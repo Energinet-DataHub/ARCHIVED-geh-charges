@@ -29,8 +29,8 @@ env:
   DOTNET_VERSION: '3.1'
   ORGANISATION_NAME: 'endk'
   AZURE_FUNCTIONAPP_NAME: 'helloworld'
-  PROJECT_NAME: TEMPLATE_REPLACE__YOUR_DOMAIN_NAME
-  REPOSITORY_NAME: Energinet-DataHub/TEMPLATE_REPLACE__YOUR_DOMAIN_REPOSITORY
+  PROJECT_NAME: charges
+  REPOSITORY_NAME: Energinet-DataHub/geh-charges
 
 jobs:
   build_helloworld:
@@ -66,22 +66,22 @@ jobs:
       matrix:
         environment: [
           {
-            long: rg-DataHub-TEMPLATE_REPLACE__YOUR_DOMAIN_NAME-U,
+            long: rg-DataHub-Charges-U,
             short: u,
             name: Development
           },
           {
-            long: rg-DataHub-TEMPLATE_REPLACE__YOUR_DOMAIN_NAME-T,
+            long: rg-DataHub-Charges-T,
             short: t,
             name: Test
           },
           {
-            long: rg-DataHub-TEMPLATE_REPLACE__YOUR_DOMAIN_NAME-B,
+            long: rg-DataHub-Charges-B,
             short: b,
             name: Preprod
           },
           {
-            long: rg-DataHub-TEMPLATE_REPLACE__YOUR_DOMAIN_NAME-P,
+            long: rg-DataHub-Charges-P,
             short: p,
             name: Production
           }
