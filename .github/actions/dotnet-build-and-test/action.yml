@@ -45,5 +45,4 @@ runs:
       shell: bash
       run: |
         dotnet tool install --tool-path ./temp/reportgenerator dotnet-reportgenerator-globaltool
-        dotnet test ${{ inputs.solution_file_path }} /p:CollectCoverage=true /p:CoverletOutput=${{ inputs.output_path }}/ /p:CoverletOutputFormat=cobertura /p:Threshold=0
-        cd ${{ inputs.output_path }}/
+        dotnet test ${{ inputs.solution_file_path }} --filter Category=Unit /p:CollectCoverage=true /p:CoverletOutput=${{ inputs.output_path }}/ /p:CoverletOutputFormat=cobertura /p:Threshold=0
