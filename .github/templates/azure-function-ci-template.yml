@@ -20,7 +20,7 @@ on:
     paths:
       - source/TEMPLATE_REPLACE__YOUR_SOLUTION_PATH/** # eg. source/hello-world/**
       - .github/workflows/TEMPLATE_REPLACE__YOUR_CICD_FILE_NAME.yml # eg. .github/workflows/hello-world-cicd.yml
-      - .github/actions/dotnet-build-and-test
+      - .github/actions/dotnet-build-and-test/**
   workflow_dispatch: {}
 
 env:
