@@ -19,8 +19,8 @@ on:
       - main
     paths:
       - source/hello-world/**
-      - .github/workflows/hello-world-cicd.yml
-      - .github/actions/dotnet-build-and-test
+      - .github/workflows/hello-world-cd.yml
+      - .github/actions/dotnet-build-and-test/**
   workflow_dispatch: {}
 
 env:
