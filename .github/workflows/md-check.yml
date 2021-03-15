@@ -3,6 +3,7 @@ name: Markdown Check
 on:
   pull_request:
     branches: [ main ]
+    paths: '**.md'
   workflow_dispatch: {}
 
 jobs:
