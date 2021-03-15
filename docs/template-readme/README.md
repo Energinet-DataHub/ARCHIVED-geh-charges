@@ -3,12 +3,12 @@
 - [Intro](#intro)
 - [Getting started](#getting-started)
 - [Whats included?](#whats-included)
-  - [Files](#files)
-  - [Terraform project including CD](#terraform-project-including-cd)
-  - [.NET Azure function project including CD](#.net-azure-function-project-including-cd)
+    - [Files](#files)
+    - [Terraform project including CD](#terraform-project-including-cd)
+    - [.NET Azure function project including CD](#.net-azure-function-project-including-cd)
 - [Getting started](#getting-started)
-  - [How to begin using the Terraform project](#how-to-begin-using-the-terraform-project)
-  - [How to begin developing .NET](#how-to-begin-developing-net)
+    - [How to begin using the Terraform project](#how-to-begin-using-the-terraform-project)
+    - [How to begin developing .NET](#how-to-begin-developing-net)
 - [I need help](#i-need-help)
 
 ## Intro
