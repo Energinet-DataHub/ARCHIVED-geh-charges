@@ -17,10 +17,6 @@ on:
   pull_request:
     branches:
       - main
-    paths:
-      - source/hello-world/**
-      - .github/workflows/hello-world-ci.yml
-      - .github/actions/dotnet-build-and-test/**
   workflow_dispatch: {}
 
 env:
@@ -29,7 +25,25 @@ env:
   DOTNET_VERSION: '3.1'
 
 jobs:
+  pre_job:
+    runs-on: ubuntu-latest
+    outputs:
+      should_skip: ${{ steps.skip_check.outputs.should_skip }}
+    steps:
+      - name: Should skip?
+        id: skip_check
+        uses: fkirc/skip-duplicate-actions@v1.4.0
+        with:
+          github_token: ${{ github.token }}
+          paths: '[
+            "source/hello-world/**",
+            ".github/workflows/hello-world-ci.yml",
+            ".github/actions/dotnet-build-and-test/**"
+          ]'
+
   validate_build_helloworld:
+    needs: pre_job
+    if: ${{ needs.pre_job.outputs.should_skip != 'true' }}
     name: Validate build HelloWorld
     runs-on: ubuntu-latest
     steps:
