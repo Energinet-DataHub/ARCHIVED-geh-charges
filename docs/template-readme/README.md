@@ -13,7 +13,7 @@
 
 ## Intro
 
-This domain repository was created using the template located here: [https://github.com/Energinet-DataHub/geh-domain-template-repository](https://github.com/Energinet-DataHub/geh-domain-template-repository).
+This domain repository was created using the template located [here](https://github.com/Energinet-DataHub/geh-domain-template-repository).
 
 The reason for using the template to create this domain, is to deliver the basic structure needed to be able to develop and deliver code, without having to spend time on setting up the basic structure needed (CI/CD, IaC etc.), and to ensure consistency across all domain repositories.
 
