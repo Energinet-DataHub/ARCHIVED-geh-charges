@@ -1,12 +1,5 @@
 ﻿DataHub
-github
-gitignore
 Energinet
-https
-IaC
-json
-MSBuild
 README
 Terraform
 TODO
-yml
