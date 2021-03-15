@@ -24,26 +24,26 @@ The template comes with a basic set of files, and projects, that will make it ea
 ### Files
 
 - [LICENSE](../../LICENSE) Required file for open source repositories inside this organisation.
-- [.gitignore](../../.gitignore) .gitignore template file.
-- [.github/ISSUE_TEMPLATE](../../.github/ISSUE_TEMPLATE) A set of github templates to ensure consistency in how issues is created across all repositories.
-- [.github/PULL_REQUEST_TEMPLATE.md](../../.github/PULL_REQUEST_TEMPLATE.md) A template for pull requests in this repository. Created to ensure consistency in how pull requests is looks across all repositories.
+- [`.gitignore`](../../.gitignore) `.gitignore` template file.
+- [`.github/ISSUE_TEMPLATE`](../../.github/ISSUE_TEMPLATE) A set of github templates to ensure consistency in how issues is created across all repositories.
+- [`.github/PULL_REQUEST_TEMPLATE.md`](../../.github/PULL_REQUEST_TEMPLATE.md) A template for pull requests in this repository. Created to ensure consistency in how pull requests is looks across all repositories.
 
 ### Terraform project including CD
 
-- [build/infrastructure](../../build/infrastructure) A terraform setup that can be extended with all the components needed for this domain. It comes with an application insights component, since the general though was that all domains have a need to log data. Read [Application Insights](https://docs.microsoft.com/en-us/azure/azure-monitor/app/app-insights-overview) for more information.
-- [.github/workflows/infrastructure-cd.yml](../../.github/workflows/infrastructure-cd.yml) A pipeline used for continous delivery of the Terraform project to all environments.
+- [build/infrastructure](../../build/infrastructure) A Terraform setup that can be extended with all the components needed for this domain. It comes with an application insights component, since the general though was that all domains have a need to log data. Read [Application Insights](https://docs.microsoft.com/en-us/azure/azure-monitor/app/app-insights-overview) for more information.
+- [`.github/workflows/infrastructure-cd.yml`](../../.github/workflows/infrastructure-cd.yml) A pipeline used for continous delivery of the Terraform project to all environments.
 
 ### .NET Azure Function project including CD
 
 - [source/hello-world](../../source/hello-world) An Azure Function solution/project for .NET.
-- [.github/workflows/hello-world-cd.yml](../../.github/workflows/hello-world-cd.yml) A pipeline for continous deployment of the HelloWorld project.
-- [.github/workflows/templates/hello-world-ci.yml](../../.github/workflows/hello-world-ci.yml) A pipeline for continous integration. This is to be used in branch protection rules.
+- [`.github/workflows/hello-world-cd.yml`](../../.github/workflows/hello-world-cd.yml) A pipeline for continous deployment of the HelloWorld project.
+- [`.github/workflows/templates/hello-world-ci.yml`](../../.github/workflows/hello-world-ci.yml) A pipeline for continous integration. This is to be used in branch protection rules.
 
 ### .NET Analyzers
 
-- [Directory.Build.props](../../Directory.Build.props) For more information on MSBuild and how it works, please refer to the [official documentation](https://docs.microsoft.com/en-us/visualstudio/msbuild/customize-your-build?view=vs-2019#directorybuildprops-and-directorybuildtargets).
+- [Directory.Build.props](../../Directory.Build.props) For more information on `MSBuild` and how it works, please refer to the [official documentation](https://docs.microsoft.com/en-us/visualstudio/msbuild/customize-your-build?view=vs-2019#directorybuildprops-and-directorybuildtargets).
 - [stylecop.json](../../stylecop.json) StyleCop Analyzers config file.
-- [.editorconfig](../../.editorconfig) .editorconfig template file used in this organization.
+- [`.editorconfig`](../../.editorconfig) `.editorconfig` template file used in this organization.
 
 ## Getting started
 
@@ -52,7 +52,7 @@ This includes: CI/CD for Azure Functions, Infrastructure as Code using Terraform
 
 ### How to begin using the Terraform project
 
-To get started using the terraform project, all you have to do i actually just add your new files to the directory located [here](../../build/infrastructure).
+To get started using the Terraform project, all you have to do i actually just add your new files to the directory located [here](../../build/infrastructure).
 
 The infrastructure pipeline will automatically pick up any new changes to this directory on the main branch, and deploy it to the different environments.
 
