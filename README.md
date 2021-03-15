@@ -2,7 +2,7 @@
 
 ## Intro
 
-Welcome to the charges domain of the [Green Energy Hub project](https://github.com/Energinet-DataHub/green-energy-hub)
+Welcome to the charges domain of the [Green Energy Hub project](https://github.com/Energinet-DataHub/green-energy-hub) test
 
 The charges domain is responsible for keeping track of price lists of grid companies and prices set by laws on the national level (fees and taxes).
 
