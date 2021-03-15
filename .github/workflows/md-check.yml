@@ -1,8 +1,6 @@
 name: Markdown Check
 
 on:
-  push:
-    branches: [ main, introduce-md-check ]
   pull_request:
     branches: [ main ]
   workflow_dispatch: {}
