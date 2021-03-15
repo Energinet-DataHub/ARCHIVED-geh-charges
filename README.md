@@ -12,7 +12,7 @@ More introduction to come.
 
 ## Architecture
 
-The following architectural sketch is an incomplete work in progress and for now partially in danish. This will be changes as the domain settles.
+The following architectural sketch is an incomplete work in progress and for now partially in danish. This will be changed as the domain settles.
 
 ![design](ARCHITECTURE.png)
 
