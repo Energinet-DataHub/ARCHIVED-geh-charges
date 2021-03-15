@@ -1,13 +1,10 @@
-﻿cd
-DataHub
-geh
+﻿DataHub
 github
 gitignore
 Energinet
 https
 IaC
 json
-md
 MSBuild
 README
 Terraform
