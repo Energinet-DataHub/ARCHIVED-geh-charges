@@ -20,4 +20,4 @@ The following architectural sketch is an incomplete work in progress and for now
 
 This repository was created using the Green Energy Hub template.
 
-Please read the [template readme](./docs/template-readme/README.md) for details and introduction to the template.
+Please read the [template README](./docs/template-readme/README.md) for details and introduction to the template.
