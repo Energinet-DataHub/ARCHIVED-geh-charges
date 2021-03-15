@@ -29,8 +29,8 @@ jobs:
     - name: Copy configuration files
       if: ${{ steps.skip_check.outputs.should_skip == 'false' }}
       run: |
-        cp ${GITHUB_WORKSPACE}/utilities/md-spellcheck/wordlist.txt ${GITHUB_WORKSPACE}/wordlist.txt
-        cp ${GITHUB_WORKSPACE}/utilities/md-spellcheck/spellcheck.yml ${GITHUB_WORKSPACE}/spellcheck.yml
+        cp ${GITHUB_WORKSPACE}/.github/utilities/md-spellcheck/wordlist.txt ${GITHUB_WORKSPACE}/wordlist.txt
+        cp ${GITHUB_WORKSPACE}/.github/utilities/md-spellcheck/spellcheck.yml ${GITHUB_WORKSPACE}/spellcheck.yml
 
     - name: Replace path in Spell Check config
       if: ${{ steps.skip_check.outputs.should_skip == 'false' }}
@@ -44,7 +44,7 @@ jobs:
       with:
         use-quiet-mode: 'yes'
         use-verbose-mode: 'yes'
-        config-file: './utilities/md-linkcheck/mlc_config.json'
+        config-file: './.github/utilities/md-linkcheck/mlc_config.json'
       continue-on-error: true
       id: md-link-check
 
