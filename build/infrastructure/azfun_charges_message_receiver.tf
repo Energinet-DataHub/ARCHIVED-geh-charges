@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 module "azfun_charges_message_receiver" {
-  source                                    = "git::https://github.com/Energinet-DataHub/green-energy-hub-core.git//terraform/modules/function-app?ref=1.3.0"
+  source                                    = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//function-app?ref=1.3.0"
   name                                      = "azfun-charges-message-receiver-${var.project}-${var.organisation}-${var.environment}"
   resource_group_name                       = data.azurerm_resource_group.main.name
   location                                  = data.azurerm_resource_group.main.location
@@ -36,7 +36,7 @@ module "azfun_charges_message_receiver" {
 }
 
 module "azfun_charges_message_receiver_plan" {
-  source              = "git::https://github.com/Energinet-DataHub/green-energy-hub-core.git//terraform/modules/app-service-plan?ref=1.3.0"
+  source              = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//app-service-plan?ref=1.3.0"
   name                = "asp-charges-message-receiver-${var.project}-${var.organisation}-${var.environment}"
   resource_group_name = data.azurerm_resource_group.main.name
   location            = data.azurerm_resource_group.main.location
@@ -49,7 +49,7 @@ module "azfun_charges_message_receiver_plan" {
 }
 
 module "azfun_charges_message_receiver_stor" {
-  source                    = "git::https://github.com/Energinet-DataHub/green-energy-hub-core.git//terraform/modules/storage-account?ref=1.3.0"
+  source                    = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//storage-account?ref=1.3.0"
   name                      = "stor${random_string.message_receiver.result}"
   resource_group_name       = data.azurerm_resource_group.main.name
   location                  = data.azurerm_resource_group.main.location
