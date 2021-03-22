@@ -50,18 +50,11 @@ module "azfun_charges_message_receiver_plan" {
 
 module "azfun_charges_message_receiver_stor" {
   source                    = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//storage-account?ref=1.0.0"
-  name                      = "stor${random_string.message_receiver.result}"
+  name                      = "stor-charges-message-receiver-${var.project}-${var.organisation}-${var.environment}"
   resource_group_name       = data.azurerm_resource_group.main.name
   location                  = data.azurerm_resource_group.main.location
   account_replication_type  = "LRS"
   access_tier               = "Cool"
   account_tier              = "Standard"
   tags                      = data.azurerm_resource_group.main.tags
-}
-
-# Since all functions need a storage connected we just generate a random name
-resource "random_string" "message_receiver" {
-  length  = 10
-  special = false
-  upper   = false
 }
