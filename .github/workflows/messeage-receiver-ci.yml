@@ -38,7 +38,8 @@ jobs:
           paths: '[
             "source/GreenEnergyHub.Charges/**",
             ".github/workflows/message-receiver-ci.yml",
-            ".github/actions/dotnet-build-and-test/**"
+            ".github/actions/dotnet-build-and-test/**",
+            ".github/actions/azure-core-tools-install/**",
           ]'
 
   validate_build_TEMPLATE_REPLACE__YOUR_FUNCTION_BASE_NAME_LOWERCASE_NO_SYMBOLS: # eg. validate_build_helloworld:
