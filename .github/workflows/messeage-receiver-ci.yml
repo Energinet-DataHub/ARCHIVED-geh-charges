@@ -39,8 +39,8 @@ jobs:
         with:
           github_token: ${{ github.token }}
           paths: '[
-            "source/GreenEnergyHub.Charges/**", # eg. source/hello-world/**
-            ".github/workflows/message-receiver-ci.yml", # eg. .github/workflows/hello-world-cicd.yml
+            "source/GreenEnergyHub.Charges/**",
+            ".github/workflows/message-receiver-ci.yml",
             ".github/actions/dotnet-build-and-test/**"
           ]'
 
