@@ -86,7 +86,7 @@ jobs:
       - name: Setup Authorization to pull TF modules
         run: |
           git config --local --remove-section http."https://github.com/"
-          git config --global url."https://foo:${{ secrets.PAT_TOKEN }}@github.com/Energinet-DataHub/green-energy-hub-core".insteadOf "https://github.com/Energinet-DataHub/green-energy-hub-core"
+          git config --global url."https://foo:${{ secrets.PAT_TOKEN }}@github.com/Energinet-DataHub/geh-terraform-modules".insteadOf "https://github.com/Energinet-DataHub/geh-terraform-modules"
       
       - name: Check If Terraform State Storage exists
         id: state-storage-exists
