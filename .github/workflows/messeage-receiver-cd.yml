@@ -29,7 +29,7 @@ env:
   SOLUTION_FILE_PATH: 'source/GreenEnergyHub.Charges/GreenEnergyHub.Charges.sln'
   DOTNET_VERSION: '5.0'
   ORGANISATION_NAME: 'endk'
-  AZURE_FUNCTIONAPP_NAME: 'ChargeHttpTrigger'
+  AZURE_FUNCTIONAPP_NAME: 'message-receiver'
   PROJECT_NAME: charges
   REPOSITORY_NAME: Energinet-DataHub/geh-charges
 
