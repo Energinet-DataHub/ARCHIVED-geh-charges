@@ -21,6 +21,15 @@ limitations under the License.
         <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
         <RunAnalyzersDuringBuild>true</RunAnalyzersDuringBuild>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
+        <LangVersion>9</LangVersion>
     </PropertyGroup>
+
+    <ItemGroup>
+      <Folder Include="Events\Integration" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="NodaTime" Version="3.0.5" />
+    </ItemGroup>
 
 </Project>
