@@ -14,9 +14,6 @@
 name: Message receiver CI
 
 on:
-  push:
-    branches:
-      - Setup-CI-Pipeline
   pull_request:
     branches:
       - main
