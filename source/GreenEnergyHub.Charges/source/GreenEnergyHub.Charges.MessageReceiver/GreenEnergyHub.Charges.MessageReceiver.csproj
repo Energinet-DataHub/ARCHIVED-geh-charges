@@ -5,6 +5,7 @@
     <AzureFunctionsVersion>v3</AzureFunctionsVersion>
     <OutputType>Exe</OutputType>
     <_FunctionsSkipCleanOutput>true</_FunctionsSkipCleanOutput>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <AssemblyName>GreenEnergyHub.Charges.MessageReceiver</AssemblyName>
     <RootNamespace>GreenEnergyHub.Charges.MessageReceiver</RootNamespace>
   </PropertyGroup>
