@@ -3,16 +3,15 @@ using NodaTime;
 
 namespace GreenEnergyHub.Charges.Domain.Events.Local
 {
-    public class ChargeTransactionReceived : IEvent
+    public class ChargeTransactionReceived : ILocalEvent
     {
-        public ChargeTransactionReceived(Instant receivedTime, string correlationId, ChangeOfChargesTransaction transaction)
+        public ChargeTransactionReceived(string correlationId, ChangeOfChargesTransaction transaction)
         {
-            ReceivedTime = receivedTime;
             CorrelationId = correlationId;
             Transaction = transaction;
         }
 
-        public Instant ReceivedTime { get; }
+        public Instant PublishedTime { get; } = SystemClock.Instance.GetCurrentInstant();
 
         public string CorrelationId { get; }
 

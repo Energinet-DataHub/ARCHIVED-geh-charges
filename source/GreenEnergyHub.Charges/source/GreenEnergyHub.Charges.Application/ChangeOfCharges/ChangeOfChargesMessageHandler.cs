@@ -12,76 +12,41 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
+using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
-using Azure.Messaging.ServiceBus;
+using System.Transactions;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Message;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Result;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
-using GreenEnergyHub.Charges.Domain.Events.Local;
-using GreenEnergyHub.Json;
-using NodaTime;
 
 namespace GreenEnergyHub.Charges.Application.ChangeOfCharges
 {
     public class ChangeOfChargesMessageHandler : IChangeOfChargesMessageHandler
     {
-        private const string ChargesServiceBusReceiverTransactionQueueName =
-            "CHARGES_SERVICE_BUS_RECEIVER_TRANSACTION_QUEUE_NAME";
+        private readonly IChangeOfChargesTransactionHandler _changeOfChargesTransactionHandler;
 
-        private const string ChargesServiceBusConnectionString =
-            "CHARGES_SERVICE_BUS_CONNECTION_STRING";
-
-        private readonly IJsonSerializer _jsonSerializer;
-
-        public ChangeOfChargesMessageHandler(IJsonSerializer jsonSerializer)
+        public ChangeOfChargesMessageHandler(IChangeOfChargesTransactionHandler changeOfChargesTransactionHandler)
         {
-            _jsonSerializer = jsonSerializer;
+            _changeOfChargesTransactionHandler = changeOfChargesTransactionHandler;
         }
 
-        public async Task<ChangeOfChargesMessageResult> HandleAsync(ChangeOfChargesMessage message)
+        public async Task<ChangeOfChargesMessageResult> HandleAsync([NotNull] ChangeOfChargesMessage message)
         {
-            if (message != null)
+            using var scope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled);
+            var result = await HandleTransactionsAsync(message.Transactions).ConfigureAwait(false);
+            scope.Complete();
+            return result;
+        }
+
+        private async Task<ChangeOfChargesMessageResult> HandleTransactionsAsync(List<ChangeOfChargesTransaction> transactions)
+        {
+            foreach (ChangeOfChargesTransaction transaction in transactions)
             {
-                foreach (ChangeOfChargesTransaction transaction in message.Transactions)
-                {
-                    await PublishLocalEventAsync(transaction).ConfigureAwait(false);
-                }
+                await _changeOfChargesTransactionHandler.HandleAsync(transaction).ConfigureAwait(false);
             }
 
-            return new ChangeOfChargesMessageResult();
-        }
-
-        private static string GetEnvironmentVariable(string name)
-        {
-            var environmentVariable = Environment.GetEnvironmentVariable(name) ??
-                            throw new ArgumentNullException(name, "does not exist in configuration settings");
-            return environmentVariable;
-        }
-
-        private async Task PublishLocalEventAsync(ChangeOfChargesTransaction changeOfChargesTransaction)
-        {
-            var connectionString = GetEnvironmentVariable(ChargesServiceBusConnectionString);
-            // create a Service Bus client
-            await using ServiceBusClient client = new (connectionString);
-
-            // create a sender for the queue
-            var queueOrTopicName = GetEnvironmentVariable(ChargesServiceBusReceiverTransactionQueueName);
-            ServiceBusSender sender = client.CreateSender(queueOrTopicName);
-
-            var chargeTransactionReceivedEvent =
-                new ChargeTransactionReceived(
-                    SystemClock.Instance.GetCurrentInstant(),
-                    Guid.NewGuid().ToString(),
-                    changeOfChargesTransaction);
-
-            var serializedMessage = _jsonSerializer.Serialize(chargeTransactionReceivedEvent);
-
-            // create a message that we can send
-            var message = new ServiceBusMessage(serializedMessage);
-
-            // send the message
-            await sender.SendMessageAsync(message).ConfigureAwait(false);
+            return ChangeOfChargesMessageResult.CreateSuccess();
         }
     }
 }

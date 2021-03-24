@@ -12,10 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Message;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Result;
-using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
 
 namespace GreenEnergyHub.Charges.Application.ChangeOfCharges
 {
@@ -29,6 +29,6 @@ namespace GreenEnergyHub.Charges.Application.ChangeOfCharges
         /// </summary>
         /// <param name="message"></param>
         /// <returns>Returns the result of the synchronous handling of the message.</returns>
-        Task<ChangeOfChargesMessageResult> HandleAsync(ChangeOfChargesMessage message);
+        Task<ChangeOfChargesMessageResult> HandleAsync([NotNull]ChangeOfChargesMessage message);
     }
 }

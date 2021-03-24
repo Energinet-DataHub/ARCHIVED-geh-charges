@@ -33,7 +33,9 @@ namespace GreenEnergyHub.Charges.MessageReceiver
         private static void RegisterServices(IServiceCollection collection)
         {
             collection.AddScoped<IChangeOfChargesMessageHandler, ChangeOfChargesMessageHandler>();
-            collection.AddSingleton<IJsonSerializer, JsonSerializer>();
+            collection.AddScoped<IJsonSerializer, JsonSerializer>();
+            collection.AddScoped<IChangeOfChargesTransactionHandler, ChangeOfChargesTransactionHandler>();
+            collection.AddScoped<ILocalEventPublisher, LocalEventPublisher>();
         }
     }
 }

@@ -20,6 +20,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "GreenEnergyHub", "GreenEner
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GreenEnergyHub.Json", "..\Shared\GreenEnergyHub\source\GreenEnergyHub.Json\GreenEnergyHub.Json.csproj", "{85B5E913-F347-4EA6-B7D6-FED1BFD1FB89}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GreenEnergyHub.Queues.AzureServiceBus", "..\queues\source\GreenEnergyHub.Queues.AzureServiceBus\GreenEnergyHub.Queues.AzureServiceBus.csproj", "{B3A66F2C-1114-4985-91E5-A58A8C30AF6B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GreenEnergyHub.Queues", "..\queues\source\GreenEnergyHub.Queues\GreenEnergyHub.Queues.csproj", "{F7B15740-FE66-4A02-87C6-0D8620F48A0B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GreenEnergyHub.Messaging", "..\messaging\source\GreenEnergyHub.Messaging\GreenEnergyHub.Messaging.csproj", "{7A6F13FA-E28F-4FEB-B2B8-9C7AEAD9BB97}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -50,6 +56,18 @@ Global
 		{85B5E913-F347-4EA6-B7D6-FED1BFD1FB89}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{85B5E913-F347-4EA6-B7D6-FED1BFD1FB89}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{85B5E913-F347-4EA6-B7D6-FED1BFD1FB89}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B3A66F2C-1114-4985-91E5-A58A8C30AF6B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B3A66F2C-1114-4985-91E5-A58A8C30AF6B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B3A66F2C-1114-4985-91E5-A58A8C30AF6B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B3A66F2C-1114-4985-91E5-A58A8C30AF6B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F7B15740-FE66-4A02-87C6-0D8620F48A0B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F7B15740-FE66-4A02-87C6-0D8620F48A0B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F7B15740-FE66-4A02-87C6-0D8620F48A0B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F7B15740-FE66-4A02-87C6-0D8620F48A0B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7A6F13FA-E28F-4FEB-B2B8-9C7AEAD9BB97}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7A6F13FA-E28F-4FEB-B2B8-9C7AEAD9BB97}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7A6F13FA-E28F-4FEB-B2B8-9C7AEAD9BB97}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7A6F13FA-E28F-4FEB-B2B8-9C7AEAD9BB97}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -57,6 +75,9 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{68412EBF-701D-467D-8716-74269E171F41} = {05DE980B-A2A7-4235-AE53-3167E94699DD}
 		{85B5E913-F347-4EA6-B7D6-FED1BFD1FB89} = {9FE16521-EC21-4551-9E51-0C6702D21098}
+		{B3A66F2C-1114-4985-91E5-A58A8C30AF6B} = {9FE16521-EC21-4551-9E51-0C6702D21098}
+		{F7B15740-FE66-4A02-87C6-0D8620F48A0B} = {9FE16521-EC21-4551-9E51-0C6702D21098}
+		{7A6F13FA-E28F-4FEB-B2B8-9C7AEAD9BB97} = {9FE16521-EC21-4551-9E51-0C6702D21098}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {19228BC9-BC51-4044-842C-ACD1F68D4008}
