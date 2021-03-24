@@ -6,6 +6,9 @@
     - [Files](#files)
     - [Terraform project including CD](#terraform-project-including-cd)
     - [.NET Azure function project including CD](#.net-azure-function-project-including-cd)
+    - [.NET Analyzers](#.net-analyzers)
+    - [Markdown lint CI](#markdown-lint-ci)
+    - [License CI](#license-ci)
 - [Getting started](#getting-started)
     - [How to begin using the Terraform project](#how-to-begin-using-the-terraform-project)
     - [How to begin developing .NET](#how-to-begin-developing-net)
@@ -45,6 +48,18 @@ The template comes with a basic set of files, and projects, that will make it ea
 - `stylecop.json` Analyzer configuration file.
 - `.editorconfig` template file used in this organization.
 
+### Markdown lint CI
+
+- `.github/workflows/md-check.yml` A pipeline to check markdown files, flag style issues, spelling errors and links.
+- `.markdownlint.json` Markdown lint check configuration file.
+- `.github/utilities/md-linkcheck` Link check configuration.
+- `.github/utilities/md-spellcheck` Spell check configuration.
+
+### LICENSE CI
+
+- `license-check-ci` A pipeline to check that all files includes the LICENSE header.
+- `.licenserc.json` License check configuration
+
 ## Getting started
 
 As mentioned above, cooked into this template is some basic projects, that helps you start delivering code.
@@ -62,15 +77,15 @@ To create new .NET Function projects inside this repository, you only have to fo
 The following example, assumes that you have a new solution that is named `MyNewSolution`, and inside that an Azure HTTP Trigger named `MyNewTrigger`.
 
 1. Creating the project
-    1. Create a new folder named `MyNewSolution` inside the [source](../../source) folder.
+    1. Create a new folder named `MyNewSolution` inside the source folder located at the path `source`.
     2. Inside the newly created folder from step 1, create your .NET solution.
     3. Create an Azure HTTP Trigger project inside the `MyNewSolution` solution named `MyNewTrigger`.
 2. Set up the continuous integration
-    1. Duplicate the `azure-function-ci-template.yml` file located here `.github/templates/azure-function-ci-template.yml`.
+    1. Duplicate the `azure-function-ci-template.yml` file located at the path `.github/templates/azure-function-ci-template.yml`.
     2. Rename it to fit your project name, in this case `my-new-trigger-ci.yml`.
     3. Inside the `my-new-trigger-ci.yml` file replace all the values that is prefixed with the following `TEMPLATE_REPLACE__`.
 3. Set up the continuous delivery
-    1. Duplicate the `azure-function-cd-template.yml` file located here `.github/templates/azure-function-cd-template.yml`.
+    1. Duplicate the `azure-function-cd-template.yml` file located at the path `.github/templates/azure-function-cd-template.yml`.
     2. Rename it to fit your project name, in this case `my-new-trigger-cd.yml`.
     3. Inside the `my-new-trigger-cd.yml` file replace all the values that is prefixed with the following `TEMPLATE_REPLACE__`.
 4. Adding your new project to the branch protection rules
