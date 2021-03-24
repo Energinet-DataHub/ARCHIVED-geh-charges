@@ -26,7 +26,7 @@ module "azfun_message_receiver" {
     WEBSITE_ENABLE_SYNC_UPDATE_SITE                   = true
     WEBSITE_RUN_FROM_PACKAGE                          = 1
     WEBSITES_ENABLE_APP_SERVICE_STORAGE               = true
-    FUNCTIONS_WORKER_RUNTIME                          = "dotnet-isolated"
+    FUNCTIONS_WORKER_RUNTIME                          = "dotnet"
   }
   dependencies                              = [
     module.appi.dependent_on,
