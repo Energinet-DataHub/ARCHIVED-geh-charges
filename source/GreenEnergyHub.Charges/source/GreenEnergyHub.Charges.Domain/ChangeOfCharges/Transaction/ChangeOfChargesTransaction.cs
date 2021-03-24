@@ -13,12 +13,15 @@
 // limitations under the License.
 
 using System.Text.Json.Serialization;
+using GreenEnergyHub.Charges.Domain.Common;
 using NodaTime;
 
 namespace GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction
 {
     public class ChangeOfChargesTransaction
     {
+        public MarketDocument? MarketDocument { get; set; }
+
         public MktActivityRecord? MktActivityRecord { get; set; }
 
         public string? Type { get; set; }

@@ -1,4 +1,5 @@
 ﻿using GreenEnergyHub.Charges.Application.ChangeOfCharges;
+using GreenEnergyHub.Json;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
@@ -19,6 +20,7 @@ namespace GreenEnergyHub.Charges.MessageReceiver
         private static void RegisterServices(IServiceCollection collection)
         {
             collection.AddScoped<IChangeOfChargesMessageHandler, ChangeOfChargesMessageHandler>();
+            collection.AddSingleton<IJsonSerializer, JsonSerializer>();
         }
     }
 }

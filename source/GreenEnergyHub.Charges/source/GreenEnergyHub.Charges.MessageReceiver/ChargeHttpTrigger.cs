@@ -14,11 +14,11 @@
 
 using System;
 using System.Net;
-using System.Text.Json;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application.ChangeOfCharges;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Message;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
+using GreenEnergyHub.Json;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
 using Microsoft.Extensions.DependencyInjection;
@@ -33,8 +33,15 @@ namespace GreenEnergyHub.Charges.MessageReceiver
             [HttpTrigger(AuthorizationLevel.Anonymous, "get", "post")] HttpRequestData req,
             FunctionContext executionContext)
         {
-            if (executionContext == null) throw new ArgumentNullException(nameof(executionContext));
-            if (req == null) throw new ArgumentNullException(nameof(req));
+            if (executionContext == null)
+            {
+                throw new ArgumentNullException(nameof(executionContext));
+            }
+
+            if (req == null)
+            {
+                throw new ArgumentNullException(nameof(req));
+            }
 
             var logger = executionContext.GetLogger("ChargeHttpTrigger");
             logger.LogInformation("C# HTTP trigger function processed a request");
@@ -42,7 +49,10 @@ namespace GreenEnergyHub.Charges.MessageReceiver
             var response = req.CreateResponse(HttpStatusCode.OK);
             response.Headers.Add("Content-Type", "text/plain; charset=utf-8");
 
-            var message = await GetChangeOfChargesMessageAsync(req).ConfigureAwait(false);
+            var jsonDeserializer =
+                executionContext.InstanceServices.GetRequiredService<IJsonSerializer>();
+
+            var message = await GetChangeOfChargesMessageAsync(jsonDeserializer, req).ConfigureAwait(false);
 
             var changeOfChargesMessageHandler =
                 executionContext.InstanceServices.GetRequiredService<IChangeOfChargesMessageHandler>();
@@ -54,15 +64,16 @@ namespace GreenEnergyHub.Charges.MessageReceiver
             return response;
         }
 
-        private static async Task<ChangeOfChargesMessage> GetChangeOfChargesMessageAsync(HttpRequestData req)
+        private static async Task<ChangeOfChargesMessage> GetChangeOfChargesMessageAsync(
+            IJsonSerializer jsonDeserializer, HttpRequestData req)
         {
             // Mimic that we receive a message that can contain multiple transactions.
             // In upcoming stories we'll instead receive multi-transactions eBIX messages.
-            var transaction = await JsonSerializer
-                .DeserializeAsync<ChangeOfChargesTransaction>(req.Body)
+            var transaction = (ChangeOfChargesTransaction)await jsonDeserializer
+                .DeserializeAsync(req.Body, typeof(ChangeOfChargesTransaction))
                 .ConfigureAwait(false);
             var message = new ChangeOfChargesMessage();
-            message.Transactions.Add(transaction!);
+            message.Transactions.Add(transaction);
             return message;
         }
     }
