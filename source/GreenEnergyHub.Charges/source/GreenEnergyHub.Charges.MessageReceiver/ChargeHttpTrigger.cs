@@ -49,19 +49,21 @@ namespace GreenEnergyHub.Charges.MessageReceiver
             var response = req.CreateResponse(HttpStatusCode.OK);
             response.Headers.Add("Content-Type", "text/plain; charset=utf-8");
 
-            var jsonDeserializer =
-                executionContext.InstanceServices.GetRequiredService<IJsonSerializer>();
-
+            var jsonDeserializer = GetRequireService<IJsonSerializer>(executionContext);
             var message = await GetChangeOfChargesMessageAsync(jsonDeserializer, req).ConfigureAwait(false);
 
-            var changeOfChargesMessageHandler =
-                executionContext.InstanceServices.GetRequiredService<IChangeOfChargesMessageHandler>();
+            var changeOfChargesMessageHandler = GetRequireService<IChangeOfChargesMessageHandler>(executionContext);
             var status = await changeOfChargesMessageHandler.HandleAsync(message).ConfigureAwait(false);
 
             // Future features/stories are expected to specify the expected output
-            await response.WriteAsJsonAsync(status).ConfigureAwait(false);
 
+            //await response.WriteAsJsonAsync(status).ConfigureAwait(false);
             return response;
+        }
+
+        private static T GetRequireService<T>(FunctionContext functionContext)
+        {
+            return functionContext.InstanceServices.GetService<T>();
         }
 
         private static async Task<ChangeOfChargesMessage> GetChangeOfChargesMessageAsync(
