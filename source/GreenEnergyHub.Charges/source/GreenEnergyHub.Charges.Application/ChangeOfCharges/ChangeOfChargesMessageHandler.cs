@@ -33,9 +33,7 @@ namespace GreenEnergyHub.Charges.Application.ChangeOfCharges
 
         public async Task<ChangeOfChargesMessageResult> HandleAsync([NotNull] ChangeOfChargesMessage message)
         {
-            using var scope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled);
             var result = await HandleTransactionsAsync(message.Transactions).ConfigureAwait(false);
-            scope.Complete();
             return result;
         }
 
