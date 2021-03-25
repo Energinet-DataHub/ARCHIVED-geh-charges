@@ -1,18 +1,18 @@
 # Template
 
-- [Intro](#intro)
-- [Getting started](#getting-started)
-- [Whats included?](#whats-included)
+- [Template](#template)
+  - [Intro](#intro)
+  - [Whats included?](#whats-included)
     - [Files](#files)
     - [Terraform project including CD](#terraform-project-including-cd)
-    - [.NET Azure function project including CD](#.net-azure-function-project-including-cd)
-    - [.NET Analyzers](#.net-analyzers)
+    - [.NET Azure Function project including CD](#net-azure-function-project-including-cd)
+    - [.NET Analyzers](#net-analyzers)
     - [Markdown lint CI](#markdown-lint-ci)
-    - [License CI](#license-ci)
-- [Getting started](#getting-started)
+    - [LICENSE CI](#license-ci)
+  - [Getting started](#getting-started)
     - [How to begin using the Terraform project](#how-to-begin-using-the-terraform-project)
     - [How to begin developing .NET](#how-to-begin-developing-net)
-- [I need help](#i-need-help)
+  - [Contributing/Help](#contributinghelp)
 
 ## Intro
 
@@ -38,7 +38,7 @@ The template comes with a basic set of files, and projects, that will make it ea
 
 ### .NET Azure Function project including CD
 
-**OBS: The hello-world example has been removed from this repo because it's no longer needed.**
+**OBS: The hello-world example has been removed from this repository because it's no longer needed.**
 
 - `source/hello-world` An Azure Function solution/project for .NET.
 - `.github/workflows/hello-world-cd.yml` A pipeline for continuous deployment of the `HelloWorld` project.
