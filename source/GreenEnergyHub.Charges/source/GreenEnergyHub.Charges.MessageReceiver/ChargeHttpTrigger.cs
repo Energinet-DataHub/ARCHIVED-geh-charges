@@ -52,8 +52,9 @@ namespace GreenEnergyHub.Charges.MessageReceiver
         }
 
         private static T GetRequireService<T>(FunctionContext functionContext)
+            where T : notnull
         {
-            return functionContext.InstanceServices.GetService<T>();
+            return functionContext.InstanceServices.GetRequiredService<T>();
         }
 
         /// <summary>
