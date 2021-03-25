@@ -25,6 +25,7 @@ limitations under the License.
     </PropertyGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\..\..\Shared\GreenEnergyHub\source\GreenEnergyHub.TestHelpers\GreenEnergyHub.TestHelpers.csproj" />
       <ProjectReference Include="..\GreenEnergyHub.Charges.Application\GreenEnergyHub.Charges.Application.csproj" />
       <ProjectReference Include="..\GreenEnergyHub.Charges.Domain\GreenEnergyHub.Charges.Domain.csproj" />
       <ProjectReference Include="..\GreenEnergyHub.Charges.Infrastructure\GreenEnergyHub.Charges.Infrastructure.csproj" />
@@ -33,9 +34,9 @@ limitations under the License.
     <ItemGroup>
         <PackageReference Include="xunit" Version="2.4.1" />
         <PackageReference Include="FluentAssertions" Version="5.10.3" />
-        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.5.0" />
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.9.1" />
+        <PackageReference Include="xunit.runner.visualstudio" Version="2.4.3" />
         <PackageReference Include="NSubstitute" Version="4.2.2" />
-        <PackageReference Include="xunit.runner.visualstudio" Version="2.4.0" />
         <PackageReference Include="coverlet.collector" Version="1.2.0" />
     </ItemGroup>
 </Project>
