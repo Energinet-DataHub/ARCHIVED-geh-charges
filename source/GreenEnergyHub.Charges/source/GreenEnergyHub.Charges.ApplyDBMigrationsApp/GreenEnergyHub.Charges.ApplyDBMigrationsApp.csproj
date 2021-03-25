@@ -11,11 +11,8 @@
     </ItemGroup>
 
     <ItemGroup>
-      <None Remove="Scripts\Model\202103250958 Initial charge model.sql" />
       <EmbeddedResource Include="Scripts\Model\202103250958 Initial charge model.sql" />
-      <None Remove="Scripts\Seed\202103251012 Initial seed data.sql" />
       <EmbeddedResource Include="Scripts\Seed\202103251012 Initial seed data.sql" />
-      <None Remove="Scripts\Test\202103251113 MarketParticipants.sql" />
       <EmbeddedResource Include="Scripts\Test\202103251113 MarketParticipants.sql" />
     </ItemGroup>
 
