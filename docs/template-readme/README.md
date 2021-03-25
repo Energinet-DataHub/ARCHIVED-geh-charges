@@ -38,6 +38,8 @@ The template comes with a basic set of files, and projects, that will make it ea
 
 ### .NET Azure Function project including CD
 
+**OBS: The hello-world example has been removed from this repo because it's no longer needed.**
+
 - `source/hello-world` An Azure Function solution/project for .NET.
 - `.github/workflows/hello-world-cd.yml` A pipeline for continuous deployment of the `HelloWorld` project.
 - `.github/workflows/hello-world-ci.yml` A pipeline for continuous integration. This is to be used in branch protection rules.
