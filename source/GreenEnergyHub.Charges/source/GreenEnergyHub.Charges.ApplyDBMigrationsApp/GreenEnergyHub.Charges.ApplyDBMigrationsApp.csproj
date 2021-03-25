@@ -11,9 +11,13 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Scripts\Model" />
       <Folder Include="Scripts\Seed" />
       <Folder Include="Scripts\Test" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="Scripts\Model\202103250958 Initial charge model.sql" />
+      <EmbeddedResource Include="Scripts\Model\202103250958 Initial charge model.sql" />
     </ItemGroup>
 
 </Project>
