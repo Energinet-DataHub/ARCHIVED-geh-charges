@@ -10,4 +10,10 @@
       <PackageReference Include="dbup-sqlserver" Version="4.5.0" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Scripts\Model" />
+      <Folder Include="Scripts\Seed" />
+      <Folder Include="Scripts\Test" />
+    </ItemGroup>
+
 </Project>
