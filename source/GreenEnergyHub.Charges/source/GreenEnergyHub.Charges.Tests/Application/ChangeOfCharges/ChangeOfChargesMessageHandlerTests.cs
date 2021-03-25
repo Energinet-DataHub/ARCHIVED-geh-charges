@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
+using FluentAssertions;
 using GreenEnergyHub.Charges.Application.ChangeOfCharges;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
 using GreenEnergyHub.Charges.Tests.Builders;
@@ -16,7 +17,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChangeOfCharges
     {
         [Theory]
         [InlineAutoDomainData]
-        public async Task HandleAsync_WhenCalledWithMultipleTransactions_ShouldCallMultiepleTimes(
+        public async Task HandleAsync_WhenCalledWithMultipleTransactions_ShouldCallMultipleTimes(
             [NotNull] [Frozen] Mock<IChangeOfChargesTransactionHandler> changeOfChargesTransactionHandler,
             [NotNull] ChangeOfChargesMessageHandler sut)
         {
@@ -29,11 +30,12 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChangeOfCharges
                 .Build();
 
             // Act
-            await sut.HandleAsync(changeOfChargesMessage).ConfigureAwait(false);
+            var response = await sut.HandleAsync(changeOfChargesMessage).ConfigureAwait(false);
 
             // Assert
             changeOfChargesTransactionHandler
                 .Verify(v => v.HandleAsync(It.IsAny<ChangeOfChargesTransaction>()), Times.Exactly(3));
+            response.IsSucceeded.Should().BeTrue();
         }
     }
 }

@@ -6,7 +6,7 @@ namespace GreenEnergyHub.Charges.Tests.Builders
 {
     public class ChangeOfChargesMessageBuilder
     {
-        private List<ChangeOfChargesTransaction> _transactions = new ();
+        private readonly List<ChangeOfChargesTransaction> _transactions = new ();
 
         public ChangeOfChargesMessageBuilder WithTransaction(ChangeOfChargesTransaction transaction)
         {
