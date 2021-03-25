@@ -26,8 +26,7 @@ namespace GreenEnergyHub.Charges.ApplyDBMigrationsApp
             var isDryRun = args.Contains("dryRun");
 
             // This is the new way of doing it, but for backwards compatibility, the "old way" is still default.
-            // var upgrader = UpgradeFactory.GetUpgradeEngine(connectionString, filter, isDryRun);
-            var upgrader = UpgradeFactory.GetUpgradeEngine(connectionString);
+            var upgrader = UpgradeFactory.GetUpgradeEngine(connectionString, filter, isDryRun);
 
             var result = upgrader.PerformUpgrade();
 
