@@ -1,18 +1,18 @@
 # Template
 
-- [Template](#template)
-  - [Intro](#intro)
-  - [Whats included?](#whats-included)
+- [Intro](#intro)
+- [Getting started](#getting-started)
+- [Whats included?](#whats-included)
     - [Files](#files)
     - [Terraform project including CD](#terraform-project-including-cd)
-    - [.NET Azure Function project including CD](#net-azure-function-project-including-cd)
-    - [.NET Analyzers](#net-analyzers)
+    - [.NET Azure function project including CD](#.net-azure-function-project-including-cd)
+    - [.NET Analyzers](#.net-analyzers)
     - [Markdown lint CI](#markdown-lint-ci)
-    - [LICENSE CI](#license-ci)
-  - [Getting started](#getting-started)
+    - [License CI](#license-ci)
+- [Getting started](#getting-started)
     - [How to begin using the Terraform project](#how-to-begin-using-the-terraform-project)
     - [How to begin developing .NET](#how-to-begin-developing-net)
-  - [Contributing/Help](#contributinghelp)
+- [I need help](#i-need-help)
 
 ## Intro
 
