@@ -44,7 +44,7 @@ message MoveOut {
 }
 ```
 
-When this is compiled to C# it will produce three classes: Envelope, MoveIn, and MoveOut. The host needs to be configured to understand these classes so that it can deserialize them correctly.
+When this is compiled to C# it will produce three classes: `Envelope`, `MoveIn`, and `MoveOut`. The host needs to be configured to understand these classes so that it can deserialize them correctly.
 
 #### Receiving data
 
@@ -100,7 +100,7 @@ brew install protobuf@3.14
 
 #### Include tooling in csproj
 
-It is possible to have the proto contracts generated at compile time by using a nuget package - Grpc.Tools v2.34.0
+It is possible to have the proto contracts generated at compile time by using a NuGet package - Grpc.Tools v2.34.0
 
 When this is referenced in the csproj file
 

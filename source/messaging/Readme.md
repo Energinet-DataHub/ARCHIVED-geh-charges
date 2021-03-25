@@ -18,7 +18,7 @@ There are two kinds of handlers in the system; `RequestHandlers` and `CommandHan
 
 ### Getting started
 
-To start using the framework you should extend either `HubRequestHandler` or `HubCommandHandler` depending on the specific use case, ie. if it's a synchronous action that requires a response extend the `HubRequestHandler`.
+To start using the framework you should extend either `HubRequestHandler` or `HubCommandHandler` depending on the specific use case, i.e. if it's a synchronous action that requires a response extend the `HubRequestHandler`.
 
 Common methods for handlers:
 
@@ -34,7 +34,7 @@ Common methods for handlers:
 
 - `RejectAsync` is invoked when the message can't be handled.
 
-In your Startup.cs you should call the extension method `AddGreenEnergyHub` in the `GreenEnergyHub.Messaging.Integration.ServiceCollection` package, in order to bootstrap the framework. Provide a list of assemblies that will be scanned for HubRequestHandlers, HubCommandHandlers and IHubMessages.
+In your Startup.cs you should call the extension method `AddGreenEnergyHub` in the `GreenEnergyHub.Messaging.Integration.ServiceCollection` package, in order to bootstrap the framework. Provide a list of assemblies that will be scanned for `HubRequestHandler`s, `HubCommandHandler`s and `IHubMessage`s.
 
 Example Startup:
 
