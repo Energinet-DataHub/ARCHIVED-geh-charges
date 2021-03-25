@@ -21,23 +21,6 @@ namespace GreenEnergyHub.Charges.ApplyDBMigrationsApp.Helpers
 {
     public static class UpgradeFactory
     {
-        // TODO: Delete this method once scripts have been ported to new format.
-        public static UpgradeEngine GetUpgradeEngine(string connectionString)
-        {
-            if (string.IsNullOrWhiteSpace(connectionString))
-            {
-                throw new ArgumentException("Connection string must have a value");
-            }
-
-            EnsureDatabase.For.SqlDatabase(connectionString);
-
-            return DeployChanges.To
-                .SqlDatabase(connectionString)
-                .WithScriptsEmbeddedInAssembly(Assembly.GetExecutingAssembly())
-                .LogToConsole()
-                .Build();
-        }
-
         public static UpgradeEngine GetUpgradeEngine(string connectionString, Func<string, bool> scriptFilter, bool isDryRun = false)
         {
             if (string.IsNullOrWhiteSpace(connectionString))
