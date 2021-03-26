@@ -1,6 +1,18 @@
-﻿DataHub
+﻿### This file contains the list of words to be ignored by spell check
+composable
+DataHub
+deserialize
+DTO
+FluentValidation
 github
+GreenEnergyHub
 Energinet
 IaC
 mergeable
+namespace
+NRules
+NuGet
+POCO
+proto
+runtime
 Terraform
