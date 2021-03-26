@@ -1,4 +1,4 @@
-# ApplyDBMigrationsApp
+# `ApplyDBMigrationsApp`
 
 ## Purpose
 
@@ -24,7 +24,7 @@ It's possible to do a dry run with the parameter `dryRun`. All scripts will be r
 
 ## Adding a new script to be synced to SQL servers on deploy
 
-When a new script should be added to the tracked updates, a new .sql file should be added to the Scripts\{Type} folder. Where type can be Model/Seed/Test. It should be named with date and time (yyyyMMddHHmm) as prefix and a descriptive file name, ie.: `202012312359 Add MeteringPoint model.sql`.
+When a new script should be added to the tracked updates, a new `.sql` file should be added to the Scripts\{Type} folder. Where type can be Model/Seed/Test. It should be named with date and time (`yyyyMMddHHmm`) as prefix and a descriptive file name, i.e.: `202012312359 Add MeteringPoint model.sql`.
 
 ## Script executing order
 
