@@ -22,11 +22,11 @@ namespace GreenEnergyHub.Charges.Application.ChangeOfCharges
 {
     public class LocalEventPublisher : ILocalEventPublisher
     {
-        private const string ChargesServiceBusReceiverTransactionQueueName =
-            "CHARGES_SERVICE_BUS_RECEIVER_TRANSACTION_QUEUE_NAME";
+        private const string LocalEventsTopicName =
+            "LOCAL_EVENTS_TOPIC_NAME";
 
-        private const string ChargesServiceBusConnectionString =
-            "CHARGES_SERVICE_BUS_CONNECTION_STRING";
+        private const string LocalEventsConnectionString =
+            "LOCAL_EVENTS_CONNECTION_STRING";
 
         private readonly IJsonSerializer _jsonSerializer;
 
@@ -37,10 +37,10 @@ namespace GreenEnergyHub.Charges.Application.ChangeOfCharges
 
         public async Task PublishAsync(ILocalEvent localEvent)
         {
-            var connectionString = GetEnvironmentVariable(ChargesServiceBusConnectionString);
+            var connectionString = GetEnvironmentVariable(LocalEventsConnectionString);
             await using ServiceBusClient client = new (connectionString);
 
-            var queueOrTopicName = GetEnvironmentVariable(ChargesServiceBusReceiverTransactionQueueName);
+            var queueOrTopicName = GetEnvironmentVariable(LocalEventsTopicName);
             ServiceBusSender sender = client.CreateSender(queueOrTopicName);
 
             var serializedMessage = _jsonSerializer.Serialize(localEvent);

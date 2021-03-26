@@ -4,7 +4,7 @@
     "FUNCTIONS_WORKER_RUNTIME": "dotnet-isolated",
     "AzureWebJobsStorage": "UseDevelopmentStorage=true",
     "AzureWebJobsDashboard": "UseDevelopmentStorage=true",
-    "CHARGES_SERVICE_BUS_CONNECTION_STRING": "<sb connection string>",
-    "CHARGES_SERVICE_BUS_RECEIVER_TRANSACTION_QUEUE_NAME": "<queue name>"
+    "LOCAL_EVENTS_CONNECTION_STRING": "<sb connection string>",
+    "LOCAL_EVENTS_TOPIC_NAME": "<topic name>"
   }
 }

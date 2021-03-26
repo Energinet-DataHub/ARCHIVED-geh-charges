@@ -55,7 +55,7 @@ namespace GreenEnergyHub.Charges.MessageReceiver
             where T : notnull
         {
             return functionContext.InstanceServices.GetRequiredService<T>();
-        }
+        }LocalEventPublisher
 
         /// <summary>
         ///     Mimic that we receive a message that can contain multiple transactions.
