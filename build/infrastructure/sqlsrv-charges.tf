@@ -22,18 +22,18 @@ module "sqlsrv_admin_username" {
   source        = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//key-vault-secret?ref=1.0.0"
   name          = "SQLSERVER--ADMIN--USER"
   value         = local.sqlServerAdminName
-  key_vault_id  = module.kv_shared.id
+  key_vault_id  = module.kv_charges.id
   tags          = data.azurerm_resource_group.main.tags
-  dependencies  = [module.kv_shared.dependent_on]
+  dependencies  = [module.kv_charges.dependent_on]
 }
 
 module "sqlsrv_admin_password" {
   source        = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//key-vault-secret?ref=1.0.0"
   name          = "SQLSERVER--ADMIN--PASSWORD"
   value         = random_password.sqlsrv_admin_password.result
-  key_vault_id  = module.kv_shared.id
+  key_vault_id  = module.kv_charges.id
   tags          = data.azurerm_resource_group.main.tags
-  dependencies  = [module.kv_shared.dependent_on]
+  dependencies  = [module.kv_charges.dependent_on]
 }
 
 resource "random_password" "sqlsrv_admin_password" {
