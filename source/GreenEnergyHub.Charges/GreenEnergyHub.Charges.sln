@@ -27,6 +27,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{05DE980B
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GreenEnergyHub.Charges.MessageReceiver", "source\GreenEnergyHub.Charges.MessageReceiver\GreenEnergyHub.Charges.MessageReceiver.csproj", "{AA08E5F4-33E7-4A9B-83B6-F32504695863}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GreenEnergyHub.Charges.ApplyDBMigrationsApp", "source\GreenEnergyHub.Charges.ApplyDBMigrationsApp\GreenEnergyHub.Charges.ApplyDBMigrationsApp.csproj", "{111D6B3F-0005-4740-B486-CFA7FD887F3D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -53,8 +55,14 @@ Global
 		{AA08E5F4-33E7-4A9B-83B6-F32504695863}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AA08E5F4-33E7-4A9B-83B6-F32504695863}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AA08E5F4-33E7-4A9B-83B6-F32504695863}.Release|Any CPU.Build.0 = Release|Any CPU
+		{111D6B3F-0005-4740-B486-CFA7FD887F3D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{111D6B3F-0005-4740-B486-CFA7FD887F3D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{111D6B3F-0005-4740-B486-CFA7FD887F3D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{111D6B3F-0005-4740-B486-CFA7FD887F3D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{68412EBF-701D-467D-8716-74269E171F41} = {05DE980B-A2A7-4235-AE53-3167E94699DD}
+		{AA08E5F4-33E7-4A9B-83B6-F32504695863} = {832447E5-7A46-4381-817C-5D73A20510C2}
+		{111D6B3F-0005-4740-B486-CFA7FD887F3D} = {832447E5-7A46-4381-817C-5D73A20510C2}
 	EndGlobalSection
 EndGlobal
