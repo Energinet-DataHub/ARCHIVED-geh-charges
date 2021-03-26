@@ -14,8 +14,8 @@ Core concepts for customizing the request processing flow are as follows:
 
 * *Hub Action Requests*: A small POCO-like class implementing `IHubActionRequest` that defining the properties expected on a request of that type.
 * *Hub Action Handlers*: Provides the business processing logic for handling a request of that type, namely validating the message against business rules. Must derive from `IngestionHandler<HubActionRequestType>` and handles any validation processes in `ValidateAsync()`, persists the request for further processing in `AcceptAsync()`, and crafts a `HubActionResponse` to return the caller in `RespondAsync()`.
-* *RuleCollection*: Serves as a base class for defining validation rules for a DTO.
-* *PropertyRule&lt;T&gt;*: Provides custom validation logic for a property that can be reused in RuleCollections.
+* *`RuleCollection`*: Serves as a base class for defining validation rules for a DTO.
+* *`PropertyRule`&lt;T&gt;*: Provides custom validation logic for a property that can be reused in `RuleCollection`s.
 
 ## Requests and handlers
 
@@ -57,7 +57,7 @@ public class MarketEvaluationPointGsrnShouldBe18DigitsLong : PropertyRule<string
 }
 ```
 
-To use this new class a RuleCollection for `MarketEvaluationPoint` is created.
+To use this new class a `RuleCollection` for `MarketEvaluationPoint` is created.
 
 ``` csharp
 public class MarketEvaluationPointRuleCollection : RuleCollection<MarketEvaluationPoint> {
@@ -92,7 +92,7 @@ public class MoveInRuleCollection : RuleCollection<MoveIn> {
 
 When the actual rule is used, the class that needs to perform the validation takes a dependency on `IRuleEngine<T>` where T is the type that needs to be validated.
 
-Fx.:
+Example:
 
 ``` csharp
 public class ChangeOfSupplierWorkflow {
