@@ -45,10 +45,6 @@ limitations under the License.
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Charges.MessageReceiver" />
-    </ItemGroup>
-
-    <ItemGroup>
       <Compile Remove="Charges.MessageReceiver\ChargeHttpTriggerTests.cs" />
     </ItemGroup>
 </Project>
