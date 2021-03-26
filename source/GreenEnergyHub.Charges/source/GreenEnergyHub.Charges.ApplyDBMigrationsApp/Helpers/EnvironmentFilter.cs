@@ -11,21 +11,20 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+
 using System;
-using HelloWorld.HelloWorldFunction;
-using Microsoft.Azure.Functions.Extensions.DependencyInjection;
+using System.Linq;
 
-[assembly: FunctionsStartup(typeof(Startup))]
-
-namespace HelloWorld.HelloWorldFunction
+namespace GreenEnergyHub.Charges.ApplyDBMigrationsApp.Helpers
 {
-    #pragma warning disable CA1812
-    internal class Startup : FunctionsStartup
+    public static class EnvironmentFilter
     {
-        public override void Configure(IFunctionsHostBuilder builder)
+        public static Func<string, bool> GetFilter(string[] args)
         {
-            // Register services
+            return file => file.EndsWith(".sql", StringComparison.InvariantCulture) &&
+                           ((file.Contains(".Scripts.Seed.") && args.Contains("includeSeedData")) ||
+                            (file.Contains(".Scripts.Test.") && args.Contains("includeTestData")) ||
+                            file.Contains(".Scripts.Model."));
         }
     }
-    #pragma warning restore CA1812
 }

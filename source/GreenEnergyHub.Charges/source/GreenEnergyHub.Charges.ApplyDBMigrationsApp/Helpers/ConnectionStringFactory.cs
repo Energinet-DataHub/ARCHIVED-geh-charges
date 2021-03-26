@@ -12,13 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Collections.Generic;
-using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
+using System.Linq;
 
-namespace GreenEnergyHub.Charges.Domain.ChangeOfCharges.Message
+namespace GreenEnergyHub.Charges.ApplyDBMigrationsApp.Helpers
 {
-    public class ChangeOfChargesMessage
+    public static class ConnectionStringFactory
     {
-        public List<ChangeOfChargesTransaction> Transactions { get; } = new ();
+        private const string DefaultConnectionString =
+            "Server=(local); Database=Charges; Trusted_connection=true";
+
+        public static string GetConnectionString(string[] args)
+        {
+            return args.FirstOrDefault() ?? DefaultConnectionString;
+        }
     }
 }

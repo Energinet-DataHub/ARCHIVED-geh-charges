@@ -27,17 +27,21 @@ limitations under the License.
     <ItemGroup>
       <ProjectReference Include="..\..\..\Shared\GreenEnergyHub\source\GreenEnergyHub.TestHelpers\GreenEnergyHub.TestHelpers.csproj" />
       <ProjectReference Include="..\GreenEnergyHub.Charges.Application\GreenEnergyHub.Charges.Application.csproj" />
+      <ProjectReference Include="..\GreenEnergyHub.Charges.ApplyDBMigrationsApp\GreenEnergyHub.Charges.ApplyDBMigrationsApp.csproj" />
       <ProjectReference Include="..\GreenEnergyHub.Charges.Domain\GreenEnergyHub.Charges.Domain.csproj" />
       <ProjectReference Include="..\GreenEnergyHub.Charges.Infrastructure\GreenEnergyHub.Charges.Infrastructure.csproj" />
     </ItemGroup>
 
     <ItemGroup>
+        <PackageReference Include="AutoFixture" Version="4.15.0" />
+        <PackageReference Include="AutoFixture.AutoMoq" Version="4.15.0" />
+        <PackageReference Include="System.ComponentModel.TypeConverter" Version="4.3.0" />
         <PackageReference Include="xunit" Version="2.4.1" />
         <PackageReference Include="FluentAssertions" Version="5.10.3" />
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.9.1" />
-        <PackageReference Include="xunit.runner.visualstudio" Version="2.4.3" />
         <PackageReference Include="NSubstitute" Version="4.2.2" />
-        <PackageReference Include="coverlet.collector" Version="1.2.0" />
+        <PackageReference Include="xunit.runner.visualstudio" Version="2.4.3" />
+        <PackageReference Include="coverlet.collector" Version="3.0.3" />
     </ItemGroup>
 
     <ItemGroup>

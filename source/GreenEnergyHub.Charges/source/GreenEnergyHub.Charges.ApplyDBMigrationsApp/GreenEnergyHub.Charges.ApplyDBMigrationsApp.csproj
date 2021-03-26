@@ -16,16 +16,19 @@ limitations under the License.
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>netcoreapp3.1</TargetFramework>
-        <Nullable>enable</Nullable>
+        <OutputType>Exe</OutputType>
+        <TargetFramework>net5.0</TargetFramework>
         <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-        <RunAnalyzersDuringBuild>true</RunAnalyzersDuringBuild>
-        <GenerateDocumentationFile>true</GenerateDocumentationFile>
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\HelloWorld.Application\HelloWorld.Application.csproj" />
-      <ProjectReference Include="..\HelloWorld.Domain\HelloWorld.Domain.csproj" />
+      <PackageReference Include="dbup-sqlserver" Version="4.5.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <EmbeddedResource Include="Scripts\Model\202103250958 Initial charge model.sql" />
+      <EmbeddedResource Include="Scripts\Seed\202103251012 Initial seed data.sql" />
+      <EmbeddedResource Include="Scripts\Test\202103251113 MarketParticipants.sql" />
     </ItemGroup>
 
 </Project>

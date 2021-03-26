@@ -11,19 +11,15 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-using Xunit;
 
-namespace HelloWorld.Tests
+using System.Text.RegularExpressions;
+
+namespace GreenEnergyHub.Charges.ApplyDBMigrationsApp.Helpers
 {
-    public class SomeTests
+    public static class NamingConvention
     {
-        [Fact]
-        public void DummySuccessfulTest()
-        {
-            // Write clever tests (not this one) to include in the template
-            var sut = nameof(DummySuccessfulTest);
-
-            Assert.Equal("DummySuccessfulTest", sut);
-        }
+        // Matches                                                  {type} {timestamp } {name}
+        // Energinet.DataHub.MarketData.ApplyDBMigrationsApp.Scripts.Model.202103021434 First.sql
+        public static readonly Regex Regex = new Regex(@".*Scripts\.(?<type>Model|Seed|Test)\.(?<timestamp>\d{12}) (?<name>\D*).sql");
     }
 }

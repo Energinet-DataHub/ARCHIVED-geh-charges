@@ -28,6 +28,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GreenEnergyHub.Messaging", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GreenEnergyHub.TestHelpers", "..\Shared\GreenEnergyHub\source\GreenEnergyHub.TestHelpers\GreenEnergyHub.TestHelpers.csproj", "{374A128A-2E02-4978-A629-2B820B8A48E5}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GreenEnergyHub.Charges.ApplyDBMigrationsApp", "source\GreenEnergyHub.Charges.ApplyDBMigrationsApp\GreenEnergyHub.Charges.ApplyDBMigrationsApp.csproj", "{111D6B3F-0005-4740-B486-CFA7FD887F3D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -74,6 +76,10 @@ Global
 		{374A128A-2E02-4978-A629-2B820B8A48E5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{374A128A-2E02-4978-A629-2B820B8A48E5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{374A128A-2E02-4978-A629-2B820B8A48E5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{111D6B3F-0005-4740-B486-CFA7FD887F3D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{111D6B3F-0005-4740-B486-CFA7FD887F3D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{111D6B3F-0005-4740-B486-CFA7FD887F3D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{111D6B3F-0005-4740-B486-CFA7FD887F3D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -85,6 +91,9 @@ Global
 		{F7B15740-FE66-4A02-87C6-0D8620F48A0B} = {9FE16521-EC21-4551-9E51-0C6702D21098}
 		{7A6F13FA-E28F-4FEB-B2B8-9C7AEAD9BB97} = {9FE16521-EC21-4551-9E51-0C6702D21098}
 		{374A128A-2E02-4978-A629-2B820B8A48E5} = {9FE16521-EC21-4551-9E51-0C6702D21098}
+		{68412EBF-701D-467D-8716-74269E171F41} = {05DE980B-A2A7-4235-AE53-3167E94699DD}
+		{AA08E5F4-33E7-4A9B-83B6-F32504695863} = {832447E5-7A46-4381-817C-5D73A20510C2}
+		{111D6B3F-0005-4740-B486-CFA7FD887F3D} = {832447E5-7A46-4381-817C-5D73A20510C2}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {19228BC9-BC51-4044-842C-ACD1F68D4008}
