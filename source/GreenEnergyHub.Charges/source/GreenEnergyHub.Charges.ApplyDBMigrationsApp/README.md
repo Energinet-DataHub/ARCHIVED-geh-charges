@@ -18,7 +18,7 @@ The tool can be run manually on any SQL server database using the following comm
 
 `<connection string>` must be replaced with the correct connection string for the database, possibly encapsulated with `"`
 
-If seed data or test data should also be applied, add the relevant of these arguments: `includeSeedData`, `includeTestData`.
+Model scripts are always applied, if seed data or test data should also be applied, add the relevant of these arguments: `includeSeedData`, `includeTestData`.
 
 It's possible to do a dry run with the parameter `dryRun`. All scripts will be run inside a transaction that will be rolled back afterwards.
 
