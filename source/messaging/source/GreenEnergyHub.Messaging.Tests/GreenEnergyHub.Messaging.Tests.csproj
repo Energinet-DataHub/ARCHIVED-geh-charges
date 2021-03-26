@@ -16,30 +16,37 @@ limitations under the License.
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net5.0</TargetFramework>
+        <TargetFramework>netcoreapp3.1</TargetFramework>
         <Nullable>enable</Nullable>
         <IsPackable>false</IsPackable>
         <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
         <RunAnalyzersDuringBuild>true</RunAnalyzersDuringBuild>
-        <LangVersion>9</LangVersion>
     </PropertyGroup>
-
-    <ItemGroup>
-      <ProjectReference Include="..\GreenEnergyHub.Charges.Application\GreenEnergyHub.Charges.Application.csproj" />
-      <ProjectReference Include="..\GreenEnergyHub.Charges.ApplyDBMigrationsApp\GreenEnergyHub.Charges.ApplyDBMigrationsApp.csproj" />
-      <ProjectReference Include="..\GreenEnergyHub.Charges.Domain\GreenEnergyHub.Charges.Domain.csproj" />
-      <ProjectReference Include="..\GreenEnergyHub.Charges.Infrastructure\GreenEnergyHub.Charges.Infrastructure.csproj" />
-    </ItemGroup>
 
     <ItemGroup>
         <PackageReference Include="AutoFixture" Version="4.15.0" />
         <PackageReference Include="AutoFixture.AutoMoq" Version="4.15.0" />
+        <PackageReference Include="AutoFixture.Idioms" Version="4.15.0" />
+        <PackageReference Include="AutoFixture.Xunit2" Version="4.15.0" />
+        <PackageReference Include="coverlet.msbuild" Version="3.0.3">
+          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+          <PrivateAssets>all</PrivateAssets>
+        </PackageReference>
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="3.1.10" />
+        <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="3.1.10" />
+        <PackageReference Include="Moq" Version="4.16.0" />
+        <PackageReference Include="Moq.AutoMock" Version="2.3.0" />
+        <PackageReference Include="NodaTime" Version="3.0.5" />
         <PackageReference Include="System.ComponentModel.TypeConverter" Version="4.3.0" />
         <PackageReference Include="xunit" Version="2.4.1" />
         <PackageReference Include="FluentAssertions" Version="5.10.3" />
-        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.9.1" />
-        <PackageReference Include="NSubstitute" Version="4.2.2" />
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.8.3" />
         <PackageReference Include="xunit.runner.visualstudio" Version="2.4.3" />
         <PackageReference Include="coverlet.collector" Version="3.0.3" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\GreenEnergyHub.Messaging.Integration.ServiceCollection\GreenEnergyHub.Messaging.Integration.ServiceCollection.csproj" />
+      <ProjectReference Include="..\GreenEnergyHub.Messaging\GreenEnergyHub.Messaging.csproj" />
     </ItemGroup>
 </Project>
