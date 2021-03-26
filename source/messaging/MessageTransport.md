@@ -98,11 +98,11 @@ Using brew (Mac OS X): [brew link](https://github.com/protocolbuffers/protobuf/)
 brew install protobuf@3.14
 ```
 
-#### Include tooling in csproj
+#### Include tooling in `csproj`
 
-It is possible to have the proto contracts generated at compile time by using a NuGet package - Grpc.Tools v2.34.0
+It is possible to have the proto contracts generated at compile time by using a NuGet package - `Grpc.Tools v2.34.0`
 
-When this is referenced in the csproj file
+When this is referenced in the `csproj` file
 
 ``` xml
 <ItemGroup>
@@ -110,7 +110,7 @@ When this is referenced in the csproj file
 </ItemGroup>
 ```
 
-Configuration of the utility also happens in the csproj file
+Configuration of the utility also happens in the `csproj` file
 
 ``` xml
 <ItemGroup>
