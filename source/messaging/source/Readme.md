@@ -121,6 +121,6 @@ All rules declarations must be generic (`where TRequest : IActionRequest`) becau
 
 Thus, the solution defines interfaces for various properties available on requests; for example `IHubMessageHasCustomerId` defines a single property `CustomerId`. A rule that requires `CustomerId` would then constrain its `where TRequest : IActionRequest, IHubMessageHasCustomerId` to expose the property for validation in the rule action.
 
-Rule sets bind a group of `Rule`s to a particular request type by implementing `IRuleSet<HubActionRequestType>`. However, type references to rules in their static enumeration should be kept generic (i.e. `typeof(NonNegativeCustomerIdRule<>)`) so that the rule set can be composable; for example one may wish to create a "Customer" rule set that applies a set of validations to any request that references a `CustomerId` (via `IHubMessageHasCustomerId`).
+Rule sets bind a group of `Rule`s to a particular request type by implementing `IRuleSet<HubActionRequestType>`. However, type references to rules in their static enumeration should be kept generic (i.e. `typeof(NonNegativeCustomerIdRule<>)`) so that the rule set can be `composable`; for example one may wish to create a "Customer" rule set that applies a set of validations to any request that references a `CustomerId` (via `IHubMessageHasCustomerId`).
 
 As such, having rule sets listing generic `Rule` instances permits for composing rule sets at compile time and binding the `Rule` instances to the correct `TRequest` at runtime (which happens in the `NRulesEngine` class).
