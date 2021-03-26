@@ -20,8 +20,8 @@ on:
   workflow_dispatch: {}
 
 env:
-  CSPROJ_FILE_PATH: source/GreenEnergyHub.Charges/source/GreenEnergyHub.Charges.MessageReceiver/GreenEnergyHub.Charges.MessageReceiver.csproj # eg. 'source/hello-world/source/HelloWorld.HelloWorldFunction/HelloWorld.HelloWorldFunction.csproj'
-  SOLUTION_FILE_PATH: source/GreenEnergyHub.Charges/GreenEnergyHub.Charges.sln # eg. 'source/hello-world/HelloWorld.sln'
+  CSPROJ_FILE_PATH: source/GreenEnergyHub.Charges/source/GreenEnergyHub.Charges.MessageReceiver/GreenEnergyHub.Charges.MessageReceiver.csproj
+  SOLUTION_FILE_PATH: source/GreenEnergyHub.Charges/GreenEnergyHub.Charges.sln
   DOTNET_VERSION: '5.0'
 
 jobs:
@@ -42,7 +42,7 @@ jobs:
             ".github/actions/azure-core-tools-install/**"
           ]'
 
-  validate_build_TEMPLATE_REPLACE__YOUR_FUNCTION_BASE_NAME_LOWERCASE_NO_SYMBOLS: # eg. validate_build_helloworld:
+  validate_build_TEMPLATE_REPLACE__YOUR_FUNCTION_BASE_NAME_LOWERCASE_NO_SYMBOLS:
     needs: pre_job
     if: ${{ needs.pre_job.outputs.should_skip != 'true' }}
     name: Validate build Message receiver
