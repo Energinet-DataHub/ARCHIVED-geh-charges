@@ -29,3 +29,13 @@ variable "organisation" {
   type          = string
   description   = "Organisation that is running the infrastructure code"
 }
+
+variable "tenant_id" {
+  type          = string
+  description   = "tenant id"
+}
+
+variable "spn_object_id" {
+  type          = string
+  description   = "spn_object_id"
+}
