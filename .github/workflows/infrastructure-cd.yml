@@ -130,6 +130,22 @@ jobs:
         run: terraform plan
 
       - name: Terraform Apply
+        id: terraform-apply
         working-directory: ./build/infrastructure
-        run: terraform apply -no-color -auto-approve
+        run: |
+          terraform apply -no-color -auto-approve
+          echo "::set-output name=sql-server-url::$(terraform output sql_server_url)"
+          echo "::set-output name=charges-sql-database-name::$(terraform output charges_sql_database_name)"
+          echo "::set-output name=charges-user-keyvaultname::$(terraform output charges_user_keyvaultname)"
+          echo "::set-output name=charges-password-keyvaultname::$(terraform output charges_password_keyvaultname)"
+          echo "::set-output name=kv-charges-name::$(terraform output kv_charges_name)"
         continue-on-error: false
+
+      - name: Applying market data migrations
+        uses: ./.github/actions/charges-apply-db-migrations
+        with:
+          sql-server-url: ${{ steps.terraform-apply.outputs.sql-server-url }}
+          sql-database-name: ${{ steps.terraform-apply.outputs.charges-sql-database-name }}
+          user-keyvaultname: ${{ steps.terraform-apply.outputs.charges-user-keyvaultname }}
+          password-keyvaultname: ${{ steps.terraform-apply.outputs.charges-password-keyvaultname }}
+          keyvault-name: ${{ steps.terraform-apply.outputs.kv-charges-name }}

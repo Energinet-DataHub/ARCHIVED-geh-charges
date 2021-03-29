@@ -1,0 +1,35 @@
+name: 'Applying charges db migrations'
+description: 'Applies migrations to the charges DB (in the shared sql srv) to make sure the DB is up to date.'
+inputs:
+  sql-server-url:
+    description: 'URL for the shared database'
+    required: true
+  sql-database-name:
+    description: 'Name of the charges database'
+    required: true
+  user-keyvaultname:
+    description: 'Name of the keyvault secret containing the username for the charges sql database'
+    required: true
+  password-keyvaultname:
+    description: 'Name of the keyvault secret containing the password for the charges sql database'
+    required: true
+  keyvault-name:
+    description: 'Name of the keyvault to retrieve secrets from'
+    required: true   
+    
+runs:
+  using: "composite"
+  steps:
+    - name: Obtain keyvault information
+      run: |
+        keyvault_secret_details=$(az keyvault secret show --name "${{ inputs.user-keyvaultname }}" --vault-name ${{ inputs.keyvault-name }})
+        charges_username=$(echo $keyvault_secret_details | python -c "import sys, json; print(json.load(sys.stdin)['value'])")
+        echo ::add-mask::$charges_username
+        echo "CHARGES_USERNAME=$charges_username" >> $GITHUB_ENV
+        keyvault_secret_details=$(az keyvault secret show --name "${{ inputs.password-keyvaultname }}" --vault-name ${{ inputs.keyvault_name }})
+        charges_password=$(echo $keyvault_secret_details | python -c "import sys, json; print(json.load(sys.stdin)['value'])")
+        echo ::add-mask::$charges_password
+        echo "CHARGES_PASSWORD=$charges_password" >> $GITHUB_ENV
+      shell: bash
+    - run: dotnet run --project source/GreenEnergyHub.Charges/source/GreenEnergyHub.Charges.ApplyDBMigrationsApp/ --configuration Release -- "Server=tcp:${{ inputs.sql-server-url }},1433;Initial Catalog=${{ inputs.sql-database-name }};Persist Security Info=False;User ID=${{ env.CHARGES_USERNAME }};Password=${{ env.CHARGES_PASSWORD }};MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;"
+      shell: bash
