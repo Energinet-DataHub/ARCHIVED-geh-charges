@@ -18,7 +18,7 @@ on:
     branches:
       - main
     paths:
-      - source/GreenEnergyHub.Charges/
+      - source/GreenEnergyHub.Charges/**
       - .github/workflows/message-receiver-cd.yml
       - .github/actions/dotnet-build-and-test/**
       - .github/actions/azure-core-tools-install/**
