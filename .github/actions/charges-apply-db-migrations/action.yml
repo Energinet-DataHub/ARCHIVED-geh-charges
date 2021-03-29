@@ -40,7 +40,6 @@ runs:
         then
           echo "INCLUDE_TESTDATA=includeTestData" >> $GITHUB_ENV
         fi
-      shell: bash
-      if: ${{ inputs.environment-name == 'Development' || inputs.environment-name == 'Test' }}     
+      shell: bash    
     - run: dotnet run --project source/GreenEnergyHub.Charges/source/GreenEnergyHub.Charges.ApplyDBMigrationsApp/ --configuration Release -- "Server=tcp:${{ inputs.sql-server-url }},1433;Initial Catalog=${{ inputs.sql-database-name }};Persist Security Info=False;User ID=${{ env.CHARGES_USERNAME }};Password=${{ env.CHARGES_PASSWORD }};MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;" includeSeedData ${{ env.INCLUDE_TESTDATA }}
       shell: bash
