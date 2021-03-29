@@ -151,3 +151,4 @@ jobs:
           user-keyvaultname: ${{ steps.terraform-apply.outputs.charges-user-keyvaultname }}
           password-keyvaultname: ${{ steps.terraform-apply.outputs.charges-password-keyvaultname }}
           keyvault-name: ${{ steps.terraform-apply.outputs.kv-charges-name }}
+          environment-name: $ {{ matrix.environment.name }}

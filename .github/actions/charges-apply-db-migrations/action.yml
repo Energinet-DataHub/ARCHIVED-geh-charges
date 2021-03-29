@@ -15,8 +15,11 @@ inputs:
     required: true
   keyvault-name:
     description: 'Name of the keyvault to retrieve secrets from'
-    required: true   
-    
+    required: true
+  environment-name:
+    description: 'Environment to apply the migrations to'
+    required: true
+
 runs:
   using: "composite"
   steps:
@@ -31,5 +34,5 @@ runs:
         echo ::add-mask::$charges_password
         echo "CHARGES_PASSWORD=$charges_password" >> $GITHUB_ENV
       shell: bash
-    - run: dotnet run --project source/GreenEnergyHub.Charges/source/GreenEnergyHub.Charges.ApplyDBMigrationsApp/ --configuration Release -- "Server=tcp:${{ inputs.sql-server-url }},1433;Initial Catalog=${{ inputs.sql-database-name }};Persist Security Info=False;User ID=${{ env.CHARGES_USERNAME }};Password=${{ env.CHARGES_PASSWORD }};MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;"
+    - run: dotnet run --project source/GreenEnergyHub.Charges/source/GreenEnergyHub.Charges.ApplyDBMigrationsApp/ --configuration Release -- "Server=tcp:${{ inputs.sql-server-url }},1433;Initial Catalog=${{ inputs.sql-database-name }};Persist Security Info=False;User ID=${{ env.CHARGES_USERNAME }};Password=${{ env.CHARGES_PASSWORD }};MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;" includeSeed
       shell: bash
