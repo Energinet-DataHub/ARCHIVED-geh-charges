@@ -34,7 +34,7 @@ runs:
         echo ::add-mask::$charges_password
         echo "CHARGES_PASSWORD=$charges_password" >> $GITHUB_ENV
       shell: bash
-    - name: Setup test data
+    - name: Setup variable to use test data in certain environments only
       run: |
         if ${{ inputs.environment-name == 'Development' || inputs.environment-name == 'Test' }}
         then
