@@ -143,7 +143,7 @@ jobs:
           echo "::set-output name=kv-charges-name::$(terraform output kv_charges_name)"
         continue-on-error: false
 
-      - name: Applying market data migrations
+      - name: Applying charges migrations
         uses: ./.github/actions/charges-apply-db-migrations
         with:
           sql-server-url: ${{ steps.terraform-apply.outputs.sql-server-url }}
