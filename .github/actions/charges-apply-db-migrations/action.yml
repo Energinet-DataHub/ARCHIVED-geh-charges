@@ -26,7 +26,7 @@ runs:
         charges_username=$(echo $keyvault_secret_details | python -c "import sys, json; print(json.load(sys.stdin)['value'])")
         echo ::add-mask::$charges_username
         echo "CHARGES_USERNAME=$charges_username" >> $GITHUB_ENV
-        keyvault_secret_details=$(az keyvault secret show --name "${{ inputs.password-keyvaultname }}" --vault-name ${{ inputs.keyvault_name }})
+        keyvault_secret_details=$(az keyvault secret show --name "${{ inputs.password-keyvaultname }}" --vault-name ${{ inputs.keyvault-name }})
         charges_password=$(echo $keyvault_secret_details | python -c "import sys, json; print(json.load(sys.stdin)['value'])")
         echo ::add-mask::$charges_password
         echo "CHARGES_PASSWORD=$charges_password" >> $GITHUB_ENV
