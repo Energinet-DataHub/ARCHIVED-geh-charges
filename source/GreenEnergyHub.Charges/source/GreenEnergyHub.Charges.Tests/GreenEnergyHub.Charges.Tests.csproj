@@ -25,6 +25,7 @@ limitations under the License.
     </PropertyGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\..\..\Shared\GreenEnergyHub\source\GreenEnergyHub.TestHelpers\GreenEnergyHub.TestHelpers.csproj" />
       <ProjectReference Include="..\GreenEnergyHub.Charges.Application\GreenEnergyHub.Charges.Application.csproj" />
       <ProjectReference Include="..\GreenEnergyHub.Charges.ApplyDBMigrationsApp\GreenEnergyHub.Charges.ApplyDBMigrationsApp.csproj" />
       <ProjectReference Include="..\GreenEnergyHub.Charges.Domain\GreenEnergyHub.Charges.Domain.csproj" />
@@ -41,5 +42,9 @@ limitations under the License.
         <PackageReference Include="NSubstitute" Version="4.2.2" />
         <PackageReference Include="xunit.runner.visualstudio" Version="2.4.3" />
         <PackageReference Include="coverlet.collector" Version="3.0.3" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Remove="Charges.MessageReceiver\ChargeHttpTriggerTests.cs" />
     </ItemGroup>
 </Project>
