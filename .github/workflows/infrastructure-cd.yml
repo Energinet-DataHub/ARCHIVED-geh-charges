@@ -20,6 +20,9 @@ on:
     paths:
       - build/infrastructure/**
       - build/modules/**
+      - .github/actions/azure-cli-install-login
+      - .github/actions/charges-apply-db-migrations
+      - .github/actions/configure-terraform-backend      
       - .github/workflows/infrastructure-cd.yml
   workflow_dispatch: {}
 env:
@@ -81,7 +84,6 @@ jobs:
 
       - name: Azure CLI Install and Login
         uses: ./.github/actions/azure-cli-install-login
-
 
       - name: Setup Authorization to pull TF modules
         run: |
