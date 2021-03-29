@@ -20,6 +20,9 @@ on:
     paths:
       - build/infrastructure/**
       - build/modules/**
+      - .github/actions/azure-cli-install-login
+      - .github/actions/charges-apply-db-migrations
+      - .github/actions/configure-terraform-backend      
       - .github/workflows/infrastructure-cd.yml
   workflow_dispatch: {}
 env:
@@ -82,7 +85,6 @@ jobs:
       - name: Azure CLI Install and Login
         uses: ./.github/actions/azure-cli-install-login
 
-
       - name: Setup Authorization to pull TF modules
         run: |
           git config --local --remove-section http."https://github.com/"
@@ -141,7 +143,7 @@ jobs:
           echo "::set-output name=kv-charges-name::$(terraform output kv_charges_name)"
         continue-on-error: false
 
-      - name: Applying market data migrations
+      - name: Applying charges migrations
         uses: ./.github/actions/charges-apply-db-migrations
         with:
           sql-server-url: ${{ steps.terraform-apply.outputs.sql-server-url }}
@@ -149,3 +151,4 @@ jobs:
           user-keyvaultname: ${{ steps.terraform-apply.outputs.charges-user-keyvaultname }}
           password-keyvaultname: ${{ steps.terraform-apply.outputs.charges-password-keyvaultname }}
           keyvault-name: ${{ steps.terraform-apply.outputs.kv-charges-name }}
+          environment-name: $ {{ matrix.environment.name }}
