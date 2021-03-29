@@ -21,6 +21,7 @@ limitations under the License.
         <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
         <RunAnalyzersDuringBuild>true</RunAnalyzersDuringBuild>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
+        <LangVersion>9</LangVersion>
     </PropertyGroup>
 
     <ItemGroup>

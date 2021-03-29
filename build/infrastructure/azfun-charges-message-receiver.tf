@@ -23,15 +23,18 @@ module "azfun_message_receiver" {
   tags                                      = data.azurerm_resource_group.main.tags
   app_settings                              = {
     # Region: Default Values
-    WEBSITE_ENABLE_SYNC_UPDATE_SITE                   = true
-    WEBSITE_RUN_FROM_PACKAGE                          = 1
-    WEBSITES_ENABLE_APP_SERVICE_STORAGE               = true
-    FUNCTIONS_WORKER_RUNTIME                          = "dotnet-isolated"
+    WEBSITE_ENABLE_SYNC_UPDATE_SITE              = true
+    WEBSITE_RUN_FROM_PACKAGE                     = 1
+    WEBSITES_ENABLE_APP_SERVICE_STORAGE          = true
+    FUNCTIONS_WORKER_RUNTIME                     = "dotnet-isolated"
+    LOCAL_EVENTS_CONNECTION_STRING               = module.sbtar_local_events_sender.primary_connection_string
+    LOCAL_EVENTS_TOPIC_NAME                      = module.sbt_local_events.name
   }
   dependencies                              = [
     module.appi.dependent_on,
     module.azfun_message_receiver_plan.dependent_on,
     module.azfun_message_receiver_stor.dependent_on,
+    module.sbtar_local_events_sender.dependent_on,
   ]
 }
 
