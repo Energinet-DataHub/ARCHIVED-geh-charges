@@ -54,7 +54,7 @@ namespace GreenEnergyHub.Messaging
             }
 
             // Add our delegate as a singleton
-            serviceCollection.AddSingleton<ServiceProviderDelegate>(sp => sp.GetService);
+            serviceCollection.AddSingleton<ServiceProviderDelegate>(sp => sp.GetService!);
 
             return serviceCollection;
         }
