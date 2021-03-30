@@ -44,7 +44,7 @@ namespace GreenEnergyHub.Messaging.Tests.Validation
             var sp = serviceCollection.BuildServiceProvider();
             var sut = sp.GetService<ServiceProviderDelegate>();
 
-            var result = sut(typeof(ChangeOfSupplier));
+            var result = sut!(typeof(ChangeOfSupplier));
 
             result.Should()
                 .NotBeNull()
