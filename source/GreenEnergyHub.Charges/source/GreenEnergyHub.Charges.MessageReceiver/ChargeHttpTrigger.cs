@@ -39,7 +39,7 @@ namespace GreenEnergyHub.Charges.MessageReceiver
             logger.LogInformation("Function {FunctionName} started to process a request", FunctionName);
 
             var jsonDeserializer = GetRequireService<IJsonSerializer>(executionContext);
-            var message = await GetChangeOfChargesMessageAsync(jsonDeserializer, req).ConfigureAwait(false);
+            var message = await GetChangeOfChargesMessageAsync(jsonDeserializer, req, executionContext).ConfigureAwait(false);
 
             var changeOfChargesMessageHandler = GetRequireService<IChangeOfChargesMessageHandler>(executionContext);
             var status = await changeOfChargesMessageHandler.HandleAsync(message).ConfigureAwait(false);
@@ -63,11 +63,13 @@ namespace GreenEnergyHub.Charges.MessageReceiver
         /// </summary>
         private static async Task<ChangeOfChargesMessage> GetChangeOfChargesMessageAsync(
             IJsonSerializer jsonDeserializer,
-            HttpRequestData req)
+            HttpRequestData req,
+            FunctionContext executionContext)
         {
             var transaction = (ChangeOfChargesTransaction)await jsonDeserializer
                 .DeserializeAsync(req.Body, typeof(ChangeOfChargesTransaction))
                 .ConfigureAwait(false);
+            transaction.CorrelationId = executionContext.InvocationId;
             var message = new ChangeOfChargesMessage();
             message.Transactions.Add(transaction);
             return message;
