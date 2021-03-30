@@ -37,19 +37,19 @@ namespace GreenEnergyHub.Messaging
                 // Check if the type is a ruleset and add it
                 if (TryGetRuleSetDefinition(type, out var ruleSetServiceDescriptor))
                 {
-                    serviceCollection.Add(ruleSetServiceDescriptor);
+                    serviceCollection.Add(ruleSetServiceDescriptor!);
                 }
 
                 // Check if the type is a ruleset and configure the rule engine to support it
                 if (TryGetRuleEngineServiceDescriptor(type, out var ruleEngineServiceDescriptor))
                 {
-                    serviceCollection.Add(ruleEngineServiceDescriptor);
+                    serviceCollection.Add(ruleEngineServiceDescriptor!);
                 }
 
                 // Check if the type is a property rule and add it
                 if (TryGetPropertyRuleServiceDescriptor(type, out var propertyRuleServiceDescriptor))
                 {
-                    serviceCollection.Add(propertyRuleServiceDescriptor);
+                    serviceCollection.Add(propertyRuleServiceDescriptor!);
                 }
             }
 
