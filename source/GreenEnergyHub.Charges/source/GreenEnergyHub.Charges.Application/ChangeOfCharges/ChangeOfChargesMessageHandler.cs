@@ -33,13 +33,13 @@ namespace GreenEnergyHub.Charges.Application.ChangeOfCharges
 
         public async Task<ChangeOfChargesMessageResult> HandleAsync([NotNull] ChangeOfChargesMessage message)
         {
-            var result = await HandleTransactionsAsync(message.Transactions).ConfigureAwait(false);
+            var result = await HandleTransactionsAsync(message).ConfigureAwait(false);
             return result;
         }
 
-        private async Task<ChangeOfChargesMessageResult> HandleTransactionsAsync(List<ChangeOfChargesTransaction> transactions)
+        private async Task<ChangeOfChargesMessageResult> HandleTransactionsAsync([NotNull] ChangeOfChargesMessage message)
         {
-            foreach (ChangeOfChargesTransaction transaction in transactions)
+            foreach (ChangeOfChargesTransaction transaction in message.Transactions)
             {
                 await _changeOfChargesTransactionHandler.HandleAsync(transaction).ConfigureAwait(false);
             }

@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using Azure.Messaging.ServiceBus;
 using GreenEnergyHub.Charges.Domain.Events.Local;
@@ -35,7 +36,7 @@ namespace GreenEnergyHub.Charges.Application.ChangeOfCharges
             _jsonSerializer = jsonSerializer;
         }
 
-        public async Task PublishAsync(ILocalEvent localEvent)
+        public async Task PublishAsync([NotNull] ILocalEvent localEvent)
         {
             var connectionString = GetEnvironmentVariable(LocalEventsConnectionString);
             await using ServiceBusClient client = new (connectionString);
@@ -45,7 +46,7 @@ namespace GreenEnergyHub.Charges.Application.ChangeOfCharges
 
             var serializedMessage = _jsonSerializer.Serialize(localEvent);
 
-            var message = new ServiceBusMessage(serializedMessage);
+            var message = new ServiceBusMessage(serializedMessage) { CorrelationId = localEvent.CorrelationId };
 
             await sender.SendMessageAsync(message).ConfigureAwait(false);
         }
