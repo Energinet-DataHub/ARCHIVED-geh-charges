@@ -11,31 +11,26 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+using System.Diagnostics.CodeAnalysis;
 using GreenEnergyHub.Charges.Application.ChangeOfCharges;
+using GreenEnergyHub.Charges.MessageReceiver;
 using GreenEnergyHub.Json;
+using Microsoft.Azure.Functions.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
+
+[assembly: FunctionsStartup(typeof(Startup))]
 
 namespace GreenEnergyHub.Charges.MessageReceiver
 {
-    public static class Program
+    public class Startup : FunctionsStartup
     {
-        public static void Main()
+        public override void Configure([NotNull] IFunctionsHostBuilder builder)
         {
-            var host = new HostBuilder()
-                .ConfigureFunctionsWorkerDefaults()
-                .ConfigureServices(RegisterServices)
-                .Build();
-
-            host.Run();
-        }
-
-        private static void RegisterServices(IServiceCollection collection)
-        {
-            collection.AddScoped<IChangeOfChargesMessageHandler, ChangeOfChargesMessageHandler>();
-            collection.AddScoped<IJsonSerializer, JsonSerializer>();
-            collection.AddScoped<IChangeOfChargesTransactionHandler, ChangeOfChargesTransactionHandler>();
-            collection.AddScoped<ILocalEventPublisher, LocalEventPublisher>();
+            // builder.Services.AddHttpClient();
+            builder.Services.AddSingleton<IJsonSerializer, JsonSerializer>();
+            builder.Services.AddSingleton<IChangeOfChargesMessageHandler, ChangeOfChargesMessageHandler>();
+            builder.Services.AddSingleton<IChangeOfChargesTransactionHandler, ChangeOfChargesTransactionHandler>();
+            builder.Services.AddSingleton<ILocalEventPublisher, LocalEventPublisher>();
         }
     }
 }
