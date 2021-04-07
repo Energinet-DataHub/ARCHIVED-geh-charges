@@ -1,0 +1,10 @@
+{
+    "IsEncrypted": false,
+    "Values": {
+        "AzureWebJobsStorage": "UseDevelopmentStorage=true",
+        "FUNCTIONS_WORKER_RUNTIME": "dotnet",
+        "AzureWebJobsDashboard": "UseDevelopmentStorage=true",
+        "LOCAL_EVENTS_CONNECTION_STRING": "<sb connection string>",
+        "LOCAL_EVENTS_TOPIC_NAME": "<topic name>"
+    }
+}

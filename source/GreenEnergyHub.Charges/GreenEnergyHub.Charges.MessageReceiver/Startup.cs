@@ -16,6 +16,8 @@ namespace GreenEnergyHub.Charges.MessageReceiver
             // builder.Services.AddHttpClient();
             builder.Services.AddSingleton<IJsonSerializer, JsonSerializer>();
             builder.Services.AddSingleton<IChangeOfChargesMessageHandler, ChangeOfChargesMessageHandler>();
+            builder.Services.AddSingleton<IChangeOfChargesTransactionHandler, ChangeOfChargesTransactionHandler>();
+            builder.Services.AddSingleton<ILocalEventPublisher, LocalEventPublisher>();
         }
     }
 }
