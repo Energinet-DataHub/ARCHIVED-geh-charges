@@ -46,7 +46,11 @@ namespace GreenEnergyHub.Charges.Application.ChangeOfCharges
 
             var serializedMessage = _jsonSerializer.Serialize(localEvent);
 
-            var message = new ServiceBusMessage(serializedMessage) { CorrelationId = localEvent.CorrelationId };
+            var message = new ServiceBusMessage(serializedMessage)
+            {
+                CorrelationId = localEvent.CorrelationId,
+                Subject = localEvent.Filter,
+            };
 
             await sender.SendMessageAsync(message).ConfigureAwait(false);
         }

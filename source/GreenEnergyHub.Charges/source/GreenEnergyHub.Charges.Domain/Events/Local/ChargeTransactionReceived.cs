@@ -30,5 +30,7 @@ namespace GreenEnergyHub.Charges.Domain.Events.Local
         public string CorrelationId { get; }
 
         public ChangeOfChargesTransaction Transaction { get; }
+
+        public string Filter => nameof(ChargeTransactionReceived);
     }
 }

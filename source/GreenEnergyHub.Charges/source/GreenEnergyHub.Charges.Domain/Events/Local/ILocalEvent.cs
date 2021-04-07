@@ -19,5 +19,9 @@ namespace GreenEnergyHub.Charges.Domain.Events.Local
     /// </summary>
     public interface ILocalEvent : IEvent
     {
+        /// <summary>
+        /// Servicebus filter
+        /// </summary>
+        public string Filter { get; }
     }
 }
