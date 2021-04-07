@@ -14,9 +14,6 @@
 name: Message receiver CD
 
 on:
-  pull_request:
-    branches:
-      - dotnet31
   push:
     branches:
       - main

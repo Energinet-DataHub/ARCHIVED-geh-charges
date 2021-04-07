@@ -17,7 +17,6 @@ on:
   pull_request:
     branches:
       - main
-      - dotnet31
   workflow_dispatch: {}
 
 env:
