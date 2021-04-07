@@ -16,7 +16,7 @@ namespace GreenEnergyHub.Charges.Domain.ChangeOfCharges.Result
 {
     public class ChangeOfChargesMessageResult
     {
-        public bool IsSucceeded { get; init; }
+        public bool IsSucceeded { get; set; }
 
         public static ChangeOfChargesMessageResult CreateSuccess()
         {
