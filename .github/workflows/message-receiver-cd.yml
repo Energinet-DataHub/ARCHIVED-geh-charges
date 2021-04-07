@@ -14,6 +14,9 @@
 name: Message receiver CD
 
 on:
+  pull_request:
+    branches:
+      - dotnet31
   push:
     branches:
       - main
@@ -27,7 +30,7 @@ on:
 env:
   CSPROJ_FILE_PATH: 'source/GreenEnergyHub.Charges/source/GreenEnergyHub.Charges.MessageReceiver/GreenEnergyHub.Charges.MessageReceiver.csproj'
   SOLUTION_FILE_PATH: 'source/GreenEnergyHub.Charges/GreenEnergyHub.Charges.sln'
-  DOTNET_VERSION: '5.0'
+  DOTNET_VERSION: '3.1'
   ORGANISATION_NAME: 'endk'
   AZURE_FUNCTIONAPP_NAME: 'message-receiver'
   PROJECT_NAME: charges
