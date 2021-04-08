@@ -52,6 +52,6 @@ resource "azurerm_servicebus_subscription_rule" "sbs-charge-transaction-received
   filter_type         = "CorrelationFilter"
 
   correlation_filter {
-      label = "ChargeTransactionReceived"
+      label = "FeeCreate"
   }
 }
