@@ -12,11 +12,24 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using GreenEnergyHub.Charges.Application.InputValidation.ValidationRules;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
+using GreenEnergyHub.Messaging.Validation;
 
-namespace GreenEnergyHub.Charges.Domain.ChangeOfCharges.Fee
+namespace GreenEnergyHub.Charges.Application.InputValidation
 {
-    public class FeeCreate : FeeBase
+    public class ChangeOfChargesRules : RuleCollection<ChangeOfChargesTransaction>
     {
+        public ChangeOfChargesRules()
+        {
+            RuleFor(input => input.MarketDocument!.ProcessType)
+                .PropertyRule<Vr009>();
+
+            RuleFor(input => input.MarketDocument!.SenderMarketParticipant!.MRid)
+                .PropertyRule<Vr150>();
+
+            RuleFor(input => input.MarketDocument!.ReceiverMarketParticipant!.MRid)
+                .PropertyRule<Vr153>();
+        }
     }
 }

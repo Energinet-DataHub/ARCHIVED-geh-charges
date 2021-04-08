@@ -12,9 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace GreenEnergyHub.Charges.Domain.ChangeOfCharges.Tariff
+namespace GreenEnergyHub.Charges.Application.InputValidation.ValidationRules
 {
-    public class TariffCreate : TariffBase
+    public static class MarketParticipantMrIdValidator
     {
+        public static bool IsValid(string? marketParticipantMrId)
+        {
+            return !string.IsNullOrWhiteSpace(marketParticipantMrId);
+        }
     }
 }

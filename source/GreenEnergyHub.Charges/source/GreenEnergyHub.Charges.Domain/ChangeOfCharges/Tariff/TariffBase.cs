@@ -12,9 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
+
 namespace GreenEnergyHub.Charges.Domain.ChangeOfCharges.Tariff
 {
-    public class TariffCreate : TariffBase
+    public abstract class TariffBase : ChangeOfChargesTransaction
     {
     }
 }

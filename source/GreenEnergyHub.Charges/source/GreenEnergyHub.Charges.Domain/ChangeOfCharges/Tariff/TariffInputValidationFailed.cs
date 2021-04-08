@@ -14,7 +14,7 @@
 
 namespace GreenEnergyHub.Charges.Domain.ChangeOfCharges.Tariff
 {
-    public class TariffCreate : TariffBase
+    public class TariffInputValidationFailed : TariffBase
     {
     }
 }
