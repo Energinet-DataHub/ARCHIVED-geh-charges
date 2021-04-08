@@ -13,24 +13,10 @@
 // limitations under the License.
 
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
-using NodaTime;
 
-namespace GreenEnergyHub.Charges.Domain.Events.Local
+namespace GreenEnergyHub.Charges.Domain.ChangeOfCharges.Tariff
 {
-    public class ChargeTransactionReceived : ILocalEvent
+    public class TariffCreate : ChangeOfChargesTransaction
     {
-        public ChargeTransactionReceived(string correlationId, ChangeOfChargesTransaction transaction)
-        {
-            CorrelationId = correlationId;
-            Transaction = transaction;
-        }
-
-        public Instant PublishedTime { get; } = SystemClock.Instance.GetCurrentInstant();
-
-        public string CorrelationId { get; }
-
-        public ChangeOfChargesTransaction Transaction { get; }
-
-        public string Filter => Transaction.GetType().ToString();
     }
 }

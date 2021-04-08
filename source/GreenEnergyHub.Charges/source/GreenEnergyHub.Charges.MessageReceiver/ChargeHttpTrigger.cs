@@ -14,7 +14,9 @@
 
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application.ChangeOfCharges;
+using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Fee;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Message;
+using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Tariff;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
 using GreenEnergyHub.Json;
 using Microsoft.AspNetCore.Http;
@@ -45,7 +47,7 @@ namespace GreenEnergyHub.Charges.MessageReceiver
             ExecutionContext context,
             ILogger log)
         {
-            log.LogInformation("Function {FunctionName}started to process a request", FunctionName);
+            log.LogInformation("Function {FunctionName} started to process a request", FunctionName);
             var message = await GetChangeOfChargesMessageAsync(_jsonDeserializer, req, context).ConfigureAwait(false);
             var status = await _changeOfChargesMessageHandler.HandleAsync(message).ConfigureAwait(false);
             return new OkObjectResult(status);
@@ -59,10 +61,42 @@ namespace GreenEnergyHub.Charges.MessageReceiver
             var transaction = (ChangeOfChargesTransaction)await jsonDeserializer
                 .DeserializeAsync(req.Body, typeof(ChangeOfChargesTransaction))
                 .ConfigureAwait(false);
+            var command = GetCommandFromChangeOfChargeTransaction(transaction);
             transaction.CorrelationId = executionContext.InvocationId.ToString();
             var message = new ChangeOfChargesMessage();
-            message.Transactions.Add(transaction);
+            message.Transactions.Add(command);
             return message;
+        }
+
+        private static ChangeOfChargesTransaction GetCommandFromChangeOfChargeTransaction(ChangeOfChargesTransaction transaction)
+        {
+            return transaction.Type switch
+            {
+                "D01" => new FeeCreate
+                {
+                    Period = transaction.Period,
+                    Type = transaction.Type,
+                    CorrelationId = transaction.CorrelationId,
+                    MarketDocument = transaction.MarketDocument,
+                    RequestDate = transaction.RequestDate,
+                    LastUpdatedBy = transaction.LastUpdatedBy,
+                    MktActivityRecord = transaction.MktActivityRecord,
+                    ChargeTypeMRid = transaction.ChargeTypeMRid,
+                    ChargeTypeOwnerMRid = transaction.ChargeTypeOwnerMRid,
+                },
+                _ => new TariffCreate
+                {
+                    Period = transaction.Period,
+                    Type = transaction.Type,
+                    CorrelationId = transaction.CorrelationId,
+                    MarketDocument = transaction.MarketDocument,
+                    RequestDate = transaction.RequestDate,
+                    LastUpdatedBy = transaction.LastUpdatedBy,
+                    MktActivityRecord = transaction.MktActivityRecord,
+                    ChargeTypeMRid = transaction.ChargeTypeMRid,
+                    ChargeTypeOwnerMRid = transaction.ChargeTypeOwnerMRid,
+                }
+            };
         }
     }
 }
