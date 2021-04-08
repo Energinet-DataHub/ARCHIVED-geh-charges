@@ -53,21 +53,6 @@ namespace GreenEnergyHub.Charges.MessageReceiver
             return new OkObjectResult(status);
         }
 
-        private static async Task<ChangeOfChargesMessage> GetChangeOfChargesMessageAsync(
-            IJsonSerializer jsonDeserializer,
-            HttpRequest req,
-            ExecutionContext executionContext)
-        {
-            var transaction = (ChangeOfChargesTransaction)await jsonDeserializer
-                .DeserializeAsync(req.Body, typeof(ChangeOfChargesTransaction))
-                .ConfigureAwait(false);
-            var command = GetCommandFromChangeOfChargeTransaction(transaction);
-            transaction.CorrelationId = executionContext.InvocationId.ToString();
-            var message = new ChangeOfChargesMessage();
-            message.Transactions.Add(command);
-            return message;
-        }
-
         private static ChangeOfChargesTransaction GetCommandFromChangeOfChargeTransaction(ChangeOfChargesTransaction transaction)
         {
             return transaction.Type switch
@@ -97,6 +82,21 @@ namespace GreenEnergyHub.Charges.MessageReceiver
                     ChargeTypeOwnerMRid = transaction.ChargeTypeOwnerMRid,
                 }
             };
+        }
+
+        private async Task<ChangeOfChargesMessage> GetChangeOfChargesMessageAsync(
+            IJsonSerializer jsonDeserializer,
+            HttpRequest req,
+            ExecutionContext executionContext)
+        {
+            var transaction = (ChangeOfChargesTransaction)await jsonDeserializer
+                .DeserializeAsync(req.Body, typeof(ChangeOfChargesTransaction))
+                .ConfigureAwait(false);
+            var command = GetCommandFromChangeOfChargeTransaction(transaction);
+            transaction.CorrelationId = executionContext.InvocationId.ToString();
+            var message = new ChangeOfChargesMessage();
+            message.Transactions.Add(command);
+            return message;
         }
     }
 }

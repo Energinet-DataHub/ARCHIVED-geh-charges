@@ -11,6 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+
 using System.Diagnostics.CodeAnalysis;
 using GreenEnergyHub.Charges.Application.ChangeOfCharges;
 using GreenEnergyHub.Charges.MessageReceiver;
@@ -26,7 +27,6 @@ namespace GreenEnergyHub.Charges.MessageReceiver
     {
         public override void Configure([NotNull] IFunctionsHostBuilder builder)
         {
-            // builder.Services.AddHttpClient();
             builder.Services.AddSingleton<IJsonSerializer, JsonSerializer>();
             builder.Services.AddScoped<IChangeOfChargesMessageHandler, ChangeOfChargesMessageHandler>();
             builder.Services.AddScoped<IChangeOfChargesTransactionHandler, ChangeOfChargesTransactionHandler>();

@@ -36,6 +36,7 @@ namespace GreenEnergyHub.Messaging
         /// <exception cref="ArgumentException"><paramref name="pipelineBehavior"/> does not inherit from <see cref="IPipelineBehavior{TRequest,TResponse}"/></exception>
         public IContinuePipelineBehavior Apply(Type pipelineBehavior, Action<DependsOnConfiguration>? depends = null)
         {
+            if (pipelineBehavior == null) throw new ArgumentNullException(nameof(pipelineBehavior));
             if (!IsPipelineBehavior(pipelineBehavior))
             {
                 throw new ArgumentException("This is not a pipeline behavior", nameof(pipelineBehavior));
@@ -53,6 +54,7 @@ namespace GreenEnergyHub.Messaging
         /// <exception cref="ArgumentException"><paramref name="pipelineBehavior"/> does not inherit from <see cref="IPipelineBehavior{TRequest,TResponse}"/></exception>
         public IContinuePipelineBehavior ContinueWith(Type pipelineBehavior, Action<DependsOnConfiguration>? depends = null)
         {
+            if (pipelineBehavior == null) throw new ArgumentNullException(nameof(pipelineBehavior));
             if (!IsPipelineBehavior(pipelineBehavior))
             {
                 throw new ArgumentException("This is not a pipeline behavior", nameof(pipelineBehavior));
