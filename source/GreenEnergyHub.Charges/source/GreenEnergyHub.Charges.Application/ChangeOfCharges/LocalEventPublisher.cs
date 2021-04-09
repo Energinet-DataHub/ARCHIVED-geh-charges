@@ -49,8 +49,8 @@ namespace GreenEnergyHub.Charges.Application.ChangeOfCharges
             var message = new ServiceBusMessage(serializedMessage)
             {
                 CorrelationId = localEvent.CorrelationId,
-                Subject = localEvent.Filter,
             };
+            message.ApplicationProperties.Add("filter", localEvent.Filter);
 
             await sender.SendMessageAsync(message).ConfigureAwait(false);
         }

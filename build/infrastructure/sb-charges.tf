@@ -49,9 +49,6 @@ resource "azurerm_servicebus_subscription_rule" "sbs-charge-transaction-received
   namespace_name      = module.sbn_charges.name
   topic_name          = module.sbt_local_events.name
   subscription_name   = azurerm_servicebus_subscription.sbs-charge-transaction-received-subscription.name
-  filter_type         = "CorrelationFilter"
-
-  correlation_filter {
-      label = "FeeCreate"
-  }
+  filter_type         = "SqlFilter"
+  sql_filter          = "sys.label = 'FeeCreate' OR sys.label = 'TariffCreate'"
 }
