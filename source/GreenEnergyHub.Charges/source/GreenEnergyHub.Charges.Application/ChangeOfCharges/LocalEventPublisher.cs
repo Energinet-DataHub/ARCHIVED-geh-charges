@@ -27,7 +27,7 @@ namespace GreenEnergyHub.Charges.Application.ChangeOfCharges
             "LOCAL_EVENTS_TOPIC_NAME";
 
         private const string LocalEventsConnectionString =
-            "LOCAL_EVENTS_CONNECTION_STRING";
+            "LOCAL_EVENTS_SENDER_CONNECTION_STRING";
 
         private readonly IJsonSerializer _jsonSerializer;
 

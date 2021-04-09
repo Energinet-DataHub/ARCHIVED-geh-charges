@@ -29,13 +29,14 @@ namespace GreenEnergyHub.Charges.LocalMessageServiceBusTopicTrigger
         [FunctionName(FunctionName)]
         public async Task RunAsync(
             [ServiceBusTrigger(
-            "LOCAL_EVENTS_TOPIC_NAME",
-            "LOCAL_EVENTS_SUBSCRIPTION_NAME",
-            Connection = "LOCAL_EVENTS_CONNECTION_STRING")]
+            "sbt-local-events",
+            "sbs-charge-transaction-received-subscription",
+            Connection = "LOCAL_EVENTS_LISTENER_CONNECTION_STRING")]
             string jsonSerializedQueueItem,
             ILogger log)
         {
-            var transaction = _jsonDeserializer.Deserialize<ChangeOfChargesTransaction>(jsonSerializedQueueItem);
+            var wrapper = _jsonDeserializer.Deserialize<ServiceBusWrapper>(jsonSerializedQueueItem);
+            var transaction = wrapper.Transaction;
             var result = await _changeOfChargeTransactionInputValidator.ValidateAsync(transaction).ConfigureAwait(false);
 
             if (result.Success)
