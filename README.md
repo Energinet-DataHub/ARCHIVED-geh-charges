@@ -6,18 +6,33 @@ Welcome to the charges domain of the [Green Energy Hub project](https://github.c
 
 The charges domain is responsible for keeping track of price lists of grid companies and prices set by laws on the national level (fees and taxes).
 
-In addition, the charges domain also keep track of which of these prices a specific market evaluation point is assigned to at any given moment in time.
+In addition, the charges domain also keeps track of which of these prices a specific market evaluation point is assigned to at any given moment in time.
 
-More introduction to come.
+These are the business processes maintained by this domain.
+
+| Process  |
+| ------------- |
+| [Change of Subscription](docs/business-processes/change-of-subscription.md) |
+| [Change of Fee](docs/business-processes/change-of-fee.md) |
+| [Change of Tariff](docs/business-processes/change-of-tariff.md) |
+| [Request for Prices](docs/business-processes/request-for-prices.md) |
 
 ## Architecture
 
-The following architectural sketch is an incomplete work in progress and for now partially in danish. This will be changed as the domain settles.
-
 ![design](ARCHITECTURE.png)
 
-## Repository origin
+## Context Streams
 
-This repository was created using the Green Energy Hub template.
+TODO: Awaiting drawing from @MartinFHansen.
 
-Please read the [template documentation](./docs/template-readme/README.md) for details and introduction to the template.
+## Domain Road Map
+
+TODO: Awaiting input from @MartinFHansen.
+
+## Getting Started
+
+Learn how to get started with Green Energy Hub [here](https://github.com/Energinet-DataHub/green-energy-hub/blob/main/docs/getting-started.md).
+
+## Where can I get more help?
+
+Read about community for Green Energy Hub [here](https://github.com/Energinet-DataHub/green-energy-hub/blob/main/COMMUNITY.md) and learn about how to get involved og get help.

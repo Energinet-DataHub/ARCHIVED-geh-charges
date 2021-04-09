@@ -1,0 +1,19 @@
+sequenceDiagram
+    participant O as Grid Operator
+    participant GEH as Green Energy Hub
+    participant S as Energy Supplier
+
+    activate O
+    activate GEH
+    O->>GEH: Update price list
+    GEH->>O: Approve update of price list
+    GEH->>O: Reject update of price list
+    deactivate O
+
+    activate S
+    GEH->>S: Information about the update of price list
+    Note over GEH, S: If subscription is being stopped
+    GEH->>S: Information about connections on the market evaluation point
+    deactivate GEH
+    deactivate S
+
