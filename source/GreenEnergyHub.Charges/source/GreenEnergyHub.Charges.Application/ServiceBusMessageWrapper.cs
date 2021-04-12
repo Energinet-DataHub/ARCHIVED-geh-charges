@@ -2,13 +2,8 @@
 
 namespace GreenEnergyHub.Charges.Application
 {
-    public abstract class ServiceBusMessageWrapper
+    public class ServiceBusMessageWrapper
     {
-        protected ServiceBusMessageWrapper(ChangeOfChargesTransaction transaction)
-        {
-            Transaction = transaction;
-        }
-
-        public ChangeOfChargesTransaction Transaction { get; }
+        public ChangeOfChargesTransaction Transaction { get; set; } = new ();
     }
 }
