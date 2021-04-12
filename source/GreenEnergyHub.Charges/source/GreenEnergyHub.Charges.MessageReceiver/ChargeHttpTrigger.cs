@@ -91,12 +91,13 @@ namespace GreenEnergyHub.Charges.MessageReceiver
             HttpRequest req,
             ExecutionContext executionContext)
         {
+            var message = new ChangeOfChargesMessage();
             var transaction = (ChangeOfChargesTransaction)await jsonDeserializer
                 .DeserializeAsync(req.Body, typeof(ChangeOfChargesTransaction))
                 .ConfigureAwait(false);
+
             var command = GetCommandFromChangeOfChargeTransaction(transaction);
-            transaction.CorrelationId = executionContext.InvocationId.ToString();
-            var message = new ChangeOfChargesMessage();
+            command.CorrelationId = executionContext.InvocationId.ToString();
             message.Transactions.Add(command);
             return message;
         }
