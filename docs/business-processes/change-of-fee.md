@@ -2,7 +2,8 @@
 
 A fee is a price for a single service or task at a given date. The business process _change of fee_ enables a system operator or grid access provider to manage fees.
 
-Association of fees to metering points are performed using other business process (BRS-037).
+Association of fees to metering points are performed using business process _Settlement master data for a metering point –
+subscription, fee and tariff links_.
 
 The following sequence diagram shows the exchange of messages in this process.
 
