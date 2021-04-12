@@ -33,7 +33,7 @@ namespace GreenEnergyHub.Charges.Application.ChangeOfCharges
         {
             var result = await _inputValidationRuleEngine.ValidateAsync(changeOfChargesMessage).ConfigureAwait(false);
 
-            var hubRequestValidationResult = new HubRequestValidationResult(changeOfChargesMessage.Transaction.MRID);
+            var hubRequestValidationResult = new HubRequestValidationResult(changeOfChargesMessage.ChargeTypeMRid);
 
             foreach (var error in result)
             {
