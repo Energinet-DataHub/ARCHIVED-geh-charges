@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using GreenEnergyHub.Charges.Application;
 using GreenEnergyHub.Charges.Application.ChangeOfCharges;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Fee;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Tariff;
@@ -9,14 +10,14 @@ using Microsoft.Extensions.Logging;
 
 namespace GreenEnergyHub.Charges.LocalMessageServiceBusTopicTrigger
 {
-    public class LocalMessageServiceBusTopicTrigger
+    public class LocalMessageServiceBusTopicTriggerFunction
     {
         private const string FunctionName = "LocalMessageServieBusTopicTrigger";
         private readonly IJsonSerializer _jsonDeserializer;
         private readonly IChangeOfChargeTransactionInputValidator _changeOfChargeTransactionInputValidator;
         private readonly IChangeOfChargesTransactionHandler _changeOfChargesTransactionHandler;
 
-        public LocalMessageServiceBusTopicTrigger(
+        public LocalMessageServiceBusTopicTriggerFunction(
             IJsonSerializer jsonDeserializer,
             IChangeOfChargeTransactionInputValidator changeOfChargeTransactionInputValidator,
             IChangeOfChargesTransactionHandler changeOfChargesTransactionHandler)
@@ -35,8 +36,8 @@ namespace GreenEnergyHub.Charges.LocalMessageServiceBusTopicTrigger
             string jsonSerializedQueueItem,
             ILogger log)
         {
-            var wrapper = _jsonDeserializer.Deserialize<ServiceBusWrapper>(jsonSerializedQueueItem);
-            var transaction = wrapper.Transaction;
+            var serviceBusMessage = _jsonDeserializer.Deserialize<ServiceBusMessageWrapper>(jsonSerializedQueueItem);
+            var transaction = serviceBusMessage.Transaction;
             var result = await _changeOfChargeTransactionInputValidator.ValidateAsync(transaction).ConfigureAwait(false);
 
             if (result.Success)
@@ -66,6 +67,7 @@ namespace GreenEnergyHub.Charges.LocalMessageServiceBusTopicTrigger
                     MktActivityRecord = transaction.MktActivityRecord,
                     ChargeTypeMRid = transaction.ChargeTypeMRid,
                     ChargeTypeOwnerMRid = transaction.ChargeTypeOwnerMRid,
+                    Transaction = transaction.Transaction,
                 },
                 _ => new TariffInputValidationSucceded
                 {
@@ -78,6 +80,7 @@ namespace GreenEnergyHub.Charges.LocalMessageServiceBusTopicTrigger
                     MktActivityRecord = transaction.MktActivityRecord,
                     ChargeTypeMRid = transaction.ChargeTypeMRid,
                     ChargeTypeOwnerMRid = transaction.ChargeTypeOwnerMRid,
+                    Transaction = transaction.Transaction,
                 }
             };
         }
@@ -97,6 +100,7 @@ namespace GreenEnergyHub.Charges.LocalMessageServiceBusTopicTrigger
                     MktActivityRecord = transaction.MktActivityRecord,
                     ChargeTypeMRid = transaction.ChargeTypeMRid,
                     ChargeTypeOwnerMRid = transaction.ChargeTypeOwnerMRid,
+                    Transaction = transaction.Transaction,
                 },
                 _ => new TariffInputValidationFailed
                 {
@@ -109,6 +113,7 @@ namespace GreenEnergyHub.Charges.LocalMessageServiceBusTopicTrigger
                     MktActivityRecord = transaction.MktActivityRecord,
                     ChargeTypeMRid = transaction.ChargeTypeMRid,
                     ChargeTypeOwnerMRid = transaction.ChargeTypeOwnerMRid,
+                    Transaction = transaction.Transaction,
                 }
             };
         }
