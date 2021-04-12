@@ -12,9 +12,9 @@ These are the business processes maintained by this domain.
 
 | Process  |
 | ------------- |
-| [Change of Subscription](docs/business-processes/change-of-subscription.md) |
-| [Change of Fee](docs/business-processes/change-of-fee.md) |
-| [Change of Tariff](docs/business-processes/change-of-tariff.md) |
+| [Change of Subscription price list](docs/business-processes/change-of-subscription.md) |
+| [Change of Fee price list](docs/business-processes/change-of-fee.md) |
+| [Change of Tariff price list](docs/business-processes/change-of-tariff.md) |
 | [Request for Prices](docs/business-processes/request-for-prices.md) |
 
 ## Architecture
