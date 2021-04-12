@@ -1,6 +1,6 @@
 # Change Of Fee Price List
 
-A fee is a price for a single service or task at a given date related to a metering point, e.g. a re-connection fee. The business process _change of fee_ allows Grid Access Providers to create, maintain and stop their fees in Green Energy Hub. Once Green Energy Hub has validated an incoming price list change for a fee, the information will be distributed to all Energy Suppliers as they need this information for invoicing consumers.
+A fee is a price for a single service or task at a given date related to a metering point, e.g. a re-connection fee. The business process _change of fee price list_ allows Grid Access Providers to create, maintain or stop their fees in Green Energy Hub. Once Green Energy Hub has validated an incoming price list change for a fee, the information will be distributed to all Energy Suppliers as they need this information for invoicing consumers.
 
 Association of fees to metering points are performed using business process _Settlement master data for a metering point –
 subscription, fee and tariff links_.
