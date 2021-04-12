@@ -18,4 +18,4 @@ If the link relates to a tariff marked as a tax, the energy supplier for the met
 is responsible for correctly linking to a metering point.
 
 Green Energy Hub passes on all links to the relevant energy suppliers, and links relating to tariffs
-marked as taxes to the relevant grid company.
+marked as taxes to the relevant Grid Access Provider.
