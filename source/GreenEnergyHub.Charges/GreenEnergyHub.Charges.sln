@@ -36,8 +36,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GreenEnergyHub.Queues.Valid
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GreenEnergyHub.Queues.Kafka", "source\GreenEnergyHub.Queues.Kafka\GreenEnergyHub.Queues.Kafka.csproj", "{AC6E5C96-78ED-4AA0-ACE2-D3A1C7EDA614}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GreenEnergyHub.Queues", "source\GreenEnergyHub.Queues\GreenEnergyHub.Queues.csproj", "{7ED252C0-1252-4E50-A7DA-FF5AB26C1A48}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GreenEnergyHub.Messaging.Integration.ServiceCollection", "source\GreenEnergyHub.Messaging.Integration.ServiceCollection\GreenEnergyHub.Messaging.Integration.ServiceCollection.csproj", "{4E246E68-9785-4DBE-8857-6E065F8A099C}"
 EndProject
 Global
@@ -102,10 +100,6 @@ Global
 		{AC6E5C96-78ED-4AA0-ACE2-D3A1C7EDA614}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AC6E5C96-78ED-4AA0-ACE2-D3A1C7EDA614}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AC6E5C96-78ED-4AA0-ACE2-D3A1C7EDA614}.Release|Any CPU.Build.0 = Release|Any CPU
-		{7ED252C0-1252-4E50-A7DA-FF5AB26C1A48}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{7ED252C0-1252-4E50-A7DA-FF5AB26C1A48}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{7ED252C0-1252-4E50-A7DA-FF5AB26C1A48}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{7ED252C0-1252-4E50-A7DA-FF5AB26C1A48}.Release|Any CPU.Build.0 = Release|Any CPU
 		{4E246E68-9785-4DBE-8857-6E065F8A099C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{4E246E68-9785-4DBE-8857-6E065F8A099C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4E246E68-9785-4DBE-8857-6E065F8A099C}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -126,7 +120,6 @@ Global
 		{205A40C6-42FC-4438-B47C-6384171CF755} = {832447E5-7A46-4381-817C-5D73A20510C2}
 		{A8300A32-B0DE-40B5-A915-AAD7FE2BE2F2} = {9FE16521-EC21-4551-9E51-0C6702D21098}
 		{AC6E5C96-78ED-4AA0-ACE2-D3A1C7EDA614} = {9FE16521-EC21-4551-9E51-0C6702D21098}
-		{7ED252C0-1252-4E50-A7DA-FF5AB26C1A48} = {9FE16521-EC21-4551-9E51-0C6702D21098}
 		{4E246E68-9785-4DBE-8857-6E065F8A099C} = {9FE16521-EC21-4551-9E51-0C6702D21098}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution

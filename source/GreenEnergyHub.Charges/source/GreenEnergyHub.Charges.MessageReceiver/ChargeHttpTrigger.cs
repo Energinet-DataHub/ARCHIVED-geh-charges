@@ -51,8 +51,8 @@ namespace GreenEnergyHub.Charges.MessageReceiver
         {
             log.LogInformation("Function {FunctionName} started to process a request", FunctionName);
             var message = await GetChangeOfChargesMessageAsync(_jsonDeserializer, req, context).ConfigureAwait(false);
-            var status = await _changeOfChargesMessageHandler.HandleAsync(message).ConfigureAwait(false);
-            return new OkObjectResult(status);
+            var messageResult = await _changeOfChargesMessageHandler.HandleAsync(message).ConfigureAwait(false);
+            return new OkObjectResult(messageResult);
         }
 
         private static ChangeOfChargesTransaction GetCommandFromChangeOfChargeTransaction(ChangeOfChargesTransaction transaction)
