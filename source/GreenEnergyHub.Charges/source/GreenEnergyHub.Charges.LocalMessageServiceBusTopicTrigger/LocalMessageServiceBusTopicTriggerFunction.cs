@@ -67,7 +67,6 @@ namespace GreenEnergyHub.Charges.LocalMessageServiceBusTopicTrigger
                     MktActivityRecord = transaction.MktActivityRecord,
                     ChargeTypeMRid = transaction.ChargeTypeMRid,
                     ChargeTypeOwnerMRid = transaction.ChargeTypeOwnerMRid,
-                    Transaction = transaction.Transaction,
                 },
                 _ => new TariffInputValidationSucceded
                 {
@@ -80,7 +79,6 @@ namespace GreenEnergyHub.Charges.LocalMessageServiceBusTopicTrigger
                     MktActivityRecord = transaction.MktActivityRecord,
                     ChargeTypeMRid = transaction.ChargeTypeMRid,
                     ChargeTypeOwnerMRid = transaction.ChargeTypeOwnerMRid,
-                    Transaction = transaction.Transaction,
                 }
             };
         }
@@ -100,7 +98,6 @@ namespace GreenEnergyHub.Charges.LocalMessageServiceBusTopicTrigger
                     MktActivityRecord = transaction.MktActivityRecord,
                     ChargeTypeMRid = transaction.ChargeTypeMRid,
                     ChargeTypeOwnerMRid = transaction.ChargeTypeOwnerMRid,
-                    Transaction = transaction.Transaction,
                 },
                 _ => new TariffInputValidationFailed
                 {
@@ -113,7 +110,6 @@ namespace GreenEnergyHub.Charges.LocalMessageServiceBusTopicTrigger
                     MktActivityRecord = transaction.MktActivityRecord,
                     ChargeTypeMRid = transaction.ChargeTypeMRid,
                     ChargeTypeOwnerMRid = transaction.ChargeTypeOwnerMRid,
-                    Transaction = transaction.Transaction,
                 }
             };
         }
