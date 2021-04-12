@@ -16,6 +16,7 @@ These are the business processes maintained by this domain.
 | [Change of Fee price list](docs/business-processes/change-of-fee.md) |
 | [Change of Tariff price list](docs/business-processes/change-of-tariff.md) |
 | [Request for Prices](docs/business-processes/request-for-prices.md) |
+| [Settlement master data for metering point - fee, subscription and tariff links](docs/business-processes/settlement_master_data.md)
 
 ## Architecture
 
