@@ -1,7 +1,7 @@
 # Change Of Subscription Price List
 
 A subscription is a fixed price for services regarding grid connections and associated services.
-The business process _change of subscription_ enables a system operator or grid access provider to
+The business process _change of subscription price list_ enables a system operator or grid access provider to
 manage subscriptions.
 
 Association of subscriptions to market evaluation points are performed using business process _Settlement master data for a metering point –
