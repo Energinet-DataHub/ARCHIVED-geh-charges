@@ -23,11 +23,11 @@ These are the business processes maintained by this domain.
 
 ## Context Streams
 
-TODO: Awaiting drawing from @MartinFHansen.
+TODO: Awaiting drawing from `@MartinFHansen`.
 
 ## Domain Road Map
 
-TODO: Awaiting input from @MartinFHansen.
+TODO: Awaiting input from `@MartinFHansen`.
 
 ## Getting Started
 
@@ -37,4 +37,4 @@ Learn how to get started with Green Energy Hub [here](https://github.com/Energin
 
 Read about community for Green Energy Hub [here](https://github.com/Energinet-DataHub/green-energy-hub/blob/main/COMMUNITY.md) and learn about how to get involved and get help.
 
-Please note that we have provided a [Dictionary](https://github.com/Energinet-DataHub/green-energy-hub/tree/main/docs/dictionary-and-concepts) to help understand many of the terms used throughout the repo.
+Please note that we have provided a [Dictionary](https://github.com/Energinet-DataHub/green-energy-hub/tree/main/docs/dictionary-and-concepts) to help understand many of the terms used throughout the repository.

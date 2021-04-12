@@ -1,4 +1,5 @@
 ﻿### This file contains the list of words to be ignored by spell check
+Architechtural
 composable
 DataHub
 deserialize
@@ -14,6 +15,8 @@ NRules
 NuGet
 POCO
 proto
+resending
 runtime
 Terraform
 TODO
+TSO
