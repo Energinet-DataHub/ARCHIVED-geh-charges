@@ -4,7 +4,8 @@ A subscription is a fixed price for services regarding grid connections and asso
 The business process _change of subscription_ enables a system operator or grid access provider to
 manage subscriptions.
 
-Association of subscriptions to market evaluation points are performed using other business process (BRS-037).
+Association of subscriptions to market evaluation points are performed using business process _Settlement master data for a metering point –
+subscription, fee and tariff links_.
 
 The following sequence diagram shows the exchange of messages in this process.
 
