@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netcoreapp3.1</TargetFramework>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\..\messaging\source\GreenEnergyHub.Messaging\GreenEnergyHub.Messaging.csproj" />
+      <ProjectReference Include="..\..\..\Shared\GreenEnergyHub\source\GreenEnergyHub.Json\GreenEnergyHub.Json.csproj" />
+    </ItemGroup>
+
+</Project>

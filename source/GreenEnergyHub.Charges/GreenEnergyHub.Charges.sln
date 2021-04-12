@@ -6,7 +6,7 @@ Licensed under the Apache License, Version 2.0 (the "License2");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
 
-    http://www.apache.org/licenses/LICENSE-2.0
+				http://www.apache.org/licenses/LICENSE-2.0
 
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,
@@ -35,8 +35,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GreenEnergyHub.Json", "..\S
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GreenEnergyHub.Queues.AzureServiceBus", "..\queues\source\GreenEnergyHub.Queues.AzureServiceBus\GreenEnergyHub.Queues.AzureServiceBus.csproj", "{B3A66F2C-1114-4985-91E5-A58A8C30AF6B}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GreenEnergyHub.Queues", "..\queues\source\GreenEnergyHub.Queues\GreenEnergyHub.Queues.csproj", "{F7B15740-FE66-4A02-87C6-0D8620F48A0B}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GreenEnergyHub.Messaging", "..\messaging\source\GreenEnergyHub.Messaging\GreenEnergyHub.Messaging.csproj", "{7A6F13FA-E28F-4FEB-B2B8-9C7AEAD9BB97}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GreenEnergyHub.TestHelpers", "..\Shared\GreenEnergyHub\source\GreenEnergyHub.TestHelpers\GreenEnergyHub.TestHelpers.csproj", "{374A128A-2E02-4978-A629-2B820B8A48E5}"
@@ -46,12 +44,6 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GreenEnergyHub.Charges.MessageReceiver", "source\GreenEnergyHub.Charges.MessageReceiver\GreenEnergyHub.Charges.MessageReceiver.csproj", "{FE2916A4-709B-4B3C-B023-97C0FE2CF35B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GreenEnergyHub.Charges.LocalMessageServiceBusTopicTrigger", "source\GreenEnergyHub.Charges.LocalMessageServiceBusTopicTrigger\GreenEnergyHub.Charges.LocalMessageServiceBusTopicTrigger.csproj", "{205A40C6-42FC-4438-B47C-6384171CF755}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GreenEnergyHub.Queues.ValidationReportDispatcher", "source\GreenEnergyHub.Queues.ValidationReportDispatcher\GreenEnergyHub.Queues.ValidationReportDispatcher.csproj", "{A8300A32-B0DE-40B5-A915-AAD7FE2BE2F2}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GreenEnergyHub.Queues.Kafka", "source\GreenEnergyHub.Queues.Kafka\GreenEnergyHub.Queues.Kafka.csproj", "{AC6E5C96-78ED-4AA0-ACE2-D3A1C7EDA614}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GreenEnergyHub.Messaging.Integration.ServiceCollection", "source\GreenEnergyHub.Messaging.Integration.ServiceCollection\GreenEnergyHub.Messaging.Integration.ServiceCollection.csproj", "{4E246E68-9785-4DBE-8857-6E065F8A099C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -83,10 +75,6 @@ Global
 		{B3A66F2C-1114-4985-91E5-A58A8C30AF6B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B3A66F2C-1114-4985-91E5-A58A8C30AF6B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B3A66F2C-1114-4985-91E5-A58A8C30AF6B}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F7B15740-FE66-4A02-87C6-0D8620F48A0B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F7B15740-FE66-4A02-87C6-0D8620F48A0B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F7B15740-FE66-4A02-87C6-0D8620F48A0B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F7B15740-FE66-4A02-87C6-0D8620F48A0B}.Release|Any CPU.Build.0 = Release|Any CPU
 		{7A6F13FA-E28F-4FEB-B2B8-9C7AEAD9BB97}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{7A6F13FA-E28F-4FEB-B2B8-9C7AEAD9BB97}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7A6F13FA-E28F-4FEB-B2B8-9C7AEAD9BB97}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -107,18 +95,6 @@ Global
 		{205A40C6-42FC-4438-B47C-6384171CF755}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{205A40C6-42FC-4438-B47C-6384171CF755}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{205A40C6-42FC-4438-B47C-6384171CF755}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A8300A32-B0DE-40B5-A915-AAD7FE2BE2F2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A8300A32-B0DE-40B5-A915-AAD7FE2BE2F2}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A8300A32-B0DE-40B5-A915-AAD7FE2BE2F2}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A8300A32-B0DE-40B5-A915-AAD7FE2BE2F2}.Release|Any CPU.Build.0 = Release|Any CPU
-		{AC6E5C96-78ED-4AA0-ACE2-D3A1C7EDA614}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{AC6E5C96-78ED-4AA0-ACE2-D3A1C7EDA614}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{AC6E5C96-78ED-4AA0-ACE2-D3A1C7EDA614}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{AC6E5C96-78ED-4AA0-ACE2-D3A1C7EDA614}.Release|Any CPU.Build.0 = Release|Any CPU
-		{4E246E68-9785-4DBE-8857-6E065F8A099C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{4E246E68-9785-4DBE-8857-6E065F8A099C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{4E246E68-9785-4DBE-8857-6E065F8A099C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{4E246E68-9785-4DBE-8857-6E065F8A099C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -127,15 +103,11 @@ Global
 		{68412EBF-701D-467D-8716-74269E171F41} = {05DE980B-A2A7-4235-AE53-3167E94699DD}
 		{85B5E913-F347-4EA6-B7D6-FED1BFD1FB89} = {9FE16521-EC21-4551-9E51-0C6702D21098}
 		{B3A66F2C-1114-4985-91E5-A58A8C30AF6B} = {9FE16521-EC21-4551-9E51-0C6702D21098}
-		{F7B15740-FE66-4A02-87C6-0D8620F48A0B} = {9FE16521-EC21-4551-9E51-0C6702D21098}
 		{7A6F13FA-E28F-4FEB-B2B8-9C7AEAD9BB97} = {9FE16521-EC21-4551-9E51-0C6702D21098}
 		{374A128A-2E02-4978-A629-2B820B8A48E5} = {9FE16521-EC21-4551-9E51-0C6702D21098}
 		{111D6B3F-0005-4740-B486-CFA7FD887F3D} = {832447E5-7A46-4381-817C-5D73A20510C2}
 		{FE2916A4-709B-4B3C-B023-97C0FE2CF35B} = {832447E5-7A46-4381-817C-5D73A20510C2}
 		{205A40C6-42FC-4438-B47C-6384171CF755} = {832447E5-7A46-4381-817C-5D73A20510C2}
-		{A8300A32-B0DE-40B5-A915-AAD7FE2BE2F2} = {9FE16521-EC21-4551-9E51-0C6702D21098}
-		{AC6E5C96-78ED-4AA0-ACE2-D3A1C7EDA614} = {9FE16521-EC21-4551-9E51-0C6702D21098}
-		{4E246E68-9785-4DBE-8857-6E065F8A099C} = {9FE16521-EC21-4551-9E51-0C6702D21098}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {19228BC9-BC51-4044-842C-ACD1F68D4008}

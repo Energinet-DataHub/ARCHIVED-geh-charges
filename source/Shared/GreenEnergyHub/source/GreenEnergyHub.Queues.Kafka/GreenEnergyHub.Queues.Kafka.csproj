@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netcoreapp3.1</TargetFramework>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\..\queues\source\GreenEnergyHub.Queues\GreenEnergyHub.Queues.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Confluent.Kafka" Version="1.5.3" />
+    </ItemGroup>
+
+</Project>
