@@ -6,7 +6,7 @@ Welcome to the charges domain of the [Green Energy Hub project](https://github.c
 
 The charges domain is responsible for keeping track of price lists of grid companies and prices set by laws on the national level (fees and taxes).
 
-In addition, the charges domain also keeps track of which of these prices a specific market evaluation point is assigned to at any given moment in time.
+In addition, the charges domain also keeps track of which of these prices a specific metering point is assigned to at any given moment in time.
 
 These are the business processes maintained by this domain.
 
