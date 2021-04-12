@@ -2,7 +2,7 @@
 
 This process handles subscription, fee and tariff links for a metering point.
 
-To create a correct wholesale settlement basis, the price elements in the submitted price
+To create a correct wholesale settlement basis, the charges in the submitted price
 lists must be linked to the metering points in Green Energy Hub, and these links must be
 forwarded to the relevant players.
 
