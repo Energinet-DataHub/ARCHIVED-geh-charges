@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Linq;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application;
 using GreenEnergyHub.Charges.Application.ChangeOfCharges;
@@ -54,7 +55,7 @@ namespace GreenEnergyHub.Charges.LocalMessageServiceBusTopicTrigger
             var transaction = serviceBusMessage.Transaction;
             var result = await _changeOfChargeTransactionInputValidator.ValidateAsync(transaction).ConfigureAwait(false);
 
-            if (result.Success)
+            if (!result.Errors.Any())
             {
                 await _changeOfChargesTransactionHandler.HandleAsync(GetCommandFromChangeOfChargeTransactionInputValidationSucceded(transaction)).ConfigureAwait(false);
             }
