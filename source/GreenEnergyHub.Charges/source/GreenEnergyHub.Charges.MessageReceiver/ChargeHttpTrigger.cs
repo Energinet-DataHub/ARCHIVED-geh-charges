@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application.ChangeOfCharges;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Fee;
@@ -43,8 +44,9 @@ namespace GreenEnergyHub.Charges.MessageReceiver
 
         [FunctionName(FunctionName)]
         public async Task<IActionResult> RunAsync(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = null)] HttpRequest req,
-            ExecutionContext context,
+            [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = null)]
+            [NotNull] HttpRequest req,
+            [NotNull] ExecutionContext context,
             ILogger log)
         {
             log.LogInformation("Function {FunctionName} started to process a request", FunctionName);
@@ -84,7 +86,7 @@ namespace GreenEnergyHub.Charges.MessageReceiver
             };
         }
 
-        private async Task<ChangeOfChargesMessage> GetChangeOfChargesMessageAsync(
+        private static async Task<ChangeOfChargesMessage> GetChangeOfChargesMessageAsync(
             IJsonSerializer jsonDeserializer,
             HttpRequest req,
             ExecutionContext executionContext)
