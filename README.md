@@ -6,7 +6,7 @@ Welcome to the charges domain of the [Green Energy Hub project](https://github.c
 
 The charges domain is responsible for keeping track of price lists of Grid Access Providers and Transmission System Operators (TSO). A charge may be a fee, a subscription or a tariff, where the latter has the option of being a tax.
 
-In addition, the charges domain also keeps track of which of these prices a specific metering point is assigned to at any given moment in time.
+In addition, the charges domain also keeps track of which of these prices are assigned to a specific metering point at any given moment in time.
 
 These are the business processes maintained by this domain.
 
