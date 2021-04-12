@@ -4,7 +4,7 @@ This process handles subscription, fee and tariff links for a metering point.
 
 To create a correct wholesale settlement basis, the charges in the submitted price
 lists must be linked to the metering points in Green Energy Hub, and these links must be
-forwarded to the relevant players.
+forwarded to the relevant market participants.
 
 Grid access providers and the TSO must submit links for their own subscriptions, fees and
 tariffs per metering point to Green Energy Hub.
