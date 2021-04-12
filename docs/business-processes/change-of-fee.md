@@ -8,7 +8,7 @@ subscription, fee and tariff links_.
 The following sequence diagram shows the exchange of messages in this process.
 
 <!-- In order to update this image:
-  1. Go to `https://mermaid-js.github.io/mermaid-live-editor/`
+  1. Go to mermaid live editor
   2. Paste the content of the *.mermaid file for the business process (located next to this file)
   3. Add ALT text for link required by MD lint check
   4. Update the sequence diagram in the online editor
