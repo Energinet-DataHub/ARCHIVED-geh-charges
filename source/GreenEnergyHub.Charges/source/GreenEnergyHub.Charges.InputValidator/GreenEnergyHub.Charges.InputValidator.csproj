@@ -13,14 +13,21 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 -->
+
 <Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
-    <AzureFunctionsVersion>v3</AzureFunctionsVersion>
-  </PropertyGroup>
+    <PropertyGroup>
+      <TargetFramework>netcoreapp3.1</TargetFramework>
+      <Nullable>enable</Nullable>
+      <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+      <RunAnalyzersDuringBuild>true</RunAnalyzersDuringBuild>
+      <GenerateDocumentationFile>true</GenerateDocumentationFile>
+      <LangVersion>9</LangVersion>
+      <RootNamespace>GreenEnergyHub.Charges.LocalMessageServiceBusTopicTrigger</RootNamespace>
+    </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.Azure.Functions.Extensions" Version="1.1.0" />
     <PackageReference Include="Microsoft.Azure.WebJobs.Extensions.EventHubs" Version="4.2.0" />
+    <PackageReference Include="Microsoft.Azure.WebJobs.Extensions.ServiceBus" Version="4.2.1" />
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="3.1.12" />
     <PackageReference Include="Microsoft.NET.Sdk.Functions" Version="3.0.11" />
   </ItemGroup>
@@ -38,6 +45,9 @@ limitations under the License.
     </None>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\messaging\source\GreenEnergyHub.Messaging.Integration.ServiceCollection\GreenEnergyHub.Messaging.Integration.ServiceCollection.csproj" />
+    <ProjectReference Include="..\..\..\queues\source\GreenEnergyHub.Queues.ValidationReportDispatcher\GreenEnergyHub.Queues.ValidationReportDispatcher.csproj" />
+    <ProjectReference Include="..\..\..\Shared\GreenEnergyHub\source\GreenEnergyHub.Json\GreenEnergyHub.Json.csproj" />
     <ProjectReference Include="..\GreenEnergyHub.Charges.Application\GreenEnergyHub.Charges.Application.csproj" />
     <ProjectReference Include="..\GreenEnergyHub.Charges.Domain\GreenEnergyHub.Charges.Domain.csproj" />
   </ItemGroup>

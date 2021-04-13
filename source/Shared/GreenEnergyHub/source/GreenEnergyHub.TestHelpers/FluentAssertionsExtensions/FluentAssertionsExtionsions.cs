@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,6 +29,8 @@ namespace GreenEnergyHub.TestHelpers.FluentAssertionsExtensions
         /// <param name="obj"></param>
         public static void NotContainNullsOrEmptyEnumerables(this ObjectAssertions obj)
         {
+            if (obj == null) throw new ArgumentNullException(nameof(obj));
+
             NotContainNullsOrEmptyEnumerables(obj.Subject, new List<object>());
         }
 
