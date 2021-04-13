@@ -12,9 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application.ChangeOfCharges;
+using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Fee;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Message;
+using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Tariff;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
 using GreenEnergyHub.Json;
 using Microsoft.AspNetCore.Http;
@@ -41,14 +44,46 @@ namespace GreenEnergyHub.Charges.MessageReceiver
 
         [FunctionName(FunctionName)]
         public async Task<IActionResult> RunAsync(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = null)] HttpRequest req,
-            ExecutionContext context,
+            [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = null)]
+            [NotNull] HttpRequest req,
+            [NotNull] ExecutionContext context,
             ILogger log)
         {
-            log.LogInformation("Function {FunctionName}started to process a request", FunctionName);
+            log.LogInformation("Function {FunctionName} started to process a request", FunctionName);
             var message = await GetChangeOfChargesMessageAsync(_jsonDeserializer, req, context).ConfigureAwait(false);
-            var status = await _changeOfChargesMessageHandler.HandleAsync(message).ConfigureAwait(false);
-            return new OkObjectResult(status);
+            var messageResult = await _changeOfChargesMessageHandler.HandleAsync(message).ConfigureAwait(false);
+            return new OkObjectResult(messageResult);
+        }
+
+        private static ChangeOfChargesTransaction GetCommandFromChangeOfChargeTransaction(ChangeOfChargesTransaction transaction)
+        {
+            return transaction.Type switch
+            {
+                "D01" => new FeeCreate
+                {
+                    Period = transaction.Period,
+                    Type = transaction.Type,
+                    CorrelationId = transaction.CorrelationId,
+                    MarketDocument = transaction.MarketDocument,
+                    RequestDate = transaction.RequestDate,
+                    LastUpdatedBy = transaction.LastUpdatedBy,
+                    MktActivityRecord = transaction.MktActivityRecord,
+                    ChargeTypeMRid = transaction.ChargeTypeMRid,
+                    ChargeTypeOwnerMRid = transaction.ChargeTypeOwnerMRid,
+                },
+                _ => new TariffCreate
+                {
+                    Period = transaction.Period,
+                    Type = transaction.Type,
+                    CorrelationId = transaction.CorrelationId,
+                    MarketDocument = transaction.MarketDocument,
+                    RequestDate = transaction.RequestDate,
+                    LastUpdatedBy = transaction.LastUpdatedBy,
+                    MktActivityRecord = transaction.MktActivityRecord,
+                    ChargeTypeMRid = transaction.ChargeTypeMRid,
+                    ChargeTypeOwnerMRid = transaction.ChargeTypeOwnerMRid,
+                }
+            };
         }
 
         private static async Task<ChangeOfChargesMessage> GetChangeOfChargesMessageAsync(
@@ -56,12 +91,14 @@ namespace GreenEnergyHub.Charges.MessageReceiver
             HttpRequest req,
             ExecutionContext executionContext)
         {
+            var message = new ChangeOfChargesMessage();
             var transaction = (ChangeOfChargesTransaction)await jsonDeserializer
                 .DeserializeAsync(req.Body, typeof(ChangeOfChargesTransaction))
                 .ConfigureAwait(false);
-            transaction.CorrelationId = executionContext.InvocationId.ToString();
-            var message = new ChangeOfChargesMessage();
-            message.Transactions.Add(transaction);
+
+            var command = GetCommandFromChangeOfChargeTransaction(transaction);
+            command.CorrelationId = executionContext.InvocationId.ToString();
+            message.Transactions.Add(command);
             return message;
         }
     }

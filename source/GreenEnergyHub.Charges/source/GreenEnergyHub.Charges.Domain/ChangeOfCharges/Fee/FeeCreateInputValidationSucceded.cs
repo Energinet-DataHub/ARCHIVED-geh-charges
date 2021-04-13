@@ -12,16 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace GreenEnergyHub.Charges.Domain.Events.Local
+namespace GreenEnergyHub.Charges.Domain.ChangeOfCharges.Fee
 {
-    /// <summary>
-    /// Contract for events.
-    /// </summary>
-    public interface ILocalEvent : IEvent
+    public class FeeCreateInputValidationSucceded : FeeBase
     {
-        /// <summary>
-        /// Servicebus filter
-        /// </summary>
-        public string Filter { get; }
     }
 }

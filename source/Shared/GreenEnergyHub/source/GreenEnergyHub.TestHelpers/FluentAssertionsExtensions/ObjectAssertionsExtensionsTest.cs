@@ -24,7 +24,7 @@ namespace GreenEnergyHub.TestHelpers.FluentAssertionsExtensions
     public class ObjectAssertionsExtensionsTest
     {
         [Fact]
-        public void Property_is_not_null()
+        public void PropertyIsNotNull()
         {
             // Arrange
             var sut = new RecursiveTestHelperWithOneProp
@@ -37,7 +37,7 @@ namespace GreenEnergyHub.TestHelpers.FluentAssertionsExtensions
         }
 
         [Fact]
-        public void Property_is_null()
+        public void PropertyIsNull()
         {
             // Arrange
             var sut = new RecursiveTestHelperWithOneProp
@@ -50,7 +50,7 @@ namespace GreenEnergyHub.TestHelpers.FluentAssertionsExtensions
         }
 
         [Fact]
-        public void Nested_property_is_null()
+        public void NestedPropertyIsNull()
         {
             // Arrange
             var sut = new RecursiveTestHelperWithOnePropAndOneList { Number = 1, RecursiveTestHelperWithOneProps = null };
@@ -60,7 +60,7 @@ namespace GreenEnergyHub.TestHelpers.FluentAssertionsExtensions
         }
 
         [Fact]
-        public void Nested_property_is_empty()
+        public void NestedPropertyIsEmpty()
         {
             // Arrange
             var sut = new RecursiveTestHelperWithOnePropAndOneList { Number = 1, RecursiveTestHelperWithOneProps = new List<RecursiveTestHelperWithOneProp>() };
@@ -70,7 +70,7 @@ namespace GreenEnergyHub.TestHelpers.FluentAssertionsExtensions
         }
 
         [Fact]
-        public void Nested_property_is_not_null_contained_object_and_its_prob_is_not_null()
+        public void NestedPropertyIsNotNullContainedObjectAndItsProbIsNotNull()
         {
             // Arrange
             var sut = new RecursiveTestHelperWithOnePropAndOneList
@@ -84,7 +84,7 @@ namespace GreenEnergyHub.TestHelpers.FluentAssertionsExtensions
         }
 
         [Fact]
-        public void Stack_overflow_guard()
+        public void StackOverflowGuard()
         {
             // Arrange
             var testHelper1 = new RecursiveTestHelper();
@@ -97,7 +97,7 @@ namespace GreenEnergyHub.TestHelpers.FluentAssertionsExtensions
         }
 
         [Fact]
-        public void Stack_overflow_List_guard()
+        public void StackOverflowListGuard()
         {
             // Arrange
             var testHelper1 = new RecursiveTestListHelper { List = new List<RecursiveTestListHelper>() };

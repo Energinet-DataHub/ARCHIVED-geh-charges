@@ -12,29 +12,24 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Diagnostics.CodeAnalysis;
+using GreenEnergyHub.Charges.Application.InputValidation.ValidationRules;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
-using NodaTime;
+using GreenEnergyHub.Messaging.Validation;
 
-namespace GreenEnergyHub.Charges.Domain.Events.Local
+namespace GreenEnergyHub.Charges.Application.InputValidation
 {
-    public class ChargeTransactionReceived : ILocalEvent
+    public class ChangeOfChargesRules : RuleCollection<ChangeOfChargesTransaction>
     {
-        public ChargeTransactionReceived(
-            string correlationId,
-            [NotNull] ChangeOfChargesTransaction transaction)
+        public ChangeOfChargesRules()
         {
-            CorrelationId = correlationId;
-            Transaction = transaction;
-            Filter = transaction.GetType().Name;
+            RuleFor(input => input.MarketDocument!.ProcessType)
+                .PropertyRule<Vr009>();
+
+            RuleFor(input => input.MarketDocument!.SenderMarketParticipant!.MRid)
+                .PropertyRule<Vr150>();
+
+            RuleFor(input => input.MarketDocument!.ReceiverMarketParticipant!.MRid)
+                .PropertyRule<Vr153>();
         }
-
-        public Instant PublishedTime { get; } = SystemClock.Instance.GetCurrentInstant();
-
-        public string CorrelationId { get; }
-
-        public ChangeOfChargesTransaction Transaction { get; }
-
-        public string Filter { get; }
     }
 }

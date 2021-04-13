@@ -34,3 +34,21 @@ module "sbtar_local_events_sender" {
   dependencies              = [module.sbn_charges]
   topic_name                = module.sbt_local_events.name
 }
+
+resource "azurerm_servicebus_subscription" "sbs-charge-transaction-received-subscription" {
+  name                = "sbs-charge-transaction-received-subscription"
+  resource_group_name = data.azurerm_resource_group.main.name
+  namespace_name      = module.sbn_charges.name
+  topic_name          = module.sbt_local_events.name
+  max_delivery_count  = 1
+}
+
+resource "azurerm_servicebus_subscription_rule" "sbs-charge-transaction-received-filter" {
+  name                = "sbsr-charge-transaction-received-filter"
+  resource_group_name = data.azurerm_resource_group.main.name
+  namespace_name      = module.sbn_charges.name
+  topic_name          = module.sbt_local_events.name
+  subscription_name   = azurerm_servicebus_subscription.sbs-charge-transaction-received-subscription.name
+  filter_type         = "SqlFilter"
+  sql_filter          = "sys.label = 'FeeCreate' OR sys.label = 'TariffCreate'"
+}

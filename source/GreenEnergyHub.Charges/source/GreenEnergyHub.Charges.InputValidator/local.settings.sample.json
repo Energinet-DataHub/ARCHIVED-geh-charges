@@ -1,0 +1,12 @@
+{
+  "IsEncrypted": false,
+  "Values": {
+    "FUNCTIONS_WORKER_RUNTIME": "dotnet",
+    "AzureWebJobsStorage": "UseDevelopmentStorage=true",
+    "AzureWebJobsDashboard": "UseDevelopmentStorage=true",
+    "LOCAL_EVENTS_LISTENER_CONNECTION_STRING": "<sb listener connection string>",
+    "LOCAL_EVENTS_SENDER_CONNECTION_STRING": "<sb sender connection string>",
+    "LOCAL_EVENTS_TOPIC_NAME": "<topic name>",
+    "LOCAL_EVENTS_SUBSCRIPTION_NAME": "<subscription name>"
+  }
+}

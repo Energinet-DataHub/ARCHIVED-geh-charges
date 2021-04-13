@@ -28,4 +28,8 @@ limitations under the License.
       <PackageReference Include="NodaTime" Version="3.0.5" />
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\..\..\messaging\source\GreenEnergyHub.Messaging\GreenEnergyHub.Messaging.csproj" />
+    </ItemGroup>
+
 </Project>
