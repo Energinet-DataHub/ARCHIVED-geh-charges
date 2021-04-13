@@ -35,8 +35,8 @@ module "sbtar_local_events_sender" {
   topic_name                = module.sbt_local_events.name
 }
 
-resource "azurerm_servicebus_subscription" "sbs-charge-catch-all" {
-  name                = "sbs-charge-catch-all"
+resource "azurerm_servicebus_subscription" "sbs-charge-all-events" {
+  name                = "sbs-charge-all-events"
   resource_group_name = data.azurerm_resource_group.main.name
   namespace_name      = module.sbn_charges.name
   topic_name          = module.sbt_local_events.name
