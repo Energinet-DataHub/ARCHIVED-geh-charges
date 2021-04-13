@@ -14,6 +14,7 @@ mergeable
 namespace
 NRules
 NuGet
+PI
 POCO
 proto
 resending
