@@ -34,7 +34,7 @@ In the current program increment (PI) the planned work is captured by the stated
 2. The domain can validate, create, update and stop price elements.
 3. The domain delivers change of charge messages to the [Post Office](https://github.com/Energinet-DataHub/geh-post-office) domain.
 4. The domain supports retrieval of historic price elements for audit purposes.
-5. The domænet can be surveilled by a dashboard (one step closer to working software).
+5. The domain can be surveilled by a dashboard (one step closer to working software).
 
 ## Getting Started
 
