@@ -29,11 +29,11 @@ namespace GreenEnergyHub.Charges.Application.ChangeOfCharges
             _inputValidationRuleEngine = inputValidationRuleEngine;
         }
 
-        public async Task<HubRequestValidationResult> ValidateAsync([NotNull] ChangeOfChargesTransaction changeOfChargesMessage)
+        public async Task<HubRequestValidationResult> ValidateAsync([NotNull] ChangeOfChargesTransaction changeOfChargesTransaction)
         {
-            var result = await _inputValidationRuleEngine.ValidateAsync(changeOfChargesMessage).ConfigureAwait(false);
+            var result = await _inputValidationRuleEngine.ValidateAsync(changeOfChargesTransaction).ConfigureAwait(false);
 
-            var hubRequestValidationResult = new HubRequestValidationResult(changeOfChargesMessage.ChargeTypeMRid);
+            var hubRequestValidationResult = new HubRequestValidationResult(changeOfChargesTransaction.ChargeTypeMRid);
 
             foreach (var error in result)
             {
