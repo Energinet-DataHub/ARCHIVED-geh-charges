@@ -12,16 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace GreenEnergyHub.Charges.Domain.Events.Local
+using FluentValidation.Validators;
+using GreenEnergyHub.Messaging.Validation;
+
+namespace GreenEnergyHub.Charges.Application.InputValidation.ValidationRules
 {
-    /// <summary>
-    /// Contract for events.
-    /// </summary>
-    public interface ILocalEvent : IEvent
+    public class Vr150 : PropertyRule<string?>
     {
-        /// <summary>
-        /// Servicebus filter
-        /// </summary>
-        public string Filter { get; }
+        protected override string Code => "VR.150";
+
+        protected override bool IsValid(string? marketParticipantMrId, PropertyValidatorContext context)
+        {
+            return MarketParticipantMrIdValidator.IsValid(marketParticipantMrId);
+        }
     }
 }

@@ -12,16 +12,19 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace GreenEnergyHub.Charges.Domain.Events.Local
+using FluentValidation.Validators;
+using GreenEnergyHub.Charges.Domain.Common;
+using GreenEnergyHub.Messaging.Validation;
+
+namespace GreenEnergyHub.Charges.Application.InputValidation.ValidationRules
 {
-    /// <summary>
-    /// Contract for events.
-    /// </summary>
-    public interface ILocalEvent : IEvent
+    public class Vr009 : PropertyRule<ProcessType>
     {
-        /// <summary>
-        /// Servicebus filter
-        /// </summary>
-        public string Filter { get; }
+        protected override string Code => "VR.009";
+
+        protected override bool IsValid(ProcessType processType, PropertyValidatorContext context)
+        {
+            return processType != ProcessType.Unknown;
+        }
     }
 }

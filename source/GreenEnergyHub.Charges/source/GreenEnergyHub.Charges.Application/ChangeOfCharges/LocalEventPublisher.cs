@@ -27,7 +27,7 @@ namespace GreenEnergyHub.Charges.Application.ChangeOfCharges
             "LOCAL_EVENTS_TOPIC_NAME";
 
         private const string LocalEventsConnectionString =
-            "LOCAL_EVENTS_CONNECTION_STRING";
+            "LOCAL_EVENTS_SENDER_CONNECTION_STRING";
 
         private readonly IJsonSerializer _jsonSerializer;
 
@@ -46,7 +46,14 @@ namespace GreenEnergyHub.Charges.Application.ChangeOfCharges
 
             var serializedMessage = _jsonSerializer.Serialize(localEvent);
 
-            var message = new ServiceBusMessage(serializedMessage) { CorrelationId = localEvent.CorrelationId };
+            var message = new ServiceBusMessage(serializedMessage)
+            {
+                CorrelationId = localEvent.CorrelationId,
+                Subject = localEvent.Filter, // We set 'Subject' at the moment for a better overview in the AZ portal.
+            };
+
+            // We use this custom "filter" property to filter our messages on the ServiceBus.
+            message.ApplicationProperties.Add("filter", localEvent.Filter);
 
             await sender.SendMessageAsync(message).ConfigureAwait(false);
         }

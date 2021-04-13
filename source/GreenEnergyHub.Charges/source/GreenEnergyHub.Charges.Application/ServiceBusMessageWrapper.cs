@@ -12,16 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace GreenEnergyHub.Charges.Domain.Events.Local
+using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
+
+namespace GreenEnergyHub.Charges.Application
 {
-    /// <summary>
-    /// Contract for events.
-    /// </summary>
-    public interface ILocalEvent : IEvent
+    public class ServiceBusMessageWrapper
     {
-        /// <summary>
-        /// Servicebus filter
-        /// </summary>
-        public string Filter { get; }
+        public ChangeOfChargesTransaction Transaction { get; set; } = new ();
     }
 }

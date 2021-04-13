@@ -11,7 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-name: Message receiver CI
+name: Local message service bus topic trigger CI
 
 on:
   pull_request:
@@ -20,7 +20,7 @@ on:
   workflow_dispatch: {}
 
 env:
-  CSPROJ_FILE_PATH: source/GreenEnergyHub.Charges/source/GreenEnergyHub.Charges.MessageReceiver/GreenEnergyHub.Charges.MessageReceiver.csproj
+  CSPROJ_FILE_PATH: 'source/GreenEnergyHub.Charges/source/GreenEnergyHub.Charges.InputValidator/GreenEnergyHub.Charges.InputValidator.csproj'
   SOLUTION_FILE_PATH: source/GreenEnergyHub.Charges/GreenEnergyHub.Charges.sln
   DOTNET_VERSION: '3.1'
 
@@ -37,15 +37,15 @@ jobs:
           github_token: ${{ github.token }}
           paths: '[
             "source/GreenEnergyHub.Charges/**",
-            ".github/workflows/message-receiver-ci.yml",
+            ".github/workflows/input-validator-ci.yml",
             ".github/actions/dotnet-build-and-test/**",
             ".github/actions/azure-core-tools-install/**"
           ]'
 
-  validate_build_message_receiver:
+  validate_local_message_service_bus_topic_trigger:
     needs: pre_job
     if: ${{ needs.pre_job.outputs.should_skip != 'true' }}
-    name: Validate build Message receiver
+    name: Validate build Local message service bus topic trigger
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository

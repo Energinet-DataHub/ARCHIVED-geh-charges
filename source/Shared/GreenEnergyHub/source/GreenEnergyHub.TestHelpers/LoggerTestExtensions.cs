@@ -25,7 +25,12 @@ namespace GreenEnergyHub.TestHelpers
         /// </summary>
         public static Mock<ILogger<T>> VerifyLoggerWasCalled<T>(this Mock<ILogger<T>> logger, string expectedMessage, LogLevel logLevel)
         {
-            Func<object, Type, bool> state = (v, t) => v.ToString().CompareTo(expectedMessage) == 0;
+            Func<object, Type, bool> state = (v, t) => string.Compare(v.ToString(), expectedMessage, StringComparison.InvariantCulture) == 0;
+
+            if (logger == null)
+            {
+                throw new ArgumentNullException(nameof(logger));
+            }
 
             logger.Verify(
                 x => x.Log(

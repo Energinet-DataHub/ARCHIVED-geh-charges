@@ -14,21 +14,23 @@
 
 using System.Diagnostics.CodeAnalysis;
 using GreenEnergyHub.Charges.Application.ChangeOfCharges;
-using GreenEnergyHub.Charges.MessageReceiver;
+using GreenEnergyHub.Charges.LocalMessageServiceBusTopicTrigger;
 using GreenEnergyHub.Json;
+using GreenEnergyHub.Messaging;
 using Microsoft.Azure.Functions.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection;
 
 [assembly: FunctionsStartup(typeof(Startup))]
 
-namespace GreenEnergyHub.Charges.MessageReceiver
+namespace GreenEnergyHub.Charges.LocalMessageServiceBusTopicTrigger
 {
     public class Startup : FunctionsStartup
     {
         public override void Configure([NotNull] IFunctionsHostBuilder builder)
         {
+            builder.Services.AddGreenEnergyHub(typeof(ChangeOfChargesMessageHandler).Assembly);
             builder.Services.AddSingleton<IJsonSerializer, JsonSerializer>();
-            builder.Services.AddScoped<IChangeOfChargesMessageHandler, ChangeOfChargesMessageHandler>();
+            builder.Services.AddScoped<IChangeOfChargeTransactionInputValidator, ChangeOfChargeTransactionInputValidator>();
             builder.Services.AddScoped<IChangeOfChargesTransactionHandler, ChangeOfChargesTransactionHandler>();
             builder.Services.AddScoped<ILocalEventPublisher, LocalEventPublisher>();
         }
