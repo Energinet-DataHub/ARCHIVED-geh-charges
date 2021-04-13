@@ -1,3 +1,3 @@
 # Test
 
-Read about general QA that applies to the entire Green Energy Hub here (TODO: Make link when available).
+Read about general QA that applies to the entire Green Energy Hub [here](https://github.com/Energinet-DataHub/green-energy-hub/blob/main/docs/test.md).
