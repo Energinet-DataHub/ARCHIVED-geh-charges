@@ -28,7 +28,6 @@ namespace GreenEnergyHub.Charges.LocalMessageServiceBusTopicTrigger
     {
         public override void Configure([NotNull] IFunctionsHostBuilder builder)
         {
-            // builder.Services.AddHttpClient();
             builder.Services.AddGreenEnergyHub(typeof(ChangeOfChargesMessageHandler).Assembly);
             builder.Services.AddSingleton<IJsonSerializer, JsonSerializer>();
             builder.Services.AddScoped<IChangeOfChargeTransactionInputValidator, ChangeOfChargeTransactionInputValidator>();
