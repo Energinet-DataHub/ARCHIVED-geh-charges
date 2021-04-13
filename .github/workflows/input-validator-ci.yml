@@ -11,7 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-name: Local message service bus topic trigger CI
+name: Input Validator CI
 
 on:
   pull_request:
@@ -42,10 +42,10 @@ jobs:
             ".github/actions/azure-core-tools-install/**"
           ]'
 
-  validate_local_message_service_bus_topic_trigger:
+  validate_input_validator:
     needs: pre_job
     if: ${{ needs.pre_job.outputs.should_skip != 'true' }}
-    name: Validate build Local message service bus topic trigger
+    name: Validate build Input validator
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository

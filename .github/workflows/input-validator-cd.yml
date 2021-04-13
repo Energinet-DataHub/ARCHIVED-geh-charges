@@ -11,7 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-name: Local message service bus topic trigger CD
+name: Input Validator CD
 
 on:
   push:
@@ -19,7 +19,7 @@ on:
       - main
     paths:
       - source/GreenEnergyHub.Charges/**
-      - .github/workflows/local-message-service-bus-trigger-cd.yml
+      - .github/workflows/input-validator-cd.yml
       - .github/actions/dotnet-build-and-test/**
       - .github/actions/azure-core-tools-install/**
   workflow_dispatch: {}
@@ -35,7 +35,7 @@ env:
 
 jobs:
   build_input_validator:
-    name: Build Local message service bus topic trigger
+    name: Build Input Validator
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -64,7 +64,7 @@ jobs:
     
   deploy_input_validator:
     name: Deploy function to ${{ matrix.environment.name }} - ${{ matrix.environment.long }}
-    needs: build_local_message_service_bus_topic_trigger
+    needs: build_input_validator
     runs-on: ubuntu-latest
     strategy:
       matrix:

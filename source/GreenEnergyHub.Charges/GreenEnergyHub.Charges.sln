@@ -40,7 +40,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GreenEnergyHub.Charges.Appl
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GreenEnergyHub.Charges.MessageReceiver", "source\GreenEnergyHub.Charges.MessageReceiver\GreenEnergyHub.Charges.MessageReceiver.csproj", "{FE2916A4-709B-4B3C-B023-97C0FE2CF35B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GreenEnergyHub.Charges.LocalMessageServiceBusTopicTrigger", "source\GreenEnergyHub.Charges.LocalMessageServiceBusTopicTrigger\GreenEnergyHub.Charges.LocalMessageServiceBusTopicTrigger.csproj", "{205A40C6-42FC-4438-B47C-6384171CF755}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GreenEnergyHub.Charges.InputValidator", "source\GreenEnergyHub.Charges.InputValidator\GreenEnergyHub.Charges.InputValidator.csproj", "{205A40C6-42FC-4438-B47C-6384171CF755}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GreenEnergyHub.Queues", "..\queues\source\GreenEnergyHub.Queues\GreenEnergyHub.Queues.csproj", "{FF5081B2-7B4E-4F20-89F5-4216D81C1461}"
 EndProject

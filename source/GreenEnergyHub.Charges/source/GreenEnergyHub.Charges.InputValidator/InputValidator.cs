@@ -25,14 +25,14 @@ using Microsoft.Extensions.Logging;
 
 namespace GreenEnergyHub.Charges.LocalMessageServiceBusTopicTrigger
 {
-    public class LocalMessageServiceBusTopicTriggerFunction
+    public class InputValidator
     {
-        private const string FunctionName = "LocalMessageServieBusTopicTrigger";
+        private const string FunctionName = "InputValidator";
         private readonly IJsonSerializer _jsonDeserializer;
         private readonly IChangeOfChargeTransactionInputValidator _changeOfChargeTransactionInputValidator;
         private readonly IChangeOfChargesTransactionHandler _changeOfChargesTransactionHandler;
 
-        public LocalMessageServiceBusTopicTriggerFunction(
+        public InputValidator(
             IJsonSerializer jsonDeserializer,
             IChangeOfChargeTransactionInputValidator changeOfChargeTransactionInputValidator,
             IChangeOfChargesTransactionHandler changeOfChargesTransactionHandler)
