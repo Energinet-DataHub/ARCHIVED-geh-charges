@@ -35,6 +35,14 @@ module "sbtar_local_events_sender" {
   topic_name                = module.sbt_local_events.name
 }
 
+resource "azurerm_servicebus_subscription" "sbs-charge-catch-all" {
+  name                = "sbs-charge-catch-all"
+  resource_group_name = data.azurerm_resource_group.main.name
+  namespace_name      = module.sbn_charges.name
+  topic_name          = module.sbt_local_events.name
+  max_delivery_count  = 1
+}
+
 resource "azurerm_servicebus_subscription" "sbs-charge-transaction-received-subscription" {
   name                = "sbs-charge-transaction-received-subscription"
   resource_group_name = data.azurerm_resource_group.main.name
