@@ -44,7 +44,7 @@ module "azfun_charges_input_validator" {
 
 module "azfun_charges_input_validator_plan" {
   source              = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//app-service-plan?ref=1.0.0"
-  name                = "asp-message-receiver-${var.project}-${var.organisation}-${var.environment}"
+  name                = "azfun-charges-input-validator-${var.project}-${var.organisation}-${var.environment}"
   resource_group_name = data.azurerm_resource_group.main.name
   location            = data.azurerm_resource_group.main.location
   kind                = "FunctionApp"
