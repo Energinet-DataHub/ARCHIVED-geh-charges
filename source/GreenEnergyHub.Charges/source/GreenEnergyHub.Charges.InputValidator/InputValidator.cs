@@ -83,7 +83,7 @@ namespace GreenEnergyHub.Charges.LocalMessageServiceBusTopicTrigger
                     ChargeTypeMRid = transaction.ChargeTypeMRid,
                     ChargeTypeOwnerMRid = transaction.ChargeTypeOwnerMRid,
                 },
-                _ => new TariffInputValidationSucceded
+                _ => new TariffCreateInputValidationSucceded
                 {
                     Period = transaction.Period,
                     Type = transaction.Type,
@@ -114,7 +114,7 @@ namespace GreenEnergyHub.Charges.LocalMessageServiceBusTopicTrigger
                     ChargeTypeMRid = transaction.ChargeTypeMRid,
                     ChargeTypeOwnerMRid = transaction.ChargeTypeOwnerMRid,
                 },
-                _ => new TariffInputValidationFailed
+                _ => new TariffCreateInputValidationFailed
                 {
                     Period = transaction.Period,
                     Type = transaction.Type,
