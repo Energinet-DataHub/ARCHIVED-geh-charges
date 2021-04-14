@@ -13,7 +13,7 @@
 # limitations under the License.
 module "azfun_charges_business_validator" {
   source                                    = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//function-app?ref=1.0.0"
-  name                                      = "azfun-charges-business-validator-${var.project}-${var.organisation}-${var.environment}"
+  name                                      = "azfun-business-validator-${var.project}-${var.organisation}-${var.environment}"
   resource_group_name                       = data.azurerm_resource_group.main.name
   location                                  = data.azurerm_resource_group.main.location
   storage_account_access_key                = module.azfun_charges_business_validator_stor.primary_access_key
@@ -44,7 +44,7 @@ module "azfun_charges_business_validator" {
 
 module "azfun_charges_business_validator_plan" {
   source              = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//app-service-plan?ref=1.0.0"
-  name                = "azfun-charges-business-validator-${var.project}-${var.organisation}-${var.environment}"
+  name                = "asp-business-validator-${var.project}-${var.organisation}-${var.environment}"
   resource_group_name = data.azurerm_resource_group.main.name
   location            = data.azurerm_resource_group.main.location
   kind                = "FunctionApp"
