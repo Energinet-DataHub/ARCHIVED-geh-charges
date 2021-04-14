@@ -16,7 +16,11 @@ Microsoft NuGet packages have been omitted from this list.
 <!---
   Table content created using this command:
 
-  grep -rh " uses: " .github/**/*.y*ml | sed 's/[ -]*uses: //g' | grep -v "./.github/actions" | sort -u | sed 's/\(.*\)@v\?\(.*\)/| `\1` | \2 | <https:\/\/github.com\/\1> | MIT |/'
+      grep -rh " uses: " .github/**/*.y*ml | sed 's/[ -]*uses: //g' | grep -v "./.github/actions" | sort -u | sed 's/\(.*\)@v\?\(.*\)/| `\1` | \2 | <https:\/\/github.com\/\1> | MIT |/'
+
+  Please fix LICENSE and add probably also (re)add Azure CLI in case you update the whole table.
+
+    | `Azure CLI` | | <https://aka.ms/InstallAzureCLIDeb> | MIT |
 --->
 | Name | Version | Url | License |
 | -- | -- | -- | -- |
