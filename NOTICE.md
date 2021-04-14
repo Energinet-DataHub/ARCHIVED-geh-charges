@@ -15,20 +15,29 @@ Microsoft NuGet packages have been omitted from this list.
 
 | Name | Version | Url | License |
 | -- | -- | -- | -- |
-| `actions-download-file` | `suisei-cn/actions-download-file@v1` | <https://github.com/suisei-cn/actions-download-file> | MIT |
-| `Checkout V2` | `actions/checkout@v2` | <https://github.com/actions/checkout> | MIT |
-| `Download-Artifact v2` | `actions/download-artifact@v2` | <https://github.com/actions/download-artifact> | MIT |
-| `GitHub Action - Markdown link check` | `gaurav-nelson/github-action-markdown-link-check@v1` | <https://github.com/gaurav-nelson/github-action-markdown-link-check> | MIT |
-| `GitHub Actions for deploying to Azure Functions` | `Azure/functions-action@v1` | <https://github.com/Azure/functions-action> | MIT |
-| `Linter for markdown (with presets)` | `avto-dev/markdown-lint@v1` | <https://github.com/avto-dev/markdown-lint> | MIT |
-| `Problem Matcher for markdownlint-cli` | `xt0rted/markdownlint-problem-matcher@v1` | <https://github.com/xt0rted/markdownlint-problem-matcher> | MIT |
-| `Repository Dispatch` | `peter-evans/repository-dispatch@v1` | <https://github.com/peter-evans/repository-dispatch> | MIT |
-| `setup-dotnet` | `actions/setup-dotnet@v1` | <https://github.com/actions/setup-dotnet> | MIT |
-| `setup-python V2` | `actions/setup-python@v2` | <https://github.com/actions/setup-python> | MIT |
-| `setup-terraform` | `actions/hashicorp/setup-terraform@v1.2.1` | <https://github.com/hashicorp/setup-terraform> | MPL-2.0 |
-| `Skip Duplicate Actions` | `fkirc/skip-duplicate-actions@v1.4.0` | <https://github.com/fkirc/skip-duplicate-actions> | MIT |
-| `spellcheck-github-actions` | `rojopolis/spellcheck-github-actions@0.5.0` | <https://github.com/rojopolis/spellcheck-github-actions> | MIT |
-| `Upload-Artifact v2` | `actions/upload-artifact@v2` | <https://github.com/actions/upload-artifact> | MIT |
+
+<!---
+  Table content created using this command:
+
+  grep -rh " uses: " .github/**/*.y*ml | sed 's/[ -]*uses: //g' | grep -v "./.github/actions" | sort | sed 's/\(.*\)@\(.*\)/| `\1@\2` | <https:\/\/github.com\/\1> | MIT |/'
+--->
+| Action | Url | License |
+| -- | -- | -- |
+| `actions/checkout@master` | <https://github.com/actions/checkout> | MIT |
+| `actions/checkout@v2` | <https://github.com/actions/checkout> | MIT |
+| `actions/download-artifact@v2` | <https://github.com/actions/download-artifact> | MIT |
+| `actions/setup-dotnet@v1` | <https://github.com/actions/setup-dotnet> | MIT |
+| `actions/setup-python@v2` | <https://github.com/actions/setup-python> | MIT |
+| `actions/upload-artifact@v2` | <https://github.com/actions/upload-artifact> | MIT |
+| `avto-dev/markdown-lint@v1` | <https://github.com/avto-dev/markdown-lint> | MIT |
+| `Azure/functions-action@v1` | <https://github.com/Azure/functions-action> | MIT |
+| `fkirc/skip-duplicate-actions@v1.4.0` | <https://github.com/fkirc/skip-duplicate-actions> | MIT |
+| `gaurav-nelson/github-action-markdown-link-check@v1` | <https://github.com/gaurav-nelson/github-action-markdown-link-check> | MIT |
+| `hashicorp/setup-terraform@v1.2.1` | <https://github.com/hashicorp/setup-terraform> | MPL-2.0 |
+| `kt3k/license_checker@v1.0.3` | <https://github.com/kt3k/license_checker> | MIT |
+| `peter-evans/repository-dispatch@v1` | <https://github.com/peter-evans/repository-dispatch> | MIT |
+| `rojopolis/spellcheck-github-actions@0.5.0` | <https://github.com/rojopolis/spellcheck-github-actions> | MIT |
+| `xt0rted/markdownlint-problem-matcher@v1` | <https://github.com/xt0rted/markdownlint-problem-matcher> | MIT |
 
 ### NuGet Packages
 
