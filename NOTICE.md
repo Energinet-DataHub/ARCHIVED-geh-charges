@@ -34,9 +34,20 @@ Microsoft NuGet packages have been omitted from this list.
 
 | Name | Version | Url | License |
 | -- | -- | -- | -- |
-| `coverlet.collector` | 1.2.0 | <https://www.nuget.org/packages/coverlet.collector/1.2.0> | MIT |
+| `AutoFixture` | 4.16.0 | <https://www.nuget.org/packages/AutoFixture/4.16.0/> | MIT |
+| `AutoFixture.AutoMoq` | 4.16.0 | <https://www.nuget.org/packages/AutoFixture.AutoMoq/4.16.0/> | MIT |
+| `AutoFixture.Xunit2` | 4.16.0 | <https://www.nuget.org/packages/AutoFixture.Xunit2/4.16.0/> | MIT |
+| `Confluent.Kafka` | 1.5.3 | <https://www.nuget.org/packages/Confluent.Kafka/1.5.3/> | Apache-2.0 |
+| `coverlet.collector` | 3.0.3 | <https://www.nuget.org/packages/coverlet.collector/3.0.3/> | MIT |
+| `dbup-sqlserver` | 4.5.0 | <https://www.nuget.org/packages/dbup-sqlserver/4.5.0/> | MIT |
 | `Fluent Assertions` | 5.10.3 | <https://www.nuget.org/packages/FluentAssertions/5.10.3/> | Apache-2.0 |
+| `FluentValidation` | 9.5.4 | <https://www.nuget.org/packages/FluentValidation/9.5.4/> | Apache-2.0 |
+| `MediatR` | 9.0.0 | <https://www.nuget.org/packages/MediatR/9.0.0/> | Apache-2.0 |
+| `MediatR.Extensions.Microsoft.DependencyInjection` | 9.0.0 | <https://www.nuget.org/packages/MediatR.Extensions.Microsoft.DependencyInjection/9.0.0/> | Apache-2.0 |
+| `Moq` | 4.16.1 | <https://www.nuget.org/packages/Moq/4.16.1/> | BSD-3-Clause |
+| `NodaTime` | 3.0.5 | <https://www.nuget.org/packages/NodaTime/3.0.5/> | Apache-2.0 |
+| `NodaTime.Serialization.SystemTextJson` | 1.0.0 | <https://www.nuget.org/packages/NodaTime.Serialization.SystemTextJson/1.0.0/> | Apache-2.0 |
 | `NSubstitute` | 4.2.2 | <https://www.nuget.org/packages/NSubstitute/4.2.2> | BSD-3-Clause |
 | `StyleCop.Analyzers` | 1.1.118 | <https://www.nuget.org/packages/StyleCop.Analyzers/1.1.118> | Apache-2.0 |
 | `xunit` | 2.4.1 | <https://www.nuget.org/packages/xunit/2.4.1> | [`xunit` license](https://raw.githubusercontent.com/xunit/xunit/master/license.txt) |
-| `xunit.runner.visualstudio` | 2.4.0 | <https://www.nuget.org/packages/xunit.runner.visualstudio/2.4.0> | [`xunit` license](https://raw.githubusercontent.com/xunit/xunit/master/license.txt) |
+| `xunit.runner.visualstudio` | 2.4.3 | <https://www.nuget.org/packages/xunit.runner.visualstudio/2.4.3> | [`xunit` license](https://raw.githubusercontent.com/xunit/xunit/master/license.txt) |
