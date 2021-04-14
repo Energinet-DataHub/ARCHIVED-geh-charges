@@ -78,3 +78,21 @@ resource "azurerm_servicebus_subscription_rule" "sbs-charge-input-validated-rece
   filter_type         = "SqlFilter"
   sql_filter          = "sys.label = 'FeeCreateInputValidationSucceded' OR sys.label = 'TariffCreateInputValidationSucceded'"
 }
+
+resource "azurerm_servicebus_subscription" "sbs-charge-business-validated-received-subscription" {
+  name                = "sbs-charge-business-validated-received-subscription"
+  resource_group_name = data.azurerm_resource_group.main.name
+  namespace_name      = module.sbn_charges.name
+  topic_name          = module.sbt_local_events.name
+  max_delivery_count  = 1
+}
+
+resource "azurerm_servicebus_subscription_rule" "sbs-charge-business-validated-received-filter" {
+  name                = "sbsr-charge-business-validated-received-filter"
+  resource_group_name = data.azurerm_resource_group.main.name
+  namespace_name      = module.sbn_charges.name
+  topic_name          = module.sbt_local_events.name
+  subscription_name   = azurerm_servicebus_subscription.sbs-charge-business-validated-received-subscription.name
+  filter_type         = "SqlFilter"
+  sql_filter          = "sys.label = 'FeeCreateBusinessValidationSucceded' OR sys.label = 'TariffCreateBusinessValidationSucceded'"
+}
