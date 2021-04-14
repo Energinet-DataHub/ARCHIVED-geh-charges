@@ -30,7 +30,7 @@ module "azfun_charges_persist_changes" {
     CHARGE_DB_CONNECTION_STRING                  = local.CHARGE_DB_CONNECTION_STRING
     LOCAL_EVENTS_LISTENER_CONNECTION_STRING      = trimsuffix(module.sbtar_local_events_listener.primary_connection_string, ";EntityPath=${module.sbt_local_events.name}")
     LOCAL_EVENTS_TOPIC_NAME                      = module.sbt_local_events.name
-    LOCAL_EVENTS_SUBSCRIPTION_NAME               = azurerm_servicebus_subscription_rule.sbs-charge-business-validated-received-filter.subscription_name
+    LOCAL_EVENTS_SUBSCRIPTION_NAME               = azurerm_servicebus_subscription_rule.sbs-business-validated-received-filter.subscription_name
   }
   dependencies                              = [
     module.appi.dependent_on,
