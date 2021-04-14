@@ -118,7 +118,6 @@ This solution has been temporarily copied to the Charges repository. We expect t
 
 | Name | Version | Url | License |
 | -- | -- | -- | -- |
-| `` | -- | <> | -- |
 | `AutoFixture` | 4.16.0 | <https://www.nuget.org/packages/AutoFixture/4.16.0/> | MIT |
 | `AutoFixture.AutoMoq` | 4.16.0 | <https://www.nuget.org/packages/AutoFixture.AutoMoq/4.16.0/> | MIT |
 | `AutoFixture.Xunit2` | 4.16.0 | <https://www.nuget.org/packages/AutoFixture.Xunit2/4.16.0/> | MIT |
