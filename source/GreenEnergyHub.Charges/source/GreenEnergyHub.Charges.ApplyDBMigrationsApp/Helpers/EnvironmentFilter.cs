@@ -19,12 +19,24 @@ namespace GreenEnergyHub.Charges.ApplyDBMigrationsApp.Helpers
 {
     public static class EnvironmentFilter
     {
+        public static Func<string, bool> GetPreDeployFilter(string[] args)
+        {
+            return file => file.EndsWith(".sql", StringComparison.InvariantCulture) &&
+                           file.Contains(".Scripts.PreDeploy.") && args.Contains("includePreDeploy");
+        }
+
         public static Func<string, bool> GetFilter(string[] args)
         {
             return file => file.EndsWith(".sql", StringComparison.InvariantCulture) &&
-                           ((file.Contains(".Scripts.Seed.") && args.Contains("includeSeedData")) ||
-                            (file.Contains(".Scripts.Test.") && args.Contains("includeTestData")) ||
-                            file.Contains(".Scripts.Model."));
+                            ((file.Contains(".Scripts.Seed.") && args.Contains("includeSeedData")) ||
+                             (file.Contains(".Scripts.Test.") && args.Contains("includeTestData")) ||
+                             file.Contains(".Scripts.Model."));
+        }
+
+        public static Func<string, bool> GetPostDeployFilter(string[] args)
+        {
+            return file => file.EndsWith(".sql", StringComparison.InvariantCulture)
+                           && file.Contains(".Scripts.PostDeploy.") && args.Contains("includePostDeploy");
         }
     }
 }
