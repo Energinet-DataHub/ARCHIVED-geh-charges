@@ -16,25 +16,30 @@ Microsoft NuGet packages have been omitted from this list.
 <!---
   Table content created using this command:
 
-  grep -rh " uses: " .github/**/*.y*ml | sed 's/[ -]*uses: //g' | grep -v "./.github/actions" | sort | sed 's/\(.*\)@\(.*\)/| `\1@\2` | <https:\/\/github.com\/\1> | MIT |/'
+      grep -rh " uses: " .github/**/*.y*ml | sed 's/[ -]*uses: //g' | grep -v "./.github/actions" | sort -u | sed 's/\(.*\)@v\?\(.*\)/| `\1` | \2 | <https:\/\/github.com\/\1> | MIT |/'
+
+  Please fix LICENSE and add probably also (re)add Azure CLI in case you update the whole table.
+
+    | `Azure CLI` | | <https://aka.ms/InstallAzureCLIDeb> | MIT |
 --->
-| Action | Url | License |
-| -- | -- | -- |
-| `actions/checkout@master` | <https://github.com/actions/checkout> | MIT |
-| `actions/checkout@v2` | <https://github.com/actions/checkout> | MIT |
-| `actions/download-artifact@v2` | <https://github.com/actions/download-artifact> | MIT |
-| `actions/setup-dotnet@v1` | <https://github.com/actions/setup-dotnet> | MIT |
-| `actions/setup-python@v2` | <https://github.com/actions/setup-python> | MIT |
-| `actions/upload-artifact@v2` | <https://github.com/actions/upload-artifact> | MIT |
-| `avto-dev/markdown-lint@v1` | <https://github.com/avto-dev/markdown-lint> | MIT |
-| `Azure/functions-action@v1` | <https://github.com/Azure/functions-action> | MIT |
-| `fkirc/skip-duplicate-actions@v1.4.0` | <https://github.com/fkirc/skip-duplicate-actions> | MIT |
-| `gaurav-nelson/github-action-markdown-link-check@v1` | <https://github.com/gaurav-nelson/github-action-markdown-link-check> | MIT |
-| `hashicorp/setup-terraform@v1.2.1` | <https://github.com/hashicorp/setup-terraform> | MPL-2.0 |
-| `kt3k/license_checker@v1.0.3` | <https://github.com/kt3k/license_checker> | MIT |
-| `peter-evans/repository-dispatch@v1` | <https://github.com/peter-evans/repository-dispatch> | MIT |
-| `rojopolis/spellcheck-github-actions@0.5.0` | <https://github.com/rojopolis/spellcheck-github-actions> | MIT |
-| `xt0rted/markdownlint-problem-matcher@v1` | <https://github.com/xt0rted/markdownlint-problem-matcher> | MIT |
+| Name | Version | Url | License |
+| -- | -- | -- | -- |
+| `actions/checkout` | master | <https://github.com/actions/checkout> | MIT |
+| `actions/checkout` | 2 | <https://github.com/actions/checkout> | MIT |
+| `actions/download-artifact` | 2 | <https://github.com/actions/download-artifact> | MIT |
+| `actions/setup-dotnet` | 1 | <https://github.com/actions/setup-dotnet> | MIT |
+| `actions/setup-python` | 2 | <https://github.com/actions/setup-python> | MIT |
+| `actions/upload-artifact` | 2 | <https://github.com/actions/upload-artifact> | MIT |
+| `avto-dev/markdown-lint` | 1 | <https://github.com/avto-dev/markdown-lint> | MIT |
+| `Azure/functions-action` | 1 | <https://github.com/Azure/functions-action> | MIT |
+| `Azure CLI` | | <https://aka.ms/InstallAzureCLIDeb> | MIT |
+| `fkirc/skip-duplicate-actions` | 1.4.0 | <https://github.com/fkirc/skip-duplicate-actions> | MIT |
+| `gaurav-nelson/github-action-markdown-link-check` | 1 | <https://github.com/gaurav-nelson/github-action-markdown-link-check> | MIT |
+| `hashicorp/setup-terraform` | 1.2.1 | <https://github.com/hashicorp/setup-terraform> | MPL-2.0 |
+| `kt3k/license_checker` | 1.0.3 | <https://github.com/kt3k/license_checker> | MIT |
+| `peter-evans/repository-dispatch` | 1 | <https://github.com/peter-evans/repository-dispatch> | MIT |
+| `rojopolis/spellcheck-github-actions` | 0.5.0 | <https://github.com/rojopolis/spellcheck-github-actions> | MIT |
+| `xt0rted/markdownlint-problem-matcher` | 1 | <https://github.com/xt0rted/markdownlint-problem-matcher> | MIT |
 
 ### NuGet Packages
 
