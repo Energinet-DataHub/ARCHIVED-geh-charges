@@ -13,4 +13,5 @@
 # limitations under the License.
 locals {
     sqlServerAdminName = "gehdbadmin"
+	CHARGE_DB_CONNECTION_STRING = "Server=${module.sqlsrv_charges.fully_qualified_domain_name};Database=${module.sqldb_charges.name};Uid=${local.sqlServerAdminName};Pwd=${random_password.sqlsrv_admin_password.result};"
 }
