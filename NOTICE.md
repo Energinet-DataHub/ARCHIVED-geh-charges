@@ -88,7 +88,7 @@ This solution has been temporarily copied to the Charges repository. We expect t
 | `Moq` | 4.16.0 | <https://www.nuget.org/packages/Moq/4.16.0/> | BSD-3-Clause |
 | `Moq.AutoMock` | 2.3.0 | <https://www.nuget.org/packages/Moq.AutoMock/2.3.0/> | MIT |
 | `NodaTime` | 3.0.5 | <https://www.nuget.org/packages/NodaTime/3.0.5/> | Apache-2.0 |
-| `NodaTime.Serialization.Protobuf` | 2.0.0 | https://www.nuget.org/packages/NodaTime.Serialization.Protobuf/2.0.0/ | Apache-2.0 |
+| `NodaTime.Serialization.Protobuf` | 2.0.0 | <https://www.nuget.org/packages/NodaTime.Serialization.Protobuf/2.0.0/> | Apache-2.0 |
 | `StyleCop.Analyzers` | 1.1.118 | <https://www.nuget.org/packages/StyleCop.Analyzers/1.1.118> | Apache-2.0 |
 | `xunit` | 2.4.1 | <https://www.nuget.org/packages/xunit/2.4.1> | [`xunit` license](https://raw.githubusercontent.com/xunit/xunit/master/license.txt) |
 | `xunit.runner.visualstudio` | 2.4.3 | <https://www.nuget.org/packages/xunit.runner.visualstudio/2.4.3> | [`xunit` license](https://raw.githubusercontent.com/xunit/xunit/master/license.txt) |
