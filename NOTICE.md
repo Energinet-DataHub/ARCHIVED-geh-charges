@@ -31,6 +31,7 @@ Microsoft NuGet packages have been omitted from this list.
 | `actions/upload-artifact@v2` | <https://github.com/actions/upload-artifact> | MIT |
 | `avto-dev/markdown-lint@v1` | <https://github.com/avto-dev/markdown-lint> | MIT |
 | `Azure/functions-action@v1` | <https://github.com/Azure/functions-action> | MIT |
+| `Azure CLI` | <https://aka.ms/InstallAzureCLIDeb> | MIT |
 | `fkirc/skip-duplicate-actions@v1.4.0` | <https://github.com/fkirc/skip-duplicate-actions> | MIT |
 | `gaurav-nelson/github-action-markdown-link-check@v1` | <https://github.com/gaurav-nelson/github-action-markdown-link-check> | MIT |
 | `hashicorp/setup-terraform@v1.2.1` | <https://github.com/hashicorp/setup-terraform> | MPL-2.0 |
