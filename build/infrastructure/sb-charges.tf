@@ -76,5 +76,5 @@ resource "azurerm_servicebus_subscription_rule" "sbs-charge-input-validated-rece
   topic_name          = module.sbt_local_events.name
   subscription_name   = azurerm_servicebus_subscription.sbs-charge-input-validated-received-subscription.name
   filter_type         = "SqlFilter"
-  sql_filter          = "sys.label = 'FeeCreateInputValidationSucceded' OR sys.label = 'TariffInputValidationSucceded'"
+  sql_filter          = "sys.label = 'FeeCreateInputValidationSucceded' OR sys.label = 'TariffCreateInputValidationSucceded'"
 }
