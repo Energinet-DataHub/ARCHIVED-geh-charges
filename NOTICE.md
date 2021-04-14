@@ -45,7 +45,7 @@ Microsoft NuGet packages have been omitted from this list.
 
 Below gives an overview of the NuGet packages used across the solutions in the repository.
 
-#### Charges Solution (GreenEnergyHub.Charges.sln)
+#### Charges Solution (GreenEnergyHub.Charges)
 
 | Name | Version | Url | License |
 | -- | -- | -- | -- |
@@ -55,7 +55,7 @@ Below gives an overview of the NuGet packages used across the solutions in the r
 | `Confluent.Kafka` | 1.5.3 | <https://www.nuget.org/packages/Confluent.Kafka/1.5.3/> | Apache-2.0 |
 | `coverlet.collector` | 3.0.3 | <https://www.nuget.org/packages/coverlet.collector/3.0.3/> | MIT |
 | `dbup-sqlserver` | 4.5.0 | <https://www.nuget.org/packages/dbup-sqlserver/4.5.0/> | MIT |
-| `Fluent Assertions` | 5.10.3 | <https://www.nuget.org/packages/FluentAssertions/5.10.3/> | Apache-2.0 |
+| `FluentAssertions` | 5.10.3 | <https://www.nuget.org/packages/FluentAssertions/5.10.3/> | Apache-2.0 |
 | `FluentValidation` | 9.5.4 | <https://www.nuget.org/packages/FluentValidation/9.5.4/> | Apache-2.0 |
 | `MediatR` | 9.0.0 | <https://www.nuget.org/packages/MediatR/9.0.0/> | Apache-2.0 |
 | `MediatR.Extensions.Microsoft.DependencyInjection` | 9.0.0 | <https://www.nuget.org/packages/MediatR.Extensions.Microsoft.DependencyInjection/9.0.0/> | Apache-2.0 |
@@ -79,7 +79,7 @@ This solution has been temporarily copied to the Charges repository. We expect t
 | `AutoFixture.Xunit2` | 4.15.0 | <https://www.nuget.org/packages/AutoFixture.Xunit2/4.15.0/> | MIT |
 | `coverlet.collector` | 3.0.3 | <https://www.nuget.org/packages/coverlet.collector/3.0.3/> | MIT |
 | `coverlet.msbuild` | 3.0.3 | <https://www.nuget.org/packages/coverlet.msbuild/3.0.3/> | MIT |
-| `Fluent Assertions` | 5.10.3 | <https://www.nuget.org/packages/FluentAssertions/5.10.3/> | Apache-2.0 |
+| `FluentAssertions` | 5.10.3 | <https://www.nuget.org/packages/FluentAssertions/5.10.3/> | Apache-2.0 |
 | `FluentValidation` | 9.5.4 | <https://www.nuget.org/packages/FluentValidation/9.5.4/> | Apache-2.0 |
 | `Google.Protobuf` | 3.15.1 | <https://www.nuget.org/packages/Google.Protobuf/3.15.1/> | [`protobuf` license](https://github.com/protocolbuffers/protobuf/blob/master/LICENSE) |
 | `Grpc.Tools` | 2.35.0 | <https://www.nuget.org/packages/Grpc.Tools/2.35.0/> | Apache-2.0 |
@@ -99,6 +99,18 @@ This solution has been temporarily copied to the Charges repository. We expect t
 
 | Name | Version | Url | License |
 | -- | -- | -- | -- |
+| `Confluent.Kafka` | 1.5.3 | <https://www.nuget.org/packages/Confluent.Kafka/1.5.3/> | Apache-2.0 |
+| `coverlet.collector` | 1.2.0 | <https://www.nuget.org/packages/coverlet.collector/1.2.0/> | MIT |
+| `coverlet.msbuild` | 3.0.0 | <https://www.nuget.org/packages/coverlet.msbuild/3.0.0/> | MIT |
+| `FluentValidation` | 9.5.4 | <https://www.nuget.org/packages/FluentValidation/9.5.4/> | Apache-2.0 |
+| `MediatR` | 9.0.0 | <https://www.nuget.org/packages/MediatR/9.0.0/> | Apache-2.0 |
+| `Moq` | 4.16.0 | <https://www.nuget.org/packages/Moq/4.16.0/> | BSD-3-Clause |
+| `Moq.AutoMock` | 2.3.0 | <https://www.nuget.org/packages/Moq.AutoMock/2.3.0/> | MIT |
+| `NodaTime` | 3.0.5 | <https://www.nuget.org/packages/NodaTime/3.0.5/> | Apache-2.0 |
+| `NodaTime.Serialization.SystemTextJson` | 1.0.0 | <https://www.nuget.org/packages/NodaTime.Serialization.SystemTextJson/1.0.0/> | Apache-2.0 |
+| `StyleCop.Analyzers` | 1.1.118 | <https://www.nuget.org/packages/StyleCop.Analyzers/1.1.118> | Apache-2.0 |
+| `xunit` | 2.4.0 | <https://www.nuget.org/packages/xunit/2.4.0> | [`xunit` license](https://raw.githubusercontent.com/xunit/xunit/master/license.txt) |
+| `xunit.runner.visualstudio` | 2.4.0 | <https://www.nuget.org/packages/xunit.runner.visualstudio/2.4.0> | [`xunit` license](https://raw.githubusercontent.com/xunit/xunit/master/license.txt) |
 
 #### Shared solution (GreenEnergyHub)
 
@@ -106,3 +118,13 @@ This solution has been temporarily copied to the Charges repository. We expect t
 
 | Name | Version | Url | License |
 | -- | -- | -- | -- |
+| `` | -- | <> | -- |
+| `AutoFixture` | 4.16.0 | <https://www.nuget.org/packages/AutoFixture/4.16.0/> | MIT |
+| `AutoFixture.AutoMoq` | 4.16.0 | <https://www.nuget.org/packages/AutoFixture.AutoMoq/4.16.0/> | MIT |
+| `AutoFixture.Xunit2` | 4.16.0 | <https://www.nuget.org/packages/AutoFixture.Xunit2/4.16.0/> | MIT |
+| `FluentAssertions` | 5.10.3 | <https://www.nuget.org/packages/FluentAssertions/5.10.3/> | Apache-2.0 |
+| `Moq` | 4.16.1 | <https://www.nuget.org/packages/Moq/4.16.1/> | BSD-3-Clause |
+| `NodaTime.Serialization.SystemTextJson` | 1.0.0 | <https://www.nuget.org/packages/NodaTime.Serialization.SystemTextJson/1.0.0/> | Apache-2.0 |
+| `StyleCop.Analyzers` | 1.1.118 | <https://www.nuget.org/packages/StyleCop.Analyzers/1.1.118> | Apache-2.0 |
+| `xunit` | 2.4.1 | <https://www.nuget.org/packages/xunit/2.4.1> | [`xunit` license](https://raw.githubusercontent.com/xunit/xunit/master/license.txt) |
+| `xunit.runner.visualstudio` | 2.4.3 | <https://www.nuget.org/packages/xunit.runner.visualstudio/2.4.3> | [`xunit` license](https://raw.githubusercontent.com/xunit/xunit/master/license.txt) |
