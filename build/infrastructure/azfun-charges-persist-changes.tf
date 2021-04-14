@@ -57,7 +57,7 @@ module "azfun_charges_persist_changes_plan" {
 
 module "azfun_charges_persist_changes_stor" {
   source                    = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//storage-account?ref=1.0.0"
-  name                      = "stormsgrcvr${random_string.charges_persist_changes.result}"
+  name                      = "storpercha${random_string.charges_persist_changes.result}"
   resource_group_name       = data.azurerm_resource_group.main.name
   location                  = data.azurerm_resource_group.main.location
   account_replication_type  = "LRS"
