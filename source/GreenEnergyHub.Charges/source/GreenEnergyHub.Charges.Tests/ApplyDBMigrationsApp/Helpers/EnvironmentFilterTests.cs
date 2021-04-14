@@ -25,6 +25,8 @@ namespace GreenEnergyHub.Charges.Tests.ApplyDBMigrationsApp.Helpers
         [Theory]
         [InlineData(1, "")]
         [InlineData(1, "hereGoesNothing")]
+        [InlineData(1, "includePreDeploy")]
+        [InlineData(1, "includePostDeploy")]
         [InlineData(2, "includeSeedData")]
         [InlineData(2, "includeTestData")]
         [InlineData(3, "includeTestData", "includeSeedData")]
