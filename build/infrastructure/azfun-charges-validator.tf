@@ -11,14 +11,14 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-module "azfun_charges_input_validator" {
+module "azfun_charges_validator" {
   source                                    = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//function-app?ref=1.0.0"
-  name                                      = "azfun-input-validator-${var.project}-${var.organisation}-${var.environment}"
+  name                                      = "azfun-validator-${var.project}-${var.organisation}-${var.environment}"
   resource_group_name                       = data.azurerm_resource_group.main.name
   location                                  = data.azurerm_resource_group.main.location
-  storage_account_access_key                = module.azfun_charges_input_validator_stor.primary_access_key
-  app_service_plan_id                       = module.azfun_charges_input_validator_plan.id
-  storage_account_name                      = module.azfun_charges_input_validator_stor.name
+  storage_account_access_key                = module.azfun_charges_validator_stor.primary_access_key
+  app_service_plan_id                       = module.azfun_charges_validator_plan.id
+  storage_account_name                      = module.azfun_charges_validator_stor.name
   application_insights_instrumentation_key  = module.appi.instrumentation_key
   tags                                      = data.azurerm_resource_group.main.tags
   app_settings                              = {
@@ -34,17 +34,17 @@ module "azfun_charges_input_validator" {
   }
   dependencies                              = [
     module.appi.dependent_on,
-    module.azfun_charges_input_validator_plan.dependent_on,
-    module.azfun_charges_input_validator_stor.dependent_on,
+    module.azfun_charges_validator_plan.dependent_on,
+    module.azfun_charges_validator_stor.dependent_on,
     module.sbtar_local_events_listener.dependent_on,
     module.sbtar_local_events_sender.dependent_on,
     module.sbt_local_events.dependent_on,
   ]
 }
 
-module "azfun_charges_input_validator_plan" {
+module "azfun_charges_validator_plan" {
   source              = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//app-service-plan?ref=1.0.0"
-  name                = "asp-input-validator-${var.project}-${var.organisation}-${var.environment}"
+  name                = "asp-validator-${var.project}-${var.organisation}-${var.environment}"
   resource_group_name = data.azurerm_resource_group.main.name
   location            = data.azurerm_resource_group.main.location
   kind                = "FunctionApp"
@@ -55,9 +55,9 @@ module "azfun_charges_input_validator_plan" {
   tags                = data.azurerm_resource_group.main.tags
 }
 
-module "azfun_charges_input_validator_stor" {
+module "azfun_charges_validator_stor" {
   source                    = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//storage-account?ref=1.0.0"
-  name                      = "stormsgrcvr${random_string.charges_input_validator.result}"
+  name                      = "stormsgrcvr${random_string.charges_validator.result}"
   resource_group_name       = data.azurerm_resource_group.main.name
   location                  = data.azurerm_resource_group.main.location
   account_replication_type  = "LRS"
@@ -67,7 +67,7 @@ module "azfun_charges_input_validator_stor" {
 }
 
 # Since all functions need a storage connected we just generate a random name
-resource "random_string" "charges_input_validator" {
+resource "random_string" "charges_validator" {
   length  = 6
   special = false
   upper   = false
