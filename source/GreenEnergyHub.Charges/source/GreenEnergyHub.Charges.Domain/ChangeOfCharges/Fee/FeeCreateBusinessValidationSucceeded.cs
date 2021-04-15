@@ -14,7 +14,7 @@
 
 namespace GreenEnergyHub.Charges.Domain.ChangeOfCharges.Fee
 {
-    public class FeeCreateInputValidationSucceded : FeeBase
+    public class FeeCreateBusinessValidationSucceeded : FeeBase
     {
     }
 }

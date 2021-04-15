@@ -12,9 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace GreenEnergyHub.Charges.Domain.ChangeOfCharges.Tariff
+namespace GreenEnergyHub.Charges.Domain.ChangeOfCharges.Fee
 {
-    public class TariffCreateInputValidationSucceded : TariffBase
+    public class FeeCreateInputValidationSucceeded : FeeBase
     {
     }
 }

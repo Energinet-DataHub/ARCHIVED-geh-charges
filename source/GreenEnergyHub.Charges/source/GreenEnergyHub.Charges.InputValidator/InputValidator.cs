@@ -71,7 +71,7 @@ namespace GreenEnergyHub.Charges.LocalMessageServiceBusTopicTrigger
         {
             return transaction.Type switch
             {
-                "D01" => new FeeCreateInputValidationSucceded
+                "D01" => new FeeCreateInputValidationSucceeded
                 {
                     Period = transaction.Period,
                     Type = transaction.Type,
@@ -83,7 +83,7 @@ namespace GreenEnergyHub.Charges.LocalMessageServiceBusTopicTrigger
                     ChargeTypeMRid = transaction.ChargeTypeMRid,
                     ChargeTypeOwnerMRid = transaction.ChargeTypeOwnerMRid,
                 },
-                _ => new TariffCreateInputValidationSucceded
+                _ => new TariffCreateInputValidationSucceeded
                 {
                     Period = transaction.Period,
                     Type = transaction.Type,
