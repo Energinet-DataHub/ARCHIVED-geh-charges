@@ -65,10 +65,6 @@ Below gives an overview of the NuGet packages used across the solutions in the r
 | `xunit` | 2.4.1 | <https://www.nuget.org/packages/xunit/2.4.1> | [`xunit` license](https://raw.githubusercontent.com/xunit/xunit/master/license.txt) |
 | `xunit.runner.visualstudio` | 2.4.3 | <https://www.nuget.org/packages/xunit.runner.visualstudio/2.4.3> | [`xunit` license](https://raw.githubusercontent.com/xunit/xunit/master/license.txt) |
 
-
-
-
-
 #### Messaging solution (GreenEnergyHub.Messaging)
 
 This solution has been temporarily copied to the Charges repository. We expect this to be available as NuGet packages later.
