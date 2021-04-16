@@ -29,4 +29,9 @@ limitations under the License.
       <ProjectReference Include="..\GreenEnergyHub.Charges.Domain\GreenEnergyHub.Charges.Domain.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <PackageReference Include="JetBrains.Annotations" Version="2021.1.0" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.14" />
+    </ItemGroup>
+
 </Project>

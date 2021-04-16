@@ -54,6 +54,7 @@ Below gives an overview of the NuGet packages used across the solutions in the r
 | `dbup-sqlserver` | 4.5.0 | <https://www.nuget.org/packages/dbup-sqlserver/4.5.0/> | MIT |
 | `FluentAssertions` | 5.10.3 | <https://www.nuget.org/packages/FluentAssertions/5.10.3/> | Apache-2.0 |
 | `FluentValidation` | 9.5.4 | <https://www.nuget.org/packages/FluentValidation/9.5.4/> | Apache-2.0 |
+| `JetBrains.Annotations` | 2021.1.0 | <https://www.nuget.org/packages/JetBrains.Annotations/2021.1.0> | MIT |
 | `MediatR` | 9.0.0 | <https://www.nuget.org/packages/MediatR/9.0.0/> | Apache-2.0 |
 | `MediatR.Extensions.Microsoft.DependencyInjection` | 9.0.0 | <https://www.nuget.org/packages/MediatR.Extensions.Microsoft.DependencyInjection/9.0.0/> | Apache-2.0 |
 | `Moq` | 4.16.1 | <https://www.nuget.org/packages/Moq/4.16.1/> | BSD-3-Clause |
@@ -63,6 +64,10 @@ Below gives an overview of the NuGet packages used across the solutions in the r
 | `StyleCop.Analyzers` | 1.1.118 | <https://www.nuget.org/packages/StyleCop.Analyzers/1.1.118> | Apache-2.0 |
 | `xunit` | 2.4.1 | <https://www.nuget.org/packages/xunit/2.4.1> | [`xunit` license](https://raw.githubusercontent.com/xunit/xunit/master/license.txt) |
 | `xunit.runner.visualstudio` | 2.4.3 | <https://www.nuget.org/packages/xunit.runner.visualstudio/2.4.3> | [`xunit` license](https://raw.githubusercontent.com/xunit/xunit/master/license.txt) |
+
+
+
+
 
 #### Messaging solution (GreenEnergyHub.Messaging)
 
