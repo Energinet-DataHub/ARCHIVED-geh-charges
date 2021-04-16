@@ -61,38 +61,20 @@ resource "azurerm_servicebus_subscription_rule" "sbs-charge-transaction-received
   sql_filter          = "sys.label = 'FeeCreate' OR sys.label = 'TariffCreate'"
 }
 
-resource "azurerm_servicebus_subscription" "sbs-charge-input-validated-received-subscription" {
-  name                = "sbs-charge-input-validated-received-subscription"
+resource "azurerm_servicebus_subscription" "sbs-charge-validated-received-subscription" {
+  name                = "sbs-charge-validated-received-subscription"
   resource_group_name = data.azurerm_resource_group.main.name
   namespace_name      = module.sbn_charges.name
   topic_name          = module.sbt_local_events.name
   max_delivery_count  = 1
 }
 
-resource "azurerm_servicebus_subscription_rule" "sbs-charge-input-validated-received-filter" {
-  name                = "sbsr-charge-input-validated-received-filter"
+resource "azurerm_servicebus_subscription_rule" "sbs-charge-validated-received-filter" {
+  name                = "sbsr-charge-validated-received-filter"
   resource_group_name = data.azurerm_resource_group.main.name
   namespace_name      = module.sbn_charges.name
   topic_name          = module.sbt_local_events.name
-  subscription_name   = azurerm_servicebus_subscription.sbs-charge-input-validated-received-subscription.name
+  subscription_name   = azurerm_servicebus_subscription.sbs-charge-validated-received-subscription.name
   filter_type         = "SqlFilter"
-  sql_filter          = "sys.label = 'FeeCreateInputValidationSucceded' OR sys.label = 'TariffCreateInputValidationSucceded'"
-}
-
-resource "azurerm_servicebus_subscription" "sbs-business-validated-received-subscription" {
-  name                = "sbs-business-validated-received-subscription"
-  resource_group_name = data.azurerm_resource_group.main.name
-  namespace_name      = module.sbn_charges.name
-  topic_name          = module.sbt_local_events.name
-  max_delivery_count  = 1
-}
-
-resource "azurerm_servicebus_subscription_rule" "sbs-business-validated-received-filter" {
-  name                = "sbsr-business-validated-received-filter"
-  resource_group_name = data.azurerm_resource_group.main.name
-  namespace_name      = module.sbn_charges.name
-  topic_name          = module.sbt_local_events.name
-  subscription_name   = azurerm_servicebus_subscription.sbs-business-validated-received-subscription.name
-  filter_type         = "SqlFilter"
-  sql_filter          = "sys.label = 'FeeCreateBusinessValidationSucceded' OR sys.label = 'TariffCreateBusinessValidationSucceded'"
+  sql_filter          = "sys.label = 'FeeCreateValidationSucceeded' OR sys.label = 'TariffCreateValidationSucceeded'"
 }
