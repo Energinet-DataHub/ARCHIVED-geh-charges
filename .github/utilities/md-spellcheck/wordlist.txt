@@ -11,6 +11,7 @@ GreenEnergyHub
 Energinet
 IaC
 mergeable
+MPL
 namespace
 NRules
 NuGet
@@ -23,3 +24,4 @@ surveilled
 Terraform
 TODO
 TSO
+Url

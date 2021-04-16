@@ -115,18 +115,3 @@ jobs:
           app-name: "azfun-${{ env.AZURE_FUNCTIONAPP_NAME }}"
           package: ${{ github.workspace }}/drop
           publish-profile: ${{ steps.get-publish-profile.outputs.publish-profile }}
-
-      - name: Documentation update dispatch
-        uses: peter-evans/repository-dispatch@v1
-        with:
-          token: ${{ secrets.PAT_TOKEN }}
-          repository: Energinet-DataHub/environments-overview        
-          event-type: update-environment-overview-event
-          client-payload: '{
-            "repository_name": "${{ env.REPOSITORY_NAME }}",
-            "env_name": "${{ env.ENV_NAME }}",
-            "resource_group_name": "${{ env.RESOURCE_GROUP_NAME }}",
-            "project_name": "${{ env.PROJECT_NAME }}",
-            "service_name": "${{ env.AZURE_FUNCTIONAPP_NAME }}",
-            "commit_id": "${{ github.sha }}"
-          }'
