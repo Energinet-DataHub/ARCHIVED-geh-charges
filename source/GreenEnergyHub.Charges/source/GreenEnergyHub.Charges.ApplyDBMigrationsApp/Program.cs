@@ -31,7 +31,7 @@ namespace GreenEnergyHub.Charges.ApplyDBMigrationsApp
             ResultReporter.ReportResult(preDeployResult);
 
             var result = PerformUpgrade(connectionString, EnvironmentFilter.GetFilter(args), isDryRun);
-            if (!preDeployResult.Successful) { return ResultReporter.ReportResult(result); }
+            if (!result.Successful) { return ResultReporter.ReportResult(result); }
             ResultReporter.ReportResult(result);
 
             var postDeployResult = PerformUpgrade(connectionString, EnvironmentFilter.GetPostDeployFilter(args), isDryRun);
