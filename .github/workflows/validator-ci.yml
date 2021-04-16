@@ -11,7 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-name: Input Validator CI
+name: Validator CI
 
 on:
   pull_request:
@@ -20,7 +20,7 @@ on:
   workflow_dispatch: {}
 
 env:
-  CSPROJ_FILE_PATH: 'source/GreenEnergyHub.Charges/source/GreenEnergyHub.Charges.InputValidator/GreenEnergyHub.Charges.InputValidator.csproj'
+  CSPROJ_FILE_PATH: 'source/GreenEnergyHub.Charges/source/GreenEnergyHub.Charges.Validator/GreenEnergyHub.Charges.Validator.csproj'
   SOLUTION_FILE_PATH: source/GreenEnergyHub.Charges/GreenEnergyHub.Charges.sln
   DOTNET_VERSION: '3.1'
 
@@ -37,15 +37,15 @@ jobs:
           github_token: ${{ github.token }}
           paths: '[
             "source/GreenEnergyHub.Charges/**",
-            ".github/workflows/input-validator-ci.yml",
+            ".github/workflows/validator-ci.yml",
             ".github/actions/dotnet-build-and-test/**",
             ".github/actions/azure-core-tools-install/**"
           ]'
 
-  validate_input_validator:
+  validate_validator:
     needs: pre_job
     if: ${{ needs.pre_job.outputs.should_skip != 'true' }}
-    name: Validate build Input validator
+    name: Validate build validator
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository

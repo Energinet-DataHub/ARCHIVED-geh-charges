@@ -25,14 +25,14 @@ using Microsoft.Extensions.Logging;
 
 namespace GreenEnergyHub.Charges.LocalMessageServiceBusTopicTrigger
 {
-    public class InputValidator
+    public class Validator
     {
-        private const string FunctionName = "InputValidator";
+        private const string FunctionName = "Validator";
         private readonly IJsonSerializer _jsonDeserializer;
         private readonly IChangeOfChargeTransactionInputValidator _changeOfChargeTransactionInputValidator;
         private readonly IChangeOfChargesTransactionHandler _changeOfChargesTransactionHandler;
 
-        public InputValidator(
+        public Validator(
             IJsonSerializer jsonDeserializer,
             IChangeOfChargeTransactionInputValidator changeOfChargeTransactionInputValidator,
             IChangeOfChargesTransactionHandler changeOfChargesTransactionHandler)
@@ -57,21 +57,21 @@ namespace GreenEnergyHub.Charges.LocalMessageServiceBusTopicTrigger
 
             if (!result.Errors.Any())
             {
-                await _changeOfChargesTransactionHandler.HandleAsync(GetCommandFromChangeOfChargeTransactionInputValidationSucceded(transaction)).ConfigureAwait(false);
+                await _changeOfChargesTransactionHandler.HandleAsync(GetCommandFromChangeOfChargeTransactionValidationSucceeded(transaction)).ConfigureAwait(false);
             }
             else
             {
-                await _changeOfChargesTransactionHandler.HandleAsync(GetCommandFromChangeOfChargeTransactionInputValidationFailed(transaction)).ConfigureAwait(false);
+                await _changeOfChargesTransactionHandler.HandleAsync(GetCommandFromChangeOfChargeTransactionValidationFailed(transaction)).ConfigureAwait(false);
             }
 
             log.LogDebug("Received event with charge type mRID '{mRID}'", transaction.ChargeTypeMRid);
         }
 
-        private static ChangeOfChargesTransaction GetCommandFromChangeOfChargeTransactionInputValidationSucceded(ChangeOfChargesTransaction transaction)
+        private static ChangeOfChargesTransaction GetCommandFromChangeOfChargeTransactionValidationSucceeded(ChangeOfChargesTransaction transaction)
         {
             return transaction.Type switch
             {
-                "D01" => new FeeCreateInputValidationSucceded
+                "D01" => new FeeCreateValidationSucceeded
                 {
                     Period = transaction.Period,
                     Type = transaction.Type,
@@ -83,7 +83,7 @@ namespace GreenEnergyHub.Charges.LocalMessageServiceBusTopicTrigger
                     ChargeTypeMRid = transaction.ChargeTypeMRid,
                     ChargeTypeOwnerMRid = transaction.ChargeTypeOwnerMRid,
                 },
-                _ => new TariffCreateInputValidationSucceded
+                _ => new TariffCreateValidationSucceeded
                 {
                     Period = transaction.Period,
                     Type = transaction.Type,
@@ -98,11 +98,11 @@ namespace GreenEnergyHub.Charges.LocalMessageServiceBusTopicTrigger
             };
         }
 
-        private static ChangeOfChargesTransaction GetCommandFromChangeOfChargeTransactionInputValidationFailed(ChangeOfChargesTransaction transaction)
+        private static ChangeOfChargesTransaction GetCommandFromChangeOfChargeTransactionValidationFailed(ChangeOfChargesTransaction transaction)
         {
             return transaction.Type switch
             {
-                "D01" => new FeeCreateInputValidationFailed
+                "D01" => new FeeCreateValidationFailed
                 {
                     Period = transaction.Period,
                     Type = transaction.Type,
@@ -114,7 +114,7 @@ namespace GreenEnergyHub.Charges.LocalMessageServiceBusTopicTrigger
                     ChargeTypeMRid = transaction.ChargeTypeMRid,
                     ChargeTypeOwnerMRid = transaction.ChargeTypeOwnerMRid,
                 },
-                _ => new TariffCreateInputValidationFailed
+                _ => new TariffCreateValidationFailed
                 {
                     Period = transaction.Period,
                     Type = transaction.Type,
