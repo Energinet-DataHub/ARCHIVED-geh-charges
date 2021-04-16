@@ -11,7 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-name: Validator CD
+name: Local message service bus topic trigger CD
 
 on:
   push:
@@ -19,23 +19,23 @@ on:
       - main
     paths:
       - source/GreenEnergyHub.Charges/**
-      - .github/workflows/validator-cd.yml
+      - .github/workflows/local-message-service-bus-trigger-cd.yml
       - .github/actions/dotnet-build-and-test/**
       - .github/actions/azure-core-tools-install/**
   workflow_dispatch: {}
 
 env:
-  CSPROJ_FILE_PATH: 'source/GreenEnergyHub.Charges/source/GreenEnergyHub.Charges.Validator/GreenEnergyHub.Charges.Validator.csproj'
+  CSPROJ_FILE_PATH: 'source/GreenEnergyHub.Charges/source/GreenEnergyHub.Charges.InputValidator/GreenEnergyHub.Charges.InputValidator.csproj'
   SOLUTION_FILE_PATH: 'source/GreenEnergyHub.Charges/GreenEnergyHub.Charges.sln'
   DOTNET_VERSION: '3.1'
   ORGANISATION_NAME: 'endk'
-  AZURE_FUNCTIONAPP_NAME: 'validator'
+  AZURE_FUNCTIONAPP_NAME: 'input-validator'
   PROJECT_NAME: charges
   REPOSITORY_NAME: Energinet-DataHub/geh-charges
 
 jobs:
-  build_validator:
-    name: Build Validator
+  build_input_validator:
+    name: Build Local message service bus topic trigger
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -62,9 +62,9 @@ jobs:
           name: drop
           path: '${{ github.workspace }}/output'
     
-  deploy_validator:
+  deploy_input_validator:
     name: Deploy function to ${{ matrix.environment.name }} - ${{ matrix.environment.long }}
-    needs: build_validator
+    needs: build_local_message_service_bus_topic_trigger
     runs-on: ubuntu-latest
     strategy:
       matrix:
