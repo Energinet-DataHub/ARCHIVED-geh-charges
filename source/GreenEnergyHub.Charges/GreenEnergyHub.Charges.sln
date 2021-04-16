@@ -40,7 +40,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GreenEnergyHub.Charges.Appl
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GreenEnergyHub.Charges.MessageReceiver", "source\GreenEnergyHub.Charges.MessageReceiver\GreenEnergyHub.Charges.MessageReceiver.csproj", "{FE2916A4-709B-4B3C-B023-97C0FE2CF35B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GreenEnergyHub.Charges.InputValidator", "source\GreenEnergyHub.Charges.InputValidator\GreenEnergyHub.Charges.InputValidator.csproj", "{205A40C6-42FC-4438-B47C-6384171CF755}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GreenEnergyHub.Charges.Validator", "source\GreenEnergyHub.Charges.Validator\GreenEnergyHub.Charges.Validator.csproj", "{205A40C6-42FC-4438-B47C-6384171CF755}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GreenEnergyHub.Queues", "..\queues\source\GreenEnergyHub.Queues\GreenEnergyHub.Queues.csproj", "{FF5081B2-7B4E-4F20-89F5-4216D81C1461}"
 EndProject
@@ -51,8 +51,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GreenEnergyHub.Messaging", "..\messaging\source\GreenEnergyHub.Messaging\GreenEnergyHub.Messaging.csproj", "{5A53A82C-E529-4514-8340-817939B678AC}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GreenEnergyHub.Messaging.Integration.ServiceCollection", "..\messaging\source\GreenEnergyHub.Messaging.Integration.ServiceCollection\GreenEnergyHub.Messaging.Integration.ServiceCollection.csproj", "{4B2E6784-9886-4484-99C2-C6680E29AD19}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GreenEnergyHub.Charges.BusinessValidator", "source\GreenEnergyHub.Charges.BusinessValidator\GreenEnergyHub.Charges.BusinessValidator.csproj", "{706E91A5-3D62-441A-B6FB-7A0BB182EE88}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -120,10 +118,6 @@ Global
 		{4B2E6784-9886-4484-99C2-C6680E29AD19}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4B2E6784-9886-4484-99C2-C6680E29AD19}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4B2E6784-9886-4484-99C2-C6680E29AD19}.Release|Any CPU.Build.0 = Release|Any CPU
-		{706E91A5-3D62-441A-B6FB-7A0BB182EE88}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{706E91A5-3D62-441A-B6FB-7A0BB182EE88}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{706E91A5-3D62-441A-B6FB-7A0BB182EE88}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{706E91A5-3D62-441A-B6FB-7A0BB182EE88}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -141,7 +135,6 @@ Global
 		{106D1371-0EAD-4F4B-9990-EB178764B3BA} = {9FE16521-EC21-4551-9E51-0C6702D21098}
 		{5A53A82C-E529-4514-8340-817939B678AC} = {9FE16521-EC21-4551-9E51-0C6702D21098}
 		{4B2E6784-9886-4484-99C2-C6680E29AD19} = {9FE16521-EC21-4551-9E51-0C6702D21098}
-		{706E91A5-3D62-441A-B6FB-7A0BB182EE88} = {832447E5-7A46-4381-817C-5D73A20510C2}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {19228BC9-BC51-4044-842C-ACD1F68D4008}
