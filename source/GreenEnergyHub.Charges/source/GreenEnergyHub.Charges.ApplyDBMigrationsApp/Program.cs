@@ -12,7 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Linq;
+using DbUp.Engine;
 using GreenEnergyHub.Charges.ApplyDBMigrationsApp.Helpers;
 
 namespace GreenEnergyHub.Charges.ApplyDBMigrationsApp
@@ -22,15 +24,27 @@ namespace GreenEnergyHub.Charges.ApplyDBMigrationsApp
         public static int Main(string[] args)
         {
             var connectionString = ConnectionStringFactory.GetConnectionString(args);
-            var filter = EnvironmentFilter.GetFilter(args);
             var isDryRun = args.Contains("dryRun");
 
+            var preDeployResult = PerformUpgrade(connectionString, EnvironmentFilter.GetPreDeployFilter(args), isDryRun);
+            if (!preDeployResult.Successful) { return ResultReporter.ReportResult(preDeployResult); }
+            ResultReporter.ReportResult(preDeployResult);
+
+            var result = PerformUpgrade(connectionString, EnvironmentFilter.GetFilter(args), isDryRun);
+            if (!result.Successful) { return ResultReporter.ReportResult(result); }
+            ResultReporter.ReportResult(result);
+
+            var postDeployResult = PerformUpgrade(connectionString, EnvironmentFilter.GetPostDeployFilter(args), isDryRun);
+            return ResultReporter.ReportResult(postDeployResult);
+        }
+
+        private static DatabaseUpgradeResult PerformUpgrade(string connectionString, Func<string, bool> filter, bool isDryRun)
+        {
             // This is the new way of doing it, but for backwards compatibility, the "old way" is still default.
             var upgrader = UpgradeFactory.GetUpgradeEngine(connectionString, filter, isDryRun);
 
             var result = upgrader.PerformUpgrade();
-
-            return ResultReporter.ReportResult(result);
+            return result;
         }
     }
 }
