@@ -25,6 +25,8 @@ namespace GreenEnergyHub.Charges.Tests.ApplyDBMigrationsApp.Helpers
         [Theory]
         [InlineData(1, "")]
         [InlineData(1, "hereGoesNothing")]
+        [InlineData(1, "includePreDeploy")]
+        [InlineData(1, "includePostDeploy")]
         [InlineData(2, "includeSeedData")]
         [InlineData(2, "includeTestData")]
         [InlineData(3, "includeTestData", "includeSeedData")]
@@ -64,6 +66,36 @@ namespace GreenEnergyHub.Charges.Tests.ApplyDBMigrationsApp.Helpers
         {
             // Arrange
             var filter = EnvironmentFilter.GetFilter(args);
+
+            // Act
+            var actual = filter.Invoke(scriptFile);
+
+            // Assert
+            actual.Should().Be(expectedToRun);
+        }
+
+        [Theory]
+        [InlineData(false, "Energinet.DataHub.MarketData.ApplyDBMigrationsApp.Scripts.PreDeploy.Script 1.sql", "")]
+        [InlineData(true, "Energinet.DataHub.MarketData.ApplyDBMigrationsApp.Scripts.PreDeploy.Script 1.sql", "includePreDeploy")]
+        public void PreDeployment_Script_is_included_when_parameters_match(bool expectedToRun, string scriptFile, params string[] args)
+        {
+            // Arrange
+            var filter = EnvironmentFilter.GetPreDeployFilter(args);
+
+            // Act
+            var actual = filter.Invoke(scriptFile);
+
+            // Assert
+            actual.Should().Be(expectedToRun);
+        }
+
+        [Theory]
+        [InlineData(false, "Energinet.DataHub.MarketData.ApplyDBMigrationsApp.Scripts.PostDeploy.Script 1.sql", "")]
+        [InlineData(true, "Energinet.DataHub.MarketData.ApplyDBMigrationsApp.Scripts.PostDeploy.Script 1.sql", "includePostDeploy")]
+        public void PostDeployment_Script_is_included_when_parameters_match(bool expectedToRun, string scriptFile, params string[] args)
+        {
+            // Arrange
+            var filter = EnvironmentFilter.GetPostDeployFilter(args);
 
             // Act
             var actual = filter.Invoke(scriptFile);
