@@ -43,5 +43,7 @@ namespace GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction
         public string? CorrelationId { get; set; }
 
         public string? LastUpdatedBy { get; set; }
+
+        public string? MRid { get; set; }
     }
 }

@@ -12,22 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Text.Json.Serialization;
-using NodaTime;
-
-namespace GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction
+namespace GreenEnergyHub.Charges.Infrastructure.Context.Model
 {
-    public class MktActivityRecord
+    public class MarketParticipant
     {
-        [JsonPropertyName("mRID")]
+        public int Id { get; set; }
+
         public string? MRid { get; set; }
 
-        public Instant ValidityStartDate { get; set; }
+        public string? Name { get; set; }
 
-        public Instant? ValidityEndDate { get; set; }
-
-        public MktActivityRecordStatus Status { get; set; }
-
-        public ChargeType? ChargeType { get; set; }
+        public string? Role { get; set; }
     }
 }
