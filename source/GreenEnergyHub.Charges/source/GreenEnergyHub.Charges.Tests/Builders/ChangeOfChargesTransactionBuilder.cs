@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Message;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
 using NodaTime;
 
@@ -82,7 +81,7 @@ namespace GreenEnergyHub.Charges.Tests.Builders
                 ChargeTypeMRid = _mrid,
                 MktActivityRecord = new MktActivityRecord
                 {
-                    Status = _status,
+                    Status = (MktActivityRecordStatus)_status,
                     ValidityStartDate = _validityStartDate,
                     ChargeType = new ChargeType
                     {

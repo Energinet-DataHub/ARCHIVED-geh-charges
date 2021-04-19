@@ -12,22 +12,22 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Text.Json.Serialization;
-using NodaTime;
-
-namespace GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction
+namespace GreenEnergyHub.Charges.Application.ChangeOfCharges.Repositories
 {
-    public class MktActivityRecord
+    public class ChargeStorageStatus
     {
-        [JsonPropertyName("mRID")]
-        public string? MRid { get; set; }
+        public bool Success { get; private set; }
 
-        public Instant ValidityStartDate { get; set; }
+        public string? Reason { get; private set; }
 
-        public Instant? ValidityEndDate { get; set; }
+        public static ChargeStorageStatus CreateSuccess()
+        {
+            return new ChargeStorageStatus { Success = true };
+        }
 
-        public MktActivityRecordStatus Status { get; set; }
-
-        public ChargeType? ChargeType { get; set; }
+        public static ChargeStorageStatus CreateFailure(string reason)
+        {
+            return new ChargeStorageStatus { Success = false, Reason = reason };
+        }
     }
 }
