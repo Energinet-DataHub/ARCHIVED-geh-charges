@@ -49,7 +49,7 @@ Below gives an overview of the NuGet packages used across the solutions in the r
 | `AutoFixture` | 4.16.0 | <https://www.nuget.org/packages/AutoFixture/4.16.0/> | MIT |
 | `AutoFixture.AutoMoq` | 4.16.0 | <https://www.nuget.org/packages/AutoFixture.AutoMoq/4.16.0/> | MIT |
 | `AutoFixture.Xunit2` | 4.16.0 | <https://www.nuget.org/packages/AutoFixture.Xunit2/4.16.0/> | MIT |
-| `Confluent.Kafka` | 1.5.3 | <https://www.nuget.org/packages/Confluent.Kafka/1.5.3/> | Apache-2.0 |
+| `Confluent.Kafka` | 1.6.3 | <https://www.nuget.org/packages/Confluent.Kafka/1.5.3/> | Apache-2.0 |
 | `coverlet.collector` | 3.0.3 | <https://www.nuget.org/packages/coverlet.collector/3.0.3/> | MIT |
 | `dbup-sqlserver` | 4.5.0 | <https://www.nuget.org/packages/dbup-sqlserver/4.5.0/> | MIT |
 | `FluentAssertions` | 5.10.3 | <https://www.nuget.org/packages/FluentAssertions/5.10.3/> | Apache-2.0 |
