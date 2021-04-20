@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 module "appi" {
-  source              = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//application-insights?ref=1.0.0"
+  source              = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//application-insights?ref=1.2.0"
 
   name                = "appi-${var.project}-${var.organisation}-${var.environment}"
   resource_group_name = data.azurerm_resource_group.main.name
