@@ -14,6 +14,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using GreenEnergyHub.Messaging;
 using GreenEnergyHub.Messaging.MessageTypes.Common;
 using NodaTime;
@@ -38,6 +39,8 @@ namespace GreenEnergyHub.Queues.ValidationReportDispatcher.Validation
         public Instant RequestDate { get; set; }
 
         public IReadOnlyList<ValidationError> Errors => _validationErrors.AsReadOnly();
+
+        public bool IsSucceeded => Errors.Any();
 
         public void Add(ValidationError validationError)
         {

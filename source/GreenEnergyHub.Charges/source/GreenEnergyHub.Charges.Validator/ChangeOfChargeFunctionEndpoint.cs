@@ -25,21 +25,24 @@ using Microsoft.Extensions.Logging;
 
 namespace GreenEnergyHub.Charges.LocalMessageServiceBusTopicTrigger
 {
-    public class Validator
+    public class ChangeOfChargeFunctionEndpoint
     {
-        private const string FunctionName = "Validator";
+        private const string FunctionName = "ChangeOfChargeFunctionEndpoint";
         private readonly IJsonSerializer _jsonDeserializer;
         private readonly IChangeOfChargeTransactionInputValidator _changeOfChargeTransactionInputValidator;
         private readonly IChangeOfChargesTransactionHandler _changeOfChargesTransactionHandler;
+        private readonly IChangeOfChargeService _changeOfChargeService;
 
-        public Validator(
+        public ChangeOfChargeFunctionEndpoint(
             IJsonSerializer jsonDeserializer,
             IChangeOfChargeTransactionInputValidator changeOfChargeTransactionInputValidator,
-            IChangeOfChargesTransactionHandler changeOfChargesTransactionHandler)
+            IChangeOfChargesTransactionHandler changeOfChargesTransactionHandler,
+            IChangeOfChargeService changeOfChargeService)
         {
             _jsonDeserializer = jsonDeserializer;
             _changeOfChargeTransactionInputValidator = changeOfChargeTransactionInputValidator;
             _changeOfChargesTransactionHandler = changeOfChargesTransactionHandler;
+            _changeOfChargeService = changeOfChargeService;
         }
 
         [FunctionName(FunctionName)]
@@ -53,16 +56,19 @@ namespace GreenEnergyHub.Charges.LocalMessageServiceBusTopicTrigger
         {
             var serviceBusMessage = _jsonDeserializer.Deserialize<ServiceBusMessageWrapper>(jsonSerializedQueueItem);
             var transaction = serviceBusMessage.Transaction;
-            var result = await _changeOfChargeTransactionInputValidator.ValidateAsync(transaction).ConfigureAwait(false);
 
-            if (!result.Errors.Any())
-            {
-                await _changeOfChargesTransactionHandler.HandleAsync(GetCommandFromChangeOfChargeTransactionValidationSucceeded(transaction)).ConfigureAwait(false);
-            }
-            else
-            {
-                await _changeOfChargesTransactionHandler.HandleAsync(GetCommandFromChangeOfChargeTransactionValidationFailed(transaction)).ConfigureAwait(false);
-            }
+            await _changeOfChargeService.HandleAsync(transaction);
+
+            // var result = await _changeOfChargeTransactionInputValidator.ValidateAsync(transaction).ConfigureAwait(false);
+            //
+            // if (!result.Errors.Any())
+            // {
+            //     await _changeOfChargesTransactionHandler.HandleAsync(GetCommandFromChangeOfChargeTransactionValidationSucceeded(transaction)).ConfigureAwait(false);
+            // }
+            // else
+            // {
+            //     await _changeOfChargesTransactionHandler.HandleAsync(GetCommandFromChangeOfChargeTransactionValidationFailed(transaction)).ConfigureAwait(false);
+            // }
 
             log.LogDebug("Received event with charge type mRID '{mRID}'", transaction.ChargeTypeMRid);
         }
