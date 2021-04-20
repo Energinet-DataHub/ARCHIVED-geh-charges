@@ -195,12 +195,10 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
                     ChargeType = new Domain.ChangeOfCharges.Transaction.ChargeType
                         { VatPayer = KnownVatPayer, Name = "shortDescription", Description = "longDescription", },
                 },
-                Period = new ChargeTypePeriod(new List<Point>
-                {
-                    new Point { Position = 1, PriceAmount = 1m, Time = SystemClock.Instance.GetCurrentInstant(), },
-                })
+                Period = new ChargeTypePeriod
                 {
                     Resolution = KnownResolutionType,
+                    Points = { new Point { Position = 1, PriceAmount = 1m, Time = SystemClock.Instance.GetCurrentInstant(), } },
                 },
             };
             return transaction;
