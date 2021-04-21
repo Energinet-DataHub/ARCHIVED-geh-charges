@@ -14,17 +14,17 @@ The mapping covers the generic set of attributes shared amongst all the RSM-mess
 
 > Do note, that some of the CIM names are identical and will require a context to acquire uniqueness, hence a suggested context is provided for those mappings.
 
-| **EbIX attribute**|**CIM name**| **Suggested "context" if needed to obtain CIM name uniqueness** | **CIM path** |
+| **ebIX attribute**|**CIM name**| **Suggested "context" if needed to obtain CIM name uniqueness** | **CIM path** |
 |:-|:-|:-|:-|
-| MessageReference | No CIM name, use ebIX |||
-| DocumentType | No CIM name, use ebIX |||
-| MessageType | No CIM name, use ebIX |||
-| Identification | mRID | MarketDocument | MarketDocument/mRID |
-| DocumentType | Type | MarketDocument | MarketDocument/Type |
-| Creation | CreatedDateTime | MarketDocument | MarketDocument/CreatedDateTime |
-| Sender/Identification | mRID | SenderMarketParticipant | MarketDocument/Sender_MarketParticipant/mRID |
-| Recipient/Identification | mRID | ReceiverMarketParticipant | MarketDocument/Receiver_MarketParticipant/mRID |
-| EnergyBusinessProcess | ProcessType | MarketDocument | MarketDocument/Process/ProcessType |
-| EnergyBusinessProcessRole (Sender) | Type | SenderMarketParticipant<br>or SenderMarketParticipant_(MarketRole) | MarketDocument/Sender_MarketParticipant/MarketRole/Type |
-| EnergyBusinessProcessRole (Recipient) | Type | ReceiverMarketParticipant<br>or ReceiverMarketParticipant_(MarketRole) | MarketDocument/Receiver_MarketParticipant/MarketRole/Type |
-| EnergyIndustryClassification | Kind | MarketServiceCategory | MarketDocument/Market_ServiceCategory/Kind |
+| `MessageReference` | No CIM name, use ebIX |||
+| `DocumentType` | No CIM name, use ebIX |||
+| `MessageType` | No CIM name, use ebIX |||
+| `Identification` | `mRID` | `MarketDocument` | `MarketDocument/mRID` |
+| `DocumentType` | `Type` | `MarketDocument` | `MarketDocument/Type` |
+| `Creation` | `CreatedDateTime` | `MarketDocument` | `MarketDocument/CreatedDateTime` |
+| `Sender/Identification` | `mRID` | `SenderMarketParticipant` | `MarketDocument/Sender_MarketParticipant/mRID` |
+| `Recipient/Identification` | `mRID` | `ReceiverMarketParticipant` | `MarketDocument/Receiver_MarketParticipant/mRID` |
+| `EnergyBusinessProcess` | `ProcessType` | `MarketDocument` | `MarketDocument/Process/ProcessType` |
+| `EnergyBusinessProcessRole (Sender)` | `Type` | `SenderMarketParticipant`<br>or `SenderMarketParticipant_(MarketRole)` | `MarketDocument/Sender_MarketParticipant/MarketRole/Type` |
+| `EnergyBusinessProcessRole (Recipient)` | `Type` | `ReceiverMarketParticipant`<br>or `ReceiverMarketParticipant_(MarketRole)` | `MarketDocument/Receiver_MarketParticipant/MarketRole/Type` |
+| `EnergyIndustryClassification` | `Kind` | `MarketServiceCategory` | `MarketDocument/Market_ServiceCategory/Kind` |
