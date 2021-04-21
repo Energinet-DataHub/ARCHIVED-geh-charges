@@ -1,8 +1,8 @@
 # Mapping of RSM to CIM
 
-## Disclamer
+## Disclaimer
 
-** Discussion about mappings and naming in the Green Energy Hub is currently ongoing. This, and the linked documents, are provided as is for historical reference until a new mapping strategy is found.**
+**Discussion about mappings and naming in the Green Energy Hub is currently ongoing. This, and the linked documents, are provided as is for historical reference until a new mapping strategy is found.**
 
 ## Mapping documents
 
