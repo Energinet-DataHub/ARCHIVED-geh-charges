@@ -6,6 +6,7 @@ composable
 DataHub
 deserialize
 DTO
+ebIX
 FluentValidation
 github
 GreenEnergyHub
