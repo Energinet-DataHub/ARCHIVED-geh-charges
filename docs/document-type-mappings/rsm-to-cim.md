@@ -124,7 +124,7 @@ This dictionary can be used for looking up what the name of your CIM attribute s
 
 Below is the initial document structure for CIM documents.
 
-### MktActivityRecord
+### `MktActivityRecord`
 
 ```ruby
 {
@@ -275,7 +275,7 @@ Below is the initial document structure for CIM documents.
 }
 ```
 
-### TimeSeries
+### `TimeSeries`
 
 ```ruby
   "TimeSeries": {
@@ -315,7 +315,7 @@ Below is the initial document structure for CIM documents.
   }
 ```
 
-### Series
+### `Series`
 
 ```ruby
     {
@@ -351,7 +351,7 @@ Below is the initial document structure for CIM documents.
     }
 ```
 
-### MarketDocument
+### `MarketDocument`
 
 ```ruby
     {
@@ -381,7 +381,7 @@ Below is the initial document structure for CIM documents.
     }
 ```
 
-### NotifyAggregatedTimeSeriesMarketDocument
+### `NotifyAggregatedTimeSeriesMarketDocument`
 
 ```ruby
     {
@@ -391,7 +391,7 @@ Below is the initial document structure for CIM documents.
     }
 ```
 
-### AdministrativeCustomerMarketParticipant
+### `AdministrativeCustomerMarketParticipant`
 
 ```ruby
     {
@@ -401,7 +401,7 @@ Below is the initial document structure for CIM documents.
     }
 ```
 
-### ConfirmRequestChangeOfSupplierMarketDocument
+### `ConfirmRequestChangeOfSupplierMarketDocument`
 
 ```ruby
     {
