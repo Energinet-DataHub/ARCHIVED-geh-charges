@@ -180,9 +180,9 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
             }
         }
 
-        private static ChangeOfChargesTransaction GetValidChangeOfChargesMessage()
+        private static ChargeCommand GetValidChangeOfChargesMessage()
         {
-            var transaction = new ChangeOfChargesTransaction
+            var transaction = new ChargeCommand
             {
                 MRid = "chargeMRid",
                 ChargeTypeMRid = "chargeTypeMRid",

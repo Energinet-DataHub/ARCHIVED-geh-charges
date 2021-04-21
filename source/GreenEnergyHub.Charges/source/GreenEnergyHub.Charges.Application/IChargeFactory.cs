@@ -3,7 +3,7 @@
     /// <summary>
     /// TODO
     /// </summary>
-    public interface IChangeOfChargeReceiptService
+    public interface IChargeFactory
     {
     }
 }

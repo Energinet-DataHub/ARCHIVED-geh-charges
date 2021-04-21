@@ -19,12 +19,15 @@ using MarketDocument = GreenEnergyHub.Charges.Domain.Common.MarketDocument;
 
 namespace GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction
 {
-    public class ChangeOfChargesTransaction
+    public class ChargeCommand
     {
         public MarketDocument? MarketDocument { get; set; }
 
         public MktActivityRecord? MktActivityRecord { get; set; }
 
+        /// <summary>
+        /// The kind of charge: Fee ("D02") | Subscription ("D01") | Tariff ("D03").
+        /// </summary>
         public string? Type { get; set; }
 
         [JsonPropertyName("ChargeType_mRID")]

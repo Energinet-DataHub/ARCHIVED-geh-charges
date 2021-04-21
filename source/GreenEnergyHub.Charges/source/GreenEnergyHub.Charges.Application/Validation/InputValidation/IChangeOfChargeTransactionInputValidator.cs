@@ -14,6 +14,7 @@
 
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
+using GreenEnergyHub.Charges.Application.Validation;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
 using GreenEnergyHub.Queues.ValidationReportDispatcher.Validation;
 
@@ -25,10 +26,10 @@ namespace GreenEnergyHub.Charges.Application.ChangeOfCharges
     public interface IChangeOfChargeTransactionInputValidator
     {
         /// <summary>
-        /// Input validates a <see cref="ChangeOfChargesTransaction"/>.
+        /// Input validates a <see cref="ChargeCommand"/>.
         /// </summary>
-        /// <param name="changeOfChargesTransaction">The message to validate.</param>
+        /// <param name="chargeCommand">The message to validate.</param>
         /// <returns>The validation result.</returns>
-        Task<HubRequestValidationResult> ValidateAsync([NotNull] ChangeOfChargesTransaction changeOfChargesTransaction);
+        Task<ChargeCommandValidationResult> ValidateAsync([NotNull] ChargeCommand chargeCommand);
     }
 }

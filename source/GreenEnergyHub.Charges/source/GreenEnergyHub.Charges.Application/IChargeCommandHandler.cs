@@ -6,13 +6,13 @@ namespace GreenEnergyHub.Charges.Application
     /// <summary>
     /// TODO
     /// </summary>
-    public interface IChangeOfChargeService
+    public interface IChargeCommandHandler
     {
         /// <summary>
         ///  TODO
         /// </summary>
-        /// <param name="transaction"></param>
+        /// <param name="command"></param>
         /// <returns>TODO return</returns>
-        Task HandleAsync(ChangeOfChargesTransaction transaction);
+        Task HandleAsync(ChargeCommand command);
     }
 }

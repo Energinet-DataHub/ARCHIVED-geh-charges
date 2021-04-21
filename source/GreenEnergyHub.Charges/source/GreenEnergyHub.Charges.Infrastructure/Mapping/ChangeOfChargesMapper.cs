@@ -24,53 +24,53 @@ namespace GreenEnergyHub.Charges.Infrastructure.Mapping
     public static class ChangeOfChargesMapper
     {
         public static Charge MapChangeOfChargesTransactionToCharge(
-            [NotNull]ChangeOfChargesTransaction changeOfChargeTransaction,
+            [NotNull]ChargeCommand chargeCommand,
             ChargeType chargeType,
             MarketParticipant chargeTypeOwnerMRid,
             ResolutionType resolutionType,
             VatPayerType vatPayerType)
         {
-            if (changeOfChargeTransaction == null) throw new ArgumentNullException(nameof(changeOfChargeTransaction));
-            if (string.IsNullOrWhiteSpace(changeOfChargeTransaction.ChargeTypeMRid)) throw new ArgumentException($"{nameof(changeOfChargeTransaction.ChargeTypeMRid)} must have value");
-            if (string.IsNullOrWhiteSpace(changeOfChargeTransaction.CorrelationId)) throw new ArgumentException($"{nameof(changeOfChargeTransaction.CorrelationId)} must have value");
-            if (string.IsNullOrWhiteSpace(changeOfChargeTransaction.LastUpdatedBy)) throw new ArgumentException($"{nameof(changeOfChargeTransaction.LastUpdatedBy)} must have value");
-            if (changeOfChargeTransaction.MktActivityRecord?.ChargeType == null) throw new ArgumentException($"{nameof(changeOfChargeTransaction.MktActivityRecord.ChargeType)} can't be null");
-            if (string.IsNullOrWhiteSpace(changeOfChargeTransaction.MktActivityRecord.ChargeType.Name)) throw new ArgumentException($"{nameof(changeOfChargeTransaction.MktActivityRecord.ChargeType.Name)} must have value");
-            if (string.IsNullOrWhiteSpace(changeOfChargeTransaction.MktActivityRecord.ChargeType.Description)) throw new ArgumentException($"{nameof(changeOfChargeTransaction.MktActivityRecord.ChargeType.Description)} must have value");
-            if (changeOfChargeTransaction.Period == null) throw new ArgumentException($"{nameof(changeOfChargeTransaction.Period)} can't be null");
-            if (changeOfChargeTransaction.Period.Points == null) throw new ArgumentException($"{nameof(changeOfChargeTransaction.Period.Points)} can't be null");
+            if (chargeCommand == null) throw new ArgumentNullException(nameof(chargeCommand));
+            if (string.IsNullOrWhiteSpace(chargeCommand.ChargeTypeMRid)) throw new ArgumentException($"{nameof(chargeCommand.ChargeTypeMRid)} must have value");
+            if (string.IsNullOrWhiteSpace(chargeCommand.CorrelationId)) throw new ArgumentException($"{nameof(chargeCommand.CorrelationId)} must have value");
+            if (string.IsNullOrWhiteSpace(chargeCommand.LastUpdatedBy)) throw new ArgumentException($"{nameof(chargeCommand.LastUpdatedBy)} must have value");
+            if (chargeCommand.MktActivityRecord?.ChargeType == null) throw new ArgumentException($"{nameof(chargeCommand.MktActivityRecord.ChargeType)} can't be null");
+            if (string.IsNullOrWhiteSpace(chargeCommand.MktActivityRecord.ChargeType.Name)) throw new ArgumentException($"{nameof(chargeCommand.MktActivityRecord.ChargeType.Name)} must have value");
+            if (string.IsNullOrWhiteSpace(chargeCommand.MktActivityRecord.ChargeType.Description)) throw new ArgumentException($"{nameof(chargeCommand.MktActivityRecord.ChargeType.Description)} must have value");
+            if (chargeCommand.Period == null) throw new ArgumentException($"{nameof(chargeCommand.Period)} can't be null");
+            if (chargeCommand.Period.Points == null) throw new ArgumentException($"{nameof(chargeCommand.Period.Points)} can't be null");
 
             var charge = new Charge
             {
                 ChargeType = chargeType,
                 ChargeTypeOwner = chargeTypeOwnerMRid,
-                Description = changeOfChargeTransaction.MktActivityRecord.ChargeType.Description,
-                LastUpdatedBy = changeOfChargeTransaction.LastUpdatedBy,
-                LastUpdatedByCorrelationId = changeOfChargeTransaction.CorrelationId,
-                LastUpdatedByTransactionId = changeOfChargeTransaction.MRid,
-                Name = changeOfChargeTransaction.MktActivityRecord.ChargeType.Name,
-                RequestDateTime = changeOfChargeTransaction.RequestDate.ToUnixTimeTicks(),
+                Description = chargeCommand.MktActivityRecord.ChargeType.Description,
+                LastUpdatedBy = chargeCommand.LastUpdatedBy,
+                LastUpdatedByCorrelationId = chargeCommand.CorrelationId,
+                LastUpdatedByTransactionId = chargeCommand.MRid,
+                Name = chargeCommand.MktActivityRecord.ChargeType.Name,
+                RequestDateTime = chargeCommand.RequestDate.ToUnixTimeTicks(),
                 ResolutionType = resolutionType,
-                StartDate = changeOfChargeTransaction.MktActivityRecord.ValidityStartDate.ToUnixTimeTicks(),
-                EndDate = changeOfChargeTransaction.MktActivityRecord.ValidityEndDate?.ToUnixTimeTicks(),
-                Status = (int)changeOfChargeTransaction.MktActivityRecord.Status,
-                TaxIndicator = changeOfChargeTransaction.MktActivityRecord.ChargeType.TaxIndicator,
-                TransparentInvoicing = changeOfChargeTransaction.MktActivityRecord.ChargeType.TransparentInvoicing,
+                StartDate = chargeCommand.MktActivityRecord.ValidityStartDate.ToUnixTimeTicks(),
+                EndDate = chargeCommand.MktActivityRecord.ValidityEndDate?.ToUnixTimeTicks(),
+                Status = (int)chargeCommand.MktActivityRecord.Status,
+                TaxIndicator = chargeCommand.MktActivityRecord.ChargeType.TaxIndicator,
+                TransparentInvoicing = chargeCommand.MktActivityRecord.ChargeType.TransparentInvoicing,
                 VatPayer = vatPayerType,
-                MRid = changeOfChargeTransaction.ChargeTypeMRid,
+                MRid = chargeCommand.ChargeTypeMRid,
                 Currency = "DKK",
             };
 
-            foreach (var point in changeOfChargeTransaction.Period.Points)
+            foreach (var point in chargeCommand.Period.Points)
             {
                 var newChargePrice = new ChargePrice
                 {
                     Time = point.Time.ToUnixTimeTicks(),
                     Amount = point.PriceAmount,
-                    LastUpdatedByCorrelationId = changeOfChargeTransaction.CorrelationId,
-                    LastUpdatedByTransactionId = changeOfChargeTransaction.MRid,
-                    LastUpdatedBy = changeOfChargeTransaction.LastUpdatedBy,
-                    RequestDateTime = changeOfChargeTransaction.RequestDate.ToUnixTimeTicks(),
+                    LastUpdatedByCorrelationId = chargeCommand.CorrelationId,
+                    LastUpdatedByTransactionId = chargeCommand.MRid,
+                    LastUpdatedBy = chargeCommand.LastUpdatedBy,
+                    RequestDateTime = chargeCommand.RequestDate.ToUnixTimeTicks(),
                 };
 
                 charge.ChargePrices.Add(newChargePrice);

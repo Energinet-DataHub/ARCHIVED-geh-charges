@@ -14,33 +14,28 @@
 
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
+using GreenEnergyHub.Charges.Application.Validation;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
 using GreenEnergyHub.Messaging;
-using GreenEnergyHub.Queues.ValidationReportDispatcher.Validation;
 
 namespace GreenEnergyHub.Charges.Application.ChangeOfCharges
 {
     public class ChangeOfChargeTransactionInputValidator : IChangeOfChargeTransactionInputValidator
     {
-        private readonly IRuleEngine<ChangeOfChargesTransaction> _inputValidationRuleEngine;
+        private readonly IRuleEngine<ChargeCommand> _inputValidationRuleEngine;
 
-        public ChangeOfChargeTransactionInputValidator(IRuleEngine<ChangeOfChargesTransaction> inputValidationRuleEngine)
+        public ChangeOfChargeTransactionInputValidator(IRuleEngine<ChargeCommand> inputValidationRuleEngine)
         {
             _inputValidationRuleEngine = inputValidationRuleEngine;
         }
 
-        public async Task<HubRequestValidationResult> ValidateAsync([NotNull] ChangeOfChargesTransaction changeOfChargesTransaction)
+        public async Task<ChargeCommandValidationResult> ValidateAsync([NotNull] ChargeCommand chargeCommand)
         {
-            var result = await _inputValidationRuleEngine.ValidateAsync(changeOfChargesTransaction).ConfigureAwait(false);
+            var result = await _inputValidationRuleEngine.ValidateAsync(chargeCommand).ConfigureAwait(false);
 
-            var hubRequestValidationResult = new HubRequestValidationResult(changeOfChargesTransaction.ChargeTypeMRid);
-
-            foreach (var error in result)
-            {
-                hubRequestValidationResult.Add(new ValidationError(error.RuleNumber, error.Message));
-            }
-
-            return hubRequestValidationResult;
+            return !result.Success
+                ? ChargeCommandValidationResult.CreateFailureFromRuleResultCollection(result)
+                : ChargeCommandValidationResult.CreateSuccess();
         }
     }
 }

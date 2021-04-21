@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System.Threading.Tasks;
+using GreenEnergyHub.Charges.Domain;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
 
 namespace GreenEnergyHub.Charges.Application.ChangeOfCharges.Repositories
@@ -23,10 +24,16 @@ namespace GreenEnergyHub.Charges.Application.ChangeOfCharges.Repositories
     public interface IChargeRepository
     {
         /// <summary>
-        /// Stores the given <see cref="ChangeOfChargesTransaction"/> in persistent storage.
+        /// Stores the given <see cref="ChargeCommand"/> in persistent storage.
         /// </summary>
-        /// <param name="transaction">The transaction to be persisted.</param>
+        /// <param name="command">The command to be persisted.</param>
         /// <returns>A <see cref="ChargeStorageStatus"/> to indicate if the operation was performed successfully.</returns>
-        Task<ChargeStorageStatus> StoreChargeAsync(ChangeOfChargesTransaction transaction);
+        Task<ChargeStorageStatus> StoreChargeAsync(ChargeCommand command);
+
+        /// <summary>
+        /// TODO
+        /// </summary>
+        /// <returns>TODO 2</returns>
+        Task<Charge> GetChargeAsync();
     }
 }

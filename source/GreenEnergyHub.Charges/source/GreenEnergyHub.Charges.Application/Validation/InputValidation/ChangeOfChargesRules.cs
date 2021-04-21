@@ -18,7 +18,7 @@ using GreenEnergyHub.Messaging.Validation;
 
 namespace GreenEnergyHub.Charges.Application.InputValidation
 {
-    public class ChangeOfChargesRules : RuleCollection<ChangeOfChargesTransaction>
+    public class ChangeOfChargesRules : RuleCollection<ChargeCommand>
     {
         public ChangeOfChargesRules()
         {

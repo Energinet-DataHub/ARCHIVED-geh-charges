@@ -42,7 +42,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChangeOfCharges
 
             // Assert
             localEventPublisher.Verify(x => x.PublishAsync(It.Is<ChargeTransactionReceived>(localEvent =>
-                localEvent.Transaction == transaction && localEvent.CorrelationId == transaction.CorrelationId)));
+                localEvent.Command == transaction && localEvent.CorrelationId == transaction.CorrelationId)));
         }
     }
 }

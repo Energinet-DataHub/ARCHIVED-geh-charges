@@ -22,18 +22,18 @@ namespace GreenEnergyHub.Charges.Domain.Events.Local
     {
         public ChargeTransactionReceived(
             string correlationId,
-            [NotNull] ChangeOfChargesTransaction transaction)
+            [NotNull] ChargeCommand command)
         {
             CorrelationId = correlationId;
-            Transaction = transaction;
-            Filter = transaction.GetType().Name;
+            Command = command;
+            Filter = command.GetType().Name;
         }
 
         public Instant PublishedTime { get; } = SystemClock.Instance.GetCurrentInstant();
 
         public string CorrelationId { get; }
 
-        public ChangeOfChargesTransaction Transaction { get; }
+        public ChargeCommand Command { get; }
 
         public string Filter { get; }
     }
