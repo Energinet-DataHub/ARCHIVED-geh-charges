@@ -10,7 +10,7 @@ The purpose of this document is create a single mapping reference for the shared
 
 ## Mapping table
 
-The mapping covers the generic set of attributes shared amongst all the RSM-messages communicated to and from DataHub. It adheres to the general [rsm-to-cim.md](https://github.com/Energinet-DataHub/green-energy-hub/blob/main/samples/energinet/docs/document-type-mappings/rsm-to-cim.md) document.
+The mapping covers the generic set of attributes shared amongst all the RSM-messages communicated to and from DataHub. It adheres to the general [rsm-to-cim.md](https://github.com/Energinet-DataHub/geh-charges/blob/main/docs/document-type-mappings/rsm-to-cim.md) document.
 
 > Do note, that some of the CIM names are identical and will require a context to acquire uniqueness, hence a suggested context is provided for those mappings.
 
