@@ -2,7 +2,7 @@
 
 ## Developer Experience
 
-It is possible to deploy infrastructure from localhost.
+It is possible to deploy infrastructure from `localhost`.
 
 For installation and learning resources on Terraform refer to [`terraform.io`](https://www.terraform.io).
 
