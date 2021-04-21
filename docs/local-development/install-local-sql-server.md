@@ -28,7 +28,7 @@ Click the "Download now" button under the developer edition.
 
 ### Prepare configuration
 
-* Copy the file `ConfigurationFile.ini.SQL2019Developer.samples` (from the sql-server sub-folder next to this) to `C:\SQL2019\Developer_ENU`
+* Copy the file `ConfigurationFile.ini.SQL2019Developer.samples` (from the `sql-server` sub-folder next to this) to `C:\SQL2019\Developer_ENU`
 * Rename the file to `ConfigurationFile.ini`
 * Find the line containing the setting for `SQLSYSADMINACCOUNTS`
 * Edit the line to use your windows account on the device you are installing it on. An example can be seen below:
