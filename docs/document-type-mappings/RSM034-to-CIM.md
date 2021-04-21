@@ -2,11 +2,11 @@
 
 ## Mapping table
 
-The mapping covers the following RSM-034 messages and adheres to the general [rsm-to-cim.md](https://github.com/Energinet-DataHub/green-energy-hub/blob/main/samples/energinet/docs/document-type-mappings/rsm-to-cim.md) document.
+The mapping covers the following RSM-034 messages and adheres to the general [rsm-to-cim.md](https://github.com/Energinet-DataHub/geh-charges/blob/main/docs/document-type-mappings/rsm-to-cim.md) document.
 
 >- **`DK_NotifyChargeInformation`** - Notification of price list changes
 
-Fields shared by all RSM messages are omitted from this document. They can be found [here](https://github.com/Energinet-DataHub/green-energy-hub/blob/main/samples/energinet/docs/document-type-mappings/shared-rsm-fields.md)
+Fields shared by all RSM messages are omitted from this document. They can be found [here](https://github.com/Energinet-DataHub/geh-charges/blob/main/docs/document-type-mappings/shared-rsm-fields.md)
 
 > Do note, that some of the CIM names are identical and will require a context to acquire uniqueness, hence a suggested context is provided for those mappings.
 
