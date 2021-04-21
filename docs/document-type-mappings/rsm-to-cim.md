@@ -4,10 +4,9 @@
 
 The following is a list of mapping documents for specific RSM messages.
 
-* [Shared fields](https://github.com/Energinet-DataHub/green-energy-hub/blob/main/samples/energinet/docs/document-type-mappings/shared-rsm-fields.md)
-* [RSM-012](https://github.com/Energinet-DataHub/green-energy-hub/blob/main/samples/energinet/docs/document-type-mappings/RSM012-to-CIM.md) - Time series
-* [RSM-033](https://github.com/Energinet-DataHub/green-energy-hub/blob/main/samples/energinet/docs/document-type-mappings/RSM033-to-CIM.md) - Changing price lists
-* [RSM-034](https://github.com/Energinet-DataHub/green-energy-hub/blob/main/samples/energinet/docs/document-type-mappings/RSM034-to-CIM.md) - Notification of price list changes
+* [Shared fields](https://github.com/Energinet-DataHub/geh-charges/blob/main/docs/document-type-mappings/shared-rsm-fields.md)
+* [RSM-033](https://github.com/Energinet-DataHub/geh-charges/blob/main/docs/document-type-mappings/RSM033-to-CIM.md) - Changing price lists
+* [RSM-034](https://github.com/Energinet-DataHub/geh-charges/blob/main/docs/document-type-mappings/RSM034-to-CIM.md) - Notification of price list changes
 
 The remaining part of the document addresses the mapping in more general terms.
 
