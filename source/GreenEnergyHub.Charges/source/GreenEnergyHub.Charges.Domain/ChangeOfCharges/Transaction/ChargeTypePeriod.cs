@@ -18,16 +18,13 @@ namespace GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction
 {
     public class ChargeTypePeriod
     {
-        private List<Point>? _points;
+        public ChargeTypePeriod()
+        {
+            Points = new ();
+        }
 
         public string? Resolution { get; set; }
 
-        public List<Point> Points
-        {
-            get
-            {
-                return _points ??= new List<Point>();
-            }
-        }
+        public List<Point> Points { get; }
     }
 }
