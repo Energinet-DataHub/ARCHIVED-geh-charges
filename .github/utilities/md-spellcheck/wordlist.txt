@@ -1,6 +1,7 @@
 ﻿### This file contains the list of words to be ignored by spell check
 ADR
 Architechtural
+CIM
 composable
 DataHub
 deserialize
@@ -19,6 +20,7 @@ PI
 POCO
 proto
 resending
+RSM
 runtime
 surveilled
 Terraform
