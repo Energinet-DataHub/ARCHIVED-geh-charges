@@ -4,19 +4,19 @@
 
 It is possible to deploy infrastructure from localhost.
 
-For installation and learning resources on Terraform refer to [terraform.io](https://www.terraform.io).
+For installation and learning resources on Terraform refer to [`terraform.io`](https://www.terraform.io).
 
-The steps below solves the problem of otherwise having to provide TF variables on each `terraform apply` invocation. All mentioned files are
+The steps below solves the problem of otherwise having to provide Terraform variables on each `terraform apply` invocation. All mentioned files are
 located in the current folder and all commands must likewise be executed from this same folder.
 
 The steps needed are:
 
 - Create file `localhost.tfvars` from `localhost.tfvars.sample` and provide your personal values.
-  (The format is the same as other terraform configuration files)
+  (The format is the same as other Terraform configuration files)
 - Make sure that you're logged in with an account that has access permissions to the selected resource group.
-  (Use `az login` from Azure CLI to switch account as needed)
+  (Use `az login` from `Azure CLI` to switch account as needed)
 - Temporarily rename `backend.tf` to `backend.tf.exclude`.
-  (This is needed to avoid terraform from picking it up because the settings in the file are not overwritten by your
+  (This is needed to avoid Terraform from picking it up because the settings in the file are not overwritten by your
   `localhost.tfvars` file. Also Terraform currently doesn't support explicit exclusion. See [this issue](https://github.com/hashicorp/terraform/issues/2253))
 - Execute `terraform init`
 - Execute `terraform apply -var-file="localhost.tfvars"`
@@ -35,7 +35,7 @@ If you want to tear down all the resources again simply execute `terraform destr
 
 This describes what values to use for the various values in the `localhost.tfvars` file.
 
-It is assumed that Azure CLI for Windows and the Azure AD module for `powershell` is installed. If not, guides can be found found later in this file.
+It is assumed that `Azure CLI` for Windows and the Azure AD module for `powershell` is installed. If not, guides can be found found later in this file.
 
 ### `environment`
 
@@ -79,7 +79,7 @@ az login
 
 In the result, a field will be called `tenantId`.
 
-The value is what is needed for `tenantId` (hint: it looks like a GUID)
+The value is what is needed for `tenantId` (hint: it looks like a `GUID`)
 
 ### `spn_object_id`
 
@@ -103,7 +103,7 @@ Get-AzureADUser -searchstring "username@yourdomain.com"
 
 The object ID should now be displayed as the first column in the result.
 
-This ID is the value you need for `object_id` (hint: it looks like a GUID)
+This ID is the value you need for `object_id` (hint: it looks like a `GUID`)
 
 ## Installing `Azure CLI`
 
