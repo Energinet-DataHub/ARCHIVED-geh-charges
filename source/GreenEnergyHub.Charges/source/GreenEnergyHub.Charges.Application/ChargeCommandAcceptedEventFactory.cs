@@ -29,7 +29,7 @@ namespace GreenEnergyHub.Charges.Application
 
         public IInternalEvent CreateEvent(ChargeCommand command)
         {
-            return new ChargeCommandAcceptedEvent(_clock.GetCurrentInstant(), command.CorrelationId, command);
+            return new ChargeCommandAcceptedEvent(_clock.GetCurrentInstant(), command.CorrelationId!, command);
         }
     }
 }
