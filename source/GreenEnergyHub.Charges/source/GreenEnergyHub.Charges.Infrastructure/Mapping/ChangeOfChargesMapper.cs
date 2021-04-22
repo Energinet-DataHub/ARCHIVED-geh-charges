@@ -16,6 +16,7 @@ using System;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
 using GreenEnergyHub.Charges.Infrastructure.Context.Model;
 using JetBrains.Annotations;
+using NodaTime;
 using ChargeType = GreenEnergyHub.Charges.Infrastructure.Context.Model.ChargeType;
 using MarketParticipant = GreenEnergyHub.Charges.Infrastructure.Context.Model.MarketParticipant;
 
@@ -77,6 +78,34 @@ namespace GreenEnergyHub.Charges.Infrastructure.Mapping
             }
 
             return charge;
+        }
+
+        public static Domain.Charge MapChargeToChangeOfChargesMessage(Charge charge)
+        {
+            if (charge == null) throw new ArgumentNullException(nameof(charge));
+
+            return new Domain.Charge
+            {
+                ChargeTypeMRid = charge.MRid,
+                MktActivityRecord = new MktActivityRecord
+                {
+                    Status = (MktActivityRecordStatus)charge.Status,
+                    ChargeType = new Domain.ChangeOfCharges.Transaction.ChargeType()
+                    {
+                        Name = charge.Name,
+                        TaxIndicator = charge.TaxIndicator,
+                        VatPayer = charge.VatPayer?.Name,
+                        Description = charge.Description,
+                        TransparentInvoicing = charge.TransparentInvoicing,
+                    },
+                    ValidityStartDate = Instant.FromUnixTimeTicks(charge.StartDate),
+                    ValidityEndDate = charge.EndDate != null ? Instant.FromUnixTimeTicks(charge.EndDate.Value) : null as Instant?,
+                },
+                RequestDate = Instant.FromUnixTimeTicks(charge.RequestDateTime),
+                LastUpdatedBy = charge.LastUpdatedBy,
+                CorrelationId = charge.LastUpdatedByCorrelationId,
+                ChargeTypeOwnerMRid = charge.ChargeTypeOwner?.MRid,
+            };
         }
     }
 }

@@ -35,7 +35,18 @@ namespace GreenEnergyHub.Charges.Infrastructure.Repositories
             _chargesDatabaseContext = chargesDatabaseContext;
         }
 
-        public async Task<ChargeStorageStatus> StoreChargeAsync(Domain.Charge command)
+        public async Task<Charge?> GetChargeAsync(string mrid, string chargeTypeOwnerMRid)
+        {
+            var charge = await _chargesDatabaseContext.Charge
+                .Include(x => x.ChargeTypeOwner)
+                .SingleOrDefaultAsync(x => x.MRid == mrid &&
+                                           x.ChargeTypeOwner != null &&
+                                           x.ChargeTypeOwner.MRid == chargeTypeOwnerMRid).ConfigureAwait(false);
+
+            return charge is null ? null : ChangeOfChargesMapper.MapChargeToChangeOfChargesMessage(charge);
+        }
+
+        public async Task<ChargeStorageStatus> StoreChargeAsync(Charge command)
         {
             if (command == null) throw new ArgumentNullException(nameof(command));
 
