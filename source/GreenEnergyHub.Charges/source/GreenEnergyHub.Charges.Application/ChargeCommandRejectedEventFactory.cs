@@ -32,7 +32,6 @@ namespace GreenEnergyHub.Charges.Application
             ChargeCommand command,
             ChargeCommandValidationResult validationResult)
         {
-
             return new ChargeCommandRejectedEvent(
                 _clock.GetCurrentInstant(),
                 command!.CorrelationId!,
