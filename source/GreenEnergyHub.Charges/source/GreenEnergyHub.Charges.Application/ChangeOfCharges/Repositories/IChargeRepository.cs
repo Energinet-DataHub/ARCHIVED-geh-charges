@@ -14,7 +14,6 @@
 
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Domain;
-using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
 
 namespace GreenEnergyHub.Charges.Application.ChangeOfCharges.Repositories
 {
@@ -23,17 +22,8 @@ namespace GreenEnergyHub.Charges.Application.ChangeOfCharges.Repositories
     /// </summary>
     public interface IChargeRepository
     {
-        /// <summary>
-        /// Stores the given <see cref="ChargeCommand"/> in persistent storage.
-        /// </summary>
-        /// <param name="command">The command to be persisted.</param>
-        /// <returns>A <see cref="ChargeStorageStatus"/> to indicate if the operation was performed successfully.</returns>
         Task StoreChargeAsync(Charge command);
 
-        /// <summary>
-        /// TODO
-        /// </summary>
-        /// <returns>TODO 2</returns>
         Task<Charge> GetChargeAsync(string mrid, string chargeTypeOwnerMRid);
     }
 }
