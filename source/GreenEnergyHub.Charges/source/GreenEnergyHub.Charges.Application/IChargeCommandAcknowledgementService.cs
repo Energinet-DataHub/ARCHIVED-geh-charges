@@ -20,7 +20,7 @@ namespace GreenEnergyHub.Charges.Application
 {
     public interface IChargeCommandAcknowledgementService
     {
-        Task RejectAsync(ChargeCommandValidationResult validationResult);
+        Task RejectAsync(ChargeCommand command, ChargeCommandValidationResult validationResult);
 
         Task AcceptAsync(ChargeCommand command);
     }

@@ -32,9 +32,9 @@ namespace GreenEnergyHub.Charges.Application
             _chargeCommandAcceptedEventFactory = chargeCommandAcceptedEventFactory;
         }
 
-        public async Task RejectAsync(ChargeCommandValidationResult validationResult)
+        public async Task RejectAsync(ChargeCommand command, ChargeCommandValidationResult validationResult)
         {
-            var chargeEvent = _chargeCommandRejectedEventFactory.CreateEvent(validationResult);
+            var chargeEvent = _chargeCommandRejectedEventFactory.CreateEvent(command, validationResult);
             await _internalEventPublisher.PublishAsync(chargeEvent).ConfigureAwait(false);
         }
 
