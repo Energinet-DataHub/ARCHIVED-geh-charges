@@ -32,7 +32,7 @@ namespace GreenEnergyHub.Charges.Tests.Builders
             _mrid = "some mrid";
             _validityStartDate = SystemClock.Instance.GetCurrentInstant()
                 .Plus(Duration.FromDays(500));
-            _vatPayer = CommandType. "D02";
+            _vatPayer = "D02";
             _status = 2; // Addition
             _taxIndicator = false;
             _owner = "owner";

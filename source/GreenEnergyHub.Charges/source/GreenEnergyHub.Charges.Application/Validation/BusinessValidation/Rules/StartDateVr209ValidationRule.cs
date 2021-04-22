@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Diagnostics.CodeAnalysis;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
 using NodaTime;
 
@@ -23,7 +24,7 @@ namespace GreenEnergyHub.Charges.Application.Validation.BusinessValidation.Rules
         private readonly Instant _endOfValidInterval;
         private readonly Instant _validityStartDate;
 
-        public StartDateVr209ValidationRule(ChargeCommand command, StartDateVr209ValidationRuleConfiguration configuration)
+        public StartDateVr209ValidationRule([NotNull]ChargeCommand command, [NotNull]StartDateVr209ValidationRuleConfiguration configuration)
         {
             _validityStartDate = command.MktActivityRecord!.ValidityStartDate;
 

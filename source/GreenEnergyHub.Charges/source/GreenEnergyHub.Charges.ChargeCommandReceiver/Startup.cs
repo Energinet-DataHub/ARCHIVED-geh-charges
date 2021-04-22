@@ -17,11 +17,13 @@ using GreenEnergyHub.Charges.Application;
 using GreenEnergyHub.Charges.Application.ChangeOfCharges;
 using GreenEnergyHub.Charges.Application.Validation;
 using GreenEnergyHub.Charges.Application.Validation.BusinessValidation;
+using GreenEnergyHub.Charges.Infrastructure.Repositories;
 using GreenEnergyHub.Charges.LocalMessageServiceBusTopicTrigger;
 using GreenEnergyHub.Json;
 using GreenEnergyHub.Messaging;
 using Microsoft.Azure.Functions.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection;
+using NodaTime;
 
 [assembly: FunctionsStartup(typeof(Startup))]
 
@@ -33,6 +35,7 @@ namespace GreenEnergyHub.Charges.LocalMessageServiceBusTopicTrigger
         {
             builder.Services.AddGreenEnergyHub(typeof(ChangeOfChargesMessageHandler).Assembly);
             builder.Services.AddSingleton<IJsonSerializer, JsonSerializer>();
+            builder.Services.AddScoped(typeof(IClock), _ => SystemClock.Instance);
             builder.Services.AddScoped<IChangeOfChargeTransactionInputValidator, ChangeOfChargeTransactionInputValidator>();
             builder.Services.AddScoped<IChangeOfChargesTransactionHandler, ChangeOfChargesTransactionHandler>();
             builder.Services.AddScoped<IInternalEventPublisher, InternalEventPublisher>();
