@@ -22,15 +22,15 @@ namespace GreenEnergyHub.Charges.Domain.Events.Local
             Instant publishedTime,
             string correlationId,
             string originalDocumentIdentification,
-            string originalTransactionReference)
+            string originalEventIdentification)
             : base(publishedTime, correlationId)
         {
             OriginalDocumentIdentification = originalDocumentIdentification;
-            OriginalTransactionReference = originalTransactionReference;
+            OriginalEventIdentification = originalEventIdentification;
         }
 
         public string OriginalDocumentIdentification { get; }
 
-        public string OriginalTransactionReference { get;  }
+        public string OriginalEventIdentification { get;  }
     }
 }
