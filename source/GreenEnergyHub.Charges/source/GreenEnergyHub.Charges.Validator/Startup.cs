@@ -13,7 +13,10 @@
 // limitations under the License.
 
 using System.Diagnostics.CodeAnalysis;
+using GreenEnergyHub.Charges.Application;
 using GreenEnergyHub.Charges.Application.ChangeOfCharges;
+using GreenEnergyHub.Charges.Application.Validation;
+using GreenEnergyHub.Charges.Application.Validation.BusinessValidation;
 using GreenEnergyHub.Charges.LocalMessageServiceBusTopicTrigger;
 using GreenEnergyHub.Json;
 using GreenEnergyHub.Messaging;
@@ -33,6 +36,12 @@ namespace GreenEnergyHub.Charges.LocalMessageServiceBusTopicTrigger
             builder.Services.AddScoped<IChangeOfChargeTransactionInputValidator, ChangeOfChargeTransactionInputValidator>();
             builder.Services.AddScoped<IChangeOfChargesTransactionHandler, ChangeOfChargesTransactionHandler>();
             builder.Services.AddScoped<ILocalEventPublisher, LocalEventPublisher>();
+            builder.Services.AddScoped<IChargeCommandAcknowledgementService, ChargeCommandAcknowledgementService>();
+            builder.Services.AddScoped<IChargeCommandHandler, ChargeCommandHandler>();
+            builder.Services.AddScoped<IChargeFactory, ChargeFactory>();
+            builder.Services.AddScoped<IBusinessValidationRulesFactory, BusinessValidationRulesFactory>();
+            builder.Services.AddScoped<IChargeCommandBusinessValidator, ChargeCommandBusinessValidator>();
+            builder.Services.AddScoped<IChargeCommandValidator, ChargeCommandValidator>();
         }
     }
 }

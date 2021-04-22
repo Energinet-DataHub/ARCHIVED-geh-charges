@@ -20,6 +20,7 @@ using GreenEnergyHub.Charges.Infrastructure.Context;
 using GreenEnergyHub.Charges.Infrastructure.Context.Model;
 using GreenEnergyHub.Charges.Infrastructure.Mapping;
 using Microsoft.EntityFrameworkCore;
+using Charge = GreenEnergyHub.Charges.Domain.Charge;
 using ChargeType = GreenEnergyHub.Charges.Infrastructure.Context.Model.ChargeType;
 using MarketParticipant = GreenEnergyHub.Charges.Infrastructure.Context.Model.MarketParticipant;
 
@@ -34,7 +35,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Repositories
             _chargesDatabaseContext = chargesDatabaseContext;
         }
 
-        public async Task<ChargeStorageStatus> StoreChargeAsync(ChargeCommand command)
+        public async Task<ChargeStorageStatus> StoreChargeAsync(Domain.Charge command)
         {
             if (command == null) throw new ArgumentNullException(nameof(command));
 
@@ -55,6 +56,11 @@ namespace GreenEnergyHub.Charges.Infrastructure.Repositories
             await _chargesDatabaseContext.Charge.AddAsync(charge).ConfigureAwait(false);
             await _chargesDatabaseContext.SaveChangesAsync().ConfigureAwait(false);
             return ChargeStorageStatus.CreateSuccess();
+        }
+
+        public Task<Charge> GetChargeAsync()
+        {
+            throw new NotImplementedException();
         }
 
         private async Task<MarketParticipant?> GetChargeTypeOwnerMRidAsync(ChargeCommand chargeMessage)

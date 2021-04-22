@@ -28,7 +28,7 @@ namespace GreenEnergyHub.Charges.Application.ChangeOfCharges.Repositories
         /// </summary>
         /// <param name="command">The command to be persisted.</param>
         /// <returns>A <see cref="ChargeStorageStatus"/> to indicate if the operation was performed successfully.</returns>
-        Task<ChargeStorageStatus> StoreChargeAsync(ChargeCommand command);
+        Task<ChargeStorageStatus> StoreChargeAsync(Charge command);
 
         /// <summary>
         /// TODO

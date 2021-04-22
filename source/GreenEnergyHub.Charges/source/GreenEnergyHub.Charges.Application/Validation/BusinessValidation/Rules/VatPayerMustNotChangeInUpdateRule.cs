@@ -14,6 +14,6 @@ namespace GreenEnergyHub.Charges.Application.Validation.BusinessValidation.Rules
             _charge = charge;
         }
 
-        public bool IsValid => _command!.MktActivityRecord!.ChargeType!.VatPayer == _charge.VatPayer;
+        public bool IsValid => _command!.MktActivityRecord!.ChargeType!.VatPayer == _charge!.MktActivityRecord!.ChargeType!.VatPayer;
     }
 }

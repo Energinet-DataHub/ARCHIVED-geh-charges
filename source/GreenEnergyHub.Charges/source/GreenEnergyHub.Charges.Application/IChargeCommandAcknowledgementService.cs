@@ -1,11 +1,11 @@
 ﻿using System.Threading.Tasks;
+using GreenEnergyHub.Charges.Application.ChangeOfCharges.Repositories;
 using GreenEnergyHub.Charges.Application.Validation;
-using GreenEnergyHub.Queues.ValidationReportDispatcher.Validation;
 
 namespace GreenEnergyHub.Charges.Application
 {
     /// <summary>
-    /// TODO
+    /// TODO: Doc
     /// </summary>
     public interface IChargeCommandAcknowledgementService
     {
@@ -15,5 +15,12 @@ namespace GreenEnergyHub.Charges.Application
         /// <param name="validationResult"></param>
         /// <returns>TODO 2</returns>
         Task RejectAsync(ChargeCommandValidationResult validationResult);
+
+        /// <summary>
+        /// TODO
+        /// </summary>
+        /// <param name="validationResult"></param>
+        /// <returns>TODO 2</returns>
+        Task RejectAsync(ChargeStorageStatus validationResult);
     }
 }
