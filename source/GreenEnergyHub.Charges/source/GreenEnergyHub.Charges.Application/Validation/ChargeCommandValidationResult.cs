@@ -16,11 +16,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using GreenEnergyHub.Charges.Application.Validation.BusinessValidation;
-using GreenEnergyHub.Messaging.Validation;
 
 namespace GreenEnergyHub.Charges.Application.Validation
 {
-    // TODO: Consider allowing to add both valid and invalid rules
     public class ChargeCommandValidationResult
     {
         private readonly IBusinessValidationRule[] _invalidRules;
@@ -42,14 +40,13 @@ namespace GreenEnergyHub.Charges.Application.Validation
             return new ();
         }
 
-        // TODO: Does this belong here? Consider using a ChargeCommandValidationResult.AddFailedRule()?
-        public static ChargeCommandValidationResult CreateFailureFromRuleResultCollection(RuleResultCollection result)
+        public static ChargeCommandValidationResult CreateFailure(IList<IBusinessValidationRule> invalidRules)
         {
-            return new (result.Select(r => new BusinessValidationRule(false)).ToArray<IBusinessValidationRule>());
-        }
+            if (invalidRules.Any(r => !r.IsValid))
+            {
+                throw new ArgumentException("All validation rules must be valid", nameof(invalidRules));
+            }
 
-        public static ChargeCommandValidationResult CreateFailure(IEnumerable<IBusinessValidationRule> invalidRules)
-        {
             return new (invalidRules.ToArray());
         }
     }

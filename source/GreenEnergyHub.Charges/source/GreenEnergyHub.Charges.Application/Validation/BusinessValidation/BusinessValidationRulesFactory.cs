@@ -18,13 +18,6 @@ using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
 
 namespace GreenEnergyHub.Charges.Application.Validation.BusinessValidation
 {
-    /// <summary>
-    /// TODO: Implement the following business rules
-    /// System validation: Netvirksomhed er legitim aktør
-    /// VR-209 StartDate must be in (configurable?) date interval
-    /// VR-??? TAX indicator must not change in an update
-    /// VR-630 VAT payer must not change in an update
-    /// </summary>
     public class BusinessValidationRulesFactory : IBusinessValidationRulesFactory
     {
         private readonly IBusinessUpdateValidationRulesFactory _businessUpdateValidationRulesFactory;

@@ -42,6 +42,7 @@ namespace GreenEnergyHub.Charges.LocalMessageServiceBusTopicTrigger
             builder.Services.AddScoped<IBusinessValidationRulesFactory, BusinessValidationRulesFactory>();
             builder.Services.AddScoped<IChargeCommandBusinessValidator, ChargeCommandBusinessValidator>();
             builder.Services.AddScoped<IChargeCommandValidator, ChargeCommandValidator>();
+            builder.Services.AddScoped<IUpdateRulesConfigurationRepository, UpdateRulesConfigurationRepository>();
         }
     }
 }

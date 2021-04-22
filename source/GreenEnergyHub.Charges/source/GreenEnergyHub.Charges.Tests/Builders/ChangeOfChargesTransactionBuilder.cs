@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Data;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
 using NodaTime;
 
@@ -31,7 +32,7 @@ namespace GreenEnergyHub.Charges.Tests.Builders
             _mrid = "some mrid";
             _validityStartDate = SystemClock.Instance.GetCurrentInstant()
                 .Plus(Duration.FromDays(500));
-            _vatPayer = "D02";
+            _vatPayer = CommandType. "D02";
             _status = 2; // Addition
             _taxIndicator = false;
             _owner = "owner";

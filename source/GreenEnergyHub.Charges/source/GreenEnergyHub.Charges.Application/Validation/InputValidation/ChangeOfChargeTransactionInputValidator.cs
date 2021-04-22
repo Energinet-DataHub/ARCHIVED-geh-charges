@@ -13,8 +13,10 @@
 // limitations under the License.
 
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application.Validation;
+using GreenEnergyHub.Charges.Application.Validation.BusinessValidation;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
 using GreenEnergyHub.Messaging;
 
@@ -32,9 +34,10 @@ namespace GreenEnergyHub.Charges.Application.ChangeOfCharges
         public async Task<ChargeCommandValidationResult> ValidateAsync([NotNull] ChargeCommand chargeCommand)
         {
             var result = await _inputValidationRuleEngine.ValidateAsync(chargeCommand).ConfigureAwait(false);
+            var validationRules = result.Select(r => new BusinessValidationRule(false)).ToArray<IBusinessValidationRule>();
 
             return !result.Success
-                ? ChargeCommandValidationResult.CreateFailureFromRuleResultCollection(result)
+                ? ChargeCommandValidationResult.CreateFailure(validationRules)
                 : ChargeCommandValidationResult.CreateSuccess();
         }
     }
