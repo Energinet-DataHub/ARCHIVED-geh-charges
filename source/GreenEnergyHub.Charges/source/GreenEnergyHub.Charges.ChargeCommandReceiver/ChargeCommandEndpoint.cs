@@ -20,7 +20,6 @@ using Microsoft.Extensions.Logging;
 
 namespace GreenEnergyHub.Charges.LocalMessageServiceBusTopicTrigger
 {
-    // TODO: Rename project to ChargeCommandReceiver
     // Thoughts on naming of projects for handling accept event:
     // - forward to market participants: Charge(Forwarder|Sender|Emitter)
     // - send receipt to sender: (Charge?)AcknowledgementSender
