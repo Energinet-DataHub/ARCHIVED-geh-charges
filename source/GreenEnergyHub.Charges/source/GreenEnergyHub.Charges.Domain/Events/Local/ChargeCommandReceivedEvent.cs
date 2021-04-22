@@ -12,14 +12,19 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using GreenEnergyHub.Charges.Application.Validation;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
-using GreenEnergyHub.Charges.Domain.Events.Local;
+using NodaTime;
 
-namespace GreenEnergyHub.Charges.Application
+namespace GreenEnergyHub.Charges.Domain.Events.Local
 {
-    public interface IChargeCommandRejectedEventFactory
+    public class ChargeCommandReceivedEvent : InternalEventBase
     {
-        IInternalEvent CreateEvent(ChargeCommand command);
+        private readonly ChargeCommand _command;
+
+        public ChargeCommandReceivedEvent(Instant publishedTime, string correlationId, ChargeCommand command)
+            : base(publishedTime, correlationId)
+        {
+            _command = command;
+        }
     }
 }

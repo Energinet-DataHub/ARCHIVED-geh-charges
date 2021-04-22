@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using GreenEnergyHub.Charges.Application.Validation;
+using System.Diagnostics.CodeAnalysis;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
 using GreenEnergyHub.Charges.Domain.Events.Local;
 using NodaTime;
@@ -29,8 +29,7 @@ namespace GreenEnergyHub.Charges.Application
         }
 
         public IInternalEvent CreateEvent(
-            ChargeCommand command,
-            ChargeCommandValidationResult validationResult)
+            [NotNull] ChargeCommand command)
         {
             return new ChargeCommandRejectedEvent(
                 _clock.GetCurrentInstant(),

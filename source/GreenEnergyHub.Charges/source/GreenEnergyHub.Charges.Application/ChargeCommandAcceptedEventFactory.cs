@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Diagnostics.CodeAnalysis;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
 using GreenEnergyHub.Charges.Domain.Events.Local;
 using NodaTime;
@@ -27,7 +28,7 @@ namespace GreenEnergyHub.Charges.Application
             _clock = clock;
         }
 
-        public ChargeCommandAcceptedEvent CreateEvent(ChargeCommand command)
+        public ChargeCommandAcceptedEvent CreateEvent([NotNull] ChargeCommand command)
         {
             return new ChargeCommandAcceptedEvent(
                 _clock.GetCurrentInstant(),

@@ -22,7 +22,7 @@ namespace GreenEnergyHub.Charges.Application.ChangeOfCharges.Repositories
     /// </summary>
     public interface IChargeRepository
     {
-        Task StoreChargeAsync(Charge command);
+        Task StoreChargeAsync(Charge newCharge);
 
         Task<Charge> GetChargeAsync(string mrid, string chargeTypeOwnerMRid);
     }
