@@ -14,7 +14,7 @@ namespace GreenEnergyHub.Charges.Application.Validation.BusinessValidation
 
         public async Task<ChargeCommandValidationResult> ValidateAsync(ChargeCommand command)
         {
-            var ruleSet = await _businessValidationRulesFactory.GetRulesForChargeCommandAsync(command).ConfigureAwait(false);
+            var ruleSet = await _businessValidationRulesFactory.CreateRulesForChargeCommandAsync(command).ConfigureAwait(false);
             return ruleSet.Validate();
         }
     }

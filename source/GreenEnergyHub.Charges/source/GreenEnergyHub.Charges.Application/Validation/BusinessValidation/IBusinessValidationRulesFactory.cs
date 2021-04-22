@@ -13,6 +13,6 @@ namespace GreenEnergyHub.Charges.Application.Validation.BusinessValidation
         /// </summary>
         /// <param name="command"></param>
         /// <returns>TODO 2</returns>
-        Task<IBusinessValidationRuleSet> GetRulesForChargeCommandAsync(ChargeCommand command);
+        Task<IBusinessValidationRuleSet> CreateRulesForChargeCommandAsync(ChargeCommand command);
     }
 }

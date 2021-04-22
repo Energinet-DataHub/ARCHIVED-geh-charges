@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Application.ChangeOfCharges.Repositories;
-using GreenEnergyHub.Charges.Application.Validation.BusinessValidation.Rules;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
 
 namespace GreenEnergyHub.Charges.Application.Validation.BusinessValidation
@@ -16,33 +13,22 @@ namespace GreenEnergyHub.Charges.Application.Validation.BusinessValidation
     /// </summary>
     public class BusinessValidationRulesFactory : IBusinessValidationRulesFactory
     {
-        private readonly IChargeRepository _chargeRepository;
+        private readonly IBusinessUpdateValidationRulesFactory _businessUpdateValidationRulesFactory;
 
-        public BusinessValidationRulesFactory(IChargeRepository chargeRepository)
+        public BusinessValidationRulesFactory(IBusinessUpdateValidationRulesFactory businessUpdateValidationRulesFactory)
         {
-            _chargeRepository = chargeRepository;
+            _businessUpdateValidationRulesFactory = businessUpdateValidationRulesFactory;
         }
 
-        public async Task<IBusinessValidationRuleSet> GetRulesForChargeCommandAsync(ChargeCommand command)
+        public async Task<IBusinessValidationRuleSet> CreateRulesForChargeCommandAsync(ChargeCommand command)
         {
             if (command == null) throw new ArgumentNullException(nameof(command));
 
             return command.MktActivityRecord!.Status switch
             {
-                MktActivityRecordStatus.Change => await GetRulesForUpdateCommandAsync(command).ConfigureAwait(false),
-                _ => throw new NotImplementedException(),
+                MktActivityRecordStatus.Change => await _businessUpdateValidationRulesFactory.CreateRulesForUpdateCommandAsync(command).ConfigureAwait(false),
+                _ => throw new NotImplementedException("Unknown operation"),
             };
-        }
-
-        private async Task<IBusinessValidationRuleSet> GetRulesForUpdateCommandAsync(ChargeCommand command)
-        {
-            var charge = await _chargeRepository.GetChargeAsync().ConfigureAwait(false);
-            var rules = new List<IBusinessValidationRule>();
-
-            // TODO magic string
-            if (command.Type == "D03") rules.Add(new VatPayerMustNotChangeInUpdateRule(command, charge));
-
-            return BusinessValidationRuleSet.FromRules(rules);
         }
     }
 }
