@@ -17,16 +17,8 @@ using GreenEnergyHub.Charges.Domain.Events.Local;
 
 namespace GreenEnergyHub.Charges.Application
 {
-    /// <summary>
-    /// TODO
-    /// </summary>
     public interface IChargeCommandRejectedEventFactory
     {
-        /// <summary>
-        /// TODO
-        /// </summary>
-        /// <param name="validationResult"></param>
-        /// <returns>TODO 2</returns>
         IInternalEvent CreateEvent(ChargeCommandValidationResult validationResult);
     }
 }

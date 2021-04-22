@@ -17,16 +17,8 @@ using GreenEnergyHub.Charges.Domain.Events.Local;
 
 namespace GreenEnergyHub.Charges.Application
 {
-    /// <summary>
-    /// TODO
-    /// </summary>
     public interface IChargeCommandAcceptedEventFactory
     {
-        /// <summary>
-        /// TODO
-        /// </summary>
-        /// <param name="command"></param>
-        /// <returns>TODO 2</returns>
-        IInternalEvent CreateEvent(ChargeCommand command);
+        ChargeCommandAcceptedEvent CreateEvent(ChargeCommand command);
     }
 }
