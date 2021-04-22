@@ -16,21 +16,24 @@ using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
 using GreenEnergyHub.Charges.Domain.Events.Local;
+using NodaTime;
 
 namespace GreenEnergyHub.Charges.Application.ChangeOfCharges
 {
     public class ChangeOfChargesTransactionHandler : IChangeOfChargesTransactionHandler
     {
         private readonly IInternalEventPublisher _internalEventPublisher;
+        private readonly IClock _clock;
 
-        public ChangeOfChargesTransactionHandler(IInternalEventPublisher internalEventPublisher)
+        public ChangeOfChargesTransactionHandler(IInternalEventPublisher internalEventPublisher, IClock clock)
         {
             _internalEventPublisher = internalEventPublisher;
+            _clock = clock;
         }
 
         public async Task HandleAsync([NotNull] ChargeCommand command)
         {
-            var localEvent = new ChargeCommandAcceptedEvent(command.CorrelationId!, command);
+            var localEvent = new ChargeCommandReceivedEvent(_clock.GetCurrentInstant(), command.CorrelationId!, command);
             await _internalEventPublisher.PublishAsync(localEvent).ConfigureAwait(false);
         }
     }

@@ -25,16 +25,19 @@ namespace GreenEnergyHub.Charges.Application
         private readonly IChargeCommandRejectedEventFactory _chargeCommandRejectedEventFactory;
         private readonly IChargeCommandAcceptedEventFactory _chargeCommandAcceptedEventFactory;
 
-        public ChargeCommandAcknowledgementService(IInternalEventPublisher internalEventPublisher, IChargeCommandRejectedEventFactory chargeCommandRejectedEventFactory, IChargeCommandAcceptedEventFactory chargeCommandAcceptedEventFactory)
+        public ChargeCommandAcknowledgementService(
+            IInternalEventPublisher internalEventPublisher,
+            IChargeCommandRejectedEventFactory chargeCommandRejectedEventFactory,
+            IChargeCommandAcceptedEventFactory chargeCommandAcceptedEventFactory)
         {
             _internalEventPublisher = internalEventPublisher;
             _chargeCommandRejectedEventFactory = chargeCommandRejectedEventFactory;
             _chargeCommandAcceptedEventFactory = chargeCommandAcceptedEventFactory;
         }
 
-        public async Task RejectAsync(ChargeCommandValidationResult validationResult)
+        public async Task RejectAsync(ChargeCommand command, ChargeCommandValidationResult validationResult)
         {
-            var chargeEvent = _chargeCommandRejectedEventFactory.CreateEvent(validationResult);
+            var chargeEvent = _chargeCommandRejectedEventFactory.CreateEvent(command);
             await _internalEventPublisher.PublishAsync(chargeEvent).ConfigureAwait(false);
         }
 

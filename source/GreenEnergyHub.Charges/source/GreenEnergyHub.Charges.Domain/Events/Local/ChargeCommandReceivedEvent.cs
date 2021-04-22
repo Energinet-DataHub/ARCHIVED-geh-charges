@@ -13,15 +13,18 @@
 // limitations under the License.
 
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
+using NodaTime;
 
-namespace GreenEnergyHub.Charges.Domain
+namespace GreenEnergyHub.Charges.Domain.Events.Local
 {
-    /// <summary>
-    /// TODO: Charge for now derives from ChargeCommand to get up and running quick and dirty.
-    ///       I, however, still wanted to make my intentions/thoughts explicit.
-    ///       Please consider making it a nice and sweet (domain) model completely decoupled from command.
-    /// </summary>
-    public class Charge : ChargeCommand
+    public class ChargeCommandReceivedEvent : InternalEventBase
     {
+        private readonly ChargeCommand _command;
+
+        public ChargeCommandReceivedEvent(Instant publishedTime, string correlationId, ChargeCommand command)
+            : base(publishedTime, correlationId)
+        {
+            _command = command;
+        }
     }
 }

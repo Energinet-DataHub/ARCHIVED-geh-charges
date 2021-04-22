@@ -39,7 +39,7 @@ namespace GreenEnergyHub.Charges.Application
             var validationResult = await _chargeCommandValidator.ValidateAsync(command).ConfigureAwait(false);
             if (validationResult.IsFailed)
             {
-                await _chargeCommandAcknowledgementService.RejectAsync(validationResult).ConfigureAwait(false);
+                await _chargeCommandAcknowledgementService.RejectAsync(command, validationResult).ConfigureAwait(false);
                 return;
             }
 

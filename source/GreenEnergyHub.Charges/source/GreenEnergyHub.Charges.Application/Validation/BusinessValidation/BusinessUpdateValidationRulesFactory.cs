@@ -14,6 +14,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application.ChangeOfCharges.Repositories;
 using GreenEnergyHub.Charges.Application.Validation.BusinessValidation.Rules;
@@ -33,7 +34,7 @@ namespace GreenEnergyHub.Charges.Application.Validation.BusinessValidation
             _updateRulesConfigurationRepository = updateRulesConfigurationRepository;
         }
 
-        public async Task<IBusinessValidationRuleSet> CreateRulesForUpdateCommandAsync(ChargeCommand command)
+        public async Task<IBusinessValidationRuleSet> CreateRulesForUpdateCommandAsync([NotNull] ChargeCommand command)
         {
             if (command == null) throw new ArgumentNullException(nameof(command));
 

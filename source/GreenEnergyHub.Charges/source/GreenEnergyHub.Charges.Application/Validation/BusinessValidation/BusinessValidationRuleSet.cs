@@ -33,7 +33,8 @@ namespace GreenEnergyHub.Charges.Application.Validation.BusinessValidation
 
         public ChargeCommandValidationResult Validate()
         {
-            var invalidRules = _rules.Where(r => !r.IsValid);
+            var invalidRules = _rules.Where(r => !r.IsValid).ToList();
+
             if (invalidRules.Any())
             {
                 return ChargeCommandValidationResult.CreateFailure(invalidRules);

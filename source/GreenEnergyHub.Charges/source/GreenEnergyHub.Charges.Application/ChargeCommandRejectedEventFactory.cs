@@ -12,7 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using GreenEnergyHub.Charges.Application.Validation;
+using System.Diagnostics.CodeAnalysis;
+using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
 using GreenEnergyHub.Charges.Domain.Events.Local;
 using NodaTime;
 
@@ -27,14 +28,14 @@ namespace GreenEnergyHub.Charges.Application
             _clock = clock;
         }
 
-        public IInternalEvent CreateEvent(ChargeCommandValidationResult validationResult)
+        public IInternalEvent CreateEvent(
+            [NotNull] ChargeCommand command)
         {
             return new ChargeCommandRejectedEvent(
                 _clock.GetCurrentInstant(),
-                command!.CorrelationId,
-                command!.MktActivityRecord!.MRid,
-                command!.OriginalTransactionReference,
-                41);
+                command!.CorrelationId!,
+                command!.MarketDocument!.MRid!,
+                command!.MktActivityRecord!.MRid!);
         }
     }
 }

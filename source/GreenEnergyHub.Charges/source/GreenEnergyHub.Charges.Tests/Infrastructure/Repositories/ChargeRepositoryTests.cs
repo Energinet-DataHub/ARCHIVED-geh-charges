@@ -15,6 +15,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using GreenEnergyHub.Charges.Domain;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
 using GreenEnergyHub.Charges.Infrastructure.Context;
 using GreenEnergyHub.Charges.Infrastructure.Context.Model;
@@ -25,6 +26,7 @@ using GreenEnergyHub.TestHelpers.Traits;
 using Microsoft.EntityFrameworkCore;
 using NodaTime;
 using Xunit;
+using Charge = GreenEnergyHub.Charges.Domain.Charge;
 using ChargeType = GreenEnergyHub.Charges.Infrastructure.Context.Model.ChargeType;
 using MarketParticipant = GreenEnergyHub.Charges.Infrastructure.Context.Model.MarketParticipant;
 
@@ -53,7 +55,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
         public async Task StoreChargeAsync_WhenValueNotFoundInDbContext_ThenFailureStatusReturnedAsync(string chargeType, string resolutionType, string vatPayerType, string chargeOwner, string failureReason)
         {
             // Arrange
-            var message = GetValidChangeOfChargesMessage();
+            var message = GetValidCharge();
             message.Type = chargeType;
             message.ChargeTypeOwnerMRid = chargeOwner;
             message!.MktActivityRecord!.ChargeType!.VatPayer = vatPayerType;
@@ -63,12 +65,9 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
             await using var chargesDatabaseContext = new ChargesDatabaseContext(_dbContextOptions);
             var sut = new ChargeRepository(chargesDatabaseContext);
 
-            // Act
-            var result = await sut.StoreChargeAsync(message).ConfigureAwait(false);
-
-            // Assert
-            Assert.False(result.Success);
-            Assert.Equal(failureReason, result.Reason);
+            // Acy & Assert
+            var ex = await Assert.ThrowsAsync<Exception>(async () => await sut.StoreChargeAsync(message).ConfigureAwait(false)).ConfigureAwait(false);
+            Assert.Equal(failureReason, ex.Message);
         }
 
         #region Argument validation
@@ -84,7 +83,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
         public async Task StoreChargeAsync_WhenValuesInMessageUsedForDbContextLookupsAreInvalid_ThenExceptionThrownAsync(string chargeType, string resolutionType, string vatPayerType, string chargeOwner, string exceptionMessage)
         {
             // Arrange
-            var message = GetValidChangeOfChargesMessage();
+            var message = GetValidCharge();
             message.Type = chargeType;
             message.ChargeTypeOwnerMRid = chargeOwner;
 #pragma warning disable CS8602 // Dereference of a possibly null reference.
@@ -118,7 +117,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
         public async Task StoreChargeAsync_WhenValuesInMessageAreInvalid_ThenExceptionThrownAsync(string chargeTypeMRid, string correlationId, string lastUpdatedBy, string shortDescription, string longDescription, string argumentThatFails)
         {
             // Arrange
-            var message = GetValidChangeOfChargesMessage();
+            var message = GetValidCharge();
             message.ChargeTypeMRid = chargeTypeMRid;
             message.CorrelationId = correlationId;
             message.LastUpdatedBy = lastUpdatedBy;
@@ -145,24 +144,21 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
         public async Task StoreChargeAsync_WhenChargeIsSaved_ThenSuccessReturnedAsync()
         {
             // Arrange
-            var message = GetValidChangeOfChargesMessage();
+            var message = GetValidCharge();
 
             SeedDatabase();
             await using var chargesDatabaseContext = new ChargesDatabaseContext(_dbContextOptions);
             var sut = new ChargeRepository(chargesDatabaseContext);
 
-            // Act
-            var result = await sut.StoreChargeAsync(message).ConfigureAwait(false);
-
-            // Assert
-            Assert.True(result.Success);
+            // Act & Assert
+            await sut.StoreChargeAsync(message).ConfigureAwait(false);
         }
 
         [Fact]
         public void MapChangeOfChargesMessageToCharge_WhenMessageWithProperties_ThenReturnsChargeWithPropertiesSet()
         {
             // Arrange
-            var changeOfChargesMessage = GetValidChangeOfChargesMessage();
+            var changeOfChargesMessage = GetValidCharge();
             changeOfChargesMessage!.MktActivityRecord!.ValidityEndDate = Instant.MaxValue;
             var chargeType = new ChargeType { Code = changeOfChargesMessage.Type, Id = 1, Name = "Name" };
             var chargeTypeOwnerMRid = new MarketParticipant { Id = 1, MRid = changeOfChargesMessage.ChargeTypeOwnerMRid };
@@ -180,9 +176,9 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
             }
         }
 
-        private static ChargeCommand GetValidChangeOfChargesMessage()
+        private static Charge GetValidCharge()
         {
-            var transaction = new ChargeCommand
+            var transaction = new Charge
             {
                 MRid = "chargeMRid",
                 ChargeTypeMRid = "chargeTypeMRid",
@@ -203,6 +199,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
                     Resolution = KnownResolutionType,
                 },
             };
+
             return transaction;
         }
 

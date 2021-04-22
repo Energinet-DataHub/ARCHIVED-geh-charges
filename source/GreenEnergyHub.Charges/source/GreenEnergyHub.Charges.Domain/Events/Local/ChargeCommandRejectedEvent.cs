@@ -18,9 +18,19 @@ namespace GreenEnergyHub.Charges.Domain.Events.Local
 {
     public class ChargeCommandRejectedEvent : InternalEventBase
     {
-        public ChargeCommandRejectedEvent(Instant publishedTime, string correlationId)
+        public ChargeCommandRejectedEvent(
+            Instant publishedTime,
+            string correlationId,
+            string originalDocumentIdentification,
+            string originalEventIdentification)
             : base(publishedTime, correlationId)
         {
+            OriginalDocumentIdentification = originalDocumentIdentification;
+            OriginalEventIdentification = originalEventIdentification;
         }
+
+        public string OriginalDocumentIdentification { get; }
+
+        public string OriginalEventIdentification { get;  }
     }
 }
