@@ -29,7 +29,10 @@ namespace GreenEnergyHub.Charges.Application
 
         public ChargeCommandAcceptedEvent CreateEvent(ChargeCommand command)
         {
-            return new ChargeCommandAcceptedEvent(_clock.GetCurrentInstant(), command.CorrelationId!, command);
+            return new ChargeCommandAcceptedEvent(
+                _clock.GetCurrentInstant(),
+                command.CorrelationId!,
+                command);
         }
     }
 }
