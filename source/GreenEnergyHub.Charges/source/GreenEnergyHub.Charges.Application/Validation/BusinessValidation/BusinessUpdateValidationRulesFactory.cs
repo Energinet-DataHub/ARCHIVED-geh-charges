@@ -14,9 +14,11 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application.ChangeOfCharges.Repositories;
 using GreenEnergyHub.Charges.Application.Validation.BusinessValidation.Rules;
+using GreenEnergyHub.Charges.Domain;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
 
 namespace GreenEnergyHub.Charges.Application.Validation.BusinessValidation
@@ -30,17 +32,25 @@ namespace GreenEnergyHub.Charges.Application.Validation.BusinessValidation
             _chargeRepository = chargeRepository;
         }
 
-        public async Task<IBusinessValidationRuleSet> CreateRulesForUpdateCommandAsync(ChargeCommand command)
+        public async Task<IBusinessValidationRuleSet> CreateRulesForUpdateCommandAsync([NotNull] ChargeCommand command)
         {
-            if (command == null) throw new ArgumentNullException(nameof(command));
-
-            var charge = await _chargeRepository.GetChargeAsync(command.).ConfigureAwait(false);
+            var charge = await GetChargeAsync(command.MRid, command.ChargeTypeOwnerMRid).ConfigureAwait(false);
             var rules = new List<IBusinessValidationRule>();
 
             // TODO magic string
             if (command.Type == "D03") rules.Add(new VatPayerMustNotChangeInUpdateRule(command, charge));
 
             return BusinessValidationRuleSet.FromRules(rules);
+        }
+
+        private async Task<Charge> GetChargeAsync(string? chargeMrId, string? chargeTypeOwnerMRid)
+        {
+            if (chargeMrId == null) throw new ArgumentNullException(nameof(chargeMrId));
+            if (chargeTypeOwnerMRid == null) throw new ArgumentNullException(nameof(chargeTypeOwnerMRid));
+
+            var charge = await _chargeRepository.GetChargeAsync(chargeMrId, chargeTypeOwnerMRid)
+                .ConfigureAwait(false);
+            return charge;
         }
     }
 }
