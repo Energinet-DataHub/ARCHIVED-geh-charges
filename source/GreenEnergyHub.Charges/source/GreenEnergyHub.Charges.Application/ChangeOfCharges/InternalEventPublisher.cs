@@ -21,7 +21,7 @@ using GreenEnergyHub.Json;
 
 namespace GreenEnergyHub.Charges.Application.ChangeOfCharges
 {
-    public class LocalEventPublisher : ILocalEventPublisher
+    public class InternalEventPublisher : IInternalEventPublisher
     {
         private const string LocalEventsTopicName =
             "LOCAL_EVENTS_TOPIC_NAME";
@@ -31,12 +31,12 @@ namespace GreenEnergyHub.Charges.Application.ChangeOfCharges
 
         private readonly IJsonSerializer _jsonSerializer;
 
-        public LocalEventPublisher(IJsonSerializer jsonSerializer)
+        public InternalEventPublisher(IJsonSerializer jsonSerializer)
         {
             _jsonSerializer = jsonSerializer;
         }
 
-        public async Task PublishAsync([NotNull] ILocalEvent localEvent)
+        public async Task PublishAsync([NotNull] IInternalEvent internalEvent)
         {
             var connectionString = GetEnvironmentVariable(LocalEventsConnectionString);
             await using ServiceBusClient client = new (connectionString);
@@ -44,16 +44,16 @@ namespace GreenEnergyHub.Charges.Application.ChangeOfCharges
             var queueOrTopicName = GetEnvironmentVariable(LocalEventsTopicName);
             ServiceBusSender sender = client.CreateSender(queueOrTopicName);
 
-            var serializedMessage = _jsonSerializer.Serialize(localEvent);
+            var serializedMessage = _jsonSerializer.Serialize(internalEvent);
 
             var message = new ServiceBusMessage(serializedMessage)
             {
-                CorrelationId = localEvent.CorrelationId,
-                Subject = localEvent.Filter, // We set 'Subject' at the moment for a better overview in the AZ portal.
+                CorrelationId = internalEvent.CorrelationId,
+                Subject = internalEvent.Filter, // We set 'Subject' at the moment for a better overview in the AZ portal.
             };
 
             // We use this custom "filter" property to filter our messages on the ServiceBus.
-            message.ApplicationProperties.Add("filter", localEvent.Filter);
+            message.ApplicationProperties.Add("filter", internalEvent.Filter);
 
             await sender.SendMessageAsync(message).ConfigureAwait(false);
         }

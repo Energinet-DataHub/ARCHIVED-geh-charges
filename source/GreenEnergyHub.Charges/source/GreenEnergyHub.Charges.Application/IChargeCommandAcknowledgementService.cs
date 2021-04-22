@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Application.ChangeOfCharges.Repositories;
 using GreenEnergyHub.Charges.Application.Validation;
+using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
 
 namespace GreenEnergyHub.Charges.Application
 {
@@ -19,8 +19,8 @@ namespace GreenEnergyHub.Charges.Application
         /// <summary>
         /// TODO
         /// </summary>
-        /// <param name="validationResult"></param>
+        /// <param name="command"></param>
         /// <returns>TODO 2</returns>
-        Task RejectAsync(ChargeStorageStatus validationResult);
+        Task AcceptAsync(ChargeCommand command);
     }
 }

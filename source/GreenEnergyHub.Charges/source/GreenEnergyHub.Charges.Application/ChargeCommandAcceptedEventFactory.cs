@@ -12,21 +12,24 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Threading.Tasks;
+using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
 using GreenEnergyHub.Charges.Domain.Events.Local;
+using NodaTime;
 
-namespace GreenEnergyHub.Charges.Application.ChangeOfCharges
+namespace GreenEnergyHub.Charges.Application
 {
-    /// <summary>
-    /// Service for publishing events internally in the domain.
-    /// </summary>
-    public interface ILocalEventPublisher
+    public class ChargeCommandAcceptedEventFactory : IChargeCommandAcceptedEventFactory
     {
-        /// <summary>
-        /// Publish the local event to the domain.
-        /// </summary>
-        /// <param name="localEvent"></param>
-        /// <returns>No return value.</returns>
-        Task PublishAsync(ILocalEvent localEvent);
+        private readonly IClock _clock;
+
+        public ChargeCommandAcceptedEventFactory(IClock clock)
+        {
+            _clock = clock;
+        }
+
+        public IInternalEvent CreateEvent(ChargeCommand command)
+        {
+            return new ChargeCommandAcceptedEvent(_clock.GetCurrentInstant(), command.CorrelationId, command);
+        }
     }
 }

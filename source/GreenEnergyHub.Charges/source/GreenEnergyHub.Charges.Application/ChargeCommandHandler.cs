@@ -30,11 +30,8 @@ namespace GreenEnergyHub.Charges.Application
             }
 
             var charge = await _chargeFactory.CreateFromCommandAsync(command).ConfigureAwait(false);
-            var storageResult = await _chargeRepository.StoreChargeAsync(charge).ConfigureAwait(false);
-            if (!storageResult.Success)
-            {
-                await _chargeCommandAcknowledgementService.RejectAsync(storageResult).ConfigureAwait(false);
-            }
+            await _chargeRepository.StoreChargeAsync(charge).ConfigureAwait(false);
+            await _chargeCommandAcknowledgementService.AcceptAsync(command).ConfigureAwait(false);
         }
     }
 }

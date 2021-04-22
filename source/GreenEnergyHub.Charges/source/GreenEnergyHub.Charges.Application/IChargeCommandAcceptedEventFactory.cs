@@ -12,28 +12,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Domain;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
+using GreenEnergyHub.Charges.Domain.Events.Local;
 
-namespace GreenEnergyHub.Charges.Application.ChangeOfCharges.Repositories
+namespace GreenEnergyHub.Charges.Application
 {
     /// <summary>
-    /// Contract defining the capabilities of the infrastructure component facilitating interaction with the charges data store.
+    /// TODO
     /// </summary>
-    public interface IChargeRepository
+    public interface IChargeCommandAcceptedEventFactory
     {
-        /// <summary>
-        /// Stores the given <see cref="ChargeCommand"/> in persistent storage.
-        /// </summary>
-        /// <param name="command">The command to be persisted.</param>
-        /// <returns>A <see cref="ChargeStorageStatus"/> to indicate if the operation was performed successfully.</returns>
-        Task StoreChargeAsync(Charge command);
-
         /// <summary>
         /// TODO
         /// </summary>
+        /// <param name="command"></param>
         /// <returns>TODO 2</returns>
-        Task<Charge> GetChargeAsync(string mrid, string chargeTypeOwnerMRid);
+        IInternalEvent CreateEvent(ChargeCommand command);
     }
 }

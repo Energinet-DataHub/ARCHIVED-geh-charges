@@ -12,26 +12,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
 using GreenEnergyHub.Charges.Domain.Events.Local;
 
 namespace GreenEnergyHub.Charges.Application.ChangeOfCharges
 {
-    public class ChangeOfChargesTransactionHandler : IChangeOfChargesTransactionHandler
+    /// <summary>
+    /// Service for publishing events internally in the domain.
+    /// </summary>
+    public interface IInternalEventPublisher
     {
-        private readonly IInternalEventPublisher _internalEventPublisher;
-
-        public ChangeOfChargesTransactionHandler(IInternalEventPublisher internalEventPublisher)
-        {
-            _internalEventPublisher = internalEventPublisher;
-        }
-
-        public async Task HandleAsync([NotNull] ChargeCommand command)
-        {
-            var localEvent = new ChargeCommandAcceptedEvent(command.CorrelationId!, command);
-            await _internalEventPublisher.PublishAsync(localEvent).ConfigureAwait(false);
-        }
+        /// <summary>
+        /// Publish the local event to the domain.
+        /// </summary>
+        /// <param name="internalEvent"></param>
+        /// <returns>No return value.</returns>
+        Task PublishAsync(IInternalEvent internalEvent);
     }
 }

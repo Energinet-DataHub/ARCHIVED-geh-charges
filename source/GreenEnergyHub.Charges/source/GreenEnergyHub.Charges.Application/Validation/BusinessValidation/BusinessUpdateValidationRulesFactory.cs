@@ -34,7 +34,7 @@ namespace GreenEnergyHub.Charges.Application.Validation.BusinessValidation
         {
             if (command == null) throw new ArgumentNullException(nameof(command));
 
-            var charge = await _chargeRepository.GetChargeAsync().ConfigureAwait(false);
+            var charge = await _chargeRepository.GetChargeAsync(command.).ConfigureAwait(false);
             var rules = new List<IBusinessValidationRule>();
 
             // TODO magic string

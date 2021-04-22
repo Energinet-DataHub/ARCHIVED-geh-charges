@@ -12,29 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Diagnostics.CodeAnalysis;
-using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
 using NodaTime;
 
 namespace GreenEnergyHub.Charges.Domain.Events.Local
 {
-    public class ChargeTransactionReceived : ILocalEvent
+    public class ChargeCommandRejectedEvent : InternalEventBase
     {
-        public ChargeTransactionReceived(
-            string correlationId,
-            [NotNull] ChargeCommand command)
+        public ChargeCommandRejectedEvent(Instant publishedTime, string correlationId)
+            : base(publishedTime, correlationId)
         {
-            CorrelationId = correlationId;
-            Command = command;
-            Filter = command.GetType().Name;
         }
-
-        public Instant PublishedTime { get; } = SystemClock.Instance.GetCurrentInstant();
-
-        public string CorrelationId { get; }
-
-        public ChargeCommand Command { get; }
-
-        public string Filter { get; }
     }
 }

@@ -35,7 +35,7 @@ namespace GreenEnergyHub.Charges.LocalMessageServiceBusTopicTrigger
             builder.Services.AddSingleton<IJsonSerializer, JsonSerializer>();
             builder.Services.AddScoped<IChangeOfChargeTransactionInputValidator, ChangeOfChargeTransactionInputValidator>();
             builder.Services.AddScoped<IChangeOfChargesTransactionHandler, ChangeOfChargesTransactionHandler>();
-            builder.Services.AddScoped<ILocalEventPublisher, LocalEventPublisher>();
+            builder.Services.AddScoped<IInternalEventPublisher, InternalEventPublisher>();
             builder.Services.AddScoped<IChargeCommandAcknowledgementService, ChargeCommandAcknowledgementService>();
             builder.Services.AddScoped<IChargeCommandHandler, ChargeCommandHandler>();
             builder.Services.AddScoped<IChargeFactory, ChargeFactory>();

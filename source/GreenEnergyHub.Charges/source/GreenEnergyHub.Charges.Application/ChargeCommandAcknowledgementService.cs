@@ -1,19 +1,33 @@
 ﻿using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Application.ChangeOfCharges.Repositories;
+using GreenEnergyHub.Charges.Application.ChangeOfCharges;
 using GreenEnergyHub.Charges.Application.Validation;
+using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
 
 namespace GreenEnergyHub.Charges.Application
 {
     public class ChargeCommandAcknowledgementService : IChargeCommandAcknowledgementService
     {
-        public Task RejectAsync(ChargeCommandValidationResult validationResult)
+        private readonly IInternalEventPublisher _internalEventPublisher;
+        private readonly IChargeCommandRejectedEventFactory _chargeCommandRejectedEventFactory;
+        private readonly IChargeCommandAcceptedEventFactory _chargeCommandAcceptedEventFactory;
+
+        public ChargeCommandAcknowledgementService(IInternalEventPublisher internalEventPublisher, IChargeCommandRejectedEventFactory chargeCommandRejectedEventFactory, IChargeCommandAcceptedEventFactory chargeCommandAcceptedEventFactory)
         {
-            return Task.CompletedTask;
+            _internalEventPublisher = internalEventPublisher;
+            _chargeCommandRejectedEventFactory = chargeCommandRejectedEventFactory;
+            _chargeCommandAcceptedEventFactory = chargeCommandAcceptedEventFactory;
         }
 
-        public Task RejectAsync(ChargeStorageStatus validationResult)
+        public async Task RejectAsync(ChargeCommandValidationResult validationResult)
         {
-            return Task.CompletedTask;
+            var chargeEvent = _chargeCommandRejectedEventFactory.CreateEvent(validationResult);
+            await _internalEventPublisher.PublishAsync(chargeEvent).ConfigureAwait(false);
+        }
+
+        public async Task AcceptAsync(ChargeCommand command)
+        {
+            var chargeEvent = _chargeCommandAcceptedEventFactory.CreateEvent(command);
+            await _internalEventPublisher.PublishAsync(chargeEvent).ConfigureAwait(false);
         }
     }
 }

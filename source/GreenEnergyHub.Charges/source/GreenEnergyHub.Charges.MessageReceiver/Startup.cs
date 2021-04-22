@@ -30,7 +30,7 @@ namespace GreenEnergyHub.Charges.MessageReceiver
             builder.Services.AddSingleton<IJsonSerializer, JsonSerializer>();
             builder.Services.AddScoped<IChangeOfChargesMessageHandler, ChangeOfChargesMessageHandler>();
             builder.Services.AddScoped<IChangeOfChargesTransactionHandler, ChangeOfChargesTransactionHandler>();
-            builder.Services.AddScoped<ILocalEventPublisher, LocalEventPublisher>();
+            builder.Services.AddScoped<IInternalEventPublisher, InternalEventPublisher>();
         }
     }
 }

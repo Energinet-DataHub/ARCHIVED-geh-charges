@@ -20,13 +20,17 @@ using Microsoft.Extensions.Logging;
 
 namespace GreenEnergyHub.Charges.LocalMessageServiceBusTopicTrigger
 {
-    public class ChargeTransactionFunctionEndpoint
+    // TODO: Rename project to ChargeCommandReceiver
+    // Thoughts on naming of projects for handling accept event:
+    // - forward to market participants: Charge(Forwarder|Sender|Emitter)
+    // - send receipt to sender: (Charge?)AcknowledgementSender
+    public class ChargeCommandEndpoint
     {
-        private const string FunctionName = nameof(ChargeTransactionFunctionEndpoint);
+        private const string FunctionName = nameof(ChargeCommandEndpoint);
         private readonly IJsonSerializer _jsonDeserializer;
         private readonly IChargeCommandHandler _chargeCommandHandler;
 
-        public ChargeTransactionFunctionEndpoint(
+        public ChargeCommandEndpoint(
             IJsonSerializer jsonDeserializer,
             IChargeCommandHandler chargeCommandHandler)
         {
