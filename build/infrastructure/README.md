@@ -4,6 +4,8 @@
 
 It is possible to deploy infrastructure from `localhost`.
 
+Please see prerequisites section at the end of this document.
+
 For installation and learning resources on Terraform refer to [`terraform.io`](https://www.terraform.io).
 
 The steps below solves the problem of otherwise having to provide Terraform variables on each `terraform apply` invocation. All mentioned files are
@@ -104,6 +106,8 @@ Get-AzureADUser -searchstring "username@yourdomain.com"
 The object ID should now be displayed as the first column in the result.
 
 This ID is the value you need for `object_id` (hint: it looks like a `GUID`)
+
+# Prerequisites
 
 ## Installing `Azure CLI`
 
