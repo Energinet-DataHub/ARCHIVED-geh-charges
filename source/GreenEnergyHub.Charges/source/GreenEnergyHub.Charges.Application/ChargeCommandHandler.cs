@@ -26,7 +26,11 @@ namespace GreenEnergyHub.Charges.Application
         private readonly IChargeRepository _chargeRepository;
         private readonly IChargeFactory _chargeFactory;
 
-        public ChargeCommandHandler(IChargeCommandAcknowledgementService chargeCommandAcknowledgementService, IChargeCommandValidator chargeCommandValidator, IChargeRepository chargeRepository, IChargeFactory chargeFactory)
+        public ChargeCommandHandler(
+            IChargeCommandAcknowledgementService chargeCommandAcknowledgementService,
+            IChargeCommandValidator chargeCommandValidator,
+            IChargeRepository chargeRepository,
+            IChargeFactory chargeFactory)
         {
             _chargeCommandAcknowledgementService = chargeCommandAcknowledgementService;
             _chargeCommandValidator = chargeCommandValidator;

@@ -12,16 +12,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Diagnostics.CodeAnalysis;
 using GreenEnergyHub.Charges.Application;
 using GreenEnergyHub.Charges.Application.ChangeOfCharges;
+using GreenEnergyHub.Charges.Application.ChangeOfCharges.Repositories;
 using GreenEnergyHub.Charges.Application.Validation;
 using GreenEnergyHub.Charges.Application.Validation.BusinessValidation;
+using GreenEnergyHub.Charges.Infrastructure.Context;
 using GreenEnergyHub.Charges.Infrastructure.Repositories;
 using GreenEnergyHub.Charges.LocalMessageServiceBusTopicTrigger;
 using GreenEnergyHub.Json;
 using GreenEnergyHub.Messaging;
 using Microsoft.Azure.Functions.Extensions.DependencyInjection;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using NodaTime;
 
@@ -33,6 +37,11 @@ namespace GreenEnergyHub.Charges.LocalMessageServiceBusTopicTrigger
     {
         public override void Configure([NotNull] IFunctionsHostBuilder builder)
         {
+            var connectionString = Environment.GetEnvironmentVariable("CHARGE_DB_CONNECTION_STRING") ??
+                                   throw new ArgumentNullException("CHARGE_DB_CONNECTION_STRING", "does not exist in configuration settings");
+            builder.Services.AddDbContext<ChargesDatabaseContext>(
+                options => options.UseSqlServer(connectionString));
+            builder.Services.AddScoped<IChargesDatabaseContext, ChargesDatabaseContext>();
             builder.Services.AddGreenEnergyHub(typeof(ChangeOfChargesMessageHandler).Assembly);
             builder.Services.AddSingleton<IJsonSerializer, JsonSerializer>();
             builder.Services.AddScoped(typeof(IClock), _ => SystemClock.Instance);
@@ -46,6 +55,10 @@ namespace GreenEnergyHub.Charges.LocalMessageServiceBusTopicTrigger
             builder.Services.AddScoped<IChargeCommandBusinessValidator, ChargeCommandBusinessValidator>();
             builder.Services.AddScoped<IChargeCommandValidator, ChargeCommandValidator>();
             builder.Services.AddScoped<IUpdateRulesConfigurationRepository, UpdateRulesConfigurationRepository>();
+            builder.Services.AddScoped<IBusinessUpdateValidationRulesFactory, BusinessUpdateValidationRulesFactory>();
+            builder.Services.AddScoped<IChargeRepository, ChargeRepository>();
+            builder.Services.AddScoped<IBusinessAdditionValidationRulesFactory, BusinessAdditionValidationRulesFactory>();
+            builder.Services.AddScoped<IChargeCommandAcceptedEventFactory, ChargeCommandAcceptedEventFactory>();
         }
     }
 }

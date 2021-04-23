@@ -48,7 +48,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Mapping
                 Description = chargeCommand.MktActivityRecord.ChargeType.Description,
                 LastUpdatedBy = chargeCommand.LastUpdatedBy,
                 LastUpdatedByCorrelationId = chargeCommand.CorrelationId,
-                LastUpdatedByTransactionId = chargeCommand.MRid,
+                LastUpdatedByTransactionId = chargeCommand.MktActivityRecord.MRid,
                 Name = chargeCommand.MktActivityRecord.ChargeType.Name,
                 RequestDateTime = chargeCommand.RequestDate.ToUnixTimeTicks(),
                 ResolutionType = resolutionType,
@@ -69,7 +69,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Mapping
                     Time = point.Time.ToUnixTimeTicks(),
                     Amount = point.PriceAmount,
                     LastUpdatedByCorrelationId = chargeCommand.CorrelationId,
-                    LastUpdatedByTransactionId = chargeCommand.MRid,
+                    LastUpdatedByTransactionId = chargeCommand.MktActivityRecord.MRid,
                     LastUpdatedBy = chargeCommand.LastUpdatedBy,
                     RequestDateTime = chargeCommand.RequestDate.ToUnixTimeTicks(),
                 };

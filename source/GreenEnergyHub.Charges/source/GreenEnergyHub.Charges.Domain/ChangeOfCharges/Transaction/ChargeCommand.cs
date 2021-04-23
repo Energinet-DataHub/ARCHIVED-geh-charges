@@ -13,7 +13,6 @@
 // limitations under the License.
 
 using System.Text.Json.Serialization;
-using GreenEnergyHub.Messaging;
 using NodaTime;
 using MarketDocument = GreenEnergyHub.Charges.Domain.Common.MarketDocument;
 

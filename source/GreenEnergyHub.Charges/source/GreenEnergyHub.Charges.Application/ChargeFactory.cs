@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Domain;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
@@ -20,10 +21,23 @@ namespace GreenEnergyHub.Charges.Application
 {
     public class ChargeFactory : IChargeFactory
     {
-        public Task<Charge> CreateFromCommandAsync(ChargeCommand command)
+        public Task<Charge> CreateFromCommandAsync([NotNull]ChargeCommand command)
         {
             // Quick and dirty as long as Charge is a command
-            return Task.FromResult((Charge)command);
+            var c = new Charge
+            {
+                Period = command.Period,
+                Type = command.Type,
+                CorrelationId = command.CorrelationId,
+                MarketDocument = command.MarketDocument,
+                MRid = command.MRid,
+                RequestDate = command.RequestDate,
+                LastUpdatedBy = command.LastUpdatedBy,
+                MktActivityRecord = command.MktActivityRecord,
+                ChargeTypeMRid = command.ChargeTypeMRid,
+                ChargeTypeOwnerMRid = command.ChargeTypeOwnerMRid,
+            };
+            return Task.FromResult(c);
         }
     }
 }

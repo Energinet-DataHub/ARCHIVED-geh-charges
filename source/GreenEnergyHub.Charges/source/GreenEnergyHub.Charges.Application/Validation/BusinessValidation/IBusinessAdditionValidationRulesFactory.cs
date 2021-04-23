@@ -12,20 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using NodaTime;
+using System.Threading.Tasks;
+using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
 
-namespace GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction
+namespace GreenEnergyHub.Charges.Application.Validation.BusinessValidation
 {
-    public class MktActivityRecord
+    public interface IBusinessAdditionValidationRulesFactory
     {
-        public string? MRid { get; set; }
-
-        public Instant ValidityStartDate { get; set; }
-
-        public Instant? ValidityEndDate { get; set; }
-
-        public MktActivityRecordStatus Status { get; set; }
-
-        public ChargeType? ChargeType { get; set; }
+        Task<IBusinessValidationRuleSet> CreateRulesForAdditionCommandAsync(ChargeCommand command);
     }
 }
