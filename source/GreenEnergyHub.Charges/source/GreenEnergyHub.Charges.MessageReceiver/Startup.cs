@@ -18,6 +18,7 @@ using GreenEnergyHub.Charges.MessageReceiver;
 using GreenEnergyHub.Json;
 using Microsoft.Azure.Functions.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection;
+using NodaTime;
 
 [assembly: FunctionsStartup(typeof(Startup))]
 
@@ -27,6 +28,7 @@ namespace GreenEnergyHub.Charges.MessageReceiver
     {
         public override void Configure([NotNull] IFunctionsHostBuilder builder)
         {
+            builder.Services.AddScoped(typeof(IClock), _ => SystemClock.Instance);
             builder.Services.AddSingleton<IJsonSerializer, JsonSerializer>();
             builder.Services.AddScoped<IChangeOfChargesMessageHandler, ChangeOfChargesMessageHandler>();
             builder.Services.AddScoped<IChangeOfChargesTransactionHandler, ChangeOfChargesTransactionHandler>();
