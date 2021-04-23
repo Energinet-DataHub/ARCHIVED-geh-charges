@@ -31,9 +31,10 @@ When a new script should be added to the tracked updates, a new `.sql` file shou
 ## Script executing order
 
 Scripts are executed in order defined by group:
+
   1. `PreDeploy` will execute first
-  2. `Model`, `Seed` and `Test` will execute second 
-  3. `PostDeploy` will execute last  
+  2. `Model`, `Seed` and `Test` will execute second
+  3. `PostDeploy` will execute last
 
 Within each group scripts will be executed ordered by the date and time prefix.
 
