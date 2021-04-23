@@ -19,7 +19,7 @@ using MarketDocument = GreenEnergyHub.Charges.Domain.Common.MarketDocument;
 
 namespace GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction
 {
-    public class ChangeOfChargesTransaction
+    public class ChargeCommand
     {
         public MarketDocument? MarketDocument { get; set; }
 

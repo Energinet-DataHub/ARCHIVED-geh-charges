@@ -12,27 +12,24 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Collections.Generic;
-using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Message;
+using GreenEnergyHub.Charges.Application.InputValidation.ValidationRules;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
+using GreenEnergyHub.Messaging.Validation;
 
-namespace GreenEnergyHub.Charges.Tests.Builders
+namespace GreenEnergyHub.Charges.Application.InputValidation
 {
-    public class ChangeOfChargesMessageBuilder
+    public class ChangeOfChargesRules : RuleCollection<ChargeCommand>
     {
-        private readonly List<ChargeCommand> _transactions = new ();
-
-        public ChangeOfChargesMessageBuilder WithTransaction(ChargeCommand transaction)
+        public ChangeOfChargesRules()
         {
-            _transactions.Add(transaction);
-            return this;
-        }
+            RuleFor(input => input.MarketDocument!.ProcessType)
+                .PropertyRule<Vr009>();
 
-        public ChangeOfChargesMessage Build()
-        {
-            var changeOfChargesMessage = new ChangeOfChargesMessage();
-            changeOfChargesMessage.Transactions.AddRange(_transactions);
-            return changeOfChargesMessage;
+            RuleFor(input => input.MarketDocument!.SenderMarketParticipant!.MRid)
+                .PropertyRule<Vr150>();
+
+            RuleFor(input => input.MarketDocument!.ReceiverMarketParticipant!.MRid)
+                .PropertyRule<Vr153>();
         }
     }
 }

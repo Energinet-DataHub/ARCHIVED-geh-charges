@@ -12,24 +12,23 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using GreenEnergyHub.Charges.Application.InputValidation.ValidationRules;
+using System;
+using GreenEnergyHub.Charges.Domain;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
-using GreenEnergyHub.Messaging.Validation;
 
-namespace GreenEnergyHub.Charges.Application.InputValidation
+namespace GreenEnergyHub.Charges.Application.Validation.BusinessValidation
 {
-    public class ChangeOfChargesRules : RuleCollection<ChangeOfChargesTransaction>
+    public class TaxIndicatorMustNotChangeInUpdateRule : IBusinessValidationRule
     {
-        public ChangeOfChargesRules()
+        private readonly ChargeCommand _command;
+        private readonly Charge _charge;
+
+        public TaxIndicatorMustNotChangeInUpdateRule(ChargeCommand command, Charge charge)
         {
-            RuleFor(input => input.MarketDocument!.ProcessType)
-                .PropertyRule<Vr009>();
-
-            RuleFor(input => input.MarketDocument!.SenderMarketParticipant!.MRid)
-                .PropertyRule<Vr150>();
-
-            RuleFor(input => input.MarketDocument!.ReceiverMarketParticipant!.MRid)
-                .PropertyRule<Vr153>();
+            _command = command;
+            _charge = charge;
         }
+
+        public bool IsValid => _command!.MktActivityRecord!.ChargeType!.TaxIndicator != _charge!.MktActivityRecord!.ChargeType!.TaxIndicator;
     }
 }

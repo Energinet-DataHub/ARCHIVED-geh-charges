@@ -55,7 +55,7 @@ namespace GreenEnergyHub.Charges.MessageReceiver
             return new OkObjectResult(messageResult);
         }
 
-        private static ChangeOfChargesTransaction GetCommandFromChangeOfChargeTransaction(ChangeOfChargesTransaction transaction)
+        private static ChargeCommand GetCommandFromChangeOfChargeTransaction(ChargeCommand transaction)
         {
             return transaction.Type switch
             {
@@ -92,8 +92,8 @@ namespace GreenEnergyHub.Charges.MessageReceiver
             ExecutionContext executionContext)
         {
             var message = new ChangeOfChargesMessage();
-            var transaction = (ChangeOfChargesTransaction)await jsonDeserializer
-                .DeserializeAsync(req.Body, typeof(ChangeOfChargesTransaction))
+            var transaction = (ChargeCommand)await jsonDeserializer
+                .DeserializeAsync(req.Body, typeof(ChargeCommand))
                 .ConfigureAwait(false);
 
             var command = GetCommandFromChangeOfChargeTransaction(transaction);
