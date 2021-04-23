@@ -55,7 +55,7 @@ namespace GreenEnergyHub.Charges.LocalMessageServiceBusTopicTrigger
             var transaction = serviceBusMessage.Transaction;
             var result = await _changeOfChargeTransactionInputValidator.ValidateAsync(transaction).ConfigureAwait(false);
 
-            if (!result.Errors.Any())
+            if (result.IsFailed)
             {
                 await _changeOfChargesTransactionHandler.HandleAsync(GetCommandFromChangeOfChargeTransactionValidationSucceeded(transaction)).ConfigureAwait(false);
             }
@@ -67,7 +67,7 @@ namespace GreenEnergyHub.Charges.LocalMessageServiceBusTopicTrigger
             log.LogDebug("Received event with charge type mRID '{mRID}'", transaction.ChargeTypeMRid);
         }
 
-        private static ChangeOfChargesTransaction GetCommandFromChangeOfChargeTransactionValidationSucceeded(ChangeOfChargesTransaction transaction)
+        private static ChargeCommand GetCommandFromChangeOfChargeTransactionValidationSucceeded(ChargeCommand transaction)
         {
             return transaction.Type switch
             {
@@ -98,7 +98,7 @@ namespace GreenEnergyHub.Charges.LocalMessageServiceBusTopicTrigger
             };
         }
 
-        private static ChangeOfChargesTransaction GetCommandFromChangeOfChargeTransactionValidationFailed(ChangeOfChargesTransaction transaction)
+        private static ChargeCommand GetCommandFromChangeOfChargeTransactionValidationFailed(ChargeCommand transaction)
         {
             return transaction.Type switch
             {

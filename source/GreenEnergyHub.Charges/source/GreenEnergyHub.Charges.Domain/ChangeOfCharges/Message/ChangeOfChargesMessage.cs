@@ -19,6 +19,6 @@ namespace GreenEnergyHub.Charges.Domain.ChangeOfCharges.Message
 {
     public class ChangeOfChargesMessage
     {
-        public List<ChangeOfChargesTransaction> Transactions { get; } = new ();
+        public List<ChargeCommand> Transactions { get; } = new ();
     }
 }
