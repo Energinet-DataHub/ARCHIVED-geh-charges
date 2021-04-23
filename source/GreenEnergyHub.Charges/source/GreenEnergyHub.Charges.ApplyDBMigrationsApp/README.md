@@ -30,7 +30,14 @@ When a new script should be added to the tracked updates, a new `.sql` file shou
 
 ## Script executing order
 
-PreDeply will run first, PostDeploy last. Scripts are executed in order defined by the date and time prefix. If scripts with the same date and time prefix exists, those of type PreDeply will run first, Model will be run before Seed and then Test. Finally PostDeploy will run.
+Scripts are executed in order defined by group:
+  1. `PreDeploy` will execute first
+  2. `Model`, `Seed` and `Test` will execute second 
+  3. `PostDeploy` will execute last  
+
+Within each group scripts will be executed ordered by the date and time prefix.
+
+If scripts with the same date and time prefix exists, those of type `Model` will execute before `Seed` and then `Test`.
 
 ## Warning
 
