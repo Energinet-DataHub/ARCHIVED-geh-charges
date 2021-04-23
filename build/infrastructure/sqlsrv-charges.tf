@@ -1,5 +1,5 @@
 module "sqlsrv_charges" {
-  source                        = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//sql-server?ref=1.0.0"
+  source                        = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//sql-server?ref=1.2.0"
   name                          = "sqlsrv-${var.project}-${var.organisation}-${var.environment}"
   resource_group_name           = data.azurerm_resource_group.main.name
   location                      = data.azurerm_resource_group.main.location
@@ -9,7 +9,7 @@ module "sqlsrv_charges" {
 }
 
 module "sqldb_charges" {
-  source              = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//sql-database?ref=1.0.0"
+  source              = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//sql-database?ref=1.2.0"
   name                = "sqldb-charges"
   resource_group_name = data.azurerm_resource_group.main.name
   location            = data.azurerm_resource_group.main.location
@@ -19,7 +19,7 @@ module "sqldb_charges" {
 }
 
 module "sqlsrv_admin_username" {
-  source        = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//key-vault-secret?ref=1.0.0"
+  source        = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//key-vault-secret?ref=1.2.0"
   name          = "SQLSERVER--ADMIN--USER"
   value         = local.sqlServerAdminName
   key_vault_id  = module.kv_charges.id
@@ -28,7 +28,7 @@ module "sqlsrv_admin_username" {
 }
 
 module "sqlsrv_admin_password" {
-  source        = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//key-vault-secret?ref=1.0.0"
+  source        = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//key-vault-secret?ref=1.2.0"
   name          = "SQLSERVER--ADMIN--PASSWORD"
   value         = random_password.sqlsrv_admin_password.result
   key_vault_id  = module.kv_charges.id

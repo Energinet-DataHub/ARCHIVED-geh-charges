@@ -74,9 +74,9 @@ namespace GreenEnergyHub.Charges.Tests.Builders
             return this;
         }
 
-        public ChangeOfChargesTransaction Build()
+        public ChargeCommand Build()
         {
-            var test = new ChangeOfChargesTransaction
+            var test = new ChargeCommand
             {
                 ChargeTypeMRid = _mrid,
                 MktActivityRecord = new MktActivityRecord

@@ -12,23 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Diagnostics.CodeAnalysis;
-using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
-using GreenEnergyHub.Queues.ValidationReportDispatcher.Validation;
 
-namespace GreenEnergyHub.Charges.Application.ChangeOfCharges
+namespace GreenEnergyHub.Charges.Domain
 {
     /// <summary>
-    /// Contract defining the input validator for change of charges messages.
+    /// TODO: Charge for now derives from ChargeCommand to get up and running quick and dirty.
+    ///       I, however, still wanted to make my intentions/thoughts explicit.
+    ///       Please consider making it a nice and sweet (domain) model completely decoupled from command.
     /// </summary>
-    public interface IChangeOfChargeTransactionInputValidator
+    public class Charge : ChargeCommand
     {
-        /// <summary>
-        /// Input validates a <see cref="ChangeOfChargesTransaction"/>.
-        /// </summary>
-        /// <param name="changeOfChargesTransaction">The message to validate.</param>
-        /// <returns>The validation result.</returns>
-        Task<HubRequestValidationResult> ValidateAsync([NotNull] ChangeOfChargesTransaction changeOfChargesTransaction);
     }
 }

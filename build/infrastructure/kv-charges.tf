@@ -1,5 +1,5 @@
 module "kv_charges" {
-  source                          = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//key-vault?ref=1.0.0"
+  source                          = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//key-vault?ref=1.2.0"
   name                            = "kv${var.project}${var.organisation}${var.environment}"
   resource_group_name             = data.azurerm_resource_group.main.name
   location                        = data.azurerm_resource_group.main.location

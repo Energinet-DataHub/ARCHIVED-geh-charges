@@ -24,7 +24,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Mapping
     public static class ChangeOfChargesMapper
     {
         public static Charge MapChangeOfChargesTransactionToCharge(
-            [NotNull]ChangeOfChargesTransaction changeOfChargeTransaction,
+            [NotNull]ChargeCommand changeOfChargeTransaction,
             ChargeType chargeType,
             MarketParticipant chargeTypeOwnerMRid,
             ResolutionType resolutionType,

@@ -48,7 +48,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChangeOfCharges
 
             // Assert
             changeOfChargesTransactionHandler
-                .Verify(v => v.HandleAsync(It.IsAny<ChangeOfChargesTransaction>()), Times.Exactly(3));
+                .Verify(v => v.HandleAsync(It.IsAny<ChargeCommand>()), Times.Exactly(3));
             response.IsSucceeded.Should().BeTrue();
         }
     }

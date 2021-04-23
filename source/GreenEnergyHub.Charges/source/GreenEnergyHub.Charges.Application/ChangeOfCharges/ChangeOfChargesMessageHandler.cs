@@ -37,7 +37,7 @@ namespace GreenEnergyHub.Charges.Application.ChangeOfCharges
 
         private async Task<ChangeOfChargesMessageResult> HandleTransactionsAsync([NotNull] ChangeOfChargesMessage message)
         {
-            foreach (ChangeOfChargesTransaction transaction in message.Transactions)
+            foreach (ChargeCommand transaction in message.Transactions)
             {
                 await _changeOfChargesTransactionHandler.HandleAsync(transaction).ConfigureAwait(false);
             }
