@@ -28,7 +28,7 @@ namespace GreenEnergyHub.Charges.Application.ChangeOfCharges
             _localEventPublisher = localEventPublisher;
         }
 
-        public async Task HandleAsync([NotNull] ChangeOfChargesTransaction transaction)
+        public async Task HandleAsync([NotNull] ChargeCommand transaction)
         {
             var localEvent = new ChargeTransactionReceived(transaction.CorrelationId!, transaction);
             await _localEventPublisher.PublishAsync(localEvent).ConfigureAwait(false);

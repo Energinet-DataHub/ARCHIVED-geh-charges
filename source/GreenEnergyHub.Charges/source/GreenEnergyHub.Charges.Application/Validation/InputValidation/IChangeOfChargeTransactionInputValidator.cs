@@ -13,28 +13,23 @@
 // limitations under the License.
 
 using System.Diagnostics.CodeAnalysis;
+using System.Threading.Tasks;
+using GreenEnergyHub.Charges.Application.Validation;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
-using NodaTime;
+using GreenEnergyHub.Queues.ValidationReportDispatcher.Validation;
 
-namespace GreenEnergyHub.Charges.Domain.Events.Local
+namespace GreenEnergyHub.Charges.Application.ChangeOfCharges
 {
-    public class ChargeTransactionReceived : ILocalEvent
+    /// <summary>
+    /// Contract defining the input validator for change of charges messages.
+    /// </summary>
+    public interface IChangeOfChargeTransactionInputValidator
     {
-        public ChargeTransactionReceived(
-            string correlationId,
-            [NotNull] ChargeCommand transaction)
-        {
-            CorrelationId = correlationId;
-            Transaction = transaction;
-            Filter = transaction.GetType().Name;
-        }
-
-        public Instant PublishedTime { get; } = SystemClock.Instance.GetCurrentInstant();
-
-        public string CorrelationId { get; }
-
-        public ChargeCommand Transaction { get; }
-
-        public string Filter { get; }
+        /// <summary>
+        /// Input validates a <see cref="ChargeCommand"/>.
+        /// </summary>
+        /// <param name="chargeCommand">The message to validate.</param>
+        /// <returns>The validation result.</returns>
+        Task<ChargeCommandValidationResult> ValidateAsync([NotNull] ChargeCommand chargeCommand);
     }
 }

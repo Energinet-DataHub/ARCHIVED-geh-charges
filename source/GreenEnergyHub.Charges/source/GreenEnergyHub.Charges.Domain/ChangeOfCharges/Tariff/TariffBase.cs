@@ -16,7 +16,7 @@ using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
 
 namespace GreenEnergyHub.Charges.Domain.ChangeOfCharges.Tariff
 {
-    public abstract class TariffBase : ChangeOfChargesTransaction
+    public abstract class TariffBase : ChargeCommand
     {
     }
 }

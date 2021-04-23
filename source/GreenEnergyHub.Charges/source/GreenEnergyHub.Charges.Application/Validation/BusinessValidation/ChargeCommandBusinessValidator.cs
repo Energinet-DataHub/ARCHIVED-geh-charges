@@ -12,27 +12,24 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Collections.Generic;
-using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Message;
+using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
 
-namespace GreenEnergyHub.Charges.Tests.Builders
+namespace GreenEnergyHub.Charges.Application.Validation.BusinessValidation
 {
-    public class ChangeOfChargesMessageBuilder
+    public class ChargeCommandBusinessValidator : IChargeCommandBusinessValidator
     {
-        private readonly List<ChargeCommand> _transactions = new ();
+        private readonly IBusinessValidationRulesFactory _businessValidationRulesFactory;
 
-        public ChangeOfChargesMessageBuilder WithTransaction(ChargeCommand transaction)
+        public ChargeCommandBusinessValidator(IBusinessValidationRulesFactory businessValidationRulesFactory)
         {
-            _transactions.Add(transaction);
-            return this;
+            _businessValidationRulesFactory = businessValidationRulesFactory;
         }
 
-        public ChangeOfChargesMessage Build()
+        public async Task<ChargeCommandValidationResult> ValidateAsync(ChargeCommand command)
         {
-            var changeOfChargesMessage = new ChangeOfChargesMessage();
-            changeOfChargesMessage.Transactions.AddRange(_transactions);
-            return changeOfChargesMessage;
+            var ruleSet = await _businessValidationRulesFactory.CreateRulesForChargeCommandAsync(command).ConfigureAwait(false);
+            return ruleSet.Validate();
         }
     }
 }

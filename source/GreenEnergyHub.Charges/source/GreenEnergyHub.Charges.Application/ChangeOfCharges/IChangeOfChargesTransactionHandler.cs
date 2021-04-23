@@ -29,6 +29,6 @@ namespace GreenEnergyHub.Charges.Application.ChangeOfCharges
         /// </summary>
         /// <param name="message"></param>
         /// <returns>Returns the result of the synchronous handling of the message.</returns>
-        Task HandleAsync(ChangeOfChargesTransaction message);
+        Task HandleAsync(ChargeCommand message);
     }
 }

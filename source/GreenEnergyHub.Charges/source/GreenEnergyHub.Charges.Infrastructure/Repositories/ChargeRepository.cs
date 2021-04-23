@@ -20,6 +20,7 @@ using GreenEnergyHub.Charges.Infrastructure.Context;
 using GreenEnergyHub.Charges.Infrastructure.Context.Model;
 using GreenEnergyHub.Charges.Infrastructure.Mapping;
 using Microsoft.EntityFrameworkCore;
+using Charge = GreenEnergyHub.Charges.Domain.Charge;
 using ChargeType = GreenEnergyHub.Charges.Infrastructure.Context.Model.ChargeType;
 using MarketParticipant = GreenEnergyHub.Charges.Infrastructure.Context.Model.MarketParticipant;
 
@@ -34,7 +35,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Repositories
             _chargesDatabaseContext = chargesDatabaseContext;
         }
 
-        public async Task<ChargeStorageStatus> StoreChargeAsync(ChangeOfChargesTransaction transaction)
+        public async Task<ChargeStorageStatus> StoreChargeAsync(ChargeCommand transaction)
         {
             if (transaction == null) throw new ArgumentNullException(nameof(transaction));
 
@@ -57,7 +58,13 @@ namespace GreenEnergyHub.Charges.Infrastructure.Repositories
             return ChargeStorageStatus.CreateSuccess();
         }
 
-        private async Task<MarketParticipant?> GetChargeTypeOwnerMRidAsync(ChangeOfChargesTransaction chargeMessage)
+        public Task<Charge> GetChargeAsync(string? commandMRid, string? commandChargeTypeOwnerMRid)
+        {
+            // OBS: This will soon be fixed in upcoming PR.
+            return Task.FromResult(new Charge());
+        }
+
+        private async Task<MarketParticipant?> GetChargeTypeOwnerMRidAsync(ChargeCommand chargeMessage)
         {
             return string.IsNullOrWhiteSpace(chargeMessage.ChargeTypeOwnerMRid)
                 ? throw new ArgumentException($"Fails as {nameof(chargeMessage.ChargeTypeOwnerMRid)} is invalid")
@@ -65,7 +72,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Repositories
                 type.MRid == chargeMessage.ChargeTypeOwnerMRid).ConfigureAwait(false);
         }
 
-        private async Task<VatPayerType?> GetVatPayerTypeAsync(ChangeOfChargesTransaction chargeMessage)
+        private async Task<VatPayerType?> GetVatPayerTypeAsync(ChargeCommand chargeMessage)
         {
             return string.IsNullOrWhiteSpace(chargeMessage.MktActivityRecord?.ChargeType?.VatPayer)
                 ? throw new ArgumentException($"Fails as {nameof(chargeMessage.MktActivityRecord.ChargeType.VatPayer)} is invalid")
@@ -73,14 +80,14 @@ namespace GreenEnergyHub.Charges.Infrastructure.Repositories
                 type.Name == chargeMessage.MktActivityRecord.ChargeType.VatPayer).ConfigureAwait(false);
         }
 
-        private async Task<ResolutionType?> GetResolutionTypeAsync(ChangeOfChargesTransaction chargeMessage)
+        private async Task<ResolutionType?> GetResolutionTypeAsync(ChargeCommand chargeMessage)
         {
             return string.IsNullOrWhiteSpace(chargeMessage.Period?.Resolution)
                 ? throw new ArgumentException($"Fails as {nameof(chargeMessage.Period.Resolution)} is invalid")
                 : await _chargesDatabaseContext.ResolutionType.SingleOrDefaultAsync(type => type.Name == chargeMessage.Period.Resolution).ConfigureAwait(false);
         }
 
-        private async Task<ChargeType?> GetChargeTypeAsync(ChangeOfChargesTransaction chargeMessage)
+        private async Task<ChargeType?> GetChargeTypeAsync(ChargeCommand chargeMessage)
         {
             return string.IsNullOrWhiteSpace(chargeMessage.Type)
                 ? throw new ArgumentException($"Fails as {nameof(chargeMessage.Type)} is invalid")
