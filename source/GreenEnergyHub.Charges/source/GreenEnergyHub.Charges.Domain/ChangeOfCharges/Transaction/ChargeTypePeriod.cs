@@ -20,7 +20,7 @@ namespace GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction
     {
         public ChargeTypePeriod()
         {
-            Points = new List<Point>();
+            Points = new ();
         }
 
         public string? Resolution { get; set; }
