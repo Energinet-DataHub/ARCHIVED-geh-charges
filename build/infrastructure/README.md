@@ -107,13 +107,13 @@ The object ID should now be displayed as the first column in the result.
 
 This ID is the value you need for `object_id` (hint: it looks like a `GUID`)
 
-# Prerequisites
+## Prerequisites
 
-## Installing `Azure CLI`
+### Installing `Azure CLI`
 
 Follow the [guide](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli).
 
-## Installing `Azure AD for powershell`
+### Installing `Azure AD for powershell`
 
 Run your `powershell` as an administrator.
 
