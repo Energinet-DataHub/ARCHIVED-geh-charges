@@ -194,6 +194,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
                 Period = new ChargeTypePeriod()
                 {
                     Resolution = KnownResolutionType,
+                    Points = { new Point { Position = 1, PriceAmount = 1m, Time = SystemClock.Instance.GetCurrentInstant(), } },
                 },
             };
             transaction.Period.AddPoints(new List<Point>

@@ -28,7 +28,9 @@ namespace GreenEnergyHub.Charges.Application.Validation.BusinessValidation
         private readonly IChargeRepository _chargeRepository;
         private readonly IUpdateRulesConfigurationRepository _updateRulesConfigurationRepository;
 
-        public BusinessUpdateValidationRulesFactory(IChargeRepository chargeRepository, IUpdateRulesConfigurationRepository updateRulesConfigurationRepository)
+        public BusinessUpdateValidationRulesFactory(
+            IChargeRepository chargeRepository,
+            IUpdateRulesConfigurationRepository updateRulesConfigurationRepository)
         {
             _chargeRepository = chargeRepository;
             _updateRulesConfigurationRepository = updateRulesConfigurationRepository;
@@ -41,6 +43,13 @@ namespace GreenEnergyHub.Charges.Application.Validation.BusinessValidation
             var charge = await _chargeRepository.GetChargeAsync(command.MRid!, command.ChargeTypeOwnerMRid!).ConfigureAwait(false);
             var configuration = await _updateRulesConfigurationRepository.GetConfigurationAsync().ConfigureAwait(false);
 
+            var rules = GetRules(command, configuration, charge);
+
+            return BusinessValidationRuleSet.FromRules(rules);
+        }
+
+        private static List<IBusinessValidationRule> GetRules(ChargeCommand command, UpdateRulesConfiguration configuration, Charge charge)
+        {
             var rules = new List<IBusinessValidationRule>
             {
                 new StartDateVr209ValidationRule(
@@ -50,15 +59,15 @@ namespace GreenEnergyHub.Charges.Application.Validation.BusinessValidation
 
             if (command.Type == ChargeCommandType.Tariff)
             {
-                AddTariffOnlyRules(command, rules, charge);
+                AddTariffOnlyRules(rules, command, charge);
             }
 
-            return BusinessValidationRuleSet.FromRules(rules);
+            return rules;
         }
 
         private static void AddTariffOnlyRules(
-            ChargeCommand command,
             List<IBusinessValidationRule> rules,
+            ChargeCommand command,
             Charge charge)
         {
             rules.Add(new VatPayerMustNotChangeInUpdateRule(command, charge));
