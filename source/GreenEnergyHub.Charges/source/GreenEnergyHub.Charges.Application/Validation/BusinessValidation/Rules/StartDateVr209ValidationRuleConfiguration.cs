@@ -12,11 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
+using GreenEnergyHub.Charges.Domain;
 
-namespace GreenEnergyHub.Charges.Domain.ChangeOfCharges.Fee
+namespace GreenEnergyHub.Charges.Application.Validation.BusinessValidation.Rules
 {
-    public abstract class FeeBase : ChargeCommand
+    public class StartDateVr209ValidationRuleConfiguration
     {
+        public StartDateVr209ValidationRuleConfiguration(Interval<int> validIntervalFromNowInDays)
+        {
+            ValidIntervalFromNowInDays = validIntervalFromNowInDays;
+        }
+
+        public Interval<int> ValidIntervalFromNowInDays { get; }
     }
 }

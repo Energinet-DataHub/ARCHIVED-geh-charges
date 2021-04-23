@@ -12,11 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
 
-namespace GreenEnergyHub.Charges.Domain.ChangeOfCharges.Fee
+namespace GreenEnergyHub.Charges.Application.Validation.BusinessValidation
 {
-    public abstract class FeeBase : ChargeCommand
+    public interface IBusinessValidationRulesFactory
     {
+        Task<IBusinessValidationRuleSet> CreateRulesForChargeCommandAsync(ChargeCommand command);
     }
 }
