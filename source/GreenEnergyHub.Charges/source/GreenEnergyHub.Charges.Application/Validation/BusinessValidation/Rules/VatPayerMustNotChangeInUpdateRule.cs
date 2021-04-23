@@ -12,27 +12,22 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Collections.Generic;
-using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Message;
+using GreenEnergyHub.Charges.Domain;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
 
-namespace GreenEnergyHub.Charges.Tests.Builders
+namespace GreenEnergyHub.Charges.Application.Validation.BusinessValidation.Rules
 {
-    public class ChangeOfChargesMessageBuilder
+    public class VatPayerMustNotChangeInUpdateRule : IBusinessValidationRule
     {
-        private readonly List<ChargeCommand> _transactions = new ();
+        private readonly ChargeCommand _command;
+        private readonly Charge _charge;
 
-        public ChangeOfChargesMessageBuilder WithTransaction(ChargeCommand transaction)
+        public VatPayerMustNotChangeInUpdateRule(ChargeCommand command, Charge charge)
         {
-            _transactions.Add(transaction);
-            return this;
+            _command = command;
+            _charge = charge;
         }
 
-        public ChangeOfChargesMessage Build()
-        {
-            var changeOfChargesMessage = new ChangeOfChargesMessage();
-            changeOfChargesMessage.Transactions.AddRange(_transactions);
-            return changeOfChargesMessage;
-        }
+        public bool IsValid => _command!.MktActivityRecord!.ChargeType!.VatPayer == _charge!.MktActivityRecord!.ChargeType!.VatPayer;
     }
 }

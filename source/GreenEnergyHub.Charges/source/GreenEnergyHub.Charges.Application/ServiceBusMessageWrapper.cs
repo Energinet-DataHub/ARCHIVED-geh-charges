@@ -18,6 +18,6 @@ namespace GreenEnergyHub.Charges.Application
 {
     public class ServiceBusMessageWrapper
     {
-        public ChangeOfChargesTransaction Transaction { get; set; } = new ();
+        public ChargeCommand Transaction { get; set; } = new ();
     }
 }
