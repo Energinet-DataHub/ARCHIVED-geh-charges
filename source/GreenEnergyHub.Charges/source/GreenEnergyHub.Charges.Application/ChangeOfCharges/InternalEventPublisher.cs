@@ -43,9 +43,7 @@ namespace GreenEnergyHub.Charges.Application.ChangeOfCharges
 
             var queueOrTopicName = GetEnvironmentVariable(LocalEventsTopicName);
             ServiceBusSender sender = client.CreateSender(queueOrTopicName);
-
             var serializedMessage = _jsonSerializer.Serialize(internalEvent);
-
             var message = new ServiceBusMessage(serializedMessage)
             {
                 CorrelationId = internalEvent.CorrelationId,

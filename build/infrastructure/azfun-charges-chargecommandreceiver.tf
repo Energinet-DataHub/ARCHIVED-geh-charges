@@ -30,6 +30,7 @@ module "azfun_charges_charge_command_receiver" {
     LOCAL_EVENTS_SENDER_CONNECTION_STRING        = trimsuffix(module.sbtar_local_events_sender.primary_connection_string, ";EntityPath=${module.sbt_local_events.name}")
     LOCAL_EVENTS_LISTENER_CONNECTION_STRING      = trimsuffix(module.sbtar_local_events_listener.primary_connection_string, ";EntityPath=${module.sbt_local_events.name}")
     LOCAL_EVENTS_TOPIC_NAME                      = module.sbt_local_events.name
+    LOCAL_EVENTS_SUBSCRIPTION_NAME               = azurerm_servicebus_subscription.sbs-charge-command-received-subscription.name
     CHARGE_DB_CONNECTION_STRING                  = local.CHARGE_DB_CONNECTION_STRING
   }
   dependencies                              = [
