@@ -12,17 +12,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using GreenEnergyHub.Charges.Core;
-
-namespace GreenEnergyHub.Charges.Application.Validation.BusinessValidation.Rules
+namespace GreenEnergyHub.Iso8601
 {
-    public class StartDateVr209ValidationRuleConfiguration
+    public class Iso8601ConversionConfiguration : IIso8601ConversionConfiguration
     {
-        public StartDateVr209ValidationRuleConfiguration(Interval<int> validIntervalFromNowInDays)
+        private readonly string _tzDatabaseName;
+
+        public Iso8601ConversionConfiguration(string timeZoneName)
         {
-            ValidIntervalFromNowInDays = validIntervalFromNowInDays;
+            _tzDatabaseName = timeZoneName;
         }
 
-        public Interval<int> ValidIntervalFromNowInDays { get; }
+        public string GetTZDatabaseName()
+        {
+            return _tzDatabaseName;
+        }
     }
 }

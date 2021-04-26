@@ -7,6 +7,7 @@
     "LOCAL_EVENTS_LISTENER_CONNECTION_STRING": "<sb listener connection string>",
     "LOCAL_EVENTS_SENDER_CONNECTION_STRING": "<sb sender connection string>",
     "LOCAL_EVENTS_TOPIC_NAME": "<topic name>",
-    "LOCAL_EVENTS_SUBSCRIPTION_NAME": "<subscription name>"
+    "LOCAL_EVENTS_SUBSCRIPTION_NAME": "<subscription name>",
+    "LOCAL_TIMEZONENAME": "Your time zone ID, e.g.Europe/Copenhagen, see https://en.wikipedia.org/wiki/List_of_tz_database_time_zones for others"
   }
 }

@@ -12,9 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Diagnostics.CodeAnalysis;
 using GreenEnergyHub.Charges.Application.ChangeOfCharges;
+using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.LocalMessageServiceBusTopicTrigger;
+using GreenEnergyHub.Iso8601;
 using GreenEnergyHub.Json;
 using GreenEnergyHub.Messaging;
 using Microsoft.Azure.Functions.Extensions.DependencyInjection;
@@ -30,9 +33,24 @@ namespace GreenEnergyHub.Charges.LocalMessageServiceBusTopicTrigger
         {
             builder.Services.AddGreenEnergyHub(typeof(ChangeOfChargesMessageHandler).Assembly);
             builder.Services.AddSingleton<IJsonSerializer, JsonSerializer>();
-            builder.Services.AddScoped<IChangeOfChargeTransactionInputValidator, ChangeOfChargeTransactionInputValidator>();
+            builder.Services
+                .AddScoped<IChangeOfChargeTransactionInputValidator, ChangeOfChargeTransactionInputValidator>();
             builder.Services.AddScoped<IChangeOfChargesTransactionHandler, ChangeOfChargesTransactionHandler>();
             builder.Services.AddScoped<ILocalEventPublisher, LocalEventPublisher>();
+
+            AddIso8601Services(builder.Services);
+        }
+
+        private static void AddIso8601Services(IServiceCollection services)
+        {
+            const string timeZoneIdString = "LOCAL_TIMEZONENAME";
+            var timeZoneId = Environment.GetEnvironmentVariable(timeZoneIdString) ??
+                             throw new ArgumentNullException(
+                                 timeZoneIdString,
+                                 "does not exist in configuration settings");
+            var timeZoneConfiguration = new Iso8601ConversionConfiguration(timeZoneId);
+            services.AddSingleton<IIso8601ConversionConfiguration>(timeZoneConfiguration);
+            services.AddScoped<IZonedDateTimeService, ZonedDateTimeService>();
         }
     }
 }

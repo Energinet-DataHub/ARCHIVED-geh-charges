@@ -12,17 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using GreenEnergyHub.Charges.Core;
-
-namespace GreenEnergyHub.Charges.Application.Validation.BusinessValidation.Rules
+namespace GreenEnergyHub.Charges.Core.DateTime
 {
-    public class StartDateVr209ValidationRuleConfiguration
+    public enum ResolutionStrategy
     {
-        public StartDateVr209ValidationRuleConfiguration(Interval<int> validIntervalFromNowInDays)
-        {
-            ValidIntervalFromNowInDays = validIntervalFromNowInDays;
-        }
-
-        public Interval<int> ValidIntervalFromNowInDays { get; }
+        Leniently,
     }
 }

@@ -12,18 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace GreenEnergyHub.Charges.Domain
+using NodaTime;
+
+namespace GreenEnergyHub.Charges.Core.DateTime
 {
-    public class Interval<T>
+    public interface IZonedDateTimeService
     {
-        public Interval(T start, T end)
-        {
-            Start = start;
-            End = end;
-        }
+        ZonedDateTime GetZonedDateTimeNow();
 
-        public T Start { get; set; }
-
-        public T End { get; set; }
+        ZonedDateTime GetZonedDateTime(LocalDateTime localDateTime, ResolutionStrategy strategy);
     }
 }

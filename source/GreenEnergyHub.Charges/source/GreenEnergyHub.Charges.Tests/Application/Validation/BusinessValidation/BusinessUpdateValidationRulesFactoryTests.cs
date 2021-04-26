@@ -21,6 +21,7 @@ using AutoFixture.Xunit2;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Application.Validation.BusinessValidation;
 using GreenEnergyHub.Charges.Application.Validation.BusinessValidation.Rules;
+using GreenEnergyHub.Charges.Core;
 using GreenEnergyHub.Charges.Domain;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
 using GreenEnergyHub.TestHelpers;
@@ -123,7 +124,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Validation.BusinessValidation
         /// </summary>
         private static UpdateRulesConfiguration CreateConfiguration()
         {
-            return new UpdateRulesConfiguration(new StartDateVr209ValidationRuleConfiguration(new Interval<int>(1, 2)));
+            return new UpdateRulesConfiguration(new StartDateVr209ValidationRuleConfiguration(new Interval<int>(31, 1095)));
         }
 
         private static ChargeCommand TurnCommandIntoSpecifiedUpdateType(ChargeCommand chargeCommand, string commandType)

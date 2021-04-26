@@ -12,17 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using GreenEnergyHub.Charges.Core;
-
-namespace GreenEnergyHub.Charges.Application.Validation.BusinessValidation.Rules
+namespace GreenEnergyHub.Iso8601
 {
-    public class StartDateVr209ValidationRuleConfiguration
+    /// <summary>
+    /// Interface for time conversion configuration to use within the ISO8601 handling
+    /// </summary>
+    public interface IIso8601ConversionConfiguration
     {
-        public StartDateVr209ValidationRuleConfiguration(Interval<int> validIntervalFromNowInDays)
-        {
-            ValidIntervalFromNowInDays = validIntervalFromNowInDays;
-        }
-
-        public Interval<int> ValidIntervalFromNowInDays { get; }
+        /// <summary>
+        /// Retrieves the name of the time zone to use in conversions (see https://en.wikipedia.org/wiki/List_of_tz_database_time_zones for list of possibilities)
+        /// </summary>
+        /// <returns>The name of the time zone to use when converting time, as named by the tz database standard</returns>
+        string GetTZDatabaseName();
     }
 }

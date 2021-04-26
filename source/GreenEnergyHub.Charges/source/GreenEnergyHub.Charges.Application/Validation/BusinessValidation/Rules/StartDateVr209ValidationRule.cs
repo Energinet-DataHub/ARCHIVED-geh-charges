@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System.Diagnostics.CodeAnalysis;
+using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
 using NodaTime;
 
@@ -20,18 +21,34 @@ namespace GreenEnergyHub.Charges.Application.Validation.BusinessValidation.Rules
 {
     public class StartDateVr209ValidationRule : IBusinessValidationRule
     {
-        private readonly Instant _startOfValidInterval;
-        private readonly Instant _endOfValidInterval;
         private readonly Instant _validityStartDate;
+        private readonly Instant _periodStart;
+        private readonly Instant _periodEnd;
 
-        public StartDateVr209ValidationRule([NotNull]ChargeCommand command, [NotNull]StartDateVr209ValidationRuleConfiguration configuration)
+        public StartDateVr209ValidationRule(
+            [NotNull] ChargeCommand command,
+            [NotNull] StartDateVr209ValidationRuleConfiguration configuration,
+            [NotNull] IZonedDateTimeService zonedDateTimeService)
         {
             _validityStartDate = command.MktActivityRecord!.ValidityStartDate;
 
-            _startOfValidInterval = _validityStartDate.Plus(Duration.FromDays(configuration.ValidIntervalFromNowInDays.Start));
-            _endOfValidInterval = _validityStartDate.Plus(Duration.FromDays(configuration.ValidIntervalFromNowInDays.End));
+            var today = zonedDateTimeService.GetZonedDateTimeNow().Date;
+
+            _periodStart = CalculatePeriodPoint(configuration.ValidIntervalFromNowInDays.Start, zonedDateTimeService, today);
+            _periodEnd = CalculatePeriodPoint(configuration.ValidIntervalFromNowInDays.End, zonedDateTimeService, today);
         }
 
-        public bool IsValid => _validityStartDate >= _startOfValidInterval && _validityStartDate <= _endOfValidInterval;
+        public bool IsValid => _validityStartDate >= _periodStart && _validityStartDate <= _periodEnd;
+
+        private static Instant CalculatePeriodPoint(
+            int numberOfDays,
+            IZonedDateTimeService zonedDateTimeService,
+            LocalDate today)
+        {
+            var localDate = today.Minus(Period.FromDays(numberOfDays));
+            return zonedDateTimeService
+                .GetZonedDateTime(localDate.AtMidnight(), ResolutionStrategy.Leniently)
+                .ToInstant();
+        }
     }
 }
