@@ -14,7 +14,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using GreenEnergyHub.Messaging;
 using GreenEnergyHub.Messaging.MessageTypes.Common;
 using NodaTime;
