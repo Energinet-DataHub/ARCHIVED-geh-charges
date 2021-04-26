@@ -40,8 +40,6 @@ namespace GreenEnergyHub.Queues.ValidationReportDispatcher.Validation
 
         public IReadOnlyList<ValidationError> Errors => _validationErrors.AsReadOnly();
 
-        public bool IsSucceeded => Errors.Any();
-
         public void Add(ValidationError validationError)
         {
             _validationErrors.Add(validationError);
