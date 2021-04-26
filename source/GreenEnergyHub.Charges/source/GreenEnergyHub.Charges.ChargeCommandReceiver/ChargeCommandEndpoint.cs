@@ -37,9 +37,9 @@ namespace GreenEnergyHub.Charges.LocalMessageServiceBusTopicTrigger
         [FunctionName(FunctionName)]
         public async Task RunAsync(
             [ServiceBusTrigger(
-            "%LOCAL_EVENTS_TOPIC_NAME%",
-            "%LOCAL_EVENTS_SUBSCRIPTION_NAME%",
-            Connection = "LOCAL_EVENTS_LISTENER_CONNECTION_STRING")]
+            "%COMMAND_RECEIVED_TOPIC_NAME%",
+            "%COMMAND_RECEIVED_SUBSCRIPTION_NAME%",
+            Connection = "COMMAND_RECEIVED_LISTENER_CONNECTION_STRING")]
             string jsonSerializedQueueItem,
             ILogger log)
         {
