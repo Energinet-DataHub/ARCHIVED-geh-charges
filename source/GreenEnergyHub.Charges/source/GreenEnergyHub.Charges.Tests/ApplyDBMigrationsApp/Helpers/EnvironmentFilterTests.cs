@@ -25,8 +25,8 @@ namespace GreenEnergyHub.Charges.Tests.ApplyDBMigrationsApp.Helpers
         [Theory]
         [InlineData(1, "")]
         [InlineData(1, "hereGoesNothing")]
-        [InlineData(1, "includePreDeploy")]
-        [InlineData(1, "includePostDeploy")]
+        [InlineData(1, "excludePreDeploy")]
+        [InlineData(1, "excludePostDeploy")]
         [InlineData(2, "includeSeedData")]
         [InlineData(2, "includeTestData")]
         [InlineData(3, "includeTestData", "includeSeedData")]
@@ -75,8 +75,8 @@ namespace GreenEnergyHub.Charges.Tests.ApplyDBMigrationsApp.Helpers
         }
 
         [Theory]
-        [InlineData(false, "Energinet.DataHub.MarketData.ApplyDBMigrationsApp.Scripts.PreDeploy.Script 1.sql", "")]
-        [InlineData(true, "Energinet.DataHub.MarketData.ApplyDBMigrationsApp.Scripts.PreDeploy.Script 1.sql", "includePreDeploy")]
+        [InlineData(true, "Energinet.DataHub.MarketData.ApplyDBMigrationsApp.Scripts.PreDeploy.Script 1.sql", "")]
+        [InlineData(false, "Energinet.DataHub.MarketData.ApplyDBMigrationsApp.Scripts.PreDeploy.Script 1.sql", "excludePreDeploy")]
         public void PreDeployment_Script_is_included_when_parameters_match(bool expectedToRun, string scriptFile, params string[] args)
         {
             // Arrange
@@ -90,8 +90,9 @@ namespace GreenEnergyHub.Charges.Tests.ApplyDBMigrationsApp.Helpers
         }
 
         [Theory]
-        [InlineData(false, "Energinet.DataHub.MarketData.ApplyDBMigrationsApp.Scripts.PostDeploy.Script 1.sql", "")]
-        [InlineData(true, "Energinet.DataHub.MarketData.ApplyDBMigrationsApp.Scripts.PostDeploy.Script 1.sql", "includePostDeploy")]
+        [InlineData(true, "Energinet.DataHub.MarketData.ApplyDBMigrationsApp.Scripts.PostDeploy.Script 1.sql", "")]
+        [InlineData(false, "Energinet.DataHub.MarketData.ApplyDBMigrationsApp.Scripts.PostDeploy.Script 1.sql", "excludePostDeploy")]
+
         public void PostDeployment_Script_is_included_when_parameters_match(bool expectedToRun, string scriptFile, params string[] args)
         {
             // Arrange
