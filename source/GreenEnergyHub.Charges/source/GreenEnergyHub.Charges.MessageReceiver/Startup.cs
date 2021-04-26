@@ -14,6 +14,7 @@
 
 using System.Diagnostics.CodeAnalysis;
 using GreenEnergyHub.Charges.Application.ChangeOfCharges;
+using GreenEnergyHub.Charges.Infrastructure.Topics;
 using GreenEnergyHub.Charges.MessageReceiver;
 using GreenEnergyHub.Json;
 using Microsoft.Azure.Functions.Extensions.DependencyInjection;
@@ -32,6 +33,8 @@ namespace GreenEnergyHub.Charges.MessageReceiver
             builder.Services.AddSingleton<IJsonSerializer, JsonSerializer>();
             builder.Services.AddScoped<IChangeOfChargesMessageHandler, ChangeOfChargesMessageHandler>();
             builder.Services.AddScoped<IChangeOfChargesTransactionHandler, ChangeOfChargesTransactionHandler>();
+            builder.Services
+                .AddScoped<IInternalEventCommunicationConfiguration, InternalEventCommunicationConfiguration>();
             builder.Services.AddScoped<IInternalEventPublisher, InternalEventPublisher>();
         }
     }
