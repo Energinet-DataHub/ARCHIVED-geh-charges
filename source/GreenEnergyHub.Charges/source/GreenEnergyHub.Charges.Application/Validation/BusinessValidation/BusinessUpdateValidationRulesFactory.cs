@@ -40,7 +40,16 @@ namespace GreenEnergyHub.Charges.Application.Validation.BusinessValidation
         {
             if (command == null) throw new ArgumentNullException(nameof(command));
 
-            var charge = await _chargeRepository.GetChargeAsync(command.MRid!, command.ChargeTypeOwnerMRid!).ConfigureAwait(false);
+            var commandMRid = command.MRid!;
+            var commandChargeTypeOwnerMRid = command.ChargeTypeOwnerMRid!;
+
+            var charge = await _chargeRepository.GetChargeAsync(commandMRid, commandChargeTypeOwnerMRid).ConfigureAwait(false);
+
+            if (charge == null)
+            {
+                throw new Exception($"Charge found on MRid: {commandMRid}, ChargeTypeOwnerMRid: {commandChargeTypeOwnerMRid}");
+            }
+
             var configuration = await _updateRulesConfigurationRepository.GetConfigurationAsync().ConfigureAwait(false);
 
             var rules = GetRules(command, configuration, charge);
