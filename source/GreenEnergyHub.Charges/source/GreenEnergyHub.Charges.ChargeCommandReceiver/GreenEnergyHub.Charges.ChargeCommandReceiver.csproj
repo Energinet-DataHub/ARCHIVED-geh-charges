@@ -17,6 +17,7 @@ limitations under the License.
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
       <TargetFramework>netcoreapp3.1</TargetFramework>
+      <AzureFunctionsVersion>v3</AzureFunctionsVersion>
       <Nullable>enable</Nullable>
       <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
       <RunAnalyzersDuringBuild>true</RunAnalyzersDuringBuild>
