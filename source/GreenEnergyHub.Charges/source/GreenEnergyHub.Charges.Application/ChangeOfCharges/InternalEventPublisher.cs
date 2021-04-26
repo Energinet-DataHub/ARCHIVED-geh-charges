@@ -24,10 +24,10 @@ namespace GreenEnergyHub.Charges.Application.ChangeOfCharges
     public class InternalEventPublisher : IInternalEventPublisher
     {
         private const string LocalEventsTopicName =
-            "LOCAL_EVENTS_TOPIC_NAME";
+            "COMMAND_RECEIVED_TOPIC_NAME";
 
         private const string LocalEventsConnectionString =
-            "LOCAL_EVENTS_SENDER_CONNECTION_STRING";
+            "COMMAND_RECEIVED_SENDER_CONNECTION_STRING";
 
         private readonly IJsonSerializer _jsonSerializer;
 
