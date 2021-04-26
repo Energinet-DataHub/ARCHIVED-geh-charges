@@ -13,7 +13,6 @@
 // limitations under the License.
 
 using System.Text.Json.Serialization;
-using GreenEnergyHub.Messaging;
 using NodaTime;
 using MarketDocument = GreenEnergyHub.Charges.Domain.Common.MarketDocument;
 
@@ -25,6 +24,9 @@ namespace GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction
 
         public MktActivityRecord? MktActivityRecord { get; set; }
 
+        /// <summary>
+        /// The kind of charge: Fee ("D02") | Subscription ("D01") | Tariff ("D03").
+        /// </summary>
         public string? Type { get; set; }
 
         [JsonPropertyName("ChargeType_mRID")]

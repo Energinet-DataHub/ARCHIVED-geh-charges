@@ -15,12 +15,11 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Application.Validation;
 using GreenEnergyHub.Charges.Application.Validation.BusinessValidation;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
 using GreenEnergyHub.Messaging;
 
-namespace GreenEnergyHub.Charges.Application.ChangeOfCharges
+namespace GreenEnergyHub.Charges.Application.Validation.InputValidation
 {
     public class ChangeOfChargeTransactionInputValidator : IChangeOfChargeTransactionInputValidator
     {

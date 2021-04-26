@@ -26,5 +26,10 @@ namespace GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction
         public string? Resolution { get; set; }
 
         public List<Point> Points { get; }
+
+        public void AddPoints(IEnumerable<Point> newPoints)
+        {
+            Points.AddRange(newPoints);
+        }
     }
 }

@@ -28,8 +28,8 @@ namespace GreenEnergyHub.Charges.Application.Validation.BusinessValidation.Rules
         {
             _validityStartDate = command.MktActivityRecord!.ValidityStartDate;
 
-            _startOfValidInterval = _validityStartDate.Plus(Duration.FromDays(configuration.ValidIntervalFromNowInDays.Start));
-            _endOfValidInterval = _validityStartDate.Plus(Duration.FromDays(configuration.ValidIntervalFromNowInDays.End));
+            _startOfValidInterval = command.RequestDate.Plus(Duration.FromDays(configuration.ValidIntervalFromNowInDays.Start));
+            _endOfValidInterval = command.RequestDate.Plus(Duration.FromDays(configuration.ValidIntervalFromNowInDays.End));
         }
 
         public bool IsValid => _validityStartDate >= _startOfValidInterval && _validityStartDate <= _endOfValidInterval;
