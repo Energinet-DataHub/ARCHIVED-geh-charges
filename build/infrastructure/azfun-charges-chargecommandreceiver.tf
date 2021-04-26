@@ -28,7 +28,7 @@ module "azfun_charges_charge_command_receiver" {
     WEBSITES_ENABLE_APP_SERVICE_STORAGE          = true
     FUNCTIONS_WORKER_RUNTIME                     = "dotnet"
     COMMAND_ACCEPTED_SENDER_CONNECTION_STRING    = trimsuffix(module.sbtar_command_accepted_sender.primary_connection_string, ";EntityPath=${module.sbt_command_accepted.name}")
-	COMMAND_REJECTED_SENDER_CONNECTION_STRING    = trimsuffix(module.sbtar_command_rejected_sender.primary_connection_string, ";EntityPath=${module.sbt_command_rejected.name}")
+    COMMAND_REJECTED_SENDER_CONNECTION_STRING    = trimsuffix(module.sbtar_command_rejected_sender.primary_connection_string, ";EntityPath=${module.sbt_command_rejected.name}")
     COMMAND_RECEIVED_LISTENER_CONNECTION_STRING  = trimsuffix(module.sbtar_command_received_listener.primary_connection_string, ";EntityPath=${module.sbt_command_received.name}")
     COMMAND_RECEIVED_TOPIC_NAME                  = module.sbt_command_received.name
     COMMAND_ACCEPTED_TOPIC_NAME                  = module.sbt_command_accepted.name
@@ -42,10 +42,10 @@ module "azfun_charges_charge_command_receiver" {
     module.azfun_charges_charge_command_receiver_stor.dependent_on,
     module.sbtar_command_received_listener.dependent_on,
     module.sbtar_command_accepted_sender.dependent_on,
-	module.sbtar_command_rejected_sender.dependent_on,
+    module.sbtar_command_rejected_sender.dependent_on,
     module.sbt_command_received.dependent_on,
-	module.sbt_command_accepted.dependent_on,
-	module.sbt_command_rejected.dependent_on,
+    module.sbt_command_accepted.dependent_on,
+    module.sbt_command_rejected.dependent_on,
   ]
 }
 
