@@ -188,6 +188,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
                 ChargeTypeOwnerMRid = KnownChargeOwner,
                 MktActivityRecord = new MktActivityRecord
                 {
+                    MRid = "MktActivtyRecordMRIDValue",
                     ChargeType = new Domain.ChangeOfCharges.Transaction.ChargeType
                         { VatPayer = KnownVatPayer, Name = "shortDescription", Description = "longDescription", },
                 },
