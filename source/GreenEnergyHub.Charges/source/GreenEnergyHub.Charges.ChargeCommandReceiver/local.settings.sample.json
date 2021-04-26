@@ -5,8 +5,8 @@
     "AzureWebJobsStorage": "UseDevelopmentStorage=true",
     "AzureWebJobsDashboard": "UseDevelopmentStorage=true",
     "LOCAL_EVENTS_LISTENER_CONNECTION_STRING": "<sb listener connection string>",
-    "LOCAL_EVENTS_SENDER_CONNECTION_STRING": "<sb sender connection string>",
-    "LOCAL_EVENTS_TOPIC_NAME": "<topic name>",
+    "COMMAND_RECEIVER_SENDER_CONNECTION_STRING": "<sb sender connection string>",
+    "COMMAND_RECEIVER_TOPIC_NAME": "<topic name>",
     "LOCAL_EVENTS_SUBSCRIPTION_NAME": "<subscription name>",
     "CHARGE_DB_CONNECTION_STRING": "<charge db connection string>"
   }
