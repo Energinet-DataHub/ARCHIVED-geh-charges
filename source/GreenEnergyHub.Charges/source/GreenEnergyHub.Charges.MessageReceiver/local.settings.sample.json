@@ -4,7 +4,7 @@
     "AzureWebJobsStorage": "UseDevelopmentStorage=true",
     "FUNCTIONS_WORKER_RUNTIME": "dotnet",
     "AzureWebJobsDashboard": "UseDevelopmentStorage=true",
-    "COMMAND_RECEIVED_SENDER_CONNECTION_STRING": "<connection string for sending events to the service bus>"
+    "COMMAND_RECEIVED_SENDER_CONNECTION_STRING": "<connection string for sending events to the service bus>",
     "COMMAND_RECEIVED_TOPIC_NAME": "<topic name>"
     }
 }
