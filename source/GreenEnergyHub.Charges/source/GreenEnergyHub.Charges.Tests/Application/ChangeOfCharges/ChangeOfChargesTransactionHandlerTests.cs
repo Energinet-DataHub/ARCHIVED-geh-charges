@@ -31,7 +31,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChangeOfCharges
         [Theory]
         [InlineAutoDomainData]
         public async Task ChangeOfChargesTransactionHandler_WhenCalled_ShouldCallPublisher(
-            [NotNull] [Frozen] Mock<ILocalEventPublisher> localEventPublisher,
+            [NotNull] [Frozen] Mock<IInternalEventPublisher> localEventPublisher,
             [NotNull] ChangeOfChargesTransactionHandler sut)
         {
             // Arrange
@@ -41,8 +41,8 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChangeOfCharges
             await sut.HandleAsync(transaction).ConfigureAwait(false);
 
             // Assert
-            localEventPublisher.Verify(x => x.PublishAsync(It.Is<ChargeTransactionReceived>(localEvent =>
-                localEvent.Transaction == transaction && localEvent.CorrelationId == transaction.CorrelationId)));
+            localEventPublisher.Verify(x => x.PublishAsync(It.Is<ChargeCommandReceivedEvent>(localEvent =>
+                localEvent.Command == transaction && localEvent.CorrelationId == transaction.CorrelationId)));
         }
     }
 }

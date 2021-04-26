@@ -12,16 +12,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace GreenEnergyHub.Charges.Domain.Events.Local
+namespace GreenEnergyHub.Iso8601
 {
-    /// <summary>
-    /// Contract for events.
-    /// </summary>
-    public interface ILocalEvent : IEvent
+    public class Iso8601ConversionConfiguration : IIso8601ConversionConfiguration
     {
-        /// <summary>
-        /// Servicebus filter
-        /// </summary>
-        public string Filter { get; }
+        private readonly string _tzDatabaseName;
+
+        public Iso8601ConversionConfiguration(string timeZoneName)
+        {
+            _tzDatabaseName = timeZoneName;
+        }
+
+        public string GetTZDatabaseName()
+        {
+            return _tzDatabaseName;
+        }
     }
 }
