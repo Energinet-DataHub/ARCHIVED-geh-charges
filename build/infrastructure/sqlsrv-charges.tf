@@ -50,7 +50,7 @@ module "sqlsrv_admin_password" {
 }
 
 resource "random_password" "sqlsrv_admin_password" {
-  length = 16
+  length = 24
   special = true
   override_special = "_%@"
 }
