@@ -4,10 +4,13 @@
     "FUNCTIONS_WORKER_RUNTIME": "dotnet",
     "AzureWebJobsStorage": "UseDevelopmentStorage=true",
     "AzureWebJobsDashboard": "UseDevelopmentStorage=true",
-    "LOCAL_EVENTS_LISTENER_CONNECTION_STRING": "<sb listener connection string>",
-    "COMMAND_RECEIVER_SENDER_CONNECTION_STRING": "<sb sender connection string>",
-    "COMMAND_RECEIVER_TOPIC_NAME": "<topic name>",
-    "LOCAL_EVENTS_SUBSCRIPTION_NAME": "<subscription name>",
+    "COMMAND_RECEIVED_LISTENER_CONNECTION_STRING": "<sb listener connection string>",
+    "COMMAND_ACCEPTED_SENDER_CONNECTION_STRING": "<sb sender connection string>",
+    "COMMAND_REJECTED_SENDER_CONNECTION_STRING": "<sb sender connection string>",
+    "COMMAND_RECEIVED_TOPIC_NAME": "<topic name>",
+    "COMMAND_ACCEPTED_TOPIC_NAME": "<topic name>",
+    "COMMAND_REJECTED_TOPIC_NAME": "<topic name>",
+    "COMMAND_RECEIVED_SUBSCRIPTION_NAME": "<subscription name>",
     "CHARGE_DB_CONNECTION_STRING": "<charge db connection string>"
   }
 }
