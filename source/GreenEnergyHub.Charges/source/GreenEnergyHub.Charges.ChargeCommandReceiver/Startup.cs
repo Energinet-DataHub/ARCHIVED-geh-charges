@@ -20,10 +20,10 @@ using GreenEnergyHub.Charges.Application.ChangeOfCharges.Repositories;
 using GreenEnergyHub.Charges.Application.Validation;
 using GreenEnergyHub.Charges.Application.Validation.BusinessValidation;
 using GreenEnergyHub.Charges.Application.Validation.InputValidation;
+using GreenEnergyHub.Charges.ChargeCommandReceiver;
 using GreenEnergyHub.Charges.Infrastructure.Context;
 using GreenEnergyHub.Charges.Infrastructure.Repositories;
 using GreenEnergyHub.Charges.Infrastructure.Topics;
-using GreenEnergyHub.Charges.LocalMessageServiceBusTopicTrigger;
 using GreenEnergyHub.Json;
 using GreenEnergyHub.Messaging;
 using Microsoft.Azure.Functions.Extensions.DependencyInjection;
@@ -33,7 +33,7 @@ using NodaTime;
 
 [assembly: FunctionsStartup(typeof(Startup))]
 
-namespace GreenEnergyHub.Charges.LocalMessageServiceBusTopicTrigger
+namespace GreenEnergyHub.Charges.ChargeCommandReceiver
 {
     public class Startup : FunctionsStartup
     {
@@ -58,11 +58,12 @@ namespace GreenEnergyHub.Charges.LocalMessageServiceBusTopicTrigger
             builder.Services.AddScoped<IBusinessValidationRulesFactory, BusinessValidationRulesFactory>();
             builder.Services.AddScoped<IChargeCommandBusinessValidator, ChargeCommandBusinessValidator>();
             builder.Services.AddScoped<IChargeCommandValidator, ChargeCommandValidator>();
-            builder.Services.AddScoped<IUpdateRulesConfigurationRepository, UpdateRulesConfigurationRepository>();
-            builder.Services.AddScoped<IBusinessUpdateValidationRulesFactory, BusinessUpdateValidationRulesFactory>();
-            builder.Services.AddScoped<IChargeRepository, ChargeRepository>();
             builder.Services.AddScoped<IBusinessAdditionValidationRulesFactory, BusinessAdditionValidationRulesFactory>();
+            builder.Services.AddScoped<IBusinessUpdateValidationRulesFactory, BusinessUpdateValidationRulesFactory>();
+            builder.Services.AddScoped<IUpdateRulesConfigurationRepository, UpdateRulesConfigurationRepository>();
+            builder.Services.AddScoped<IChargeRepository, ChargeRepository>();
             builder.Services.AddScoped<IChargeCommandAcceptedEventFactory, ChargeCommandAcceptedEventFactory>();
+            builder.Services.AddScoped<IChargeCommandRejectedEventFactory, ChargeCommandRejectedEventFactory>();
         }
     }
 }
