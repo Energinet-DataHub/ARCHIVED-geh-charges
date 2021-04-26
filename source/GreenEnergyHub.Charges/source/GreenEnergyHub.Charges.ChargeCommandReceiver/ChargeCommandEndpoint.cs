@@ -18,7 +18,7 @@ using GreenEnergyHub.Json;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Extensions.Logging;
 
-namespace GreenEnergyHub.Charges.LocalMessageServiceBusTopicTrigger
+namespace GreenEnergyHub.Charges.ChargeCommandReceiver
 {
     public class ChargeCommandEndpoint
     {
