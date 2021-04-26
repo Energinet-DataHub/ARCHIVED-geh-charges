@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using Azure.Messaging.ServiceBus;
@@ -23,25 +22,21 @@ namespace GreenEnergyHub.Charges.Application.ChangeOfCharges
 {
     public class InternalEventPublisher : IInternalEventPublisher
     {
-        private const string LocalEventsTopicName =
-            "COMMAND_RECEIVED_TOPIC_NAME";
-
-        private const string LocalEventsConnectionString =
-            "COMMAND_RECEIVED_SENDER_CONNECTION_STRING";
-
         private readonly IJsonSerializer _jsonSerializer;
+        private readonly IInternalEventCommunicationConfiguration _communicationConfiguration;
 
-        public InternalEventPublisher(IJsonSerializer jsonSerializer)
+        public InternalEventPublisher(IJsonSerializer jsonSerializer, IInternalEventCommunicationConfiguration communicationConfiguration)
         {
             _jsonSerializer = jsonSerializer;
+            _communicationConfiguration = communicationConfiguration;
         }
 
         public async Task PublishAsync([NotNull] IInternalEvent internalEvent)
         {
-            var connectionString = GetEnvironmentVariable(LocalEventsConnectionString);
+            var connectionString = _communicationConfiguration.GetConnectionString(internalEvent);
             await using ServiceBusClient client = new (connectionString);
 
-            var queueOrTopicName = GetEnvironmentVariable(LocalEventsTopicName);
+            var queueOrTopicName = _communicationConfiguration.GetTopic(internalEvent);
             ServiceBusSender sender = client.CreateSender(queueOrTopicName);
             var serializedMessage = _jsonSerializer.Serialize(internalEvent);
             var message = new ServiceBusMessage(serializedMessage)
@@ -54,13 +49,6 @@ namespace GreenEnergyHub.Charges.Application.ChangeOfCharges
             message.ApplicationProperties.Add("filter", internalEvent.Filter);
 
             await sender.SendMessageAsync(message).ConfigureAwait(false);
-        }
-
-        private static string GetEnvironmentVariable(string name)
-        {
-            var environmentVariable = Environment.GetEnvironmentVariable(name) ??
-                            throw new ArgumentNullException(name, "does not exist in configuration settings");
-            return environmentVariable;
         }
     }
 }
