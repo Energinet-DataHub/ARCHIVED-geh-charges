@@ -22,9 +22,9 @@ namespace GreenEnergyHub.Charges.Tests.Builders
     {
         private readonly List<ChargeCommand> _transactions = new ();
 
-        public ChangeOfChargesMessageBuilder WithTransaction(ChargeCommand transaction)
+        public ChangeOfChargesMessageBuilder WithTransaction(ChargeCommand command)
         {
-            _transactions.Add(transaction);
+            _transactions.Add(command);
             return this;
         }
 

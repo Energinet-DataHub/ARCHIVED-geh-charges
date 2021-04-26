@@ -13,20 +13,13 @@
 // limitations under the License.
 
 using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Domain.Events.Local;
+using GreenEnergyHub.Charges.Domain;
+using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
 
-namespace GreenEnergyHub.Charges.Application.ChangeOfCharges
+namespace GreenEnergyHub.Charges.Application
 {
-    /// <summary>
-    /// Service for publishing events internally in the domain.
-    /// </summary>
-    public interface ILocalEventPublisher
+    public interface IChargeFactory
     {
-        /// <summary>
-        /// Publish the local event to the domain.
-        /// </summary>
-        /// <param name="localEvent"></param>
-        /// <returns>No return value.</returns>
-        Task PublishAsync(ILocalEvent localEvent);
+        Task<Charge> CreateFromCommandAsync(ChargeCommand command);
     }
 }

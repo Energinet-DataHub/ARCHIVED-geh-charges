@@ -21,5 +21,7 @@ namespace GreenEnergyHub.Charges.Core.DateTime
         ZonedDateTime GetZonedDateTimeNow();
 
         ZonedDateTime GetZonedDateTime(LocalDateTime localDateTime, ResolutionStrategy strategy);
+
+        ZonedDateTime GetZonedDateTime(Instant instant);
     }
 }

@@ -12,29 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Diagnostics.CodeAnalysis;
+using GreenEnergyHub.Charges.Application.Validation;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
-using NodaTime;
+using GreenEnergyHub.Charges.Domain.Events.Local;
 
-namespace GreenEnergyHub.Charges.Domain.Events.Local
+namespace GreenEnergyHub.Charges.Application
 {
-    public class ChargeTransactionReceived : ILocalEvent
+    public interface IChargeCommandRejectedEventFactory
     {
-        public ChargeTransactionReceived(
-            string correlationId,
-            [NotNull] ChargeCommand transaction)
-        {
-            CorrelationId = correlationId;
-            Transaction = transaction;
-            Filter = transaction.GetType().Name;
-        }
-
-        public Instant PublishedTime { get; } = SystemClock.Instance.GetCurrentInstant();
-
-        public string CorrelationId { get; }
-
-        public ChargeCommand Transaction { get; }
-
-        public string Filter { get; }
+        IInternalEvent CreateEvent(ChargeCommand command);
     }
 }

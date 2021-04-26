@@ -12,12 +12,23 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
+using NodaTime;
 
-namespace GreenEnergyHub.Charges.Application
+namespace GreenEnergyHub.Charges.Domain.Events.Local
 {
-    public class ServiceBusMessageWrapper
+    public abstract class InternalEventBase : IInternalEvent
     {
-        public ChargeCommand Command { get; set; } = new ();
+        protected InternalEventBase(Instant publishedTime, string correlationId)
+        {
+            CorrelationId = correlationId;
+            PublishedTime = publishedTime;
+            Filter = GetType().Name;
+        }
+
+        public Instant PublishedTime { get; }
+
+        public string CorrelationId { get; }
+
+        public string Filter { get; }
     }
 }

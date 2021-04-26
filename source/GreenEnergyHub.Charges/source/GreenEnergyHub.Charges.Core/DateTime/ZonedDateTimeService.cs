@@ -15,7 +15,6 @@
 using System;
 using GreenEnergyHub.Iso8601;
 using NodaTime;
-using NodaTime.TimeZones;
 
 namespace GreenEnergyHub.Charges.Core.DateTime
 {
@@ -44,6 +43,12 @@ namespace GreenEnergyHub.Charges.Core.DateTime
 
             var timeZone = GetTimeZone();
             return timeZone.AtLeniently(localDateTime);
+        }
+
+        public ZonedDateTime GetZonedDateTime(Instant instant)
+        {
+            var timeZone = GetTimeZone();
+            return instant.InZone(timeZone);
         }
 
         private DateTimeZone GetTimeZone()

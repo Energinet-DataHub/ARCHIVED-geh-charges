@@ -28,23 +28,23 @@ namespace GreenEnergyHub.Charges.Tests.Application.Validation.BusinessValidation
     {
         [Theory]
         // Test that start of interval is inclusive
-        [InlineData("2020-05-06T21:59:59Z", "2020-05-10T13:00:00Z", "Europe/Copenhagen", 3, 1, false)]
-        [InlineData("2020-05-06T22:00:00Z", "2020-05-10T13:00:00Z", "Europe/Copenhagen", 3, 1, true)]
+        [InlineData("2020-05-10T13:00:00Z", "2020-05-10T21:59:59Z", "Europe/Copenhagen", 1, 3, false)]
+        [InlineData("2020-05-10T13:00:00Z", "2020-05-10T22:00:00Z", "Europe/Copenhagen", 1, 3, true)]
         // Test that end of interval is inclusive
-        [InlineData("2020-05-08T22:00:00Z", "2020-05-10T13:00:00Z", "Europe/Copenhagen", 3, 1, true)]
-        [InlineData("2020-05-08T22:00:01Z", "2020-05-10T13:00:00Z", "Europe/Copenhagen", 3, 1, false)]
+        [InlineData("2020-05-10T13:00:00Z", "2020-05-13T21:59:59Z", "Europe/Copenhagen", 1, 3, true)]
+        [InlineData("2020-05-10T13:00:00Z", "2020-05-13T22:00:00Z", "Europe/Copenhagen", 1, 3, false)]
         public void IsValid_WhenStartDateIsWithinInterval_IsTrue(
-            string effectuationDateIsoString,
             string nowIsoString,
+            string effectuationDateIsoString,
             string timeZoneId,
             int startOfOccurrence,
             int endOfOccurrence,
             bool expected)
         {
             // Arrange
-            var command = CreateCommand(effectuationDateIsoString);
+            var command = CreateCommand(effectuationDateIsoString, nowIsoString);
             var configuration = CreateRuleConfiguration(startOfOccurrence, endOfOccurrence);
-            var zonedDateTimeService = CreateLocalDateTimeService(nowIsoString, timeZoneId);
+            var zonedDateTimeService = CreateLocalDateTimeService(timeZoneId);
 
             // Act (implicit)
             var sut = new StartDateVr209ValidationRule(command, configuration, zonedDateTimeService);
@@ -53,12 +53,9 @@ namespace GreenEnergyHub.Charges.Tests.Application.Validation.BusinessValidation
             Assert.Equal(expected, sut.IsValid);
         }
 
-        private static ZonedDateTimeService CreateLocalDateTimeService(string nowIsoString, string timeZoneId)
+        private static ZonedDateTimeService CreateLocalDateTimeService(string timeZoneId)
         {
             var clock = new Mock<IClock>();
-            clock
-                .Setup(c => c.GetCurrentInstant())
-                .Returns(InstantPattern.General.Parse(nowIsoString).Value);
             return new ZonedDateTimeService(clock.Object, new Iso8601ConversionConfiguration(timeZoneId));
         }
 
@@ -71,10 +68,11 @@ namespace GreenEnergyHub.Charges.Tests.Application.Validation.BusinessValidation
             return configuration;
         }
 
-        private static ChargeCommand CreateCommand(string effectuationDateIsoString)
+        private static ChargeCommand CreateCommand(string effectuationDateIsoString, string nowIsoString)
         {
             return new ChargeCommand
             {
+                RequestDate = InstantPattern.General.Parse(nowIsoString).Value,
                 MktActivityRecord = new MktActivityRecord
                 {
                     ValidityStartDate = InstantPattern.General.Parse(effectuationDateIsoString).Value,

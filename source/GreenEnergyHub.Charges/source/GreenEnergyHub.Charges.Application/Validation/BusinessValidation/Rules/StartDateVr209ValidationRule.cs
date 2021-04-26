@@ -32,20 +32,19 @@ namespace GreenEnergyHub.Charges.Application.Validation.BusinessValidation.Rules
         {
             _validityStartDate = command.MktActivityRecord!.ValidityStartDate;
 
-            var today = zonedDateTimeService.GetZonedDateTimeNow().Date;
-
+            var today = zonedDateTimeService.GetZonedDateTime(command.RequestDate).Date;
             _periodStart = CalculatePeriodPoint(configuration.ValidIntervalFromNowInDays.Start, zonedDateTimeService, today);
-            _periodEnd = CalculatePeriodPoint(configuration.ValidIntervalFromNowInDays.End, zonedDateTimeService, today);
+            _periodEnd = CalculatePeriodPoint(configuration.ValidIntervalFromNowInDays.End + 1, zonedDateTimeService, today);
         }
 
-        public bool IsValid => _validityStartDate >= _periodStart && _validityStartDate <= _periodEnd;
+        public bool IsValid => _validityStartDate >= _periodStart && _validityStartDate < _periodEnd;
 
         private static Instant CalculatePeriodPoint(
             int numberOfDays,
             IZonedDateTimeService zonedDateTimeService,
             LocalDate today)
         {
-            var localDate = today.Minus(Period.FromDays(numberOfDays));
+            var localDate = today.Plus(Period.FromDays(numberOfDays));
             return zonedDateTimeService
                 .GetZonedDateTime(localDate.AtMidnight(), ResolutionStrategy.Leniently)
                 .ToInstant();

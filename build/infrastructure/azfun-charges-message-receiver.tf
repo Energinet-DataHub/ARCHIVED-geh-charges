@@ -27,14 +27,14 @@ module "azfun_message_receiver" {
     WEBSITE_RUN_FROM_PACKAGE                     = 1
     WEBSITES_ENABLE_APP_SERVICE_STORAGE          = true
     FUNCTIONS_WORKER_RUNTIME                     = "dotnet"
-    LOCAL_EVENTS_SENDER_CONNECTION_STRING        = module.sbtar_local_events_sender.primary_connection_string
-    LOCAL_EVENTS_TOPIC_NAME                      = module.sbt_local_events.name
+    COMMAND_RECEIVED_SENDER_CONNECTION_STRING    = module.sbtar_command_received_sender.primary_connection_string
+    COMMAND_RECEIVED_TOPIC_NAME                  = module.sbt_command_received.name
   }
   dependencies                              = [
     module.appi.dependent_on,
     module.azfun_message_receiver_plan.dependent_on,
     module.azfun_message_receiver_stor.dependent_on,
-    module.sbtar_local_events_sender.dependent_on,
+    module.sbtar_command_received_sender.dependent_on,
   ]
 }
 

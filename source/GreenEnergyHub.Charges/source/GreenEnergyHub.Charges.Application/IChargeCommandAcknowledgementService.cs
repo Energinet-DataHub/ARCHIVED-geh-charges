@@ -12,22 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
+using GreenEnergyHub.Charges.Application.Validation;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
 
-namespace GreenEnergyHub.Charges.Application.Validation.InputValidation
+namespace GreenEnergyHub.Charges.Application
 {
-    /// <summary>
-    /// Contract defining the input validator for change of charges messages.
-    /// </summary>
-    public interface IChangeOfChargeTransactionInputValidator
+    public interface IChargeCommandAcknowledgementService
     {
-        /// <summary>
-        /// Input validates a <see cref="ChargeCommand"/>.
-        /// </summary>
-        /// <param name="chargeCommand">The message to validate.</param>
-        /// <returns>The validation result.</returns>
-        Task<ChargeCommandValidationResult> ValidateAsync([NotNull] ChargeCommand chargeCommand);
+        Task RejectAsync(ChargeCommand command, ChargeCommandValidationResult validationResult);
+
+        Task AcceptAsync(ChargeCommand command);
     }
 }

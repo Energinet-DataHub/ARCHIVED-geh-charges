@@ -55,33 +55,33 @@ namespace GreenEnergyHub.Charges.MessageReceiver
             return new OkObjectResult(messageResult);
         }
 
-        private static ChargeCommand GetCommandFromChangeOfChargeTransaction(ChargeCommand transaction)
+        private static ChargeCommand GetCommandFromChangeOfChargeTransaction(ChargeCommand command)
         {
-            return transaction.Type switch
+            return command.Type switch
             {
                 "D01" => new FeeCreate
                 {
-                    Period = transaction.Period,
-                    Type = transaction.Type,
-                    CorrelationId = transaction.CorrelationId,
-                    MarketDocument = transaction.MarketDocument,
-                    RequestDate = transaction.RequestDate,
-                    LastUpdatedBy = transaction.LastUpdatedBy,
-                    MktActivityRecord = transaction.MktActivityRecord,
-                    ChargeTypeMRid = transaction.ChargeTypeMRid,
-                    ChargeTypeOwnerMRid = transaction.ChargeTypeOwnerMRid,
+                    Period = command.Period,
+                    Type = command.Type,
+                    CorrelationId = command.CorrelationId,
+                    MarketDocument = command.MarketDocument,
+                    RequestDate = command.RequestDate,
+                    LastUpdatedBy = command.LastUpdatedBy,
+                    MktActivityRecord = command.MktActivityRecord,
+                    ChargeTypeMRid = command.ChargeTypeMRid,
+                    ChargeTypeOwnerMRid = command.ChargeTypeOwnerMRid,
                 },
                 _ => new TariffCreate
                 {
-                    Period = transaction.Period,
-                    Type = transaction.Type,
-                    CorrelationId = transaction.CorrelationId,
-                    MarketDocument = transaction.MarketDocument,
-                    RequestDate = transaction.RequestDate,
-                    LastUpdatedBy = transaction.LastUpdatedBy,
-                    MktActivityRecord = transaction.MktActivityRecord,
-                    ChargeTypeMRid = transaction.ChargeTypeMRid,
-                    ChargeTypeOwnerMRid = transaction.ChargeTypeOwnerMRid,
+                    Period = command.Period,
+                    Type = command.Type,
+                    CorrelationId = command.CorrelationId,
+                    MarketDocument = command.MarketDocument,
+                    RequestDate = command.RequestDate,
+                    LastUpdatedBy = command.LastUpdatedBy,
+                    MktActivityRecord = command.MktActivityRecord,
+                    ChargeTypeMRid = command.ChargeTypeMRid,
+                    ChargeTypeOwnerMRid = command.ChargeTypeOwnerMRid,
                 }
             };
         }
