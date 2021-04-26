@@ -7,46 +7,38 @@ module "sbn_charges" {
   tags                = data.azurerm_resource_group.main.tags
 }
 
-module "sbt_local_events" {
+module "sbt_command_received" {
   source              = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//service-bus-topic?ref=1.2.0"
-  name                = "sbt-local-events"
+  name                = "sbt-command-received"
   namespace_name      = module.sbn_charges.name
   resource_group_name = data.azurerm_resource_group.main.name
   dependencies        = [module.sbn_charges]
 }
 
-module "sbtar_local_events_listener" {
+module "sbtar_command_received_listener" {
   source                    = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//service-bus-topic-auth-rule?ref=1.2.0"
-  name                      = "sbtar-local-events-listener"
+  name                      = "sbtar-command-received-listener"
   namespace_name            = module.sbn_charges.name
   resource_group_name       = data.azurerm_resource_group.main.name
   listen                    = true
   dependencies              = [module.sbn_charges]
-  topic_name                = module.sbt_local_events.name
+  topic_name                = module.sbt_command_received.name
 }
 
-module "sbtar_local_events_sender" {
+module "sbtar_command_received_sender" {
   source                    = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//service-bus-topic-auth-rule?ref=1.2.0"
-  name                      = "sbtar-local-events-sender"
+  name                      = "sbtar-command-received-sender"
   namespace_name            = module.sbn_charges.name
   resource_group_name       = data.azurerm_resource_group.main.name
   send                      = true
   dependencies              = [module.sbn_charges]
-  topic_name                = module.sbt_local_events.name
+  topic_name                = module.sbt_command_received.name
 }
 
-resource "azurerm_servicebus_subscription" "sbs-charge-all-events" {
-  name                = "sbs-charge-all-events"
+resource "azurerm_servicebus_subscription" "sbs_command_received" {
+  name                = "sbs-command-received"
   resource_group_name = data.azurerm_resource_group.main.name
   namespace_name      = module.sbn_charges.name
-  topic_name          = module.sbt_local_events.name
-  max_delivery_count  = 1
-}
-
-resource "azurerm_servicebus_subscription" "sbs-charge-command-received-subscription" {
-  name                = "sbs-charge-command-received-subscription"
-  resource_group_name = data.azurerm_resource_group.main.name
-  namespace_name      = module.sbn_charges.name
-  topic_name          = module.sbt_local_events.name
+  topic_name          = module.sbt_command_received.name
   max_delivery_count  = 1
 }
