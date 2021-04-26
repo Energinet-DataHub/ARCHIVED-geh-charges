@@ -25,7 +25,9 @@ namespace GreenEnergyHub.Charges.Application.ChangeOfCharges
         private readonly IJsonSerializer _jsonSerializer;
         private readonly IInternalEventCommunicationConfiguration _communicationConfiguration;
 
-        public InternalEventPublisher(IJsonSerializer jsonSerializer, IInternalEventCommunicationConfiguration communicationConfiguration)
+        public InternalEventPublisher(
+            IJsonSerializer jsonSerializer,
+            IInternalEventCommunicationConfiguration communicationConfiguration)
         {
             _jsonSerializer = jsonSerializer;
             _communicationConfiguration = communicationConfiguration;
