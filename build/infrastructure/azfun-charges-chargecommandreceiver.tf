@@ -31,6 +31,8 @@ module "azfun_charges_charge_command_receiver" {
 	COMMAND_REJECTED_SENDER_CONNECTION_STRING    = trimsuffix(module.sbtar_command_rejected_sender.primary_connection_string, ";EntityPath=${module.sbt_command_rejected.name}")
     COMMAND_RECEIVED_LISTENER_CONNECTION_STRING  = trimsuffix(module.sbtar_command_received_listener.primary_connection_string, ";EntityPath=${module.sbt_command_received.name}")
     COMMAND_RECEIVED_TOPIC_NAME                  = module.sbt_command_received.name
+    COMMAND_ACCEPTED_TOPIC_NAME                  = module.sbt_command_accepted.name
+    COMMAND_REJECTED_TOPIC_NAME                  = module.sbt_command_rejected.name
     COMMAND_RECEIVED_SUBSCRIPTION_NAME           = azurerm_servicebus_subscription.sbs_command_received.name
     CHARGE_DB_CONNECTION_STRING                  = local.CHARGE_DB_CONNECTION_STRING
   }
