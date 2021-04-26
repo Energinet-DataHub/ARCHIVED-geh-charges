@@ -1,10 +1,12 @@
 ﻿### This file contains the list of words to be ignored by spell check
 ADR
 Architechtural
+CIM
 composable
 DataHub
 deserialize
 DTO
+ebIX
 FluentValidation
 github
 GreenEnergyHub
@@ -19,9 +21,13 @@ PI
 POCO
 proto
 resending
+RSM
 runtime
 surveilled
 Terraform
 TODO
 TSO
 Url
+eg
+PreDeploy
+PostDeploy
