@@ -35,16 +35,8 @@ namespace GreenEnergyHub.Charges.Tests.Application.Validation
             [NotNull] ChargeCommandValidator sut,
             ChargeCommand anyCommand)
         {
-            // Arrange
-            var invalidResult = CreateInvalidValidationResult();
-            inputValidator
-                .Setup(v => v.ValidateAsync(anyCommand))
-                .Returns(Task.FromResult(invalidResult));
-
-            // Act
+            ConfigureValidatorToReturnInvalidResult(inputValidator, anyCommand);
             var actual = await sut.ValidateAsync(anyCommand).ConfigureAwait(false);
-
-            // Assert
             Assert.True(actual.IsFailed);
         }
 
@@ -57,14 +49,8 @@ namespace GreenEnergyHub.Charges.Tests.Application.Validation
             ChargeCommand anyCommand)
         {
             // Arrange
-            var validResult = ChargeCommandValidationResult.CreateSuccess();
-            var invalidResult = CreateInvalidValidationResult();
-            inputValidator
-                .Setup(v => v.ValidateAsync(anyCommand))
-                .Returns(Task.FromResult(validResult));
-            businessValidator
-                .Setup(v => v.ValidateAsync(anyCommand))
-                .Returns(Task.FromResult(invalidResult));
+            ConfigureValidatorToReturnValidResult(inputValidator, anyCommand);
+            ConfigureValidatorToReturnInvalidResult(businessValidator, anyCommand);
 
             // Act
             var actual = await sut.ValidateAsync(anyCommand).ConfigureAwait(false);
@@ -82,20 +68,46 @@ namespace GreenEnergyHub.Charges.Tests.Application.Validation
             ChargeCommand anyCommand)
         {
             // Arrange
-            var validResult = ChargeCommandValidationResult.CreateSuccess();
-            var invalidResult = ChargeCommandValidationResult.CreateSuccess();
-            inputValidator
-                .Setup(v => v.ValidateAsync(anyCommand))
-                .Returns(Task.FromResult(validResult));
-            businessValidator
-                .Setup(v => v.ValidateAsync(anyCommand))
-                .Returns(Task.FromResult(invalidResult));
+            ConfigureValidatorToReturnValidResult(inputValidator, anyCommand);
+            ConfigureValidatorToReturnValidResult(businessValidator, anyCommand);
 
             // Act
             var actual = await sut.ValidateAsync(anyCommand).ConfigureAwait(false);
 
             // Assert
             Assert.False(actual.IsFailed);
+        }
+
+        private static void ConfigureValidatorToReturnValidResult(Mock<IChangeOfChargeTransactionInputValidator> inputValidator, ChargeCommand anyCommand)
+        {
+            var validResult = ChargeCommandValidationResult.CreateSuccess();
+            inputValidator
+                .Setup(v => v.ValidateAsync(anyCommand))
+                .Returns(Task.FromResult(validResult));
+        }
+
+        private static void ConfigureValidatorToReturnInvalidResult(Mock<IChangeOfChargeTransactionInputValidator> inputValidator, ChargeCommand anyCommand)
+        {
+            var invalidResult = CreateInvalidValidationResult();
+            inputValidator
+                .Setup(v => v.ValidateAsync(anyCommand))
+                .Returns(Task.FromResult(invalidResult));
+        }
+
+        private static void ConfigureValidatorToReturnValidResult(Mock<IChargeCommandBusinessValidator> businessValidator, ChargeCommand anyCommand)
+        {
+            var validResult = ChargeCommandValidationResult.CreateSuccess();
+            businessValidator
+                .Setup(v => v.ValidateAsync(anyCommand))
+                .Returns(Task.FromResult(validResult));
+        }
+
+        private static void ConfigureValidatorToReturnInvalidResult(Mock<IChargeCommandBusinessValidator> businessValidator, ChargeCommand anyCommand)
+        {
+            var invalidResult = CreateInvalidValidationResult();
+            businessValidator
+                .Setup(v => v.ValidateAsync(anyCommand))
+                .Returns(Task.FromResult(invalidResult));
         }
 
         private static ChargeCommandValidationResult CreateInvalidValidationResult()
