@@ -13,7 +13,6 @@
 // limitations under the License.
 
 using System;
-using System.Linq;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application.ChangeOfCharges.Repositories;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
@@ -49,9 +48,12 @@ namespace GreenEnergyHub.Charges.Infrastructure.Repositories
 
         public async Task<bool> CheckIfChargeExistsAsync(string mrid, string chargeTypeOwnerMRid)
         {
-            return await _chargesDatabaseContext.Charge.AnyAsync(x => x.MRid == mrid &&
-                                                                      x.ChargeTypeOwner != null &&
-                                                                      x.ChargeTypeOwner.MRid == chargeTypeOwnerMRid).ConfigureAwait(false);
+            var x = await _chargesDatabaseContext.Charge
+                .Include(x => x.ChargeTypeOwner)
+                .AnyAsync(x => x.MRid == mrid &&
+                                        x.ChargeTypeOwner != null &&
+                                        x.ChargeTypeOwner.MRid == chargeTypeOwnerMRid).ConfigureAwait(false);
+            return x;
         }
 
         public async Task StoreChargeAsync(Charge newCharge)

@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System.Diagnostics.CodeAnalysis;
+using GreenEnergyHub.Charges.Application;
 using GreenEnergyHub.Charges.Application.ChangeOfCharges;
 using GreenEnergyHub.Charges.Infrastructure.Topics;
 using GreenEnergyHub.Charges.MessageReceiver;
@@ -31,6 +32,7 @@ namespace GreenEnergyHub.Charges.MessageReceiver
         {
             builder.Services.AddScoped(typeof(IClock), _ => SystemClock.Instance);
             builder.Services.AddSingleton<IJsonSerializer, JsonSerializer>();
+            builder.Services.AddScoped<IExecutionExceptionHandler, ExecutionExceptionHandler>();
             builder.Services.AddScoped<IChangeOfChargesMessageHandler, ChangeOfChargesMessageHandler>();
             builder.Services.AddScoped<IChangeOfChargesTransactionHandler, ChangeOfChargesTransactionHandler>();
             builder.Services

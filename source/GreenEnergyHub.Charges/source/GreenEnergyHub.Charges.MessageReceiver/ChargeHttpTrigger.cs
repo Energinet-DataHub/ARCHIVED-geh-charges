@@ -13,7 +13,9 @@
 // limitations under the License.
 
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using System.Threading.Tasks;
+using GreenEnergyHub.Charges.Application;
 using GreenEnergyHub.Charges.Application.ChangeOfCharges;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Fee;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Message;
@@ -33,13 +35,16 @@ namespace GreenEnergyHub.Charges.MessageReceiver
         private const string FunctionName = "ChargeHttpTrigger";
         private readonly IJsonSerializer _jsonDeserializer;
         private readonly IChangeOfChargesMessageHandler _changeOfChargesMessageHandler;
+        private readonly IExecutionExceptionHandler _executionExceptionHandler;
 
         public ChargeHttpTrigger(
             IJsonSerializer jsonDeserializer,
-            IChangeOfChargesMessageHandler changeOfChargesMessageHandler)
+            IChangeOfChargesMessageHandler changeOfChargesMessageHandler,
+            IExecutionExceptionHandler executionExceptionHandler)
         {
             _jsonDeserializer = jsonDeserializer;
             _changeOfChargesMessageHandler = changeOfChargesMessageHandler;
+            _executionExceptionHandler = executionExceptionHandler;
         }
 
         [FunctionName(FunctionName)]
@@ -51,8 +56,12 @@ namespace GreenEnergyHub.Charges.MessageReceiver
         {
             log.LogInformation("Function {FunctionName} started to process a request", FunctionName);
             var message = await GetChangeOfChargesMessageAsync(_jsonDeserializer, req, context).ConfigureAwait(false);
-            var messageResult = await _changeOfChargesMessageHandler.HandleAsync(message).ConfigureAwait(false);
-            return new OkObjectResult(messageResult);
+
+            await _executionExceptionHandler.ExecuteChargeCommandAsync(
+                    () => _changeOfChargesMessageHandler.HandleAsync(message), message.Transactions.First())
+                .ConfigureAwait(false);
+
+            return new OkObjectResult(true);
         }
 
         private static ChargeCommand GetCommandFromChangeOfChargeTransaction(ChargeCommand command)

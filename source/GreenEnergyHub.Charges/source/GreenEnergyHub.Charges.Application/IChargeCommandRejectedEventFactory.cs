@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
+using System.Diagnostics.CodeAnalysis;
 using GreenEnergyHub.Charges.Application.Validation;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
 using GreenEnergyHub.Charges.Domain.Events.Local;
@@ -20,6 +22,12 @@ namespace GreenEnergyHub.Charges.Application
 {
     public interface IChargeCommandRejectedEventFactory
     {
-        IInternalEvent CreateEvent(ChargeCommand command);
+        IInternalEvent CreateEvent(
+            [NotNull] ChargeCommand command,
+            [NotNull] ChargeCommandValidationResult chargeCommandValidationResult);
+
+        IInternalEvent CreateEvent(
+            [NotNull] ChargeCommand command,
+            [NotNull] Exception exception);
     }
 }

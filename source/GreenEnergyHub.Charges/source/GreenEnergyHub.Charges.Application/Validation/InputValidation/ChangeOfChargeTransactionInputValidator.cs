@@ -12,10 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application.Validation.BusinessValidation;
+using GreenEnergyHub.Charges.Application.Validation.BusinessValidation.Rules;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
 using GreenEnergyHub.Messaging;
 
@@ -33,7 +35,13 @@ namespace GreenEnergyHub.Charges.Application.Validation.InputValidation
         public async Task<ChargeCommandValidationResult> ValidateAsync([NotNull] ChargeCommand chargeCommand)
         {
             var result = await _inputValidationRuleEngine.ValidateAsync(chargeCommand).ConfigureAwait(false);
-            var validationRules = result.Select(r => new BusinessValidationRule(false)).ToArray<IBusinessValidationRule>();
+
+            // Since we have refactored the former validation result, now both input and business validation uses
+            // the same model. But one works with rule types and the other works with error codes.
+            // This is a temp fix to address this issue.
+            var validationRules = result.Select(r => new BusinessValidationRule(
+                false,
+                (ValidationRule)Enum.Parse(typeof(ValidationRule), r.Message))).ToArray<IBusinessValidationRule>();
 
             return !result.Success
                 ? ChargeCommandValidationResult.CreateFailure(validationRules)

@@ -47,9 +47,6 @@ namespace GreenEnergyHub.Charges.Application.ChangeOfCharges
                 Subject = internalEvent.Filter, // We set 'Subject' at the moment for a better overview in the AZ portal.
             };
 
-            // We use this custom "filter" property to filter our messages on the ServiceBus.
-            message.ApplicationProperties.Add("filter", internalEvent.Filter);
-
             await sender.SendMessageAsync(message).ConfigureAwait(false);
         }
     }

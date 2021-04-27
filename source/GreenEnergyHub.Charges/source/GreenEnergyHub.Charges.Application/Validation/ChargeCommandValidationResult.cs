@@ -21,19 +21,19 @@ namespace GreenEnergyHub.Charges.Application.Validation
 {
     public class ChargeCommandValidationResult
     {
-        private readonly IBusinessValidationRule[] _invalidRules;
-
         private ChargeCommandValidationResult()
             : this(Array.Empty<IBusinessValidationRule>())
         {
         }
 
-        private ChargeCommandValidationResult(IBusinessValidationRule[] invalidRules)
+        private ChargeCommandValidationResult(IEnumerable<IBusinessValidationRule> invalidRules)
         {
-            _invalidRules = invalidRules;
+            InvalidRules = invalidRules;
         }
 
-        public bool IsFailed => _invalidRules.Select(r => !r.IsValid).Any();
+        public IEnumerable<IBusinessValidationRule> InvalidRules { get; }
+
+        public bool IsFailed => InvalidRules.Select(r => !r.IsValid).Any();
 
         public static ChargeCommandValidationResult CreateSuccess()
         {
@@ -42,7 +42,7 @@ namespace GreenEnergyHub.Charges.Application.Validation
 
         public static ChargeCommandValidationResult CreateFailure(IList<IBusinessValidationRule> invalidRules)
         {
-            if (invalidRules.Any(r => !r.IsValid))
+            if (!invalidRules.Any(r => !r.IsValid))
             {
                 throw new ArgumentException("All validation rules must be valid", nameof(invalidRules));
             }

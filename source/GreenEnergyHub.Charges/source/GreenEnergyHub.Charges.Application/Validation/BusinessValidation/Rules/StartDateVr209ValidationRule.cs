@@ -24,14 +24,20 @@ namespace GreenEnergyHub.Charges.Application.Validation.BusinessValidation.Rules
         private readonly Instant _endOfValidInterval;
         private readonly Instant _validityStartDate;
 
-        public StartDateVr209ValidationRule([NotNull]ChargeCommand command, [NotNull]StartDateVr209ValidationRuleConfiguration configuration)
+        public StartDateVr209ValidationRule(
+            [NotNull] ChargeCommand command,
+            [NotNull] StartDateVr209ValidationRuleConfiguration configuration)
         {
             _validityStartDate = command.MktActivityRecord!.ValidityStartDate;
 
-            _startOfValidInterval = command.RequestDate.Plus(Duration.FromDays(configuration.ValidIntervalFromNowInDays.Start));
-            _endOfValidInterval = command.RequestDate.Plus(Duration.FromDays(configuration.ValidIntervalFromNowInDays.End));
+            _startOfValidInterval =
+                command.RequestDate.Plus(Duration.FromDays(configuration.ValidIntervalFromNowInDays.Start));
+            _endOfValidInterval =
+                command.RequestDate.Plus(Duration.FromDays(configuration.ValidIntervalFromNowInDays.End));
         }
 
         public bool IsValid => _validityStartDate >= _startOfValidInterval && _validityStartDate <= _endOfValidInterval;
+
+        public ValidationRule Rule => ValidationRule.TimeLimitsNotFollowed;
     }
 }
