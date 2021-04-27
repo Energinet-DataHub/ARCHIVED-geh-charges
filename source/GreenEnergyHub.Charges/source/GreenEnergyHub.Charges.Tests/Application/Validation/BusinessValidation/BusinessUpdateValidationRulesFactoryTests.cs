@@ -35,15 +35,12 @@ namespace GreenEnergyHub.Charges.Tests.Application.Validation.BusinessValidation
         [Theory]
         [InlineAutoDomainData]
         public async Task CreateRulesForUpdateCommandAsync_ReturnsRulesForTariffUpdateCommand(
-            [NotNull][Frozen] Mock<IUpdateRulesConfigurationRepository> updateRulesConfigurationRepository,
+            [NotNull] [Frozen] Mock<IUpdateRulesConfigurationRepository> updateRulesConfigurationRepository,
             [NotNull] BusinessUpdateValidationRulesFactory sut,
             [NotNull] ChargeCommand chargeCommand)
         {
             // Arrange
-            var configuration = CreateConfiguration();
-            updateRulesConfigurationRepository
-                .Setup(r => r.GetConfigurationAsync())
-                .Returns(Task.FromResult(configuration));
+            ConfigureRepository(updateRulesConfigurationRepository);
 
             var expectedRules = new HashSet<Type>
             {
@@ -65,20 +62,14 @@ namespace GreenEnergyHub.Charges.Tests.Application.Validation.BusinessValidation
         [Theory]
         [InlineAutoDomainData]
         public async Task CreateRulesForUpdateCommandAsync_ReturnsRulesForFeeUpdateCommand(
-            [NotNull][Frozen] Mock<IUpdateRulesConfigurationRepository> updateRulesConfigurationRepository,
+            [NotNull] [Frozen] Mock<IUpdateRulesConfigurationRepository> updateRulesConfigurationRepository,
             [NotNull] BusinessUpdateValidationRulesFactory sut,
             [NotNull] ChargeCommand chargeCommand)
         {
             // Arrange
-            var configuration = CreateConfiguration();
-            updateRulesConfigurationRepository
-                .Setup(r => r.GetConfigurationAsync())
-                .Returns(Task.FromResult(configuration));
+            ConfigureRepository(updateRulesConfigurationRepository);
 
-            var expectedRules = new HashSet<Type>
-            {
-                typeof(StartDateVr209ValidationRule),
-            };
+            var expectedRules = new HashSet<Type> { typeof(StartDateVr209ValidationRule), };
 
             var feeUpdateCommand = TurnCommandIntoSpecifiedUpdateType(chargeCommand, ChargeCommandType.Fee);
 
@@ -93,22 +84,17 @@ namespace GreenEnergyHub.Charges.Tests.Application.Validation.BusinessValidation
         [Theory]
         [InlineAutoDomainData]
         public async Task CreateRulesForUpdateCommandAsync_ReturnsRulesForSubscriptionUpdateCommand(
-            [NotNull][Frozen] Mock<IUpdateRulesConfigurationRepository> updateRulesConfigurationRepository,
+            [NotNull] [Frozen] Mock<IUpdateRulesConfigurationRepository> updateRulesConfigurationRepository,
             [NotNull] BusinessUpdateValidationRulesFactory sut,
             [NotNull] ChargeCommand chargeCommand)
         {
             // Arrange
-            var configuration = CreateConfiguration();
-            updateRulesConfigurationRepository
-                .Setup(r => r.GetConfigurationAsync())
-                .Returns(Task.FromResult(configuration));
+            ConfigureRepository(updateRulesConfigurationRepository);
 
-            var expectedRules = new HashSet<Type>
-            {
-                typeof(StartDateVr209ValidationRule),
-            };
+            var expectedRules = new HashSet<Type> { typeof(StartDateVr209ValidationRule), };
 
-            var subscriptionUpdateCommand = TurnCommandIntoSpecifiedUpdateType(chargeCommand, ChargeCommandType.Subscription);
+            var subscriptionUpdateCommand =
+                TurnCommandIntoSpecifiedUpdateType(chargeCommand, ChargeCommandType.Subscription);
 
             // Act
             var actual = await sut.CreateRulesForUpdateCommandAsync(subscriptionUpdateCommand).ConfigureAwait(false);
@@ -124,7 +110,8 @@ namespace GreenEnergyHub.Charges.Tests.Application.Validation.BusinessValidation
         /// </summary>
         private static UpdateRulesConfiguration CreateConfiguration()
         {
-            return new UpdateRulesConfiguration(new StartDateVr209ValidationRuleConfiguration(new Interval<int>(31, 1095)));
+            return new UpdateRulesConfiguration(
+                new StartDateVr209ValidationRuleConfiguration(new Interval<int>(31, 1095)));
         }
 
         private static ChargeCommand TurnCommandIntoSpecifiedUpdateType(ChargeCommand chargeCommand, string commandType)
@@ -132,6 +119,15 @@ namespace GreenEnergyHub.Charges.Tests.Application.Validation.BusinessValidation
             chargeCommand.Type = commandType;
             chargeCommand!.MktActivityRecord!.Status = MktActivityRecordStatus.Change;
             return chargeCommand;
+        }
+
+        private static void ConfigureRepository(
+            Mock<IUpdateRulesConfigurationRepository> updateRulesConfigurationRepository)
+        {
+            var configuration = CreateConfiguration();
+            updateRulesConfigurationRepository
+                .Setup(r => r.GetConfigurationAsync())
+                .Returns(Task.FromResult(configuration));
         }
     }
 }
