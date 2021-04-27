@@ -20,7 +20,7 @@ namespace GreenEnergyHub.Charges.Domain.Events
     /// <summary>
     /// Contract for events.
     /// </summary>
-    public interface IEvent : IMessage
+    public interface IEvent
     {
         /// <summary>
         /// The time the event occurred.

@@ -16,7 +16,7 @@ using GreenEnergyHub.Charges.Domain.Messages;
 
 namespace GreenEnergyHub.Charges.Domain.Command
 {
-    public class CommandBase : MessageBase, ICommand
+    public class CommandBase : MessageBase
     {
     }
 }
