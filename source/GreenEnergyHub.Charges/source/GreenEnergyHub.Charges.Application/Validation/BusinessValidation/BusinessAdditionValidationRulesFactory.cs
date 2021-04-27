@@ -18,6 +18,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application.ChangeOfCharges.Repositories;
 using GreenEnergyHub.Charges.Application.Validation.BusinessValidation.Rules;
+using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
 
 namespace GreenEnergyHub.Charges.Application.Validation.BusinessValidation
@@ -26,13 +27,16 @@ namespace GreenEnergyHub.Charges.Application.Validation.BusinessValidation
     {
         private readonly IUpdateRulesConfigurationRepository _updateRulesConfigurationRepository;
         private readonly IChargeRepository _chargeRepository;
+        private readonly IZonedDateTimeService _zonedDateTimeService;
 
         public BusinessAdditionValidationRulesFactory(
             IUpdateRulesConfigurationRepository updateRulesConfigurationRepository,
-            IChargeRepository chargeRepository)
+            IChargeRepository chargeRepository,
+            IZonedDateTimeService zonedDateTimeService)
         {
             _updateRulesConfigurationRepository = updateRulesConfigurationRepository;
             _chargeRepository = chargeRepository;
+            _zonedDateTimeService = zonedDateTimeService;
         }
 
         public async Task<IBusinessValidationRuleSet> CreateRulesForAdditionCommandAsync([NotNull] ChargeCommand command)
@@ -45,13 +49,14 @@ namespace GreenEnergyHub.Charges.Application.Validation.BusinessValidation
             return BusinessValidationRuleSet.FromRules(rules);
         }
 
-        private static List<IBusinessValidationRule> GetRules(ChargeCommand command, UpdateRulesConfiguration configuration)
+        private List<IBusinessValidationRule> GetRules(ChargeCommand command, UpdateRulesConfiguration configuration)
         {
             var rules = new List<IBusinessValidationRule>
             {
                 new StartDateVr209ValidationRule(
                     command,
-                    configuration.StartDateVr209ValidationRuleConfiguration),
+                    configuration.StartDateVr209ValidationRuleConfiguration,
+                    _zonedDateTimeService),
             };
 
             return rules;

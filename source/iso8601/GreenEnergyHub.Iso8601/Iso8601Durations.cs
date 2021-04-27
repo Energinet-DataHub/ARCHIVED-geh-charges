@@ -86,8 +86,7 @@ namespace GreenEnergyHub.Iso8601
             var timeZoneId = _configuration.GetTZDatabaseName();
 
             var timeZone = DateTimeZoneProviders.Tzdb.GetZoneOrNull(timeZoneId);
-            if (timeZone == null)
-                throw new ArgumentException("{timeZoneId} is not a supported time zone", timeZoneId);
+            if (timeZone == null) throw new ArgumentException("{timeZoneId} is not a supported time zone", timeZoneId);
 
             return timeZone!;
         }

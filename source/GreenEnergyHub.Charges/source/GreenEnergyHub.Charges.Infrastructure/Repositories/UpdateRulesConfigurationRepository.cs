@@ -15,6 +15,7 @@
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application.Validation.BusinessValidation;
 using GreenEnergyHub.Charges.Application.Validation.BusinessValidation.Rules;
+using GreenEnergyHub.Charges.Core;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Repositories
 {
@@ -24,7 +25,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Repositories
         {
             // For now we just mimic fetching configuration from elsewhere - probably some kind of persistent storage
             var updateRulesConfiguration = new UpdateRulesConfiguration(
-                new StartDateVr209ValidationRuleConfiguration(new Domain.Interval<int>(31, 1095)));
+                new StartDateVr209ValidationRuleConfiguration(new Interval<int>(31, 1095)));
             return Task.FromResult(updateRulesConfiguration);
         }
     }
