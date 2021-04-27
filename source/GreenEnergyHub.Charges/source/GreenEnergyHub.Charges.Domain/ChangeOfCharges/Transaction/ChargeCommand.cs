@@ -13,13 +13,13 @@
 // limitations under the License.
 
 using System.Text.Json.Serialization;
-using GreenEnergyHub.Charges.Domain.Command;
+using GreenEnergyHub.Charges.Domain.Messages;
 using NodaTime;
 using MarketDocument = GreenEnergyHub.Charges.Domain.Common.MarketDocument;
 
 namespace GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction
 {
-    public class ChargeCommand : CommandBase
+    public class ChargeCommand : MessageBase
     {
         public MarketDocument? MarketDocument { get; set; }
 
