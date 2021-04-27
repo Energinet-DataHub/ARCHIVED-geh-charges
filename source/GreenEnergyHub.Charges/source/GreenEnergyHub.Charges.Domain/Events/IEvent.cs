@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using GreenEnergyHub.Charges.Domain.Messages;
 using NodaTime;
 
 namespace GreenEnergyHub.Charges.Domain.Events
@@ -19,7 +20,7 @@ namespace GreenEnergyHub.Charges.Domain.Events
     /// <summary>
     /// Contract for events.
     /// </summary>
-    public interface IEvent
+    public interface IEvent : IMessage
     {
         /// <summary>
         /// The time the event occurred.
