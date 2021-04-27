@@ -18,6 +18,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application.ChangeOfCharges.Repositories;
 using GreenEnergyHub.Charges.Application.Validation.BusinessValidation.Rules;
+using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.Domain;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
 
@@ -27,13 +28,16 @@ namespace GreenEnergyHub.Charges.Application.Validation.BusinessValidation
     {
         private readonly IChargeRepository _chargeRepository;
         private readonly IUpdateRulesConfigurationRepository _updateRulesConfigurationRepository;
+        private readonly IZonedDateTimeService _localDateTimeService;
 
         public BusinessUpdateValidationRulesFactory(
             IChargeRepository chargeRepository,
-            IUpdateRulesConfigurationRepository updateRulesConfigurationRepository)
+            IUpdateRulesConfigurationRepository updateRulesConfigurationRepository,
+            IZonedDateTimeService localDateTimeService)
         {
             _chargeRepository = chargeRepository;
             _updateRulesConfigurationRepository = updateRulesConfigurationRepository;
+            _localDateTimeService = localDateTimeService;
         }
 
         public async Task<IBusinessValidationRuleSet> CreateRulesForUpdateCommandAsync([NotNull] ChargeCommand command)
@@ -57,13 +61,14 @@ namespace GreenEnergyHub.Charges.Application.Validation.BusinessValidation
             return BusinessValidationRuleSet.FromRules(rules);
         }
 
-        private static List<IBusinessValidationRule> GetRules(ChargeCommand command, UpdateRulesConfiguration configuration, Charge charge)
+        private List<IBusinessValidationRule> GetRules(ChargeCommand command, UpdateRulesConfiguration configuration, Charge charge)
         {
             var rules = new List<IBusinessValidationRule>
             {
                 new StartDateVr209ValidationRule(
                     command,
-                    configuration.StartDateVr209ValidationRuleConfiguration),
+                    configuration.StartDateVr209ValidationRuleConfiguration,
+                    _localDateTimeService),
             };
 
             if (command.Type == ChargeCommandType.Tariff)

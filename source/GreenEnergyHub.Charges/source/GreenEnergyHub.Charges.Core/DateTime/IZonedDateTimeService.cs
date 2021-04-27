@@ -12,14 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Collections.Generic;
+using NodaTime;
 
-namespace GreenEnergyHub.Charges.Application.Validation.BusinessValidation
+namespace GreenEnergyHub.Charges.Core.DateTime
 {
-    public interface IBusinessValidationRuleSet
+    public interface IZonedDateTimeService
     {
-        IReadOnlyCollection<IBusinessValidationRule> GetRules();
+        ZonedDateTime GetZonedDateTimeNow();
 
-        ChargeCommandValidationResult Validate();
+        ZonedDateTime GetZonedDateTime(LocalDateTime localDateTime, ResolutionStrategy strategy);
+
+        ZonedDateTime GetZonedDateTime(Instant instant);
     }
 }
