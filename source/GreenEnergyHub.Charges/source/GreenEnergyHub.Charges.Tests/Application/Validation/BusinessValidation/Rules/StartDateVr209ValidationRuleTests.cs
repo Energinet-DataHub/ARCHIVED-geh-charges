@@ -12,11 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using AutoFixture.Xunit2;
 using GreenEnergyHub.Charges.Application.Validation.BusinessValidation.Rules;
 using GreenEnergyHub.Charges.Core;
 using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
 using GreenEnergyHub.Iso8601;
+using JetBrains.Annotations;
 using Moq;
 using NodaTime;
 using NodaTime.Text;
@@ -28,29 +30,44 @@ namespace GreenEnergyHub.Charges.Tests.Application.Validation.BusinessValidation
     {
         [Theory]
         // Test that start of interval is inclusive
-        [InlineData("2020-05-10T13:00:00Z", "2020-05-10T21:59:59Z", "Europe/Copenhagen", 1, 3, false)]
-        [InlineData("2020-05-10T13:00:00Z", "2020-05-10T22:00:00Z", "Europe/Copenhagen", 1, 3, true)]
+        [InlineAutoMoqData("2020-05-10T13:00:00Z", "2020-05-10T21:59:59Z", "Europe/Copenhagen", 1, 3, false)]
+        [InlineAutoMoqData("2020-05-10T13:00:00Z", "2020-05-10T22:00:00Z", "Europe/Copenhagen", 1, 3, true)]
         // Test that end of interval is inclusive
-        [InlineData("2020-05-10T13:00:00Z", "2020-05-13T21:59:59Z", "Europe/Copenhagen", 1, 3, true)]
-        [InlineData("2020-05-10T13:00:00Z", "2020-05-13T22:00:00Z", "Europe/Copenhagen", 1, 3, false)]
+        [InlineAutoMoqData("2020-05-10T13:00:00Z", "2020-05-13T21:59:59Z", "Europe/Copenhagen", 1, 3, true)]
+        [InlineAutoMoqData("2020-05-10T13:00:00Z", "2020-05-13T22:00:00Z", "Europe/Copenhagen", 1, 3, false)]
         public void IsValid_WhenStartDateIsWithinInterval_IsTrue(
             string nowIsoString,
             string effectuationDateIsoString,
             string timeZoneId,
             int startOfOccurrence,
             int endOfOccurrence,
-            bool expected)
+            bool expected,
+            [NotNull] [Frozen] ChargeCommand chargeCommand)
         {
             // Arrange
-            var command = CreateCommand(effectuationDateIsoString, nowIsoString);
+            ArrangeChargeCommand(nowIsoString, effectuationDateIsoString, chargeCommand);
+
+            // var command = CreateCommand(effectuationDateIsoString, nowIsoString);
             var configuration = CreateRuleConfiguration(startOfOccurrence, endOfOccurrence);
             var zonedDateTimeService = CreateLocalDateTimeService(timeZoneId);
 
             // Act (implicit)
-            var sut = new StartDateVr209ValidationRule(command, configuration, zonedDateTimeService);
+            var sut = new StartDateVr209ValidationRule(chargeCommand, configuration, zonedDateTimeService);
 
             // Assert
             Assert.Equal(expected, sut.IsValid);
+        }
+
+        private static void ArrangeChargeCommand(
+            string nowIsoString,
+            string effectuationDateIsoString,
+            [NotNull] ChargeCommand chargeCommand)
+        {
+            chargeCommand.RequestDate = InstantPattern.General.Parse(nowIsoString).Value;
+            chargeCommand.MktActivityRecord = new MktActivityRecord
+            {
+                ValidityStartDate = InstantPattern.General.Parse(effectuationDateIsoString).Value,
+            };
         }
 
         private static ZonedDateTimeService CreateLocalDateTimeService(string timeZoneId)
