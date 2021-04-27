@@ -12,13 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Diagnostics.CodeAnalysis;
 using AutoFixture.Xunit2;
 using GreenEnergyHub.Charges.Application.Validation.BusinessValidation.Rules;
 using GreenEnergyHub.Charges.Core;
 using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
 using GreenEnergyHub.Iso8601;
-using JetBrains.Annotations;
 using Moq;
 using NodaTime;
 using NodaTime.Text;
@@ -46,8 +46,6 @@ namespace GreenEnergyHub.Charges.Tests.Application.Validation.BusinessValidation
         {
             // Arrange
             ArrangeChargeCommand(nowIsoString, effectuationDateIsoString, chargeCommand);
-
-            // var command = CreateCommand(effectuationDateIsoString, nowIsoString);
             var configuration = CreateRuleConfiguration(startOfOccurrence, endOfOccurrence);
             var zonedDateTimeService = CreateLocalDateTimeService(timeZoneId);
 
@@ -61,7 +59,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Validation.BusinessValidation
         private static void ArrangeChargeCommand(
             string nowIsoString,
             string effectuationDateIsoString,
-            [NotNull] ChargeCommand chargeCommand)
+            ChargeCommand chargeCommand)
         {
             chargeCommand.RequestDate = InstantPattern.General.Parse(nowIsoString).Value;
             chargeCommand.MktActivityRecord = new MktActivityRecord
@@ -83,18 +81,6 @@ namespace GreenEnergyHub.Charges.Tests.Application.Validation.BusinessValidation
             var configuration =
                 new StartDateVr209ValidationRuleConfiguration(new Interval<int>(startOfOccurrence, endOfOccurrence));
             return configuration;
-        }
-
-        private static ChargeCommand CreateCommand(string effectuationDateIsoString, string nowIsoString)
-        {
-            return new ChargeCommand
-            {
-                RequestDate = InstantPattern.General.Parse(nowIsoString).Value,
-                MktActivityRecord = new MktActivityRecord
-                {
-                    ValidityStartDate = InstantPattern.General.Parse(effectuationDateIsoString).Value,
-                },
-            };
         }
     }
 }
