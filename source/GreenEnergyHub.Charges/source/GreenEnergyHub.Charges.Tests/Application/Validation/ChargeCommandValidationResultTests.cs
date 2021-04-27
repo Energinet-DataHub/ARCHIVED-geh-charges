@@ -16,6 +16,7 @@ using System;
 using System.Collections.Generic;
 using GreenEnergyHub.Charges.Application.Validation;
 using GreenEnergyHub.Charges.Application.Validation.BusinessValidation;
+using GreenEnergyHub.Charges.Application.Validation.BusinessValidation.Rules;
 using Xunit;
 
 namespace GreenEnergyHub.Charges.Tests.Application.Validation
@@ -47,12 +48,12 @@ namespace GreenEnergyHub.Charges.Tests.Application.Validation
 
         private static List<IBusinessValidationRule> CreateValidRules()
         {
-            return new () { new BusinessValidationRule(true) };
+            return new () { new BusinessValidationRule(true, ValidationRule.TimeLimitsNotFollowed) };
         }
 
         private static List<IBusinessValidationRule> CreateInvalidRules()
         {
-            return new () { new BusinessValidationRule(false) };
+            return new () { new BusinessValidationRule(false, ValidationRule.TimeLimitsNotFollowed) };
         }
     }
 }

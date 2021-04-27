@@ -39,6 +39,8 @@ namespace GreenEnergyHub.Charges.Application.Validation.BusinessValidation.Rules
 
         public bool IsValid => _validityStartDate >= _periodStart && _validityStartDate < _periodEnd;
 
+        public ValidationRule Rule => ValidationRule.TimeLimitsNotFollowed;
+
         private static Instant CalculatePeriodPoint(
             int numberOfDays,
             IZonedDateTimeService zonedDateTimeService,
