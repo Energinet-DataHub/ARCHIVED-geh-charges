@@ -20,7 +20,7 @@ namespace GreenEnergyHub.Charges.Application.Validation.InputValidation.Validati
 {
     public class Vr009 : PropertyRule<ProcessType>
     {
-        protected override string Code => "VR009";
+        protected override string Code => "ProcessIsMandatory";
 
         protected override bool IsValid(ProcessType processType, PropertyValidatorContext context)
         {

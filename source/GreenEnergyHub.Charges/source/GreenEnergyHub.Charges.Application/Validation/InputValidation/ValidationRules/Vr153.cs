@@ -20,7 +20,7 @@ namespace GreenEnergyHub.Charges.Application.Validation.InputValidation.Validati
 {
     public class Vr153 : PropertyRule<string?>
     {
-        protected override string Code => "VR153";
+        protected override string Code => "RecipientIsMandatory";
 
         protected override bool IsValid(string? marketParticipantMrId, PropertyValidatorContext context)
         {

@@ -5,8 +5,8 @@
         TimeLimitsNotFollowed, // VR209
         ChangingVATindicationIsNotAllowed, //VR630
         ChangingTaxTariffsIsNotAllowed, // VRXYZ
-        Vr009,
-        Vr150,
-        Vr153,
+        ProcessIsMandatory, //VR009
+        SenderIsMandatory, // VR150
+        RecipientIsMandatory, // VR153
     }
 }
