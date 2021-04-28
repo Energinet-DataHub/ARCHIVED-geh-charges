@@ -7,7 +7,7 @@ subscription, fee and tariff links_.
 
 ## Process flow
 
-The following process flow depicts the different paths a change of fee price list can take through the domain.
+The following process flow depicts the different paths a change of charge price list can take through the domain.
 It also shows the micro services involved along with the activities they perform.
 
 ![Process flow](.././images/ChangeOfChargePriceListProcessFlow.png)
