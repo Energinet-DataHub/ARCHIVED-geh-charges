@@ -20,7 +20,7 @@ These are the business processes maintained by this domain.
 
 ## Architecture
 
-The architechture diagram below illustrates both current state of the Charges domain as well as future work, last-mentioned being illustrated by grey arrows and components with lowered opacity.
+The architecture diagram below illustrates both current state of the Charges domain as well as future work, last-mentioned being illustrated by grey arrows and components with lowered opacity.
 
 ![design](ARCHITECTURE.png)
 
