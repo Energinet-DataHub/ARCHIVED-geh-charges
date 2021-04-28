@@ -17,19 +17,19 @@ using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
 
 namespace GreenEnergyHub.Charges.Application.Validation.BusinessValidation.Rules
 {
-    public class VatPayerMustNotChangeInUpdateRule : IBusinessValidationRule
+    public class ChangingTariffTaxValueNotAllowedRule : IBusinessValidationRule
     {
         private readonly ChargeCommand _command;
         private readonly Charge _charge;
 
-        public VatPayerMustNotChangeInUpdateRule(ChargeCommand command, Charge charge)
+        public ChangingTariffTaxValueNotAllowedRule(ChargeCommand command, Charge charge)
         {
             _command = command;
             _charge = charge;
         }
 
-        public bool IsValid => _command!.MktActivityRecord!.ChargeType!.VatPayer == _charge!.MktActivityRecord!.ChargeType!.VatPayer;
+        public ValidationRule Rule => ValidationRule.ChangingTariffTaxValueNotAllowed;
 
-        public ValidationRule Rule => ValidationRule.ChangingVATindicationIsNotAllowed;
+        public bool IsValid => _command!.MktActivityRecord!.ChargeType!.TaxIndicator == _charge!.MktActivityRecord!.ChargeType!.TaxIndicator;
     }
 }

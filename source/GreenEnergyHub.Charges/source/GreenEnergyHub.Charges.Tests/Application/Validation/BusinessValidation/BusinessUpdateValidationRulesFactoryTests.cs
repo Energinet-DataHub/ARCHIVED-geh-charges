@@ -44,8 +44,8 @@ namespace GreenEnergyHub.Charges.Tests.Application.Validation.BusinessValidation
 
             var expectedRules = new HashSet<Type>
             {
-                typeof(VatPayerMustNotChangeInUpdateRule),
-                typeof(TaxIndicatorMustNotChangeInUpdateRule),
+                typeof(ChangingTariffVatValueNotAllowedRule),
+                typeof(ChangingTariffTaxValueNotAllowedRule),
                 typeof(StartDateVr209ValidationRule),
             };
 
