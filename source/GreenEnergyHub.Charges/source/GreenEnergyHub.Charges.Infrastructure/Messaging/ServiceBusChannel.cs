@@ -20,6 +20,13 @@ namespace GreenEnergyHub.Charges.Infrastructure.Messaging
 {
     public class ServiceBusChannel : Channel
     {
+        private ICorrelationContext _correlationContext;
+
+        public ServiceBusChannel(ICorrelationContext correlationContext)
+        {
+            _correlationContext = correlationContext;
+        }
+
         /// <summary>
         /// Write the <paramref name="data"/> to the channel
         /// </summary>
