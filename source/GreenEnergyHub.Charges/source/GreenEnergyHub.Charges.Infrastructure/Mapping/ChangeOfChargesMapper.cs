@@ -54,7 +54,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Mapping
                 ResolutionType = resolutionType,
                 StartDate = chargeCommand.MktActivityRecord.ValidityStartDate.ToUnixTimeTicks(),
                 EndDate = chargeCommand.MktActivityRecord.ValidityEndDate?.ToUnixTimeTicks(),
-                Status = (int)chargeCommand.MktActivityRecord.Status,
+                Status = (byte)chargeCommand.MktActivityRecord.Status,
                 TaxIndicator = chargeCommand.MktActivityRecord.ChargeType.TaxIndicator,
                 TransparentInvoicing = chargeCommand.MktActivityRecord.ChargeType.TransparentInvoicing,
                 VatPayer = vatPayerType,

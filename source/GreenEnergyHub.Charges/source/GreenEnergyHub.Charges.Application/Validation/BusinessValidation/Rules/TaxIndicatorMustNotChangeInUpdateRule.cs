@@ -28,8 +28,8 @@ namespace GreenEnergyHub.Charges.Application.Validation.BusinessValidation.Rules
             _charge = charge;
         }
 
-        public bool IsValid => _command!.MktActivityRecord!.ChargeType!.TaxIndicator != _charge!.MktActivityRecord!.ChargeType!.TaxIndicator;
-
         public ValidationRule Rule => ValidationRule.ChangingTaxTariffsIsNotAllowed;
+
+        public bool IsValid => _command!.MktActivityRecord!.ChargeType!.TaxIndicator == _charge!.MktActivityRecord!.ChargeType!.TaxIndicator;
     }
 }

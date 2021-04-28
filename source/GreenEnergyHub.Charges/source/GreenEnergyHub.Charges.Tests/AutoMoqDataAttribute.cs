@@ -12,24 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using GreenEnergyHub.Charges.Domain.Messages;
-using NodaTime;
+using AutoFixture;
+using AutoFixture.AutoMoq;
+using AutoFixture.Xunit2;
 
-namespace GreenEnergyHub.Charges.Domain.Events.Local
+namespace GreenEnergyHub.Charges.Tests
 {
-    public abstract class InternalEventBase : MessageBase, IInternalEvent
+    public class AutoMoqDataAttribute : AutoDataAttribute
     {
-        protected InternalEventBase(Instant publishedTime, string correlationId)
+        public AutoMoqDataAttribute()
+            : base(() => new Fixture().Customize(new AutoMoqCustomization()))
         {
-            CorrelationId = correlationId;
-            PublishedTime = publishedTime;
-            Filter = GetType().Name;
         }
-
-        public Instant PublishedTime { get; }
-
-        public string CorrelationId { get; }
-
-        public string Filter { get; }
     }
 }

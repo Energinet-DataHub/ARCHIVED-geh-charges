@@ -45,7 +45,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Validation
         [InlineAutoDomainData]
         public async Task ValidateAsync_WhenInputValidationSucceedsAndBusinessValidationFails_ReturnsInvalid(
             [NotNull] [Frozen] Mock<IChangeOfChargeTransactionInputValidator> inputValidator,
-            [NotNull][Frozen] Mock<IChargeCommandBusinessValidator> businessValidator,
+            [NotNull] [Frozen] Mock<IChargeCommandBusinessValidator> businessValidator,
             [NotNull] ChargeCommandValidator sut,
             ChargeCommand anyCommand)
         {
@@ -64,7 +64,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Validation
         [InlineAutoDomainData]
         public async Task ValidateAsync_WhenInputValidationSucceedsAndBusinessValidationSucceeds_ReturnsValid(
             [NotNull] [Frozen] Mock<IChangeOfChargeTransactionInputValidator> inputValidator,
-            [NotNull][Frozen] Mock<IChargeCommandBusinessValidator> businessValidator,
+            [NotNull] [Frozen] Mock<IChargeCommandBusinessValidator> businessValidator,
             [NotNull] ChargeCommandValidator sut,
             ChargeCommand anyCommand)
         {

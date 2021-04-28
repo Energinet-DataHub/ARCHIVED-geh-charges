@@ -12,24 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using GreenEnergyHub.Charges.Domain.Messages;
-using NodaTime;
+using GreenEnergyHub.Messaging.MessageTypes.Common;
 
-namespace GreenEnergyHub.Charges.Domain.Events.Local
+namespace GreenEnergyHub.Charges.Domain.Messages
 {
-    public abstract class InternalEventBase : MessageBase, IInternalEvent
+    public abstract class MessageBase : IMessage
     {
-        protected InternalEventBase(Instant publishedTime, string correlationId)
+        protected MessageBase()
         {
-            CorrelationId = correlationId;
-            PublishedTime = publishedTime;
-            Filter = GetType().Name;
+            Transaction = Transaction.NewTransaction();
         }
 
-        public Instant PublishedTime { get; }
-
-        public string CorrelationId { get; }
-
-        public string Filter { get; }
+        public Transaction Transaction { get; set; }
     }
 }

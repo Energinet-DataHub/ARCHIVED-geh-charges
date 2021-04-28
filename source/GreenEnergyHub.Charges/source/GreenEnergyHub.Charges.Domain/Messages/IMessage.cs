@@ -12,24 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using GreenEnergyHub.Charges.Domain.Messages;
-using NodaTime;
+using GreenEnergyHub.Messaging.Transport;
 
-namespace GreenEnergyHub.Charges.Domain.Events.Local
+namespace GreenEnergyHub.Charges.Domain.Messages
 {
-    public abstract class InternalEventBase : MessageBase, IInternalEvent
+    /// <summary>
+    /// Interface for messages exchanged in the charge domain
+    /// </summary>
+    public interface IMessage : IOutboundMessage, IInboundMessage
     {
-        protected InternalEventBase(Instant publishedTime, string correlationId)
-        {
-            CorrelationId = correlationId;
-            PublishedTime = publishedTime;
-            Filter = GetType().Name;
-        }
-
-        public Instant PublishedTime { get; }
-
-        public string CorrelationId { get; }
-
-        public string Filter { get; }
     }
 }
