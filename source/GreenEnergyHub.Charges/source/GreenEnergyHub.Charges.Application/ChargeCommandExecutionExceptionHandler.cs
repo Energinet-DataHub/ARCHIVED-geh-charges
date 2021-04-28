@@ -20,12 +20,12 @@ using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
 
 namespace GreenEnergyHub.Charges.Application
 {
-    public class ExecutionExceptionHandler : IExecutionExceptionHandler
+    public class ChargeCommandExecutionExceptionHandler : IChargeCommandExecutionExceptionHandler
     {
         private readonly IChargeCommandRejectedEventFactory _chargeCommandRejectedEventFactory;
         private readonly IInternalEventPublisher _internalEventPublisher;
 
-        public ExecutionExceptionHandler(
+        public ChargeCommandExecutionExceptionHandler(
             IChargeCommandRejectedEventFactory chargeCommandRejectedEventFactory,
             IInternalEventPublisher internalEventPublisher)
         {
@@ -49,6 +49,29 @@ namespace GreenEnergyHub.Charges.Application
                 await _internalEventPublisher.PublishAsync(internalEvent).ConfigureAwait(false);
                 throw;
             }
+        }
+
+        public async Task<TResult> ExecuteChargeCommandAsync<TResult>(
+            [NotNull] Func<Task<TResult>> func,
+            [NotNull] ChargeCommand command)
+        {
+            try
+            {
+                return await func().ConfigureAwait(false);
+            }
+            catch (Exception e)
+            {
+                await PublishExceptionAsCommandRejectedEventAsync(command, e).ConfigureAwait(false);
+                throw;
+            }
+        }
+
+        private async Task PublishExceptionAsCommandRejectedEventAsync(ChargeCommand command, Exception e)
+        {
+            var internalEvent = _chargeCommandRejectedEventFactory.CreateEvent(
+                command,
+                e);
+            await _internalEventPublisher.PublishAsync(internalEvent).ConfigureAwait(false);
         }
     }
 }

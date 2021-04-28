@@ -37,7 +37,7 @@ namespace GreenEnergyHub.Charges.Application.Validation.InputValidation
             var result = await _inputValidationRuleEngine.ValidateAsync(chargeCommand).ConfigureAwait(false);
 
             // Since we have refactored the former validation result, now both input and business validation uses
-            // the same model. But one works with rule types and the other works with error codes.
+            // the same model. But one works with rule types and the other works with codes.
             // This is a temp fix to address this issue.
             var validationRules = result.Select(r => new BusinessValidationRule(
                 false,

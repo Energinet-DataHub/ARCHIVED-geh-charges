@@ -48,12 +48,11 @@ namespace GreenEnergyHub.Charges.Infrastructure.Repositories
 
         public async Task<bool> CheckIfChargeExistsAsync(string mrid, string chargeTypeOwnerMRid)
         {
-            var x = await _chargesDatabaseContext.Charge
+            return await _chargesDatabaseContext.Charge
                 .Include(x => x.ChargeTypeOwner)
                 .AnyAsync(x => x.MRid == mrid &&
                                         x.ChargeTypeOwner != null &&
                                         x.ChargeTypeOwner.MRid == chargeTypeOwnerMRid).ConfigureAwait(false);
-            return x;
         }
 
         public async Task StoreChargeAsync(Charge newCharge)

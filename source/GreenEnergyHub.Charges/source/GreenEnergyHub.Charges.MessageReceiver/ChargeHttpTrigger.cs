@@ -19,6 +19,7 @@ using GreenEnergyHub.Charges.Application;
 using GreenEnergyHub.Charges.Application.ChangeOfCharges;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Fee;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Message;
+using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Result;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Tariff;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
 using GreenEnergyHub.Json;
@@ -35,16 +36,16 @@ namespace GreenEnergyHub.Charges.MessageReceiver
         private const string FunctionName = "ChargeHttpTrigger";
         private readonly IJsonSerializer _jsonDeserializer;
         private readonly IChangeOfChargesMessageHandler _changeOfChargesMessageHandler;
-        private readonly IExecutionExceptionHandler _executionExceptionHandler;
+        private readonly IChargeCommandExecutionExceptionHandler _chargeCommandExecutionExceptionHandler;
 
         public ChargeHttpTrigger(
             IJsonSerializer jsonDeserializer,
             IChangeOfChargesMessageHandler changeOfChargesMessageHandler,
-            IExecutionExceptionHandler executionExceptionHandler)
+            IChargeCommandExecutionExceptionHandler chargeCommandExecutionExceptionHandler)
         {
             _jsonDeserializer = jsonDeserializer;
             _changeOfChargesMessageHandler = changeOfChargesMessageHandler;
-            _executionExceptionHandler = executionExceptionHandler;
+            _chargeCommandExecutionExceptionHandler = chargeCommandExecutionExceptionHandler;
         }
 
         [FunctionName(FunctionName)]
@@ -57,11 +58,11 @@ namespace GreenEnergyHub.Charges.MessageReceiver
             log.LogInformation("Function {FunctionName} started to process a request", FunctionName);
             var message = await GetChangeOfChargesMessageAsync(_jsonDeserializer, req, context).ConfigureAwait(false);
 
-            await _executionExceptionHandler.ExecuteChargeCommandAsync(
+            var messageResult = await _chargeCommandExecutionExceptionHandler.ExecuteChargeCommandAsync(
                     () => _changeOfChargesMessageHandler.HandleAsync(message), message.Transactions.First())
                 .ConfigureAwait(false);
 
-            return new OkObjectResult(true);
+            return new OkObjectResult(messageResult);
         }
 
         private static ChargeCommand GetCommandFromChangeOfChargeTransaction(ChargeCommand command)
