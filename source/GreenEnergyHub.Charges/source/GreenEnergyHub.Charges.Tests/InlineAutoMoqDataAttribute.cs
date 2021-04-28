@@ -12,14 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Collections.Generic;
+using AutoFixture.Xunit2;
 
-namespace GreenEnergyHub.Charges.Application.Validation.BusinessValidation
+namespace GreenEnergyHub.Charges.Tests
 {
-    public interface IBusinessValidationRuleSet
+    public class InlineAutoMoqDataAttribute : InlineAutoDataAttribute
     {
-        IReadOnlyCollection<IBusinessValidationRule> GetRules();
-
-        ChargeCommandValidationResult Validate();
+        public InlineAutoMoqDataAttribute(params object[] objects)
+            : base(new AutoMoqDataAttribute(), objects) { }
     }
 }

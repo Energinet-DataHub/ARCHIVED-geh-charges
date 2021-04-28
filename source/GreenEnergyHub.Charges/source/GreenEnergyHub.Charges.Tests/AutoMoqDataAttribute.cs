@@ -12,18 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace GreenEnergyHub.Charges.Domain
+using AutoFixture;
+using AutoFixture.AutoMoq;
+using AutoFixture.Xunit2;
+
+namespace GreenEnergyHub.Charges.Tests
 {
-    public class Interval<T>
+    public class AutoMoqDataAttribute : AutoDataAttribute
     {
-        public Interval(T start, T end)
+        public AutoMoqDataAttribute()
+            : base(() => new Fixture().Customize(new AutoMoqCustomization()))
         {
-            Start = start;
-            End = end;
         }
-
-        public T Start { get; set; }
-
-        public T End { get; set; }
     }
 }

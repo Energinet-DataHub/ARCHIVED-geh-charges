@@ -12,14 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Collections.Generic;
-
-namespace GreenEnergyHub.Charges.Application.Validation.BusinessValidation
+namespace GreenEnergyHub.Charges.Core
 {
-    public interface IBusinessValidationRuleSet
+    public class Interval<T>
     {
-        IReadOnlyCollection<IBusinessValidationRule> GetRules();
+        public Interval(T start, T end)
+        {
+            Start = start;
+            End = end;
+        }
 
-        ChargeCommandValidationResult Validate();
+        public T Start { get; set; }
+
+        public T End { get; set; }
     }
 }

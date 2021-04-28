@@ -12,14 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Collections.Generic;
-
-namespace GreenEnergyHub.Charges.Application.Validation.BusinessValidation
+namespace GreenEnergyHub.Charges.Core.DateTime
 {
-    public interface IBusinessValidationRuleSet
+    public enum ResolutionStrategy
     {
-        IReadOnlyCollection<IBusinessValidationRule> GetRules();
-
-        ChargeCommandValidationResult Validate();
+        Leniently,
     }
 }
