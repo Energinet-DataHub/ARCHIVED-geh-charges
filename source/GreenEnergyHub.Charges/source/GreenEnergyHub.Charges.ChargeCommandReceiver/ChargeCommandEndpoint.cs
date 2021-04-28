@@ -25,16 +25,13 @@ namespace GreenEnergyHub.Charges.ChargeCommandReceiver
         private const string FunctionName = nameof(ChargeCommandEndpoint);
         private readonly IJsonSerializer _jsonDeserializer;
         private readonly IChargeCommandHandler _chargeCommandHandler;
-        private readonly IChargeCommandExecutionExceptionHandler _chargeCommandExecutionExceptionHandler;
 
         public ChargeCommandEndpoint(
             IJsonSerializer jsonDeserializer,
-            IChargeCommandHandler chargeCommandHandler,
-            IChargeCommandExecutionExceptionHandler chargeCommandExecutionExceptionHandler)
+            IChargeCommandHandler chargeCommandHandler)
         {
             _jsonDeserializer = jsonDeserializer;
             _chargeCommandHandler = chargeCommandHandler;
-            _chargeCommandExecutionExceptionHandler = chargeCommandExecutionExceptionHandler;
         }
 
         [FunctionName(FunctionName)]
@@ -49,9 +46,7 @@ namespace GreenEnergyHub.Charges.ChargeCommandReceiver
             var jsonSerializedQueueItem = System.Text.Encoding.UTF8.GetString(message);
             var serviceBusMessage = _jsonDeserializer.Deserialize<ServiceBusMessageWrapper>(jsonSerializedQueueItem);
             var transaction = serviceBusMessage.Command;
-            await _chargeCommandExecutionExceptionHandler
-                .ExecuteChargeCommandAsync(() => _chargeCommandHandler.HandleAsync(transaction), transaction)
-                .ConfigureAwait(false);
+            await _chargeCommandHandler.HandleAsync(transaction).ConfigureAwait(false);
 
             log.LogDebug("Received event with charge type mRID '{mRID}'", transaction.ChargeTypeMRid);
         }

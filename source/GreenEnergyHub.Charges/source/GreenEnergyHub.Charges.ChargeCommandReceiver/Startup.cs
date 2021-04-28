@@ -51,7 +51,6 @@ namespace GreenEnergyHub.Charges.ChargeCommandReceiver
             builder.Services.AddScoped(typeof(IClock), _ => SystemClock.Instance);
             builder.Services.AddScoped<IChargeCommandRejectedEventFactory, ChargeCommandRejectedEventFactory>();
             builder.Services.AddScoped<IInternalEventPublisher, InternalEventPublisher>();
-            builder.Services.AddScoped<IChargeCommandExecutionExceptionHandler, ChargeCommandExecutionExceptionHandler>();
             builder.Services.AddScoped<IChangeOfChargeTransactionInputValidator, ChangeOfChargeTransactionInputValidator>();
             builder.Services.AddScoped<IChangeOfChargesTransactionHandler, ChangeOfChargesTransactionHandler>();
             builder.Services

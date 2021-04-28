@@ -32,7 +32,6 @@ namespace GreenEnergyHub.Charges.MessageReceiver
         {
             builder.Services.AddScoped(typeof(IClock), _ => SystemClock.Instance);
             builder.Services.AddSingleton<IJsonSerializer, JsonSerializer>();
-            builder.Services.AddScoped<IChargeCommandExecutionExceptionHandler, ChargeCommandExecutionExceptionHandler>();
             builder.Services.AddScoped<IChangeOfChargesMessageHandler, ChangeOfChargesMessageHandler>();
             builder.Services.AddScoped<IChangeOfChargesTransactionHandler, ChangeOfChargesTransactionHandler>();
             builder.Services
