@@ -12,16 +12,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 module "azfun_charges_charge_command_receiver" {
-  source                                    = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//function-app?ref=1.2.0"
-  name                                      = "azfun-charge-command-receiver-${var.project}-${var.organisation}-${var.environment}"
-  resource_group_name                       = data.azurerm_resource_group.main.name
-  location                                  = data.azurerm_resource_group.main.location
-  storage_account_access_key                = module.azfun_charges_charge_command_receiver_stor.primary_access_key
-  app_service_plan_id                       = module.azfun_charges_charge_command_receiver_plan.id
-  storage_account_name                      = module.azfun_charges_charge_command_receiver_stor.name
-  application_insights_instrumentation_key  = module.appi.instrumentation_key
-  tags                                      = data.azurerm_resource_group.main.tags
-  app_settings                              = {
+  source                                         = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//function-app?ref=1.2.0"
+  name                                           = "azfun-charge-command-receiver-${var.project}-${var.organisation}-${var.environment}"
+  resource_group_name                            = data.azurerm_resource_group.main.name
+  location                                       = data.azurerm_resource_group.main.location
+  storage_account_access_key                     = module.azfun_charges_charge_command_receiver_stor.primary_access_key
+  app_service_plan_id                            = module.azfun_charges_charge_command_receiver_plan.id
+  storage_account_name                           = module.azfun_charges_charge_command_receiver_stor.name
+  application_insights_instrumentation_key       = module.appi.instrumentation_key
+  always_on                                      = true
+  tags                                           = data.azurerm_resource_group.main.tags
+  app_settings                                   = {
     # Region: Default Values
     WEBSITE_ENABLE_SYNC_UPDATE_SITE              = true
     WEBSITE_RUN_FROM_PACKAGE                     = 1
@@ -35,9 +36,8 @@ module "azfun_charges_charge_command_receiver" {
     COMMAND_REJECTED_TOPIC_NAME                  = module.sbt_command_rejected.name
     COMMAND_RECEIVED_SUBSCRIPTION_NAME           = azurerm_servicebus_subscription.sbs_command_received.name
     CHARGE_DB_CONNECTION_STRING                  = local.CHARGE_DB_CONNECTION_STRING
-    LOCAL_TIMEZONENAME                           = local.LOCAL_TIMEZONENAME
-  }
-  dependencies                              = [
+  } 
+  dependencies                                   = [
     module.appi.dependent_on,
     module.azfun_charges_charge_command_receiver_plan.dependent_on,
     module.azfun_charges_charge_command_receiver_stor.dependent_on,
@@ -57,8 +57,8 @@ module "azfun_charges_charge_command_receiver_plan" {
   location            = data.azurerm_resource_group.main.location
   kind                = "FunctionApp"
   sku                 = {
-    tier  = "Free"
-    size  = "F1"
+    tier  = "Basic"
+    size  = "B1"
   }
   tags                = data.azurerm_resource_group.main.tags
 }
