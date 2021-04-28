@@ -36,7 +36,7 @@ module "azfun_charges_charge_command_receiver" {
     COMMAND_REJECTED_TOPIC_NAME                  = module.sbt_command_rejected.name
     COMMAND_RECEIVED_SUBSCRIPTION_NAME           = azurerm_servicebus_subscription.sbs_command_received.name
     CHARGE_DB_CONNECTION_STRING                  = local.CHARGE_DB_CONNECTION_STRING
-	LOCAL_TIMEZONENAME                           = local.LOCAL_TIMEZONENAME
+    LOCAL_TIMEZONENAME                           = local.LOCAL_TIMEZONENAME
   } 
   dependencies                                   = [
     module.appi.dependent_on,
