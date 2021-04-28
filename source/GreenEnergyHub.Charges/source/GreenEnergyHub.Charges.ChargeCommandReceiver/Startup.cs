@@ -64,7 +64,7 @@ namespace GreenEnergyHub.Charges.ChargeCommandReceiver
             builder.Services.AddScoped<IBusinessValidationRulesFactory, BusinessValidationRulesFactory>();
             builder.Services.AddScoped<IChargeCommandBusinessValidator, ChargeCommandBusinessValidator>();
             builder.Services.AddScoped<IChargeCommandValidator, ChargeCommandValidator>();
-            builder.Services.AddScoped<IUpdateRulesConfigurationRepository, UpdateRulesConfigurationRepository>();
+            builder.Services.AddScoped<IRulesConfigurationRepository, RulesConfigurationRepository>();
             builder.Services.AddScoped<IChargeRepository, ChargeRepository>();
             builder.Services.AddScoped<IChargeCommandAcceptedEventFactory, ChargeCommandAcceptedEventFactory>();
 

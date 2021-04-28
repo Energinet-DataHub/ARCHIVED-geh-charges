@@ -27,16 +27,16 @@ namespace GreenEnergyHub.Charges.Application.Validation.BusinessValidation
     public class BusinessUpdateValidationRulesFactory : IBusinessUpdateValidationRulesFactory
     {
         private readonly IChargeRepository _chargeRepository;
-        private readonly IUpdateRulesConfigurationRepository _updateRulesConfigurationRepository;
+        private readonly IRulesConfigurationRepository _rulesConfigurationRepository;
         private readonly IZonedDateTimeService _localDateTimeService;
 
         public BusinessUpdateValidationRulesFactory(
             IChargeRepository chargeRepository,
-            IUpdateRulesConfigurationRepository updateRulesConfigurationRepository,
+            IRulesConfigurationRepository rulesConfigurationRepository,
             IZonedDateTimeService localDateTimeService)
         {
             _chargeRepository = chargeRepository;
-            _updateRulesConfigurationRepository = updateRulesConfigurationRepository;
+            _rulesConfigurationRepository = rulesConfigurationRepository;
             _localDateTimeService = localDateTimeService;
         }
 
@@ -54,14 +54,14 @@ namespace GreenEnergyHub.Charges.Application.Validation.BusinessValidation
                 throw new Exception($"Charge found on MRid: {chargeTypeMRid}, ChargeTypeOwnerMRid: {commandChargeTypeOwnerMRid}");
             }
 
-            var configuration = await _updateRulesConfigurationRepository.GetConfigurationAsync().ConfigureAwait(false);
+            var configuration = await _rulesConfigurationRepository.GetConfigurationAsync().ConfigureAwait(false);
 
             var rules = GetRules(command, configuration, charge);
 
             return BusinessValidationRuleSet.FromRules(rules);
         }
 
-        private List<IBusinessValidationRule> GetRules(ChargeCommand command, UpdateRulesConfiguration configuration, Charge charge)
+        private List<IBusinessValidationRule> GetRules(ChargeCommand command, RulesConfiguration configuration, Charge charge)
         {
             var rules = new List<IBusinessValidationRule>
             {
