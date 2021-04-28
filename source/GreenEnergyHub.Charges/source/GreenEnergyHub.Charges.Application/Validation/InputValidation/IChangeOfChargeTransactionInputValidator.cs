@@ -14,11 +14,9 @@
 
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Application.Validation;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
-using GreenEnergyHub.Queues.ValidationReportDispatcher.Validation;
 
-namespace GreenEnergyHub.Charges.Application.ChangeOfCharges
+namespace GreenEnergyHub.Charges.Application.Validation.InputValidation
 {
     /// <summary>
     /// Contract defining the input validator for change of charges messages.

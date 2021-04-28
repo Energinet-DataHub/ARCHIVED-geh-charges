@@ -21,10 +21,14 @@ namespace GreenEnergyHub.Charges.Application.Validation.BusinessValidation
     public class BusinessValidationRulesFactory : IBusinessValidationRulesFactory
     {
         private readonly IBusinessUpdateValidationRulesFactory _businessUpdateValidationRulesFactory;
+        private readonly IBusinessAdditionValidationRulesFactory _businessAdditionValidationRulesFactory;
 
-        public BusinessValidationRulesFactory(IBusinessUpdateValidationRulesFactory businessUpdateValidationRulesFactory)
+        public BusinessValidationRulesFactory(
+            IBusinessUpdateValidationRulesFactory businessUpdateValidationRulesFactory,
+            IBusinessAdditionValidationRulesFactory businessAdditionValidationRulesFactory)
         {
             _businessUpdateValidationRulesFactory = businessUpdateValidationRulesFactory;
+            _businessAdditionValidationRulesFactory = businessAdditionValidationRulesFactory;
         }
 
         public async Task<IBusinessValidationRuleSet> CreateRulesForChargeCommandAsync(ChargeCommand command)
@@ -33,6 +37,7 @@ namespace GreenEnergyHub.Charges.Application.Validation.BusinessValidation
 
             return command.MktActivityRecord!.Status switch
             {
+                MktActivityRecordStatus.Addition => await _businessAdditionValidationRulesFactory.CreateRulesForAdditionCommandAsync(command).ConfigureAwait(false),
                 MktActivityRecordStatus.Change => await _businessUpdateValidationRulesFactory.CreateRulesForUpdateCommandAsync(command).ConfigureAwait(false),
                 _ => throw new NotImplementedException("Unknown operation"),
             };
