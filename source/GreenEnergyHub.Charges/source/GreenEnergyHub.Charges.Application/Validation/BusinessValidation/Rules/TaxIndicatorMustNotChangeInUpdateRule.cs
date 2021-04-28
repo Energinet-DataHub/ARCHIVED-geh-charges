@@ -12,11 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
 using GreenEnergyHub.Charges.Domain;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
 
-namespace GreenEnergyHub.Charges.Application.Validation.BusinessValidation
+namespace GreenEnergyHub.Charges.Application.Validation.BusinessValidation.Rules
 {
     public class TaxIndicatorMustNotChangeInUpdateRule : IBusinessValidationRule
     {
@@ -29,6 +28,6 @@ namespace GreenEnergyHub.Charges.Application.Validation.BusinessValidation
             _charge = charge;
         }
 
-        public bool IsValid => _command!.MktActivityRecord!.ChargeType!.TaxIndicator != _charge!.MktActivityRecord!.ChargeType!.TaxIndicator;
+        public bool IsValid => _command!.MktActivityRecord!.ChargeType!.TaxIndicator == _charge!.MktActivityRecord!.ChargeType!.TaxIndicator;
     }
 }
