@@ -12,16 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace GreenEnergyHub.Charges.Domain.Events.Local
+using GreenEnergyHub.Messaging.Transport;
+
+namespace GreenEnergyHub.Charges.Domain.Messages
 {
     /// <summary>
-    /// Contract for events.
+    /// Interface for messages exchanged in the charge domain
     /// </summary>
-    public interface ILocalEvent : IEvent
+    public interface IMessage : IOutboundMessage, IInboundMessage
     {
-        /// <summary>
-        /// Servicebus filter
-        /// </summary>
-        public string Filter { get; }
     }
 }

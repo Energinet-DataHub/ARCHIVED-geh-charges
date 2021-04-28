@@ -34,7 +34,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Context.Model
 
         public string? Description { get; set; }
 
-        public int Status { get; set; }
+        public byte Status { get; set; }
 
         public long StartDate { get; set; }
 

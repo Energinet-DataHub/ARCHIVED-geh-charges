@@ -31,6 +31,8 @@ namespace GreenEnergyHub.Charges.Application.Validation.BusinessValidation
             return new BusinessValidationRuleSet(rules);
         }
 
+        public IReadOnlyCollection<IBusinessValidationRule> GetRules() => _rules.AsReadOnly();
+
         public ChargeCommandValidationResult Validate()
         {
             var invalidRules = _rules.Where(r => !r.IsValid).ToList();

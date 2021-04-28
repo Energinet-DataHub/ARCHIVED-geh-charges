@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application.ChangeOfCharges.Repositories;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
@@ -35,33 +36,44 @@ namespace GreenEnergyHub.Charges.Infrastructure.Repositories
             _chargesDatabaseContext = chargesDatabaseContext;
         }
 
-        public async Task<ChargeStorageStatus> StoreChargeAsync(ChargeCommand transaction)
+        public async Task<Charge> GetChargeAsync(string mrid, string chargeTypeOwnerMRid)
         {
-            if (transaction == null) throw new ArgumentNullException(nameof(transaction));
+            var charge = await _chargesDatabaseContext.Charge
+                .Include(x => x.ChargeTypeOwner)
+                .SingleAsync(x => x.MRid == mrid &&
+                                           x.ChargeTypeOwner != null &&
+                                           x.ChargeTypeOwner.MRid == chargeTypeOwnerMRid).ConfigureAwait(false);
 
-            var chargeType = await GetChargeTypeAsync(transaction).ConfigureAwait(false);
-            if (chargeType == null) return ChargeStorageStatus.CreateFailure($"No charge type for {transaction.Type}");
+            return ChangeOfChargesMapper.MapChargeToChangeOfChargesMessage(charge);
+        }
 
-            var resolutionType = await GetResolutionTypeAsync(transaction).ConfigureAwait(false);
-            if (resolutionType == null) return ChargeStorageStatus.CreateFailure($"No resolution type for {transaction.Period?.Resolution}");
+        public async Task<bool> CheckIfChargeExistsAsync(string mrid, string chargeTypeOwnerMRid)
+        {
+            return await _chargesDatabaseContext.Charge.AnyAsync(x => x.MRid == mrid &&
+                                                                      x.ChargeTypeOwner != null &&
+                                                                      x.ChargeTypeOwner.MRid == chargeTypeOwnerMRid).ConfigureAwait(false);
+        }
 
-            var vatPayerType = await GetVatPayerTypeAsync(transaction).ConfigureAwait(false);
-            if (vatPayerType == null) return ChargeStorageStatus.CreateFailure($"No VAT payer type for {transaction.MktActivityRecord?.ChargeType?.VatPayer}");
+        public async Task StoreChargeAsync(Charge newCharge)
+        {
+            if (newCharge == null) throw new ArgumentNullException(nameof(newCharge));
 
-            var chargeTypeOwnerMRid = await GetChargeTypeOwnerMRidAsync(transaction).ConfigureAwait(false);
-            if (chargeTypeOwnerMRid == null) return ChargeStorageStatus.CreateFailure($"No market participant for {transaction.ChargeTypeOwnerMRid}");
+            var chargeType = await GetChargeTypeAsync(newCharge).ConfigureAwait(false);
+            if (chargeType == null) throw new Exception($"No charge type for {newCharge.Type}");
 
-            var charge = ChangeOfChargesMapper.MapChangeOfChargesTransactionToCharge(transaction, chargeType, chargeTypeOwnerMRid, resolutionType, vatPayerType);
+            var resolutionType = await GetResolutionTypeAsync(newCharge).ConfigureAwait(false);
+            if (resolutionType == null) throw new Exception($"No resolution type for {newCharge.Period?.Resolution}");
+
+            var vatPayerType = await GetVatPayerTypeAsync(newCharge).ConfigureAwait(false);
+            if (vatPayerType == null) throw new Exception($"No VAT payer type for {newCharge.MktActivityRecord?.ChargeType?.VatPayer}");
+
+            var chargeTypeOwnerMRid = await GetChargeTypeOwnerMRidAsync(newCharge).ConfigureAwait(false);
+            if (chargeTypeOwnerMRid == null) throw new Exception($"No market participant for {newCharge.ChargeTypeOwnerMRid}");
+
+            var charge = ChangeOfChargesMapper.MapChangeOfChargesTransactionToCharge(newCharge, chargeType, chargeTypeOwnerMRid, resolutionType, vatPayerType);
 
             await _chargesDatabaseContext.Charge.AddAsync(charge).ConfigureAwait(false);
             await _chargesDatabaseContext.SaveChangesAsync().ConfigureAwait(false);
-            return ChargeStorageStatus.CreateSuccess();
-        }
-
-        public Task<Charge> GetChargeAsync(string? commandMRid, string? commandChargeTypeOwnerMRid)
-        {
-            // OBS: This will soon be fixed in upcoming PR.
-            return Task.FromResult(new Charge());
         }
 
         private async Task<MarketParticipant?> GetChargeTypeOwnerMRidAsync(ChargeCommand chargeMessage)

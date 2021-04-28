@@ -12,21 +12,22 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Domain.Events.Local;
+using NodaTime;
 
-namespace GreenEnergyHub.Charges.Application.ChangeOfCharges
+namespace GreenEnergyHub.Iso8601
 {
     /// <summary>
-    /// Service for publishing events internally in the domain.
+    /// Util functions performing  time duration calculations in accordance to ISO 8601 Durations
     /// </summary>
-    public interface ILocalEventPublisher
+    public interface IIso8601Durations
     {
         /// <summary>
-        /// Publish the local event to the domain.
+        /// Add a time interval consisting of a number of durations
         /// </summary>
-        /// <param name="localEvent"></param>
-        /// <returns>No return value.</returns>
-        Task PublishAsync(ILocalEvent localEvent);
+        /// <param name="startInstant">The start instant for the time interval</param>
+        /// <param name="duration">ISO 8601 duration</param>
+        /// <param name="numberOfDurations">Number of durations to add</param>
+        /// <returns>End time for time interval</returns>
+        Instant AddDuration(Instant startInstant, string duration, int numberOfDurations);
     }
 }

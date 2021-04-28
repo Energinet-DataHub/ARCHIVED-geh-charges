@@ -42,9 +42,9 @@ namespace GreenEnergyHub.Charges.Application.Validation
 
         public static ChargeCommandValidationResult CreateFailure(IList<IBusinessValidationRule> invalidRules)
         {
-            if (invalidRules.Any(r => !r.IsValid))
+            if (invalidRules.Any(r => r.IsValid))
             {
-                throw new ArgumentException("All validation rules must be valid", nameof(invalidRules));
+                throw new ArgumentException("All validation rules must be invalid", nameof(invalidRules));
             }
 
             return new (invalidRules.ToArray());

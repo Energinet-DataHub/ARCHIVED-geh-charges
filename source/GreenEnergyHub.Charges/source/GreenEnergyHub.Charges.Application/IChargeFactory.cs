@@ -12,18 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace GreenEnergyHub.Charges.Domain
+using System.Threading.Tasks;
+using GreenEnergyHub.Charges.Domain;
+using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
+
+namespace GreenEnergyHub.Charges.Application
 {
-    public class Interval<T>
+    public interface IChargeFactory
     {
-        public Interval(T start, T end)
-        {
-            Start = start;
-            End = end;
-        }
-
-        public T Start { get; set; }
-
-        public T End { get; set; }
+        Task<Charge> CreateFromCommandAsync(ChargeCommand command);
     }
 }

@@ -16,6 +16,8 @@ namespace GreenEnergyHub.Charges.Domain
 {
     public static class ChargeCommandType
     {
+        public const string Subscription = "D01";
+        public const string Fee = "D02";
         public const string Tariff = "D03";
     }
 }
