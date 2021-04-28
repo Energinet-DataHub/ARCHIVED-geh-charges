@@ -28,7 +28,7 @@ namespace GreenEnergyHub.Charges.Application.Validation
         {
         }
 
-        private ChargeCommandValidationResult(IEnumerable<IBusinessValidationRule> invalidRules)
+        private ChargeCommandValidationResult(IList<IBusinessValidationRule> invalidRules)
         {
             InvalidRules = invalidRules;
         }

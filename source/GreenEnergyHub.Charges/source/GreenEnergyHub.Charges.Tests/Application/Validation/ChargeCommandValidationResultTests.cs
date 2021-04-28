@@ -14,6 +14,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using GreenEnergyHub.Charges.Application.Validation;
 using GreenEnergyHub.Charges.Application.Validation.BusinessValidation;
 using GreenEnergyHub.Charges.Application.Validation.BusinessValidation.Rules;
@@ -44,6 +45,18 @@ namespace GreenEnergyHub.Charges.Tests.Application.Validation
             var validRules = CreateValidRules();
             Assert.Throws<ArgumentException>(
                 () => ChargeCommandValidationResult.CreateFailure(validRules));
+        }
+
+        [Fact]
+        public void CreateFailure_WhenCreatedWithValidAndInvalidRules_ThrowsArgumentException()
+        {
+            // Arrange
+            var validRules = CreateValidRules();
+            var invalidRules = CreateInvalidRules();
+            var allRules = validRules.Concat(invalidRules).ToList();
+
+            // Act and assert
+            Assert.Throws<ArgumentException>(() => ChargeCommandValidationResult.CreateFailure(allRules));
         }
 
         private static List<IBusinessValidationRule> CreateValidRules()
