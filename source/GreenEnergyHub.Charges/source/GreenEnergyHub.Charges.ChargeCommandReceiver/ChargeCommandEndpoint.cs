@@ -40,9 +40,10 @@ namespace GreenEnergyHub.Charges.ChargeCommandReceiver
             "%COMMAND_RECEIVED_TOPIC_NAME%",
             "%COMMAND_RECEIVED_SUBSCRIPTION_NAME%",
             Connection = "COMMAND_RECEIVED_LISTENER_CONNECTION_STRING")]
-            string jsonSerializedQueueItem,
+            byte[] message,
             ILogger log)
         {
+            var jsonSerializedQueueItem = System.Text.Encoding.UTF8.GetString(message);
             var serviceBusMessage = _jsonDeserializer.Deserialize<ServiceBusMessageWrapper>(jsonSerializedQueueItem);
             var transaction = serviceBusMessage.Command;
 

@@ -13,23 +13,10 @@
 // limitations under the License.
 
 using GreenEnergyHub.Charges.Domain.Messages;
-using NodaTime;
 
-namespace GreenEnergyHub.Charges.Domain.Events.Local
+namespace GreenEnergyHub.Charges.Domain.Command
 {
-    public abstract class InternalEventBase : MessageBase, IInternalEvent
+    public class CommandBase : MessageBase
     {
-        protected InternalEventBase(Instant publishedTime, string correlationId)
-        {
-            CorrelationId = correlationId;
-            PublishedTime = publishedTime;
-            Filter = GetType().Name;
-        }
-
-        public Instant PublishedTime { get; }
-
-        public string CorrelationId { get; }
-
-        public string Filter { get; }
     }
 }
