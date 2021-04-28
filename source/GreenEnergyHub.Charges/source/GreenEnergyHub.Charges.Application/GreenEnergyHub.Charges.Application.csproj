@@ -36,4 +36,8 @@ limitations under the License.
       <PackageReference Include="Azure.Messaging.ServiceBus" Version="7.1.2" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Compile Remove="Validation\BusinessValidation\Rules\ValidationRuleIdentifier.cs" />
+    </ItemGroup>
+
 </Project>

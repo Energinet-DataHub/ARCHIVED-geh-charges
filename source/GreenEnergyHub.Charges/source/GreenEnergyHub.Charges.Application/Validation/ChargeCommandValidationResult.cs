@@ -15,23 +15,22 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using GreenEnergyHub.Charges.Application.Validation.BusinessValidation;
 
 namespace GreenEnergyHub.Charges.Application.Validation
 {
     public class ChargeCommandValidationResult
     {
         private ChargeCommandValidationResult()
-            : this(Array.Empty<IBusinessValidationRule>())
+            : this(Array.Empty<IValidationRule>())
         {
         }
 
-        private ChargeCommandValidationResult(IEnumerable<IBusinessValidationRule> invalidRules)
+        private ChargeCommandValidationResult(IEnumerable<IValidationRule> invalidRules)
         {
             InvalidRules = invalidRules;
         }
 
-        public IEnumerable<IBusinessValidationRule> InvalidRules { get; }
+        public IEnumerable<IValidationRule> InvalidRules { get; }
 
         public bool IsFailed => InvalidRules.Select(r => !r.IsValid).Any();
 
@@ -40,7 +39,7 @@ namespace GreenEnergyHub.Charges.Application.Validation
             return new ();
         }
 
-        public static ChargeCommandValidationResult CreateFailure(IList<IBusinessValidationRule> invalidRules)
+        public static ChargeCommandValidationResult CreateFailure(IList<IValidationRule> invalidRules)
         {
             if (!invalidRules.Any(r => !r.IsValid))
             {

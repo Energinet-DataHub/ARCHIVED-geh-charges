@@ -15,9 +15,9 @@
 using GreenEnergyHub.Charges.Domain;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
 
-namespace GreenEnergyHub.Charges.Application.Validation.BusinessValidation.Rules
+namespace GreenEnergyHub.Charges.Application.Validation.BusinessValidation.ValidationRules
 {
-    public class VatPayerMustNotChangeInUpdateRule : IBusinessValidationRule
+    public class VatPayerMustNotChangeInUpdateRule : IValidationRule
     {
         private readonly ChargeCommand _command;
         private readonly Charge _charge;
@@ -30,6 +30,6 @@ namespace GreenEnergyHub.Charges.Application.Validation.BusinessValidation.Rules
 
         public bool IsValid => _command!.MktActivityRecord!.ChargeType!.VatPayer == _charge!.MktActivityRecord!.ChargeType!.VatPayer;
 
-        public ValidationRule Rule => ValidationRule.ChangingVATindicationIsNotAllowed;
+        public ValidationRuleIdentifier ValidationRuleIdentifier => ValidationRuleIdentifier.ChangingVATindicationIsNotAllowed;
     }
 }

@@ -12,17 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using GreenEnergyHub.Charges.Core;
-
-namespace GreenEnergyHub.Charges.Application.Validation.BusinessValidation.Rules
+namespace GreenEnergyHub.Charges.Application.Validation.BusinessValidation
 {
-    public class StartDateVr209ValidationRuleConfiguration
+    public class ValidationRule : IValidationRule
     {
-        public StartDateVr209ValidationRuleConfiguration(Interval<int> validIntervalFromNowInDays)
+        public ValidationRule(bool isValid, ValidationRuleIdentifier ruleIdentifier)
         {
-            ValidIntervalFromNowInDays = validIntervalFromNowInDays;
+            IsValid = isValid;
+            ValidationRuleIdentifier = ruleIdentifier;
         }
 
-        public Interval<int> ValidIntervalFromNowInDays { get; }
+        public bool IsValid { get; }
+
+        public ValidationRuleIdentifier ValidationRuleIdentifier { get; }
     }
 }

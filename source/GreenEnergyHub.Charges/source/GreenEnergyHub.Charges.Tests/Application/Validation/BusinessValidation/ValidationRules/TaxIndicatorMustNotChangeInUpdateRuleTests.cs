@@ -13,30 +13,31 @@
 // limitations under the License.
 
 using System.Diagnostics.CodeAnalysis;
-using GreenEnergyHub.Charges.Application.Validation.BusinessValidation.Rules;
+using GreenEnergyHub.Charges.Application.Validation.BusinessValidation.ValidationRules;
 using GreenEnergyHub.Charges.Domain;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
 using GreenEnergyHub.TestHelpers;
 using Xunit;
 
-namespace GreenEnergyHub.Charges.Tests.Application.Validation.BusinessValidation.Rules
+namespace GreenEnergyHub.Charges.Tests.Application.Validation.BusinessValidation.ValidationRules
 {
-    public class VatPayerMustNotChangeInUpdateRuleTests
+    public class TaxIndicatorMustNotChangeInUpdateRuleTests
     {
         [Theory]
         [InlineAutoDomainData]
-        public void IsValid_WhenVatPayerInCommandDoesNotMatchCharge_IsFalse([NotNull]ChargeCommand command, [NotNull] Charge charge)
+        public void IsValid_WhenTaxIndicatorInCommandDoesNotMatchCharge_IsFalse([NotNull]ChargeCommand command, [NotNull] Charge charge)
         {
-            var sut = new VatPayerMustNotChangeInUpdateRule(command, charge);
+            command!.MktActivityRecord!.ChargeType!.TaxIndicator = !charge!.MktActivityRecord!.ChargeType!.TaxIndicator;
+            var sut = new TaxIndicatorMustNotChangeInUpdateRule(command, charge);
             Assert.False(sut.IsValid);
         }
 
         [Theory]
         [InlineAutoDomainData]
-        public void IsValid_WhenVatPayerInCommandMatches_IsTrue([NotNull]ChargeCommand command, [NotNull] Charge charge)
+        public void IsValid_WhenTaxIndicatorInCommandMatches_IsTrue([NotNull]ChargeCommand command, [NotNull] Charge charge)
         {
-            command!.MktActivityRecord!.ChargeType!.VatPayer = charge!.MktActivityRecord!.ChargeType!.VatPayer;
-            var sut = new VatPayerMustNotChangeInUpdateRule(command, charge);
+            command!.MktActivityRecord!.ChargeType!.TaxIndicator = charge!.MktActivityRecord!.ChargeType!.TaxIndicator;
+            var sut = new TaxIndicatorMustNotChangeInUpdateRule(command, charge);
             Assert.True(sut.IsValid);
         }
     }

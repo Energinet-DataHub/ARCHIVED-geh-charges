@@ -12,14 +12,25 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using GreenEnergyHub.Charges.Application.Validation.BusinessValidation.Rules;
+using System.Collections.Generic;
 
-namespace GreenEnergyHub.Charges.Application.Validation.BusinessValidation
+namespace GreenEnergyHub.Charges.Application.Validation
 {
-    public interface IBusinessValidationRule
+    /// <summary>
+    /// TODO
+    /// </summary>
+    public interface IValidationRuleSet
     {
-        public bool IsValid { get; }
+        /// <summary>
+        /// TODO
+        /// </summary>
+        /// <returns>TODO 2</returns>
+        IReadOnlyCollection<IValidationRule> GetRules();
 
-        public ValidationRule Rule { get; }
+        /// <summary>
+        /// TODO
+        /// </summary>
+        /// <returns>TODO 2</returns>
+        ChargeCommandValidationResult Validate();
     }
 }

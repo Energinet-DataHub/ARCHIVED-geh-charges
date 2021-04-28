@@ -12,14 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Collections.Generic;
-
-namespace GreenEnergyHub.Charges.Application.Validation.BusinessValidation
+namespace GreenEnergyHub.Charges.Application.Validation
 {
-    public interface IBusinessValidationRuleSet
+    public enum ValidationRuleIdentifier
     {
-        IReadOnlyCollection<IBusinessValidationRule> GetRules();
-
-        ChargeCommandValidationResult Validate();
+        TimeLimitsNotFollowed, // VR209
+        ChangingVATindicationIsNotAllowed, //VR630
+        ChangingTaxTariffsIsNotAllowed, // VRXYZ
+        ProcessIsMandatory, //VR009
+        SenderIsMandatory, // VR150
+        RecipientIsMandatory, // VR153
     }
 }

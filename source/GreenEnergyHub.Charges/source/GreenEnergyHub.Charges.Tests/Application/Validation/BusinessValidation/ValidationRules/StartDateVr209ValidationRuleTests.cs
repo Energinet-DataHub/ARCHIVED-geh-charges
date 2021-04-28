@@ -14,7 +14,7 @@
 
 using System.Diagnostics.CodeAnalysis;
 using AutoFixture.Xunit2;
-using GreenEnergyHub.Charges.Application.Validation.BusinessValidation.Rules;
+using GreenEnergyHub.Charges.Application.Validation.BusinessValidation.ValidationRules;
 using GreenEnergyHub.Charges.Core;
 using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
@@ -24,7 +24,7 @@ using NodaTime;
 using NodaTime.Text;
 using Xunit;
 
-namespace GreenEnergyHub.Charges.Tests.Application.Validation.BusinessValidation.Rules
+namespace GreenEnergyHub.Charges.Tests.Application.Validation.BusinessValidation.ValidationRules
 {
     public class StartDateVr209ValidationRuleTests
     {

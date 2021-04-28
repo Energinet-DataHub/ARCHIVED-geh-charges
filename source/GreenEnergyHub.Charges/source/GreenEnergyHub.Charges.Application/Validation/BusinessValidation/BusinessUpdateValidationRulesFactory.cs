@@ -17,7 +17,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application.ChangeOfCharges.Repositories;
-using GreenEnergyHub.Charges.Application.Validation.BusinessValidation.Rules;
+using GreenEnergyHub.Charges.Application.Validation.BusinessValidation.ValidationRules;
 using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.Domain;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
@@ -40,12 +40,12 @@ namespace GreenEnergyHub.Charges.Application.Validation.BusinessValidation
             _localDateTimeService = localDateTimeService;
         }
 
-        public async Task<IBusinessValidationRuleSet> CreateRulesForUpdateCommandAsync([NotNull] ChargeCommand command)
+        public async Task<IValidationRuleSet> CreateRulesForUpdateCommandAsync([NotNull] ChargeCommand chargeCommand)
         {
-            if (command == null) throw new ArgumentNullException(nameof(command));
+            if (chargeCommand == null) throw new ArgumentNullException(nameof(chargeCommand));
 
-            var chargeTypeMRid = command.ChargeTypeMRid!;
-            var commandChargeTypeOwnerMRid = command.ChargeTypeOwnerMRid!;
+            var chargeTypeMRid = chargeCommand.ChargeTypeMRid!;
+            var commandChargeTypeOwnerMRid = chargeCommand.ChargeTypeOwnerMRid!;
 
             var charge = await _chargeRepository.GetChargeAsync(chargeTypeMRid, commandChargeTypeOwnerMRid).ConfigureAwait(false);
 
@@ -56,14 +56,14 @@ namespace GreenEnergyHub.Charges.Application.Validation.BusinessValidation
 
             var configuration = await _rulesConfigurationRepository.GetConfigurationAsync().ConfigureAwait(false);
 
-            var rules = GetRules(command, configuration, charge);
+            var rules = GetRules(chargeCommand, configuration, charge);
 
-            return BusinessValidationRuleSet.FromRules(rules);
+            return ValidationRuleSet.FromRules(rules);
         }
 
-        private List<IBusinessValidationRule> GetRules(ChargeCommand command, RulesConfiguration configuration, Charge charge)
+        private List<IValidationRule> GetRules(ChargeCommand command, RulesConfiguration configuration, Charge charge)
         {
-            var rules = new List<IBusinessValidationRule>
+            var rules = new List<IValidationRule>
             {
                 new StartDateVr209ValidationRule(
                     command,
@@ -80,7 +80,7 @@ namespace GreenEnergyHub.Charges.Application.Validation.BusinessValidation
         }
 
         private static void AddTariffOnlyRules(
-            List<IBusinessValidationRule> rules,
+            List<IValidationRule> rules,
             ChargeCommand command,
             Charge charge)
         {

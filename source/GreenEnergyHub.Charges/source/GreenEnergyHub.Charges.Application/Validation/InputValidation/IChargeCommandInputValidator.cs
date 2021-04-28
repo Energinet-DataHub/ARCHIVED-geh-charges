@@ -12,25 +12,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using GreenEnergyHub.Charges.Application.InputValidation.ValidationRules;
-using GreenEnergyHub.Charges.Application.Validation.InputValidation.ValidationRules;
+using System.Diagnostics.CodeAnalysis;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
-using GreenEnergyHub.Messaging.Validation;
 
 namespace GreenEnergyHub.Charges.Application.Validation.InputValidation
 {
-    public class ChangeOfChargesRules : RuleCollection<ChargeCommand>
+    /// <summary>
+    /// Contract defining the input validator for change of charges messages.
+    /// </summary>
+    public interface IChargeCommandInputValidator
     {
-        public ChangeOfChargesRules()
-        {
-            RuleFor(input => input.MarketDocument!.ProcessType)
-                .PropertyRule<Vr009>();
-
-            RuleFor(input => input.MarketDocument!.SenderMarketParticipant!.MRid)
-                .PropertyRule<Vr150>();
-
-            RuleFor(input => input.MarketDocument!.ReceiverMarketParticipant!.MRid)
-                .PropertyRule<Vr153>();
-        }
+        /// <summary>
+        /// Input validates a <see cref="ChargeCommand"/>.
+        /// </summary>
+        /// <param name="chargeCommand">The message to validate.</param>
+        /// <returns>The validation result.</returns>
+        ChargeCommandValidationResult Validate([NotNull] ChargeCommand chargeCommand);
     }
 }

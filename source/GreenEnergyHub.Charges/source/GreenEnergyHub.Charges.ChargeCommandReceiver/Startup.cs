@@ -52,7 +52,7 @@ namespace GreenEnergyHub.Charges.ChargeCommandReceiver
             builder.Services.AddScoped<IChargeCommandRejectedEventFactory, ChargeCommandRejectedEventFactory>();
             builder.Services.AddScoped<IInternalEventPublisher, InternalEventPublisher>();
             builder.Services.AddScoped<IChargeCommandExecutionExceptionHandler, ChargeCommandExecutionExceptionHandler>();
-            builder.Services.AddScoped<IChangeOfChargeTransactionInputValidator, ChangeOfChargeTransactionInputValidator>();
+            builder.Services.AddScoped<IChargeCommandInputValidator, ChargeCommandInputValidator>();
             builder.Services.AddScoped<IChangeOfChargesTransactionHandler, ChangeOfChargesTransactionHandler>();
             builder.Services
                 .AddScoped<IInternalEventCommunicationConfiguration, InternalEventCommunicationConfiguration>();
@@ -62,6 +62,7 @@ namespace GreenEnergyHub.Charges.ChargeCommandReceiver
             builder.Services.AddScoped<IBusinessAdditionValidationRulesFactory, BusinessAdditionValidationRulesFactory>();
             builder.Services.AddScoped<IBusinessUpdateValidationRulesFactory, BusinessUpdateValidationRulesFactory>();
             builder.Services.AddScoped<IBusinessValidationRulesFactory, BusinessValidationRulesFactory>();
+            builder.Services.AddScoped<IInputValidationRulesFactory, InputValidationRulesFactory>();
             builder.Services.AddScoped<IChargeCommandBusinessValidator, ChargeCommandBusinessValidator>();
             builder.Services.AddScoped<IChargeCommandValidator, ChargeCommandValidator>();
             builder.Services.AddScoped<IRulesConfigurationRepository, RulesConfigurationRepository>();
