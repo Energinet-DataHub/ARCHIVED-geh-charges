@@ -17,11 +17,11 @@ using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
 
 namespace GreenEnergyHub.Charges.Application.Validation.InputValidation.ValidationRules
 {
-    public class RecipientIsMandatoryTypeVr009ValidationRule : IValidationRule
+    public class RecipientIsMandatoryTypeVr153ValidationRule : IValidationRule
     {
         private readonly ChargeCommand _chargeCommand;
 
-        public RecipientIsMandatoryTypeVr009ValidationRule([NotNull] ChargeCommand chargeCommand)
+        public RecipientIsMandatoryTypeVr153ValidationRule([NotNull] ChargeCommand chargeCommand)
         {
             _chargeCommand = chargeCommand;
         }
