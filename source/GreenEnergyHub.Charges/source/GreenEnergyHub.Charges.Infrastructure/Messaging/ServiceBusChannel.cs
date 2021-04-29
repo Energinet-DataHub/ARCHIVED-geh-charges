@@ -19,10 +19,16 @@ using GreenEnergyHub.Messaging.Transport;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Messaging
 {
+    /// <summary>
+    /// Implementation of a channel sending information over the Azure Service Bus
+    /// A new channel should be used for each queue or topic you wish to send to
+    /// Each channel should be used as scoped context for dependency injection
+    /// while ServiceBusSender and the ServiceBusClient used to make the sender should be singletons
+    /// </summary>
     public class ServiceBusChannel : Channel
     {
-        private ServiceBusSender _serviceBusSender;
-        private ICorrelationContext _correlationContext;
+        private readonly ServiceBusSender _serviceBusSender;
+        private readonly ICorrelationContext _correlationContext;
 
         public ServiceBusChannel(ServiceBusSender serviceBusSender, ICorrelationContext correlationContext)
         {
@@ -35,9 +41,24 @@ namespace GreenEnergyHub.Charges.Infrastructure.Messaging
         /// </summary>
         /// <param name="data">data to write</param>
         /// <param name="cancellationToken">cancellation token</param>
-        protected override Task WriteAsync(byte[] data, CancellationToken cancellationToken = default)
+        protected override async Task WriteAsync(byte[] data, CancellationToken cancellationToken = default)
         {
-            return Task.FromResult(Task.CompletedTask);
+            var message = GetServiceBusMessage(data);
+
+            await _serviceBusSender.SendMessageAsync(message, cancellationToken).ConfigureAwait(false);
+        }
+
+        private ServiceBusMessage GetServiceBusMessage(byte[] data)
+        {
+            if (string.IsNullOrWhiteSpace(_correlationContext.CorrelationId))
+            {
+                return new ServiceBusMessage(data);
+            }
+
+            return new ServiceBusMessage(data)
+            {
+                CorrelationId = _correlationContext.CorrelationId,
+            };
         }
     }
 }
