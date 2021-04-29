@@ -16,21 +16,10 @@ using System.Collections.Generic;
 
 namespace GreenEnergyHub.Charges.Application.Validation
 {
-    /// <summary>
-    /// TODO
-    /// </summary>
     public interface IValidationRuleSet
     {
-        /// <summary>
-        /// TODO
-        /// </summary>
-        /// <returns>TODO 2</returns>
         IReadOnlyCollection<IValidationRule> GetRules();
 
-        /// <summary>
-        /// TODO
-        /// </summary>
-        /// <returns>TODO 2</returns>
         ChargeCommandValidationResult Validate();
     }
 }
