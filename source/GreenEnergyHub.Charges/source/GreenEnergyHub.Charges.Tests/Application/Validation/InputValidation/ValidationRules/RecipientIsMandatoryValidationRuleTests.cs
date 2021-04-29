@@ -15,23 +15,23 @@
 using System.Diagnostics.CodeAnalysis;
 using GreenEnergyHub.Charges.Application.Validation.InputValidation.ValidationRules;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
-using GreenEnergyHub.Charges.Domain.Common;
 using Xunit;
 
 namespace GreenEnergyHub.Charges.Tests.Application.Validation.InputValidation.ValidationRules
 {
-    public class IsKnownProcessTypeVr209ValidationRuleTests
+    public class RecipientIsMandatoryValidationRuleTests
     {
         [Theory]
-        [InlineAutoMoqData(ProcessType.Unknown, false)]
-        [InlineAutoMoqData(ProcessType.UpdateChargeInformation, true)]
-        public void IsKnownProcessTypeVr209ValidationRule_Test(
-            ProcessType processType,
+        [InlineAutoMoqData(null!, false)]
+        [InlineAutoMoqData("", false)]
+        [InlineAutoMoqData("content", true)]
+        public void RecipientIsMandatoryValidationRule_Test(
+            string mrid,
             bool expected,
-            [NotNull]ChargeCommand command)
+            [NotNull] ChargeCommand command)
         {
-            command!.MarketDocument!.ProcessType = processType;
-            var sut = new IsKnownProcessTypeVr009ValidationRule(command);
+            command!.MarketDocument!.ReceiverMarketParticipant!.MRid = mrid;
+            var sut = new RecipientIsMandatoryTypeValidationRule(command);
             Assert.Equal(expected, sut.IsValid);
         }
     }

@@ -65,9 +65,9 @@ namespace GreenEnergyHub.Charges.Application.Validation.BusinessValidation
         {
             var rules = new List<IValidationRule>
             {
-                new StartDateVr209ValidationRule(
+                new StartDateValidationRule(
                     command,
-                    configuration.StartDateVr209ValidationRuleConfiguration,
+                    configuration.StartDateValidationRuleConfiguration,
                     _localDateTimeService),
             };
 
@@ -84,8 +84,8 @@ namespace GreenEnergyHub.Charges.Application.Validation.BusinessValidation
             ChargeCommand command,
             Charge charge)
         {
-            rules.Add(new VatPayerMustNotChangeInUpdateRule(command, charge));
-            rules.Add(new TaxIndicatorMustNotChangeInUpdateRule(command, charge));
+            rules.Add(new ChangingTariffVatValueNotAllowedRule(command, charge));
+            rules.Add(new ChangingTariffTaxValueNotAllowedRule(command, charge));
         }
     }
 }

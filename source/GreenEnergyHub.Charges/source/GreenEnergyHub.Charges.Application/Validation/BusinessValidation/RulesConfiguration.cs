@@ -18,11 +18,11 @@ namespace GreenEnergyHub.Charges.Application.Validation.BusinessValidation
 {
     public record RulesConfiguration
     {
-        public RulesConfiguration(StartDateVr209ValidationRuleConfiguration startDateVr209ValidationRuleConfiguration)
+        public RulesConfiguration(StartDateValidationRuleConfiguration startDateValidationRuleConfiguration)
         {
-            StartDateVr209ValidationRuleConfiguration = startDateVr209ValidationRuleConfiguration;
+            StartDateValidationRuleConfiguration = startDateValidationRuleConfiguration;
         }
 
-        public StartDateVr209ValidationRuleConfiguration StartDateVr209ValidationRuleConfiguration { get; }
+        public StartDateValidationRuleConfiguration StartDateValidationRuleConfiguration { get; }
     }
 }

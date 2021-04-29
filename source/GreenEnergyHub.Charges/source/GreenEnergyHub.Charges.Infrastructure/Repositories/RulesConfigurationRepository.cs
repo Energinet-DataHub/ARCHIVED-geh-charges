@@ -25,7 +25,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Repositories
         {
             // For now we just mimic fetching configuration from elsewhere - probably some kind of persistent storage
             var updateRulesConfiguration = new RulesConfiguration(
-                new StartDateVr209ValidationRuleConfiguration(new Interval<int>(31, 1095)));
+                new StartDateValidationRuleConfiguration(new Interval<int>(31, 1095)));
             return Task.FromResult(updateRulesConfiguration);
         }
     }

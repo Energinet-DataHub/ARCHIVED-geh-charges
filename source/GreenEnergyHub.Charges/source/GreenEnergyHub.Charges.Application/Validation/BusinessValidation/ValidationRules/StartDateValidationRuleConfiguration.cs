@@ -12,24 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using GreenEnergyHub.Charges.Domain;
-using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
+using GreenEnergyHub.Charges.Core;
 
 namespace GreenEnergyHub.Charges.Application.Validation.BusinessValidation.ValidationRules
 {
-    public class VatPayerMustNotChangeInUpdateRule : IValidationRule
+    public class StartDateValidationRuleConfiguration
     {
-        private readonly ChargeCommand _command;
-        private readonly Charge _charge;
-
-        public VatPayerMustNotChangeInUpdateRule(ChargeCommand command, Charge charge)
+        public StartDateValidationRuleConfiguration(Interval<int> validIntervalFromNowInDays)
         {
-            _command = command;
-            _charge = charge;
+            ValidIntervalFromNowInDays = validIntervalFromNowInDays;
         }
 
-        public bool IsValid => _command!.MktActivityRecord!.ChargeType!.VatPayer == _charge!.MktActivityRecord!.ChargeType!.VatPayer;
-
-        public ValidationRuleIdentifier ValidationRuleIdentifier => ValidationRuleIdentifier.ChangingVATindicationIsNotAllowed;
+        public Interval<int> ValidIntervalFromNowInDays { get; }
     }
 }

@@ -35,9 +35,9 @@ namespace GreenEnergyHub.Charges.Application.Validation.InputValidation
         {
             var rules = new List<IValidationRule>
             {
-                new IsKnownProcessTypeVr009ValidationRule(chargeCommand),
-                new SenderIsMandatoryTypeVr150ValidationRule(chargeCommand),
-                new RecipientIsMandatoryTypeVr153ValidationRule(chargeCommand),
+                new IsKnownProcessTypeValidationRule(chargeCommand),
+                new SenderIsMandatoryTypeValidationRule(chargeCommand),
+                new RecipientIsMandatoryTypeValidationRule(chargeCommand),
             };
 
             return rules;

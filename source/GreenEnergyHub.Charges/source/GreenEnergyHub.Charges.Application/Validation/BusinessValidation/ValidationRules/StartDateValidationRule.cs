@@ -19,15 +19,15 @@ using NodaTime;
 
 namespace GreenEnergyHub.Charges.Application.Validation.BusinessValidation.ValidationRules
 {
-    public class StartDateVr209ValidationRule : IValidationRule
+    public class StartDateValidationRule : IValidationRule
     {
         private readonly Instant _validityStartDate;
         private readonly Instant _periodStart;
         private readonly Instant _periodEnd;
 
-        public StartDateVr209ValidationRule(
+        public StartDateValidationRule(
             [NotNull] ChargeCommand command,
-            [NotNull] StartDateVr209ValidationRuleConfiguration configuration,
+            [NotNull] StartDateValidationRuleConfiguration configuration,
             [NotNull] IZonedDateTimeService zonedDateTimeService)
         {
             _validityStartDate = command.MktActivityRecord!.ValidityStartDate;

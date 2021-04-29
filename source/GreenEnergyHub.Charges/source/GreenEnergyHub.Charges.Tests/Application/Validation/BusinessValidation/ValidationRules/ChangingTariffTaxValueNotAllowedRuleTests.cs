@@ -21,14 +21,14 @@ using Xunit;
 
 namespace GreenEnergyHub.Charges.Tests.Application.Validation.BusinessValidation.ValidationRules
 {
-    public class TaxIndicatorMustNotChangeInUpdateRuleTests
+    public class ChangingTariffTaxValueNotAllowedRuleTests
     {
         [Theory]
         [InlineAutoDomainData]
         public void IsValid_WhenTaxIndicatorInCommandDoesNotMatchCharge_IsFalse([NotNull]ChargeCommand command, [NotNull] Charge charge)
         {
             command!.MktActivityRecord!.ChargeType!.TaxIndicator = !charge!.MktActivityRecord!.ChargeType!.TaxIndicator;
-            var sut = new TaxIndicatorMustNotChangeInUpdateRule(command, charge);
+            var sut = new ChangingTariffTaxValueNotAllowedRule(command, charge);
             Assert.False(sut.IsValid);
         }
 
@@ -37,7 +37,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Validation.BusinessValidation
         public void IsValid_WhenTaxIndicatorInCommandMatches_IsTrue([NotNull]ChargeCommand command, [NotNull] Charge charge)
         {
             command!.MktActivityRecord!.ChargeType!.TaxIndicator = charge!.MktActivityRecord!.ChargeType!.TaxIndicator;
-            var sut = new TaxIndicatorMustNotChangeInUpdateRule(command, charge);
+            var sut = new ChangingTariffTaxValueNotAllowedRule(command, charge);
             Assert.True(sut.IsValid);
         }
     }

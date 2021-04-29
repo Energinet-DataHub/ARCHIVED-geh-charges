@@ -36,16 +36,13 @@ namespace GreenEnergyHub.Charges.MessageReceiver
         private const string FunctionName = "ChargeHttpTrigger";
         private readonly IJsonSerializer _jsonDeserializer;
         private readonly IChangeOfChargesMessageHandler _changeOfChargesMessageHandler;
-        private readonly IChargeCommandExecutionExceptionHandler _chargeCommandExecutionExceptionHandler;
 
         public ChargeHttpTrigger(
             IJsonSerializer jsonDeserializer,
-            IChangeOfChargesMessageHandler changeOfChargesMessageHandler,
-            IChargeCommandExecutionExceptionHandler chargeCommandExecutionExceptionHandler)
+            IChangeOfChargesMessageHandler changeOfChargesMessageHandler)
         {
             _jsonDeserializer = jsonDeserializer;
             _changeOfChargesMessageHandler = changeOfChargesMessageHandler;
-            _chargeCommandExecutionExceptionHandler = chargeCommandExecutionExceptionHandler;
         }
 
         [FunctionName(FunctionName)]
@@ -58,8 +55,7 @@ namespace GreenEnergyHub.Charges.MessageReceiver
             log.LogInformation("Function {FunctionName} started to process a request", FunctionName);
             var message = await GetChangeOfChargesMessageAsync(_jsonDeserializer, req, context).ConfigureAwait(false);
 
-            var messageResult = await _chargeCommandExecutionExceptionHandler.ExecuteChargeCommandAsync(
-                    () => _changeOfChargesMessageHandler.HandleAsync(message), message.Transactions.First())
+            var messageResult = await _changeOfChargesMessageHandler.HandleAsync(message)
                 .ConfigureAwait(false);
 
             return new OkObjectResult(messageResult);

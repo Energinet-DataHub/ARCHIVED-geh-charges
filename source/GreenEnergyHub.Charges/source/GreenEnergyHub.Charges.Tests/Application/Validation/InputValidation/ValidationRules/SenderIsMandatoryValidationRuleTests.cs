@@ -19,19 +19,19 @@ using Xunit;
 
 namespace GreenEnergyHub.Charges.Tests.Application.Validation.InputValidation.ValidationRules
 {
-    public class SenderIsMandatoryVr150ValidationRuleTests
+    public class SenderIsMandatoryValidationRuleTests
     {
         [Theory]
         [InlineAutoMoqData(null!, false)]
         [InlineAutoMoqData("", false)]
         [InlineAutoMoqData("content", true)]
-        public void SenderIsMandatoryVr150ValidationRule_Test(
+        public void SenderIsMandatoryValidationRule_Test(
             string mrid,
             bool expected,
-            [NotNull]ChargeCommand command)
+            [NotNull] ChargeCommand command)
         {
             command!.MarketDocument!.SenderMarketParticipant!.MRid = mrid;
-            var sut = new SenderIsMandatoryTypeVr150ValidationRule(command);
+            var sut = new SenderIsMandatoryTypeValidationRule(command);
             Assert.Equal(expected, sut.IsValid);
         }
     }

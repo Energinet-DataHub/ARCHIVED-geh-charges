@@ -17,9 +17,9 @@ namespace GreenEnergyHub.Charges.Application.Validation
     public enum ValidationRuleIdentifier
     {
         TimeLimitsNotFollowed, // VR209
-        ChangingVATindicationIsNotAllowed, //VR630
-        ChangingTaxTariffsIsNotAllowed, // VRXYZ
-        ProcessIsMandatory, //VR009
+        ChangingTariffVatValueNotAllowed, // VR630
+        ChangingTariffTaxValueNotAllowed, // VRXYZ
+        ProcessIsMandatory, // VR009
         SenderIsMandatory, // VR150
         RecipientIsMandatory, // VR153
     }
