@@ -25,7 +25,8 @@ namespace GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction
 
         public string? Resolution { get; set; }
 
-        public List<Point> Points { get; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2227", Justification = "JSON deserialization")]
+        public List<Point> Points { get; set; }
 
         public void AddPoints(IEnumerable<Point> newPoints)
         {
