@@ -12,15 +12,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using GreenEnergyHub.Charges.Application.Validation.BusinessValidation.Rules;
+
 namespace GreenEnergyHub.Charges.Application.Validation.BusinessValidation
 {
     public class BusinessValidationRule : IBusinessValidationRule
     {
-        public BusinessValidationRule(bool isValid)
+        public BusinessValidationRule(bool isValid, ValidationRule rule)
         {
             IsValid = isValid;
+            Rule = rule;
         }
 
         public bool IsValid { get; }
+
+        public ValidationRule Rule { get; }
     }
 }

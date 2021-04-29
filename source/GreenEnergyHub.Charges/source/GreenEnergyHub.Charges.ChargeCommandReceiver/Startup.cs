@@ -49,11 +49,12 @@ namespace GreenEnergyHub.Charges.ChargeCommandReceiver
             builder.Services.AddGreenEnergyHub(typeof(ChangeOfChargesMessageHandler).Assembly);
             builder.Services.AddSingleton<IJsonSerializer, JsonSerializer>();
             builder.Services.AddScoped(typeof(IClock), _ => SystemClock.Instance);
+            builder.Services.AddScoped<IChargeCommandRejectedEventFactory, ChargeCommandRejectedEventFactory>();
+            builder.Services.AddScoped<IInternalEventPublisher, InternalEventPublisher>();
             builder.Services.AddScoped<IChangeOfChargeTransactionInputValidator, ChangeOfChargeTransactionInputValidator>();
             builder.Services.AddScoped<IChangeOfChargesTransactionHandler, ChangeOfChargesTransactionHandler>();
             builder.Services
                 .AddScoped<IInternalEventCommunicationConfiguration, InternalEventCommunicationConfiguration>();
-            builder.Services.AddScoped<IInternalEventPublisher, InternalEventPublisher>();
             builder.Services.AddScoped<IChargeCommandAcknowledgementService, ChargeCommandAcknowledgementService>();
             builder.Services.AddScoped<IChargeCommandHandler, ChargeCommandHandler>();
             builder.Services.AddScoped<IChargeFactory, ChargeFactory>();
@@ -62,10 +63,9 @@ namespace GreenEnergyHub.Charges.ChargeCommandReceiver
             builder.Services.AddScoped<IBusinessValidationRulesFactory, BusinessValidationRulesFactory>();
             builder.Services.AddScoped<IChargeCommandBusinessValidator, ChargeCommandBusinessValidator>();
             builder.Services.AddScoped<IChargeCommandValidator, ChargeCommandValidator>();
-            builder.Services.AddScoped<IUpdateRulesConfigurationRepository, UpdateRulesConfigurationRepository>();
+            builder.Services.AddScoped<IRulesConfigurationRepository, RulesConfigurationRepository>();
             builder.Services.AddScoped<IChargeRepository, ChargeRepository>();
             builder.Services.AddScoped<IChargeCommandAcceptedEventFactory, ChargeCommandAcceptedEventFactory>();
-            builder.Services.AddScoped<IChargeCommandRejectedEventFactory, ChargeCommandRejectedEventFactory>();
 
             AddIso8601Services(builder.Services);
         }

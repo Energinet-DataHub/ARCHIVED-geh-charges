@@ -13,10 +13,13 @@
 // limitations under the License.
 
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using System.Threading.Tasks;
+using GreenEnergyHub.Charges.Application;
 using GreenEnergyHub.Charges.Application.ChangeOfCharges;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Fee;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Message;
+using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Result;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Tariff;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
 using GreenEnergyHub.Json;
@@ -51,7 +54,10 @@ namespace GreenEnergyHub.Charges.MessageReceiver
         {
             log.LogInformation("Function {FunctionName} started to process a request", FunctionName);
             var message = await GetChangeOfChargesMessageAsync(_jsonDeserializer, req, context).ConfigureAwait(false);
-            var messageResult = await _changeOfChargesMessageHandler.HandleAsync(message).ConfigureAwait(false);
+
+            var messageResult = await _changeOfChargesMessageHandler.HandleAsync(message)
+                .ConfigureAwait(false);
+
             return new OkObjectResult(messageResult);
         }
 

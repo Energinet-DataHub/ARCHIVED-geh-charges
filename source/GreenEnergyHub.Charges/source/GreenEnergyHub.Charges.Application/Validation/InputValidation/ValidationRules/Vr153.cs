@@ -13,13 +13,14 @@
 // limitations under the License.
 
 using FluentValidation.Validators;
+using GreenEnergyHub.Charges.Application.InputValidation.ValidationRules;
 using GreenEnergyHub.Messaging.Validation;
 
-namespace GreenEnergyHub.Charges.Application.InputValidation.ValidationRules
+namespace GreenEnergyHub.Charges.Application.Validation.InputValidation.ValidationRules
 {
     public class Vr153 : PropertyRule<string?>
     {
-        protected override string Code => "VR.153";
+        protected override string Code => "RecipientIsMandatory";
 
         protected override bool IsValid(string? marketParticipantMrId, PropertyValidatorContext context)
         {

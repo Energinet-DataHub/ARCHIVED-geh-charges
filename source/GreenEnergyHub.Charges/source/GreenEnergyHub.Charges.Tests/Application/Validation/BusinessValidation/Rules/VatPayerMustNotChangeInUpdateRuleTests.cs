@@ -27,7 +27,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Validation.BusinessValidation
         [InlineAutoDomainData]
         public void IsValid_WhenVatPayerInCommandDoesNotMatchCharge_IsFalse([NotNull]ChargeCommand command, [NotNull] Charge charge)
         {
-            var sut = new VatPayerMustNotChangeInUpdateRule(command, charge);
+            var sut = new ChangingTariffVatValueNotAllowedRule(command, charge);
             Assert.False(sut.IsValid);
         }
 
@@ -36,7 +36,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Validation.BusinessValidation
         public void IsValid_WhenVatPayerInCommandMatches_IsTrue([NotNull]ChargeCommand command, [NotNull] Charge charge)
         {
             command!.MktActivityRecord!.ChargeType!.VatPayer = charge!.MktActivityRecord!.ChargeType!.VatPayer;
-            var sut = new VatPayerMustNotChangeInUpdateRule(command, charge);
+            var sut = new ChangingTariffVatValueNotAllowedRule(command, charge);
             Assert.True(sut.IsValid);
         }
     }

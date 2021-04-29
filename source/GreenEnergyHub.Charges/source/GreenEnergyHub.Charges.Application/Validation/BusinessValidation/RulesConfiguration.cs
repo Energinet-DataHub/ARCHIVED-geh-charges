@@ -12,22 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using GreenEnergyHub.Charges.Domain;
-using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
+using GreenEnergyHub.Charges.Application.Validation.BusinessValidation.Rules;
 
-namespace GreenEnergyHub.Charges.Application.Validation.BusinessValidation.Rules
+namespace GreenEnergyHub.Charges.Application.Validation.BusinessValidation
 {
-    public class VatPayerMustNotChangeInUpdateRule : IBusinessValidationRule
+    public record RulesConfiguration
     {
-        private readonly ChargeCommand _command;
-        private readonly Charge _charge;
-
-        public VatPayerMustNotChangeInUpdateRule(ChargeCommand command, Charge charge)
+        public RulesConfiguration(StartDateVr209ValidationRuleConfiguration startDateVr209ValidationRuleConfiguration)
         {
-            _command = command;
-            _charge = charge;
+            StartDateVr209ValidationRuleConfiguration = startDateVr209ValidationRuleConfiguration;
         }
 
-        public bool IsValid => _command!.MktActivityRecord!.ChargeType!.VatPayer == _charge!.MktActivityRecord!.ChargeType!.VatPayer;
+        public StartDateVr209ValidationRuleConfiguration StartDateVr209ValidationRuleConfiguration { get; }
     }
 }

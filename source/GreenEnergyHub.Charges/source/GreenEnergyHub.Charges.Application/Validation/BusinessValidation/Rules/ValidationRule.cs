@@ -12,12 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Threading.Tasks;
-
-namespace GreenEnergyHub.Charges.Application.Validation.BusinessValidation
+namespace GreenEnergyHub.Charges.Application.Validation.BusinessValidation.Rules
 {
-    public interface IUpdateRulesConfigurationRepository
+    public enum ValidationRule
     {
-        Task<UpdateRulesConfiguration> GetConfigurationAsync();
+        TimeLimitsNotFollowed, // VR209
+        ChangingTariffVatValueNotAllowed, //VR630
+        ChangingTariffTaxValueNotAllowed, // VRXYZ
+        ProcessIsMandatory, //VR009
+        SenderIsMandatory, // VR150
+        RecipientIsMandatory, // VR153
     }
 }

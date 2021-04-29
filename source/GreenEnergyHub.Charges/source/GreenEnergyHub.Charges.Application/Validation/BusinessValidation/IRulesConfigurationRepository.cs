@@ -12,17 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using GreenEnergyHub.Charges.Application.Validation.BusinessValidation.Rules;
+using System.Threading.Tasks;
 
 namespace GreenEnergyHub.Charges.Application.Validation.BusinessValidation
 {
-    public record UpdateRulesConfiguration
+    public interface IRulesConfigurationRepository
     {
-        public UpdateRulesConfiguration(StartDateVr209ValidationRuleConfiguration startDateVr209ValidationRuleConfiguration)
-        {
-            StartDateVr209ValidationRuleConfiguration = startDateVr209ValidationRuleConfiguration;
-        }
-
-        public StartDateVr209ValidationRuleConfiguration StartDateVr209ValidationRuleConfiguration { get; }
+        Task<RulesConfiguration> GetConfigurationAsync();
     }
 }
