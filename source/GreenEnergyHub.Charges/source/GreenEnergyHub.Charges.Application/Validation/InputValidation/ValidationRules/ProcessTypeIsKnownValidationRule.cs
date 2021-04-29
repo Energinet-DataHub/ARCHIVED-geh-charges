@@ -18,11 +18,11 @@ using GreenEnergyHub.Charges.Domain.Common;
 
 namespace GreenEnergyHub.Charges.Application.Validation.InputValidation.ValidationRules
 {
-    public class IsKnownProcessTypeValidationRule : IValidationRule
+    public class ProcessTypeIsKnownValidationRule : IValidationRule
     {
         private readonly ChargeCommand _chargeCommand;
 
-        public IsKnownProcessTypeValidationRule([NotNull] ChargeCommand chargeCommand)
+        public ProcessTypeIsKnownValidationRule([NotNull] ChargeCommand chargeCommand)
         {
             _chargeCommand = chargeCommand;
         }

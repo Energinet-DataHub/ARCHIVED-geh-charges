@@ -20,18 +20,18 @@ using Xunit;
 
 namespace GreenEnergyHub.Charges.Tests.Application.Validation.InputValidation.ValidationRules
 {
-    public class IsKnownProcessTypeValidationRuleTests
+    public class ProcessTypeIsKnownValidationRuleTests
     {
         [Theory]
         [InlineAutoMoqData(ProcessType.Unknown, false)]
         [InlineAutoMoqData(ProcessType.UpdateChargeInformation, true)]
-        public void IsKnownProcessTypeValidationRule_Test(
+        public void ProcessTypeIsKnownValidationRule_Test(
             ProcessType processType,
             bool expected,
             [NotNull] ChargeCommand command)
         {
             command!.MarketDocument!.ProcessType = processType;
-            var sut = new IsKnownProcessTypeValidationRule(command);
+            var sut = new ProcessTypeIsKnownValidationRule(command);
             Assert.Equal(expected, sut.IsValid);
         }
     }
