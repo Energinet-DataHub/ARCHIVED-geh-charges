@@ -61,7 +61,6 @@ namespace GreenEnergyHub.Charges.MessageReceiver
             var messageResult = await _chargeCommandExecutionExceptionHandler.ExecuteChargeCommandAsync(
                     () => _changeOfChargesMessageHandler.HandleAsync(message), message.Transactions.First())
                 .ConfigureAwait(false);
-
             return new OkObjectResult(messageResult);
         }
 

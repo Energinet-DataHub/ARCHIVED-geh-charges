@@ -7,6 +7,15 @@ manage subscriptions.
 Association of subscriptions to metering points are performed using business process _Settlement master data for a metering point –
 subscription, fee and tariff links_.
 
+## Process flow
+
+The following process flow depicts the different paths a change of charge price list can take through the domain.
+It also shows the micro services involved along with the activities they perform.
+
+![Process flow](.././images/ChangeOfChargePriceListProcessFlow.png)
+
+## Sequence diagram
+
 The following sequence diagram shows the exchange of messages in this process.
 
 <!-- In order to update this image:
