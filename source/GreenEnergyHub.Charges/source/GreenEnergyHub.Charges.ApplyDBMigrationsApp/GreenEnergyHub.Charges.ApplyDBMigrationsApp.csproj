@@ -26,11 +26,14 @@ limitations under the License.
     </ItemGroup>
 
     <ItemGroup>
-      <EmbeddedResource Include="Scripts\PostDeploy\202104131400 Enable Table CDC.sql" />
-      <EmbeddedResource Include="Scripts\PreDeploy\202104131355 Enable Database CDC.sql" />
       <EmbeddedResource Include="Scripts\Model\202103250958 Initial charge model.sql" />
       <EmbeddedResource Include="Scripts\Seed\202103251012 Initial seed data.sql" />
       <EmbeddedResource Include="Scripts\Test\202103251113 MarketParticipants.sql" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Scripts\PostDeploy\" />
+      <Folder Include="Scripts\PreDeploy\" />
     </ItemGroup>
 
 </Project>
