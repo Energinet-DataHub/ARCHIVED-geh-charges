@@ -44,11 +44,9 @@ namespace GreenEnergyHub.Charges.Application.ChangeOfCharges
             var message = new ServiceBusMessage(serializedMessage)
             {
                 CorrelationId = internalEvent.CorrelationId,
-                Subject = internalEvent.Filter, // We set 'Subject' at the moment for a better overview in the AZ portal.
+                // We set 'Subject' at the moment for a better overview in the AZ portal.
+                Subject = internalEvent.GetType().Name,
             };
-
-            // We use this custom "filter" property to filter our messages on the ServiceBus.
-            message.ApplicationProperties.Add("filter", internalEvent.Filter);
 
             await sender.SendMessageAsync(message).ConfigureAwait(false);
         }

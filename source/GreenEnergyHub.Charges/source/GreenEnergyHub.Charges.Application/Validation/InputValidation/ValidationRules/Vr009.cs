@@ -16,11 +16,11 @@ using FluentValidation.Validators;
 using GreenEnergyHub.Charges.Domain.Common;
 using GreenEnergyHub.Messaging.Validation;
 
-namespace GreenEnergyHub.Charges.Application.InputValidation.ValidationRules
+namespace GreenEnergyHub.Charges.Application.Validation.InputValidation.ValidationRules
 {
     public class Vr009 : PropertyRule<ProcessType>
     {
-        protected override string Code => "VR.009";
+        protected override string Code => "ProcessIsMandatory";
 
         protected override bool IsValid(ProcessType processType, PropertyValidatorContext context)
         {

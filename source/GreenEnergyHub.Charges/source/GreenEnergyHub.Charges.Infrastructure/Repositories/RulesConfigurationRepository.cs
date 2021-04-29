@@ -19,12 +19,12 @@ using GreenEnergyHub.Charges.Core;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Repositories
 {
-    public class UpdateRulesConfigurationRepository : IUpdateRulesConfigurationRepository
+    public class RulesConfigurationRepository : IRulesConfigurationRepository
     {
-        public Task<UpdateRulesConfiguration> GetConfigurationAsync()
+        public Task<RulesConfiguration> GetConfigurationAsync()
         {
             // For now we just mimic fetching configuration from elsewhere - probably some kind of persistent storage
-            var updateRulesConfiguration = new UpdateRulesConfiguration(
+            var updateRulesConfiguration = new RulesConfiguration(
                 new StartDateVr209ValidationRuleConfiguration(new Interval<int>(31, 1095)));
             return Task.FromResult(updateRulesConfiguration);
         }

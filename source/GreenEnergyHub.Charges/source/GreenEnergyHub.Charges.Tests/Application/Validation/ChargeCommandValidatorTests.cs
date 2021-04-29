@@ -18,6 +18,7 @@ using System.Threading.Tasks;
 using AutoFixture.Xunit2;
 using GreenEnergyHub.Charges.Application.Validation;
 using GreenEnergyHub.Charges.Application.Validation.BusinessValidation;
+using GreenEnergyHub.Charges.Application.Validation.BusinessValidation.Rules;
 using GreenEnergyHub.Charges.Application.Validation.InputValidation;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
 using GreenEnergyHub.TestHelpers;
@@ -112,7 +113,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Validation
 
         private static ChargeCommandValidationResult CreateInvalidValidationResult()
         {
-            var invalidRules = new List<IBusinessValidationRule> { new BusinessValidationRule(false) };
+            var invalidRules = new List<IBusinessValidationRule> { new BusinessValidationRule(false, ValidationRule.TimeLimitsNotFollowed) };
             return ChargeCommandValidationResult.CreateFailure(invalidRules);
         }
     }

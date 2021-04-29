@@ -35,7 +35,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Validation.BusinessValidation
         [Theory]
         [InlineAutoDomainData]
         public async Task CreateRulesForUpdateCommandAsync_ReturnsRulesForTariffUpdateCommand(
-            [NotNull] [Frozen] Mock<IUpdateRulesConfigurationRepository> updateRulesConfigurationRepository,
+            [NotNull] [Frozen] Mock<IRulesConfigurationRepository> updateRulesConfigurationRepository,
             [NotNull] BusinessUpdateValidationRulesFactory sut,
             [NotNull] ChargeCommand chargeCommand)
         {
@@ -44,8 +44,8 @@ namespace GreenEnergyHub.Charges.Tests.Application.Validation.BusinessValidation
 
             var expectedRules = new HashSet<Type>
             {
-                typeof(VatPayerMustNotChangeInUpdateRule),
-                typeof(TaxIndicatorMustNotChangeInUpdateRule),
+                typeof(ChangingTariffVatValueNotAllowedRule),
+                typeof(ChangingTariffTaxValueNotAllowedRule),
                 typeof(StartDateVr209ValidationRule),
             };
 
@@ -62,7 +62,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Validation.BusinessValidation
         [Theory]
         [InlineAutoDomainData]
         public async Task CreateRulesForUpdateCommandAsync_ReturnsRulesForFeeUpdateCommand(
-            [NotNull] [Frozen] Mock<IUpdateRulesConfigurationRepository> updateRulesConfigurationRepository,
+            [NotNull] [Frozen] Mock<IRulesConfigurationRepository> updateRulesConfigurationRepository,
             [NotNull] BusinessUpdateValidationRulesFactory sut,
             [NotNull] ChargeCommand chargeCommand)
         {
@@ -84,7 +84,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Validation.BusinessValidation
         [Theory]
         [InlineAutoDomainData]
         public async Task CreateRulesForUpdateCommandAsync_ReturnsRulesForSubscriptionUpdateCommand(
-            [NotNull] [Frozen] Mock<IUpdateRulesConfigurationRepository> updateRulesConfigurationRepository,
+            [NotNull] [Frozen] Mock<IRulesConfigurationRepository> updateRulesConfigurationRepository,
             [NotNull] BusinessUpdateValidationRulesFactory sut,
             [NotNull] ChargeCommand chargeCommand)
         {
@@ -108,9 +108,9 @@ namespace GreenEnergyHub.Charges.Tests.Application.Validation.BusinessValidation
         /// Workaround because we haven't yet found a way to have AutoFixture create objects
         /// without parameterless constructors.
         /// </summary>
-        private static UpdateRulesConfiguration CreateConfiguration()
+        private static RulesConfiguration CreateConfiguration()
         {
-            return new UpdateRulesConfiguration(
+            return new RulesConfiguration(
                 new StartDateVr209ValidationRuleConfiguration(new Interval<int>(31, 1095)));
         }
 
@@ -122,7 +122,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Validation.BusinessValidation
         }
 
         private static void ConfigureRepository(
-            Mock<IUpdateRulesConfigurationRepository> updateRulesConfigurationRepository)
+            Mock<IRulesConfigurationRepository> updateRulesConfigurationRepository)
         {
             var configuration = CreateConfiguration();
             updateRulesConfigurationRepository

@@ -46,7 +46,6 @@ namespace GreenEnergyHub.Charges.ChargeCommandReceiver
             var jsonSerializedQueueItem = System.Text.Encoding.UTF8.GetString(message);
             var serviceBusMessage = _jsonDeserializer.Deserialize<ServiceBusMessageWrapper>(jsonSerializedQueueItem);
             var transaction = serviceBusMessage.Command;
-
             await _chargeCommandHandler.HandleAsync(transaction).ConfigureAwait(false);
 
             log.LogDebug("Received event with charge type mRID '{mRID}'", transaction.ChargeTypeMRid);
