@@ -18,6 +18,12 @@ These are the business processes maintained by this domain.
 | [Request for Prices](docs/business-processes/request-for-prices.md) |
 | [Settlement master data for metering point - fee, subscription and tariff links](docs/business-processes/settlement_master_data.md)
 
+## Getting Started
+
+Learn how to get started with Green Energy Hub [here](https://github.com/Energinet-DataHub/green-energy-hub/blob/main/docs/getting-started.md).
+
+Learn how to get a development environment up and running for development, debugging, testing or evaluation purposes [here](docs/local-development/README.md).
+
 ## Architecture
 
 The architecture diagram below illustrates both current state of the Charges domain as well as future work, last-mentioned being illustrated by grey arrows and components with lowered opacity.
@@ -37,10 +43,6 @@ In the current program increment (PI) the planned work is captured by the stated
 3. The domain delivers change of charge messages to the [Post Office](https://github.com/Energinet-DataHub/geh-post-office) domain.
 4. The domain supports retrieval of historic charges for audit purposes.
 5. The domain can be surveilled by a dashboard (one step closer to working software).
-
-## Getting Started
-
-Learn how to get started with Green Energy Hub [here](https://github.com/Energinet-DataHub/green-energy-hub/blob/main/docs/getting-started.md).
 
 ## Where can I get more help?
 
