@@ -14,16 +14,19 @@
 
 using System.Threading;
 using System.Threading.Tasks;
+using Azure.Messaging.ServiceBus;
 using GreenEnergyHub.Messaging.Transport;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Messaging
 {
     public class ServiceBusChannel : Channel
     {
+        private ServiceBusSender _serviceBusSender;
         private ICorrelationContext _correlationContext;
 
-        public ServiceBusChannel(ICorrelationContext correlationContext)
+        public ServiceBusChannel(ServiceBusSender serviceBusSender, ICorrelationContext correlationContext)
         {
+            _serviceBusSender = serviceBusSender;
             _correlationContext = correlationContext;
         }
 
