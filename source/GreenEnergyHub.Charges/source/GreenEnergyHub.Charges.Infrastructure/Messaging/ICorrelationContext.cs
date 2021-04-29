@@ -14,8 +14,14 @@
 
 namespace GreenEnergyHub.Charges.Infrastructure.Messaging
 {
+    /// <summary>
+    /// Interface for class exposing a correlation context
+    /// </summary>
     public interface ICorrelationContext
     {
+        /// <summary>
+        /// The correlation ID which can be used to link different operations together
+        /// </summary>
         string CorrelationId { get; set; }
     }
 }
