@@ -25,6 +25,8 @@ Build and execute the command line tool `ApplyDBMigrationsApp` with connection s
 
 The connection string can be found in the configuration of the charge command receiver function in the Azure portal.
 
+TODO: `includeSeedData` and `includeTestData`
+
 ## Publish Azure Functions ##
 
 Instructions are [here](publish-function-azure-sandbox.md).
@@ -35,6 +37,7 @@ TODO
 
 * E.g. Postman
 * Example messages
+  * Requires SQL seed and test data
 
 ## FAQ ##
 
