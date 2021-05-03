@@ -12,13 +12,22 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Threading.Tasks;
+using System.Diagnostics.CodeAnalysis;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
 
-namespace GreenEnergyHub.Charges.Application.Validation.BusinessValidation
+namespace GreenEnergyHub.Charges.Application.Validation.InputValidation.ValidationRules
 {
-    public interface IBusinessValidationRulesFactory
+    public class RecipientIsMandatoryTypeValidationRule : IValidationRule
     {
-        Task<IValidationRuleSet> CreateRulesForChargeCommandAsync(ChargeCommand chargeCommand);
+        private readonly ChargeCommand _chargeCommand;
+
+        public RecipientIsMandatoryTypeValidationRule([NotNull] ChargeCommand chargeCommand)
+        {
+            _chargeCommand = chargeCommand;
+        }
+
+        public bool IsValid => MarketParticipantMrIdValidator.IsValid(_chargeCommand.MarketDocument!.ReceiverMarketParticipant!.MRid);
+
+        public ValidationRuleIdentifier ValidationRuleIdentifier => ValidationRuleIdentifier.RecipientIsMandatory;
     }
 }

@@ -17,7 +17,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application.ChangeOfCharges.Repositories;
-using GreenEnergyHub.Charges.Application.Validation.BusinessValidation.Rules;
+using GreenEnergyHub.Charges.Application.Validation.BusinessValidation.ValidationRules;
 using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
 
@@ -39,23 +39,23 @@ namespace GreenEnergyHub.Charges.Application.Validation.BusinessValidation
             _zonedDateTimeService = zonedDateTimeService;
         }
 
-        public async Task<IBusinessValidationRuleSet> CreateRulesForAdditionCommandAsync([NotNull] ChargeCommand command)
+        public async Task<IValidationRuleSet> CreateRulesForAdditionCommandAsync([NotNull] ChargeCommand chargeCommand)
         {
-            await CheckIfChargeExistAsync(command).ConfigureAwait(false);
+            await CheckIfChargeExistAsync(chargeCommand).ConfigureAwait(false);
             var configuration = await _rulesConfigurationRepository.GetConfigurationAsync().ConfigureAwait(false);
 
-            var rules = GetRules(command, configuration);
+            var rules = GetRules(chargeCommand, configuration);
 
-            return BusinessValidationRuleSet.FromRules(rules);
+            return ValidationRuleSet.FromRules(rules);
         }
 
-        private List<IBusinessValidationRule> GetRules(ChargeCommand command, RulesConfiguration configuration)
+        private List<IValidationRule> GetRules(ChargeCommand command, RulesConfiguration configuration)
         {
-            var rules = new List<IBusinessValidationRule>
+            var rules = new List<IValidationRule>
             {
-                new StartDateVr209ValidationRule(
+                new StartDateValidationRule(
                     command,
-                    configuration.StartDateVr209ValidationRuleConfiguration,
+                    configuration.StartDateValidationRuleConfiguration,
                     _zonedDateTimeService),
             };
 

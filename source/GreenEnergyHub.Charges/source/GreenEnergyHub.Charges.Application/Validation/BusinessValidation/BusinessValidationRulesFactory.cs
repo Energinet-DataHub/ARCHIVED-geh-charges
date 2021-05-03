@@ -31,14 +31,14 @@ namespace GreenEnergyHub.Charges.Application.Validation.BusinessValidation
             _businessAdditionValidationRulesFactory = businessAdditionValidationRulesFactory;
         }
 
-        public async Task<IBusinessValidationRuleSet> CreateRulesForChargeCommandAsync(ChargeCommand command)
+        public async Task<IValidationRuleSet> CreateRulesForChargeCommandAsync(ChargeCommand chargeCommand)
         {
-            if (command == null) throw new ArgumentNullException(nameof(command));
+            if (chargeCommand == null) throw new ArgumentNullException(nameof(chargeCommand));
 
-            return command.MktActivityRecord!.Status switch
+            return chargeCommand.MktActivityRecord!.Status switch
             {
-                MktActivityRecordStatus.Addition => await _businessAdditionValidationRulesFactory.CreateRulesForAdditionCommandAsync(command).ConfigureAwait(false),
-                MktActivityRecordStatus.Change => await _businessUpdateValidationRulesFactory.CreateRulesForUpdateCommandAsync(command).ConfigureAwait(false),
+                MktActivityRecordStatus.Addition => await _businessAdditionValidationRulesFactory.CreateRulesForAdditionCommandAsync(chargeCommand).ConfigureAwait(false),
+                MktActivityRecordStatus.Change => await _businessUpdateValidationRulesFactory.CreateRulesForUpdateCommandAsync(chargeCommand).ConfigureAwait(false),
                 _ => throw new NotImplementedException("Unknown operation"),
             };
         }

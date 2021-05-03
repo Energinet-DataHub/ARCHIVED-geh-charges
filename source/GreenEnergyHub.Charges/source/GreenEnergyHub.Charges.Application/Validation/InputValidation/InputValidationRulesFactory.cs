@@ -12,26 +12,34 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using GreenEnergyHub.Charges.Application.InputValidation.ValidationRules;
+using System;
+using System.Collections.Generic;
 using GreenEnergyHub.Charges.Application.Validation.InputValidation.ValidationRules;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
-using GreenEnergyHub.Messaging.Validation;
 
 namespace GreenEnergyHub.Charges.Application.Validation.InputValidation
 {
-    public class ChangeOfChargesRules : RuleCollection<ChargeCommand>
+    public class InputValidationRulesFactory : IInputValidationRulesFactory
     {
-        public ChangeOfChargesRules()
+        public IValidationRuleSet CreateRulesForChargeCommand(ChargeCommand chargeCommand)
         {
-            RuleFor(input => input.MarketDocument!.ProcessType)
-                .PropertyRule<Vr009>();
+            if (chargeCommand == null) throw new ArgumentNullException(nameof(chargeCommand));
 
-            // After our own inputvalidation this class will cease to exist.
-            // RuleFor(input => input.MarketDocument!.SenderMarketParticipant!.MRid)
-            //     .PropertyRule<Vr150>();
-            //
-            // RuleFor(input => input.MarketDocument!.ReceiverMarketParticipant!.MRid)
-            //     .PropertyRule<Vr153>();
+            var rules = GetRules(chargeCommand);
+
+            return ValidationRuleSet.FromRules(rules);
+        }
+
+        private static List<IValidationRule> GetRules(ChargeCommand chargeCommand)
+        {
+            var rules = new List<IValidationRule>
+            {
+                new ProcessTypeIsKnownValidationRule(chargeCommand),
+                new SenderIsMandatoryTypeValidationRule(chargeCommand),
+                new RecipientIsMandatoryTypeValidationRule(chargeCommand),
+            };
+
+            return rules;
         }
     }
 }
