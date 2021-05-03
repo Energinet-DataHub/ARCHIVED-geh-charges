@@ -12,24 +12,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using GreenEnergyHub.Charges.Domain;
+using System.Diagnostics.CodeAnalysis;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
 
-namespace GreenEnergyHub.Charges.Application.Validation.BusinessValidation.Rules
+namespace GreenEnergyHub.Charges.Application.Validation.InputValidation
 {
-    public class ChangingTariffVatValueNotAllowedRule : IBusinessValidationRule
+    /// <summary>
+    /// Contract defining the input validator for change of charges messages.
+    /// </summary>
+    public interface IChargeCommandInputValidator
     {
-        private readonly ChargeCommand _command;
-        private readonly Charge _charge;
-
-        public ChangingTariffVatValueNotAllowedRule(ChargeCommand command, Charge charge)
-        {
-            _command = command;
-            _charge = charge;
-        }
-
-        public bool IsValid => _command!.MktActivityRecord!.ChargeType!.VatPayer == _charge!.MktActivityRecord!.ChargeType!.VatPayer;
-
-        public ValidationRule Rule => ValidationRule.ChangingTariffVatValueNotAllowed;
+        /// <summary>
+        /// Input validates a <see cref="ChargeCommand"/>.
+        /// </summary>
+        /// <param name="chargeCommand">The message to validate.</param>
+        /// <returns>The validation result.</returns>
+        ChargeCommandValidationResult Validate([NotNull] ChargeCommand chargeCommand);
     }
 }

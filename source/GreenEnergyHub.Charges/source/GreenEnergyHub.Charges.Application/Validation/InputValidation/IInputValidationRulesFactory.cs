@@ -12,15 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace GreenEnergyHub.Charges.Application.Validation.BusinessValidation.Rules
+using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
+
+namespace GreenEnergyHub.Charges.Application.Validation.InputValidation
 {
-    public enum ValidationRule
+    public interface IInputValidationRulesFactory
     {
-        TimeLimitsNotFollowed, // VR209
-        ChangingTariffVatValueNotAllowed, //VR630
-        ChangingTariffTaxValueNotAllowed, // VRXYZ
-        ProcessIsMandatory, //VR009
-        SenderIsMandatory, // VR150
-        RecipientIsMandatory, // VR153
+        IValidationRuleSet CreateRulesForChargeCommand(ChargeCommand chargeCommand);
     }
 }

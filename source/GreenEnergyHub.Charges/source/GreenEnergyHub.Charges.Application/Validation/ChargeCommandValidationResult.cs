@@ -15,25 +15,24 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using GreenEnergyHub.Charges.Application.Validation.BusinessValidation;
 
 namespace GreenEnergyHub.Charges.Application.Validation
 {
     public class ChargeCommandValidationResult
     {
-        private IEnumerable<IBusinessValidationRule> _invalidRules = new List<IBusinessValidationRule>();
+        private IEnumerable<IValidationRule> _invalidRules = new List<IValidationRule>();
 
         private ChargeCommandValidationResult()
-            : this(Array.Empty<IBusinessValidationRule>())
+            : this(Array.Empty<IValidationRule>())
         {
         }
 
-        private ChargeCommandValidationResult(IList<IBusinessValidationRule> invalidRules)
+        private ChargeCommandValidationResult(IList<IValidationRule> invalidRules)
         {
             InvalidRules = invalidRules;
         }
 
-        public IEnumerable<IBusinessValidationRule> InvalidRules
+        public IEnumerable<IValidationRule> InvalidRules
         {
             get => _invalidRules;
             private set
@@ -54,7 +53,7 @@ namespace GreenEnergyHub.Charges.Application.Validation
             return new ();
         }
 
-        public static ChargeCommandValidationResult CreateFailure(IList<IBusinessValidationRule> invalidRules)
+        public static ChargeCommandValidationResult CreateFailure(IList<IValidationRule> invalidRules)
         {
             return new (invalidRules.ToArray());
         }

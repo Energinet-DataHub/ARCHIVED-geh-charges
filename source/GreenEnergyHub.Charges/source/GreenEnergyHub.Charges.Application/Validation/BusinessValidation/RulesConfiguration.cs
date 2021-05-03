@@ -12,17 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using GreenEnergyHub.Charges.Application.Validation.BusinessValidation.Rules;
+using GreenEnergyHub.Charges.Application.Validation.BusinessValidation.ValidationRules;
 
 namespace GreenEnergyHub.Charges.Application.Validation.BusinessValidation
 {
     public record RulesConfiguration
     {
-        public RulesConfiguration(StartDateVr209ValidationRuleConfiguration startDateVr209ValidationRuleConfiguration)
+        public RulesConfiguration(StartDateValidationRuleConfiguration startDateValidationRuleConfiguration)
         {
-            StartDateVr209ValidationRuleConfiguration = startDateVr209ValidationRuleConfiguration;
+            StartDateValidationRuleConfiguration = startDateValidationRuleConfiguration;
         }
 
-        public StartDateVr209ValidationRuleConfiguration StartDateVr209ValidationRuleConfiguration { get; }
+        public StartDateValidationRuleConfiguration StartDateValidationRuleConfiguration { get; }
     }
 }

@@ -14,7 +14,7 @@
 
 using System.Diagnostics.CodeAnalysis;
 using AutoFixture.Xunit2;
-using GreenEnergyHub.Charges.Application.Validation.BusinessValidation.Rules;
+using GreenEnergyHub.Charges.Application.Validation.BusinessValidation.ValidationRules;
 using GreenEnergyHub.Charges.Core;
 using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
@@ -24,9 +24,9 @@ using NodaTime;
 using NodaTime.Text;
 using Xunit;
 
-namespace GreenEnergyHub.Charges.Tests.Application.Validation.BusinessValidation.Rules
+namespace GreenEnergyHub.Charges.Tests.Application.Validation.BusinessValidation.ValidationRules
 {
-    public class StartDateVr209ValidationRuleTests
+    public class StartDateValidationRuleTests
     {
         [Theory]
         // Test that start of interval is inclusive
@@ -50,7 +50,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Validation.BusinessValidation
             var zonedDateTimeService = CreateLocalDateTimeService(timeZoneId);
 
             // Act (implicit)
-            var sut = new StartDateVr209ValidationRule(chargeCommand, configuration, zonedDateTimeService);
+            var sut = new StartDateValidationRule(chargeCommand, configuration, zonedDateTimeService);
 
             // Assert
             Assert.Equal(expected, sut.IsValid);
@@ -74,12 +74,12 @@ namespace GreenEnergyHub.Charges.Tests.Application.Validation.BusinessValidation
             return new ZonedDateTimeService(clock.Object, new Iso8601ConversionConfiguration(timeZoneId));
         }
 
-        private static StartDateVr209ValidationRuleConfiguration CreateRuleConfiguration(
+        private static StartDateValidationRuleConfiguration CreateRuleConfiguration(
             int startOfOccurrence,
             int endOfOccurrence)
         {
             var configuration =
-                new StartDateVr209ValidationRuleConfiguration(new Interval<int>(startOfOccurrence, endOfOccurrence));
+                new StartDateValidationRuleConfiguration(new Interval<int>(startOfOccurrence, endOfOccurrence));
             return configuration;
         }
     }

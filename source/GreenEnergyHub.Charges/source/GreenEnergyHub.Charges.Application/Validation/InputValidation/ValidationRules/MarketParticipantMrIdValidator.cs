@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace GreenEnergyHub.Charges.Application.InputValidation.ValidationRules
+namespace GreenEnergyHub.Charges.Application.Validation.InputValidation.ValidationRules
 {
     public static class MarketParticipantMrIdValidator
     {

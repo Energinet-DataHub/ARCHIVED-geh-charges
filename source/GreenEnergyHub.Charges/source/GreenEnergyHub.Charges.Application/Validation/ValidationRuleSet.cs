@@ -15,23 +15,23 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace GreenEnergyHub.Charges.Application.Validation.BusinessValidation
+namespace GreenEnergyHub.Charges.Application.Validation
 {
-    public class BusinessValidationRuleSet : IBusinessValidationRuleSet
+    public class ValidationRuleSet : IValidationRuleSet
     {
-        private readonly List<IBusinessValidationRule> _rules;
+        private readonly List<IValidationRule> _rules;
 
-        private BusinessValidationRuleSet(List<IBusinessValidationRule> rules)
+        private ValidationRuleSet(List<IValidationRule> rules)
         {
             _rules = rules;
         }
 
-        public static IBusinessValidationRuleSet FromRules(List<IBusinessValidationRule> rules)
+        public static IValidationRuleSet FromRules(List<IValidationRule> rules)
         {
-            return new BusinessValidationRuleSet(rules);
+            return new ValidationRuleSet(rules);
         }
 
-        public IReadOnlyCollection<IBusinessValidationRule> GetRules() => _rules.AsReadOnly();
+        public IReadOnlyCollection<IValidationRule> GetRules() => _rules.AsReadOnly();
 
         public ChargeCommandValidationResult Validate()
         {

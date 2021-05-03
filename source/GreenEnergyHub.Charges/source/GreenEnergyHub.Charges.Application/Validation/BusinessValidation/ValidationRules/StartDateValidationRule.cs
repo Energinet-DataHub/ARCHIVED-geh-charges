@@ -17,17 +17,17 @@ using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
 using NodaTime;
 
-namespace GreenEnergyHub.Charges.Application.Validation.BusinessValidation.Rules
+namespace GreenEnergyHub.Charges.Application.Validation.BusinessValidation.ValidationRules
 {
-    public class StartDateVr209ValidationRule : IBusinessValidationRule
+    public class StartDateValidationRule : IValidationRule
     {
         private readonly Instant _validityStartDate;
         private readonly Instant _periodStart;
         private readonly Instant _periodEnd;
 
-        public StartDateVr209ValidationRule(
+        public StartDateValidationRule(
             [NotNull] ChargeCommand command,
-            [NotNull] StartDateVr209ValidationRuleConfiguration configuration,
+            [NotNull] StartDateValidationRuleConfiguration configuration,
             [NotNull] IZonedDateTimeService zonedDateTimeService)
         {
             _validityStartDate = command.MktActivityRecord!.ValidityStartDate;
@@ -39,7 +39,7 @@ namespace GreenEnergyHub.Charges.Application.Validation.BusinessValidation.Rules
 
         public bool IsValid => _validityStartDate >= _periodStart && _validityStartDate < _periodEnd;
 
-        public ValidationRule Rule => ValidationRule.TimeLimitsNotFollowed;
+        public ValidationRuleIdentifier ValidationRuleIdentifier => ValidationRuleIdentifier.TimeLimitsNotFollowed;
 
         private static Instant CalculatePeriodPoint(
             int numberOfDays,
