@@ -12,19 +12,23 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using FluentValidation.Validators;
-using GreenEnergyHub.Charges.Application.InputValidation.ValidationRules;
-using GreenEnergyHub.Messaging.Validation;
+using System.Diagnostics.CodeAnalysis;
+using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
+using GreenEnergyHub.Charges.Domain.Common;
 
 namespace GreenEnergyHub.Charges.Application.Validation.InputValidation.ValidationRules
 {
-    public class Vr153 : PropertyRule<string?>
+    public class ProcessTypeIsKnownValidationRule : IValidationRule
     {
-        protected override string Code => "RecipientIsMandatory";
+        private readonly ChargeCommand _chargeCommand;
 
-        protected override bool IsValid(string? marketParticipantMrId, PropertyValidatorContext context)
+        public ProcessTypeIsKnownValidationRule([NotNull] ChargeCommand chargeCommand)
         {
-            return MarketParticipantMrIdValidator.IsValid(marketParticipantMrId);
+            _chargeCommand = chargeCommand;
         }
+
+        public bool IsValid => _chargeCommand.MarketDocument!.ProcessType != ProcessType.Unknown;
+
+        public ValidationRuleIdentifier ValidationRuleIdentifier => ValidationRuleIdentifier.ProcessIsMandatory;
     }
 }

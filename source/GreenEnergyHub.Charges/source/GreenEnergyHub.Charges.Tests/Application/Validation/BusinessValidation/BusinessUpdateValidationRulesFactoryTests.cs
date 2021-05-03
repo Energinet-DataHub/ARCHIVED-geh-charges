@@ -20,7 +20,7 @@ using System.Threading.Tasks;
 using AutoFixture.Xunit2;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Application.Validation.BusinessValidation;
-using GreenEnergyHub.Charges.Application.Validation.BusinessValidation.Rules;
+using GreenEnergyHub.Charges.Application.Validation.BusinessValidation.ValidationRules;
 using GreenEnergyHub.Charges.Core;
 using GreenEnergyHub.Charges.Domain;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
@@ -46,7 +46,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Validation.BusinessValidation
             {
                 typeof(ChangingTariffVatValueNotAllowedRule),
                 typeof(ChangingTariffTaxValueNotAllowedRule),
-                typeof(StartDateVr209ValidationRule),
+                typeof(StartDateValidationRule),
             };
 
             var tariffUpdateCommand = TurnCommandIntoSpecifiedUpdateType(chargeCommand, ChargeCommandType.Tariff);
@@ -69,7 +69,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Validation.BusinessValidation
             // Arrange
             ConfigureRepository(updateRulesConfigurationRepository);
 
-            var expectedRules = new HashSet<Type> { typeof(StartDateVr209ValidationRule), };
+            var expectedRules = new HashSet<Type> { typeof(StartDateValidationRule), };
 
             var feeUpdateCommand = TurnCommandIntoSpecifiedUpdateType(chargeCommand, ChargeCommandType.Fee);
 
@@ -91,7 +91,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Validation.BusinessValidation
             // Arrange
             ConfigureRepository(updateRulesConfigurationRepository);
 
-            var expectedRules = new HashSet<Type> { typeof(StartDateVr209ValidationRule), };
+            var expectedRules = new HashSet<Type> { typeof(StartDateValidationRule), };
 
             var subscriptionUpdateCommand =
                 TurnCommandIntoSpecifiedUpdateType(chargeCommand, ChargeCommandType.Subscription);
@@ -111,7 +111,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Validation.BusinessValidation
         private static RulesConfiguration CreateConfiguration()
         {
             return new RulesConfiguration(
-                new StartDateVr209ValidationRuleConfiguration(new Interval<int>(31, 1095)));
+                new StartDateValidationRuleConfiguration(new Interval<int>(31, 1095)));
         }
 
         private static ChargeCommand TurnCommandIntoSpecifiedUpdateType(ChargeCommand chargeCommand, string commandType)

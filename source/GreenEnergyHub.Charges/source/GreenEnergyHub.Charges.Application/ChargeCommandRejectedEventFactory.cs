@@ -40,7 +40,7 @@ namespace GreenEnergyHub.Charges.Application
                 command!.CorrelationId!,
                 command!.MarketDocument!.MRid!,
                 command!.MktActivityRecord!.MRid!,
-                chargeCommandValidationResult.InvalidRules.Select(x => x.Rule.ToString()).ToArray());
+                chargeCommandValidationResult.InvalidRules.Select(x => x.ValidationRuleIdentifier.ToString()).ToArray());
         }
 
         public IInternalEvent CreateEvent(

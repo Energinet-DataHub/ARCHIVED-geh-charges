@@ -15,9 +15,9 @@
 using GreenEnergyHub.Charges.Domain;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
 
-namespace GreenEnergyHub.Charges.Application.Validation.BusinessValidation.Rules
+namespace GreenEnergyHub.Charges.Application.Validation.BusinessValidation.ValidationRules
 {
-    public class ChangingTariffTaxValueNotAllowedRule : IBusinessValidationRule
+    public class ChangingTariffTaxValueNotAllowedRule : IValidationRule
     {
         private readonly ChargeCommand _command;
         private readonly Charge _charge;
@@ -28,7 +28,7 @@ namespace GreenEnergyHub.Charges.Application.Validation.BusinessValidation.Rules
             _charge = charge;
         }
 
-        public ValidationRule Rule => ValidationRule.ChangingTariffTaxValueNotAllowed;
+        public ValidationRuleIdentifier ValidationRuleIdentifier => ValidationRuleIdentifier.ChangingTariffTaxValueNotAllowed;
 
         public bool IsValid => _command!.MktActivityRecord!.ChargeType!.TaxIndicator == _charge!.MktActivityRecord!.ChargeType!.TaxIndicator;
     }

@@ -12,17 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using GreenEnergyHub.Charges.Core;
-
-namespace GreenEnergyHub.Charges.Application.Validation.BusinessValidation.Rules
+namespace GreenEnergyHub.Charges.Application.Validation
 {
-    public class StartDateVr209ValidationRuleConfiguration
+    public enum ValidationRuleIdentifier
     {
-        public StartDateVr209ValidationRuleConfiguration(Interval<int> validIntervalFromNowInDays)
-        {
-            ValidIntervalFromNowInDays = validIntervalFromNowInDays;
-        }
-
-        public Interval<int> ValidIntervalFromNowInDays { get; }
+        TimeLimitsNotFollowed, // VR209
+        ChangingTariffVatValueNotAllowed, // VR630
+        ChangingTariffTaxValueNotAllowed, // VRXYZ
+        ProcessIsMandatory, // VR009
+        SenderIsMandatory, // VR150
+        RecipientIsMandatory, // VR153
     }
 }
