@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
@@ -90,6 +91,28 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Messaging
             Assert.NotNull(receivedMessage);
             Assert.Equal(correlationId, receivedMessage!.CorrelationId);
             Assert.True(content.SequenceEqual(receivedMessage.Body.ToArray()));
+        }
+
+        [Fact(Skip = "Manually run test to see the class can communicate with the service bus")]
+        public async Task WriteAsync_WhenManuallyRun_EndsUpOnServiceBus()
+        {
+            // Arrange
+            var correlationContext = new CorrelationContext();
+            correlationContext.CorrelationId = Guid.NewGuid().ToString();
+
+            var connectionString = "<your service bus connection string>";
+            await using ServiceBusClient client = new (connectionString);
+
+            var topic = "<your service bus topic>";
+            var sender = client.CreateSender(topic);
+
+            var messageText = "Hello world";
+            var message = Encoding.UTF8.GetBytes(messageText);
+
+            var sut = new TestableServiceBusChannel(sender, correlationContext);
+
+            // Act
+            await sut.WriteToAsync(message).ConfigureAwait(false);
         }
     }
 }
