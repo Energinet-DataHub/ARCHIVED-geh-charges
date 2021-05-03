@@ -29,9 +29,9 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Messaging
         {
         }
 
-        public Task WriteToAsync(byte[] data, CancellationToken cancellationToken = default)
+        public async Task WriteToAsync(byte[] data, CancellationToken cancellationToken = default)
         {
-            return WriteAsync(data, cancellationToken);
+            await WriteAsync(data, cancellationToken).ConfigureAwait(false);
         }
     }
 }
