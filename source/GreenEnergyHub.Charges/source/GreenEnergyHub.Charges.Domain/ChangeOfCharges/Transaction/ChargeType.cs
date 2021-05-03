@@ -23,7 +23,7 @@ namespace GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction
         public string Name { get; set; }
 
         [JsonPropertyName("description")]
-        public string? Description { get; set; }
+        public string Description { get; set; }
 
         [JsonPropertyName("VATPayer")]
         public string VatPayer { get; set; }

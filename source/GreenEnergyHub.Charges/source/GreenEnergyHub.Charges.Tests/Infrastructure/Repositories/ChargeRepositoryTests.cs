@@ -180,7 +180,6 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
         {
             var transaction = new Charge
             {
-                MRid = "chargeMRid",
                 ChargeTypeMRid = "chargeTypeMRid",
                 CorrelationId = "correlationId",
                 LastUpdatedBy = "lastUpdatedBy",

@@ -17,7 +17,7 @@ using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
 using GreenEnergyHub.Charges.Domain.Common;
 using MarketParticipant = GreenEnergyHub.Charges.Domain.Common.MarketParticipant;
 
-namespace GreenEnergyHub.Charges.MessageReceiver
+namespace GreenEnergyHub.Charges.Application
 {
     public static class ChargeCommandNullChecker
     {
@@ -64,7 +64,6 @@ namespace GreenEnergyHub.Charges.MessageReceiver
         {
             if (marketParticipant == null) throw new ArgumentNullException(nameof(marketParticipant));
             if (marketParticipant.MRid == null) throw new ArgumentNullException(marketParticipant.MRid);
-            if (marketParticipant.Name == null) throw new ArgumentNullException(marketParticipant.Name);
         }
 
         private static void CheckChargeCommandPeriod(ChargeTypePeriod chargeTypePeriod)

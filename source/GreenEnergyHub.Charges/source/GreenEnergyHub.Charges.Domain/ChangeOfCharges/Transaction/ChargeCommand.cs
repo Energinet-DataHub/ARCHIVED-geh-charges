@@ -37,7 +37,7 @@ namespace GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction
         [JsonPropertyName("ChargeTypeOwner_mRID")]
         public string ChargeTypeOwnerMRid { get; set; }
 
-        public ChargeTypePeriod? Period { get; set; }
+        public ChargeTypePeriod Period { get; set; }
 
         /// <summary>
         ///     The date this request was made.
