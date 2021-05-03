@@ -16,6 +16,7 @@ namespace GreenEnergyHub.Charges.Domain.Common
 {
     public enum MarketParticipantRole
     {
+        Unknown,
         EnergySupplier,
     }
 }

@@ -18,17 +18,19 @@ namespace GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction
 {
     public class ChargeType
     {
+#pragma warning disable 8618
         [JsonPropertyName("name")]
-        public string? Name { get; set; }
+        public string Name { get; set; }
 
         [JsonPropertyName("description")]
         public string? Description { get; set; }
 
         [JsonPropertyName("VATPayer")]
-        public string? VatPayer { get; set; }
+        public string VatPayer { get; set; }
 
         public bool TransparentInvoicing { get; set; }
 
         public bool TaxIndicator { get; set; }
+#pragma warning restore 8618
     }
 }

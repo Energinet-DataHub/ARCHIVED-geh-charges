@@ -18,12 +18,14 @@ namespace GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction
 {
     public class ChargeTypePeriod
     {
+#pragma warning disable 8618
         public ChargeTypePeriod()
         {
             Points = new ();
         }
+#pragma warning restore 8618
 
-        public string? Resolution { get; set; }
+        public string Resolution { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2227", Justification = "JSON deserialization")]
         public List<Point> Points { get; set; }

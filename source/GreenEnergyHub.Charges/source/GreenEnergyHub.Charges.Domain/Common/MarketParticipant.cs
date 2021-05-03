@@ -18,10 +18,12 @@ namespace GreenEnergyHub.Charges.Domain.Common
     {
         public int Id { get; set; }
 
-        public string? MRid { get; set; }
+#pragma warning disable 8618
+        public string MRid { get; set; }
 
-        public string? Name { get; set; }
+        public string Name { get; set; }
 
-        public MarketParticipantRole? Role { get; set; }
+        public MarketParticipantRole Role { get; set; }
+#pragma warning restore 8618
     }
 }

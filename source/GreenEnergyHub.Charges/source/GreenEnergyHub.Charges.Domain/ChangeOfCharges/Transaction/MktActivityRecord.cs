@@ -18,7 +18,8 @@ namespace GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction
 {
     public class MktActivityRecord
     {
-        public string? MRid { get; set; }
+#pragma warning disable 8618
+        public string MRid { get; set; }
 
         public Instant ValidityStartDate { get; set; }
 
@@ -26,6 +27,7 @@ namespace GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction
 
         public MktActivityRecordStatus Status { get; set; }
 
-        public ChargeType? ChargeType { get; set; }
+        public ChargeType ChargeType { get; set; }
+#pragma warning restore 8618
     }
 }

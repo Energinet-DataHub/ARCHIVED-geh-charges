@@ -19,20 +19,22 @@ namespace GreenEnergyHub.Charges.Domain.Common
 {
     public class MarketDocument
     {
+#pragma warning disable 8618
         [JsonPropertyName("mRID")]
-        public string? MRid { get; set; }
+        public string MRid { get; set; }
 
         public Instant CreatedDateTime { get; set; }
 
         [JsonPropertyName("Sender_MarketParticipant")]
-        public MarketParticipant? SenderMarketParticipant { get; set; }
+        public MarketParticipant SenderMarketParticipant { get; set; }
 
         [JsonPropertyName("Receiver_MarketParticipant")]
-        public MarketParticipant? ReceiverMarketParticipant { get; set; }
+        public MarketParticipant ReceiverMarketParticipant { get; set; }
 
         public ProcessType ProcessType { get; set; }
 
         [JsonPropertyName("Market_ServiceCategoryKind")]
         public ServiceCategoryKind MarketServiceCategoryKind { get; set; }
+#pragma warning restore 8618
     }
 }

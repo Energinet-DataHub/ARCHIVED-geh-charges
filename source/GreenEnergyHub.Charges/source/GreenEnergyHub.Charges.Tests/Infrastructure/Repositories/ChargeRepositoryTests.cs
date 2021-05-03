@@ -163,7 +163,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
             var chargeType = new ChargeType { Code = changeOfChargesMessage.Type, Id = 1, Name = "Name" };
             var chargeTypeOwnerMRid = new MarketParticipant { Id = 1, MRid = changeOfChargesMessage.ChargeTypeOwnerMRid };
             var resolutionType = new ResolutionType { Id = 1, Name = changeOfChargesMessage.Period?.Resolution };
-            var vatPayerType = new VatPayerType { Id = 1, Name = changeOfChargesMessage.MktActivityRecord?.ChargeType?.VatPayer };
+            var vatPayerType = new VatPayerType { Id = 1, Name = changeOfChargesMessage.MktActivityRecord.ChargeType.VatPayer };
 
             // When
             var result = ChangeOfChargesMapper.MapChangeOfChargesTransactionToCharge(changeOfChargesMessage, chargeType, chargeTypeOwnerMRid, resolutionType, vatPayerType);

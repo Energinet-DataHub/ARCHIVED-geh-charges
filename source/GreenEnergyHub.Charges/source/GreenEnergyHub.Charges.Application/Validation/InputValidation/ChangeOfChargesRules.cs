@@ -26,11 +26,12 @@ namespace GreenEnergyHub.Charges.Application.Validation.InputValidation
             RuleFor(input => input.MarketDocument!.ProcessType)
                 .PropertyRule<Vr009>();
 
-            RuleFor(input => input.MarketDocument!.SenderMarketParticipant!.MRid)
-                .PropertyRule<Vr150>();
-
-            RuleFor(input => input.MarketDocument!.ReceiverMarketParticipant!.MRid)
-                .PropertyRule<Vr153>();
+            // After our own inputvalidation this class will cease to exist.
+            // RuleFor(input => input.MarketDocument!.SenderMarketParticipant!.MRid)
+            //     .PropertyRule<Vr150>();
+            //
+            // RuleFor(input => input.MarketDocument!.ReceiverMarketParticipant!.MRid)
+            //     .PropertyRule<Vr153>();
         }
     }
 }

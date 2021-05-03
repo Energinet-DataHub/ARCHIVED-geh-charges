@@ -19,18 +19,20 @@ namespace GreenEnergyHub.Charges.Infrastructure.Context.Model
 {
     public class Charge
     {
+#pragma warning disable 8618
         public Charge()
         {
             ChargePrices = new List<ChargePrice>();
         }
+#pragma warning restore 8618
 
         public int Id { get; set; }
 
-        public string? MRid { get; set; }
+        public string MRid { get; set; }
 
-        public virtual ChargeType? ChargeType { get; set; }
+        public virtual ChargeType ChargeType { get; set; }
 
-        public string? Name { get; set; }
+        public string Name { get; set; }
 
         public string? Description { get; set; }
 
@@ -43,23 +45,23 @@ namespace GreenEnergyHub.Charges.Infrastructure.Context.Model
         public string? Currency { get; set; }
 
         [ForeignKey("ChargeTypeOwnerID")]
-        public virtual MarketParticipant? ChargeTypeOwner { get; set; }
+        public virtual MarketParticipant ChargeTypeOwner { get; set; }
 
         public bool TransparentInvoicing { get; set; }
 
         public bool TaxIndicator { get; set; }
 
-        public virtual ResolutionType? ResolutionType { get; set; }
+        public virtual ResolutionType ResolutionType { get; set; }
 
-        public virtual VatPayerType? VatPayer { get; set; }
+        public virtual VatPayerType VatPayer { get; set; }
 
         public virtual List<ChargePrice> ChargePrices { get; }
 
-        public string? LastUpdatedByCorrelationId { get; set; }
+        public string LastUpdatedByCorrelationId { get; set; }
 
-        public string? LastUpdatedByTransactionId { get; set; }
+        public string LastUpdatedByTransactionId { get; set; }
 
-        public string? LastUpdatedBy { get; set; }
+        public string LastUpdatedBy { get; set; }
 
         public long RequestDateTime { get; set; }
     }

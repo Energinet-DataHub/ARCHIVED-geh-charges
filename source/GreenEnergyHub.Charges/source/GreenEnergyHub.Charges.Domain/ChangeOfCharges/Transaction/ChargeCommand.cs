@@ -21,20 +21,21 @@ namespace GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction
 {
     public class ChargeCommand : CommandBase
     {
-        public MarketDocument? MarketDocument { get; set; }
+#pragma warning disable 8618
+        public MarketDocument MarketDocument { get; set; }
 
-        public MktActivityRecord? MktActivityRecord { get; set; }
+        public MktActivityRecord MktActivityRecord { get; set; }
 
         /// <summary>
         /// The kind of charge: Fee ("D02") | Subscription ("D01") | Tariff ("D03").
         /// </summary>
-        public string? Type { get; set; }
+        public string Type { get; set; }
 
         [JsonPropertyName("ChargeType_mRID")]
-        public string? ChargeTypeMRid { get; set; }
+        public string ChargeTypeMRid { get; set; }
 
         [JsonPropertyName("ChargeTypeOwner_mRID")]
-        public string? ChargeTypeOwnerMRid { get; set; }
+        public string ChargeTypeOwnerMRid { get; set; }
 
         public ChargeTypePeriod? Period { get; set; }
 
@@ -43,10 +44,9 @@ namespace GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction
         /// </summary>
         public Instant RequestDate { get; set; } = SystemClock.Instance.GetCurrentInstant();
 
-        public string? CorrelationId { get; set; }
+        public string CorrelationId { get; set; }
 
-        public string? LastUpdatedBy { get; set; }
-
-        public string? MRid { get; set; }
+        public string LastUpdatedBy { get; set; }
+#pragma warning restore 8618
     }
 }

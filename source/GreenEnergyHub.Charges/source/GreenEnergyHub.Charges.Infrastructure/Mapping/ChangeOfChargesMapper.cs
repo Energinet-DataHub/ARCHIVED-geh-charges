@@ -94,7 +94,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Mapping
                     {
                         Name = charge.Name,
                         TaxIndicator = charge.TaxIndicator,
-                        VatPayer = charge.VatPayer?.Name,
+                        VatPayer = charge.VatPayer.Name,
                         Description = charge.Description,
                         TransparentInvoicing = charge.TransparentInvoicing,
                     },
@@ -104,7 +104,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Mapping
                 RequestDate = Instant.FromUnixTimeTicks(charge.RequestDateTime),
                 LastUpdatedBy = charge.LastUpdatedBy,
                 CorrelationId = charge.LastUpdatedByCorrelationId,
-                ChargeTypeOwnerMRid = charge.ChargeTypeOwner?.MRid,
+                ChargeTypeOwnerMRid = charge.ChargeTypeOwner.MRid,
             };
         }
     }
