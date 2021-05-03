@@ -38,7 +38,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Messaging
     {
         [Theory]
         [InlineAutoDomainData]
-        public async Task WriteAsync_WhenNoCorrectionId_SendsMessageWithoutCorrelationId(
+        public async Task WriteAsync_WhenNoCorrelationId_SendsMessageWithoutCorrelationId(
             [NotNull] [Frozen] Mock<ICorrelationContext> correlationContext,
             [NotNull] [Frozen] Mock<MockableServiceBusSender> serviceBusSender,
             [NotNull] byte[] content)
@@ -66,7 +66,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Messaging
 
         [Theory]
         [InlineAutoDomainData]
-        public async Task WriteAsync_WhenCorrectionId_SendsMessageWithCorrelationId(
+        public async Task WriteAsync_WhenCorrelationId_SendsMessageWithCorrelationId(
             [NotNull] [Frozen] Mock<ICorrelationContext> correlationContext,
             [NotNull] [Frozen] Mock<MockableServiceBusSender> serviceBusSender,
             [NotNull] byte[] content,
