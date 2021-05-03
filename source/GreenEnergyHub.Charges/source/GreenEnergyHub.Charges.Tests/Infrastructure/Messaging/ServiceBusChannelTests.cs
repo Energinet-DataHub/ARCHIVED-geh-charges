@@ -12,8 +12,19 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
+using System.Linq;
+using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
+using AutoFixture.Xunit2;
+using Azure.Messaging.ServiceBus;
+using GreenEnergyHub.Charges.Infrastructure.Messaging;
+using GreenEnergyHub.TestHelpers;
 using GreenEnergyHub.TestHelpers.Traits;
+using Microsoft.VisualStudio.TestPlatform.CommunicationUtilities;
+using Moq;
 using Xunit;
 
 namespace GreenEnergyHub.Charges.Tests.Infrastructure.Messaging
@@ -24,10 +35,61 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Messaging
     [Trait(TraitNames.Category, TraitValues.UnitTest)]
     public class ServiceBusChannelTests
     {
-        [Fact]
-        public async Task WriteAsync_WhenOnInterrupted_AddsMessage()
+        [Theory]
+        [InlineAutoDomainData]
+        public async Task WriteAsync_WhenNoCorrectionId_SendsMessageWithoutCorrelationId(
+            [NotNull] [Frozen] Mock<ICorrelationContext> correlationContext,
+            [NotNull] [Frozen] Mock<MockableServiceBusSender> serviceBusSender,
+            [NotNull] byte[] content)
         {
-            await Task.FromResult(Task.CompletedTask).ConfigureAwait(false);
+            // Arrange
+            ServiceBusMessage? receivedMessage = null;
+            serviceBusSender
+                .Setup(s => s.SendMessageAsync(
+                    It.IsAny<ServiceBusMessage>(),
+                    It.IsAny<CancellationToken>()))
+                .Callback<ServiceBusMessage, CancellationToken>((message, token) => receivedMessage = message);
+
+            correlationContext.Setup(c => c.CorrelationId).Returns(string.Empty);
+
+            var sut = new TestableServiceBusChannel(serviceBusSender.Object, correlationContext.Object);
+
+            // Act
+            await sut.WriteToAsync(content).ConfigureAwait(false);
+
+            // Assert
+            Assert.NotNull(receivedMessage);
+            Assert.Empty(receivedMessage!.CorrelationId);
+            Assert.True(content.SequenceEqual(receivedMessage.Body.ToArray()));
+        }
+
+        [Theory]
+        [InlineAutoDomainData]
+        public async Task WriteAsync_WhenCorrectionId_SendsMessageWithCorrelationId(
+            [NotNull] [Frozen] Mock<ICorrelationContext> correlationContext,
+            [NotNull] [Frozen] Mock<MockableServiceBusSender> serviceBusSender,
+            [NotNull] byte[] content,
+            [NotNull] string correlationId)
+        {
+            // Arrange
+            ServiceBusMessage? receivedMessage = null;
+            serviceBusSender
+                .Setup(s => s.SendMessageAsync(
+                    It.IsAny<ServiceBusMessage>(),
+                    It.IsAny<CancellationToken>()))
+                .Callback<ServiceBusMessage, CancellationToken>((message, token) => receivedMessage = message);
+
+            correlationContext.Setup(c => c.CorrelationId).Returns(correlationId);
+
+            var sut = new TestableServiceBusChannel(serviceBusSender.Object, correlationContext.Object);
+
+            // Act
+            await sut.WriteToAsync(content).ConfigureAwait(false);
+
+            // Assert
+            Assert.NotNull(receivedMessage);
+            Assert.Equal(correlationId, receivedMessage!.CorrelationId);
+            Assert.True(content.SequenceEqual(receivedMessage.Body.ToArray()));
         }
     }
 }
