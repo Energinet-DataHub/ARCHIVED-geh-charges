@@ -50,11 +50,6 @@ namespace GreenEnergyHub.Charges.Infrastructure.Messaging
 
         private ServiceBusMessage GetServiceBusMessage(byte[] data)
         {
-            if (string.IsNullOrWhiteSpace(_correlationContext.CorrelationId))
-            {
-                return new ServiceBusMessage(data);
-            }
-
             return new ServiceBusMessage(data)
             {
                 CorrelationId = _correlationContext.CorrelationId,
