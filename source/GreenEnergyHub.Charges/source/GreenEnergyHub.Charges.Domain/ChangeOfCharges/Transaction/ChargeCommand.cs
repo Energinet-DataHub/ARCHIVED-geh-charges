@@ -16,37 +16,39 @@ using System.Text.Json.Serialization;
 using GreenEnergyHub.Charges.Domain.Command;
 using NodaTime;
 using MarketDocument = GreenEnergyHub.Charges.Domain.Common.MarketDocument;
+#pragma warning disable 8618
 
 namespace GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction
 {
+    // Non-nullable member is uninitialized is ignored
+    // Only properties which is allowed to be null is nullable
+    // ChargeCommand integrity is null checked by ChargeCommandNullChecker
     public class ChargeCommand : CommandBase
     {
-        public MarketDocument? MarketDocument { get; set; }
+        public MarketDocument MarketDocument { get; set; }
 
-        public MktActivityRecord? MktActivityRecord { get; set; }
+        public MktActivityRecord MktActivityRecord { get; set; }
 
         /// <summary>
         /// The kind of charge: Fee ("D02") | Subscription ("D01") | Tariff ("D03").
         /// </summary>
-        public string? Type { get; set; }
+        public string Type { get; set; }
 
         [JsonPropertyName("ChargeType_mRID")]
-        public string? ChargeTypeMRid { get; set; }
+        public string ChargeTypeMRid { get; set; }
 
         [JsonPropertyName("ChargeTypeOwner_mRID")]
-        public string? ChargeTypeOwnerMRid { get; set; }
+        public string ChargeTypeOwnerMRid { get; set; }
 
-        public ChargeTypePeriod? Period { get; set; }
+        public ChargeTypePeriod Period { get; set; }
 
         /// <summary>
         ///     The date this request was made.
         /// </summary>
         public Instant RequestDate { get; set; } = SystemClock.Instance.GetCurrentInstant();
 
-        public string? CorrelationId { get; set; }
+        public string CorrelationId { get; set; }
 
-        public string? LastUpdatedBy { get; set; }
-
-        public string? MRid { get; set; }
+        public string LastUpdatedBy { get; set; }
     }
 }
