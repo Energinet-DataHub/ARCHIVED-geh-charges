@@ -32,14 +32,6 @@ namespace GreenEnergyHub.Charges.Infrastructure.Mapping
             VatPayerType vatPayerType)
         {
             if (chargeCommand == null) throw new ArgumentNullException(nameof(chargeCommand));
-            if (string.IsNullOrWhiteSpace(chargeCommand.ChargeTypeMRid)) throw new ArgumentException($"{nameof(chargeCommand.ChargeTypeMRid)} must have value");
-            if (string.IsNullOrWhiteSpace(chargeCommand.CorrelationId)) throw new ArgumentException($"{nameof(chargeCommand.CorrelationId)} must have value");
-            if (string.IsNullOrWhiteSpace(chargeCommand.LastUpdatedBy)) throw new ArgumentException($"{nameof(chargeCommand.LastUpdatedBy)} must have value");
-            if (chargeCommand.MktActivityRecord?.ChargeType == null) throw new ArgumentException($"{nameof(chargeCommand.MktActivityRecord.ChargeType)} can't be null");
-            if (string.IsNullOrWhiteSpace(chargeCommand.MktActivityRecord.ChargeType.Name)) throw new ArgumentException($"{nameof(chargeCommand.MktActivityRecord.ChargeType.Name)} must have value");
-            if (string.IsNullOrWhiteSpace(chargeCommand.MktActivityRecord.ChargeType.Description)) throw new ArgumentException($"{nameof(chargeCommand.MktActivityRecord.ChargeType.Description)} must have value");
-            if (chargeCommand.Period == null) throw new ArgumentException($"{nameof(chargeCommand.Period)} can't be null");
-            if (chargeCommand.Period.Points == null) throw new ArgumentException($"{nameof(chargeCommand.Period.Points)} can't be null");
 
             var charge = new Charge
             {

@@ -63,10 +63,10 @@ namespace GreenEnergyHub.Charges.Infrastructure.Repositories
             if (chargeType == null) throw new Exception($"No charge type for {newCharge.Type}");
 
             var resolutionType = await GetResolutionTypeAsync(newCharge).ConfigureAwait(false);
-            if (resolutionType == null) throw new Exception($"No resolution type for {newCharge.Period?.Resolution}");
+            if (resolutionType == null) throw new Exception($"No resolution type for {newCharge.Period.Resolution}");
 
             var vatPayerType = await GetVatPayerTypeAsync(newCharge).ConfigureAwait(false);
-            if (vatPayerType == null) throw new Exception($"No VAT payer type for {newCharge.MktActivityRecord?.ChargeType?.VatPayer}");
+            if (vatPayerType == null) throw new Exception($"No VAT payer type for {newCharge.MktActivityRecord.ChargeType.VatPayer}");
 
             var chargeTypeOwnerMRid = await GetChargeTypeOwnerMRidAsync(newCharge).ConfigureAwait(false);
             if (chargeTypeOwnerMRid == null) throw new Exception($"No market participant for {newCharge.ChargeTypeOwnerMRid}");
