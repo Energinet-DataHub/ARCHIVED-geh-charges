@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System;
+using System.Linq;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
 using GreenEnergyHub.Charges.Domain.Common;
 using MarketParticipant = GreenEnergyHub.Charges.Domain.Common.MarketParticipant;
@@ -36,6 +37,7 @@ namespace GreenEnergyHub.Charges.Application
             if (string.IsNullOrWhiteSpace(chargeCommand.LastUpdatedBy)) throw new ArgumentException(chargeCommand.LastUpdatedBy);
             if (string.IsNullOrWhiteSpace(chargeCommand.Type)) throw new ArgumentException(chargeCommand.Type);
             if (string.IsNullOrWhiteSpace(chargeCommand.ChargeTypeOwnerMRid)) throw new ArgumentException(chargeCommand.ChargeTypeOwnerMRid);
+            if (string.IsNullOrWhiteSpace(chargeCommand.ChargeTypeMRid)) throw new ArgumentException(chargeCommand.ChargeTypeOwnerMRid);
         }
 
         private static void CheckChargeCommandMktActivityRecord(MktActivityRecord mktActivityRecord)
@@ -50,6 +52,7 @@ namespace GreenEnergyHub.Charges.Application
             if (chargeType == null) throw new ArgumentNullException(nameof(chargeType));
             if (string.IsNullOrWhiteSpace(chargeType.Name)) throw new ArgumentException(chargeType.Name);
             if (string.IsNullOrWhiteSpace(chargeType.VatPayer)) throw new ArgumentException(chargeType.VatPayer);
+            if (string.IsNullOrWhiteSpace(chargeType.Description)) throw new ArgumentException(chargeType.Description);
         }
 
         private static void CheckChargeCommandMarketDocument(MarketDocument marketDocument)
