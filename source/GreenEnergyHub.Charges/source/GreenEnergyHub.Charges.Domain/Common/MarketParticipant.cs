@@ -12,16 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#pragma warning disable 8618
 namespace GreenEnergyHub.Charges.Domain.Common
 {
+    // Non-nullable member is uninitialized is ignored
+    // Only properties which is allowed to be null is nullable
+    // MarketParticipant integrity is null checked by ChargeCommandNullChecker
     public class MarketParticipant
     {
         public int Id { get; set; }
 
-#pragma warning disable 8618
         public string MRid { get; set; }
 
         public MarketParticipantRole Role { get; set; }
-#pragma warning restore 8618
     }
 }

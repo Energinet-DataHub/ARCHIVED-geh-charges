@@ -13,17 +13,19 @@
 // limitations under the License.
 
 using System.Collections.Generic;
+#pragma warning disable 8618
 
 namespace GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction
 {
+    // Non-nullable member is uninitialized is ignored
+    // Only properties which is allowed to be null is nullable
+    // ChargeTypePeriod integrity is null checked by ChargeCommandNullChecker
     public class ChargeTypePeriod
     {
-#pragma warning disable 8618
         public ChargeTypePeriod()
         {
             Points = new ();
         }
-#pragma warning restore 8618
 
         public string Resolution { get; set; }
 

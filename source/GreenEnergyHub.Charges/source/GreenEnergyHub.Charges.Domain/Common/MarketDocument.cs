@@ -14,12 +14,15 @@
 
 using System.Text.Json.Serialization;
 using NodaTime;
+#pragma warning disable 8618
 
 namespace GreenEnergyHub.Charges.Domain.Common
 {
+    // Non-nullable member is uninitialized is ignored
+    // Only properties which is allowed to be null is nullable
+    // MarketDocument integrity is null checked by ChargeCommandNullChecker
     public class MarketDocument
     {
-#pragma warning disable 8618
         [JsonPropertyName("mRID")]
         public string MRid { get; set; }
 
@@ -35,6 +38,5 @@ namespace GreenEnergyHub.Charges.Domain.Common
 
         [JsonPropertyName("Market_ServiceCategoryKind")]
         public ServiceCategoryKind MarketServiceCategoryKind { get; set; }
-#pragma warning restore 8618
     }
 }

@@ -16,12 +16,15 @@ using System.Text.Json.Serialization;
 using GreenEnergyHub.Charges.Domain.Command;
 using NodaTime;
 using MarketDocument = GreenEnergyHub.Charges.Domain.Common.MarketDocument;
+#pragma warning disable 8618
 
 namespace GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction
 {
+    // Non-nullable member is uninitialized is ignored
+    // Only properties which is allowed to be null is nullable
+    // ChargeCommand integrity is null checked by ChargeCommandNullChecker
     public class ChargeCommand : CommandBase
     {
-#pragma warning disable 8618
         public MarketDocument MarketDocument { get; set; }
 
         public MktActivityRecord MktActivityRecord { get; set; }
@@ -47,6 +50,5 @@ namespace GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction
         public string CorrelationId { get; set; }
 
         public string LastUpdatedBy { get; set; }
-#pragma warning restore 8618
     }
 }
