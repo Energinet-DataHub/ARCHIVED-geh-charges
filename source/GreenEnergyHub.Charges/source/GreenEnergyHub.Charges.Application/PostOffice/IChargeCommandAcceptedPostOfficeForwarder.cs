@@ -12,9 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace GreenEnergyHub.Charges.Domain.ChangeOfCharges.Fee
+using System.Threading.Tasks;
+using GreenEnergyHub.Charges.Domain.Events.Local;
+
+namespace GreenEnergyHub.Charges.Application.PostOffice
 {
-    public class FeeCreateValidationFailed : FeeBase
+    public interface IChargeCommandAcceptedPostOfficeForwarder
     {
+        Task HandleAsync(ChargeCommandAcceptedEvent acceptedEvent);
     }
 }

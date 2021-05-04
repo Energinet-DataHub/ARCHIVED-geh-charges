@@ -12,11 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
+using System.Diagnostics.CodeAnalysis;
+using System.Threading.Tasks;
+using GreenEnergyHub.Charges.Domain.PostOffice;
 
-namespace GreenEnergyHub.Charges.Domain.ChangeOfCharges.Tariff
+namespace GreenEnergyHub.Charges.Infrastructure.PostOffice
 {
-    public abstract class TariffBase : ChargeCommand
+    public interface IPostOfficeService
     {
+        Task SendAsync([NotNull] ChargeCommandAcceptedAcknowledgement acknowledgement);
     }
 }
