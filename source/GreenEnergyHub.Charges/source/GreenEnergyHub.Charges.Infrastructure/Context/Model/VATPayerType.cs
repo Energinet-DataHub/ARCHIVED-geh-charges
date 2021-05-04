@@ -18,6 +18,8 @@ namespace GreenEnergyHub.Charges.Infrastructure.Context.Model
     {
         public int Id { get; set; }
 
-        public string? Name { get; set; }
+#pragma warning disable 8618
+        public string Name { get; set; }
+#pragma warning restore 8618
     }
 }

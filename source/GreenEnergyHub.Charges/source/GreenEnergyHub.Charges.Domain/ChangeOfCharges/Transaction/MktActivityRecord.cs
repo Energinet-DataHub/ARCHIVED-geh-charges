@@ -13,12 +13,16 @@
 // limitations under the License.
 
 using NodaTime;
+#pragma warning disable 8618
 
 namespace GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction
 {
+    // Non-nullable member is uninitialized is ignored
+    // Only properties which is allowed to be null is nullable
+    // MktActivityRecord integrity is null checked by ChargeCommandNullChecker
     public class MktActivityRecord
     {
-        public string? MRid { get; set; }
+        public string MRid { get; set; }
 
         public Instant ValidityStartDate { get; set; }
 
@@ -26,6 +30,6 @@ namespace GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction
 
         public MktActivityRecordStatus Status { get; set; }
 
-        public ChargeType? ChargeType { get; set; }
+        public ChargeType ChargeType { get; set; }
     }
 }

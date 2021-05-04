@@ -13,19 +13,23 @@
 // limitations under the License.
 
 using System.Text.Json.Serialization;
+#pragma warning disable 8618
 
 namespace GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction
 {
+    // Non-nullable member is uninitialized is ignored
+    // Only properties which is allowed to be null is nullable
+    // ChargeType integrity is null checked by ChargeCommandNullChecker
     public class ChargeType
     {
         [JsonPropertyName("name")]
-        public string? Name { get; set; }
+        public string Name { get; set; }
 
         [JsonPropertyName("description")]
-        public string? Description { get; set; }
+        public string Description { get; set; }
 
         [JsonPropertyName("VATPayer")]
-        public string? VatPayer { get; set; }
+        public string VatPayer { get; set; }
 
         public bool TransparentInvoicing { get; set; }
 

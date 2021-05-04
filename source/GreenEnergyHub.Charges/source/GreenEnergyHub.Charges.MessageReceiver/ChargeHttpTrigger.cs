@@ -60,6 +60,11 @@ namespace GreenEnergyHub.Charges.MessageReceiver
             var message = await GetChangeOfChargesMessageAsync(_jsonDeserializer, req)
                 .ConfigureAwait(false);
 
+            foreach (var messageTransaction in message.Transactions)
+            {
+                ChargeCommandNullChecker.ThrowExceptionIfRequiredPropertyIsNull(messageTransaction);
+            }
+
             var messageResult = await _changeOfChargesMessageHandler.HandleAsync(message)
                 .ConfigureAwait(false);
 
