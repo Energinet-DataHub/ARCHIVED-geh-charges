@@ -1,0 +1,35 @@
+# Copyright 2020 Energinet DataHub A/S
+#
+# Licensed under the Apache License, Version 2.0 (the "License2");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+data "azurerm_subscription" "current" {}
+
+data "template_file" "dash_charges_template" {
+  template = "${file("${path.module}/dash-charges-template.json")}"
+  vars = {
+	subscription_id          = data.azurerm_subscription.current.subscription_id
+	resouce_group_name       = data.azurerm_resource_group.main.name
+	application_insight_name = module.appi.name
+    service_bus_namespace    = module.sbn_charges.name
+  }
+}
+
+resource "azurerm_dashboard" "dash_charges" {
+  name                = "dash-${var.project}-${var.organisation}-${var.environment}"
+  resource_group_name = data.azurerm_resource_group.main.name
+  location            = data.azurerm_resource_group.main.location
+  tags = {
+    source         = "terraform",
+    "hidden-title" = "Charges Domain"
+  }
+  dashboard_properties = data.template_file.dash_charges_template.rendered
+}
