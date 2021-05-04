@@ -32,5 +32,4 @@ resource "azurerm_dashboard" "dash_charges" {
     "hidden-title" = "Charges Domain"
   }
   dashboard_properties = data.template_file.dash_charges_template.rendered
-  depends_on           = [module.webtest_charges_message_receiver]
 }
