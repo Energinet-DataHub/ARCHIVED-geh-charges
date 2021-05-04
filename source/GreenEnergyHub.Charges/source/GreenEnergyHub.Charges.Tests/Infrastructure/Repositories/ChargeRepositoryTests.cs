@@ -15,7 +15,6 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Domain;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
 using GreenEnergyHub.Charges.Infrastructure.Context;
 using GreenEnergyHub.Charges.Infrastructure.Context.Model;
@@ -161,9 +160,9 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
             var changeOfChargesMessage = GetValidCharge();
             changeOfChargesMessage!.MktActivityRecord!.ValidityEndDate = Instant.MaxValue;
             var chargeType = new ChargeType { Code = changeOfChargesMessage.Type, Id = 1, Name = "Name" };
-            var chargeTypeOwnerMRid = new MarketParticipant { Id = 1, MRid = changeOfChargesMessage.ChargeTypeOwnerMRid };
-            var resolutionType = new ResolutionType { Id = 1, Name = changeOfChargesMessage.Period?.Resolution };
-            var vatPayerType = new VatPayerType { Id = 1, Name = changeOfChargesMessage.MktActivityRecord?.ChargeType?.VatPayer };
+            var chargeTypeOwnerMRid = new MarketParticipant { Id = 1, MRid = changeOfChargesMessage.ChargeTypeOwnerMRid, Name = "Name" };
+            var resolutionType = new ResolutionType { Id = 1, Name = changeOfChargesMessage.Period.Resolution };
+            var vatPayerType = new VatPayerType { Id = 1, Name = changeOfChargesMessage.MktActivityRecord.ChargeType.VatPayer };
 
             // When
             var result = ChangeOfChargesMapper.MapChangeOfChargesTransactionToCharge(changeOfChargesMessage, chargeType, chargeTypeOwnerMRid, resolutionType, vatPayerType);
@@ -180,7 +179,6 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
         {
             var transaction = new Charge
             {
-                MRid = "chargeMRid",
                 ChargeTypeMRid = "chargeTypeMRid",
                 CorrelationId = "correlationId",
                 LastUpdatedBy = "lastUpdatedBy",
@@ -199,9 +197,12 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
                 },
             };
             transaction.Period.AddPoints(new List<Point>
-{
-    new Point { Position = 1, PriceAmount = 1m, Time = SystemClock.Instance.GetCurrentInstant(), },
-});
+                    {
+                    new Point
+                    {
+                        Position = 1, PriceAmount = 1m, Time = SystemClock.Instance.GetCurrentInstant(),
+                    },
+                    });
             return transaction;
         }
 
@@ -226,6 +227,8 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
                 {
                     MRid = KnownChargeOwner,
                     Id = 1,
+                    Name = "Name",
+                    Role = "Role",
                 },
             };
             context.AddRange(chargeOwners);
