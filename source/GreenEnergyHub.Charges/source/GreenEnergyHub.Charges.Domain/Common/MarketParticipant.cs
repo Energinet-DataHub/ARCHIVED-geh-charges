@@ -24,6 +24,8 @@ namespace GreenEnergyHub.Charges.Domain.Common
 
         public string MRid { get; set; }
 
+        public string Name { get; set; }
+
         public MarketParticipantRole Role { get; set; }
     }
 }
