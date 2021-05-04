@@ -87,7 +87,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Repositories
 
         private async Task<VatPayerType?> GetVatPayerTypeAsync(ChargeCommand chargeMessage)
         {
-            return string.IsNullOrWhiteSpace(chargeMessage.MktActivityRecord?.ChargeType?.VatPayer)
+            return string.IsNullOrWhiteSpace(chargeMessage.MktActivityRecord.ChargeType.VatPayer)
                 ? throw new ArgumentException($"Fails as {nameof(chargeMessage.MktActivityRecord.ChargeType.VatPayer)} is invalid")
                 : await _chargesDatabaseContext.VatPayerType.SingleOrDefaultAsync(type =>
                 type.Name == chargeMessage.MktActivityRecord.ChargeType.VatPayer).ConfigureAwait(false);
@@ -95,7 +95,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Repositories
 
         private async Task<ResolutionType?> GetResolutionTypeAsync(ChargeCommand chargeMessage)
         {
-            return string.IsNullOrWhiteSpace(chargeMessage.Period?.Resolution)
+            return string.IsNullOrWhiteSpace(chargeMessage.Period.Resolution)
                 ? throw new ArgumentException($"Fails as {nameof(chargeMessage.Period.Resolution)} is invalid")
                 : await _chargesDatabaseContext.ResolutionType.SingleOrDefaultAsync(type => type.Name == chargeMessage.Period.Resolution).ConfigureAwait(false);
         }
