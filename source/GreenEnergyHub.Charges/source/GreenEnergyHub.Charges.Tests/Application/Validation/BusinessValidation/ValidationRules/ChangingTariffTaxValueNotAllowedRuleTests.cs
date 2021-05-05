@@ -27,7 +27,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Validation.BusinessValidation
         [InlineAutoDomainData]
         public void IsValid_WhenTaxIndicatorInCommandDoesNotMatchCharge_IsFalse([NotNull]ChargeCommand command, [NotNull] Charge charge)
         {
-            command.MktActivityRecord.ChargeType.TaxIndicator = charge!.MktActivityRecord.ChargeType.TaxIndicator;
+            command.MktActivityRecord.ChargeType.TaxIndicator = !charge.MktActivityRecord.ChargeType.TaxIndicator;
             var sut = new ChangingTariffTaxValueNotAllowedRule(command, charge);
             Assert.False(sut.IsValid);
         }
