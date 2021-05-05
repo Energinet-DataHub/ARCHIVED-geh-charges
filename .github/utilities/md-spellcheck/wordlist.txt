@@ -2,6 +2,7 @@
 ADR
 Architechtural
 CIM
+codecov
 composable
 DataHub
 deserialize
