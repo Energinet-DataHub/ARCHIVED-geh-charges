@@ -32,6 +32,7 @@ namespace GreenEnergyHub.Charges.ChargeAcknowledgementSender
             ILogger log)
         {
             log.LogInformation("Health Status API invoked");
+            log.LogDebug("Workaround for unused method argument", req);
 
             /* Consider checking access to Service Bus topics for charge command accepted and for post office */
 
