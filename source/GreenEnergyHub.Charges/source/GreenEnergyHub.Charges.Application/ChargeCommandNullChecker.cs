@@ -34,13 +34,10 @@ namespace GreenEnergyHub.Charges.Application
         {
             if (chargeNew == null) throw new ArgumentNullException(nameof(chargeNew));
 
-            if (string.IsNullOrWhiteSpace(chargeNew.Type)) throw new ArgumentException(chargeNew.Type);
             if (string.IsNullOrWhiteSpace(chargeNew.Owner)) throw new ArgumentException(chargeNew.Owner);
             if (string.IsNullOrWhiteSpace(chargeNew.Id)) throw new ArgumentException(chargeNew.Id);
             if (string.IsNullOrWhiteSpace(chargeNew.Name)) throw new ArgumentException(chargeNew.Name);
-            if (string.IsNullOrWhiteSpace(chargeNew.Vat)) throw new ArgumentException(chargeNew.Vat);
             if (string.IsNullOrWhiteSpace(chargeNew.Description)) throw new ArgumentException(chargeNew.Description);
-            if (string.IsNullOrWhiteSpace(chargeNew.Resolution)) throw new ArgumentException(chargeNew.Resolution);
         }
 
         private static void CheckEvent(ChargeEvent chargeEvent)

@@ -43,7 +43,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Mapping
                 LastUpdatedByCorrelationId = chargeCommand.ChargeEvent.CorrelationId,
                 LastUpdatedByTransactionId = chargeCommand.ChargeEvent.Id,
                 Name = chargeCommand.ChargeNew.Name,
-                RequestDateTime = chargeCommand.ChargeNew.RequestDate.ToUnixTimeTicks(),
+                RequestDateTime = chargeCommand.ChargeEvent.RequestDate.ToUnixTimeTicks(),
                 ResolutionType = resolutionType,
                 StartDate = chargeCommand.ChargeEvent.StartDateTime.ToUnixTimeTicks(),
                 EndDate = chargeCommand.ChargeEvent.EndDateTime?.ToUnixTimeTicks(),
@@ -64,7 +64,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Mapping
                     LastUpdatedByCorrelationId = chargeCommand.ChargeEvent.CorrelationId,
                     LastUpdatedByTransactionId = chargeCommand.ChargeEvent.Id,
                     LastUpdatedBy = chargeCommand.ChargeEvent.LastUpdatedBy,
-                    RequestDateTime = chargeCommand.ChargeNew.RequestDate.ToUnixTimeTicks(),
+                    RequestDateTime = chargeCommand.ChargeEvent.RequestDate.ToUnixTimeTicks(),
                 };
 
                 charge.ChargePrices.Add(newChargePrice);
@@ -89,7 +89,6 @@ namespace GreenEnergyHub.Charges.Infrastructure.Mapping
                     TransparentInvoicing = charge.TransparentInvoicing,
                     Tax = charge.TaxIndicator,
                     Owner = charge.ChargeTypeOwner.MRid,
-                    RequestDate = Instant.FromUnixTimeTicks(charge.RequestDateTime),
                     Resolution = Enum.Parse<Resolution>(charge.ResolutionType.Name!),
                 },
                 ChargeEvent = new ChargeEvent
@@ -98,6 +97,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Mapping
                     StartDateTime = Instant.FromUnixTimeTicks(charge.StartDate),
                     EndDateTime = charge.EndDate != null ? Instant.FromUnixTimeTicks(charge.EndDate.Value) : null,
                     Status = (ChargeEventFunction)charge.Status,
+                    RequestDate = Instant.FromUnixTimeTicks(charge.RequestDateTime),
                 },
             };
         }
