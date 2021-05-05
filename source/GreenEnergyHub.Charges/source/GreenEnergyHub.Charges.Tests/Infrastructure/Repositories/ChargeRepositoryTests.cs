@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
@@ -21,7 +20,6 @@ using GreenEnergyHub.Charges.Infrastructure.Context;
 using GreenEnergyHub.Charges.Infrastructure.Context.Model;
 using GreenEnergyHub.Charges.Infrastructure.Mapping;
 using GreenEnergyHub.Charges.Infrastructure.Repositories;
-using GreenEnergyHub.TestHelpers;
 using GreenEnergyHub.TestHelpers.Traits;
 using Microsoft.EntityFrameworkCore;
 using NodaTime;
@@ -38,9 +36,6 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
     [Trait(TraitNames.Category, TraitValues.UnitTest)]
     public class ChargeRepositoryTest
     {
-        private const string KnownChargeType = "knownChargeType";
-        private const string KnownResolutionType = "knownResolutionType";
-        private const string KnownVatPayer = "knownVatPayer";
         private const string KnownChargeOwner = "knownChargeOwner";
 
         private readonly DbContextOptions<ChargesDatabaseContext> _dbContextOptions = new DbContextOptionsBuilder<ChargesDatabaseContext>()
@@ -211,13 +206,13 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
             context.Database.EnsureDeleted();
             context.Database.EnsureCreated();
 
-            var chargeTypes = new List<ChargeType> { new ChargeType { Code = KnownChargeType, Id = 1, } };
+            var chargeTypes = new List<ChargeType> { new ChargeType { Code = "Fee", Id = 1, } };
             context.AddRange(chargeTypes);
 
-            var resolutionTypes = new List<ResolutionType> { new ResolutionType { Name = KnownResolutionType, Id = 1, } };
+            var resolutionTypes = new List<ResolutionType> { new ResolutionType { Name = "P1D", Id = 1, } };
             context.AddRange(resolutionTypes);
 
-            var vatPayerTypes = new List<VatPayerType> { new VatPayerType { Name = KnownVatPayer, Id = 1, } };
+            var vatPayerTypes = new List<VatPayerType> { new VatPayerType { Name = "D01", Id = 1, } };
             context.AddRange(vatPayerTypes);
 
             var chargeOwners = new List<MarketParticipant>
