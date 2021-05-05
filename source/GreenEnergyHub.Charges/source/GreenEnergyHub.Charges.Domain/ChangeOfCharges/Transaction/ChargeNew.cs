@@ -43,7 +43,6 @@ namespace GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction
 
         public Resolution Resolution { get; set; }
 
-        // Point has: Position, Price, Time
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2227", Justification = "JSON deserialization")]
         public List<Point> Points { get; set; }
     }

@@ -87,7 +87,7 @@ namespace GreenEnergyHub.Charges.Tests.Builders
                     Owner = _owner,
                     Points = new List<Point>
                     {
-                        new Point { Position = 0, Time = SystemClock.Instance.GetCurrentInstant(), PriceAmount = 200m },
+                        new Point { Position = 0, Time = SystemClock.Instance.GetCurrentInstant(), Price = 200m },
                     },
                     Resolution = Resolution.PT1H,
                     Type = ChargeType.Fee,

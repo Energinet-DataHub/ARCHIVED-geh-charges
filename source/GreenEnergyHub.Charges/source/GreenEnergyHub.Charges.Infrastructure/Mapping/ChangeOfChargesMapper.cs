@@ -60,7 +60,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Mapping
                 var newChargePrice = new ChargePrice
                 {
                     Time = point.Time.ToUnixTimeTicks(),
-                    Amount = point.PriceAmount,
+                    Amount = point.Price,
                     LastUpdatedByCorrelationId = chargeCommand.ChargeEvent.CorrelationId,
                     LastUpdatedByTransactionId = chargeCommand.ChargeEvent.Id,
                     LastUpdatedBy = chargeCommand.ChargeEvent.LastUpdatedBy,

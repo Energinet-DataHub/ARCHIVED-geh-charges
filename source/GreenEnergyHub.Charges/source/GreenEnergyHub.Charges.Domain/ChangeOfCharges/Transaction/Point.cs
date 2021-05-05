@@ -20,7 +20,7 @@ namespace GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction
     {
         public int Position { get; set; }
 
-        public decimal PriceAmount { get; set; }
+        public decimal Price { get; set; }
 
         public Instant Time { get; set; }
     }
