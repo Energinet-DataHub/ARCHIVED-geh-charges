@@ -22,10 +22,12 @@ limitations under the License.
 
     <ItemGroup>
       <PackageReference Include="NodaTime" Version="3.0.5" />
+      <PackageReference Include="NodaTime.Serialization.JsonNet" Version="3.0.0" />
     </ItemGroup>
 
     <ItemGroup>
       <ProjectReference Include="..\..\..\iso8601\GreenEnergyHub.Iso8601\GreenEnergyHub.Iso8601.csproj" />
+      <ProjectReference Include="..\..\..\Shared\GreenEnergyHub\source\GreenEnergyHub.Json\GreenEnergyHub.Json.csproj" />
     </ItemGroup>
 
 </Project>
