@@ -12,20 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#pragma warning disable 8618
-namespace GreenEnergyHub.Charges.Domain.Common
+namespace GreenEnergyHub.Charges.Infrastructure.Messaging
 {
-    // Non-nullable member is uninitialized is ignored
-    // Only properties which is allowed to be null is nullable
-    // MarketParticipant integrity is null checked by ChargeCommandNullChecker
-    public class MarketParticipant
+    /// <summary>
+    /// Interface for class exposing a correlation context
+    /// </summary>
+    public interface ICorrelationContext
     {
-        public int Id { get; set; }
-
-        public string MRid { get; set; }
-
-        public string Name { get; set; }
-
-        public MarketParticipantRole Role { get; set; }
+        /// <summary>
+        /// The correlation ID which can be used to link different operations together
+        /// </summary>
+        string CorrelationId { get; set; }
     }
 }

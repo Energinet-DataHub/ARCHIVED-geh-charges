@@ -63,10 +63,10 @@ namespace GreenEnergyHub.Charges.Infrastructure.Repositories
             if (chargeType == null) throw new Exception($"No charge type for {newCharge.Type}");
 
             var resolutionType = await GetResolutionTypeAsync(newCharge).ConfigureAwait(false);
-            if (resolutionType == null) throw new Exception($"No resolution type for {newCharge.Period?.Resolution}");
+            if (resolutionType == null) throw new Exception($"No resolution type for {newCharge.Period.Resolution}");
 
             var vatPayerType = await GetVatPayerTypeAsync(newCharge).ConfigureAwait(false);
-            if (vatPayerType == null) throw new Exception($"No VAT payer type for {newCharge.MktActivityRecord?.ChargeType?.VatPayer}");
+            if (vatPayerType == null) throw new Exception($"No VAT payer type for {newCharge.MktActivityRecord.ChargeType.VatPayer}");
 
             var chargeTypeOwnerMRid = await GetChargeTypeOwnerMRidAsync(newCharge).ConfigureAwait(false);
             if (chargeTypeOwnerMRid == null) throw new Exception($"No market participant for {newCharge.ChargeTypeOwnerMRid}");
@@ -87,7 +87,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Repositories
 
         private async Task<VatPayerType?> GetVatPayerTypeAsync(ChargeCommand chargeMessage)
         {
-            return string.IsNullOrWhiteSpace(chargeMessage.MktActivityRecord?.ChargeType?.VatPayer)
+            return string.IsNullOrWhiteSpace(chargeMessage.MktActivityRecord.ChargeType.VatPayer)
                 ? throw new ArgumentException($"Fails as {nameof(chargeMessage.MktActivityRecord.ChargeType.VatPayer)} is invalid")
                 : await _chargesDatabaseContext.VatPayerType.SingleOrDefaultAsync(type =>
                 type.Name == chargeMessage.MktActivityRecord.ChargeType.VatPayer).ConfigureAwait(false);
@@ -95,7 +95,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Repositories
 
         private async Task<ResolutionType?> GetResolutionTypeAsync(ChargeCommand chargeMessage)
         {
-            return string.IsNullOrWhiteSpace(chargeMessage.Period?.Resolution)
+            return string.IsNullOrWhiteSpace(chargeMessage.Period.Resolution)
                 ? throw new ArgumentException($"Fails as {nameof(chargeMessage.Period.Resolution)} is invalid")
                 : await _chargesDatabaseContext.ResolutionType.SingleOrDefaultAsync(type => type.Name == chargeMessage.Period.Resolution).ConfigureAwait(false);
         }

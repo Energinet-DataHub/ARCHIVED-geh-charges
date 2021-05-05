@@ -18,10 +18,12 @@ namespace GreenEnergyHub.Charges.Infrastructure.Context.Model
     {
         public int Id { get; set; }
 
-        public string? MRid { get; set; }
+#pragma warning disable 8618
+        public string MRid { get; set; }
 
-        public string? Name { get; set; }
+        public string Name { get; set; }
 
-        public string? Role { get; set; }
+        public string Role { get; set; }
+#pragma warning restore 8618
     }
 }

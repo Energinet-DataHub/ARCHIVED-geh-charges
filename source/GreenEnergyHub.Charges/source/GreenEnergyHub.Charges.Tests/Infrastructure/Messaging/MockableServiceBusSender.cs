@@ -12,20 +12,19 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#pragma warning disable 8618
-namespace GreenEnergyHub.Charges.Domain.Common
+using System.Threading;
+using System.Threading.Tasks;
+using Azure.Messaging.ServiceBus;
+
+namespace GreenEnergyHub.Charges.Tests.Infrastructure.Messaging
 {
-    // Non-nullable member is uninitialized is ignored
-    // Only properties which is allowed to be null is nullable
-    // MarketParticipant integrity is null checked by ChargeCommandNullChecker
-    public class MarketParticipant
+    public class MockableServiceBusSender : ServiceBusSender
     {
-        public int Id { get; set; }
-
-        public string MRid { get; set; }
-
-        public string Name { get; set; }
-
-        public MarketParticipantRole Role { get; set; }
+        public override async Task SendMessageAsync(
+            ServiceBusMessage message,
+            CancellationToken cancellationToken = default)
+        {
+            await Task.FromResult(Task.CompletedTask).ConfigureAwait(false);
+        }
     }
 }

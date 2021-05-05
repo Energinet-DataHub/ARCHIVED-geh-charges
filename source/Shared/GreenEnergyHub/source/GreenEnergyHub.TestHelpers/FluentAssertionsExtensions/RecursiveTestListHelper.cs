@@ -18,6 +18,8 @@ namespace GreenEnergyHub.TestHelpers.FluentAssertionsExtensions
 {
     public class RecursiveTestListHelper
     {
+#pragma warning disable CA2227
         public IList<RecursiveTestListHelper> List { get; set; }
+#pragma warning restore CA2227
     }
 }
