@@ -33,14 +33,12 @@ namespace GreenEnergyHub.Charges.Infrastructure
 
         public async Task HandleAsync([NotNull] ChargeCommandAcceptedEvent acceptedEvent)
         {
-            // TODO: Param: MktActivityRecord.OriginalTransactionReference_MktActivityRecord.mRID
             // TODO: Delegate construction to factory (but not in infrastructure project)
             var chargeCommandAcceptedAcknowledgement = new ChargeAcknowledgement(
                 acceptedEvent.CorrelationId,
-                acceptedEvent.Command.MarketDocument.ReceiverMarketParticipant.MRid,
-                acceptedEvent.Command.MarketDocument.ReceiverMarketParticipant.Role,
+                acceptedEvent.Command.MarketDocument.SenderMarketParticipant.MRid,
+                acceptedEvent.Command.MarketDocument.SenderMarketParticipant.Role,
                 acceptedEvent.Command.MktActivityRecord.MRid,
-                "MktActivityRecord.OriginalTransactionReference_MktActivityRecord.mRID",
                 acceptedEvent.Command.MarketDocument.ProcessType);
 
             await _postOfficeService.SendAsync(chargeCommandAcceptedAcknowledgement).ConfigureAwait(false);
