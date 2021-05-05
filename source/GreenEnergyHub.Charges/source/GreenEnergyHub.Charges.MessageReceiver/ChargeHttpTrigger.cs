@@ -16,9 +16,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application;
 using GreenEnergyHub.Charges.Application.ChangeOfCharges;
-using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Fee;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Message;
-using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Tariff;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
 using GreenEnergyHub.Charges.Infrastructure.Messaging;
 using GreenEnergyHub.Json;
@@ -72,48 +70,16 @@ namespace GreenEnergyHub.Charges.MessageReceiver
             return new OkObjectResult(messageResult);
         }
 
-        private static ChargeCommand GetCommandFromChangeOfChargeTransaction(ChargeCommand command)
-        {
-            return command.Type switch
-            {
-                "D01" => new FeeCreate
-                {
-                    Period = command.Period,
-                    Type = command.Type,
-                    CorrelationId = command.CorrelationId,
-                    MarketDocument = command.MarketDocument,
-                    RequestDate = command.RequestDate,
-                    LastUpdatedBy = command.LastUpdatedBy,
-                    MktActivityRecord = command.MktActivityRecord,
-                    ChargeTypeMRid = command.ChargeTypeMRid,
-                    ChargeTypeOwnerMRid = command.ChargeTypeOwnerMRid,
-                },
-                _ => new TariffCreate
-                {
-                    Period = command.Period,
-                    Type = command.Type,
-                    CorrelationId = command.CorrelationId,
-                    MarketDocument = command.MarketDocument,
-                    RequestDate = command.RequestDate,
-                    LastUpdatedBy = command.LastUpdatedBy,
-                    MktActivityRecord = command.MktActivityRecord,
-                    ChargeTypeMRid = command.ChargeTypeMRid,
-                    ChargeTypeOwnerMRid = command.ChargeTypeOwnerMRid,
-                }
-            };
-        }
-
         private async Task<ChangeOfChargesMessage> GetChangeOfChargesMessageAsync(
             IJsonSerializer jsonDeserializer,
             HttpRequest req)
         {
             var message = new ChangeOfChargesMessage();
-            var transaction = (ChargeCommand)await jsonDeserializer
+            var command = (ChargeCommand)await jsonDeserializer
                 .DeserializeAsync(req.Body, typeof(ChargeCommand))
                 .ConfigureAwait(false);
 
-            var command = GetCommandFromChangeOfChargeTransaction(transaction);
-            command.CorrelationId = _correlationContext.CorrelationId;
+            command.SetCorrelationId(_correlationContext.CorrelationId);
             message.Transactions.Add(command);
             return message;
         }

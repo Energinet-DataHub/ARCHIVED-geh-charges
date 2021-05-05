@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Text.Json.Serialization;
+using Newtonsoft.Json;
 using NodaTime;
 #pragma warning disable 8618
 
@@ -23,20 +23,20 @@ namespace GreenEnergyHub.Charges.Domain.Common
     // MarketDocument integrity is null checked by ChargeCommandNullChecker
     public class MarketDocument
     {
-        [JsonPropertyName("mRID")]
+        [JsonProperty("mRID")]
         public string MRid { get; set; }
 
         public Instant CreatedDateTime { get; set; }
 
-        [JsonPropertyName("Sender_MarketParticipant")]
+        [JsonProperty("Sender_MarketParticipant")]
         public MarketParticipant SenderMarketParticipant { get; set; }
 
-        [JsonPropertyName("Receiver_MarketParticipant")]
+        [JsonProperty("Receiver_MarketParticipant")]
         public MarketParticipant ReceiverMarketParticipant { get; set; }
 
         public ProcessType ProcessType { get; set; }
 
-        [JsonPropertyName("Market_ServiceCategoryKind")]
+        [JsonProperty("Market_ServiceCategoryKind")]
         public ServiceCategoryKind MarketServiceCategoryKind { get; set; }
     }
 }

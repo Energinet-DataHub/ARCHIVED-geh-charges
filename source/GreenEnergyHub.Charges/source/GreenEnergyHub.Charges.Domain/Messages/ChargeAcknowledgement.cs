@@ -12,11 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace GreenEnergyHub.Charges.Domain.PostOffice
+namespace GreenEnergyHub.Charges.Domain.Messages
 {
-    public class ChargeCommandAcceptedAcknowledgement
+    public class ChargeAcknowledgement
     {
-        public ChargeCommandAcceptedAcknowledgement(string correlationId)
+        public ChargeAcknowledgement(string correlationId)
         {
             CorrelationId = correlationId;
         }

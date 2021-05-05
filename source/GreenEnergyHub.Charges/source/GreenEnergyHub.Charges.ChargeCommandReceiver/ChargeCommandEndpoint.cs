@@ -16,25 +16,22 @@ using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
 using GreenEnergyHub.Charges.Infrastructure.Messaging;
-using GreenEnergyHub.Json;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 
 namespace GreenEnergyHub.Charges.ChargeCommandReceiver
 {
     public class ChargeCommandEndpoint
     {
         private const string FunctionName = nameof(ChargeCommandEndpoint);
-        private readonly IJsonSerializer _jsonDeserializer;
         private readonly IChargeCommandHandler _chargeCommandHandler;
         private readonly ICorrelationContext _correlationContext;
 
         public ChargeCommandEndpoint(
-            IJsonSerializer jsonDeserializer,
             IChargeCommandHandler chargeCommandHandler,
             ICorrelationContext correlationContext)
         {
-            _jsonDeserializer = jsonDeserializer;
             _chargeCommandHandler = chargeCommandHandler;
             _correlationContext = correlationContext;
         }
@@ -49,20 +46,17 @@ namespace GreenEnergyHub.Charges.ChargeCommandReceiver
             ILogger log)
         {
             var jsonSerializedQueueItem = System.Text.Encoding.UTF8.GetString(message);
-            var serviceBusMessage = _jsonDeserializer.Deserialize<ServiceBusMessageWrapper>(jsonSerializedQueueItem);
-            var transaction = serviceBusMessage.Command;
-            SetCorrelationContext(transaction);
-            await _chargeCommandHandler.HandleAsync(transaction).ConfigureAwait(false);
+            var serviceBusMessage = JsonConvert.DeserializeObject<ServiceBusMessageWrapper<ChargeCommand>>(jsonSerializedQueueItem);
+            var chargeCommand = serviceBusMessage.Message!;
+            SetCorrelationContext(chargeCommand);
+            await _chargeCommandHandler.HandleAsync(chargeCommand).ConfigureAwait(false);
 
-            log.LogDebug("Received event with charge type mRID '{mRID}'", transaction.ChargeTypeMRid);
+            log.LogDebug("Received command with charge type mRID '{mRID}'", chargeCommand.ChargeTypeMRid);
         }
 
         private void SetCorrelationContext(ChargeCommand command)
         {
-            if (command.CorrelationId != null)
-            {
-                _correlationContext.CorrelationId = command.CorrelationId;
-            }
+            _correlationContext.CorrelationId = command.CorrelationId;
         }
     }
 }

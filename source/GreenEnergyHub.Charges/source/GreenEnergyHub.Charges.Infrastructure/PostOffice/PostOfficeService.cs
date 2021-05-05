@@ -15,7 +15,7 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using Azure.Messaging.ServiceBus;
-using GreenEnergyHub.Charges.Domain.PostOffice;
+using GreenEnergyHub.Charges.Domain.Messages;
 using GreenEnergyHub.Json;
 using Microsoft.Extensions.Options;
 
@@ -32,7 +32,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.PostOffice
             _options = options;
         }
 
-        public async Task SendAsync([NotNull] ChargeCommandAcceptedAcknowledgement acknowledgement)
+        public async Task SendAsync([NotNull] ChargeAcknowledgement acknowledgement)
         {
             var connectionString = _options.Value.ConnectionString;
             await using ServiceBusClient client = new (connectionString);

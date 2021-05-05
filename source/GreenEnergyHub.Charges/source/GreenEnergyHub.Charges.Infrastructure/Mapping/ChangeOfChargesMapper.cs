@@ -25,53 +25,53 @@ namespace GreenEnergyHub.Charges.Infrastructure.Mapping
     public static class ChangeOfChargesMapper
     {
         public static Charge MapChangeOfChargesTransactionToCharge(
-            [NotNull]ChargeCommand chargeCommand,
+            [NotNull]Domain.Charge chargeModel,
             ChargeType chargeType,
             MarketParticipant chargeTypeOwnerMRid,
             ResolutionType resolutionType,
             VatPayerType vatPayerType)
         {
-            if (chargeCommand == null) throw new ArgumentNullException(nameof(chargeCommand));
-            if (string.IsNullOrWhiteSpace(chargeCommand.ChargeTypeMRid)) throw new ArgumentException($"{nameof(chargeCommand.ChargeTypeMRid)} must have value");
-            if (string.IsNullOrWhiteSpace(chargeCommand.CorrelationId)) throw new ArgumentException($"{nameof(chargeCommand.CorrelationId)} must have value");
-            if (string.IsNullOrWhiteSpace(chargeCommand.LastUpdatedBy)) throw new ArgumentException($"{nameof(chargeCommand.LastUpdatedBy)} must have value");
-            if (chargeCommand.MktActivityRecord?.ChargeType == null) throw new ArgumentException($"{nameof(chargeCommand.MktActivityRecord.ChargeType)} can't be null");
-            if (string.IsNullOrWhiteSpace(chargeCommand.MktActivityRecord.ChargeType.Name)) throw new ArgumentException($"{nameof(chargeCommand.MktActivityRecord.ChargeType.Name)} must have value");
-            if (string.IsNullOrWhiteSpace(chargeCommand.MktActivityRecord.ChargeType.Description)) throw new ArgumentException($"{nameof(chargeCommand.MktActivityRecord.ChargeType.Description)} must have value");
-            if (chargeCommand.Period == null) throw new ArgumentException($"{nameof(chargeCommand.Period)} can't be null");
-            if (chargeCommand.Period.Points == null) throw new ArgumentException($"{nameof(chargeCommand.Period.Points)} can't be null");
+            if (chargeModel == null) throw new ArgumentNullException(nameof(chargeModel));
+            if (string.IsNullOrWhiteSpace(chargeModel.ChargeTypeMRid)) throw new ArgumentException($"{nameof(chargeModel.ChargeTypeMRid)} must have value");
+            if (string.IsNullOrWhiteSpace(chargeModel.CorrelationId)) throw new ArgumentException($"{nameof(chargeModel.CorrelationId)} must have value");
+            if (string.IsNullOrWhiteSpace(chargeModel.LastUpdatedBy)) throw new ArgumentException($"{nameof(chargeModel.LastUpdatedBy)} must have value");
+            if (chargeModel.MktActivityRecord.ChargeType == null) throw new ArgumentException($"{nameof(chargeModel.MktActivityRecord.ChargeType)} can't be null");
+            if (string.IsNullOrWhiteSpace(chargeModel.MktActivityRecord.ChargeType.Name)) throw new ArgumentException($"{nameof(chargeModel.MktActivityRecord.ChargeType.Name)} must have value");
+            if (string.IsNullOrWhiteSpace(chargeModel.MktActivityRecord.ChargeType.Description)) throw new ArgumentException($"{nameof(chargeModel.MktActivityRecord.ChargeType.Description)} must have value");
+            if (chargeModel.Period == null) throw new ArgumentException($"{nameof(chargeModel.Period)} can't be null");
+            if (chargeModel.Period.Points == null) throw new ArgumentException($"{nameof(chargeModel.Period.Points)} can't be null");
 
             var charge = new Charge
             {
                 ChargeType = chargeType,
                 ChargeTypeOwner = chargeTypeOwnerMRid,
-                Description = chargeCommand.MktActivityRecord.ChargeType.Description,
-                LastUpdatedBy = chargeCommand.LastUpdatedBy,
-                LastUpdatedByCorrelationId = chargeCommand.CorrelationId,
-                LastUpdatedByTransactionId = chargeCommand.MktActivityRecord.MRid,
-                Name = chargeCommand.MktActivityRecord.ChargeType.Name,
-                RequestDateTime = chargeCommand.RequestDate.ToUnixTimeTicks(),
+                Description = chargeModel.MktActivityRecord.ChargeType.Description,
+                LastUpdatedBy = chargeModel.LastUpdatedBy,
+                LastUpdatedByCorrelationId = chargeModel.CorrelationId,
+                LastUpdatedByTransactionId = chargeModel.MktActivityRecord.MRid,
+                Name = chargeModel.MktActivityRecord.ChargeType.Name,
+                RequestDateTime = chargeModel.RequestDate.ToUnixTimeTicks(),
                 ResolutionType = resolutionType,
-                StartDate = chargeCommand.MktActivityRecord.ValidityStartDate.ToUnixTimeTicks(),
-                EndDate = chargeCommand.MktActivityRecord.ValidityEndDate?.ToUnixTimeTicks(),
-                Status = (byte)chargeCommand.MktActivityRecord.Status,
-                TaxIndicator = chargeCommand.MktActivityRecord.ChargeType.TaxIndicator,
-                TransparentInvoicing = chargeCommand.MktActivityRecord.ChargeType.TransparentInvoicing,
+                StartDate = chargeModel.MktActivityRecord.ValidityStartDate.ToUnixTimeTicks(),
+                EndDate = chargeModel.MktActivityRecord.ValidityEndDate?.ToUnixTimeTicks(),
+                Status = (byte)chargeModel.MktActivityRecord.Status,
+                TaxIndicator = chargeModel.MktActivityRecord.ChargeType.TaxIndicator,
+                TransparentInvoicing = chargeModel.MktActivityRecord.ChargeType.TransparentInvoicing,
                 VatPayer = vatPayerType,
-                MRid = chargeCommand.ChargeTypeMRid,
+                MRid = chargeModel.ChargeTypeMRid,
                 Currency = "DKK",
             };
 
-            foreach (var point in chargeCommand.Period.Points)
+            foreach (var point in chargeModel.Period.Points)
             {
                 var newChargePrice = new ChargePrice
                 {
                     Time = point.Time.ToUnixTimeTicks(),
                     Amount = point.PriceAmount,
-                    LastUpdatedByCorrelationId = chargeCommand.CorrelationId,
-                    LastUpdatedByTransactionId = chargeCommand.MktActivityRecord.MRid,
-                    LastUpdatedBy = chargeCommand.LastUpdatedBy,
-                    RequestDateTime = chargeCommand.RequestDate.ToUnixTimeTicks(),
+                    LastUpdatedByCorrelationId = chargeModel.CorrelationId,
+                    LastUpdatedByTransactionId = chargeModel.MktActivityRecord.MRid,
+                    LastUpdatedBy = chargeModel.LastUpdatedBy,
+                    RequestDateTime = chargeModel.RequestDate.ToUnixTimeTicks(),
                 };
 
                 charge.ChargePrices.Add(newChargePrice);
@@ -99,7 +99,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Mapping
                         TransparentInvoicing = charge.TransparentInvoicing,
                     },
                     ValidityStartDate = Instant.FromUnixTimeTicks(charge.StartDate),
-                    ValidityEndDate = charge.EndDate != null ? Instant.FromUnixTimeTicks(charge.EndDate.Value) : null as Instant?,
+                    ValidityEndDate = charge.EndDate != null ? Instant.FromUnixTimeTicks(charge.EndDate.Value) : null,
                 },
                 RequestDate = Instant.FromUnixTimeTicks(charge.RequestDateTime),
                 LastUpdatedBy = charge.LastUpdatedBy,

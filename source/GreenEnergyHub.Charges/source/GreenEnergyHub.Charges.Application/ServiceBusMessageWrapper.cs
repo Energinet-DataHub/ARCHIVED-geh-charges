@@ -12,12 +12,19 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
+using GreenEnergyHub.Charges.Domain.Messages;
+using JetBrains.Annotations;
 
 namespace GreenEnergyHub.Charges.Application
 {
-    public class ServiceBusMessageWrapper
+    public class ServiceBusMessageWrapper<TMessage>
+        where TMessage : IMessage
     {
-        public ChargeCommand Command { get; set; } = new ();
+        public TMessage? Message
+        {
+            get;
+            [UsedImplicitly]
+            set;
+        }
     }
 }

@@ -12,8 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Diagnostics.CodeAnalysis;
-using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
 using NodaTime;
 
 namespace GreenEnergyHub.Charges.Domain.Events.Local
@@ -22,13 +20,9 @@ namespace GreenEnergyHub.Charges.Domain.Events.Local
     {
         public ChargeCommandAcceptedEvent(
             Instant publishedTime,
-            string correlationId,
-            [NotNull] ChargeCommand command)
+            string correlationId)
             : base(publishedTime, correlationId)
         {
-            Command = command;
         }
-
-        public ChargeCommand Command { get; }
     }
 }

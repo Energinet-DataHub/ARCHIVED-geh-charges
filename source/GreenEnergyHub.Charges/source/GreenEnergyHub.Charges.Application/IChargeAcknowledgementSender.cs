@@ -15,9 +15,9 @@
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Domain.Events.Local;
 
-namespace GreenEnergyHub.Charges.Application.PostOffice
+namespace GreenEnergyHub.Charges.Application
 {
-    public interface IChargeCommandAcceptedPostOfficeForwarder
+    public interface IChargeAcknowledgementSender
     {
         Task HandleAsync(ChargeCommandAcceptedEvent acceptedEvent);
     }

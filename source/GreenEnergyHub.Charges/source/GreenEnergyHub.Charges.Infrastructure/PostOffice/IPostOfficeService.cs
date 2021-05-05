@@ -14,12 +14,12 @@
 
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Domain.PostOffice;
+using GreenEnergyHub.Charges.Domain.Messages;
 
 namespace GreenEnergyHub.Charges.Infrastructure.PostOffice
 {
     public interface IPostOfficeService
     {
-        Task SendAsync([NotNull] ChargeCommandAcceptedAcknowledgement acknowledgement);
+        Task SendAsync([NotNull] ChargeAcknowledgement acknowledgement);
     }
 }

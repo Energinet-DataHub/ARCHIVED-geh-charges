@@ -13,7 +13,6 @@
 // limitations under the License.
 
 using System.Diagnostics.CodeAnalysis;
-using GreenEnergyHub.Charges.Application;
 using GreenEnergyHub.Charges.Application.ChangeOfCharges;
 using GreenEnergyHub.Charges.Infrastructure.Messaging;
 using GreenEnergyHub.Charges.Infrastructure.Topics;
@@ -22,6 +21,7 @@ using GreenEnergyHub.Json;
 using Microsoft.Azure.Functions.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection;
 using NodaTime;
+using JsonSerializer = GreenEnergyHub.Charges.Core.Json.JsonSerializer;
 
 [assembly: FunctionsStartup(typeof(Startup))]
 

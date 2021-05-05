@@ -14,24 +14,25 @@
 
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Application.PostOffice;
+using GreenEnergyHub.Charges.Application;
 using GreenEnergyHub.Charges.Domain.Events.Local;
-using GreenEnergyHub.Charges.Domain.PostOffice;
+using GreenEnergyHub.Charges.Domain.Messages;
+using GreenEnergyHub.Charges.Infrastructure.PostOffice;
 
-namespace GreenEnergyHub.Charges.Infrastructure.PostOffice
+namespace GreenEnergyHub.Charges.Infrastructure
 {
-    public class ChargeCommandAcceptedPostOfficeForwarder : IChargeCommandAcceptedPostOfficeForwarder
+    public class ChargeAcknowledgementSender : IChargeAcknowledgementSender
     {
         private readonly IPostOfficeService _postOfficeService;
 
-        public ChargeCommandAcceptedPostOfficeForwarder(IPostOfficeService postOfficeService)
+        public ChargeAcknowledgementSender(IPostOfficeService postOfficeService)
         {
             _postOfficeService = postOfficeService;
         }
 
         public async Task HandleAsync([NotNull]ChargeCommandAcceptedEvent acceptedEvent)
         {
-            var chargeCommandAcceptedAcknowledgement = new ChargeCommandAcceptedAcknowledgement(acceptedEvent.CorrelationId);
+            var chargeCommandAcceptedAcknowledgement = new ChargeAcknowledgement(acceptedEvent.CorrelationId);
             await _postOfficeService.SendAsync(chargeCommandAcceptedAcknowledgement).ConfigureAwait(false);
         }
     }
