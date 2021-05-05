@@ -54,8 +54,14 @@ limitations under the License.
     </ItemGroup>
 
     <ItemGroup>
+      <Content Include="TestFiles\InvalidChargeAddition.json">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
       <Content Include="TestFiles\ValidChargeAddition.json" CopyToOutputDirectory="Always" />
-      <Content Include="TestFiles\ValidChargeUpdate.json" CopyToOutputDirectory="Always" />
+      <Content Include="TestFiles\InvalidChargeUpdate.json" CopyToOutputDirectory="Always" />
+      <Content Include="TestFiles\ValidChargeUpdate.json">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
     </ItemGroup>
 
     <ItemGroup>
