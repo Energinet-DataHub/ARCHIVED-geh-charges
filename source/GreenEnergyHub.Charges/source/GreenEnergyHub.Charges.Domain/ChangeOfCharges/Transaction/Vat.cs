@@ -15,12 +15,11 @@
 namespace GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction
 {
     /// <summary>
-    /// The kind of charge: Subscription ("D01") | Fee ("D02") | Tariff ("D03").
+    /// D01 is No Vat | D02 is Vat.
     /// </summary>
-    public enum ChargeType
+    public enum Vat
     {
-        Subscription,
-        Fee,
-        Tariff,
+        D01,
+        D02,
     }
 }

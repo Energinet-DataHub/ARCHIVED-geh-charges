@@ -25,22 +25,22 @@ namespace GreenEnergyHub.Charges.Application
         public static void ThrowExceptionIfRequiredPropertyIsNull(ChargeCommand chargeCommand)
         {
             if (chargeCommand == null) throw new ArgumentNullException(nameof(chargeCommand));
-            CheckCharge(chargeCommand.Charge);
+            CheckCharge(chargeCommand.ChargeNew);
             CheckDocument(chargeCommand.Document);
             CheckEvent(chargeCommand.ChargeEvent);
         }
 
-        private static void CheckCharge(ChargeNew charge)
+        private static void CheckCharge(ChargeNew chargeNew)
         {
-            if (charge == null) throw new ArgumentNullException(nameof(charge));
+            if (chargeNew == null) throw new ArgumentNullException(nameof(chargeNew));
 
-            if (string.IsNullOrWhiteSpace(charge.Type)) throw new ArgumentException(charge.Type);
-            if (string.IsNullOrWhiteSpace(charge.Owner)) throw new ArgumentException(charge.Owner);
-            if (string.IsNullOrWhiteSpace(charge.Id)) throw new ArgumentException(charge.Id);
-            if (string.IsNullOrWhiteSpace(charge.Name)) throw new ArgumentException(charge.Name);
-            if (string.IsNullOrWhiteSpace(charge.Vat)) throw new ArgumentException(charge.Vat);
-            if (string.IsNullOrWhiteSpace(charge.Description)) throw new ArgumentException(charge.Description);
-            if (string.IsNullOrWhiteSpace(charge.Resolution)) throw new ArgumentException(charge.Resolution);
+            if (string.IsNullOrWhiteSpace(chargeNew.Type)) throw new ArgumentException(chargeNew.Type);
+            if (string.IsNullOrWhiteSpace(chargeNew.Owner)) throw new ArgumentException(chargeNew.Owner);
+            if (string.IsNullOrWhiteSpace(chargeNew.Id)) throw new ArgumentException(chargeNew.Id);
+            if (string.IsNullOrWhiteSpace(chargeNew.Name)) throw new ArgumentException(chargeNew.Name);
+            if (string.IsNullOrWhiteSpace(chargeNew.Vat)) throw new ArgumentException(chargeNew.Vat);
+            if (string.IsNullOrWhiteSpace(chargeNew.Description)) throw new ArgumentException(chargeNew.Description);
+            if (string.IsNullOrWhiteSpace(chargeNew.Resolution)) throw new ArgumentException(chargeNew.Resolution);
         }
 
         private static void CheckEvent(ChargeEvent chargeEvent)

@@ -28,7 +28,7 @@ namespace GreenEnergyHub.Charges.Tests.Application
     public class ChargeCommandNullCheckerTest
     {
         [Theory]
-        [InlineAutoDomainData(null, "Valid", "Valid", "Valid", "Valid", "Valid", "Valid", "Valid", "Valid", "Valid", "Valid", "Valid", "Valid")]
+        [InlineAutoDomainData(null, "Valid", "Valid", "Valid", ChargeType.Fee, "Valid", "Valid", "Valid", "Valid", "Valid", "Valid", "Valid", "Valid")]
         [InlineAutoDomainData("valid", null, "Valid", "Valid", "Valid", "Valid", "Valid", "Valid", "Valid", "Valid", "Valid", "Valid", "Valid")]
         [InlineAutoDomainData("valid", "Valid", null, "Valid", "Valid", "Valid", "Valid", "Valid", "Valid", "Valid", "Valid", "Valid", "Valid")]
         [InlineAutoDomainData("valid", "Valid", "Valid", null, "Valid", "Valid", "Valid", "Valid", "Valid", "Valid", "Valid", "Valid", "Valid")]
@@ -71,19 +71,19 @@ namespace GreenEnergyHub.Charges.Tests.Application
         {
             // Arrange
             var c = GetValidCharge();
-            c.Charge.Id = chargeId;
-            c.Charge.Owner = owner;
+            c.ChargeNew.Id = chargeId;
+            c.ChargeNew.Owner = owner;
             c.ChargeEvent.CorrelationId = correlationId;
             c.ChargeEvent.LastUpdatedBy = lastUpdatedBy;
-            c.Charge.Type = type;
-            c.Charge.Resolution = resolution;
+            c.ChargeNew.Type = type;
+            c.ChargeNew.Resolution = resolution;
             c.Document.Id = documentId;
             c.Document.Sender.MRid = senderId;
             c.Document.Recipient.MRid = recipientId;
             c.ChargeEvent.Id = eventId;
-            c.Charge.Description = chargeTypeLongDescription;
-            c.Charge.Vat = chargeTypeVat;
-            c.Charge.Name = chargeTypeDescription;
+            c.ChargeNew.Description = chargeTypeLongDescription;
+            c.ChargeNew.Vat = chargeTypeVat;
+            c.ChargeNew.Name = chargeTypeDescription;
 
             // Act & Assert
             Assert.Throws<ArgumentException>(() => ChargeCommandNullChecker.ThrowExceptionIfRequiredPropertyIsNull(c));
@@ -94,7 +94,7 @@ namespace GreenEnergyHub.Charges.Tests.Application
         {
             // Arrange
             var c = GetValidCharge();
-            c.Charge = null!;
+            c.ChargeNew = null!;
 
             // Act & Assert
             Assert.Throws<ArgumentNullException>(() => ChargeCommandNullChecker.ThrowExceptionIfRequiredPropertyIsNull(c));
@@ -126,7 +126,7 @@ namespace GreenEnergyHub.Charges.Tests.Application
         {
             return new ()
             {
-                Charge = new ChargeNew
+                ChargeNew = new ChargeNew
                 {
                     Name = "description",
                     Id = "id",
@@ -135,9 +135,9 @@ namespace GreenEnergyHub.Charges.Tests.Application
                     {
                         new Point { Position = 0, Time = SystemClock.Instance.GetCurrentInstant(), PriceAmount = 200m },
                     },
-                    Resolution = "Resolution",
-                    Type = "Type",
-                    Vat = "Vat",
+                    Resolution = Resolution.Hourly,
+                    Type = ChargeType.Fee,
+                    Vat = Vat.Vat20,
                     Description = "LongDescription",
                     RequestDate = SystemClock.Instance.GetCurrentInstant(),
                 },

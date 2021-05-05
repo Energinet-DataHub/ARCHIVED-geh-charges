@@ -15,12 +15,13 @@
 namespace GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction
 {
     /// <summary>
-    /// The kind of charge: Subscription ("D01") | Fee ("D02") | Tariff ("D03").
+    /// PT15M = 15 minutes | PT1H = hour | P1D = day | P1M = month.
     /// </summary>
-    public enum ChargeType
+    public enum Resolution
     {
-        Subscription,
-        Fee,
-        Tariff,
+        PT15M,
+        PT1H,
+        P1D,
+        P1M,
     }
 }

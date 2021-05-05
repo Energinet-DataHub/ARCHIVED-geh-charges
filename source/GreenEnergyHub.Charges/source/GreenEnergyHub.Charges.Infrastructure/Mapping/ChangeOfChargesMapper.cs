@@ -38,24 +38,24 @@ namespace GreenEnergyHub.Charges.Infrastructure.Mapping
             {
                 ChargeType = chargeType,
                 ChargeTypeOwner = chargeTypeOwnerMRid,
-                Description = chargeCommand.Charge.Name,
+                Description = chargeCommand.ChargeNew.Name,
                 LastUpdatedBy = chargeCommand.ChargeEvent.LastUpdatedBy,
                 LastUpdatedByCorrelationId = chargeCommand.ChargeEvent.CorrelationId,
                 LastUpdatedByTransactionId = chargeCommand.ChargeEvent.Id,
-                Name = chargeCommand.Charge.Name,
-                RequestDateTime = chargeCommand.Charge.RequestDate.ToUnixTimeTicks(),
+                Name = chargeCommand.ChargeNew.Name,
+                RequestDateTime = chargeCommand.ChargeNew.RequestDate.ToUnixTimeTicks(),
                 ResolutionType = resolutionType,
                 StartDate = chargeCommand.ChargeEvent.StartDateTime.ToUnixTimeTicks(),
                 EndDate = chargeCommand.ChargeEvent.EndDateTime?.ToUnixTimeTicks(),
                 Status = (byte)chargeCommand.ChargeEvent.Status,
-                TaxIndicator = chargeCommand.Charge.Tax,
-                TransparentInvoicing = chargeCommand.Charge.TransparentInvoicing,
+                TaxIndicator = chargeCommand.ChargeNew.Tax,
+                TransparentInvoicing = chargeCommand.ChargeNew.TransparentInvoicing,
                 VatPayer = vatPayerType,
-                MRid = chargeCommand.Charge.Id,
+                MRid = chargeCommand.ChargeNew.Id,
                 Currency = "DKK",
             };
 
-            foreach (var point in chargeCommand.Charge.Points)
+            foreach (var point in chargeCommand.ChargeNew.Points)
             {
                 var newChargePrice = new ChargePrice
                 {
@@ -64,7 +64,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Mapping
                     LastUpdatedByCorrelationId = chargeCommand.ChargeEvent.CorrelationId,
                     LastUpdatedByTransactionId = chargeCommand.ChargeEvent.Id,
                     LastUpdatedBy = chargeCommand.ChargeEvent.LastUpdatedBy,
-                    RequestDateTime = chargeCommand.Charge.RequestDate.ToUnixTimeTicks(),
+                    RequestDateTime = chargeCommand.ChargeNew.RequestDate.ToUnixTimeTicks(),
                 };
 
                 charge.ChargePrices.Add(newChargePrice);
@@ -79,18 +79,18 @@ namespace GreenEnergyHub.Charges.Infrastructure.Mapping
 
             return new Domain.Charge
             {
-                Charge = new ChargeNew
+                ChargeNew = new ChargeNew
                 {
                     Id = charge.MRid,
-                    Type = charge.ChargeType.Code!,
+                    Type = Enum.Parse<GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction.ChargeType>(charge.ChargeType.Code!),
                     Name = charge.Name, // Description to be Name
                     Description = charge.Description, // LongDescription to be Description
-                    Vat = charge.VatPayer.Name,
+                    Vat = Enum.Parse<Vat>(charge.VatPayer.Name),
                     TransparentInvoicing = charge.TransparentInvoicing,
                     Tax = charge.TaxIndicator,
                     Owner = charge.ChargeTypeOwner.MRid,
                     RequestDate = Instant.FromUnixTimeTicks(charge.RequestDateTime),
-                    Resolution = charge.ResolutionType.Name!,
+                    Resolution = Enum.Parse<Resolution>(charge.ResolutionType.Name!),
                 },
                 ChargeEvent = new ChargeEvent
                 {
@@ -99,26 +99,6 @@ namespace GreenEnergyHub.Charges.Infrastructure.Mapping
                     EndDateTime = charge.EndDate != null ? Instant.FromUnixTimeTicks(charge.EndDate.Value) : null,
                     Status = (ChargeEventFunction)charge.Status,
                 },
-
-                // ChargeTypeMRid = charge.MRid,
-                // ChargeEvent = new ChargeEvent
-                // {
-                //     Status = (ChargeEventFuction)charge.Status,
-                //     ChargeType = new Domain.ChangeOfCharges.Transaction.ChargeType()
-                //     {
-                //         Name = charge.Name,
-                //         TaxIndicator = charge.TaxIndicator,
-                //         VatPayer = charge.VatPayer.Name,
-                //         Description = charge.Description,
-                //         TransparentInvoicing = charge.TransparentInvoicing,
-                //     },
-                //     StartDateTime = Instant.FromUnixTimeTicks(charge.StartDate),
-                //     EndDateTime = charge.EndDate != null ? Instant.FromUnixTimeTicks(charge.EndDate.Value) : null as Instant?,
-                // },
-                // RequestDate = Instant.FromUnixTimeTicks(charge.RequestDateTime),
-                // LastUpdatedBy = charge.LastUpdatedBy,
-                // CorrelationId = charge.LastUpdatedByCorrelationId,
-                // ChargeTypeOwnerMRid = charge.ChargeTypeOwner.MRid,
             };
         }
     }

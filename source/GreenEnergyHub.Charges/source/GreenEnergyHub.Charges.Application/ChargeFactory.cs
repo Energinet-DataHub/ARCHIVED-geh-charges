@@ -26,7 +26,7 @@ namespace GreenEnergyHub.Charges.Application
             // Quick and dirty as long as Charge is a command
             var c = new Charge
             {
-                Charge = command.Charge,
+                ChargeNew = command.ChargeNew,
                 Document = command.Document,
                 ChargeEvent = command.ChargeEvent,
             };

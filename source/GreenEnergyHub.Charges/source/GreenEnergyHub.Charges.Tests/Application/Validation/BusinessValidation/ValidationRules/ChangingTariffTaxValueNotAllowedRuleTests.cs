@@ -25,18 +25,22 @@ namespace GreenEnergyHub.Charges.Tests.Application.Validation.BusinessValidation
     {
         [Theory]
         [InlineAutoDomainData]
-        public void IsValid_WhenTaxIndicatorInCommandDoesNotMatchCharge_IsFalse([NotNull]ChargeCommand command, [NotNull] Charge charge)
+        public void IsValid_WhenTaxIndicatorInCommandDoesNotMatchCharge_IsFalse(
+            [NotNull]ChargeCommand command,
+            [NotNull] Charge charge)
         {
-            command.Charge.Tax = charge!.Charge.Tax;
+            command.ChargeNew.Tax = !charge.ChargeNew.Tax;
             var sut = new ChangingTariffTaxValueNotAllowedRule(command, charge);
             Assert.False(sut.IsValid);
         }
 
         [Theory]
         [InlineAutoDomainData]
-        public void IsValid_WhenTaxIndicatorInCommandMatches_IsTrue([NotNull]ChargeCommand command, [NotNull] Charge charge)
+        public void IsValid_WhenTaxIndicatorInCommandMatches_IsTrue(
+            [NotNull]ChargeCommand command,
+            [NotNull] Charge charge)
         {
-            command.Charge.Tax = charge.Charge.Tax;
+            command.ChargeNew.Tax = charge.ChargeNew.Tax;
             var sut = new ChangingTariffTaxValueNotAllowedRule(command, charge);
             Assert.True(sut.IsValid);
         }

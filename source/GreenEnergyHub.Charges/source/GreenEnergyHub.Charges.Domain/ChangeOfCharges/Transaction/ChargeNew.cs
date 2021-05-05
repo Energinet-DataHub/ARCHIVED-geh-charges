@@ -27,15 +27,13 @@ namespace GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction
 
         public string Id { get; set; }
 
-        // Should be an Enum
-        public string Type { get; set; }
+        public ChargeType Type { get; set; }
 
         public string Name { get; set; }
 
         public string Description { get; set; }
 
-        // Should be an Enum
-        public string Vat { get; set; }
+        public Vat Vat { get; set; }
 
         public bool TransparentInvoicing { get; set; }
 
@@ -43,13 +41,10 @@ namespace GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction
 
         public string Owner { get; set; }
 
-        // Should be an Enum
-        public string Resolution { get; set; }
+        public Resolution Resolution { get; set; }
 
         // Point has: Position, Price, Time
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2227", Justification = "JSON deserialization")]
         public List<Point> Points { get; set; }
-
-        public Instant RequestDate { get; set; } = SystemClock.Instance.GetCurrentInstant();
     }
 }

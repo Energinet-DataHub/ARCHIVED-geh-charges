@@ -13,12 +13,9 @@
 // limitations under the License.
 
 using System.Collections.Generic;
-using System.Data;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
 using GreenEnergyHub.Charges.Domain.Common;
 using NodaTime;
-using MarketParticipant = GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction.MarketParticipant;
-using MarketParticipantRole = GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction.MarketParticipantRole;
 
 namespace GreenEnergyHub.Charges.Tests.Builders
 {
@@ -83,7 +80,7 @@ namespace GreenEnergyHub.Charges.Tests.Builders
         {
             return new ()
             {
-                Charge = new ChargeNew
+                ChargeNew = new ChargeNew
                 {
                     Name = "description",
                     Id = _mrid,
@@ -92,11 +89,10 @@ namespace GreenEnergyHub.Charges.Tests.Builders
                     {
                         new Point { Position = 0, Time = SystemClock.Instance.GetCurrentInstant(), PriceAmount = 200m },
                     },
-                    Resolution = "Resolution",
-                    Type = "Type",
-                    Vat = _vatPayer,
+                    Resolution = Resolution.PT1H,
+                    Type = ChargeType.Fee,
+                    Vat = Vat.D02,
                     Description = "LongDescription",
-                    RequestDate = SystemClock.Instance.GetCurrentInstant(),
                     Tax = _taxIndicator,
                 },
                 Document = new Document
@@ -114,6 +110,7 @@ namespace GreenEnergyHub.Charges.Tests.Builders
                   CorrelationId = "CorrelationId",
                   LastUpdatedBy = "LastUpdatedBy",
                   StartDateTime = _validityStartDate,
+                  RequestDate = SystemClock.Instance.GetCurrentInstant(),
                 },
             };
         }

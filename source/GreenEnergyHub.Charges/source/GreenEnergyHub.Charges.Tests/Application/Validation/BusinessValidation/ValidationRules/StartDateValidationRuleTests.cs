@@ -61,7 +61,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Validation.BusinessValidation
             string effectuationDateIsoString,
             ChargeCommand chargeCommand)
         {
-            chargeCommand.Charge.RequestDate = InstantPattern.General.Parse(nowIsoString).Value;
+            chargeCommand.ChargeEvent.RequestDate = InstantPattern.General.Parse(nowIsoString).Value;
             chargeCommand.ChargeEvent = new ChargeEvent
             {
                 StartDateTime = InstantPattern.General.Parse(effectuationDateIsoString).Value,

@@ -33,5 +33,7 @@ namespace GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction
         public string CorrelationId { get; set; }
 
         public string LastUpdatedBy { get; set; }
+
+        public Instant RequestDate { get; set; } = SystemClock.Instance.GetCurrentInstant();
     }
 }

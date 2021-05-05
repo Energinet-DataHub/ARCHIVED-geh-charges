@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Text.Json.Serialization;
 using NodaTime;
 #pragma warning disable 8618
 
@@ -29,13 +28,10 @@ namespace GreenEnergyHub.Charges.Domain.Common
 
         public Instant CreatedDateTime { get; set; }
 
-        [JsonPropertyName("Sender_MarketParticipant")]
         public MarketParticipant Sender { get; set; }
 
-        [JsonPropertyName("Receiver_MarketParticipant")]
         public MarketParticipant Recipient { get; set; }
 
-        [JsonPropertyName("Market_ServiceCategoryKind")]
         public IndustryClassification IndustryClassification { get; set; }
 
         public BusinessReasonCode BusinessReasonCode { get; set; }
