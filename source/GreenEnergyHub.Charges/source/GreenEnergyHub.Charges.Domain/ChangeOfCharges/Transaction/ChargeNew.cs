@@ -25,20 +25,38 @@ namespace GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction
             Points = new List<Point>();
         }
 
+        /// <summary>
+        /// Unique ID of a charge (Note, unique per market participants).
+        /// Example: EA-001
+        /// </summary>
         public string Id { get; set; }
 
         public ChargeType Type { get; set; }
 
+        /// <summary>
+        /// The charge name
+        /// Example: "Elafgift"
+        /// </summary>
         public string Name { get; set; }
 
         public string Description { get; set; }
 
         public Vat Vat { get; set; }
 
+        /// <summary>
+        /// In Denmark the Energy Supplier invoices the customer, including the charges from the Grid Access Provider and the System Operator.
+        /// This boolean can be use to indicate that a charge must be visible on the invoice sent to the customer.
+        /// </summary>
         public bool TransparentInvoicing { get; set; }
 
+        /// <summary>
+        /// Indicates whether the Charge is tax or not.
+        /// </summary>
         public bool Tax { get; set; }
 
+        /// <summary>
+        ///  Charge Owner, e.g. the GLN or EIC identification number.
+        /// </summary>
         public string Owner { get; set; }
 
         public Resolution Resolution { get; set; }

@@ -16,12 +16,21 @@ using NodaTime;
 
 namespace GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction
 {
+    /// <summary>
+    /// This Point class is used for handling each individual price of charge price list.
+    /// </summary>
     public class Point
     {
+        /// <summary>
+        /// The position of the price in the price list it was delivered.
+        /// </summary>
         public int Position { get; set; }
 
         public decimal Price { get; set; }
 
+        /// <summary>
+        /// A point in time, where the price applies.
+        /// </summary>
         public Instant Time { get; set; }
     }
 }

@@ -15,6 +15,7 @@
 namespace GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction
 {
     /// <summary>
+    /// This enum is used to indicate the resolution of a charge price list.
     /// PT15M = 15 minutes | PT1H = hour | P1D = day | P1M = month.
     /// </summary>
     public enum Resolution

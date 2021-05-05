@@ -18,6 +18,10 @@ namespace GreenEnergyHub.Charges.Domain.Common
     // Non-nullable member is uninitialized is ignored
     // Only properties which is allowed to be null is nullable
     // MarketParticipant integrity is null checked by ChargeCommandNullChecker
+
+    /// <summary>
+    /// This class contains information about a market participant, e.g. a Grid Access Provider, whom may submit a charge message.
+    /// </summary>
     public class MarketParticipant
     {
         public int Id { get; set; }

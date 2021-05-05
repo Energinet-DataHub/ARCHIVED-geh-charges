@@ -15,7 +15,8 @@
 namespace GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction
 {
     /// <summary>
-    /// D01 is No Vat | D02 is Vat.
+    /// This enum indicates the VAT value. ("Moms" in Denmark).
+    /// D01 is No VAT | D02 is VAT.
     /// </summary>
     public enum Vat
     {

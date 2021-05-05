@@ -19,21 +19,40 @@ namespace GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction
 {
     // Non-nullable member is uninitialized is ignored
     // Only properties which is allowed to be null is nullable
-    // MktActivityRecord integrity is null checked by ChargeCommandNullChecker
+    // ChargeEvent integrity is null checked by ChargeCommandNullChecker
+
+    /// <summary>
+    /// The ChargeEvent class contains the intend of the charge command, e.g. it's an update of a charge plus an ID provided by the sender.
+    /// </summary>
     public class ChargeEvent
     {
+        /// <summary>
+        /// Contains a unique ID for the specific Charge Event, provided by the sender.
+        /// </summary>
         public string Id { get; set; }
 
+        /// <summary>
+        /// Valid from, of a charge price list. Also known as Effective Date.
+        /// </summary>
         public Instant StartDateTime { get; set; }
 
+        /// <summary>
+        /// Valid to, of a charge price list.
+        /// </summary>
         public Instant? EndDateTime { get; set; }
 
         public ChargeEventFunction Status { get; set; }
 
         public string CorrelationId { get; set; }
 
+        /// <summary>
+        /// PTA: Is this relevant for an incoming charge command?
+        /// </summary>
         public string LastUpdatedBy { get; set; }
 
+        /// <summary>
+        ///  Point in time set by the Charges domain
+        /// </summary>
         public Instant RequestDate { get; set; } = SystemClock.Instance.GetCurrentInstant();
     }
 }

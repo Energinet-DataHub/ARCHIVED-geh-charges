@@ -19,13 +19,27 @@ namespace GreenEnergyHub.Charges.Domain.Common
 {
     // Non-nullable member is uninitialized is ignored
     // Only properties which is allowed to be null is nullable
-    // MarketDocument integrity is null checked by ChargeCommandNullChecker
+    // Document integrity is null checked by ChargeCommandNullChecker
+
+    /// <summary>
+    /// The Document class contains relevant information from the Business Message in which the ChargeEvent(s) were delivered to the Charges domain.
+    /// This includes among other things sender and recipient details, An ID provided by the sender, and some business context related data.
+    /// </summary>
     public class Document
     {
+        /// <summary>
+        /// An ID provided by the sender.
+        /// </summary>
         public string Id { get; set; }
 
+        /// <summary>
+        /// The document type indicates the intended business context of this business message.
+        /// </summary>
         public string Type { get; set; }
 
+        /// <summary>
+        /// A point in time provided by the sender
+        /// </summary>
         public Instant CreatedDateTime { get; set; }
 
         public MarketParticipant Sender { get; set; }

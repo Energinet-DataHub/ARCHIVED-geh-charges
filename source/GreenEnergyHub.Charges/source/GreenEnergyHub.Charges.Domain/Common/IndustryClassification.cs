@@ -13,6 +13,9 @@
 // limitations under the License.
 namespace GreenEnergyHub.Charges.Domain.Common
 {
+    /// <summary>
+    /// IndustryClassification indicates the industry context. E.g. if a Charge price list is related to electricity.
+    /// </summary>
     public enum IndustryClassification
     {
         Unknown = 0,
