@@ -26,15 +26,9 @@ namespace GreenEnergyHub.Charges.Application
             // Quick and dirty as long as Charge is a command
             var c = new Charge
             {
-                Period = command.Period,
-                Type = command.Type,
-                CorrelationId = command.CorrelationId,
+                Charge = command.Charge,
                 Document = command.Document,
-                RequestDate = command.RequestDate,
-                LastUpdatedBy = command.LastUpdatedBy,
                 ChargeEvent = command.ChargeEvent,
-                ChargeTypeMRid = command.ChargeTypeMRid,
-                ChargeTypeOwnerMRid = command.ChargeTypeOwnerMRid,
             };
             return Task.FromResult(c);
         }

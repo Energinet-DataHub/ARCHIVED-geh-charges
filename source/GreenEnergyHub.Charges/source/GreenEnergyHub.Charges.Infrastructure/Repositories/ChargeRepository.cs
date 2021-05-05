@@ -60,16 +60,16 @@ namespace GreenEnergyHub.Charges.Infrastructure.Repositories
             if (newCharge == null) throw new ArgumentNullException(nameof(newCharge));
 
             var chargeType = await GetChargeTypeAsync(newCharge).ConfigureAwait(false);
-            if (chargeType == null) throw new Exception($"No charge type for {newCharge.Type}");
+            if (chargeType == null) throw new Exception($"No charge type for {newCharge.Charge.Type}");
 
             var resolutionType = await GetResolutionTypeAsync(newCharge).ConfigureAwait(false);
-            if (resolutionType == null) throw new Exception($"No resolution type for {newCharge.Period.Resolution}");
+            if (resolutionType == null) throw new Exception($"No resolution type for {newCharge.Charge.Resolution}");
 
             var vatPayerType = await GetVatPayerTypeAsync(newCharge).ConfigureAwait(false);
-            if (vatPayerType == null) throw new Exception($"No VAT payer type for {newCharge.ChargeEvent.ChargeType.VatPayer}");
+            if (vatPayerType == null) throw new Exception($"No VAT payer type for {newCharge.Charge.Vat}");
 
             var chargeTypeOwnerMRid = await GetChargeTypeOwnerMRidAsync(newCharge).ConfigureAwait(false);
-            if (chargeTypeOwnerMRid == null) throw new Exception($"No market participant for {newCharge.ChargeTypeOwnerMRid}");
+            if (chargeTypeOwnerMRid == null) throw new Exception($"No market participant for {newCharge.Charge.Owner}");
 
             var charge = ChangeOfChargesMapper.MapChangeOfChargesTransactionToCharge(newCharge, chargeType, chargeTypeOwnerMRid, resolutionType, vatPayerType);
 
@@ -79,32 +79,32 @@ namespace GreenEnergyHub.Charges.Infrastructure.Repositories
 
         private async Task<MarketParticipant?> GetChargeTypeOwnerMRidAsync(ChargeCommand chargeMessage)
         {
-            return string.IsNullOrWhiteSpace(chargeMessage.ChargeTypeOwnerMRid)
-                ? throw new ArgumentException($"Fails as {nameof(chargeMessage.ChargeTypeOwnerMRid)} is invalid")
+            return string.IsNullOrWhiteSpace(chargeMessage.Charge.Owner)
+                ? throw new ArgumentException($"Fails as {nameof(chargeMessage.Charge.Owner)} is invalid")
                 : await _chargesDatabaseContext.MarketParticipant.SingleOrDefaultAsync(type =>
-                type.MRid == chargeMessage.ChargeTypeOwnerMRid).ConfigureAwait(false);
+                type.MRid == chargeMessage.Charge.Owner).ConfigureAwait(false);
         }
 
         private async Task<VatPayerType?> GetVatPayerTypeAsync(ChargeCommand chargeMessage)
         {
-            return string.IsNullOrWhiteSpace(chargeMessage.ChargeEvent.ChargeType.VatPayer)
-                ? throw new ArgumentException($"Fails as {nameof(chargeMessage.ChargeEvent.ChargeType.VatPayer)} is invalid")
+            return string.IsNullOrWhiteSpace(chargeMessage.Charge.Vat)
+                ? throw new ArgumentException($"Fails as {nameof(chargeMessage.Charge.Vat)} is invalid")
                 : await _chargesDatabaseContext.VatPayerType.SingleOrDefaultAsync(type =>
-                type.Name == chargeMessage.ChargeEvent.ChargeType.VatPayer).ConfigureAwait(false);
+                type.Name == chargeMessage.Charge.Vat).ConfigureAwait(false);
         }
 
         private async Task<ResolutionType?> GetResolutionTypeAsync(ChargeCommand chargeMessage)
         {
-            return string.IsNullOrWhiteSpace(chargeMessage.Period.Resolution)
-                ? throw new ArgumentException($"Fails as {nameof(chargeMessage.Period.Resolution)} is invalid")
-                : await _chargesDatabaseContext.ResolutionType.SingleOrDefaultAsync(type => type.Name == chargeMessage.Period.Resolution).ConfigureAwait(false);
+            return string.IsNullOrWhiteSpace(chargeMessage.Charge.Resolution)
+                ? throw new ArgumentException($"Fails as {nameof(chargeMessage.Charge.Resolution)} is invalid")
+                : await _chargesDatabaseContext.ResolutionType.SingleOrDefaultAsync(type => type.Name == chargeMessage.Charge.Resolution).ConfigureAwait(false);
         }
 
         private async Task<ChargeType?> GetChargeTypeAsync(ChargeCommand chargeMessage)
         {
-            return string.IsNullOrWhiteSpace(chargeMessage.Type)
-                ? throw new ArgumentException($"Fails as {nameof(chargeMessage.Type)} is invalid")
-                : await _chargesDatabaseContext.ChargeType.SingleOrDefaultAsync(type => type.Code == chargeMessage.Type).ConfigureAwait(false);
+            return string.IsNullOrWhiteSpace(chargeMessage.Charge.Type)
+                ? throw new ArgumentException($"Fails as {nameof(chargeMessage.Charge.Type)} is invalid")
+                : await _chargesDatabaseContext.ChargeType.SingleOrDefaultAsync(type => type.Code == chargeMessage.Charge.Type).ConfigureAwait(false);
         }
     }
 }

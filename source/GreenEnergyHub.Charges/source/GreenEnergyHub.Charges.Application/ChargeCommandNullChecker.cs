@@ -25,7 +25,7 @@ namespace GreenEnergyHub.Charges.Application
         public static void ThrowExceptionIfRequiredPropertyIsNull(ChargeCommand chargeCommand)
         {
             CheckChargeCommand(chargeCommand);
-            CheckChargeCommandPeriod(chargeCommand.Period);
+            CheckChargeCommandPeriod(chargeCommand.Charge);
             CheckChargeCommandMarketDocument(chargeCommand.Document);
             CheckChargeCommandMktActivityRecord(chargeCommand.ChargeEvent);
         }
@@ -33,11 +33,11 @@ namespace GreenEnergyHub.Charges.Application
         private static void CheckChargeCommand(ChargeCommand chargeCommand)
         {
             if (chargeCommand == null) throw new ArgumentNullException(nameof(chargeCommand));
-            if (string.IsNullOrWhiteSpace(chargeCommand.CorrelationId)) throw new ArgumentException(chargeCommand.CorrelationId);
-            if (string.IsNullOrWhiteSpace(chargeCommand.LastUpdatedBy)) throw new ArgumentException(chargeCommand.LastUpdatedBy);
-            if (string.IsNullOrWhiteSpace(chargeCommand.Type)) throw new ArgumentException(chargeCommand.Type);
-            if (string.IsNullOrWhiteSpace(chargeCommand.ChargeTypeOwnerMRid)) throw new ArgumentException(chargeCommand.ChargeTypeOwnerMRid);
-            if (string.IsNullOrWhiteSpace(chargeCommand.ChargeTypeMRid)) throw new ArgumentException(chargeCommand.ChargeTypeOwnerMRid);
+            if (string.IsNullOrWhiteSpace(chargeCommand.ChargeEvent.CorrelationId)) throw new ArgumentException(chargeCommand.CorrelationId);
+            if (string.IsNullOrWhiteSpace(chargeCommand.ChargeEvent.LastUpdatedBy)) throw new ArgumentException(chargeCommand.LastUpdatedBy);
+            if (string.IsNullOrWhiteSpace(chargeCommand.Charge.Type)) throw new ArgumentException(chargeCommand.Type);
+            if (string.IsNullOrWhiteSpace(chargeCommand.Charge.Owner)) throw new ArgumentException(chargeCommand.ChargeTypeOwnerMRid);
+            if (string.IsNullOrWhiteSpace(chargeCommand.Charge.Id)) throw new ArgumentException(chargeCommand.ChargeTypeOwnerMRid);
         }
 
         private static void CheckChargeCommandMktActivityRecord(ChargeEvent chargeEvent)

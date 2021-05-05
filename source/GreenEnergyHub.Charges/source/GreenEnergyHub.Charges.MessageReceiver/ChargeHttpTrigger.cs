@@ -76,48 +76,16 @@ namespace GreenEnergyHub.Charges.MessageReceiver
             return new OkObjectResult(messageResult);
         }
 
-        private static ChargeCommand GetCommandFromChangeOfChargeTransaction(ChargeCommand command)
-        {
-            return command.Type switch
-            {
-                "D01" => new FeeCreate
-                {
-                    Period = command.Period,
-                    Type = command.Type,
-                    CorrelationId = command.CorrelationId,
-                    Document = command.Document,
-                    RequestDate = command.RequestDate,
-                    LastUpdatedBy = command.LastUpdatedBy,
-                    ChargeEvent = command.ChargeEvent,
-                    ChargeTypeMRid = command.ChargeTypeMRid,
-                    ChargeTypeOwnerMRid = command.ChargeTypeOwnerMRid,
-                },
-                _ => new TariffCreate
-                {
-                    Period = command.Period,
-                    Type = command.Type,
-                    CorrelationId = command.CorrelationId,
-                    Document = command.Document,
-                    RequestDate = command.RequestDate,
-                    LastUpdatedBy = command.LastUpdatedBy,
-                    ChargeEvent = command.ChargeEvent,
-                    ChargeTypeMRid = command.ChargeTypeMRid,
-                    ChargeTypeOwnerMRid = command.ChargeTypeOwnerMRid,
-                }
-            };
-        }
-
         private async Task<ChangeOfChargesMessage> GetChangeOfChargesMessageAsync(
             IJsonSerializer jsonDeserializer,
             HttpRequest req)
         {
             var message = new ChangeOfChargesMessage();
-            var transaction = (ChargeCommand)await jsonDeserializer
+            var command = (ChargeCommand)await jsonDeserializer
                 .DeserializeAsync(req.Body, typeof(ChargeCommand))
                 .ConfigureAwait(false);
 
-            var command = GetCommandFromChangeOfChargeTransaction(transaction);
-            command.CorrelationId = _correlationContext.CorrelationId;
+            command.ChargeEvent.CorrelationId = _correlationContext.CorrelationId;
             message.Transactions.Add(command);
             return message;
         }

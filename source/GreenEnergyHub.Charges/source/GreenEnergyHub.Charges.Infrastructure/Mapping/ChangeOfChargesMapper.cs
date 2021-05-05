@@ -14,6 +14,7 @@
 
 using System;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
+using GreenEnergyHub.Charges.Domain.Common;
 using GreenEnergyHub.Charges.Infrastructure.Context.Model;
 using JetBrains.Annotations;
 using NodaTime;
@@ -37,33 +38,33 @@ namespace GreenEnergyHub.Charges.Infrastructure.Mapping
             {
                 ChargeType = chargeType,
                 ChargeTypeOwner = chargeTypeOwnerMRid,
-                Description = chargeCommand.ChargeEvent.ChargeType.Description,
-                LastUpdatedBy = chargeCommand.LastUpdatedBy,
-                LastUpdatedByCorrelationId = chargeCommand.CorrelationId,
+                Description = chargeCommand.Charge.Description,
+                LastUpdatedBy = chargeCommand.ChargeEvent.LastUpdatedBy,
+                LastUpdatedByCorrelationId = chargeCommand.ChargeEvent.CorrelationId,
                 LastUpdatedByTransactionId = chargeCommand.ChargeEvent.Id,
-                Name = chargeCommand.ChargeEvent.ChargeType.Name,
-                RequestDateTime = chargeCommand.RequestDate.ToUnixTimeTicks(),
+                Name = chargeCommand.Charge.Description,
+                RequestDateTime = chargeCommand.Charge.RequestDate.ToUnixTimeTicks(),
                 ResolutionType = resolutionType,
                 StartDate = chargeCommand.ChargeEvent.StartDateTime.ToUnixTimeTicks(),
                 EndDate = chargeCommand.ChargeEvent.EndDateTime?.ToUnixTimeTicks(),
                 Status = (byte)chargeCommand.ChargeEvent.Status,
-                TaxIndicator = chargeCommand.ChargeEvent.ChargeType.TaxIndicator,
-                TransparentInvoicing = chargeCommand.ChargeEvent.ChargeType.TransparentInvoicing,
+                TaxIndicator = chargeCommand.Charge.Tax,
+                TransparentInvoicing = chargeCommand.Charge.TransparentInvoicing,
                 VatPayer = vatPayerType,
-                MRid = chargeCommand.ChargeTypeMRid,
+                MRid = chargeCommand.Charge.Id,
                 Currency = "DKK",
             };
 
-            foreach (var point in chargeCommand.Period.Points)
+            foreach (var point in chargeCommand.Charge.Points)
             {
                 var newChargePrice = new ChargePrice
                 {
                     Time = point.Time.ToUnixTimeTicks(),
                     Amount = point.PriceAmount,
-                    LastUpdatedByCorrelationId = chargeCommand.CorrelationId,
+                    LastUpdatedByCorrelationId = chargeCommand.ChargeEvent.CorrelationId,
                     LastUpdatedByTransactionId = chargeCommand.ChargeEvent.Id,
-                    LastUpdatedBy = chargeCommand.LastUpdatedBy,
-                    RequestDateTime = chargeCommand.RequestDate.ToUnixTimeTicks(),
+                    LastUpdatedBy = chargeCommand.ChargeEvent.LastUpdatedBy,
+                    RequestDateTime = chargeCommand.Charge.RequestDate.ToUnixTimeTicks(),
                 };
 
                 charge.ChargePrices.Add(newChargePrice);
@@ -78,25 +79,43 @@ namespace GreenEnergyHub.Charges.Infrastructure.Mapping
 
             return new Domain.Charge
             {
-                ChargeTypeMRid = charge.MRid,
-                ChargeEvent = new ChargeEvent
+                Charge = new ChargeNew
                 {
-                    Status = (ChargeEventFuction)charge.Status,
-                    ChargeType = new Domain.ChangeOfCharges.Transaction.ChargeType()
-                    {
-                        Name = charge.Name,
-                        TaxIndicator = charge.TaxIndicator,
-                        VatPayer = charge.VatPayer.Name,
-                        Description = charge.Description,
-                        TransparentInvoicing = charge.TransparentInvoicing,
-                    },
-                    StartDateTime = Instant.FromUnixTimeTicks(charge.StartDate),
-                    EndDateTime = charge.EndDate != null ? Instant.FromUnixTimeTicks(charge.EndDate.Value) : null as Instant?,
+                    Description = charge.Name,
+                    Id = charge.MRid,
+                    Owner = charge.ChargeTypeOwner.MRid,
+                    Tax = charge.TaxIndicator,
+                    //Type = charge.ChargeType.Name,
+                    LongDescription = charge.Description,
+                    Vat = charge.VatPayer.Name,
+                    RequestDate = charge.RequestDateTime,
+                    TransparentInvoicing = charge.TransparentInvoicing,
+                    Resolution = charge.ResolutionType.Name!
                 },
-                RequestDate = Instant.FromUnixTimeTicks(charge.RequestDateTime),
-                LastUpdatedBy = charge.LastUpdatedBy,
-                CorrelationId = charge.LastUpdatedByCorrelationId,
-                ChargeTypeOwnerMRid = charge.ChargeTypeOwner.MRid,
+                Document = new Document
+                {
+                    Id = charge.
+                },
+
+                // ChargeTypeMRid = charge.MRid,
+                // ChargeEvent = new ChargeEvent
+                // {
+                //     Status = (ChargeEventFuction)charge.Status,
+                //     ChargeType = new Domain.ChangeOfCharges.Transaction.ChargeType()
+                //     {
+                //         Name = charge.Name,
+                //         TaxIndicator = charge.TaxIndicator,
+                //         VatPayer = charge.VatPayer.Name,
+                //         Description = charge.Description,
+                //         TransparentInvoicing = charge.TransparentInvoicing,
+                //     },
+                //     StartDateTime = Instant.FromUnixTimeTicks(charge.StartDate),
+                //     EndDateTime = charge.EndDate != null ? Instant.FromUnixTimeTicks(charge.EndDate.Value) : null as Instant?,
+                // },
+                // RequestDate = Instant.FromUnixTimeTicks(charge.RequestDateTime),
+                // LastUpdatedBy = charge.LastUpdatedBy,
+                // CorrelationId = charge.LastUpdatedByCorrelationId,
+                // ChargeTypeOwnerMRid = charge.ChargeTypeOwner.MRid,
             };
         }
     }
