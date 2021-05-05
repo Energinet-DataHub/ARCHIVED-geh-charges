@@ -56,7 +56,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GreenEnergyHub.Iso8601", ".
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GreenEnergyHub.Charges.Core", "source\GreenEnergyHub.Charges.Core\GreenEnergyHub.Charges.Core.csproj", "{7EB158E1-FC7E-4591-B2CC-12F5ECAC21FA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GreenEnergyHub.Charges.ChargeCommandAcceptedPostOfficeForwarder", "source\GreenEnergyHub.Charges.ChargeCommandAcceptedPostOfficeForwarder\GreenEnergyHub.Charges.ChargeCommandAcceptedPostOfficeForwarder.csproj", "{02DE278B-693D-44D4-BBE2-66E2A9DF7CE4}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GreenEnergyHub.Charges.ChargeAcknowledgementSender", "source\GreenEnergyHub.Charges.ChargeAcknowledgementSender\GreenEnergyHub.Charges.ChargeAcknowledgementSender.csproj", "{02DE278B-693D-44D4-BBE2-66E2A9DF7CE4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

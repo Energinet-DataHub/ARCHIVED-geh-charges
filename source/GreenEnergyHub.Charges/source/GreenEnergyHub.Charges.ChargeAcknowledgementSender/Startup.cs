@@ -14,18 +14,18 @@
 
 using System;
 using System.Diagnostics.CodeAnalysis;
-using GreenEnergyHub.Charges.Application.PostOffice;
-using GreenEnergyHub.Charges.ChargeCommandAcceptedPostOfficeForwarder;
+using GreenEnergyHub.Charges.ChargeAcknowledgementSender;
 using GreenEnergyHub.Charges.Infrastructure.Messaging;
 using GreenEnergyHub.Charges.Infrastructure.PostOffice;
 using GreenEnergyHub.Json;
 using Microsoft.Azure.Functions.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection;
 using NodaTime;
+using JsonSerializer = GreenEnergyHub.Charges.Core.Json.JsonSerializer;
 
 [assembly: FunctionsStartup(typeof(Startup))]
 
-namespace GreenEnergyHub.Charges.ChargeCommandAcceptedPostOfficeForwarder
+namespace GreenEnergyHub.Charges.ChargeAcknowledgementSender
 {
     public class Startup : FunctionsStartup
     {

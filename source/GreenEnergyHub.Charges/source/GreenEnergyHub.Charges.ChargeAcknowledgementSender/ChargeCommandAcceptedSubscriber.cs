@@ -14,26 +14,25 @@
 
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application;
-using GreenEnergyHub.Charges.Application.PostOffice;
 using GreenEnergyHub.Charges.Domain.Events.Local;
 using GreenEnergyHub.Charges.Infrastructure.Messaging;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 
-namespace GreenEnergyHub.Charges.ChargeCommandAcceptedPostOfficeForwarder
+namespace GreenEnergyHub.Charges.ChargeAcknowledgementSender
 {
-    public class FunctionEndpoint
+    public class ChargeCommandAcceptedSubscriber
     {
-        private const string FunctionName = nameof(FunctionEndpoint);
-        private readonly IChargeCommandAcceptedPostOfficeForwarder _chargeCommandAcceptedPostOfficeForwarder;
+        private const string FunctionName = nameof(ChargeCommandAcceptedSubscriber);
+        private readonly IChargeAcknowledgementSender _chargeAcknowledgementSender;
         private readonly ICorrelationContext _correlationContext;
 
-        public FunctionEndpoint(
-            IChargeCommandAcceptedPostOfficeForwarder chargeCommandAcceptedPostOfficeForwarder,
+        public ChargeCommandAcceptedSubscriber(
+            IChargeAcknowledgementSender chargeAcknowledgementSender,
             ICorrelationContext correlationContext)
         {
-            _chargeCommandAcceptedPostOfficeForwarder = chargeCommandAcceptedPostOfficeForwarder;
+            _chargeAcknowledgementSender = chargeAcknowledgementSender;
             _correlationContext = correlationContext;
         }
 
@@ -50,7 +49,7 @@ namespace GreenEnergyHub.Charges.ChargeCommandAcceptedPostOfficeForwarder
             var serviceBusMessage = JsonConvert.DeserializeObject<ServiceBusMessageWrapper<ChargeCommandAcceptedEvent>>(jsonSerializedQueueItem);
             var acceptedEvent = serviceBusMessage.Message;
             SetCorrelationContext(acceptedEvent);
-            await _chargeCommandAcceptedPostOfficeForwarder.HandleAsync(acceptedEvent!).ConfigureAwait(false);
+            await _chargeAcknowledgementSender.HandleAsync(acceptedEvent!).ConfigureAwait(false);
 
             log.LogDebug("Received event with correlation ID '{CorrelationId}'", acceptedEvent.CorrelationId);
         }
