@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System;
+using System.Linq;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
 using GreenEnergyHub.Charges.Domain.Common;
 using MarketParticipant = GreenEnergyHub.Charges.Domain.Common.MarketParticipant;
@@ -32,30 +33,32 @@ namespace GreenEnergyHub.Charges.Application
         private static void CheckChargeCommand(ChargeCommand chargeCommand)
         {
             if (chargeCommand == null) throw new ArgumentNullException(nameof(chargeCommand));
-            if (chargeCommand.CorrelationId == null) throw new ArgumentNullException(chargeCommand.CorrelationId);
-            if (chargeCommand.LastUpdatedBy == null) throw new ArgumentNullException(chargeCommand.LastUpdatedBy);
-            if (chargeCommand.Type == null) throw new ArgumentNullException(chargeCommand.Type);
-            if (chargeCommand.ChargeTypeOwnerMRid == null) throw new ArgumentNullException(chargeCommand.ChargeTypeOwnerMRid);
+            if (string.IsNullOrWhiteSpace(chargeCommand.CorrelationId)) throw new ArgumentException(chargeCommand.CorrelationId);
+            if (string.IsNullOrWhiteSpace(chargeCommand.LastUpdatedBy)) throw new ArgumentException(chargeCommand.LastUpdatedBy);
+            if (string.IsNullOrWhiteSpace(chargeCommand.Type)) throw new ArgumentException(chargeCommand.Type);
+            if (string.IsNullOrWhiteSpace(chargeCommand.ChargeTypeOwnerMRid)) throw new ArgumentException(chargeCommand.ChargeTypeOwnerMRid);
+            if (string.IsNullOrWhiteSpace(chargeCommand.ChargeTypeMRid)) throw new ArgumentException(chargeCommand.ChargeTypeOwnerMRid);
         }
 
         private static void CheckChargeCommandMktActivityRecord(MktActivityRecord mktActivityRecord)
         {
             if (mktActivityRecord == null) throw new ArgumentNullException(nameof(mktActivityRecord));
-            if (mktActivityRecord.MRid == null) throw new ArgumentNullException(mktActivityRecord.MRid);
+            if (string.IsNullOrWhiteSpace(mktActivityRecord.MRid)) throw new ArgumentException(mktActivityRecord.MRid);
             CheckMktActivityRecordChargeType(mktActivityRecord.ChargeType);
         }
 
         private static void CheckMktActivityRecordChargeType(ChargeType chargeType)
         {
             if (chargeType == null) throw new ArgumentNullException(nameof(chargeType));
-            if (chargeType.Name == null) throw new ArgumentNullException(chargeType.Name);
-            if (chargeType.VatPayer == null) throw new ArgumentNullException(chargeType.VatPayer);
+            if (string.IsNullOrWhiteSpace(chargeType.Name)) throw new ArgumentException(chargeType.Name);
+            if (string.IsNullOrWhiteSpace(chargeType.VatPayer)) throw new ArgumentException(chargeType.VatPayer);
+            if (string.IsNullOrWhiteSpace(chargeType.Description)) throw new ArgumentException(chargeType.Description);
         }
 
         private static void CheckChargeCommandMarketDocument(MarketDocument marketDocument)
         {
             if (marketDocument == null) throw new ArgumentNullException(nameof(marketDocument));
-            if (marketDocument.MRid == null) throw new ArgumentNullException(marketDocument.MRid);
+            if (string.IsNullOrWhiteSpace(marketDocument.MRid)) throw new ArgumentException(marketDocument.MRid);
             CheckMarketDocumentMarketParticipant(marketDocument.ReceiverMarketParticipant);
             CheckMarketDocumentMarketParticipant(marketDocument.SenderMarketParticipant);
         }
@@ -63,13 +66,13 @@ namespace GreenEnergyHub.Charges.Application
         private static void CheckMarketDocumentMarketParticipant(MarketParticipant marketParticipant)
         {
             if (marketParticipant == null) throw new ArgumentNullException(nameof(marketParticipant));
-            if (marketParticipant.MRid == null) throw new ArgumentNullException(marketParticipant.MRid);
+            if (string.IsNullOrWhiteSpace(marketParticipant.MRid)) throw new ArgumentException(marketParticipant.MRid);
         }
 
         private static void CheckChargeCommandPeriod(ChargeTypePeriod chargeTypePeriod)
         {
             if (chargeTypePeriod == null) throw new ArgumentNullException(nameof(chargeTypePeriod));
-            if (chargeTypePeriod.Resolution == null) throw new ArgumentNullException(chargeTypePeriod.Resolution);
+            if (string.IsNullOrWhiteSpace(chargeTypePeriod.Resolution)) throw new ArgumentException(chargeTypePeriod.Resolution);
         }
     }
 }

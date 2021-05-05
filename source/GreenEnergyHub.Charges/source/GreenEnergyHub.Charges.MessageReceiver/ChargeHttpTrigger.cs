@@ -30,6 +30,10 @@ namespace GreenEnergyHub.Charges.MessageReceiver
 {
     public class ChargeHttpTrigger
     {
+        /// <summary>
+        /// The name of the function.
+        /// Function name affects the URL and thus possibly dependent infrastructure.
+        /// </summary>
         private const string FunctionName = "ChargeHttpTrigger";
         private readonly IJsonSerializer _jsonDeserializer;
         private readonly IChangeOfChargesMessageHandler _changeOfChargesMessageHandler;

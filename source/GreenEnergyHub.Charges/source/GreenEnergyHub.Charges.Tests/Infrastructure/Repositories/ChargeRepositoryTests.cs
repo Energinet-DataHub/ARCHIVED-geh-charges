@@ -54,18 +54,18 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
         public async Task StoreChargeAsync_WhenValueNotFoundInDbContext_ThenFailureStatusReturnedAsync(string chargeType, string resolutionType, string vatPayerType, string chargeOwner, string failureReason)
         {
             // Arrange
-            var message = GetValidCharge();
-            message.Type = chargeType;
-            message.ChargeTypeOwnerMRid = chargeOwner;
-            message!.MktActivityRecord!.ChargeType!.VatPayer = vatPayerType;
-            message!.Period!.Resolution = resolutionType;
+            var charge = GetValidCharge();
+            charge.Type = chargeType;
+            charge.ChargeTypeOwnerMRid = chargeOwner;
+            charge.MktActivityRecord.ChargeType.VatPayer = vatPayerType;
+            charge.Period.Resolution = resolutionType;
 
             SeedDatabase();
             await using var chargesDatabaseContext = new ChargesDatabaseContext(_dbContextOptions);
             var sut = new ChargeRepository(chargesDatabaseContext);
 
             // Acy & Assert
-            var ex = await Assert.ThrowsAsync<Exception>(async () => await sut.StoreChargeAsync(message).ConfigureAwait(false)).ConfigureAwait(false);
+            var ex = await Assert.ThrowsAsync<Exception>(async () => await sut.StoreChargeAsync(charge).ConfigureAwait(false)).ConfigureAwait(false);
             Assert.Equal(failureReason, ex.Message);
         }
 
@@ -82,20 +82,18 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
         public async Task StoreChargeAsync_WhenValuesInMessageUsedForDbContextLookupsAreInvalid_ThenExceptionThrownAsync(string chargeType, string resolutionType, string vatPayerType, string chargeOwner, string exceptionMessage)
         {
             // Arrange
-            var message = GetValidCharge();
-            message.Type = chargeType;
-            message.ChargeTypeOwnerMRid = chargeOwner;
-#pragma warning disable CS8602 // Dereference of a possibly null reference.
-            message.MktActivityRecord.ChargeType.VatPayer = vatPayerType;
-            message.Period.Resolution = resolutionType;
-#pragma warning restore CS8602 // Dereference of a possibly null reference.
+            var charge = GetValidCharge();
+            charge.Type = chargeType;
+            charge.ChargeTypeOwnerMRid = chargeOwner;
+            charge.MktActivityRecord.ChargeType.VatPayer = vatPayerType;
+            charge.Period.Resolution = resolutionType;
 
             SeedDatabase();
             await using var context = new ChargesDatabaseContext(_dbContextOptions);
             var sut = new ChargeRepository(context);
 
             // Act
-            var exception = await Record.ExceptionAsync(async () => await sut.StoreChargeAsync(message).ConfigureAwait(false)).ConfigureAwait(false);
+            var exception = await Record.ExceptionAsync(async () => await sut.StoreChargeAsync(charge).ConfigureAwait(false)).ConfigureAwait(false);
 
             // Assert
             Assert.IsType<ArgumentException>(exception);
@@ -103,37 +101,29 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
         }
 
         [Theory]
-        [InlineAutoDomainData(null, "Valid", "Valid", "Valid", "Valid", "ChargeTypeMRid")]
-        [InlineAutoDomainData(" ", "Valid", "Valid", "Valid", "Valid", "ChargeTypeMRid")]
-        [InlineAutoDomainData("Valid", null, "Valid", "Valid", "Valid", "CorrelationId")]
-        [InlineAutoDomainData("Valid", " ", "Valid", "Valid", "Valid", "CorrelationId")]
-        [InlineAutoDomainData("Valid", "Valid", null, "Valid", "Valid", "LastUpdatedBy")]
-        [InlineAutoDomainData("Valid", "Valid", " ", "Valid", "Valid", "LastUpdatedBy")]
-        [InlineAutoDomainData("Valid", "Valid", "Valid", null, "Valid", "Name")]
-        [InlineAutoDomainData("Valid", "Valid", "Valid", " ", "Valid", "Name")]
-        [InlineAutoDomainData("Valid", "Valid", "Valid", "Valid", null, "Description")]
-        [InlineAutoDomainData("Valid", "Valid", "Valid", "Valid", " ", "Description")]
-        public async Task StoreChargeAsync_WhenValuesInMessageAreInvalid_ThenExceptionThrownAsync(string chargeTypeMRid, string correlationId, string lastUpdatedBy, string shortDescription, string longDescription, string argumentThatFails)
+        [InlineAutoDomainData(null, "Valid", "Valid", "Valid", "Valid")]
+        [InlineAutoDomainData("Valid", null, "Valid", "Valid", "Valid")]
+        [InlineAutoDomainData("Valid", "Valid", null, "Valid", "Valid")]
+        [InlineAutoDomainData("Valid", "Valid", "Valid", null, "Valid")]
+        [InlineAutoDomainData("Valid", "Valid", "Valid", "Valid", null)]
+        public async Task StoreChargeAsync_WhenValuesInMessageAreInvalid_ThenExceptionThrownAsync(string chargeTypeMRid, string correlationId, string lastUpdatedBy, string shortDescription, string longDescription)
         {
             // Arrange
-            var message = GetValidCharge(correlationId);
-            message.ChargeTypeMRid = chargeTypeMRid;
-            message.LastUpdatedBy = lastUpdatedBy;
-#pragma warning disable CS8602 // Dereference of a possibly null reference.
-            message.MktActivityRecord.ChargeType.Name = shortDescription;
-            message.MktActivityRecord.ChargeType.Description = longDescription;
-#pragma warning restore CS8602 // Dereference of a possibly null reference.
+            var charge = GetValidCharge(correlationId);
+            charge.ChargeTypeMRid = chargeTypeMRid;
+            charge.LastUpdatedBy = lastUpdatedBy;
+            charge.MktActivityRecord.ChargeType.Name = shortDescription;
+            charge.MktActivityRecord.ChargeType.Description = longDescription;
 
             SeedDatabase();
             await using var context = new ChargesDatabaseContext(_dbContextOptions);
             var sut = new ChargeRepository(context);
 
             // Act
-            var exception = await Record.ExceptionAsync(async () => await sut.StoreChargeAsync(message).ConfigureAwait(false)).ConfigureAwait(false);
+            var exception = await Record.ExceptionAsync(async () => await sut.StoreChargeAsync(charge).ConfigureAwait(false)).ConfigureAwait(false);
 
             // Assert
-            Assert.IsType<ArgumentException>(exception);
-            Assert.Contains($"{argumentThatFails} must have value", exception.Message);
+            Assert.IsType<DbUpdateException>(exception);
         }
 
         #endregion
@@ -142,29 +132,29 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
         public async Task StoreChargeAsync_WhenChargeIsSaved_ThenSuccessReturnedAsync()
         {
             // Arrange
-            var message = GetValidCharge();
+            var charge = GetValidCharge();
 
             SeedDatabase();
             await using var chargesDatabaseContext = new ChargesDatabaseContext(_dbContextOptions);
             var sut = new ChargeRepository(chargesDatabaseContext);
 
             // Act & Assert
-            await sut.StoreChargeAsync(message).ConfigureAwait(false);
+            await sut.StoreChargeAsync(charge).ConfigureAwait(false);
         }
 
         [Fact]
         public void MapChangeOfChargesMessageToCharge_WhenMessageWithProperties_ThenReturnsChargeWithPropertiesSet()
         {
             // Arrange
-            var changeOfChargesMessage = GetValidCharge();
-            changeOfChargesMessage!.MktActivityRecord!.ValidityEndDate = Instant.MaxValue;
-            var chargeType = new ChargeType { Code = changeOfChargesMessage.Type, Id = 1, Name = "Name" };
-            var chargeTypeOwnerMRid = new MarketParticipant { Id = 1, MRid = changeOfChargesMessage.ChargeTypeOwnerMRid, Name = "Name" };
-            var resolutionType = new ResolutionType { Id = 1, Name = changeOfChargesMessage.Period.Resolution };
-            var vatPayerType = new VatPayerType { Id = 1, Name = changeOfChargesMessage.MktActivityRecord.ChargeType.VatPayer };
+            var charge = GetValidCharge();
+            charge!.MktActivityRecord!.ValidityEndDate = Instant.MaxValue;
+            var chargeType = new ChargeType { Code = charge.Type, Id = 1, Name = "Name" };
+            var chargeTypeOwnerMRid = new MarketParticipant { Id = 1, MRid = charge.ChargeTypeOwnerMRid, Name = "Name" };
+            var resolutionType = new ResolutionType { Id = 1, Name = charge.Period.Resolution };
+            var vatPayerType = new VatPayerType { Id = 1, Name = charge.MktActivityRecord.ChargeType.VatPayer };
 
             // When
-            var result = ChangeOfChargesMapper.MapChangeOfChargesTransactionToCharge(changeOfChargesMessage, chargeType, chargeTypeOwnerMRid, resolutionType, vatPayerType);
+            var result = ChangeOfChargesMapper.MapChangeOfChargesTransactionToCharge(charge, chargeType, chargeTypeOwnerMRid, resolutionType, vatPayerType);
 
             var properties = result.GetType().GetProperties();
             foreach (var property in properties)
@@ -185,7 +175,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
                 ChargeTypeOwnerMRid = KnownChargeOwner,
                 MktActivityRecord = new MktActivityRecord
                 {
-                    MRid = "MktActivtyRecordMRIDValue",
+                    MRid = "MktActivityRecordMRIDValue",
                     ChargeType = new Domain.ChangeOfCharges.Transaction.ChargeType
                         { VatPayer = KnownVatPayer, Name = "shortDescription", Description = "longDescription", },
                 },
