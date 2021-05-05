@@ -29,10 +29,10 @@ namespace GreenEnergyHub.Charges.Application
                 Period = command.Period,
                 Type = command.Type,
                 CorrelationId = command.CorrelationId,
-                MarketDocument = command.MarketDocument,
+                Document = command.Document,
                 RequestDate = command.RequestDate,
                 LastUpdatedBy = command.LastUpdatedBy,
-                MktActivityRecord = command.MktActivityRecord,
+                ChargeEvent = command.ChargeEvent,
                 ChargeTypeMRid = command.ChargeTypeMRid,
                 ChargeTypeOwnerMRid = command.ChargeTypeOwnerMRid,
             };

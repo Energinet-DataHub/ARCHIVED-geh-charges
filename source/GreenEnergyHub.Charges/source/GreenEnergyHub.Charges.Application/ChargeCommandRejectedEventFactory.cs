@@ -38,8 +38,8 @@ namespace GreenEnergyHub.Charges.Application
             return new ChargeCommandRejectedEvent(
                 _clock.GetCurrentInstant(),
                 command.CorrelationId,
-                command.MarketDocument.MRid,
-                command.MktActivityRecord.MRid,
+                command.Document.Id,
+                command.ChargeEvent.Id,
                 chargeCommandValidationResult.InvalidRules.Select(x => x.ValidationRuleIdentifier.ToString()).ToArray());
         }
 
@@ -50,8 +50,8 @@ namespace GreenEnergyHub.Charges.Application
             return new ChargeCommandRejectedEvent(
                 _clock.GetCurrentInstant(),
                 command.CorrelationId,
-                command.MarketDocument.MRid,
-                command.MktActivityRecord.MRid,
+                command.Document.Id,
+                command.ChargeEvent.Id,
                 new[] { exception.Message });
         }
     }

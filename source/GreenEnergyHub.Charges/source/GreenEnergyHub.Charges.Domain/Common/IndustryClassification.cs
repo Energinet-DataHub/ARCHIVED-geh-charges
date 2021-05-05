@@ -13,7 +13,7 @@
 // limitations under the License.
 namespace GreenEnergyHub.Charges.Domain.Common
 {
-    public enum ServiceCategoryKind
+    public enum IndustryClassification
     {
         Unknown = 0,
         Electricity = 23,

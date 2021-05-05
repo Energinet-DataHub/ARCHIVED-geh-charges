@@ -37,18 +37,18 @@ namespace GreenEnergyHub.Charges.Infrastructure.Mapping
             {
                 ChargeType = chargeType,
                 ChargeTypeOwner = chargeTypeOwnerMRid,
-                Description = chargeCommand.MktActivityRecord.ChargeType.Description,
+                Description = chargeCommand.ChargeEvent.ChargeType.Description,
                 LastUpdatedBy = chargeCommand.LastUpdatedBy,
                 LastUpdatedByCorrelationId = chargeCommand.CorrelationId,
-                LastUpdatedByTransactionId = chargeCommand.MktActivityRecord.MRid,
-                Name = chargeCommand.MktActivityRecord.ChargeType.Name,
+                LastUpdatedByTransactionId = chargeCommand.ChargeEvent.Id,
+                Name = chargeCommand.ChargeEvent.ChargeType.Name,
                 RequestDateTime = chargeCommand.RequestDate.ToUnixTimeTicks(),
                 ResolutionType = resolutionType,
-                StartDate = chargeCommand.MktActivityRecord.ValidityStartDate.ToUnixTimeTicks(),
-                EndDate = chargeCommand.MktActivityRecord.ValidityEndDate?.ToUnixTimeTicks(),
-                Status = (byte)chargeCommand.MktActivityRecord.Status,
-                TaxIndicator = chargeCommand.MktActivityRecord.ChargeType.TaxIndicator,
-                TransparentInvoicing = chargeCommand.MktActivityRecord.ChargeType.TransparentInvoicing,
+                StartDate = chargeCommand.ChargeEvent.StartDateTime.ToUnixTimeTicks(),
+                EndDate = chargeCommand.ChargeEvent.EndDateTime?.ToUnixTimeTicks(),
+                Status = (byte)chargeCommand.ChargeEvent.Status,
+                TaxIndicator = chargeCommand.ChargeEvent.ChargeType.TaxIndicator,
+                TransparentInvoicing = chargeCommand.ChargeEvent.ChargeType.TransparentInvoicing,
                 VatPayer = vatPayerType,
                 MRid = chargeCommand.ChargeTypeMRid,
                 Currency = "DKK",
@@ -61,7 +61,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Mapping
                     Time = point.Time.ToUnixTimeTicks(),
                     Amount = point.PriceAmount,
                     LastUpdatedByCorrelationId = chargeCommand.CorrelationId,
-                    LastUpdatedByTransactionId = chargeCommand.MktActivityRecord.MRid,
+                    LastUpdatedByTransactionId = chargeCommand.ChargeEvent.Id,
                     LastUpdatedBy = chargeCommand.LastUpdatedBy,
                     RequestDateTime = chargeCommand.RequestDate.ToUnixTimeTicks(),
                 };
@@ -79,9 +79,9 @@ namespace GreenEnergyHub.Charges.Infrastructure.Mapping
             return new Domain.Charge
             {
                 ChargeTypeMRid = charge.MRid,
-                MktActivityRecord = new MktActivityRecord
+                ChargeEvent = new ChargeEvent
                 {
-                    Status = (MktActivityRecordStatus)charge.Status,
+                    Status = (ChargeEventFuction)charge.Status,
                     ChargeType = new Domain.ChangeOfCharges.Transaction.ChargeType()
                     {
                         Name = charge.Name,
@@ -90,8 +90,8 @@ namespace GreenEnergyHub.Charges.Infrastructure.Mapping
                         Description = charge.Description,
                         TransparentInvoicing = charge.TransparentInvoicing,
                     },
-                    ValidityStartDate = Instant.FromUnixTimeTicks(charge.StartDate),
-                    ValidityEndDate = charge.EndDate != null ? Instant.FromUnixTimeTicks(charge.EndDate.Value) : null as Instant?,
+                    StartDateTime = Instant.FromUnixTimeTicks(charge.StartDate),
+                    EndDateTime = charge.EndDate != null ? Instant.FromUnixTimeTicks(charge.EndDate.Value) : null as Instant?,
                 },
                 RequestDate = Instant.FromUnixTimeTicks(charge.RequestDateTime),
                 LastUpdatedBy = charge.LastUpdatedBy,

@@ -12,13 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction
+namespace GreenEnergyHub.Charges.Domain.Common
 {
-    public enum MktActivityRecordStatus
+    public enum BusinessReasonCode
     {
-        Unknown = 0,
-        Addition = 2,
-        Deletion = 3,
-        Change = 4,
+        Unknown,
+        D18,
     }
 }

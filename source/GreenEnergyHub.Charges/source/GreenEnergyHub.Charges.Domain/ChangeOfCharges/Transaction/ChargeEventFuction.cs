@@ -12,22 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using GreenEnergyHub.Charges.Domain.Command;
-using GreenEnergyHub.Charges.Domain.Common;
-
-#pragma warning disable 8618
-
 namespace GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction
 {
-    // Non-nullable member is uninitialized is ignored
-    // Only properties which is allowed to be null is nullable
-    // ChargeCommand integrity is null checked by ChargeCommandNullChecker
-    public class ChargeCommand : CommandBase
+    public enum ChargeEventFuction
     {
-        public Document Document { get; set; }
-
-        public ChargeEvent ChargeEvent { get; set; }
-
-        public ChargeNew Charge { get; set; }
+        Unknown = 0,
+        Addition = 2,
+        Deletion = 3,
+        Change = 4,
     }
 }

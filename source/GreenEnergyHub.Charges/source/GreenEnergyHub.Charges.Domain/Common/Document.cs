@@ -12,24 +12,30 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Text.Json.Serialization;
 using NodaTime;
 #pragma warning disable 8618
 
-namespace GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction
+namespace GreenEnergyHub.Charges.Domain.Common
 {
     // Non-nullable member is uninitialized is ignored
     // Only properties which is allowed to be null is nullable
-    // MktActivityRecord integrity is null checked by ChargeCommandNullChecker
-    public class MktActivityRecord
+    // MarketDocument integrity is null checked by ChargeCommandNullChecker
+    public class Document
     {
-        public string MRid { get; set; }
+        public string Id { get; set; }
 
-        public Instant ValidityStartDate { get; set; }
+        public Instant CreatedDateTime { get; set; }
 
-        public Instant? ValidityEndDate { get; set; }
+        [JsonPropertyName("Sender_MarketParticipant")]
+        public MarketParticipant Sender { get; set; }
 
-        public MktActivityRecordStatus Status { get; set; }
+        [JsonPropertyName("Receiver_MarketParticipant")]
+        public MarketParticipant Recipient { get; set; }
 
-        public ChargeType ChargeType { get; set; }
+        [JsonPropertyName("Market_ServiceCategoryKind")]
+        public IndustryClassification IndustryClassification { get; set; }
+
+        public BusinessReasonCode BusinessReasonCode { get; set; }
     }
 }
