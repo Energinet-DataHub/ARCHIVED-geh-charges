@@ -25,6 +25,8 @@ namespace GreenEnergyHub.Charges.Domain.Common
     {
         public string Id { get; set; }
 
+        public string Type { get; set; }
+
         public Instant CreatedDateTime { get; set; }
 
         [JsonPropertyName("Sender_MarketParticipant")]

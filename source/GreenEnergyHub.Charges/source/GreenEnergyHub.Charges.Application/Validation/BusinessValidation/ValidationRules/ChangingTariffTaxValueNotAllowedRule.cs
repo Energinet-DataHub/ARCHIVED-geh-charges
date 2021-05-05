@@ -30,6 +30,6 @@ namespace GreenEnergyHub.Charges.Application.Validation.BusinessValidation.Valid
 
         public ValidationRuleIdentifier ValidationRuleIdentifier => ValidationRuleIdentifier.ChangingTariffTaxValueNotAllowed;
 
-        public bool IsValid => _command.ChargeEvent.ChargeType.TaxIndicator == _charge.ChargeEvent.ChargeType.TaxIndicator;
+        public bool IsValid => _command.Charge.Tax == _charge.Charge.Tax;
     }
 }

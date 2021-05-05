@@ -24,41 +24,38 @@ namespace GreenEnergyHub.Charges.Application
     {
         public static void ThrowExceptionIfRequiredPropertyIsNull(ChargeCommand chargeCommand)
         {
-            CheckChargeCommand(chargeCommand);
-            CheckChargeCommandPeriod(chargeCommand.Charge);
-            CheckChargeCommandMarketDocument(chargeCommand.Document);
-            CheckChargeCommandMktActivityRecord(chargeCommand.ChargeEvent);
-        }
-
-        private static void CheckChargeCommand(ChargeCommand chargeCommand)
-        {
             if (chargeCommand == null) throw new ArgumentNullException(nameof(chargeCommand));
-            if (string.IsNullOrWhiteSpace(chargeCommand.ChargeEvent.CorrelationId)) throw new ArgumentException(chargeCommand.CorrelationId);
-            if (string.IsNullOrWhiteSpace(chargeCommand.ChargeEvent.LastUpdatedBy)) throw new ArgumentException(chargeCommand.LastUpdatedBy);
-            if (string.IsNullOrWhiteSpace(chargeCommand.Charge.Type)) throw new ArgumentException(chargeCommand.Type);
-            if (string.IsNullOrWhiteSpace(chargeCommand.Charge.Owner)) throw new ArgumentException(chargeCommand.ChargeTypeOwnerMRid);
-            if (string.IsNullOrWhiteSpace(chargeCommand.Charge.Id)) throw new ArgumentException(chargeCommand.ChargeTypeOwnerMRid);
+            CheckCharge(chargeCommand.Charge);
+            CheckDocument(chargeCommand.Document);
+            CheckEvent(chargeCommand.ChargeEvent);
         }
 
-        private static void CheckChargeCommandMktActivityRecord(ChargeEvent chargeEvent)
+        private static void CheckCharge(ChargeNew charge)
+        {
+            if (charge == null) throw new ArgumentNullException(nameof(charge));
+
+            if (string.IsNullOrWhiteSpace(charge.Type)) throw new ArgumentException(charge.Type);
+            if (string.IsNullOrWhiteSpace(charge.Owner)) throw new ArgumentException(charge.Owner);
+            if (string.IsNullOrWhiteSpace(charge.Id)) throw new ArgumentException(charge.Id);
+            if (string.IsNullOrWhiteSpace(charge.Description)) throw new ArgumentException(charge.Description);
+            if (string.IsNullOrWhiteSpace(charge.Vat)) throw new ArgumentException(charge.Vat);
+            if (string.IsNullOrWhiteSpace(charge.LongDescription)) throw new ArgumentException(charge.LongDescription);
+            if (string.IsNullOrWhiteSpace(charge.Resolution)) throw new ArgumentException(charge.Resolution);
+        }
+
+        private static void CheckEvent(ChargeEvent chargeEvent)
         {
             if (chargeEvent == null) throw new ArgumentNullException(nameof(chargeEvent));
             if (string.IsNullOrWhiteSpace(chargeEvent.Id)) throw new ArgumentException(chargeEvent.Id);
-            CheckMktActivityRecordChargeType(chargeEvent.ChargeType);
+            if (string.IsNullOrWhiteSpace(chargeEvent.CorrelationId)) throw new ArgumentException(chargeEvent.CorrelationId);
+            if (string.IsNullOrWhiteSpace(chargeEvent.LastUpdatedBy)) throw new ArgumentException(chargeEvent.LastUpdatedBy);
         }
 
-        private static void CheckMktActivityRecordChargeType(ChargeType chargeType)
-        {
-            if (chargeType == null) throw new ArgumentNullException(nameof(chargeType));
-            if (string.IsNullOrWhiteSpace(chargeType.Name)) throw new ArgumentException(chargeType.Name);
-            if (string.IsNullOrWhiteSpace(chargeType.VatPayer)) throw new ArgumentException(chargeType.VatPayer);
-            if (string.IsNullOrWhiteSpace(chargeType.Description)) throw new ArgumentException(chargeType.Description);
-        }
-
-        private static void CheckChargeCommandMarketDocument(Document document)
+        private static void CheckDocument(Document document)
         {
             if (document == null) throw new ArgumentNullException(nameof(document));
             if (string.IsNullOrWhiteSpace(document.Id)) throw new ArgumentException(document.Id);
+            if (string.IsNullOrWhiteSpace(document.Type)) throw new ArgumentException(document.Id);
             CheckMarketDocumentMarketParticipant(document.Recipient);
             CheckMarketDocumentMarketParticipant(document.Sender);
         }
@@ -67,12 +64,6 @@ namespace GreenEnergyHub.Charges.Application
         {
             if (marketParticipant == null) throw new ArgumentNullException(nameof(marketParticipant));
             if (string.IsNullOrWhiteSpace(marketParticipant.MRid)) throw new ArgumentException(marketParticipant.MRid);
-        }
-
-        private static void CheckChargeCommandPeriod(ChargeTypePeriod chargeTypePeriod)
-        {
-            if (chargeTypePeriod == null) throw new ArgumentNullException(nameof(chargeTypePeriod));
-            if (string.IsNullOrWhiteSpace(chargeTypePeriod.Resolution)) throw new ArgumentException(chargeTypePeriod.Resolution);
         }
     }
 }

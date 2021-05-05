@@ -32,7 +32,7 @@ namespace GreenEnergyHub.Charges.Application.Validation.BusinessValidation.Valid
         {
             _validityStartDate = command.ChargeEvent.StartDateTime;
 
-            var today = zonedDateTimeService.GetZonedDateTime(command.RequestDate).Date;
+            var today = zonedDateTimeService.GetZonedDateTime(command.Charge.RequestDate).Date;
             _periodStart = CalculatePeriodPoint(configuration.ValidIntervalFromNowInDays.Start, zonedDateTimeService, today);
             _periodEnd = CalculatePeriodPoint(configuration.ValidIntervalFromNowInDays.End + 1, zonedDateTimeService, today);
         }
