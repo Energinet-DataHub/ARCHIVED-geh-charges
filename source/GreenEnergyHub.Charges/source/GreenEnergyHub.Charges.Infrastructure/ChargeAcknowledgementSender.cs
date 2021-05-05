@@ -15,12 +15,13 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application;
+using GreenEnergyHub.Charges.Domain;
 using GreenEnergyHub.Charges.Domain.Events.Local;
-using GreenEnergyHub.Charges.Domain.Messages;
 using GreenEnergyHub.Charges.Infrastructure.PostOffice;
 
 namespace GreenEnergyHub.Charges.Infrastructure
 {
+    // TODO: Move class to application project? Which would also bring IPostOfficeService to application
     public class ChargeAcknowledgementSender : IChargeAcknowledgementSender
     {
         private readonly IPostOfficeService _postOfficeService;
@@ -30,9 +31,18 @@ namespace GreenEnergyHub.Charges.Infrastructure
             _postOfficeService = postOfficeService;
         }
 
-        public async Task HandleAsync([NotNull]ChargeCommandAcceptedEvent acceptedEvent)
+        public async Task HandleAsync([NotNull] ChargeCommandAcceptedEvent acceptedEvent)
         {
-            var chargeCommandAcceptedAcknowledgement = new ChargeAcknowledgement(acceptedEvent.CorrelationId);
+            // TODO: Param: MktActivityRecord.OriginalTransactionReference_MktActivityRecord.mRID
+            // TODO: Delegate construction to factory (but not in infrastructure project)
+            var chargeCommandAcceptedAcknowledgement = new ChargeAcknowledgement(
+                acceptedEvent.CorrelationId,
+                acceptedEvent.Command.MarketDocument.ReceiverMarketParticipant.MRid,
+                acceptedEvent.Command.MarketDocument.ReceiverMarketParticipant.Role,
+                acceptedEvent.Command.MktActivityRecord.MRid,
+                "MktActivityRecord.OriginalTransactionReference_MktActivityRecord.mRID",
+                acceptedEvent.Command.MarketDocument.ProcessType);
+
             await _postOfficeService.SendAsync(chargeCommandAcceptedAcknowledgement).ConfigureAwait(false);
         }
     }

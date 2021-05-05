@@ -15,7 +15,7 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using Azure.Messaging.ServiceBus;
-using GreenEnergyHub.Charges.Domain.Messages;
+using GreenEnergyHub.Charges.Domain;
 using GreenEnergyHub.Json;
 using Microsoft.Extensions.Options;
 

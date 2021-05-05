@@ -14,7 +14,7 @@
 
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Domain.Messages;
+using GreenEnergyHub.Charges.Domain;
 
 namespace GreenEnergyHub.Charges.Infrastructure.PostOffice
 {
