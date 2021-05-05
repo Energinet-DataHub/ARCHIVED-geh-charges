@@ -47,7 +47,7 @@ namespace GreenEnergyHub.Charges.ChargeAcknowledgementSender
         {
             var jsonSerializedQueueItem = System.Text.Encoding.UTF8.GetString(message);
             var serviceBusMessage = JsonConvert.DeserializeObject<ServiceBusMessageWrapper<ChargeCommandAcceptedEvent>>(jsonSerializedQueueItem);
-            var acceptedEvent = serviceBusMessage.Message;
+            var acceptedEvent = serviceBusMessage.Command;
             SetCorrelationContext(acceptedEvent);
             await _chargeAcknowledgementSender.HandleAsync(acceptedEvent!).ConfigureAwait(false);
 

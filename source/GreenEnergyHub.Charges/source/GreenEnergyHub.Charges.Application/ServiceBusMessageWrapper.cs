@@ -20,7 +20,7 @@ namespace GreenEnergyHub.Charges.Application
     public class ServiceBusMessageWrapper<TMessage>
         where TMessage : IMessage
     {
-        public TMessage? Message
+        public TMessage? Command
         {
             get;
             [UsedImplicitly]

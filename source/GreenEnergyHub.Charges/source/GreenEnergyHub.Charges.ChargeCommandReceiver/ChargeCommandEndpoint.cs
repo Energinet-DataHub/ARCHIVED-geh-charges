@@ -16,9 +16,9 @@ using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
 using GreenEnergyHub.Charges.Infrastructure.Messaging;
+using GreenEnergyHub.Json;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
 
 namespace GreenEnergyHub.Charges.ChargeCommandReceiver
 {
@@ -27,13 +27,16 @@ namespace GreenEnergyHub.Charges.ChargeCommandReceiver
         private const string FunctionName = nameof(ChargeCommandEndpoint);
         private readonly IChargeCommandHandler _chargeCommandHandler;
         private readonly ICorrelationContext _correlationContext;
+        private readonly IJsonSerializer _jsonSerializer;
 
         public ChargeCommandEndpoint(
             IChargeCommandHandler chargeCommandHandler,
-            ICorrelationContext correlationContext)
+            ICorrelationContext correlationContext,
+            IJsonSerializer jsonSerializer)
         {
             _chargeCommandHandler = chargeCommandHandler;
             _correlationContext = correlationContext;
+            _jsonSerializer = jsonSerializer;
         }
 
         [FunctionName(FunctionName)]
@@ -46,8 +49,8 @@ namespace GreenEnergyHub.Charges.ChargeCommandReceiver
             ILogger log)
         {
             var jsonSerializedQueueItem = System.Text.Encoding.UTF8.GetString(message);
-            var serviceBusMessage = JsonConvert.DeserializeObject<ServiceBusMessageWrapper<ChargeCommand>>(jsonSerializedQueueItem);
-            var chargeCommand = serviceBusMessage.Message!;
+            var serviceBusMessage = _jsonSerializer.Deserialize<ServiceBusMessageWrapper<ChargeCommand>>(jsonSerializedQueueItem);
+            var chargeCommand = serviceBusMessage.Command!;
             SetCorrelationContext(chargeCommand);
             await _chargeCommandHandler.HandleAsync(chargeCommand).ConfigureAwait(false);
 
