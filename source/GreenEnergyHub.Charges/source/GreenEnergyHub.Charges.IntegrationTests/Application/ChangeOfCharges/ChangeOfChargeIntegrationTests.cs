@@ -14,12 +14,12 @@
 
 using System;
 using System.Diagnostics.CodeAnalysis;
-using System.IO;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
 using GreenEnergyHub.Charges.Application.ChangeOfCharges;
 using GreenEnergyHub.Charges.IntegrationTests.TestHelpers;
 using GreenEnergyHub.Charges.MessageReceiver;
+using GreenEnergyHub.Charges.TestCore;
 using GreenEnergyHub.Json;
 using GreenEnergyHub.TestHelpers;
 using GreenEnergyHub.TestHelpers.Traits;
@@ -28,7 +28,6 @@ using Microsoft.AspNetCore.Http.Internal;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NodaTime;
@@ -52,28 +51,23 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
         }
 
         [Theory]
-        [InlineAutoDomainData]
+        [InlineAutoMoqData("TestFiles\\ValidChargeAddition.json")]
+        [InlineAutoMoqData("TestFiles\\ValidChargeUpdate.json")]
         public async Task ChargeCommandAccepted_Is_True(
+            string testFile,
             [NotNull] [Frozen] Mock<ILogger> logger,
             [NotNull] ExecutionContext executionContext,
             [NotNull] IClock clock)
         {
             // arrange
-            var stream = TestDataHelper.GetInputStream("TestFiles\\ChargeAddition.json", clock);
-
-            var defaultHttpContext = new DefaultHttpContext();
-
-            defaultHttpContext.Request.Body = stream;
-            var req = new DefaultHttpRequest(defaultHttpContext);
-            executionContext.InvocationId = Guid.NewGuid();
+            var req = CreateHttpRequest(testFile, clock);
+            SetInvocationId(executionContext);
 
             // act
             var result = (OkObjectResult)await _sut.RunAsync(req, executionContext, logger.Object).ConfigureAwait(false);
 
             // assert
-            Assert.True(result!.StatusCode!.Value == 200);
-            // localEventPublisher.Verify(x => x.PublishAsync(It.Is<ChargeCommandReceivedEvent>(localEvent =>
-            //     localEvent.Command == transaction && localEvent.CorrelationId == transaction.CorrelationId)));
+            Assert.Equal(200, result!.StatusCode!.Value);
         }
 
         [Theory]
@@ -90,6 +84,20 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
 
             // Assert
             await Task.Run(() => Assert.True(true)).ConfigureAwait(false);
+        }
+
+        private static void SetInvocationId(ExecutionContext executionContext)
+        {
+            executionContext.InvocationId = Guid.NewGuid();
+        }
+
+        private static DefaultHttpRequest CreateHttpRequest(string testFile, IClock clock)
+        {
+            var stream = TestDataHelper.GetInputStream(testFile, clock);
+            var defaultHttpContext = new DefaultHttpContext();
+            defaultHttpContext.Request.Body = stream;
+            var req = new DefaultHttpRequest(defaultHttpContext);
+            return req;
         }
     }
 }

@@ -16,7 +16,7 @@ using AutoFixture;
 using AutoFixture.AutoMoq;
 using AutoFixture.Xunit2;
 
-namespace GreenEnergyHub.Charges.Tests
+namespace GreenEnergyHub.Charges.TestCore
 {
     public class AutoMoqDataAttribute : AutoDataAttribute
     {
