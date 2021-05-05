@@ -38,11 +38,11 @@ namespace GreenEnergyHub.Charges.Infrastructure.Mapping
             {
                 ChargeType = chargeType,
                 ChargeTypeOwner = chargeTypeOwnerMRid,
-                Description = chargeCommand.Charge.Description,
+                Description = chargeCommand.Charge.Name,
                 LastUpdatedBy = chargeCommand.ChargeEvent.LastUpdatedBy,
                 LastUpdatedByCorrelationId = chargeCommand.ChargeEvent.CorrelationId,
                 LastUpdatedByTransactionId = chargeCommand.ChargeEvent.Id,
-                Name = chargeCommand.Charge.Description,
+                Name = chargeCommand.Charge.Name,
                 RequestDateTime = chargeCommand.Charge.RequestDate.ToUnixTimeTicks(),
                 ResolutionType = resolutionType,
                 StartDate = chargeCommand.ChargeEvent.StartDateTime.ToUnixTimeTicks(),
@@ -81,20 +81,23 @@ namespace GreenEnergyHub.Charges.Infrastructure.Mapping
             {
                 Charge = new ChargeNew
                 {
-                    Description = charge.Name,
                     Id = charge.MRid,
-                    Owner = charge.ChargeTypeOwner.MRid,
-                    Tax = charge.TaxIndicator,
-                    //Type = charge.ChargeType.Name,
-                    LongDescription = charge.Description,
+                    Type = charge.ChargeType.Code!,
+                    Name = charge.Name, // Description to be Name
+                    Description = charge.Description, // LongDescription to be Description
                     Vat = charge.VatPayer.Name,
-                    RequestDate = charge.RequestDateTime,
                     TransparentInvoicing = charge.TransparentInvoicing,
-                    Resolution = charge.ResolutionType.Name!
+                    Tax = charge.TaxIndicator,
+                    Owner = charge.ChargeTypeOwner.MRid,
+                    RequestDate = Instant.FromUnixTimeTicks(charge.RequestDateTime),
+                    Resolution = charge.ResolutionType.Name!,
                 },
-                Document = new Document
+                ChargeEvent = new ChargeEvent
                 {
-                    Id = charge.
+                    Id = charge.LastUpdatedByTransactionId,
+                    StartDateTime = Instant.FromUnixTimeTicks(charge.StartDate),
+                    EndDateTime = charge.EndDate != null ? Instant.FromUnixTimeTicks(charge.EndDate.Value) : null,
+                    Status = (ChargeEventFunction)charge.Status,
                 },
 
                 // ChargeTypeMRid = charge.MRid,

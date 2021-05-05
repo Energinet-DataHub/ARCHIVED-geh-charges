@@ -37,9 +37,9 @@ namespace GreenEnergyHub.Charges.Application
             if (string.IsNullOrWhiteSpace(charge.Type)) throw new ArgumentException(charge.Type);
             if (string.IsNullOrWhiteSpace(charge.Owner)) throw new ArgumentException(charge.Owner);
             if (string.IsNullOrWhiteSpace(charge.Id)) throw new ArgumentException(charge.Id);
-            if (string.IsNullOrWhiteSpace(charge.Description)) throw new ArgumentException(charge.Description);
+            if (string.IsNullOrWhiteSpace(charge.Name)) throw new ArgumentException(charge.Name);
             if (string.IsNullOrWhiteSpace(charge.Vat)) throw new ArgumentException(charge.Vat);
-            if (string.IsNullOrWhiteSpace(charge.LongDescription)) throw new ArgumentException(charge.LongDescription);
+            if (string.IsNullOrWhiteSpace(charge.Description)) throw new ArgumentException(charge.Description);
             if (string.IsNullOrWhiteSpace(charge.Resolution)) throw new ArgumentException(charge.Resolution);
         }
 

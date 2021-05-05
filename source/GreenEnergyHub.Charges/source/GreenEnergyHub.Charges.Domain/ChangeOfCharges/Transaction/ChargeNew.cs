@@ -30,9 +30,9 @@ namespace GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction
         // Should be an Enum
         public string Type { get; set; }
 
-        public string Description { get; set; }
+        public string Name { get; set; }
 
-        public string LongDescription { get; set; }
+        public string Description { get; set; }
 
         // Should be an Enum
         public string Vat { get; set; }

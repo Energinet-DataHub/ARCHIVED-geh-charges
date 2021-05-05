@@ -81,9 +81,9 @@ namespace GreenEnergyHub.Charges.Tests.Application
             c.Document.Sender.MRid = senderId;
             c.Document.Recipient.MRid = recipientId;
             c.ChargeEvent.Id = eventId;
-            c.Charge.LongDescription = chargeTypeLongDescription;
+            c.Charge.Description = chargeTypeLongDescription;
             c.Charge.Vat = chargeTypeVat;
-            c.Charge.Description = chargeTypeDescription;
+            c.Charge.Name = chargeTypeDescription;
 
             // Act & Assert
             Assert.Throws<ArgumentException>(() => ChargeCommandNullChecker.ThrowExceptionIfRequiredPropertyIsNull(c));
@@ -128,7 +128,7 @@ namespace GreenEnergyHub.Charges.Tests.Application
             {
                 Charge = new ChargeNew
                 {
-                    Description = "description",
+                    Name = "description",
                     Id = "id",
                     Owner = "owner",
                     Points = new List<Point>
@@ -138,7 +138,7 @@ namespace GreenEnergyHub.Charges.Tests.Application
                     Resolution = "Resolution",
                     Type = "Type",
                     Vat = "Vat",
-                    LongDescription = "LongDescription",
+                    Description = "LongDescription",
                     RequestDate = SystemClock.Instance.GetCurrentInstant(),
                 },
                 Document = new Document
@@ -166,7 +166,7 @@ namespace GreenEnergyHub.Charges.Tests.Application
                 ChargeEvent = new ChargeEvent
                 {
                   Id = "id",
-                  Status = ChargeEventFuction.Change,
+                  Status = ChargeEventFunction.Change,
                   CorrelationId = "CorrelationId",
                   LastUpdatedBy = "LastUpdatedBy",
                   StartDateTime = SystemClock.Instance.GetCurrentInstant(),

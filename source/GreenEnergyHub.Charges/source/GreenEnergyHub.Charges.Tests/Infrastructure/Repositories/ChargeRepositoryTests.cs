@@ -114,8 +114,8 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
             charge.Charge.Id = chargeId;
             charge.ChargeEvent.CorrelationId = correlationId;
             charge.ChargeEvent.LastUpdatedBy = lastUpdatedBy;
-            charge.Charge.Description = description;
-            charge.Charge.LongDescription = longDescription;
+            charge.Charge.Name = description;
+            charge.Charge.Description = longDescription;
 
             SeedDatabase();
             await using var context = new ChargesDatabaseContext(_dbContextOptions);
@@ -172,7 +172,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
             {
                 Charge = new ChargeNew
                 {
-                    Description = "description",
+                    Name = "description",
                     Id = "Id",
                     Owner = "Owner",
                     Points = new List<Point>
@@ -182,7 +182,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
                     Resolution = "Resolution",
                     Type = "Type",
                     Vat = "Vat",
-                    LongDescription = "LongDescription",
+                    Description = "LongDescription",
                     RequestDate = SystemClock.Instance.GetCurrentInstant(),
                 },
                 Document = new Document
@@ -196,7 +196,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
                 ChargeEvent = new ChargeEvent
                 {
                     Id = "id",
-                    Status = ChargeEventFuction.Addition,
+                    Status = ChargeEventFunction.Addition,
                     CorrelationId = "CorrelationId",
                     LastUpdatedBy = "LastUpdatedBy",
                     StartDateTime = SystemClock.Instance.GetCurrentInstant(),

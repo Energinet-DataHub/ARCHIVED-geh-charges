@@ -85,7 +85,7 @@ namespace GreenEnergyHub.Charges.Tests.Builders
             {
                 Charge = new ChargeNew
                 {
-                    Description = "description",
+                    Name = "description",
                     Id = _mrid,
                     Owner = _owner,
                     Points = new List<Point>
@@ -95,7 +95,7 @@ namespace GreenEnergyHub.Charges.Tests.Builders
                     Resolution = "Resolution",
                     Type = "Type",
                     Vat = _vatPayer,
-                    LongDescription = "LongDescription",
+                    Description = "LongDescription",
                     RequestDate = SystemClock.Instance.GetCurrentInstant(),
                     Tax = _taxIndicator,
                 },
@@ -110,7 +110,7 @@ namespace GreenEnergyHub.Charges.Tests.Builders
                 ChargeEvent = new ChargeEvent
                 {
                   Id = "id",
-                  Status = ChargeEventFuction.Addition,
+                  Status = ChargeEventFunction.Addition,
                   CorrelationId = "CorrelationId",
                   LastUpdatedBy = "LastUpdatedBy",
                   StartDateTime = _validityStartDate,

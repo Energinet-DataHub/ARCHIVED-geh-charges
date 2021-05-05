@@ -28,7 +28,7 @@ namespace GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction
 
         public Instant? EndDateTime { get; set; }
 
-        public ChargeEventFuction Status { get; set; }
+        public ChargeEventFunction Status { get; set; }
 
         public string CorrelationId { get; set; }
 

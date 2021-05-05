@@ -14,7 +14,7 @@
 
 namespace GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction
 {
-    public enum ChargeEventFuction
+    public enum ChargeEventFunction
     {
         Unknown = 0,
         Addition = 2,
