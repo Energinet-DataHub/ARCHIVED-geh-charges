@@ -22,7 +22,6 @@ using GreenEnergyHub.Json;
 using Microsoft.Azure.Functions.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection;
 using NodaTime;
-using JsonSerializer = GreenEnergyHub.Charges.Core.Json.JsonSerializer;
 
 [assembly: FunctionsStartup(typeof(Startup))]
 
@@ -39,7 +38,7 @@ namespace GreenEnergyHub.Charges.ChargeAcknowledgementSender
                     configuration.TopicName = Environment.GetEnvironmentVariable("POST_OFFICE_TOPIC_NAME");
                 });
             builder.Services.AddScoped<ICorrelationContext, CorrelationContext>();
-            builder.Services.AddSingleton<IJsonSerializer, JsonSerializer>();
+            builder.Services.AddSingleton<IJsonSerializer, GreenEnergyHub.Charges.Core.Json.JsonSerializer>();
             builder.Services.AddScoped(typeof(IClock), _ => SystemClock.Instance);
             builder.Services.AddScoped<IPostOfficeService, PostOfficeService>();
             builder.Services.AddScoped<IChargeAcknowledgementSender, Infrastructure.ChargeAcknowledgementSender>();
