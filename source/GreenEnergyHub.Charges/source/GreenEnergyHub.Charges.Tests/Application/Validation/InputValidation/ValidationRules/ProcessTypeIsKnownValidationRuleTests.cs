@@ -26,11 +26,11 @@ namespace GreenEnergyHub.Charges.Tests.Application.Validation.InputValidation.Va
         [InlineAutoMoqData(ProcessType.Unknown, false)]
         [InlineAutoMoqData(ProcessType.UpdateChargeInformation, true)]
         public void ProcessTypeIsKnownValidationRule_Test(
-            ProcessType processType,
+            BusinessReasonCode businessReasonCode,
             bool expected,
             [NotNull] ChargeCommand command)
         {
-            command!.MarketDocument!.ProcessType = processType;
+            command.Document.BusinessReasonCode = businessReasonCode;
             var sut = new ProcessTypeIsKnownValidationRule(command);
             Assert.Equal(expected, sut.IsValid);
         }

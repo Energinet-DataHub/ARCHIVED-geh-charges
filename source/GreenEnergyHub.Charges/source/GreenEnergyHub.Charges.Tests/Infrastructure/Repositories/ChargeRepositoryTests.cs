@@ -16,6 +16,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
+using GreenEnergyHub.Charges.Domain.Common;
 using GreenEnergyHub.Charges.Infrastructure.Context;
 using GreenEnergyHub.Charges.Infrastructure.Context.Model;
 using GreenEnergyHub.Charges.Infrastructure.Mapping;
@@ -55,10 +56,10 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
         {
             // Arrange
             var charge = GetValidCharge();
-            charge.Type = chargeType;
-            charge.ChargeTypeOwnerMRid = chargeOwner;
-            charge.MktActivityRecord.ChargeType.VatPayer = vatPayerType;
-            charge.Period.Resolution = resolutionType;
+            charge.Charge.Type = chargeType;
+            charge.Charge.Owner = chargeOwner;
+            charge.Charge.Vat = vatPayerType;
+            charge.Charge.Resolution = resolutionType;
 
             SeedDatabase();
             await using var chargesDatabaseContext = new ChargesDatabaseContext(_dbContextOptions);
@@ -83,10 +84,10 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
         {
             // Arrange
             var charge = GetValidCharge();
-            charge.Type = chargeType;
-            charge.ChargeTypeOwnerMRid = chargeOwner;
-            charge.MktActivityRecord.ChargeType.VatPayer = vatPayerType;
-            charge.Period.Resolution = resolutionType;
+            charge.Charge.Type = chargeType;
+            charge.Charge.Owner = chargeOwner;
+            charge.Charge.Vat = vatPayerType;
+            charge.Charge.Resolution = resolutionType;
 
             SeedDatabase();
             await using var context = new ChargesDatabaseContext(_dbContextOptions);
@@ -106,15 +107,15 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
         [InlineAutoDomainData("Valid", "Valid", null, "Valid", "Valid")]
         [InlineAutoDomainData("Valid", "Valid", "Valid", null, "Valid")]
         [InlineAutoDomainData("Valid", "Valid", "Valid", "Valid", null)]
-        public async Task StoreChargeAsync_WhenValuesInMessageAreInvalid_ThenExceptionThrownAsync(string chargeTypeMRid, string correlationId, string lastUpdatedBy, string shortDescription, string longDescription)
+        public async Task StoreChargeAsync_WhenValuesInMessageAreInvalid_ThenExceptionThrownAsync(string chargeId, string correlationId, string lastUpdatedBy, string description, string longDescription)
         {
             // Arrange
             var charge = GetValidCharge();
-            charge.ChargeTypeMRid = chargeTypeMRid;
-            charge.CorrelationId = correlationId;
-            charge.LastUpdatedBy = lastUpdatedBy;
-            charge.MktActivityRecord.ChargeType.Name = shortDescription;
-            charge.MktActivityRecord.ChargeType.Description = longDescription;
+            charge.Charge.Id = chargeId;
+            charge.ChargeEvent.CorrelationId = correlationId;
+            charge.ChargeEvent.LastUpdatedBy = lastUpdatedBy;
+            charge.Charge.Description = description;
+            charge.Charge.LongDescription = longDescription;
 
             SeedDatabase();
             await using var context = new ChargesDatabaseContext(_dbContextOptions);
@@ -148,11 +149,11 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
         {
             // Arrange
             var charge = GetValidCharge();
-            charge!.MktActivityRecord!.ValidityEndDate = Instant.MaxValue;
-            var chargeType = new ChargeType { Code = charge.Type, Id = 1, Name = "Name" };
-            var chargeTypeOwnerMRid = new MarketParticipant { Id = 1, MRid = charge.ChargeTypeOwnerMRid, Name = "Name" };
-            var resolutionType = new ResolutionType { Id = 1, Name = charge.Period.Resolution };
-            var vatPayerType = new VatPayerType { Id = 1, Name = charge.MktActivityRecord.ChargeType.VatPayer };
+            charge.ChargeEvent.StartDateTime = Instant.MaxValue;
+            var chargeType = new ChargeType { Code = charge.Charge.Type, Id = 1, Name = "Name" };
+            var chargeTypeOwnerMRid = new MarketParticipant { Id = 1, MRid = charge.Charge.Owner, Name = "Name" };
+            var resolutionType = new ResolutionType { Id = 1, Name = charge.Charge.Resolution };
+            var vatPayerType = new VatPayerType { Id = 1, Name = charge.Charge.Vat };
 
             // When
             var result = ChangeOfChargesMapper.MapChangeOfChargesTransactionToCharge(charge, chargeType, chargeTypeOwnerMRid, resolutionType, vatPayerType);
@@ -169,30 +170,38 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
         {
             var transaction = new Charge
             {
-                ChargeTypeMRid = "chargeTypeMRid",
-                CorrelationId = "correlationId",
-                LastUpdatedBy = "lastUpdatedBy",
-                Type = KnownChargeType,
-                ChargeTypeOwnerMRid = KnownChargeOwner,
-                MktActivityRecord = new MktActivityRecord
+                Charge = new ChargeNew
                 {
-                    MRid = "MktActivityRecordMRIDValue",
-                    ChargeType = new Domain.ChangeOfCharges.Transaction.ChargeType
-                        { VatPayer = KnownVatPayer, Name = "shortDescription", Description = "longDescription", },
+                    Description = "description",
+                    Id = "Id",
+                    Owner = "Owner",
+                    Points = new List<Point>
+                    {
+                        new Point { Position = 0, Time = SystemClock.Instance.GetCurrentInstant(), PriceAmount = 200m },
+                    },
+                    Resolution = "Resolution",
+                    Type = "Type",
+                    Vat = "Vat",
+                    LongDescription = "LongDescription",
+                    RequestDate = SystemClock.Instance.GetCurrentInstant(),
                 },
-                Period = new ChargeTypePeriod()
+                Document = new Document
                 {
-                    Resolution = KnownResolutionType,
-                    Points = { new Point { Position = 1, PriceAmount = 1m, Time = SystemClock.Instance.GetCurrentInstant(), } },
+                    Id = "id",
+                    Type = "type",
+                    IndustryClassification = IndustryClassification.Electricity,
+                    BusinessReasonCode = BusinessReasonCode.D18,
+                    CreatedDateTime = SystemClock.Instance.GetCurrentInstant(),
+                },
+                ChargeEvent = new ChargeEvent
+                {
+                    Id = "id",
+                    Status = ChargeEventFuction.Addition,
+                    CorrelationId = "CorrelationId",
+                    LastUpdatedBy = "LastUpdatedBy",
+                    StartDateTime = SystemClock.Instance.GetCurrentInstant(),
                 },
             };
-            transaction.Period.AddPoints(new List<Point>
-                    {
-                    new Point
-                    {
-                        Position = 1, PriceAmount = 1m, Time = SystemClock.Instance.GetCurrentInstant(),
-                    },
-                    });
             return transaction;
         }
 

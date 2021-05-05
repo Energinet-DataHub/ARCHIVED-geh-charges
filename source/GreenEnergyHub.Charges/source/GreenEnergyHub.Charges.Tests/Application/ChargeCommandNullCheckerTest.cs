@@ -55,68 +55,68 @@ namespace GreenEnergyHub.Charges.Tests.Application
         [InlineAutoDomainData("valid", "Valid", "Valid", "Valid", "Valid", "Valid", "Valid", "Valid", "Valid", "Valid", "Valid", "", "Valid")]
         [InlineAutoDomainData("valid", "Valid", "Valid", "Valid", "Valid", "Valid", "Valid", "Valid", "Valid", "Valid", "Valid", "Valid", "")]
         public void ChargeCommandPropertiesAreNotNullOrWhitespace(
-            string chargeTypeMRid,
+            string chargeId,
             string correlationId,
             string lastUpdatedBy,
-            string chargeTypeOwnerId,
+            string owner,
             string type,
             string resolution,
-            string marketDocumentMRid,
-            string senderMarketDocumentMRid,
-            string receiverMarketDocumentMRid,
-            string mktActivityRecordMRid,
-            string chargeTypeDescription,
-            string chargeTypeVatPayer,
-            string chargeTypeName)
+            string documentId,
+            string senderId,
+            string recipientId,
+            string eventId,
+            string chargeTypeLongDescription,
+            string chargeTypeVat,
+            string chargeTypeDescription)
         {
             // Arrange
             var c = GetValidCharge();
-            c.ChargeTypeMRid = chargeTypeMRid;
-            c.ChargeTypeOwnerMRid = chargeTypeOwnerId;
-            c.CorrelationId = correlationId;
-            c.LastUpdatedBy = lastUpdatedBy;
-            c.Type = type;
-            c.Period.Resolution = resolution;
-            c.MarketDocument.MRid = marketDocumentMRid;
-            c.MarketDocument.SenderMarketParticipant.MRid = senderMarketDocumentMRid;
-            c.MarketDocument.ReceiverMarketParticipant.MRid = receiverMarketDocumentMRid;
-            c.MktActivityRecord.MRid = mktActivityRecordMRid;
-            c.MktActivityRecord.ChargeType.Description = chargeTypeDescription;
-            c.MktActivityRecord.ChargeType.VatPayer = chargeTypeVatPayer;
-            c.MktActivityRecord.ChargeType.Name = chargeTypeName;
+            c.Charge.Id = chargeId;
+            c.Charge.Owner = owner;
+            c.ChargeEvent.CorrelationId = correlationId;
+            c.ChargeEvent.LastUpdatedBy = lastUpdatedBy;
+            c.Charge.Type = type;
+            c.Charge.Resolution = resolution;
+            c.Document.Id = documentId;
+            c.Document.Sender.MRid = senderId;
+            c.Document.Recipient.MRid = recipientId;
+            c.ChargeEvent.Id = eventId;
+            c.Charge.LongDescription = chargeTypeLongDescription;
+            c.Charge.Vat = chargeTypeVat;
+            c.Charge.Description = chargeTypeDescription;
 
             // Act & Assert
             Assert.Throws<ArgumentException>(() => ChargeCommandNullChecker.ThrowExceptionIfRequiredPropertyIsNull(c));
         }
 
         [Fact]
-        public void ChargeCommandPeriodIsNullThrowsException()
+        public void ChargeCommandChargeIsNullThrowsException()
         {
             // Arrange
             var c = GetValidCharge();
-            c.Period = null!;
+            c.Charge = null!;
 
             // Act & Assert
             Assert.Throws<ArgumentNullException>(() => ChargeCommandNullChecker.ThrowExceptionIfRequiredPropertyIsNull(c));
         }
 
         [Fact]
-        public void ChargeCommandMarketDocumentIsNullThrowsException()
+        public void ChargeCommandDocumentIsNullThrowsException()
         {
             // Arrange
             var c = GetValidCharge();
-            c.MarketDocument = null!;
+            c.Document = null!;
 
             // Act & Assert
             Assert.Throws<ArgumentNullException>(() => ChargeCommandNullChecker.ThrowExceptionIfRequiredPropertyIsNull(c));
         }
 
         [Fact]
-        public void ChargeCommandMktActivityRecordIsNullThrowsException()
+        public void ChargeCommandChargeEventIsNullThrowsException()
         {
             // Arrange
             var c = GetValidCharge();
-            c.MktActivityRecord = null!;
+            c.ChargeEvent = null!;
 
             // Act & Assert
             Assert.Throws<ArgumentNullException>(() => ChargeCommandNullChecker.ThrowExceptionIfRequiredPropertyIsNull(c));
@@ -126,52 +126,50 @@ namespace GreenEnergyHub.Charges.Tests.Application
         {
             return new ()
             {
-                Type = "D01",
-                CorrelationId = "CorrelationId",
-                RequestDate = SystemClock.Instance.GetCurrentInstant(),
-                LastUpdatedBy = "LastUpdatedBy",
-                ChargeTypeMRid = "ChargeTypeMrid",
-                ChargeTypeOwnerMRid = "ChargeTypeOwnerMRid",
-                Period = new ChargeTypePeriod
+                Charge = new ChargeNew
                 {
+                    Description = "description",
+                    Id = "id",
+                    Owner = "owner",
                     Points = new List<Point>
                     {
                         new Point { Position = 0, Time = SystemClock.Instance.GetCurrentInstant(), PriceAmount = 200m },
                     },
                     Resolution = "Resolution",
+                    Type = "Type",
+                    Vat = "Vat",
+                    LongDescription = "LongDescription",
+                    RequestDate = SystemClock.Instance.GetCurrentInstant(),
                 },
-                MarketDocument = new MarketDocument
+                Document = new Document
                 {
-                    MRid = "MRid",
-                    ProcessType = ProcessType.UpdateChargeInformation,
-                    CreatedDateTime = SystemClock.Instance.GetCurrentInstant(),
-                    ReceiverMarketParticipant = new MarketParticipant
+                    Id = "id",
+                    Recipient = new MarketParticipant
                     {
                         Id = 0,
                         Name = "Name",
                         Role = MarketParticipantRole.EnergySupplier,
                         MRid = "MRid",
                     },
-                    SenderMarketParticipant = new MarketParticipant
+                    Sender = new MarketParticipant
                     {
                         Id = 1,
                         Name = "Name",
                         Role = MarketParticipantRole.EnergySupplier,
                         MRid = "MRid",
                     },
-                    MarketServiceCategoryKind = ServiceCategoryKind.Electricity,
+                    Type = "type",
+                    IndustryClassification = IndustryClassification.Electricity,
+                    BusinessReasonCode = BusinessReasonCode.D18,
+                    CreatedDateTime = SystemClock.Instance.GetCurrentInstant(),
                 },
-                MktActivityRecord = new MktActivityRecord
+                ChargeEvent = new ChargeEvent
                 {
-                    Status = MktActivityRecordStatus.Addition,
-                    MRid = "MRid",
-                    ValidityStartDate = SystemClock.Instance.GetCurrentInstant(),
-                    ChargeType = new ChargeType
-                    {
-                     Description = "Description",
-                     Name = "Name",
-                     VatPayer = "VatPayer",
-                    },
+                  Id = "id",
+                  Status = ChargeEventFuction.Change,
+                  CorrelationId = "CorrelationId",
+                  LastUpdatedBy = "LastUpdatedBy",
+                  StartDateTime = SystemClock.Instance.GetCurrentInstant(),
                 },
             };
         }

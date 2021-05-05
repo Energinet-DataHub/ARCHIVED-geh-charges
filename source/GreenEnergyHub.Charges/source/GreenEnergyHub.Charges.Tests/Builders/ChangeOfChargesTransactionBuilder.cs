@@ -12,9 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Collections.Generic;
 using System.Data;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
+using GreenEnergyHub.Charges.Domain.Common;
 using NodaTime;
+using MarketParticipant = GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction.MarketParticipant;
+using MarketParticipantRole = GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction.MarketParticipantRole;
 
 namespace GreenEnergyHub.Charges.Tests.Builders
 {
@@ -77,23 +81,41 @@ namespace GreenEnergyHub.Charges.Tests.Builders
 
         public ChargeCommand Build()
         {
-            var test = new ChargeCommand
+            return new ()
             {
-                ChargeTypeMRid = _mrid,
-                MktActivityRecord = new MktActivityRecord
+                Charge = new ChargeNew
                 {
-                    Status = (MktActivityRecordStatus)_status,
-                    ValidityStartDate = _validityStartDate,
-                    ChargeType = new ChargeType
+                    Description = "description",
+                    Id = _mrid,
+                    Owner = _owner,
+                    Points = new List<Point>
                     {
-                      VatPayer = _vatPayer,
-                      TaxIndicator = _taxIndicator,
+                        new Point { Position = 0, Time = SystemClock.Instance.GetCurrentInstant(), PriceAmount = 200m },
                     },
+                    Resolution = "Resolution",
+                    Type = "Type",
+                    Vat = _vatPayer,
+                    LongDescription = "LongDescription",
+                    RequestDate = SystemClock.Instance.GetCurrentInstant(),
+                    Tax = _taxIndicator,
                 },
-                ChargeTypeOwnerMRid = _owner,
+                Document = new Document
+                {
+                    Id = "id",
+                    Type = "type",
+                    IndustryClassification = IndustryClassification.Electricity,
+                    BusinessReasonCode = BusinessReasonCode.D18,
+                    CreatedDateTime = SystemClock.Instance.GetCurrentInstant(),
+                },
+                ChargeEvent = new ChargeEvent
+                {
+                  Id = "id",
+                  Status = ChargeEventFuction.Addition,
+                  CorrelationId = "CorrelationId",
+                  LastUpdatedBy = "LastUpdatedBy",
+                  StartDateTime = _validityStartDate,
+                },
             };
-
-            return test;
         }
     }
 }
