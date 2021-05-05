@@ -4,7 +4,7 @@
     "CreatedDateTime": "{{$isoTimestamp}}",
     "Sender_MarketParticipant": {
       "Id": 37,
-      "MRid": "",
+      "MRid": "8100000000030",
       "Name": "Grid Operator 3",
       "Role": 0
     },

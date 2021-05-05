@@ -17,6 +17,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
 using GreenEnergyHub.Charges.Application.ChangeOfCharges;
+using GreenEnergyHub.Charges.Infrastructure.Messaging;
 using GreenEnergyHub.Charges.IntegrationTests.TestHelpers;
 using GreenEnergyHub.Charges.MessageReceiver;
 using GreenEnergyHub.Charges.TestCore;
@@ -46,7 +47,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
 
             _sut = new ChargeHttpTrigger(
                 host.Services.GetRequiredService<IJsonSerializer>(),
-                host.Services.GetRequiredService<IChangeOfChargesMessageHandler>());
+                host.Services.GetRequiredService<IChangeOfChargesMessageHandler>(),
+                host.Services.GetRequiredService<ICorrelationContext>());
         }
 
         [Theory]
