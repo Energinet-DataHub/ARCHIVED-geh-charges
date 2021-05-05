@@ -14,6 +14,7 @@
 
 using System;
 using System.Diagnostics.CodeAnalysis;
+using GreenEnergyHub.Charges.Application;
 using GreenEnergyHub.Charges.ChargeAcknowledgementSender;
 using GreenEnergyHub.Charges.Infrastructure.Messaging;
 using GreenEnergyHub.Charges.Infrastructure.PostOffice;
@@ -41,6 +42,7 @@ namespace GreenEnergyHub.Charges.ChargeAcknowledgementSender
             builder.Services.AddSingleton<IJsonSerializer, JsonSerializer>();
             builder.Services.AddScoped(typeof(IClock), _ => SystemClock.Instance);
             builder.Services.AddScoped<IPostOfficeService, PostOfficeService>();
+            builder.Services.AddScoped<IChargeAcknowledgementSender, Infrastructure.ChargeAcknowledgementSender>();
         }
     }
 }

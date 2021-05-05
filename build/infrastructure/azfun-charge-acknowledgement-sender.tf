@@ -31,6 +31,7 @@ module "azfun_charge_acknowledgement_sender" {
 
     COMMAND_ACCEPTED_LISTENER_CONNECTION_STRING  = trimsuffix(module.sbtar_command_accepted_listener.primary_connection_string, ";EntityPath=${module.sbt_command_accepted.name}")
     COMMAND_ACCEPTED_TOPIC_NAME                  = module.sbt_command_accepted.name
+    COMMAND_ACCEPTED_SUBSCRIPTION_NAME           = azurerm_servicebus_subscription.sbs_command_accepted.name
 
     POST_OFFICE_SENDER_CONNECTION_STRING         = trimsuffix(module.sbtar_post_office_sender.primary_connection_string, ";EntityPath=${module.sbt_post_office.name}")
     POST_OFFICE_TOPIC_NAME                       = module.sbt_post_office.name
