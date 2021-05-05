@@ -11,14 +11,14 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-module "azfun_charge_forwarder" {
+module "azfun_charge_acknowledgement_sender" {
   source                                         = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//function-app?ref=1.2.0"
-  name                                           = "azfun-charge-forwarder-${var.project}-${var.organisation}-${var.environment}"
+  name                                           = "azfun-charge-acknowledgement-sender-${var.project}-${var.organisation}-${var.environment}"
   resource_group_name                            = data.azurerm_resource_group.main.name
   location                                       = data.azurerm_resource_group.main.location
-  storage_account_access_key                     = module.azfun_charge_forwarder_stor.primary_access_key
-  app_service_plan_id                            = module.azfun_charge_forwarder_plan.id
-  storage_account_name                           = module.azfun_charge_forwarder_stor.name
+  storage_account_access_key                     = module.azfun_charge_acknowledgement_sender_stor.primary_access_key
+  app_service_plan_id                            = module.azfun_charge_acknowledgement_sender_plan.id
+  storage_account_name                           = module.azfun_charge_acknowledgement_sender_stor.name
   application_insights_instrumentation_key       = module.appi.instrumentation_key
   always_on                                      = true
   tags                                           = data.azurerm_resource_group.main.tags
@@ -39,9 +39,9 @@ module "azfun_charge_forwarder" {
   } 
 }
 
-module "azfun_charge_forwarder_plan" {
+module "azfun_charge_acknowledgement_sender_plan" {
   source              = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//app-service-plan?ref=1.2.0"
-  name                = "asp-charge-forwarder-${var.project}-${var.organisation}-${var.environment}"
+  name                = "asp-charge-acknowledgement-sender-${var.project}-${var.organisation}-${var.environment}"
   resource_group_name = data.azurerm_resource_group.main.name
   location            = data.azurerm_resource_group.main.location
   kind                = "FunctionApp"
@@ -52,9 +52,9 @@ module "azfun_charge_forwarder_plan" {
   tags                = data.azurerm_resource_group.main.tags
 }
 
-module "azfun_charge_forwarder_stor" {
+module "azfun_charge_acknowledgement_sender_stor" {
   source                    = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//storage-account?ref=1.2.0"
-  name                      = "stormsgrcvr${random_string.charge_forwarder.result}"
+  name                      = "stormsgrcvr${random_string.charge_acknowledgement_sender.result}"
   resource_group_name       = data.azurerm_resource_group.main.name
   location                  = data.azurerm_resource_group.main.location
   account_replication_type  = "LRS"
@@ -64,7 +64,7 @@ module "azfun_charge_forwarder_stor" {
 }
 
 # Since all functions need a storage connected we just generate a random name
-resource "random_string" "charge_forwarder" {
+resource "random_string" "charge_acknowledgement_sender" {
   length  = 6
   special = false
   upper   = false
