@@ -56,4 +56,11 @@ limitations under the License.
       <Content Include="TestFiles\ChargeAddition.json" CopyToOutputDirectory="Always" />
       <Content Include="TestFiles\ChargeUpdate.json" CopyToOutputDirectory="Always" />
     </ItemGroup>
+
+    <ItemGroup>
+      <None Update="local.settings.json">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        <CopyToPublishDirectory>Never</CopyToPublishDirectory>
+      </None>
+    </ItemGroup>
 </Project>

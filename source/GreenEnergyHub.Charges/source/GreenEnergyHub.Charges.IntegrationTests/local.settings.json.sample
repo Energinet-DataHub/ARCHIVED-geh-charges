@@ -1,9 +1,10 @@
 ﻿{
-  "IsEncrypted": false,
-  "AzureWebJobsStorage": "UseDevelopmentStorage=true",
-  "FUNCTIONS_WORKER_RUNTIME": "dotnet",
-  "APPINSIGHTS_INSTRUMENTATIONKEY": "",
-  "BLOB_FILES_RAWMESSAGES_CONTAINER_NAME": "rawmessages",
-  "CONNECTION_STRING_SHARED_BLOB": "UseDevelopmentStorage=true",
-  "MESSAGERECEIVER_URL": "http://localhost:7071/api/MessageReceiver"
+   "IsEncrypted": false,
+   "Values": {
+    "AzureWebJobsStorage": "UseDevelopmentStorage=true",
+    "FUNCTIONS_WORKER_RUNTIME": "dotnet",
+    "AzureWebJobsDashboard": "UseDevelopmentStorage=true",
+    "COMMAND_RECEIVED_SENDER_CONNECTION_STRING": "<Connection string for command received sender>",
+    "COMMAND_RECEIVED_TOPIC_NAME": "sbt-command-received"
+    }
 }

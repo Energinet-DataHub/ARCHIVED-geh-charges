@@ -15,11 +15,10 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
-using System.Reflection;
-using System.Text;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
 using GreenEnergyHub.Charges.Application.ChangeOfCharges;
+using GreenEnergyHub.Charges.IntegrationTests.TestHelpers;
 using GreenEnergyHub.Charges.MessageReceiver;
 using GreenEnergyHub.Json;
 using GreenEnergyHub.TestHelpers;
@@ -44,8 +43,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
 
         public ChangeOfChargesMessageHandlerTests()
         {
-            var startup = new Startup();
-            var host = new HostBuilder().ConfigureWebJobs(startup.Configure).Build();
+            TestConfigurationHelper.ConfigureEnvironmentVariablesFromLocalSettings();
+            var host = TestConfigurationHelper.SetupHost();
 
             _sut = new ChargeHttpTrigger(
                 host.Services.GetRequiredService<IJsonSerializer>(),
@@ -60,7 +59,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
             [NotNull] IClock clock)
         {
             // arrange
-            var stream = GetInputStream("TestFiles\\ChargeAddition.json", clock);
+            var stream = TestDataHelper.GetInputStream("TestFiles\\ChargeAddition.json", clock);
 
             var defaultHttpContext = new DefaultHttpContext();
 
@@ -91,22 +90,6 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
 
             // Assert
             await Task.Run(() => Assert.True(true)).ConfigureAwait(false);
-        }
-
-        private static Stream GetInputStream(string filePath, IClock clock)
-        {
-            var basePath = Assembly.GetExecutingAssembly().Location;
-            var path = Path.Combine(Directory.GetParent(basePath).FullName, filePath);
-            var fileText = File.ReadAllText(path);
-            var replaced = ReplaceMergeFields(clock, fileText);
-
-            return new MemoryStream(Encoding.ASCII.GetBytes(replaced));
-        }
-
-        private static string ReplaceMergeFields(IClock clock, string file)
-        {
-            var now = clock.GetCurrentInstant().ToString();
-            return file.Replace("{{$isoTimestamp}}", now);
         }
     }
 }
