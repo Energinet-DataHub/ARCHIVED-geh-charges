@@ -16,7 +16,9 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
+using GreenEnergyHub.Charges.Application;
 using GreenEnergyHub.Charges.Application.ChangeOfCharges;
+using GreenEnergyHub.Charges.ChargeCommandReceiver;
 using GreenEnergyHub.Charges.Infrastructure.Messaging;
 using GreenEnergyHub.Charges.IntegrationTests.TestHelpers;
 using GreenEnergyHub.Charges.MessageReceiver;
@@ -38,17 +40,29 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
     [Trait(TraitNames.Category, TraitValues.IntegrationTest)]
     public class ChangeOfChargesMessageHandlerTests
     {
-        private readonly ChargeHttpTrigger _sut;
+        private readonly ChargeHttpTrigger _chargeHttpTrigger;
+        private readonly ChargeCommandEndpoint _chargeCommandEndpoint;
 
         public ChangeOfChargesMessageHandlerTests()
         {
             TestConfigurationHelper.ConfigureEnvironmentVariablesFromLocalSettings();
-            var host = TestConfigurationHelper.SetupHost();
+            var messageReceiverHost = TestConfigurationHelper.SetupHost(new MessageReceiver.Startup());
+            var chargeCommandReceiverHost = TestConfigurationHelper.SetupHost(new ChargeCommandReceiver.Startup());
 
-            _sut = new ChargeHttpTrigger(
-                host.Services.GetRequiredService<IJsonSerializer>(),
-                host.Services.GetRequiredService<IChangeOfChargesMessageHandler>(),
-                host.Services.GetRequiredService<ICorrelationContext>());
+            _chargeHttpTrigger = new ChargeHttpTrigger(
+                messageReceiverHost.Services.GetRequiredService<IJsonSerializer>(),
+                messageReceiverHost.Services.GetRequiredService<IChangeOfChargesMessageHandler>(),
+                messageReceiverHost.Services.GetRequiredService<ICorrelationContext>());
+
+            _chargeCommandEndpoint = new ChargeCommandEndpoint(
+                chargeCommandReceiverHost.Services.GetRequiredService<IJsonSerializer>(),
+                chargeCommandReceiverHost.Services.GetRequiredService<IChargeCommandHandler>(),
+                chargeCommandReceiverHost.Services.GetRequiredService<ICorrelationContext>());
+
+            using (chargeCommandReceiverHost)
+            {
+                chargeCommandReceiverHost.StartAsync().ConfigureAwait(false);
+            }
         }
 
         [Theory]
@@ -65,7 +79,9 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
             SetInvocationId(executionContext);
 
             // act
-            var result = (OkObjectResult)await _sut.RunAsync(req, executionContext, logger.Object).ConfigureAwait(false);
+            var result = (OkObjectResult)await _chargeHttpTrigger.RunAsync(req, executionContext, logger.Object).ConfigureAwait(false);
+            //var testMessage = Array.Empty<byte>();
+            //await _chargeCommandEndpoint.RunAsync(testMessage, logger.Object).ConfigureAwait(false);
 
             // assert
             Assert.Equal(200, result!.StatusCode!.Value);
@@ -85,7 +101,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
             SetInvocationId(executionContext);
 
             // act
-            var result = (OkObjectResult)await _sut.RunAsync(req, executionContext, logger.Object).ConfigureAwait(false);
+            var result = (OkObjectResult)await _chargeHttpTrigger.RunAsync(req, executionContext, logger.Object).ConfigureAwait(false);
 
             // assert
             Assert.True(true);

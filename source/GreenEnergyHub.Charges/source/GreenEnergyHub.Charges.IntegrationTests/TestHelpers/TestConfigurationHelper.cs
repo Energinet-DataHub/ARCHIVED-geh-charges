@@ -13,14 +13,21 @@
 // limitations under the License.
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using GreenEnergyHub.Charges.MessageReceiver;
+using Microsoft.Azure.Functions.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
 namespace GreenEnergyHub.Charges.IntegrationTests.TestHelpers
 {
     public static class TestConfigurationHelper
     {
+        /// <summary>
+        /// EnvironmentVariables are not automatically loaded when running XUnit integrationstests.
+        /// This method follows the suggested workaround mentioned here:
+        /// https://github.com/Azure/azure-functions-host/issues/6953
+        /// </summary>
         public static void ConfigureEnvironmentVariablesFromLocalSettings()
         {
             var path = Path.GetDirectoryName(typeof(ChargeHttpTrigger).Assembly.Location);
@@ -33,9 +40,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.TestHelpers
             }
         }
 
-        public static IHost SetupHost()
+        public static IHost SetupHost([NotNull] FunctionsStartup startup)
         {
-            var startup = new Startup();
             return new HostBuilder().ConfigureWebJobs(startup.Configure).Build();
         }
     }

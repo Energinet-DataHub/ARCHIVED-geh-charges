@@ -5,6 +5,14 @@
     "FUNCTIONS_WORKER_RUNTIME": "dotnet",
     "AzureWebJobsDashboard": "UseDevelopmentStorage=true",
     "COMMAND_RECEIVED_SENDER_CONNECTION_STRING": "<Connection string for command received sender>",
-    "COMMAND_RECEIVED_TOPIC_NAME": "sbt-command-received"
+    "COMMAND_RECEIVED_LISTENER_CONNECTION_STRING": "<sb listener connection string>",
+    "COMMAND_ACCEPTED_SENDER_CONNECTION_STRING": "<sb sender connection string>",
+    "COMMAND_REJECTED_SENDER_CONNECTION_STRING": "<sb sender connection string>",
+    "COMMAND_RECEIVED_TOPIC_NAME": "sbt-command-received",
+    "COMMAND_ACCEPTED_TOPIC_NAME": "sbt-command-accepted",
+    "COMMAND_REJECTED_TOPIC_NAME": "sbt-command-rejected",
+    "COMMAND_RECEIVED_SUBSCRIPTION_NAME": "sbs-command-received-integration-test",
+    "CHARGE_DB_CONNECTION_STRING": "<charge db connection string>",
+    "LOCAL_TIMEZONENAME": "Your time zone ID, e.g.Europe/Copenhagen, see https://en.wikipedia.org/wiki/List_of_tz_database_time_zones for others"
     }
 }
