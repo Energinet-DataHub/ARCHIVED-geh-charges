@@ -25,13 +25,11 @@ using GreenEnergyHub.Charges.IntegrationTests.TestHelpers;
 using GreenEnergyHub.Charges.MessageReceiver;
 using GreenEnergyHub.Charges.TestCore;
 using GreenEnergyHub.Json;
-using GreenEnergyHub.TestHelpers;
 using GreenEnergyHub.TestHelpers.Traits;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Internal;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.ServiceBus;
-using Microsoft.Azure.ServiceBus.Management;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -49,7 +47,6 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
         private readonly ChargeHttpTrigger _chargeHttpTrigger;
         private readonly ChargeCommandEndpoint _chargeCommandEndpoint;
 
-        // private readonly SubscriptionClient _subscriptionClient;
         public ChangeOfChargesMessageHandlerTests(ITestOutputHelper testOutputHelper)
         {
             _testOutputHelper = testOutputHelper;
@@ -66,11 +63,6 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
                 chargeCommandReceiverHost.Services.GetRequiredService<IJsonSerializer>(),
                 chargeCommandReceiverHost.Services.GetRequiredService<IChargeCommandHandler>(),
                 chargeCommandReceiverHost.Services.GetRequiredService<ICorrelationContext>());
-
-            using (chargeCommandReceiverHost)
-            {
-                chargeCommandReceiverHost.StartAsync().ConfigureAwait(false);
-            }
         }
 
         // [InlineAutoMoqData("TestFiles\\ValidChargeUpdate.json")]
