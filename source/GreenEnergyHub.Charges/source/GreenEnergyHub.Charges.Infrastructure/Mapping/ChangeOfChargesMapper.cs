@@ -38,33 +38,33 @@ namespace GreenEnergyHub.Charges.Infrastructure.Mapping
             {
                 ChargeType = chargeType,
                 ChargeTypeOwner = chargeTypeOwnerMRid,
-                Description = chargeModel.MktActivityRecord.ChargeType.Description,
-                LastUpdatedBy = chargeModel.LastUpdatedBy,
-                LastUpdatedByCorrelationId = chargeModel.CorrelationId,
-                LastUpdatedByTransactionId = chargeModel.MktActivityRecord.MRid,
-                Name = chargeModel.MktActivityRecord.ChargeType.Name,
-                RequestDateTime = chargeModel.RequestDate.ToUnixTimeTicks(),
+                Description = chargeModel.Description,
+                LastUpdatedBy = chargeModel.ChargeEvent.LastUpdatedBy,
+                LastUpdatedByCorrelationId = chargeModel.Document.CorrelationId,
+                LastUpdatedByTransactionId = chargeModel.Document.Id,
+                Name = chargeModel.Name,
+                RequestDateTime = chargeModel.Document.RequestDate.ToUnixTimeTicks(),
                 ResolutionType = resolutionType,
-                StartDate = chargeModel.MktActivityRecord.ValidityStartDate.ToUnixTimeTicks(),
-                EndDate = chargeModel.MktActivityRecord.ValidityEndDate?.ToUnixTimeTicks(),
-                Status = (byte)chargeModel.MktActivityRecord.Status,
-                TaxIndicator = chargeModel.MktActivityRecord.ChargeType.TaxIndicator,
-                TransparentInvoicing = chargeModel.MktActivityRecord.ChargeType.TransparentInvoicing,
+                StartDate = chargeModel.StartDateTime.ToUnixTimeTicks(),
+                EndDate = chargeModel.EndDateTime?.ToUnixTimeTicks(),
+                Status = (byte)chargeModel.ChargeEvent.Status,
+                TaxIndicator = chargeModel.Tax,
+                TransparentInvoicing = chargeModel.TransparentInvoicing,
                 VatPayer = vatPayerType,
-                MRid = chargeModel.ChargeTypeMRid,
+                MRid = chargeModel.Id,
                 Currency = "DKK",
             };
 
-            foreach (var point in chargeModel.Period.Points)
+            foreach (var point in chargeModel.Points)
             {
                 var newChargePrice = new ChargePrice
                 {
                     Time = point.Time.ToUnixTimeTicks(),
-                    Amount = point.PriceAmount,
-                    LastUpdatedByCorrelationId = chargeModel.CorrelationId,
-                    LastUpdatedByTransactionId = chargeModel.MktActivityRecord.MRid,
-                    LastUpdatedBy = chargeModel.LastUpdatedBy,
-                    RequestDateTime = chargeModel.RequestDate.ToUnixTimeTicks(),
+                    Amount = point.Price,
+                    LastUpdatedByCorrelationId = chargeModel.Document.CorrelationId,
+                    LastUpdatedByTransactionId = chargeModel.Document.Id,
+                    LastUpdatedBy = chargeModel.ChargeEvent.LastUpdatedBy,
+                    RequestDateTime = chargeModel.Document.RequestDate.ToUnixTimeTicks(),
                 };
 
                 charge.ChargePrices.Add(newChargePrice);
@@ -79,8 +79,6 @@ namespace GreenEnergyHub.Charges.Infrastructure.Mapping
 
             return new Domain.Charge
             {
-                Charge = new ChargeDto
-                {
                     Id = charge.MRid,
                     Type = Enum.Parse<GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction.ChargeType>(charge.ChargeType.Code!),
                     Name = charge.Name, // Description to be Name
@@ -92,13 +90,12 @@ namespace GreenEnergyHub.Charges.Infrastructure.Mapping
                     Tax = charge.TaxIndicator,
                     Owner = charge.ChargeTypeOwner.MRid,
                     Resolution = Enum.Parse<Resolution>(charge.ResolutionType.Name!),
-                },
-                ChargeEvent = new ChargeEvent
+                    ChargeEvent = new ChargeEvent
                 {
                     Id = charge.LastUpdatedByTransactionId,
                     Status = (ChargeEventFunction)charge.Status,
                 },
-                Document = new Document
+                    Document = new Document
                 {
                     RequestDate = Instant.FromUnixTimeTicks(charge.RequestDateTime),
                 },

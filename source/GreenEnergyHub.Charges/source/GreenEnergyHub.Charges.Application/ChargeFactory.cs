@@ -26,9 +26,20 @@ namespace GreenEnergyHub.Charges.Application
             // Quick and dirty as long as Charge is a command
             var c = new Charge
             {
-                Charge = command.Charge,
                 Document = command.Document,
                 ChargeEvent = command.ChargeEvent,
+                Id = command.Charge.Id,
+                Description = command.Charge.Description,
+                Name = command.Charge.Name,
+                Owner = command.Charge.Owner,
+                Points = command.Charge.Points,
+                Resolution = command.Charge.Resolution,
+                Tax = command.Charge.Tax,
+                Type = command.Charge.Type,
+                Vat = command.Charge.Vat,
+                TransparentInvoicing = command.Charge.TransparentInvoicing,
+                EndDateTime = command.Charge.EndDateTime,
+                StartDateTime = command.Charge.StartDateTime,
             };
             return Task.FromResult(c);
         }

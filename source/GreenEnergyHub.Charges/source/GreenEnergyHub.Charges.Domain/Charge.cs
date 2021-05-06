@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Collections.Generic;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
 using GreenEnergyHub.Charges.Domain.Common;
 using NodaTime;
@@ -20,31 +21,64 @@ namespace GreenEnergyHub.Charges.Domain
 {
     public class Charge
     {
-        // TODO: This DTO-style domain model probably needs refactoring. Directive suppresses warning that props can be null.
 #pragma warning disable 8618
-        public MarketDocument MarketDocument { get; set; }
-
-        public MktActivityRecord MktActivityRecord { get; set; }
-
-        /// <summary>
-        /// The kind of charge: Fee ("D02") | Subscription ("D01") | Tariff ("D03").
-        /// </summary>
-        public string Type { get; set; }
-
-        public string ChargeTypeMRid { get; set; }
-
-        public string ChargeTypeOwnerMRid { get; set; }
-
-        public ChargeTypePeriod Period { get; set; }
-
-        /// <summary>
-        ///     The date this request was made.
-        /// </summary>
-        public Instant RequestDate { get; set; }
-
-        public string CorrelationId { get; set; }
-
-        public string LastUpdatedBy { get; set; }
+        public Charge()
 #pragma warning restore 8618
+        {
+            Points = new List<Point>();
+        }
+
+        public Document Document { get; set; }
+
+        public ChargeEvent ChargeEvent { get; set; }
+
+        /// <summary>
+        /// Unique ID of a charge (Note, unique per market participants).
+        /// Example: EA-001
+        /// </summary>
+        public string Id { get; set; }
+
+        public ChargeType Type { get; set; }
+
+        /// <summary>
+        /// The charge name
+        /// Example: "Elafgift"
+        /// </summary>
+        public string Name { get; set; }
+
+        public string Description { get; set; }
+
+        /// <summary>
+        /// Valid from, of a charge price list. Also known as Effective Date.
+        /// </summary>
+        public Instant StartDateTime { get; set; }
+
+        /// <summary>
+        /// Valid to, of a charge price list.
+        /// </summary>
+        public Instant? EndDateTime { get; set; }
+
+        public Vat Vat { get; set; }
+
+        /// <summary>
+        /// In Denmark the Energy Supplier invoices the customer, including the charges from the Grid Access Provider and the System Operator.
+        /// This boolean can be use to indicate that a charge must be visible on the invoice sent to the customer.
+        /// </summary>
+        public bool TransparentInvoicing { get; set; }
+
+        /// <summary>
+        /// Indicates whether the Charge is tax or not.
+        /// </summary>
+        public bool Tax { get; set; }
+
+        /// <summary>
+        ///  Charge Owner, e.g. the GLN or EIC identification number.
+        /// </summary>
+        public string Owner { get; set; }
+
+        public Resolution Resolution { get; set; }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2227", Justification = "JSON deserialization")]
+        public List<Point> Points { get; set; }
     }
 }

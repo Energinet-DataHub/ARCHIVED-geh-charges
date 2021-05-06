@@ -36,10 +36,10 @@ namespace GreenEnergyHub.Charges.Infrastructure
             // TODO: Delegate construction to factory (but not in infrastructure project)
             var chargeCommandAcceptedAcknowledgement = new ChargeAcknowledgement(
                 acceptedEvent.CorrelationId,
-                acceptedEvent.Command.MarketDocument.SenderMarketParticipant.MRid,
-                acceptedEvent.Command.MarketDocument.SenderMarketParticipant.Role,
-                acceptedEvent.Command.MktActivityRecord.MRid,
-                acceptedEvent.Command.MarketDocument.ProcessType);
+                acceptedEvent.Command.Document.Sender.MRid,
+                acceptedEvent.Command.Document.Sender.Role,
+                acceptedEvent.Command.Document.Id,
+                acceptedEvent.Command.ChargeEvent.BusinessReasonCode);
 
             await _postOfficeService.SendAsync(chargeCommandAcceptedAcknowledgement).ConfigureAwait(false);
         }
