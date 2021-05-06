@@ -25,45 +25,45 @@ namespace GreenEnergyHub.Charges.Infrastructure.Mapping
     public static class ChangeOfChargesMapper
     {
         public static Charge MapChangeOfChargesTransactionToCharge(
-            [NotNull]ChargeCommand chargeCommand,
+            [NotNull]Domain.Charge chargeModel,
             ChargeType chargeType,
             MarketParticipant chargeTypeOwnerMRid,
             ResolutionType resolutionType,
             VatPayerType vatPayerType)
         {
-            if (chargeCommand == null) throw new ArgumentNullException(nameof(chargeCommand));
+            if (chargeModel == null) throw new ArgumentNullException(nameof(chargeModel));
 
             var charge = new Charge
             {
                 ChargeType = chargeType,
                 ChargeTypeOwner = chargeTypeOwnerMRid,
-                Description = chargeCommand.MktActivityRecord.ChargeType.Description,
-                LastUpdatedBy = chargeCommand.LastUpdatedBy,
-                LastUpdatedByCorrelationId = chargeCommand.CorrelationId,
-                LastUpdatedByTransactionId = chargeCommand.MktActivityRecord.MRid,
-                Name = chargeCommand.MktActivityRecord.ChargeType.Name,
-                RequestDateTime = chargeCommand.RequestDate.ToUnixTimeTicks(),
+                Description = chargeModel.MktActivityRecord.ChargeType.Description,
+                LastUpdatedBy = chargeModel.LastUpdatedBy,
+                LastUpdatedByCorrelationId = chargeModel.CorrelationId,
+                LastUpdatedByTransactionId = chargeModel.MktActivityRecord.MRid,
+                Name = chargeModel.MktActivityRecord.ChargeType.Name,
+                RequestDateTime = chargeModel.RequestDate.ToUnixTimeTicks(),
                 ResolutionType = resolutionType,
-                StartDate = chargeCommand.MktActivityRecord.ValidityStartDate.ToUnixTimeTicks(),
-                EndDate = chargeCommand.MktActivityRecord.ValidityEndDate?.ToUnixTimeTicks(),
-                Status = (byte)chargeCommand.MktActivityRecord.Status,
-                TaxIndicator = chargeCommand.MktActivityRecord.ChargeType.TaxIndicator,
-                TransparentInvoicing = chargeCommand.MktActivityRecord.ChargeType.TransparentInvoicing,
+                StartDate = chargeModel.MktActivityRecord.ValidityStartDate.ToUnixTimeTicks(),
+                EndDate = chargeModel.MktActivityRecord.ValidityEndDate?.ToUnixTimeTicks(),
+                Status = (byte)chargeModel.MktActivityRecord.Status,
+                TaxIndicator = chargeModel.MktActivityRecord.ChargeType.TaxIndicator,
+                TransparentInvoicing = chargeModel.MktActivityRecord.ChargeType.TransparentInvoicing,
                 VatPayer = vatPayerType,
-                MRid = chargeCommand.ChargeTypeMRid,
+                MRid = chargeModel.ChargeTypeMRid,
                 Currency = "DKK",
             };
 
-            foreach (var point in chargeCommand.Period.Points)
+            foreach (var point in chargeModel.Period.Points)
             {
                 var newChargePrice = new ChargePrice
                 {
                     Time = point.Time.ToUnixTimeTicks(),
                     Amount = point.PriceAmount,
-                    LastUpdatedByCorrelationId = chargeCommand.CorrelationId,
-                    LastUpdatedByTransactionId = chargeCommand.MktActivityRecord.MRid,
-                    LastUpdatedBy = chargeCommand.LastUpdatedBy,
-                    RequestDateTime = chargeCommand.RequestDate.ToUnixTimeTicks(),
+                    LastUpdatedByCorrelationId = chargeModel.CorrelationId,
+                    LastUpdatedByTransactionId = chargeModel.MktActivityRecord.MRid,
+                    LastUpdatedBy = chargeModel.LastUpdatedBy,
+                    RequestDateTime = chargeModel.RequestDate.ToUnixTimeTicks(),
                 };
 
                 charge.ChargePrices.Add(newChargePrice);
@@ -91,6 +91,8 @@ namespace GreenEnergyHub.Charges.Infrastructure.Mapping
                         TransparentInvoicing = charge.TransparentInvoicing,
                     },
                     ValidityStartDate = Instant.FromUnixTimeTicks(charge.StartDate),
+
+                    // ReSharper disable once RedundantCast - removing the "as Instant?" cast will break the CI build
                     ValidityEndDate = charge.EndDate != null ? Instant.FromUnixTimeTicks(charge.EndDate.Value) : null as Instant?,
                 },
                 RequestDate = Instant.FromUnixTimeTicks(charge.RequestDateTime),

@@ -12,7 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Text.Json.Serialization;
+using Newtonsoft.Json;
+
 #pragma warning disable 8618
 
 namespace GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction
@@ -22,13 +23,13 @@ namespace GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction
     // ChargeType integrity is null checked by ChargeCommandNullChecker
     public class ChargeType
     {
-        [JsonPropertyName("name")]
+        [JsonProperty("name")]
         public string Name { get; set; }
 
-        [JsonPropertyName("description")]
+        [JsonProperty("description")]
         public string Description { get; set; }
 
-        [JsonPropertyName("VATPayer")]
+        [JsonProperty("VATPayer")]
         public string VatPayer { get; set; }
 
         public bool TransparentInvoicing { get; set; }

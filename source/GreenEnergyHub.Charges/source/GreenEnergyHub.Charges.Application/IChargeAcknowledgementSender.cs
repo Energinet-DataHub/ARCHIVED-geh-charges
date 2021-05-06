@@ -12,9 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace GreenEnergyHub.Charges.Domain.ChangeOfCharges.Tariff
+using System.Threading.Tasks;
+using GreenEnergyHub.Charges.Domain.Events.Local;
+
+namespace GreenEnergyHub.Charges.Application
 {
-    public class TariffCreateValidationFailed : TariffBase
+    public interface IChargeAcknowledgementSender
     {
+        Task HandleAsync(ChargeCommandAcceptedEvent acceptedEvent);
     }
 }

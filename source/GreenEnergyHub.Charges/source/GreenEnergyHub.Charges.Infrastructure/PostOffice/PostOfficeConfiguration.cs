@@ -12,9 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace GreenEnergyHub.Charges.Domain.ChangeOfCharges.Tariff
+namespace GreenEnergyHub.Charges.Infrastructure.PostOffice
 {
-    public class TariffCreate : TariffBase
+    public class PostOfficeConfiguration
     {
+        public string? ConnectionString { get; set; }
+
+        public string? TopicName { get; set; }
     }
 }

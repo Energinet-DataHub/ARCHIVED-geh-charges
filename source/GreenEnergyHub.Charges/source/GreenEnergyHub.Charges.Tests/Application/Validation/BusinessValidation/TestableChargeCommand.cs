@@ -14,9 +14,14 @@
 
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
 
-namespace GreenEnergyHub.Charges.Domain.ChangeOfCharges.Fee
+namespace GreenEnergyHub.Charges.Tests.Application.Validation.BusinessValidation
 {
-    public abstract class FeeBase : ChargeCommand
+    public class TestableChargeCommand : ChargeCommand
     {
+        public TestableChargeCommand()
+            : base("some-correlation-id")
+        {
+            MktActivityRecord = new MktActivityRecord();
+        }
     }
 }

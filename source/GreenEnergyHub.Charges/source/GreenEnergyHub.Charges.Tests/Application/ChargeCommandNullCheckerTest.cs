@@ -70,10 +70,9 @@ namespace GreenEnergyHub.Charges.Tests.Application
             string chargeTypeName)
         {
             // Arrange
-            var c = GetValidCharge();
+            var c = GetValidCharge(correlationId);
             c.ChargeTypeMRid = chargeTypeMRid;
             c.ChargeTypeOwnerMRid = chargeTypeOwnerId;
-            c.CorrelationId = correlationId;
             c.LastUpdatedBy = lastUpdatedBy;
             c.Type = type;
             c.Period.Resolution = resolution;
@@ -122,12 +121,11 @@ namespace GreenEnergyHub.Charges.Tests.Application
             Assert.Throws<ArgumentNullException>(() => ChargeCommandNullChecker.ThrowExceptionIfRequiredPropertyIsNull(c));
         }
 
-        private static ChargeCommand GetValidCharge()
+        private static ChargeCommand GetValidCharge(string correlationId = "some-correlation-id")
         {
-            return new ()
+            return new (correlationId)
             {
                 Type = "D01",
-                CorrelationId = "CorrelationId",
                 RequestDate = SystemClock.Instance.GetCurrentInstant(),
                 LastUpdatedBy = "LastUpdatedBy",
                 ChargeTypeMRid = "ChargeTypeMrid",
