@@ -32,6 +32,13 @@ namespace GreenEnergyHub.Charges.Domain.Common
         /// </summary>
         public string Id { get; set; }
 
+        public string CorrelationId { get; set; }
+
+        /// <summary>
+        ///  Point in time set by the Charges domain
+        /// </summary>
+        public Instant RequestDate { get; set; } = SystemClock.Instance.GetCurrentInstant();
+
         /// <summary>
         /// The document type indicates the intended business context of this business message.
         /// </summary>
@@ -47,7 +54,5 @@ namespace GreenEnergyHub.Charges.Domain.Common
         public MarketParticipant Recipient { get; set; }
 
         public IndustryClassification IndustryClassification { get; set; }
-
-        public BusinessReasonCode BusinessReasonCode { get; set; }
     }
 }

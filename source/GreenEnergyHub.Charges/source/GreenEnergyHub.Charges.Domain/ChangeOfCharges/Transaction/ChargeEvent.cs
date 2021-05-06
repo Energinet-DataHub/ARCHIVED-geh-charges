@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using GreenEnergyHub.Charges.Domain.Common;
 using NodaTime;
 #pragma warning disable 8618
 
@@ -31,28 +32,13 @@ namespace GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction
         /// </summary>
         public string Id { get; set; }
 
-        /// <summary>
-        /// Valid from, of a charge price list. Also known as Effective Date.
-        /// </summary>
-        public Instant StartDateTime { get; set; }
-
-        /// <summary>
-        /// Valid to, of a charge price list.
-        /// </summary>
-        public Instant? EndDateTime { get; set; }
+        public BusinessReasonCode BusinessReasonCode { get; set; }
 
         public ChargeEventFunction Status { get; set; }
-
-        public string CorrelationId { get; set; }
 
         /// <summary>
         /// PTA: Is this relevant for an incoming charge command?
         /// </summary>
         public string LastUpdatedBy { get; set; }
-
-        /// <summary>
-        ///  Point in time set by the Charges domain
-        /// </summary>
-        public Instant RequestDate { get; set; } = SystemClock.Instance.GetCurrentInstant();
     }
 }

@@ -143,12 +143,12 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
         {
             // Arrange
             var charge = GetValidCharge();
-            charge.ChargeEvent.StartDateTime = Instant.MinValue;
-            charge.ChargeEvent.EndDateTime = Instant.MaxValue;
-            var chargeType = new ChargeType { Code = charge.ChargeNew.Type.ToString(), Id = 1, Name = "Name" };
-            var chargeTypeOwnerMRid = new MarketParticipant { Id = 1, MRid = charge.ChargeNew.Owner, Name = "Name" };
-            var resolutionType = new ResolutionType { Id = 1, Name = charge.ChargeNew.Resolution.ToString() };
-            var vatPayerType = new VatPayerType { Id = 1, Name = charge.ChargeNew.Vat.ToString() };
+            charge.Charge.StartDateTime = Instant.MinValue;
+            charge.Charge.EndDateTime = Instant.MaxValue;
+            var chargeType = new ChargeType { Code = charge.Charge.Type.ToString(), Id = 1, Name = "Name" };
+            var chargeTypeOwnerMRid = new MarketParticipant { Id = 1, MRid = charge.Charge.Owner, Name = "Name" };
+            var resolutionType = new ResolutionType { Id = 1, Name = charge.Charge.Resolution.ToString() };
+            var vatPayerType = new VatPayerType { Id = 1, Name = charge.Charge.Vat.ToString() };
 
             // When
             var result = ChangeOfChargesMapper.MapChangeOfChargesTransactionToCharge(charge, chargeType, chargeTypeOwnerMRid, resolutionType, vatPayerType);
@@ -165,11 +165,12 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
         {
             var transaction = new Charge
             {
-                ChargeNew = new ChargeNew
+                Charge = new ChargeDto
                 {
                     Name = "description",
                     Id = "Id",
                     Owner = KnownChargeOwner,
+                    StartDateTime = SystemClock.Instance.GetCurrentInstant(),
                     Points = new List<Point>
                     {
                         new Point { Position = 0, Time = SystemClock.Instance.GetCurrentInstant(), Price = 200m },
@@ -182,19 +183,18 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
                 Document = new Document
                 {
                     Id = "id",
+                    CorrelationId = "CorrelationId",
+                    RequestDate = SystemClock.Instance.GetCurrentInstant(),
                     Type = "type",
                     IndustryClassification = IndustryClassification.Electricity,
-                    BusinessReasonCode = BusinessReasonCode.D18,
                     CreatedDateTime = SystemClock.Instance.GetCurrentInstant(),
                 },
                 ChargeEvent = new ChargeEvent
                 {
                     Id = "id",
                     Status = ChargeEventFunction.Addition,
-                    CorrelationId = "CorrelationId",
+                    BusinessReasonCode = BusinessReasonCode.D18,
                     LastUpdatedBy = "LastUpdatedBy",
-                    StartDateTime = SystemClock.Instance.GetCurrentInstant(),
-                    RequestDate = SystemClock.Instance.GetCurrentInstant(),
                 },
             };
             return transaction;

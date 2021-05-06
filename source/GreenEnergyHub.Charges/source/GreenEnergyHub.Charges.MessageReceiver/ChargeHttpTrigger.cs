@@ -85,7 +85,7 @@ namespace GreenEnergyHub.Charges.MessageReceiver
                 .DeserializeAsync(req.Body, typeof(ChargeCommand))
                 .ConfigureAwait(false);
 
-            command.ChargeEvent.CorrelationId = _correlationContext.CorrelationId;
+            command.Document.CorrelationId = _correlationContext.CorrelationId;
             message.Transactions.Add(command);
             return message;
         }

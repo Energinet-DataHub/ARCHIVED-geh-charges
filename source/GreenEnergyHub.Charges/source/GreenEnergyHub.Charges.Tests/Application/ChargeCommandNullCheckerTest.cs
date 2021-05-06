@@ -62,16 +62,16 @@ namespace GreenEnergyHub.Charges.Tests.Application
         {
             // Arrange
             var c = GetValidCharge();
-            c.ChargeNew.Id = chargeId;
-            c.ChargeNew.Owner = owner;
-            c.ChargeEvent.CorrelationId = correlationId;
+            c.Charge.Id = chargeId;
+            c.Charge.Owner = owner;
+            c.Document.CorrelationId = correlationId;
             c.ChargeEvent.LastUpdatedBy = lastUpdatedBy;
             c.Document.Id = documentId;
             c.Document.Sender.MRid = senderId;
             c.Document.Recipient.MRid = recipientId;
             c.ChargeEvent.Id = eventId;
-            c.ChargeNew.Description = chargeTypeLongDescription;
-            c.ChargeNew.Name = chargeTypeDescription;
+            c.Charge.Description = chargeTypeLongDescription;
+            c.Charge.Name = chargeTypeDescription;
 
             // Act & Assert
             Assert.Throws<ArgumentException>(() => ChargeCommandNullChecker.ThrowExceptionIfRequiredPropertyIsNull(c));
@@ -82,7 +82,7 @@ namespace GreenEnergyHub.Charges.Tests.Application
         {
             // Arrange
             var c = GetValidCharge();
-            c.ChargeNew = null!;
+            c.Charge = null!;
 
             // Act & Assert
             Assert.Throws<ArgumentNullException>(() => ChargeCommandNullChecker.ThrowExceptionIfRequiredPropertyIsNull(c));
@@ -114,10 +114,11 @@ namespace GreenEnergyHub.Charges.Tests.Application
         {
             return new ()
             {
-                ChargeNew = new ChargeNew
+                Charge = new ChargeDto
                 {
                     Name = "description",
                     Id = "id",
+                    StartDateTime = SystemClock.Instance.GetCurrentInstant(),
                     Owner = "owner",
                     Points = new List<Point>
                     {
@@ -131,6 +132,8 @@ namespace GreenEnergyHub.Charges.Tests.Application
                 Document = new Document
                 {
                     Id = "id",
+                    CorrelationId = "CorrelationId",
+                    RequestDate = SystemClock.Instance.GetCurrentInstant(),
                     Recipient = new MarketParticipant
                     {
                         Id = 0,
@@ -147,17 +150,14 @@ namespace GreenEnergyHub.Charges.Tests.Application
                     },
                     Type = "type",
                     IndustryClassification = IndustryClassification.Electricity,
-                    BusinessReasonCode = BusinessReasonCode.D18,
                     CreatedDateTime = SystemClock.Instance.GetCurrentInstant(),
                 },
                 ChargeEvent = new ChargeEvent
                 {
                   Id = "id",
                   Status = ChargeEventFunction.Change,
-                  CorrelationId = "CorrelationId",
+                  BusinessReasonCode = BusinessReasonCode.D18,
                   LastUpdatedBy = "LastUpdatedBy",
-                  StartDateTime = SystemClock.Instance.GetCurrentInstant(),
-                  RequestDate = SystemClock.Instance.GetCurrentInstant(),
                 },
             };
         }

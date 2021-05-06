@@ -18,9 +18,9 @@ using NodaTime;
 
 namespace GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction
 {
-    public class ChargeNew
+    public class ChargeDto
     {
-        public ChargeNew()
+        public ChargeDto()
         {
             Points = new List<Point>();
         }
@@ -40,6 +40,16 @@ namespace GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction
         public string Name { get; set; }
 
         public string Description { get; set; }
+
+        /// <summary>
+        /// Valid from, of a charge price list. Also known as Effective Date.
+        /// </summary>
+        public Instant StartDateTime { get; set; }
+
+        /// <summary>
+        /// Valid to, of a charge price list.
+        /// </summary>
+        public Instant? EndDateTime { get; set; }
 
         public Vat Vat { get; set; }
 

@@ -44,8 +44,8 @@ namespace GreenEnergyHub.Charges.Application.Validation.BusinessValidation
         {
             if (chargeCommand == null) throw new ArgumentNullException(nameof(chargeCommand));
 
-            var chargeTypeMRid = chargeCommand.ChargeNew.Id;
-            var commandChargeTypeOwnerMRid = chargeCommand.ChargeNew.Owner;
+            var chargeTypeMRid = chargeCommand.Charge.Id;
+            var commandChargeTypeOwnerMRid = chargeCommand.Charge.Owner;
 
             var charge = await _chargeRepository.GetChargeAsync(chargeTypeMRid, commandChargeTypeOwnerMRid).ConfigureAwait(false);
 
@@ -71,7 +71,7 @@ namespace GreenEnergyHub.Charges.Application.Validation.BusinessValidation
                     _localDateTimeService),
             };
 
-            if (command.ChargeNew.Type == ChargeType.Tariff)
+            if (command.Charge.Type == ChargeType.Tariff)
             {
                 AddTariffOnlyRules(rules, command, charge);
             }

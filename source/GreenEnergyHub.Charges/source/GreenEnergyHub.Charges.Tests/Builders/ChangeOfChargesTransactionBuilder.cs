@@ -80,11 +80,12 @@ namespace GreenEnergyHub.Charges.Tests.Builders
         {
             return new ()
             {
-                ChargeNew = new ChargeNew
+                Charge = new ChargeDto
                 {
                     Name = "description",
                     Id = _mrid,
                     Owner = _owner,
+                    StartDateTime = _validityStartDate,
                     Points = new List<Point>
                     {
                         new Point { Position = 0, Time = SystemClock.Instance.GetCurrentInstant(), Price = 200m },
@@ -98,19 +99,18 @@ namespace GreenEnergyHub.Charges.Tests.Builders
                 Document = new Document
                 {
                     Id = "id",
+                    CorrelationId = "CorrelationId",
                     Type = "type",
+                    RequestDate = SystemClock.Instance.GetCurrentInstant(),
                     IndustryClassification = IndustryClassification.Electricity,
-                    BusinessReasonCode = BusinessReasonCode.D18,
                     CreatedDateTime = SystemClock.Instance.GetCurrentInstant(),
                 },
                 ChargeEvent = new ChargeEvent
                 {
                   Id = "id",
                   Status = ChargeEventFunction.Addition,
-                  CorrelationId = "CorrelationId",
+                  BusinessReasonCode = BusinessReasonCode.D18,
                   LastUpdatedBy = "LastUpdatedBy",
-                  StartDateTime = _validityStartDate,
-                  RequestDate = SystemClock.Instance.GetCurrentInstant(),
                 },
             };
         }

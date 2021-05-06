@@ -32,39 +32,42 @@ namespace GreenEnergyHub.Charges.Infrastructure.Mapping
             ResolutionType resolutionType,
             VatPayerType vatPayerType)
         {
-            if (chargeCommand == null) throw new ArgumentNullException(nameof(chargeCommand));
+            if (chargeCommand == null)
+            {
+                throw new ArgumentNullException(nameof(chargeCommand));
+            }
 
             var charge = new Charge
             {
                 ChargeType = chargeType,
                 ChargeTypeOwner = chargeTypeOwnerMRid,
-                Description = chargeCommand.ChargeNew.Name,
+                Description = chargeCommand.Charge.Name,
                 LastUpdatedBy = chargeCommand.ChargeEvent.LastUpdatedBy,
-                LastUpdatedByCorrelationId = chargeCommand.ChargeEvent.CorrelationId,
+                LastUpdatedByCorrelationId = chargeCommand.Document.CorrelationId,
                 LastUpdatedByTransactionId = chargeCommand.ChargeEvent.Id,
-                Name = chargeCommand.ChargeNew.Name,
-                RequestDateTime = chargeCommand.ChargeEvent.RequestDate.ToUnixTimeTicks(),
+                Name = chargeCommand.Charge.Name,
+                RequestDateTime = chargeCommand.Document.RequestDate.ToUnixTimeTicks(),
                 ResolutionType = resolutionType,
-                StartDate = chargeCommand.ChargeEvent.StartDateTime.ToUnixTimeTicks(),
-                EndDate = chargeCommand.ChargeEvent.EndDateTime?.ToUnixTimeTicks(),
+                StartDate = chargeCommand.Charge.StartDateTime.ToUnixTimeTicks(),
+                EndDate = chargeCommand.Charge.EndDateTime?.ToUnixTimeTicks(),
                 Status = (byte)chargeCommand.ChargeEvent.Status,
-                TaxIndicator = chargeCommand.ChargeNew.Tax,
-                TransparentInvoicing = chargeCommand.ChargeNew.TransparentInvoicing,
+                TaxIndicator = chargeCommand.Charge.Tax,
+                TransparentInvoicing = chargeCommand.Charge.TransparentInvoicing,
                 VatPayer = vatPayerType,
-                MRid = chargeCommand.ChargeNew.Id,
+                MRid = chargeCommand.Charge.Id,
                 Currency = "DKK",
             };
 
-            foreach (var point in chargeCommand.ChargeNew.Points)
+            foreach (var point in chargeCommand.Charge.Points)
             {
                 var newChargePrice = new ChargePrice
                 {
                     Time = point.Time.ToUnixTimeTicks(),
                     Amount = point.Price,
-                    LastUpdatedByCorrelationId = chargeCommand.ChargeEvent.CorrelationId,
+                    LastUpdatedByCorrelationId = chargeCommand.Document.CorrelationId,
                     LastUpdatedByTransactionId = chargeCommand.ChargeEvent.Id,
                     LastUpdatedBy = chargeCommand.ChargeEvent.LastUpdatedBy,
-                    RequestDateTime = chargeCommand.ChargeEvent.RequestDate.ToUnixTimeTicks(),
+                    RequestDateTime = chargeCommand.Document.RequestDate.ToUnixTimeTicks(),
                 };
 
                 charge.ChargePrices.Add(newChargePrice);
@@ -75,16 +78,21 @@ namespace GreenEnergyHub.Charges.Infrastructure.Mapping
 
         public static Domain.Charge MapChargeToChangeOfChargesMessage(Charge charge)
         {
-            if (charge == null) throw new ArgumentNullException(nameof(charge));
+            if (charge == null)
+            {
+                throw new ArgumentNullException(nameof(charge));
+            }
 
             return new Domain.Charge
             {
-                ChargeNew = new ChargeNew
+                Charge = new ChargeDto
                 {
                     Id = charge.MRid,
                     Type = Enum.Parse<GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction.ChargeType>(charge.ChargeType.Code!),
                     Name = charge.Name, // Description to be Name
                     Description = charge.Description, // LongDescription to be Description
+                    StartDateTime = Instant.FromUnixTimeTicks(charge.StartDate),
+                    EndDateTime = charge.EndDate != null ? Instant.FromUnixTimeTicks(charge.EndDate.Value) : (Instant?)null,
                     Vat = Enum.Parse<Vat>(charge.VatPayer.Name),
                     TransparentInvoicing = charge.TransparentInvoicing,
                     Tax = charge.TaxIndicator,
@@ -94,9 +102,10 @@ namespace GreenEnergyHub.Charges.Infrastructure.Mapping
                 ChargeEvent = new ChargeEvent
                 {
                     Id = charge.LastUpdatedByTransactionId,
-                    StartDateTime = Instant.FromUnixTimeTicks(charge.StartDate),
-                    EndDateTime = charge.EndDate != null ? Instant.FromUnixTimeTicks(charge.EndDate.Value) : (Instant?)null,
                     Status = (ChargeEventFunction)charge.Status,
+                },
+                Document = new Document
+                {
                     RequestDate = Instant.FromUnixTimeTicks(charge.RequestDateTime),
                 },
             };

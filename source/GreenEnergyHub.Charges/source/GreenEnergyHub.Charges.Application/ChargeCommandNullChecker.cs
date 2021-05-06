@@ -25,26 +25,25 @@ namespace GreenEnergyHub.Charges.Application
         public static void ThrowExceptionIfRequiredPropertyIsNull(ChargeCommand chargeCommand)
         {
             if (chargeCommand == null) throw new ArgumentNullException(nameof(chargeCommand));
-            CheckCharge(chargeCommand.ChargeNew);
+            CheckCharge(chargeCommand.Charge);
             CheckDocument(chargeCommand.Document);
             CheckEvent(chargeCommand.ChargeEvent);
         }
 
-        private static void CheckCharge(ChargeNew chargeNew)
+        private static void CheckCharge(ChargeDto chargeDto)
         {
-            if (chargeNew == null) throw new ArgumentNullException(nameof(chargeNew));
+            if (chargeDto == null) throw new ArgumentNullException(nameof(chargeDto));
 
-            if (string.IsNullOrWhiteSpace(chargeNew.Owner)) throw new ArgumentException(chargeNew.Owner);
-            if (string.IsNullOrWhiteSpace(chargeNew.Id)) throw new ArgumentException(chargeNew.Id);
-            if (string.IsNullOrWhiteSpace(chargeNew.Name)) throw new ArgumentException(chargeNew.Name);
-            if (string.IsNullOrWhiteSpace(chargeNew.Description)) throw new ArgumentException(chargeNew.Description);
+            if (string.IsNullOrWhiteSpace(chargeDto.Owner)) throw new ArgumentException(chargeDto.Owner);
+            if (string.IsNullOrWhiteSpace(chargeDto.Id)) throw new ArgumentException(chargeDto.Id);
+            if (string.IsNullOrWhiteSpace(chargeDto.Name)) throw new ArgumentException(chargeDto.Name);
+            if (string.IsNullOrWhiteSpace(chargeDto.Description)) throw new ArgumentException(chargeDto.Description);
         }
 
         private static void CheckEvent(ChargeEvent chargeEvent)
         {
             if (chargeEvent == null) throw new ArgumentNullException(nameof(chargeEvent));
             if (string.IsNullOrWhiteSpace(chargeEvent.Id)) throw new ArgumentException(chargeEvent.Id);
-            if (string.IsNullOrWhiteSpace(chargeEvent.CorrelationId)) throw new ArgumentException(chargeEvent.CorrelationId);
             if (string.IsNullOrWhiteSpace(chargeEvent.LastUpdatedBy)) throw new ArgumentException(chargeEvent.LastUpdatedBy);
         }
 
@@ -52,6 +51,7 @@ namespace GreenEnergyHub.Charges.Application
         {
             if (document == null) throw new ArgumentNullException(nameof(document));
             if (string.IsNullOrWhiteSpace(document.Id)) throw new ArgumentException(document.Id);
+            if (string.IsNullOrWhiteSpace(document.CorrelationId)) throw new ArgumentException(document.CorrelationId);
             if (string.IsNullOrWhiteSpace(document.Type)) throw new ArgumentException(document.Id);
             CheckMarketDocumentMarketParticipant(document.Recipient);
             CheckMarketDocumentMarketParticipant(document.Sender);
