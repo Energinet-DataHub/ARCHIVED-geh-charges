@@ -93,15 +93,12 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
             // act
             var messageReceiverResult = await RunMessageReceiver(logger, executionContext, req).ConfigureAwait(false);
 
-            try
-            {
-                GetMessageFromServiceBus(serviceBusConnectionString!, serviceBusTopic!, serviceBusSubscription!, logger.Object);
-            }
-            catch (InvalidOperationException e)
-            {
-                _testOutputHelper.WriteLine(e.ToString());
-                throw;
-            }
+            var message = GetMessageFromServiceBus(serviceBusConnectionString!, serviceBusTopic!, serviceBusSubscription!);
+
+            _testOutputHelper.WriteLine($"Message to be handled by ChargeCommandEndpoint: {message.Body.Length}");
+
+            await _chargeCommandEndpoint.RunAsync(message.Body, logger.Object).ConfigureAwait(false);
+            _testOutputHelper.WriteLine($"Message handled by ChargeCommandEndpoint: {message.Body.Length}");
 
             // assert
             Assert.Equal(200, messageReceiverResult!.StatusCode!.Value);
@@ -133,11 +130,10 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
             return (OkObjectResult)await _chargeHttpTrigger.RunAsync(req, executionContext, logger.Object).ConfigureAwait(false);
         }
 
-        private void GetMessageFromServiceBus(
+        private Message GetMessageFromServiceBus(
             string serviceBusConnectionString,
             string serviceBusTopic,
-            string serviceBusSubscription,
-            ILogger logger)
+            string serviceBusSubscription)
         {
             Message receivedMessage = null!;
 
@@ -152,11 +148,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
                     if (messageJson.Length > 0)
                     {
                         _testOutputHelper.WriteLine($"Message received with body: {message.Body.Length}");
-
-                        await _chargeCommandEndpoint.RunAsync(message.Body, logger).ConfigureAwait(false);
-                        _testOutputHelper.WriteLine($"Message handled by ChargeCommandEndpoint: {message.Body.Length}");
-
-                        // await subscriptionClient.CompleteAsync(message.SystemProperties.LockToken).ConfigureAwait(false);
+                        await subscriptionClient.CompleteAsync(message.SystemProperties.LockToken).ConfigureAwait(false);
                     }
                 },
 #pragma warning disable 1998
@@ -164,7 +156,6 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
 #pragma warning restore 1998
                     {
                         _testOutputHelper.WriteLine(args.Exception.ToString());
-                        throw new InvalidOperationException("ChargeCommandEndpoint", args.Exception);
                     })
                     { MaxConcurrentCalls = 1, AutoComplete = false });
 
@@ -174,6 +165,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
                 ++count;
                 //_testOutputHelper.WriteLine("still running: " + ++count);
             }
+
+            return receivedMessage;
         }
 
         private static void SetInvocationId(ExecutionContext executionContext)
