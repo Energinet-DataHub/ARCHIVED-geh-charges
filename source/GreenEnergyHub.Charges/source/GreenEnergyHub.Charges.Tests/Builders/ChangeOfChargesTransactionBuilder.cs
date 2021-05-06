@@ -92,7 +92,7 @@ namespace GreenEnergyHub.Charges.Tests.Builders
                     },
                     Resolution = Resolution.PT1H,
                     Type = ChargeType.Fee,
-                    Vat = Vat.D02,
+                    Vat = Vat.Vat25,
                     Description = "LongDescription",
                     Tax = _taxIndicator,
                 },
@@ -109,7 +109,7 @@ namespace GreenEnergyHub.Charges.Tests.Builders
                 {
                   Id = "id",
                   Status = ChargeEventFunction.Addition,
-                  BusinessReasonCode = BusinessReasonCode.D18,
+                  BusinessReasonCode = BusinessReasonCode.UpdateChargeInformation,
                   LastUpdatedBy = "LastUpdatedBy",
                 },
             };

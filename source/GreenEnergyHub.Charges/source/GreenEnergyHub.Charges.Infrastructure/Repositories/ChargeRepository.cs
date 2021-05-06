@@ -54,36 +54,26 @@ namespace GreenEnergyHub.Charges.Infrastructure.Repositories
 
         public async Task StoreChargeAsync(Charge newCharge)
         {
-            if (newCharge == null)
-            {
-                throw new ArgumentNullException(nameof(newCharge));
-            }
+            if (newCharge == null) throw new ArgumentNullException(nameof(newCharge));
 
             var chargeType = await GetChargeTypeAsync(newCharge).ConfigureAwait(false);
-            if (chargeType == null)
-            {
-                throw new Exception($"No charge type for {newCharge.Type}");
-            }
+            if (chargeType == null) throw new Exception($"No charge type for {newCharge.Type}");
 
             var resolutionType = await GetResolutionTypeAsync(newCharge).ConfigureAwait(false);
-            if (resolutionType == null)
-            {
-                throw new Exception($"No resolution type for {newCharge.Resolution}");
-            }
+            if (resolutionType == null) throw new Exception($"No resolution type for {newCharge.Resolution}");
 
             var vatPayerType = await GetVatPayerTypeAsync(newCharge).ConfigureAwait(false);
-            if (vatPayerType == null)
-            {
-                throw new Exception($"No VAT payer type for {newCharge.Vat}");
-            }
+            if (vatPayerType == null) throw new Exception($"No VAT payer type for {newCharge.Vat}");
 
             var chargeTypeOwnerMRid = await GetChargeTypeOwnerMRidAsync(newCharge).ConfigureAwait(false);
-            if (chargeTypeOwnerMRid == null)
-            {
-                throw new Exception($"No market participant for {newCharge.Owner}");
-            }
+            if (chargeTypeOwnerMRid == null) throw new Exception($"No market participant for {newCharge.Owner}");
 
-            var charge = ChangeOfChargesMapper.MapChangeOfChargesTransactionToCharge(newCharge, chargeType, chargeTypeOwnerMRid, resolutionType, vatPayerType);
+            var charge = ChangeOfChargesMapper.MapChangeOfChargesTransactionToCharge(
+                newCharge,
+                chargeType,
+                chargeTypeOwnerMRid,
+                resolutionType,
+                vatPayerType);
 
             await _chargesDatabaseContext.Charge.AddAsync(charge).ConfigureAwait(false);
             await _chargesDatabaseContext.SaveChangesAsync().ConfigureAwait(false);

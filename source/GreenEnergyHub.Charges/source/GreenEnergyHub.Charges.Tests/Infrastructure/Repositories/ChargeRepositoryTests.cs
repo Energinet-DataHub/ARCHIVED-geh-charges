@@ -175,7 +175,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
                     },
                 Resolution = Resolution.P1D,
                 Type = Domain.ChangeOfCharges.Transaction.ChargeType.Fee,
-                Vat = Vat.D01,
+                Vat = Vat.NoVat,
                 Description = "LongDescription",
 
                 Document = new Document
@@ -191,7 +191,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
                 {
                     Id = "id",
                     Status = ChargeEventFunction.Addition,
-                    BusinessReasonCode = BusinessReasonCode.D18,
+                    BusinessReasonCode = BusinessReasonCode.UpdateChargeInformation,
                     LastUpdatedBy = "LastUpdatedBy",
                 },
             };

@@ -15,11 +15,11 @@
 namespace GreenEnergyHub.Charges.Domain.Common
 {
     /// <summary>
-    /// BusinessReasonCode indicates the intended business context, e.g. D18 means update charge price list
+    /// BusinessReasonCode indicates the intended business context.
     /// </summary>
     public enum BusinessReasonCode
     {
-        Unknown,
-        D18,
+        Unknown = 0,
+        UpdateChargeInformation = 18,
     }
 }
