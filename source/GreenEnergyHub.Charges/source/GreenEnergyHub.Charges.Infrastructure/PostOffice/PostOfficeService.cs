@@ -15,35 +15,34 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using Azure.Messaging.ServiceBus;
-using GreenEnergyHub.Charges.Domain.Events.Local;
+using GreenEnergyHub.Charges.Domain;
 using GreenEnergyHub.Json;
+using Microsoft.Extensions.Options;
 
-namespace GreenEnergyHub.Charges.Application.ChangeOfCharges
+namespace GreenEnergyHub.Charges.Infrastructure.PostOffice
 {
-    public class InternalEventPublisher : IInternalEventPublisher
+    public class PostOfficeService : IPostOfficeService
     {
         private readonly IJsonSerializer _jsonSerializer;
-        private readonly IInternalEventCommunicationConfiguration _communicationConfiguration;
+        private readonly IOptions<PostOfficeConfiguration> _options;
 
-        public InternalEventPublisher(
-            IJsonSerializer jsonSerializer,
-            IInternalEventCommunicationConfiguration communicationConfiguration)
+        public PostOfficeService(IJsonSerializer jsonSerializer, IOptions<PostOfficeConfiguration> options)
         {
             _jsonSerializer = jsonSerializer;
-            _communicationConfiguration = communicationConfiguration;
+            _options = options;
         }
 
-        public async Task PublishAsync([NotNull] IInternalEvent internalEvent)
+        public async Task SendAsync([NotNull] ChargeAcknowledgement acknowledgement)
         {
-            var connectionString = _communicationConfiguration.GetConnectionString(internalEvent);
+            var connectionString = _options.Value.ConnectionString;
             await using ServiceBusClient client = new (connectionString);
 
-            var queueOrTopicName = _communicationConfiguration.GetTopic(internalEvent);
+            var queueOrTopicName = _options.Value.TopicName;
             ServiceBusSender sender = client.CreateSender(queueOrTopicName);
-            var serializedMessage = _jsonSerializer.Serialize(internalEvent);
+            var serializedMessage = _jsonSerializer.Serialize(acknowledgement);
             var message = new ServiceBusMessage(serializedMessage)
             {
-                CorrelationId = internalEvent.CorrelationId,
+                CorrelationId = acknowledgement!.CorrelationId,
             };
 
             await sender.SendMessageAsync(message).ConfigureAwait(false);

@@ -12,8 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Text.Json.Serialization;
 using GreenEnergyHub.Charges.Domain.Command;
+using JetBrains.Annotations;
+using Newtonsoft.Json;
 using NodaTime;
 using MarketDocument = GreenEnergyHub.Charges.Domain.Common.MarketDocument;
 #pragma warning disable 8618
@@ -25,6 +26,11 @@ namespace GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction
     // ChargeCommand integrity is null checked by ChargeCommandNullChecker
     public class ChargeCommand : CommandBase
     {
+        public ChargeCommand([NotNull] string correlationId)
+            : base(correlationId)
+        {
+        }
+
         public MarketDocument MarketDocument { get; set; }
 
         public MktActivityRecord MktActivityRecord { get; set; }
@@ -34,10 +40,10 @@ namespace GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction
         /// </summary>
         public string Type { get; set; }
 
-        [JsonPropertyName("ChargeType_mRID")]
+        [JsonProperty("ChargeType_mRID")]
         public string ChargeTypeMRid { get; set; }
 
-        [JsonPropertyName("ChargeTypeOwner_mRID")]
+        [JsonProperty("ChargeTypeOwner_mRID")]
         public string ChargeTypeOwnerMRid { get; set; }
 
         public ChargeTypePeriod Period { get; set; }
@@ -46,8 +52,6 @@ namespace GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction
         ///     The date this request was made.
         /// </summary>
         public Instant RequestDate { get; set; } = SystemClock.Instance.GetCurrentInstant();
-
-        public string CorrelationId { get; set; }
 
         public string LastUpdatedBy { get; set; }
     }

@@ -13,10 +13,15 @@
 // limitations under the License.
 
 using GreenEnergyHub.Charges.Domain.Messages;
+using JetBrains.Annotations;
 
 namespace GreenEnergyHub.Charges.Domain.Command
 {
-    public class CommandBase : MessageBase
+    public abstract class CommandBase : MessageBase
     {
+        protected CommandBase([NotNull] string correlationId)
+            : base(correlationId)
+        {
+        }
     }
 }

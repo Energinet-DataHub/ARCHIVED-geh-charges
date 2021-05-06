@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Data;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
 using NodaTime;
 
@@ -77,7 +76,7 @@ namespace GreenEnergyHub.Charges.Tests.Builders
 
         public ChargeCommand Build()
         {
-            var test = new ChargeCommand
+            var test = new ChargeCommand("some-correlation-id")
             {
                 ChargeTypeMRid = _mrid,
                 MktActivityRecord = new MktActivityRecord

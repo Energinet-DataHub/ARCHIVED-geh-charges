@@ -13,15 +13,38 @@
 // limitations under the License.
 
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
+using GreenEnergyHub.Charges.Domain.Common;
+using NodaTime;
 
 namespace GreenEnergyHub.Charges.Domain
 {
-    /// <summary>
-    /// TODO: Charge for now derives from ChargeCommand to get up and running quick and dirty.
-    ///       I, however, still wanted to make my intentions/thoughts explicit.
-    ///       Please consider making it a nice and sweet (domain) model completely decoupled from command.
-    /// </summary>
-    public class Charge : ChargeCommand
+    public class Charge
     {
+        // TODO: This DTO-style domain model probably needs refactoring. Directive suppresses warning that props can be null.
+#pragma warning disable 8618
+        public MarketDocument MarketDocument { get; set; }
+
+        public MktActivityRecord MktActivityRecord { get; set; }
+
+        /// <summary>
+        /// The kind of charge: Fee ("D02") | Subscription ("D01") | Tariff ("D03").
+        /// </summary>
+        public string Type { get; set; }
+
+        public string ChargeTypeMRid { get; set; }
+
+        public string ChargeTypeOwnerMRid { get; set; }
+
+        public ChargeTypePeriod Period { get; set; }
+
+        /// <summary>
+        ///     The date this request was made.
+        /// </summary>
+        public Instant RequestDate { get; set; }
+
+        public string CorrelationId { get; set; }
+
+        public string LastUpdatedBy { get; set; }
+#pragma warning restore 8618
     }
 }

@@ -22,9 +22,8 @@ namespace GreenEnergyHub.Charges.Domain.Events.Local
     {
         public ChargeCommandAcceptedEvent(
             Instant publishedTime,
-            string correlationId,
             [NotNull] ChargeCommand command)
-            : base(publishedTime, correlationId)
+            : base(publishedTime, command.CorrelationId)
         {
             Command = command;
         }

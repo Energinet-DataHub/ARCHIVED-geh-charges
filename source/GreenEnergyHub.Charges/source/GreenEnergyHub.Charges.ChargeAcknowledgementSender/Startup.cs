@@ -12,33 +12,36 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Diagnostics.CodeAnalysis;
-using GreenEnergyHub.Charges.Application.ChangeOfCharges;
+using GreenEnergyHub.Charges.Application;
+using GreenEnergyHub.Charges.ChargeAcknowledgementSender;
 using GreenEnergyHub.Charges.Infrastructure.Messaging;
-using GreenEnergyHub.Charges.Infrastructure.Topics;
-using GreenEnergyHub.Charges.MessageReceiver;
+using GreenEnergyHub.Charges.Infrastructure.PostOffice;
 using GreenEnergyHub.Json;
 using Microsoft.Azure.Functions.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection;
 using NodaTime;
-using JsonSerializer = GreenEnergyHub.Charges.Core.Json.JsonSerializer;
 
 [assembly: FunctionsStartup(typeof(Startup))]
 
-namespace GreenEnergyHub.Charges.MessageReceiver
+namespace GreenEnergyHub.Charges.ChargeAcknowledgementSender
 {
     public class Startup : FunctionsStartup
     {
         public override void Configure([NotNull] IFunctionsHostBuilder builder)
         {
-            builder.Services.AddScoped(typeof(IClock), _ => SystemClock.Instance);
+            builder.Services.AddOptions<PostOfficeConfiguration>().Configure(
+                configuration =>
+                {
+                    configuration.ConnectionString = Environment.GetEnvironmentVariable("POST_OFFICE_SENDER_CONNECTION_STRING");
+                    configuration.TopicName = Environment.GetEnvironmentVariable("POST_OFFICE_TOPIC_NAME");
+                });
             builder.Services.AddScoped<ICorrelationContext, CorrelationContext>();
-            builder.Services.AddSingleton<IJsonSerializer, JsonSerializer>();
-            builder.Services.AddScoped<IChangeOfChargesMessageHandler, ChangeOfChargesMessageHandler>();
-            builder.Services.AddScoped<IChangeOfChargesTransactionHandler, ChangeOfChargesTransactionHandler>();
-            builder.Services
-                .AddScoped<IInternalEventCommunicationConfiguration, InternalEventCommunicationConfiguration>();
-            builder.Services.AddScoped<IInternalEventPublisher, InternalEventPublisher>();
+            builder.Services.AddSingleton<IJsonSerializer, GreenEnergyHub.Charges.Core.Json.JsonSerializer>();
+            builder.Services.AddScoped(typeof(IClock), _ => SystemClock.Instance);
+            builder.Services.AddScoped<IPostOfficeService, PostOfficeService>();
+            builder.Services.AddScoped<IChargeAcknowledgementSender, Infrastructure.ChargeAcknowledgementSender>();
         }
     }
 }

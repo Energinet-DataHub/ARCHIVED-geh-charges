@@ -109,9 +109,8 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
         public async Task StoreChargeAsync_WhenValuesInMessageAreInvalid_ThenExceptionThrownAsync(string chargeTypeMRid, string correlationId, string lastUpdatedBy, string shortDescription, string longDescription)
         {
             // Arrange
-            var charge = GetValidCharge();
+            var charge = GetValidCharge(correlationId);
             charge.ChargeTypeMRid = chargeTypeMRid;
-            charge.CorrelationId = correlationId;
             charge.LastUpdatedBy = lastUpdatedBy;
             charge.MktActivityRecord.ChargeType.Name = shortDescription;
             charge.MktActivityRecord.ChargeType.Description = longDescription;
@@ -165,12 +164,12 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
             }
         }
 
-        private static Charge GetValidCharge()
+        private static Charge GetValidCharge(string correlationId = "some-correlation-id")
         {
             var transaction = new Charge
             {
                 ChargeTypeMRid = "chargeTypeMRid",
-                CorrelationId = "correlationId",
+                CorrelationId = correlationId,
                 LastUpdatedBy = "lastUpdatedBy",
                 Type = KnownChargeType,
                 ChargeTypeOwnerMRid = KnownChargeOwner,
