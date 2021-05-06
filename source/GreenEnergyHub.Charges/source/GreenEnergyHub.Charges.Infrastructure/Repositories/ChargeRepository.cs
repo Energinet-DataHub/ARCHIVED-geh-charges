@@ -107,7 +107,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Repositories
             // If we start using a enum for Chargetype does it make sense to check if it exists?
             return string.IsNullOrWhiteSpace(chargeMessage.ChargeNew.Type.ToString())
                 ? throw new ArgumentException($"Fails as {nameof(chargeMessage.ChargeNew.Type)} is invalid")
-                : await _chargesDatabaseContext.ChargeType.SingleOrDefaultAsync(type => type.Code == chargeMessage.ChargeNew.Type.ToString()).ConfigureAwait(false);
+                : await _chargesDatabaseContext.ChargeType.SingleOrDefaultAsync(type => type.Name == chargeMessage.ChargeNew.Type.ToString()).ConfigureAwait(false);
         }
     }
 }
