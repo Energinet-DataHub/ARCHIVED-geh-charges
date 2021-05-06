@@ -112,7 +112,7 @@ namespace GreenEnergyHub.Charges.Tests.Application
 
         private static ChargeCommand GetValidCharge()
         {
-            return new ()
+            return new ("some-correlation-id")
             {
                 Charge = new ChargeDto
                 {

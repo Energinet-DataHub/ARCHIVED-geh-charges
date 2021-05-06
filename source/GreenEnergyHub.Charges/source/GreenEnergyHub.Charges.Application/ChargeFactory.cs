@@ -41,6 +41,7 @@ namespace GreenEnergyHub.Charges.Application
                 EndDateTime = command.Charge.EndDateTime,
                 StartDateTime = command.Charge.StartDateTime,
             };
+            c.Document.CorrelationId = command.CorrelationId;
             return Task.FromResult(c);
         }
     }

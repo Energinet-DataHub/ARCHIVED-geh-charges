@@ -78,7 +78,7 @@ namespace GreenEnergyHub.Charges.Tests.Builders
 
         public ChargeCommand Build()
         {
-            return new ()
+            return new ("some-correlation-id")
             {
                 Charge = new ChargeDto
                 {

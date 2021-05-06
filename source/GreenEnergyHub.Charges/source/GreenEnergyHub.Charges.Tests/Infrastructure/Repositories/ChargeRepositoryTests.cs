@@ -143,12 +143,12 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
         {
             // Arrange
             var charge = GetValidCharge();
-            charge.Charge.StartDateTime = Instant.MinValue;
-            charge.Charge.EndDateTime = Instant.MaxValue;
-            var chargeType = new ChargeType { Code = charge.Charge.Type.ToString(), Id = 1, Name = "Name" };
-            var chargeTypeOwnerMRid = new MarketParticipant { Id = 1, MRid = charge.Charge.Owner, Name = "Name" };
-            var resolutionType = new ResolutionType { Id = 1, Name = charge.Charge.Resolution.ToString() };
-            var vatPayerType = new VatPayerType { Id = 1, Name = charge.Charge.Vat.ToString() };
+            charge.StartDateTime = Instant.MinValue;
+            charge.EndDateTime = Instant.MaxValue;
+            var chargeType = new ChargeType { Code = charge.Type.ToString(), Id = 1, Name = "Name" };
+            var chargeTypeOwnerMRid = new MarketParticipant { Id = 1, MRid = charge.Owner, Name = "Name" };
+            var resolutionType = new ResolutionType { Id = 1, Name = charge.Resolution.ToString() };
+            var vatPayerType = new VatPayerType { Id = 1, Name = charge.Vat.ToString() };
 
             // When
             var result = ChangeOfChargesMapper.MapChangeOfChargesTransactionToCharge(charge, chargeType, chargeTypeOwnerMRid, resolutionType, vatPayerType);
@@ -165,21 +165,19 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
         {
             var transaction = new Charge
             {
-                Charge = new ChargeDto
-                {
-                    Name = "description",
-                    Id = "Id",
-                    Owner = KnownChargeOwner,
-                    StartDateTime = SystemClock.Instance.GetCurrentInstant(),
-                    Points = new List<Point>
+                Name = "description",
+                Id = "Id",
+                Owner = KnownChargeOwner,
+                StartDateTime = SystemClock.Instance.GetCurrentInstant(),
+                Points = new List<Point>
                     {
                         new Point { Position = 0, Time = SystemClock.Instance.GetCurrentInstant(), Price = 200m },
                     },
-                    Resolution = Resolution.P1D,
-                    Type = Domain.ChangeOfCharges.Transaction.ChargeType.Fee,
-                    Vat = Vat.D01,
-                    Description = "LongDescription",
-                },
+                Resolution = Resolution.P1D,
+                Type = Domain.ChangeOfCharges.Transaction.ChargeType.Fee,
+                Vat = Vat.D01,
+                Description = "LongDescription",
+
                 Document = new Document
                 {
                     Id = "id",

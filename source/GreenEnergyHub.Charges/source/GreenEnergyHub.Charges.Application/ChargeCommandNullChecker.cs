@@ -51,8 +51,7 @@ namespace GreenEnergyHub.Charges.Application
         {
             if (document == null) throw new ArgumentNullException(nameof(document));
             if (string.IsNullOrWhiteSpace(document.Id)) throw new ArgumentException(document.Id);
-            if (string.IsNullOrWhiteSpace(document.CorrelationId)) throw new ArgumentException(document.CorrelationId);
-            if (string.IsNullOrWhiteSpace(document.Type)) throw new ArgumentException(document.Id);
+            if (string.IsNullOrWhiteSpace(document.Type)) throw new ArgumentException(document.Type);
             CheckMarketDocumentMarketParticipant(document.Recipient);
             CheckMarketDocumentMarketParticipant(document.Sender);
         }

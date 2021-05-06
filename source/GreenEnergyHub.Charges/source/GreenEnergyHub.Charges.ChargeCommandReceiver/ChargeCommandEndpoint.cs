@@ -54,7 +54,7 @@ namespace GreenEnergyHub.Charges.ChargeCommandReceiver
             SetCorrelationContext(chargeCommand);
             await _chargeCommandHandler.HandleAsync(chargeCommand).ConfigureAwait(false);
 
-            log.LogDebug("Received command with charge type mRID '{mRID}'", chargeCommand.ChargeTypeMRid);
+            log.LogDebug("Received command with charge type mRID '{mRID}'", chargeCommand.Charge.Id);
         }
 
         private void SetCorrelationContext(ChargeCommand command)

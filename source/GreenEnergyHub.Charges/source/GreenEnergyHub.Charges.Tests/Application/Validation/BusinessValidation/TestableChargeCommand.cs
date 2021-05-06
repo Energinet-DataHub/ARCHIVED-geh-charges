@@ -21,7 +21,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Validation.BusinessValidation
         public TestableChargeCommand()
             : base("some-correlation-id")
         {
-            MktActivityRecord = new MktActivityRecord();
+            ChargeEvent = new ChargeEvent();
         }
     }
 }
