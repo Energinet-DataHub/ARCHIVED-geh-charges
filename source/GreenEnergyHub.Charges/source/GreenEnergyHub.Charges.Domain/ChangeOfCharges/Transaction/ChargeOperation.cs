@@ -18,9 +18,9 @@ using NodaTime;
 
 namespace GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction
 {
-    public class ChargeDto
+    public class ChargeOperation
     {
-        public ChargeDto()
+        public ChargeOperation()
         {
             Points = new List<Point>();
         }

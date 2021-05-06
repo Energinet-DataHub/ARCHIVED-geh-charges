@@ -62,16 +62,16 @@ namespace GreenEnergyHub.Charges.Tests.Application
         {
             // Arrange
             var c = GetValidCharge();
-            c.Charge.Id = chargeId;
-            c.Charge.Owner = owner;
-            c.Document.CorrelationId = correlationId;
+            c.ChargeOperation.Id = chargeId;
+            c.ChargeOperation.Owner = owner;
+            c.SetCorrelationId(correlationId);
             c.ChargeEvent.LastUpdatedBy = lastUpdatedBy;
             c.Document.Id = documentId;
             c.Document.Sender.MRid = senderId;
             c.Document.Recipient.MRid = recipientId;
             c.ChargeEvent.Id = eventId;
-            c.Charge.Description = chargeTypeLongDescription;
-            c.Charge.Name = chargeTypeDescription;
+            c.ChargeOperation.Description = chargeTypeLongDescription;
+            c.ChargeOperation.Name = chargeTypeDescription;
 
             // Act & Assert
             Assert.Throws<ArgumentException>(() => ChargeCommandNullChecker.ThrowExceptionIfRequiredPropertyIsNull(c));
@@ -82,7 +82,7 @@ namespace GreenEnergyHub.Charges.Tests.Application
         {
             // Arrange
             var c = GetValidCharge();
-            c.Charge = null!;
+            c.ChargeOperation = null!;
 
             // Act & Assert
             Assert.Throws<ArgumentNullException>(() => ChargeCommandNullChecker.ThrowExceptionIfRequiredPropertyIsNull(c));
@@ -114,7 +114,7 @@ namespace GreenEnergyHub.Charges.Tests.Application
         {
             return new ("some-correlation-id")
             {
-                Charge = new ChargeDto
+                ChargeOperation = new ChargeOperation
                 {
                     Name = "description",
                     Id = "id",

@@ -151,7 +151,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
             var vatPayerType = new VatPayerType { Id = 1, Name = charge.Vat.ToString() };
 
             // When
-            var result = ChangeOfChargesMapper.MapChangeOfChargesTransactionToCharge(charge, chargeType, chargeTypeOwnerMRid, resolutionType, vatPayerType);
+            var result = ChangeOfChargesMapper.MapDomainChargeToCharge(charge, chargeType, chargeTypeOwnerMRid, resolutionType, vatPayerType);
 
             var properties = result.GetType().GetProperties();
             foreach (var property in properties)
@@ -210,7 +210,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
             var resolutionTypes = new List<ResolutionType> { new ResolutionType { Name = "P1D", Id = 1, } };
             context.AddRange(resolutionTypes);
 
-            var vatPayerTypes = new List<VatPayerType> { new VatPayerType { Name = "D01", Id = 1, } };
+            var vatPayerTypes = new List<VatPayerType> { new VatPayerType { Name = "NoVat", Id = 1, } };
             context.AddRange(vatPayerTypes);
 
             var chargeOwners = new List<MarketParticipant>

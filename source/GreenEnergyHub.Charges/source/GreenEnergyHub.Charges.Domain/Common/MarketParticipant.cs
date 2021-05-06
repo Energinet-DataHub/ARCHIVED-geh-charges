@@ -20,7 +20,7 @@ namespace GreenEnergyHub.Charges.Domain.Common
     // MarketParticipant integrity is null checked by ChargeCommandNullChecker
 
     /// <summary>
-    /// This class contains information about a market participant, e.g. a Grid Access Provider, whom may submit a charge message.
+    /// A market participant, e.g. a Grid Access Provider, whom may submit a charge message.
     /// </summary>
     public class MarketParticipant
     {

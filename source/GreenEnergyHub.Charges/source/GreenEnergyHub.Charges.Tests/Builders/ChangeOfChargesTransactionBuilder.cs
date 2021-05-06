@@ -80,7 +80,7 @@ namespace GreenEnergyHub.Charges.Tests.Builders
         {
             return new ("some-correlation-id")
             {
-                Charge = new ChargeDto
+                ChargeOperation = new ChargeOperation
                 {
                     Name = "description",
                     Id = _mrid,

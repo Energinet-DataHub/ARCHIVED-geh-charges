@@ -25,19 +25,21 @@ namespace GreenEnergyHub.Charges.Application
         public static void ThrowExceptionIfRequiredPropertyIsNull(ChargeCommand chargeCommand)
         {
             if (chargeCommand == null) throw new ArgumentNullException(nameof(chargeCommand));
-            CheckCharge(chargeCommand.Charge);
+            if (string.IsNullOrWhiteSpace(chargeCommand.CorrelationId)) throw new ArgumentException(chargeCommand.CorrelationId);
+
+            CheckCharge(chargeCommand.ChargeOperation);
             CheckDocument(chargeCommand.Document);
             CheckEvent(chargeCommand.ChargeEvent);
         }
 
-        private static void CheckCharge(ChargeDto chargeDto)
+        private static void CheckCharge(ChargeOperation chargeOperation)
         {
-            if (chargeDto == null) throw new ArgumentNullException(nameof(chargeDto));
+            if (chargeOperation == null) throw new ArgumentNullException(nameof(chargeOperation));
 
-            if (string.IsNullOrWhiteSpace(chargeDto.Owner)) throw new ArgumentException(chargeDto.Owner);
-            if (string.IsNullOrWhiteSpace(chargeDto.Id)) throw new ArgumentException(chargeDto.Id);
-            if (string.IsNullOrWhiteSpace(chargeDto.Name)) throw new ArgumentException(chargeDto.Name);
-            if (string.IsNullOrWhiteSpace(chargeDto.Description)) throw new ArgumentException(chargeDto.Description);
+            if (string.IsNullOrWhiteSpace(chargeOperation.Owner)) throw new ArgumentException(chargeOperation.Owner);
+            if (string.IsNullOrWhiteSpace(chargeOperation.Id)) throw new ArgumentException(chargeOperation.Id);
+            if (string.IsNullOrWhiteSpace(chargeOperation.Name)) throw new ArgumentException(chargeOperation.Name);
+            if (string.IsNullOrWhiteSpace(chargeOperation.Description)) throw new ArgumentException(chargeOperation.Description);
         }
 
         private static void CheckEvent(ChargeEvent chargeEvent)
@@ -52,11 +54,11 @@ namespace GreenEnergyHub.Charges.Application
             if (document == null) throw new ArgumentNullException(nameof(document));
             if (string.IsNullOrWhiteSpace(document.Id)) throw new ArgumentException(document.Id);
             if (string.IsNullOrWhiteSpace(document.Type)) throw new ArgumentException(document.Type);
-            CheckMarketDocumentMarketParticipant(document.Recipient);
-            CheckMarketDocumentMarketParticipant(document.Sender);
+            CheckMarketParticipant(document.Recipient);
+            CheckMarketParticipant(document.Sender);
         }
 
-        private static void CheckMarketDocumentMarketParticipant(MarketParticipant marketParticipant)
+        private static void CheckMarketParticipant(MarketParticipant marketParticipant)
         {
             if (marketParticipant == null) throw new ArgumentNullException(nameof(marketParticipant));
             if (string.IsNullOrWhiteSpace(marketParticipant.MRid)) throw new ArgumentException(marketParticipant.MRid);
