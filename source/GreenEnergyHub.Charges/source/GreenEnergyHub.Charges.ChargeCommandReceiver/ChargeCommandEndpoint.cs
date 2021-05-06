@@ -17,7 +17,9 @@ using GreenEnergyHub.Charges.Application;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
 using GreenEnergyHub.Charges.Infrastructure.Messaging;
 using GreenEnergyHub.Json;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs;
+using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.Extensions.Logging;
 
 namespace GreenEnergyHub.Charges.ChargeCommandReceiver
@@ -25,6 +27,7 @@ namespace GreenEnergyHub.Charges.ChargeCommandReceiver
     public class ChargeCommandEndpoint
     {
         private const string FunctionName = nameof(ChargeCommandEndpoint);
+        private const string TriggerFunctionName = "TriggerFunction";
         private readonly IJsonSerializer _jsonDeserializer;
         private readonly IChargeCommandHandler _chargeCommandHandler;
         private readonly ICorrelationContext _correlationContext;
@@ -55,6 +58,17 @@ namespace GreenEnergyHub.Charges.ChargeCommandReceiver
             await _chargeCommandHandler.HandleAsync(transaction).ConfigureAwait(false);
 
             log.LogDebug("Received event with charge type mRID '{mRID}'", transaction.ChargeTypeMRid);
+        }
+
+        [FunctionName(TriggerFunctionName)]
+        public static async Task<IActionResult> TriggerAsync(
+            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = null)]
+            ILogger log)
+        {
+            log.LogInformation("Trigger {FunctionName}", FunctionName);
+
+            return await Task.Run(() => new OkObjectResult("Success"))
+                .ConfigureAwait(false);
         }
 
         private void SetCorrelationContext(ChargeCommand command)
