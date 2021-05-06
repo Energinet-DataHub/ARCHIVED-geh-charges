@@ -78,19 +78,24 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
             var req = CreateHttpRequest(testFilePath, clock);
             SetInvocationId(executionContext);
 
-            var serviceBusSubscription = Environment.GetEnvironmentVariable("COMMAND_RECEIVED_SUBSCRIPTION_NAME");
-            var serviceBusTopic = Environment.GetEnvironmentVariable("COMMAND_RECEIVED_TOPIC_NAME");
+            var subscriptionName = Environment.GetEnvironmentVariable("COMMAND_INTEGRATIONTEST_SUBSCRIPTION_NAME");
+            var commandReceivedTopicName = Environment.GetEnvironmentVariable("COMMAND_RECEIVED_TOPIC_NAME");
+            var commandAcceptedTopicName = Environment.GetEnvironmentVariable("COMMAND_ACCEPTED_TOPIC_NAME");
+            var commandRejectedTopicName = Environment.GetEnvironmentVariable("COMMAND_ACCEPTED_TOPIC_NAME");
             var serviceBusConnectionString = Environment.GetEnvironmentVariable("COMMAND_RECEIVED_LISTENER_CONNECTION_STRING");
 
             // act
             var messageReceiverResult = await RunMessageReceiver(logger, executionContext, req).ConfigureAwait(false);
+            var commandReceivedMessage = GetMessageFromServiceBus(serviceBusConnectionString!, commandReceivedTopicName!, subscriptionName!);
 
-            var message = GetMessageFromServiceBus(serviceBusConnectionString!, serviceBusTopic!, serviceBusSubscription!);
+            _testOutputHelper.WriteLine($"Message to be handled by ChargeCommandEndpoint: {commandReceivedMessage.Body.Length}");
 
-            _testOutputHelper.WriteLine($"Message to be handled by ChargeCommandEndpoint: {message.Body.Length}");
+            await _chargeCommandEndpoint.RunAsync(commandReceivedMessage.Body, logger.Object).ConfigureAwait(false);
 
-            await _chargeCommandEndpoint.RunAsync(message.Body, logger.Object).ConfigureAwait(false);
-            _testOutputHelper.WriteLine($"Message handled by ChargeCommandEndpoint: {message.Body.Length}");
+            //var commandAcceptedMessage = GetMessageFromServiceBus(serviceBusConnectionString!, commandAcceptedTopicName!, subscriptionName!);
+            var commandRejectedMessage = GetMessageFromServiceBus(serviceBusConnectionString!, commandRejectedTopicName!, subscriptionName!);
+
+            _testOutputHelper.WriteLine($"Message accepted by ChargeCommandEndpoint: {commandRejectedMessage.Body.Length}");
 
             // assert
             Assert.Equal(200, messageReceiverResult!.StatusCode!.Value);
@@ -175,20 +180,6 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
             return req;
         }
 
-        // private static async Task<SubscriptionClient> GetOrCreateTopicSubscription(
-        //     string serviceBusConnectionString,
-        //     string topicPath,
-        //     string subscriptionName)
-        // {
-        //     var managementClient = new ManagementClient(serviceBusConnectionString);
-        //     if (!await managementClient.SubscriptionExistsAsync(topicPath, subscriptionName).ConfigureAwait(false))
-        //     {
-        //         await managementClient.CreateSubscriptionAsync(new SubscriptionDescription(topicPath, subscriptionName)).ConfigureAwait(false);
-        //     }
-        //
-        //     var subscriptionClient = new SubscriptionClient(serviceBusConnectionString, topicPath, subscriptionName);
-        //     return subscriptionClient;
-        // }
         private static SubscriptionClient GetSubscriptionClient(
             string serviceBusConnectionString,
             string topicPath,

@@ -34,7 +34,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.TestHelpers
 
         private static string ReplaceMergeFields(IClock clock, string file)
         {
-            var now = clock.GetCurrentInstant().ToString();
+            var currentInstant = clock.GetCurrentInstant();
+            var now = currentInstant.ToString();
             return file.Replace("{{$isoTimestamp}}", now);
         }
     }
