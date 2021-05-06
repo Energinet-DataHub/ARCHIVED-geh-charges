@@ -91,7 +91,9 @@ namespace GreenEnergyHub.Charges.Infrastructure.Mapping
                         TransparentInvoicing = charge.TransparentInvoicing,
                     },
                     ValidityStartDate = Instant.FromUnixTimeTicks(charge.StartDate),
-                    ValidityEndDate = charge.EndDate != null ? Instant.FromUnixTimeTicks(charge.EndDate.Value) : null,
+
+                    // ReSharper disable once RedundantCast - removing the "as Instant?" cast will break the CI build
+                    ValidityEndDate = charge.EndDate != null ? Instant.FromUnixTimeTicks(charge.EndDate.Value) : null as Instant?,
                 },
                 RequestDate = Instant.FromUnixTimeTicks(charge.RequestDateTime),
                 LastUpdatedBy = charge.LastUpdatedBy,
