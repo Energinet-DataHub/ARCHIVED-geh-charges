@@ -37,7 +37,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Validation.BusinessValidation
         public async Task CreateRulesForUpdateCommandAsync_ReturnsRulesForTariffUpdateCommand(
             [NotNull] [Frozen] Mock<IRulesConfigurationRepository> updateRulesConfigurationRepository,
             [NotNull] BusinessUpdateValidationRulesFactory sut,
-            [NotNull] ChargeCommand chargeCommand)
+            [NotNull] TestableChargeCommand chargeCommand)
         {
             // Arrange
             ConfigureRepository(updateRulesConfigurationRepository);
@@ -64,7 +64,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Validation.BusinessValidation
         public async Task CreateRulesForUpdateCommandAsync_ReturnsRulesForFeeUpdateCommand(
             [NotNull] [Frozen] Mock<IRulesConfigurationRepository> updateRulesConfigurationRepository,
             [NotNull] BusinessUpdateValidationRulesFactory sut,
-            [NotNull] ChargeCommand chargeCommand)
+            [NotNull] TestableChargeCommand chargeCommand)
         {
             // Arrange
             ConfigureRepository(updateRulesConfigurationRepository);
@@ -86,7 +86,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Validation.BusinessValidation
         public async Task CreateRulesForUpdateCommandAsync_ReturnsRulesForSubscriptionUpdateCommand(
             [NotNull] [Frozen] Mock<IRulesConfigurationRepository> updateRulesConfigurationRepository,
             [NotNull] BusinessUpdateValidationRulesFactory sut,
-            [NotNull] ChargeCommand chargeCommand)
+            [NotNull] TestableChargeCommand chargeCommand)
         {
             // Arrange
             ConfigureRepository(updateRulesConfigurationRepository);

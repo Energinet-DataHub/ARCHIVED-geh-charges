@@ -14,27 +14,27 @@
 
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application;
-using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
+using GreenEnergyHub.Charges.Domain.Events.Local;
 using GreenEnergyHub.Charges.Infrastructure.Messaging;
 using GreenEnergyHub.Json;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Extensions.Logging;
 
-namespace GreenEnergyHub.Charges.ChargeCommandReceiver
+namespace GreenEnergyHub.Charges.ChargeAcknowledgementSender
 {
-    public class ChargeCommandEndpoint
+    public class ChargeCommandAcceptedSubscriber
     {
-        private const string FunctionName = nameof(ChargeCommandEndpoint);
-        private readonly IChargeCommandHandler _chargeCommandHandler;
+        private const string FunctionName = nameof(ChargeCommandAcceptedSubscriber);
+        private readonly IChargeAcknowledgementSender _chargeAcknowledgementSender;
         private readonly ICorrelationContext _correlationContext;
         private readonly IJsonSerializer _jsonSerializer;
 
-        public ChargeCommandEndpoint(
-            IChargeCommandHandler chargeCommandHandler,
+        public ChargeCommandAcceptedSubscriber(
+            IChargeAcknowledgementSender chargeAcknowledgementSender,
             ICorrelationContext correlationContext,
             IJsonSerializer jsonSerializer)
         {
-            _chargeCommandHandler = chargeCommandHandler;
+            _chargeAcknowledgementSender = chargeAcknowledgementSender;
             _correlationContext = correlationContext;
             _jsonSerializer = jsonSerializer;
         }
@@ -42,24 +42,23 @@ namespace GreenEnergyHub.Charges.ChargeCommandReceiver
         [FunctionName(FunctionName)]
         public async Task RunAsync(
             [ServiceBusTrigger(
-            "%COMMAND_RECEIVED_TOPIC_NAME%",
-            "%COMMAND_RECEIVED_SUBSCRIPTION_NAME%",
-            Connection = "COMMAND_RECEIVED_LISTENER_CONNECTION_STRING")]
+            "%COMMAND_ACCEPTED_TOPIC_NAME%",
+            "%COMMAND_ACCEPTED_SUBSCRIPTION_NAME%",
+            Connection = "COMMAND_ACCEPTED_LISTENER_CONNECTION_STRING")]
             byte[] message,
             ILogger log)
         {
             var jsonSerializedQueueItem = System.Text.Encoding.UTF8.GetString(message);
-            var serviceBusMessage = _jsonSerializer.Deserialize<ServiceBusMessageWrapper<ChargeCommand>>(jsonSerializedQueueItem);
-            var chargeCommand = serviceBusMessage.Command!;
-            SetCorrelationContext(chargeCommand);
-            await _chargeCommandHandler.HandleAsync(chargeCommand).ConfigureAwait(false);
+            var acceptedEvent = _jsonSerializer.Deserialize<ChargeCommandAcceptedEvent>(jsonSerializedQueueItem);
+            SetCorrelationContext(acceptedEvent);
+            await _chargeAcknowledgementSender.HandleAsync(acceptedEvent!).ConfigureAwait(false);
 
-            log.LogDebug("Received command with charge type mRID '{mRID}'", chargeCommand.ChargeTypeMRid);
+            log.LogDebug("Received event with correlation ID '{CorrelationId}'", acceptedEvent.CorrelationId);
         }
 
-        private void SetCorrelationContext(ChargeCommand command)
+        private void SetCorrelationContext(ChargeCommandAcceptedEvent acceptedEvent)
         {
-            _correlationContext.CorrelationId = command.CorrelationId;
+            _correlationContext.CorrelationId = acceptedEvent.CorrelationId;
         }
     }
 }

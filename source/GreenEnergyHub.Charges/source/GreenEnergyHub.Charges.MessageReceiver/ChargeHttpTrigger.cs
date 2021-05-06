@@ -16,9 +16,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application;
 using GreenEnergyHub.Charges.Application.ChangeOfCharges;
-using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Fee;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Message;
-using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Tariff;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
 using GreenEnergyHub.Charges.Infrastructure.Messaging;
 using GreenEnergyHub.Json;
@@ -85,7 +83,7 @@ namespace GreenEnergyHub.Charges.MessageReceiver
                 .DeserializeAsync(req.Body, typeof(ChargeCommand))
                 .ConfigureAwait(false);
 
-            command.Document.CorrelationId = _correlationContext.CorrelationId;
+            command.SetCorrelationId(_correlationContext.CorrelationId);
             message.Transactions.Add(command);
             return message;
         }

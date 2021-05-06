@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Diagnostics.CodeAnalysis;
 using GreenEnergyHub.Charges.Domain.Command;
 using GreenEnergyHub.Charges.Domain.Common;
 
@@ -24,6 +25,11 @@ namespace GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction
     // ChargeCommand integrity is null checked by ChargeCommandNullChecker
     public class ChargeCommand : CommandBase
     {
+        public ChargeCommand([NotNull] string correlationId)
+            : base(correlationId)
+        {
+        }
+
         public Document Document { get; set; }
 
         public ChargeEvent ChargeEvent { get; set; }

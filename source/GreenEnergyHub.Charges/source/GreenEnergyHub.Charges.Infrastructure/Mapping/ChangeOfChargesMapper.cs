@@ -26,48 +26,45 @@ namespace GreenEnergyHub.Charges.Infrastructure.Mapping
     public static class ChangeOfChargesMapper
     {
         public static Charge MapChangeOfChargesTransactionToCharge(
-            [NotNull]ChargeCommand chargeCommand,
+            [NotNull]Domain.Charge chargeModel,
             ChargeType chargeType,
             MarketParticipant chargeTypeOwnerMRid,
             ResolutionType resolutionType,
             VatPayerType vatPayerType)
         {
-            if (chargeCommand == null)
-            {
-                throw new ArgumentNullException(nameof(chargeCommand));
-            }
+            if (chargeModel == null) throw new ArgumentNullException(nameof(chargeModel));
 
             var charge = new Charge
             {
                 ChargeType = chargeType,
                 ChargeTypeOwner = chargeTypeOwnerMRid,
-                Description = chargeCommand.Charge.Name,
-                LastUpdatedBy = chargeCommand.ChargeEvent.LastUpdatedBy,
-                LastUpdatedByCorrelationId = chargeCommand.Document.CorrelationId,
-                LastUpdatedByTransactionId = chargeCommand.ChargeEvent.Id,
-                Name = chargeCommand.Charge.Name,
-                RequestDateTime = chargeCommand.Document.RequestDate.ToUnixTimeTicks(),
+                Description = chargeModel.MktActivityRecord.ChargeType.Description,
+                LastUpdatedBy = chargeModel.LastUpdatedBy,
+                LastUpdatedByCorrelationId = chargeModel.CorrelationId,
+                LastUpdatedByTransactionId = chargeModel.MktActivityRecord.MRid,
+                Name = chargeModel.MktActivityRecord.ChargeType.Name,
+                RequestDateTime = chargeModel.RequestDate.ToUnixTimeTicks(),
                 ResolutionType = resolutionType,
-                StartDate = chargeCommand.Charge.StartDateTime.ToUnixTimeTicks(),
-                EndDate = chargeCommand.Charge.EndDateTime?.ToUnixTimeTicks(),
-                Status = (byte)chargeCommand.ChargeEvent.Status,
-                TaxIndicator = chargeCommand.Charge.Tax,
-                TransparentInvoicing = chargeCommand.Charge.TransparentInvoicing,
+                StartDate = chargeModel.MktActivityRecord.ValidityStartDate.ToUnixTimeTicks(),
+                EndDate = chargeModel.MktActivityRecord.ValidityEndDate?.ToUnixTimeTicks(),
+                Status = (byte)chargeModel.MktActivityRecord.Status,
+                TaxIndicator = chargeModel.MktActivityRecord.ChargeType.TaxIndicator,
+                TransparentInvoicing = chargeModel.MktActivityRecord.ChargeType.TransparentInvoicing,
                 VatPayer = vatPayerType,
-                MRid = chargeCommand.Charge.Id,
+                MRid = chargeModel.ChargeTypeMRid,
                 Currency = "DKK",
             };
 
-            foreach (var point in chargeCommand.Charge.Points)
+            foreach (var point in chargeModel.Period.Points)
             {
                 var newChargePrice = new ChargePrice
                 {
                     Time = point.Time.ToUnixTimeTicks(),
-                    Amount = point.Price,
-                    LastUpdatedByCorrelationId = chargeCommand.Document.CorrelationId,
-                    LastUpdatedByTransactionId = chargeCommand.ChargeEvent.Id,
-                    LastUpdatedBy = chargeCommand.ChargeEvent.LastUpdatedBy,
-                    RequestDateTime = chargeCommand.Document.RequestDate.ToUnixTimeTicks(),
+                    Amount = point.PriceAmount,
+                    LastUpdatedByCorrelationId = chargeModel.CorrelationId,
+                    LastUpdatedByTransactionId = chargeModel.MktActivityRecord.MRid,
+                    LastUpdatedBy = chargeModel.LastUpdatedBy,
+                    RequestDateTime = chargeModel.RequestDate.ToUnixTimeTicks(),
                 };
 
                 charge.ChargePrices.Add(newChargePrice);
@@ -78,10 +75,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Mapping
 
         public static Domain.Charge MapChargeToChangeOfChargesMessage(Charge charge)
         {
-            if (charge == null)
-            {
-                throw new ArgumentNullException(nameof(charge));
-            }
+            if (charge == null) throw new ArgumentNullException(nameof(charge));
 
             return new Domain.Charge
             {

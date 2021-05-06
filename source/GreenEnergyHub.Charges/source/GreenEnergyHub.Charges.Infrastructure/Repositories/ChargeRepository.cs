@@ -15,7 +15,6 @@
 using System;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application.ChangeOfCharges.Repositories;
-using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
 using GreenEnergyHub.Charges.Infrastructure.Context;
 using GreenEnergyHub.Charges.Infrastructure.Context.Model;
 using GreenEnergyHub.Charges.Infrastructure.Mapping;
@@ -40,7 +39,6 @@ namespace GreenEnergyHub.Charges.Infrastructure.Repositories
             var charge = await _chargesDatabaseContext.Charge
                 .Include(x => x.ChargeTypeOwner)
                 .SingleAsync(x => x.MRid == mrid &&
-                                           x.ChargeTypeOwner != null &&
                                            x.ChargeTypeOwner.MRid == chargeTypeOwnerMRid).ConfigureAwait(false);
 
             return ChangeOfChargesMapper.MapChargeToChangeOfChargesMessage(charge);
@@ -51,7 +49,6 @@ namespace GreenEnergyHub.Charges.Infrastructure.Repositories
             return await _chargesDatabaseContext.Charge
                 .Include(x => x.ChargeTypeOwner)
                 .AnyAsync(x => x.MRid == mrid &&
-                                        x.ChargeTypeOwner != null &&
                                         x.ChargeTypeOwner.MRid == chargeTypeOwnerMRid).ConfigureAwait(false);
         }
 
@@ -92,7 +89,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Repositories
             await _chargesDatabaseContext.SaveChangesAsync().ConfigureAwait(false);
         }
 
-        private async Task<MarketParticipant?> GetChargeTypeOwnerMRidAsync(ChargeCommand chargeMessage)
+        private async Task<MarketParticipant?> GetChargeTypeOwnerMRidAsync(Charge chargeMessage)
         {
             return string.IsNullOrWhiteSpace(chargeMessage.Charge.Owner)
                 ? throw new ArgumentException($"Fails as {nameof(chargeMessage.Charge.Owner)} is invalid")
@@ -100,7 +97,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Repositories
                 type.MRid == chargeMessage.Charge.Owner).ConfigureAwait(false);
         }
 
-        private async Task<VatPayerType?> GetVatPayerTypeAsync(ChargeCommand chargeMessage)
+        private async Task<VatPayerType?> GetVatPayerTypeAsync(Charge chargeMessage)
         {
             // If we start using a enum for Vat does it make sense to check if it exists?
             return string.IsNullOrWhiteSpace(chargeMessage.Charge.Vat.ToString())
@@ -109,7 +106,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Repositories
                 type.Name == chargeMessage.Charge.Vat.ToString()).ConfigureAwait(false);
         }
 
-        private async Task<ResolutionType?> GetResolutionTypeAsync(ChargeCommand chargeMessage)
+        private async Task<ResolutionType?> GetResolutionTypeAsync(Charge chargeMessage)
         {
             // If we start using a enum for Resolution does it make sense to check if it exists?
             return string.IsNullOrWhiteSpace(chargeMessage.Charge.Resolution.ToString())
@@ -117,7 +114,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Repositories
                 : await _chargesDatabaseContext.ResolutionType.SingleOrDefaultAsync(type => type.Name == chargeMessage.Charge.Resolution.ToString()).ConfigureAwait(false);
         }
 
-        private async Task<ChargeType?> GetChargeTypeAsync(ChargeCommand chargeMessage)
+        private async Task<ChargeType?> GetChargeTypeAsync(Charge chargeMessage)
         {
             // If we start using a enum for Chargetype does it make sense to check if it exists?
             return string.IsNullOrWhiteSpace(chargeMessage.Charge.Type.ToString())
