@@ -19,7 +19,12 @@ namespace GreenEnergyHub.Charges.Domain
 {
     public class ChargeAcknowledgement
     {
-        public ChargeAcknowledgement(string correlationId, string receiverMRid, MarketParticipantRole receiverBusinessProcessRole, object originalTransactionReferenceMRid, ProcessType businessReasonCode)
+        public ChargeAcknowledgement(
+            string correlationId,
+            string receiverMRid,
+            MarketParticipantRole receiverBusinessProcessRole,
+            object originalTransactionReferenceMRid,
+            ProcessType businessReasonCode)
         {
             CorrelationId = correlationId;
             ReceiverMRid = receiverMRid;

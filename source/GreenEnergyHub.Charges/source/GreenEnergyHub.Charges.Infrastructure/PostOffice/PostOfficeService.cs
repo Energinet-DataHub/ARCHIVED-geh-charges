@@ -43,9 +43,6 @@ namespace GreenEnergyHub.Charges.Infrastructure.PostOffice
             var message = new ServiceBusMessage(serializedMessage)
             {
                 CorrelationId = acknowledgement!.CorrelationId,
-
-                // We set 'Subject' at the moment for a better overview in the AZ portal.
-                Subject = acknowledgement.GetType().Name,
             };
 
             await sender.SendMessageAsync(message).ConfigureAwait(false);
