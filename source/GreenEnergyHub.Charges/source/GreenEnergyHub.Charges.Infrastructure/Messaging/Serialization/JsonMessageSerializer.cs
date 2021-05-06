@@ -12,17 +12,45 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using GreenEnergyHub.Json;
 using GreenEnergyHub.Messaging.Transport;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Messaging.Serialization
 {
     public class JsonMessageSerializer : MessageSerializer
     {
-        public override async Task<byte[]> ToBytesAsync(IOutboundMessage message, CancellationToken cancellationToken = default)
+        private readonly IJsonOutboundMapperFactory _mapperFactory;
+        private readonly IJsonSerializer _jsonSerializer;
+
+        public JsonMessageSerializer(IJsonOutboundMapperFactory mapperFactory, IJsonSerializer jsonSerializer)
         {
-            return await Task.FromResult(System.Array.Empty<byte>()).ConfigureAwait(false);
+            _mapperFactory = mapperFactory;
+            _jsonSerializer = jsonSerializer;
+        }
+
+        public override Task<byte[]> ToBytesAsync(IOutboundMessage message, CancellationToken cancellationToken = default)
+        {
+            var dto = GetDto(message);
+
+            var result = SerializeDto(dto);
+
+            return Task.FromResult(result);
+        }
+
+        private object GetDto(IOutboundMessage message)
+        {
+            var mapper = _mapperFactory.GetMapper(message);
+            return mapper.Convert(message);
+        }
+
+        private byte[] SerializeDto(object dto)
+        {
+            var serializedDto = _jsonSerializer.Serialize(dto);
+
+            return Encoding.UTF8.GetBytes(serializedDto);
         }
     }
 }
