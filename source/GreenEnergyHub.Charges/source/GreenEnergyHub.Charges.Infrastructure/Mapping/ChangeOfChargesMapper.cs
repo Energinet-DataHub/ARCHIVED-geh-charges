@@ -95,7 +95,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Mapping
                 {
                     Id = charge.LastUpdatedByTransactionId,
                     StartDateTime = Instant.FromUnixTimeTicks(charge.StartDate),
-                    EndDateTime = charge.EndDate != null ? Instant.FromUnixTimeTicks(charge.EndDate.Value) : null,
+                    EndDateTime = charge.EndDate != null ? Instant.FromUnixTimeTicks(charge.EndDate.Value) : (Instant?)null,
                     Status = (ChargeEventFunction)charge.Status,
                     RequestDate = Instant.FromUnixTimeTicks(charge.RequestDateTime),
                 },
