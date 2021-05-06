@@ -206,7 +206,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
             context.Database.EnsureDeleted();
             context.Database.EnsureCreated();
 
-            var chargeTypes = new List<ChargeType> { new ChargeType { Code = "Fee", Id = 1, } };
+            var chargeTypes = new List<ChargeType> { new ChargeType { Name = "Fee", Id = 1, } };
             context.AddRange(chargeTypes);
 
             var resolutionTypes = new List<ResolutionType> { new ResolutionType { Name = "P1D", Id = 1, } };
