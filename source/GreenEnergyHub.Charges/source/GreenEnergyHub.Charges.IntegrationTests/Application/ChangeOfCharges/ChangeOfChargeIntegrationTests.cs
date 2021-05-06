@@ -86,76 +86,25 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
             var req = CreateHttpRequest(testFilePath, clock);
             SetInvocationId(executionContext);
 
-            // act
-            var result = (OkObjectResult)await _chargeHttpTrigger.RunAsync(req, executionContext, logger.Object).ConfigureAwait(false);
-
-            // assert
-            Assert.Equal(200, result!.StatusCode!.Value);
-        }
-
-        [Theory]
-        [InlineAutoDomainData]
-        public void Test_Subscription([NotNull] [Frozen] Mock<ILogger> logger)
-        {
-            // arrange
-            string result = null!;
-            var log = logger;
-
             var serviceBusSubscription = Environment.GetEnvironmentVariable("COMMAND_RECEIVED_SUBSCRIPTION_NAME");
             var serviceBusTopic = Environment.GetEnvironmentVariable("COMMAND_RECEIVED_TOPIC_NAME");
             var serviceBusConnectionString = Environment.GetEnvironmentVariable("COMMAND_RECEIVED_LISTENER_CONNECTION_STRING");
-            var subscriptionClient = GetSubscriptionClient(serviceBusConnectionString!, serviceBusTopic!, serviceBusSubscription!);
 
             // act
-            subscriptionClient.RegisterMessageHandler(
-                async (message, token) =>
-                {
-                    var messageJson = Encoding.UTF8.GetString(message.Body);
-                    result = messageJson;
+            var messageReceiverResult = await RunMessageReceiver(logger, executionContext, req).ConfigureAwait(false);
 
-                    if (messageJson.Length > 0)
-                    {
-                        await subscriptionClient.CompleteAsync(message.SystemProperties.LockToken).ConfigureAwait(false);
-                    }
-                },
-#pragma warning disable 1998
-                new MessageHandlerOptions(async args => _testOutputHelper.WriteLine(args.Exception.ToString()))
-                    { MaxConcurrentCalls = 1, AutoComplete = false });
-#pragma warning restore 1998
-
-//             try
-//             {
-//                 subscriptionClient.RegisterMessageHandler(
-//                     async (message, token) =>
-//                     {
-//                         var messageJson = Encoding.UTF8.GetString(message.Body);
-//                         // var updateMessage = JsonConvert.DeserializeObject<ServiceBusMessageWrapper>(messageJson);
-//                         //await _chargeCommandEndpoint.RunAsync(message.Body, logger.Object).ConfigureAwait(false);
-//                         result = messageJson;
-//
-//                         await subscriptionClient
-//                             .CompleteAsync(message.SystemProperties.LockToken)
-//                             .ConfigureAwait(false);
-//
-//                         //Assert.Equal(200, result!.StatusCode!.Value);
-//                     },
-// #pragma warning disable 1998
-//                     new MessageHandlerOptions(async args => _testOutputHelper.WriteLine(args.Exception.ToString()))
-//                         { MaxConcurrentCalls = 1, AutoComplete = false });
-// #pragma warning restore 1998
-//             }
-//             catch (InvalidOperationException e)
-//             {
-//                 _testOutputHelper.WriteLine("Exception: " + e.Message);
-//             }
-            var count = 0;
-            while (result == null)
+            try
             {
-                _testOutputHelper.WriteLine("still running: " + ++count);
+                GetMessageFromServiceBus(serviceBusConnectionString!, serviceBusTopic!, serviceBusSubscription!, logger.Object);
+            }
+            catch (InvalidOperationException e)
+            {
+                _testOutputHelper.WriteLine(e.ToString());
+                throw;
             }
 
             // assert
-            Assert.True(true);
+            Assert.Equal(200, messageReceiverResult!.StatusCode!.Value);
         }
 
         [Theory]
@@ -179,6 +128,54 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
             //Assert.Equal(500, result!.StatusCode!.Value);
         }
 
+        private async Task<OkObjectResult> RunMessageReceiver(Mock<ILogger> logger, ExecutionContext executionContext, DefaultHttpRequest req)
+        {
+            return (OkObjectResult)await _chargeHttpTrigger.RunAsync(req, executionContext, logger.Object).ConfigureAwait(false);
+        }
+
+        private void GetMessageFromServiceBus(
+            string serviceBusConnectionString,
+            string serviceBusTopic,
+            string serviceBusSubscription,
+            ILogger logger)
+        {
+            Message receivedMessage = null!;
+
+            var subscriptionClient = GetSubscriptionClient(serviceBusConnectionString!, serviceBusTopic!, serviceBusSubscription!);
+
+            subscriptionClient.RegisterMessageHandler(
+                async (message, token) =>
+                {
+                    var messageJson = Encoding.UTF8.GetString(message.Body);
+                    receivedMessage = message;
+
+                    if (messageJson.Length > 0)
+                    {
+                        _testOutputHelper.WriteLine($"Message received with body: {message.Body.Length}");
+
+                        await _chargeCommandEndpoint.RunAsync(message.Body, logger).ConfigureAwait(false);
+                        _testOutputHelper.WriteLine($"Message handled by ChargeCommandEndpoint: {message.Body.Length}");
+
+                        // await subscriptionClient.CompleteAsync(message.SystemProperties.LockToken).ConfigureAwait(false);
+                    }
+                },
+#pragma warning disable 1998
+                new MessageHandlerOptions(async args =>
+#pragma warning restore 1998
+                    {
+                        _testOutputHelper.WriteLine(args.Exception.ToString());
+                        throw new InvalidOperationException("ChargeCommandEndpoint", args.Exception);
+                    })
+                    { MaxConcurrentCalls = 1, AutoComplete = false });
+
+            var count = 0;
+            while (receivedMessage == null)
+            {
+                ++count;
+                //_testOutputHelper.WriteLine("still running: " + ++count);
+            }
+        }
+
         private static void SetInvocationId(ExecutionContext executionContext)
         {
             executionContext.InvocationId = Guid.NewGuid();
@@ -193,21 +190,20 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
             return req;
         }
 
-        private static async Task<SubscriptionClient> GetOrCreateTopicSubscription(
-            string serviceBusConnectionString,
-            string topicPath,
-            string subscriptionName)
-        {
-            var managementClient = new ManagementClient(serviceBusConnectionString);
-            if (!await managementClient.SubscriptionExistsAsync(topicPath, subscriptionName).ConfigureAwait(false))
-            {
-                await managementClient.CreateSubscriptionAsync(new SubscriptionDescription(topicPath, subscriptionName)).ConfigureAwait(false);
-            }
-
-            var subscriptionClient = new SubscriptionClient(serviceBusConnectionString, topicPath, subscriptionName);
-            return subscriptionClient;
-        }
-
+        // private static async Task<SubscriptionClient> GetOrCreateTopicSubscription(
+        //     string serviceBusConnectionString,
+        //     string topicPath,
+        //     string subscriptionName)
+        // {
+        //     var managementClient = new ManagementClient(serviceBusConnectionString);
+        //     if (!await managementClient.SubscriptionExistsAsync(topicPath, subscriptionName).ConfigureAwait(false))
+        //     {
+        //         await managementClient.CreateSubscriptionAsync(new SubscriptionDescription(topicPath, subscriptionName)).ConfigureAwait(false);
+        //     }
+        //
+        //     var subscriptionClient = new SubscriptionClient(serviceBusConnectionString, topicPath, subscriptionName);
+        //     return subscriptionClient;
+        // }
         private static SubscriptionClient GetSubscriptionClient(
             string serviceBusConnectionString,
             string topicPath,
