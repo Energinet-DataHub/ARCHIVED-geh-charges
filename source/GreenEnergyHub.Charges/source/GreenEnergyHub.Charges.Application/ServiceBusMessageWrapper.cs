@@ -18,7 +18,7 @@ using JetBrains.Annotations;
 namespace GreenEnergyHub.Charges.Application
 {
     public class ServiceBusMessageWrapper<TMessage>
-        where TMessage : IMessage
+        where TMessage : class, IMessage
     {
         public TMessage? Command
         {
