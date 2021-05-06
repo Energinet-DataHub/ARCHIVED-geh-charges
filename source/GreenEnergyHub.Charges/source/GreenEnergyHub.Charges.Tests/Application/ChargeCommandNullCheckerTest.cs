@@ -62,16 +62,16 @@ namespace GreenEnergyHub.Charges.Tests.Application
         {
             // Arrange
             var c = GetValidCharge();
-            c.ChargeOperation.Id = chargeId;
-            c.ChargeOperation.Owner = owner;
+            c.ChargeDto.Id = chargeId;
+            c.ChargeDto.Owner = owner;
             c.SetCorrelationId(correlationId);
-            c.ChargeEvent.LastUpdatedBy = lastUpdatedBy;
+            c.ChargeOperation.LastUpdatedBy = lastUpdatedBy;
             c.Document.Id = documentId;
             c.Document.Sender.MRid = senderId;
             c.Document.Recipient.MRid = recipientId;
-            c.ChargeEvent.Id = eventId;
-            c.ChargeOperation.Description = chargeTypeLongDescription;
-            c.ChargeOperation.Name = chargeTypeDescription;
+            c.ChargeOperation.Id = eventId;
+            c.ChargeDto.Description = chargeTypeLongDescription;
+            c.ChargeDto.Name = chargeTypeDescription;
 
             // Act & Assert
             Assert.Throws<ArgumentException>(() => ChargeCommandNullChecker.ThrowExceptionIfRequiredPropertyIsNull(c));
@@ -82,7 +82,7 @@ namespace GreenEnergyHub.Charges.Tests.Application
         {
             // Arrange
             var c = GetValidCharge();
-            c.ChargeOperation = null!;
+            c.ChargeDto = null!;
 
             // Act & Assert
             Assert.Throws<ArgumentNullException>(() => ChargeCommandNullChecker.ThrowExceptionIfRequiredPropertyIsNull(c));
@@ -104,7 +104,7 @@ namespace GreenEnergyHub.Charges.Tests.Application
         {
             // Arrange
             var c = GetValidCharge();
-            c.ChargeEvent = null!;
+            c.ChargeOperation = null!;
 
             // Act & Assert
             Assert.Throws<ArgumentNullException>(() => ChargeCommandNullChecker.ThrowExceptionIfRequiredPropertyIsNull(c));
@@ -114,7 +114,7 @@ namespace GreenEnergyHub.Charges.Tests.Application
         {
             return new ("some-correlation-id")
             {
-                ChargeOperation = new ChargeOperation
+                ChargeDto = new ChargeDto
                 {
                     Name = "description",
                     Id = "id",
@@ -152,7 +152,7 @@ namespace GreenEnergyHub.Charges.Tests.Application
                     IndustryClassification = IndustryClassification.Electricity,
                     CreatedDateTime = SystemClock.Instance.GetCurrentInstant(),
                 },
-                ChargeEvent = new ChargeEvent
+                ChargeOperation = new ChargeOperation
                 {
                   Id = "id",
                   Status = ChargeEventFunction.Change,

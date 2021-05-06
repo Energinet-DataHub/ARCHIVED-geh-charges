@@ -39,7 +39,7 @@ namespace GreenEnergyHub.Charges.Infrastructure
                 acceptedEvent.Command.Document.Sender.MRid,
                 acceptedEvent.Command.Document.Sender.Role,
                 acceptedEvent.Command.Document.Id,
-                acceptedEvent.Command.ChargeEvent.BusinessReasonCode);
+                acceptedEvent.Command.ChargeOperation.BusinessReasonCode);
 
             await _postOfficeService.SendAsync(chargeCommandAcceptedAcknowledgement).ConfigureAwait(false);
         }

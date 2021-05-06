@@ -27,26 +27,26 @@ namespace GreenEnergyHub.Charges.Application
             if (chargeCommand == null) throw new ArgumentNullException(nameof(chargeCommand));
             if (string.IsNullOrWhiteSpace(chargeCommand.CorrelationId)) throw new ArgumentException(chargeCommand.CorrelationId);
 
-            CheckCharge(chargeCommand.ChargeOperation);
+            CheckCharge(chargeCommand.ChargeDto);
             CheckDocument(chargeCommand.Document);
-            CheckEvent(chargeCommand.ChargeEvent);
+            CheckEvent(chargeCommand.ChargeOperation);
         }
 
-        private static void CheckCharge(ChargeOperation chargeOperation)
+        private static void CheckCharge(ChargeDto chargeDto)
+        {
+            if (chargeDto == null) throw new ArgumentNullException(nameof(chargeDto));
+
+            if (string.IsNullOrWhiteSpace(chargeDto.Owner)) throw new ArgumentException(chargeDto.Owner);
+            if (string.IsNullOrWhiteSpace(chargeDto.Id)) throw new ArgumentException(chargeDto.Id);
+            if (string.IsNullOrWhiteSpace(chargeDto.Name)) throw new ArgumentException(chargeDto.Name);
+            if (string.IsNullOrWhiteSpace(chargeDto.Description)) throw new ArgumentException(chargeDto.Description);
+        }
+
+        private static void CheckEvent(ChargeOperation chargeOperation)
         {
             if (chargeOperation == null) throw new ArgumentNullException(nameof(chargeOperation));
-
-            if (string.IsNullOrWhiteSpace(chargeOperation.Owner)) throw new ArgumentException(chargeOperation.Owner);
             if (string.IsNullOrWhiteSpace(chargeOperation.Id)) throw new ArgumentException(chargeOperation.Id);
-            if (string.IsNullOrWhiteSpace(chargeOperation.Name)) throw new ArgumentException(chargeOperation.Name);
-            if (string.IsNullOrWhiteSpace(chargeOperation.Description)) throw new ArgumentException(chargeOperation.Description);
-        }
-
-        private static void CheckEvent(ChargeEvent chargeEvent)
-        {
-            if (chargeEvent == null) throw new ArgumentNullException(nameof(chargeEvent));
-            if (string.IsNullOrWhiteSpace(chargeEvent.Id)) throw new ArgumentException(chargeEvent.Id);
-            if (string.IsNullOrWhiteSpace(chargeEvent.LastUpdatedBy)) throw new ArgumentException(chargeEvent.LastUpdatedBy);
+            if (string.IsNullOrWhiteSpace(chargeOperation.LastUpdatedBy)) throw new ArgumentException(chargeOperation.LastUpdatedBy);
         }
 
         private static void CheckDocument(Document document)

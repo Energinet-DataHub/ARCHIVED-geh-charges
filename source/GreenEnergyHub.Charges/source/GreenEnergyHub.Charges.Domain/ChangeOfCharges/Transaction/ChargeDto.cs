@@ -13,24 +13,17 @@
 // limitations under the License.
 
 using System.Collections.Generic;
-using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
-using GreenEnergyHub.Charges.Domain.Common;
 using NodaTime;
-
-namespace GreenEnergyHub.Charges.Domain
-{
-    public class Charge
-    {
 #pragma warning disable 8618
-        public Charge()
-#pragma warning restore 8618
+
+namespace GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction
+{
+    public class ChargeDto
+    {
+        public ChargeDto()
         {
             Points = new List<Point>();
         }
-
-        public Document Document { get; set; }
-
-        public ChargeOperation ChargeOperation { get; set; }
 
         /// <summary>
         /// Unique ID of a charge (Note, unique per market participants).

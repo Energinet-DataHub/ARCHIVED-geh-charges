@@ -64,8 +64,8 @@ namespace GreenEnergyHub.Charges.Application.Validation.BusinessValidation
 
         private async Task CheckIfChargeExistAsync(ChargeCommand command)
         {
-            var chargeTypeMRid = command.ChargeOperation.Id;
-            var commandChargeTypeOwnerMRid = command.ChargeOperation.Owner;
+            var chargeTypeMRid = command.ChargeDto.Id;
+            var commandChargeTypeOwnerMRid = command.ChargeDto.Owner;
 
             var result = await _chargeRepository.CheckIfChargeExistsAsync(chargeTypeMRid, commandChargeTypeOwnerMRid).ConfigureAwait(false);
             if (result)

@@ -80,7 +80,7 @@ namespace GreenEnergyHub.Charges.Tests.Builders
         {
             return new ("some-correlation-id")
             {
-                ChargeOperation = new ChargeOperation
+                ChargeDto = new ChargeDto
                 {
                     Name = "description",
                     Id = _mrid,
@@ -105,7 +105,7 @@ namespace GreenEnergyHub.Charges.Tests.Builders
                     IndustryClassification = IndustryClassification.Electricity,
                     CreatedDateTime = SystemClock.Instance.GetCurrentInstant(),
                 },
-                ChargeEvent = new ChargeEvent
+                ChargeOperation = new ChargeOperation
                 {
                   Id = "id",
                   Status = ChargeEventFunction.Addition,

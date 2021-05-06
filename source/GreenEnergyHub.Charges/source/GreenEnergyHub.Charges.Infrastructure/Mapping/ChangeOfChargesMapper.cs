@@ -39,7 +39,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Mapping
                 ChargeType = chargeType,
                 ChargeTypeOwner = chargeTypeOwnerMRid,
                 Description = chargeModel.Description,
-                LastUpdatedBy = chargeModel.ChargeEvent.LastUpdatedBy,
+                LastUpdatedBy = chargeModel.ChargeOperation.LastUpdatedBy,
                 LastUpdatedByCorrelationId = chargeModel.Document.CorrelationId,
                 LastUpdatedByTransactionId = chargeModel.Document.Id,
                 Name = chargeModel.Name,
@@ -47,7 +47,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Mapping
                 ResolutionType = resolutionType,
                 StartDate = chargeModel.StartDateTime.ToUnixTimeTicks(),
                 EndDate = chargeModel.EndDateTime?.ToUnixTimeTicks(),
-                Status = (byte)chargeModel.ChargeEvent.Status,
+                Status = (byte)chargeModel.ChargeOperation.Status,
                 TaxIndicator = chargeModel.Tax,
                 TransparentInvoicing = chargeModel.TransparentInvoicing,
                 VatPayer = vatPayerType,
@@ -63,7 +63,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Mapping
                     Amount = point.Price,
                     LastUpdatedByCorrelationId = chargeModel.Document.CorrelationId,
                     LastUpdatedByTransactionId = chargeModel.Document.Id,
-                    LastUpdatedBy = chargeModel.ChargeEvent.LastUpdatedBy,
+                    LastUpdatedBy = chargeModel.ChargeOperation.LastUpdatedBy,
                     RequestDateTime = chargeModel.Document.RequestDate.ToUnixTimeTicks(),
                 };
 
@@ -90,7 +90,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Mapping
                     Tax = charge.TaxIndicator,
                     Owner = charge.ChargeTypeOwner.MRid,
                     Resolution = Enum.Parse<Resolution>(charge.ResolutionType.Name!),
-                    ChargeEvent = new ChargeEvent
+                    ChargeOperation = new ChargeOperation
                 {
                     Id = charge.LastUpdatedByTransactionId,
                     Status = (ChargeEventFunction)charge.Status,

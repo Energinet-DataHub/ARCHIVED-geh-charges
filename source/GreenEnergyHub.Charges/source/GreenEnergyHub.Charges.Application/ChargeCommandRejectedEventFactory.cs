@@ -39,7 +39,7 @@ namespace GreenEnergyHub.Charges.Application
                 _clock.GetCurrentInstant(),
                 command.Document.CorrelationId,
                 command.Document.Id,
-                command.ChargeEvent.Id,
+                command.ChargeOperation.Id,
                 chargeCommandValidationResult.InvalidRules.Select(x => x.ValidationRuleIdentifier.ToString()).ToArray());
         }
 
@@ -51,7 +51,7 @@ namespace GreenEnergyHub.Charges.Application
                 _clock.GetCurrentInstant(),
                 command.Document.CorrelationId,
                 command.Document.Id,
-                command.ChargeEvent.Id,
+                command.ChargeOperation.Id,
                 new[] { exception.Message });
         }
     }

@@ -187,7 +187,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
                     IndustryClassification = IndustryClassification.Electricity,
                     CreatedDateTime = SystemClock.Instance.GetCurrentInstant(),
                 },
-                ChargeEvent = new ChargeEvent
+                ChargeOperation = new ChargeOperation
                 {
                     Id = "id",
                     Status = ChargeEventFunction.Addition,

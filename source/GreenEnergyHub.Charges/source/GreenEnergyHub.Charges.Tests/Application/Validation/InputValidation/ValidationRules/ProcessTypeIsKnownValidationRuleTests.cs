@@ -30,7 +30,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Validation.InputValidation.Va
             bool expected,
             [NotNull] ChargeCommand command)
         {
-            command.ChargeEvent.BusinessReasonCode = businessReasonCode;
+            command.ChargeOperation.BusinessReasonCode = businessReasonCode;
             var sut = new ProcessTypeIsKnownValidationRule(command);
             Assert.Equal(expected, sut.IsValid);
         }
