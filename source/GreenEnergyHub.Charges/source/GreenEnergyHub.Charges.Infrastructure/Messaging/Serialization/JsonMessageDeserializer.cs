@@ -20,8 +20,8 @@ using GreenEnergyHub.Messaging.Transport;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Messaging.Serialization
 {
-    public class JsonMessageDeserializer<TMessage> : MessageDeserializer
-      where TMessage : IInboundMessage
+    public class JsonMessageDeserializer<TInboundMessage> : MessageDeserializer<TInboundMessage>
+      where TInboundMessage : IInboundMessage
     {
         private readonly IJsonSerializer _jsonSerializer;
 
@@ -33,7 +33,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Messaging.Serialization
         public override async Task<IInboundMessage> FromBytesAsync(byte[] data, CancellationToken cancellationToken = default)
         {
             await using var stream = new MemoryStream(data);
-            return (TMessage)await _jsonSerializer.DeserializeAsync(stream, typeof(TMessage)).ConfigureAwait(false);
+            return (TInboundMessage)await _jsonSerializer.DeserializeAsync(stream, typeof(TInboundMessage)).ConfigureAwait(false);
         }
     }
 }

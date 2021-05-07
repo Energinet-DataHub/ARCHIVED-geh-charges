@@ -12,10 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Threading.Tasks;
 using Azure.Messaging.ServiceBus;
-using GreenEnergyHub.Messaging.Transport;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Messaging
 {
@@ -25,14 +25,14 @@ namespace GreenEnergyHub.Charges.Infrastructure.Messaging
     /// Each channel should be used as scoped context for dependency injection
     /// while ServiceBusSender and the ServiceBusClient used to make the sender should be singletons
     /// </summary>
-    public class ServiceBusChannel : Channel
+    public class ServiceBusChannel<TMessage> : Channel<TMessage>
     {
         private readonly ServiceBusSender _serviceBusSender;
         private readonly ICorrelationContext _correlationContext;
 
-        public ServiceBusChannel(ServiceBusSender serviceBusSender, ICorrelationContext correlationContext)
+        public ServiceBusChannel([NotNull] ServiceBusSender<TMessage> serviceBusSender, ICorrelationContext correlationContext)
         {
-            _serviceBusSender = serviceBusSender;
+            _serviceBusSender = serviceBusSender.Instance;
             _correlationContext = correlationContext;
         }
 
@@ -44,7 +44,6 @@ namespace GreenEnergyHub.Charges.Infrastructure.Messaging
         protected override async Task WriteAsync(byte[] data, CancellationToken cancellationToken = default)
         {
             var message = GetServiceBusMessage(data);
-
             await _serviceBusSender.SendMessageAsync(message, cancellationToken).ConfigureAwait(false);
         }
 
