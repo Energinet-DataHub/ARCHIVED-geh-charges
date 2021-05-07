@@ -28,54 +28,53 @@ namespace GreenEnergyHub.Charges.Tests.Core.Json
 
         private const string ChargeCommandAcceptedEventJsonString = @"
 {
-  ""Command"": {""Document"": {
-		""Id"": ""MAR2021-05-05T13:56:29.301Z"",
-		""CreatedDateTime"": ""2021-05-05T13:56:29.301Z"",
-        ""BusinessReasonCode"": 1,
-		""IndustryClassification"": 23,
-        ""Type"": ""DocumentType"",
-		""Sender"": {
-			""Id"": 37,
-			""MRid"": ""8100000000030"",
-			""Name"": ""Grid Operator 3"",
-			""Role"": 0
-		},
-		""Recipient"": {
-			""Id"": 1,
-			""MRid"": ""5790001330552"",
-			""Name"": ""Hub"",
-			""Role"": 0
-		}
+  ""Command"": {
+        ""Document"": {
+		    ""Id"": ""MAR2021-05-05T13:56:29.301Z"",
+		    ""CreatedDateTime"": ""2021-05-05T13:56:29.301Z"",
+            ""BusinessReasonCode"": 1,
+		    ""IndustryClassification"": 23,
+            ""Type"": 10,
+		    ""Sender"": {
+		    	""Id"": 37,
+		    	""MRid"": ""8100000000030"",
+		    	""Name"": ""Grid Operator 3"",
+		    	""Role"": 0
+		    },
+		    ""Recipient"": {
+		    	""Id"": 1,
+		    	""MRid"": ""5790001330552"",
+		    	""Name"": ""Hub"",
+		    	""Role"": 0
+		    }
 	},
-	""ChargeEvent"": {
-		""Id"": ""MD2021-05-05T13:56:29.301Z"",
-		""StartDateTime"": ""2021-06-30T22:00:00Z"",
-		""EndDateTime"": null,
-		""Status"": 2,
-	    ""LastUpdatedBy"": ""LastUpdatedBy""
-	},
-    ""Charge"":{
-    ""Id"": ""VoltTPostman978"",
-    ""Name"": ""Electric charge"",
-    ""Type"": 2,
-	""Owner"": ""8100000000030"",
-	""Period"": {
-		""Resolution"": ""P1D"",
-		""Points"": [
-			{
-				""Position"": 1,
-				""PriceAmount"": 150.001,
-				""Time"": ""2021-04-30T22:00:00Z""
-			}
-		]
-	},
-    ""Tax"": true,
-    ""Vat"": 0,
-    ""Description"": ""The charge description"",
-	""Transaction"": {
-		""mRID"": ""MD2021-05-05T13:56:29.301Z""
-	}
-    }
+	""ChargeOperation"": {
+		    ""Id"": ""MD2021-05-05T13:56:29.301Z"",
+		    ""StartDateTime"": ""2021-06-30T22:00:00Z"",
+		    ""EndDateTime"": null,
+		    ""Status"": 2,
+            ""ChargeId"": ""VoltTPostman978"",
+            ""ChargeName"": ""Electric charge"",
+            ""ChargeType"": 2,
+  	        ""ChargeOwner"": ""8100000000030"",
+            ""TaxIndicator"": true,
+            ""VatClassification"": 0,
+            ""Description"": ""The charge description"",
+            ""Period"": {
+		        ""Resolution"": ""P1D"",
+		        ""Points"": [
+		    	    {
+		    		    ""Position"": 1,
+		    		    ""PriceAmount"": 150.001,
+		    		    ""Time"": ""2021-04-30T22:00:00Z""
+		    	    }
+		        ]
+	        }
+    },
+   ""Transaction"": {
+   		""mRID"": ""MD2021-05-05T13:56:29.301Z""
+   	}
+}
 },
 ""CorrelationId"": ""4b8cfcd1-59f7-4931-8f77-99879b5ff3d8""
 }

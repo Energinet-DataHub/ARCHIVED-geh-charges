@@ -88,6 +88,20 @@ namespace GreenEnergyHub.Charges.Tests.Builders
                     RequestDate = SystemClock.Instance.GetCurrentInstant(),
                     IndustryClassification = IndustryClassification.Electricity,
                     CreatedDateTime = SystemClock.Instance.GetCurrentInstant(),
+                    Recipient = new MarketParticipant
+                    {
+                        Id = 0,
+                        Name = "Name",
+                        Role = MarketParticipantRole.EnergySupplier,
+                        MRid = "MRid",
+                    },
+                    Sender = new MarketParticipant
+                    {
+                        Id = 0,
+                        Name = "Name",
+                        Role = MarketParticipantRole.EnergySupplier,
+                        MRid = "MRid",
+                    },
                 },
                 ChargeOperation = new ChargeOperation
                 {

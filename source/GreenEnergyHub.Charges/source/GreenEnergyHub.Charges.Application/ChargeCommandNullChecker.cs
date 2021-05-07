@@ -27,10 +27,10 @@ namespace GreenEnergyHub.Charges.Application
             if (string.IsNullOrWhiteSpace(chargeCommand.CorrelationId)) throw new ArgumentException(chargeCommand.CorrelationId);
 
             CheckDocument(chargeCommand.Document);
-            CheckEvent(chargeCommand.ChargeOperation);
+            CheckChargeOperation(chargeCommand.ChargeOperation);
         }
 
-        private static void CheckEvent(ChargeOperation chargeOperation)
+        private static void CheckChargeOperation(ChargeOperation chargeOperation)
         {
             if (chargeOperation == null) throw new ArgumentNullException(nameof(chargeOperation));
             if (string.IsNullOrWhiteSpace(chargeOperation.Id)) throw new ArgumentException(chargeOperation.Id);
