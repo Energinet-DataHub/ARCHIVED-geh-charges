@@ -47,6 +47,13 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
         private readonly ITestOutputHelper _testOutputHelper;
         private readonly ChargeHttpTrigger _chargeHttpTrigger;
         private readonly ChargeCommandEndpoint _chargeCommandEndpoint;
+        private string _subscriptionName;
+        private string _commandReceivedTopicName;
+        private string _commandAcceptedTopicName;
+        private string _commandRejectedTopicName;
+        private string _commandReceivedConnectionString;
+        private string _commandAcceptedConnectionString;
+        private string _commandRejectedConnectionString;
 
         public ChangeOfChargesMessageHandlerTests(ITestOutputHelper testOutputHelper)
         {
@@ -64,11 +71,19 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
                 chargeCommandReceiverHost.Services.GetRequiredService<IJsonSerializer>(),
                 chargeCommandReceiverHost.Services.GetRequiredService<IChargeCommandHandler>(),
                 chargeCommandReceiverHost.Services.GetRequiredService<ICorrelationContext>());
+
+            _subscriptionName = Environment.GetEnvironmentVariable("COMMAND_INTEGRATIONTEST_SUBSCRIPTION_NAME") !;
+            _commandReceivedTopicName = Environment.GetEnvironmentVariable("COMMAND_RECEIVED_TOPIC_NAME") !;
+            _commandAcceptedTopicName = Environment.GetEnvironmentVariable("COMMAND_ACCEPTED_TOPIC_NAME") !;
+            _commandRejectedTopicName = Environment.GetEnvironmentVariable("COMMAND_REJECTED_TOPIC_NAME") !;
+            _commandReceivedConnectionString = Environment.GetEnvironmentVariable("COMMAND_RECEIVED_LISTENER_CONNECTION_STRING") !;
+            _commandAcceptedConnectionString = Environment.GetEnvironmentVariable("COMMAND_ACCEPTED_LISTENER_CONNECTION_STRING") !;
+            _commandRejectedConnectionString = Environment.GetEnvironmentVariable("COMMAND_REJECTED_LISTENER_CONNECTION_STRING") !;
         }
 
-        // [InlineAutoMoqData("TestFiles\\ValidChargeUpdate.json")]
         [Theory]
         [InlineAutoMoqData("TestFiles\\ValidChargeAddition.json")]
+        [InlineAutoMoqData("TestFiles\\ValidChargeUpdate.json")]
         public async Task Test_ChargeCommand_is_Accepted(
             string testFilePath,
             [NotNull] [Frozen] Mock<ILogger> logger,
@@ -77,32 +92,20 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
         {
             // arrange
             var req = CreateHttpRequest(testFilePath, clock);
-            SetInvocationId(executionContext);
-
-            var subscriptionName = Environment.GetEnvironmentVariable("COMMAND_INTEGRATIONTEST_SUBSCRIPTION_NAME");
-
-            var commandReceivedTopicName = Environment.GetEnvironmentVariable("COMMAND_RECEIVED_TOPIC_NAME");
-            var commandAcceptedTopicName = Environment.GetEnvironmentVariable("COMMAND_ACCEPTED_TOPIC_NAME");
-            var commandRejectedTopicName = Environment.GetEnvironmentVariable("COMMAND_REJECTED_TOPIC_NAME");
-
-            var commandReceivedConnectionString = Environment.GetEnvironmentVariable("COMMAND_RECEIVED_LISTENER_CONNECTION_STRING");
-            var commandAcceptedConnectionString = Environment.GetEnvironmentVariable("COMMAND_ACCEPTED_LISTENER_CONNECTION_STRING");
-            var commandRejectedConnectionString = Environment.GetEnvironmentVariable("COMMAND_REJECTED_LISTENER_CONNECTION_STRING");
 
             // act
             var messageReceiverResult = await RunMessageReceiver(logger, executionContext, req).ConfigureAwait(false);
-            var commandReceivedMessage = GetMessageFromServiceBus(commandReceivedConnectionString!, commandReceivedTopicName!, subscriptionName!);
-
+            var commandReceivedMessage = GetMessageFromServiceBus(_commandReceivedConnectionString, _commandReceivedTopicName, _subscriptionName);
             _testOutputHelper.WriteLine($"Message to be handled by ChargeCommandEndpoint: {commandReceivedMessage.Body.Length}");
 
             await _chargeCommandEndpoint.RunAsync(commandReceivedMessage.Body, logger.Object).ConfigureAwait(false);
 
-            // var commandAcceptedMessage = GetMessageFromServiceBus(commandAcceptedConnectionString!, commandAcceptedTopicName!, subscriptionName!);
-            var commandRejectedMessage = GetMessageFromServiceBus(commandRejectedConnectionString!, commandRejectedTopicName!, subscriptionName!);
-
+            // var commandAcceptedMessage = GetMessageFromServiceBus(commandAcceptedConnectionString, commandAcceptedTopicName, subscriptionName);
+            var commandRejectedMessage = GetMessageFromServiceBus(_commandRejectedConnectionString, _commandRejectedTopicName, _subscriptionName);
             _testOutputHelper.WriteLine($"Message accepted by ChargeCommandEndpoint: {commandRejectedMessage.Body.Length}");
 
             // assert
+            Assert.Equal(200, messageReceiverResult!.StatusCode!.Value);
             Assert.Equal(nameof(ChargeCommandReceivedEvent), commandReceivedMessage.Label);
             Assert.Equal(nameof(ChargeCommandRejectedEvent), commandRejectedMessage.Label);
             Assert.True(commandRejectedMessage.Body.Length > 0);
@@ -119,14 +122,22 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
         {
             // arrange
             var req = CreateHttpRequest(testFilePath, clock);
-            SetInvocationId(executionContext);
 
             // act
-            var result = (OkObjectResult)await _chargeHttpTrigger.RunAsync(req, executionContext, logger.Object).ConfigureAwait(false);
+            var messageReceiverResult = await RunMessageReceiver(logger, executionContext, req).ConfigureAwait(false);
+            var commandReceivedMessage = GetMessageFromServiceBus(_commandReceivedConnectionString, _commandReceivedTopicName, _subscriptionName);
+            _testOutputHelper.WriteLine($"Message to be handled by ChargeCommandEndpoint: {commandReceivedMessage.Body.Length}");
+
+            await _chargeCommandEndpoint.RunAsync(commandReceivedMessage.Body, logger.Object).ConfigureAwait(false);
+
+            var commandRejectedMessage = GetMessageFromServiceBus(_commandRejectedConnectionString, _commandRejectedTopicName, _subscriptionName);
+            _testOutputHelper.WriteLine($"Message accepted by ChargeCommandEndpoint: {commandRejectedMessage.Body.Length}");
 
             // assert
-            Assert.True(true);
-            //Assert.Equal(500, result!.StatusCode!.Value);
+            Assert.Equal(200, messageReceiverResult!.StatusCode!.Value);
+            Assert.Equal(nameof(ChargeCommandReceivedEvent), commandReceivedMessage.Label);
+            Assert.Equal(nameof(ChargeCommandRejectedEvent), commandRejectedMessage.Label);
+            Assert.True(commandRejectedMessage.Body.Length > 0);
         }
 
         private async Task<OkObjectResult> RunMessageReceiver(Mock<ILogger> logger, ExecutionContext executionContext, DefaultHttpRequest req)
@@ -141,7 +152,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
         {
             Message receivedMessage = null!;
 
-            var subscriptionClient = GetSubscriptionClient(serviceBusConnectionString!, serviceBusTopic!, serviceBusSubscription!);
+            var subscriptionClient = GetSubscriptionClient(serviceBusConnectionString, serviceBusTopic, serviceBusSubscription);
 
             subscriptionClient.RegisterMessageHandler(
                 async (message, token) =>
@@ -153,13 +164,14 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
                     {
                         _testOutputHelper.WriteLine($"Message received with body: {message.Body.Length}");
                         await subscriptionClient.CompleteAsync(message.SystemProperties.LockToken).ConfigureAwait(false);
+
+                        var inflightMessageHandlerTasksWaitTimeout = new TimeSpan(0, 0, 0, 0, 1);
+                        await subscriptionClient.UnregisterMessageHandlerAsync(inflightMessageHandlerTasksWaitTimeout).ConfigureAwait(false);
                     }
                 },
-#pragma warning disable 1998
                 new MessageHandlerOptions(async args =>
-#pragma warning restore 1998
                     {
-                        _testOutputHelper.WriteLine(args.Exception.ToString());
+                        await Task.Run(() => _testOutputHelper.WriteLine(args.Exception.ToString())).ConfigureAwait(false);
                     })
                     { MaxConcurrentCalls = 1, AutoComplete = false });
 
@@ -171,11 +183,6 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
             }
 
             return receivedMessage;
-        }
-
-        private static void SetInvocationId(ExecutionContext executionContext)
-        {
-            executionContext.InvocationId = Guid.NewGuid();
         }
 
         private static DefaultHttpRequest CreateHttpRequest(string testFile, IClock clock)
