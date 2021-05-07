@@ -24,7 +24,7 @@ namespace GreenEnergyHub.Charges.Domain
             string receiverMRid,
             MarketParticipantRole receiverBusinessProcessRole,
             object originalTransactionReferenceMRid,
-            ProcessType businessReasonCode)
+            BusinessReasonCode businessReasonCode)
         {
             CorrelationId = correlationId;
             ReceiverMRid = receiverMRid;
@@ -45,6 +45,6 @@ namespace GreenEnergyHub.Charges.Domain
         public object OriginalTransactionReferenceMRid { get; }
 
         [UsedImplicitly]
-        public ProcessType BusinessReasonCode { get; }
+        public BusinessReasonCode BusinessReasonCode { get; }
     }
 }

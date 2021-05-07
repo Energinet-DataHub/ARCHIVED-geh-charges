@@ -11,11 +11,14 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-
-namespace GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction
+namespace GreenEnergyHub.Charges.Domain.Common
 {
-    public enum MarketParticipantRole
+    /// <summary>
+    /// IndustryClassification indicates the industry context. E.g. if a Charge price list is related to electricity.
+    /// </summary>
+    public enum IndustryClassification
     {
-        EnergySupplier,
+        Unknown = 0,
+        Electricity = 23,
     }
 }
