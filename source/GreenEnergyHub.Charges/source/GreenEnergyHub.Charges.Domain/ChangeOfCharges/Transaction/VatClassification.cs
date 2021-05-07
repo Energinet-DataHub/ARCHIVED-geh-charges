@@ -11,11 +11,16 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-namespace GreenEnergyHub.Charges.Domain.Common
+
+namespace GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction
 {
-    public enum ServiceCategoryKind
+    /// <summary>
+    /// This enum indicates the VAT value. ("Moms" in Denmark).
+    /// D01 is No VAT | D02 is VAT.
+    /// </summary>
+    public enum VatClassification
     {
-        Unknown = 0,
-        Electricity = 23,
+        NoVat,
+        Vat25,
     }
 }

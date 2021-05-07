@@ -14,14 +14,14 @@
 
 namespace GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction
 {
-    public class MarketParticipant
+    /// <summary>
+    /// This enum indicates the action requested by the sender, e.g. using Addition when sender wants to create a new charge price list.
+    /// </summary>
+    public enum OperationType
     {
-        public int Id { get; set; }
-
-        public string? MRid { get; set; }
-
-        public string? Name { get; set; }
-
-        public MarketParticipantRole? Role { get; set; }
+        Unknown = 0,
+        Addition = 2,
+        Deletion = 3,
+        Change = 4,
     }
 }

@@ -36,7 +36,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChangeOfCharges
             [NotNull] ChangeOfChargesMessageHandler sut)
         {
             // Arrange
-            var transactionBuilder = new ChangeOfChargesTransactionBuilder();
+            var transactionBuilder = new ChargeCommandTestBuilder();
             var changeOfChargesMessage = new ChangeOfChargesMessageBuilder()
                 .WithTransaction(transactionBuilder.Build())
                 .WithTransaction(transactionBuilder.Build())

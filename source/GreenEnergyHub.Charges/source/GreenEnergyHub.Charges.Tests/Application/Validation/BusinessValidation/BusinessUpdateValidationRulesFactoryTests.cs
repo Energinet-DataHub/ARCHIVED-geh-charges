@@ -49,7 +49,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Validation.BusinessValidation
                 typeof(StartDateValidationRule),
             };
 
-            var tariffUpdateCommand = TurnCommandIntoSpecifiedUpdateType(chargeCommand, ChargeCommandType.Tariff);
+            var tariffUpdateCommand = TurnCommandIntoSpecifiedUpdateType(chargeCommand, ChargeType.Tariff);
 
             // Act
             var actual = await sut.CreateRulesForUpdateCommandAsync(tariffUpdateCommand).ConfigureAwait(false);
@@ -71,7 +71,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Validation.BusinessValidation
 
             var expectedRules = new HashSet<Type> { typeof(StartDateValidationRule), };
 
-            var feeUpdateCommand = TurnCommandIntoSpecifiedUpdateType(chargeCommand, ChargeCommandType.Fee);
+            var feeUpdateCommand = TurnCommandIntoSpecifiedUpdateType(chargeCommand, ChargeType.Fee);
 
             // Act
             var actual = await sut.CreateRulesForUpdateCommandAsync(feeUpdateCommand).ConfigureAwait(false);
@@ -94,7 +94,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Validation.BusinessValidation
             var expectedRules = new HashSet<Type> { typeof(StartDateValidationRule), };
 
             var subscriptionUpdateCommand =
-                TurnCommandIntoSpecifiedUpdateType(chargeCommand, ChargeCommandType.Subscription);
+                TurnCommandIntoSpecifiedUpdateType(chargeCommand, ChargeType.Subscription);
 
             // Act
             var actual = await sut.CreateRulesForUpdateCommandAsync(subscriptionUpdateCommand).ConfigureAwait(false);
@@ -114,10 +114,10 @@ namespace GreenEnergyHub.Charges.Tests.Application.Validation.BusinessValidation
                 new StartDateValidationRuleConfiguration(new Interval<int>(31, 1095)));
         }
 
-        private static ChargeCommand TurnCommandIntoSpecifiedUpdateType(ChargeCommand chargeCommand, string commandType)
+        private static ChargeCommand TurnCommandIntoSpecifiedUpdateType(ChargeCommand chargeCommand, ChargeType chargeType)
         {
-            chargeCommand.Type = commandType;
-            chargeCommand!.MktActivityRecord!.Status = MktActivityRecordStatus.Change;
+            chargeCommand.ChargeOperation.Type = chargeType;
+            chargeCommand.ChargeOperation.Status = OperationType.Change;
             return chargeCommand;
         }
 

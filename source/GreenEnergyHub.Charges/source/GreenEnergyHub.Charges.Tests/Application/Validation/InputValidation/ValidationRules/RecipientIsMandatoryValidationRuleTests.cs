@@ -30,7 +30,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Validation.InputValidation.Va
             bool expected,
             [NotNull] ChargeCommand command)
         {
-            command!.MarketDocument!.ReceiverMarketParticipant!.MRid = mrid;
+            command.Document.Recipient.MRid = mrid;
             var sut = new RecipientIsMandatoryTypeValidationRule(command);
             Assert.Equal(expected, sut.IsValid);
         }

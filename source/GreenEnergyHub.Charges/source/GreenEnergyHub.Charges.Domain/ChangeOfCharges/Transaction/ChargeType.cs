@@ -12,28 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Newtonsoft.Json;
-
-#pragma warning disable 8618
-
 namespace GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction
 {
-    // Non-nullable member is uninitialized is ignored
-    // Only properties which is allowed to be null is nullable
-    // ChargeType integrity is null checked by ChargeCommandNullChecker
-    public class ChargeType
+    /// <summary>
+    /// The kind of charge: Subscription ("D01") | Fee ("D02") | Tariff ("D03").
+    /// </summary>
+    public enum ChargeType
     {
-        [JsonProperty("name")]
-        public string Name { get; set; }
-
-        [JsonProperty("description")]
-        public string Description { get; set; }
-
-        [JsonProperty("VATPayer")]
-        public string VatPayer { get; set; }
-
-        public bool TransparentInvoicing { get; set; }
-
-        public bool TaxIndicator { get; set; }
+        Subscription,
+        Fee,
+        Tariff,
     }
 }
