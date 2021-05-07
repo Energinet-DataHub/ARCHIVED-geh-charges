@@ -36,7 +36,10 @@ namespace GreenEnergyHub.Charges.IntegrationTests.TestHelpers
         {
             var currentInstant = clock.GetCurrentInstant();
             var now = currentInstant.ToString();
-            return file.Replace("{{$isoTimestamp}}", now);
+            var inThirtyoneDays = currentInstant.Plus(Duration.FromDays(31)).ToString();
+            return file
+                .Replace("{{$isoTimestamp}}", now)
+                .Replace("{{$isoTimestampPlusOneMonth}}", inThirtyoneDays);
         }
     }
 }

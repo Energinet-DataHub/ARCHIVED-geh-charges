@@ -19,7 +19,7 @@
   },
   "MktActivityRecord": {
     "MRid": "MAR{{$isoTimestamp}}",
-    "ValidityStartDate": "2021-09-26T22:00:00Z",
+    "ValidityStartDate": "{{$isoTimestampPlusOneMonth}}",
     "ValidityEndDate": null,
     "Status": 2,
     "ChargeType": {

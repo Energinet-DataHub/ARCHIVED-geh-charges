@@ -47,13 +47,13 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
         private readonly ITestOutputHelper _testOutputHelper;
         private readonly ChargeHttpTrigger _chargeHttpTrigger;
         private readonly ChargeCommandEndpoint _chargeCommandEndpoint;
-        private string _subscriptionName;
-        private string _commandReceivedTopicName;
-        private string _commandAcceptedTopicName;
-        private string _commandRejectedTopicName;
-        private string _commandReceivedConnectionString;
-        private string _commandAcceptedConnectionString;
-        private string _commandRejectedConnectionString;
+        private readonly string _subscriptionName;
+        private readonly string _commandReceivedTopicName;
+        private readonly string _commandAcceptedTopicName;
+        private readonly string _commandRejectedTopicName;
+        private readonly string _commandReceivedConnectionString;
+        private readonly string _commandAcceptedConnectionString;
+        private readonly string _commandRejectedConnectionString;
 
         public ChangeOfChargesMessageHandlerTests(ITestOutputHelper testOutputHelper)
         {
