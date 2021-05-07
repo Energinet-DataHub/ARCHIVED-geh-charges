@@ -20,6 +20,7 @@ using AutoFixture.Xunit2;
 using GreenEnergyHub.Charges.Application;
 using GreenEnergyHub.Charges.Application.ChangeOfCharges;
 using GreenEnergyHub.Charges.ChargeCommandReceiver;
+using GreenEnergyHub.Charges.Domain.Events.Local;
 using GreenEnergyHub.Charges.Infrastructure.Messaging;
 using GreenEnergyHub.Charges.IntegrationTests.TestHelpers;
 using GreenEnergyHub.Charges.MessageReceiver;
@@ -79,26 +80,32 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
             SetInvocationId(executionContext);
 
             var subscriptionName = Environment.GetEnvironmentVariable("COMMAND_INTEGRATIONTEST_SUBSCRIPTION_NAME");
+
             var commandReceivedTopicName = Environment.GetEnvironmentVariable("COMMAND_RECEIVED_TOPIC_NAME");
             var commandAcceptedTopicName = Environment.GetEnvironmentVariable("COMMAND_ACCEPTED_TOPIC_NAME");
-            var commandRejectedTopicName = Environment.GetEnvironmentVariable("COMMAND_ACCEPTED_TOPIC_NAME");
-            var serviceBusConnectionString = Environment.GetEnvironmentVariable("COMMAND_RECEIVED_LISTENER_CONNECTION_STRING");
+            var commandRejectedTopicName = Environment.GetEnvironmentVariable("COMMAND_REJECTED_TOPIC_NAME");
+
+            var commandReceivedConnectionString = Environment.GetEnvironmentVariable("COMMAND_RECEIVED_LISTENER_CONNECTION_STRING");
+            var commandAcceptedConnectionString = Environment.GetEnvironmentVariable("COMMAND_ACCEPTED_LISTENER_CONNECTION_STRING");
+            var commandRejectedConnectionString = Environment.GetEnvironmentVariable("COMMAND_REJECTED_LISTENER_CONNECTION_STRING");
 
             // act
             var messageReceiverResult = await RunMessageReceiver(logger, executionContext, req).ConfigureAwait(false);
-            var commandReceivedMessage = GetMessageFromServiceBus(serviceBusConnectionString!, commandReceivedTopicName!, subscriptionName!);
+            var commandReceivedMessage = GetMessageFromServiceBus(commandReceivedConnectionString!, commandReceivedTopicName!, subscriptionName!);
 
             _testOutputHelper.WriteLine($"Message to be handled by ChargeCommandEndpoint: {commandReceivedMessage.Body.Length}");
 
             await _chargeCommandEndpoint.RunAsync(commandReceivedMessage.Body, logger.Object).ConfigureAwait(false);
 
-            //var commandAcceptedMessage = GetMessageFromServiceBus(serviceBusConnectionString!, commandAcceptedTopicName!, subscriptionName!);
-            var commandRejectedMessage = GetMessageFromServiceBus(serviceBusConnectionString!, commandRejectedTopicName!, subscriptionName!);
+            // var commandAcceptedMessage = GetMessageFromServiceBus(commandAcceptedConnectionString!, commandAcceptedTopicName!, subscriptionName!);
+            var commandRejectedMessage = GetMessageFromServiceBus(commandRejectedConnectionString!, commandRejectedTopicName!, subscriptionName!);
 
             _testOutputHelper.WriteLine($"Message accepted by ChargeCommandEndpoint: {commandRejectedMessage.Body.Length}");
 
             // assert
-            Assert.Equal(200, messageReceiverResult!.StatusCode!.Value);
+            Assert.Equal(nameof(ChargeCommandReceivedEvent), commandReceivedMessage.Label);
+            Assert.Equal(nameof(ChargeCommandRejectedEvent), commandRejectedMessage.Label);
+            Assert.True(commandRejectedMessage.Body.Length > 0);
         }
 
         [Theory]
