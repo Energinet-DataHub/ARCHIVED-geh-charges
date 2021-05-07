@@ -87,10 +87,10 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
         public async Task Test_ChargeCommand_is_Accepted(
             string testFilePath,
             [NotNull] [Frozen] Mock<ILogger> logger,
-            [NotNull] ExecutionContext executionContext,
-            [NotNull] IClock clock)
+            [NotNull] ExecutionContext executionContext)
         {
             // arrange
+            IClock clock = SystemClock.Instance;
             var req = CreateHttpRequest(testFilePath, clock);
 
             // act
@@ -100,15 +100,15 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
 
             await _chargeCommandEndpoint.RunAsync(commandReceivedMessage.Body, logger.Object).ConfigureAwait(false);
 
-            // var commandAcceptedMessage = GetMessageFromServiceBus(commandAcceptedConnectionString, commandAcceptedTopicName, subscriptionName);
-            var commandRejectedMessage = GetMessageFromServiceBus(_commandRejectedConnectionString, _commandRejectedTopicName, _subscriptionName);
-            _testOutputHelper.WriteLine($"Message accepted by ChargeCommandEndpoint: {commandRejectedMessage.Body.Length}");
+            var commandAcceptedMessage = GetMessageFromServiceBus(_commandAcceptedConnectionString, _commandAcceptedTopicName, _subscriptionName);
+            //var commandRejectedMessage = GetMessageFromServiceBus(_commandRejectedConnectionString, _commandRejectedTopicName, _subscriptionName);
+            _testOutputHelper.WriteLine($"Message accepted by ChargeCommandEndpoint: {commandAcceptedMessage.Body.Length}");
 
             // assert
             Assert.Equal(200, messageReceiverResult!.StatusCode!.Value);
             Assert.Equal(nameof(ChargeCommandReceivedEvent), commandReceivedMessage.Label);
-            Assert.Equal(nameof(ChargeCommandRejectedEvent), commandRejectedMessage.Label);
-            Assert.True(commandRejectedMessage.Body.Length > 0);
+            Assert.Equal(nameof(ChargeCommandAcceptedEvent), commandAcceptedMessage.Label);
+            Assert.True(commandAcceptedMessage.Body.Length > 0);
         }
 
         [Theory]
@@ -117,10 +117,10 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
         public async Task Test_ChargeCommand_is_Rejected(
             string testFilePath,
             [NotNull] [Frozen] Mock<ILogger> logger,
-            [NotNull] ExecutionContext executionContext,
-            [NotNull] IClock clock)
+            [NotNull] ExecutionContext executionContext)
         {
             // arrange
+            IClock clock = SystemClock.Instance;
             var req = CreateHttpRequest(testFilePath, clock);
 
             // act
@@ -179,7 +179,6 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
             while (receivedMessage == null)
             {
                 ++count;
-                //_testOutputHelper.WriteLine("still running: " + ++count);
             }
 
             return receivedMessage;
