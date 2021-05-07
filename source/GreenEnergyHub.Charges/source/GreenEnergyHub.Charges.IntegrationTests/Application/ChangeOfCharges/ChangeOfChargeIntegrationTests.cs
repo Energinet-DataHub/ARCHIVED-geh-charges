@@ -87,21 +87,23 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
         public async Task Test_ChargeCommand_is_Accepted(
             string testFilePath,
             [NotNull] [Frozen] Mock<ILogger> logger,
-            [NotNull] ExecutionContext executionContext)
+            [NotNull] ExecutionContext executionContext,
+            [NotNull] ServiceBusMessageTestHelper serviceBusMessageTestHelper)
         {
             // arrange
             IClock clock = SystemClock.Instance;
-            var req = CreateHttpRequest(testFilePath, clock);
+            var req = HttpRequestHelper.CreateHttpRequest(testFilePath, clock);
 
             // act
             var messageReceiverResult = await RunMessageReceiver(logger, executionContext, req).ConfigureAwait(false);
-            var commandReceivedMessage = GetMessageFromServiceBus(_commandReceivedConnectionString, _commandReceivedTopicName, _subscriptionName);
+            var commandReceivedMessage = serviceBusMessageTestHelper
+                .GetMessageFromServiceBus(_commandReceivedConnectionString, _commandReceivedTopicName, _subscriptionName);
             _testOutputHelper.WriteLine($"Message to be handled by ChargeCommandEndpoint: {commandReceivedMessage.Body.Length}");
 
             await _chargeCommandEndpoint.RunAsync(commandReceivedMessage.Body, logger.Object).ConfigureAwait(false);
 
-            var commandAcceptedMessage = GetMessageFromServiceBus(_commandAcceptedConnectionString, _commandAcceptedTopicName, _subscriptionName);
-            //var commandRejectedMessage = GetMessageFromServiceBus(_commandRejectedConnectionString, _commandRejectedTopicName, _subscriptionName);
+            var commandAcceptedMessage = serviceBusMessageTestHelper
+                .GetMessageFromServiceBus(_commandAcceptedConnectionString, _commandAcceptedTopicName, _subscriptionName);
             _testOutputHelper.WriteLine($"Message accepted by ChargeCommandEndpoint: {commandAcceptedMessage.Body.Length}");
 
             // assert
@@ -117,20 +119,23 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
         public async Task Test_ChargeCommand_is_Rejected(
             string testFilePath,
             [NotNull] [Frozen] Mock<ILogger> logger,
-            [NotNull] ExecutionContext executionContext)
+            [NotNull] ExecutionContext executionContext,
+            [NotNull] ServiceBusMessageTestHelper serviceBusMessageTestHelper)
         {
             // arrange
             IClock clock = SystemClock.Instance;
-            var req = CreateHttpRequest(testFilePath, clock);
+            var req = HttpRequestHelper.CreateHttpRequest(testFilePath, clock);
 
             // act
             var messageReceiverResult = await RunMessageReceiver(logger, executionContext, req).ConfigureAwait(false);
-            var commandReceivedMessage = GetMessageFromServiceBus(_commandReceivedConnectionString, _commandReceivedTopicName, _subscriptionName);
+            var commandReceivedMessage = serviceBusMessageTestHelper
+                .GetMessageFromServiceBus(_commandReceivedConnectionString, _commandReceivedTopicName, _subscriptionName);
             _testOutputHelper.WriteLine($"Message to be handled by ChargeCommandEndpoint: {commandReceivedMessage.Body.Length}");
 
             await _chargeCommandEndpoint.RunAsync(commandReceivedMessage.Body, logger.Object).ConfigureAwait(false);
 
-            var commandRejectedMessage = GetMessageFromServiceBus(_commandRejectedConnectionString, _commandRejectedTopicName, _subscriptionName);
+            var commandRejectedMessage = serviceBusMessageTestHelper
+                .GetMessageFromServiceBus(_commandRejectedConnectionString, _commandRejectedTopicName, _subscriptionName);
             _testOutputHelper.WriteLine($"Message accepted by ChargeCommandEndpoint: {commandRejectedMessage.Body.Length}");
 
             // assert
@@ -143,63 +148,6 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
         private async Task<OkObjectResult> RunMessageReceiver(Mock<ILogger> logger, ExecutionContext executionContext, DefaultHttpRequest req)
         {
             return (OkObjectResult)await _chargeHttpTrigger.RunAsync(req, executionContext, logger.Object).ConfigureAwait(false);
-        }
-
-        private Message GetMessageFromServiceBus(
-            string serviceBusConnectionString,
-            string serviceBusTopic,
-            string serviceBusSubscription)
-        {
-            Message receivedMessage = null!;
-
-            var subscriptionClient = GetSubscriptionClient(serviceBusConnectionString, serviceBusTopic, serviceBusSubscription);
-
-            subscriptionClient.RegisterMessageHandler(
-                async (message, token) =>
-                {
-                    var messageJson = Encoding.UTF8.GetString(message.Body);
-                    receivedMessage = message;
-
-                    if (messageJson.Length > 0)
-                    {
-                        _testOutputHelper.WriteLine($"Message received with body: {message.Body.Length}");
-                        await subscriptionClient.CompleteAsync(message.SystemProperties.LockToken).ConfigureAwait(false);
-
-                        var inflightMessageHandlerTasksWaitTimeout = new TimeSpan(0, 0, 0, 0, 1);
-                        await subscriptionClient.UnregisterMessageHandlerAsync(inflightMessageHandlerTasksWaitTimeout).ConfigureAwait(false);
-                    }
-                },
-                new MessageHandlerOptions(async args =>
-                    {
-                        await Task.Run(() => _testOutputHelper.WriteLine(args.Exception.ToString())).ConfigureAwait(false);
-                    })
-                    { MaxConcurrentCalls = 1, AutoComplete = false });
-
-            var count = 0;
-            while (receivedMessage == null)
-            {
-                ++count;
-            }
-
-            return receivedMessage;
-        }
-
-        private static DefaultHttpRequest CreateHttpRequest(string testFile, IClock clock)
-        {
-            var stream = TestDataHelper.GetInputStream(testFile, clock);
-            var defaultHttpContext = new DefaultHttpContext();
-            defaultHttpContext.Request.Body = stream;
-            var req = new DefaultHttpRequest(defaultHttpContext);
-            return req;
-        }
-
-        private static SubscriptionClient GetSubscriptionClient(
-            string serviceBusConnectionString,
-            string topicPath,
-            string subscriptionName)
-        {
-            var subscriptionClient = new SubscriptionClient(serviceBusConnectionString, topicPath, subscriptionName);
-            return subscriptionClient;
         }
     }
 }
