@@ -12,11 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Diagnostics.CodeAnalysis;
 using GreenEnergyHub.Charges.Domain.Command;
-using JetBrains.Annotations;
-using Newtonsoft.Json;
-using NodaTime;
-using MarketDocument = GreenEnergyHub.Charges.Domain.Common.MarketDocument;
+using GreenEnergyHub.Charges.Domain.Common;
+
 #pragma warning disable 8618
 
 namespace GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction
@@ -31,28 +30,8 @@ namespace GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction
         {
         }
 
-        public MarketDocument MarketDocument { get; set; }
+        public Document Document { get; set; }
 
-        public MktActivityRecord MktActivityRecord { get; set; }
-
-        /// <summary>
-        /// The kind of charge: Fee ("D02") | Subscription ("D01") | Tariff ("D03").
-        /// </summary>
-        public string Type { get; set; }
-
-        [JsonProperty("ChargeType_mRID")]
-        public string ChargeTypeMRid { get; set; }
-
-        [JsonProperty("ChargeTypeOwner_mRID")]
-        public string ChargeTypeOwnerMRid { get; set; }
-
-        public ChargeTypePeriod Period { get; set; }
-
-        /// <summary>
-        ///     The date this request was made.
-        /// </summary>
-        public Instant RequestDate { get; set; } = SystemClock.Instance.GetCurrentInstant();
-
-        public string LastUpdatedBy { get; set; }
+        public ChargeOperation ChargeOperation { get; set; }
     }
 }

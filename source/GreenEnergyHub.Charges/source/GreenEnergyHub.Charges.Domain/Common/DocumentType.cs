@@ -12,13 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction
+namespace GreenEnergyHub.Charges.Domain.Common
 {
-    public enum MktActivityRecordStatus
+    /// <summary>
+    /// The document type indicates the intended business context of this business message.
+    /// </summary>
+    public enum DocumentType
     {
         Unknown = 0,
-        Addition = 2,
-        Deletion = 3,
-        Change = 4,
+        RequestUpdateChargeInformation = 10, // This will be received as D10 in ebiX.
     }
 }

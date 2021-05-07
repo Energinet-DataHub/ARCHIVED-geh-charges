@@ -60,15 +60,20 @@ namespace GreenEnergyHub.Charges.Infrastructure.Repositories
             if (chargeType == null) throw new Exception($"No charge type for {newCharge.Type}");
 
             var resolutionType = await GetResolutionTypeAsync(newCharge).ConfigureAwait(false);
-            if (resolutionType == null) throw new Exception($"No resolution type for {newCharge.Period.Resolution}");
+            if (resolutionType == null) throw new Exception($"No resolution type for {newCharge.Resolution}");
 
             var vatPayerType = await GetVatPayerTypeAsync(newCharge).ConfigureAwait(false);
-            if (vatPayerType == null) throw new Exception($"No VAT payer type for {newCharge.MktActivityRecord.ChargeType.VatPayer}");
+            if (vatPayerType == null) throw new Exception($"No VAT payer type for {newCharge.VatClassification}");
 
             var chargeTypeOwnerMRid = await GetChargeTypeOwnerMRidAsync(newCharge).ConfigureAwait(false);
-            if (chargeTypeOwnerMRid == null) throw new Exception($"No market participant for {newCharge.ChargeTypeOwnerMRid}");
+            if (chargeTypeOwnerMRid == null) throw new Exception($"No market participant for {newCharge.Owner}");
 
-            var charge = ChangeOfChargesMapper.MapChangeOfChargesTransactionToCharge(newCharge, chargeType, chargeTypeOwnerMRid, resolutionType, vatPayerType);
+            var charge = ChangeOfChargesMapper.MapDomainChargeToCharge(
+                newCharge,
+                chargeType,
+                chargeTypeOwnerMRid,
+                resolutionType,
+                vatPayerType);
 
             await _chargesDatabaseContext.Charge.AddAsync(charge).ConfigureAwait(false);
             await _chargesDatabaseContext.SaveChangesAsync().ConfigureAwait(false);
@@ -76,32 +81,36 @@ namespace GreenEnergyHub.Charges.Infrastructure.Repositories
 
         private async Task<MarketParticipant?> GetChargeTypeOwnerMRidAsync(Charge chargeMessage)
         {
-            return string.IsNullOrWhiteSpace(chargeMessage.ChargeTypeOwnerMRid)
-                ? throw new ArgumentException($"Fails as {nameof(chargeMessage.ChargeTypeOwnerMRid)} is invalid")
+            return string.IsNullOrWhiteSpace(chargeMessage.Owner)
+                ? throw new ArgumentException($"Fails as {nameof(chargeMessage.Owner)} is invalid")
                 : await _chargesDatabaseContext.MarketParticipant.SingleOrDefaultAsync(type =>
-                type.MRid == chargeMessage.ChargeTypeOwnerMRid).ConfigureAwait(false);
+                type.MRid == chargeMessage.Owner).ConfigureAwait(false);
         }
 
         private async Task<VatPayerType?> GetVatPayerTypeAsync(Charge chargeMessage)
         {
-            return string.IsNullOrWhiteSpace(chargeMessage.MktActivityRecord.ChargeType.VatPayer)
-                ? throw new ArgumentException($"Fails as {nameof(chargeMessage.MktActivityRecord.ChargeType.VatPayer)} is invalid")
+            // If we start using a enum for Vat does it make sense to check if it exists?
+            return string.IsNullOrWhiteSpace(chargeMessage.VatClassification.ToString())
+                ? throw new ArgumentException($"Fails as {nameof(chargeMessage.VatClassification)} is invalid")
+                // Right now we cant support vat not being of type D01 or D02, After we refactor or DB scheme it will be update.
                 : await _chargesDatabaseContext.VatPayerType.SingleOrDefaultAsync(type =>
-                type.Name == chargeMessage.MktActivityRecord.ChargeType.VatPayer).ConfigureAwait(false);
+                    type.Name == "D01").ConfigureAwait(false);
         }
 
         private async Task<ResolutionType?> GetResolutionTypeAsync(Charge chargeMessage)
         {
-            return string.IsNullOrWhiteSpace(chargeMessage.Period.Resolution)
-                ? throw new ArgumentException($"Fails as {nameof(chargeMessage.Period.Resolution)} is invalid")
-                : await _chargesDatabaseContext.ResolutionType.SingleOrDefaultAsync(type => type.Name == chargeMessage.Period.Resolution).ConfigureAwait(false);
+            // If we start using a enum for Resolution does it make sense to check if it exists?
+            return string.IsNullOrWhiteSpace(chargeMessage.Resolution.ToString())
+                ? throw new ArgumentException($"Fails as {nameof(chargeMessage.Resolution)} is invalid")
+                : await _chargesDatabaseContext.ResolutionType.SingleOrDefaultAsync(type => type.Name == chargeMessage.Resolution.ToString()).ConfigureAwait(false);
         }
 
         private async Task<ChargeType?> GetChargeTypeAsync(Charge chargeMessage)
         {
-            return string.IsNullOrWhiteSpace(chargeMessage.Type)
+            // If we start using a enum for Chargetype does it make sense to check if it exists?
+            return string.IsNullOrWhiteSpace(chargeMessage.Type.ToString())
                 ? throw new ArgumentException($"Fails as {nameof(chargeMessage.Type)} is invalid")
-                : await _chargesDatabaseContext.ChargeType.SingleOrDefaultAsync(type => type.Code == chargeMessage.Type).ConfigureAwait(false);
+                : await _chargesDatabaseContext.ChargeType.SingleOrDefaultAsync(type => type.Name == chargeMessage.Type.ToString()).ConfigureAwait(false);
         }
     }
 }

@@ -35,7 +35,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChangeOfCharges
             [NotNull] ChangeOfChargesTransactionHandler sut)
         {
             // Arrange
-            var transaction = new ChangeOfChargesTransactionBuilder().Build();
+            var transaction = new ChargeCommandTestBuilder().Build();
 
             // Act
             await sut.HandleAsync(transaction).ConfigureAwait(false);

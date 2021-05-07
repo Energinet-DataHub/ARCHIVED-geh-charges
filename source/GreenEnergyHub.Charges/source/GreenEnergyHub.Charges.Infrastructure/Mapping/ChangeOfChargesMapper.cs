@@ -14,6 +14,7 @@
 
 using System;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
+using GreenEnergyHub.Charges.Domain.Common;
 using GreenEnergyHub.Charges.Infrastructure.Context.Model;
 using JetBrains.Annotations;
 using NodaTime;
@@ -24,7 +25,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Mapping
 {
     public static class ChangeOfChargesMapper
     {
-        public static Charge MapChangeOfChargesTransactionToCharge(
+        public static Charge MapDomainChargeToCharge(
             [NotNull]Domain.Charge chargeModel,
             ChargeType chargeType,
             MarketParticipant chargeTypeOwnerMRid,
@@ -37,33 +38,33 @@ namespace GreenEnergyHub.Charges.Infrastructure.Mapping
             {
                 ChargeType = chargeType,
                 ChargeTypeOwner = chargeTypeOwnerMRid,
-                Description = chargeModel.MktActivityRecord.ChargeType.Description,
+                Description = chargeModel.Description,
                 LastUpdatedBy = chargeModel.LastUpdatedBy,
-                LastUpdatedByCorrelationId = chargeModel.CorrelationId,
-                LastUpdatedByTransactionId = chargeModel.MktActivityRecord.MRid,
-                Name = chargeModel.MktActivityRecord.ChargeType.Name,
-                RequestDateTime = chargeModel.RequestDate.ToUnixTimeTicks(),
+                LastUpdatedByCorrelationId = chargeModel.Document.CorrelationId,
+                LastUpdatedByTransactionId = chargeModel.Document.Id,
+                Name = chargeModel.Name,
+                RequestDateTime = chargeModel.Document.RequestDate.ToUnixTimeTicks(),
                 ResolutionType = resolutionType,
-                StartDate = chargeModel.MktActivityRecord.ValidityStartDate.ToUnixTimeTicks(),
-                EndDate = chargeModel.MktActivityRecord.ValidityEndDate?.ToUnixTimeTicks(),
-                Status = (byte)chargeModel.MktActivityRecord.Status,
-                TaxIndicator = chargeModel.MktActivityRecord.ChargeType.TaxIndicator,
-                TransparentInvoicing = chargeModel.MktActivityRecord.ChargeType.TransparentInvoicing,
+                StartDate = chargeModel.StartDateTime.ToUnixTimeTicks(),
+                EndDate = chargeModel.EndDateTime?.ToUnixTimeTicks(),
+                Status = (byte)chargeModel.Status,
+                TaxIndicator = chargeModel.TaxIndicator,
+                TransparentInvoicing = chargeModel.TransparentInvoicing,
                 VatPayer = vatPayerType,
-                MRid = chargeModel.ChargeTypeMRid,
+                MRid = chargeModel.Id,
                 Currency = "DKK",
             };
 
-            foreach (var point in chargeModel.Period.Points)
+            foreach (var point in chargeModel.Points)
             {
                 var newChargePrice = new ChargePrice
                 {
                     Time = point.Time.ToUnixTimeTicks(),
-                    Amount = point.PriceAmount,
-                    LastUpdatedByCorrelationId = chargeModel.CorrelationId,
-                    LastUpdatedByTransactionId = chargeModel.MktActivityRecord.MRid,
+                    Amount = point.Price,
+                    LastUpdatedByCorrelationId = chargeModel.Document.CorrelationId,
+                    LastUpdatedByTransactionId = chargeModel.Document.Id,
                     LastUpdatedBy = chargeModel.LastUpdatedBy,
-                    RequestDateTime = chargeModel.RequestDate.ToUnixTimeTicks(),
+                    RequestDateTime = chargeModel.Document.RequestDate.ToUnixTimeTicks(),
                 };
 
                 charge.ChargePrices.Add(newChargePrice);
@@ -78,27 +79,23 @@ namespace GreenEnergyHub.Charges.Infrastructure.Mapping
 
             return new Domain.Charge
             {
-                ChargeTypeMRid = charge.MRid,
-                MktActivityRecord = new MktActivityRecord
+                    Id = charge.MRid,
+                    Type = Enum.Parse<GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction.ChargeType>(charge.ChargeType.Code!),
+                    Name = charge.Name, // Description to be Name
+                    Description = charge.Description, // LongDescription to be Description
+                    StartDateTime = Instant.FromUnixTimeTicks(charge.StartDate),
+                    EndDateTime = charge.EndDate != null ? Instant.FromUnixTimeTicks(charge.EndDate.Value) : (Instant?)null,
+                    VatClassification = Enum.Parse<VatClassification>(charge.VatPayer.Name),
+                    TransparentInvoicing = charge.TransparentInvoicing,
+                    TaxIndicator = charge.TaxIndicator,
+                    Owner = charge.ChargeTypeOwner.MRid,
+                    Resolution = Enum.Parse<Resolution>(charge.ResolutionType.Name!),
+                    ChargeOperationId = charge.LastUpdatedByTransactionId,
+                    Status = (OperationType)charge.Status,
+                    Document = new Document
                 {
-                    Status = (MktActivityRecordStatus)charge.Status,
-                    ChargeType = new Domain.ChangeOfCharges.Transaction.ChargeType()
-                    {
-                        Name = charge.Name,
-                        TaxIndicator = charge.TaxIndicator,
-                        VatPayer = charge.VatPayer.Name,
-                        Description = charge.Description,
-                        TransparentInvoicing = charge.TransparentInvoicing,
-                    },
-                    ValidityStartDate = Instant.FromUnixTimeTicks(charge.StartDate),
-
-                    // ReSharper disable once RedundantCast - removing the "as Instant?" cast will break the CI build
-                    ValidityEndDate = charge.EndDate != null ? Instant.FromUnixTimeTicks(charge.EndDate.Value) : null as Instant?,
+                    RequestDate = Instant.FromUnixTimeTicks(charge.RequestDateTime),
                 },
-                RequestDate = Instant.FromUnixTimeTicks(charge.RequestDateTime),
-                LastUpdatedBy = charge.LastUpdatedBy,
-                CorrelationId = charge.LastUpdatedByCorrelationId,
-                ChargeTypeOwnerMRid = charge.ChargeTypeOwner.MRid,
             };
         }
     }
