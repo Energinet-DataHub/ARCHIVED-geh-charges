@@ -33,7 +33,5 @@ namespace GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction
         public Document Document { get; set; }
 
         public ChargeOperation ChargeOperation { get; set; }
-
-        public ChargeDto ChargeDto { get; set; }
     }
 }

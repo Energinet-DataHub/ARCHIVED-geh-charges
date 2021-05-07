@@ -17,7 +17,7 @@ namespace GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction
     /// <summary>
     /// This enum indicates the action requested by the sender, e.g. using Addition when sender wants to create a new charge price list.
     /// </summary>
-    public enum ChargeEventFunction
+    public enum OperationType
     {
         Unknown = 0,
         Addition = 2,

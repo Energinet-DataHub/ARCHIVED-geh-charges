@@ -39,7 +39,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Mapping
                 ChargeType = chargeType,
                 ChargeTypeOwner = chargeTypeOwnerMRid,
                 Description = chargeModel.Description,
-                LastUpdatedBy = chargeModel.ChargeOperation.LastUpdatedBy,
+                LastUpdatedBy = chargeModel.LastUpdatedBy,
                 LastUpdatedByCorrelationId = chargeModel.Document.CorrelationId,
                 LastUpdatedByTransactionId = chargeModel.Document.Id,
                 Name = chargeModel.Name,
@@ -47,7 +47,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Mapping
                 ResolutionType = resolutionType,
                 StartDate = chargeModel.StartDateTime.ToUnixTimeTicks(),
                 EndDate = chargeModel.EndDateTime?.ToUnixTimeTicks(),
-                Status = (byte)chargeModel.ChargeOperation.Status,
+                Status = (byte)chargeModel.Status,
                 TaxIndicator = chargeModel.Tax,
                 TransparentInvoicing = chargeModel.TransparentInvoicing,
                 VatPayer = vatPayerType,
@@ -63,7 +63,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Mapping
                     Amount = point.Price,
                     LastUpdatedByCorrelationId = chargeModel.Document.CorrelationId,
                     LastUpdatedByTransactionId = chargeModel.Document.Id,
-                    LastUpdatedBy = chargeModel.ChargeOperation.LastUpdatedBy,
+                    LastUpdatedBy = chargeModel.LastUpdatedBy,
                     RequestDateTime = chargeModel.Document.RequestDate.ToUnixTimeTicks(),
                 };
 
@@ -90,11 +90,8 @@ namespace GreenEnergyHub.Charges.Infrastructure.Mapping
                     Tax = charge.TaxIndicator,
                     Owner = charge.ChargeTypeOwner.MRid,
                     Resolution = Enum.Parse<Resolution>(charge.ResolutionType.Name!),
-                    ChargeOperation = new ChargeOperation
-                {
-                    Id = charge.LastUpdatedByTransactionId,
-                    Status = (ChargeEventFunction)charge.Status,
-                },
+                    ChargeOperationId = charge.LastUpdatedByTransactionId,
+                    Status = (OperationType)charge.Status,
                     Document = new Document
                 {
                     RequestDate = Instant.FromUnixTimeTicks(charge.RequestDateTime),

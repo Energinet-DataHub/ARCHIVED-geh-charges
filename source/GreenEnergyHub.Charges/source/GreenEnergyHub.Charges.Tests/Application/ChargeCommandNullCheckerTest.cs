@@ -13,15 +13,11 @@
 // limitations under the License.
 
 using System;
-using System.Collections.Generic;
 using GreenEnergyHub.Charges.Application;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
-using GreenEnergyHub.Charges.Domain.Common;
+using GreenEnergyHub.Charges.Tests.Builders;
 using GreenEnergyHub.TestHelpers;
-using NodaTime;
 using Xunit;
-using MarketParticipant = GreenEnergyHub.Charges.Domain.Common.MarketParticipant;
-using MarketParticipantRole = GreenEnergyHub.Charges.Domain.Common.MarketParticipantRole;
 
 namespace GreenEnergyHub.Charges.Tests.Application
 {
@@ -37,7 +33,6 @@ namespace GreenEnergyHub.Charges.Tests.Application
         [InlineAutoDomainData("valid", "Valid", "Valid", "Valid", "Valid", "Valid", null, "Valid", "Valid", "Valid")]
         [InlineAutoDomainData("valid", "Valid", "Valid", "Valid", "Valid", "Valid", "Valid", null, "Valid", "Valid")]
         [InlineAutoDomainData("valid", "Valid", "Valid", "Valid", "Valid", "Valid", "Valid", "Valid", null, "Valid")]
-        [InlineAutoDomainData("valid", "Valid", "Valid", "Valid", "Valid", "Valid", "Valid", "Valid", "Valid", null)]
         [InlineAutoDomainData("", "Valid", "Valid", "Valid", "Valid", "Valid", "Valid", "Valid", "Valid", "Valid")]
         [InlineAutoDomainData("valid", "", "Valid", "Valid", "Valid", "Valid", "Valid", "Valid", "Valid", "Valid")]
         [InlineAutoDomainData("valid", "Valid", "", "Valid", "Valid", "Valid", "Valid", "Valid", "Valid", "Valid")]
@@ -47,11 +42,9 @@ namespace GreenEnergyHub.Charges.Tests.Application
         [InlineAutoDomainData("valid", "Valid", "Valid", "Valid", "Valid", "Valid", "", "Valid", "Valid", "Valid")]
         [InlineAutoDomainData("valid", "Valid", "Valid", "Valid", "Valid", "Valid", "Valid", "", "Valid", "Valid")]
         [InlineAutoDomainData("valid", "Valid", "Valid", "Valid", "Valid", "Valid", "Valid", "Valid", "", "Valid")]
-        [InlineAutoDomainData("valid", "Valid", "Valid", "Valid", "Valid", "Valid", "Valid", "Valid", "Valid", "")]
         public void ChargeCommandPropertiesAreNotNullOrWhitespace(
             string chargeId,
             string correlationId,
-            string lastUpdatedBy,
             string owner,
             string documentId,
             string senderId,
@@ -61,38 +54,26 @@ namespace GreenEnergyHub.Charges.Tests.Application
             string chargeTypeDescription)
         {
             // Arrange
-            var c = GetValidCharge();
-            c.ChargeDto.Id = chargeId;
-            c.ChargeDto.Owner = owner;
+            var c = Build();
+            c.ChargeOperation.ChargeId = chargeId;
+            c.ChargeOperation.ChargeOwner = owner;
             c.SetCorrelationId(correlationId);
-            c.ChargeOperation.LastUpdatedBy = lastUpdatedBy;
             c.Document.Id = documentId;
             c.Document.Sender.MRid = senderId;
             c.Document.Recipient.MRid = recipientId;
             c.ChargeOperation.Id = eventId;
-            c.ChargeDto.Description = chargeTypeLongDescription;
-            c.ChargeDto.Name = chargeTypeDescription;
+            c.ChargeOperation.ChargeDescription = chargeTypeLongDescription;
+            c.ChargeOperation.ChargeName = chargeTypeDescription;
 
             // Act & Assert
             Assert.Throws<ArgumentException>(() => ChargeCommandNullChecker.ThrowExceptionIfRequiredPropertyIsNull(c));
         }
 
         [Fact]
-        public void ChargeCommandChargeIsNullThrowsException()
-        {
-            // Arrange
-            var c = GetValidCharge();
-            c.ChargeDto = null!;
-
-            // Act & Assert
-            Assert.Throws<ArgumentNullException>(() => ChargeCommandNullChecker.ThrowExceptionIfRequiredPropertyIsNull(c));
-        }
-
-        [Fact]
         public void ChargeCommandDocumentIsNullThrowsException()
         {
             // Arrange
-            var c = GetValidCharge();
+            var c = Build();
             c.Document = null!;
 
             // Act & Assert
@@ -100,66 +81,21 @@ namespace GreenEnergyHub.Charges.Tests.Application
         }
 
         [Fact]
-        public void ChargeCommandChargeEventIsNullThrowsException()
+        public void ChargeCommandChargeOperationIsNullThrowsException()
         {
             // Arrange
-            var c = GetValidCharge();
+            var testBuilder = new ChargeCommandTestBuilder();
+            var c = testBuilder.Build();
             c.ChargeOperation = null!;
 
             // Act & Assert
             Assert.Throws<ArgumentNullException>(() => ChargeCommandNullChecker.ThrowExceptionIfRequiredPropertyIsNull(c));
         }
 
-        private static ChargeCommand GetValidCharge()
+        private static ChargeCommand Build()
         {
-            return new ("some-correlation-id")
-            {
-                ChargeDto = new ChargeDto
-                {
-                    Name = "description",
-                    Id = "id",
-                    StartDateTime = SystemClock.Instance.GetCurrentInstant(),
-                    Owner = "owner",
-                    Points = new List<Point>
-                    {
-                        new Point { Position = 0, Time = SystemClock.Instance.GetCurrentInstant(), Price = 200m },
-                    },
-                    Resolution = Resolution.P1D,
-                    Type = ChargeType.Fee,
-                    Vat = Vat.NoVat,
-                    Description = "LongDescription",
-                },
-                Document = new Document
-                {
-                    Id = "id",
-                    CorrelationId = "CorrelationId",
-                    RequestDate = SystemClock.Instance.GetCurrentInstant(),
-                    Recipient = new MarketParticipant
-                    {
-                        Id = 0,
-                        Name = "Name",
-                        Role = MarketParticipantRole.EnergySupplier,
-                        MRid = "MRid",
-                    },
-                    Sender = new MarketParticipant
-                    {
-                        Id = 1,
-                        Name = "Name",
-                        Role = MarketParticipantRole.EnergySupplier,
-                        MRid = "MRid",
-                    },
-                    Type = "type",
-                    IndustryClassification = IndustryClassification.Electricity,
-                    CreatedDateTime = SystemClock.Instance.GetCurrentInstant(),
-                },
-                ChargeOperation = new ChargeOperation
-                {
-                  Id = "id",
-                  Status = ChargeEventFunction.Change,
-                  BusinessReasonCode = BusinessReasonCode.UpdateChargeInformation,
-                  LastUpdatedBy = "LastUpdatedBy",
-                },
-            };
+            var builder = new ChargeCommandTestBuilder();
+            return builder.Build();
         }
     }
 }

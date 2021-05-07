@@ -187,13 +187,10 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
                     IndustryClassification = IndustryClassification.Electricity,
                     CreatedDateTime = SystemClock.Instance.GetCurrentInstant(),
                 },
-                ChargeOperation = new ChargeOperation
-                {
-                    Id = "id",
-                    Status = ChargeEventFunction.Addition,
-                    BusinessReasonCode = BusinessReasonCode.UpdateChargeInformation,
-                    LastUpdatedBy = "LastUpdatedBy",
-                },
+                ChargeOperationId = "id",
+                Status = OperationType.Addition,
+                BusinessReasonCode = BusinessReasonCode.UpdateChargeInformation,
+                LastUpdatedBy = "LastUpdatedBy",
             };
             return transaction;
         }
@@ -210,7 +207,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
             var resolutionTypes = new List<ResolutionType> { new ResolutionType { Name = "P1D", Id = 1, } };
             context.AddRange(resolutionTypes);
 
-            var vatPayerTypes = new List<VatPayerType> { new VatPayerType { Name = "NoVat", Id = 1, } };
+            var vatPayerTypes = new List<VatPayerType> { new VatPayerType { Name = "D01", Id = 1, } };
             context.AddRange(vatPayerTypes);
 
             var chargeOwners = new List<MarketParticipant>

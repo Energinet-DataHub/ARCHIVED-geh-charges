@@ -26,19 +26,22 @@ namespace GreenEnergyHub.Charges.Application
             var c = new Charge
             {
                 Document = command.Document,
-                ChargeOperation = command.ChargeOperation,
-                Id = command.ChargeDto.Id,
-                Description = command.ChargeDto.Description,
-                Name = command.ChargeDto.Name,
-                Owner = command.ChargeDto.Owner,
-                Points = command.ChargeDto.Points,
-                Resolution = command.ChargeDto.Resolution,
-                Tax = command.ChargeDto.Tax,
-                Type = command.ChargeDto.Type,
-                Vat = command.ChargeDto.Vat,
-                TransparentInvoicing = command.ChargeDto.TransparentInvoicing,
-                EndDateTime = command.ChargeDto.EndDateTime,
-                StartDateTime = command.ChargeDto.StartDateTime,
+                Id = command.ChargeOperation.ChargeId,
+                Description = command.ChargeOperation.ChargeDescription,
+                Name = command.ChargeOperation.ChargeName,
+                Owner = command.ChargeOperation.ChargeOwner,
+                Points = command.ChargeOperation.Points,
+                Resolution = command.ChargeOperation.Resolution,
+                Tax = command.ChargeOperation.Tax,
+                Type = command.ChargeOperation.Type,
+                Vat = command.ChargeOperation.Vat,
+                TransparentInvoicing = command.ChargeOperation.TransparentInvoicing,
+                EndDateTime = command.ChargeOperation.EndDateTime,
+                StartDateTime = command.ChargeOperation.StartDateTime,
+                Status = command.ChargeOperation.Status,
+                BusinessReasonCode = command.ChargeOperation.BusinessReasonCode,
+                ChargeOperationId = command.ChargeOperation.Id,
+                LastUpdatedBy = "Volt", // This should be used to identify the user.
             };
             // Right now CorrelationId is not a part of the Charge, but its needed for persistence.
             c.Document.CorrelationId = command.CorrelationId;

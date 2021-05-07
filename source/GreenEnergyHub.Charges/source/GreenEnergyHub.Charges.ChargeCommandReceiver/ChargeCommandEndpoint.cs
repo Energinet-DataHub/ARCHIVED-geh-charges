@@ -54,7 +54,8 @@ namespace GreenEnergyHub.Charges.ChargeCommandReceiver
             SetCorrelationContext(chargeCommand);
             await _chargeCommandHandler.HandleAsync(chargeCommand).ConfigureAwait(false);
 
-            log.LogDebug("Received command with charge type mRID '{mRID}'", chargeCommand.ChargeDto.Id);
+            //TODO: LRN is it correct with this log? ChargeId / mRID is not set on a create I take it?
+            log.LogDebug("Received command with charge type mRID '{mRID}'", chargeCommand.ChargeOperation.ChargeId);
         }
 
         private void SetCorrelationContext(ChargeCommand command)

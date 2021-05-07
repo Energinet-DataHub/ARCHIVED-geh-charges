@@ -28,7 +28,7 @@ namespace GreenEnergyHub.Charges.Application.Validation.BusinessValidation.Valid
             _charge = charge;
         }
 
-        public bool IsValid => _command.ChargeDto.Vat == _charge.Vat;
+        public bool IsValid => _command.ChargeOperation.Vat == _charge.Vat;
 
         public ValidationRuleIdentifier ValidationRuleIdentifier => ValidationRuleIdentifier.ChangingTariffVatValueNotAllowed;
     }

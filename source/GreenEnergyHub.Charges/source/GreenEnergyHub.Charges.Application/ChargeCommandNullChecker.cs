@@ -13,7 +13,6 @@
 // limitations under the License.
 
 using System;
-using System.Linq;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
 using GreenEnergyHub.Charges.Domain.Common;
 using MarketParticipant = GreenEnergyHub.Charges.Domain.Common.MarketParticipant;
@@ -27,26 +26,18 @@ namespace GreenEnergyHub.Charges.Application
             if (chargeCommand == null) throw new ArgumentNullException(nameof(chargeCommand));
             if (string.IsNullOrWhiteSpace(chargeCommand.CorrelationId)) throw new ArgumentException(chargeCommand.CorrelationId);
 
-            CheckCharge(chargeCommand.ChargeDto);
             CheckDocument(chargeCommand.Document);
             CheckEvent(chargeCommand.ChargeOperation);
-        }
-
-        private static void CheckCharge(ChargeDto chargeDto)
-        {
-            if (chargeDto == null) throw new ArgumentNullException(nameof(chargeDto));
-
-            if (string.IsNullOrWhiteSpace(chargeDto.Owner)) throw new ArgumentException(chargeDto.Owner);
-            if (string.IsNullOrWhiteSpace(chargeDto.Id)) throw new ArgumentException(chargeDto.Id);
-            if (string.IsNullOrWhiteSpace(chargeDto.Name)) throw new ArgumentException(chargeDto.Name);
-            if (string.IsNullOrWhiteSpace(chargeDto.Description)) throw new ArgumentException(chargeDto.Description);
         }
 
         private static void CheckEvent(ChargeOperation chargeOperation)
         {
             if (chargeOperation == null) throw new ArgumentNullException(nameof(chargeOperation));
             if (string.IsNullOrWhiteSpace(chargeOperation.Id)) throw new ArgumentException(chargeOperation.Id);
-            if (string.IsNullOrWhiteSpace(chargeOperation.LastUpdatedBy)) throw new ArgumentException(chargeOperation.LastUpdatedBy);
+            if (string.IsNullOrWhiteSpace(chargeOperation.ChargeOwner)) throw new ArgumentException(chargeOperation.ChargeOwner);
+            if (string.IsNullOrWhiteSpace(chargeOperation.ChargeId)) throw new ArgumentException(chargeOperation.ChargeId);
+            if (string.IsNullOrWhiteSpace(chargeOperation.ChargeName)) throw new ArgumentException(chargeOperation.ChargeName);
+            if (string.IsNullOrWhiteSpace(chargeOperation.ChargeDescription)) throw new ArgumentException(chargeOperation.ChargeDescription);
         }
 
         private static void CheckDocument(Document document)

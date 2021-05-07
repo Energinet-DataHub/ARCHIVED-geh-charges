@@ -30,7 +30,14 @@ namespace GreenEnergyHub.Charges.Domain
 
         public Document Document { get; set; }
 
-        public ChargeOperation ChargeOperation { get; set; }
+        /// <summary>
+        /// Contains a unique ID for the specific Charge Event, provided by the sender.
+        /// </summary>
+        public string ChargeOperationId { get; set; }
+
+        public BusinessReasonCode BusinessReasonCode { get; set; }
+
+        public OperationType Status { get; set; }
 
         /// <summary>
         /// Unique ID of a charge (Note, unique per market participants).
@@ -77,6 +84,11 @@ namespace GreenEnergyHub.Charges.Domain
         public string Owner { get; set; }
 
         public Resolution Resolution { get; set; }
+
+        /// <summary>
+        /// PTA: Is this relevant for an incoming charge command?
+        /// </summary>
+        public string LastUpdatedBy { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2227", Justification = "JSON deserialization")]
         public List<Point> Points { get; set; }

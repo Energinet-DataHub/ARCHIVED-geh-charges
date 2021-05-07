@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Collections.Generic;
 using GreenEnergyHub.Charges.Domain.Common;
 using NodaTime;
 #pragma warning disable 8618
@@ -27,6 +28,11 @@ namespace GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction
     /// </summary>
     public class ChargeOperation
     {
+        public ChargeOperation()
+        {
+            Points = new List<Point>();
+        }
+
         /// <summary>
         /// Contains a unique ID for the specific Charge Event, provided by the sender.
         /// </summary>
@@ -34,11 +40,55 @@ namespace GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction
 
         public BusinessReasonCode BusinessReasonCode { get; set; }
 
-        public ChargeEventFunction Status { get; set; }
+        public OperationType Status { get; set; }
 
         /// <summary>
-        /// PTA: Is this relevant for an incoming charge command?
+        /// Unique ID of a charge (Note, unique per market participants).
+        /// Example: EA-001
         /// </summary>
-        public string LastUpdatedBy { get; set; }
+        public string ChargeId { get; set; }
+
+        public ChargeType Type { get; set; }
+
+        /// <summary>
+        /// The charge name
+        /// Example: "Elafgift"
+        /// </summary>
+        public string ChargeName { get; set; }
+
+        public string ChargeDescription { get; set; }
+
+        /// <summary>
+        /// Valid from, of a charge price list. Also known as Effective Date.
+        /// </summary>
+        public Instant StartDateTime { get; set; }
+
+        /// <summary>
+        /// Valid to, of a charge price list.
+        /// </summary>
+        public Instant? EndDateTime { get; set; }
+
+        public Vat Vat { get; set; }
+
+        /// <summary>
+        /// In Denmark the Energy Supplier invoices the customer, including the charges from the Grid Access Provider and the System Operator.
+        /// This boolean can be use to indicate that a charge must be visible on the invoice sent to the customer.
+        /// </summary>
+        public bool TransparentInvoicing { get; set; }
+
+        /// <summary>
+        /// Indicates whether the Charge is tax or not.
+        /// </summary>
+        public bool Tax { get; set; }
+
+        /// <summary>
+        ///  Charge Owner, e.g. the GLN or EIC identification number.
+        /// </summary>
+        public string ChargeOwner { get; set; }
+
+        public Resolution Resolution { get; set; }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2227", Justification = "JSON deserialization")]
+        public List<Point> Points { get; set; }
     }
 }

@@ -19,7 +19,7 @@ using NodaTime;
 
 namespace GreenEnergyHub.Charges.Tests.Builders
 {
-   public class ChangeOfChargesTransactionBuilder
+   public class ChargeCommandTestBuilder
     {
         private string _mrid;
         private Instant _validityStartDate;
@@ -28,7 +28,7 @@ namespace GreenEnergyHub.Charges.Tests.Builders
         private int _status;
         private string _owner;
 
-        public ChangeOfChargesTransactionBuilder()
+        public ChargeCommandTestBuilder()
         {
             _mrid = "some mrid";
             _validityStartDate = SystemClock.Instance.GetCurrentInstant()
@@ -39,38 +39,38 @@ namespace GreenEnergyHub.Charges.Tests.Builders
             _owner = "owner";
         }
 
-        public ChangeOfChargesTransactionBuilder WithMrid(string mrid)
+        public ChargeCommandTestBuilder WithMrid(string mrid)
         {
             _mrid = mrid;
             return this;
         }
 
-        public ChangeOfChargesTransactionBuilder WithValidityStartDateDays(int days)
+        public ChargeCommandTestBuilder WithValidityStartDateDays(int days)
         {
             _validityStartDate = SystemClock.Instance.GetCurrentInstant()
                 .Plus(Duration.FromDays(days));
             return this;
         }
 
-        public ChangeOfChargesTransactionBuilder WithTaxIndicator(bool taxIndicator)
+        public ChargeCommandTestBuilder WithTaxIndicator(bool taxIndicator)
         {
             _taxIndicator = taxIndicator;
             return this;
         }
 
-        public ChangeOfChargesTransactionBuilder WithOwner(string owner)
+        public ChargeCommandTestBuilder WithOwner(string owner)
         {
             _owner = owner;
             return this;
         }
 
-        public ChangeOfChargesTransactionBuilder WithVatPayer(string vatPayer)
+        public ChargeCommandTestBuilder WithVatPayer(string vatPayer)
         {
             _vatPayer = vatPayer;
             return this;
         }
 
-        public ChangeOfChargesTransactionBuilder WithStatus(int status)
+        public ChargeCommandTestBuilder WithStatus(int status)
         {
             _status = status;
             return this;
@@ -80,22 +80,6 @@ namespace GreenEnergyHub.Charges.Tests.Builders
         {
             return new ("some-correlation-id")
             {
-                ChargeDto = new ChargeDto
-                {
-                    Name = "description",
-                    Id = _mrid,
-                    Owner = _owner,
-                    StartDateTime = _validityStartDate,
-                    Points = new List<Point>
-                    {
-                        new Point { Position = 0, Time = SystemClock.Instance.GetCurrentInstant(), Price = 200m },
-                    },
-                    Resolution = Resolution.PT1H,
-                    Type = ChargeType.Fee,
-                    Vat = Vat.Vat25,
-                    Description = "LongDescription",
-                    Tax = _taxIndicator,
-                },
                 Document = new Document
                 {
                     Id = "id",
@@ -108,9 +92,21 @@ namespace GreenEnergyHub.Charges.Tests.Builders
                 ChargeOperation = new ChargeOperation
                 {
                   Id = "id",
-                  Status = ChargeEventFunction.Addition,
+                  Status = OperationType.Addition,
                   BusinessReasonCode = BusinessReasonCode.UpdateChargeInformation,
-                  LastUpdatedBy = "LastUpdatedBy",
+                  ChargeName = "description",
+                  ChargeId = _mrid,
+                  ChargeOwner = _owner,
+                  StartDateTime = _validityStartDate,
+                  Points = new List<Point>
+                  {
+                      new Point { Position = 0, Time = SystemClock.Instance.GetCurrentInstant(), Price = 200m },
+                  },
+                  Resolution = Resolution.PT1H,
+                  Type = ChargeType.Fee,
+                  Vat = Vat.Vat25,
+                  ChargeDescription = "LongDescription",
+                  Tax = _taxIndicator,
                 },
             };
         }
