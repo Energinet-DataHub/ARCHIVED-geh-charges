@@ -65,7 +65,7 @@ namespace GreenEnergyHub.Charges.Domain
         /// </summary>
         public Instant? EndDateTime { get; set; }
 
-        public Vat Vat { get; set; }
+        public VatClassification VatClassification { get; set; }
 
         /// <summary>
         /// In Denmark the Energy Supplier invoices the customer, including the charges from the Grid Access Provider and the System Operator.
@@ -76,7 +76,7 @@ namespace GreenEnergyHub.Charges.Domain
         /// <summary>
         /// Indicates whether the Charge is tax or not.
         /// </summary>
-        public bool Tax { get; set; }
+        public bool Taxable { get; set; }
 
         /// <summary>
         ///  Charge Owner, e.g. the GLN or EIC identification number.

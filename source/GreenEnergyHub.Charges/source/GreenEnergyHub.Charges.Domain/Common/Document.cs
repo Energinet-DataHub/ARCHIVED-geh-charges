@@ -39,10 +39,7 @@ namespace GreenEnergyHub.Charges.Domain.Common
         /// </summary>
         public Instant RequestDate { get; set; } = SystemClock.Instance.GetCurrentInstant();
 
-        /// <summary>
-        /// The document type indicates the intended business context of this business message.
-        /// </summary>
-        public string Type { get; set; }
+        public DocumentType Type { get; set; }
 
         /// <summary>
         /// A point in time provided by the sender

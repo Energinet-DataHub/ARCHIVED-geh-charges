@@ -29,7 +29,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Validation.BusinessValidation
             [NotNull]ChargeCommand command,
             [NotNull] Charge charge)
         {
-            command.ChargeOperation.Tax = !charge.Tax;
+            command.ChargeOperation.TaxIndicator = !charge.Taxable;
             var sut = new ChangingTariffTaxValueNotAllowedRule(command, charge);
             Assert.False(sut.IsValid);
         }
@@ -40,7 +40,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Validation.BusinessValidation
             [NotNull]ChargeCommand command,
             [NotNull] Charge charge)
         {
-            command.ChargeOperation.Tax = charge.Tax;
+            command.ChargeOperation.TaxIndicator = charge.Taxable;
             var sut = new ChangingTariffTaxValueNotAllowedRule(command, charge);
             Assert.True(sut.IsValid);
         }

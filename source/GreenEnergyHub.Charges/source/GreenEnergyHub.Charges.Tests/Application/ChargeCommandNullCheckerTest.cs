@@ -50,8 +50,8 @@ namespace GreenEnergyHub.Charges.Tests.Application
             string senderId,
             string recipientId,
             string eventId,
-            string chargeTypeLongDescription,
-            string chargeTypeDescription)
+            string description,
+            string chargeName)
         {
             // Arrange
             var c = Build();
@@ -62,8 +62,8 @@ namespace GreenEnergyHub.Charges.Tests.Application
             c.Document.Sender.MRid = senderId;
             c.Document.Recipient.MRid = recipientId;
             c.ChargeOperation.Id = eventId;
-            c.ChargeOperation.ChargeDescription = chargeTypeLongDescription;
-            c.ChargeOperation.ChargeName = chargeTypeDescription;
+            c.ChargeOperation.ChargeDescription = description;
+            c.ChargeOperation.ChargeName = chargeName;
 
             // Act & Assert
             Assert.Throws<ArgumentException>(() => ChargeCommandNullChecker.ThrowExceptionIfRequiredPropertyIsNull(c));

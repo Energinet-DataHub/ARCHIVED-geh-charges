@@ -20,6 +20,6 @@ namespace GreenEnergyHub.Charges.Domain.Common
     public enum BusinessReasonCode
     {
         Unknown = 0,
-        UpdateChargeInformation = 18,
+        UpdateChargeInformation = 18, // This will be received as D18 in ebiX.
     }
 }

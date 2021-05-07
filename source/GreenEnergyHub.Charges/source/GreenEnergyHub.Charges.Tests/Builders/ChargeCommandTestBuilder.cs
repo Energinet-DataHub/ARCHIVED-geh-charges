@@ -84,7 +84,7 @@ namespace GreenEnergyHub.Charges.Tests.Builders
                 {
                     Id = "id",
                     CorrelationId = "CorrelationId",
-                    Type = "type",
+                    Type = DocumentType.RequestUpdateChargeInformation,
                     RequestDate = SystemClock.Instance.GetCurrentInstant(),
                     IndustryClassification = IndustryClassification.Electricity,
                     CreatedDateTime = SystemClock.Instance.GetCurrentInstant(),
@@ -104,9 +104,9 @@ namespace GreenEnergyHub.Charges.Tests.Builders
                   },
                   Resolution = Resolution.PT1H,
                   Type = ChargeType.Fee,
-                  Vat = Vat.Vat25,
+                  VatClassification = VatClassification.Vat25,
                   ChargeDescription = "LongDescription",
-                  Tax = _taxIndicator,
+                  TaxIndicator = _taxIndicator,
                 },
             };
         }

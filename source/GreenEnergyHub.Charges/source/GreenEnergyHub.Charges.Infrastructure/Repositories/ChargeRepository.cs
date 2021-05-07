@@ -63,7 +63,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Repositories
             if (resolutionType == null) throw new Exception($"No resolution type for {newCharge.Resolution}");
 
             var vatPayerType = await GetVatPayerTypeAsync(newCharge).ConfigureAwait(false);
-            if (vatPayerType == null) throw new Exception($"No VAT payer type for {newCharge.Vat}");
+            if (vatPayerType == null) throw new Exception($"No VAT payer type for {newCharge.VatClassification}");
 
             var chargeTypeOwnerMRid = await GetChargeTypeOwnerMRidAsync(newCharge).ConfigureAwait(false);
             if (chargeTypeOwnerMRid == null) throw new Exception($"No market participant for {newCharge.Owner}");
@@ -90,8 +90,8 @@ namespace GreenEnergyHub.Charges.Infrastructure.Repositories
         private async Task<VatPayerType?> GetVatPayerTypeAsync(Charge chargeMessage)
         {
             // If we start using a enum for Vat does it make sense to check if it exists?
-            return string.IsNullOrWhiteSpace(chargeMessage.Vat.ToString())
-                ? throw new ArgumentException($"Fails as {nameof(chargeMessage.Vat)} is invalid")
+            return string.IsNullOrWhiteSpace(chargeMessage.VatClassification.ToString())
+                ? throw new ArgumentException($"Fails as {nameof(chargeMessage.VatClassification)} is invalid")
                 // Right now we cant support vat not being of type D01 or D02, After we refactor or DB scheme it will be update.
                 : await _chargesDatabaseContext.VatPayerType.SingleOrDefaultAsync(type =>
                     type.Name == "D01").ConfigureAwait(false);

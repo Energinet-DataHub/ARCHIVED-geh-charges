@@ -148,7 +148,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
             var chargeType = new ChargeType { Code = charge.Type.ToString(), Id = 1, Name = "Name" };
             var chargeTypeOwnerMRid = new MarketParticipant { Id = 1, MRid = charge.Owner, Name = "Name" };
             var resolutionType = new ResolutionType { Id = 1, Name = charge.Resolution.ToString() };
-            var vatPayerType = new VatPayerType { Id = 1, Name = charge.Vat.ToString() };
+            var vatPayerType = new VatPayerType { Id = 1, Name = charge.VatClassification.ToString() };
 
             // When
             var result = ChangeOfChargesMapper.MapDomainChargeToCharge(charge, chargeType, chargeTypeOwnerMRid, resolutionType, vatPayerType);
@@ -175,7 +175,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
                     },
                 Resolution = Resolution.P1D,
                 Type = Domain.ChangeOfCharges.Transaction.ChargeType.Fee,
-                Vat = Vat.NoVat,
+                VatClassification = VatClassification.NoVat,
                 Description = "LongDescription",
 
                 Document = new Document
@@ -183,7 +183,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
                     Id = "id",
                     CorrelationId = "CorrelationId",
                     RequestDate = SystemClock.Instance.GetCurrentInstant(),
-                    Type = "type",
+                    Type = DocumentType.RequestUpdateChargeInformation,
                     IndustryClassification = IndustryClassification.Electricity,
                     CreatedDateTime = SystemClock.Instance.GetCurrentInstant(),
                 },
