@@ -14,12 +14,12 @@
 
 using System;
 using System.Diagnostics.CodeAnalysis;
+using Azure.Messaging.ServiceBus;
 using GreenEnergyHub.Charges.Application;
 using GreenEnergyHub.Charges.ChargeAcknowledgementSender;
 using GreenEnergyHub.Charges.Domain.Events.Local;
 using GreenEnergyHub.Charges.Infrastructure.Messaging;
 using GreenEnergyHub.Charges.Infrastructure.Messaging.Serialization;
-using GreenEnergyHub.Charges.Infrastructure.PostOffice;
 using GreenEnergyHub.Json;
 using GreenEnergyHub.Messaging.Transport;
 using Microsoft.Azure.Functions.Extensions.DependencyInjection;
@@ -35,28 +35,28 @@ namespace GreenEnergyHub.Charges.ChargeAcknowledgementSender
         public override void Configure([NotNull] IFunctionsHostBuilder builder)
         {
             builder.Services.AddScoped(typeof(IClock), _ => SystemClock.Instance);
-            builder.Services.AddScoped<IChargeAcknowledgementSender, Infrastructure.ChargeAcknowledgementSender>();
+            builder.Services.AddScoped<IChargeAcknowledgementSender, Application.ChargeAcknowledgementSender>();
+            builder.Services.AddScoped<ICorrelationContext, CorrelationContext>();
 
-            ConfigurePostOffice(builder);
             ConfigureMessaging(builder);
-        }
-
-        private static void ConfigurePostOffice(IFunctionsHostBuilder builder)
-        {
-            builder.Services.AddScoped<IPostOfficeService, PostOfficeService>();
-            builder.Services.AddOptions<PostOfficeConfiguration>().Configure(
-                configuration =>
-                {
-                    configuration.ConnectionString = Environment.GetEnvironmentVariable("POST_OFFICE_SENDER_CONNECTION_STRING");
-                    configuration.TopicName = Environment.GetEnvironmentVariable("POST_OFFICE_TOPIC_NAME");
-                });
         }
 
         private static void ConfigureMessaging(IFunctionsHostBuilder builder)
         {
-            builder.Services.AddScoped<ICorrelationContext, CorrelationContext>();
-            builder.Services.AddScoped<MessageDeserializer, JsonMessageDeserializer<ChargeCommandAcceptedEvent>>();
             builder.Services.AddScoped<MessageExtractor>();
+            builder.Services.AddScoped<MessageDispatcher>();
+            builder.Services.AddScoped<MessageSerializer, JsonMessageSerializer>();
+            builder.Services.AddScoped<IJsonOutboundMapperFactory, DefaultJsonMapperFactory>();
+            builder.Services.AddScoped<Channel, ServiceBusChannel>();
+            builder.Services.AddScoped<ServiceBusSender>(
+                _ =>
+                {
+                    var connectionString = Environment.GetEnvironmentVariable("POST_OFFICE_SENDER_CONNECTION_STRING");
+                    var topicName = Environment.GetEnvironmentVariable("POST_OFFICE_TOPIC_NAME");
+                    var client = new ServiceBusClient(connectionString);
+                    return client.CreateSender(topicName);
+                });
+            builder.Services.AddScoped<MessageDeserializer, JsonMessageDeserializer<ChargeCommandAcceptedEvent>>();
             builder.Services.AddSingleton<IJsonSerializer, GreenEnergyHub.Charges.Core.Json.JsonSerializer>();
         }
     }
