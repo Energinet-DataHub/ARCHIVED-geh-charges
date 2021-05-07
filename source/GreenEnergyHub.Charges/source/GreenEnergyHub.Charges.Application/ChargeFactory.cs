@@ -32,7 +32,7 @@ namespace GreenEnergyHub.Charges.Application
                 Owner = command.ChargeOperation.ChargeOwner,
                 Points = command.ChargeOperation.Points,
                 Resolution = command.ChargeOperation.Resolution,
-                Taxable = command.ChargeOperation.TaxIndicator,
+                TaxIndicator = command.ChargeOperation.TaxIndicator,
                 Type = command.ChargeOperation.Type,
                 VatClassification = command.ChargeOperation.VatClassification,
                 TransparentInvoicing = command.ChargeOperation.TransparentInvoicing,

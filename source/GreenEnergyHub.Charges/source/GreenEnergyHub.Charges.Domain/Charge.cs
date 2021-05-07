@@ -76,7 +76,7 @@ namespace GreenEnergyHub.Charges.Domain
         /// <summary>
         /// Indicates whether the Charge is tax or not.
         /// </summary>
-        public bool Taxable { get; set; }
+        public bool TaxIndicator { get; set; }
 
         /// <summary>
         ///  Charge Owner, e.g. the GLN or EIC identification number.
