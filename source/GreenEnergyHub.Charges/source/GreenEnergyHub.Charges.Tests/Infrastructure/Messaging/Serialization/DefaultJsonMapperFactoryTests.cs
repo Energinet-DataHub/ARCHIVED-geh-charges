@@ -16,13 +16,13 @@ using System.Diagnostics.CodeAnalysis;
 using GreenEnergyHub.Charges.Infrastructure.Messaging.Serialization;
 using GreenEnergyHub.Messaging.Transport;
 using GreenEnergyHub.TestHelpers;
-using GreenEnergyHub.TestHelpers.Traits;
 using Moq;
 using Xunit;
+using Xunit.Categories;
 
 namespace GreenEnergyHub.Charges.Tests.Infrastructure.Messaging.Serialization
 {
-    [Trait(TraitNames.Category, TraitValues.UnitTest)]
+    [UnitTest]
     public class DefaultJsonMapperFactoryTests
     {
         [Theory]

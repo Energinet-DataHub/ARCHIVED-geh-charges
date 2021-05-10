@@ -14,10 +14,11 @@
 
 using GreenEnergyHub.Messaging.Protobuf.Tests.Tooling;
 using Xunit;
+using Xunit.Categories;
 
 namespace GreenEnergyHub.Messaging.Protobuf.Tests
 {
-    [Trait("Category", "Unit")]
+    [UnitTest]
     public class ProtobufMessageSerializerTests : TestBaseWithIdioms<ProtobufMessageSerializer>
     {
     }

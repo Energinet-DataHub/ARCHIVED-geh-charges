@@ -14,13 +14,13 @@
 
 using System.Collections.Generic;
 using FluentAssertions;
-using GreenEnergyHub.TestHelpers.Traits;
 using Xunit;
+using Xunit.Categories;
 using Xunit.Sdk;
 
 namespace GreenEnergyHub.TestHelpers.FluentAssertionsExtensions
 {
-    [Trait(TraitNames.Category, TraitValues.UnitTest)]
+    [UnitTest]
     public class ObjectAssertionsExtensionsTest
     {
         [Fact]

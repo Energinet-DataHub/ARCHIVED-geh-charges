@@ -18,10 +18,12 @@ using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
 using GreenEnergyHub.Charges.Tests.Builders;
 using GreenEnergyHub.TestHelpers;
 using Xunit;
+using Xunit.Categories;
 
 namespace GreenEnergyHub.Charges.Tests.Application
 {
-    public class ChargeCommandNullCheckerTest
+    [UnitTest]
+    public class ChargeCommandNullCheckerTests
     {
         [Theory]
         [InlineAutoDomainData(null, "Valid", "Valid", "Valid", "Valid", "Valid", "Valid", "Valid", "Valid")]

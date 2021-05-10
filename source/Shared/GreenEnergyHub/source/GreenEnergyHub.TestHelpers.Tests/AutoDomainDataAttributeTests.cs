@@ -13,12 +13,12 @@
 // limitations under the License.
 
 using AutoFixture.Xunit2;
-using GreenEnergyHub.TestHelpers.Traits;
 using Xunit;
+using Xunit.Categories;
 
 namespace GreenEnergyHub.TestHelpers.Tests
 {
-    [Trait(TraitNames.Category, TraitValues.UnitTest)]
+    [UnitTest]
     public class AutoDomainDataAttributeTests
     {
         [Theory]
