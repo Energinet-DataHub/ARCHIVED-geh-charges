@@ -56,8 +56,8 @@ resource "azurerm_servicebus_subscription" "sbs_command_received" {
   max_delivery_count  = 1
 }
 
-resource "azurerm_servicebus_subscription" "sbs-command-integration-test" {
-  name                = "sbs-command-integration-test"
+resource "azurerm_servicebus_subscription" "sbs_command_received_it" {
+  name                = "sbs-command-received-it"
   resource_group_name = data.azurerm_resource_group.main.name
   namespace_name      = module.sbn_charges.name
   topic_name          = module.sbt_command_received.name
@@ -92,8 +92,8 @@ module "sbtar_command_accepted_sender" {
   topic_name                = module.sbt_command_accepted.name
 }
 
-resource "azurerm_servicebus_subscription" "sbs-command-integration-test" {
-  name                = "sbs-command-integration-test"
+resource "azurerm_servicebus_subscription" "sbs_command_accepted_it" {
+  name                = "sbs-command-accepted-it"
   resource_group_name = data.azurerm_resource_group.main.name
   namespace_name      = module.sbn_charges.name
   topic_name          = module.sbt_command_accepted.name
@@ -144,8 +144,8 @@ resource "azurerm_servicebus_subscription" "sbs_command_rejected" {
   max_delivery_count  = 1
 }
 
-resource "azurerm_servicebus_subscription" "sbs-command-integration-test" {
-  name                = "sbs-command-integration-test"
+resource "azurerm_servicebus_subscription" "sbs_command_rejected_it" {
+  name                = "sbs-command-rejected-it"
   resource_group_name = data.azurerm_resource_group.main.name
   namespace_name      = module.sbn_charges.name
   topic_name          = module.sbt_command_rejected.name
