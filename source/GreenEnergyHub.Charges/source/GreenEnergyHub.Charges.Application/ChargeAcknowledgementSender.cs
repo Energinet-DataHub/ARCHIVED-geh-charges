@@ -14,21 +14,20 @@
 
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Application;
 using GreenEnergyHub.Charges.Domain;
 using GreenEnergyHub.Charges.Domain.Events.Local;
-using GreenEnergyHub.Charges.Infrastructure.PostOffice;
+using GreenEnergyHub.Messaging.Transport;
 
-namespace GreenEnergyHub.Charges.Infrastructure
+namespace GreenEnergyHub.Charges.Application
 {
     // TODO: Move class to application project? Which would also bring IPostOfficeService to application
     public class ChargeAcknowledgementSender : IChargeAcknowledgementSender
     {
-        private readonly IPostOfficeService _postOfficeService;
+        private readonly MessageDispatcher _messageDispatcher;
 
-        public ChargeAcknowledgementSender(IPostOfficeService postOfficeService)
+        public ChargeAcknowledgementSender(MessageDispatcher messageDispatcher)
         {
-            _postOfficeService = postOfficeService;
+            _messageDispatcher = messageDispatcher;
         }
 
         public async Task HandleAsync([NotNull] ChargeCommandAcceptedEvent acceptedEvent)
@@ -41,7 +40,7 @@ namespace GreenEnergyHub.Charges.Infrastructure
                 acceptedEvent.Command.Document.Id,
                 acceptedEvent.Command.ChargeOperation.BusinessReasonCode);
 
-            await _postOfficeService.SendAsync(chargeCommandAcceptedAcknowledgement).ConfigureAwait(false);
+            await _messageDispatcher.DispatchAsync(chargeCommandAcceptedAcknowledgement).ConfigureAwait(false);
         }
     }
 }

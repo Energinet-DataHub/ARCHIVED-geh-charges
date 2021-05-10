@@ -12,12 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace GreenEnergyHub.Charges.Infrastructure.PostOffice
-{
-    public class PostOfficeConfiguration
-    {
-        public string? ConnectionString { get; set; }
+using GreenEnergyHub.Messaging.Transport;
 
-        public string? TopicName { get; set; }
+namespace GreenEnergyHub.Charges.Infrastructure.Messaging.Serialization
+{
+    public class NoMapper : IJsonOutboundMapper
+    {
+        public object Convert(IOutboundMessage message)
+        {
+            return message;
+        }
     }
 }

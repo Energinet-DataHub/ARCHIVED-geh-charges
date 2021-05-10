@@ -13,7 +13,6 @@
 // limitations under the License.
 
 using System;
-using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
@@ -24,7 +23,6 @@ using Azure.Messaging.ServiceBus;
 using GreenEnergyHub.Charges.Infrastructure.Messaging;
 using GreenEnergyHub.TestHelpers;
 using GreenEnergyHub.TestHelpers.Traits;
-using Microsoft.VisualStudio.TestPlatform.CommunicationUtilities;
 using Moq;
 using Xunit;
 
