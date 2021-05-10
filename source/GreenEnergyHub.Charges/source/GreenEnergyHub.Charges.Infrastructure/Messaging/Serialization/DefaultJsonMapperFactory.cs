@@ -12,9 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace GreenEnergyHub.Charges.Domain.ChangeOfCharges.Fee
+using GreenEnergyHub.Messaging.Transport;
+
+namespace GreenEnergyHub.Charges.Infrastructure.Messaging.Serialization
 {
-    public class FeeCreateValidationSucceeded : FeeBase
+    public class DefaultJsonMapperFactory : IJsonOutboundMapperFactory
     {
+        public IJsonOutboundMapper GetMapper(IOutboundMessage message)
+        {
+            return new NoMapper();
+        }
     }
 }

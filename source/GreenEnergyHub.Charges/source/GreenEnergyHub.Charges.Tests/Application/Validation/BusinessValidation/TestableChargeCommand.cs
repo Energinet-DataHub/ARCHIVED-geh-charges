@@ -12,16 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction
+using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
+
+namespace GreenEnergyHub.Charges.Tests.Application.Validation.BusinessValidation
 {
-    public class MarketParticipant
+    public class TestableChargeCommand : ChargeCommand
     {
-        public int Id { get; set; }
-
-        public string? MRid { get; set; }
-
-        public string? Name { get; set; }
-
-        public MarketParticipantRole? Role { get; set; }
+        public TestableChargeCommand()
+            : base("some-correlation-id")
+        {
+            ChargeOperation = new ChargeOperation();
+        }
     }
 }

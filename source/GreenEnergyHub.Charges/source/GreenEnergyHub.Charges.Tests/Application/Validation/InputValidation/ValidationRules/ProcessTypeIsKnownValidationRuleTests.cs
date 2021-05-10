@@ -18,20 +18,22 @@ using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
 using GreenEnergyHub.Charges.Domain.Common;
 using GreenEnergyHub.Charges.TestCore;
 using Xunit;
+using Xunit.Categories;
 
 namespace GreenEnergyHub.Charges.Tests.Application.Validation.InputValidation.ValidationRules
 {
+    [UnitTest]
     public class ProcessTypeIsKnownValidationRuleTests
     {
         [Theory]
-        [InlineAutoMoqData(ProcessType.Unknown, false)]
-        [InlineAutoMoqData(ProcessType.UpdateChargeInformation, true)]
+        [InlineAutoMoqData(BusinessReasonCode.Unknown, false)]
+        [InlineAutoMoqData(BusinessReasonCode.UpdateChargeInformation, true)]
         public void ProcessTypeIsKnownValidationRule_Test(
-            ProcessType processType,
+            BusinessReasonCode businessReasonCode,
             bool expected,
             [NotNull] ChargeCommand command)
         {
-            command!.MarketDocument!.ProcessType = processType;
+            command.ChargeOperation.BusinessReasonCode = businessReasonCode;
             var sut = new ProcessTypeIsKnownValidationRule(command);
             Assert.Equal(expected, sut.IsValid);
         }

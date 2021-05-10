@@ -12,11 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace GreenEnergyHub.Charges.Domain.Common
+namespace GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction
 {
-    public enum ProcessType
+    /// <summary>
+    /// This enum indicates the VAT value. ("Moms" in Denmark).
+    /// D01 is No VAT | D02 is VAT.
+    /// </summary>
+    public enum VatClassification
     {
-        Unknown = 0,
-        UpdateChargeInformation = 18,
+        NoVat,
+        Vat25,
     }
 }

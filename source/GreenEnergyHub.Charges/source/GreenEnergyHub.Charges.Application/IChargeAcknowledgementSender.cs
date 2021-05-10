@@ -12,13 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction
+using System.Threading.Tasks;
+using GreenEnergyHub.Charges.Domain.Events.Local;
+
+namespace GreenEnergyHub.Charges.Application
 {
-    public enum MktActivityRecordStatus
+    public interface IChargeAcknowledgementSender
     {
-        Unknown = 0,
-        Addition = 2,
-        Deletion = 3,
-        Change = 4,
+        Task HandleAsync(ChargeCommandAcceptedEvent acceptedEvent);
     }
 }

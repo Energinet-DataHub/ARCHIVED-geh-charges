@@ -18,9 +18,11 @@ using GreenEnergyHub.Charges.Domain;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
 using GreenEnergyHub.TestHelpers;
 using Xunit;
+using Xunit.Categories;
 
 namespace GreenEnergyHub.Charges.Tests.Application.Validation.BusinessValidation.ValidationRules
 {
+    [UnitTest]
     public class ChangingTariffVatValueNotAllowedRuleTests
     {
         [Theory]
@@ -35,7 +37,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Validation.BusinessValidation
         [InlineAutoDomainData]
         public void IsValid_WhenVatPayerInCommandMatches_IsTrue([NotNull]ChargeCommand command, [NotNull] Charge charge)
         {
-            command.MktActivityRecord.ChargeType.VatPayer = charge.MktActivityRecord.ChargeType.VatPayer;
+            command.ChargeOperation.VatClassification = charge.VatClassification;
             var sut = new ChangingTariffVatValueNotAllowedRule(command, charge);
             Assert.True(sut.IsValid);
         }

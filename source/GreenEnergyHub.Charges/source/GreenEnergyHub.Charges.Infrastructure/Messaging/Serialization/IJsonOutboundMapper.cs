@@ -12,10 +12,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction
+using GreenEnergyHub.Messaging.Transport;
+
+namespace GreenEnergyHub.Charges.Infrastructure.Messaging.Serialization
 {
-    public enum MarketParticipantRole
+    /// <summary>
+    /// Interface for mapping an outbound message to a DTO that can be used for json serialization
+    /// </summary>
+    public interface IJsonOutboundMapper
     {
-        EnergySupplier,
+        /// <summary>
+        /// Converts the outbound message into a serializable DTO
+        /// </summary>
+        /// <param name="message">Outbound message to convert</param>
+        /// <returns>DTO that can be used in JSON serialization</returns>
+        public object Convert(IOutboundMessage message);
     }
 }

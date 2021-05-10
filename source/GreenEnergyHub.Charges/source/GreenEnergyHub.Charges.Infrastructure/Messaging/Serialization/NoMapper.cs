@@ -12,9 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace GreenEnergyHub.Charges.Domain.ChangeOfCharges.Tariff
+using GreenEnergyHub.Messaging.Transport;
+
+namespace GreenEnergyHub.Charges.Infrastructure.Messaging.Serialization
 {
-    public class TariffCreate : TariffBase
+    public class NoMapper : IJsonOutboundMapper
     {
+        public object Convert(IOutboundMessage message)
+        {
+            return message;
+        }
     }
 }

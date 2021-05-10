@@ -21,6 +21,7 @@ using GreenEnergyHub.Json;
 using Microsoft.Azure.Functions.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection;
 using NodaTime;
+using JsonSerializer = GreenEnergyHub.Charges.Core.Json.JsonSerializer;
 
 [assembly: FunctionsStartup(typeof(Startup))]
 

@@ -17,9 +17,11 @@ using GreenEnergyHub.Charges.Application.Validation.InputValidation.ValidationRu
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
 using GreenEnergyHub.Charges.TestCore;
 using Xunit;
+using Xunit.Categories;
 
 namespace GreenEnergyHub.Charges.Tests.Application.Validation.InputValidation.ValidationRules
 {
+    [UnitTest]
     public class RecipientIsMandatoryValidationRuleTests
     {
         [Theory]
@@ -31,7 +33,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Validation.InputValidation.Va
             bool expected,
             [NotNull] ChargeCommand command)
         {
-            command!.MarketDocument!.ReceiverMarketParticipant!.MRid = mrid;
+            command.Document.Recipient.MRid = mrid;
             var sut = new RecipientIsMandatoryTypeValidationRule(command);
             Assert.Equal(expected, sut.IsValid);
         }

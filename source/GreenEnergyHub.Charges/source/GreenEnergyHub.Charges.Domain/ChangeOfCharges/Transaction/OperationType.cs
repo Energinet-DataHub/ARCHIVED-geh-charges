@@ -12,24 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using NodaTime;
-#pragma warning disable 8618
-
 namespace GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction
 {
-    // Non-nullable member is uninitialized is ignored
-    // Only properties which is allowed to be null is nullable
-    // MktActivityRecord integrity is null checked by ChargeCommandNullChecker
-    public class MktActivityRecord
+    /// <summary>
+    /// This enum indicates the action requested by the sender, e.g. using Addition when sender wants to create a new charge price list.
+    /// </summary>
+    public enum OperationType
     {
-        public string MRid { get; set; }
-
-        public Instant ValidityStartDate { get; set; }
-
-        public Instant? ValidityEndDate { get; set; }
-
-        public MktActivityRecordStatus Status { get; set; }
-
-        public ChargeType ChargeType { get; set; }
+        Unknown = 0,
+        Addition = 2,
+        Deletion = 3,
+        Change = 4,
     }
 }

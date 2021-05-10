@@ -18,25 +18,31 @@ using GreenEnergyHub.Charges.Domain;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
 using GreenEnergyHub.TestHelpers;
 using Xunit;
+using Xunit.Categories;
 
 namespace GreenEnergyHub.Charges.Tests.Application.Validation.BusinessValidation.ValidationRules
 {
+    [UnitTest]
     public class ChangingTariffTaxValueNotAllowedRuleTests
     {
         [Theory]
         [InlineAutoDomainData]
-        public void IsValid_WhenTaxIndicatorInCommandDoesNotMatchCharge_IsFalse([NotNull]ChargeCommand command, [NotNull] Charge charge)
+        public void IsValid_WhenTaxIndicatorInCommandDoesNotMatchCharge_IsFalse(
+            [NotNull]ChargeCommand command,
+            [NotNull] Charge charge)
         {
-            command.MktActivityRecord.ChargeType.TaxIndicator = charge!.MktActivityRecord.ChargeType.TaxIndicator;
+            command.ChargeOperation.TaxIndicator = !charge.TaxIndicator;
             var sut = new ChangingTariffTaxValueNotAllowedRule(command, charge);
             Assert.False(sut.IsValid);
         }
 
         [Theory]
         [InlineAutoDomainData]
-        public void IsValid_WhenTaxIndicatorInCommandMatches_IsTrue([NotNull]ChargeCommand command, [NotNull] Charge charge)
+        public void IsValid_WhenTaxIndicatorInCommandMatches_IsTrue(
+            [NotNull]ChargeCommand command,
+            [NotNull] Charge charge)
         {
-            command.MktActivityRecord.ChargeType.TaxIndicator = charge.MktActivityRecord.ChargeType.TaxIndicator;
+            command.ChargeOperation.TaxIndicator = charge.TaxIndicator;
             var sut = new ChangingTariffTaxValueNotAllowedRule(command, charge);
             Assert.True(sut.IsValid);
         }

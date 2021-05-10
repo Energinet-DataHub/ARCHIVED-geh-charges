@@ -12,11 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
-
-namespace GreenEnergyHub.Charges.Domain.ChangeOfCharges.Fee
+namespace GreenEnergyHub.Charges.Domain.Common
 {
-    public abstract class FeeBase : ChargeCommand
+    /// <summary>
+    /// BusinessReasonCode indicates the intended business context.
+    /// </summary>
+    public enum BusinessReasonCode
     {
+        Unknown = 0,
+        UpdateChargeInformation = 18, // This will be received as D18 in ebiX.
     }
 }

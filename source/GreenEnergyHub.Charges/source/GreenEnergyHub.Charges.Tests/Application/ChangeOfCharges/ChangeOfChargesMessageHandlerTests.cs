@@ -20,13 +20,13 @@ using GreenEnergyHub.Charges.Application.ChangeOfCharges;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
 using GreenEnergyHub.Charges.Tests.Builders;
 using GreenEnergyHub.TestHelpers;
-using GreenEnergyHub.TestHelpers.Traits;
 using Moq;
 using Xunit;
+using Xunit.Categories;
 
 namespace GreenEnergyHub.Charges.Tests.Application.ChangeOfCharges
 {
-    [Trait(TraitNames.Category, TraitValues.UnitTest)]
+    [UnitTest]
     public class ChangeOfChargesMessageHandlerTests
     {
         [Theory]
@@ -36,7 +36,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChangeOfCharges
             [NotNull] ChangeOfChargesMessageHandler sut)
         {
             // Arrange
-            var transactionBuilder = new ChangeOfChargesTransactionBuilder();
+            var transactionBuilder = new ChargeCommandTestBuilder();
             var changeOfChargesMessage = new ChangeOfChargesMessageBuilder()
                 .WithTransaction(transactionBuilder.Build())
                 .WithTransaction(transactionBuilder.Build())

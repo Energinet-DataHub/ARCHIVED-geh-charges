@@ -19,13 +19,13 @@ using GreenEnergyHub.Charges.Application.ChangeOfCharges;
 using GreenEnergyHub.Charges.Domain.Events.Local;
 using GreenEnergyHub.Charges.Tests.Builders;
 using GreenEnergyHub.TestHelpers;
-using GreenEnergyHub.TestHelpers.Traits;
 using Moq;
 using Xunit;
+using Xunit.Categories;
 
 namespace GreenEnergyHub.Charges.Tests.Application.ChangeOfCharges
 {
-    [Trait(TraitNames.Category, TraitValues.UnitTest)]
+    [UnitTest]
     public class ChangeOfChargesTransactionHandlerTests
     {
         [Theory]
@@ -35,7 +35,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChangeOfCharges
             [NotNull] ChangeOfChargesTransactionHandler sut)
         {
             // Arrange
-            var transaction = new ChangeOfChargesTransactionBuilder().Build();
+            var transaction = new ChargeCommandTestBuilder().Build();
 
             // Act
             await sut.HandleAsync(transaction).ConfigureAwait(false);

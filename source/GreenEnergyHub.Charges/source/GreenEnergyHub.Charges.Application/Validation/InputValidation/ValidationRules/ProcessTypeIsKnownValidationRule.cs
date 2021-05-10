@@ -27,7 +27,7 @@ namespace GreenEnergyHub.Charges.Application.Validation.InputValidation.Validati
             _chargeCommand = chargeCommand;
         }
 
-        public bool IsValid => _chargeCommand.MarketDocument.ProcessType != ProcessType.Unknown;
+        public bool IsValid => _chargeCommand.ChargeOperation.BusinessReasonCode != BusinessReasonCode.Unknown;
 
         public ValidationRuleIdentifier ValidationRuleIdentifier => ValidationRuleIdentifier.ProcessIsMandatory;
     }

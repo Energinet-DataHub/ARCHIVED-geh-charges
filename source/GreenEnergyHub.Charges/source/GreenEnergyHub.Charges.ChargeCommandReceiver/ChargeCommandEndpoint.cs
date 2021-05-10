@@ -27,19 +27,18 @@ namespace GreenEnergyHub.Charges.ChargeCommandReceiver
     public class ChargeCommandEndpoint
     {
         private const string FunctionName = nameof(ChargeCommandEndpoint);
-        private const string TriggerFunctionName = "TriggerFunction";
-        private readonly IJsonSerializer _jsonDeserializer;
         private readonly IChargeCommandHandler _chargeCommandHandler;
         private readonly ICorrelationContext _correlationContext;
+        private readonly IJsonSerializer _jsonSerializer;
 
         public ChargeCommandEndpoint(
-            IJsonSerializer jsonDeserializer,
             IChargeCommandHandler chargeCommandHandler,
-            ICorrelationContext correlationContext)
+            ICorrelationContext correlationContext,
+            IJsonSerializer jsonSerializer)
         {
-            _jsonDeserializer = jsonDeserializer;
             _chargeCommandHandler = chargeCommandHandler;
             _correlationContext = correlationContext;
+            _jsonSerializer = jsonSerializer;
         }
 
         [FunctionName(FunctionName)]
@@ -52,31 +51,18 @@ namespace GreenEnergyHub.Charges.ChargeCommandReceiver
             ILogger log)
         {
             var jsonSerializedQueueItem = System.Text.Encoding.UTF8.GetString(message);
-            var serviceBusMessage = _jsonDeserializer.Deserialize<ServiceBusMessageWrapper>(jsonSerializedQueueItem);
-            var transaction = serviceBusMessage.Command;
-            SetCorrelationContext(transaction);
-            await _chargeCommandHandler.HandleAsync(transaction).ConfigureAwait(false);
+            var serviceBusMessage = _jsonSerializer.Deserialize<ServiceBusMessageWrapper<ChargeCommand>>(jsonSerializedQueueItem);
+            var chargeCommand = serviceBusMessage.Command!;
+            SetCorrelationContext(chargeCommand);
+            await _chargeCommandHandler.HandleAsync(chargeCommand).ConfigureAwait(false);
 
-            log.LogDebug("Received event with charge type mRID '{mRID}'", transaction.ChargeTypeMRid);
-        }
-
-        [FunctionName(TriggerFunctionName)]
-        public static async Task<IActionResult> TriggerAsync(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = null)]
-            ILogger log)
-        {
-            log.LogInformation("Trigger {FunctionName}", FunctionName);
-
-            return await Task.Run(() => new OkObjectResult("Success"))
-                .ConfigureAwait(false);
+            //TODO: LRN is it correct with this log? ChargeId / mRID is not set on a create I take it?
+            log.LogDebug("Received command with charge type mRID '{mRID}'", chargeCommand.ChargeOperation.ChargeId);
         }
 
         private void SetCorrelationContext(ChargeCommand command)
         {
-            if (command.CorrelationId != null)
-            {
-                _correlationContext.CorrelationId = command.CorrelationId;
-            }
+            _correlationContext.CorrelationId = command.CorrelationId;
         }
     }
 }

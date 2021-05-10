@@ -12,9 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace GreenEnergyHub.Charges.Domain.ChangeOfCharges.Fee
+namespace GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction
 {
-    public class FeeCreateValidationFailed : FeeBase
+    /// <summary>
+    /// This enum is used to indicate the resolution of a charge price list.
+    /// PT15M = 15 minutes | PT1H = hour | P1D = day | P1M = month.
+    /// </summary>
+    public enum Resolution
     {
+        PT15M,
+        PT1H,
+        P1D,
+        P1M,
     }
 }
