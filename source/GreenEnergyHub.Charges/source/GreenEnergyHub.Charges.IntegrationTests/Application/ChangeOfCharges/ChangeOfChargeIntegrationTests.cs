@@ -57,6 +57,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
         public ChangeOfChargeIntegrationTests(ITestOutputHelper testOutputHelper)
         {
             _testOutputHelper = testOutputHelper;
+
             TestConfigurationHelper.ConfigureEnvironmentVariablesFromLocalSettings();
             var messageReceiverHost = TestConfigurationHelper.SetupHost(new MessageReceiver.Startup());
             var chargeCommandReceiverHost = TestConfigurationHelper.SetupHost(new ChargeCommandReceiver.Startup());
@@ -83,8 +84,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
         }
 
         [Theory]
-        [InlineAutoMoqData("TestFiles\\ValidChargeAddition.json")]
-        [InlineAutoMoqData("TestFiles\\ValidChargeUpdate.json")]
+        [InlineAutoMoqData("TestFiles\\ValidTariffAddition.json")]
+        [InlineAutoMoqData("TestFiles\\ValidTariffUpdate.json")]
         public async Task Test_ChargeCommand_is_Accepted(
             string testFilePath,
             [NotNull] [Frozen] Mock<ILogger> logger,
@@ -115,8 +116,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
         }
 
         [Theory]
-        [InlineAutoMoqData("TestFiles\\InvalidChargeAddition.json")]
-        [InlineAutoMoqData("TestFiles\\InvalidChargeUpdate.json")]
+        [InlineAutoMoqData("TestFiles\\InvalidTariffAddition.json")]
+        [InlineAutoMoqData("TestFiles\\InvalidTariffUpdate.json")]
         public async Task Test_ChargeCommand_is_Rejected(
             string testFilePath,
             [NotNull] [Frozen] Mock<ILogger> logger,

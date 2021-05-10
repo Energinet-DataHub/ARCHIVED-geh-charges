@@ -1,0 +1,45 @@
+﻿{
+  "Document": {
+    "Id": "MD{{$isoTimestamp}}",
+    "CreatedDateTime": "{{$isoTimestamp}}",
+    "IndustryClassification": 23,
+    "Type": 0,
+    "Sender": {
+      "Id": 37,
+      "MRid": "8100000000030",
+      "Name": "Grid Operator 3",
+      "Role": 0
+    },
+    "Recipient": {
+      "Id": 1,
+      "MRid": "5790001330552",
+      "Name": "Hub",
+      "Role": 0
+    }
+  },
+  "ChargeOperation": {
+    "Id": "MAR{{$isoTimestamp}}",
+    "EndDateTime": null,
+    "Status": 4,
+    "LastUpdatedBy": "LastUpdatedBy",
+    "BusinessReasonCode": 1,
+    "ChargeId": "VoltIntegrationTest",
+    "ChargeName": "Electric charge",
+    "Type": 2,
+    "ChargeOwner": "8100000000030",
+    "Resolution": "P1D",
+    "Tax": true,
+    "Vat": 0,
+    "ChargeDescription": "The charge description",
+    "StartDateTime": "2020-09-26T22:00:00Z",
+    "Period": {
+      "Points": [
+        {
+          "Position": 1,
+          "PriceAmount": 150.001,
+          "Time": "2020-09-26T22:00:00Z"
+        }
+      ]
+    }
+  }
+}
