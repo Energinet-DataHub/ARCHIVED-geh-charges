@@ -14,7 +14,6 @@
 
 using System;
 using System.Diagnostics.CodeAnalysis;
-using Azure.Messaging.ServiceBus;
 using GreenEnergyHub.Charges.Application;
 using GreenEnergyHub.Charges.ChargeAcknowledgementSender;
 using GreenEnergyHub.Charges.Domain;
@@ -33,7 +32,7 @@ namespace GreenEnergyHub.Charges.ChargeAcknowledgementSender
         public override void Configure([NotNull] IFunctionsHostBuilder builder)
         {
             builder.Services.AddScoped(typeof(IClock), _ => SystemClock.Instance);
-            builder.Services.AddScoped<IChargeAcknowledgementSender, Infrastructure.ChargeAcknowledgementSender>();
+            builder.Services.AddScoped<IChargeAcknowledgementSender, Application.ChargeAcknowledgementSender>();
 
             builder.Services
                 .AddMessaging()
