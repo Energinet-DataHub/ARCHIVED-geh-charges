@@ -12,25 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Threading;
-using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Application;
+using GreenEnergyHub.Messaging.MessageTypes.Common;
 using GreenEnergyHub.Messaging.Transport;
-using JetBrains.Annotations;
 
-namespace GreenEnergyHub.Charges.Infrastructure.Messaging
+namespace GreenEnergyHub.Charges.Tests.Infrastructure.Messaging
 {
-    public class MessageDispatcher<TMessage> : MessageDispatcher, IMessageDispatcher<TMessage>
-        where TMessage : IOutboundMessage
+    public class TestOutboundMessage : IOutboundMessage
     {
-        public MessageDispatcher([NotNull] MessageSerializer serializer, [NotNull] Channel<TMessage> channel)
-            : base(serializer, channel)
+        public TestOutboundMessage(Transaction transaction)
         {
+            Transaction = transaction;
         }
 
-        public async Task DispatchAsync(TMessage message, CancellationToken cancellationToken = default)
-        {
-            await base.DispatchAsync(message, cancellationToken).ConfigureAwait(false);
-        }
+        public Transaction Transaction { get; set; }
     }
 }

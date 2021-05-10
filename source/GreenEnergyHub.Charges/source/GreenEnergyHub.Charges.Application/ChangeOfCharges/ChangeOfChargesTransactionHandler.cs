@@ -22,19 +22,19 @@ namespace GreenEnergyHub.Charges.Application.ChangeOfCharges
 {
     public class ChangeOfChargesTransactionHandler : IChangeOfChargesTransactionHandler
     {
-        private readonly IInternalEventPublisher _internalEventPublisher;
         private readonly IClock _clock;
+        private readonly IMessageDispatcher<ChargeCommandReceivedEvent> _messageDispatcher;
 
-        public ChangeOfChargesTransactionHandler(IInternalEventPublisher internalEventPublisher, IClock clock)
+        public ChangeOfChargesTransactionHandler(IClock clock, IMessageDispatcher<ChargeCommandReceivedEvent> messageDispatcher)
         {
-            _internalEventPublisher = internalEventPublisher;
             _clock = clock;
+            _messageDispatcher = messageDispatcher;
         }
 
         public async Task HandleAsync([NotNull] ChargeCommand command)
         {
-            var localEvent = new ChargeCommandReceivedEvent(_clock.GetCurrentInstant(), command.CorrelationId!, command);
-            await _internalEventPublisher.PublishAsync(localEvent).ConfigureAwait(false);
+            var receivedEvent = new ChargeCommandReceivedEvent(_clock.GetCurrentInstant(), command.CorrelationId!, command);
+            await _messageDispatcher.DispatchAsync(receivedEvent).ConfigureAwait(false);
         }
     }
 }

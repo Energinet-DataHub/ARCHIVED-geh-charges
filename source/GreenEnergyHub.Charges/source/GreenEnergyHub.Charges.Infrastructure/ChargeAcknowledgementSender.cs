@@ -17,16 +17,15 @@ using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application;
 using GreenEnergyHub.Charges.Domain;
 using GreenEnergyHub.Charges.Domain.Events.Local;
-using GreenEnergyHub.Charges.Infrastructure.Messaging;
 
 namespace GreenEnergyHub.Charges.Infrastructure
 {
     // TODO: Move class to application project? Can't because of the MessageDispatcher<> dependency...
     public class ChargeAcknowledgementSender : IChargeAcknowledgementSender
     {
-        private readonly MessageDispatcher<ChargeAcknowledgement> _messageDispatcher;
+        private readonly IMessageDispatcher<ChargeAcknowledgement> _messageDispatcher;
 
-        public ChargeAcknowledgementSender(MessageDispatcher<ChargeAcknowledgement> messageDispatcher)
+        public ChargeAcknowledgementSender(IMessageDispatcher<ChargeAcknowledgement> messageDispatcher)
         {
             _messageDispatcher = messageDispatcher;
         }

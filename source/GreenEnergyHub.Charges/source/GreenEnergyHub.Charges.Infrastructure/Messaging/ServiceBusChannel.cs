@@ -16,6 +16,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Threading.Tasks;
 using Azure.Messaging.ServiceBus;
+using GreenEnergyHub.Messaging.Transport;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Messaging
 {
@@ -26,11 +27,14 @@ namespace GreenEnergyHub.Charges.Infrastructure.Messaging
     /// while ServiceBusSender and the ServiceBusClient used to make the sender should be singletons
     /// </summary>
     public class ServiceBusChannel<TMessage> : Channel<TMessage>
+        where TMessage : IOutboundMessage
     {
         private readonly ServiceBusSender _serviceBusSender;
         private readonly ICorrelationContext _correlationContext;
 
-        public ServiceBusChannel([NotNull] ServiceBusSender<TMessage> serviceBusSender, ICorrelationContext correlationContext)
+        public ServiceBusChannel(
+            [NotNull] IServiceBusSender<TMessage> serviceBusSender,
+            ICorrelationContext correlationContext)
         {
             _serviceBusSender = serviceBusSender.Instance;
             _correlationContext = correlationContext;
@@ -49,10 +53,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Messaging
 
         private ServiceBusMessage GetServiceBusMessage(byte[] data)
         {
-            return new ServiceBusMessage(data)
-            {
-                CorrelationId = _correlationContext.CorrelationId,
-            };
+            return new ServiceBusMessage(data) { CorrelationId = _correlationContext.CorrelationId, };
         }
     }
 }

@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using GreenEnergyHub.Charges.Domain.Common;
+using GreenEnergyHub.Charges.Domain.Messages;
 using GreenEnergyHub.Messaging.MessageTypes.Common;
 using GreenEnergyHub.Messaging.Transport;
 using JetBrains.Annotations;

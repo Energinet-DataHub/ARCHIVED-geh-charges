@@ -12,19 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using GreenEnergyHub.Charges.Domain.Messages;
-using JetBrains.Annotations;
+using System.Threading;
+using System.Threading.Tasks;
+using GreenEnergyHub.Messaging.Transport;
 
 namespace GreenEnergyHub.Charges.Application
 {
-    public class ServiceBusMessageWrapper<TMessage>
-        where TMessage : class, IMessage
+    public interface IMessageDispatcher<in TMessage>
+        where TMessage : IOutboundMessage
     {
-        public TMessage? Command
-        {
-            get;
-            [UsedImplicitly]
-            set;
-        }
+        public Task DispatchAsync(TMessage message, CancellationToken cancellationToken = default);
     }
 }

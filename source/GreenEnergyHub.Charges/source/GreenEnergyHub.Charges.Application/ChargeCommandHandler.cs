@@ -12,10 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application.ChangeOfCharges.Repositories;
 using GreenEnergyHub.Charges.Application.Validation;
-using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
+using GreenEnergyHub.Charges.Domain.Events.Local;
 
 namespace GreenEnergyHub.Charges.Application
 {
@@ -38,18 +39,20 @@ namespace GreenEnergyHub.Charges.Application
             _chargeFactory = chargeFactory;
         }
 
-        public async Task HandleAsync(ChargeCommand command)
+        public async Task HandleAsync(ChargeCommandReceivedEvent commandReceivedEvent)
         {
-            var validationResult = await _chargeCommandValidator.ValidateAsync(command).ConfigureAwait(false);
+            if (commandReceivedEvent == null) throw new ArgumentNullException(nameof(commandReceivedEvent));
+
+            var validationResult = await _chargeCommandValidator.ValidateAsync(commandReceivedEvent.Command).ConfigureAwait(false);
             if (validationResult.IsFailed)
             {
-                await _chargeCommandAcknowledgementService.RejectAsync(command, validationResult).ConfigureAwait(false);
+                await _chargeCommandAcknowledgementService.RejectAsync(commandReceivedEvent.Command, validationResult).ConfigureAwait(false);
                 return;
             }
 
-            var charge = await _chargeFactory.CreateFromCommandAsync(command).ConfigureAwait(false);
+            var charge = await _chargeFactory.CreateFromCommandAsync(commandReceivedEvent.Command).ConfigureAwait(false);
             await _chargeRepository.StoreChargeAsync(charge).ConfigureAwait(false);
-            await _chargeCommandAcknowledgementService.AcceptAsync(command).ConfigureAwait(false);
+            await _chargeCommandAcknowledgementService.AcceptAsync(commandReceivedEvent.Command).ConfigureAwait(false);
         }
     }
 }

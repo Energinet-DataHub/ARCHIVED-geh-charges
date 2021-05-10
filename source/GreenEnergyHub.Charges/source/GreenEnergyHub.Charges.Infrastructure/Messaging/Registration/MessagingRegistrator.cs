@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using Azure.Messaging.ServiceBus;
+using GreenEnergyHub.Charges.Application;
 using GreenEnergyHub.Charges.Infrastructure.Messaging.Serialization;
 using GreenEnergyHub.Messaging.Transport;
 using Microsoft.Extensions.DependencyInjection;
@@ -46,14 +47,18 @@ namespace GreenEnergyHub.Charges.Infrastructure.Messaging.Registration
         public MessagingRegistrator AddMessageDispatcher<TOutboundMessage>(
             string serviceBusConnectionString,
             string serviceBusTopicName)
+            where TOutboundMessage : IOutboundMessage
         {
-            _services.AddScoped<MessageDispatcher<TOutboundMessage>>();
+            _services.AddScoped<IMessageDispatcher<TOutboundMessage>, MessageDispatcher<TOutboundMessage>>();
             _services.AddScoped<Channel<TOutboundMessage>, ServiceBusChannel<TOutboundMessage>>();
-            _services.AddScoped<ServiceBusSender>(
+
+            // Must be a singleton as per documentation of ServiceBusClient and ServiceBusSender
+            _services.AddSingleton<IServiceBusSender<TOutboundMessage>>(
                 _ =>
                 {
                     var client = new ServiceBusClient(serviceBusConnectionString);
-                    return client.CreateSender(serviceBusTopicName);
+                    var instance = client.CreateSender(serviceBusTopicName);
+                    return new ServiceBusSender<TOutboundMessage>(instance);
                 });
 
             return this;

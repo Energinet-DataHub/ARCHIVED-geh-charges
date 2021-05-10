@@ -12,18 +12,45 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
+using System.IO;
+using System.Threading;
+using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Infrastructure.Messaging.Serialization;
 using GreenEnergyHub.Messaging.Transport;
 using JetBrains.Annotations;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Messaging
 {
+    // TODO BJARKE: Unit tests
     public class MessageExtractor<TInboundMessage> : MessageExtractor
         where TInboundMessage : IInboundMessage
     {
         public MessageExtractor([NotNull] MessageDeserializer<TInboundMessage> deserializer)
             : base(deserializer)
         {
+        }
+
+        public new async Task<TInboundMessage> ExtractAsync(byte[] data, CancellationToken cancellationToken = default)
+        {
+            return (TInboundMessage)await base.ExtractAsync(data, cancellationToken).ConfigureAwait(false);
+        }
+
+        public async Task<TInboundMessage> ExtractAsync(Stream data, CancellationToken cancellationToken = default)
+        {
+            if (data == null) throw new ArgumentNullException(nameof(data));
+
+            var bytes = await GetBytesFromStreamAsync(data, cancellationToken).ConfigureAwait(false);
+
+            return await ExtractAsync(bytes, cancellationToken).ConfigureAwait(false);
+        }
+
+        private static async Task<byte[]> GetBytesFromStreamAsync(Stream data, CancellationToken cancellationToken)
+        {
+            await using var stream = new MemoryStream();
+            await data.CopyToAsync(stream, cancellationToken).ConfigureAwait(false);
+            var bytes = stream.ToArray();
+            return bytes;
         }
     }
 }

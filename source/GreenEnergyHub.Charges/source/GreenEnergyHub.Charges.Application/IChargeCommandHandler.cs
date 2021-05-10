@@ -13,12 +13,12 @@
 // limitations under the License.
 
 using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
+using GreenEnergyHub.Charges.Domain.Events.Local;
 
 namespace GreenEnergyHub.Charges.Application
 {
     public interface IChargeCommandHandler
     {
-        Task HandleAsync(ChargeCommand command);
+        Task HandleAsync(ChargeCommandReceivedEvent commandReceivedEvent);
     }
 }

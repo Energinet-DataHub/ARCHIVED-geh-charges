@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using Azure.Messaging.ServiceBus;
+using GreenEnergyHub.Messaging.Transport;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Messaging
 {
@@ -22,7 +23,8 @@ namespace GreenEnergyHub.Charges.Infrastructure.Messaging
     /// being dispatched/send.
     /// </summary>
     // ReSharper disable once UnusedTypeParameter - Generic type parameter is needed
-    public class ServiceBusSender<TMessage>
+    public class ServiceBusSender<TOutboundMessage> : IServiceBusSender<TOutboundMessage>
+        where TOutboundMessage : IOutboundMessage
     {
         public ServiceBusSender(ServiceBusSender instance)
         {
