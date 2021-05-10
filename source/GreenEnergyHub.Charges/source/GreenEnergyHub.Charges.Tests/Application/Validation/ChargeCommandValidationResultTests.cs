@@ -16,11 +16,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using GreenEnergyHub.Charges.Application.Validation;
-using GreenEnergyHub.Charges.Application.Validation.BusinessValidation;
 using Xunit;
+using Xunit.Categories;
 
 namespace GreenEnergyHub.Charges.Tests.Application.Validation
 {
+    [UnitTest]
     public class ChargeCommandValidationResultTests
     {
         [Fact]
