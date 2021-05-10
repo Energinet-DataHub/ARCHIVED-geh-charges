@@ -18,9 +18,11 @@ using GreenEnergyHub.Charges.Domain;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
 using GreenEnergyHub.TestHelpers;
 using Xunit;
+using Xunit.Categories;
 
 namespace GreenEnergyHub.Charges.Tests.Application.Validation.BusinessValidation.ValidationRules
 {
+    [UnitTest]
     public class ChangingTariffTaxValueNotAllowedRuleTests
     {
         [Theory]

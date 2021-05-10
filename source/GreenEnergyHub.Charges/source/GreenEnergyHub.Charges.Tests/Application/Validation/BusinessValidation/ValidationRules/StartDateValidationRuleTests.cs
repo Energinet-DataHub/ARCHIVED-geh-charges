@@ -23,9 +23,11 @@ using Moq;
 using NodaTime;
 using NodaTime.Text;
 using Xunit;
+using Xunit.Categories;
 
 namespace GreenEnergyHub.Charges.Tests.Application.Validation.BusinessValidation.ValidationRules
 {
+    [UnitTest]
     public class StartDateValidationRuleTests
     {
         [Theory]

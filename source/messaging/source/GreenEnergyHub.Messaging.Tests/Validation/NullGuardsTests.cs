@@ -20,10 +20,11 @@ using AutoFixture.Idioms;
 using GreenEnergyHub.Messaging.Tests.TestHelpers;
 using GreenEnergyHub.Messaging.Validation;
 using Xunit;
+using Xunit.Categories;
 
 namespace GreenEnergyHub.Messaging.Tests.Validation
 {
-    [Trait("Category", "Unit")]
+    [UnitTest]
     public class NullGuardsTests
     {
         [Fact]

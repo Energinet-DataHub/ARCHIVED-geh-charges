@@ -17,10 +17,11 @@ using System.Collections;
 using System.Collections.Generic;
 using GreenEnergyHub.Messaging.Validation;
 using Xunit;
+using Xunit.Categories;
 
 namespace GreenEnergyHub.Messaging.Tests.Validation
 {
-    [Trait("Category", "Unit")]
+    [UnitTest]
     public class RuleResultCollectionTests
     {
         private readonly RuleResult _result1 = new RuleResult("VAR001", "This is an error");

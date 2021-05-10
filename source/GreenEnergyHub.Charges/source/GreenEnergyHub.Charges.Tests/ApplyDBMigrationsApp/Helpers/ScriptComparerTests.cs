@@ -16,10 +16,11 @@ using System.Linq;
 using FluentAssertions;
 using GreenEnergyHub.Charges.ApplyDBMigrationsApp.Helpers;
 using Xunit;
+using Xunit.Categories;
 
 namespace GreenEnergyHub.Charges.Tests.ApplyDBMigrationsApp.Helpers
 {
-    [Trait("Category", "Unit")]
+    [UnitTest]
     public class ScriptComparerTests
     {
         [Fact]
