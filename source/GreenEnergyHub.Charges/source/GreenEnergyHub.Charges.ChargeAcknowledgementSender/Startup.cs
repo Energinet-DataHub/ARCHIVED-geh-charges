@@ -14,6 +14,7 @@
 
 using System;
 using System.Diagnostics.CodeAnalysis;
+using Azure.Messaging.ServiceBus;
 using GreenEnergyHub.Charges.Application;
 using GreenEnergyHub.Charges.ChargeAcknowledgementSender;
 using GreenEnergyHub.Charges.Domain;

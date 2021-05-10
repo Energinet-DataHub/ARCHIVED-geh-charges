@@ -12,9 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using GreenEnergyHub.Messaging.Transport;
+
 namespace GreenEnergyHub.Charges.Infrastructure.Messaging
 {
-    public abstract class Channel<TMessage> : GreenEnergyHub.Messaging.Transport.Channel
+    // ReSharper disable once UnusedTypeParameter - needed for dependency resolution
+    public abstract class Channel<TOutboundMessage> : Channel
+        where TOutboundMessage : IOutboundMessage
     {
     }
 }

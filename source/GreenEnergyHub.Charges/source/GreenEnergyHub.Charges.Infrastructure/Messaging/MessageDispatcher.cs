@@ -20,15 +20,15 @@ using JetBrains.Annotations;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Messaging
 {
-    public class MessageDispatcher<TMessage> : MessageDispatcher, IMessageDispatcher<TMessage>
-        where TMessage : IOutboundMessage
+    public class MessageDispatcher<TOutboundMessage> : MessageDispatcher, IMessageDispatcher<TOutboundMessage>
+        where TOutboundMessage : IOutboundMessage
     {
-        public MessageDispatcher([NotNull] MessageSerializer serializer, [NotNull] Channel<TMessage> channel)
+        public MessageDispatcher([NotNull] MessageSerializer serializer, [NotNull] Channel<TOutboundMessage> channel)
             : base(serializer, channel)
         {
         }
 
-        public async Task DispatchAsync(TMessage message, CancellationToken cancellationToken = default)
+        public async Task DispatchAsync(TOutboundMessage message, CancellationToken cancellationToken = default)
         {
             await base.DispatchAsync(message, cancellationToken).ConfigureAwait(false);
         }

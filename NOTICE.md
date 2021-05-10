@@ -23,6 +23,8 @@ The Green Energy Hub repository relies on open source libraries and tools. We re
 | -- | -- | -- | -- |
 | `actions/checkout` | master | <https://github.com/actions/checkout> | MIT |
 | `actions/checkout` | 2 | <https://github.com/actions/checkout> | MIT |
+
+| `codecov/codecov-action@v1` | <https://github.com/codecov/codecov-action> | MIT |
 | `actions/download-artifact` | 2 | <https://github.com/actions/download-artifact> | MIT |
 | `actions/setup-dotnet` | 1 | <https://github.com/actions/setup-dotnet> | MIT |
 | `actions/setup-python` | 2 | <https://github.com/actions/setup-python> | MIT |

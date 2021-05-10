@@ -1,0 +1,26 @@
+flags:
+  unit:
+    paths:
+      - source/GreenEnergyHub.Charges/source/GreenEnergyHub.Charges.Application/
+      - source/GreenEnergyHub.Charges/source/GreenEnergyHub.Charges.Domain/
+      - source/GreenEnergyHub.Charges/source/GreenEnergyHub.Charges.Core/
+  integration:
+    paths:
+      - source/GreenEnergyHub.Charges/source/GreenEnergyHub.Charges.Infrastructure
+      - source/GreenEnergyHub.Charges/source/GreenEnergyHub.Charges.ChargeCommandReceiver
+      - source/GreenEnergyHub.Charges/source/GreenEnergyHub.Charges.ApplyDBMigrationsApp
+
+coverage:
+  status:
+    project:
+      default:
+        flags:
+          - unit
+          - integration
+      unit:
+        flags:
+          - unit
+      integration:
+        flags:
+          - integration
+

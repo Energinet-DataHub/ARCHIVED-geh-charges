@@ -18,9 +18,9 @@ using GreenEnergyHub.Messaging.Transport;
 
 namespace GreenEnergyHub.Charges.Application
 {
-    public interface IMessageDispatcher<in TMessage>
-        where TMessage : IOutboundMessage
+    public interface IMessageDispatcher<in TOutboundMessage>
+        where TOutboundMessage : IOutboundMessage
     {
-        public Task DispatchAsync(TMessage message, CancellationToken cancellationToken = default);
+        public Task DispatchAsync(TOutboundMessage message, CancellationToken cancellationToken = default);
     }
 }

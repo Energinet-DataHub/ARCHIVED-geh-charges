@@ -26,14 +26,14 @@ namespace GreenEnergyHub.Charges.Infrastructure.Messaging
     /// Each channel should be used as scoped context for dependency injection
     /// while ServiceBusSender and the ServiceBusClient used to make the sender should be singletons
     /// </summary>
-    public class ServiceBusChannel<TMessage> : Channel<TMessage>
-        where TMessage : IOutboundMessage
+    public class ServiceBusChannel<TOutboundMessage> : Channel<TOutboundMessage>
+        where TOutboundMessage : IOutboundMessage
     {
         private readonly ServiceBusSender _serviceBusSender;
         private readonly ICorrelationContext _correlationContext;
 
         public ServiceBusChannel(
-            [NotNull] IServiceBusSender<TMessage> serviceBusSender,
+            [NotNull] IServiceBusSender<TOutboundMessage> serviceBusSender,
             ICorrelationContext correlationContext)
         {
             _serviceBusSender = serviceBusSender.Instance;

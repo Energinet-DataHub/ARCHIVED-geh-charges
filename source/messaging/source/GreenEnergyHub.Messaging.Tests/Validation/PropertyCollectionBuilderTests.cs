@@ -18,13 +18,14 @@ using System.Threading.Tasks;
 using FluentValidation;
 using GreenEnergyHub.Messaging.Tests.TestHelpers;
 using Xunit;
+using Xunit.Categories;
 
 namespace GreenEnergyHub.Messaging.Tests.Validation
 {
+    [UnitTest]
     public class PropertyCollectionBuilderTests
     {
         [Fact]
-        [Trait("Category", "Unit")]
         public async Task PropertyCollectionBuilder_PropertyRule()
         {
             var cos = new ChangeOfSupplier(new List<int>());
@@ -38,7 +39,6 @@ namespace GreenEnergyHub.Messaging.Tests.Validation
         }
 
         [Fact]
-        [Trait("Category", "Unit")]
         public async Task PropertyCollectionBuilder_RuleCollection()
         {
             var mp = new MarketParticipant("216asdAdsasd", "This is a Test");

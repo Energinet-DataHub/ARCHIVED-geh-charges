@@ -14,11 +14,10 @@
 
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Application;
 using GreenEnergyHub.Charges.Domain;
 using GreenEnergyHub.Charges.Domain.Events.Local;
 
-namespace GreenEnergyHub.Charges.Infrastructure
+namespace GreenEnergyHub.Charges.Application
 {
     // TODO: Move class to application project? Can't because of the MessageDispatcher<> dependency...
     public class ChargeAcknowledgementSender : IChargeAcknowledgementSender

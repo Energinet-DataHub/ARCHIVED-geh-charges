@@ -13,15 +13,15 @@
 // limitations under the License.
 
 using GreenEnergyHub.Charges.Domain.Events.Local;
-using GreenEnergyHub.TestHelpers.Traits;
 using JetBrains.Annotations;
 using Newtonsoft.Json;
 using Xunit;
+using Xunit.Categories;
 using JsonSerializer = GreenEnergyHub.Charges.Core.Json.JsonSerializer;
 
 namespace GreenEnergyHub.Charges.Tests.Core.Json
 {
-    [Trait(TraitNames.Category, TraitValues.UnitTest)]
+    [UnitTest]
     public class JsonSerializerTests
     {
         private const string ChargeCommandAcceptedEventMRid = "MAR2021-05-05T13:56:29.301Z";

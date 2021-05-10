@@ -20,10 +20,10 @@ using GreenEnergyHub.Charges.Infrastructure.Context;
 using GreenEnergyHub.Charges.Infrastructure.Context.Model;
 using GreenEnergyHub.Charges.Infrastructure.Mapping;
 using GreenEnergyHub.Charges.Infrastructure.Repositories;
-using GreenEnergyHub.TestHelpers.Traits;
 using Microsoft.EntityFrameworkCore;
 using NodaTime;
 using Xunit;
+using Xunit.Categories;
 using Charge = GreenEnergyHub.Charges.Domain.Charge;
 using ChargeType = GreenEnergyHub.Charges.Infrastructure.Context.Model.ChargeType;
 using MarketParticipant = GreenEnergyHub.Charges.Infrastructure.Context.Model.MarketParticipant;
@@ -33,7 +33,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
     /// <summary>
     /// Tests <see cref="ChargeRepository"/> using an SQLite in-memory database.
     /// </summary>
-    [Trait(TraitNames.Category, TraitValues.UnitTest)]
+    [UnitTest]
     public class ChargeRepositoryTest
     {
         private const string KnownChargeOwner = "knownChargeOwner";

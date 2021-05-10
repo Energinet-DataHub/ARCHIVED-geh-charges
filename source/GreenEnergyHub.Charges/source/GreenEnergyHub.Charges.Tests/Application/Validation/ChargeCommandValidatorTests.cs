@@ -23,9 +23,11 @@ using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
 using GreenEnergyHub.TestHelpers;
 using Moq;
 using Xunit;
+using Xunit.Categories;
 
 namespace GreenEnergyHub.Charges.Tests.Application.Validation
 {
+    [UnitTest]
     public class ChargeCommandValidatorTests
     {
         [Theory]

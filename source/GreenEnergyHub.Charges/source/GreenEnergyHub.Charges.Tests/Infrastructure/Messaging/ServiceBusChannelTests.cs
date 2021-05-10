@@ -22,16 +22,16 @@ using AutoFixture.Xunit2;
 using Azure.Messaging.ServiceBus;
 using GreenEnergyHub.Charges.Infrastructure.Messaging;
 using GreenEnergyHub.TestHelpers;
-using GreenEnergyHub.TestHelpers.Traits;
 using Moq;
 using Xunit;
+using Xunit.Categories;
 
 namespace GreenEnergyHub.Charges.Tests.Infrastructure.Messaging
 {
     /// <summary>
     /// Tests focusing on the Service Bus implementation of the Messaging Channel
     /// </summary>
-    [Trait(TraitNames.Category, TraitValues.UnitTest)]
+    [UnitTest]
     public class ServiceBusChannelTests
     {
         [Theory]
