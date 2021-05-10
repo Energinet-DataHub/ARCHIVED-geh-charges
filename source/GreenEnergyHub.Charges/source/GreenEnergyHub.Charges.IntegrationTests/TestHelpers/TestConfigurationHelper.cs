@@ -36,7 +36,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.TestHelpers
 
             foreach (var item in parsed!)
             {
-                Environment.SetEnvironmentVariable(item.Key, item.ToString());
+                Environment.SetEnvironmentVariable(item.Key, item.Value?.ToString());
             }
         }
 
