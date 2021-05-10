@@ -37,7 +37,8 @@ namespace GreenEnergyHub.Charges.Application
         {
             return new ChargeCommandRejectedEvent(
                 _clock.GetCurrentInstant(),
-                command.Document.CorrelationId,
+                // ReSharper disable once ConstantNullCoalescingCondition - because, yes it can be null!
+                command.Document.CorrelationId ?? command.CorrelationId, // bugfix or new bug!?
                 command.Document.Id,
                 command.ChargeOperation.Id,
                 chargeCommandValidationResult.InvalidRules.Select(x => x.ValidationRuleIdentifier.ToString()).ToArray());

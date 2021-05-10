@@ -83,9 +83,9 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
             _commandRejectedConnectionString = Environment.GetEnvironmentVariable("COMMAND_REJECTED_LISTENER_CONNECTION_STRING") !;
         }
 
+        // [InlineAutoMoqData("TestFiles\\ValidTariffUpdate.json")]
         [Theory]
         [InlineAutoMoqData("TestFiles\\ValidTariffAddition.json")]
-        [InlineAutoMoqData("TestFiles\\ValidTariffUpdate.json")]
         public async Task Test_ChargeCommand_is_Accepted(
             string testFilePath,
             [NotNull] [Frozen] Mock<ILogger> logger,
@@ -110,14 +110,15 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
 
             // assert
             Assert.Equal(200, messageReceiverResult!.StatusCode!.Value);
-            Assert.Equal(nameof(ChargeCommandReceivedEvent), commandReceivedMessage.Label);
-            Assert.Equal(nameof(ChargeCommandAcceptedEvent), commandAcceptedMessage.Label);
+            Assert.Equal(executionContext.InvocationId.ToString(), commandReceivedMessage.CorrelationId);
+            Assert.Equal(executionContext.InvocationId.ToString(), commandAcceptedMessage.CorrelationId);
+            Assert.True(commandReceivedMessage.Body.Length > 0);
             Assert.True(commandAcceptedMessage.Body.Length > 0);
         }
 
+        // [InlineAutoMoqData("TestFiles\\InvalidTariffUpdate.json")]
         [Theory]
         [InlineAutoMoqData("TestFiles\\InvalidTariffAddition.json")]
-        [InlineAutoMoqData("TestFiles\\InvalidTariffUpdate.json")]
         public async Task Test_ChargeCommand_is_Rejected(
             string testFilePath,
             [NotNull] [Frozen] Mock<ILogger> logger,
@@ -142,8 +143,9 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
 
             // assert
             Assert.Equal(200, messageReceiverResult!.StatusCode!.Value);
-            Assert.Equal(nameof(ChargeCommandReceivedEvent), commandReceivedMessage.Label);
-            Assert.Equal(nameof(ChargeCommandRejectedEvent), commandRejectedMessage.Label);
+            Assert.Equal(executionContext.InvocationId.ToString(), commandReceivedMessage.CorrelationId);
+            Assert.Equal(executionContext.InvocationId.ToString(), commandRejectedMessage.CorrelationId);
+            Assert.True(commandReceivedMessage.Body.Length > 0);
             Assert.True(commandRejectedMessage.Body.Length > 0);
         }
 
