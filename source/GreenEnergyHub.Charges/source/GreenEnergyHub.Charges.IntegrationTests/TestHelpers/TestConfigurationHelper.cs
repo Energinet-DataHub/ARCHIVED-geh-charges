@@ -34,9 +34,9 @@ namespace GreenEnergyHub.Charges.IntegrationTests.TestHelpers
             var json = File.ReadAllText(Path.Join(path, "local.settings.json"));
             var parsed = Newtonsoft.Json.Linq.JObject.Parse(json).Value<Newtonsoft.Json.Linq.JObject>("Values");
 
-            foreach (var item in parsed)
+            foreach (var item in parsed!)
             {
-                Environment.SetEnvironmentVariable(item.Key, item.Value.ToString());
+                Environment.SetEnvironmentVariable(item.Key, item.ToString());
             }
         }
 

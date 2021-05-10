@@ -25,7 +25,6 @@ using GreenEnergyHub.Charges.IntegrationTests.TestHelpers;
 using GreenEnergyHub.Charges.MessageReceiver;
 using GreenEnergyHub.Charges.TestCore;
 using GreenEnergyHub.Json;
-using GreenEnergyHub.TestHelpers.Traits;
 using Microsoft.AspNetCore.Http.Internal;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs;
@@ -35,11 +34,12 @@ using Moq;
 using NodaTime;
 using Xunit;
 using Xunit.Abstractions;
+using Xunit.Categories;
 
 namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
 {
-    [Trait(TraitNames.Category, TraitValues.IntegrationTest)]
-    public class ChangeOfChargesMessageHandlerTests
+    [UnitTest]
+    public class ChangeOfChargeIntegrationTests
     {
         private readonly ITestOutputHelper _testOutputHelper;
         private readonly ChargeHttpTrigger _chargeHttpTrigger;
@@ -54,7 +54,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
         private readonly string _commandAcceptedConnectionString;
         private readonly string _commandRejectedConnectionString;
 
-        public ChangeOfChargesMessageHandlerTests(ITestOutputHelper testOutputHelper)
+        public ChangeOfChargeIntegrationTests(ITestOutputHelper testOutputHelper)
         {
             _testOutputHelper = testOutputHelper;
             TestConfigurationHelper.ConfigureEnvironmentVariablesFromLocalSettings();
@@ -67,9 +67,9 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
                 messageReceiverHost.Services.GetRequiredService<ICorrelationContext>());
 
             _chargeCommandEndpoint = new ChargeCommandEndpoint(
-                chargeCommandReceiverHost.Services.GetRequiredService<IJsonSerializer>(),
                 chargeCommandReceiverHost.Services.GetRequiredService<IChargeCommandHandler>(),
-                chargeCommandReceiverHost.Services.GetRequiredService<ICorrelationContext>());
+                chargeCommandReceiverHost.Services.GetRequiredService<ICorrelationContext>(),
+                chargeCommandReceiverHost.Services.GetRequiredService<IJsonSerializer>());
 
             _commandReceivedSubscriptionName = Environment.GetEnvironmentVariable("COMMAND_RECEIVED_INTEGRATION_TEST_SUBSCRIPTION_NAME") !;
             _commandAcceptedSubscriptionName = Environment.GetEnvironmentVariable("COMMAND_ACCEPTED_INTEGRATION_TEST_SUBSCRIPTION_NAME") !;
