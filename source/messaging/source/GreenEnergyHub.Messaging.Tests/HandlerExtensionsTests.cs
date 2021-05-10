@@ -21,13 +21,14 @@ using GreenEnergyHub.Messaging.Tests.TestHelpers;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;
+using Xunit.Categories;
 
 namespace GreenEnergyHub.Messaging.Tests
 {
+    [UnitTest]
     public class HandlerExtensionsTests
     {
         [Fact]
-        [Trait("Category", "Unit")]
         public void HandlerExtensionsWithReasonableDefaults_Should_Setup_MediatR()
         {
             const bool validateScopes = true;
@@ -42,7 +43,6 @@ namespace GreenEnergyHub.Messaging.Tests
         }
 
         [Fact]
-        [Trait("Category", "Unit")]
         public void HandlerExtension_Should_Locate_One_IngestionHandler()
         {
             const bool validateScopes = true;
@@ -58,7 +58,6 @@ namespace GreenEnergyHub.Messaging.Tests
         }
 
         [Fact]
-        [Trait("Category", "Unit")]
         public void HandlerExtension_Should_inject_registrations_into_HubMessageTypeMap()
         {
             const bool validateScopes = true;
@@ -77,7 +76,6 @@ namespace GreenEnergyHub.Messaging.Tests
         }
 
         [Fact]
-        [Trait("Category", "Unit")]
         public void HandlerExtension_ShouldRegisterAllIHubMessagesAsMessageRegistrations()
         {
             var expectedTypeOne = typeof(TestMessage);

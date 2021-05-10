@@ -19,10 +19,11 @@ using GreenEnergyHub.Messaging.Tests.TestHelpers;
 using GreenEnergyHub.Messaging.Validation;
 using Moq;
 using Xunit;
+using Xunit.Categories;
 
 namespace GreenEnergyHub.Messaging.Tests
 {
-    [Trait("Category", "Unit")]
+    [UnitTest]
     public class FluentHybridRuleEngineTests
     {
         [Fact]
