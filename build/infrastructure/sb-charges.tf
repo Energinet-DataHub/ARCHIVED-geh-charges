@@ -56,6 +56,14 @@ resource "azurerm_servicebus_subscription" "sbs_command_received" {
   max_delivery_count  = 1
 }
 
+resource "azurerm_servicebus_subscription" "sbs-command-integration-test" {
+  name                = "sbs-command-integration-test"
+  resource_group_name = data.azurerm_resource_group.main.name
+  namespace_name      = module.sbn_charges.name
+  topic_name          = module.sbt_command_received.name
+  max_delivery_count  = 1
+}
+
 module "sbt_command_accepted" {
   source              = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//service-bus-topic?ref=1.2.0"
   name                = "sbt-command-accepted"
@@ -82,6 +90,14 @@ module "sbtar_command_accepted_sender" {
   send                      = true
   dependencies              = [module.sbn_charges]
   topic_name                = module.sbt_command_accepted.name
+}
+
+resource "azurerm_servicebus_subscription" "sbs-command-integration-test" {
+  name                = "sbs-command-integration-test"
+  resource_group_name = data.azurerm_resource_group.main.name
+  namespace_name      = module.sbn_charges.name
+  topic_name          = module.sbt_command_accepted.name
+  max_delivery_count  = 1
 }
 
 resource "azurerm_servicebus_subscription" "sbs_command_accepted" {
@@ -122,6 +138,14 @@ module "sbtar_command_rejected_sender" {
 
 resource "azurerm_servicebus_subscription" "sbs_command_rejected" {
   name                = "sbs-command-rejected"
+  resource_group_name = data.azurerm_resource_group.main.name
+  namespace_name      = module.sbn_charges.name
+  topic_name          = module.sbt_command_rejected.name
+  max_delivery_count  = 1
+}
+
+resource "azurerm_servicebus_subscription" "sbs-command-integration-test" {
+  name                = "sbs-command-integration-test"
   resource_group_name = data.azurerm_resource_group.main.name
   namespace_name      = module.sbn_charges.name
   topic_name          = module.sbt_command_rejected.name
