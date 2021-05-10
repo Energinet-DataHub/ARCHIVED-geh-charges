@@ -12,14 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Diagnostics.CodeAnalysis;
-using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Domain;
-
-namespace GreenEnergyHub.Charges.Infrastructure.PostOffice
+namespace GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction
 {
-    public interface IPostOfficeService
+    /// <summary>
+    /// This enum indicates the VAT value. ("Moms" in Denmark).
+    /// D01 is No VAT | D02 is VAT.
+    /// </summary>
+    public enum VatClassification
     {
-        Task SendAsync([NotNull] ChargeAcknowledgement acknowledgement);
+        NoVat,
+        Vat25,
     }
 }

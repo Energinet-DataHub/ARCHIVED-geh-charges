@@ -13,24 +13,27 @@
 // limitations under the License.
 
 using GreenEnergyHub.Charges.Domain.Common;
+using GreenEnergyHub.Messaging.MessageTypes.Common;
+using GreenEnergyHub.Messaging.Transport;
 using JetBrains.Annotations;
 
 namespace GreenEnergyHub.Charges.Domain
 {
-    public class ChargeAcknowledgement
+    public class ChargeAcknowledgement : IOutboundMessage
     {
         public ChargeAcknowledgement(
             string correlationId,
             string receiverMRid,
             MarketParticipantRole receiverBusinessProcessRole,
             object originalTransactionReferenceMRid,
-            ProcessType businessReasonCode)
+            BusinessReasonCode businessReasonCode)
         {
             CorrelationId = correlationId;
             ReceiverMRid = receiverMRid;
             ReceiverBusinessProcessRole = receiverBusinessProcessRole;
             OriginalTransactionReferenceMRid = originalTransactionReferenceMRid;
             BusinessReasonCode = businessReasonCode;
+            Transaction = Transaction.NewTransaction();
         }
 
         public string CorrelationId { get; }
@@ -45,6 +48,9 @@ namespace GreenEnergyHub.Charges.Domain
         public object OriginalTransactionReferenceMRid { get; }
 
         [UsedImplicitly]
-        public ProcessType BusinessReasonCode { get; }
+        public BusinessReasonCode BusinessReasonCode { get; }
+
+        [UsedImplicitly]
+        public Transaction Transaction { get; set; }
     }
 }

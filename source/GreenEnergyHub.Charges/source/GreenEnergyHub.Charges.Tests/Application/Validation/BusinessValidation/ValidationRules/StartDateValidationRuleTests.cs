@@ -61,11 +61,11 @@ namespace GreenEnergyHub.Charges.Tests.Application.Validation.BusinessValidation
             string effectuationDateIsoString,
             ChargeCommand chargeCommand)
         {
-            chargeCommand.RequestDate = InstantPattern.General.Parse(nowIsoString).Value;
-            chargeCommand.MktActivityRecord = new MktActivityRecord
+            chargeCommand.ChargeOperation = new ChargeOperation
             {
-                ValidityStartDate = InstantPattern.General.Parse(effectuationDateIsoString).Value,
+                StartDateTime = InstantPattern.General.Parse(effectuationDateIsoString).Value,
             };
+            chargeCommand.Document.RequestDate = InstantPattern.General.Parse(nowIsoString).Value;
         }
 
         private static ZonedDateTimeService CreateLocalDateTimeService(string timeZoneId)

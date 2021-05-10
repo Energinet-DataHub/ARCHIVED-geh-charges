@@ -12,15 +12,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction
+using GreenEnergyHub.Messaging.Transport;
+
+namespace GreenEnergyHub.Charges.Infrastructure.Messaging.Serialization
 {
     /// <summary>
-    /// The kind of charge: Subscription ("D01") | Fee ("D02") | Tariff ("D03").
+    /// Interface for factory that can create a JSON mapper for outbound messages
     /// </summary>
-    public enum ChargeType
+    public interface IJsonOutboundMapperFactory
     {
-        Subscription,
-        Fee,
-        Tariff,
+        /// <summary>
+        /// Retrieves the mapper needed for a specific outbound message
+        /// </summary>
+        /// <param name="message">The outbound message to find the mapper for</param>
+        /// <returns>The mapper needed for the outbound message</returns>
+        IJsonOutboundMapper GetMapper(IOutboundMessage message);
     }
 }

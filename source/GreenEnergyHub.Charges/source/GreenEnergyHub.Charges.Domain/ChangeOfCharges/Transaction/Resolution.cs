@@ -11,11 +11,18 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-namespace GreenEnergyHub.Charges.Domain.Common
+
+namespace GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction
 {
-    public enum ServiceCategoryKind
+    /// <summary>
+    /// This enum is used to indicate the resolution of a charge price list.
+    /// PT15M = 15 minutes | PT1H = hour | P1D = day | P1M = month.
+    /// </summary>
+    public enum Resolution
     {
-        Unknown = 0,
-        Electricity = 23,
+        PT15M,
+        PT1H,
+        P1D,
+        P1M,
     }
 }

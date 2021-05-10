@@ -12,24 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using NodaTime;
-#pragma warning disable 8618
-
-namespace GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction
+namespace GreenEnergyHub.Charges.Domain.Common
 {
-    // Non-nullable member is uninitialized is ignored
-    // Only properties which is allowed to be null is nullable
-    // MktActivityRecord integrity is null checked by ChargeCommandNullChecker
-    public class MktActivityRecord
+    /// <summary>
+    /// BusinessReasonCode indicates the intended business context.
+    /// </summary>
+    public enum BusinessReasonCode
     {
-        public string MRid { get; set; }
-
-        public Instant ValidityStartDate { get; set; }
-
-        public Instant? ValidityEndDate { get; set; }
-
-        public MktActivityRecordStatus Status { get; set; }
-
-        public ChargeType ChargeType { get; set; }
+        Unknown = 0,
+        UpdateChargeInformation = 18, // This will be received as D18 in ebiX.
     }
 }

@@ -12,11 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace GreenEnergyHub.Charges.Domain.Common
+namespace GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction
 {
-    public enum ProcessType
+    /// <summary>
+    /// This enum indicates the action requested by the sender, e.g. using Addition when sender wants to create a new charge price list.
+    /// </summary>
+    public enum OperationType
     {
         Unknown = 0,
-        UpdateChargeInformation = 18,
+        Addition = 2,
+        Deletion = 3,
+        Change = 4,
     }
 }

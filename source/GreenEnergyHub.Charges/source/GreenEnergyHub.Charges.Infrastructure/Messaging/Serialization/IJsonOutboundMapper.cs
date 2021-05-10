@@ -12,12 +12,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace GreenEnergyHub.Charges.Infrastructure.PostOffice
-{
-    public class PostOfficeConfiguration
-    {
-        public string? ConnectionString { get; set; }
+using GreenEnergyHub.Messaging.Transport;
 
-        public string? TopicName { get; set; }
+namespace GreenEnergyHub.Charges.Infrastructure.Messaging.Serialization
+{
+    /// <summary>
+    /// Interface for mapping an outbound message to a DTO that can be used for json serialization
+    /// </summary>
+    public interface IJsonOutboundMapper
+    {
+        /// <summary>
+        /// Converts the outbound message into a serializable DTO
+        /// </summary>
+        /// <param name="message">Outbound message to convert</param>
+        /// <returns>DTO that can be used in JSON serialization</returns>
+        public object Convert(IOutboundMessage message);
     }
 }

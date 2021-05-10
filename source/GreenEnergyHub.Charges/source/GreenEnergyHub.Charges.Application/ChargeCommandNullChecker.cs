@@ -13,7 +13,6 @@
 // limitations under the License.
 
 using System;
-using System.Linq;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
 using GreenEnergyHub.Charges.Domain.Common;
 using MarketParticipant = GreenEnergyHub.Charges.Domain.Common.MarketParticipant;
@@ -24,55 +23,35 @@ namespace GreenEnergyHub.Charges.Application
     {
         public static void ThrowExceptionIfRequiredPropertyIsNull(ChargeCommand chargeCommand)
         {
-            CheckChargeCommand(chargeCommand);
-            CheckChargeCommandPeriod(chargeCommand.Period);
-            CheckChargeCommandMarketDocument(chargeCommand.MarketDocument);
-            CheckChargeCommandMktActivityRecord(chargeCommand.MktActivityRecord);
-        }
-
-        private static void CheckChargeCommand(ChargeCommand chargeCommand)
-        {
             if (chargeCommand == null) throw new ArgumentNullException(nameof(chargeCommand));
             if (string.IsNullOrWhiteSpace(chargeCommand.CorrelationId)) throw new ArgumentException(chargeCommand.CorrelationId);
-            if (string.IsNullOrWhiteSpace(chargeCommand.LastUpdatedBy)) throw new ArgumentException(chargeCommand.LastUpdatedBy);
-            if (string.IsNullOrWhiteSpace(chargeCommand.Type)) throw new ArgumentException(chargeCommand.Type);
-            if (string.IsNullOrWhiteSpace(chargeCommand.ChargeTypeOwnerMRid)) throw new ArgumentException(chargeCommand.ChargeTypeOwnerMRid);
-            if (string.IsNullOrWhiteSpace(chargeCommand.ChargeTypeMRid)) throw new ArgumentException(chargeCommand.ChargeTypeOwnerMRid);
+
+            CheckDocument(chargeCommand.Document);
+            CheckChargeOperation(chargeCommand.ChargeOperation);
         }
 
-        private static void CheckChargeCommandMktActivityRecord(MktActivityRecord mktActivityRecord)
+        private static void CheckChargeOperation(ChargeOperation chargeOperation)
         {
-            if (mktActivityRecord == null) throw new ArgumentNullException(nameof(mktActivityRecord));
-            if (string.IsNullOrWhiteSpace(mktActivityRecord.MRid)) throw new ArgumentException(mktActivityRecord.MRid);
-            CheckMktActivityRecordChargeType(mktActivityRecord.ChargeType);
+            if (chargeOperation == null) throw new ArgumentNullException(nameof(chargeOperation));
+            if (string.IsNullOrWhiteSpace(chargeOperation.Id)) throw new ArgumentException(chargeOperation.Id);
+            if (string.IsNullOrWhiteSpace(chargeOperation.ChargeOwner)) throw new ArgumentException(chargeOperation.ChargeOwner);
+            if (string.IsNullOrWhiteSpace(chargeOperation.ChargeId)) throw new ArgumentException(chargeOperation.ChargeId);
+            if (string.IsNullOrWhiteSpace(chargeOperation.ChargeName)) throw new ArgumentException(chargeOperation.ChargeName);
+            if (string.IsNullOrWhiteSpace(chargeOperation.ChargeDescription)) throw new ArgumentException(chargeOperation.ChargeDescription);
         }
 
-        private static void CheckMktActivityRecordChargeType(ChargeType chargeType)
+        private static void CheckDocument(Document document)
         {
-            if (chargeType == null) throw new ArgumentNullException(nameof(chargeType));
-            if (string.IsNullOrWhiteSpace(chargeType.Name)) throw new ArgumentException(chargeType.Name);
-            if (string.IsNullOrWhiteSpace(chargeType.VatPayer)) throw new ArgumentException(chargeType.VatPayer);
-            if (string.IsNullOrWhiteSpace(chargeType.Description)) throw new ArgumentException(chargeType.Description);
+            if (document == null) throw new ArgumentNullException(nameof(document));
+            if (string.IsNullOrWhiteSpace(document.Id)) throw new ArgumentException(document.Id);
+            CheckMarketParticipant(document.Recipient);
+            CheckMarketParticipant(document.Sender);
         }
 
-        private static void CheckChargeCommandMarketDocument(MarketDocument marketDocument)
-        {
-            if (marketDocument == null) throw new ArgumentNullException(nameof(marketDocument));
-            if (string.IsNullOrWhiteSpace(marketDocument.MRid)) throw new ArgumentException(marketDocument.MRid);
-            CheckMarketDocumentMarketParticipant(marketDocument.ReceiverMarketParticipant);
-            CheckMarketDocumentMarketParticipant(marketDocument.SenderMarketParticipant);
-        }
-
-        private static void CheckMarketDocumentMarketParticipant(MarketParticipant marketParticipant)
+        private static void CheckMarketParticipant(MarketParticipant marketParticipant)
         {
             if (marketParticipant == null) throw new ArgumentNullException(nameof(marketParticipant));
             if (string.IsNullOrWhiteSpace(marketParticipant.MRid)) throw new ArgumentException(marketParticipant.MRid);
-        }
-
-        private static void CheckChargeCommandPeriod(ChargeTypePeriod chargeTypePeriod)
-        {
-            if (chargeTypePeriod == null) throw new ArgumentNullException(nameof(chargeTypePeriod));
-            if (string.IsNullOrWhiteSpace(chargeTypePeriod.Resolution)) throw new ArgumentException(chargeTypePeriod.Resolution);
         }
     }
 }
