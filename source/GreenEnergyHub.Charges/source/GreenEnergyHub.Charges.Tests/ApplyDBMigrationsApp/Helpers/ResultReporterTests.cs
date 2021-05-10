@@ -13,16 +13,18 @@
 // limitations under the License.
 
 // The following can be used again on the other side of the first event publish PR
-/*using System;
+using System;
 using System.Collections.Generic;
 using DbUp.Engine;
 using GreenEnergyHub.Charges.ApplyDBMigrationsApp.Helpers;
+using GreenEnergyHub.TestHelpers;
 using Moq;
 using Xunit;
+using Xunit.Categories;
 
 namespace GreenEnergyHub.Charges.Tests.ApplyDBMigrationsApp.Helpers
 {
-    [Trait("Category", "Unit")]
+    [UnitTest]
     public class ResultReporterTests
     {
         private const int SuccessResult = 0;
@@ -62,4 +64,4 @@ namespace GreenEnergyHub.Charges.Tests.ApplyDBMigrationsApp.Helpers
             Assert.Equal(FailureResult, result);
         }
     }
-}*/
+}
