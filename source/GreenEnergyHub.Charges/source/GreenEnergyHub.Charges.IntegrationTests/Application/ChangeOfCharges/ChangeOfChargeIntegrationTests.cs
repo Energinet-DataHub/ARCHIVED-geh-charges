@@ -14,7 +14,6 @@
 
 using System;
 using System.Diagnostics.CodeAnalysis;
-using System.Text;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
 using GreenEnergyHub.Charges.Application;
@@ -27,10 +26,8 @@ using GreenEnergyHub.Charges.MessageReceiver;
 using GreenEnergyHub.Charges.TestCore;
 using GreenEnergyHub.Json;
 using GreenEnergyHub.TestHelpers.Traits;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Internal;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Azure.ServiceBus;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -72,7 +69,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
                 chargeCommandReceiverHost.Services.GetRequiredService<IChargeCommandHandler>(),
                 chargeCommandReceiverHost.Services.GetRequiredService<ICorrelationContext>());
 
-            _subscriptionName = Environment.GetEnvironmentVariable("COMMAND_INTEGRATIONTEST_SUBSCRIPTION_NAME") !;
+            _subscriptionName = Environment.GetEnvironmentVariable("COMMAND_INTEGRATION_TEST_SUBSCRIPTION_NAME") !;
             _commandReceivedTopicName = Environment.GetEnvironmentVariable("COMMAND_RECEIVED_TOPIC_NAME") !;
             _commandAcceptedTopicName = Environment.GetEnvironmentVariable("COMMAND_ACCEPTED_TOPIC_NAME") !;
             _commandRejectedTopicName = Environment.GetEnvironmentVariable("COMMAND_REJECTED_TOPIC_NAME") !;
