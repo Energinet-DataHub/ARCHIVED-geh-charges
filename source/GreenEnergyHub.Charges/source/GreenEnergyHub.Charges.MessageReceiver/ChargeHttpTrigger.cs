@@ -14,12 +14,11 @@
 
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
+using GreenEnergyHub.Charges.Application;
 using GreenEnergyHub.Charges.Application.ChangeOfCharges;
-using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Fee;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Message;
-using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Tariff;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
-using GreenEnergyHub.Json;
+using GreenEnergyHub.Charges.Infrastructure.Messaging;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs;
@@ -30,16 +29,23 @@ namespace GreenEnergyHub.Charges.MessageReceiver
 {
     public class ChargeHttpTrigger
     {
+        /// <summary>
+        /// The name of the function.
+        /// Function name affects the URL and thus possibly dependent infrastructure.
+        /// </summary>
         private const string FunctionName = "ChargeHttpTrigger";
-        private readonly IJsonSerializer _jsonDeserializer;
         private readonly IChangeOfChargesMessageHandler _changeOfChargesMessageHandler;
+        private readonly ICorrelationContext _correlationContext;
+        private readonly MessageExtractor<ChargeCommand> _messageExtractor;
 
         public ChargeHttpTrigger(
-            IJsonSerializer jsonDeserializer,
-            IChangeOfChargesMessageHandler changeOfChargesMessageHandler)
+            IChangeOfChargesMessageHandler changeOfChargesMessageHandler,
+            ICorrelationContext correlationContext,
+            MessageExtractor<ChargeCommand> messageExtractor)
         {
-            _jsonDeserializer = jsonDeserializer;
             _changeOfChargesMessageHandler = changeOfChargesMessageHandler;
+            _correlationContext = correlationContext;
+            _messageExtractor = messageExtractor;
         }
 
         [FunctionName(FunctionName)]
@@ -50,56 +56,36 @@ namespace GreenEnergyHub.Charges.MessageReceiver
             ILogger log)
         {
             log.LogInformation("Function {FunctionName} started to process a request", FunctionName);
-            var message = await GetChangeOfChargesMessageAsync(_jsonDeserializer, req, context).ConfigureAwait(false);
-            var messageResult = await _changeOfChargesMessageHandler.HandleAsync(message).ConfigureAwait(false);
+
+            SetupCorrelationContext(context);
+
+            var message = await GetChangeOfChargesMessageAsync(req).ConfigureAwait(false);
+
+            foreach (var messageTransaction in message.Transactions)
+            {
+                ChargeCommandNullChecker.ThrowExceptionIfRequiredPropertyIsNull(messageTransaction);
+            }
+
+            var messageResult = await _changeOfChargesMessageHandler.HandleAsync(message)
+                .ConfigureAwait(false);
+
             return new OkObjectResult(messageResult);
         }
 
-        private static ChargeCommand GetCommandFromChangeOfChargeTransaction(ChargeCommand command)
-        {
-            return command.Type switch
-            {
-                "D01" => new FeeCreate
-                {
-                    Period = command.Period,
-                    Type = command.Type,
-                    CorrelationId = command.CorrelationId,
-                    MarketDocument = command.MarketDocument,
-                    RequestDate = command.RequestDate,
-                    LastUpdatedBy = command.LastUpdatedBy,
-                    MktActivityRecord = command.MktActivityRecord,
-                    ChargeTypeMRid = command.ChargeTypeMRid,
-                    ChargeTypeOwnerMRid = command.ChargeTypeOwnerMRid,
-                },
-                _ => new TariffCreate
-                {
-                    Period = command.Period,
-                    Type = command.Type,
-                    CorrelationId = command.CorrelationId,
-                    MarketDocument = command.MarketDocument,
-                    RequestDate = command.RequestDate,
-                    LastUpdatedBy = command.LastUpdatedBy,
-                    MktActivityRecord = command.MktActivityRecord,
-                    ChargeTypeMRid = command.ChargeTypeMRid,
-                    ChargeTypeOwnerMRid = command.ChargeTypeOwnerMRid,
-                }
-            };
-        }
-
-        private static async Task<ChangeOfChargesMessage> GetChangeOfChargesMessageAsync(
-            IJsonSerializer jsonDeserializer,
-            HttpRequest req,
-            ExecutionContext executionContext)
+        private async Task<ChangeOfChargesMessage> GetChangeOfChargesMessageAsync(
+            HttpRequest req)
         {
             var message = new ChangeOfChargesMessage();
-            var transaction = (ChargeCommand)await jsonDeserializer
-                .DeserializeAsync(req.Body, typeof(ChargeCommand))
-                .ConfigureAwait(false);
+            var command = await _messageExtractor.ExtractAsync(req.Body).ConfigureAwait(false);
 
-            var command = GetCommandFromChangeOfChargeTransaction(transaction);
-            command.CorrelationId = executionContext.InvocationId.ToString();
+            command.SetCorrelationId(_correlationContext.CorrelationId);
             message.Transactions.Add(command);
             return message;
+        }
+
+        private void SetupCorrelationContext(ExecutionContext context)
+        {
+            _correlationContext.CorrelationId = context.InvocationId.ToString();
         }
     }
 }

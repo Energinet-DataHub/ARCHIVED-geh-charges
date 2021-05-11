@@ -15,38 +15,46 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using GreenEnergyHub.Charges.Application.Validation.BusinessValidation;
 
 namespace GreenEnergyHub.Charges.Application.Validation
 {
     public class ChargeCommandValidationResult
     {
-        private readonly IBusinessValidationRule[] _invalidRules;
+        private IEnumerable<IValidationRule> _invalidRules = new List<IValidationRule>();
 
         private ChargeCommandValidationResult()
-            : this(Array.Empty<IBusinessValidationRule>())
+            : this(Array.Empty<IValidationRule>())
         {
         }
 
-        private ChargeCommandValidationResult(IBusinessValidationRule[] invalidRules)
+        private ChargeCommandValidationResult(IList<IValidationRule> invalidRules)
         {
-            _invalidRules = invalidRules;
+            InvalidRules = invalidRules;
         }
 
-        public bool IsFailed => _invalidRules.Select(r => !r.IsValid).Any();
+        public IEnumerable<IValidationRule> InvalidRules
+        {
+            get => _invalidRules;
+            private set
+            {
+                if (value.Any(r => r.IsValid))
+                {
+                    throw new ArgumentException("All validation rules must be valid", nameof(InvalidRules));
+                }
+
+                _invalidRules = value;
+            }
+        }
+
+        public bool IsFailed => InvalidRules.Select(r => !r.IsValid).Any();
 
         public static ChargeCommandValidationResult CreateSuccess()
         {
             return new ();
         }
 
-        public static ChargeCommandValidationResult CreateFailure(IList<IBusinessValidationRule> invalidRules)
+        public static ChargeCommandValidationResult CreateFailure(IList<IValidationRule> invalidRules)
         {
-            if (invalidRules.Any(r => r.IsValid))
-            {
-                throw new ArgumentException("All validation rules must be invalid", nameof(invalidRules));
-            }
-
             return new (invalidRules.ToArray());
         }
     }

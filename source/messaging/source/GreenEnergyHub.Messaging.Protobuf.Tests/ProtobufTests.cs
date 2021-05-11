@@ -23,10 +23,11 @@ using Microsoft.Extensions.DependencyInjection;
 using NodaTime;
 using Test.Assets;
 using Xunit;
+using Xunit.Categories;
 
 namespace GreenEnergyHub.Messaging.Protobuf.Tests
 {
-    [Trait("Category", "Component")]
+    [UnitTest]
     public class ProtobufTests
     {
         [Fact]

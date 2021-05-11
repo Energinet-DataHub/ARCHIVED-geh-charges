@@ -22,11 +22,11 @@ using GreenEnergyHub.Charges.Application.Validation.BusinessValidation;
 using GreenEnergyHub.Charges.Application.Validation.InputValidation;
 using GreenEnergyHub.Charges.ChargeCommandReceiver;
 using GreenEnergyHub.Charges.Core.DateTime;
+using GreenEnergyHub.Charges.Domain.Events.Local;
 using GreenEnergyHub.Charges.Infrastructure.Context;
+using GreenEnergyHub.Charges.Infrastructure.Messaging.Registration;
 using GreenEnergyHub.Charges.Infrastructure.Repositories;
-using GreenEnergyHub.Charges.Infrastructure.Topics;
 using GreenEnergyHub.Iso8601;
-using GreenEnergyHub.Json;
 using GreenEnergyHub.Messaging;
 using Microsoft.Azure.Functions.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
@@ -41,36 +41,46 @@ namespace GreenEnergyHub.Charges.ChargeCommandReceiver
     {
         public override void Configure([NotNull] IFunctionsHostBuilder builder)
         {
-            var connectionString = Environment.GetEnvironmentVariable("CHARGE_DB_CONNECTION_STRING") ??
-                                   throw new ArgumentNullException("CHARGE_DB_CONNECTION_STRING", "does not exist in configuration settings");
-            builder.Services.AddDbContext<ChargesDatabaseContext>(
-                options => options.UseSqlServer(connectionString));
-            builder.Services.AddScoped<IChargesDatabaseContext, ChargesDatabaseContext>();
             builder.Services.AddGreenEnergyHub(typeof(ChangeOfChargesMessageHandler).Assembly);
-            builder.Services.AddSingleton<IJsonSerializer, JsonSerializer>();
             builder.Services.AddScoped(typeof(IClock), _ => SystemClock.Instance);
-            builder.Services.AddScoped<IChangeOfChargeTransactionInputValidator, ChangeOfChargeTransactionInputValidator>();
             builder.Services.AddScoped<IChangeOfChargesTransactionHandler, ChangeOfChargesTransactionHandler>();
-            builder.Services
-                .AddScoped<IInternalEventCommunicationConfiguration, InternalEventCommunicationConfiguration>();
-            builder.Services.AddScoped<IInternalEventPublisher, InternalEventPublisher>();
             builder.Services.AddScoped<IChargeCommandAcknowledgementService, ChargeCommandAcknowledgementService>();
             builder.Services.AddScoped<IChargeCommandHandler, ChargeCommandHandler>();
             builder.Services.AddScoped<IChargeFactory, ChargeFactory>();
-            builder.Services.AddScoped<IBusinessAdditionValidationRulesFactory, BusinessAdditionValidationRulesFactory>();
-            builder.Services.AddScoped<IBusinessUpdateValidationRulesFactory, BusinessUpdateValidationRulesFactory>();
-            builder.Services.AddScoped<IBusinessValidationRulesFactory, BusinessValidationRulesFactory>();
-            builder.Services.AddScoped<IChargeCommandBusinessValidator, ChargeCommandBusinessValidator>();
-            builder.Services.AddScoped<IChargeCommandValidator, ChargeCommandValidator>();
-            builder.Services.AddScoped<IUpdateRulesConfigurationRepository, UpdateRulesConfigurationRepository>();
-            builder.Services.AddScoped<IChargeRepository, ChargeRepository>();
             builder.Services.AddScoped<IChargeCommandAcceptedEventFactory, ChargeCommandAcceptedEventFactory>();
             builder.Services.AddScoped<IChargeCommandRejectedEventFactory, ChargeCommandRejectedEventFactory>();
 
-            AddIso8601Services(builder.Services);
+            ConfigurePersistence(builder);
+            ConfigureValidation(builder);
+            ConfigureIso8601Services(builder.Services);
+            ConfigureMessaging(builder);
         }
 
-        private static void AddIso8601Services(IServiceCollection services)
+        private static void ConfigurePersistence(IFunctionsHostBuilder builder)
+        {
+            var connectionString = Environment.GetEnvironmentVariable("CHARGE_DB_CONNECTION_STRING") ??
+                                   throw new ArgumentNullException(
+                                       "CHARGE_DB_CONNECTION_STRING",
+                                       "does not exist in configuration settings");
+            builder.Services.AddDbContext<ChargesDatabaseContext>(
+                options => options.UseSqlServer(connectionString));
+            builder.Services.AddScoped<IChargesDatabaseContext, ChargesDatabaseContext>();
+            builder.Services.AddScoped<IChargeRepository, ChargeRepository>();
+        }
+
+        private static void ConfigureValidation(IFunctionsHostBuilder builder)
+        {
+            builder.Services.AddScoped<IBusinessAdditionValidationRulesFactory, BusinessAdditionValidationRulesFactory>();
+            builder.Services.AddScoped<IBusinessUpdateValidationRulesFactory, BusinessUpdateValidationRulesFactory>();
+            builder.Services.AddScoped<IBusinessValidationRulesFactory, BusinessValidationRulesFactory>();
+            builder.Services.AddScoped<IInputValidationRulesFactory, InputValidationRulesFactory>();
+            builder.Services.AddScoped<IRulesConfigurationRepository, RulesConfigurationRepository>();
+            builder.Services.AddScoped<IChargeCommandInputValidator, ChargeCommandInputValidator>();
+            builder.Services.AddScoped<IChargeCommandBusinessValidator, ChargeCommandBusinessValidator>();
+            builder.Services.AddScoped<IChargeCommandValidator, ChargeCommandValidator>();
+        }
+
+        private static void ConfigureIso8601Services(IServiceCollection services)
         {
             const string timeZoneIdString = "LOCAL_TIMEZONENAME";
             var timeZoneId = Environment.GetEnvironmentVariable(timeZoneIdString) ??
@@ -80,6 +90,25 @@ namespace GreenEnergyHub.Charges.ChargeCommandReceiver
             var timeZoneConfiguration = new Iso8601ConversionConfiguration(timeZoneId);
             services.AddSingleton<IIso8601ConversionConfiguration>(timeZoneConfiguration);
             services.AddScoped<IZonedDateTimeService, ZonedDateTimeService>();
+        }
+
+        private static void ConfigureMessaging(IFunctionsHostBuilder builder)
+        {
+            builder.Services
+                .AddMessaging()
+                .AddMessageDispatcher<ChargeCommandAcceptedEvent>(
+                    GetEnv("COMMAND_ACCEPTED_SENDER_CONNECTION_STRING"),
+                    GetEnv("COMMAND_ACCEPTED_TOPIC_NAME"))
+                .AddMessageDispatcher<ChargeCommandRejectedEvent>(
+                    GetEnv("COMMAND_REJECTED_SENDER_CONNECTION_STRING"),
+                    GetEnv("COMMAND_REJECTED_TOPIC_NAME"))
+                .AddMessageExtractor<ChargeCommandReceivedEvent>();
+        }
+
+        private static string GetEnv(string variableName)
+        {
+            return Environment.GetEnvironmentVariable(variableName) ??
+                   throw new Exception($"Function app is missing required environment variable '{variableName}'");
         }
     }
 }

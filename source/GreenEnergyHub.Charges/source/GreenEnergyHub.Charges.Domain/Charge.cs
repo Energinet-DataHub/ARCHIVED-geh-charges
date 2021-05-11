@@ -12,16 +12,85 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Collections.Generic;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
+using GreenEnergyHub.Charges.Domain.Common;
+using NodaTime;
 
 namespace GreenEnergyHub.Charges.Domain
 {
-    /// <summary>
-    /// TODO: Charge for now derives from ChargeCommand to get up and running quick and dirty.
-    ///       I, however, still wanted to make my intentions/thoughts explicit.
-    ///       Please consider making it a nice and sweet (domain) model completely decoupled from command.
-    /// </summary>
-    public class Charge : ChargeCommand
+    public class Charge
     {
+#pragma warning disable 8618
+        public Charge()
+#pragma warning restore 8618
+        {
+            Points = new List<Point>();
+        }
+
+        public Document Document { get; set; }
+
+        /// <summary>
+        /// Contains a unique ID for the specific Charge Event, provided by the sender.
+        /// </summary>
+        public string ChargeOperationId { get; set; }
+
+        public BusinessReasonCode BusinessReasonCode { get; set; }
+
+        public OperationType Status { get; set; }
+
+        /// <summary>
+        /// Unique ID of a charge (Note, unique per market participants).
+        /// Example: EA-001
+        /// </summary>
+        public string Id { get; set; }
+
+        public ChargeType Type { get; set; }
+
+        /// <summary>
+        /// The charge name
+        /// Example: "Elafgift"
+        /// </summary>
+        public string Name { get; set; }
+
+        public string Description { get; set; }
+
+        /// <summary>
+        /// Valid from, of a charge price list. Also known as Effective Date.
+        /// </summary>
+        public Instant StartDateTime { get; set; }
+
+        /// <summary>
+        /// Valid to, of a charge price list.
+        /// </summary>
+        public Instant? EndDateTime { get; set; }
+
+        public VatClassification VatClassification { get; set; }
+
+        /// <summary>
+        /// In Denmark the Energy Supplier invoices the customer, including the charges from the Grid Access Provider and the System Operator.
+        /// This boolean can be use to indicate that a charge must be visible on the invoice sent to the customer.
+        /// </summary>
+        public bool TransparentInvoicing { get; set; }
+
+        /// <summary>
+        /// Indicates whether the Charge is tax or not.
+        /// </summary>
+        public bool TaxIndicator { get; set; }
+
+        /// <summary>
+        ///  Charge Owner, e.g. the GLN or EIC identification number.
+        /// </summary>
+        public string Owner { get; set; }
+
+        public Resolution Resolution { get; set; }
+
+        /// <summary>
+        /// PTA: Is this relevant for an incoming charge command?
+        /// </summary>
+        public string LastUpdatedBy { get; set; }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2227", Justification = "JSON deserialization")]
+        public List<Point> Points { get; set; }
     }
 }

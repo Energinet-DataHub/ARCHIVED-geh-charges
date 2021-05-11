@@ -17,7 +17,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application.ChangeOfCharges.Repositories;
-using GreenEnergyHub.Charges.Application.Validation.BusinessValidation.Rules;
+using GreenEnergyHub.Charges.Application.Validation.BusinessValidation.ValidationRules;
 using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.Domain;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
@@ -27,25 +27,25 @@ namespace GreenEnergyHub.Charges.Application.Validation.BusinessValidation
     public class BusinessUpdateValidationRulesFactory : IBusinessUpdateValidationRulesFactory
     {
         private readonly IChargeRepository _chargeRepository;
-        private readonly IUpdateRulesConfigurationRepository _updateRulesConfigurationRepository;
+        private readonly IRulesConfigurationRepository _rulesConfigurationRepository;
         private readonly IZonedDateTimeService _localDateTimeService;
 
         public BusinessUpdateValidationRulesFactory(
             IChargeRepository chargeRepository,
-            IUpdateRulesConfigurationRepository updateRulesConfigurationRepository,
+            IRulesConfigurationRepository rulesConfigurationRepository,
             IZonedDateTimeService localDateTimeService)
         {
             _chargeRepository = chargeRepository;
-            _updateRulesConfigurationRepository = updateRulesConfigurationRepository;
+            _rulesConfigurationRepository = rulesConfigurationRepository;
             _localDateTimeService = localDateTimeService;
         }
 
-        public async Task<IBusinessValidationRuleSet> CreateRulesForUpdateCommandAsync([NotNull] ChargeCommand command)
+        public async Task<IValidationRuleSet> CreateRulesForUpdateCommandAsync([NotNull] ChargeCommand chargeCommand)
         {
-            if (command == null) throw new ArgumentNullException(nameof(command));
+            if (chargeCommand == null) throw new ArgumentNullException(nameof(chargeCommand));
 
-            var chargeTypeMRid = command.ChargeTypeMRid!;
-            var commandChargeTypeOwnerMRid = command.ChargeTypeOwnerMRid!;
+            var chargeTypeMRid = chargeCommand.ChargeOperation.Id;
+            var commandChargeTypeOwnerMRid = chargeCommand.ChargeOperation.ChargeOwner;
 
             var charge = await _chargeRepository.GetChargeAsync(chargeTypeMRid, commandChargeTypeOwnerMRid).ConfigureAwait(false);
 
@@ -54,24 +54,24 @@ namespace GreenEnergyHub.Charges.Application.Validation.BusinessValidation
                 throw new Exception($"Charge found on MRid: {chargeTypeMRid}, ChargeTypeOwnerMRid: {commandChargeTypeOwnerMRid}");
             }
 
-            var configuration = await _updateRulesConfigurationRepository.GetConfigurationAsync().ConfigureAwait(false);
+            var configuration = await _rulesConfigurationRepository.GetConfigurationAsync().ConfigureAwait(false);
 
-            var rules = GetRules(command, configuration, charge);
+            var rules = GetRules(chargeCommand, configuration, charge);
 
-            return BusinessValidationRuleSet.FromRules(rules);
+            return ValidationRuleSet.FromRules(rules);
         }
 
-        private List<IBusinessValidationRule> GetRules(ChargeCommand command, UpdateRulesConfiguration configuration, Charge charge)
+        private List<IValidationRule> GetRules(ChargeCommand command, RulesConfiguration configuration, Charge charge)
         {
-            var rules = new List<IBusinessValidationRule>
+            var rules = new List<IValidationRule>
             {
-                new StartDateVr209ValidationRule(
+                new StartDateValidationRule(
                     command,
-                    configuration.StartDateVr209ValidationRuleConfiguration,
+                    configuration.StartDateValidationRuleConfiguration,
                     _localDateTimeService),
             };
 
-            if (command.Type == ChargeCommandType.Tariff)
+            if (command.ChargeOperation.Type == ChargeType.Tariff)
             {
                 AddTariffOnlyRules(rules, command, charge);
             }
@@ -80,12 +80,12 @@ namespace GreenEnergyHub.Charges.Application.Validation.BusinessValidation
         }
 
         private static void AddTariffOnlyRules(
-            List<IBusinessValidationRule> rules,
+            List<IValidationRule> rules,
             ChargeCommand command,
             Charge charge)
         {
-            rules.Add(new VatPayerMustNotChangeInUpdateRule(command, charge));
-            rules.Add(new TaxIndicatorMustNotChangeInUpdateRule(command, charge));
+            rules.Add(new ChangingTariffVatValueNotAllowedRule(command, charge));
+            rules.Add(new ChangingTariffTaxValueNotAllowedRule(command, charge));
         }
     }
 }

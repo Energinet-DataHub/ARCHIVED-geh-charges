@@ -17,9 +17,11 @@ using GreenEnergyHub.Messaging.MessageRouting;
 using Moq;
 using Moq.AutoMock;
 using Xunit;
+using Xunit.Categories;
 
 namespace GreenEnergyHub.Messaging.Tests
 {
+    [UnitTest]
     public class HubMessageTypeMapTests
     {
         private readonly AutoMocker _autoMocker;
@@ -30,7 +32,6 @@ namespace GreenEnergyHub.Messaging.Tests
         }
 
         [Fact]
-        [Trait("Category", "Unit")]
         public void ValidCategory_ReturnsCorrectType()
         {
             var messageMaps = new[] { new MessageRegistration("ServiceStart", typeof(Type)) };
@@ -41,7 +42,6 @@ namespace GreenEnergyHub.Messaging.Tests
         }
 
         [Fact]
-        [Trait("Category", "Unit")]
         public void InvalidCategory_ReturnsNull()
         {
             var messageMaps = Array.Empty<MessageRegistration>();

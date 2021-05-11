@@ -13,36 +13,42 @@
 // limitations under the License.
 
 using System.Diagnostics.CodeAnalysis;
+using System.Threading;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
+using GreenEnergyHub.Charges.Application;
 using GreenEnergyHub.Charges.Application.ChangeOfCharges;
 using GreenEnergyHub.Charges.Domain.Events.Local;
 using GreenEnergyHub.Charges.Tests.Builders;
 using GreenEnergyHub.TestHelpers;
-using GreenEnergyHub.TestHelpers.Traits;
 using Moq;
 using Xunit;
+using Xunit.Categories;
 
 namespace GreenEnergyHub.Charges.Tests.Application.ChangeOfCharges
 {
-    [Trait(TraitNames.Category, TraitValues.UnitTest)]
+    [UnitTest]
     public class ChangeOfChargesTransactionHandlerTests
     {
         [Theory]
         [InlineAutoDomainData]
         public async Task ChangeOfChargesTransactionHandler_WhenCalled_ShouldCallPublisher(
-            [NotNull] [Frozen] Mock<IInternalEventPublisher> localEventPublisher,
+            [NotNull] [Frozen] Mock<IMessageDispatcher<ChargeCommandReceivedEvent>> localEventPublisher,
             [NotNull] ChangeOfChargesTransactionHandler sut)
         {
             // Arrange
-            var transaction = new ChangeOfChargesTransactionBuilder().Build();
+            var transaction = new ChargeCommandTestBuilder().Build();
 
             // Act
             await sut.HandleAsync(transaction).ConfigureAwait(false);
 
             // Assert
-            localEventPublisher.Verify(x => x.PublishAsync(It.Is<ChargeCommandReceivedEvent>(localEvent =>
-                localEvent.Command == transaction && localEvent.CorrelationId == transaction.CorrelationId)));
+            localEventPublisher.Verify(
+                x => x.DispatchAsync(
+                    It.Is<ChargeCommandReceivedEvent>(
+                        localEvent => localEvent.Command == transaction &&
+                                      localEvent.CorrelationId == transaction.CorrelationId),
+                    It.IsAny<CancellationToken>()));
         }
     }
 }

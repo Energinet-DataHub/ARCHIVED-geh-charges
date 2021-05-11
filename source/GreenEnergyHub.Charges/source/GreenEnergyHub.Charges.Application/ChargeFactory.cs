@@ -23,20 +23,28 @@ namespace GreenEnergyHub.Charges.Application
     {
         public Task<Charge> CreateFromCommandAsync([NotNull]ChargeCommand command)
         {
-            // Quick and dirty as long as Charge is a command
             var c = new Charge
             {
-                Period = command.Period,
-                Type = command.Type,
-                CorrelationId = command.CorrelationId,
-                MarketDocument = command.MarketDocument,
-                MRid = command.ChargeTypeMRid,
-                RequestDate = command.RequestDate,
-                LastUpdatedBy = command.LastUpdatedBy,
-                MktActivityRecord = command.MktActivityRecord,
-                ChargeTypeMRid = command.ChargeTypeMRid,
-                ChargeTypeOwnerMRid = command.ChargeTypeOwnerMRid,
+                Document = command.Document,
+                Id = command.ChargeOperation.ChargeId,
+                Description = command.ChargeOperation.ChargeDescription,
+                Name = command.ChargeOperation.ChargeName,
+                Owner = command.ChargeOperation.ChargeOwner,
+                Points = command.ChargeOperation.Points,
+                Resolution = command.ChargeOperation.Resolution,
+                TaxIndicator = command.ChargeOperation.TaxIndicator,
+                Type = command.ChargeOperation.Type,
+                VatClassification = command.ChargeOperation.VatClassification,
+                TransparentInvoicing = command.ChargeOperation.TransparentInvoicing,
+                EndDateTime = command.ChargeOperation.EndDateTime,
+                StartDateTime = command.ChargeOperation.StartDateTime,
+                Status = command.ChargeOperation.Status,
+                BusinessReasonCode = command.ChargeOperation.BusinessReasonCode,
+                ChargeOperationId = command.ChargeOperation.Id,
+                LastUpdatedBy = "Volt", // This should be used to identify the user.
             };
+            // Right now CorrelationId is not a part of the Charge, but its needed for persistence.
+            c.Document.CorrelationId = command.CorrelationId;
             return Task.FromResult(c);
         }
     }

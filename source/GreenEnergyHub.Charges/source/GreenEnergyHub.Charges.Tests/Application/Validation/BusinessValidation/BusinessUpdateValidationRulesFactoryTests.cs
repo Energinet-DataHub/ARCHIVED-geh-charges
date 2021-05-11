@@ -20,36 +20,37 @@ using System.Threading.Tasks;
 using AutoFixture.Xunit2;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Application.Validation.BusinessValidation;
-using GreenEnergyHub.Charges.Application.Validation.BusinessValidation.Rules;
+using GreenEnergyHub.Charges.Application.Validation.BusinessValidation.ValidationRules;
 using GreenEnergyHub.Charges.Core;
-using GreenEnergyHub.Charges.Domain;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
 using GreenEnergyHub.TestHelpers;
 using Moq;
 using Xunit;
+using Xunit.Categories;
 
 namespace GreenEnergyHub.Charges.Tests.Application.Validation.BusinessValidation
 {
+    [UnitTest]
     public class BusinessUpdateValidationRulesFactoryTests
     {
         [Theory]
         [InlineAutoDomainData]
         public async Task CreateRulesForUpdateCommandAsync_ReturnsRulesForTariffUpdateCommand(
-            [NotNull] [Frozen] Mock<IUpdateRulesConfigurationRepository> updateRulesConfigurationRepository,
+            [NotNull] [Frozen] Mock<IRulesConfigurationRepository> updateRulesConfigurationRepository,
             [NotNull] BusinessUpdateValidationRulesFactory sut,
-            [NotNull] ChargeCommand chargeCommand)
+            [NotNull] TestableChargeCommand chargeCommand)
         {
             // Arrange
             ConfigureRepository(updateRulesConfigurationRepository);
 
             var expectedRules = new HashSet<Type>
             {
-                typeof(VatPayerMustNotChangeInUpdateRule),
-                typeof(TaxIndicatorMustNotChangeInUpdateRule),
-                typeof(StartDateVr209ValidationRule),
+                typeof(ChangingTariffVatValueNotAllowedRule),
+                typeof(ChangingTariffTaxValueNotAllowedRule),
+                typeof(StartDateValidationRule),
             };
 
-            var tariffUpdateCommand = TurnCommandIntoSpecifiedUpdateType(chargeCommand, ChargeCommandType.Tariff);
+            var tariffUpdateCommand = TurnCommandIntoSpecifiedUpdateType(chargeCommand, ChargeType.Tariff);
 
             // Act
             var actual = await sut.CreateRulesForUpdateCommandAsync(tariffUpdateCommand).ConfigureAwait(false);
@@ -62,16 +63,16 @@ namespace GreenEnergyHub.Charges.Tests.Application.Validation.BusinessValidation
         [Theory]
         [InlineAutoDomainData]
         public async Task CreateRulesForUpdateCommandAsync_ReturnsRulesForFeeUpdateCommand(
-            [NotNull] [Frozen] Mock<IUpdateRulesConfigurationRepository> updateRulesConfigurationRepository,
+            [NotNull] [Frozen] Mock<IRulesConfigurationRepository> updateRulesConfigurationRepository,
             [NotNull] BusinessUpdateValidationRulesFactory sut,
-            [NotNull] ChargeCommand chargeCommand)
+            [NotNull] TestableChargeCommand chargeCommand)
         {
             // Arrange
             ConfigureRepository(updateRulesConfigurationRepository);
 
-            var expectedRules = new HashSet<Type> { typeof(StartDateVr209ValidationRule), };
+            var expectedRules = new HashSet<Type> { typeof(StartDateValidationRule), };
 
-            var feeUpdateCommand = TurnCommandIntoSpecifiedUpdateType(chargeCommand, ChargeCommandType.Fee);
+            var feeUpdateCommand = TurnCommandIntoSpecifiedUpdateType(chargeCommand, ChargeType.Fee);
 
             // Act
             var actual = await sut.CreateRulesForUpdateCommandAsync(feeUpdateCommand).ConfigureAwait(false);
@@ -84,17 +85,17 @@ namespace GreenEnergyHub.Charges.Tests.Application.Validation.BusinessValidation
         [Theory]
         [InlineAutoDomainData]
         public async Task CreateRulesForUpdateCommandAsync_ReturnsRulesForSubscriptionUpdateCommand(
-            [NotNull] [Frozen] Mock<IUpdateRulesConfigurationRepository> updateRulesConfigurationRepository,
+            [NotNull] [Frozen] Mock<IRulesConfigurationRepository> updateRulesConfigurationRepository,
             [NotNull] BusinessUpdateValidationRulesFactory sut,
-            [NotNull] ChargeCommand chargeCommand)
+            [NotNull] TestableChargeCommand chargeCommand)
         {
             // Arrange
             ConfigureRepository(updateRulesConfigurationRepository);
 
-            var expectedRules = new HashSet<Type> { typeof(StartDateVr209ValidationRule), };
+            var expectedRules = new HashSet<Type> { typeof(StartDateValidationRule), };
 
             var subscriptionUpdateCommand =
-                TurnCommandIntoSpecifiedUpdateType(chargeCommand, ChargeCommandType.Subscription);
+                TurnCommandIntoSpecifiedUpdateType(chargeCommand, ChargeType.Subscription);
 
             // Act
             var actual = await sut.CreateRulesForUpdateCommandAsync(subscriptionUpdateCommand).ConfigureAwait(false);
@@ -108,21 +109,21 @@ namespace GreenEnergyHub.Charges.Tests.Application.Validation.BusinessValidation
         /// Workaround because we haven't yet found a way to have AutoFixture create objects
         /// without parameterless constructors.
         /// </summary>
-        private static UpdateRulesConfiguration CreateConfiguration()
+        private static RulesConfiguration CreateConfiguration()
         {
-            return new UpdateRulesConfiguration(
-                new StartDateVr209ValidationRuleConfiguration(new Interval<int>(31, 1095)));
+            return new RulesConfiguration(
+                new StartDateValidationRuleConfiguration(new Interval<int>(31, 1095)));
         }
 
-        private static ChargeCommand TurnCommandIntoSpecifiedUpdateType(ChargeCommand chargeCommand, string commandType)
+        private static ChargeCommand TurnCommandIntoSpecifiedUpdateType(ChargeCommand chargeCommand, ChargeType chargeType)
         {
-            chargeCommand.Type = commandType;
-            chargeCommand!.MktActivityRecord!.Status = MktActivityRecordStatus.Change;
+            chargeCommand.ChargeOperation.Type = chargeType;
+            chargeCommand.ChargeOperation.Status = OperationType.Change;
             return chargeCommand;
         }
 
         private static void ConfigureRepository(
-            Mock<IUpdateRulesConfigurationRepository> updateRulesConfigurationRepository)
+            Mock<IRulesConfigurationRepository> updateRulesConfigurationRepository)
         {
             var configuration = CreateConfiguration();
             updateRulesConfigurationRepository

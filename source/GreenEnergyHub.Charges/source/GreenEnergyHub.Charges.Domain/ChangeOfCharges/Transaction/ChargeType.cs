@@ -12,23 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Text.Json.Serialization;
-
 namespace GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction
 {
-    public class ChargeType
+    /// <summary>
+    /// The kind of charge: Subscription ("D01") | Fee ("D02") | Tariff ("D03").
+    /// </summary>
+    public enum ChargeType
     {
-        [JsonPropertyName("name")]
-        public string? Name { get; set; }
-
-        [JsonPropertyName("description")]
-        public string? Description { get; set; }
-
-        [JsonPropertyName("VATPayer")]
-        public string? VatPayer { get; set; }
-
-        public bool TransparentInvoicing { get; set; }
-
-        public bool TaxIndicator { get; set; }
+        Subscription,
+        Fee,
+        Tariff,
     }
 }

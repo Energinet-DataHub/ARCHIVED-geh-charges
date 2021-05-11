@@ -23,15 +23,17 @@ using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
 using GreenEnergyHub.TestHelpers;
 using Moq;
 using Xunit;
+using Xunit.Categories;
 
 namespace GreenEnergyHub.Charges.Tests.Application.Validation
 {
+    [UnitTest]
     public class ChargeCommandValidatorTests
     {
         [Theory]
         [InlineAutoDomainData]
         public async Task ValidateAsync_WhenInputValidationFails_ReturnsInvalid(
-            [NotNull] [Frozen] Mock<IChangeOfChargeTransactionInputValidator> inputValidator,
+            [NotNull] [Frozen] Mock<IChargeCommandInputValidator> inputValidator,
             [NotNull] ChargeCommandValidator sut,
             ChargeCommand anyCommand)
         {
@@ -43,7 +45,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Validation
         [Theory]
         [InlineAutoDomainData]
         public async Task ValidateAsync_WhenInputValidationSucceedsAndBusinessValidationFails_ReturnsInvalid(
-            [NotNull] [Frozen] Mock<IChangeOfChargeTransactionInputValidator> inputValidator,
+            [NotNull] [Frozen] Mock<IChargeCommandInputValidator> inputValidator,
             [NotNull] [Frozen] Mock<IChargeCommandBusinessValidator> businessValidator,
             [NotNull] ChargeCommandValidator sut,
             ChargeCommand anyCommand)
@@ -62,7 +64,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Validation
         [Theory]
         [InlineAutoDomainData]
         public async Task ValidateAsync_WhenInputValidationSucceedsAndBusinessValidationSucceeds_ReturnsValid(
-            [NotNull] [Frozen] Mock<IChangeOfChargeTransactionInputValidator> inputValidator,
+            [NotNull] [Frozen] Mock<IChargeCommandInputValidator> inputValidator,
             [NotNull] [Frozen] Mock<IChargeCommandBusinessValidator> businessValidator,
             [NotNull] ChargeCommandValidator sut,
             ChargeCommand anyCommand)
@@ -78,20 +80,16 @@ namespace GreenEnergyHub.Charges.Tests.Application.Validation
             Assert.False(actual.IsFailed);
         }
 
-        private static void ConfigureValidatorToReturnValidResult(Mock<IChangeOfChargeTransactionInputValidator> inputValidator, ChargeCommand anyCommand)
+        private static void ConfigureValidatorToReturnValidResult(Mock<IChargeCommandInputValidator> inputValidator, ChargeCommand anyCommand)
         {
             var validResult = ChargeCommandValidationResult.CreateSuccess();
-            inputValidator
-                .Setup(v => v.ValidateAsync(anyCommand))
-                .Returns(Task.FromResult(validResult));
+            inputValidator.Setup(v => v.Validate(anyCommand)).Returns(validResult);
         }
 
-        private static void ConfigureValidatorToReturnInvalidResult(Mock<IChangeOfChargeTransactionInputValidator> inputValidator, ChargeCommand anyCommand)
+        private static void ConfigureValidatorToReturnInvalidResult(Mock<IChargeCommandInputValidator> inputValidator, ChargeCommand anyCommand)
         {
             var invalidResult = CreateInvalidValidationResult();
-            inputValidator
-                .Setup(v => v.ValidateAsync(anyCommand))
-                .Returns(Task.FromResult(invalidResult));
+            inputValidator.Setup(v => v.Validate(anyCommand)).Returns(invalidResult);
         }
 
         private static void ConfigureValidatorToReturnValidResult(Mock<IChargeCommandBusinessValidator> businessValidator, ChargeCommand anyCommand)
@@ -112,7 +110,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Validation
 
         private static ChargeCommandValidationResult CreateInvalidValidationResult()
         {
-            var invalidRules = new List<IBusinessValidationRule> { new BusinessValidationRule(false) };
+            var invalidRules = new List<IValidationRule> { new ValidationRule(false, ValidationRuleIdentifier.TimeLimitsNotFollowed) };
             return ChargeCommandValidationResult.CreateFailure(invalidRules);
         }
     }

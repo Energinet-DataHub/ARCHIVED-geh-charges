@@ -17,7 +17,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application.ChangeOfCharges.Repositories;
-using GreenEnergyHub.Charges.Application.Validation.BusinessValidation.Rules;
+using GreenEnergyHub.Charges.Application.Validation.BusinessValidation.ValidationRules;
 using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
 
@@ -25,37 +25,37 @@ namespace GreenEnergyHub.Charges.Application.Validation.BusinessValidation
 {
     public class BusinessAdditionValidationRulesFactory : IBusinessAdditionValidationRulesFactory
     {
-        private readonly IUpdateRulesConfigurationRepository _updateRulesConfigurationRepository;
+        private readonly IRulesConfigurationRepository _rulesConfigurationRepository;
         private readonly IChargeRepository _chargeRepository;
         private readonly IZonedDateTimeService _zonedDateTimeService;
 
         public BusinessAdditionValidationRulesFactory(
-            IUpdateRulesConfigurationRepository updateRulesConfigurationRepository,
+            IRulesConfigurationRepository rulesConfigurationRepository,
             IChargeRepository chargeRepository,
             IZonedDateTimeService zonedDateTimeService)
         {
-            _updateRulesConfigurationRepository = updateRulesConfigurationRepository;
+            _rulesConfigurationRepository = rulesConfigurationRepository;
             _chargeRepository = chargeRepository;
             _zonedDateTimeService = zonedDateTimeService;
         }
 
-        public async Task<IBusinessValidationRuleSet> CreateRulesForAdditionCommandAsync([NotNull] ChargeCommand command)
+        public async Task<IValidationRuleSet> CreateRulesForAdditionCommandAsync([NotNull] ChargeCommand chargeCommand)
         {
-            await CheckIfChargeExistAsync(command).ConfigureAwait(false);
-            var configuration = await _updateRulesConfigurationRepository.GetConfigurationAsync().ConfigureAwait(false);
+            await CheckIfChargeExistAsync(chargeCommand).ConfigureAwait(false);
+            var configuration = await _rulesConfigurationRepository.GetConfigurationAsync().ConfigureAwait(false);
 
-            var rules = GetRules(command, configuration);
+            var rules = GetRules(chargeCommand, configuration);
 
-            return BusinessValidationRuleSet.FromRules(rules);
+            return ValidationRuleSet.FromRules(rules);
         }
 
-        private List<IBusinessValidationRule> GetRules(ChargeCommand command, UpdateRulesConfiguration configuration)
+        private List<IValidationRule> GetRules(ChargeCommand command, RulesConfiguration configuration)
         {
-            var rules = new List<IBusinessValidationRule>
+            var rules = new List<IValidationRule>
             {
-                new StartDateVr209ValidationRule(
+                new StartDateValidationRule(
                     command,
-                    configuration.StartDateVr209ValidationRuleConfiguration,
+                    configuration.StartDateValidationRuleConfiguration,
                     _zonedDateTimeService),
             };
 
@@ -64,8 +64,8 @@ namespace GreenEnergyHub.Charges.Application.Validation.BusinessValidation
 
         private async Task CheckIfChargeExistAsync(ChargeCommand command)
         {
-            var chargeTypeMRid = command.ChargeTypeMRid!;
-            var commandChargeTypeOwnerMRid = command.ChargeTypeOwnerMRid!;
+            var chargeTypeMRid = command.ChargeOperation.Id;
+            var commandChargeTypeOwnerMRid = command.ChargeOperation.ChargeOwner;
 
             var result = await _chargeRepository.CheckIfChargeExistsAsync(chargeTypeMRid, commandChargeTypeOwnerMRid).ConfigureAwait(false);
             if (result)

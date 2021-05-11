@@ -19,6 +19,6 @@ namespace GreenEnergyHub.Charges.Application.Validation.BusinessValidation
 {
     public interface IBusinessValidationRulesFactory
     {
-        Task<IBusinessValidationRuleSet> CreateRulesForChargeCommandAsync(ChargeCommand command);
+        Task<IValidationRuleSet> CreateRulesForChargeCommandAsync(ChargeCommand chargeCommand);
     }
 }

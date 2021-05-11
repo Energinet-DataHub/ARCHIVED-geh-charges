@@ -23,15 +23,15 @@ using GreenEnergyHub.Messaging.Tests.TestHelpers;
 using GreenEnergyHub.Messaging.Tests.TestHelpers.Validation;
 using GreenEnergyHub.Messaging.Validation;
 using Xunit;
+using Xunit.Categories;
 using ChangeOfSupplier = GreenEnergyHub.Messaging.Tests.TestHelpers.ChangeOfSupplier;
 
 namespace GreenEnergyHub.Messaging.Tests.Validation
 {
-    [Trait("Category", "Unit")]
+    [UnitTest]
     public class PropertyBuilderTests
     {
         [Fact]
-        [Trait("Category", "Unit")]
         public void PropertyRuleShouldBeAssigned()
         {
             // Arrange
@@ -50,7 +50,6 @@ namespace GreenEnergyHub.Messaging.Tests.Validation
         }
 
         [Fact]
-        [Trait("Category", "Unit")]
         public void RuleCollectionShouldBeAssigned()
         {
             // Arrange

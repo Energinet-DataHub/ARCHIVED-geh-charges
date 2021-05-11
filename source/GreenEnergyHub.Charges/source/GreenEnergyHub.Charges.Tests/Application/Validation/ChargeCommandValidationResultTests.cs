@@ -14,12 +14,14 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using GreenEnergyHub.Charges.Application.Validation;
-using GreenEnergyHub.Charges.Application.Validation.BusinessValidation;
 using Xunit;
+using Xunit.Categories;
 
 namespace GreenEnergyHub.Charges.Tests.Application.Validation
 {
+    [UnitTest]
     public class ChargeCommandValidationResultTests
     {
         [Fact]
@@ -45,14 +47,26 @@ namespace GreenEnergyHub.Charges.Tests.Application.Validation
                 () => ChargeCommandValidationResult.CreateFailure(validRules));
         }
 
-        private static List<IBusinessValidationRule> CreateValidRules()
+        [Fact]
+        public void CreateFailure_WhenCreatedWithValidAndInvalidRules_ThrowsArgumentException()
         {
-            return new () { new BusinessValidationRule(true) };
+            // Arrange
+            var validRules = CreateValidRules();
+            var invalidRules = CreateInvalidRules();
+            var allRules = validRules.Concat(invalidRules).ToList();
+
+            // Act and assert
+            Assert.Throws<ArgumentException>(() => ChargeCommandValidationResult.CreateFailure(allRules));
         }
 
-        private static List<IBusinessValidationRule> CreateInvalidRules()
+        private static List<IValidationRule> CreateValidRules()
         {
-            return new () { new BusinessValidationRule(false) };
+            return new () { new ValidationRule(true, ValidationRuleIdentifier.TimeLimitsNotFollowed) };
+        }
+
+        private static List<IValidationRule> CreateInvalidRules()
+        {
+            return new () { new ValidationRule(false, ValidationRuleIdentifier.TimeLimitsNotFollowed) };
         }
     }
 }

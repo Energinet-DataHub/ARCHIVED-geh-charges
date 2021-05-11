@@ -22,20 +22,19 @@ namespace GreenEnergyHub.Charges.Application.Validation
     public class ChargeCommandValidator : IChargeCommandValidator
     {
         private readonly IChargeCommandBusinessValidator _chargeCommandBusinessValidator;
-        private readonly IChangeOfChargeTransactionInputValidator _chargeTransactionInputValidator;
+        private readonly IChargeCommandInputValidator _chargeCommandInputValidator;
 
         public ChargeCommandValidator(
-            IChangeOfChargeTransactionInputValidator chargeTransactionInputValidator,
+            IChargeCommandInputValidator chargeCommandInputValidator,
             IChargeCommandBusinessValidator chargeCommandBusinessValidator)
         {
-            _chargeTransactionInputValidator = chargeTransactionInputValidator;
+            _chargeCommandInputValidator = chargeCommandInputValidator;
             _chargeCommandBusinessValidator = chargeCommandBusinessValidator;
         }
 
         public async Task<ChargeCommandValidationResult> ValidateAsync(ChargeCommand command)
         {
-            var inputValidationResult =
-                await _chargeTransactionInputValidator.ValidateAsync(command).ConfigureAwait(false);
+            var inputValidationResult = _chargeCommandInputValidator.Validate(command);
             if (inputValidationResult.IsFailed) return inputValidationResult;
 
             var businessValidationResult =

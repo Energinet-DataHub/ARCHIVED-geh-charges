@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Collections.Generic;
 using NodaTime;
 
 namespace GreenEnergyHub.Charges.Domain.Events.Local
@@ -22,12 +23,16 @@ namespace GreenEnergyHub.Charges.Domain.Events.Local
             Instant publishedTime,
             string correlationId,
             string originalDocumentIdentification,
-            string originalEventIdentification)
+            string originalEventIdentification,
+            IEnumerable<string> reason)
             : base(publishedTime, correlationId)
         {
+            Reason = reason;
             OriginalDocumentIdentification = originalDocumentIdentification;
             OriginalEventIdentification = originalEventIdentification;
         }
+
+        public IEnumerable<string> Reason { get; set; }
 
         public string OriginalDocumentIdentification { get; }
 

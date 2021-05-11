@@ -14,7 +14,8 @@
 
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application;
-using GreenEnergyHub.Json;
+using GreenEnergyHub.Charges.Domain.Events.Local;
+using GreenEnergyHub.Charges.Infrastructure.Messaging;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Extensions.Logging;
 
@@ -23,15 +24,18 @@ namespace GreenEnergyHub.Charges.ChargeCommandReceiver
     public class ChargeCommandEndpoint
     {
         private const string FunctionName = nameof(ChargeCommandEndpoint);
-        private readonly IJsonSerializer _jsonDeserializer;
         private readonly IChargeCommandHandler _chargeCommandHandler;
+        private readonly ICorrelationContext _correlationContext;
+        private readonly MessageExtractor<ChargeCommandReceivedEvent> _messageExtractor;
 
         public ChargeCommandEndpoint(
-            IJsonSerializer jsonDeserializer,
-            IChargeCommandHandler chargeCommandHandler)
+            IChargeCommandHandler chargeCommandHandler,
+            ICorrelationContext correlationContext,
+            MessageExtractor<ChargeCommandReceivedEvent> messageExtractor)
         {
-            _jsonDeserializer = jsonDeserializer;
             _chargeCommandHandler = chargeCommandHandler;
+            _correlationContext = correlationContext;
+            _messageExtractor = messageExtractor;
         }
 
         [FunctionName(FunctionName)]
@@ -40,16 +44,19 @@ namespace GreenEnergyHub.Charges.ChargeCommandReceiver
             "%COMMAND_RECEIVED_TOPIC_NAME%",
             "%COMMAND_RECEIVED_SUBSCRIPTION_NAME%",
             Connection = "COMMAND_RECEIVED_LISTENER_CONNECTION_STRING")]
-            byte[] message,
+            byte[] data,
             ILogger log)
         {
-            var jsonSerializedQueueItem = System.Text.Encoding.UTF8.GetString(message);
-            var serviceBusMessage = _jsonDeserializer.Deserialize<ServiceBusMessageWrapper>(jsonSerializedQueueItem);
-            var transaction = serviceBusMessage.Command;
+            var receivedEvent = await _messageExtractor.ExtractAsync(data).ConfigureAwait(false);
+            SetCorrelationContext(receivedEvent);
+            await _chargeCommandHandler.HandleAsync(receivedEvent).ConfigureAwait(false);
 
-            await _chargeCommandHandler.HandleAsync(transaction).ConfigureAwait(false);
+            log.LogDebug("Received command with charge ID '{ID}'", receivedEvent.Command.ChargeOperation.ChargeId);
+        }
 
-            log.LogDebug("Received event with charge type mRID '{mRID}'", transaction.ChargeTypeMRid);
+        private void SetCorrelationContext(ChargeCommandReceivedEvent command)
+        {
+            _correlationContext.CorrelationId = command.CorrelationId;
         }
     }
 }
