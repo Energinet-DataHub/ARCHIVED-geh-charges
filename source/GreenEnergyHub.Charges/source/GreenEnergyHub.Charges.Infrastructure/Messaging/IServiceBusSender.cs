@@ -12,21 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Domain.Events.Local;
+using Azure.Messaging.ServiceBus;
+using GreenEnergyHub.Messaging.Transport;
 
-namespace GreenEnergyHub.Charges.Application.ChangeOfCharges
+namespace GreenEnergyHub.Charges.Infrastructure.Messaging
 {
-    /// <summary>
-    /// Service for publishing events internally in the domain.
-    /// </summary>
-    public interface IInternalEventPublisher
+    // ReSharper disable once UnusedTypeParameter
+    // - Type parameter is necessary in order to distinguish instances during resolution of types in dependency container
+    public interface IServiceBusSender<TOutboundMessage>
+        where TOutboundMessage : IOutboundMessage
     {
-        /// <summary>
-        /// Publish the local event to the domain.
-        /// </summary>
-        /// <param name="internalEvent"></param>
-        /// <returns>No return value.</returns>
-        Task PublishAsync(IInternalEvent internalEvent);
+        ServiceBusSender Instance { get; }
     }
 }

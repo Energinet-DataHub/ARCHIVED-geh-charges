@@ -22,11 +22,11 @@ namespace GreenEnergyHub.Charges.Application
 {
     public interface IChargeCommandRejectedEventFactory
     {
-        IInternalEvent CreateEvent(
+        ChargeCommandRejectedEvent CreateEvent(
             [NotNull] ChargeCommand command,
             [NotNull] ChargeCommandValidationResult chargeCommandValidationResult);
 
-        IInternalEvent CreateEvent(
+        ChargeCommandRejectedEvent CreateEvent(
             [NotNull] ChargeCommand command,
             [NotNull] Exception exception);
     }

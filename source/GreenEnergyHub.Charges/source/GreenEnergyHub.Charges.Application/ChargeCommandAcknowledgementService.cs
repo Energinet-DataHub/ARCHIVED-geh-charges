@@ -13,38 +13,41 @@
 // limitations under the License.
 
 using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Application.ChangeOfCharges;
 using GreenEnergyHub.Charges.Application.Validation;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
+using GreenEnergyHub.Charges.Domain.Events.Local;
 
 namespace GreenEnergyHub.Charges.Application
 {
     public class ChargeCommandAcknowledgementService : IChargeCommandAcknowledgementService
     {
-        private readonly IInternalEventPublisher _internalEventPublisher;
         private readonly IChargeCommandRejectedEventFactory _chargeCommandRejectedEventFactory;
         private readonly IChargeCommandAcceptedEventFactory _chargeCommandAcceptedEventFactory;
+        private readonly IMessageDispatcher<ChargeCommandRejectedEvent> _rejectedMessageDispatcher;
+        private readonly IMessageDispatcher<ChargeCommandAcceptedEvent> _acceptedMessageDispatcher;
 
         public ChargeCommandAcknowledgementService(
-            IInternalEventPublisher internalEventPublisher,
             IChargeCommandRejectedEventFactory chargeCommandRejectedEventFactory,
-            IChargeCommandAcceptedEventFactory chargeCommandAcceptedEventFactory)
+            IChargeCommandAcceptedEventFactory chargeCommandAcceptedEventFactory,
+            IMessageDispatcher<ChargeCommandRejectedEvent> rejectedMessageDispatcher,
+            IMessageDispatcher<ChargeCommandAcceptedEvent> acceptedMessageDispatcher)
         {
-            _internalEventPublisher = internalEventPublisher;
             _chargeCommandRejectedEventFactory = chargeCommandRejectedEventFactory;
             _chargeCommandAcceptedEventFactory = chargeCommandAcceptedEventFactory;
+            _rejectedMessageDispatcher = rejectedMessageDispatcher;
+            _acceptedMessageDispatcher = acceptedMessageDispatcher;
         }
 
         public async Task RejectAsync(ChargeCommand command, ChargeCommandValidationResult validationResult)
         {
-            var chargeEvent = _chargeCommandRejectedEventFactory.CreateEvent(command, validationResult);
-            await _internalEventPublisher.PublishAsync(chargeEvent).ConfigureAwait(false);
+            var rejectedEvent = _chargeCommandRejectedEventFactory.CreateEvent(command, validationResult);
+            await _rejectedMessageDispatcher.DispatchAsync(rejectedEvent).ConfigureAwait(false);
         }
 
         public async Task AcceptAsync(ChargeCommand command)
         {
-            var chargeEvent = _chargeCommandAcceptedEventFactory.CreateEvent(command);
-            await _internalEventPublisher.PublishAsync(chargeEvent).ConfigureAwait(false);
+            var acceptedEvent = _chargeCommandAcceptedEventFactory.CreateEvent(command);
+            await _acceptedMessageDispatcher.DispatchAsync(acceptedEvent).ConfigureAwait(false);
         }
     }
 }

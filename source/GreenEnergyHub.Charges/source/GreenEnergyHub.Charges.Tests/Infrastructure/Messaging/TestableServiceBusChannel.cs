@@ -14,16 +14,17 @@
 
 using System.Threading;
 using System.Threading.Tasks;
-using Azure.Messaging.ServiceBus;
 using GreenEnergyHub.Charges.Infrastructure.Messaging;
+using GreenEnergyHub.Messaging.Transport;
 using JetBrains.Annotations;
 
 namespace GreenEnergyHub.Charges.Tests.Infrastructure.Messaging
 {
-    public class TestableServiceBusChannel : ServiceBusChannel
+    public class TestableServiceBusChannel<TOutboundMessage> : ServiceBusChannel<TOutboundMessage>
+        where TOutboundMessage : IOutboundMessage
     {
         public TestableServiceBusChannel(
-            [NotNull] ServiceBusSender serviceBusSender,
+            [NotNull] IServiceBusSender<TOutboundMessage> serviceBusSender,
             [NotNull] ICorrelationContext correlationContext)
             : base(serviceBusSender, correlationContext)
         {

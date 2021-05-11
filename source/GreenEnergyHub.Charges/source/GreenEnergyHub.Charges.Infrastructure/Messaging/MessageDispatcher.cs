@@ -12,28 +12,25 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
-using GreenEnergyHub.Json;
+using GreenEnergyHub.Charges.Application;
 using GreenEnergyHub.Messaging.Transport;
+using JetBrains.Annotations;
 
-namespace GreenEnergyHub.Charges.Infrastructure.Messaging.Serialization
+namespace GreenEnergyHub.Charges.Infrastructure.Messaging
 {
-    public class JsonMessageDeserializer<TInboundMessage> : MessageDeserializer<TInboundMessage>
-      where TInboundMessage : IInboundMessage
+    public class MessageDispatcher<TOutboundMessage> : MessageDispatcher, IMessageDispatcher<TOutboundMessage>
+        where TOutboundMessage : IOutboundMessage
     {
-        private readonly IJsonSerializer _jsonSerializer;
-
-        public JsonMessageDeserializer(IJsonSerializer jsonSerializer)
+        public MessageDispatcher([NotNull] MessageSerializer serializer, [NotNull] Channel<TOutboundMessage> channel)
+            : base(serializer, channel)
         {
-            _jsonSerializer = jsonSerializer;
         }
 
-        public override async Task<IInboundMessage> FromBytesAsync(byte[] data, CancellationToken cancellationToken = default)
+        public async Task DispatchAsync(TOutboundMessage message, CancellationToken cancellationToken = default)
         {
-            await using var stream = new MemoryStream(data);
-            return (TInboundMessage)await _jsonSerializer.DeserializeAsync(stream, typeof(TInboundMessage)).ConfigureAwait(false);
+            await base.DispatchAsync(message, cancellationToken).ConfigureAwait(false);
         }
     }
 }

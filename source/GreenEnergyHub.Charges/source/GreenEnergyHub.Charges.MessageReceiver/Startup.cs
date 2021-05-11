@@ -12,16 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Diagnostics.CodeAnalysis;
 using GreenEnergyHub.Charges.Application.ChangeOfCharges;
-using GreenEnergyHub.Charges.Infrastructure.Messaging;
-using GreenEnergyHub.Charges.Infrastructure.Topics;
+using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
+using GreenEnergyHub.Charges.Domain.Events.Local;
+using GreenEnergyHub.Charges.Infrastructure.Messaging.Registration;
 using GreenEnergyHub.Charges.MessageReceiver;
-using GreenEnergyHub.Json;
 using Microsoft.Azure.Functions.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection;
 using NodaTime;
-using JsonSerializer = GreenEnergyHub.Charges.Core.Json.JsonSerializer;
 
 [assembly: FunctionsStartup(typeof(Startup))]
 
@@ -32,13 +32,26 @@ namespace GreenEnergyHub.Charges.MessageReceiver
         public override void Configure([NotNull] IFunctionsHostBuilder builder)
         {
             builder.Services.AddScoped(typeof(IClock), _ => SystemClock.Instance);
-            builder.Services.AddScoped<ICorrelationContext, CorrelationContext>();
-            builder.Services.AddSingleton<IJsonSerializer, JsonSerializer>();
             builder.Services.AddScoped<IChangeOfChargesMessageHandler, ChangeOfChargesMessageHandler>();
             builder.Services.AddScoped<IChangeOfChargesTransactionHandler, ChangeOfChargesTransactionHandler>();
+
+            ConfigureMessaging(builder);
+        }
+
+        private static void ConfigureMessaging(IFunctionsHostBuilder builder)
+        {
             builder.Services
-                .AddScoped<IInternalEventCommunicationConfiguration, InternalEventCommunicationConfiguration>();
-            builder.Services.AddScoped<IInternalEventPublisher, InternalEventPublisher>();
+                .AddMessaging()
+                .AddMessageExtractor<ChargeCommand>()
+                .AddMessageDispatcher<ChargeCommandReceivedEvent>(
+                    GetEnv("COMMAND_RECEIVED_SENDER_CONNECTION_STRING"),
+                    GetEnv("COMMAND_RECEIVED_TOPIC_NAME"));
+        }
+
+        private static string GetEnv(string variableName)
+        {
+            return Environment.GetEnvironmentVariable(variableName) ??
+                   throw new Exception($"Function app is missing required environment variable '{variableName}'");
         }
     }
 }

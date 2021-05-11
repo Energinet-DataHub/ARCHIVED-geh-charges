@@ -16,16 +16,15 @@ using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Domain;
 using GreenEnergyHub.Charges.Domain.Events.Local;
-using GreenEnergyHub.Messaging.Transport;
 
 namespace GreenEnergyHub.Charges.Application
 {
-    // TODO: Move class to application project? Which would also bring IPostOfficeService to application
+    // TODO: Move class to application project? Can't because of the MessageDispatcher<> dependency...
     public class ChargeAcknowledgementSender : IChargeAcknowledgementSender
     {
-        private readonly MessageDispatcher _messageDispatcher;
+        private readonly IMessageDispatcher<ChargeAcknowledgement> _messageDispatcher;
 
-        public ChargeAcknowledgementSender(MessageDispatcher messageDispatcher)
+        public ChargeAcknowledgementSender(IMessageDispatcher<ChargeAcknowledgement> messageDispatcher)
         {
             _messageDispatcher = messageDispatcher;
         }
