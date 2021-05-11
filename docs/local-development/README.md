@@ -7,7 +7,7 @@ These are the basic steps to set up your own environment for development.
 3. Publish Azure Functions
 4. Test by executing a business process
 
-**FAQ**
+FAQ
 
 1. How do I debug my function?
 2. Tips for trouble shooting
@@ -37,7 +37,7 @@ TODO
 
 * E.g. Postman
 * Example messages
-  * Requires SQL seed and test data
+    * Requires SQL seed and test data
 
 ## FAQ ##
 
