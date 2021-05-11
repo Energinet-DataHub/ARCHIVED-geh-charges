@@ -2,7 +2,7 @@
 
 These are the basic steps to set up your own environment for development.
 
-1. Set up intrastructure in Azure using Terraform
+1. Set up infrastructure in Azure using Terraform
 2. Create database
 3. Publish Azure Functions
 4. Test by executing a business process
@@ -13,7 +13,7 @@ These are the basic steps to set up your own environment for development.
 2. Tips for trouble shooting
 3. How do I use a local SQL Server when doing db development?
 
-## Set up intrastructure in Azure using Terraform ##
+## Set up infrastructure in Azure using Terraform ##
 
 Instructions are [here](../../build/infrastructure/README.md).
 
@@ -45,7 +45,7 @@ TODO
 
 TODO
 
-* local.settings.sample.json
+* `local.settings.sample.json`
 
 ### Tips for trouble shooting ###
 
