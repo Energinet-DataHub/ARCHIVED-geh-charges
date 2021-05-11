@@ -38,7 +38,7 @@ using Xunit.Categories;
 
 namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
 {
-    [UnitTest]
+    [IntegrationTest]
     public class ChangeOfChargeIntegrationTests
     {
         private readonly ITestOutputHelper _testOutputHelper;
