@@ -28,10 +28,13 @@ namespace GreenEnergyHub.Charges.IntegrationTests.TestHelpers
         /// This method follows the suggested workaround mentioned here:
         /// https://github.com/Azure/azure-functions-host/issues/6953
         /// </summary>
-        public static void ConfigureEnvironmentVariablesFromLocalSettings()
+        public static void ConfigureEnvironmentVariables()
         {
             var path = Path.GetDirectoryName(typeof(ChargeHttpTrigger).Assembly.Location);
-            var json = File.ReadAllText(Path.Join(path, "local.settings.json"));
+            var settingsFile = Path.Join(path, "local.settings.json");
+            if (!File.Exists(settingsFile)) return;
+
+            var json = File.ReadAllText(settingsFile);
             var parsed = Newtonsoft.Json.Linq.JObject.Parse(json).Value<Newtonsoft.Json.Linq.JObject>("Values");
 
             foreach (var item in parsed!)

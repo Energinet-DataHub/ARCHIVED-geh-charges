@@ -19,6 +19,7 @@ using AutoFixture.Xunit2;
 using GreenEnergyHub.Charges.Application;
 using GreenEnergyHub.Charges.Application.ChangeOfCharges;
 using GreenEnergyHub.Charges.ChargeCommandReceiver;
+using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
 using GreenEnergyHub.Charges.Domain.Events.Local;
 using GreenEnergyHub.Charges.Infrastructure.Messaging;
 using GreenEnergyHub.Charges.IntegrationTests.TestHelpers;
@@ -58,19 +59,19 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
         {
             _testOutputHelper = testOutputHelper;
 
-            TestConfigurationHelper.ConfigureEnvironmentVariablesFromLocalSettings();
+            TestConfigurationHelper.ConfigureEnvironmentVariables();
             var messageReceiverHost = TestConfigurationHelper.SetupHost(new MessageReceiver.Startup());
             var chargeCommandReceiverHost = TestConfigurationHelper.SetupHost(new ChargeCommandReceiver.Startup());
 
             _chargeHttpTrigger = new ChargeHttpTrigger(
-                messageReceiverHost.Services.GetRequiredService<IJsonSerializer>(),
                 messageReceiverHost.Services.GetRequiredService<IChangeOfChargesMessageHandler>(),
-                messageReceiverHost.Services.GetRequiredService<ICorrelationContext>());
+                messageReceiverHost.Services.GetRequiredService<ICorrelationContext>(),
+                messageReceiverHost.Services.GetRequiredService<MessageExtractor<ChargeCommand>>());
 
             _chargeCommandEndpoint = new ChargeCommandEndpoint(
                 chargeCommandReceiverHost.Services.GetRequiredService<IChargeCommandHandler>(),
                 chargeCommandReceiverHost.Services.GetRequiredService<ICorrelationContext>(),
-                chargeCommandReceiverHost.Services.GetRequiredService<IJsonSerializer>());
+                chargeCommandReceiverHost.Services.GetRequiredService<MessageExtractor<ChargeCommandReceivedEvent>>());
 
             _commandReceivedSubscriptionName = Environment.GetEnvironmentVariable("COMMAND_RECEIVED_INTEGRATION_TEST_SUBSCRIPTION_NAME") !;
             _commandAcceptedSubscriptionName = Environment.GetEnvironmentVariable("COMMAND_ACCEPTED_INTEGRATION_TEST_SUBSCRIPTION_NAME") !;
