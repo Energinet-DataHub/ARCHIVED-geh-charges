@@ -34,6 +34,8 @@ inputs:
     required: false
     default: './output'
 
+#TODO: dynamic keyvault name
+
 runs:
   using: composite
   steps:
@@ -41,6 +43,79 @@ runs:
       shell: bash
       run: |
         dotnet build ${{ inputs.csproj_file_path }} --configuration Release --output ${{ inputs.output_path }}
+    - name: Obtain keyvault information
+      run: |
+        keyvault_secret_details=$(az keyvault secret show --name "COMMAND_RECEIVED_SENDER_CONNECTION_STRING" --vault-name kvchargesendku)
+        charges_COMMAND_RECEIVED_SENDER_CONNECTION_STRING=$(echo $keyvault_secret_details | python -c "import sys, json; print(json.load(sys.stdin)['value'])")
+        echo ::add-mask::$charges_COMMAND_RECEIVED_SENDER_CONNECTION_STRING
+        echo "CHARGES_COMMAND_RECEIVED_SENDER_CONNECTION_STRING=$charges_COMMAND_RECEIVED_SENDER_CONNECTION_STRING" >> $GITHUB_ENV
+
+        keyvault_secret_details=$(az keyvault secret show --name "COMMAND_RECEIVED_LISTENER_CONNECTION_STRING" --vault-name kvchargesendku)
+        charges_COMMAND_RECEIVED_LISTENER_CONNECTION_STRING=$(echo $keyvault_secret_details | python -c "import sys, json; print(json.load(sys.stdin)['value'])")
+        echo ::add-mask::$charges_COMMAND_RECEIVED_LISTENER_CONNECTION_STRING
+        echo "CHARGES_COMMAND_RECEIVED_LISTENER_CONNECTION_STRING=$charges_COMMAND_RECEIVED_LISTENER_CONNECTION_STRING" >> $GITHUB_ENV
+
+        keyvault_secret_details=$(az keyvault secret show --name "COMMAND_ACCEPTED_SENDER_CONNECTION_STRING" --vault-name kvchargesendku)
+        charges_COMMAND_ACCEPTED_SENDER_CONNECTION_STRING=$(echo $keyvault_secret_details | python -c "import sys, json; print(json.load(sys.stdin)['value'])")
+        echo ::add-mask::$charges_COMMAND_ACCEPTED_SENDER_CONNECTION_STRING
+        echo "CHARGES_COMMAND_ACCEPTED_SENDER_CONNECTION_STRING=$charges_COMMAND_ACCEPTED_SENDER_CONNECTION_STRING" >> $GITHUB_ENV
+
+        keyvault_secret_details=$(az keyvault secret show --name "COMMAND_ACCEPTED_LISTENER_CONNECTION_STRING" --vault-name kvchargesendku)
+        charges_COMMAND_ACCEPTED_LISTENER_CONNECTION_STRING=$(echo $keyvault_secret_details | python -c "import sys, json; print(json.load(sys.stdin)['value'])")
+        echo ::add-mask::$charges_COMMAND_ACCEPTED_LISTENER_CONNECTION_STRING
+        echo "CHARGES_COMMAND_ACCEPTED_LISTENER_CONNECTION_STRING=$charges_COMMAND_ACCEPTED_LISTENER_CONNECTION_STRING" >> $GITHUB_ENV
+
+        keyvault_secret_details=$(az keyvault secret show --name "COMMAND_REJECTED_SENDER_CONNECTION_STRING" --vault-name kvchargesendku)
+        charges_COMMAND_REJECTED_SENDER_CONNECTION_STRING=$(echo $keyvault_secret_details | python -c "import sys, json; print(json.load(sys.stdin)['value'])")
+        echo ::add-mask::$charges_COMMAND_REJECTED_SENDER_CONNECTION_STRING
+        echo "CHARGES_COMMAND_REJECTED_SENDER_CONNECTION_STRING=$charges_COMMAND_REJECTED_SENDER_CONNECTION_STRING" >> $GITHUB_ENV
+
+        keyvault_secret_details=$(az keyvault secret show --name "COMMAND_REJECTED_LISTENER_CONNECTION_STRING" --vault-name kvchargesendku)
+        charges_COMMAND_REJECTED_LISTENER_CONNECTION_STRING=$(echo $keyvault_secret_details | python -c "import sys, json; print(json.load(sys.stdin)['value'])")
+        echo ::add-mask::$charges_COMMAND_REJECTED_LISTENER_CONNECTION_STRING
+        echo "CHARGES_COMMAND_REJECTED_LISTENER_CONNECTION_STRING=$charges_COMMAND_REJECTED_LISTENER_CONNECTION_STRING" >> $GITHUB_ENV
+
+        keyvault_secret_details=$(az keyvault secret show --name "COMMAND_RECEIVED_TOPIC_NAME" --vault-name kvchargesendku)
+        charges_COMMAND_RECEIVED_TOPIC_NAME=$(echo $keyvault_secret_details | python -c "import sys, json; print(json.load(sys.stdin)['value'])")
+        echo ::add-mask::$charges_COMMAND_RECEIVED_TOPIC_NAME
+        echo "CHARGES_COMMAND_RECEIVED_TOPIC_NAME=$charges_COMMAND_RECEIVED_TOPIC_NAME" >> $GITHUB_ENV
+
+        keyvault_secret_details=$(az keyvault secret show --name "COMMAND_ACCEPTED_TOPIC_NAME" --vault-name kvchargesendku)
+        charges_COMMAND_ACCEPTED_TOPIC_NAME=$(echo $keyvault_secret_details | python -c "import sys, json; print(json.load(sys.stdin)['value'])")
+        echo ::add-mask::$charges_COMMAND_ACCEPTED_TOPIC_NAME
+        echo "CHARGES_COMMAND_ACCEPTED_TOPIC_NAME=$charges_COMMAND_ACCEPTED_TOPIC_NAME" >> $GITHUB_ENVvvvvvvvv
+
+        keyvault_secret_details=$(az keyvault secret show --name "COMMAND_REJECTED_TOPIC_NAME" --vault-name kvchargesendku)
+        charges_COMMAND_REJECTED_TOPIC_NAME=$(echo $keyvault_secret_details | python -c "import sys, json; print(json.load(sys.stdin)['value'])")
+        echo ::add-mask::$charges_COMMAND_REJECTED_TOPIC_NAME
+        echo "CHARGES_COMMAND_REJECTED_TOPIC_NAME=$charges_COMMAND_REJECTED_TOPIC_NAME" >> $GITHUB_ENV
+
+        keyvault_secret_details=$(az keyvault secret show --name "COMMAND_RECEIVED_INTEGRATION_TEST_SUBSCRIPTION_NAME" --vault-name kvchargesendku)
+        charges_COMMAND_RECEIVED_INTEGRATION_TEST_SUBSCRIPTION_NAME=$(echo $keyvault_secret_details | python -c "import sys, json; print(json.load(sys.stdin)['value'])")
+        echo ::add-mask::$charges_COMMAND_RECEIVED_INTEGRATION_TEST_SUBSCRIPTION_NAME
+        echo "CHARGES_COMMAND_RECEIVED_INTEGRATION_TEST_SUBSCRIPTION_NAME=$charges_COMMAND_RECEIVED_INTEGRATION_TEST_SUBSCRIPTION_NAME" >> $GITHUB_ENV
+
+        keyvault_secret_details=$(az keyvault secret show --name "COMMAND_ACCEPTED_INTEGRATION_TEST_SUBSCRIPTION_NAME" --vault-name kvchargesendku)
+        charges_COMMAND_ACCEPTED_INTEGRATION_TEST_SUBSCRIPTION_NAME=$(echo $keyvault_secret_details | python -c "import sys, json; print(json.load(sys.stdin)['value'])")
+        echo ::add-mask::$charges_COMMAND_ACCEPTED_INTEGRATION_TEST_SUBSCRIPTION_NAME
+        echo "CHARGES_COMMAND_ACCEPTED_INTEGRATION_TEST_SUBSCRIPTION_NAME=$charges_COMMAND_ACCEPTED_INTEGRATION_TEST_SUBSCRIPTION_NAME" >> $GITHUB_ENVvvvvvvvv
+
+        keyvault_secret_details=$(az keyvault secret show --name "COMMAND_REJECTED_INTEGRATION_TEST_SUBSCRIPTION_NAME" --vault-name kvchargesendku)
+        charges_COMMAND_REJECTED_INTEGRATION_TEST_SUBSCRIPTION_NAME=$(echo $keyvault_secret_details | python -c "import sys, json; print(json.load(sys.stdin)['value'])")
+        echo ::add-mask::$charges_COMMAND_REJECTED_INTEGRATION_TEST_SUBSCRIPTION_NAME
+        echo "CHARGES_COMMAND_REJECTED_INTEGRATION_TEST_SUBSCRIPTION_NAME=$charges_COMMAND_REJECTED_INTEGRATION_TEST_SUBSCRIPTION_NAME" >> $GITHUB_ENV
+
+        keyvault_secret_details=$(az keyvault secret show --name "CHARGE_DB_CONNECTION_STRING" --vault-name kvchargesendku)
+        charges_CHARGE_DB_CONNECTION_STRING=$(echo $keyvault_secret_details | python -c "import sys, json; print(json.load(sys.stdin)['value'])")
+        echo ::add-mask::$charges_CHARGE_DB_CONNECTION_STRING
+        echo "CHARGES_CHARGE_DB_CONNECTION_STRING=$charges_CHARGE_DB_CONNECTION_STRING" >> $GITHUB_ENV
+
+        keyvault_secret_details=$(az keyvault secret show --name "LOCAL_TIMEZONENAME" --vault-name kvchargesendku)
+        charges_LOCAL_TIMEZONENAME=$(echo $keyvault_secret_details | python -c "import sys, json; print(json.load(sys.stdin)['value'])")
+        echo ::add-mask::$charges_LOCAL_TIMEZONENAME
+        echo "CHARGES_LOCAL_TIMEZONENAME=$charges_LOCAL_TIMEZONENAME" >> $GITHUB_ENV
+      
+      shell: bash
     - name: test and publish report
       shell: bash
       run: |
