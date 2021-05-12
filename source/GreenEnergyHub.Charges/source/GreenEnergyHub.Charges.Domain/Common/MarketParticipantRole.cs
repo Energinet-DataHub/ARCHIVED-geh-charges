@@ -14,7 +14,7 @@
 
 namespace GreenEnergyHub.Charges.Domain.Common
 {
-    public enum BusinessProcessRole
+    public enum MarketParticipantRole
     {
         EnergySupplier,
     }

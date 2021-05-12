@@ -38,12 +38,12 @@ namespace GreenEnergyHub.Charges.Tests.Core.Json
 		    ""Sender"": {
 		    	""Id"": ""8100000000030"",
 		    	""Name"": ""Grid Operator 3"",
-		    	""Role"": 0
+		    	""BusinessProcessRole"": 0
 		    },
 		    ""Recipient"": {
 		    	""Id"": ""5790001330552"",
 		    	""Name"": ""Hub"",
-		    	""Role"": 0
+		    	""BusinessProcessRole"": 0
 		    }
 	},
 	""ChargeOperation"": {

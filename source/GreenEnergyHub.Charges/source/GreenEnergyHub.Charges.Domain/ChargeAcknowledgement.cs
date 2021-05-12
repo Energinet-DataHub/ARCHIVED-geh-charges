@@ -24,13 +24,13 @@ namespace GreenEnergyHub.Charges.Domain
         public ChargeAcknowledgement(
             string correlationId,
             string receiverMRid,
-            BusinessProcessRole receiverBusinessProcessRole,
+            MarketParticipantRole receiverMarketParticipantRole,
             object originalTransactionReferenceMRid,
             BusinessReasonCode businessReasonCode)
         {
             CorrelationId = correlationId;
             ReceiverMRid = receiverMRid;
-            ReceiverBusinessProcessRole = receiverBusinessProcessRole;
+            ReceiverMarketParticipantRole = receiverMarketParticipantRole;
             OriginalTransactionReferenceMRid = originalTransactionReferenceMRid;
             BusinessReasonCode = businessReasonCode;
             Transaction = Transaction.NewTransaction();
@@ -42,7 +42,7 @@ namespace GreenEnergyHub.Charges.Domain
         public string ReceiverMRid { get; }
 
         [UsedImplicitly]
-        public BusinessProcessRole ReceiverBusinessProcessRole { get; }
+        public MarketParticipantRole ReceiverMarketParticipantRole { get; }
 
         [UsedImplicitly]
         public object OriginalTransactionReferenceMRid { get; }

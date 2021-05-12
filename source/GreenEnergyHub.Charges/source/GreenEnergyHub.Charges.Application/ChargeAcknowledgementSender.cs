@@ -35,7 +35,7 @@ namespace GreenEnergyHub.Charges.Application
             var chargeCommandAcceptedAcknowledgement = new ChargeAcknowledgement(
                 acceptedEvent.CorrelationId,
                 acceptedEvent.Command.Document.Sender.Id,
-                acceptedEvent.Command.Document.Sender.Role,
+                acceptedEvent.Command.Document.Sender.BusinessProcessRole,
                 acceptedEvent.Command.Document.Id,
                 acceptedEvent.Command.ChargeOperation.BusinessReasonCode);
 

@@ -92,13 +92,13 @@ namespace GreenEnergyHub.Charges.Tests.Builders
                     {
                         Id = "0",
                         Name = "Name",
-                        Role = BusinessProcessRole.EnergySupplier,
+                        BusinessProcessRole = MarketParticipantRole.EnergySupplier,
                     },
                     Sender = new MarketParticipant
                     {
                         Id = "1",
                         Name = "Name",
-                        Role = BusinessProcessRole.EnergySupplier,
+                        BusinessProcessRole = MarketParticipantRole.EnergySupplier,
                     },
                 },
                 ChargeOperation = new ChargeOperation
