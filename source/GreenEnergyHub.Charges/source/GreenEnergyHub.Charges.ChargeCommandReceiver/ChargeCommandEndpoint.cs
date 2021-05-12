@@ -14,7 +14,7 @@
 
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application;
-using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
+using GreenEnergyHub.Charges.Domain.Events.Local;
 using GreenEnergyHub.Charges.Infrastructure.Messaging;
 using GreenEnergyHub.Json;
 using Microsoft.AspNetCore.Mvc;
@@ -29,16 +29,16 @@ namespace GreenEnergyHub.Charges.ChargeCommandReceiver
         private const string FunctionName = nameof(ChargeCommandEndpoint);
         private readonly IChargeCommandHandler _chargeCommandHandler;
         private readonly ICorrelationContext _correlationContext;
-        private readonly IJsonSerializer _jsonSerializer;
+        private readonly MessageExtractor<ChargeCommandReceivedEvent> _messageExtractor;
 
         public ChargeCommandEndpoint(
             IChargeCommandHandler chargeCommandHandler,
             ICorrelationContext correlationContext,
-            IJsonSerializer jsonSerializer)
+            MessageExtractor<ChargeCommandReceivedEvent> messageExtractor)
         {
             _chargeCommandHandler = chargeCommandHandler;
             _correlationContext = correlationContext;
-            _jsonSerializer = jsonSerializer;
+            _messageExtractor = messageExtractor;
         }
 
         [FunctionName(FunctionName)]
@@ -47,20 +47,17 @@ namespace GreenEnergyHub.Charges.ChargeCommandReceiver
             "%COMMAND_RECEIVED_TOPIC_NAME%",
             "%COMMAND_RECEIVED_SUBSCRIPTION_NAME%",
             Connection = "COMMAND_RECEIVED_LISTENER_CONNECTION_STRING")]
-            byte[] message,
+            byte[] data,
             ILogger log)
         {
-            var jsonSerializedQueueItem = System.Text.Encoding.UTF8.GetString(message);
-            var serviceBusMessage = _jsonSerializer.Deserialize<ServiceBusMessageWrapper<ChargeCommand>>(jsonSerializedQueueItem);
-            var chargeCommand = serviceBusMessage.Command!;
-            SetCorrelationContext(chargeCommand);
-            await _chargeCommandHandler.HandleAsync(chargeCommand).ConfigureAwait(false);
+            var receivedEvent = await _messageExtractor.ExtractAsync(data).ConfigureAwait(false);
+            SetCorrelationContext(receivedEvent);
+            await _chargeCommandHandler.HandleAsync(receivedEvent).ConfigureAwait(false);
 
-            //TODO: LRN is it correct with this log? ChargeId / mRID is not set on a create I take it?
-            log.LogDebug("Received command with charge type mRID '{mRID}'", chargeCommand.ChargeOperation.ChargeId);
+            log.LogDebug("Received command with charge ID '{ID}'", receivedEvent.Command.ChargeOperation.ChargeId);
         }
 
-        private void SetCorrelationContext(ChargeCommand command)
+        private void SetCorrelationContext(ChargeCommandReceivedEvent command)
         {
             _correlationContext.CorrelationId = command.CorrelationId;
         }

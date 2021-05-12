@@ -31,7 +31,7 @@ namespace GreenEnergyHub.Charges.Application
             _clock = clock;
         }
 
-        public IInternalEvent CreateEvent(
+        public ChargeCommandRejectedEvent CreateEvent(
             [NotNull] ChargeCommand command,
             [NotNull] ChargeCommandValidationResult chargeCommandValidationResult)
         {
@@ -44,7 +44,7 @@ namespace GreenEnergyHub.Charges.Application
                 chargeCommandValidationResult.InvalidRules.Select(x => x.ValidationRuleIdentifier.ToString()).ToArray());
         }
 
-        public IInternalEvent CreateEvent(
+        public ChargeCommandRejectedEvent CreateEvent(
             [NotNull] ChargeCommand command,
             [NotNull] Exception exception)
         {

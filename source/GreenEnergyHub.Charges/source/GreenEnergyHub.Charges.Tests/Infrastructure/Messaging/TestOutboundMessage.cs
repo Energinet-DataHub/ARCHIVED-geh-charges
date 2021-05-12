@@ -12,13 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Domain.Events.Local;
+using GreenEnergyHub.Messaging.MessageTypes.Common;
+using GreenEnergyHub.Messaging.Transport;
 
-namespace GreenEnergyHub.Charges.Application
+namespace GreenEnergyHub.Charges.Tests.Infrastructure.Messaging
 {
-    public interface IChargeCommandHandler
+    public class TestOutboundMessage : IOutboundMessage
     {
-        Task HandleAsync(ChargeCommandReceivedEvent commandReceivedEvent);
+        public TestOutboundMessage(Transaction transaction)
+        {
+            Transaction = transaction;
+        }
+
+        public Transaction Transaction { get; set; }
     }
 }

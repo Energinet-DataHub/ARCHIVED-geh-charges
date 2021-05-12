@@ -12,13 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Domain.Events.Local;
+using GreenEnergyHub.Messaging.Transport;
 
-namespace GreenEnergyHub.Charges.Application
+namespace GreenEnergyHub.Charges.Infrastructure.Messaging
 {
-    public interface IChargeCommandHandler
+    // ReSharper disable once UnusedTypeParameter - needed for dependency resolution
+    public abstract class Channel<TOutboundMessage> : Channel
+        where TOutboundMessage : IOutboundMessage
     {
-        Task HandleAsync(ChargeCommandReceivedEvent commandReceivedEvent);
     }
 }

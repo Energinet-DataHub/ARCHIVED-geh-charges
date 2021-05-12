@@ -47,11 +47,12 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Messaging
                 .Setup(s => s.SendMessageAsync(
                     It.IsAny<ServiceBusMessage>(),
                     It.IsAny<CancellationToken>()))
-                .Callback<ServiceBusMessage, CancellationToken>((message, token) => receivedMessage = message);
+                .Callback<ServiceBusMessage, CancellationToken>((message, _) => receivedMessage = message);
+            var genericSender = new ServiceBusSender<TestOutboundMessage>(serviceBusSender.Object);
 
             correlationContext.Setup(c => c.CorrelationId).Returns(string.Empty);
 
-            var sut = new TestableServiceBusChannel(serviceBusSender.Object, correlationContext.Object);
+            var sut = new TestableServiceBusChannel<TestOutboundMessage>(genericSender, correlationContext.Object);
 
             // Act
             await sut.WriteToAsync(content).ConfigureAwait(false);
@@ -76,11 +77,12 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Messaging
                 .Setup(s => s.SendMessageAsync(
                     It.IsAny<ServiceBusMessage>(),
                     It.IsAny<CancellationToken>()))
-                .Callback<ServiceBusMessage, CancellationToken>((message, token) => receivedMessage = message);
+                .Callback<ServiceBusMessage, CancellationToken>((message, _) => receivedMessage = message);
 
             correlationContext.Setup(c => c.CorrelationId).Returns(correlationId);
+            var genericSender = new ServiceBusSender<TestOutboundMessage>(serviceBusSender.Object);
 
-            var sut = new TestableServiceBusChannel(serviceBusSender.Object, correlationContext.Object);
+            var sut = new TestableServiceBusChannel<TestOutboundMessage>(genericSender, correlationContext.Object);
 
             // Act
             await sut.WriteToAsync(content).ConfigureAwait(false);
@@ -95,19 +97,19 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Messaging
         public async Task WriteAsync_WhenManuallyRun_EndsUpOnServiceBus()
         {
             // Arrange
-            var correlationContext = new CorrelationContext();
-            correlationContext.CorrelationId = Guid.NewGuid().ToString();
+            var correlationContext = new CorrelationContext { CorrelationId = Guid.NewGuid().ToString() };
 
             var connectionString = "<your service bus connection string>";
             await using ServiceBusClient client = new (connectionString);
 
             var topic = "<your service bus topic>";
             var sender = client.CreateSender(topic);
+            var genericSender = new ServiceBusSender<TestOutboundMessage>(sender);
 
             var messageText = "Hello world";
             var message = Encoding.UTF8.GetBytes(messageText);
 
-            var sut = new TestableServiceBusChannel(sender, correlationContext);
+            var sut = new TestableServiceBusChannel<TestOutboundMessage>(genericSender, correlationContext);
 
             // Act
             await sut.WriteToAsync(message).ConfigureAwait(false);

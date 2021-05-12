@@ -14,14 +14,11 @@
 
 using System;
 using System.Diagnostics.CodeAnalysis;
-using Azure.Messaging.ServiceBus;
 using GreenEnergyHub.Charges.Application;
 using GreenEnergyHub.Charges.ChargeAcknowledgementSender;
+using GreenEnergyHub.Charges.Domain;
 using GreenEnergyHub.Charges.Domain.Events.Local;
-using GreenEnergyHub.Charges.Infrastructure.Messaging;
-using GreenEnergyHub.Charges.Infrastructure.Messaging.Serialization;
-using GreenEnergyHub.Json;
-using GreenEnergyHub.Messaging.Transport;
+using GreenEnergyHub.Charges.Infrastructure.Messaging.Registration;
 using Microsoft.Azure.Functions.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection;
 using NodaTime;
@@ -36,28 +33,19 @@ namespace GreenEnergyHub.Charges.ChargeAcknowledgementSender
         {
             builder.Services.AddScoped(typeof(IClock), _ => SystemClock.Instance);
             builder.Services.AddScoped<IChargeAcknowledgementSender, Application.ChargeAcknowledgementSender>();
-            builder.Services.AddScoped<ICorrelationContext, CorrelationContext>();
 
-            ConfigureMessaging(builder);
+            builder.Services
+                .AddMessaging()
+                .AddMessageDispatcher<ChargeAcknowledgement>(
+                    GetEnv("POST_OFFICE_SENDER_CONNECTION_STRING"),
+                    GetEnv("POST_OFFICE_TOPIC_NAME"))
+                .AddMessageExtractor<ChargeCommandAcceptedEvent>();
         }
 
-        private static void ConfigureMessaging(IFunctionsHostBuilder builder)
+        private static string GetEnv(string variableName)
         {
-            builder.Services.AddScoped<MessageExtractor>();
-            builder.Services.AddScoped<MessageDispatcher>();
-            builder.Services.AddScoped<MessageSerializer, JsonMessageSerializer>();
-            builder.Services.AddScoped<IJsonOutboundMapperFactory, DefaultJsonMapperFactory>();
-            builder.Services.AddScoped<Channel, ServiceBusChannel>();
-            builder.Services.AddScoped<ServiceBusSender>(
-                _ =>
-                {
-                    var connectionString = Environment.GetEnvironmentVariable("POST_OFFICE_SENDER_CONNECTION_STRING");
-                    var topicName = Environment.GetEnvironmentVariable("POST_OFFICE_TOPIC_NAME");
-                    var client = new ServiceBusClient(connectionString);
-                    return client.CreateSender(topicName);
-                });
-            builder.Services.AddScoped<MessageDeserializer, JsonMessageDeserializer<ChargeCommandAcceptedEvent>>();
-            builder.Services.AddSingleton<IJsonSerializer, GreenEnergyHub.Charges.Core.Json.JsonSerializer>();
+            return Environment.GetEnvironmentVariable(variableName) ??
+                   throw new Exception($"Function app is missing required environment variable '{variableName}'");
         }
     }
 }

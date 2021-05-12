@@ -12,13 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Domain.Events.Local;
+using GreenEnergyHub.Messaging.Transport;
 
-namespace GreenEnergyHub.Charges.Application
+namespace GreenEnergyHub.Charges.Infrastructure.Messaging.Serialization
 {
-    public interface IChargeCommandHandler
+    public abstract class MessageDeserializer<TInboundMessage> : MessageDeserializer
+        where TInboundMessage : IInboundMessage
     {
-        Task HandleAsync(ChargeCommandReceivedEvent commandReceivedEvent);
     }
 }

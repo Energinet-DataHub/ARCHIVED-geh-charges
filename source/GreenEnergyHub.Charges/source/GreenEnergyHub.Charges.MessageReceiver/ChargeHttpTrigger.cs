@@ -19,7 +19,6 @@ using GreenEnergyHub.Charges.Application.ChangeOfCharges;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Message;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
 using GreenEnergyHub.Charges.Infrastructure.Messaging;
-using GreenEnergyHub.Json;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs;
@@ -35,18 +34,18 @@ namespace GreenEnergyHub.Charges.MessageReceiver
         /// Function name affects the URL and thus possibly dependent infrastructure.
         /// </summary>
         private const string FunctionName = "ChargeHttpTrigger";
-        private readonly IJsonSerializer _jsonDeserializer;
         private readonly IChangeOfChargesMessageHandler _changeOfChargesMessageHandler;
         private readonly ICorrelationContext _correlationContext;
+        private readonly MessageExtractor<ChargeCommand> _messageExtractor;
 
         public ChargeHttpTrigger(
-            IJsonSerializer jsonDeserializer,
             IChangeOfChargesMessageHandler changeOfChargesMessageHandler,
-            ICorrelationContext correlationContext)
+            ICorrelationContext correlationContext,
+            MessageExtractor<ChargeCommand> messageExtractor)
         {
-            _jsonDeserializer = jsonDeserializer;
             _changeOfChargesMessageHandler = changeOfChargesMessageHandler;
             _correlationContext = correlationContext;
+            _messageExtractor = messageExtractor;
         }
 
         [FunctionName(FunctionName)]
@@ -60,8 +59,7 @@ namespace GreenEnergyHub.Charges.MessageReceiver
 
             SetupCorrelationContext(context);
 
-            var message = await GetChangeOfChargesMessageAsync(_jsonDeserializer, req)
-                .ConfigureAwait(false);
+            var message = await GetChangeOfChargesMessageAsync(req).ConfigureAwait(false);
 
             foreach (var messageTransaction in message.Transactions)
             {
@@ -75,13 +73,10 @@ namespace GreenEnergyHub.Charges.MessageReceiver
         }
 
         private async Task<ChangeOfChargesMessage> GetChangeOfChargesMessageAsync(
-            IJsonSerializer jsonDeserializer,
             HttpRequest req)
         {
             var message = new ChangeOfChargesMessage();
-            var command = (ChargeCommand)await jsonDeserializer
-                .DeserializeAsync(req.Body, typeof(ChargeCommand))
-                .ConfigureAwait(false);
+            var command = await _messageExtractor.ExtractAsync(req.Body).ConfigureAwait(false);
 
             command.SetCorrelationId(_correlationContext.CorrelationId);
             message.Transactions.Add(command);
