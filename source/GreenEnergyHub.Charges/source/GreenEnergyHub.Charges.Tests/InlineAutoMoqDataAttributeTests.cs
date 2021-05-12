@@ -13,8 +13,9 @@
 // limitations under the License.
 
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
+using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
+using GreenEnergyHub.TestHelpers.FluentAssertionsExtensions;
 using Xunit;
 using Xunit.Categories;
 
@@ -28,9 +29,7 @@ namespace GreenEnergyHub.Charges.Tests
         public void Attribute_SupportsInstantiatingClassTypeObjectsWithPropsWithGeneratedValues(
             [NotNull] ChargeCommand command)
         {
-            Assert.NotNull(command);
-            Assert.NotEmpty(command.ChargeOperation.Points);
-            Assert.NotEqual(default, command.ChargeOperation.Points.First().Position);
+            command.Should().NotContainNullsOrEmptyEnumerables();
         }
     }
 }
