@@ -90,23 +90,21 @@ namespace GreenEnergyHub.Charges.Tests.Builders
                     CreatedDateTime = SystemClock.Instance.GetCurrentInstant(),
                     Recipient = new MarketParticipant
                     {
-                        Id = 0,
+                        Id = "0",
                         Name = "Name",
-                        Role = MarketParticipantRole.EnergySupplier,
-                        MRid = "MRid",
+                        Role = BusinessProcessRole.EnergySupplier,
                     },
                     Sender = new MarketParticipant
                     {
-                        Id = 0,
+                        Id = "1",
                         Name = "Name",
-                        Role = MarketParticipantRole.EnergySupplier,
-                        MRid = "MRid",
+                        Role = BusinessProcessRole.EnergySupplier,
                     },
                 },
                 ChargeOperation = new ChargeOperation
                 {
                   Id = "id",
-                  Status = OperationType.Addition,
+                  OperationType = OperationType.Addition,
                   BusinessReasonCode = BusinessReasonCode.UpdateChargeInformation,
                   ChargeName = "description",
                   ChargeId = _mrid,

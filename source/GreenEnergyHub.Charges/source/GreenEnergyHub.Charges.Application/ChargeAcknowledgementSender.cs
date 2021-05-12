@@ -34,7 +34,7 @@ namespace GreenEnergyHub.Charges.Application
             // TODO: Delegate construction to factory (but not in infrastructure project)
             var chargeCommandAcceptedAcknowledgement = new ChargeAcknowledgement(
                 acceptedEvent.CorrelationId,
-                acceptedEvent.Command.Document.Sender.MRid,
+                acceptedEvent.Command.Document.Sender.Id,
                 acceptedEvent.Command.Document.Sender.Role,
                 acceptedEvent.Command.Document.Id,
                 acceptedEvent.Command.ChargeOperation.BusinessReasonCode);

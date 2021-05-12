@@ -35,7 +35,7 @@ namespace GreenEnergyHub.Charges.Application.Validation.BusinessValidation
         {
             if (chargeCommand == null) throw new ArgumentNullException(nameof(chargeCommand));
 
-            return chargeCommand.ChargeOperation.Status switch
+            return chargeCommand.ChargeOperation.OperationType switch
             {
                 OperationType.Addition => await _businessAdditionValidationRulesFactory.CreateRulesForAdditionCommandAsync(chargeCommand).ConfigureAwait(false),
                 OperationType.Change => await _businessUpdateValidationRulesFactory.CreateRulesForUpdateCommandAsync(chargeCommand).ConfigureAwait(false),
