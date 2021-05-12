@@ -43,7 +43,12 @@ jobs:
             ".github/workflows/charges-integration-tests-ci.yml",
             ".github/actions/dotnet-build-and-test/**",
             ".github/actions/azure-core-tools-install/**"
+            ".github/actions/azure-cli-install-login/**"
           ]'
+    
+      - name: Azure CLI Install and Login
+        uses: ./.github/actions/azure-cli-install-login
+    
 
   validate_charges_integration_tests:
     needs: pre_job
