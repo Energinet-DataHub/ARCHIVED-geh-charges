@@ -28,11 +28,11 @@ namespace GreenEnergyHub.Charges.Tests.Application.Validation.InputValidation.Va
         [InlineAutoMoqData("", false)]
         [InlineAutoMoqData("content", true)]
         public void RecipientIsMandatoryValidationRule_Test(
-            string mrid,
+            string id,
             bool expected,
             [NotNull] ChargeCommand command)
         {
-            command.Document.Recipient.MRid = mrid;
+            command.Document.Recipient.Id = id;
             var sut = new RecipientIsMandatoryTypeValidationRule(command);
             Assert.Equal(expected, sut.IsValid);
         }

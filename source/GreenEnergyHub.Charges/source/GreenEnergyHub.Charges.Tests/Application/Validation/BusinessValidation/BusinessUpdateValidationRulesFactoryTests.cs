@@ -118,7 +118,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Validation.BusinessValidation
         private static ChargeCommand TurnCommandIntoSpecifiedUpdateType(ChargeCommand chargeCommand, ChargeType chargeType)
         {
             chargeCommand.ChargeOperation.Type = chargeType;
-            chargeCommand.ChargeOperation.Status = OperationType.Change;
+            chargeCommand.ChargeOperation.OperationType = OperationType.Change;
             return chargeCommand;
         }
 

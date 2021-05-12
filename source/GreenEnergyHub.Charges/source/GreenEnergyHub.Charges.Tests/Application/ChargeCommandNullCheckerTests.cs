@@ -61,8 +61,8 @@ namespace GreenEnergyHub.Charges.Tests.Application
             c.ChargeOperation.ChargeOwner = owner;
             c.SetCorrelationId(correlationId);
             c.Document.Id = documentId;
-            c.Document.Sender.MRid = senderId;
-            c.Document.Recipient.MRid = recipientId;
+            c.Document.Sender.Id = senderId;
+            c.Document.Recipient.Id = recipientId;
             c.ChargeOperation.Id = eventId;
             c.ChargeOperation.ChargeDescription = description;
             c.ChargeOperation.ChargeName = chargeName;
