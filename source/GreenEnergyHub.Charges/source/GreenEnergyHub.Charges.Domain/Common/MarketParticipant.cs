@@ -25,7 +25,7 @@ namespace GreenEnergyHub.Charges.Domain.Common
     public class MarketParticipant
     {
         /// <summary>
-        /// Contains an ID that identifies the Market Participants. In Denmark this would be the GLN or EIC number.
+        /// Contains an ID that identifies the Market Participants. In Denmark this would be the GLN number or EIC code.
         /// </summary>
         public string Id { get; set; }
 
