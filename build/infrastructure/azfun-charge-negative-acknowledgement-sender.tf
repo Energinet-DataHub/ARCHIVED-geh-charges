@@ -29,9 +29,9 @@ module "azfun_charge_negative_acknowledgement_sender" {
     WEBSITES_ENABLE_APP_SERVICE_STORAGE          = true
     FUNCTIONS_WORKER_RUNTIME                     = "dotnet"
 
-    COMMAND_ACCEPTED_LISTENER_CONNECTION_STRING  = trimsuffix(module.sbtar_command_accepted_listener.primary_connection_string, ";EntityPath=${module.sbt_command_accepted.name}")
-    COMMAND_ACCEPTED_TOPIC_NAME                  = module.sbt_command_accepted.name
-    COMMAND_ACCEPTED_SUBSCRIPTION_NAME           = azurerm_servicebus_subscription.sbs_command_accepted.name
+    COMMAND_REJECTED_LISTENER_CONNECTION_STRING  = trimsuffix(module.sbtar_command_rejected_listener.primary_connection_string, ";EntityPath=${module.sbt_command_rejected.name}")
+    COMMAND_REJECTED_TOPIC_NAME                  = module.sbt_command_rejected.name
+    COMMAND_REJECTED_SUBSCRIPTION_NAME           = azurerm_servicebus_subscription.sbs_command_rejected.name
 
     POST_OFFICE_SENDER_CONNECTION_STRING         = trimsuffix(module.sbtar_post_office_sender.primary_connection_string, ";EntityPath=${module.sbt_post_office.name}")
     POST_OFFICE_TOPIC_NAME                       = module.sbt_post_office.name

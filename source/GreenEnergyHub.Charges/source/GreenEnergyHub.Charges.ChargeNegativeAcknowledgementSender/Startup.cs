@@ -36,10 +36,10 @@ namespace GreenEnergyHub.Charges.ChargeNegativeAcknowledgementSender
 
             builder.Services
                 .AddMessaging()
-                .AddMessageDispatcher<ChargeAcknowledgement>(
+                .AddMessageDispatcher<ChargeNegativeAcknowledgement>(
                     GetEnv("POST_OFFICE_SENDER_CONNECTION_STRING"),
                     GetEnv("POST_OFFICE_TOPIC_NAME"))
-                .AddMessageExtractor<ChargeCommandAcceptedEvent>();
+                .AddMessageExtractor<ChargeCommandRejectedEvent>();
         }
 
         private static string GetEnv(string variableName)

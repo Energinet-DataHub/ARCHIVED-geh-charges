@@ -7,6 +7,7 @@
 
     "COMMAND_REJECTED_LISTENER_CONNECTION_STRING": "<sb listener connection string>",
     "COMMAND_REJECTED_TOPIC_NAME": "sbt-command-rejected",
+    "COMMAND_REJECTED_SUBSCRIPTION_NAME": "sbs-command-rejected",
 
     "POST_OFFICE_SENDER_CONNECTION_STRING": "<sb sender connection string>",
     "POST_OFFICE_TOPIC_NAME": "sbt-post-office",

@@ -4,7 +4,9 @@ echo Deploy Azure functions to your private sandbox
 echo Assuming: Domain=charges, Environment=s
 echo *** Make sure that you created all local.settings.json settings files ***
 
-set /p project=Enter project used with Terraform (perhaps your initials?)
+setlocal
+
+set /p project=Enter project used with Terraform (perhaps your initials?): 
 set /p doBuild=Build solution ([y]/n)?
 set /p deployMessageReceiver=Deploy message receiver ([y]/n)?
 set /p deployCommandReceiver=Deploy command receiver ([y]/n)?
@@ -38,3 +40,5 @@ IF /I not "%deployNegAckSender%" == "n" (
     func azure functionapp publish azfun-charge-negative-acknowledgement-sender-charges-%project%-s
 	popd
 )
+
+endlocal
