@@ -23,5 +23,6 @@ namespace GreenEnergyHub.Charges.Application.Validation
         SenderIsMandatory, // VR150
         RecipientIsMandatory, // VR153
         ChargeOperationIdIsRequired, // VR223
+        BusinessReasonCodeIsIncorrect, // VR424
     }
 }
