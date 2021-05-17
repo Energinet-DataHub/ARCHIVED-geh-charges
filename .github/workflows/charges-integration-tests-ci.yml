@@ -17,13 +17,9 @@ on:
   push:
     branches:
       - Change_of_Charges_Integration_test
-    paths:
-      - .github/actions/azure-cli-install-login/**
   pull_request:
     branches:
       - main
-    paths:
-      - .github/actions/azure-cli-install-login/**
   workflow_dispatch: {}
 
 env:
