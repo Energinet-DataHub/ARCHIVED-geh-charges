@@ -12,17 +12,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace GreenEnergyHub.Charges.Application.Validation
+using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
+
+namespace GreenEnergyHub.Charges.Application.Validation.InputValidation.ValidationRules
 {
-    public enum ValidationRuleIdentifier
+    public class ChargeIdLengthValidationRule : IValidationRule
     {
-        TimeLimitsNotFollowed, // VR209
-        ChangingTariffVatValueNotAllowed, // VR630
-        ChangingTariffTaxValueNotAllowed, // VRXYZ
-        ProcessIsMandatory, // VR009
-        SenderIsMandatory, // VR150
-        RecipientIsMandatory, // VR153
-        ChargeOperationIdIsRequired, // VR223
-        ChargeIdLengthIncorrect, // VR441
+        private readonly ChargeCommand _chargeCommand;
+
+        public ChargeIdLengthValidationRule(ChargeCommand chargeCommand)
+        {
+            _chargeCommand = chargeCommand;
+        }
+
+        public bool IsValid => _chargeCommand.ChargeOperation.ChargeId.Length <= 10;
+
+        public ValidationRuleIdentifier ValidationRuleIdentifier => ValidationRuleIdentifier.ChargeIdLengthIncorrect;
     }
 }
