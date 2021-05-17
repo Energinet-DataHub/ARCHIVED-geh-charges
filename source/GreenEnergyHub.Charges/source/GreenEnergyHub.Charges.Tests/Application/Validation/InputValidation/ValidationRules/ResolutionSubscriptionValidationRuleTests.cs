@@ -30,7 +30,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Validation.InputValidation.Va
         [InlineAutoMoqData(Resolution.P1M, true)]
         [InlineAutoMoqData(Resolution.PT1H, true)]
         [InlineAutoMoqData(Resolution.PT15M, true)]
-        public void ResolutionTariffValidationRule_WithTariffType_Test(
+        public void ResolutionTariffValidationRule_WithTariffType_EqualsExpectedResult(
             Resolution resolution,
             bool expected,
             [NotNull] ChargeCommand command)
@@ -52,7 +52,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Validation.InputValidation.Va
         [InlineAutoMoqData(Resolution.P1M, true)]
         [InlineAutoMoqData(Resolution.PT1H, false)]
         [InlineAutoMoqData(Resolution.PT15M, false)]
-        public void ResolutionTariffValidationRule_WithSubscriptionType_Test(
+        public void ResolutionTariffValidationRule_WithSubscriptionType_EqualsExpectedResult(
             Resolution resolution,
             bool expected,
             [NotNull] ChargeCommand command)
@@ -74,7 +74,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Validation.InputValidation.Va
         [InlineAutoMoqData(Resolution.P1M, true)]
         [InlineAutoMoqData(Resolution.PT1H, true)]
         [InlineAutoMoqData(Resolution.PT15M, true)]
-        public void ResolutionTariffValidationRule_WithFeeType_Test(
+        public void ResolutionTariffValidationRule_WithFeeType_EqualsExpectedResult(
             Resolution resolution,
             bool expected,
             [NotNull] ChargeCommand command)
