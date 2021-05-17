@@ -19,5 +19,9 @@ namespace GreenEnergyHub.Charges.Application.Validation.InputValidation
     public interface IInputValidationRulesFactory
     {
         IValidationRuleSet CreateRulesForChargeCommand(ChargeCommand chargeCommand);
+
+        IValidationRuleSet UpdateRulesForChargeCommand(ChargeCommand chargeCommand);
+
+        IValidationRuleSet StopRulesForChargeCommand(ChargeCommand chargeCommand);
     }
 }

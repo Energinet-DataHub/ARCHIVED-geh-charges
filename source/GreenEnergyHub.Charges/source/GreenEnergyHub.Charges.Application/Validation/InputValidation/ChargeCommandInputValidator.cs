@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Diagnostics.CodeAnalysis;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
 
@@ -28,8 +29,23 @@ namespace GreenEnergyHub.Charges.Application.Validation.InputValidation
 
         public ChargeCommandValidationResult Validate([NotNull] ChargeCommand chargeCommand)
         {
-            var ruleSet = _inputValidationRulesFactory.CreateRulesForChargeCommand(chargeCommand);
-            return ruleSet.Validate();
+            IValidationRuleSet ruleSet;
+            switch (chargeCommand.ChargeOperation.OperationType)
+            {
+                case OperationType.Unknown:
+                    throw new NotSupportedException(chargeCommand.ChargeOperation.OperationType.ToString());
+                case OperationType.Addition:
+                    ruleSet = _inputValidationRulesFactory.CreateRulesForChargeCommand(chargeCommand);
+                    return ruleSet.Validate();
+                case OperationType.Deletion:
+                    ruleSet = _inputValidationRulesFactory.StopRulesForChargeCommand(chargeCommand);
+                    return ruleSet.Validate();
+                case OperationType.Change:
+                    ruleSet = _inputValidationRulesFactory.UpdateRulesForChargeCommand(chargeCommand);
+                    return ruleSet.Validate();
+                default:
+                    throw new ArgumentOutOfRangeException(chargeCommand.ChargeOperation.OperationType.ToString());
+            }
         }
     }
 }
