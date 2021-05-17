@@ -15,7 +15,7 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 using GreenEnergyHub.Charges.Application.Acknowledgement;
-using GreenEnergyHub.Charges.ChargeAcknowledgementSender;
+using GreenEnergyHub.Charges.ChargeNegativeAcknowledgementSender;
 using GreenEnergyHub.Charges.Domain.Acknowledgements;
 using GreenEnergyHub.Charges.Domain.Events.Local;
 using GreenEnergyHub.Charges.Infrastructure.Messaging.Registration;
@@ -25,14 +25,14 @@ using NodaTime;
 
 [assembly: FunctionsStartup(typeof(Startup))]
 
-namespace GreenEnergyHub.Charges.ChargeAcknowledgementSender
+namespace GreenEnergyHub.Charges.ChargeNegativeAcknowledgementSender
 {
     public class Startup : FunctionsStartup
     {
         public override void Configure([NotNull] IFunctionsHostBuilder builder)
         {
             builder.Services.AddScoped(typeof(IClock), _ => SystemClock.Instance);
-            builder.Services.AddScoped<IChargeAcknowledgementSender, Application.Acknowledgement.ChargeAcknowledgementSender>();
+            builder.Services.AddScoped<IChargeNegativeAcknowledgementSender, Application.Acknowledgement.ChargeNegativeAcknowledgementSender>();
 
             builder.Services
                 .AddMessaging()

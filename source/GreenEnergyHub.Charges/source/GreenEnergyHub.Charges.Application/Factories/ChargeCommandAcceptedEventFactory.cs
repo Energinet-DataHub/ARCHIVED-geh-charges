@@ -12,14 +12,27 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Domain;
+using System.Diagnostics.CodeAnalysis;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
+using GreenEnergyHub.Charges.Domain.Events.Local;
+using NodaTime;
 
-namespace GreenEnergyHub.Charges.Application
+namespace GreenEnergyHub.Charges.Application.Factories
 {
-    public interface IChargeFactory
+    public class ChargeCommandAcceptedEventFactory : IChargeCommandAcceptedEventFactory
     {
-        Task<Charge> CreateFromCommandAsync(ChargeCommand command);
+        private readonly IClock _clock;
+
+        public ChargeCommandAcceptedEventFactory(IClock clock)
+        {
+            _clock = clock;
+        }
+
+        public ChargeCommandAcceptedEvent CreateEvent([NotNull] ChargeCommand command)
+        {
+            return new ChargeCommandAcceptedEvent(
+                _clock.GetCurrentInstant(),
+                command);
+        }
     }
 }

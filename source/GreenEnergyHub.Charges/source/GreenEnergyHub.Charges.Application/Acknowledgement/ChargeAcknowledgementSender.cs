@@ -14,12 +14,11 @@
 
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Domain;
+using GreenEnergyHub.Charges.Domain.Acknowledgements;
 using GreenEnergyHub.Charges.Domain.Events.Local;
 
-namespace GreenEnergyHub.Charges.Application
+namespace GreenEnergyHub.Charges.Application.Acknowledgement
 {
-    // TODO: Move class to application project? Can't because of the MessageDispatcher<> dependency...
     public class ChargeAcknowledgementSender : IChargeAcknowledgementSender
     {
         private readonly IMessageDispatcher<ChargeAcknowledgement> _messageDispatcher;
@@ -31,7 +30,6 @@ namespace GreenEnergyHub.Charges.Application
 
         public async Task HandleAsync([NotNull] ChargeCommandAcceptedEvent acceptedEvent)
         {
-            // TODO: Delegate construction to factory (but not in infrastructure project)
             var chargeCommandAcceptedAcknowledgement = new ChargeAcknowledgement(
                 acceptedEvent.CorrelationId,
                 acceptedEvent.Command.Document.Sender.Id,

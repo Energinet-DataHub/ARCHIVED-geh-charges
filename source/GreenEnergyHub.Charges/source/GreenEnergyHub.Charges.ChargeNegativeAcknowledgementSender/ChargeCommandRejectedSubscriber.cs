@@ -20,21 +20,21 @@ using GreenEnergyHub.Messaging.Transport;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Extensions.Logging;
 
-namespace GreenEnergyHub.Charges.ChargeAcknowledgementSender
+namespace GreenEnergyHub.Charges.ChargeNegativeAcknowledgementSender
 {
-    public class ChargeCommandAcceptedSubscriber
+    public class ChargeCommandRejectedSubscriber
     {
-        private const string FunctionName = nameof(ChargeCommandAcceptedSubscriber);
-        private readonly IChargeAcknowledgementSender _chargeAcknowledgementSender;
+        private const string FunctionName = nameof(ChargeCommandRejectedSubscriber);
+        private readonly IChargeNegativeAcknowledgementSender _chargeNegativeAcknowledgementSender;
         private readonly ICorrelationContext _correlationContext;
         private readonly MessageExtractor _messageExtractor;
 
-        public ChargeCommandAcceptedSubscriber(
-            IChargeAcknowledgementSender chargeAcknowledgementSender,
+        public ChargeCommandRejectedSubscriber(
+            IChargeNegativeAcknowledgementSender chargeNegativeAcknowledgementSender,
             ICorrelationContext correlationContext,
             MessageExtractor messageExtractor)
         {
-            _chargeAcknowledgementSender = chargeAcknowledgementSender;
+            _chargeNegativeAcknowledgementSender = chargeNegativeAcknowledgementSender;
             _correlationContext = correlationContext;
             _messageExtractor = messageExtractor;
         }
@@ -42,22 +42,22 @@ namespace GreenEnergyHub.Charges.ChargeAcknowledgementSender
         [FunctionName(FunctionName)]
         public async Task RunAsync(
             [ServiceBusTrigger(
-            "%COMMAND_ACCEPTED_TOPIC_NAME%",
-            "%COMMAND_ACCEPTED_SUBSCRIPTION_NAME%",
-            Connection = "COMMAND_ACCEPTED_LISTENER_CONNECTION_STRING")]
+            "%COMMAND_REJECTED_TOPIC_NAME%",
+            "%COMMAND_REJECTED_SUBSCRIPTION_NAME%",
+            Connection = "COMMAND_REJECTED_LISTENER_CONNECTION_STRING")]
             byte[] message,
             ILogger log)
         {
-            var acceptedEvent = (ChargeCommandAcceptedEvent)await _messageExtractor.ExtractAsync(message).ConfigureAwait(false);
-            SetCorrelationContext(acceptedEvent);
-            await _chargeAcknowledgementSender.HandleAsync(acceptedEvent).ConfigureAwait(false);
+            var rejectedEvent = (ChargeCommandRejectedEvent)await _messageExtractor.ExtractAsync(message).ConfigureAwait(false);
+            SetCorrelationContext(rejectedEvent);
+            await _chargeNegativeAcknowledgementSender.HandleAsync(rejectedEvent).ConfigureAwait(false);
 
-            log.LogDebug("Received event with correlation ID '{CorrelationId}'", acceptedEvent.CorrelationId);
+            log.LogDebug("Received event with correlation ID '{CorrelationId}'", rejectedEvent.CorrelationId);
         }
 
-        private void SetCorrelationContext(ChargeCommandAcceptedEvent acceptedEvent)
+        private void SetCorrelationContext(ChargeCommandRejectedEvent rejectedEvent)
         {
-            _correlationContext.CorrelationId = acceptedEvent.CorrelationId;
+            _correlationContext.CorrelationId = rejectedEvent.CorrelationId;
         }
     }
 }
