@@ -25,15 +25,15 @@ namespace GreenEnergyHub.Charges.Tests.Application.Validation.InputValidation.Va
     public class VatClassificationValidationRuleTests
     {
         [Theory]
-        [InlineAutoMoqData("NoVat", true)]
-        [InlineAutoMoqData("Vat25", true)]
-        [InlineAutoMoqData("Unknown", false)]
+        [InlineAutoMoqData(VatClassification.NoVat, true)]
+        [InlineAutoMoqData(VatClassification.Vat25, true)]
+        [InlineAutoMoqData(VatClassification.Unknown, false)]
         public void VatClassificationValidationRule_Test(
-            string vatClassificationAsString,
+            VatClassification vatClassification,
             bool expected,
             [NotNull] ChargeCommand command)
         {
-            command.ChargeOperation.VatClassification = Enum.Parse<VatClassification>(vatClassificationAsString);
+            command.ChargeOperation.VatClassification = vatClassification;
             var sut = new VatClassificationValidationRule(command);
             Assert.Equal(expected, sut.IsValid);
         }
