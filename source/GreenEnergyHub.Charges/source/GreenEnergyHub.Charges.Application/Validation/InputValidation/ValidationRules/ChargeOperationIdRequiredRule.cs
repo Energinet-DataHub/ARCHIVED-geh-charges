@@ -12,18 +12,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
+
 namespace GreenEnergyHub.Charges.Application.Validation.InputValidation.ValidationRules
 {
     public class ChargeOperationIdRequiredRule : IValidationRule
     {
-        private readonly string? _chargeOperationId;
+        private readonly ChargeCommand _chargeCommand;
 
-        public ChargeOperationIdRequiredRule(string chargeOperationId)
+        public ChargeOperationIdRequiredRule(ChargeCommand chargeCommand)
         {
-            _chargeOperationId = chargeOperationId;
+            _chargeCommand = chargeCommand;
         }
 
-        public bool IsValid => _chargeOperationId != null;
+        public bool IsValid => !string.IsNullOrEmpty(_chargeCommand.ChargeOperation.Id);
 
         public ValidationRuleIdentifier ValidationRuleIdentifier =>
             ValidationRuleIdentifier.ChargeOperationIdIsRequired;
