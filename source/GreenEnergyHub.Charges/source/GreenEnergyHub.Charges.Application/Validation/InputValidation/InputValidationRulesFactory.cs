@@ -64,7 +64,7 @@ namespace GreenEnergyHub.Charges.Application.Validation.InputValidation
         {
             var rules = new List<IValidationRule>
             {
-                new ProcessTypeIsKnownValidationRule(chargeCommand), // LRN: To be removed.
+                new ChargeOperationIdRequiredRule(chargeCommand.ChargeOperation.Id),
             };
 
             return rules;
