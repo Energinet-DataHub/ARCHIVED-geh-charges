@@ -24,9 +24,9 @@ runs:
 #    
 #    - run: echo "tenant" ${{ env.ARM_TENANT_ID}}
 #      shell: bash
-#    
-#    - run: curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
-#      shell: bash
+    
+    - run: curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
+      shell: bash
     
     - run: |
         az login --service-principal --username ${{ env.ARM_CLIENT_ID }} --password ${{ env.ARM_CLIENT_SECRET }} --tenant ${{ env.ARM_TENANT_ID}}
