@@ -21,7 +21,9 @@ using GreenEnergyHub.Charges.Application.ChangeOfCharges;
 using GreenEnergyHub.Charges.ChargeCommandReceiver;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
 using GreenEnergyHub.Charges.Domain.Events.Local;
+using GreenEnergyHub.Charges.Infrastructure.Context;
 using GreenEnergyHub.Charges.Infrastructure.Messaging;
+using GreenEnergyHub.Charges.Infrastructure.Repositories;
 using GreenEnergyHub.Charges.IntegrationTests.TestHelpers;
 using GreenEnergyHub.Charges.MessageReceiver;
 using GreenEnergyHub.Charges.TestCore;
@@ -40,9 +42,10 @@ using Xunit.Categories;
 namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
 {
     [IntegrationTest]
-    public class ChangeOfChargeIntegrationTests
+    public class ChangeOfChargeIntegrationTests : IClassFixture<DbFixture>
     {
         private readonly ITestOutputHelper _testOutputHelper;
+        private readonly ServiceProvider _serviceProvider;
         private readonly ChargeHttpTrigger _chargeHttpTrigger;
         private readonly ChargeCommandEndpoint _chargeCommandEndpoint;
         private readonly string _commandReceivedSubscriptionName;
@@ -58,11 +61,14 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
         private readonly string _commandAcceptedIntegrationTestSubscriptionName;
         private readonly string _commandRejectedIntegrationTestSubscriptionName;
 
-        public ChangeOfChargeIntegrationTests(ITestOutputHelper testOutputHelper)
+        public ChangeOfChargeIntegrationTests(
+            ITestOutputHelper testOutputHelper,
+            [NotNull] DbFixture dbFixture)
         {
             _testOutputHelper = testOutputHelper;
+            _serviceProvider = dbFixture.ServiceProvider;
 
-            TestConfigurationHelper.ConfigureEnvironmentVariables();
+            // TestConfigurationHelper.ConfigureEnvironmentVariables();
             var messageReceiverHost = TestConfigurationHelper.SetupHost(new MessageReceiver.Startup());
             var chargeCommandReceiverHost = TestConfigurationHelper.SetupHost(new ChargeCommandReceiver.Startup());
 
@@ -174,10 +180,13 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
                 .GetMessageFromServiceBus(_commandAcceptedConnectionString, _commandAcceptedTopicName, _commandAcceptedSubscriptionName);
             _testOutputHelper.WriteLine($"Message accepted by ChargeCommandEndpoint: {commandAcceptedMessage.Body.Length}");
 
+            var chargeExistsByCorrelationId = await ChargeExistsByCorrelationId(executionContext).ConfigureAwait(false);
+
             // assert
             Assert.Equal(200, messageReceiverResult!.StatusCode!.Value);
             Assert.Equal(executionContext.InvocationId.ToString(), commandAcceptedMessage.CorrelationId);
             Assert.True(commandAcceptedMessage.Body.Length > 0);
+            Assert.True(chargeExistsByCorrelationId);
         }
 
         [Theory]
@@ -199,10 +208,13 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
                 .GetMessageFromServiceBus(_commandRejectedConnectionString, _commandRejectedTopicName, _commandRejectedSubscriptionName);
             _testOutputHelper.WriteLine($"Message rejected by ChargeCommandEndpoint: {commandRejectedMessage.Body.Length}");
 
+            var chargeExistsByCorrelationId = await ChargeExistsByCorrelationId(executionContext).ConfigureAwait(false);
+
             // assert
             Assert.Equal(200, messageReceiverResult!.StatusCode!.Value);
             Assert.Equal(executionContext.InvocationId.ToString(), commandRejectedMessage.CorrelationId);
             Assert.True(commandRejectedMessage.Body.Length > 0);
+            Assert.False(chargeExistsByCorrelationId);
         }
 
         // Manually receive messages from topic/subscription
@@ -227,6 +239,16 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
         {
             return (OkObjectResult)await _chargeHttpTrigger
                 .RunAsync(req, executionContext, logger.Object).ConfigureAwait(false);
+        }
+
+        private async Task<bool> ChargeExistsByCorrelationId(ExecutionContext executionContext)
+        {
+            await using var context = _serviceProvider.GetService<ChargesDatabaseContext>();
+            var chargeRepository = new ChargeRepository(context);
+            var chargeExistsByCorrelationId = await chargeRepository
+                .CheckIfChargeExistsByCorrelationIdAsync(executionContext.InvocationId.ToString())
+                .ConfigureAwait(false);
+            return chargeExistsByCorrelationId;
         }
     }
 }
