@@ -45,8 +45,48 @@ jobs:
             ".github/actions/azure-core-tools-install/**"
           ]'    
 
-  validate_charges_integration_tests:
+  setup_environment:
+    name: Setup environment: ${{ matrix.environment.name }} - ${{ matrix.environment.long }}
     needs: pre_job
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        environment: [
+          {
+            long: rg-DataHub-Charges-U,
+            short: u,
+            name: Development
+          },
+          {
+            long: rg-DataHub-Charges-T,
+            short: t,
+            name: Test
+          },
+          {
+            long: rg-DataHub-Charges-B,
+            short: b,
+            name: Preprod
+          },
+          {
+            long: rg-DataHub-Charges-P,
+            short: p,
+            name: Production
+          }
+        ]
+    environment:
+      name: ${{ matrix.environment.long }}
+    steps:
+      - name: Set Environment Secrets
+        run: |  
+          echo "ARM_TENANT_ID=${{ secrets.TENANT_ID }}" >> $GITHUB_ENV
+          echo "ARM_CLIENT_ID=${{ secrets.SPN_ID }}" >> $GITHUB_ENV
+          echo "ARM_CLIENT_SECRET=${{ secrets.SPN_SECRET }}" >> $GITHUB_ENV
+
+      - name: Azure CLI Install and Login
+        uses: ./.github/actions/azure-cli-install-login
+
+  validate_charges_integration_tests:
+    needs: setup_environment
     if: ${{ needs.pre_job.outputs.should_skip != 'true' }}
     name: Validate build Charges Integration Tests
     runs-on: ubuntu-latest
@@ -58,15 +98,6 @@ jobs:
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
-
-      - name: Set Environment Secrets
-        run: |  
-          echo "ARM_TENANT_ID=${{ secrets.TENANT_ID }}" >> $GITHUB_ENV
-          echo "ARM_CLIENT_ID=${{ secrets.SPN_ID }}" >> $GITHUB_ENV
-          echo "ARM_CLIENT_SECRET=${{ secrets.SPN_SECRET }}" >> $GITHUB_ENV
-
-      - name: Azure CLI Install and Login
-        uses: ./.github/actions/azure-cli-install-login
 
       - name: Setup Azure Core Tools
         uses: ./.github/actions/azure-core-tools-install
