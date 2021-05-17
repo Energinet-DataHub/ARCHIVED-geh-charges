@@ -26,6 +26,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Validation.InputValidation.Va
         [Theory]
         [InlineAutoMoqData("ChargeOperationId", true)]
         [InlineAutoMoqData("", false)]
+        [InlineAutoMoqData(" ", false)]
         [InlineAutoMoqData(null!, false)]
         public void Test(
             string chargeOperationId,
