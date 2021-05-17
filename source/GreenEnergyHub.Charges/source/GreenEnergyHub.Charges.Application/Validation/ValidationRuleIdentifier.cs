@@ -23,6 +23,6 @@ namespace GreenEnergyHub.Charges.Application.Validation
         SenderIsMandatory, // VR150
         RecipientIsMandatory, // VR153
         ChargeOperationIdIsRequired, // VR223
-        ResolutionFee, // VR505-2
+        InvalidResolutionTypeOnFee, // VR505-2
     }
 }
