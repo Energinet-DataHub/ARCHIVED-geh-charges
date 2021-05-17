@@ -35,9 +35,14 @@ namespace GreenEnergyHub.Charges.Tests.Application.Validation.InputValidation.Va
             bool expected,
             [NotNull] ChargeCommand command)
         {
+            // Arrange
             command.ChargeOperation.Type = ChargeType.Tariff;
             command.ChargeOperation.Resolution = resolution;
+
+            // Act
             var sut = new ResolutionFeeValidationRule(command);
+
+            // Assert
             sut.IsValid.Should().Be(expected);
         }
 
@@ -52,9 +57,14 @@ namespace GreenEnergyHub.Charges.Tests.Application.Validation.InputValidation.Va
             bool expected,
             [NotNull] ChargeCommand command)
         {
+            // Arrange
             command.ChargeOperation.Type = ChargeType.Subscription;
             command.ChargeOperation.Resolution = resolution;
+
+            // Act
             var sut = new ResolutionFeeValidationRule(command);
+
+            // Assert
             sut.IsValid.Should().Be(expected);
         }
 
@@ -69,9 +79,14 @@ namespace GreenEnergyHub.Charges.Tests.Application.Validation.InputValidation.Va
             bool expected,
             [NotNull] ChargeCommand command)
         {
+            // Arrange
             command.ChargeOperation.Type = ChargeType.Fee;
             command.ChargeOperation.Resolution = resolution;
+
+            // Act
             var sut = new ResolutionFeeValidationRule(command);
+
+            // Assert
             sut.IsValid.Should().Be(expected);
         }
     }
