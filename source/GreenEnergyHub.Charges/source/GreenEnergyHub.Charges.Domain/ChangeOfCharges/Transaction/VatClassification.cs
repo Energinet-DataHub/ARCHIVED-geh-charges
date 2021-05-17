@@ -20,6 +20,8 @@ namespace GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction
     /// </summary>
     public enum VatClassification
     {
+        // ReSharper disable once UnusedMember.Global
+        Unknown = 0,
         NoVat,
         Vat25,
     }
