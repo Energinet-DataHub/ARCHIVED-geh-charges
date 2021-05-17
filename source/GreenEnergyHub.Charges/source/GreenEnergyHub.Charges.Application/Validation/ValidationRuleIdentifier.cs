@@ -23,6 +23,6 @@ namespace GreenEnergyHub.Charges.Application.Validation
         SenderIsMandatory, // VR150
         RecipientIsMandatory, // VR153
         ChargeOperationIdIsRequired, // VR223
-        VatClassification, // VR488
+        InvalidVatClassificationOnCreate, // VR488
     }
 }
