@@ -46,7 +46,7 @@ jobs:
           ]'    
 
   setup_environment:
-    name: Setup environment: ${{ matrix.environment.name }} - ${{ matrix.environment.long }}
+    name: Setup environment ${{ matrix.environment.name }} - ${{ matrix.environment.long }}
     needs: pre_job
     runs-on: ubuntu-latest
     strategy:
