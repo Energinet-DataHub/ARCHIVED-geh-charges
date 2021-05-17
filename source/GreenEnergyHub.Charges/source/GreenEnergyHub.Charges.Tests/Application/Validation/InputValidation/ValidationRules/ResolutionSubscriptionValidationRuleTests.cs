@@ -59,11 +59,11 @@ namespace GreenEnergyHub.Charges.Tests.Application.Validation.InputValidation.Va
         }
 
         [Theory]
-        [InlineAutoMoqData(Resolution.Unknown, false)]
+        [InlineAutoMoqData(Resolution.Unknown, true)]
         [InlineAutoMoqData(Resolution.P1D, true)]
-        [InlineAutoMoqData(Resolution.P1M, false)]
-        [InlineAutoMoqData(Resolution.PT1H, false)]
-        [InlineAutoMoqData(Resolution.PT15M, false)]
+        [InlineAutoMoqData(Resolution.P1M, true)]
+        [InlineAutoMoqData(Resolution.PT1H, true)]
+        [InlineAutoMoqData(Resolution.PT15M, true)]
         public void ResolutionTariffValidationRule_WithFeeType_Test(
             Resolution resolution,
             bool expected,

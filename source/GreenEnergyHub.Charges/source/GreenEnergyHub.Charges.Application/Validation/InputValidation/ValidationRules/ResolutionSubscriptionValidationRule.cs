@@ -30,7 +30,7 @@ namespace GreenEnergyHub.Charges.Application.Validation.InputValidation.Validati
         {
             get
             {
-                if (_chargeCommand.ChargeOperation.Type == ChargeType.Fee)
+                if (_chargeCommand.ChargeOperation.Type == ChargeType.Subscription)
                 {
                     return _chargeCommand.ChargeOperation.Resolution is Resolution.P1M;
                 }
