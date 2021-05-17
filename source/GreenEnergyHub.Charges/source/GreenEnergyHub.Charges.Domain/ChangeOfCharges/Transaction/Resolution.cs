@@ -20,7 +20,7 @@ namespace GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction
     /// </summary>
     public enum Resolution
     {
-        Unknown,
+        Unknown = 0,
         PT15M,
         PT1H,
         P1D,
