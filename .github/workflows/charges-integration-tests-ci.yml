@@ -47,7 +47,7 @@ jobs:
           ]'
     
       - name: Azure CLI Install and Login
-        uses: ../.github/actions/azure-cli-install-login
+        uses: ./.github/actions/azure-cli-install-login
     
 
   validate_charges_integration_tests:
