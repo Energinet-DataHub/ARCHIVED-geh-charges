@@ -19,18 +19,18 @@ using GreenEnergyHub.Charges.Domain.Events.Local;
 
 namespace GreenEnergyHub.Charges.Application.Acknowledgement
 {
-    public class ChargeNegativeAcknowledgementSender : IChargeNegativeAcknowledgementSender
+    public class ChargeRejectionSender : IChargeRejectionSender
     {
-        private readonly IMessageDispatcher<ChargeNegativeAcknowledgement> _messageDispatcher;
+        private readonly IMessageDispatcher<ChargeRejection> _messageDispatcher;
 
-        public ChargeNegativeAcknowledgementSender(IMessageDispatcher<ChargeNegativeAcknowledgement> messageDispatcher)
+        public ChargeRejectionSender(IMessageDispatcher<ChargeRejection> messageDispatcher)
         {
             _messageDispatcher = messageDispatcher;
         }
 
         public async Task HandleAsync([NotNull] ChargeCommandRejectedEvent rejectedEvent)
         {
-            var chargeCommandAcceptedAcknowledgement = new ChargeNegativeAcknowledgement(
+            var chargeRejection = new ChargeRejection(
                 rejectedEvent.CorrelationId,
                 rejectedEvent.Command.Document.Sender.Id,
                 rejectedEvent.Command.Document.Sender.BusinessProcessRole,
@@ -38,7 +38,7 @@ namespace GreenEnergyHub.Charges.Application.Acknowledgement
                 rejectedEvent.Command.ChargeOperation.BusinessReasonCode,
                 rejectedEvent.Reason);
 
-            await _messageDispatcher.DispatchAsync(chargeCommandAcceptedAcknowledgement).ConfigureAwait(false);
+            await _messageDispatcher.DispatchAsync(chargeRejection).ConfigureAwait(false);
         }
     }
 }

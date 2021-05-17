@@ -20,9 +20,9 @@ using JetBrains.Annotations;
 
 namespace GreenEnergyHub.Charges.Domain.Acknowledgements
 {
-    public class ChargeNegativeAcknowledgement : IOutboundMessage
+    public class ChargeRejection : IOutboundMessage
     {
-        public ChargeNegativeAcknowledgement(
+        public ChargeRejection(
             string correlationId,
             string receiverMRid,
             MarketParticipantRole receiverMarketParticipantRole,

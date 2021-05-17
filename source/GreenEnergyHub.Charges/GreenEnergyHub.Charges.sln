@@ -56,9 +56,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GreenEnergyHub.Iso8601", ".
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GreenEnergyHub.Charges.Core", "source\GreenEnergyHub.Charges.Core\GreenEnergyHub.Charges.Core.csproj", "{7EB158E1-FC7E-4591-B2CC-12F5ECAC21FA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GreenEnergyHub.Charges.ChargeNegativeAcknowledgementSender", "source\GreenEnergyHub.Charges.ChargeNegativeAcknowledgementSender\GreenEnergyHub.Charges.ChargeNegativeAcknowledgementSender.csproj", "{02DE278B-693D-44D4-BBE2-66E2A9DF7CE4}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GreenEnergyHub.Charges.ChargeRejectionSender", "source\GreenEnergyHub.Charges.ChargeRejectionSender\GreenEnergyHub.Charges.ChargeRejectionSender.csproj", "{02DE278B-693D-44D4-BBE2-66E2A9DF7CE4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GreenEnergyHub.Charges.ChargeAcknowledgementSender", "source\GreenEnergyHub.Charges.ChargeAcknowledgementSender\GreenEnergyHub.Charges.ChargeAcknowledgementSender.csproj", "{30AD090D-A112-45EC-A25A-F9280B65B2E4}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GreenEnergyHub.Charges.ChargeConfirmationSender", "source\GreenEnergyHub.Charges.ChargeConfirmationSender\GreenEnergyHub.Charges.ChargeConfirmationSender.csproj", "{30AD090D-A112-45EC-A25A-F9280B65B2E4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

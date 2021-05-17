@@ -24,16 +24,16 @@ namespace GreenEnergyHub.Charges.ChargeAcknowledgementSender
     public class ChargeCommandAcceptedSubscriber
     {
         private const string FunctionName = nameof(ChargeCommandAcceptedSubscriber);
-        private readonly IChargeAcknowledgementSender _chargeAcknowledgementSender;
+        private readonly IChargeConfirmationSender _chargeConfirmationSender;
         private readonly ICorrelationContext _correlationContext;
         private readonly MessageExtractor<ChargeCommandAcceptedEvent> _messageExtractor;
 
         public ChargeCommandAcceptedSubscriber(
-            IChargeAcknowledgementSender chargeAcknowledgementSender,
+            IChargeConfirmationSender chargeConfirmationSender,
             ICorrelationContext correlationContext,
             MessageExtractor<ChargeCommandAcceptedEvent> messageExtractor)
         {
-            _chargeAcknowledgementSender = chargeAcknowledgementSender;
+            _chargeConfirmationSender = chargeConfirmationSender;
             _correlationContext = correlationContext;
             _messageExtractor = messageExtractor;
         }
@@ -49,7 +49,7 @@ namespace GreenEnergyHub.Charges.ChargeAcknowledgementSender
         {
             var acceptedEvent = await _messageExtractor.ExtractAsync(message).ConfigureAwait(false);
             SetCorrelationContext(acceptedEvent);
-            await _chargeAcknowledgementSender.HandleAsync(acceptedEvent).ConfigureAwait(false);
+            await _chargeConfirmationSender.HandleAsync(acceptedEvent).ConfigureAwait(false);
 
             log.LogDebug("Received event with correlation ID '{CorrelationId}'", acceptedEvent.CorrelationId);
         }

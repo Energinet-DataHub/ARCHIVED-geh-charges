@@ -19,18 +19,18 @@ using GreenEnergyHub.Charges.Domain.Events.Local;
 
 namespace GreenEnergyHub.Charges.Application.Acknowledgement
 {
-    public class ChargeAcknowledgementSender : IChargeAcknowledgementSender
+    public class ChargeConfirmationSender : IChargeConfirmationSender
     {
-        private readonly IMessageDispatcher<ChargeAcknowledgement> _messageDispatcher;
+        private readonly IMessageDispatcher<ChargeConfirmation> _messageDispatcher;
 
-        public ChargeAcknowledgementSender(IMessageDispatcher<ChargeAcknowledgement> messageDispatcher)
+        public ChargeConfirmationSender(IMessageDispatcher<ChargeConfirmation> messageDispatcher)
         {
             _messageDispatcher = messageDispatcher;
         }
 
         public async Task HandleAsync([NotNull] ChargeCommandAcceptedEvent acceptedEvent)
         {
-            var chargeCommandAcceptedAcknowledgement = new ChargeAcknowledgement(
+            var chargeCommandAcceptedAcknowledgement = new ChargeConfirmation(
                 acceptedEvent.CorrelationId,
                 acceptedEvent.Command.Document.Sender.Id,
                 acceptedEvent.Command.Document.Sender.BusinessProcessRole,
