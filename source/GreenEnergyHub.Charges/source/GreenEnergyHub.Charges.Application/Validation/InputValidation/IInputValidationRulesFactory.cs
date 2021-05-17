@@ -18,10 +18,10 @@ namespace GreenEnergyHub.Charges.Application.Validation.InputValidation
 {
     public interface IInputValidationRulesFactory
     {
-        IValidationRuleSet CreateRulesForChargeCommand(ChargeCommand chargeCommand);
+        IValidationRuleSet CreateRulesForChargeCreateCommand(ChargeCommand chargeCommand);
 
-        IValidationRuleSet UpdateRulesForChargeCommand(ChargeCommand chargeCommand);
+        IValidationRuleSet CreateRulesForChargeUpdateCommand(ChargeCommand chargeCommand);
 
-        IValidationRuleSet StopRulesForChargeCommand(ChargeCommand chargeCommand);
+        IValidationRuleSet CreateRulesForChargeStopCommand(ChargeCommand chargeCommand);
     }
 }

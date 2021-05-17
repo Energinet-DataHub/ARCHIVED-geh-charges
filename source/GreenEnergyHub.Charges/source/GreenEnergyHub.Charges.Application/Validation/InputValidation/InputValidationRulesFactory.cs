@@ -21,7 +21,7 @@ namespace GreenEnergyHub.Charges.Application.Validation.InputValidation
 {
     public class InputValidationRulesFactory : IInputValidationRulesFactory
     {
-        public IValidationRuleSet CreateRulesForChargeCommand(ChargeCommand chargeCommand)
+        public IValidationRuleSet CreateRulesForChargeCreateCommand(ChargeCommand chargeCommand)
         {
             if (chargeCommand == null) throw new ArgumentNullException(nameof(chargeCommand));
 
@@ -30,7 +30,7 @@ namespace GreenEnergyHub.Charges.Application.Validation.InputValidation
             return ValidationRuleSet.FromRules(rules);
         }
 
-        public IValidationRuleSet UpdateRulesForChargeCommand(ChargeCommand chargeCommand)
+        public IValidationRuleSet CreateRulesForChargeUpdateCommand(ChargeCommand chargeCommand)
         {
             if (chargeCommand == null) throw new ArgumentNullException(nameof(chargeCommand));
 
@@ -39,7 +39,7 @@ namespace GreenEnergyHub.Charges.Application.Validation.InputValidation
             return ValidationRuleSet.FromRules(mandatoryRules);
         }
 
-        public IValidationRuleSet StopRulesForChargeCommand(ChargeCommand chargeCommand)
+        public IValidationRuleSet CreateRulesForChargeStopCommand(ChargeCommand chargeCommand)
         {
             if (chargeCommand == null) throw new ArgumentNullException(nameof(chargeCommand));
 

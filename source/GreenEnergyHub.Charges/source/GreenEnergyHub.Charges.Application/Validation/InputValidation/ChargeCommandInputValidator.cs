@@ -35,13 +35,13 @@ namespace GreenEnergyHub.Charges.Application.Validation.InputValidation
                 case OperationType.Unknown:
                     throw new NotSupportedException(chargeCommand.ChargeOperation.OperationType.ToString());
                 case OperationType.Addition:
-                    ruleSet = _inputValidationRulesFactory.CreateRulesForChargeCommand(chargeCommand);
+                    ruleSet = _inputValidationRulesFactory.CreateRulesForChargeCreateCommand(chargeCommand);
                     return ruleSet.Validate();
                 case OperationType.Deletion:
-                    ruleSet = _inputValidationRulesFactory.StopRulesForChargeCommand(chargeCommand);
+                    ruleSet = _inputValidationRulesFactory.CreateRulesForChargeStopCommand(chargeCommand);
                     return ruleSet.Validate();
                 case OperationType.Change:
-                    ruleSet = _inputValidationRulesFactory.UpdateRulesForChargeCommand(chargeCommand);
+                    ruleSet = _inputValidationRulesFactory.CreateRulesForChargeUpdateCommand(chargeCommand);
                     return ruleSet.Validate();
                 default:
                     throw new ArgumentOutOfRangeException(chargeCommand.ChargeOperation.OperationType.ToString());
