@@ -16,19 +16,19 @@ description: 'Installs Azure CLI and logs into Azure Account'
 runs:
   using: "composite"
   steps: 
-    - run: echo "client id" ${{ env.ARM_CLIENT_ID }}
-      shell: bash
-    
-    - run: echo "client secret" ${{ env.ARM_CLIENT_SECRET }}
-      shell: bash
-    
-    - run: echo "tenant" ${{ env.ARM_TENANT_ID}}
-      shell: bash
-    
-    - run: curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
-      shell: bash
-    
-#    - run: |
-#        az login --service-principal --username ${{ env.ARM_CLIENT_ID }} --password ${{ env.ARM_CLIENT_SECRET }} --tenant ${{ env.ARM_TENANT_ID}}
-#        az account set --subscription ${{ env.ARM_SUBSCRIPTION_ID }}
+#    - run: echo "client id" ${{ env.ARM_CLIENT_ID }}
 #      shell: bash
+#    
+#    - run: echo "client secret" ${{ env.ARM_CLIENT_SECRET }}
+#      shell: bash
+#    
+#    - run: echo "tenant" ${{ env.ARM_TENANT_ID}}
+#      shell: bash
+#    
+#    - run: curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
+#      shell: bash
+    
+    - run: |
+        az login --service-principal --username ${{ env.ARM_CLIENT_ID }} --password ${{ env.ARM_CLIENT_SECRET }} --tenant ${{ env.ARM_TENANT_ID}}
+        az account set --subscription ${{ env.ARM_SUBSCRIPTION_ID }}
+      shell: bash
