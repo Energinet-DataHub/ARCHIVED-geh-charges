@@ -23,6 +23,6 @@ namespace GreenEnergyHub.Charges.Application.Validation
         SenderIsMandatory, // VR150
         RecipientIsMandatory, // VR153
         ChargeOperationIdIsRequired, // VR223
-        ResolutionSubscription, // VR505-3
+        InvalidResolutionTypeOnSubscription, // VR505-3
     }
 }

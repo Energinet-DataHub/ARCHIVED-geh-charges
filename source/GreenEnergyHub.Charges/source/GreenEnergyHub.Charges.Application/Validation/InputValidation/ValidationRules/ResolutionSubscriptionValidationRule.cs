@@ -39,6 +39,6 @@ namespace GreenEnergyHub.Charges.Application.Validation.InputValidation.Validati
             }
         }
 
-        public ValidationRuleIdentifier ValidationRuleIdentifier => ValidationRuleIdentifier.ResolutionSubscription;
+        public ValidationRuleIdentifier ValidationRuleIdentifier => ValidationRuleIdentifier.InvalidResolutionTypeOnSubscription;
     }
 }
