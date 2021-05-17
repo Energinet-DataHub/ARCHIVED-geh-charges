@@ -11,7 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-name: Charge Negative Acknowledgement Sender CD
+name: Charge Rejection Sender CD
 
 on:
   push:
@@ -19,17 +19,17 @@ on:
       - main
     paths:
       - source/GreenEnergyHub.Charges/**
-      - .github/workflows/charge-negative-acknowledgement-sender-cd.yml
+      - .github/workflows/charge-rejection-sender-cd.yml
       - .github/actions/dotnet-build-and-test/**
       - .github/actions/azure-core-tools-install/**
   workflow_dispatch: {}
 
 env:
-  CSPROJ_FILE_PATH: 'source/GreenEnergyHub.Charges/source/GreenEnergyHub.Charges.ChargeNegativeAcknowledgementSender/GreenEnergyHub.Charges.ChargeNegativeAcknowledgementSender.csproj'
+  CSPROJ_FILE_PATH: 'source/GreenEnergyHub.Charges/source/GreenEnergyHub.Charges.ChargeRejectionSender/GreenEnergyHub.Charges.ChargeRejectionSender.csproj'
   SOLUTION_FILE_PATH: 'source/GreenEnergyHub.Charges/GreenEnergyHub.Charges.sln'
   DOTNET_VERSION: '3.1'
   ORGANISATION_NAME: 'endk'
-  AZURE_FUNCTIONAPP_NAME: 'charge-negative-acknowledgement-sender'
+  AZURE_FUNCTIONAPP_NAME: 'charge-rejection-sender'
   PROJECT_NAME: charges
   REPOSITORY_NAME: Energinet-DataHub/geh-charges
 
