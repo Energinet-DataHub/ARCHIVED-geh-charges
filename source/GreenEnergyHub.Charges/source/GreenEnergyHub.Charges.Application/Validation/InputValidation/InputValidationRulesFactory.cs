@@ -21,22 +21,50 @@ namespace GreenEnergyHub.Charges.Application.Validation.InputValidation
 {
     public class InputValidationRulesFactory : IInputValidationRulesFactory
     {
-        public IValidationRuleSet CreateRulesForChargeCommand(ChargeCommand chargeCommand)
+        public IValidationRuleSet CreateRulesForChargeCreateCommand(ChargeCommand chargeCommand)
         {
             if (chargeCommand == null) throw new ArgumentNullException(nameof(chargeCommand));
 
-            var rules = GetRules(chargeCommand);
+            var rules = GetCreateRules(chargeCommand);
 
             return ValidationRuleSet.FromRules(rules);
         }
 
-        private static List<IValidationRule> GetRules(ChargeCommand chargeCommand)
+        public IValidationRuleSet CreateRulesForChargeUpdateCommand(ChargeCommand chargeCommand)
+        {
+            if (chargeCommand == null) throw new ArgumentNullException(nameof(chargeCommand));
+
+            var mandatoryRules = GetMandatoryRules(chargeCommand);
+
+            return ValidationRuleSet.FromRules(mandatoryRules);
+        }
+
+        public IValidationRuleSet CreateRulesForChargeStopCommand(ChargeCommand chargeCommand)
+        {
+            if (chargeCommand == null) throw new ArgumentNullException(nameof(chargeCommand));
+
+            var mandatoryRules = GetMandatoryRules(chargeCommand);
+
+            return ValidationRuleSet.FromRules(mandatoryRules);
+        }
+
+        private static List<IValidationRule> GetCreateRules(ChargeCommand chargeCommand)
         {
             var rules = new List<IValidationRule>
             {
                 new ProcessTypeIsKnownValidationRule(chargeCommand),
                 new SenderIsMandatoryTypeValidationRule(chargeCommand),
                 new RecipientIsMandatoryTypeValidationRule(chargeCommand),
+            };
+
+            return rules;
+        }
+
+        private static List<IValidationRule> GetMandatoryRules(ChargeCommand chargeCommand)
+        {
+            var rules = new List<IValidationRule>
+            {
+                new ChargeOperationIdRequiredRule(chargeCommand),
             };
 
             return rules;
