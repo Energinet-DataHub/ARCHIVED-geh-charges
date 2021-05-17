@@ -51,7 +51,7 @@ namespace GreenEnergyHub.Charges.Application
         private static void CheckMarketParticipant(MarketParticipant marketParticipant)
         {
             if (marketParticipant == null) throw new ArgumentNullException(nameof(marketParticipant));
-            if (string.IsNullOrWhiteSpace(marketParticipant.MRid)) throw new ArgumentException(marketParticipant.MRid);
+            if (string.IsNullOrWhiteSpace(marketParticipant.Id)) throw new ArgumentException(marketParticipant.Id);
         }
     }
 }
