@@ -17,9 +17,13 @@ on:
   push:
     branches:
       - Change_of_Charges_Integration_test
+      paths:
+      - .github/actions/azure-cli-install-login/**
   pull_request:
     branches:
       - main
+    paths:
+      - .github/actions/azure-cli-install-login/**
   workflow_dispatch: {}
 
 env:
@@ -40,14 +44,12 @@ jobs:
           github_token: ${{ github.token }}
           paths: '[
             "source/GreenEnergyHub.Charges/**",
-            ".github/actions/azure-cli-install-login/**",
             ".github/workflows/charges-integration-tests-ci.yml",
             ".github/actions/dotnet-build-and-test/**",
             ".github/actions/azure-core-tools-install/**"
           ]'
-    
-      - name: Azure CLI Install and Login
-        uses: ./.github/actions/azure-cli-install-login
+      - name: test debug
+        run: echo ${{ steps.skip_check.outputs.should_skip }}
     
 
   validate_charges_integration_tests:
@@ -63,6 +65,9 @@ jobs:
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Azure CLI Install and Login
+        uses: ./.github/actions/azure-cli-install-login
 
       - name: Setup Azure Core Tools
         uses: ./.github/actions/azure-core-tools-install
