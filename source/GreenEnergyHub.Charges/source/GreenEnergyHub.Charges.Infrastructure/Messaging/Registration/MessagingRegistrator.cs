@@ -42,7 +42,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Messaging.Registration
         }
 
         /// <summary>
-        /// Register services required to resolve a <see cref="MessageDispatcher{TInboundMessage}"/>.
+        /// Register services required to resolve a <see cref="IMessageDispatcher{TInboundMessage}"/>.
         /// </summary>
         public MessagingRegistrator AddMessageDispatcher<TOutboundMessage>(
             string serviceBusConnectionString,

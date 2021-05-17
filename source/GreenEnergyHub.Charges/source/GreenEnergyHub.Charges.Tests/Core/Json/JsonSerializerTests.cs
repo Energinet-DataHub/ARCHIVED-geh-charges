@@ -36,23 +36,21 @@ namespace GreenEnergyHub.Charges.Tests.Core.Json
 		    ""IndustryClassification"": 23,
             ""Type"": 10,
 		    ""Sender"": {
-		    	""Id"": 37,
-		    	""MRid"": ""8100000000030"",
+		    	""Id"": ""8100000000030"",
 		    	""Name"": ""Grid Operator 3"",
-		    	""Role"": 0
+		    	""BusinessProcessRole"": 0
 		    },
 		    ""Recipient"": {
-		    	""Id"": 1,
-		    	""MRid"": ""5790001330552"",
+		    	""Id"": ""5790001330552"",
 		    	""Name"": ""Hub"",
-		    	""Role"": 0
+		    	""BusinessProcessRole"": 0
 		    }
 	},
 	""ChargeOperation"": {
 		    ""Id"": ""MD2021-05-05T13:56:29.301Z"",
 		    ""StartDateTime"": ""2021-06-30T22:00:00Z"",
 		    ""EndDateTime"": null,
-		    ""Status"": 2,
+		    ""OperationType"": 2,
             ""ChargeId"": ""VoltTPostman978"",
             ""ChargeName"": ""Electric charge"",
             ""ChargeType"": 2,
