@@ -14,6 +14,7 @@
 
 using System;
 using System.Diagnostics.CodeAnalysis;
+using FluentAssertions;
 using GreenEnergyHub.Charges.Application.Validation.InputValidation.ValidationRules;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
 using Xunit;
@@ -35,7 +36,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Validation.InputValidation.Va
         {
             command.ChargeOperation.VatClassification = vatClassification;
             var sut = new VatClassificationValidationRule(command);
-            Assert.Equal(expected, sut.IsValid);
+            sut.IsValid.Should().Be(expected);
         }
     }
 }
