@@ -34,5 +34,6 @@ namespace GreenEnergyHub.Charges.Application.Validation
         InvalidResolutionTypeOnFeeOnCreate, // VR505-2
         InvalidResolutionTypeOnSubscriptionOnCreate, // VR505-3
         StartDateTimeIsMandatory, // VR531
+        ChargeOwnerIsRequired, // VR532
     }
 }
