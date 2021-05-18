@@ -36,7 +36,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Validation.InputValidation.Va
             bool expected,
             [NotNull] ChargeCommand command)
         {
-            command.ChargeOperation.ChargeName = GenerateStringWithLength(chargeDescriptionLength);
+            command.ChargeOperation.ChargeDescription = GenerateStringWithLength(chargeDescriptionLength);
             var sut = new ChargeDescriptionHasMaximumLengthRule(command);
             sut.IsValid.Should().Be(expected);
         }
