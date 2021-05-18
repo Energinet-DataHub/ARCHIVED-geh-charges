@@ -28,5 +28,6 @@ namespace GreenEnergyHub.Charges.Application.Validation
         BusinessReasonCodeIsIncorrect, // VR424
         InvalidVatClassificationOnCreate, // VR488
         InvalidResolutionTypeOnTariffOnCreate, // VR505-1
+        InvalidResolutionTypeOnFeeOnCreate, // VR505-2
     }
 }

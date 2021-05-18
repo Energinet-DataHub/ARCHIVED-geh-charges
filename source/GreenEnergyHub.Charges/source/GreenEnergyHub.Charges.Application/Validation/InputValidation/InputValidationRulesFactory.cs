@@ -57,6 +57,7 @@ namespace GreenEnergyHub.Charges.Application.Validation.InputValidation
                 new RecipientIsMandatoryTypeValidationRule(chargeCommand),
                 new VatClassificationValidationRule(chargeCommand),
                 new ResolutionTariffValidationRule(chargeCommand),
+                new ResolutionFeeValidationRule(chargeCommand),
             };
 
             return rules;
