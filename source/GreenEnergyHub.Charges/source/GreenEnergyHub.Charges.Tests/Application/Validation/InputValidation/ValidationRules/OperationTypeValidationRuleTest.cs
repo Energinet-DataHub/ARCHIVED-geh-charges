@@ -24,13 +24,15 @@ namespace GreenEnergyHub.Charges.Tests.Application.Validation.InputValidation.Va
         [Theory]
         [InlineAutoMoqData(OperationType.Unknown, false)]
         [InlineAutoMoqData(OperationType.Addition, true)]
+        [InlineAutoMoqData(OperationType.Change, true)]
+        [InlineAutoMoqData(OperationType.Deletion, true)]
         public void Test(
             OperationType operationType,
             bool expected,
             [NotNull] ChargeCommand command)
         {
             command.ChargeOperation.OperationType = operationType;
-            var sut = new ProcessTypeIsKnownValidationRule(command);
+            var sut = new OperationTypeValidationRule(command);
             Assert.Equal(expected, sut.IsValid);
         }
     }
