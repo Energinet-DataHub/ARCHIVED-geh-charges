@@ -1,0 +1,33 @@
+﻿// Copyright 2020 Energinet DataHub A/S
+//
+// Licensed under the Apache License, Version 2.0 (the "License2");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
+
+namespace GreenEnergyHub.Charges.Application.Validation.InputValidation.ValidationRules
+{
+    public class ChargeNameLengthValidationRule : IValidationRule
+    {
+        private readonly ChargeCommand _chargeCommand;
+        private int _maximumChargeNameLength = 50;
+
+        public ChargeNameLengthValidationRule(ChargeCommand chargeCommand)
+        {
+            _chargeCommand = chargeCommand;
+        }
+
+        public bool IsValid => _chargeCommand.ChargeOperation.ChargeName.Length <= _maximumChargeNameLength;
+
+        public ValidationRuleIdentifier ValidationRuleIdentifier => ValidationRuleIdentifier.MaximumChargeNameLengthExceeded;
+    }
+}
