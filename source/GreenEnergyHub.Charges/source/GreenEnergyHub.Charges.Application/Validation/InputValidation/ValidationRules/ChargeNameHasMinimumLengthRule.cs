@@ -16,12 +16,12 @@ using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
 
 namespace GreenEnergyHub.Charges.Application.Validation.InputValidation.ValidationRules
 {
-    public class ChargeNameLengthValidationRule : IValidationRule
+    public class ChargeNameHasMinimumLengthRule : IValidationRule
     {
         private readonly ChargeCommand _chargeCommand;
         private readonly int _maximumChargeNameLength = 50;
 
-        public ChargeNameLengthValidationRule(ChargeCommand chargeCommand)
+        public ChargeNameHasMinimumLengthRule(ChargeCommand chargeCommand)
         {
             _chargeCommand = chargeCommand;
         }

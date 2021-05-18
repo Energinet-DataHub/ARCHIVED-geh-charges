@@ -61,7 +61,7 @@ namespace GreenEnergyHub.Charges.Application.Validation.InputValidation
                 new ResolutionTariffValidationRule(chargeCommand),
                 new ResolutionFeeValidationRule(chargeCommand),
                 new ResolutionSubscriptionValidationRule(chargeCommand),
-                new ChargeNameLengthValidationRule(chargeCommand),
+                new ChargeNameHasMinimumLengthRule(chargeCommand),
             };
 
             return rules;
@@ -71,7 +71,7 @@ namespace GreenEnergyHub.Charges.Application.Validation.InputValidation
         {
             var rules = new List<IValidationRule>
             {
-                new ChargeNameLengthValidationRule(chargeCommand),
+                new ChargeNameHasMinimumLengthRule(chargeCommand),
             };
 
             return rules;

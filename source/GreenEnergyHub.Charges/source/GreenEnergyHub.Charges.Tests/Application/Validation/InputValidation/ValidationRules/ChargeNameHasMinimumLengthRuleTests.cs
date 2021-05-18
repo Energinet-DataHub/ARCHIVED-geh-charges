@@ -23,7 +23,7 @@ using Xunit.Categories;
 namespace GreenEnergyHub.Charges.Tests.Application.Validation.InputValidation.ValidationRules
 {
     [UnitTest]
-    public class ChargeNameLengthValidationRuleTests
+    public class ChargeNameHasMinimumLengthRuleTests
     {
         private const int ChargeNameMaximumLength = 50;
 
@@ -37,7 +37,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Validation.InputValidation.Va
             [NotNull] ChargeCommand command)
         {
             command.ChargeOperation.ChargeName = GenerateStringWithLength(chargeNameLength);
-            var sut = new ChargeNameLengthValidationRule(command);
+            var sut = new ChargeNameHasMinimumLengthRule(command);
             sut.IsValid.Should().Be(expected);
         }
 
