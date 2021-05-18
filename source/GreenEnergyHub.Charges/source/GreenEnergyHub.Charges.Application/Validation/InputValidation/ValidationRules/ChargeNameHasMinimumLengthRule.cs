@@ -19,14 +19,14 @@ namespace GreenEnergyHub.Charges.Application.Validation.InputValidation.Validati
     public class ChargeNameHasMinimumLengthRule : IValidationRule
     {
         private readonly ChargeCommand _chargeCommand;
-        private readonly int _maximumChargeNameLength = 50;
+        private const int MaximumChargeNameLength = 50;
 
         public ChargeNameHasMinimumLengthRule(ChargeCommand chargeCommand)
         {
             _chargeCommand = chargeCommand;
         }
 
-        public bool IsValid => _chargeCommand.ChargeOperation.ChargeName.Length <= _maximumChargeNameLength;
+        public bool IsValid => _chargeCommand.ChargeOperation.ChargeName.Length <= MaximumChargeNameLength;
 
         public ValidationRuleIdentifier ValidationRuleIdentifier => ValidationRuleIdentifier.ChargeNameHasMinimumLengthRule;
     }
