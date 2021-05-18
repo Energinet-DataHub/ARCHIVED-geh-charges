@@ -70,3 +70,14 @@ resource "random_string" "charge_confirmation_sender" {
   special = false
   upper   = false
 }
+
+module "ping_webtest_charge_confirmation_sender" {
+  source                          = "./modules/ping-webtest" # Repo geh-terraform-modules doesn't have a webtest module at the time of this writing
+  name                            = "ping-webtest-charge-confirmation-sender-${var.project}-${var.organisation}-${var.environment}"
+  resource_group_name             = data.azurerm_resource_group.main.name
+  location                        = data.azurerm_resource_group.main.location
+  tags                            = data.azurerm_resource_group.main.tags
+  application_insights_id         = module.appi.id
+  url                             = "https://${module.azfun_charge_confirmation_sender.default_hostname}/api/HealthStatus"
+  dependencies                    = [module.azfun_charge_confirmation_sender.dependent_on]
+}
