@@ -30,7 +30,7 @@ namespace GreenEnergyHub.Charges.Application.Acknowledgement
 
         public async Task HandleAsync([NotNull] ChargeCommandRejectedEvent rejectedEvent)
         {
-            var chargeCommandAcceptedAcknowledgement = new ChargeNegativeAcknowledgement(
+            var negativeAcknowledgement = new ChargeNegativeAcknowledgement(
                 rejectedEvent.CorrelationId,
                 rejectedEvent.Command.Document.Sender.Id,
                 rejectedEvent.Command.Document.Sender.BusinessProcessRole,
@@ -38,7 +38,7 @@ namespace GreenEnergyHub.Charges.Application.Acknowledgement
                 rejectedEvent.Command.ChargeOperation.BusinessReasonCode,
                 rejectedEvent.Reason);
 
-            await _messageDispatcher.DispatchAsync(chargeCommandAcceptedAcknowledgement).ConfigureAwait(false);
+            await _messageDispatcher.DispatchAsync(negativeAcknowledgement).ConfigureAwait(false);
         }
     }
 }
