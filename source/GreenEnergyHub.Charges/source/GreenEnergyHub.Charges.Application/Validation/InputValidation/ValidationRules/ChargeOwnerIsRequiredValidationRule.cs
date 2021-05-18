@@ -12,22 +12,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
-using System.Diagnostics.CodeAnalysis;
-using GreenEnergyHub.Charges.Application.Validation;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
-using GreenEnergyHub.Charges.Domain.Events.Local;
 
-namespace GreenEnergyHub.Charges.Application
+namespace GreenEnergyHub.Charges.Application.Validation.InputValidation.ValidationRules
 {
-    public interface IChargeCommandRejectedEventFactory
+    public class ChargeOwnerIsRequiredValidationRule : IValidationRule
     {
-        ChargeCommandRejectedEvent CreateEvent(
-            [NotNull] ChargeCommand command,
-            [NotNull] ChargeCommandValidationResult chargeCommandValidationResult);
+        private readonly ChargeCommand _chargeCommand;
 
-        ChargeCommandRejectedEvent CreateEvent(
-            [NotNull] ChargeCommand command,
-            [NotNull] Exception exception);
+        public ChargeOwnerIsRequiredValidationRule(ChargeCommand chargeCommand)
+        {
+            _chargeCommand = chargeCommand;
+        }
+
+        public bool IsValid => !string.IsNullOrWhiteSpace(_chargeCommand.ChargeOperation.ChargeOwner);
+
+        public ValidationRuleIdentifier ValidationRuleIdentifier => ValidationRuleIdentifier.ChargeOwnerIsRequired;
     }
 }

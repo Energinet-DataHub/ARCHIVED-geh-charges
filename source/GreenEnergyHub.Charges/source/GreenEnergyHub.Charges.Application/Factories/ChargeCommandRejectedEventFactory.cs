@@ -20,7 +20,7 @@ using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
 using GreenEnergyHub.Charges.Domain.Events.Local;
 using NodaTime;
 
-namespace GreenEnergyHub.Charges.Application
+namespace GreenEnergyHub.Charges.Application.Factories
 {
     public class ChargeCommandRejectedEventFactory : IChargeCommandRejectedEventFactory
     {
@@ -37,9 +37,7 @@ namespace GreenEnergyHub.Charges.Application
         {
             return new ChargeCommandRejectedEvent(
                 _clock.GetCurrentInstant(),
-                command.Document.CorrelationId,
-                command.Document.Id,
-                command.ChargeOperation.Id,
+                command,
                 chargeCommandValidationResult.InvalidRules.Select(x => x.ValidationRuleIdentifier.ToString()).ToArray());
         }
 
@@ -49,9 +47,7 @@ namespace GreenEnergyHub.Charges.Application
         {
             return new ChargeCommandRejectedEvent(
                 _clock.GetCurrentInstant(),
-                command.Document.CorrelationId,
-                command.Document.Id,
-                command.ChargeOperation.Id,
+                command,
                 new[] { exception.Message });
         }
     }
