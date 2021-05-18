@@ -55,6 +55,7 @@ namespace GreenEnergyHub.Charges.Application.Validation.InputValidation
                 new ProcessTypeIsKnownValidationRule(chargeCommand),
                 new SenderIsMandatoryTypeValidationRule(chargeCommand),
                 new RecipientIsMandatoryTypeValidationRule(chargeCommand),
+                new VatClassificationValidationRule(chargeCommand),
                 new ResolutionTariffValidationRule(chargeCommand),
             };
 
@@ -66,6 +67,9 @@ namespace GreenEnergyHub.Charges.Application.Validation.InputValidation
             var rules = new List<IValidationRule>
             {
                 new ChargeOperationIdRequiredRule(chargeCommand),
+                new ChargeIdRequiredValidationRule(chargeCommand),
+                new BusinessReasonCodeMustBeUpdateChargeInformation(chargeCommand),
+                new DocumentTypeMustBeRequestUpdateChargeInformation(chargeCommand),
             };
 
             return rules;
