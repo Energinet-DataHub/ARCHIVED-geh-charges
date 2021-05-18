@@ -25,11 +25,16 @@ namespace GreenEnergyHub.Charges.Tests.Application.Validation.InputValidation.Va
     [UnitTest]
     public class ChargeNameLengthValidationRuleTests
     {
+        private const int ChargeNameMaximumLength = 50;
+
         [Theory]
-        [InlineAutoMoqData(49, true)]
-        [InlineAutoMoqData(50, true)]
-        [InlineAutoMoqData(51, false)]
-        public void ChargeNameLengthValidationRule_WhenCalledWithChargeNameLength_EqualsExpectedResult(int chargeNameLength, bool expected, [NotNull] ChargeCommand command)
+        [InlineAutoMoqData(ChargeNameMaximumLength - 1, true)]
+        [InlineAutoMoqData(ChargeNameMaximumLength, true)]
+        [InlineAutoMoqData(ChargeNameMaximumLength + 1, false)]
+        public void ChargeNameLengthValidationRule_WhenCalledWithChargeNameLength_EqualsExpectedResult(
+            int chargeNameLength,
+            bool expected,
+            [NotNull] ChargeCommand command)
         {
             command.ChargeOperation.ChargeName =
                 string.Join(string.Empty, Enumerable.Repeat(0, chargeNameLength).Select(n => "a"));
