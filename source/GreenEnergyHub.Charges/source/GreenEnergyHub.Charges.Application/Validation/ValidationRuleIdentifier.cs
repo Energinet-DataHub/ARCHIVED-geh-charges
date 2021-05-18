@@ -30,6 +30,6 @@ namespace GreenEnergyHub.Charges.Application.Validation
         InvalidResolutionTypeOnTariffOnCreate, // VR505-1
         InvalidResolutionTypeOnFeeOnCreate, // VR505-2
         InvalidResolutionTypeOnSubscriptionOnCreate, // VR505-3
-        ChargeNameHasMinimumLengthRule, // VR446
+        ChargeNameHasMaximumLengthRule, // VR446
     }
 }
