@@ -35,5 +35,6 @@ namespace GreenEnergyHub.Charges.Application.Validation
         InvalidResolutionTypeOnSubscriptionOnCreate, // VR505-3
         StartDateTimeIsMandatory, // VR531
         ChargeOwnerIsRequired, // VR532
+        ChargeNameHasMaximumLengthRule, // VR446
     }
 }
