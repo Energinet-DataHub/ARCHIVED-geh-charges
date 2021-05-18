@@ -1,4 +1,4 @@
-// Copyright 2020 Energinet DataHub A/S
+﻿// Copyright 2020 Energinet DataHub A/S
 //
 // Licensed under the Apache License, Version 2.0 (the "License2");
 // you may not use this file except in compliance with the License.
@@ -27,7 +27,6 @@ namespace GreenEnergyHub.Charges.Application.Validation
         ChargeIdIsRequired, // VR440
         DocumentTypeIsIncorrect, // VR404
         BusinessReasonCodeIsIncorrect, // VR424,
-        BusinessReasonCodeIsIncorrect, // VR424
         InvalidVatClassificationOnCreate, // VR488
         InvalidResolutionTypeOnTariffOnCreate, // VR505-1
         InvalidResolutionTypeOnFeeOnCreate, // VR505-2
