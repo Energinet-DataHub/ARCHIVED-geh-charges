@@ -18,6 +18,8 @@ namespace GreenEnergyHub.Charges.Application.Validation.InputValidation.Validati
 {
     public class ChargeIdLengthValidationRule : IValidationRule
     {
+        private const int ValidLength = 10;
+
         private readonly ChargeCommand _chargeCommand;
 
         public ChargeIdLengthValidationRule(ChargeCommand chargeCommand)
@@ -25,7 +27,7 @@ namespace GreenEnergyHub.Charges.Application.Validation.InputValidation.Validati
             _chargeCommand = chargeCommand;
         }
 
-        public bool IsValid => _chargeCommand.ChargeOperation.ChargeId.Length <= 10;
+        public bool IsValid => _chargeCommand.ChargeOperation.ChargeId.Length <= ValidLength;
 
         public ValidationRuleIdentifier ValidationRuleIdentifier => ValidationRuleIdentifier.ChargeIdLengthIncorrect;
     }
