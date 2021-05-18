@@ -26,14 +26,13 @@ namespace GreenEnergyHub.Charges.Application
             if (chargeCommand == null) throw new ArgumentNullException(nameof(chargeCommand));
             if (string.IsNullOrWhiteSpace(chargeCommand.CorrelationId)) throw new ArgumentException(chargeCommand.CorrelationId);
 
-            CheckDocument(chargeCommand.Document);
             CheckChargeOperation(chargeCommand.ChargeOperation);
+            CheckDocument(chargeCommand.Document);
         }
 
         private static void CheckChargeOperation(ChargeOperation chargeOperation)
         {
             if (chargeOperation == null) throw new ArgumentNullException(nameof(chargeOperation));
-            if (string.IsNullOrWhiteSpace(chargeOperation.ChargeOwner)) throw new ArgumentException(chargeOperation.ChargeOwner);
             if (string.IsNullOrWhiteSpace(chargeOperation.ChargeName)) throw new ArgumentException(chargeOperation.ChargeName);
             if (string.IsNullOrWhiteSpace(chargeOperation.ChargeDescription)) throw new ArgumentException(chargeOperation.ChargeDescription);
         }
@@ -41,15 +40,6 @@ namespace GreenEnergyHub.Charges.Application
         private static void CheckDocument(Document document)
         {
             if (document == null) throw new ArgumentNullException(nameof(document));
-            if (string.IsNullOrWhiteSpace(document.Id)) throw new ArgumentException(document.Id);
-            CheckMarketParticipant(document.Recipient);
-            CheckMarketParticipant(document.Sender);
-        }
-
-        private static void CheckMarketParticipant(MarketParticipant marketParticipant)
-        {
-            if (marketParticipant == null) throw new ArgumentNullException(nameof(marketParticipant));
-            if (string.IsNullOrWhiteSpace(marketParticipant.Id)) throw new ArgumentException(marketParticipant.Id);
         }
     }
 }
