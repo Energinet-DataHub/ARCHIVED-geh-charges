@@ -10,7 +10,7 @@ echo ===========================================================================
 
 setlocal
 
-set /p project=Enter project used with Terraform (perhaps your initials?): 
+set /p project=Enter organization used with Terraform (perhaps your initials?): 
 set /p doBuild=Build solution ([y]/n)?
 set /p deployMessageReceiver=Deploy message receiver ([y]/n)?
 set /p deployCommandReceiver=Deploy command receiver ([y]/n)?
