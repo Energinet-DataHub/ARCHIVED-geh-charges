@@ -26,5 +26,6 @@ namespace GreenEnergyHub.Charges.Application.Validation
         ChargeIdIsRequired, // VR440
         DocumentTypeIsIncorrect, // VR404
         BusinessReasonCodeIsIncorrect, // VR424
+        ChargeTypeIsUnknown, // VR449
     }
 }
