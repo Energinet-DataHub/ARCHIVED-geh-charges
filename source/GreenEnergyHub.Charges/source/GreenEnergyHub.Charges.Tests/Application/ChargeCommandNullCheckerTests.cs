@@ -26,44 +26,36 @@ namespace GreenEnergyHub.Charges.Tests.Application
     public class ChargeCommandNullCheckerTests
     {
         [Theory]
-        [InlineAutoDomainData(null, "Valid", "Valid", "Valid", "Valid", "Valid", "Valid", "Valid", "Valid")]
-        [InlineAutoDomainData("valid", null, "Valid", "Valid", "Valid", "Valid", "Valid", "Valid", "Valid")]
-        [InlineAutoDomainData("valid", "Valid", null, "Valid", "Valid", "Valid", "Valid", "Valid", "Valid")]
-        [InlineAutoDomainData("valid", "Valid", "Valid", null, "Valid", "Valid", "Valid", "Valid", "Valid")]
-        [InlineAutoDomainData("valid", "Valid", "Valid", "Valid", null, "Valid", "Valid", "Valid", "Valid")]
-        [InlineAutoDomainData("valid", "Valid", "Valid", "Valid", "Valid", null, "Valid", "Valid", "Valid")]
-        [InlineAutoDomainData("valid", "Valid", "Valid", "Valid", "Valid", "Valid", null, "Valid", "Valid")]
-        [InlineAutoDomainData("valid", "Valid", "Valid", "Valid", "Valid", "Valid", "Valid", null, "Valid")]
-        [InlineAutoDomainData("valid", "Valid", "Valid", "Valid", "Valid", "Valid", "Valid", "Valid", null)]
-        [InlineAutoDomainData("", "Valid", "Valid", "Valid", "Valid", "Valid", "Valid", "Valid", "Valid")]
-        [InlineAutoDomainData("valid", "", "Valid", "Valid", "Valid", "Valid", "Valid", "Valid", "Valid")]
-        [InlineAutoDomainData("valid", "Valid", "", "Valid", "Valid", "Valid", "Valid", "Valid", "Valid")]
-        [InlineAutoDomainData("valid", "Valid", "Valid", "", "Valid", "Valid", "Valid", "Valid", "Valid")]
-        [InlineAutoDomainData("valid", "Valid", "Valid", "Valid", "", "Valid", "Valid", "Valid", "Valid")]
-        [InlineAutoDomainData("valid", "Valid", "Valid", "Valid", "Valid", "", "Valid", "Valid", "Valid")]
-        [InlineAutoDomainData("valid", "Valid", "Valid", "Valid", "Valid", "Valid", "", "Valid", "Valid")]
-        [InlineAutoDomainData("valid", "Valid", "Valid", "Valid", "Valid", "Valid", "Valid", "", "Valid")]
-        [InlineAutoDomainData("valid", "Valid", "Valid", "Valid", "Valid", "Valid", "Valid", "Valid", "")]
+        [InlineAutoDomainData(null, "Valid", "Valid", "Valid", "Valid", "Valid", "Valid")]
+        [InlineAutoDomainData("valid", null, "Valid", "Valid", "Valid", "Valid", "Valid")]
+        [InlineAutoDomainData("valid", "Valid", null, "Valid", "Valid", "Valid", "Valid")]
+        [InlineAutoDomainData("valid", "Valid", "Valid", null, "Valid", "Valid", "Valid")]
+        [InlineAutoDomainData("valid", "Valid", "Valid", "Valid", null, "Valid", "Valid")]
+        [InlineAutoDomainData("valid", "Valid", "Valid", "Valid", "Valid", null, "Valid")]
+        [InlineAutoDomainData("valid", "Valid", "Valid", "Valid", "Valid", "Valid", null)]
+        [InlineAutoDomainData("", "Valid", "Valid", "Valid", "Valid", "Valid", "Valid")]
+        [InlineAutoDomainData("valid", "", "Valid", "Valid", "Valid", "Valid", "Valid")]
+        [InlineAutoDomainData("valid", "Valid", "", "Valid", "Valid", "Valid", "Valid")]
+        [InlineAutoDomainData("valid", "Valid", "Valid", "", "Valid", "Valid", "Valid")]
+        [InlineAutoDomainData("valid", "Valid", "Valid", "Valid", "", "Valid", "Valid")]
+        [InlineAutoDomainData("valid", "Valid", "Valid", "Valid", "Valid", "", "Valid")]
+        [InlineAutoDomainData("valid", "Valid", "Valid", "Valid", "Valid", "Valid", "")]
         public void ChargeCommandPropertiesAreNotNullOrWhitespace(
-            string chargeId,
             string correlationId,
             string owner,
             string documentId,
             string senderId,
             string recipientId,
-            string eventId,
             string description,
             string chargeName)
         {
             // Arrange
             var c = Build();
-            c.ChargeOperation.ChargeId = chargeId;
             c.ChargeOperation.ChargeOwner = owner;
             c.SetCorrelationId(correlationId);
             c.Document.Id = documentId;
             c.Document.Sender.Id = senderId;
             c.Document.Recipient.Id = recipientId;
-            c.ChargeOperation.Id = eventId;
             c.ChargeOperation.ChargeDescription = description;
             c.ChargeOperation.ChargeName = chargeName;
 
