@@ -29,11 +29,11 @@ namespace GreenEnergyHub.Charges.Tests.Application.Validation.InputValidation.Va
         [InlineAutoMoqData(" ", false)]
         [InlineAutoMoqData(null!, false)]
         public void ChargeOwnerIsRequiredValidationRule_Test(
-            string chargeId,
+            string chargeOwner,
             bool expected,
             [NotNull] ChargeCommand command)
         {
-            command.ChargeOperation.ChargeOwner = chargeId;
+            command.ChargeOperation.ChargeOwner = chargeOwner;
             var sut = new ChargeOwnerIsRequiredValidationRule(command);
             Assert.Equal(expected, sut.IsValid);
         }
