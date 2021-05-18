@@ -12,27 +12,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
-using NodaTime;
 
-namespace GreenEnergyHub.Charges.Domain.Events.Local
+namespace GreenEnergyHub.Charges.Application.Validation.InputValidation.ValidationRules
 {
-    public class ChargeCommandRejectedEvent : InternalEventBase
+    public class ChargeTypeIsKnownValidationRule : IValidationRule
     {
-        public ChargeCommandRejectedEvent(
-            Instant publishedTime,
-            [NotNull] ChargeCommand command,
-            IEnumerable<string> reason)
-            : base(publishedTime, command.CorrelationId)
+        private readonly ChargeCommand _chargeCommand;
+
+        public ChargeTypeIsKnownValidationRule(ChargeCommand chargeCommand)
         {
-            Command = command;
-            Reason = reason;
+            _chargeCommand = chargeCommand;
         }
 
-        public ChargeCommand Command { get; }
+        public bool IsValid => _chargeCommand.ChargeOperation.Type != ChargeType.Unknown;
 
-        public IEnumerable<string> Reason { get; set; }
+        public ValidationRuleIdentifier ValidationRuleIdentifier => ValidationRuleIdentifier.ChargeTypeIsUnknown;
     }
 }

@@ -12,16 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction
+using System.Threading.Tasks;
+using GreenEnergyHub.Charges.Application.Validation;
+using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
+
+namespace GreenEnergyHub.Charges.Application.Acknowledgement
 {
-    /// <summary>
-    /// The kind of charge: Subscription ("D01") | Fee ("D02") | Tariff ("D03").
-    /// </summary>
-    public enum ChargeType
+    public interface IChargeCommandConfirmationService
     {
-        Unknown,
-        Subscription,
-        Fee,
-        Tariff,
+        Task RejectAsync(ChargeCommand command, ChargeCommandValidationResult validationResult);
+
+        Task AcceptAsync(ChargeCommand command);
     }
 }

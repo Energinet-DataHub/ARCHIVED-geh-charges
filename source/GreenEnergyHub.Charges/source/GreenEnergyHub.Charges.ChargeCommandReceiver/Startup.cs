@@ -15,8 +15,10 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 using GreenEnergyHub.Charges.Application;
+using GreenEnergyHub.Charges.Application.Acknowledgement;
 using GreenEnergyHub.Charges.Application.ChangeOfCharges;
 using GreenEnergyHub.Charges.Application.ChangeOfCharges.Repositories;
+using GreenEnergyHub.Charges.Application.Factories;
 using GreenEnergyHub.Charges.Application.Validation;
 using GreenEnergyHub.Charges.Application.Validation.BusinessValidation;
 using GreenEnergyHub.Charges.Application.Validation.InputValidation;
@@ -44,7 +46,7 @@ namespace GreenEnergyHub.Charges.ChargeCommandReceiver
             builder.Services.AddGreenEnergyHub(typeof(ChangeOfChargesMessageHandler).Assembly);
             builder.Services.AddScoped(typeof(IClock), _ => SystemClock.Instance);
             builder.Services.AddScoped<IChangeOfChargesTransactionHandler, ChangeOfChargesTransactionHandler>();
-            builder.Services.AddScoped<IChargeCommandAcknowledgementService, ChargeCommandAcknowledgementService>();
+            builder.Services.AddScoped<IChargeCommandConfirmationService, ChargeCommandConfirmationService>();
             builder.Services.AddScoped<IChargeCommandHandler, ChargeCommandHandler>();
             builder.Services.AddScoped<IChargeFactory, ChargeFactory>();
             builder.Services.AddScoped<IChargeCommandAcceptedEventFactory, ChargeCommandAcceptedEventFactory>();

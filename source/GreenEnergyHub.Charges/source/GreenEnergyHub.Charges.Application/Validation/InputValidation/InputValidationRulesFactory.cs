@@ -26,6 +26,7 @@ namespace GreenEnergyHub.Charges.Application.Validation.InputValidation
             if (chargeCommand == null) throw new ArgumentNullException(nameof(chargeCommand));
 
             var rules = GetCreateRules(chargeCommand);
+            rules.AddRange(GetMandatoryRules(chargeCommand));
 
             return ValidationRuleSet.FromRules(rules);
         }
@@ -34,9 +35,10 @@ namespace GreenEnergyHub.Charges.Application.Validation.InputValidation
         {
             if (chargeCommand == null) throw new ArgumentNullException(nameof(chargeCommand));
 
-            var mandatoryRules = GetMandatoryRules(chargeCommand);
+            var rules = GetUpdateRules(chargeCommand);
+            rules.AddRange(GetMandatoryRules(chargeCommand));
 
-            return ValidationRuleSet.FromRules(mandatoryRules);
+            return ValidationRuleSet.FromRules(rules);
         }
 
         public IValidationRuleSet CreateRulesForChargeStopCommand(ChargeCommand chargeCommand)
@@ -59,6 +61,17 @@ namespace GreenEnergyHub.Charges.Application.Validation.InputValidation
                 new ResolutionTariffValidationRule(chargeCommand),
                 new ResolutionFeeValidationRule(chargeCommand),
                 new ResolutionSubscriptionValidationRule(chargeCommand),
+                new ChargeNameHasMaximumLengthRule(chargeCommand),
+            };
+
+            return rules;
+        }
+
+        private static List<IValidationRule> GetUpdateRules(ChargeCommand chargeCommand)
+        {
+            var rules = new List<IValidationRule>
+            {
+                new ChargeNameHasMaximumLengthRule(chargeCommand),
             };
 
             return rules;
@@ -72,6 +85,11 @@ namespace GreenEnergyHub.Charges.Application.Validation.InputValidation
                 new ChargeIdRequiredValidationRule(chargeCommand),
                 new BusinessReasonCodeMustBeUpdateChargeInformation(chargeCommand),
                 new DocumentTypeMustBeRequestUpdateChargeInformation(chargeCommand),
+                new ChargeTypeIsKnownValidationRule(chargeCommand),
+                new ChargeIdLengthValidationRule(chargeCommand),
+                new StartDateTimeRequiredValidationRule(chargeCommand),
+                new OperationTypeValidationRule(chargeCommand),
+                new ChargeOwnerIsRequiredValidationRule(chargeCommand),
             };
 
             return rules;

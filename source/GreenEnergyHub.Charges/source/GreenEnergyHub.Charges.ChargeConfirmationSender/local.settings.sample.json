@@ -1,0 +1,17 @@
+{
+  "IsEncrypted": false,
+  "Values": {
+    "FUNCTIONS_WORKER_RUNTIME": "dotnet",
+    "AzureWebJobsStorage": "UseDevelopmentStorage=true",
+    "AzureWebJobsDashboard": "UseDevelopmentStorage=true",
+
+    "COMMAND_ACCEPTED_LISTENER_CONNECTION_STRING": "<sb listener connection string>",
+    "COMMAND_ACCEPTED_TOPIC_NAME": "sbt-command-accepted",
+    "COMMAND_ACCEPTED_SUBSCRIPTION_NAME": "sbs-command-accepted",
+
+    "POST_OFFICE_SENDER_CONNECTION_STRING": "<sb sender connection string>",
+    "POST_OFFICE_TOPIC_NAME": "sbt-post-office",
+
+    "LOCAL_TIMEZONENAME": "Your time zone ID, e.g.Europe/Copenhagen, see https://en.wikipedia.org/wiki/List_of_tz_database_time_zones for others"
+  }
+}

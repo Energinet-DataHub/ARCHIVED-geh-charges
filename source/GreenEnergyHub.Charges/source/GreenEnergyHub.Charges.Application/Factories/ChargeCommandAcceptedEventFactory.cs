@@ -12,27 +12,27 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
+using GreenEnergyHub.Charges.Domain.Events.Local;
 using NodaTime;
 
-namespace GreenEnergyHub.Charges.Domain.Events.Local
+namespace GreenEnergyHub.Charges.Application.Factories
 {
-    public class ChargeCommandRejectedEvent : InternalEventBase
+    public class ChargeCommandAcceptedEventFactory : IChargeCommandAcceptedEventFactory
     {
-        public ChargeCommandRejectedEvent(
-            Instant publishedTime,
-            [NotNull] ChargeCommand command,
-            IEnumerable<string> reason)
-            : base(publishedTime, command.CorrelationId)
+        private readonly IClock _clock;
+
+        public ChargeCommandAcceptedEventFactory(IClock clock)
         {
-            Command = command;
-            Reason = reason;
+            _clock = clock;
         }
 
-        public ChargeCommand Command { get; }
-
-        public IEnumerable<string> Reason { get; set; }
+        public ChargeCommandAcceptedEvent CreateEvent([NotNull] ChargeCommand command)
+        {
+            return new ChargeCommandAcceptedEvent(
+                _clock.GetCurrentInstant(),
+                command);
+        }
     }
 }

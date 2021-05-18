@@ -5,7 +5,10 @@ rem simply issue the command "deploy-from-localhost" in a command prompt in this
 
 @echo off
 
-if exist "backend.tf" rename backend.tf backend.tf.tmp
+if exist "backend.tf" (
+    if exist "backend.tf.tmp" del backend.tf.tmp
+    rename backend.tf backend.tf.tmp
+)
 
 terraform init
 terraform plan -var-file="localhost.tfvars"

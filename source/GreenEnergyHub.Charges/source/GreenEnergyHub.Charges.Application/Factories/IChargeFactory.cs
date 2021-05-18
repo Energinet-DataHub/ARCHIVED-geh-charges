@@ -12,16 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction
+using System.Threading.Tasks;
+using GreenEnergyHub.Charges.Domain;
+using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
+
+namespace GreenEnergyHub.Charges.Application.Factories
 {
-    /// <summary>
-    /// The kind of charge: Subscription ("D01") | Fee ("D02") | Tariff ("D03").
-    /// </summary>
-    public enum ChargeType
+    public interface IChargeFactory
     {
-        Unknown,
-        Subscription,
-        Fee,
-        Tariff,
+        Task<Charge> CreateFromCommandAsync(ChargeCommand command);
     }
 }
