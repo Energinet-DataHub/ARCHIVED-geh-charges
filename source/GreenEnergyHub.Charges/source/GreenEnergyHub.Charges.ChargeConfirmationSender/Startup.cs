@@ -15,7 +15,7 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 using GreenEnergyHub.Charges.Application.Acknowledgement;
-using GreenEnergyHub.Charges.ChargeAcknowledgementSender;
+using GreenEnergyHub.Charges.ChargeConfirmationSender;
 using GreenEnergyHub.Charges.Domain.Acknowledgements;
 using GreenEnergyHub.Charges.Domain.Events.Local;
 using GreenEnergyHub.Charges.Infrastructure.Messaging.Registration;
@@ -25,7 +25,7 @@ using NodaTime;
 
 [assembly: FunctionsStartup(typeof(Startup))]
 
-namespace GreenEnergyHub.Charges.ChargeAcknowledgementSender
+namespace GreenEnergyHub.Charges.ChargeConfirmationSender
 {
     public class Startup : FunctionsStartup
     {

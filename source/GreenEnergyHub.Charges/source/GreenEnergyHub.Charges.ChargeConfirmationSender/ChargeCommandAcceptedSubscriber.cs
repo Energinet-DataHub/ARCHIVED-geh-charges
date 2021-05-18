@@ -19,7 +19,7 @@ using GreenEnergyHub.Charges.Infrastructure.Messaging;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Extensions.Logging;
 
-namespace GreenEnergyHub.Charges.ChargeAcknowledgementSender
+namespace GreenEnergyHub.Charges.ChargeConfirmationSender
 {
     public class ChargeCommandAcceptedSubscriber
     {
