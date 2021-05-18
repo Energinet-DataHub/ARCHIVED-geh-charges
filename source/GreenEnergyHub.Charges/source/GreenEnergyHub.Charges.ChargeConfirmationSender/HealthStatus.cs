@@ -19,7 +19,7 @@ using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.Extensions.Logging;
 
-namespace GreenEnergyHub.Charges.ChargeAcknowledgementSender
+namespace GreenEnergyHub.Charges.ChargeConfirmationSender
 {
     public static class HealthStatus
     {

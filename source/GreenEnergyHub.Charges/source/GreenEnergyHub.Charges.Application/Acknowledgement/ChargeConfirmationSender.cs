@@ -19,26 +19,25 @@ using GreenEnergyHub.Charges.Domain.Events.Local;
 
 namespace GreenEnergyHub.Charges.Application.Acknowledgement
 {
-    public class ChargeNegativeAcknowledgementSender : IChargeNegativeAcknowledgementSender
+    public class ChargeConfirmationSender : IChargeConfirmationSender
     {
-        private readonly IMessageDispatcher<ChargeNegativeAcknowledgement> _messageDispatcher;
+        private readonly IMessageDispatcher<ChargeConfirmation> _messageDispatcher;
 
-        public ChargeNegativeAcknowledgementSender(IMessageDispatcher<ChargeNegativeAcknowledgement> messageDispatcher)
+        public ChargeConfirmationSender(IMessageDispatcher<ChargeConfirmation> messageDispatcher)
         {
             _messageDispatcher = messageDispatcher;
         }
 
-        public async Task HandleAsync([NotNull] ChargeCommandRejectedEvent rejectedEvent)
+        public async Task HandleAsync([NotNull] ChargeCommandAcceptedEvent acceptedEvent)
         {
-            var negativeAcknowledgement = new ChargeNegativeAcknowledgement(
-                rejectedEvent.CorrelationId,
-                rejectedEvent.Command.Document.Sender.Id,
-                rejectedEvent.Command.Document.Sender.BusinessProcessRole,
-                rejectedEvent.Command.Document.Id,
-                rejectedEvent.Command.ChargeOperation.BusinessReasonCode,
-                rejectedEvent.Reason);
+            var confirmation = new ChargeConfirmation(
+                acceptedEvent.CorrelationId,
+                acceptedEvent.Command.Document.Sender.Id,
+                acceptedEvent.Command.Document.Sender.BusinessProcessRole,
+                acceptedEvent.Command.Document.Id,
+                acceptedEvent.Command.ChargeOperation.BusinessReasonCode);
 
-            await _messageDispatcher.DispatchAsync(negativeAcknowledgement).ConfigureAwait(false);
+            await _messageDispatcher.DispatchAsync(confirmation).ConfigureAwait(false);
         }
     }
 }

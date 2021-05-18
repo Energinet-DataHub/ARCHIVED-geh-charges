@@ -13,12 +13,15 @@
 // limitations under the License.
 
 using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Domain.Events.Local;
+using GreenEnergyHub.Charges.Application.Validation;
+using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
 
 namespace GreenEnergyHub.Charges.Application.Acknowledgement
 {
-    public interface IChargeNegativeAcknowledgementSender
+    public interface IChargeCommandConfirmationService
     {
-        Task HandleAsync(ChargeCommandRejectedEvent rejectedEvent);
+        Task RejectAsync(ChargeCommand command, ChargeCommandValidationResult validationResult);
+
+        Task AcceptAsync(ChargeCommand command);
     }
 }

@@ -19,21 +19,21 @@ using GreenEnergyHub.Charges.Infrastructure.Messaging;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Extensions.Logging;
 
-namespace GreenEnergyHub.Charges.ChargeAcknowledgementSender
+namespace GreenEnergyHub.Charges.ChargeRejectionSender
 {
-    public class ChargeCommandAcceptedSubscriber
+    public class ChargeCommandRejectedSubscriber
     {
-        private const string FunctionName = nameof(ChargeCommandAcceptedSubscriber);
-        private readonly IChargeAcknowledgementSender _chargeAcknowledgementSender;
+        private const string FunctionName = nameof(ChargeCommandRejectedSubscriber);
+        private readonly IChargeRejectionSender _chargeRejectionSender;
         private readonly ICorrelationContext _correlationContext;
-        private readonly MessageExtractor<ChargeCommandAcceptedEvent> _messageExtractor;
+        private readonly MessageExtractor<ChargeCommandRejectedEvent> _messageExtractor;
 
-        public ChargeCommandAcceptedSubscriber(
-            IChargeAcknowledgementSender chargeAcknowledgementSender,
+        public ChargeCommandRejectedSubscriber(
+            IChargeRejectionSender chargeRejectionSender,
             ICorrelationContext correlationContext,
-            MessageExtractor<ChargeCommandAcceptedEvent> messageExtractor)
+            MessageExtractor<ChargeCommandRejectedEvent> messageExtractor)
         {
-            _chargeAcknowledgementSender = chargeAcknowledgementSender;
+            _chargeRejectionSender = chargeRejectionSender;
             _correlationContext = correlationContext;
             _messageExtractor = messageExtractor;
         }
@@ -41,22 +41,22 @@ namespace GreenEnergyHub.Charges.ChargeAcknowledgementSender
         [FunctionName(FunctionName)]
         public async Task RunAsync(
             [ServiceBusTrigger(
-            "%COMMAND_ACCEPTED_TOPIC_NAME%",
-            "%COMMAND_ACCEPTED_SUBSCRIPTION_NAME%",
-            Connection = "COMMAND_ACCEPTED_LISTENER_CONNECTION_STRING")]
+            "%COMMAND_REJECTED_TOPIC_NAME%",
+            "%COMMAND_REJECTED_SUBSCRIPTION_NAME%",
+            Connection = "COMMAND_REJECTED_LISTENER_CONNECTION_STRING")]
             byte[] message,
             ILogger log)
         {
-            var acceptedEvent = await _messageExtractor.ExtractAsync(message).ConfigureAwait(false);
-            SetCorrelationContext(acceptedEvent);
-            await _chargeAcknowledgementSender.HandleAsync(acceptedEvent).ConfigureAwait(false);
+            var rejectedEvent = await _messageExtractor.ExtractAsync(message).ConfigureAwait(false);
+            SetCorrelationContext(rejectedEvent);
+            await _chargeRejectionSender.HandleAsync(rejectedEvent).ConfigureAwait(false);
 
-            log.LogDebug("Received event with correlation ID '{CorrelationId}'", acceptedEvent.CorrelationId);
+            log.LogDebug("Received event with correlation ID '{CorrelationId}'", rejectedEvent.CorrelationId);
         }
 
-        private void SetCorrelationContext(ChargeCommandAcceptedEvent acceptedEvent)
+        private void SetCorrelationContext(ChargeCommandRejectedEvent rejectedEvent)
         {
-            _correlationContext.CorrelationId = acceptedEvent.CorrelationId;
+            _correlationContext.CorrelationId = rejectedEvent.CorrelationId;
         }
     }
 }
