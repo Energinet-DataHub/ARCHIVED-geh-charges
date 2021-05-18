@@ -65,6 +65,9 @@ namespace GreenEnergyHub.Charges.Application.Validation.InputValidation
             var rules = new List<IValidationRule>
             {
                 new ChargeOperationIdRequiredRule(chargeCommand),
+                new ChargeIdRequiredValidationRule(chargeCommand),
+                new BusinessReasonCodeMustBeUpdateChargeInformation(chargeCommand),
+                new DocumentTypeMustBeRequestUpdateChargeInformation(chargeCommand),
                 new ChargeIdLengthValidationRule(chargeCommand),
             };
 
