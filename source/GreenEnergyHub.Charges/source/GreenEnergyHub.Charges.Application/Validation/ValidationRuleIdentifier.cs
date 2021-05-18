@@ -27,5 +27,6 @@ namespace GreenEnergyHub.Charges.Application.Validation
         DocumentTypeIsIncorrect, // VR404
         BusinessReasonCodeIsIncorrect, // VR424
         InvalidVatClassificationOnCreate, // VR488
+        InvalidResolutionTypeOnTariffOnCreate, // VR505-1
     }
 }
