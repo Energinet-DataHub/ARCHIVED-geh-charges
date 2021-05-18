@@ -1,4 +1,4 @@
-﻿// Copyright 2020 Energinet DataHub A/S
+// Copyright 2020 Energinet DataHub A/S
 //
 // Licensed under the Apache License, Version 2.0 (the "License2");
 // you may not use this file except in compliance with the License.
@@ -55,6 +55,10 @@ namespace GreenEnergyHub.Charges.Application.Validation.InputValidation
                 new ProcessTypeIsKnownValidationRule(chargeCommand),
                 new SenderIsMandatoryTypeValidationRule(chargeCommand),
                 new RecipientIsMandatoryTypeValidationRule(chargeCommand),
+                new VatClassificationValidationRule(chargeCommand),
+                new ResolutionTariffValidationRule(chargeCommand),
+                new ResolutionFeeValidationRule(chargeCommand),
+                new ResolutionSubscriptionValidationRule(chargeCommand),
             };
 
             return rules;
@@ -65,6 +69,10 @@ namespace GreenEnergyHub.Charges.Application.Validation.InputValidation
             var rules = new List<IValidationRule>
             {
                 new ChargeOperationIdRequiredRule(chargeCommand),
+                new ChargeIdRequiredValidationRule(chargeCommand),
+                new BusinessReasonCodeMustBeUpdateChargeInformation(chargeCommand),
+                new DocumentTypeMustBeRequestUpdateChargeInformation(chargeCommand),
+                new StartDateTimeRequiredValidationRule(chargeCommand),
                 new OperationTypeValidationRule(chargeCommand),
             };
 

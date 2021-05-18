@@ -12,27 +12,28 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using GreenEnergyHub.Charges.Application.Validation.InputValidation.ValidationRules;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
-using NodaTime;
+using Xunit;
 
-namespace GreenEnergyHub.Charges.Domain.Events.Local
+namespace GreenEnergyHub.Charges.Tests.Application.Validation.InputValidation.ValidationRules
 {
-    public class ChargeCommandRejectedEvent : InternalEventBase
+    public class ChargeIdRequiredValidationRuleTest
     {
-        public ChargeCommandRejectedEvent(
-            Instant publishedTime,
-            [NotNull] ChargeCommand command,
-            IEnumerable<string> reason)
-            : base(publishedTime, command.CorrelationId)
+        [Theory]
+        [InlineAutoMoqData("ChargeId", true)]
+        [InlineAutoMoqData("", false)]
+        [InlineAutoMoqData(" ", false)]
+        [InlineAutoMoqData(null!, false)]
+        public void Test(
+            string chargeId,
+            bool expected,
+            [NotNull] ChargeCommand command)
         {
-            Command = command;
-            Reason = reason;
+            command.ChargeOperation.ChargeId = chargeId;
+            var sut = new ChargeIdRequiredValidationRule(command);
+            Assert.Equal(expected, sut.IsValid);
         }
-
-        public ChargeCommand Command { get; }
-
-        public IEnumerable<string> Reason { get; set; }
     }
 }

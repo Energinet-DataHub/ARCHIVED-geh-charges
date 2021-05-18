@@ -56,7 +56,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GreenEnergyHub.Iso8601", ".
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GreenEnergyHub.Charges.Core", "source\GreenEnergyHub.Charges.Core\GreenEnergyHub.Charges.Core.csproj", "{7EB158E1-FC7E-4591-B2CC-12F5ECAC21FA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GreenEnergyHub.Charges.ChargeAcknowledgementSender", "source\GreenEnergyHub.Charges.ChargeAcknowledgementSender\GreenEnergyHub.Charges.ChargeAcknowledgementSender.csproj", "{02DE278B-693D-44D4-BBE2-66E2A9DF7CE4}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GreenEnergyHub.Charges.ChargeNegativeAcknowledgementSender", "source\GreenEnergyHub.Charges.ChargeNegativeAcknowledgementSender\GreenEnergyHub.Charges.ChargeNegativeAcknowledgementSender.csproj", "{02DE278B-693D-44D4-BBE2-66E2A9DF7CE4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GreenEnergyHub.Charges.ChargeAcknowledgementSender", "source\GreenEnergyHub.Charges.ChargeAcknowledgementSender\GreenEnergyHub.Charges.ChargeAcknowledgementSender.csproj", "{30AD090D-A112-45EC-A25A-F9280B65B2E4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -136,6 +138,10 @@ Global
 		{02DE278B-693D-44D4-BBE2-66E2A9DF7CE4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{02DE278B-693D-44D4-BBE2-66E2A9DF7CE4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{02DE278B-693D-44D4-BBE2-66E2A9DF7CE4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{30AD090D-A112-45EC-A25A-F9280B65B2E4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{30AD090D-A112-45EC-A25A-F9280B65B2E4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{30AD090D-A112-45EC-A25A-F9280B65B2E4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{30AD090D-A112-45EC-A25A-F9280B65B2E4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -155,6 +161,7 @@ Global
 		{4B2E6784-9886-4484-99C2-C6680E29AD19} = {9FE16521-EC21-4551-9E51-0C6702D21098}
 		{3952688E-AEDD-4197-8760-5987185680B0} = {9FE16521-EC21-4551-9E51-0C6702D21098}
 		{02DE278B-693D-44D4-BBE2-66E2A9DF7CE4} = {832447E5-7A46-4381-817C-5D73A20510C2}
+		{30AD090D-A112-45EC-A25A-F9280B65B2E4} = {832447E5-7A46-4381-817C-5D73A20510C2}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {19228BC9-BC51-4044-842C-ACD1F68D4008}

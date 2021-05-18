@@ -12,16 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction
+using System.Threading.Tasks;
+using GreenEnergyHub.Charges.Domain;
+using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
+
+namespace GreenEnergyHub.Charges.Application.Factories
 {
-    /// <summary>
-    /// This enum indicates the VAT value. ("Moms" in Denmark).
-    /// D01 is No VAT | D02 is VAT.
-    /// </summary>
-    public enum VatClassification
+    public interface IChargeFactory
     {
-        Unknown = 0,
-        NoVat,
-        Vat25,
+        Task<Charge> CreateFromCommandAsync(ChargeCommand command);
     }
 }

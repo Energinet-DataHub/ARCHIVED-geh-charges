@@ -12,27 +12,22 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
-using NodaTime;
 
-namespace GreenEnergyHub.Charges.Domain.Events.Local
+namespace GreenEnergyHub.Charges.Application.Validation.InputValidation.ValidationRules
 {
-    public class ChargeCommandRejectedEvent : InternalEventBase
+    public class StartDateTimeRequiredValidationRule : IValidationRule
     {
-        public ChargeCommandRejectedEvent(
-            Instant publishedTime,
-            [NotNull] ChargeCommand command,
-            IEnumerable<string> reason)
-            : base(publishedTime, command.CorrelationId)
+        private readonly ChargeCommand _chargeCommand;
+
+        public StartDateTimeRequiredValidationRule(ChargeCommand chargeCommand)
         {
-            Command = command;
-            Reason = reason;
+            _chargeCommand = chargeCommand;
         }
 
-        public ChargeCommand Command { get; }
+        // Instant is a struct, so to ensure caller supplied it, we check if it has the default value.
+        public bool IsValid => _chargeCommand.ChargeOperation.StartDateTime != default;
 
-        public IEnumerable<string> Reason { get; set; }
+        public ValidationRuleIdentifier ValidationRuleIdentifier => ValidationRuleIdentifier.StartDateTimeIsMandatory;
     }
 }

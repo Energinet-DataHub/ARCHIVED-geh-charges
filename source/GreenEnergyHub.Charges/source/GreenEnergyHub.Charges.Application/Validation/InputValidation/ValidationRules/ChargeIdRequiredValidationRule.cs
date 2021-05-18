@@ -12,16 +12,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Application.Validation;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
 
-namespace GreenEnergyHub.Charges.Application
+namespace GreenEnergyHub.Charges.Application.Validation.InputValidation.ValidationRules
 {
-    public interface IChargeCommandAcknowledgementService
+    public class ChargeIdRequiredValidationRule : IValidationRule
     {
-        Task RejectAsync(ChargeCommand command, ChargeCommandValidationResult validationResult);
+        private readonly ChargeCommand _chargeCommand;
 
-        Task AcceptAsync(ChargeCommand command);
+        public ChargeIdRequiredValidationRule(ChargeCommand chargeCommand)
+        {
+            _chargeCommand = chargeCommand;
+        }
+
+        public bool IsValid => !string.IsNullOrWhiteSpace(_chargeCommand.ChargeOperation.ChargeId);
+
+        public ValidationRuleIdentifier ValidationRuleIdentifier => ValidationRuleIdentifier.ChargeIdIsRequired;
     }
 }
