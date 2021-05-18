@@ -46,7 +46,7 @@ namespace GreenEnergyHub.Charges.ChargeCommandReceiver
             builder.Services.AddGreenEnergyHub(typeof(ChangeOfChargesMessageHandler).Assembly);
             builder.Services.AddScoped(typeof(IClock), _ => SystemClock.Instance);
             builder.Services.AddScoped<IChangeOfChargesTransactionHandler, ChangeOfChargesTransactionHandler>();
-            builder.Services.AddScoped<IChargeCommandAcknowledgementService, ChargeCommandAcknowledgementService>();
+            builder.Services.AddScoped<IChargeCommandConfirmationService, ChargeCommandConfirmationService>();
             builder.Services.AddScoped<IChargeCommandHandler, ChargeCommandHandler>();
             builder.Services.AddScoped<IChargeFactory, ChargeFactory>();
             builder.Services.AddScoped<IChargeCommandAcceptedEventFactory, ChargeCommandAcceptedEventFactory>();
