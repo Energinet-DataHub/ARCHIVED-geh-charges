@@ -15,6 +15,7 @@
 using System.Diagnostics.CodeAnalysis;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
+using GreenEnergyHub.Charges.TestCore;
 using GreenEnergyHub.TestHelpers.FluentAssertionsExtensions;
 using Xunit;
 using Xunit.Categories;
