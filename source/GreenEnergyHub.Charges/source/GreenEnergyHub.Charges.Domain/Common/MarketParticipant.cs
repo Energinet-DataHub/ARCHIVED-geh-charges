@@ -24,12 +24,17 @@ namespace GreenEnergyHub.Charges.Domain.Common
     /// </summary>
     public class MarketParticipant
     {
-        public int Id { get; set; }
-
-        public string MRid { get; set; }
+        /// <summary>
+        /// Contains an ID that identifies the Market Participants. In Denmark this would be the GLN number or EIC code.
+        /// </summary>
+        public string Id { get; set; }
 
         public string Name { get; set; }
 
-        public MarketParticipantRole Role { get; set; }
+        /// <summary>
+        /// Contains the role a market participant uses when initiating and communicating with Green Energy Hub
+        /// about a specific business process, e.g. Grid Access Provider use 'DDM' when creating Charge price lists.
+        /// </summary>
+        public MarketParticipantRole BusinessProcessRole { get; set; }
     }
 }

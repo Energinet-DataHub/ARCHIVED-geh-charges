@@ -12,16 +12,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
+using GreenEnergyHub.Charges.Domain.Messages;
+using GreenEnergyHub.Messaging.MessageTypes.Common;
 
-namespace GreenEnergyHub.Charges.Application.Validation.InputValidation
+namespace GreenEnergyHub.Charges.Tests.Infrastructure.Messaging
 {
-    public interface IInputValidationRulesFactory
+    public class TestMessage : IMessage
     {
-        IValidationRuleSet CreateRulesForChargeCreateCommand(ChargeCommand chargeCommand);
+        public TestMessage(Transaction transaction, string correlationId)
+        {
+            Transaction = transaction;
+            CorrelationId = correlationId;
+        }
 
-        IValidationRuleSet CreateRulesForChargeUpdateCommand(ChargeCommand chargeCommand);
+        public Transaction Transaction { get; set; }
 
-        IValidationRuleSet CreateRulesForChargeStopCommand(ChargeCommand chargeCommand);
+        public string CorrelationId { get; }
     }
 }

@@ -15,26 +15,26 @@
 using System.Diagnostics.CodeAnalysis;
 using GreenEnergyHub.Charges.Application.Validation.InputValidation.ValidationRules;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
-using GreenEnergyHub.Charges.TestCore;
 using Xunit;
 using Xunit.Categories;
 
 namespace GreenEnergyHub.Charges.Tests.Application.Validation.InputValidation.ValidationRules
 {
     [UnitTest]
-    public class RecipientIsMandatoryValidationRuleTests
+    public class ChargeOperationIdRequiredRuleTest
     {
         [Theory]
-        [InlineAutoMoqData(null!, false)]
+        [InlineAutoMoqData("ChargeOperationId", true)]
         [InlineAutoMoqData("", false)]
-        [InlineAutoMoqData("content", true)]
-        public void RecipientIsMandatoryValidationRule_Test(
-            string id,
+        [InlineAutoMoqData(" ", false)]
+        [InlineAutoMoqData(null!, false)]
+        public void Test(
+            string chargeOperationId,
             bool expected,
             [NotNull] ChargeCommand command)
         {
-            command.Document.Recipient.Id = id;
-            var sut = new RecipientIsMandatoryTypeValidationRule(command);
+            command.ChargeOperation.Id = chargeOperationId;
+            var sut = new ChargeOperationIdRequiredRule(command);
             Assert.Equal(expected, sut.IsValid);
         }
     }
