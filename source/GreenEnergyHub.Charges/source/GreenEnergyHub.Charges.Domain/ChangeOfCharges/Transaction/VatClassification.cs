@@ -20,6 +20,7 @@ namespace GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction
     /// </summary>
     public enum VatClassification
     {
+        Unknown = 0,
         NoVat,
         Vat25,
     }
