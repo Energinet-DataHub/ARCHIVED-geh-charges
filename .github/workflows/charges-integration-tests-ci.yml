@@ -14,9 +14,6 @@
 name: Charges Integration Test CI
 
 on:
-  push:
-    branches:
-      - Change_of_Charges_Integration_test
   pull_request:
     branches:
       - main
@@ -41,8 +38,7 @@ jobs:
           paths: '[
             "source/GreenEnergyHub.Charges/**",
             ".github/workflows/charges-integration-tests-ci.yml",
-            ".github/actions/dotnet-build-and-test/**",
-            ".github/actions/azure-core-tools-install/**"
+            ".github/actions/dotnet-build-and-test/**"
           ]'    
 
   setup_environment:
