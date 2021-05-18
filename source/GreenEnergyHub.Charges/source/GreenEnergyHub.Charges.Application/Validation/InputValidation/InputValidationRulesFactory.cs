@@ -62,6 +62,7 @@ namespace GreenEnergyHub.Charges.Application.Validation.InputValidation
                 new ResolutionFeeValidationRule(chargeCommand),
                 new ResolutionSubscriptionValidationRule(chargeCommand),
                 new ChargeNameHasMaximumLengthRule(chargeCommand),
+                new ChargeDescriptionHasMaximumLengthRule(chargeCommand),
             };
 
             return rules;
@@ -72,6 +73,7 @@ namespace GreenEnergyHub.Charges.Application.Validation.InputValidation
             var rules = new List<IValidationRule>
             {
                 new ChargeNameHasMaximumLengthRule(chargeCommand),
+                new ChargeDescriptionHasMaximumLengthRule(chargeCommand),
             };
 
             return rules;
