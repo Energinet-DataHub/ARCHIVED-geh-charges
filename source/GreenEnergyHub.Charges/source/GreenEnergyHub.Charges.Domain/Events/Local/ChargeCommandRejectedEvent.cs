@@ -13,6 +13,8 @@
 // limitations under the License.
 
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
 using NodaTime;
 
 namespace GreenEnergyHub.Charges.Domain.Events.Local
@@ -21,21 +23,16 @@ namespace GreenEnergyHub.Charges.Domain.Events.Local
     {
         public ChargeCommandRejectedEvent(
             Instant publishedTime,
-            string correlationId,
-            string originalDocumentIdentification,
-            string originalEventIdentification,
+            [NotNull] ChargeCommand command,
             IEnumerable<string> reason)
-            : base(publishedTime, correlationId)
+            : base(publishedTime, command.CorrelationId)
         {
+            Command = command;
             Reason = reason;
-            OriginalDocumentIdentification = originalDocumentIdentification;
-            OriginalEventIdentification = originalEventIdentification;
         }
 
+        public ChargeCommand Command { get; }
+
         public IEnumerable<string> Reason { get; set; }
-
-        public string OriginalDocumentIdentification { get; }
-
-        public string OriginalEventIdentification { get;  }
     }
 }
