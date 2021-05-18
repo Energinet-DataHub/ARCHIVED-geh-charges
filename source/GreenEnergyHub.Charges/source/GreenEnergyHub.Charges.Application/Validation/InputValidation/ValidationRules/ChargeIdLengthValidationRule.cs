@@ -27,7 +27,8 @@ namespace GreenEnergyHub.Charges.Application.Validation.InputValidation.Validati
             _chargeCommand = chargeCommand;
         }
 
-        public bool IsValid => _chargeCommand.ChargeOperation.ChargeId.Length <= ValidLength;
+        // ChargeId can be null when the rule i executed.
+        public bool IsValid => _chargeCommand.ChargeOperation.ChargeId?.Length <= ValidLength;
 
         public ValidationRuleIdentifier ValidationRuleIdentifier => ValidationRuleIdentifier.ChargeIdLengthIncorrect;
     }
