@@ -22,5 +22,13 @@ namespace GreenEnergyHub.Charges.Application.Validation
         ProcessIsMandatory, // VR009
         SenderIsMandatory, // VR150
         RecipientIsMandatory, // VR153
+        ChargeOperationIdIsRequired, // VR223
+        ChargeIdIsRequired, // VR440
+        DocumentTypeIsIncorrect, // VR404
+        BusinessReasonCodeIsIncorrect, // VR424
+        InvalidVatClassificationOnCreate, // VR488
+        InvalidResolutionTypeOnTariffOnCreate, // VR505-1
+        InvalidResolutionTypeOnFeeOnCreate, // VR505-2
+        InvalidResolutionTypeOnSubscriptionOnCreate, // VR505-3
     }
 }

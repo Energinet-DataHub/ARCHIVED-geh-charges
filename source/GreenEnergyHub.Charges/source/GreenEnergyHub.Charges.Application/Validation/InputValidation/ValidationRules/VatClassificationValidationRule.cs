@@ -12,16 +12,22 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Diagnostics.CodeAnalysis;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
 
-namespace GreenEnergyHub.Charges.Application.Validation.InputValidation
+namespace GreenEnergyHub.Charges.Application.Validation.InputValidation.ValidationRules
 {
-    public interface IInputValidationRulesFactory
+    public class VatClassificationValidationRule : IValidationRule
     {
-        IValidationRuleSet CreateRulesForChargeCreateCommand(ChargeCommand chargeCommand);
+        private readonly ChargeCommand _chargeCommand;
 
-        IValidationRuleSet CreateRulesForChargeUpdateCommand(ChargeCommand chargeCommand);
+        public VatClassificationValidationRule([NotNull] ChargeCommand chargeCommand)
+        {
+            _chargeCommand = chargeCommand;
+        }
 
-        IValidationRuleSet CreateRulesForChargeStopCommand(ChargeCommand chargeCommand);
+        public bool IsValid => _chargeCommand.ChargeOperation.VatClassification is VatClassification.NoVat or VatClassification.Vat25;
+
+        public ValidationRuleIdentifier ValidationRuleIdentifier => ValidationRuleIdentifier.InvalidVatClassificationOnCreate;
     }
 }

@@ -13,15 +13,21 @@
 // limitations under the License.
 
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
+using GreenEnergyHub.Charges.Domain.Common;
 
-namespace GreenEnergyHub.Charges.Application.Validation.InputValidation
+namespace GreenEnergyHub.Charges.Application.Validation.InputValidation.ValidationRules
 {
-    public interface IInputValidationRulesFactory
+    public class DocumentTypeMustBeRequestUpdateChargeInformation : IValidationRule
     {
-        IValidationRuleSet CreateRulesForChargeCreateCommand(ChargeCommand chargeCommand);
+        private readonly ChargeCommand _chargeCommand;
 
-        IValidationRuleSet CreateRulesForChargeUpdateCommand(ChargeCommand chargeCommand);
+        public DocumentTypeMustBeRequestUpdateChargeInformation(ChargeCommand chargeCommand)
+        {
+            _chargeCommand = chargeCommand;
+        }
 
-        IValidationRuleSet CreateRulesForChargeStopCommand(ChargeCommand chargeCommand);
+        public bool IsValid => _chargeCommand.Document.Type == DocumentType.RequestUpdateChargeInformation;
+
+        public ValidationRuleIdentifier ValidationRuleIdentifier => ValidationRuleIdentifier.DocumentTypeIsIncorrect;
     }
 }

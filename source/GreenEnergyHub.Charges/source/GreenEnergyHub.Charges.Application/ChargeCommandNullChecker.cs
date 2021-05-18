@@ -33,9 +33,7 @@ namespace GreenEnergyHub.Charges.Application
         private static void CheckChargeOperation(ChargeOperation chargeOperation)
         {
             if (chargeOperation == null) throw new ArgumentNullException(nameof(chargeOperation));
-            if (string.IsNullOrWhiteSpace(chargeOperation.Id)) throw new ArgumentException(chargeOperation.Id);
             if (string.IsNullOrWhiteSpace(chargeOperation.ChargeOwner)) throw new ArgumentException(chargeOperation.ChargeOwner);
-            if (string.IsNullOrWhiteSpace(chargeOperation.ChargeId)) throw new ArgumentException(chargeOperation.ChargeId);
             if (string.IsNullOrWhiteSpace(chargeOperation.ChargeName)) throw new ArgumentException(chargeOperation.ChargeName);
             if (string.IsNullOrWhiteSpace(chargeOperation.ChargeDescription)) throw new ArgumentException(chargeOperation.ChargeDescription);
         }
