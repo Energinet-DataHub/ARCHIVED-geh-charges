@@ -61,16 +61,6 @@ jobs:
             long: rg-DataHub-Charges-T,
             short: t,
             name: Test
-          },
-          {
-            long: rg-DataHub-Charges-B,
-            short: b,
-            name: Preprod
-          },
-          {
-            long: rg-DataHub-Charges-P,
-            short: p,
-            name: Production
           }
         ]
     environment:
