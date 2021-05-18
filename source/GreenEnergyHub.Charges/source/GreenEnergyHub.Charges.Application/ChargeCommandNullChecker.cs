@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System;
+using GreenEnergyHub.Charges.Domain;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
 using GreenEnergyHub.Charges.Domain.Common;
 using MarketParticipant = GreenEnergyHub.Charges.Domain.Common.MarketParticipant;
@@ -26,8 +27,8 @@ namespace GreenEnergyHub.Charges.Application
             if (chargeCommand == null) throw new ArgumentNullException(nameof(chargeCommand));
             if (string.IsNullOrWhiteSpace(chargeCommand.CorrelationId)) throw new ArgumentException(chargeCommand.CorrelationId);
 
-            CheckChargeOperation(chargeCommand.ChargeOperation);
             CheckDocument(chargeCommand.Document);
+            CheckChargeOperation(chargeCommand.ChargeOperation);
         }
 
         private static void CheckChargeOperation(ChargeOperation chargeOperation)
@@ -40,6 +41,14 @@ namespace GreenEnergyHub.Charges.Application
         private static void CheckDocument(Document document)
         {
             if (document == null) throw new ArgumentNullException(nameof(document));
+            if (string.IsNullOrWhiteSpace(document.Id)) throw new ArgumentException(document.Id);
+            CheckMarketParticipant(document.Recipient);
+            CheckMarketParticipant(document.Sender);
+        }
+
+        private static void CheckMarketParticipant(MarketParticipant marketParticipant)
+        {
+            if (marketParticipant == null) throw new ArgumentNullException(nameof(marketParticipant));
         }
     }
 }

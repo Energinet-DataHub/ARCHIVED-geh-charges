@@ -26,22 +26,26 @@ namespace GreenEnergyHub.Charges.Tests.Application
     public class ChargeCommandNullCheckerTests
     {
         [Theory]
-        [InlineAutoDomainData(null, "Valid", "Valid")]
-        [InlineAutoDomainData("valid", null, "Valid")]
-        [InlineAutoDomainData("valid", "Valid", null)]
-        [InlineAutoDomainData("", "Valid", "Valid")]
-        [InlineAutoDomainData("valid", "", "Valid")]
-        [InlineAutoDomainData("valid", "Valid", "")]
+        [InlineAutoDomainData(null, "Valid", "Valid", "Valid")]
+        [InlineAutoDomainData("valid", null, "Valid", "Valid")]
+        [InlineAutoDomainData("valid", "Valid", null, "Valid")]
+        [InlineAutoDomainData("valid", "Valid", "Valid", null)]
+        [InlineAutoDomainData("", "Valid", "Valid", "Valid")]
+        [InlineAutoDomainData("valid", "", "Valid", "Valid")]
+        [InlineAutoDomainData("valid", "Valid", "", "Valid")]
+        [InlineAutoDomainData("valid", "Valid", "Valid", "")]
         public void ChargeCommandPropertiesAreNotNullOrWhitespace(
             string correlationId,
             string description,
-            string chargeName)
+            string chargeName,
+            string documentId)
         {
             // Arrange
             var c = Build();
             c.SetCorrelationId(correlationId);
             c.ChargeOperation.ChargeDescription = description;
             c.ChargeOperation.ChargeName = chargeName;
+            c.Document.Id = documentId;
 
             // Act & Assert
             Assert.Throws<ArgumentException>(() => ChargeCommandNullChecker.ThrowExceptionIfRequiredPropertyIsNull(c));
