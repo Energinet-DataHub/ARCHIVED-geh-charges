@@ -19,7 +19,7 @@ namespace GreenEnergyHub.Charges.Application.Validation.InputValidation.Validati
     public class ChargeNameLengthValidationRule : IValidationRule
     {
         private readonly ChargeCommand _chargeCommand;
-        private int _maximumChargeNameLength = 50;
+        private readonly int _maximumChargeNameLength = 50;
 
         public ChargeNameLengthValidationRule(ChargeCommand chargeCommand)
         {
