@@ -17,7 +17,7 @@ using GreenEnergyHub.Messaging.MessageTypes.Common;
 using GreenEnergyHub.Messaging.Transport;
 using JetBrains.Annotations;
 
-namespace GreenEnergyHub.Charges.Domain
+namespace GreenEnergyHub.Charges.Domain.Acknowledgements
 {
     public class ChargeAcknowledgement : IOutboundMessage
     {
@@ -25,7 +25,7 @@ namespace GreenEnergyHub.Charges.Domain
             string correlationId,
             string receiverMRid,
             MarketParticipantRole receiverMarketParticipantRole,
-            object originalTransactionReferenceMRid,
+            string originalTransactionReferenceMRid,
             BusinessReasonCode businessReasonCode)
         {
             CorrelationId = correlationId;
@@ -45,7 +45,7 @@ namespace GreenEnergyHub.Charges.Domain
         public MarketParticipantRole ReceiverMarketParticipantRole { get; }
 
         [UsedImplicitly]
-        public object OriginalTransactionReferenceMRid { get; }
+        public string OriginalTransactionReferenceMRid { get; }
 
         [UsedImplicitly]
         public BusinessReasonCode BusinessReasonCode { get; }
