@@ -12,16 +12,22 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Threading.Tasks;
+using System;
+using System.Diagnostics.CodeAnalysis;
 using GreenEnergyHub.Charges.Application.Validation;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
+using GreenEnergyHub.Charges.Domain.Events.Local;
 
-namespace GreenEnergyHub.Charges.Application
+namespace GreenEnergyHub.Charges.Application.Factories
 {
-    public interface IChargeCommandAcknowledgementService
+    public interface IChargeCommandRejectedEventFactory
     {
-        Task RejectAsync(ChargeCommand command, ChargeCommandValidationResult validationResult);
+        ChargeCommandRejectedEvent CreateEvent(
+            [NotNull] ChargeCommand command,
+            [NotNull] ChargeCommandValidationResult chargeCommandValidationResult);
 
-        Task AcceptAsync(ChargeCommand command);
+        ChargeCommandRejectedEvent CreateEvent(
+            [NotNull] ChargeCommand command,
+            [NotNull] Exception exception);
     }
 }

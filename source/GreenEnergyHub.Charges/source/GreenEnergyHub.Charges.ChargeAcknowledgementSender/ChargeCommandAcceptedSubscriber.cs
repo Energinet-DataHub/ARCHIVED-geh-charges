@@ -13,10 +13,9 @@
 // limitations under the License.
 
 using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Application;
+using GreenEnergyHub.Charges.Application.Acknowledgement;
 using GreenEnergyHub.Charges.Domain.Events.Local;
 using GreenEnergyHub.Charges.Infrastructure.Messaging;
-using GreenEnergyHub.Messaging.Transport;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Extensions.Logging;
 
@@ -27,12 +26,12 @@ namespace GreenEnergyHub.Charges.ChargeAcknowledgementSender
         private const string FunctionName = nameof(ChargeCommandAcceptedSubscriber);
         private readonly IChargeAcknowledgementSender _chargeAcknowledgementSender;
         private readonly ICorrelationContext _correlationContext;
-        private readonly MessageExtractor _messageExtractor;
+        private readonly MessageExtractor<ChargeCommandAcceptedEvent> _messageExtractor;
 
         public ChargeCommandAcceptedSubscriber(
             IChargeAcknowledgementSender chargeAcknowledgementSender,
             ICorrelationContext correlationContext,
-            MessageExtractor messageExtractor)
+            MessageExtractor<ChargeCommandAcceptedEvent> messageExtractor)
         {
             _chargeAcknowledgementSender = chargeAcknowledgementSender;
             _correlationContext = correlationContext;
@@ -48,7 +47,7 @@ namespace GreenEnergyHub.Charges.ChargeAcknowledgementSender
             byte[] message,
             ILogger log)
         {
-            var acceptedEvent = (ChargeCommandAcceptedEvent)await _messageExtractor.ExtractAsync(message).ConfigureAwait(false);
+            var acceptedEvent = await _messageExtractor.ExtractAsync(message).ConfigureAwait(false);
             SetCorrelationContext(acceptedEvent);
             await _chargeAcknowledgementSender.HandleAsync(acceptedEvent).ConfigureAwait(false);
 
