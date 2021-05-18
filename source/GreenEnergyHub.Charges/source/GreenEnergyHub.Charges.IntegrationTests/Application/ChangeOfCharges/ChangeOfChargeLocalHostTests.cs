@@ -131,7 +131,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
             Assert.Equal(executionContext.InvocationId.ToString(), commandAcceptedMessage.CorrelationId);
             Assert.True(commandReceivedMessage.Body.Length > 0);
             Assert.True(commandAcceptedMessage.Body.Length > 0);
-            Assert.False(chargeExistsByCorrelationId);
+            Assert.True(chargeExistsByCorrelationId);
         }
 
         [Theory(Skip = "Run at localhost to integration test local code using sandboxed Service Bus")]

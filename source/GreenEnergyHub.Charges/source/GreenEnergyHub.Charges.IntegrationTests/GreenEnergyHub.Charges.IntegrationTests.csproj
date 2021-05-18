@@ -58,8 +58,6 @@ limitations under the License.
     <ItemGroup>
       <Content Include="TestFiles\InvalidTariffAddition.json" CopyToOutputDirectory="Always" />
       <Content Include="TestFiles\ValidTariffAddition.json" CopyToOutputDirectory="Always" />
-      <Content Include="TestFiles\InvalidTariffUpdate.json" CopyToOutputDirectory="Always" />
-      <Content Include="TestFiles\ValidTariffUpdate.json" CopyToOutputDirectory="Always" />
     </ItemGroup>
 
     <ItemGroup>
