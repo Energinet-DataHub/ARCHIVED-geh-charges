@@ -36,10 +36,15 @@ namespace GreenEnergyHub.Charges.Tests.Application.Validation.InputValidation.Va
             bool expected,
             [NotNull] ChargeCommand command)
         {
-            command.ChargeOperation.ChargeName =
-                string.Join(string.Empty, Enumerable.Repeat(0, chargeNameLength).Select(n => "a"));
+            command.ChargeOperation.ChargeName = GenerateStringWithLength(chargeNameLength);
             var sut = new ChargeNameLengthValidationRule(command);
             sut.IsValid.Should().Be(expected);
+        }
+
+        private static string GenerateStringWithLength(int stringLength)
+        {
+            var repeatedChars = Enumerable.Repeat(0, stringLength).Select(n => "a");
+            return string.Join(string.Empty, repeatedChars);
         }
     }
 }
