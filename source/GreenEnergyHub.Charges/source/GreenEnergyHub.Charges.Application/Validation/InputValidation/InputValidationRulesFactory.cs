@@ -74,6 +74,7 @@ namespace GreenEnergyHub.Charges.Application.Validation.InputValidation
                 new DocumentTypeMustBeRequestUpdateChargeInformation(chargeCommand),
                 new ChargeIdLengthValidationRule(chargeCommand),
                 new StartDateTimeRequiredValidationRule(chargeCommand),
+                new OperationTypeValidationRule(chargeCommand),
             };
 
             return rules;
