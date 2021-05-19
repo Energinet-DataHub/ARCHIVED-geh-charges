@@ -124,7 +124,8 @@ jobs:
       # Get action required for integration test from repo
       - name: Checkout repository
         uses: actions/checkout@master
-        path: .github/actions
+        with:
+          path: .github/actions
 
       - name: Integration test
         if: ${{ matrix.environment.short == 'u' }}
