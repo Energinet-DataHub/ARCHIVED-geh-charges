@@ -17,7 +17,6 @@ on:
   push:
     branches:
       - main
-      - Change_of_Charges_Integration_test
     paths:
       - source/GreenEnergyHub.Charges/**
       - .github/workflows/message-receiver-cd.yml
