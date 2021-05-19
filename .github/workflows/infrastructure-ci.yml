@@ -113,5 +113,5 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          msg: "Congratulations! Your enviroment was successfully deployed. It will automatically be destroyed again when the PR is closed."
+          msg: "Congratulations! Your enviroment was successfully deployed into the rg-DataHub-Testing-U environment (Resources will contain the name ${{ env.PROJECT_NAME }}). It will automatically be destroyed again when the PR is closed."
           check_for_duplicate_msg: true  # OPTIONAL 
