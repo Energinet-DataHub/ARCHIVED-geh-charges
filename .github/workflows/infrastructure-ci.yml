@@ -23,7 +23,7 @@ on:
   workflow_dispatch: {}
 env:
   ORGANISATION_NAME: endk
-  PROJECT_NAME: 'charges${{ github.event.number }}'
+  PROJECT_NAME: 'cha${{ github.event.number }}'
   RESOURCE_GROUP_NAME: rg-DataHub-Testing-U
   ENVIRONMENT_SHORT: u
 
