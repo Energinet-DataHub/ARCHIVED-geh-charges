@@ -17,13 +17,13 @@ using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
 
 namespace GreenEnergyHub.Charges.Application.Validation.InputValidation.ValidationRules
 {
-    public class ChargePriceMaximumDigitsRule : IValidationRule
+    public class ChargePriceMaximumDigitsAndDecimalsRule : IValidationRule
     {
         private const int MaximumDigitsInPrice = 8;
         private const int MaximumDecimalsInPrice = 6;
         private readonly ChargeCommand _chargeCommand;
 
-        public ChargePriceMaximumDigitsRule(ChargeCommand chargeCommand)
+        public ChargePriceMaximumDigitsAndDecimalsRule(ChargeCommand chargeCommand)
         {
             _chargeCommand = chargeCommand;
         }
@@ -70,6 +70,6 @@ namespace GreenEnergyHub.Charges.Application.Validation.InputValidation.Validati
         }
 
         public ValidationRuleIdentifier ValidationRuleIdentifier =>
-            ValidationRuleIdentifier.ChargePriceMaximumDigitsRule;
+            ValidationRuleIdentifier.ChargePriceMaximumAndDecimalsDigitsRule;
     }
 }

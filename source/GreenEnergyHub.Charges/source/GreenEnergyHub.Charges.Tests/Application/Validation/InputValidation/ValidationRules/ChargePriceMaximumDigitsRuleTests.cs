@@ -31,8 +31,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Validation.InputValidation.Va
         [InlineAutoMoqData(99999999.0000001, false)]
         [InlineAutoMoqData(99999999, true)]
         [InlineAutoMoqData(100000000.000001, false)]
-
-        public void ChargePriceMaximumDigitsRule_WhenCalledWithValidPrice_ShouldReturnValid(
+        public void ChargePriceMaximumDigitsAndDecimalsRule_WhenCalledWithValidPrice_ShouldReturnValid(
             decimal price,
             bool expected,
             [NotNull] ChargeCommand command,
@@ -43,7 +42,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Validation.InputValidation.Va
             command.ChargeOperation.Points = new List<Point> { point };
 
             // Act
-            var sut = new ChargePriceMaximumDigitsRule(command);
+            var sut = new ChargePriceMaximumDigitsAndDecimalsRule(command);
 
             // Assert
             sut.IsValid.Should().Be(expected);
