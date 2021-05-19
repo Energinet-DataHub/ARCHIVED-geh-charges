@@ -31,7 +31,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Validation.InputValidation.Va
         [InlineAutoMoqData(ChargeDescriptionMaximumLength - 1, true)]
         [InlineAutoMoqData(ChargeDescriptionMaximumLength, true)]
         [InlineAutoMoqData(ChargeDescriptionMaximumLength + 1, false)]
-        public void ChargeDescriptionHasMaximumLengthRule_WhenCalledWithChargeDescriptionLength_EqualsExpectedResult(
+        public void ChargeDescriptionHasMaximumLengthRule_WhenCalledWithTooLongChargeDescription_ValidationFails(
             int chargeDescriptionLength,
             bool expected,
             [NotNull] ChargeCommand command)
