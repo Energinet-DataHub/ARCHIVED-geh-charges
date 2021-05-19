@@ -23,5 +23,7 @@ namespace GreenEnergyHub.Charges.Application.Validation.InputValidation
         IValidationRuleSet CreateRulesForChargeUpdateCommand(ChargeCommand chargeCommand);
 
         IValidationRuleSet CreateRulesForChargeStopCommand(ChargeCommand chargeCommand);
+
+        IValidationRuleSet CreateRulesForChargeUnknownCommand(ChargeCommand chargeCommand);
     }
 }
