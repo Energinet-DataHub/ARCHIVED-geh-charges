@@ -17,6 +17,7 @@ using System.Linq;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Application.Validation.InputValidation.ValidationRules;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
+using GreenEnergyHub.Charges.TestCore;
 using Xunit;
 using Xunit.Categories;
 
@@ -43,7 +44,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Validation.InputValidation.Va
 
         private static string GenerateStringWithLength(int stringLength)
         {
-            var repeatedChars = Enumerable.Repeat(0, stringLength).Select(n => "a");
+            var repeatedChars = Enumerable.Repeat(0, stringLength).Select(_ => "a");
             return string.Join(string.Empty, repeatedChars);
         }
     }
