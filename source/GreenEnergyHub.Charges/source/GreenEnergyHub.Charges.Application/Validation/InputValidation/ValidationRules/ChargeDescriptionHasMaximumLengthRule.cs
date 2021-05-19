@@ -12,25 +12,22 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Diagnostics.CodeAnalysis;
-using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
-using GreenEnergyHub.Charges.TestCore;
-using GreenEnergyHub.TestHelpers.FluentAssertionsExtensions;
-using Xunit;
-using Xunit.Categories;
 
-namespace GreenEnergyHub.Charges.Tests
+namespace GreenEnergyHub.Charges.Application.Validation.InputValidation.ValidationRules
 {
-    [UnitTest]
-    public class InlineAutoMoqDataAttributeTests
+    public class ChargeDescriptionHasMaximumLengthRule : IValidationRule
     {
-        [Theory]
-        [InlineAutoMoqData]
-        public void Attribute_SupportsInstantiatingClassTypeObjectsWithPropsWithGeneratedValues(
-            [NotNull] ChargeCommand command)
+        private const int MaximumChargeDescriptionLength = 2048;
+        private readonly ChargeCommand _chargeCommand;
+
+        public ChargeDescriptionHasMaximumLengthRule(ChargeCommand chargeCommand)
         {
-            command.Should().NotContainNullsOrEmptyEnumerables();
+            _chargeCommand = chargeCommand;
         }
+
+        public bool IsValid => _chargeCommand.ChargeOperation.ChargeDescription.Length <= MaximumChargeDescriptionLength;
+
+        public ValidationRuleIdentifier ValidationRuleIdentifier => ValidationRuleIdentifier.ChargeDescriptionHasMaximumLengthRule;
     }
 }

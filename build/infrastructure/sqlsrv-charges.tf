@@ -49,6 +49,15 @@ module "sqlsrv_admin_password" {
   dependencies  = [module.kv_charges.dependent_on]
 }
 
+module "sqlsrv_charge_db_connection_string" {
+  source        = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//key-vault-secret?ref=1.2.0"
+  name          = "CHARGE-DB-CONNECTION-STRING"
+  value         = local.CHARGE_DB_CONNECTION_STRING
+  key_vault_id  = module.kv_charges.id
+  tags          = data.azurerm_resource_group.main.tags
+  dependencies  = [module.kv_charges.dependent_on]
+}
+
 resource "random_password" "sqlsrv_admin_password" {
   length = 24
   special = true

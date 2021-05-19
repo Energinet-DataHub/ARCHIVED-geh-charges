@@ -15,6 +15,7 @@
 using System.Diagnostics.CodeAnalysis;
 using GreenEnergyHub.Charges.Application.Validation.InputValidation.ValidationRules;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
+using GreenEnergyHub.Charges.TestCore;
 using NodaTime;
 using NodaTime.Text;
 using Xunit;

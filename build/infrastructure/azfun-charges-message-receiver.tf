@@ -62,6 +62,15 @@ module "azfun_message_receiver_stor" {
   tags                      = data.azurerm_resource_group.main.tags
 }
 
+module "kv_azfun_message_receiver_hostname" {
+  source        = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//key-vault-secret?ref=1.2.0"
+  name          = "MESSAGE-RECEIVER-HOSTNAME"
+  value         = module.azfun_message_receiver.default_hostname
+  key_vault_id  = module.kv_charges.id
+  tags          = data.azurerm_resource_group.main.tags
+  dependencies  = [module.kv_charges.dependent_on]
+}
+
 # Since all functions need a storage connected we just generate a random name
 resource "random_string" "message_receiver" {
   length  = 6
