@@ -27,7 +27,7 @@ on:
 env:
   CSPROJ_FILE_PATH: 'source/GreenEnergyHub.Charges/source/GreenEnergyHub.Charges.MessageReceiver/GreenEnergyHub.Charges.MessageReceiver.csproj'
   SOLUTION_FILE_PATH: 'source/GreenEnergyHub.Charges/GreenEnergyHub.Charges.sln'
-  INTEGRATION_TEST_DLL: GreenEnergyHub.Charges.ChargeCommandReceiver.dll
+  INTEGRATION_TEST_DLL: GreenEnergyHub.Charges.IntegrationTests.dll
   DOTNET_VERSION: '3.1'
   ORGANISATION_NAME: 'endk'
   AZURE_FUNCTIONAPP_NAME: 'message-receiver'
