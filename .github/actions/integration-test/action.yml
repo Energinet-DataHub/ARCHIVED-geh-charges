@@ -38,6 +38,11 @@ runs:
     - name: Obtain keyvault information
       shell: bash
       run: |
+        keyvault_secret_details=$(az keyvault secret show --name "MESSAGE-RECEIVER-HOSTNAME" --vault-name ${{ inputs.key_vault_name }})
+        charges_MESSAGE-RECEIVER-HOSTNAME=$(echo $keyvault_secret_details | python -c "import sys, json; print(json.load(sys.stdin)['value'])")
+        echo ::add-mask::$charges_MESSAGE-RECEIVER-HOSTNAME
+        echo "CHARGES_MESSAGE-RECEIVER-HOSTNAME=$charges_MESSAGE-RECEIVER-HOSTNAME" >> $GITHUB_ENV
+
         keyvault_secret_details=$(az keyvault secret show --name "COMMAND_RECEIVED_SENDER_CONNECTION_STRING" --vault-name ${{ inputs.key_vault_name }})
         charges_COMMAND_RECEIVED_SENDER_CONNECTION_STRING=$(echo $keyvault_secret_details | python -c "import sys, json; print(json.load(sys.stdin)['value'])")
         echo ::add-mask::$charges_COMMAND_RECEIVED_SENDER_CONNECTION_STRING
