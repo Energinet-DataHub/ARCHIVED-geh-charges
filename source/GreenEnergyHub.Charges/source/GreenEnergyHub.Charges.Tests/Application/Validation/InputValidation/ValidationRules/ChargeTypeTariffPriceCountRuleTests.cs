@@ -17,6 +17,7 @@ using System.Diagnostics.CodeAnalysis;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Application.Validation.InputValidation.ValidationRules;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
+using GreenEnergyHub.Charges.TestCore;
 using Xunit;
 using Xunit.Categories;
 using ChargeType = GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction.ChargeType;
