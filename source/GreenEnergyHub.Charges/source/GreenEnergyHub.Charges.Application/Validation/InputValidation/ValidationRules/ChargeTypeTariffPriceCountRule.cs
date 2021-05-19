@@ -16,14 +16,14 @@ using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
 
 namespace GreenEnergyHub.Charges.Application.Validation.InputValidation.ValidationRules
 {
-    public class ChargePriceCountRule : IValidationRule
+    public class ChargeTypeTariffPriceCountRule : IValidationRule
     {
         private const int PricePointsRequiredInP1D = 1;
         private const int PricePointsRequiredInPt1H = 24;
         private const int PricePointsRequiredInPt15M = 96;
         private readonly ChargeCommand _chargeCommand;
 
-        public ChargePriceCountRule(ChargeCommand chargeCommand)
+        public ChargeTypeTariffPriceCountRule(ChargeCommand chargeCommand)
         {
             _chargeCommand = chargeCommand;
         }
@@ -49,6 +49,6 @@ namespace GreenEnergyHub.Charges.Application.Validation.InputValidation.Validati
             }
         }
 
-        public ValidationRuleIdentifier ValidationRuleIdentifier => ValidationRuleIdentifier.ChargePriceCountRule;
+        public ValidationRuleIdentifier ValidationRuleIdentifier => ValidationRuleIdentifier.ChargeTypeTariffPriceCountRule;
     }
 }

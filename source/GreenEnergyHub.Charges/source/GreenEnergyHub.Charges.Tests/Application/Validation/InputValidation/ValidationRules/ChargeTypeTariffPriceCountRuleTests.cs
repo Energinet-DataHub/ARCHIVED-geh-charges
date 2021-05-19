@@ -24,7 +24,7 @@ using ChargeType = GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction.Cha
 namespace GreenEnergyHub.Charges.Tests.Application.Validation.InputValidation.ValidationRules
 {
     [UnitTest]
-    public class ChargePriceCountRuleTests
+    public class ChargeTypeTariffPriceCountRuleTests
     {
         [Theory]
         [InlineAutoMoqData(1, false)]
@@ -44,7 +44,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Validation.InputValidation.Va
             chargeCommand.ChargeOperation.Points = new List<Point>(GeneratePricePointList(point, priceCount));
 
             // Act
-            var sut = new ChargePriceCountRule(chargeCommand);
+            var sut = new ChargeTypeTariffPriceCountRule(chargeCommand);
 
             // Assert
             sut.IsValid.Should().Be(expected);
@@ -68,7 +68,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Validation.InputValidation.Va
             chargeCommand.ChargeOperation.Points = new List<Point>(GeneratePricePointList(point, priceCount));
 
             // Act
-            var sut = new ChargePriceCountRule(chargeCommand);
+            var sut = new ChargeTypeTariffPriceCountRule(chargeCommand);
 
             // Assert
             sut.IsValid.Should().Be(expected);
@@ -94,7 +94,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Validation.InputValidation.Va
             chargeCommand.ChargeOperation.Points = new List<Point>(GeneratePricePointList(point, priceCount));
 
             // Act
-            var sut = new ChargePriceCountRule(chargeCommand);
+            var sut = new ChargeTypeTariffPriceCountRule(chargeCommand);
 
             // Assert
             sut.IsValid.Should().Be(expected);
@@ -109,7 +109,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Validation.InputValidation.Va
             [NotNull] ChargeCommand chargeCommand)
         {
             chargeCommand.ChargeOperation.Type = chargeType;
-            var sut = new ChargePriceCountRule(chargeCommand);
+            var sut = new ChargeTypeTariffPriceCountRule(chargeCommand);
             sut.IsValid.Should().BeTrue();
         }
 
