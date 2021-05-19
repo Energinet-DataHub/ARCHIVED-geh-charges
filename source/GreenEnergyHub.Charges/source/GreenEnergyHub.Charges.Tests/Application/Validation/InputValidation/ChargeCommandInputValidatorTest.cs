@@ -27,19 +27,6 @@ namespace GreenEnergyHub.Charges.Tests.Application.Validation.InputValidation
     {
         [Theory]
         [InlineAutoDomainData]
-        public void OperationTypeUnknownIsNotSupported(
-            [NotNull] ChargeCommand anyCommand,
-            ChargeCommandInputValidator sut)
-        {
-            // Arrange
-            anyCommand.ChargeOperation.OperationType = OperationType.Unknown;
-
-            // Act & Assert
-            Assert.Throws<NotSupportedException>(() => sut.Validate(anyCommand));
-        }
-
-        [Theory]
-        [InlineAutoDomainData]
         public void OperationTypeUnknownValueIsNotSupported(
             [NotNull] ChargeCommand anyCommand,
             ChargeCommandInputValidator sut)
