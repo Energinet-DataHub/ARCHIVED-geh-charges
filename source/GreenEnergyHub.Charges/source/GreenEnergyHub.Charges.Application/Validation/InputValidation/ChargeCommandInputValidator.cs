@@ -33,7 +33,8 @@ namespace GreenEnergyHub.Charges.Application.Validation.InputValidation
             switch (chargeCommand.ChargeOperation.OperationType)
             {
                 case OperationType.Unknown:
-                    throw new NotSupportedException(chargeCommand.ChargeOperation.OperationType.ToString());
+                    ruleSet = _inputValidationRulesFactory.CreateRulesForChargeUnknownCommand(chargeCommand);
+                    return ruleSet.Validate();
                 case OperationType.Addition:
                     ruleSet = _inputValidationRulesFactory.CreateRulesForChargeCreateCommand(chargeCommand);
                     return ruleSet.Validate();
