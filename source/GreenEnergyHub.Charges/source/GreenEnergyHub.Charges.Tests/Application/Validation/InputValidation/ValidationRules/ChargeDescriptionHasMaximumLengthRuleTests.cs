@@ -25,12 +25,12 @@ namespace GreenEnergyHub.Charges.Tests.Application.Validation.InputValidation.Va
     [UnitTest]
     public class ChargeDescriptionHasMaximumLengthRuleTests
     {
-        private const int ChargeNameMaximumLength = 2048;
+        private const int ChargeDescriptionMaximumLength = 2048;
 
         [Theory]
-        [InlineAutoMoqData(ChargeNameMaximumLength - 1, true)]
-        [InlineAutoMoqData(ChargeNameMaximumLength, true)]
-        [InlineAutoMoqData(ChargeNameMaximumLength + 1, false)]
+        [InlineAutoMoqData(ChargeDescriptionMaximumLength - 1, true)]
+        [InlineAutoMoqData(ChargeDescriptionMaximumLength, true)]
+        [InlineAutoMoqData(ChargeDescriptionMaximumLength + 1, false)]
         public void ChargeDescriptionHasMaximumLengthRule_WhenCalledWithChargeDescriptionLength_EqualsExpectedResult(
             int chargeDescriptionLength,
             bool expected,
