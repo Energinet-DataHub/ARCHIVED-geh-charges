@@ -50,6 +50,18 @@ namespace GreenEnergyHub.Charges.Application.Validation.InputValidation
             return ValidationRuleSet.FromRules(mandatoryRules);
         }
 
+        public IValidationRuleSet CreateRulesForChargeUnknownCommand(ChargeCommand chargeCommand)
+        {
+            if (chargeCommand == null) throw new ArgumentNullException(nameof(chargeCommand));
+
+            var rules = new List<IValidationRule>
+            {
+                new OperationTypeValidationRule(chargeCommand),
+            };
+
+            return ValidationRuleSet.FromRules(rules);
+        }
+
         private static List<IValidationRule> GetCreateRules(ChargeCommand chargeCommand)
         {
             var rules = new List<IValidationRule>
