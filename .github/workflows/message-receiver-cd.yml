@@ -21,12 +21,13 @@ on:
       - source/GreenEnergyHub.Charges/**
       - .github/workflows/message-receiver-cd.yml
       - .github/actions/dotnet-build-and-test/**
-      - .github/actions/azure-core-tools-install/**
+      - .github/actions/integration-test/**
   workflow_dispatch: {}
 
 env:
   CSPROJ_FILE_PATH: 'source/GreenEnergyHub.Charges/source/GreenEnergyHub.Charges.MessageReceiver/GreenEnergyHub.Charges.MessageReceiver.csproj'
   SOLUTION_FILE_PATH: 'source/GreenEnergyHub.Charges/GreenEnergyHub.Charges.sln'
+  INTEGRATION_TEST_DLL: GreenEnergyHub.Charges.ChargeCommandReceiver.dll
   DOTNET_VERSION: '3.1'
   ORGANISATION_NAME: 'endk'
   AZURE_FUNCTIONAPP_NAME: 'message-receiver'
@@ -62,7 +63,7 @@ jobs:
           name: drop
           path: '${{ github.workspace }}/output'
     
-  deploy_messagereceiver:
+  deploy_function:
     name: Deploy function to ${{ matrix.environment.name }} - ${{ matrix.environment.long }}
     needs: build_messagereceiver
     runs-on: ubuntu-latest
@@ -119,3 +120,14 @@ jobs:
           app-name: "azfun-${{ env.AZURE_FUNCTIONAPP_NAME }}"
           package: ${{ github.workspace }}/drop
           publish-profile: ${{ steps.get-publish-profile.outputs.publish-profile }}
+
+      # Get action required for integration test from repo
+      - name: Checkout repository
+        uses: actions/checkout@master
+
+      - name: Integration test
+        if: ${{ matrix.environment.short == 'u' }}
+        uses: ./.github/actions/integration-test
+        with:
+          key_vault_name: ${{ env.KEY_VAULT_NAME }}
+          test_dll: ${{ github.workspace }}/output/${{ env.INTEGRATION_TEST_DLL }}
