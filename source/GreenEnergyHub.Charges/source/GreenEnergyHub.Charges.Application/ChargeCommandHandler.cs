@@ -24,18 +24,18 @@ namespace GreenEnergyHub.Charges.Application
 {
     public class ChargeCommandHandler : IChargeCommandHandler
     {
-        private readonly IChargeCommandAcknowledgementService _chargeCommandAcknowledgementService;
+        private readonly IChargeCommandConfirmationService _chargeCommandConfirmationService;
         private readonly IChargeCommandValidator _chargeCommandValidator;
         private readonly IChargeRepository _chargeRepository;
         private readonly IChargeFactory _chargeFactory;
 
         public ChargeCommandHandler(
-            IChargeCommandAcknowledgementService chargeCommandAcknowledgementService,
+            IChargeCommandConfirmationService chargeCommandConfirmationService,
             IChargeCommandValidator chargeCommandValidator,
             IChargeRepository chargeRepository,
             IChargeFactory chargeFactory)
         {
-            _chargeCommandAcknowledgementService = chargeCommandAcknowledgementService;
+            _chargeCommandConfirmationService = chargeCommandConfirmationService;
             _chargeCommandValidator = chargeCommandValidator;
             _chargeRepository = chargeRepository;
             _chargeFactory = chargeFactory;
@@ -48,13 +48,13 @@ namespace GreenEnergyHub.Charges.Application
             var validationResult = await _chargeCommandValidator.ValidateAsync(commandReceivedEvent.Command).ConfigureAwait(false);
             if (validationResult.IsFailed)
             {
-                await _chargeCommandAcknowledgementService.RejectAsync(commandReceivedEvent.Command, validationResult).ConfigureAwait(false);
+                await _chargeCommandConfirmationService.RejectAsync(commandReceivedEvent.Command, validationResult).ConfigureAwait(false);
                 return;
             }
 
             var charge = await _chargeFactory.CreateFromCommandAsync(commandReceivedEvent.Command).ConfigureAwait(false);
             await _chargeRepository.StoreChargeAsync(charge).ConfigureAwait(false);
-            await _chargeCommandAcknowledgementService.AcceptAsync(commandReceivedEvent.Command).ConfigureAwait(false);
+            await _chargeCommandConfirmationService.AcceptAsync(commandReceivedEvent.Command).ConfigureAwait(false);
         }
     }
 }

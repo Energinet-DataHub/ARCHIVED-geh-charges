@@ -19,25 +19,26 @@ using GreenEnergyHub.Charges.Domain.Events.Local;
 
 namespace GreenEnergyHub.Charges.Application.Acknowledgement
 {
-    public class ChargeAcknowledgementSender : IChargeAcknowledgementSender
+    public class ChargeRejectionSender : IChargeRejectionSender
     {
-        private readonly IMessageDispatcher<ChargeAcknowledgement> _messageDispatcher;
+        private readonly IMessageDispatcher<ChargeRejection> _messageDispatcher;
 
-        public ChargeAcknowledgementSender(IMessageDispatcher<ChargeAcknowledgement> messageDispatcher)
+        public ChargeRejectionSender(IMessageDispatcher<ChargeRejection> messageDispatcher)
         {
             _messageDispatcher = messageDispatcher;
         }
 
-        public async Task HandleAsync([NotNull] ChargeCommandAcceptedEvent acceptedEvent)
+        public async Task HandleAsync([NotNull] ChargeCommandRejectedEvent rejectedEvent)
         {
-            var acknowledgement = new ChargeAcknowledgement(
-                acceptedEvent.CorrelationId,
-                acceptedEvent.Command.Document.Sender.Id,
-                acceptedEvent.Command.Document.Sender.BusinessProcessRole,
-                acceptedEvent.Command.Document.Id,
-                acceptedEvent.Command.ChargeOperation.BusinessReasonCode);
+            var chargeRejection = new ChargeRejection(
+                rejectedEvent.CorrelationId,
+                rejectedEvent.Command.Document.Sender.Id,
+                rejectedEvent.Command.Document.Sender.BusinessProcessRole,
+                rejectedEvent.Command.Document.Id,
+                rejectedEvent.Command.ChargeOperation.BusinessReasonCode,
+                rejectedEvent.Reason);
 
-            await _messageDispatcher.DispatchAsync(acknowledgement).ConfigureAwait(false);
+            await _messageDispatcher.DispatchAsync(chargeRejection).ConfigureAwait(false);
         }
     }
 }

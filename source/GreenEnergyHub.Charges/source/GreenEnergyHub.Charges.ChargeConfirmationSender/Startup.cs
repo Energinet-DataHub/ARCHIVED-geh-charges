@@ -15,7 +15,7 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 using GreenEnergyHub.Charges.Application.Acknowledgement;
-using GreenEnergyHub.Charges.ChargeAcknowledgementSender;
+using GreenEnergyHub.Charges.ChargeConfirmationSender;
 using GreenEnergyHub.Charges.Domain.Acknowledgements;
 using GreenEnergyHub.Charges.Domain.Events.Local;
 using GreenEnergyHub.Charges.Infrastructure.Messaging.Registration;
@@ -25,18 +25,18 @@ using NodaTime;
 
 [assembly: FunctionsStartup(typeof(Startup))]
 
-namespace GreenEnergyHub.Charges.ChargeAcknowledgementSender
+namespace GreenEnergyHub.Charges.ChargeConfirmationSender
 {
     public class Startup : FunctionsStartup
     {
         public override void Configure([NotNull] IFunctionsHostBuilder builder)
         {
             builder.Services.AddScoped(typeof(IClock), _ => SystemClock.Instance);
-            builder.Services.AddScoped<IChargeAcknowledgementSender, Application.Acknowledgement.ChargeAcknowledgementSender>();
+            builder.Services.AddScoped<IChargeConfirmationSender, Application.Acknowledgement.ChargeConfirmationSender>();
 
             builder.Services
                 .AddMessaging()
-                .AddMessageDispatcher<ChargeAcknowledgement>(
+                .AddMessageDispatcher<ChargeConfirmation>(
                     GetEnv("POST_OFFICE_SENDER_CONNECTION_STRING"),
                     GetEnv("POST_OFFICE_TOPIC_NAME"))
                 .AddMessageExtractor<ChargeCommandAcceptedEvent>();

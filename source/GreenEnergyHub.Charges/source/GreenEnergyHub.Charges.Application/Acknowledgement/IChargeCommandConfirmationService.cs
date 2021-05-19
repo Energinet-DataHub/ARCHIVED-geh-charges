@@ -18,7 +18,7 @@ using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
 
 namespace GreenEnergyHub.Charges.Application.Acknowledgement
 {
-    public interface IChargeCommandAcknowledgementService
+    public interface IChargeCommandConfirmationService
     {
         Task RejectAsync(ChargeCommand command, ChargeCommandValidationResult validationResult);
 

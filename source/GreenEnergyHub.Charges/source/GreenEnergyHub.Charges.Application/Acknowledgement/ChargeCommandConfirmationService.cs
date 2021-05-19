@@ -20,14 +20,14 @@ using GreenEnergyHub.Charges.Domain.Events.Local;
 
 namespace GreenEnergyHub.Charges.Application.Acknowledgement
 {
-    public class ChargeCommandAcknowledgementService : IChargeCommandAcknowledgementService
+    public class ChargeCommandConfirmationService : IChargeCommandConfirmationService
     {
         private readonly IChargeCommandRejectedEventFactory _chargeCommandRejectedEventFactory;
         private readonly IChargeCommandAcceptedEventFactory _chargeCommandAcceptedEventFactory;
         private readonly IMessageDispatcher<ChargeCommandRejectedEvent> _rejectedMessageDispatcher;
         private readonly IMessageDispatcher<ChargeCommandAcceptedEvent> _acceptedMessageDispatcher;
 
-        public ChargeCommandAcknowledgementService(
+        public ChargeCommandConfirmationService(
             IChargeCommandRejectedEventFactory chargeCommandRejectedEventFactory,
             IChargeCommandAcceptedEventFactory chargeCommandAcceptedEventFactory,
             IMessageDispatcher<ChargeCommandRejectedEvent> rejectedMessageDispatcher,
