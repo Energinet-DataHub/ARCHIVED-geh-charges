@@ -60,9 +60,9 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
         private readonly string _commandReceivedConnectionString;
         private readonly string _commandAcceptedConnectionString;
         private readonly string _commandRejectedConnectionString;
-        private readonly string _commandReceivedIntegrationTestSubscriptionName;
-        private readonly string _commandAcceptedIntegrationTestSubscriptionName;
-        private readonly string _commandRejectedIntegrationTestSubscriptionName;
+        private readonly string _commandReceivedSubscriptionName;
+        private readonly string _commandAcceptedSubscriptionName;
+        private readonly string _commandRejectedSubscriptionName;
 
         public ChangeOfChargeLocalHostTests(ITestOutputHelper testOutputHelper, [NotNull] DbFixture dbFixture)
         {
@@ -82,13 +82,9 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
                 chargeCommandReceiverHost.Services.GetRequiredService<ICorrelationContext>(),
                 chargeCommandReceiverHost.Services.GetRequiredService<MessageExtractor<ChargeCommandReceivedEvent>>());
 
-            string commandReceivedSubscriptionName = Environment.GetEnvironmentVariable("COMMAND_RECEIVED_INTEGRATION_TEST_SUBSCRIPTION_NAME") !;
-            string commandAcceptedSubscriptionName = Environment.GetEnvironmentVariable("COMMAND_ACCEPTED_INTEGRATION_TEST_SUBSCRIPTION_NAME") !;
-            string commandRejectedSubscriptionName = Environment.GetEnvironmentVariable("COMMAND_REJECTED_INTEGRATION_TEST_SUBSCRIPTION_NAME") !;
-            _commandReceivedIntegrationTestSubscriptionName = $"{commandReceivedSubscriptionName}-it";
-            _commandAcceptedIntegrationTestSubscriptionName = $"{commandAcceptedSubscriptionName}-it";
-            _commandRejectedIntegrationTestSubscriptionName = $"{commandRejectedSubscriptionName}-it";
-
+            _commandReceivedSubscriptionName = Environment.GetEnvironmentVariable("COMMAND_RECEIVED_SUBSCRIPTION_NAME") !;
+            _commandAcceptedSubscriptionName = Environment.GetEnvironmentVariable("COMMAND_ACCEPTED_SUBSCRIPTION_NAME") !;
+            _commandRejectedSubscriptionName = Environment.GetEnvironmentVariable("COMMAND_REJECTED_SUBSCRIPTION_NAME") !;
             _commandReceivedTopicName = Environment.GetEnvironmentVariable("COMMAND_RECEIVED_TOPIC_NAME") !;
             _commandAcceptedTopicName = Environment.GetEnvironmentVariable("COMMAND_ACCEPTED_TOPIC_NAME") !;
             _commandRejectedTopicName = Environment.GetEnvironmentVariable("COMMAND_REJECTED_TOPIC_NAME") !;
@@ -112,13 +108,13 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
             // act
             var messageReceiverResult = await RunMessageReceiver(logger, executionContext, req).ConfigureAwait(false);
             var commandReceivedMessage = serviceBusMessageTestHelper
-                .GetMessageFromServiceBus(_commandReceivedConnectionString, _commandReceivedTopicName, _commandReceivedIntegrationTestSubscriptionName);
+                .GetMessageFromServiceBus(_commandReceivedConnectionString, _commandReceivedTopicName, _commandReceivedSubscriptionName);
             _testOutputHelper.WriteLine($"Message to be handled by ChargeCommandEndpoint: {commandReceivedMessage.Body.Length}");
 
             await _chargeCommandEndpoint.RunAsync(commandReceivedMessage.Body, logger.Object).ConfigureAwait(false);
 
             var commandAcceptedMessage = serviceBusMessageTestHelper
-                .GetMessageFromServiceBus(_commandAcceptedConnectionString, _commandAcceptedTopicName, _commandAcceptedIntegrationTestSubscriptionName);
+                .GetMessageFromServiceBus(_commandAcceptedConnectionString, _commandAcceptedTopicName, _commandAcceptedSubscriptionName);
             _testOutputHelper.WriteLine($"Message accepted by ChargeCommandEndpoint: {commandAcceptedMessage.Body.Length}");
 
             var chargeExistsByCorrelationId = await _testDbHelper
@@ -149,13 +145,13 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
             // act
             var messageReceiverResult = await RunMessageReceiver(logger, executionContext, req).ConfigureAwait(false);
             var commandReceivedMessage = serviceBusMessageTestHelper
-                .GetMessageFromServiceBus(_commandReceivedConnectionString, _commandReceivedTopicName, _commandReceivedIntegrationTestSubscriptionName);
+                .GetMessageFromServiceBus(_commandReceivedConnectionString, _commandReceivedTopicName, _commandReceivedSubscriptionName);
             _testOutputHelper.WriteLine($"Message to be handled by ChargeCommandEndpoint: {commandReceivedMessage.Body.Length}");
 
             await _chargeCommandEndpoint.RunAsync(commandReceivedMessage.Body, logger.Object).ConfigureAwait(false);
 
             var commandRejectedMessage = serviceBusMessageTestHelper
-                .GetMessageFromServiceBus(_commandRejectedConnectionString, _commandRejectedTopicName, _commandRejectedIntegrationTestSubscriptionName);
+                .GetMessageFromServiceBus(_commandRejectedConnectionString, _commandRejectedTopicName, _commandRejectedSubscriptionName);
             _testOutputHelper.WriteLine($"Message accepted by ChargeCommandEndpoint: {commandRejectedMessage.Body.Length}");
 
             var chargeExistsByCorrelationId = await _testDbHelper

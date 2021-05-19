@@ -1,6 +1,7 @@
 ﻿{
    "IsEncrypted": false,
    "Values": {
+    "MESSAGE-RECEIVER-HOSTNAME": "<Message receiver hostname>",
     "COMMAND_RECEIVED_SENDER_CONNECTION_STRING": "<Connection string for command received sender>"
     "COMMAND_RECEIVED_LISTENER_CONNECTION_STRING": "<Connection string for command received listener>",
     "COMMAND_ACCEPTED_SENDER_CONNECTION_STRING": "<Connection string for command accepted sender>",
@@ -10,9 +11,9 @@
     "COMMAND_RECEIVED_TOPIC_NAME": "sbt-command-received",
     "COMMAND_ACCEPTED_TOPIC_NAME": "sbt-command-accepted",
     "COMMAND_REJECTED_TOPIC_NAME": "sbt-command-rejected",
-    "COMMAND_RECEIVED_INTEGRATION_TEST_SUBSCRIPTION_NAME": "sbs-command-received-it",
-    "COMMAND_ACCEPTED_INTEGRATION_TEST_SUBSCRIPTION_NAME": "sbs-command-accepted-it",
-    "COMMAND_REJECTED_INTEGRATION_TEST_SUBSCRIPTION_NAME": "sbs-command-rejected-it",
+    "COMMAND_RECEIVED_SUBSCRIPTION_NAME": "sbs-command-received",
+    "COMMAND_ACCEPTED_SUBSCRIPTION_NAME": "sbs-command-accepted",
+    "COMMAND_REJECTED_SUBSCRIPTION_NAME": "sbs-command-rejected",
     "CHARGE_DB_CONNECTION_STRING": "<charge db connection string>",
     "LOCAL_TIMEZONENAME": "Your time zone ID, e.g.Europe/Copenhagen, see https://en.wikipedia.org/wiki/List_of_tz_database_time_zones for others"
     }

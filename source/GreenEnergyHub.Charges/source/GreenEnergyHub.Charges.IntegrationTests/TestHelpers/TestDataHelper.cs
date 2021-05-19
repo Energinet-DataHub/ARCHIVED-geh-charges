@@ -32,6 +32,16 @@ namespace GreenEnergyHub.Charges.IntegrationTests.TestHelpers
             return new MemoryStream(Encoding.ASCII.GetBytes(replaced));
         }
 
+        public static string GetInputJson(string filePath, [NotNull] IClock clock)
+        {
+            var basePath = Assembly.GetExecutingAssembly().Location;
+            var path = Path.Combine(Directory.GetParent(basePath).FullName, filePath);
+            var fileText = File.ReadAllText(path);
+            var replaced = ReplaceMergeFields(clock, fileText);
+
+            return replaced;
+        }
+
         private static string ReplaceMergeFields(IClock clock, string file)
         {
             var currentInstant = clock.GetCurrentInstant();

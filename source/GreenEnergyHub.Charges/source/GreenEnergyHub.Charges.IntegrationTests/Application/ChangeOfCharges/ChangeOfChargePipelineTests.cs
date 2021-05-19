@@ -14,20 +14,14 @@
 
 using System;
 using System.Diagnostics.CodeAnalysis;
+using System.Net;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Text;
 using System.Threading.Tasks;
-using AutoFixture.Xunit2;
-using GreenEnergyHub.Charges.Application.ChangeOfCharges;
-using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
-using GreenEnergyHub.Charges.Infrastructure.Messaging;
 using GreenEnergyHub.Charges.IntegrationTests.TestHelpers;
-using GreenEnergyHub.Charges.MessageReceiver;
 using GreenEnergyHub.Charges.TestCore;
-using Microsoft.AspNetCore.Http.Internal;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Moq;
 using NodaTime;
 using Xunit;
 using Xunit.Categories;
@@ -37,7 +31,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
     [IntegrationTest]
     public class ChangeOfChargePipelineTests : IClassFixture<DbFixture>
     {
-        private readonly ChargeHttpTrigger _chargeHttpTrigger;
+        private readonly string _messageReceiverHostname;
         private readonly string _commandAcceptedSubscriptionName;
         private readonly string _commandRejectedSubscriptionName;
         private readonly string _commandAcceptedTopicName;
@@ -50,15 +44,9 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
         {
             _testDbHelper = new TestDbHelper(dbFixture.ServiceProvider);
 
-            var messageReceiverHost = TestConfigurationHelper.SetupHost(new MessageReceiver.Startup());
-
-            _chargeHttpTrigger = new ChargeHttpTrigger(
-                messageReceiverHost.Services.GetRequiredService<IChangeOfChargesMessageHandler>(),
-                messageReceiverHost.Services.GetRequiredService<ICorrelationContext>(),
-                messageReceiverHost.Services.GetRequiredService<MessageExtractor<ChargeCommand>>());
-
-            _commandAcceptedSubscriptionName = Environment.GetEnvironmentVariable("COMMAND_ACCEPTED_INTEGRATION_TEST_SUBSCRIPTION_NAME") !;
-            _commandRejectedSubscriptionName = Environment.GetEnvironmentVariable("COMMAND_REJECTED_INTEGRATION_TEST_SUBSCRIPTION_NAME") !;
+            _messageReceiverHostname = Environment.GetEnvironmentVariable("MESSAGE-RECEIVER-HOSTNAME") !;
+            _commandAcceptedSubscriptionName = Environment.GetEnvironmentVariable("COMMAND_ACCEPTED_SUBSCRIPTION_NAME") !;
+            _commandRejectedSubscriptionName = Environment.GetEnvironmentVariable("COMMAND_REJECTED_SUBSCRIPTION_NAME") !;
             _commandAcceptedTopicName = Environment.GetEnvironmentVariable("COMMAND_ACCEPTED_TOPIC_NAME") !;
             _commandRejectedTopicName = Environment.GetEnvironmentVariable("COMMAND_REJECTED_TOPIC_NAME") !;
             _commandAcceptedConnectionString = Environment.GetEnvironmentVariable("COMMAND_ACCEPTED_LISTENER_CONNECTION_STRING") !;
@@ -69,16 +57,15 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
         [InlineAutoMoqData("TestFiles\\ValidTariffAddition.json")]
         public async Task Test_ChargeCommandCompleteFlow_is_Accepted(
             string testFilePath,
-            [NotNull] [Frozen] Mock<ILogger> logger,
             [NotNull] ExecutionContext executionContext,
             [NotNull] ServiceBusMessageTestHelper serviceBusMessageTestHelper)
         {
             // arrange
             IClock clock = SystemClock.Instance;
-            var req = HttpRequestHelper.CreateHttpRequest(testFilePath, clock);
+            var chargeJson = TestDataHelper.GetInputJson(testFilePath, clock);
 
             // act
-            var messageReceiverResult = await RunMessageReceiver(logger, executionContext, req).ConfigureAwait(false);
+            var messageReceiverHttpResponseMessage = await RunMessageReceiver(chargeJson).ConfigureAwait(false);
 
             var commandAcceptedMessage = serviceBusMessageTestHelper
                 .GetMessageFromServiceBus(_commandAcceptedConnectionString, _commandAcceptedTopicName, _commandAcceptedSubscriptionName);
@@ -88,7 +75,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
                 .ConfigureAwait(false);
 
             // assert
-            Assert.Equal(200, messageReceiverResult!.StatusCode!.Value);
+            Assert.Equal(HttpStatusCode.OK, messageReceiverHttpResponseMessage.StatusCode);
             Assert.Equal(executionContext.InvocationId.ToString(), commandAcceptedMessage.CorrelationId);
             Assert.True(commandAcceptedMessage.Body.Length > 0);
             Assert.True(chargeExistsByCorrelationId);
@@ -98,16 +85,15 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
         [InlineAutoMoqData("TestFiles\\InValidTariffAddition.json")]
         public async Task Test_ChargeCommandCompleteFlow_is_Rejected(
             string testFilePath,
-            [NotNull] [Frozen] Mock<ILogger> logger,
             [NotNull] ExecutionContext executionContext,
             [NotNull] ServiceBusMessageTestHelper serviceBusMessageTestHelper)
         {
             // arrange
             IClock clock = SystemClock.Instance;
-            var req = HttpRequestHelper.CreateHttpRequest(testFilePath, clock);
+            var chargeJson = TestDataHelper.GetInputJson(testFilePath, clock);
 
             // act
-            var messageReceiverResult = await RunMessageReceiver(logger, executionContext, req).ConfigureAwait(false);
+            var messageReceiverHttpResponseMessage = await RunMessageReceiver(chargeJson).ConfigureAwait(false);
 
             var commandRejectedMessage = serviceBusMessageTestHelper
                 .GetMessageFromServiceBus(_commandRejectedConnectionString, _commandRejectedTopicName, _commandRejectedSubscriptionName);
@@ -117,16 +103,21 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
                 .ConfigureAwait(false);
 
             // assert
-            Assert.Equal(200, messageReceiverResult!.StatusCode!.Value);
+            Assert.Equal(HttpStatusCode.OK, messageReceiverHttpResponseMessage.StatusCode);
             Assert.Equal(executionContext.InvocationId.ToString(), commandRejectedMessage.CorrelationId);
             Assert.True(commandRejectedMessage.Body.Length > 0);
             Assert.False(chargeExistsByCorrelationId);
         }
 
-        private async Task<OkObjectResult> RunMessageReceiver(Mock<ILogger> logger, ExecutionContext executionContext, DefaultHttpRequest req)
+        private async Task<HttpResponseMessage> RunMessageReceiver([NotNull] string json)
         {
-            return (OkObjectResult)await _chargeHttpTrigger
-                .RunAsync(req, executionContext, logger.Object).ConfigureAwait(false);
+            using var client = new HttpClient();
+            client.DefaultRequestHeaders.Accept.Clear();
+            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+#pragma warning disable CA2000
+            return await client.PostAsync(new Uri($"https://{_messageReceiverHostname}/api/chargehttptrigger/"), new StringContent(json, Encoding.UTF8, "application/json")).ConfigureAwait(false);
+#pragma warning restore CA2000
         }
     }
 }

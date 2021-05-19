@@ -83,18 +83,10 @@ resource "azurerm_servicebus_subscription" "sbs_command_received" {
   max_delivery_count  = 1
 }
 
-resource "azurerm_servicebus_subscription" "sbs_command_received_it" {
-  name                = "sbs-command-received-it"
-  resource_group_name = data.azurerm_resource_group.main.name
-  namespace_name      = module.sbn_charges.name
-  topic_name          = module.sbt_command_received.name
-  max_delivery_count  = 1
-}
-
-module "kv_sbs_command_received_it" {
+module "kv_sbs_command_received" {
   source        = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//key-vault-secret?ref=1.2.0"
-  name          = "COMMAND-RECEIVED-INTEGRATION-TEST-SUBSCRIPTION-NAME"
-  value         = "sbs_command_received_it"
+  name          = "COMMAND-RECEIVED-SUBSCRIPTION-NAME"
+  value         = "sbs_command_received"
   key_vault_id  = module.kv_charges.id
   tags          = data.azurerm_resource_group.main.tags
   dependencies  = [module.kv_charges.dependent_on]
@@ -163,18 +155,10 @@ resource "azurerm_servicebus_subscription" "sbs_command_accepted" {
   max_delivery_count  = 1
 }
 
-resource "azurerm_servicebus_subscription" "sbs_command_accepted_it" {
-  name                = "sbs-command-accepted-it"
-  resource_group_name = data.azurerm_resource_group.main.name
-  namespace_name      = module.sbn_charges.name
-  topic_name          = module.sbt_command_accepted.name
-  max_delivery_count  = 1
-}
-
-module "kv_sbs_command_accepted_it" {
+module "kv_sbs_command_accepted" {
   source        = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//key-vault-secret?ref=1.2.0"
-  name          = "COMMAND-ACCEPTED-INTEGRATION-TEST-SUBSCRIPTION-NAME"
-  value         = "sbs_command_accepted_it"
+  name          = "COMMAND-ACCEPTED-SUBSCRIPTION-NAME"
+  value         = "sbs_command_accepted"
   key_vault_id  = module.kv_charges.id
   tags          = data.azurerm_resource_group.main.tags
   dependencies  = [module.kv_charges.dependent_on]
@@ -243,18 +227,10 @@ resource "azurerm_servicebus_subscription" "sbs_command_rejected" {
   max_delivery_count  = 1
 }
 
-resource "azurerm_servicebus_subscription" "sbs_command_rejected_it" {
-  name                = "sbs-command-rejected-it"
-  resource_group_name = data.azurerm_resource_group.main.name
-  namespace_name      = module.sbn_charges.name
-  topic_name          = module.sbt_command_rejected.name
-  max_delivery_count  = 1
-}
-
-module "kv_sbs_command_rejected_it" {
+module "kv_sbs_command_rejected" {
   source        = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//key-vault-secret?ref=1.2.0"
-  name          = "COMMAND-REJECTED-INTEGRATION-TEST-SUBSCRIPTION-NAME"
-  value         = "sbs_command_rejected_it"
+  name          = "COMMAND-REJECTED-SUBSCRIPTION-NAME"
+  value         = "sbs_command_rejected"
   key_vault_id  = module.kv_charges.id
   tags          = data.azurerm_resource_group.main.tags
   dependencies  = [module.kv_charges.dependent_on]
