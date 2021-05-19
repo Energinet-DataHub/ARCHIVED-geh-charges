@@ -33,6 +33,7 @@ env:
   AZURE_FUNCTIONAPP_NAME: 'charge-rejection-sender'
   PROJECT_NAME: charges
   REPOSITORY_NAME: Energinet-DataHub/geh-charges
+  KEY_VAULT_NAME: kvchargesendku
 
 jobs:
   build_function:

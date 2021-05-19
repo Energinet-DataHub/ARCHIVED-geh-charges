@@ -1,7 +1,7 @@
 ﻿{
    "IsEncrypted": false,
    "Values": {
-    "MESSAGE-RECEIVER-HOSTNAME": "<Message receiver hostname>",
+    "MESSAGE_RECEIVER_HOSTNAME": "<Message receiver hostname>",
     "COMMAND_RECEIVED_SENDER_CONNECTION_STRING": "<Connection string for command received sender>"
     "COMMAND_RECEIVED_LISTENER_CONNECTION_STRING": "<Connection string for command received listener>",
     "COMMAND_ACCEPTED_SENDER_CONNECTION_STRING": "<Connection string for command accepted sender>",
