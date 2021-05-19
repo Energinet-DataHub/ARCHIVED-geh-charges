@@ -33,6 +33,7 @@ env:
   AZURE_FUNCTIONAPP_NAME: 'message-receiver'
   PROJECT_NAME: charges
   REPOSITORY_NAME: Energinet-DataHub/geh-charges
+  KEY_VAULT_NAME: kvchargesendku
 
 jobs:
   build_messagereceiver:
