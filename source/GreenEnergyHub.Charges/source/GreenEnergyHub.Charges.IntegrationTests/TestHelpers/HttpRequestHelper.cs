@@ -12,13 +12,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using AutoFixture.Xunit2;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Internal;
+using NodaTime;
 
-namespace GreenEnergyHub.Charges.Tests
+namespace GreenEnergyHub.Charges.IntegrationTests.TestHelpers
 {
-    public class InlineAutoMoqDataAttribute : InlineAutoDataAttribute
+    public static class HttpRequestHelper
     {
-        public InlineAutoMoqDataAttribute(params object[] objects)
-            : base(new AutoMoqDataAttribute(), objects) { }
+        public static DefaultHttpRequest CreateHttpRequest(string testFile, IClock clock)
+        {
+            var stream = TestDataHelper.GetInputStream(testFile, clock);
+            var defaultHttpContext = new DefaultHttpContext();
+            defaultHttpContext.Request.Body = stream;
+            var req = new DefaultHttpRequest(defaultHttpContext);
+            return req;
+        }
     }
 }

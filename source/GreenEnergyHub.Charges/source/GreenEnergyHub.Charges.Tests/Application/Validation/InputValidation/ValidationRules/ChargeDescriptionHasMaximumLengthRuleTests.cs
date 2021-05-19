@@ -13,28 +13,39 @@
 // limitations under the License.
 
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
+using FluentAssertions;
 using GreenEnergyHub.Charges.Application.Validation.InputValidation.ValidationRules;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
 using GreenEnergyHub.Charges.TestCore;
 using Xunit;
+using Xunit.Categories;
 
 namespace GreenEnergyHub.Charges.Tests.Application.Validation.InputValidation.ValidationRules
 {
-    public class ChargeIdRequiredValidationRuleTest
+    [UnitTest]
+    public class ChargeDescriptionHasMaximumLengthRuleTests
     {
+        private const int ChargeDescriptionMaximumLength = 2048;
+
         [Theory]
-        [InlineAutoMoqData("ChargeId", true)]
-        [InlineAutoMoqData("", false)]
-        [InlineAutoMoqData(" ", false)]
-        [InlineAutoMoqData(null!, false)]
-        public void Test(
-            string chargeId,
+        [InlineAutoMoqData(ChargeDescriptionMaximumLength - 1, true)]
+        [InlineAutoMoqData(ChargeDescriptionMaximumLength, true)]
+        [InlineAutoMoqData(ChargeDescriptionMaximumLength + 1, false)]
+        public void ChargeDescriptionHasMaximumLengthRule_WhenDescriptionTooLong_IsFalse(
+            int chargeDescriptionLength,
             bool expected,
             [NotNull] ChargeCommand command)
         {
-            command.ChargeOperation.ChargeId = chargeId;
-            var sut = new ChargeIdRequiredValidationRule(command);
-            Assert.Equal(expected, sut.IsValid);
+            command.ChargeOperation.ChargeDescription = GenerateStringWithLength(chargeDescriptionLength);
+            var sut = new ChargeDescriptionHasMaximumLengthRule(command);
+            sut.IsValid.Should().Be(expected);
+        }
+
+        private static string GenerateStringWithLength(int stringLength)
+        {
+            var repeatedChars = Enumerable.Repeat(0, stringLength).Select(_ => "a");
+            return string.Join(string.Empty, repeatedChars);
         }
     }
 }
