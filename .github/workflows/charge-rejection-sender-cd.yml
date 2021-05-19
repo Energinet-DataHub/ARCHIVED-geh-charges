@@ -121,12 +121,8 @@ jobs:
           package: ${{ github.workspace }}/drop
           publish-profile: ${{ steps.get-publish-profile.outputs.publish-profile }}
 
-  integration_test:
-    name: Execute integration tests
-    runs-on: ubuntu-latest
-    needs: deploy_function
-    steps:
       - name: Integration test
+        if: ${{ matrix.environment.short == 'u' }}
         uses: ./.github/actions/integration-test
         with:
           key_vault_name: ${{ env.KEY_VAULT_NAME }}
