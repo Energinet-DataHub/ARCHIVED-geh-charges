@@ -16,6 +16,7 @@ using System.Diagnostics.CodeAnalysis;
 using GreenEnergyHub.Charges.Application.Validation.InputValidation.ValidationRules;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
 using GreenEnergyHub.Charges.Domain.Common;
+using GreenEnergyHub.Charges.TestCore;
 using Xunit;
 using Xunit.Categories;
 

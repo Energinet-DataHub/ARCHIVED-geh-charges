@@ -21,17 +21,19 @@ on:
       - source/GreenEnergyHub.Charges/**
       - .github/workflows/charge-command-receiver-cd.yml
       - .github/actions/dotnet-build-and-test/**
-      - .github/actions/azure-core-tools-install/**
+      - .github/actions/integration-test/**
   workflow_dispatch: {}
 
 env:
   CSPROJ_FILE_PATH: 'source/GreenEnergyHub.Charges/source/GreenEnergyHub.Charges.ChargeCommandReceiver/GreenEnergyHub.Charges.ChargeCommandReceiver.csproj'
   SOLUTION_FILE_PATH: 'source/GreenEnergyHub.Charges/GreenEnergyHub.Charges.sln'
+  INTEGRATION_TEST_DLL: GreenEnergyHub.Charges.ChargeCommandReceiver.dll
   DOTNET_VERSION: '3.1'
   ORGANISATION_NAME: 'endk'
   AZURE_FUNCTIONAPP_NAME: 'charge-command-receiver'
   PROJECT_NAME: charges
   REPOSITORY_NAME: Energinet-DataHub/geh-charges
+  KEY_VAULT_NAME: kvchargesendku
 
 jobs:
   build_charge_command_receiver:
@@ -62,7 +64,7 @@ jobs:
           name: drop
           path: '${{ github.workspace }}/output'
     
-  deploy_charge_command_receiver:
+  deploy_function:
     name: Deploy function to ${{ matrix.environment.name }} - ${{ matrix.environment.long }}
     needs: build_charge_command_receiver
     runs-on: ubuntu-latest
@@ -119,3 +121,14 @@ jobs:
           app-name: "azfun-${{ env.AZURE_FUNCTIONAPP_NAME }}"
           package: ${{ github.workspace }}/drop
           publish-profile: ${{ steps.get-publish-profile.outputs.publish-profile }}
+
+  integration_test:
+    name: Execute integration tests
+    runs-on: ubuntu-latest
+    needs: deploy_function
+    steps:
+      - name: Integration test
+        uses: ./.github/actions/integration-test
+        with:
+          key_vault_name: ${{ env.KEY_VAULT_NAME }}
+          test_dll: ${{ github.workspace }}/output/${{ env.INTEGRATION_TEST_DLL }}
