@@ -101,10 +101,6 @@ runs:
         charges_CHARGE_DB_CONNECTION_STRING=$(echo $keyvault_secret_details | python -c "import sys, json; print(json.load(sys.stdin)['value'])")
         echo ::add-mask::$charges_CHARGE_DB_CONNECTION_STRING
         echo "CHARGE_DB_CONNECTION_STRING=$charges_CHARGE_DB_CONNECTION_STRING" >> $GITHUB_ENV
-
-        keyvault_secret_details=$(az keyvault secret show --name "LOCAL-TIMEZONENAME" --vault-name ${{ inputs.key_vault_name }})
-        charges_LOCAL_TIMEZONENAME=$(echo $keyvault_secret_details | python -c "import sys, json; print(json.load(sys.stdin)['value'])")
-        echo "LOCAL_TIMEZONENAME=$charges_LOCAL_TIMEZONENAME" >> $GITHUB_ENV
       
     - name: Run integration tests
       shell: bash
