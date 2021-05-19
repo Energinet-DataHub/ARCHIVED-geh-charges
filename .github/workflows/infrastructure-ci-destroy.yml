@@ -23,7 +23,7 @@ on:
     types: [closed]
 env:
   ORGANISATION_NAME: endk
-  PROJECT_NAME: 'mpoint${{ github.event.number }}'
+  PROJECT_NAME: 'cha${{ github.event.number }}'
   RESOURCE_GROUP_NAME: rg-DataHub-Testing-U
   ENVIRONMENT_SHORT: u
 
