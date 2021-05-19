@@ -32,7 +32,6 @@ namespace GreenEnergyHub.Charges.Application.Validation.InputValidation
             IValidationRuleSet ruleSet;
             switch (chargeCommand.ChargeOperation.OperationType)
             {
-                // den fejler når operationtype er 0 som i testen, med hvad skal der ske her?
                 case OperationType.Unknown:
                     throw new NotSupportedException(chargeCommand.ChargeOperation.OperationType.ToString());
                 case OperationType.Addition:
