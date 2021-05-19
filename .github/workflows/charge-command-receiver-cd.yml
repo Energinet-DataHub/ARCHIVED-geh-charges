@@ -122,6 +122,11 @@ jobs:
           package: ${{ github.workspace }}/drop
           publish-profile: ${{ steps.get-publish-profile.outputs.publish-profile }}
 
+      # Get action required for integration test from repo
+      - name: Checkout repository
+        uses: actions/checkout@master
+        path: .github/actions
+
       - name: Integration test
         if: ${{ matrix.environment.short == 'u' }}
         uses: ./.github/actions/integration-test
