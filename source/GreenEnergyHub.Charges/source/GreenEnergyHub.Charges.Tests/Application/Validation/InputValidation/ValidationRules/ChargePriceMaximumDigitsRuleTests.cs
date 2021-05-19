@@ -29,7 +29,6 @@ namespace GreenEnergyHub.Charges.Tests.Application.Validation.InputValidation.Va
         [InlineAutoMoqData(0.000001, true)]
         [InlineAutoMoqData(99999999.000001, true)]
         [InlineAutoMoqData(99999999.0000001, false)]
-        [InlineAutoMoqData(99999999.000001, true)]
         [InlineAutoMoqData(99999999, true)]
         [InlineAutoMoqData(100000000.000001, false)]
 
