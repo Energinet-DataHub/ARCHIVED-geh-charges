@@ -20,7 +20,7 @@ namespace GreenEnergyHub.Charges.Application.Validation.InputValidation.Validati
 {
     public class MaximumPriceRule : IValidationRule
     {
-        private const int MaximumDigitsInPrice = 6;
+        private const int PriceUpperBound = 1000000;
         private readonly ChargeCommand _chargeCommand;
 
         public MaximumPriceRule(ChargeCommand chargeCommand)
@@ -28,16 +28,7 @@ namespace GreenEnergyHub.Charges.Application.Validation.InputValidation.Validati
             _chargeCommand = chargeCommand;
         }
 
-        public bool IsValid =>
-            _chargeCommand.ChargeOperation.Points.All(point => GetNumberOfDigits(point.Price) <= MaximumDigitsInPrice);
-
-        // https://stackoverflow.com/a/21546928
-        private static int GetNumberOfDigits(decimal d)
-        {
-            var abs = Math.Abs(d);
-
-            return abs < 1 ? 0 : (int)(Math.Log10(decimal.ToDouble(abs)) + 1);
-        }
+        public bool IsValid => _chargeCommand.ChargeOperation.Points.All(point => point.Price < PriceUpperBound);
 
         public ValidationRuleIdentifier ValidationRuleIdentifier => ValidationRuleIdentifier.MaximumPriceRule;
     }
