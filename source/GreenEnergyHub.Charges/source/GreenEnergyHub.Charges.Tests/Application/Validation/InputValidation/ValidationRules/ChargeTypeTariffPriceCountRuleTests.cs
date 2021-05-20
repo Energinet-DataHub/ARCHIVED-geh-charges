@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using FluentAssertions;
@@ -33,7 +34,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Validation.InputValidation.Va
         [InlineAutoMoqData(24, true)]
         [InlineAutoMoqData(25, false)]
         [InlineAutoMoqData(96, false)]
-        public void ChargePriceCountRule_WhenCalledWithPT1H_IsValidWith24PricePoints(
+        public void IsValid_WhenPT1HAnd24PricePoints_IsTrue(
             int priceCount,
             bool expected,
             [NotNull]ChargeCommand chargeCommand,
@@ -57,7 +58,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Validation.InputValidation.Va
         [InlineAutoMoqData(2, false)]
         [InlineAutoMoqData(24, false)]
         [InlineAutoMoqData(96, false)]
-        public void ChargePriceCountRule_WhenCalledWithP1D_IsValidWith1PricePoint(
+        public void IsValid_WhenPT1HAnd1PricePoint_IsTrue(
             int priceCount,
             bool expected,
             [NotNull]ChargeCommand chargeCommand,
@@ -83,7 +84,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Validation.InputValidation.Va
         [InlineAutoMoqData(95, false)]
         [InlineAutoMoqData(96, true)]
         [InlineAutoMoqData(97, false)]
-        public void ChargePriceCountRule_WhenCalledWithPt15M_IsValidWith96PricePoint(
+        public void IsValid_WhenPT1HAnd96PricePoints_IsTrue(
             int priceCount,
             bool expected,
             [NotNull]ChargeCommand chargeCommand,
@@ -105,13 +106,32 @@ namespace GreenEnergyHub.Charges.Tests.Application.Validation.InputValidation.Va
         [InlineAutoMoqData(ChargeType.Fee)]
         [InlineAutoMoqData(ChargeType.Subscription)]
         [InlineAutoMoqData(ChargeType.Unknown)]
-        public void ChargePriceCountRule_WhenNotTariff_IsValid(
+        public void IsValid_WhenNotTariff_IsValid(
             ChargeType chargeType,
             [NotNull] ChargeCommand chargeCommand)
         {
             chargeCommand.ChargeOperation.Type = chargeType;
             var sut = new ChargeTypeTariffPriceCountRule(chargeCommand);
             sut.IsValid.Should().BeTrue();
+        }
+
+        [Theory]
+        [InlineAutoMoqData(Resolution.Unknown)]
+        [InlineAutoMoqData(Resolution.P1M)]
+        public void IsValid_WhenTariffAndUnknownResolutionType_Throws(
+            Resolution resolution,
+            [NotNull] ChargeCommand chargeCommand)
+        {
+            // Arrange
+            chargeCommand.ChargeOperation.Type = ChargeType.Tariff;
+            chargeCommand.ChargeOperation.Resolution = resolution;
+            var chargeTypeTariffPriceCountRule = new ChargeTypeTariffPriceCountRule(chargeCommand);
+
+            // Act
+            Action act = () => chargeTypeTariffPriceCountRule.IsValid.Should().BeTrue();
+
+            // Assert
+            act.Should().Throw<ArgumentException>();
         }
 
         private static List<Point> GeneratePricePointList(Point item, int length)

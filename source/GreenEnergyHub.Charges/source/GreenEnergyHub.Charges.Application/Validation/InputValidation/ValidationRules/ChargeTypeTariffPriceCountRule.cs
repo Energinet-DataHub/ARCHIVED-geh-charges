@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
 
 namespace GreenEnergyHub.Charges.Application.Validation.InputValidation.ValidationRules
@@ -28,25 +29,26 @@ namespace GreenEnergyHub.Charges.Application.Validation.InputValidation.Validati
             _chargeCommand = chargeCommand;
         }
 
-        public bool IsValid
-        {
-            get
-            {
-                if (_chargeCommand.ChargeOperation.Type == ChargeType.Tariff)
-                {
-                    switch (_chargeCommand.ChargeOperation.Resolution)
-                    {
-                        case Resolution.PT15M:
-                            return _chargeCommand.ChargeOperation.Points.Count == PricePointsRequiredInPt15M;
-                        case Resolution.PT1H:
-                            return _chargeCommand.ChargeOperation.Points.Count == PricePointsRequiredInPt1H;
-                        case Resolution.P1D:
-                            return _chargeCommand.ChargeOperation.Points.Count == PricePointsRequiredInP1D;
-                    }
-                }
+        public bool IsValid => Validate();
 
-                return true;
+        private bool Validate()
+        {
+            if (_chargeCommand.ChargeOperation.Type == ChargeType.Tariff)
+            {
+                switch (_chargeCommand.ChargeOperation.Resolution)
+                {
+                    case Resolution.PT15M:
+                        return _chargeCommand.ChargeOperation.Points.Count == PricePointsRequiredInPt15M;
+                    case Resolution.PT1H:
+                        return _chargeCommand.ChargeOperation.Points.Count == PricePointsRequiredInPt1H;
+                    case Resolution.P1D:
+                        return _chargeCommand.ChargeOperation.Points.Count == PricePointsRequiredInP1D;
+                    default:
+                        throw new ArgumentException();
+                }
             }
+
+            return true;
         }
 
         public ValidationRuleIdentifier ValidationRuleIdentifier => ValidationRuleIdentifier.ChargeTypeTariffPriceCountRule;
