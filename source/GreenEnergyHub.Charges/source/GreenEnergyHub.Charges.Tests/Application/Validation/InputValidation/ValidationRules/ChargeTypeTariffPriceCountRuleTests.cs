@@ -33,7 +33,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Validation.InputValidation.Va
         [InlineAutoMoqData(24, true)]
         [InlineAutoMoqData(25, false)]
         [InlineAutoMoqData(96, false)]
-        public void ChargePriceCountRule_WhenCalledWithPT1H_Expects24PricePoints(
+        public void ChargePriceCountRule_WhenCalledWithPT1H_IsValidWith24PricePoints(
             int priceCount,
             bool expected,
             [NotNull]ChargeCommand chargeCommand,
@@ -57,7 +57,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Validation.InputValidation.Va
         [InlineAutoMoqData(2, false)]
         [InlineAutoMoqData(24, false)]
         [InlineAutoMoqData(96, false)]
-        public void ChargePriceCountRule_WhenCalledWithP1D_Expects1PricePoint(
+        public void ChargePriceCountRule_WhenCalledWithP1D_IsValidWith1PricePoint(
             int priceCount,
             bool expected,
             [NotNull]ChargeCommand chargeCommand,
@@ -83,7 +83,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Validation.InputValidation.Va
         [InlineAutoMoqData(95, false)]
         [InlineAutoMoqData(96, true)]
         [InlineAutoMoqData(97, false)]
-        public void ChargePriceCountRule_WhenCalledWithPt15M_Expects96PricePoint(
+        public void ChargePriceCountRule_WhenCalledWithPt15M_IsValidWith96PricePoint(
             int priceCount,
             bool expected,
             [NotNull]ChargeCommand chargeCommand,
@@ -105,7 +105,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Validation.InputValidation.Va
         [InlineAutoMoqData(ChargeType.Fee)]
         [InlineAutoMoqData(ChargeType.Subscription)]
         [InlineAutoMoqData(ChargeType.Unknown)]
-        public void ChargePriceCountRule_WhenNotTariff_ShouldParseValidation(
+        public void ChargePriceCountRule_WhenNotTariff_IsValid(
             ChargeType chargeType,
             [NotNull] ChargeCommand chargeCommand)
         {
