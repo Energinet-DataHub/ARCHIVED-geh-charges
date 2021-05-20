@@ -24,7 +24,7 @@ using Xunit.Categories;
 namespace GreenEnergyHub.Charges.Tests.Application.Validation.InputValidation.ValidationRules
 {
     [UnitTest]
-    public class ChargePriceMaximumDigitsRuleTests
+    public class ChargePriceMaximumDigitsAndDecimalsRuleTests
     {
         [Theory]
         [InlineAutoMoqData(0.000001, true)]
