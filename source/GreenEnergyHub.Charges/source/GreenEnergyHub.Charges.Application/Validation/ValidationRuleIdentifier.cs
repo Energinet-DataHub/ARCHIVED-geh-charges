@@ -39,5 +39,6 @@ namespace GreenEnergyHub.Charges.Application.Validation
         ChargeDescriptionHasMaximumLengthRule, // VR447
         ChargeTypeTariffPriceCountRule, // VR507-1
         MaximumPriceRule, // VR509
+        ChargePriceMaximumAndDecimalsDigitsRule, // VR457
     }
 }
