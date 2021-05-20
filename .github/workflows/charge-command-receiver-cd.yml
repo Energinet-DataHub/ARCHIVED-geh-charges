@@ -27,7 +27,7 @@ on:
 env:
   CSPROJ_FILE_PATH: 'source/GreenEnergyHub.Charges/source/GreenEnergyHub.Charges.ChargeCommandReceiver/GreenEnergyHub.Charges.ChargeCommandReceiver.csproj'
   SOLUTION_FILE_PATH: 'source/GreenEnergyHub.Charges/GreenEnergyHub.Charges.sln'
-  INTEGRATION_TEST_DLL: GreenEnergyHub.Charges.ChargeCommandReceiver.dll
+  INTEGRATION_TEST_DLL: GreenEnergyHub.Charges.IntegrationTests.dll
   DOTNET_VERSION: '3.1'
   ORGANISATION_NAME: 'endk'
   AZURE_FUNCTIONAPP_NAME: 'charge-command-receiver'
@@ -122,13 +122,33 @@ jobs:
           package: ${{ github.workspace }}/drop
           publish-profile: ${{ steps.get-publish-profile.outputs.publish-profile }}
 
+      #########################################################################################################
+      # Integration test
+      #
+      # Can't be moved to separate job because it would require to await to deployment to all environments.
+      # Moving it to a separate pipeline would result in yet another race condition between pipelines.
+      #########################################################################################################
+
       # Get action required for integration test from repo
       - name: Checkout repository
         uses: actions/checkout@master
+
+      # Get builded integration test dll
+      - name: Download artifact 
+        uses: actions/download-artifact@v2
+        with:
+          name: drop
+          path: drop
+
+      - name: DEBUG
+        run: |
+          ls -l
+          echo Drop folder:
+          ls -l drop
 
       - name: Integration test
         if: ${{ matrix.environment.short == 'u' }}
         uses: ./.github/actions/integration-test
         with:
           key_vault_name: ${{ env.KEY_VAULT_NAME }}
-          test_dll: ${{ github.workspace }}/output/${{ env.INTEGRATION_TEST_DLL }}
+          test_dll: drop/${{ env.INTEGRATION_TEST_DLL }}
