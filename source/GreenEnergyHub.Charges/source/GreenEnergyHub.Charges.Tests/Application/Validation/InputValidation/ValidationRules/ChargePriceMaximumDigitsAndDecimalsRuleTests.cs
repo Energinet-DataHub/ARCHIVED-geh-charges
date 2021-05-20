@@ -32,7 +32,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Validation.InputValidation.Va
         [InlineAutoMoqData(99999999.0000001, false)]
         [InlineAutoMoqData(99999999, true)]
         [InlineAutoMoqData(100000000.000001, false)]
-        public void ChargePriceMaximumDigitsAndDecimalsRule_WhenCalledWithValidPrice_ShouldReturnValid(
+        public void IsValid_WhenLessThan8DigitsAnd6Decimals_IsValid(
             decimal price,
             bool expected,
             [NotNull] ChargeCommand command,
