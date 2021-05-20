@@ -114,12 +114,12 @@ namespace GreenEnergyHub.Charges.Tests.Application.Validation.InputValidation.Va
             sut.IsValid.Should().BeTrue();
         }
 
-        private static List<Point> GeneratePricePointList(Point point, int itemsInList)
+        private static List<Point> GeneratePricePointList(Point item, int length)
         {
             var pointList = new List<Point>();
-            for (var i = 0; i < itemsInList; i++)
+            for (var i = 0; i < length; i++)
             {
-                pointList.Add(point);
+                pointList.Add(item);
             }
 
             return pointList;
