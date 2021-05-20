@@ -19,7 +19,7 @@ using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.Extensions.Logging;
 
-namespace GreenEnergyHub.Charges.ChargeNegativeAcknowledgementSender
+namespace GreenEnergyHub.Charges.MessageReceiver
 {
     public static class HealthStatus
     {
@@ -34,7 +34,7 @@ namespace GreenEnergyHub.Charges.ChargeNegativeAcknowledgementSender
             log.LogInformation("Health Status API invoked");
             log.LogDebug("Workaround for unused method argument", req);
 
-            /* Consider checking access to Service Bus topics for charge command rejected and for post office */
+            /* Consider checking access to used Service Bus topics and other health checks */
 
             var status = new
             {
