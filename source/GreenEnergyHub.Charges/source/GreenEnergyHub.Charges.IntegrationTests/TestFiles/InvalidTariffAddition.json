@@ -1,0 +1,40 @@
+﻿{
+  "Document": {
+    "Id": "MD{{$isoTimestamp}}",
+    "CreatedDateTime": "{{$isoTimestamp}}",
+    "IndustryClassification": 23,
+    "Type": 10,
+    "Sender": {
+      "Id": 37,
+      "Name": "Grid Operator 3",
+      "BusinessProcessRole": 0
+    },
+    "Recipient": {
+      "Id": 5790001330552,
+      "Name": "Hub",
+      "BusinessProcessRole": 0
+    }
+  },
+  "ChargeOperation": {
+    "Id": "{{$isoTimestamp}}",
+    "EndDateTime": null,
+    "OperationType": 2,
+    "BusinessReasonCode": 18,
+    "ChargeId": "400kVolt",
+    "ChargeName": "Electric charge",
+    "Type": 2,
+    "ChargeOwner": "8100000000030",
+    "Resolution": "P1D",
+    "TaxIndicator": true,
+    "VatClassification": 1,
+    "ChargeDescription": "The charge description",
+    "StartDateTime": "2020-09-26T22:00:00Z",
+    "Points": [
+      {
+        "Position": 1,
+        "Price": 100.001,
+        "Time": "2020-09-26T22:00:00Z"
+      }
+    ]
+  }
+}
