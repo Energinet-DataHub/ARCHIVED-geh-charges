@@ -26,6 +26,7 @@ on:
 
 env:
   CSPROJ_FILE_PATH: 'source/GreenEnergyHub.Charges/source/GreenEnergyHub.Charges.ChargeCommandReceiver/GreenEnergyHub.Charges.ChargeCommandReceiver.csproj'
+  INTEGRATION_TEST_CSPROJ_FILE_PATH: 'source/GreenEnergyHub.Charges/source/GreenEnergyHub.Charges.IntegrationTests/GreenEnergyHub.Charges.IntegrationTests.csproj'
   SOLUTION_FILE_PATH: 'source/GreenEnergyHub.Charges/GreenEnergyHub.Charges.sln'
   INTEGRATION_TEST_DLL: GreenEnergyHub.Charges.IntegrationTests.dll
   DOTNET_VERSION: '3.1'
@@ -132,6 +133,21 @@ jobs:
       # Get action required for integration test from repo
       - name: Checkout repository
         uses: actions/checkout@master
+
+      # Build integration test project
+      - name: Build and test project
+        uses: ./.github/actions/dotnet-build-and-test
+        with:
+          CSPROJ_FILE_PATH: ${{ env.INTEGRATION_TEST_CSPROJ_FILE_PATH }}
+          SOLUTION_FILE_PATH: ${{ env.SOLUTION_FILE_PATH }}
+          OUTPUT_PATH: '${{ github.workspace }}/output'
+
+      # Publish integration test artifact
+      - name: Publish artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: drop
+          path: '${{ github.workspace }}/output'
 
       # Get builded integration test dll
       - name: Download artifact 
