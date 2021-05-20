@@ -25,7 +25,7 @@ using ChargeType = GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction.Cha
 namespace GreenEnergyHub.Charges.Tests.Application.Validation.InputValidation.ValidationRules
 {
     [UnitTest]
-    public class ChargeTypeTariffPriceCountRuleTests
+    public class ChargeFeeSubscriptionPriceCountRuleTests
     {
         [Theory]
         [InlineAutoMoqData(ChargeType.Fee, 0, false)]
