@@ -75,6 +75,7 @@ namespace GreenEnergyHub.Charges.Application.Validation.InputValidation
                 new ResolutionSubscriptionValidationRule(chargeCommand),
                 new ChargeNameHasMaximumLengthRule(chargeCommand),
                 new ChargeDescriptionHasMaximumLengthRule(chargeCommand),
+                new ChargeTypeTariffPriceCountRule(chargeCommand),
                 new MaximumPriceRule(chargeCommand),
             };
 
@@ -87,6 +88,7 @@ namespace GreenEnergyHub.Charges.Application.Validation.InputValidation
             {
                 new ChargeNameHasMaximumLengthRule(chargeCommand),
                 new ChargeDescriptionHasMaximumLengthRule(chargeCommand),
+                new ChargeTypeTariffPriceCountRule(chargeCommand),
                 new MaximumPriceRule(chargeCommand),
             };
 
