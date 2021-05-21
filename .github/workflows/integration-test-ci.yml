@@ -61,7 +61,7 @@ jobs:
       - name: Build project
         shell: bash
         run: |
-          dotnet build ${{ env.CSPROJ_FILE_PATH }} --configuration Release --output ${{ ${{ github.workspace }}/output-integration-test }}
+          dotnet build ${{ env.CSPROJ_FILE_PATH }} --configuration Release --output ${{ github.workspace }}/output-integration-test
 
       - name: Publish artifact
         uses: actions/upload-artifact@v2
