@@ -22,14 +22,15 @@ using Xunit.Categories;
 namespace GreenEnergyHub.Charges.Tests.Application.Validation.InputValidation.ValidationRules
 {
     [UnitTest]
-    public class ChargeTypeIsKnownValidationRuleTest
+    public class ChargeTypeIsKnownValidationRuleTests
     {
         [Theory]
         [InlineAutoMoqData(ChargeType.Unknown, false)]
         [InlineAutoMoqData(ChargeType.Fee, true)]
+        [InlineAutoMoqData(ChargeType.Tariff, true)]
         [InlineAutoMoqData(ChargeType.Subscription, true)]
-        [InlineAutoMoqData(ChargeType.Subscription, true)]
-        public void Test(
+        [InlineAutoMoqData(-1, false)]
+        public void ChargeTypeIsKnownValidationRuleTest(
             ChargeType chargeType,
             bool expected,
             [NotNull] ChargeCommand command)
