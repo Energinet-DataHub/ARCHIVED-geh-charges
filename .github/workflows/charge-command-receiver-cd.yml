@@ -68,7 +68,7 @@ jobs:
     
   deploy_function:
      name: Deploy function to ${{ matrix.environment.name }} - ${{ matrix.environment.long }}
-     needs: build_charge_command_receiver
+#     needs: build_charge_command_receiver
      runs-on: ubuntu-latest
   #   strategy:
   #     matrix:
