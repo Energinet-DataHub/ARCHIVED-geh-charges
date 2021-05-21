@@ -32,7 +32,6 @@ namespace GreenEnergyHub.Charges.Tests.Application.Validation.InputValidation.Va
         [InlineAutoMoqData(1, true)]
         [InlineAutoMoqData(2, false)]
         public void IsValid_WhenCalledWith1PricePoint_ShouldParseValidation(
-            ChargeType chargeType,
             int priceCount,
             bool expected,
             [NotNull]ChargeCommand chargeCommand,
