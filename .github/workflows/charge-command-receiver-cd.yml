@@ -67,9 +67,9 @@ jobs:
   #         path: '${{ github.workspace }}/output'
     
   deploy_function:
-  #   name: Deploy function to ${{ matrix.environment.name }} - ${{ matrix.environment.long }}
-  #   needs: build_charge_command_receiver
-  #   runs-on: ubuntu-latest
+     name: Deploy function to ${{ matrix.environment.name }} - ${{ matrix.environment.long }}
+     needs: build_charge_command_receiver
+     runs-on: ubuntu-latest
   #   strategy:
   #     matrix:
   #       environment: [
@@ -94,9 +94,10 @@ jobs:
   #           name: Production
   #         }
   #       ]
-  #   environment:
+     environment:
+     name: debug testfiles
   #     name: ${{ matrix.environment.long }}
-  #   steps:
+     steps:
   #     - name: Download artifact 
   #       uses: actions/download-artifact@v2
   #       with:
