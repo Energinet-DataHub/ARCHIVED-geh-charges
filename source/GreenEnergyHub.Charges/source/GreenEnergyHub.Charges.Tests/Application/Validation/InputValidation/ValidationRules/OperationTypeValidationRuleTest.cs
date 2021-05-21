@@ -17,9 +17,11 @@ using GreenEnergyHub.Charges.Application.Validation.InputValidation.ValidationRu
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
 using GreenEnergyHub.Charges.TestCore;
 using Xunit;
+using Xunit.Categories;
 
 namespace GreenEnergyHub.Charges.Tests.Application.Validation.InputValidation.ValidationRules
 {
+    [UnitTest]
     public class OperationTypeValidationRuleTest
     {
         [Theory]
@@ -27,6 +29,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Validation.InputValidation.Va
         [InlineAutoMoqData(OperationType.Addition, true)]
         [InlineAutoMoqData(OperationType.Change, true)]
         [InlineAutoMoqData(OperationType.Deletion, true)]
+        [InlineAutoMoqData(-1, false)]
         public void Test(
             OperationType operationType,
             bool expected,
