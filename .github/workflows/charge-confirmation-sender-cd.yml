@@ -137,18 +137,18 @@ jobs:
       - name: Download artifact 
         uses: actions/download-artifact@v2
         with:
-          name: drop-it
-          path: drop-it
+          name: drop-integration-test
+          path: drop-integration-test
 
       - name: DEBUG
         run: |
           ls -l
           echo Drop folder:
-          ls -l drop-it
+          ls -l drop-integration-test
 
       - name: Integration test
         if: ${{ matrix.environment.short == 'u' }}
         uses: ./.github/actions/integration-test
         with:
           key_vault_name: ${{ env.KEY_VAULT_NAME }}
-          test_dll: drop-it/${{ env.INTEGRATION_TEST_DLL }}
+          test_dll: drop-integration-test/${{ env.INTEGRATION_TEST_DLL }}

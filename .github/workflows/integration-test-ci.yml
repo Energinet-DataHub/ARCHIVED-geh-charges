@@ -38,8 +38,7 @@ jobs:
           paths: '[
             "source/GreenEnergyHub.Charges/**",
             ".github/workflows/integration-test-ci.yml",
-            ".github/actions/dotnet-build-and-test/**",
-            ".github/actions/azure-core-tools-install/**"
+            ".github/actions/dotnet-build-and-test/**"
           ]'
 
   validate_integration_test:
@@ -59,15 +58,14 @@ jobs:
       - name: Setup Azure Core Tools
         uses: ./.github/actions/azure-core-tools-install
 
-      - name: Build and test project
-        uses: ./.github/actions/dotnet-build-and-test
-        with:
-          CSPROJ_FILE_PATH: ${{ env.CSPROJ_FILE_PATH }}
-          SOLUTION_FILE_PATH: ${{ env.SOLUTION_FILE_PATH }}
-          OUTPUT_PATH: '${{ github.workspace }}/output-it'
+      - name: Build project
+        shell: bash
+        run: |
+          dotnet build ${{ env.CSPROJ_FILE_PATH }} --configuration Release --output ${{ ${{ github.workspace }}/output-integration-test }}
 
       - name: Publish artifact
         uses: actions/upload-artifact@v2
         with:
-          name: drop-it
-          path: '${{ github.workspace }}/output-it'
+          name: drop-integration-test
+          path: '${{ github.workspace }}/output-integration-test'
+          retention-days: 1
