@@ -27,9 +27,9 @@ namespace GreenEnergyHub.Charges.Tests.Application.Validation.InputValidation.Va
     public class SubscriptionMustHaveSinglePriceRuleTests
     {
         [Theory]
-        [InlineAutoMoqData(ChargeType.Subscription, 0, false)]
-        [InlineAutoMoqData(ChargeType.Subscription, 1, true)]
-        [InlineAutoMoqData(ChargeType.Subscription, 2, false)]
+        [InlineAutoMoqData(0, false)]
+        [InlineAutoMoqData(1, true)]
+        [InlineAutoMoqData(2, false)]
         public void IsValid_WhenCalledWith1PricePoint_ShouldParseValidation(
             ChargeType chargeType,
             int priceCount,
@@ -38,7 +38,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Validation.InputValidation.Va
             Point point)
         {
             // Arrange
-            chargeCommand.ChargeOperation.Type = chargeType;
+            chargeCommand.ChargeOperation.Type = ChargeType.Subscription;
             chargeCommand.ChargeOperation.Points = new List<Point>(GeneratePricePointList(point, priceCount));
 
             // Act
