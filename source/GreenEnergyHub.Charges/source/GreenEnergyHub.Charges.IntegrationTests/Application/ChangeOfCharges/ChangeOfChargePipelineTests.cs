@@ -63,7 +63,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
                                         $" {_commandAcceptedConnectionString}, {_commandRejectedConnectionString}");
         }
 
-        [Theory]
+        [Theory(Timeout = 120000)]
         [InlineAutoMoqData("TestFiles/ValidTariffAddition.json")]
         public async Task Test_ChargeCommandCompleteFlow_is_Accepted(
             string testFilePath,
@@ -99,7 +99,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
             Assert.True(chargeExistsByCorrelationId);
         }
 
-        [Theory]
+        [Theory(Timeout = 120000)]
         [InlineAutoMoqData("TestFiles/InValidTariffAddition.json")]
         public async Task Test_ChargeCommandCompleteFlow_is_Rejected(
             string testFilePath,
