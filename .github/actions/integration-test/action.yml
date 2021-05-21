@@ -105,4 +105,4 @@ runs:
     - name: Run integration tests
       shell: bash
       run: |
-        dotnet test ${{ inputs.test_dll }}
+        dotnet test ${{ inputs.test_dll }} --logger:"console;verbosity=detailed"
