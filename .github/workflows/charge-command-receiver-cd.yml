@@ -156,12 +156,14 @@ jobs:
           name: drop
           path: drop
 
-      - name: DEBUG
+      - name: DEBUG drop
         run: |
           ls -l
           echo Drop folder:
           ls -l drop
-
+          echo Testfiles folder:
+          ls -l drop/TestFiles
+      
       - name: Integration test
         if: ${{ matrix.environment.short == 'u' }}
         uses: ./.github/actions/integration-test
