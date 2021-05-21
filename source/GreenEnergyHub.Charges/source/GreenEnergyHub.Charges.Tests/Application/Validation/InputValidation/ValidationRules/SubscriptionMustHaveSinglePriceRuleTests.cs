@@ -20,17 +20,13 @@ using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
 using GreenEnergyHub.Charges.TestCore;
 using Xunit;
 using Xunit.Categories;
-using ChargeType = GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction.ChargeType;
 
 namespace GreenEnergyHub.Charges.Tests.Application.Validation.InputValidation.ValidationRules
 {
     [UnitTest]
-    public class ChargeFeeSubscriptionPriceCountRuleTests
+    public class SubscriptionMustHaveSinglePriceRuleTests
     {
         [Theory]
-        [InlineAutoMoqData(ChargeType.Fee, 0, false)]
-        [InlineAutoMoqData(ChargeType.Fee, 1, true)]
-        [InlineAutoMoqData(ChargeType.Fee, 2, false)]
         [InlineAutoMoqData(ChargeType.Subscription, 0, false)]
         [InlineAutoMoqData(ChargeType.Subscription, 1, true)]
         [InlineAutoMoqData(ChargeType.Subscription, 2, false)]
@@ -46,7 +42,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Validation.InputValidation.Va
             chargeCommand.ChargeOperation.Points = new List<Point>(GeneratePricePointList(point, priceCount));
 
             // Act
-            var sut = new ChargeFeeSubscriptionPriceCountRule(chargeCommand);
+            var sut = new SubscriptionMustHaveSinglePriceRule(chargeCommand);
 
             // Assert
             sut.IsValid.Should().Be(expected);
@@ -60,7 +56,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Validation.InputValidation.Va
             [NotNull] ChargeCommand chargeCommand)
         {
             chargeCommand.ChargeOperation.Type = chargeType;
-            var sut = new ChargeFeeSubscriptionPriceCountRule(chargeCommand);
+            var sut = new SubscriptionMustHaveSinglePriceRule(chargeCommand);
             sut.IsValid.Should().BeTrue();
         }
 

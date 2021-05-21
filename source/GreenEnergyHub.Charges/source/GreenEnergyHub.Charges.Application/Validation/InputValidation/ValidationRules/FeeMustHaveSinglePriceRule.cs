@@ -16,12 +16,12 @@ using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
 
 namespace GreenEnergyHub.Charges.Application.Validation.InputValidation.ValidationRules
 {
-    public class ChargeFeeSubscriptionPriceCountRule : IValidationRule
+    public class FeeMustHaveSinglePriceRule : IValidationRule
     {
         private const int PricePointsRequired = 1;
         private readonly ChargeCommand _chargeCommand;
 
-        public ChargeFeeSubscriptionPriceCountRule(ChargeCommand chargeCommand)
+        public FeeMustHaveSinglePriceRule(ChargeCommand chargeCommand)
         {
             _chargeCommand = chargeCommand;
         }
@@ -30,7 +30,7 @@ namespace GreenEnergyHub.Charges.Application.Validation.InputValidation.Validati
         {
             get
             {
-                if (_chargeCommand.ChargeOperation.Type is ChargeType.Fee or ChargeType.Subscription)
+                if (_chargeCommand.ChargeOperation.Type is ChargeType.Fee)
                 {
                     return _chargeCommand.ChargeOperation.Points.Count == PricePointsRequired;
                 }
@@ -39,6 +39,6 @@ namespace GreenEnergyHub.Charges.Application.Validation.InputValidation.Validati
             }
         }
 
-        public ValidationRuleIdentifier ValidationRuleIdentifier => ValidationRuleIdentifier.ChargeFeeSubscriptionPriceCountRule;
+        public ValidationRuleIdentifier ValidationRuleIdentifier => ValidationRuleIdentifier.FeeMustHaveSinglePriceRule;
     }
 }
