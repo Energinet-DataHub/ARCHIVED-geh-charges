@@ -40,5 +40,7 @@ namespace GreenEnergyHub.Charges.Application.Validation
         ChargeTypeTariffPriceCountRule, // VR507-1
         MaximumPriceRule, // VR509
         ChargePriceMaximumAndDecimalsDigitsRule, // VR457
+        FeeMustHaveSinglePriceRule, // VR507-2
+        SubscriptionMustHaveSinglePriceRule, // VR507-2
     }
 }

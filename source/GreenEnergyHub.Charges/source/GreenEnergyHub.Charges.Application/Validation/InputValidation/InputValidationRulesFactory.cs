@@ -78,6 +78,8 @@ namespace GreenEnergyHub.Charges.Application.Validation.InputValidation
                 new ChargeTypeTariffPriceCountRule(chargeCommand),
                 new MaximumPriceRule(chargeCommand),
                 new ChargePriceMaximumDigitsAndDecimalsRule(chargeCommand),
+                new FeeMustHaveSinglePriceRule(chargeCommand),
+                new SubscriptionMustHaveSinglePriceRule(chargeCommand),
             };
 
             return rules;
@@ -92,6 +94,8 @@ namespace GreenEnergyHub.Charges.Application.Validation.InputValidation
                 new ChargeTypeTariffPriceCountRule(chargeCommand),
                 new MaximumPriceRule(chargeCommand),
                 new ChargePriceMaximumDigitsAndDecimalsRule(chargeCommand),
+                new FeeMustHaveSinglePriceRule(chargeCommand),
+                new SubscriptionMustHaveSinglePriceRule(chargeCommand),
             };
 
             return rules;
