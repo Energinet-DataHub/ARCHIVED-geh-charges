@@ -52,7 +52,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Validation.InputValidation.Va
         [Theory]
         [InlineAutoMoqData(ChargeType.Tariff)]
         [InlineAutoMoqData(ChargeType.Unknown)]
-        public void IsValid_WhenNotEitherFeeOrSubscription_ShouldParseValidation(
+        public void IsValid_WhenNeitherFeeOrSubscription_ShouldParseValidation(
             ChargeType chargeType,
             [NotNull] ChargeCommand chargeCommand)
         {
