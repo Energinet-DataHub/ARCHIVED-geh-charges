@@ -28,6 +28,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Validation.InputValidation.Va
         [Theory]
         [InlineAutoMoqData(BusinessReasonCode.Unknown, false)]
         [InlineAutoMoqData(BusinessReasonCode.UpdateChargeInformation, true)]
+        [InlineAutoMoqData(-1, false)]
         public void ProcessTypeIsKnownValidationRule_Test(
             BusinessReasonCode businessReasonCode,
             bool expected,

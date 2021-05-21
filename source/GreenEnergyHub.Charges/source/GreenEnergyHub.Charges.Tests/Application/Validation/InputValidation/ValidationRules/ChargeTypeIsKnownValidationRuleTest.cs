@@ -29,6 +29,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Validation.InputValidation.Va
         [InlineAutoMoqData(ChargeType.Fee, true)]
         [InlineAutoMoqData(ChargeType.Subscription, true)]
         [InlineAutoMoqData(ChargeType.Subscription, true)]
+        [InlineAutoMoqData(-1, false)]
         public void Test(
             ChargeType chargeType,
             bool expected,
