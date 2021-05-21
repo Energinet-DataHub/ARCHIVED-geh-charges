@@ -62,9 +62,29 @@ module "azfun_message_receiver_stor" {
   tags                      = data.azurerm_resource_group.main.tags
 }
 
+module "kv_azfun_message_receiver_hostname" {
+  source        = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//key-vault-secret?ref=1.2.0"
+  name          = "MESSAGE-RECEIVER-HOSTNAME"
+  value         = module.azfun_message_receiver.default_hostname
+  key_vault_id  = module.kv_charges.id
+  tags          = data.azurerm_resource_group.main.tags
+  dependencies  = [module.kv_charges.dependent_on]
+}
+
 # Since all functions need a storage connected we just generate a random name
 resource "random_string" "message_receiver" {
   length  = 6
   special = false
   upper   = false
+}
+
+module "ping_webtest_message_receiver" {
+  source                          = "./modules/ping-webtest" # Repo geh-terraform-modules doesn't have a webtest module at the time of this writing
+  name                            = "ping-webtest-message-receiver-${var.project}-${var.organisation}-${var.environment}"
+  resource_group_name             = data.azurerm_resource_group.main.name
+  location                        = data.azurerm_resource_group.main.location
+  tags                            = data.azurerm_resource_group.main.tags
+  application_insights_id         = module.appi.id
+  url                             = "https://${module.azfun_message_receiver.default_hostname}/api/HealthStatus"
+  dependencies                    = [module.azfun_message_receiver.dependent_on]
 }

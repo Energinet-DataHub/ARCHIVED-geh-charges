@@ -36,7 +36,12 @@ namespace GreenEnergyHub.Charges.ChargeNegativeAcknowledgementSender
 
             /* Consider checking access to Service Bus topics for charge command rejected and for post office */
 
-            return Task.FromResult((IActionResult)new OkResult());
+            var status = new
+            {
+                FunctionAppIsAlive = true,
+            };
+
+            return Task.FromResult<IActionResult>(new JsonResult(status));
         }
     }
 }
