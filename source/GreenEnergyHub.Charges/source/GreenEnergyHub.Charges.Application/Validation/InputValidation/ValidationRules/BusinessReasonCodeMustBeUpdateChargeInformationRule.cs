@@ -17,11 +17,11 @@ using GreenEnergyHub.Charges.Domain.Common;
 
 namespace GreenEnergyHub.Charges.Application.Validation.InputValidation.ValidationRules
 {
-    public class BusinessReasonCodeMustBeUpdateChargeInformation : IValidationRule
+    public class BusinessReasonCodeMustBeUpdateChargeInformationRule : IValidationRule
     {
         private readonly ChargeCommand _chargeCommand;
 
-        public BusinessReasonCodeMustBeUpdateChargeInformation(ChargeCommand chargeCommand)
+        public BusinessReasonCodeMustBeUpdateChargeInformationRule(ChargeCommand chargeCommand)
         {
             _chargeCommand = chargeCommand;
         }
@@ -30,6 +30,6 @@ namespace GreenEnergyHub.Charges.Application.Validation.InputValidation.Validati
                                BusinessReasonCode.UpdateChargeInformation;
 
         public ValidationRuleIdentifier ValidationRuleIdentifier =>
-            ValidationRuleIdentifier.BusinessReasonCodeIsIncorrect;
+            ValidationRuleIdentifier.BusinessReasonCodeMustBeUpdateChargeInformation;
     }
 }

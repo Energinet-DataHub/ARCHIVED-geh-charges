@@ -29,6 +29,7 @@ namespace GreenEnergyHub.Charges.Application.Validation.InputValidation.Validati
                                _chargeCommand.ChargeOperation.Type == ChargeType.Subscription ||
                                _chargeCommand.ChargeOperation.Type == ChargeType.Tariff;
 
-        public ValidationRuleIdentifier ValidationRuleIdentifier => ValidationRuleIdentifier.ChargeTypeIsUnknown;
+        public ValidationRuleIdentifier ValidationRuleIdentifier =>
+            ValidationRuleIdentifier.ChargeTypeIsKnownValidation;
     }
 }

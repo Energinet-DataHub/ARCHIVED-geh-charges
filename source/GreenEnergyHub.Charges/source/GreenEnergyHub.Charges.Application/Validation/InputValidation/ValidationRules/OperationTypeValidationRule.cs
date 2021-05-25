@@ -29,6 +29,6 @@ namespace GreenEnergyHub.Charges.Application.Validation.InputValidation.Validati
                                _chargeCommand.ChargeOperation.OperationType == OperationType.Change ||
                                _chargeCommand.ChargeOperation.OperationType == OperationType.Deletion;
 
-        public ValidationRuleIdentifier ValidationRuleIdentifier => ValidationRuleIdentifier.OperationTypeIsUnknown;
+        public ValidationRuleIdentifier ValidationRuleIdentifier => ValidationRuleIdentifier.OperationTypeValidation;
     }
 }
