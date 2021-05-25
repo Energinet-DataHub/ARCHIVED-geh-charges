@@ -45,7 +45,8 @@ namespace GreenEnergyHub.Charges.Application.Validation.InputValidation
                     ruleSet = _inputValidationRulesFactory.CreateRulesForChargeUpdateCommand(chargeCommand);
                     return ruleSet.Validate();
                 default:
-                    throw new ArgumentOutOfRangeException(chargeCommand.ChargeOperation.OperationType.ToString());
+                    ruleSet = _inputValidationRulesFactory.CreateRulesForChargeUnknownCommand(chargeCommand);
+                    return ruleSet.Validate();
             }
         }
     }
