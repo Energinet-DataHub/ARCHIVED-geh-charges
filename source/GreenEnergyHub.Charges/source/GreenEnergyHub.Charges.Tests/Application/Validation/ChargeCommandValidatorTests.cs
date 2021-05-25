@@ -110,7 +110,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Validation
 
         private static ChargeCommandValidationResult CreateInvalidValidationResult()
         {
-            var invalidRules = new List<IValidationRule> { new ValidationRule(false, ValidationRuleIdentifier.TimeLimitsNotFollowed) };
+            var invalidRules = new List<IValidationRule> { new ValidationRule(false, ValidationRuleIdentifier.StartDateValidation) };
             return ChargeCommandValidationResult.CreateFailure(invalidRules);
         }
     }

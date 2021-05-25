@@ -28,6 +28,7 @@ namespace GreenEnergyHub.Charges.Application.Validation.InputValidation.Validati
         // Instant is a struct, so to ensure caller supplied it, we check if it has the default value.
         public bool IsValid => _chargeCommand.ChargeOperation.StartDateTime != default;
 
-        public ValidationRuleIdentifier ValidationRuleIdentifier => ValidationRuleIdentifier.StartDateTimeIsMandatory;
+        public ValidationRuleIdentifier ValidationRuleIdentifier =>
+            ValidationRuleIdentifier.StartDateTimeRequiredValidation;
     }
 }

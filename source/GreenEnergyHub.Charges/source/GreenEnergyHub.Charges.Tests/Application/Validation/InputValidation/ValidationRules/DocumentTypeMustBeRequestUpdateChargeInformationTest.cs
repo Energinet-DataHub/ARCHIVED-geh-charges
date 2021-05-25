@@ -34,7 +34,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Validation.InputValidation.Va
             [NotNull] ChargeCommand command)
         {
             command.Document.Type = documentType;
-            var sut = new DocumentTypeMustBeRequestUpdateChargeInformation(command);
+            var sut = new DocumentTypeMustBeRequestUpdateChargeInformationRule(command);
             Assert.Equal(expected, sut.IsValid);
         }
     }

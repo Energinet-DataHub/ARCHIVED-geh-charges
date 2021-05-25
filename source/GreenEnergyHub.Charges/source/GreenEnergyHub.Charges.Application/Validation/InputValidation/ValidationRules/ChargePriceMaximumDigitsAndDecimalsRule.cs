@@ -70,6 +70,6 @@ namespace GreenEnergyHub.Charges.Application.Validation.InputValidation.Validati
         }
 
         public ValidationRuleIdentifier ValidationRuleIdentifier =>
-            ValidationRuleIdentifier.ChargePriceMaximumAndDecimalsDigitsRule;
+            ValidationRuleIdentifier.ChargePriceMaximumDigitsAndDecimals;
     }
 }
