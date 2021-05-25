@@ -48,10 +48,10 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
     /// See local.settings.json.sample for an example.
     /// </summary>
     [IntegrationTest]
-    public class ChangeOfChargeLocalHostTests : IClassFixture<DbFixture>
+    public class ChangeOfChargeLocalHostTests : IClassFixture<DbContextRegistrator>
     {
         private readonly ITestOutputHelper _testOutputHelper;
-        private readonly TestDbHelper _testDbHelper;
+        private readonly ChargeDbQueries _chargeDbQueries;
         private readonly ChargeHttpTrigger _chargeHttpTrigger;
         private readonly ChargeCommandEndpoint _chargeCommandEndpoint;
         private readonly string _commandReceivedTopicName;
@@ -64,13 +64,13 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
         private readonly string _commandAcceptedSubscriptionName;
         private readonly string _commandRejectedSubscriptionName;
 
-        public ChangeOfChargeLocalHostTests(ITestOutputHelper testOutputHelper, [NotNull] DbFixture dbFixture)
+        public ChangeOfChargeLocalHostTests(ITestOutputHelper testOutputHelper, [NotNull] DbContextRegistrator dbContextRegistrator)
         {
             _testOutputHelper = testOutputHelper;
-            _testDbHelper = new TestDbHelper(dbFixture.ServiceProvider);
+            _chargeDbQueries = new ChargeDbQueries(dbContextRegistrator.ServiceProvider);
 
-            var messageReceiverHost = TestConfigurationHelper.SetupHost(new MessageReceiver.Startup());
-            var chargeCommandReceiverHost = TestConfigurationHelper.SetupHost(new ChargeCommandReceiver.Startup());
+            var messageReceiverHost = FunctionHostConfigurationHelper.SetupHost(new MessageReceiver.Startup());
+            var chargeCommandReceiverHost = FunctionHostConfigurationHelper.SetupHost(new ChargeCommandReceiver.Startup());
 
             _chargeHttpTrigger = new ChargeHttpTrigger(
                 messageReceiverHost.Services.GetRequiredService<IChangeOfChargesMessageHandler>(),
@@ -99,25 +99,25 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
             string testFilePath,
             [NotNull] [Frozen] Mock<ILogger> logger,
             [NotNull] ExecutionContext executionContext,
-            [NotNull] ServiceBusMessageTestHelper serviceBusMessageTestHelper)
+            [NotNull] ServiceBusTestHelper serviceBusTestHelper)
         {
             // arrange
             IClock clock = SystemClock.Instance;
-            var req = HttpRequestHelper.CreateHttpRequest(testFilePath, clock);
+            var req = HttpRequestFactory.CreateHttpRequest(testFilePath, clock);
 
             // act
             var messageReceiverResult = await RunMessageReceiver(logger, executionContext, req).ConfigureAwait(false);
-            var commandReceivedMessage = serviceBusMessageTestHelper
+            var commandReceivedMessage = serviceBusTestHelper
                 .GetMessageFromServiceBus(_commandReceivedConnectionString, _commandReceivedTopicName, _commandReceivedSubscriptionName);
             _testOutputHelper.WriteLine($"Message to be handled by ChargeCommandEndpoint: {commandReceivedMessage.Body.Length}");
 
             await _chargeCommandEndpoint.RunAsync(commandReceivedMessage.Body, logger.Object).ConfigureAwait(false);
 
-            var commandAcceptedMessage = serviceBusMessageTestHelper
+            var commandAcceptedMessage = serviceBusTestHelper
                 .GetMessageFromServiceBus(_commandAcceptedConnectionString, _commandAcceptedTopicName, _commandAcceptedSubscriptionName);
             _testOutputHelper.WriteLine($"Message accepted by ChargeCommandEndpoint: {commandAcceptedMessage.Body.Length}");
 
-            var chargeExistsByCorrelationId = await _testDbHelper
+            var chargeExistsByCorrelationId = await _chargeDbQueries
                 .ChargeExistsByCorrelationIdAsync(executionContext.InvocationId.ToString())
                 .ConfigureAwait(false);
 
@@ -136,25 +136,25 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
             string testFilePath,
             [NotNull] [Frozen] Mock<ILogger> logger,
             [NotNull] ExecutionContext executionContext,
-            [NotNull] ServiceBusMessageTestHelper serviceBusMessageTestHelper)
+            [NotNull] ServiceBusTestHelper serviceBusTestHelper)
         {
             // arrange
             IClock clock = SystemClock.Instance;
-            var req = HttpRequestHelper.CreateHttpRequest(testFilePath, clock);
+            var req = HttpRequestFactory.CreateHttpRequest(testFilePath, clock);
 
             // act
             var messageReceiverResult = await RunMessageReceiver(logger, executionContext, req).ConfigureAwait(false);
-            var commandReceivedMessage = serviceBusMessageTestHelper
+            var commandReceivedMessage = serviceBusTestHelper
                 .GetMessageFromServiceBus(_commandReceivedConnectionString, _commandReceivedTopicName, _commandReceivedSubscriptionName);
             _testOutputHelper.WriteLine($"Message to be handled by ChargeCommandEndpoint: {commandReceivedMessage.Body.Length}");
 
             await _chargeCommandEndpoint.RunAsync(commandReceivedMessage.Body, logger.Object).ConfigureAwait(false);
 
-            var commandRejectedMessage = serviceBusMessageTestHelper
+            var commandRejectedMessage = serviceBusTestHelper
                 .GetMessageFromServiceBus(_commandRejectedConnectionString, _commandRejectedTopicName, _commandRejectedSubscriptionName);
             _testOutputHelper.WriteLine($"Message accepted by ChargeCommandEndpoint: {commandRejectedMessage.Body.Length}");
 
-            var chargeExistsByCorrelationId = await _testDbHelper
+            var chargeExistsByCorrelationId = await _chargeDbQueries
                 .ChargeExistsByCorrelationIdAsync(executionContext.InvocationId.ToString())
                 .ConfigureAwait(false);
 
