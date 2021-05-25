@@ -24,9 +24,9 @@ namespace GreenEnergyHub.Charges.Application.ChangeOfCharges.Repositories
     {
         Task StoreChargeAsync(Charge newCharge);
 
-        Task<Charge> GetChargeAsync(string mrid, string chargeTypeOwnerMRid);
+        Task<Charge> GetChargeAsync(string chargeId, string owner);
 
-        Task<bool> CheckIfChargeExistsAsync(string mrid, string chargeTypeOwnerMRid);
+        Task<bool> CheckIfChargeExistsAsync(string chargeId, string owner);
 
         Task<bool> CheckIfChargeExistsByCorrelationIdAsync(string correlationId);
     }

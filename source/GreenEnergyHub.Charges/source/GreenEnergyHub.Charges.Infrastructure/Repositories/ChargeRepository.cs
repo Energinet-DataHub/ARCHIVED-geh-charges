@@ -16,12 +16,9 @@ using System;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application.ChangeOfCharges.Repositories;
 using GreenEnergyHub.Charges.Infrastructure.Context;
-using GreenEnergyHub.Charges.Infrastructure.Context.Model;
 using GreenEnergyHub.Charges.Infrastructure.Mapping;
 using Microsoft.EntityFrameworkCore;
 using Charge = GreenEnergyHub.Charges.Domain.Charge;
-using ChargeType = GreenEnergyHub.Charges.Infrastructure.Context.Model.ChargeType;
-using MarketParticipant = GreenEnergyHub.Charges.Infrastructure.Context.Model.MarketParticipant;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Repositories
 {
@@ -34,28 +31,28 @@ namespace GreenEnergyHub.Charges.Infrastructure.Repositories
             _chargesDatabaseContext = chargesDatabaseContext;
         }
 
-        public async Task<Charge> GetChargeAsync(string mrid, string chargeTypeOwnerMRid)
+        public async Task<Charge> GetChargeAsync(string chargeId, string owner)
         {
             var charge = await _chargesDatabaseContext.Charge
-                .Include(x => x.ChargeTypeOwner)
-                .SingleAsync(x => x.MRid == mrid &&
-                                           x.ChargeTypeOwner.MRid == chargeTypeOwnerMRid).ConfigureAwait(false);
+                .Include(x => x.ChargePeriodDetails)
+                .Include(x => x.ChargePrices)
+                .SingleAsync(x => x.ChargeId == chargeId &&
+                                           x.Owner == owner).ConfigureAwait(false);
 
-            return ChangeOfChargesMapper.MapChargeToChangeOfChargesMessage(charge);
+            return ChargeMapper.MapChargeToChangeOfChargesMessage(charge);
         }
 
-        public async Task<bool> CheckIfChargeExistsAsync(string mrid, string chargeTypeOwnerMRid)
+        public async Task<bool> CheckIfChargeExistsAsync(string chargeId, string owner)
         {
             return await _chargesDatabaseContext.Charge
-                .Include(x => x.ChargeTypeOwner)
-                .AnyAsync(x => x.MRid == mrid &&
-                                        x.ChargeTypeOwner.MRid == chargeTypeOwnerMRid).ConfigureAwait(false);
+                .AnyAsync(x => x.ChargeId == chargeId &&
+                                        x.Owner == owner).ConfigureAwait(false);
         }
 
         public async Task<bool> CheckIfChargeExistsByCorrelationIdAsync(string correlationId)
         {
-            return await _chargesDatabaseContext.Charge
-                .AnyAsync(x => x.LastUpdatedByCorrelationId == correlationId)
+            return await _chargesDatabaseContext.ChargeOperation
+                .AnyAsync(x => x.CorrelationId == correlationId)
                 .ConfigureAwait(false);
         }
 
@@ -63,61 +60,40 @@ namespace GreenEnergyHub.Charges.Infrastructure.Repositories
         {
             if (newCharge == null) throw new ArgumentNullException(nameof(newCharge));
 
-            var chargeType = await GetChargeTypeAsync(newCharge).ConfigureAwait(false);
-            if (chargeType == null) throw new Exception($"No charge type for {newCharge.Type}");
+            // Charge.
+            var charge = ChargeMapper.MapDomainChargeToCharge(newCharge);
 
-            var resolutionType = await GetResolutionTypeAsync(newCharge).ConfigureAwait(false);
-            if (resolutionType == null) throw new Exception($"No resolution type for {newCharge.Resolution}");
+            var createdCharge = await _chargesDatabaseContext.Charge.AddAsync(charge).ConfigureAwait(false);
 
-            var vatPayerType = await GetVatPayerTypeAsync(newCharge).ConfigureAwait(false);
-            if (vatPayerType == null) throw new Exception($"No VAT payer type for {newCharge.VatClassification}");
-
-            var chargeTypeOwnerMRid = await GetChargeTypeOwnerMRidAsync(newCharge).ConfigureAwait(false);
-            if (chargeTypeOwnerMRid == null) throw new Exception($"No market participant for {newCharge.Owner}");
-
-            var charge = ChangeOfChargesMapper.MapDomainChargeToCharge(
-                newCharge,
-                chargeType,
-                chargeTypeOwnerMRid,
-                resolutionType,
-                vatPayerType);
-
-            await _chargesDatabaseContext.Charge.AddAsync(charge).ConfigureAwait(false);
             await _chargesDatabaseContext.SaveChangesAsync().ConfigureAwait(false);
-        }
 
-        private async Task<MarketParticipant?> GetChargeTypeOwnerMRidAsync(Charge chargeMessage)
-        {
-            return string.IsNullOrWhiteSpace(chargeMessage.Owner)
-                ? throw new ArgumentException($"Fails as {nameof(chargeMessage.Owner)} is invalid")
-                : await _chargesDatabaseContext.MarketParticipant.SingleOrDefaultAsync(type =>
-                type.MRid == chargeMessage.Owner).ConfigureAwait(false);
-        }
+            // ChargeOperation.
+            var chargeOperation = ChargeMapper.CreateChargeOperation(newCharge, createdCharge.Entity.RowId);
 
-        private async Task<VatPayerType?> GetVatPayerTypeAsync(Charge chargeMessage)
-        {
-            // If we start using a enum for Vat does it make sense to check if it exists?
-            return string.IsNullOrWhiteSpace(chargeMessage.VatClassification.ToString())
-                ? throw new ArgumentException($"Fails as {nameof(chargeMessage.VatClassification)} is invalid")
-                // Right now we cant support vat not being of type D01 or D02, After we refactor or DB scheme it will be update.
-                : await _chargesDatabaseContext.VatPayerType.SingleOrDefaultAsync(type =>
-                    type.Name == "D01").ConfigureAwait(false);
-        }
+            var createdChargeOperation = await _chargesDatabaseContext.ChargeOperation.AddAsync(chargeOperation).ConfigureAwait(false);
 
-        private async Task<ResolutionType?> GetResolutionTypeAsync(Charge chargeMessage)
-        {
-            // If we start using a enum for Resolution does it make sense to check if it exists?
-            return string.IsNullOrWhiteSpace(chargeMessage.Resolution.ToString())
-                ? throw new ArgumentException($"Fails as {nameof(chargeMessage.Resolution)} is invalid")
-                : await _chargesDatabaseContext.ResolutionType.SingleOrDefaultAsync(type => type.Name == chargeMessage.Resolution.ToString()).ConfigureAwait(false);
-        }
+            await _chargesDatabaseContext.SaveChangesAsync().ConfigureAwait(false);
 
-        private async Task<ChargeType?> GetChargeTypeAsync(Charge chargeMessage)
-        {
-            // If we start using a enum for Chargetype does it make sense to check if it exists?
-            return string.IsNullOrWhiteSpace(chargeMessage.Type.ToString())
-                ? throw new ArgumentException($"Fails as {nameof(chargeMessage.Type)} is invalid")
-                : await _chargesDatabaseContext.ChargeType.SingleOrDefaultAsync(type => type.Name == chargeMessage.Type.ToString()).ConfigureAwait(false);
+            // ChargeDetails.
+            var chargeDetails =
+                ChargeMapper.CreateChargePeriodDetails(newCharge, createdCharge.Entity.RowId, createdChargeOperation.Entity.RowId);
+
+            await _chargesDatabaseContext.ChargePeriodDetails.AddAsync(chargeDetails).ConfigureAwait(false);
+
+            await _chargesDatabaseContext.SaveChangesAsync().ConfigureAwait(false);
+
+            // ChargePrices
+            var chargePrices = ChargeMapper.CreateChargePrice(
+                newCharge,
+                createdCharge.Entity.RowId,
+                createdChargeOperation.Entity.RowId);
+
+            foreach (var chargePrice in chargePrices)
+            {
+                await _chargesDatabaseContext.ChargePrice.AddAsync(chargePrice).ConfigureAwait(false);
+            }
+
+            await _chargesDatabaseContext.SaveChangesAsync().ConfigureAwait(false);
         }
     }
 }

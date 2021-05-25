@@ -12,22 +12,27 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+#pragma warning disable 8618
 namespace GreenEnergyHub.Charges.Infrastructure.Context.Model
 {
     public class ChargePrice
     {
-        public int Id { get; set; }
+        [Key]
+        public int RowId { get; set; }
+
+        [ForeignKey("Charge")]
+        public int ChargeRowId { get; set; }
+
+        [ForeignKey("ChargeOperation")]
+        public int ChargeOperationRowId { get; set; }
 
         public long Time { get; set; }
 
-        public decimal Amount { get; set; }
+        public decimal Price { get; set; }
 
-        public string? LastUpdatedByCorrelationId { get; set; }
-
-        public string? LastUpdatedByTransactionId { get; set; }
-
-        public string? LastUpdatedBy { get; set; }
-
-        public long RequestDateTime { get; set; }
+        public bool Retired { get; set; }
     }
 }

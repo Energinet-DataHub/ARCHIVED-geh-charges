@@ -12,14 +12,37 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace GreenEnergyHub.Charges.Infrastructure.Context.Model
-{
-    public class VatPayerType
-    {
-        public int Id { get; set; }
+using System;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 #pragma warning disable 8618
+
+namespace GreenEnergyHub.Charges.Infrastructure.Context.Model
+{
+    public class ChargePeriodDetails
+    {
+        [Key]
+        public int RowId { get; set; }
+
+        [ForeignKey("Charge")]
+        public int ChargeRowId { get; set; }
+
+        [ForeignKey("ChargeOperation")]
+        public int ChargeOperationRowId { get; set; }
+
+        public DateTime StartTimeDate { get; set; }
+
+        public DateTime? EndTimeDate { get; set; }
+
         public string Name { get; set; }
-#pragma warning restore 8618
+
+        public string Description { get; set; }
+
+        public int VatClassification { get; set; }
+
+        public bool Retired { get; set; }
+
+        public DateTime? RetiredDateTime { get; set; }
     }
 }
