@@ -51,6 +51,6 @@ namespace GreenEnergyHub.Charges.Application.Validation.InputValidation.Validati
             return true;
         }
 
-        public ValidationRuleIdentifier ValidationRuleIdentifier => ValidationRuleIdentifier.ChargeTypeTariffPriceCountRule;
+        public ValidationRuleIdentifier ValidationRuleIdentifier => ValidationRuleIdentifier.ChargeTypeTariffPriceCount;
     }
 }

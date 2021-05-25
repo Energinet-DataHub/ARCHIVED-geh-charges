@@ -26,8 +26,10 @@ namespace GreenEnergyHub.Charges.Application.Validation.InputValidation.Validati
             _chargeCommand = chargeCommand;
         }
 
-        public bool IsValid => _chargeCommand.ChargeOperation.ChargeDescription.Length <= MaximumChargeDescriptionLength;
+        public bool IsValid =>
+            _chargeCommand.ChargeOperation.ChargeDescription.Length <= MaximumChargeDescriptionLength;
 
-        public ValidationRuleIdentifier ValidationRuleIdentifier => ValidationRuleIdentifier.ChargeDescriptionHasMaximumLengthRule;
+        public ValidationRuleIdentifier ValidationRuleIdentifier =>
+            ValidationRuleIdentifier.ChargeDescriptionHasMaximumLength;
     }
 }

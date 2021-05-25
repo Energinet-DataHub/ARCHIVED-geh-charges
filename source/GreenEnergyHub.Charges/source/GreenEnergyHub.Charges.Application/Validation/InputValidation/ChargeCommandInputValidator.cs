@@ -32,9 +32,6 @@ namespace GreenEnergyHub.Charges.Application.Validation.InputValidation
             IValidationRuleSet ruleSet;
             switch (chargeCommand.ChargeOperation.OperationType)
             {
-                case OperationType.Unknown:
-                    ruleSet = _inputValidationRulesFactory.CreateRulesForChargeUnknownCommand(chargeCommand);
-                    return ruleSet.Validate();
                 case OperationType.Addition:
                     ruleSet = _inputValidationRulesFactory.CreateRulesForChargeCreateCommand(chargeCommand);
                     return ruleSet.Validate();
@@ -45,7 +42,8 @@ namespace GreenEnergyHub.Charges.Application.Validation.InputValidation
                     ruleSet = _inputValidationRulesFactory.CreateRulesForChargeUpdateCommand(chargeCommand);
                     return ruleSet.Validate();
                 default:
-                    throw new ArgumentOutOfRangeException(chargeCommand.ChargeOperation.OperationType.ToString());
+                    ruleSet = _inputValidationRulesFactory.CreateRulesForChargeUnknownCommand(chargeCommand);
+                    return ruleSet.Validate();
             }
         }
     }
