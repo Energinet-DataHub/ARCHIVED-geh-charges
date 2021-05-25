@@ -18,11 +18,11 @@ using NodaTime;
 
 namespace GreenEnergyHub.Charges.IntegrationTests.TestHelpers
 {
-    public static class HttpRequestHelper
+    public static class HttpRequestFactory
     {
         public static DefaultHttpRequest CreateHttpRequest(string testFile, IClock clock)
         {
-            var stream = TestDataHelper.GetInputStream(testFile, clock);
+            var stream = EmbeddedResourceHelper.GetInputStream(testFile, clock);
             var defaultHttpContext = new DefaultHttpContext();
             defaultHttpContext.Request.Body = stream;
             var req = new DefaultHttpRequest(defaultHttpContext);

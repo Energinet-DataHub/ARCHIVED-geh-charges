@@ -30,7 +30,7 @@ using Xunit.Categories;
 namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
 {
     [IntegrationTest]
-    public class ChangeOfChargePipelineTests : IClassFixture<DbFixture>
+    public class ChangeOfChargePipelineTests : IClassFixture<DbContextRegistrator>
     {
         private readonly ITestOutputHelper _testOutputHelper;
         private readonly string _messageReceiverHostname;
@@ -40,14 +40,14 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
         private readonly string _commandRejectedTopicName;
         private readonly string _commandAcceptedConnectionString;
         private readonly string _commandRejectedConnectionString;
-        private readonly TestDbHelper _testDbHelper;
+        private readonly ChargeDbQueries _chargeDbQueries;
 
-        public ChangeOfChargePipelineTests([NotNull] DbFixture dbFixture, ITestOutputHelper testOutputHelper)
+        public ChangeOfChargePipelineTests([NotNull] DbContextRegistrator dbContextRegistrator, ITestOutputHelper testOutputHelper)
         {
             _testOutputHelper = testOutputHelper;
             _testOutputHelper.WriteLine($"{nameof(ChangeOfChargePipelineTests)} constructor invoked");
 
-            _testDbHelper = new TestDbHelper(dbFixture.ServiceProvider);
+            _chargeDbQueries = new ChargeDbQueries(dbContextRegistrator.ServiceProvider);
 
             _messageReceiverHostname = Environment.GetEnvironmentVariable("MESSAGE_RECEIVER_HOSTNAME") !;
             _commandAcceptedSubscriptionName = Environment.GetEnvironmentVariable("COMMAND_ACCEPTED_SUBSCRIPTION_NAME") !;
@@ -68,13 +68,13 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
         public async Task Test_ChargeCommandCompleteFlow_is_Accepted(
             string testFilePath,
             [NotNull] ExecutionContext executionContext,
-            [NotNull] ServiceBusMessageTestHelper serviceBusMessageTestHelper)
+            [NotNull] ServiceBusTestHelper serviceBusTestHelper)
         {
             _testOutputHelper.WriteLine($"Run {nameof(Test_ChargeCommandCompleteFlow_is_Accepted)} for CorrelationId: {executionContext.InvocationId}");
 
             // arrange
             IClock clock = SystemClock.Instance;
-            var chargeJson = TestDataHelper.GetInputJson(testFilePath, clock);
+            var chargeJson = EmbeddedResourceHelper.GetInputJson(testFilePath, clock);
 
             _testOutputHelper.WriteLine($"Content length of testfile: {chargeJson.Length}");
 
@@ -83,12 +83,12 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
 
             _testOutputHelper.WriteLine($"MessageReceiver response status: {messageReceiverHttpResponseMessage.StatusCode}");
 
-            var commandAcceptedMessage = serviceBusMessageTestHelper
+            var commandAcceptedMessage = serviceBusTestHelper
                 .GetMessageFromServiceBus(_commandAcceptedConnectionString, _commandAcceptedTopicName, _commandAcceptedSubscriptionName);
 
             _testOutputHelper.WriteLine($"CommandAcceptedMessage: {commandAcceptedMessage.Label}, {commandAcceptedMessage.CorrelationId}");
 
-            var chargeExistsByCorrelationId = await _testDbHelper
+            var chargeExistsByCorrelationId = await _chargeDbQueries
                 .ChargeExistsByCorrelationIdAsync(executionContext.InvocationId.ToString())
                 .ConfigureAwait(false);
 
@@ -104,13 +104,13 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
         public async Task Test_ChargeCommandCompleteFlow_is_Rejected(
             string testFilePath,
             [NotNull] ExecutionContext executionContext,
-            [NotNull] ServiceBusMessageTestHelper serviceBusMessageTestHelper)
+            [NotNull] ServiceBusTestHelper serviceBusTestHelper)
         {
             _testOutputHelper.WriteLine($"Run {nameof(Test_ChargeCommandCompleteFlow_is_Rejected)} for CorrelationId: {executionContext.InvocationId}");
 
             // arrange
             IClock clock = SystemClock.Instance;
-            var chargeJson = TestDataHelper.GetInputJson(testFilePath, clock);
+            var chargeJson = EmbeddedResourceHelper.GetInputJson(testFilePath, clock);
 
             _testOutputHelper.WriteLine($"Content length of testfile: {chargeJson.Length}");
 
@@ -119,12 +119,12 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
 
             _testOutputHelper.WriteLine($"MessageReceiver response status: {messageReceiverHttpResponseMessage.StatusCode}");
 
-            var commandRejectedMessage = serviceBusMessageTestHelper
+            var commandRejectedMessage = serviceBusTestHelper
                 .GetMessageFromServiceBus(_commandRejectedConnectionString, _commandRejectedTopicName, _commandRejectedSubscriptionName);
 
             _testOutputHelper.WriteLine($"CommandAcceptedMessage: {commandRejectedMessage.Label}, {commandRejectedMessage.CorrelationId}");
 
-            var chargeExistsByCorrelationId = await _testDbHelper
+            var chargeExistsByCorrelationId = await _chargeDbQueries
                 .ChargeExistsByCorrelationIdAsync(executionContext.InvocationId.ToString())
                 .ConfigureAwait(false);
 

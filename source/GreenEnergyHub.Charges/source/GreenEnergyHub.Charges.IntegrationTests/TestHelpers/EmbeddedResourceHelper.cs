@@ -20,7 +20,7 @@ using NodaTime;
 
 namespace GreenEnergyHub.Charges.IntegrationTests.TestHelpers
 {
-    public static class TestDataHelper
+    public static class EmbeddedResourceHelper
     {
         public static Stream GetInputStream(string filePath, [NotNull] IClock clock)
         {

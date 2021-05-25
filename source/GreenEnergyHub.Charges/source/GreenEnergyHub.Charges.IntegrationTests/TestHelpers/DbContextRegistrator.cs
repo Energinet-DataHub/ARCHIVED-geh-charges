@@ -19,11 +19,11 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace GreenEnergyHub.Charges.IntegrationTests.TestHelpers
 {
-    public class DbFixture
+    public class DbContextRegistrator
     {
-        public DbFixture()
+        public DbContextRegistrator()
         {
-            TestConfigurationHelper.ConfigureEnvironmentVariables();
+            FunctionHostConfigurationHelper.ConfigureEnvironmentVariables();
             var connectionString = Environment.GetEnvironmentVariable("CHARGE_DB_CONNECTION_STRING");
 
             var serviceCollection = new ServiceCollection();
