@@ -15,10 +15,10 @@
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
 
-namespace GreenEnergyHub.Charges.Application.Validation.BusinessValidation
+namespace GreenEnergyHub.Charges.Application.Validation.BusinessValidation.Factories
 {
-    public interface IBusinessValidationRulesFactory
+    public interface IBusinessStopValidationRulesFactory
     {
-        Task<IValidationRuleSet> CreateRulesForChargeCommandAsync(ChargeCommand chargeCommand);
+        Task<IValidationRuleSet> CreateRulesForStopCommandAsync(ChargeCommand chargeCommand);
     }
 }

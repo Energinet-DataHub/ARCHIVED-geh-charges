@@ -16,19 +16,22 @@ using System;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
 
-namespace GreenEnergyHub.Charges.Application.Validation.BusinessValidation
+namespace GreenEnergyHub.Charges.Application.Validation.BusinessValidation.Factories
 {
     public class BusinessValidationRulesFactory : IBusinessValidationRulesFactory
     {
         private readonly IBusinessUpdateValidationRulesFactory _businessUpdateValidationRulesFactory;
         private readonly IBusinessAdditionValidationRulesFactory _businessAdditionValidationRulesFactory;
+        private readonly IBusinessStopValidationRulesFactory _businessStopValidationRulesFactory;
 
         public BusinessValidationRulesFactory(
             IBusinessUpdateValidationRulesFactory businessUpdateValidationRulesFactory,
-            IBusinessAdditionValidationRulesFactory businessAdditionValidationRulesFactory)
+            IBusinessAdditionValidationRulesFactory businessAdditionValidationRulesFactory,
+            IBusinessStopValidationRulesFactory businessStopValidationRulesFactory)
         {
             _businessUpdateValidationRulesFactory = businessUpdateValidationRulesFactory;
             _businessAdditionValidationRulesFactory = businessAdditionValidationRulesFactory;
+            _businessStopValidationRulesFactory = businessStopValidationRulesFactory;
         }
 
         public async Task<IValidationRuleSet> CreateRulesForChargeCommandAsync(ChargeCommand chargeCommand)
@@ -39,6 +42,7 @@ namespace GreenEnergyHub.Charges.Application.Validation.BusinessValidation
             {
                 OperationType.Create => await _businessAdditionValidationRulesFactory.CreateRulesForAdditionCommandAsync(chargeCommand).ConfigureAwait(false),
                 OperationType.Update => await _businessUpdateValidationRulesFactory.CreateRulesForUpdateCommandAsync(chargeCommand).ConfigureAwait(false),
+                OperationType.Stop => await _businessStopValidationRulesFactory.CreateRulesForStopCommandAsync(chargeCommand).ConfigureAwait(false),
                 _ => throw new NotImplementedException("Unknown operation"),
             };
         }

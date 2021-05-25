@@ -21,7 +21,7 @@ using GreenEnergyHub.Charges.Application.Validation.BusinessValidation.Validatio
 using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
 
-namespace GreenEnergyHub.Charges.Application.Validation.BusinessValidation
+namespace GreenEnergyHub.Charges.Application.Validation.BusinessValidation.Factories
 {
     public class BusinessAdditionValidationRulesFactory : IBusinessAdditionValidationRulesFactory
     {

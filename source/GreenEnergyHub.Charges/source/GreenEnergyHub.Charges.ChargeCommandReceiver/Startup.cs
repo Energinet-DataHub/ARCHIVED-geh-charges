@@ -21,11 +21,13 @@ using GreenEnergyHub.Charges.Application.ChangeOfCharges.Repositories;
 using GreenEnergyHub.Charges.Application.Factories;
 using GreenEnergyHub.Charges.Application.Validation;
 using GreenEnergyHub.Charges.Application.Validation.BusinessValidation;
+using GreenEnergyHub.Charges.Application.Validation.BusinessValidation.Factories;
 using GreenEnergyHub.Charges.Application.Validation.InputValidation;
 using GreenEnergyHub.Charges.ChargeCommandReceiver;
 using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.Domain.Events.Local;
 using GreenEnergyHub.Charges.Infrastructure.Context;
+using GreenEnergyHub.Charges.Infrastructure.Mapping;
 using GreenEnergyHub.Charges.Infrastructure.Messaging.Registration;
 using GreenEnergyHub.Charges.Infrastructure.Repositories;
 using GreenEnergyHub.Iso8601;
@@ -68,12 +70,15 @@ namespace GreenEnergyHub.Charges.ChargeCommandReceiver
                 options => options.UseSqlServer(connectionString));
             builder.Services.AddScoped<IChargesDatabaseContext, ChargesDatabaseContext>();
             builder.Services.AddScoped<IChargeRepository, ChargeRepository>();
+            builder.Services.AddScoped<IMarketParticipantRepository, MarketParticipantRepository>();
+            builder.Services.AddScoped<IMarketParticipantMapper, MarketParticipantMapper>();
         }
 
         private static void ConfigureValidation(IFunctionsHostBuilder builder)
         {
             builder.Services.AddScoped<IBusinessAdditionValidationRulesFactory, BusinessAdditionValidationRulesFactory>();
             builder.Services.AddScoped<IBusinessUpdateValidationRulesFactory, BusinessUpdateValidationRulesFactory>();
+            builder.Services.AddScoped<IBusinessStopValidationRulesFactory, BusinessStopValidationRulesFactory>();
             builder.Services.AddScoped<IBusinessValidationRulesFactory, BusinessValidationRulesFactory>();
             builder.Services.AddScoped<IInputValidationRulesFactory, InputValidationRulesFactory>();
             builder.Services.AddScoped<IRulesConfigurationRepository, RulesConfigurationRepository>();
