@@ -26,8 +26,10 @@ namespace GreenEnergyHub.Charges.Application.Validation.InputValidation.Validati
             _chargeCommand = chargeCommand;
         }
 
-        public bool IsValid => _chargeCommand.ChargeOperation.VatClassification is VatClassification.NoVat or VatClassification.Vat25;
+        public bool IsValid => _chargeCommand.ChargeOperation.VatClassification is VatClassification.NoVat
+            or VatClassification.Vat25;
 
-        public ValidationRuleIdentifier ValidationRuleIdentifier => ValidationRuleIdentifier.InvalidVatClassificationOnCreate;
+        public ValidationRuleIdentifier ValidationRuleIdentifier =>
+            ValidationRuleIdentifier.VatClassificationValidation;
     }
 }
