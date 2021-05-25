@@ -20,11 +20,11 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace GreenEnergyHub.Charges.IntegrationTests.TestHelpers
 {
-    public class TestDbHelper
+    public class ChargeDbQueries
     {
         private readonly ServiceProvider _serviceProvider;
 
-        public TestDbHelper(ServiceProvider serviceProvider)
+        public ChargeDbQueries(ServiceProvider serviceProvider)
         {
             _serviceProvider = serviceProvider;
         }

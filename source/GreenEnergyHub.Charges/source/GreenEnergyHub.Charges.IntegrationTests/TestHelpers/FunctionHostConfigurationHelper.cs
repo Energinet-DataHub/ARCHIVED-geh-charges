@@ -21,7 +21,7 @@ using Microsoft.Extensions.Hosting;
 
 namespace GreenEnergyHub.Charges.IntegrationTests.TestHelpers
 {
-    public static class TestConfigurationHelper
+    public static class FunctionHostConfigurationHelper
     {
         /// <summary>
         /// EnvironmentVariables are not automatically loaded when running XUnit integrationstests.
