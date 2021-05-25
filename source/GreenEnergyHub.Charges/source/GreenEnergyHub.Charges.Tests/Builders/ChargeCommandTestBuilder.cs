@@ -34,7 +34,7 @@ namespace GreenEnergyHub.Charges.Tests.Builders
             _validityStartDate = SystemClock.Instance.GetCurrentInstant()
                 .Plus(Duration.FromDays(500));
             _vatPayer = "D02";
-            _status = 2; // Addition
+            _status = 2; // Create
             _taxIndicator = false;
             _owner = "owner";
         }
@@ -104,7 +104,7 @@ namespace GreenEnergyHub.Charges.Tests.Builders
                 ChargeOperation = new ChargeOperation
                 {
                   Id = "id",
-                  OperationType = OperationType.Addition,
+                  OperationType = OperationType.Create,
                   BusinessReasonCode = BusinessReasonCode.UpdateChargeInformation,
                   ChargeName = "description",
                   ChargeId = _mrid,
