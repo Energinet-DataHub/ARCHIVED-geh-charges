@@ -34,12 +34,9 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
     {
         private readonly ITestOutputHelper _testOutputHelper;
         private readonly string _messageReceiverHostname;
-        private readonly string _commandAcceptedSubscriptionName;
-        private readonly string _commandRejectedSubscriptionName;
-        private readonly string _commandAcceptedTopicName;
-        private readonly string _commandRejectedTopicName;
-        private readonly string _commandAcceptedConnectionString;
-        private readonly string _commandRejectedConnectionString;
+        private readonly string _postOfficeSubscriptionName;
+        private readonly string _postOfficeTopicName;
+        private readonly string _postOfficeConnectionString;
         private readonly TestDbHelper _testDbHelper;
 
         public ChangeOfChargePipelineTests([NotNull] DbFixture dbFixture, ITestOutputHelper testOutputHelper)
@@ -50,17 +47,14 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
             _testDbHelper = new TestDbHelper(dbFixture.ServiceProvider);
 
             _messageReceiverHostname = Environment.GetEnvironmentVariable("MESSAGE_RECEIVER_HOSTNAME") !;
-            _commandAcceptedSubscriptionName = Environment.GetEnvironmentVariable("COMMAND_ACCEPTED_SUBSCRIPTION_NAME") !;
-            _commandRejectedSubscriptionName = Environment.GetEnvironmentVariable("COMMAND_REJECTED_SUBSCRIPTION_NAME") !;
-            _commandAcceptedTopicName = Environment.GetEnvironmentVariable("COMMAND_ACCEPTED_TOPIC_NAME") !;
-            _commandRejectedTopicName = Environment.GetEnvironmentVariable("COMMAND_REJECTED_TOPIC_NAME") !;
-            _commandAcceptedConnectionString = Environment.GetEnvironmentVariable("COMMAND_ACCEPTED_LISTENER_CONNECTION_STRING") !;
-            _commandRejectedConnectionString = Environment.GetEnvironmentVariable("COMMAND_REJECTED_LISTENER_CONNECTION_STRING") !;
+            _postOfficeSubscriptionName = Environment.GetEnvironmentVariable("POST_OFFICE_SUBSCRIPTION_NAME") !;
+            _postOfficeTopicName = Environment.GetEnvironmentVariable("POST_OFFICE_TOPIC_NAME") !;
+            _postOfficeConnectionString = Environment.GetEnvironmentVariable("POST_OFFICE_LISTENER_CONNECTION_STRING") !;
 
-            _testOutputHelper.WriteLine($"{nameof(ChangeOfChargePipelineTests)} Configuration: {_messageReceiverHostname}," +
-                                        $" {_commandAcceptedSubscriptionName}, {_commandRejectedSubscriptionName}," +
-                                        $" {_commandAcceptedTopicName}, {_commandRejectedTopicName}," +
-                                        $" {_commandAcceptedConnectionString}, {_commandRejectedConnectionString}");
+            _testOutputHelper.WriteLine($"{nameof(ChangeOfChargePipelineTests)} Configuration: " +
+                                        $"{_messageReceiverHostname}," +
+                                        $"{_postOfficeSubscriptionName}, " +
+                                        $"{_postOfficeTopicName}");
         }
 
         [Theory(Timeout = 120000)]
@@ -84,7 +78,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
             _testOutputHelper.WriteLine($"MessageReceiver response status: {messageReceiverHttpResponseMessage.StatusCode}");
 
             var commandAcceptedMessage = serviceBusMessageTestHelper
-                .GetMessageFromServiceBus(_commandAcceptedConnectionString, _commandAcceptedTopicName, _commandAcceptedSubscriptionName);
+                .GetMessageFromServiceBus(_postOfficeConnectionString, _postOfficeTopicName, _postOfficeSubscriptionName);
 
             _testOutputHelper.WriteLine($"CommandAcceptedMessage: {commandAcceptedMessage.Label}, {commandAcceptedMessage.CorrelationId}");
 
@@ -120,7 +114,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
             _testOutputHelper.WriteLine($"MessageReceiver response status: {messageReceiverHttpResponseMessage.StatusCode}");
 
             var commandRejectedMessage = serviceBusMessageTestHelper
-                .GetMessageFromServiceBus(_commandRejectedConnectionString, _commandRejectedTopicName, _commandRejectedSubscriptionName);
+                .GetMessageFromServiceBus(_postOfficeConnectionString, _postOfficeTopicName, _postOfficeSubscriptionName);
 
             _testOutputHelper.WriteLine($"CommandAcceptedMessage: {commandRejectedMessage.Label}, {commandRejectedMessage.CorrelationId}");
 
