@@ -21,11 +21,11 @@ using Xunit.Abstractions;
 namespace GreenEnergyHub.Charges.IntegrationTests.TestHelpers
 {
     // ReSharper disable once ClassNeverInstantiated.Global
-    public class ServiceBusMessageTestHelper
+    public class ServiceBusTestHelper
     {
         private readonly ITestOutputHelper _testOutputHelper;
 
-        public ServiceBusMessageTestHelper(ITestOutputHelper testOutputHelper)
+        public ServiceBusTestHelper(ITestOutputHelper testOutputHelper)
         {
             _testOutputHelper = testOutputHelper;
         }
