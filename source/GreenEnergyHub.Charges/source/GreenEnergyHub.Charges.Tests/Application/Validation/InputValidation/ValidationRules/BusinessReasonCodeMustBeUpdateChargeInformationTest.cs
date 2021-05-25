@@ -35,7 +35,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Validation.InputValidation.Va
             [NotNull] ChargeCommand command)
         {
             command.ChargeOperation.BusinessReasonCode = businessReasonCode;
-            var sut = new BusinessReasonCodeMustBeUpdateChargeInformation(command);
+            var sut = new BusinessReasonCodeMustBeUpdateChargeInformationRule(command);
             Assert.Equal(expected, sut.IsValid);
         }
     }
