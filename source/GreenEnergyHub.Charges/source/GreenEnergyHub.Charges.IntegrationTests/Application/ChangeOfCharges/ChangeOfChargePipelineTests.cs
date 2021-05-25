@@ -100,7 +100,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
         }
 
         [Theory(Timeout = 120000)]
-        [InlineAutoMoqData("TestFiles/InValidTariffAddition.json")]
+        [InlineAutoMoqData("TestFiles/InvalidTariffAddition.json")]
         public async Task Test_ChargeCommandCompleteFlow_is_Rejected(
             string testFilePath,
             [NotNull] ExecutionContext executionContext,
