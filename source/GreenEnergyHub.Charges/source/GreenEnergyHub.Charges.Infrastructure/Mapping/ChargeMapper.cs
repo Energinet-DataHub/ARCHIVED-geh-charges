@@ -32,6 +32,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Mapping
             MarketParticipant marketParticipant)
         {
             if (charge == null) throw new ArgumentNullException(nameof(charge));
+
             return new ChargeOperation
             {
                 Charge = MapDomainChargeToCharge(charge, marketParticipant),
@@ -66,7 +67,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Mapping
                 {
                     Position = x.RowId,
                     Price = x.Price,
-                    Time = Instant.FromUnixTimeTicks(x.Time),
+                    Time = Instant.FromDateTimeUtc(x.Time),
                 }).ToList(),
                 Document = new Document
                 {
@@ -112,7 +113,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Mapping
 
             return charge.Points.Select(point => new ChargePrice
                 {
-                    Time = point.Time.ToUnixTimeTicks(),
+                    Time = point.Time.ToDateTimeUtc(),
                     Price = point.Price,
                     Retired = false,
                 }).ToList();

@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -29,7 +30,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Context.Model
         [ForeignKey("ChargeOperation")]
         public int ChargeOperationRowId { get; set; }
 
-        public long Time { get; set; }
+        public DateTime Time { get; set; }
 
         public decimal Price { get; set; }
 

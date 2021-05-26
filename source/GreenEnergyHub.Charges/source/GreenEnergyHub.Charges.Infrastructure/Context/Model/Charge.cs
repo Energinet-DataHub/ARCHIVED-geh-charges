@@ -14,7 +14,7 @@
 
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+
 #pragma warning disable 8618
 #pragma warning disable CA2227
 
@@ -47,10 +47,10 @@ namespace GreenEnergyHub.Charges.Infrastructure.Context.Model
 
         public byte TransparentInvoicing { get; set; }
 
+        public virtual MarketParticipant MarketParticipant { get; set; }
+
         public virtual List<ChargePrice> ChargePrices { get; set; }
 
         public virtual List<ChargePeriodDetails> ChargePeriodDetails { get; set; }
-
-        public virtual MarketParticipant MarketParticipant { get; set; }
     }
 }
