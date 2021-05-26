@@ -5,6 +5,7 @@ All process flows within the Charges domain will be gathered here.
 | Process flows |
 |-------------------|
 |[Change of charge price list](#Change-of-charge-price-list-flow)|
+|[Persisting charges ruleset](#Persisting-charges-ruleset)|
 |...|
 <br>
 
@@ -14,3 +15,13 @@ The following process flow depicts the different paths a change of charge price 
 It also shows the micro services involved along with the activities they perform.
 
 ![Process flow](.././images/ChangeOfChargePriceListProcessFlow.png)
+
+## Persisting charges ruleset
+
+Below process flow depicts our ruleset for persisting an incoming charge in the SQL database.
+The ruleset documents the different persistence paths the system can take given circumstances like charge already exist (same Charge ID and Owner) and if so, whether the incoming charge has a period that overlaps any of the existing charge's periods. 
+All paths outline the exact database tables it needs to interact with and when existing charge data, e.g periods or prices need to be retired.
+
+The ruleset assumes the incoming charge has been converted to an internal model, i.e. the ChargeCommand, and it has passed both input and business validations.
+
+![Persisting charges ruleset](.././images/PersistingChargesRuleSet_ProcessFlow.png)
