@@ -77,7 +77,7 @@ resource "azurerm_servicebus_subscription" "sbs_post_office" {
 module "kv_sbs_post_office" {
   source        = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//key-vault-secret?ref=1.2.0"
   name          = "POST-OFFICE-SUBSCRIPTION-NAME"
-  value         = "sbs_post_office"
+  value         = "sbs-post-office"
   key_vault_id  = module.kv_charges.id
   tags          = data.azurerm_resource_group.main.tags
   dependencies  = [module.kv_charges.dependent_on]
