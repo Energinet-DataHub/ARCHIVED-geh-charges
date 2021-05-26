@@ -37,8 +37,8 @@ namespace GreenEnergyHub.Charges.Application.Validation.BusinessValidation
 
             return chargeCommand.ChargeOperation.OperationType switch
             {
-                OperationType.Addition => await _businessAdditionValidationRulesFactory.CreateRulesForAdditionCommandAsync(chargeCommand).ConfigureAwait(false),
-                OperationType.Change => await _businessUpdateValidationRulesFactory.CreateRulesForUpdateCommandAsync(chargeCommand).ConfigureAwait(false),
+                OperationType.Create => await _businessAdditionValidationRulesFactory.CreateRulesForAdditionCommandAsync(chargeCommand).ConfigureAwait(false),
+                OperationType.Update => await _businessUpdateValidationRulesFactory.CreateRulesForUpdateCommandAsync(chargeCommand).ConfigureAwait(false),
                 _ => throw new NotImplementedException("Unknown operation"),
             };
         }

@@ -26,9 +26,9 @@ namespace GreenEnergyHub.Charges.Tests.Application.Validation.InputValidation.Va
     {
         [Theory]
         [InlineAutoMoqData(OperationType.Unknown, false)]
-        [InlineAutoMoqData(OperationType.Addition, true)]
-        [InlineAutoMoqData(OperationType.Change, true)]
-        [InlineAutoMoqData(OperationType.Deletion, true)]
+        [InlineAutoMoqData(OperationType.Create, true)]
+        [InlineAutoMoqData(OperationType.Update, true)]
+        [InlineAutoMoqData(OperationType.Stop, true)]
         [InlineAutoMoqData(-1, false)]
         public void Test(
             OperationType operationType,

@@ -188,7 +188,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
                     CreatedDateTime = SystemClock.Instance.GetCurrentInstant(),
                 },
                 ChargeOperationId = "id",
-                Status = OperationType.Addition,
+                Status = OperationType.Create,
                 BusinessReasonCode = BusinessReasonCode.UpdateChargeInformation,
                 LastUpdatedBy = "LastUpdatedBy",
             };

@@ -32,13 +32,16 @@ namespace GreenEnergyHub.Charges.Application.Validation.InputValidation
             IValidationRuleSet ruleSet;
             switch (chargeCommand.ChargeOperation.OperationType)
             {
-                case OperationType.Addition:
+                case OperationType.Unknown:
+                    ruleSet = _inputValidationRulesFactory.CreateRulesForChargeUnknownCommand(chargeCommand);
+                    return ruleSet.Validate();
+                case OperationType.Create:
                     ruleSet = _inputValidationRulesFactory.CreateRulesForChargeCreateCommand(chargeCommand);
                     return ruleSet.Validate();
-                case OperationType.Deletion:
+                case OperationType.Stop:
                     ruleSet = _inputValidationRulesFactory.CreateRulesForChargeStopCommand(chargeCommand);
                     return ruleSet.Validate();
-                case OperationType.Change:
+                case OperationType.Update:
                     ruleSet = _inputValidationRulesFactory.CreateRulesForChargeUpdateCommand(chargeCommand);
                     return ruleSet.Validate();
                 default:
