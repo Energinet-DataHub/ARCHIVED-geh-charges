@@ -74,7 +74,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
             var chargeJson = EmbeddedResourceHelper.GetInputJson(testFilePath, clock);
             var chargeCommand = new JsonSerializer().Deserialize<ChargeCommand>(chargeJson);
 
-            _testOutputHelper.WriteLine($"Content length of testfile: {chargeJson.Length}");
+            _testOutputHelper.WriteLine($"ChargeCommand.Document.ID: {chargeCommand.Document.Id}");
 
             // act
             var messageReceiverHttpResponseMessage = await RunMessageReceiver(chargeJson).ConfigureAwait(false);
@@ -87,10 +87,10 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
             var messageJson = Encoding.UTF8.GetString(commandAcceptedMessage.Body);
             var chargeConfirmation = new JsonSerializer().Deserialize<ChargeConfirmation>(messageJson);
 
-            _testOutputHelper.WriteLine($"CommandAcceptedMessage: {commandAcceptedMessage.Label}, {commandAcceptedMessage.CorrelationId}");
+            _testOutputHelper.WriteLine($"CommandAcceptedMessage: {commandAcceptedMessage.CorrelationId}");
 
             var chargeExistsByCorrelationId = await _chargeDbQueries
-                .ChargeExistsByCorrelationIdAsync(executionContext.InvocationId.ToString())
+                .ChargeExistsByCorrelationIdAsync(chargeConfirmation.CorrelationId)
                 .ConfigureAwait(false);
 
             // assert
@@ -114,7 +114,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
             var chargeJson = EmbeddedResourceHelper.GetInputJson(testFilePath, clock);
             var chargeCommand = new JsonSerializer().Deserialize<ChargeCommand>(chargeJson);
 
-            _testOutputHelper.WriteLine($"Content length of testfile: {chargeJson.Length}");
+            _testOutputHelper.WriteLine($"ChargeCommand.Document.ID: {chargeCommand.Document.Id}");
 
             // act
             var messageReceiverHttpResponseMessage = await RunMessageReceiver(chargeJson).ConfigureAwait(false);
@@ -128,7 +128,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
             var messageJson = Encoding.UTF8.GetString(commandRejectedMessage.Body);
             var chargeRejection = new JsonSerializer().Deserialize<ChargeRejection>(messageJson);
 
-            _testOutputHelper.WriteLine($"CommandAcceptedMessage: {commandRejectedMessage.Label}, {commandRejectedMessage.CorrelationId}");
+            _testOutputHelper.WriteLine($"CommandAcceptedMessage: {commandRejectedMessage.CorrelationId}");
 
             var chargeExistsByCorrelationId = await _chargeDbQueries
                 .ChargeExistsByCorrelationIdAsync(executionContext.InvocationId.ToString())
