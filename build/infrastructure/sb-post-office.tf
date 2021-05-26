@@ -30,6 +30,15 @@ module "sbt_post_office" {
   resource_group_name = data.azurerm_resource_group.main.name
 }
 
+module "kv_post_office_topic_name" {
+  source        = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//key-vault-secret?ref=1.2.0"
+  name          = "POST-OFFICE-TOPIC-NAME"
+  value         = "sbt-post-office"
+  key_vault_id  = module.kv_charges.id
+  tags          = data.azurerm_resource_group.main.tags
+  dependencies  = [module.kv_charges.dependent_on]
+}
+
 module "sbtar_post_office_listener" {
   source                    = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//service-bus-topic-auth-rule?ref=1.2.0"
   name                      = "sbtar-post-office-listener"
@@ -37,6 +46,15 @@ module "sbtar_post_office_listener" {
   resource_group_name       = data.azurerm_resource_group.main.name
   listen                    = true
   topic_name                = module.sbt_post_office.name
+}
+
+module "kv_post_office_listener_connection_string" {
+  source        = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//key-vault-secret?ref=1.3.0"
+  name          = "POST-OFFICE-LISTENER-CONNECTION-STRING"
+  value         = trimsuffix(module.sbtar_post_office_listener.primary_connection_string, ";EntityPath=${module.sbt_post_office.name}")
+  key_vault_id  = module.kv_charges.id
+  tags          = data.azurerm_resource_group.main.tags
+  dependencies  = [module.kv_charges.dependent_on, module.sbtar_post_office_listener.dependent_on]
 }
 
 module "sbtar_post_office_sender" {
@@ -54,4 +72,13 @@ resource "azurerm_servicebus_subscription" "sbs_post_office" {
   namespace_name      = module.sbn_charges.name
   topic_name          = module.sbt_post_office.name
   max_delivery_count  = 1
+}
+
+module "kv_sbs_post_office" {
+  source        = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//key-vault-secret?ref=1.2.0"
+  name          = "POST-OFFICE-SUBSCRIPTION-NAME"
+  value         = "sbs_post_office"
+  key_vault_id  = module.kv_charges.id
+  tags          = data.azurerm_resource_group.main.tags
+  dependencies  = [module.kv_charges.dependent_on]
 }
