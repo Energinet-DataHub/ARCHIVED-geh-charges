@@ -16,6 +16,7 @@ namespace GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction
 {
     /// <summary>
     /// The kind of charge: Subscription ("D01") | Fee ("D02") | Tariff ("D03").
+    /// IMPORTANT: The enum is used in transportation so make sure not to change existing numbers.
     /// </summary>
     public enum ChargeType
     {
