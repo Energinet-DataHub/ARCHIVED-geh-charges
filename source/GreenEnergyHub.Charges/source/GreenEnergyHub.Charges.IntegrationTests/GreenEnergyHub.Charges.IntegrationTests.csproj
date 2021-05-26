@@ -60,8 +60,8 @@ limitations under the License.
     </ItemGroup>
 
     <ItemGroup>
-      <None Update="local.settings.json">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <None Update="integrationtest.local.settings.json">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         <CopyToPublishDirectory>Never</CopyToPublishDirectory>
       </None>
     </ItemGroup>
