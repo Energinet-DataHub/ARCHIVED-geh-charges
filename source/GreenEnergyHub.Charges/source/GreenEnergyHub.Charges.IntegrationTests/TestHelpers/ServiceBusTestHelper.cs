@@ -37,18 +37,6 @@ namespace GreenEnergyHub.Charges.IntegrationTests.TestHelpers
         {
             Message receivedMessage = null!;
 
-            // var completion = new TaskCompletionSource<UserEvent>();
-            //
-            // subscriptionClient.RegisterMessageHandler((message, ct) =>
-            // {
-            //     var json = Encoding.UTF8.GetString(message.Body);
-            //     UserEvent ev = JsonSerializer.Deserialize<UserEvent>(json);
-            //     completion.SetResult(ev);
-            //     return Task.CompletedTask;
-            //
-            // }, new MessageHandlerOptions(ExceptionReceivedHandler));
-            //
-            // UserEvent reveivedEvent = await completion.Task;
             var subscriptionClient = GetSubscriptionClient(serviceBusConnectionString, serviceBusTopic, serviceBusSubscription);
 
             subscriptionClient.RegisterMessageHandler(
