@@ -107,14 +107,16 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
 
             // act
             var messageReceiverResult = await RunMessageReceiver(logger, executionContext, req).ConfigureAwait(false);
-            var commandReceivedMessage = serviceBusTestHelper
-                .GetMessageFromServiceBus(_commandReceivedConnectionString, _commandReceivedTopicName, _commandReceivedSubscriptionName);
+            var commandReceivedMessage = await serviceBusTestHelper
+                .GetMessageFromServiceBusAsync(_commandReceivedConnectionString, _commandReceivedTopicName, _commandReceivedSubscriptionName)
+                .ConfigureAwait(false);
             _testOutputHelper.WriteLine($"Message to be handled by ChargeCommandEndpoint: {commandReceivedMessage.Body.Length}");
 
             await _chargeCommandEndpoint.RunAsync(commandReceivedMessage.Body, logger.Object).ConfigureAwait(false);
 
-            var commandAcceptedMessage = serviceBusTestHelper
-                .GetMessageFromServiceBus(_commandAcceptedConnectionString, _commandAcceptedTopicName, _commandAcceptedSubscriptionName);
+            var commandAcceptedMessage = await serviceBusTestHelper
+                .GetMessageFromServiceBusAsync(_commandAcceptedConnectionString, _commandAcceptedTopicName, _commandAcceptedSubscriptionName)
+                .ConfigureAwait(false);
             _testOutputHelper.WriteLine($"Message accepted by ChargeCommandEndpoint: {commandAcceptedMessage.Body.Length}");
 
             var chargeExistsByCorrelationId = await _chargeDbQueries
@@ -144,14 +146,15 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
 
             // act
             var messageReceiverResult = await RunMessageReceiver(logger, executionContext, req).ConfigureAwait(false);
-            var commandReceivedMessage = serviceBusTestHelper
-                .GetMessageFromServiceBus(_commandReceivedConnectionString, _commandReceivedTopicName, _commandReceivedSubscriptionName);
+            var commandReceivedMessage = await serviceBusTestHelper
+                .GetMessageFromServiceBusAsync(_commandReceivedConnectionString, _commandReceivedTopicName, _commandReceivedSubscriptionName)
+                .ConfigureAwait(false);
             _testOutputHelper.WriteLine($"Message to be handled by ChargeCommandEndpoint: {commandReceivedMessage.Body.Length}");
 
             await _chargeCommandEndpoint.RunAsync(commandReceivedMessage.Body, logger.Object).ConfigureAwait(false);
 
-            var commandRejectedMessage = serviceBusTestHelper
-                .GetMessageFromServiceBus(_commandRejectedConnectionString, _commandRejectedTopicName, _commandRejectedSubscriptionName);
+            var commandRejectedMessage = await serviceBusTestHelper
+                .GetMessageFromServiceBusAsync(_commandRejectedConnectionString, _commandRejectedTopicName, _commandRejectedSubscriptionName).ConfigureAwait(false);
             _testOutputHelper.WriteLine($"Message accepted by ChargeCommandEndpoint: {commandRejectedMessage.Body.Length}");
 
             var chargeExistsByCorrelationId = await _chargeDbQueries

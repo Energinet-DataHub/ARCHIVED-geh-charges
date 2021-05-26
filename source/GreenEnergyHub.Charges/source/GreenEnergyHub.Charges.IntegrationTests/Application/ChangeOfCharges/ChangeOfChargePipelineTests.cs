@@ -77,8 +77,9 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
 
             _testOutputHelper.WriteLine($"MessageReceiver response status: {messageReceiverHttpResponseMessage.StatusCode}");
 
-            var commandAcceptedMessage = serviceBusTestHelper
-                .GetMessageFromServiceBus(_postOfficeConnectionString, _postOfficeTopicName, _postOfficeSubscriptionName);
+            var commandAcceptedMessage = await serviceBusTestHelper
+                .GetMessageFromServiceBusAsync(_postOfficeConnectionString, _postOfficeTopicName, _postOfficeSubscriptionName)
+                .ConfigureAwait(false);
 
             _testOutputHelper.WriteLine($"CommandAcceptedMessage: {commandAcceptedMessage.Label}, {commandAcceptedMessage.CorrelationId}");
 
@@ -113,8 +114,9 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
 
             _testOutputHelper.WriteLine($"MessageReceiver response status: {messageReceiverHttpResponseMessage.StatusCode}");
 
-            var commandRejectedMessage = serviceBusTestHelper
-                .GetMessageFromServiceBus(_postOfficeConnectionString, _postOfficeTopicName, _postOfficeSubscriptionName);
+            var commandRejectedMessage = await serviceBusTestHelper
+                .GetMessageFromServiceBusAsync(_postOfficeConnectionString, _postOfficeTopicName, _postOfficeSubscriptionName)
+                .ConfigureAwait(false);
 
             _testOutputHelper.WriteLine($"CommandAcceptedMessage: {commandRejectedMessage.Label}, {commandRejectedMessage.CorrelationId}");
 
