@@ -94,7 +94,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
         }
 
         [Theory(Skip = "Run at localhost to integration test local code using sandboxed Service Bus")]
-        [InlineAutoMoqData("TestFiles/ValidTariffAddition.json")]
+        [InlineAutoMoqData("TestFiles/ValidCreateTariffCommand.json")]
         public async Task Test_ChargeCommand_is_Accepted(
             string testFilePath,
             [NotNull] [Frozen] Mock<ILogger> logger,
@@ -131,7 +131,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
         }
 
         [Theory(Skip = "Run at localhost to integration test local code using sandboxed Service Bus")]
-        [InlineAutoMoqData("TestFiles/InvalidTariffAddition.json")]
+        [InlineAutoMoqData("TestFiles/InValidCreateTariffCommand.json")]
         public async Task Test_ChargeCommand_is_Rejected(
             string testFilePath,
             [NotNull] [Frozen] Mock<ILogger> logger,

@@ -60,7 +60,7 @@ namespace GreenEnergyHub.Charges.Application.Validation.BusinessValidation.Facto
             var configuration = await _rulesConfigurationRepository.GetConfigurationAsync().ConfigureAwait(false);
 
             var senderId = chargeCommand.Document.Sender.Id;
-            var sender = _marketParticipantRepository.GetEnergySupplierOrNull(senderId);
+            var sender = _marketParticipantRepository.GetMarketParticipantOrNull(senderId);
 
             var rules = GetRules(chargeCommand, configuration, charge, sender);
 

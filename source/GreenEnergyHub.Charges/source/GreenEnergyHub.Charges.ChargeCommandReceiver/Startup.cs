@@ -76,7 +76,7 @@ namespace GreenEnergyHub.Charges.ChargeCommandReceiver
 
         private static void ConfigureValidation(IFunctionsHostBuilder builder)
         {
-            builder.Services.AddScoped<IBusinessAdditionValidationRulesFactory, BusinessAdditionValidationRulesFactory>();
+            builder.Services.AddScoped<IBusinessCreateValidationRulesFactory, BusinessCreateValidationRulesFactory>();
             builder.Services.AddScoped<IBusinessUpdateValidationRulesFactory, BusinessUpdateValidationRulesFactory>();
             builder.Services.AddScoped<IBusinessStopValidationRulesFactory, BusinessStopValidationRulesFactory>();
             builder.Services.AddScoped<IBusinessValidationRulesFactory, BusinessValidationRulesFactory>();

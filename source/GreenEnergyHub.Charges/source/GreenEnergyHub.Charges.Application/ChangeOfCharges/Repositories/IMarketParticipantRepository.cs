@@ -24,6 +24,6 @@ namespace GreenEnergyHub.Charges.Application.ChangeOfCharges.Repositories
         /// <summary>
         /// Get all energy suppliers.
         /// </summary>
-        MarketParticipant? GetEnergySupplierOrNull(string id);
+        MarketParticipant? GetMarketParticipantOrNull(string id);
     }
 }

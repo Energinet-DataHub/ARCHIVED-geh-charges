@@ -34,12 +34,11 @@ namespace GreenEnergyHub.Charges.Infrastructure.Repositories
             _mapper = mapper;
         }
 
-        public MarketParticipant? GetEnergySupplierOrNull(string id)
+        public MarketParticipant? GetMarketParticipantOrNull(string id)
         {
             return _chargesDatabaseContext
                 .MarketParticipant
                 .Where(mp => mp.MRid == id)
-                .HasRole(MarketParticipantRole.EnergySupplier)
                 .AsEnumerable()
                 .Select(_mapper.ToDomainObject)
                 .SingleOrDefault();

@@ -16,11 +16,15 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoFixture.Xunit2;
 using FluentAssertions;
+using GreenEnergyHub.Charges.Application.Validation.BusinessValidation;
 using GreenEnergyHub.Charges.Application.Validation.BusinessValidation.Factories;
 using GreenEnergyHub.Charges.Application.Validation.BusinessValidation.ValidationRules;
+using GreenEnergyHub.Charges.Core;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
 using GreenEnergyHub.Charges.TestCore;
+using Moq;
 using Xunit;
 using Xunit.Categories;
 
@@ -36,10 +40,12 @@ namespace GreenEnergyHub.Charges.Tests.Application.Validation.BusinessValidation
         public async Task CreateRulesForCreateCommandAsync_ReturnsRulesContainingExpectedRuleType(
             Type expectedRuleType,
             ChargeType chargeType,
+            [NotNull] [Frozen] Mock<IRulesConfigurationRepository> updateRulesConfigurationRepository,
             [NotNull] BusinessCreateValidationRulesFactory sut,
             [NotNull] TestableChargeCommand chargeCommand)
         {
             // Arrange
+            ConfigureRepositoryMock(updateRulesConfigurationRepository);
             var command = TurnCommandIntoSpecifiedChargeType(chargeCommand, chargeType);
 
             // Act
@@ -55,6 +61,25 @@ namespace GreenEnergyHub.Charges.Tests.Application.Validation.BusinessValidation
             chargeCommand.ChargeOperation.Type = chargeType;
             chargeCommand.ChargeOperation.OperationType = OperationType.Create;
             return chargeCommand;
+        }
+
+        private static void ConfigureRepositoryMock(
+            Mock<IRulesConfigurationRepository> updateRulesConfigurationRepository)
+        {
+            var configuration = CreateConfiguration();
+            updateRulesConfigurationRepository
+                .Setup(r => r.GetConfigurationAsync())
+                .Returns(Task.FromResult(configuration));
+        }
+
+        /// <summary>
+        /// Workaround because we haven't yet found a way to have AutoFixture create objects
+        /// without parameterless constructors.
+        /// </summary>
+        private static RulesConfiguration CreateConfiguration()
+        {
+            return new RulesConfiguration(
+                new StartDateValidationRuleConfiguration(new Interval<int>(31, 1095)));
         }
     }
 }

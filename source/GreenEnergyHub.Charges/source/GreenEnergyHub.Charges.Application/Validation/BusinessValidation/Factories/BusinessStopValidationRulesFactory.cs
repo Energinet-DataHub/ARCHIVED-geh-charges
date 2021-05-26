@@ -35,7 +35,7 @@ namespace GreenEnergyHub.Charges.Application.Validation.BusinessValidation.Facto
             if (chargeCommand == null) throw new ArgumentNullException(nameof(chargeCommand));
 
             var senderId = chargeCommand.Document.Sender.Id;
-            var sender = _marketParticipantRepository.GetEnergySupplierOrNull(senderId);
+            var sender = _marketParticipantRepository.GetMarketParticipantOrNull(senderId);
 
             var rules = new List<IValidationRule>
             {

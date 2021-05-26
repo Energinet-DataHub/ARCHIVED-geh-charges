@@ -14,8 +14,14 @@
 
 namespace GreenEnergyHub.Charges.Domain.Common
 {
+    /// <summary>
+    /// IMPORTANT: This is used in transport so the numbers matters.
+    /// </summary>
     public enum MarketParticipantRole
     {
-        EnergySupplier,
+        Unknown = 0,
+        EnergySupplier = 1,
+        GridOperator = 2,
+        SystemOperator = 3,
     }
 }

@@ -58,7 +58,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
         }
 
         [Theory(Timeout = 120000)]
-        [InlineAutoMoqData("TestFiles/ValidTariffAddition.json")]
+        [InlineAutoMoqData("TestFiles/ValidCreateTariffCommand.json")]
         public async Task Test_ChargeCommandCompleteFlow_is_Accepted(
             string testFilePath,
             [NotNull] ExecutionContext executionContext,
@@ -94,7 +94,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
         }
 
         [Theory(Timeout = 120000)]
-        [InlineAutoMoqData("TestFiles/InvalidTariffAddition.json")]
+        [InlineAutoMoqData("TestFiles/InValidCreateTariffCommand.json")]
         public async Task Test_ChargeCommandCompleteFlow_is_Rejected(
             string testFilePath,
             [NotNull] ExecutionContext executionContext,

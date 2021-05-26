@@ -14,36 +14,75 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application.ChangeOfCharges.Repositories;
 using GreenEnergyHub.Charges.Application.Validation.BusinessValidation.ValidationRules;
+using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
+using GreenEnergyHub.Charges.Domain.Common;
 
 namespace GreenEnergyHub.Charges.Application.Validation.BusinessValidation.Factories
 {
     public class BusinessCreateValidationRulesFactory : IBusinessCreateValidationRulesFactory
     {
+        private readonly IRulesConfigurationRepository _rulesConfigurationRepository;
+        private readonly IChargeRepository _chargeRepository;
+        private readonly IZonedDateTimeService _zonedDateTimeService;
         private readonly IMarketParticipantRepository _marketParticipantRepository;
 
-        public BusinessCreateValidationRulesFactory(IMarketParticipantRepository marketParticipantRepository)
+        public BusinessCreateValidationRulesFactory(
+            IRulesConfigurationRepository rulesConfigurationRepository,
+            IChargeRepository chargeRepository,
+            IZonedDateTimeService zonedDateTimeService,
+            IMarketParticipantRepository marketParticipantRepository)
         {
+            _rulesConfigurationRepository = rulesConfigurationRepository;
+            _chargeRepository = chargeRepository;
+            _zonedDateTimeService = zonedDateTimeService;
             _marketParticipantRepository = marketParticipantRepository;
         }
 
-        public Task<IValidationRuleSet> CreateRulesForCreateCommandAsync(ChargeCommand chargeCommand)
+        public async Task<IValidationRuleSet> CreateRulesForCreateCommandAsync([NotNull] ChargeCommand chargeCommand)
         {
-            if (chargeCommand == null) throw new ArgumentNullException(nameof(chargeCommand));
+            await CheckIfChargeExistAsync(chargeCommand).ConfigureAwait(false);
+            var configuration = await _rulesConfigurationRepository.GetConfigurationAsync().ConfigureAwait(false);
 
             var senderId = chargeCommand.Document.Sender.Id;
-            var sender = _marketParticipantRepository.GetEnergySupplierOrNull(senderId);
+            var sender = _marketParticipantRepository.GetMarketParticipantOrNull(senderId);
 
+            var rules = GetRules(chargeCommand, configuration, sender);
+
+            return ValidationRuleSet.FromRules(rules);
+        }
+
+        private List<IValidationRule> GetRules(
+            ChargeCommand command,
+            RulesConfiguration configuration,
+            MarketParticipant? sender)
+        {
             var rules = new List<IValidationRule>
             {
+                new StartDateValidationRule(
+                    command,
+                    configuration.StartDateValidationRuleConfiguration,
+                    _zonedDateTimeService),
                 new CommandSenderMustBeAnExistingPartyRule(sender),
             };
 
-            var ruleSet = ValidationRuleSet.FromRules(rules);
-            return Task.FromResult(ruleSet);
+            return rules;
+        }
+
+        private async Task CheckIfChargeExistAsync(ChargeCommand command)
+        {
+            var chargeTypeMRid = command.ChargeOperation.Id;
+            var commandChargeTypeOwnerMRid = command.ChargeOperation.ChargeOwner;
+
+            var result = await _chargeRepository.CheckIfChargeExistsAsync(chargeTypeMRid, commandChargeTypeOwnerMRid).ConfigureAwait(false);
+            if (result)
+            {
+                throw new Exception($"Charge found on MRid: {chargeTypeMRid}, ChargeTypeOwnerMRid: {commandChargeTypeOwnerMRid}");
+            }
         }
     }
 }

@@ -19,13 +19,17 @@ namespace GreenEnergyHub.Charges.Infrastructure.Mapping
 {
     public static class MarketParticipantRoleMapper
     {
-        private const string EnergySupplierDatabaseValue = "DDQ";
+        private const string EnergySupplier = "DDQ";
+        private const string GridOperator = "DDM";
+        private const string SystemOperator = "EZ";
 
         public static string ToDatabaseValue(this MarketParticipantRole role)
         {
             return role switch
             {
-                MarketParticipantRole.EnergySupplier => EnergySupplierDatabaseValue,
+                MarketParticipantRole.EnergySupplier => EnergySupplier,
+                MarketParticipantRole.GridOperator => GridOperator,
+                MarketParticipantRole.SystemOperator => SystemOperator,
                 _ => throw new NotImplementedException(role.ToString()),
             };
         }
@@ -34,7 +38,9 @@ namespace GreenEnergyHub.Charges.Infrastructure.Mapping
         {
             return role switch
             {
-                EnergySupplierDatabaseValue => MarketParticipantRole.EnergySupplier,
+                EnergySupplier => MarketParticipantRole.EnergySupplier,
+                GridOperator => MarketParticipantRole.GridOperator,
+                SystemOperator => MarketParticipantRole.SystemOperator,
                 _ => throw new NotImplementedException(role),
             };
         }
