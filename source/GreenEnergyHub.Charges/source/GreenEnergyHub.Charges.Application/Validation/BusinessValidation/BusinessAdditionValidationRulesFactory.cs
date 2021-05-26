@@ -67,7 +67,7 @@ namespace GreenEnergyHub.Charges.Application.Validation.BusinessValidation
             var chargeTypeMRid = command.ChargeOperation.Id;
             var commandChargeTypeOwnerMRid = command.ChargeOperation.ChargeOwner;
 
-            var result = await _chargeRepository.CheckIfChargeExistsAsync(chargeTypeMRid, commandChargeTypeOwnerMRid).ConfigureAwait(false);
+            var result = await _chargeRepository.CheckIfChargeExistsAsync(chargeTypeMRid, commandChargeTypeOwnerMRid, command.ChargeOperation.Type).ConfigureAwait(false);
             if (result)
             {
                 throw new Exception($"Charge found on MRid: {chargeTypeMRid}, ChargeTypeOwnerMRid: {commandChargeTypeOwnerMRid}");

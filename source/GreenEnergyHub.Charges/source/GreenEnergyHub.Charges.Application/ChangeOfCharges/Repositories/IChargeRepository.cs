@@ -14,6 +14,7 @@
 
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Domain;
+using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
 
 namespace GreenEnergyHub.Charges.Application.ChangeOfCharges.Repositories
 {
@@ -24,9 +25,9 @@ namespace GreenEnergyHub.Charges.Application.ChangeOfCharges.Repositories
     {
         Task StoreChargeAsync(Charge newCharge);
 
-        Task<Charge> GetChargeAsync(string chargeId, string owner);
+        Task<Charge> GetChargeAsync(string chargeId, string owner, ChargeType chargeType);
 
-        Task<bool> CheckIfChargeExistsAsync(string chargeId, string owner);
+        Task<bool> CheckIfChargeExistsAsync(string chargeId, string owner, ChargeType chargeType);
 
         Task<bool> CheckIfChargeExistsByCorrelationIdAsync(string correlationId);
     }

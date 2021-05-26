@@ -21,112 +21,115 @@ using GreenEnergyHub.Charges.Infrastructure.Context.Model;
 using JetBrains.Annotations;
 using NodaTime;
 using ChargeOperation = GreenEnergyHub.Charges.Infrastructure.Context.Model.ChargeOperation;
+using MarketParticipant = GreenEnergyHub.Charges.Infrastructure.Context.Model.MarketParticipant;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Mapping
 {
     public static class ChargeMapper
     {
-        public static Charge MapDomainChargeToCharge(
-            [NotNull] Domain.Charge c)
-        {
-            if (c == null) throw new ArgumentNullException(nameof(c));
-
-            var charge = new Charge
-            {
-                Currency = "DKK",
-                Name = c.Name,
-                Owner = c.Owner,
-                ChargeId = c.Id,
-                ChargeType = (int)c.Type,
-                ResolutionType = (int)c.Resolution,
-                TaxIndicator = Convert.ToByte(c.TaxIndicator),
-                TransparentInvoicing = Convert.ToByte(c.TransparentInvoicing),
-            };
-
-            return charge;
-        }
-
-        public static ChargeOperation CreateChargeOperation(
-            [NotNull] Domain.Charge c,
-            int chargeRowId)
-        {
-            if (c == null) throw new ArgumentNullException(nameof(c));
-
-            return new ChargeOperation
-            {
-                CorrelationId = c.Document.CorrelationId,
-                WriteDateTime = c.Document.CreatedDateTime.ToDateTimeUtc(),
-                ChargeOperationId = c.Document.Id,
-                ChargeRowId = chargeRowId,
-            };
-        }
-
-        public static IEnumerable<ChargePrice> CreateChargePrice(
-            [NotNull] Domain.Charge c,
-            int chargeRowId,
-            int chargeOperationRowId)
-        {
-            if (c == null) throw new ArgumentNullException(nameof(c));
-
-            return c.Points.Select(point => new ChargePrice
-                {
-                    Time = point.Time.ToUnixTimeTicks(),
-                    Price = point.Price,
-                    Retired = false,
-                    ChargeRowId = chargeRowId,
-                    ChargeOperationRowId = chargeOperationRowId,
-                })
-                .ToList();
-        }
-
-        public static ChargePeriodDetails CreateChargePeriodDetails(
-            [NotNull] Domain.Charge c,
-            int chargeRowId,
-            int chargeOperationRowId)
-        {
-            if (c == null) throw new ArgumentNullException(nameof(c));
-
-            return new ChargePeriodDetails
-            {
-                Description = c.Description,
-                Name = c.Name,
-                VatClassification = (int)c.VatClassification,
-                ChargeRowId = chargeRowId,
-                EndTimeDate = c.EndDateTime?.ToDateTimeUtc(),
-                StartTimeDate = c.StartDateTime.ToDateTimeUtc(),
-                ChargeOperationRowId = chargeOperationRowId,
-            };
-        }
-
-        public static Domain.Charge MapChargeToChangeOfChargesMessage(Charge charge)
+        public static ChargeOperation MapToChargeOperation(
+            [NotNull] Domain.Charge charge,
+            MarketParticipant marketParticipant)
         {
             if (charge == null) throw new ArgumentNullException(nameof(charge));
+            return new ChargeOperation
+            {
+                Charge = MapDomainChargeToCharge(charge, marketParticipant),
+                CorrelationId = charge.Document.CorrelationId,
+                WriteDateTime = charge.Document.RequestDate.ToDateTimeUtc(),
+                ChargeOperationId = charge.ChargeOperationId,
+            };
+        }
+
+        public static Domain.Charge MapChargeToChargeDomainModel(Charge charge)
+        {
+            if (charge == null) throw new ArgumentNullException(nameof(charge));
+
             var validChargeDetails = charge.ChargePeriodDetails
                 .OrderBy(x => Math.Abs((x.StartTimeDate - DateTime.UtcNow).Ticks)).First();
 
             return new Domain.Charge
             {
-                    Id = charge.ChargeId,
-                    Type = (ChargeType)charge.ChargeType,
-                    Name = validChargeDetails.Name, // Description to be Name
-                    Description = validChargeDetails.Description, // LongDescription to be Description
-                    StartDateTime = Instant.FromDateTimeUtc(validChargeDetails.StartTimeDate),
-                    Owner = charge.Owner,
-                    Resolution = (Resolution)charge.ResolutionType,
-                    Status = (OperationType)1, // TODO: LRN Missing?
-                    TaxIndicator = Convert.ToBoolean(charge.TaxIndicator),
-                    TransparentInvoicing = Convert.ToBoolean(charge.TransparentInvoicing),
-                    VatClassification = (VatClassification)validChargeDetails.VatClassification,
-                    BusinessReasonCode = (BusinessReasonCode)1, // TODO: LRN Missing?,
-                    ChargeOperationId = charge.ChargeId,
-                    LastUpdatedBy = "MISSING?", // TODO: LRN MISSING?
-                    EndDateTime = validChargeDetails.EndTimeDate != null ? Instant.FromDateTimeUtc(validChargeDetails.EndTimeDate.Value) : null,
-                    Points = charge.ChargePrices.OrderByDescending(x => x.RowId).Select(x => new Point
+                Id = charge.ChargeId,
+                Type = (ChargeType)charge.ChargeType,
+                Name = validChargeDetails.Name,
+                Description = validChargeDetails.Description,
+                StartDateTime = Instant.FromDateTimeUtc(validChargeDetails.StartTimeDate),
+                Owner = charge.Owner,
+                Resolution = (Resolution)charge.ResolutionType,
+                TaxIndicator = Convert.ToBoolean(charge.TaxIndicator),
+                TransparentInvoicing = Convert.ToBoolean(charge.TransparentInvoicing),
+                VatClassification = (VatClassification)validChargeDetails.VatClassification,
+                ChargeOperationId = charge.ChargeId,
+                EndDateTime = validChargeDetails.EndTimeDate != null ? Instant.FromDateTimeUtc(validChargeDetails.EndTimeDate.Value) : null,
+                Points = charge.ChargePrices.Select(x => new Point
+                {
+                    Position = x.RowId,
+                    Price = x.Price,
+                    Time = Instant.FromUnixTimeTicks(x.Time),
+                }).ToList(),
+                Document = new Document
+                {
+                    Sender = new Domain.Common.MarketParticipant
                     {
-                        Position = x.RowId,
-                        Price = x.Price,
-                        Time = Instant.FromUnixTimeTicks(x.Time),
-                    }).ToList(),
+                        Id = charge.MarketParticipant.MarketParticipantId,
+                        Name = charge.MarketParticipant.Name,
+                        BusinessProcessRole = (MarketParticipantRole)charge.MarketParticipant.Role,
+                    },
+                },
+            };
+        }
+
+        private static Charge MapDomainChargeToCharge(
+            [NotNull] Domain.Charge charge,
+            MarketParticipant marketParticipant)
+        {
+            if (charge == null) throw new ArgumentNullException(nameof(charge));
+
+            return new Charge
+            {
+                Currency = "DKK",
+                Name = charge.Name,
+                Owner = charge.Owner,
+                ChargeId = charge.Id,
+                ChargeType = (int)charge.Type,
+                ResolutionType = (int)charge.Resolution,
+                TaxIndicator = Convert.ToByte(charge.TaxIndicator),
+                TransparentInvoicing = Convert.ToByte(charge.TransparentInvoicing),
+                ChargePrices = MapChargeToChargePrice(charge).ToList(),
+                ChargePeriodDetails = new List<ChargePeriodDetails>
+                {
+                    MapChargeToChargePeriodDetails(charge),
+                },
+                MarketParticipant = marketParticipant,
+            };
+        }
+
+        private static IEnumerable<ChargePrice> MapChargeToChargePrice(
+            [NotNull] Domain.Charge charge)
+        {
+            if (charge == null) throw new ArgumentNullException(nameof(charge));
+
+            return charge.Points.Select(point => new ChargePrice
+                {
+                    Time = point.Time.ToUnixTimeTicks(),
+                    Price = point.Price,
+                    Retired = false,
+                }).ToList();
+        }
+
+        private static ChargePeriodDetails MapChargeToChargePeriodDetails(
+            [NotNull] Domain.Charge charge)
+        {
+            if (charge == null) throw new ArgumentNullException(nameof(charge));
+
+            return new ChargePeriodDetails
+            {
+                Description = charge.Description,
+                Name = charge.Name,
+                VatClassification = (int)charge.VatClassification,
+                EndTimeDate = charge.EndDateTime?.ToDateTimeUtc(),
+                StartTimeDate = charge.StartDateTime.ToDateTimeUtc(),
             };
         }
     }

@@ -26,12 +26,12 @@ namespace GreenEnergyHub.Charges.Infrastructure.Context
         /// <summary>
         /// Market participants available in the database.
         /// </summary>
-        DbSet<ChargePrice> ChargePrice { get; }
+        DbSet<ChargePrice> ChargePrices { get; }
 
         /// <summary>
         /// VAT payer types available in the database.
         /// </summary>
-        DbSet<ChargeOperation> ChargeOperation { get; }
+        DbSet<ChargeOperation> ChargeOperations { get; }
 
         /// <summary>
         /// Charge types available in the database.
@@ -41,7 +41,12 @@ namespace GreenEnergyHub.Charges.Infrastructure.Context
         /// <summary>
         /// Charges available in the database.
         /// </summary>
-        DbSet<Charge> Charge { get; }
+        DbSet<Charge> Charges { get; }
+
+        /// <summary>
+        /// MarketParticipants available in the database.
+        /// </summary>
+        DbSet<MarketParticipant> MarketParticipants { get; }
 
         /// <summary>
         /// Saves changes to the database.

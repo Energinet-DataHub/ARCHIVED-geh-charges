@@ -12,18 +12,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.ComponentModel.DataAnnotations;
+
+#pragma warning disable 8618
+
 namespace GreenEnergyHub.Charges.Infrastructure.Context.Model
 {
     public class MarketParticipant
     {
-        public int Id { get; set; }
+        [Key]
+        public int RowId { get; set; }
 
-#pragma warning disable 8618
-        public string MRid { get; set; }
+        public string MarketParticipantId { get; set; }
 
         public string Name { get; set; }
 
-        public string Role { get; set; }
-#pragma warning restore 8618
+        public int Role { get; set; }
     }
 }
