@@ -33,7 +33,7 @@ CREATE TABLE [Charges].[ChargeOperation]
 (
     RowId int NOT NULL IDENTITY PRIMARY KEY,
     ChargeRowId int NOT NULL FOREIGN KEY REFERENCES [Charges].Charge(RowId),
-    CorrelationID nvarchar(36) NOT NULL,
+    CorrelationId nvarchar(36) NOT NULL,
     ChargeOperationId nvarchar(100) NOT NULL,
     WriteDateTime DateTime NOT NULL
 )
