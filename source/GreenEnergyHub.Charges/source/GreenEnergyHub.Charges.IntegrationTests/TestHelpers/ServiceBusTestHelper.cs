@@ -30,7 +30,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.TestHelpers
             _testOutputHelper = testOutputHelper;
         }
 
-        public Message GetMessageFromServiceBus(
+        public async Task<Message> GetMessageFromServiceBusAsync(
             string serviceBusConnectionString,
             string serviceBusTopic,
             string serviceBusSubscription)
@@ -65,6 +65,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.TestHelpers
             var count = 0;
             while (receivedMessage == null)
             {
+                await Task.Delay(50).ConfigureAwait(false);
                 ++count;
             }
 
