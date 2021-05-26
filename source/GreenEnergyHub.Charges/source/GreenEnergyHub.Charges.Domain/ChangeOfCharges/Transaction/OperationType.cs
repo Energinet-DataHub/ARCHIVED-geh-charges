@@ -15,13 +15,13 @@
 namespace GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction
 {
     /// <summary>
-    /// This enum indicates the action requested by the sender, e.g. using Addition when sender wants to create a new charge price list.
+    /// This enum indicates the action requested by the sender, e.g. using Create when sender wants to create a new charge price list.
     /// </summary>
     public enum OperationType
     {
         Unknown = 0,
-        Addition = 2,
-        Deletion = 3,
-        Change = 4,
+        Create = 2,
+        Stop = 3,
+        Update = 4,
     }
 }
