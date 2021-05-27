@@ -37,16 +37,16 @@ namespace GreenEnergyHub.Charges.Tests.Application.Validation.BusinessValidation
 
         // Subscription update
         [InlineAutoMoqData(typeof(StartDateValidationRule), ChargeType.Subscription)]
-        [InlineAutoMoqData(typeof(CommandSenderMustBeAnExistingPartyRule), ChargeType.Subscription)]
+        [InlineAutoMoqData(typeof(CommandSenderMustBeAnExistingMarketParticipantRule), ChargeType.Subscription)]
 
         // Fee update
         [InlineAutoMoqData(typeof(StartDateValidationRule), ChargeType.Fee)]
-        [InlineAutoMoqData(typeof(CommandSenderMustBeAnExistingPartyRule), ChargeType.Fee)]
+        [InlineAutoMoqData(typeof(CommandSenderMustBeAnExistingMarketParticipantRule), ChargeType.Fee)]
 
         // Tariff update
         [InlineAutoMoqData(typeof(ChangingTariffTaxValueNotAllowedRule), ChargeType.Tariff)]
         [InlineAutoMoqData(typeof(StartDateValidationRule), ChargeType.Tariff)]
-        [InlineAutoMoqData(typeof(CommandSenderMustBeAnExistingPartyRule), ChargeType.Tariff)]
+        [InlineAutoMoqData(typeof(CommandSenderMustBeAnExistingMarketParticipantRule), ChargeType.Tariff)]
         public async Task CreateRulesForUpdateCommandAsync_ReturnsRulesContainingExpectedRule(
             Type expectedRuleType,
             ChargeType chargeType,

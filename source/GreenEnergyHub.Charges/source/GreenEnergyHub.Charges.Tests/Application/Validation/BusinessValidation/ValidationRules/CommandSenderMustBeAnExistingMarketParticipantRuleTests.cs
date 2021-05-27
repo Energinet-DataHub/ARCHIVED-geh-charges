@@ -22,13 +22,13 @@ using Xunit.Categories;
 namespace GreenEnergyHub.Charges.Tests.Application.Validation.BusinessValidation.ValidationRules
 {
     [UnitTest]
-    public class CommandSenderMustBeAnExistingPartyRuleTests
+    public class CommandSenderMustBeAnExistingMarketParticipantRuleTests
     {
         [Theory]
         [AutoMoqData]
         public void IsValid_WhenSenderHasValue_IsTrue(MarketParticipant sender)
         {
-            var sut = new CommandSenderMustBeAnExistingPartyRule(sender);
+            var sut = new CommandSenderMustBeAnExistingMarketParticipantRule(sender);
             sut.IsValid.Should().BeTrue();
         }
 
@@ -36,7 +36,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Validation.BusinessValidation
         public void IsValid_WhenSenderIsNull_IsFalse()
         {
             MarketParticipant? sender = null;
-            var sut = new CommandSenderMustBeAnExistingPartyRule(sender);
+            var sut = new CommandSenderMustBeAnExistingMarketParticipantRule(sender);
             sut.IsValid.Should().BeFalse();
         }
     }

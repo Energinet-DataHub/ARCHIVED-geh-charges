@@ -67,7 +67,7 @@ namespace GreenEnergyHub.Charges.Application.Validation.BusinessValidation.Facto
                     command,
                     configuration.StartDateValidationRuleConfiguration,
                     _zonedDateTimeService),
-                new CommandSenderMustBeAnExistingPartyRule(sender),
+                new CommandSenderMustBeAnExistingMarketParticipantRule(sender),
             };
 
             return rules;

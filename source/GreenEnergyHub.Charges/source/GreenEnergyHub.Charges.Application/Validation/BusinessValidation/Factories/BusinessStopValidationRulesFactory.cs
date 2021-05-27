@@ -39,7 +39,7 @@ namespace GreenEnergyHub.Charges.Application.Validation.BusinessValidation.Facto
 
             var rules = new List<IValidationRule>
             {
-                new CommandSenderMustBeAnExistingPartyRule(sender),
+                new CommandSenderMustBeAnExistingMarketParticipantRule(sender),
             };
 
             var ruleSet = ValidationRuleSet.FromRules(rules);

@@ -42,6 +42,6 @@ namespace GreenEnergyHub.Charges.Application.Validation
         ChargePriceMaximumDigitsAndDecimals, // VR457
         FeeMustHaveSinglePrice, // VR507-2
         SubscriptionMustHaveSinglePrice, // VR507-2
-        CommandSenderMustBeAnExistingParty, // VR152
+        CommandSenderMustBeAnExistingMarketParticipant, // VR152
     }
 }

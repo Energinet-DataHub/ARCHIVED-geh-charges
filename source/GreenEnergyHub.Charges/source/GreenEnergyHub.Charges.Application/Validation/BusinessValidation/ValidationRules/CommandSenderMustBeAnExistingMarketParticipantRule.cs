@@ -16,11 +16,11 @@ using GreenEnergyHub.Charges.Domain.Common;
 
 namespace GreenEnergyHub.Charges.Application.Validation.BusinessValidation.ValidationRules
 {
-    public class CommandSenderMustBeAnExistingPartyRule : IValidationRule
+    public class CommandSenderMustBeAnExistingMarketParticipantRule : IValidationRule
     {
         private readonly MarketParticipant? _sender;
 
-        public CommandSenderMustBeAnExistingPartyRule(MarketParticipant? sender)
+        public CommandSenderMustBeAnExistingMarketParticipantRule(MarketParticipant? sender)
         {
             _sender = sender;
         }
@@ -28,6 +28,6 @@ namespace GreenEnergyHub.Charges.Application.Validation.BusinessValidation.Valid
         public bool IsValid => _sender != null;
 
         public ValidationRuleIdentifier ValidationRuleIdentifier =>
-            ValidationRuleIdentifier.CommandSenderMustBeAnExistingParty;
+            ValidationRuleIdentifier.CommandSenderMustBeAnExistingMarketParticipant;
     }
 }

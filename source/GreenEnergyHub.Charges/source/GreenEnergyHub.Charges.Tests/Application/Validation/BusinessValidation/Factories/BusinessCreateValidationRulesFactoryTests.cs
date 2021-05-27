@@ -34,9 +34,9 @@ namespace GreenEnergyHub.Charges.Tests.Application.Validation.BusinessValidation
     public class BusinessCreateValidationRulesFactoryTests
     {
         [Theory]
-        [InlineAutoMoqData(typeof(CommandSenderMustBeAnExistingPartyRule), ChargeType.Subscription)]
-        [InlineAutoMoqData(typeof(CommandSenderMustBeAnExistingPartyRule), ChargeType.Fee)]
-        [InlineAutoMoqData(typeof(CommandSenderMustBeAnExistingPartyRule), ChargeType.Tariff)]
+        [InlineAutoMoqData(typeof(CommandSenderMustBeAnExistingMarketParticipantRule), ChargeType.Subscription)]
+        [InlineAutoMoqData(typeof(CommandSenderMustBeAnExistingMarketParticipantRule), ChargeType.Fee)]
+        [InlineAutoMoqData(typeof(CommandSenderMustBeAnExistingMarketParticipantRule), ChargeType.Tariff)]
         public async Task CreateRulesForCreateCommandAsync_ReturnsRulesContainingExpectedRuleType(
             Type expectedRuleType,
             ChargeType chargeType,

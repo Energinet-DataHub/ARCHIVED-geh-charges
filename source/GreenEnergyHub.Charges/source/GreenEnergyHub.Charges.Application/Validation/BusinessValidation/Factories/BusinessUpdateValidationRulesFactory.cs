@@ -79,7 +79,7 @@ namespace GreenEnergyHub.Charges.Application.Validation.BusinessValidation.Facto
                     command,
                     configuration.StartDateValidationRuleConfiguration,
                     _localDateTimeService),
-                new CommandSenderMustBeAnExistingPartyRule(sender),
+                new CommandSenderMustBeAnExistingMarketParticipantRule(sender),
             };
 
             if (command.ChargeOperation.Type == ChargeType.Tariff)
