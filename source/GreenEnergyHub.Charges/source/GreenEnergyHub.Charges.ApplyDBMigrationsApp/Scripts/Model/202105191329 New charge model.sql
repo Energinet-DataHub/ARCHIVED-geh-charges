@@ -26,7 +26,7 @@ CREATE TABLE [Charges].[Charge]
 )
 GO
 
-CREATE INDEX i1 ON [Charges].[Charge] (ChargeId ASC, ChargeType ASC, Owner ASC);
+CREATE INDEX i1 ON [Charges].[Charge] (ChargeId ASC, ChargeType ASC, MarketParticipantRowId ASC);
 GO
 
 CREATE TABLE [Charges].[ChargeOperation]
