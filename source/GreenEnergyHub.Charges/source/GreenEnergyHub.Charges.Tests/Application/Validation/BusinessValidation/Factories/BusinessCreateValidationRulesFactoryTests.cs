@@ -40,12 +40,12 @@ namespace GreenEnergyHub.Charges.Tests.Application.Validation.BusinessValidation
         public async Task CreateRulesForCreateCommandAsync_ReturnsRulesContainingExpectedRuleType(
             Type expectedRuleType,
             ChargeType chargeType,
-            [NotNull] [Frozen] Mock<IRulesConfigurationRepository> updateRulesConfigurationRepository,
+            [NotNull] [Frozen] Mock<IRulesConfigurationRepository> rulesConfigurationRepository,
             [NotNull] BusinessCreateValidationRulesFactory sut,
             [NotNull] TestableChargeCommand chargeCommand)
         {
             // Arrange
-            ConfigureRepositoryMock(updateRulesConfigurationRepository);
+            ConfigureRepositoryMock(rulesConfigurationRepository);
             var command = TurnCommandIntoSpecifiedChargeType(chargeCommand, chargeType);
 
             // Act
