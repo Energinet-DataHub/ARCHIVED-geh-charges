@@ -12,13 +12,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
+using GreenEnergyHub.Charges.Domain.Common;
 
-namespace GreenEnergyHub.Charges.Application.Validation.BusinessValidation
+namespace GreenEnergyHub.Charges.Infrastructure.Mapping
 {
-    public interface IBusinessAdditionValidationRulesFactory
+    /// <summary>
+    /// Mapper to map from persistence model to domain model.
+    /// </summary>
+    public interface IMarketParticipantMapper
     {
-        Task<IValidationRuleSet> CreateRulesForAdditionCommandAsync(ChargeCommand chargeCommand);
+        /// <summary>
+        /// Map from persistence object to domain object.
+        /// </summary>
+        /// <param name="persistenceModel"></param>
+        /// <returns>A mapped market participant</returns>
+        MarketParticipant ToDomainObject(Infrastructure.Context.Model.MarketParticipant persistenceModel);
     }
 }

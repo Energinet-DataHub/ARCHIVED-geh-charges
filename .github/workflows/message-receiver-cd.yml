@@ -129,26 +129,29 @@ jobs:
       # Moving it to a separate pipeline would result in yet another race condition between pipelines.
       #########################################################################################################
 
-      # # Get action required for integration test from repo
-      # - name: Checkout repository
-      #   uses: actions/checkout@master
+      # Get action required for integration test from repo
+      - name: Checkout repository
+        if: ${{ matrix.environment.short == 'u' }}
+        uses: actions/checkout@master
 
-      # # Get builded integration test dll
-      # - name: Download artifact 
-      #   uses: actions/download-artifact@v2
-      #   with:
-      #     name: drop-integration-test
-      #     path: drop-integration-test
+      - name: Build project
+        if: ${{ matrix.environment.short == 'u' }}
+        shell: bash
+        run: |
+          dotnet build ${{ env.INTEGRATION_TEST_CSPROJ_FILE_PATH }} --configuration Release --output ${{ github.workspace }}/output-integration-test
 
-      # - name: DEBUG
-      #   run: |
-      #     ls -l
-      #     echo Drop folder:
-      #     ls -l drop-integration-test
+      - name: DEBUG output-integration-test
+          if: ${{ matrix.environment.short == 'u' }}
+          run: |
+            ls -l
+            echo output folder:
+            ls -l output-integration-test
+            echo Testfiles folder:
+            ls -l output-integration-test/TestFiles
 
-      # - name: Integration test
-      #   if: ${{ matrix.environment.short == 'u' }}
-      #   uses: ./.github/actions/integration-test
-      #   with:
-      #     key_vault_name: ${{ env.KEY_VAULT_NAME }}
-      #     test_dll: drop-integration-test/${{ env.INTEGRATION_TEST_DLL }}
+      - name: Integration test
+        if: ${{ matrix.environment.short == 'u' }}
+        uses: ./.github/actions/integration-test
+        with:
+          key_vault_name: ${{ env.KEY_VAULT_NAME }}
+          test_dll: ${{ github.workspace }}/output-integration-test/${{ env.INTEGRATION_TEST_DLL }}

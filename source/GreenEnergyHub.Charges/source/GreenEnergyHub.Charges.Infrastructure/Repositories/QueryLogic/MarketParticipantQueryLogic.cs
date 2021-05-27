@@ -12,16 +12,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace GreenEnergyHub.Charges.Domain.Common
+using System.Linq;
+using GreenEnergyHub.Charges.Domain.Common;
+using GreenEnergyHub.Charges.Infrastructure.Mapping;
+using MarketParticipant = GreenEnergyHub.Charges.Infrastructure.Context.Model.MarketParticipant;
+
+namespace GreenEnergyHub.Charges.Infrastructure.Repositories.QueryLogic
 {
-    /// <summary>
-    /// IMPORTANT: This is used in transport so the numbers matters.
-    /// </summary>
-    public enum MarketParticipantRole
+    public static class MarketParticipantQueryLogic
     {
-        Unknown = 0,
-        EnergySupplier = 1,
-        GridAccessProvider = 2,
-        SystemOperator = 3,
+        public static IQueryable<MarketParticipant> HasRole(
+            this IQueryable<MarketParticipant> query,
+            MarketParticipantRole role)
+        {
+            return query.Where(mp => mp.Role == role.ToDatabaseValue());
+        }
     }
 }
