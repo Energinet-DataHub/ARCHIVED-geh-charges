@@ -26,7 +26,7 @@ CREATE TABLE [Charges].[Charge]
 )
 GO
 
-CREATE UNIQUE INDEX i1 ON [Charges].[Charge] (ChargeId ASC, ChargeType ASC, Owner ASC);
+CREATE INDEX i1 ON [Charges].[Charge] (ChargeId ASC, ChargeType ASC, Owner ASC);
 GO
 
 CREATE TABLE [Charges].[ChargeOperation]
@@ -39,7 +39,7 @@ CREATE TABLE [Charges].[ChargeOperation]
 )
 GO
 
-CREATE UNIQUE INDEX i1 ON [Charges].[ChargeOperation] (ChargeRowId DESC, WriteDateTime DESC);
+CREATE INDEX i1 ON [Charges].[ChargeOperation] (ChargeRowId DESC, WriteDateTime DESC);
 GO
 
 CREATE TABLE [Charges].[ChargePrice]
@@ -54,7 +54,7 @@ CREATE TABLE [Charges].[ChargePrice]
 )
 GO
 
-CREATE UNIQUE INDEX i1 ON [Charges].[ChargePrice] (ChargeRowId DESC, Time DESC);
+CREATE INDEX i1 ON [Charges].[ChargePrice] (ChargeRowId DESC, Time DESC);
 CREATE INDEX i2 ON [Charges].[ChargePrice] (ChargeOperationRowId);
 GO
 
@@ -73,6 +73,6 @@ CREATE TABLE [Charges].[ChargePeriodDetails]
 )
 GO
 
-CREATE UNIQUE INDEX i1 ON [Charges].[ChargePeriodDetails] (ChargeRowId DESC, StartDateTime DESC, EndDateTime DESC, Retired DESC);
+CREATE INDEX i1 ON [Charges].[ChargePeriodDetails] (ChargeRowId DESC, StartDateTime DESC, EndDateTime DESC, Retired DESC);
 CREATE INDEX i2 ON [Charges].[ChargePeriodDetails] (ChargeOperationRowId);
 GO
