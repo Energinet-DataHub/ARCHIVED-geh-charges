@@ -5,14 +5,14 @@
     "IndustryClassification": 23,
     "Type": 10,
     "Sender": {
-      "Id": 37,
+      "Id": 8100000000030,
       "Name": "Grid Operator 3",
-      "BusinessProcessRole": 0
+      "BusinessProcessRole": 2
     },
     "Recipient": {
       "Id": 5790001330552,
       "Name": "Hub",
-      "BusinessProcessRole": 0
+      "BusinessProcessRole": 1
     }
   },
   "ChargeOperation": {
