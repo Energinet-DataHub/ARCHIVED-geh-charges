@@ -21,7 +21,7 @@ namespace GreenEnergyHub.Charges.Domain.Common
     {
         Unknown = 0,
         EnergySupplier = 1,
-        GridOperator = 2,
+        GridAccessProvider = 2,
         SystemOperator = 3,
     }
 }
