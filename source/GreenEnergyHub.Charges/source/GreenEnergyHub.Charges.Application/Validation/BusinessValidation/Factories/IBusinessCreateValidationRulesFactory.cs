@@ -12,16 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace GreenEnergyHub.Charges.Domain.Common
+using System.Threading.Tasks;
+using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
+
+namespace GreenEnergyHub.Charges.Application.Validation.BusinessValidation.Factories
 {
-    /// <summary>
-    /// IMPORTANT: This is used in transport so the numbers matters.
-    /// </summary>
-    public enum MarketParticipantRole
+    public interface IBusinessCreateValidationRulesFactory
     {
-        Unknown = 0,
-        EnergySupplier = 1,
-        GridAccessProvider = 2,
-        SystemOperator = 3,
+        Task<IValidationRuleSet> CreateRulesForCreateCommandAsync(ChargeCommand chargeCommand);
     }
 }
