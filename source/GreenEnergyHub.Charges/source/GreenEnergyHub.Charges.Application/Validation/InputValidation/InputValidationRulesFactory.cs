@@ -56,6 +56,7 @@ namespace GreenEnergyHub.Charges.Application.Validation.InputValidation
 
             var rules = new List<IValidationRule>
             {
+                new ChargeTypeIsKnownValidationRule(chargeCommand),
                 new OperationTypeValidationRule(chargeCommand),
             };
 
@@ -78,6 +79,8 @@ namespace GreenEnergyHub.Charges.Application.Validation.InputValidation
                 new ChargeTypeTariffPriceCountRule(chargeCommand),
                 new MaximumPriceRule(chargeCommand),
                 new ChargePriceMaximumDigitsAndDecimalsRule(chargeCommand),
+                new FeeMustHaveSinglePriceRule(chargeCommand),
+                new SubscriptionMustHaveSinglePriceRule(chargeCommand),
             };
 
             return rules;
@@ -92,6 +95,8 @@ namespace GreenEnergyHub.Charges.Application.Validation.InputValidation
                 new ChargeTypeTariffPriceCountRule(chargeCommand),
                 new MaximumPriceRule(chargeCommand),
                 new ChargePriceMaximumDigitsAndDecimalsRule(chargeCommand),
+                new FeeMustHaveSinglePriceRule(chargeCommand),
+                new SubscriptionMustHaveSinglePriceRule(chargeCommand),
             };
 
             return rules;
@@ -103,8 +108,8 @@ namespace GreenEnergyHub.Charges.Application.Validation.InputValidation
             {
                 new ChargeOperationIdRequiredRule(chargeCommand),
                 new ChargeIdRequiredValidationRule(chargeCommand),
-                new BusinessReasonCodeMustBeUpdateChargeInformation(chargeCommand),
-                new DocumentTypeMustBeRequestUpdateChargeInformation(chargeCommand),
+                new BusinessReasonCodeMustBeUpdateChargeInformationRule(chargeCommand),
+                new DocumentTypeMustBeRequestUpdateChargeInformationRule(chargeCommand),
                 new ChargeTypeIsKnownValidationRule(chargeCommand),
                 new ChargeIdLengthValidationRule(chargeCommand),
                 new StartDateTimeRequiredValidationRule(chargeCommand),

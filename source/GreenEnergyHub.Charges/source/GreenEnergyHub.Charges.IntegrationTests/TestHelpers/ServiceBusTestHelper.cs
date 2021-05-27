@@ -21,16 +21,16 @@ using Xunit.Abstractions;
 namespace GreenEnergyHub.Charges.IntegrationTests.TestHelpers
 {
     // ReSharper disable once ClassNeverInstantiated.Global
-    public class ServiceBusMessageTestHelper
+    public class ServiceBusTestHelper
     {
         private readonly ITestOutputHelper _testOutputHelper;
 
-        public ServiceBusMessageTestHelper(ITestOutputHelper testOutputHelper)
+        public ServiceBusTestHelper(ITestOutputHelper testOutputHelper)
         {
             _testOutputHelper = testOutputHelper;
         }
 
-        public Message GetMessageFromServiceBus(
+        public async Task<Message> GetMessageFromServiceBusAsync(
             string serviceBusConnectionString,
             string serviceBusTopic,
             string serviceBusSubscription)
@@ -65,6 +65,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.TestHelpers
             var count = 0;
             while (receivedMessage == null)
             {
+                await Task.Delay(50).ConfigureAwait(false);
                 ++count;
             }
 

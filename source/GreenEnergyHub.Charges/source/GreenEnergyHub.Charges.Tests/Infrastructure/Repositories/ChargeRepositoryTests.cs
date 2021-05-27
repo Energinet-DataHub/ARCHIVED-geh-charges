@@ -121,7 +121,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
                     },
                 },
                 ChargeOperationId = "id",
-                Status = OperationType.Addition,
+                Status = OperationType.Create,
                 BusinessReasonCode = BusinessReasonCode.UpdateChargeInformation,
                 LastUpdatedBy = "LastUpdatedBy",
             };

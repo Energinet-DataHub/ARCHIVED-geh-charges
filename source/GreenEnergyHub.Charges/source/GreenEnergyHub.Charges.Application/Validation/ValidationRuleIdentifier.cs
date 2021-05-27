@@ -16,29 +16,31 @@ namespace GreenEnergyHub.Charges.Application.Validation
 {
     public enum ValidationRuleIdentifier
     {
-        TimeLimitsNotFollowed, // VR209
+        StartDateValidation, // VR209
         ChangingTariffVatValueNotAllowed, // VR630
         ChangingTariffTaxValueNotAllowed, // VRXYZ
-        ProcessIsMandatory, // VR009
-        SenderIsMandatory, // VR150
-        RecipientIsMandatory, // VR153
+        ProcessTypeIsKnownValidation, // VR009
+        SenderIsMandatoryTypeValidation, // VR150
+        RecipientIsMandatoryTypeValidation, // VR153
         ChargeOperationIdIsRequired, // VR223
-        OperationTypeIsUnknown, // VR445
-        ChargeIdLengthIncorrect, // VR441
-        ChargeIdIsRequired, // VR440
-        DocumentTypeIsIncorrect, // VR404
-        BusinessReasonCodeIsIncorrect, // VR424
-        ChargeTypeIsUnknown, // VR449
-        InvalidVatClassificationOnCreate, // VR488
-        InvalidResolutionTypeOnTariffOnCreate, // VR505-1
-        InvalidResolutionTypeOnFeeOnCreate, // VR505-2
-        InvalidResolutionTypeOnSubscriptionOnCreate, // VR505-3
-        StartDateTimeIsMandatory, // VR531
+        OperationTypeValidation, // VR445
+        ChargeIdLengthValidation, // VR441
+        ChargeIdRequiredValidation, // VR440
+        DocumentTypeMustBeRequestUpdateChargeInformation, // VR404
+        BusinessReasonCodeMustBeUpdateChargeInformation, // VR424
+        ChargeTypeIsKnownValidation, // VR449
+        VatClassificationValidation, // VR488
+        ResolutionTariffValidation, // VR505-1
+        ResolutionFeeValidation, // VR505-2
+        ResolutionSubscriptionValidation, // VR505-3
+        StartDateTimeRequiredValidation, // VR531
         ChargeOwnerIsRequired, // VR532
-        ChargeNameHasMaximumLengthRule, // VR446
-        ChargeDescriptionHasMaximumLengthRule, // VR447
-        ChargeTypeTariffPriceCountRule, // VR507-1
-        MaximumPriceRule, // VR509
-        ChargePriceMaximumAndDecimalsDigitsRule, // VR457
+        ChargeNameHasMaximumLength, // VR446
+        ChargeDescriptionHasMaximumLength, // VR447
+        ChargeTypeTariffPriceCount, // VR507-1
+        MaximumPrice, // VR509
+        ChargePriceMaximumDigitsAndDecimals, // VR457
+        FeeMustHaveSinglePrice, // VR507-2
+        SubscriptionMustHaveSinglePrice, // VR507-2
     }
 }

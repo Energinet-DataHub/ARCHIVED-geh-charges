@@ -19,92 +19,124 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
+using GreenEnergyHub.Charges.Core.Json;
+using GreenEnergyHub.Charges.Domain.Acknowledgements;
+using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
 using GreenEnergyHub.Charges.IntegrationTests.TestHelpers;
 using GreenEnergyHub.Charges.TestCore;
 using Microsoft.Azure.WebJobs;
 using NodaTime;
 using Xunit;
+using Xunit.Abstractions;
 using Xunit.Categories;
 
 namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
 {
     [IntegrationTest]
-    public class ChangeOfChargePipelineTests : IClassFixture<DbFixture>
+    public class ChangeOfChargePipelineTests : IClassFixture<DbContextRegistrator>
     {
+        private readonly ITestOutputHelper _testOutputHelper;
         private readonly string _messageReceiverHostname;
-        private readonly string _commandAcceptedSubscriptionName;
-        private readonly string _commandRejectedSubscriptionName;
-        private readonly string _commandAcceptedTopicName;
-        private readonly string _commandRejectedTopicName;
-        private readonly string _commandAcceptedConnectionString;
-        private readonly string _commandRejectedConnectionString;
-        private readonly TestDbHelper _testDbHelper;
+        private readonly string _postOfficeSubscriptionName;
+        private readonly string _postOfficeTopicName;
+        private readonly string _postOfficeConnectionString;
+        private readonly ChargeDbQueries _chargeDbQueries;
 
-        public ChangeOfChargePipelineTests([NotNull] DbFixture dbFixture)
+        public ChangeOfChargePipelineTests([NotNull] DbContextRegistrator dbContextRegistrator, ITestOutputHelper testOutputHelper)
         {
-            _testDbHelper = new TestDbHelper(dbFixture.ServiceProvider);
+            _testOutputHelper = testOutputHelper;
+            _testOutputHelper.WriteLine($"{nameof(ChangeOfChargePipelineTests)} constructor invoked");
+
+            _chargeDbQueries = new ChargeDbQueries(dbContextRegistrator.ServiceProvider);
 
             _messageReceiverHostname = Environment.GetEnvironmentVariable("MESSAGE_RECEIVER_HOSTNAME") !;
-            _commandAcceptedSubscriptionName = Environment.GetEnvironmentVariable("COMMAND_ACCEPTED_SUBSCRIPTION_NAME") !;
-            _commandRejectedSubscriptionName = Environment.GetEnvironmentVariable("COMMAND_REJECTED_SUBSCRIPTION_NAME") !;
-            _commandAcceptedTopicName = Environment.GetEnvironmentVariable("COMMAND_ACCEPTED_TOPIC_NAME") !;
-            _commandRejectedTopicName = Environment.GetEnvironmentVariable("COMMAND_REJECTED_TOPIC_NAME") !;
-            _commandAcceptedConnectionString = Environment.GetEnvironmentVariable("COMMAND_ACCEPTED_LISTENER_CONNECTION_STRING") !;
-            _commandRejectedConnectionString = Environment.GetEnvironmentVariable("COMMAND_REJECTED_LISTENER_CONNECTION_STRING") !;
+            _postOfficeSubscriptionName = Environment.GetEnvironmentVariable("POST_OFFICE_SUBSCRIPTION_NAME") !;
+            _postOfficeTopicName = Environment.GetEnvironmentVariable("POST_OFFICE_TOPIC_NAME") !;
+            _postOfficeConnectionString = Environment.GetEnvironmentVariable("POST_OFFICE_LISTENER_CONNECTION_STRING") !;
+
+            _testOutputHelper.WriteLine($"{nameof(ChangeOfChargePipelineTests)} Configuration: " +
+                                        $"{_messageReceiverHostname}," +
+                                        $"{_postOfficeSubscriptionName}, " +
+                                        $"{_postOfficeTopicName}");
         }
 
-        [Theory]
-        [InlineAutoMoqData("TestFiles\\ValidTariffAddition.json")]
+        [Theory(Timeout = 60000)]
+        [InlineAutoMoqData("TestFiles/ValidTariffAddition.json")]
         public async Task Test_ChargeCommandCompleteFlow_is_Accepted(
             string testFilePath,
             [NotNull] ExecutionContext executionContext,
-            [NotNull] ServiceBusMessageTestHelper serviceBusMessageTestHelper)
+            [NotNull] ServiceBusTestHelper serviceBusTestHelper)
         {
+            _testOutputHelper.WriteLine($"Run {nameof(Test_ChargeCommandCompleteFlow_is_Accepted)} for CorrelationId: {executionContext.InvocationId}");
+
             // arrange
             IClock clock = SystemClock.Instance;
-            var chargeJson = TestDataHelper.GetInputJson(testFilePath, clock);
+            var chargeJson = EmbeddedResourceHelper.GetInputJson(testFilePath, clock);
+            var chargeCommand = new JsonSerializer().Deserialize<ChargeCommand>(chargeJson);
+
+            _testOutputHelper.WriteLine($"ChargeCommand.Document.ID: {chargeCommand.Document.Id}");
 
             // act
             var messageReceiverHttpResponseMessage = await RunMessageReceiver(chargeJson).ConfigureAwait(false);
 
-            var commandAcceptedMessage = serviceBusMessageTestHelper
-                .GetMessageFromServiceBus(_commandAcceptedConnectionString, _commandAcceptedTopicName, _commandAcceptedSubscriptionName);
+            _testOutputHelper.WriteLine($"MessageReceiver response status: {messageReceiverHttpResponseMessage.StatusCode}");
 
-            var chargeExistsByCorrelationId = await _testDbHelper
-                .ChargeExistsByCorrelationIdAsync(executionContext.InvocationId.ToString())
+            var commandAcceptedMessage = await serviceBusTestHelper
+                .GetMessageFromServiceBusAsync(_postOfficeConnectionString, _postOfficeTopicName, _postOfficeSubscriptionName)
+                .ConfigureAwait(false);
+            var messageJson = Encoding.UTF8.GetString(commandAcceptedMessage.Body);
+            var chargeConfirmation = new JsonSerializer().Deserialize<ChargeConfirmation>(messageJson);
+
+            _testOutputHelper.WriteLine($"CommandAcceptedMessage: {commandAcceptedMessage.CorrelationId}");
+
+            var chargeExistsByCorrelationId = await _chargeDbQueries
+                .ChargeExistsByCorrelationIdAsync(chargeConfirmation.CorrelationId)
                 .ConfigureAwait(false);
 
             // assert
             Assert.Equal(HttpStatusCode.OK, messageReceiverHttpResponseMessage.StatusCode);
-            Assert.Equal(executionContext.InvocationId.ToString(), commandAcceptedMessage.CorrelationId);
+            Assert.Equal(chargeCommand.Document.Id, chargeConfirmation.OriginalTransactionReferenceMRid);
             Assert.True(commandAcceptedMessage.Body.Length > 0);
             Assert.True(chargeExistsByCorrelationId);
         }
 
-        [Theory]
-        [InlineAutoMoqData("TestFiles\\InValidTariffAddition.json")]
+        [Theory(Timeout = 60000)]
+        [InlineAutoMoqData("TestFiles/InvalidTariffAddition.json")]
         public async Task Test_ChargeCommandCompleteFlow_is_Rejected(
             string testFilePath,
             [NotNull] ExecutionContext executionContext,
-            [NotNull] ServiceBusMessageTestHelper serviceBusMessageTestHelper)
+            [NotNull] ServiceBusTestHelper serviceBusTestHelper)
         {
+            _testOutputHelper.WriteLine($"Run {nameof(Test_ChargeCommandCompleteFlow_is_Rejected)} for CorrelationId: {executionContext.InvocationId}");
+
             // arrange
             IClock clock = SystemClock.Instance;
-            var chargeJson = TestDataHelper.GetInputJson(testFilePath, clock);
+            var chargeJson = EmbeddedResourceHelper.GetInputJson(testFilePath, clock);
+            var chargeCommand = new JsonSerializer().Deserialize<ChargeCommand>(chargeJson);
+
+            _testOutputHelper.WriteLine($"ChargeCommand.Document.ID: {chargeCommand.Document.Id}");
 
             // act
             var messageReceiverHttpResponseMessage = await RunMessageReceiver(chargeJson).ConfigureAwait(false);
 
-            var commandRejectedMessage = serviceBusMessageTestHelper
-                .GetMessageFromServiceBus(_commandRejectedConnectionString, _commandRejectedTopicName, _commandRejectedSubscriptionName);
+            _testOutputHelper.WriteLine($"MessageReceiver response status: {messageReceiverHttpResponseMessage.StatusCode}");
 
-            var chargeExistsByCorrelationId = await _testDbHelper
+            var commandRejectedMessage = await serviceBusTestHelper
+                .GetMessageFromServiceBusAsync(_postOfficeConnectionString, _postOfficeTopicName, _postOfficeSubscriptionName)
+                .ConfigureAwait(false);
+
+            var messageJson = Encoding.UTF8.GetString(commandRejectedMessage.Body);
+            var chargeRejection = new JsonSerializer().Deserialize<ChargeRejection>(messageJson);
+
+            _testOutputHelper.WriteLine($"CommandAcceptedMessage: {commandRejectedMessage.CorrelationId}");
+
+            var chargeExistsByCorrelationId = await _chargeDbQueries
                 .ChargeExistsByCorrelationIdAsync(executionContext.InvocationId.ToString())
                 .ConfigureAwait(false);
 
             // assert
             Assert.Equal(HttpStatusCode.OK, messageReceiverHttpResponseMessage.StatusCode);
-            Assert.Equal(executionContext.InvocationId.ToString(), commandRejectedMessage.CorrelationId);
+            Assert.Equal(chargeCommand.Document.Id, chargeRejection.OriginalTransactionReferenceMRid);
             Assert.True(commandRejectedMessage.Body.Length > 0);
             Assert.False(chargeExistsByCorrelationId);
         }

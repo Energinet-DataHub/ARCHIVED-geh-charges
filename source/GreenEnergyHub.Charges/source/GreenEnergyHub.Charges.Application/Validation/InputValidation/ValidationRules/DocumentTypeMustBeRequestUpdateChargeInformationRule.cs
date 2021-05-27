@@ -17,17 +17,18 @@ using GreenEnergyHub.Charges.Domain.Common;
 
 namespace GreenEnergyHub.Charges.Application.Validation.InputValidation.ValidationRules
 {
-    public class DocumentTypeMustBeRequestUpdateChargeInformation : IValidationRule
+    public class DocumentTypeMustBeRequestUpdateChargeInformationRule : IValidationRule
     {
         private readonly ChargeCommand _chargeCommand;
 
-        public DocumentTypeMustBeRequestUpdateChargeInformation(ChargeCommand chargeCommand)
+        public DocumentTypeMustBeRequestUpdateChargeInformationRule(ChargeCommand chargeCommand)
         {
             _chargeCommand = chargeCommand;
         }
 
         public bool IsValid => _chargeCommand.Document.Type == DocumentType.RequestUpdateChargeInformation;
 
-        public ValidationRuleIdentifier ValidationRuleIdentifier => ValidationRuleIdentifier.DocumentTypeIsIncorrect;
+        public ValidationRuleIdentifier ValidationRuleIdentifier =>
+            ValidationRuleIdentifier.DocumentTypeMustBeRequestUpdateChargeInformation;
     }
 }

@@ -12,16 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Diagnostics.CodeAnalysis;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
 
 namespace GreenEnergyHub.Charges.Application.Validation.InputValidation.ValidationRules
 {
-    public class ResolutionSubscriptionValidationRule : IValidationRule
+    public class SubscriptionMustHaveSinglePriceRule : IValidationRule
     {
+        private const int PricePointsRequired = 1;
         private readonly ChargeCommand _chargeCommand;
 
-        public ResolutionSubscriptionValidationRule([NotNull] ChargeCommand chargeCommand)
+        public SubscriptionMustHaveSinglePriceRule(ChargeCommand chargeCommand)
         {
             _chargeCommand = chargeCommand;
         }
@@ -30,15 +30,16 @@ namespace GreenEnergyHub.Charges.Application.Validation.InputValidation.Validati
         {
             get
             {
-                if (_chargeCommand.ChargeOperation.Type == ChargeType.Subscription)
+                if (_chargeCommand.ChargeOperation.Type is ChargeType.Subscription)
                 {
-                    return _chargeCommand.ChargeOperation.Resolution is Resolution.P1M;
+                    return _chargeCommand.ChargeOperation.Points.Count == PricePointsRequired;
                 }
 
                 return true;
             }
         }
 
-        public ValidationRuleIdentifier ValidationRuleIdentifier => ValidationRuleIdentifier.ResolutionSubscriptionValidation;
+        public ValidationRuleIdentifier ValidationRuleIdentifier =>
+            ValidationRuleIdentifier.SubscriptionMustHaveSinglePrice;
     }
 }

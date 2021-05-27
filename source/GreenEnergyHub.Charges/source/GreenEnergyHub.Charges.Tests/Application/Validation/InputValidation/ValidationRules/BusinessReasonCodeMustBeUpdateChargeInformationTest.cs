@@ -28,13 +28,14 @@ namespace GreenEnergyHub.Charges.Tests.Application.Validation.InputValidation.Va
         [Theory]
         [InlineAutoMoqData(BusinessReasonCode.Unknown, false)]
         [InlineAutoMoqData(BusinessReasonCode.UpdateChargeInformation, true)]
+        [InlineAutoMoqData(-1, false)]
         public void Test(
             BusinessReasonCode businessReasonCode,
             bool expected,
             [NotNull] ChargeCommand command)
         {
             command.ChargeOperation.BusinessReasonCode = businessReasonCode;
-            var sut = new BusinessReasonCodeMustBeUpdateChargeInformation(command);
+            var sut = new BusinessReasonCodeMustBeUpdateChargeInformationRule(command);
             Assert.Equal(expected, sut.IsValid);
         }
     }
