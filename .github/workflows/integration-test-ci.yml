@@ -63,6 +63,14 @@ jobs:
         run: |
           dotnet build ${{ env.CSPROJ_FILE_PATH }} --configuration Release --output ${{ github.workspace }}/output-integration-test
 
+      - name: DEBUG output
+          run: |
+            ls -l
+            echo output-integration-test folder:
+            ls -l output-integration-test
+            echo Testfiles folder:
+            ls -l output-integration-test/TestFiles
+
       - name: Publish artifact
         uses: actions/upload-artifact@v2
         with:
