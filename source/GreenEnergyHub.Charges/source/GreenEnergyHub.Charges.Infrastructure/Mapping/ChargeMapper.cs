@@ -90,7 +90,6 @@ namespace GreenEnergyHub.Charges.Infrastructure.Mapping
             return new Charge
             {
                 Currency = "DKK",
-                Name = charge.Name,
                 Owner = charge.Owner,
                 ChargeId = charge.Id,
                 ChargeType = (int)charge.Type,
