@@ -51,7 +51,10 @@ namespace GreenEnergyHub.Charges.Application.Validation.BusinessValidation.Facto
             var chargeTypeMRid = chargeCommand.ChargeOperation.Id;
             var commandChargeTypeOwnerMRid = chargeCommand.ChargeOperation.ChargeOwner;
 
-            var charge = await _chargeRepository.GetChargeAsync(chargeTypeMRid, commandChargeTypeOwnerMRid, chargeCommand.ChargeOperation.Type).ConfigureAwait(false);
+            var charge = await _chargeRepository.GetChargeAsync(
+                chargeTypeMRid,
+                commandChargeTypeOwnerMRid,
+                chargeCommand.ChargeOperation.Type).ConfigureAwait(false);
 
             if (charge == null)
             {

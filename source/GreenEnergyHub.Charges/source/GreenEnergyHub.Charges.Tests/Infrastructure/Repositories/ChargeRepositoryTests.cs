@@ -35,7 +35,8 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
     {
         private const string MarketParticipantId = "MarketParticipantId";
 
-        private readonly DbContextOptions<ChargesDatabaseContext> _dbContextOptions = new DbContextOptionsBuilder<ChargesDatabaseContext>()
+        private readonly DbContextOptions<ChargesDatabaseContext> _dbContextOptions =
+            new DbContextOptionsBuilder<ChargesDatabaseContext>()
             .UseSqlite("Filename=Test.db")
             .Options;
 
@@ -67,7 +68,11 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
 
             // Act
             await sut.StoreChargeAsync(charge).ConfigureAwait(false);
-            var expected = await sut.CheckIfChargeExistsAsync(charge.Id, charge.Owner, charge.Type).ConfigureAwait(false);
+
+            var expected = await sut.CheckIfChargeExistsAsync(
+                charge.Id,
+                charge.Owner,
+                charge.Type).ConfigureAwait(false);
 
             // Assert
             Assert.True(expected);
@@ -84,7 +89,8 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
 
             // Act
             await sut.StoreChargeAsync(charge).ConfigureAwait(false);
-            var expected = await sut.CheckIfChargeExistsByCorrelationIdAsync(charge.Document.CorrelationId).ConfigureAwait(false);
+            var expected =
+                await sut.CheckIfChargeExistsByCorrelationIdAsync(charge.Document.CorrelationId).ConfigureAwait(false);
 
             // Assert
             Assert.True(expected);
@@ -133,7 +139,8 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
         private void SeedDatabase()
         {
             using var context = new ChargesDatabaseContext(_dbContextOptions);
-            context.MarketParticipant.Add(new MarketParticipant { Name = "Name", Role = 1, MarketParticipantId = MarketParticipantId });
+            context.MarketParticipant.Add(
+                new MarketParticipant { Name = "Name", Role = 1, MarketParticipantId = MarketParticipantId });
             context.Database.EnsureDeleted();
             context.Database.EnsureCreated();
             context.SaveChanges();

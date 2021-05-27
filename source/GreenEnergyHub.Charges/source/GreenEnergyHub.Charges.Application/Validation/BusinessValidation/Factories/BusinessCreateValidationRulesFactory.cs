@@ -77,11 +77,16 @@ namespace GreenEnergyHub.Charges.Application.Validation.BusinessValidation.Facto
         {
             var chargeTypeMRid = command.ChargeOperation.Id;
             var commandChargeTypeOwnerMRid = command.ChargeOperation.ChargeOwner;
+            var chargeType = command.ChargeOperation.Type;
 
-            var result = await _chargeRepository.CheckIfChargeExistsAsync(chargeTypeMRid, commandChargeTypeOwnerMRid, command.ChargeOperation.Type).ConfigureAwait(false);
+            var result = await _chargeRepository.CheckIfChargeExistsAsync(
+                chargeTypeMRid,
+                commandChargeTypeOwnerMRid,
+                chargeType).ConfigureAwait(false);
+
             if (result)
             {
-                throw new Exception($"Charge found on MRid: {chargeTypeMRid}, ChargeTypeOwnerMRid: {commandChargeTypeOwnerMRid}");
+                throw new Exception($"Charge found on MRid: {chargeTypeMRid}, ChargeTypeOwnerMRid: {commandChargeTypeOwnerMRid}, ChargeType: {chargeType}");
             }
         }
     }
