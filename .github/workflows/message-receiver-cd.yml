@@ -134,21 +134,22 @@ jobs:
         uses: actions/checkout@master
 
       - name: Build project
+        if: ${{ matrix.environment.short == 'u' }}
         shell: bash
         run: |
-          dotnet build ${{ env.INTEGRATION_TEST_CSPROJ_FILE_PATH }} --configuration Release --output ${{ github.workspace }}/output
+          dotnet build ${{ env.INTEGRATION_TEST_CSPROJ_FILE_PATH }} --configuration Release --output ${{ github.workspace }}/output-integration-test
 
-      - name: DEBUG output
+      - name: DEBUG output-integration-test
           run: |
             ls -l
             echo output folder:
-            ls -l output
+            ls -l output-integration-test
             echo Testfiles folder:
-            ls -l output/TestFiles
+            ls -l output-integration-test/TestFiles
 
       - name: Integration test
         if: ${{ matrix.environment.short == 'u' }}
         uses: ./.github/actions/integration-test
         with:
           key_vault_name: ${{ env.KEY_VAULT_NAME }}
-          test_dll: ${{ github.workspace }}/output/${{ env.INTEGRATION_TEST_DLL }}
+          test_dll: ${{ github.workspace }}/output-integration-test/${{ env.INTEGRATION_TEST_DLL }}
