@@ -131,6 +131,7 @@ jobs:
 
       # Get action required for integration test from repo
       - name: Checkout repository
+        if: ${{ matrix.environment.short == 'u' }}
         uses: actions/checkout@master
 
       - name: Build project
@@ -140,6 +141,7 @@ jobs:
           dotnet build ${{ env.INTEGRATION_TEST_CSPROJ_FILE_PATH }} --configuration Release --output ${{ github.workspace }}/output-integration-test
 
       - name: DEBUG output-integration-test
+          if: ${{ matrix.environment.short == 'u' }}
           run: |
             ls -l
             echo output folder:
