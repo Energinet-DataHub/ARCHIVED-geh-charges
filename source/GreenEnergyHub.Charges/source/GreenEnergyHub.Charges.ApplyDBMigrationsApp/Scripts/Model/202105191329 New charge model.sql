@@ -18,7 +18,7 @@ CREATE TABLE [Charges].[Charge]
     RowId int NOT NULL IDENTITY PRIMARY KEY,
     ChargeId nvarchar(35) NOT NULL,
     ChargeType int NOT NULL,
-    Owner int NOT NULL FOREIGN KEY REFERENCES [Charges].MarketParticipant(RowId),
+    MarketParticipantRowId int NOT NULL FOREIGN KEY REFERENCES [Charges].MarketParticipant(RowId),
     TaxIndicator bit NOT NULL,
     Resolution int NOT NULL,
     Currency nvarchar(10) NOT NULL,
