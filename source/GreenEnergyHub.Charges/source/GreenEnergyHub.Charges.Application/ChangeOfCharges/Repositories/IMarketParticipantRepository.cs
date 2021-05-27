@@ -12,13 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
+using GreenEnergyHub.Charges.Domain.Common;
 
-namespace GreenEnergyHub.Charges.Application.Validation.BusinessValidation
+namespace GreenEnergyHub.Charges.Application.ChangeOfCharges.Repositories
 {
-    public interface IBusinessValidationRulesFactory
+    /// <summary>
+    /// Repository for managing market participants.
+    /// </summary>
+    public interface IMarketParticipantRepository
     {
-        Task<IValidationRuleSet> CreateRulesForChargeCommandAsync(ChargeCommand chargeCommand);
+        /// <summary>
+        /// Get all energy suppliers.
+        /// </summary>
+        MarketParticipant? GetMarketParticipantOrNull(string id);
     }
 }

@@ -21,23 +21,27 @@ using GreenEnergyHub.Charges.Application.Validation.BusinessValidation.Validatio
 using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.Domain;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
+using GreenEnergyHub.Charges.Domain.Common;
 
-namespace GreenEnergyHub.Charges.Application.Validation.BusinessValidation
+namespace GreenEnergyHub.Charges.Application.Validation.BusinessValidation.Factories
 {
     public class BusinessUpdateValidationRulesFactory : IBusinessUpdateValidationRulesFactory
     {
         private readonly IChargeRepository _chargeRepository;
         private readonly IRulesConfigurationRepository _rulesConfigurationRepository;
         private readonly IZonedDateTimeService _localDateTimeService;
+        private readonly IMarketParticipantRepository _marketParticipantRepository;
 
         public BusinessUpdateValidationRulesFactory(
             IChargeRepository chargeRepository,
             IRulesConfigurationRepository rulesConfigurationRepository,
-            IZonedDateTimeService localDateTimeService)
+            IZonedDateTimeService localDateTimeService,
+            IMarketParticipantRepository marketParticipantRepository)
         {
             _chargeRepository = chargeRepository;
             _rulesConfigurationRepository = rulesConfigurationRepository;
             _localDateTimeService = localDateTimeService;
+            _marketParticipantRepository = marketParticipantRepository;
         }
 
         public async Task<IValidationRuleSet> CreateRulesForUpdateCommandAsync([NotNull] ChargeCommand chargeCommand)
@@ -48,20 +52,26 @@ namespace GreenEnergyHub.Charges.Application.Validation.BusinessValidation
             var commandChargeTypeOwnerMRid = chargeCommand.ChargeOperation.ChargeOwner;
 
             var charge = await _chargeRepository.GetChargeAsync(chargeTypeMRid, commandChargeTypeOwnerMRid).ConfigureAwait(false);
-
             if (charge == null)
             {
-                throw new Exception($"Charge found on MRid: {chargeTypeMRid}, ChargeTypeOwnerMRid: {commandChargeTypeOwnerMRid}");
+                throw new Exception($"Charge not found on MRid: {chargeTypeMRid}, ChargeTypeOwnerMRid: {commandChargeTypeOwnerMRid}");
             }
 
             var configuration = await _rulesConfigurationRepository.GetConfigurationAsync().ConfigureAwait(false);
 
-            var rules = GetRules(chargeCommand, configuration, charge);
+            var senderId = chargeCommand.Document.Sender.Id;
+            var sender = _marketParticipantRepository.GetMarketParticipantOrNull(senderId);
+
+            var rules = GetRules(chargeCommand, configuration, charge, sender);
 
             return ValidationRuleSet.FromRules(rules);
         }
 
-        private List<IValidationRule> GetRules(ChargeCommand command, RulesConfiguration configuration, Charge charge)
+        private List<IValidationRule> GetRules(
+            ChargeCommand command,
+            RulesConfiguration configuration,
+            Charge charge,
+            MarketParticipant? sender)
         {
             var rules = new List<IValidationRule>
             {
@@ -69,6 +79,7 @@ namespace GreenEnergyHub.Charges.Application.Validation.BusinessValidation
                     command,
                     configuration.StartDateValidationRuleConfiguration,
                     _localDateTimeService),
+                new CommandSenderMustBeAnExistingMarketParticipantRule(sender),
             };
 
             if (command.ChargeOperation.Type == ChargeType.Tariff)
