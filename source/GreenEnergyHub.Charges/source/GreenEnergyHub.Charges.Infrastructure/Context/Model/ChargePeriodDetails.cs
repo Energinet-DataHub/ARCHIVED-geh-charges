@@ -31,9 +31,9 @@ namespace GreenEnergyHub.Charges.Infrastructure.Context.Model
         [ForeignKey("ChargeOperation")]
         public int ChargeOperationRowId { get; set; }
 
-        public DateTime StartTimeDate { get; set; }
+        public DateTime StartDateTime { get; set; }
 
-        public DateTime? EndTimeDate { get; set; }
+        public DateTime? EndDateTime { get; set; }
 
         public string Name { get; set; }
 

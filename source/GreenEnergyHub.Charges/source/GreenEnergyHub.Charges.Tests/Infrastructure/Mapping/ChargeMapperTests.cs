@@ -38,19 +38,23 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Mapping
                 {
                     new ChargePeriodDetails
                     {
-                    StartTimeDate = future,
+                    StartDateTime = future,
                     RowId = 1,
                     },
                     new ChargePeriodDetails
                     {
-                        StartTimeDate = past,
+                        StartDateTime = past,
                         RowId = 2,
                     },
                     new ChargePeriodDetails
                     {
-                        StartTimeDate = expected,
+                        StartDateTime = expected,
                         RowId = 3,
                     },
+                },
+                MarketParticipant = new MarketParticipant
+                {
+                  MarketParticipantId = "id",
                 },
             });
 
@@ -73,9 +77,13 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Mapping
                 {
                     new ChargePeriodDetails
                     {
-                        StartTimeDate = expected,
+                        StartDateTime = expected,
                         RowId = 1,
                     },
+                },
+                MarketParticipant = new MarketParticipant
+                {
+                    MarketParticipantId = "id",
                 },
             });
 

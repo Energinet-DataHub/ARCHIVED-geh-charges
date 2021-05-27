@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application.ChangeOfCharges.Repositories;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
@@ -40,7 +41,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Repositories
                 .Include(x => x.ChargePrices)
                 .Include(x => x.MarketParticipant)
                 .SingleAsync(x => x.ChargeId == chargeId &&
-                                           x.Owner == owner &&
+                                           x.MarketParticipant.MarketParticipantId == owner &&
                                            x.ChargeType == (int)chargeType).ConfigureAwait(false);
 
             return ChargeMapper.MapChargeToChargeDomainModel(charge);
@@ -50,7 +51,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Repositories
         {
             return await _chargesDatabaseContext.Charge
                 .AnyAsync(x => x.ChargeId == chargeId &&
-                                        x.Owner == owner &&
+                                        x.MarketParticipant.MarketParticipantId == owner &&
                                         x.ChargeType == (int)chargeType).ConfigureAwait(false);
         }
 

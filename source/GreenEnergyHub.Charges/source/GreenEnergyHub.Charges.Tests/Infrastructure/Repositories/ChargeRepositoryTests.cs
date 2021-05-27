@@ -33,6 +33,8 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
     [UnitTest]
     public class ChargeRepositoryTest
     {
+        private const string MarketParticipantId = "MarketParticipantId";
+
         private readonly DbContextOptions<ChargesDatabaseContext> _dbContextOptions = new DbContextOptionsBuilder<ChargesDatabaseContext>()
             .UseSqlite("Filename=Test.db")
             .Options;
@@ -94,7 +96,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
             {
                 Name = "description",
                 Id = "Id",
-                Owner = "Owner",
+                Owner = MarketParticipantId,
                 StartDateTime = SystemClock.Instance.GetCurrentInstant(),
                 Points = new List<Point>
                     {
@@ -131,7 +133,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
         private void SeedDatabase()
         {
             using var context = new ChargesDatabaseContext(_dbContextOptions);
-            context.MarketParticipant.Add(new MarketParticipant { Name = "Name", Role = 1, MarketParticipantId = "Id" });
+            context.MarketParticipant.Add(new MarketParticipant { Name = "Name", Role = 1, MarketParticipantId = MarketParticipantId });
             context.Database.EnsureDeleted();
             context.Database.EnsureCreated();
             context.SaveChanges();

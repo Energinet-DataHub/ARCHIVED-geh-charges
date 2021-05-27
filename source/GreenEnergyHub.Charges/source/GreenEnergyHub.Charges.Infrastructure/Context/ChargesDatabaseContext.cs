@@ -39,5 +39,11 @@ namespace GreenEnergyHub.Charges.Infrastructure.Context
 
         public Task<int> SaveChangesAsync()
             => base.SaveChangesAsync();
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.HasDefaultSchema("Charges");
+            base.OnModelCreating(modelBuilder);
+        }
     }
 }

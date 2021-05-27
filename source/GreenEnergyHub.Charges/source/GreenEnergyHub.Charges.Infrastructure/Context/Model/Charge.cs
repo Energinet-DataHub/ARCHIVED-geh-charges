@@ -35,11 +35,11 @@ namespace GreenEnergyHub.Charges.Infrastructure.Context.Model
 
         public int ChargeType { get; set; }
 
-        public string Owner { get; set; }
+        public int MarketParticipantRowId { get; set; }
 
         public byte TaxIndicator { get; set; }
 
-        public int ResolutionType { get; set; }
+        public int Resolution { get; set; }
 
         public string Currency { get; set; }
 
