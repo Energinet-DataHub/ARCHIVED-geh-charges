@@ -27,15 +27,12 @@ namespace GreenEnergyHub.Charges.Infrastructure.Mapping
     public static class ChargeMapper
     {
         public static ChargeOperation MapToChargeOperation(
-            [NotNull] Domain.Charge charge,
-            [NotNull] MarketParticipant marketParticipant)
+            [NotNull] Domain.Charge charge)
         {
             if (charge == null) throw new ArgumentNullException(nameof(charge));
-            if (marketParticipant == null) throw new ArgumentNullException(nameof(marketParticipant));
 
             return new ChargeOperation
             {
-                Charge = MapDomainChargeToCharge(charge, marketParticipant),
                 CorrelationId = charge.Document.CorrelationId,
                 WriteDateTime = charge.Document.RequestDate.ToDateTimeUtc(),
                 ChargeOperationId = charge.ChargeOperationId,
@@ -72,12 +69,14 @@ namespace GreenEnergyHub.Charges.Infrastructure.Mapping
             };
         }
 
-        private static Charge MapDomainChargeToCharge(
+        public static Charge MapDomainChargeToCharge(
             [NotNull] Domain.Charge charge,
             MarketParticipant marketParticipant)
         {
             if (charge == null) throw new ArgumentNullException(nameof(charge));
+            if (marketParticipant == null) throw new ArgumentNullException(nameof(marketParticipant));
 
+            var chargeOperation = MapToChargeOperation(charge);
             return new Charge
             {
                 Currency = "DKK",
@@ -87,17 +86,19 @@ namespace GreenEnergyHub.Charges.Infrastructure.Mapping
                 Resolution = (int)charge.Resolution,
                 TaxIndicator = Convert.ToByte(charge.TaxIndicator),
                 TransparentInvoicing = Convert.ToByte(charge.TransparentInvoicing),
-                ChargePrices = MapChargeToChargePrice(charge).ToList(),
+                ChargePrices = MapChargeToChargePrice(charge, chargeOperation).ToList(),
                 ChargePeriodDetails = new List<ChargePeriodDetails>
                 {
-                    MapChargeToChargePeriodDetails(charge),
+                    MapChargeToChargePeriodDetails(charge, chargeOperation),
                 },
                 MarketParticipant = marketParticipant,
+                ChargeOperation = chargeOperation,
             };
         }
 
         private static IEnumerable<ChargePrice> MapChargeToChargePrice(
-            [NotNull] Domain.Charge charge)
+            [NotNull] Domain.Charge charge,
+            ChargeOperation chargeOperation)
         {
             if (charge == null) throw new ArgumentNullException(nameof(charge));
 
@@ -106,11 +107,13 @@ namespace GreenEnergyHub.Charges.Infrastructure.Mapping
                     Time = point.Time.ToDateTimeUtc(),
                     Price = point.Price,
                     Retired = false,
+                    ChargeOperation = chargeOperation,
                 }).ToList();
         }
 
         private static ChargePeriodDetails MapChargeToChargePeriodDetails(
-            [NotNull] Domain.Charge charge)
+            [NotNull] Domain.Charge charge,
+            ChargeOperation chargeOperation)
         {
             if (charge == null) throw new ArgumentNullException(nameof(charge));
 
@@ -121,6 +124,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Mapping
                 VatClassification = (int)charge.VatClassification,
                 EndDateTime = charge.EndDateTime?.ToDateTimeUtc(),
                 StartDateTime = charge.StartDateTime.ToDateTimeUtc(),
+                ChargeOperation = chargeOperation,
             };
         }
     }

@@ -35,5 +35,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Context.Model
         public decimal Price { get; set; }
 
         public bool Retired { get; set; }
+
+        public virtual ChargeOperation ChargeOperation { get; set; }
     }
 }

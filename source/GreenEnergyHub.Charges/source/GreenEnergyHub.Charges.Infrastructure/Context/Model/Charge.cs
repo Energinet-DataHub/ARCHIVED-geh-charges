@@ -45,6 +45,8 @@ namespace GreenEnergyHub.Charges.Infrastructure.Context.Model
 
         public byte TransparentInvoicing { get; set; }
 
+        public virtual ChargeOperation ChargeOperation { get; set; }
+
         public virtual MarketParticipant MarketParticipant { get; set; }
 
         public virtual List<ChargePrice> ChargePrices { get; set; }

@@ -68,9 +68,9 @@ namespace GreenEnergyHub.Charges.Infrastructure.Repositories
 
             var marketParticipant = await GetMarketParticipantAsync(newCharge.Document.Sender.Id).ConfigureAwait(false);
 
-            var chargeOperation = ChargeMapper.MapToChargeOperation(newCharge, marketParticipant);
+            var chargeOperation = ChargeMapper.MapDomainChargeToCharge(newCharge, marketParticipant);
 
-            await _chargesDatabaseContext.ChargeOperation.AddAsync(chargeOperation).ConfigureAwait(false);
+            await _chargesDatabaseContext.Charge.AddAsync(chargeOperation).ConfigureAwait(false);
 
             await _chargesDatabaseContext.SaveChangesAsync().ConfigureAwait(false);
         }
