@@ -17,6 +17,7 @@ on:
   pull_request:
     branches:
       - main
+      - Change_of_Charges_Integrationtest24
   workflow_dispatch: {}
 
 env:
