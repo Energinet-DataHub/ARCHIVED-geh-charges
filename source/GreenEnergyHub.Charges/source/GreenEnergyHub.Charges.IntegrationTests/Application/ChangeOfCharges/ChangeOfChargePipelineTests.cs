@@ -19,6 +19,9 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
+using GreenEnergyHub.Charges.Core.Json;
+using GreenEnergyHub.Charges.Domain.Acknowledgements;
+using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
 using GreenEnergyHub.Charges.IntegrationTests.TestHelpers;
 using GreenEnergyHub.Charges.TestCore;
 using Microsoft.Azure.WebJobs;
@@ -57,7 +60,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
                                         $"{_postOfficeTopicName}");
         }
 
-        [Theory(Timeout = 120000)]
+        [Theory(Timeout = 60000)]
         [InlineAutoMoqData("TestFiles/ValidCreateTariffCommand.json")]
         public async Task Test_ChargeCommandCompleteFlow_is_Accepted(
             string testFilePath,
@@ -69,8 +72,9 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
             // arrange
             IClock clock = SystemClock.Instance;
             var chargeJson = EmbeddedResourceHelper.GetInputJson(testFilePath, clock);
+            var chargeCommand = new JsonSerializer().Deserialize<ChargeCommand>(chargeJson);
 
-            _testOutputHelper.WriteLine($"Content length of testfile: {chargeJson.Length}");
+            _testOutputHelper.WriteLine($"ChargeCommand.Document.ID: {chargeCommand.Document.Id}");
 
             // act
             var messageReceiverHttpResponseMessage = await RunMessageReceiver(chargeJson).ConfigureAwait(false);
@@ -80,22 +84,24 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
             var commandAcceptedMessage = await serviceBusTestHelper
                 .GetMessageFromServiceBusAsync(_postOfficeConnectionString, _postOfficeTopicName, _postOfficeSubscriptionName)
                 .ConfigureAwait(false);
+            var messageJson = Encoding.UTF8.GetString(commandAcceptedMessage.Body);
+            var chargeConfirmation = new JsonSerializer().Deserialize<ChargeConfirmation>(messageJson);
 
-            _testOutputHelper.WriteLine($"CommandAcceptedMessage: {commandAcceptedMessage.Label}, {commandAcceptedMessage.CorrelationId}");
+            _testOutputHelper.WriteLine($"CommandAcceptedMessage: {commandAcceptedMessage.CorrelationId}");
 
             var chargeExistsByCorrelationId = await _chargeDbQueries
-                .ChargeExistsByCorrelationIdAsync(executionContext.InvocationId.ToString())
+                .ChargeExistsByCorrelationIdAsync(chargeConfirmation.CorrelationId)
                 .ConfigureAwait(false);
 
             // assert
             Assert.Equal(HttpStatusCode.OK, messageReceiverHttpResponseMessage.StatusCode);
-            Assert.Equal(executionContext.InvocationId.ToString(), commandAcceptedMessage.CorrelationId);
+            Assert.Equal(chargeCommand.Document.Id, chargeConfirmation.OriginalTransactionReferenceMRid);
             Assert.True(commandAcceptedMessage.Body.Length > 0);
             Assert.True(chargeExistsByCorrelationId);
         }
 
-        [Theory(Timeout = 120000)]
-        [InlineAutoMoqData("TestFiles/InValidCreateTariffCommand.json")]
+        [Theory(Timeout = 60000)]
+        [InlineAutoMoqData("TestFiles/InvalidCreateTariffCommand.json")]
         public async Task Test_ChargeCommandCompleteFlow_is_Rejected(
             string testFilePath,
             [NotNull] ExecutionContext executionContext,
@@ -106,8 +112,9 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
             // arrange
             IClock clock = SystemClock.Instance;
             var chargeJson = EmbeddedResourceHelper.GetInputJson(testFilePath, clock);
+            var chargeCommand = new JsonSerializer().Deserialize<ChargeCommand>(chargeJson);
 
-            _testOutputHelper.WriteLine($"Content length of testfile: {chargeJson.Length}");
+            _testOutputHelper.WriteLine($"ChargeCommand.Document.ID: {chargeCommand.Document.Id}");
 
             // act
             var messageReceiverHttpResponseMessage = await RunMessageReceiver(chargeJson).ConfigureAwait(false);
@@ -118,7 +125,10 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
                 .GetMessageFromServiceBusAsync(_postOfficeConnectionString, _postOfficeTopicName, _postOfficeSubscriptionName)
                 .ConfigureAwait(false);
 
-            _testOutputHelper.WriteLine($"CommandAcceptedMessage: {commandRejectedMessage.Label}, {commandRejectedMessage.CorrelationId}");
+            var messageJson = Encoding.UTF8.GetString(commandRejectedMessage.Body);
+            var chargeRejection = new JsonSerializer().Deserialize<ChargeRejection>(messageJson);
+
+            _testOutputHelper.WriteLine($"CommandAcceptedMessage: {commandRejectedMessage.CorrelationId}");
 
             var chargeExistsByCorrelationId = await _chargeDbQueries
                 .ChargeExistsByCorrelationIdAsync(executionContext.InvocationId.ToString())
@@ -126,7 +136,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
 
             // assert
             Assert.Equal(HttpStatusCode.OK, messageReceiverHttpResponseMessage.StatusCode);
-            Assert.Equal(executionContext.InvocationId.ToString(), commandRejectedMessage.CorrelationId);
+            Assert.Equal(chargeCommand.Document.Id, chargeRejection.OriginalTransactionReferenceMRid);
             Assert.True(commandRejectedMessage.Body.Length > 0);
             Assert.False(chargeExistsByCorrelationId);
         }
