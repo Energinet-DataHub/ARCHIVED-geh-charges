@@ -38,8 +38,8 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Mapping
                 {
                     new ChargePeriodDetails
                     {
-                    StartDateTime = future,
-                    RowId = 1,
+                        StartDateTime = future,
+                        RowId = 1,
                     },
                     new ChargePeriodDetails
                     {
@@ -55,35 +55,6 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Mapping
                 MarketParticipant = new MarketParticipant
                 {
                   MarketParticipantId = "id",
-                },
-            });
-
-            // Assert
-            Assert.Equal(expected, sut.StartDateTime.ToDateTimeUtc());
-        }
-
-        [Fact]
-        public void MapChargeToChargeDomainModel_SetsCorrectSPriceFromPoints()
-        {
-            // Arrange
-            var startTimeDate = DateTime.UtcNow;
-            var expected = startTimeDate + TimeSpan.FromSeconds(3);
-            var future = startTimeDate + TimeSpan.FromDays(3);
-
-            // Act
-            var sut = ChargeMapper.MapChargeToChargeDomainModel(new Charge
-            {
-                ChargePeriodDetails =
-                {
-                    new ChargePeriodDetails
-                    {
-                        StartDateTime = expected,
-                        RowId = 1,
-                    },
-                },
-                MarketParticipant = new MarketParticipant
-                {
-                    MarketParticipantId = "id",
                 },
             });
 
