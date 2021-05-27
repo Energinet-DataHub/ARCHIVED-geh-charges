@@ -47,7 +47,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Mapping
                 VatClassification = (VatClassification)currentChargeDetails.VatClassification,
                 ChargeOperationId = charge.ChargeId,
                 EndDateTime = currentChargeDetails.EndDateTime != null ?
-                    Instant.FromDateTimeUtc(currentChargeDetails.EndDateTime.Value) : null,
+                    Instant.FromDateTimeUtc(currentChargeDetails.EndDateTime.Value) : (Instant?)null,
                 Points = charge.ChargePrices.Select(x => new Point
                 {
                     Position = x.RowId,
