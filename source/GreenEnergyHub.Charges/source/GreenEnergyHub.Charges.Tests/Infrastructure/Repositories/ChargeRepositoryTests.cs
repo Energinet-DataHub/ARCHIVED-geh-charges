@@ -117,7 +117,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
                     CreatedDateTime = SystemClock.Instance.GetCurrentInstant(),
                     Sender = new Domain.Common.MarketParticipant
                     {
-                        Id = "Id",
+                        Id = MarketParticipantId,
                         Name = "Name",
                         BusinessProcessRole = (MarketParticipantRole)1,
                     },
