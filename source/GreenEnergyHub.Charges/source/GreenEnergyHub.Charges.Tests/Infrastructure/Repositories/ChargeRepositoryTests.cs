@@ -139,10 +139,10 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
         private void SeedDatabase()
         {
             using var context = new ChargesDatabaseContext(_dbContextOptions);
-            context.MarketParticipant.Add(
-                new MarketParticipant { Name = "Name", Role = 1, MarketParticipantId = MarketParticipantId });
             context.Database.EnsureDeleted();
             context.Database.EnsureCreated();
+            context.MarketParticipant.Add(
+                            new MarketParticipant { Name = "Name", Role = 1, MarketParticipantId = MarketParticipantId });
             context.SaveChanges();
         }
     }
