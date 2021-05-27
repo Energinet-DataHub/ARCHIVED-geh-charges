@@ -14,10 +14,12 @@
 name: Integration Test CI
 
 on:
+  push:
+    branches:
+      - Change_of_Charges_Integrationtest24
   pull_request:
     branches:
       - main
-      - Change_of_Charges_Integrationtest24
   workflow_dispatch: {}
 
 env:
