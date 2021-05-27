@@ -25,9 +25,9 @@ namespace GreenEnergyHub.Charges.Infrastructure.Mapping
 
             return new MarketParticipant
             {
-                Id = persistenceModel.MRid,
+                Id = persistenceModel.MarketParticipantId,
                 Name = persistenceModel.Name,
-                BusinessProcessRole = MarketParticipantRoleMapper.FromDatabaseValue(persistenceModel.Role),
+                BusinessProcessRole = (MarketParticipantRole)persistenceModel.Role,
             };
         }
     }
