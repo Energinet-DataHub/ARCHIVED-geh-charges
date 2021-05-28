@@ -45,7 +45,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Mapping
                 TaxIndicator = Convert.ToBoolean(charge.TaxIndicator),
                 TransparentInvoicing = Convert.ToBoolean(charge.TransparentInvoicing),
                 VatClassification = (VatClassification)currentChargeDetails.VatClassification,
-                ChargeOperationId = charge.ChargeId,
+                ChargeOperationId = charge.ChargeOperation.ChargeOperationId,
                 EndDateTime = currentChargeDetails.EndDateTime != null ?
                     Instant.FromDateTimeUtc(currentChargeDetails.EndDateTime.Value) : (Instant?)null,
                 Points = charge.ChargePrices.Select(x => new Point
