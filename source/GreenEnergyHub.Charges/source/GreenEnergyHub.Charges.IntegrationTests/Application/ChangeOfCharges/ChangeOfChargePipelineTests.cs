@@ -14,13 +14,12 @@
 
 using System;
 using System.Diagnostics.CodeAnalysis;
-using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Core.Json;
 using GreenEnergyHub.Charges.Domain.Acknowledgements;
+using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Result;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
 using GreenEnergyHub.Charges.IntegrationTests.TestHelpers;
 using GreenEnergyHub.Charges.TestCore;
@@ -29,6 +28,7 @@ using NodaTime;
 using Xunit;
 using Xunit.Abstractions;
 using Xunit.Categories;
+using JsonSerializer = GreenEnergyHub.Charges.Core.Json.JsonSerializer;
 
 namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
 {
@@ -77,28 +77,27 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
             _testOutputHelper.WriteLine($"ChargeCommand.Document.ID: {chargeCommand.Document.Id}");
 
             // act
-            var messageReceiverHttpResponseMessage = await RunMessageReceiver(chargeJson).ConfigureAwait(false);
+            var changeOfChargesMessageResult = await RunMessageReceiver(chargeJson).ConfigureAwait(false);
+            _testOutputHelper.WriteLine($"MessageReceiver response is succeeded: {changeOfChargesMessageResult.IsSucceeded}");
 
-            _testOutputHelper.WriteLine($"MessageReceiver response status: {messageReceiverHttpResponseMessage.StatusCode}");
-
-            var chargeConfirmationResult = await serviceBusTestHelper
+            var (receivedEvent, receivedMessage) = await serviceBusTestHelper
                 .GetMessageFromServiceBusAsync<ChargeConfirmation>(
                     _postOfficeConnectionString,
                     _postOfficeTopicName,
                     _postOfficeSubscriptionName,
-                    chargeCommand.CorrelationId)
+                    changeOfChargesMessageResult.CorrelationId!)
                 .ConfigureAwait(false);
 
-            _testOutputHelper.WriteLine($"CommandAcceptedMessage: {chargeConfirmationResult.receivedMessage.CorrelationId}");
+            _testOutputHelper.WriteLine($"CommandAcceptedMessage: {receivedMessage.CorrelationId}");
 
             var chargeExistsByCorrelationId = await _chargeDbQueries
-                .ChargeExistsByCorrelationIdAsync(chargeConfirmationResult.receivedMessage.CorrelationId)
+                .ChargeExistsByCorrelationIdAsync(receivedMessage.CorrelationId)
                 .ConfigureAwait(false);
 
             // assert
-            Assert.Equal(HttpStatusCode.OK, messageReceiverHttpResponseMessage.StatusCode);
-            Assert.Equal(chargeCommand.Document.Id, chargeConfirmationResult.receivedEvent.OriginalTransactionReferenceMRid);
-            Assert.NotNull(chargeConfirmationResult.receivedEvent);
+            Assert.True(changeOfChargesMessageResult.IsSucceeded);
+            Assert.Equal(chargeCommand.Document.Id, receivedEvent.OriginalTransactionReferenceMRid);
+            Assert.NotNull(receivedEvent);
             Assert.True(chargeExistsByCorrelationId);
         }
 
@@ -119,11 +118,10 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
             _testOutputHelper.WriteLine($"ChargeCommand.Document.ID: {chargeCommand.Document.Id}");
 
             // act
-            var messageReceiverHttpResponseMessage = await RunMessageReceiver(chargeJson).ConfigureAwait(false);
+            var changeOfChargesMessageResult = await RunMessageReceiver(chargeJson).ConfigureAwait(false);
+            _testOutputHelper.WriteLine($"MessageReceiver is succeeded: {changeOfChargesMessageResult.IsSucceeded}");
 
-            _testOutputHelper.WriteLine($"MessageReceiver response status: {messageReceiverHttpResponseMessage.StatusCode}");
-
-            var chargeRejectionResult = await serviceBusTestHelper
+            var (receivedEvent, receivedMessage) = await serviceBusTestHelper
                 .GetMessageFromServiceBusAsync<ChargeRejection>(
                     _postOfficeConnectionString,
                     _postOfficeTopicName,
@@ -131,28 +129,32 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
                     chargeCommand.CorrelationId)
                 .ConfigureAwait(false);
 
-            _testOutputHelper.WriteLine($"CommandAcceptedMessage: {chargeRejectionResult.receivedMessage.CorrelationId}");
+            _testOutputHelper.WriteLine($"CommandAcceptedMessage: {receivedMessage.CorrelationId}");
 
             var chargeExistsByCorrelationId = await _chargeDbQueries
                 .ChargeExistsByCorrelationIdAsync(executionContext.InvocationId.ToString())
                 .ConfigureAwait(false);
 
             // assert
-            Assert.Equal(HttpStatusCode.OK, messageReceiverHttpResponseMessage.StatusCode);
-            Assert.Equal(chargeCommand.Document.Id, chargeRejectionResult.receivedEvent.OriginalTransactionReferenceMRid);
-            Assert.NotNull(chargeRejectionResult.receivedEvent);
+            Assert.True(changeOfChargesMessageResult.IsSucceeded);
+            Assert.Equal(chargeCommand.Document.Id, receivedEvent.OriginalTransactionReferenceMRid);
+            Assert.NotNull(receivedEvent);
             Assert.False(chargeExistsByCorrelationId);
         }
 
-        private async Task<HttpResponseMessage> RunMessageReceiver([NotNull] string json)
+        private async Task<ChangeOfChargesMessageResult> RunMessageReceiver([NotNull] string json)
         {
             using var client = new HttpClient();
             client.DefaultRequestHeaders.Accept.Clear();
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
-#pragma warning disable CA2000
-            return await client.PostAsync(new Uri($"https://{_messageReceiverHostname}/api/chargehttptrigger/"), new StringContent(json, Encoding.UTF8, "application/json")).ConfigureAwait(false);
-#pragma warning restore CA2000
+            var requestUri = new Uri($"https://{_messageReceiverHostname}/api/chargehttptrigger/");
+            var stringContent = new StringContent(json, Encoding.UTF8, "application/json");
+            var response = await client.PostAsync(requestUri, stringContent).ConfigureAwait(false);
+            stringContent.Dispose();
+
+            string responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+            return new JsonSerializer().Deserialize<ChangeOfChargesMessageResult>(responseContent);
         }
     }
 }
