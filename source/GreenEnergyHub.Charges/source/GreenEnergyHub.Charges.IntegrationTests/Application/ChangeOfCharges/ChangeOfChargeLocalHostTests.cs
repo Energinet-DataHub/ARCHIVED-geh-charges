@@ -107,17 +107,25 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
 
             // act
             var messageReceiverResult = await RunMessageReceiver(logger, executionContext, req).ConfigureAwait(false);
-            var commandReceivedMessage = await serviceBusTestHelper
-                .GetMessageFromServiceBusAsync(_commandReceivedConnectionString, _commandReceivedTopicName, _commandReceivedSubscriptionName)
+            var commandReceivedResult = await serviceBusTestHelper
+                .GetMessageFromServiceBusAsync<ChargeCommandRejectedEvent>(
+                    _commandReceivedConnectionString,
+                    _commandReceivedTopicName,
+                    _commandReceivedSubscriptionName,
+                    executionContext.InvocationId.ToString())
                 .ConfigureAwait(false);
-            _testOutputHelper.WriteLine($"Message to be handled by ChargeCommandEndpoint: {commandReceivedMessage.Body.Length}");
+            _testOutputHelper.WriteLine($"Message to be handled by ChargeCommandEndpoint: {commandReceivedResult.receivedMessage.Body.Length}");
 
-            await _chargeCommandEndpoint.RunAsync(commandReceivedMessage.Body, logger.Object).ConfigureAwait(false);
+            await _chargeCommandEndpoint.RunAsync(commandReceivedResult.receivedMessage.Body, logger.Object).ConfigureAwait(false);
 
-            var commandAcceptedMessage = await serviceBusTestHelper
-                .GetMessageFromServiceBusAsync(_commandAcceptedConnectionString, _commandAcceptedTopicName, _commandAcceptedSubscriptionName)
+            var commandAcceptedResult = await serviceBusTestHelper
+                .GetMessageFromServiceBusAsync<ChargeCommandAcceptedEvent>(
+                    _commandAcceptedConnectionString,
+                    _commandAcceptedTopicName,
+                    _commandAcceptedSubscriptionName,
+                    commandReceivedResult.receivedEvent.CorrelationId)
                 .ConfigureAwait(false);
-            _testOutputHelper.WriteLine($"Message accepted by ChargeCommandEndpoint: {commandAcceptedMessage.Body.Length}");
+            _testOutputHelper.WriteLine($"Message accepted by ChargeCommandEndpoint: {commandAcceptedResult.receivedMessage.CorrelationId}");
 
             var chargeExistsByCorrelationId = await _chargeDbQueries
                 .ChargeExistsByCorrelationIdAsync(executionContext.InvocationId.ToString())
@@ -125,10 +133,10 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
 
             // assert
             Assert.Equal(200, messageReceiverResult!.StatusCode!.Value);
-            Assert.Equal(executionContext.InvocationId.ToString(), commandReceivedMessage.CorrelationId);
-            Assert.Equal(executionContext.InvocationId.ToString(), commandAcceptedMessage.CorrelationId);
-            Assert.True(commandReceivedMessage.Body.Length > 0);
-            Assert.True(commandAcceptedMessage.Body.Length > 0);
+            Assert.Equal(executionContext.InvocationId.ToString(), commandReceivedResult.receivedMessage.CorrelationId);
+            Assert.Equal(executionContext.InvocationId.ToString(), commandAcceptedResult.receivedMessage.CorrelationId);
+            Assert.True(commandReceivedResult.receivedMessage.Body.Length > 0);
+            Assert.True(commandAcceptedResult.receivedMessage.Body.Length > 0);
             Assert.True(chargeExistsByCorrelationId);
         }
 
@@ -146,16 +154,23 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
 
             // act
             var messageReceiverResult = await RunMessageReceiver(logger, executionContext, req).ConfigureAwait(false);
-            var commandReceivedMessage = await serviceBusTestHelper
-                .GetMessageFromServiceBusAsync(_commandReceivedConnectionString, _commandReceivedTopicName, _commandReceivedSubscriptionName)
+            var commandReceivedResult = await serviceBusTestHelper.GetMessageFromServiceBusAsync<ChargeCommand>(
+                    _commandReceivedConnectionString,
+                    _commandReceivedTopicName,
+                    _commandReceivedSubscriptionName,
+                    executionContext.InvocationId.ToString())
                 .ConfigureAwait(false);
-            _testOutputHelper.WriteLine($"Message to be handled by ChargeCommandEndpoint: {commandReceivedMessage.Body.Length}");
+            _testOutputHelper.WriteLine($"Message to be handled by ChargeCommandEndpoint: {commandReceivedResult.receivedMessage.Body.Length}");
 
-            await _chargeCommandEndpoint.RunAsync(commandReceivedMessage.Body, logger.Object).ConfigureAwait(false);
+            await _chargeCommandEndpoint.RunAsync(commandReceivedResult.receivedMessage.Body, logger.Object).ConfigureAwait(false);
 
-            var commandRejectedMessage = await serviceBusTestHelper
-                .GetMessageFromServiceBusAsync(_commandRejectedConnectionString, _commandRejectedTopicName, _commandRejectedSubscriptionName).ConfigureAwait(false);
-            _testOutputHelper.WriteLine($"Message accepted by ChargeCommandEndpoint: {commandRejectedMessage.Body.Length}");
+            var commandRejectedResult = await serviceBusTestHelper.GetMessageFromServiceBusAsync<ChargeCommandRejectedEvent>(
+                    _commandRejectedConnectionString,
+                    _commandRejectedTopicName,
+                    _commandRejectedSubscriptionName,
+                    executionContext.InvocationId.ToString())
+                .ConfigureAwait(false);
+            _testOutputHelper.WriteLine($"Message accepted by ChargeCommandEndpoint: {commandRejectedResult.receivedMessage.Body.Length}");
 
             var chargeExistsByCorrelationId = await _chargeDbQueries
                 .ChargeExistsByCorrelationIdAsync(executionContext.InvocationId.ToString())
@@ -163,10 +178,10 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
 
             // assert
             Assert.Equal(200, messageReceiverResult!.StatusCode!.Value);
-            Assert.Equal(executionContext.InvocationId.ToString(), commandReceivedMessage.CorrelationId);
-            Assert.Equal(executionContext.InvocationId.ToString(), commandRejectedMessage.CorrelationId);
-            Assert.True(commandReceivedMessage.Body.Length > 0);
-            Assert.True(commandRejectedMessage.Body.Length > 0);
+            Assert.Equal(executionContext.InvocationId.ToString(), commandReceivedResult.receivedEvent.CorrelationId);
+            Assert.Equal(executionContext.InvocationId.ToString(), commandRejectedResult.receivedEvent.CorrelationId);
+            Assert.True(commandReceivedResult.receivedMessage.Body.Length > 0);
+            Assert.True(commandRejectedResult.receivedMessage.Body.Length > 0);
             Assert.False(chargeExistsByCorrelationId);
         }
 

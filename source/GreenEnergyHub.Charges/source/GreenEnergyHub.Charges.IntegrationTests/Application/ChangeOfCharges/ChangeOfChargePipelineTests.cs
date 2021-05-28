@@ -81,22 +81,24 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
 
             _testOutputHelper.WriteLine($"MessageReceiver response status: {messageReceiverHttpResponseMessage.StatusCode}");
 
-            var commandAcceptedMessage = await serviceBusTestHelper
-                .GetMessageFromServiceBusAsync(_postOfficeConnectionString, _postOfficeTopicName, _postOfficeSubscriptionName)
+            var chargeConfirmationResult = await serviceBusTestHelper
+                .GetMessageFromServiceBusAsync<ChargeConfirmation>(
+                    _postOfficeConnectionString,
+                    _postOfficeTopicName,
+                    _postOfficeSubscriptionName,
+                    chargeCommand.CorrelationId)
                 .ConfigureAwait(false);
-            var messageJson = Encoding.UTF8.GetString(commandAcceptedMessage.Body);
-            var chargeConfirmation = new JsonSerializer().Deserialize<ChargeConfirmation>(messageJson);
 
-            _testOutputHelper.WriteLine($"CommandAcceptedMessage: {commandAcceptedMessage.CorrelationId}");
+            _testOutputHelper.WriteLine($"CommandAcceptedMessage: {chargeConfirmationResult.receivedMessage.CorrelationId}");
 
             var chargeExistsByCorrelationId = await _chargeDbQueries
-                .ChargeExistsByCorrelationIdAsync(chargeConfirmation.CorrelationId)
+                .ChargeExistsByCorrelationIdAsync(chargeConfirmationResult.receivedMessage.CorrelationId)
                 .ConfigureAwait(false);
 
             // assert
             Assert.Equal(HttpStatusCode.OK, messageReceiverHttpResponseMessage.StatusCode);
-            Assert.Equal(chargeCommand.Document.Id, chargeConfirmation.OriginalTransactionReferenceMRid);
-            Assert.True(commandAcceptedMessage.Body.Length > 0);
+            Assert.Equal(chargeCommand.Document.Id, chargeConfirmationResult.receivedEvent.OriginalTransactionReferenceMRid);
+            Assert.NotNull(chargeConfirmationResult.receivedEvent);
             Assert.True(chargeExistsByCorrelationId);
         }
 
@@ -121,14 +123,15 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
 
             _testOutputHelper.WriteLine($"MessageReceiver response status: {messageReceiverHttpResponseMessage.StatusCode}");
 
-            var commandRejectedMessage = await serviceBusTestHelper
-                .GetMessageFromServiceBusAsync(_postOfficeConnectionString, _postOfficeTopicName, _postOfficeSubscriptionName)
+            var chargeRejectionResult = await serviceBusTestHelper
+                .GetMessageFromServiceBusAsync<ChargeRejection>(
+                    _postOfficeConnectionString,
+                    _postOfficeTopicName,
+                    _postOfficeSubscriptionName,
+                    chargeCommand.CorrelationId)
                 .ConfigureAwait(false);
 
-            var messageJson = Encoding.UTF8.GetString(commandRejectedMessage.Body);
-            var chargeRejection = new JsonSerializer().Deserialize<ChargeRejection>(messageJson);
-
-            _testOutputHelper.WriteLine($"CommandAcceptedMessage: {commandRejectedMessage.CorrelationId}");
+            _testOutputHelper.WriteLine($"CommandAcceptedMessage: {chargeRejectionResult.receivedMessage.CorrelationId}");
 
             var chargeExistsByCorrelationId = await _chargeDbQueries
                 .ChargeExistsByCorrelationIdAsync(executionContext.InvocationId.ToString())
@@ -136,8 +139,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
 
             // assert
             Assert.Equal(HttpStatusCode.OK, messageReceiverHttpResponseMessage.StatusCode);
-            Assert.Equal(chargeCommand.Document.Id, chargeRejection.OriginalTransactionReferenceMRid);
-            Assert.True(commandRejectedMessage.Body.Length > 0);
+            Assert.Equal(chargeCommand.Document.Id, chargeRejectionResult.receivedEvent.OriginalTransactionReferenceMRid);
+            Assert.NotNull(chargeRejectionResult.receivedEvent);
             Assert.False(chargeExistsByCorrelationId);
         }
 
