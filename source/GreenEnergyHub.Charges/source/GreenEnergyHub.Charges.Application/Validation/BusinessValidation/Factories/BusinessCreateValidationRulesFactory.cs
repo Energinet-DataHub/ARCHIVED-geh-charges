@@ -75,18 +75,18 @@ namespace GreenEnergyHub.Charges.Application.Validation.BusinessValidation.Facto
 
         private async Task CheckIfChargeExistAsync(ChargeCommand command)
         {
-            var chargeOperationId = command.ChargeOperation.Id;
+            var chargeId = command.ChargeOperation.ChargeId;
             var chargeOperationChargeOwner = command.ChargeOperation.ChargeOwner;
             var chargeType = command.ChargeOperation.Type;
 
             var result = await _chargeRepository.CheckIfChargeExistsAsync(
-                chargeOperationId,
+                chargeId,
                 chargeOperationChargeOwner,
                 chargeType).ConfigureAwait(false);
 
             if (result)
             {
-                throw new Exception($"Charge found on MRid: {chargeOperationId}, ChargeTypeOwnerMRid: {chargeOperationChargeOwner}, ChargeType: {chargeType}");
+                throw new Exception($"Charge found on ChargeId: {chargeId}, ChargeOwner: {chargeOperationChargeOwner}, ChargeType: {chargeType}");
             }
         }
     }
