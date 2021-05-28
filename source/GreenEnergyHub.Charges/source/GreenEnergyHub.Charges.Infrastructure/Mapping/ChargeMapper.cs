@@ -50,7 +50,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Mapping
                     Instant.FromDateTimeUtc(currentChargeDetails.EndDateTime.Value) : (Instant?)null,
                 Points = charge.ChargePrices.Select(x => new Point
                 {
-                    Position = x.RowId,
+                    Position = 0,
                     Price = x.Price,
                     Time = Instant.FromDateTimeUtc(x.Time),
                 }).ToList(),
