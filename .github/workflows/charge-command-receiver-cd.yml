@@ -26,7 +26,6 @@ on:
 
 env:
   CSPROJ_FILE_PATH: 'source/GreenEnergyHub.Charges/source/GreenEnergyHub.Charges.ChargeCommandReceiver/GreenEnergyHub.Charges.ChargeCommandReceiver.csproj'
-  INTEGRATION_TEST_CSPROJ_FILE_PATH: 'source/GreenEnergyHub.Charges/source/GreenEnergyHub.Charges.IntegrationTests/GreenEnergyHub.Charges.IntegrationTests.csproj'
   SOLUTION_FILE_PATH: 'source/GreenEnergyHub.Charges/GreenEnergyHub.Charges.sln'
   INTEGRATION_TEST_DLL: GreenEnergyHub.Charges.IntegrationTests.dll
   DOTNET_VERSION: '3.1'
