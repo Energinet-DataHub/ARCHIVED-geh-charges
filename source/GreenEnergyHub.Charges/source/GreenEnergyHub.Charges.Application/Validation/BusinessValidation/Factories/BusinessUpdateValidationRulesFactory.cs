@@ -59,7 +59,7 @@ namespace GreenEnergyHub.Charges.Application.Validation.BusinessValidation.Facto
 
             if (charge == null)
             {
-                throw new Exception($"Charge found on ChargeId: {chargeId}, ChargeOwner: {chargeOperationChargeOwner}, ChargeType: {chargeType}");
+                throw new Exception($"Charge not found on ChargeId: {chargeId}, ChargeOwner: {chargeOperationChargeOwner}, ChargeType: {chargeType}");
             }
 
             var configuration = await _rulesConfigurationRepository.GetConfigurationAsync().ConfigureAwait(false);

@@ -86,7 +86,7 @@ namespace GreenEnergyHub.Charges.Application.Validation.BusinessValidation.Facto
 
             if (result)
             {
-                throw new Exception($"Charge found on ChargeId: {chargeId}, ChargeOwner: {chargeOperationChargeOwner}, ChargeType: {chargeType}");
+                throw new Exception($"Charge not found on ChargeId: {chargeId}, ChargeOwner: {chargeOperationChargeOwner}, ChargeType: {chargeType}");
             }
         }
     }
