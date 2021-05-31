@@ -68,6 +68,7 @@ namespace GreenEnergyHub.Charges.MessageReceiver
 
             var messageResult = await _changeOfChargesMessageHandler.HandleAsync(message)
                 .ConfigureAwait(false);
+            messageResult.CorrelationId = _correlationContext.CorrelationId;
 
             return new OkObjectResult(messageResult);
         }
