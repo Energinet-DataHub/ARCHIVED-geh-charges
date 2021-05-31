@@ -24,29 +24,29 @@ namespace GreenEnergyHub.Charges.Infrastructure.Context
     public interface IChargesDatabaseContext
     {
         /// <summary>
-        /// Market participants available in the database.
+        /// ChargePrices available in the database.
         /// </summary>
-        DbSet<MarketParticipant> MarketParticipant { get; }
+        DbSet<ChargePrice> ChargePrice { get; }
 
         /// <summary>
-        /// VAT payer types available in the database.
+        /// ChargeOperations available in the database.
         /// </summary>
-        DbSet<VatPayerType> VatPayerType { get; }
+        DbSet<ChargeOperation> ChargeOperation { get; }
 
         /// <summary>
-        /// Charge types available in the database.
+        /// ChargePeriodDetails available in the database.
         /// </summary>
-        DbSet<ChargeType> ChargeType { get; }
-
-        /// <summary>
-        /// Resolution types available in the database.
-        /// </summary>
-        DbSet<ResolutionType> ResolutionType { get; }
+        DbSet<ChargePeriodDetails> ChargePeriodDetails { get; }
 
         /// <summary>
         /// Charges available in the database.
         /// </summary>
         DbSet<Charge> Charge { get; }
+
+        /// <summary>
+        /// MarketParticipants available in the database.
+        /// </summary>
+        DbSet<MarketParticipant> MarketParticipant { get; }
 
         /// <summary>
         /// Saves changes to the database.

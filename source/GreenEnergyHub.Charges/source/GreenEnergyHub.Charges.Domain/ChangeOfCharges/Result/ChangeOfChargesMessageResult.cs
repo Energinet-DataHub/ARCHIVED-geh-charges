@@ -18,9 +18,11 @@ namespace GreenEnergyHub.Charges.Domain.ChangeOfCharges.Result
     {
         public bool IsSucceeded { get; set; }
 
+        public string? CorrelationId { get; set; }
+
         public static ChangeOfChargesMessageResult CreateSuccess()
         {
-            return new () { IsSucceeded = true, };
+            return new () { IsSucceeded = true };
         }
     }
 }
