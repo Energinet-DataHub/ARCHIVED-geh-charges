@@ -56,6 +56,10 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Mapping
                 {
                   MarketParticipantId = "id",
                 },
+                ChargeOperation = new ChargeOperation
+                {
+                    ChargeOperationId = "ChargeOperationId",
+                },
             });
 
             // Assert
