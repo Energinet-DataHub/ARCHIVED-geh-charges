@@ -13,13 +13,14 @@
 // limitations under the License.
 
 using GreenEnergyHub.Charges.Domain.Common;
+using GreenEnergyHub.Charges.Domain.Messages;
 using GreenEnergyHub.Messaging.MessageTypes.Common;
 using GreenEnergyHub.Messaging.Transport;
 using JetBrains.Annotations;
 
 namespace GreenEnergyHub.Charges.Domain.Acknowledgements
 {
-    public class ChargeConfirmation : IOutboundMessage
+    public class ChargeConfirmation : IMessage, IOutboundMessage
     {
         public ChargeConfirmation(
             string correlationId,
