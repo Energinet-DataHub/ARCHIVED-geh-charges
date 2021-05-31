@@ -36,6 +36,8 @@ namespace GreenEnergyHub.Charges.Infrastructure.Context.Model
 
         public bool Retired { get; set; }
 
+        public DateTime RetiredTime { get; set; }
+
         public virtual ChargeOperation ChargeOperation { get; set; }
     }
 }
