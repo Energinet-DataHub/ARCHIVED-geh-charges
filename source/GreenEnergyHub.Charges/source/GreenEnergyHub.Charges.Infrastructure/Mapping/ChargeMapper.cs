@@ -108,7 +108,6 @@ namespace GreenEnergyHub.Charges.Infrastructure.Mapping
                 {
                     Time = point.Time.ToDateTimeUtc(),
                     Price = point.Price,
-                    Retired = false,
                     ChargeOperation = chargeOperation,
                 }).ToList();
         }
