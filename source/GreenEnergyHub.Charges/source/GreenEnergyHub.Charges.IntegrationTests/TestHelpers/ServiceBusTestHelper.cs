@@ -15,6 +15,8 @@
 using System;
 using System.Text;
 using System.Threading.Tasks;
+using GreenEnergyHub.Charges.Core.Json;
+using GreenEnergyHub.Charges.Domain.Messages;
 using Microsoft.Azure.ServiceBus;
 using Xunit.Abstractions;
 
@@ -30,46 +32,43 @@ namespace GreenEnergyHub.Charges.IntegrationTests.TestHelpers
             _testOutputHelper = testOutputHelper;
         }
 
-        public async Task<Message> GetMessageFromServiceBusAsync(
+        public async Task<(T receivedEvent, Message receivedMessage)> GetMessageFromServiceBusAsync<T>(
             string serviceBusConnectionString,
             string serviceBusTopic,
-            string serviceBusSubscription)
+            string serviceBusSubscription,
+            string correlationId)
         {
             Message receivedMessage = null!;
-
+            var completion = new TaskCompletionSource<T>();
             var subscriptionClient = GetSubscriptionClient(serviceBusConnectionString, serviceBusTopic, serviceBusSubscription);
 
             subscriptionClient.RegisterMessageHandler(
-                async (message, token) =>
+                async (serviceBusMessage, ct) =>
                 {
-                    var messageJson = Encoding.UTF8.GetString(message.Body);
-                    receivedMessage = message;
+                    var jsonMessage = Encoding.UTF8.GetString(serviceBusMessage.Body);
+                    var deserializedMessage = new JsonSerializer().Deserialize<T>(jsonMessage);
 
-                    if (messageJson.Length > 0)
+                    if (deserializedMessage is IMessage message && message.CorrelationId == correlationId)
                     {
-                        _testOutputHelper.WriteLine($"Message received with body: {message.Body.Length}");
-                        await subscriptionClient.CompleteAsync(message.SystemProperties.LockToken).ConfigureAwait(false);
+                        receivedMessage = serviceBusMessage;
+
+                        _testOutputHelper.WriteLine($"Message received with body: {serviceBusMessage.Body.Length}");
+                        await subscriptionClient.CompleteAsync(serviceBusMessage.SystemProperties.LockToken).ConfigureAwait(false);
 
                         var inflightMessageHandlerTasksWaitTimeout = new TimeSpan(0, 0, 0, 0, 1);
                         await subscriptionClient.UnregisterMessageHandlerAsync(inflightMessageHandlerTasksWaitTimeout).ConfigureAwait(false);
+
+                        completion.SetResult(deserializedMessage);
                     }
-                },
-                new MessageHandlerOptions(async args =>
+                }, new MessageHandlerOptions(async args =>
                     {
                         await Task.Run(() => _testOutputHelper.WriteLine(args.Exception.ToString())).ConfigureAwait(false);
                     })
                     { MaxConcurrentCalls = 1, AutoComplete = false });
 
-            // ReSharper disable once NotAccessedVariable
-            // - for debugging purposes only
-            var count = 0;
-            while (receivedMessage == null)
-            {
-                await Task.Delay(50).ConfigureAwait(false);
-                ++count;
-            }
+            var receivedEvent = await completion.Task.ConfigureAwait(false);
 
-            return receivedMessage;
+            return (receivedEvent, receivedMessage);
         }
 
         private static SubscriptionClient GetSubscriptionClient(
