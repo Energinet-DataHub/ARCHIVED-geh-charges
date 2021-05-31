@@ -26,9 +26,6 @@ limitations under the License.
     </ItemGroup>
 
     <ItemGroup>
-      <EmbeddedResource Include="Scripts\Model\202103250958 Initial charge model.sql" />
-      <EmbeddedResource Include="Scripts\Seed\202103251012 Initial seed data.sql" />
-      <EmbeddedResource Include="Scripts\Test\202103251113 MarketParticipants.sql" />
       <EmbeddedResource Include="Scripts\Test\202105201033 New MarketParticipants.sql" />
       <EmbeddedResource Include="Scripts\Model\202105191329 New charge model.sql" />
     </ItemGroup>
@@ -36,6 +33,7 @@ limitations under the License.
     <ItemGroup>
       <Folder Include="Scripts\PostDeploy\" />
       <Folder Include="Scripts\PreDeploy\" />
+      <Folder Include="Scripts\Seed" />
     </ItemGroup>
 
 </Project>
