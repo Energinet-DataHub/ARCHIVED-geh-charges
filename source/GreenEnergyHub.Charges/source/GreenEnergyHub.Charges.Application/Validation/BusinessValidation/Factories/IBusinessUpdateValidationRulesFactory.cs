@@ -12,14 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace GreenEnergyHub.Charges.Infrastructure.Context.Model
-{
-    public class VatPayerType
-    {
-        public int Id { get; set; }
+using System.Threading.Tasks;
+using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
 
-#pragma warning disable 8618
-        public string Name { get; set; }
-#pragma warning restore 8618
+namespace GreenEnergyHub.Charges.Application.Validation.BusinessValidation.Factories
+{
+    public interface IBusinessUpdateValidationRulesFactory
+    {
+        Task<IValidationRuleSet> CreateRulesForUpdateCommandAsync(ChargeCommand chargeCommand);
     }
 }

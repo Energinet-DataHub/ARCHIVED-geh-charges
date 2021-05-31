@@ -12,12 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace GreenEnergyHub.Charges.Infrastructure.Context.Model
-{
-    public class ResolutionType
-    {
-        public int Id { get; set; }
+using System.Threading.Tasks;
+using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
 
-        public string? Name { get; set; }
+namespace GreenEnergyHub.Charges.Application.Validation.BusinessValidation.Factories
+{
+    public interface IBusinessStopValidationRulesFactory
+    {
+        Task<IValidationRuleSet> CreateRulesForStopCommandAsync(ChargeCommand chargeCommand);
     }
 }

@@ -12,21 +12,22 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.ComponentModel.DataAnnotations;
+using GreenEnergyHub.Charges.Domain.Common;
 
-#pragma warning disable 8618
-
-namespace GreenEnergyHub.Charges.Infrastructure.Context.Model
+namespace GreenEnergyHub.Charges.Application.Validation.BusinessValidation.ValidationRules
 {
-    public class MarketParticipant
+    public class CommandSenderMustBeAnExistingMarketParticipantRule : IValidationRule
     {
-        [Key]
-        public int RowId { get; set; }
+        private readonly MarketParticipant? _sender;
 
-        public string MarketParticipantId { get; set; }
+        public CommandSenderMustBeAnExistingMarketParticipantRule(MarketParticipant? sender)
+        {
+            _sender = sender;
+        }
 
-        public string Name { get; set; }
+        public bool IsValid => _sender != null;
 
-        public int Role { get; set; }
+        public ValidationRuleIdentifier ValidationRuleIdentifier =>
+            ValidationRuleIdentifier.CommandSenderMustBeAnExistingMarketParticipant;
     }
 }

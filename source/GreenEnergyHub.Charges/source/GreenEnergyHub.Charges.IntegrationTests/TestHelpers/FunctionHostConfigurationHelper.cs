@@ -31,7 +31,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.TestHelpers
         public static void ConfigureEnvironmentVariables()
         {
             var path = Path.GetDirectoryName(typeof(ChargeHttpTrigger).Assembly.Location);
-            var settingsFile = Path.Join(path, "local.settings.json");
+            var settingsFile = Path.Join(path, "integrationtest.local.settings.json");
             if (!File.Exists(settingsFile)) return;
 
             var json = File.ReadAllText(settingsFile);

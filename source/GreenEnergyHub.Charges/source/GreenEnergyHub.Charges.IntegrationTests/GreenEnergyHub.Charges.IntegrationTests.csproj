@@ -49,19 +49,19 @@ limitations under the License.
         <PackageReference Include="System.ComponentModel.TypeConverter" Version="4.3.0" />
         <PackageReference Include="xunit" Version="2.4.1" />
         <PackageReference Include="FluentAssertions" Version="5.10.3" />
-        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.9.4" />
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.10.0" />
         <PackageReference Include="xunit.runner.visualstudio" Version="2.4.3" />
         <PackageReference Include="coverlet.collector" Version="3.0.3" />
     </ItemGroup>
 
     <ItemGroup>
-      <Content Include="TestFiles\InvalidTariffAddition.json" CopyToOutputDirectory="Always" />
-      <Content Include="TestFiles\ValidTariffAddition.json" CopyToOutputDirectory="Always" />
+      <Content Include="TestFiles\InvalidCreateTariffCommand.json" CopyToOutputDirectory="Always" />
+      <Content Include="TestFiles\ValidCreateTariffCommand.json" CopyToOutputDirectory="Always" />
     </ItemGroup>
 
     <ItemGroup>
-      <None Update="local.settings.json">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <None Update="integrationtest.local.settings.json">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         <CopyToPublishDirectory>Never</CopyToPublishDirectory>
       </None>
     </ItemGroup>

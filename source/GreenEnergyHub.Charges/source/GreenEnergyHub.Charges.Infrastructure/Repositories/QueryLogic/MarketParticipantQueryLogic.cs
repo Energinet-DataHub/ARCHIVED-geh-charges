@@ -12,21 +12,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using GreenEnergyHub.Charges.Domain.Common;
+using GreenEnergyHub.Charges.Infrastructure.Mapping;
+using MarketParticipant = GreenEnergyHub.Charges.Infrastructure.Context.Model.MarketParticipant;
 
-#pragma warning disable 8618
-
-namespace GreenEnergyHub.Charges.Infrastructure.Context.Model
+namespace GreenEnergyHub.Charges.Infrastructure.Repositories.QueryLogic
 {
-    public class MarketParticipant
+    public static class MarketParticipantQueryLogic
     {
-        [Key]
-        public int RowId { get; set; }
-
-        public string MarketParticipantId { get; set; }
-
-        public string Name { get; set; }
-
-        public int Role { get; set; }
+        public static IQueryable<MarketParticipant> HasRole(
+            this IQueryable<MarketParticipant> query,
+            MarketParticipantRole role)
+        {
+            return query.Where(mp => mp.Role == (int)role);
+        }
     }
 }

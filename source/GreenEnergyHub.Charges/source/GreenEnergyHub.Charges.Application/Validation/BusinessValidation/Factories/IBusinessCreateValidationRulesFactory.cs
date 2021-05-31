@@ -12,14 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace GreenEnergyHub.Charges.Infrastructure.Context.Model
+using System.Threading.Tasks;
+using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
+
+namespace GreenEnergyHub.Charges.Application.Validation.BusinessValidation.Factories
 {
-    public class ChargeType
+    public interface IBusinessCreateValidationRulesFactory
     {
-        public int Id { get; set; }
-
-        public string? Code { get; set; }
-
-        public string? Name { get; set; }
+        Task<IValidationRuleSet> CreateRulesForCreateCommandAsync(ChargeCommand chargeCommand);
     }
 }
