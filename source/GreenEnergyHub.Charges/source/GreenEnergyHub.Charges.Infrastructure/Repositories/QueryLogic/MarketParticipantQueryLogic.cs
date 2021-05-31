@@ -25,7 +25,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Repositories.QueryLogic
             this IQueryable<MarketParticipant> query,
             MarketParticipantRole role)
         {
-            return query.Where(mp => mp.Role == role.ToDatabaseValue());
+            return query.Where(mp => mp.Role == (int)role);
         }
     }
 }

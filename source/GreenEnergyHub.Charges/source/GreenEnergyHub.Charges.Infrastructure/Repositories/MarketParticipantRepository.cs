@@ -38,7 +38,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Repositories
         {
             return _chargesDatabaseContext
                 .MarketParticipant
-                .Where(mp => mp.MRid == id)
+                .Where(mp => mp.MarketParticipantId == id)
                 .AsEnumerable()
                 .Select(_mapper.ToDomainObject)
                 .SingleOrDefault();
