@@ -34,7 +34,7 @@ namespace GreenEnergyHub.Charges.Application.Acknowledgement
                 rejectedEvent.CorrelationId,
                 rejectedEvent.Command.Document.Sender.Id,
                 rejectedEvent.Command.Document.Sender.BusinessProcessRole,
-                rejectedEvent.Command.Document.Id,
+                rejectedEvent.Command.ChargeOperation.Id,
                 rejectedEvent.Command.ChargeOperation.BusinessReasonCode,
                 rejectedEvent.Reason);
 
