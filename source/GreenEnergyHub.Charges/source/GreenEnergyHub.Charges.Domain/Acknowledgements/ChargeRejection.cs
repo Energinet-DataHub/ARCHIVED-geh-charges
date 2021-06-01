@@ -14,13 +14,14 @@
 
 using System.Collections.Generic;
 using GreenEnergyHub.Charges.Domain.Common;
+using GreenEnergyHub.Charges.Domain.Messages;
 using GreenEnergyHub.Messaging.MessageTypes.Common;
 using GreenEnergyHub.Messaging.Transport;
 using JetBrains.Annotations;
 
 namespace GreenEnergyHub.Charges.Domain.Acknowledgements
 {
-    public class ChargeRejection : IOutboundMessage
+    public class ChargeRejection : IMessage, IOutboundMessage
     {
         public ChargeRejection(
             string correlationId,

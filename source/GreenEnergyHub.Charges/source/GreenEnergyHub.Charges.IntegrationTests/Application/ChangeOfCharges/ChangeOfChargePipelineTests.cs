@@ -126,7 +126,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
                     _postOfficeConnectionString,
                     _postOfficeTopicName,
                     _postOfficeSubscriptionName,
-                    chargeCommand.CorrelationId)
+                    changeOfChargesMessageResult.CorrelationId!)
                 .ConfigureAwait(false);
 
             _testOutputHelper.WriteLine($"CommandAcceptedMessage: {receivedMessage.CorrelationId}");
