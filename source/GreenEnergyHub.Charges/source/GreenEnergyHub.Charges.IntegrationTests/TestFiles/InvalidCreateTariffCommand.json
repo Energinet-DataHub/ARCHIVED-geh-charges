@@ -20,7 +20,7 @@
     "EndDateTime": null,
     "OperationType": 2,
     "BusinessReasonCode": 18,
-    "ChargeId": "400kVolt",
+    "ChargeId": "{{$randomCharacters}}",
     "ChargeName": "Electric charge",
     "Type": 2,
     "ChargeOwner": "8100000000030",
