@@ -74,7 +74,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
             var chargeJson = EmbeddedResourceHelper.GetInputJson(testFilePath, clock);
             var chargeCommand = new JsonSerializer().Deserialize<ChargeCommand>(chargeJson);
 
-            _testOutputHelper.WriteLine($"ChargeCommand.Document.ID: {chargeCommand.Document.Id}");
+            _testOutputHelper.WriteLine($"ChargeCommand.ChargeOperation.Id: {chargeCommand.ChargeOperation.Id}");
 
             // act
             var changeOfChargesMessageResult = await RunMessageReceiver(chargeJson).ConfigureAwait(false);
@@ -96,7 +96,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
 
             // assert
             Assert.True(changeOfChargesMessageResult.IsSucceeded);
-            Assert.Equal(chargeCommand.Document.Id, receivedEvent.OriginalTransactionReferenceMRid);
+            Assert.Equal(chargeCommand.ChargeOperation.Id, receivedEvent.OriginalTransactionReferenceMRid);
             Assert.NotNull(receivedEvent);
             Assert.True(chargeExistsByCorrelationId);
         }
@@ -115,7 +115,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
             var chargeJson = EmbeddedResourceHelper.GetInputJson(testFilePath, clock);
             var chargeCommand = new JsonSerializer().Deserialize<ChargeCommand>(chargeJson);
 
-            _testOutputHelper.WriteLine($"ChargeCommand.Document.ID: {chargeCommand.Document.Id}");
+            _testOutputHelper.WriteLine($"ChargeCommand.ChargeOperation.ID: {chargeCommand.ChargeOperation.Id}");
 
             // act
             var changeOfChargesMessageResult = await RunMessageReceiver(chargeJson).ConfigureAwait(false);
@@ -137,7 +137,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
 
             // assert
             Assert.True(changeOfChargesMessageResult.IsSucceeded);
-            Assert.Equal(chargeCommand.Document.Id, receivedEvent.OriginalTransactionReferenceMRid);
+            Assert.Equal(chargeCommand.ChargeOperation.Id, receivedEvent.OriginalTransactionReferenceMRid);
             Assert.NotNull(receivedEvent);
             Assert.False(chargeExistsByCorrelationId);
         }
