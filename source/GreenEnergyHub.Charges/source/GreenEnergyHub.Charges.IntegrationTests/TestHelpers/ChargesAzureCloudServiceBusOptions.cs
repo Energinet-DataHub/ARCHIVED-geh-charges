@@ -12,25 +12,26 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
-using JetBrains.Annotations;
+using System.Diagnostics.CodeAnalysis;
+using Microsoft.Extensions.Configuration;
 using Squadron;
 
 namespace GreenEnergyHub.Charges.IntegrationTests.TestHelpers
 {
-    public class ChargeAzureCloudServiceBusOptions : AzureCloudServiceBusOptions
+    public class ChargesAzureCloudServiceBusOptions : AzureCloudServiceBusOptions
     {
-        public static readonly string ReceivedTopicName = "RCV";
-        public static readonly string SubscriptionName001 = "SUB-001";
+        public const string ReceivedTopicName = "sbt-received";
+        public const string SubscriptionName = "sbs-received";
+        private const string ServiceBusNamespaceConfiguration = "Squadron:Azure:ServiceBusNamespace";
 
         public override void Configure([NotNull] ServiceBusOptionsBuilder builder)
         {
-            if (builder == null) throw new ArgumentNullException(nameof(builder));
+            var config = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build();
 
             builder
-                .Namespace("sbn-charges-integration-test-hes")
+                .Namespace(config[ServiceBusNamespaceConfiguration])
                 .AddTopic(ReceivedTopicName)
-                .AddSubscription(SubscriptionName001);
+                .AddSubscription(SubscriptionName);
         }
     }
 }

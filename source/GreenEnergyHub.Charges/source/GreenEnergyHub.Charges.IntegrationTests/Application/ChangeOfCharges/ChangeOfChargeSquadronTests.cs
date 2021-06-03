@@ -40,11 +40,11 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
 {
     [IntegrationTest]
     public class ChangeOfChargeSquadronTests
-        : IClassFixture<AzureCloudServiceBusResource<ChargeAzureCloudServiceBusOptions>>
+        : IClassFixture<AzureCloudServiceBusResource<ChargesAzureCloudServiceBusOptions>>
     {
-        private readonly AzureCloudServiceBusResource<ChargeAzureCloudServiceBusOptions> _serviceBusResource;
+        private readonly AzureCloudServiceBusResource<ChargesAzureCloudServiceBusOptions> _serviceBusResource;
 
-        public ChangeOfChargeSquadronTests(AzureCloudServiceBusResource<ChargeAzureCloudServiceBusOptions> serviceBusResource)
+        public ChangeOfChargeSquadronTests(AzureCloudServiceBusResource<ChargesAzureCloudServiceBusOptions> serviceBusResource)
         {
             _serviceBusResource = serviceBusResource;
         }
@@ -60,7 +60,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
             if (executionContext == null) throw new ArgumentNullException(nameof(executionContext));
 
             // Arrange
-            var topicClient = _serviceBusResource.GetTopicClient(ChargeAzureCloudServiceBusOptions.ReceivedTopicName);
+            var topicClient = _serviceBusResource.GetTopicClient(ChargesAzureCloudServiceBusOptions.ReceivedTopicName);
             var messageReceiverHost = FunctionHostConfigurationHelper.SetupHost(new MessageReceiverConfiguration(topicClient));
 
             var chargeHttpTrigger = new ChargeHttpTrigger(
@@ -74,8 +74,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
             await RunMessageReceiver(logger, executionContext, req, chargeHttpTrigger).ConfigureAwait(false);
 
             var subscriptionClient = _serviceBusResource.GetSubscriptionClient(
-                ChargeAzureCloudServiceBusOptions.ReceivedTopicName,
-                ChargeAzureCloudServiceBusOptions.SubscriptionName001);
+                ChargesAzureCloudServiceBusOptions.ReceivedTopicName,
+                ChargesAzureCloudServiceBusOptions.SubscriptionName);
 
             var completion = new TaskCompletionSource<ChargeCommand?>();
 

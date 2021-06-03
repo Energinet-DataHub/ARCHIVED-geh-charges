@@ -1,0 +1,15 @@
+﻿{
+  "Squadron": {
+    "Azure": {
+      "SubscriptionId": "SubscriptionId",
+      "ResourceGroup": "ResourceGroup",
+      "DefaultLocation": "westeurope",
+      "Credentials": {
+        "TenantId": "TenantId",
+        "ClientId": "AppId/ClientId",
+        "Secret": "secret"
+      },
+      "ServiceBusNamespace": "sbn-charges-integration-test-{unique value}"
+    }
+  }
+}
