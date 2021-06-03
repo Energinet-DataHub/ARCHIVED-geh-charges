@@ -52,7 +52,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
 
         [Theory]
         [InlineAutoMoqData("TestFiles/ValidCreateTariffCommand.json")]
-        public async Task M1(
+        [InlineAutoMoqData("TestFiles/InvalidCreateTariffCommand.json")]
+        public async Task MessageReceiver_receives_message(
             string testFilePath,
             [NotNull] [Frozen] Mock<ILogger> logger,
             [NotNull] ExecutionContext executionContext)
