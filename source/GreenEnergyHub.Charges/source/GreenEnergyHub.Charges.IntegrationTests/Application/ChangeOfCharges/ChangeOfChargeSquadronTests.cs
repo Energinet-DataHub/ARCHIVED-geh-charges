@@ -13,10 +13,12 @@
 // limitations under the License.
 
 using System;
+using System.Text;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
 using GreenEnergyHub.Charges.Application.ChangeOfCharges;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
+using GreenEnergyHub.Charges.Domain.Events.Local;
 using GreenEnergyHub.Charges.Infrastructure.Messaging;
 using GreenEnergyHub.Charges.IntegrationTests.TestHelpers;
 using GreenEnergyHub.Charges.MessageReceiver;
@@ -24,14 +26,17 @@ using GreenEnergyHub.Charges.TestCore;
 using JetBrains.Annotations;
 using Microsoft.AspNetCore.Http.Internal;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Azure.ServiceBus;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Moq;
+using Newtonsoft.Json;
 using NodaTime;
 using Squadron;
 using Xunit;
 using Xunit.Categories;
+using Xunit.Sdk;
 
 namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
 {
@@ -68,9 +73,40 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
             IClock clock = SystemClock.Instance;
             var req = HttpRequestFactory.CreateHttpRequest(testFilePath, clock);
 
-            var messageReceiverResult = await RunMessageReceiver(logger, executionContext, req, chargeHttpTrigger).ConfigureAwait(false);
+            await RunMessageReceiver(logger, executionContext, req, chargeHttpTrigger).ConfigureAwait(false);
 
-            Assert.True(true);
+            var subscriptionClient = _serviceBusResource.GetSubscriptionClient(
+                NewChargeServiceBus.ReceivedTopicName,
+                NewChargeServiceBus.SubscriptionName001);
+
+            var completion = new TaskCompletionSource<ChargeCommand?>();
+
+            subscriptionClient.RegisterMessageHandler(
+                (message, ct) =>
+            {
+                try
+                {
+                    var json = Encoding.UTF8.GetString(message.Body);
+                    var ev = JsonConvert.DeserializeObject<ChargeCommand>(json);
+                    completion.SetResult(ev);
+                }
+#pragma warning disable CA1031 // allow catch of exception
+                catch (Exception exception)
+                {
+                    completion.SetException(exception);
+                }
+#pragma warning restore CA1031
+                return Task.CompletedTask;
+            }, new MessageHandlerOptions(ExceptionReceivedHandler));
+
+            var receivedEvent = await completion.Task.ConfigureAwait(false);
+
+            Assert.NotNull(receivedEvent);
+        }
+
+        private Task ExceptionReceivedHandler(ExceptionReceivedEventArgs arg)
+        {
+            throw new NotImplementedException();
         }
 
         private static async Task<OkObjectResult> RunMessageReceiver(Mock<ILogger> logger, ExecutionContext executionContext, DefaultHttpRequest req, ChargeHttpTrigger chargeHttpTrigger)
