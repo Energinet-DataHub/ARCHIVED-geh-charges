@@ -16,9 +16,9 @@ using System;
 using JetBrains.Annotations;
 using Squadron;
 
-namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
+namespace GreenEnergyHub.Charges.IntegrationTests.TestHelpers
 {
-    public class NewChargeServiceBus : AzureCloudServiceBusOptions
+    public class ChargeAzureCloudServiceBusOptions : AzureCloudServiceBusOptions
     {
         public static readonly string ReceivedTopicName = "RCV";
         public static readonly string SubscriptionName001 = "SUB-001";
@@ -28,7 +28,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
             if (builder == null) throw new ArgumentNullException(nameof(builder));
 
             builder
-                .Namespace("sbn-charges-integration-test")
+                .Namespace("sbn-charges-integration-test-hes")
                 .AddTopic(ReceivedTopicName)
                 .AddSubscription(SubscriptionName001);
         }

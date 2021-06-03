@@ -18,7 +18,6 @@ using System.Threading.Tasks;
 using AutoFixture.Xunit2;
 using GreenEnergyHub.Charges.Application.ChangeOfCharges;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
-using GreenEnergyHub.Charges.Domain.Events.Local;
 using GreenEnergyHub.Charges.Infrastructure.Messaging;
 using GreenEnergyHub.Charges.IntegrationTests.TestHelpers;
 using GreenEnergyHub.Charges.MessageReceiver;
@@ -36,17 +35,16 @@ using NodaTime;
 using Squadron;
 using Xunit;
 using Xunit.Categories;
-using Xunit.Sdk;
 
 namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
 {
     [IntegrationTest]
     public class ChangeOfChargeSquadronTests
-        : IClassFixture<AzureCloudServiceBusResource<NewChargeServiceBus>>
+        : IClassFixture<AzureCloudServiceBusResource<ChargeAzureCloudServiceBusOptions>>
     {
-        private readonly AzureCloudServiceBusResource<NewChargeServiceBus> _serviceBusResource;
+        private readonly AzureCloudServiceBusResource<ChargeAzureCloudServiceBusOptions> _serviceBusResource;
 
-        public ChangeOfChargeSquadronTests(AzureCloudServiceBusResource<NewChargeServiceBus> serviceBusResource)
+        public ChangeOfChargeSquadronTests(AzureCloudServiceBusResource<ChargeAzureCloudServiceBusOptions> serviceBusResource)
         {
             _serviceBusResource = serviceBusResource;
         }
@@ -62,7 +60,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
             if (executionContext == null) throw new ArgumentNullException(nameof(executionContext));
 
             // Arrange
-            var topicClient = _serviceBusResource.GetTopicClient(NewChargeServiceBus.ReceivedTopicName);
+            var topicClient = _serviceBusResource.GetTopicClient(ChargeAzureCloudServiceBusOptions.ReceivedTopicName);
             var messageReceiverHost = FunctionHostConfigurationHelper.SetupHost(new MessageReceiverConfiguration(topicClient));
 
             var chargeHttpTrigger = new ChargeHttpTrigger(
@@ -76,8 +74,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
             await RunMessageReceiver(logger, executionContext, req, chargeHttpTrigger).ConfigureAwait(false);
 
             var subscriptionClient = _serviceBusResource.GetSubscriptionClient(
-                NewChargeServiceBus.ReceivedTopicName,
-                NewChargeServiceBus.SubscriptionName001);
+                ChargeAzureCloudServiceBusOptions.ReceivedTopicName,
+                ChargeAzureCloudServiceBusOptions.SubscriptionName001);
 
             var completion = new TaskCompletionSource<ChargeCommand?>();
 

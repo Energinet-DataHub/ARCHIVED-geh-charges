@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application;
@@ -20,12 +21,11 @@ using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
 using GreenEnergyHub.Charges.Domain.Events.Local;
 using GreenEnergyHub.Charges.Infrastructure.Messaging;
 using GreenEnergyHub.Charges.Infrastructure.Messaging.Registration;
-using JetBrains.Annotations;
 using Microsoft.Azure.Functions.Extensions.DependencyInjection;
 using Microsoft.Azure.ServiceBus;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
+namespace GreenEnergyHub.Charges.IntegrationTests.TestHelpers
 {
     public class MessageReceiverConfiguration : MessageReceiver.Startup
     {
