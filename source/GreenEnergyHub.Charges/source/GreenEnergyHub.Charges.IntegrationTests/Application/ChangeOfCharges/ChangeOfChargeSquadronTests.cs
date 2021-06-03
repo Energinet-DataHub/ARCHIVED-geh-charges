@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Text;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
@@ -22,7 +23,7 @@ using GreenEnergyHub.Charges.Infrastructure.Messaging;
 using GreenEnergyHub.Charges.IntegrationTests.TestHelpers;
 using GreenEnergyHub.Charges.MessageReceiver;
 using GreenEnergyHub.Charges.TestCore;
-using JetBrains.Annotations;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Internal;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.ServiceBus;
@@ -56,10 +57,57 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
             [NotNull] [Frozen] Mock<ILogger> logger,
             [NotNull] ExecutionContext executionContext)
         {
-            if (logger == null) throw new ArgumentNullException(nameof(logger));
-            if (executionContext == null) throw new ArgumentNullException(nameof(executionContext));
+            // arrange
+            IClock clock = SystemClock.Instance;
+            var httpRequest = HttpRequestFactory.CreateHttpRequest(testFilePath, clock);
 
-            // Arrange
+            // act
+            await CallMessageReceiver(logger, executionContext, httpRequest).ConfigureAwait(false);
+
+            var subscriptionClient = _serviceBusResource.GetSubscriptionClient(
+                ChargesAzureCloudServiceBusOptions.ReceivedTopicName,
+                ChargesAzureCloudServiceBusOptions.SubscriptionName);
+
+            var completion = new TaskCompletionSource<ChargeCommand?>();
+
+            RegisterSubscriptionClientMessageHandler(subscriptionClient, completion);
+
+            var receivedEvent = await completion.Task.ConfigureAwait(false);
+
+            // assert
+            Assert.NotNull(receivedEvent);
+        }
+
+        private void RegisterSubscriptionClientMessageHandler(
+            [NotNull] ISubscriptionClient subscriptionClient,
+            [NotNull] TaskCompletionSource<ChargeCommand?> completion)
+        {
+            subscriptionClient.RegisterMessageHandler(
+                (message, ct) =>
+                {
+                    try
+                    {
+                        var json = Encoding.UTF8.GetString(message.Body);
+                        var ev = JsonConvert.DeserializeObject<ChargeCommand>(json);
+                        completion.SetResult(ev);
+                    }
+#pragma warning disable CA1031 // allow catch of exception
+                    catch (Exception exception)
+                    {
+                        completion.SetException(exception);
+                    }
+#pragma warning restore CA1031
+                    return Task.CompletedTask;
+                }, new MessageHandlerOptions(ExceptionReceivedHandler));
+        }
+
+        private Task ExceptionReceivedHandler(ExceptionReceivedEventArgs arg)
+        {
+            throw new NotImplementedException();
+        }
+
+        private async Task<OkObjectResult> CallMessageReceiver(IMock<ILogger> logger, ExecutionContext executionContext, HttpRequest req)
+        {
             var topicClient = _serviceBusResource.GetTopicClient(ChargesAzureCloudServiceBusOptions.ReceivedTopicName);
             var messageReceiverHost = FunctionHostConfigurationHelper.SetupHost(new MessageReceiverConfiguration(topicClient));
 
@@ -68,47 +116,6 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
                 messageReceiverHost.Services.GetRequiredService<ICorrelationContext>(),
                 messageReceiverHost.Services.GetRequiredService<MessageExtractor<ChargeCommand>>());
 
-            IClock clock = SystemClock.Instance;
-            var req = HttpRequestFactory.CreateHttpRequest(testFilePath, clock);
-
-            await RunMessageReceiver(logger, executionContext, req, chargeHttpTrigger).ConfigureAwait(false);
-
-            var subscriptionClient = _serviceBusResource.GetSubscriptionClient(
-                ChargesAzureCloudServiceBusOptions.ReceivedTopicName,
-                ChargesAzureCloudServiceBusOptions.SubscriptionName);
-
-            var completion = new TaskCompletionSource<ChargeCommand?>();
-
-            subscriptionClient.RegisterMessageHandler(
-                (message, ct) =>
-            {
-                try
-                {
-                    var json = Encoding.UTF8.GetString(message.Body);
-                    var ev = JsonConvert.DeserializeObject<ChargeCommand>(json);
-                    completion.SetResult(ev);
-                }
-#pragma warning disable CA1031 // allow catch of exception
-                catch (Exception exception)
-                {
-                    completion.SetException(exception);
-                }
-#pragma warning restore CA1031
-                return Task.CompletedTask;
-            }, new MessageHandlerOptions(ExceptionReceivedHandler));
-
-            var receivedEvent = await completion.Task.ConfigureAwait(false);
-
-            Assert.NotNull(receivedEvent);
-        }
-
-        private Task ExceptionReceivedHandler(ExceptionReceivedEventArgs arg)
-        {
-            throw new NotImplementedException();
-        }
-
-        private static async Task<OkObjectResult> RunMessageReceiver(Mock<ILogger> logger, ExecutionContext executionContext, DefaultHttpRequest req, ChargeHttpTrigger chargeHttpTrigger)
-        {
             return (OkObjectResult)await chargeHttpTrigger
                 .RunAsync(req, executionContext, logger.Object)
                 .ConfigureAwait(false);
