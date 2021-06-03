@@ -58,20 +58,18 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
             [NotNull] ExecutionContext executionContext)
         {
             // arrange
-            IClock clock = SystemClock.Instance;
-            var httpRequest = HttpRequestFactory.CreateHttpRequest(testFilePath, clock);
-
-            // act
-            await CallMessageReceiver(logger, executionContext, httpRequest).ConfigureAwait(false);
-
             var subscriptionClient = _serviceBusResource.GetSubscriptionClient(
                 ChargesAzureCloudServiceBusOptions.ReceivedTopicName,
                 ChargesAzureCloudServiceBusOptions.SubscriptionName);
 
             var completion = new TaskCompletionSource<ChargeCommand?>();
-
             RegisterSubscriptionClientMessageHandler(subscriptionClient, completion);
 
+            IClock clock = SystemClock.Instance;
+            var httpRequest = HttpRequestFactory.CreateHttpRequest(testFilePath, clock);
+
+            // act
+            await CallMessageReceiver(logger, executionContext, httpRequest).ConfigureAwait(false);
             var receivedEvent = await completion.Task.ConfigureAwait(false);
 
             // assert
