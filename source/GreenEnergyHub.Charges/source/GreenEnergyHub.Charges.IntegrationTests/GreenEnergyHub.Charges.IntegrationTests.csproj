@@ -39,6 +39,7 @@ limitations under the License.
         <PackageReference Include="AutoFixture.AutoMoq" Version="4.17.0" />
         <PackageReference Include="Azure.Messaging.ServiceBus" Version="7.1.2" />
         <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.2.2" />
+        <PackageReference Include="Microsoft.Azure.Management.ServiceBus" Version="2.0.0" />
         <PackageReference Include="Microsoft.Azure.WebJobs.Extensions" Version="4.0.1" />
         <PackageReference Include="Microsoft.Azure.WebJobs.Host.TestCommon" Version="3.0.27" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="3.1.14" />
@@ -46,7 +47,7 @@ limitations under the License.
         <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="3.1.15" />
         <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="3.1.15" />
         <PackageReference Include="Microsoft.Extensions.Hosting" Version="3.1.15" />
-        <PackageReference Include="Squadron.AzureCloudServiceBus" Version="0.10.0" />
+        <PackageReference Include="Microsoft.IdentityModel.Clients.ActiveDirectory" Version="5.2.2" />
         <PackageReference Include="System.ComponentModel.TypeConverter" Version="4.3.0" />
         <PackageReference Include="xunit" Version="2.4.1" />
         <PackageReference Include="FluentAssertions" Version="5.10.3" />
@@ -74,5 +75,14 @@ limitations under the License.
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         <CopyToPublishDirectory>Never</CopyToPublishDirectory>
       </None>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Reference Include="Squadron.AzureCloud, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
+        <HintPath>..\..\..\..\..\squadron\src\AzureCloudServiceBus\bin\Debug\netcoreapp3.0\Squadron.AzureCloud.dll</HintPath>
+      </Reference>
+      <Reference Include="Squadron.AzureCloudServiceBus, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
+        <HintPath>..\..\..\..\..\squadron\src\AzureCloudServiceBus\bin\Debug\netcoreapp3.0\Squadron.AzureCloudServiceBus.dll</HintPath>
+      </Reference>
     </ItemGroup>
 </Project>
