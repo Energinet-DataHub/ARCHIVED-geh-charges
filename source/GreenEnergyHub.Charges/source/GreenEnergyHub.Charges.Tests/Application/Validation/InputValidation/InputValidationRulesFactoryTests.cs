@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
@@ -37,7 +38,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Validation.InputValidation
 
             // Act
             var actualRuleTypes = sut.CreateRulesForChargeCreateCommand(createCommand).GetRules().Select(r => r.GetType()).ToList();
-            var expectedRuleTypes = GetMandatoryRules().Select(r => r.GetType()).ToList();
+            var expectedRuleTypes = GetExpectedMandatoryRules().Select(r => r.GetType()).ToList();
 
             // Assert
             actualRuleTypes.Should().Contain(expectedRuleTypes);
@@ -52,7 +53,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Validation.InputValidation
 
             // Act
             var actualRuleTypes = sut.CreateRulesForChargeUpdateCommand(updateCommand).GetRules().Select(r => r.GetType()).ToList();
-            var expectedRuleTypes = GetMandatoryRules().Select(r => r.GetType()).ToList();
+            var expectedRuleTypes = GetExpectedMandatoryRules().Select(r => r.GetType()).ToList();
 
             // Assert
             actualRuleTypes.Should().Contain(expectedRuleTypes);
@@ -67,13 +68,73 @@ namespace GreenEnergyHub.Charges.Tests.Application.Validation.InputValidation
 
             // Act
             var actualRuleTypes = sut.CreateRulesForChargeStopCommand(stopCommand).GetRules().Select(r => r.GetType()).ToList();
-            var expectedRuleTypes = GetMandatoryRules().Select(r => r.GetType()).ToList();
+            var expectedRuleTypes = GetExpectedMandatoryRules().Select(r => r.GetType()).ToList();
 
             // Assert
             actualRuleTypes.Should().Contain(expectedRuleTypes);
         }
 
-        private static IEnumerable<IValidationRule> GetMandatoryRules()
+        [Fact]
+        public void CreateRulesForChargeCreateCommand_ShouldContainCreateRulesTest()
+        {
+            // Arrange
+            var sut = new InputValidationRulesFactory();
+            var createCommand = new TestableChargeCommand { ChargeOperation = { OperationType = OperationType.Create } };
+
+            // Act
+            var actualRuleTypes = sut.CreateRulesForChargeCreateCommand(createCommand).GetRules().Select(r => r.GetType()).ToList();
+            var expectedRuleTypes = GetExpectedCreateRules().Select(r => r.GetType()).ToList();
+
+            // Assert
+            actualRuleTypes.Should().Contain(expectedRuleTypes);
+        }
+
+        [Fact]
+        public void CreateRulesForChargeUpdateCommand_ShouldContainUpdateRulesTest()
+        {
+            // Arrange
+            var sut = new InputValidationRulesFactory();
+            var updateCommand = new TestableChargeCommand { ChargeOperation = { OperationType = OperationType.Update } };
+
+            // Act
+            var actualRuleTypes = sut.CreateRulesForChargeUpdateCommand(updateCommand).GetRules().Select(r => r.GetType()).ToList();
+            var expectedRuleTypes = GetExpectedUpdateRules().Select(r => r.GetType()).ToList();
+
+            // Assert
+            actualRuleTypes.Should().Contain(expectedRuleTypes);
+        }
+
+        [Fact]
+        public void CreateRulesForChargeUpdateCommand_ShouldThrowArgumentNullException_WhenCalledWithNull()
+        {
+            // Arrange
+            var sut = new InputValidationRulesFactory();
+
+            // Act & Assert
+            Assert.Throws<ArgumentNullException>(() => sut.CreateRulesForChargeCreateCommand(null!));
+        }
+
+        [Fact]
+        public void CreateRulesForChargeCreateCommand_ShouldThrowArgumentNullException_WhenCalledWithNull()
+        {
+            // Arrange
+            var sut = new InputValidationRulesFactory();
+
+            // Act & Assert
+            Assert.Throws<ArgumentNullException>(() => sut.CreateRulesForChargeCreateCommand(null!));
+        }
+
+        [Fact]
+        public void CreateRulesForChargeStopCommand_ShouldThrowArgumentNullException_WhenCalledWithNull()
+        {
+            // Arrange
+            var sut = new InputValidationRulesFactory();
+
+            // Act & Assert
+            Assert.Throws<ArgumentNullException>(() => sut.CreateRulesForChargeStopCommand(null!));
+        }
+
+        private static IEnumerable<IValidationRule> GetExpectedMandatoryRules()
         {
             var testableChargeCommand = new TestableChargeCommand();
 
@@ -88,6 +149,49 @@ namespace GreenEnergyHub.Charges.Tests.Application.Validation.InputValidation
                 new StartDateTimeRequiredValidationRule(testableChargeCommand),
                 new OperationTypeValidationRule(testableChargeCommand),
                 new ChargeOwnerIsRequiredValidationRule(testableChargeCommand),
+            };
+
+            return rules;
+        }
+
+        private static IEnumerable<IValidationRule> GetExpectedCreateRules()
+        {
+            var testableChargeCommand = new TestableChargeCommand();
+
+            var rules = new List<IValidationRule>
+            {
+                new ProcessTypeIsKnownValidationRule(testableChargeCommand),
+                new SenderIsMandatoryTypeValidationRule(testableChargeCommand),
+                new RecipientIsMandatoryTypeValidationRule(testableChargeCommand),
+                new VatClassificationValidationRule(testableChargeCommand),
+                new ResolutionTariffValidationRule(testableChargeCommand),
+                new ResolutionFeeValidationRule(testableChargeCommand),
+                new ResolutionSubscriptionValidationRule(testableChargeCommand),
+                new ChargeNameHasMaximumLengthRule(testableChargeCommand),
+                new ChargeDescriptionHasMaximumLengthRule(testableChargeCommand),
+                new ChargeTypeTariffPriceCountRule(testableChargeCommand),
+                new MaximumPriceRule(testableChargeCommand),
+                new ChargePriceMaximumDigitsAndDecimalsRule(testableChargeCommand),
+                new FeeMustHaveSinglePriceRule(testableChargeCommand),
+                new SubscriptionMustHaveSinglePriceRule(testableChargeCommand),
+            };
+
+            return rules;
+        }
+
+        private static IEnumerable<IValidationRule> GetExpectedUpdateRules()
+        {
+            var testableChargeCommand = new TestableChargeCommand();
+
+            var rules = new List<IValidationRule>
+            {
+                new ChargeNameHasMaximumLengthRule(testableChargeCommand),
+                new ChargeDescriptionHasMaximumLengthRule(testableChargeCommand),
+                new ChargeTypeTariffPriceCountRule(testableChargeCommand),
+                new MaximumPriceRule(testableChargeCommand),
+                new ChargePriceMaximumDigitsAndDecimalsRule(testableChargeCommand),
+                new FeeMustHaveSinglePriceRule(testableChargeCommand),
+                new SubscriptionMustHaveSinglePriceRule(testableChargeCommand),
             };
 
             return rules;
