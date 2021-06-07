@@ -155,6 +155,16 @@ namespace GreenEnergyHub.Charges.Tests.Application.Validation.InputValidation
             Assert.Throws<ArgumentNullException>(() => sut.CreateRulesForChargeStopCommand(null!));
         }
 
+        [Fact]
+        public void CreateRulesForChargeUnknownCommand_ShouldThrowArgumentNullException_WhenCalledWithNull()
+        {
+            // Arrange
+            var sut = new InputValidationRulesFactory();
+
+            // Act & Assert
+            Assert.Throws<ArgumentNullException>(() => sut.CreateRulesForChargeUnknownCommand(null!));
+        }
+
         private static IEnumerable<IValidationRule> GetExpectedMandatoryRules()
         {
             var testableChargeCommand = new TestableChargeCommand();
