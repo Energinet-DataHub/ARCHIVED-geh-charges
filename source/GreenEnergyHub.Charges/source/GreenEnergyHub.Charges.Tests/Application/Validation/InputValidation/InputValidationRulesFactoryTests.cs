@@ -37,7 +37,8 @@ namespace GreenEnergyHub.Charges.Tests.Application.Validation.InputValidation
             var createCommand = new TestableChargeCommand { ChargeOperation = { OperationType = OperationType.Create } };
 
             // Act
-            var actualRuleTypes = sut.CreateRulesForChargeCreateCommand(createCommand).GetRules().Select(r => r.GetType()).ToList();
+            var actualRuleTypes = sut.CreateRulesForChargeCreateCommand(createCommand).GetRules()
+                .Select(r => r.GetType()).ToList();
             var expectedRuleTypes = GetExpectedMandatoryRules().Select(r => r.GetType()).ToList();
 
             // Assert
@@ -52,7 +53,8 @@ namespace GreenEnergyHub.Charges.Tests.Application.Validation.InputValidation
             var updateCommand = new TestableChargeCommand { ChargeOperation = { OperationType = OperationType.Update } };
 
             // Act
-            var actualRuleTypes = sut.CreateRulesForChargeUpdateCommand(updateCommand).GetRules().Select(r => r.GetType()).ToList();
+            var actualRuleTypes = sut.CreateRulesForChargeUpdateCommand(updateCommand).GetRules()
+                .Select(r => r.GetType()).ToList();
             var expectedRuleTypes = GetExpectedMandatoryRules().Select(r => r.GetType()).ToList();
 
             // Assert
@@ -67,7 +69,8 @@ namespace GreenEnergyHub.Charges.Tests.Application.Validation.InputValidation
             var stopCommand = new TestableChargeCommand { ChargeOperation = { OperationType = OperationType.Stop } };
 
             // Act
-            var actualRuleTypes = sut.CreateRulesForChargeStopCommand(stopCommand).GetRules().Select(r => r.GetType()).ToList();
+            var actualRuleTypes = sut.CreateRulesForChargeStopCommand(stopCommand).GetRules()
+                .Select(r => r.GetType()).ToList();
             var expectedRuleTypes = GetExpectedMandatoryRules().Select(r => r.GetType()).ToList();
 
             // Assert
@@ -82,7 +85,8 @@ namespace GreenEnergyHub.Charges.Tests.Application.Validation.InputValidation
             var createCommand = new TestableChargeCommand { ChargeOperation = { OperationType = OperationType.Create } };
 
             // Act
-            var actualRuleTypes = sut.CreateRulesForChargeCreateCommand(createCommand).GetRules().Select(r => r.GetType()).ToList();
+            var actualRuleTypes = sut.CreateRulesForChargeCreateCommand(createCommand).GetRules()
+                .Select(r => r.GetType()).ToList();
             var expectedRuleTypes = GetExpectedCreateRules().Select(r => r.GetType()).ToList();
 
             // Assert
@@ -97,8 +101,25 @@ namespace GreenEnergyHub.Charges.Tests.Application.Validation.InputValidation
             var updateCommand = new TestableChargeCommand { ChargeOperation = { OperationType = OperationType.Update } };
 
             // Act
-            var actualRuleTypes = sut.CreateRulesForChargeUpdateCommand(updateCommand).GetRules().Select(r => r.GetType()).ToList();
+            var actualRuleTypes = sut.CreateRulesForChargeUpdateCommand(updateCommand).GetRules()
+                .Select(r => r.GetType()).ToList();
             var expectedRuleTypes = GetExpectedUpdateRules().Select(r => r.GetType()).ToList();
+
+            // Assert
+            actualRuleTypes.Should().Contain(expectedRuleTypes);
+        }
+
+        [Fact]
+        public void CreateRulesForChargeUnknownCommand_ShouldContainUnknownRulesTest()
+        {
+            // Arrange
+            var sut = new InputValidationRulesFactory();
+            var updateCommand = new TestableChargeCommand { ChargeOperation = { OperationType = OperationType.Unknown } };
+
+            // Act
+            var actualRuleTypes = sut.CreateRulesForChargeUnknownCommand(updateCommand).GetRules()
+                .Select(r => r.GetType()).ToList();
+            var expectedRuleTypes = GetExpectedUnknownRules().Select(r => r.GetType()).ToList();
 
             // Assert
             actualRuleTypes.Should().Contain(expectedRuleTypes);
@@ -111,7 +132,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Validation.InputValidation
             var sut = new InputValidationRulesFactory();
 
             // Act & Assert
-            Assert.Throws<ArgumentNullException>(() => sut.CreateRulesForChargeCreateCommand(null!));
+            Assert.Throws<ArgumentNullException>(() => sut.CreateRulesForChargeUpdateCommand(null!));
         }
 
         [Fact]
@@ -192,6 +213,19 @@ namespace GreenEnergyHub.Charges.Tests.Application.Validation.InputValidation
                 new ChargePriceMaximumDigitsAndDecimalsRule(testableChargeCommand),
                 new FeeMustHaveSinglePriceRule(testableChargeCommand),
                 new SubscriptionMustHaveSinglePriceRule(testableChargeCommand),
+            };
+
+            return rules;
+        }
+
+        private static IEnumerable<IValidationRule> GetExpectedUnknownRules()
+        {
+            var testableChargeCommand = new TestableChargeCommand();
+
+            var rules = new List<IValidationRule>
+            {
+                new ChargeTypeIsKnownValidationRule(testableChargeCommand),
+                new OperationTypeValidationRule(testableChargeCommand),
             };
 
             return rules;
