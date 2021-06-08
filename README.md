@@ -34,6 +34,8 @@ The architecture diagram below illustrates both current state of the Charges dom
 
 ![design](ARCHITECTURE.png)
 
+Note: As the integration between the Charges and Post Office domains is yet to be established, the `ChargeConfirmation` and `ChargeRejection` events are temporarily placed in the Charges domain's Service Bus.
+
 ## Context Streams
 
 TODO: Awaiting drawing from `@MartinFHansen`.
