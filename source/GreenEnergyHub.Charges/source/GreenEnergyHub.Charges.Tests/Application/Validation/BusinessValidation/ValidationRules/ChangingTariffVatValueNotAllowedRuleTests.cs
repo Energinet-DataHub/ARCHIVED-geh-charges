@@ -13,6 +13,8 @@
 // limitations under the License.
 
 using System.Diagnostics.CodeAnalysis;
+using FluentAssertions;
+using GreenEnergyHub.Charges.Application.Validation;
 using GreenEnergyHub.Charges.Application.Validation.BusinessValidation.ValidationRules;
 using GreenEnergyHub.Charges.Domain;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
@@ -40,6 +42,14 @@ namespace GreenEnergyHub.Charges.Tests.Application.Validation.BusinessValidation
             command.ChargeOperation.VatClassification = charge.VatClassification;
             var sut = new ChangingTariffVatValueNotAllowedRule(command, charge);
             Assert.True(sut.IsValid);
+        }
+
+        [Theory]
+        [InlineAutoDomainData]
+        public void ValidationRuleIdentifier_ShouldBe_EqualTo([NotNull]ChargeCommand command, [NotNull] Charge charge)
+        {
+            var sut = new ChangingTariffVatValueNotAllowedRule(command, charge);
+            sut.ValidationRuleIdentifier.Should().Be(ValidationRuleIdentifier.ChangingTariffVatValueNotAllowed);
         }
     }
 }

@@ -14,12 +14,16 @@
 
 using System.Diagnostics.CodeAnalysis;
 using AutoFixture.Xunit2;
+using FluentAssertions;
+using GreenEnergyHub.Charges.Application.Validation;
 using GreenEnergyHub.Charges.Application.Validation.BusinessValidation.ValidationRules;
+using GreenEnergyHub.Charges.Application.Validation.InputValidation.ValidationRules;
 using GreenEnergyHub.Charges.Core;
 using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
 using GreenEnergyHub.Charges.TestCore;
 using GreenEnergyHub.Iso8601;
+using GreenEnergyHub.TestHelpers;
 using Moq;
 using NodaTime;
 using NodaTime.Text;
@@ -57,6 +61,19 @@ namespace GreenEnergyHub.Charges.Tests.Application.Validation.BusinessValidation
 
             // Assert
             Assert.Equal(expected, sut.IsValid);
+        }
+
+        [Theory]
+        [InlineAutoDomainData]
+        public void ValidationRuleIdentifier_ShouldBe_EqualTo([NotNull] ChargeCommand command)
+        {
+            // Arrange
+            var configuration = CreateRuleConfiguration(1, 3);
+            var zonedDateTimeService = CreateLocalDateTimeService("Europe/Copenhagen");
+            var sut = new StartDateValidationRule(command, configuration, zonedDateTimeService);
+
+            // Assert
+            sut.ValidationRuleIdentifier.Should().Be(ValidationRuleIdentifier.StartDateValidation);
         }
 
         private static void ArrangeChargeCommand(
