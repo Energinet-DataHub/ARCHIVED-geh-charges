@@ -35,6 +35,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
     [IntegrationTest]
     public class ChangeOfChargePipelineTests : IClassFixture<DbContextRegistrator>
     {
+        private readonly bool _runPipelineTests;
         private readonly ITestOutputHelper _testOutputHelper;
         private readonly string _messageReceiverHostname;
         private readonly string _postOfficeSubscriptionName;
@@ -46,13 +47,16 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
         {
             _testOutputHelper = testOutputHelper;
             _testOutputHelper.WriteLine($"{nameof(ChangeOfChargePipelineTests)} constructor invoked");
-
             _chargeDbQueries = new ChargeDbQueries(dbContextRegistrator.ServiceProvider);
 
-            _messageReceiverHostname = Environment.GetEnvironmentVariable("MESSAGE_RECEIVER_HOSTNAME") !;
-            _postOfficeSubscriptionName = Environment.GetEnvironmentVariable("POST_OFFICE_SUBSCRIPTION_NAME") !;
-            _postOfficeTopicName = Environment.GetEnvironmentVariable("POST_OFFICE_TOPIC_NAME") !;
-            _postOfficeConnectionString = Environment.GetEnvironmentVariable("POST_OFFICE_LISTENER_CONNECTION_STRING") !;
+            var environmentVariables = Environment.GetEnvironmentVariables();
+            var environmentVariableReader = new EnvironmentVariableReader(environmentVariables);
+            _runPipelineTests = environmentVariableReader.GetEnvironmentVariableOrTrue("RUN_PIPELINE_TESTS");
+
+            _messageReceiverHostname = environmentVariableReader.GetEnvironmentVariableOrEmptyString("MESSAGE_RECEIVER_HOSTNAME");
+            _postOfficeSubscriptionName = environmentVariableReader.GetEnvironmentVariableOrEmptyString("POST_OFFICE_SUBSCRIPTION_NAME");
+            _postOfficeTopicName = environmentVariableReader.GetEnvironmentVariableOrEmptyString("POST_OFFICE_TOPIC_NAME");
+            _postOfficeConnectionString = environmentVariableReader.GetEnvironmentVariableOrEmptyString("POST_OFFICE_LISTENER_CONNECTION_STRING");
 
             _testOutputHelper.WriteLine($"{nameof(ChangeOfChargePipelineTests)} Configuration: " +
                                         $"{_messageReceiverHostname}," +
@@ -61,14 +65,14 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
         }
 
         [Theory(Timeout = 60000)]
+        [Trait("HostingEnvironment", "Development")]
         [InlineAutoMoqData("TestFiles/ValidCreateTariffCommand.json")]
         public async Task Test_ChargeCommandCompleteFlow_is_Accepted(
             string testFilePath,
             [NotNull] ExecutionContext executionContext,
             [NotNull] ServiceBusTestHelper serviceBusTestHelper)
         {
-            var runPipelineTests = bool.Parse(Environment.GetEnvironmentVariable("RUN_PIPELINE_TESTS") ?? "false");
-            if (!runPipelineTests) return;
+            if (!_runPipelineTests) return;
 
             _testOutputHelper.WriteLine($"Run {nameof(Test_ChargeCommandCompleteFlow_is_Accepted)} for CorrelationId: {executionContext.InvocationId}");
 
@@ -105,14 +109,14 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
         }
 
         [Theory(Timeout = 60000)]
+        [Trait("HostingEnvironment", "Development")]
         [InlineAutoMoqData("TestFiles/InvalidCreateTariffCommand.json")]
         public async Task Test_ChargeCommandCompleteFlow_is_Rejected(
             string testFilePath,
             [NotNull] ExecutionContext executionContext,
             [NotNull] ServiceBusTestHelper serviceBusTestHelper)
         {
-            var runPipelineTests = bool.Parse(Environment.GetEnvironmentVariable("RUN_PIPELINE_TESTS") ?? "false");
-            if (!runPipelineTests) return;
+            if (!_runPipelineTests) return;
 
             _testOutputHelper.WriteLine($"Run {nameof(Test_ChargeCommandCompleteFlow_is_Rejected)} for CorrelationId: {executionContext.InvocationId}");
 

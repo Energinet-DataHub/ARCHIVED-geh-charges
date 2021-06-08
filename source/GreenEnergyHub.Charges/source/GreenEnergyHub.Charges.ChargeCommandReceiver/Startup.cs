@@ -60,6 +60,19 @@ namespace GreenEnergyHub.Charges.ChargeCommandReceiver
             ConfigureMessaging(builder);
         }
 
+        protected virtual void ConfigureMessaging([NotNull] IFunctionsHostBuilder builder)
+        {
+            builder.Services
+                .AddMessaging()
+                .AddMessageDispatcher<ChargeCommandAcceptedEvent>(
+                    GetEnv("COMMAND_ACCEPTED_SENDER_CONNECTION_STRING"),
+                    GetEnv("COMMAND_ACCEPTED_TOPIC_NAME"))
+                .AddMessageDispatcher<ChargeCommandRejectedEvent>(
+                    GetEnv("COMMAND_REJECTED_SENDER_CONNECTION_STRING"),
+                    GetEnv("COMMAND_REJECTED_TOPIC_NAME"))
+                .AddMessageExtractor<ChargeCommandReceivedEvent>();
+        }
+
         private static void ConfigurePersistence(IFunctionsHostBuilder builder)
         {
             var connectionString = Environment.GetEnvironmentVariable("CHARGE_DB_CONNECTION_STRING") ??
@@ -97,19 +110,6 @@ namespace GreenEnergyHub.Charges.ChargeCommandReceiver
             var timeZoneConfiguration = new Iso8601ConversionConfiguration(timeZoneId);
             services.AddSingleton<IIso8601ConversionConfiguration>(timeZoneConfiguration);
             services.AddScoped<IZonedDateTimeService, ZonedDateTimeService>();
-        }
-
-        private static void ConfigureMessaging(IFunctionsHostBuilder builder)
-        {
-            builder.Services
-                .AddMessaging()
-                .AddMessageDispatcher<ChargeCommandAcceptedEvent>(
-                    GetEnv("COMMAND_ACCEPTED_SENDER_CONNECTION_STRING"),
-                    GetEnv("COMMAND_ACCEPTED_TOPIC_NAME"))
-                .AddMessageDispatcher<ChargeCommandRejectedEvent>(
-                    GetEnv("COMMAND_REJECTED_SENDER_CONNECTION_STRING"),
-                    GetEnv("COMMAND_REJECTED_TOPIC_NAME"))
-                .AddMessageExtractor<ChargeCommandReceivedEvent>();
         }
 
         private static string GetEnv(string variableName)
