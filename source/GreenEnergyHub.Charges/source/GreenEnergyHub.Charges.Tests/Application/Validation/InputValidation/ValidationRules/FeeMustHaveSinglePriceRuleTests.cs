@@ -15,9 +15,11 @@
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using FluentAssertions;
+using GreenEnergyHub.Charges.Application.Validation;
 using GreenEnergyHub.Charges.Application.Validation.InputValidation.ValidationRules;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
 using GreenEnergyHub.Charges.TestCore;
+using GreenEnergyHub.TestHelpers;
 using Xunit;
 using Xunit.Categories;
 using ChargeType = GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction.ChargeType;
@@ -58,6 +60,14 @@ namespace GreenEnergyHub.Charges.Tests.Application.Validation.InputValidation.Va
             chargeCommand.ChargeOperation.Type = chargeType;
             var sut = new FeeMustHaveSinglePriceRule(chargeCommand);
             sut.IsValid.Should().BeTrue();
+        }
+
+        [Theory]
+        [InlineAutoDomainData]
+        public void ValidationRuleIdentifier_ShouldBe_EqualTo([NotNull] ChargeCommand command)
+        {
+            var sut = new FeeMustHaveSinglePriceRule(command);
+            sut.ValidationRuleIdentifier.Should().Be(ValidationRuleIdentifier.FeeMustHaveSinglePrice);
         }
 
         private static List<Point> GeneratePricePointList(Point point, int itemsInList)
