@@ -67,6 +67,9 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
             [NotNull] ExecutionContext executionContext,
             [NotNull] ServiceBusTestHelper serviceBusTestHelper)
         {
+            var runPipelineTests = bool.Parse(Environment.GetEnvironmentVariable("RUN_PIPELINE_TESTS") ?? "false");
+            if (!runPipelineTests) return;
+
             _testOutputHelper.WriteLine($"Run {nameof(Test_ChargeCommandCompleteFlow_is_Accepted)} for CorrelationId: {executionContext.InvocationId}");
 
             // arrange
@@ -108,6 +111,9 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
             [NotNull] ExecutionContext executionContext,
             [NotNull] ServiceBusTestHelper serviceBusTestHelper)
         {
+            var runPipelineTests = bool.Parse(Environment.GetEnvironmentVariable("RUN_PIPELINE_TESTS") ?? "false");
+            if (!runPipelineTests) return;
+
             _testOutputHelper.WriteLine($"Run {nameof(Test_ChargeCommandCompleteFlow_is_Rejected)} for CorrelationId: {executionContext.InvocationId}");
 
             // arrange

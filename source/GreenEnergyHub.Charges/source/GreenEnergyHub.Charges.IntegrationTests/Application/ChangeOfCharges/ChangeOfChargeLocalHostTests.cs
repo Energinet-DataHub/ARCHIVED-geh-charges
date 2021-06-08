@@ -29,6 +29,7 @@ using Microsoft.AspNetCore.Http.Internal;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NodaTime;
@@ -69,8 +70,12 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
             _testOutputHelper = testOutputHelper;
             _chargeDbQueries = new ChargeDbQueries(dbContextRegistrator.ServiceProvider);
 
-            var messageReceiverHost = FunctionHostConfigurationHelper.SetupHost(new MessageReceiver.Startup());
-            var chargeCommandReceiverHost = FunctionHostConfigurationHelper.SetupHost(new ChargeCommandReceiver.Startup());
+            var runLocalhostTests = bool.Parse(Environment.GetEnvironmentVariable("RUN_LOCALHOST_TESTS") ?? "false");
+
+            var messageReceiverHost = runLocalhostTests ?
+                FunctionHostConfigurationHelper.SetupHost(new MessageReceiver.Startup()) : new Mock<IHost>().Object;
+            var chargeCommandReceiverHost = runLocalhostTests ?
+                FunctionHostConfigurationHelper.SetupHost(new ChargeCommandReceiver.Startup()) : new Mock<IHost>().Object;
 
             _chargeHttpTrigger = new ChargeHttpTrigger(
                 messageReceiverHost.Services.GetRequiredService<IChangeOfChargesMessageHandler>(),
@@ -93,7 +98,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
             _commandRejectedConnectionString = Environment.GetEnvironmentVariable("COMMAND_REJECTED_LISTENER_CONNECTION_STRING") !;
         }
 
-        [Theory(Skip = "Run at localhost to integration test local code using sandboxed Service Bus")]
+        [Theory]
+        [Trait("HostingEnvironment", "Local")]
         [InlineAutoMoqData("TestFiles/ValidCreateTariffCommand.json")]
         public async Task Test_ChargeCommand_is_Accepted(
             string testFilePath,
@@ -101,6 +107,9 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
             [NotNull] ExecutionContext executionContext,
             [NotNull] ServiceBusTestHelper serviceBusTestHelper)
         {
+            var runLocalhostTests = bool.Parse(Environment.GetEnvironmentVariable("RUN_LOCALHOST_TESTS") ?? "false");
+            if (!runLocalhostTests) return;
+
             // arrange
             IClock clock = SystemClock.Instance;
             var req = HttpRequestFactory.CreateHttpRequest(testFilePath, clock);
@@ -140,7 +149,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
             Assert.True(chargeExistsByCorrelationId);
         }
 
-        [Theory(Skip = "Run at localhost to integration test local code using sandboxed Service Bus")]
+        [Theory]
+        [Trait("HostingEnvironment", "Local")]
         [InlineAutoMoqData("TestFiles/InvalidCreateTariffCommand.json")]
         public async Task Test_ChargeCommand_is_Rejected(
             string testFilePath,
@@ -148,6 +158,9 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
             [NotNull] ExecutionContext executionContext,
             [NotNull] ServiceBusTestHelper serviceBusTestHelper)
         {
+            var runLocalhostTests = bool.Parse(Environment.GetEnvironmentVariable("RUN_LOCALHOST_TESTS") ?? "false");
+            if (!runLocalhostTests) return;
+
             // arrange
             IClock clock = SystemClock.Instance;
             var req = HttpRequestFactory.CreateHttpRequest(testFilePath, clock);
