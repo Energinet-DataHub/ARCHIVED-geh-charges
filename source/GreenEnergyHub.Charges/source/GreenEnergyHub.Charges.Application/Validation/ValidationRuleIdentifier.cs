@@ -22,7 +22,7 @@ namespace GreenEnergyHub.Charges.Application.Validation
         ProcessTypeIsKnownValidation, // VR009
         SenderIsMandatoryTypeValidation, // VR150
         RecipientIsMandatoryTypeValidation, // VR153
-        ChargeOperationIdIsRequired, // VR223
+        ChargeOperationIdRequired, // VR223
         OperationTypeValidation, // VR445
         ChargeIdLengthValidation, // VR441
         ChargeIdRequiredValidation, // VR440
@@ -34,7 +34,7 @@ namespace GreenEnergyHub.Charges.Application.Validation
         ResolutionFeeValidation, // VR505-2
         ResolutionSubscriptionValidation, // VR505-3
         StartDateTimeRequiredValidation, // VR531
-        ChargeOwnerIsRequired, // VR532
+        ChargeOwnerIsRequiredValidation, // VR532
         ChargeNameHasMaximumLength, // VR446
         ChargeDescriptionHasMaximumLength, // VR447
         ChargeTypeTariffPriceCount, // VR507-1
