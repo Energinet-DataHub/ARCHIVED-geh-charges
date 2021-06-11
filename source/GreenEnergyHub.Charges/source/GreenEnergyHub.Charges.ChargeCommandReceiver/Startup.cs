@@ -73,7 +73,7 @@ namespace GreenEnergyHub.Charges.ChargeCommandReceiver
                 .AddMessageExtractor<ChargeCommandReceivedEvent>();
         }
 
-        private static void ConfigurePersistence(IFunctionsHostBuilder builder)
+        protected virtual void ConfigurePersistence([NotNull] IFunctionsHostBuilder builder)
         {
             var connectionString = Environment.GetEnvironmentVariable("CHARGE_DB_CONNECTION_STRING") ??
                                    throw new ArgumentNullException(
@@ -87,6 +87,18 @@ namespace GreenEnergyHub.Charges.ChargeCommandReceiver
             builder.Services.AddScoped<IMarketParticipantMapper, MarketParticipantMapper>();
         }
 
+        protected virtual void ConfigureIso8601Services(IServiceCollection services)
+        {
+            const string timeZoneIdString = "LOCAL_TIMEZONENAME";
+            var timeZoneId = Environment.GetEnvironmentVariable(timeZoneIdString) ??
+                             throw new ArgumentNullException(
+                                 timeZoneIdString,
+                                 "does not exist in configuration settings");
+            var timeZoneConfiguration = new Iso8601ConversionConfiguration(timeZoneId);
+            services.AddSingleton<IIso8601ConversionConfiguration>(timeZoneConfiguration);
+            services.AddScoped<IZonedDateTimeService, ZonedDateTimeService>();
+        }
+
         private static void ConfigureValidation(IFunctionsHostBuilder builder)
         {
             builder.Services.AddScoped<IBusinessCreateValidationRulesFactory, BusinessCreateValidationRulesFactory>();
@@ -98,18 +110,6 @@ namespace GreenEnergyHub.Charges.ChargeCommandReceiver
             builder.Services.AddScoped<IChargeCommandInputValidator, ChargeCommandInputValidator>();
             builder.Services.AddScoped<IChargeCommandBusinessValidator, ChargeCommandBusinessValidator>();
             builder.Services.AddScoped<IChargeCommandValidator, ChargeCommandValidator>();
-        }
-
-        private static void ConfigureIso8601Services(IServiceCollection services)
-        {
-            const string timeZoneIdString = "LOCAL_TIMEZONENAME";
-            var timeZoneId = Environment.GetEnvironmentVariable(timeZoneIdString) ??
-                             throw new ArgumentNullException(
-                                 timeZoneIdString,
-                                 "does not exist in configuration settings");
-            var timeZoneConfiguration = new Iso8601ConversionConfiguration(timeZoneId);
-            services.AddSingleton<IIso8601ConversionConfiguration>(timeZoneConfiguration);
-            services.AddScoped<IZonedDateTimeService, ZonedDateTimeService>();
         }
 
         private static string GetEnv(string variableName)

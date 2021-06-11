@@ -12,15 +12,23 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application;
+using GreenEnergyHub.Charges.Application.ChangeOfCharges.Repositories;
+using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.Domain.Events.Local;
+using GreenEnergyHub.Charges.Infrastructure.Context;
+using GreenEnergyHub.Charges.Infrastructure.Mapping;
 using GreenEnergyHub.Charges.Infrastructure.Messaging;
 using GreenEnergyHub.Charges.Infrastructure.Messaging.Registration;
+using GreenEnergyHub.Charges.Infrastructure.Repositories;
+using GreenEnergyHub.Iso8601;
 using Microsoft.Azure.Functions.Extensions.DependencyInjection;
 using Microsoft.Azure.ServiceBus;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace GreenEnergyHub.Charges.IntegrationTests.TestHelpers
@@ -50,6 +58,26 @@ namespace GreenEnergyHub.Charges.IntegrationTests.TestHelpers
                 .AddScoped<IMessageDispatcher<ChargeCommandRejectedEvent>, MessageDispatcher<ChargeCommandRejectedEvent>>()
                 .AddScoped<Channel<ChargeCommandAcceptedEvent>, TopicChannelCommandAccepted>()
                 .AddScoped<Channel<ChargeCommandRejectedEvent>, TopicChannelCommandRejected>();
+        }
+
+        protected override void ConfigurePersistence([NotNull] IFunctionsHostBuilder builder)
+        {
+            var connectionString = Environment.GetEnvironmentVariable("CHARGE_DB_CONNECTION_STRING") ?? "Not found";
+            builder.Services.AddDbContext<ChargesDatabaseContext>(
+                options => options.UseSqlServer(connectionString));
+            builder.Services.AddScoped<IChargesDatabaseContext, ChargesDatabaseContext>();
+            builder.Services.AddScoped<IChargeRepository, ChargeRepository>();
+            builder.Services.AddScoped<IMarketParticipantRepository, MarketParticipantRepository>();
+            builder.Services.AddScoped<IMarketParticipantMapper, MarketParticipantMapper>();
+        }
+
+        protected override void ConfigureIso8601Services(IServiceCollection services)
+        {
+            const string timeZoneIdString = "LOCAL_TIMEZONENAME";
+            var timeZoneId = Environment.GetEnvironmentVariable(timeZoneIdString) ?? string.Empty;
+            var timeZoneConfiguration = new Iso8601ConversionConfiguration(timeZoneId);
+            services.AddSingleton<IIso8601ConversionConfiguration>(timeZoneConfiguration);
+            services.AddScoped<IZonedDateTimeService, ZonedDateTimeService>();
         }
 
         private class TopicChannelCommandAccepted : Channel<ChargeCommandAcceptedEvent>

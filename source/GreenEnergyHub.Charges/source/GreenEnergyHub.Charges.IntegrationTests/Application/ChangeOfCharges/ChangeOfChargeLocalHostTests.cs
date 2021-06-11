@@ -70,9 +70,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
             _testOutputHelper = testOutputHelper;
             _chargeDbQueries = new ChargeDbQueries(dbContextRegistrator.ServiceProvider);
 
-            var environmentVariables = Environment.GetEnvironmentVariables();
-            var environmentVariableReader = new EnvironmentVariableReader(environmentVariables);
-            _runLocalhostTests = environmentVariableReader.GetEnvironmentVariableOrFalse("RUN_LOCALHOST_TESTS");
+            _runLocalhostTests = Environment.GetEnvironmentVariable("RUN_LOCALHOST_TESTS")?.ToUpperInvariant() == "TRUE";
 
             var messageReceiverHost = _runLocalhostTests ?
                 FunctionHostConfigurationHelper.SetupHost(new MessageReceiver.Startup()) :
@@ -92,19 +90,19 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
                 chargeCommandReceiverHost.Services.GetRequiredService<ICorrelationContext>(),
                 chargeCommandReceiverHost.Services.GetRequiredService<MessageExtractor<ChargeCommandReceivedEvent>>());
 
-            _commandReceivedSubscriptionName = environmentVariableReader.GetEnvironmentVariableOrEmptyString("COMMAND_RECEIVED_SUBSCRIPTION_NAME");
-            _commandAcceptedSubscriptionName = environmentVariableReader.GetEnvironmentVariableOrEmptyString("COMMAND_ACCEPTED_SUBSCRIPTION_NAME");
-            _commandRejectedSubscriptionName = environmentVariableReader.GetEnvironmentVariableOrEmptyString("COMMAND_REJECTED_SUBSCRIPTION_NAME");
-            _commandReceivedTopicName = environmentVariableReader.GetEnvironmentVariableOrEmptyString("COMMAND_RECEIVED_TOPIC_NAME");
-            _commandAcceptedTopicName = environmentVariableReader.GetEnvironmentVariableOrEmptyString("COMMAND_ACCEPTED_TOPIC_NAME");
-            _commandRejectedTopicName = environmentVariableReader.GetEnvironmentVariableOrEmptyString("COMMAND_REJECTED_TOPIC_NAME");
-            _commandReceivedConnectionString = environmentVariableReader.GetEnvironmentVariableOrEmptyString("COMMAND_RECEIVED_LISTENER_CONNECTION_STRING");
-            _commandAcceptedConnectionString = environmentVariableReader.GetEnvironmentVariableOrEmptyString("COMMAND_ACCEPTED_LISTENER_CONNECTION_STRING");
-            _commandRejectedConnectionString = environmentVariableReader.GetEnvironmentVariableOrEmptyString("COMMAND_REJECTED_LISTENER_CONNECTION_STRING");
+            _commandReceivedSubscriptionName = Environment.GetEnvironmentVariable("COMMAND_RECEIVED_SUBSCRIPTION_NAME") ?? string.Empty;
+            _commandAcceptedSubscriptionName = Environment.GetEnvironmentVariable("COMMAND_ACCEPTED_SUBSCRIPTION_NAME") ?? string.Empty;
+            _commandRejectedSubscriptionName = Environment.GetEnvironmentVariable("COMMAND_REJECTED_SUBSCRIPTION_NAME") ?? string.Empty;
+            _commandReceivedTopicName = Environment.GetEnvironmentVariable("COMMAND_RECEIVED_TOPIC_NAME") ?? string.Empty;
+            _commandAcceptedTopicName = Environment.GetEnvironmentVariable("COMMAND_ACCEPTED_TOPIC_NAME") ?? string.Empty;
+            _commandRejectedTopicName = Environment.GetEnvironmentVariable("COMMAND_REJECTED_TOPIC_NAME") ?? string.Empty;
+            _commandReceivedConnectionString = Environment.GetEnvironmentVariable("COMMAND_RECEIVED_LISTENER_CONNECTION_STRING") ?? string.Empty;
+            _commandAcceptedConnectionString = Environment.GetEnvironmentVariable("COMMAND_ACCEPTED_LISTENER_CONNECTION_STRING") ?? string.Empty;
+            _commandRejectedConnectionString = Environment.GetEnvironmentVariable("COMMAND_REJECTED_LISTENER_CONNECTION_STRING") ?? string.Empty;
         }
 
         [Theory]
-        [Trait("HostingEnvironment", "LocalHost")]
+        [Trait(HostingEnvironmentTraitConstants.HostingEnvironment, HostingEnvironmentTraitConstants.LocalHost)]
         [InlineAutoMoqData("TestFiles/ValidCreateTariffCommand.json")]
         public async Task Test_ChargeCommand_is_Accepted(
             string testFilePath,
@@ -154,7 +152,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
         }
 
         [Theory]
-        [Trait("HostingEnvironment", "LocalHost")]
+        [Trait(HostingEnvironmentTraitConstants.HostingEnvironment, HostingEnvironmentTraitConstants.LocalHost)]
         [InlineAutoMoqData("TestFiles/InvalidCreateTariffCommand.json")]
         public async Task Test_ChargeCommand_is_Rejected(
             string testFilePath,
