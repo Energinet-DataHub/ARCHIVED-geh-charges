@@ -13,29 +13,41 @@
 // limitations under the License.
 
 using System.Diagnostics.CodeAnalysis;
+using FluentAssertions;
+using GreenEnergyHub.Charges.Application.Validation;
 using GreenEnergyHub.Charges.Application.Validation.InputValidation.ValidationRules;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
 using GreenEnergyHub.Charges.Domain.Common;
 using GreenEnergyHub.Charges.TestCore;
+using GreenEnergyHub.TestHelpers;
 using Xunit;
 using Xunit.Categories;
 
 namespace GreenEnergyHub.Charges.Tests.Application.Validation.InputValidation.ValidationRules
 {
     [UnitTest]
-    public class DocumentTypeMustBeRequestUpdateChargeInformationTest
+    public class BusinessReasonCodeMustBeUpdateChargeInformationTests
     {
         [Theory]
-        [InlineAutoMoqData(DocumentType.Unknown, false)]
-        [InlineAutoMoqData(DocumentType.RequestUpdateChargeInformation, true)]
-        public void Test(
-            DocumentType documentType,
+        [InlineAutoMoqData(BusinessReasonCode.Unknown, false)]
+        [InlineAutoMoqData(BusinessReasonCode.UpdateChargeInformation, true)]
+        [InlineAutoMoqData(-1, false)]
+        public void BusinessReasonCodeMustBeUpdateChargeInformation_Test(
+            BusinessReasonCode businessReasonCode,
             bool expected,
             [NotNull] ChargeCommand command)
         {
-            command.Document.Type = documentType;
-            var sut = new DocumentTypeMustBeRequestUpdateChargeInformationRule(command);
+            command.ChargeOperation.BusinessReasonCode = businessReasonCode;
+            var sut = new BusinessReasonCodeMustBeUpdateChargeInformationRule(command);
             Assert.Equal(expected, sut.IsValid);
+        }
+
+        [Theory]
+        [InlineAutoDomainData]
+        public void ValidationRuleIdentifier_ShouldBe_EqualTo([NotNull] ChargeCommand command)
+        {
+            var sut = new BusinessReasonCodeMustBeUpdateChargeInformationRule(command);
+            sut.ValidationRuleIdentifier.Should().Be(ValidationRuleIdentifier.BusinessReasonCodeMustBeUpdateChargeInformation);
         }
     }
 }
