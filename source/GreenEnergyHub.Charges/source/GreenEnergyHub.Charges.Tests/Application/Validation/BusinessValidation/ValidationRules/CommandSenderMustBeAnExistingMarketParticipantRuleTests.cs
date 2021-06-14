@@ -13,9 +13,13 @@
 // limitations under the License.
 
 using FluentAssertions;
+using GreenEnergyHub.Charges.Application.Validation;
 using GreenEnergyHub.Charges.Application.Validation.BusinessValidation.ValidationRules;
+using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
 using GreenEnergyHub.Charges.Domain.Common;
 using GreenEnergyHub.Charges.TestCore;
+using GreenEnergyHub.TestHelpers;
+using JetBrains.Annotations;
 using Xunit;
 using Xunit.Categories;
 
@@ -38,6 +42,14 @@ namespace GreenEnergyHub.Charges.Tests.Application.Validation.BusinessValidation
             MarketParticipant? sender = null;
             var sut = new CommandSenderMustBeAnExistingMarketParticipantRule(sender);
             sut.IsValid.Should().BeFalse();
+        }
+
+        [Theory]
+        [InlineAutoDomainData]
+        public void ValidationRuleIdentifier_ShouldBe_EqualTo([NotNull] MarketParticipant sender)
+        {
+            var sut = new CommandSenderMustBeAnExistingMarketParticipantRule(sender);
+            sut.ValidationRuleIdentifier.Should().Be(ValidationRuleIdentifier.CommandSenderMustBeAnExistingMarketParticipant);
         }
     }
 }
