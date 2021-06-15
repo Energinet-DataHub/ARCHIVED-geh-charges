@@ -13,23 +13,26 @@
 // limitations under the License.
 
 using System.Diagnostics.CodeAnalysis;
+using FluentAssertions;
+using GreenEnergyHub.Charges.Application.Validation;
 using GreenEnergyHub.Charges.Application.Validation.InputValidation.ValidationRules;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
 using GreenEnergyHub.Charges.TestCore;
+using GreenEnergyHub.TestHelpers;
 using Xunit;
 using Xunit.Categories;
 
 namespace GreenEnergyHub.Charges.Tests.Application.Validation.InputValidation.ValidationRules
 {
     [UnitTest]
-    public class ChargeOperationIdRequiredRuleTest
+    public class ChargeOperationIdRequiredRuleTests
     {
         [Theory]
         [InlineAutoMoqData("ChargeOperationId", true)]
         [InlineAutoMoqData("", false)]
         [InlineAutoMoqData(" ", false)]
         [InlineAutoMoqData(null!, false)]
-        public void Test(
+        public void ChargeOperationIdRequiredRule_Test(
             string chargeOperationId,
             bool expected,
             [NotNull] ChargeCommand command)
@@ -37,6 +40,14 @@ namespace GreenEnergyHub.Charges.Tests.Application.Validation.InputValidation.Va
             command.ChargeOperation.Id = chargeOperationId;
             var sut = new ChargeOperationIdRequiredRule(command);
             Assert.Equal(expected, sut.IsValid);
+        }
+
+        [Theory]
+        [InlineAutoDomainData]
+        public void ValidationRuleIdentifier_ShouldBe_EqualTo([NotNull] ChargeCommand command)
+        {
+            var sut = new ChargeOperationIdRequiredRule(command);
+            sut.ValidationRuleIdentifier.Should().Be(ValidationRuleIdentifier.ChargeOperationIdRequired);
         }
     }
 }

@@ -13,29 +13,40 @@
 // limitations under the License.
 
 using System.Diagnostics.CodeAnalysis;
+using FluentAssertions;
+using GreenEnergyHub.Charges.Application.Validation;
 using GreenEnergyHub.Charges.Application.Validation.InputValidation.ValidationRules;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
+using GreenEnergyHub.Charges.Domain.Common;
 using GreenEnergyHub.Charges.TestCore;
+using GreenEnergyHub.TestHelpers;
 using Xunit;
 using Xunit.Categories;
 
 namespace GreenEnergyHub.Charges.Tests.Application.Validation.InputValidation.ValidationRules
 {
     [UnitTest]
-    public class ChargeIdLengthValidationRuleTest
+    public class DocumentTypeMustBeRequestUpdateChargeInformationTests
     {
         [Theory]
-        [InlineAutoMoqData("1234567891", true)]
-        [InlineAutoMoqData("12345678912", false)]
-        [InlineAutoMoqData(null!, false)]
-        public void Test(
-            string chargeId,
+        [InlineAutoMoqData(DocumentType.Unknown, false)]
+        [InlineAutoMoqData(DocumentType.RequestUpdateChargeInformation, true)]
+        public void DocumentTypeMustBeRequestUpdateChargeInformation_Test(
+            DocumentType documentType,
             bool expected,
             [NotNull] ChargeCommand command)
         {
-            command.ChargeOperation.ChargeId = chargeId;
-            var sut = new ChargeIdLengthValidationRule(command);
+            command.Document.Type = documentType;
+            var sut = new DocumentTypeMustBeRequestUpdateChargeInformationRule(command);
             Assert.Equal(expected, sut.IsValid);
+        }
+
+        [Theory]
+        [InlineAutoDomainData]
+        public void ValidationRuleIdentifier_ShouldBe_EqualTo([NotNull] ChargeCommand command)
+        {
+            var sut = new DocumentTypeMustBeRequestUpdateChargeInformationRule(command);
+            sut.ValidationRuleIdentifier.Should().Be(ValidationRuleIdentifier.DocumentTypeMustBeRequestUpdateChargeInformation);
         }
     }
 }

@@ -13,30 +13,40 @@
 // limitations under the License.
 
 using System.Diagnostics.CodeAnalysis;
+using FluentAssertions;
+using GreenEnergyHub.Charges.Application.Validation;
 using GreenEnergyHub.Charges.Application.Validation.InputValidation.ValidationRules;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
-using GreenEnergyHub.Charges.Domain.Common;
 using GreenEnergyHub.Charges.TestCore;
+using GreenEnergyHub.TestHelpers;
 using Xunit;
 using Xunit.Categories;
 
 namespace GreenEnergyHub.Charges.Tests.Application.Validation.InputValidation.ValidationRules
 {
     [UnitTest]
-    public class BusinessReasonCodeMustBeUpdateChargeInformationTest
+    public class ChargeIdLengthValidationRuleTests
     {
         [Theory]
-        [InlineAutoMoqData(BusinessReasonCode.Unknown, false)]
-        [InlineAutoMoqData(BusinessReasonCode.UpdateChargeInformation, true)]
-        [InlineAutoMoqData(-1, false)]
-        public void Test(
-            BusinessReasonCode businessReasonCode,
+        [InlineAutoMoqData("1234567891", true)]
+        [InlineAutoMoqData("12345678912", false)]
+        [InlineAutoMoqData(null!, false)]
+        public void ChargeIdLengthValidationRule_Test(
+            string chargeId,
             bool expected,
             [NotNull] ChargeCommand command)
         {
-            command.ChargeOperation.BusinessReasonCode = businessReasonCode;
-            var sut = new BusinessReasonCodeMustBeUpdateChargeInformationRule(command);
+            command.ChargeOperation.ChargeId = chargeId;
+            var sut = new ChargeIdLengthValidationRule(command);
             Assert.Equal(expected, sut.IsValid);
+        }
+
+        [Theory]
+        [InlineAutoDomainData]
+        public void ValidationRuleIdentifier_ShouldBe_EqualTo([NotNull] ChargeCommand command)
+        {
+            var sut = new ChargeIdLengthValidationRule(command);
+            sut.ValidationRuleIdentifier.Should().Be(ValidationRuleIdentifier.ChargeIdLengthValidation);
         }
     }
 }
