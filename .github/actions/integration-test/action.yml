@@ -64,4 +64,4 @@ runs:
     - name: Run integration tests
       shell: bash
       run: |
-        dotnet test ${{ inputs.test_dll }} --logger:"console;verbosity=detailed"
+        dotnet test ${{ inputs.test_dll }} --filter HostingEnvironment=Development --logger:"console;verbosity=detailed"

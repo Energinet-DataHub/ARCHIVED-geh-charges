@@ -38,7 +38,7 @@ namespace GreenEnergyHub.Charges.MessageReceiver
             ConfigureMessaging(builder);
         }
 
-        private static void ConfigureMessaging(IFunctionsHostBuilder builder)
+        protected virtual void ConfigureMessaging([NotNull] IFunctionsHostBuilder builder)
         {
             builder.Services
                 .AddMessaging()
