@@ -60,7 +60,20 @@ namespace GreenEnergyHub.Charges.ChargeCommandReceiver
             ConfigureMessaging(builder);
         }
 
-        private static void ConfigurePersistence(IFunctionsHostBuilder builder)
+        protected virtual void ConfigureMessaging([NotNull] IFunctionsHostBuilder builder)
+        {
+            builder.Services
+                .AddMessaging()
+                .AddMessageDispatcher<ChargeCommandAcceptedEvent>(
+                    GetEnv("COMMAND_ACCEPTED_SENDER_CONNECTION_STRING"),
+                    GetEnv("COMMAND_ACCEPTED_TOPIC_NAME"))
+                .AddMessageDispatcher<ChargeCommandRejectedEvent>(
+                    GetEnv("COMMAND_REJECTED_SENDER_CONNECTION_STRING"),
+                    GetEnv("COMMAND_REJECTED_TOPIC_NAME"))
+                .AddMessageExtractor<ChargeCommandReceivedEvent>();
+        }
+
+        protected virtual void ConfigurePersistence([NotNull] IFunctionsHostBuilder builder)
         {
             var connectionString = Environment.GetEnvironmentVariable("CHARGE_DB_CONNECTION_STRING") ??
                                    throw new ArgumentNullException(
@@ -74,20 +87,7 @@ namespace GreenEnergyHub.Charges.ChargeCommandReceiver
             builder.Services.AddScoped<IMarketParticipantMapper, MarketParticipantMapper>();
         }
 
-        private static void ConfigureValidation(IFunctionsHostBuilder builder)
-        {
-            builder.Services.AddScoped<IBusinessCreateValidationRulesFactory, BusinessCreateValidationRulesFactory>();
-            builder.Services.AddScoped<IBusinessUpdateValidationRulesFactory, BusinessUpdateValidationRulesFactory>();
-            builder.Services.AddScoped<IBusinessStopValidationRulesFactory, BusinessStopValidationRulesFactory>();
-            builder.Services.AddScoped<IBusinessValidationRulesFactory, BusinessValidationRulesFactory>();
-            builder.Services.AddScoped<IInputValidationRulesFactory, InputValidationRulesFactory>();
-            builder.Services.AddScoped<IRulesConfigurationRepository, RulesConfigurationRepository>();
-            builder.Services.AddScoped<IChargeCommandInputValidator, ChargeCommandInputValidator>();
-            builder.Services.AddScoped<IChargeCommandBusinessValidator, ChargeCommandBusinessValidator>();
-            builder.Services.AddScoped<IChargeCommandValidator, ChargeCommandValidator>();
-        }
-
-        private static void ConfigureIso8601Services(IServiceCollection services)
+        protected virtual void ConfigureIso8601Services(IServiceCollection services)
         {
             const string timeZoneIdString = "LOCAL_TIMEZONENAME";
             var timeZoneId = Environment.GetEnvironmentVariable(timeZoneIdString) ??
@@ -99,17 +99,17 @@ namespace GreenEnergyHub.Charges.ChargeCommandReceiver
             services.AddScoped<IZonedDateTimeService, ZonedDateTimeService>();
         }
 
-        private static void ConfigureMessaging(IFunctionsHostBuilder builder)
+        private static void ConfigureValidation(IFunctionsHostBuilder builder)
         {
-            builder.Services
-                .AddMessaging()
-                .AddMessageDispatcher<ChargeCommandAcceptedEvent>(
-                    GetEnv("COMMAND_ACCEPTED_SENDER_CONNECTION_STRING"),
-                    GetEnv("COMMAND_ACCEPTED_TOPIC_NAME"))
-                .AddMessageDispatcher<ChargeCommandRejectedEvent>(
-                    GetEnv("COMMAND_REJECTED_SENDER_CONNECTION_STRING"),
-                    GetEnv("COMMAND_REJECTED_TOPIC_NAME"))
-                .AddMessageExtractor<ChargeCommandReceivedEvent>();
+            builder.Services.AddScoped<IBusinessCreateValidationRulesFactory, BusinessCreateValidationRulesFactory>();
+            builder.Services.AddScoped<IBusinessUpdateValidationRulesFactory, BusinessUpdateValidationRulesFactory>();
+            builder.Services.AddScoped<IBusinessStopValidationRulesFactory, BusinessStopValidationRulesFactory>();
+            builder.Services.AddScoped<IBusinessValidationRulesFactory, BusinessValidationRulesFactory>();
+            builder.Services.AddScoped<IInputValidationRulesFactory, InputValidationRulesFactory>();
+            builder.Services.AddScoped<IRulesConfigurationRepository, RulesConfigurationRepository>();
+            builder.Services.AddScoped<IChargeCommandInputValidator, ChargeCommandInputValidator>();
+            builder.Services.AddScoped<IChargeCommandBusinessValidator, ChargeCommandBusinessValidator>();
+            builder.Services.AddScoped<IChargeCommandValidator, ChargeCommandValidator>();
         }
 
         private static string GetEnv(string variableName)

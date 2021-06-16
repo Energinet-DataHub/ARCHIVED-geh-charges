@@ -16,7 +16,7 @@
     }
   },
   "ChargeOperation": {
-    "Id": "{{$isoTimestamp}}",
+    "Id": "MD{{$isoTimestamp}}",
     "EndDateTime": null,
     "OperationType": 2,
     "BusinessReasonCode": 18,
