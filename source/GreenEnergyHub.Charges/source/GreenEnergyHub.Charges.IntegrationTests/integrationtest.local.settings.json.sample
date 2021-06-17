@@ -1,6 +1,8 @@
 ﻿{
    "IsEncrypted": false,
    "Values": {
+    "RUN_LOCALHOST_TESTS": false,
+    "RUN_PIPELINE_TESTS": false,
     "MESSAGE_RECEIVER_HOSTNAME": "<Message receiver hostname>",
     "COMMAND_RECEIVED_SENDER_CONNECTION_STRING": "<Connection string for command received sender>"
     "COMMAND_RECEIVED_LISTENER_CONNECTION_STRING": "<Connection string for command received listener>",
