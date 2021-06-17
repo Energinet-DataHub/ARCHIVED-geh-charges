@@ -19,6 +19,7 @@ using AutoFixture.Xunit2;
 using GreenEnergyHub.Charges.Application;
 using GreenEnergyHub.Charges.Application.ChangeOfCharges;
 using GreenEnergyHub.Charges.ChargeCommandReceiver;
+using GreenEnergyHub.Charges.Core.Json;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
 using GreenEnergyHub.Charges.Domain.Events.Local;
 using GreenEnergyHub.Charges.Infrastructure.Messaging;
@@ -111,7 +112,9 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
 
             // arrange
             IClock clock = SystemClock.Instance;
-            var req = HttpRequestFactory.CreateHttpRequest(testFilePath, clock);
+            var chargeJson = EmbeddedResourceHelper.GetInputJson(testFilePath, clock);
+            var req = HttpRequestFactory.CreateHttpRequest(chargeJson);
+            var chargeCommand = new JsonSerializer().Deserialize<ChargeCommand>(chargeJson);
 
             // act
             var messageReceiverResult = await RunMessageReceiver(logger, executionContext, req).ConfigureAwait(false);
@@ -135,8 +138,11 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
                 .ConfigureAwait(false);
             _testOutputHelper.WriteLine($"Message accepted by ChargeCommandEndpoint: {commandAcceptedResult.receivedMessage.CorrelationId}");
 
-            var chargeExistsByCorrelationId = await _chargeDbQueries
-                .ChargeExistsByCorrelationIdAsync(executionContext.InvocationId.ToString())
+            var chargeExists = await _chargeDbQueries
+                .ChargeExistsAsync(
+                    chargeCommand.ChargeOperation.ChargeId,
+                    chargeCommand.ChargeOperation.ChargeOwner,
+                    chargeCommand.ChargeOperation.Type)
                 .ConfigureAwait(false);
 
             // assert
@@ -145,7 +151,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
             Assert.Equal(executionContext.InvocationId.ToString(), commandAcceptedResult.receivedMessage.CorrelationId);
             Assert.True(commandReceivedResult.receivedMessage.Body.Length > 0);
             Assert.True(commandAcceptedResult.receivedMessage.Body.Length > 0);
-            Assert.True(chargeExistsByCorrelationId);
+            Assert.True(chargeExists);
         }
 
         [Theory(Timeout = 60000)]
@@ -161,7 +167,9 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
 
             // arrange
             IClock clock = SystemClock.Instance;
-            var req = HttpRequestFactory.CreateHttpRequest(testFilePath, clock);
+            var chargeJson = EmbeddedResourceHelper.GetInputJson(testFilePath, clock);
+            var req = HttpRequestFactory.CreateHttpRequest(chargeJson);
+            var chargeCommand = new JsonSerializer().Deserialize<ChargeCommand>(chargeJson);
 
             // act
             var messageReceiverResult = await RunMessageReceiver(logger, executionContext, req).ConfigureAwait(false);
@@ -183,8 +191,11 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
                 .ConfigureAwait(false);
             _testOutputHelper.WriteLine($"Message accepted by ChargeCommandEndpoint: {commandRejectedResult.receivedMessage.Body.Length}");
 
-            var chargeExistsByCorrelationId = await _chargeDbQueries
-                .ChargeExistsByCorrelationIdAsync(executionContext.InvocationId.ToString())
+            var chargeExists = await _chargeDbQueries
+                .ChargeExistsAsync(
+                    chargeCommand.ChargeOperation.ChargeId,
+                    chargeCommand.ChargeOperation.ChargeOwner,
+                    chargeCommand.ChargeOperation.Type)
                 .ConfigureAwait(false);
 
             // assert
@@ -193,7 +204,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
             Assert.Equal(executionContext.InvocationId.ToString(), commandRejectedResult.receivedEvent.CorrelationId);
             Assert.True(commandReceivedResult.receivedMessage.Body.Length > 0);
             Assert.True(commandRejectedResult.receivedMessage.Body.Length > 0);
-            Assert.False(chargeExistsByCorrelationId);
+            Assert.False(chargeExists);
         }
 
         private async Task<OkObjectResult> RunMessageReceiver(Mock<ILogger> logger, ExecutionContext executionContext, DefaultHttpRequest req)

@@ -12,17 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.IO;
+using System.Text;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Internal;
-using NodaTime;
 
 namespace GreenEnergyHub.Charges.IntegrationTests.TestHelpers
 {
     public static class HttpRequestFactory
     {
-        public static DefaultHttpRequest CreateHttpRequest(string testFile, IClock clock)
+        public static DefaultHttpRequest CreateHttpRequest(string chargeJson)
         {
-            var stream = EmbeddedResourceHelper.GetInputStream(testFile, clock);
+            var stream = new MemoryStream(Encoding.ASCII.GetBytes(chargeJson));
             var defaultHttpContext = new DefaultHttpContext();
             defaultHttpContext.Request.Body = stream;
             var req = new DefaultHttpRequest(defaultHttpContext);

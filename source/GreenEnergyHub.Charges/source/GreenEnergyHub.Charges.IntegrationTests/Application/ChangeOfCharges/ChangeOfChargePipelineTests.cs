@@ -95,15 +95,18 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
 
             _testOutputHelper.WriteLine($"CommandAcceptedMessage: {receivedMessage.CorrelationId}");
 
-            var chargeExistsByCorrelationId = await _chargeDbQueries
-                .ChargeExistsByCorrelationIdAsync(receivedMessage.CorrelationId)
+            var chargeExists = await _chargeDbQueries
+                .ChargeExistsAsync(
+                    chargeCommand.ChargeOperation.ChargeId,
+                    chargeCommand.ChargeOperation.ChargeOwner,
+                    chargeCommand.ChargeOperation.Type)
                 .ConfigureAwait(false);
 
             // assert
             Assert.True(changeOfChargesMessageResult.IsSucceeded);
             Assert.Equal(chargeCommand.ChargeOperation.Id, receivedEvent.OriginalTransactionReferenceMRid);
             Assert.NotNull(receivedEvent);
-            Assert.True(chargeExistsByCorrelationId);
+            Assert.True(chargeExists);
         }
 
         [Theory(Timeout = 60000)]
@@ -139,15 +142,18 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
 
             _testOutputHelper.WriteLine($"CommandAcceptedMessage: {receivedMessage.CorrelationId}");
 
-            var chargeExistsByCorrelationId = await _chargeDbQueries
-                .ChargeExistsByCorrelationIdAsync(executionContext.InvocationId.ToString())
+            var chargeExists = await _chargeDbQueries
+                .ChargeExistsAsync(
+                    chargeCommand.ChargeOperation.ChargeId,
+                    chargeCommand.ChargeOperation.ChargeOwner,
+                    chargeCommand.ChargeOperation.Type)
                 .ConfigureAwait(false);
 
             // assert
             Assert.True(changeOfChargesMessageResult.IsSucceeded);
             Assert.Equal(chargeCommand.ChargeOperation.Id, receivedEvent.OriginalTransactionReferenceMRid);
             Assert.NotNull(receivedEvent);
-            Assert.False(chargeExistsByCorrelationId);
+            Assert.False(chargeExists);
         }
 
         private async Task<ChangeOfChargesMessageResult> RunMessageReceiver([NotNull] string json)
