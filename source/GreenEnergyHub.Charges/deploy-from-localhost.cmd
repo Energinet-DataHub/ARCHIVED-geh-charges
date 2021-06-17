@@ -12,6 +12,8 @@ setlocal
 
 set /p project=Enter organization used with Terraform (perhaps your initials?): 
 set /p doBuild=Build solution ([y]/n)?
+rem If you don't know the password, perhaps you can obtain it from the configuration settings of the deployed ChargeCommandReceiver function in Azure portal
+set /p sqlPassword=Enter SQL password for 'gehdbadmin' to update db or empty to skip: 
 set /p deployMessageReceiver=Deploy message receiver ([y]/n)?
 set /p deployCommandReceiver=Deploy command receiver ([y]/n)?
 set /p deployConfirmationSender=Deploy confirmation sender ([y]/n)?
@@ -21,6 +23,12 @@ IF /I not "%doBuild%" == "n" (
     rem Clean is necessary if e.g. a function project name has changed because otherwise both assemblies will be picked up by deployment
     dotnet clean GreenEnergyHub.Charges.sln -c Release
     dotnet build GreenEnergyHub.Charges.sln -c Release
+)
+
+IF not "%sqlPassword%" == "" (
+    dotnet run --project source\GreenEnergyHub.Charges.ApplyDBMigrationsApp --configuration Release --^
+        "Server=sqlsrv-charges-%project%-s.database.windows.net;Database=sqldb-charges;Uid=gehdbadmin;Pwd=%sqlPassword%;TrustServerCertificate=true;Persist Security Info=True;"^
+        includeSeedData includeTestData
 )
 
 rem All (but the last) deployments are opened in separate windows in order to execute in parallel
