@@ -56,9 +56,6 @@ jobs:
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
 
-      - name: Setup Azure Core Tools
-        uses: ./.github/actions/azure-core-tools-install
-
       - name: Build and test project
         uses: ./.github/actions/dotnet-build-and-test
         with:
