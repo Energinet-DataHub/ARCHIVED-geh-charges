@@ -16,31 +16,18 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Reflection;
-using System.Text;
 using NodaTime;
 
 namespace GreenEnergyHub.Charges.IntegrationTests.TestHelpers
 {
     public static class EmbeddedResourceHelper
     {
-        public static Stream GetInputStream(string filePath, [NotNull] IClock clock)
-        {
-            var basePath = Assembly.GetExecutingAssembly().Location;
-            var path = Path.Combine(Directory.GetParent(basePath).FullName, filePath);
-            var fileText = File.ReadAllText(path);
-            var replaced = ReplaceMergeFields(clock, fileText);
-
-            return new MemoryStream(Encoding.ASCII.GetBytes(replaced));
-        }
-
         public static string GetInputJson(string filePath, [NotNull] IClock clock)
         {
             var basePath = Assembly.GetExecutingAssembly().Location;
             var path = Path.Combine(Directory.GetParent(basePath).FullName, filePath);
             var fileText = File.ReadAllText(path);
-            var replaced = ReplaceMergeFields(clock, fileText);
-
-            return replaced;
+            return ReplaceMergeFields(clock, fileText);
         }
 
         private static string ReplaceMergeFields(IClock clock, string file)
