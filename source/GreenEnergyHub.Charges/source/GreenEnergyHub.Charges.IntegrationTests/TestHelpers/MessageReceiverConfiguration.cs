@@ -36,7 +36,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.TestHelpers
             _topicClient = topicClient;
         }
 
-        public override void ConfigureMessaging([NotNull] IFunctionsHostBuilder builder)
+        protected override void ConfigureMessaging([NotNull] IFunctionsHostBuilder builder)
         {
             if (builder == null) throw new ArgumentNullException(nameof(builder));
 

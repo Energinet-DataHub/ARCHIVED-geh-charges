@@ -29,7 +29,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.TestHelpers
             var config = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build();
 
             builder
-                .Namespace(config[ServiceBusNamespaceConfiguration], true)
+                .Namespace(config[ServiceBusNamespaceConfiguration])
                 .AddTopic(ReceivedTopicName)
                 .AddSubscription(SubscriptionName);
         }

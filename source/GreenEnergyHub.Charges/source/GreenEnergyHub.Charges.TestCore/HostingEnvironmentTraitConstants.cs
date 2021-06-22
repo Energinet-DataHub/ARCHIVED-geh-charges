@@ -19,5 +19,6 @@ namespace GreenEnergyHub.Charges.TestCore
         public const string HostingEnvironment = "HostingEnvironment";
         public const string LocalHost = "LocalHost";
         public const string Development = "Development";
+        public const string PullRequestGate = "PullRequestGate";
     }
 }
