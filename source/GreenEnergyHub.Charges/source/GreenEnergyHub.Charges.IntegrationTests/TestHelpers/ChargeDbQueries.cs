@@ -14,6 +14,7 @@
 
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
+using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
 using GreenEnergyHub.Charges.Infrastructure.Context;
 using GreenEnergyHub.Charges.Infrastructure.Repositories;
 using Microsoft.Extensions.DependencyInjection;
@@ -29,14 +30,15 @@ namespace GreenEnergyHub.Charges.IntegrationTests.TestHelpers
             _serviceProvider = serviceProvider;
         }
 
-        public async Task<bool> ChargeExistsByCorrelationIdAsync([NotNull] string correlationId)
+        public async Task<bool> ChargeExistsAsync(
+            [NotNull] string chargeId, [NotNull] string owner, [NotNull] ChargeType chargeType)
         {
             await using var context = _serviceProvider.GetService<ChargesDatabaseContext>();
             var chargeRepository = new ChargeRepository(context);
-            var chargeExistsByCorrelationId = await chargeRepository
-                .CheckIfChargeExistsByCorrelationIdAsync(correlationId)
+            var chargeExists = await chargeRepository
+                .CheckIfChargeExistsAsync(chargeId, owner, chargeType)
                 .ConfigureAwait(false);
-            return chargeExistsByCorrelationId;
+            return chargeExists;
         }
     }
 }

@@ -35,6 +35,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
     [IntegrationTest]
     public class ChangeOfChargePipelineTests : IClassFixture<DbContextRegistrator>
     {
+        private readonly bool _runPipelineTests;
         private readonly ITestOutputHelper _testOutputHelper;
         private readonly string _messageReceiverHostname;
         private readonly string _postOfficeSubscriptionName;
@@ -46,13 +47,14 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
         {
             _testOutputHelper = testOutputHelper;
             _testOutputHelper.WriteLine($"{nameof(ChangeOfChargePipelineTests)} constructor invoked");
-
             _chargeDbQueries = new ChargeDbQueries(dbContextRegistrator.ServiceProvider);
 
-            _messageReceiverHostname = Environment.GetEnvironmentVariable("MESSAGE_RECEIVER_HOSTNAME") !;
-            _postOfficeSubscriptionName = Environment.GetEnvironmentVariable("POST_OFFICE_SUBSCRIPTION_NAME") !;
-            _postOfficeTopicName = Environment.GetEnvironmentVariable("POST_OFFICE_TOPIC_NAME") !;
-            _postOfficeConnectionString = Environment.GetEnvironmentVariable("POST_OFFICE_LISTENER_CONNECTION_STRING") !;
+            _runPipelineTests = Environment.GetEnvironmentVariable("RUN_PIPELINE_TESTS")?.ToUpperInvariant() != "FALSE";
+
+            _messageReceiverHostname = Environment.GetEnvironmentVariable("MESSAGE_RECEIVER_HOSTNAME") ?? string.Empty;
+            _postOfficeSubscriptionName = Environment.GetEnvironmentVariable("POST_OFFICE_SUBSCRIPTION_NAME") ?? string.Empty;
+            _postOfficeTopicName = Environment.GetEnvironmentVariable("POST_OFFICE_TOPIC_NAME") ?? string.Empty;
+            _postOfficeConnectionString = Environment.GetEnvironmentVariable("POST_OFFICE_LISTENER_CONNECTION_STRING") ?? string.Empty;
 
             _testOutputHelper.WriteLine($"{nameof(ChangeOfChargePipelineTests)} Configuration: " +
                                         $"{_messageReceiverHostname}," +
@@ -61,12 +63,15 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
         }
 
         [Theory(Timeout = 60000)]
+        [Trait(HostingEnvironmentTraitConstants.HostingEnvironment, HostingEnvironmentTraitConstants.Development)]
         [InlineAutoMoqData("TestFiles/ValidCreateTariffCommand.json")]
         public async Task Test_ChargeCommandCompleteFlow_is_Accepted(
             string testFilePath,
             [NotNull] ExecutionContext executionContext,
             [NotNull] ServiceBusTestHelper serviceBusTestHelper)
         {
+            if (!_runPipelineTests) return;
+
             _testOutputHelper.WriteLine($"Run {nameof(Test_ChargeCommandCompleteFlow_is_Accepted)} for CorrelationId: {executionContext.InvocationId}");
 
             // arrange
@@ -90,24 +95,30 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
 
             _testOutputHelper.WriteLine($"CommandAcceptedMessage: {receivedMessage.CorrelationId}");
 
-            var chargeExistsByCorrelationId = await _chargeDbQueries
-                .ChargeExistsByCorrelationIdAsync(receivedMessage.CorrelationId)
+            var chargeExists = await _chargeDbQueries
+                .ChargeExistsAsync(
+                    chargeCommand.ChargeOperation.ChargeId,
+                    chargeCommand.ChargeOperation.ChargeOwner,
+                    chargeCommand.ChargeOperation.Type)
                 .ConfigureAwait(false);
 
             // assert
             Assert.True(changeOfChargesMessageResult.IsSucceeded);
             Assert.Equal(chargeCommand.ChargeOperation.Id, receivedEvent.OriginalTransactionReferenceMRid);
             Assert.NotNull(receivedEvent);
-            Assert.True(chargeExistsByCorrelationId);
+            Assert.True(chargeExists);
         }
 
         [Theory(Timeout = 60000)]
+        [Trait(HostingEnvironmentTraitConstants.HostingEnvironment, HostingEnvironmentTraitConstants.Development)]
         [InlineAutoMoqData("TestFiles/InvalidCreateTariffCommand.json")]
         public async Task Test_ChargeCommandCompleteFlow_is_Rejected(
             string testFilePath,
             [NotNull] ExecutionContext executionContext,
             [NotNull] ServiceBusTestHelper serviceBusTestHelper)
         {
+            if (!_runPipelineTests) return;
+
             _testOutputHelper.WriteLine($"Run {nameof(Test_ChargeCommandCompleteFlow_is_Rejected)} for CorrelationId: {executionContext.InvocationId}");
 
             // arrange
@@ -131,15 +142,18 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
 
             _testOutputHelper.WriteLine($"CommandAcceptedMessage: {receivedMessage.CorrelationId}");
 
-            var chargeExistsByCorrelationId = await _chargeDbQueries
-                .ChargeExistsByCorrelationIdAsync(executionContext.InvocationId.ToString())
+            var chargeExists = await _chargeDbQueries
+                .ChargeExistsAsync(
+                    chargeCommand.ChargeOperation.ChargeId,
+                    chargeCommand.ChargeOperation.ChargeOwner,
+                    chargeCommand.ChargeOperation.Type)
                 .ConfigureAwait(false);
 
             // assert
             Assert.True(changeOfChargesMessageResult.IsSucceeded);
             Assert.Equal(chargeCommand.ChargeOperation.Id, receivedEvent.OriginalTransactionReferenceMRid);
             Assert.NotNull(receivedEvent);
-            Assert.False(chargeExistsByCorrelationId);
+            Assert.False(chargeExists);
         }
 
         private async Task<ChangeOfChargesMessageResult> RunMessageReceiver([NotNull] string json)

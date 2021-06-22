@@ -13,30 +13,31 @@
 // limitations under the License.
 
 using System.Diagnostics.CodeAnalysis;
-using GreenEnergyHub.Charges.Application.Validation.InputValidation.ValidationRules;
+using System.Threading.Tasks;
+using FluentAssertions;
+using GreenEnergyHub.Charges.Application.Factories;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
 using GreenEnergyHub.Charges.TestCore;
+using GreenEnergyHub.TestHelpers.FluentAssertionsExtensions;
 using Xunit;
 using Xunit.Categories;
 
-namespace GreenEnergyHub.Charges.Tests.Application.Validation.InputValidation.ValidationRules
+namespace GreenEnergyHub.Charges.Tests.Application.Factories
 {
     [UnitTest]
-    public class ChargeIdRequiredValidationRuleTest
+    public class ChargeFactoryTests
     {
         [Theory]
-        [InlineAutoMoqData("ChargeId", true)]
-        [InlineAutoMoqData("", false)]
-        [InlineAutoMoqData(" ", false)]
-        [InlineAutoMoqData(null!, false)]
-        public void Test(
-            string chargeId,
-            bool expected,
-            [NotNull] ChargeCommand command)
+        [InlineAutoMoqData]
+        public async Task CreateFromCommandAsync_Charge_HasNoNullsOrEmptyCollections(
+            ChargeCommand chargeCommand,
+            [NotNull] ChargeFactory sut)
         {
-            command.ChargeOperation.ChargeId = chargeId;
-            var sut = new ChargeIdRequiredValidationRule(command);
-            Assert.Equal(expected, sut.IsValid);
+            // Act
+            var actual = await sut.CreateFromCommandAsync(chargeCommand).ConfigureAwait(false);
+
+            // Assert
+            actual.Should().NotContainNullsOrEmptyEnumerables();
         }
     }
 }

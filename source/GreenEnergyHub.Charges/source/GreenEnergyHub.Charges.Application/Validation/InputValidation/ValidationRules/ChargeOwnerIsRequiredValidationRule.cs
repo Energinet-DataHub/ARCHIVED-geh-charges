@@ -27,6 +27,6 @@ namespace GreenEnergyHub.Charges.Application.Validation.InputValidation.Validati
 
         public bool IsValid => !string.IsNullOrWhiteSpace(_chargeCommand.ChargeOperation.ChargeOwner);
 
-        public ValidationRuleIdentifier ValidationRuleIdentifier => ValidationRuleIdentifier.ChargeOwnerIsRequired;
+        public ValidationRuleIdentifier ValidationRuleIdentifier => ValidationRuleIdentifier.ChargeOwnerIsRequiredValidation;
     }
 }

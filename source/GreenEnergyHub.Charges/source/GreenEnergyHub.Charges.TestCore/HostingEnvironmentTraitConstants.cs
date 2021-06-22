@@ -12,22 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.IO;
-using System.Text;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.Internal;
-
-namespace GreenEnergyHub.Charges.IntegrationTests.TestHelpers
+namespace GreenEnergyHub.Charges.TestCore
 {
-    public static class HttpRequestFactory
+    public static class HostingEnvironmentTraitConstants
     {
-        public static DefaultHttpRequest CreateHttpRequest(string chargeJson)
-        {
-            var stream = new MemoryStream(Encoding.ASCII.GetBytes(chargeJson));
-            var defaultHttpContext = new DefaultHttpContext();
-            defaultHttpContext.Request.Body = stream;
-            var req = new DefaultHttpRequest(defaultHttpContext);
-            return req;
-        }
+        public const string HostingEnvironment = "HostingEnvironment";
+        public const string LocalHost = "LocalHost";
+        public const string Development = "Development";
     }
 }
