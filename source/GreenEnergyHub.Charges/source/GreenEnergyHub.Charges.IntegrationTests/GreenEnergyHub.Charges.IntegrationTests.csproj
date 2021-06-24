@@ -59,17 +59,9 @@ limitations under the License.
     </ItemGroup>
 
     <ItemGroup>
-      <Content Include="appsettings.json.sample">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        <CopyToPublishDirectory>Never</CopyToPublishDirectory>
-      </Content>
       <Content Include="TestFiles\InvalidCreateTariffCommand.json" CopyToOutputDirectory="Always" />
       <Content Include="TestFiles\ValidCreateTariffCommand.json" CopyToOutputDirectory="Always" />
       <None Remove="appsettings.json" />
-      <Content Include="appsettings.json">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        <CopyToPublishDirectory>Never</CopyToPublishDirectory>
-      </Content>
     </ItemGroup>
 
     <ItemGroup>

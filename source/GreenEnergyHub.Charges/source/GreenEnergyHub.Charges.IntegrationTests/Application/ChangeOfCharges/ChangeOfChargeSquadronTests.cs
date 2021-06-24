@@ -59,8 +59,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
                 ChargesAzureCloudServiceBusOptions.SubscriptionName);
 
             var completion = new TaskCompletionSource<ChargeCommand?>();
-            ServiceBusTestHelper.RegisterSubscriptionClientMessageHandler(
-                subscriptionClient, completion);
+            ServiceBusTestHelper.RegisterSubscriptionClientMessageHandler(subscriptionClient, completion);
 
             IClock clock = SystemClock.Instance;
             var chargeJson = EmbeddedResourceHelper.GetInputJson(testFilePath, clock);

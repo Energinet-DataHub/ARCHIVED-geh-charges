@@ -12,9 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Diagnostics.CodeAnalysis;
-using Microsoft.Extensions.Configuration;
 using Squadron;
+using Squadron.AzureCloud;
 
 namespace GreenEnergyHub.Charges.IntegrationTests.TestHelpers
 {
@@ -22,16 +23,40 @@ namespace GreenEnergyHub.Charges.IntegrationTests.TestHelpers
     {
         public const string ReceivedTopicName = "sbt-received";
         public const string SubscriptionName = "sbs-received";
-        private const string ServiceBusNamespaceConfiguration = "Squadron:Azure:ServiceBusNamespace";
 
         public override void Configure([NotNull] ServiceBusOptionsBuilder builder)
         {
-            var config = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build();
+            FunctionHostConfigurationHelper.ConfigureEnvironmentVariables();
+
+            var projectName = Environment.GetEnvironmentVariable("PROJECT_NAME") ?? string.Empty;
+            var serviceBusNamespace = $"sbn-{projectName}-integration-test";
+
+            builder.SetConfigResolver(ChargesAzureResourceConfigurationResolver);
 
             builder
-                .Namespace(config[ServiceBusNamespaceConfiguration])
+                .Namespace(serviceBusNamespace)
                 .AddTopic(ReceivedTopicName)
                 .AddSubscription(SubscriptionName);
+        }
+
+        private AzureResourceConfiguration ChargesAzureResourceConfigurationResolver()
+        {
+            var secret = Environment.GetEnvironmentVariable("SECRET") ?? string.Empty;
+            var clientId = Environment.GetEnvironmentVariable("CLIENT_ID") ?? string.Empty;
+            var tenantId = Environment.GetEnvironmentVariable("TENANT_ID") ?? string.Empty;
+            var defaultLocation = Environment.GetEnvironmentVariable("DEFAULT_LOCATION") ?? string.Empty;
+            var resourceGroup = Environment.GetEnvironmentVariable("RESOURCE_GROUP") ?? string.Empty;
+            var subscriptionId = Environment.GetEnvironmentVariable("SUBSCRIPTION_ID") ?? string.Empty;
+
+            var azureResourceConfiguration = new AzureResourceConfiguration
+            {
+                Credentials = new AzureCredentials { Secret = secret, ClientId = clientId, TenantId = tenantId },
+                DefaultLocation = defaultLocation,
+                ResourceGroup = resourceGroup,
+                SubscriptionId = subscriptionId,
+            };
+
+            return azureResourceConfiguration;
         }
     }
 }
