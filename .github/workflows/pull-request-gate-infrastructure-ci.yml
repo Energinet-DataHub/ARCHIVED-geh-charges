@@ -47,10 +47,6 @@ jobs:
           echo "ARM_CLIENT_SECRET=${{ secrets.SPN_SECRET }}" >> $GITHUB_ENV
           echo "ARM_SUBSCRIPTION_ID=${{ secrets.SUBSCRIPTION_ID }}" >> $GITHUB_ENV
 
-      - name: DEBUG PROJECT_NAME
-        run: |
-          echo project name: ${{ secrets.PROJECT_NAME }}
-
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v1.2.1
         with:
@@ -113,19 +109,6 @@ jobs:
 
       - name: Terraform Apply
         working-directory: ./build/infrastructure
-        run: terraform apply -no-color -auto-approve
-        continue-on-error: false
-
-      - name: Terraform Init for pull request gate
-        working-directory: ./build/infrastructure/pullRequestGate
-        run: terraform init
-
-      - name: Terraform Plan for pull request gate
-        working-directory: ./build/infrastructure/pullRequestGate
-        run: terraform plan
-
-      - name: Terraform Apply for pull request gate
-        working-directory: ./build/infrastructure/pullRequestGate
         run: terraform apply -no-color -auto-approve
         continue-on-error: false
 

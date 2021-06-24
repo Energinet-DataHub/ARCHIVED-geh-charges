@@ -82,14 +82,4 @@ jobs:
         working-directory: ./build/infrastructure
         run: terraform destroy -no-color -auto-approve
         continue-on-error: false
-
-      - name: Terraform Init
-        working-directory: ./build/infrastructure/pullRequestGate
-        run: terraform init
-
-      - name: Terraform Destroy
-        working-directory: ./build/infrastructure/pullRequestGate
-        run: terraform destroy -no-color -auto-approve
-        continue-on-error: false
-
         
