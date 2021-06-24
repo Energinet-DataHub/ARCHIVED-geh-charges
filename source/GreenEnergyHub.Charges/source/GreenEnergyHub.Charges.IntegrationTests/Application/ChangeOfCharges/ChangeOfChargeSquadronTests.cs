@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
@@ -29,6 +30,7 @@ using Moq;
 using NodaTime;
 using Squadron;
 using Xunit;
+using Xunit.Abstractions;
 using Xunit.Categories;
 
 namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
@@ -39,8 +41,25 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
     {
         private readonly AzureCloudServiceBusResource<ChargesAzureCloudServiceBusOptions> _serviceBusResource;
 
-        public ChangeOfChargeSquadronTests(AzureCloudServiceBusResource<ChargesAzureCloudServiceBusOptions> serviceBusResource)
+        public ChangeOfChargeSquadronTests(
+            AzureCloudServiceBusResource<ChargesAzureCloudServiceBusOptions> serviceBusResource,
+            [NotNull] ITestOutputHelper testOutputHelper)
         {
+            var secret = Environment.GetEnvironmentVariable("SECRET") ?? string.Empty;
+            var clientId = Environment.GetEnvironmentVariable("CLIENT_ID") ?? string.Empty;
+            var tenantId = Environment.GetEnvironmentVariable("TENANT_ID") ?? string.Empty;
+            var defaultLocation = Environment.GetEnvironmentVariable("DEFAULT_LOCATION") ?? string.Empty;
+            var resourceGroup = Environment.GetEnvironmentVariable("RESOURCE_GROUP") ?? string.Empty;
+            var subscriptionId = Environment.GetEnvironmentVariable("SUBSCRIPTION_ID") ?? string.Empty;
+
+            testOutputHelper.WriteLine($"{nameof(ChangeOfChargePipelineTests)} Configuration: " +
+                                        $"{secret}," +
+                                        $"{clientId}, " +
+                                        $"{tenantId}, " +
+                                        $"{defaultLocation}, " +
+                                        $"{resourceGroup}, " +
+                                        $"{subscriptionId}");
+
             _serviceBusResource = serviceBusResource;
         }
 
