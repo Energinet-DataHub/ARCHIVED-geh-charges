@@ -139,14 +139,6 @@ jobs:
         run: |
           dotnet build ${{ env.INTEGRATION_TEST_CSPROJ_FILE_PATH }} --configuration Release --output ${{ github.workspace }}/output-integration-test
 
-      - name: DEBUG output-integration-test
-        run: |
-          ls -l
-          echo output folder:
-          ls -l output-integration-test
-          echo Testfiles folder:
-          ls -l output-integration-test/TestFiles
-
       - name: Run integration tests
         shell: bash
         run: |

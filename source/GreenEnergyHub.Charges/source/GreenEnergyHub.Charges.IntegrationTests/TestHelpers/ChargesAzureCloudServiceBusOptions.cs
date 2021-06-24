@@ -57,13 +57,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.TestHelpers
                 || string.IsNullOrWhiteSpace(resourceGroup)
                 || string.IsNullOrWhiteSpace(subscriptionId))
             {
-                var errormessage = $"{nameof(ChargesAzureCloudServiceBusOptions)} Configuration: " +
-                                   $"{secret}," +
-                                   $"{clientId}, " +
-                                   $"{tenantId}, " +
-                                   $"{defaultLocation}, " +
-                                   $"{resourceGroup}, " +
-                                   $"{subscriptionId}";
+                var errormessage = $"{nameof(ChargesAzureCloudServiceBusOptions)} Missing configuration: " +
+                                   $"{secret},{clientId},{tenantId},{defaultLocation},{resourceGroup},{subscriptionId}";
 
                 throw new ArgumentException(errormessage);
             }
