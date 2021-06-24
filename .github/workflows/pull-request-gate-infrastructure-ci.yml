@@ -11,7 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-name: Infrastructure CI
+name: Pull Request Gate Infrastructure CI
 
 on:
   pull_request:
@@ -46,7 +46,6 @@ jobs:
           echo "ARM_CLIENT_OBJECT_ID=${{ secrets.SPN_OBJECT_ID }}" >> $GITHUB_ENV
           echo "ARM_CLIENT_SECRET=${{ secrets.SPN_SECRET }}" >> $GITHUB_ENV
           echo "ARM_SUBSCRIPTION_ID=${{ secrets.SUBSCRIPTION_ID }}" >> $GITHUB_ENV
-          echo "ARM_PROJECT_NAME"=${{ secrets.PROJECT_NAME }}" >> $GITHUB_ENV
 
       - name: DEBUG PROJECT_NAME
         run: |
