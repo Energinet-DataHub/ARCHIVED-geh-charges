@@ -75,7 +75,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.TestHelpers
 
         public static void RegisterSubscriptionClientMessageHandler<T>(
             [NotNull] ISubscriptionClient subscriptionClient,
-            [NotNull] TaskCompletionSource<T?> completion)
+            [NotNull] TaskCompletionSource<T> completion)
         {
             subscriptionClient.RegisterMessageHandler(
                 (message, _) =>
@@ -84,7 +84,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.TestHelpers
                     {
                         var json = Encoding.UTF8.GetString(message.Body);
                         var ev = JsonConvert.DeserializeObject<T>(json);
-                        completion.SetResult(ev);
+                        completion.SetResult(ev!);
                     }
 #pragma warning disable CA1031 // allow catch of exception
                     catch (Exception exception)
