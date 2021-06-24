@@ -45,11 +45,11 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
             AzureCloudServiceBusResource<ChargesAzureCloudServiceBusOptions> serviceBusResource,
             [NotNull] ITestOutputHelper testOutputHelper)
         {
-            var secret = Environment.GetEnvironmentVariable("SECRET") ?? string.Empty;
+            var secret = Environment.GetEnvironmentVariable("CLIENT_SECRET") ?? string.Empty;
             var clientId = Environment.GetEnvironmentVariable("CLIENT_ID") ?? string.Empty;
             var tenantId = Environment.GetEnvironmentVariable("TENANT_ID") ?? string.Empty;
             var defaultLocation = Environment.GetEnvironmentVariable("DEFAULT_LOCATION") ?? string.Empty;
-            var resourceGroup = Environment.GetEnvironmentVariable("RESOURCE_GROUP") ?? string.Empty;
+            var resourceGroup = Environment.GetEnvironmentVariable("RESOURCE_GROUP_NAME") ?? string.Empty;
             var subscriptionId = Environment.GetEnvironmentVariable("SUBSCRIPTION_ID") ?? string.Empty;
 
             testOutputHelper.WriteLine($"{nameof(ChangeOfChargePipelineTests)} Configuration: " +
