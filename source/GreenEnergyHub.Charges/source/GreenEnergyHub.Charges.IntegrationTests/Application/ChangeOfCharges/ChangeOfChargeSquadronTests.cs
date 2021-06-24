@@ -44,7 +44,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
             _serviceBusResource = serviceBusResource;
         }
 
-        [Theory(Timeout = 100000)]
+        [Theory(Timeout = 30000)]
         [Trait(HostingEnvironmentTraitConstants.HostingEnvironment, HostingEnvironmentTraitConstants.PullRequestGate)]
         [InlineAutoMoqData("TestFiles/ValidCreateTariffCommand.json")]
         [InlineAutoMoqData("TestFiles/InvalidCreateTariffCommand.json")]
