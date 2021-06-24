@@ -27,6 +27,8 @@
     "TENANT_ID": "<Azure tenant id>",
     "CLIENT_ID": "<Azure client id>",
     "CLIENT_SECRET": "<Azure client secret>",
-    "PROJECT_NAME": "Your Project name, e.g. charges-[your initials]-s"
+    "PROJECT_NAME": "Charges",
+    "ORGANISATION_NAME": "endk",
+    "ENVIRONMENT_SHORT": "s"
     }
 }

@@ -29,7 +29,9 @@ namespace GreenEnergyHub.Charges.IntegrationTests.TestHelpers
             FunctionHostConfigurationHelper.ConfigureEnvironmentVariables();
 
             var projectName = Environment.GetEnvironmentVariable("PROJECT_NAME") ?? string.Empty;
-            var serviceBusNamespace = $"sbn-{projectName}";
+            var organisationName = Environment.GetEnvironmentVariable("ORGANISATION_NAME") ?? string.Empty;
+            var environmentShort = Environment.GetEnvironmentVariable("ENVIRONMENT_SHORT") ?? string.Empty;
+            var serviceBusNamespace = $"sbn-{projectName}-{organisationName}-{environmentShort}";
 
             builder.SetConfigResolver(ChargesAzureResourceConfigurationResolver);
 
