@@ -20,7 +20,6 @@ module "azfun_message_receiver" {
   app_service_plan_id                       = module.azfun_message_receiver_plan.id
   storage_account_name                      = module.azfun_message_receiver_stor.name
   application_insights_instrumentation_key  = module.appi.instrumentation_key
-  always_on                                 = false
   tags                                      = data.azurerm_resource_group.main.tags
   app_settings                              = {
     # Region: Default Values
@@ -46,8 +45,8 @@ module "azfun_message_receiver_plan" {
   location            = data.azurerm_resource_group.main.location
   kind                = "FunctionApp"
   sku                 = {
-    tier  = "Free"
-    size  = "F1"
+    tier  = "Basic"
+    size  = "B1"
   }
   tags                = data.azurerm_resource_group.main.tags
 }
