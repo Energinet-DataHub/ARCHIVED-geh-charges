@@ -48,6 +48,24 @@ namespace GreenEnergyHub.Charges.IntegrationTests.TestHelpers
             var resourceGroup = Environment.GetEnvironmentVariable("RESOURCE_GROUP_NAME") ?? string.Empty;
             var subscriptionId = Environment.GetEnvironmentVariable("SUBSCRIPTION_ID") ?? string.Empty;
 
+            if (string.IsNullOrWhiteSpace(secret)
+                || string.IsNullOrWhiteSpace(clientId)
+                || string.IsNullOrWhiteSpace(tenantId)
+                || string.IsNullOrWhiteSpace(defaultLocation)
+                || string.IsNullOrWhiteSpace(resourceGroup)
+                || string.IsNullOrWhiteSpace(subscriptionId))
+            {
+                var errormessage = $"{nameof(ChargesAzureCloudServiceBusOptions)} Configuration: " +
+                                   $"{secret}," +
+                                   $"{clientId}, " +
+                                   $"{tenantId}, " +
+                                   $"{defaultLocation}, " +
+                                   $"{resourceGroup}, " +
+                                   $"{subscriptionId}";
+
+                throw new ArgumentException(errormessage);
+            }
+
             var azureResourceConfiguration = new AzureResourceConfiguration
             {
                 Credentials = new AzureCredentials { Secret = secret, ClientId = clientId, TenantId = tenantId },
