@@ -83,7 +83,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.TestHelpers
                     try
                     {
                         var json = Encoding.UTF8.GetString(message.Body);
-                        var ev = JsonConvert.DeserializeObject<T>(json);
+                        var ev = new JsonSerializer().Deserialize<T>(json);
                         completion.SetResult(ev!);
                     }
 #pragma warning disable CA1031 // allow catch of exception

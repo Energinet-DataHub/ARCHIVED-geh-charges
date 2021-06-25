@@ -12,12 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
 using GreenEnergyHub.Charges.Application.ChangeOfCharges;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
+using GreenEnergyHub.Charges.Domain.Events.Local;
 using GreenEnergyHub.Charges.Infrastructure.Messaging;
 using GreenEnergyHub.Charges.IntegrationTests.TestHelpers;
 using GreenEnergyHub.Charges.MessageReceiver;
@@ -59,7 +59,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
                 ChargesAzureCloudServiceBusOptions.ReceivedTopicName,
                 ChargesAzureCloudServiceBusOptions.SubscriptionName);
 
-            var completion = new TaskCompletionSource<ChargeCommand?>();
+            var completion = new TaskCompletionSource<ChargeCommandReceivedEvent?>();
             ServiceBusTestHelper.RegisterSubscriptionClientMessageHandler(subscriptionClient, completion);
 
             IClock clock = SystemClock.Instance;
@@ -72,6 +72,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
 
             // assert
             Assert.NotNull(receivedEvent);
+            Assert.NotNull(receivedEvent?.Command.Document);
+            Assert.NotNull(receivedEvent?.Command.ChargeOperation);
         }
 
         private async Task CallMessageReceiver(
