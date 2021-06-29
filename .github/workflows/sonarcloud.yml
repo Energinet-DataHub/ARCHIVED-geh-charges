@@ -11,7 +11,9 @@ on:
     types: [opened, synchronize, reopened]
 env:
   SOLUTION_PATH: 'source\GreenEnergyHub.Charges\GreenEnergyHub.Charges.sln'
-  DOTNET_VERSION: '3.1'
+  DOTNET_VERSION: '5.0.x'
+  SONAR_PROJECTKEY: 'geh-charges'
+  SOURCE_PATH_ON_BUILDMACHINE: 'D:\a\geh-charges\geh-charges\source' # We have to be speficic with this path to get around a .NET 5.0 issue in SonarCLoud
 jobs:
   build:
     name: Build
@@ -21,34 +23,30 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: 1.11
+    
+      - name: Setup .NET 3.1 environment
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: '3.1.x'      
+      
+      - name: Setup .NET ${{ env.DOTNET_VERSION }} environment
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+          
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
-      - name: Cache SonarCloud packages
-        uses: actions/cache@v1
-        with:
-          path: ~\sonar\cache
-          key: ${{ runner.os }}-sonar
-          restore-keys: ${{ runner.os }}-sonar
-      - name: Cache SonarCloud scanner
-        id: cache-sonar-scanner
-        uses: actions/cache@v1
-        with:
-          path: .\.sonar\scanner
-          key: ${{ runner.os }}-sonar-scanner
-          restore-keys: ${{ runner.os }}-sonar-scanner
+
       - name: Install SonarCloud scanner
-        if: steps.cache-sonar-scanner.outputs.cache-hit != 'true'
         shell: powershell
         run: |
           New-Item -Path .\.sonar\scanner -ItemType Directory
-          dotnet tool update dotnet-sonarscanner --tool-path .\.sonar\scanner
+          dotnet tool update dotnet-sonarscanner --global
+
       - name: Build and analyze
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         shell: powershell
         run: |
-          .\.sonar\scanner\dotnet-sonarscanner begin /k:"geh-charges" /o:"energinet-datahub" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io"
+          dotnet-sonarscanner begin /k:"${{ env.SONAR_PROJECTKEY }}" /o:"energinet-datahub" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.projectBaseDir="${{ env.SOURCE_PATH_ON_BUILDMACHINE }}" /d:sonar.host.url="https://sonarcloud.io"
           dotnet build ${{ env.SOLUTION_PATH }} --configuration Release
-          .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
+          dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
