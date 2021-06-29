@@ -44,6 +44,13 @@ TODO: Awaiting drawing from `@MartinFHansen`.
 
 In the current program increment (PI) the planned work is captured by the stated PI goals:
 
+1. When a (consumption) metering point created event is published in the Metering Point domain, the Charges domain will add new charge links for mandatory TSO tariffs to the metering point. 
+2. When receiving a new charge (tariff) link request from a Grid Access Provider, the charge link is stored with the specified time period.
+3. The monitoring of the Charges domain is extended to cover charge links. 
+4. Extend (2) with fees and subscriptions.
+
+Recent program increment goals:
+
 1. Charges are moved to its own Charges domain (and GitHub repository), in order to ensure flexibility, independence of other domains, and stability.
 2. The domain can validate, create, update and stop charges.
 3. The domain delivers change of charge messages to the [Post Office](https://github.com/Energinet-DataHub/geh-post-office) domain.
