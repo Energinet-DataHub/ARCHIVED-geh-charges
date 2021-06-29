@@ -12,8 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
-using System.Diagnostics;
+using GreenEnergyHub.Charges.Infrastructure.Messaging;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using NodaTime;
@@ -36,6 +35,9 @@ namespace GreenEnergyHub.Charges.ChargeLinkReceiver
         {
             serviceCollection.AddScoped(typeof(IClock), _ => SystemClock.Instance);
             serviceCollection.AddLogging();
+
+            //TODO: This line will not be needed once we use the messaging framework in this function
+            serviceCollection.AddScoped<ICorrelationContext, CorrelationContext>();
         }
     }
 }
