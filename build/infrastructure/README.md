@@ -39,7 +39,7 @@ If you still get an error like `Error: Error ensuring Resource Providers are reg
 az login
 ```
 
-search for your subscription and copy the 'id' (a GUID) 
+search for your subscription and copy the 'id' (a GUID) and use it to set subscription:
 
 ```PowerShell
 az account set --subscription "your subscription id"
