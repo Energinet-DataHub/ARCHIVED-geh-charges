@@ -64,6 +64,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GreenEnergyHub.Charges.Inte
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GreenEnergyHub.Charges.TestCore", "source\GreenEnergyHub.Charges.TestCore\GreenEnergyHub.Charges.TestCore.csproj", "{9E2BAFBA-DD6E-44B8-803E-A9F6B3DB47B6}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GreenEnergyHub.Charges.ChargeLinkReceiver", "source\GreenEnergyHub.Charges.ChargeLinkReceiver\GreenEnergyHub.Charges.ChargeLinkReceiver.csproj", "{539A7F51-A284-4268-AA14-98BB6122F5EB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -154,6 +156,10 @@ Global
 		{9E2BAFBA-DD6E-44B8-803E-A9F6B3DB47B6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9E2BAFBA-DD6E-44B8-803E-A9F6B3DB47B6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9E2BAFBA-DD6E-44B8-803E-A9F6B3DB47B6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{539A7F51-A284-4268-AA14-98BB6122F5EB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{539A7F51-A284-4268-AA14-98BB6122F5EB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{539A7F51-A284-4268-AA14-98BB6122F5EB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{539A7F51-A284-4268-AA14-98BB6122F5EB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -176,6 +182,7 @@ Global
 		{30AD090D-A112-45EC-A25A-F9280B65B2E4} = {832447E5-7A46-4381-817C-5D73A20510C2}
 		{BC92EDE8-BDD4-49B2-AFFC-475DB29209B7} = {05DE980B-A2A7-4235-AE53-3167E94699DD}
 		{9E2BAFBA-DD6E-44B8-803E-A9F6B3DB47B6} = {05DE980B-A2A7-4235-AE53-3167E94699DD}
+		{539A7F51-A284-4268-AA14-98BB6122F5EB} = {832447E5-7A46-4381-817C-5D73A20510C2}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {19228BC9-BC51-4044-842C-ACD1F68D4008}
