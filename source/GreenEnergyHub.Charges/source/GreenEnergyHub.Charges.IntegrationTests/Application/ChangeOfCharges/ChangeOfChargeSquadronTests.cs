@@ -16,6 +16,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
 using GreenEnergyHub.Charges.Application.ChangeOfCharges;
+using GreenEnergyHub.Charges.Core.Json;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
 using GreenEnergyHub.Charges.Domain.Events.Local;
 using GreenEnergyHub.Charges.Infrastructure.Messaging;
@@ -64,6 +65,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
 
             IClock clock = SystemClock.Instance;
             var chargeJson = EmbeddedResourceHelper.GetInputJson(testFilePath, clock);
+            var chargeCommand = new JsonSerializer().Deserialize<ChargeCommand>(chargeJson);
             var httpRequest = HttpRequestFactory.CreateHttpRequest(chargeJson);
 
             // act
@@ -74,6 +76,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
             Assert.NotNull(receivedEvent);
             Assert.NotNull(receivedEvent?.Command.Document);
             Assert.NotNull(receivedEvent?.Command.ChargeOperation);
+            Assert.Equal(chargeCommand.ChargeOperation.ChargeId, receivedEvent?.Command.ChargeOperation.ChargeId);
         }
 
         private async Task CallMessageReceiver(
