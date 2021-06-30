@@ -19,7 +19,7 @@ on:
       - main
     paths:
       - build/infrastructure
-      - .github/workflows/pull-request-gate-infrastructure-ci-destroy.yml
+      - .github/workflows/pr-env-teardown.yml
     types: [closed]
 env:
   ORGANISATION_NAME: endk

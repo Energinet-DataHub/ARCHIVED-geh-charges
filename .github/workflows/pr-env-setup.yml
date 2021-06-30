@@ -19,7 +19,7 @@ on:
       - main
     paths:
       - build/infrastructure
-      - .github/workflows/pull-request-gate-infrastructure-ci.yml
+      - .github/workflows/pr-env-setup.yml
   workflow_dispatch: {}
 env:
   ORGANISATION_NAME: endk
