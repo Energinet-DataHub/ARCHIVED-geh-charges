@@ -135,11 +135,9 @@ jobs:
         uses: actions/checkout@master
 
       - name: Build project
-        shell: bash
         run: |
           dotnet build ${{ env.INTEGRATION_TEST_CSPROJ_FILE_PATH }} --configuration Release --output ${{ github.workspace }}/output-integration-test
 
       - name: Run integration tests
-        shell: bash
         run: |
           dotnet test ${{ github.workspace }}/output-integration-test/${{ env.INTEGRATION_TEST_DLL }} --filter HostingEnvironment=PullRequestGate --logger:"console;verbosity=detailed"
