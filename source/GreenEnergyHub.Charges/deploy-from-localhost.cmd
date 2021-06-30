@@ -10,11 +10,12 @@ echo ===========================================================================
 
 setlocal
 
-set /p project=Enter organization used with Terraform (perhaps your initials?): 
+set /p organization=Enter organization used with Terraform (perhaps your initials?): 
 set /p doBuild=Build solution ([y]/n)?
 rem If you don't know the password, perhaps you can obtain it from the configuration settings of the deployed ChargeCommandReceiver function in Azure portal
 set /p sqlPassword=Enter SQL password for 'gehdbadmin' to update db or empty to skip: 
 set /p deployMessageReceiver=Deploy message receiver ([y]/n)?
+set /p deployChargeLinkReceiver=Deploy charge link receiver ([y]/n)?
 set /p deployCommandReceiver=Deploy command receiver ([y]/n)?
 set /p deployConfirmationSender=Deploy confirmation sender ([y]/n)?
 set /p deployRejectionSender=Deploy rejection sender ([y]/n)?
@@ -27,7 +28,7 @@ IF /I not "%doBuild%" == "n" (
 
 IF not "%sqlPassword%" == "" (
     dotnet run --project source\GreenEnergyHub.Charges.ApplyDBMigrationsApp --configuration Release --^
-        "Server=sqlsrv-charges-%project%-s.database.windows.net;Database=sqldb-charges;Uid=gehdbadmin;Pwd=%sqlPassword%;TrustServerCertificate=true;Persist Security Info=True;"^
+        "Server=sqlsrv-charges-%organization%-s.database.windows.net;Database=sqldb-charges;Uid=gehdbadmin;Pwd=%sqlPassword%;TrustServerCertificate=true;Persist Security Info=True;"^
         includeSeedData includeTestData
 )
 
@@ -35,26 +36,32 @@ rem All (but the last) deployments are opened in separate windows in order to ex
 
 IF /I not "%deployMessageReceiver%" == "n" (
     pushd source\GreenEnergyHub.Charges.MessageReceiver\bin\Release\netcoreapp3.1
-    start "Deploy: Message Receiver" cmd /c "func azure functionapp publish azfun-message-receiver-charges-%project%-s & pause"
+    start "Deploy: Message Receiver" cmd /c "func azure functionapp publish azfun-message-receiver-charges-%organization%-s & pause"
+    popd
+)
+
+IF /I not "%deployChargeLinkReceiver%" == "n" (
+    pushd source\GreenEnergyHub.Charges.ChargeLinkReceiver\bin\Release\net5.0
+    start "Deploy: Charge Link Receiver" cmd /c "func azure functionapp publish azfun-link-receiver-charges-%organization%-s & pause"
     popd
 )
 
 IF /I not "%deployCommandReceiver%" == "n" (
     pushd source\GreenEnergyHub.Charges.ChargeCommandReceiver\bin\Release\netcoreapp3.1
-    start "Deploy: Charge Command Receiver" cmd /c "func azure functionapp publish azfun-charge-command-receiver-charges-%project%-s & pause"
+    start "Deploy: Charge Command Receiver" cmd /c "func azure functionapp publish azfun-charge-command-receiver-charges-%organization%-s & pause"
     popd
 )
 
 IF /I not "%deployConfirmationSender%" == "n" (
     pushd source\GreenEnergyHub.Charges.ChargeConfirmationSender\bin\Release\netcoreapp3.1
-    start "Deploy: Charge Confirmation Sender" cmd /c "func azure functionapp publish azfun-charge-confirmation-sender-charges-%project%-s & pause"
+    start "Deploy: Charge Confirmation Sender" cmd /c "func azure functionapp publish azfun-charge-confirmation-sender-charges-%organization%-s & pause"
     popd
 )
 
 IF /I not "%deployRejectionSender%" == "n" (
     pushd source\GreenEnergyHub.Charges.ChargeRejectionSender\bin\Release\netcoreapp3.1
 	echo Deploy: Charge Rejection Sender
-    func azure functionapp publish azfun-charge-rejection-sender-charges-%project%-s
+    func azure functionapp publish azfun-charge-rejection-sender-charges-%organization%-s
 	popd
 )
 
