@@ -27,8 +27,8 @@ Information about the settings:
 - `project` is the project or domain name and is used in resource name and must be lowercase. Helps ensuring global uniqueness of resource names
 - `tenant_id` is the cloud service provider tenant id
 - `spn_object_id` is the service principal object id
-- `sharedresources_keyvault_name` is the name of the keyvault holding shared/system-wide secrets
-- `sharedresources_resource_group_name` is the resouce group where shared resources like the shared key vault and more is located
+- `sharedresources_keyvault_name` is the name of the key vault holding shared/system-wide secrets
+- `sharedresources_resource_group_name` is the resource group where shared resources like the shared key vault and more is located
 
 If you want to tear down all the resources again simply execute `terraform destroy -auto-approve -var-file="localhost.tfvars"` in the `.working-folder` folder.
 
@@ -131,7 +131,7 @@ If you're deploying the domain as a development environment - i.e. with not depe
 This is most likely provided by your enterprise architect or cloud architect or similar.
 
 If you're deploying the domain as a development environment - i.e. with not dependencies to other domains - then you can choose this for yourself.
-It's possible to use the same resource group as the resouce group used for the domain infrastructure.
+It's possible to use the same resource group as the resource group used for the domain infrastructure.
 
 ## Prerequisites
 
