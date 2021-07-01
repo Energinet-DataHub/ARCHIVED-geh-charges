@@ -39,7 +39,6 @@ namespace GreenEnergyHub.Charges.Application.Factories
                 EndDateTime = command.ChargeOperation.EndDateTime,
                 StartDateTime = command.ChargeOperation.StartDateTime,
                 Status = command.ChargeOperation.OperationType,
-                BusinessReasonCode = command.ChargeOperation.BusinessReasonCode,
                 ChargeOperationId = command.ChargeOperation.Id,
                 LastUpdatedBy = "Volt", // This should be used to identify the user.
             };

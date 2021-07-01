@@ -35,8 +35,6 @@ namespace GreenEnergyHub.Charges.Domain
         /// </summary>
         public string ChargeOperationId { get; set; }
 
-        public BusinessReasonCode BusinessReasonCode { get; set; }
-
         public OperationType Status { get; set; }
 
         /// <summary>

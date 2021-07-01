@@ -127,10 +127,10 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
                         Name = "Name",
                         BusinessProcessRole = (MarketParticipantRole)1,
                     },
+                    BusinessReasonCode = BusinessReasonCode.UpdateChargeInformation,
                 },
                 ChargeOperationId = "id",
                 Status = OperationType.Create,
-                BusinessReasonCode = BusinessReasonCode.UpdateChargeInformation,
                 LastUpdatedBy = "LastUpdatedBy",
             };
             return transaction;
