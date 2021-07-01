@@ -1,0 +1,88 @@
+# Copyright 2020 Energinet DataHub A/S
+#
+# Licensed under the Apache License, Version 2.0 (the "License2");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+name: PR Environment - Setup
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - build/infrastructure
+      - .github/workflows/pr-env-setup.yml
+  workflow_dispatch: {}
+env:
+  ORGANISATION_NAME: endk
+  PROJECT_NAME: 'cha${{ github.event.number }}'
+  RESOURCE_GROUP_NAME: rg-DataHub-Testing-U
+  ENVIRONMENT_NAME: Development
+  ENVIRONMENT_SHORT: u
+  ENVIRONMENT_LONG: rg-DataHub-Testing-U
+  INTEGRATION_TEST_CSPROJ_FILE_PATH: 'source/GreenEnergyHub.Charges/source/GreenEnergyHub.Charges.IntegrationTests/GreenEnergyHub.Charges.IntegrationTests.csproj'
+  INTEGRATION_TEST_DLL: GreenEnergyHub.Charges.IntegrationTests.dll
+  DEFAULT_LOCATION: "westeurope"
+  TENANT_ID: ${{ secrets.TENANT_ID }}
+  CLIENT_SECRET: ${{ secrets.SPN_SECRET }}
+  CLIENT_ID: ${{ secrets.SPN_ID }}
+  CLIENT_OBJECT_ID: ${{ secrets.SPN_SECRET }}
+  SUBSCRIPTION_ID: ${{ secrets.SUBSCRIPTION_ID }}
+
+jobs:
+  infra_deploy:
+    name: Deploy infrastructure
+    runs-on: ubuntu-latest
+    environment:
+      name: rg-DataHub-Testing-U # Unfortunately this is not currently supported: ${{ env.ENVIRONMENT_LONG }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set Environment Secrets
+        run: |  
+          echo "ARM_TENANT_ID=${{ secrets.TENANT_ID }}" >> $GITHUB_ENV
+          echo "ARM_CLIENT_ID=${{ secrets.SPN_ID }}" >> $GITHUB_ENV
+          echo "ARM_CLIENT_OBJECT_ID=${{ secrets.SPN_OBJECT_ID }}" >> $GITHUB_ENV
+          echo "ARM_CLIENT_SECRET=${{ secrets.SPN_SECRET }}" >> $GITHUB_ENV
+          echo "ARM_SUBSCRIPTION_ID=${{ secrets.SUBSCRIPTION_ID }}" >> $GITHUB_ENV
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v1.2.1
+        with:
+          terraform_wrapper: false
+      
+      - name: Terraform CD
+        uses: ./.github/actions/terraform-cd
+        with:
+          SECRETS_SHARED_RESOURCES_KEYVAULT_NAME: ${{ secrets.SHARED_RESOURCES_KEYVAULT_NAME }}
+          SECRETS_SHARED_RESOURCES_RESOURCE_GROUP_NAME: ${{ secrets.SHARED_RESOURCES_RESOURCE_GROUP_NAME }}
+          SECRETS_SHARED_RESOURCES_SQL_SERVER_NAME: ${{ secrets.SHARED_RESOURCES_SQL_SERVER_NAME }}
+          SECRETS_PAT_TOKEN: ${{ secrets.PAT_TOKEN }}
+          SECRETS_TENANT_ID: ${{ secrets.TENANT_ID }}
+          SECRETS_SPN_ID: ${{ secrets.SPN_ID }}
+          SECRETS_SPN_OBJECT_ID: ${{ secrets.SPN_OBJECT_ID }}
+          SECRETS_SPN_SECRET: ${{ secrets.SPN_SECRET }}
+          SECRETS_SUBSCRIPTION_ID: ${{ secrets.SUBSCRIPTION_ID }}
+          PROJECT_NAME: ${{ env.PROJECT_NAME }}
+          ORGANISATION_NAME: ${{ env.ORGANISATION_NAME }}
+          ENVIRONMENT_SHORT: ${{ env.ENVIRONMENT_SHORT }}
+          ENVIRONMENT_LONG: ${{ env.ENVIRONMENT_LONG }}
+          ENVIRONMENT_NAME: ${{ env.ENVIRONMENT_NAME }}
+          TERRAFORM_BACKEND_FILE_PATH: "./build/infrastructure/main/backend.tf"
+
+      - name: comment PR
+        uses: unsplash/comment-on-pr@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          msg: "Congratulations! Your enviroment was successfully deployed into rg-DataHub-Testing-U (Resources will contain the name ${{ env.PROJECT_NAME }}). It will automatically be destroyed again when the PR is closed."
+          check_for_duplicate_msg: true  # OPTIONAL

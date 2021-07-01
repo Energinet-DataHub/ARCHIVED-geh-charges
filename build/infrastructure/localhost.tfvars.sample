@@ -7,9 +7,11 @@ Also be cautious about length of strings as some ressources has a very limited
 max name length.
 */
 
-environment         = "YOUR_ENVIRONMENT"
-organisation        = "YOUR_ORGANIZATION"
-resource_group_name = "YOUR_RESOURCE_GROUP"
-project             = "YOUR_PROJECT_NAME"
-tenant_id           = "YOUR_TENANT_ID"
-spn_object_id       = "YOUR_SPN_OBJECT_ID"
+environment                         = "Short for environment name. Helps ensuring global uniqueness of resource names"
+organisation                        = "YOUR_ORGANIZATION"
+resource_group_name                 = "YOUR_RESOURCE_GROUP"
+project                             = "YOUR_PROJECT_NAME"
+tenant_id                           = "YOUR_TENANT_ID"
+spn_object_id                       = "YOUR_SPN_OBJECT_ID"
+sharedresources_keyvault_name       = "UNUSED IN DEVELOPMENT ENVIRONMENTS"
+sharedresources_resource_group_name = "UNUSED IN DEVELOPMENT ENVIRONMENTS"

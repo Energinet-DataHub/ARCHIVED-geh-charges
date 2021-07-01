@@ -11,31 +11,15 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-variable "resource_group_name" {
-  type = string
+
+# IMPORTANT: This is being overwritten (not just overridden) in Development environment
+data "azurerm_key_vault" "kv_sharedresources" {
+  name                = var.sharedresources_keyvault_name
+  resource_group_name = var.sharedresources_resource_group_name
 }
 
-variable "environment" {
-  type          = string
-  description   = "Enviroment that the infrastructure code is deployed into"
-}
-
-variable "project" {
-  type          = string
-  description   = "Project that is running the infrastructure code"
-}
-
-variable "organisation" {
-  type          = string
-  description   = "Organisation that is running the infrastructure code"
-}
-
-variable "tenant_id" {
-  type          = string
-  description   = "tenant id"
-}
-
-variable "spn_object_id" {
-  type          = string
-  description   = "spn_object_id"
+# IMPORTANT: This is being overwritten (not just overridden) in Development environment
+data "azurerm_key_vault_secret" "metering_point_created_listener_connection_string" {
+  name         = "metering-point-created-listener-connection-string"
+  key_vault_id = data.azurerm_key_vault.kv_sharedresources.id
 }
