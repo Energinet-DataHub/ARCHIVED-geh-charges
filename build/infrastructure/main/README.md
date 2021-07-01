@@ -34,6 +34,18 @@ If you want to tear down all the resources again simply execute `terraform destr
 
 **Tip**: If you don't have provisioned any resources yet and encounter problems it might help to delete folder `.terraform` and file `.terraform.lock.hcl` and start over with `terraform init`.
 
+If you still get an error like `Error: Error ensuring Resource Providers are registered: Cannot register provider Microsoft.DevSpaces with Azure Resource Manager: resources.ProvidersClient#Register: Failure responding to request: StatusCode=403` then you need to select the right subscription for your resource group:
+
+```PowerShell
+az login
+```
+
+search for your subscription and copy the 'id' (a `GUID`) and use it to set subscription:
+
+```PowerShell
+az account set --subscription "your subscription id"
+```
+
 ## Variables in `localhost.tfvars`
 
 This describes what values to use for the various values in the `localhost.tfvars` file.
