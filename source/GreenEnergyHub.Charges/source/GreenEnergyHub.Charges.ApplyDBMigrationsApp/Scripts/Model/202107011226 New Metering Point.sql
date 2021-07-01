@@ -1,12 +1,12 @@
 ﻿CREATE TABLE [Charges].[MeteringPoint]
 (
-    RowId bigint NOT NULL IDENTITY PRIMARY KEY,
+    RowId int NOT NULL IDENTITY PRIMARY KEY,
     MeteringPointId NVARCHAR(50) NOT NULL,
-    MeteringPointType smallint NOT NULL,
-    MeteringGridArea NVARCHAR(30) NOT NULL,
+    MeteringPointType int NOT NULL,
+    MeteringGridArea NVARCHAR(50) NOT NULL,
     EffectiveDate DateTime NOT NULL,
-    ConnectionState smallint NOT NULL,
-    SettlementMethod smallint NOT NULL,
+    ConnectionState int NOT NULL,
+    SettlementMethod int NOT NULL,
 )
 GO
 
