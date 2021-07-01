@@ -42,7 +42,7 @@ jobs:
     name: Deploy infrastructure
     runs-on: ubuntu-latest
     environment:
-      name: ${{ env.ENVIRONMENT_LONG }}
+      name: rg-DataHub-Testing-U # Unfortunately this is not currently supported: ${{ env.ENVIRONMENT_LONG }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
