@@ -1,0 +1,17 @@
+/*
+Make sure to select values that ensures globally unique names of ressources.
+This is required for e.g. SQL Server and more. Failure to do so does not always result
+in intuitive errors. As an example a time out on creating SQL Server has been observed.
+
+Also be cautious about length of strings as some ressources has a very limited
+max name length.
+*/
+
+environment                         = "Short for environment name. Helps ensuring global uniqueness of resource names"
+organisation                        = "YOUR_ORGANIZATION"
+resource_group_name                 = "YOUR_RESOURCE_GROUP"
+project                             = "YOUR_PROJECT_NAME"
+tenant_id                           = "YOUR_TENANT_ID"
+spn_object_id                       = "YOUR_SPN_OBJECT_ID"
+sharedresources_keyvault_name       = "YOUR SHARED RESOURCES KEYVAULT NAME"
+sharedresources_resource_group_name = "YOUR SHARED RESOURCES RESOURCE GROUP NAME"

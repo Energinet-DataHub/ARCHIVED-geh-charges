@@ -17,19 +17,20 @@ The steps needed are:
   (The format is the same as other Terraform configuration files)
 - Make sure that you're logged in with an account that has access permissions to the selected resource group.
   (Use `az login` from `Azure CLI` to switch account as needed)
-- Temporarily rename `backend.tf` to `backend.tf.exclude`.
-  (This is needed to avoid Terraform from picking it up because the settings in the file are not overwritten by your
-  `localhost.tfvars` file. Also Terraform currently doesn't support explicit exclusion. See [this issue](https://github.com/hashicorp/terraform/issues/2253))
-- Execute `terraform init`
-- Execute `terraform apply -var-file="localhost.tfvars"`
-- Restore file name of `backend.tf`
+- Execute the helper script `deploy-from-localhost.cmd`
 
 Information about the settings:
 
-- `environment` is used in resource name and must be lowercase
-- `organisation` is used in resource name and must be lowercase
+- `environment` is short for environment name and is used in resource name and must be lowercase. Helps ensuring global uniqueness of resource names
+- `organisation` is your organisation name and is used in resource name and must be lowercase. Helps ensuring global uniqueness of resource names
+- `resource_group_name` the resource group where the infrastructure is provisioned
+- `project` is the project or domain name and is used in resource name and must be lowercase. Helps ensuring global uniqueness of resource names
+- `tenant_id` is the cloud service provider tenant id
+- `spn_object_id` is the service principal object id
+- `sharedresources_keyvault_name` is the name of the keyvault holding shared/system-wide secrets
+- `sharedresources_resource_group_name` is the resouce group where shared resources like the shared key vault and more is located
 
-If you want to tear down all the resources again simply execute `terraform destroy -auto-approve`.
+If you want to tear down all the resources again simply execute `terraform destroy -auto-approve -var-file="localhost.tfvars"` in the `.development-merged` folder.
 
 **Tip**: If you don't have provisioned any resources yet and encounter problems it might help to delete folder `.terraform` and file `.terraform.lock.hcl` and start over with `terraform init`.
 
@@ -107,6 +108,19 @@ The object ID should now be displayed as the first column in the result.
 
 This ID is the value you need for `object_id` (hint: it looks like a `GUID`)
 
+### - `sharedresources_keyvault_name`
+
+This is most likely provided by your enterprise architect or cloud architect or similar.
+
+If you're deploying the domain as a development environment - i.e. with not dependencies to other domains - then you can choose this for yourself.
+
+### - `sharedresources_resource_group_name`
+
+This is most likely provided by your enterprise architect or cloud architect or similar.
+
+If you're deploying the domain as a development environment - i.e. with not dependencies to other domains - then you can choose this for yourself.
+It's possible to use the same resource group as the resouce group used for the domain infrastructure.
+
 ## Prerequisites
 
 ### Installing `Azure CLI`
@@ -122,3 +136,9 @@ The following command installs the module:
 ```PowerShell
 Install-Module -Name AzureAD
 ```
+
+## Working with Multiple Environments
+
+Sometimes it is necessary to have variations of the infrastructure in different environments. This can be achieved by adding `*_override.tf` files in the respective environment folders in `build/infrastructure/env`.
+
+See more about overriding files with Terraform [here](https://www.terraform.io/docs/language/files/override.html).
