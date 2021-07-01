@@ -11,63 +11,54 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-name: Infrastructure CD
+name: PR Environment - Setup
 
 on:
-  push:
+  pull_request:
     branches:
       - main
     paths:
-      - build/infrastructure/**
-      - build/modules/**
-      - .github/actions/azure-cli-install-login/**
-      - .github/actions/charges-apply-db-migrations/**
-      - .github/actions/configure-terraform-backend/**   
-      - .github/workflows/infrastructure-cd.yml
+      - build/infrastructure
+      - .github/workflows/pr-env-setup.yml
   workflow_dispatch: {}
 env:
   ORGANISATION_NAME: endk
-  PROJECT_NAME: charges
+  PROJECT_NAME: 'cha${{ github.event.number }}'
+  RESOURCE_GROUP_NAME: rg-DataHub-Testing-U
+  ENVIRONMENT_NAME: Development
+  ENVIRONMENT_SHORT: u
+  ENVIRONMENT_LONG: rg-DataHub-Testing-U
+  INTEGRATION_TEST_CSPROJ_FILE_PATH: 'source/GreenEnergyHub.Charges/source/GreenEnergyHub.Charges.IntegrationTests/GreenEnergyHub.Charges.IntegrationTests.csproj'
+  INTEGRATION_TEST_DLL: GreenEnergyHub.Charges.IntegrationTests.dll
+  DEFAULT_LOCATION: "westeurope"
+  TENANT_ID: ${{ secrets.TENANT_ID }}
+  CLIENT_SECRET: ${{ secrets.SPN_SECRET }}
+  CLIENT_ID: ${{ secrets.SPN_ID }}
+  CLIENT_OBJECT_ID: ${{ secrets.SPN_SECRET }}
+  SUBSCRIPTION_ID: ${{ secrets.SUBSCRIPTION_ID }}
 
 jobs:
   infra_deploy:
-    name: Deploy infrastructure to ${{ matrix.environment.long }}
+    name: Deploy infrastructure
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        environment: [
-          {
-            long: rg-DataHub-Charges-U,
-            short: u,
-            name: Development
-          },
-          {
-            long: rg-DataHub-Charges-T,
-            short: t,
-            name: Test
-          },
-          {
-            long: rg-DataHub-Charges-B,
-            short: b,
-            name: Preprod
-          },
-          {
-            long: rg-DataHub-Charges-P,
-            short: p,
-            name: Production
-          }
-        ]
     environment:
-      name: ${{ matrix.environment.long }}
+      name: ${{ env.ENVIRONMENT_LONG }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
+
+      - name: Set Environment Secrets
+        run: |  
+          echo "ARM_TENANT_ID=${{ secrets.TENANT_ID }}" >> $GITHUB_ENV
+          echo "ARM_CLIENT_ID=${{ secrets.SPN_ID }}" >> $GITHUB_ENV
+          echo "ARM_CLIENT_OBJECT_ID=${{ secrets.SPN_OBJECT_ID }}" >> $GITHUB_ENV
+          echo "ARM_CLIENT_SECRET=${{ secrets.SPN_SECRET }}" >> $GITHUB_ENV
+          echo "ARM_SUBSCRIPTION_ID=${{ secrets.SUBSCRIPTION_ID }}" >> $GITHUB_ENV
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v1.2.1
         with:
           terraform_wrapper: false
-          terraform_version: 0.14.10
       
       - name: Terraform CD
         uses: ./.github/actions/terraform-cd
@@ -83,17 +74,15 @@ jobs:
           SECRETS_SUBSCRIPTION_ID: ${{ secrets.SUBSCRIPTION_ID }}
           PROJECT_NAME: ${{ env.PROJECT_NAME }}
           ORGANISATION_NAME: ${{ env.ORGANISATION_NAME }}
-          ENVIRONMENT_SHORT: ${{ mastrix.environment.short }}
-          ENVIRONMENT_LONG: ${{ mastrix.environment.long }}
-          ENVIRONMENT_NAME: ${{ mastrix.environment.name }}
+          ENVIRONMENT_SHORT: ${{ env.ENVIRONMENT_SHORT }}
+          ENVIRONMENT_LONG: ${{ env.ENVIRONMENT_LONG }}
+          ENVIRONMENT_NAME: ${{ env.ENVIRONMENT_NAME }}
           TERRAFORM_BACKEND_FILE_PATH: "./build/infrastructure/backend.tf"
 
-      - name: Applying charges migrations
-        uses: ./.github/actions/charges-apply-db-migrations
+      - name: comment PR
+        uses: unsplash/comment-on-pr@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          sql-server-url: ${{ steps.terraform-apply.outputs.sql-server-url }}
-          sql-database-name: ${{ steps.terraform-apply.outputs.charges-sql-database-name }}
-          user-keyvaultname: ${{ steps.terraform-apply.outputs.charges-user-keyvaultname }}
-          password-keyvaultname: ${{ steps.terraform-apply.outputs.charges-password-keyvaultname }}
-          keyvault-name: ${{ steps.terraform-apply.outputs.kv-charges-name }}
-          environment-name: ${{ matrix.environment.name }}
+          msg: "Congratulations! Your enviroment was successfully deployed into rg-DataHub-Testing-U (Resources will contain the name ${{ env.PROJECT_NAME }}). It will automatically be destroyed again when the PR is closed."
+          check_for_duplicate_msg: true  # OPTIONAL
