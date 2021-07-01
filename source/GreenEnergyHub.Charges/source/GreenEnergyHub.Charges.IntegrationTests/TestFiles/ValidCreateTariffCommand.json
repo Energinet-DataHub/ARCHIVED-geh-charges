@@ -13,13 +13,13 @@
       "Id": 5790001330552,
       "Name": "Hub",
       "BusinessProcessRole": 1
-    }
+    },
+    "BusinessReasonCode": 18
   },
   "ChargeOperation": {
     "Id": "MD{{$isoTimestamp}}",
     "EndDateTime": null,
     "OperationType": 2,
-    "BusinessReasonCode": 18,
     "ChargeId": "{{$randomCharacters}}",
     "ChargeName": "Electric charge",
     "Type": 2,

@@ -100,12 +100,12 @@ namespace GreenEnergyHub.Charges.Tests.Builders
                         Name = "Name",
                         BusinessProcessRole = MarketParticipantRole.EnergySupplier,
                     },
+                    BusinessReasonCode = BusinessReasonCode.UpdateChargeInformation,
                 },
                 ChargeOperation = new ChargeOperation
                 {
                   Id = "id",
                   OperationType = OperationType.Create,
-                  BusinessReasonCode = BusinessReasonCode.UpdateChargeInformation,
                   ChargeName = "description",
                   ChargeId = _mrid,
                   ChargeOwner = _owner,

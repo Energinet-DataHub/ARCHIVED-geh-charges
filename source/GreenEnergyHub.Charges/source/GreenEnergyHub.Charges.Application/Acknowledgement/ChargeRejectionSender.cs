@@ -35,7 +35,7 @@ namespace GreenEnergyHub.Charges.Application.Acknowledgement
                 rejectedEvent.Command.Document.Sender.Id,
                 rejectedEvent.Command.Document.Sender.BusinessProcessRole,
                 rejectedEvent.Command.ChargeOperation.Id,
-                rejectedEvent.Command.ChargeOperation.BusinessReasonCode,
+                rejectedEvent.Command.Document.BusinessReasonCode,
                 rejectedEvent.Reason);
 
             await _messageDispatcher.DispatchAsync(chargeRejection).ConfigureAwait(false);
