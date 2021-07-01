@@ -90,7 +90,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
             // Act
             await sut.StoreChargeAsync(charge).ConfigureAwait(false);
             var expected =
-                await sut.CheckIfChargeExistsByCorrelationIdAsync(charge.Document.CorrelationId).ConfigureAwait(false);
+                await sut.CheckIfChargeExistsByCorrelationIdAsync(charge.CorrelationId).ConfigureAwait(false);
 
             // Assert
             Assert.True(expected);
@@ -116,7 +116,6 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
                 Document = new Document
                 {
                     Id = "id",
-                    CorrelationId = "CorrelationId",
                     RequestDate = SystemClock.Instance.GetCurrentInstant(),
                     Type = DocumentType.RequestUpdateChargeInformation,
                     IndustryClassification = IndustryClassification.Electricity,
@@ -132,6 +131,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
                 ChargeOperationId = "id",
                 Status = OperationType.Create,
                 LastUpdatedBy = "LastUpdatedBy",
+                CorrelationId = "CorrelationId",
             };
             return transaction;
         }

@@ -90,5 +90,7 @@ namespace GreenEnergyHub.Charges.Domain
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2227", Justification = "JSON deserialization")]
         public List<Point> Points { get; set; }
+
+        public string CorrelationId { get; set; }
     }
 }
