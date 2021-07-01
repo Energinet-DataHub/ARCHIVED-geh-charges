@@ -12,17 +12,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# This should have been an _override file overriding only depends_on but overriding of depends_on is not supported
-# So we do a complete file overwrite
-
+# Purpose of this overwrite (not override) is to depend on and use the shared key vault stub.
 data "azurerm_key_vault" "kv_sharedresources" {
-  name                = var.sharedresources_keyvault_name
-  resource_group_name = var.sharedresources_resource_group_name
-  depends_on   = [ module.kv_shared.name ]
+  name                = module.kv_shared_stub.name
+  resource_group_name = data.azurerm_resource_group.main.name
+  depends_on          = [ module.kv_shared_stub.name ]
 }
 
+# Purpose of this overwrite (not override) is to depend on and use the shared key vault stub.
 data "azurerm_key_vault_secret" "metering_point_created_listener_connection_string" {
   name         = "metering-point-created-listener-connection-string"
-  key_vault_id = data.azurerm_key_vault.kv_sharedresources.id
+  key_vault_id = module.kv_shared_stub.id
   depends_on   = [ module.kv_metering_point_created_listener_connection_string.name ]
 }

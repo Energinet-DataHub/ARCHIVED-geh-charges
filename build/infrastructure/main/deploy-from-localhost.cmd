@@ -20,6 +20,5 @@ rem Deploy resources of merged setup
 
 pushd ..\.development-merged
 terraform init
-terraform plan -var-file="localhost.tfvars" -out=tfplan
-terraform apply -var-file="localhost.tfvars" tfplan
+terraform apply -var-file="localhost.tfvars"
 popd

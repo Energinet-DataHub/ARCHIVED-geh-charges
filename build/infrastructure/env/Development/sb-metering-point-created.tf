@@ -46,9 +46,9 @@ module "kv_metering_point_created_listener_connection_string" {
   source              = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//key-vault-secret?ref=1.3.0"
   name                = "metering-point-created-listener-connection-string"
   value               = trimsuffix(module.sbtar_metering_point_created_listener.primary_connection_string, ";EntityPath=${module.sbt_metering_point_created.name}")
-  key_vault_id        = module.kv_shared.id
+  key_vault_id        = module.kv_shared_stub.id
   tags                = data.azurerm_resource_group.main.tags
-  dependencies        = [module.kv_shared.dependent_on, module.sbtar_metering_point_created_listener.dependent_on]
+  dependencies        = [module.kv_shared_stub.dependent_on, module.sbtar_metering_point_created_listener.dependent_on]
 }
 
 module "sbtar_metering_point_created_sender" {
@@ -66,9 +66,9 @@ module "kv_metering_point_created_sender_connection_string" {
   source              = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//key-vault-secret?ref=1.3.0"
   name                = "metering-point-created-sender-connection-string"
   value               = trimsuffix(module.sbtar_metering_point_created_sender.primary_connection_string, ";EntityPath=${module.sbt_metering_point_created.name}")
-  key_vault_id        = module.kv_charges.id
+  key_vault_id        = module.kv_shared_stub.id
   tags                = data.azurerm_resource_group.main.tags
-  dependencies        = [module.kv_shared.dependent_on, module.sbtar_metering_point_created_sender.dependent_on]
+  dependencies        = [module.kv_shared_stub.dependent_on, module.sbtar_metering_point_created_sender.dependent_on]
 }
 
 resource "azurerm_servicebus_subscription" "sbs_metering_point_created" {

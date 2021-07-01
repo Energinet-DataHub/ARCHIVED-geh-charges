@@ -16,10 +16,27 @@
 # Then add shared secrets to this key vault an all other Terraform code in main should not need to care about the
 # "local shared" key vault concept.
 
-module "kv_shared" {
+/*
+This is a key vault provisioned in development environments in order to eliminate external dependencies.
+"stub" signals that we are stub'ing away shared resources and other domains.
+We ignore the settings (variables 'sharedresources_keyvault_name' and 'sharedresources_resource_group_name').
+
+Pros and cons for using/provisioning a shared key vault stub:
+
+Pros:
+- We don't need to override e.g. azfunc appsettings
+- Development environments works as similar to other environments as possible (by actually using a dedicated key vault for system-wide settings)
+- We can add secrets (e.g. connection strings that are desired to be accessed for e.g. testing using Postman or other semi-automated tests requiring the secrets)
+
+Cons:
+- We could have simplified some things and saved provisioning this addition resource by completely eliminating the use of a key vault and simply
+  overriding e.g. azfunc appsettings
+*/
+
+module "kv_shared_stub" {
   source                          = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//key-vault?ref=1.3.0"
-  name                            = var.sharedresources_keyvault_name
-  resource_group_name             = var.sharedresources_resource_group_name
+  name                            = "kvsharedstub${var.project}${var.organisation}${var.environment}"
+  resource_group_name             = data.azurerm_resource_group.main.name
   location                        = data.azurerm_resource_group.main.location
   tags                            = data.azurerm_resource_group.main.tags
   enabled_for_template_deployment = true
