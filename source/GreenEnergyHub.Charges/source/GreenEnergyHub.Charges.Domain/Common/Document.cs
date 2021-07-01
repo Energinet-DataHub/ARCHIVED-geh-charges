@@ -51,5 +51,7 @@ namespace GreenEnergyHub.Charges.Domain.Common
         public MarketParticipant Recipient { get; set; }
 
         public IndustryClassification IndustryClassification { get; set; }
+
+        public BusinessReasonCode BusinessReasonCode { get; set; }
     }
 }

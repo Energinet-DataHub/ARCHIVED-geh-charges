@@ -38,8 +38,6 @@ namespace GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction
         /// </summary>
         public string Id { get; set; }
 
-        public BusinessReasonCode BusinessReasonCode { get; set; }
-
         public OperationType OperationType { get; set; }
 
         /// <summary>
