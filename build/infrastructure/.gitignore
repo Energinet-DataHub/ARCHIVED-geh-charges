@@ -23,4 +23,5 @@
 *.tfvars
 *.tfstate
 *.tfstate.backup
-*.backend.tf.exclude
+tfplan
+.working-folder

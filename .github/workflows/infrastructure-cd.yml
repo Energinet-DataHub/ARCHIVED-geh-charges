@@ -63,86 +63,30 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Set Environment Secrets
-        run: |  
-          echo "ARM_TENANT_ID=${{ secrets.TENANT_ID }}" >> $GITHUB_ENV
-          echo "ARM_CLIENT_ID=${{ secrets.SPN_ID }}" >> $GITHUB_ENV
-          echo "ARM_CLIENT_OBJECT_ID=${{ secrets.SPN_OBJECT_ID }}" >> $GITHUB_ENV
-          echo "ARM_CLIENT_SECRET=${{ secrets.SPN_SECRET }}" >> $GITHUB_ENV
-          echo "ARM_SUBSCRIPTION_ID=${{ secrets.SUBSCRIPTION_ID }}" >> $GITHUB_ENV
-
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v1.2.1
         with:
           terraform_wrapper: false
           terraform_version: 0.14.10
       
-      - name: Setup Python
-        uses: actions/setup-python@v2
+      - name: Terraform CD
+        uses: ./.github/actions/terraform-cd
         with:
-          python-version: '3.7' # Version range or exact version of a Python version to use, using SemVer's version range syntax
-          architecture: 'x64' # optional x64 or x86. Defaults to x64 if not specified
-
-      - name: Azure CLI Install and Login
-        uses: ./.github/actions/azure-cli-install-login
-
-      - name: Setup Authorization to pull TF modules
-        run: |
-          git config --local --remove-section http."https://github.com/"
-          git config --global url."https://foo:${{ secrets.PAT_TOKEN }}@github.com/Energinet-DataHub/geh-terraform-modules".insteadOf "https://github.com/Energinet-DataHub/geh-terraform-modules"
-      
-      - name: Check If Terraform State Storage exists
-        id: state-storage-exists
-        run: |
-          storage_exists=$(az storage account check-name --name 'tfstate${{ env.PROJECT_NAME }}${{ matrix.environment.short }}' | python3 -c "import sys, json; print(not json.load(sys.stdin)['nameAvailable'])")
-          echo "::set-output name=state-storage-exists::${storage_exists}"
-
-      # Create TF State Container if needed
-      - name: Create Terraform State Storage
-        run: |
-          storage_name="tfstate${{ env.PROJECT_NAME }}${{ matrix.environment.short }}"
-          az storage account create --resource-group ${{ matrix.environment.long }} --name $storage_name --sku Standard_LRS --encryption-services blob
-          account_key=$(az storage account keys list --resource-group ${{ matrix.environment.long }} --account-name $storage_name --query '[0].value' -o tsv)
-          az storage container create --name tfstate --account-name $storage_name --account-key $account_key
-        if: steps.state-storage-exists.outputs.state-storage-exists == 'False'
-
-      # Try not to reference TF_VAR variables in pipeline yml files, only values should be set and they should be read in terraform only
-      # rather create duplicate ENV pipeline vatiable if needed to separate concerns
-      - name: Set TF Vars
-        run: |
-          echo "TF_VAR_environment=${{ matrix.environment.short }}" >> $GITHUB_ENV
-          echo "TF_VAR_organisation=${{ env.ORGANISATION_NAME }}" >> $GITHUB_ENV
-          echo "TF_VAR_project=${{ env.PROJECT_NAME }}" >> $GITHUB_ENV
-          echo "TF_VAR_resource_group_name=${{ matrix.environment.long }}" >> $GITHUB_ENV
-          echo "TF_VAR_tenant_id=${{ secrets.TENANT_ID }}" >> $GITHUB_ENV
-          echo "TF_VAR_spn_object_id=${{ secrets.SPN_OBJECT_ID }}" >> $GITHUB_ENV
-
-      - name: Configure Terraform Backend
-        uses: ./.github/actions/configure-terraform-backend
-        with:
-          backend-file-path: "./build/infrastructure/backend.tf"
-          resource-group-name: "${{ matrix.environment.long }}"
-          storage-account-name: "tfstate${{ env.PROJECT_NAME }}${{ matrix.environment.short }}"
-
-      - name: Terraform Init
-        working-directory: ./build/infrastructure
-        run: terraform init
-
-      - name: Terraform Plan
-        working-directory: ./build/infrastructure
-        run: terraform plan
-
-      - name: Terraform Apply
-        id: terraform-apply
-        working-directory: ./build/infrastructure
-        run: |
-          terraform apply -no-color -auto-approve
-          echo "::set-output name=sql-server-url::$(terraform output sql_server_url)"
-          echo "::set-output name=charges-sql-database-name::$(terraform output charges_sql_database_name)"
-          echo "::set-output name=charges-user-keyvaultname::$(terraform output charges_user_keyvaultname)"
-          echo "::set-output name=charges-password-keyvaultname::$(terraform output charges_password_keyvaultname)"
-          echo "::set-output name=kv-charges-name::$(terraform output kv_charges_name)"
-        continue-on-error: false
+          SECRETS_SHARED_RESOURCES_KEYVAULT_NAME: ${{ secrets.SHARED_RESOURCES_KEYVAULT_NAME }}
+          SECRETS_SHARED_RESOURCES_RESOURCE_GROUP_NAME: ${{ secrets.SHARED_RESOURCES_RESOURCE_GROUP_NAME }}
+          SECRETS_SHARED_RESOURCES_SQL_SERVER_NAME: ${{ secrets.SHARED_RESOURCES_SQL_SERVER_NAME }}
+          SECRETS_PAT_TOKEN: ${{ secrets.PAT_TOKEN }}
+          SECRETS_TENANT_ID: ${{ secrets.TENANT_ID }}
+          SECRETS_SPN_ID: ${{ secrets.SPN_ID }}
+          SECRETS_SPN_OBJECT_ID: ${{ secrets.SPN_OBJECT_ID }}
+          SECRETS_SPN_SECRET: ${{ secrets.SPN_SECRET }}
+          SECRETS_SUBSCRIPTION_ID: ${{ secrets.SUBSCRIPTION_ID }}
+          PROJECT_NAME: ${{ env.PROJECT_NAME }}
+          ORGANISATION_NAME: ${{ env.ORGANISATION_NAME }}
+          ENVIRONMENT_SHORT: ${{ mastrix.environment.short }}
+          ENVIRONMENT_LONG: ${{ mastrix.environment.long }}
+          ENVIRONMENT_NAME: ${{ mastrix.environment.name }}
+          TERRAFORM_BACKEND_FILE_PATH: "./build/infrastructure/main/backend.tf"
 
       - name: Applying charges migrations
         uses: ./.github/actions/charges-apply-db-migrations
