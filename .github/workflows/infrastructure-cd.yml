@@ -86,7 +86,7 @@ jobs:
           ENVIRONMENT_SHORT: ${{ mastrix.environment.short }}
           ENVIRONMENT_LONG: ${{ mastrix.environment.long }}
           ENVIRONMENT_NAME: ${{ mastrix.environment.name }}
-          TERRAFORM_BACKEND_FILE_PATH: "./build/infrastructure/backend.tf"
+          TERRAFORM_BACKEND_FILE_PATH: "./build/infrastructure/main/backend.tf"
 
       - name: Applying charges migrations
         uses: ./.github/actions/charges-apply-db-migrations

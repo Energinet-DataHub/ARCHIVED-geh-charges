@@ -68,7 +68,7 @@ jobs:
       - name: Configure Terraform Backend
         uses: ./.github/actions/configure-terraform-backend
         with:
-          backend-file-path: "./build/infrastructure/backend.tf"
+          backend-file-path: "./build/infrastructure/main/backend.tf"
           resource-group-name: "${{ env.RESOURCE_GROUP_NAME }}"
           storage-account-name: "tfstate${{ env.PROJECT_NAME }}${{ env.ENVIRONMENT_SHORT }}"
 

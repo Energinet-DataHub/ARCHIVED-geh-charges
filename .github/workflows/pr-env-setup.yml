@@ -77,7 +77,7 @@ jobs:
           ENVIRONMENT_SHORT: ${{ env.ENVIRONMENT_SHORT }}
           ENVIRONMENT_LONG: ${{ env.ENVIRONMENT_LONG }}
           ENVIRONMENT_NAME: ${{ env.ENVIRONMENT_NAME }}
-          TERRAFORM_BACKEND_FILE_PATH: "./build/infrastructure/backend.tf"
+          TERRAFORM_BACKEND_FILE_PATH: "./build/infrastructure/main/backend.tf"
 
       - name: comment PR
         uses: unsplash/comment-on-pr@master
