@@ -93,8 +93,9 @@ runs:
     - name: Set TF Vars
       shell: bash
       run: |
-        echo "TF_VAR_environment_name=${{ inputs.ENVIRONMENT_NAME }}" >> $GITHUB_ENV
-        echo "TF_VAR_environment_short=${{ inputs.ENVIRONMENT_SHORT }}" >> $GITHUB_ENV
+        echo "TF_VAR_tenant_id=${{ inputs.SECRETS_TENANT_ID }}" >> $GITHUB_ENV
+        echo "TF_VAR_spn_object_id=${{ inputs.SECRETS_SPN_OBJECT_ID }}" >> $GITHUB_ENV
+        echo "TF_VAR_environment=${{ inputs.ENVIRONMENT_SHORT }}" >> $GITHUB_ENV
         echo "TF_VAR_organisation=${{ inputs.ORGANISATION_NAME }}" >> $GITHUB_ENV
         echo "TF_VAR_project=${{ inputs.PROJECT_NAME }}" >> $GITHUB_ENV
         echo "TF_VAR_resource_group_name=${{ inputs.ENVIRONMENT_LONG }}" >> $GITHUB_ENV
