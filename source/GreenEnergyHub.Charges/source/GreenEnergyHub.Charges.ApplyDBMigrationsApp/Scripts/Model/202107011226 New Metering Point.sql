@@ -11,4 +11,5 @@
 GO
 
 CREATE INDEX i1 ON [Charges].[MeteringPoint] (RowId DESC);
+CREATE INDEX i2 ON [Charges].[MeteringPoint] (MeteringPointId DESC);
 GO
