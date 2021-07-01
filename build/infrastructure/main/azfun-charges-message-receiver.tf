@@ -79,7 +79,7 @@ resource "random_string" "message_receiver" {
 }
 
 module "ping_webtest_message_receiver" {
-  source                          = "./modules/ping-webtest" # Repo geh-terraform-modules doesn't have a webtest module at the time of this writing
+  source                          = "../modules/ping-webtest" # Repo geh-terraform-modules doesn't have a webtest module at the time of this writing
   name                            = "ping-webtest-message-receiver-${var.project}-${var.organisation}-${var.environment}"
   resource_group_name             = data.azurerm_resource_group.main.name
   location                        = data.azurerm_resource_group.main.location

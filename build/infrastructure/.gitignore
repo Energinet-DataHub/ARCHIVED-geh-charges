@@ -24,4 +24,4 @@
 *.tfstate
 *.tfstate.backup
 tfplan
-.development-merged
+.working-folder

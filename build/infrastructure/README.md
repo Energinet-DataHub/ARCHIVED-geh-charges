@@ -30,7 +30,7 @@ Information about the settings:
 - `sharedresources_keyvault_name` is the name of the keyvault holding shared/system-wide secrets
 - `sharedresources_resource_group_name` is the resouce group where shared resources like the shared key vault and more is located
 
-If you want to tear down all the resources again simply execute `terraform destroy -auto-approve -var-file="localhost.tfvars"` in the `.development-merged` folder.
+If you want to tear down all the resources again simply execute `terraform destroy -auto-approve -var-file="localhost.tfvars"` in the `.working-folder` folder.
 
 **Tip**: If you don't have provisioned any resources yet and encounter problems it might help to delete folder `.terraform` and file `.terraform.lock.hcl` and start over with `terraform init`.
 
