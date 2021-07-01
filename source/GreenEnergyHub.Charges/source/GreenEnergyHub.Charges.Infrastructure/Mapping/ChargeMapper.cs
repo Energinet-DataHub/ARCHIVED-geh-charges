@@ -92,7 +92,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Mapping
 
             return new ChargeOperation
             {
-                CorrelationId = charge.Document.CorrelationId,
+                CorrelationId = charge.CorrelationId,
                 WriteDateTime = charge.Document.RequestDate.ToDateTimeUtc(),
                 ChargeOperationId = charge.ChargeOperationId,
             };

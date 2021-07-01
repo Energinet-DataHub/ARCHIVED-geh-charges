@@ -83,7 +83,6 @@ namespace GreenEnergyHub.Charges.Tests.Builders
                 Document = new Document
                 {
                     Id = "id",
-                    CorrelationId = "CorrelationId",
                     Type = DocumentType.RequestUpdateChargeInformation,
                     RequestDate = SystemClock.Instance.GetCurrentInstant(),
                     IndustryClassification = IndustryClassification.Electricity,
