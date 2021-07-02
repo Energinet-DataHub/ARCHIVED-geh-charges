@@ -22,6 +22,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Messaging.Serialization.MarketDo
         {
             return value switch
             {
+                "D05" => DocumentType.RequestChangeBillingMasterData,
                 "D10" => DocumentType.RequestUpdateChargeInformation,
                 _ => DocumentType.Unknown
             };
