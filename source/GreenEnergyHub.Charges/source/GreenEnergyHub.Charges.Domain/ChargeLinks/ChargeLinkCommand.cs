@@ -14,6 +14,9 @@
 
 using System.Diagnostics.CodeAnalysis;
 using GreenEnergyHub.Charges.Domain.Command;
+using GreenEnergyHub.Charges.Domain.MarketDocument;
+
+#pragma warning disable 8618
 
 namespace GreenEnergyHub.Charges.Domain.ChargeLinks
 {
@@ -23,5 +26,7 @@ namespace GreenEnergyHub.Charges.Domain.ChargeLinks
             : base(correlationId)
         {
         }
+
+        public Document Document { get; set; }
     }
 }

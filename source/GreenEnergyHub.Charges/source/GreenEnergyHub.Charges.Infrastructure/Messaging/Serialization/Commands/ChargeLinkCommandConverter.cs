@@ -35,7 +35,10 @@ namespace GreenEnergyHub.Charges.Infrastructure.Messaging.Serialization.Commands
         {
             var correlationId = _correlationContext.CorrelationId;
 
-            var result = new ChargeLinkCommand(correlationId);
+            var result = new ChargeLinkCommand(correlationId)
+            {
+                Document = document,
+            };
 
             return await Task.FromResult(result).ConfigureAwait(false);
         }
