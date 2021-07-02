@@ -13,7 +13,7 @@
 // limitations under the License.
 
 using System.Collections.Generic;
-using GreenEnergyHub.Charges.Domain.Common;
+using GreenEnergyHub.Charges.Domain.MarketDocument;
 using GreenEnergyHub.Charges.Domain.Messages;
 using GreenEnergyHub.Messaging.MessageTypes.Common;
 using GreenEnergyHub.Messaging.Transport;

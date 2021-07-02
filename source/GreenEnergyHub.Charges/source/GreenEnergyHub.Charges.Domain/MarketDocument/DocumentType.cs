@@ -12,16 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace GreenEnergyHub.Charges.Domain.Common
+namespace GreenEnergyHub.Charges.Domain.MarketDocument
 {
     /// <summary>
-    /// IMPORTANT: This is used in transport so the numbers matters.
+    /// The document type indicates the intended business context of this business message.
     /// </summary>
-    public enum MarketParticipantRole
+    public enum DocumentType
     {
         Unknown = 0,
-        EnergySupplier = 1,
-        GridAccessProvider = 2,
-        SystemOperator = 3,
+        RequestUpdateChargeInformation = 10, // This will be received as D10 in ebiX.
     }
 }

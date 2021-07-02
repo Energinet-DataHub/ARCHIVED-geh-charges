@@ -15,8 +15,7 @@
 using FluentAssertions;
 using GreenEnergyHub.Charges.Application.Validation;
 using GreenEnergyHub.Charges.Application.Validation.BusinessValidation.ValidationRules;
-using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
-using GreenEnergyHub.Charges.Domain.Common;
+using GreenEnergyHub.Charges.Domain.MarketDocument;
 using GreenEnergyHub.Charges.TestCore;
 using GreenEnergyHub.TestHelpers;
 using JetBrains.Annotations;

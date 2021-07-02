@@ -15,7 +15,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
-using GreenEnergyHub.Charges.Domain.Common;
+using GreenEnergyHub.Charges.Domain.MarketDocument;
 using GreenEnergyHub.Charges.Infrastructure.Context;
 using GreenEnergyHub.Charges.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
@@ -120,7 +120,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
                     Type = DocumentType.RequestUpdateChargeInformation,
                     IndustryClassification = IndustryClassification.Electricity,
                     CreatedDateTime = SystemClock.Instance.GetCurrentInstant(),
-                    Sender = new Domain.Common.MarketParticipant
+                    Sender = new Domain.MarketDocument.MarketParticipant
                     {
                         Id = MarketParticipantId,
                         Name = "Name",

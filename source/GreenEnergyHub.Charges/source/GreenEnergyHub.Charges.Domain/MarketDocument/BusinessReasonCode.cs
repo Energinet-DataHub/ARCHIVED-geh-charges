@@ -11,14 +11,15 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-namespace GreenEnergyHub.Charges.Domain.Common
+
+namespace GreenEnergyHub.Charges.Domain.MarketDocument
 {
     /// <summary>
-    /// IndustryClassification indicates the industry context. E.g. if a Charge price list is related to electricity.
+    /// BusinessReasonCode indicates the intended business context.
     /// </summary>
-    public enum IndustryClassification
+    public enum BusinessReasonCode
     {
         Unknown = 0,
-        Electricity = 23,
+        UpdateChargeInformation = 18, // This will be received as D18 in ebiX.
     }
 }

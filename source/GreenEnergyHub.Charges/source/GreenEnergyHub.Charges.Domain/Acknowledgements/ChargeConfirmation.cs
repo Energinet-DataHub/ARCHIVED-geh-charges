@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using GreenEnergyHub.Charges.Domain.Common;
+using GreenEnergyHub.Charges.Domain.MarketDocument;
 using GreenEnergyHub.Charges.Domain.Messages;
 using GreenEnergyHub.Messaging.MessageTypes.Common;
 using GreenEnergyHub.Messaging.Transport;
