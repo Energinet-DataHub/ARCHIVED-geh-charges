@@ -93,7 +93,8 @@ namespace GreenEnergyHub.Charges.Infrastructure.Messaging.Serialization.MarketDo
                 }
                 else if (reader.Is(CimDocumentConverterConstants.IndustryClassification, ns))
                 {
-                    // We do not actually use this field, but we need to handle it non-the-less
+                    var content = await reader.ReadElementContentAsStringAsync().ConfigureAwait(false);
+                    document.IndustryClassification = IndustryClassificationMapper.Map(content);
                     continue;
                 }
                 else if (reader.Is(CimDocumentConverterConstants.SenderId, ns))
