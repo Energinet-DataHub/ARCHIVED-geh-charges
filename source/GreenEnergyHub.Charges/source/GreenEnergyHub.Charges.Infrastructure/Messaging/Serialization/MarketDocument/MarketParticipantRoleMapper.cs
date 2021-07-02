@@ -25,6 +25,10 @@ namespace GreenEnergyHub.Charges.Infrastructure.Messaging.Serialization.MarketDo
                 "DDQ" => MarketParticipantRole.EnergySupplier,
                 "DDM" => MarketParticipantRole.GridAccessProvider,
                 "EZ" => MarketParticipantRole.SystemOperator,
+                "MDR" => MarketParticipantRole.MeteredDataResponsible,
+                "STS" => MarketParticipantRole.EnergyAgency,
+                "DGL" => MarketParticipantRole.MeteredDataAdministrator,
+                "DDZ" => MarketParticipantRole.MeteringPointAdministrator,
                 _ => MarketParticipantRole.Unknown
             };
         }
