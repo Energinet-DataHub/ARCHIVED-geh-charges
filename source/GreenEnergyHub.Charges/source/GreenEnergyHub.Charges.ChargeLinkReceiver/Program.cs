@@ -13,6 +13,8 @@
 // limitations under the License.
 
 using GreenEnergyHub.Charges.Infrastructure.Messaging;
+using GreenEnergyHub.Charges.Infrastructure.Messaging.Serialization.Commands;
+using GreenEnergyHub.Messaging.Transport;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using NodaTime;
@@ -36,8 +38,15 @@ namespace GreenEnergyHub.Charges.ChargeLinkReceiver
             serviceCollection.AddScoped(typeof(IClock), _ => SystemClock.Instance);
             serviceCollection.AddLogging();
 
-            //TODO: This line will not be needed once we use the messaging framework in this function
-            serviceCollection.AddScoped<ICorrelationContext, CorrelationContext>();
+            ConfigureMessaging(serviceCollection);
+        }
+
+        private static void ConfigureMessaging(IServiceCollection services)
+        {
+            services.AddScoped<ICorrelationContext, CorrelationContext>();
+            services.AddScoped<MessageExtractor>();
+            services.AddScoped<ChargeLinkCommandConverter>();
+            services.AddScoped<MessageDeserializer, ChargeLinkCommandDeserializer>();
         }
     }
 }

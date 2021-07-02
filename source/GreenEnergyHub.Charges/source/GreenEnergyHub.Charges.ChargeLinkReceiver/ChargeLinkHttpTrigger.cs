@@ -15,7 +15,9 @@
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Threading.Tasks;
+using GreenEnergyHub.Charges.Domain.ChargeLinks;
 using GreenEnergyHub.Charges.Infrastructure.Messaging;
+using GreenEnergyHub.Messaging.Transport;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
@@ -31,13 +33,16 @@ namespace GreenEnergyHub.Charges.ChargeLinkReceiver
         /// </summary>
         private const string FunctionName = "ChargeLinkHttpTrigger";
         private readonly ICorrelationContext _correlationContext;
+        private readonly MessageExtractor _messageExtractor;
         private readonly ILogger _log;
 
         public ChargeLinkHttpTrigger(
             ICorrelationContext correlationContext,
+            MessageExtractor messageExtractor,
             [NotNull] ILoggerFactory loggerFactory)
         {
             _correlationContext = correlationContext;
+            _messageExtractor = messageExtractor;
             _log = loggerFactory.CreateLogger(nameof(ChargeLinkHttpTrigger));
         }
 
@@ -47,16 +52,33 @@ namespace GreenEnergyHub.Charges.ChargeLinkReceiver
             [NotNull] HttpRequestData req,
             [NotNull] FunctionContext context)
         {
-            _log.LogInformation("Function {FunctionName} started to process a request, with a length of {SizeOfMessage}", FunctionName, req.Body.Length);
+            _log.LogInformation("Function {FunctionName} started to process a request", FunctionName);
 
             SetupCorrelationContext(context);
 
-            return await Task.FromResult(new OkResult()).ConfigureAwait(false);
+            var command = await GetChargeLinkCommandAsync(req.Body).ConfigureAwait(false);
+
+            return new OkObjectResult(command);
+        }
+
+        private static async Task<byte[]> ConvertStreamToBytesAsync(Stream stream)
+        {
+            using var ms = new MemoryStream();
+            await stream.CopyToAsync(ms).ConfigureAwait(false);
+            return ms.ToArray();
         }
 
         private void SetupCorrelationContext(FunctionContext context)
         {
             _correlationContext.CorrelationId = context.InvocationId;
+        }
+
+        private async Task<ChargeLinkCommand> GetChargeLinkCommandAsync(Stream stream)
+        {
+            var message = await ConvertStreamToBytesAsync(stream).ConfigureAwait(false);
+            var command = (ChargeLinkCommand)await _messageExtractor.ExtractAsync(message).ConfigureAwait(false);
+
+            return command;
         }
     }
 }
