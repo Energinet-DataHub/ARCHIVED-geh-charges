@@ -14,7 +14,7 @@
 
 using System.Collections.Generic;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
-using GreenEnergyHub.Charges.Domain.Common;
+using GreenEnergyHub.Charges.Domain.MarketDocument;
 using NodaTime;
 
 namespace GreenEnergyHub.Charges.Tests.Builders

@@ -13,10 +13,9 @@
 // limitations under the License.
 
 using System;
-using GreenEnergyHub.Charges.Domain;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
-using GreenEnergyHub.Charges.Domain.Common;
-using MarketParticipant = GreenEnergyHub.Charges.Domain.Common.MarketParticipant;
+using GreenEnergyHub.Charges.Domain.MarketDocument;
+using MarketParticipant = GreenEnergyHub.Charges.Domain.MarketDocument.MarketParticipant;
 
 namespace GreenEnergyHub.Charges.Application
 {
