@@ -12,12 +12,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace GreenEnergyHub.Charges.Domain.Events.Integration
+using Google.Protobuf;
+using GreenEnergyHub.Messaging.Transport;
+
+namespace GreenEnergyHub.Charges.Infrastructure.Transport.Protobuf
 {
     /// <summary>
-    /// Contract for events.
+    /// Maps an object to proto buf <see cref="IMessage"/>
     /// </summary>
-    public interface IIntegrationEvent : IEvent
+    public abstract class ProtobufOutboundMapper
     {
+        /// <summary>
+        /// Map application message to protobuf
+        /// </summary>
+        /// <param name="obj">Object to map</param>
+        /// <returns>Proto buf message</returns>
+        public abstract IMessage Convert(IOutboundMessage obj);
     }
 }

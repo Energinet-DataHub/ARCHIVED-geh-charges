@@ -1,0 +1,135 @@
+/* Copyright 2020 Energinet DataHub A/S
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License2");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+/**
+ * Metering Point Domain related messages.
+ */
+syntax = "proto3";
+
+// import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "Energinet.DataHub.MeteringPoints.IntegrationEventContracts";
+
+/**
+ * Represents the creation of a metering point.
+ */
+message MeteringPointCreated {
+    string metering_point_id = 1; // Unique metering point identifier.
+    string metering_point_type = 2; // Defines the type of metering point created.
+    string metering_grid_area = 3; // Indicates the metering grid area in which the metering point is created.
+    string to_grid = 4;  // If an Exchange MP is created, this field indicates the outgoing grid.
+    string from_grid = 5; // If an Exchange MP is created, this field indicates the incoming grid.
+    string settlement_method = 6; // If a Consumption or Net loss correction metering point is created, this field indicates the settlement method.
+    string metering_method = 7; // This indicates if the metering point created is physical, virtual, or calculated.
+    string meter_reading_periodicity = 8; // This indicates the reading periodicity.
+    string connection_state = 9; // This indicates the connection state upon creation.
+    string net_settlement_group = 10; // This indicates the net settlement group.
+    string product = 11; // This indicates the energy product.
+    string quantity_unit = 12; // This indicates the quantity unit, eg. kWh.
+    string parent_metering_point_id = 13; // Unique identifier of associated parent metering point. This field is empty if no parent is set upon creation.
+    string effective_date = 14; // The date on which the metering point is created.
+}
+/**
+ * Represents the connection of a metering point.
+ */
+message MeteringPointConnected {
+    string metering_point_id = 1; // Unique metering point identifier.
+    string effective_date = 2; // The date on which the metering point is connected.
+}
+
+/**
+ * Represents the disconnection of a metering point.
+ */
+message MeteringPointDisconnected {
+    string metering_point_id = 1; // Unique metering point identifier.
+    string effective_date = 2; // The date on which the metering point is disconnected.
+}
+
+/**
+ * Represents the closing of a metering point.
+ */
+message MeteringPointClosed {
+    string metering_point_id = 1; // Unique metering point identifier.
+    string effective_date = 2; // The date on which the metering point is closed.
+}
+
+/**
+ * Represents the cancellation of a metering point. This can only happen for MPs who have never had a supplier.
+ */
+message MeteringPointCancelled {
+    string metering_point_id = 1; // Unique metering point identifier.
+}
+
+/**
+ * Represents the coupling of a parent to a eligible metering point.
+ * If a parent is changed, ie. one is removed and another is coupled, both the coupling and the decoupling messages are sent.
+ */
+message ParentCoupled {
+    string metering_point_id = 1; // Unique metering point identifier of the child metering point.
+    string parent_metering_point_id = 2; // Unique identifier of associated parent metering point.
+    string effective_date = 3; // The date on which the parent is coupled.
+}
+
+/**
+ * Represents the decoupling of a parent to a eligible metering point.
+ * If a parent is changed, ie. one is removed and another is coupled, both the coupling and the decoupling messages are sent.
+ */
+message ParentDecoupled {
+    string metering_point_id = 1; // Unique metering point identifier of the metering point which has the existing parent decoupled.
+    string effective_date = 2; // The date on which the parent is decoupled.
+}
+
+/**
+ * Represents the changing of settlement details. Either the settlement method or the reading periodicity will be changed, or both will be changed.
+ */
+message SettlementDetailsChanged {
+    string metering_point_id = 1; // Unique metering point identifier of the metering point which has its metering method changed.
+    string settlement_method = 2; // The settlement method of the metering point.
+    string meter_reading_periodicity = 3; // The reading periodicity of the metering point.
+    string effective_date = 4; // The date on which the settlement details are change.
+}
+
+/**
+ * Represents the changing of the Metering Method.
+ */
+message MeteringMethodChanged {
+    string metering_point_id = 1; // Unique metering point identifier of the metering point which has its settlement details changed.
+    string metering_method = 2; // This indicates if the metering point is now physical, virtual, or calculated.
+    string effective_date = 3; // The date on which the metering method is changed.
+}
+
+/**
+ * Represents the changing of the Net Settlement Group.
+ */
+message NetSettlementGroupChanged {
+    string metering_point_id = 1; // Unique metering point identifier of the metering point which has its net settlement group changed.
+    string net_settlement_group = 2; // This indicates if the new net settlement group.
+    string effective_date = 3; // The date on which the net settlement group is changed.
+}
+
+message IntegrationEventEnvelope {
+    oneof IntegrationEventMessages {
+        MeteringPointCreated meteringPointCreatedMessage = 1;
+        MeteringPointConnected meteringPointConnectedMessage = 2;
+        MeteringPointDisconnected meteringPointDisconnectedMessage = 3;
+        MeteringPointClosed meteringPointClosedMessage = 4;
+        MeteringPointCancelled meteringPointCancelledMessage = 5;
+        ParentCoupled parentCoupledMessage = 6;
+        ParentDecoupled parentDecoupledMessage = 7;
+        SettlementDetailsChanged settlementDetailsChangedMessage = 8;
+        MeteringMethodChanged meteringMethodChangedMessage = 9;
+        NetSettlementGroupChanged netSettlementGroupChangedMessage = 10;
+    }
+}

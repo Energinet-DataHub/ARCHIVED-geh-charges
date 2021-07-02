@@ -46,7 +46,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Messaging.Registration
         /// </summary>
         public MessagingRegistrator AddMessageDispatcher<TOutboundMessage>(
             string serviceBusConnectionString,
-            string serviceBusTopicName)
+            string serviceBusQueueOrTopicName)
             where TOutboundMessage : IOutboundMessage
         {
             _services.AddScoped<IMessageDispatcher<TOutboundMessage>, MessageDispatcher<TOutboundMessage>>();
@@ -57,7 +57,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Messaging.Registration
                 _ =>
                 {
                     var client = new ServiceBusClient(serviceBusConnectionString);
-                    var instance = client.CreateSender(serviceBusTopicName);
+                    var instance = client.CreateSender(serviceBusQueueOrTopicName);
                     return new ServiceBusSender<TOutboundMessage>(instance);
                 });
 

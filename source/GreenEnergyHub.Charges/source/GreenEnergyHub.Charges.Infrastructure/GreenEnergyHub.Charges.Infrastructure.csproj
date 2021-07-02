@@ -15,23 +15,36 @@ limitations under the License.
 -->
 <Project Sdk="Microsoft.NET.Sdk">
 
-    <PropertyGroup>
-        <TargetFramework>netcoreapp3.1</TargetFramework>
-        <Nullable>enable</Nullable>
-        <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-        <RunAnalyzersDuringBuild>true</RunAnalyzersDuringBuild>
-        <GenerateDocumentationFile>true</GenerateDocumentationFile>
-        <LangVersion>9</LangVersion>
-    </PropertyGroup>
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <Nullable>enable</Nullable>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <RunAnalyzersDuringBuild>true</RunAnalyzersDuringBuild>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <LangVersion>9</LangVersion>
+  </PropertyGroup>
 
-    <ItemGroup>
-      <ProjectReference Include="..\GreenEnergyHub.Charges.Application\GreenEnergyHub.Charges.Application.csproj" />
-      <ProjectReference Include="..\GreenEnergyHub.Charges.Domain\GreenEnergyHub.Charges.Domain.csproj" />
-    </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\GreenEnergyHub.Charges.Application\GreenEnergyHub.Charges.Application.csproj" />
+    <ProjectReference Include="..\GreenEnergyHub.Charges.Domain\GreenEnergyHub.Charges.Domain.csproj" />
+  </ItemGroup>
 
-    <ItemGroup>
-      <PackageReference Include="JetBrains.Annotations" Version="2021.1.0" />
-      <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.16" />
-    </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="JetBrains.Annotations" Version="2021.1.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.16" />
+    <PackageReference Include="Google.Protobuf" Version="3.15.8" />
+    <PackageReference Include="Grpc.Tools" Version="2.37.0" PrivateAssets="All" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Protobuf Include="**/*.proto">
+      <GrpcServices>None</GrpcServices>
+      <Access>Public</Access>
+      <ProtoCompile>True</ProtoCompile>
+      <CompileOutputs>True</CompileOutputs>
+      <OutputDir>obj\Debug\net5.0\</OutputDir>
+      <Generator>MSBuild:Compile</Generator>
+    </Protobuf>
+  </ItemGroup>
 
 </Project>
