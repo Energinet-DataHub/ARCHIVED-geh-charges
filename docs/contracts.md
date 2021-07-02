@@ -67,7 +67,7 @@ Represents the discontinuation of a charge.
 | ChargeType | enum |  | The type of charge; tariff, fee or subscription |
 | ChargeOwner | string |  | A charge owner identification, e.g. the Market Participant's GLN or EIC number |
 | CorrelationId | string |  | The associated correlation id of the processed charge request |
-| Discontinued (TBD) | bit |  | Undecided |
+| EffectiveDate (TBD) | Timestamp (UTC) |  | Undecided |
 
 <a name=".ChargeDiscontinuationCancelled"></a>
 
