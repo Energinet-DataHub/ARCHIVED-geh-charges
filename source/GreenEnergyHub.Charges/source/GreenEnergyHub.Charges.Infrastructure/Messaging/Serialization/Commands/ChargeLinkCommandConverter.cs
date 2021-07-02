@@ -23,9 +23,19 @@ namespace GreenEnergyHub.Charges.Infrastructure.Messaging.Serialization.Commands
 {
     public class ChargeLinkCommandConverter : DocumentConverter
     {
+        private readonly ICorrelationContext _correlationContext;
+
+        public ChargeLinkCommandConverter(
+            ICorrelationContext correlationContext)
+        {
+            _correlationContext = correlationContext;
+        }
+
         protected override async Task<IInboundMessage> ConvertSpecializedContentAsync(XmlReader reader, Document document)
         {
-            var result = new ChargeLinkCommand(string.Empty);
+            var correlationId = _correlationContext.CorrelationId;
+
+            var result = new ChargeLinkCommand(correlationId);
 
             return await Task.FromResult(result).ConfigureAwait(false);
         }
