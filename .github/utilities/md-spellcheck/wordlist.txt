@@ -1,6 +1,7 @@
 ﻿### This file contains the list of words to be ignored by spell check
 ADR
 Architechtural
+ChargeCreated
 ChargeDiscontinuationCancelled
 ChargeDiscontinued
 ChargeId
@@ -30,6 +31,7 @@ GLN
 GreenEnergyHub
 Energinet
 IaC
+IntegrationEventContract
 mergeable
 MPL
 namespace

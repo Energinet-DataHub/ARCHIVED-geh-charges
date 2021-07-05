@@ -54,7 +54,7 @@ This event contains the new period as well other periods that were adjusted by i
 | CompleteUpdatePeriodEndDateTime | Timestamp (UTC) | required | The end point of the latest charge period reported in this event, if that period's EndDateTime is null, the Timestamp equivalent to 31/12/9999 will be used |
 | ChargePeriods | [ChargePeriodsUpdated.ChargePeriod](#.ChargePeriodsUpdated.ChargePeriod) | required | A list with the updated charge period as well as any adjusted charge periods |
 
-<a name="ChargePeriodsUpdated.ChargePeriod"></a>
+<a name=".ChargePeriodsUpdated.ChargePeriod"></a>
 
 #### ChargePeriodsUpdated.ChargePeriod
 
