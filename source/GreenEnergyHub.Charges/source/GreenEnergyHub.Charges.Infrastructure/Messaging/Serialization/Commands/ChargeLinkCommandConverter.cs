@@ -53,18 +53,23 @@ namespace GreenEnergyHub.Charges.Infrastructure.Messaging.Serialization.Commands
 
         private static async Task<ChargeLink> ParseChargeLinkAsync(XmlReader reader)
         {
-            var series = new ChargeLink();
+            var link = new ChargeLink();
 
             while (await reader.ReadAsync().ConfigureAwait(false))
             {
                 if (reader.Is(CimChargeLinkCommandConstants.Id, CimChargeLinkCommandConstants.Namespace))
                 {
                     var content = await reader.ReadElementContentAsStringAsync().ConfigureAwait(false);
-                    series.Id = content;
+                    link.Id = content;
+                }
+                else if (reader.Is(CimChargeLinkCommandConstants.MeteringPointId, CimChargeLinkCommandConstants.Namespace))
+                {
+                    var content = await reader.ReadElementContentAsStringAsync().ConfigureAwait(false);
+                    link.MeteringPointId = content;
                 }
             }
 
-            return series;
+            return link;
         }
     }
 }

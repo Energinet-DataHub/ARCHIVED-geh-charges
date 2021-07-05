@@ -22,5 +22,7 @@ namespace GreenEnergyHub.Charges.Domain.ChargeLinks
         /// Contains a unique ID for the specific link, provided by the sender.
         /// </summary>
         public string Id { get; set; }
+
+        public string MeteringPointId { get; set; }
     }
 }

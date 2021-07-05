@@ -28,5 +28,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Messaging.Serialization.Commands
         internal const string Namespace = "urn:ebix:org:RequestChangeBillingMasterData:1:0";
 
         internal const string Id = "mRID";
+
+        internal const string MeteringPointId = "marketEvaluationPoint.mRID";
     }
 }
