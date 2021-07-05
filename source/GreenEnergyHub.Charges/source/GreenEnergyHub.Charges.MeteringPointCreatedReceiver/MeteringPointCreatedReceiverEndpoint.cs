@@ -16,7 +16,6 @@ using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Domain.Events.Integration;
-using GreenEnergyHub.Charges.Infrastructure.Messaging;
 using GreenEnergyHub.Messaging.Transport;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -62,8 +61,6 @@ namespace GreenEnergyHub.Charges.MeteringPointCreatedReceiver
             [NotNull] HttpRequest req,
             ILogger log)
         {
-            //var meteringPointCreatedEvent = MeteringPointCreatedEventMessage.Parser.ParseFrom(data);
-            //var meteringPointCreatedEvent = await _messageExtractor.ExtractAsync(req.Body).ConfigureAwait(false);
             var meteringPointCreatedEvent = new MeteringPointCreatedEvent(
                 "mpi",
                 "mpt",

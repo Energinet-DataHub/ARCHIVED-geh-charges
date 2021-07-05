@@ -32,7 +32,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Integration.Mappers
                 ConnectionState = obj.ConnectionState,
                 FromGrid = obj.FromGrid,
                 ToGrid = obj.ToGrid,
-                //MeteringGridArea =
+                MeteringGridArea = obj.GridAreaId,
                 MeteringMethod = obj.MeteringMethod,
                 MeteringPointType = obj.MeteringPointType,
                 MeterReadingPeriodicity = obj.MeterReadingPeriodicity,

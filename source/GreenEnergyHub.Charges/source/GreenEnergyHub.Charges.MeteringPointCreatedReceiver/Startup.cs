@@ -16,11 +16,7 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using Azure.Messaging.ServiceBus;
 using Energinet.DataHub.MeteringPoints.IntegrationEventContracts;
-using GreenEnergyHub.Charges.Domain.Acknowledgements;
-using GreenEnergyHub.Charges.Domain.Events.Integration;
-using GreenEnergyHub.Charges.Domain.Events.Local;
 using GreenEnergyHub.Charges.Infrastructure.Messaging;
-using GreenEnergyHub.Charges.Infrastructure.Messaging.Registration;
 using GreenEnergyHub.Charges.Infrastructure.Transport;
 using GreenEnergyHub.Charges.Infrastructure.Transport.Protobuf.Integration;
 using GreenEnergyHub.Charges.MeteringPointCreatedReceiver;
@@ -53,13 +49,7 @@ namespace GreenEnergyHub.Charges.MeteringPointCreatedReceiver
 
             var connectionString = Environment.GetEnvironmentVariable("METERING_POINT_CREATED_LISTENER_CONNECTION_STRING");
             var topicName = Environment.GetEnvironmentVariable("METERING_POINT_CREATED_TOPIC_NAME");
-            builder.Services.AddScoped<ServiceBusSender>(sp => new ServiceBusClient(connectionString).CreateSender(topicName));
-        }
-
-        private static string GetEnv(string variableName)
-        {
-            return Environment.GetEnvironmentVariable(variableName) ??
-                   throw new Exception($"Function app is missing required environment variable '{variableName}'");
+            builder.Services.AddScoped(sp => new ServiceBusClient(connectionString).CreateSender(topicName));
         }
     }
 }
