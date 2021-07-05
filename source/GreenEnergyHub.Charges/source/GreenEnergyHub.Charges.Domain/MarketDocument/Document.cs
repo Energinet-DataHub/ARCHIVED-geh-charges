@@ -36,7 +36,7 @@ namespace GreenEnergyHub.Charges.Domain.MarketDocument
         /// <summary>
         ///  Point in time set by the Charges domain
         /// </summary>
-        public Instant RequestDate { get; set; } = SystemClock.Instance.GetCurrentInstant();
+        public Instant RequestDate { get; set; }
 
         public DocumentType Type { get; set; }
 
