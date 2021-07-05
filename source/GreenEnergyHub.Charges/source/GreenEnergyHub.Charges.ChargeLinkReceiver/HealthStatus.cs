@@ -12,26 +12,35 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.Functions.Worker;
+using Microsoft.Azure.Functions.Worker.Http;
 using Microsoft.Extensions.Logging;
 
 namespace GreenEnergyHub.Charges.ChargeLinkReceiver
 {
-    public static class HealthStatus
+    public class HealthStatus
     {
+        private readonly ILogger _log;
+
+        public HealthStatus([NotNull] ILoggerFactory loggerFactory)
+        {
+            _log = loggerFactory.CreateLogger(nameof(HealthStatus));
+        }
+
         /// <summary>
         /// HTTP GET endpoint that can be used to monitor the health of the function app.
         /// </summary>
         [Function(nameof(HealthStatus))]
-        public static Task<IActionResult> RunAsync(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = null)] HttpRequest req,
-            ILogger log)
+        public Task<IActionResult> RunAsync(
+            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = null)]
+            [NotNull] HttpRequestData req,
+            [NotNull] FunctionContext context)
         {
-            log.LogInformation("Health Status API invoked");
-            log.LogDebug("Workaround for unused method argument", req);
+            _log.LogInformation("Health Status API invoked");
+            _log.LogDebug("Workaround for unused method arguments", req, context);
 
             /* Consider checking access to used Service Bus topics and other health checks */
 
@@ -42,5 +51,6 @@ namespace GreenEnergyHub.Charges.ChargeLinkReceiver
 
             return Task.FromResult<IActionResult>(new JsonResult(status));
         }
+
     }
 }
