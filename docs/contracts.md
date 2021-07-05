@@ -34,7 +34,6 @@ Represents the creation of a new charge.
 | Resolution | enum | required | The resolution of a charge price list, e.g. 15 min, hourly, daily, monthly |
 | TaxIndicator | bit | required | Indicates whether a tariff is considered a tax or not, 1 = true |
 | ChargePeriod | [ChargePeriod](#.ChargePeriod) | required | Contains the charge's validity period  |
-|  |  |  |  |
 
 <a name=".ChargePeriod"></a>
 
