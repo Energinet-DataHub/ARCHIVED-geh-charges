@@ -18,6 +18,7 @@ using GreenEnergyHub.Charges.Domain.ChargeLinks;
 using GreenEnergyHub.Charges.Domain.MarketDocument;
 using GreenEnergyHub.Charges.Infrastructure.Messaging.Serialization.MarketDocument;
 using GreenEnergyHub.Messaging.Transport;
+using NodaTime;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Messaging.Serialization.Commands
 {
@@ -26,7 +27,9 @@ namespace GreenEnergyHub.Charges.Infrastructure.Messaging.Serialization.Commands
         private readonly ICorrelationContext _correlationContext;
 
         public ChargeLinkCommandConverter(
-            ICorrelationContext correlationContext)
+            ICorrelationContext correlationContext,
+            IClock clock)
+            : base(clock)
         {
             _correlationContext = correlationContext;
         }

@@ -23,6 +23,13 @@ namespace GreenEnergyHub.Charges.Infrastructure.Messaging.Serialization.MarketDo
 {
     public abstract class DocumentConverter
     {
+        private readonly IClock _clock;
+
+        protected DocumentConverter(IClock clock)
+        {
+            _clock = clock;
+        }
+
         public async Task<IInboundMessage> ConvertAsync([NotNull] XmlReader reader)
         {
             var document = await ParseDocumentAsync(reader).ConfigureAwait(false);
@@ -44,19 +51,6 @@ namespace GreenEnergyHub.Charges.Infrastructure.Messaging.Serialization.MarketDo
         private static bool IfRootElementIsNotAssigned(string rootElement, string rootNamespace)
         {
             return rootElement.Length == 0 && rootNamespace.Length == 0;
-        }
-
-        private static async Task<Document> ParseDocumentAsync(XmlReader reader)
-        {
-            var document = new Document()
-            {
-                Sender = new MarketParticipant(),
-                Recipient = new MarketParticipant(),
-            };
-
-            await ParseFieldsAsync(reader, document).ConfigureAwait(false);
-
-            return document;
         }
 
         private static async Task ParseFieldsAsync(XmlReader reader, Document document)
@@ -129,6 +123,20 @@ namespace GreenEnergyHub.Charges.Infrastructure.Messaging.Serialization.MarketDo
                     break;
                 }
             }
+        }
+
+        private async Task<Document> ParseDocumentAsync(XmlReader reader)
+        {
+            var document = new Document()
+            {
+                Sender = new MarketParticipant(),
+                Recipient = new MarketParticipant(),
+                RequestDate = _clock.GetCurrentInstant(),
+            };
+
+            await ParseFieldsAsync(reader, document).ConfigureAwait(false);
+
+            return document;
         }
     }
 }
