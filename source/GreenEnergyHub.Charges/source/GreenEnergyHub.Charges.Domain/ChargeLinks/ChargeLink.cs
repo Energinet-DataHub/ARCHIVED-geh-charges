@@ -12,23 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Diagnostics.CodeAnalysis;
-using GreenEnergyHub.Charges.Domain.Command;
-using GreenEnergyHub.Charges.Domain.MarketDocument;
-
 #pragma warning disable 8618
 
 namespace GreenEnergyHub.Charges.Domain.ChargeLinks
 {
-    public class ChargeLinkCommand : CommandBase
+    public class ChargeLink
     {
-        public ChargeLinkCommand([NotNull] string correlationId)
-            : base(correlationId)
-        {
-        }
-
-        public Document Document { get; set; }
-
-        public ChargeLink ChargeLink { get; set; }
+        /// <summary>
+        /// Contains a unique ID for the specific link, provided by the sender.
+        /// </summary>
+        public string Id { get; set; }
     }
 }

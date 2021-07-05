@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using System.Xml;
 using GreenEnergyHub.Charges.Domain.ChargeLinks;
@@ -34,16 +35,36 @@ namespace GreenEnergyHub.Charges.Infrastructure.Messaging.Serialization.Commands
             _correlationContext = correlationContext;
         }
 
-        protected override async Task<IInboundMessage> ConvertSpecializedContentAsync(XmlReader reader, Document document)
+        protected override async Task<IInboundMessage> ConvertSpecializedContentAsync(
+            [NotNull] XmlReader reader,
+            [NotNull] Document document)
         {
             var correlationId = _correlationContext.CorrelationId;
 
-            var result = new ChargeLinkCommand(correlationId)
+            var command = new ChargeLinkCommand(correlationId)
             {
                 Document = document,
             };
 
-            return await Task.FromResult(result).ConfigureAwait(false);
+            command.ChargeLink = await ParseChargeLinkAsync(reader).ConfigureAwait(false);
+
+            return command;
+        }
+
+        private static async Task<ChargeLink> ParseChargeLinkAsync(XmlReader reader)
+        {
+            var series = new ChargeLink();
+
+            while (await reader.ReadAsync().ConfigureAwait(false))
+            {
+                if (reader.Is(CimChargeLinkCommandConstants.Id, CimChargeLinkCommandConstants.Namespace))
+                {
+                    var content = await reader.ReadElementContentAsStringAsync().ConfigureAwait(false);
+                    series.Id = content;
+                }
+            }
+
+            return series;
         }
     }
 }
