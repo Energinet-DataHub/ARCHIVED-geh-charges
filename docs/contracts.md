@@ -50,7 +50,9 @@ This event contains the new period as well other periods that were adjusted by i
 | ChargeOwner | string |  | A charge owner identification, e.g. the Market Participant's GLN or EIC number |
 | CompleteUpdatePeriodStartDateTime | Timestamp (UTC) |  | The starting point of the earliest charge period reported in this event |
 | CompleteUpdatePeriodEndDateTime | Timestamp (UTC) |  | The end point of the latest charge period reported in this event, if that period's EndDateTime is null, the Timestamp equivalient to 31/12/9999 will be used |
-| ChargePeriods | [ChargePeriodsUpdated.ChargePeriod](#.ChargePeriodsUpdated.ChargePeriod) |  | A list with the updated charge period as well as any adjusted charge periods |
+| ChargePeriods | [ChargePeriodsUpdated.ChargePeriod](#.ChargePeriodsUpdatedChargePeriod) |  | A list with the updated charge period as well as any adjusted charge periods |
+
+<a name=".ChargePeriodsUpdatedChargePeriod"></a>
 
 #### ChargePeriodsUpdated.ChargePeriod
 
