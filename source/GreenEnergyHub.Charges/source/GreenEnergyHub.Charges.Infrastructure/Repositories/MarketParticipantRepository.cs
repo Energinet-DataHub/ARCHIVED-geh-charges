@@ -14,10 +14,9 @@
 
 using System.Linq;
 using GreenEnergyHub.Charges.Application.ChangeOfCharges.Repositories;
-using GreenEnergyHub.Charges.Domain.Common;
+using GreenEnergyHub.Charges.Domain.MarketDocument;
 using GreenEnergyHub.Charges.Infrastructure.Context;
 using GreenEnergyHub.Charges.Infrastructure.Mapping;
-using GreenEnergyHub.Charges.Infrastructure.Repositories.QueryLogic;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Repositories
 {

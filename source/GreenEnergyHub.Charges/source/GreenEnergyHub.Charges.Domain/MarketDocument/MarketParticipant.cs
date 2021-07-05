@@ -13,7 +13,7 @@
 // limitations under the License.
 
 #pragma warning disable 8618
-namespace GreenEnergyHub.Charges.Domain.Common
+namespace GreenEnergyHub.Charges.Domain.MarketDocument
 {
     // Non-nullable member is uninitialized is ignored
     // Only properties which is allowed to be null is nullable
