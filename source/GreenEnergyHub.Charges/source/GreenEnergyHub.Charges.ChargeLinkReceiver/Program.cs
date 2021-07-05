@@ -14,10 +14,12 @@
 
 using GreenEnergyHub.Charges.Infrastructure.Messaging;
 using GreenEnergyHub.Charges.Infrastructure.Messaging.Serialization.Commands;
+using GreenEnergyHub.Json;
 using GreenEnergyHub.Messaging.Transport;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using NodaTime;
+using JsonSerializer = GreenEnergyHub.Charges.Core.Json.JsonSerializer;
 
 namespace GreenEnergyHub.Charges.ChargeLinkReceiver
 {
@@ -47,6 +49,7 @@ namespace GreenEnergyHub.Charges.ChargeLinkReceiver
             services.AddScoped<MessageExtractor>();
             services.AddScoped<ChargeLinkCommandConverter>();
             services.AddScoped<MessageDeserializer, ChargeLinkCommandDeserializer>();
+            services.AddScoped<IJsonSerializer, JsonSerializer>(); // TODO Remove this once we move to protobuf
         }
     }
 }
