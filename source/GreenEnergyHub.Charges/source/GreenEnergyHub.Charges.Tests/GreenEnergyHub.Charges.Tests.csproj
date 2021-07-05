@@ -50,4 +50,11 @@ limitations under the License.
     <ItemGroup>
       <Compile Remove="Charges.MessageReceiver\ChargeHttpTriggerTests.cs" />
     </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="TestFiles\Valid_CIM_ChargeLink.xml" />
+      <EmbeddedResource Include="TestFiles\Valid_CIM_ChargeLink.xml" />
+      <None Remove="TestFiles\Valid_CIM_ChargeLink_WithUnusedCimContent.xml" />
+      <EmbeddedResource Include="TestFiles\Valid_CIM_ChargeLink_WithUnusedCimContent.xml" />
+    </ItemGroup>
 </Project>
