@@ -5,7 +5,7 @@
 - [IntegrationEventContract.proto](#IntegrationEventContract.proto)
     - [ChargeCreated](#.ChargeCreated)
     - [ChargePeriodsUpdated](#.ChargePeriodsUpdated)
-        - [ChargePeriod](.ChargePeriodsUpdated.ChargePeriod)
+        - [ChargePeriod](#.ChargePeriodsUpdated.ChargePeriod)
     - [ChargeDiscontinued](#.ChargeDiscontinued)
     - [ChargeDiscontinuationCancelled](#.ChargeDiscontinuationCancelled)
     - [ChargePricesUpdated](#.ChargePricesUpdated)
