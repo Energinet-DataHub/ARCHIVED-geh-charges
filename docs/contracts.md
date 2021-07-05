@@ -20,7 +20,7 @@ Charges Domain related integration events
 ### ChargeCreated
 
 Represents the creation of a new charge.
-This event contains the static charge data as well initial charge period data.
+This event contains the static charge data as well the initial charge period data.
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
@@ -48,12 +48,16 @@ This event contains the new period as well other periods that were adjusted by i
 | ChargeType | enum |  | The type of charge; tariff, fee or subscription |
 | ChargeOwner | string |  | A charge owner identification, e.g. the Market Participant's GLN or EIC number |
 | CompleteUpdatePeriodStartDateTime | Timestamp (UTC) |  | The starting point of the earliest charge period reported in this event |
-| CompleteUpdatePeriodEndDateTime | Timestamp (UTC) |  | The end point of the latest charge period reported in this event, if that period's EndDateTime is null, 31/12/9999 is used |
+| CompleteUpdatePeriodEndDateTime | Timestamp (UTC) |  | The end point of the latest charge period reported in this event, if that period's EndDateTime is null, the Timestamp equivalient to 31/12/9999 will be used |
 | CorrelationId | string |  | The associated correlation id of the processed charge request, it is the same for all charge periods below |
-| ChargePeriods |  |  | A list with the updated charge period as well as any adjusted charge periods |
+| ChargePeriods | [ChargePeriodsUpdated.ChargePeriod](#.ChargePeriodsUpdated.ChargePeriod) |  | A list with the updated charge period as well as any adjusted charge periods |
+
+#### ChargePeriodsUpdated.ChargePeriod
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
 | StartDateTime | Timestamp (UTC) |  | The charge period's valid from date and time |
 | EndDateTime | Timestamp (UTC), nullable |  | The charge period's valid to date and time |
-|  |  |  |  |
 
 <a name=".ChargeDiscontinued"></a>
 
@@ -66,8 +70,8 @@ Represents the discontinuation of a charge.
 | ChargeId | string |  | A charge identifier provided by the Market Participant. Combined with Charge Owner it becomes unique  |
 | ChargeType | enum |  | The type of charge; tariff, fee or subscription |
 | ChargeOwner | string |  | A charge owner identification, e.g. the Market Participant's GLN or EIC number |
-| CorrelationId | string |  | The associated correlation id of the processed charge request |
 | EffectiveDate (TBD) | Timestamp (UTC) |  | Undecided |
+| CorrelationId | string |  | The associated correlation id of the processed charge request |
 
 <a name=".ChargeDiscontinuationCancelled"></a>
 
@@ -81,8 +85,8 @@ Represents the cancellation of the charge discontinuation.
 | ChargeId | string |  | A charge identifier provided by the Market Participant. Combined with Charge Owner it becomes unique  |
 | ChargeType | enum |  | The type of charge; tariff, fee or subscription |
 | ChargeOwner | string |  | A charge owner identification, e.g. the Market Participant's GLN or EIC number |
-| CorrelationId | string |  | The associated correlation id of the processed charge request |
 | Discontinued (TBD) | bit |  | Undecided |
+| CorrelationId | string |  | The associated correlation id of the processed charge request |
 
 <a name=".ChargePricesUpdated"></a>
 
@@ -98,3 +102,4 @@ Represents the update of one or more charge prices.
 | PriceListStartDateTime | Timestamp (UTC) |  |  |
 | PriceListEndDateTime | Timestamp (UTC) |  |  |
 | Time | Timestamp (UTC) |  | A point in time where the charge price applies |
+| CorrelationId | string |  | The associated correlation id of the processed charge request |
