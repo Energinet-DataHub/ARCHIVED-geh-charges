@@ -29,6 +29,18 @@ namespace GreenEnergyHub.Charges.Infrastructure.Integration.Mappers
             {
                 MeteringPointId = obj.MeteringPointId,
                 EffectiveDate = obj.EffectiveDate,
+                ConnectionState = obj.ConnectionState,
+                FromGrid = obj.FromGrid,
+                ToGrid = obj.ToGrid,
+                //MeteringGridArea =
+                MeteringMethod = obj.MeteringMethod,
+                MeteringPointType = obj.MeteringPointType,
+                MeterReadingPeriodicity = obj.MeterReadingPeriodicity,
+                NetSettlementGroup = obj.NetSettlementGroup,
+                //ParentMeteringPointId = obj.Pa
+                Product = obj.Product,
+                QuantityUnit = obj.QuantityUnit,
+                SettlementMethod = obj.SettlementMethod,
             };
         }
     }

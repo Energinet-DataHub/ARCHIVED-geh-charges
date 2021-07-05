@@ -42,31 +42,16 @@ namespace GreenEnergyHub.Charges.MeteringPointCreatedReceiver
             _messageDispatcher = messageDispatcher;
         }
 
-        // [FunctionName(FunctionName)]
-        // public async Task RunAsync(
-        //     [ServiceBusTrigger(
-        //         "%METERING_POINT_CREATED_TOPIC_NAME%",
-        //         "%METERING_POINT_CREATED_SUBSCRIPTION_NAME%",
-        //         Connection = "METERING_POINT_CREATED_LISTENER_CONNECTION_STRING")]
-        //     byte[] data,
-        //     ILogger log)
-        // {
-        //     //var meteringPointCreatedEvent = MeteringPointCreatedEventMessage.Parser.ParseFrom(data);
-        //     var meteringPointCreatedEvent = await _messageExtractor.ExtractAsync(data).ConfigureAwait(false);
-        //
-        //     log.LogDebug("Received metering point created event '{@Event}'", meteringPointCreatedEvent);
-        // }
         [FunctionName(FunctionName)]
         public async Task RunAsync(
             [ServiceBusTrigger(
-                "%METERING_POINT_CREATED_QUEUE_NAME%",
-                Connection = "METERING_POINT_CREATED_QUEUE_LISTENER_CONNECTION_STRING")]
+                "%METERING_POINT_CREATED_TOPIC_NAME%",
+                "%METERING_POINT_CREATED_SUBSCRIPTION_NAME%",
+                Connection = "METERING_POINT_CREATED_LISTENER_CONNECTION_STRING")]
             byte[] data,
             ILogger log)
         {
-            //var meteringPointCreatedEvent = MeteringPointCreatedEventMessage.Parser.ParseFrom(data);
             var meteringPointCreatedEvent = await _messageExtractor.ExtractAsync(data).ConfigureAwait(false);
-
             var jsonSerializerOptions = new JsonSerializerOptions { WriteIndented = true };
             log.LogDebug("Received metering point created event '{@Event}'", JsonSerializer.Serialize(meteringPointCreatedEvent, jsonSerializerOptions));
         }

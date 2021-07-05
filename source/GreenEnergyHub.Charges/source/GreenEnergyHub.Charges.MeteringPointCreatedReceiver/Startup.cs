@@ -51,13 +51,9 @@ namespace GreenEnergyHub.Charges.MeteringPointCreatedReceiver
             builder.Services.AddScoped<MessageDispatcher>();
             builder.Services.AddScoped<Channel, ServiceBusChannel>();
 
-            // TODO: User sender connection string
-            var connectionString = "";
-            var topicName = Environment.GetEnvironmentVariable("METERING_POINT_CREATED_QUEUE_NAME");
+            var connectionString = Environment.GetEnvironmentVariable("METERING_POINT_CREATED_LISTENER_CONNECTION_STRING");
+            var topicName = Environment.GetEnvironmentVariable("METERING_POINT_CREATED_TOPIC_NAME");
             builder.Services.AddScoped<ServiceBusSender>(sp => new ServiceBusClient(connectionString).CreateSender(topicName));
-            // container.Register<ServiceBusSender>(
-            //     () => new ServiceBusClient(connectionString).CreateSender(topicName),
-            //     Lifestyle.Singleton);
         }
 
         private static string GetEnv(string variableName)
