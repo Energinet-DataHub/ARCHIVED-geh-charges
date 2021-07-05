@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using System.Threading.Tasks;
 using System.Xml;
 using GreenEnergyHub.Charges.Domain.ChargeLinks;
@@ -79,6 +80,21 @@ namespace GreenEnergyHub.Charges.Infrastructure.Messaging.Serialization.Commands
                 {
                     var content = await reader.ReadElementContentAsStringAsync().ConfigureAwait(false);
                     link.ChargeId = content;
+                }
+                else if (reader.Is(CimChargeLinkCommandConstants.Factor, CimChargeLinkCommandConstants.Namespace))
+                {
+                    var content = await reader.ReadElementContentAsStringAsync().ConfigureAwait(false);
+                    link.Factor = int.Parse(content, CultureInfo.InvariantCulture);
+                }
+                else if (reader.Is(CimChargeLinkCommandConstants.ChargeOwner, CimChargeLinkCommandConstants.Namespace))
+                {
+                    var content = await reader.ReadElementContentAsStringAsync().ConfigureAwait(false);
+                    link.ChargeOwner = content;
+                }
+                else if (reader.Is(CimChargeLinkCommandConstants.ChargeType, CimChargeLinkCommandConstants.Namespace))
+                {
+                    var content = await reader.ReadElementContentAsStringAsync().ConfigureAwait(false);
+                    link.ChargeType = ChargeTypeMapper.Map(content);
                 }
             }
 

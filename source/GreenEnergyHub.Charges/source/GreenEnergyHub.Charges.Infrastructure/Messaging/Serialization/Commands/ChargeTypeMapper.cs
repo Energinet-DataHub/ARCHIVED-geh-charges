@@ -13,31 +13,20 @@
 // limitations under the License.
 
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
-using NodaTime;
 
-#pragma warning disable 8618
-
-namespace GreenEnergyHub.Charges.Domain.ChargeLinks
+namespace GreenEnergyHub.Charges.Infrastructure.Messaging.Serialization.Commands
 {
-    public class ChargeLink
+    public static class ChargeTypeMapper
     {
-        /// <summary>
-        /// Contains a unique ID for the specific link, provided by the sender.
-        /// </summary>
-        public string Id { get; set; }
-
-        public string MeteringPointId { get; set; }
-
-        public Instant StartDateTime { get; set; }
-
-        public Instant? EndDateTime { get; set; }
-
-        public string ChargeId { get; set; }
-
-        public int Factor { get; set; }
-
-        public string ChargeOwner { get; set; }
-
-        public ChargeType ChargeType { get; set; }
+        public static ChargeType Map(string value)
+        {
+            return value switch
+            {
+                "D01" => ChargeType.Subscription,
+                "D02" => ChargeType.Fee,
+                "D03" => ChargeType.Tariff,
+                _ => ChargeType.Unknown
+            };
+        }
     }
 }

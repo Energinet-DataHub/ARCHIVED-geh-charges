@@ -36,5 +36,11 @@ namespace GreenEnergyHub.Charges.Infrastructure.Messaging.Serialization.Commands
         internal const string EndDateTime = "end_DateAndOrTime.dateTime";
 
         internal const string ChargeId = "chargeGroup.chargeType.mRID";
+
+        internal const string Factor = "chargeGroup.chargeType.factor";
+
+        internal const string ChargeOwner = "chargeGroup.chargeType.chargeTypeOwner_MarketParticipant.mRID";
+
+        internal const string ChargeType = "chargeGroup.chargeType.type";
     }
 }
