@@ -67,6 +67,14 @@ namespace GreenEnergyHub.Charges.Infrastructure.Messaging.Serialization.Commands
                     var content = await reader.ReadElementContentAsStringAsync().ConfigureAwait(false);
                     link.MeteringPointId = content;
                 }
+                else if (reader.Is(CimChargeLinkCommandConstants.StartDateTime, CimChargeLinkCommandConstants.Namespace))
+                {
+                    link.StartDateTime = Instant.FromDateTimeUtc(reader.ReadElementContentAsDateTime());
+                }
+                else if (reader.Is(CimChargeLinkCommandConstants.EndDateTime, CimChargeLinkCommandConstants.Namespace))
+                {
+                    link.EndDateTime = Instant.FromDateTimeUtc(reader.ReadElementContentAsDateTime());
+                }
             }
 
             return link;

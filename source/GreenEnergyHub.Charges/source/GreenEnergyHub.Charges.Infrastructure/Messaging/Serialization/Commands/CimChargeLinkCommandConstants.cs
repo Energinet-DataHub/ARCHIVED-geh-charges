@@ -30,5 +30,9 @@ namespace GreenEnergyHub.Charges.Infrastructure.Messaging.Serialization.Commands
         internal const string Id = "mRID";
 
         internal const string MeteringPointId = "marketEvaluationPoint.mRID";
+
+        internal const string StartDateTime = "start_DateAndOrTime.dateTime";
+
+        internal const string EndDateTime = "end_DateAndOrTime.dateTime";
     }
 }

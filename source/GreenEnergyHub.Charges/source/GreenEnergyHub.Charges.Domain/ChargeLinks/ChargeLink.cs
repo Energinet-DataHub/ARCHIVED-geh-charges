@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using NodaTime;
+
 #pragma warning disable 8618
 
 namespace GreenEnergyHub.Charges.Domain.ChargeLinks
@@ -24,5 +26,9 @@ namespace GreenEnergyHub.Charges.Domain.ChargeLinks
         public string Id { get; set; }
 
         public string MeteringPointId { get; set; }
+
+        public Instant StartDateTime { get; set; }
+
+        public Instant? EndDateTime { get; set; }
     }
 }
