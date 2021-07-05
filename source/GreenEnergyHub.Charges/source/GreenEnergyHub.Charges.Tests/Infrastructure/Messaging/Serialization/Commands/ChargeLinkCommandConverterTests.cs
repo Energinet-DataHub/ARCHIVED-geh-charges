@@ -37,7 +37,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Messaging.Serialization.Co
     {
         [Theory]
         [InlineAutoMoqData]
-        public async Task ConvertAsync_WhenCalledWithValidCimMessag_ReturnsParsedObject(
+        public async Task ConvertAsync_WhenCalledWithValidCimMessage_ReturnsParsedObject(
             [NotNull][Frozen] Mock<ICorrelationContext> context,
             [NotNull] ChargeLinkCommandConverter sut)
         {
@@ -75,7 +75,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Messaging.Serialization.Co
 
         [Theory]
         [InlineAutoMoqData]
-        public async Task ConvertAsync_WhenCalledWithValidTimeSeriesContainingUnusedCimContent_ReturnsParsedObject(
+        public async Task ConvertAsync_WhenCalledWithValidCimMessageContainingUnusedCimContent_ReturnsParsedObject(
             [NotNull][Frozen] Mock<ICorrelationContext> context,
             [NotNull] ChargeLinkCommandConverter sut)
         {
@@ -92,6 +92,30 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Messaging.Serialization.Co
             // Assert
             Assert.Equal("DocId_Valid_002", result.Document.Id);
             Assert.Equal("rId_Valid_002", result.ChargeLink.Id);
+
+            await Task.CompletedTask.ConfigureAwait(false);
+        }
+
+        [Theory]
+        [InlineAutoMoqData]
+        public async Task ConvertAsync_WhenCalledWithValidCimMessageWithoutEndDate_ReturnsParsedObject(
+            [NotNull][Frozen] Mock<ICorrelationContext> context,
+            [NotNull] ChargeLinkCommandConverter sut)
+        {
+            // Arrange
+            var correlationId = Guid.NewGuid().ToString();
+            context.Setup(c => c.CorrelationId).Returns(correlationId);
+
+            var stream = GetEmbeddedResource("GreenEnergyHub.Charges.Tests.TestFiles.Valid_CIM_ChargeLink_WithoutEndDate.xml");
+            using var reader = XmlReader.Create(stream, new XmlReaderSettings { Async = true });
+
+            // Act
+            var result = (ChargeLinkCommand)await sut.ConvertAsync(reader).ConfigureAwait(false);
+
+            // Assert
+            Assert.Equal("DocId_Valid_003", result.Document.Id);
+            Assert.Equal("rId_Valid_003", result.ChargeLink.Id);
+            Assert.Null(result.ChargeLink.EndDateTime);
 
             await Task.CompletedTask.ConfigureAwait(false);
         }

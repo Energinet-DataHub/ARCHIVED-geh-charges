@@ -56,5 +56,7 @@ limitations under the License.
       <EmbeddedResource Include="TestFiles\Valid_CIM_ChargeLink.xml" />
       <None Remove="TestFiles\Valid_CIM_ChargeLink_WithUnusedCimContent.xml" />
       <EmbeddedResource Include="TestFiles\Valid_CIM_ChargeLink_WithUnusedCimContent.xml" />
+      <None Remove="TestFiles\Valid_CIM_ChargeLink_WithoutEndDate.xml" />
+      <EmbeddedResource Include="TestFiles\Valid_CIM_ChargeLink_WithoutEndDate.xml" />
     </ItemGroup>
 </Project>
