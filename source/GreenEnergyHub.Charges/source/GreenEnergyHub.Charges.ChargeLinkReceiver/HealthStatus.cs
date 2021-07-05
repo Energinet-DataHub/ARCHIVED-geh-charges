@@ -51,6 +51,5 @@ namespace GreenEnergyHub.Charges.ChargeLinkReceiver
 
             return Task.FromResult<IActionResult>(new JsonResult(status));
         }
-
     }
 }
