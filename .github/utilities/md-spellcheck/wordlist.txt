@@ -1,14 +1,14 @@
 ﻿### This file contains the list of words to be ignored by spell check
 ADR
 Architechtural
+CancelledEndDateTime
 ChargeCreated
 ChargeDiscontinuationCancelled
 ChargeDiscontinued
 ChargeId
 ChargeOwner
 ChargePeriod
-ChargePeriods
-ChargePeriodsUpdated
+ChargePeriodUpdated
 ChargePrice
 ChargePricesUpdated
 ChargeType
@@ -21,7 +21,6 @@ DataHub
 deserialize
 DTO
 ebIX
-EffectiveDate
 EIC
 EndDateTime
 enum

@@ -33,7 +33,7 @@ Represents the creation of a new charge.
 | Currency | string | required | The charge price currency |
 | Resolution | enum | required | The resolution of a charge price list, e.g. 15 min, hourly, daily, monthly |
 | TaxIndicator | bit | required | Indicates whether a tariff is considered a tax or not, 1 = true |
-| ChargePeriod | [ChargePeriod](#.ChargePeriod) | required | The charge period's valid from date and time |
+| ChargePeriod | [ChargePeriod](#.ChargePeriod) | required | Contains the charge's validity period  |
 |  |  |  |  |
 
 <a name=".ChargePeriod"></a>
@@ -58,7 +58,7 @@ Represents the update of a charge period.
 | ChargeId | string | required | A charge identifier provided by the Market Participant. Combined with Charge Owner and Charge Type it becomes unique  |
 | ChargeType | enum | required | The type of charge; tariff, fee or subscription |
 | ChargeOwner | string | required | A charge owner identification, e.g. the Market Participant's GLN or EIC number |
-| ChargePeriod | [ChargePeriod](#.ChargePeriod) | required | A list with the updated charge period as well as any adjusted charge periods |
+| ChargePeriod | [ChargePeriod](#.ChargePeriod) | required | Contains the charge's changed validity period |
 
 <a name=".ChargeDiscontinued"></a>
 
