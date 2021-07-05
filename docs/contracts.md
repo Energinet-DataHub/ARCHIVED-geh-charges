@@ -28,7 +28,7 @@ This event contains the static charge data as well the initial charge period dat
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| ChargeId | string | required | A charge identifier provided by the Market Participant. Combined with Charge Owner it becomes unique  |
+| ChargeId | string | required | A charge identifier provided by the Market Participant. Combined with Charge Owner and Charge Type it becomes unique  |
 | ChargeType | enum | required | The type of charge; tariff, fee or subscription |
 | ChargeOwner | string | required | A charge owner identification, e.g. the Market Participant's GLN or EIC number |
 | Currency | string | required | The charge price currency |
@@ -47,11 +47,11 @@ This event contains the new period as well other periods that were adjusted by i
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| ChargeId | string | required | A charge identifier provided by the Market Participant. Combined with Charge Owner it becomes unique  |
+| ChargeId | string | required | A charge identifier provided by the Market Participant. Combined with Charge Owner and Charge Type it becomes unique  |
 | ChargeType | enum | required | The type of charge; tariff, fee or subscription |
 | ChargeOwner | string | required | A charge owner identification, e.g. the Market Participant's GLN or EIC number |
-| CompleteUpdatePeriodStartDateTime | Timestamp (UTC) | required | The starting point of the earliest charge period reported in this event |
-| CompleteUpdatePeriodEndDateTime | Timestamp (UTC) | required | The end point of the latest charge period reported in this event, if that period's EndDateTime is null, the Timestamp equivalent to 31/12/9999 will be used |
+| UpdatedPeriodStartDateTime | Timestamp (UTC) | required | The starting point of the earliest charge period reported in this event |
+| UpdatedPeriodEndDateTime | Timestamp (UTC) | required | The end point of the latest charge period reported in this event, if that period's EndDateTime is null, the Timestamp equivalent to 31/12/9999 will be used |
 | ChargePeriods | [ChargePeriodsUpdated.ChargePeriod](#.ChargePeriodsUpdated.ChargePeriod) | required | A list with the updated charge period as well as any adjusted charge periods |
 
 <a name=".ChargePeriodsUpdated.ChargePeriod"></a>
@@ -73,7 +73,7 @@ Represents the discontinuation of a charge.
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| ChargeId | string | required | A charge identifier provided by the Market Participant. Combined with Charge Owner it becomes unique  |
+| ChargeId | string | required | A charge identifier provided by the Market Participant. Combined with Charge Owner and Charge Type it becomes unique  |
 | ChargeType | enum | required | The type of charge; tariff, fee or subscription |
 | ChargeOwner | string | required | A charge owner identification, e.g. the Market Participant's GLN or EIC number |
 | EffectiveDate | Timestamp (UTC) | required | The date and time the charge is discontinued |
@@ -86,7 +86,7 @@ Represents the cancellation of the charge discontinuation.
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| ChargeId | string | required | A charge identifier provided by the Market Participant. Combined with Charge Owner it becomes unique  |
+| ChargeId | string | required | A charge identifier provided by the Market Participant. Combined with Charge Owner and Charge Type it becomes unique  |
 | ChargeType | enum | required | The type of charge; tariff, fee or subscription |
 | ChargeOwner | string | required | A charge owner identification, e.g. the Market Participant's GLN or EIC number |
 | EffectiveDate | Timestamp (UTC) | required | The date and time that the cancellation applies (expected to hit a previous discontinuation) |
@@ -99,11 +99,11 @@ Represents the update of one or more charge prices.
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| ChargeId | string | required | A charge identifier provided by the Market Participant. Combined with Charge Owner it becomes unique  |
+| ChargeId | string | required | A charge identifier provided by the Market Participant. Combined with Charge Owner and Charge Type it becomes unique  |
 | ChargeType | enum | required | The type of charge; tariff, fee or subscription |
 | ChargeOwner | string | required | A charge owner identification, e.g. the Market Participant's GLN or EIC number |
-| PriceListStartDateTime | Timestamp (UTC) | required | The time interval covers the entire period of charge prices, the starting point here is equal to the time of the very first charge price in the list  |
-| PriceListEndDateTime | Timestamp (UTC) | required | The time interval covers the entire period of charge prices, the end point here is equal to the time of the last charge price in the list |
+| UpdatedPeriodStartDateTime | Timestamp (UTC) | required | The time interval covers the entire period of charge prices, the starting point here is equal to the time of the very first charge price in the list  |
+| UpdatedPeriodEndDateTime | Timestamp (UTC) | required | The time interval covers the entire period of charge prices, the end point here is equal to the time of the last charge price in the list |
 | Points | [ChargePrice](#.ChargePrice) | required | A list with charge prices |
 
 <a name=".ChargePrice"></a>

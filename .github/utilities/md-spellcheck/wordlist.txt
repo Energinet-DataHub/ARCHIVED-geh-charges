@@ -14,8 +14,8 @@ ChargePricesUpdated
 ChargeType
 CIM
 codecov
-CompleteUpdatePeriodEndDateTime
-CompleteUpdatePeriodStartDateTime
+UpdatedPeriodEndDateTime
+UpdatedPeriodStartDateTime
 composable
 DataHub
 deserialize
@@ -40,8 +40,6 @@ NuGet
 nullable
 PI
 POCO
-PriceListEndDateTime
-PriceListStartDateTime
 proto
 resending
 RSM
