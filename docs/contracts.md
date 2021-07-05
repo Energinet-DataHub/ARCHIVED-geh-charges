@@ -74,7 +74,7 @@ Represents the discontinuation of a charge.
 | ChargeId | string |  | A charge identifier provided by the Market Participant. Combined with Charge Owner it becomes unique  |
 | ChargeType | enum |  | The type of charge; tariff, fee or subscription |
 | ChargeOwner | string |  | A charge owner identification, e.g. the Market Participant's GLN or EIC number |
-| EffectiveDate (TBD) | Timestamp (UTC) |  | Undecided |
+| EffectiveDate | Timestamp (UTC) |  | The date and time the charge is discontinued |
 
 <a name=".ChargeDiscontinuationCancelled"></a>
 
@@ -84,11 +84,10 @@ Represents the cancellation of the charge discontinuation.
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-|  | string |  |  |
 | ChargeId | string |  | A charge identifier provided by the Market Participant. Combined with Charge Owner it becomes unique  |
 | ChargeType | enum |  | The type of charge; tariff, fee or subscription |
 | ChargeOwner | string |  | A charge owner identification, e.g. the Market Participant's GLN or EIC number |
-| Discontinued (TBD) | bit |  | Undecided |
+| EffectiveDate | Timestamp (UTC) |  | The date and time that the cancellation applies (expected to hit a previous discontinuation) |
 
 <a name=".ChargePricesUpdated"></a>
 
@@ -101,6 +100,15 @@ Represents the update of one or more charge prices.
 | ChargeId | string |  | A charge identifier provided by the Market Participant. Combined with Charge Owner it becomes unique  |
 | ChargeType | enum |  | The type of charge; tariff, fee or subscription |
 | ChargeOwner | string |  | A charge owner identification, e.g. the Market Participant's GLN or EIC number |
-| PriceListStartDateTime | Timestamp (UTC) |  |  |
-| PriceListEndDateTime | Timestamp (UTC) |  |  |
+| PriceListStartDateTime | Timestamp (UTC) |  | The time interval covers the entire period of charge prices, the starting point here is equal to the time of the very first charge price in the list  |
+| PriceListEndDateTime | Timestamp (UTC) |  | The time interval covers the entire period of charge prices, the end point here is equal to the time of the last charge price in the list |
+| Points | [ChargePrice](#.ChargePrice) |  | A list with the charge prices |
+
+<a name=".ChargePrice"></a>
+
+#### ChargePrice
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
 | Time | Timestamp (UTC) |  | A point in time where the charge price applies |
+| Price | Decimal(14,6) |  | A charge price |
