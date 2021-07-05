@@ -75,6 +75,11 @@ namespace GreenEnergyHub.Charges.Infrastructure.Messaging.Serialization.Commands
                 {
                     link.EndDateTime = Instant.FromDateTimeUtc(reader.ReadElementContentAsDateTime());
                 }
+                else if (reader.Is(CimChargeLinkCommandConstants.ChargeId, CimChargeLinkCommandConstants.Namespace))
+                {
+                    var content = await reader.ReadElementContentAsStringAsync().ConfigureAwait(false);
+                    link.ChargeId = content;
+                }
             }
 
             return link;

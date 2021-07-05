@@ -30,5 +30,7 @@ namespace GreenEnergyHub.Charges.Domain.ChargeLinks
         public Instant StartDateTime { get; set; }
 
         public Instant? EndDateTime { get; set; }
+
+        public string ChargeId { get; set; }
     }
 }
