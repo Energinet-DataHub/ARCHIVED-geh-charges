@@ -59,4 +59,8 @@ limitations under the License.
       <None Remove="TestFiles\Valid_CIM_ChargeLink_WithoutEndDate.xml" />
       <EmbeddedResource Include="TestFiles\Valid_CIM_ChargeLink_WithoutEndDate.xml" />
     </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Infrastructure\Messaging\Serialization\MarketDocument" />
+    </ItemGroup>
 </Project>
