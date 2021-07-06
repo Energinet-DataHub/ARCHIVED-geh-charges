@@ -14,7 +14,7 @@
 
 using System.Collections.Generic;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
-using GreenEnergyHub.Charges.Domain.Common;
+using GreenEnergyHub.Charges.Domain.MarketDocument;
 using NodaTime;
 
 namespace GreenEnergyHub.Charges.Tests.Builders
@@ -83,7 +83,6 @@ namespace GreenEnergyHub.Charges.Tests.Builders
                 Document = new Document
                 {
                     Id = "id",
-                    CorrelationId = "CorrelationId",
                     Type = DocumentType.RequestUpdateChargeInformation,
                     RequestDate = SystemClock.Instance.GetCurrentInstant(),
                     IndustryClassification = IndustryClassification.Electricity,
@@ -100,12 +99,12 @@ namespace GreenEnergyHub.Charges.Tests.Builders
                         Name = "Name",
                         BusinessProcessRole = MarketParticipantRole.EnergySupplier,
                     },
+                    BusinessReasonCode = BusinessReasonCode.UpdateChargeInformation,
                 },
                 ChargeOperation = new ChargeOperation
                 {
                   Id = "id",
                   OperationType = OperationType.Create,
-                  BusinessReasonCode = BusinessReasonCode.UpdateChargeInformation,
                   ChargeName = "description",
                   ChargeId = _mrid,
                   ChargeOwner = _owner,

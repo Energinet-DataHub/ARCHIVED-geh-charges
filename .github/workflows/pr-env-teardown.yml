@@ -1,4 +1,4 @@
-﻿# Copyright 2020 Energinet DataHub A/S
+# Copyright 2020 Energinet DataHub A/S
 #
 # Licensed under the Apache License, Version 2.0 (the "License2");
 # you may not use this file except in compliance with the License.
@@ -17,15 +17,13 @@ on:
   pull_request:
     branches:
       - main
-    paths:
-      - build/infrastructure
-      - .github/workflows/pr-env-teardown.yml
     types: [closed]
 env:
   ORGANISATION_NAME: endk
   PROJECT_NAME: 'cha${{ github.event.number }}'
   RESOURCE_GROUP_NAME: rg-DataHub-Testing-U
   ENVIRONMENT_SHORT: u
+  ENVIRONMENT_NAME: Development
 
 jobs:
   infra_destroy:
@@ -70,16 +68,22 @@ jobs:
       - name: Configure Terraform Backend
         uses: ./.github/actions/configure-terraform-backend
         with:
-          backend-file-path: "./build/infrastructure/backend.tf"
+          backend-file-path: "./build/infrastructure/main/backend.tf"
           resource-group-name: "${{ env.RESOURCE_GROUP_NAME }}"
           storage-account-name: "tfstate${{ env.PROJECT_NAME }}${{ env.ENVIRONMENT_SHORT }}"
 
-      - name: Terraform Init
+      # Override/overwrite with environment specific infrastructure
+      - name: Configure environment specific infrastructure
+        shell: bash
         working-directory: ./build/infrastructure
+        run: |
+          cp -fR ./env/${{ env.ENVIRONMENT_NAME }}/* ./main
+
+      - name: Terraform Init
+        working-directory: ./build/infrastructure/main
         run: terraform init
 
       - name: Terraform Destroy
-        working-directory: ./build/infrastructure
+        working-directory: ./build/infrastructure/main
         run: terraform destroy -no-color -auto-approve
         continue-on-error: false
-        

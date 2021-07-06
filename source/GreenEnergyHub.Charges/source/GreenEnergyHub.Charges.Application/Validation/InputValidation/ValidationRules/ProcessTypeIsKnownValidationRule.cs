@@ -14,7 +14,7 @@
 
 using System.Diagnostics.CodeAnalysis;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
-using GreenEnergyHub.Charges.Domain.Common;
+using GreenEnergyHub.Charges.Domain.MarketDocument;
 
 namespace GreenEnergyHub.Charges.Application.Validation.InputValidation.ValidationRules
 {
@@ -28,7 +28,7 @@ namespace GreenEnergyHub.Charges.Application.Validation.InputValidation.Validati
         }
 
         public bool IsValid =>
-            _chargeCommand.ChargeOperation.BusinessReasonCode == BusinessReasonCode.UpdateChargeInformation;
+            _chargeCommand.Document.BusinessReasonCode == BusinessReasonCode.UpdateChargeInformation;
 
         public ValidationRuleIdentifier ValidationRuleIdentifier =>
             ValidationRuleIdentifier.ProcessTypeIsKnownValidation;

@@ -21,7 +21,7 @@ using GreenEnergyHub.Charges.Application.Validation.BusinessValidation.Validatio
 using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.Domain;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
-using GreenEnergyHub.Charges.Domain.Common;
+using GreenEnergyHub.Charges.Domain.MarketDocument;
 
 namespace GreenEnergyHub.Charges.Application.Validation.BusinessValidation.Factories
 {

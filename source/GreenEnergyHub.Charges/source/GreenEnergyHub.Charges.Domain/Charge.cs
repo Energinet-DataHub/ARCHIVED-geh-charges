@@ -14,7 +14,7 @@
 
 using System.Collections.Generic;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
-using GreenEnergyHub.Charges.Domain.Common;
+using GreenEnergyHub.Charges.Domain.MarketDocument;
 using NodaTime;
 
 namespace GreenEnergyHub.Charges.Domain
@@ -34,8 +34,6 @@ namespace GreenEnergyHub.Charges.Domain
         /// Contains a unique ID for the specific Charge Event, provided by the sender.
         /// </summary>
         public string ChargeOperationId { get; set; }
-
-        public BusinessReasonCode BusinessReasonCode { get; set; }
 
         public OperationType Status { get; set; }
 
@@ -92,5 +90,7 @@ namespace GreenEnergyHub.Charges.Domain
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2227", Justification = "JSON deserialization")]
         public List<Point> Points { get; set; }
+
+        public string CorrelationId { get; set; }
     }
 }

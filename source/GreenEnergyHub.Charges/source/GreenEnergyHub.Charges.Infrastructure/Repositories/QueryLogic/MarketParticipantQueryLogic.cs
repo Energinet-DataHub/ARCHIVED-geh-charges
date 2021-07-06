@@ -13,8 +13,7 @@
 // limitations under the License.
 
 using System.Linq;
-using GreenEnergyHub.Charges.Domain.Common;
-using GreenEnergyHub.Charges.Infrastructure.Mapping;
+using GreenEnergyHub.Charges.Domain.MarketDocument;
 using MarketParticipant = GreenEnergyHub.Charges.Infrastructure.Context.Model.MarketParticipant;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Repositories.QueryLogic

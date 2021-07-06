@@ -14,7 +14,7 @@
 data "azurerm_subscription" "current" {}
 
 data "template_file" "dash_charges_template" {
-  template = "${file("${path.module}/dash-charges-template.json")}"
+  template = file("${path.module}/dash-charges-template.json")
   vars = {
 	subscription_id          = data.azurerm_subscription.current.subscription_id
 	resouce_group_name       = data.azurerm_resource_group.main.name

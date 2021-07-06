@@ -13,7 +13,6 @@
 // limitations under the License.
 
 using System.Collections.Generic;
-using GreenEnergyHub.Charges.Domain.Common;
 using NodaTime;
 #pragma warning disable 8618
 
@@ -37,8 +36,6 @@ namespace GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction
         /// Contains a unique ID for the specific Charge Event, provided by the sender.
         /// </summary>
         public string Id { get; set; }
-
-        public BusinessReasonCode BusinessReasonCode { get; set; }
 
         public OperationType OperationType { get; set; }
 
