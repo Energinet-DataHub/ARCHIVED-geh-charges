@@ -53,6 +53,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Messaging.Serialization.Co
 
             // Assert
             Assert.Equal(correlationId, result.CorrelationId);
+
             // Document
             Assert.Equal("DocId_Valid_001", result.Document.Id);
             Assert.Equal(DocumentType.RequestChangeBillingMasterData, result.Document.Type);
@@ -62,6 +63,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Messaging.Serialization.Co
             Assert.Equal("5790001330552", result.Document.Recipient.Id);
             Assert.Equal(MarketParticipantRole.MeteringPointAdministrator, result.Document.Recipient.BusinessProcessRole);
             Assert.Equal(InstantPattern.ExtendedIso.Parse("2021-07-05T13:20:02.387Z").Value, result.Document.CreatedDateTime);
+
             // ChargeLink
             Assert.Equal("rId_Valid_001", result.ChargeLink.Id);
             Assert.Equal("578032999778756222", result.ChargeLink.MeteringPointId);
