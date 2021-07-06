@@ -17,9 +17,6 @@ on:
   pull_request:
     branches:
       - main
-    paths:
-      - build/infrastructure
-      - .github/workflows/pr-env-setup.yml
   workflow_dispatch: {}
 env:
   ORGANISATION_NAME: endk
