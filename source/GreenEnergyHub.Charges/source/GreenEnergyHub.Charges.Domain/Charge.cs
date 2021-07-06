@@ -14,7 +14,7 @@
 
 using System.Collections.Generic;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
-using GreenEnergyHub.Charges.Domain.Common;
+using GreenEnergyHub.Charges.Domain.MarketDocument;
 using NodaTime;
 
 namespace GreenEnergyHub.Charges.Domain
@@ -90,5 +90,7 @@ namespace GreenEnergyHub.Charges.Domain
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2227", Justification = "JSON deserialization")]
         public List<Point> Points { get; set; }
+
+        public string CorrelationId { get; set; }
     }
 }

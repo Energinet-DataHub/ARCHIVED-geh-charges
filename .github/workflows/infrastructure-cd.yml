@@ -83,9 +83,9 @@ jobs:
           SECRETS_SUBSCRIPTION_ID: ${{ secrets.SUBSCRIPTION_ID }}
           PROJECT_NAME: ${{ env.PROJECT_NAME }}
           ORGANISATION_NAME: ${{ env.ORGANISATION_NAME }}
-          ENVIRONMENT_SHORT: ${{ mastrix.environment.short }}
-          ENVIRONMENT_LONG: ${{ mastrix.environment.long }}
-          ENVIRONMENT_NAME: ${{ mastrix.environment.name }}
+          ENVIRONMENT_SHORT: ${{ matrix.environment.short }}
+          ENVIRONMENT_LONG: ${{ matrix.environment.long }}
+          ENVIRONMENT_NAME: ${{ matrix.environment.name }}
           TERRAFORM_BACKEND_FILE_PATH: "./build/infrastructure/main/backend.tf"
 
       - name: Applying charges migrations

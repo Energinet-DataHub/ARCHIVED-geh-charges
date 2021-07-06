@@ -43,7 +43,7 @@ namespace GreenEnergyHub.Charges.Application.Factories
                 LastUpdatedBy = "Volt", // This should be used to identify the user.
             };
             // Right now CorrelationId is not a part of the Charge, but its needed for persistence.
-            c.Document.CorrelationId = command.CorrelationId;
+            c.CorrelationId = command.CorrelationId;
             return Task.FromResult(c);
         }
     }

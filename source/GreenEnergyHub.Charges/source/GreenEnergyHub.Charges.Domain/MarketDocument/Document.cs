@@ -13,9 +13,10 @@
 // limitations under the License.
 
 using NodaTime;
+
 #pragma warning disable 8618
 
-namespace GreenEnergyHub.Charges.Domain.Common
+namespace GreenEnergyHub.Charges.Domain.MarketDocument
 {
     // Non-nullable member is uninitialized is ignored
     // Only properties which is allowed to be null is nullable
@@ -31,8 +32,6 @@ namespace GreenEnergyHub.Charges.Domain.Common
         /// An ID provided by the sender.
         /// </summary>
         public string Id { get; set; }
-
-        public string CorrelationId { get; set; }
 
         /// <summary>
         ///  Point in time set by the Charges domain

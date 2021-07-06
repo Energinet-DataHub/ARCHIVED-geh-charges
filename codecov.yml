@@ -1,26 +1,30 @@
 flags:
-  unit:
+  businesslogic:
     paths:
       - source/GreenEnergyHub.Charges/source/GreenEnergyHub.Charges.Application/
       - source/GreenEnergyHub.Charges/source/GreenEnergyHub.Charges.Domain/
       - source/GreenEnergyHub.Charges/source/GreenEnergyHub.Charges.Core/
-  integration:
+  infrastructure:
     paths:
-      - source/GreenEnergyHub.Charges/source/GreenEnergyHub.Charges.Infrastructure
-      - source/GreenEnergyHub.Charges/source/GreenEnergyHub.Charges.ChargeCommandReceiver
-      - source/GreenEnergyHub.Charges/source/GreenEnergyHub.Charges.ApplyDBMigrationsApp
+      - source/GreenEnergyHub.Charges/source/GreenEnergyHub.Charges.ApplyDBMigrationsApp/
+      - source/GreenEnergyHub.Charges/source/GreenEnergyHub.Charges.ChargeCommandReceiver/
+      - source/GreenEnergyHub.Charges/source/GreenEnergyHub.Charges.ChargeConfirmationSender/
+      - source/GreenEnergyHub.Charges/source/GreenEnergyHub.Charges.ChargeLinkReceiver/
+      - source/GreenEnergyHub.Charges/source/GreenEnergyHub.Charges.ChargeRejectionSender/      
+      - source/GreenEnergyHub.Charges/source/GreenEnergyHub.Charges.Infrastructure/
+      - source/GreenEnergyHub.Charges/source/GreenEnergyHub.Charges.MessageReceiver/
 
 coverage:
   status:
     project:
       default:
         flags:
-          - unit
-          - integration
-      unit:
+          - businesslogic
+          - infrastructure
+      businesslogic:
         flags:
-          - unit
-      integration:
+          - businesslogic
+      infrastructure:
         flags:
-          - integration
+          - infrastructure
 
