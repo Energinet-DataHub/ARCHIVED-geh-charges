@@ -14,57 +14,57 @@
 
 /*
 =================================================================================
-Infrastructure for a representation of the queues of externally published integration events.
+Infrastructure for a representation of the topics of externally published integration events.
 This is used to be able to fully explore and integration test the charges domain
 without relying on the external dependencies to other domains.
 =================================================================================
 */
 
-module "sbq_metering_point_created" {
-  source              = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//service-bus-queue?ref=1.3.0"
-  name                = local.METERING_POINT_CREATED_QUEUE_NAME
+module "sbt_metering_point_created" {
+  source              = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//service-bus-topic?ref=1.3.0"
+  name                = local.METERING_POINT_CREATED_TOPIC_NAME
   namespace_name      = module.sbn_external_integration_events.name
   resource_group_name = data.azurerm_resource_group.main.name
   dependencies        = [module.sbn_external_integration_events]
 }
 
-module "sbqar_metering_point_created_listener" {
-  source                    = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//service-bus-queue-auth-rule?ref=1.3.0"
-  name                      = "sbqar-metering-point-created-listener"
+module "sbtar_metering_point_created_listener" {
+  source                    = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//service-bus-topic-auth-rule?ref=1.3.0"
+  name                      = "sbtar-metering-point-created-listener"
   namespace_name            = module.sbn_external_integration_events.name
   resource_group_name       = data.azurerm_resource_group.main.name
   listen                    = true
   dependencies              = [module.sbn_external_integration_events]
-  queue_name                = module.sbq_metering_point_created.name
+  topic_name                = module.sbt_metering_point_created.name
 }
 
 # Add the connection string to the "shared" keyvault of the development environment so we can access it the same way in all resouces
 module "kv_metering_point_created_listener_connection_string" {
   source              = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//key-vault-secret?ref=1.3.0"
   name                = "metering-point-created-listener-connection-string"
-  value               = trimsuffix(module.sbqar_metering_point_created_listener.primary_connection_string, ";EntityPath=${module.sbq_metering_point_created.name}")
+  value               = trimsuffix(module.sbtar_metering_point_created_listener.primary_connection_string, ";EntityPath=${module.sbt_metering_point_created.name}")
   key_vault_id        = module.kv_shared_stub.id
   tags                = data.azurerm_resource_group.main.tags
-  dependencies        = [module.kv_shared_stub.dependent_on, module.sbqar_metering_point_created_listener.dependent_on]
+  dependencies        = [module.kv_shared_stub.dependent_on, module.sbtar_metering_point_created_listener.dependent_on]
 }
 
 # Created in order to be able to get connection string to send messages in order to be able to test in development environment
-module "sbqar_metering_point_created_sender" {
-  source                    = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//service-bus-queue-auth-rule?ref=1.3.0"
-  name                      = "sbqar-metering-point-created-sender"
+module "sbtar_metering_point_created_sender" {
+  source                    = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//service-bus-topic-auth-rule?ref=1.3.0"
+  name                      = "sbtar-metering-point-created-sender"
   namespace_name            = module.sbn_external_integration_events.name
   resource_group_name       = data.azurerm_resource_group.main.name
   send                      = true
   dependencies              = [module.sbn_external_integration_events]
-  queue_name                = module.sbq_metering_point_created.name
+  topic_name                = module.sbt_metering_point_created.name
 }
 
 # Add the connection string to the "shared" keyvault of the development environment so we can access it the same way in all resouces
 module "kv_metering_point_created_sender_connection_string" {
   source              = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//key-vault-secret?ref=1.3.0"
   name                = "metering-point-created-sender-connection-string"
-  value               = trimsuffix(module.sbqar_metering_point_created_sender.primary_connection_string, ";EntityPath=${module.sbq_metering_point_created.name}")
+  value               = trimsuffix(module.sbtar_metering_point_created_sender.primary_connection_string, ";EntityPath=${module.sbt_metering_point_created.name}")
   key_vault_id        = module.kv_shared_stub.id
   tags                = data.azurerm_resource_group.main.tags
-  dependencies        = [module.kv_shared_stub.dependent_on, module.sbqar_metering_point_created_sender.dependent_on]
+  dependencies        = [module.kv_shared_stub.dependent_on, module.sbtar_metering_point_created_sender.dependent_on]
 }

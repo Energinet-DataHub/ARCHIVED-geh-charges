@@ -14,7 +14,7 @@
 
 /*
 =================================================================================
-Infrastructure for a representation of the queues of externally published integration events.
+Infrastructure for a representation of the topics of externally published integration events.
 This is used to be able to fully explore and integration test the charges domain
 without relying on the external dependencies to other domains.
 
