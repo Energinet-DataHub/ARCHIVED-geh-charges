@@ -89,7 +89,6 @@ namespace GreenEnergyHub.Charges.Infrastructure.Messaging.Serialization.MarketDo
                 {
                     var content = await reader.ReadElementContentAsStringAsync().ConfigureAwait(false);
                     document.IndustryClassification = IndustryClassificationMapper.Map(content);
-                    continue;
                 }
                 else if (reader.Is(CimDocumentConverterConstants.SenderId, ns))
                 {
