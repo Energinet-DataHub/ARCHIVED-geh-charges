@@ -7,7 +7,6 @@ flags:
   infrastructure:
     paths:
       - source/GreenEnergyHub.Charges/source/GreenEnergyHub.Charges.ApplyDBMigrationsApp/
-      - source/GreenEnergyHub.Charges/source/GreenEnergyHub.Charges.ChargeAcknowledgementSender/
       - source/GreenEnergyHub.Charges/source/GreenEnergyHub.Charges.ChargeCommandReceiver/
       - source/GreenEnergyHub.Charges/source/GreenEnergyHub.Charges.ChargeConfirmationSender/
       - source/GreenEnergyHub.Charges/source/GreenEnergyHub.Charges.ChargeLinkReceiver/
