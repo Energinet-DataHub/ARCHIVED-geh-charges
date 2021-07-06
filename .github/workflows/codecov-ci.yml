@@ -66,10 +66,16 @@ jobs:
       - name: Collect coverage
         run: dotnet test ${{ matrix.project }} --filter "Category=UnitTest" --collect:"XPlat Code Coverage" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=opencover
         
-      - name: Upload coverage
+      - name: Upload coverage (businesslogic flag)
         uses: codecov/codecov-action@v1
         with:
-          flags: unit
+          flags: businesslogic
           fail_ci_if_error: true
           verbose: true
           
+      - name: Upload coverage (infrastructure flag)
+        uses: codecov/codecov-action@v1
+        with:
+          flags: infrastructure
+          fail_ci_if_error: true
+          verbose: true
