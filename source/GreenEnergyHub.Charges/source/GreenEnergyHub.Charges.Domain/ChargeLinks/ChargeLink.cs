@@ -13,14 +13,20 @@
 // limitations under the License.
 
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
+using GreenEnergyHub.Charges.Domain.Events.Local;
+using GreenEnergyHub.Messaging.Transport;
 using NodaTime;
 
 #pragma warning disable 8618
 
 namespace GreenEnergyHub.Charges.Domain.ChargeLinks
 {
-    public class ChargeLink
+    public class ChargeLink : InboundIntegrationEvent, IOutboundMessage
     {
+        public ChargeLink()
+            : base(Messaging.MessageTypes.Common.Transaction.NewTransaction())
+        { }
+
         /// <summary>
         /// Contains a unique ID for the specific link, provided by the sender.
         /// </summary>

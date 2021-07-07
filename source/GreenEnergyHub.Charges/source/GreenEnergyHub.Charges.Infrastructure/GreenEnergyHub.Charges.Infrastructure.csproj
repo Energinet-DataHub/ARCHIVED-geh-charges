@@ -32,6 +32,23 @@ limitations under the License.
     <ItemGroup>
       <PackageReference Include="JetBrains.Annotations" Version="2021.1.0" />
       <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.16" />
+      <PackageReference Include="Google.Protobuf" Version="3.15.8" />
+      <PackageReference Include="Grpc.Tools" Version="2.37.0" PrivateAssets="All" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Protobuf Include="**/*.proto">
+        <GrpcServices>None</GrpcServices>
+        <Access>Public</Access>
+        <ProtoCompile>True</ProtoCompile>
+        <CompileOutputs>True</CompileOutputs>
+        <OutputDir>obj\Debug\net5.0\</OutputDir>
+        <Generator>MSBuild:Compile</Generator>
+      </Protobuf>
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="Integration\ChargeLinkDomain.proto" />
     </ItemGroup>
 
 </Project>
