@@ -24,10 +24,10 @@ on:
 env:
   ORGANISATION_NAME: endk
   PROJECT_NAME: 'cha${{ github.event.number }}'
-  RESOURCE_GROUP_NAME: rg-DataHub-Testing-U
+  RESOURCE_GROUP_NAME: Pull_Requests
   ENVIRONMENT_NAME: Development
   ENVIRONMENT_SHORT: u
-  ENVIRONMENT_LONG: rg-DataHub-Testing-U
+  ENVIRONMENT_LONG: Pull_Requests
   INTEGRATION_TEST_CSPROJ_FILE_PATH: 'source/GreenEnergyHub.Charges/source/GreenEnergyHub.Charges.IntegrationTests/GreenEnergyHub.Charges.IntegrationTests.csproj'
   INTEGRATION_TEST_DLL: GreenEnergyHub.Charges.IntegrationTests.dll
   DEFAULT_LOCATION: "westeurope"
@@ -42,7 +42,7 @@ jobs:
     name: Deploy infrastructure
     runs-on: ubuntu-latest
     environment:
-      name: rg-DataHub-Testing-U # Unfortunately this is not currently supported: ${{ env.ENVIRONMENT_LONG }}
+      name: Pull_Requests # Unfortunately this is not currently supported: ${{ env.ENVIRONMENT_LONG }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -59,30 +59,34 @@ jobs:
         uses: hashicorp/setup-terraform@v1.2.1
         with:
           terraform_wrapper: false
+
+      - name: Set Custom TF Vars
+        shell: bash
+        run: |
+          echo "TF_VAR_sharedresources_keyvault_name=${{ secrets.AZURE_KV_NAME_SHARED }}" >> $GITHUB_ENV
+          echo "TF_VAR_sharedresources_resource_group_name=${{ secrets.AZURE_RG_NAME_SHARED }}" >> $GITHUB_ENV
       
       - name: Terraform CD
-        uses: ./.github/actions/terraform-cd
+        id: terraform-action
+        uses: Energinet-DataHub/.github/.github/actions/terraform@main
         with:
-          SECRETS_SHARED_RESOURCES_KEYVAULT_NAME: ${{ secrets.SHARED_RESOURCES_KEYVAULT_NAME }}
-          SECRETS_SHARED_RESOURCES_RESOURCE_GROUP_NAME: ${{ secrets.SHARED_RESOURCES_RESOURCE_GROUP_NAME }}
-          SECRETS_SHARED_RESOURCES_SQL_SERVER_NAME: ${{ secrets.SHARED_RESOURCES_SQL_SERVER_NAME }}
-          SECRETS_PAT_TOKEN: ${{ secrets.PAT_TOKEN }}
-          SECRETS_TENANT_ID: ${{ secrets.TENANT_ID }}
-          SECRETS_SPN_ID: ${{ secrets.SPN_ID }}
-          SECRETS_SPN_OBJECT_ID: ${{ secrets.SPN_OBJECT_ID }}
-          SECRETS_SPN_SECRET: ${{ secrets.SPN_SECRET }}
-          SECRETS_SUBSCRIPTION_ID: ${{ secrets.SUBSCRIPTION_ID }}
-          PROJECT_NAME: ${{ env.PROJECT_NAME }}
-          ORGANISATION_NAME: ${{ env.ORGANISATION_NAME }}
-          ENVIRONMENT_SHORT: ${{ env.ENVIRONMENT_SHORT }}
-          ENVIRONMENT_LONG: ${{ env.ENVIRONMENT_LONG }}
-          ENVIRONMENT_NAME: ${{ env.ENVIRONMENT_NAME }}
-          TERRAFORM_BACKEND_FILE_PATH: "./build/infrastructure/main/backend.tf"
+          PROJECT_NAME: ${{ secrets.PROJECT_NAME }}
+          ORGANISATION_NAME: ${{ secrets.ORGANISATION_NAME }}
+          ENVIRONMENT_SHORT: pr
+          ENVIRONMENT_NAME: prtest
+          TERRAFORM_BACKEND_FILE_PATH: ${{ env.TERRAFORM_BACKEND_FILE_PATH }}
+          TERRAFORM_WORKING_DIR_PATH: ${{ env.TERRAFORM_WORKING_DIR_PATH }}
+          AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+          AZURE_SPN_ID: ${{ secrets.AZURE_SPN_ID }}
+          AZURE_SPN_OBJECT_ID: ${{ secrets.AZURE_SPN_OBJECT_ID }}
+          AZURE_SPN_SECRET: ${{ secrets.AZURE_SPN_SECRET }}
+          AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          AZURE_RG_NAME: ${{ secrets.AZURE_RG_NAME }}
 
       - name: comment PR
         uses: unsplash/comment-on-pr@master
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          msg: "Congratulations! Your enviroment was successfully deployed into rg-DataHub-Testing-U (Resources will contain the name ${{ env.PROJECT_NAME }}). It will automatically be destroyed again when the PR is closed."
+          msg: "Congratulations! Your enviroment was successfully deployed into Pull_Requests (Resources will contain the name ${{ env.PROJECT_NAME }}). It will automatically be destroyed again when the PR is closed."
           check_for_duplicate_msg: true  # OPTIONAL

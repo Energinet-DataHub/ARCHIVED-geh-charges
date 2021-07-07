@@ -11,6 +11,8 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+data "azurerm_client_config" "current" {}
+
 module "kv_charges" {
   source                          = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//key-vault?ref=1.2.0"
   name                            = "kv${var.project}${var.organisation}${var.environment}"
@@ -22,8 +24,8 @@ module "kv_charges" {
   
   access_policy = [
     {
-      tenant_id               = var.tenant_id
-      object_id               = var.spn_object_id
+      tenant_id               = data.azurerm_client_config.current.tenant_id
+      object_id               = data.azurerm_client_config.current.object_id
       secret_permissions      = ["set", "get", "list", "delete"]
       certificate_permissions = []
       key_permissions         = []

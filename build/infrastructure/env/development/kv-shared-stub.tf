@@ -44,8 +44,8 @@ module "kv_shared_stub" {
   
   access_policy = [
     {
-      tenant_id               = var.tenant_id
-      object_id               = var.spn_object_id
+      tenant_id               = data.azurerm_client_config.current.tenant_id
+      object_id               = data.azurerm_client_config.current.object_id
       secret_permissions      = ["set", "get", "list", "delete"]
       certificate_permissions = []
       key_permissions         = []

@@ -30,16 +30,6 @@ variable "organisation" {
   description   = "Organisation that is running the infrastructure code"
 }
 
-variable "tenant_id" {
-  type          = string
-  description   = "tenant id"
-}
-
-variable "spn_object_id" {
-  type          = string
-  description   = "spn_object_id"
-}
-
 variable "sharedresources_keyvault_name" {
   type          = string
   description   = "Name of key vault for shared secrets"

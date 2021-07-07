@@ -19,81 +19,189 @@ on:
       - main
     paths:
       - build/infrastructure/**
-      - build/modules/**
-      - .github/actions/azure-cli-install-login/**
-      - .github/actions/charges-apply-db-migrations/**
-      - .github/actions/configure-terraform-backend/**   
       - .github/workflows/infrastructure-cd.yml
+      - .github/actions/charges-apply-db-migrations/**
   workflow_dispatch: {}
 env:
-  ORGANISATION_NAME: endk
-  PROJECT_NAME: charges
+  TERRAFORM_BACKEND_FILE_PATH: './build/infrastructure/main/backend.tf'
+  TERRAFORM_WORKING_DIR_PATH: './build/infrastructure/main'
 
 jobs:
-  infra_deploy:
-    name: Deploy infrastructure to ${{ matrix.environment.long }}
+  infra_deploy_development:
+    name: Deploy infrastructure to Development
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        environment: [
-          {
-            long: rg-DataHub-Charges-U,
-            short: u,
-            name: Development
-          },
-          {
-            long: rg-DataHub-Charges-T,
-            short: t,
-            name: Test
-          },
-          {
-            long: rg-DataHub-Charges-B,
-            short: b,
-            name: Preprod
-          },
-          {
-            long: rg-DataHub-Charges-P,
-            short: p,
-            name: Production
-          }
-        ]
     environment:
-      name: ${{ matrix.environment.long }}
+      name: Development
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@master
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v1.2.1
         with:
           terraform_wrapper: false
-          terraform_version: 0.14.10
-      
+          terraform_version: 1.0.1 # THIS NEEDS TO BE EQUAL TO THE VERSION DEFINED IN PROVIDERS.TF
+
+      - name: Set Custom TF Vars
+        shell: bash
+        run: |
+          echo "TF_VAR_sharedresources_keyvault_name=${{ secrets.AZURE_KV_NAME_SHARED }}" >> $GITHUB_ENV
+          echo "TF_VAR_sharedresources_resource_group_name=${{ secrets.AZURE_RG_NAME_SHARED }}" >> $GITHUB_ENV
+
       - name: Terraform CD
-        uses: ./.github/actions/terraform-cd
+        id: terraform-action
+        uses: Energinet-DataHub/.github/.github/actions/terraform@1.0.3
         with:
-          SECRETS_SHARED_RESOURCES_KEYVAULT_NAME: ${{ secrets.SHARED_RESOURCES_KEYVAULT_NAME }}
-          SECRETS_SHARED_RESOURCES_RESOURCE_GROUP_NAME: ${{ secrets.SHARED_RESOURCES_RESOURCE_GROUP_NAME }}
-          SECRETS_SHARED_RESOURCES_SQL_SERVER_NAME: ${{ secrets.SHARED_RESOURCES_SQL_SERVER_NAME }}
-          SECRETS_PAT_TOKEN: ${{ secrets.PAT_TOKEN }}
-          SECRETS_TENANT_ID: ${{ secrets.TENANT_ID }}
-          SECRETS_SPN_ID: ${{ secrets.SPN_ID }}
-          SECRETS_SPN_OBJECT_ID: ${{ secrets.SPN_OBJECT_ID }}
-          SECRETS_SPN_SECRET: ${{ secrets.SPN_SECRET }}
-          SECRETS_SUBSCRIPTION_ID: ${{ secrets.SUBSCRIPTION_ID }}
-          PROJECT_NAME: ${{ env.PROJECT_NAME }}
-          ORGANISATION_NAME: ${{ env.ORGANISATION_NAME }}
-          ENVIRONMENT_SHORT: ${{ matrix.environment.short }}
-          ENVIRONMENT_LONG: ${{ matrix.environment.long }}
-          ENVIRONMENT_NAME: ${{ matrix.environment.name }}
-          TERRAFORM_BACKEND_FILE_PATH: "./build/infrastructure/main/backend.tf"
+          PROJECT_NAME: ${{ secrets.PROJECT_NAME }}
+          ORGANISATION_NAME: ${{ secrets.ORGANISATION_NAME }}
+          ENVIRONMENT_SHORT: u
+          ENVIRONMENT_NAME: development
+          TERRAFORM_BACKEND_FILE_PATH: ${{ env.TERRAFORM_BACKEND_FILE_PATH }}
+          TERRAFORM_WORKING_DIR_PATH: ${{ env.TERRAFORM_WORKING_DIR_PATH }}
+          AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+          AZURE_SPN_ID: ${{ secrets.AZURE_SPN_ID }}
+          AZURE_SPN_OBJECT_ID: ${{ secrets.AZURE_SPN_OBJECT_ID }}
+          AZURE_SPN_SECRET: ${{ secrets.AZURE_SPN_SECRET }}
+          AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          AZURE_RG_NAME: ${{ secrets.AZURE_RG_NAME }}
 
       - name: Applying charges migrations
         uses: ./.github/actions/charges-apply-db-migrations
         with:
-          sql-server-url: ${{ steps.terraform-apply.outputs.sql-server-url }}
-          sql-database-name: ${{ steps.terraform-apply.outputs.charges-sql-database-name }}
-          user-keyvaultname: ${{ steps.terraform-apply.outputs.charges-user-keyvaultname }}
-          password-keyvaultname: ${{ steps.terraform-apply.outputs.charges-password-keyvaultname }}
-          keyvault-name: ${{ steps.terraform-apply.outputs.kv-charges-name }}
-          environment-name: ${{ matrix.environment.name }}
+          sql-connection-string: ${{ steps.outputs.SQL_CONNECTION_STRING }}
+          environment-name: Development
+  
+  infra_deploy_test:
+    name: Deploy infrastructure to Test
+    needs: infra_deploy_development
+    runs-on: ubuntu-latest
+    environment:
+      name: Test
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@master
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v1.2.1
+        with:
+          terraform_wrapper: false
+          terraform_version: 1.0.1 # THIS NEEDS TO BE EQUAL TO THE VERSION DEFINED IN PROVIDERS.TF
+
+      - name: Set Custom TF Vars
+        shell: bash
+        run: |
+          echo "TF_VAR_sharedresources_keyvault_name=${{ secrets.AZURE_KV_NAME_SHARED }}" >> $GITHUB_ENV
+          echo "TF_VAR_sharedresources_resource_group_name=${{ secrets.AZURE_RG_NAME_SHARED }}" >> $GITHUB_ENV
+
+      - name: Terraform CD
+        id: terraform-action
+        uses: Energinet-DataHub/.github/.github/actions/terraform@1.0.3
+        with:
+          PROJECT_NAME: ${{ secrets.PROJECT_NAME }}
+          ORGANISATION_NAME: ${{ secrets.ORGANISATION_NAME }}
+          ENVIRONMENT_SHORT: t
+          ENVIRONMENT_NAME: test
+          TERRAFORM_BACKEND_FILE_PATH: ${{ env.TERRAFORM_BACKEND_FILE_PATH }}
+          TERRAFORM_WORKING_DIR_PATH: ${{ env.TERRAFORM_WORKING_DIR_PATH }}
+          AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+          AZURE_SPN_ID: ${{ secrets.AZURE_SPN_ID }}
+          AZURE_SPN_OBJECT_ID: ${{ secrets.AZURE_SPN_OBJECT_ID }}
+          AZURE_SPN_SECRET: ${{ secrets.AZURE_SPN_SECRET }}
+          AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          AZURE_RG_NAME: ${{ secrets.AZURE_RG_NAME }}
+
+      - name: Applying charges migrations
+        uses: ./.github/actions/charges-apply-db-migrations
+        with:
+          sql-connection-string: ${{ steps.outputs.SQL_CONNECTION_STRING }}
+          environment-name: Test
+
+  infra_deploy_preprod:
+    name: Deploy infrastructure to Preproduction
+    needs: infra_deploy_test
+    runs-on: ubuntu-latest
+    environment:
+      name: Preproduction
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@master
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v1.2.1
+        with:
+          terraform_wrapper: false
+          terraform_version: 1.0.1 # THIS NEEDS TO BE EQUAL TO THE VERSION DEFINED IN PROVIDERS.TF
+
+      - name: Set Custom TF Vars
+        shell: bash
+        run: |
+          echo "TF_VAR_sharedresources_keyvault_name=${{ secrets.AZURE_KV_NAME_SHARED }}" >> $GITHUB_ENV
+          echo "TF_VAR_sharedresources_resource_group_name=${{ secrets.AZURE_RG_NAME_SHARED }}" >> $GITHUB_ENV
+
+      - name: Terraform CD
+        id: terraform-action
+        uses: Energinet-DataHub/.github/.github/actions/terraform@1.0.3
+        with:
+          PROJECT_NAME: ${{ secrets.PROJECT_NAME }}
+          ORGANISATION_NAME: ${{ secrets.ORGANISATION_NAME }}
+          ENVIRONMENT_SHORT: b
+          ENVIRONMENT_NAME: preproduction
+          TERRAFORM_BACKEND_FILE_PATH: ${{ env.TERRAFORM_BACKEND_FILE_PATH }}
+          TERRAFORM_WORKING_DIR_PATH: ${{ env.TERRAFORM_WORKING_DIR_PATH }}
+          AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+          AZURE_SPN_ID: ${{ secrets.AZURE_SPN_ID }}
+          AZURE_SPN_OBJECT_ID: ${{ secrets.AZURE_SPN_OBJECT_ID }}
+          AZURE_SPN_SECRET: ${{ secrets.AZURE_SPN_SECRET }}
+          AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          AZURE_RG_NAME: ${{ secrets.AZURE_RG_NAME }}
+
+      - name: Applying charges migrations
+        uses: ./.github/actions/charges-apply-db-migrations
+        with:
+          sql-connection-string: ${{ steps.outputs.SQL_CONNECTION_STRING }}
+          environment-name: Preproduction
+
+  infra_deploy_prod:
+    name: Deploy infrastructure to Production
+    needs: infra_deploy_preprod
+    runs-on: ubuntu-latest
+    environment:
+      name: Production
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@master
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v1.2.1
+        with:
+          terraform_wrapper: false
+          terraform_version: 1.0.1 # THIS NEEDS TO BE EQUAL TO THE VERSION DEFINED IN PROVIDERS.TF
+
+      - name: Set Custom TF Vars
+        shell: bash
+        run: |
+          echo "TF_VAR_sharedresources_keyvault_name=${{ secrets.AZURE_KV_NAME_SHARED }}" >> $GITHUB_ENV
+          echo "TF_VAR_sharedresources_resource_group_name=${{ secrets.AZURE_RG_NAME_SHARED }}" >> $GITHUB_ENV
+      
+      - name: Terraform CD
+        id: terraform-action
+        uses: Energinet-DataHub/.github/.github/actions/terraform@1.0.3
+        with:
+          PROJECT_NAME: ${{ secrets.PROJECT_NAME }}
+          ORGANISATION_NAME: ${{ secrets.ORGANISATION_NAME }}
+          ENVIRONMENT_SHORT: p
+          ENVIRONMENT_NAME: production
+          TERRAFORM_BACKEND_FILE_PATH: ${{ env.TERRAFORM_BACKEND_FILE_PATH }}
+          TERRAFORM_WORKING_DIR_PATH: ${{ env.TERRAFORM_WORKING_DIR_PATH }}
+          AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+          AZURE_SPN_ID: ${{ secrets.AZURE_SPN_ID }}
+          AZURE_SPN_OBJECT_ID: ${{ secrets.AZURE_SPN_OBJECT_ID }}
+          AZURE_SPN_SECRET: ${{ secrets.AZURE_SPN_SECRET }}
+          AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          AZURE_RG_NAME: ${{ secrets.AZURE_RG_NAME }}
+
+      - name: Applying charges migrations
+        uses: ./.github/actions/charges-apply-db-migrations
+        with:
+          sql-connection-string: ${{ steps.outputs.SQL_CONNECTION_STRING }}
+          environment-name: Production
