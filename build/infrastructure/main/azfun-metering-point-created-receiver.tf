@@ -52,7 +52,7 @@ module "azfun_metering_point_created_receiver_plan" {
 }
 
 module "azfun_metering_point_created_receiver_stor" {
-  source                    = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//storage-account?ref=1.3.0"
+  source                    = "../modules/storage-account"
   name                      = "stormpcre${random_string.metering_point_created_receiver.result}"
   resource_group_name       = data.azurerm_resource_group.main.name
   location                  = data.azurerm_resource_group.main.location

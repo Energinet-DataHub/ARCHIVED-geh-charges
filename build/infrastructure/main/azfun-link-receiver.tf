@@ -49,7 +49,7 @@ module "azfun_link_receiver_plan" {
 }
 
 module "azfun_link_receiver_stor" {
-  source                    = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//storage-account?ref=1.2.0"
+  source                    = "../modules/storage-account"
   name                      = "storlinkrcvr${random_string.link_receiver.result}"
   resource_group_name       = data.azurerm_resource_group.main.name
   location                  = data.azurerm_resource_group.main.location
