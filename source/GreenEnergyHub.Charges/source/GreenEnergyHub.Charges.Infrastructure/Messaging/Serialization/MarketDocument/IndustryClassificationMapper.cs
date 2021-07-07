@@ -12,15 +12,19 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace GreenEnergyHub.Charges.Domain.MarketDocument
+using GreenEnergyHub.Charges.Domain.MarketDocument;
+
+namespace GreenEnergyHub.Charges.Infrastructure.Messaging.Serialization.MarketDocument
 {
-    /// <summary>
-    /// BusinessReasonCode indicates the intended business context.
-    /// </summary>
-    public enum BusinessReasonCode
+    public static class IndustryClassificationMapper
     {
-        Unknown = 0,
-        UpdateMasterDataSettlement = 1,
-        UpdateChargeInformation = 18,
+        public static IndustryClassification Map(string value)
+        {
+            return value switch
+            {
+                "23" => IndustryClassification.Electricity,
+                _ => IndustryClassification.Unknown
+            };
+        }
     }
 }

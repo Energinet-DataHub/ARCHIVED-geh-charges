@@ -20,6 +20,7 @@ namespace GreenEnergyHub.Charges.Domain.MarketDocument
     public enum DocumentType
     {
         Unknown = 0,
-        RequestUpdateChargeInformation = 10, // This will be received as D10 in ebiX.
+        RequestChangeBillingMasterData = 1,
+        RequestUpdateChargeInformation = 10,
     }
 }

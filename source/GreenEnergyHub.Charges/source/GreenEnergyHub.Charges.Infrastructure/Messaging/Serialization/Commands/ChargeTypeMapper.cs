@@ -12,15 +12,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace GreenEnergyHub.Charges.Domain.MarketDocument
+using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
+
+namespace GreenEnergyHub.Charges.Infrastructure.Messaging.Serialization.Commands
 {
-    /// <summary>
-    /// BusinessReasonCode indicates the intended business context.
-    /// </summary>
-    public enum BusinessReasonCode
+    public static class ChargeTypeMapper
     {
-        Unknown = 0,
-        UpdateMasterDataSettlement = 1,
-        UpdateChargeInformation = 18,
+        public static ChargeType Map(string value)
+        {
+            return value switch
+            {
+                "D01" => ChargeType.Subscription,
+                "D02" => ChargeType.Fee,
+                "D03" => ChargeType.Tariff,
+                _ => ChargeType.Unknown
+            };
+        }
     }
 }

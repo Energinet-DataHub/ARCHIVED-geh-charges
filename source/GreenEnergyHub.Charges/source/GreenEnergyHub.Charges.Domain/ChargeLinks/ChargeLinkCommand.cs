@@ -12,15 +12,23 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace GreenEnergyHub.Charges.Domain.MarketDocument
+using System.Diagnostics.CodeAnalysis;
+using GreenEnergyHub.Charges.Domain.Command;
+using GreenEnergyHub.Charges.Domain.MarketDocument;
+
+#pragma warning disable 8618
+
+namespace GreenEnergyHub.Charges.Domain.ChargeLinks
 {
-    /// <summary>
-    /// BusinessReasonCode indicates the intended business context.
-    /// </summary>
-    public enum BusinessReasonCode
+    public class ChargeLinkCommand : CommandBase
     {
-        Unknown = 0,
-        UpdateMasterDataSettlement = 1,
-        UpdateChargeInformation = 18,
+        public ChargeLinkCommand([NotNull] string correlationId)
+            : base(correlationId)
+        {
+        }
+
+        public Document Document { get; set; }
+
+        public ChargeLink ChargeLink { get; set; }
     }
 }
