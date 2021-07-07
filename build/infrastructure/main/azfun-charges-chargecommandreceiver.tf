@@ -65,7 +65,7 @@ module "azfun_charge_command_receiver_plan" {
 }
 
 module "azfun_charge_command_receiver_stor" {
-  source                    = "../modules/storage-account"
+  source                    = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//storage-account?ref=1.7.0"
   name                      = "storchacom${random_string.charge_command_receiver.result}"
   resource_group_name       = data.azurerm_resource_group.main.name
   location                  = data.azurerm_resource_group.main.location

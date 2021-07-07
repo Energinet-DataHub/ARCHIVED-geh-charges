@@ -54,7 +54,7 @@ module "azfun_charge_rejection_sender_plan" {
 }
 
 module "azfun_charge_rejection_sender_stor" {
-  source                    = "../modules/storage-account"
+  source                    = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//storage-account?ref=1.7.0"
   name                      = "storcharej${random_string.charge_rejection_sender.result}"
   resource_group_name       = data.azurerm_resource_group.main.name
   location                  = data.azurerm_resource_group.main.location
