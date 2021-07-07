@@ -12,15 +12,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace GreenEnergyHub.Charges.Domain.MarketDocument
+using GreenEnergyHub.Charges.Domain.MarketDocument;
+
+namespace GreenEnergyHub.Charges.Infrastructure.Messaging.Serialization.MarketDocument
 {
-    /// <summary>
-    /// BusinessReasonCode indicates the intended business context.
-    /// </summary>
-    public enum BusinessReasonCode
+    public static class DocumentTypeMapper
     {
-        Unknown = 0,
-        UpdateMasterDataSettlement = 1,
-        UpdateChargeInformation = 18,
+        public static DocumentType Map(string value)
+        {
+            return value switch
+            {
+                "D05" => DocumentType.RequestChangeBillingMasterData,
+                "D10" => DocumentType.RequestUpdateChargeInformation,
+                _ => DocumentType.Unknown
+            };
+        }
     }
 }
