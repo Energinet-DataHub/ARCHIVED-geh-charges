@@ -17,7 +17,6 @@ using System.IO;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Domain.ChargeLinks;
 using GreenEnergyHub.Charges.Infrastructure.Messaging;
-using GreenEnergyHub.Json;
 using GreenEnergyHub.Messaging.Transport;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.Functions.Worker;
@@ -35,18 +34,18 @@ namespace GreenEnergyHub.Charges.ChargeLinkReceiver
         private const string FunctionName = "ChargeLinkHttpTrigger";
         private readonly ICorrelationContext _correlationContext;
         private readonly MessageExtractor _messageExtractor;
-        private readonly IJsonSerializer _jsonSerializer; // TODO Entire variable and use should be removed once publishing using protobuf
+        private readonly MessageDispatcher _messageDispatcher;
         private readonly ILogger _log;
 
         public ChargeLinkHttpTrigger(
             ICorrelationContext correlationContext,
             MessageExtractor messageExtractor,
-            IJsonSerializer jsonSerializer,
+            MessageDispatcher messageDispatcher,
             [NotNull] ILoggerFactory loggerFactory)
         {
             _correlationContext = correlationContext;
             _messageExtractor = messageExtractor;
-            _jsonSerializer = jsonSerializer;
+            _messageDispatcher = messageDispatcher;
             _log = loggerFactory.CreateLogger(nameof(ChargeLinkHttpTrigger));
         }
 
@@ -62,14 +61,15 @@ namespace GreenEnergyHub.Charges.ChargeLinkReceiver
 
             var command = await GetChargeLinkCommandAsync(req.Body).ConfigureAwait(false);
 
-            var result = _jsonSerializer.Serialize<ChargeLinkCommand>(command);
+            await _messageDispatcher.DispatchAsync(
+                command.ChargeLink).ConfigureAwait(false);
 
-            return new OkObjectResult(result);
+            return new OkResult();
         }
 
         private static async Task<byte[]> ConvertStreamToBytesAsync(Stream stream)
         {
-            using var ms = new MemoryStream();
+            await using var ms = new MemoryStream();
             await stream.CopyToAsync(ms).ConfigureAwait(false);
             return ms.ToArray();
         }
