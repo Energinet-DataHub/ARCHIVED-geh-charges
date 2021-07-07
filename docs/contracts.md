@@ -44,7 +44,7 @@ Represents a charge period.
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | StartDateTime | Timestamp | required | In UTC. The charge period's valid from date and time |
-| EndDateTime | Timestamp | optional with default value | In UTC. The charge period's valid to date and time. The default value will be the equivalent to 9999-12-31T23:59:59Z without miliseconds |
+| EndDateTime | Timestamp | optional with default value | In UTC. The charge period's valid to date and time. The default value will be the equivalent to 9999-12-31T23:59:59Z without milliseconds |
 
 The Timestamp type is documented [here](https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#timestamp).
 
