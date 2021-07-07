@@ -12,15 +12,24 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace GreenEnergyHub.Charges.Domain.MarketDocument
+using System;
+using System.Diagnostics.CodeAnalysis;
+using System.IO;
+using System.Reflection;
+
+namespace GreenEnergyHub.Charges.TestCore
 {
-    /// <summary>
-    /// BusinessReasonCode indicates the intended business context.
-    /// </summary>
-    public enum BusinessReasonCode
+    public static class EmbeddedStreamHelper
     {
-        Unknown = 0,
-        UpdateMasterDataSettlement = 1,
-        UpdateChargeInformation = 18,
+        public static Stream GetInputStream([NotNull] Assembly assembly, string streamPath)
+        {
+            var result = assembly.GetManifestResourceStream(streamPath);
+            if (result == null)
+            {
+                throw new NotImplementedException($"The filename {streamPath} has not been added as an embedded resource to the project");
+            }
+
+            return result;
+        }
     }
 }
