@@ -17,9 +17,15 @@ on:
   push:
     branches:
       - main
+    paths:
+      - source/**
+      - .github/workflows/codecov.yml
   pull_request:
     branches:
       - main
+    paths:
+      - source/**
+      - .github/workflows/codecov.yml
   workflow_dispatch: {}
   
 env:
