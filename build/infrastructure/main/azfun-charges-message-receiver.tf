@@ -45,8 +45,8 @@ module "azfun_message_receiver_plan" {
   location            = data.azurerm_resource_group.main.location
   kind                = "FunctionApp"
   sku                 = {
-    tier  = "Free"
-    size  = "F1"
+    tier  = "Basic"
+    size  = "B1"
   }
   tags                = data.azurerm_resource_group.main.tags
 }
