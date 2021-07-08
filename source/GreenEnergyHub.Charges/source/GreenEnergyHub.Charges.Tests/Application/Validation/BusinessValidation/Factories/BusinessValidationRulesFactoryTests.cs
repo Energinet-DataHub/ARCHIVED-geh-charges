@@ -85,7 +85,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Validation.BusinessValidation
             // Arrange
             ChargeCommand? command = null;
 
-            // Act
+            // Act / Assert
             await Assert.ThrowsAsync<ArgumentNullException>(
                 () => sut.CreateRulesForChargeCommandAsync(command!))
                 .ConfigureAwait(false);
@@ -100,7 +100,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Validation.BusinessValidation
             // Arrange
             command.ChargeOperation.OperationType = OperationType.Unknown;
 
-            // Act
+            // Act / Assert
             await Assert.ThrowsAsync<NotImplementedException>(
                     () => sut.CreateRulesForChargeCommandAsync(command!))
                 .ConfigureAwait(false);
