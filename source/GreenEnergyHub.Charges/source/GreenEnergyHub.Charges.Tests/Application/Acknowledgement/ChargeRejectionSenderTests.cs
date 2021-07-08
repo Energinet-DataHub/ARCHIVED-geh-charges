@@ -34,7 +34,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Acknowledgement
         [InlineAutoMoqData]
         public async Task HandleAsync_WhenCalled_DispatchRejection(
             [Frozen] [NotNull] Mock<IMessageDispatcher<ChargeRejection>> dispatcher,
-            [NotNull] ChargeCommandRejectedEvent acceptedEvent,
+            [NotNull] ChargeCommandRejectedEvent rejectedEvent,
             [NotNull] ChargeRejectionSender sut)
         {
             // Arrange
@@ -47,7 +47,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Acknowledgement
                     (_, _) => dispatched = true);
 
             // Act
-            await sut.HandleAsync(acceptedEvent).ConfigureAwait(false);
+            await sut.HandleAsync(rejectedEvent).ConfigureAwait(false);
 
             // Assert
             Assert.True(dispatched);
