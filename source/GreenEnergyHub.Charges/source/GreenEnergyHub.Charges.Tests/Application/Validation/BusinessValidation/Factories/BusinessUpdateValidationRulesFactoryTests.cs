@@ -18,10 +18,12 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
 using FluentAssertions;
+using GreenEnergyHub.Charges.Application.ChangeOfCharges.Repositories;
 using GreenEnergyHub.Charges.Application.Validation.BusinessValidation;
 using GreenEnergyHub.Charges.Application.Validation.BusinessValidation.Factories;
 using GreenEnergyHub.Charges.Application.Validation.BusinessValidation.ValidationRules;
 using GreenEnergyHub.Charges.Core;
+using GreenEnergyHub.Charges.Domain;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
 using GreenEnergyHub.Charges.TestCore;
 using Moq;
@@ -64,6 +66,42 @@ namespace GreenEnergyHub.Charges.Tests.Application.Validation.BusinessValidation
             // Assert
             var actualRules = actual.GetRules().Select(r => r.GetType());
             actualRules.Should().Contain(expectedRuleType);
+        }
+
+        [Theory]
+        [InlineAutoMoqData]
+        public async Task CreateRulesForUpdateCommandAsync_WhenCalledWithNull_ThrowsArgumentNullException(
+            [NotNull] BusinessUpdateValidationRulesFactory sut)
+        {
+            // Arrange
+            ChargeCommand? command = null;
+
+            // Act / Assert
+            await Assert.ThrowsAsync<ArgumentNullException>(
+                    () => sut.CreateRulesForUpdateCommandAsync(command!))
+                .ConfigureAwait(false);
+        }
+
+        [Theory]
+        [InlineAutoMoqData]
+        public async Task CreateRulesForUpdateCommandAsync_IfChargeDoesNotExist_ThrowsException(
+            [Frozen] [NotNull] Mock<IChargeRepository> repository,
+            [NotNull] ChargeCommand command,
+            [NotNull] BusinessUpdateValidationRulesFactory sut)
+        {
+            // Arrange
+            Charge? charge = null;
+            repository.Setup(
+                    r => r.GetChargeAsync(
+                        It.IsAny<string>(),
+                        It.IsAny<string>(),
+                        It.IsAny<ChargeType>()))
+                .Returns(Task.FromResult(charge!));
+
+            // Act / Assert
+            await Assert.ThrowsAsync<Exception>(
+                    () => sut.CreateRulesForUpdateCommandAsync(command!))
+                .ConfigureAwait(false);
         }
 
         /// <summary>
