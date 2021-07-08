@@ -13,12 +13,14 @@
 // limitations under the License.
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Text;
 using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Core.Json;
 using GreenEnergyHub.Charges.Domain.Messages;
 using Microsoft.Azure.ServiceBus;
+using Newtonsoft.Json;
 using Xunit.Abstractions;
+using JsonSerializer = GreenEnergyHub.Charges.Core.Json.JsonSerializer;
 
 namespace GreenEnergyHub.Charges.IntegrationTests.TestHelpers
 {
@@ -43,7 +45,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.TestHelpers
             var subscriptionClient = GetSubscriptionClient(serviceBusConnectionString, serviceBusTopic, serviceBusSubscription);
 
             subscriptionClient.RegisterMessageHandler(
-                async (serviceBusMessage, ct) =>
+                async (serviceBusMessage, _) =>
                 {
                     var jsonMessage = Encoding.UTF8.GetString(serviceBusMessage.Body);
                     var deserializedMessage = new JsonSerializer().Deserialize<T>(jsonMessage);
@@ -71,6 +73,29 @@ namespace GreenEnergyHub.Charges.IntegrationTests.TestHelpers
             return (receivedEvent, receivedMessage);
         }
 
+        public static void RegisterSubscriptionClientMessageHandler<T>(
+            [NotNull] ISubscriptionClient subscriptionClient,
+            [NotNull] TaskCompletionSource<T> completion)
+        {
+            subscriptionClient.RegisterMessageHandler(
+                (message, _) =>
+                {
+                    try
+                    {
+                        var json = Encoding.UTF8.GetString(message.Body);
+                        var ev = new JsonSerializer().Deserialize<T>(json);
+                        completion.SetResult(ev!);
+                    }
+#pragma warning disable CA1031 // allow catch of exception
+                    catch (Exception exception)
+                    {
+                        completion.SetException(exception);
+                    }
+#pragma warning restore CA1031
+                    return Task.CompletedTask;
+                }, new MessageHandlerOptions(ExceptionReceivedHandlerAsync));
+        }
+
         private static SubscriptionClient GetSubscriptionClient(
             string serviceBusConnectionString,
             string topicPath,
@@ -78,6 +103,11 @@ namespace GreenEnergyHub.Charges.IntegrationTests.TestHelpers
         {
             var subscriptionClient = new SubscriptionClient(serviceBusConnectionString, topicPath, subscriptionName);
             return subscriptionClient;
+        }
+
+        private static Task ExceptionReceivedHandlerAsync(ExceptionReceivedEventArgs arg)
+        {
+            throw new MessageNotFoundException(arg.ToString(), arg.Exception);
         }
     }
 }
