@@ -50,6 +50,20 @@ namespace GreenEnergyHub.Charges.Tests.Application.Validation.BusinessValidation
             actualRules.Should().Contain(expectedRuleType);
         }
 
+        [Theory]
+        [InlineAutoMoqData]
+        public async Task CreateRulesForStopCommandAsync_WhenCalledWithNull_ThrowsArgumentNullException(
+            [NotNull] BusinessStopValidationRulesFactory sut)
+        {
+            // Arrange
+            ChargeCommand? command = null;
+
+            // Act / Assert
+            await Assert.ThrowsAsync<ArgumentNullException>(
+                    () => sut.CreateRulesForStopCommandAsync(command!))
+                .ConfigureAwait(false);
+        }
+
         private static ChargeCommand TurnCommandIntoSpecifiedChargeType(ChargeCommand chargeCommand, ChargeType chargeType)
         {
             chargeCommand.ChargeOperation.Type = chargeType;
