@@ -12,14 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
+using Azure.Messaging.ServiceBus;
+using Energinet.DataHub.ChargeLinks.InternalContracts;
 using GreenEnergyHub.Charges.Infrastructure.Messaging;
 using GreenEnergyHub.Charges.Infrastructure.Messaging.Serialization.Commands;
-using GreenEnergyHub.Json;
+using GreenEnergyHub.Charges.Infrastructure.Transport.Protobuf.Integration;
 using GreenEnergyHub.Messaging.Transport;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using NodaTime;
-using JsonSerializer = GreenEnergyHub.Charges.Core.Json.JsonSerializer;
 
 namespace GreenEnergyHub.Charges.ChargeLinkReceiver
 {
@@ -49,7 +51,13 @@ namespace GreenEnergyHub.Charges.ChargeLinkReceiver
             services.AddScoped<MessageExtractor>();
             services.AddScoped<ChargeLinkCommandConverter>();
             services.AddScoped<MessageDeserializer, ChargeLinkCommandDeserializer>();
-            services.AddScoped<IJsonSerializer, JsonSerializer>(); // TODO Remove this once we move to protobuf
+            services.SendProtobuf<ChargeLinkCommandDomain>();
+            services.AddScoped<MessageDispatcher>();
+            services.AddScoped<Channel, Infrastructure.Transport.ServiceBusChannel>();
+
+            var connectionString = Environment.GetEnvironmentVariable("CHARGE_LINK_CREATED_SENDER_CONNECTION_STRING");
+            var topicName = Environment.GetEnvironmentVariable("CHARGE_LINK_CREATED_TOPIC_NAME");
+            services.AddScoped(sp => new ServiceBusClient(connectionString).CreateSender(topicName));
         }
     }
 }
