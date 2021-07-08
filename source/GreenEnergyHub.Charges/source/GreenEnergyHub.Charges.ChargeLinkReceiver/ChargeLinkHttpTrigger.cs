@@ -62,7 +62,7 @@ namespace GreenEnergyHub.Charges.ChargeLinkReceiver
             var command = await GetChargeLinkCommandAsync(req.Body).ConfigureAwait(false);
 
             await _messageDispatcher.DispatchAsync(
-                command.ChargeLink).ConfigureAwait(false);
+                command).ConfigureAwait(false);
 
             return new OkResult();
         }

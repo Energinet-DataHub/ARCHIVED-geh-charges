@@ -14,7 +14,7 @@
  */
 
 /**
- * Metering Point Domain related messages.
+ * Charge link Domain related messages.
  */
 syntax = "proto3";
 
@@ -23,15 +23,38 @@ syntax = "proto3";
 option csharp_namespace = "Energinet.DataHub.ChargeLinks.InternalContracts";
 
 /**
+ * Represents a ChargeLinkCommand
+ */
+
+message ChargeLinkCommandDomain {
+  DocumentDomain Document = 1;
+  ChargeLinkDomain ChargeLink = 2;
+}
+
+/**
+ * Represents a ChargeLink
+ */
+message DocumentDomain {
+  string id = 1;
+  string request_date = 2;
+  string type = 3;
+  string created_date_time = 4;
+  string sender = 5;
+  string recipient = 6;
+  string industry_classification = 7;
+  string business_reason_code = 8;
+}
+
+/**
  * Represents a ChargeLink
  */
 message ChargeLinkDomain {
-    string id = 1; // Contains a unique ID for the specific link, provided by the sender.
-    string metering_point_id = 2; //
-    string start_date_time = 3; //
-    string end_date_time = 4; //
-    string charge_id = 5; //
-    string factor = 6; //
-    string charge_owner = 7; //
-    string charge_type = 8; //
+  string id = 1; // Contains a unique ID for the specific link, provided by the sender.
+  string metering_point_id = 2; //
+  string start_date_time = 3; //
+  string end_date_time = 4; //
+  string charge_id = 5; //
+  string factor = 6; //
+  string charge_owner = 7; //
+  string charge_type = 8; //
 }
