@@ -84,7 +84,7 @@ runs:
           echo "Storage exists";
           exit;
         fi
-        az storage account create --resource-group ${{ inputs.ENVIRONMENT_LONG }} --name ${{ env.TERRAFORM_STORAGE_NAME }} --sku Standard_LRS --encryption-services blob
+        az storage account create --resource-group ${{ inputs.ENVIRONMENT_LONG }} --name ${{ env.TERRAFORM_STORAGE_NAME }} --sku Standard_LRS --encryption-services blob --min-tls-version TLS1_2
         account_key=$(az storage account keys list --resource-group ${{ inputs.ENVIRONMENT_LONG }} --account-name ${{ env.TERRAFORM_STORAGE_NAME }} --query '[0].value' -o tsv)
         az storage container create --name tfstate --account-name ${{ env.TERRAFORM_STORAGE_NAME }} --account-key $account_key
 

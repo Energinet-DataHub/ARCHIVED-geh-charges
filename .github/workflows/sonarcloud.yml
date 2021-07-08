@@ -9,6 +9,9 @@ on:
 
   pull_request:
     types: [opened, synchronize, reopened]
+    paths:
+     - source/**
+     - .github/workflows/sonarcloud.yml
 env:
   SOLUTION_PATH: 'source\GreenEnergyHub.Charges\GreenEnergyHub.Charges.sln'
   DOTNET_VERSION: '5.0.x'
