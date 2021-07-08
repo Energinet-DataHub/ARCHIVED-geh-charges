@@ -4,7 +4,7 @@ using Energinet.DataHub.ChargeLinks.InternalContracts;
 using GreenEnergyHub.Charges.Domain.ChargeLinks;
 using GreenEnergyHub.Messaging.Protobuf;
 
-namespace GreenEnergyHub.Charges.Infrastructure.Integration.Mappers
+namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
 {
     public class ChargeLinkDomainOutboundMapper : ProtobufOutboundMapper<ChargeLinkCommand>
     {
@@ -42,6 +42,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Integration.Mappers
                     StartDateTime = chargeLink.StartDateTime.ToString(),
                     EndDateTime = chargeLink.EndDateTime.ToString(),
                 },
+                CorrelationId = obj.CorrelationId,
             };
         }
     }

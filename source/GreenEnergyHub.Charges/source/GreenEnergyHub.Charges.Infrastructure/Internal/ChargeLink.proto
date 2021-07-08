@@ -27,8 +27,9 @@ option csharp_namespace = "Energinet.DataHub.ChargeLinks.InternalContracts";
  */
 
 message ChargeLinkCommandDomain {
-  DocumentDomain Document = 1;
-  ChargeLinkDomain ChargeLink = 2;
+  DocumentDomain document = 1;
+  ChargeLinkDomain charge_link = 2;
+  string correlation_id = 3;
 }
 
 /**

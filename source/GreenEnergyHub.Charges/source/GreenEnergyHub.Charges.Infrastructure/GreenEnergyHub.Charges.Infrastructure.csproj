@@ -49,7 +49,7 @@ limitations under the License.
     </ItemGroup>
 
     <ItemGroup>
-      <None Remove="Integration\ChargeLinkDomain.proto" />
+      <None Remove="Internal\ChargeLinkDomain.proto" />
     </ItemGroup>
 
 </Project>
