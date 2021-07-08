@@ -13,10 +13,14 @@
 // limitations under the License.
 
 using System;
+using System.Diagnostics.CodeAnalysis;
+using GreenEnergyHub.Charges.Domain.MarketDocument;
 using GreenEnergyHub.Charges.Infrastructure.Context.Model;
 using GreenEnergyHub.Charges.Infrastructure.Mapping;
+using GreenEnergyHub.Charges.TestCore;
 using Xunit;
 using Xunit.Categories;
+using MarketParticipant = GreenEnergyHub.Charges.Infrastructure.Context.Model.MarketParticipant;
 
 namespace GreenEnergyHub.Charges.Tests.Infrastructure.Mapping
 {
@@ -64,6 +68,43 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Mapping
 
             // Assert
             Assert.Equal(expected, sut.StartDateTime.ToDateTimeUtc());
+        }
+
+        [Fact]
+        public void MapChargeToChargeDomainModel_IfChargeIsNull_ThrowsArgumentNullException()
+        {
+            // Arrange
+            Charge? charge = null;
+
+            // Act / Assert
+            Assert.Throws<ArgumentNullException>(
+                    () => ChargeMapper.MapChargeToChargeDomainModel(charge!));
+        }
+
+        [Theory]
+        [InlineAutoMoqData]
+        public void MapDomainChargeToCharge_IfChargeIsNull_ThrowsArgumentNullException(
+            [NotNull] MarketParticipant marketParticipant)
+        {
+            // Arrange
+            GreenEnergyHub.Charges.Domain.Charge? charge = null;
+
+            // Act / Assert
+            Assert.Throws<ArgumentNullException>(
+                () => ChargeMapper.MapDomainChargeToCharge(charge!, marketParticipant));
+        }
+
+        [Theory]
+        [InlineAutoMoqData]
+        public void MapDomainChargeToCharge_IfMarketParticipantIsNull_ThrowsArgumentNullException(
+            [NotNull] GreenEnergyHub.Charges.Domain.Charge charge)
+        {
+            // Arrange
+            MarketParticipant? marketParticipant = null;
+
+            // Act / Assert
+            Assert.Throws<ArgumentNullException>(
+                () => ChargeMapper.MapDomainChargeToCharge(charge, marketParticipant!));
         }
     }
 }
