@@ -2,7 +2,7 @@
 using System.Globalization;
 using Energinet.DataHub.ChargeLinks.InternalContracts;
 using GreenEnergyHub.Charges.Domain.ChargeLinks;
-using GreenEnergyHub.Charges.Infrastructure.Transport.Protobuf;
+using GreenEnergyHub.Messaging.Protobuf;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Integration.Mappers
 {

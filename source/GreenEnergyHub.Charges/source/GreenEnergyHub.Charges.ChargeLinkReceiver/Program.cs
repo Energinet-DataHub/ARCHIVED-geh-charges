@@ -17,7 +17,7 @@ using Azure.Messaging.ServiceBus;
 using Energinet.DataHub.ChargeLinks.InternalContracts;
 using GreenEnergyHub.Charges.Infrastructure.Messaging;
 using GreenEnergyHub.Charges.Infrastructure.Messaging.Serialization.Commands;
-using GreenEnergyHub.Charges.Infrastructure.Transport.Protobuf.Integration;
+using GreenEnergyHub.Messaging.Protobuf;
 using GreenEnergyHub.Messaging.Transport;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -52,8 +52,8 @@ namespace GreenEnergyHub.Charges.ChargeLinkReceiver
             services.AddScoped<ChargeLinkCommandConverter>();
             services.AddScoped<MessageDeserializer, ChargeLinkCommandDeserializer>();
             services.SendProtobuf<ChargeLinkCommandDomain>();
-            services.AddScoped<MessageDispatcher>();
             services.AddScoped<Channel, Infrastructure.Transport.ServiceBusChannel>();
+            services.AddScoped<MessageDispatcher>();
 
             var connectionString = Environment.GetEnvironmentVariable("CHARGE_LINK_CREATED_SENDER_CONNECTION_STRING");
             var topicName = Environment.GetEnvironmentVariable("CHARGE_LINK_CREATED_TOPIC_NAME");
