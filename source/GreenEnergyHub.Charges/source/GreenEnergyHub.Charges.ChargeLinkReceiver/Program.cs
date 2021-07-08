@@ -52,7 +52,7 @@ namespace GreenEnergyHub.Charges.ChargeLinkReceiver
             services.AddScoped<ChargeLinkCommandConverter>();
             services.AddScoped<MessageDeserializer, ChargeLinkCommandDeserializer>();
             services.SendProtobuf<ChargeLinkCommandDomain>();
-            services.AddScoped<Channel, Infrastructure.Transport.ServiceBusChannel>();
+            services.AddSingleton<Channel, Infrastructure.Transport.ServiceBusChannel>();
             services.AddScoped<MessageDispatcher>();
 
             var connectionString = Environment.GetEnvironmentVariable("CHARGE_LINK_CREATED_SENDER_CONNECTION_STRING");
