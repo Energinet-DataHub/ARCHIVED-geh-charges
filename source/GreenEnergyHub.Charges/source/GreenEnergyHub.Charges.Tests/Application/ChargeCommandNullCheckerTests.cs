@@ -56,6 +56,16 @@ namespace GreenEnergyHub.Charges.Tests.Application
         }
 
         [Fact]
+        public void ThrowExceptionIfRequiredPropertyIsNull_WhenValid_DoesNotThrow()
+        {
+            // Arrange
+            var command = Build();
+
+            // Act / Assert
+            ChargeCommandNullChecker.ThrowExceptionIfRequiredPropertyIsNull(command);
+        }
+
+        [Fact]
         public void ThrowExceptionIfRequiredPropertyIsNull_WhenCommandIsNull_ThrowsArgumentNullException()
         {
             // Arrange
@@ -63,34 +73,6 @@ namespace GreenEnergyHub.Charges.Tests.Application
 
             // Act & Assert
             Assert.Throws<ArgumentNullException>(() => ChargeCommandNullChecker.ThrowExceptionIfRequiredPropertyIsNull(command!));
-        }
-
-        [Theory]
-        [InlineData(null)]
-        [InlineData("")]
-        [InlineData(" ")]
-        public void ThrowExceptionIfRequiredPropertyIsNull_WhenChargeNameIsNullOrWhiteSpace_ThrowsArgumentException(string chargeName)
-        {
-            // Arrange
-            var command = Build();
-            command.ChargeOperation.ChargeName = chargeName;
-
-            // Act & Assert
-            Assert.Throws<ArgumentException>(() => ChargeCommandNullChecker.ThrowExceptionIfRequiredPropertyIsNull(command!));
-        }
-
-        [Theory]
-        [InlineData(null)]
-        [InlineData("")]
-        [InlineData(" ")]
-        public void ThrowExceptionIfRequiredPropertyIsNull_WhenChargeDescriptionIsNullOrWhiteSpace_ThrowsArgumentException(string chargeDescription)
-        {
-            // Arrange
-            var command = Build();
-            command.ChargeOperation.ChargeDescription = chargeDescription;
-
-            // Act & Assert
-            Assert.Throws<ArgumentException>(() => ChargeCommandNullChecker.ThrowExceptionIfRequiredPropertyIsNull(command!));
         }
 
         [Fact]
