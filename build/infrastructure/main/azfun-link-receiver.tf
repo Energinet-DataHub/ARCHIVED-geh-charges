@@ -27,6 +27,8 @@ module "azfun_link_receiver" {
     WEBSITE_RUN_FROM_PACKAGE                     = 1
     WEBSITES_ENABLE_APP_SERVICE_STORAGE          = true
     FUNCTIONS_WORKER_RUNTIME                     = "dotnet-isolated"
+    CHARGE_LINK_CREATED_TOPIC_NAME               = module.sbt_link_command_accepted.name
+    CHARGE_LINK_CREATED_SENDER_CONNECTION_STRING = trimsuffix(module.sbtar_link_command_accepted_sender.primary_connection_string, ";EntityPath=${module.sbt_link_command_accepted.name}")
   }
   dependencies                              = [
     module.appi.dependent_on,
