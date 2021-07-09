@@ -26,8 +26,18 @@ namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
                     RequestDate = document.RequestDate.ToString(),
                     Type = document.Type.ToString(),
                     CreatedDateTime = document.CreatedDateTime.ToString(),
-                    Sender = document.Sender.ToString(),
-                    Recipient = document.Recipient.ToString(),
+                    Sender = new MarketParticipantDomain
+                    {
+                        Id = document.Sender.Id,
+                        Name = document.Sender.Name,
+                        MarketParticipantRole = document.Sender.BusinessProcessRole.ToString(),
+                    },
+                    Recipient = new MarketParticipantDomain
+                    {
+                        Id = document.Recipient.Id,
+                        Name = document.Recipient.Name,
+                        MarketParticipantRole = document.Recipient.BusinessProcessRole.ToString(),
+                    },
                     IndustryClassification = document.IndustryClassification.ToString(),
                     BusinessReasonCode = document.BusinessReasonCode.ToString(),
                 },

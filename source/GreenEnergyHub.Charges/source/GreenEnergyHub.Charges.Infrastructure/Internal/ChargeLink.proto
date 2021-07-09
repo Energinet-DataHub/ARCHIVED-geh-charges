@@ -32,6 +32,12 @@ message ChargeLinkCommandDomain {
   string correlation_id = 3;
 }
 
+message MarketParticipantDomain {
+    string id = 1;
+    string name = 2;
+    string market_participant_role = 3;
+}
+
 /**
  * Represents a ChargeLink
  */
@@ -40,8 +46,8 @@ message DocumentDomain {
   string request_date = 2;
   string type = 3;
   string created_date_time = 4;
-  string sender = 5;
-  string recipient = 6;
+  MarketParticipantDomain sender = 5;
+  MarketParticipantDomain recipient = 6;
   string industry_classification = 7;
   string business_reason_code = 8;
 }
