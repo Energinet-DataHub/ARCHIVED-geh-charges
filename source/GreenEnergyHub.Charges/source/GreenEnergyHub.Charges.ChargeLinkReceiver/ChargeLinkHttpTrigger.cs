@@ -16,6 +16,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Domain.ChargeLinks;
+using GreenEnergyHub.Charges.Domain.ChargeLinks.Result;
 using GreenEnergyHub.Charges.Infrastructure.Messaging;
 using GreenEnergyHub.Messaging.Transport;
 using Microsoft.AspNetCore.Mvc;
@@ -60,11 +61,13 @@ namespace GreenEnergyHub.Charges.ChargeLinkReceiver
             SetupCorrelationContext(context);
 
             var command = await GetChargeLinkCommandAsync(req.Body).ConfigureAwait(false);
-
             await _messageDispatcher.DispatchAsync(
                 command).ConfigureAwait(false);
 
-            return new OkResult();
+            var result = ChargeLinksMessageResult.CreateSuccess();
+            result.CorrelationId = command.CorrelationId;
+
+            return new OkObjectResult(result);
         }
 
         private static async Task<byte[]> ConvertStreamToBytesAsync(Stream stream)
