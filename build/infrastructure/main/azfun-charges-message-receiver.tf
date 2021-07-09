@@ -45,14 +45,14 @@ module "azfun_message_receiver_plan" {
   location            = data.azurerm_resource_group.main.location
   kind                = "FunctionApp"
   sku                 = {
-    tier  = "Free"
-    size  = "F1"
+    tier  = "Basic"
+    size  = "B1"
   }
   tags                = data.azurerm_resource_group.main.tags
 }
 
 module "azfun_message_receiver_stor" {
-  source                    = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//storage-account?ref=1.2.0"
+  source                    = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//storage-account?ref=1.7.0"
   name                      = "stormsgrcvr${random_string.message_receiver.result}"
   resource_group_name       = data.azurerm_resource_group.main.name
   location                  = data.azurerm_resource_group.main.location
