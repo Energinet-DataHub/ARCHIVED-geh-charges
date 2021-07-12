@@ -145,4 +145,4 @@ runs:
         then
           echo "INCLUDE_TESTDATA=includeTestData" >> $GITHUB_ENV
         fi
-      dotnet run --project source/GreenEnergyHub.Charges/source/GreenEnergyHub.Charges.ApplyDBMigrationsApp/ --configuration Release  ${{ steps.terraform-apply.outputs.sql-server-connection-string }} includeSeedData ${{ inputs.INCLUDE_TESTDATA }}
+        dotnet run --project source/GreenEnergyHub.Charges/source/GreenEnergyHub.Charges.ApplyDBMigrationsApp/ --configuration Release  ${{ steps.terraform-apply.outputs.sql-server-connection-string }} includeSeedData ${{ inputs.INCLUDE_TESTDATA }}
