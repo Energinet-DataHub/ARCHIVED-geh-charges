@@ -13,7 +13,7 @@
 # limitations under the License.
 locals {
     sqlServerAdminName                        = "gehdbadmin"
-	CHARGE_DB_CONNECTION_STRING               = "Server=${module.sqlsrv_charges.fully_qualified_domain_name};Database=${module.sqldb_charges.name};Uid=${module.sqlsrv_admin_username.value};Pwd=${module.sqlsrv_admin_password.value};"
+	CHARGE_DB_CONNECTION_STRING               = "Server=${module.sqlsrv_charges.fully_qualified_domain_name};Database=${module.sqldb_charges.name};Uid=${local.sqlServerAdminName};Pwd=${random_password.sqlsrv_admin_password.result};"
     LOCAL_TIMEZONENAME                        = "Europe/Copenhagen"
     # Must match the name used in the repo geh-shared-resources
     METERING_POINT_CREATED_TOPIC_NAME         = "MeteringPointCreatedEventMessage"

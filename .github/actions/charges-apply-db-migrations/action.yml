@@ -27,5 +27,5 @@ runs:
           echo "INCLUDE_TESTDATA=includeTestData" >> $GITHUB_ENV
         fi
       shell: bash
-    - run: dotnet run --project source/GreenEnergyHub.Charges/source/GreenEnergyHub.Charges.ApplyDBMigrationsApp/ --configuration Release -- ${{ env.CHARGES_SQL_CONNNECTION_STRING }} includeSeedData ${{ env.INCLUDE_TESTDATA }}
+    - run: dotnet run --project source/GreenEnergyHub.Charges/source/GreenEnergyHub.Charges.ApplyDBMigrationsApp/ --configuration Release -- "${{ env.CHARGES_SQL_CONNNECTION_STRING }}" includeSeedData ${{ env.INCLUDE_TESTDATA }}
       shell: bash
