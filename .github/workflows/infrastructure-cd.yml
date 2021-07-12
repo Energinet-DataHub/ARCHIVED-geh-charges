@@ -88,3 +88,9 @@ jobs:
           ENVIRONMENT_LONG: ${{ matrix.environment.long }}
           ENVIRONMENT_NAME: ${{ matrix.environment.name }}
           TERRAFORM_BACKEND_FILE_PATH: "./build/infrastructure/main/backend.tf"
+
+      - name: Applying charges migrations
+        uses: ./.github/actions/charges-apply-db-migrations
+        with:
+          sql-server-connection-string: ${{ steps.terraform.outputs.sql-server-connection-string }}
+          environment-name: ${{ matrix.environment.name }}
