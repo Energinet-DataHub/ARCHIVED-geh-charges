@@ -71,3 +71,13 @@ resource "azurerm_sql_firewall_rule" "sqlsrv_fwrule" {
   start_ip_address    = "0.0.0.0"
   end_ip_address      = "255.255.255.255"  
 }
+
+data "azurerm_key_vault_secret" "SQLSERVER_ADMIN_PASSWORD" {
+  name         = "SQLSERVER--ADMIN--PASSWORD"
+  key_vault_id = module.kv_charges.id
+}
+
+data "azurerm_key_vault_secret" "SQLSERVER_ADMIN_PASSWORD" {
+  name         = "SQLSERVER--ADMIN--PASSWORD"
+  key_vault_id = module.kv_charges.id
+}
