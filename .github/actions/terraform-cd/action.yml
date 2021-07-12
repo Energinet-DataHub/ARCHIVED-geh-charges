@@ -137,3 +137,12 @@ runs:
       run: | 
         terraform apply -no-color -auto-approve
         echo "::set-output name=sql-server-connection-string::$(terraform output sql-server-connection-string)"
+
+    - name: Setup variable to use test data in certain environments only
+      shell: bash
+      run: |
+        if ${{ inputs.ENVIRONMENT_NAME == 'Development' || inputs.ENVIRONMENT_NAME == 'Test' }}
+        then
+          echo "INCLUDE_TESTDATA=includeTestData" >> $GITHUB_ENV
+        fi
+        dotnet run --project source/Energinet.DataHub.MeteringPoints.ApplyDBMigrationsApp/ --configuration Release -- ${{ steps.terraform-apply.outputs.sql-server-connection-string }} includeSeedData ${{ inputs.INCLUDE_TESTDATA }}
