@@ -45,6 +45,10 @@ inputs:
     required: true
   TERRAFORM_BACKEND_FILE_PATH:
     required: true
+outputs:
+  sql-server-connection-string:
+    description: "The charges sql server connection string"
+    value: ${{ steps.terraform-apply.outputs.sql-server-connection-string }}
 
 runs:
   using: composite
@@ -132,4 +136,4 @@ runs:
       working-directory: ./build/infrastructure/main
       run: | 
         terraform apply -no-color -auto-approve
-        echo "::set-output name=sql-server-connectionstring::$(terraform output metering_point_connection_string)"
+        echo "::set-output name=sql-server-connection-string::$(terraform output sql-server-connection-string)"

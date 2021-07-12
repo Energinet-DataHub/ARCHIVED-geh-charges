@@ -71,6 +71,7 @@ jobs:
       
       - name: Terraform CD
         uses: ./.github/actions/terraform-cd
+        id: terraform
         with:
           SECRETS_SHARED_RESOURCES_KEYVAULT_NAME: ${{ secrets.SHARED_RESOURCES_KEYVAULT_NAME }}
           SECRETS_SHARED_RESOURCES_RESOURCE_GROUP_NAME: ${{ secrets.SHARED_RESOURCES_RESOURCE_GROUP_NAME }}
@@ -87,13 +88,9 @@ jobs:
           ENVIRONMENT_LONG: ${{ matrix.environment.long }}
           ENVIRONMENT_NAME: ${{ matrix.environment.name }}
           TERRAFORM_BACKEND_FILE_PATH: "./build/infrastructure/main/backend.tf"
-
+          
       - name: Applying charges migrations
         uses: ./.github/actions/charges-apply-db-migrations
         with:
-          sql-server-url: ${{ steps.terraform-apply.outputs.sql-server-url }}
-          sql-database-name: ${{ steps.terraform-apply.outputs.charges-sql-database-name }}
-          user-keyvaultname: ${{ steps.terraform-apply.outputs.charges-user-keyvaultname }}
-          password-keyvaultname: ${{ steps.terraform-apply.outputs.charges-password-keyvaultname }}
-          keyvault-name: ${{ steps.terraform-apply.outputs.kv-charges-name }}
+          sql-server-connection-string: ${{ steps.terraform.outputs.sql-server-connection-string }}
           environment-name: ${{ matrix.environment.name }}
