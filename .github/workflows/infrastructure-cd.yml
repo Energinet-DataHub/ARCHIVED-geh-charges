@@ -68,9 +68,10 @@ jobs:
         with:
           terraform_wrapper: false
           terraform_version: 0.14.10
-      
+
       - name: Terraform CD
         uses: ./.github/actions/terraform-cd
+        id: terraform
         with:
           SECRETS_SHARED_RESOURCES_KEYVAULT_NAME: ${{ secrets.SHARED_RESOURCES_KEYVAULT_NAME }}
           SECRETS_SHARED_RESOURCES_RESOURCE_GROUP_NAME: ${{ secrets.SHARED_RESOURCES_RESOURCE_GROUP_NAME }}
@@ -91,9 +92,5 @@ jobs:
       - name: Applying charges migrations
         uses: ./.github/actions/charges-apply-db-migrations
         with:
-          sql-server-url: ${{ steps.terraform-apply.outputs.sql-server-url }}
-          sql-database-name: ${{ steps.terraform-apply.outputs.charges-sql-database-name }}
-          user-keyvaultname: ${{ steps.terraform-apply.outputs.charges-user-keyvaultname }}
-          password-keyvaultname: ${{ steps.terraform-apply.outputs.charges-password-keyvaultname }}
-          keyvault-name: ${{ steps.terraform-apply.outputs.kv-charges-name }}
+          sql-server-connection-string: ${{ steps.terraform.outputs.sql-server-connection-string }}
           environment-name: ${{ matrix.environment.name }}
