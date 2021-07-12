@@ -121,7 +121,9 @@ runs:
       shell: bash
       working-directory: ./build/infrastructure
       run: |
-        cp -fR ./env/${{ inputs.ENVIRONMENT_NAME }}/* ./main
+        if [ -d "${{ inputs.ENVIRONMENT_NAME }}" ]; then
+          cp -fR ./env/${{ inputs.ENVIRONMENT_NAME }}/* ./main
+        fi
 
     - name: Terraform Init
       shell: bash
