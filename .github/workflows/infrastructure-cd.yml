@@ -93,5 +93,5 @@ jobs:
         uses: ./.github/actions/charges-apply-db-migrations
         with:
           sql-connection-string-keyvaultsecretname: ${{ steps.terraform.outputs.sql-connection-string-keyvaultsecretname }}
-          kv-charges-name: ${{ steps.terraform.outputs.kv-charges-name }}
+          keyvault-name: ${{ steps.terraform.outputs.kv-charges-name }}
           environment-name: ${{ matrix.environment.name }}
