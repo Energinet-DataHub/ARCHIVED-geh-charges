@@ -23,5 +23,9 @@ namespace GreenEnergyHub.Charges.Domain.MarketDocument
         EnergySupplier = 1,
         GridAccessProvider = 2,
         SystemOperator = 3,
+        MeteredDataResponsible = 4,
+        EnergyAgency = 5,
+        MeteredDataAdministrator = 6,
+        MeteringPointAdministrator = 7,
     }
 }

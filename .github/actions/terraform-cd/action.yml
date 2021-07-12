@@ -45,6 +45,10 @@ inputs:
     required: true
   TERRAFORM_BACKEND_FILE_PATH:
     required: true
+outputs:
+  sql-server-connection-string:
+    description: "The charges sql server connection string"
+    value: ${{ steps.terraform-apply.outputs.sql-server-connection-string }}
 
 runs:
   using: composite
@@ -84,7 +88,7 @@ runs:
           echo "Storage exists";
           exit;
         fi
-        az storage account create --resource-group ${{ inputs.ENVIRONMENT_LONG }} --name ${{ env.TERRAFORM_STORAGE_NAME }} --sku Standard_LRS --encryption-services blob
+        az storage account create --resource-group ${{ inputs.ENVIRONMENT_LONG }} --name ${{ env.TERRAFORM_STORAGE_NAME }} --sku Standard_LRS --encryption-services blob --min-tls-version TLS1_2
         account_key=$(az storage account keys list --resource-group ${{ inputs.ENVIRONMENT_LONG }} --account-name ${{ env.TERRAFORM_STORAGE_NAME }} --query '[0].value' -o tsv)
         az storage container create --name tfstate --account-name ${{ env.TERRAFORM_STORAGE_NAME }} --account-key $account_key
 
@@ -132,4 +136,13 @@ runs:
       working-directory: ./build/infrastructure/main
       run: | 
         terraform apply -no-color -auto-approve
-        echo "::set-output name=sql-server-connectionstring::$(terraform output metering_point_connection_string)"
+        echo "::set-output name=sql-server-connection-string::$(terraform output sql-server-connection-string)"
+
+    - name: Setup variable to use test data in certain environments only
+      shell: bash
+      run: |
+        if ${{ inputs.ENVIRONMENT_NAME == 'Development' || inputs.ENVIRONMENT_NAME == 'Test' }}
+        then
+          echo "INCLUDE_TESTDATA=includeTestData" >> $GITHUB_ENV
+        fi
+        dotnet run --project source/GreenEnergyHub.Charges/source/GreenEnergyHub.Charges.ApplyDBMigrationsApp/ --configuration Release -- ${{ steps.terraform-apply.outputs.sql-server-connection-string }} includeSeedData ${{ inputs.INCLUDE_TESTDATA }}

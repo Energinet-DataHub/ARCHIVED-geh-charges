@@ -20,6 +20,7 @@ namespace GreenEnergyHub.Charges.Domain.MarketDocument
     public enum BusinessReasonCode
     {
         Unknown = 0,
-        UpdateChargeInformation = 18, // This will be received as D18 in ebiX.
+        UpdateMasterDataSettlement = 1,
+        UpdateChargeInformation = 18,
     }
 }

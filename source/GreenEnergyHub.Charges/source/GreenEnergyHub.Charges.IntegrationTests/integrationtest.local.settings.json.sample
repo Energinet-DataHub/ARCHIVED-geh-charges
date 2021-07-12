@@ -21,5 +21,14 @@
     "POST_OFFICE_SUBSCRIPTION_NAME": "sbs-post-office",
     "CHARGE_DB_CONNECTION_STRING": "<charge db connection string>",
     "LOCAL_TIMEZONENAME": "Your time zone ID, e.g.Europe/Copenhagen, see https://en.wikipedia.org/wiki/List_of_tz_database_time_zones for others"
+    "SUBSCRIPTION_ID": "<Azure subscription id>",
+    "RESOURCE_GROUP_NAME": "<Azure resource group name>",
+    "DEFAULT_LOCATION": "<Azure default location>",
+    "TENANT_ID": "<Azure tenant id>",
+    "CLIENT_ID": "<Azure client id>",
+    "CLIENT_SECRET": "<Azure client secret>",
+    "PROJECT_NAME": "Charges",
+    "ORGANISATION_NAME": "endk",
+    "ENVIRONMENT_SHORT": "s"
     }
 }
