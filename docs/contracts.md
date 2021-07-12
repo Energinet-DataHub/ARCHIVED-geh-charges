@@ -98,8 +98,8 @@ Represents the creation and update of one or more charge prices.
 | ChargeId | string | required | A charge identifier provided by the Market Participant. Combined with Charge Owner and Charge Type it becomes unique  |
 | ChargeType | enum | required | The type of charge; tariff, fee or subscription |
 | ChargeOwner | string | required | A charge owner identification, e.g. the Market Participant's GLN or EIC number |
-| UpdatedPeriodStartDateTime | Timestamp | required | In UTC. The time interval covers the entire period of charge prices, the starting point here is equal to the time of the very first charge price in the list  |
-| UpdatedPeriodEndDateTime | Timestamp | required | In UTC. The time interval covers the entire period of charge prices, the end point here is equal to the time of the last charge price in the list |
+| UpdatedPeriodStartDateTime | Timestamp | required | In UTC. The start of the charge prices period. The start equals the time of the earliest charge price in the list |
+| UpdatedPeriodEndDateTime | Timestamp | required | In UTC. The end of the charge prices period. The end is to be considered an up to (excluding) date time which equals the end of the latest charge price in the list. This is a calculated value that adds a single duration equal to the charge's resolution, e.g. hourly, to the latest charge price's time |
 | Points | [ChargePrice](#.ChargePrice) | required | A list with charge prices |
 
 <a name=".ChargePrice"></a>
