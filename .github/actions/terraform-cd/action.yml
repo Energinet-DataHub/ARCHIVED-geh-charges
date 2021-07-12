@@ -136,4 +136,5 @@ runs:
       working-directory: ./build/infrastructure/main
       run: | 
         terraform apply -no-color -auto-approve
-        echo "::set-output name=sql-server-connection-string::$(terraform output sql-server-connection-string)"
+        echo "::set-output name=sql-connection-string-keyvaultsecretname::$(terraform output sql_connection_string_keyvaultsecretname)"
+        echo "::set-output name=kv-charges-name::$(terraform output kv_charges_name)"
