@@ -18,6 +18,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
 using FluentAssertions;
+using GreenEnergyHub.Charges.Application.ChangeOfCharges.Repositories;
+using GreenEnergyHub.Charges.Application.Validation;
 using GreenEnergyHub.Charges.Application.Validation.BusinessValidation;
 using GreenEnergyHub.Charges.Application.Validation.BusinessValidation.Factories;
 using GreenEnergyHub.Charges.Application.Validation.BusinessValidation.ValidationRules;
@@ -54,6 +56,27 @@ namespace GreenEnergyHub.Charges.Tests.Application.Validation.BusinessValidation
             // Assert
             var actualRules = actual.GetRules().Select(r => r.GetType());
             actualRules.Should().Contain(expectedRuleType);
+        }
+
+        [Theory]
+        [InlineAutoMoqData]
+        public async Task CreateRulesForCreateCommandAsync_IfChargeExist_ThrowsException(
+            [Frozen] [NotNull] Mock<IChargeRepository> repository,
+            [NotNull] ChargeCommand command,
+            [NotNull] BusinessCreateValidationRulesFactory sut)
+        {
+            // Arrange
+            repository.Setup(
+                    r => r.CheckIfChargeExistsAsync(
+                        It.IsAny<string>(),
+                        It.IsAny<string>(),
+                        It.IsAny<ChargeType>()))
+                .Returns(Task.FromResult(true));
+
+            // Act / Assert
+            await Assert.ThrowsAsync<Exception>(
+                    () => sut.CreateRulesForCreateCommandAsync(command!))
+                .ConfigureAwait(false);
         }
 
         private static ChargeCommand TurnCommandIntoSpecifiedChargeType(ChargeCommand chargeCommand, ChargeType chargeType)

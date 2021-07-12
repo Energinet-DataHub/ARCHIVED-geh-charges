@@ -17,9 +17,6 @@ on:
   pull_request:
     branches:
       - main
-    paths:
-      - build/infrastructure
-      - .github/workflows/pr-env-setup.yml
   workflow_dispatch: {}
 env:
   ORGANISATION_NAME: endk
@@ -90,3 +87,19 @@ jobs:
         with:
           msg: "Congratulations! Your enviroment was successfully deployed into Pull_Requests (Resources will contain the name ${{ env.PROJECT_NAME }}). It will automatically be destroyed again when the PR is closed."
           check_for_duplicate_msg: true  # OPTIONAL
+
+      #########################################################################################################
+      # Integration test
+      #########################################################################################################
+
+      # Get action required for integration test from repo
+      - name: Checkout repository
+        uses: actions/checkout@master
+
+      - name: Build project
+        run: |
+          dotnet build ${{ env.INTEGRATION_TEST_CSPROJ_FILE_PATH }} --configuration Release --output ${{ github.workspace }}/output-integration-test
+
+      - name: Run integration tests
+        run: |
+          dotnet test ${{ github.workspace }}/output-integration-test/${{ env.INTEGRATION_TEST_DLL }} --filter HostingEnvironment=PullRequestGate --logger:"console;verbosity=detailed"
