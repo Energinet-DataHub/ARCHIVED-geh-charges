@@ -16,10 +16,10 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using Azure.Messaging.ServiceBus;
 using Energinet.DataHub.MeteringPoints.IntegrationEventContracts;
+using GreenEnergyHub.Charges.Domain.Events.Integration;
 using GreenEnergyHub.Charges.Infrastructure.Messaging;
-using GreenEnergyHub.Charges.Infrastructure.Transport;
-using GreenEnergyHub.Charges.Infrastructure.Transport.Protobuf.Integration;
 using GreenEnergyHub.Charges.MeteringPointCreatedReceiver;
+using GreenEnergyHub.Messaging.Protobuf;
 using GreenEnergyHub.Messaging.Transport;
 using Microsoft.Azure.Functions.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection;
@@ -45,7 +45,7 @@ namespace GreenEnergyHub.Charges.MeteringPointCreatedReceiver
             builder.Services.SendProtobuf<MeteringPointCreated>();
 
             builder.Services.AddScoped<MessageDispatcher>();
-            builder.Services.AddScoped<Channel, ServiceBusChannel>();
+            builder.Services.AddScoped<Channel, ServiceBusChannel<MeteringPointCreatedEvent>>();
 
             var connectionString = Environment.GetEnvironmentVariable("METERING_POINT_CREATED_LISTENER_CONNECTION_STRING");
             var topicName = Environment.GetEnvironmentVariable("METERING_POINT_CREATED_TOPIC_NAME");

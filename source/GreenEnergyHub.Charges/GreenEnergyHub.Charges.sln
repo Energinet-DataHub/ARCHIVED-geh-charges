@@ -68,6 +68,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GreenEnergyHub.Charges.Char
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GreenEnergyHub.Charges.MeteringPointCreatedReceiver", "source\GreenEnergyHub.Charges.MeteringPointCreatedReceiver\GreenEnergyHub.Charges.MeteringPointCreatedReceiver.csproj", "{CD47DBE6-E773-43D3-9063-A0482ADEF5CC}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GreenEnergyHub.Messaging.Protobuf", "..\messaging\source\GreenEnergyHub.Messaging.Protobuf\GreenEnergyHub.Messaging.Protobuf.csproj", "{027594F4-6A33-4128-9F99-542BD19BFF31}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GreenEnergyHub.Messaging.Protobuf.Integration.ServiceCollection", "..\messaging\source\GreenEnergyHub.Messaging.Protobuf.Integration.ServiceCollection\GreenEnergyHub.Messaging.Protobuf.Integration.ServiceCollection.csproj", "{6DEF95FE-4001-400E-9F7C-F4F5E76FA563}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -166,6 +170,14 @@ Global
 		{CD47DBE6-E773-43D3-9063-A0482ADEF5CC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CD47DBE6-E773-43D3-9063-A0482ADEF5CC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CD47DBE6-E773-43D3-9063-A0482ADEF5CC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{027594F4-6A33-4128-9F99-542BD19BFF31}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{027594F4-6A33-4128-9F99-542BD19BFF31}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{027594F4-6A33-4128-9F99-542BD19BFF31}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{027594F4-6A33-4128-9F99-542BD19BFF31}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6DEF95FE-4001-400E-9F7C-F4F5E76FA563}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6DEF95FE-4001-400E-9F7C-F4F5E76FA563}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6DEF95FE-4001-400E-9F7C-F4F5E76FA563}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6DEF95FE-4001-400E-9F7C-F4F5E76FA563}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -190,6 +202,8 @@ Global
 		{9E2BAFBA-DD6E-44B8-803E-A9F6B3DB47B6} = {05DE980B-A2A7-4235-AE53-3167E94699DD}
 		{539A7F51-A284-4268-AA14-98BB6122F5EB} = {832447E5-7A46-4381-817C-5D73A20510C2}
 		{CD47DBE6-E773-43D3-9063-A0482ADEF5CC} = {832447E5-7A46-4381-817C-5D73A20510C2}
+		{027594F4-6A33-4128-9F99-542BD19BFF31} = {9FE16521-EC21-4551-9E51-0C6702D21098}
+		{6DEF95FE-4001-400E-9F7C-F4F5E76FA563} = {9FE16521-EC21-4551-9E51-0C6702D21098}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {19228BC9-BC51-4044-842C-ACD1F68D4008}

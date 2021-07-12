@@ -16,7 +16,7 @@ using System;
 using Energinet.DataHub.MeteringPoints.IntegrationEventContracts;
 using Google.Protobuf;
 using GreenEnergyHub.Charges.Domain.Events.Integration;
-using GreenEnergyHub.Charges.Infrastructure.Transport.Protobuf;
+using GreenEnergyHub.Messaging.Protobuf;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Integration.Mappers
 {
