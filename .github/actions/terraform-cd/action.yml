@@ -137,3 +137,9 @@ runs:
       run: | 
         terraform apply -no-color -auto-approve
         echo "::set-output name=sql-server-connection-string::$(terraform output sql-server-connection-string)"
+
+    - name: Applying charges migrations
+        uses: ./.github/actions/charges-apply-db-migrations
+        with:
+          sql-server-connection-string: ${{ steps.terraform-apply.outputs.sql-server-connection-string }}
+          environment-name: ${{ inputs.ENVIRONMENT_LONG }}
