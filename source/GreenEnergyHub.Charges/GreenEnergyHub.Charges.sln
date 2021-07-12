@@ -40,35 +40,35 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GreenEnergyHub.Charges.Appl
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GreenEnergyHub.Charges.MessageReceiver", "source\GreenEnergyHub.Charges.MessageReceiver\GreenEnergyHub.Charges.MessageReceiver.csproj", "{FE2916A4-709B-4B3C-B023-97C0FE2CF35B}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GreenEnergyHub.Charges.ChargeCommandReceiver", "source\GreenEnergyHub.Charges.ChargeCommandReceiver\GreenEnergyHub.Charges.ChargeCommandReceiver.csproj", "{205A40C6-42FC-4438-B47C-6384171CF755}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GreenEnergyHub.Charges.ChargeCommandReceiver", "source\GreenEnergyHub.Charges.ChargeCommandReceiver\GreenEnergyHub.Charges.ChargeCommandReceiver.csproj", "{205A40C6-42FC-4438-B47C-6384171CF755}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GreenEnergyHub.Queues", "..\queues\source\GreenEnergyHub.Queues\GreenEnergyHub.Queues.csproj", "{FF5081B2-7B4E-4F20-89F5-4216D81C1461}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GreenEnergyHub.Queues", "..\queues\source\GreenEnergyHub.Queues\GreenEnergyHub.Queues.csproj", "{FF5081B2-7B4E-4F20-89F5-4216D81C1461}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GreenEnergyHub.Queues.ValidationReportDispatcher", "..\queues\source\GreenEnergyHub.Queues.ValidationReportDispatcher\GreenEnergyHub.Queues.ValidationReportDispatcher.csproj", "{425791C6-49E2-4AD3-BBAC-C3D511F874A1}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GreenEnergyHub.Queues.ValidationReportDispatcher", "..\queues\source\GreenEnergyHub.Queues.ValidationReportDispatcher\GreenEnergyHub.Queues.ValidationReportDispatcher.csproj", "{425791C6-49E2-4AD3-BBAC-C3D511F874A1}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GreenEnergyHub.Queues.Kafka", "..\queues\source\GreenEnergyHub.Queues.Kafka\GreenEnergyHub.Queues.Kafka.csproj", "{106D1371-0EAD-4F4B-9990-EB178764B3BA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GreenEnergyHub.Queues.Kafka", "..\queues\source\GreenEnergyHub.Queues.Kafka\GreenEnergyHub.Queues.Kafka.csproj", "{106D1371-0EAD-4F4B-9990-EB178764B3BA}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GreenEnergyHub.Messaging", "..\messaging\source\GreenEnergyHub.Messaging\GreenEnergyHub.Messaging.csproj", "{5A53A82C-E529-4514-8340-817939B678AC}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GreenEnergyHub.Messaging", "..\messaging\source\GreenEnergyHub.Messaging\GreenEnergyHub.Messaging.csproj", "{5A53A82C-E529-4514-8340-817939B678AC}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GreenEnergyHub.Messaging.Integration.ServiceCollection", "..\messaging\source\GreenEnergyHub.Messaging.Integration.ServiceCollection\GreenEnergyHub.Messaging.Integration.ServiceCollection.csproj", "{4B2E6784-9886-4484-99C2-C6680E29AD19}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GreenEnergyHub.Messaging.Integration.ServiceCollection", "..\messaging\source\GreenEnergyHub.Messaging.Integration.ServiceCollection\GreenEnergyHub.Messaging.Integration.ServiceCollection.csproj", "{4B2E6784-9886-4484-99C2-C6680E29AD19}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GreenEnergyHub.Iso8601", "..\iso8601\GreenEnergyHub.Iso8601\GreenEnergyHub.Iso8601.csproj", "{3952688E-AEDD-4197-8760-5987185680B0}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GreenEnergyHub.Iso8601", "..\iso8601\GreenEnergyHub.Iso8601\GreenEnergyHub.Iso8601.csproj", "{3952688E-AEDD-4197-8760-5987185680B0}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GreenEnergyHub.Charges.Core", "source\GreenEnergyHub.Charges.Core\GreenEnergyHub.Charges.Core.csproj", "{7EB158E1-FC7E-4591-B2CC-12F5ECAC21FA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GreenEnergyHub.Charges.Core", "source\GreenEnergyHub.Charges.Core\GreenEnergyHub.Charges.Core.csproj", "{7EB158E1-FC7E-4591-B2CC-12F5ECAC21FA}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GreenEnergyHub.Charges.ChargeRejectionSender", "source\GreenEnergyHub.Charges.ChargeRejectionSender\GreenEnergyHub.Charges.ChargeRejectionSender.csproj", "{02DE278B-693D-44D4-BBE2-66E2A9DF7CE4}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GreenEnergyHub.Charges.ChargeRejectionSender", "source\GreenEnergyHub.Charges.ChargeRejectionSender\GreenEnergyHub.Charges.ChargeRejectionSender.csproj", "{02DE278B-693D-44D4-BBE2-66E2A9DF7CE4}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GreenEnergyHub.Charges.ChargeConfirmationSender", "source\GreenEnergyHub.Charges.ChargeConfirmationSender\GreenEnergyHub.Charges.ChargeConfirmationSender.csproj", "{30AD090D-A112-45EC-A25A-F9280B65B2E4}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GreenEnergyHub.Charges.ChargeConfirmationSender", "source\GreenEnergyHub.Charges.ChargeConfirmationSender\GreenEnergyHub.Charges.ChargeConfirmationSender.csproj", "{30AD090D-A112-45EC-A25A-F9280B65B2E4}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GreenEnergyHub.Charges.IntegrationTests", "source\GreenEnergyHub.Charges.IntegrationTests\GreenEnergyHub.Charges.IntegrationTests.csproj", "{BC92EDE8-BDD4-49B2-AFFC-475DB29209B7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GreenEnergyHub.Charges.IntegrationTests", "source\GreenEnergyHub.Charges.IntegrationTests\GreenEnergyHub.Charges.IntegrationTests.csproj", "{BC92EDE8-BDD4-49B2-AFFC-475DB29209B7}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GreenEnergyHub.Charges.TestCore", "source\GreenEnergyHub.Charges.TestCore\GreenEnergyHub.Charges.TestCore.csproj", "{9E2BAFBA-DD6E-44B8-803E-A9F6B3DB47B6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GreenEnergyHub.Charges.TestCore", "source\GreenEnergyHub.Charges.TestCore\GreenEnergyHub.Charges.TestCore.csproj", "{9E2BAFBA-DD6E-44B8-803E-A9F6B3DB47B6}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GreenEnergyHub.Charges.ChargeLinkReceiver", "source\GreenEnergyHub.Charges.ChargeLinkReceiver\GreenEnergyHub.Charges.ChargeLinkReceiver.csproj", "{539A7F51-A284-4268-AA14-98BB6122F5EB}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GreenEnergyHub.Charges.ChargeLinkReceiver", "source\GreenEnergyHub.Charges.ChargeLinkReceiver\GreenEnergyHub.Charges.ChargeLinkReceiver.csproj", "{539A7F51-A284-4268-AA14-98BB6122F5EB}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GreenEnergyHub.Messaging.Protobuf", "..\messaging\source\GreenEnergyHub.Messaging.Protobuf\GreenEnergyHub.Messaging.Protobuf.csproj", "{46E01A80-BCAE-498E-8250-6DE0C18ABC36}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GreenEnergyHub.Messaging.Protobuf", "..\messaging\source\GreenEnergyHub.Messaging.Protobuf\GreenEnergyHub.Messaging.Protobuf.csproj", "{46E01A80-BCAE-498E-8250-6DE0C18ABC36}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GreenEnergyHub.Messaging.Protobuf.Integration.ServiceCollection", "..\messaging\source\GreenEnergyHub.Messaging.Protobuf.Integration.ServiceCollection\GreenEnergyHub.Messaging.Protobuf.Integration.ServiceCollection.csproj", "{26DFABDA-7D73-42A5-A502-A666479454D5}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GreenEnergyHub.Messaging.Protobuf.Integration.ServiceCollection", "..\messaging\source\GreenEnergyHub.Messaging.Protobuf.Integration.ServiceCollection\GreenEnergyHub.Messaging.Protobuf.Integration.ServiceCollection.csproj", "{26DFABDA-7D73-42A5-A502-A666479454D5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
