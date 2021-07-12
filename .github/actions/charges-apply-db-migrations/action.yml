@@ -19,13 +19,13 @@ runs:
         charges_sql_connection_string=$(echo $keyvault_secret_details | python -c "import sys, json; print(json.load(sys.stdin)['value'])")
         echo ::add-mask::$charges_sql_connection_string
         echo "CHARGES_SQL_CONNNECTION_STRING=$charges_sql_connection_string" >> $GITHUB_ENV
-      shell: bash  
+      shell: bash
     - name: Setup variable to use test data in certain environments only
       run: |
         if ${{ inputs.environment-name == 'Development' || inputs.environment-name == 'Test' }}
         then
           echo "INCLUDE_TESTDATA=includeTestData" >> $GITHUB_ENV
         fi
-      shell: bash       
+      shell: bash
     - run: dotnet run --project source/GreenEnergyHub.Charges/source/GreenEnergyHub.Charges.ApplyDBMigrationsApp/ --configuration Release -- ${{ env.CHARGES_SQL_CONNNECTION_STRING }} includeSeedData ${{ env.INCLUDE_TESTDATA }}
       shell: bash
