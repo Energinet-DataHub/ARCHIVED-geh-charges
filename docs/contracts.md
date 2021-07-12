@@ -3,6 +3,7 @@
 ## Table of Contents
 
 - [IntegrationEventContract.proto](#IntegrationEventContract.proto)
+- [Charges and charge prices events](#.ChargesAndChargePricesEvents)
     - [ChargeCreated](#.ChargeCreated)
         - [ChargePeriod](#.ChargePeriod)
     - [ChargePeriodUpdated](#.ChargePeriodUpdated)
@@ -10,6 +11,10 @@
     - [ChargeDiscontinuationCancelled](#.ChargeDiscontinuationCancelled)
     - [ChargePricesUpdated](#.ChargePricesUpdated)
         - [ChargePrice](#.ChargePrice)
+- [Charge link events](#.ChargeLinkEvents)
+    - [ChargeLinkCreated](#.ChargeLinkCreated)
+        - [ChargeLinkPeriod](#.ChargeLinkPeriod)
+    - [ChargeLinkUpdated](#.ChargeLinkUpdated)
 
 <a name="IntegrationEventContract.proto"></a>
 
@@ -18,6 +23,10 @@
 Charges Domain related integration events
 
 Note: Correlation Id is expected to be available on integration events as part of their meta data and for that reason it is not reflected below.
+
+<a name=".ChargesAndChargePricesEvents"></a>
+
+## Charges and charge prices events
 
 <a name=".ChargeCreated"></a>
 
@@ -110,6 +119,10 @@ Represents the creation and update of one or more charge prices.
 | ----- | ---- | ----- | ----------- |
 | Time | Timestamp | required | In UTC. Point in time where the charge price applies |
 | Price | Decimal(14,6) | required | Charge price |
+
+<a name=".ChargeLinkEvents"></a>
+
+## Charge link events
 
 <a name=".ChargeLinkCreated"></a>
 
