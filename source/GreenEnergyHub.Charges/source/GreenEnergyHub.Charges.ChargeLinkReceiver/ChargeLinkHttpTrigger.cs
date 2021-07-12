@@ -15,6 +15,7 @@
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Threading.Tasks;
+using GreenEnergyHub.Charges.Application.ChargeLinks;
 using GreenEnergyHub.Charges.Domain.ChargeLinks;
 using GreenEnergyHub.Charges.Domain.ChargeLinks.Result;
 using GreenEnergyHub.Charges.Infrastructure.Messaging;
@@ -35,18 +36,20 @@ namespace GreenEnergyHub.Charges.ChargeLinkReceiver
         private const string FunctionName = "ChargeLinkHttpTrigger";
         private readonly ICorrelationContext _correlationContext;
         private readonly MessageExtractor _messageExtractor;
-        private readonly MessageDispatcher _messageDispatcher;
+        private readonly IChargeLinkMessageHandler _chargeLinkMessageHandler;
         private readonly ILogger _log;
 
         public ChargeLinkHttpTrigger(
             ICorrelationContext correlationContext,
+            IChargeLinkMessageHandler chargeLinkMessageHandler,
             MessageExtractor messageExtractor,
-            MessageDispatcher messageDispatcher,
             [NotNull] ILoggerFactory loggerFactory)
         {
             _correlationContext = correlationContext;
+
             _messageExtractor = messageExtractor;
-            _messageDispatcher = messageDispatcher;
+
+            _chargeLinkMessageHandler = chargeLinkMessageHandler;
             _log = loggerFactory.CreateLogger(nameof(ChargeLinkHttpTrigger));
         }
 
@@ -61,13 +64,18 @@ namespace GreenEnergyHub.Charges.ChargeLinkReceiver
             SetupCorrelationContext(context);
 
             var command = await GetChargeLinkCommandAsync(req.Body).ConfigureAwait(false);
-            await _messageDispatcher.DispatchAsync(
-                command).ConfigureAwait(false);
 
-            var result = ChargeLinksMessageResult.CreateSuccess();
-            result.CorrelationId = command.CorrelationId;
+            var chargeLinksMessageResult = await _chargeLinkMessageHandler.HandleAsync(command).ConfigureAwait(false);
 
-            return new OkObjectResult(result);
+            return new OkObjectResult(chargeLinksMessageResult);
+        }
+
+        private async Task<ChargeLinkCommand> GetChargeLinkCommandAsync(Stream stream)
+        {
+            var message = await ConvertStreamToBytesAsync(stream).ConfigureAwait(false);
+            var command = (ChargeLinkCommand)await _messageExtractor.ExtractAsync(message).ConfigureAwait(false);
+
+            return command;
         }
 
         private static async Task<byte[]> ConvertStreamToBytesAsync(Stream stream)
@@ -80,14 +88,6 @@ namespace GreenEnergyHub.Charges.ChargeLinkReceiver
         private void SetupCorrelationContext(FunctionContext context)
         {
             _correlationContext.CorrelationId = context.InvocationId;
-        }
-
-        private async Task<ChargeLinkCommand> GetChargeLinkCommandAsync(Stream stream)
-        {
-            var message = await ConvertStreamToBytesAsync(stream).ConfigureAwait(false);
-            var command = (ChargeLinkCommand)await _messageExtractor.ExtractAsync(message).ConfigureAwait(false);
-
-            return command;
         }
     }
 }
