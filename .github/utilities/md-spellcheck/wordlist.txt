@@ -7,6 +7,10 @@ ChargeCreated
 ChargeDiscontinuationCancelled
 ChargeDiscontinued
 ChargeId
+ChargeLinkCreated
+ChargeLinkId
+ChargeLinkPeriod
+ChargeLinkUpdated
 ChargeOwner
 ChargePeriod
 ChargePeriodUpdated
@@ -33,6 +37,7 @@ Energinet
 IaC
 IntegrationEventContract
 mergeable
+MeteringPointId
 MPL
 namespace
 NRules
