@@ -18,7 +18,7 @@ using GreenEnergyHub.Charges.Domain.ChargeLinks.Result;
 
 namespace GreenEnergyHub.Charges.Application.ChargeLinks
 {
-    public interface IChargeLinkMessageHandler
+    public interface IChargeLinkCommandHandler
     {
         public Task<ChargeLinksMessageResult> HandleAsync(ChargeLinkCommand chargeLinkCommand);
     }

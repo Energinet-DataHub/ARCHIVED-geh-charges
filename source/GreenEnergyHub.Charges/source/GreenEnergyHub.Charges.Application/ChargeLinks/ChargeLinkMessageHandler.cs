@@ -20,7 +20,7 @@ using GreenEnergyHub.Messaging.Transport;
 
 namespace GreenEnergyHub.Charges.Application.ChargeLinks
 {
-    public class ChargeLinkCommandHandler : IChargeLinkMessageHandler
+    public class ChargeLinkCommandHandler : IChargeLinkCommandHandler
     {
         private readonly MessageDispatcher _messageDispatcher;
 

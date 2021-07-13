@@ -36,12 +36,12 @@ namespace GreenEnergyHub.Charges.ChargeLinkReceiver
         private const string FunctionName = "ChargeLinkHttpTrigger";
         private readonly ICorrelationContext _correlationContext;
         private readonly MessageExtractor _messageExtractor;
-        private readonly IChargeLinkMessageHandler _chargeLinkMessageHandler;
+        private readonly IChargeLinkCommandHandler _chargeLinkCommandHandler;
         private readonly ILogger _log;
 
         public ChargeLinkHttpTrigger(
             ICorrelationContext correlationContext,
-            IChargeLinkMessageHandler chargeLinkMessageHandler,
+            IChargeLinkCommandHandler chargeLinkCommandHandler,
             MessageExtractor messageExtractor,
             [NotNull] ILoggerFactory loggerFactory)
         {
@@ -49,7 +49,7 @@ namespace GreenEnergyHub.Charges.ChargeLinkReceiver
 
             _messageExtractor = messageExtractor;
 
-            _chargeLinkMessageHandler = chargeLinkMessageHandler;
+            _chargeLinkCommandHandler = chargeLinkCommandHandler;
             _log = loggerFactory.CreateLogger(nameof(ChargeLinkHttpTrigger));
         }
 
@@ -65,7 +65,7 @@ namespace GreenEnergyHub.Charges.ChargeLinkReceiver
 
             var command = await GetChargeLinkCommandAsync(req.Body).ConfigureAwait(false);
 
-            var chargeLinksMessageResult = await _chargeLinkMessageHandler.HandleAsync(command).ConfigureAwait(false);
+            var chargeLinksMessageResult = await _chargeLinkCommandHandler.HandleAsync(command).ConfigureAwait(false);
 
             return new OkObjectResult(chargeLinksMessageResult);
         }
