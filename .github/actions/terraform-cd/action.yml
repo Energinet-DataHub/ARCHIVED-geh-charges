@@ -121,7 +121,7 @@ runs:
       shell: bash
       working-directory: ./build/infrastructure
       run: |
-        if [ -d "${{ inputs.ENVIRONMENT_NAME }}" ]; then
+        if [ -d "./env/${{ inputs.ENVIRONMENT_NAME }}" ]; then
           cp -fR ./env/${{ inputs.ENVIRONMENT_NAME }}/* ./main
         fi
 
