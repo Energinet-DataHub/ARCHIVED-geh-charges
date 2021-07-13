@@ -15,10 +15,14 @@
 using System;
 using GreenEnergyHub.Charges.Application;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
+using GreenEnergyHub.Charges.Domain.MarketDocument;
+using GreenEnergyHub.Charges.Infrastructure.Context.Model;
 using GreenEnergyHub.Charges.Tests.Builders;
 using GreenEnergyHub.TestHelpers;
 using Xunit;
 using Xunit.Categories;
+using Xunit.Sdk;
+using MarketParticipant = GreenEnergyHub.Charges.Domain.MarketDocument.MarketParticipant;
 
 namespace GreenEnergyHub.Charges.Tests.Application
 {
@@ -49,6 +53,38 @@ namespace GreenEnergyHub.Charges.Tests.Application
 
             // Act & Assert
             Assert.Throws<ArgumentException>(() => ChargeCommandNullChecker.ThrowExceptionIfRequiredPropertyIsNull(c));
+        }
+
+        [Fact]
+        public void ThrowExceptionIfRequiredPropertyIsNull_WhenValid_DoesNotThrow()
+        {
+            // Arrange
+            var command = Build();
+
+            // Act / Assert
+            ChargeCommandNullChecker.ThrowExceptionIfRequiredPropertyIsNull(command);
+        }
+
+        [Fact]
+        public void ThrowExceptionIfRequiredPropertyIsNull_WhenCommandIsNull_ThrowsArgumentNullException()
+        {
+            // Arrange
+            ChargeCommand? command = null;
+
+            // Act & Assert
+            Assert.Throws<ArgumentNullException>(() => ChargeCommandNullChecker.ThrowExceptionIfRequiredPropertyIsNull(command!));
+        }
+
+        [Fact]
+        public void ThrowExceptionIfRequiredPropertyIsNull_WhenParticipantIsNull_ThrowsArgumentNullException()
+        {
+            // Arrange
+            MarketParticipant? marketParticipant = null;
+            var command = Build();
+            command.Document.Sender = marketParticipant!;
+
+            // Act & Assert
+            Assert.Throws<ArgumentNullException>(() => ChargeCommandNullChecker.ThrowExceptionIfRequiredPropertyIsNull(command!));
         }
 
         [Fact]

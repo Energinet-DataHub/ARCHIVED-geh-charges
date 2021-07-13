@@ -12,12 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
 using GreenEnergyHub.Charges.Domain.MarketDocument;
 using GreenEnergyHub.Charges.Infrastructure.Context;
 using GreenEnergyHub.Charges.Infrastructure.Repositories;
+using GreenEnergyHub.Charges.TestCore;
 using Microsoft.EntityFrameworkCore;
 using NodaTime;
 using Xunit;
@@ -94,6 +97,20 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
 
             // Assert
             Assert.True(expected);
+        }
+
+        [Theory]
+        [InlineAutoMoqData]
+        public async Task StoreChargeAsync_WhenChargeIsNull_ThrowsArgumentNullException(
+            [NotNull] ChargeRepository sut)
+        {
+            // Arrange
+            Charge? charge = null;
+
+            // Act / Assert
+            await Assert.ThrowsAsync<ArgumentNullException>(
+                    () => sut.StoreChargeAsync(charge!))
+                .ConfigureAwait(false);
         }
 
         private static Charge GetValidCharge()

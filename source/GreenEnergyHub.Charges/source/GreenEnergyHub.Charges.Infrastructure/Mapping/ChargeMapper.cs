@@ -88,8 +88,6 @@ namespace GreenEnergyHub.Charges.Infrastructure.Mapping
         private static ChargeOperation MapToChargeOperation(
             [NotNull] Domain.Charge charge)
         {
-            if (charge == null) throw new ArgumentNullException(nameof(charge));
-
             return new ChargeOperation
             {
                 CorrelationId = charge.CorrelationId,
@@ -102,8 +100,6 @@ namespace GreenEnergyHub.Charges.Infrastructure.Mapping
             [NotNull] Domain.Charge charge,
             ChargeOperation chargeOperation)
         {
-            if (charge == null) throw new ArgumentNullException(nameof(charge));
-
             return charge.Points.Select(point => new ChargePrice
                 {
                     Time = point.Time.ToDateTimeUtc(),
@@ -116,8 +112,6 @@ namespace GreenEnergyHub.Charges.Infrastructure.Mapping
             [NotNull] Domain.Charge charge,
             ChargeOperation chargeOperation)
         {
-            if (charge == null) throw new ArgumentNullException(nameof(charge));
-
             return new ChargePeriodDetails
             {
                 Description = charge.Description,
