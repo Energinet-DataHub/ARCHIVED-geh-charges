@@ -28,7 +28,7 @@ namespace GreenEnergyHub.Charges.Domain.ChargeLinks
         { }
 
         /// <summary>
-        /// Contains a unique ID for the specific link, provided by the sender.
+        /// Contains a ID for the specific link, provided by the sender. Combined with sender.id it becomes unique.
         /// </summary>
         public string Id { get; set; }
 
