@@ -20,6 +20,7 @@ using GreenEnergyHub.Charges.Domain.ChargeLinks;
 using GreenEnergyHub.Charges.Domain.MarketDocument;
 using GreenEnergyHub.Charges.Infrastructure.Internal.Mappers;
 using GreenEnergyHub.Messaging.MessageTypes.Common;
+using GreenEnergyHub.TestHelpers.FluentAssertionsExtensions;
 using NodaTime;
 using Xunit;
 using Xunit.Categories;
@@ -91,7 +92,8 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Internal.Mappers
             convertedDocument.Type.Should().BeEquivalentTo(chargeLinkDocument.Type.ToString());
             convertedDocument.RequestDate.Should().BeEquivalentTo(chargeLinkDocument.RequestDate.ToString());
             convertedDocument.IndustryClassification.Should().BeEquivalentTo(chargeLinkDocument.IndustryClassification.ToString());
-
+            convertedDocument.Should().NotContainNullsOrEmptyEnumerables();
+            chargeLinkDocument.Should().NotContainNullsOrEmptyEnumerables();
             converted.ChargeLink.Id.Should().Be(chargeLink.ChargeLink.Id);
             converted.ChargeLink.ChargeId.Should().Be(chargeLink.ChargeLink.ChargeId);
             converted.ChargeLink.ChargeOwner.Should().Be(chargeLink.ChargeLink.ChargeOwner);
