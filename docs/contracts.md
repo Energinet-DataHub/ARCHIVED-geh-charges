@@ -24,6 +24,7 @@ Charges Domain related integration events
 
 Note: Correlation Id is expected to be available on integration events as part of their meta data and for that reason it is not reflected below.
 
+<br>
 <a name=".ChargesAndChargePricesEvents"></a>
 
 ## Charges and charge prices events
@@ -120,6 +121,7 @@ Represents the creation and update of one or more charge prices.
 | Time | Timestamp | required | In UTC. Point in time where the charge price applies |
 | Price | Decimal(14,6) | required | Charge price |
 
+<br>
 <a name=".ChargeLinkEvents"></a>
 
 ## Charge link events
@@ -132,7 +134,7 @@ Represents the creation of a new charge link
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| ChargeLinkId | string | required | A charge link identifier provided by the Market Participant (add request before identifier???)  |
+| ChargeLinkId | string | required | An identifier for the charge link event. Provided by the Market Participant. Uniqueness cannot be guaranteed |
 | MeteringPointId | string | required | A unique metering point identifier |
 | ChargeId | string | required | A charge identifier. Combined with Charge Owner and Charge Type it becomes unique  |
 | ChargeType | enum | required | The type of charge; tariff, fee or subscription |
@@ -149,21 +151,21 @@ Represents a charge link period.
 | ----- | ---- | ----- | ----------- |
 | StartDateTime | Timestamp | required | In UTC. The charge link period's valid from date and time |
 | EndDateTime | Timestamp | optional with default value | In UTC. The charge link period's valid to date and time. The default value will be the equivalent to 9999-12-31T23:59:59Z without milliseconds |
-| Factor | int | optional/required |  |
+| Factor | int | required | Indicates the number of times the same fee or subscription must be collected. Always 1 for tariffs |
 
 <a name=".ChargeLinkUpdated"></a>
 
 ### ChargeLinkUpdated
 
-Represents....
+Represents the update of one or more charge links.
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| ChargeLinkId | string | required | A charge link identifier provided by the Market Participant (add request before identifier???) |
+| ChargeLinkId | string | required | An identifier for the charge link event. Provided by the Market Participant. Uniqueness cannot be guaranteed |
 | MeteringPointId | string | required | A unique metering point identifier |
 | ChargeId | string | required | A charge identifier. Combined with Charge Owner and Charge Type it becomes unique  |
 | ChargeType | enum | required | The type of charge; tariff, fee or subscription |
 | ChargeOwner | string | required | A charge owner identification, e.g. the Market Participant's GLN or EIC number |
-| UpdatedPeriodStartDateTime | Timestamp | required | In UTC. Time interval covering the entire period of charge link updates within this event. The start equals the StartDateTime of the earliest charge link in the Periods list.
+| UpdatedPeriodStartDateTime | Timestamp | required | In UTC. Time interval covering the entire period of charge link updates within this event. The start equals the StartDateTime of the earliest charge link in the Periods list |
 | UpdatedPeriodEndDateTime | Timestamp | required | In UTC. Time interval covering the entire period of charge link updates within this event. The end equals the EndDateTime of the latest charge link in the Periods list |
-| Periods | [ChargeLinkPeriod](#.ChargeLinkPeriod) | required | A list of charge link periods |
+| Periods | [ChargeLinkPeriod](#.ChargeLinkPeriod) | required | A list of charge link periods and factor values |
