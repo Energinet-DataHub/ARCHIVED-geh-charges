@@ -27,27 +27,27 @@ option csharp_namespace = "Energinet.DataHub.ChargeLinks.InternalContracts";
 message ChargeLinkCommandDomain {
   DocumentDomain document = 1;
   ChargeLinkDomain charge_link = 2;
-  string correlation_id = 3;
+  string correlation_id = 3; // Unique identifier used inside GEH to identify a message across domains and inside domains
 }
 
 message MarketParticipantDomain {
-    string id = 1;
-    string name = 2;
-    string market_participant_role = 3;
+    string id = 1; // Contains an ID that identifies the Market Participants. In Denmark this would be the GLN number or EIC code.
+    string name = 2; // Name of the Market Participant
+    string market_participant_role = 3;  // Contains the role a market participant uses when initiating and communicating with Green Energy Hub
 }
 
 /**
  * Represents a ChargeLink
  */
 message DocumentDomain {
-  string id = 1;
-  string request_date = 2;
-  string type = 3;
-  string created_date_time = 4;
-  MarketParticipantDomain sender = 5;
-  MarketParticipantDomain recipient = 6;
-  string industry_classification = 7;
-  string business_reason_code = 8;
+  string id = 1; // An identifier for the charge link event. Provided by the Market Participant. Uniqueness cannot be guaranteed
+  string request_date = 2; // The datetime of when the request was received by GEH
+  string type = 3; // The document type indicates the intended business context of this business message.
+  string created_date_time = 4; // A datetime created by external actors and mostly used for support
+  MarketParticipantDomain sender = 5; // A market participant, e.g. a Grid Access Provider, whom may submit a charge link message.
+  MarketParticipantDomain recipient = 6; // A market participant, e.g. a Grid Access Provider, whom may receive a charge link message.
+  string industry_classification = 7; // IndustryClassification indicates the industry context. E.g. if a Charge price list is related to electricity.
+  string business_reason_code = 8; // BusinessReasonCode indicates the intended business context.
 }
 
 /**
@@ -55,11 +55,11 @@ message DocumentDomain {
  */
 message ChargeLinkDomain {
   string id = 1; // Contains a unique ID for the specific link, provided by the sender.
-  string metering_point_id = 2; //
-  string start_date_time = 3; //
-  string end_date_time = 4; //
-  string charge_id = 5; //
-  string factor = 6; //
-  string charge_owner = 7; //
-  string charge_type = 8; //
+  string metering_point_id = 2; // A unique metering point identifier
+  string start_date_time = 3; // In UTC. The charge link period's valid from date and time
+  string end_date_time = 4; // In UTC. The charge link period's valid to date and time. The default value will be the equivalent to 9999-12-31T23:59:59Z without milliseconds
+  string charge_id = 5; // A charge identifier. Combined with Charge Owner and Charge Type it becomes unique
+  string factor = 6; // Indicates the number of times the same fee or subscription must be collected. Always 1 for tariffs
+  string charge_owner = 7; // A charge owner identification, e.g. the Market Participant's GLN or EIC number
+  string charge_type = 8; // The type of charge; tariff, fee or subscription
 }
