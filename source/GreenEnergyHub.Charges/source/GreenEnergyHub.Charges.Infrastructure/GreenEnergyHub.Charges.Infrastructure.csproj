@@ -48,8 +48,4 @@ limitations under the License.
       </Protobuf>
     </ItemGroup>
 
-    <ItemGroup>
-      <None Remove="Internal\ChargeLinkDomain.proto" />
-    </ItemGroup>
-
 </Project>
