@@ -4,7 +4,7 @@
     "AzureWebJobsDashboard": "UseDevelopmentStorage=true",
     "AzureWebJobsStorage": "UseDevelopmentStorage=true",
     "FUNCTIONS_WORKER_RUNTIME": "dotnet-isolated",
-    "CHARGE_LINK_CREATED_TOPIC_NAME": "charge-link-created-command-received",
-    "CHARGE_LINK_CREATED_SENDER_CONNECTION_STRING": ""
+    "CHARGE_LINK_ACCEPTED_TOPIC_NAME": "charge-link-created-command-received",
+    "CHARGE_LINK_ACCEPTED_SENDER_CONNECTION_STRING": "<connection string for charge link accepted service bus>"
   }
 }
