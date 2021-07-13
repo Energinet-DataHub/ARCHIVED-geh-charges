@@ -46,9 +46,12 @@ inputs:
   TERRAFORM_BACKEND_FILE_PATH:
     required: true
 outputs:
-  sql-server-connection-string:
-    description: "The charges sql server connection string"
-    value: ${{ steps.terraform-apply.outputs.sql-server-connection-string }}
+  sql-connection-string-keyvaultsecretname:
+    description: "The name of the secret in the keyvault containing the connection string to the charge sql database"
+    value: ${{ steps.terraform-apply.outputs.sql-connection-string-keyvaultsecretname }}
+  kv-charges-name:
+    description: "The name of the charges keyvault"
+    value: ${{ steps.terraform-apply.outputs.kv-charges-name }}    
 
 runs:
   using: composite
@@ -118,7 +121,9 @@ runs:
       shell: bash
       working-directory: ./build/infrastructure
       run: |
-        cp -fR ./env/${{ inputs.ENVIRONMENT_NAME }}/* ./main
+        if [ -d "./env/${{ inputs.ENVIRONMENT_NAME }}" ]; then
+          cp -fR ./env/${{ inputs.ENVIRONMENT_NAME }}/* ./main
+        fi
 
     - name: Terraform Init
       shell: bash
@@ -136,13 +141,5 @@ runs:
       working-directory: ./build/infrastructure/main
       run: | 
         terraform apply -no-color -auto-approve
-        echo "::set-output name=sql-server-connection-string::$(terraform output sql-server-connection-string)"
-
-    - name: Setup variable to use test data in certain environments only
-      shell: bash
-      run: |
-        if ${{ inputs.ENVIRONMENT_NAME == 'Development' || inputs.ENVIRONMENT_NAME == 'Test' }}
-        then
-          echo "INCLUDE_TESTDATA=includeTestData" >> $GITHUB_ENV
-        fi
-        dotnet run --project source/GreenEnergyHub.Charges/source/GreenEnergyHub.Charges.ApplyDBMigrationsApp/ --configuration Release -- ${{ steps.terraform-apply.outputs.sql-server-connection-string }} includeSeedData ${{ inputs.INCLUDE_TESTDATA }}
+        echo "::set-output name=sql-connection-string-keyvaultsecretname::$(terraform output sql_connection_string_keyvaultsecretname)"
+        echo "::set-output name=kv-charges-name::$(terraform output kv_charges_name)"
