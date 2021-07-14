@@ -13,10 +13,11 @@
 // limitations under the License.
 
 using System;
-using Azure.Messaging.ServiceBus;
 using Energinet.DataHub.ChargeLinks.InternalContracts;
+using GreenEnergyHub.Charges.Application.ChargeLinks;
 using GreenEnergyHub.Charges.Domain.ChargeLinks;
 using GreenEnergyHub.Charges.Infrastructure.Messaging;
+using GreenEnergyHub.Charges.Infrastructure.Messaging.Registration;
 using GreenEnergyHub.Charges.Infrastructure.Messaging.Serialization.Commands;
 using GreenEnergyHub.Messaging.Protobuf;
 using GreenEnergyHub.Messaging.Transport;
@@ -48,17 +49,22 @@ namespace GreenEnergyHub.Charges.ChargeLinkReceiver
 
         private static void ConfigureMessaging(IServiceCollection services)
         {
-            services.AddScoped<ICorrelationContext, CorrelationContext>();
-            services.AddScoped<MessageExtractor>();
             services.AddScoped<ChargeLinkCommandConverter>();
+            services.AddScoped<IChargeLinkCommandHandler, ChargeLinkCommandHandler>();
             services.AddScoped<MessageDeserializer, ChargeLinkCommandDeserializer>();
             services.SendProtobuf<ChargeLinkCommandDomain>();
             services.AddSingleton<Channel, ServiceBusChannel<ChargeLinkCommand>>();
             services.AddScoped<MessageDispatcher>();
 
-            var connectionString = Environment.GetEnvironmentVariable("CHARGE_LINK_RECEIVED_SENDER_CONNECTION_STRING");
-            var topicName = Environment.GetEnvironmentVariable("CHARGE_LINK_RECEIVED_TOPIC_NAME");
-            services.AddScoped(sp => new ServiceBusClient(connectionString).CreateSender(topicName));
+            services.AddMessagingProtobuf().AddMessageDispatcher<ChargeLinkCommand>(
+                GetEnv("CHARGE_LINK_RECEIVED_SENDER_CONNECTION_STRING"),
+                GetEnv("CHARGE_LINK_RECEIVED_TOPIC_NAME"));
+        }
+
+        private static string GetEnv(string variableName)
+        {
+            return Environment.GetEnvironmentVariable(variableName) ??
+                   throw new Exception($"Function app is missing required environment variable '{variableName}'");
         }
     }
 }
