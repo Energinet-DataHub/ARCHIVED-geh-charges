@@ -25,7 +25,7 @@ using Xunit.Categories;
 namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks
 {
     [UnitTest]
-    public class ChargeLinkMessageHandlerTests
+    public class ChargeLinkCommandHandlerTests
     {
         [Theory]
         [InlineAutoDomainData]
