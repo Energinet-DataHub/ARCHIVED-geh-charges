@@ -68,3 +68,11 @@ module "kv_metering_point_created_sender_connection_string" {
   tags                = data.azurerm_resource_group.main.tags
   dependencies        = [module.kv_shared_stub.dependent_on, module.sbtar_metering_point_created_sender.dependent_on]
 }
+
+resource "azurerm_servicebus_subscription" "sbs_metering_point_created" {
+  name                = local.METERING_POINT_CREATED_SUBSCRIPTION_NAME
+  resource_group_name = data.azurerm_resource_group.main.name
+  namespace_name      = module.sbn_external_integration_events.name
+  topic_name          = module.sbt_metering_point_created.name
+  max_delivery_count  = 1
+} 

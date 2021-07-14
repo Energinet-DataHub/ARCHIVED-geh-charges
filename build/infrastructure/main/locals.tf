@@ -18,4 +18,5 @@ locals {
     LOCAL_TIMEZONENAME                        = "Europe/Copenhagen"
     # Must match the name used in the repo geh-shared-resources
     METERING_POINT_CREATED_TOPIC_NAME         = "metering-point-created"
+    METERING_POINT_CREATED_SUBSCRIPTION_NAME  = "metering-point-created-sub-charges"
 }
