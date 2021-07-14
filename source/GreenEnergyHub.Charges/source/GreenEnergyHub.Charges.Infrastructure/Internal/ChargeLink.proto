@@ -36,7 +36,7 @@ message MarketParticipantDomain {
 }
 
 /**
- * Represents a ChargeLink
+ * Represents a Document
  */
 message DocumentDomain {
   string id = 1; // An identifier for the charge link event. Provided by the Market Participant. Uniqueness cannot be guaranteed
