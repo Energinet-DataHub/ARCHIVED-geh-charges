@@ -14,7 +14,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 -->
-<RequestChangeBillingMasterData_MarketDocument xmlns="urn:ebix:org:RequestChangeBillingMasterData:1:0">
+<RequestChangeBillingMasterData_MarketDocument xmlns="urn:ediel.org:structure:requestchangebillingmasterdata:0:1">
     <mRID>DocId_Valid_003</mRID>
     <type>D05</type>
     <process.processType>D17</process.processType>
