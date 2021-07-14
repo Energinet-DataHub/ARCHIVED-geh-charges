@@ -14,18 +14,11 @@
 
 using System;
 using System.Diagnostics.CodeAnalysis;
-using System.IO;
-using System.Reflection;
-using System.Threading;
 using System.Threading.Tasks;
-using AutoFixture.Xunit2;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Application.ChargeLinks;
 using GreenEnergyHub.Charges.Domain.ChargeLinks;
-using GreenEnergyHub.Charges.TestCore;
-using GreenEnergyHub.Messaging.Transport;
 using GreenEnergyHub.TestHelpers;
-using Moq;
 using Xunit;
 using Xunit.Categories;
 

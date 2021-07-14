@@ -43,10 +43,8 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Internal.Mappers
             var convertedDocument = converted.Document;
             convertedDocument.Id.Should().BeEquivalentTo(chargeLinkDocument.Id);
             convertedDocument.Sender.Id.Should().BeEquivalentTo(chargeLinkDocument.Sender.Id);
-            convertedDocument.Sender.Name.Should().BeEquivalentTo(chargeLinkDocument.Sender.Name);
             convertedDocument.Sender.MarketParticipantRole.Should().BeEquivalentTo(chargeLinkDocument.Sender.BusinessProcessRole.ToString());
             convertedDocument.Recipient.Id.Should().BeEquivalentTo(chargeLinkDocument.Recipient.Id);
-            convertedDocument.Recipient.Name.Should().BeEquivalentTo(chargeLinkDocument.Recipient.Name);
             convertedDocument.Recipient.MarketParticipantRole.Should().BeEquivalentTo(chargeLinkDocument.Recipient.BusinessProcessRole.ToString());
             convertedDocument.BusinessReasonCode.Should().BeEquivalentTo(chargeLinkDocument.BusinessReasonCode.ToString());
             convertedDocument.CreatedDateTime.Should().BeEquivalentTo(chargeLinkDocument.CreatedDateTime.ToString());

@@ -43,13 +43,11 @@ namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
                     Sender = new MarketParticipantDomain
                     {
                         Id = document.Sender.Id,
-                        Name = document.Sender.Name,
                         MarketParticipantRole = document.Sender.BusinessProcessRole.ToString(),
                     },
                     Recipient = new MarketParticipantDomain
                     {
                         Id = document.Recipient.Id,
-                        Name = document.Recipient.Name,
                         MarketParticipantRole = document.Recipient.BusinessProcessRole.ToString(),
                     },
                     IndustryClassification = document.IndustryClassification.ToString(),

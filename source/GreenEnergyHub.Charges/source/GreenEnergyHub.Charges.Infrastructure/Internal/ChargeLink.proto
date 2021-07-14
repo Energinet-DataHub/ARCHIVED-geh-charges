@@ -32,8 +32,7 @@ message ChargeLinkCommandDomain {
 
 message MarketParticipantDomain {
     string id = 1; // Contains an ID that identifies the Market Participants. In Denmark this would be the GLN number or EIC code.
-    string name = 2; // Name of the Market Participant
-    string market_participant_role = 3;  // Contains the role a market participant uses when initiating and communicating with Green Energy Hub
+    string market_participant_role = 2;  // Contains the role a market participant uses when initiating and communicating with Green Energy Hub
 }
 
 /**
