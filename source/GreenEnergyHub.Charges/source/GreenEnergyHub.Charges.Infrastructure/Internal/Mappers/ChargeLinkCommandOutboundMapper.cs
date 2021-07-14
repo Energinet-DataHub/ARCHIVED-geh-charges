@@ -38,20 +38,20 @@ namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
                 {
                     Id = document.Id,
                     RequestDate = document.RequestDate.ToString(),
-                    Type = document.Type.ToString(),
+                    Type = (DocumentTypeDomain)document.Type,
                     CreatedDateTime = document.CreatedDateTime.ToString(),
                     Sender = new MarketParticipantDomain
                     {
                         Id = document.Sender.Id,
-                        MarketParticipantRole = document.Sender.BusinessProcessRole.ToString(),
+                        MarketParticipantRole = (MarketParticipantRoleDomain)document.Sender.BusinessProcessRole,
                     },
                     Recipient = new MarketParticipantDomain
                     {
                         Id = document.Recipient.Id,
-                        MarketParticipantRole = document.Recipient.BusinessProcessRole.ToString(),
+                        MarketParticipantRole = (MarketParticipantRoleDomain)document.Recipient.BusinessProcessRole,
                     },
-                    IndustryClassification = document.IndustryClassification.ToString(),
-                    BusinessReasonCode = document.BusinessReasonCode.ToString(),
+                    IndustryClassification = (IndustryClassificationDomain)document.IndustryClassification,
+                    BusinessReasonCode = (BusinessReasonCodeDomain)document.BusinessReasonCode,
                 },
                 ChargeLink = new ChargeLinkDomain
                 {
@@ -59,8 +59,8 @@ namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
                     MeteringPointId = chargeLink.MeteringPointId,
                     ChargeId = chargeLink.ChargeId,
                     ChargeOwner = chargeLink.ChargeOwner,
-                    Factor = chargeLink.Factor.ToString(CultureInfo.InvariantCulture),
-                    ChargeType = chargeLink.ChargeType.ToString(),
+                    Factor = chargeLink.Factor,
+                    ChargeType = (ChargeTypeDomain)chargeLink.ChargeType,
                     StartDateTime = chargeLink.StartDateTime.ToString(),
                     EndDateTime = chargeLink.EndDateTime.ToString(),
                 },
