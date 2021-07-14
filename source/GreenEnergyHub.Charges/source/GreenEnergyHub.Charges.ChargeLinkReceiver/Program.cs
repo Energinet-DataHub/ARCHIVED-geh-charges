@@ -56,8 +56,8 @@ namespace GreenEnergyHub.Charges.ChargeLinkReceiver
             services.AddSingleton<Channel, ServiceBusChannel<ChargeLinkCommand>>();
             services.AddScoped<MessageDispatcher>();
 
-            var connectionString = Environment.GetEnvironmentVariable("CHARGE_LINK_CREATED_SENDER_CONNECTION_STRING");
-            var topicName = Environment.GetEnvironmentVariable("CHARGE_LINK_CREATED_TOPIC_NAME");
+            var connectionString = Environment.GetEnvironmentVariable("CHARGE_LINK_RECEIVED_SENDER_CONNECTION_STRING");
+            var topicName = Environment.GetEnvironmentVariable("CHARGE_LINK_RECEIVED_TOPIC_NAME");
             services.AddScoped(sp => new ServiceBusClient(connectionString).CreateSender(topicName));
         }
     }
