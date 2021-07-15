@@ -126,7 +126,7 @@ resource "azurerm_servicebus_subscription" "sbs-link-command-received" {
   max_delivery_count  = 1
 }
 
-module "sbtar_command_rejected_listener" {
+module "sbtar_link_command_received_listener" {
   source                    = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//service-bus-topic-auth-rule?ref=1.3.0"
   name                      = "sbtar-link-command-received-listener"
   namespace_name            = module.sbn_charges.name
