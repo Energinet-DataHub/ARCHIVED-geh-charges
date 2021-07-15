@@ -30,7 +30,7 @@ module "azfun_metering_point_created_receiver" {
     WEBSITES_ENABLE_APP_SERVICE_STORAGE                = true
     FUNCTIONS_WORKER_RUNTIME                           = "dotnet"
 
-    METERING_POINT_CREATED_LISTENER_CONNECTION_STRING  = data.azurerm_key_vault_secret.metering_point_created_listener_connection_string.value
+    METERING_POINT_CREATED_LISTENER_CONNECTION_STRING  = data.azurerm_key_vault_secret.integration_events_listener_connection_string.value
     METERING_POINT_CREATED_TOPIC_NAME                  = local.METERING_POINT_CREATED_TOPIC_NAME
     METERING_POINT_CREATED_SUBSCRIPTION_NAME           = local.METERING_POINT_CREATED_SUBSCRIPTION_NAME
 
