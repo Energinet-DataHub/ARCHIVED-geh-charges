@@ -128,6 +128,16 @@ resource "azurerm_servicebus_subscription" "sbs-link-command-received" {
 
 module "sbtar_command_rejected_listener" {
   source                    = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//service-bus-topic-auth-rule?ref=1.3.0"
+  name                      = "sbtar-link-command-received-listener"
+  namespace_name            = module.sbn_charges.name
+  resource_group_name       = data.azurerm_resource_group.main.name
+  listen                    = true
+  dependencies              = [module.sbn_charges]
+  topic_name                = module.sbt_link_command_received.name
+}
+
+module "sbtar_command_rejected_listener" {
+  source                    = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//service-bus-topic-auth-rule?ref=1.3.0"
   name                      = "sbtar-command-rejected-listener"
   namespace_name            = module.sbn_charges.name
   resource_group_name       = data.azurerm_resource_group.main.name
