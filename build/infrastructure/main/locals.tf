@@ -21,4 +21,6 @@ locals {
     METERING_POINT_CREATED_SUBSCRIPTION_NAME      = "metering-point-created-sub-charges"
 	# Must match the name used in the repo geh-shared-resources
 	INTEGRATION_EVENTS_LISTENER_CONNECTION_STRING = "INTEGRATION-EVENTS-LISTENER-CONNECTION-STRING"
+	# Must match the name used in the repo geh-shared-resources
+	INTEGRATION_EVENTS_SENDER_CONNECTION_STRING   = "INTEGRATION-EVENTS-SENDER-CONNECTION-STRING"
 }
