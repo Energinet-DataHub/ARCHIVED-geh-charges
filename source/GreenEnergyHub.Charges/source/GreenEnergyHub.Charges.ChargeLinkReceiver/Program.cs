@@ -12,14 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
+using Energinet.DataHub.ChargeLinks.InternalContracts;
+using GreenEnergyHub.Charges.Application.ChargeLinks;
+using GreenEnergyHub.Charges.Domain.ChargeLinks;
 using GreenEnergyHub.Charges.Infrastructure.Messaging;
+using GreenEnergyHub.Charges.Infrastructure.Messaging.Registration;
 using GreenEnergyHub.Charges.Infrastructure.Messaging.Serialization.Commands;
-using GreenEnergyHub.Json;
+using GreenEnergyHub.Messaging.Protobuf;
 using GreenEnergyHub.Messaging.Transport;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using NodaTime;
-using JsonSerializer = GreenEnergyHub.Charges.Core.Json.JsonSerializer;
 
 namespace GreenEnergyHub.Charges.ChargeLinkReceiver
 {
@@ -45,11 +49,22 @@ namespace GreenEnergyHub.Charges.ChargeLinkReceiver
 
         private static void ConfigureMessaging(IServiceCollection services)
         {
-            services.AddScoped<ICorrelationContext, CorrelationContext>();
-            services.AddScoped<MessageExtractor>();
             services.AddScoped<ChargeLinkCommandConverter>();
+            services.AddScoped<IChargeLinkCommandHandler, ChargeLinkCommandHandler>();
             services.AddScoped<MessageDeserializer, ChargeLinkCommandDeserializer>();
-            services.AddScoped<IJsonSerializer, JsonSerializer>(); // TODO Remove this once we move to protobuf
+            services.SendProtobuf<ChargeLinkCommandDomain>();
+            services.AddSingleton<Channel, ServiceBusChannel<ChargeLinkCommand>>();
+            services.AddScoped<MessageDispatcher>();
+
+            services.AddMessagingProtobuf().AddMessageDispatcher<ChargeLinkCommand>(
+                GetEnv("CHARGE_LINK_RECEIVED_SENDER_CONNECTION_STRING"),
+                GetEnv("CHARGE_LINK_RECEIVED_TOPIC_NAME"));
+        }
+
+        private static string GetEnv(string variableName)
+        {
+            return Environment.GetEnvironmentVariable(variableName) ??
+                   throw new Exception($"Function app is missing required environment variable '{variableName}'");
         }
     }
 }
