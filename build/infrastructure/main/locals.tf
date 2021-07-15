@@ -12,11 +12,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 locals {
-    sqlServerAdminName                        = "gehdbadmin"
-	CHARGE_DB_CONNECTION_STRING               = "Server=${module.sqlsrv_charges.fully_qualified_domain_name};Database=${module.sqldb_charges.name};Uid=${local.sqlServerAdminName};Pwd=${random_password.sqlsrv_admin_password.result};"
-    LOCAL_TIMEZONENAME                        = "Europe/Copenhagen"
+    sqlServerAdminName                            = "gehdbadmin"
+	CHARGE_DB_CONNECTION_STRING                   = "Server=${module.sqlsrv_charges.fully_qualified_domain_name};Database=${module.sqldb_charges.name};Uid=${local.sqlServerAdminName};Pwd=${random_password.sqlsrv_admin_password.result};"
+    LOCAL_TIMEZONENAME                            = "Europe/Copenhagen"
     # Must match the name used in the repo geh-shared-resources
-    METERING_POINT_CREATED_TOPIC_NAME         = "MeteringPointCreatedEventMessage"
+    METERING_POINT_CREATED_TOPIC_NAME             = "metering-point-created"
     # Must match the name used in the repo geh-shared-resources
-    METERING_POINT_CREATED_SUBSCRIPTION_NAME  = "sbs-metering-point-created"
+    METERING_POINT_CREATED_SUBSCRIPTION_NAME      = "metering-point-created-sub-charges"
+	# Must match the name used in the repo geh-shared-resources
+	INTEGRATION_EVENTS_LISTENER_CONNECTION_STRING = "INTEGRATION-EVENTS-LISTENER-CONNECTION-STRING"
 }
