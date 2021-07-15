@@ -25,7 +25,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Messaging.Serialization.Commands
         /// <summary>
         /// The CIM namespace for now includes ebix in the naming. This has been raised to the CIM group, but remains as is for now
         /// </summary>
-        internal const string Namespace = "urn:ebix:org:RequestChangeBillingMasterData:1:0";
+        internal const string Namespace = "urn:ediel.org:structure:requestchangebillingmasterdata:0:1";
 
         internal const string Id = "mRID";
 
