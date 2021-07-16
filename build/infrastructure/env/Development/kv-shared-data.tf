@@ -23,5 +23,5 @@ data "azurerm_key_vault" "kv_sharedresources" {
 data "azurerm_key_vault_secret" "integration_events_listener_connection_string" {
   name         = local.INTEGRATION_EVENTS_LISTENER_CONNECTION_STRING
   key_vault_id = module.kv_shared_stub.id
-  depends_on   = [ module.kv_metering_point_created_listener_connection_string.name ]
+  depends_on   = [ module.kvs_integrationevents_listener_connection_string.name ]
 }
