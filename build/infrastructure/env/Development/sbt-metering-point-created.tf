@@ -23,11 +23,10 @@ on the existing Service Bus Namespace.
 =================================================================================
 */
 
-module "sbn_external_integration_events" {
-  source              = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//service-bus-namespace?ref=1.3.0"
-  name                = "sbn-external-${var.project}-${var.organisation}-${var.environment}"
+module "sbt_metering_point_created" {
+  source              = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//service-bus-topic?ref=1.7.0"
+  name                = local.METERING_POINT_CREATED_TOPIC_NAME
+  namespace_name      = module.sbn_external_integration_events.name
   resource_group_name = data.azurerm_resource_group.main.name
-  location            = data.azurerm_resource_group.main.location
-  sku                 = "basic"
-  tags                = data.azurerm_resource_group.main.tags
+  dependencies        = [module.sbn_external_integration_events.dependent_on]
 }
