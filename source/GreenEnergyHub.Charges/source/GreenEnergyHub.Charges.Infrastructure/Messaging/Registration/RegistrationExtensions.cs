@@ -33,5 +33,13 @@ namespace GreenEnergyHub.Charges.Infrastructure.Messaging.Registration
 
             return new MessagingRegistrator(services);
         }
+
+        public static MessagingRegistrator AddMessagingProtobuf(this IServiceCollection services)
+        {
+            services.AddScoped<ICorrelationContext, CorrelationContext>();
+            services.AddScoped<MessageExtractor>();
+
+            return new MessagingRegistrator(services);
+        }
     }
 }
