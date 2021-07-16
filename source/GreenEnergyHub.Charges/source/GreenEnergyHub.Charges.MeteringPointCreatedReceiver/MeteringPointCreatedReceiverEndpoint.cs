@@ -12,15 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
 using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Domain.Events.Integration;
 using GreenEnergyHub.Messaging.Transport;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs;
-using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.Extensions.Logging;
 
 namespace GreenEnergyHub.Charges.MeteringPointCreatedReceiver
@@ -33,12 +28,10 @@ namespace GreenEnergyHub.Charges.MeteringPointCreatedReceiver
         /// </summary>
         private const string FunctionName = nameof(MeteringPointCreatedReceiverEndpoint);
         private readonly MessageExtractor _messageExtractor;
-        private readonly MessageDispatcher _messageDispatcher;
 
-        public MeteringPointCreatedReceiverEndpoint(MessageExtractor messageExtractor, MessageDispatcher messageDispatcher)
+        public MeteringPointCreatedReceiverEndpoint(MessageExtractor messageExtractor)
         {
             _messageExtractor = messageExtractor;
-            _messageDispatcher = messageDispatcher;
         }
 
         [FunctionName(FunctionName)]
@@ -53,34 +46,6 @@ namespace GreenEnergyHub.Charges.MeteringPointCreatedReceiver
             var meteringPointCreatedEvent = await _messageExtractor.ExtractAsync(data).ConfigureAwait(false);
             var jsonSerializerOptions = new JsonSerializerOptions { WriteIndented = true };
             log.LogDebug("Received metering point created event '{@Event}'", JsonSerializer.Serialize(meteringPointCreatedEvent, jsonSerializerOptions));
-        }
-
-        [FunctionName("Enqueue_something")]
-        public async Task<IActionResult> Run2Async(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "get", "post", Route = null)]
-            [NotNull] HttpRequest req,
-            ILogger log)
-        {
-            var meteringPointCreatedEvent = new MeteringPointCreatedEvent(
-                "mpi",
-                "mpt",
-                "gai",
-                "sm",
-                "mm",
-                "cc",
-                "mrp",
-                "nsg",
-                "tg",
-                "fg",
-                "p",
-                "qu",
-                "ef");
-            await _messageDispatcher.DispatchAsync(
-                meteringPointCreatedEvent).ConfigureAwait(false);
-
-            // Avoid "never used" errors
-            log.LogDebug("Foo '{@Event}'", req.Path);
-            return new OkObjectResult(meteringPointCreatedEvent);
         }
     }
 }
