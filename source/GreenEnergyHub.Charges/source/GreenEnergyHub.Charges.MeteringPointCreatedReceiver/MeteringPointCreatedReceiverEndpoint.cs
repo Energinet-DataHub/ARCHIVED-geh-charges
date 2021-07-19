@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Text.Json;
 using System.Threading.Tasks;
 using GreenEnergyHub.Messaging.Transport;
 using Microsoft.Azure.WebJobs;
@@ -44,8 +43,7 @@ namespace GreenEnergyHub.Charges.MeteringPointCreatedReceiver
             ILogger log)
         {
             var meteringPointCreatedEvent = await _messageExtractor.ExtractAsync(data).ConfigureAwait(false);
-            var jsonSerializerOptions = new JsonSerializerOptions { WriteIndented = true };
-            log.LogDebug("Received metering point created event '{@Event}'", JsonSerializer.Serialize(meteringPointCreatedEvent, jsonSerializerOptions));
+            log.LogInformation("Received metering point created event '{@EventTransactionMrId}'", meteringPointCreatedEvent.Transaction.MRID);
         }
     }
 }
