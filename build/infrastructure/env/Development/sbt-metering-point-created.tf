@@ -17,15 +17,18 @@
 Infrastructure for a representation of the topics of externally published integration events.
 This is used to be able to fully explore and integration test the charges domain
 without relying on the external dependencies to other domains.
+
+In order to make it lightweight we implement as additional topics
+on the existing Service Bus Namespace.
 =================================================================================
 */
 
 module "sbt_metering_point_created" {
-  source              = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//service-bus-topic?ref=1.3.0"
+  source              = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//service-bus-topic?ref=1.7.0"
   name                = local.METERING_POINT_CREATED_TOPIC_NAME
   namespace_name      = module.sbn_external_integration_events.name
   resource_group_name = data.azurerm_resource_group.main.name
-  dependencies        = [module.sbn_external_integration_events]
+  dependencies        = [module.sbn_external_integration_events.dependent_on]
 }
 
 module "sbtar_metering_point_created_listener" {
@@ -75,4 +78,4 @@ resource "azurerm_servicebus_subscription" "sbs_metering_point_created" {
   namespace_name      = module.sbn_external_integration_events.name
   topic_name          = module.sbt_metering_point_created.name
   max_delivery_count  = 1
-} 
+}

@@ -24,10 +24,28 @@ on the existing Service Bus Namespace.
 */
 
 module "sbn_external_integration_events" {
-  source              = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//service-bus-namespace?ref=1.3.0"
+  source              = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//service-bus-namespace?ref=1.7.0"
   name                = "sbn-external-${var.project}-${var.organisation}-${var.environment}"
   resource_group_name = data.azurerm_resource_group.main.name
   location            = data.azurerm_resource_group.main.location
   sku                 = "basic"
   tags                = data.azurerm_resource_group.main.tags
+}
+
+module "sbnar_integrationevents_listener" {
+  source                    = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//service-bus-namespace-auth-rule?ref=1.7.0"
+  name                      = "sbnar-integrationevents-listener"
+  namespace_name            = module.sbn_external_integration_events.name
+  resource_group_name       = data.azurerm_resource_group.main.name
+  listen                    = true
+  dependencies              = [module.sbn_external_integration_events]
+}
+
+module "sbnar_integrationevents_sender" {
+  source                    = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//service-bus-namespace-auth-rule?ref=1.7.0"
+  name                      = "sbnar-integrationevents-sender"
+  namespace_name            = module.sbn_external_integration_events.name
+  resource_group_name       = data.azurerm_resource_group.main.name
+  send                      = true
+  dependencies              = [module.sbn_external_integration_events]
 }

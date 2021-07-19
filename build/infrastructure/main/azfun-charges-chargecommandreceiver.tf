@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 module "azfun_charge_command_receiver" {
-  source                                         = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//function-app?ref=1.2.0"
+  source                                         = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//function-app?ref=1.7.0"
   name                                           = "azfun-charge-command-receiver-${var.project}-${var.organisation}-${var.environment}"
   resource_group_name                            = data.azurerm_resource_group.main.name
   location                                       = data.azurerm_resource_group.main.location
@@ -52,7 +52,7 @@ module "azfun_charge_command_receiver" {
 }
 
 module "azfun_charge_command_receiver_plan" {
-  source              = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//app-service-plan?ref=1.2.0"
+  source              = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//app-service-plan?ref=1.7.0"
   name                = "asp-charge-command-receiver-${var.project}-${var.organisation}-${var.environment}"
   resource_group_name = data.azurerm_resource_group.main.name
   location            = data.azurerm_resource_group.main.location

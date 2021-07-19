@@ -13,7 +13,7 @@
 # limitations under the License.
 
 module "azfun_metering_point_created_receiver" {
-  source                                         = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//function-app?ref=1.3.0"
+  source                                         = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//function-app?ref=1.7.0"
   name                                           = "azfun-metering-point-created-receiver-${var.project}-${var.organisation}-${var.environment}"
   resource_group_name                            = data.azurerm_resource_group.main.name
   location                                       = data.azurerm_resource_group.main.location
@@ -30,7 +30,7 @@ module "azfun_metering_point_created_receiver" {
     WEBSITES_ENABLE_APP_SERVICE_STORAGE                = true
     FUNCTIONS_WORKER_RUNTIME                           = "dotnet"
 
-    METERING_POINT_CREATED_LISTENER_CONNECTION_STRING  = data.azurerm_key_vault_secret.metering_point_created_listener_connection_string.value
+    METERING_POINT_CREATED_LISTENER_CONNECTION_STRING  = data.azurerm_key_vault_secret.integration_events_listener_connection_string.value
     METERING_POINT_CREATED_TOPIC_NAME                  = local.METERING_POINT_CREATED_TOPIC_NAME
     METERING_POINT_CREATED_SUBSCRIPTION_NAME           = local.METERING_POINT_CREATED_SUBSCRIPTION_NAME
 
@@ -39,7 +39,7 @@ module "azfun_metering_point_created_receiver" {
 }
 
 module "azfun_metering_point_created_receiver_plan" {
-  source              = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//app-service-plan?ref=1.3.0"
+  source              = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//app-service-plan?ref=1.7.0"
   name                = "asp-metering-point-created-receiver-${var.project}-${var.organisation}-${var.environment}"
   resource_group_name = data.azurerm_resource_group.main.name
   location            = data.azurerm_resource_group.main.location
