@@ -13,13 +13,13 @@
 # limitations under the License.
 locals {
     sqlServerAdminName                            = "gehdbadmin"
-	CHARGE_DB_CONNECTION_STRING                   = "Server=${module.sqlsrv_charges.fully_qualified_domain_name};Database=${module.sqldb_charges.name};Uid=${local.sqlServerAdminName};Pwd=${random_password.sqlsrv_admin_password.result};"
+    CHARGE_DB_CONNECTION_STRING                   = "Server=${module.sqlsrv_charges.fully_qualified_domain_name};Database=${module.sqldb_charges.name};Uid=${local.sqlServerAdminName};Pwd=${random_password.sqlsrv_admin_password.result};"
     LOCAL_TIMEZONENAME                            = "Europe/Copenhagen"
     # All below this line must match the names used in the repo geh-shared-resources
-	CHARGE_LINK_CREATED_TOPIC_NAME                = "ChargeLinkCreated"
-	CHARGE_LINK_UPDATED_TOPIC_NAME                = "ChargeLinkUpdated"
+    CHARGE_LINK_CREATED_TOPIC_NAME                = "ChargeLinkCreated"
+    CHARGE_LINK_UPDATED_TOPIC_NAME                = "ChargeLinkUpdated"
     METERING_POINT_CREATED_TOPIC_NAME             = "metering-point-created"
     METERING_POINT_CREATED_SUBSCRIPTION_NAME      = "metering-point-created-sub-charges"
-	INTEGRATION_EVENTS_LISTENER_CONNECTION_STRING = "INTEGRATION-EVENTS-LISTENER-CONNECTION-STRING"
-	INTEGRATION_EVENTS_SENDER_CONNECTION_STRING   = "INTEGRATION-EVENTS-SENDER-CONNECTION-STRING"
+    INTEGRATION_EVENTS_LISTENER_CONNECTION_STRING = "INTEGRATION-EVENTS-LISTENER-CONNECTION-STRING"
+    INTEGRATION_EVENTS_SENDER_CONNECTION_STRING   = "INTEGRATION-EVENTS-SENDER-CONNECTION-STRING"
 }
