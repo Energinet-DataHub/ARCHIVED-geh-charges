@@ -11,10 +11,10 @@ if not exist .working-folder mkdir .working-folder
 rem Go to a folder that doesn't contain .working-folder because xcopy won't work otherwise
 pushd main
 del ..\.working-folder\*.tf
-xcopy * ..\.working-folder /S /Y /Q >nul
+xcopy .\* ..\.working-folder /S /Y /Q >nul
 del ..\.working-folder\backend.tf
 xcopy ..\env\Development\* ..\.working-folder /S /Y /Q >nul
-xcopy ..\localhost.tfvars ..\.working-folder /S /Y /Q >nul
+xcopy ..\localhost.tfvars ..\.working-folder /Y /Q >nul
 popd
 
 rem Deploy resources of merged setup
