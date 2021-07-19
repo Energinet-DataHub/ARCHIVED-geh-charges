@@ -25,3 +25,10 @@ data "azurerm_key_vault_secret" "integration_events_listener_connection_string" 
   key_vault_id = module.kv_shared_stub.id
   depends_on   = [ module.kvs_integrationevents_listener_connection_string.name ]
 }
+
+# Purpose of this overwrite (not override) is to depend on and use the shared key vault stub.
+data "azurerm_key_vault_secret" "integration_events_sender_connection_string" {
+  name         = local.INTEGRATION_EVENTS_SENDER_CONNECTION_STRING
+  key_vault_id = module.kv_shared_stub.id
+  depends_on   = [ module.kvs_integrationevents_sender_connection_string.name ]
+}
