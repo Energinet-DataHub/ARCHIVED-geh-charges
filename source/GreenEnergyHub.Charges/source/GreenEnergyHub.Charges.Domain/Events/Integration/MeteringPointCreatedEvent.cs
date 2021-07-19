@@ -13,12 +13,10 @@
 // limitations under the License.
 
 using GreenEnergyHub.Messaging.MessageTypes.Common;
-using GreenEnergyHub.Messaging.Transport;
 
 namespace GreenEnergyHub.Charges.Domain.Events.Integration
 {
-    // TODO BJARKE: Do not commit ioutbound
-    public class MeteringPointCreatedEvent : InboundIntegrationEvent, IOutboundMessage
+    public class MeteringPointCreatedEvent : InboundIntegrationEvent
     {
         public MeteringPointCreatedEvent(
             string meteringPointId,
