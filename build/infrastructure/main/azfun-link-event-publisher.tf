@@ -30,7 +30,7 @@ module "azfun_link_event_publisher" {
     FUNCTIONS_WORKER_RUNTIME                     = "dotnet-isolated"
     LINK_ACCEPTED_LISTENER_CONNECTION_STRING     = module.sbnar_charges_listener.primary_connection_string
     LINK_ACCEPTED_TOPIC_NAME                     = module.sbt_link_command_accepted.name
-	LINK_ACCEPTED_SUBSCRIPTION_NAME              = azurerm_servicebus_subscription.sbs_link_command_accepted_event_publisher.name
+    LINK_ACCEPTED_SUBSCRIPTION_NAME              = azurerm_servicebus_subscription.sbs_link_command_accepted_event_publisher.name
     INTEGRATIONEVENT_SENDER_CONNECTION_STRING    = data.azurerm_key_vault_secret.integration_events_sender_connection_string.value
     CHARGE_LINK_CREATED_TOPIC_NAME               = local.CHARGE_LINK_CREATED_TOPIC_NAME
     CHARGE_LINK_UPDATED_TOPIC_NAME               = local.CHARGE_LINK_UPDATED_TOPIC_NAME
@@ -39,7 +39,7 @@ module "azfun_link_event_publisher" {
     module.appi.dependent_on,
     module.azfun_link_event_publisher_plan.dependent_on,
     module.azfun_link_event_publisher_stor.dependent_on,
-	module.sbnar_charges_listener.dependent_on,
+    module.sbnar_charges_listener.dependent_on,
     module.sbt_link_command_accepted.dependent_on,
   ]
 }
