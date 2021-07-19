@@ -23,3 +23,9 @@ data "azurerm_key_vault_secret" "integration_events_listener_connection_string" 
   name         = local.INTEGRATION_EVENTS_LISTENER_CONNECTION_STRING
   key_vault_id = data.azurerm_key_vault.kv_sharedresources.id
 }
+
+# IMPORTANT: This is being overwritten (not just overridden) in Development environment
+data "azurerm_key_vault_secret" "integration_events_sender_connection_string" {
+  name         = local.INTEGRATION_EVENTS_SENDER_CONNECTION_STRING
+  key_vault_id = data.azurerm_key_vault.kv_sharedresources.id
+}
