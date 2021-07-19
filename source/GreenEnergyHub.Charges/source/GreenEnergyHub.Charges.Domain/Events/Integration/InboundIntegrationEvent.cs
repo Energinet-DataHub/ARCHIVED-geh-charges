@@ -12,12 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using GreenEnergyHub.Messaging.MessageTypes.Common;
+using GreenEnergyHub.Messaging.Transport;
+
 namespace GreenEnergyHub.Charges.Domain.Events.Integration
 {
-    /// <summary>
-    /// Contract for events.
-    /// </summary>
-    public interface IIntegrationEvent : IEvent
+    public abstract class InboundIntegrationEvent : IInboundMessage
     {
+        protected InboundIntegrationEvent(Transaction transaction)
+        {
+            Transaction = transaction;
+        }
+
+        public Transaction Transaction { get; set; }
     }
 }
