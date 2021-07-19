@@ -19,6 +19,7 @@ set /p deployChargeLinkReceiver=Deploy charge link receiver ([y]/n)?
 set /p deployCommandReceiver=Deploy command receiver ([y]/n)?
 set /p deployConfirmationSender=Deploy confirmation sender ([y]/n)?
 set /p deployRejectionSender=Deploy rejection sender ([y]/n)?
+set /p meteringPointCreatedReceiver=Deploy metering point created receiver ([y]/n)?
 
 IF /I not "%doBuild%" == "n" (
     rem Clean is necessary if e.g. a function project name has changed because otherwise both assemblies will be picked up by deployment
@@ -63,6 +64,13 @@ IF /I not "%deployRejectionSender%" == "n" (
 	echo Deploy: Charge Rejection Sender
     func azure functionapp publish azfun-charge-rejection-sender-charges-%organization%-s
 	popd
+)
+
+IF /I not "%meteringPointCreatedReceiver%" == "n" (
+    pushd source\GreenEnergyHub.Charges.MeteringPointCreatedReceiver\bin\Release\netcoreapp3.1
+    echo Metring Point Created Receiver
+    func azure functionapp publish azfun-metering-point-created-receiver-charges-%organization%-s
+    popd
 )
 
 endlocal

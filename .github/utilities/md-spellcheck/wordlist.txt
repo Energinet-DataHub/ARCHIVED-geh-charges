@@ -46,6 +46,7 @@ nullable
 PI
 POCO
 proto
+protobuf
 resending
 RSM
 runtime
