@@ -59,7 +59,10 @@ module "kvs_integrationevents_listener_connection_string" {
   name          = local.INTEGRATION_EVENTS_LISTENER_CONNECTION_STRING
   value         = module.sbnar_integrationevents_listener.primary_connection_string
   key_vault_id  = module.kv_shared_stub.id
-  dependencies  = [module.sbnar_integrationevents_listener.dependent_on]
+  dependencies  = [
+    module.kv_shared_stub.dependent_on,
+    module.sbnar_integrationevents_listener.dependent_on,
+  ]
 }
 
 module "kvs_integrationevents_sender_connection_string" {
@@ -67,5 +70,8 @@ module "kvs_integrationevents_sender_connection_string" {
   name          = local.INTEGRATION_EVENTS_SENDER_CONNECTION_STRING
   value         = module.sbnar_integrationevents_sender.primary_connection_string
   key_vault_id  = module.kv_shared_stub.id
-  dependencies  = [module.sbnar_integrationevents_sender.dependent_on]
+  dependencies  = [
+    module.kv_shared_stub.dependent_on,
+    module.sbnar_integrationevents_sender.dependent_on
+  ]
 }
