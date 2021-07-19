@@ -20,7 +20,7 @@ module "sbn_charges" {
   tags                = data.azurerm_resource_group.main.tags
 }
 
-module "sbn_charges_listener" {
+module "sbnar_charges_listener" {
   source                    = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//service-bus-namespace-auth-rule?ref=1.7.0"
   name                      = "sbnar-charges-listener"
   namespace_name            = module.sbn_charges.name
@@ -29,7 +29,7 @@ module "sbn_charges_listener" {
   dependencies              = [module.sbn_charges]
 }
 
-module "sbn_charges_sender" {
+module "sbnar_charges_sender" {
   source                    = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//service-bus-namespace-auth-rule?ref=1.7.0"
   name                      = "sbnar-charges-sender"
   namespace_name            = module.sbn_charges.name
