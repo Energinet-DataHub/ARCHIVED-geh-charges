@@ -1,0 +1,40 @@
+﻿syntax = "proto3";
+
+option csharp_namespace = "Energinet.DataHub.ChargeLinks.InternalContracts";
+
+enum ChargeTypeDomain {
+  CT_UNKNOWN = 0;
+  CT_SUBSCRIPTION = 1;
+  CT_FEE = 2;
+  CT_TARIFF = 3;
+}
+
+enum BusinessReasonCodeDomain {
+  BRC_UNKNOWN = 0;
+  BRC_UPDATE_MASTER_DATA_SETTLEMENT = 1;
+  BRC_UPDATE_CHARGE_INFORMATION = 18;
+}
+
+enum IndustryClassificationDomain {
+  IC_UNKNOWN = 0;
+  IC_ELECTRICITY = 23;
+}
+
+enum DocumentTypeDomain
+{
+  DT_UNKNOWN = 0;
+  DT_REQUEST_CHANGE_BILLING_MASTER_DATA = 1;
+  DT_REQUEST_UPDATE_CHARGE_INFORMATION = 10;
+}
+
+enum MarketParticipantRoleDomain
+{
+  MPR_UNKNOWN = 0;
+  MPR_ENERGY_SUPPLIER = 1;
+  MPR_GRID_ACCESS_PROVIDER = 2;
+  MPR_SYSTEM_OPERATOR = 3;
+  MPR_METERED_DATA_RESPONSIBLE = 4;
+  MPR_ENERGY_AGENCY = 5;
+  MPR_METERED_DATA_ADMINISTRATOR = 6;
+  MPR_METERING_POINT_ADMINISTRATOR = 7;
+}

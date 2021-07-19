@@ -1,0 +1,23 @@
+﻿/**
+ * Charge link Domain related messages.
+ */
+syntax = "proto3";
+
+option csharp_namespace = "Energinet.DataHub.ChargeLinks.InternalContracts";
+
+import "Internal/Enums.proto";
+import "Internal/MarketParticipantDomain.proto";
+
+/**
+ * Represents a Document
+ */
+message DocumentDomain {
+  string id = 1; // An identifier for the charge link event. Provided by the Market Participant. Uniqueness cannot be guaranteed
+  string request_date = 2; // The datetime of when the request was received by GEH
+  DocumentTypeDomain type = 3; // The document type indicates the intended business context of this business message.
+  string created_date_time = 4; // A datetime created by external actors and mostly used for support
+  MarketParticipantDomain sender = 5; // A market participant, e.g. a Grid Access Provider, whom may submit a charge link message.
+  MarketParticipantDomain recipient = 6; // A market participant, e.g. Metering Point Administrator, whom may receive a charge link message.
+  IndustryClassificationDomain industry_classification = 7; // IndustryClassification indicates the industry context. E.g. if a Charge price list is related to electricity.
+  BusinessReasonCodeDomain business_reason_code = 8; // BusinessReasonCode indicates the intended business context.
+}

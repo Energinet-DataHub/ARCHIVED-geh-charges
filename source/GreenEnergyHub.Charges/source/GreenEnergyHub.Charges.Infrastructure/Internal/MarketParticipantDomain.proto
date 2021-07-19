@@ -1,0 +1,10 @@
+﻿syntax = "proto3";
+
+import "Internal/Enums.proto";
+
+option csharp_namespace = "Energinet.DataHub.ChargeLinks.InternalContracts";
+
+message MarketParticipantDomain {
+    string id = 1; // Contains an ID that identifies the Market Participants. In Denmark this would be the GLN number or EIC code.
+    MarketParticipantRoleDomain MarketParticipantRole = 2;  // Contains the role a market participant uses when initiating and communicating with Green Energy Hub
+}
