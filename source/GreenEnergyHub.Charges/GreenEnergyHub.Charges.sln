@@ -72,7 +72,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GreenEnergyHub.Messaging.Pr
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GreenEnergyHub.Charges.MeteringPointCreatedReceiver", "source\GreenEnergyHub.Charges.MeteringPointCreatedReceiver\GreenEnergyHub.Charges.MeteringPointCreatedReceiver.csproj", "{FF989652-97EB-4237-8A9B-22CA48E963AE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GreenEnergyHub.Charges.ChargeLinkChargeLinkEventPublisher", "source\GreenEnergyHub.Charges.ChargeLinkEventPublisher\GreenEnergyHub.Charges.ChargeLinkChargeLinkEventPublisher.csproj", "{01617B72-B9AB-4FBF-AE67-154666584BB7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GreenEnergyHub.Charges.ChargeLinkEventPublisher", "source\GreenEnergyHub.Charges.ChargeLinkEventPublisher\GreenEnergyHub.Charges.ChargeLinkEventPublisher.csproj", "{01617B72-B9AB-4FBF-AE67-154666584BB7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
