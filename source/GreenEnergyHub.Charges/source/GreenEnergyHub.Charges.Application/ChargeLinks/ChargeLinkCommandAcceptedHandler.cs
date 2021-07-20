@@ -14,27 +14,31 @@
 
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
+using GreenEnergyHub.Charges.Application.Mapping;
 using GreenEnergyHub.Charges.Domain.Events.Local;
 using GreenEnergyHub.Messaging.Transport;
 
 namespace GreenEnergyHub.Charges.Application.ChargeLinks
 {
-    public class ChargeLinkCommandAcceptedHandler
+    public class ChargeLinkCommandAcceptedHandler : IChargeLinkCommandAcceptedHandler
     {
         private readonly MessageDispatcher _messageDispatcher;
+        private readonly IChargeLinkCommandMapper _chargeLinkCommandMapper;
 
-        public ChargeLinkCommandAcceptedHandler(MessageDispatcher messageDispatcher)
+        public ChargeLinkCommandAcceptedHandler(
+            MessageDispatcher messageDispatcher,
+            IChargeLinkCommandMapper chargeLinkCommandMapper)
         {
             _messageDispatcher = messageDispatcher;
+            _chargeLinkCommandMapper = chargeLinkCommandMapper;
         }
 
         public async Task HandleAsync([NotNull] ChargeCommandReceivedEvent chargeLinkCommand)
         {
-            // Map to ChargeCommandAcceptedEvent
+            var chargeCommandAcceptedEvent = _chargeLinkCommandMapper.Map(chargeLinkCommand);
 
             // Dispatch
-            var chargeCommandAcceptedEvent = new ChargeCommandAcceptedEvent();
-            await _messageDispatcher.DispatchAsync(chargeCommandAcceptedEvent);
+            await _messageDispatcher.DispatchAsync(chargeCommandAcceptedEvent).ConfigureAwait(false);
         }
     }
 }

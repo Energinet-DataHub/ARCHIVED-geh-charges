@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System.Threading.Tasks;
+using GreenEnergyHub.Charges.Application.ChargeLinks;
 using GreenEnergyHub.Messaging.Transport;
 using Microsoft.Azure.WebJobs;
 
@@ -22,10 +23,14 @@ namespace GreenEnergyHub.Charges.ChargeLinkCommandReceiver
     {
         private const string FunctionName = nameof(LinkCommandReceiverEndpoint);
         private readonly MessageExtractor _messageExtractor;
+        private readonly IChargeLinkCommandAcceptedHandler _chargeLinkCommandAcceptedHandler;
 
-        public LinkCommandReceiverEndpoint(MessageExtractor messageExtractor)
+        public LinkCommandReceiverEndpoint(
+            MessageExtractor messageExtractor,
+            IChargeLinkCommandAcceptedHandler chargeLinkCommandAcceptedHandler)
         {
             _messageExtractor = messageExtractor;
+            _chargeLinkCommandAcceptedHandler = chargeLinkCommandAcceptedHandler;
         }
 
         [FunctionName(FunctionName)]
@@ -37,7 +42,7 @@ namespace GreenEnergyHub.Charges.ChargeLinkCommandReceiver
             byte[] data)
         {
             var chargeLinkCommandMessage = await _messageExtractor.ExtractAsync(data).ConfigureAwait(false);
-
+            //await _chargeLinkCommandAcceptedHandler.HandleAsync(chargeLinkCommandMessage);
         }
     }
 }
