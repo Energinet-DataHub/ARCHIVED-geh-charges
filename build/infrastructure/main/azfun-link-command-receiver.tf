@@ -17,8 +17,8 @@ module "azfun_link_command_receiver" {
   resource_group_name                       = data.azurerm_resource_group.main.name
   location                                  = data.azurerm_resource_group.main.location
   storage_account_access_key                = module.azfun_link_receiver_stor.primary_access_key
-  app_service_plan_id                       = module.azfun_link_receiver_plan.id
-  storage_account_name                      = module.azfun_link_receiver_stor.name
+  app_service_plan_id                       = module.azfun_link_receiver_command_plan.id
+  storage_account_name                      = module.azfun_link_receiver_command_stor.name
   application_insights_instrumentation_key  = module.appi.instrumentation_key
   tags                                      = data.azurerm_resource_group.main.tags
   app_settings                              = {
@@ -40,7 +40,7 @@ module "azfun_link_command_receiver" {
   ]
 }
 
-module "azfun_link_receiver_plan" {
+module "azfun_link_command_receiver_plan" {
   source              = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//app-service-plan?ref=1.7.0"
   name                = "asp-link-command-receiver-${var.project}-${var.organisation}-${var.environment}"
   resource_group_name = data.azurerm_resource_group.main.name
@@ -53,9 +53,9 @@ module "azfun_link_receiver_plan" {
   tags                = data.azurerm_resource_group.main.tags
 }
 
-module "azfun_link_receiver_stor" {
+module "azfun_link_command_receiver_stor" {
   source                    = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//storage-account?ref=1.7.0"
-  name                      = "storlinkrcvr${random_string.link_receiver.result}"
+  name                      = "storlinkrcvr${random_string.link_command_receiver.result}"
   resource_group_name       = data.azurerm_resource_group.main.name
   location                  = data.azurerm_resource_group.main.location
   account_replication_type  = "LRS"
@@ -65,13 +65,13 @@ module "azfun_link_receiver_stor" {
 }
 
 # Since all functions need a storage connected we just generate a random name
-resource "random_string" "link_receiver" {
+resource "random_string" "link_command_receiver" {
   length  = 6
   special = false
   upper   = false
 }
 
-module "ping_webtest_link_receiver" {
+module "ping_webtest_link_command_receiver" {
   source                          = "../modules/ping-webtest" # Repo geh-terraform-modules doesn't have a webtest module at the time of this writing
   name                            = "ping-webtest-link-receiver-${var.project}-${var.organisation}-${var.environment}"
   resource_group_name             = data.azurerm_resource_group.main.name
@@ -79,5 +79,5 @@ module "ping_webtest_link_receiver" {
   tags                            = data.azurerm_resource_group.main.tags
   application_insights_id         = module.appi.id
   url                             = "https://${module.azfun_link_receiver.default_hostname}/api/HealthStatus"
-  dependencies                    = [module.azfun_link_receiver.dependent_on]
+  dependencies                    = [module.azfun_link_command_receiver.dependent_on]
 }
