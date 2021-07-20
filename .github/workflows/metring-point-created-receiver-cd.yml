@@ -11,7 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-name: Metring Point Created Receiver CD
+name: Metering Point Created Receiver CD
 
 on:
   push:
@@ -19,7 +19,7 @@ on:
       - main
     paths:
       - source/GreenEnergyHub.Charges/**
-      - .github/workflows/metring-point-created-receiver-cd.yml
+      - .github/workflows/metering-point-created-receiver-cd.yml
       - .github/actions/dotnet-build-and-test/**
       - .github/actions/integration-test/**
   workflow_dispatch: {}
@@ -30,7 +30,7 @@ env:
   INTEGRATION_TEST_DLL: GreenEnergyHub.Charges.IntegrationTests.dll
   DOTNET_VERSION: '3.1'
   ORGANISATION_NAME: 'endk'
-  AZURE_FUNCTIONAPP_NAME: 'metring-point-created-receiver'
+  AZURE_FUNCTIONAPP_NAME: 'metering-point-created-receiver'
   PROJECT_NAME: charges
   REPOSITORY_NAME: Energinet-DataHub/geh-charges
   KEY_VAULT_NAME: kvchargesendku
