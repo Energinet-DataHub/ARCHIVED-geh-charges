@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System;
+using GreenEnergyHub.Charges.Infrastructure.Messaging;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
@@ -33,6 +34,13 @@ namespace GreenEnergyHub.Charges.ChargeLinkEventPublisher
         private static void ConfigureServices(HostBuilderContext hostBuilderContext, IServiceCollection serviceCollection)
         {
             serviceCollection.AddLogging();
+
+            ConfigureMessaging(serviceCollection);
+        }
+
+        private static void ConfigureMessaging(IServiceCollection serviceCollection)
+        {
+            serviceCollection.AddScoped<ICorrelationContext, CorrelationContext>();
         }
 
         private static string GetEnv(string variableName)
