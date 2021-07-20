@@ -23,6 +23,7 @@ env:
   PROJECT_NAME: 'cha${{ github.event.number }}'
   RESOURCE_GROUP_NAME: rg-DataHub-Testing-U
   ENVIRONMENT_SHORT: u
+  ENVIRONMENT_LONG: rg-DataHub-Testing-U  
   ENVIRONMENT_NAME: Development
 
 jobs:
@@ -90,3 +91,14 @@ jobs:
         working-directory: ./build/infrastructure/main
         run: terraform destroy -no-color -auto-approve
         continue-on-error: false
+        
+      - name: Remove Terraform state
+        uses: ./.github/actions/delete-terraform-state
+        with:
+          SECRETS_TENANT_ID: ${{ secrets.TENANT_ID }}
+          SECRETS_SPN_ID: ${{ secrets.SPN_ID }}
+          SECRETS_SPN_SECRET: ${{ secrets.SPN_SECRET }}
+          SECRETS_SUBSCRIPTION_ID: ${{ secrets.SUBSCRIPTION_ID }}
+          PROJECT_NAME: ${{ env.PROJECT_NAME }}
+          ENVIRONMENT_SHORT: ${{ env.ENVIRONMENT_SHORT }}
+          ENVIRONMENT_LONG: ${{ env.ENVIRONMENT_LONG }}
