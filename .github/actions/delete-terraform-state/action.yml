@@ -56,4 +56,4 @@ runs:
           echo "Storage does not exists, nothing to delete";
           exit;
         fi
-        az storage account delete --resource-group ${{ inputs.ENVIRONMENT_LONG }} --name ${{ env.TERRAFORM_STORAGE_NAME }}
+        az storage account delete --resource-group ${{ inputs.ENVIRONMENT_LONG }} --name ${{ env.TERRAFORM_STORAGE_NAME }} --yes
