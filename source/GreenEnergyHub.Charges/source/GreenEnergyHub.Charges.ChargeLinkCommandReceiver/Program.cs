@@ -2,6 +2,7 @@
 using GreenEnergyHub.Charges.Infrastructure.Messaging.Registration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using NodaTime;
 
 namespace GreenEnergyHub.Charges.ChargeLinkCommandReceiver
 {
@@ -19,14 +20,17 @@ namespace GreenEnergyHub.Charges.ChargeLinkCommandReceiver
         private static void ConfigureServices(HostBuilderContext hostBuilderContext,
             IServiceCollection serviceCollection)
         {
+            serviceCollection.AddScoped(typeof(IClock), _ => SystemClock.Instance);
+            serviceCollection.AddLogging();
 
+            ConfigureMessaging(serviceCollection);
         }
 
         private static void ConfigureMessaging(IServiceCollection services)
         {
-            services.AddMessagingProtobuf().AddMessageDispatcher<ChargeLinkCommand>(
-                GetEnv("CHARGE_LINK_RECEIVED_SENDER_CONNECTION_STRING"),
-                GetEnv("CHARGE_LINK_RECEIVED_TOPIC_NAME"));
+            // services.AddMessagingProtobuf().AddMessageDispatcher<ChargeLinkCommandAccepedted>(
+            //     GetEnv("CHARGE_LINK_RECEIVED_SENDER_CONNECTION_STRING"),
+            //     GetEnv("CHARGE_LINK_RECEIVED_TOPIC_NAME"));
         }
 
         private static string GetEnv(string variableName)

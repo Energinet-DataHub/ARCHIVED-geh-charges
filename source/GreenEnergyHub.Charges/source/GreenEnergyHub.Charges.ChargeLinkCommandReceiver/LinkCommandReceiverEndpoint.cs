@@ -22,12 +22,10 @@ namespace GreenEnergyHub.Charges.ChargeLinkCommandReceiver
     {
         private const string FunctionName = nameof(LinkCommandReceiverEndpoint);
         private readonly MessageExtractor _messageExtractor;
-        private readonly MessageDispatcher _messageDispatcher;
 
-        public LinkCommandReceiverEndpoint(MessageExtractor messageExtractor, MessageDispatcher messageDispatcher)
+        public LinkCommandReceiverEndpoint(MessageExtractor messageExtractor)
         {
             _messageExtractor = messageExtractor;
-            _messageDispatcher = messageDispatcher;
         }
 
         [FunctionName(FunctionName)]
@@ -38,8 +36,8 @@ namespace GreenEnergyHub.Charges.ChargeLinkCommandReceiver
                 Connection = "CHARGE_LINK_RECEIVED_LISTENER_CONNECTION_STRING")]
             byte[] data)
         {
-            var chargeLinkAcceptedMessage = await _messageExtractor.ExtractAsync(data).ConfigureAwait(false);
-            _messageDispatcher.DispatchAsync()
+            var chargeLinkCommandMessage = await _messageExtractor.ExtractAsync(data).ConfigureAwait(false);
+
         }
     }
 }
