@@ -3,6 +3,9 @@
   "Values": {
     "AzureWebJobsDashboard": "UseDevelopmentStorage=true",
     "AzureWebJobsStorage": "UseDevelopmentStorage=true",
-    "FUNCTIONS_WORKER_RUNTIME": "dotnet-isolated"
+    "FUNCTIONS_WORKER_RUNTIME": "dotnet-isolated",
+    "LISTENER_CONNECTION_STRING": "<sb listener connection string>",
+    "LINK_ACCEPTED_TOPIC_NAME": "sbt-link-command-accepted",
+    "LINK_ACCEPTED_SUBSCRIPTION_NAME": "sbs-link-command-accepted-event-publisher"
   }
 }
