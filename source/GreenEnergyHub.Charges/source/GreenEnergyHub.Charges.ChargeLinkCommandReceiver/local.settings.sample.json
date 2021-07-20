@@ -3,10 +3,10 @@
     "Values": {
       "AzureWebJobsStorage": "UseDevelopmentStorage=true",
       "FUNCTIONS_WORKER_RUNTIME": "dotnet-isolated",
-      "CHARGE_LINK_RECEIVED_SUBSCRIPTION_NAME": "<listener subscription name>",
-      "CHARGE_LINK_RECEIVED_TOPIC_NAME": "<listener topic name>",
+      "CHARGE_LINK_RECEIVED_SUBSCRIPTION_NAME": "sbs-link-command-received",
+      "CHARGE_LINK_RECEIVED_TOPIC_NAME": "sbt-link-command-received",
       "CHARGE_LINK_RECEIVED_LISTENER_CONNECTION_STRING": "<listener connection string>",
-      "CHARGE_LINK_ACCEPTED_TOPIC_NAME": "<sender topic name>",
+      "CHARGE_LINK_ACCEPTED_TOPIC_NAME": "sbt-link-command-accepted",
       "CHARGE_LINK_ACCEPTED_SENDER_CONNECTION_STRING": "<sender connection string>"
     }
 }
