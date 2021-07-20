@@ -47,7 +47,7 @@ namespace GreenEnergyHub.Charges.ChargeLinkEventPublisher
             [ServiceBusTrigger(
                 "%LINK_ACCEPTED_TOPIC_NAME%",
                 "%LINK_ACCEPTED_SUBSCRIPTION_NAME%",
-                Connection = "LISTENER_CONNECTION_STRING")]
+                Connection = "LINK_ACCEPTED_LISTENER_CONNECTION_STRING")]
             [NotNull] byte[] message,
             [NotNull] FunctionContext context)
         {
