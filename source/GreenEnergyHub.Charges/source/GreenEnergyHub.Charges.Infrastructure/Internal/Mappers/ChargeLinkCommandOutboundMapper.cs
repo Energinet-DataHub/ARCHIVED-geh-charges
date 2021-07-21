@@ -14,8 +14,10 @@
 
 using System;
 using System.Globalization;
-using Energinet.DataHub.ChargeLinks.InternalContracts;
+using Google.Protobuf.WellKnownTypes;
+using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.Domain.ChargeLinks;
+using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandReceived;
 using GreenEnergyHub.Messaging.Protobuf;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
@@ -32,37 +34,37 @@ namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
             var document = obj.Document;
             var chargeLink = obj.ChargeLink;
 
-            return new ChargeLinkCommandDomain
+            return new ChargeLinkCommandReceivedContract
             {
-                Document = new DocumentDomain
+                Document = new DocumentContract
                 {
                     Id = document.Id,
-                    RequestDate = document.RequestDate.ToString(),
-                    Type = (DocumentTypeDomain)document.Type,
-                    CreatedDateTime = document.CreatedDateTime.ToString(),
-                    Sender = new MarketParticipantDomain
+                    RequestDate = Timestamp.FromDateTime(document.RequestDate.ToDateTimeUtc()),
+                    Type = (DocumentTypeContract)document.Type,
+                    CreatedDateTime = Timestamp.FromDateTime(document.CreatedDateTime.ToDateTimeUtc()),
+                    Sender = new MarketParticipantContract
                     {
                         Id = document.Sender.Id,
-                        MarketParticipantRole = (MarketParticipantRoleDomain)document.Sender.BusinessProcessRole,
+                        MarketParticipantRole = (MarketParticipantRoleContract)document.Sender.BusinessProcessRole,
                     },
-                    Recipient = new MarketParticipantDomain
+                    Recipient = new MarketParticipantContract
                     {
                         Id = document.Recipient.Id,
-                        MarketParticipantRole = (MarketParticipantRoleDomain)document.Recipient.BusinessProcessRole,
+                        MarketParticipantRole = (MarketParticipantRoleContract)document.Recipient.BusinessProcessRole,
                     },
-                    IndustryClassification = (IndustryClassificationDomain)document.IndustryClassification,
-                    BusinessReasonCode = (BusinessReasonCodeDomain)document.BusinessReasonCode,
+                    IndustryClassification = (IndustryClassificationContract)document.IndustryClassification,
+                    BusinessReasonCode = (BusinessReasonCodeContract)document.BusinessReasonCode,
                 },
-                ChargeLink = new ChargeLinkDomain
+                ChargeLink = new ChargeLinkContract
                 {
                     Id = obj.ChargeLink.Id,
                     MeteringPointId = chargeLink.MeteringPointId,
                     ChargeId = chargeLink.ChargeId,
                     ChargeOwner = chargeLink.ChargeOwner,
                     Factor = chargeLink.Factor,
-                    ChargeType = (ChargeTypeDomain)chargeLink.ChargeType,
-                    StartDateTime = chargeLink.StartDateTime.ToString(),
-                    EndDateTime = chargeLink.EndDateTime.ToString(),
+                    ChargeType = (ChargeTypeContract)chargeLink.ChargeType,
+                    StartDateTime = Timestamp.FromDateTime(chargeLink.StartDateTime.ToDateTimeUtc()),
+                    EndDateTime = Timestamp.FromDateTime(chargeLink.EndDateTime.TimeOrEndDefault().ToDateTimeUtc()),
                 },
                 CorrelationId = obj.CorrelationId,
             };

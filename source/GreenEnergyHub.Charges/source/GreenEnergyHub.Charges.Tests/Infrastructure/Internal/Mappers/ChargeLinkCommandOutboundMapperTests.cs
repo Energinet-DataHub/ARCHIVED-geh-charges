@@ -13,13 +13,15 @@
 // limitations under the License.
 
 using System.Diagnostics.CodeAnalysis;
-using System.Globalization;
-using Energinet.DataHub.ChargeLinks.InternalContracts;
 using FluentAssertions;
+using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.Domain.ChargeLinks;
+using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandReceived;
 using GreenEnergyHub.Charges.Infrastructure.Internal.Mappers;
 using GreenEnergyHub.Charges.TestCore;
 using GreenEnergyHub.TestHelpers.FluentAssertionsExtensions;
+using Microsoft.EntityFrameworkCore;
+using NodaTime;
 using Xunit;
 using Xunit.Categories;
 
@@ -35,8 +37,10 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Internal.Mappers
             // Arrange
             var mapper = new ChargeLinkDomainOutboundMapper();
 
+            UpdateInstantsToValidTimes(chargeLinkCommand);
+
             // Act
-            var converted = (ChargeLinkCommandDomain)mapper.Convert(chargeLinkCommand);
+            var converted = (ChargeLinkCommandReceivedContract)mapper.Convert(chargeLinkCommand);
 
             // Assert
             var chargeLinkDocument = chargeLinkCommand.Document;
@@ -47,9 +51,9 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Internal.Mappers
             convertedDocument.Recipient.Id.Should().BeEquivalentTo(chargeLinkDocument.Recipient.Id);
             convertedDocument.Recipient.MarketParticipantRole.Should().BeEquivalentTo(chargeLinkDocument.Recipient.BusinessProcessRole);
             convertedDocument.BusinessReasonCode.Should().BeEquivalentTo(chargeLinkDocument.BusinessReasonCode);
-            convertedDocument.CreatedDateTime.Should().BeEquivalentTo(chargeLinkDocument.CreatedDateTime.ToString());
+            convertedDocument.CreatedDateTime.Seconds.Should().Be(chargeLinkDocument.CreatedDateTime.ToUnixTimeSeconds());
             convertedDocument.Type.Should().BeEquivalentTo(chargeLinkDocument.Type);
-            convertedDocument.RequestDate.Should().BeEquivalentTo(chargeLinkDocument.RequestDate.ToString());
+            convertedDocument.RequestDate.Seconds.Should().Be(chargeLinkDocument.RequestDate.ToUnixTimeSeconds());
             convertedDocument.IndustryClassification.Should().BeEquivalentTo(chargeLinkDocument.IndustryClassification);
             convertedDocument.Should().NotContainNullsOrEmptyEnumerables();
             chargeLinkDocument.Should().NotContainNullsOrEmptyEnumerables();
@@ -59,8 +63,16 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Internal.Mappers
             converted.ChargeLink.ChargeType.Should().Be(chargeLinkCommand.ChargeLink.ChargeType);
             converted.ChargeLink.Factor.Should().Be(chargeLinkCommand.ChargeLink.Factor);
             converted.ChargeLink.MeteringPointId.Should().Be(chargeLinkCommand.ChargeLink.MeteringPointId);
-            converted.ChargeLink.StartDateTime.Should().BeEquivalentTo(converted.ChargeLink.StartDateTime);
-            converted.ChargeLink.EndDateTime.Should().BeEquivalentTo(converted.ChargeLink.EndDateTime);
+            converted.ChargeLink.StartDateTime.Seconds.Should().Be(chargeLinkCommand.ChargeLink.StartDateTime.ToUnixTimeSeconds());
+            converted.ChargeLink.EndDateTime.Seconds.Should().Be(chargeLinkCommand.ChargeLink.EndDateTime.TimeOrEndDefault().ToUnixTimeSeconds());
+        }
+
+        private static void UpdateInstantsToValidTimes([NotNull] ChargeLinkCommand chargeLinkCommand)
+        {
+            chargeLinkCommand.Document.RequestDate = Instant.FromUtc(2021, 7, 21, 11, 42, 25);
+            chargeLinkCommand.Document.CreatedDateTime = Instant.FromUtc(2021, 7, 21, 12, 14, 43);
+            chargeLinkCommand.ChargeLink.StartDateTime = Instant.FromUtc(2021, 8, 31, 22, 0);
+            chargeLinkCommand.ChargeLink.EndDateTime = Instant.FromUtc(2021, 9, 30, 22, 0);
         }
     }
 }

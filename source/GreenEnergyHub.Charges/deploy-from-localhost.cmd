@@ -16,6 +16,7 @@ rem If you don't know the password, perhaps you can obtain it from the configura
 set /p sqlPassword=Enter SQL password for 'gehdbadmin' to update db or empty to skip: 
 set /p deployMessageReceiver=Deploy message receiver ([y]/n)?
 set /p deployChargeLinkReceiver=Deploy charge link receiver ([y]/n)?
+set /p deployChargeLinkEventPublisher=Deploy charge link event publisher ([y]/n)?
 set /p deployCommandReceiver=Deploy command receiver ([y]/n)?
 set /p deployConfirmationSender=Deploy confirmation sender ([y]/n)?
 set /p deployRejectionSender=Deploy rejection sender ([y]/n)?
@@ -45,6 +46,12 @@ IF /I not "%deployMessageReceiver%" == "n" (
 IF /I not "%deployChargeLinkReceiver%" == "n" (
     pushd source\GreenEnergyHub.Charges.ChargeLinkReceiver\bin\Release\net5.0
     start "Deploy: Charge Link Receiver" cmd /c "func azure functionapp publish azfun-link-receiver-charges-%organization%-s & pause"
+    popd
+)
+
+IF /I not "%deployChargeLinkEventPublisher%" == "n" (
+    pushd source\GreenEnergyHub.Charges.ChargeLinkEventPublisher\bin\Release\net5.0
+    start "Deploy: Charge Link Event Publisher" cmd /c "func azure functionapp publish azfun-link-event-publisher-charges-%organization%-s & pause"
     popd
 )
 
