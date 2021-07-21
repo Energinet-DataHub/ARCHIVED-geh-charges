@@ -10,12 +10,13 @@ using NodaTime;
 
 namespace GreenEnergyHub.Charges.ChargeLinkCommandReceiver
 {
-    public class Program
+    public static class Program
     {
         public static void Main()
         {
             var host = new HostBuilder()
                 .ConfigureFunctionsWorkerDefaults()
+                .ConfigureServices(ConfigureServices)
                 .Build();
 
             host.Run();
