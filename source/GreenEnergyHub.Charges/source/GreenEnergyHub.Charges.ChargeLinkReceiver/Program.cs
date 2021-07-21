@@ -13,9 +13,9 @@
 // limitations under the License.
 
 using System;
-using Energinet.DataHub.ChargeLinks.InternalContracts;
 using GreenEnergyHub.Charges.Application.ChargeLinks;
 using GreenEnergyHub.Charges.Domain.ChargeLinks;
+using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandReceived;
 using GreenEnergyHub.Charges.Infrastructure.Messaging;
 using GreenEnergyHub.Charges.Infrastructure.Messaging.Registration;
 using GreenEnergyHub.Charges.Infrastructure.Messaging.Serialization.Commands;
@@ -52,7 +52,7 @@ namespace GreenEnergyHub.Charges.ChargeLinkReceiver
             services.AddScoped<ChargeLinkCommandConverter>();
             services.AddScoped<IChargeLinkCommandHandler, ChargeLinkCommandHandler>();
             services.AddScoped<MessageDeserializer, ChargeLinkCommandDeserializer>();
-            services.SendProtobuf<ChargeLinkCommandDomain>();
+            services.SendProtobuf<ChargeLinkCommandReceivedContract>();
             services.AddSingleton<Channel, ServiceBusChannel<ChargeLinkCommand>>();
             services.AddScoped<MessageDispatcher>();
 
