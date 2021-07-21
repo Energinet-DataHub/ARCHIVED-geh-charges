@@ -2,6 +2,7 @@
 using GreenEnergyHub.Charges.Application.ChargeLinks;
 using GreenEnergyHub.Charges.Application.Mapping;
 using GreenEnergyHub.Charges.Domain.Events.Local;
+using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandReceived;
 using GreenEnergyHub.Charges.Infrastructure.Messaging.Registration;
 using GreenEnergyHub.Messaging.Protobuf;
 using GreenEnergyHub.Messaging.Transport;
