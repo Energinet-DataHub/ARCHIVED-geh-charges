@@ -27,11 +27,11 @@ module "azfun_link_command_receiver" {
     WEBSITE_RUN_FROM_PACKAGE                        = 1
     WEBSITES_ENABLE_APP_SERVICE_STORAGE             = true
     FUNCTIONS_WORKER_RUNTIME                        = "dotnet-isolated"
-    CHARGE_LINK_RECEIVED_SUBSCRIPTION_NAME          = "sbs-link-command-received"
+    CHARGE_LINK_RECEIVED_SUBSCRIPTION_NAME          = "sbs-link-command-received-receiver"
     CHARGE_LINK_RECEIVED_TOPIC_NAME                 = module.sbt_link_command_received.name
-    CHARGE_LINK_RECEIVED_LISTENER_CONNECTION_STRING = trimsuffix(module.sbtar_link_command_received_sender.primary_connection_string, ";EntityPath=${module.sbt_link_command_received.name}")
+    CHARGE_LINK_RECEIVED_LISTENER_CONNECTION_STRING = module.sbnar_charges_listener.primary_connection_string
     CHARGE_LINK_RECEIVED_TOPIC_NAME                 = module.sbt_link_command_received.name
-    CHARGE_LINK_ACCEPTED_SENDER_CONNECTION_STRING   = trimsuffix(module.sbtar_link_command_received_sender.primary_connection_string, ";EntityPath=${module.sbt_link_command_received.name}")
+    CHARGE_LINK_ACCEPTED_SENDER_CONNECTION_STRING   = module.sbnar_charges_sender.primary_connection_string
   }
   dependencies                              = [
     module.appi.dependent_on,
