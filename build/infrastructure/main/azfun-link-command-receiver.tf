@@ -17,8 +17,8 @@ module "azfun_link_command_receiver" {
   resource_group_name                       = data.azurerm_resource_group.main.name
   location                                  = data.azurerm_resource_group.main.location
   storage_account_access_key                = module.azfun_link_receiver_stor.primary_access_key
-  app_service_plan_id                       = module.azfun_link_receiver_command_plan.id
-  storage_account_name                      = module.azfun_link_receiver_command_stor.name
+  app_service_plan_id                       = module.azfun_link_command_receiver_plan.id
+  storage_account_name                      = module.azfun_link_command_receiver_stor.name
   application_insights_instrumentation_key  = module.appi.instrumentation_key
   tags                                      = data.azurerm_resource_group.main.tags
   app_settings                              = {
@@ -73,11 +73,11 @@ resource "random_string" "link_command_receiver" {
 
 module "ping_webtest_link_command_receiver" {
   source                          = "../modules/ping-webtest" # Repo geh-terraform-modules doesn't have a webtest module at the time of this writing
-  name                            = "ping-webtest-link-receiver-${var.project}-${var.organisation}-${var.environment}"
+  name                            = "ping-webtest-link-command-receiver-${var.project}-${var.organisation}-${var.environment}"
   resource_group_name             = data.azurerm_resource_group.main.name
   location                        = data.azurerm_resource_group.main.location
   tags                            = data.azurerm_resource_group.main.tags
   application_insights_id         = module.appi.id
-  url                             = "https://${module.azfun_link_receiver.default_hostname}/api/HealthStatus"
+  url                             = "https://${module.azfun_link_command_receiver.default_hostname}/api/HealthStatus"
   dependencies                    = [module.azfun_link_command_receiver.dependent_on]
 }
