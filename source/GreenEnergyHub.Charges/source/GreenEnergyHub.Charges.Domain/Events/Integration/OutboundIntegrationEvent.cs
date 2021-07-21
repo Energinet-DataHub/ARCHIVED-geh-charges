@@ -19,9 +19,9 @@ namespace GreenEnergyHub.Charges.Domain.Events.Integration
 {
     public abstract class OutboundIntegrationEvent : IOutboundMessage
     {
-        protected OutboundIntegrationEvent(Transaction transaction)
+        protected OutboundIntegrationEvent()
         {
-            Transaction = transaction;
+            Transaction = Transaction.NewTransaction();
         }
 
         public Transaction Transaction { get; set; }
