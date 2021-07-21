@@ -13,7 +13,7 @@
 // limitations under the License.
 
 using System;
-using Energinet.DataHub.ChargeLinks.InternalContracts;
+using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandAccepted;
 using GreenEnergyHub.Charges.Infrastructure.Messaging;
 using GreenEnergyHub.Messaging.Protobuf;
 using Microsoft.Extensions.DependencyInjection;
@@ -44,8 +44,8 @@ namespace GreenEnergyHub.Charges.ChargeLinkEventPublisher
         {
             serviceCollection.AddScoped<ICorrelationContext, CorrelationContext>();
 
-            serviceCollection.ReceiveProtobuf<ChargeLinkCommandAcceptedDomain>(
-                configuration => configuration.WithParser(() => ChargeLinkCommandAcceptedDomain.Parser));
+            serviceCollection.ReceiveProtobuf<ChargeLinkCommandAcceptedContract>(
+                configuration => configuration.WithParser(() => ChargeLinkCommandAcceptedContract.Parser));
         }
 
         private static string GetEnv(string variableName)
