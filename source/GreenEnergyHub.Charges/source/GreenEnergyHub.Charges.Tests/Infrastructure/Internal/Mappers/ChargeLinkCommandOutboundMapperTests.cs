@@ -13,10 +13,9 @@
 // limitations under the License.
 
 using System.Diagnostics.CodeAnalysis;
-using System.Globalization;
-using Energinet.DataHub.ChargeLinks.InternalContracts;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.ChargeLinks;
+using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandReceived;
 using GreenEnergyHub.Charges.Infrastructure.Internal.Mappers;
 using GreenEnergyHub.Charges.TestCore;
 using GreenEnergyHub.TestHelpers.FluentAssertionsExtensions;
@@ -36,7 +35,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Internal.Mappers
             var mapper = new ChargeLinkDomainOutboundMapper();
 
             // Act
-            var converted = (ChargeLinkCommandDomain)mapper.Convert(chargeLinkCommand);
+            var converted = (ChargeLinkCommandReceivedContract)mapper.Convert(chargeLinkCommand);
 
             // Assert
             var chargeLinkDocument = chargeLinkCommand.Document;
