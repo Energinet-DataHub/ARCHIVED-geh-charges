@@ -3,7 +3,7 @@
     "Values": {
       "AzureWebJobsStorage": "UseDevelopmentStorage=true",
       "FUNCTIONS_WORKER_RUNTIME": "dotnet-isolated",
-      "CHARGE_LINK_RECEIVED_SUBSCRIPTION_NAME": "sbs-link-command-received",
+      "CHARGE_LINK_RECEIVED_SUBSCRIPTION_NAME": "sbs-link-command-received-receiver",
       "CHARGE_LINK_RECEIVED_TOPIC_NAME": "sbt-link-command-received",
       "CHARGE_LINK_RECEIVED_LISTENER_CONNECTION_STRING": "<listener connection string>",
       "CHARGE_LINK_ACCEPTED_TOPIC_NAME": "sbt-link-command-accepted",
