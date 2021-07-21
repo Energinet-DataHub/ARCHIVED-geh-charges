@@ -14,6 +14,7 @@
 
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application.ChargeLinks;
+using GreenEnergyHub.Charges.Domain.Events.Local;
 using GreenEnergyHub.Messaging.Transport;
 using Microsoft.Azure.WebJobs;
 
@@ -41,8 +42,9 @@ namespace GreenEnergyHub.Charges.ChargeLinkCommandReceiver
                 Connection = "CHARGE_LINK_RECEIVED_LISTENER_CONNECTION_STRING")]
             byte[] data)
         {
-            var chargeLinkCommandMessage = await _messageExtractor.ExtractAsync(data).ConfigureAwait(false);
-            //await _chargeLinkCommandAcceptedHandler.HandleAsync(chargeLinkCommandMessage);
+            var chargeLinkCommandMessage =
+                await _messageExtractor.ExtractAsync(data).ConfigureAwait(false);
+            await _chargeLinkCommandAcceptedHandler.HandleAsync((ChargeCommandReceivedEvent)chargeLinkCommandMessage);
         }
     }
 }
