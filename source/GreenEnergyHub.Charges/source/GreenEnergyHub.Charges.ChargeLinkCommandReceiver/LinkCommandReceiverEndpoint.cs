@@ -12,11 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application.ChargeLinks;
 using GreenEnergyHub.Charges.Domain.Events.Local;
+using GreenEnergyHub.Charges.Infrastructure.Messaging;
 using GreenEnergyHub.Messaging.Transport;
-using Microsoft.Azure.WebJobs;
+using Microsoft.Azure.Functions.Worker;
 
 namespace GreenEnergyHub.Charges.ChargeLinkCommandReceiver
 {
@@ -25,26 +27,38 @@ namespace GreenEnergyHub.Charges.ChargeLinkCommandReceiver
         private const string FunctionName = nameof(LinkCommandReceiverEndpoint);
         private readonly MessageExtractor _messageExtractor;
         private readonly IChargeLinkCommandAcceptedHandler _chargeLinkCommandAcceptedHandler;
+        private readonly ICorrelationContext _correlationContext;
 
         public LinkCommandReceiverEndpoint(
             MessageExtractor messageExtractor,
+            ICorrelationContext correlationContext,
             IChargeLinkCommandAcceptedHandler chargeLinkCommandAcceptedHandler)
         {
             _messageExtractor = messageExtractor;
+            _correlationContext = correlationContext;
             _chargeLinkCommandAcceptedHandler = chargeLinkCommandAcceptedHandler;
         }
 
-        [FunctionName(FunctionName)]
+        [Function(FunctionName)]
         public async Task RunAsync(
             [ServiceBusTrigger(
                 "%CHARGE_LINK_RECEIVED_TOPIC_NAME%",
                 "%CHARGE_LINK_RECEIVED_SUBSCRIPTION_NAME%",
                 Connection = "CHARGE_LINK_RECEIVED_LISTENER_CONNECTION_STRING")]
-            byte[] data)
+            byte[] data,
+            [NotNull] FunctionContext context)
         {
+            SetupCorrelationContext(context);
+
             var chargeLinkCommandMessage =
                 await _messageExtractor.ExtractAsync(data).ConfigureAwait(false);
-            await _chargeLinkCommandAcceptedHandler.HandleAsync((ChargeCommandReceivedEvent)chargeLinkCommandMessage);
+            await _chargeLinkCommandAcceptedHandler
+                .HandleAsync((ChargeCommandReceivedEvent)chargeLinkCommandMessage).ConfigureAwait(false);
+        }
+
+        private void SetupCorrelationContext(FunctionContext context)
+        {
+            _correlationContext.CorrelationId = context.InvocationId;
         }
     }
 }

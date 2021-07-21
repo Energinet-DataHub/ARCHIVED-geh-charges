@@ -3,6 +3,7 @@ using GreenEnergyHub.Charges.Application.ChargeLinks;
 using GreenEnergyHub.Charges.Application.Mapping;
 using GreenEnergyHub.Charges.Domain.Events.Local;
 using GreenEnergyHub.Charges.Infrastructure.Messaging.Registration;
+using GreenEnergyHub.Messaging.Protobuf;
 using GreenEnergyHub.Messaging.Transport;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -37,6 +38,9 @@ namespace GreenEnergyHub.Charges.ChargeLinkCommandReceiver
 
         private static void ConfigureMessaging(IServiceCollection services)
         {
+            services.ReceiveProtobuf<ChargeLinkCommandReceivedContract>(
+                configuration => configuration.WithParser(() => ChargeLinkCommandReceivedContract.Parser));
+
             services.AddScoped<MessageDispatcher>();
             services.AddMessagingProtobuf().AddMessageDispatcher<ChargeCommandAcceptedEvent>(
                 GetEnv("CHARGE_LINK_ACCEPTED_SENDER_CONNECTION_STRING"),
