@@ -22,16 +22,16 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks
 {
     public class ChargeLinkEventPublishHandler : IChargeLinkEventPublishHandler
     {
-        private IMessageDispatcher<ChargeLinkCreated> _createdDispatcher;
+        private IMessageDispatcher<ChargeLinkCreatedEvent> _createdDispatcher;
 
-        public ChargeLinkEventPublishHandler(IMessageDispatcher<ChargeLinkCreated> createdDispatcher)
+        public ChargeLinkEventPublishHandler(IMessageDispatcher<ChargeLinkCreatedEvent> createdDispatcher)
         {
             _createdDispatcher = createdDispatcher;
         }
 
         public async Task PublishEventsAsync(ChargeLinkCommand command)
         {
-            var createdEvent = new ChargeLinkCreated(
+            var createdEvent = new ChargeLinkCreatedEvent(
                 string.Empty,
                 string.Empty,
                 string.Empty,

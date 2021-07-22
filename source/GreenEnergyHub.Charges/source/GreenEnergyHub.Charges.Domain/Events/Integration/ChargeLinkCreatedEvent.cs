@@ -16,9 +16,9 @@ using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
 
 namespace GreenEnergyHub.Charges.Domain.Events.Integration
 {
-    public class ChargeLinkCreated : OutboundIntegrationEvent
+    public class ChargeLinkCreatedEvent : OutboundIntegrationEvent
     {
-        public ChargeLinkCreated(
+        public ChargeLinkCreatedEvent(
             string chargeLinkId,
             string meteringPointId,
             string chargeId,
