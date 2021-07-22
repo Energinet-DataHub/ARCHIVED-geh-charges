@@ -15,6 +15,7 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application.ChargeLinks;
+using GreenEnergyHub.Charges.Domain.ChargeLinks;
 using GreenEnergyHub.Charges.Domain.Events.Local;
 using GreenEnergyHub.Charges.Infrastructure.Messaging;
 using GreenEnergyHub.Messaging.Transport;
@@ -53,7 +54,7 @@ namespace GreenEnergyHub.Charges.ChargeLinkCommandReceiver
             var chargeLinkCommandMessage =
                 await _messageExtractor.ExtractAsync(data).ConfigureAwait(false);
             await _chargeLinkCommandAcceptedHandler
-                .HandleAsync((ChargeCommandReceivedEvent)chargeLinkCommandMessage).ConfigureAwait(false);
+                .HandleAsync((ChargeLinkCommandReceivedEvent)chargeLinkCommandMessage).ConfigureAwait(false);
         }
 
         private void SetupCorrelationContext(FunctionContext context)

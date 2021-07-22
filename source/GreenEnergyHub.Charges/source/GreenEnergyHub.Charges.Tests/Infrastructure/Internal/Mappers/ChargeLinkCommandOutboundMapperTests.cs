@@ -35,7 +35,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Internal.Mappers
         public void Convert_WhenCalled_ShouldMapToProtobufWithCorrectValues([NotNull] ChargeLinkCommand chargeLinkCommand)
         {
             // Arrange
-            var mapper = new ChargeLinkDomainOutboundMapper();
+            var mapper = new ChargeLinkReceivedOutboundMapper();
 
             UpdateInstantsToValidTimes(chargeLinkCommand);
 

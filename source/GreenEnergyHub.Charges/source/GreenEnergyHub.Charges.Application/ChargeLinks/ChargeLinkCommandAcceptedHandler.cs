@@ -15,6 +15,7 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application.Mapping;
+using GreenEnergyHub.Charges.Domain.ChargeLinks;
 using GreenEnergyHub.Charges.Domain.Events.Local;
 using GreenEnergyHub.Messaging.Transport;
 
@@ -33,7 +34,7 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks
             _chargeLinkCommandMapper = chargeLinkCommandMapper;
         }
 
-        public async Task HandleAsync([NotNull] ChargeCommandReceivedEvent chargeLinkCommand)
+        public async Task HandleAsync([NotNull] ChargeLinkCommandReceivedEvent chargeLinkCommand)
         {
             var chargeCommandAcceptedEvent = _chargeLinkCommandMapper.Map(chargeLinkCommand);
 

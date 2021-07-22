@@ -33,7 +33,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks
             [NotNull] ChargeLinkCommandHandler sut)
         {
             // Arrange
-            var chargeLinkCommand = new ChargeLinkCommand(Guid.NewGuid().ToString());
+            var chargeLinkCommand = new ChargeLinkCommandReceivedEvent(Guid.NewGuid().ToString());
 
             // Act
             var result = await sut.HandleAsync(chargeLinkCommand).ConfigureAwait(false);

@@ -20,7 +20,7 @@ using GreenEnergyHub.Messaging.Transport;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Integration.Mappers
 {
-    public class MeteringPointCreatedIntegrationInboundMapper : ProtobufInboundMapper<MeteringPointCreated>
+    public class LinkCommandReceivedOutboundMapperInboundMapper : ProtobufInboundMapper<MeteringPointCreated>
     {
         protected override IInboundMessage Convert(MeteringPointCreated obj)
         {

@@ -14,12 +14,13 @@
 
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
+using GreenEnergyHub.Charges.Domain.ChargeLinks;
 using GreenEnergyHub.Charges.Domain.Events.Local;
 
 namespace GreenEnergyHub.Charges.Application.ChargeLinks
 {
     public interface IChargeLinkCommandAcceptedHandler
     {
-        Task HandleAsync([NotNull] ChargeCommandReceivedEvent chargeLinkCommand);
+        Task HandleAsync([NotNull] ChargeLinkCommandReceivedEvent chargeLinkCommand);
     }
 }

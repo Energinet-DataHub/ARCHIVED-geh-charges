@@ -53,10 +53,10 @@ namespace GreenEnergyHub.Charges.ChargeLinkReceiver
             services.AddScoped<IChargeLinkCommandHandler, ChargeLinkCommandHandler>();
             services.AddScoped<MessageDeserializer, ChargeLinkCommandDeserializer>();
             services.SendProtobuf<ChargeLinkCommandReceivedContract>();
-            services.AddSingleton<Channel, ServiceBusChannel<ChargeLinkCommand>>();
+            services.AddSingleton<Channel, ServiceBusChannel<ChargeLinkCommandReceivedEvent>>();
             services.AddScoped<MessageDispatcher>();
 
-            services.AddMessagingProtobuf().AddMessageDispatcher<ChargeLinkCommand>(
+            services.AddMessagingProtobuf().AddMessageDispatcher<ChargeLinkCommandReceivedEvent>(
                 GetEnv("CHARGE_LINK_RECEIVED_SENDER_CONNECTION_STRING"),
                 GetEnv("CHARGE_LINK_RECEIVED_TOPIC_NAME"));
         }

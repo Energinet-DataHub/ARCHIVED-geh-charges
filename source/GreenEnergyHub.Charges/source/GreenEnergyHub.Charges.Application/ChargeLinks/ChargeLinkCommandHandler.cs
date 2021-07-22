@@ -29,7 +29,7 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks
             _messageDispatcher = messageDispatcher;
         }
 
-        public async Task<ChargeLinksMessageResult> HandleAsync([NotNull]ChargeLinkCommand chargeLinkCommand)
+        public async Task<ChargeLinksMessageResult> HandleAsync([NotNull]ChargeLinkCommandReceivedEvent chargeLinkCommand)
         {
             await _messageDispatcher.DispatchAsync(chargeLinkCommand).ConfigureAwait(false);
 
