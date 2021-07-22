@@ -21,6 +21,6 @@ namespace GreenEnergyHub.Charges.Domain.MarketDocument
     {
         Unknown = 0,
         UpdateMasterDataSettlement = 1,
-        UpdateChargeInformation = 18,
+        UpdateChargeInformation = 2,
     }
 }
