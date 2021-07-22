@@ -16,15 +16,14 @@ using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Domain.ChargeLinks;
 using GreenEnergyHub.Charges.Domain.ChargeLinks.Result;
-using GreenEnergyHub.Messaging.Transport;
 
 namespace GreenEnergyHub.Charges.Application.ChargeLinks
 {
     public class ChargeLinkCommandHandler : IChargeLinkCommandHandler
     {
-        private readonly MessageDispatcher _messageDispatcher;
+        private readonly IMessageDispatcher<ChargeLinkCommandReceivedEvent> _messageDispatcher;
 
-        public ChargeLinkCommandHandler(MessageDispatcher messageDispatcher)
+        public ChargeLinkCommandHandler(IMessageDispatcher<ChargeLinkCommandReceivedEvent> messageDispatcher)
         {
             _messageDispatcher = messageDispatcher;
         }

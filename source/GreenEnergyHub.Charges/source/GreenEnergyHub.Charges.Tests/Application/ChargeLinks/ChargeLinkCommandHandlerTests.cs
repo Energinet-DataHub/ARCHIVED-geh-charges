@@ -14,11 +14,15 @@
 
 using System;
 using System.Diagnostics.CodeAnalysis;
+using System.Threading;
 using System.Threading.Tasks;
+using AutoFixture.Xunit2;
 using FluentAssertions;
+using GreenEnergyHub.Charges.Application;
 using GreenEnergyHub.Charges.Application.ChargeLinks;
 using GreenEnergyHub.Charges.Domain.ChargeLinks;
 using GreenEnergyHub.TestHelpers;
+using Moq;
 using Xunit;
 using Xunit.Categories;
 
@@ -30,6 +34,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks
         [Theory]
         [InlineAutoDomainData]
         public async Task HandleAsync_WhenCalledWithValidChargeLinkXML_ShouldReturnOk(
+            [NotNull] [Frozen] Mock<IMessageDispatcher<ChargeLinkCommandReceivedEvent>> messageDispatcher,
             [NotNull] ChargeLinkCommandHandler sut)
         {
             // Arrange
@@ -40,6 +45,8 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks
 
             // Assert
             result.IsSucceeded.Should().BeTrue();
+            messageDispatcher.Verify(
+                x => x.DispatchAsync(chargeLinkCommand, It.IsAny<CancellationToken>()));
         }
     }
 }

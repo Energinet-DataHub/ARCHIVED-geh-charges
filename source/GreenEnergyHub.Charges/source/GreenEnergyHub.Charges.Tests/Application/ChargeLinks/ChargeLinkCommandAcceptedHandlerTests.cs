@@ -14,8 +14,10 @@
 
 using System;
 using System.Diagnostics.CodeAnalysis;
+using System.Threading;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
+using GreenEnergyHub.Charges.Application;
 using GreenEnergyHub.Charges.Application.ChargeLinks;
 using GreenEnergyHub.Charges.Application.Mapping;
 using GreenEnergyHub.Charges.Domain.ChargeLinks;
@@ -32,7 +34,8 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks
         [Theory]
         [InlineAutoDomainData]
         public async Task HandleAsync_WhenCalledWithValidChargeLinkXML_ShouldReturnOk(
-            [Frozen] [NotNull] Mock<IChargeLinkCommandMapper> chargeLinkCommandMapper,
+            [NotNull] [Frozen] Mock<IMessageDispatcher<ChargeLinkCommandAcceptedEvent>> messageDispatcher,
+            [NotNull] [Frozen] Mock<IChargeLinkCommandMapper> chargeLinkCommandMapper,
             [NotNull] ChargeLinkCommandReceivedEvent chargeLinkCommandReceivedEvent,
             [NotNull] ChargeLinkCommandAcceptedEvent chargeLinkCommandAcceptedEvent,
             [NotNull] ChargeLinkCommandAcceptedHandler sut)
@@ -45,6 +48,8 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks
             await sut.HandleAsync(chargeLinkCommandReceivedEvent).ConfigureAwait(false);
 
             // Assert
+            messageDispatcher.Verify(
+                x => x.DispatchAsync(chargeLinkCommandAcceptedEvent, It.IsAny<CancellationToken>()));
         }
     }
 }

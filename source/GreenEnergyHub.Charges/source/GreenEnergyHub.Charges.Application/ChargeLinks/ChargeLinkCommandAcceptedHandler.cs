@@ -16,18 +16,16 @@ using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application.Mapping;
 using GreenEnergyHub.Charges.Domain.ChargeLinks;
-using GreenEnergyHub.Charges.Domain.Events.Local;
-using GreenEnergyHub.Messaging.Transport;
 
 namespace GreenEnergyHub.Charges.Application.ChargeLinks
 {
     public class ChargeLinkCommandAcceptedHandler : IChargeLinkCommandAcceptedHandler
     {
-        private readonly MessageDispatcher _messageDispatcher;
+        private readonly IMessageDispatcher<ChargeLinkCommandAcceptedEvent> _messageDispatcher;
         private readonly IChargeLinkCommandMapper _chargeLinkCommandMapper;
 
         public ChargeLinkCommandAcceptedHandler(
-            MessageDispatcher messageDispatcher,
+            IMessageDispatcher<ChargeLinkCommandAcceptedEvent> messageDispatcher,
             IChargeLinkCommandMapper chargeLinkCommandMapper)
         {
             _messageDispatcher = messageDispatcher;
