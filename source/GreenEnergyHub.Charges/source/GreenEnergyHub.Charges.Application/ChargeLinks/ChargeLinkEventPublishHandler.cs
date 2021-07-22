@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System.Threading.Tasks;
+using GreenEnergyHub.Charges.Application.Factories;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
 using GreenEnergyHub.Charges.Domain.ChargeLinks;
 using GreenEnergyHub.Charges.Domain.Events.Integration;
@@ -22,25 +23,20 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks
 {
     public class ChargeLinkEventPublishHandler : IChargeLinkEventPublishHandler
     {
-        private IMessageDispatcher<ChargeLinkCreatedEvent> _createdDispatcher;
+        private readonly IMessageDispatcher<ChargeLinkCreatedEvent> _createdDispatcher;
+        private readonly IChargeLinkCreatedEventFactory _createdEventFactory;
 
-        public ChargeLinkEventPublishHandler(IMessageDispatcher<ChargeLinkCreatedEvent> createdDispatcher)
+        public ChargeLinkEventPublishHandler(
+            IChargeLinkCreatedEventFactory createdEventFactory,
+            IMessageDispatcher<ChargeLinkCreatedEvent> createdDispatcher)
         {
+            _createdEventFactory = createdEventFactory;
             _createdDispatcher = createdDispatcher;
         }
 
         public async Task PublishEventsAsync(ChargeLinkCommand command)
         {
-            var createdEvent = new ChargeLinkCreatedEvent(
-                string.Empty,
-                string.Empty,
-                string.Empty,
-                ChargeType.Unknown,
-                string.Empty,
-                new ChargeLinkPeriod(
-                    SystemClock.Instance.GetCurrentInstant(),
-                    SystemClock.Instance.GetCurrentInstant(),
-                    0));
+            var createdEvent = _createdEventFactory.CreateEvent(command);
 
             await _createdDispatcher.DispatchAsync(createdEvent).ConfigureAwait(false);
         }
