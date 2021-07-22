@@ -12,11 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application;
 using GreenEnergyHub.Messaging.Transport;
-using JetBrains.Annotations;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Messaging
 {
