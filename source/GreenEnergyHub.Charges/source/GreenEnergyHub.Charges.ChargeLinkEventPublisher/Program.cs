@@ -14,6 +14,7 @@
 
 using System;
 using GreenEnergyHub.Charges.Application.ChargeLinks;
+using GreenEnergyHub.Charges.Application.Factories;
 using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandAccepted;
 using GreenEnergyHub.Charges.Infrastructure.Messaging;
 using GreenEnergyHub.Messaging.Protobuf;
@@ -40,6 +41,7 @@ namespace GreenEnergyHub.Charges.ChargeLinkEventPublisher
 
             ConfigureMessaging(serviceCollection);
 
+            serviceCollection.AddScoped<IChargeLinkCreatedEventFactory, ChargeLinkCreatedEventFactory>();
             serviceCollection.AddScoped<IChargeLinkEventPublishHandler, ChargeLinkEventPublishHandler>();
         }
 
