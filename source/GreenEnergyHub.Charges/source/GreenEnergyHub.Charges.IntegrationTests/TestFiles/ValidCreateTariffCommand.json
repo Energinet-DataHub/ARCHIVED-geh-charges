@@ -2,8 +2,8 @@
   "Document": {
     "Id": "MD{{$isoTimestamp}}",
     "CreatedDateTime": "{{$isoTimestamp}}",
-    "IndustryClassification": 23,
-    "Type": 10,
+    "IndustryClassification": 1,
+    "Type": 2,
     "Sender": {
       "Id": 8100000000030,
       "Name": "Grid Operator 3",
@@ -14,15 +14,15 @@
       "Name": "Hub",
       "BusinessProcessRole": 1
     },
-    "BusinessReasonCode": 18
+    "BusinessReasonCode": 2
   },
   "ChargeOperation": {
     "Id": "MD{{$isoTimestamp}}",
     "EndDateTime": null,
-    "OperationType": 2,
+    "OperationType": 1,
     "ChargeId": "{{$randomCharacters}}",
     "ChargeName": "Electric charge",
-    "Type": 2,
+    "Type": 3,
     "ChargeOwner": "8100000000030",
     "Resolution": "P1D",
     "TaxIndicator": true,
