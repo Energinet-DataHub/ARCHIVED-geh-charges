@@ -17,8 +17,11 @@ using GreenEnergyHub.Charges.Domain.ChargeLinks;
 
 namespace GreenEnergyHub.Charges.Application.ChargeLinks
 {
-    public interface IChargeLinkEventPublisher
+    public class ChargeLinkEventPublishHandler : IChargeLinkEventPublishHandler
     {
-        Task PublishEventsAsync(ChargeLinkCommand command);
+        public Task PublishEventsAsync(ChargeLinkCommand command)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

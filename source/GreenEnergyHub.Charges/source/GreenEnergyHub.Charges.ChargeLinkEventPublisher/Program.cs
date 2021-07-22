@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System;
+using GreenEnergyHub.Charges.Application.ChargeLinks;
 using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandAccepted;
 using GreenEnergyHub.Charges.Infrastructure.Messaging;
 using GreenEnergyHub.Messaging.Protobuf;
@@ -38,6 +39,8 @@ namespace GreenEnergyHub.Charges.ChargeLinkEventPublisher
             serviceCollection.AddLogging();
 
             ConfigureMessaging(serviceCollection);
+
+            serviceCollection.AddScoped<IChargeLinkEventPublishHandler, ChargeLinkEventPublishHandler>();
         }
 
         private static void ConfigureMessaging(IServiceCollection serviceCollection)
