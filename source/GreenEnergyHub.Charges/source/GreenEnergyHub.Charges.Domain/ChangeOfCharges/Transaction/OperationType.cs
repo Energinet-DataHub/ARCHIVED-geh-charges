@@ -20,8 +20,8 @@ namespace GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction
     public enum OperationType
     {
         Unknown = 0,
-        Create = 2,
-        Stop = 3,
-        Update = 4,
+        Create = 1,
+        Stop = 2,
+        Update = 3,
     }
 }
