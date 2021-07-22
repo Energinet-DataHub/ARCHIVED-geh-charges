@@ -16,32 +16,33 @@ namespace GreenEnergyHub.Charges.Application.Validation
 {
     public enum ValidationRuleIdentifier
     {
-        StartDateValidation, // VR209
-        ChangingTariffVatValueNotAllowed, // VR630
-        ChangingTariffTaxValueNotAllowed, // VRXYZ
-        ProcessTypeIsKnownValidation, // VR009
-        SenderIsMandatoryTypeValidation, // VR150
-        RecipientIsMandatoryTypeValidation, // VR153
-        ChargeOperationIdRequired, // VR223
-        OperationTypeValidation, // VR445
-        ChargeIdLengthValidation, // VR441
-        ChargeIdRequiredValidation, // VR440
-        DocumentTypeMustBeRequestUpdateChargeInformation, // VR404
-        BusinessReasonCodeMustBeUpdateChargeInformation, // VR424
-        ChargeTypeIsKnownValidation, // VR449
-        VatClassificationValidation, // VR488
-        ResolutionTariffValidation, // VR505-1
-        ResolutionFeeValidation, // VR505-2
-        ResolutionSubscriptionValidation, // VR505-3
-        StartDateTimeRequiredValidation, // VR531
-        ChargeOwnerIsRequiredValidation, // VR532
-        ChargeNameHasMaximumLength, // VR446
-        ChargeDescriptionHasMaximumLength, // VR447
-        ChargeTypeTariffPriceCount, // VR507-1
-        MaximumPrice, // VR509
-        ChargePriceMaximumDigitsAndDecimals, // VR457
-        FeeMustHaveSinglePrice, // VR507-2
-        SubscriptionMustHaveSinglePrice, // VR507-2
-        CommandSenderMustBeAnExistingMarketParticipant, // VR152
+        Unknown = 0,
+        StartDateValidation = 1, // VR209
+        ChangingTariffVatValueNotAllowed = 2, // VR630
+        ChangingTariffTaxValueNotAllowed = 3, // VRXYZ
+        ProcessTypeIsKnownValidation = 4, // VR009
+        SenderIsMandatoryTypeValidation = 5, // VR150
+        RecipientIsMandatoryTypeValidation = 6, // VR153
+        ChargeOperationIdRequired = 7, // VR223
+        OperationTypeValidation = 8, // VR445
+        ChargeIdLengthValidation = 9, // VR441
+        ChargeIdRequiredValidation = 10, // VR440
+        DocumentTypeMustBeRequestUpdateChargeInformation = 11, // VR404
+        BusinessReasonCodeMustBeUpdateChargeInformation = 12, // VR424
+        ChargeTypeIsKnownValidation = 13, // VR449
+        VatClassificationValidation = 14, // VR488
+        ResolutionTariffValidation = 15, // VR505-1
+        ResolutionFeeValidation = 16, // VR505-2
+        ResolutionSubscriptionValidation = 17, // VR505-3
+        StartDateTimeRequiredValidation = 18, // VR531
+        ChargeOwnerIsRequiredValidation = 19, // VR532
+        ChargeNameHasMaximumLength = 20, // VR446
+        ChargeDescriptionHasMaximumLength = 21, // VR447
+        ChargeTypeTariffPriceCount = 22, // VR507-1
+        MaximumPrice = 23, // VR509
+        ChargePriceMaximumDigitsAndDecimals = 24, // VR457
+        FeeMustHaveSinglePrice = 25, // VR507-2
+        SubscriptionMustHaveSinglePrice = 26, // VR507-2
+        CommandSenderMustBeAnExistingMarketParticipant = 27, // VR152
     }
 }
