@@ -15,9 +15,13 @@
 using System;
 using GreenEnergyHub.Charges.Application.ChargeLinks;
 using GreenEnergyHub.Charges.Application.Factories;
+using GreenEnergyHub.Charges.Domain.Events.Integration;
+using GreenEnergyHub.Charges.Infrastructure.Integration.ChargeLinkCreated;
 using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandAccepted;
 using GreenEnergyHub.Charges.Infrastructure.Messaging;
+using GreenEnergyHub.Charges.Infrastructure.Messaging.Registration;
 using GreenEnergyHub.Messaging.Protobuf;
+using GreenEnergyHub.Messaging.Transport;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
@@ -47,10 +51,15 @@ namespace GreenEnergyHub.Charges.ChargeLinkEventPublisher
 
         private static void ConfigureMessaging(IServiceCollection serviceCollection)
         {
-            serviceCollection.AddScoped<ICorrelationContext, CorrelationContext>();
-
             serviceCollection.ReceiveProtobuf<ChargeLinkCommandAcceptedContract>(
                 configuration => configuration.WithParser(() => ChargeLinkCommandAcceptedContract.Parser));
+            serviceCollection.SendProtobuf<ChargeLinkCreatedContract>();
+            serviceCollection.AddSingleton<Channel, ServiceBusChannel<ChargeLinkCreatedEvent>>();
+            serviceCollection.AddScoped<MessageDispatcher>();
+
+            serviceCollection.AddMessagingProtobuf().AddMessageDispatcher<ChargeLinkCreatedEvent>(
+                GetEnv("INTEGRATIONEVENT_SENDER_CONNECTION_STRING"),
+                GetEnv("CHARGE_LINK_RECEIVED_TOPIC_NAME"));
         }
 
         private static string GetEnv(string variableName)
