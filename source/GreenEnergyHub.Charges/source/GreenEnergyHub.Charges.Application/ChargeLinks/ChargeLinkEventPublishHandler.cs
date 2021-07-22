@@ -34,7 +34,7 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks
             _createdDispatcher = createdDispatcher;
         }
 
-        public async Task PublishEventsAsync(ChargeLinkCommand command)
+        public async Task HandleAsync(ChargeLinkCommand command)
         {
             var createdEvent = _createdEventFactory.CreateEvent(command);
 
