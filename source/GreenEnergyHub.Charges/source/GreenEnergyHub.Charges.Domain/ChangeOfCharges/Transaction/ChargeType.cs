@@ -20,9 +20,9 @@ namespace GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction
     /// </summary>
     public enum ChargeType
     {
-        Unknown = -1,
-        Subscription = 0,
-        Fee = 1,
-        Tariff = 2,
+        Unknown = 0,
+        Subscription = 1,
+        Fee = 2,
+        Tariff = 3,
     }
 }
