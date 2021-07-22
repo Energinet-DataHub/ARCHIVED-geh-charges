@@ -19,6 +19,6 @@ namespace GreenEnergyHub.Charges.Domain.MarketDocument
     public enum IndustryClassification
     {
         Unknown = 0,
-        Electricity = 23,
+        Electricity = 1,
     }
 }
