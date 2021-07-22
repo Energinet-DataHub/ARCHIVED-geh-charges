@@ -13,8 +13,6 @@
 // limitations under the License.
 
 using System;
-using Google.Protobuf.WellKnownTypes;
-using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
 using GreenEnergyHub.Charges.Domain.ChargeLinks;
 using GreenEnergyHub.Charges.Domain.MarketDocument;
@@ -25,7 +23,7 @@ using NodaTime;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
 {
-    public class LinkCommandReceivedOutboundMapperInboundMapper : ProtobufInboundMapper<ChargeLinkCommandReceivedContract>
+    public class LinkCommandReceivedInboundMapper : ProtobufInboundMapper<ChargeLinkCommandReceivedContract>
     {
         protected override IInboundMessage Convert(ChargeLinkCommandReceivedContract obj)
         {
@@ -34,7 +32,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
             var document = obj.Document;
             var chargeLink = obj.ChargeLink;
 
-            return new ChargeLinkCommand(obj.CorrelationId)
+            return new ChargeLinkCommandReceivedEvent(obj.CorrelationId)
             {
                 Document = new Document
                 {
