@@ -28,18 +28,18 @@ using Xunit.Categories;
 namespace GreenEnergyHub.Charges.Tests.Infrastructure.Internal.Mappers
 {
     [UnitTest]
-    public class ChargeLinkCommandAcceptedInboundMapperTests
+    public class LinkCommandAcceptedInboundMapperTests
     {
         [Theory]
         [InlineAutoMoqData]
         public void Convert_WhenCalled_ShouldMapToDomainObjectWithCorrectValues(
             [NotNull] ChargeLinkCommandAcceptedContract acceptedCommand,
-            [NotNull] ChargeLinkCommandAcceptedInboundMapper sut)
+            [NotNull] LinkCommandAcceptedInboundMapper sut)
         {
             // Arrange
 
             // Act
-            var converted = (ChargeLinkCommand)sut.Convert(acceptedCommand);
+            var converted = (ChargeLinkCommandAcceptedEvent)sut.Convert(acceptedCommand);
 
             // Assert
             converted.Document.Id.Should().BeEquivalentTo(acceptedCommand.Document.Id);

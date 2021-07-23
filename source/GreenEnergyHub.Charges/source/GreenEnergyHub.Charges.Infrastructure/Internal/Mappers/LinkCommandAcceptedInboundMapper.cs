@@ -23,13 +23,13 @@ using NodaTime;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
 {
-    public class ChargeLinkCommandAcceptedInboundMapper : ProtobufInboundMapper<ChargeLinkCommandAcceptedContract>
+    public class LinkCommandAcceptedInboundMapper : ProtobufInboundMapper<ChargeLinkCommandAcceptedContract>
     {
         protected override IInboundMessage Convert(ChargeLinkCommandAcceptedContract obj)
         {
             if (obj == null) throw new ArgumentNullException(nameof(obj));
 
-            return new ChargeLinkCommand(obj.CorrelationId)
+            return new ChargeLinkCommandAcceptedEvent(obj.CorrelationId)
             {
                 Document = MapDocument(obj.Document),
                 ChargeLink = MapChargeLink(obj.ChargeLink),
