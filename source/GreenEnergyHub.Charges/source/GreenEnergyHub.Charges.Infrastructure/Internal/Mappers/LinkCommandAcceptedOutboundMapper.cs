@@ -13,18 +13,17 @@
 // limitations under the License.
 
 using System;
-using System.Globalization;
 using Google.Protobuf.WellKnownTypes;
 using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.Domain.ChargeLinks;
-using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandReceived;
+using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandAccepted;
 using GreenEnergyHub.Messaging.Protobuf;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
 {
-    public class ChargeLinkDomainOutboundMapper : ProtobufOutboundMapper<ChargeLinkCommand>
+    public class LinkCommandAcceptedOutboundMapper : ProtobufOutboundMapper<ChargeLinkCommandAcceptedEvent>
     {
-        protected override Google.Protobuf.IMessage Convert(ChargeLinkCommand obj)
+        protected override Google.Protobuf.IMessage Convert(ChargeLinkCommandAcceptedEvent obj)
         {
             if (obj == null)
             {
@@ -34,26 +33,26 @@ namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
             var document = obj.Document;
             var chargeLink = obj.ChargeLink;
 
-            return new ChargeLinkCommandReceivedContract
+            return new ChargeLinkCommandAcceptedContract
             {
                 Document = new DocumentContract
                 {
-                    Id = document.Id,
-                    RequestDate = Timestamp.FromDateTime(document.RequestDate.ToDateTimeUtc()),
-                    Type = (DocumentTypeContract)document.Type,
-                    CreatedDateTime = Timestamp.FromDateTime(document.CreatedDateTime.ToDateTimeUtc()),
-                    Sender = new MarketParticipantContract
-                    {
-                        Id = document.Sender.Id,
-                        MarketParticipantRole = (MarketParticipantRoleContract)document.Sender.BusinessProcessRole,
-                    },
-                    Recipient = new MarketParticipantContract
-                    {
-                        Id = document.Recipient.Id,
-                        MarketParticipantRole = (MarketParticipantRoleContract)document.Recipient.BusinessProcessRole,
-                    },
-                    IndustryClassification = (IndustryClassificationContract)document.IndustryClassification,
-                    BusinessReasonCode = (BusinessReasonCodeContract)document.BusinessReasonCode,
+                        Id = document.Id,
+                        RequestDate = Timestamp.FromDateTime(document.RequestDate.ToDateTimeUtc()),
+                        Type = (DocumentTypeContract)document.Type,
+                        CreatedDateTime = Timestamp.FromDateTime(document.CreatedDateTime.ToDateTimeUtc()),
+                        Sender = new MarketParticipantContract
+                        {
+                            Id = document.Sender.Id,
+                            MarketParticipantRole = (MarketParticipantRoleContract)document.Sender.BusinessProcessRole,
+                        },
+                        Recipient = new MarketParticipantContract
+                        {
+                            Id = document.Recipient.Id,
+                            MarketParticipantRole = (MarketParticipantRoleContract)document.Recipient.BusinessProcessRole,
+                        },
+                        IndustryClassification = (IndustryClassificationContract)document.IndustryClassification,
+                        BusinessReasonCode = (BusinessReasonCodeContract)document.BusinessReasonCode,
                 },
                 ChargeLink = new ChargeLinkContract
                 {

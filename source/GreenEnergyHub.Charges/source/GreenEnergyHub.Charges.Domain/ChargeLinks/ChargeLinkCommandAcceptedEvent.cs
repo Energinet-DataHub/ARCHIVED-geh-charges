@@ -12,14 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Domain.ChargeLinks;
-using GreenEnergyHub.Charges.Domain.ChargeLinks.Result;
+using System.Diagnostics.CodeAnalysis;
 
-namespace GreenEnergyHub.Charges.Application.ChargeLinks
+namespace GreenEnergyHub.Charges.Domain.ChargeLinks
 {
-    public interface IChargeLinkCommandHandler
+    public class ChargeLinkCommandAcceptedEvent : ChargeLinkCommand
     {
-        public Task<ChargeLinksMessageResult> HandleAsync(ChargeLinkCommandReceivedEvent chargeLinkCommand);
+        public ChargeLinkCommandAcceptedEvent([NotNull] string correlationId)
+            : base(correlationId)
+        {
+        }
     }
 }
