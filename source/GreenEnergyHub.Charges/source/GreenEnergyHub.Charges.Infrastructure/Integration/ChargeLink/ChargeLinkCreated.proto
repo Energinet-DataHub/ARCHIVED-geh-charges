@@ -1,0 +1,45 @@
+﻿/* Copyright 2020 Energinet DataHub A/S
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License2");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+/**
+ * Charge link Created event contract.
+ */
+syntax = "proto3";
+
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "GreenEnergyHub.Charges.Infrastructure.Integration.ChargeLinkCreated";
+
+message ChargeLinkCreatedContract {
+  string charge_link_id = 1;
+  string metering_point_id = 2;
+  string charge_id = 3;
+  ChargeTypeContract charge_type = 4;
+  string charge_owner = 5;
+  ChargeLinkPeriodContract charge_link_period = 6;
+}
+
+message ChargeLinkPeriodContract {
+  google.protobuf.Timestamp start_date_time = 1; // In UTC. The charge link period's valid from date and time
+  google.protobuf.Timestamp end_date_time = 2; // In UTC. The charge link period's valid to date and time. The default value will be the equivalent to 9999-12-31T23:59:59Z without milliseconds
+  int32 factor = 3; // Indicates the number of times the same fee or subscription must be collected. Always 1 for tariffs
+}
+
+enum ChargeTypeContract {
+  CT_UNKNOWN = 0;
+  CT_SUBSCRIPTION = 1;
+  CT_FEE = 2;
+  CT_TARIFF = 3;
+}
