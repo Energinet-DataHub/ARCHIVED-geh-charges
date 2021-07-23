@@ -6,6 +6,8 @@
     "FUNCTIONS_WORKER_RUNTIME": "dotnet-isolated",
     "LINK_ACCEPTED_LISTENER_CONNECTION_STRING": "<sb listener connection string>",
     "LINK_ACCEPTED_TOPIC_NAME": "sbt-link-command-accepted",
-    "LINK_ACCEPTED_SUBSCRIPTION_NAME": "sbs-link-command-accepted-event-publisher"
+    "LINK_ACCEPTED_SUBSCRIPTION_NAME": "sbs-link-command-accepted-event-publisher",
+    "INTEGRATIONEVENT_SENDER_CONNECTION_STRING": "<sb sender connection string>",
+    "CHARGE_LINK_CREATED_TOPIC_NAME": "charge-link-created"
   }
 }

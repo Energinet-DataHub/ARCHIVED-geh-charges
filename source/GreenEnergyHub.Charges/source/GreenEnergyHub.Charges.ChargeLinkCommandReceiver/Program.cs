@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System;
+using GreenEnergyHub.Charges.Application;
 using GreenEnergyHub.Charges.Application.ChargeLinks;
 using GreenEnergyHub.Charges.Application.Mapping;
 using GreenEnergyHub.Charges.Domain.ChargeLinks;
@@ -57,10 +58,8 @@ namespace GreenEnergyHub.Charges.ChargeLinkCommandReceiver
         {
             services.ReceiveProtobuf<ChargeLinkCommandReceivedContract>(
                 configuration => configuration.WithParser(() => ChargeLinkCommandReceivedContract.Parser));
-            services.AddSingleton<Channel, ServiceBusChannel<ChargeLinkCommandReceivedEvent>>();
             services.SendProtobuf<ChargeLinkCommandAcceptedContract>();
-            services.AddScoped<MessageDispatcher>();
-            services.AddMessagingProtobuf().AddMessageDispatcher<ChargeLinkCommandReceivedEvent>(
+            services.AddMessagingProtobuf().AddMessageDispatcher<ChargeLinkCommandAcceptedEvent>(
                 GetEnv("CHARGE_LINK_ACCEPTED_SENDER_CONNECTION_STRING"),
                 GetEnv("CHARGE_LINK_ACCEPTED_TOPIC_NAME"));
         }
