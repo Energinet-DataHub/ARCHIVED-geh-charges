@@ -35,8 +35,6 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks
         public async Task HandleAsync([NotNull] ChargeLinkCommandReceivedEvent chargeLinkCommand)
         {
             var chargeCommandAcceptedEvent = _chargeLinkCommandMapper.Map(chargeLinkCommand);
-
-            // Dispatch
             await _messageDispatcher.DispatchAsync(chargeCommandAcceptedEvent).ConfigureAwait(false);
         }
     }
