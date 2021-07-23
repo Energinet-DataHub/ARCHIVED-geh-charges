@@ -14,6 +14,7 @@
 
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
+using GreenEnergyHub.Charges.Application.ChargeLinks;
 using GreenEnergyHub.Charges.Domain.ChargeLinks;
 using GreenEnergyHub.Charges.Infrastructure.Messaging;
 using GreenEnergyHub.Messaging.Transport;
@@ -32,15 +33,18 @@ namespace GreenEnergyHub.Charges.ChargeLinkEventPublisher
         private const string FunctionName = "ChargeLinkEventPublisherServiceBusTrigger";
         private readonly ICorrelationContext _correlationContext;
         private readonly MessageExtractor _messageExtractor;
+        private readonly IChargeLinkEventPublishHandler _chargeLinkEventPublishHandler;
         private readonly ILogger _log;
 
         public ChargeLinkEventPublisherServiceBusTrigger(
             ICorrelationContext correlationContext,
             MessageExtractor messageExtractor,
+            IChargeLinkEventPublishHandler chargeLinkEventPublishHandler,
             [NotNull] ILoggerFactory loggerFactory)
         {
             _correlationContext = correlationContext;
             _messageExtractor = messageExtractor;
+            _chargeLinkEventPublishHandler = chargeLinkEventPublishHandler;
 
             _log = loggerFactory.CreateLogger(nameof(ChargeLinkEventPublisherServiceBusTrigger));
         }
@@ -59,7 +63,8 @@ namespace GreenEnergyHub.Charges.ChargeLinkEventPublisher
             SetupCorrelationContext(context);
 
             var acceptedChargeLinkCommand = (ChargeLinkCommand)await _messageExtractor.ExtractAsync(message).ConfigureAwait(false);
-            _log.LogInformation("Received charge link accepted event with document id '{@DocumentId}'", acceptedChargeLinkCommand.Document.Id);
+
+            await _chargeLinkEventPublishHandler.HandleAsync(acceptedChargeLinkCommand).ConfigureAwait(false);
 
             return new OkResult();
         }
