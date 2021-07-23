@@ -14,11 +14,12 @@
 
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
+using GreenEnergyHub.Charges.Application.ChargeLinks;
+using GreenEnergyHub.Charges.Domain.ChargeLinks;
 using GreenEnergyHub.Charges.Infrastructure.Messaging;
 using GreenEnergyHub.Messaging.Transport;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.Functions.Worker;
-using Microsoft.Azure.Functions.Worker.Http;
 using Microsoft.Extensions.Logging;
 
 namespace GreenEnergyHub.Charges.ChargeLinkEventPublisher
@@ -31,13 +32,19 @@ namespace GreenEnergyHub.Charges.ChargeLinkEventPublisher
         /// </summary>
         private const string FunctionName = "ChargeLinkEventPublisherServiceBusTrigger";
         private readonly ICorrelationContext _correlationContext;
+        private readonly MessageExtractor _messageExtractor;
+        private readonly IChargeLinkEventPublishHandler _chargeLinkEventPublishHandler;
         private readonly ILogger _log;
 
         public ChargeLinkEventPublisherServiceBusTrigger(
             ICorrelationContext correlationContext,
+            MessageExtractor messageExtractor,
+            IChargeLinkEventPublishHandler chargeLinkEventPublishHandler,
             [NotNull] ILoggerFactory loggerFactory)
         {
             _correlationContext = correlationContext;
+            _messageExtractor = messageExtractor;
+            _chargeLinkEventPublishHandler = chargeLinkEventPublishHandler;
 
             _log = loggerFactory.CreateLogger(nameof(ChargeLinkEventPublisherServiceBusTrigger));
         }
@@ -55,7 +62,11 @@ namespace GreenEnergyHub.Charges.ChargeLinkEventPublisher
 
             SetupCorrelationContext(context);
 
-            return await Task.FromResult(new OkResult()).ConfigureAwait(false);
+            var acceptedChargeLinkCommand = (ChargeLinkCommandAcceptedEvent)await _messageExtractor.ExtractAsync(message).ConfigureAwait(false);
+
+            await _chargeLinkEventPublishHandler.HandleAsync(acceptedChargeLinkCommand).ConfigureAwait(false);
+
+            return new OkResult();
         }
 
         private void SetupCorrelationContext(FunctionContext context)
