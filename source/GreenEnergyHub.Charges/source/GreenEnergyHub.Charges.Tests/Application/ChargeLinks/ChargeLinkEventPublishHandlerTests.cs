@@ -36,7 +36,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks
         public async Task HandleAsync_WhenCalled_UsesFactoryToCreateEventAndDispatchesIt(
             [Frozen] [NotNull] Mock<IChargeLinkCreatedEventFactory> factory,
             [Frozen] [NotNull] Mock<IMessageDispatcher<ChargeLinkCreatedEvent>> dispatcher,
-            [NotNull] ChargeLinkCommand command,
+            [NotNull] ChargeLinkCommandAcceptedEvent command,
             [NotNull] ChargeLinkCreatedEvent createdEvent,
             [NotNull] ChargeLinkEventPublishHandler sut)
         {

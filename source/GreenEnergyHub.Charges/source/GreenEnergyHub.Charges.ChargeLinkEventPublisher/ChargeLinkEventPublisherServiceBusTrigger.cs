@@ -62,7 +62,7 @@ namespace GreenEnergyHub.Charges.ChargeLinkEventPublisher
 
             SetupCorrelationContext(context);
 
-            var acceptedChargeLinkCommand = (ChargeLinkCommand)await _messageExtractor.ExtractAsync(message).ConfigureAwait(false);
+            var acceptedChargeLinkCommand = (ChargeLinkCommandAcceptedEvent)await _messageExtractor.ExtractAsync(message).ConfigureAwait(false);
 
             await _chargeLinkEventPublishHandler.HandleAsync(acceptedChargeLinkCommand).ConfigureAwait(false);
 
