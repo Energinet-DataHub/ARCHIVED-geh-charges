@@ -22,6 +22,7 @@ using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.Domain;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
 using GreenEnergyHub.Charges.Domain.MarketDocument;
+using NodaTime;
 
 namespace GreenEnergyHub.Charges.Application.Validation.BusinessValidation.Factories
 {
@@ -31,17 +32,20 @@ namespace GreenEnergyHub.Charges.Application.Validation.BusinessValidation.Facto
         private readonly IRulesConfigurationRepository _rulesConfigurationRepository;
         private readonly IZonedDateTimeService _localDateTimeService;
         private readonly IMarketParticipantRepository _marketParticipantRepository;
+        private readonly IClock _clock;
 
         public BusinessUpdateValidationRulesFactory(
             IChargeRepository chargeRepository,
             IRulesConfigurationRepository rulesConfigurationRepository,
             IZonedDateTimeService localDateTimeService,
-            IMarketParticipantRepository marketParticipantRepository)
+            IMarketParticipantRepository marketParticipantRepository,
+            IClock clock)
         {
             _chargeRepository = chargeRepository;
             _rulesConfigurationRepository = rulesConfigurationRepository;
             _localDateTimeService = localDateTimeService;
             _marketParticipantRepository = marketParticipantRepository;
+            _clock = clock;
         }
 
         public async Task<IValidationRuleSet> CreateRulesForUpdateCommandAsync([NotNull] ChargeCommand chargeCommand)
@@ -83,7 +87,8 @@ namespace GreenEnergyHub.Charges.Application.Validation.BusinessValidation.Facto
                 new StartDateValidationRule(
                     command,
                     configuration.StartDateValidationRuleConfiguration,
-                    _localDateTimeService),
+                    _localDateTimeService,
+                    _clock),
                 new CommandSenderMustBeAnExistingMarketParticipantRule(sender),
             };
 
