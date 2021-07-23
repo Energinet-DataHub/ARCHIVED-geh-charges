@@ -28,11 +28,12 @@ namespace GreenEnergyHub.Charges.Application.Validation.BusinessValidation.Valid
         public StartDateValidationRule(
             [NotNull] ChargeCommand command,
             [NotNull] StartDateValidationRuleConfiguration configuration,
-            [NotNull] IZonedDateTimeService zonedDateTimeService)
+            [NotNull] IZonedDateTimeService zonedDateTimeService,
+            [NotNull] IClock clock)
         {
             _validityStartDate = command.ChargeOperation.StartDateTime;
 
-            var today = zonedDateTimeService.GetZonedDateTime(command.Document.RequestDate).Date;
+            var today = zonedDateTimeService.GetZonedDateTime(clock.GetCurrentInstant()).Date;
             _periodStart = CalculatePeriodPoint(configuration.ValidIntervalFromNowInDays.Start, zonedDateTimeService, today);
             _periodEnd = CalculatePeriodPoint(configuration.ValidIntervalFromNowInDays.End + 1, zonedDateTimeService, today);
         }

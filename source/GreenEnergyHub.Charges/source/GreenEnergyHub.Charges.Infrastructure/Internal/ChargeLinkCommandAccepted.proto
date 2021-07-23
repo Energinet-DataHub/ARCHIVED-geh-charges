@@ -63,7 +63,7 @@ enum DocumentTypeContract
 {
   DT_UNKNOWN = 0;
   DT_REQUEST_CHANGE_BILLING_MASTER_DATA = 1;
-  DT_REQUEST_UPDATE_CHARGE_INFORMATION = 10;
+  DT_REQUEST_UPDATE_CHARGE_INFORMATION = 2;
 }
 
 enum MarketParticipantRoleContract
@@ -80,13 +80,13 @@ enum MarketParticipantRoleContract
 
 enum IndustryClassificationContract {
   IC_UNKNOWN = 0;
-  IC_ELECTRICITY = 23;
+  IC_ELECTRICITY = 1;
 }
 
 enum BusinessReasonCodeContract {
   BRC_UNKNOWN = 0;
   BRC_UPDATE_MASTER_DATA_SETTLEMENT = 1;
-  BRC_UPDATE_CHARGE_INFORMATION = 18;
+  BRC_UPDATE_CHARGE_INFORMATION = 2;
 }
 
 enum ChargeTypeContract {

@@ -16,11 +16,10 @@ using System.Diagnostics.CodeAnalysis;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.Domain.ChargeLinks;
-using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandReceived;
+using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandAccepted;
 using GreenEnergyHub.Charges.Infrastructure.Internal.Mappers;
 using GreenEnergyHub.Charges.TestCore;
 using GreenEnergyHub.TestHelpers.FluentAssertionsExtensions;
-using Microsoft.EntityFrameworkCore;
 using NodaTime;
 using Xunit;
 using Xunit.Categories;
@@ -28,19 +27,19 @@ using Xunit.Categories;
 namespace GreenEnergyHub.Charges.Tests.Infrastructure.Internal.Mappers
 {
     [UnitTest]
-    public class ChargeLinkCommandOutboundMapperTests
+    public class LinkCommandAcceptedOutboundMapperTests
     {
         [Theory]
         [InlineAutoMoqData]
-        public void Convert_WhenCalled_ShouldMapToProtobufWithCorrectValues([NotNull] ChargeLinkCommand chargeLinkCommand)
+        public void Convert_WhenCalled_ShouldMapToProtobufWithCorrectValues([NotNull] ChargeLinkCommandAcceptedEvent chargeLinkCommand)
         {
             // Arrange
-            var mapper = new ChargeLinkDomainOutboundMapper();
+            var mapper = new LinkCommandAcceptedOutboundMapper();
 
             UpdateInstantsToValidTimes(chargeLinkCommand);
 
             // Act
-            var converted = (ChargeLinkCommandReceivedContract)mapper.Convert(chargeLinkCommand);
+            var converted = (ChargeLinkCommandAcceptedContract)mapper.Convert(chargeLinkCommand);
 
             // Assert
             var chargeLinkDocument = chargeLinkCommand.Document;

@@ -12,16 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction
+using System.Diagnostics.CodeAnalysis;
+using System.Threading.Tasks;
+using GreenEnergyHub.Charges.Domain.ChargeLinks;
+using GreenEnergyHub.Charges.Domain.Events.Local;
+
+namespace GreenEnergyHub.Charges.Application.ChargeLinks
 {
-    /// <summary>
-    /// This enum indicates the VAT value. ("Moms" in Denmark).
-    /// D01 is No VAT | D02 is VAT.
-    /// </summary>
-    public enum VatClassification
+    public interface IChargeLinkCommandAcceptedHandler
     {
-        Unknown = 0,
-        NoVat = 1,
-        Vat25 = 2,
+        Task HandleAsync([NotNull] ChargeLinkCommandReceivedEvent chargeLinkCommand);
     }
 }

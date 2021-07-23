@@ -12,16 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction
+using GreenEnergyHub.Charges.Domain.ChargeLinks;
+
+namespace GreenEnergyHub.Charges.Application.Mapping
 {
-    /// <summary>
-    /// This enum indicates the VAT value. ("Moms" in Denmark).
-    /// D01 is No VAT | D02 is VAT.
-    /// </summary>
-    public enum VatClassification
+    public interface IChargeLinkCommandMapper
     {
-        Unknown = 0,
-        NoVat = 1,
-        Vat25 = 2,
+        ChargeLinkCommandAcceptedEvent Map(ChargeLinkCommandReceivedEvent commandReceived);
     }
 }
