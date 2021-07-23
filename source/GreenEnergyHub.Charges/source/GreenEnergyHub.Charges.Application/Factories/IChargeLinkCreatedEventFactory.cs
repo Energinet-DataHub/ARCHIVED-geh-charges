@@ -19,6 +19,6 @@ namespace GreenEnergyHub.Charges.Application.Factories
 {
     public interface IChargeLinkCreatedEventFactory
     {
-        ChargeLinkCreatedEvent CreateEvent(ChargeLinkCommand command);
+        ChargeLinkCreatedEvent CreateEvent(ChargeLinkCommandAcceptedEvent command);
     }
 }

@@ -28,7 +28,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Factories
         [Theory]
         [InlineAutoMoqData]
         public void CreateEvent_WhenCalled_CreatesEventWithCorrectValues(
-            [NotNull] ChargeLinkCommand command,
+            [NotNull] ChargeLinkCommandAcceptedEvent command,
             [NotNull] ChargeLinkCreatedEventFactory sut)
         {
             // Arrange

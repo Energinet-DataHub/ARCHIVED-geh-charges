@@ -43,7 +43,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks
             // Arrange
             factory.Setup(
                     f => f.CreateEvent(
-                        It.IsAny<ChargeLinkCommand>()))
+                        It.IsAny<ChargeLinkCommandAcceptedEvent>()))
                 .Returns(createdEvent);
 
             var dispatched = false;

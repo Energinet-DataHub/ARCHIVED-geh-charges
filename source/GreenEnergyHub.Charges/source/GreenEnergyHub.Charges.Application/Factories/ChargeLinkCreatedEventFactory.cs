@@ -21,7 +21,7 @@ namespace GreenEnergyHub.Charges.Application.Factories
 {
     public class ChargeLinkCreatedEventFactory : IChargeLinkCreatedEventFactory
     {
-        public ChargeLinkCreatedEvent CreateEvent([NotNull] ChargeLinkCommand command)
+        public ChargeLinkCreatedEvent CreateEvent([NotNull] ChargeLinkCommandAcceptedEvent command)
         {
             return new ChargeLinkCreatedEvent(
                 command.ChargeLink.Id,
