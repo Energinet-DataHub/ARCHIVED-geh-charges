@@ -57,7 +57,7 @@ namespace GreenEnergyHub.Charges.ChargeLinkEventPublisher
 
             serviceCollection.AddMessagingProtobuf().AddMessageDispatcher<ChargeLinkCreatedEvent>(
                 GetEnv("INTEGRATIONEVENT_SENDER_CONNECTION_STRING"),
-                GetEnv("CHARGE_LINK_RECEIVED_TOPIC_NAME"));
+                GetEnv("CHARGE_LINK_CREATED_TOPIC_NAME"));
         }
 
         private static string GetEnv(string variableName)
