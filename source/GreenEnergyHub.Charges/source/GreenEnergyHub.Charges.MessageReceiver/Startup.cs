@@ -17,8 +17,12 @@ using System.Diagnostics.CodeAnalysis;
 using GreenEnergyHub.Charges.Application.ChangeOfCharges;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
 using GreenEnergyHub.Charges.Domain.Events.Local;
+using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeCommandReceived;
+using GreenEnergyHub.Charges.Infrastructure.Messaging;
 using GreenEnergyHub.Charges.Infrastructure.Messaging.Registration;
 using GreenEnergyHub.Charges.MessageReceiver;
+using GreenEnergyHub.Messaging.Protobuf;
+using GreenEnergyHub.Messaging.Transport;
 using Microsoft.Azure.Functions.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection;
 using NodaTime;
@@ -42,10 +46,15 @@ namespace GreenEnergyHub.Charges.MessageReceiver
         {
             builder.Services
                 .AddMessaging()
-                .AddMessageExtractor<ChargeCommand>()
+                .AddMessageExtractor<ChargeCommand>();
+
+            builder.Services.SendProtobuf<ChargeCommandReceivedContract>();
+            builder.Services.AddSingleton<Channel, ServiceBusChannel<ChargeCommandReceivedEvent>>();
+            builder.Services
+                .AddMessagingProtobuf()
                 .AddMessageDispatcher<ChargeCommandReceivedEvent>(
-                    GetEnv("COMMAND_RECEIVED_SENDER_CONNECTION_STRING"),
-                    GetEnv("COMMAND_RECEIVED_TOPIC_NAME"));
+                GetEnv("CHARGE_LINK_RECEIVED_SENDER_CONNECTION_STRING"),
+                GetEnv("CHARGE_LINK_RECEIVED_TOPIC_NAME"));
         }
 
         private static string GetEnv(string variableName)
