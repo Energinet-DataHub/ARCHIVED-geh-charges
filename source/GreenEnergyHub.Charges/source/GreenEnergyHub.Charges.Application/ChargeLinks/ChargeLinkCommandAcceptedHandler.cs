@@ -14,28 +14,28 @@
 
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
+using GreenEnergyHub.Charges.Application.Mapping;
 using GreenEnergyHub.Charges.Domain.ChargeLinks;
-using GreenEnergyHub.Charges.Domain.ChargeLinks.Result;
 
 namespace GreenEnergyHub.Charges.Application.ChargeLinks
 {
-    public class ChargeLinkCommandHandler : IChargeLinkCommandHandler
+    public class ChargeLinkCommandAcceptedHandler : IChargeLinkCommandAcceptedHandler
     {
-        private readonly IMessageDispatcher<ChargeLinkCommandReceivedEvent> _messageDispatcher;
+        private readonly IMessageDispatcher<ChargeLinkCommandAcceptedEvent> _messageDispatcher;
+        private readonly IChargeLinkCommandMapper _chargeLinkCommandMapper;
 
-        public ChargeLinkCommandHandler(IMessageDispatcher<ChargeLinkCommandReceivedEvent> messageDispatcher)
+        public ChargeLinkCommandAcceptedHandler(
+            IMessageDispatcher<ChargeLinkCommandAcceptedEvent> messageDispatcher,
+            IChargeLinkCommandMapper chargeLinkCommandMapper)
         {
             _messageDispatcher = messageDispatcher;
+            _chargeLinkCommandMapper = chargeLinkCommandMapper;
         }
 
-        public async Task<ChargeLinksMessageResult> HandleAsync([NotNull]ChargeLinkCommandReceivedEvent chargeLinkCommand)
+        public async Task HandleAsync([NotNull] ChargeLinkCommandReceivedEvent chargeLinkCommand)
         {
-            await _messageDispatcher.DispatchAsync(chargeLinkCommand).ConfigureAwait(false);
-
-            var chargeLinksMessageResult = ChargeLinksMessageResult.CreateSuccess();
-            chargeLinksMessageResult.CorrelationId = chargeLinkCommand.CorrelationId;
-
-            return chargeLinksMessageResult;
+            var chargeCommandAcceptedEvent = _chargeLinkCommandMapper.Map(chargeLinkCommand);
+            await _messageDispatcher.DispatchAsync(chargeCommandAcceptedEvent).ConfigureAwait(false);
         }
     }
 }

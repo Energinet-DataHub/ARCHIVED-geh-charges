@@ -17,9 +17,9 @@ using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
-using FluentAssertions;
 using GreenEnergyHub.Charges.Application;
 using GreenEnergyHub.Charges.Application.ChargeLinks;
+using GreenEnergyHub.Charges.Application.Mapping;
 using GreenEnergyHub.Charges.Domain.ChargeLinks;
 using GreenEnergyHub.TestHelpers;
 using Moq;
@@ -29,24 +29,27 @@ using Xunit.Categories;
 namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks
 {
     [UnitTest]
-    public class ChargeLinkCommandHandlerTests
+    public class ChargeLinkCommandAcceptedHandlerTests
     {
         [Theory]
         [InlineAutoDomainData]
         public async Task HandleAsync_WhenCalledWithValidChargeLinkXML_ShouldReturnOk(
-            [NotNull] [Frozen] Mock<IMessageDispatcher<ChargeLinkCommandReceivedEvent>> messageDispatcher,
-            [NotNull] ChargeLinkCommandHandler sut)
+            [NotNull] [Frozen] Mock<IMessageDispatcher<ChargeLinkCommandAcceptedEvent>> messageDispatcher,
+            [NotNull] [Frozen] Mock<IChargeLinkCommandMapper> chargeLinkCommandMapper,
+            [NotNull] ChargeLinkCommandReceivedEvent chargeLinkCommandReceivedEvent,
+            [NotNull] ChargeLinkCommandAcceptedEvent chargeLinkCommandAcceptedEvent,
+            [NotNull] ChargeLinkCommandAcceptedHandler sut)
         {
             // Arrange
-            var chargeLinkCommand = new ChargeLinkCommandReceivedEvent(Guid.NewGuid().ToString());
+            chargeLinkCommandMapper.Setup(x => x.Map(chargeLinkCommandReceivedEvent))
+                .Returns(chargeLinkCommandAcceptedEvent);
 
             // Act
-            var result = await sut.HandleAsync(chargeLinkCommand).ConfigureAwait(false);
+            await sut.HandleAsync(chargeLinkCommandReceivedEvent).ConfigureAwait(false);
 
             // Assert
-            result.IsSucceeded.Should().BeTrue();
             messageDispatcher.Verify(
-                x => x.DispatchAsync(chargeLinkCommand, It.IsAny<CancellationToken>()));
+                x => x.DispatchAsync(chargeLinkCommandAcceptedEvent, It.IsAny<CancellationToken>()));
         }
     }
 }

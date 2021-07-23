@@ -70,10 +70,10 @@ namespace GreenEnergyHub.Charges.ChargeLinkReceiver
             return new OkObjectResult(chargeLinksMessageResult);
         }
 
-        private async Task<ChargeLinkCommand> GetChargeLinkCommandAsync(Stream stream)
+        private async Task<ChargeLinkCommandReceivedEvent> GetChargeLinkCommandAsync(Stream stream)
         {
             var message = await ConvertStreamToBytesAsync(stream).ConfigureAwait(false);
-            var command = (ChargeLinkCommand)await _messageExtractor.ExtractAsync(message).ConfigureAwait(false);
+            var command = (ChargeLinkCommandReceivedEvent)await _messageExtractor.ExtractAsync(message).ConfigureAwait(false);
 
             return command;
         }

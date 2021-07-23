@@ -47,7 +47,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Integration.Mappers
                 ParentMeteringPointId = "14",
             };
 
-            var mapper = new MeteringPointCreatedIntegrationInboundMapper();
+            var mapper = new LinkCommandReceivedOutboundMapperInboundMapper();
 
             // Act
             var converted = (MeteringPointCreatedEvent)mapper.Convert(meteringPointCreatedEvent);

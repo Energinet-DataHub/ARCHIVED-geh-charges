@@ -118,14 +118,6 @@ module "sbt_command_rejected" {
   dependencies        = [module.sbn_charges]
 }
 
-module "sbt_link_command_received" {
-  source              = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//service-bus-topic?ref=1.3.0"
-  name                = "sbt-link-command-received"
-  namespace_name      = module.sbn_charges.name
-  resource_group_name = data.azurerm_resource_group.main.name
-  dependencies        = [module.sbn_charges]
-}
-
 module "sbtar_link_command_received_sender" {
   source                    = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//service-bus-topic-auth-rule?ref=1.3.0"
   name                      = "sbtar-link-command-received-sender"

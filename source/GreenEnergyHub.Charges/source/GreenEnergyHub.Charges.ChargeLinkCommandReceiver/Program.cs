@@ -14,18 +14,19 @@
 
 using System;
 using GreenEnergyHub.Charges.Application.ChargeLinks;
+using GreenEnergyHub.Charges.Application.Mapping;
 using GreenEnergyHub.Charges.Domain.ChargeLinks;
+using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandAccepted;
 using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandReceived;
 using GreenEnergyHub.Charges.Infrastructure.Messaging;
 using GreenEnergyHub.Charges.Infrastructure.Messaging.Registration;
-using GreenEnergyHub.Charges.Infrastructure.Messaging.Serialization.Commands;
 using GreenEnergyHub.Messaging.Protobuf;
 using GreenEnergyHub.Messaging.Transport;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using NodaTime;
 
-namespace GreenEnergyHub.Charges.ChargeLinkReceiver
+namespace GreenEnergyHub.Charges.ChargeLinkCommandReceiver
 {
     public static class Program
     {
@@ -39,26 +40,29 @@ namespace GreenEnergyHub.Charges.ChargeLinkReceiver
             host.Run();
         }
 
-        private static void ConfigureServices(HostBuilderContext hostBuilderContext, IServiceCollection serviceCollection)
+        private static void ConfigureServices(
+            HostBuilderContext hostBuilderContext,
+            IServiceCollection serviceCollection)
         {
             serviceCollection.AddScoped(typeof(IClock), _ => SystemClock.Instance);
             serviceCollection.AddLogging();
+            serviceCollection.AddScoped<IChargeLinkCommandAcceptedHandler, ChargeLinkCommandAcceptedHandler>();
+
+            serviceCollection.AddSingleton<IChargeLinkCommandMapper, ChargeLinkCommandMapper>();
 
             ConfigureMessaging(serviceCollection);
         }
 
         private static void ConfigureMessaging(IServiceCollection services)
         {
-            services.AddScoped<ChargeLinkCommandConverter>();
-            services.AddScoped<IChargeLinkCommandHandler, ChargeLinkCommandHandler>();
-            services.AddScoped<MessageDeserializer, ChargeLinkCommandDeserializer>();
-            services.SendProtobuf<ChargeLinkCommandReceivedContract>();
+            services.ReceiveProtobuf<ChargeLinkCommandReceivedContract>(
+                configuration => configuration.WithParser(() => ChargeLinkCommandReceivedContract.Parser));
             services.AddSingleton<Channel, ServiceBusChannel<ChargeLinkCommandReceivedEvent>>();
+            services.SendProtobuf<ChargeLinkCommandAcceptedContract>();
             services.AddScoped<MessageDispatcher>();
-
             services.AddMessagingProtobuf().AddMessageDispatcher<ChargeLinkCommandReceivedEvent>(
-                GetEnv("CHARGE_LINK_RECEIVED_SENDER_CONNECTION_STRING"),
-                GetEnv("CHARGE_LINK_RECEIVED_TOPIC_NAME"));
+                GetEnv("CHARGE_LINK_ACCEPTED_SENDER_CONNECTION_STRING"),
+                GetEnv("CHARGE_LINK_ACCEPTED_TOPIC_NAME"));
         }
 
         private static string GetEnv(string variableName)
