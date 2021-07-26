@@ -44,7 +44,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
 
         private Document GetDocument(DocumentContract document)
         {
-            return new Document
+            return new()
             {
                 Id = document.Id,
                 Sender =
@@ -69,7 +69,22 @@ namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
 
         private ChargeOperation GetChargeOperation(ChargeOperationContract chargeOperation)
         {
-            return new ChargeOperation();
+            return new()
+            {
+                Id = chargeOperation.Id,
+                Resolution = (Resolution)chargeOperation.Resolution,
+                Type = (ChargeType)chargeOperation.ChargeType,
+                ChargeDescription = chargeOperation.ChargeDescription,
+                ChargeId = chargeOperation.ChargeId,
+                ChargeName = chargeOperation.ChargeName,
+                ChargeOwner = chargeOperation.ChargeOwner,
+                OperationType = (OperationType)chargeOperation.OperationType,
+                TaxIndicator = chargeOperation.TaxIndicator,
+                TransparentInvoicing = chargeOperation.TransparentInvoicing,
+                VatClassification = (VatClassification)chargeOperation.VatClassification,
+                StartDateTime = Instant.FromUnixTimeSeconds(chargeOperation.StartDateTime.Seconds),
+                EndDateTime = Instant.FromUnixTimeSeconds(chargeOperation.EndDateTime.Seconds),
+            };
         }
     }
 }
