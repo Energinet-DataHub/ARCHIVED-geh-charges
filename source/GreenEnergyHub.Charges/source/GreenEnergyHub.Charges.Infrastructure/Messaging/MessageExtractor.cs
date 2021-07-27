@@ -13,12 +13,12 @@
 // limitations under the License.
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Infrastructure.Messaging.Serialization;
 using GreenEnergyHub.Messaging.Transport;
-using JetBrains.Annotations;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Messaging
 {
