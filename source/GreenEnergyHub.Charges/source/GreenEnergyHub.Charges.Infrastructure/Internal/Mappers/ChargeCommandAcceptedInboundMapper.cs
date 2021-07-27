@@ -31,9 +31,8 @@ namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
         {
             if (obj == null) throw new ArgumentNullException(nameof(obj));
 
-            return new ChargeCommandReceivedEvent(
+            return new ChargeCommandAcceptedEvent(
                 Instant.FromDateTimeUtc(DateTime.Now.ToUniversalTime()),
-                obj.CorrelationId,
                 new ChargeCommand(obj.CorrelationId)
             {
                 Document = GetDocument(obj.Document),
