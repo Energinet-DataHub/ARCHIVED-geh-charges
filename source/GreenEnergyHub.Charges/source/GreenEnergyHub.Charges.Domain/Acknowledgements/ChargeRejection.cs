@@ -17,7 +17,6 @@ using GreenEnergyHub.Charges.Domain.MarketDocument;
 using GreenEnergyHub.Charges.Domain.Messages;
 using GreenEnergyHub.Messaging.MessageTypes.Common;
 using GreenEnergyHub.Messaging.Transport;
-using JetBrains.Annotations;
 
 namespace GreenEnergyHub.Charges.Domain.Acknowledgements
 {
@@ -42,21 +41,16 @@ namespace GreenEnergyHub.Charges.Domain.Acknowledgements
 
         public string CorrelationId { get; }
 
-        [UsedImplicitly]
         public string ReceiverMRid { get; }
 
-        [UsedImplicitly]
         public MarketParticipantRole ReceiverMarketParticipantRole { get; }
 
-        [UsedImplicitly]
         public string OriginalTransactionReferenceMRid { get; }
 
-        [UsedImplicitly]
         public BusinessReasonCode BusinessReasonCode { get; }
 
         public IEnumerable<string> RejectReason { get; }
 
-        [UsedImplicitly]
         public Transaction Transaction { get; set; }
     }
 }

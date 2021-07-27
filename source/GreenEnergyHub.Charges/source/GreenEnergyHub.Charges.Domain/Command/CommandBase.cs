@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Diagnostics.CodeAnalysis;
 using GreenEnergyHub.Charges.Domain.Messages;
-using JetBrains.Annotations;
 
 namespace GreenEnergyHub.Charges.Domain.Command
 {
