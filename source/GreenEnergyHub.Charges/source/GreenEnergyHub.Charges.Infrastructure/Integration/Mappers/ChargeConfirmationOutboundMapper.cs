@@ -21,18 +21,18 @@ namespace GreenEnergyHub.Charges.Infrastructure.Integration.Mappers
 {
     public class ChargeConfirmationOutboundMapper : ProtobufOutboundMapper<ChargeCommandAcceptedEvent>
     {
-        protected override Google.Protobuf.IMessage Convert(ChargeCommandAcceptedEvent obj)
+        protected override Google.Protobuf.IMessage Convert(ChargeCommandAcceptedEvent acceptedEvent)
         {
-            if (obj == null)
-                throw new ArgumentNullException(nameof(obj));
+            if (acceptedEvent == null)
+                throw new ArgumentNullException(nameof(acceptedEvent));
 
             return new ChargeConfirmationContract
             {
-                CorrelationId = obj.CorrelationId,
-                ReceiverMrid = obj.Command.Document.Sender.Id,
-                ReceiverMarketParticipantRole = (MarketParticipantRoleContract)obj.Command.Document.Sender.BusinessProcessRole,
-                OriginalTransactionReferenceMrid = obj.Command.ChargeOperation.Id,
-                BusinessReasonCode = (BusinessReasonCodeContract)obj.Command.Document.BusinessReasonCode,
+                CorrelationId = acceptedEvent.CorrelationId,
+                ReceiverMrid = acceptedEvent.Command.Document.Sender.Id,
+                ReceiverMarketParticipantRole = (MarketParticipantRoleContract)acceptedEvent.Command.Document.Sender.BusinessProcessRole,
+                OriginalTransactionReferenceMrid = acceptedEvent.Command.ChargeOperation.Id,
+                BusinessReasonCode = (BusinessReasonCodeContract)acceptedEvent.Command.Document.BusinessReasonCode,
             };
         }
     }

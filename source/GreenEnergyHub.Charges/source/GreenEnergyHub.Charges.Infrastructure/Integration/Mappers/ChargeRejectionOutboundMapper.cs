@@ -21,23 +21,23 @@ namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
 {
     public class ChargeRejectionOutboundMapper : ProtobufOutboundMapper<ChargeCommandRejectedEvent>
     {
-        protected override Google.Protobuf.IMessage Convert(ChargeCommandRejectedEvent obj)
+        protected override Google.Protobuf.IMessage Convert(ChargeCommandRejectedEvent rejectedEvent)
         {
-            if (obj == null)
+            if (rejectedEvent == null)
             {
-                throw new ArgumentNullException(nameof(obj));
+                throw new ArgumentNullException(nameof(rejectedEvent));
             }
 
             var chargeRejection = new ChargeRejectionContract()
             {
-                CorrelationId = obj.CorrelationId,
-                ReceiverMrid = obj.Command.Document.Sender.Id,
-                ReceiverMarketParticipantRole = (MarketParticipantRoleContract)obj.Command.Document.Sender.BusinessProcessRole,
-                OriginalTransactionReferenceMrid = obj.Command.ChargeOperation.Id,
-                BusinessReasonCode = (BusinessReasonCodeContract)obj.Command.Document.BusinessReasonCode,
+                CorrelationId = rejectedEvent.CorrelationId,
+                ReceiverMrid = rejectedEvent.Command.Document.Sender.Id,
+                ReceiverMarketParticipantRole = (MarketParticipantRoleContract)rejectedEvent.Command.Document.Sender.BusinessProcessRole,
+                OriginalTransactionReferenceMrid = rejectedEvent.Command.ChargeOperation.Id,
+                BusinessReasonCode = (BusinessReasonCodeContract)rejectedEvent.Command.Document.BusinessReasonCode,
             };
 
-            foreach (var reason in obj.Reason)
+            foreach (var reason in rejectedEvent.Reason)
             {
                 chargeRejection.RejectReasons.Add(reason);
             }
