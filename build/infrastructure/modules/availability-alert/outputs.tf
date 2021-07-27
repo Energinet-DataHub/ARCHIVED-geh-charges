@@ -11,16 +11,14 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-output "webtest_id" {
-  value = azurerm_application_insights_web_test.main.id
-}
-
-output "webtests_synthetic_id" {
-  value = azurerm_application_insights_web_test.main.synthetic_monitor_id
+output "id" {
+  value       = azurerm_monitor_metric_alert.main.id
+  description = "The id of the resource created."
 }
 
 output "name" {
-  value = azurerm_application_insights_web_test.main.name
+  value       = azurerm_monitor_metric_alert.main.name
+  description = "The name of the resource created."
 }
 
 output "dependent_on" {
