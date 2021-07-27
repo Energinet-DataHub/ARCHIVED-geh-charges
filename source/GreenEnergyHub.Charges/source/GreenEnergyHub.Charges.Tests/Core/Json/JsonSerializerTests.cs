@@ -13,7 +13,6 @@
 // limitations under the License.
 
 using GreenEnergyHub.Charges.Domain.Events.Local;
-using JetBrains.Annotations;
 using Newtonsoft.Json;
 using Xunit;
 using Xunit.Categories;
@@ -107,7 +106,6 @@ namespace GreenEnergyHub.Charges.Tests.Core.Json
             Assert.Equal(ChargeCommandAcceptedEventMRid, actual.Command.Document.Id);
         }
 
-        [UsedImplicitly]
         private class Foo
         {
             public Foo(int noSetter)
@@ -121,7 +119,6 @@ namespace GreenEnergyHub.Charges.Tests.Core.Json
             public int PrivateSetter
             {
                 get;
-                [UsedImplicitly]
                 private set;
             }
 
