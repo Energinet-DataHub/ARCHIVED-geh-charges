@@ -28,7 +28,7 @@ resource "azurerm_monitor_action_group" "main" {
   enabled                = var.enabled
   email_receiver {
     name                 = var.email_receiver.name
-	email_address        = var.email_receiver.email_address
+    email_address        = var.email_receiver.email_address
   }
   tags                   = var.tags
 }
