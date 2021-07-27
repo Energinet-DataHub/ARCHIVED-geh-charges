@@ -16,7 +16,7 @@ using System;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
 using GreenEnergyHub.Charges.Domain.Events.Local;
 using GreenEnergyHub.Charges.Domain.MarketDocument;
-using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeCommandReceived;
+using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeCommandAccepted;
 using GreenEnergyHub.Messaging.MessageTypes.Common;
 using GreenEnergyHub.Messaging.Protobuf;
 using GreenEnergyHub.Messaging.Transport;
@@ -25,9 +25,9 @@ using MarketParticipant = GreenEnergyHub.Charges.Domain.MarketDocument.MarketPar
 
 namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
 {
-    public class ChargeCommandReceivedInboundMapper : ProtobufInboundMapper<ChargeCommandReceivedContract>
+    public class ChargeCommandAcceptedInboundMapper : ProtobufInboundMapper<ChargeCommandAcceptedContract>
     {
-        protected override IInboundMessage Convert(ChargeCommandReceivedContract obj)
+        protected override IInboundMessage Convert(ChargeCommandAcceptedContract obj)
         {
             if (obj == null) throw new ArgumentNullException(nameof(obj));
 

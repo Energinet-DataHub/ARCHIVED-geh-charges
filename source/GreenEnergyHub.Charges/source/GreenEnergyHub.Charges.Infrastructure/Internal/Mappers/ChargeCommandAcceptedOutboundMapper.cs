@@ -17,51 +17,32 @@ using System.Collections.Generic;
 using Google.Protobuf.WellKnownTypes;
 using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
+using GreenEnergyHub.Charges.Domain.Events.Local;
 using GreenEnergyHub.Charges.Domain.MarketDocument;
-using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeCommandReceived;
+using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeCommandAccepted;
 using GreenEnergyHub.Messaging.Protobuf;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
 {
-    public class ChargeCommandReceivedOutboundMapper : ProtobufOutboundMapper<ChargeCommand>
+    public class ChargeCommandAcceptedOutboundMapper : ProtobufOutboundMapper<ChargeCommandAcceptedEvent>
     {
-        protected override Google.Protobuf.IMessage Convert(ChargeCommand obj)
+        protected override Google.Protobuf.IMessage Convert(ChargeCommandAcceptedEvent obj)
         {
             if (obj == null)
             {
                 throw new ArgumentNullException(nameof(obj));
             }
 
-            var chargeCommandReceivedContract = new ChargeCommandReceivedContract
+            var chargeCommandAcceptedContract = new ChargeCommandAcceptedContract
             {
-                Document = GetDocument(obj.Document),
-                ChargeOperation = GetChargeOperation(obj.ChargeOperation),
+                Document = GetDocument(obj.Command.Document),
+                ChargeOperation = GetChargeOperation(obj.Command.ChargeOperation),
                 CorrelationId = obj.CorrelationId,
             };
 
-            AddChargePoints(chargeCommandReceivedContract, obj.ChargeOperation.Points);
+            AddChargePoints(chargeCommandAcceptedContract, obj.Command.ChargeOperation.Points);
 
-            return chargeCommandReceivedContract;
-        }
-
-        private static ChargeOperationContract GetChargeOperation(ChargeOperation charge)
-        {
-            return new ChargeOperationContract
-            {
-                Id = charge.Id,
-                ChargeId = charge.ChargeId,
-                ChargeOwner = charge.ChargeOwner,
-                ChargeType = (ChargeTypeContract)charge.Type,
-                StartDateTime = Timestamp.FromDateTime(charge.StartDateTime.ToDateTimeUtc()),
-                EndDateTime = Timestamp.FromDateTime(charge.EndDateTime.TimeOrEndDefault().ToDateTimeUtc()),
-                Resolution = (ResolutionContract)charge.Resolution,
-                ChargeDescription = charge.ChargeDescription,
-                ChargeName = charge.ChargeName,
-                OperationType = (OperationTypeContract)charge.OperationType,
-                TaxIndicator = charge.TaxIndicator,
-                TransparentInvoicing = charge.TransparentInvoicing,
-                VatClassification = (VatClassificationContract)charge.VatClassification,
-            };
+            return chargeCommandAcceptedContract;
         }
 
         private static DocumentContract GetDocument(Document document)
@@ -87,7 +68,27 @@ namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
             };
         }
 
-        private static void AddChargePoints(ChargeCommandReceivedContract contract, List<Point> points)
+        private static ChargeOperationContract GetChargeOperation(ChargeOperation charge)
+        {
+            return new ChargeOperationContract
+            {
+                Id = charge.Id,
+                ChargeId = charge.ChargeId,
+                ChargeOwner = charge.ChargeOwner,
+                ChargeType = (ChargeTypeContract)charge.Type,
+                StartDateTime = Timestamp.FromDateTime(charge.StartDateTime.ToDateTimeUtc()),
+                EndDateTime = Timestamp.FromDateTime(charge.EndDateTime.TimeOrEndDefault().ToDateTimeUtc()),
+                Resolution = (ResolutionContract)charge.Resolution,
+                ChargeDescription = charge.ChargeDescription,
+                ChargeName = charge.ChargeName,
+                OperationType = (OperationTypeContract)charge.OperationType,
+                TaxIndicator = charge.TaxIndicator,
+                TransparentInvoicing = charge.TransparentInvoicing,
+                VatClassification = (VatClassificationContract)charge.VatClassification,
+            };
+        }
+
+        private static void AddChargePoints(ChargeCommandAcceptedContract contract, List<Point> points)
         {
             foreach (Point point in points)
             {
