@@ -23,7 +23,7 @@ module "mag_availabilitity_group" {
     email_address     = var.notification_email
   }
   tags                = data.azurerm_resource_group.main.tags
-  dependencies                                   = [
+  dependencies        = [
     module.appi.dependent_on,
   ]
 }
