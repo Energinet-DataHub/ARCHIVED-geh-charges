@@ -81,3 +81,18 @@ module "ping_webtest_link_command_receiver" {
   url                             = "https://${module.azfun_link_command_receiver.default_hostname}/api/HealthStatus"
   dependencies                    = [module.azfun_link_command_receiver.dependent_on]
 }
+
+module "mma_ping_webtest_link_command_receiver" {
+  source                   = "../modules/availability-alert"
+  name                     = "mma-charge-link-command-receiver-${var.project}-${var.organisation}-${var.environment}"
+  resource_group_name      = data.azurerm_resource_group.main.name
+  application_insight_id   = module.appi.id
+  ping_test_name           = module.ping_webtest_link_command_receiver.name
+  action_group_id          = module.mag_availabilitity_group.id
+  tags                     = data.azurerm_resource_group.main.tags
+  dependencies             = [
+    module.appi.dependent_on,
+	module.ping_webtest_link_command_receiver.dependent_on,
+	module.mag_availabilitity_group.dependent_on
+  ]
+}
