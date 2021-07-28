@@ -20,7 +20,7 @@ module "mag_availabilitity_group" {
   enabled             = true
   email_receiver      = {
     name              = "Availability notification - ${var.project}-${var.organisation}-${var.environment}"
-	email_address     = var.notification_email
+    email_address     = var.notification_email
   }
   tags                = data.azurerm_resource_group.main.tags
   dependencies                                   = [

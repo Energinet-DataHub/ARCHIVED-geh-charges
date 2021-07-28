@@ -89,7 +89,7 @@ module "mma_ping_webtest_link_receiver" {
   tags                     = data.azurerm_resource_group.main.tags
   dependencies             = [
     module.appi.dependent_on,
-	module.ping_webtest_link_receiver.dependent_on,
-	module.mag_availabilitity_group.dependent_on
+    module.ping_webtest_link_receiver.dependent_on,
+    module.mag_availabilitity_group.dependent_on
   ]
 }

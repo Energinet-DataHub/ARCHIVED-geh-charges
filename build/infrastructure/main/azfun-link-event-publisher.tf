@@ -96,7 +96,7 @@ module "mma_ping_webtest_link_event_publisher" {
   tags                     = data.azurerm_resource_group.main.tags
   dependencies             = [
     module.appi.dependent_on,
-	module.ping_webtest_link_event_publisher.dependent_on,
-	module.mag_availabilitity_group.dependent_on
+    module.ping_webtest_link_event_publisher.dependent_on,
+    module.mag_availabilitity_group.dependent_on
   ]
 }
