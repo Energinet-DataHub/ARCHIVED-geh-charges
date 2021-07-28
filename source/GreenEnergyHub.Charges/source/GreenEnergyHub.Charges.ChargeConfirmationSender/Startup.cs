@@ -18,7 +18,7 @@ using GreenEnergyHub.Charges.Application.Acknowledgement;
 using GreenEnergyHub.Charges.ChargeConfirmationSender;
 using GreenEnergyHub.Charges.Domain.Acknowledgements;
 using GreenEnergyHub.Charges.Infrastructure.Integration.ChargeConfirmation;
-using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandAccepted;
+using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeCommandAccepted;
 using GreenEnergyHub.Charges.Infrastructure.Messaging.Registration;
 using GreenEnergyHub.Messaging.Protobuf;
 using Microsoft.Azure.Functions.Extensions.DependencyInjection;
@@ -41,8 +41,8 @@ namespace GreenEnergyHub.Charges.ChargeConfirmationSender
 
         private static void ConfigureMessaging(IServiceCollection services)
         {
-            services.ReceiveProtobuf<ChargeLinkCommandAcceptedContract>(
-                configuration => configuration.WithParser(() => ChargeLinkCommandAcceptedContract.Parser));
+            services.ReceiveProtobuf<ChargeCommandAcceptedContract>(
+                configuration => configuration.WithParser(() => ChargeCommandAcceptedContract.Parser));
             services.SendProtobuf<ChargeConfirmationContract>();
             services.AddMessagingProtobuf().AddMessageDispatcher<ChargeConfirmation>(
                 GetEnv("POST_OFFICE_SENDER_CONNECTION_STRING"),
