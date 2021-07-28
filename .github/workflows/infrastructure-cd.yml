@@ -69,6 +69,11 @@ jobs:
           terraform_wrapper: false
           terraform_version: 0.14.10
 
+      - name: Setup domain specific Terraform options
+        uses: ./.github/actions/setup-domain-specific-terraform-options
+        with:
+          NOTIFICATION_EMAIL: ${{ secrets.NOTIFICATION_EMAIL }}
+
       - name: Terraform CD
         uses: ./.github/actions/terraform-cd
         id: terraform
