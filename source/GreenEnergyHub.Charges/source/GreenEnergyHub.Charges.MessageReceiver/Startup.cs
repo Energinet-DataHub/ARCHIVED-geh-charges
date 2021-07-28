@@ -53,8 +53,8 @@ namespace GreenEnergyHub.Charges.MessageReceiver
             builder.Services
                 .AddMessagingProtobuf()
                 .AddMessageDispatcher<ChargeCommandReceivedEvent>(
-                GetEnv("CHARGE_LINK_RECEIVED_SENDER_CONNECTION_STRING"),
-                GetEnv("CHARGE_LINK_RECEIVED_TOPIC_NAME"));
+                GetEnv("COMMAND_RECEIVED_SENDER_CONNECTION_STRING"),
+                GetEnv("COMMAND_RECEIVED_TOPIC_NAME"));
         }
 
         private static string GetEnv(string variableName)
