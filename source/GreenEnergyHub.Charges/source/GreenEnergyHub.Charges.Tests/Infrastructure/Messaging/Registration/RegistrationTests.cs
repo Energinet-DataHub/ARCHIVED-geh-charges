@@ -25,25 +25,6 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Messaging.Registration
     [UnitTest]
     public class RegistrationTests
     {
-        [Theory]
-        [InlineAutoDomainData]
-        public void AddMessageDispatcher_AllowsResolvingAMessageDispatcher(string anyTopicName)
-        {
-            // Arrange
-            var anyValidConnectionString = "Endpoint=foo/;SharedAccessKeyName=foo;SharedAccessKey=foo";
-            var services = new ServiceCollection();
-
-            // Act
-            services
-                .AddMessaging()
-                .AddMessageDispatcher<TestMessage>(anyValidConnectionString, anyTopicName);
-
-            // Assert
-            var provider = services.BuildServiceProvider();
-            var dispatcher = provider.GetService<IMessageDispatcher<TestMessage>>();
-            Assert.NotNull(dispatcher);
-        }
-
         [Fact]
         public void AddMessageExtractor_AllowsResolvingAMessageExtractor()
         {
