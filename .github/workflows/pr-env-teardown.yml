@@ -67,7 +67,7 @@ jobs:
           echo "TF_VAR_spn_object_id=${{ secrets.SPN_OBJECT_ID }}" >> $GITHUB_ENV
           echo "TF_VAR_sharedresources_keyvault_name=${{ secrets.SHARED_RESOURCES_KEYVAULT_NAME }}" >> $GITHUB_ENV
           echo "TF_VAR_sharedresources_resource_group_name=${{ secrets.SHARED_RESOURCES_RESOURCE_GROUP_NAME }}" >> $GITHUB_ENV
-          echo "TF_VAR_sharedresources_sql_server_name=${{ secrets.SHARED_RESOURCES_SQL_SERVER_NAME }}" >> $GITHUB_ENV          
+          echo "TF_VAR_sharedresources_sql_server_name=${{ secrets.SHARED_RESOURCES_SQL_SERVER_NAME }}" >> $GITHUB_ENV
           
       - name: Setup domain specific Terraform options
         uses: ./.github/actions/setup-domain-specific-terraform-options
