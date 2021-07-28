@@ -11,6 +11,13 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+
+# Note that using this module will generate an alert for functions with
+# availability tests that are not yet deployed or are under deployment.
+# The default values for threshold and window_size has been picked to 
+# mitigate this effect, by allowing deploying to take place without
+# triggering an alert. If this is not the use case you need, make sure
+# to set threshold and window_size accordingly in your usage.
 resource "null_resource" "dependency_getter" {
   provisioner "local-exec" {
     command = "echo ${length(var.dependencies)}"
