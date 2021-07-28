@@ -17,15 +17,16 @@ using System.Collections.Generic;
 using Google.Protobuf.WellKnownTypes;
 using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
+using GreenEnergyHub.Charges.Domain.Events.Local;
 using GreenEnergyHub.Charges.Domain.MarketDocument;
 using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeCommandReceived;
 using GreenEnergyHub.Messaging.Protobuf;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
 {
-    public class ChargeCommandReceivedOutboundMapper : ProtobufOutboundMapper<ChargeCommand>
+    public class ChargeCommandReceivedOutboundMapper : ProtobufOutboundMapper<ChargeCommandReceivedEvent>
     {
-        protected override Google.Protobuf.IMessage Convert(ChargeCommand obj)
+        protected override Google.Protobuf.IMessage Convert(ChargeCommandReceivedEvent obj)
         {
             if (obj == null)
             {
@@ -34,12 +35,12 @@ namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
 
             var chargeCommandReceivedContract = new ChargeCommandReceivedContract
             {
-                Document = GetDocument(obj.Document),
-                ChargeOperation = GetChargeOperation(obj.ChargeOperation),
+                Document = GetDocument(obj.Command.Document),
+                ChargeOperation = GetChargeOperation(obj.Command.ChargeOperation),
                 CorrelationId = obj.CorrelationId,
             };
 
-            AddChargePoints(chargeCommandReceivedContract, obj.ChargeOperation.Points);
+            AddChargePoints(chargeCommandReceivedContract, obj.Command.ChargeOperation.Points);
 
             return chargeCommandReceivedContract;
         }
