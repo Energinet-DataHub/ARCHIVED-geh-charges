@@ -23,7 +23,7 @@ on:
       - .github/actions/azure-cli-install-login/**
       - .github/actions/charges-apply-db-migrations/**
       - .github/actions/configure-terraform-backend/**   
-      - .github/actions/setup-domain-specific-terraform-options/**
+      - .github/actions/setup-terraform-options/**
       - .github/actions/terraform-cd/**
       - .github/workflows/infrastructure-cd.yml
   workflow_dispatch: {}
