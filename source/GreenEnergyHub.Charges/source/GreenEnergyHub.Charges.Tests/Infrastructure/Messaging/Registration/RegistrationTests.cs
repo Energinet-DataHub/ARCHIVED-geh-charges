@@ -12,8 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using GreenEnergyHub.Charges.Application;
+using GreenEnergyHub.Charges.Domain.Events.Local;
+using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeCommandReceived;
 using GreenEnergyHub.Charges.Infrastructure.Messaging;
 using GreenEnergyHub.Charges.Infrastructure.Messaging.Registration;
+using GreenEnergyHub.Messaging.Protobuf;
+using GreenEnergyHub.TestHelpers;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 using Xunit.Categories;
@@ -23,6 +28,25 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Messaging.Registration
     [UnitTest]
     public class RegistrationTests
     {
+        [Theory]
+        [InlineAutoDomainData]
+        public void AddMessageDispatcher_AllowsResolvingAMessageDispatcher(string anyTopicName)
+        {
+            // Arrange
+            var anyValidConnectionString = "Endpoint=foo/;SharedAccessKeyName=foo;SharedAccessKey=foo";
+            var services = new ServiceCollection();
+
+            // Act
+            services.SendProtobuf<TestMessageContract>();
+            services.AddMessagingProtobuf()
+                .AddMessageDispatcher<TestMessage>(anyValidConnectionString, anyTopicName);
+
+            // Assert
+            var provider = services.BuildServiceProvider();
+            var dispatcher = provider.GetService<IMessageDispatcher<TestMessage>>();
+            Assert.NotNull(dispatcher);
+        }
+
         [Fact]
         public void AddMessageExtractor_AllowsResolvingAMessageExtractor()
         {
