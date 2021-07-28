@@ -12,10 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using GreenEnergyHub.Charges.Application;
 using GreenEnergyHub.Charges.Infrastructure.Messaging;
 using GreenEnergyHub.Charges.Infrastructure.Messaging.Registration;
-using GreenEnergyHub.TestHelpers;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 using Xunit.Categories;
