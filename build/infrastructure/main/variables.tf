@@ -49,3 +49,8 @@ variable "sharedresources_resource_group_name" {
   type          = string
   description   = "Resource group containing shared resources"
 }
+
+variable "notification_email" {
+  type          = string
+  description   = "Email address to send notifications to"
+}

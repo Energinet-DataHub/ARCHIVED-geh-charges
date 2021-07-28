@@ -11,19 +11,19 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-output "webtest_id" {
-  value = azurerm_application_insights_web_test.main.id
-}
 
-output "webtests_synthetic_id" {
-  value = azurerm_application_insights_web_test.main.synthetic_monitor_id
-}
+name: Setup domain specific Terraform options
+description: Setup Terraform options which are domain specific
+inputs:
+  notification_email:
+    required: true
 
-output "name" {
-  value = azurerm_application_insights_web_test.main.name
-}
-
-output "dependent_on" {
-  value       = null_resource.dependency_setter.id
-  description = "The dependencies of the resource created."
-}
+runs:
+  using: composite
+  steps:
+    # Try not to reference TF_VAR variables in pipeline yml files, only values should be set and they should be read in terraform only
+    # rather create duplicate ENV pipeline vatiable if needed to separate concerns
+    - name: Set TF Vars
+      shell: bash
+      run: |
+        echo "TF_VAR_notification_email=${{ inputs.notification_email }}" >> $GITHUB_ENV

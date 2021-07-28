@@ -34,6 +34,7 @@ resource "azurerm_application_insights_web_test" "main" {
   frequency               = var.frequency
   timeout                 = var.timeout
   enabled                 = var.enabled
+  retry_enabled           = var.retry_enabled
   geo_locations           = var.geo_locations
 
   configuration = <<XML

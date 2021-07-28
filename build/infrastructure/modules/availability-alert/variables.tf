@@ -21,31 +21,43 @@ variable resource_group_name {
   description = "(Required) The name of the resource group in which to create the storage account. Changing this forces a new resource to be created."
 }
 
-variable location {
+variable application_insight_id {
   type        = string
-  description = "(Required) Specifies the supported Azure location where the resource exists. Changing this forces a new resource to be created."
+  description = "(Required) ID of application insight to use for monitoring"
 }
 
-variable account_kind {
+variable ping_test_name {
   type        = string
-  description = "(Optional) Defines the Kind of account. Valid options are BlobStorage, BlockBlobStorage, FileStorage, Storage and StorageV2. Changing this forces a new resource to be created. Defaults to StorageV2."
-  default     = "StorageV2"
+  description = "(Required) Name of the ping test to monitor"
 }
 
-variable account_tier {
+variable action_group_id {
   type        = string
-  description = "(Required) Defines the Tier to use for this storage account. Valid options are Standard and Premium. For BlockBlobStorage and FileStorage accounts only Premium is valid. Changing this forces a new resource to be created."
+  description = "(Required) ID of the action group to trigger when an alert is raised"
 }
 
-variable account_replication_type {
+variable description {
   type        = string
-  description = "(Required) Defines the type of replication to use for this storage account. Valid options are LRS, GRS, RAGRS, ZRS, GZRS and RAGZRS."
+  description = "(Optional) Description shown for the alert rules"
+  default     = "Action will be triggered when ping test has failed more than x times within the specified frequency"
 }
 
-variable access_tier {
+variable threshold {
+  type        = number
+  description = "(Optional) The number of times the availability test needs to fail before issuing an alert"
+  default     = 3
+}
+
+variable frequency {
   type        = string
-  description = "(Optional) Defines the access tier for BlobStorage, FileStorage and StorageV2 accounts. Valid options are Hot and Cool, defaults to Hot."
-  default     = "Hot"
+  description = "(Optional) How often this availability is monitored, represented in ISO 8601 duration format. Possible values are PT1M, PT5M, PT15M, PT30M and PT1H."
+  default     = "PT5M"
+}
+
+variable window_size {
+  type        = string
+  description = "(Optional) Time window to consider when monitoring for the threshold. Possible values are PT1M, PT5M, PT15M, PT30M, PT1H, PT6H, PT12H and P1D."
+  default     = "PT30M"
 }
 
 variable tags {
@@ -58,9 +70,4 @@ variable dependencies {
   type        = list
   description = "A mapping of dependencies which this module depends on."
   default     = []
-}
-
-variable is_hns_enabled {
-  description = "Enable Hierarchical Namespace"
-  default = false
 }

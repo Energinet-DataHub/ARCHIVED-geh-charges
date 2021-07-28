@@ -55,6 +55,12 @@ variable enabled {
   default     = true
 }
 
+variable retry_enabled {
+  type        = bool
+  description = "(Optional) Whether to retry the availability test 3 times before failing it"
+  default     = true   
+}
+
 variable geo_locations {
   type        = list
   description = "(Optional) A list of where to physically run the tests from to give global coverage for accessibility of your application."

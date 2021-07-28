@@ -133,6 +133,10 @@ This is most likely provided by your enterprise architect or cloud architect or 
 If you're deploying the domain as a development environment - i.e. with not dependencies to other domains - then you can choose this for yourself.
 It's possible to use the same resource group as the resource group used for the domain infrastructure.
 
+### - `notification_email`
+
+The email address that should receive notifications of alerts raised by the infrastructure. Use your own for development.
+
 ## Prerequisites
 
 ### Installing `Azure CLI`
