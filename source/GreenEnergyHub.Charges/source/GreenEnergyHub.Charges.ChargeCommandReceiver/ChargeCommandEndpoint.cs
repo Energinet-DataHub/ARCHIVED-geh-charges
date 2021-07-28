@@ -16,6 +16,7 @@ using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application;
 using GreenEnergyHub.Charges.Domain.Events.Local;
 using GreenEnergyHub.Charges.Infrastructure.Messaging;
+using GreenEnergyHub.Messaging.Transport;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Extensions.Logging;
 
@@ -26,12 +27,12 @@ namespace GreenEnergyHub.Charges.ChargeCommandReceiver
         private const string FunctionName = nameof(ChargeCommandEndpoint);
         private readonly IChargeCommandHandler _chargeCommandHandler;
         private readonly ICorrelationContext _correlationContext;
-        private readonly MessageExtractor<ChargeCommandReceivedEvent> _messageExtractor;
+        private readonly MessageExtractor _messageExtractor;
 
         public ChargeCommandEndpoint(
             IChargeCommandHandler chargeCommandHandler,
             ICorrelationContext correlationContext,
-            MessageExtractor<ChargeCommandReceivedEvent> messageExtractor)
+            MessageExtractor messageExtractor)
         {
             _chargeCommandHandler = chargeCommandHandler;
             _correlationContext = correlationContext;
@@ -47,7 +48,7 @@ namespace GreenEnergyHub.Charges.ChargeCommandReceiver
             byte[] data,
             ILogger log)
         {
-            var receivedEvent = await _messageExtractor.ExtractAsync(data).ConfigureAwait(false);
+            var receivedEvent = (ChargeCommandReceivedEvent)await _messageExtractor.ExtractAsync(data).ConfigureAwait(false);
             SetCorrelationContext(receivedEvent);
             await _chargeCommandHandler.HandleAsync(receivedEvent).ConfigureAwait(false);
 

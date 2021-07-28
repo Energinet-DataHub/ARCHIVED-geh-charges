@@ -36,7 +36,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
             var chargeCommandRejectedContract = new ChargeCommandRejectedContract
             {
                 PublishedTime = new Timestamp(),
-                ChargeCommand =
+                ChargeCommand = new ChargeCommandContract()
                 {
                     Document = GetDocument(rejectionEvent.Command.Document),
                     ChargeOperation = GetChargeOperation(rejectionEvent.Command.ChargeOperation),

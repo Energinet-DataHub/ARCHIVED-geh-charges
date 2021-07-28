@@ -49,10 +49,8 @@ namespace GreenEnergyHub.Charges.MessageReceiver
                 .AddMessageExtractor<ChargeCommand>();
 
             builder.Services.SendProtobuf<ChargeCommandReceivedContract>();
-            builder.Services.AddSingleton<Channel, ServiceBusChannel<ChargeCommandReceivedEvent>>();
             builder.Services
-                .AddMessagingProtobuf()
-                .AddMessageDispatcher<ChargeCommandReceivedEvent>(
+                .AddMessagingProtobuf().AddMessageDispatcher<ChargeCommandReceivedEvent>(
                 GetEnv("COMMAND_RECEIVED_SENDER_CONNECTION_STRING"),
                 GetEnv("COMMAND_RECEIVED_TOPIC_NAME"));
         }

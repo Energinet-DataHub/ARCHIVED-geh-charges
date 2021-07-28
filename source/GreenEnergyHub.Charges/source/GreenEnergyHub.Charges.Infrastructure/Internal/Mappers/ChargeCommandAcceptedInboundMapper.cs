@@ -13,6 +13,8 @@
 // limitations under the License.
 
 using System;
+using System.Collections.Generic;
+using Google.Protobuf.Collections;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
 using GreenEnergyHub.Charges.Domain.Events.Local;
 using GreenEnergyHub.Charges.Domain.MarketDocument;
@@ -83,7 +85,25 @@ namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
                 VatClassification = (VatClassification)chargeOperation.VatClassification,
                 StartDateTime = Instant.FromUnixTimeSeconds(chargeOperation.StartDateTime.Seconds),
                 EndDateTime = Instant.FromUnixTimeSeconds(chargeOperation.EndDateTime.Seconds),
+                Points = GetChargePoints(chargeOperation.Points),
             };
+        }
+
+        private static List<Point> GetChargePoints(RepeatedField<PointContract> points)
+        {
+            var list = new List<Point>();
+
+            foreach (var point in points)
+            {
+                list.Add(new Point
+                {
+                    Position = point.Position,
+                    Price = (decimal)point.Price,
+                    Time = Instant.FromUnixTimeSeconds(point.Time.Seconds),
+                });
+            }
+
+            return list;
         }
     }
 }
