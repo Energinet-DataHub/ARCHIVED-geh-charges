@@ -56,6 +56,11 @@ jobs:
         uses: hashicorp/setup-terraform@v1.2.1
         with:
           terraform_wrapper: false
+
+      - name: Setup domain specific Terraform options
+        uses: ./.github/actions/setup-domain-specific-terraform-options
+        with:
+          NOTIFICATION_EMAIL: ${{ secrets.NOTIFICATION_EMAIL }}
       
       - name: Terraform CD
         uses: ./.github/actions/terraform-cd
