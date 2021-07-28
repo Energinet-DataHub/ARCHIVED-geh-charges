@@ -26,4 +26,4 @@ runs:
     - name: Set TF Vars
       shell: bash
       run: |
-        echo "notification_email=${{ inputs.NOTIFICATION_EMAIL }}" >> $GITHUB_ENV
+        echo "TF_VAR_notification_email=${{ inputs.NOTIFICATION_EMAIL }}" >> $GITHUB_ENV
