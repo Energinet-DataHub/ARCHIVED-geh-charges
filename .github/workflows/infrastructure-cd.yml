@@ -23,6 +23,8 @@ on:
       - .github/actions/azure-cli-install-login/**
       - .github/actions/charges-apply-db-migrations/**
       - .github/actions/configure-terraform-backend/**   
+      - .github/actions/setup-terraform-options/**
+      - .github/actions/terraform-cd/**
       - .github/workflows/infrastructure-cd.yml
   workflow_dispatch: {}
 env:
@@ -68,6 +70,11 @@ jobs:
         with:
           terraform_wrapper: false
           terraform_version: 0.14.10
+
+      - name: Setup domain specific Terraform options
+        uses: ./.github/actions/setup-terraform-options
+        with:
+          notification_email: ${{ secrets.NOTIFICATION_EMAIL }}
 
       - name: Terraform CD
         uses: ./.github/actions/terraform-cd
