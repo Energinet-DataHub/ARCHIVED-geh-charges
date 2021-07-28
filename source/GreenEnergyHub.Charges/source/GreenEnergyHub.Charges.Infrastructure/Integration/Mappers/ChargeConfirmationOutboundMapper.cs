@@ -13,15 +13,14 @@
 // limitations under the License.
 
 using System;
-using GreenEnergyHub.Charges.Domain.Events.Local;
 using GreenEnergyHub.Charges.Infrastructure.Integration.ChargeConfirmation;
 using GreenEnergyHub.Messaging.Protobuf;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Integration.Mappers
 {
-    public class ChargeConfirmationOutboundMapper : ProtobufOutboundMapper<ChargeCommandAcceptedEvent>
+    public class ChargeConfirmationOutboundMapper : ProtobufOutboundMapper<Domain.Acknowledgements.ChargeConfirmation>
     {
-        protected override Google.Protobuf.IMessage Convert(ChargeCommandAcceptedEvent acceptedEvent)
+        protected override Google.Protobuf.IMessage Convert(Domain.Acknowledgements.ChargeConfirmation acceptedEvent)
         {
             if (acceptedEvent == null)
                 throw new ArgumentNullException(nameof(acceptedEvent));
@@ -29,10 +28,10 @@ namespace GreenEnergyHub.Charges.Infrastructure.Integration.Mappers
             return new ChargeConfirmationContract
             {
                 CorrelationId = acceptedEvent.CorrelationId,
-                ReceiverMrid = acceptedEvent.Command.Document.Sender.Id,
-                ReceiverMarketParticipantRole = (MarketParticipantRoleContract)acceptedEvent.Command.Document.Sender.BusinessProcessRole,
-                OriginalTransactionReferenceMrid = acceptedEvent.Command.ChargeOperation.Id,
-                BusinessReasonCode = (BusinessReasonCodeContract)acceptedEvent.Command.Document.BusinessReasonCode,
+                ReceiverMrid = acceptedEvent.ReceiverMRid,
+                ReceiverMarketParticipantRole = (MarketParticipantRoleContract)acceptedEvent.ReceiverMarketParticipantRole,
+                OriginalTransactionReferenceMrid = acceptedEvent.OriginalTransactionReferenceMRid,
+                BusinessReasonCode = (BusinessReasonCodeContract)acceptedEvent.BusinessReasonCode,
             };
         }
     }

@@ -13,31 +13,31 @@
 // limitations under the License.
 
 using System;
-using GreenEnergyHub.Charges.Domain.Events.Local;
+using GreenEnergyHub.Charges.Domain.Acknowledgements;
 using GreenEnergyHub.Charges.Infrastructure.Integration.ChargeRejection;
 using GreenEnergyHub.Messaging.Protobuf;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
 {
-    public class ChargeRejectionOutboundMapper : ProtobufOutboundMapper<ChargeCommandRejectedEvent>
+    public class ChargeRejectionOutboundMapper : ProtobufOutboundMapper<ChargeRejection>
     {
-        protected override Google.Protobuf.IMessage Convert(ChargeCommandRejectedEvent rejectedEvent)
+        protected override Google.Protobuf.IMessage Convert(ChargeRejection rejection)
         {
-            if (rejectedEvent == null)
+            if (rejection == null)
             {
-                throw new ArgumentNullException(nameof(rejectedEvent));
+                throw new ArgumentNullException(nameof(rejection));
             }
 
             var chargeRejection = new ChargeRejectionContract()
             {
-                CorrelationId = rejectedEvent.CorrelationId,
-                ReceiverMrid = rejectedEvent.Command.Document.Sender.Id,
-                ReceiverMarketParticipantRole = (MarketParticipantRoleContract)rejectedEvent.Command.Document.Sender.BusinessProcessRole,
-                OriginalTransactionReferenceMrid = rejectedEvent.Command.ChargeOperation.Id,
-                BusinessReasonCode = (BusinessReasonCodeContract)rejectedEvent.Command.Document.BusinessReasonCode,
+                CorrelationId = rejection.CorrelationId,
+                ReceiverMrid = rejection.ReceiverMRid,
+                ReceiverMarketParticipantRole = (MarketParticipantRoleContract)rejection.ReceiverMarketParticipantRole,
+                OriginalTransactionReferenceMrid = rejection.OriginalTransactionReferenceMRid,
+                BusinessReasonCode = (BusinessReasonCodeContract)rejection.BusinessReasonCode,
             };
 
-            foreach (var reason in rejectedEvent.Reason)
+            foreach (var reason in rejection.RejectReason)
             {
                 chargeRejection.RejectReasons.Add(reason);
             }
