@@ -96,6 +96,10 @@ jobs:
           ENVIRONMENT_NAME: ${{ matrix.environment.name }}
           TERRAFORM_BACKEND_FILE_PATH: "./build/infrastructure/main/backend.tf"
 
+      - name: Obtain Terraform output
+        uses: ./.github/actions/obtain-terraform-output
+        id: terraform
+
       - name: Applying charges migrations
         uses: ./.github/actions/charges-apply-db-migrations
         with:
