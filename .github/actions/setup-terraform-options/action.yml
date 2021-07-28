@@ -15,7 +15,7 @@
 name: Setup domain specific Terraform options
 description: Setup Terraform options which are domain specific
 inputs:
-  NOTIFICATION_EMAIL:
+  notification_email:
     required: true
 
 runs:
@@ -26,4 +26,4 @@ runs:
     - name: Set TF Vars
       shell: bash
       run: |
-        echo "TF_VAR_notification_email=${{ inputs.NOTIFICATION_EMAIL }}" >> $GITHUB_ENV
+        echo "TF_VAR_notification_email=${{ inputs.notification_email }}" >> $GITHUB_ENV

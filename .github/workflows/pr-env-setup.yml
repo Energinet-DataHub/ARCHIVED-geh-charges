@@ -58,9 +58,9 @@ jobs:
           terraform_wrapper: false
 
       - name: Setup domain specific Terraform options
-        uses: ./.github/actions/setup-domain-specific-terraform-options
+        uses: ./.github/actions/setup-terraform-options
         with:
-          NOTIFICATION_EMAIL: ${{ secrets.NOTIFICATION_EMAIL }}
+          notification_email: ${{ secrets.NOTIFICATION_EMAIL }}
       
       - name: Terraform CD
         uses: ./.github/actions/terraform-cd

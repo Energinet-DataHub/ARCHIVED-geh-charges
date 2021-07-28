@@ -70,9 +70,9 @@ jobs:
           echo "TF_VAR_sharedresources_sql_server_name=${{ secrets.SHARED_RESOURCES_SQL_SERVER_NAME }}" >> $GITHUB_ENV
           
       - name: Setup domain specific Terraform options
-        uses: ./.github/actions/setup-domain-specific-terraform-options
+        uses: ./.github/actions/setup-terraform-options
         with:
-          NOTIFICATION_EMAIL: ${{ secrets.NOTIFICATION_EMAIL }}
+          notification_email: ${{ secrets.NOTIFICATION_EMAIL }}
 
       - name: Configure Terraform Backend
         uses: ./.github/actions/configure-terraform-backend
