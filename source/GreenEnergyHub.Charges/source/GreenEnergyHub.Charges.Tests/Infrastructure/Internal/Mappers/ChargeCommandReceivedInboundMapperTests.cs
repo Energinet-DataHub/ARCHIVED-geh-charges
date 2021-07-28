@@ -15,7 +15,7 @@
 using System.Diagnostics.CodeAnalysis;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.Events.Local;
-using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeCommandAccepted;
+using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeCommandReceived;
 using GreenEnergyHub.Charges.Infrastructure.Internal.Mappers;
 using GreenEnergyHub.Charges.TestCore;
 using Xunit;
@@ -24,18 +24,18 @@ using Xunit.Categories;
 namespace GreenEnergyHub.Charges.Tests.Infrastructure.Internal.Mappers
 {
     [UnitTest]
-    public class ChargeCommandAcceptedInboundMapperTests
+    public class ChargeCommandReceivedInboundMapperTests
     {
         [Theory]
         [InlineAutoMoqData]
         public void Convert_WhenCalled_ShouldMapToDomainObjectWithCorrectValues(
-            [NotNull] ChargeCommandAcceptedContract acceptedCommand,
-            [NotNull] ChargeCommandAcceptedInboundMapper sut)
+            [NotNull] ChargeCommandReceivedContract acceptedCommand,
+            [NotNull] ChargeCommandReceivedInboundMapper sut)
         {
             // Arrange
 
             // Act
-            var converted = (ChargeCommandAcceptedEvent)sut.Convert(acceptedCommand);
+            var converted = (ChargeCommandReceivedEvent)sut.Convert(acceptedCommand);
 
             // Assert
             converted.CorrelationId.Should().BeEquivalentTo(acceptedCommand.CorrelationId);
