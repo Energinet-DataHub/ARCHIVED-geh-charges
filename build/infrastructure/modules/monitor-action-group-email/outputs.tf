@@ -12,33 +12,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 output "id" {
-  value       = azurerm_storage_account.main.id
+  value       = azurerm_monitor_action_group.main.id
   description = "The id of the resource created."
 }
 
 output "name" {
-  value       = azurerm_storage_account.main.name
+  value       = azurerm_monitor_action_group.main.name
   description = "The name of the resource created."
 }
 
 output "dependent_on" {
   value       = null_resource.dependency_setter.id
   description = "The dependencies of the resource created."
-}
-
-output "primary_connection_string" {
-  value       = azurerm_storage_account.main.primary_connection_string
-  description = "The connection string associated with the primary location."
-  sensitive   = true
-}
-
-output "primary_access_key" {
-  value       = azurerm_storage_account.main.primary_access_key
-  description = "The primary access key for the storage account."
-  sensitive   = true
-}
-
-output "primary_blob_endpoint" {
-  value       = azurerm_storage_account.main.primary_blob_endpoint 
-  description = "The endpoint URL for blob storage in the primary location."
 }

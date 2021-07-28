@@ -16,21 +16,19 @@ resource "null_resource" "dependency_getter" {
     command = "echo ${length(var.dependencies)}"
   }
 }
-
 resource "null_resource" "dependency_setter" {
-  depends_on = [
-    azurerm_storage_account.main,
-  ]
+  depends_on = [azurerm_monitor_action_group.main]
 }
 
-resource "azurerm_storage_account" "main" {
-  depends_on                        = [null_resource.dependency_getter]
-  name                              = var.name
-  resource_group_name               = var.resource_group_name 
-  location                          = var.location 
-  account_tier                      = "Standard"
-  account_replication_type          = "LRS"
-  is_hns_enabled                    = var.is_hns_enabled  
-  min_tls_version                   = "TLS1_2"
-  tags                              = var.tags
+resource "azurerm_monitor_action_group" "main" {
+  depends_on             = [null_resource.dependency_getter]
+  name                   = var.name
+  resource_group_name    = var.resource_group_name 
+  short_name			 = var.short_name
+  enabled                = var.enabled
+  email_receiver {
+    name                 = var.email_receiver.name
+    email_address        = var.email_receiver.email_address
+  }
+  tags                   = var.tags
 }
