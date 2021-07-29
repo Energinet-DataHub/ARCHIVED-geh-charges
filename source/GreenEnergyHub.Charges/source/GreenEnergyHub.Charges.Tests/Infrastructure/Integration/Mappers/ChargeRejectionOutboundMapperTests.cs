@@ -33,8 +33,6 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Integration.Mappers
             [NotNull] ChargeRejection chargeRejection,
             [NotNull] ChargeRejectionOutboundMapper sut)
         {
-            // Arrange
-
             // Act
             var result = (ChargeRejectionContract)sut.Convert(chargeRejection);
 

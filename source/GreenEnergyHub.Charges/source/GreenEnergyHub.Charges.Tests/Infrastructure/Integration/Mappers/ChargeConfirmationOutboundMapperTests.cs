@@ -33,8 +33,6 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Integration.Mappers
             [NotNull] ChargeConfirmation chargeConfirmation,
             [NotNull] ChargeConfirmationOutboundMapper sut)
         {
-            // Arrange
-
             // Act
             var result = (ChargeConfirmationContract)sut.Convert(chargeConfirmation);
 

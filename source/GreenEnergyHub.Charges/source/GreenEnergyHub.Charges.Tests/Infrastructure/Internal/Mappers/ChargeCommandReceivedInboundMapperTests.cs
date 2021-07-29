@@ -33,8 +33,6 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Internal.Mappers
             [NotNull] ChargeCommandReceivedContract acceptedCommand,
             [NotNull] ChargeCommandReceivedInboundMapper sut)
         {
-            // Arrange
-
             // Act
             var converted = (ChargeCommandReceivedEvent)sut.Convert(acceptedCommand);
 
