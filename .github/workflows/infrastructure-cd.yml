@@ -78,7 +78,6 @@ jobs:
 
       - name: Terraform CD
         uses: ./.github/actions/terraform-cd
-        id: terraform
         with:
           SECRETS_SHARED_RESOURCES_KEYVAULT_NAME: ${{ secrets.SHARED_RESOURCES_KEYVAULT_NAME }}
           SECRETS_SHARED_RESOURCES_RESOURCE_GROUP_NAME: ${{ secrets.SHARED_RESOURCES_RESOURCE_GROUP_NAME }}
