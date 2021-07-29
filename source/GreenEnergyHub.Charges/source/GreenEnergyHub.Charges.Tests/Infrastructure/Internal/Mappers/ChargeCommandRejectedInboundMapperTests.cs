@@ -59,9 +59,9 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Internal.Mappers
             var commandDocument = converted.Command.Document;
             commandDocument.Id.Should().BeEquivalentTo(rejectedContract.ChargeCommand.Document.Id);
             commandDocument.Recipient.Id.Should().BeEquivalentTo(rejectedContract.ChargeCommand.Document.Recipient.Id);
-            commandDocument.Recipient.BusinessProcessRole.Should().BeEquivalentTo(rejectedContract.ChargeCommand.Document.Recipient.MarketParticipantRole);
+            commandDocument.Recipient.BusinessProcessRole.Should().BeEquivalentTo(rejectedContract.ChargeCommand.Document.Recipient.BusinessProcessRole);
             commandDocument.Sender.Id.Should().BeEquivalentTo(rejectedContract.ChargeCommand.Document.Sender.Id);
-            commandDocument.Sender.BusinessProcessRole.Should().BeEquivalentTo(rejectedContract.ChargeCommand.Document.Sender.MarketParticipantRole);
+            commandDocument.Sender.BusinessProcessRole.Should().BeEquivalentTo(rejectedContract.ChargeCommand.Document.Sender.BusinessProcessRole);
             commandDocument.Type.Should().BeEquivalentTo(rejectedContract.ChargeCommand.Document.Type);
             commandDocument.IndustryClassification.Should().BeEquivalentTo(rejectedContract.ChargeCommand.Document.IndustryClassification);
             commandDocument.RequestDate.ToUnixTimeSeconds().Should().Be(rejectedContract.ChargeCommand.Document.RequestDate.Seconds);

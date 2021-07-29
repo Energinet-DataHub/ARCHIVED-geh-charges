@@ -45,7 +45,7 @@ message DocumentContract {
 
 message MarketParticipantContract {
   string id = 1; // Contains an ID that identifies the Market Participants. In Denmark this would be the GLN number or EIC code.
-  MarketParticipantRoleContract MarketParticipantRole = 2;  // Contains the role a market participant uses when initiating and communicating with Green Energy Hub
+  MarketParticipantRoleContract BusinessProcessRole = 2;  // Contains the role a market participant uses when initiating and communicating with Green Energy Hub
 }
 
 message ChargeOperationContract {
