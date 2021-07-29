@@ -15,10 +15,14 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 using FluentAssertions;
+using Google.Protobuf;
 using GreenEnergyHub.Charges.Domain.ChargeLinks;
+using GreenEnergyHub.Charges.Domain.MarketDocument;
 using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandAccepted;
 using GreenEnergyHub.Charges.Infrastructure.Internal.Mappers;
 using GreenEnergyHub.Charges.TestCore;
+using GreenEnergyHub.TestHelpers.FluentAssertionsExtensions;
+using NodaTime;
 using Xunit;
 using Xunit.Categories;
 
@@ -33,35 +37,8 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Internal.Mappers
             [NotNull] ChargeLinkCommandAcceptedContract acceptedCommand,
             [NotNull] LinkCommandAcceptedInboundMapper sut)
         {
-            // Arrange
-
-            // Act
-            var converted = (ChargeLinkCommandAcceptedEvent)sut.Convert(acceptedCommand);
-
-            // Assert
-            converted.Document.Id.Should().BeEquivalentTo(acceptedCommand.Document.Id);
-            converted.Document.RequestDate.ToUnixTimeSeconds().Should()
-                .Be(acceptedCommand.Document.RequestDate.Seconds);
-            converted.Document.Type.Should().BeEquivalentTo(acceptedCommand.Document.Type);
-            converted.Document.CreatedDateTime.ToUnixTimeSeconds().Should()
-                .Be(acceptedCommand.Document.CreatedDateTime.Seconds);
-            converted.Document.Sender.Id.Should().BeEquivalentTo(acceptedCommand.Document.Sender.Id);
-            converted.Document.Sender.BusinessProcessRole.Should().BeEquivalentTo(acceptedCommand.Document.Sender.MarketParticipantRole);
-            converted.Document.Recipient.Id.Should().BeEquivalentTo(acceptedCommand.Document.Recipient.Id);
-            converted.Document.Recipient.BusinessProcessRole.Should().BeEquivalentTo(acceptedCommand.Document.Recipient.MarketParticipantRole);
-            converted.Document.IndustryClassification.Should().BeEquivalentTo(acceptedCommand.Document.IndustryClassification);
-            converted.Document.BusinessReasonCode.Should().BeEquivalentTo(acceptedCommand.Document.BusinessReasonCode);
-            converted.ChargeLink.Id.Should().BeEquivalentTo(acceptedCommand.ChargeLink.Id);
-            converted.ChargeLink.MeteringPointId.Should().BeEquivalentTo(acceptedCommand.ChargeLink.MeteringPointId);
-            converted.ChargeLink.StartDateTime.ToUnixTimeSeconds().Should()
-                .Be(acceptedCommand.ChargeLink.StartDateTime.Seconds);
-            Assert.NotNull(converted.ChargeLink.EndDateTime);
-            converted.ChargeLink.EndDateTime!.Value.ToUnixTimeSeconds().Should()
-                .Be(acceptedCommand.ChargeLink.EndDateTime.Seconds);
-            converted.ChargeLink.ChargeId.Should().BeEquivalentTo(acceptedCommand.ChargeLink.ChargeId);
-            converted.ChargeLink.Factor.Should().Be(acceptedCommand.ChargeLink.Factor);
-            converted.ChargeLink.ChargeOwner.Should().BeEquivalentTo(acceptedCommand.ChargeLink.ChargeOwner);
-            converted.ChargeLink.ChargeType.Should().BeEquivalentTo(acceptedCommand.ChargeLink.ChargeType);
+            var result = (ChargeLinkCommandAcceptedEvent)sut.Convert(acceptedCommand);
+            result.Should().BeEquivalentToContract(acceptedCommand);
         }
 
         [Fact]

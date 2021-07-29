@@ -55,7 +55,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
             return new MarketParticipant
             {
                 Id = marketParticipant.Id,
-                BusinessProcessRole = (MarketParticipantRole)marketParticipant.MarketParticipantRole,
+                BusinessProcessRole = (MarketParticipantRole)marketParticipant.BusinessProcessRole,
             };
         }
 

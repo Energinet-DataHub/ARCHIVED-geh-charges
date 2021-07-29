@@ -42,12 +42,12 @@ namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
                     Sender = new MarketParticipant
                     {
                         Id = document.Sender.Id,
-                        BusinessProcessRole = (MarketParticipantRole)document.Sender.MarketParticipantRole,
+                        BusinessProcessRole = (MarketParticipantRole)document.Sender.BusinessProcessRole,
                     },
                     Recipient = new MarketParticipant
                     {
                         Id = document.Recipient.Id,
-                        BusinessProcessRole = (MarketParticipantRole)document.Recipient.MarketParticipantRole,
+                        BusinessProcessRole = (MarketParticipantRole)document.Recipient.BusinessProcessRole,
                     },
                     IndustryClassification = (IndustryClassification)document.IndustryClassification,
                     BusinessReasonCode = (BusinessReasonCode)document.BusinessReasonCode,
