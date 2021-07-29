@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
 using GreenEnergyHub.Charges.Domain.ChargeLinks;
 using GreenEnergyHub.Charges.Domain.MarketDocument;
@@ -25,10 +26,8 @@ namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
 {
     public class LinkCommandReceivedInboundMapper : ProtobufInboundMapper<ChargeLinkCommandReceivedContract>
     {
-        protected override IInboundMessage Convert(ChargeLinkCommandReceivedContract obj)
+        protected override IInboundMessage Convert([NotNull]ChargeLinkCommandReceivedContract obj)
         {
-            if (obj == null) throw new ArgumentNullException(nameof(obj));
-
             var document = obj.Document;
             var chargeLink = obj.ChargeLink;
 

@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Diagnostics.CodeAnalysis;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.Events.Local;
@@ -68,6 +69,14 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Internal.Mappers
             commandDocument.RequestDate.ToUnixTimeSeconds().Should().Be(rejectedContract.ChargeCommand.Document.RequestDate.Seconds);
             commandDocument.BusinessReasonCode.Should().BeEquivalentTo(rejectedContract.ChargeCommand.Document.BusinessReasonCode);
             commandDocument.CreatedDateTime.ToUnixTimeSeconds().Should().Be(rejectedContract.ChargeCommand.Document.CreatedDateTime.Seconds);
+        }
+
+        [Fact]
+        public void Convert_WhenCalledWithNull_ShouldThrow()
+        {
+            var mapper = new ChargeCommandRejectedInboundMapper();
+            ChargeCommandRejectedContract? chargeCommandRejectedContract = null;
+            Assert.Throws<InvalidOperationException>(() => mapper.Convert(chargeCommandRejectedContract!));
         }
     }
 }

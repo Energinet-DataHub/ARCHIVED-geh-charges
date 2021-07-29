@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Diagnostics.CodeAnalysis;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Core.DateTime;
@@ -64,6 +65,14 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Internal.Mappers
             converted.ChargeLink.MeteringPointId.Should().Be(chargeLinkCommand.ChargeLink.MeteringPointId);
             converted.ChargeLink.StartDateTime.Seconds.Should().Be(chargeLinkCommand.ChargeLink.StartDateTime.ToUnixTimeSeconds());
             converted.ChargeLink.EndDateTime.Seconds.Should().Be(chargeLinkCommand.ChargeLink.EndDateTime.TimeOrEndDefault().ToUnixTimeSeconds());
+        }
+
+        [Fact]
+        public void Convert_WhenCalledWithNull_ShouldThrow()
+        {
+            var mapper = new LinkCommandAcceptedOutboundMapper();
+            ChargeLinkCommandAcceptedEvent? chargeLinkCommandAcceptedEvent = null;
+            Assert.Throws<InvalidOperationException>(() => mapper.Convert(chargeLinkCommandAcceptedEvent!));
         }
 
         private static void UpdateInstantsToValidTimes([NotNull] ChargeLinkCommand chargeLinkCommand)

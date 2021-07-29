@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
 using GreenEnergyHub.Charges.Domain.Events.Local;
 using GreenEnergyHub.Charges.Domain.MarketDocument;
@@ -27,10 +28,8 @@ namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
 {
     public class ChargeCommandRejectedInboundMapper : ProtobufInboundMapper<ChargeCommandRejectedContract>
     {
-        protected override IInboundMessage Convert(ChargeCommandRejectedContract rejectedContract)
+        protected override IInboundMessage Convert([NotNull]ChargeCommandRejectedContract rejectedContract)
         {
-            if (rejectedContract == null) throw new ArgumentNullException(nameof(rejectedContract));
-
             return new ChargeCommandRejectedEvent(
                 Instant.FromDateTimeUtc(DateTime.Now.ToUniversalTime()),
                 new ChargeCommand(rejectedContract.ChargeCommand.CorrelationId)

@@ -14,6 +14,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using Google.Protobuf.WellKnownTypes;
 using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
@@ -26,13 +27,8 @@ namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
 {
     public class ChargeCommandReceivedOutboundMapper : ProtobufOutboundMapper<ChargeCommandReceivedEvent>
     {
-        protected override Google.Protobuf.IMessage Convert(ChargeCommandReceivedEvent obj)
+        protected override Google.Protobuf.IMessage Convert([NotNull]ChargeCommandReceivedEvent obj)
         {
-            if (obj == null)
-            {
-                throw new ArgumentNullException(nameof(obj));
-            }
-
             var chargeCommandReceivedContract = new ChargeCommandReceivedContract
             {
                 Document = GetDocument(obj.Command.Document),

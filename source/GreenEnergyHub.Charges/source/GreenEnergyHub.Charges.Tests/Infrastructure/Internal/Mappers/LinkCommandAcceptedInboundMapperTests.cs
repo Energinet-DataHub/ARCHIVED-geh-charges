@@ -12,16 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Diagnostics.CodeAnalysis;
 using FluentAssertions;
-using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.Domain.ChargeLinks;
 using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandAccepted;
-using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandReceived;
 using GreenEnergyHub.Charges.Infrastructure.Internal.Mappers;
 using GreenEnergyHub.Charges.TestCore;
-using GreenEnergyHub.TestHelpers.FluentAssertionsExtensions;
-using NodaTime;
 using Xunit;
 using Xunit.Categories;
 
@@ -65,6 +62,14 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Internal.Mappers
             converted.ChargeLink.Factor.Should().Be(acceptedCommand.ChargeLink.Factor);
             converted.ChargeLink.ChargeOwner.Should().BeEquivalentTo(acceptedCommand.ChargeLink.ChargeOwner);
             converted.ChargeLink.ChargeType.Should().BeEquivalentTo(acceptedCommand.ChargeLink.ChargeType);
+        }
+
+        [Fact]
+        public void Convert_WhenCalledWithNull_ShouldThrow()
+        {
+            var mapper = new LinkCommandAcceptedInboundMapper();
+            ChargeLinkCommandAcceptedContract? chargeLinkCommandAcceptedContract = null;
+            Assert.Throws<InvalidOperationException>(() => mapper.Convert(chargeLinkCommandAcceptedContract!));
         }
     }
 }

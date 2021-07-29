@@ -83,6 +83,14 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Internal.Mappers
             }
         }
 
+        [Fact]
+        public void Convert_WhenCalledWithNull_ShouldThrow()
+        {
+            var mapper = new ChargeCommandReceivedOutboundMapper();
+            ChargeCommandReceivedEvent? chargeCommandReceivedEvent = null;
+            Assert.Throws<InvalidOperationException>(() => mapper.Convert(chargeCommandReceivedEvent!));
+        }
+
         private static void UpdateInstantsToValidTimes([NotNull] ChargeCommandReceivedEvent chargeCommandReceivedEvent)
         {
             chargeCommandReceivedEvent.Command.Document.RequestDate = Instant.FromUtc(2021, 7, 21, 11, 42, 25);

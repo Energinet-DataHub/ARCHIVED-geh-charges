@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using Google.Protobuf.WellKnownTypes;
 using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.Domain.ChargeLinks;
@@ -23,13 +24,8 @@ namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
 {
     public class LinkCommandReceivedOutboundMapper : ProtobufOutboundMapper<ChargeLinkCommandReceivedEvent>
     {
-        protected override Google.Protobuf.IMessage Convert(ChargeLinkCommandReceivedEvent obj)
+        protected override Google.Protobuf.IMessage Convert([NotNull]ChargeLinkCommandReceivedEvent obj)
         {
-            if (obj == null)
-            {
-                throw new ArgumentNullException(nameof(obj));
-            }
-
             var document = obj.Document;
             var chargeLink = obj.ChargeLink;
 
