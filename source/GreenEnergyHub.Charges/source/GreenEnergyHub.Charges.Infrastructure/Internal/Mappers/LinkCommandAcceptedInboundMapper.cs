@@ -26,12 +26,12 @@ namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
 {
     public class LinkCommandAcceptedInboundMapper : ProtobufInboundMapper<ChargeLinkCommandAcceptedContract>
     {
-        protected override IInboundMessage Convert([NotNull]ChargeLinkCommandAcceptedContract obj)
+        protected override IInboundMessage Convert([NotNull]ChargeLinkCommandAcceptedContract chargeLinkCommandAcceptedContract)
         {
-            return new ChargeLinkCommandAcceptedEvent(obj.CorrelationId)
+            return new ChargeLinkCommandAcceptedEvent(chargeLinkCommandAcceptedContract.CorrelationId)
             {
-                Document = MapDocument(obj.Document),
-                ChargeLink = MapChargeLink(obj.ChargeLink),
+                Document = MapDocument(chargeLinkCommandAcceptedContract.Document),
+                ChargeLink = MapChargeLink(chargeLinkCommandAcceptedContract.ChargeLink),
             };
         }
 

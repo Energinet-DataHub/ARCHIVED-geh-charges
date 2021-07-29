@@ -30,14 +30,14 @@ namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
 {
     public class ChargeCommandAcceptedInboundMapper : ProtobufInboundMapper<ChargeCommandAcceptedContract>
     {
-        protected override IInboundMessage Convert([NotNull]ChargeCommandAcceptedContract obj)
+        protected override IInboundMessage Convert([NotNull]ChargeCommandAcceptedContract chargeCommandAcceptedContract)
         {
             return new ChargeCommandAcceptedEvent(
                 Instant.FromDateTimeUtc(DateTime.Now.ToUniversalTime()),
-                new ChargeCommand(obj.CorrelationId)
+                new ChargeCommand(chargeCommandAcceptedContract.CorrelationId)
             {
-                Document = GetDocument(obj.Document),
-                ChargeOperation = GetChargeOperation(obj.ChargeOperation),
+                Document = GetDocument(chargeCommandAcceptedContract.Document),
+                ChargeOperation = GetChargeOperation(chargeCommandAcceptedContract.ChargeOperation),
                 Transaction = Transaction.NewTransaction(),
             });
         }

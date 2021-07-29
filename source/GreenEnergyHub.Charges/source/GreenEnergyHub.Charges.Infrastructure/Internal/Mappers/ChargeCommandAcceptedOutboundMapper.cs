@@ -27,16 +27,16 @@ namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
 {
     public class ChargeCommandAcceptedOutboundMapper : ProtobufOutboundMapper<ChargeCommandAcceptedEvent>
     {
-        protected override Google.Protobuf.IMessage Convert([NotNull]ChargeCommandAcceptedEvent obj)
+        protected override Google.Protobuf.IMessage Convert([NotNull]ChargeCommandAcceptedEvent chargeCommandAcceptedEvent)
         {
             var chargeCommandAcceptedContract = new ChargeCommandAcceptedContract
             {
-                Document = GetDocument(obj.Command.Document),
-                ChargeOperation = GetChargeOperation(obj.Command.ChargeOperation),
-                CorrelationId = obj.CorrelationId,
+                Document = GetDocument(chargeCommandAcceptedEvent.Command.Document),
+                ChargeOperation = GetChargeOperation(chargeCommandAcceptedEvent.Command.ChargeOperation),
+                CorrelationId = chargeCommandAcceptedEvent.CorrelationId,
             };
 
-            AddChargePoints(chargeCommandAcceptedContract, obj.Command.ChargeOperation.Points);
+            AddChargePoints(chargeCommandAcceptedContract, chargeCommandAcceptedEvent.Command.ChargeOperation.Points);
 
             return chargeCommandAcceptedContract;
         }

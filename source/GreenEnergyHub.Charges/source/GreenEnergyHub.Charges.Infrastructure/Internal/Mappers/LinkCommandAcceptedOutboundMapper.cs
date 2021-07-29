@@ -24,10 +24,10 @@ namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
 {
     public class LinkCommandAcceptedOutboundMapper : ProtobufOutboundMapper<ChargeLinkCommandAcceptedEvent>
     {
-        protected override Google.Protobuf.IMessage Convert([NotNull]ChargeLinkCommandAcceptedEvent obj)
+        protected override Google.Protobuf.IMessage Convert([NotNull]ChargeLinkCommandAcceptedEvent chargeLinkCommandAcceptedEvent)
         {
-            var document = obj.Document;
-            var chargeLink = obj.ChargeLink;
+            var document = chargeLinkCommandAcceptedEvent.Document;
+            var chargeLink = chargeLinkCommandAcceptedEvent.ChargeLink;
 
             return new ChargeLinkCommandAcceptedContract
             {
@@ -52,7 +52,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
                 },
                 ChargeLink = new ChargeLinkContract
                 {
-                    Id = obj.ChargeLink.Id,
+                    Id = chargeLinkCommandAcceptedEvent.ChargeLink.Id,
                     MeteringPointId = chargeLink.MeteringPointId,
                     ChargeId = chargeLink.ChargeId,
                     ChargeOwner = chargeLink.ChargeOwner,
@@ -61,7 +61,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
                     StartDateTime = Timestamp.FromDateTime(chargeLink.StartDateTime.ToDateTimeUtc()),
                     EndDateTime = Timestamp.FromDateTime(chargeLink.EndDateTime.TimeOrEndDefault().ToDateTimeUtc()),
                 },
-                CorrelationId = obj.CorrelationId,
+                CorrelationId = chargeLinkCommandAcceptedEvent.CorrelationId,
             };
         }
     }
