@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Diagnostics.CodeAnalysis;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
@@ -53,6 +54,14 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Integration.Mappers
             result.ChargeLinkPeriod.EndDateTime.Seconds.Should()
                 .Be(createdEvent.ChargeLinkPeriod.EndDateTime.ToUnixTimeSeconds());
             result.ChargeLinkPeriod.Factor.Should().Be(createdEvent.ChargeLinkPeriod.Factor);
+        }
+
+        [Fact]
+        public void Convert_WhenCalledWithNull_ShouldThrow()
+        {
+            var mapper = new ChargeLinkCreatedOutboundMapper();
+            ChargeLinkCreatedEvent? chargeLinkCreatedEvent = null;
+            Assert.Throws<InvalidOperationException>(() => mapper.Convert(chargeLinkCreatedEvent!));
         }
 
         private static ChargeLinkCreatedEvent GetCreatedEvent()

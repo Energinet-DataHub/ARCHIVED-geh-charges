@@ -12,11 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Diagnostics.CodeAnalysis;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.Acknowledgements;
 using GreenEnergyHub.Charges.Infrastructure.Integration.ChargeRejection;
-using GreenEnergyHub.Charges.Infrastructure.Internal.Mappers;
+using GreenEnergyHub.Charges.Infrastructure.Integration.Mappers;
 using GreenEnergyHub.Charges.TestCore;
 using Xunit;
 using Xunit.Categories;
@@ -44,6 +45,14 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Integration.Mappers
             result.OriginalTransactionReferenceMrid.Should().BeEquivalentTo(chargeRejection.OriginalTransactionReferenceMRid);
             result.ReceiverMarketParticipantRole.Should().BeEquivalentTo(chargeRejection.ReceiverMarketParticipantRole);
             result.RejectReasons.Should().BeEquivalentTo(chargeRejection.RejectReason);
+        }
+
+        [Fact]
+        public void Convert_WhenCalledWithNull_ShouldThrow()
+        {
+            var mapper = new ChargeRejectionOutboundMapper();
+            ChargeRejection? chargeRejection = null;
+            Assert.Throws<InvalidOperationException>(() => mapper.Convert(chargeRejection!));
         }
     }
 }

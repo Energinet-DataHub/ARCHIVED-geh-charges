@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
+using System.Diagnostics.CodeAnalysis;
 using GreenEnergyHub.Charges.Infrastructure.Integration.ChargeConfirmation;
 using GreenEnergyHub.Messaging.Protobuf;
 
@@ -20,18 +20,15 @@ namespace GreenEnergyHub.Charges.Infrastructure.Integration.Mappers
 {
     public class ChargeConfirmationOutboundMapper : ProtobufOutboundMapper<Domain.Acknowledgements.ChargeConfirmation>
     {
-        protected override Google.Protobuf.IMessage Convert(Domain.Acknowledgements.ChargeConfirmation acceptedEvent)
+        protected override Google.Protobuf.IMessage Convert([NotNull]Domain.Acknowledgements.ChargeConfirmation chargeConfirmation)
         {
-            if (acceptedEvent == null)
-                throw new ArgumentNullException(nameof(acceptedEvent));
-
             return new ChargeConfirmationContract
             {
-                CorrelationId = acceptedEvent.CorrelationId,
-                ReceiverMrid = acceptedEvent.ReceiverMRid,
-                ReceiverMarketParticipantRole = (MarketParticipantRoleContract)acceptedEvent.ReceiverMarketParticipantRole,
-                OriginalTransactionReferenceMrid = acceptedEvent.OriginalTransactionReferenceMRid,
-                BusinessReasonCode = (BusinessReasonCodeContract)acceptedEvent.BusinessReasonCode,
+                CorrelationId = chargeConfirmation.CorrelationId,
+                ReceiverMrid = chargeConfirmation.ReceiverMRid,
+                ReceiverMarketParticipantRole = (MarketParticipantRoleContract)chargeConfirmation.ReceiverMarketParticipantRole,
+                OriginalTransactionReferenceMrid = chargeConfirmation.OriginalTransactionReferenceMRid,
+                BusinessReasonCode = (BusinessReasonCodeContract)chargeConfirmation.BusinessReasonCode,
             };
         }
     }

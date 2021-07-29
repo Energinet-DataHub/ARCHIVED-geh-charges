@@ -12,23 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
-using GreenEnergyHub.Charges.Domain.Acknowledgements;
+using System.Diagnostics.CodeAnalysis;
 using GreenEnergyHub.Charges.Infrastructure.Integration.ChargeRejection;
 using GreenEnergyHub.Messaging.Protobuf;
 
-namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
+namespace GreenEnergyHub.Charges.Infrastructure.Integration.Mappers
 {
-    public class ChargeRejectionOutboundMapper : ProtobufOutboundMapper<ChargeRejection>
+    public class ChargeRejectionOutboundMapper : ProtobufOutboundMapper<Domain.Acknowledgements.ChargeRejection>
     {
-        protected override Google.Protobuf.IMessage Convert(ChargeRejection rejection)
+        protected override Google.Protobuf.IMessage Convert([NotNull]Domain.Acknowledgements.ChargeRejection rejection)
         {
-            if (rejection == null)
-            {
-                throw new ArgumentNullException(nameof(rejection));
-            }
-
-            var chargeRejection = new ChargeRejectionContract()
+            var chargeRejection = new ChargeRejectionContract
             {
                 CorrelationId = rejection.CorrelationId,
                 ReceiverMrid = rejection.ReceiverMRid,

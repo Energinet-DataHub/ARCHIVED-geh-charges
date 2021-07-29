@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using Energinet.DataHub.MeteringPoints.IntegrationEventContracts;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.Events.Integration;
@@ -47,7 +48,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Integration.Mappers
                 ParentMeteringPointId = "14",
             };
 
-            var mapper = new LinkCommandReceivedOutboundMapperInboundMapper();
+            var mapper = new MeteringPointCreatedIntegrationInboundMapper();
 
             // Act
             var converted = (MeteringPointCreatedEvent)mapper.Convert(meteringPointCreatedEvent);
@@ -67,6 +68,14 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Integration.Mappers
             converted.MeterReadingPeriodicity.Should().BeEquivalentTo(meteringPointCreatedEvent.MeterReadingPeriodicity);
             converted.NetSettlementGroup.Should().BeEquivalentTo(meteringPointCreatedEvent.NetSettlementGroup);
             //converted.ParentMeteringPointId.Should().BeEquivalentTo(meteringPointCreatedEvent.ParentMeteringPointId);
+        }
+
+        [Fact]
+        public void Convert_WhenCalledWithNull_ShouldThrow()
+        {
+            var mapper = new MeteringPointCreatedIntegrationInboundMapper();
+            MeteringPointCreated? meteringPointCreated = null;
+            Assert.Throws<InvalidOperationException>(() => mapper.Convert(meteringPointCreated!));
         }
     }
 }

@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Diagnostics.CodeAnalysis;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.Acknowledgements;
@@ -43,6 +44,14 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Integration.Mappers
             result.BusinessReasonCode.Should().BeEquivalentTo(chargeConfirmation.BusinessReasonCode);
             result.OriginalTransactionReferenceMrid.Should().BeEquivalentTo(chargeConfirmation.OriginalTransactionReferenceMRid);
             result.ReceiverMarketParticipantRole.Should().BeEquivalentTo(chargeConfirmation.ReceiverMarketParticipantRole);
+        }
+
+        [Fact]
+        public void Convert_WhenCalledWithNull_ShouldThrow()
+        {
+            var mapper = new ChargeConfirmationOutboundMapper();
+            ChargeConfirmation? chargeConfirmation = null;
+            Assert.Throws<InvalidOperationException>(() => mapper.Convert(chargeConfirmation!));
         }
     }
 }
