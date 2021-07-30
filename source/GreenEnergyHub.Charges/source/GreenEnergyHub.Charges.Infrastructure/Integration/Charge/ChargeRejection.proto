@@ -22,9 +22,9 @@ option csharp_namespace = "GreenEnergyHub.Charges.Infrastructure.Integration.Cha
 
 message ChargeRejectionContract {
   string correlation_id = 1;
-  string receiver_mrid = 2;
+  string receiver = 2;
   MarketParticipantRoleContract receiver_market_participant_role = 3;
-  string original_transaction_reference_mrid = 4;
+  string original_transaction_reference = 4;
   BusinessReasonCodeContract business_reason_code = 5;
   repeated string reject_reasons = 6;
 }

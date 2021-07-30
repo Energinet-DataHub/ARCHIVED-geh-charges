@@ -25,13 +25,13 @@ namespace GreenEnergyHub.Charges.Infrastructure.Integration.Mappers
             var chargeRejection = new ChargeRejectionContract
             {
                 CorrelationId = rejection.CorrelationId,
-                ReceiverMrid = rejection.ReceiverMRid,
+                Receiver = rejection.Receiver,
                 ReceiverMarketParticipantRole = (MarketParticipantRoleContract)rejection.ReceiverMarketParticipantRole,
-                OriginalTransactionReferenceMrid = rejection.OriginalTransactionReferenceMRid,
+                OriginalTransactionReference = rejection.OriginalTransactionReference,
                 BusinessReasonCode = (BusinessReasonCodeContract)rejection.BusinessReasonCode,
             };
 
-            foreach (var reason in rejection.RejectReason)
+            foreach (var reason in rejection.RejectReasons)
             {
                 chargeRejection.RejectReasons.Add(reason);
             }

@@ -35,11 +35,11 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Internal.Mappers
             var mapper = new LinkCommandReceivedInboundMapper();
 
             // Act
-            var converted = (ChargeLinkCommandReceivedEvent)mapper.Convert(chargeLinkCommand);
+            var result = (ChargeLinkCommandReceivedEvent)mapper.Convert(chargeLinkCommand);
 
             // Assert
             var chargeLinkDocument = chargeLinkCommand.Document;
-            var convertedDocument = converted.Document;
+            var convertedDocument = result.Document;
             convertedDocument.Id.Should().BeEquivalentTo(chargeLinkDocument.Id);
             convertedDocument.Sender.Id.Should().BeEquivalentTo(chargeLinkDocument.Sender.Id);
             convertedDocument.Sender.BusinessProcessRole.Should().BeEquivalentTo(chargeLinkDocument.Sender.BusinessProcessRole);
@@ -50,14 +50,14 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Internal.Mappers
             convertedDocument.Type.Should().BeEquivalentTo(chargeLinkDocument.Type);
             convertedDocument.RequestDate.ToUnixTimeSeconds().Should().Be(chargeLinkDocument.RequestDate.Seconds);
             convertedDocument.IndustryClassification.Should().BeEquivalentTo(chargeLinkDocument.IndustryClassification);
-            converted.ChargeLink.Id.Should().Be(chargeLinkCommand.ChargeLink.Id);
-            converted.ChargeLink.ChargeId.Should().Be(chargeLinkCommand.ChargeLink.ChargeId);
-            converted.ChargeLink.ChargeOwner.Should().Be(chargeLinkCommand.ChargeLink.ChargeOwner);
-            converted.ChargeLink.ChargeType.Should().Be(chargeLinkCommand.ChargeLink.ChargeType);
-            converted.ChargeLink.Factor.Should().Be(chargeLinkCommand.ChargeLink.Factor);
-            converted.ChargeLink.MeteringPointId.Should().Be(chargeLinkCommand.ChargeLink.MeteringPointId);
-            converted.ChargeLink.StartDateTime.ToUnixTimeSeconds().Should().Be(chargeLinkCommand.ChargeLink.StartDateTime.Seconds);
-            converted.ChargeLink.EndDateTime!.Value.ToUnixTimeSeconds().Should().Be(chargeLinkCommand.ChargeLink.EndDateTime.Seconds);
+            result.ChargeLink.Id.Should().Be(chargeLinkCommand.ChargeLink.Id);
+            result.ChargeLink.ChargeId.Should().Be(chargeLinkCommand.ChargeLink.ChargeId);
+            result.ChargeLink.ChargeOwner.Should().Be(chargeLinkCommand.ChargeLink.ChargeOwner);
+            result.ChargeLink.ChargeType.Should().Be(chargeLinkCommand.ChargeLink.ChargeType);
+            result.ChargeLink.Factor.Should().Be(chargeLinkCommand.ChargeLink.Factor);
+            result.ChargeLink.MeteringPointId.Should().Be(chargeLinkCommand.ChargeLink.MeteringPointId);
+            result.ChargeLink.StartDateTime.ToUnixTimeSeconds().Should().Be(chargeLinkCommand.ChargeLink.StartDateTime.Seconds);
+            result.ChargeLink.EndDateTime!.Value.ToUnixTimeSeconds().Should().Be(chargeLinkCommand.ChargeLink.EndDateTime.Seconds);
         }
 
         [Fact]

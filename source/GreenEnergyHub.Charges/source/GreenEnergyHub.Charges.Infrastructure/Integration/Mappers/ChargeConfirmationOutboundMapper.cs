@@ -25,9 +25,9 @@ namespace GreenEnergyHub.Charges.Infrastructure.Integration.Mappers
             return new ChargeConfirmationContract
             {
                 CorrelationId = chargeConfirmation.CorrelationId,
-                ReceiverMrid = chargeConfirmation.ReceiverMRid,
+                Receiver = chargeConfirmation.Receiver,
                 ReceiverMarketParticipantRole = (MarketParticipantRoleContract)chargeConfirmation.ReceiverMarketParticipantRole,
-                OriginalTransactionReferenceMrid = chargeConfirmation.OriginalTransactionReferenceMRid,
+                OriginalTransactionReference = chargeConfirmation.OriginalTransactionReference,
                 BusinessReasonCode = (BusinessReasonCodeContract)chargeConfirmation.BusinessReasonCode,
             };
         }

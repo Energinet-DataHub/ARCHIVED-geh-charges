@@ -33,16 +33,8 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Integration.Mappers
             [NotNull] ChargeRejection chargeRejection,
             [NotNull] ChargeRejectionOutboundMapper sut)
         {
-            // Act
             var result = (ChargeRejectionContract)sut.Convert(chargeRejection);
-
-            // Assert
-            result.CorrelationId.Should().BeEquivalentTo(chargeRejection.CorrelationId);
-            result.ReceiverMrid.Should().BeEquivalentTo(chargeRejection.ReceiverMRid);
-            result.BusinessReasonCode.Should().BeEquivalentTo(chargeRejection.BusinessReasonCode);
-            result.OriginalTransactionReferenceMrid.Should().BeEquivalentTo(chargeRejection.OriginalTransactionReferenceMRid);
-            result.ReceiverMarketParticipantRole.Should().BeEquivalentTo(chargeRejection.ReceiverMarketParticipantRole);
-            result.RejectReasons.Should().BeEquivalentTo(chargeRejection.RejectReason);
+            AssertExtensions.ContractIsEquivalent(result, chargeRejection);
         }
 
         [Fact]

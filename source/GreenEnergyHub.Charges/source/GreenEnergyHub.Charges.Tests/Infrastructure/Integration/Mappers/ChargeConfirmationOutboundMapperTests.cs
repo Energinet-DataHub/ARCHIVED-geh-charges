@@ -35,13 +35,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Integration.Mappers
         {
             // Act
             var result = (ChargeConfirmationContract)sut.Convert(chargeConfirmation);
-
-            // Assert
-            result.CorrelationId.Should().BeEquivalentTo(chargeConfirmation.CorrelationId);
-            result.ReceiverMrid.Should().BeEquivalentTo(chargeConfirmation.ReceiverMRid);
-            result.BusinessReasonCode.Should().BeEquivalentTo(chargeConfirmation.BusinessReasonCode);
-            result.OriginalTransactionReferenceMrid.Should().BeEquivalentTo(chargeConfirmation.OriginalTransactionReferenceMRid);
-            result.ReceiverMarketParticipantRole.Should().BeEquivalentTo(chargeConfirmation.ReceiverMarketParticipantRole);
+            AssertExtensions.ContractIsEquivalent(result, chargeConfirmation);
         }
 
         [Fact]
