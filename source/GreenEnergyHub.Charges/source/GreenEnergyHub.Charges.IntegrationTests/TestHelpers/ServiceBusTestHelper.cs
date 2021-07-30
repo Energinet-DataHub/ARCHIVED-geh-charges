@@ -16,10 +16,10 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Text;
 using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Domain.Messages;
+using GreenEnergyHub.Messaging.Transport;
 using Microsoft.Azure.ServiceBus;
-using Newtonsoft.Json;
 using Xunit.Abstractions;
+using IMessage = GreenEnergyHub.Charges.Domain.Messages.IMessage;
 using JsonSerializer = GreenEnergyHub.Charges.Core.Json.JsonSerializer;
 
 namespace GreenEnergyHub.Charges.IntegrationTests.TestHelpers
@@ -28,10 +28,12 @@ namespace GreenEnergyHub.Charges.IntegrationTests.TestHelpers
     public class ServiceBusTestHelper
     {
         private readonly ITestOutputHelper _testOutputHelper;
+        private readonly MessageExtractor _messageExtractor;
 
-        public ServiceBusTestHelper(ITestOutputHelper testOutputHelper)
+        public ServiceBusTestHelper(ITestOutputHelper testOutputHelper, MessageExtractor messageExtractor)
         {
             _testOutputHelper = testOutputHelper;
+            _messageExtractor = messageExtractor;
         }
 
         public async Task<(T receivedEvent, Message receivedMessage)> GetMessageFromServiceBusAsync<T>(
@@ -47,8 +49,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.TestHelpers
             subscriptionClient.RegisterMessageHandler(
                 async (serviceBusMessage, _) =>
                 {
-                    var jsonMessage = Encoding.UTF8.GetString(serviceBusMessage.Body);
-                    var deserializedMessage = new JsonSerializer().Deserialize<T>(jsonMessage);
+                    var deserializedMessage = (T)await _messageExtractor.ExtractAsync(serviceBusMessage.Body, _).ConfigureAwait(false);
 
                     if (deserializedMessage is IMessage message && message.CorrelationId == correlationId)
                     {

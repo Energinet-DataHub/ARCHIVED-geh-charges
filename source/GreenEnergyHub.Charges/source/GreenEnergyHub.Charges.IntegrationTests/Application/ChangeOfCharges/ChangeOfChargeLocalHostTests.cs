@@ -26,6 +26,7 @@ using GreenEnergyHub.Charges.Infrastructure.Messaging;
 using GreenEnergyHub.Charges.IntegrationTests.TestHelpers;
 using GreenEnergyHub.Charges.MessageReceiver;
 using GreenEnergyHub.Charges.TestCore;
+using GreenEnergyHub.Messaging.Transport;
 using Microsoft.AspNetCore.Http.Internal;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs;
@@ -86,7 +87,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
             _chargeCommandEndpoint = new ChargeCommandEndpoint(
                 chargeCommandReceiverHost.Services.GetRequiredService<IChargeCommandHandler>(),
                 chargeCommandReceiverHost.Services.GetRequiredService<ICorrelationContext>(),
-                chargeCommandReceiverHost.Services.GetRequiredService<MessageExtractor<ChargeCommandReceivedEvent>>());
+                chargeCommandReceiverHost.Services.GetRequiredService<MessageExtractor>());
 
             _commandReceivedSubscriptionName = Environment.GetEnvironmentVariable("COMMAND_RECEIVED_SUBSCRIPTION_NAME") ?? string.Empty;
             _commandAcceptedSubscriptionName = Environment.GetEnvironmentVariable("COMMAND_ACCEPTED_SUBSCRIPTION_NAME") ?? string.Empty;
