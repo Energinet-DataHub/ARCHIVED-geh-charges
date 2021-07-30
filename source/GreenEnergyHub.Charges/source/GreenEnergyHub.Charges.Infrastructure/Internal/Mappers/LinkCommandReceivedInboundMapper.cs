@@ -33,36 +33,46 @@ namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
 
             return new ChargeLinkCommandReceivedEvent(chargeLinkCommandReceivedContract.CorrelationId)
             {
-                Document = new Document
+                Document = ConvertDocument(document),
+                ChargeLink = ConvertChargeLink(chargeLinkCommandReceivedContract, chargeLink),
+            };
+        }
+
+        private static Document ConvertDocument(DocumentContract document)
+        {
+            return new Document
+            {
+                Id = document.Id,
+                RequestDate = Instant.FromUnixTimeSeconds(document.RequestDate.Seconds),
+                Type = (DocumentType)document.Type,
+                CreatedDateTime = Instant.FromUnixTimeSeconds(document.CreatedDateTime.Seconds),
+                Sender = new MarketParticipant
                 {
-                    Id = document.Id,
-                    RequestDate = Instant.FromUnixTimeSeconds(document.RequestDate.Seconds),
-                    Type = (DocumentType)document.Type,
-                    CreatedDateTime = Instant.FromUnixTimeSeconds(document.CreatedDateTime.Seconds),
-                    Sender = new MarketParticipant
-                    {
-                        Id = document.Sender.Id,
-                        BusinessProcessRole = (MarketParticipantRole)document.Sender.BusinessProcessRole,
-                    },
-                    Recipient = new MarketParticipant
-                    {
-                        Id = document.Recipient.Id,
-                        BusinessProcessRole = (MarketParticipantRole)document.Recipient.BusinessProcessRole,
-                    },
-                    IndustryClassification = (IndustryClassification)document.IndustryClassification,
-                    BusinessReasonCode = (BusinessReasonCode)document.BusinessReasonCode,
+                    Id = document.Sender.Id,
+                    BusinessProcessRole = (MarketParticipantRole)document.Sender.BusinessProcessRole,
                 },
-                ChargeLink = new ChargeLink
+                Recipient = new MarketParticipant
                 {
-                    Id = chargeLinkCommandReceivedContract.ChargeLink.Id,
-                    MeteringPointId = chargeLink.MeteringPointId,
-                    ChargeId = chargeLink.ChargeId,
-                    ChargeOwner = chargeLink.ChargeOwner,
-                    Factor = chargeLink.Factor,
-                    ChargeType = (ChargeType)chargeLink.ChargeType,
-                    StartDateTime = Instant.FromUnixTimeSeconds(chargeLink.StartDateTime.Seconds),
-                    EndDateTime = Instant.FromUnixTimeSeconds(chargeLink.EndDateTime.Seconds),
+                    Id = document.Recipient.Id,
+                    BusinessProcessRole = (MarketParticipantRole)document.Recipient.BusinessProcessRole,
                 },
+                IndustryClassification = (IndustryClassification)document.IndustryClassification,
+                BusinessReasonCode = (BusinessReasonCode)document.BusinessReasonCode,
+            };
+        }
+
+        private static ChargeLink ConvertChargeLink(ChargeLinkCommandReceivedContract chargeLinkCommandReceivedContract, ChargeLinkContract chargeLink)
+        {
+            return new ChargeLink
+            {
+                Id = chargeLinkCommandReceivedContract.ChargeLink.Id,
+                MeteringPointId = chargeLink.MeteringPointId,
+                ChargeId = chargeLink.ChargeId,
+                ChargeOwner = chargeLink.ChargeOwner,
+                Factor = chargeLink.Factor,
+                ChargeType = (ChargeType)chargeLink.ChargeType,
+                StartDateTime = Instant.FromUnixTimeSeconds(chargeLink.StartDateTime.Seconds),
+                EndDateTime = Instant.FromUnixTimeSeconds(chargeLink.EndDateTime.Seconds),
             };
         }
     }

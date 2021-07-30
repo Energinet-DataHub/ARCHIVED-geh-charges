@@ -34,8 +34,8 @@ namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
                 PublishedTime = chargeCommandReceivedEvent.PublishedTime.ToTimestamp(),
                 Command = new ChargeCommandContract
                 {
-                    Document = MapDocument(chargeCommandReceivedEvent.Command.Document),
-                    ChargeOperation = MapChargeOperation(chargeCommandReceivedEvent.Command.ChargeOperation),
+                    Document = ConvertDocument(chargeCommandReceivedEvent.Command.Document),
+                    ChargeOperation = ConvertChargeOperation(chargeCommandReceivedEvent.Command.ChargeOperation),
                     CorrelationId = chargeCommandReceivedEvent.Command.CorrelationId,
                 },
                 CorrelationId = chargeCommandReceivedEvent.CorrelationId,
@@ -46,7 +46,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
             return chargeCommandReceivedContract;
         }
 
-        private static ChargeOperationContract MapChargeOperation(ChargeOperation charge)
+        private static ChargeOperationContract ConvertChargeOperation(ChargeOperation charge)
         {
             return new ChargeOperationContract
             {
@@ -66,7 +66,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
             };
         }
 
-        private static DocumentContract MapDocument(Document document)
+        private static DocumentContract ConvertDocument(Document document)
         {
             return new DocumentContract
             {

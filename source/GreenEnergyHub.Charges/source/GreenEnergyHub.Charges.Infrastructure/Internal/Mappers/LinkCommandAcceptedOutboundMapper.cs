@@ -17,6 +17,7 @@ using System.Diagnostics.CodeAnalysis;
 using Google.Protobuf.WellKnownTypes;
 using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.Domain.ChargeLinks;
+using GreenEnergyHub.Charges.Domain.MarketDocument;
 using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandAccepted;
 using GreenEnergyHub.Messaging.Protobuf;
 
@@ -31,37 +32,47 @@ namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
 
             return new ChargeLinkCommandAcceptedContract
             {
-                Document = new DocumentContract
-                {
-                        Id = document.Id,
-                        RequestDate = Timestamp.FromDateTime(document.RequestDate.ToDateTimeUtc()),
-                        Type = (DocumentTypeContract)document.Type,
-                        CreatedDateTime = Timestamp.FromDateTime(document.CreatedDateTime.ToDateTimeUtc()),
-                        Sender = new MarketParticipantContract
-                        {
-                            Id = document.Sender.Id,
-                            BusinessProcessRole = (MarketParticipantRoleContract)document.Sender.BusinessProcessRole,
-                        },
-                        Recipient = new MarketParticipantContract
-                        {
-                            Id = document.Recipient.Id,
-                            BusinessProcessRole = (MarketParticipantRoleContract)document.Recipient.BusinessProcessRole,
-                        },
-                        IndustryClassification = (IndustryClassificationContract)document.IndustryClassification,
-                        BusinessReasonCode = (BusinessReasonCodeContract)document.BusinessReasonCode,
-                },
-                ChargeLink = new ChargeLinkContract
-                {
-                    Id = chargeLinkCommandAcceptedEvent.ChargeLink.Id,
-                    MeteringPointId = chargeLink.MeteringPointId,
-                    ChargeId = chargeLink.ChargeId,
-                    ChargeOwner = chargeLink.ChargeOwner,
-                    Factor = chargeLink.Factor,
-                    ChargeType = (ChargeTypeContract)chargeLink.ChargeType,
-                    StartDateTime = Timestamp.FromDateTime(chargeLink.StartDateTime.ToDateTimeUtc()),
-                    EndDateTime = Timestamp.FromDateTime(chargeLink.EndDateTime.TimeOrEndDefault().ToDateTimeUtc()),
-                },
+                Document = ConvertDocument(document),
+                ChargeLink = ConvertChargeLink(chargeLinkCommandAcceptedEvent, chargeLink),
                 CorrelationId = chargeLinkCommandAcceptedEvent.CorrelationId,
+            };
+        }
+
+        private static DocumentContract ConvertDocument(Document document)
+        {
+            return new DocumentContract
+            {
+                Id = document.Id,
+                RequestDate = Timestamp.FromDateTime(document.RequestDate.ToDateTimeUtc()),
+                Type = (DocumentTypeContract)document.Type,
+                CreatedDateTime = Timestamp.FromDateTime(document.CreatedDateTime.ToDateTimeUtc()),
+                Sender = new MarketParticipantContract
+                {
+                    Id = document.Sender.Id,
+                    BusinessProcessRole = (MarketParticipantRoleContract)document.Sender.BusinessProcessRole,
+                },
+                Recipient = new MarketParticipantContract
+                {
+                    Id = document.Recipient.Id,
+                    BusinessProcessRole = (MarketParticipantRoleContract)document.Recipient.BusinessProcessRole,
+                },
+                IndustryClassification = (IndustryClassificationContract)document.IndustryClassification,
+                BusinessReasonCode = (BusinessReasonCodeContract)document.BusinessReasonCode,
+            };
+        }
+
+        private static ChargeLinkContract ConvertChargeLink(ChargeLinkCommandAcceptedEvent chargeLinkCommandAcceptedEvent, ChargeLink chargeLink)
+        {
+            return new ChargeLinkContract
+            {
+                Id = chargeLinkCommandAcceptedEvent.ChargeLink.Id,
+                MeteringPointId = chargeLink.MeteringPointId,
+                ChargeId = chargeLink.ChargeId,
+                ChargeOwner = chargeLink.ChargeOwner,
+                Factor = chargeLink.Factor,
+                ChargeType = (ChargeTypeContract)chargeLink.ChargeType,
+                StartDateTime = Timestamp.FromDateTime(chargeLink.StartDateTime.ToDateTimeUtc()),
+                EndDateTime = Timestamp.FromDateTime(chargeLink.EndDateTime.TimeOrEndDefault().ToDateTimeUtc()),
             };
         }
     }

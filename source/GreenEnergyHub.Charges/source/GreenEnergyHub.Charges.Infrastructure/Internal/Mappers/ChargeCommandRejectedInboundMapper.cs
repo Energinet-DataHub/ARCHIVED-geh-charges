@@ -36,14 +36,14 @@ namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
                 rejectedContract.CorrelationId,
                 new ChargeCommand(rejectedContract.Command.CorrelationId)
                 {
-                    Document = GetDocument(rejectedContract.Command.Document),
-                    ChargeOperation = GetChargeOperation(rejectedContract.Command.ChargeOperation),
+                    Document = ConvertDocument(rejectedContract.Command.Document),
+                    ChargeOperation = ConvertChargeOperation(rejectedContract.Command.ChargeOperation),
                     Transaction = Transaction.NewTransaction(),
                 },
                 rejectedContract.RejectReasons);
         }
 
-        private static Document GetDocument(DocumentContract document)
+        private static Document ConvertDocument(DocumentContract document)
         {
             return new ()
             {
@@ -68,7 +68,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
             };
         }
 
-        private static ChargeOperation GetChargeOperation(ChargeOperationContract chargeOperation)
+        private static ChargeOperation ConvertChargeOperation(ChargeOperationContract chargeOperation)
         {
             return new ()
             {

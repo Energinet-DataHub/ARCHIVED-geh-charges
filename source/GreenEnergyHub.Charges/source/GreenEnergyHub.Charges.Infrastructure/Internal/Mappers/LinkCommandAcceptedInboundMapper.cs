@@ -30,12 +30,12 @@ namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
         {
             return new ChargeLinkCommandAcceptedEvent(chargeLinkCommandAcceptedContract.CorrelationId)
             {
-                Document = MapDocument(chargeLinkCommandAcceptedContract.Document),
-                ChargeLink = MapChargeLink(chargeLinkCommandAcceptedContract.ChargeLink),
+                Document = ConvertDocument(chargeLinkCommandAcceptedContract.Document),
+                ChargeLink = ConvertChargeLink(chargeLinkCommandAcceptedContract.ChargeLink),
             };
         }
 
-        private static Document MapDocument(DocumentContract document)
+        private static Document ConvertDocument(DocumentContract document)
         {
             return new Document
             {
@@ -59,7 +59,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
             };
         }
 
-        private static ChargeLink MapChargeLink(ChargeLinkContract link)
+        private static ChargeLink ConvertChargeLink(ChargeLinkContract link)
         {
             return new ChargeLink
             {
