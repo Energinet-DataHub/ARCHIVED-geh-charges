@@ -24,8 +24,9 @@ option csharp_namespace = "GreenEnergyHub.Charges.Infrastructure.Internal.Charge
 
 message ChargeCommandRejectedContract {
   google.protobuf.Timestamp published_time = 1;
-  ChargeCommandContract charge_command = 2;
-  repeated string reject_reasons = 3;
+  ChargeCommandContract command = 2;
+  string correlation_id = 3; // Unique identifier used inside GEH to identify a message across domains and inside domains
+  repeated string reject_reasons = 4;
 }
 
 message ChargeCommandContract {
@@ -54,7 +55,7 @@ message ChargeOperationContract {
   string id = 1; // Contains a ID for the specific link, provided by the sender. Combined with sender.id it becomes unique.
   OperationTypeContract operation_type = 2; // This enum indicates the action requested by the sender
   string charge_id = 3; // A charge identifier. Combined with Charge Owner and Charge Type it becomes unique
-  ChargeTypeContract charge_type = 4; // The type of charge; tariff, fee or subscription
+  ChargeTypeContract type = 4; // The type of charge; tariff, fee or subscription
   string charge_name = 5; // The charge name, Example: "Elafgift"
   string charge_description = 6; //
   google.protobuf.Timestamp start_date_time = 7; // In UTC. The charge link period's valid from date and time

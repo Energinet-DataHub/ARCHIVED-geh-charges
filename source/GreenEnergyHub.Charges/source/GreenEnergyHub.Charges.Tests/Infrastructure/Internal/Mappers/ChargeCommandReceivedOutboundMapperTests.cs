@@ -44,43 +44,10 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Internal.Mappers
             UpdateInstantsToValidTimes(chargeCommandReceivedEvent);
 
             // Act
-            var converted = (ChargeCommandReceivedContract)mapper.Convert(chargeCommandReceivedEvent);
+            var result = (ChargeCommandReceivedContract)mapper.Convert(chargeCommandReceivedEvent);
 
             // Assert
-            var chargeLinkDocument = chargeCommandReceivedEvent.Command.Document;
-            var convertedDocument = converted.Document;
-            convertedDocument.Id.Should().BeEquivalentTo(chargeLinkDocument.Id);
-            convertedDocument.Sender.Id.Should().BeEquivalentTo(chargeLinkDocument.Sender.Id);
-            convertedDocument.Sender.BusinessProcessRole.Should().BeEquivalentTo(chargeLinkDocument.Sender.BusinessProcessRole);
-            convertedDocument.Recipient.Id.Should().BeEquivalentTo(chargeLinkDocument.Recipient.Id);
-            convertedDocument.Recipient.BusinessProcessRole.Should().BeEquivalentTo(chargeLinkDocument.Recipient.BusinessProcessRole);
-            convertedDocument.BusinessReasonCode.Should().BeEquivalentTo(chargeLinkDocument.BusinessReasonCode);
-            convertedDocument.CreatedDateTime.Seconds.Should().Be(chargeLinkDocument.CreatedDateTime.ToUnixTimeSeconds());
-            convertedDocument.Type.Should().BeEquivalentTo(chargeLinkDocument.Type);
-            convertedDocument.RequestDate.Seconds.Should().Be(chargeLinkDocument.RequestDate.ToUnixTimeSeconds());
-            convertedDocument.IndustryClassification.Should().BeEquivalentTo(chargeLinkDocument.IndustryClassification);
-            convertedDocument.Should().NotContainNullsOrEmptyEnumerables();
-            chargeLinkDocument.Should().NotContainNullsOrEmptyEnumerables();
-            converted.ChargeOperation.Id.Should().Be(chargeCommandReceivedEvent.Command.ChargeOperation.Id);
-            converted.ChargeOperation.OperationType.Should().Be(chargeCommandReceivedEvent.Command.ChargeOperation.OperationType);
-            converted.ChargeOperation.ChargeId.Should().Be(chargeCommandReceivedEvent.Command.ChargeOperation.ChargeId);
-            converted.ChargeOperation.ChargeType.Should().Be(chargeCommandReceivedEvent.Command.ChargeOperation.Type);
-            converted.ChargeOperation.ChargeName.Should().Be(chargeCommandReceivedEvent.Command.ChargeOperation.ChargeName);
-            converted.ChargeOperation.ChargeDescription.Should().Be(chargeCommandReceivedEvent.Command.ChargeOperation.ChargeDescription);
-            converted.ChargeOperation.StartDateTime.Seconds.Should().Be(chargeCommandReceivedEvent.Command.ChargeOperation.StartDateTime.ToUnixTimeSeconds());
-            converted.ChargeOperation.EndDateTime.Seconds.Should().Be(chargeCommandReceivedEvent.Command.ChargeOperation.EndDateTime.TimeOrEndDefault().ToUnixTimeSeconds());
-            converted.ChargeOperation.VatClassification.Should().Be(chargeCommandReceivedEvent.Command.ChargeOperation.VatClassification);
-            converted.ChargeOperation.TransparentInvoicing.Should().Be(chargeCommandReceivedEvent.Command.ChargeOperation.TransparentInvoicing);
-            converted.ChargeOperation.TaxIndicator.Should().Be(chargeCommandReceivedEvent.Command.ChargeOperation.TaxIndicator);
-            converted.ChargeOperation.ChargeOwner.Should().Be(chargeCommandReceivedEvent.Command.ChargeOperation.ChargeOwner);
-            converted.ChargeOperation.Resolution.Should().Be(chargeCommandReceivedEvent.Command.ChargeOperation.Resolution);
-            foreach (var point in converted.ChargeOperation.Points)
-            {
-                var matchingPoint = chargeCommandReceivedEvent.Command.ChargeOperation.Points[converted.ChargeOperation.Points.IndexOf(point)];
-                point.Position.Should().Be(matchingPoint.Position);
-                point.Price.Should().Be((double)matchingPoint.Price);
-                point.Time.Seconds.Should().Be(matchingPoint.Time.ToUnixTimeSeconds());
-            }
+            AssertExtensions.ContractIsEquivalent(result, chargeCommandReceivedEvent);
         }
 
         [Fact]

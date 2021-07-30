@@ -14,6 +14,7 @@
 
 using System;
 using System.Diagnostics.CodeAnalysis;
+using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
 using GreenEnergyHub.Charges.Domain.Events.Local;
 using GreenEnergyHub.Charges.Domain.MarketDocument;
@@ -31,11 +32,12 @@ namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
         protected override IInboundMessage Convert([NotNull]ChargeCommandRejectedContract rejectedContract)
         {
             return new ChargeCommandRejectedEvent(
-                Instant.FromDateTimeUtc(DateTime.Now.ToUniversalTime()),
-                new ChargeCommand(rejectedContract.ChargeCommand.CorrelationId)
+                rejectedContract.PublishedTime.ToInstant(),
+                rejectedContract.CorrelationId,
+                new ChargeCommand(rejectedContract.Command.CorrelationId)
                 {
-                    Document = GetDocument(rejectedContract.ChargeCommand.Document),
-                    ChargeOperation = GetChargeOperation(rejectedContract.ChargeCommand.ChargeOperation),
+                    Document = GetDocument(rejectedContract.Command.Document),
+                    ChargeOperation = GetChargeOperation(rejectedContract.Command.ChargeOperation),
                     Transaction = Transaction.NewTransaction(),
                 },
                 rejectedContract.RejectReasons);
@@ -72,7 +74,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
             {
                 Id = chargeOperation.Id,
                 Resolution = (Resolution)chargeOperation.Resolution,
-                Type = (ChargeType)chargeOperation.ChargeType,
+                Type = (ChargeType)chargeOperation.Type,
                 ChargeDescription = chargeOperation.ChargeDescription,
                 ChargeId = chargeOperation.ChargeId,
                 ChargeName = chargeOperation.ChargeName,

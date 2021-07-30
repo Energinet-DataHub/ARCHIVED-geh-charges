@@ -30,41 +30,14 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Internal.Mappers
         [Theory]
         [InlineAutoMoqData]
         public void Convert_WhenCalled_ShouldMapToDomainObjectWithCorrectValues(
-            [NotNull] ChargeCommandAcceptedContract acceptedCommand,
+            [NotNull] ChargeCommandAcceptedContract chargeCommandAcceptedContract,
             [NotNull] ChargeCommandAcceptedInboundMapper sut)
         {
             // Act
-            var converted = (ChargeCommandAcceptedEvent)sut.Convert(acceptedCommand);
+            var result = (ChargeCommandAcceptedEvent)sut.Convert(chargeCommandAcceptedContract);
 
             // Assert
-            converted.CorrelationId.Should().BeEquivalentTo(acceptedCommand.CorrelationId);
-            var commandChargeOperation = converted.Command.ChargeOperation;
-            commandChargeOperation.Id.Should().BeEquivalentTo(acceptedCommand.ChargeOperation.Id);
-            commandChargeOperation.Resolution.Should().BeEquivalentTo(acceptedCommand.ChargeOperation.Resolution);
-            commandChargeOperation.Type.Should().BeEquivalentTo(acceptedCommand.ChargeOperation.ChargeType);
-            commandChargeOperation.ChargeDescription.Should().BeEquivalentTo(acceptedCommand.ChargeOperation.ChargeDescription);
-            commandChargeOperation.ChargeId.Should().BeEquivalentTo(acceptedCommand.ChargeOperation.ChargeId);
-            commandChargeOperation.ChargeName.Should().BeEquivalentTo(acceptedCommand.ChargeOperation.ChargeName);
-            commandChargeOperation.ChargeOwner.Should().BeEquivalentTo(acceptedCommand.ChargeOperation.ChargeOwner);
-            commandChargeOperation.OperationType.Should().BeEquivalentTo(acceptedCommand.ChargeOperation.OperationType);
-            commandChargeOperation.TaxIndicator.Should().Be(acceptedCommand.ChargeOperation.TaxIndicator);
-            commandChargeOperation.TransparentInvoicing.Should().Be(acceptedCommand.ChargeOperation.TransparentInvoicing);
-            commandChargeOperation.VatClassification.Should().BeEquivalentTo(acceptedCommand.ChargeOperation.VatClassification);
-            commandChargeOperation.EndDateTime!.Value.ToUnixTimeSeconds().Should().Be(acceptedCommand.ChargeOperation.EndDateTime.Seconds);
-            commandChargeOperation.StartDateTime.ToUnixTimeSeconds().Should().Be(acceptedCommand.ChargeOperation.StartDateTime.Seconds);
-            commandChargeOperation.Points.Should().BeEquivalentTo(acceptedCommand.ChargeOperation.Points);
-
-            var commandDocument = converted.Command.Document;
-            commandDocument.Id.Should().BeEquivalentTo(acceptedCommand.Document.Id);
-            commandDocument.Recipient.Id.Should().BeEquivalentTo(acceptedCommand.Document.Recipient.Id);
-            commandDocument.Recipient.BusinessProcessRole.Should().BeEquivalentTo(acceptedCommand.Document.Recipient.BusinessProcessRole);
-            commandDocument.Sender.Id.Should().BeEquivalentTo(acceptedCommand.Document.Sender.Id);
-            commandDocument.Sender.BusinessProcessRole.Should().BeEquivalentTo(acceptedCommand.Document.Sender.BusinessProcessRole);
-            commandDocument.Type.Should().BeEquivalentTo(acceptedCommand.Document.Type);
-            commandDocument.IndustryClassification.Should().BeEquivalentTo(acceptedCommand.Document.IndustryClassification);
-            commandDocument.RequestDate.ToUnixTimeSeconds().Should().Be(acceptedCommand.Document.RequestDate.Seconds);
-            commandDocument.BusinessReasonCode.Should().BeEquivalentTo(acceptedCommand.Document.BusinessReasonCode);
-            commandDocument.CreatedDateTime.ToUnixTimeSeconds().Should().Be(acceptedCommand.Document.CreatedDateTime.Seconds);
+            result.Should().BeEquivalentToOutgoing(chargeCommandAcceptedContract);
         }
 
         [Fact]

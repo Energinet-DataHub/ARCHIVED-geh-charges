@@ -15,14 +15,10 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 using FluentAssertions;
-using Google.Protobuf;
 using GreenEnergyHub.Charges.Domain.ChargeLinks;
-using GreenEnergyHub.Charges.Domain.MarketDocument;
 using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandAccepted;
 using GreenEnergyHub.Charges.Infrastructure.Internal.Mappers;
 using GreenEnergyHub.Charges.TestCore;
-using GreenEnergyHub.TestHelpers.FluentAssertionsExtensions;
-using NodaTime;
 using Xunit;
 using Xunit.Categories;
 
@@ -34,11 +30,11 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Internal.Mappers
         [Theory]
         [InlineAutoMoqData]
         public void Convert_WhenCalled_ShouldMapToDomainObjectWithCorrectValues(
-            [NotNull] ChargeLinkCommandAcceptedContract acceptedCommand,
+            [NotNull] ChargeLinkCommandAcceptedContract chargeLinkCommandAcceptedContract,
             [NotNull] LinkCommandAcceptedInboundMapper sut)
         {
-            var result = (ChargeLinkCommandAcceptedEvent)sut.Convert(acceptedCommand);
-            result.Should().BeEquivalentToContract(acceptedCommand);
+            var result = (ChargeLinkCommandAcceptedEvent)sut.Convert(chargeLinkCommandAcceptedContract);
+            result.Should().BeEquivalentToOutgoing(chargeLinkCommandAcceptedContract);
         }
 
         [Fact]

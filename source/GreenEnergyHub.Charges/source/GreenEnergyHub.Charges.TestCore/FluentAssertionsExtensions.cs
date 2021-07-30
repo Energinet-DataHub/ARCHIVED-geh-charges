@@ -1,5 +1,4 @@
-﻿using System;
-using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics.CodeAnalysis;
 using FluentAssertions;
 using FluentAssertions.Primitives;
 using Google.Protobuf;
@@ -22,7 +21,7 @@ namespace GreenEnergyHub.Charges.TestCore
                     // Gives more explicit assertion failure
                     options.WithTracing();
 
-                    // Overrides the compare of NodatTime instant and protobuf Timestamp
+                    // Overrides the compare of NodaTime instant and protobuf Timestamp
                     options.Using<object>(s => ((Instant)s.Subject).ToUnixTimeSeconds()
                         .Should().Be(((Google.Protobuf.WellKnownTypes.Timestamp)s.Expectation).Seconds))
                         .WhenTypeIs<Google.Protobuf.WellKnownTypes.Timestamp>();

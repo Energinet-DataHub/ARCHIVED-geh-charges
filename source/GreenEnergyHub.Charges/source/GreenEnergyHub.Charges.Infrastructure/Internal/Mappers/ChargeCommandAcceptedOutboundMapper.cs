@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using Google.Protobuf.WellKnownTypes;
@@ -31,8 +30,13 @@ namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
         {
             var chargeCommandAcceptedContract = new ChargeCommandAcceptedContract
             {
-                Document = GetDocument(chargeCommandAcceptedEvent.Command.Document),
-                ChargeOperation = GetChargeOperation(chargeCommandAcceptedEvent.Command.ChargeOperation),
+                PublishedTime = chargeCommandAcceptedEvent.PublishedTime.ToTimestamp(),
+                Command = new ChargeCommandContract
+                {
+                    Document = GetDocument(chargeCommandAcceptedEvent.Command.Document),
+                    ChargeOperation = GetChargeOperation(chargeCommandAcceptedEvent.Command.ChargeOperation),
+                    CorrelationId = chargeCommandAcceptedEvent.CorrelationId,
+                },
                 CorrelationId = chargeCommandAcceptedEvent.CorrelationId,
             };
 
@@ -71,7 +75,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
                 Id = charge.Id,
                 ChargeId = charge.ChargeId,
                 ChargeOwner = charge.ChargeOwner,
-                ChargeType = (ChargeTypeContract)charge.Type,
+                Type = (ChargeTypeContract)charge.Type,
                 StartDateTime = Timestamp.FromDateTime(charge.StartDateTime.ToDateTimeUtc()),
                 EndDateTime = Timestamp.FromDateTime(charge.EndDateTime.TimeOrEndDefault().ToDateTimeUtc()),
                 Resolution = (ResolutionContract)charge.Resolution,
@@ -88,7 +92,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
         {
             foreach (Point point in points)
             {
-                contract.ChargeOperation.Points.Add(new PointContract
+                contract.Command.ChargeOperation.Points.Add(new PointContract
                 {
                     Position = point.Position,
                     Price = (double)point.Price,

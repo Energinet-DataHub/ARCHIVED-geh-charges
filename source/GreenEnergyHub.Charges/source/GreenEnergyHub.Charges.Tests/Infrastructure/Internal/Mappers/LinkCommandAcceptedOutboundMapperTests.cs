@@ -14,13 +14,10 @@
 
 using System;
 using System.Diagnostics.CodeAnalysis;
-using FluentAssertions;
-using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.Domain.ChargeLinks;
 using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandAccepted;
 using GreenEnergyHub.Charges.Infrastructure.Internal.Mappers;
 using GreenEnergyHub.Charges.TestCore;
-using GreenEnergyHub.TestHelpers.FluentAssertionsExtensions;
 using NodaTime;
 using Xunit;
 using Xunit.Categories;
@@ -32,39 +29,17 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Internal.Mappers
     {
         [Theory]
         [InlineAutoMoqData]
-        public void Convert_WhenCalled_ShouldMapToProtobufWithCorrectValues([NotNull] ChargeLinkCommandAcceptedEvent chargeLinkCommand)
+        public void Convert_WhenCalled_ShouldMapToProtobufWithCorrectValues([NotNull] ChargeLinkCommandAcceptedEvent chargeLinkCommandAcceptedEvent)
         {
             // Arrange
-            var mapper = new LinkCommandAcceptedOutboundMapper();
-
-            UpdateInstantsToValidTimes(chargeLinkCommand);
+            var sut = new LinkCommandAcceptedOutboundMapper();
+            UpdateInstantsToValidTimes(chargeLinkCommandAcceptedEvent);
 
             // Act
-            var converted = (ChargeLinkCommandAcceptedContract)mapper.Convert(chargeLinkCommand);
+            var result = (ChargeLinkCommandAcceptedContract)sut.Convert(chargeLinkCommandAcceptedEvent);
 
             // Assert
-            var chargeLinkDocument = chargeLinkCommand.Document;
-            var convertedDocument = converted.Document;
-            convertedDocument.Id.Should().BeEquivalentTo(chargeLinkDocument.Id);
-            convertedDocument.Sender.Id.Should().BeEquivalentTo(chargeLinkDocument.Sender.Id);
-            convertedDocument.Sender.BusinessProcessRole.Should().BeEquivalentTo(chargeLinkDocument.Sender.BusinessProcessRole);
-            convertedDocument.Recipient.Id.Should().BeEquivalentTo(chargeLinkDocument.Recipient.Id);
-            convertedDocument.Recipient.BusinessProcessRole.Should().BeEquivalentTo(chargeLinkDocument.Recipient.BusinessProcessRole);
-            convertedDocument.BusinessReasonCode.Should().BeEquivalentTo(chargeLinkDocument.BusinessReasonCode);
-            convertedDocument.CreatedDateTime.Seconds.Should().Be(chargeLinkDocument.CreatedDateTime.ToUnixTimeSeconds());
-            convertedDocument.Type.Should().BeEquivalentTo(chargeLinkDocument.Type);
-            convertedDocument.RequestDate.Seconds.Should().Be(chargeLinkDocument.RequestDate.ToUnixTimeSeconds());
-            convertedDocument.IndustryClassification.Should().BeEquivalentTo(chargeLinkDocument.IndustryClassification);
-            convertedDocument.Should().NotContainNullsOrEmptyEnumerables();
-            chargeLinkDocument.Should().NotContainNullsOrEmptyEnumerables();
-            converted.ChargeLink.Id.Should().Be(chargeLinkCommand.ChargeLink.Id);
-            converted.ChargeLink.ChargeId.Should().Be(chargeLinkCommand.ChargeLink.ChargeId);
-            converted.ChargeLink.ChargeOwner.Should().Be(chargeLinkCommand.ChargeLink.ChargeOwner);
-            converted.ChargeLink.ChargeType.Should().Be(chargeLinkCommand.ChargeLink.ChargeType);
-            converted.ChargeLink.Factor.Should().Be(chargeLinkCommand.ChargeLink.Factor);
-            converted.ChargeLink.MeteringPointId.Should().Be(chargeLinkCommand.ChargeLink.MeteringPointId);
-            converted.ChargeLink.StartDateTime.Seconds.Should().Be(chargeLinkCommand.ChargeLink.StartDateTime.ToUnixTimeSeconds());
-            converted.ChargeLink.EndDateTime.Seconds.Should().Be(chargeLinkCommand.ChargeLink.EndDateTime.TimeOrEndDefault().ToUnixTimeSeconds());
+            AssertExtensions.ContractIsEquivalent(result, chargeLinkCommandAcceptedEvent);
         }
 
         [Fact]

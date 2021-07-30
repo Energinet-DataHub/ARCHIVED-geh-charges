@@ -29,5 +29,10 @@ namespace GreenEnergyHub.Charges.Core.DateTime
         {
             return Timestamp.FromDateTimeOffset(instant.ToDateTimeOffset());
         }
+
+        public static Instant ToInstant([NotNull] this Timestamp timestamp)
+        {
+            return Instant.FromUnixTimeSeconds(timestamp.Seconds);
+        }
     }
 }

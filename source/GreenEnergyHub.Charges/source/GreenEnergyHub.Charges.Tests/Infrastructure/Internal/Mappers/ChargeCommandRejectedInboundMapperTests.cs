@@ -33,40 +33,8 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Internal.Mappers
             [NotNull] ChargeCommandRejectedContract rejectedContract,
             [NotNull] ChargeCommandRejectedInboundMapper sut)
         {
-            // Act
-            var converted = (ChargeCommandRejectedEvent)sut.Convert(rejectedContract);
-
-            // Assert
-            converted.CorrelationId.Should().BeEquivalentTo(rejectedContract.ChargeCommand.CorrelationId);
-            converted.Reason.Should().BeEquivalentTo(rejectedContract.RejectReasons);
-
-            var commandChargeOperation = converted.Command.ChargeOperation;
-            commandChargeOperation.Id.Should().BeEquivalentTo(rejectedContract.ChargeCommand.ChargeOperation.Id);
-            commandChargeOperation.Resolution.Should().BeEquivalentTo(rejectedContract.ChargeCommand.ChargeOperation.Resolution);
-            commandChargeOperation.Type.Should().BeEquivalentTo(rejectedContract.ChargeCommand.ChargeOperation.ChargeType);
-            commandChargeOperation.ChargeDescription.Should().BeEquivalentTo(rejectedContract.ChargeCommand.ChargeOperation.ChargeDescription);
-            commandChargeOperation.ChargeId.Should().BeEquivalentTo(rejectedContract.ChargeCommand.ChargeOperation.ChargeId);
-            commandChargeOperation.ChargeName.Should().BeEquivalentTo(rejectedContract.ChargeCommand.ChargeOperation.ChargeName);
-            commandChargeOperation.ChargeOwner.Should().BeEquivalentTo(rejectedContract.ChargeCommand.ChargeOperation.ChargeOwner);
-            commandChargeOperation.OperationType.Should().BeEquivalentTo(rejectedContract.ChargeCommand.ChargeOperation.OperationType);
-            commandChargeOperation.TaxIndicator.Should().Be(rejectedContract.ChargeCommand.ChargeOperation.TaxIndicator);
-            commandChargeOperation.TransparentInvoicing.Should().Be(rejectedContract.ChargeCommand.ChargeOperation.TransparentInvoicing);
-            commandChargeOperation.VatClassification.Should().BeEquivalentTo(rejectedContract.ChargeCommand.ChargeOperation.VatClassification);
-            commandChargeOperation.EndDateTime!.Value.ToUnixTimeSeconds().Should().Be(rejectedContract.ChargeCommand.ChargeOperation.EndDateTime.Seconds);
-            commandChargeOperation.StartDateTime.ToUnixTimeSeconds().Should().Be(rejectedContract.ChargeCommand.ChargeOperation.StartDateTime.Seconds);
-            commandChargeOperation.Points.Should().BeEquivalentTo(rejectedContract.ChargeCommand.ChargeOperation.Points);
-
-            var commandDocument = converted.Command.Document;
-            commandDocument.Id.Should().BeEquivalentTo(rejectedContract.ChargeCommand.Document.Id);
-            commandDocument.Recipient.Id.Should().BeEquivalentTo(rejectedContract.ChargeCommand.Document.Recipient.Id);
-            commandDocument.Recipient.BusinessProcessRole.Should().BeEquivalentTo(rejectedContract.ChargeCommand.Document.Recipient.BusinessProcessRole);
-            commandDocument.Sender.Id.Should().BeEquivalentTo(rejectedContract.ChargeCommand.Document.Sender.Id);
-            commandDocument.Sender.BusinessProcessRole.Should().BeEquivalentTo(rejectedContract.ChargeCommand.Document.Sender.BusinessProcessRole);
-            commandDocument.Type.Should().BeEquivalentTo(rejectedContract.ChargeCommand.Document.Type);
-            commandDocument.IndustryClassification.Should().BeEquivalentTo(rejectedContract.ChargeCommand.Document.IndustryClassification);
-            commandDocument.RequestDate.ToUnixTimeSeconds().Should().Be(rejectedContract.ChargeCommand.Document.RequestDate.Seconds);
-            commandDocument.BusinessReasonCode.Should().BeEquivalentTo(rejectedContract.ChargeCommand.Document.BusinessReasonCode);
-            commandDocument.CreatedDateTime.ToUnixTimeSeconds().Should().Be(rejectedContract.ChargeCommand.Document.CreatedDateTime.Seconds);
+            var result = (ChargeCommandRejectedEvent)sut.Convert(rejectedContract);
+            result.Should().BeEquivalentToOutgoing(rejectedContract);
         }
 
         [Fact]

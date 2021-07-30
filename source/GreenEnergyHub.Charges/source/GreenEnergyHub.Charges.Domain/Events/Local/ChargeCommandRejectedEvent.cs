@@ -23,9 +23,10 @@ namespace GreenEnergyHub.Charges.Domain.Events.Local
     {
         public ChargeCommandRejectedEvent(
             Instant publishedTime,
+            string correlationId,
             [NotNull] ChargeCommand command,
             IEnumerable<string> reason)
-            : base(publishedTime, command.CorrelationId)
+            : base(publishedTime, correlationId)
         {
             Command = command;
             RejectReasons = reason;

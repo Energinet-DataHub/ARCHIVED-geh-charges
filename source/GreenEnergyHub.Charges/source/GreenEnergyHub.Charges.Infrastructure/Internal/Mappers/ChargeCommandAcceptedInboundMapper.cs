@@ -12,10 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using Google.Protobuf.Collections;
+using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
 using GreenEnergyHub.Charges.Domain.Events.Local;
 using GreenEnergyHub.Charges.Domain.MarketDocument;
@@ -33,16 +33,17 @@ namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
         protected override IInboundMessage Convert([NotNull]ChargeCommandAcceptedContract chargeCommandAcceptedContract)
         {
             return new ChargeCommandAcceptedEvent(
-                Instant.FromDateTimeUtc(DateTime.Now.ToUniversalTime()),
-                new ChargeCommand(chargeCommandAcceptedContract.CorrelationId)
+                chargeCommandAcceptedContract.PublishedTime.ToInstant(),
+                chargeCommandAcceptedContract.CorrelationId,
+                new ChargeCommand(chargeCommandAcceptedContract.Command.CorrelationId)
             {
-                Document = GetDocument(chargeCommandAcceptedContract.Document),
-                ChargeOperation = GetChargeOperation(chargeCommandAcceptedContract.ChargeOperation),
+                Document = MapDocument(chargeCommandAcceptedContract.Command.Document),
+                ChargeOperation = MapChargeOperation(chargeCommandAcceptedContract.Command.ChargeOperation),
                 Transaction = Transaction.NewTransaction(),
             });
         }
 
-        private static Document GetDocument(DocumentContract document)
+        private static Document MapDocument(DocumentContract document)
         {
             return new ()
             {
@@ -67,13 +68,13 @@ namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
             };
         }
 
-        private static ChargeOperation GetChargeOperation(ChargeOperationContract chargeOperation)
+        private static ChargeOperation MapChargeOperation(ChargeOperationContract chargeOperation)
         {
             return new ()
             {
                 Id = chargeOperation.Id,
                 Resolution = (Resolution)chargeOperation.Resolution,
-                Type = (ChargeType)chargeOperation.ChargeType,
+                Type = (ChargeType)chargeOperation.Type,
                 ChargeDescription = chargeOperation.ChargeDescription,
                 ChargeId = chargeOperation.ChargeId,
                 ChargeName = chargeOperation.ChargeName,
@@ -84,11 +85,11 @@ namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
                 VatClassification = (VatClassification)chargeOperation.VatClassification,
                 StartDateTime = Instant.FromUnixTimeSeconds(chargeOperation.StartDateTime.Seconds),
                 EndDateTime = Instant.FromUnixTimeSeconds(chargeOperation.EndDateTime.Seconds),
-                Points = GetChargePoints(chargeOperation.Points),
+                Points = MapChargePoints(chargeOperation.Points),
             };
         }
 
-        private static List<Point> GetChargePoints(RepeatedField<PointContract> points)
+        private static List<Point> MapChargePoints(RepeatedField<PointContract> points)
         {
             var list = new List<Point>();
 

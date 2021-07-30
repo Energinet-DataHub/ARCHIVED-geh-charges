@@ -35,6 +35,7 @@ limitations under the License.
       <PackageReference Include="System.ComponentModel.TypeConverter" Version="4.3.0" />
       <PackageReference Include="xunit.extensibility.core" Version="2.4.1" />
       <PackageReference Include="Google.Protobuf" Version="3.17.3" />
+      <PackageReference Include="xunit" Version="2.4.1" />
     </ItemGroup>
 
 </Project>

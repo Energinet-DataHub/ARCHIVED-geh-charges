@@ -31,8 +31,13 @@ namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
         {
             var chargeCommandReceivedContract = new ChargeCommandReceivedContract
             {
-                Document = GetDocument(chargeCommandReceivedEvent.Command.Document),
-                ChargeOperation = GetChargeOperation(chargeCommandReceivedEvent.Command.ChargeOperation),
+                PublishedTime = chargeCommandReceivedEvent.PublishedTime.ToTimestamp(),
+                Command = new ChargeCommandContract
+                {
+                    Document = MapDocument(chargeCommandReceivedEvent.Command.Document),
+                    ChargeOperation = MapChargeOperation(chargeCommandReceivedEvent.Command.ChargeOperation),
+                    CorrelationId = chargeCommandReceivedEvent.Command.CorrelationId,
+                },
                 CorrelationId = chargeCommandReceivedEvent.CorrelationId,
             };
 
@@ -41,14 +46,14 @@ namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
             return chargeCommandReceivedContract;
         }
 
-        private static ChargeOperationContract GetChargeOperation(ChargeOperation charge)
+        private static ChargeOperationContract MapChargeOperation(ChargeOperation charge)
         {
             return new ChargeOperationContract
             {
                 Id = charge.Id,
                 ChargeId = charge.ChargeId,
                 ChargeOwner = charge.ChargeOwner,
-                ChargeType = (ChargeTypeContract)charge.Type,
+                Type = (ChargeTypeContract)charge.Type,
                 StartDateTime = Timestamp.FromDateTime(charge.StartDateTime.ToDateTimeUtc()),
                 EndDateTime = Timestamp.FromDateTime(charge.EndDateTime.TimeOrEndDefault().ToDateTimeUtc()),
                 Resolution = (ResolutionContract)charge.Resolution,
@@ -61,7 +66,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
             };
         }
 
-        private static DocumentContract GetDocument(Document document)
+        private static DocumentContract MapDocument(Document document)
         {
             return new DocumentContract
             {
@@ -88,7 +93,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
         {
             foreach (Point point in points)
             {
-                contract.ChargeOperation.Points.Add(new PointContract
+                contract.Command.ChargeOperation.Points.Add(new PointContract
                 {
                     Position = point.Position,
                     Price = (double)point.Price,
