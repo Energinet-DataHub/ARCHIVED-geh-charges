@@ -22,11 +22,11 @@ using NodaTime;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Integration.Mappers
 {
-    public class CreateChargeLinksCommandInboundMapper : ProtobufInboundMapper<CreateChargeLinksCommandContract>
+    public class CreateLinkCommandInboundMapper : ProtobufInboundMapper<CreateLinkCommandContract>
     {
-        protected override IInboundMessage Convert([NotNull] CreateChargeLinksCommandContract command)
+        protected override IInboundMessage Convert([NotNull] CreateLinkCommandContract command)
         {
-            return new CreateChargeLinksCommandReceivedEvent(
+            return new CreateLinkCommandEvent(
                 command.MeteringPointId,
                 (MeteringPointType)command.MeteringPointType,
                 Instant.FromUnixTimeSeconds(command.StartDateTime.Seconds));

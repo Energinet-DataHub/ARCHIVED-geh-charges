@@ -18,9 +18,9 @@ using NodaTime;
 
 namespace GreenEnergyHub.Charges.Domain.Events.Integration
 {
-    public class CreateChargeLinksCommandReceivedEvent : InboundIntegrationEvent
+    public class CreateLinkCommandEvent : InboundIntegrationEvent
     {
-        public CreateChargeLinksCommandReceivedEvent(
+        public CreateLinkCommandEvent(
             string meteringPointId,
             MeteringPointType meteringPointType,
             Instant startDateTime)

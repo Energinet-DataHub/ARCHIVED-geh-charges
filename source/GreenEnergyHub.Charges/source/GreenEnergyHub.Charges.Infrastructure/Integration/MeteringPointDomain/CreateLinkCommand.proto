@@ -20,10 +20,10 @@ import "google/protobuf/timestamp.proto";
 option csharp_namespace = "Energinet.DataHub.MeteringPoints.IntegrationEventContracts";
 
 /**
- * Represents a CreateChargeLinksCommand
+ * Represents a CreateLinkCommand
  */
 
-message CreateChargeLinksCommandContract {
+message CreateLinkCommandContract {
   string metering_point_id = 1;
   MeteringPointTypeContract metering_point_type = 2;
   google.protobuf.Timestamp start_date_time = 3; // In UTC. The charge link period's valid from date and time
