@@ -64,13 +64,9 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
 
             var completion = new TaskCompletionSource<ChargeCommandReceivedEvent?>();
 
-            var chargeCommandReceiverHost = FunctionHostConfigurationHelper.SetupHost(new ChargeCommandReceiver.Startup());
-            chargeCommandReceiverHost.Services.GetRequiredService<MessageExtractor>();
-            await ServiceBusTestHelper.RegisterSubscriptionClientMessageHandlerAsync(
+            ServiceBusTestHelper.RegisterSubscriptionClientMessageHandler(
                     subscriptionClient,
-                    completion,
-                    chargeCommandReceiverHost.Services.GetRequiredService<MessageExtractor>())
-                .ConfigureAwait(false);
+                    completion);
 
             IClock clock = SystemClock.Instance;
             var chargeJson = EmbeddedResourceHelper.GetInputJson(testFilePath, clock);

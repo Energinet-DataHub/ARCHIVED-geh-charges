@@ -73,17 +73,17 @@ namespace GreenEnergyHub.Charges.IntegrationTests.TestHelpers
             return (receivedEvent, receivedMessage);
         }
 
-        public static Task RegisterSubscriptionClientMessageHandlerAsync<T>(
+        public static void RegisterSubscriptionClientMessageHandler<T>(
             [NotNull] ISubscriptionClient subscriptionClient,
-            [NotNull] TaskCompletionSource<T> completion,
-            MessageExtractor messageExtractor)
+            [NotNull] TaskCompletionSource<T> completion)
         {
             subscriptionClient.RegisterMessageHandler(
                 async (message, _) =>
                 {
                     try
                     {
-                        var ev = (T)await messageExtractor.ExtractAsync(message.Body, CancellationToken.None)
+                        var deserializer = new ProtobufMessageDeserializerTestable();
+                        var ev = (T)await deserializer.FromBytesAsync(message.Body, CancellationToken.None)
                             .ConfigureAwait(false);
                         completion.SetResult(ev!);
                     }
@@ -94,7 +94,6 @@ namespace GreenEnergyHub.Charges.IntegrationTests.TestHelpers
                     }
 #pragma warning restore CA1031
                 }, new MessageHandlerOptions(ExceptionReceivedHandlerAsync));
-            return Task.CompletedTask;
         }
 
         private static SubscriptionClient GetSubscriptionClient(
