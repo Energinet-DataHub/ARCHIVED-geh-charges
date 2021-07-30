@@ -41,7 +41,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.TestHelpers
             if (builder == null) throw new ArgumentNullException(nameof(builder));
 
             builder.Services
-                .AddMessaging()
+                .AddMessagingProtobuf()
                 .AddMessageExtractor<ChargeCommand>();
 
             builder.Services
