@@ -14,14 +14,11 @@
 
 using System;
 using System.Diagnostics.CodeAnalysis;
-using FluentAssertions;
-using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
 using GreenEnergyHub.Charges.Domain.Events.Local;
 using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeCommandReceived;
 using GreenEnergyHub.Charges.Infrastructure.Internal.Mappers;
 using GreenEnergyHub.Charges.TestCore;
-using GreenEnergyHub.TestHelpers.FluentAssertionsExtensions;
 using NodaTime;
 using Xunit;
 using Xunit.Categories;
@@ -33,29 +30,28 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Internal.Mappers
     {
         [Theory]
         [InlineAutoMoqData]
-        public void Convert_WhenCalled_ShouldMapToProtobufWithCorrectValues([NotNull]ChargeCommand chargeCommand)
+        public void Convert_WhenCalled_ShouldMapToProtobufWithCorrectValues(
+            [NotNull]ChargeCommand chargeCommand,
+            [NotNull]ChargeCommandReceivedOutboundMapper sut)
         {
             // Arrange
             var guid = Guid.NewGuid().ToString();
             ChargeCommandReceivedEvent chargeCommandReceivedEvent = new (SystemClock.Instance.GetCurrentInstant(), guid, chargeCommand);
-
-            var mapper = new ChargeCommandReceivedOutboundMapper();
-
             UpdateInstantsToValidTimes(chargeCommandReceivedEvent);
 
             // Act
-            var result = (ChargeCommandReceivedContract)mapper.Convert(chargeCommandReceivedEvent);
+            var result = (ChargeCommandReceivedContract)sut.Convert(chargeCommandReceivedEvent);
 
             // Assert
             AssertExtensions.ContractIsEquivalent(result, chargeCommandReceivedEvent);
         }
 
-        [Fact]
-        public void Convert_WhenCalledWithNull_ShouldThrow()
+        [Theory]
+        [InlineAutoMoqData]
+        public void Convert_WhenCalledWithNull_ShouldThrow([NotNull] ChargeCommandReceivedOutboundMapper sut)
         {
-            var mapper = new ChargeCommandReceivedOutboundMapper();
             ChargeCommandReceivedEvent? chargeCommandReceivedEvent = null;
-            Assert.Throws<InvalidOperationException>(() => mapper.Convert(chargeCommandReceivedEvent!));
+            Assert.Throws<InvalidOperationException>(() => sut.Convert(chargeCommandReceivedEvent!));
         }
 
         private static void UpdateInstantsToValidTimes([NotNull] ChargeCommandReceivedEvent chargeCommandReceivedEvent)

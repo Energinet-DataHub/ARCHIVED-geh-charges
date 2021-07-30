@@ -15,7 +15,6 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
 using GreenEnergyHub.Charges.Domain.Events.Local;
 using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeCommandRejected;
@@ -41,18 +40,22 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Internal.Mappers
             AssertExtensions.ContractIsEquivalent(result, chargeCommandRejectedEvent);
         }
 
-        [Fact]
-        public void Convert_WhenCalledWithNull_ShouldThrow()
+        [Theory]
+        [InlineAutoMoqData]
+        public void Convert_WhenCalledWithNull_ShouldThrow([NotNull] ChargeCommandRejectedOutboundMapper sut)
         {
-            var mapper = new ChargeCommandRejectedOutboundMapper();
             ChargeCommandRejectedEvent? chargeCommandRejectedEvent = null;
-            Assert.Throws<InvalidOperationException>(() => mapper.Convert(chargeCommandRejectedEvent!));
+            Assert.Throws<InvalidOperationException>(() => sut.Convert(chargeCommandRejectedEvent!));
         }
 
         private static ChargeCommandRejectedEvent CreateChargeCommandRejectedEvent(ChargeCommand chargeCommand)
         {
             var reasons = new List<string> { "reason 1", "reason 2" };
-            var chargeCommandRejectedEvent = new ChargeCommandRejectedEvent(SystemClock.Instance.GetCurrentInstant(), chargeCommand.CorrelationId, chargeCommand, reasons);
+            var chargeCommandRejectedEvent = new ChargeCommandRejectedEvent(
+                SystemClock.Instance.GetCurrentInstant(),
+                chargeCommand.CorrelationId,
+                chargeCommand,
+                reasons);
             UpdateInstantsToValidTimes(chargeCommandRejectedEvent);
             return chargeCommandRejectedEvent;
         }

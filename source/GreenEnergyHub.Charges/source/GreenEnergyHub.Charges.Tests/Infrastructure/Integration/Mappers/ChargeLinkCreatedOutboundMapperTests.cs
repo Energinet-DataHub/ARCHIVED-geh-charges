@@ -38,12 +38,12 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Integration.Mappers
             AssertExtensions.ContractIsEquivalent(result, createdEvent);
         }
 
-        [Fact]
-        public void Convert_WhenCalledWithNull_ShouldThrow()
+        [Theory]
+        [InlineAutoMoqData]
+        public void Convert_WhenCalledWithNull_ShouldThrow([NotNull]ChargeLinkCreatedOutboundMapper sut)
         {
-            var mapper = new ChargeLinkCreatedOutboundMapper();
             ChargeLinkCreatedEvent? chargeLinkCreatedEvent = null;
-            Assert.Throws<InvalidOperationException>(() => mapper.Convert(chargeLinkCreatedEvent!));
+            Assert.Throws<InvalidOperationException>(() => sut.Convert(chargeLinkCreatedEvent!));
         }
 
         private static ChargeLinkCreatedEvent GetCreatedEvent()

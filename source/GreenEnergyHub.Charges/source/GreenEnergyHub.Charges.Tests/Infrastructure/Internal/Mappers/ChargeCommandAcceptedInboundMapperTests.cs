@@ -40,12 +40,12 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Internal.Mappers
             result.Should().BeEquivalentToOutgoing(chargeCommandAcceptedContract);
         }
 
-        [Fact]
-        public void Convert_WhenCalledWithNull_ShouldThrow()
+        [Theory]
+        [InlineAutoMoqData]
+        public void Convert_WhenCalledWithNull_ShouldThrow([NotNull]ChargeCommandAcceptedInboundMapper sut)
         {
-            var mapper = new ChargeCommandAcceptedInboundMapper();
             ChargeCommandAcceptedContract? chargeCommandAcceptedContract = null;
-            Assert.Throws<InvalidOperationException>(() => mapper.Convert(chargeCommandAcceptedContract!));
+            Assert.Throws<InvalidOperationException>(() => sut.Convert(chargeCommandAcceptedContract!));
         }
     }
 }

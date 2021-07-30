@@ -29,19 +29,20 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Internal.Mappers
     {
         [Theory]
         [InlineAutoMoqData]
-        public void Convert_WhenCalled_ShouldMapToProtobufWithCorrectValues([NotNull] ChargeLinkCommandReceivedContract chargeLinkCommandReceivedContract)
+        public void Convert_WhenCalled_ShouldMapToProtobufWithCorrectValues(
+            [NotNull] ChargeLinkCommandReceivedContract chargeLinkCommandReceivedContract,
+            [NotNull] LinkCommandReceivedInboundMapper sut)
         {
-            var mapper = new LinkCommandReceivedInboundMapper();
-            var result = (ChargeLinkCommandReceivedEvent)mapper.Convert(chargeLinkCommandReceivedContract);
+            var result = (ChargeLinkCommandReceivedEvent)sut.Convert(chargeLinkCommandReceivedContract);
             result.Should().BeEquivalentToOutgoing(chargeLinkCommandReceivedContract);
         }
 
-        [Fact]
-        public void Convert_WhenCalledWithNull_ShouldThrow()
+        [Theory]
+        [InlineAutoMoqData]
+        public void Convert_WhenCalledWithNull_ShouldThrow([NotNull]LinkCommandReceivedInboundMapper sut)
         {
-            var mapper = new LinkCommandReceivedInboundMapper();
             ChargeLinkCommandReceivedContract? chargeLinkCommandReceivedContract = null;
-            Assert.Throws<InvalidOperationException>(() => mapper.Convert(chargeLinkCommandReceivedContract!));
+            Assert.Throws<InvalidOperationException>(() => sut.Convert(chargeLinkCommandReceivedContract!));
         }
     }
 }

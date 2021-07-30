@@ -32,26 +32,21 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Internal.Mappers
     {
         [Theory]
         [InlineAutoMoqData]
-        public void Convert_WhenCalled_ShouldMapToProtobufWithCorrectValues([NotNull] ChargeLinkCommandReceivedEvent chargeLinkCommandReceivedEvent)
+        public void Convert_WhenCalled_ShouldMapToProtobufWithCorrectValues(
+            [NotNull] ChargeLinkCommandReceivedEvent chargeLinkCommandReceivedEvent,
+            [NotNull] LinkCommandReceivedOutboundMapper sut)
         {
-            // Arrange
-            var mapper = new LinkCommandReceivedOutboundMapper();
-
             UpdateInstantsToValidTimes(chargeLinkCommandReceivedEvent);
-
-            // Act
-            var result = (ChargeLinkCommandReceivedContract)mapper.Convert(chargeLinkCommandReceivedEvent);
-
-            // Assert
+            var result = (ChargeLinkCommandReceivedContract)sut.Convert(chargeLinkCommandReceivedEvent);
             AssertExtensions.ContractIsEquivalent(result, chargeLinkCommandReceivedEvent);
         }
 
-        [Fact]
-        public void Convert_WhenCalledWithNull_ShouldThrow()
+        [Theory]
+        [InlineAutoMoqData]
+        public void Convert_WhenCalledWithNull_ShouldThrow([NotNull]LinkCommandReceivedOutboundMapper sut)
         {
-            var mapper = new LinkCommandReceivedOutboundMapper();
             ChargeLinkCommandReceivedEvent? chargeLinkCommandReceivedEvent = null;
-            Assert.Throws<InvalidOperationException>(() => mapper.Convert(chargeLinkCommandReceivedEvent!));
+            Assert.Throws<InvalidOperationException>(() => sut.Convert(chargeLinkCommandReceivedEvent!));
         }
 
         private static void UpdateInstantsToValidTimes([NotNull] ChargeLinkCommand chargeLinkCommand)

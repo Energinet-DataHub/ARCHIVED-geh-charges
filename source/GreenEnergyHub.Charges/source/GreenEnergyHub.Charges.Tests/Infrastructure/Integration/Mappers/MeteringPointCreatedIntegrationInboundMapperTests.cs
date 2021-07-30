@@ -54,12 +54,12 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Integration.Mappers
             //converted.ParentMeteringPointId.Should().BeEquivalentTo(meteringPointCreatedEvent.ParentMeteringPointId);
         }
 
-        [Fact]
-        public void Convert_WhenCalledWithNull_ShouldThrow()
+        [Theory]
+        [InlineAutoMoqData]
+        public void Convert_WhenCalledWithNull_ShouldThrow([NotNull]MeteringPointCreatedIntegrationInboundMapper sut)
         {
-            var mapper = new MeteringPointCreatedIntegrationInboundMapper();
             MeteringPointCreated? meteringPointCreated = null;
-            Assert.Throws<InvalidOperationException>(() => mapper.Convert(meteringPointCreated!));
+            Assert.Throws<InvalidOperationException>(() => sut.Convert(meteringPointCreated!));
         }
     }
 }

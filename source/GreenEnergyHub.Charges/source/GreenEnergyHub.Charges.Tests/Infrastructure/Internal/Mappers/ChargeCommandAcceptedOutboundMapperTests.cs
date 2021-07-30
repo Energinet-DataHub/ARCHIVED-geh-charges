@@ -33,29 +33,29 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Internal.Mappers
     {
         [Theory]
         [InlineAutoMoqData]
-        public void Convert_WhenCalled_ShouldMapToProtobufWithCorrectValues([NotNull]ChargeCommand chargeCommand)
+        public void Convert_WhenCalled_ShouldMapToProtobufWithCorrectValues(
+            [NotNull]ChargeCommand chargeCommand,
+            [NotNull]ChargeCommandAcceptedOutboundMapper sut)
         {
             // Arrange
             ChargeCommandAcceptedEvent chargeCommandAcceptedEvent =
                 new (SystemClock.Instance.GetCurrentInstant(), chargeCommand.CorrelationId, chargeCommand);
 
-            var mapper = new ChargeCommandAcceptedOutboundMapper();
-
             UpdateInstantsToValidTimes(chargeCommandAcceptedEvent);
 
             // Act
-            var result = (ChargeCommandAcceptedContract)mapper.Convert(chargeCommandAcceptedEvent);
+            var result = (ChargeCommandAcceptedContract)sut.Convert(chargeCommandAcceptedEvent);
 
             // Assert
             AssertExtensions.ContractIsEquivalent(result, chargeCommandAcceptedEvent);
         }
 
-        [Fact]
-        public void Convert_WhenCalledWithNull_ShouldThrow()
+        [Theory]
+        [InlineAutoMoqData]
+        public void Convert_WhenCalledWithNull_ShouldThrow([NotNull]ChargeCommandAcceptedOutboundMapper sut)
         {
-            var mapper = new ChargeCommandAcceptedOutboundMapper();
             ChargeCommandAcceptedEvent? chargeCommandAcceptedEvent = null;
-            Assert.Throws<InvalidOperationException>(() => mapper.Convert(chargeCommandAcceptedEvent!));
+            Assert.Throws<InvalidOperationException>(() => sut.Convert(chargeCommandAcceptedEvent!));
         }
 
         private static void UpdateInstantsToValidTimes([NotNull] ChargeCommandAcceptedEvent chargeCommandAcceptedEvent)
