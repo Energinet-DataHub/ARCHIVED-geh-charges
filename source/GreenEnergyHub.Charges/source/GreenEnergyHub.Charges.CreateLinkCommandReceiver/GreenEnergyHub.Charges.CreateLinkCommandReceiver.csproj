@@ -19,7 +19,7 @@ limitations under the License.
     <AzureFunctionsVersion>v3</AzureFunctionsVersion>
     <OutputType>Exe</OutputType>
     <_FunctionsSkipCleanOutput>true</_FunctionsSkipCleanOutput>
-    <RootNamespace>GreenEnergyHub.Charges.CreateChargeLinksReceiver</RootNamespace>
+    <RootNamespace>GreenEnergyHub.Charges.CreateLinkCommandReceiver</RootNamespace>
     <Nullable>enable</Nullable>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <LangVersion>9</LangVersion>

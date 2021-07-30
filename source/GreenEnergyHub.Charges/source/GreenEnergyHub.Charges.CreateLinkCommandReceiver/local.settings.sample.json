@@ -1,0 +1,11 @@
+{
+   "IsEncrypted": false,
+  "Values": {
+    "AzureWebJobsDashboard": "UseDevelopmentStorage=true",
+    "AzureWebJobsStorage": "UseDevelopmentStorage=true",
+    "FUNCTIONS_WORKER_RUNTIME": "dotnet-isolated",
+    "INTEGRATIONEVENT_LISTENER_CONNECTION_STRING": "<sb sender connection string>",
+    "CREATE_LINK_COMMAND_TOPIC_NAME": "sbt-create-link-command",
+    "CREATE_LINK_COMMAND_SUBSCRIPTION_NAME": "sbs-create-link-command-charges"
+  }
+}
