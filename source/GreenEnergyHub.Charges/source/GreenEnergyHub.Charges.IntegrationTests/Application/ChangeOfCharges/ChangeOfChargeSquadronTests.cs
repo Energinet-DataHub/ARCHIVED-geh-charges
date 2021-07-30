@@ -1,4 +1,4 @@
-﻿// Copyright 2020 Energinet DataHub A/S
+﻿ // Copyright 2020 Energinet DataHub A/S
 //
 // Licensed under the Apache License, Version 2.0 (the "License2");
 // you may not use this file except in compliance with the License.
@@ -23,6 +23,8 @@ using GreenEnergyHub.Charges.Infrastructure.Messaging;
 using GreenEnergyHub.Charges.IntegrationTests.TestHelpers;
 using GreenEnergyHub.Charges.MessageReceiver;
 using GreenEnergyHub.Charges.TestCore;
+using GreenEnergyHub.Messaging.Protobuf;
+using GreenEnergyHub.Messaging.Transport;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Extensions.DependencyInjection;
@@ -61,7 +63,14 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
                 ChargesAzureCloudServiceBusOptions.SubscriptionName);
 
             var completion = new TaskCompletionSource<ChargeCommandReceivedEvent?>();
-            ServiceBusTestHelper.RegisterSubscriptionClientMessageHandler(subscriptionClient, completion);
+
+            var chargeCommandReceiverHost = FunctionHostConfigurationHelper.SetupHost(new ChargeCommandReceiver.Startup());
+            chargeCommandReceiverHost.Services.GetRequiredService<MessageExtractor>();
+            await ServiceBusTestHelper.RegisterSubscriptionClientMessageHandlerAsync(
+                    subscriptionClient,
+                    completion,
+                    chargeCommandReceiverHost.Services.GetRequiredService<MessageExtractor>())
+                .ConfigureAwait(false);
 
             IClock clock = SystemClock.Instance;
             var chargeJson = EmbeddedResourceHelper.GetInputJson(testFilePath, clock);

@@ -14,13 +14,12 @@
 
 using System;
 using System.Diagnostics.CodeAnalysis;
-using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using GreenEnergyHub.Messaging.Transport;
 using Microsoft.Azure.ServiceBus;
 using Xunit.Abstractions;
 using IMessage = GreenEnergyHub.Charges.Domain.Messages.IMessage;
-using JsonSerializer = GreenEnergyHub.Charges.Core.Json.JsonSerializer;
 
 namespace GreenEnergyHub.Charges.IntegrationTests.TestHelpers
 {
@@ -74,17 +73,18 @@ namespace GreenEnergyHub.Charges.IntegrationTests.TestHelpers
             return (receivedEvent, receivedMessage);
         }
 
-        public static void RegisterSubscriptionClientMessageHandler<T>(
+        public static Task RegisterSubscriptionClientMessageHandlerAsync<T>(
             [NotNull] ISubscriptionClient subscriptionClient,
-            [NotNull] TaskCompletionSource<T> completion)
+            [NotNull] TaskCompletionSource<T> completion,
+            MessageExtractor messageExtractor)
         {
             subscriptionClient.RegisterMessageHandler(
-                (message, _) =>
+                async (message, _) =>
                 {
                     try
                     {
-                        var json = Encoding.UTF8.GetString(message.Body);
-                        var ev = new JsonSerializer().Deserialize<T>(json);
+                        var ev = (T)await messageExtractor.ExtractAsync(message.Body, CancellationToken.None)
+                            .ConfigureAwait(false);
                         completion.SetResult(ev!);
                     }
 #pragma warning disable CA1031 // allow catch of exception
@@ -93,8 +93,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.TestHelpers
                         completion.SetException(exception);
                     }
 #pragma warning restore CA1031
-                    return Task.CompletedTask;
                 }, new MessageHandlerOptions(ExceptionReceivedHandlerAsync));
+            return Task.CompletedTask;
         }
 
         private static SubscriptionClient GetSubscriptionClient(

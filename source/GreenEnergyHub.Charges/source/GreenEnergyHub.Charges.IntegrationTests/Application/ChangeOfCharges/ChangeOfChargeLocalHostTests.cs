@@ -120,7 +120,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
             // act
             var messageReceiverResult = await RunMessageReceiver(logger, executionContext, req).ConfigureAwait(false);
             var commandReceivedResult = await serviceBusTestHelper
-                .GetMessageFromServiceBusAsync<ChargeCommand>(
+                .GetMessageFromServiceBusAsync<ChargeCommandAcceptedEvent>(
                     _commandReceivedConnectionString ?? string.Empty,
                     _commandReceivedTopicName ?? string.Empty,
                     _commandReceivedSubscriptionName ?? string.Empty,
