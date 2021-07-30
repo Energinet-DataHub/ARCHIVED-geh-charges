@@ -44,8 +44,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Internal.Mappers
         [InlineAutoMoqData]
         public void Convert_WhenCalledWithNull_ShouldThrow([NotNull] ChargeCommandRejectedOutboundMapper sut)
         {
-            ChargeCommandRejectedEvent? chargeCommandRejectedEvent = null;
-            Assert.Throws<InvalidOperationException>(() => sut.Convert(chargeCommandRejectedEvent!));
+            Assert.Throws<InvalidOperationException>(() => sut.Convert(null!));
         }
 
         private static ChargeCommandRejectedEvent CreateChargeCommandRejectedEvent(ChargeCommand chargeCommand)

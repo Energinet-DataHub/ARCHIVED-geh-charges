@@ -54,8 +54,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Internal.Mappers
         [InlineAutoMoqData]
         public void Convert_WhenCalledWithNull_ShouldThrow([NotNull]ChargeCommandAcceptedOutboundMapper sut)
         {
-            ChargeCommandAcceptedEvent? chargeCommandAcceptedEvent = null;
-            Assert.Throws<InvalidOperationException>(() => sut.Convert(chargeCommandAcceptedEvent!));
+            Assert.Throws<InvalidOperationException>(() => sut.Convert(null!));
         }
 
         private static void UpdateInstantsToValidTimes([NotNull] ChargeCommandAcceptedEvent chargeCommandAcceptedEvent)

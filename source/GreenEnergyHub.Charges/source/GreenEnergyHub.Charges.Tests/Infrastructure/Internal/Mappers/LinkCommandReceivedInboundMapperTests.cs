@@ -41,8 +41,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Internal.Mappers
         [InlineAutoMoqData]
         public void Convert_WhenCalledWithNull_ShouldThrow([NotNull]LinkCommandReceivedInboundMapper sut)
         {
-            ChargeLinkCommandReceivedContract? chargeLinkCommandReceivedContract = null;
-            Assert.Throws<InvalidOperationException>(() => sut.Convert(chargeLinkCommandReceivedContract!));
+            Assert.Throws<InvalidOperationException>(() => sut.Convert(null!));
         }
     }
 }

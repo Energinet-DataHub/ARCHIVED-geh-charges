@@ -42,8 +42,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Integration.Mappers
         [InlineAutoMoqData]
         public void Convert_WhenCalledWithNull_ShouldThrow([NotNull]ChargeConfirmationOutboundMapper sut)
         {
-            ChargeConfirmation? chargeConfirmation = null;
-            Assert.Throws<InvalidOperationException>(() => sut.Convert(chargeConfirmation!));
+            Assert.Throws<InvalidOperationException>(() => sut.Convert(null!));
         }
     }
 }

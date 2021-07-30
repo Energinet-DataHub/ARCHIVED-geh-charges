@@ -58,8 +58,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Integration.Mappers
         [InlineAutoMoqData]
         public void Convert_WhenCalledWithNull_ShouldThrow([NotNull]MeteringPointCreatedIntegrationInboundMapper sut)
         {
-            MeteringPointCreated? meteringPointCreated = null;
-            Assert.Throws<InvalidOperationException>(() => sut.Convert(meteringPointCreated!));
+            Assert.Throws<InvalidOperationException>(() => sut.Convert(null!));
         }
     }
 }
