@@ -28,11 +28,11 @@ namespace GreenEnergyHub.Charges.Domain.Events.Local
             : base(publishedTime, command.CorrelationId)
         {
             Command = command;
-            Reason = reason;
+            RejectReasons = reason;
         }
 
         public ChargeCommand Command { get; }
 
-        public IEnumerable<string> Reason { get; set; }
+        public IEnumerable<string> RejectReasons { get; set; }
     }
 }
