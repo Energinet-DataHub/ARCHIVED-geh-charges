@@ -16,6 +16,9 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Threading.Tasks;
+using GreenEnergyHub.Charges.Domain.Events.Local;
+using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeCommandReceived;
+using GreenEnergyHub.Charges.Infrastructure.Internal.Mappers;
 using GreenEnergyHub.Messaging.Transport;
 using Microsoft.Azure.ServiceBus;
 using Xunit.Abstractions;
@@ -78,13 +81,11 @@ namespace GreenEnergyHub.Charges.IntegrationTests.TestHelpers
             [NotNull] TaskCompletionSource<T> completion)
         {
             subscriptionClient.RegisterMessageHandler(
-                async (message, _) =>
+                (message, _) =>
                 {
                     try
                     {
-                        var deserializer = new ProtobufMessageDeserializerTestable();
-                        var ev = (T)await deserializer.FromBytesAsync(message.Body, CancellationToken.None)
-                            .ConfigureAwait(false);
+                        var ev = (T)ProtobufMessageChargeCommandReceivedDeserializer(message.Body);
                         completion.SetResult(ev!);
                     }
 #pragma warning disable CA1031 // allow catch of exception
@@ -93,6 +94,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.TestHelpers
                         completion.SetException(exception);
                     }
 #pragma warning restore CA1031
+                    return Task.CompletedTask;
                 }, new MessageHandlerOptions(ExceptionReceivedHandlerAsync));
         }
 
@@ -103,6 +105,14 @@ namespace GreenEnergyHub.Charges.IntegrationTests.TestHelpers
         {
             var subscriptionClient = new SubscriptionClient(serviceBusConnectionString, topicPath, subscriptionName);
             return subscriptionClient;
+        }
+
+        private static IInboundMessage ProtobufMessageChargeCommandReceivedDeserializer(byte[] data)
+        {
+            var mapper = new ChargeCommandReceivedInboundMapper();
+            var parsed = ChargeCommandReceivedContract.Parser.ParseFrom(data);
+            var mapped = mapper.Convert(parsed);
+            return mapped;
         }
 
         private static Task ExceptionReceivedHandlerAsync(ExceptionReceivedEventArgs arg)
