@@ -42,10 +42,10 @@ namespace GreenEnergyHub.Charges.Tests.Core.DateTime
             var sut = Timestamp.FromDateTime(time.AddTicks(17));
 
             // Act
-            sut.TruncateToSeconds();
+            var actual = sut.TruncateToSeconds();
 
             // Assert
-            Assert.Equal(expected, sut);
+            Assert.Equal(expected, actual);
         }
     }
 }

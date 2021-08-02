@@ -31,7 +31,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
         {
             var chargeCommandReceivedContract = new ChargeCommandReceivedContract
             {
-                PublishedTime = chargeCommandReceivedEvent.PublishedTime.ToTimestamp(),
+                PublishedTime = chargeCommandReceivedEvent.PublishedTime.ToTimestamp().TruncateToSeconds(),
                 Command = new ChargeCommandContract
                 {
                     Document = ConvertDocument(chargeCommandReceivedEvent.Command.Document),
@@ -54,8 +54,8 @@ namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
                 ChargeId = charge.ChargeId,
                 ChargeOwner = charge.ChargeOwner,
                 Type = (ChargeTypeContract)charge.Type,
-                StartDateTime = charge.StartDateTime.ToTimestamp(),
-                EndDateTime = charge.EndDateTime.TimeOrEndDefault().ToTimestamp(),
+                StartDateTime = charge.StartDateTime.ToTimestamp().TruncateToSeconds(),
+                EndDateTime = charge.EndDateTime.TimeOrEndDefault().ToTimestamp().TruncateToSeconds(),
                 Resolution = (ResolutionContract)charge.Resolution,
                 ChargeDescription = charge.ChargeDescription,
                 ChargeName = charge.ChargeName,
@@ -71,9 +71,9 @@ namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
             return new DocumentContract
             {
                 Id = document.Id,
-                RequestDate = document.RequestDate.ToTimestamp(),
+                RequestDate = document.RequestDate.ToTimestamp().TruncateToSeconds(),
                 Type = (DocumentTypeContract)document.Type,
-                CreatedDateTime = document.CreatedDateTime.ToTimestamp(),
+                CreatedDateTime = document.CreatedDateTime.ToTimestamp().TruncateToSeconds(),
                 Sender = new MarketParticipantContract
                 {
                     Id = document.Sender.Id,
@@ -97,7 +97,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
                 {
                     Position = point.Position,
                     Price = (double)point.Price,
-                    Time = point.Time.ToTimestamp(),
+                    Time = point.Time.ToTimestamp().TruncateToSeconds(),
                 });
             }
         }
