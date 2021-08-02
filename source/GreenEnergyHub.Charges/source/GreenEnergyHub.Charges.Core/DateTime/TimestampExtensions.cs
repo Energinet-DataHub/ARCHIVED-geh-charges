@@ -18,18 +18,11 @@ using NodaTime;
 
 namespace GreenEnergyHub.Charges.Core.DateTime
 {
-    public static class InstantExtensions
+    public static class TimestampExtensions
     {
-        public static Instant TimeOrEndDefault(this Instant? instant)
+        public static Instant ToInstant([NotNull] this Timestamp timestamp)
         {
-            // This value is decided for the ProtoBuf contracts.
-            // It should thus not be replaced by e.g. Instant.MaxValue.
-            return instant ?? Instant.FromUtc(9999, 12, 31, 23, 59, 59);
-        }
-
-        public static Timestamp ToTimestamp([NotNull] this Instant instant)
-        {
-            return Timestamp.FromDateTimeOffset(instant.ToDateTimeOffset());
+            return Instant.FromUnixTimeSeconds(timestamp.Seconds);
         }
     }
 }
