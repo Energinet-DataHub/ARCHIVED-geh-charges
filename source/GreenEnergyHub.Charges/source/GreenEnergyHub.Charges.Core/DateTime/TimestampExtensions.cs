@@ -25,5 +25,10 @@ namespace GreenEnergyHub.Charges.Core.DateTime
             var instant = Instant.FromUnixTimeSeconds(timestamp.Seconds);
             return instant.PlusNanoseconds(timestamp.Nanos);
         }
+
+        public static void TruncateToSeconds([NotNull] this Timestamp timestamp)
+        {
+            timestamp.Nanos = 0;
+        }
     }
 }
