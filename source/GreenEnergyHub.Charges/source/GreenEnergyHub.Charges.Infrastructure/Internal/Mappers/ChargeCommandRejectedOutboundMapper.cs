@@ -62,8 +62,8 @@ namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
                 ChargeId = charge.ChargeId,
                 ChargeOwner = charge.ChargeOwner,
                 Type = (ChargeTypeContract)charge.Type,
-                StartDateTime = Timestamp.FromDateTime(charge.StartDateTime.ToDateTimeUtc()),
-                EndDateTime = Timestamp.FromDateTime(charge.EndDateTime.TimeOrEndDefault().ToDateTimeUtc()),
+                StartDateTime = charge.StartDateTime.ToTimestamp(),
+                EndDateTime = charge.EndDateTime.TimeOrEndDefault().ToTimestamp(),
                 Resolution = (ResolutionContract)charge.Resolution,
                 ChargeDescription = charge.ChargeDescription,
                 ChargeName = charge.ChargeName,
@@ -79,9 +79,9 @@ namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
             return new ()
             {
                 Id = document.Id,
-                RequestDate = Timestamp.FromDateTime(document.RequestDate.ToDateTimeUtc()),
+                RequestDate = document.RequestDate.ToTimestamp(),
                 Type = (DocumentTypeContract)document.Type,
-                CreatedDateTime = Timestamp.FromDateTime(document.CreatedDateTime.ToDateTimeUtc()),
+                CreatedDateTime = document.CreatedDateTime.ToTimestamp(),
                 Sender = new MarketParticipantContract
                 {
                     Id = document.Sender.Id,
@@ -105,7 +105,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
                 {
                     Position = point.Position,
                     Price = (double)point.Price,
-                    Time = Timestamp.FromDateTime(point.Time.ToDateTimeUtc()),
+                    Time = point.Time.ToTimestamp(),
                 });
             }
         }
