@@ -62,9 +62,9 @@ namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
                     },
                 Type = (DocumentType)document.Type,
                 IndustryClassification = (IndustryClassification)document.IndustryClassification,
-                RequestDate = Instant.FromUnixTimeSeconds(document.RequestDate.Seconds),
+                RequestDate = document.RequestDate.ToInstant(),
                 BusinessReasonCode = (BusinessReasonCode)document.BusinessReasonCode,
-                CreatedDateTime = Instant.FromUnixTimeSeconds(document.CreatedDateTime.Seconds),
+                CreatedDateTime = document.CreatedDateTime.ToInstant(),
             };
         }
 
@@ -83,8 +83,8 @@ namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
                 TaxIndicator = chargeOperation.TaxIndicator,
                 TransparentInvoicing = chargeOperation.TransparentInvoicing,
                 VatClassification = (VatClassification)chargeOperation.VatClassification,
-                StartDateTime = Instant.FromUnixTimeSeconds(chargeOperation.StartDateTime.Seconds),
-                EndDateTime = Instant.FromUnixTimeSeconds(chargeOperation.EndDateTime.Seconds),
+                StartDateTime = chargeOperation.StartDateTime.ToInstant(),
+                EndDateTime = chargeOperation.EndDateTime.ToInstant(),
                 Points = MapChargePoints(chargeOperation.Points),
             };
         }
@@ -99,7 +99,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
                 {
                     Position = point.Position,
                     Price = (decimal)point.Price,
-                    Time = Instant.FromUnixTimeSeconds(point.Time.Seconds),
+                    Time = point.Time.ToInstant(),
                 });
             }
 
