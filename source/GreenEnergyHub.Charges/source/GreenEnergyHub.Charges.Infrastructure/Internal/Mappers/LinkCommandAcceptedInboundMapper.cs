@@ -14,6 +14,7 @@
 
 using System;
 using System.Diagnostics.CodeAnalysis;
+using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
 using GreenEnergyHub.Charges.Domain.ChargeLinks;
 using GreenEnergyHub.Charges.Domain.MarketDocument;
@@ -40,9 +41,9 @@ namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
             return new Document
             {
                 Id = document.Id,
-                RequestDate = Instant.FromUnixTimeSeconds(document.RequestDate.Seconds),
+                RequestDate = document.RequestDate.ToInstant(),
                 Type = (DocumentType)document.Type,
-                CreatedDateTime = Instant.FromUnixTimeSeconds(document.CreatedDateTime.Seconds),
+                CreatedDateTime = document.CreatedDateTime.ToInstant(),
                 Sender = MapMarketParticipant(document.Sender),
                 Recipient = MapMarketParticipant(document.Recipient),
                 IndustryClassification = (IndustryClassification)document.IndustryClassification,
@@ -65,8 +66,8 @@ namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
             {
                 Id = link.Id,
                 MeteringPointId = link.MeteringPointId,
-                StartDateTime = Instant.FromUnixTimeSeconds(link.StartDateTime.Seconds),
-                EndDateTime = Instant.FromUnixTimeSeconds(link.EndDateTime.Seconds),
+                StartDateTime = link.StartDateTime.ToInstant(),
+                EndDateTime = link.EndDateTime.ToInstant(),
                 ChargeId = link.ChargeId,
                 Factor = link.Factor,
                 ChargeOwner = link.ChargeOwner,

@@ -22,7 +22,15 @@ namespace GreenEnergyHub.Charges.Core.DateTime
     {
         public static Instant ToInstant([NotNull] this Timestamp timestamp)
         {
-            return Instant.FromUnixTimeSeconds(timestamp.Seconds);
+            var instant = Instant.FromUnixTimeSeconds(timestamp.Seconds);
+            return instant.PlusNanoseconds(timestamp.Nanos);
+        }
+
+        public static Timestamp TruncateToSeconds([NotNull] this Timestamp timestamp)
+        {
+            var result = new Timestamp(timestamp);
+            result.Nanos = 0;
+            return result;
         }
     }
 }

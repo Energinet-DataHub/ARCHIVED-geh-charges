@@ -31,7 +31,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
         {
             var chargeCommandReceivedContract = new ChargeCommandReceivedContract
             {
-                PublishedTime = chargeCommandReceivedEvent.PublishedTime.ToTimestamp(),
+                PublishedTime = chargeCommandReceivedEvent.PublishedTime.ToTimestamp().TruncateToSeconds(),
                 Command = new ChargeCommandContract
                 {
                     Document = ConvertDocument(chargeCommandReceivedEvent.Command.Document),
@@ -41,7 +41,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
                 CorrelationId = chargeCommandReceivedEvent.CorrelationId,
             };
 
-            AddChargePoints(chargeCommandReceivedContract, chargeCommandReceivedEvent.Command.ChargeOperation.Points);
+            ConvertPoints(chargeCommandReceivedContract, chargeCommandReceivedEvent.Command.ChargeOperation.Points);
 
             return chargeCommandReceivedContract;
         }
@@ -54,8 +54,8 @@ namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
                 ChargeId = charge.ChargeId,
                 ChargeOwner = charge.ChargeOwner,
                 Type = (ChargeTypeContract)charge.Type,
-                StartDateTime = Timestamp.FromDateTime(charge.StartDateTime.ToDateTimeUtc()),
-                EndDateTime = Timestamp.FromDateTime(charge.EndDateTime.TimeOrEndDefault().ToDateTimeUtc()),
+                StartDateTime = charge.StartDateTime.ToTimestamp().TruncateToSeconds(),
+                EndDateTime = charge.EndDateTime.TimeOrEndDefault().ToTimestamp().TruncateToSeconds(),
                 Resolution = (ResolutionContract)charge.Resolution,
                 ChargeDescription = charge.ChargeDescription,
                 ChargeName = charge.ChargeName,
@@ -71,9 +71,9 @@ namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
             return new DocumentContract
             {
                 Id = document.Id,
-                RequestDate = Timestamp.FromDateTime(document.RequestDate.ToDateTimeUtc()),
+                RequestDate = document.RequestDate.ToTimestamp().TruncateToSeconds(),
                 Type = (DocumentTypeContract)document.Type,
-                CreatedDateTime = Timestamp.FromDateTime(document.CreatedDateTime.ToDateTimeUtc()),
+                CreatedDateTime = document.CreatedDateTime.ToTimestamp().TruncateToSeconds(),
                 Sender = new MarketParticipantContract
                 {
                     Id = document.Sender.Id,
@@ -89,7 +89,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
             };
         }
 
-        private static void AddChargePoints(ChargeCommandReceivedContract contract, List<Point> points)
+        private static void ConvertPoints(ChargeCommandReceivedContract contract, List<Point> points)
         {
             foreach (Point point in points)
             {
@@ -97,7 +97,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
                 {
                     Position = point.Position,
                     Price = (double)point.Price,
-                    Time = Timestamp.FromDateTime(point.Time.ToDateTimeUtc()),
+                    Time = point.Time.ToTimestamp().TruncateToSeconds(),
                 });
             }
         }

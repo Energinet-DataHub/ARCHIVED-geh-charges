@@ -32,5 +32,20 @@ namespace GreenEnergyHub.Charges.Tests.Core.DateTime
             var actual = timestamp.ToInstant();
             Assert.Equal(expected.UtcDateTime, actual.ToDateTimeOffset().UtcDateTime);
         }
+
+        [Fact]
+        public void TruncateToSeconds()
+        {
+            // Arrange
+            var time = new System.DateTime(2021, 8, 2, 10, 58, 34, DateTimeKind.Utc);
+            var expected = Timestamp.FromDateTime(time);
+            var sut = Timestamp.FromDateTime(time.AddTicks(17));
+
+            // Act
+            var actual = sut.TruncateToSeconds();
+
+            // Assert
+            Assert.Equal(expected, actual);
+        }
     }
 }
