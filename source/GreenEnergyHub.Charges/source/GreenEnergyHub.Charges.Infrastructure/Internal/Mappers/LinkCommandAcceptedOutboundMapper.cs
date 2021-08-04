@@ -43,9 +43,9 @@ namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
             return new DocumentContract
             {
                 Id = document.Id,
-                RequestDate = Timestamp.FromDateTime(document.RequestDate.ToDateTimeUtc()),
+                RequestDate = document.RequestDate.ToTimestamp(),
                 Type = (DocumentTypeContract)document.Type,
-                CreatedDateTime = Timestamp.FromDateTime(document.CreatedDateTime.ToDateTimeUtc()),
+                CreatedDateTime = document.CreatedDateTime.ToTimestamp(),
                 Sender = new MarketParticipantContract
                 {
                     Id = document.Sender.Id,
@@ -71,8 +71,8 @@ namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
                 ChargeOwner = chargeLink.ChargeOwner,
                 Factor = chargeLink.Factor,
                 ChargeType = (ChargeTypeContract)chargeLink.ChargeType,
-                StartDateTime = Timestamp.FromDateTime(chargeLink.StartDateTime.ToDateTimeUtc()),
-                EndDateTime = Timestamp.FromDateTime(chargeLink.EndDateTime.TimeOrEndDefault().ToDateTimeUtc()),
+                StartDateTime = chargeLink.StartDateTime.ToTimestamp(),
+                EndDateTime = chargeLink.EndDateTime.TimeOrEndDefault().ToTimestamp(),
             };
         }
     }
