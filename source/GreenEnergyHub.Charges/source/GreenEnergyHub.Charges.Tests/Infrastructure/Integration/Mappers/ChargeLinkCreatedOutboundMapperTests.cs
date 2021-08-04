@@ -35,7 +35,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Integration.Mappers
         {
             var createdEvent = GetCreatedEvent();
             var result = (ChargeLinkCreatedContract)sut.Convert(createdEvent);
-            AssertExtensions.ContractIsEquivalent(result, createdEvent);
+            ProtoBufAssert.OutgoingContractIsSubset(createdEvent, result);
         }
 
         [Theory]

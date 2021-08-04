@@ -43,7 +43,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Internal.Mappers
             var result = (ChargeCommandReceivedContract)sut.Convert(chargeCommandReceivedEvent);
 
             // Assert
-            AssertExtensions.ContractIsEquivalent(result, chargeCommandReceivedEvent);
+            ProtoBufAssert.OutgoingContractIsSubset(chargeCommandReceivedEvent, result);
         }
 
         [Theory]

@@ -14,7 +14,6 @@
 
 using System;
 using System.Diagnostics.CodeAnalysis;
-using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.Acknowledgements;
 using GreenEnergyHub.Charges.Infrastructure.Integration.ChargeConfirmation;
 using GreenEnergyHub.Charges.Infrastructure.Integration.Mappers;
@@ -30,12 +29,12 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Integration.Mappers
         [Theory]
         [InlineAutoMoqData]
         public void Convert_WhenCalled_MapsToCorrectValues(
-            [NotNull] ChargeConfirmation chargeConfirmation,
+            [NotNull] ChargeConfirmation expected,
             [NotNull] ChargeConfirmationOutboundMapper sut)
         {
             // Act
-            var result = (ChargeConfirmationContract)sut.Convert(chargeConfirmation);
-            AssertExtensions.ContractIsEquivalent(result, chargeConfirmation);
+            var actual = (ChargeConfirmationContract)sut.Convert(expected);
+            ProtoBufAssert.OutgoingContractIsSubset(expected, actual);
         }
 
         [Theory]

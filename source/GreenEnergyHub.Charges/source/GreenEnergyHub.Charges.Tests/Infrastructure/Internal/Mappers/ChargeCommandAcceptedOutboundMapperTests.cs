@@ -14,14 +14,11 @@
 
 using System;
 using System.Diagnostics.CodeAnalysis;
-using FluentAssertions;
-using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
 using GreenEnergyHub.Charges.Domain.Events.Local;
 using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeCommandAccepted;
 using GreenEnergyHub.Charges.Infrastructure.Internal.Mappers;
 using GreenEnergyHub.Charges.TestCore;
-using GreenEnergyHub.TestHelpers.FluentAssertionsExtensions;
 using NodaTime;
 using Xunit;
 using Xunit.Categories;
@@ -47,7 +44,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Internal.Mappers
             var result = (ChargeCommandAcceptedContract)sut.Convert(chargeCommandAcceptedEvent);
 
             // Assert
-            AssertExtensions.ContractIsEquivalent(result, chargeCommandAcceptedEvent);
+            ProtoBufAssert.OutgoingContractIsSubset(chargeCommandAcceptedEvent, result);
         }
 
         [Theory]

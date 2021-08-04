@@ -35,7 +35,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Internal.Mappers
         {
             UpdateInstantsToValidTimes(chargeLinkCommandAcceptedEvent);
             var result = (ChargeLinkCommandAcceptedContract)sut.Convert(chargeLinkCommandAcceptedEvent);
-            AssertExtensions.ContractIsEquivalent(result, chargeLinkCommandAcceptedEvent);
+            ProtoBufAssert.OutgoingContractIsSubset(chargeLinkCommandAcceptedEvent, result);
         }
 
         [Theory]

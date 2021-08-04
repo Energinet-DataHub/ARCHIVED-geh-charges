@@ -14,7 +14,6 @@
 
 using System;
 using System.Diagnostics.CodeAnalysis;
-using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.Acknowledgements;
 using GreenEnergyHub.Charges.Infrastructure.Integration.ChargeRejection;
 using GreenEnergyHub.Charges.Infrastructure.Integration.Mappers;
@@ -34,7 +33,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Integration.Mappers
             [NotNull] ChargeRejectionOutboundMapper sut)
         {
             var result = (ChargeRejectionContract)sut.Convert(chargeRejection);
-            AssertExtensions.ContractIsEquivalent(result, chargeRejection);
+            ProtoBufAssert.OutgoingContractIsSubset(chargeRejection, result);
         }
 
         [Theory]
