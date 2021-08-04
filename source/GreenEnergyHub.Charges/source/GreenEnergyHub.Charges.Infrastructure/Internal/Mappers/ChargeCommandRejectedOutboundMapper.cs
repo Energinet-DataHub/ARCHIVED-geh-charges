@@ -40,7 +40,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
                 CorrelationId = rejectionEvent.CorrelationId,
             };
 
-            AddChargePoints(chargeCommandRejectedContract, rejectionEvent.Command.ChargeOperation.Points);
+            ConvertPoints(chargeCommandRejectedContract, rejectionEvent.Command.ChargeOperation.Points);
             AddRejectedReasons(chargeCommandRejectedContract, rejectionEvent);
 
             return chargeCommandRejectedContract;
@@ -97,7 +97,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
             };
         }
 
-        private static void AddChargePoints(ChargeCommandRejectedContract contract, List<Point> points)
+        private static void ConvertPoints(ChargeCommandRejectedContract contract, List<Point> points)
         {
             foreach (Point point in points)
             {

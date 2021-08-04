@@ -86,11 +86,11 @@ namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
                 VatClassification = (VatClassification)chargeOperation.VatClassification,
                 StartDateTime = chargeOperation.StartDateTime.ToInstant(),
                 EndDateTime = chargeOperation.EndDateTime.ToInstant(),
-                Points = MapChargePoints(chargeOperation.Points),
+                Points = ConvertPoints(chargeOperation.Points),
             };
         }
 
-        private static List<Point> MapChargePoints(RepeatedField<PointContract> points)
+        private static List<Point> ConvertPoints(RepeatedField<PointContract> points)
         {
             var list = new List<Point>();
 
