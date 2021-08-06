@@ -40,7 +40,6 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Mapping
             // Assert
             Assert.NotNull(result);
             Assert.Equal(marketParticipant.MarketParticipantId, result.Id);
-            Assert.Equal(marketParticipant.Name, result.Name);
             Assert.Equal(marketParticipant.Role, (int)result.BusinessProcessRole);
         }
 

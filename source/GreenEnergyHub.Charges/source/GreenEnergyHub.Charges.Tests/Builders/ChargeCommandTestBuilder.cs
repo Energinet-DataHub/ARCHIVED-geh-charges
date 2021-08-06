@@ -90,13 +90,11 @@ namespace GreenEnergyHub.Charges.Tests.Builders
                     Recipient = new MarketParticipant
                     {
                         Id = "0",
-                        Name = "Name",
                         BusinessProcessRole = MarketParticipantRole.EnergySupplier,
                     },
                     Sender = new MarketParticipant
                     {
                         Id = "1",
-                        Name = "Name",
                         BusinessProcessRole = MarketParticipantRole.EnergySupplier,
                     },
                     BusinessReasonCode = BusinessReasonCode.UpdateChargeInformation,
