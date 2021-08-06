@@ -16,7 +16,6 @@ using System;
 using System.Linq;
 using System.Reflection;
 using AutoFixture;
-using AutoFixture.AutoMoq;
 using AutoFixture.Dsl;
 using AutoFixture.Kernel;
 using Google.Protobuf;
@@ -24,6 +23,13 @@ using Xunit.Sdk;
 
 namespace GreenEnergyHub.Charges.TestCore
 {
+    /// <summary>
+    /// AutoFixture customization that uses reflect to find all implementations of protobuf messages in assemblies
+    /// belonging to GreenEnergyHub.
+    ///
+    /// For each of these implementations it registers a customization that makes sure we populate all of the protobuf
+    /// repeated fields with content
+    /// </summary>
     public class ProtobufCustomization : ICustomization
     {
         public void Customize(IFixture fixture)
@@ -63,8 +69,8 @@ namespace GreenEnergyHub.Charges.TestCore
         private static void CustomizeIMessageImplementation(IFixture fixture, Type messageType)
         {
             // Since the protobuf IMessage implementations are not known until at runtime, we cannot
-            // use Customize<T> as you normally would. Instead, we use reflection and delegates to setup
-            // everything at runtime by using the ProtobufCustomizationFunction utility class to help us
+            // use Customize<T> as we normally would. Instead, we use reflection and func delegates to setup
+            // everything at runtime with the help of the ProtobufCustomizationFunction utility class
             var function = CreateProtobufCustomizationFunction(fixture, messageType);
             var functionMethod = function
                 .GetType()
