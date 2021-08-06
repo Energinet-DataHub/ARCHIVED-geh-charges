@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
+using System.Linq;
 using FluentAssertions;
 using Google.Protobuf;
 using Google.Protobuf.WellKnownTypes;
@@ -46,6 +48,11 @@ namespace GreenEnergyHub.Charges.TestCore
 
                     // Ignore the public prop "Descriptor" of the contract object
                     options.Excluding(ctx => ctx.SelectedMemberPath == "Descriptor");
+
+                    // Ignore transaction properties from the GreenEnergyHub.Messaging assembly
+                    options.Excluding(ctx =>
+                        ctx.SelectedMemberPath.Split(".", StringSplitOptions.RemoveEmptyEntries).Contains("Transaction") &&
+                        ctx.SelectedMemberInfo.MemberType.Assembly!.FullName!.StartsWith("GreenEnergyHub.Messaging", StringComparison.InvariantCulture));
 
                     // Use runtime type of "expected"
                     options.RespectingRuntimeTypes();
