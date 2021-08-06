@@ -37,7 +37,10 @@ namespace GreenEnergyHub.Charges.TestCore
 
             foreach (var assembly in assemblies)
             {
-                FindAndCustomizeIMessageImplementations(fixture, assembly);
+                if (assembly.FullName != null && assembly.FullName.StartsWith("GreenEnergyHub", StringComparison.InvariantCulture))
+                {
+                    FindAndCustomizeIMessageImplementations(fixture, assembly);
+                }
             }
         }
 
@@ -47,25 +50,25 @@ namespace GreenEnergyHub.Charges.TestCore
 
             foreach (var type in types)
             {
-                if (type.GetInterfaces().Any(x =>
-                    x.IsGenericType &&
-                    x.GetGenericTypeDefinition() == typeof(IMessage<>)))
+                if (!type.IsInterface
+                    && type.GetInterfaces().Any(x =>
+                        x.IsGenericType &&
+                        x.GetGenericTypeDefinition() == typeof(IMessage<>)))
                 {
                     CustomizeIMessageImplementation(fixture, type);
                 }
             }
         }
 
-        private static void CustomizeIMessageImplementation(IFixture fixture, Type t)
+        private static void CustomizeIMessageImplementation(IFixture fixture, Type messageType)
         {
-            var customizationMethod = typeof(ProtobufCustomization)
-                .GetMethod(
-                    nameof(GetCustomization),
-                    BindingFlags.NonPublic | BindingFlags.Static);
-
-            var function = Delegate.CreateDelegate(
-                customizationMethod!.ReturnType,
-                customizationMethod!);
+            // Since the protobuf IMessage implementations are not known until at runtime, we cannot
+            // use Customize<T> as you normally would. Instead, we use reflection and delegates to setup
+            // everything at runtime by using the ProtobufCustomizationFunction utility class to help us
+            var function = CreateProtobufCustomizationFunction(fixture, messageType);
+            var functionMethod = function
+                .GetType()
+                .GetMethod("GetCustomization");
 
             typeof(IFixture)
                 .GetMethods()
@@ -88,27 +91,15 @@ namespace GreenEnergyHub.Charges.TestCore
                         return false;
                     })
                 .Single()
-                .MakeGenericMethod(t)
-                .Invoke(fixture, new object[] { function });
-
-            System.Console.WriteLine("Seems ok - " + t);
+                .MakeGenericMethod(messageType)
+                .Invoke(fixture, new object[] { functionMethod?.Invoke(function, Array.Empty<object>()) ?? new NullException("Null encountered while invoking method to retrieve customization function") });
         }
 
-        private static Func<ICustomizationComposer<T>, ISpecimenBuilder> GetCustomization<T>(IFixture fixture)
+        private static object CreateProtobufCustomizationFunction(IFixture fixture, Type messageType)
         {
-            return c => c.Do(
-                e =>
-                {
-                    var message = e as IMessage;
-
-                    if (message == null)
-                    {
-                        throw new NullException(
-                            "GetCustomization was called on a type that was not an IMessage, resulting in a null error");
-                    }
-
-                    message.AddManyToRepeatedFields(fixture);
-                });
+            var functionType = typeof(ProtobufCustomizationFunction<>)
+                .MakeGenericType(messageType);
+            return Activator.CreateInstance(functionType, new object[] { fixture }) !;
         }
     }
 }
