@@ -11,7 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-name: Metring Point Created Receiver CI
+name: Metering Point Created Receiver CI
 
 on:
   pull_request:
@@ -37,7 +37,7 @@ jobs:
           github_token: ${{ github.token }}
           paths: '[
             "source/GreenEnergyHub.Charges/**",
-            ".github/workflows/metring-point-created-receiver-ci.yml",
+            ".github/workflows/metering-point-created-receiver-ci.yml",
             ".github/actions/dotnet-build-and-test/**",
             ".github/actions/azure-core-tools-install/**"
           ]'
