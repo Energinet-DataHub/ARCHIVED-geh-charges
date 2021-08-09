@@ -27,7 +27,7 @@ namespace GreenEnergyHub.Charges.Tests.Core.Enumeration
         [Theory]
         [InlineAutoMoqData(ProtobufEnum.AaSomething, ComparisonEnum.Something, true)]
         [InlineAutoMoqData(ProtobufEnum.AaSomething, ComparisonEnum.EnergySupplier, false)]
-        [InlineAutoMoqData(ProtobufEnum.RUnknown, ComparisonEnum.Unknown, true)]
+        [InlineAutoMoqData(ProtobufEnum.RPt15M, ComparisonEnum.PT15M, true)]
         [InlineAutoMoqData(ProtobufEnum.MprEnergySupplier, ComparisonEnum.Something, false)]
         [InlineAutoMoqData(ProtobufEnum.MprEnergySupplier, ComparisonEnum.EnergySupplier, true)]
         public void IsEquivalent_WhenCompared_ReturnsCorrectResult(
@@ -52,7 +52,7 @@ namespace GreenEnergyHub.Charges.Tests.Core.Enumeration
         {
             AaSomething = 0,
             MprEnergySupplier = 1,
-            RUnknown = 2,
+            RPt15M = 2,
             Tofewwords = 3,
         }
 
@@ -60,7 +60,7 @@ namespace GreenEnergyHub.Charges.Tests.Core.Enumeration
         {
             Something = 0,
             EnergySupplier = 1,
-            Unknown = 2,
+            PT15M = 2,
         }
     }
 }
