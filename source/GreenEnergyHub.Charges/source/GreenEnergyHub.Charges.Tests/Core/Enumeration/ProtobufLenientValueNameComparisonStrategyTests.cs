@@ -27,6 +27,7 @@ namespace GreenEnergyHub.Charges.Tests.Core.Enumeration
         [Theory]
         [InlineAutoMoqData(ProtobufEnum.AaSomething, ComparisonEnum.Something, true)]
         [InlineAutoMoqData(ProtobufEnum.AaSomething, ComparisonEnum.EnergySupplier, false)]
+        [InlineAutoMoqData(ProtobufEnum.RUnknown, ComparisonEnum.Unknown, true)]
         [InlineAutoMoqData(ProtobufEnum.MprEnergySupplier, ComparisonEnum.Something, false)]
         [InlineAutoMoqData(ProtobufEnum.MprEnergySupplier, ComparisonEnum.EnergySupplier, true)]
         public void IsEquivalent_WhenCompared_ReturnsCorrectResult(
@@ -51,13 +52,15 @@ namespace GreenEnergyHub.Charges.Tests.Core.Enumeration
         {
             AaSomething = 0,
             MprEnergySupplier = 1,
-            Tofewwords = 2,
+            RUnknown = 2,
+            Tofewwords = 3,
         }
 
         public enum ComparisonEnum
         {
             Something = 0,
             EnergySupplier = 1,
+            Unknown = 2,
         }
     }
 }

@@ -95,13 +95,14 @@ namespace GreenEnergyHub.Charges.TestCore
                 });
         }
 
-        public static void EnumIsSubSet<TProtbufEnum, TComparisonEnum>()
+        public static void ContractEnumIsSubSet<TProtobufEnum, TComparisonEnum>()
         {
             Assert.True(
                 EnumComparison.IsSubsetOf(
-                    typeof(TProtbufEnum),
+                    typeof(TProtobufEnum),
                     typeof(TComparisonEnum),
-                    EnumComparisonStrategy.ProtobufLenient));
+                    EnumComparisonStrategy.ProtobufLenient),
+                "Checking " + typeof(TProtobufEnum) + " against " + typeof(TComparisonEnum));
         }
     }
 }
