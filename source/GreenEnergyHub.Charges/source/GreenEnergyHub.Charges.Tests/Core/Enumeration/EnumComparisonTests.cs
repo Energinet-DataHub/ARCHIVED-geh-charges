@@ -24,13 +24,6 @@ namespace GreenEnergyHub.Charges.Tests.Core.Enumeration
     public class EnumComparisonTests
     {
         [Theory]
-        [MemberData("AllStrategies")]
-        public void IsSubsetOf_WhenComparingToSelf_IsAlwaysSubSet(EnumComparisonStrategy strategy)
-        {
-            Assert.True(EnumComparison.IsSubsetOf(typeof(EnumOne), typeof(EnumOne), strategy));
-        }
-
-        [Theory]
         [InlineData(typeof(EnumOne), typeof(EnumTwo), false)]
         [InlineData(typeof(EnumOne), typeof(EnumThree), false)]
         [InlineData(typeof(EnumOne), typeof(EnumFour), true)]
@@ -84,14 +77,6 @@ namespace GreenEnergyHub.Charges.Tests.Core.Enumeration
         {
             A = 0,
             C = 2,
-        }
-
-        public static IEnumerable<object[]> AllStrategies()
-        {
-            foreach (var strategy in Enum.GetValues(typeof(EnumComparisonStrategy)))
-            {
-                yield return new object[] { strategy! };
-            }
         }
     }
 }
