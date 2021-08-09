@@ -17,7 +17,9 @@ using System.Linq;
 using FluentAssertions;
 using Google.Protobuf;
 using Google.Protobuf.WellKnownTypes;
+using GreenEnergyHub.Charges.Core.Enumeration;
 using NodaTime;
+using Xunit;
 using Xunit.Sdk;
 
 namespace GreenEnergyHub.Charges.TestCore
@@ -91,6 +93,15 @@ namespace GreenEnergyHub.Charges.TestCore
 
                     return options;
                 });
+        }
+
+        public static void EnumIsSubSet<TProtbufEnum, TComparisonEnum>()
+        {
+            Assert.True(
+                EnumComparison.IsSubsetOf(
+                    typeof(TProtbufEnum),
+                    typeof(TComparisonEnum),
+                    EnumComparisonStrategy.ProtobufLenient));
         }
     }
 }

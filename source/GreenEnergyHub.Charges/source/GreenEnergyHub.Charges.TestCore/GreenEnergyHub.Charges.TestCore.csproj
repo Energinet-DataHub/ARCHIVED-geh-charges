@@ -39,4 +39,8 @@ limitations under the License.
       <PackageReference Include="xunit" Version="2.4.1" />
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\GreenEnergyHub.Charges.Core\GreenEnergyHub.Charges.Core.csproj" />
+    </ItemGroup>
+
 </Project>
