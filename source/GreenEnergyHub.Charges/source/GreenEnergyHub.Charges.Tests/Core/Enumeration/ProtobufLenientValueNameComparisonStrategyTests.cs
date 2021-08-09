@@ -25,10 +25,10 @@ namespace GreenEnergyHub.Charges.Tests.Core.Enumeration
     public class ProtobufLenientValueNameComparisonStrategyTests
     {
         [Theory]
-        [InlineAutoMoqData(ProtobufEnum.AA_SOMETHING, ComparisonEnum.Something, true)]
-        [InlineAutoMoqData(ProtobufEnum.AA_SOMETHING, ComparisonEnum.EnergySupplier, false)]
-        [InlineAutoMoqData(ProtobufEnum.MPR_ENERGY_SUPPLIER, ComparisonEnum.Something, false)]
-        [InlineAutoMoqData(ProtobufEnum.MPR_ENERGY_SUPPLIER, ComparisonEnum.EnergySupplier, true)]
+        [InlineAutoMoqData(ProtobufEnum.AaSomething, ComparisonEnum.Something, true)]
+        [InlineAutoMoqData(ProtobufEnum.AaSomething, ComparisonEnum.EnergySupplier, false)]
+        [InlineAutoMoqData(ProtobufEnum.MprEnergySupplier, ComparisonEnum.Something, false)]
+        [InlineAutoMoqData(ProtobufEnum.MprEnergySupplier, ComparisonEnum.EnergySupplier, true)]
         public void IsEquivalent_WhenCompared_ReturnsCorrectResult(
             ProtobufEnum protobufValue,
             ComparisonEnum comparisonEnum,
@@ -44,14 +44,14 @@ namespace GreenEnergyHub.Charges.Tests.Core.Enumeration
         public void IsEquivalent_WhenProtobufEnumLackPrefix_ThrowsArgumentExceptions(
             [NotNull] ProtobufLenientValueNameComparisonStrategy sut)
         {
-            Assert.Throws<ArgumentException>(() => sut.IsEquivalent(ProtobufEnum.NoPrefix, ComparisonEnum.Something));
+            Assert.Throws<ArgumentException>(() => sut.IsEquivalent(ProtobufEnum.Tofewwords, ComparisonEnum.Something));
         }
 
         public enum ProtobufEnum
         {
-            AA_SOMETHING = 0,
-            MPR_ENERGY_SUPPLIER = 1,
-            NoPrefix = 2,
+            AaSomething = 0,
+            MprEnergySupplier = 1,
+            Tofewwords = 2,
         }
 
         public enum ComparisonEnum

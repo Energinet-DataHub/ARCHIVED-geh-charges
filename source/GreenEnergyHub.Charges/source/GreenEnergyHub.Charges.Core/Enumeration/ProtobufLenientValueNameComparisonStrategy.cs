@@ -14,6 +14,8 @@
 
 using System;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace GreenEnergyHub.Charges.Core.Enumeration
 {
@@ -36,14 +38,18 @@ namespace GreenEnergyHub.Charges.Core.Enumeration
 
         private static string GetStringWithoutPrefix(string s)
         {
-            var pos = s.IndexOf('_');
-            if (pos < 0)
+            var uppercaseWords = Regex.Matches(s, @"([A-Z][a-z]+)")
+                .Cast<Match>()
+                .Select(m => m.Value).ToList();
+
+            if (uppercaseWords.Count < 2)
             {
                 throw new ArgumentException(
-                    "The provided name of a protobuf enum value does not comform to protobuf standard");
+                    "The provided name of a protobuf enum value does not adhere to protobuf standard naming: " + s);
             }
 
-            return s.Substring(pos + 1, s.Length - pos - 1);
+            uppercaseWords.Remove(uppercaseWords.First());
+            return string.Join(null, uppercaseWords);
         }
     }
 }
