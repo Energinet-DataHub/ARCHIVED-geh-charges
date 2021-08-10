@@ -38,7 +38,9 @@ Note: As the integration between the Charges and Post Office domains is yet to b
 
 ## Context Streams
 
-TODO: Awaiting drawing from `@MartinFHansen`.
+This sections documents the data flows to and from the Charges domain.
+
+![Context stream](./docs/images/ChargesContextStreams.png "Charges context streams")
 
 ## Domain Road Map
 
