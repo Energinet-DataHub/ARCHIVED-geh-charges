@@ -13,6 +13,8 @@
 // limitations under the License.
 
 using System;
+using System.Diagnostics.CodeAnalysis;
+using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
 using GreenEnergyHub.Charges.Domain.ChargeLinks;
 using GreenEnergyHub.Charges.Domain.MarketDocument;
@@ -25,25 +27,23 @@ namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
 {
     public class LinkCommandAcceptedInboundMapper : ProtobufInboundMapper<ChargeLinkCommandAcceptedContract>
     {
-        protected override IInboundMessage Convert(ChargeLinkCommandAcceptedContract obj)
+        protected override IInboundMessage Convert([NotNull]ChargeLinkCommandAcceptedContract chargeLinkCommandAcceptedContract)
         {
-            if (obj == null) throw new ArgumentNullException(nameof(obj));
-
-            return new ChargeLinkCommandAcceptedEvent(obj.CorrelationId)
+            return new ChargeLinkCommandAcceptedEvent(chargeLinkCommandAcceptedContract.CorrelationId)
             {
-                Document = MapDocument(obj.Document),
-                ChargeLink = MapChargeLink(obj.ChargeLink),
+                Document = ConvertDocument(chargeLinkCommandAcceptedContract.Document),
+                ChargeLink = ConvertChargeLink(chargeLinkCommandAcceptedContract.ChargeLink),
             };
         }
 
-        private static Document MapDocument(DocumentContract document)
+        private static Document ConvertDocument(DocumentContract document)
         {
             return new Document
             {
                 Id = document.Id,
-                RequestDate = Instant.FromUnixTimeSeconds(document.RequestDate.Seconds),
+                RequestDate = document.RequestDate.ToInstant(),
                 Type = (DocumentType)document.Type,
-                CreatedDateTime = Instant.FromUnixTimeSeconds(document.CreatedDateTime.Seconds),
+                CreatedDateTime = document.CreatedDateTime.ToInstant(),
                 Sender = MapMarketParticipant(document.Sender),
                 Recipient = MapMarketParticipant(document.Recipient),
                 IndustryClassification = (IndustryClassification)document.IndustryClassification,
@@ -56,18 +56,18 @@ namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
             return new MarketParticipant
             {
                 Id = marketParticipant.Id,
-                BusinessProcessRole = (MarketParticipantRole)marketParticipant.MarketParticipantRole,
+                BusinessProcessRole = (MarketParticipantRole)marketParticipant.BusinessProcessRole,
             };
         }
 
-        private static ChargeLink MapChargeLink(ChargeLinkContract link)
+        private static ChargeLink ConvertChargeLink(ChargeLinkContract link)
         {
             return new ChargeLink
             {
                 Id = link.Id,
                 MeteringPointId = link.MeteringPointId,
-                StartDateTime = Instant.FromUnixTimeSeconds(link.StartDateTime.Seconds),
-                EndDateTime = Instant.FromUnixTimeSeconds(link.EndDateTime.Seconds),
+                StartDateTime = link.StartDateTime.ToInstant(),
+                EndDateTime = link.EndDateTime.ToInstant(),
                 ChargeId = link.ChargeId,
                 Factor = link.Factor,
                 ChargeOwner = link.ChargeOwner,

@@ -17,8 +17,10 @@ using System.Diagnostics.CodeAnalysis;
 using GreenEnergyHub.Charges.Application.Acknowledgement;
 using GreenEnergyHub.Charges.ChargeRejectionSender;
 using GreenEnergyHub.Charges.Domain.Acknowledgements;
-using GreenEnergyHub.Charges.Domain.Events.Local;
+using GreenEnergyHub.Charges.Infrastructure.Integration.ChargeRejection;
+using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeCommandRejected;
 using GreenEnergyHub.Charges.Infrastructure.Messaging.Registration;
+using GreenEnergyHub.Messaging.Protobuf;
 using Microsoft.Azure.Functions.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection;
 using NodaTime;
@@ -34,12 +36,17 @@ namespace GreenEnergyHub.Charges.ChargeRejectionSender
             builder.Services.AddScoped(typeof(IClock), _ => SystemClock.Instance);
             builder.Services.AddScoped<IChargeRejectionSender, Application.Acknowledgement.ChargeRejectionSender>();
 
-            builder.Services
-                .AddMessaging()
-                .AddMessageDispatcher<ChargeRejection>(
-                    GetEnv("POST_OFFICE_SENDER_CONNECTION_STRING"),
-                    GetEnv("POST_OFFICE_TOPIC_NAME"))
-                .AddMessageExtractor<ChargeCommandRejectedEvent>();
+            ConfigureMessaging(builder.Services);
+        }
+
+        private static void ConfigureMessaging(IServiceCollection services)
+        {
+            services.ReceiveProtobuf<ChargeCommandRejectedContract>(
+                configuration => configuration.WithParser(() => ChargeCommandRejectedContract.Parser));
+            services.SendProtobuf<ChargeRejectionContract>();
+            services.AddMessagingProtobuf().AddMessageDispatcher<ChargeRejection>(
+                GetEnv("POST_OFFICE_SENDER_CONNECTION_STRING"),
+                GetEnv("POST_OFFICE_TOPIC_NAME"));
         }
 
         private static string GetEnv(string variableName)

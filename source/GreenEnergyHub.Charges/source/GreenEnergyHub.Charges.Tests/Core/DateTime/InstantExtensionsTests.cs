@@ -48,5 +48,13 @@ namespace GreenEnergyHub.Charges.Tests.Core.DateTime
             // Assert
             Assert.Equal(expectedResult, result);
         }
+
+        [Fact]
+        public void ToTimestamp_ReturnsInstant()
+        {
+            var instant = Instant.FromUtc(1992, 6, 26, 20, 15); // Start time of the match where Denmark won the European Football Championship
+            var result = instant.ToTimestamp();
+            Assert.Equal(instant.ToDateTimeOffset(), result.ToDateTimeOffset()); // Not a direct comparison, but the simplest way to assert the result
+        }
     }
 }

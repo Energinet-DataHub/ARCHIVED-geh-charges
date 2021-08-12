@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Diagnostics.CodeAnalysis;
+using Google.Protobuf.WellKnownTypes;
 using NodaTime;
 
 namespace GreenEnergyHub.Charges.Core.DateTime
@@ -20,7 +22,14 @@ namespace GreenEnergyHub.Charges.Core.DateTime
     {
         public static Instant TimeOrEndDefault(this Instant? instant)
         {
+            // This value is decided for the ProtoBuf contracts.
+            // It should thus not be replaced by e.g. Instant.MaxValue.
             return instant ?? Instant.FromUtc(9999, 12, 31, 23, 59, 59);
+        }
+
+        public static Timestamp ToTimestamp([NotNull] this Instant instant)
+        {
+            return Timestamp.FromDateTimeOffset(instant.ToDateTimeOffset());
         }
     }
 }

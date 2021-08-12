@@ -12,14 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Diagnostics.CodeAnalysis;
-using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
 using GreenEnergyHub.Charges.Domain.Events.Integration;
 using GreenEnergyHub.Charges.Infrastructure.Integration.ChargeLinkCreated;
 using GreenEnergyHub.Charges.Infrastructure.Integration.Mappers;
 using GreenEnergyHub.Charges.TestCore;
-using GreenEnergyHub.TestHelpers.FluentAssertionsExtensions;
 using NodaTime;
 using Xunit;
 using Xunit.Categories;
@@ -34,25 +33,16 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Integration.Mappers
         public void Convert_WhenCalled_MapsToCorrectValues(
             [NotNull] ChargeLinkCreatedOutboundMapper sut)
         {
-            // Arrange
             var createdEvent = GetCreatedEvent();
-
-            // Act
             var result = (ChargeLinkCreatedContract)sut.Convert(createdEvent);
+            ProtoBufAssert.OutgoingContractIsSubset(createdEvent, result);
+        }
 
-            // Assert
-            result.Should().NotContainNullsOrEmptyEnumerables();
-            result.ChargeLinkId.Should().BeEquivalentTo(createdEvent.ChargeLinkId);
-            result.MeteringPointId.Should().BeEquivalentTo(createdEvent.MeteringPointId);
-            result.ChargeId.Should().BeEquivalentTo(createdEvent.ChargeId);
-            result.ChargeType.Should().BeEquivalentTo(createdEvent.ChargeType);
-            result.ChargeOwner.Should().BeEquivalentTo(createdEvent.ChargeOwner);
-            Assert.NotNull(result.ChargeLinkPeriod);
-            result.ChargeLinkPeriod.StartDateTime.Seconds.Should()
-                .Be(createdEvent.ChargeLinkPeriod.StartDateTime.ToUnixTimeSeconds());
-            result.ChargeLinkPeriod.EndDateTime.Seconds.Should()
-                .Be(createdEvent.ChargeLinkPeriod.EndDateTime.ToUnixTimeSeconds());
-            result.ChargeLinkPeriod.Factor.Should().Be(createdEvent.ChargeLinkPeriod.Factor);
+        [Theory]
+        [InlineAutoMoqData]
+        public void Convert_WhenCalledWithNull_ShouldThrow([NotNull]ChargeLinkCreatedOutboundMapper sut)
+        {
+            Assert.Throws<InvalidOperationException>(() => sut.Convert(null!));
         }
 
         private static ChargeLinkCreatedEvent GetCreatedEvent()

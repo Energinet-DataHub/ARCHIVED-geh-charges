@@ -27,11 +27,15 @@ using GreenEnergyHub.Charges.ChargeCommandReceiver;
 using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.Domain.Events.Local;
 using GreenEnergyHub.Charges.Infrastructure.Context;
+using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeCommandAccepted;
+using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeCommandReceived;
+using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeCommandRejected;
 using GreenEnergyHub.Charges.Infrastructure.Mapping;
 using GreenEnergyHub.Charges.Infrastructure.Messaging.Registration;
 using GreenEnergyHub.Charges.Infrastructure.Repositories;
 using GreenEnergyHub.Iso8601;
 using GreenEnergyHub.Messaging;
+using GreenEnergyHub.Messaging.Protobuf;
 using Microsoft.Azure.Functions.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -62,15 +66,18 @@ namespace GreenEnergyHub.Charges.ChargeCommandReceiver
 
         protected virtual void ConfigureMessaging([NotNull] IFunctionsHostBuilder builder)
         {
-            builder.Services
-                .AddMessaging()
-                .AddMessageDispatcher<ChargeCommandAcceptedEvent>(
-                    GetEnv("COMMAND_ACCEPTED_SENDER_CONNECTION_STRING"),
-                    GetEnv("COMMAND_ACCEPTED_TOPIC_NAME"))
-                .AddMessageDispatcher<ChargeCommandRejectedEvent>(
-                    GetEnv("COMMAND_REJECTED_SENDER_CONNECTION_STRING"),
-                    GetEnv("COMMAND_REJECTED_TOPIC_NAME"))
-                .AddMessageExtractor<ChargeCommandReceivedEvent>();
+            builder.Services.ReceiveProtobuf<ChargeCommandReceivedContract>(
+                configuration => configuration.WithParser(() => ChargeCommandReceivedContract.Parser));
+
+            builder.Services.SendProtobuf<ChargeCommandAcceptedContract>();
+            builder.Services.AddMessagingProtobuf().AddMessageDispatcher<ChargeCommandAcceptedEvent>(
+                GetEnv("COMMAND_ACCEPTED_SENDER_CONNECTION_STRING"),
+                GetEnv("COMMAND_ACCEPTED_TOPIC_NAME"));
+
+            builder.Services.SendProtobuf<ChargeCommandRejectedContract>();
+            builder.Services.AddMessagingProtobuf().AddMessageDispatcher<ChargeCommandRejectedEvent>(
+                GetEnv("COMMAND_REJECTED_SENDER_CONNECTION_STRING"),
+                GetEnv("COMMAND_REJECTED_TOPIC_NAME"));
         }
 
         protected virtual void ConfigurePersistence([NotNull] IFunctionsHostBuilder builder)

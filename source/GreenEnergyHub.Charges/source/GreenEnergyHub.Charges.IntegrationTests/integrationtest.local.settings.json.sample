@@ -4,7 +4,7 @@
     "RUN_LOCALHOST_TESTS": false,
     "RUN_PIPELINE_TESTS": false,
     "MESSAGE_RECEIVER_HOSTNAME": "<Message receiver hostname>",
-    "COMMAND_RECEIVED_SENDER_CONNECTION_STRING": "<Connection string for command received sender>"
+    "COMMAND_RECEIVED_SENDER_CONNECTION_STRING": "<Connection string for command received sender>",
     "COMMAND_RECEIVED_LISTENER_CONNECTION_STRING": "<Connection string for command received listener>",
     "COMMAND_ACCEPTED_SENDER_CONNECTION_STRING": "<Connection string for command accepted sender>",
     "COMMAND_ACCEPTED_LISTENER_CONNECTION_STRING": "<Connection string for command accepted listener>",
@@ -20,7 +20,7 @@
     "COMMAND_REJECTED_SUBSCRIPTION_NAME": "sbs-command-rejected",
     "POST_OFFICE_SUBSCRIPTION_NAME": "sbs-post-office",
     "CHARGE_DB_CONNECTION_STRING": "<charge db connection string>",
-    "LOCAL_TIMEZONENAME": "Your time zone ID, e.g.Europe/Copenhagen, see https://en.wikipedia.org/wiki/List_of_tz_database_time_zones for others"
+    "LOCAL_TIMEZONENAME": "Your time zone ID, e.g.Europe/Copenhagen, see https://en.wikipedia.org/wiki/List_of_tz_database_time_zones for others",
     "SUBSCRIPTION_ID": "<Azure subscription id>",
     "RESOURCE_GROUP_NAME": "<Azure resource group name>",
     "DEFAULT_LOCATION": "<Azure default location>",

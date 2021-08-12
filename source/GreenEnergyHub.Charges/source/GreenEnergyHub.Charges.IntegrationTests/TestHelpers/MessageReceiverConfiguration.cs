@@ -19,8 +19,10 @@ using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
 using GreenEnergyHub.Charges.Domain.Events.Local;
+using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeCommandReceived;
 using GreenEnergyHub.Charges.Infrastructure.Messaging;
 using GreenEnergyHub.Charges.Infrastructure.Messaging.Registration;
+using GreenEnergyHub.Messaging.Protobuf;
 using Microsoft.Azure.Functions.Extensions.DependencyInjection;
 using Microsoft.Azure.ServiceBus;
 using Microsoft.Extensions.DependencyInjection;
@@ -46,6 +48,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.TestHelpers
 
             builder.Services
                 .AddSingleton(_ => _topicClient)
+                .SendProtobuf<ChargeCommandReceivedContract>()
                 .AddScoped<IMessageDispatcher<ChargeCommandReceivedEvent>, MessageDispatcher<ChargeCommandReceivedEvent>>()
                 .AddScoped<Channel<ChargeCommandReceivedEvent>, TopicChannel>();
         }

@@ -55,6 +55,7 @@ limitations under the License.
   <ItemGroup>
     <ProjectReference Include="..\..\..\iso8601\GreenEnergyHub.Iso8601\GreenEnergyHub.Iso8601.csproj" />
     <ProjectReference Include="..\..\..\messaging\source\GreenEnergyHub.Messaging.Integration.ServiceCollection\GreenEnergyHub.Messaging.Integration.ServiceCollection.csproj" />
+    <ProjectReference Include="..\..\..\messaging\source\GreenEnergyHub.Messaging.Protobuf.Integration.ServiceCollection\GreenEnergyHub.Messaging.Protobuf.Integration.ServiceCollection.csproj" />
     <ProjectReference Include="..\..\..\queues\source\GreenEnergyHub.Queues.ValidationReportDispatcher\GreenEnergyHub.Queues.ValidationReportDispatcher.csproj" />
     <ProjectReference Include="..\..\..\Shared\GreenEnergyHub\source\GreenEnergyHub.Json\GreenEnergyHub.Json.csproj" />
     <ProjectReference Include="..\GreenEnergyHub.Charges.Application\GreenEnergyHub.Charges.Application.csproj" />

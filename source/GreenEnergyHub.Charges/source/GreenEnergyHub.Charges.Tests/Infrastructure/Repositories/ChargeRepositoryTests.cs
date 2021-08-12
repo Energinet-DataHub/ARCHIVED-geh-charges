@@ -140,7 +140,6 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
                     Sender = new Domain.MarketDocument.MarketParticipant
                     {
                         Id = MarketParticipantId,
-                        Name = "Name",
                         BusinessProcessRole = (MarketParticipantRole)1,
                     },
                     BusinessReasonCode = BusinessReasonCode.UpdateChargeInformation,
