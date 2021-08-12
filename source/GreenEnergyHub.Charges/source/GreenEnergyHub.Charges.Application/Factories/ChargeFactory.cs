@@ -38,7 +38,7 @@ namespace GreenEnergyHub.Charges.Application.Factories
                 TransparentInvoicing = command.ChargeOperation.TransparentInvoicing,
                 EndDateTime = command.ChargeOperation.EndDateTime,
                 StartDateTime = command.ChargeOperation.StartDateTime,
-                Status = command.ChargeOperation.OperationType,
+                Status = OperationType.Create,
                 ChargeOperationId = command.ChargeOperation.Id,
                 LastUpdatedBy = "Volt", // This should be used to identify the user.
             };

@@ -14,14 +14,20 @@
 
 using System;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
-using GreenEnergyHub.Charges.Application.Validation;
+using GreenEnergyHub.Charges.Application.ChangeOfCharges.Repositories;
+using GreenEnergyHub.Charges.Application.Validation.BusinessValidation;
 using GreenEnergyHub.Charges.Application.Validation.BusinessValidation.Factories;
+using GreenEnergyHub.Charges.Application.Validation.BusinessValidation.ValidationRules;
+using GreenEnergyHub.Charges.Core;
+using GreenEnergyHub.Charges.Domain;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
 using GreenEnergyHub.Charges.TestCore;
 using Moq;
 using Xunit;
+using Xunit.Abstractions;
 using Xunit.Categories;
 
 namespace GreenEnergyHub.Charges.Tests.Application.Validation.BusinessValidation.Factories
@@ -30,51 +36,97 @@ namespace GreenEnergyHub.Charges.Tests.Application.Validation.BusinessValidation
     public class BusinessValidationRulesFactoryTests
     {
         [Theory]
-        [InlineAutoMoqData(OperationType.Create, true, false, false)]
-        [InlineAutoMoqData(OperationType.Update, false, true, false)]
-        [InlineAutoMoqData(OperationType.Stop, false, false, true)]
-        public async Task CreateRulesForChargeCommandAsync_WhenCalledWithCommand_UsesOnlyCorrectFactoryAndReturnsResult(
-            OperationType operationType,
-            bool expectCreateFactoryUsed,
-            bool expectUpdateFactoryUsed,
-            bool expectStopFactoryUsed,
-            [Frozen] [NotNull] Mock<IBusinessCreateValidationRulesFactory> createFactory,
-            [Frozen] [NotNull] Mock<IBusinessUpdateValidationRulesFactory> updateFactory,
-            [Frozen] [NotNull] Mock<IBusinessStopValidationRulesFactory> stopFactory,
-            [NotNull] IValidationRuleSet validationRules,
-            [NotNull] ChargeCommand command,
-            [NotNull] BusinessValidationRulesFactory sut)
+        [InlineAutoMoqData(typeof(StartDateValidationRule))]
+        [InlineAutoMoqData(typeof(CommandSenderMustBeAnExistingMarketParticipantRule))]
+        public async Task CreateRulesForChargeCommandAsync_WhenCalledWithNewCharge_ReturnsExpectedMandatoryRules(
+            Type expectedRule,
+            [NotNull][Frozen] Mock<IChargeRepository> repository,
+            [NotNull][Frozen] Mock<IRulesConfigurationRepository> rulesConfigurationRepository,
+            [NotNull] BusinessValidationRulesFactory sut,
+            [NotNull] TestableChargeCommand chargeCommand)
+        {
+            //Arrange
+            ConfigureRepositoryMock(rulesConfigurationRepository);
+
+            Charge? charge = null;
+            repository.Setup(
+                r => r.GetChargeAsync(
+                    It.IsAny<string>(),
+                    It.IsAny<string>(),
+                    It.IsAny<ChargeType>()))
+                .Returns(Task.FromResult(charge!));
+
+            //Act
+            var actual = await sut.CreateRulesForChargeCommandAsync(chargeCommand).ConfigureAwait(false);
+            var actualRules = actual.GetRules().Select(r => r.GetType());
+
+            //Assert
+            Assert.Equal(2, actual.GetRules().Count);
+            Assert.Contains(expectedRule, actualRules);
+        }
+
+        [Theory]
+        [InlineAutoMoqData(typeof(StartDateValidationRule))]
+        [InlineAutoMoqData(typeof(CommandSenderMustBeAnExistingMarketParticipantRule))]
+        public async Task CreateRulesForChargeCommandAsync_WhenCalledWithExistingChargeNotTariff_ReturnsExpectedRules(
+            Type expectedRule,
+            [NotNull][Frozen] Mock<IChargeRepository> repository,
+            [NotNull][Frozen] Mock<IRulesConfigurationRepository> rulesConfigurationRepository,
+            [NotNull] BusinessValidationRulesFactory sut,
+            [NotNull] TestableChargeCommand chargeCommand)
         {
             // Arrange
-            command.ChargeOperation.OperationType = operationType;
+            chargeCommand.ChargeOperation.Type = ChargeType.Fee;
+            ConfigureRepositoryMock(rulesConfigurationRepository);
 
-            var createUsed = false;
-            createFactory.Setup(
-                    c => c.CreateRulesForCreateCommandAsync(command))
-                .Returns(Task.FromResult(validationRules))
-                .Callback<ChargeCommand>(_ => createUsed = true);
-
-            var updateUsed = false;
-            updateFactory.Setup(
-                    u => u.CreateRulesForUpdateCommandAsync(command))
-                .Returns(Task.FromResult(validationRules))
-                .Callback<ChargeCommand>(_ => updateUsed = true);
-
-            var stopUsed = false;
-            stopFactory.Setup(
-                    s => s.CreateRulesForStopCommandAsync(command))
-                .Returns(Task.FromResult(validationRules))
-                .Callback<ChargeCommand>(_ => stopUsed = true);
+            var chargeExists = true;
+            repository.Setup(
+                r => r.CheckIfChargeExistsAsync(
+                    It.IsAny<string>(),
+                    It.IsAny<string>(),
+                    It.IsAny<ChargeType>()))
+                .Returns(Task.FromResult(chargeExists));
 
             // Act
-            var result = await sut.CreateRulesForChargeCommandAsync(command).ConfigureAwait(false);
+            var actual = await sut.CreateRulesForChargeCommandAsync(chargeCommand).ConfigureAwait(false);
+            var actualRules = actual.GetRules().Select(r => r.GetType());
 
             // Assert
-            Assert.NotNull(result);
-            Assert.Equal(validationRules, result);
-            Assert.Equal(expectCreateFactoryUsed, createUsed);
-            Assert.Equal(expectUpdateFactoryUsed, updateUsed);
-            Assert.Equal(expectStopFactoryUsed, stopUsed);
+            Assert.Equal(2, actual.GetRules().Count);
+            Assert.Contains(expectedRule, actualRules);
+        }
+
+        [Theory]
+        [InlineAutoMoqData(typeof(StartDateValidationRule))]
+        [InlineAutoMoqData(typeof(CommandSenderMustBeAnExistingMarketParticipantRule))]
+        [InlineAutoMoqData(typeof(ChangingTariffTaxValueNotAllowedRule))]
+        [InlineAutoMoqData(typeof(ChangingTariffVatValueNotAllowedRule))]
+        public async Task CreateRulesForChargeCommandAsync_WhenCalledWithExistingTariff_ReturnsExpectedRules(
+            Type expectedRule,
+            [NotNull][Frozen] Mock<IChargeRepository> repository,
+            [NotNull][Frozen] Mock<IRulesConfigurationRepository> rulesConfigurationRepository,
+            [NotNull] BusinessValidationRulesFactory sut,
+            [NotNull] TestableChargeCommand chargeCommand)
+        {
+            // Arrange
+            chargeCommand.ChargeOperation.Type = ChargeType.Tariff;
+            ConfigureRepositoryMock(rulesConfigurationRepository);
+
+            var chargeExists = true;
+            repository.Setup(
+                r => r.CheckIfChargeExistsAsync(
+                    It.IsAny<string>(),
+                    It.IsAny<string>(),
+                    It.IsAny<ChargeType>()))
+                .Returns(Task.FromResult(chargeExists));
+
+            // Act
+            var actual = await sut.CreateRulesForChargeCommandAsync(chargeCommand).ConfigureAwait(false);
+            var actualRules = actual.GetRules().Select(r => r.GetType());
+
+            // Assert
+            Assert.Equal(4, actual.GetRules().Count);
+            Assert.Contains(expectedRule, actualRules);
         }
 
         [Theory]
@@ -91,19 +143,23 @@ namespace GreenEnergyHub.Charges.Tests.Application.Validation.BusinessValidation
                 .ConfigureAwait(false);
         }
 
-        [Theory]
-        [InlineAutoMoqData]
-        public static async Task CreateRulesForChargeCommandAsync_WhenCalledWithUnknownOperationType_ThrowsNotImplementedException(
-            [NotNull] ChargeCommand command,
-            [NotNull] BusinessValidationRulesFactory sut)
+        /// <summary>
+        /// Workaround because we haven't yet found a way to have AutoFixture create objects
+        /// without parameterless constructors.
+        /// </summary>
+        private static RulesConfiguration CreateConfiguration()
         {
-            // Arrange
-            command.ChargeOperation.OperationType = OperationType.Unknown;
+            return new RulesConfiguration(
+                new StartDateValidationRuleConfiguration(new Interval<int>(31, 1095)));
+        }
 
-            // Act / Assert
-            await Assert.ThrowsAsync<NotImplementedException>(
-                    () => sut.CreateRulesForChargeCommandAsync(command!))
-                .ConfigureAwait(false);
+        private static void ConfigureRepositoryMock(
+            Mock<IRulesConfigurationRepository> rulesConfigurationRepository)
+        {
+            var configuration = CreateConfiguration();
+            rulesConfigurationRepository
+                .Setup(r => r.GetConfigurationAsync())
+                .Returns(Task.FromResult(configuration));
         }
     }
 }

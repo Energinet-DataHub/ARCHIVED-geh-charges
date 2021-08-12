@@ -49,6 +49,9 @@ limitations under the License.
     </ItemGroup>
 
     <ItemGroup>
+      <Compile Remove="Application\Validation\BusinessValidation\Factories\BusinessCreateValidationRulesFactoryTests.cs" />
+      <Compile Remove="Application\Validation\BusinessValidation\Factories\BusinessStopValidationRulesFactoryTests.cs" />
+      <Compile Remove="Application\Validation\BusinessValidation\Factories\BusinessUpdateValidationRulesFactoryTests.cs" />
       <Compile Remove="Charges.MessageReceiver\ChargeHttpTriggerTests.cs" />
     </ItemGroup>
 
@@ -63,5 +66,11 @@ limitations under the License.
 
     <ItemGroup>
       <Folder Include="Infrastructure\Messaging\Serialization\MarketDocument" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Include="Application\Validation\BusinessValidation\Factories\BusinessCreateValidationRulesFactoryTests.cs" />
+      <None Include="Application\Validation\BusinessValidation\Factories\BusinessStopValidationRulesFactoryTests.cs" />
+      <None Include="Application\Validation\BusinessValidation\Factories\BusinessUpdateValidationRulesFactoryTests.cs" />
     </ItemGroup>
 </Project>

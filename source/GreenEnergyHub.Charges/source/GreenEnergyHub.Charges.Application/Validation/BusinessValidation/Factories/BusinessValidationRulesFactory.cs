@@ -13,38 +13,108 @@
 // limitations under the License.
 
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
+using GreenEnergyHub.Charges.Application.ChangeOfCharges.Repositories;
+using GreenEnergyHub.Charges.Application.Validation.BusinessValidation.ValidationRules;
+using GreenEnergyHub.Charges.Core.DateTime;
+using GreenEnergyHub.Charges.Domain;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
+using GreenEnergyHub.Charges.Domain.MarketDocument;
+using NodaTime;
 
 namespace GreenEnergyHub.Charges.Application.Validation.BusinessValidation.Factories
 {
     public class BusinessValidationRulesFactory : IBusinessValidationRulesFactory
     {
-        private readonly IBusinessUpdateValidationRulesFactory _businessUpdateValidationRulesFactory;
-        private readonly IBusinessCreateValidationRulesFactory _businessCreateValidationRulesFactory;
-        private readonly IBusinessStopValidationRulesFactory _businessStopValidationRulesFactory;
+        private readonly IRulesConfigurationRepository _rulesConfigurationRepository;
+        private readonly IChargeRepository _chargeRepository;
+        private readonly IMarketParticipantRepository _marketParticipantRepository;
+        private readonly IZonedDateTimeService _zonedDateTimeService;
+        private readonly IClock _clock;
 
         public BusinessValidationRulesFactory(
-            IBusinessUpdateValidationRulesFactory businessUpdateValidationRulesFactory,
-            IBusinessCreateValidationRulesFactory businessCreateValidationRulesFactory,
-            IBusinessStopValidationRulesFactory businessStopValidationRulesFactory)
+            IRulesConfigurationRepository rulesConfigurationRepository,
+            IChargeRepository chargeRepository,
+            IMarketParticipantRepository marketParticipantRepository,
+            IZonedDateTimeService zonedDateTimeService,
+            IClock clock)
         {
-            _businessUpdateValidationRulesFactory = businessUpdateValidationRulesFactory;
-            _businessCreateValidationRulesFactory = businessCreateValidationRulesFactory;
-            _businessStopValidationRulesFactory = businessStopValidationRulesFactory;
+            _rulesConfigurationRepository = rulesConfigurationRepository;
+            _chargeRepository = chargeRepository;
+            _marketParticipantRepository = marketParticipantRepository;
+            _zonedDateTimeService = zonedDateTimeService;
+            _clock = clock;
         }
 
         public async Task<IValidationRuleSet> CreateRulesForChargeCommandAsync(ChargeCommand chargeCommand)
         {
             if (chargeCommand == null) throw new ArgumentNullException(nameof(chargeCommand));
 
-            return chargeCommand.ChargeOperation.OperationType switch
+            var configuration = await _rulesConfigurationRepository.GetConfigurationAsync().ConfigureAwait(false);
+
+            var senderId = chargeCommand.Document.Sender.Id;
+            var sender = _marketParticipantRepository.GetMarketParticipantOrNull(senderId);
+
+            var rules = GetMandatoryRules(chargeCommand, configuration, sender);
+
+            var chargeExists = await CheckIfChargeExistAsync(chargeCommand).ConfigureAwait(false);
+
+            if (chargeExists)
             {
-                OperationType.Create => await _businessCreateValidationRulesFactory.CreateRulesForCreateCommandAsync(chargeCommand).ConfigureAwait(false),
-                OperationType.Update => await _businessUpdateValidationRulesFactory.CreateRulesForUpdateCommandAsync(chargeCommand).ConfigureAwait(false),
-                OperationType.Stop => await _businessStopValidationRulesFactory.CreateRulesForStopCommandAsync(chargeCommand).ConfigureAwait(false),
-                _ => throw new NotImplementedException("Unknown operation"),
+                var charge = await _chargeRepository.GetChargeAsync(
+                    chargeCommand.ChargeOperation.ChargeId,
+                    chargeCommand.ChargeOperation.ChargeOwner,
+                    chargeCommand.ChargeOperation.Type).ConfigureAwait(false);
+
+                if (chargeCommand.ChargeOperation.Type == ChargeType.Tariff)
+                {
+                    AddTariffOnlyRules(rules, chargeCommand, charge);
+                }
+            }
+
+            return ValidationRuleSet.FromRules(rules);
+        }
+
+        private static void AddTariffOnlyRules(
+            List<IValidationRule> rules,
+            ChargeCommand command,
+            Charge charge)
+        {
+            rules.Add(new ChangingTariffVatValueNotAllowedRule(command, charge));
+            rules.Add(new ChangingTariffTaxValueNotAllowedRule(command, charge));
+        }
+
+        private List<IValidationRule> GetMandatoryRules(
+            ChargeCommand chargeCommand,
+            RulesConfiguration configuration,
+            MarketParticipant? sender)
+        {
+            var rules = new List<IValidationRule>
+            {
+                new StartDateValidationRule(
+                    chargeCommand,
+                    configuration.StartDateValidationRuleConfiguration,
+                    _zonedDateTimeService,
+                    _clock),
+                new CommandSenderMustBeAnExistingMarketParticipantRule(sender),
             };
+
+            return rules;
+        }
+
+        private async Task<bool> CheckIfChargeExistAsync(ChargeCommand command)
+        {
+            var chargeId = command.ChargeOperation.ChargeId;
+            var chargeOperationChargeOwner = command.ChargeOperation.ChargeOwner;
+            var chargeType = command.ChargeOperation.Type;
+
+            var result = await _chargeRepository.CheckIfChargeExistsAsync(
+                chargeId,
+                chargeOperationChargeOwner,
+                chargeType).ConfigureAwait(false);
+
+            return result;
         }
     }
 }
