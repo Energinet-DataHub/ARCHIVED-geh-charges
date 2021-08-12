@@ -45,7 +45,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Validation.BusinessValidation
             [NotNull] BusinessValidationRulesFactory sut,
             [NotNull] TestableChargeCommand chargeCommand)
         {
-            //Arrange
+            // Arrange
             ConfigureRepositoryMock(rulesConfigurationRepository);
 
             Charge? charge = null;
@@ -56,11 +56,11 @@ namespace GreenEnergyHub.Charges.Tests.Application.Validation.BusinessValidation
                     It.IsAny<ChargeType>()))
                 .Returns(Task.FromResult(charge!));
 
-            //Act
+            // Act
             var actual = await sut.CreateRulesForChargeCommandAsync(chargeCommand).ConfigureAwait(false);
             var actualRules = actual.GetRules().Select(r => r.GetType());
 
-            //Assert
+            // Assert
             Assert.Equal(2, actual.GetRules().Count);
             Assert.Contains(expectedRule, actualRules);
         }
