@@ -25,10 +25,6 @@ limitations under the License.
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Validation\BusinessValidation\Factories\BusinessValidationRulesFactory - Copy.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\..\..\messaging\source\GreenEnergyHub.Messaging\GreenEnergyHub.Messaging.csproj" />
     <ProjectReference Include="..\..\..\queues\source\GreenEnergyHub.Queues.ValidationReportDispatcher\GreenEnergyHub.Queues.ValidationReportDispatcher.csproj" />
     <ProjectReference Include="..\..\..\Shared\GreenEnergyHub\source\GreenEnergyHub.Json\GreenEnergyHub.Json.csproj" />
