@@ -23,16 +23,17 @@ namespace GreenEnergyHub.Charges.Domain.Events.Local
     {
         public ChargeCommandRejectedEvent(
             Instant publishedTime,
+            string correlationId,
             [NotNull] ChargeCommand command,
             IEnumerable<string> reason)
-            : base(publishedTime, command.CorrelationId)
+            : base(publishedTime, correlationId)
         {
             Command = command;
-            Reason = reason;
+            RejectReasons = reason;
         }
 
         public ChargeCommand Command { get; }
 
-        public IEnumerable<string> Reason { get; set; }
+        public IEnumerable<string> RejectReasons { get; set; }
     }
 }

@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using Energinet.DataHub.MeteringPoints.IntegrationEventContracts;
 using GreenEnergyHub.Charges.Domain.Events.Integration;
 using GreenEnergyHub.Messaging.Protobuf;
@@ -20,11 +21,10 @@ using GreenEnergyHub.Messaging.Transport;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Integration.Mappers
 {
-    public class LinkCommandReceivedOutboundMapperInboundMapper : ProtobufInboundMapper<MeteringPointCreated>
+    public class MeteringPointCreatedIntegrationInboundMapper : ProtobufInboundMapper<MeteringPointCreated>
     {
-        protected override IInboundMessage Convert(MeteringPointCreated obj)
+        protected override IInboundMessage Convert([NotNull]MeteringPointCreated obj)
         {
-            if (obj == null) throw new ArgumentNullException(nameof(obj));
             return new MeteringPointCreatedEvent(
                 obj.MeteringPointId,
                 obj.MeteringPointType,

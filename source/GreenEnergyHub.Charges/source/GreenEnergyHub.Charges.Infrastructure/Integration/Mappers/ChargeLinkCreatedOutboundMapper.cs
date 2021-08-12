@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using Google.Protobuf.WellKnownTypes;
 using GreenEnergyHub.Charges.Domain.Events.Integration;
 using GreenEnergyHub.Charges.Infrastructure.Integration.ChargeLinkCreated;
@@ -22,13 +23,8 @@ namespace GreenEnergyHub.Charges.Infrastructure.Integration.Mappers
 {
     public class ChargeLinkCreatedOutboundMapper : ProtobufOutboundMapper<ChargeLinkCreatedEvent>
     {
-        protected override Google.Protobuf.IMessage Convert(ChargeLinkCreatedEvent obj)
+        protected override Google.Protobuf.IMessage Convert([NotNull]ChargeLinkCreatedEvent obj)
         {
-            if (obj == null)
-            {
-                throw new ArgumentNullException(nameof(obj));
-            }
-
             return new ChargeLinkCreatedContract
             {
                 ChargeLinkId = obj.ChargeLinkId,

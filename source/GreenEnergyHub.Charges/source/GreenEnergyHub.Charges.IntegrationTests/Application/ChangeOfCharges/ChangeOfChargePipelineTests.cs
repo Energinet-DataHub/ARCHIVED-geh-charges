@@ -104,7 +104,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
 
             // assert
             Assert.True(changeOfChargesMessageResult.IsSucceeded);
-            Assert.Equal(chargeCommand.ChargeOperation.Id, receivedEvent.OriginalTransactionReferenceMRid);
+            Assert.Equal(chargeCommand.ChargeOperation.Id, receivedEvent.OriginalTransactionReference);
             Assert.NotNull(receivedEvent);
             Assert.True(chargeExists);
         }
@@ -151,7 +151,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
 
             // assert
             Assert.True(changeOfChargesMessageResult.IsSucceeded);
-            Assert.Equal(chargeCommand.ChargeOperation.Id, receivedEvent.OriginalTransactionReferenceMRid);
+            Assert.Equal(chargeCommand.ChargeOperation.Id, receivedEvent.OriginalTransactionReference);
             Assert.NotNull(receivedEvent);
             Assert.False(chargeExists);
         }

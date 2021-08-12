@@ -12,10 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
+using System.Diagnostics.CodeAnalysis;
 using Energinet.DataHub.MeteringPoints.IntegrationEventContracts;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.Events.Integration;
 using GreenEnergyHub.Charges.Infrastructure.Integration.Mappers;
+using GreenEnergyHub.Charges.TestCore;
 using GreenEnergyHub.TestHelpers.FluentAssertionsExtensions;
 using Xunit;
 using Xunit.Categories;
@@ -25,32 +28,14 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Integration.Mappers
     [UnitTest]
     public class MeteringPointCreatedIntegrationInboundMapperTests
     {
-        [Fact]
-        public void MeteringPointCreatedIntegrationInboundMapper_WhenCalled_ShouldMapToProtobufWithCorrectValues()
+        [Theory]
+        [InlineAutoMoqData]
+        public void MeteringPointCreatedIntegrationInboundMapper_WhenCalled_ShouldMapToProtobufWithCorrectValues(
+            [NotNull] MeteringPointCreated meteringPointCreatedEvent,
+            [NotNull] MeteringPointCreatedIntegrationInboundMapper sut)
         {
-            // Arrange
-            var meteringPointCreatedEvent = new MeteringPointCreated
-            {
-                Product = "1",
-                ConnectionState = "2",
-                EffectiveDate = "3",
-                FromGrid = "4",
-                MeteringMethod = "5",
-                QuantityUnit = "6",
-                SettlementMethod = "7",
-                ToGrid = "8",
-                MeteringGridArea = "9",
-                MeteringPointId = "10",
-                MeteringPointType = "11",
-                MeterReadingPeriodicity = "12",
-                NetSettlementGroup = "13",
-                ParentMeteringPointId = "14",
-            };
-
-            var mapper = new LinkCommandReceivedOutboundMapperInboundMapper();
-
             // Act
-            var converted = (MeteringPointCreatedEvent)mapper.Convert(meteringPointCreatedEvent);
+            var converted = (MeteringPointCreatedEvent)sut.Convert(meteringPointCreatedEvent);
 
             // Assert
             converted.Should().NotContainNullsOrEmptyEnumerables();
@@ -67,6 +52,13 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Integration.Mappers
             converted.MeterReadingPeriodicity.Should().BeEquivalentTo(meteringPointCreatedEvent.MeterReadingPeriodicity);
             converted.NetSettlementGroup.Should().BeEquivalentTo(meteringPointCreatedEvent.NetSettlementGroup);
             //converted.ParentMeteringPointId.Should().BeEquivalentTo(meteringPointCreatedEvent.ParentMeteringPointId);
+        }
+
+        [Theory]
+        [InlineAutoMoqData]
+        public void Convert_WhenCalledWithNull_ShouldThrow([NotNull]MeteringPointCreatedIntegrationInboundMapper sut)
+        {
+            Assert.Throws<InvalidOperationException>(() => sut.Convert(null!));
         }
     }
 }

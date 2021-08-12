@@ -26,11 +26,8 @@ namespace GreenEnergyHub.Charges.Infrastructure.Messaging.Registration
         {
             services.AddScoped<ICorrelationContext, CorrelationContext>();
             services.AddScoped<MessageExtractor>();
-            services.AddScoped<MessageSerializer, JsonMessageSerializer>();
-            services.AddScoped<IJsonOutboundMapperFactory, DefaultJsonMapperFactory>();
+            services.AddSingleton<IJsonSerializer, Core.Json.JsonSerializer>();
             services.AddScoped<MessageDeserializer, JsonMessageDeserializer<ChargeCommandAcceptedEvent>>();
-            services.AddSingleton<IJsonSerializer, GreenEnergyHub.Charges.Core.Json.JsonSerializer>();
-
             return new MessagingRegistrator(services);
         }
 

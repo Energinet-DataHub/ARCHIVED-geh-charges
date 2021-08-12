@@ -13,8 +13,11 @@
 // limitations under the License.
 
 using GreenEnergyHub.Charges.Application;
+using GreenEnergyHub.Charges.Domain.Events.Local;
+using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeCommandReceived;
 using GreenEnergyHub.Charges.Infrastructure.Messaging;
 using GreenEnergyHub.Charges.Infrastructure.Messaging.Registration;
+using GreenEnergyHub.Messaging.Protobuf;
 using GreenEnergyHub.TestHelpers;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;
@@ -34,8 +37,8 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Messaging.Registration
             var services = new ServiceCollection();
 
             // Act
-            services
-                .AddMessaging()
+            services.SendProtobuf<TestMessageContract>();
+            services.AddMessagingProtobuf()
                 .AddMessageDispatcher<TestMessage>(anyValidConnectionString, anyTopicName);
 
             // Assert

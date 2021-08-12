@@ -32,6 +32,7 @@ namespace GreenEnergyHub.Charges.Application.Factories
         {
             return new ChargeCommandAcceptedEvent(
                 _clock.GetCurrentInstant(),
+                command.CorrelationId,
                 command);
         }
     }
