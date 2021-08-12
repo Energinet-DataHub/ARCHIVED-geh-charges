@@ -24,16 +24,16 @@ namespace GreenEnergyHub.Charges.Tests.Core.Enumeration
     public class EnumComparisonTests
     {
         [Theory]
-        [InlineData(typeof(EnumOne), typeof(EnumTwo), false)]
-        [InlineData(typeof(EnumOne), typeof(EnumThree), false)]
-        [InlineData(typeof(EnumOne), typeof(EnumFour), true)]
-        [InlineData(typeof(EnumOne), typeof(EnumFive), false)]
-        [InlineData(typeof(EnumOne), typeof(EnumSix), false)]
-        [InlineData(typeof(EnumTwo), typeof(EnumOne), true)]
-        [InlineData(typeof(EnumThree), typeof(EnumOne), false)]
-        [InlineData(typeof(EnumFour), typeof(EnumOne), true)]
-        [InlineData(typeof(EnumFive), typeof(EnumOne), false)]
-        [InlineData(typeof(EnumSix), typeof(EnumOne), true)]
+        [InlineData(typeof(ReferenceEnum), typeof(SubsetEnum), false)]
+        [InlineData(typeof(ReferenceEnum), typeof(NothingSharedEnum), false)]
+        [InlineData(typeof(ReferenceEnum), typeof(ExactlyLikeReferenceEnum), true)]
+        [InlineData(typeof(ReferenceEnum), typeof(MatchingNameButMismatchingIntEnum), false)]
+        [InlineData(typeof(ReferenceEnum), typeof(SubsetVariantEnum), false)]
+        [InlineData(typeof(SubsetEnum), typeof(ReferenceEnum), true)]
+        [InlineData(typeof(NothingSharedEnum), typeof(ReferenceEnum), false)]
+        [InlineData(typeof(ExactlyLikeReferenceEnum), typeof(ReferenceEnum), true)]
+        [InlineData(typeof(MatchingNameButMismatchingIntEnum), typeof(ReferenceEnum), false)]
+        [InlineData(typeof(SubsetVariantEnum), typeof(ReferenceEnum), true)]
         public void IsSubsetOf_WhenExactStrategyIsUsed_ReturnsCorrectResult(
             Type subjectType,
             Type comparisonType,
@@ -42,38 +42,38 @@ namespace GreenEnergyHub.Charges.Tests.Core.Enumeration
             Assert.Equal(expected, EnumComparison.IsSubsetOf(subjectType, comparisonType, EnumComparisonStrategy.Exact));
         }
 
-        private enum EnumOne
+        private enum ReferenceEnum
         {
             A = 0,
             B = 1,
             C = 2,
         }
 
-        private enum EnumTwo
+        private enum SubsetEnum
         {
             A = 0,
             B = 1,
         }
 
-        private enum EnumThree
+        private enum NothingSharedEnum
         {
             D = 0,
         }
 
-        private enum EnumFour
+        private enum ExactlyLikeReferenceEnum
         {
             A = 0,
             B = 1,
             C = 2,
         }
 
-        private enum EnumFive
+        private enum MatchingNameButMismatchingIntEnum
         {
             A = 0,
             C = 1,
         }
 
-        private enum EnumSix
+        private enum SubsetVariantEnum
         {
             A = 0,
             C = 2,
