@@ -37,12 +37,6 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Internal
         }
 
         [Fact]
-        public void OperationTypeContract_ShouldBeSubsetOfOperationType()
-        {
-            ProtoBufAssert.ContractEnumIsSubSet<OperationTypeContract, OperationType>();
-        }
-
-        [Fact]
         public void DocumentTypeContract_ShouldBeSubsetOfDocumentType()
         {
             ProtoBufAssert.ContractEnumIsSubSet<DocumentTypeContract, DocumentType>();

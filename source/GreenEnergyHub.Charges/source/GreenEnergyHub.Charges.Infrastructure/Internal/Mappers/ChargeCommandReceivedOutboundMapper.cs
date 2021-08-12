@@ -59,7 +59,6 @@ namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
                 Resolution = (ResolutionContract)charge.Resolution,
                 ChargeDescription = charge.ChargeDescription,
                 ChargeName = charge.ChargeName,
-                OperationType = (OperationTypeContract)charge.OperationType,
                 TaxIndicator = charge.TaxIndicator,
                 TransparentInvoicing = charge.TransparentInvoicing,
                 VatClassification = (VatClassificationContract)charge.VatClassification,
