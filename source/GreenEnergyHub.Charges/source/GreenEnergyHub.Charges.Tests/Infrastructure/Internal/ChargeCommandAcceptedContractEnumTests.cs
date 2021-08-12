@@ -14,7 +14,7 @@
 
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
 using GreenEnergyHub.Charges.Domain.MarketDocument;
-using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeCommandRejected;
+using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeCommandAccepted;
 using GreenEnergyHub.Charges.TestCore;
 using Xunit;
 using Xunit.Categories;
@@ -22,7 +22,7 @@ using Xunit.Categories;
 namespace GreenEnergyHub.Charges.Tests.Infrastructure.Internal
 {
     [UnitTest]
-    public class ChargeCommandRejectedContractTests
+    public class ChargeCommandAcceptedContractEnumTests
     {
         [Fact]
         public void ResolutionContract_ShouldBeSubsetOfResolution()

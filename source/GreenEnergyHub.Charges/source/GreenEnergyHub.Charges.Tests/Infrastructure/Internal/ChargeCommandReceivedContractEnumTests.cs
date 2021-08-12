@@ -22,7 +22,7 @@ using Xunit.Categories;
 namespace GreenEnergyHub.Charges.Tests.Infrastructure.Internal
 {
     [UnitTest]
-    public class ChargeCommandReceivedContractTests
+    public class ChargeCommandReceivedContractEnumTests
     {
         [Fact]
         public void ResolutionContract_ShouldBeSubsetOfResolution()
