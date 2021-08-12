@@ -25,10 +25,17 @@ namespace GreenEnergyHub.Charges.Tests.Core.Enumeration
     {
         [Theory]
         [MemberData("AllStrategies")]
-        public void IsSubsetOf_WhenComparingToSelf_IsAlwaysSubSet(EnumComparisonStrategy strategy)
+        public void Create_WhenCalled_ReturnsNotNullComparisonStrategy(EnumComparisonStrategy strategy)
         {
             var actual = EnumValueNameComparisonStrategyFactory.Create(strategy);
             Assert.NotNull(actual);
+        }
+
+        [Fact]
+        public void Create_WhenCalledWithUnknownStrategy_ThrowsNotImplementedException()
+        {
+            var strategy = (EnumComparisonStrategy)987; // Some unused enum value
+            Assert.Throws<NotImplementedException>(() => EnumValueNameComparisonStrategyFactory.Create(strategy));
         }
 
         public static IEnumerable<object[]> AllStrategies()
