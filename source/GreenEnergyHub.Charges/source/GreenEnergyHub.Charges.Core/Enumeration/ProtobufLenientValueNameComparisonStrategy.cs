@@ -19,6 +19,16 @@ using System.Text.RegularExpressions;
 
 namespace GreenEnergyHub.Charges.Core.Enumeration
 {
+    /// <summary>
+    /// Protobuf lenient comparison allows the name of the enums being compared to be slightly lenient unlike
+    /// the exact match strategy where the names has to exactly alike.
+    ///
+    /// In protobuf lenient comparison protobuf will have a prefix to the name, defined by one or more
+    /// characters starting with an upper case character and ending at the character just before the next
+    /// upper case character. For example PrefixEnumName would compare EnumName with the other enum, skipping the
+    /// first Uppercase word. In addition, the remaining part of the enum value name will be allowed to match
+    /// without regard to casing.
+    /// </summary>
     public class ProtobufLenientValueNameComparisonStrategy : IEnumValueNameComparisonStrategy
     {
         public bool IsEquivalent([NotNull] Enum protobufValue, [NotNull] Enum comparisonValue)
