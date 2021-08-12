@@ -24,15 +24,15 @@ namespace GreenEnergyHub.Charges.Infrastructure.Integration.Mappers
 {
     public class ChargeRejectionInboundMapper : ProtobufInboundMapper<ChargeRejectionContract>
     {
-        protected override IInboundMessage Convert([NotNull]ChargeRejectionContract obj)
+        protected override IInboundMessage Convert([NotNull]ChargeRejectionContract rejectionContract)
         {
             return new Domain.Acknowledgements.ChargeRejection(
-                obj.CorrelationId,
-                obj.Receiver,
-                (MarketParticipantRole)obj.ReceiverMarketParticipantRole,
-                obj.OriginalTransactionReference,
-                (BusinessReasonCode)obj.BusinessReasonCode,
-                ConvertRejectionReasons(obj.RejectReasons));
+                rejectionContract.CorrelationId,
+                rejectionContract.Receiver,
+                (MarketParticipantRole)rejectionContract.ReceiverMarketParticipantRole,
+                rejectionContract.OriginalTransactionReference,
+                (BusinessReasonCode)rejectionContract.BusinessReasonCode,
+                ConvertRejectionReasons(rejectionContract.RejectReasons));
         }
 
         private static List<string> ConvertRejectionReasons(RepeatedField<string> rejectionReasons)

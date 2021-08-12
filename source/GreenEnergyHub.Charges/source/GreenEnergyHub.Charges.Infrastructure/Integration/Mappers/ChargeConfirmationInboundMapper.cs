@@ -22,14 +22,14 @@ namespace GreenEnergyHub.Charges.Infrastructure.Integration.Mappers
 {
     public class ChargeConfirmationInboundMapper : ProtobufInboundMapper<ChargeConfirmationContract>
     {
-        protected override IInboundMessage Convert([NotNull]ChargeConfirmationContract obj)
+        protected override IInboundMessage Convert([NotNull]ChargeConfirmationContract confirmationContract)
         {
             return new Domain.Acknowledgements.ChargeConfirmation(
-                obj.CorrelationId,
-                obj.Receiver,
-                (MarketParticipantRole)obj.ReceiverMarketParticipantRole,
-                obj.OriginalTransactionReference,
-                (BusinessReasonCode)obj.BusinessReasonCode);
+                confirmationContract.CorrelationId,
+                confirmationContract.Receiver,
+                (MarketParticipantRole)confirmationContract.ReceiverMarketParticipantRole,
+                confirmationContract.OriginalTransactionReference,
+                (BusinessReasonCode)confirmationContract.BusinessReasonCode);
         }
     }
 }
