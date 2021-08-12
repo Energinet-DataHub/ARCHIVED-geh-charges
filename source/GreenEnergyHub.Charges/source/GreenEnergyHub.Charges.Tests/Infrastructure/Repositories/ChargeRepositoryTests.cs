@@ -146,7 +146,6 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
                     BusinessReasonCode = BusinessReasonCode.UpdateChargeInformation,
                 },
                 ChargeOperationId = "id",
-                Status = OperationType.Create,
                 LastUpdatedBy = "LastUpdatedBy",
                 CorrelationId = "CorrelationId",
             };

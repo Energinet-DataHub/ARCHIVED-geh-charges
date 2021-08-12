@@ -35,7 +35,7 @@ namespace GreenEnergyHub.Charges.Domain
         /// </summary>
         public string ChargeOperationId { get; set; }
 
-        public OperationType Status { get; set; }
+        //public OperationType Status { get; set; }
 
         /// <summary>
         /// Unique ID of a charge (Note, unique per market participants).
