@@ -35,6 +35,8 @@ limitations under the License.
       <EmbeddedResource Include="Scripts\Seed\202108130611 System operator market participant.sql" />
       <None Remove="Scripts\Seed\202108130629 Default charges.sql" />
       <EmbeddedResource Include="Scripts\Seed\202108130629 Default charges.sql" />
+      <None Remove="Scripts\Seed\202108131029 Default charge links.sql" />
+      <EmbeddedResource Include="Scripts\Seed\202108131029 Default charge links.sql" />
     </ItemGroup>
 
     <ItemGroup>
