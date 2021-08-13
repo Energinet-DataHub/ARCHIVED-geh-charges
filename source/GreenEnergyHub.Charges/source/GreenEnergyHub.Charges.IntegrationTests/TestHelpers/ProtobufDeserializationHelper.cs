@@ -34,7 +34,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.TestHelpers
                 return (T)DeserializeChargeRejection(data);
             }
 
-            throw new NotImplementedException("Missing implementation on how to deserialize " + typeof(T));
+            throw new NotImplementedException("Missing implementation on how to deserialize " + typeof(T).FullName);
         }
 
         private static IInboundMessage DeserializeChargeConfirmation(byte[] data)
