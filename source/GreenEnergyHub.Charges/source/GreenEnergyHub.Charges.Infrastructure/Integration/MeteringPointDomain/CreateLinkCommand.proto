@@ -19,10 +19,6 @@ import "google/protobuf/timestamp.proto";
 
 option csharp_namespace = "Energinet.DataHub.MeteringPoints.IntegrationEventContracts";
 
-/**
- * Represents a CreateLinkCommand
- */
-
 message CreateLinkCommandContract {
   string metering_point_id = 1;
   MeteringPointTypeContract metering_point_type = 2;
