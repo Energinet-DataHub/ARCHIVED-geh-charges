@@ -17,26 +17,26 @@ namespace GreenEnergyHub.Charges.Domain.MeteringPoint
     public enum MeteringPointType
     {
         Unknown = 0,
-        Consumption = 1, // This will be received in E17 in ebiX
-        Production = 2, // This will be received in E18 in ebiX
-        Exchange = 3, // This will be received in E20 in ebiX
-        VeProduction = 4, // This will be received as D01 in ebiX
-        Analysis = 5, // This will be received as D02 in ebiX
-        SurplusProductionGroup = 6, // This will be received as D04 in ebiX
-        NetProduction = 7, // This will be received as D05 in ebiX
-        SupplyToGrid = 8, // This will be received as D06 in ebiX
-        ConsumptionFromGrid = 9, // This will be received as D07 in ebiX
-        WholesaleService = 10, // This will received as D08 in ebiX
-        OwnProduction = 11, // This will be received as D09 i ebiX
-        NetFromGrid = 12, // This will be received as D10 in ebiX
-        NetToGrid = 13, // This will be received as D11 in ebiX
-        TotalConsumption = 14, // This will be received as D12 in ebiX
-        GridLossCorrection = 15, // This will be received as D13 in ebiX
-        ElectricalHeating = 16, // This will be received as D14 in ebiX
-        NetConsumption = 17, // This will be received as D15 in ebiX
-        OtherConsumption = 18, // This will be received as D17 in ebiX
-        OtherProduction = 19, // This will be received as D18 in ebiX
-        ExchangeReactiveEnergy = 20, // This will be received as D20 in ebiX
-        InternalUse = 21, // This will be received as D99 in ebiX
+        Consumption = 1,
+        Production = 2,
+        Exchange = 3,
+        VeProduction = 4,
+        Analysis = 5,
+        SurplusProductionGroup = 6,
+        NetProduction = 7,
+        SupplyToGrid = 8,
+        ConsumptionFromGrid = 9,
+        WholesaleService = 10,
+        OwnProduction = 11,
+        NetFromGrid = 12,
+        NetToGrid = 13,
+        TotalConsumption = 14,
+        GridLossCorrection = 15,
+        ElectricalHeating = 16,
+        NetConsumption = 17,
+        OtherConsumption = 18,
+        OtherProduction = 19,
+        ExchangeReactiveEnergy = 20,
+        InternalUse = 21,
     }
 }
