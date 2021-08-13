@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-module "mag_availabilitity_group" {
+module "mag_availability_group" {
   source              = "../modules/monitor-action-group-email" # Repo geh-terraform-modules doesn't have a monitor-action-group at the time of writting this
   name                = "mag-availability-${var.project}-${var.organisation}-${var.environment}"
   resource_group_name = data.azurerm_resource_group.main.name
