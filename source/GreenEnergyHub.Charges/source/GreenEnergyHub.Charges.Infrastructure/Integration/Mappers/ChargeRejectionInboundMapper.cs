@@ -37,7 +37,9 @@ namespace GreenEnergyHub.Charges.Infrastructure.Integration.Mappers
 
         private static List<string> ConvertRejectionReasons(RepeatedField<string> rejectionReasons)
         {
-            return rejectionReasons.ToList();
+            var reasons = new List<string>();
+            reasons.AddRange(rejectionReasons);
+            return reasons;
         }
     }
 }

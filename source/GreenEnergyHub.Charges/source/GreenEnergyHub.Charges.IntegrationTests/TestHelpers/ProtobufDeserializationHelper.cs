@@ -29,6 +29,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.TestHelpers
             {
                 return (T)DeserializeChargeConfirmation(data);
             }
+
             if (typeof(T) == typeof(ChargeRejection))
             {
                 return (T)DeserializeChargeRejection(data);
