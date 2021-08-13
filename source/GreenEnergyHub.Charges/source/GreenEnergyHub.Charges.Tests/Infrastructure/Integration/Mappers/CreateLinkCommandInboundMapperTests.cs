@@ -28,11 +28,11 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Integration.Mappers
         [Theory]
         [InlineAutoMoqData]
         public void Convert_WhenCalled_ShouldMapToDomainObjectWithCorrectValues(
-            [NotNull] CreateLinkCommandContract chargeCommandAcceptedContract,
+            [NotNull] CreateLinkCommandContract createLinkCommandContract,
             [NotNull] CreateLinkCommandInboundMapper sut)
         {
-            var result = (CreateLinkCommandEvent)sut.Convert(chargeCommandAcceptedContract);
-            ProtoBufAssert.IncomingContractIsSuperset(result, chargeCommandAcceptedContract);
+            var result = (CreateLinkCommandEvent)sut.Convert(createLinkCommandContract);
+            ProtoBufAssert.IncomingContractIsSuperset(result, createLinkCommandContract);
         }
     }
 }
