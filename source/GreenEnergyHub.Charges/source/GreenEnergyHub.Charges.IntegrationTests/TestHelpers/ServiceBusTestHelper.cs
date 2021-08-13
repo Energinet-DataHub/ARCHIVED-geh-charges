@@ -51,7 +51,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.TestHelpers
             subscriptionClient.RegisterMessageHandler(
                 async (serviceBusMessage, _) =>
                 {
-                    var deserializedMessage = (T)await _messageExtractor.ExtractAsync(serviceBusMessage.Body, _).ConfigureAwait(false);
+                    var deserializedMessage = ProtobufDeserializationHelper.Deserialize<T>(serviceBusMessage.Body);
 
                     if (deserializedMessage is IMessage message && message.CorrelationId == correlationId)
                     {
