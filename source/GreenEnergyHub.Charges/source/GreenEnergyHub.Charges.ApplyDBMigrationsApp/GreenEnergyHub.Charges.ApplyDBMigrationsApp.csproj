@@ -31,6 +31,8 @@ limitations under the License.
       <EmbeddedResource Include="Scripts\Model\202107011226 New Metering Point.sql" />
       <None Remove="Scripts\Model\202108130551 Default Charge Links.sql" />
       <EmbeddedResource Include="Scripts\Model\202108130551 Default Charge Links.sql" />
+      <None Remove="Scripts\Seed\202108130611 System operator market participant.sql" />
+      <EmbeddedResource Include="Scripts\Seed\202108130611 System operator market participant.sql" />
     </ItemGroup>
 
     <ItemGroup>
