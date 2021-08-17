@@ -20,6 +20,8 @@ using GreenEnergyHub.Charges.Domain.Events.Local;
 using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeCommandRejected;
 using GreenEnergyHub.Charges.Infrastructure.Internal.Mappers;
 using GreenEnergyHub.Charges.TestCore;
+using GreenEnergyHub.Charges.TestCore.Attributes;
+using GreenEnergyHub.Charges.TestCore.Protobuf;
 using NodaTime;
 using Xunit;
 using Xunit.Categories;
@@ -37,7 +39,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Internal.Mappers
         {
             var chargeCommandRejectedEvent = CreateChargeCommandRejectedEvent(chargeCommand);
             var result = (ChargeCommandRejectedContract)sut.Convert(chargeCommandRejectedEvent);
-            ProtoBufAssert.OutgoingContractIsSubset(chargeCommandRejectedEvent, result);
+            ProtobufAssert.OutgoingContractIsSubset(chargeCommandRejectedEvent, result);
         }
 
         [Theory]

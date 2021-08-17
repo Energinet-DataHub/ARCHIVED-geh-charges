@@ -22,9 +22,9 @@ using NodaTime;
 using Xunit;
 using Xunit.Sdk;
 
-namespace GreenEnergyHub.Charges.TestCore
+namespace GreenEnergyHub.Charges.TestCore.Protobuf
 {
-    public static class ProtoBufAssert
+    public static class ProtobufAssert
     {
         /// <summary>
         /// Throws <see cref="XunitException"/>.

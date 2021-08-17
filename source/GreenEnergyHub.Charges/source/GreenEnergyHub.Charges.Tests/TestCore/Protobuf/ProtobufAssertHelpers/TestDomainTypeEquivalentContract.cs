@@ -16,7 +16,7 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using Google.Protobuf;
 
-namespace GreenEnergyHub.Charges.Tests.TestCore.ProtoBufAssertHelpers
+namespace GreenEnergyHub.Charges.Tests.TestCore.Protobuf.ProtobufAssertHelpers
 {
     public class TestDomainTypeEquivalentContract : TestBaseContract, IMessage<TestDomainTypeEquivalentContract>
     {
