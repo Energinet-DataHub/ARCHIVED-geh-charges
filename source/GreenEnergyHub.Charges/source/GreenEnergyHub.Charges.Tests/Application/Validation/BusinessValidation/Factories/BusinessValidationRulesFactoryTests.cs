@@ -61,7 +61,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Validation.BusinessValidation
             var actualRules = actual.GetRules().Select(r => r.GetType());
 
             // Assert
-            Assert.Equal(2, actual.GetRules().Count);
+            Assert.Equal(2, actual.GetRules().Count); // This assert is added to ensure that when the rule set is expanded, the test gets attention as well.
             Assert.Contains(expectedRule, actualRules);
         }
 
@@ -92,7 +92,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Validation.BusinessValidation
             var actualRules = actual.GetRules().Select(r => r.GetType());
 
             // Assert
-            Assert.Equal(2, actual.GetRules().Count);
+            Assert.Equal(2, actual.GetRules().Count); // This assert is added to ensure that when the rule set is expanded, the test gets attention as well.
             Assert.Contains(expectedRule, actualRules);
         }
 
@@ -125,7 +125,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Validation.BusinessValidation
             var actualRules = actual.GetRules().Select(r => r.GetType());
 
             // Assert
-            Assert.Equal(4, actual.GetRules().Count);
+            Assert.Equal(4, actual.GetRules().Count); // This assert is added to ensure that when the rule set is expanded, the test gets attention as well.
             Assert.Contains(expectedRule, actualRules);
         }
 
