@@ -16,6 +16,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using GreenEnergyHub.Charges.Domain;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
 using GreenEnergyHub.Charges.Infrastructure.Context.Model;
 using NodaTime;
@@ -24,29 +25,29 @@ namespace GreenEnergyHub.Charges.Infrastructure.Context.Mapping
 {
     public static class ChargeMapper
     {
-        public static Domain.Charge MapChargeToChargeDomainModel(DBCharge dbCharge)
+        public static Charge MapChargeContextModelToDomainModel(DBCharge charge)
         {
-            if (dbCharge == null) throw new ArgumentNullException(nameof(dbCharge));
+            if (charge == null) throw new ArgumentNullException(nameof(charge));
 
-            var currentChargeDetails = dbCharge.ChargePeriodDetails
+            var currentChargeDetails = charge.ChargePeriodDetails
                 .OrderBy(x => Math.Abs((x.StartDateTime - DateTime.UtcNow).Ticks)).First();
 
-            return new Domain.Charge
+            return new Charge
             {
-                Id = dbCharge.ChargeId,
-                Type = (ChargeType)dbCharge.ChargeType,
+                Id = charge.ChargeId,
+                Type = (ChargeType)charge.ChargeType,
                 Name = currentChargeDetails.Name,
                 Description = currentChargeDetails.Description,
                 StartDateTime = Instant.FromDateTimeUtc(currentChargeDetails.StartDateTime),
-                Owner = dbCharge.DBMarketParticipant.MarketParticipantId,
-                Resolution = (Resolution)dbCharge.Resolution,
-                TaxIndicator = Convert.ToBoolean(dbCharge.TaxIndicator),
-                TransparentInvoicing = Convert.ToBoolean(dbCharge.TransparentInvoicing),
+                Owner = charge.DBMarketParticipant.MarketParticipantId,
+                Resolution = (Resolution)charge.Resolution,
+                TaxIndicator = Convert.ToBoolean(charge.TaxIndicator),
+                TransparentInvoicing = Convert.ToBoolean(charge.TransparentInvoicing),
                 VatClassification = (VatClassification)currentChargeDetails.VatClassification,
-                ChargeOperationId = dbCharge.DBChargeOperation.ChargeOperationId,
+                ChargeOperationId = charge.DBChargeOperation.ChargeOperationId,
                 EndDateTime = currentChargeDetails.EndDateTime != null ?
                     Instant.FromDateTimeUtc(currentChargeDetails.EndDateTime.Value) : (Instant?)null,
-                Points = dbCharge.ChargePrices.Select(x => new Point
+                Points = charge.ChargePrices.Select(x => new Point
                 {
                     Position = 0,
                     Price = x.Price,
@@ -55,19 +56,19 @@ namespace GreenEnergyHub.Charges.Infrastructure.Context.Mapping
             };
         }
 
-        public static DBCharge MapDomainChargeToCharge(
-            [NotNull] Domain.Charge charge,
-            DBMarketParticipant dbMarketParticipant)
+        public static DBCharge MapDomainChargeToContextChargeModel(
+            [NotNull] Charge charge,
+            DBMarketParticipant marketParticipant)
         {
             if (charge == null) throw new ArgumentNullException(nameof(charge));
-            if (dbMarketParticipant == null) throw new ArgumentNullException(nameof(dbMarketParticipant));
+            if (marketParticipant == null) throw new ArgumentNullException(nameof(marketParticipant));
 
             var chargeOperation = MapToChargeOperation(charge);
 
             return new DBCharge
             {
                 Currency = "DKK",
-                MarketParticipantRowId = dbMarketParticipant.RowId,
+                MarketParticipantRowId = marketParticipant.RowId,
                 ChargeId = charge.Id,
                 ChargeType = (int)charge.Type,
                 Resolution = (int)charge.Resolution,
@@ -78,13 +79,13 @@ namespace GreenEnergyHub.Charges.Infrastructure.Context.Mapping
                 {
                     MapChargeToChargePeriodDetails(charge, chargeOperation),
                 },
-                DBMarketParticipant = dbMarketParticipant,
+                DBMarketParticipant = marketParticipant,
                 DBChargeOperation = chargeOperation,
             };
         }
 
         private static DBChargeOperation MapToChargeOperation(
-            [NotNull] Domain.Charge charge)
+            [NotNull] Charge charge)
         {
             return new DBChargeOperation
             {
@@ -95,20 +96,20 @@ namespace GreenEnergyHub.Charges.Infrastructure.Context.Mapping
         }
 
         private static IEnumerable<DBChargePrice> MapChargeToChargePrice(
-            [NotNull] Domain.Charge charge,
-            DBChargeOperation dbChargeOperation)
+            [NotNull] Charge charge,
+            DBChargeOperation chargeOperation)
         {
             return charge.Points.Select(point => new DBChargePrice
                 {
                     Time = point.Time.ToDateTimeUtc(),
                     Price = point.Price,
-                    DBChargeOperation = dbChargeOperation,
+                    DBChargeOperation = chargeOperation,
                 }).ToList();
         }
 
         private static DBChargePeriodDetails MapChargeToChargePeriodDetails(
-            [NotNull] Domain.Charge charge,
-            DBChargeOperation dbChargeOperation)
+            [NotNull] Charge charge,
+            DBChargeOperation chargeOperation)
         {
             return new DBChargePeriodDetails
             {
@@ -117,7 +118,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Context.Mapping
                 VatClassification = (int)charge.VatClassification,
                 EndDateTime = charge.EndDateTime?.ToDateTimeUtc(),
                 StartDateTime = charge.StartDateTime.ToDateTimeUtc(),
-                DBChargeOperation = dbChargeOperation,
+                DBChargeOperation = chargeOperation,
             };
         }
     }

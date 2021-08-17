@@ -43,7 +43,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Repositories
                                            x.DBMarketParticipant.MarketParticipantId == owner &&
                                            x.ChargeType == (int)chargeType).ConfigureAwait(false);
 
-            return ChargeMapper.MapChargeToChargeDomainModel(charge);
+            return ChargeMapper.MapChargeContextModelToDomainModel(charge);
         }
 
         public async Task<bool> CheckIfChargeExistsAsync(string chargeId, string owner, ChargeType chargeType)
@@ -67,7 +67,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Repositories
 
             var marketParticipant = await GetMarketParticipantAsync(newCharge.Document.Sender.Id).ConfigureAwait(false);
 
-            var charge = ChargeMapper.MapDomainChargeToCharge(newCharge, marketParticipant);
+            var charge = ChargeMapper.MapDomainChargeToContextChargeModel(newCharge, marketParticipant);
 
             await _chargesDatabaseContext.Charge.AddAsync(charge).ConfigureAwait(false);
 
