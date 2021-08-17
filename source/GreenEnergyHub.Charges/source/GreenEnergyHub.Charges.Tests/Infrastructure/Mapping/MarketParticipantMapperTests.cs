@@ -15,13 +15,12 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 using GreenEnergyHub.Charges.Domain.MarketDocument;
+using GreenEnergyHub.Charges.Infrastructure.Context.Mapping;
 using GreenEnergyHub.Charges.Infrastructure.Context.Model;
-using GreenEnergyHub.Charges.Infrastructure.Mapping;
 using GreenEnergyHub.Charges.TestCore;
 using Microsoft.Azure.Amqp.Serialization;
 using Xunit;
 using Xunit.Categories;
-using MarketParticipant = GreenEnergyHub.Charges.Infrastructure.Context.Model.MarketParticipant;
 
 namespace GreenEnergyHub.Charges.Tests.Infrastructure.Mapping
 {
@@ -31,16 +30,16 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Mapping
         [Theory]
         [InlineAutoMoqData]
         public void ToDomainObject_WhenGivenParticipants_ReturnsMappedObject(
-            [NotNull] MarketParticipant marketParticipant,
+            [NotNull] DBMarketParticipant dbMarketParticipant,
             [NotNull] MarketParticipantMapper sut)
         {
             // Act
-            var result = sut.ToDomainObject(marketParticipant);
+            var result = sut.ToDomainObject(dbMarketParticipant);
 
             // Assert
             Assert.NotNull(result);
-            Assert.Equal(marketParticipant.MarketParticipantId, result.Id);
-            Assert.Equal(marketParticipant.Role, (int)result.BusinessProcessRole);
+            Assert.Equal(dbMarketParticipant.MarketParticipantId, result.Id);
+            Assert.Equal(dbMarketParticipant.Role, (int)result.BusinessProcessRole);
         }
 
         [Theory]
@@ -49,7 +48,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Mapping
             [NotNull] MarketParticipantMapper sut)
         {
             // Arrange
-            MarketParticipant? marketParticipant = null;
+            DBMarketParticipant? marketParticipant = null;
 
             // Act / Assert
             Assert.Throws<ArgumentNullException>(

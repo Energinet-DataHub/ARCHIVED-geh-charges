@@ -20,12 +20,12 @@ using System.ComponentModel.DataAnnotations;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Context.Model
 {
-    public class Charge
+    public class DBCharge
     {
-        public Charge()
+        public DBCharge()
         {
-            ChargePrices = new List<ChargePrice>();
-            ChargePeriodDetails = new List<ChargePeriodDetails>();
+            ChargePrices = new List<DBChargePrice>();
+            ChargePeriodDetails = new List<DBChargePeriodDetails>();
         }
 
         [Key]
@@ -45,12 +45,12 @@ namespace GreenEnergyHub.Charges.Infrastructure.Context.Model
 
         public byte TransparentInvoicing { get; set; }
 
-        public virtual ChargeOperation ChargeOperation { get; set; }
+        public virtual DBChargeOperation DBChargeOperation { get; set; }
 
-        public virtual MarketParticipant MarketParticipant { get; set; }
+        public virtual DBMarketParticipant DBMarketParticipant { get; set; }
 
-        public virtual List<ChargePrice> ChargePrices { get; set; }
+        public virtual List<DBChargePrice> ChargePrices { get; set; }
 
-        public virtual List<ChargePeriodDetails> ChargePeriodDetails { get; set; }
+        public virtual List<DBChargePeriodDetails> ChargePeriodDetails { get; set; }
     }
 }

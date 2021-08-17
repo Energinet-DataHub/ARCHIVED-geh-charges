@@ -16,17 +16,17 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
+using GreenEnergyHub.Charges.Domain;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
 using GreenEnergyHub.Charges.Domain.MarketDocument;
 using GreenEnergyHub.Charges.Infrastructure.Context;
+using GreenEnergyHub.Charges.Infrastructure.Context.Model;
 using GreenEnergyHub.Charges.Infrastructure.Repositories;
 using GreenEnergyHub.Charges.TestCore;
 using Microsoft.EntityFrameworkCore;
 using NodaTime;
 using Xunit;
 using Xunit.Categories;
-using Charge = GreenEnergyHub.Charges.Domain.Charge;
-using MarketParticipant = GreenEnergyHub.Charges.Infrastructure.Context.Model.MarketParticipant;
 
 namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
 {
@@ -137,7 +137,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
                     Type = DocumentType.RequestUpdateChargeInformation,
                     IndustryClassification = IndustryClassification.Electricity,
                     CreatedDateTime = SystemClock.Instance.GetCurrentInstant(),
-                    Sender = new Domain.MarketDocument.MarketParticipant
+                    Sender = new MarketParticipant
                     {
                         Id = MarketParticipantId,
                         BusinessProcessRole = (MarketParticipantRole)1,
@@ -158,7 +158,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
             context.Database.EnsureDeleted();
             context.Database.EnsureCreated();
             context.MarketParticipant.Add(
-                            new MarketParticipant { Name = "Name", Role = 1, MarketParticipantId = MarketParticipantId });
+                            new DBMarketParticipant { Name = "Name", Role = 1, MarketParticipantId = MarketParticipantId });
             context.SaveChanges();
         }
     }

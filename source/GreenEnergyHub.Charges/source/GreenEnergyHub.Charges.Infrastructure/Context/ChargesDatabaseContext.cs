@@ -27,15 +27,15 @@ namespace GreenEnergyHub.Charges.Infrastructure.Context
         }
 #pragma warning restore CS8618 // Non-nullable field is uninitialized. Consider declaring as nullable.
 
-        public DbSet<ChargePrice> ChargePrice { get; set; }
+        public DbSet<DBChargePrice> ChargePrice { get; set; }
 
-        public DbSet<ChargeOperation> ChargeOperation { get; set; }
+        public DbSet<DBChargeOperation> ChargeOperation { get; set; }
 
-        public DbSet<ChargePeriodDetails> ChargePeriodDetails { get; set; }
+        public DbSet<DBChargePeriodDetails> ChargePeriodDetails { get; set; }
 
-        public DbSet<Charge> Charge { get; set; }
+        public DbSet<DBCharge> Charge { get; set; }
 
-        public DbSet<MarketParticipant> MarketParticipant { get; set; }
+        public DbSet<DBMarketParticipant> MarketParticipant { get; set; }
 
         public Task<int> SaveChangesAsync()
             => base.SaveChangesAsync();

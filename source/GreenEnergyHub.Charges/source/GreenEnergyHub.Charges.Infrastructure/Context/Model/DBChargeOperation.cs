@@ -20,33 +20,18 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Context.Model
 {
-    public class ChargePeriodDetails
+    public class DBChargeOperation
     {
         [Key]
         public int RowId { get; set; }
 
+        public string ChargeOperationId { get; set; }
+
         [ForeignKey("Charge")]
         public int ChargeRowId { get; set; }
 
-        [ForeignKey("ChargeOperation")]
-        public int ChargeOperationRowId { get; set; }
+        public string CorrelationId { get; set; }
 
-        public virtual ChargeOperation ChargeOperation { get; set; }
-
-        public virtual Charge Charge { get; set; }
-
-        public DateTime StartDateTime { get; set; }
-
-        public DateTime? EndDateTime { get; set; }
-
-        public string Name { get; set; }
-
-        public string Description { get; set; }
-
-        public int VatClassification { get; set; }
-
-        public bool Retired { get; set; }
-
-        public DateTime? RetiredDateTime { get; set; }
+        public DateTime WriteDateTime { get; set; }
     }
 }

@@ -17,21 +17,27 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 #pragma warning disable 8618
-
 namespace GreenEnergyHub.Charges.Infrastructure.Context.Model
 {
-    public class ChargeOperation
+    public class DBChargePrice
     {
         [Key]
         public int RowId { get; set; }
 
-        public string ChargeOperationId { get; set; }
-
         [ForeignKey("Charge")]
         public int ChargeRowId { get; set; }
 
-        public string CorrelationId { get; set; }
+        [ForeignKey("ChargeOperation")]
+        public int ChargeOperationRowId { get; set; }
 
-        public DateTime WriteDateTime { get; set; }
+        public DateTime Time { get; set; }
+
+        public decimal Price { get; set; }
+
+        public bool Retired { get; set; }
+
+        public DateTime? RetiredDateTime { get; set; }
+
+        public virtual DBChargeOperation DBChargeOperation { get; set; }
     }
 }

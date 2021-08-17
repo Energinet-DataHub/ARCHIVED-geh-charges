@@ -14,14 +14,14 @@
 
 using System.Linq;
 using GreenEnergyHub.Charges.Domain.MarketDocument;
-using MarketParticipant = GreenEnergyHub.Charges.Infrastructure.Context.Model.MarketParticipant;
+using GreenEnergyHub.Charges.Infrastructure.Context.Model;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Repositories.QueryLogic
 {
     public static class MarketParticipantQueryLogic
     {
-        public static IQueryable<MarketParticipant> HasRole(
-            this IQueryable<MarketParticipant> query,
+        public static IQueryable<DBMarketParticipant> HasRole(
+            this IQueryable<DBMarketParticipant> query,
             MarketParticipantRole role)
         {
             return query.Where(mp => mp.Role == (int)role);

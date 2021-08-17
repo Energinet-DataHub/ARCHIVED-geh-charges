@@ -13,13 +13,12 @@
 // limitations under the License.
 
 using System;
-using System.Linq;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application.ChangeOfCharges.Repositories;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
 using GreenEnergyHub.Charges.Infrastructure.Context;
+using GreenEnergyHub.Charges.Infrastructure.Context.Mapping;
 using GreenEnergyHub.Charges.Infrastructure.Context.Model;
-using GreenEnergyHub.Charges.Infrastructure.Mapping;
 using Microsoft.EntityFrameworkCore;
 using Charge = GreenEnergyHub.Charges.Domain.Charge;
 
@@ -39,9 +38,9 @@ namespace GreenEnergyHub.Charges.Infrastructure.Repositories
             var charge = await _chargesDatabaseContext.Charge
                 .Include(x => x.ChargePeriodDetails)
                 .Include(x => x.ChargePrices)
-                .Include(x => x.MarketParticipant)
+                .Include(x => x.DBMarketParticipant)
                 .SingleAsync(x => x.ChargeId == chargeId &&
-                                           x.MarketParticipant.MarketParticipantId == owner &&
+                                           x.DBMarketParticipant.MarketParticipantId == owner &&
                                            x.ChargeType == (int)chargeType).ConfigureAwait(false);
 
             return ChargeMapper.MapChargeToChargeDomainModel(charge);
@@ -51,7 +50,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Repositories
         {
             return await _chargesDatabaseContext.Charge
                 .AnyAsync(x => x.ChargeId == chargeId &&
-                                        x.MarketParticipant.MarketParticipantId == owner &&
+                                        x.DBMarketParticipant.MarketParticipantId == owner &&
                                         x.ChargeType == (int)chargeType).ConfigureAwait(false);
         }
 
@@ -75,7 +74,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Repositories
             await _chargesDatabaseContext.SaveChangesAsync().ConfigureAwait(false);
         }
 
-        private async Task<MarketParticipant> GetMarketParticipantAsync(string marketParticipantId)
+        private async Task<DBMarketParticipant> GetMarketParticipantAsync(string marketParticipantId)
         {
             return await _chargesDatabaseContext.MarketParticipant.SingleAsync(x =>
                 x.MarketParticipantId == marketParticipantId).ConfigureAwait(false);

@@ -13,8 +13,9 @@
 // limitations under the License.
 
 using GreenEnergyHub.Charges.Domain.MarketDocument;
+using GreenEnergyHub.Charges.Infrastructure.Context.Model;
 
-namespace GreenEnergyHub.Charges.Infrastructure.Mapping
+namespace GreenEnergyHub.Charges.Infrastructure.Context.Mapping
 {
     /// <summary>
     /// Mapper to map from persistence model to domain model.
@@ -26,6 +27,6 @@ namespace GreenEnergyHub.Charges.Infrastructure.Mapping
         /// </summary>
         /// <param name="persistenceModel"></param>
         /// <returns>A mapped market participant</returns>
-        MarketParticipant ToDomainObject(Infrastructure.Context.Model.MarketParticipant persistenceModel);
+        MarketParticipant ToDomainObject(DBMarketParticipant persistenceModel);
     }
 }

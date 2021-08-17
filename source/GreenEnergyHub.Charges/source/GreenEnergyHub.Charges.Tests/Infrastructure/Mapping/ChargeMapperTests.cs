@@ -15,14 +15,12 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using GreenEnergyHub.Charges.Domain.MarketDocument;
+using GreenEnergyHub.Charges.Infrastructure.Context.Mapping;
 using GreenEnergyHub.Charges.Infrastructure.Context.Model;
-using GreenEnergyHub.Charges.Infrastructure.Mapping;
 using GreenEnergyHub.Charges.TestCore;
 using NodaTime;
 using Xunit;
 using Xunit.Categories;
-using MarketParticipant = GreenEnergyHub.Charges.Infrastructure.Context.Model.MarketParticipant;
 
 namespace GreenEnergyHub.Charges.Tests.Infrastructure.Mapping
 {
@@ -38,31 +36,31 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Mapping
             var future = expected + TimeSpan.FromDays(3);
 
             // Act
-            var sut = ChargeMapper.MapChargeToChargeDomainModel(new Charge
+            var sut = ChargeMapper.MapChargeToChargeDomainModel(new DBCharge
             {
                 ChargePeriodDetails =
                 {
-                    new ChargePeriodDetails
+                    new DBChargePeriodDetails
                     {
                         StartDateTime = future,
                         RowId = 1,
                     },
-                    new ChargePeriodDetails
+                    new DBChargePeriodDetails
                     {
                         StartDateTime = past,
                         RowId = 2,
                     },
-                    new ChargePeriodDetails
+                    new DBChargePeriodDetails
                     {
                         StartDateTime = expected,
                         RowId = 3,
                     },
                 },
-                MarketParticipant = new MarketParticipant
+                DBMarketParticipant = new DBMarketParticipant
                 {
                   MarketParticipantId = "id",
                 },
-                ChargeOperation = new ChargeOperation
+                DBChargeOperation = new DBChargeOperation
                 {
                     ChargeOperationId = "ChargeOperationId",
                 },
@@ -76,7 +74,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Mapping
         [InlineAutoMoqData]
         public void MapDomainChargeToCharge_WhenNoEndTimeIsUsed_MapsEndTimeToNull(
             [NotNull] Domain.Charge charge,
-            MarketParticipant marketParticipant)
+            DBMarketParticipant dbMarketParticipant)
         {
             // Arrange
             charge.EndDateTime = null;
@@ -91,7 +89,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Mapping
             }
 
             // Act
-            var result = ChargeMapper.MapDomainChargeToCharge(charge, marketParticipant);
+            var result = ChargeMapper.MapDomainChargeToCharge(charge, dbMarketParticipant);
 
             // Assert
             Assert.Null(result.ChargePeriodDetails.First().EndDateTime);
@@ -101,7 +99,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Mapping
         public void MapChargeToChargeDomainModel_IfChargeIsNull_ThrowsArgumentNullException()
         {
             // Arrange
-            Charge? charge = null;
+            DBCharge? charge = null;
 
             // Act / Assert
             Assert.Throws<ArgumentNullException>(
@@ -111,23 +109,23 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Mapping
         [Theory]
         [InlineAutoMoqData]
         public void MapDomainChargeToCharge_IfChargeIsNull_ThrowsArgumentNullException(
-            [NotNull] MarketParticipant marketParticipant)
+            [NotNull] DBMarketParticipant dbMarketParticipant)
         {
             // Arrange
-            GreenEnergyHub.Charges.Domain.Charge? charge = null;
+            Domain.Charge? charge = null;
 
             // Act / Assert
             Assert.Throws<ArgumentNullException>(
-                () => ChargeMapper.MapDomainChargeToCharge(charge!, marketParticipant));
+                () => ChargeMapper.MapDomainChargeToCharge(charge!, dbMarketParticipant));
         }
 
         [Theory]
         [InlineAutoMoqData]
         public void MapDomainChargeToCharge_IfMarketParticipantIsNull_ThrowsArgumentNullException(
-            [NotNull] GreenEnergyHub.Charges.Domain.Charge charge)
+            [NotNull] Domain.Charge charge)
         {
             // Arrange
-            MarketParticipant? marketParticipant = null;
+            DBMarketParticipant? marketParticipant = null;
 
             // Act / Assert
             Assert.Throws<ArgumentNullException>(

@@ -26,27 +26,27 @@ namespace GreenEnergyHub.Charges.Infrastructure.Context
         /// <summary>
         /// ChargePrices available in the database.
         /// </summary>
-        DbSet<ChargePrice> ChargePrice { get; }
+        DbSet<DBChargePrice> ChargePrice { get; }
 
         /// <summary>
         /// ChargeOperations available in the database.
         /// </summary>
-        DbSet<ChargeOperation> ChargeOperation { get; }
+        DbSet<DBChargeOperation> ChargeOperation { get; }
 
         /// <summary>
         /// ChargePeriodDetails available in the database.
         /// </summary>
-        DbSet<ChargePeriodDetails> ChargePeriodDetails { get; }
+        DbSet<DBChargePeriodDetails> ChargePeriodDetails { get; }
 
         /// <summary>
         /// Charges available in the database.
         /// </summary>
-        DbSet<Charge> Charge { get; }
+        DbSet<DBCharge> Charge { get; }
 
         /// <summary>
         /// MarketParticipants available in the database.
         /// </summary>
-        DbSet<MarketParticipant> MarketParticipant { get; }
+        DbSet<DBMarketParticipant> MarketParticipant { get; }
 
         /// <summary>
         /// Saves changes to the database.
