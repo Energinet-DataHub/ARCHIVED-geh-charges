@@ -37,8 +37,10 @@ namespace GreenEnergyHub.Charges.Infrastructure.Context
 
         public DbSet<MarketParticipant> MarketParticipant { get; set; }
 
+        public DbSet<DBMeteringPoint> MeteringPoints { get; set; }
+
         public Task<int> SaveChangesAsync()
-            => base.SaveChangesAsync();
+           => base.SaveChangesAsync();
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

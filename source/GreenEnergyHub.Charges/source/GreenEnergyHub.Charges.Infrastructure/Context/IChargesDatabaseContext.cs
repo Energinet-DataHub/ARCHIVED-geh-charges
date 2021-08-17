@@ -49,6 +49,11 @@ namespace GreenEnergyHub.Charges.Infrastructure.Context
         DbSet<MarketParticipant> MarketParticipant { get; }
 
         /// <summary>
+        /// Metering Point available in the database.
+        /// </summary>
+        DbSet<DBMeteringPoint> MeteringPoints { get; }
+
+        /// <summary>
         /// Saves changes to the database.
         /// </summary>
         Task<int> SaveChangesAsync();
