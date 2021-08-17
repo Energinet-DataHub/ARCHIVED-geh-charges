@@ -37,8 +37,6 @@ namespace GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction
         /// </summary>
         public string Id { get; set; }
 
-        public OperationType OperationType { get; set; }
-
         /// <summary>
         /// Unique ID of a charge (Note, unique per market participants).
         /// Example: EA-001

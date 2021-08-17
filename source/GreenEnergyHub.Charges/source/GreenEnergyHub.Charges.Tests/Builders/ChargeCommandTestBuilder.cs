@@ -102,7 +102,6 @@ namespace GreenEnergyHub.Charges.Tests.Builders
                 ChargeOperation = new ChargeOperation
                 {
                   Id = "id",
-                  OperationType = OperationType.Create,
                   ChargeName = "description",
                   ChargeId = _mrid,
                   ChargeOwner = _owner,

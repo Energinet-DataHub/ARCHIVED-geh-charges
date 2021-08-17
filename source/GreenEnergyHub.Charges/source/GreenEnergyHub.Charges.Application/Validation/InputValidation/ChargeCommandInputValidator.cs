@@ -29,25 +29,8 @@ namespace GreenEnergyHub.Charges.Application.Validation.InputValidation
 
         public ChargeCommandValidationResult Validate([NotNull] ChargeCommand chargeCommand)
         {
-            IValidationRuleSet ruleSet;
-            switch (chargeCommand.ChargeOperation.OperationType)
-            {
-                case OperationType.Unknown:
-                    ruleSet = _inputValidationRulesFactory.CreateRulesForChargeUnknownCommand(chargeCommand);
-                    return ruleSet.Validate();
-                case OperationType.Create:
-                    ruleSet = _inputValidationRulesFactory.CreateRulesForChargeCreateCommand(chargeCommand);
-                    return ruleSet.Validate();
-                case OperationType.Stop:
-                    ruleSet = _inputValidationRulesFactory.CreateRulesForChargeStopCommand(chargeCommand);
-                    return ruleSet.Validate();
-                case OperationType.Update:
-                    ruleSet = _inputValidationRulesFactory.CreateRulesForChargeUpdateCommand(chargeCommand);
-                    return ruleSet.Validate();
-                default:
-                    ruleSet = _inputValidationRulesFactory.CreateRulesForChargeUnknownCommand(chargeCommand);
-                    return ruleSet.Validate();
-            }
+            IValidationRuleSet ruleSet = _inputValidationRulesFactory.CreateRulesForChargeCommand(chargeCommand);
+            return ruleSet.Validate();
         }
     }
 }

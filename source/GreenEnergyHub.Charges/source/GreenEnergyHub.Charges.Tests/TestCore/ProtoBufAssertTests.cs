@@ -15,10 +15,12 @@ using System.Diagnostics.CodeAnalysis;
 using GreenEnergyHub.Charges.TestCore;
 using GreenEnergyHub.Charges.Tests.TestCore.ProtoBufAssertHelpers;
 using Xunit;
+using Xunit.Categories;
 using Xunit.Sdk;
 
 namespace GreenEnergyHub.Charges.Tests.TestCore
 {
+    [UnitTest]
     public class ProtoBufAssertTests
     {
         [Theory]
