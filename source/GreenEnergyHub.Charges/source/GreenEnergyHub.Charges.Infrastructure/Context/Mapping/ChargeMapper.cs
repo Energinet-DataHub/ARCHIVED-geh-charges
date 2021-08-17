@@ -56,7 +56,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Context.Mapping
             };
         }
 
-        public static DBCharge MapDomainChargeToContextChargeModel(
+        public static DBCharge MapChargeDomainModelToContextModel(
             [NotNull] Charge charge,
             DBMarketParticipant marketParticipant)
         {

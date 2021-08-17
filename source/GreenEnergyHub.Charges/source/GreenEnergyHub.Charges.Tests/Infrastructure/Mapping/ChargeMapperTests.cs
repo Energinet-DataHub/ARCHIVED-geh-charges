@@ -89,7 +89,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Mapping
             }
 
             // Act
-            var result = ChargeMapper.MapDomainChargeToContextChargeModel(charge, dbMarketParticipant);
+            var result = ChargeMapper.MapChargeDomainModelToContextModel(charge, dbMarketParticipant);
 
             // Assert
             Assert.Null(result.ChargePeriodDetails.First().EndDateTime);
@@ -116,7 +116,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Mapping
 
             // Act / Assert
             Assert.Throws<ArgumentNullException>(
-                () => ChargeMapper.MapDomainChargeToContextChargeModel(charge!, dbMarketParticipant));
+                () => ChargeMapper.MapChargeDomainModelToContextModel(charge!, dbMarketParticipant));
         }
 
         [Theory]
@@ -129,7 +129,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Mapping
 
             // Act / Assert
             Assert.Throws<ArgumentNullException>(
-                () => ChargeMapper.MapDomainChargeToContextChargeModel(charge, marketParticipant!));
+                () => ChargeMapper.MapChargeDomainModelToContextModel(charge, marketParticipant!));
         }
     }
 }
