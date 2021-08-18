@@ -87,7 +87,7 @@ namespace GreenEnergyHub.Charges.ChargeCommandReceiver
                                        "CHARGE_DB_CONNECTION_STRING",
                                        "does not exist in configuration settings");
             builder.Services.AddDbContext<ChargesDatabaseContext>(
-                options => options.UseSqlServer(connectionString));
+                options => options.UseSqlServer(connectionString).EnableSensitiveDataLogging());
             builder.Services.AddScoped<IChargesDatabaseContext, ChargesDatabaseContext>();
             builder.Services.AddScoped<IChargeRepository, ChargeRepository>();
             builder.Services.AddScoped<IMarketParticipantRepository, MarketParticipantRepository>();

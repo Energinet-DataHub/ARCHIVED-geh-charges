@@ -13,11 +13,13 @@
 // limitations under the License.
 
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 #pragma warning disable 8618
 
 namespace GreenEnergyHub.Charges.Infrastructure.Context.Model
 {
+    [Table("MarketParticipant")]
     public class DBMarketParticipant
     {
         [Key]

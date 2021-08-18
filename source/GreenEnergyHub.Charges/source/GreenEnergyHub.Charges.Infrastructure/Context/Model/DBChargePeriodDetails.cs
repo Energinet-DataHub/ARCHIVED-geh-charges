@@ -20,6 +20,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Context.Model
 {
+    [Table("ChargePeriodDetails")]
     public class DBChargePeriodDetails
     {
         [Key]
@@ -31,9 +32,9 @@ namespace GreenEnergyHub.Charges.Infrastructure.Context.Model
         [ForeignKey("ChargeOperation")]
         public int ChargeOperationRowId { get; set; }
 
-        public virtual DBChargeOperation DBChargeOperation { get; set; }
+        public virtual DBChargeOperation ChargeOperation { get; set; }
 
-        public virtual DBCharge DBCharge { get; set; }
+        public virtual DBCharge Charge { get; set; }
 
         public DateTime StartDateTime { get; set; }
 

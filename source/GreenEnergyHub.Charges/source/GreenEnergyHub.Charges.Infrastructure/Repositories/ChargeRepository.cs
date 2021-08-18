@@ -13,14 +13,18 @@
 // limitations under the License.
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application.ChangeOfCharges.Repositories;
+using GreenEnergyHub.Charges.Domain;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
 using GreenEnergyHub.Charges.Infrastructure.Context;
 using GreenEnergyHub.Charges.Infrastructure.Context.Mapping;
 using GreenEnergyHub.Charges.Infrastructure.Context.Model;
 using Microsoft.EntityFrameworkCore;
-using Charge = GreenEnergyHub.Charges.Domain.Charge;
+using Microsoft.EntityFrameworkCore.Query;
+using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Repositories
 {
@@ -35,13 +39,17 @@ namespace GreenEnergyHub.Charges.Infrastructure.Repositories
 
         public async Task<Charge> GetChargeAsync(string chargeId, string owner, ChargeType chargeType)
         {
-            var charge = await _chargesDatabaseContext.Charge
+            var chargeQuery = _chargesDatabaseContext.Charge
                 .Include(x => x.ChargePeriodDetails)
                 .Include(x => x.ChargePrices)
-                .Include(x => x.DBMarketParticipant)
-                .SingleAsync(x => x.ChargeId == chargeId &&
-                                           x.DBMarketParticipant.MarketParticipantId == owner &&
-                                           x.ChargeType == (int)chargeType).ConfigureAwait(false);
+                .Include(x => x.MarketParticipant);
+
+            var sql = chargeQuery.ToSql();
+
+            //var charge = await chargeQuery.Where(x => x.ChargeId == chargeId &&
+            //                               x.MarketParticipant.MarketParticipantId == owner &&
+            //                              x.ChargeType == (int)chargeType).ToListAsync().ConfigureAwait(false);
+            var charge = await chargeQuery.FirstAsync().ConfigureAwait(false);
 
             return ChargeMapper.MapChargeContextModelToDomainModel(charge);
         }
@@ -50,7 +58,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Repositories
         {
             return await _chargesDatabaseContext.Charge
                 .AnyAsync(x => x.ChargeId == chargeId &&
-                                        x.DBMarketParticipant.MarketParticipantId == owner &&
+                                        x.MarketParticipant.MarketParticipantId == owner &&
                                         x.ChargeType == (int)chargeType).ConfigureAwait(false);
         }
 

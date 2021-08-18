@@ -39,12 +39,12 @@ namespace GreenEnergyHub.Charges.Infrastructure.Context.Mapping
                 Name = currentChargeDetails.Name,
                 Description = currentChargeDetails.Description,
                 StartDateTime = Instant.FromDateTimeUtc(currentChargeDetails.StartDateTime),
-                Owner = charge.DBMarketParticipant.MarketParticipantId,
+                Owner = charge.MarketParticipant.MarketParticipantId,
                 Resolution = (Resolution)charge.Resolution,
                 TaxIndicator = Convert.ToBoolean(charge.TaxIndicator),
                 TransparentInvoicing = Convert.ToBoolean(charge.TransparentInvoicing),
                 VatClassification = (VatClassification)currentChargeDetails.VatClassification,
-                ChargeOperationId = charge.DBChargeOperation.ChargeOperationId,
+                ChargeOperationId = charge.ChargeOperation.ChargeOperationId,
                 EndDateTime = currentChargeDetails.EndDateTime != null ?
                     Instant.FromDateTimeUtc(currentChargeDetails.EndDateTime.Value) : (Instant?)null,
                 Points = charge.ChargePrices.Select(x => new Point
@@ -79,8 +79,8 @@ namespace GreenEnergyHub.Charges.Infrastructure.Context.Mapping
                 {
                     MapChargeToChargePeriodDetails(charge, chargeOperation),
                 },
-                DBMarketParticipant = marketParticipant,
-                DBChargeOperation = chargeOperation,
+                MarketParticipant = marketParticipant,
+                ChargeOperation = chargeOperation,
             };
         }
 
@@ -103,7 +103,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Context.Mapping
                 {
                     Time = point.Time.ToDateTimeUtc(),
                     Price = point.Price,
-                    DBChargeOperation = chargeOperation,
+                    ChargeOperation = chargeOperation,
                 }).ToList();
         }
 
@@ -118,7 +118,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Context.Mapping
                 VatClassification = (int)charge.VatClassification,
                 EndDateTime = charge.EndDateTime?.ToDateTimeUtc(),
                 StartDateTime = charge.StartDateTime.ToDateTimeUtc(),
-                DBChargeOperation = chargeOperation,
+                ChargeOperation = chargeOperation,
             };
         }
     }

@@ -14,12 +14,14 @@
 
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 #pragma warning disable 8618
 #pragma warning disable CA2227
 
 namespace GreenEnergyHub.Charges.Infrastructure.Context.Model
 {
+    [Table("Charge")]
     public class DBCharge
     {
         public DBCharge()
@@ -45,9 +47,10 @@ namespace GreenEnergyHub.Charges.Infrastructure.Context.Model
 
         public byte TransparentInvoicing { get; set; }
 
-        public virtual DBChargeOperation DBChargeOperation { get; set; }
+        [NotMapped]
+        public virtual DBChargeOperation ChargeOperation { get; set; }
 
-        public virtual DBMarketParticipant DBMarketParticipant { get; set; }
+        public virtual DBMarketParticipant MarketParticipant { get; set; }
 
         public virtual List<DBChargePrice> ChargePrices { get; set; }
 

@@ -19,6 +19,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 #pragma warning disable 8618
 namespace GreenEnergyHub.Charges.Infrastructure.Context.Model
 {
+    [Table("ChargePrice")]
     public class DBChargePrice
     {
         [Key]
@@ -38,6 +39,8 @@ namespace GreenEnergyHub.Charges.Infrastructure.Context.Model
 
         public DateTime? RetiredDateTime { get; set; }
 
-        public virtual DBChargeOperation DBChargeOperation { get; set; }
+        public virtual DBChargeOperation ChargeOperation { get; set; }
+
+        public virtual DBCharge Charge { get; set; }
     }
 }

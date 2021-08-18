@@ -56,11 +56,11 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Mapping
                         RowId = 3,
                     },
                 },
-                DBMarketParticipant = new DBMarketParticipant
+                MarketParticipant = new DBMarketParticipant
                 {
                   MarketParticipantId = "id",
                 },
-                DBChargeOperation = new DBChargeOperation
+                ChargeOperation = new DBChargeOperation
                 {
                     ChargeOperationId = "ChargeOperationId",
                 },
