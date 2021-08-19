@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Globalization;
 using System.Threading.Tasks;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.Events.Integration;
@@ -20,6 +21,7 @@ using GreenEnergyHub.Charges.Infrastructure.Context;
 using GreenEnergyHub.Charges.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
 using NodaTime;
+using NodaTime.Text;
 using Xunit;
 
 namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
@@ -32,7 +34,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
                 .Options;
 
         [Fact]
-        public async Task CheckIfChargeExistsAsync_WhenChargeIsCreated_ThenSuccessReturnedAsync()
+        public async Task StoreMeteringPointAsync_WhenMeteringPointIsCreated_ValidObjectIsRetrievedFromDatabase()
         {
             // Arrange
             SeedDatabase();
@@ -48,7 +50,12 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
             var expected = await sut.GetMeteringPointAsync(validMeteringPoint.MeteringPointId).ConfigureAwait(false);
 
             // Assert
-            expected.Should().BeEquivalentTo(validMeteringPoint);
+            expected.RowId.Should().BeGreaterThan(0);
+            expected.ConnectionState.Should().Be(int.Parse(validMeteringPoint.ConnectionState, CultureInfo.InvariantCulture));
+            expected.MeteringGridArea.Should().Be(validMeteringPoint.GridAreaId);
+            expected.MeteringPointId.Should().Be(validMeteringPoint.MeteringPointId);
+            expected.EffectiveDate.Should().Be(InstantPattern.General.Parse(validMeteringPoint.EffectiveDate).Value);
+            expected.SettlementMethod.Should().Be(int.Parse(validMeteringPoint.SettlementMethod, CultureInfo.InvariantCulture));
         }
 
         private static MeteringPointCreatedEvent GetMeteringPointCreatedEvent()

@@ -15,13 +15,14 @@
 using System;
 using GreenEnergyHub.Charges.Domain.Events.Integration;
 using GreenEnergyHub.Charges.Domain.MeteringPoints;
+using NodaTime;
 using NodaTime.Text;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Context.Mapping
 {
     public static class MeteringPointMapper
     {
-        public static Model.DBMeteringPoint MapMeteringPointCreatedEventToMeteringPoint(
+        public static Model.MeteringPoint MapMeteringPointCreatedEventToMeteringPoint(
             MeteringPointCreatedEvent meteringPointCreatedEvent)
         {
             if (meteringPointCreatedEvent == null) throw new ArgumentNullException(nameof(meteringPointCreatedEvent));
@@ -50,25 +51,26 @@ namespace GreenEnergyHub.Charges.Infrastructure.Context.Mapping
                 throw new ArgumentException(nameof(meteringPointCreatedEvent.SettlementMethod));
             }
 
-            return new Model.DBMeteringPoint(
+            return new Model.MeteringPoint(
                 meteringPointCreatedEvent.MeteringPointId,
                 meteringPointType,
                 meteringPointCreatedEvent.GridAreaId,
-                effectiveDate,
+                effectiveDate.ToDateTimeUtc(),
                 connectionState,
                 settlementMethod);
         }
 
         public static MeteringPoint MapMeteringPointToDomainModel(
-            MeteringPoint meteringPoint)
+            Model.MeteringPoint meteringPoint)
         {
             if (meteringPoint == null) throw new ArgumentNullException(nameof(meteringPoint));
 
             return new MeteringPoint(
+                meteringPoint.RowId,
                 meteringPoint.MeteringPointId,
                 meteringPoint.MeteringPointType,
                 meteringPoint.MeteringGridArea,
-                meteringPoint.EffectiveDate,
+                Instant.FromDateTimeUtc(meteringPoint.EffectiveDate),
                 meteringPoint.ConnectionState,
                 meteringPoint.SettlementMethod);
         }

@@ -37,7 +37,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Context
 
         public DbSet<MarketParticipant> MarketParticipant { get; set; }
 
-        public DbSet<DBMeteringPoint> MeteringPoints { get; set; }
+        public DbSet<MeteringPoint> MeteringPoints { get; set; }
 
         public Task<int> SaveChangesAsync()
            => base.SaveChangesAsync();

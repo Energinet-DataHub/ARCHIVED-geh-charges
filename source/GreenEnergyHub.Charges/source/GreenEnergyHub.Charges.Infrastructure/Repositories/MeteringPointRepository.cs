@@ -20,6 +20,7 @@ using GreenEnergyHub.Charges.Domain.MeteringPoints;
 using GreenEnergyHub.Charges.Infrastructure.Context;
 using GreenEnergyHub.Charges.Infrastructure.Context.Mapping;
 using Microsoft.EntityFrameworkCore;
+using NodaTime;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Repositories
 {
@@ -48,13 +49,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Repositories
             var meteringPoint = await _chargesDatabaseContext.MeteringPoints.SingleAsync(x => x.MeteringPointId == meteringPointId)
                 .ConfigureAwait(false);
 
-            return new MeteringPoint(
-                meteringPoint.MeteringPointId,
-                meteringPoint.MeteringPointType,
-                meteringPoint.MeteringGridArea,
-                meteringPoint.EffectiveDate,
-                meteringPoint.ConnectionState,
-                meteringPoint.SettlementMethod);
+            return MeteringPointMapper.MapMeteringPointToDomainModel(meteringPoint);
         }
     }
 }

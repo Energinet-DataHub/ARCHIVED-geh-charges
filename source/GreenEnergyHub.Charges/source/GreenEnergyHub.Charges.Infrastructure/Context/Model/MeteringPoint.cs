@@ -12,19 +12,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.ComponentModel.DataAnnotations;
 using GreenEnergyHub.Charges.Domain.MeteringPoints;
 using NodaTime;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Context.Model
 {
-    public class DBMeteringPoint
+    public class MeteringPoint
     {
-        public DBMeteringPoint(
+        public MeteringPoint(
             string meteringPointId,
             MeteringPointType meteringPointType,
             string meteringGridArea,
-            Instant effectiveDate,
+            DateTime effectiveDate,
             int connectionState,
             int settlementMethod)
         {
@@ -45,7 +46,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Context.Model
 
         public string MeteringGridArea { get; set; }
 
-        public Instant EffectiveDate { get; set; }
+        public DateTime EffectiveDate { get; set; }
 
         public int ConnectionState { get; set; }
 
