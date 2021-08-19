@@ -45,11 +45,9 @@ namespace GreenEnergyHub.Charges.Infrastructure.Repositories
                 .Include(x => x.MarketParticipant);
 
             var sql = chargeQuery.ToSql();
-
-            //var charge = await chargeQuery.Where(x => x.ChargeId == chargeId &&
-            //                               x.MarketParticipant.MarketParticipantId == owner &&
-            //                              x.ChargeType == (int)chargeType).ToListAsync().ConfigureAwait(false);
-            var charge = await chargeQuery.FirstAsync().ConfigureAwait(false);
+            var charge = await chargeQuery.SingleAsync(x => x.ChargeId == chargeId &&
+                    x.MarketParticipant.MarketParticipantId == owner &&
+                    x.ChargeType == (int)chargeType).ConfigureAwait(false);
 
             return ChargeMapper.MapChargeContextModelToDomainModel(charge);
         }

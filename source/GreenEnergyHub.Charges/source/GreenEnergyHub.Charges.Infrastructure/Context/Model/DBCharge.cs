@@ -39,13 +39,13 @@ namespace GreenEnergyHub.Charges.Infrastructure.Context.Model
 
         public int MarketParticipantRowId { get; set; }
 
-        public byte TaxIndicator { get; set; }
+        public bool TaxIndicator { get; set; }
 
         public int Resolution { get; set; }
 
         public string Currency { get; set; }
 
-        public byte TransparentInvoicing { get; set; }
+        public bool TransparentInvoicing { get; set; }
 
         [NotMapped]
         public virtual DBChargeOperation ChargeOperation { get; set; }

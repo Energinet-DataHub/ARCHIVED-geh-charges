@@ -60,16 +60,17 @@ namespace GreenEnergyHub.Charges.Application.Validation.BusinessValidation.Facto
 
             var chargeExists = await CheckIfChargeExistAsync(chargeCommand).ConfigureAwait(false);
 
-            //if (chargeExists)
-            //{
-            var charge = await _chargeRepository.GetChargeAsync(
+            if (chargeExists)
+            {
+                var charge = await _chargeRepository.GetChargeAsync(
                 chargeCommand.ChargeOperation.ChargeId,
                 chargeCommand.ChargeOperation.ChargeOwner,
                 chargeCommand.ChargeOperation.Type).ConfigureAwait(false);
 
-            if (chargeCommand.ChargeOperation.Type == ChargeType.Tariff)
-            {
-                AddTariffOnlyRules(rules, chargeCommand, charge);
+                if (chargeCommand.ChargeOperation.Type == ChargeType.Tariff)
+                {
+                    AddTariffOnlyRules(rules, chargeCommand, charge);
+                }
             }
 
             return ValidationRuleSet.FromRules(rules);

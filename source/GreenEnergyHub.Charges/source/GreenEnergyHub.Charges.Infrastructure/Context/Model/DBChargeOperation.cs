@@ -33,5 +33,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Context.Model
         public string CorrelationId { get; set; }
 
         public DateTime WriteDateTime { get; set; }
+
+        public virtual DBCharge Charge { get; set; }
     }
 }
