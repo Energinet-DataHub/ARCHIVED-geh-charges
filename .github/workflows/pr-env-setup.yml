@@ -39,7 +39,7 @@ jobs:
   infra_pre_job:
     runs-on: ubuntu-latest
     outputs:
-      should_skip: ${{ steps.skip_check.outputs.should_skip }}
+      has_changes: ${{ !steps.skip_check.outputs.should_skip }}
     steps:
       - name: Should skip?
         id: skip_check
@@ -55,7 +55,7 @@ jobs:
   charges_pre_job:
     runs-on: ubuntu-latest
     outputs:
-      should_skip: ${{ steps.skip_check.outputs.should_skip }}
+      has_changes: ${{ !steps.skip_check.outputs.should_skip }}
     steps:
       - name: Should skip?
         id: skip_check
@@ -71,7 +71,7 @@ jobs:
   infra_deploy:
     name: Deploy infrastructure
     needs: [infra_pre_job, charges_pre_job]
-    if: ${{ needs.infra_pre_job.outputs.should_skip != 'true' || needs.charges_pre_job.outputs.should_skip != 'true' }}
+    if: ${{ needs.infra_pre_job.outputs.has_changes || needs.charges_pre_job.outputs.has_changes }}
     runs-on: ubuntu-latest
     environment:
       name: rg-DataHub-Testing-U # Unfortunately this is not currently supported: ${{ env.ENVIRONMENT_LONG }}
