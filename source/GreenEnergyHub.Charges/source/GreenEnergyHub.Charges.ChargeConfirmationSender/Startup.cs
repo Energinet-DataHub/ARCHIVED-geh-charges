@@ -17,8 +17,10 @@ using System.Diagnostics.CodeAnalysis;
 using GreenEnergyHub.Charges.Application.Acknowledgement;
 using GreenEnergyHub.Charges.ChargeConfirmationSender;
 using GreenEnergyHub.Charges.Domain.Acknowledgements;
-using GreenEnergyHub.Charges.Domain.Events.Local;
+using GreenEnergyHub.Charges.Infrastructure.Integration.ChargeConfirmation;
+using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeCommandAccepted;
 using GreenEnergyHub.Charges.Infrastructure.Messaging.Registration;
+using GreenEnergyHub.Messaging.Protobuf;
 using Microsoft.Azure.Functions.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection;
 using NodaTime;
@@ -34,12 +36,17 @@ namespace GreenEnergyHub.Charges.ChargeConfirmationSender
             builder.Services.AddScoped(typeof(IClock), _ => SystemClock.Instance);
             builder.Services.AddScoped<IChargeConfirmationSender, Application.Acknowledgement.ChargeConfirmationSender>();
 
-            builder.Services
-                .AddMessaging()
-                .AddMessageDispatcher<ChargeConfirmation>(
-                    GetEnv("POST_OFFICE_SENDER_CONNECTION_STRING"),
-                    GetEnv("POST_OFFICE_TOPIC_NAME"))
-                .AddMessageExtractor<ChargeCommandAcceptedEvent>();
+            ConfigureMessaging(builder.Services);
+        }
+
+        private static void ConfigureMessaging(IServiceCollection services)
+        {
+            services.ReceiveProtobuf<ChargeCommandAcceptedContract>(
+                configuration => configuration.WithParser(() => ChargeCommandAcceptedContract.Parser));
+            services.SendProtobuf<ChargeConfirmationContract>();
+            services.AddMessagingProtobuf().AddMessageDispatcher<ChargeConfirmation>(
+                GetEnv("POST_OFFICE_SENDER_CONNECTION_STRING"),
+                GetEnv("POST_OFFICE_TOPIC_NAME"));
         }
 
         private static string GetEnv(string variableName)

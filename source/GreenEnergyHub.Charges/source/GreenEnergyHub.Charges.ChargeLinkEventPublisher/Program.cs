@@ -53,8 +53,8 @@ namespace GreenEnergyHub.Charges.ChargeLinkEventPublisher
         {
             serviceCollection.ReceiveProtobuf<ChargeLinkCommandAcceptedContract>(
                 configuration => configuration.WithParser(() => ChargeLinkCommandAcceptedContract.Parser));
-            serviceCollection.SendProtobuf<ChargeLinkCreatedContract>();
 
+            serviceCollection.SendProtobuf<ChargeLinkCreatedContract>();
             serviceCollection.AddMessagingProtobuf().AddMessageDispatcher<ChargeLinkCreatedEvent>(
                 GetEnv("INTEGRATIONEVENT_SENDER_CONNECTION_STRING"),
                 GetEnv("CHARGE_LINK_CREATED_TOPIC_NAME"));

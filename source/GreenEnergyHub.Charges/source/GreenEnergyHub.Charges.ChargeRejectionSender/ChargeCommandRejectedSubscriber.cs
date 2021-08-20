@@ -16,6 +16,7 @@ using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application.Acknowledgement;
 using GreenEnergyHub.Charges.Domain.Events.Local;
 using GreenEnergyHub.Charges.Infrastructure.Messaging;
+using GreenEnergyHub.Messaging.Transport;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Extensions.Logging;
 
@@ -26,12 +27,12 @@ namespace GreenEnergyHub.Charges.ChargeRejectionSender
         private const string FunctionName = nameof(ChargeCommandRejectedSubscriber);
         private readonly IChargeRejectionSender _chargeRejectionSender;
         private readonly ICorrelationContext _correlationContext;
-        private readonly MessageExtractor<ChargeCommandRejectedEvent> _messageExtractor;
+        private readonly MessageExtractor _messageExtractor;
 
         public ChargeCommandRejectedSubscriber(
             IChargeRejectionSender chargeRejectionSender,
             ICorrelationContext correlationContext,
-            MessageExtractor<ChargeCommandRejectedEvent> messageExtractor)
+            MessageExtractor messageExtractor)
         {
             _chargeRejectionSender = chargeRejectionSender;
             _correlationContext = correlationContext;
@@ -47,7 +48,7 @@ namespace GreenEnergyHub.Charges.ChargeRejectionSender
             byte[] message,
             ILogger log)
         {
-            var rejectedEvent = await _messageExtractor.ExtractAsync(message).ConfigureAwait(false);
+            var rejectedEvent = (ChargeCommandRejectedEvent)await _messageExtractor.ExtractAsync(message).ConfigureAwait(false);
             SetCorrelationContext(rejectedEvent);
             await _chargeRejectionSender.HandleAsync(rejectedEvent).ConfigureAwait(false);
 

@@ -18,6 +18,7 @@ using GreenEnergyHub.Charges.Domain.MarketDocument;
 using GreenEnergyHub.Charges.Infrastructure.Context.Model;
 using GreenEnergyHub.Charges.Infrastructure.Mapping;
 using GreenEnergyHub.Charges.TestCore;
+using GreenEnergyHub.Charges.TestCore.Attributes;
 using Microsoft.Azure.Amqp.Serialization;
 using Xunit;
 using Xunit.Categories;
@@ -40,7 +41,6 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Mapping
             // Assert
             Assert.NotNull(result);
             Assert.Equal(marketParticipant.MarketParticipantId, result.Id);
-            Assert.Equal(marketParticipant.Name, result.Name);
             Assert.Equal(marketParticipant.Role, (int)result.BusinessProcessRole);
         }
 

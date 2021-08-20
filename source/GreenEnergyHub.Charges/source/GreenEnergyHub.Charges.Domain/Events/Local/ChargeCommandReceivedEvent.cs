@@ -19,7 +19,10 @@ namespace GreenEnergyHub.Charges.Domain.Events.Local
 {
     public class ChargeCommandReceivedEvent : InternalEventBase
     {
-        public ChargeCommandReceivedEvent(Instant publishedTime, string correlationId, ChargeCommand command)
+        public ChargeCommandReceivedEvent(
+            Instant publishedTime,
+            string correlationId,
+            ChargeCommand command)
             : base(publishedTime, correlationId)
         {
             Command = command;

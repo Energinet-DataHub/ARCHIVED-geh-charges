@@ -21,6 +21,7 @@ using GreenEnergyHub.Charges.Domain.MarketDocument;
 using GreenEnergyHub.Charges.Infrastructure.Context;
 using GreenEnergyHub.Charges.Infrastructure.Repositories;
 using GreenEnergyHub.Charges.TestCore;
+using GreenEnergyHub.Charges.TestCore.Attributes;
 using Microsoft.EntityFrameworkCore;
 using NodaTime;
 using Xunit;
@@ -140,13 +141,11 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
                     Sender = new Domain.MarketDocument.MarketParticipant
                     {
                         Id = MarketParticipantId,
-                        Name = "Name",
                         BusinessProcessRole = (MarketParticipantRole)1,
                     },
                     BusinessReasonCode = BusinessReasonCode.UpdateChargeInformation,
                 },
                 ChargeOperationId = "id",
-                Status = OperationType.Create,
                 LastUpdatedBy = "LastUpdatedBy",
                 CorrelationId = "CorrelationId",
             };

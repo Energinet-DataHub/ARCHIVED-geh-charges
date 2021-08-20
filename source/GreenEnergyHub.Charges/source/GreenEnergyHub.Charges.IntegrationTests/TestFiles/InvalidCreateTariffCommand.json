@@ -19,7 +19,6 @@
   "ChargeOperation": {
     "Id": "MD{{$isoTimestamp}}",
     "EndDateTime": null,
-    "OperationType": 1,
     "ChargeId": "{{$randomCharacters}}",
     "ChargeName": "Electric charge",
     "Type": 3,

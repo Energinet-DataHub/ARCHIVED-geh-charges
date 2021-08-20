@@ -21,6 +21,7 @@ using GreenEnergyHub.Charges.Application.Factories;
 using GreenEnergyHub.Charges.Application.Validation;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
 using GreenEnergyHub.Charges.TestCore;
+using GreenEnergyHub.Charges.TestCore.Attributes;
 using Moq;
 using NodaTime;
 using Xunit;
@@ -53,10 +54,10 @@ namespace GreenEnergyHub.Charges.Tests.Application.Factories
             // Assert
             Assert.NotNull(result);
             Assert.Equal(currentTime, result.PublishedTime);
-            Assert.Equal(failedRules.Count, result.Reason.Count());
+            Assert.Equal(failedRules.Count, result.RejectReasons.Count());
             foreach (var failedRule in failedRules)
             {
-                Assert.Contains(failedRule.ValidationRuleIdentifier.ToString(), result.Reason);
+                Assert.Contains(failedRule.ValidationRuleIdentifier.ToString(), result.RejectReasons);
             }
         }
 
@@ -80,8 +81,8 @@ namespace GreenEnergyHub.Charges.Tests.Application.Factories
             // Assert
             Assert.NotNull(result);
             Assert.Equal(currentTime, result.PublishedTime);
-            Assert.Single(result.Reason);
-            Assert.Equal(exception.Message, result.Reason.First());
+            Assert.Single(result.RejectReasons);
+            Assert.Equal(exception.Message, result.RejectReasons.First());
         }
     }
 }

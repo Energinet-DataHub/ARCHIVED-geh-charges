@@ -29,8 +29,6 @@ namespace GreenEnergyHub.Charges.Domain.MarketDocument
         /// </summary>
         public string Id { get; set; }
 
-        public string Name { get; set; }
-
         /// <summary>
         /// Contains the role a market participant uses when initiating and communicating with Green Energy Hub
         /// about a specific business process, e.g. Grid Access Provider use 'DDM' when creating Charge price lists.

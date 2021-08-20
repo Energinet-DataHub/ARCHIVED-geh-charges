@@ -14,13 +14,15 @@
 
 using System;
 using System.Diagnostics.CodeAnalysis;
-using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Domain.Messages;
+using GreenEnergyHub.Charges.Domain.Events.Local;
+using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeCommandReceived;
+using GreenEnergyHub.Charges.Infrastructure.Internal.Mappers;
+using GreenEnergyHub.Messaging.Transport;
 using Microsoft.Azure.ServiceBus;
-using Newtonsoft.Json;
 using Xunit.Abstractions;
-using JsonSerializer = GreenEnergyHub.Charges.Core.Json.JsonSerializer;
+using IMessage = GreenEnergyHub.Charges.Domain.Messages.IMessage;
 
 namespace GreenEnergyHub.Charges.IntegrationTests.TestHelpers
 {
@@ -28,10 +30,12 @@ namespace GreenEnergyHub.Charges.IntegrationTests.TestHelpers
     public class ServiceBusTestHelper
     {
         private readonly ITestOutputHelper _testOutputHelper;
+        private readonly MessageExtractor _messageExtractor;
 
-        public ServiceBusTestHelper(ITestOutputHelper testOutputHelper)
+        public ServiceBusTestHelper(ITestOutputHelper testOutputHelper, MessageExtractor messageExtractor)
         {
             _testOutputHelper = testOutputHelper;
+            _messageExtractor = messageExtractor;
         }
 
         public async Task<(T receivedEvent, Message receivedMessage)> GetMessageFromServiceBusAsync<T>(
@@ -47,8 +51,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.TestHelpers
             subscriptionClient.RegisterMessageHandler(
                 async (serviceBusMessage, _) =>
                 {
-                    var jsonMessage = Encoding.UTF8.GetString(serviceBusMessage.Body);
-                    var deserializedMessage = new JsonSerializer().Deserialize<T>(jsonMessage);
+                    var deserializedMessage = ProtobufDeserializationHelper.Deserialize<T>(serviceBusMessage.Body);
 
                     if (deserializedMessage is IMessage message && message.CorrelationId == correlationId)
                     {
@@ -82,8 +85,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.TestHelpers
                 {
                     try
                     {
-                        var json = Encoding.UTF8.GetString(message.Body);
-                        var ev = new JsonSerializer().Deserialize<T>(json);
+                        var ev = (T)ProtobufMessageChargeCommandReceivedDeserializer(message.Body);
                         completion.SetResult(ev!);
                     }
 #pragma warning disable CA1031 // allow catch of exception
@@ -103,6 +105,14 @@ namespace GreenEnergyHub.Charges.IntegrationTests.TestHelpers
         {
             var subscriptionClient = new SubscriptionClient(serviceBusConnectionString, topicPath, subscriptionName);
             return subscriptionClient;
+        }
+
+        private static IInboundMessage ProtobufMessageChargeCommandReceivedDeserializer(byte[] data)
+        {
+            var mapper = new ChargeCommandReceivedInboundMapper();
+            var parsed = ChargeCommandReceivedContract.Parser.ParseFrom(data);
+            var mapped = mapper.Convert(parsed);
+            return mapped;
         }
 
         private static Task ExceptionReceivedHandlerAsync(ExceptionReceivedEventArgs arg)

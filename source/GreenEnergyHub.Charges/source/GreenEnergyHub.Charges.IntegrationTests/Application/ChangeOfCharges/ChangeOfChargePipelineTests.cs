@@ -22,7 +22,7 @@ using GreenEnergyHub.Charges.Domain.Acknowledgements;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Result;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
 using GreenEnergyHub.Charges.IntegrationTests.TestHelpers;
-using GreenEnergyHub.Charges.TestCore;
+using GreenEnergyHub.Charges.TestCore.Attributes;
 using Microsoft.Azure.WebJobs;
 using NodaTime;
 using Xunit;
@@ -62,7 +62,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
                                         $"{_postOfficeTopicName}");
         }
 
-        [Theory(Timeout = 60000)]
+        [Theory(Timeout = 120000)]
         [Trait(HostingEnvironmentTraitConstants.HostingEnvironment, HostingEnvironmentTraitConstants.Development)]
         [InlineAutoMoqData("TestFiles/ValidCreateTariffCommand.json")]
         public async Task Test_ChargeCommandCompleteFlow_is_Accepted(
@@ -104,12 +104,12 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
 
             // assert
             Assert.True(changeOfChargesMessageResult.IsSucceeded);
-            Assert.Equal(chargeCommand.ChargeOperation.Id, receivedEvent.OriginalTransactionReferenceMRid);
+            Assert.Equal(chargeCommand.ChargeOperation.Id, receivedEvent.OriginalTransactionReference);
             Assert.NotNull(receivedEvent);
             Assert.True(chargeExists);
         }
 
-        [Theory(Timeout = 60000)]
+        [Theory(Timeout = 120000)]
         [Trait(HostingEnvironmentTraitConstants.HostingEnvironment, HostingEnvironmentTraitConstants.Development)]
         [InlineAutoMoqData("TestFiles/InvalidCreateTariffCommand.json")]
         public async Task Test_ChargeCommandCompleteFlow_is_Rejected(
@@ -151,7 +151,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
 
             // assert
             Assert.True(changeOfChargesMessageResult.IsSucceeded);
-            Assert.Equal(chargeCommand.ChargeOperation.Id, receivedEvent.OriginalTransactionReferenceMRid);
+            Assert.Equal(chargeCommand.ChargeOperation.Id, receivedEvent.OriginalTransactionReference);
             Assert.NotNull(receivedEvent);
             Assert.False(chargeExists);
         }

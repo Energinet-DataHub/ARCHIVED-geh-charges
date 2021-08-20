@@ -16,6 +16,7 @@ using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application.Acknowledgement;
 using GreenEnergyHub.Charges.Domain.Events.Local;
 using GreenEnergyHub.Charges.Infrastructure.Messaging;
+using GreenEnergyHub.Messaging.Transport;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Extensions.Logging;
 
@@ -26,12 +27,12 @@ namespace GreenEnergyHub.Charges.ChargeConfirmationSender
         private const string FunctionName = nameof(ChargeCommandAcceptedSubscriber);
         private readonly IChargeConfirmationSender _chargeConfirmationSender;
         private readonly ICorrelationContext _correlationContext;
-        private readonly MessageExtractor<ChargeCommandAcceptedEvent> _messageExtractor;
+        private readonly MessageExtractor _messageExtractor;
 
         public ChargeCommandAcceptedSubscriber(
             IChargeConfirmationSender chargeConfirmationSender,
             ICorrelationContext correlationContext,
-            MessageExtractor<ChargeCommandAcceptedEvent> messageExtractor)
+            MessageExtractor messageExtractor)
         {
             _chargeConfirmationSender = chargeConfirmationSender;
             _correlationContext = correlationContext;
@@ -47,7 +48,7 @@ namespace GreenEnergyHub.Charges.ChargeConfirmationSender
             byte[] message,
             ILogger log)
         {
-            var acceptedEvent = await _messageExtractor.ExtractAsync(message).ConfigureAwait(false);
+            var acceptedEvent = (ChargeCommandAcceptedEvent)await _messageExtractor.ExtractAsync(message).ConfigureAwait(false);
             SetCorrelationContext(acceptedEvent);
             await _chargeConfirmationSender.HandleAsync(acceptedEvent).ConfigureAwait(false);
 

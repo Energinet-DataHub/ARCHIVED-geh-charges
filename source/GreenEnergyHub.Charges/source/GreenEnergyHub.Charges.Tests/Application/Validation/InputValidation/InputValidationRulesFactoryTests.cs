@@ -18,7 +18,6 @@ using System.Linq;
 using GreenEnergyHub.Charges.Application.Validation;
 using GreenEnergyHub.Charges.Application.Validation.InputValidation;
 using GreenEnergyHub.Charges.Application.Validation.InputValidation.ValidationRules;
-using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
 using GreenEnergyHub.Charges.Tests.Application.Validation.BusinessValidation;
 using Xunit;
 using Xunit.Categories;
@@ -29,164 +28,55 @@ namespace GreenEnergyHub.Charges.Tests.Application.Validation.InputValidation
     public class InputValidationRulesFactoryTests
     {
         [Fact]
-        public void CreateRulesForChargeCreateCommand_ShouldContainRulesTest()
+        public void CreateRulesForChargeCommand_ShouldContainRulesTest()
         {
             // Arrange
             var sut = new InputValidationRulesFactory();
-            var createCommand = new TestableChargeCommand { ChargeOperation = { OperationType = OperationType.Create } };
-            var mandatoryRules = GetExpectedMandatoryRules();
-            var createRules = new List<IValidationRule>
+            var chargeCommand = new TestableChargeCommand();
+            var expectedRules = new List<IValidationRule>
             {
-                new ProcessTypeIsKnownValidationRule(createCommand),
-                new SenderIsMandatoryTypeValidationRule(createCommand),
-                new RecipientIsMandatoryTypeValidationRule(createCommand),
-                new VatClassificationValidationRule(createCommand),
-                new ResolutionTariffValidationRule(createCommand),
-                new ResolutionFeeValidationRule(createCommand),
-                new ResolutionSubscriptionValidationRule(createCommand),
-                new ChargeNameHasMaximumLengthRule(createCommand),
-                new ChargeDescriptionHasMaximumLengthRule(createCommand),
-                new ChargeTypeTariffPriceCountRule(createCommand),
-                new MaximumPriceRule(createCommand),
-                new ChargePriceMaximumDigitsAndDecimalsRule(createCommand),
-                new FeeMustHaveSinglePriceRule(createCommand),
-                new SubscriptionMustHaveSinglePriceRule(createCommand),
+                new BusinessReasonCodeMustBeUpdateChargeInformationRule(chargeCommand),
+                new ChargeDescriptionHasMaximumLengthRule(chargeCommand),
+                new ChargeIdLengthValidationRule(chargeCommand),
+                new ChargeIdRequiredValidationRule(chargeCommand),
+                new ChargeNameHasMaximumLengthRule(chargeCommand),
+                new ChargeOperationIdRequiredRule(chargeCommand),
+                new ChargeOwnerIsRequiredValidationRule(chargeCommand),
+                new ChargePriceMaximumDigitsAndDecimalsRule(chargeCommand),
+                new ChargeTypeIsKnownValidationRule(chargeCommand),
+                new ChargeTypeTariffPriceCountRule(chargeCommand),
+                new DocumentTypeMustBeRequestUpdateChargeInformationRule(chargeCommand),
+                new FeeMustHaveSinglePriceRule(chargeCommand),
+                new MaximumPriceRule(chargeCommand),
+                new ProcessTypeIsKnownValidationRule(chargeCommand),
+                new RecipientIsMandatoryTypeValidationRule(chargeCommand),
+                new ResolutionFeeValidationRule(chargeCommand),
+                new ResolutionSubscriptionValidationRule(chargeCommand),
+                new ResolutionTariffValidationRule(chargeCommand),
+                new SenderIsMandatoryTypeValidationRule(chargeCommand),
+                new StartDateTimeRequiredValidationRule(chargeCommand),
+                new SubscriptionMustHaveSinglePriceRule(chargeCommand),
+                new VatClassificationValidationRule(chargeCommand),
             };
 
             // Act
-            var actualRuleTypes = sut.CreateRulesForChargeCreateCommand(createCommand).GetRules()
+            var actualRuleTypes = sut.CreateRulesForChargeCommand(chargeCommand).GetRules()
                 .Select(r => r.GetType()).ToList();
 
-            var expectedRuleTypes = createRules.Union(mandatoryRules).Select(r => r.GetType()).ToList();
+            var expectedRuleTypes = expectedRules.Select(r => r.GetType()).ToList();
 
             // Assert
             Assert.True(actualRuleTypes.SequenceEqual(expectedRuleTypes));
         }
 
         [Fact]
-        public void CreateRulesForChargeUpdateCommand_ShouldContainRulesTest()
-        {
-            // Arrange
-            var sut = new InputValidationRulesFactory();
-            var updateCommand = new TestableChargeCommand { ChargeOperation = { OperationType = OperationType.Update } };
-            var mandatoryRules = GetExpectedMandatoryRules();
-            var updateRules = new List<IValidationRule>
-            {
-                new ChargeNameHasMaximumLengthRule(updateCommand),
-                new ChargeDescriptionHasMaximumLengthRule(updateCommand),
-                new ChargeTypeTariffPriceCountRule(updateCommand),
-                new MaximumPriceRule(updateCommand),
-                new ChargePriceMaximumDigitsAndDecimalsRule(updateCommand),
-                new FeeMustHaveSinglePriceRule(updateCommand),
-                new SubscriptionMustHaveSinglePriceRule(updateCommand),
-            };
-
-            // Act
-            var actualRuleTypes = sut.CreateRulesForChargeUpdateCommand(updateCommand).GetRules()
-                .Select(r => r.GetType()).ToList();
-
-            var expectedRuleTypes = updateRules.Union(mandatoryRules).Select(r => r.GetType()).ToList();
-
-            // Assert
-            Assert.True(actualRuleTypes.SequenceEqual(expectedRuleTypes));
-        }
-
-        [Fact]
-        public void CreateRulesForChargeStopCommand_ShouldContainRulesTest()
-        {
-            // Arrange
-            var sut = new InputValidationRulesFactory();
-            var stopCommand = new TestableChargeCommand { ChargeOperation = { OperationType = OperationType.Stop } };
-
-            // Act
-            var actualRuleTypes = sut.CreateRulesForChargeStopCommand(stopCommand).GetRules()
-                .Select(r => r.GetType()).ToList();
-            var expectedRuleTypes = GetExpectedMandatoryRules().Select(r => r.GetType()).ToList();
-
-            // Assert
-            Assert.True(actualRuleTypes.SequenceEqual(expectedRuleTypes));
-        }
-
-        [Fact]
-        public void CreateRulesForChargeUnknownCommand_ShouldContainUnknownRulesTest()
-        {
-            // Arrange
-            var sut = new InputValidationRulesFactory();
-            var unknownCommand = new TestableChargeCommand { ChargeOperation = { OperationType = OperationType.Unknown } };
-            var unknownRules = new List<IValidationRule>
-            {
-                new ChargeTypeIsKnownValidationRule(unknownCommand),
-                new OperationTypeValidationRule(unknownCommand),
-            };
-
-            // Act
-            var actualRuleTypes = sut.CreateRulesForChargeUnknownCommand(unknownCommand).GetRules()
-                .Select(r => r.GetType()).ToList();
-
-            var expectedRuleTypes = unknownRules.Select(r => r.GetType()).ToList();
-
-            // Assert
-            Assert.True(actualRuleTypes.SequenceEqual(expectedRuleTypes));
-        }
-
-        [Fact]
-        public void CreateRulesForChargeUpdateCommand_ShouldThrowArgumentNullException_WhenCalledWithNull()
+        public void CreateRulesForChargeCommand_ShouldThrowArgumentNullException_WhenCalledWithNull()
         {
             // Arrange
             var sut = new InputValidationRulesFactory();
 
             // Act & Assert
-            Assert.Throws<ArgumentNullException>(() => sut.CreateRulesForChargeUpdateCommand(null!));
-        }
-
-        [Fact]
-        public void CreateRulesForChargeCreateCommand_ShouldThrowArgumentNullException_WhenCalledWithNull()
-        {
-            // Arrange
-            var sut = new InputValidationRulesFactory();
-
-            // Act & Assert
-            Assert.Throws<ArgumentNullException>(() => sut.CreateRulesForChargeCreateCommand(null!));
-        }
-
-        [Fact]
-        public void CreateRulesForChargeStopCommand_ShouldThrowArgumentNullException_WhenCalledWithNull()
-        {
-            // Arrange
-            var sut = new InputValidationRulesFactory();
-
-            // Act & Assert
-            Assert.Throws<ArgumentNullException>(() => sut.CreateRulesForChargeStopCommand(null!));
-        }
-
-        [Fact]
-        public void CreateRulesForChargeUnknownCommand_ShouldThrowArgumentNullException_WhenCalledWithNull()
-        {
-            // Arrange
-            var sut = new InputValidationRulesFactory();
-
-            // Act & Assert
-            Assert.Throws<ArgumentNullException>(() => sut.CreateRulesForChargeUnknownCommand(null!));
-        }
-
-        private static IEnumerable<IValidationRule> GetExpectedMandatoryRules()
-        {
-            var testableChargeCommand = new TestableChargeCommand();
-
-            var rules = new List<IValidationRule>
-            {
-                new ChargeOperationIdRequiredRule(testableChargeCommand),
-                new ChargeIdRequiredValidationRule(testableChargeCommand),
-                new BusinessReasonCodeMustBeUpdateChargeInformationRule(testableChargeCommand),
-                new DocumentTypeMustBeRequestUpdateChargeInformationRule(testableChargeCommand),
-                new ChargeTypeIsKnownValidationRule(testableChargeCommand),
-                new ChargeIdLengthValidationRule(testableChargeCommand),
-                new StartDateTimeRequiredValidationRule(testableChargeCommand),
-                new OperationTypeValidationRule(testableChargeCommand),
-                new ChargeOwnerIsRequiredValidationRule(testableChargeCommand),
-            };
-
-            return rules;
+            Assert.Throws<ArgumentNullException>(() => sut.CreateRulesForChargeCommand(null!));
         }
     }
 }

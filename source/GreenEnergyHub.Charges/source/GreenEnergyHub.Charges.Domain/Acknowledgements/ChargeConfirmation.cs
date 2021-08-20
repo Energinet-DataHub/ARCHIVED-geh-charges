@@ -23,26 +23,26 @@ namespace GreenEnergyHub.Charges.Domain.Acknowledgements
     {
         public ChargeConfirmation(
             string correlationId,
-            string receiverMRid,
+            string receiver,
             MarketParticipantRole receiverMarketParticipantRole,
-            string originalTransactionReferenceMRid,
+            string originalTransactionReference,
             BusinessReasonCode businessReasonCode)
         {
             CorrelationId = correlationId;
-            ReceiverMRid = receiverMRid;
+            Receiver = receiver;
             ReceiverMarketParticipantRole = receiverMarketParticipantRole;
-            OriginalTransactionReferenceMRid = originalTransactionReferenceMRid;
+            OriginalTransactionReference = originalTransactionReference;
             BusinessReasonCode = businessReasonCode;
             Transaction = Transaction.NewTransaction();
         }
 
         public string CorrelationId { get; }
 
-        public string ReceiverMRid { get; }
+        public string Receiver { get; }
 
         public MarketParticipantRole ReceiverMarketParticipantRole { get; }
 
-        public string OriginalTransactionReferenceMRid { get; }
+        public string OriginalTransactionReference { get; }
 
         public BusinessReasonCode BusinessReasonCode { get; }
 
