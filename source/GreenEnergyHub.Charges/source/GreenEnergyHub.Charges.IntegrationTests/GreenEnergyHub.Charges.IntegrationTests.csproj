@@ -42,17 +42,17 @@ limitations under the License.
         <PackageReference Include="Microsoft.Azure.Management.ServiceBus" Version="2.1.0" />
         <PackageReference Include="Microsoft.Azure.WebJobs.Extensions" Version="4.0.1" />
         <PackageReference Include="Microsoft.Azure.WebJobs.Host.TestCommon" Version="3.0.27" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="3.1.17" />
-        <PackageReference Include="Microsoft.Extensions.Configuration" Version="3.1.17" />
-        <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="3.1.17" />
-        <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="3.1.17" />
-        <PackageReference Include="Microsoft.Extensions.Hosting" Version="3.1.17" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="3.1.18" />
+        <PackageReference Include="Microsoft.Extensions.Configuration" Version="3.1.18" />
+        <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="3.1.18" />
+        <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="3.1.18" />
+        <PackageReference Include="Microsoft.Extensions.Hosting" Version="3.1.18" />
         <PackageReference Include="Squadron.AzureCloudServiceBus" Version="0.11.0" />
-        <PackageReference Include="Squadron.Core" Version="0.11.0" />
+        <PackageReference Include="Squadron.Core" Version="0.12.0" />
         <PackageReference Include="System.ComponentModel.TypeConverter" Version="4.3.0" />
         <PackageReference Include="xunit" Version="2.4.1" />
         <PackageReference Include="FluentAssertions" Version="5.10.3" />
-        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.10.0" />
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.11.0" />
         <PackageReference Include="xunit.runner.visualstudio" Version="2.4.3" />
         <PackageReference Include="coverlet.collector" Version="3.1.0" />
     </ItemGroup>
