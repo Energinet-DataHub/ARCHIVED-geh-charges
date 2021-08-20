@@ -19,6 +19,7 @@ using GreenEnergyHub.Charges.Application.Validation.InputValidation.ValidationRu
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
 using GreenEnergyHub.Charges.Domain.MarketDocument;
 using GreenEnergyHub.Charges.TestCore;
+using GreenEnergyHub.Charges.TestCore.Attributes;
 using GreenEnergyHub.TestHelpers;
 using Xunit;
 using Xunit.Categories;

@@ -21,6 +21,7 @@ using GreenEnergyHub.Charges.Application.Factories;
 using GreenEnergyHub.Charges.Application.Validation;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
 using GreenEnergyHub.Charges.TestCore;
+using GreenEnergyHub.Charges.TestCore.Attributes;
 using Moq;
 using NodaTime;
 using Xunit;

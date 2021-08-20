@@ -21,7 +21,7 @@ using AutoFixture.Kernel;
 using Google.Protobuf;
 using Xunit.Sdk;
 
-namespace GreenEnergyHub.Charges.TestCore
+namespace GreenEnergyHub.Charges.TestCore.Protobuf
 {
     /// <summary>
     /// AutoFixture customization that uses reflect to find all implementations of protobuf messages in assemblies

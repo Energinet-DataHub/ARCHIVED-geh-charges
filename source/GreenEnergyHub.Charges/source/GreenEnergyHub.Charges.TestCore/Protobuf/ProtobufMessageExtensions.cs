@@ -20,7 +20,7 @@ using AutoFixture;
 using Google.Protobuf;
 using Google.Protobuf.Collections;
 
-namespace GreenEnergyHub.Charges.TestCore
+namespace GreenEnergyHub.Charges.TestCore.Protobuf
 {
     public static class ProtobufMessageExtensions
     {

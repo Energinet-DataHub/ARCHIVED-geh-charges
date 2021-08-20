@@ -18,6 +18,8 @@ using GreenEnergyHub.Charges.Domain.Acknowledgements;
 using GreenEnergyHub.Charges.Infrastructure.Integration.ChargeRejection;
 using GreenEnergyHub.Charges.Infrastructure.Integration.Mappers;
 using GreenEnergyHub.Charges.TestCore;
+using GreenEnergyHub.Charges.TestCore.Attributes;
+using GreenEnergyHub.Charges.TestCore.Protobuf;
 using Xunit;
 using Xunit.Categories;
 
@@ -33,7 +35,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Integration.Mappers
             [NotNull] ChargeRejectionOutboundMapper sut)
         {
             var result = (ChargeRejectionContract)sut.Convert(chargeRejection);
-            ProtoBufAssert.OutgoingContractIsSubset(chargeRejection, result);
+            ProtobufAssert.OutgoingContractIsSubset(chargeRejection, result);
         }
 
         [Theory]

@@ -19,6 +19,7 @@ using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.Events.Integration;
 using GreenEnergyHub.Charges.Infrastructure.Integration.Mappers;
 using GreenEnergyHub.Charges.TestCore;
+using GreenEnergyHub.Charges.TestCore.Attributes;
 using GreenEnergyHub.TestHelpers.FluentAssertionsExtensions;
 using Xunit;
 using Xunit.Categories;
