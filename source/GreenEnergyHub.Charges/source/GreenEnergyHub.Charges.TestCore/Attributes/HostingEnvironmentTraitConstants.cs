@@ -12,18 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace GreenEnergyHub.Charges.Tests.TestCore.ProtoBufAssertHelpers
+namespace GreenEnergyHub.Charges.TestCore.Attributes
 {
-    public class TestDomainType
+    public static class HostingEnvironmentTraitConstants
     {
-        public TestDomainType(string a, string b)
-        {
-            A = a;
-            B = b;
-        }
-
-        public string A { get; }
-
-        public string B { get; }
+        public const string HostingEnvironment = "HostingEnvironment";
+        public const string LocalHost = "LocalHost";
+        public const string Development = "Development";
+        public const string PullRequestGate = "PullRequestGate";
     }
 }

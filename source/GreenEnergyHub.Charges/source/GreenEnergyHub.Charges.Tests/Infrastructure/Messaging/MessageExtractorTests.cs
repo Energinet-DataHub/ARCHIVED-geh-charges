@@ -21,6 +21,7 @@ using AutoFixture.Xunit2;
 using GreenEnergyHub.Charges.Infrastructure.Messaging;
 using GreenEnergyHub.Charges.Infrastructure.Messaging.Serialization;
 using GreenEnergyHub.Charges.TestCore;
+using GreenEnergyHub.Charges.TestCore.Attributes;
 using GreenEnergyHub.Messaging.Transport;
 using Moq;
 using Xunit;

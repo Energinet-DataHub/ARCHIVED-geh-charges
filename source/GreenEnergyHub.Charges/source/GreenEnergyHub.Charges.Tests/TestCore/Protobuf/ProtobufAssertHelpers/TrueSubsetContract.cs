@@ -16,52 +16,46 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using Google.Protobuf;
 
-namespace GreenEnergyHub.Charges.Tests.TestCore.ProtoBufAssertHelpers
+namespace GreenEnergyHub.Charges.Tests.TestCore.Protobuf.ProtobufAssertHelpers
 {
-    public class TrueSupersetContract : TestBaseContract, IMessage<TrueSupersetContract>
+    /// <summary>
+    /// Contract that is lacking prop <see cref="TestDomainType.B"/>.
+    /// </summary>
+    public class TrueSubsetContract : TestBaseContract, IMessage<TrueSubsetContract>
     {
         public string A { get; }
 
-        public string B { get; }
-
-        /// <summary>
-        /// Property that does not exist in <see cref="TestDomainType"/>.
-        /// </summary>
-        public string C { get; }
-
         #region Irrelevant stuff
 
-        public TrueSupersetContract(string a, string b, string c)
+        public TrueSubsetContract(string a)
             : base(null!)
         {
             A = a;
-            B = b;
-            C = c;
         }
 
-        bool IEquatable<TrueSupersetContract>.Equals([AllowNull] TrueSupersetContract other)
+        public bool Equals([AllowNull] TrueSubsetContract other)
         {
             return false;
         }
 
-        public new TrueSupersetContract Clone()
+        public new TrueSubsetContract Clone()
         {
             throw new NotImplementedException();
         }
 
-        public void MergeFrom(TrueSupersetContract message)
+        public void MergeFrom(TrueSubsetContract message)
         {
             throw new NotImplementedException();
         }
 
         public override bool Equals(object? obj)
         {
-            return ((IEquatable<TrueSupersetContract>)this).Equals(obj as TrueSupersetContract);
+            return ((IEquatable<TrueSubsetContract>)this).Equals(obj as TrueSubsetContract);
         }
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(base.GetHashCode(), A, B, C);
+            return HashCode.Combine(base.GetHashCode(), A);
         }
 
         #endregion

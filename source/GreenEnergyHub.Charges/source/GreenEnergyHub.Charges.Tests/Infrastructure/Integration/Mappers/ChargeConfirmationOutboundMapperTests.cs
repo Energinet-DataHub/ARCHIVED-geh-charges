@@ -18,6 +18,8 @@ using GreenEnergyHub.Charges.Domain.Acknowledgements;
 using GreenEnergyHub.Charges.Infrastructure.Integration.ChargeConfirmation;
 using GreenEnergyHub.Charges.Infrastructure.Integration.Mappers;
 using GreenEnergyHub.Charges.TestCore;
+using GreenEnergyHub.Charges.TestCore.Attributes;
+using GreenEnergyHub.Charges.TestCore.Protobuf;
 using Xunit;
 using Xunit.Categories;
 
@@ -34,7 +36,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Integration.Mappers
         {
             // Act
             var actual = (ChargeConfirmationContract)sut.Convert(expected);
-            ProtoBufAssert.OutgoingContractIsSubset(expected, actual);
+            ProtobufAssert.OutgoingContractIsSubset(expected, actual);
         }
 
         [Theory]
