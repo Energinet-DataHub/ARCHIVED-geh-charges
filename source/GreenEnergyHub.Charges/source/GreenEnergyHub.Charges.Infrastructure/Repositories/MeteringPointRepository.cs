@@ -39,14 +39,14 @@ namespace GreenEnergyHub.Charges.Infrastructure.Repositories
 
             var meteringPoint = MeteringPointMapper.MapMeteringPointCreatedEventToMeteringPoint(meteringPointCreatedEvent);
 
-            await _chargesDatabaseContext.MeteringPoints.AddAsync(meteringPoint).ConfigureAwait(false);
+            await _chargesDatabaseContext.MeteringPoint.AddAsync(meteringPoint).ConfigureAwait(false);
 
             await _chargesDatabaseContext.SaveChangesAsync().ConfigureAwait(false);
         }
 
         public async Task<MeteringPoint> GetMeteringPointAsync(string meteringPointId)
         {
-            var meteringPoint = await _chargesDatabaseContext.MeteringPoints.SingleAsync(x => x.MeteringPointId == meteringPointId)
+            var meteringPoint = await _chargesDatabaseContext.MeteringPoint.SingleAsync(x => x.MeteringPointId == meteringPointId)
                 .ConfigureAwait(false);
 
             return MeteringPointMapper.MapMeteringPointToDomainModel(meteringPoint);

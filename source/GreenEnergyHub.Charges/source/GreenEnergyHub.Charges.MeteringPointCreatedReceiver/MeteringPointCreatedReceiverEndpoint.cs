@@ -13,6 +13,8 @@
 // limitations under the License.
 
 using System.Threading.Tasks;
+using GreenEnergyHub.Charges.Application;
+using GreenEnergyHub.Charges.Domain.Events.Integration;
 using GreenEnergyHub.Messaging.Transport;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Extensions.Logging;
@@ -27,10 +29,12 @@ namespace GreenEnergyHub.Charges.MeteringPointCreatedReceiver
         /// </summary>
         private const string FunctionName = nameof(MeteringPointCreatedReceiverEndpoint);
         private readonly MessageExtractor _messageExtractor;
+        private readonly IMeteringPointCreatedHandler _meteringPointCreatedHandler;
 
-        public MeteringPointCreatedReceiverEndpoint(MessageExtractor messageExtractor)
+        public MeteringPointCreatedReceiverEndpoint(MessageExtractor messageExtractor, IMeteringPointCreatedHandler meteringPointCreatedHandler)
         {
             _messageExtractor = messageExtractor;
+            _meteringPointCreatedHandler = meteringPointCreatedHandler;
         }
 
         [FunctionName(FunctionName)]
@@ -42,8 +46,11 @@ namespace GreenEnergyHub.Charges.MeteringPointCreatedReceiver
             byte[] data,
             ILogger log)
         {
-            var meteringPointCreatedEvent = await _messageExtractor.ExtractAsync(data).ConfigureAwait(false);
-            log.LogInformation("Received metering point created event '{@EventTransactionMrId}'", meteringPointCreatedEvent.Transaction.MRID);
+            var meteringPointCreatedEvent = (MeteringPointCreatedEvent)await _messageExtractor.ExtractAsync(data).ConfigureAwait(false);
+
+            await _meteringPointCreatedHandler.HandleAsync(meteringPointCreatedEvent).ConfigureAwait(false);
+
+            log.LogInformation("Received metering point created event '{@MeteringPointId}'", meteringPointCreatedEvent.MeteringPointId);
         }
     }
 }

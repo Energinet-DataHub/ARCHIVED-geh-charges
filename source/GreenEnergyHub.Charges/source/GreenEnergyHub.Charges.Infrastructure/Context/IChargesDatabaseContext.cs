@@ -51,7 +51,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Context
         /// <summary>
         /// Metering Point available in the database.
         /// </summary>
-        DbSet<MeteringPoint> MeteringPoints { get; }
+        DbSet<MeteringPoint> MeteringPoint { get; }
 
         /// <summary>
         /// Saves changes to the database.
