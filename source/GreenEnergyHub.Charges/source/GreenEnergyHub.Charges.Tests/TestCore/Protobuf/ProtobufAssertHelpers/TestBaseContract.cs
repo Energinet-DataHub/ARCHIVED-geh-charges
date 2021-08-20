@@ -17,7 +17,7 @@ using System.Diagnostics.CodeAnalysis;
 using Google.Protobuf;
 using Google.Protobuf.Reflection;
 
-namespace GreenEnergyHub.Charges.Tests.TestCore.ProtoBufAssertHelpers
+namespace GreenEnergyHub.Charges.Tests.TestCore.Protobuf.ProtobufAssertHelpers
 {
     public abstract class TestBaseContract : IMessage<TestBaseContract>
     {

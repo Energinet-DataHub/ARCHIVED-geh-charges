@@ -13,28 +13,24 @@
 // limitations under the License.
 
 using System.Diagnostics.CodeAnalysis;
-using GreenEnergyHub.Charges.Domain.Acknowledgements;
-using GreenEnergyHub.Charges.Infrastructure.Integration.ChargeRejection;
-using GreenEnergyHub.Charges.Infrastructure.Integration.Mappers;
-using GreenEnergyHub.Charges.TestCore;
+using FluentAssertions;
+using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
 using GreenEnergyHub.Charges.TestCore.Attributes;
-using GreenEnergyHub.Charges.TestCore.Protobuf;
+using GreenEnergyHub.TestHelpers.FluentAssertionsExtensions;
 using Xunit;
 using Xunit.Categories;
 
-namespace GreenEnergyHub.Charges.Tests.Infrastructure.Integration.Mappers
+namespace GreenEnergyHub.Charges.Tests.TestCore.Attributes
 {
     [UnitTest]
-    public class ChargeRejectionInboundMapperTests
+    public class InlineAutoMoqDataAttributeTests
     {
         [Theory]
         [InlineAutoMoqData]
-        public void Convert_WhenCalled_ShouldMapToDomainObjectWithCorrectValues(
-            [NotNull] ChargeRejectionContract chargeRejectionContract,
-            [NotNull] ChargeRejectionInboundMapper sut)
+        public void Attribute_SupportsInstantiatingClassTypeObjectsWithPropsWithGeneratedValues(
+            [NotNull] ChargeCommand command)
         {
-            var result = (ChargeRejection)sut.Convert(chargeRejectionContract);
-            ProtobufAssert.IncomingContractIsSuperset(result, chargeRejectionContract);
+            command.Should().NotContainNullsOrEmptyEnumerables();
         }
     }
 }

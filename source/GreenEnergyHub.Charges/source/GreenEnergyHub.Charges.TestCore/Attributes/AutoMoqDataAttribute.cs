@@ -12,25 +12,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Diagnostics.CodeAnalysis;
-using FluentAssertions;
-using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
-using GreenEnergyHub.Charges.TestCore;
-using GreenEnergyHub.TestHelpers.FluentAssertionsExtensions;
-using Xunit;
-using Xunit.Categories;
+using AutoFixture;
+using AutoFixture.AutoMoq;
+using AutoFixture.Xunit2;
+using GreenEnergyHub.Charges.TestCore.Protobuf;
 
-namespace GreenEnergyHub.Charges.Tests
+namespace GreenEnergyHub.Charges.TestCore.Attributes
 {
-    [UnitTest]
-    public class InlineAutoMoqDataAttributeTests
+    public class AutoMoqDataAttribute : AutoDataAttribute
     {
-        [Theory]
-        [InlineAutoMoqData]
-        public void Attribute_SupportsInstantiatingClassTypeObjectsWithPropsWithGeneratedValues(
-            [NotNull] ChargeCommand command)
+        public AutoMoqDataAttribute()
+            : base(() => new Fixture().Customize(
+                new CompositeCustomization(
+                    new AutoMoqCustomization(),
+                    new ProtobufCustomization())))
         {
-            command.Should().NotContainNullsOrEmptyEnumerables();
         }
     }
 }

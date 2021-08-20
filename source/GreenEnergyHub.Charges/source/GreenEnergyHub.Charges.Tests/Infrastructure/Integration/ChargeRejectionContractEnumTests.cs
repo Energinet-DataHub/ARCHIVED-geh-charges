@@ -15,6 +15,7 @@
 using GreenEnergyHub.Charges.Domain.MarketDocument;
 using GreenEnergyHub.Charges.Infrastructure.Integration.ChargeRejection;
 using GreenEnergyHub.Charges.TestCore;
+using GreenEnergyHub.Charges.TestCore.Protobuf;
 using Xunit;
 using Xunit.Categories;
 
@@ -26,13 +27,13 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Integration
         [Fact]
         public void MarketParticipantRoleContract_ShouldBeSubsetOfMarketParticipantRole()
         {
-            ProtoBufAssert.ContractEnumIsSubSet<MarketParticipantRoleContract, MarketParticipantRole>();
+            ProtobufAssert.ContractEnumIsSubSet<MarketParticipantRoleContract, MarketParticipantRole>();
         }
 
         [Fact]
         public void BusinessReasonCodeContract_ShouldBeSubsetOfBusinessReasonCode()
         {
-            ProtoBufAssert.ContractEnumIsSubSet<BusinessReasonCodeContract, BusinessReasonCode>();
+            ProtobufAssert.ContractEnumIsSubSet<BusinessReasonCodeContract, BusinessReasonCode>();
         }
     }
 }
