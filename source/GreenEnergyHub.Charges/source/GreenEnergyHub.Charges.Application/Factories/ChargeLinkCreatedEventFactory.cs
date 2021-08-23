@@ -15,7 +15,8 @@
 using System.Diagnostics.CodeAnalysis;
 using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.Domain.ChargeLinks;
-using GreenEnergyHub.Charges.Domain.Events.Integration;
+using GreenEnergyHub.Charges.Domain.ChargeLinks.Events.Integration;
+using GreenEnergyHub.Charges.Domain.ChargeLinks.Events.Local;
 
 namespace GreenEnergyHub.Charges.Application.Factories
 {

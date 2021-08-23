@@ -13,7 +13,7 @@
 // limitations under the License.
 
 using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Domain.Events.Local;
+using GreenEnergyHub.Charges.Domain.Charges.Events.Local;
 
 namespace GreenEnergyHub.Charges.Application.Acknowledgement
 {

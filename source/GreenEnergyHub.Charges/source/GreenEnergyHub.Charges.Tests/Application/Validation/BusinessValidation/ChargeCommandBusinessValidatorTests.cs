@@ -18,7 +18,7 @@ using AutoFixture.Xunit2;
 using GreenEnergyHub.Charges.Application.Validation;
 using GreenEnergyHub.Charges.Application.Validation.BusinessValidation;
 using GreenEnergyHub.Charges.Application.Validation.BusinessValidation.Factories;
-using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
+using GreenEnergyHub.Charges.Domain.Charges.Commands;
 using GreenEnergyHub.Charges.TestCore.Attributes;
 using Moq;
 using Xunit;

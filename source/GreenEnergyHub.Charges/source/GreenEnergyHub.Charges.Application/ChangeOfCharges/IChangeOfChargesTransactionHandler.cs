@@ -14,7 +14,7 @@
 
 using System.Threading.Tasks;
 using System.Transactions;
-using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
+using GreenEnergyHub.Charges.Domain.Charges.Commands;
 
 namespace GreenEnergyHub.Charges.Application.ChangeOfCharges
 {

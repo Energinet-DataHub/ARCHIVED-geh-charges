@@ -14,9 +14,8 @@
 
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Message;
-using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Result;
-using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
+using GreenEnergyHub.Charges.Domain.Charges.Commands;
+using GreenEnergyHub.Charges.Domain.Charges.Message;
 
 namespace GreenEnergyHub.Charges.Application.ChangeOfCharges
 {
@@ -29,20 +28,20 @@ namespace GreenEnergyHub.Charges.Application.ChangeOfCharges
             _changeOfChargesTransactionHandler = changeOfChargesTransactionHandler;
         }
 
-        public async Task<ChangeOfChargesMessageResult> HandleAsync([NotNull] ChangeOfChargesMessage message)
+        public async Task<ChargesMessageResult> HandleAsync([NotNull] ChargesMessage message)
         {
             var result = await HandleTransactionsAsync(message).ConfigureAwait(false);
             return result;
         }
 
-        private async Task<ChangeOfChargesMessageResult> HandleTransactionsAsync([NotNull] ChangeOfChargesMessage message)
+        private async Task<ChargesMessageResult> HandleTransactionsAsync([NotNull] ChargesMessage message)
         {
             foreach (ChargeCommand transaction in message.Transactions)
             {
                 await _changeOfChargesTransactionHandler.HandleAsync(transaction).ConfigureAwait(false);
             }
 
-            return ChangeOfChargesMessageResult.CreateSuccess();
+            return ChargesMessageResult.CreateSuccess();
         }
     }
 }

@@ -14,9 +14,9 @@
 
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application.Factories;
-using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
 using GreenEnergyHub.Charges.Domain.ChargeLinks;
-using GreenEnergyHub.Charges.Domain.Events.Integration;
+using GreenEnergyHub.Charges.Domain.ChargeLinks.Events.Integration;
+using GreenEnergyHub.Charges.Domain.ChargeLinks.Events.Local;
 using NodaTime;
 
 namespace GreenEnergyHub.Charges.Application.ChargeLinks

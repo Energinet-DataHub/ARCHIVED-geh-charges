@@ -18,9 +18,9 @@ using GreenEnergyHub.Messaging.Protobuf;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Integration.Mappers
 {
-    public class ChargeConfirmationOutboundMapper : ProtobufOutboundMapper<Domain.Acknowledgements.ChargeConfirmation>
+    public class ChargeConfirmationOutboundMapper : ProtobufOutboundMapper<Domain.Charges.Acknowledgements.ChargeConfirmation>
     {
-        protected override Google.Protobuf.IMessage Convert([NotNull]Domain.Acknowledgements.ChargeConfirmation chargeConfirmation)
+        protected override Google.Protobuf.IMessage Convert([NotNull]Domain.Charges.Acknowledgements.ChargeConfirmation chargeConfirmation)
         {
             return new ChargeConfirmationContract
             {

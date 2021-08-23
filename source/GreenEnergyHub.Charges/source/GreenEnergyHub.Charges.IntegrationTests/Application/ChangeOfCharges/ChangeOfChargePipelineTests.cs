@@ -18,9 +18,9 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Domain.Acknowledgements;
-using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Result;
-using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
+using GreenEnergyHub.Charges.Domain.Charges.Acknowledgements;
+using GreenEnergyHub.Charges.Domain.Charges.Commands;
+using GreenEnergyHub.Charges.Domain.Charges.Message;
 using GreenEnergyHub.Charges.IntegrationTests.TestHelpers;
 using GreenEnergyHub.Charges.TestCore.Attributes;
 using Microsoft.Azure.WebJobs;
@@ -156,7 +156,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
             Assert.False(chargeExists);
         }
 
-        private async Task<ChangeOfChargesMessageResult> RunMessageReceiver([NotNull] string json)
+        private async Task<ChargesMessageResult> RunMessageReceiver([NotNull] string json)
         {
             using var client = new HttpClient();
             client.DefaultRequestHeaders.Accept.Clear();
@@ -168,7 +168,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
             stringContent.Dispose();
 
             string responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
-            return new JsonSerializer().Deserialize<ChangeOfChargesMessageResult>(responseContent);
+            return new JsonSerializer().Deserialize<ChargesMessageResult>(responseContent);
         }
     }
 }

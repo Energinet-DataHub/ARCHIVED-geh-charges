@@ -15,8 +15,8 @@
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application.Factories;
 using GreenEnergyHub.Charges.Application.Validation;
-using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
-using GreenEnergyHub.Charges.Domain.Events.Local;
+using GreenEnergyHub.Charges.Domain.Charges.Commands;
+using GreenEnergyHub.Charges.Domain.Charges.Events.Local;
 
 namespace GreenEnergyHub.Charges.Application.Acknowledgement
 {

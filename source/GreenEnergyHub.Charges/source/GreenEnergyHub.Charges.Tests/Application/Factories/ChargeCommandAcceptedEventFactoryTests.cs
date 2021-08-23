@@ -15,7 +15,7 @@
 using System.Diagnostics.CodeAnalysis;
 using AutoFixture.Xunit2;
 using GreenEnergyHub.Charges.Application.Factories;
-using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
+using GreenEnergyHub.Charges.Domain.Charges.Commands;
 using GreenEnergyHub.Charges.TestCore.Attributes;
 using Moq;
 using NodaTime;

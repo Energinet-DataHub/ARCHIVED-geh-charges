@@ -14,7 +14,7 @@
 
 using System.Diagnostics.CodeAnalysis;
 using GreenEnergyHub.Charges.Core.DateTime;
-using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
+using GreenEnergyHub.Charges.Domain.Charges.Commands;
 using NodaTime;
 
 namespace GreenEnergyHub.Charges.Application.Validation.BusinessValidation.ValidationRules

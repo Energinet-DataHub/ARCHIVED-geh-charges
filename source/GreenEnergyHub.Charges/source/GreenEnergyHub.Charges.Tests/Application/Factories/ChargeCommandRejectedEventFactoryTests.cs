@@ -19,7 +19,7 @@ using System.Linq;
 using AutoFixture.Xunit2;
 using GreenEnergyHub.Charges.Application.Factories;
 using GreenEnergyHub.Charges.Application.Validation;
-using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
+using GreenEnergyHub.Charges.Domain.Charges.Commands;
 using GreenEnergyHub.Charges.TestCore;
 using GreenEnergyHub.Charges.TestCore.Attributes;
 using Moq;

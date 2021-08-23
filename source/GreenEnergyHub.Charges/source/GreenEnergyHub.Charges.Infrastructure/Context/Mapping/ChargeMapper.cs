@@ -16,9 +16,10 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
+using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Infrastructure.Context.Model;
 using NodaTime;
+using Charge = GreenEnergyHub.Charges.Infrastructure.Context.Model.Charge;
 using ChargeOperation = GreenEnergyHub.Charges.Infrastructure.Context.Model.ChargeOperation;
 using MarketParticipant = GreenEnergyHub.Charges.Infrastructure.Context.Model.MarketParticipant;
 
@@ -26,14 +27,14 @@ namespace GreenEnergyHub.Charges.Infrastructure.Mapping
 {
     public static class ChargeMapper
     {
-        public static Domain.Charge MapChargeToChargeDomainModel(Charge charge)
+        public static Domain.Charges.Charge MapChargeToChargeDomainModel(Charge charge)
         {
             if (charge == null) throw new ArgumentNullException(nameof(charge));
 
             var currentChargeDetails = charge.ChargePeriodDetails
                 .OrderBy(x => Math.Abs((x.StartDateTime - DateTime.UtcNow).Ticks)).First();
 
-            return new Domain.Charge
+            return new Domain.Charges.Charge
             {
                 Id = charge.ChargeId,
                 Type = (ChargeType)charge.ChargeType,
@@ -58,7 +59,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Mapping
         }
 
         public static Charge MapDomainChargeToCharge(
-            [NotNull] Domain.Charge charge,
+            [NotNull] Domain.Charges.Charge charge,
             MarketParticipant marketParticipant)
         {
             if (charge == null) throw new ArgumentNullException(nameof(charge));
@@ -86,7 +87,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Mapping
         }
 
         private static ChargeOperation MapToChargeOperation(
-            [NotNull] Domain.Charge charge)
+            [NotNull] Domain.Charges.Charge charge)
         {
             return new ChargeOperation
             {
@@ -97,7 +98,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Mapping
         }
 
         private static IEnumerable<ChargePrice> MapChargeToChargePrice(
-            [NotNull] Domain.Charge charge,
+            [NotNull] Domain.Charges.Charge charge,
             ChargeOperation chargeOperation)
         {
             return charge.Points.Select(point => new ChargePrice
@@ -109,7 +110,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Mapping
         }
 
         private static ChargePeriodDetails MapChargeToChargePeriodDetails(
-            [NotNull] Domain.Charge charge,
+            [NotNull] Domain.Charges.Charge charge,
             ChargeOperation chargeOperation)
         {
             return new ChargePeriodDetails

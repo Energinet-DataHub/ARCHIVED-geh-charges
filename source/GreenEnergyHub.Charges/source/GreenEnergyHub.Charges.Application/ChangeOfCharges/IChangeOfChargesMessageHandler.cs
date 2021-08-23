@@ -14,8 +14,7 @@
 
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Message;
-using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Result;
+using GreenEnergyHub.Charges.Domain.Charges.Message;
 
 namespace GreenEnergyHub.Charges.Application.ChangeOfCharges
 {
@@ -29,6 +28,6 @@ namespace GreenEnergyHub.Charges.Application.ChangeOfCharges
         /// </summary>
         /// <param name="message"></param>
         /// <returns>Returns the result of the synchronous handling of the message.</returns>
-        Task<ChangeOfChargesMessageResult> HandleAsync([NotNull]ChangeOfChargesMessage message);
+        Task<ChargesMessageResult> HandleAsync([NotNull]ChargesMessage message);
     }
 }

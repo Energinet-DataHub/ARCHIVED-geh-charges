@@ -16,7 +16,7 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using GreenEnergyHub.Charges.Application.Acknowledgement;
 using GreenEnergyHub.Charges.ChargeRejectionSender;
-using GreenEnergyHub.Charges.Domain.Acknowledgements;
+using GreenEnergyHub.Charges.Domain.Charges.Acknowledgements;
 using GreenEnergyHub.Charges.Infrastructure.Integration.ChargeRejection;
 using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeCommandRejected;
 using GreenEnergyHub.Charges.Infrastructure.Messaging.Registration;

@@ -15,7 +15,7 @@
 using System;
 using System.Collections.Generic;
 using GreenEnergyHub.Charges.Application.Validation.InputValidation.ValidationRules;
-using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
+using GreenEnergyHub.Charges.Domain.Charges.Commands;
 
 namespace GreenEnergyHub.Charges.Application.Validation.InputValidation
 {

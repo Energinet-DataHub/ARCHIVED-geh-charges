@@ -14,8 +14,8 @@
 
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Domain.Acknowledgements;
-using GreenEnergyHub.Charges.Domain.Events.Local;
+using GreenEnergyHub.Charges.Domain.Charges.Acknowledgements;
+using GreenEnergyHub.Charges.Domain.Charges.Events.Local;
 
 namespace GreenEnergyHub.Charges.Application.Acknowledgement
 {
