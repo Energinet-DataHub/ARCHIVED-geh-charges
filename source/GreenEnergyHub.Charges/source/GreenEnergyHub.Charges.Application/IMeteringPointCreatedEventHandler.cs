@@ -17,7 +17,7 @@ using GreenEnergyHub.Charges.Domain.Events.Integration;
 
 namespace GreenEnergyHub.Charges.Application
 {
-    public interface IMeteringPointCreatedHandler
+    public interface IMeteringPointCreatedEventHandler
     {
         Task HandleAsync(MeteringPointCreatedEvent meteringPointCreatedEvent);
     }

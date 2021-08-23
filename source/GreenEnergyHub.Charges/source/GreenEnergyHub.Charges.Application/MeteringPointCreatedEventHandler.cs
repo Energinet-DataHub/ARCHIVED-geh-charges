@@ -19,11 +19,11 @@ using GreenEnergyHub.Charges.Domain.Events.Integration;
 
 namespace GreenEnergyHub.Charges.Application
 {
-    public class MeteringPointCreatedHandler : IMeteringPointCreatedHandler
+    public class MeteringPointCreatedEventHandler : IMeteringPointCreatedEventHandler
     {
         private readonly IMeteringPointRepository _meteringPointRepository;
 
-        public MeteringPointCreatedHandler(IMeteringPointRepository meteringPointRepository)
+        public MeteringPointCreatedEventHandler(IMeteringPointRepository meteringPointRepository)
         {
             _meteringPointRepository = meteringPointRepository;
         }

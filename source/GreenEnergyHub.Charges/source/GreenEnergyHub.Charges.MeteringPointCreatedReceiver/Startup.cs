@@ -43,7 +43,7 @@ namespace GreenEnergyHub.Charges.MeteringPointCreatedReceiver
                 options => options.UseSqlServer(connectionString));
             builder.Services.AddScoped<IChargesDatabaseContext, ChargesDatabaseContext>();
             builder.Services.AddScoped<IMeteringPointRepository, MeteringPointRepository>();
-            builder.Services.AddScoped<IMeteringPointCreatedHandler, MeteringPointCreatedHandler>();
+            builder.Services.AddScoped<IMeteringPointCreatedEventHandler, MeteringPointCreatedEventHandler>();
 
             ConfigureMessaging(builder);
         }

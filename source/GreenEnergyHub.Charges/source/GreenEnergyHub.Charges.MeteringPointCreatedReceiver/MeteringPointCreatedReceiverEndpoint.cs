@@ -29,12 +29,12 @@ namespace GreenEnergyHub.Charges.MeteringPointCreatedReceiver
         /// </summary>
         private const string FunctionName = nameof(MeteringPointCreatedReceiverEndpoint);
         private readonly MessageExtractor _messageExtractor;
-        private readonly IMeteringPointCreatedHandler _meteringPointCreatedHandler;
+        private readonly IMeteringPointCreatedEventHandler _meteringPointCreatedEventHandler;
 
-        public MeteringPointCreatedReceiverEndpoint(MessageExtractor messageExtractor, IMeteringPointCreatedHandler meteringPointCreatedHandler)
+        public MeteringPointCreatedReceiverEndpoint(MessageExtractor messageExtractor, IMeteringPointCreatedEventHandler meteringPointCreatedEventHandler)
         {
             _messageExtractor = messageExtractor;
-            _meteringPointCreatedHandler = meteringPointCreatedHandler;
+            _meteringPointCreatedEventHandler = meteringPointCreatedEventHandler;
         }
 
         [FunctionName(FunctionName)]
@@ -48,7 +48,7 @@ namespace GreenEnergyHub.Charges.MeteringPointCreatedReceiver
         {
             var meteringPointCreatedEvent = (MeteringPointCreatedEvent)await _messageExtractor.ExtractAsync(data).ConfigureAwait(false);
 
-            await _meteringPointCreatedHandler.HandleAsync(meteringPointCreatedEvent).ConfigureAwait(false);
+            await _meteringPointCreatedEventHandler.HandleAsync(meteringPointCreatedEvent).ConfigureAwait(false);
 
             log.LogInformation("Received metering point created event '{@MeteringPointId}'", meteringPointCreatedEvent.MeteringPointId);
         }

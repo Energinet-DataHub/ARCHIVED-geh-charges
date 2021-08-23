@@ -35,7 +35,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.MeteringPoints
         public async Task HandleAsync_WhenCalled_ShouldCallRepository(
             [NotNull][Frozen] Mock<IMeteringPointRepository> meteringPointRepository,
             [NotNull] MeteringPointCreatedEvent meteringPointCreatedEvent,
-            [NotNull] MeteringPointCreatedHandler sut)
+            [NotNull] MeteringPointCreatedEventHandler sut)
         {
             // Act
             await sut.HandleAsync(meteringPointCreatedEvent).ConfigureAwait(false);
@@ -48,7 +48,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.MeteringPoints
         [Theory]
         [InlineAutoMoqData]
         public async Task HandleAsync_IfEventIsNull_ThrowsArgumentNullException(
-            [NotNull] MeteringPointCreatedHandler sut)
+            [NotNull] MeteringPointCreatedEventHandler sut)
         {
             // Arrange
             MeteringPointCreatedEvent? meteringPointCreatedEvent = null;
