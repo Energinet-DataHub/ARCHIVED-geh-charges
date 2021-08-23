@@ -35,7 +35,6 @@ namespace GreenEnergyHub.Charges.Infrastructure.Context.Mapping
                 throw new ArgumentException(nameof(meteringPointCreatedEvent.MeteringPointType));
             }
 
-            var test = SystemClock.Instance.GetCurrentInstant().ToString();
             var effectiveDate = InstantPattern.General.Parse(meteringPointCreatedEvent.EffectiveDate).Value;
 
             var connectionStateConvertSuccess =
