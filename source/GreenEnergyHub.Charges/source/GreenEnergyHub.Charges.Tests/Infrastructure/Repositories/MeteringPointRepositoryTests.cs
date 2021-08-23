@@ -37,7 +37,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
         public async Task StoreMeteringPointAsync_WhenMeteringPointIsCreated_ValidObjectIsRetrievedFromDatabase()
         {
             // Arrange
-            SeedDatabase();
+            EnsureDatabaseCreated();
             await using var chargesDatabaseContext = new ChargesDatabaseContext(_dbContextOptions);
 
             var validMeteringPoint = GetMeteringPointCreatedEvent();
@@ -76,12 +76,11 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
                 SystemClock.Instance.GetCurrentInstant().ToString());
         }
 
-        private void SeedDatabase()
+        private void EnsureDatabaseCreated()
         {
             using var context = new ChargesDatabaseContext(_dbContextOptions);
             context.Database.EnsureDeleted();
             context.Database.EnsureCreated();
-            context.SaveChanges();
         }
     }
 }
