@@ -33,7 +33,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Repositories
             _chargesDatabaseContext = chargesDatabaseContext;
         }
 
-        public async Task StoreMeteringPointAsync(MeteringPointCreatedEvent meteringPointCreatedEvent)
+        public async Task StoreMeteringPointCreatedEventAsync(MeteringPointCreatedEvent meteringPointCreatedEvent)
         {
             if (meteringPointCreatedEvent == null) throw new ArgumentNullException(nameof(meteringPointCreatedEvent));
 

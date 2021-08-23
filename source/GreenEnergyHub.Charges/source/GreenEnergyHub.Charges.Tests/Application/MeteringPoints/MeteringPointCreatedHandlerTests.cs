@@ -42,7 +42,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.MeteringPoints
 
             // Assert
             meteringPointRepository
-                .Verify(v => v.StoreMeteringPointAsync(It.IsAny<MeteringPointCreatedEvent>()), Times.Exactly(1));
+                .Verify(v => v.StoreMeteringPointCreatedEventAsync(It.IsAny<MeteringPointCreatedEvent>()), Times.Exactly(1));
         }
 
         [Theory]

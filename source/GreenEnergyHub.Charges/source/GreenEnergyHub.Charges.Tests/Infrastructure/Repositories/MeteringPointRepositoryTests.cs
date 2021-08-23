@@ -45,7 +45,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
             var sut = new MeteringPointRepository(chargesDatabaseContext);
 
             // Act
-            await sut.StoreMeteringPointAsync(validMeteringPoint).ConfigureAwait(false);
+            await sut.StoreMeteringPointCreatedEventAsync(validMeteringPoint).ConfigureAwait(false);
 
             var expected = await sut.GetMeteringPointAsync(validMeteringPoint.MeteringPointId).ConfigureAwait(false);
 

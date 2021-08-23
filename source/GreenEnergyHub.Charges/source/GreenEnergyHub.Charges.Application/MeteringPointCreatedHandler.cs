@@ -35,7 +35,7 @@ namespace GreenEnergyHub.Charges.Application
                 throw new ArgumentNullException(nameof(meteringPointCreatedEvent));
             }
 
-            await _meteringPointRepository.StoreMeteringPointAsync(meteringPointCreatedEvent).ConfigureAwait(false);
+            await _meteringPointRepository.StoreMeteringPointCreatedEventAsync(meteringPointCreatedEvent).ConfigureAwait(false);
         }
     }
 }
