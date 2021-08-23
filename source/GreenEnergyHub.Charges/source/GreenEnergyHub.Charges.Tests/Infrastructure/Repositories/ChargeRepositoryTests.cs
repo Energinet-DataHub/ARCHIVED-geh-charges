@@ -157,7 +157,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
             using var context = new ChargesDatabaseContext(_dbContextOptions);
             context.Database.EnsureDeleted();
             context.Database.EnsureCreated();
-            context.MarketParticipant.Add(
+            context.MarketParticipants.Add(
                             new MarketParticipant { Name = "Name", Role = 1, MarketParticipantId = MarketParticipantId });
             context.SaveChanges();
         }

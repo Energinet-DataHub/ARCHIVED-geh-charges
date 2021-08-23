@@ -36,7 +36,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Repositories
         public MarketParticipant? GetMarketParticipantOrNull(string id)
         {
             return _chargesDatabaseContext
-                .MarketParticipant
+                .MarketParticipants
                 .Where(mp => mp.MarketParticipantId == id)
                 .AsEnumerable()
                 .Select(_mapper.ToDomainObject)

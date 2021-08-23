@@ -34,7 +34,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Repositories
 
         public async Task<GreenEnergyHub.Charges.Domain.Charge> GetChargeAsync(string chargeId, string owner, ChargeType chargeType)
         {
-            var charge = await _chargesDatabaseContext.Charge
+            var charge = await _chargesDatabaseContext.Charges
                 .Include(x => x.ChargePeriodDetails)
                 .Include(x => x.ChargePrices)
                 .Include(x => x.MarketParticipant)
@@ -47,7 +47,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Repositories
 
         public async Task<bool> CheckIfChargeExistsAsync(string chargeId, string owner, ChargeType chargeType)
         {
-            return await _chargesDatabaseContext.Charge
+            return await _chargesDatabaseContext.Charges
                 .AnyAsync(x => x.ChargeId == chargeId &&
                                         x.MarketParticipant.MarketParticipantId == owner &&
                                         x.ChargeType == (int)chargeType).ConfigureAwait(false);
@@ -55,7 +55,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Repositories
 
         public async Task<bool> CheckIfChargeExistsByCorrelationIdAsync(string correlationId)
         {
-            return await _chargesDatabaseContext.ChargeOperation
+            return await _chargesDatabaseContext.ChargeOperations
                 .AnyAsync(x => x.CorrelationId == correlationId)
                 .ConfigureAwait(false);
         }
@@ -68,14 +68,14 @@ namespace GreenEnergyHub.Charges.Infrastructure.Repositories
 
             var charge = ChargeMapper.MapDomainChargeToCharge(newCharge, marketParticipant);
 
-            await _chargesDatabaseContext.Charge.AddAsync(charge).ConfigureAwait(false);
+            await _chargesDatabaseContext.Charges.AddAsync(charge).ConfigureAwait(false);
 
             await _chargesDatabaseContext.SaveChangesAsync().ConfigureAwait(false);
         }
 
         private async Task<MarketParticipant> GetMarketParticipantAsync(string marketParticipantId)
         {
-            return await _chargesDatabaseContext.MarketParticipant.SingleAsync(x =>
+            return await _chargesDatabaseContext.MarketParticipants.SingleAsync(x =>
                 x.MarketParticipantId == marketParticipantId).ConfigureAwait(false);
         }
     }
