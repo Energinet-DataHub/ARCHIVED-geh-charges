@@ -45,7 +45,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Context.Mapping
             }
 
             var settlementMethodConvertSuccess =
-                int.TryParse(meteringPointCreatedEvent.ConnectionState, out var settlementMethod);
+                int.TryParse(meteringPointCreatedEvent.SettlementMethod, out var settlementMethod);
             if (settlementMethodConvertSuccess is false)
             {
                 throw new ArgumentException(nameof(meteringPointCreatedEvent.SettlementMethod));
