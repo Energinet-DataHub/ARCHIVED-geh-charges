@@ -71,8 +71,8 @@ namespace GreenEnergyHub.Charges.Infrastructure.Context.Mapping
                 meteringPoint.MeteringPointType,
                 meteringPoint.MeteringGridArea,
                 Instant.FromDateTimeUtc(meteringPoint.EffectiveDate),
-                meteringPoint.ConnectionState,
-                meteringPoint.SettlementMethod);
+                (ConnectionState)meteringPoint.ConnectionState,
+                (SettlementMethod)meteringPoint.SettlementMethod);
         }
     }
 }

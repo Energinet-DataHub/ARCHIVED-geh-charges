@@ -24,8 +24,8 @@ namespace GreenEnergyHub.Charges.Domain.MeteringPoints
             MeteringPointType meteringPointType,
             string meteringGridArea,
             Instant effectiveDate,
-            int connectionState,
-            int settlementMethod)
+            ConnectionState connectionState,
+            SettlementMethod settlementMethod)
         {
             Id = id;
             MeteringPointId = meteringPointId;
@@ -46,8 +46,8 @@ namespace GreenEnergyHub.Charges.Domain.MeteringPoints
 
         public Instant EffectiveDate { get; set; }
 
-        public int ConnectionState { get; set; }
+        public ConnectionState ConnectionState { get; set; }
 
-        public int SettlementMethod { get; set; }
+        public SettlementMethod SettlementMethod { get; set; }
     }
 }
