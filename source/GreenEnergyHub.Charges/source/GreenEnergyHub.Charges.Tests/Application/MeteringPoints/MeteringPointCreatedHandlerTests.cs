@@ -17,6 +17,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
 using GreenEnergyHub.Charges.Application;
+using GreenEnergyHub.Charges.Application.ChangeOfCharges.Repositories;
 using GreenEnergyHub.Charges.Domain.Events.Integration;
 using GreenEnergyHub.Charges.TestCore;
 using GreenEnergyHub.TestHelpers;
@@ -32,7 +33,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.MeteringPoints
         [Theory]
         [InlineAutoDomainData]
         public async Task HandleAsync_WhenCalled_ShouldCallRepository(
-            [NotNull][Frozen] Mock<IMeteringPointCreatedHandler> meteringPointCreatedHandler,
+            [NotNull][Frozen] Mock<IMeteringPointRepository> meteringPointRepository,
             [NotNull] MeteringPointCreatedEvent meteringPointCreatedEvent,
             [NotNull] MeteringPointCreatedHandler sut)
         {
@@ -40,8 +41,8 @@ namespace GreenEnergyHub.Charges.Tests.Application.MeteringPoints
             await sut.HandleAsync(meteringPointCreatedEvent).ConfigureAwait(false);
 
             // Assert
-            meteringPointCreatedHandler
-                .Verify(v => v.HandleAsync(It.IsAny<MeteringPointCreatedEvent>()), Times.Exactly(3));
+            meteringPointRepository
+                .Verify(v => v.StoreMeteringPointAsync(It.IsAny<MeteringPointCreatedEvent>()), Times.Exactly(1));
         }
 
         [Theory]
