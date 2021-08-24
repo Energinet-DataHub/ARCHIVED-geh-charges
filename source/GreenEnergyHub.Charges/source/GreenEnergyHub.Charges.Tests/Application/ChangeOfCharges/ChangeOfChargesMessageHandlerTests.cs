@@ -16,7 +16,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
 using FluentAssertions;
-using GreenEnergyHub.Charges.Application.ChangeOfCharges;
+using GreenEnergyHub.Charges.Application.Charges.Handlers;
 using GreenEnergyHub.Charges.Domain.Charges.Commands;
 using GreenEnergyHub.Charges.Tests.Builders;
 using GreenEnergyHub.TestHelpers;
@@ -32,8 +32,8 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChangeOfCharges
         [Theory]
         [InlineAutoDomainData]
         public async Task HandleAsync_WhenCalledWithMultipleTransactions_ShouldCallMultipleTimes(
-            [NotNull] [Frozen] Mock<IChangeOfChargesTransactionHandler> changeOfChargesTransactionHandler,
-            [NotNull] ChangeOfChargesMessageHandler sut)
+            [NotNull] [Frozen] Mock<IChargeCommandHandler> changeOfChargesTransactionHandler,
+            [NotNull] ChargesMessageHandler sut)
         {
             // Arrange
             var transactionBuilder = new ChargeCommandTestBuilder();

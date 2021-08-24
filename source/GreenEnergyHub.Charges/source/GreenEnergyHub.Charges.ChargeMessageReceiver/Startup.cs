@@ -14,7 +14,7 @@
 
 using System;
 using System.Diagnostics.CodeAnalysis;
-using GreenEnergyHub.Charges.Application.ChangeOfCharges;
+using GreenEnergyHub.Charges.Application.Charges.Handlers;
 using GreenEnergyHub.Charges.Domain.Charges.Commands;
 using GreenEnergyHub.Charges.Domain.Charges.Events.Local;
 using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeCommandReceived;
@@ -34,8 +34,8 @@ namespace GreenEnergyHub.Charges.MessageReceiver
         public override void Configure([NotNull] IFunctionsHostBuilder builder)
         {
             builder.Services.AddScoped(typeof(IClock), _ => SystemClock.Instance);
-            builder.Services.AddScoped<IChangeOfChargesMessageHandler, ChangeOfChargesMessageHandler>();
-            builder.Services.AddScoped<IChangeOfChargesTransactionHandler, ChangeOfChargesTransactionHandler>();
+            builder.Services.AddScoped<IChargesMessageHandler, ChargesMessageHandler>();
+            builder.Services.AddScoped<IChargeCommandHandler, ChargeCommandHandler>();
 
             ConfigureMessaging(builder);
         }

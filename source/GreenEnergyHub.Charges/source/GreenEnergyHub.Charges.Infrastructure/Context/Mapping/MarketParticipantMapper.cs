@@ -15,7 +15,7 @@
 using System;
 using GreenEnergyHub.Charges.Domain.MarketDocument;
 
-namespace GreenEnergyHub.Charges.Infrastructure.Mapping
+namespace GreenEnergyHub.Charges.Infrastructure.Context.Mapping
 {
     public class MarketParticipantMapper : IMarketParticipantMapper
     {

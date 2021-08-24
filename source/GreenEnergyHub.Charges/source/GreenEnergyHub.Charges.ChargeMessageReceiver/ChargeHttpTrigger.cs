@@ -15,7 +15,7 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application;
-using GreenEnergyHub.Charges.Application.ChangeOfCharges;
+using GreenEnergyHub.Charges.Application.Charges.Handlers;
 using GreenEnergyHub.Charges.Domain.Charges.Commands;
 using GreenEnergyHub.Charges.Domain.Charges.Message;
 using GreenEnergyHub.Charges.Infrastructure.Messaging;
@@ -34,16 +34,16 @@ namespace GreenEnergyHub.Charges.MessageReceiver
         /// Function name affects the URL and thus possibly dependent infrastructure.
         /// </summary>
         private const string FunctionName = "ChargeHttpTrigger";
-        private readonly IChangeOfChargesMessageHandler _changeOfChargesMessageHandler;
+        private readonly IChargesMessageHandler _chargesMessageHandler;
         private readonly ICorrelationContext _correlationContext;
         private readonly MessageExtractor<ChargeCommand> _messageExtractor;
 
         public ChargeHttpTrigger(
-            IChangeOfChargesMessageHandler changeOfChargesMessageHandler,
+            IChargesMessageHandler chargesMessageHandler,
             ICorrelationContext correlationContext,
             MessageExtractor<ChargeCommand> messageExtractor)
         {
-            _changeOfChargesMessageHandler = changeOfChargesMessageHandler;
+            _chargesMessageHandler = chargesMessageHandler;
             _correlationContext = correlationContext;
             _messageExtractor = messageExtractor;
         }
@@ -59,21 +59,21 @@ namespace GreenEnergyHub.Charges.MessageReceiver
 
             SetupCorrelationContext(context);
 
-            var message = await GetChangeOfChargesMessageAsync(req).ConfigureAwait(false);
+            var message = await GetChargesMessageAsync(req).ConfigureAwait(false);
 
             foreach (var messageTransaction in message.Transactions)
             {
                 ChargeCommandNullChecker.ThrowExceptionIfRequiredPropertyIsNull(messageTransaction);
             }
 
-            var messageResult = await _changeOfChargesMessageHandler.HandleAsync(message)
+            var messageResult = await _chargesMessageHandler.HandleAsync(message)
                 .ConfigureAwait(false);
             messageResult.CorrelationId = _correlationContext.CorrelationId;
 
             return new OkObjectResult(messageResult);
         }
 
-        private async Task<ChargesMessage> GetChangeOfChargesMessageAsync(
+        private async Task<ChargesMessage> GetChargesMessageAsync(
             HttpRequest req)
         {
             var message = new ChargesMessage();

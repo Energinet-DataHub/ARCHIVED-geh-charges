@@ -15,11 +15,11 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Application.ChangeOfCharges.Repositories;
+using GreenEnergyHub.Charges.Application.Charges.Repositories;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Infrastructure.Context;
+using GreenEnergyHub.Charges.Infrastructure.Context.Mapping;
 using GreenEnergyHub.Charges.Infrastructure.Context.Model;
-using GreenEnergyHub.Charges.Infrastructure.Mapping;
 using Microsoft.EntityFrameworkCore;
 using Charge = GreenEnergyHub.Charges.Domain.Charges.Charge;
 

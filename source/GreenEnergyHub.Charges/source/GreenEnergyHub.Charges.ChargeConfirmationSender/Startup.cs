@@ -14,7 +14,7 @@
 
 using System;
 using System.Diagnostics.CodeAnalysis;
-using GreenEnergyHub.Charges.Application.Acknowledgement;
+using GreenEnergyHub.Charges.Application.Charges.Acknowledgement;
 using GreenEnergyHub.Charges.ChargeConfirmationSender;
 using GreenEnergyHub.Charges.Domain.Charges.Acknowledgements;
 using GreenEnergyHub.Charges.Infrastructure.Integration.ChargeConfirmation;
@@ -34,7 +34,7 @@ namespace GreenEnergyHub.Charges.ChargeConfirmationSender
         public override void Configure([NotNull] IFunctionsHostBuilder builder)
         {
             builder.Services.AddScoped(typeof(IClock), _ => SystemClock.Instance);
-            builder.Services.AddScoped<IChargeConfirmationSender, Application.Acknowledgement.ChargeConfirmationSender>();
+            builder.Services.AddScoped<IChargeConfirmationSender, Application.Charges.Acknowledgement.ChargeConfirmationSender>();
 
             ConfigureMessaging(builder.Services);
         }

@@ -14,6 +14,7 @@
 
 using System;
 using GreenEnergyHub.Charges.Application.ChargeLinks;
+using GreenEnergyHub.Charges.Application.ChargeLinks.Handlers;
 using GreenEnergyHub.Charges.Domain.ChargeLinks;
 using GreenEnergyHub.Charges.Domain.ChargeLinks.Events.Local;
 using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandReceived;

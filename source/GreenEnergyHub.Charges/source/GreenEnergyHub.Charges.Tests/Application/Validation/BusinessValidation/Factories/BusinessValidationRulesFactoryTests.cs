@@ -17,7 +17,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
-using GreenEnergyHub.Charges.Application.ChangeOfCharges.Repositories;
+using GreenEnergyHub.Charges.Application.Charges.Repositories;
 using GreenEnergyHub.Charges.Application.Validation.BusinessValidation;
 using GreenEnergyHub.Charges.Application.Validation.BusinessValidation.Factories;
 using GreenEnergyHub.Charges.Application.Validation.BusinessValidation.ValidationRules;

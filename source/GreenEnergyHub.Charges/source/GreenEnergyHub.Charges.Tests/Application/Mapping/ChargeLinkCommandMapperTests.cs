@@ -14,7 +14,7 @@
 
 using System.Diagnostics.CodeAnalysis;
 using FluentAssertions;
-using GreenEnergyHub.Charges.Application.Mapping;
+using GreenEnergyHub.Charges.Application.ChargeLinks.Mapping;
 using GreenEnergyHub.Charges.Domain.ChargeLinks;
 using GreenEnergyHub.Charges.Domain.ChargeLinks.Events.Local;
 using GreenEnergyHub.Charges.TestCore;

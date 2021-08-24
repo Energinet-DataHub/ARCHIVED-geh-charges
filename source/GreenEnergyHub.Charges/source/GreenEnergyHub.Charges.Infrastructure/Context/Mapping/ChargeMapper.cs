@@ -23,7 +23,7 @@ using Charge = GreenEnergyHub.Charges.Infrastructure.Context.Model.Charge;
 using ChargeOperation = GreenEnergyHub.Charges.Infrastructure.Context.Model.ChargeOperation;
 using MarketParticipant = GreenEnergyHub.Charges.Infrastructure.Context.Model.MarketParticipant;
 
-namespace GreenEnergyHub.Charges.Infrastructure.Mapping
+namespace GreenEnergyHub.Charges.Infrastructure.Context.Mapping
 {
     public static class ChargeMapper
     {

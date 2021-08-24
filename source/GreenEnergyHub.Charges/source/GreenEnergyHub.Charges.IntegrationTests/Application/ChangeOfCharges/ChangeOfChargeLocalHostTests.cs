@@ -17,7 +17,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
 using GreenEnergyHub.Charges.Application;
-using GreenEnergyHub.Charges.Application.ChangeOfCharges;
+using GreenEnergyHub.Charges.Application.Charges.Handlers;
 using GreenEnergyHub.Charges.ChargeCommandReceiver;
 using GreenEnergyHub.Charges.Core.Json;
 using GreenEnergyHub.Charges.Domain.Charges.Commands;
@@ -81,12 +81,12 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
             var chargeCommandReceiverHost = FunctionHostConfigurationHelper.SetupHost(new ChargeCommandReceiver.Startup());
 
             _chargeHttpTrigger = new ChargeHttpTrigger(
-                messageReceiverHost.Services.GetRequiredService<IChangeOfChargesMessageHandler>(),
+                messageReceiverHost.Services.GetRequiredService<IChargesMessageHandler>(),
                 messageReceiverHost.Services.GetRequiredService<ICorrelationContext>(),
                 messageReceiverHost.Services.GetRequiredService<MessageExtractor<ChargeCommand>>());
 
             _chargeCommandEndpoint = new ChargeCommandEndpoint(
-                chargeCommandReceiverHost.Services.GetRequiredService<IChargeCommandHandler>(),
+                chargeCommandReceiverHost.Services.GetRequiredService<IChargeCommandReceivedEventHandler>(),
                 chargeCommandReceiverHost.Services.GetRequiredService<ICorrelationContext>(),
                 chargeCommandReceiverHost.Services.GetRequiredService<MessageExtractor>());
 

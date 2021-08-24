@@ -17,13 +17,13 @@ using System.Threading;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
 using GreenEnergyHub.Charges.Application;
-using GreenEnergyHub.Charges.Application.ChangeOfCharges;
 using GreenEnergyHub.Charges.Domain.Charges.Events.Local;
 using GreenEnergyHub.Charges.Tests.Builders;
 using GreenEnergyHub.TestHelpers;
 using Moq;
 using Xunit;
 using Xunit.Categories;
+using ChargeCommandHandler = GreenEnergyHub.Charges.Application.Charges.Handlers.ChargeCommandHandler;
 
 namespace GreenEnergyHub.Charges.Tests.Application.ChangeOfCharges
 {
@@ -34,7 +34,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChangeOfCharges
         [InlineAutoDomainData]
         public async Task ChangeOfChargesTransactionHandler_WhenCalled_ShouldCallPublisher(
             [NotNull] [Frozen] Mock<IMessageDispatcher<ChargeCommandReceivedEvent>> localEventPublisher,
-            [NotNull] ChangeOfChargesTransactionHandler sut)
+            [NotNull] ChargeCommandHandler sut)
         {
             // Arrange
             var transaction = new ChargeCommandTestBuilder().Build();

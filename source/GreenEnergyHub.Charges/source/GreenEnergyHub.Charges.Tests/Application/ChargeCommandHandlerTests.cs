@@ -18,8 +18,8 @@ using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
 using GreenEnergyHub.Charges.Application;
-using GreenEnergyHub.Charges.Application.Acknowledgement;
-using GreenEnergyHub.Charges.Application.ChangeOfCharges.Repositories;
+using GreenEnergyHub.Charges.Application.Charges.Acknowledgement;
+using GreenEnergyHub.Charges.Application.Charges.Repositories;
 using GreenEnergyHub.Charges.Application.Validation;
 using GreenEnergyHub.Charges.Domain;
 using GreenEnergyHub.Charges.Domain.Charges;
@@ -43,7 +43,7 @@ namespace GreenEnergyHub.Charges.Tests.Application
             [Frozen] [NotNull] Mock<IChargeRepository> repository,
             [Frozen] [NotNull] Mock<IChargeCommandConfirmationService> confirmationService,
             [NotNull] ChargeCommandReceivedEvent receivedEvent,
-            [NotNull] ChargeCommandHandler sut)
+            [NotNull] ChargeCommandReceivedEventHandler sut)
         {
             // Arrange
             var validationResult = ChargeCommandValidationResult.CreateSuccess();
@@ -81,7 +81,7 @@ namespace GreenEnergyHub.Charges.Tests.Application
             [Frozen] [NotNull] Mock<IChargeCommandValidator> validator,
             [Frozen] [NotNull] Mock<IChargeCommandConfirmationService> confirmationService,
             [NotNull] ChargeCommandReceivedEvent receivedEvent,
-            [NotNull] ChargeCommandHandler sut)
+            [NotNull] ChargeCommandReceivedEventHandler sut)
         {
             // Arrange
             var validationResult = GetFailedValidationResult();
@@ -109,7 +109,7 @@ namespace GreenEnergyHub.Charges.Tests.Application
         [Theory]
         [InlineAutoMoqData]
         public async Task HandleAsync_IfEventIsNull_ThrowsArgumentNullException(
-            [NotNull] ChargeCommandHandler sut)
+            [NotNull] ChargeCommandReceivedEventHandler sut)
         {
             // Arrange
             ChargeCommandReceivedEvent? receivedEvent = null;
