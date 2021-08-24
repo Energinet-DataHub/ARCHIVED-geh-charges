@@ -63,7 +63,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
                 "234",
                 "2",
                 "1",
-                "2",
+                "1",
                 "mrp",
                 "456",
                 "567",

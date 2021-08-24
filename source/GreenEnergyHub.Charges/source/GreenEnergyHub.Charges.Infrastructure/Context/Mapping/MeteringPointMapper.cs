@@ -37,15 +37,17 @@ namespace GreenEnergyHub.Charges.Infrastructure.Context.Mapping
 
             var effectiveDate = InstantPattern.General.Parse(meteringPointCreatedEvent.EffectiveDate).Value;
 
-            var connectionStateConvertSuccess =
-                int.TryParse(meteringPointCreatedEvent.ConnectionState, out var connectionState);
+            var connectionStateConvertSuccess = ConnectionState.TryParse(
+                meteringPointCreatedEvent.ConnectionState,
+                out ConnectionState connectionState);
             if (connectionStateConvertSuccess is false)
             {
                 throw new ArgumentException(nameof(meteringPointCreatedEvent.ConnectionState));
             }
 
-            var settlementMethodConvertSuccess =
-                int.TryParse(meteringPointCreatedEvent.SettlementMethod, out var settlementMethod);
+            var settlementMethodConvertSuccess = SettlementMethod.TryParse(
+                meteringPointCreatedEvent.SettlementMethod,
+                out SettlementMethod settlementMethod);
             if (settlementMethodConvertSuccess is false)
             {
                 throw new ArgumentException(nameof(meteringPointCreatedEvent.SettlementMethod));
@@ -71,8 +73,8 @@ namespace GreenEnergyHub.Charges.Infrastructure.Context.Mapping
                 meteringPoint.MeteringPointType,
                 meteringPoint.MeteringGridArea,
                 Instant.FromDateTimeUtc(meteringPoint.EffectiveDate),
-                (ConnectionState)meteringPoint.ConnectionState,
-                (SettlementMethod)meteringPoint.SettlementMethod);
+                meteringPoint.ConnectionState,
+                meteringPoint.SettlementMethod);
         }
     }
 }

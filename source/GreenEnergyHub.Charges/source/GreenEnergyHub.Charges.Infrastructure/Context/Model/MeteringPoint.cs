@@ -25,8 +25,8 @@ namespace GreenEnergyHub.Charges.Infrastructure.Context.Model
             MeteringPointType meteringPointType,
             string meteringGridArea,
             DateTime effectiveDate,
-            int connectionState,
-            int settlementMethod)
+            ConnectionState connectionState,
+            SettlementMethod settlementMethod)
         {
             MeteringPointId = meteringPointId;
             MeteringPointType = meteringPointType;
