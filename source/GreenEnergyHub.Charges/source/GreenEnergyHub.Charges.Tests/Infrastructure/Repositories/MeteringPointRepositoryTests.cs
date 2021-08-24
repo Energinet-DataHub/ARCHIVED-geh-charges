@@ -49,7 +49,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
             var expected = await sut.GetMeteringPointAsync(validMeteringPoint.MeteringPointId).ConfigureAwait(false);
             expected.Id.Should().BeGreaterThan(0);
             expected.ConnectionState.Should().Be(int.Parse(validMeteringPoint.ConnectionState, CultureInfo.InvariantCulture));
-            expected.MeteringGridArea.Should().Be(validMeteringPoint.GridAreaId);
+            expected.MeteringGridArea.Should().Be(validMeteringPoint.GridArea);
             expected.MeteringPointId.Should().Be(validMeteringPoint.MeteringPointId);
             expected.EffectiveDate.Should().Be(InstantPattern.General.Parse(validMeteringPoint.EffectiveDate).Value);
             expected.SettlementMethod.Should().Be(int.Parse(validMeteringPoint.SettlementMethod, CultureInfo.InvariantCulture));

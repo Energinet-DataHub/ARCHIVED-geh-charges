@@ -21,7 +21,7 @@ namespace GreenEnergyHub.Charges.Domain.Events.Integration
         public MeteringPointCreatedEvent(
             string meteringPointId,
             string meteringPointType,
-            string gridAreaId,
+            string gridArea,
             string settlementMethod,
             string meteringMethod,
             string connectionState,
@@ -36,7 +36,7 @@ namespace GreenEnergyHub.Charges.Domain.Events.Integration
         {
             MeteringPointId = meteringPointId;
             MeteringPointType = meteringPointType;
-            GridAreaId = gridAreaId;
+            GridArea = gridArea;
             SettlementMethod = settlementMethod;
             MeteringMethod = meteringMethod;
             ConnectionState = connectionState;
@@ -53,7 +53,7 @@ namespace GreenEnergyHub.Charges.Domain.Events.Integration
 
         public string MeteringPointType { get; }
 
-        public string GridAreaId { get; }
+        public string GridArea { get; }
 
         public string SettlementMethod { get; }
 

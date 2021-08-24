@@ -54,7 +54,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Context.Mapping
             return new Model.MeteringPoint(
                 meteringPointCreatedEvent.MeteringPointId,
                 meteringPointType,
-                meteringPointCreatedEvent.GridAreaId,
+                meteringPointCreatedEvent.GridArea,
                 effectiveDate.ToDateTimeUtc(),
                 connectionState,
                 settlementMethod);
