@@ -13,9 +13,11 @@
 // limitations under the License.
 
 using Xunit;
+using Xunit.Categories;
 
 namespace GreenEnergyHub.Charges.Tests
 {
+    [UnitTest]
     public class BogusTests
     {
         [Fact]
