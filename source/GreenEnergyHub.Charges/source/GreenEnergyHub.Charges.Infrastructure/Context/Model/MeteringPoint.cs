@@ -15,7 +15,6 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 using GreenEnergyHub.Charges.Domain.MeteringPoints;
-using NodaTime;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Context.Model
 {
@@ -48,8 +47,8 @@ namespace GreenEnergyHub.Charges.Infrastructure.Context.Model
 
         public DateTime EffectiveDate { get; set; }
 
-        public int ConnectionState { get; set; }
+        public ConnectionState ConnectionState { get; set; }
 
-        public int SettlementMethod { get; set; }
+        public SettlementMethod SettlementMethod { get; set; }
     }
 }
