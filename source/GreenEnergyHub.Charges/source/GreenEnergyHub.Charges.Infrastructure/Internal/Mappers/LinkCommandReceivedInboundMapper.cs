@@ -41,12 +41,12 @@ namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
         protected override IInboundMessage Convert([NotNull]ChargeLinkCommandReceivedContract chargeLinkCommandReceivedContract)
         {
             return new ChargeLinkCommandReceivedEvent(
-                _clock.GetCurrentInstant(),
+                chargeLinkCommandReceivedContract.PublishedTime.ToInstant(),
                 chargeLinkCommandReceivedContract.CorrelationId,
-                new ChargeLinkCommand(chargeLinkCommandReceivedContract.CorrelationId)
+                new ChargeLinkCommand(chargeLinkCommandReceivedContract.ChargeLinkCommand.CorrelationId)
                 {
-                    Document = ConvertDocument(chargeLinkCommandReceivedContract.Document),
-                    ChargeLink = ConvertChargeLink(chargeLinkCommandReceivedContract.ChargeLink),
+                    Document = ConvertDocument(chargeLinkCommandReceivedContract.ChargeLinkCommand.Document),
+                    ChargeLink = ConvertChargeLink(chargeLinkCommandReceivedContract.ChargeLinkCommand.ChargeLink),
                     Transaction = Transaction.NewTransaction(),
                 });
         }
