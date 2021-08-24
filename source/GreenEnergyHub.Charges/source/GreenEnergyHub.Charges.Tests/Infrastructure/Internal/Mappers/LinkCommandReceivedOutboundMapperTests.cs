@@ -34,11 +34,17 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Internal.Mappers
         [Theory]
         [InlineAutoMoqData]
         public void Convert_WhenCalled_ShouldMapToProtobufWithCorrectValues(
-            [NotNull] ChargeLinkCommandReceivedEvent chargeLinkCommandReceivedEvent,
+            [NotNull] ChargeLinkCommand chargeLinkCommand,
             [NotNull] LinkCommandReceivedOutboundMapper sut)
         {
-            UpdateInstantsToValidTimes(chargeLinkCommandReceivedEvent.ChargeLinkCommand);
+            // Arrange
+            ChargeLinkCommandReceivedEvent chargeLinkCommandReceivedEvent = new (SystemClock.Instance.GetCurrentInstant(), chargeLinkCommand.CorrelationId, chargeLinkCommand);
+            UpdateInstantsToValidTimes(chargeLinkCommandReceivedEvent);
+
+            // Act
             var result = (ChargeLinkCommandReceivedContract)sut.Convert(chargeLinkCommandReceivedEvent);
+
+            // Assert
             ProtobufAssert.OutgoingContractIsSubset(chargeLinkCommandReceivedEvent.ChargeLinkCommand, result);
         }
 
@@ -49,12 +55,12 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Internal.Mappers
             Assert.Throws<InvalidOperationException>(() => sut.Convert(null!));
         }
 
-        private static void UpdateInstantsToValidTimes([NotNull] ChargeLinkCommand chargeLinkCommand)
+        private static void UpdateInstantsToValidTimes([NotNull] ChargeLinkCommandReceivedEvent receivedEvent)
         {
-            chargeLinkCommand.Document.RequestDate = Instant.FromUtc(2021, 7, 21, 11, 42, 25);
-            chargeLinkCommand.Document.CreatedDateTime = Instant.FromUtc(2021, 7, 21, 12, 14, 43);
-            chargeLinkCommand.ChargeLink.StartDateTime = Instant.FromUtc(2021, 8, 31, 22, 0);
-            chargeLinkCommand.ChargeLink.EndDateTime = Instant.FromUtc(2021, 9, 30, 22, 0);
+            receivedEvent.ChargeLinkCommand.Document.RequestDate = Instant.FromUtc(2021, 7, 21, 11, 42, 25);
+            receivedEvent.ChargeLinkCommand.Document.CreatedDateTime = Instant.FromUtc(2021, 7, 21, 12, 14, 43);
+            receivedEvent.ChargeLinkCommand.ChargeLink.StartDateTime = Instant.FromUtc(2021, 8, 31, 22, 0);
+            receivedEvent.ChargeLinkCommand.ChargeLink.EndDateTime = Instant.FromUtc(2021, 9, 30, 22, 0);
         }
     }
 }
