@@ -19,7 +19,6 @@ namespace GreenEnergyHub.Charges.Domain.MeteringPoints
     public class MeteringPoint
     {
         public MeteringPoint(
-            int id,
             string meteringPointId,
             MeteringPointType meteringPointType,
             string meteringGridArea,
@@ -27,7 +26,6 @@ namespace GreenEnergyHub.Charges.Domain.MeteringPoints
             ConnectionState connectionState,
             SettlementMethod settlementMethod)
         {
-            Id = id;
             MeteringPointId = meteringPointId;
             MeteringPointType = meteringPointType;
             MeteringGridArea = meteringGridArea;
@@ -35,8 +33,6 @@ namespace GreenEnergyHub.Charges.Domain.MeteringPoints
             ConnectionState = connectionState;
             SettlementMethod = settlementMethod;
         }
-
-        public int Id { get; set; }
 
         public string MeteringPointId { get; set; }
 

@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System;
+using GreenEnergyHub.Charges.Core.Enumeration;
 using GreenEnergyHub.Charges.Domain.Events.Integration;
 using GreenEnergyHub.Charges.Domain.MeteringPoints;
 using NodaTime;
@@ -22,57 +23,30 @@ namespace GreenEnergyHub.Charges.Infrastructure.Context.Mapping
 {
     public static class MeteringPointMapper
     {
-        public static Model.MeteringPoint MapMeteringPointCreatedEventToMeteringPoint(
-            MeteringPointCreatedEvent meteringPointCreatedEvent)
-        {
-            if (meteringPointCreatedEvent == null) throw new ArgumentNullException(nameof(meteringPointCreatedEvent));
-
-            var meteringPointTypeSuccess = MeteringPointType.TryParse(
-                meteringPointCreatedEvent.MeteringPointType,
-                out MeteringPointType meteringPointType);
-            if (meteringPointTypeSuccess is false)
-            {
-                throw new ArgumentException(nameof(meteringPointCreatedEvent.MeteringPointType));
-            }
-
-            var effectiveDate = InstantPattern.General.Parse(meteringPointCreatedEvent.EffectiveDate).Value;
-
-            var connectionStateConvertSuccess = ConnectionState.TryParse(
-                meteringPointCreatedEvent.ConnectionState,
-                out ConnectionState connectionState);
-            if (connectionStateConvertSuccess is false)
-            {
-                throw new ArgumentException(nameof(meteringPointCreatedEvent.ConnectionState));
-            }
-
-            var settlementMethodConvertSuccess = SettlementMethod.TryParse(
-                meteringPointCreatedEvent.SettlementMethod,
-                out SettlementMethod settlementMethod);
-            if (settlementMethodConvertSuccess is false)
-            {
-                throw new ArgumentException(nameof(meteringPointCreatedEvent.SettlementMethod));
-            }
-
-            return new Model.MeteringPoint(
-                meteringPointCreatedEvent.MeteringPointId,
-                meteringPointType,
-                meteringPointCreatedEvent.GridArea,
-                effectiveDate.ToDateTimeUtc(),
-                connectionState,
-                settlementMethod);
-        }
-
         public static MeteringPoint MapMeteringPointToDomainModel(
             Model.MeteringPoint meteringPoint)
         {
             if (meteringPoint == null) throw new ArgumentNullException(nameof(meteringPoint));
 
             return new MeteringPoint(
-                meteringPoint.RowId,
                 meteringPoint.MeteringPointId,
                 meteringPoint.MeteringPointType,
                 meteringPoint.MeteringGridArea,
                 Instant.FromDateTimeUtc(meteringPoint.EffectiveDate),
+                meteringPoint.ConnectionState,
+                meteringPoint.SettlementMethod);
+        }
+
+        public static Model.MeteringPoint MapMeteringPointToEntity(
+            MeteringPoint meteringPoint)
+        {
+            if (meteringPoint == null) throw new ArgumentNullException(nameof(meteringPoint));
+
+            return new Model.MeteringPoint(
+                meteringPoint.MeteringPointId,
+                meteringPoint.MeteringPointType,
+                meteringPoint.MeteringGridArea,
+                meteringPoint.EffectiveDate.ToDateTimeUtc(),
                 meteringPoint.ConnectionState,
                 meteringPoint.SettlementMethod);
         }

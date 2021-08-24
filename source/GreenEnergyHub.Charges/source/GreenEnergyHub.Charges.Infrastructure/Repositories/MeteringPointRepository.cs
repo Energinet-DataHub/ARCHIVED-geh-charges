@@ -15,12 +15,10 @@
 using System;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application.ChangeOfCharges.Repositories;
-using GreenEnergyHub.Charges.Domain.Events.Integration;
 using GreenEnergyHub.Charges.Domain.MeteringPoints;
 using GreenEnergyHub.Charges.Infrastructure.Context;
 using GreenEnergyHub.Charges.Infrastructure.Context.Mapping;
 using Microsoft.EntityFrameworkCore;
-using NodaTime;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Repositories
 {
@@ -33,13 +31,13 @@ namespace GreenEnergyHub.Charges.Infrastructure.Repositories
             _chargesDatabaseContext = chargesDatabaseContext;
         }
 
-        public async Task StoreMeteringPointCreatedEventAsync(MeteringPointCreatedEvent meteringPointCreatedEvent)
+        public async Task StoreMeteringPointAsync(MeteringPoint meteringPoint)
         {
-            if (meteringPointCreatedEvent == null) throw new ArgumentNullException(nameof(meteringPointCreatedEvent));
+            if (meteringPoint == null) throw new ArgumentNullException(nameof(meteringPoint));
 
-            var meteringPoint = MeteringPointMapper.MapMeteringPointCreatedEventToMeteringPoint(meteringPointCreatedEvent);
+            var entityModel = MeteringPointMapper.MapMeteringPointToEntity(meteringPoint);
 
-            await _chargesDatabaseContext.MeteringPoints.AddAsync(meteringPoint).ConfigureAwait(false);
+            await _chargesDatabaseContext.MeteringPoints.AddAsync(entityModel).ConfigureAwait(false);
 
             await _chargesDatabaseContext.SaveChangesAsync().ConfigureAwait(false);
         }

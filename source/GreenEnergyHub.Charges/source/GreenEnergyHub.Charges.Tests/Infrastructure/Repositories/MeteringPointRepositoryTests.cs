@@ -42,34 +42,26 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
             var sut = new MeteringPointRepository(chargesDatabaseContext);
 
             // Act
-            await sut.StoreMeteringPointCreatedEventAsync(validMeteringPoint).ConfigureAwait(false);
+            await sut.StoreMeteringPointAsync(validMeteringPoint).ConfigureAwait(false);
 
             // Assert
             var expected = await sut.GetMeteringPointAsync(validMeteringPoint.MeteringPointId).ConfigureAwait(false);
-            expected.Id.Should().BeGreaterThan(0);
             expected.ConnectionState.Should().Be(validMeteringPoint.ConnectionState);
-            expected.MeteringGridArea.Should().Be(validMeteringPoint.GridArea);
+            expected.MeteringGridArea.Should().Be(validMeteringPoint.MeteringGridArea);
             expected.MeteringPointId.Should().Be(validMeteringPoint.MeteringPointId);
-            expected.EffectiveDate.Should().Be(InstantPattern.General.Parse(validMeteringPoint.EffectiveDate).Value);
+            expected.EffectiveDate.Should().Be(validMeteringPoint.EffectiveDate);
             expected.SettlementMethod.Should().Be(validMeteringPoint.SettlementMethod);
         }
 
-        private static MeteringPointCreatedEvent GetMeteringPointCreatedEvent()
+        private static MeteringPoint GetMeteringPointCreatedEvent()
         {
-            return new MeteringPointCreatedEvent(
+            return new MeteringPoint(
                 "123",
-                MeteringPointType.Consumption.ToString(),
+                MeteringPointType.Consumption,
                 "234",
-                "2",
-                "1",
-                "1",
-                "mrp",
-                "456",
-                "567",
-                "678",
-                "product",
-                "1",
-                SystemClock.Instance.GetCurrentInstant().ToString());
+                SystemClock.Instance.GetCurrentInstant(),
+                ConnectionState.Connected,
+                SettlementMethod.Flex);
         }
 
         private void EnsureDatabaseCreated()

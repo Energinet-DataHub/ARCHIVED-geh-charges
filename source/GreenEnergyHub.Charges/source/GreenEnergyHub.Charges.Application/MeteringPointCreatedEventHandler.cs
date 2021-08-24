@@ -15,6 +15,7 @@
 using System;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application.ChangeOfCharges.Repositories;
+using GreenEnergyHub.Charges.Application.Mapping;
 using GreenEnergyHub.Charges.Domain.Events.Integration;
 
 namespace GreenEnergyHub.Charges.Application
@@ -35,7 +36,8 @@ namespace GreenEnergyHub.Charges.Application
                 throw new ArgumentNullException(nameof(meteringPointCreatedEvent));
             }
 
-            await _meteringPointRepository.StoreMeteringPointCreatedEventAsync(meteringPointCreatedEvent).ConfigureAwait(false);
+            var meteringPoint = MeteringPointMapper.MapMeteringPointCreatedEventToMeteringPoint(meteringPointCreatedEvent);
+            await _meteringPointRepository.StoreMeteringPointAsync(meteringPoint).ConfigureAwait(false);
         }
     }
 }

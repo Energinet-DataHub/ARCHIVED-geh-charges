@@ -19,9 +19,11 @@ using AutoFixture.Xunit2;
 using GreenEnergyHub.Charges.Application;
 using GreenEnergyHub.Charges.Application.ChangeOfCharges.Repositories;
 using GreenEnergyHub.Charges.Domain.Events.Integration;
+using GreenEnergyHub.Charges.Domain.MeteringPoints;
 using GreenEnergyHub.Charges.TestCore;
 using GreenEnergyHub.TestHelpers;
 using Moq;
+using NodaTime;
 using Xunit;
 using Xunit.Categories;
 
@@ -34,15 +36,14 @@ namespace GreenEnergyHub.Charges.Tests.Application.MeteringPoints
         [InlineAutoDomainData]
         public async Task HandleAsync_WhenCalled_ShouldCallRepository(
             [NotNull][Frozen] Mock<IMeteringPointRepository> meteringPointRepository,
-            [NotNull] MeteringPointCreatedEvent meteringPointCreatedEvent,
             [NotNull] MeteringPointCreatedEventHandler sut)
         {
-            // Act
+            var meteringPointCreatedEvent = GetMeteringPointCreatedEvent();
+
             await sut.HandleAsync(meteringPointCreatedEvent).ConfigureAwait(false);
 
-            // Assert
             meteringPointRepository
-                .Verify(v => v.StoreMeteringPointCreatedEventAsync(It.IsAny<MeteringPointCreatedEvent>()), Times.Exactly(1));
+                .Verify(v => v.StoreMeteringPointAsync(It.IsAny<MeteringPoint>()), Times.Exactly(1));
         }
 
         [Theory]
@@ -57,6 +58,24 @@ namespace GreenEnergyHub.Charges.Tests.Application.MeteringPoints
             await Assert.ThrowsAsync<ArgumentNullException>(
                     () => sut.HandleAsync(meteringPointCreatedEvent!))
                 .ConfigureAwait(false);
+        }
+
+        private static MeteringPointCreatedEvent GetMeteringPointCreatedEvent()
+        {
+            return new MeteringPointCreatedEvent(
+                "123",
+                MeteringPointType.Consumption.ToString(),
+                "234",
+                "2",
+                "1",
+                "1",
+                "mrp",
+                "456",
+                "567",
+                "678",
+                "product",
+                "1",
+                SystemClock.Instance.GetCurrentInstant().ToString());
         }
     }
 }
