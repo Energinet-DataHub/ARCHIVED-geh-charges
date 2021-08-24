@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace GreenEnergyHub.Charges.Application.Validation
+namespace GreenEnergyHub.Charges.Application.Charges.Validation
 {
     public enum ValidationRuleIdentifier
     {

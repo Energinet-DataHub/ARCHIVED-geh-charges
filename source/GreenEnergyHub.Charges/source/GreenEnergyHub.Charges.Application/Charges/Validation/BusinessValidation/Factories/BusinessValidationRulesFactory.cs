@@ -16,15 +16,14 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application.Charges.Repositories;
-using GreenEnergyHub.Charges.Application.Validation.BusinessValidation.ValidationRules;
+using GreenEnergyHub.Charges.Application.Charges.Validation.BusinessValidation.ValidationRules;
 using GreenEnergyHub.Charges.Core.DateTime;
-using GreenEnergyHub.Charges.Domain;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Charges.Commands;
 using GreenEnergyHub.Charges.Domain.MarketDocument;
 using NodaTime;
 
-namespace GreenEnergyHub.Charges.Application.Validation.BusinessValidation.Factories
+namespace GreenEnergyHub.Charges.Application.Charges.Validation.BusinessValidation.Factories
 {
     public class BusinessValidationRulesFactory : IBusinessValidationRulesFactory
     {

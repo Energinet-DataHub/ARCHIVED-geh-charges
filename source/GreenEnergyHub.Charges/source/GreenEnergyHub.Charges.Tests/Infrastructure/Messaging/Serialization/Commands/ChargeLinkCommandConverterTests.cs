@@ -21,6 +21,7 @@ using System.Xml;
 using AutoFixture.Xunit2;
 using GreenEnergyHub.Charges.Domain.ChargeLinks;
 using GreenEnergyHub.Charges.Domain.ChargeLinks.Command;
+using GreenEnergyHub.Charges.Domain.ChargeLinks.Events.Local;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.MarketDocument;
 using GreenEnergyHub.Charges.Infrastructure.Messaging;
@@ -51,30 +52,30 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Messaging.Serialization.Co
             using var reader = XmlReader.Create(stream, new XmlReaderSettings { Async = true });
 
             // Act
-            var result = (ChargeLinkCommand)await sut.ConvertAsync(reader).ConfigureAwait(false);
+            var result = (ChargeLinkCommandReceivedEvent)await sut.ConvertAsync(reader).ConfigureAwait(false);
 
             // Assert
             Assert.Equal(correlationId, result.CorrelationId);
 
             // Document
-            Assert.Equal("DocId_Valid_001", result.Document.Id);
-            Assert.Equal(DocumentType.RequestChangeBillingMasterData, result.Document.Type);
-            Assert.Equal(BusinessReasonCode.UpdateMasterDataSettlement, result.Document.BusinessReasonCode);
-            Assert.Equal("8100000000016", result.Document.Sender.Id);
-            Assert.Equal(MarketParticipantRole.GridAccessProvider, result.Document.Sender.BusinessProcessRole);
-            Assert.Equal("5790001330552", result.Document.Recipient.Id);
-            Assert.Equal(MarketParticipantRole.MeteringPointAdministrator, result.Document.Recipient.BusinessProcessRole);
-            Assert.Equal(InstantPattern.ExtendedIso.Parse("2021-07-05T13:20:02.387Z").Value, result.Document.CreatedDateTime);
+            Assert.Equal("DocId_Valid_001", result.ChargeLinkCommand.Document.Id);
+            Assert.Equal(DocumentType.RequestChangeBillingMasterData, result.ChargeLinkCommand.Document.Type);
+            Assert.Equal(BusinessReasonCode.UpdateMasterDataSettlement, result.ChargeLinkCommand.Document.BusinessReasonCode);
+            Assert.Equal("8100000000016", result.ChargeLinkCommand.Document.Sender.Id);
+            Assert.Equal(MarketParticipantRole.GridAccessProvider, result.ChargeLinkCommand.Document.Sender.BusinessProcessRole);
+            Assert.Equal("5790001330552", result.ChargeLinkCommand.Document.Recipient.Id);
+            Assert.Equal(MarketParticipantRole.MeteringPointAdministrator, result.ChargeLinkCommand.Document.Recipient.BusinessProcessRole);
+            Assert.Equal(InstantPattern.ExtendedIso.Parse("2021-07-05T13:20:02.387Z").Value, result.ChargeLinkCommand.Document.CreatedDateTime);
 
             // ChargeLink
-            Assert.Equal("rId_Valid_001", result.ChargeLink.Id);
-            Assert.Equal("578032999778756222", result.ChargeLink.MeteringPointId);
-            Assert.Equal(InstantPattern.ExtendedIso.Parse("2021-09-27T22:00:00Z").Value, result.ChargeLink.StartDateTime);
-            Assert.Equal(InstantPattern.ExtendedIso.Parse("2021-11-05T23:00:00Z").Value, result.ChargeLink.EndDateTime);
-            Assert.Equal("ChargeId01", result.ChargeLink.ChargeId);
-            Assert.Equal(1, result.ChargeLink.Factor);
-            Assert.Equal("8100000000016", result.ChargeLink.ChargeOwner);
-            Assert.Equal(ChargeType.Tariff, result.ChargeLink.ChargeType);
+            Assert.Equal("rId_Valid_001", result.ChargeLinkCommand.ChargeLink.Id);
+            Assert.Equal("578032999778756222", result.ChargeLinkCommand.ChargeLink.MeteringPointId);
+            Assert.Equal(InstantPattern.ExtendedIso.Parse("2021-09-27T22:00:00Z").Value, result.ChargeLinkCommand.ChargeLink.StartDateTime);
+            Assert.Equal(InstantPattern.ExtendedIso.Parse("2021-11-05T23:00:00Z").Value, result.ChargeLinkCommand.ChargeLink.EndDateTime);
+            Assert.Equal("ChargeId01", result.ChargeLinkCommand.ChargeLink.ChargeId);
+            Assert.Equal(1, result.ChargeLinkCommand.ChargeLink.Factor);
+            Assert.Equal("8100000000016", result.ChargeLinkCommand.ChargeLink.ChargeOwner);
+            Assert.Equal(ChargeType.Tariff, result.ChargeLinkCommand.ChargeLink.ChargeType);
         }
 
         [Theory]
@@ -91,11 +92,11 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Messaging.Serialization.Co
             using var reader = XmlReader.Create(stream, new XmlReaderSettings { Async = true });
 
             // Act
-            var result = (ChargeLinkCommand)await sut.ConvertAsync(reader).ConfigureAwait(false);
+            var result = (ChargeLinkCommandReceivedEvent)await sut.ConvertAsync(reader).ConfigureAwait(false);
 
             // Assert
-            Assert.Equal("DocId_Valid_002", result.Document.Id);
-            Assert.Equal("rId_Valid_002", result.ChargeLink.Id);
+            Assert.Equal("DocId_Valid_002", result.ChargeLinkCommand.Document.Id);
+            Assert.Equal("rId_Valid_002", result.ChargeLinkCommand.ChargeLink.Id);
 
             await Task.CompletedTask.ConfigureAwait(false);
         }
@@ -114,12 +115,12 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Messaging.Serialization.Co
             using var reader = XmlReader.Create(stream, new XmlReaderSettings { Async = true });
 
             // Act
-            var result = (ChargeLinkCommand)await sut.ConvertAsync(reader).ConfigureAwait(false);
+            var result = (ChargeLinkCommandReceivedEvent)await sut.ConvertAsync(reader).ConfigureAwait(false);
 
             // Assert
-            Assert.Equal("DocId_Valid_003", result.Document.Id);
-            Assert.Equal("rId_Valid_003", result.ChargeLink.Id);
-            Assert.Null(result.ChargeLink.EndDateTime);
+            Assert.Equal("DocId_Valid_003", result.ChargeLinkCommand.Document.Id);
+            Assert.Equal("rId_Valid_003", result.ChargeLinkCommand.ChargeLink.Id);
+            Assert.Null(result.ChargeLinkCommand.ChargeLink.EndDateTime);
 
             await Task.CompletedTask.ConfigureAwait(false);
         }

@@ -17,7 +17,7 @@ using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.Domain.Charges.Commands;
 using NodaTime;
 
-namespace GreenEnergyHub.Charges.Application.Validation.BusinessValidation.ValidationRules
+namespace GreenEnergyHub.Charges.Application.Charges.Validation.BusinessValidation.ValidationRules
 {
     public class StartDateValidationRule : IValidationRule
     {

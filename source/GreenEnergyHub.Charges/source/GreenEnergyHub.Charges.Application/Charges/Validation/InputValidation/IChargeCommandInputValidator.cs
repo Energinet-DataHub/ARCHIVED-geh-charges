@@ -15,7 +15,7 @@
 using System.Diagnostics.CodeAnalysis;
 using GreenEnergyHub.Charges.Domain.Charges.Commands;
 
-namespace GreenEnergyHub.Charges.Application.Validation.InputValidation
+namespace GreenEnergyHub.Charges.Application.Charges.Validation.InputValidation
 {
     /// <summary>
     /// Contract defining the input validator for change of charges messages.

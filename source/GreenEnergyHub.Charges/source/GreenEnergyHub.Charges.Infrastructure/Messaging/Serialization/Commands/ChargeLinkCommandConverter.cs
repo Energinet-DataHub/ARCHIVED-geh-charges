@@ -17,9 +17,11 @@ using System.Globalization;
 using System.Threading.Tasks;
 using System.Xml;
 using GreenEnergyHub.Charges.Domain.ChargeLinks;
+using GreenEnergyHub.Charges.Domain.ChargeLinks.Command;
 using GreenEnergyHub.Charges.Domain.ChargeLinks.Events.Local;
 using GreenEnergyHub.Charges.Domain.MarketDocument;
 using GreenEnergyHub.Charges.Infrastructure.Messaging.Serialization.MarketDocument;
+using GreenEnergyHub.Messaging.MessageTypes.Common;
 using GreenEnergyHub.Messaging.Transport;
 using NodaTime;
 
@@ -28,6 +30,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Messaging.Serialization.Commands
     public class ChargeLinkCommandConverter : DocumentConverter
     {
         private readonly ICorrelationContext _correlationContext;
+        private readonly IClock _clock;
 
         public ChargeLinkCommandConverter(
             ICorrelationContext correlationContext,
@@ -35,6 +38,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Messaging.Serialization.Commands
             : base(clock)
         {
             _correlationContext = correlationContext;
+            _clock = clock;
         }
 
         protected override async Task<IInboundMessage> ConvertSpecializedContentAsync(
@@ -43,14 +47,17 @@ namespace GreenEnergyHub.Charges.Infrastructure.Messaging.Serialization.Commands
         {
             var correlationId = _correlationContext.CorrelationId;
 
-            var command = new ChargeLinkCommandReceivedEvent(correlationId)
-            {
-                Document = document,
-            };
+            var commandReceivedEvent = new ChargeLinkCommandReceivedEvent(
+                _clock.GetCurrentInstant(),
+                correlationId,
+                new ChargeLinkCommand(correlationId)
+                {
+                    Transaction = Transaction.NewTransaction(),
+                    Document = document,
+                    ChargeLink = await ParseChargeLinkAsync(reader).ConfigureAwait(false),
+                });
 
-            command.ChargeLink = await ParseChargeLinkAsync(reader).ConfigureAwait(false);
-
-            return command;
+            return commandReceivedEvent;
         }
 
         private static async Task<ChargeLink> ParseChargeLinkAsync(XmlReader reader)

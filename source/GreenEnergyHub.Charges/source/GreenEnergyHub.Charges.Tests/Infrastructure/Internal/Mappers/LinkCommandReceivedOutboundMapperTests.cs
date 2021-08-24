@@ -37,9 +37,9 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Internal.Mappers
             [NotNull] ChargeLinkCommandReceivedEvent chargeLinkCommandReceivedEvent,
             [NotNull] LinkCommandReceivedOutboundMapper sut)
         {
-            UpdateInstantsToValidTimes(chargeLinkCommandReceivedEvent);
+            UpdateInstantsToValidTimes(chargeLinkCommandReceivedEvent.ChargeLinkCommand);
             var result = (ChargeLinkCommandReceivedContract)sut.Convert(chargeLinkCommandReceivedEvent);
-            ProtobufAssert.OutgoingContractIsSubset(chargeLinkCommandReceivedEvent, result);
+            ProtobufAssert.OutgoingContractIsSubset(chargeLinkCommandReceivedEvent.ChargeLinkCommand, result);
         }
 
         [Theory]

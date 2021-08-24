@@ -15,7 +15,7 @@
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Domain.Charges.Commands;
 
-namespace GreenEnergyHub.Charges.Application.Validation.BusinessValidation
+namespace GreenEnergyHub.Charges.Application.Charges.Validation.BusinessValidation
 {
     public interface IChargeCommandBusinessValidator
     {

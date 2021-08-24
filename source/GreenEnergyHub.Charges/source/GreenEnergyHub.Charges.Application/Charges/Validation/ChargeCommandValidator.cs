@@ -13,11 +13,11 @@
 // limitations under the License.
 
 using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Application.Validation.BusinessValidation;
-using GreenEnergyHub.Charges.Application.Validation.InputValidation;
+using GreenEnergyHub.Charges.Application.Charges.Validation.BusinessValidation;
+using GreenEnergyHub.Charges.Application.Charges.Validation.InputValidation;
 using GreenEnergyHub.Charges.Domain.Charges.Commands;
 
-namespace GreenEnergyHub.Charges.Application.Validation
+namespace GreenEnergyHub.Charges.Application.Charges.Validation
 {
     public class ChargeCommandValidator : IChargeCommandValidator
     {

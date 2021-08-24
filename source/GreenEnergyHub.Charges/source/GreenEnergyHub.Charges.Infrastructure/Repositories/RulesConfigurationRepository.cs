@@ -13,8 +13,8 @@
 // limitations under the License.
 
 using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Application.Validation.BusinessValidation;
-using GreenEnergyHub.Charges.Application.Validation.BusinessValidation.ValidationRules;
+using GreenEnergyHub.Charges.Application.Charges.Validation.BusinessValidation;
+using GreenEnergyHub.Charges.Application.Charges.Validation.BusinessValidation.ValidationRules;
 using GreenEnergyHub.Charges.Core;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Repositories

@@ -14,7 +14,7 @@
 
 using GreenEnergyHub.Charges.Domain.MarketDocument;
 
-namespace GreenEnergyHub.Charges.Application.Validation.BusinessValidation.ValidationRules
+namespace GreenEnergyHub.Charges.Application.Charges.Validation.BusinessValidation.ValidationRules
 {
     public class CommandSenderMustBeAnExistingMarketParticipantRule : IValidationRule
     {

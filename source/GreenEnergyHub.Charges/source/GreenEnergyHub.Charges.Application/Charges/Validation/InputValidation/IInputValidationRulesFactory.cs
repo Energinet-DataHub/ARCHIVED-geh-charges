@@ -14,7 +14,7 @@
 
 using GreenEnergyHub.Charges.Domain.Charges.Commands;
 
-namespace GreenEnergyHub.Charges.Application.Validation.InputValidation
+namespace GreenEnergyHub.Charges.Application.Charges.Validation.InputValidation
 {
     public interface IInputValidationRulesFactory
     {

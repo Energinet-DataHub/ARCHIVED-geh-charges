@@ -14,7 +14,7 @@
 
 using System.Collections.Generic;
 
-namespace GreenEnergyHub.Charges.Application.Validation
+namespace GreenEnergyHub.Charges.Application.Charges.Validation
 {
     public interface IValidationRuleSet
     {

@@ -15,7 +15,7 @@
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Charges.Commands;
 
-namespace GreenEnergyHub.Charges.Application.Validation.BusinessValidation.ValidationRules
+namespace GreenEnergyHub.Charges.Application.Charges.Validation.BusinessValidation.ValidationRules
 {
     public class ChangingTariffTaxValueNotAllowedRule : IValidationRule
     {

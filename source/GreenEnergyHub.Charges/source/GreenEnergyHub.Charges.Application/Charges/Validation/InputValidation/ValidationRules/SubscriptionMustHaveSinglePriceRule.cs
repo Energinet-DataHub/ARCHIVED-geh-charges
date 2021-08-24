@@ -15,7 +15,7 @@
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Charges.Commands;
 
-namespace GreenEnergyHub.Charges.Application.Validation.InputValidation.ValidationRules
+namespace GreenEnergyHub.Charges.Application.Charges.Validation.InputValidation.ValidationRules
 {
     public class SubscriptionMustHaveSinglePriceRule : IValidationRule
     {

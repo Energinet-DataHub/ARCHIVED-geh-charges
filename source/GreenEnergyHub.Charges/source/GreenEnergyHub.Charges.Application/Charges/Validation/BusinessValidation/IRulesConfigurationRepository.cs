@@ -14,7 +14,7 @@
 
 using System.Threading.Tasks;
 
-namespace GreenEnergyHub.Charges.Application.Validation.BusinessValidation
+namespace GreenEnergyHub.Charges.Application.Charges.Validation.BusinessValidation
 {
     public interface IRulesConfigurationRepository
     {

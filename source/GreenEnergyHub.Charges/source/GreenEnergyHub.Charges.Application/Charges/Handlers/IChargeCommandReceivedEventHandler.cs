@@ -15,7 +15,7 @@
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Domain.Charges.Events.Local;
 
-namespace GreenEnergyHub.Charges.Application
+namespace GreenEnergyHub.Charges.Application.Charges.Handlers
 {
     public interface IChargeCommandReceivedEventHandler
     {
