@@ -47,7 +47,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.MeteringPoints
 
         [Theory]
         [InlineAutoMoqData]
-        public async Task HandleAsync_IfEventIsNull_ThrowsArgumentNullException(
+        public async Task HandleAsync_WhenEventIsNull_ThrowsArgumentNullException(
             [NotNull] MeteringPointCreatedEventHandler sut)
         {
             // Arrange

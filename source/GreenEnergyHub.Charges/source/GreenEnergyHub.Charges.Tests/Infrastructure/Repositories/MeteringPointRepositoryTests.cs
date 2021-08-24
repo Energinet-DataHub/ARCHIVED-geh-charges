@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Globalization;
 using System.Threading.Tasks;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.Events.Integration;
@@ -48,11 +47,11 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
             // Assert
             var expected = await sut.GetMeteringPointAsync(validMeteringPoint.MeteringPointId).ConfigureAwait(false);
             expected.Id.Should().BeGreaterThan(0);
-            expected.ConnectionState.Should().Be(int.Parse(validMeteringPoint.ConnectionState, CultureInfo.InvariantCulture));
+            expected.ConnectionState.Should().Be(validMeteringPoint.ConnectionState);
             expected.MeteringGridArea.Should().Be(validMeteringPoint.GridArea);
             expected.MeteringPointId.Should().Be(validMeteringPoint.MeteringPointId);
             expected.EffectiveDate.Should().Be(InstantPattern.General.Parse(validMeteringPoint.EffectiveDate).Value);
-            expected.SettlementMethod.Should().Be(int.Parse(validMeteringPoint.SettlementMethod, CultureInfo.InvariantCulture));
+            expected.SettlementMethod.Should().Be(validMeteringPoint.SettlementMethod);
         }
 
         private static MeteringPointCreatedEvent GetMeteringPointCreatedEvent()
