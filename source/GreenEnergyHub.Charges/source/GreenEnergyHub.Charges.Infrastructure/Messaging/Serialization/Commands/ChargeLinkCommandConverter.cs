@@ -47,17 +47,12 @@ namespace GreenEnergyHub.Charges.Infrastructure.Messaging.Serialization.Commands
         {
             var correlationId = _correlationContext.CorrelationId;
 
-            var commandReceivedEvent = new ChargeLinkCommandReceivedEvent(
-                _clock.GetCurrentInstant(),
-                correlationId,
-                new ChargeLinkCommand(correlationId)
+            return new ChargeLinkCommand(correlationId)
                 {
                     Transaction = Transaction.NewTransaction(),
                     Document = document,
                     ChargeLink = await ParseChargeLinkAsync(reader).ConfigureAwait(false),
-                });
-
-            return commandReceivedEvent;
+                };
         }
 
         private static async Task<ChargeLink> ParseChargeLinkAsync(XmlReader reader)

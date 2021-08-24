@@ -45,7 +45,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Internal.Mappers
             var result = (ChargeLinkCommandReceivedContract)sut.Convert(chargeLinkCommandReceivedEvent);
 
             // Assert
-            ProtobufAssert.OutgoingContractIsSubset(chargeLinkCommandReceivedEvent.ChargeLinkCommand, result);
+            ProtobufAssert.OutgoingContractIsSubset(chargeLinkCommandReceivedEvent, result);
         }
 
         [Theory]

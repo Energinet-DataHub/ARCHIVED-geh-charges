@@ -30,7 +30,6 @@ namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
         protected override Google.Protobuf.IMessage Convert([NotNull]ChargeLinkCommandReceivedEvent chargeLinkCommandReceivedEvent)
         {
             var document = chargeLinkCommandReceivedEvent.ChargeLinkCommand.Document;
-            var chargeLink = chargeLinkCommandReceivedEvent.ChargeLinkCommand;
 
             return new ChargeLinkCommandReceivedContract
             {
