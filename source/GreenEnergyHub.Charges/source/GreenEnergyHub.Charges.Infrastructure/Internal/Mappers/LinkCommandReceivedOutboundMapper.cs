@@ -21,6 +21,7 @@ using GreenEnergyHub.Charges.Domain.ChargeLinks.Events.Local;
 using GreenEnergyHub.Charges.Domain.MarketDocument;
 using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandReceived;
 using GreenEnergyHub.Messaging.Protobuf;
+using NodaTime;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
 {
@@ -33,8 +34,13 @@ namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
 
             return new ChargeLinkCommandReceivedContract
             {
-                Document = ConvertDocument(document),
-                ChargeLink = ConvertChargeLink(chargeLinkCommandReceivedEvent),
+                PublishedTime = chargeLinkCommandReceivedEvent.PublishedTime.ToTimestamp().TruncateToSeconds(),
+                ChargeLinkCommand = new ChargeLinkCommandContract
+                {
+                    Document = ConvertDocument(document),
+                    ChargeLink = ConvertChargeLink(chargeLinkCommandReceivedEvent),
+                    CorrelationId = chargeLinkCommandReceivedEvent.ChargeLinkCommand.CorrelationId,
+                },
                 CorrelationId = chargeLinkCommandReceivedEvent.CorrelationId,
             };
         }
