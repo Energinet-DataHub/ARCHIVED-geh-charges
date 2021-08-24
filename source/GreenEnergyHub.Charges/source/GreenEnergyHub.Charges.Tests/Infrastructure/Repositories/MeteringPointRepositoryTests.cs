@@ -34,22 +34,19 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
                 .Options;
 
         [Fact]
-        public async Task StoreMeteringPointAsync_WhenMeteringPointIsCreated_ValidObjectIsRetrievedFromDatabase()
+        public async Task StoreMeteringPointAsync_WhenMeteringPointIsCreated_StoresMeteringPointInDatabase()
         {
             // Arrange
             EnsureDatabaseCreated();
             await using var chargesDatabaseContext = new ChargesDatabaseContext(_dbContextOptions);
-
             var validMeteringPoint = GetMeteringPointCreatedEvent();
-
             var sut = new MeteringPointRepository(chargesDatabaseContext);
 
             // Act
             await sut.StoreMeteringPointCreatedEventAsync(validMeteringPoint).ConfigureAwait(false);
 
-            var expected = await sut.GetMeteringPointAsync(validMeteringPoint.MeteringPointId).ConfigureAwait(false);
-
             // Assert
+            var expected = await sut.GetMeteringPointAsync(validMeteringPoint.MeteringPointId).ConfigureAwait(false);
             expected.Id.Should().BeGreaterThan(0);
             expected.ConnectionState.Should().Be(int.Parse(validMeteringPoint.ConnectionState, CultureInfo.InvariantCulture));
             expected.MeteringGridArea.Should().Be(validMeteringPoint.GridAreaId);
