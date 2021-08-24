@@ -37,7 +37,11 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Mapping
             var chargeLinkCommandAcceptedEvent = mapper.Map(chargeLinkCommandReceivedEvent);
 
             // Assert
-            chargeLinkCommandAcceptedEvent.Should().BeEquivalentTo(chargeLinkCommandReceivedEvent);
+            chargeLinkCommandAcceptedEvent.Document.Should().BeEquivalentTo(chargeLinkCommandReceivedEvent.ChargeLinkCommand.Document);
+            chargeLinkCommandAcceptedEvent.ChargeLink.Should().BeEquivalentTo(chargeLinkCommandReceivedEvent.ChargeLinkCommand.ChargeLink);
+
+            //TODO: LRN Transaction is newed when "mapping", after chargeLinkCommandAcceptedEvent Inheritance from InternalEventBase this will be sorted.
+            //chargeLinkCommandAcceptedEvent.ChargeLink.Should().BeEquivalentTo(chargeLinkCommandReceivedEvent.ChargeLinkCommand.Transaction);
         }
     }
 }
