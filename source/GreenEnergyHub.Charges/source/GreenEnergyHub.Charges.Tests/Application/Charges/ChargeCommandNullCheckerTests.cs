@@ -58,8 +58,11 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges
             // Arrange
             var command = Build();
 
-            // Act / Assert
-            ChargeCommandNullChecker.ThrowExceptionIfRequiredPropertyIsNull(command);
+            // Act
+            var ex = Record.Exception(() => ChargeCommandNullChecker.ThrowExceptionIfRequiredPropertyIsNull(command));
+
+            // Assert
+            Assert.Null(ex);
         }
 
         [Fact]
