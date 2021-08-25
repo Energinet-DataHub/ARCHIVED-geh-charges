@@ -33,7 +33,6 @@ limitations under the License.
       <EmbeddedResource Include="Scripts\Seed\202108130611 System operator market participant.sql" />
       <EmbeddedResource Include="Scripts\Seed\202108130629 Default charges.sql" />
       <EmbeddedResource Include="Scripts\Seed\202108131029 Default charge links.sql" />
-      <None Remove="Scripts\Model\202108251511 Update DateTime to DateTIme2.sql" />
       <EmbeddedResource Include="Scripts\Model\202108251511 Update DateTimes.sql" />
     </ItemGroup>
 
