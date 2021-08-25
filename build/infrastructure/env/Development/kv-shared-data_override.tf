@@ -13,12 +13,6 @@
 # limitations under the License.
 
 # Purpose of this overwrite (not override) is to depend on and use the shared key vault stub.
-data "azurerm_key_vault" "kv_sharedresources" {
-  name                = module.kv_shared_stub.name
-  resource_group_name = data.azurerm_resource_group.main.name
-}
-
-# Purpose of this overwrite (not override) is to depend on and use the shared key vault stub.
 data "azurerm_key_vault_secret" "integration_events_listener_connection_string" {
   name         = local.INTEGRATION_EVENTS_LISTENER_CONNECTION_STRING
   key_vault_id = module.kv_shared_stub.id

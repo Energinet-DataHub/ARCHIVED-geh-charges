@@ -13,7 +13,7 @@
 # limitations under the License.
 output "sql_connection_string_keyvaultsecretname" {
   description = "Name of the secret in the keyvault containing the username for the charges sql database"
-  value = module.sqlsrv_charge_db_connection_string.name
+  value = local.CHARGE_DB_CONNECTION_STRING
   sensitive = true
 }
 

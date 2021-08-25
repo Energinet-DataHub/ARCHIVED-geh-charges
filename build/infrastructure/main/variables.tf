@@ -50,6 +50,11 @@ variable "sharedresources_resource_group_name" {
   description   = "Resource group containing shared resources"
 }
 
+variable "sharedresources_sql_server_name" {
+  type          = string
+  description   = "Sql server shared resources"
+}
+
 variable "notification_email" {
   type          = string
   description   = "Email address to send notifications to"
