@@ -19,7 +19,7 @@ using AutoFixture.Kernel;
 using Google.Protobuf;
 using Xunit.Sdk;
 
-namespace GreenEnergyHub.Charges.TestCore
+namespace GreenEnergyHub.Charges.TestCore.Protobuf
 {
     public class ProtobufCustomizationFunction<TProtobufMessage>
     {

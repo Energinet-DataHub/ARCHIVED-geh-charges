@@ -12,13 +12,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
+using AutoFixture;
+using AutoFixture.AutoMoq;
+using AutoFixture.Xunit2;
+using GreenEnergyHub.Charges.TestCore.Protobuf;
 
-namespace GreenEnergyHub.Charges.Application.Validation.BusinessValidation.Factories
+namespace GreenEnergyHub.Charges.TestCore.Attributes
 {
-    public interface IBusinessStopValidationRulesFactory
+    public class AutoMoqDataAttribute : AutoDataAttribute
     {
-        Task<IValidationRuleSet> CreateRulesForStopCommandAsync(ChargeCommand chargeCommand);
+        public AutoMoqDataAttribute()
+            : base(() => new Fixture().Customize(
+                new CompositeCustomization(
+                    new AutoMoqCustomization(),
+                    new ProtobufCustomization())))
+        {
+        }
     }
 }

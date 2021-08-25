@@ -56,19 +56,18 @@ message MarketParticipantContract {
 
 message ChargeOperationContract {
   string id = 1; // Contains a ID for the specific link, provided by the sender. Combined with sender.id it becomes unique.
-  OperationTypeContract operation_type = 2; // This enum indicates the action requested by the sender
-  string charge_id = 3; // A charge identifier. Combined with Charge Owner and Charge Type it becomes unique
-  ChargeTypeContract type = 4; // The type of charge; tariff, fee or subscription
-  string charge_name = 5; // The charge name, Example: "Elafgift"
-  string charge_description = 6; //
-  google.protobuf.Timestamp start_date_time = 7; // In UTC. The charge link period's valid from date and time
-  google.protobuf.Timestamp end_date_time = 8; // In UTC. The charge link period's valid to date and time. The default value will be the equivalent to 9999-12-31T23:59:59Z without milliseconds
-  VatClassificationContract vat_classification = 9;
-  bool transparent_invoicing = 10; // In Denmark the Energy Supplier invoices the customer, including the charges from the Grid Access Provider and the System Operator. This boolean can be use to indicate that a charge must be visible on the invoice sent to the customer.
-  bool tax_indicator = 11; // Indicates whether the Charge is tax or not.
-  string charge_owner = 12; // A charge owner identification, e.g. the Market Participant's GLN or EIC number
-  ResolutionContract resolution = 13;
-  repeated PointContract points = 14;
+  string charge_id = 2; // A charge identifier. Combined with Charge Owner and Charge Type it becomes unique
+  ChargeTypeContract type = 3; // The type of charge; tariff, fee or subscription
+  string charge_name = 4; // The charge name, Example: "Elafgift"
+  string charge_description = 5; //
+  google.protobuf.Timestamp start_date_time = 6; // In UTC. The charge link period's valid from date and time
+  google.protobuf.Timestamp end_date_time = 7; // In UTC. The charge link period's valid to date and time. The default value will be the equivalent to 9999-12-31T23:59:59Z without milliseconds
+  VatClassificationContract vat_classification = 8;
+  bool transparent_invoicing = 9; // In Denmark the Energy Supplier invoices the customer, including the charges from the Grid Access Provider and the System Operator. This boolean can be use to indicate that a charge must be visible on the invoice sent to the customer.
+  bool tax_indicator = 10; // Indicates whether the Charge is tax or not.
+  string charge_owner = 11; // A charge owner identification, e.g. the Market Participant's GLN or EIC number
+  ResolutionContract resolution = 12;
+  repeated PointContract points = 13;
 }
 
 message PointContract
@@ -92,14 +91,6 @@ enum VatClassificationContract
     VT_UNKNOWN = 0;
     VT_NO_VAT = 1;
     VT_VAT_25 = 2;
-}
-
-enum OperationTypeContract
-{
-    OT_UNKNOWN = 0;
-    OT_CREATE = 1;
-    OT_STOP = 2;
-    OT_UPDATE = 3;
 }
 
 enum DocumentTypeContract

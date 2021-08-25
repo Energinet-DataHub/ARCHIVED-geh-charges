@@ -12,13 +12,25 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Threading.Tasks;
+using System.Diagnostics.CodeAnalysis;
+using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
+using GreenEnergyHub.Charges.TestCore.Attributes;
+using GreenEnergyHub.TestHelpers.FluentAssertionsExtensions;
+using Xunit;
+using Xunit.Categories;
 
-namespace GreenEnergyHub.Charges.Application.Validation.BusinessValidation.Factories
+namespace GreenEnergyHub.Charges.Tests.TestCore.Attributes
 {
-    public interface IBusinessUpdateValidationRulesFactory
+    [UnitTest]
+    public class InlineAutoMoqDataAttributeTests
     {
-        Task<IValidationRuleSet> CreateRulesForUpdateCommandAsync(ChargeCommand chargeCommand);
+        [Theory]
+        [InlineAutoMoqData]
+        public void Attribute_SupportsInstantiatingClassTypeObjectsWithPropsWithGeneratedValues(
+            [NotNull] ChargeCommand command)
+        {
+            command.Should().NotContainNullsOrEmptyEnumerables();
+        }
     }
 }

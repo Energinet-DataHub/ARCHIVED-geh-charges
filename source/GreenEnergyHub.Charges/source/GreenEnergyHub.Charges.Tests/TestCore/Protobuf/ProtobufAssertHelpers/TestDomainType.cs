@@ -12,13 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
-
-namespace GreenEnergyHub.Charges.Application.Validation.BusinessValidation.Factories
+namespace GreenEnergyHub.Charges.Tests.TestCore.Protobuf.ProtobufAssertHelpers
 {
-    public interface IBusinessCreateValidationRulesFactory
+    public class TestDomainType
     {
-        Task<IValidationRuleSet> CreateRulesForCreateCommandAsync(ChargeCommand chargeCommand);
+        public TestDomainType(string a, string b)
+        {
+            A = a;
+            B = b;
+        }
+
+        public string A { get; }
+
+        public string B { get; }
     }
 }

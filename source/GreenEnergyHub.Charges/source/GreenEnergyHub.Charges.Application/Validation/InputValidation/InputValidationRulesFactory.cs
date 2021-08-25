@@ -21,100 +21,41 @@ namespace GreenEnergyHub.Charges.Application.Validation.InputValidation
 {
     public class InputValidationRulesFactory : IInputValidationRulesFactory
     {
-        public IValidationRuleSet CreateRulesForChargeCreateCommand(ChargeCommand chargeCommand)
+        public IValidationRuleSet CreateRulesForChargeCommand(ChargeCommand chargeCommand)
         {
             if (chargeCommand == null) throw new ArgumentNullException(nameof(chargeCommand));
 
-            var rules = GetCreateRules(chargeCommand);
-            rules.AddRange(GetMandatoryRules(chargeCommand));
+            var rules = GetRules(chargeCommand);
 
             return ValidationRuleSet.FromRules(rules);
         }
 
-        public IValidationRuleSet CreateRulesForChargeUpdateCommand(ChargeCommand chargeCommand)
+        private static List<IValidationRule> GetRules(ChargeCommand chargeCommand)
         {
-            if (chargeCommand == null) throw new ArgumentNullException(nameof(chargeCommand));
-
-            var rules = GetUpdateRules(chargeCommand);
-            rules.AddRange(GetMandatoryRules(chargeCommand));
-
-            return ValidationRuleSet.FromRules(rules);
-        }
-
-        public IValidationRuleSet CreateRulesForChargeStopCommand(ChargeCommand chargeCommand)
-        {
-            if (chargeCommand == null) throw new ArgumentNullException(nameof(chargeCommand));
-
-            var mandatoryRules = GetMandatoryRules(chargeCommand);
-
-            return ValidationRuleSet.FromRules(mandatoryRules);
-        }
-
-        public IValidationRuleSet CreateRulesForChargeUnknownCommand(ChargeCommand chargeCommand)
-        {
-            if (chargeCommand == null) throw new ArgumentNullException(nameof(chargeCommand));
-
             var rules = new List<IValidationRule>
             {
+                new BusinessReasonCodeMustBeUpdateChargeInformationRule(chargeCommand),
+                new ChargeDescriptionHasMaximumLengthRule(chargeCommand),
+                new ChargeIdLengthValidationRule(chargeCommand),
+                new ChargeIdRequiredValidationRule(chargeCommand),
+                new ChargeNameHasMaximumLengthRule(chargeCommand),
+                new ChargeOperationIdRequiredRule(chargeCommand),
+                new ChargeOwnerIsRequiredValidationRule(chargeCommand),
+                new ChargePriceMaximumDigitsAndDecimalsRule(chargeCommand),
                 new ChargeTypeIsKnownValidationRule(chargeCommand),
-                new OperationTypeValidationRule(chargeCommand),
-            };
-
-            return ValidationRuleSet.FromRules(rules);
-        }
-
-        private static List<IValidationRule> GetCreateRules(ChargeCommand chargeCommand)
-        {
-            var rules = new List<IValidationRule>
-            {
+                new ChargeTypeTariffPriceCountRule(chargeCommand),
+                new DocumentTypeMustBeRequestUpdateChargeInformationRule(chargeCommand),
+                new FeeMustHaveSinglePriceRule(chargeCommand),
+                new MaximumPriceRule(chargeCommand),
                 new ProcessTypeIsKnownValidationRule(chargeCommand),
-                new SenderIsMandatoryTypeValidationRule(chargeCommand),
                 new RecipientIsMandatoryTypeValidationRule(chargeCommand),
-                new VatClassificationValidationRule(chargeCommand),
-                new ResolutionTariffValidationRule(chargeCommand),
                 new ResolutionFeeValidationRule(chargeCommand),
                 new ResolutionSubscriptionValidationRule(chargeCommand),
-                new ChargeNameHasMaximumLengthRule(chargeCommand),
-                new ChargeDescriptionHasMaximumLengthRule(chargeCommand),
-                new ChargeTypeTariffPriceCountRule(chargeCommand),
-                new MaximumPriceRule(chargeCommand),
-                new ChargePriceMaximumDigitsAndDecimalsRule(chargeCommand),
-                new FeeMustHaveSinglePriceRule(chargeCommand),
-                new SubscriptionMustHaveSinglePriceRule(chargeCommand),
-            };
-
-            return rules;
-        }
-
-        private static List<IValidationRule> GetUpdateRules(ChargeCommand chargeCommand)
-        {
-            var rules = new List<IValidationRule>
-            {
-                new ChargeNameHasMaximumLengthRule(chargeCommand),
-                new ChargeDescriptionHasMaximumLengthRule(chargeCommand),
-                new ChargeTypeTariffPriceCountRule(chargeCommand),
-                new MaximumPriceRule(chargeCommand),
-                new ChargePriceMaximumDigitsAndDecimalsRule(chargeCommand),
-                new FeeMustHaveSinglePriceRule(chargeCommand),
-                new SubscriptionMustHaveSinglePriceRule(chargeCommand),
-            };
-
-            return rules;
-        }
-
-        private static List<IValidationRule> GetMandatoryRules(ChargeCommand chargeCommand)
-        {
-            var rules = new List<IValidationRule>
-            {
-                new ChargeOperationIdRequiredRule(chargeCommand),
-                new ChargeIdRequiredValidationRule(chargeCommand),
-                new BusinessReasonCodeMustBeUpdateChargeInformationRule(chargeCommand),
-                new DocumentTypeMustBeRequestUpdateChargeInformationRule(chargeCommand),
-                new ChargeTypeIsKnownValidationRule(chargeCommand),
-                new ChargeIdLengthValidationRule(chargeCommand),
+                new ResolutionTariffValidationRule(chargeCommand),
+                new SenderIsMandatoryTypeValidationRule(chargeCommand),
                 new StartDateTimeRequiredValidationRule(chargeCommand),
-                new OperationTypeValidationRule(chargeCommand),
-                new ChargeOwnerIsRequiredValidationRule(chargeCommand),
+                new SubscriptionMustHaveSinglePriceRule(chargeCommand),
+                new VatClassificationValidationRule(chargeCommand),
             };
 
             return rules;

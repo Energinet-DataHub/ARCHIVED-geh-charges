@@ -13,24 +13,32 @@
 // limitations under the License.
 
 using System.Diagnostics.CodeAnalysis;
-using FluentAssertions;
+using AutoFixture.Xunit2;
+using GreenEnergyHub.Charges.Application.Validation;
+using GreenEnergyHub.Charges.Application.Validation.InputValidation;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
-using GreenEnergyHub.Charges.TestCore;
-using GreenEnergyHub.TestHelpers.FluentAssertionsExtensions;
 using Xunit;
 using Xunit.Categories;
 
-namespace GreenEnergyHub.Charges.Tests
+namespace GreenEnergyHub.Charges.Tests.Application.Validation.InputValidation
 {
     [UnitTest]
-    public class InlineAutoMoqDataAttributeTests
+    public class ChargeCommandInputValidatorTests
     {
         [Theory]
-        [InlineAutoMoqData]
-        public void Attribute_SupportsInstantiatingClassTypeObjectsWithPropsWithGeneratedValues(
-            [NotNull] ChargeCommand command)
+        [InlineAutoData]
+        public void Validate_WhenValidatingChargeCommand_ReturnsChargeCommandValidationResult(
+            [NotNull] InputValidationRulesFactory inputValidationRulesFactory,
+            [NotNull] ChargeCommand chargeCommand)
         {
-            command.Should().NotContainNullsOrEmptyEnumerables();
+            // Arrange
+            var sut = new ChargeCommandInputValidator(inputValidationRulesFactory);
+
+            // Act
+            var result = sut.Validate(chargeCommand);
+
+            // Assert
+            Assert.IsType<ChargeCommandValidationResult>(result);
         }
     }
 }

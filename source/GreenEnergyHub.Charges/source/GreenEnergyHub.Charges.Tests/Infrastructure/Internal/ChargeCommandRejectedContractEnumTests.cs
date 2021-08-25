@@ -16,6 +16,7 @@ using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
 using GreenEnergyHub.Charges.Domain.MarketDocument;
 using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeCommandRejected;
 using GreenEnergyHub.Charges.TestCore;
+using GreenEnergyHub.Charges.TestCore.Protobuf;
 using Xunit;
 using Xunit.Categories;
 
@@ -27,49 +28,43 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Internal
         [Fact]
         public void ResolutionContract_ShouldBeSubsetOfResolution()
         {
-            ProtoBufAssert.ContractEnumIsSubSet<ResolutionContract, Resolution>();
+            ProtobufAssert.ContractEnumIsSubSet<ResolutionContract, Resolution>();
         }
 
         [Fact]
         public void VatClassificationContract_ShouldBeSubsetOfVatClassification()
         {
-            ProtoBufAssert.ContractEnumIsSubSet<VatClassificationContract, VatClassification>();
-        }
-
-        [Fact]
-        public void OperationTypeContract_ShouldBeSubsetOfOperationType()
-        {
-            ProtoBufAssert.ContractEnumIsSubSet<OperationTypeContract, OperationType>();
+            ProtobufAssert.ContractEnumIsSubSet<VatClassificationContract, VatClassification>();
         }
 
         [Fact]
         public void DocumentTypeContract_ShouldBeSubsetOfDocumentType()
         {
-            ProtoBufAssert.ContractEnumIsSubSet<DocumentTypeContract, DocumentType>();
+            ProtobufAssert.ContractEnumIsSubSet<DocumentTypeContract, DocumentType>();
         }
 
         [Fact]
         public void MarketParticipantRoleContract_ShouldBeSubsetOfMarketParticipantRole()
         {
-            ProtoBufAssert.ContractEnumIsSubSet<MarketParticipantRoleContract, MarketParticipantRole>();
+            ProtobufAssert.ContractEnumIsSubSet<MarketParticipantRoleContract, MarketParticipantRole>();
         }
 
         [Fact]
         public void IndustryClassificationContract_ShouldBeSubsetOfIndustryClassification()
         {
-            ProtoBufAssert.ContractEnumIsSubSet<IndustryClassificationContract, IndustryClassification>();
+            ProtobufAssert.ContractEnumIsSubSet<IndustryClassificationContract, IndustryClassification>();
         }
 
         [Fact]
         public void BusinessReasonCodeContract_ShouldBeSubsetOfBusinessReasonCode()
         {
-            ProtoBufAssert.ContractEnumIsSubSet<BusinessReasonCodeContract, BusinessReasonCode>();
+            ProtobufAssert.ContractEnumIsSubSet<BusinessReasonCodeContract, BusinessReasonCode>();
         }
 
         [Fact]
         public void ChargeTypeContract_ShouldBeSubsetOfChargeType()
         {
-            ProtoBufAssert.ContractEnumIsSubSet<ChargeTypeContract, ChargeType>();
+            ProtobufAssert.ContractEnumIsSubSet<ChargeTypeContract, ChargeType>();
         }
     }
 }

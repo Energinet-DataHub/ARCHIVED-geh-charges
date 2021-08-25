@@ -80,7 +80,6 @@ namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
                 ChargeId = chargeOperation.ChargeId,
                 ChargeName = chargeOperation.ChargeName,
                 ChargeOwner = chargeOperation.ChargeOwner,
-                OperationType = (OperationType)chargeOperation.OperationType,
                 TaxIndicator = chargeOperation.TaxIndicator,
                 TransparentInvoicing = chargeOperation.TransparentInvoicing,
                 VatClassification = (VatClassification)chargeOperation.VatClassification,

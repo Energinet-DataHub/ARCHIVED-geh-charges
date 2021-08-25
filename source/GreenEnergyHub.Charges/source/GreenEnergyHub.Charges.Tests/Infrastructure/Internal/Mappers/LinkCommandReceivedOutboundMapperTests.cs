@@ -18,6 +18,8 @@ using GreenEnergyHub.Charges.Domain.ChargeLinks;
 using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandReceived;
 using GreenEnergyHub.Charges.Infrastructure.Internal.Mappers;
 using GreenEnergyHub.Charges.TestCore;
+using GreenEnergyHub.Charges.TestCore.Attributes;
+using GreenEnergyHub.Charges.TestCore.Protobuf;
 using NodaTime;
 using Xunit;
 using Xunit.Categories;
@@ -35,7 +37,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Internal.Mappers
         {
             UpdateInstantsToValidTimes(chargeLinkCommandReceivedEvent);
             var result = (ChargeLinkCommandReceivedContract)sut.Convert(chargeLinkCommandReceivedEvent);
-            ProtoBufAssert.OutgoingContractIsSubset(chargeLinkCommandReceivedEvent, result);
+            ProtobufAssert.OutgoingContractIsSubset(chargeLinkCommandReceivedEvent, result);
         }
 
         [Theory]

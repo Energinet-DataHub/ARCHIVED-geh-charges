@@ -17,6 +17,8 @@ using Energinet.DataHub.MeteringPoints.IntegrationEventContracts;
 using GreenEnergyHub.Charges.Domain.Events.Integration;
 using GreenEnergyHub.Charges.Infrastructure.Integration.Mappers;
 using GreenEnergyHub.Charges.TestCore;
+using GreenEnergyHub.Charges.TestCore.Attributes;
+using GreenEnergyHub.Charges.TestCore.Protobuf;
 using Xunit;
 using Xunit.Categories;
 
@@ -32,7 +34,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Integration.Mappers
             [NotNull] CreateLinkCommandInboundMapper sut)
         {
             var result = (CreateLinkCommandEvent)sut.Convert(createLinkCommandContract);
-            ProtoBufAssert.IncomingContractIsSuperset(result, createLinkCommandContract);
+            ProtobufAssert.IncomingContractIsSuperset(result, createLinkCommandContract);
         }
     }
 }

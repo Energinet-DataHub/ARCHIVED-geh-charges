@@ -12,20 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using AutoFixture;
-using AutoFixture.AutoMoq;
 using AutoFixture.Xunit2;
 
-namespace GreenEnergyHub.Charges.TestCore
+namespace GreenEnergyHub.Charges.TestCore.Attributes
 {
-    public class AutoMoqDataAttribute : AutoDataAttribute
+    public class InlineAutoMoqDataAttribute : InlineAutoDataAttribute
     {
-        public AutoMoqDataAttribute()
-            : base(() => new Fixture().Customize(
-                new CompositeCustomization(
-                    new AutoMoqCustomization(),
-                    new ProtobufCustomization())))
-        {
-        }
+        public InlineAutoMoqDataAttribute(params object[] objects)
+            : base(new AutoMoqDataAttribute(), objects) { }
     }
 }
