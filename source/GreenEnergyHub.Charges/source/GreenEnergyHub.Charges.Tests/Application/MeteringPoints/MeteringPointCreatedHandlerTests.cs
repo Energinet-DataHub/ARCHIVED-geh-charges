@@ -20,7 +20,7 @@ using GreenEnergyHub.Charges.Application;
 using GreenEnergyHub.Charges.Application.ChangeOfCharges.Repositories;
 using GreenEnergyHub.Charges.Domain.Events.Integration;
 using GreenEnergyHub.Charges.Domain.MeteringPoints;
-using GreenEnergyHub.Charges.TestCore;
+using GreenEnergyHub.Charges.TestCore.Attributes;
 using GreenEnergyHub.TestHelpers;
 using Moq;
 using NodaTime;
