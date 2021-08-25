@@ -31,13 +31,6 @@ namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
 {
     public class LinkCommandReceivedInboundMapper : ProtobufInboundMapper<ChargeLinkCommandReceivedContract>
     {
-        private readonly IClock _clock;
-
-        public LinkCommandReceivedInboundMapper(IClock clock)
-        {
-            _clock = clock;
-        }
-
         protected override IInboundMessage Convert([NotNull]ChargeLinkCommandReceivedContract chargeLinkCommandReceivedContract)
         {
             return new ChargeLinkCommandReceivedEvent(
