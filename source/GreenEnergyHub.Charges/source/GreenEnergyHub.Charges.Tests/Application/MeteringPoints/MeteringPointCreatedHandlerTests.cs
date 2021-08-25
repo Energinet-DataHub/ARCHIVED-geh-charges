@@ -22,6 +22,7 @@ using GreenEnergyHub.Charges.Domain.Events.Integration;
 using GreenEnergyHub.Charges.Domain.MeteringPoints;
 using GreenEnergyHub.Charges.TestCore.Attributes;
 using GreenEnergyHub.TestHelpers;
+using Microsoft.Extensions.Logging;
 using Moq;
 using NodaTime;
 using Xunit;
@@ -36,14 +37,21 @@ namespace GreenEnergyHub.Charges.Tests.Application.MeteringPoints
         [InlineAutoDomainData]
         public async Task HandleAsync_WhenCalled_ShouldCallRepository(
             [NotNull][Frozen] Mock<IMeteringPointRepository> meteringPointRepository,
+            [NotNull][Frozen] Mock<ILogger> logger,
             [NotNull] MeteringPointCreatedEventHandler sut)
         {
+            // Arrange
             var meteringPointCreatedEvent = GetMeteringPointCreatedEvent();
 
+            // Act
             await sut.HandleAsync(meteringPointCreatedEvent).ConfigureAwait(false);
 
+            // Assert
             meteringPointRepository
                 .Verify(v => v.StoreMeteringPointAsync(It.IsAny<MeteringPoint>()), Times.Exactly(1));
+            logger.VerifyLoggerWasCalled(
+                $"Finished persisting metering point with id: {meteringPointCreatedEvent.MeteringPointId}",
+                LogLevel.Information);
         }
 
         [Theory]

@@ -42,5 +42,25 @@ namespace GreenEnergyHub.TestHelpers
 
             return logger;
         }
+
+        public static Mock<ILogger> VerifyLoggerWasCalled(this Mock<ILogger> logger, string expectedMessage, LogLevel logLevel)
+        {
+            Func<object, Type, bool> state = (v, t) => string.Compare(v.ToString(), expectedMessage, StringComparison.InvariantCulture) == 0;
+
+            if (logger == null)
+            {
+                throw new ArgumentNullException(nameof(logger));
+            }
+
+            logger.Verify(
+                x => x.Log(
+                    It.Is<LogLevel>(l => l == logLevel),
+                    It.IsAny<EventId>(),
+                    It.Is<It.IsAnyType>((v, t) => state(v, t)),
+                    It.IsAny<Exception>(),
+                    It.Is<Func<It.IsAnyType, Exception, string>>((v, t) => true)));
+
+            return logger;
+        }
     }
 }

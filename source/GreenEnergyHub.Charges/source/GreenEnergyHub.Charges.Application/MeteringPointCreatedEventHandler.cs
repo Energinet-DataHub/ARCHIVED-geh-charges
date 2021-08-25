@@ -17,16 +17,19 @@ using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application.ChangeOfCharges.Repositories;
 using GreenEnergyHub.Charges.Application.Mapping;
 using GreenEnergyHub.Charges.Domain.Events.Integration;
+using Microsoft.Extensions.Logging;
 
 namespace GreenEnergyHub.Charges.Application
 {
     public class MeteringPointCreatedEventHandler : IMeteringPointCreatedEventHandler
     {
         private readonly IMeteringPointRepository _meteringPointRepository;
+        private readonly ILogger _logger;
 
-        public MeteringPointCreatedEventHandler(IMeteringPointRepository meteringPointRepository)
+        public MeteringPointCreatedEventHandler(IMeteringPointRepository meteringPointRepository, ILogger logger)
         {
             _meteringPointRepository = meteringPointRepository;
+            _logger = logger;
         }
 
         public async Task HandleAsync(MeteringPointCreatedEvent meteringPointCreatedEvent)
@@ -38,6 +41,7 @@ namespace GreenEnergyHub.Charges.Application
 
             var meteringPoint = MeteringPointMapper.MapMeteringPointCreatedEventToMeteringPoint(meteringPointCreatedEvent);
             await _meteringPointRepository.StoreMeteringPointAsync(meteringPoint).ConfigureAwait(false);
+            _logger.LogInformation("Finished persisting metering point with id: " + meteringPoint.MeteringPointId);
         }
     }
 }
