@@ -30,12 +30,9 @@ namespace GreenEnergyHub.Charges.Application.Mapping
 
             var effectiveDate = InstantPattern.General.Parse(meteringPointCreatedEvent.EffectiveDate).Value;
 
-            var meteringPointType =
-                EnumCasting.GetEnumFromString<MeteringPointType>(meteringPointCreatedEvent.MeteringPointType);
-            var connectionState =
-                EnumCasting.GetEnumFromString<ConnectionState>(meteringPointCreatedEvent.ConnectionState);
-            var settlementMethod =
-                EnumCasting.GetEnumFromString<SettlementMethod>(meteringPointCreatedEvent.SettlementMethod);
+            var meteringPointType = Enum.Parse<MeteringPointType>(meteringPointCreatedEvent.MeteringPointType);
+            var connectionState = Enum.Parse<ConnectionState>(meteringPointCreatedEvent.ConnectionState);
+            var settlementMethod = Enum.Parse<SettlementMethod>(meteringPointCreatedEvent.SettlementMethod);
 
             return new MeteringPoint(
                 meteringPointCreatedEvent.MeteringPointId,

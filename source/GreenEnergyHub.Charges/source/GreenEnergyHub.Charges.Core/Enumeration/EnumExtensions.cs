@@ -2,11 +2,14 @@
 
 namespace GreenEnergyHub.Charges.Core.Enumeration
 {
-    public class EnumCasting
+    public static class EnumExtensions
     {
-        public static T GetEnumFromString<T>(string enumValue)
-        where T : struct, Enum
+        public static T Parse<T>(this Enum source, string enumValue)
+            where T : struct, Enum, IConvertible
         {
+            if (!typeof(T).IsEnum)
+                throw new ArgumentException("T must be an enumerated type");
+
             var enumConversionSuccess = Enum.TryParse<T>(
                 enumValue,
                 out var convertedEnum);
