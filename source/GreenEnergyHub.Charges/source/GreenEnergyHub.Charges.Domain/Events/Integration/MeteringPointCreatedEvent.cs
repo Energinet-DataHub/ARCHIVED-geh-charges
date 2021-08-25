@@ -77,6 +77,6 @@ namespace GreenEnergyHub.Charges.Domain.Events.Integration
 
         public string EffectiveDate { get; }
 
-        public string ParentMeteringPointId { get; set; }
+        public string ParentMeteringPointId { get; }
     }
 }
