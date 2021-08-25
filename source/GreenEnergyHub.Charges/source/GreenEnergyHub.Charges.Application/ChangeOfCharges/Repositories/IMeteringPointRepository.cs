@@ -26,8 +26,8 @@ namespace GreenEnergyHub.Charges.Application.ChangeOfCharges.Repositories
         /// <summary>
         /// Saves the supplied metering point to the database.
         /// </summary>
-        /// <param name="meteringPointCreatedEvent"></param>
-        Task StoreMeteringPointAsync(MeteringPoint meteringPointCreatedEvent);
+        /// <param name="meteringPoint"></param>
+        Task StoreMeteringPointAsync(MeteringPoint meteringPoint);
 
         /// <summary>
         /// Used to find a Metering Point.
