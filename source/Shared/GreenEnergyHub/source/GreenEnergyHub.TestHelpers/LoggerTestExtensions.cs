@@ -25,7 +25,7 @@ namespace GreenEnergyHub.TestHelpers
         /// </summary>
         public static Mock<ILogger<T>> VerifyLoggerWasCalled<T>(this Mock<ILogger<T>> logger, string expectedMessage, LogLevel logLevel)
         {
-            Func<object, Type, bool> state = (v, t) => string.Compare(v.ToString(), expectedMessage, StringComparison.InvariantCulture) == 0;
+            Func<object, Type, bool> stringComparer = (v, t) => string.Compare(v.ToString(), expectedMessage, StringComparison.InvariantCulture) == 0;
 
             if (logger == null)
             {
@@ -36,7 +36,7 @@ namespace GreenEnergyHub.TestHelpers
                 x => x.Log(
                     It.Is<LogLevel>(l => l == logLevel),
                     It.IsAny<EventId>(),
-                    It.Is<It.IsAnyType>((v, t) => state(v, t)),
+                    It.Is<It.IsAnyType>((v, t) => stringComparer(v, t)),
                     It.IsAny<Exception>(),
                     It.Is<Func<It.IsAnyType, Exception, string>>((v, t) => true)));
 
@@ -45,7 +45,7 @@ namespace GreenEnergyHub.TestHelpers
 
         public static Mock<ILogger> VerifyLoggerWasCalled(this Mock<ILogger> logger, string expectedMessage, LogLevel logLevel)
         {
-            Func<object, Type, bool> state = (v, t) => string.Compare(v.ToString(), expectedMessage, StringComparison.InvariantCulture) == 0;
+            Func<object, Type, bool> stringComparer = (v, t) => string.Compare(v.ToString(), expectedMessage, StringComparison.InvariantCulture) == 0;
 
             if (logger == null)
             {
@@ -56,7 +56,7 @@ namespace GreenEnergyHub.TestHelpers
                 x => x.Log(
                     It.Is<LogLevel>(l => l == logLevel),
                     It.IsAny<EventId>(),
-                    It.Is<It.IsAnyType>((v, t) => state(v, t)),
+                    It.Is<It.IsAnyType>((v, t) => stringComparer(v, t)),
                     It.IsAny<Exception>(),
                     It.Is<Func<It.IsAnyType, Exception, string>>((v, t) => true)));
 

@@ -35,10 +35,7 @@ namespace GreenEnergyHub.Charges.Application
         public async Task HandleAsync(MeteringPointCreatedEvent meteringPointCreatedEvent)
         {
             if (meteringPointCreatedEvent == null)
-            {
                 throw new ArgumentNullException(nameof(meteringPointCreatedEvent));
-            }
-
             var meteringPoint = MeteringPointMapper.MapMeteringPointCreatedEventToMeteringPoint(meteringPointCreatedEvent);
             await _meteringPointRepository.StoreMeteringPointAsync(meteringPoint).ConfigureAwait(false);
             _logger.LogInformation("Finished persisting metering point with id: " + meteringPoint.MeteringPointId);

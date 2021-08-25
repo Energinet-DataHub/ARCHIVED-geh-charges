@@ -23,7 +23,6 @@ using GreenEnergyHub.Charges.Domain.MeteringPoints;
 using GreenEnergyHub.Charges.TestCore.Attributes;
 using GreenEnergyHub.TestHelpers;
 using Microsoft.Extensions.Logging;
-using Microsoft.VisualBasic;
 using Moq;
 using NodaTime;
 using Xunit;
@@ -57,6 +56,20 @@ namespace GreenEnergyHub.Charges.Tests.Application.MeteringPoints
 
         [Theory]
         [InlineAutoMoqData]
+        public async Task HandleAsync_WhenCalledWithUnknownEnum_ThrowsArgumentException(
+            [NotNull] MeteringPointCreatedEventHandler sut)
+        {
+            // Arrange
+            MeteringPointCreatedEvent meteringPointCreatedEvent = GetMeteringPointCreatedEventWithInvalidEnum();
+
+            // Act / Assert
+            await Assert.ThrowsAsync<ArgumentException>(
+                    () => sut.HandleAsync(meteringPointCreatedEvent!))
+                .ConfigureAwait(false);
+        }
+
+        [Theory]
+        [InlineAutoMoqData]
         public async Task HandleAsync_WhenEventIsNull_ThrowsArgumentNullException(
             [NotNull] MeteringPointCreatedEventHandler sut)
         {
@@ -78,6 +91,25 @@ namespace GreenEnergyHub.Charges.Tests.Application.MeteringPoints
                 "2",
                 "1",
                 "1",
+                "mrp",
+                "456",
+                "567",
+                "678",
+                "product",
+                "1",
+                SystemClock.Instance.GetCurrentInstant().ToString(),
+                "890");
+        }
+
+        private static MeteringPointCreatedEvent GetMeteringPointCreatedEventWithInvalidEnum()
+        {
+            return new MeteringPointCreatedEvent(
+                "123",
+                MeteringPointType.Consumption.ToString(),
+                "234",
+                "2",
+                "1",
+                "sdf",
                 "mrp",
                 "456",
                 "567",

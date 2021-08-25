@@ -34,17 +34,16 @@ namespace GreenEnergyHub.Charges.Infrastructure.Repositories
         public async Task StoreMeteringPointAsync(MeteringPoint meteringPoint)
         {
             if (meteringPoint == null) throw new ArgumentNullException(nameof(meteringPoint));
-
             var entityModel = MeteringPointMapper.MapMeteringPointToEntity(meteringPoint);
-
             await _chargesDatabaseContext.MeteringPoints.AddAsync(entityModel).ConfigureAwait(false);
-
             await _chargesDatabaseContext.SaveChangesAsync().ConfigureAwait(false);
         }
 
         public async Task<MeteringPoint> GetMeteringPointAsync(string meteringPointId)
         {
-            var meteringPoint = await _chargesDatabaseContext.MeteringPoints.SingleAsync(x => x.MeteringPointId == meteringPointId)
+            var meteringPoint = await _chargesDatabaseContext
+                .MeteringPoints
+                .SingleAsync(x => x.MeteringPointId == meteringPointId)
                 .ConfigureAwait(false);
 
             return MeteringPointMapper.MapMeteringPointToDomainModel(meteringPoint);

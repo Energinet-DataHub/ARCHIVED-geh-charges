@@ -26,7 +26,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Context.Model
             string gridAreaId,
             DateTime effectiveDate,
             ConnectionState connectionState,
-            SettlementMethod settlementMethod)
+            SettlementMethod? settlementMethod)
         {
             MeteringPointId = meteringPointId;
             MeteringPointType = meteringPointType;
@@ -49,6 +49,6 @@ namespace GreenEnergyHub.Charges.Infrastructure.Context.Model
 
         public ConnectionState ConnectionState { get; set; }
 
-        public SettlementMethod SettlementMethod { get; set; }
+        public SettlementMethod? SettlementMethod { get; set; }
     }
 }

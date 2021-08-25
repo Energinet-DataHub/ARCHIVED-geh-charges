@@ -38,11 +38,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Integration.Mappers
                 obj.Product,
                 obj.QuantityUnit,
                 obj.EffectiveDate,
-                obj.ParentMeteringPointId)
-            {
-                MeteringPointId = obj.MeteringPointId,
-                EffectiveDate = obj.EffectiveDate,
-            };
+                obj.ParentMeteringPointId);
         }
     }
 }

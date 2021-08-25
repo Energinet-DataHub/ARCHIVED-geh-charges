@@ -36,19 +36,19 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
             // Arrange
             EnsureDatabaseCreated();
             await using var chargesDatabaseContext = new ChargesDatabaseContext(_dbContextOptions);
-            var validMeteringPoint = GetMeteringPointCreatedEvent();
+            var expected = GetMeteringPointCreatedEvent();
             var sut = new MeteringPointRepository(chargesDatabaseContext);
 
             // Act
-            await sut.StoreMeteringPointAsync(validMeteringPoint).ConfigureAwait(false);
+            await sut.StoreMeteringPointAsync(expected).ConfigureAwait(false);
 
             // Assert
-            var expected = await sut.GetMeteringPointAsync(validMeteringPoint.MeteringPointId).ConfigureAwait(false);
-            expected.ConnectionState.Should().Be(validMeteringPoint.ConnectionState);
-            expected.GridAreaId.Should().Be(validMeteringPoint.GridAreaId);
-            expected.MeteringPointId.Should().Be(validMeteringPoint.MeteringPointId);
-            expected.EffectiveDate.Should().Be(validMeteringPoint.EffectiveDate);
-            expected.SettlementMethod.Should().Be(validMeteringPoint.SettlementMethod);
+            var actual = await sut.GetMeteringPointAsync(expected.MeteringPointId).ConfigureAwait(false);
+            actual.ConnectionState.Should().Be(expected.ConnectionState);
+            actual.GridAreaId.Should().Be(expected.GridAreaId);
+            actual.MeteringPointId.Should().Be(expected.MeteringPointId);
+            actual.EffectiveDate.Should().Be(expected.EffectiveDate);
+            actual.SettlementMethod.Should().Be(expected.SettlementMethod);
         }
 
         private static MeteringPoint GetMeteringPointCreatedEvent()
