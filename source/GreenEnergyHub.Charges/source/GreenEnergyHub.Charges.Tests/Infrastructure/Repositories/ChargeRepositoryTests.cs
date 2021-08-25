@@ -21,6 +21,7 @@ using GreenEnergyHub.Charges.Domain.MarketDocument;
 using GreenEnergyHub.Charges.Infrastructure.Context;
 using GreenEnergyHub.Charges.Infrastructure.Repositories;
 using GreenEnergyHub.Charges.TestCore;
+using GreenEnergyHub.Charges.TestCore.Attributes;
 using Microsoft.EntityFrameworkCore;
 using NodaTime;
 using Xunit;

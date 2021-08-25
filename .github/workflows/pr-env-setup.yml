@@ -35,8 +35,43 @@ env:
   SUBSCRIPTION_ID: ${{ secrets.SUBSCRIPTION_ID }}
 
 jobs:
+# Helps to determine if no changes are made to infrastructure or this workflow.
+  infra_pre_job:
+    runs-on: ubuntu-latest
+    outputs:
+      has_changes: ${{ !steps.skip_check.outputs.should_skip }}
+    steps:
+      - name: Should skip?
+        id: skip_check
+        uses: fkirc/skip-duplicate-actions@v1.4.0
+        with:
+          github_token: ${{ github.token }}
+          paths: '[
+            "build/infrastructure/**",
+            ".github/workflows/pr-env-setup.yml"
+          ]'
+
+  # Helps to determine if no changes are made to charges code or this workflow.
+  charges_pre_job:
+    runs-on: ubuntu-latest
+    outputs:
+      has_changes: ${{ !steps.skip_check.outputs.should_skip }}
+    steps:
+      - name: Should skip?
+        id: skip_check
+        uses: fkirc/skip-duplicate-actions@v1.4.0
+        with:
+          github_token: ${{ github.token }}
+          paths: '[
+            "source/**",
+            ".github/workflows/pr-env-setup.yml"
+          ]'
+
+  # Infrastructure deployment is only needed if there have been changes to infrastructure, the charges code, or this workflow.
   infra_deploy:
     name: Deploy infrastructure
+    needs: [infra_pre_job, charges_pre_job]
+    if: ${{ needs.infra_pre_job.outputs.has_changes || needs.charges_pre_job.outputs.has_changes }}
     runs-on: ubuntu-latest
     environment:
       name: rg-DataHub-Testing-U # Unfortunately this is not currently supported: ${{ env.ENVIRONMENT_LONG }}

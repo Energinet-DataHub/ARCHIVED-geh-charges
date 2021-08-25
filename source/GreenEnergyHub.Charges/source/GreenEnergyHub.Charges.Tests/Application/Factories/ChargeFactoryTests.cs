@@ -18,6 +18,7 @@ using FluentAssertions;
 using GreenEnergyHub.Charges.Application.Factories;
 using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
 using GreenEnergyHub.Charges.TestCore;
+using GreenEnergyHub.Charges.TestCore.Attributes;
 using GreenEnergyHub.TestHelpers.FluentAssertionsExtensions;
 using Xunit;
 using Xunit.Categories;

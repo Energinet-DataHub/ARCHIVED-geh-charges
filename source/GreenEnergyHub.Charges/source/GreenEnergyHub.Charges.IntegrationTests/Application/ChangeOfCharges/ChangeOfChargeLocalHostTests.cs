@@ -26,6 +26,7 @@ using GreenEnergyHub.Charges.Infrastructure.Messaging;
 using GreenEnergyHub.Charges.IntegrationTests.TestHelpers;
 using GreenEnergyHub.Charges.MessageReceiver;
 using GreenEnergyHub.Charges.TestCore;
+using GreenEnergyHub.Charges.TestCore.Attributes;
 using GreenEnergyHub.Messaging.Transport;
 using Microsoft.AspNetCore.Http.Internal;
 using Microsoft.AspNetCore.Mvc;

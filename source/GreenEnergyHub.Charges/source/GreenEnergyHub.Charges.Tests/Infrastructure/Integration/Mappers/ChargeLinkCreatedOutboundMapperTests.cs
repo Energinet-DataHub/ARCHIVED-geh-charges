@@ -19,6 +19,8 @@ using GreenEnergyHub.Charges.Domain.Events.Integration;
 using GreenEnergyHub.Charges.Infrastructure.Integration.ChargeLinkCreated;
 using GreenEnergyHub.Charges.Infrastructure.Integration.Mappers;
 using GreenEnergyHub.Charges.TestCore;
+using GreenEnergyHub.Charges.TestCore.Attributes;
+using GreenEnergyHub.Charges.TestCore.Protobuf;
 using NodaTime;
 using Xunit;
 using Xunit.Categories;
@@ -35,7 +37,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Integration.Mappers
         {
             var createdEvent = GetCreatedEvent();
             var result = (ChargeLinkCreatedContract)sut.Convert(createdEvent);
-            ProtoBufAssert.OutgoingContractIsSubset(createdEvent, result);
+            ProtobufAssert.OutgoingContractIsSubset(createdEvent, result);
         }
 
         [Theory]

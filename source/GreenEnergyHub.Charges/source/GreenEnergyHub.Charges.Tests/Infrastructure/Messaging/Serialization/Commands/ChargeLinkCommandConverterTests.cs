@@ -25,6 +25,7 @@ using GreenEnergyHub.Charges.Domain.MarketDocument;
 using GreenEnergyHub.Charges.Infrastructure.Messaging;
 using GreenEnergyHub.Charges.Infrastructure.Messaging.Serialization.Commands;
 using GreenEnergyHub.Charges.TestCore;
+using GreenEnergyHub.Charges.TestCore.Attributes;
 using Moq;
 using NodaTime.Text;
 using Xunit;
