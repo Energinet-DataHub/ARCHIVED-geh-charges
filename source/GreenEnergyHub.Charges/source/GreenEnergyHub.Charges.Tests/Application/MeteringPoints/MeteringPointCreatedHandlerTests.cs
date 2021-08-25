@@ -23,6 +23,7 @@ using GreenEnergyHub.Charges.Domain.MeteringPoints;
 using GreenEnergyHub.Charges.TestCore.Attributes;
 using GreenEnergyHub.TestHelpers;
 using Microsoft.Extensions.Logging;
+using Microsoft.VisualBasic;
 using Moq;
 using NodaTime;
 using Xunit;
@@ -83,7 +84,8 @@ namespace GreenEnergyHub.Charges.Tests.Application.MeteringPoints
                 "678",
                 "product",
                 "1",
-                SystemClock.Instance.GetCurrentInstant().ToString());
+                SystemClock.Instance.GetCurrentInstant().ToString(),
+                "890");
         }
     }
 }

@@ -13,7 +13,6 @@
 // limitations under the License.
 
 using System;
-using GreenEnergyHub.Charges.Core.Enumeration;
 using GreenEnergyHub.Charges.Domain.Events.Integration;
 using GreenEnergyHub.Charges.Domain.MeteringPoints;
 using NodaTime.Text;
@@ -37,7 +36,7 @@ namespace GreenEnergyHub.Charges.Application.Mapping
             return new MeteringPoint(
                 meteringPointCreatedEvent.MeteringPointId,
                 meteringPointType,
-                meteringPointCreatedEvent.GridArea,
+                meteringPointCreatedEvent.GridAreaId,
                 effectiveDate,
                 connectionState,
                 settlementMethod);

@@ -13,11 +13,8 @@
 // limitations under the License.
 
 using System;
-using GreenEnergyHub.Charges.Core.Enumeration;
-using GreenEnergyHub.Charges.Domain.Events.Integration;
 using GreenEnergyHub.Charges.Domain.MeteringPoints;
 using NodaTime;
-using NodaTime.Text;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Context.Mapping
 {
@@ -31,7 +28,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Context.Mapping
             return new MeteringPoint(
                 meteringPoint.MeteringPointId,
                 meteringPoint.MeteringPointType,
-                meteringPoint.MeteringGridArea,
+                meteringPoint.GridAreaId,
                 Instant.FromDateTimeUtc(meteringPoint.EffectiveDate),
                 meteringPoint.ConnectionState,
                 meteringPoint.SettlementMethod);
@@ -45,7 +42,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Context.Mapping
             return new Model.MeteringPoint(
                 meteringPoint.MeteringPointId,
                 meteringPoint.MeteringPointType,
-                meteringPoint.MeteringGridArea,
+                meteringPoint.GridAreaId,
                 meteringPoint.EffectiveDate.ToDateTimeUtc(),
                 meteringPoint.ConnectionState,
                 meteringPoint.SettlementMethod);

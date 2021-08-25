@@ -14,13 +14,11 @@
 
 using System.Threading.Tasks;
 using FluentAssertions;
-using GreenEnergyHub.Charges.Domain.Events.Integration;
 using GreenEnergyHub.Charges.Domain.MeteringPoints;
 using GreenEnergyHub.Charges.Infrastructure.Context;
 using GreenEnergyHub.Charges.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
 using NodaTime;
-using NodaTime.Text;
 using Xunit;
 
 namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
@@ -47,7 +45,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
             // Assert
             var expected = await sut.GetMeteringPointAsync(validMeteringPoint.MeteringPointId).ConfigureAwait(false);
             expected.ConnectionState.Should().Be(validMeteringPoint.ConnectionState);
-            expected.MeteringGridArea.Should().Be(validMeteringPoint.MeteringGridArea);
+            expected.GridAreaId.Should().Be(validMeteringPoint.GridAreaId);
             expected.MeteringPointId.Should().Be(validMeteringPoint.MeteringPointId);
             expected.EffectiveDate.Should().Be(validMeteringPoint.EffectiveDate);
             expected.SettlementMethod.Should().Be(validMeteringPoint.SettlementMethod);

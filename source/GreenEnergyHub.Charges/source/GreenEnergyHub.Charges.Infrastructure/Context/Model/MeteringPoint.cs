@@ -23,14 +23,14 @@ namespace GreenEnergyHub.Charges.Infrastructure.Context.Model
         public MeteringPoint(
             string meteringPointId,
             MeteringPointType meteringPointType,
-            string meteringGridArea,
+            string gridAreaId,
             DateTime effectiveDate,
             ConnectionState connectionState,
             SettlementMethod settlementMethod)
         {
             MeteringPointId = meteringPointId;
             MeteringPointType = meteringPointType;
-            MeteringGridArea = meteringGridArea;
+            GridAreaId = gridAreaId;
             EffectiveDate = effectiveDate;
             ConnectionState = connectionState;
             SettlementMethod = settlementMethod;
@@ -43,7 +43,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Context.Model
 
         public MeteringPointType MeteringPointType { get; set; }
 
-        public string MeteringGridArea { get; set; }
+        public string GridAreaId { get; set; }
 
         public DateTime EffectiveDate { get; set; }
 
