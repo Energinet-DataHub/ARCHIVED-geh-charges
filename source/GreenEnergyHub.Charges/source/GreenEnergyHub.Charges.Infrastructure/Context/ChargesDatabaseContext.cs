@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Infrastructure.Context.Model;
 using Microsoft.EntityFrameworkCore;
@@ -27,22 +28,34 @@ namespace GreenEnergyHub.Charges.Infrastructure.Context
         }
 #pragma warning restore CS8618 // Non-nullable field is uninitialized. Consider declaring as nullable.
 
-        public DbSet<ChargePrice> ChargePrice { get; set; }
+        public DbSet<ChargePrice> ChargePrices { get; set; }
 
-        public DbSet<ChargeOperation> ChargeOperation { get; set; }
+        public DbSet<ChargeOperation> ChargeOperations { get; set; }
 
         public DbSet<ChargePeriodDetails> ChargePeriodDetails { get; set; }
 
-        public DbSet<Charge> Charge { get; set; }
+        public DbSet<Charge> Charges { get; set; }
 
-        public DbSet<MarketParticipant> MarketParticipant { get; set; }
+        public DbSet<MarketParticipant> MarketParticipants { get; set; }
+
+        public DbSet<MeteringPoint> MeteringPoints { get; set; }
 
         public Task<int> SaveChangesAsync()
-            => base.SaveChangesAsync();
+           => base.SaveChangesAsync();
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.HasDefaultSchema("Charges");
+
+            if (modelBuilder == null) throw new ArgumentNullException(nameof(modelBuilder));
+
+            modelBuilder.Entity<ChargePrice>().ToTable("ChargePrice");
+            modelBuilder.Entity<ChargeOperation>().ToTable("ChargeOperation");
+            modelBuilder.Entity<ChargePeriodDetails>().ToTable("ChargePeriodDetails");
+            modelBuilder.Entity<Charge>().ToTable("Charge");
+            modelBuilder.Entity<MarketParticipant>().ToTable("MarketParticipant");
+            modelBuilder.Entity<MeteringPoint>().ToTable("MeteringPoint");
+
             base.OnModelCreating(modelBuilder);
         }
     }

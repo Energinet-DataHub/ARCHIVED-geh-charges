@@ -12,13 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace GreenEnergyHub.Charges.TestCore
+namespace GreenEnergyHub.Charges.Domain.MeteringPoints
 {
-    public static class HostingEnvironmentTraitConstants
+    public enum ConnectionState
     {
-        public const string HostingEnvironment = "HostingEnvironment";
-        public const string LocalHost = "LocalHost";
-        public const string Development = "Development";
-        public const string PullRequestGate = "PullRequestGate";
+        Unknown = 0,
+        Connected = 1,
+        Disconnected = 2,
+        ClosedDown = 3,
     }
 }

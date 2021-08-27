@@ -18,7 +18,7 @@ using Energinet.DataHub.MeteringPoints.IntegrationEventContracts;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.Events.Integration;
 using GreenEnergyHub.Charges.Infrastructure.Integration.Mappers;
-using GreenEnergyHub.Charges.TestCore;
+using GreenEnergyHub.Charges.TestCore.Attributes;
 using GreenEnergyHub.TestHelpers.FluentAssertionsExtensions;
 using Xunit;
 using Xunit.Categories;
@@ -46,12 +46,12 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Integration.Mappers
             converted.QuantityUnit.Should().BeEquivalentTo(meteringPointCreatedEvent.QuantityUnit);
             converted.SettlementMethod.Should().BeEquivalentTo(meteringPointCreatedEvent.SettlementMethod);
             converted.ToGrid.Should().BeEquivalentTo(meteringPointCreatedEvent.ToGrid);
-            //converted.MeteringGridArea.Should().BeEquivalentTo(meteringPointCreatedEvent.MeteringGridArea);
+            converted.GridAreaId.Should().BeEquivalentTo(meteringPointCreatedEvent.MeteringGridArea);
             converted.MeteringPointId.Should().BeEquivalentTo(meteringPointCreatedEvent.MeteringPointId);
             converted.MeteringPointType.Should().BeEquivalentTo(meteringPointCreatedEvent.MeteringPointType);
             converted.MeterReadingPeriodicity.Should().BeEquivalentTo(meteringPointCreatedEvent.MeterReadingPeriodicity);
             converted.NetSettlementGroup.Should().BeEquivalentTo(meteringPointCreatedEvent.NetSettlementGroup);
-            //converted.ParentMeteringPointId.Should().BeEquivalentTo(meteringPointCreatedEvent.ParentMeteringPointId);
+            converted.ParentMeteringPointId.Should().BeEquivalentTo(meteringPointCreatedEvent.ParentMeteringPointId);
         }
 
         [Theory]

@@ -17,6 +17,8 @@ using GreenEnergyHub.Charges.Domain.Acknowledgements;
 using GreenEnergyHub.Charges.Infrastructure.Integration.ChargeConfirmation;
 using GreenEnergyHub.Charges.Infrastructure.Integration.Mappers;
 using GreenEnergyHub.Charges.TestCore;
+using GreenEnergyHub.Charges.TestCore.Attributes;
+using GreenEnergyHub.Charges.TestCore.Protobuf;
 using Xunit;
 using Xunit.Categories;
 
@@ -32,7 +34,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Integration.Mappers
             [NotNull] ChargeConfirmationInboundMapper sut)
         {
             var result = (ChargeConfirmation)sut.Convert(chargeConfirmationContract);
-            ProtoBufAssert.IncomingContractIsSuperset(result, chargeConfirmationContract);
+            ProtobufAssert.IncomingContractIsSuperset(result, chargeConfirmationContract);
         }
     }
 }

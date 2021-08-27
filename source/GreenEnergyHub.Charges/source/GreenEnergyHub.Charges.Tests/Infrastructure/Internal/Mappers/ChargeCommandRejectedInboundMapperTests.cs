@@ -18,6 +18,8 @@ using GreenEnergyHub.Charges.Domain.Events.Local;
 using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeCommandRejected;
 using GreenEnergyHub.Charges.Infrastructure.Internal.Mappers;
 using GreenEnergyHub.Charges.TestCore;
+using GreenEnergyHub.Charges.TestCore.Attributes;
+using GreenEnergyHub.Charges.TestCore.Protobuf;
 using Xunit;
 using Xunit.Categories;
 
@@ -33,7 +35,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Internal.Mappers
             [NotNull] ChargeCommandRejectedInboundMapper sut)
         {
             var result = (ChargeCommandRejectedEvent)sut.Convert(rejectedContract);
-            ProtoBufAssert.IncomingContractIsSuperset(result, rejectedContract);
+            ProtobufAssert.IncomingContractIsSuperset(result, rejectedContract);
         }
 
         [Theory]

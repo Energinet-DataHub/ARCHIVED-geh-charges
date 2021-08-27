@@ -18,7 +18,8 @@ using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
 using GreenEnergyHub.Charges.Domain.Events.Local;
 using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeCommandAccepted;
 using GreenEnergyHub.Charges.Infrastructure.Internal.Mappers;
-using GreenEnergyHub.Charges.TestCore;
+using GreenEnergyHub.Charges.TestCore.Attributes;
+using GreenEnergyHub.Charges.TestCore.Protobuf;
 using NodaTime;
 using Xunit;
 using Xunit.Categories;
@@ -44,7 +45,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Internal.Mappers
             var result = (ChargeCommandAcceptedContract)sut.Convert(chargeCommandAcceptedEvent);
 
             // Assert
-            ProtoBufAssert.OutgoingContractIsSubset(chargeCommandAcceptedEvent, result);
+            ProtobufAssert.OutgoingContractIsSubset(chargeCommandAcceptedEvent, result);
         }
 
         [Theory]

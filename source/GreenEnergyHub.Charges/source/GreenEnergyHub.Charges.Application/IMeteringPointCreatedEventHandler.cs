@@ -12,13 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using AutoFixture.Xunit2;
+using System.Threading.Tasks;
+using GreenEnergyHub.Charges.Domain.Events.Integration;
 
-namespace GreenEnergyHub.Charges.TestCore
+namespace GreenEnergyHub.Charges.Application
 {
-    public class InlineAutoMoqDataAttribute : InlineAutoDataAttribute
+    public interface IMeteringPointCreatedEventHandler
     {
-        public InlineAutoMoqDataAttribute(params object[] objects)
-            : base(new AutoMoqDataAttribute(), objects) { }
+        Task HandleAsync(MeteringPointCreatedEvent meteringPointCreatedEvent);
     }
 }
