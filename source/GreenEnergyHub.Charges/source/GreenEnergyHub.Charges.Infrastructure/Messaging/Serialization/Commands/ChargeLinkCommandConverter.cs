@@ -49,7 +49,6 @@ namespace GreenEnergyHub.Charges.Infrastructure.Messaging.Serialization.Commands
 
             return new ChargeLinkCommand(correlationId)
                 {
-                    Transaction = Transaction.NewTransaction(),
                     Document = document,
                     ChargeLink = await ParseChargeLinkAsync(reader).ConfigureAwait(false),
                 };

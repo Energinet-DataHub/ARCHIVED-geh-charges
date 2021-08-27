@@ -40,7 +40,6 @@ namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
                 {
                     Document = ConvertDocument(chargeLinkCommandReceivedContract.ChargeLinkCommand.Document),
                     ChargeLink = ConvertChargeLink(chargeLinkCommandReceivedContract.ChargeLinkCommand.ChargeLink),
-                    Transaction = Transaction.NewTransaction(),
                 });
         }
 
