@@ -17,6 +17,7 @@ using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.MeteringPoints;
 using GreenEnergyHub.Charges.Infrastructure.Context;
 using GreenEnergyHub.Charges.Infrastructure.Repositories;
+using GreenEnergyHub.Charges.TestCore;
 using Microsoft.EntityFrameworkCore;
 using NodaTime;
 using Xunit;
@@ -27,17 +28,12 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
     [UnitTest]
     public class MeteringPointRepositoryTests
     {
-        private readonly DbContextOptions<ChargesDatabaseContext> _dbContextOptions =
-            new DbContextOptionsBuilder<ChargesDatabaseContext>()
-                .UseSqlite("Filename=Test.db")
-                .Options;
-
         [Fact]
         public async Task StoreMeteringPointAsync_WhenMeteringPointIsCreated_StoresMeteringPointInDatabase()
         {
             // Arrange
-            EnsureDatabaseCreated();
-            await using var chargesDatabaseContext = new ChargesDatabaseContext(_dbContextOptions);
+            EnsureDatabaseCreated(this.GetMethodName());
+            await using var chargesDatabaseContext = new ChargesDatabaseContext(GetDatabaseContext(this.GetMethodName()));
             var expected = GetMeteringPointCreatedEvent();
             var sut = new MeteringPointRepository(chargesDatabaseContext);
 
@@ -64,11 +60,21 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
                 SettlementMethod.Flex);
         }
 
-        private void EnsureDatabaseCreated()
+        private static void EnsureDatabaseCreated(string sqlFileName)
         {
-            using var context = new ChargesDatabaseContext(_dbContextOptions);
+            using var context = new ChargesDatabaseContext(GetDatabaseContext(sqlFileName));
             context.Database.EnsureDeleted();
             context.Database.EnsureCreated();
+        }
+
+        private static DbContextOptions<ChargesDatabaseContext> GetDatabaseContext(string sqlFileName)
+        {
+            DbContextOptions<ChargesDatabaseContext> dbContextOptions =
+                new DbContextOptionsBuilder<ChargesDatabaseContext>()
+                    .UseSqlite($"Filename={sqlFileName}.db")
+                    .Options;
+
+            return dbContextOptions;
         }
     }
 }
