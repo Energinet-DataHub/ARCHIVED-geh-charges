@@ -18,10 +18,8 @@ using System.Threading.Tasks;
 using System.Xml;
 using GreenEnergyHub.Charges.Domain.ChargeLinks;
 using GreenEnergyHub.Charges.Domain.ChargeLinks.Command;
-using GreenEnergyHub.Charges.Domain.ChargeLinks.Events.Local;
 using GreenEnergyHub.Charges.Domain.MarketDocument;
 using GreenEnergyHub.Charges.Infrastructure.Messaging.Serialization.MarketDocument;
-using GreenEnergyHub.Messaging.MessageTypes.Common;
 using GreenEnergyHub.Messaging.Transport;
 using NodaTime;
 
@@ -30,7 +28,6 @@ namespace GreenEnergyHub.Charges.Infrastructure.Messaging.Serialization.Commands
     public class ChargeLinkCommandConverter : DocumentConverter
     {
         private readonly ICorrelationContext _correlationContext;
-        private readonly IClock _clock;
 
         public ChargeLinkCommandConverter(
             ICorrelationContext correlationContext,
@@ -38,7 +35,6 @@ namespace GreenEnergyHub.Charges.Infrastructure.Messaging.Serialization.Commands
             : base(clock)
         {
             _correlationContext = correlationContext;
-            _clock = clock;
         }
 
         protected override async Task<IInboundMessage> ConvertSpecializedContentAsync(

@@ -45,7 +45,7 @@ namespace GreenEnergyHub.Charges.Application.Charges.Validation.InputValidation.
                     case Resolution.P1D:
                         return _chargeCommand.ChargeOperation.Points.Count == PricePointsRequiredInP1D;
                     default:
-                        throw new ArgumentException();
+                        throw new ArgumentException(nameof(_chargeCommand.ChargeOperation.Resolution));
                 }
             }
 
