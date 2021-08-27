@@ -52,7 +52,7 @@ namespace GreenEnergyHub.Charges.Tests.TestCore
         public void IncomingContractIsSuperset_Fails_WhenContractIsTrueSubset([NotNull]TestDomainType domain)
         {
             var trueSubsetContract = new TrueSubsetContract(domain.A);
-            Assert.Throws<XunitException>(
+            var x = Assert.Throws<XunitException>(
                 () => ProtoBufAssert.IncomingContractIsSuperset<TrueSubsetContract>(domain, trueSubsetContract));
         }
 

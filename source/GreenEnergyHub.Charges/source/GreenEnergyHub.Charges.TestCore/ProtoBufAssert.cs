@@ -49,12 +49,12 @@ namespace GreenEnergyHub.Charges.TestCore
                     options.ComparingByMembers<IMessage>();
 
                     // Ignore the public prop "Descriptor" of the contract object
-                    options.Excluding(ctx => ctx.SelectedMemberPath == "Descriptor");
+                    options.Excluding(ctx => ctx.Path == "Descriptor");
 
                     // Ignore transaction properties from the GreenEnergyHub.Messaging assembly
                     options.Excluding(ctx =>
-                        ctx.SelectedMemberPath.Split(".", StringSplitOptions.RemoveEmptyEntries).Contains("Transaction") &&
-                        ctx.SelectedMemberInfo.MemberType.Assembly!.FullName!.StartsWith("GreenEnergyHub.Messaging", StringComparison.InvariantCulture));
+                        ctx.Path.Split(".", StringSplitOptions.RemoveEmptyEntries).Contains("Transaction") &&
+                        ctx.Type.Assembly.FullName!.StartsWith("GreenEnergyHub.Messaging", StringComparison.InvariantCulture));
 
                     // Use runtime type of "expected"
                     options.RespectingRuntimeTypes();
@@ -86,7 +86,7 @@ namespace GreenEnergyHub.Charges.TestCore
                     options.ComparingByMembers<IMessage>();
 
                     // Ignore the public prop "Descriptor" of the contract object
-                    options.Excluding(ctx => ctx.SelectedMemberPath == "Descriptor");
+                    options.Excluding(ctx => ctx.Path == "Descriptor");
 
                     // Use runtime type of "expected"
                     options.RespectingRuntimeTypes();
