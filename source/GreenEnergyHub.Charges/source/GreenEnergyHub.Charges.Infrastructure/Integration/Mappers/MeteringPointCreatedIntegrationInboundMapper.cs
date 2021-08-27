@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
 using System.Diagnostics.CodeAnalysis;
 using Energinet.DataHub.MeteringPoints.IntegrationEventContracts;
 using GreenEnergyHub.Charges.Domain.Charges.Events.Integration;
@@ -38,11 +37,8 @@ namespace GreenEnergyHub.Charges.Infrastructure.Integration.Mappers
                 obj.FromGrid,
                 obj.Product,
                 obj.QuantityUnit,
-                obj.EffectiveDate)
-            {
-                MeteringPointId = obj.MeteringPointId,
-                EffectiveDate = obj.EffectiveDate,
-            };
+                obj.EffectiveDate,
+                obj.ParentMeteringPointId);
         }
     }
 }

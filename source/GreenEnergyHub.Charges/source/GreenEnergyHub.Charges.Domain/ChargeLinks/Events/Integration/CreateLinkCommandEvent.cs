@@ -13,7 +13,7 @@
 // limitations under the License.
 
 using GreenEnergyHub.Charges.Domain.Messages.Events;
-using GreenEnergyHub.Charges.Domain.MeteringPoint;
+using GreenEnergyHub.Charges.Domain.MeteringPoints;
 using GreenEnergyHub.Messaging.MessageTypes.Common;
 using NodaTime;
 

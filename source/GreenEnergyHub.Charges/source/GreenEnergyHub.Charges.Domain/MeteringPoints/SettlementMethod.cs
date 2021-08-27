@@ -12,22 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.MeteringPoints.IntegrationEventContracts;
-using GreenEnergyHub.Charges.Domain.MeteringPoints;
-using GreenEnergyHub.Charges.TestCore;
-using GreenEnergyHub.Charges.TestCore.Protobuf;
-using Xunit;
-using Xunit.Categories;
-
-namespace GreenEnergyHub.Charges.Tests.Infrastructure.Integration
+namespace GreenEnergyHub.Charges.Domain.MeteringPoints
 {
-    [UnitTest]
-    public class CreateLinkCommandContractEnumTests
+    public enum SettlementMethod
     {
-        [Fact]
-        public void MeteringPointTypeContract_ShouldBeSubsetOfMeteringPointType()
-        {
-            ProtobufAssert.ContractEnumIsSubSet<MeteringPointTypeContract, MeteringPointType>();
-        }
+        Unknown = 0,
+        Profiled = 1,
+        NonProfiled = 2,
+        Flex = 3,
     }
 }
