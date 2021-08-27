@@ -20,9 +20,11 @@ using GreenEnergyHub.Charges.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
 using NodaTime;
 using Xunit;
+using Xunit.Categories;
 
 namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
 {
+    [UnitTest]
     public class MeteringPointRepositoryTests
     {
         private readonly DbContextOptions<ChargesDatabaseContext> _dbContextOptions =
