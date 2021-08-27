@@ -37,9 +37,11 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Validation.BusinessVa
     public class StartDateValidationRuleTests
     {
         [Theory]
+
         // Test that start of interval is inclusive
         [InlineAutoMoqData("2020-05-10T13:00:00Z", "2020-05-10T21:59:59Z", "Europe/Copenhagen", 1, 3, false)]
         [InlineAutoMoqData("2020-05-10T13:00:00Z", "2020-05-10T22:00:00Z", "Europe/Copenhagen", 1, 3, true)]
+
         // Test that end of interval is inclusive
         [InlineAutoMoqData("2020-05-10T13:00:00Z", "2020-05-13T21:59:59Z", "Europe/Copenhagen", 1, 3, true)]
         [InlineAutoMoqData("2020-05-10T13:00:00Z", "2020-05-13T22:00:00Z", "Europe/Copenhagen", 1, 3, false)]
