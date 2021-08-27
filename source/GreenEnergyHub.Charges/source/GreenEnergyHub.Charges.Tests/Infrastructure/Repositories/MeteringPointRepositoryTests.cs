@@ -17,7 +17,6 @@ using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.MeteringPoints;
 using GreenEnergyHub.Charges.Infrastructure.Context;
 using GreenEnergyHub.Charges.Infrastructure.Repositories;
-using GreenEnergyHub.Charges.TestCore;
 using Microsoft.EntityFrameworkCore;
 using NodaTime;
 using Xunit;
@@ -32,8 +31,10 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
         public async Task StoreMeteringPointAsync_WhenMeteringPointIsCreated_StoresMeteringPointInDatabase()
         {
             // Arrange
-            EnsureDatabaseCreated(this.GetMethodName());
-            await using var chargesDatabaseContext = new ChargesDatabaseContext(GetDatabaseContext(this.GetMethodName()));
+            EnsureDatabaseCreated(nameof(StoreMeteringPointAsync_WhenMeteringPointIsCreated_StoresMeteringPointInDatabase));
+            await using var chargesDatabaseContext = new ChargesDatabaseContext(
+                GetDatabaseContext(
+                    nameof(StoreMeteringPointAsync_WhenMeteringPointIsCreated_StoresMeteringPointInDatabase)));
             var expected = GetMeteringPointCreatedEvent();
             var sut = new MeteringPointRepository(chargesDatabaseContext);
 

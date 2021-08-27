@@ -20,7 +20,6 @@ using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
 using GreenEnergyHub.Charges.Domain.MarketDocument;
 using GreenEnergyHub.Charges.Infrastructure.Context;
 using GreenEnergyHub.Charges.Infrastructure.Repositories;
-using GreenEnergyHub.Charges.TestCore;
 using GreenEnergyHub.Charges.TestCore.Attributes;
 using Microsoft.EntityFrameworkCore;
 using NodaTime;
@@ -44,8 +43,10 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
         {
             // Arrange
             var charge = GetValidCharge();
-            SeedDatabase(this.GetMethodName());
-            await using var chargesDatabaseContext = new ChargesDatabaseContext(GetDatabaseContext(this.GetMethodName()));
+            CreateAndSeedDatabase(nameof(GetChargeAsync_WhenChargeIsCreated_ThenSuccessReturnedAsync));
+            await using var chargesDatabaseContext =
+                new ChargesDatabaseContext(
+                    GetDatabaseContext(nameof(GetChargeAsync_WhenChargeIsCreated_ThenSuccessReturnedAsync)));
             var sut = new ChargeRepository(chargesDatabaseContext);
 
             // Act
@@ -61,8 +62,9 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
         {
             // Arrange
             var charge = GetValidCharge();
-            SeedDatabase(this.GetMethodName());
-            await using var chargesDatabaseContext = new ChargesDatabaseContext(GetDatabaseContext(this.GetMethodName()));
+            CreateAndSeedDatabase(nameof(CheckIfChargeExistsAsync_WhenChargeIsCreated_ThenSuccessReturnedAsync));
+            await using var chargesDatabaseContext = new ChargesDatabaseContext(
+                GetDatabaseContext(nameof(CheckIfChargeExistsAsync_WhenChargeIsCreated_ThenSuccessReturnedAsync)));
             var sut = new ChargeRepository(chargesDatabaseContext);
 
             // Act
@@ -82,8 +84,9 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
         {
             // Arrange
             var charge = GetValidCharge();
-            SeedDatabase(this.GetMethodName());
-            await using var chargesDatabaseContext = new ChargesDatabaseContext(GetDatabaseContext(this.GetMethodName()));
+            CreateAndSeedDatabase(nameof(CheckIfChargeExistsByCorrelationIdAsync_WhenChargeIsCreated_ThenSuccessReturnedAsync));
+            await using var chargesDatabaseContext = new ChargesDatabaseContext(
+                GetDatabaseContext(nameof(CheckIfChargeExistsByCorrelationIdAsync_WhenChargeIsCreated_ThenSuccessReturnedAsync)));
             var sut = new ChargeRepository(chargesDatabaseContext);
 
             // Act
@@ -147,7 +150,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
             return transaction;
         }
 
-        private static void SeedDatabase(string sqlFileName)
+        private static void CreateAndSeedDatabase(string sqlFileName)
         {
             using var context = new ChargesDatabaseContext(GetDatabaseContext(sqlFileName));
             context.Database.EnsureDeleted();
