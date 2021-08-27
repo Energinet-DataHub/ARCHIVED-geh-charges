@@ -20,7 +20,7 @@ using GreenEnergyHub.Messaging.Transport;
 
 namespace GreenEnergyHub.Charges.Domain.Charges.Acknowledgements
 {
-    public class ChargeRejection : IMessage, IOutboundMessage
+    public class ChargeRejection : IMessage
     {
         public ChargeRejection(
             string correlationId,
