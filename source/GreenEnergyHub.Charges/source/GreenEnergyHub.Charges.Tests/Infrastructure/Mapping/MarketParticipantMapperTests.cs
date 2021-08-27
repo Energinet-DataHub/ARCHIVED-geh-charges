@@ -15,6 +15,7 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 using GreenEnergyHub.Charges.Domain.MarketDocument;
+using GreenEnergyHub.Charges.Infrastructure.Context.Mapping;
 using GreenEnergyHub.Charges.Infrastructure.Context.Model;
 using GreenEnergyHub.Charges.Infrastructure.Mapping;
 using GreenEnergyHub.Charges.TestCore;

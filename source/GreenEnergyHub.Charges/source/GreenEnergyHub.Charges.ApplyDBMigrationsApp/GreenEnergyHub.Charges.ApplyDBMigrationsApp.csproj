@@ -22,10 +22,15 @@ limitations under the License.
     </PropertyGroup>
 
     <ItemGroup>
+      <None Remove="Scripts\Model\202108250923 MP grid area id and nullable settlement method.sql" />
+    </ItemGroup>
+
+    <ItemGroup>
       <PackageReference Include="dbup-sqlserver" Version="4.5.0" />
     </ItemGroup>
 
     <ItemGroup>
+      <EmbeddedResource Include="Scripts\Model\202108250923 MP grid area id and nullable settlement method.sql" />
       <EmbeddedResource Include="Scripts\Test\202105201033 New MarketParticipants.sql" />
       <EmbeddedResource Include="Scripts\Model\202105191329 New charge model.sql" />
       <EmbeddedResource Include="Scripts\Model\202107011226 New Metering Point.sql" />
