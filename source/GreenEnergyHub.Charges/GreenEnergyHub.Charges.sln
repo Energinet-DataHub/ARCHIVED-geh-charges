@@ -38,7 +38,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GreenEnergyHub.TestHelpers"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GreenEnergyHub.Charges.ApplyDBMigrationsApp", "source\GreenEnergyHub.Charges.ApplyDBMigrationsApp\GreenEnergyHub.Charges.ApplyDBMigrationsApp.csproj", "{111D6B3F-0005-4740-B486-CFA7FD887F3D}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GreenEnergyHub.Charges.ChargeMessageReceiver", "source\GreenEnergyHub.Charges.ChargeMessageReceiver\GreenEnergyHub.Charges.ChargeMessageReceiver.csproj", "{FE2916A4-709B-4B3C-B023-97C0FE2CF35B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GreenEnergyHub.Charges.ChargeReceiver", "source\GreenEnergyHub.Charges.ChargeReceiver\GreenEnergyHub.Charges.ChargeReceiver.csproj", "{FE2916A4-709B-4B3C-B023-97C0FE2CF35B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GreenEnergyHub.Charges.ChargeCommandReceiver", "source\GreenEnergyHub.Charges.ChargeCommandReceiver\GreenEnergyHub.Charges.ChargeCommandReceiver.csproj", "{205A40C6-42FC-4438-B47C-6384171CF755}"
 EndProject
