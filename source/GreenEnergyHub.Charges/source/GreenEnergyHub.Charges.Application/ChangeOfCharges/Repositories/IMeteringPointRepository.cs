@@ -12,24 +12,28 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Diagnostics.CodeAnalysis;
-using Energinet.DataHub.MeteringPoints.IntegrationEventContracts;
+using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Domain.Events.Integration;
 using GreenEnergyHub.Charges.Domain.MeteringPoints;
-using GreenEnergyHub.Messaging.Protobuf;
-using GreenEnergyHub.Messaging.Transport;
-using NodaTime;
 
-namespace GreenEnergyHub.Charges.Infrastructure.Integration.Mappers
+namespace GreenEnergyHub.Charges.Application.ChangeOfCharges.Repositories
 {
-    public class CreateLinkCommandInboundMapper : ProtobufInboundMapper<CreateLinkCommandContract>
+    /// <summary>
+    /// Repository for Metering Points.
+    /// </summary>
+    public interface IMeteringPointRepository
     {
-        protected override IInboundMessage Convert([NotNull] CreateLinkCommandContract command)
-        {
-            return new CreateLinkCommandEvent(
-                command.MeteringPointId,
-                (MeteringPointType)command.MeteringPointType,
-                Instant.FromUnixTimeSeconds(command.StartDateTime.Seconds));
-        }
+        /// <summary>
+        /// Saves the supplied metering point to the database.
+        /// </summary>
+        /// <param name="meteringPoint"></param>
+        Task StoreMeteringPointAsync(MeteringPoint meteringPoint);
+
+        /// <summary>
+        /// Used to find a Metering Point.
+        /// </summary>
+        /// <param name="meteringPointId"></param>
+        /// <returns>Metering Point</returns>
+        Task<MeteringPoint> GetMeteringPointAsync(string meteringPointId);
     }
 }

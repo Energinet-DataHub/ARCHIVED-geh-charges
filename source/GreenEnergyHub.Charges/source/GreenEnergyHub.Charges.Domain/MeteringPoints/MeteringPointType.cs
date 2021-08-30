@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace GreenEnergyHub.Charges.Domain.MeteringPoint
+namespace GreenEnergyHub.Charges.Domain.MeteringPoints
 {
     public enum MeteringPointType
     {
