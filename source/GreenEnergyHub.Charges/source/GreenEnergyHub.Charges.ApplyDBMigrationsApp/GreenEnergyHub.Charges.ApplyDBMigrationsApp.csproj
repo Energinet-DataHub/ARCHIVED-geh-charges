@@ -23,6 +23,7 @@ limitations under the License.
 
     <ItemGroup>
       <None Remove="Scripts\Model\202108250923 MP grid area id and nullable settlement method.sql" />
+      <None Remove="Scripts\Model\202108300923 Rename MP grid area id.sql" />
     </ItemGroup>
 
     <ItemGroup>
@@ -31,6 +32,7 @@ limitations under the License.
 
     <ItemGroup>
       <EmbeddedResource Include="Scripts\Model\202108250923 MP grid area id and nullable settlement method.sql" />
+      <EmbeddedResource Include="Scripts\Model\202108300923 Rename MP grid area id.sql" />
       <EmbeddedResource Include="Scripts\Test\202105201033 New MarketParticipants.sql" />
       <EmbeddedResource Include="Scripts\Model\202105191329 New charge model.sql" />
       <EmbeddedResource Include="Scripts\Model\202107011226 New Metering Point.sql" />
