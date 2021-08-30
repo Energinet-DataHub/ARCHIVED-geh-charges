@@ -20,6 +20,6 @@ namespace GreenEnergyHub.Charges.ApplyDBMigrationsApp.Helpers
     {
         // Matches                                                  {type} {timestamp } {name}
         // Energinet.DataHub.MarketData.ApplyDBMigrationsApp.Scripts.Model.202103021434 First.sql
-        public static readonly Regex Regex = new Regex(@".*Scripts\.(?<type>Model|Seed|Test|PreDeploy|PostDeploy)\.(?<timestamp>\d{12}) (?<name>\D*).sql");
+        public static readonly Regex Regex = new Regex(@".*Scripts\.(?<type>Model|Seed|Test|PreDeploy|PostDeploy)\.(?<timestamp>\d{12}) (?<name>\w.+).sql");
     }
 }
