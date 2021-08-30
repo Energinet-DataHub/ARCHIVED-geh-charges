@@ -14,9 +14,9 @@
 
 using System;
 using System.Diagnostics.CodeAnalysis;
-using GreenEnergyHub.Charges.Application.Acknowledgement;
+using GreenEnergyHub.Charges.Application.Charges.Acknowledgement;
 using GreenEnergyHub.Charges.ChargeRejectionSender;
-using GreenEnergyHub.Charges.Domain.Acknowledgements;
+using GreenEnergyHub.Charges.Domain.Charges.Acknowledgements;
 using GreenEnergyHub.Charges.Infrastructure.Integration.ChargeRejection;
 using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeCommandRejected;
 using GreenEnergyHub.Charges.Infrastructure.Messaging.Registration;
@@ -34,7 +34,7 @@ namespace GreenEnergyHub.Charges.ChargeRejectionSender
         public override void Configure([NotNull] IFunctionsHostBuilder builder)
         {
             builder.Services.AddScoped(typeof(IClock), _ => SystemClock.Instance);
-            builder.Services.AddScoped<IChargeRejectionSender, Application.Acknowledgement.ChargeRejectionSender>();
+            builder.Services.AddScoped<IChargeRejectionSender, Application.Charges.Acknowledgement.ChargeRejectionSender>();
 
             ConfigureMessaging(builder.Services);
         }

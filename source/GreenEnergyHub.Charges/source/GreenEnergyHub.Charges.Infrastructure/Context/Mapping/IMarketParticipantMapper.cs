@@ -14,7 +14,7 @@
 
 using GreenEnergyHub.Charges.Domain.MarketDocument;
 
-namespace GreenEnergyHub.Charges.Infrastructure.Mapping
+namespace GreenEnergyHub.Charges.Infrastructure.Context.Mapping
 {
     /// <summary>
     /// Mapper to map from persistence model to domain model.

@@ -17,6 +17,7 @@ using System.Globalization;
 using System.Threading.Tasks;
 using System.Xml;
 using GreenEnergyHub.Charges.Domain.ChargeLinks;
+using GreenEnergyHub.Charges.Domain.ChargeLinks.Command;
 using GreenEnergyHub.Charges.Domain.MarketDocument;
 using GreenEnergyHub.Charges.Infrastructure.Messaging.Serialization.MarketDocument;
 using GreenEnergyHub.Messaging.Transport;
@@ -42,14 +43,11 @@ namespace GreenEnergyHub.Charges.Infrastructure.Messaging.Serialization.Commands
         {
             var correlationId = _correlationContext.CorrelationId;
 
-            var command = new ChargeLinkCommandReceivedEvent(correlationId)
-            {
-                Document = document,
-            };
-
-            command.ChargeLink = await ParseChargeLinkAsync(reader).ConfigureAwait(false);
-
-            return command;
+            return new ChargeLinkCommand(correlationId)
+                {
+                    Document = document,
+                    ChargeLink = await ParseChargeLinkAsync(reader).ConfigureAwait(false),
+                };
         }
 
         private static async Task<ChargeLink> ParseChargeLinkAsync(XmlReader reader)

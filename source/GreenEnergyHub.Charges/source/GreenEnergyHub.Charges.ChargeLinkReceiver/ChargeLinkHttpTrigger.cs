@@ -16,8 +16,10 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application.ChargeLinks;
+using GreenEnergyHub.Charges.Application.ChargeLinks.Handlers;
 using GreenEnergyHub.Charges.Domain.ChargeLinks;
-using GreenEnergyHub.Charges.Domain.ChargeLinks.Result;
+using GreenEnergyHub.Charges.Domain.ChargeLinks.Command;
+using GreenEnergyHub.Charges.Domain.ChargeLinks.Events.Local;
 using GreenEnergyHub.Charges.Infrastructure.Messaging;
 using GreenEnergyHub.Messaging.Transport;
 using Microsoft.AspNetCore.Mvc;
@@ -70,10 +72,10 @@ namespace GreenEnergyHub.Charges.ChargeLinkReceiver
             return new OkObjectResult(chargeLinksMessageResult);
         }
 
-        private async Task<ChargeLinkCommandReceivedEvent> GetChargeLinkCommandAsync(Stream stream)
+        private async Task<ChargeLinkCommand> GetChargeLinkCommandAsync(Stream stream)
         {
             var message = await ConvertStreamToBytesAsync(stream).ConfigureAwait(false);
-            var command = (ChargeLinkCommandReceivedEvent)await _messageExtractor.ExtractAsync(message).ConfigureAwait(false);
+            var command = (ChargeLinkCommand)await _messageExtractor.ExtractAsync(message).ConfigureAwait(false);
 
             return command;
         }
