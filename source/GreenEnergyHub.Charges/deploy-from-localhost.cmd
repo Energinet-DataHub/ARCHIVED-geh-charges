@@ -14,7 +14,7 @@ set /p organization=Enter organization used with Terraform (perhaps your initial
 set /p doBuild=Build solution ([y]/n)?
 rem If you don't know the password, perhaps you can obtain it from the configuration settings of the deployed ChargeCommandReceiver function in Azure portal
 set /p sqlPassword=Enter SQL password for 'gehdbadmin' to update db or empty to skip: 
-set /p deployMessageReceiver=Deploy message receiver ([y]/n)?
+set /p deployChargeReceiver=Deploy charge receiver ([y]/n)?
 set /p deployChargeLinkReceiver=Deploy charge link receiver ([y]/n)?
 set /p deployChargeLinkEventPublisher=Deploy charge link event publisher ([y]/n)?
 set /p deployCommandReceiver=Deploy command receiver ([y]/n)?
@@ -37,9 +37,9 @@ IF not "%sqlPassword%" == "" (
 
 rem All (but the last) deployments are opened in separate windows in order to execute in parallel
 
-IF /I not "%deployMessageReceiver%" == "n" (
-    pushd source\GreenEnergyHub.Charges.MessageReceiver\bin\Release\netcoreapp3.1
-    start "Deploy: Message Receiver" cmd /c "func azure functionapp publish azfun-message-receiver-charges-%organization%-s & pause"
+IF /I not "%deployChargeReceiver%" == "n" (
+    pushd source\GreenEnergyHub.Charges.ChargeReceiver\bin\Release\netcoreapp3.1
+    start "Deploy: Charge Receiver" cmd /c "func azure functionapp publish azfun-charge-receiver-charges-%organization%-s & pause"
     popd
 )
 
