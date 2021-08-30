@@ -11,7 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-name: Charge receiver CI
+name: Charge Receiver CI
 
 on:
   pull_request:
@@ -20,7 +20,7 @@ on:
   workflow_dispatch: {}
 
 env:
-  CSPROJ_FILE_PATH: source/GreenEnergyHub.Charges/source/GreenEnergyHub.Charges.ChargeMessageReceiver/GreenEnergyHub.Charges.ChargeMessageReceiver.csproj
+  CSPROJ_FILE_PATH: source/GreenEnergyHub.Charges/source/GreenEnergyHub.Charges.ChargeReceiver/GreenEnergyHub.Charges.ChargeReceiver.csproj
   SOLUTION_FILE_PATH: source/GreenEnergyHub.Charges/GreenEnergyHub.Charges.sln
   DOTNET_VERSION: '3.1'
 

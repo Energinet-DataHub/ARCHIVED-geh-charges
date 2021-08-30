@@ -11,7 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-name: Message receiver CD
+name: Charge Receiver CD
 
 on:
   push:
@@ -25,7 +25,7 @@ on:
   workflow_dispatch: {}
 
 env:
-  CSPROJ_FILE_PATH: 'source/GreenEnergyHub.Charges/source/GreenEnergyHub.Charges.ChargeMessageReceiver/GreenEnergyHub.Charges.ChargeMessageReceiver.csproj'
+  CSPROJ_FILE_PATH: 'source/GreenEnergyHub.Charges/source/GreenEnergyHub.Charges.ChargeReceiver/GreenEnergyHub.Charges.ChargeReceiver.csproj'
   INTEGRATION_TEST_CSPROJ_FILE_PATH: 'source/GreenEnergyHub.Charges/source/GreenEnergyHub.Charges.IntegrationTests/GreenEnergyHub.Charges.IntegrationTests.csproj'
   SOLUTION_FILE_PATH: 'source/GreenEnergyHub.Charges/GreenEnergyHub.Charges.sln'
   INTEGRATION_TEST_DLL: GreenEnergyHub.Charges.IntegrationTests.dll
