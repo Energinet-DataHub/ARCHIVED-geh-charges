@@ -40,7 +40,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Context.Mapping
                 Type = (ChargeType)charge.ChargeType,
                 Name = currentChargeDetails.Name,
                 Description = currentChargeDetails.Description,
-                StartDateTime = Instant.FromDateTimeUtc(currentChargeDetails.StartDateTime),
+                StartDateTime = Instant.FromDateTimeUtc(currentChargeDetails.StartDateTime.ToUniversalTime()),
                 Owner = charge.MarketParticipant.MarketParticipantId,
                 Resolution = (Resolution)charge.Resolution,
                 TaxIndicator = Convert.ToBoolean(charge.TaxIndicator),
@@ -48,12 +48,12 @@ namespace GreenEnergyHub.Charges.Infrastructure.Context.Mapping
                 VatClassification = (VatClassification)currentChargeDetails.VatClassification,
                 ChargeOperationId = charge.ChargeOperation.ChargeOperationId,
                 EndDateTime = currentChargeDetails.EndDateTime != null ?
-                    Instant.FromDateTimeUtc(currentChargeDetails.EndDateTime.Value) : (Instant?)null,
+                    Instant.FromDateTimeUtc(currentChargeDetails.EndDateTime.Value.ToUniversalTime()) : (Instant?)null,
                 Points = charge.ChargePrices.Select(x => new Point
                 {
                     Position = 0,
                     Price = x.Price,
-                    Time = Instant.FromDateTimeUtc(x.Time),
+                    Time = Instant.FromDateTimeUtc(x.Time.ToUniversalTime()),
                 }).ToList(),
             };
         }
@@ -92,7 +92,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Context.Mapping
             return new ChargeOperation
             {
                 CorrelationId = charge.CorrelationId,
-                WriteDateTime = charge.Document.RequestDate.ToDateTimeUtc(),
+                WriteDateTime = charge.Document.RequestDate.ToDateTimeUtc().ToUniversalTime(),
                 ChargeOperationId = charge.ChargeOperationId,
             };
         }

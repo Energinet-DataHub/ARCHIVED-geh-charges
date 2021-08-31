@@ -25,7 +25,9 @@ namespace GreenEnergyHub.Charges.Application.Mapping
             MeteringPointCreatedEvent meteringPointCreatedEvent)
         {
             if (meteringPointCreatedEvent == null)
+            {
                 throw new ArgumentNullException(nameof(meteringPointCreatedEvent));
+            }
 
             var effectiveDate = InstantPattern.General.Parse(meteringPointCreatedEvent.EffectiveDate).Value;
             var meteringPointType = Enum.Parse<MeteringPointType>(meteringPointCreatedEvent.MeteringPointType);

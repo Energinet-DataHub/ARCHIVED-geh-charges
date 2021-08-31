@@ -40,6 +40,8 @@ namespace GreenEnergyHub.Charges.Infrastructure.Context
 
         public DbSet<MeteringPoint> MeteringPoints { get; set; }
 
+        public DbSet<DefaultChargeLinkSetting> DefaultChargeLinkSetting { get; set; }
+
         public Task<int> SaveChangesAsync()
            => base.SaveChangesAsync();
 
