@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
 using NodaTime;
 
 #pragma warning disable 8618
@@ -47,7 +46,7 @@ namespace GreenEnergyHub.Charges.Domain.Charges
 
         /// <summary>
         /// The starting date is determined by the latest date when comparing meteringPointCreatedDateTime and
-        /// SettingStartDateTime
+        /// SettingStartDateTime. It is used to describe when the charge link should start from.
         /// </summary>
         public Instant StartDateTime =>
             _settingStartDateTime > _meteringPointCreatedDateTime ? _settingStartDateTime : _meteringPointCreatedDateTime;
