@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using NodaTime;
 
 #pragma warning disable 8618
@@ -22,14 +23,39 @@ namespace GreenEnergyHub.Charges.Domain.Charges
     public class DefaultChargeLink
     {
         /// <summary>
-        /// The date the charge is applicable for linking.
+        /// The date the MeteringPoint is created. And the date the charge link should be applied from
+        /// if it is greater than the default charge link StartDateTime.
         /// </summary>
-        public Instant ApplicableDate { get; set; }
+        private readonly Instant _meteringPointCreatedDateTime;
+
+        /// <summary>
+        /// The default start date the charge link is applicable from.
+        /// </summary>
+        private readonly Instant _settingStartDateTime;
+
+        public DefaultChargeLink(
+            Instant meteringPointCreatedDateTime,
+            Instant settingStartDateTime,
+            Instant? endDateTime,
+            int chargeRowId)
+        {
+            _meteringPointCreatedDateTime = meteringPointCreatedDateTime;
+            _settingStartDateTime = settingStartDateTime;
+            EndDateTime = endDateTime;
+            ChargeRowId = chargeRowId;
+        }
+
+        /// <summary>
+        /// The starting date is determined by the latest date when comparing meteringPointCreatedDateTime and
+        /// SettingStartDateTime
+        /// </summary>
+        public Instant StartDateTime =>
+            _settingStartDateTime > _meteringPointCreatedDateTime ? _settingStartDateTime : _meteringPointCreatedDateTime;
 
         /// <summary>
         /// The date the charge is no longer applicable for linking.
         /// </summary>
-        public Instant EndDate { get; set; }
+        public Instant? EndDateTime { get; }
 
         /// <summary>
         /// A reference to the charge in the Charge table

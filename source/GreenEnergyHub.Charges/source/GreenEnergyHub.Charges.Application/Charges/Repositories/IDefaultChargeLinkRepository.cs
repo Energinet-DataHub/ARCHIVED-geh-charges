@@ -16,11 +16,12 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.MeteringPoints;
+using NodaTime;
 
 namespace GreenEnergyHub.Charges.Application.Charges.Repositories
 {
     public interface IDefaultChargeLinkRepository
     {
-        Task<IEnumerable<DefaultChargeLink>> GetAsync(MeteringPointType meteringPointType);
+        Task<IEnumerable<DefaultChargeLink>> GetAsync(MeteringPointType meteringPointType, Instant meteringPointCreatedDateTime);
     }
 }
