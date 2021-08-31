@@ -32,7 +32,7 @@ namespace GreenEnergyHub.Charges.Domain.Charges
         public Instant EndDate { get; set; }
 
         /// <summary>
-        /// Reference to the Charge the DefaultChargeLink.
+        /// A reference to the charge in the Charge table
         /// </summary>
         public int ChargeRowId { get; set; }
     }

@@ -33,7 +33,5 @@ namespace GreenEnergyHub.Charges.Infrastructure.Context.Model
         public DateTime StartDateTime { get; set; }
 
         public DateTime? EndDateTime { get; set; }
-
-        public virtual Charge Charge { get; set; }
     }
 }
