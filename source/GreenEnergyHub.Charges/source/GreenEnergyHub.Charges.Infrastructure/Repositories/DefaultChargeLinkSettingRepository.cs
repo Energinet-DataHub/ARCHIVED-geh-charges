@@ -19,7 +19,6 @@ using GreenEnergyHub.Charges.Application.Charges.Repositories;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.MeteringPoints;
 using GreenEnergyHub.Charges.Infrastructure.Context;
-using GreenEnergyHub.Charges.Infrastructure.Context.Mapping;
 using Microsoft.EntityFrameworkCore;
 using NodaTime;
 
@@ -36,24 +35,23 @@ namespace GreenEnergyHub.Charges.Infrastructure.Repositories
             _chargesDatabaseContext = chargesDatabaseContext;
         }
 
-        public async Task<IEnumerable<DefaultChargeLinkSetting>> GetDefaultChargeLinkSettingAsync(MeteringPointType meteringPointType)
+        public async Task<IEnumerable<DefaultChargeLink>> GetDefaultChargeLinkSettingAsync(MeteringPointType meteringPointType)
         {
-            var defaultChargeLinkSettings = await _chargesDatabaseContext.DefaultChargeLinkSetting
-                .Include(x => x.Charge)
-                .Include(x => x.Charge.ChargeOperation)
-                .Include(x => x.Charge.ChargePeriodDetails)
-                .Include(x => x.Charge.MarketParticipant)
+            var defaultChargeLinkSettings = await _chargesDatabaseContext.DefaultChargeLinkSettings
                 .Where(x => x.MeteringPointType == (int)meteringPointType).ToListAsync().ConfigureAwait(false);
 
             return defaultChargeLinkSettings.Select(Map).ToList();
         }
 
-        private static DefaultChargeLinkSetting Map(DBDefaultChargeLinkSetting defaultChargeLinkSettings)
+        private static DefaultChargeLink Map(DBDefaultChargeLinkSetting defaultChargeLinkSettings)
         {
-            return new DefaultChargeLinkSetting
+            return new DefaultChargeLink
             {
                 ApplicableDate = Instant.FromDateTimeUtc(defaultChargeLinkSettings.StartDateTime.ToUniversalTime()),
-                DefaultCharge = ChargeMapper.MapChargeToChargeDomainModel(defaultChargeLinkSettings.Charge),
+                EndDate = defaultChargeLinkSettings.EndDateTime != null ?
+                    Instant.FromDateTimeUtc(defaultChargeLinkSettings.EndDateTime.Value.ToUniversalTime()) :
+                    Instant.MinValue,
+                ChargeRowId = defaultChargeLinkSettings.ChargeRowId,
             };
         }
     }

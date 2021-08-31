@@ -18,16 +18,22 @@ using NodaTime;
 
 namespace GreenEnergyHub.Charges.Domain.Charges
 {
-    public class DefaultChargeLinkSetting
+    // Logically there is a MeteringPointType attached to the DefaultChargeLink, but atm. It is not used.
+    public class DefaultChargeLink
     {
         /// <summary>
-        /// The date the charge is applicable from.
+        /// The date the charge is applicable for linking.
         /// </summary>
         public Instant ApplicableDate { get; set; }
 
         /// <summary>
-        /// The default charge.
+        /// The date the charge is no longer applicable for linking.
         /// </summary>
-        public Charge DefaultCharge { get; set; }
+        public Instant EndDate { get; set; }
+
+        /// <summary>
+        /// Reference to the Charge the DefaultChargeLink.
+        /// </summary>
+        public int ChargeRowId { get; set; }
     }
 }

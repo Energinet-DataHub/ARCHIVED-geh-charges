@@ -56,7 +56,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Context
         /// <summary>
         /// DefaultChargeLinkSetting available in the database.
         /// </summary>
-        DbSet<DefaultChargeLinkSetting> DefaultChargeLinkSetting { get; }
+        DbSet<DefaultChargeLinkSetting> DefaultChargeLinkSettings { get; }
 
         /// <summary>
         /// Saves changes to the database.
