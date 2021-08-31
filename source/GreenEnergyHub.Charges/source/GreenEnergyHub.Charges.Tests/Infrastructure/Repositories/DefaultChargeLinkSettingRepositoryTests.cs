@@ -25,6 +25,7 @@ using Xunit;
 
 using ChargeOperation = GreenEnergyHub.Charges.Infrastructure.Context.Model.ChargeOperation;
 using DBDefaultChargeLinkSetting = GreenEnergyHub.Charges.Infrastructure.Context.Model.DefaultChargeLinkSetting;
+using DefaultChargeLinkSetting = GreenEnergyHub.Charges.Domain.Charges.DefaultChargeLinkSetting;
 using MarketParticipant = GreenEnergyHub.Charges.Infrastructure.Context.Model.MarketParticipant;
 
 namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
@@ -49,10 +50,11 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
             // Act
             var actual = await
                 sut.GetDefaultChargeLinkSettingAsync(MeteringPointType.Consumption).ConfigureAwait(false);
+            var actualDefaultChargeLinkSettings = actual as DefaultChargeLinkSetting[] ?? actual.ToArray();
 
             // Assert
-            Assert.NotNull(actual);
-            actual.First().DefaultCharge.Id.Should().BeEquivalentTo(ExpectedChargeId);
+            actualDefaultChargeLinkSettings.Should().NotBeNullOrEmpty();
+            actualDefaultChargeLinkSettings.First().DefaultCharge.Id.Should().BeEquivalentTo(ExpectedChargeId);
         }
 
         private void SeedDatabase()
