@@ -17,6 +17,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.Charges;
+using GreenEnergyHub.Charges.Domain.MarketDocument;
 using GreenEnergyHub.Charges.Domain.MeteringPoints;
 using GreenEnergyHub.Charges.Infrastructure.Context;
 using GreenEnergyHub.Charges.Infrastructure.Context.Model;
@@ -54,7 +55,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
 
             // Act
             var actual = await
-                sut.GetDefaultChargeLinksAsync(MeteringPointType.Consumption).ConfigureAwait(false);
+                sut.GetAsync(MeteringPointType.Consumption).ConfigureAwait(false);
 
             // Assert
             var actualDefaultChargeLinkSettings = actual as DefaultChargeLink[] ?? actual.ToArray();
@@ -69,13 +70,18 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
             context.Database.EnsureDeleted();
             context.Database.EnsureCreated();
             var marketParticipant = context.MarketParticipants.Add(
-                new MarketParticipant { Name = "Name", Role = 1, MarketParticipantId = "MarketParticipantId" });
+                new MarketParticipant
+                    {
+                        Name = "Name",
+                        Role = (int)MarketParticipantRole.EnergySupplier,
+                        MarketParticipantId = "MarketParticipantId",
+                    });
             context.SaveChanges();
             var charge = context.Charges.Add(new Charge
             {
                 Currency = "DKK",
-                Resolution = 1,
-                ChargeType = 1,
+                Resolution = (int)Resolution.P1D,
+                ChargeType = (int)ChargeType.Fee,
                 TaxIndicator = 0,
                 TransparentInvoicing = 1,
                 ChargeId = "ChargeId1",
@@ -97,7 +103,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
                 Description = "Description",
                 Name = "Name",
                 Retired = false,
-                VatClassification = 1,
+                VatClassification = (int)VatClassification.Vat25,
                 ChargeRowId = charge.Entity.RowId,
                 StartDateTime = writeDateTime,
                 ChargeOperationRowId = chargeOperation.Entity.RowId,
