@@ -23,6 +23,7 @@ using GreenEnergyHub.Charges.Infrastructure.Context.Model;
 using GreenEnergyHub.Charges.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Xunit;
+using Xunit.Categories;
 using Charge = GreenEnergyHub.Charges.Infrastructure.Context.Model.Charge;
 using ChargeOperation = GreenEnergyHub.Charges.Infrastructure.Context.Model.ChargeOperation;
 using DBDefaultChargeLinkSetting = GreenEnergyHub.Charges.Infrastructure.Context.Model.DefaultChargeLinkSetting;
@@ -30,6 +31,10 @@ using MarketParticipant = GreenEnergyHub.Charges.Infrastructure.Context.Model.Ma
 
 namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
 {
+    /// <summary>
+    /// Tests <see cref="DefaultChargeLinkRepository"/> using an SQLite in-memory database.
+    /// </summary>
+    [UnitTest]
     public class DefaultChargeLinkSettingRepositoryTests
     {
         private readonly DbContextOptions<ChargesDatabaseContext> _dbContextOptions =
@@ -45,11 +50,11 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
             // Arrange
             CreateAndSeedDatabase();
             await using var chargesDatabaseContext = new ChargesDatabaseContext(_dbContextOptions);
-            var sut = new DefaultChargeLinkSettingRepository(chargesDatabaseContext);
+            var sut = new DefaultChargeLinkRepository(chargesDatabaseContext);
 
             // Act
             var actual = await
-                sut.GetDefaultChargeLinkSettingAsync(MeteringPointType.Consumption).ConfigureAwait(false);
+                sut.GetDefaultChargeLinksAsync(MeteringPointType.Consumption).ConfigureAwait(false);
 
             // Assert
             var actualDefaultChargeLinkSettings = actual as DefaultChargeLink[] ?? actual.ToArray();

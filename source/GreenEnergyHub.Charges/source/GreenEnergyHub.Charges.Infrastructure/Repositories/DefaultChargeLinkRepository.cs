@@ -26,16 +26,16 @@ using DBDefaultChargeLinkSetting = GreenEnergyHub.Charges.Infrastructure.Context
 
 namespace GreenEnergyHub.Charges.Infrastructure.Repositories
 {
-    public class DefaultChargeLinkSettingRepository : IDefaultChargeLinkSettingRepository
+    public class DefaultChargeLinkRepository : IDefaultChargeLinkRepository
     {
         private readonly IChargesDatabaseContext _chargesDatabaseContext;
 
-        public DefaultChargeLinkSettingRepository(IChargesDatabaseContext chargesDatabaseContext)
+        public DefaultChargeLinkRepository(IChargesDatabaseContext chargesDatabaseContext)
         {
             _chargesDatabaseContext = chargesDatabaseContext;
         }
 
-        public async Task<IEnumerable<DefaultChargeLink>> GetDefaultChargeLinkSettingAsync(MeteringPointType meteringPointType)
+        public async Task<IEnumerable<DefaultChargeLink>> GetDefaultChargeLinksAsync(MeteringPointType meteringPointType)
         {
             var defaultChargeLinkSettings = await _chargesDatabaseContext.DefaultChargeLinkSettings
                 .Where(x => x.MeteringPointType == (int)meteringPointType).ToListAsync().ConfigureAwait(false);

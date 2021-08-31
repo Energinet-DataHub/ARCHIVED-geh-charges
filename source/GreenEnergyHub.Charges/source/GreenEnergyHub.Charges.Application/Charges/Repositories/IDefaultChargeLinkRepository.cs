@@ -19,8 +19,8 @@ using GreenEnergyHub.Charges.Domain.MeteringPoints;
 
 namespace GreenEnergyHub.Charges.Application.Charges.Repositories
 {
-    public interface IDefaultChargeLinkSettingRepository
+    public interface IDefaultChargeLinkRepository
     {
-        Task<IEnumerable<DefaultChargeLink>> GetDefaultChargeLinkSettingAsync(MeteringPointType meteringPointType);
+        Task<IEnumerable<DefaultChargeLink>> GetDefaultChargeLinksAsync(MeteringPointType meteringPointType);
     }
 }
