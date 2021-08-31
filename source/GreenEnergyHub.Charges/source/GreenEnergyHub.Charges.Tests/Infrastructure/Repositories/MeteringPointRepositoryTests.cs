@@ -12,42 +12,55 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
 using FluentAssertions;
+using GreenEnergyHub.Charges.ApplyDBMigrationsApp.Helpers;
 using GreenEnergyHub.Charges.Domain.MeteringPoints;
 using GreenEnergyHub.Charges.Infrastructure.Context;
 using GreenEnergyHub.Charges.Infrastructure.Repositories;
+using GreenEnergyHub.Charges.TestCore.Squadron;
 using Microsoft.EntityFrameworkCore;
 using NodaTime;
+using Squadron;
 using Xunit;
 using Xunit.Categories;
 
 namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
 {
     [UnitTest]
-    public class MeteringPointRepositoryTests
+    public class MeteringPointRepositoryTests : IClassFixture<SqlServerResource<SqlServerOptions>>
     {
+        private readonly SqlServerResource<SqlServerOptions> _resource;
+
+        public MeteringPointRepositoryTests(SqlServerResource<SqlServerOptions> resource)
+        {
+            _resource = resource;
+        }
+
         [Fact]
         public async Task StoreMeteringPointAsync_WhenMeteringPointIsCreated_StoresMeteringPointInDatabase()
         {
             // Arrange
-            EnsureDatabaseCreated(nameof(StoreMeteringPointAsync_WhenMeteringPointIsCreated_StoresMeteringPointInDatabase));
-            await using var chargesDatabaseContext = new ChargesDatabaseContext(
-                GetDatabaseContext(
-                    nameof(StoreMeteringPointAsync_WhenMeteringPointIsCreated_StoresMeteringPointInDatabase)));
-            var expected = GetMeteringPointCreatedEvent();
-            var sut = new MeteringPointRepository(chargesDatabaseContext);
+            await using var chargesDatabaseContext = await GetDatabaseContext(_resource)
+                .ConfigureAwait(false);
+            {
+                var expected = GetMeteringPointCreatedEvent();
+                var sut = new MeteringPointRepository(chargesDatabaseContext);
 
-            // Act
-            await sut.StoreMeteringPointAsync(expected).ConfigureAwait(false);
+                // Act
+                await sut.StoreMeteringPointAsync(expected).ConfigureAwait(false);
 
-            // Assert
-            var actual = await sut.GetMeteringPointAsync(expected.MeteringPointId).ConfigureAwait(false);
-            actual.ConnectionState.Should().Be(expected.ConnectionState);
-            actual.GridAreaId.Should().Be(expected.GridAreaId);
-            actual.MeteringPointId.Should().Be(expected.MeteringPointId);
-            actual.EffectiveDate.Should().Be(expected.EffectiveDate);
-            actual.SettlementMethod.Should().Be(expected.SettlementMethod);
+                // Assert
+                var actual = await sut.GetMeteringPointAsync(expected.MeteringPointId).ConfigureAwait(false);
+                actual.ConnectionState.Should().Be(expected.ConnectionState);
+                actual.GridAreaId.Should().Be(expected.GridAreaId);
+                actual.MeteringPointId.Should().Be(expected.MeteringPointId);
+                actual.EffectiveDate.Should().Be(expected.EffectiveDate);
+                actual.SettlementMethod.Should().Be(expected.SettlementMethod);
+            }
         }
 
         private static MeteringPoint GetMeteringPointCreatedEvent()
@@ -61,21 +74,35 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
                 SettlementMethod.Flex);
         }
 
-        private static void EnsureDatabaseCreated(string sqlFileName)
+        private static async Task<ChargesDatabaseContext> GetDatabaseContext(SqlServerResource<SqlServerOptions> resource)
         {
-            using var context = new ChargesDatabaseContext(GetDatabaseContext(sqlFileName));
-            context.Database.EnsureDeleted();
-            context.Database.EnsureCreated();
-        }
-
-        private static DbContextOptions<ChargesDatabaseContext> GetDatabaseContext(string sqlFileName)
-        {
+            var connectionString = await CreateDatabaseAsync(resource)
+                .ConfigureAwait(false);
             DbContextOptions<ChargesDatabaseContext> dbContextOptions =
                 new DbContextOptionsBuilder<ChargesDatabaseContext>()
-                    .UseSqlite($"Filename={sqlFileName}.db")
+                    .UseSqlServer(connectionString)
                     .Options;
 
-            return dbContextOptions;
+            var chargesContext = new ChargesDatabaseContext(dbContextOptions);
+
+            return chargesContext;
+        }
+
+        private static async Task<string> CreateDatabaseAsync(SqlServerResource<SqlServerOptions> resource)
+        {
+            const string databaseName = "New_Database";
+
+            var connectionString = await resource.CreateDatabaseAsync(databaseName).ConfigureAwait(false);
+
+            var upgrader = UpgradeFactory.GetUpgradeEngine(connectionString, _ => true);
+            var result = upgrader.PerformUpgrade();
+
+            if (result.Successful is false)
+            {
+                throw new Exception("Database migration failed");
+            }
+
+            return connectionString;
         }
     }
 }
