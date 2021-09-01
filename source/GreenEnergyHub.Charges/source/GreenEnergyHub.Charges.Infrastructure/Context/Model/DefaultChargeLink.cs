@@ -20,7 +20,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Context.Model
 {
-    public class DefaultChargeLinkSetting
+    public class DefaultChargeLink
     {
         [Key]
         public int RowId { get; set; }

@@ -28,7 +28,7 @@ using Xunit;
 using Xunit.Categories;
 using Charge = GreenEnergyHub.Charges.Infrastructure.Context.Model.Charge;
 using ChargeOperation = GreenEnergyHub.Charges.Infrastructure.Context.Model.ChargeOperation;
-using DBDefaultChargeLinkSetting = GreenEnergyHub.Charges.Infrastructure.Context.Model.DefaultChargeLinkSetting;
+using DefaultChargeLink = GreenEnergyHub.Charges.Infrastructure.Context.Model.DefaultChargeLink;
 using MarketParticipant = GreenEnergyHub.Charges.Infrastructure.Context.Model.MarketParticipant;
 
 namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
@@ -61,7 +61,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
                     SystemClock.Instance.GetCurrentInstant()).ConfigureAwait(false);
 
             // Assert
-            var actualDefaultChargeLinkSettings = actual as DefaultChargeLink[] ?? actual.ToArray();
+            var actualDefaultChargeLinkSettings = actual as Charges.Domain.Charges.DefaultChargeLink[] ?? actual.ToArray();
 
             actualDefaultChargeLinkSettings.Should().NotBeNullOrEmpty();
             actualDefaultChargeLinkSettings.First().ChargeRowId.Should().Be(_expectedChargeRowId);
@@ -111,8 +111,8 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
                 StartDateTime = writeDateTime,
                 ChargeOperationRowId = chargeOperation.Entity.RowId,
             });
-            context.DefaultChargeLinkSettings.Add(
-                new DBDefaultChargeLinkSetting
+            context.DefaultChargeLinks.Add(
+                new DefaultChargeLink
                     {
                         RowId = 1,
                         ChargeRowId = charge.Entity.RowId,

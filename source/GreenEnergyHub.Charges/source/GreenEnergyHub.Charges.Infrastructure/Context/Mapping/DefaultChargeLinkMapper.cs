@@ -13,27 +13,26 @@
 // limitations under the License.
 
 using System.Diagnostics.CodeAnalysis;
-using GreenEnergyHub.Charges.Domain.Charges;
-using GreenEnergyHub.Charges.Infrastructure.Context.Model;
 using NodaTime;
+using DefaultChargeLink = GreenEnergyHub.Charges.Infrastructure.Context.Model.DefaultChargeLink;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Context.Mapping
 {
     public static class DefaultChargeLinkMapper
     {
-        public static DefaultChargeLink Map(
+        public static Domain.Charges.DefaultChargeLink Map(
             Instant meteringPointCreatedDateTime,
-            [NotNull]DefaultChargeLinkSetting defaultChargeLinkSettings)
+            [NotNull]DefaultChargeLink defaultChargeLink)
         {
-            var endDateTime = defaultChargeLinkSettings.EndDateTime != null ?
-                Instant.FromDateTimeUtc(defaultChargeLinkSettings.EndDateTime.Value.ToUniversalTime()) :
+            var endDateTime = defaultChargeLink.EndDateTime != null ?
+                Instant.FromDateTimeUtc(defaultChargeLink.EndDateTime.Value.ToUniversalTime()) :
                 (Instant?)null;
 
-            return new DefaultChargeLink(
+            return new Domain.Charges.DefaultChargeLink(
                 meteringPointCreatedDateTime,
-                Instant.FromDateTimeUtc(defaultChargeLinkSettings.StartDateTime.ToUniversalTime()),
+                Instant.FromDateTimeUtc(defaultChargeLink.StartDateTime.ToUniversalTime()),
                 endDateTime,
-                defaultChargeLinkSettings.ChargeRowId);
+                defaultChargeLink.ChargeRowId);
         }
     }
 }

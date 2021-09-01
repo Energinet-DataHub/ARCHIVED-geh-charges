@@ -27,7 +27,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Mapping
     public class DefaultChargeLinkMapperTests
     {
         [Fact]
-        public void MapDefaultChargeLinkSettingToDefaultChargeLink_WhenCalled_MapsAllProperties()
+        public void CreateDefaultChargeLinkFromDefaultChargeLinkSetting_WhenCalled_MapsAllProperties()
         {
             // Arrange
             var meteringPointCreatedDateTime = SystemClock.Instance.GetCurrentInstant();
@@ -37,7 +37,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Mapping
             // Act
             var actual = DefaultChargeLinkMapper.Map(
                 meteringPointCreatedDateTime,
-                new DefaultChargeLinkSetting
+                new DefaultChargeLink
                 {
                     MeteringPointType = (int)MeteringPointType.Consumption,
                     StartDateTime = settingStartDateTime,

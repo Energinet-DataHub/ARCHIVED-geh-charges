@@ -36,12 +36,12 @@ namespace GreenEnergyHub.Charges.Infrastructure.Repositories
 
         public async Task<IEnumerable<DefaultChargeLink>> GetAsync(MeteringPointType meteringPointType, Instant meteringPointCreatedDateTime)
         {
-            var defaultChargeLinkSettings = await _chargesDatabaseContext.DefaultChargeLinkSettings
+            var defaultChargeLinks = await _chargesDatabaseContext.DefaultChargeLinks
                 .Where(x => x.MeteringPointType == (int)meteringPointType)
                 .ToListAsync()
                 .ConfigureAwait(false);
 
-            return defaultChargeLinkSettings.Select(x => DefaultChargeLinkMapper.Map(meteringPointCreatedDateTime, x)).ToList();
+            return defaultChargeLinks.Select(x => DefaultChargeLinkMapper.Map(meteringPointCreatedDateTime, x)).ToList();
         }
     }
 }
