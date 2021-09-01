@@ -136,7 +136,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
                     Type = DocumentType.RequestUpdateChargeInformation,
                     IndustryClassification = IndustryClassification.Electricity,
                     CreatedDateTime = SystemClock.Instance.GetCurrentInstant(),
-                    Sender = new Domain.MarketDocument.MarketParticipant
+                    Sender = new Charges.Domain.MarketDocument.MarketParticipant
                     {
                         Id = MarketParticipantId,
                         BusinessProcessRole = (MarketParticipantRole)1,

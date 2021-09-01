@@ -46,7 +46,7 @@ namespace GreenEnergyHub.Charges.Domain.Charges
 
         /// <summary>
         /// The starting date is determined by the latest date when comparing meteringPointCreatedDateTime and
-        /// SettingStartDateTime. It is used to describe when the charge link should start from.
+        /// SettingStartDateTime. It is used to dictate when the charge link should start from.
         /// </summary>
         public Instant StartDateTime =>
             _settingStartDateTime > _meteringPointCreatedDateTime ? _settingStartDateTime : _meteringPointCreatedDateTime;
@@ -59,6 +59,6 @@ namespace GreenEnergyHub.Charges.Domain.Charges
         /// <summary>
         /// A reference to the charge in the Charge table
         /// </summary>
-        public int ChargeRowId { get; set; }
+        public int ChargeRowId { get; }
     }
 }
