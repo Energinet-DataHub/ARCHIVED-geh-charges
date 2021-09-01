@@ -53,7 +53,7 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.Factories
             var periodDetails = new ChargeLinkPeriodDetails(chargeLink.StartDateTime, chargeLink.EndDateTime, chargeLink.Factor, operation);
             var periodDetailsCollection = new List<ChargeLinkPeriodDetails> { periodDetails }.AsReadOnly();
 
-            return new ChargeLink(charge.RowId, meteringPoint.MeteringPointRowId, operations, periodDetailsCollection);
+            return new ChargeLink(charge.RowId, meteringPoint.RowId, operations, periodDetailsCollection);
         }
     }
 }
