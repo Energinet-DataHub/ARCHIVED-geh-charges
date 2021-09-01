@@ -24,15 +24,15 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.Factories
         public ChargeLinkCreatedEvent CreateEvent([NotNull] ChargeLinkCommandAcceptedEvent command)
         {
             return new ChargeLinkCreatedEvent(
-                command.ChargeLink.Id,
-                command.ChargeLink.MeteringPointId,
-                command.ChargeLink.ChargeId,
-                command.ChargeLink.ChargeType,
-                command.ChargeLink.ChargeOwner,
+                command.ChargeLinkCommand.ChargeLink.Id,
+                command.ChargeLinkCommand.ChargeLink.MeteringPointId,
+                command.ChargeLinkCommand.ChargeLink.ChargeId,
+                command.ChargeLinkCommand.ChargeLink.ChargeType,
+                command.ChargeLinkCommand.ChargeLink.ChargeOwner,
                 new ChargeLinkPeriod(
-                    command.ChargeLink.StartDateTime,
-                    command.ChargeLink.EndDateTime.TimeOrEndDefault(),
-                    command.ChargeLink.Factor));
+                    command.ChargeLinkCommand.ChargeLink.StartDateTime,
+                    command.ChargeLinkCommand.ChargeLink.EndDateTime.TimeOrEndDefault(),
+                    command.ChargeLinkCommand.ChargeLink.Factor));
         }
     }
 }

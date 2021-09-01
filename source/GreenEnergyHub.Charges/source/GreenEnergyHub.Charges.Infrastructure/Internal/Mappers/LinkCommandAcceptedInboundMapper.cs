@@ -16,6 +16,7 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.Domain.ChargeLinks;
+using GreenEnergyHub.Charges.Domain.ChargeLinks.Command;
 using GreenEnergyHub.Charges.Domain.ChargeLinks.Events.Local;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.MarketDocument;
@@ -30,11 +31,14 @@ namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
     {
         protected override IInboundMessage Convert([NotNull]ChargeLinkCommandAcceptedContract chargeLinkCommandAcceptedContract)
         {
-            return new ChargeLinkCommandAcceptedEvent(chargeLinkCommandAcceptedContract.CorrelationId)
-            {
-                Document = ConvertDocument(chargeLinkCommandAcceptedContract.Document),
-                ChargeLink = ConvertChargeLink(chargeLinkCommandAcceptedContract.ChargeLink),
-            };
+            return new ChargeLinkCommandAcceptedEvent(
+                chargeLinkCommandAcceptedContract.PublishedTime.ToInstant(),
+                chargeLinkCommandAcceptedContract.CorrelationId,
+                new ChargeLinkCommand(chargeLinkCommandAcceptedContract.ChargeLinkCommand.CorrelationId)
+                {
+                    Document = ConvertDocument(chargeLinkCommandAcceptedContract.ChargeLinkCommand.Document),
+                    ChargeLink = ConvertChargeLink(chargeLinkCommandAcceptedContract.ChargeLinkCommand.ChargeLink),
+                });
         }
 
         private static Document ConvertDocument(DocumentContract document)

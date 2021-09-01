@@ -34,10 +34,12 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Internal.Mappers
         [Theory]
         [InlineAutoMoqData]
         public void Convert_WhenCalled_ShouldMapToProtobufWithCorrectValues(
-            [NotNull] ChargeLinkCommandAcceptedEvent chargeLinkCommandAcceptedEvent,
+            [NotNull] ChargeLinkCommand chargeLinkCommand,
             [NotNull] LinkCommandAcceptedOutboundMapper sut)
         {
-            UpdateInstantsToValidTimes(chargeLinkCommandAcceptedEvent);
+            ChargeLinkCommandAcceptedEvent chargeLinkCommandAcceptedEvent =
+                new (SystemClock.Instance.GetCurrentInstant(), chargeLinkCommand.CorrelationId, chargeLinkCommand);
+            UpdateInstantsToValidTimes(chargeLinkCommandAcceptedEvent.ChargeLinkCommand);
             var result = (ChargeLinkCommandAcceptedContract)sut.Convert(chargeLinkCommandAcceptedEvent);
             ProtobufAssert.OutgoingContractIsSubset(chargeLinkCommandAcceptedEvent, result);
         }

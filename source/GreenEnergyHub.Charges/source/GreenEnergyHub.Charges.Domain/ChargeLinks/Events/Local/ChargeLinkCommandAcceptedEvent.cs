@@ -14,14 +14,22 @@
 
 using System.Diagnostics.CodeAnalysis;
 using GreenEnergyHub.Charges.Domain.ChargeLinks.Command;
+using GreenEnergyHub.Charges.Domain.Messages.Events;
+using NodaTime;
 
 namespace GreenEnergyHub.Charges.Domain.ChargeLinks.Events.Local
 {
-    public class ChargeLinkCommandAcceptedEvent : ChargeLinkCommand
+    public class ChargeLinkCommandAcceptedEvent : InternalEventBase
     {
-        public ChargeLinkCommandAcceptedEvent([NotNull] string correlationId)
-            : base(correlationId)
+        public ChargeLinkCommand ChargeLinkCommand { get; }
+
+        public ChargeLinkCommandAcceptedEvent(
+            Instant publishedTime,
+            string correlationId,
+            [NotNull] ChargeLinkCommand chargeLinkCommand)
+            : base(publishedTime, correlationId)
         {
+            ChargeLinkCommand = chargeLinkCommand;
         }
     }
 }

@@ -21,12 +21,10 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.Mapping
     {
         public ChargeLinkCommandAcceptedEvent Map([NotNull] ChargeLinkCommandReceivedEvent commandReceived)
         {
-            return new ChargeLinkCommandAcceptedEvent(commandReceived.CorrelationId)
-            {
-                Document = commandReceived.ChargeLinkCommand.Document,
-                ChargeLink = commandReceived.ChargeLinkCommand.ChargeLink,
-                Transaction = commandReceived.Transaction,
-            };
+            return new ChargeLinkCommandAcceptedEvent(
+                commandReceived.PublishedTime,
+                commandReceived.CorrelationId,
+                commandReceived.ChargeLinkCommand);
         }
     }
 }

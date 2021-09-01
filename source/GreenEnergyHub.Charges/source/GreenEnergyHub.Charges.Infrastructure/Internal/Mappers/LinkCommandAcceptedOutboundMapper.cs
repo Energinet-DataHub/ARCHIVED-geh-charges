@@ -12,11 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
 using System.Diagnostics.CodeAnalysis;
-using Google.Protobuf.WellKnownTypes;
 using GreenEnergyHub.Charges.Core.DateTime;
-using GreenEnergyHub.Charges.Domain.ChargeLinks;
 using GreenEnergyHub.Charges.Domain.ChargeLinks.Events.Local;
 using GreenEnergyHub.Charges.Domain.MarketDocument;
 using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandAccepted;
@@ -28,13 +25,15 @@ namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
     {
         protected override Google.Protobuf.IMessage Convert([NotNull]ChargeLinkCommandAcceptedEvent chargeLinkCommandAcceptedEvent)
         {
-            var document = chargeLinkCommandAcceptedEvent.Document;
-            var chargeLink = chargeLinkCommandAcceptedEvent.ChargeLink;
-
             return new ChargeLinkCommandAcceptedContract
             {
-                Document = ConvertDocument(document),
-                ChargeLink = ConvertChargeLink(chargeLinkCommandAcceptedEvent, chargeLink),
+                PublishedTime = chargeLinkCommandAcceptedEvent.PublishedTime.ToTimestamp().TruncateToSeconds(),
+                ChargeLinkCommand = new ChargeLinkCommandContract
+                {
+                    Document = ConvertDocument(chargeLinkCommandAcceptedEvent.ChargeLinkCommand.Document),
+                    ChargeLink = ConvertChargeLink(chargeLinkCommandAcceptedEvent),
+                    CorrelationId = chargeLinkCommandAcceptedEvent.ChargeLinkCommand.CorrelationId,
+                },
                 CorrelationId = chargeLinkCommandAcceptedEvent.CorrelationId,
             };
         }
@@ -62,18 +61,18 @@ namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
             };
         }
 
-        private static ChargeLinkContract ConvertChargeLink(ChargeLinkCommandAcceptedEvent chargeLinkCommandAcceptedEvent, ChargeLink chargeLink)
+        private static ChargeLinkContract ConvertChargeLink(ChargeLinkCommandAcceptedEvent chargeLinkCommandAcceptedEvent)
         {
             return new ChargeLinkContract
             {
-                Id = chargeLinkCommandAcceptedEvent.ChargeLink.Id,
-                MeteringPointId = chargeLink.MeteringPointId,
-                ChargeId = chargeLink.ChargeId,
-                ChargeOwner = chargeLink.ChargeOwner,
-                Factor = chargeLink.Factor,
-                ChargeType = (ChargeTypeContract)chargeLink.ChargeType,
-                StartDateTime = chargeLink.StartDateTime.ToTimestamp(),
-                EndDateTime = chargeLink.EndDateTime.TimeOrEndDefault().ToTimestamp(),
+                Id = chargeLinkCommandAcceptedEvent.ChargeLinkCommand.ChargeLink.Id,
+                MeteringPointId = chargeLinkCommandAcceptedEvent.ChargeLinkCommand.ChargeLink.MeteringPointId,
+                ChargeId = chargeLinkCommandAcceptedEvent.ChargeLinkCommand.ChargeLink.ChargeId,
+                ChargeOwner = chargeLinkCommandAcceptedEvent.ChargeLinkCommand.ChargeLink.ChargeOwner,
+                Factor = chargeLinkCommandAcceptedEvent.ChargeLinkCommand.ChargeLink.Factor,
+                ChargeType = (ChargeTypeContract)chargeLinkCommandAcceptedEvent.ChargeLinkCommand.ChargeLink.ChargeType,
+                StartDateTime = chargeLinkCommandAcceptedEvent.ChargeLinkCommand.ChargeLink.StartDateTime.ToTimestamp(),
+                EndDateTime = chargeLinkCommandAcceptedEvent.ChargeLinkCommand.ChargeLink.EndDateTime.TimeOrEndDefault().ToTimestamp(),
             };
         }
     }

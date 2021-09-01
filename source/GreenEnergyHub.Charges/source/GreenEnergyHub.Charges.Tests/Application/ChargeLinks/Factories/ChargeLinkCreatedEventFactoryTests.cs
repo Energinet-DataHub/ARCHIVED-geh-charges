@@ -38,14 +38,14 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Factories
 
             // Assert
             Assert.NotNull(result);
-            Assert.Equal(command.ChargeLink.Id, result.ChargeLinkId);
-            Assert.Equal(command.ChargeLink.MeteringPointId, result.MeteringPointId);
-            Assert.Equal(command.ChargeLink.ChargeId, result.ChargeId);
-            Assert.Equal(command.ChargeLink.ChargeType, result.ChargeType);
-            Assert.Equal(command.ChargeLink.ChargeOwner, result.ChargeOwner);
-            Assert.Equal(command.ChargeLink.StartDateTime, result.ChargeLinkPeriod.StartDateTime);
-            Assert.Equal(command.ChargeLink.EndDateTime.TimeOrEndDefault(), result.ChargeLinkPeriod.EndDateTime);
-            Assert.Equal(command.ChargeLink.Factor, result.ChargeLinkPeriod.Factor);
+            Assert.Equal(command.ChargeLinkCommand.ChargeLink.Id, result.ChargeLinkId);
+            Assert.Equal(command.ChargeLinkCommand.ChargeLink.MeteringPointId, result.MeteringPointId);
+            Assert.Equal(command.ChargeLinkCommand.ChargeLink.ChargeId, result.ChargeId);
+            Assert.Equal(command.ChargeLinkCommand.ChargeLink.ChargeType, result.ChargeType);
+            Assert.Equal(command.ChargeLinkCommand.ChargeLink.ChargeOwner, result.ChargeOwner);
+            Assert.Equal(command.ChargeLinkCommand.ChargeLink.StartDateTime, result.ChargeLinkPeriod.StartDateTime);
+            Assert.Equal(command.ChargeLinkCommand.ChargeLink.EndDateTime.TimeOrEndDefault(), result.ChargeLinkPeriod.EndDateTime);
+            Assert.Equal(command.ChargeLinkCommand.ChargeLink.Factor, result.ChargeLinkPeriod.Factor);
         }
     }
 }
