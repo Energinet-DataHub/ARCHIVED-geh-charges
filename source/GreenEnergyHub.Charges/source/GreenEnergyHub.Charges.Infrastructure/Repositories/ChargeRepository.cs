@@ -14,8 +14,8 @@
 
 using System;
 using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Application.ChangeOfCharges.Repositories;
-using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
+using GreenEnergyHub.Charges.Application.Charges.Repositories;
+using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Infrastructure.Context;
 using GreenEnergyHub.Charges.Infrastructure.Context.Mapping;
 using GreenEnergyHub.Charges.Infrastructure.Context.Model;
@@ -32,7 +32,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Repositories
             _chargesDatabaseContext = chargesDatabaseContext;
         }
 
-        public async Task<GreenEnergyHub.Charges.Domain.Charge> GetChargeAsync(string chargeId, string owner, ChargeType chargeType)
+        public async Task<Domain.Charges.Charge> GetChargeAsync(string chargeId, string owner, ChargeType chargeType)
         {
             var charge = await _chargesDatabaseContext.Charges
                 .Include(x => x.ChargePeriodDetails)
@@ -60,7 +60,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Repositories
                 .ConfigureAwait(false);
         }
 
-        public async Task StoreChargeAsync(GreenEnergyHub.Charges.Domain.Charge newCharge)
+        public async Task StoreChargeAsync(Domain.Charges.Charge newCharge)
         {
             if (newCharge == null) throw new ArgumentNullException(nameof(newCharge));
 

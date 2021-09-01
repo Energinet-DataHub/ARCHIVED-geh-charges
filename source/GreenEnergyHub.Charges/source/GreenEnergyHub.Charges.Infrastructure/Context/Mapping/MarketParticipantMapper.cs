@@ -14,13 +14,12 @@
 
 using System;
 using GreenEnergyHub.Charges.Domain.MarketDocument;
-using GreenEnergyHub.Charges.Infrastructure.Mapping;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Context.Mapping
 {
     public class MarketParticipantMapper : IMarketParticipantMapper
     {
-        public MarketParticipant ToDomainObject(Infrastructure.Context.Model.MarketParticipant persistenceModel)
+        public MarketParticipant ToDomainObject(Model.MarketParticipant persistenceModel)
         {
             if (persistenceModel == null) throw new ArgumentNullException(nameof(persistenceModel));
 

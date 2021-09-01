@@ -16,7 +16,7 @@ using System;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application.ChangeOfCharges.Repositories;
 using GreenEnergyHub.Charges.Application.Mapping;
-using GreenEnergyHub.Charges.Domain.Events.Integration;
+using GreenEnergyHub.Charges.Domain.Charges.Events.Integration;
 using Microsoft.Extensions.Logging;
 
 namespace GreenEnergyHub.Charges.Application

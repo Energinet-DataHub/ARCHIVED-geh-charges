@@ -13,10 +13,10 @@
 // limitations under the License.
 
 using System.Linq;
-using GreenEnergyHub.Charges.Application.ChangeOfCharges.Repositories;
+using GreenEnergyHub.Charges.Application.Charges.Repositories;
 using GreenEnergyHub.Charges.Domain.MarketDocument;
 using GreenEnergyHub.Charges.Infrastructure.Context;
-using GreenEnergyHub.Charges.Infrastructure.Mapping;
+using GreenEnergyHub.Charges.Infrastructure.Context.Mapping;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Repositories
 {

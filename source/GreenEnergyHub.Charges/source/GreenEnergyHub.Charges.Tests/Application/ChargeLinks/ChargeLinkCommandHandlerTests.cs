@@ -12,17 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
 using System.Diagnostics.CodeAnalysis;
-using System.Threading;
 using System.Threading.Tasks;
-using AutoFixture.Xunit2;
 using FluentAssertions;
-using GreenEnergyHub.Charges.Application;
-using GreenEnergyHub.Charges.Application.ChargeLinks;
-using GreenEnergyHub.Charges.Domain.ChargeLinks;
+using GreenEnergyHub.Charges.Application.ChargeLinks.Handlers;
+using GreenEnergyHub.Charges.Domain.ChargeLinks.Command;
 using GreenEnergyHub.TestHelpers;
-using Moq;
 using Xunit;
 using Xunit.Categories;
 
@@ -33,20 +28,15 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks
     {
         [Theory]
         [InlineAutoDomainData]
-        public async Task HandleAsync_WhenCalledWithValidChargeLinkXML_ShouldReturnOk(
-            [NotNull] [Frozen] Mock<IMessageDispatcher<ChargeLinkCommandReceivedEvent>> messageDispatcher,
+        public async Task HandleAsync_WhenCalledWithValidChargeLink_ShouldReturnOk(
+            [NotNull] ChargeLinkCommand chargeLinkCommand,
             [NotNull] ChargeLinkCommandHandler sut)
         {
-            // Arrange
-            var chargeLinkCommand = new ChargeLinkCommandReceivedEvent(Guid.NewGuid().ToString());
-
             // Act
             var result = await sut.HandleAsync(chargeLinkCommand).ConfigureAwait(false);
 
             // Assert
             result.IsSucceeded.Should().BeTrue();
-            messageDispatcher.Verify(
-                x => x.DispatchAsync(chargeLinkCommand, It.IsAny<CancellationToken>()));
         }
     }
 }
