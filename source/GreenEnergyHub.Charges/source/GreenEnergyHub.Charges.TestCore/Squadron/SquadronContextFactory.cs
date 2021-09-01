@@ -35,19 +35,7 @@ namespace GreenEnergyHub.Charges.TestCore.Squadron
                     .Options;
 
             var chargesContext = new ChargesDatabaseContext(dbContextOptions);
-
             return chargesContext;
-        }
-
-        public static async Task EmptyDatabaseAsync(ChargesDatabaseContext chargesDatabaseContext)
-        {
-            if (chargesDatabaseContext == null) throw new ArgumentNullException(nameof(chargesDatabaseContext));
-            await chargesDatabaseContext.Database.ExecuteSqlRawAsync("DELETE FROM [Charges].[ChargePrice]").ConfigureAwait(false);
-            await chargesDatabaseContext.Database.ExecuteSqlRawAsync("DELETE FROM [Charges].[ChargeOperation]").ConfigureAwait(false);
-            await chargesDatabaseContext.Database.ExecuteSqlRawAsync("DELETE FROM [Charges].[ChargePeriodDetails]").ConfigureAwait(false);
-            await chargesDatabaseContext.Database.ExecuteSqlRawAsync("DELETE FROM [Charges].[MarketParticipant]").ConfigureAwait(false);
-            await chargesDatabaseContext.Database.ExecuteSqlRawAsync("DELETE FROM [Charges].[Charge]").ConfigureAwait(false);
-            await chargesDatabaseContext.Database.ExecuteSqlRawAsync("DELETE FROM [Charges].[MeteringPoint]").ConfigureAwait(false);
         }
 
         private static async Task<string> CreateDatabaseAsync(SqlServerResource<SqlServerOptions> resource)
