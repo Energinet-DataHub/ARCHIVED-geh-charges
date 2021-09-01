@@ -33,18 +33,30 @@ namespace GreenEnergyHub.Charges.Domain.ChargeLinks
             PeriodDetails = periodDetails;
         }
 
+        // Temporary workaround to silence EFCore until persistence is finished in upcoming PR
+#pragma warning disable 8618
+        private ChargeLink()
+#pragma warning restore 8618
+        {
+        }
+
+        /// <summary>
+        /// Globally unique identifier of the charge link.
+        /// </summary>
+        public int? RowId { get; private set; }
+
         /// <summary>
         /// The charge that is linked to the metering point (<see cref="MeteringPointRowId"/>).
         /// </summary>
-        public int ChargeRowId { get; }
+        public int ChargeRowId { get; private set; }
 
         /// <summary>
         /// The metering point that is linked to the charge (<see cref="ChargeRowId"/>).
         /// </summary>
-        public int MeteringPointRowId { get; }
+        public int MeteringPointRowId { get; private set; }
 
-        public IReadOnlyCollection<ChargeLinkOperation> Operations { get; }
+        public IReadOnlyCollection<ChargeLinkOperation> Operations { get; private set; }
 
-        public IReadOnlyCollection<ChargeLinkPeriodDetails> PeriodDetails { get; }
+        public IReadOnlyCollection<ChargeLinkPeriodDetails> PeriodDetails { get; private set; }
     }
 }

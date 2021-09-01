@@ -26,6 +26,18 @@ namespace GreenEnergyHub.Charges.Domain.ChargeLinks
             CreatedByOperation = createdByOperation;
         }
 
+        // Temporary workaround to silence EFCore until persistence is finished in upcoming PR
+#pragma warning disable 8618
+        private ChargeLinkPeriodDetails()
+#pragma warning restore 8618
+        {
+        }
+
+        /// <summary>
+        /// Globally unique identifier of the charge link period details.
+        /// </summary>
+        public int? RowId { get; set; }
+
         public Instant StartDateTime { get; }
 
         public Instant? EndDateTime { get; }

@@ -34,6 +34,13 @@ namespace GreenEnergyHub.Charges.Domain.ChargeLinks
             CorrelationId = correlationId;
         }
 
+        // Temporary workaround to silence EFCore until persistence is finished in upcoming PR
+#pragma warning disable 8618
+        private ChargeLinkOperation()
+#pragma warning restore 8618
+        {
+        }
+
         /// <summary>
         ///  Used by persistence to hydrate. So don't risc failing hydration by validating here.
         /// </summary>
@@ -44,6 +51,15 @@ namespace GreenEnergyHub.Charges.Domain.ChargeLinks
             WriteDateTime = writeDateTime;
         }
 
+        /// <summary>
+        /// Globally unique identifier of the charge link operation.
+        /// </summary>
+        public int? RowId { get; set; }
+
+        /// <summary>
+        /// Operation ID provided by customer.
+        /// TODO: Rename to e.g. CustomerOperationId?
+        /// </summary>
         public string Id { get; }
 
         public string CorrelationId { get; }
