@@ -21,7 +21,6 @@ using GreenEnergyHub.Charges.Domain.MeteringPoints;
 using GreenEnergyHub.Charges.Infrastructure.Context;
 using GreenEnergyHub.Charges.Infrastructure.Context.Mapping;
 using Microsoft.EntityFrameworkCore;
-using NodaTime;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Repositories
 {
@@ -34,14 +33,14 @@ namespace GreenEnergyHub.Charges.Infrastructure.Repositories
             _chargesDatabaseContext = chargesDatabaseContext;
         }
 
-        public async Task<IEnumerable<DefaultChargeLink>> GetAsync(MeteringPointType meteringPointType, Instant meteringPointCreatedDateTime)
+        public async Task<IEnumerable<DefaultChargeLink>> GetAsync(MeteringPointType meteringPointType)
         {
             var defaultChargeLinks = await _chargesDatabaseContext.DefaultChargeLinks
                 .Where(x => x.MeteringPointType == (int)meteringPointType)
                 .ToListAsync()
                 .ConfigureAwait(false);
 
-            return defaultChargeLinks.Select(x => DefaultChargeLinkMapper.Map(meteringPointCreatedDateTime, x)).ToList();
+            return defaultChargeLinks.Select(DefaultChargeLinkMapper.Map).ToList();
         }
     }
 }

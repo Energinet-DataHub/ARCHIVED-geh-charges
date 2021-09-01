@@ -14,8 +14,8 @@
 
 using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.Charges;
+using GreenEnergyHub.Charges.Domain.MeteringPoints;
 using GreenEnergyHub.Charges.TestCore.Attributes;
-using NodaTime;
 using NodaTime.Text;
 using Xunit;
 using Xunit.Categories;
@@ -31,90 +31,38 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Charges
             [InlineAutoMoqData("2020-05-13T13:00:00Z", "2020-05-13T13:00:00Z", "2020-05-13T13:00:00Z")]
             public void WhenStartDateTimeIsCalled_LatestDateIsUsed_FromMeteringPointCreatedDateTimeAndSettingStartDateTime2(
                 string meteringPointDate,
-                string settingStartDate,
+                string startDate,
                 string expectedStartDate)
             {
                 // Arrange
                 var meteringPointCreatedDateTime = InstantPattern.General.Parse(meteringPointDate).Value;
-                var settingStartDateTime = InstantPattern.General.Parse(settingStartDate).Value;
+                var startDateTime = InstantPattern.General.Parse(startDate).Value;
 
                 // Act
-                var sut = new DefaultChargeLink(meteringPointCreatedDateTime, settingStartDateTime, null, 0);
+                var sut = new DefaultChargeLink(startDateTime, null, 0, MeteringPointType.Consumption);
 
                 // Assert
-                sut.StartDateTime.Should().BeEquivalentTo(InstantPattern.General.Parse(expectedStartDate).Value);
+                sut.GetStartDateTime(meteringPointCreatedDateTime).Should().BeEquivalentTo(InstantPattern.General.Parse(expectedStartDate).Value);
             }
 
-            [Fact]
-            public void WhenStartDateTimeIsCalled_LatestDateIsUsed_FromMeteringPointCreatedDateTimeAndSettingStartDateTime()
+            [Theory]
+            [InlineAutoMoqData("2020-05-10T13:00:00Z", MeteringPointType.Consumption, true)]
+            [InlineAutoMoqData("2020-05-12T13:00:00Z", MeteringPointType.Exchange, false)]
+            public void WhenStartDateTimeIsCalled_LatestDateIsUsed_FromMeteringPointCreatedDateTimeAndSettingStartDateTime3(
+                string dateTime,
+                MeteringPointType meteringPointType,
+                bool applicableForLinking)
             {
                 // Arrange
-                var meteringPointCreatedDateTime = SystemClock.Instance.GetCurrentInstant();
-                var settingStartDateTime = SystemClock.Instance.GetCurrentInstant().Plus(Duration.FromDays(1));
+                var meteringPointCreatedDateTime = InstantPattern.General.Parse(dateTime).Value;
+                var startDateTime = InstantPattern.General.Parse(dateTime).Value;
 
                 // Act
-                var sut = new DefaultChargeLink(meteringPointCreatedDateTime, settingStartDateTime, null, 0);
+                var sut = new DefaultChargeLink(startDateTime, null, 0, MeteringPointType.Consumption);
 
                 // Assert
-                sut.StartDateTime.Should().BeEquivalentTo(settingStartDateTime);
-            }
-
-            [Fact]
-            public void WhenApplicableForLinkingIsCalled_ReturnsTrue_WhenEndDateTimeIsNull()
-            {
-                // Arrange
-                var meteringPointCreatedDateTime = SystemClock.Instance.GetCurrentInstant();
-                var settingStartDateTime = SystemClock.Instance.GetCurrentInstant().Plus(Duration.FromDays(1));
-
-                // Act
-                var sut = new DefaultChargeLink(meteringPointCreatedDateTime, settingStartDateTime, null, 0);
-
-                // Assert
-                sut.ApplicableForLinking.Should().BeTrue();
-            }
-
-            [Fact]
-            public void WhenApplicableForLinkingIsCalled_ReturnsTrue_WhenEndDateTimeIsAfterStartDateTime()
-            {
-                // Arrange
-                var meteringPointCreatedDateTime = SystemClock.Instance.GetCurrentInstant();
-                var settingStartDateTime = SystemClock.Instance.GetCurrentInstant().Plus(Duration.FromDays(1));
-                var endDateTime = SystemClock.Instance.GetCurrentInstant().Plus(Duration.FromDays(2));
-
-                // Act
-                var sut = new DefaultChargeLink(meteringPointCreatedDateTime, settingStartDateTime, endDateTime, 0);
-
-                // Assert
-                sut.ApplicableForLinking.Should().BeTrue();
-            }
-
-            [Fact]
-            public void WhenApplicableForLinkingIsCalled_ReturnsFalse_WhenEndDateTimeIsBeforeStartDateTime()
-            {
-                // Arrange
-                var meteringPointCreatedDateTime = SystemClock.Instance.GetCurrentInstant().Plus(Duration.FromDays(1));
-                var settingStartDateTime = SystemClock.Instance.GetCurrentInstant().Plus(Duration.FromDays(-1));
-                var endDateTime = SystemClock.Instance.GetCurrentInstant();
-
-                // Act
-                var sut = new DefaultChargeLink(meteringPointCreatedDateTime, settingStartDateTime, endDateTime, 0);
-
-                // Assert
-                sut.ApplicableForLinking.Should().BeFalse();
-            }
-
-            [Fact]
-            public void WhenApplicableForLinkingIsCalled_ReturnsFalse_WhenEndDateTimeIsEqualToStartDateTime()
-            {
-                // Arrange
-                var meteringPointCreatedDateTime = SystemClock.Instance.GetCurrentInstant();
-                var startDateTime = SystemClock.Instance.GetCurrentInstant().Plus(Duration.FromDays(1));
-
-                // Act
-                var sut = new DefaultChargeLink(meteringPointCreatedDateTime, startDateTime, startDateTime, 0);
-
-                // Assert
-                sut.ApplicableForLinking.Should().BeFalse();
+                sut.ApplicableForLinking(meteringPointCreatedDateTime, meteringPointType).Should()
+                    .Be(applicableForLinking);
             }
         }
 }

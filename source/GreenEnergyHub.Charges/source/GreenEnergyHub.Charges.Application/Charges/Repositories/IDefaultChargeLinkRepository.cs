@@ -22,6 +22,6 @@ namespace GreenEnergyHub.Charges.Application.Charges.Repositories
 {
     public interface IDefaultChargeLinkRepository
     {
-        Task<IEnumerable<DefaultChargeLink>> GetAsync(MeteringPointType meteringPointType, Instant meteringPointCreatedDateTime);
+        Task<IEnumerable<DefaultChargeLink>> GetAsync(MeteringPointType meteringPointType);
     }
 }

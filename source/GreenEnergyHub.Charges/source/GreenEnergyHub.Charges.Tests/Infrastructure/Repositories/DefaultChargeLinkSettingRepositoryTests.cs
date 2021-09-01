@@ -23,7 +23,6 @@ using GreenEnergyHub.Charges.Infrastructure.Context;
 using GreenEnergyHub.Charges.Infrastructure.Context.Model;
 using GreenEnergyHub.Charges.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
-using NodaTime;
 using Xunit;
 using Xunit.Categories;
 using Charge = GreenEnergyHub.Charges.Infrastructure.Context.Model.Charge;
@@ -57,8 +56,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
             // Act
             var actual = await
                 sut.GetAsync(
-                    MeteringPointType.Consumption,
-                    SystemClock.Instance.GetCurrentInstant()).ConfigureAwait(false);
+                    MeteringPointType.Consumption).ConfigureAwait(false);
 
             // Assert
             var actualDefaultChargeLinkSettings = actual as Charges.Domain.Charges.DefaultChargeLink[] ?? actual.ToArray();
