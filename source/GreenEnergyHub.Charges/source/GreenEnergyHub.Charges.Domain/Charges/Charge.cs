@@ -40,7 +40,7 @@ namespace GreenEnergyHub.Charges.Domain.Charges
         public string ChargeOperationId { get; set; }
 
         /// <summary>
-        /// Unique ID of a charge (Note, unique per market participants AND charge type).
+        /// Unique ID of a charge (Note, unique per market participants and charge type).
         /// Example: EA-001
         /// </summary>
         public string Id { get; set; }
