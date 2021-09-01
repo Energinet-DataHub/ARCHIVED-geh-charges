@@ -15,7 +15,6 @@
 using System;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Domain.ChargeLinks;
-using GreenEnergyHub.Charges.Domain.ChargeLinks.Command;
 using Microsoft.EntityFrameworkCore;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Context
@@ -43,14 +42,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Context
             modelBuilder.Entity<ChargeLink>(builder =>
             {
                 builder.ToTable("ChargeLink");
-                //builder.OwnsMany(cl => cl.)
             });
-
-            //modelBuilder.Entity<ChargeOperation>().ToTable("ChargeOperation");
-            //modelBuilder.Entity<ChargePeriodDetails>().ToTable("ChargePeriodDetails");
-            //modelBuilder.Entity<Charge>().ToTable("Charge");
-            //modelBuilder.Entity<MarketParticipant>().ToTable("MarketParticipant");
-            //modelBuilder.Entity<MeteringPoint>().ToTable("MeteringPoint");
             base.OnModelCreating(modelBuilder);
         }
     }
