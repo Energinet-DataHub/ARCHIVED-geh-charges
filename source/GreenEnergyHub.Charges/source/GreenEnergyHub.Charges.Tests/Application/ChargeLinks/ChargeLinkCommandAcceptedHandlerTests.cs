@@ -39,7 +39,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks
             [NotNull] [Frozen] Mock<IChargeLinkCommandMapper> chargeLinkCommandMapper,
             [NotNull] ChargeLinkCommandReceivedEvent chargeLinkCommandReceivedEvent,
             [NotNull] ChargeLinkCommandAcceptedEvent chargeLinkCommandAcceptedEvent,
-            [NotNull] ChargeLinkCommandAcceptedHandler sut)
+            [NotNull] ChargeLinkCommandReceivedHandler sut)
         {
             // Arrange
             chargeLinkCommandMapper.Setup(x => x.Map(chargeLinkCommandReceivedEvent))

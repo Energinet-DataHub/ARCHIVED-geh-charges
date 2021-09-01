@@ -12,38 +12,39 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using GreenEnergyHub.Charges.Domain.Charges;
-using GreenEnergyHub.Charges.Domain.Messages.Events;
-using GreenEnergyHub.Messaging.Transport;
-using NodaTime;
-
-#pragma warning disable 8618
+using System.Collections.Generic;
 
 namespace GreenEnergyHub.Charges.Domain.ChargeLinks
 {
-    public class ChargeLink : InboundIntegrationEvent, IOutboundMessage
+    /// <summary>
+    /// The link between a metering point and a charge.
+    /// </summary>
+    public class ChargeLink
     {
-        public ChargeLink()
-            : base(Messaging.MessageTypes.Common.Transaction.NewTransaction())
-        { }
+        public ChargeLink(
+            int chargeRowId,
+            int meteringPointRowId,
+            IReadOnlyCollection<ChargeLinkOperation> operations,
+            IReadOnlyCollection<ChargeLinkPeriodDetails> periodDetails)
+        {
+            ChargeRowId = chargeRowId;
+            MeteringPointRowId = meteringPointRowId;
+            Operations = operations;
+            PeriodDetails = periodDetails;
+        }
 
         /// <summary>
-        /// Contains a ID for the specific link, provided by the sender. Combined with sender.id it becomes unique.
+        /// The charge that is linked to the metering point (<see cref="MeteringPointRowId"/>).
         /// </summary>
-        public string Id { get; set; }
+        public int ChargeRowId { get; }
 
-        public string MeteringPointId { get; set; }
+        /// <summary>
+        /// The metering point that is linked to the charge (<see cref="ChargeRowId"/>).
+        /// </summary>
+        public int MeteringPointRowId { get; }
 
-        public Instant StartDateTime { get; set; }
+        public IReadOnlyCollection<ChargeLinkOperation> Operations { get; }
 
-        public Instant? EndDateTime { get; set; }
-
-        public string ChargeId { get; set; }
-
-        public int Factor { get; set; }
-
-        public string ChargeOwner { get; set; }
-
-        public ChargeType ChargeType { get; set; }
+        public IReadOnlyCollection<ChargeLinkPeriodDetails> PeriodDetails { get; }
     }
 }

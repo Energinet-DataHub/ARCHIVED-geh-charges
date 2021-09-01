@@ -12,23 +12,32 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Diagnostics.CodeAnalysis;
-using GreenEnergyHub.Charges.Domain.MarketDocument;
-using GreenEnergyHub.Charges.Domain.Messages.Command;
+using GreenEnergyHub.Charges.Domain.Charges;
+using NodaTime;
 
 #pragma warning disable 8618
 
 namespace GreenEnergyHub.Charges.Domain.ChargeLinks.Command
 {
-    public class ChargeLinkCommand : CommandBase
+    public class ChargeLinkDto
     {
-        public ChargeLinkCommand([NotNull] string correlationId)
-            : base(correlationId)
-        {
-        }
+        /// <summary>
+        /// Contains a ID for the specific link, provided by the sender. Combined with sender.id it becomes unique.
+        /// </summary>
+        public string OperationId { get; set; }
 
-        public Document Document { get; set; }
+        public string MeteringPointId { get; set; }
 
-        public ChargeLinkDto ChargeLink { get; set; }
+        public Instant StartDateTime { get; set; }
+
+        public Instant? EndDateTime { get; set; }
+
+        public string ChargeId { get; set; }
+
+        public int Factor { get; set; }
+
+        public string ChargeOwner { get; set; }
+
+        public ChargeType ChargeType { get; set; }
     }
 }

@@ -27,6 +27,11 @@ namespace GreenEnergyHub.Charges.Domain.Charges
             Points = new List<Point>();
         }
 
+        /// <summary>
+        /// Globally unique identifier of the charge.
+        /// </summary>
+        public int RowId { get; private set; }
+
         public Document Document { get; set; }
 
         /// <summary>
@@ -35,7 +40,7 @@ namespace GreenEnergyHub.Charges.Domain.Charges
         public string ChargeOperationId { get; set; }
 
         /// <summary>
-        /// Unique ID of a charge (Note, unique per market participants).
+        /// Unique ID of a charge (Note, unique per market participants AND charge type).
         /// Example: EA-001
         /// </summary>
         public string Id { get; set; }

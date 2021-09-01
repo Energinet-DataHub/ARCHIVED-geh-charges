@@ -12,23 +12,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Diagnostics.CodeAnalysis;
-using GreenEnergyHub.Charges.Domain.MarketDocument;
-using GreenEnergyHub.Charges.Domain.Messages.Command;
+using System.Threading.Tasks;
+using GreenEnergyHub.Charges.Domain.ChargeLinks;
+using GreenEnergyHub.Charges.Domain.ChargeLinks.Command;
+using Microsoft.EntityFrameworkCore;
 
-#pragma warning disable 8618
-
-namespace GreenEnergyHub.Charges.Domain.ChargeLinks.Command
+namespace GreenEnergyHub.Charges.Infrastructure.Context
 {
-    public class ChargeLinkCommand : CommandBase
+    public interface IChargeLinkDatabaseContext
     {
-        public ChargeLinkCommand([NotNull] string correlationId)
-            : base(correlationId)
-        {
-        }
+        DbSet<ChargeLink> ChargeLinks { get; }
 
-        public Document Document { get; set; }
-
-        public ChargeLinkDto ChargeLink { get; set; }
+        /// <summary>
+        /// Saves changes to the database.
+        /// </summary>
+        Task SaveChangesAsync();
     }
 }
