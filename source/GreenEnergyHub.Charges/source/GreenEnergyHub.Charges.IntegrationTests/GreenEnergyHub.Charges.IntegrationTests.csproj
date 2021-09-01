@@ -31,7 +31,7 @@ limitations under the License.
       <ProjectReference Include="..\GreenEnergyHub.Charges.ApplyDBMigrationsApp\GreenEnergyHub.Charges.ApplyDBMigrationsApp.csproj" />
       <ProjectReference Include="..\GreenEnergyHub.Charges.ChargeCommandReceiver\GreenEnergyHub.Charges.ChargeCommandReceiver.csproj" />
       <ProjectReference Include="..\GreenEnergyHub.Charges.Domain\GreenEnergyHub.Charges.Domain.csproj" />
-      <ProjectReference Include="..\GreenEnergyHub.Charges.MessageReceiver\GreenEnergyHub.Charges.MessageReceiver.csproj" />
+      <ProjectReference Include="..\GreenEnergyHub.Charges.ChargeReceiver\GreenEnergyHub.Charges.ChargeReceiver.csproj" />
       <ProjectReference Include="..\GreenEnergyHub.Charges.TestCore\GreenEnergyHub.Charges.TestCore.csproj" />
     </ItemGroup>
 

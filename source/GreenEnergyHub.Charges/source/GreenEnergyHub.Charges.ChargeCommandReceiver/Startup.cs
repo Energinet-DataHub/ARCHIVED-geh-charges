@@ -15,23 +15,22 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 using GreenEnergyHub.Charges.Application;
-using GreenEnergyHub.Charges.Application.Acknowledgement;
-using GreenEnergyHub.Charges.Application.ChangeOfCharges;
-using GreenEnergyHub.Charges.Application.ChangeOfCharges.Repositories;
-using GreenEnergyHub.Charges.Application.Factories;
-using GreenEnergyHub.Charges.Application.Validation;
-using GreenEnergyHub.Charges.Application.Validation.BusinessValidation;
-using GreenEnergyHub.Charges.Application.Validation.BusinessValidation.Factories;
-using GreenEnergyHub.Charges.Application.Validation.InputValidation;
+using GreenEnergyHub.Charges.Application.Charges.Acknowledgement;
+using GreenEnergyHub.Charges.Application.Charges.Factories;
+using GreenEnergyHub.Charges.Application.Charges.Handlers;
+using GreenEnergyHub.Charges.Application.Charges.Repositories;
+using GreenEnergyHub.Charges.Application.Charges.Validation;
+using GreenEnergyHub.Charges.Application.Charges.Validation.BusinessValidation;
+using GreenEnergyHub.Charges.Application.Charges.Validation.BusinessValidation.Factories;
+using GreenEnergyHub.Charges.Application.Charges.Validation.InputValidation;
 using GreenEnergyHub.Charges.ChargeCommandReceiver;
 using GreenEnergyHub.Charges.Core.DateTime;
-using GreenEnergyHub.Charges.Domain.Events.Local;
+using GreenEnergyHub.Charges.Domain.Charges.Events.Local;
 using GreenEnergyHub.Charges.Infrastructure.Context;
 using GreenEnergyHub.Charges.Infrastructure.Context.Mapping;
 using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeCommandAccepted;
 using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeCommandReceived;
 using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeCommandRejected;
-using GreenEnergyHub.Charges.Infrastructure.Mapping;
 using GreenEnergyHub.Charges.Infrastructure.Messaging.Registration;
 using GreenEnergyHub.Charges.Infrastructure.Repositories;
 using GreenEnergyHub.Iso8601;
@@ -41,6 +40,8 @@ using Microsoft.Azure.Functions.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using NodaTime;
+using ChargeCommandHandler = GreenEnergyHub.Charges.Application.Charges.Handlers.ChargeCommandHandler;
+using IChargeCommandHandler = GreenEnergyHub.Charges.Application.Charges.Handlers.IChargeCommandHandler;
 
 [assembly: FunctionsStartup(typeof(Startup))]
 
@@ -50,11 +51,11 @@ namespace GreenEnergyHub.Charges.ChargeCommandReceiver
     {
         public override void Configure([NotNull] IFunctionsHostBuilder builder)
         {
-            builder.Services.AddGreenEnergyHub(typeof(ChangeOfChargesMessageHandler).Assembly);
+            builder.Services.AddGreenEnergyHub(typeof(ChargesMessageHandler).Assembly);
             builder.Services.AddScoped(typeof(IClock), _ => SystemClock.Instance);
-            builder.Services.AddScoped<IChangeOfChargesTransactionHandler, ChangeOfChargesTransactionHandler>();
-            builder.Services.AddScoped<IChargeCommandConfirmationService, ChargeCommandConfirmationService>();
             builder.Services.AddScoped<IChargeCommandHandler, ChargeCommandHandler>();
+            builder.Services.AddScoped<IChargeCommandConfirmationService, ChargeCommandConfirmationService>();
+            builder.Services.AddScoped<IChargeCommandReceivedEventHandler, ChargeCommandReceivedEventHandler>();
             builder.Services.AddScoped<IChargeFactory, ChargeFactory>();
             builder.Services.AddScoped<IChargeCommandAcceptedEventFactory, ChargeCommandAcceptedEventFactory>();
             builder.Services.AddScoped<IChargeCommandRejectedEventFactory, ChargeCommandRejectedEventFactory>();

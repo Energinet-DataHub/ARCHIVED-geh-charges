@@ -17,9 +17,11 @@ using System.Diagnostics.CodeAnalysis;
 using Google.Protobuf.WellKnownTypes;
 using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.Domain.ChargeLinks;
+using GreenEnergyHub.Charges.Domain.ChargeLinks.Events.Local;
 using GreenEnergyHub.Charges.Domain.MarketDocument;
 using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandReceived;
 using GreenEnergyHub.Messaging.Protobuf;
+using NodaTime;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
 {
@@ -27,13 +29,17 @@ namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
     {
         protected override Google.Protobuf.IMessage Convert([NotNull]ChargeLinkCommandReceivedEvent chargeLinkCommandReceivedEvent)
         {
-            var document = chargeLinkCommandReceivedEvent.Document;
-            var chargeLink = chargeLinkCommandReceivedEvent.ChargeLink;
+            var document = chargeLinkCommandReceivedEvent.ChargeLinkCommand.Document;
 
             return new ChargeLinkCommandReceivedContract
             {
-                Document = ConvertDocument(document),
-                ChargeLink = ConvertChargeLink(chargeLinkCommandReceivedEvent, chargeLink),
+                PublishedTime = chargeLinkCommandReceivedEvent.PublishedTime.ToTimestamp().TruncateToSeconds(),
+                ChargeLinkCommand = new ChargeLinkCommandContract
+                {
+                    Document = ConvertDocument(document),
+                    ChargeLink = ConvertChargeLink(chargeLinkCommandReceivedEvent),
+                    CorrelationId = chargeLinkCommandReceivedEvent.ChargeLinkCommand.CorrelationId,
+                },
                 CorrelationId = chargeLinkCommandReceivedEvent.CorrelationId,
             };
         }
@@ -61,11 +67,12 @@ namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
             };
         }
 
-        private static ChargeLinkContract ConvertChargeLink(ChargeLinkCommandReceivedEvent chargeLinkCommandReceivedEvent, ChargeLink chargeLink)
+        private static ChargeLinkContract ConvertChargeLink(ChargeLinkCommandReceivedEvent chargeLinkCommandReceivedEvent)
         {
+            var chargeLink = chargeLinkCommandReceivedEvent.ChargeLinkCommand.ChargeLink;
             return new ChargeLinkContract
             {
-                Id = chargeLinkCommandReceivedEvent.ChargeLink.Id,
+                Id = chargeLink.Id,
                 MeteringPointId = chargeLink.MeteringPointId,
                 ChargeId = chargeLink.ChargeId,
                 ChargeOwner = chargeLink.ChargeOwner,

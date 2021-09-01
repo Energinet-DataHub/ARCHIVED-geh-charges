@@ -14,7 +14,7 @@ All process flows within the Charges domain will be gathered here.
 The following process flow depicts the different paths a change of charge price list can take through the domain.
 It also shows the micro services involved along with the activities they perform.
 
-![Process flow](.././images/ChangeOfChargePriceListProcessFlow.png)
+![Process flow](.././images/ChargePriceListProcessFlow.png)
 
 ## Persisting charges rule set
 

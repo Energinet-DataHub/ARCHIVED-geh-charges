@@ -13,7 +13,7 @@
 // limitations under the License.
 
 using System;
-using GreenEnergyHub.Charges.Domain.Events.Integration;
+using GreenEnergyHub.Charges.Domain.Charges.Events.Integration;
 using GreenEnergyHub.Charges.Domain.MeteringPoints;
 using NodaTime.Text;
 
