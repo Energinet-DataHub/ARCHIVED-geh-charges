@@ -85,7 +85,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
                 charge.Type).ConfigureAwait(false);
 
             // Assert
-            Assert.False(expected);
+            Assert.True(expected);
         }
 
         [Fact]
