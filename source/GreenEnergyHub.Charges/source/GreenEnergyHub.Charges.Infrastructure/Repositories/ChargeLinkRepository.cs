@@ -15,16 +15,15 @@
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application.ChargeLinks.Repositories;
 using GreenEnergyHub.Charges.Domain.ChargeLinks;
-using GreenEnergyHub.Charges.Domain.ChargeLinks.Command;
 using GreenEnergyHub.Charges.Infrastructure.Context;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Repositories
 {
     public class ChargeLinkRepository : IChargeLinkRepository
     {
-        private readonly IChargeLinkDatabaseContext _context;
+        private readonly IChargesDatabaseContext _context;
 
-        public ChargeLinkRepository(IChargeLinkDatabaseContext context)
+        public ChargeLinkRepository(IChargesDatabaseContext context)
         {
             _context = context;
         }
