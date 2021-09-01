@@ -32,6 +32,11 @@ namespace GreenEnergyHub.Charges.Domain.Charges
         /// </summary>
         private readonly Instant _settingStartDateTime;
 
+        /// <summary>
+        /// The date the charge is no longer applicable for linking.
+        /// </summary>
+        private readonly Instant? _endDateTime;
+
         public DefaultChargeLink(
             Instant meteringPointCreatedDateTime,
             Instant settingStartDateTime,
@@ -40,7 +45,7 @@ namespace GreenEnergyHub.Charges.Domain.Charges
         {
             _meteringPointCreatedDateTime = meteringPointCreatedDateTime;
             _settingStartDateTime = settingStartDateTime;
-            EndDateTime = endDateTime;
+            _endDateTime = endDateTime;
             ChargeRowId = chargeRowId;
         }
 
@@ -52,9 +57,9 @@ namespace GreenEnergyHub.Charges.Domain.Charges
             _settingStartDateTime > _meteringPointCreatedDateTime ? _settingStartDateTime : _meteringPointCreatedDateTime;
 
         /// <summary>
-        /// The date the charge is no longer applicable for linking.
+        /// If the charge setting has a EndDateTime, it is only applicable for link if it is lesser or equal too StartDateTime.
         /// </summary>
-        public Instant? EndDateTime { get; }
+        public bool ApplicableForLinking => _endDateTime == null || _endDateTime.Value >= StartDateTime;
 
         /// <summary>
         /// A reference to the charge in the Charge table

@@ -36,5 +36,49 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Charges
                 // Assert
                 sut.StartDateTime.Should().BeEquivalentTo(settingStartDateTime);
             }
+
+            [Fact]
+            public void WhenApplicableForLinkingIsCalled_ReturnsTrue_WhenEndDateTimeIsNull()
+            {
+                // Arrange
+                var meteringPointCreatedDateTime = SystemClock.Instance.GetCurrentInstant();
+                var settingStartDateTime = SystemClock.Instance.GetCurrentInstant().Plus(Duration.FromDays(1));
+
+                // Act
+                var sut = new DefaultChargeLink(meteringPointCreatedDateTime, settingStartDateTime, null, 0);
+
+                // Assert
+                sut.ApplicableForLinking.Should().BeTrue();
+            }
+
+            [Fact]
+            public void WhenApplicableForLinkingIsCalled_ReturnsFalse_WhenEndDateTimeIsOlderThanStartDateTime()
+            {
+                // Arrange
+                var meteringPointCreatedDateTime = SystemClock.Instance.GetCurrentInstant().Plus(Duration.FromDays(1));
+                var settingStartDateTime = SystemClock.Instance.GetCurrentInstant().Plus(Duration.FromDays(1));
+                var endDateTime = SystemClock.Instance.GetCurrentInstant();
+
+                // Act
+                var sut = new DefaultChargeLink(meteringPointCreatedDateTime, settingStartDateTime, endDateTime, 0);
+
+                // Assert
+                sut.ApplicableForLinking.Should().BeFalse();
+            }
+
+            [Fact]
+            public void WhenApplicableForLinkingIsCalled_ReturnsTrue_WhenEndDateTimeIsEqualToStartDateTime()
+            {
+                // Arrange
+                var meteringPointCreatedDateTime = SystemClock.Instance.GetCurrentInstant();
+                var settingStartDateTime = SystemClock.Instance.GetCurrentInstant().Plus(Duration.FromDays(1));
+                var endDateTime = SystemClock.Instance.GetCurrentInstant().Plus(Duration.FromDays(1));
+
+                // Act
+                var sut = new DefaultChargeLink(meteringPointCreatedDateTime, settingStartDateTime, endDateTime, 0);
+
+                // Assert
+                sut.ApplicableForLinking.Should().BeTrue();
+            }
         }
 }
