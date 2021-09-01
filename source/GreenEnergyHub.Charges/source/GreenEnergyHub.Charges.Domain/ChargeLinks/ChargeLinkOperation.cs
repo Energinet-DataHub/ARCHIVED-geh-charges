@@ -20,7 +20,7 @@ namespace GreenEnergyHub.Charges.Domain.ChargeLinks
     public class ChargeLinkOperation
     {
         private const int MaxIdLength = 100;
-        private const int RequiredCorrelationIdLength = 36;
+        private const int MaxCorrelationIdLength = 36;
 
         public ChargeLinkOperation(string id, string correlationId)
         {
@@ -28,7 +28,7 @@ namespace GreenEnergyHub.Charges.Domain.ChargeLinks
             if (id.Length > MaxIdLength) throw new ArgumentException($"Must not exceed {MaxIdLength} characters.", nameof(id));
 
             if (correlationId == null) throw new ArgumentNullException(nameof(correlationId));
-            if (correlationId.Length > RequiredCorrelationIdLength) throw new ArgumentException($"Must be {RequiredCorrelationIdLength} characters long.", nameof(correlationId));
+            if (correlationId.Length > MaxCorrelationIdLength) throw new ArgumentException($"Must not exceed {MaxCorrelationIdLength} characters.", nameof(correlationId));
 
             Id = id;
             CorrelationId = correlationId;
