@@ -82,8 +82,7 @@ IF /I not "%meteringPointCreatedReceiver%" == "n" (
 
 IF /I not "%chargeLinkCommandReceiver%" == "n" (
     pushd source\GreenEnergyHub.Charges.ChargeLinkCommandReceiver\bin\Release\net5.0
-    echo Charge Link Command Receiver
-    func azure functionapp publish azfun-link-command-receiver-charges-%organization%-s
+    start "Deploy: Charge Link Command Receiver" cmd /c "func azure functionapp publish azfun-link-command-receiver-charges-%organization%-s & pause"
     popd
 )
 
