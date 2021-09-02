@@ -21,8 +21,10 @@ using GreenEnergyHub.Charges.Domain.MarketDocument;
 using GreenEnergyHub.Charges.Infrastructure.Context;
 using GreenEnergyHub.Charges.Infrastructure.Repositories;
 using GreenEnergyHub.Charges.TestCore.Attributes;
+using GreenEnergyHub.Charges.TestCore.Squadron;
 using Microsoft.EntityFrameworkCore;
 using NodaTime;
+using Squadron;
 using Xunit;
 using Xunit.Categories;
 using Charge = GreenEnergyHub.Charges.Domain.Charges.Charge;
@@ -31,22 +33,28 @@ using MarketParticipant = GreenEnergyHub.Charges.Infrastructure.Context.Model.Ma
 namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
 {
     /// <summary>
-    /// Tests <see cref="ChargeRepository"/> using an SQLite in-memory database.
+    /// Tests <see cref="ChargeRepository"/> using a database created with squadron.
     /// </summary>
     [UnitTest]
-    public class ChargeRepositoryTest
+    public class ChargeRepositoryTest : IClassFixture<SqlServerResource<SqlServerOptions>>
     {
         private const string MarketParticipantId = "MarketParticipantId";
+        private readonly SqlServerResource<SqlServerOptions> _resource;
+
+        public ChargeRepositoryTest(SqlServerResource<SqlServerOptions> resource)
+        {
+            _resource = resource;
+        }
 
         [Fact]
         public async Task GetChargeAsync_WhenChargeIsCreated_ThenSuccessReturnedAsync()
         {
+            await using var chargesDatabaseContext = await SquadronContextFactory
+                .GetDatabaseContextAsync(_resource)
+                .ConfigureAwait(false);
             // Arrange
             var charge = GetValidCharge();
-            CreateAndSeedDatabase(nameof(GetChargeAsync_WhenChargeIsCreated_ThenSuccessReturnedAsync));
-            await using var chargesDatabaseContext =
-                new ChargesDatabaseContext(
-                    GetDatabaseContext(nameof(GetChargeAsync_WhenChargeIsCreated_ThenSuccessReturnedAsync)));
+            await SeedDatabase(chargesDatabaseContext).ConfigureAwait(false);
             var sut = new ChargeRepository(chargesDatabaseContext);
 
             // Act
@@ -60,11 +68,12 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
         [Fact]
         public async Task CheckIfChargeExistsAsync_WhenChargeIsCreated_ThenSuccessReturnedAsync()
         {
+            await using var chargesDatabaseContext = await SquadronContextFactory
+                .GetDatabaseContextAsync(_resource)
+                .ConfigureAwait(false);
             // Arrange
             var charge = GetValidCharge();
-            CreateAndSeedDatabase(nameof(CheckIfChargeExistsAsync_WhenChargeIsCreated_ThenSuccessReturnedAsync));
-            await using var chargesDatabaseContext = new ChargesDatabaseContext(
-                GetDatabaseContext(nameof(CheckIfChargeExistsAsync_WhenChargeIsCreated_ThenSuccessReturnedAsync)));
+            await SeedDatabase(chargesDatabaseContext).ConfigureAwait(false);
             var sut = new ChargeRepository(chargesDatabaseContext);
 
             // Act
@@ -82,11 +91,13 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
         [Fact]
         public async Task CheckIfChargeExistsByCorrelationIdAsync_WhenChargeIsCreated_ThenSuccessReturnedAsync()
         {
+            await using var chargesDatabaseContext = await SquadronContextFactory
+                .GetDatabaseContextAsync(_resource)
+                .ConfigureAwait(false);
+
             // Arrange
             var charge = GetValidCharge();
-            CreateAndSeedDatabase(nameof(CheckIfChargeExistsByCorrelationIdAsync_WhenChargeIsCreated_ThenSuccessReturnedAsync));
-            await using var chargesDatabaseContext = new ChargesDatabaseContext(
-                GetDatabaseContext(nameof(CheckIfChargeExistsByCorrelationIdAsync_WhenChargeIsCreated_ThenSuccessReturnedAsync)));
+            await SeedDatabase(chargesDatabaseContext).ConfigureAwait(false);
             var sut = new ChargeRepository(chargesDatabaseContext);
 
             // Act
@@ -150,24 +161,17 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
             return transaction;
         }
 
-        private static void CreateAndSeedDatabase(string sqlFileName)
+        private static async Task SeedDatabase(ChargesDatabaseContext context)
         {
-            using var context = new ChargesDatabaseContext(GetDatabaseContext(sqlFileName));
-            context.Database.EnsureDeleted();
-            context.Database.EnsureCreated();
-            context.MarketParticipants.Add(
-                            new MarketParticipant { Name = "Name", Role = 1, MarketParticipantId = MarketParticipantId });
-            context.SaveChanges();
-        }
+            var marketParticipant = await context.MarketParticipants.SingleOrDefaultAsync(x => x.MarketParticipantId == MarketParticipantId)
+                .ConfigureAwait(false);
 
-        private static DbContextOptions<ChargesDatabaseContext> GetDatabaseContext(string sqlFileName)
-        {
-            DbContextOptions<ChargesDatabaseContext> dbContextOptions =
-                new DbContextOptionsBuilder<ChargesDatabaseContext>()
-                    .UseSqlite($"Filename={sqlFileName}.db")
-                    .Options;
-
-            return dbContextOptions;
+            if (marketParticipant == null)
+            {
+                context.MarketParticipants.Add(
+                                new MarketParticipant { Name = "Name", Role = 1, MarketParticipantId = MarketParticipantId });
+                await context.SaveChangesAsync().ConfigureAwait(false);
+            }
         }
     }
 }

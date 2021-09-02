@@ -15,26 +15,32 @@
 using System.Threading.Tasks;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.MeteringPoints;
-using GreenEnergyHub.Charges.Infrastructure.Context;
 using GreenEnergyHub.Charges.Infrastructure.Repositories;
-using Microsoft.EntityFrameworkCore;
+using GreenEnergyHub.Charges.TestCore.Squadron;
 using NodaTime;
+using Squadron;
 using Xunit;
 using Xunit.Categories;
 
 namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
 {
     [UnitTest]
-    public class MeteringPointRepositoryTests
+    public class MeteringPointRepositoryTests : IClassFixture<SqlServerResource<SqlServerOptions>>
     {
+        private readonly SqlServerResource<SqlServerOptions> _resource;
+
+        public MeteringPointRepositoryTests(SqlServerResource<SqlServerOptions> resource)
+        {
+            _resource = resource;
+        }
+
         [Fact]
         public async Task StoreMeteringPointAsync_WhenMeteringPointIsCreated_StoresMeteringPointInDatabase()
         {
             // Arrange
-            EnsureDatabaseCreated(nameof(StoreMeteringPointAsync_WhenMeteringPointIsCreated_StoresMeteringPointInDatabase));
-            await using var chargesDatabaseContext = new ChargesDatabaseContext(
-                GetDatabaseContext(
-                    nameof(StoreMeteringPointAsync_WhenMeteringPointIsCreated_StoresMeteringPointInDatabase)));
+            await using var chargesDatabaseContext = await SquadronContextFactory
+                .GetDatabaseContextAsync(_resource)
+                .ConfigureAwait(false);
             var expected = GetMeteringPointCreatedEvent();
             var sut = new MeteringPointRepository(chargesDatabaseContext);
 
@@ -59,23 +65,6 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
                 SystemClock.Instance.GetCurrentInstant(),
                 ConnectionState.Connected,
                 SettlementMethod.Flex);
-        }
-
-        private static void EnsureDatabaseCreated(string sqlFileName)
-        {
-            using var context = new ChargesDatabaseContext(GetDatabaseContext(sqlFileName));
-            context.Database.EnsureDeleted();
-            context.Database.EnsureCreated();
-        }
-
-        private static DbContextOptions<ChargesDatabaseContext> GetDatabaseContext(string sqlFileName)
-        {
-            DbContextOptions<ChargesDatabaseContext> dbContextOptions =
-                new DbContextOptionsBuilder<ChargesDatabaseContext>()
-                    .UseSqlite($"Filename={sqlFileName}.db")
-                    .Options;
-
-            return dbContextOptions;
         }
     }
 }
