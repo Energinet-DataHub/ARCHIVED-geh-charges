@@ -38,7 +38,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Factories
 
             // Assert
             Assert.NotNull(result);
-            Assert.Equal(command.ChargeLink.Id, result.ChargeLinkId);
+            Assert.Equal(command.ChargeLink.OperationId, result.ChargeLinkId);
             Assert.Equal(command.ChargeLink.MeteringPointId, result.MeteringPointId);
             Assert.Equal(command.ChargeLink.ChargeId, result.ChargeId);
             Assert.Equal(command.ChargeLink.ChargeType, result.ChargeType);
