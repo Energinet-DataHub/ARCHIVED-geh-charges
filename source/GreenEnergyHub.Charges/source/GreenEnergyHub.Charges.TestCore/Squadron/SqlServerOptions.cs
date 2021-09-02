@@ -29,7 +29,8 @@ namespace GreenEnergyHub.Charges.TestCore.Squadron
                 throw new ArgumentNullException(nameof(builder));
             }
 
-            var password = "_Qtp" + Guid.NewGuid().ToString("N");
+            // Generate random valid password - "N" removes '-' as they are not valid
+            var password = Guid.NewGuid().ToString("N");
             builder
                 .Name("mssql")
                 .Image("mcr.microsoft.com/mssql/server:2019-latest")
