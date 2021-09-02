@@ -33,7 +33,7 @@ using MarketParticipant = GreenEnergyHub.Charges.Infrastructure.Context.Model.Ma
 namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
 {
     /// <summary>
-    /// Tests <see cref="ChargeRepository"/> using an SQLite in-memory database.
+    /// Tests <see cref="ChargeRepository"/> using a database created with squadron.
     /// </summary>
     [UnitTest]
     public class ChargeRepositoryTest : IClassFixture<SqlServerResource<SqlServerOptions>>
