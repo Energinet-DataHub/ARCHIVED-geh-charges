@@ -22,47 +22,81 @@ using Xunit.Categories;
 
 namespace GreenEnergyHub.Charges.Tests.Domain.Charges
 {
-        [UnitTest]
-        public class DefaultChargeLinkTests
+    [UnitTest]
+    public class DefaultChargeLinkTests
+    {
+        [Theory]
+        [InlineAutoMoqData("2020-05-10T13:00:00Z", "2020-05-11T13:00:00Z", "2020-05-11T13:00:00Z")]
+        [InlineAutoMoqData("2020-05-12T13:00:00Z", "2020-05-11T13:00:00Z", "2020-05-12T13:00:00Z")]
+        [InlineAutoMoqData("2020-05-13T13:00:00Z", "2020-05-13T13:00:00Z", "2020-05-13T13:00:00Z")]
+        public void WhenStartDateTimeIsCalled_LatestDateIsUsed_FromMeteringPointCreatedDateTimeAndSettingStartDateTime(
+            string meteringPointDate,
+            string startDate,
+            string expectedStartDate)
         {
-            [Theory]
-            [InlineAutoMoqData("2020-05-10T13:00:00Z", "2020-05-11T13:00:00Z", "2020-05-11T13:00:00Z")]
-            [InlineAutoMoqData("2020-05-12T13:00:00Z", "2020-05-11T13:00:00Z", "2020-05-12T13:00:00Z")]
-            [InlineAutoMoqData("2020-05-13T13:00:00Z", "2020-05-13T13:00:00Z", "2020-05-13T13:00:00Z")]
-            public void WhenStartDateTimeIsCalled_LatestDateIsUsed_FromMeteringPointCreatedDateTimeAndSettingStartDateTime2(
-                string meteringPointDate,
-                string startDate,
-                string expectedStartDate)
-            {
-                // Arrange
-                var meteringPointCreatedDateTime = InstantPattern.General.Parse(meteringPointDate).Value;
-                var startDateTime = InstantPattern.General.Parse(startDate).Value;
+            // Arrange
+            var meteringPointCreatedDateTime = InstantPattern.General.Parse(meteringPointDate).Value;
+            var startDateTime = InstantPattern.General.Parse(startDate).Value;
 
-                // Act
-                var sut = new DefaultChargeLink(startDateTime, null, 0, MeteringPointType.Consumption);
+            // Act
+            var sut = new DefaultChargeLink(startDateTime, null, 0, MeteringPointType.Consumption);
 
-                // Assert
-                sut.GetStartDateTime(meteringPointCreatedDateTime).Should().BeEquivalentTo(InstantPattern.General.Parse(expectedStartDate).Value);
-            }
-
-            [Theory]
-            [InlineAutoMoqData("2020-05-10T13:00:00Z", MeteringPointType.Consumption, true)]
-            [InlineAutoMoqData("2020-05-12T13:00:00Z", MeteringPointType.Exchange, false)]
-            public void WhenStartDateTimeIsCalled_LatestDateIsUsed_FromMeteringPointCreatedDateTimeAndSettingStartDateTime3(
-                string dateTime,
-                MeteringPointType meteringPointType,
-                bool applicableForLinking)
-            {
-                // Arrange
-                var meteringPointCreatedDateTime = InstantPattern.General.Parse(dateTime).Value;
-                var startDateTime = InstantPattern.General.Parse(dateTime).Value;
-
-                // Act
-                var sut = new DefaultChargeLink(startDateTime, null, 0, MeteringPointType.Consumption);
-
-                // Assert
-                sut.ApplicableForLinking(meteringPointCreatedDateTime, meteringPointType).Should()
-                    .Be(applicableForLinking);
-            }
+            // Assert
+            sut.GetStartDateTime(meteringPointCreatedDateTime).Should().BeEquivalentTo(InstantPattern.General.Parse(expectedStartDate).Value);
         }
+
+        [Fact]
+        public void ApplicableForLinking_WhenEndDateTimeIsNullAndMpTypeMatch_ReturnsTrue()
+        {
+            // Arrange
+            var startDateTime = InstantPattern.General.Parse("2020-05-10T13:00:00Z").Value;
+            var meteringPointCreatedDateTime = startDateTime;
+
+            var sut = new DefaultChargeLink(startDateTime, null, 0, MeteringPointType.Consumption);
+
+            // Act / Assert
+            Assert.True(sut.ApplicableForLinking(meteringPointCreatedDateTime, MeteringPointType.Consumption));
+        }
+
+        [Fact]
+        public void ApplicableForLinking_WhenEndDateTimeIsLaterThanStartDateTimeAndMpTypeMatch_ReturnsTrue()
+        {
+            // Arrange
+            var startDateTime = InstantPattern.General.Parse("2020-05-10T13:00:00Z").Value;
+            var endDateTime = InstantPattern.General.Parse("2020-05-11T13:00:00Z").Value;
+            var meteringPointCreatedDateTime = startDateTime;
+
+            var sut = new DefaultChargeLink(startDateTime, endDateTime, 0, MeteringPointType.Consumption);
+
+            // Act / Assert
+            Assert.True(sut.ApplicableForLinking(meteringPointCreatedDateTime, MeteringPointType.Consumption));
+        }
+
+        [Fact]
+        public void ApplicableForLinking_WhenEndDateTimeEqualsStartDateTime_ReturnsFalse()
+        {
+            // Arrange
+            var startDateTime = InstantPattern.General.Parse("2020-05-10T13:00:00Z").Value;
+            var endDateTime = startDateTime;
+            var meteringPointCreatedDateTime = startDateTime;
+
+            var sut = new DefaultChargeLink(startDateTime, endDateTime, 0, MeteringPointType.Consumption);
+
+            // Act / Assert
+            Assert.False(sut.ApplicableForLinking(meteringPointCreatedDateTime, MeteringPointType.Consumption));
+        }
+
+        [Fact]
+        public void ApplicableForLinking_WhenMpTypesDoNotMatch_ReturnsFalse()
+        {
+            // Arrange
+            var startDateTime = InstantPattern.General.Parse("2020-05-10T13:00:00Z").Value;
+            var meteringPointCreatedDateTime = startDateTime;
+
+            var sut = new DefaultChargeLink(startDateTime, null, 0, MeteringPointType.Consumption);
+
+            // Assert
+            Assert.False(sut.ApplicableForLinking(meteringPointCreatedDateTime, MeteringPointType.Production));
+        }
+    }
 }
