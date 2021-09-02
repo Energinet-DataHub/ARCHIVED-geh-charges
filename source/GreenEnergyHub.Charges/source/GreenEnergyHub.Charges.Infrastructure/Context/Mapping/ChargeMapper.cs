@@ -74,8 +74,8 @@ namespace GreenEnergyHub.Charges.Infrastructure.Context.Mapping
                 ChargeId = charge.Id,
                 ChargeType = (int)charge.Type,
                 Resolution = (int)charge.Resolution,
-                TaxIndicator = Convert.ToByte(charge.TaxIndicator),
-                TransparentInvoicing = Convert.ToByte(charge.TransparentInvoicing),
+                TaxIndicator = charge.TaxIndicator,
+                TransparentInvoicing = charge.TransparentInvoicing,
                 ChargePrices = MapChargeToChargePrice(charge, chargeOperation).ToList(),
                 ChargePeriodDetails = new List<ChargePeriodDetails>
                 {

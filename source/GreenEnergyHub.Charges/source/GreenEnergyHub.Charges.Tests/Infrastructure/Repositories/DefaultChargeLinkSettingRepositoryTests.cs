@@ -83,8 +83,8 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
                 Currency = "DKK",
                 Resolution = (int)Resolution.P1D,
                 ChargeType = (int)ChargeType.Fee,
-                TaxIndicator = 0,
-                TransparentInvoicing = 1,
+                TaxIndicator = false,
+                TransparentInvoicing = true,
                 ChargeId = "ChargeId1",
                 MarketParticipantRowId = marketParticipant.Entity.RowId,
             });

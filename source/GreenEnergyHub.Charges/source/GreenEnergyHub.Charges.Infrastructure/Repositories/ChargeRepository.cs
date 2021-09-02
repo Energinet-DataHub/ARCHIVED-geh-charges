@@ -20,6 +20,7 @@ using GreenEnergyHub.Charges.Infrastructure.Context;
 using GreenEnergyHub.Charges.Infrastructure.Context.Mapping;
 using GreenEnergyHub.Charges.Infrastructure.Context.Model;
 using Microsoft.EntityFrameworkCore;
+using Charge = GreenEnergyHub.Charges.Domain.Charges.Charge;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Repositories
 {
@@ -41,6 +42,18 @@ namespace GreenEnergyHub.Charges.Infrastructure.Repositories
                 .SingleAsync(x => x.ChargeId == chargeId &&
                                            x.MarketParticipant.MarketParticipantId == owner &&
                                            x.ChargeType == (int)chargeType).ConfigureAwait(false);
+
+            return ChargeMapper.MapChargeToChargeDomainModel(charge);
+        }
+
+        public async Task<Charge> GetChargeAsync(int chargeRowId)
+        {
+            var charge = await _chargesDatabaseContext.Charges
+                .Include(x => x.ChargePeriodDetails)
+                .Include(x => x.ChargePrices)
+                .Include(x => x.MarketParticipant)
+                .Include(x => x.ChargeOperation)
+                .SingleAsync(x => x.RowId == chargeRowId).ConfigureAwait(false);
 
             return ChargeMapper.MapChargeToChargeDomainModel(charge);
         }
