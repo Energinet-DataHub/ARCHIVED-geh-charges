@@ -68,7 +68,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Messaging.Serialization.Co
             Assert.Equal(InstantPattern.ExtendedIso.Parse("2021-07-05T13:20:02.387Z").Value, result.Document.CreatedDateTime);
 
             // ChargeLink
-            Assert.Equal("rId_Valid_001", result.ChargeLink.Id);
+            Assert.Equal("rId_Valid_001", result.ChargeLink.OperationId);
             Assert.Equal("578032999778756222", result.ChargeLink.MeteringPointId);
             Assert.Equal(InstantPattern.ExtendedIso.Parse("2021-09-27T22:00:00Z").Value, result.ChargeLink.StartDateTime);
             Assert.Equal(InstantPattern.ExtendedIso.Parse("2021-11-05T23:00:00Z").Value, result.ChargeLink.EndDateTime);
@@ -96,7 +96,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Messaging.Serialization.Co
 
             // Assert
             Assert.Equal("DocId_Valid_002", result.Document.Id);
-            Assert.Equal("rId_Valid_002", result.ChargeLink.Id);
+            Assert.Equal("rId_Valid_002", result.ChargeLink.OperationId);
 
             await Task.CompletedTask.ConfigureAwait(false);
         }
@@ -119,7 +119,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Messaging.Serialization.Co
 
             // Assert
             Assert.Equal("DocId_Valid_003", result.Document.Id);
-            Assert.Equal("rId_Valid_003", result.ChargeLink.Id);
+            Assert.Equal("rId_Valid_003", result.ChargeLink.OperationId);
             Assert.Null(result.ChargeLink.EndDateTime);
 
             await Task.CompletedTask.ConfigureAwait(false);

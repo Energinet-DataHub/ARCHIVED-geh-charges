@@ -14,26 +14,38 @@
 
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
+using GreenEnergyHub.Charges.Application.ChargeLinks.Factories;
 using GreenEnergyHub.Charges.Application.ChargeLinks.Mapping;
+using GreenEnergyHub.Charges.Application.ChargeLinks.Repositories;
 using GreenEnergyHub.Charges.Domain.ChargeLinks.Events.Local;
 
 namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
 {
-    public class ChargeLinkCommandAcceptedHandler : IChargeLinkCommandAcceptedHandler
+    public class ChargeLinkCommandReceivedHandler : IChargeLinkCommandReceivedHandler
     {
         private readonly IMessageDispatcher<ChargeLinkCommandAcceptedEvent> _messageDispatcher;
         private readonly IChargeLinkCommandMapper _chargeLinkCommandMapper;
+        private readonly IChargeLinkFactory _chargeLinkFactory;
+        private readonly IChargeLinkRepository _chargeLinkRepository;
 
-        public ChargeLinkCommandAcceptedHandler(
+        public ChargeLinkCommandReceivedHandler(
             IMessageDispatcher<ChargeLinkCommandAcceptedEvent> messageDispatcher,
-            IChargeLinkCommandMapper chargeLinkCommandMapper)
+            IChargeLinkCommandMapper chargeLinkCommandMapper,
+            IChargeLinkFactory chargeLinkFactory,
+            IChargeLinkRepository chargeLinkRepository)
         {
             _messageDispatcher = messageDispatcher;
             _chargeLinkCommandMapper = chargeLinkCommandMapper;
+            _chargeLinkFactory = chargeLinkFactory;
+            _chargeLinkRepository = chargeLinkRepository;
         }
 
         public async Task HandleAsync([NotNull] ChargeLinkCommandReceivedEvent chargeLinkCommand)
         {
+            // Upcoming stories will cover the update scenarios where charge link already exists
+            var chargeLink = await _chargeLinkFactory.CreateAsync(chargeLinkCommand).ConfigureAwait(false);
+            await _chargeLinkRepository.StoreAsync(chargeLink).ConfigureAwait(false);
+
             var chargeCommandAcceptedEvent = _chargeLinkCommandMapper.Map(chargeLinkCommand);
             await _messageDispatcher.DispatchAsync(chargeCommandAcceptedEvent).ConfigureAwait(false);
         }

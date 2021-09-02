@@ -24,7 +24,7 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.Factories
         public ChargeLinkCreatedEvent CreateEvent([NotNull] ChargeLinkCommandAcceptedEvent command)
         {
             return new ChargeLinkCreatedEvent(
-                command.ChargeLink.Id,
+                command.ChargeLink.OperationId,
                 command.ChargeLink.MeteringPointId,
                 command.ChargeLink.ChargeId,
                 command.ChargeLink.ChargeType,
