@@ -40,7 +40,7 @@ namespace GreenEnergyHub.Charges.TestCore.Squadron
 
         private static async Task<string> CreateDatabaseAsync(SqlServerResource<SqlServerOptions> resource)
         {
-            const string databaseName = "New_Database";
+            const string databaseName = "squadron_created_database";
 
             var connectionString = await resource.CreateDatabaseAsync(databaseName).ConfigureAwait(false);
 
