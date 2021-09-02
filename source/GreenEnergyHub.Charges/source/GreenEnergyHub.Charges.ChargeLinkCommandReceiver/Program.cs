@@ -46,7 +46,7 @@ namespace GreenEnergyHub.Charges.ChargeLinkCommandReceiver
         {
             serviceCollection.AddScoped(typeof(IClock), _ => SystemClock.Instance);
             serviceCollection.AddLogging();
-            serviceCollection.AddScoped<IChargeLinkCommandAcceptedHandler, ChargeLinkCommandAcceptedHandler>();
+            serviceCollection.AddScoped<IChargeLinkCommandReceivedHandler, ChargeLinkCommandReceivedHandler>();
 
             serviceCollection.AddSingleton<IChargeLinkCommandMapper, ChargeLinkCommandMapper>();
 

@@ -18,7 +18,7 @@ using GreenEnergyHub.Charges.Domain.ChargeLinks.Events.Local;
 
 namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
 {
-    public interface IChargeLinkCommandAcceptedHandler
+    public interface IChargeLinkCommandReceivedHandler
     {
         Task HandleAsync([NotNull] ChargeLinkCommandReceivedEvent chargeLinkCommand);
     }

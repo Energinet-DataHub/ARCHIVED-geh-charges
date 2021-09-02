@@ -12,19 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
 using System.Diagnostics.CodeAnalysis;
 using GreenEnergyHub.Charges.Core.DateTime;
-using GreenEnergyHub.Charges.Domain.ChargeLinks;
 using GreenEnergyHub.Charges.Domain.ChargeLinks.Command;
 using GreenEnergyHub.Charges.Domain.ChargeLinks.Events.Local;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.MarketDocument;
 using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandReceived;
-using GreenEnergyHub.Messaging.MessageTypes.Common;
 using GreenEnergyHub.Messaging.Protobuf;
 using GreenEnergyHub.Messaging.Transport;
-using NodaTime;
 using MarketParticipant = GreenEnergyHub.Charges.Domain.MarketDocument.MarketParticipant;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
@@ -66,11 +62,11 @@ namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
             };
         }
 
-        private static ChargeLink ConvertChargeLink(ChargeLinkContract chargeLink)
+        private static ChargeLinkDto ConvertChargeLink(ChargeLinkContract chargeLink)
         {
-            return new ChargeLink
+            return new ChargeLinkDto
             {
-                Id = chargeLink.Id,
+                OperationId = chargeLink.OperationId,
                 MeteringPointId = chargeLink.MeteringPointId,
                 ChargeId = chargeLink.ChargeId,
                 ChargeOwner = chargeLink.ChargeOwner,

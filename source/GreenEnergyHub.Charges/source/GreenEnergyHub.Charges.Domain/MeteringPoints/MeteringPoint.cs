@@ -34,6 +34,8 @@ namespace GreenEnergyHub.Charges.Domain.MeteringPoints
             SettlementMethod = settlementMethod;
         }
 
+        public int? RowId { get; }
+
         public string MeteringPointId { get; }
 
         public MeteringPointType MeteringPointType { get; }
