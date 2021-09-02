@@ -54,7 +54,8 @@ namespace GreenEnergyHub.Charges.Domain.Charges
         }
 
         /// <summary>
-        /// If the charge setting has a EndDateTime, it is only applicable for link if it is lesser or equal too StartDateTime.
+        /// If the DefaultChargeLink has an EndDateTime,
+        /// it is only applicable for linking when EndDateTime is later than the StartDateTime
         /// </summary>
         ///
         public bool ApplicableForLinking(Instant meteringPointCreatedDateTime, MeteringPointType meteringPointType)
