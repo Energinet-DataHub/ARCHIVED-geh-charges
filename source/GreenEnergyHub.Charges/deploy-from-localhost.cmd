@@ -21,7 +21,7 @@ set /p deployCommandReceiver=Deploy command receiver ([y]/n)?
 set /p deployConfirmationSender=Deploy confirmation sender ([y]/n)?
 set /p deployRejectionSender=Deploy rejection sender ([y]/n)?
 set /p meteringPointCreatedReceiver=Deploy metering point created receiver ([y]/n)?
-set /p chargeLinkCommandReceiver=Deploy point created receiver ([y]/n)?
+set /p chargeLinkCommandReceiver=Deploy charge link command receiver([y]/n)?
 set /p createLinkCommandReceiver=Deploy create link command receiver ([y]/n)?
 
 IF /I not "%doBuild%" == "n" (
