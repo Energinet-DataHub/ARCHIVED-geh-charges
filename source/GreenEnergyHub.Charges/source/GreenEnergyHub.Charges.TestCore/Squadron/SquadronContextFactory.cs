@@ -49,7 +49,7 @@ namespace GreenEnergyHub.Charges.TestCore.Squadron
 
             if (result.Successful is false)
             {
-                throw new Exception("Database migration failed");
+                throw new Exception("Database migration failed", result.Error);
             }
 
             return connectionString;
