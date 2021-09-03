@@ -16,7 +16,6 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application.Charges.Repositories;
-using GreenEnergyHub.Charges.Domain.ChargeLinks;
 using GreenEnergyHub.Charges.Domain.ChargeLinks.Command;
 using GreenEnergyHub.Charges.Domain.ChargeLinks.Events.Integration;
 using GreenEnergyHub.Charges.Domain.ChargeLinks.Events.Local;
@@ -99,7 +98,7 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
                       BusinessProcessRole = MarketParticipantRole.MeteringPointAdministrator,
                   },
                 },
-                ChargeLink = new ChargeLink
+                ChargeLink = new ChargeLinkDto
                 {
                     ChargeType = charge.Type,
                     ChargeId = charge.Id,
@@ -107,7 +106,7 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
                     ChargeOwner = charge.Owner,
                     MeteringPointId = createLinkCommandEvent.MeteringPointId,
                     StartDateTime = defaultChargeLink.GetStartDateTime(createLinkCommandEvent.StartDateTime),
-                    Id = Guid.NewGuid().ToString(),
+                    OperationId = Guid.NewGuid().ToString(),
                     Factor = 1, // Links created from default charge links are tariffs, which only can have factor 1.
                 },
             };

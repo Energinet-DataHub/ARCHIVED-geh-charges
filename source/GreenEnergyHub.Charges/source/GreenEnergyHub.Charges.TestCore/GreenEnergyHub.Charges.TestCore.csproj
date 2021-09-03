@@ -33,6 +33,8 @@ limitations under the License.
       <PackageReference Include="FluentAssertions" Version="6.1.0" />
       <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="3.1.18" />
       <PackageReference Include="NodaTime" Version="3.0.5" />
+      <PackageReference Include="Squadron.Core" Version="0.12.0" />
+      <PackageReference Include="Squadron.SqlServer" Version="0.12.0" />
       <PackageReference Include="System.ComponentModel.TypeConverter" Version="4.3.0" />
       <PackageReference Include="xunit.extensibility.core" Version="2.4.1" />
       <PackageReference Include="Google.Protobuf" Version="3.17.3" />
@@ -40,7 +42,9 @@ limitations under the License.
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\GreenEnergyHub.Charges.ApplyDBMigrationsApp\GreenEnergyHub.Charges.ApplyDBMigrationsApp.csproj" />
       <ProjectReference Include="..\GreenEnergyHub.Charges.Core\GreenEnergyHub.Charges.Core.csproj" />
+      <ProjectReference Include="..\GreenEnergyHub.Charges.Infrastructure\GreenEnergyHub.Charges.Infrastructure.csproj" />
     </ItemGroup>
 
 </Project>

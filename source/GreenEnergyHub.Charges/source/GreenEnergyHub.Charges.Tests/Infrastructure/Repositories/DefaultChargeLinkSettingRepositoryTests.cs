@@ -22,7 +22,9 @@ using GreenEnergyHub.Charges.Domain.MeteringPoints;
 using GreenEnergyHub.Charges.Infrastructure.Context;
 using GreenEnergyHub.Charges.Infrastructure.Context.Model;
 using GreenEnergyHub.Charges.Infrastructure.Repositories;
+using GreenEnergyHub.Charges.TestCore.Squadron;
 using Microsoft.EntityFrameworkCore;
+using Squadron;
 using Xunit;
 using Xunit.Categories;
 using Charge = GreenEnergyHub.Charges.Infrastructure.Context.Model.Charge;
@@ -36,21 +38,25 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
     /// Tests <see cref="DefaultChargeLinkRepository"/> using an SQLite in-memory database.
     /// </summary>
     [UnitTest]
-    public class DefaultChargeLinkSettingRepositoryTests
+    public class DefaultChargeLinkSettingRepositoryTests : IClassFixture<SqlServerResource<SqlServerOptions>>
     {
-        private readonly DbContextOptions<ChargesDatabaseContext> _dbContextOptions =
-            new DbContextOptionsBuilder<ChargesDatabaseContext>()
-                .UseSqlite("Filename=Test.db")
-                .Options;
-
+        private readonly SqlServerResource<SqlServerOptions> _resource;
         private int _expectedChargeRowId;
+
+        public DefaultChargeLinkSettingRepositoryTests(SqlServerResource<SqlServerOptions> resource)
+        {
+            _resource = resource;
+        }
 
         [Fact]
         public async Task GetDefaultChargeLinks_WhenCalledWithMeteringPointType_ReturnsDefaultCharges()
         {
+            await using var chargesDatabaseContext = await SquadronContextFactory
+                .GetDatabaseContextAsync(_resource)
+                .ConfigureAwait(false);
+
             // Arrange
-            CreateAndSeedDatabase();
-            await using var chargesDatabaseContext = new ChargesDatabaseContext(_dbContextOptions);
+            SeedDatabase(chargesDatabaseContext);
             var sut = new DefaultChargeLinkRepository(chargesDatabaseContext);
 
             // Act
@@ -65,11 +71,8 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
             actualDefaultChargeLinkSettings.First().ChargeRowId.Should().Be(_expectedChargeRowId);
         }
 
-        private void CreateAndSeedDatabase()
+        private void SeedDatabase(ChargesDatabaseContext context)
         {
-            using var context = new ChargesDatabaseContext(_dbContextOptions);
-            context.Database.EnsureDeleted();
-            context.Database.EnsureCreated();
             var marketParticipant = context.MarketParticipants.Add(
                 new MarketParticipant
                     {
@@ -109,14 +112,14 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
                 StartDateTime = writeDateTime,
                 ChargeOperationRowId = chargeOperation.Entity.RowId,
             });
-            context.DefaultChargeLinks.Add(
-                new DefaultChargeLink
-                    {
-                        RowId = 1,
-                        ChargeRowId = charge.Entity.RowId,
-                        MeteringPointType = (int)MeteringPointType.Consumption,
-                        StartDateTime = writeDateTime,
-                    });
+            // context.DefaultChargeLinks.Add(
+            //     new DefaultChargeLink
+            //         {
+            //             RowId = 1,
+            //             ChargeRowId = charge.Entity.RowId,
+            //             MeteringPointType = (int)MeteringPointType.Consumption,
+            //             StartDateTime = writeDateTime,
+            //         });
             context.SaveChanges();
         }
     }

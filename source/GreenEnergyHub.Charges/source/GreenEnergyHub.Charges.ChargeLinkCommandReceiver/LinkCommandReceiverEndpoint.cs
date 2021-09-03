@@ -28,17 +28,17 @@ namespace GreenEnergyHub.Charges.ChargeLinkCommandReceiver
     {
         private const string FunctionName = nameof(LinkCommandReceiverEndpoint);
         private readonly MessageExtractor _messageExtractor;
-        private readonly IChargeLinkCommandAcceptedHandler _chargeLinkCommandAcceptedHandler;
+        private readonly IChargeLinkCommandReceivedHandler _chargeLinkCommandReceivedHandler;
         private readonly ICorrelationContext _correlationContext;
 
         public LinkCommandReceiverEndpoint(
             MessageExtractor messageExtractor,
             ICorrelationContext correlationContext,
-            IChargeLinkCommandAcceptedHandler chargeLinkCommandAcceptedHandler)
+            IChargeLinkCommandReceivedHandler chargeLinkCommandReceivedHandler)
         {
             _messageExtractor = messageExtractor;
             _correlationContext = correlationContext;
-            _chargeLinkCommandAcceptedHandler = chargeLinkCommandAcceptedHandler;
+            _chargeLinkCommandReceivedHandler = chargeLinkCommandReceivedHandler;
         }
 
         [Function(FunctionName)]
@@ -54,7 +54,7 @@ namespace GreenEnergyHub.Charges.ChargeLinkCommandReceiver
 
             var chargeLinkCommandMessage =
                 await _messageExtractor.ExtractAsync(data).ConfigureAwait(false);
-            await _chargeLinkCommandAcceptedHandler
+            await _chargeLinkCommandReceivedHandler
                 .HandleAsync((ChargeLinkCommandReceivedEvent)chargeLinkCommandMessage).ConfigureAwait(false);
         }
 

@@ -16,7 +16,6 @@ using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Threading.Tasks;
 using System.Xml;
-using GreenEnergyHub.Charges.Domain.ChargeLinks;
 using GreenEnergyHub.Charges.Domain.ChargeLinks.Command;
 using GreenEnergyHub.Charges.Domain.MarketDocument;
 using GreenEnergyHub.Charges.Infrastructure.Messaging.Serialization.MarketDocument;
@@ -50,16 +49,16 @@ namespace GreenEnergyHub.Charges.Infrastructure.Messaging.Serialization.Commands
                 };
         }
 
-        private static async Task<ChargeLink> ParseChargeLinkAsync(XmlReader reader)
+        private static async Task<ChargeLinkDto> ParseChargeLinkAsync(XmlReader reader)
         {
-            var link = new ChargeLink();
+            var link = new ChargeLinkDto();
 
             while (await reader.ReadAsync().ConfigureAwait(false))
             {
                 if (reader.Is(CimChargeLinkCommandConstants.Id, CimChargeLinkCommandConstants.Namespace))
                 {
                     var content = await reader.ReadElementContentAsStringAsync().ConfigureAwait(false);
-                    link.Id = content;
+                    link.OperationId = content;
                 }
                 else if (reader.Is(CimChargeLinkCommandConstants.MeteringPointId, CimChargeLinkCommandConstants.Namespace))
                 {

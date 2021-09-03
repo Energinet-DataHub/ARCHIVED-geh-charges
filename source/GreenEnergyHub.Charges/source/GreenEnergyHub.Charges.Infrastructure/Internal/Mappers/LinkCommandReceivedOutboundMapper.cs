@@ -72,7 +72,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
             var chargeLink = chargeLinkCommandReceivedEvent.ChargeLinkCommand.ChargeLink;
             return new ChargeLinkContract
             {
-                Id = chargeLink.Id,
+                OperationId = chargeLink.OperationId,
                 MeteringPointId = chargeLink.MeteringPointId,
                 ChargeId = chargeLink.ChargeId,
                 ChargeOwner = chargeLink.ChargeOwner,
