@@ -28,6 +28,7 @@ using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.MeteringPoints;
 using GreenEnergyHub.TestHelpers;
 using Moq;
+using NodaTime;
 using Xunit;
 using Xunit.Categories;
 
@@ -40,15 +41,24 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks
         [InlineAutoDomainData]
         public async Task HandleAsync_WhenCalled_UsesFactoryToCreateEventAndDispatchesIt(
             [Frozen] [NotNull] Mock<IDefaultChargeLinkRepository> defaultChargeLinkRepository,
-            [Frozen] [NotNull] Mock<ChargeLinkCommandFactory> chargeLinkCommandFactory,
+            [Frozen] [NotNull] Mock<IChargeLinkCommandFactory> chargeLinkCommandFactory,
             [Frozen] [NotNull] Mock<IMessageDispatcher<ChargeLinkCommandReceivedEvent>> dispatcher,
             [NotNull] string correlationId,
-            [NotNull] ChargeLinkCommandReceivedEvent chargeLinkCommandReceivedEvent,
-            [NotNull] DefaultChargeLink defaultChargeLink,
             [NotNull] ChargeLinkCommand chargeLinkCommand,
-            [NotNull] CreateLinkCommandEvent createLinkCommandEvent,
             [NotNull] CreateLinkCommandEventHandler sut)
         {
+            // Arrange
+            var createLinkCommandEvent = new CreateLinkCommandEvent(
+                correlationId,
+                MeteringPointType.Consumption,
+                SystemClock.Instance.GetCurrentInstant());
+
+            var defaultChargeLink = new DefaultChargeLink(
+                SystemClock.Instance.GetCurrentInstant(),
+                null,
+                1,
+                MeteringPointType.Consumption);
+
             defaultChargeLinkRepository.Setup(
                     f => f.GetAsync(
                         It.IsAny<MeteringPointType>()))
@@ -61,19 +71,14 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks
                         correlationId))
                 .ReturnsAsync(chargeLinkCommand);
 
-            var dispatched = false;
-            dispatcher.Setup(
-                    d => d.DispatchAsync(
-                        chargeLinkCommandReceivedEvent,
-                        It.IsAny<CancellationToken>()))
-                .Callback<ChargeLinkCommandReceivedEvent, CancellationToken>(
-                    (_, _) => dispatched = true);
-
             // Act
             await sut.HandleAsync(createLinkCommandEvent, correlationId).ConfigureAwait(false);
 
             // Assert
-            Assert.True(dispatched);
+            dispatcher.Verify(
+                x => x.DispatchAsync(
+                    It.IsAny<ChargeLinkCommandReceivedEvent>(),
+                    It.IsAny<CancellationToken>()));
         }
     }
 }
