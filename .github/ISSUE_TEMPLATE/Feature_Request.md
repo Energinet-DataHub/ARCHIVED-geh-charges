@@ -1,18 +1,31 @@
 ---
-name: 🚀 Feature Request
+name: "\U0001F680 Feature Request"
 about: Use this template for adding new feature requests.
-labels: enhancement
+title: ''
+labels: epic, feature
+assignees: ''
+
 ---
 
-### Is your feature request related to a problem? Please describe.
-<!--- A clear and concise description of what the problem is. Ex. I have an issue when [...] --->
+## Problem Description
+New Product: “The current state of the [domain] has focussed primarily on [customer segments, pain points, etc]. What existing products/services fail to address is [this gap] Our product/service will address this gap by [vision/strategy] Our initial focus
 
-### Describe the solution you'd like.
-<!--- A clear and concise description of what you want to happen. Add any considered drawbacks. --->
+### Benefit Hypothesis
+The proposed measurable benefit to the end user or business: "We believe this [business outcome] will be achieved if [these users/actors/society] successfully achieve [this user/actors/society outcome] with [this feature]"
 
-### Describe alternatives you've considered.
-<!--- A clear and concise description of any alternative solutions or features you've considered. --->
+## Acceptance criteria and must have scope
+Define what is a must-have for launch and in-scope. Keep this section fluid and dynamic until you lock-in priority during planning.
 
-### Teachability, Documentation, Adoption, Migration Strategy
-<!--- If you can, explain how users will be able to use this and possibly write out a version in the docs.
-Maybe a screenshot or design? --->
+## Objectives and key results
+What is the revenue impact on our business? Is there a potential penalty or other adverse consequences if we delay?
+
+## Leading Indicators
+What is the revenue impact on our business? Is there a potential penalty or other adverse consequences if we delay?
+
+## Non Functional Requirements
+
+## Stakeholders
+Describe who needs to be kept up-to-date about this feauture, included in discussions, or updated along the way. Stakeholders can be both in Product/Engineering, as well as other teams like Customer Success who might want to keep customers updated on the feature.
+
+## Timeline
+What's the timeline for this feature, what resources are needed, and what might potentially block this from hitting the projected end date.
