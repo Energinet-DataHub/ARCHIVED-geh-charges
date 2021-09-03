@@ -41,7 +41,6 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
     public class DefaultChargeLinkSettingRepositoryTests : IClassFixture<SqlServerResource<SqlServerOptions>>
     {
         private readonly SqlServerResource<SqlServerOptions> _resource;
-        private int _expectedChargeRowId;
 
         public DefaultChargeLinkSettingRepositoryTests(SqlServerResource<SqlServerOptions> resource)
         {
@@ -56,7 +55,6 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
                 .ConfigureAwait(false);
 
             // Arrange
-            SeedDatabase(chargesDatabaseContext);
             var sut = new DefaultChargeLinkRepository(chargesDatabaseContext);
 
             // Act
@@ -65,62 +63,10 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
                     MeteringPointType.Consumption).ConfigureAwait(false);
 
             // Assert
-            var actualDefaultChargeLinkSettings = actual as Charges.Domain.Charges.DefaultChargeLink[] ?? actual.ToArray();
+            var actualDefaultChargeLinkSettings =
+                actual as Charges.Domain.Charges.DefaultChargeLink[] ?? actual.ToArray();
 
             actualDefaultChargeLinkSettings.Should().NotBeNullOrEmpty();
-            actualDefaultChargeLinkSettings.First().ChargeRowId.Should().Be(_expectedChargeRowId);
-        }
-
-        private void SeedDatabase(ChargesDatabaseContext context)
-        {
-            var marketParticipant = context.MarketParticipants.Add(
-                new MarketParticipant
-                    {
-                        Name = "Name",
-                        Role = (int)MarketParticipantRole.EnergySupplier,
-                        MarketParticipantId = "MarketParticipantId",
-                    });
-            context.SaveChanges();
-            var charge = context.Charges.Add(new Charge
-            {
-                Currency = "DKK",
-                Resolution = (int)Resolution.P1D,
-                ChargeType = (int)ChargeType.Fee,
-                TaxIndicator = false,
-                TransparentInvoicing = true,
-                ChargeId = "ChargeId1",
-                MarketParticipantRowId = marketParticipant.Entity.RowId,
-            });
-            context.SaveChanges();
-            _expectedChargeRowId = charge.Entity.RowId;
-            var writeDateTime = DateTime.UtcNow;
-            var chargeOperation = context.ChargeOperations.Add(new ChargeOperation
-            {
-                CorrelationId = "1BD3787A-EF15-41E8-BE83-191C42AC97D3",
-                ChargeOperationId = "86EDF16A-5ADD-4C86-A90F-459B5AD0D1F1",
-                WriteDateTime = writeDateTime,
-                ChargeRowId = charge.Entity.RowId,
-            });
-            context.SaveChanges();
-            context.ChargePeriodDetails.Add(new ChargePeriodDetails
-            {
-                Description = "Description",
-                Name = "Name",
-                Retired = false,
-                VatClassification = (int)VatClassification.Vat25,
-                ChargeRowId = charge.Entity.RowId,
-                StartDateTime = writeDateTime,
-                ChargeOperationRowId = chargeOperation.Entity.RowId,
-            });
-            // context.DefaultChargeLinks.Add(
-            //     new DefaultChargeLink
-            //         {
-            //             RowId = 1,
-            //             ChargeRowId = charge.Entity.RowId,
-            //             MeteringPointType = (int)MeteringPointType.Consumption,
-            //             StartDateTime = writeDateTime,
-            //         });
-            context.SaveChanges();
         }
     }
 }

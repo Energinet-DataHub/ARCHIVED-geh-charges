@@ -33,7 +33,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Repositories
             _chargesDatabaseContext = chargesDatabaseContext;
         }
 
-        public async Task<Domain.Charges.Charge> GetChargeAsync(string chargeId, string owner, ChargeType chargeType)
+        public async Task<Charge> GetChargeAsync(string chargeId, string owner, ChargeType chargeType)
         {
             var charge = await _chargesDatabaseContext.Charges
                 .Include(x => x.ChargePeriodDetails)
@@ -73,7 +73,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Repositories
                 .ConfigureAwait(false);
         }
 
-        public async Task StoreChargeAsync(Domain.Charges.Charge newCharge)
+        public async Task StoreChargeAsync(Charge newCharge)
         {
             if (newCharge == null) throw new ArgumentNullException(nameof(newCharge));
 
