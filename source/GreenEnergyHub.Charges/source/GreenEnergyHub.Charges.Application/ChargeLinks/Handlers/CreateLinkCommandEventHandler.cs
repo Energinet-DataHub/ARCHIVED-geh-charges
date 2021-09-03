@@ -12,15 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
+using GreenEnergyHub.Charges.Application.ChargeLinks.Factories;
 using GreenEnergyHub.Charges.Application.Charges.Repositories;
-using GreenEnergyHub.Charges.Domain.ChargeLinks.Command;
 using GreenEnergyHub.Charges.Domain.ChargeLinks.Events.Integration;
 using GreenEnergyHub.Charges.Domain.ChargeLinks.Events.Local;
-using GreenEnergyHub.Charges.Domain.Charges;
-using GreenEnergyHub.Charges.Domain.MarketDocument;
 using NodaTime;
 
 namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
@@ -28,18 +25,18 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
     public class CreateLinkCommandEventHandler : ICreateLinkCommandEventHandler
     {
         private readonly IDefaultChargeLinkRepository _defaultChargeLinkRepository;
-        private readonly IChargeRepository _chargeRepository;
+        private readonly IChargeLinkCommandFactory _chargeLinkCommandFactory;
         private readonly IMessageDispatcher<ChargeLinkCommandReceivedEvent> _messageDispatcher;
         private readonly IClock _clock;
 
         public CreateLinkCommandEventHandler(
             IDefaultChargeLinkRepository defaultChargeLinkRepository,
-            IChargeRepository chargeRepository,
+            IChargeLinkCommandFactory chargeLinkCommandFactory,
             IMessageDispatcher<ChargeLinkCommandReceivedEvent> messageDispatcher,
             IClock clock)
         {
             _defaultChargeLinkRepository = defaultChargeLinkRepository;
-            _chargeRepository = chargeRepository;
+            _chargeLinkCommandFactory = chargeLinkCommandFactory;
             _messageDispatcher = messageDispatcher;
             _clock = clock;
         }
@@ -55,10 +52,11 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
                     createLinkCommandEvent.StartDateTime,
                     createLinkCommandEvent.MeteringPointType))
                 {
-                    var chargeLinkCommand = await CreateChargeLinkCommandAsync(
-                        createLinkCommandEvent,
-                        correlationId,
-                        defaultChargeLink).ConfigureAwait(false);
+                    var chargeLinkCommand =
+                        await _chargeLinkCommandFactory.CreateAsync(
+                            createLinkCommandEvent,
+                            defaultChargeLink,
+                            correlationId).ConfigureAwait(false);
 
                     var chargeLinkCommandReceivedEvent = new ChargeLinkCommandReceivedEvent(
                         _clock.GetCurrentInstant(),
@@ -68,49 +66,6 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
                     await _messageDispatcher.DispatchAsync(chargeLinkCommandReceivedEvent).ConfigureAwait(false);
                 }
             }
-        }
-
-        private async Task<ChargeLinkCommand> CreateChargeLinkCommandAsync(
-            CreateLinkCommandEvent createLinkCommandEvent,
-            string correlationId,
-            [NotNull]DefaultChargeLink defaultChargeLink)
-        {
-            var charge = await _chargeRepository.GetChargeAsync(defaultChargeLink.ChargeRowId).ConfigureAwait(false);
-            var currentTime = _clock.GetCurrentInstant();
-            var chargeLinkCommand = new ChargeLinkCommand(correlationId)
-            {
-                Document = new Document
-                {
-                  Id = Guid.NewGuid().ToString(),
-                  Type = DocumentType.RequestChangeBillingMasterData,
-                  IndustryClassification = IndustryClassification.Electricity,
-                  BusinessReasonCode = BusinessReasonCode.UpdateMasterDataSettlement,
-                  RequestDate = currentTime,
-                  CreatedDateTime = currentTime,
-                  Sender = new MarketParticipant
-                  {
-                    Id = charge.Owner, // For default charge links the owner is the TSO.
-                    BusinessProcessRole = MarketParticipantRole.SystemOperator,
-                  },
-                  Recipient = new MarketParticipant
-                  {
-                      Id = "5790001330552", // DataHub GLN number.
-                      BusinessProcessRole = MarketParticipantRole.MeteringPointAdministrator,
-                  },
-                },
-                ChargeLink = new ChargeLinkDto
-                {
-                    ChargeType = charge.Type,
-                    ChargeId = charge.Id,
-                    EndDateTime = defaultChargeLink.EndDateTime,
-                    ChargeOwner = charge.Owner,
-                    MeteringPointId = createLinkCommandEvent.MeteringPointId,
-                    StartDateTime = defaultChargeLink.GetStartDateTime(createLinkCommandEvent.StartDateTime),
-                    OperationId = Guid.NewGuid().ToString(),
-                    Factor = 1, // Links created from default charge links are tariffs, which only can have factor 1.
-                },
-            };
-            return chargeLinkCommand;
         }
     }
 }
