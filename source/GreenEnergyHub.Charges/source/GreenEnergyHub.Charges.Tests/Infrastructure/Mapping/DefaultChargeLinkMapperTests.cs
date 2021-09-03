@@ -27,7 +27,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Mapping
     public class DefaultChargeLinkMapperTests
     {
         [Fact]
-        public void CreateDefaultChargeLinkFromDefaultChargeLinkSetting_WhenCalled_MapsAllProperties()
+        public void CreateDefaultChargeLinkFromDefaultChargeLink_WhenCalled_MapsAllProperties()
         {
             // Arrange
             var startDateTime = SystemClock.Instance.GetCurrentInstant();

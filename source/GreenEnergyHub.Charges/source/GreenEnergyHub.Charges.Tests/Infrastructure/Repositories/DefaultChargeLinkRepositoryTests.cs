@@ -38,11 +38,11 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
     /// Tests <see cref="DefaultChargeLinkRepository"/> using an SQLite in-memory database.
     /// </summary>
     [UnitTest]
-    public class DefaultChargeLinkSettingRepositoryTests : IClassFixture<SqlServerResource<SqlServerOptions>>
+    public class DefaultChargeLinkRepositoryTests : IClassFixture<SqlServerResource<SqlServerOptions>>
     {
         private readonly SqlServerResource<SqlServerOptions> _resource;
 
-        public DefaultChargeLinkSettingRepositoryTests(SqlServerResource<SqlServerOptions> resource)
+        public DefaultChargeLinkRepositoryTests(SqlServerResource<SqlServerOptions> resource)
         {
             _resource = resource;
         }
