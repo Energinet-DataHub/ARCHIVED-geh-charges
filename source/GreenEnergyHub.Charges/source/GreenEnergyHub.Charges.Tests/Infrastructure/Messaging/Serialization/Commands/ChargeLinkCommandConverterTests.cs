@@ -64,7 +64,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Messaging.Serialization.Co
             Assert.Equal(BusinessReasonCode.UpdateMasterDataSettlement, result.Document.BusinessReasonCode);
             Assert.Equal("8100000000016", result.Document.Sender.Id);
             Assert.Equal(MarketParticipantRole.GridAccessProvider, result.Document.Sender.BusinessProcessRole);
-            Assert.Equal(DataHubConstant.GlnNumber, result.Document.Recipient.Id);
+            Assert.Equal(SystemOperator.GlnNumber, result.Document.Recipient.Id);
             Assert.Equal(MarketParticipantRole.MeteringPointAdministrator, result.Document.Recipient.BusinessProcessRole);
             Assert.Equal(InstantPattern.ExtendedIso.Parse("2021-07-05T13:20:02.387Z").Value, result.Document.CreatedDateTime);
 

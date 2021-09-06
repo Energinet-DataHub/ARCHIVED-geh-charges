@@ -14,10 +14,17 @@
 
 namespace GreenEnergyHub.Charges.Core.Constants
 {
-    public static class DataHubConstant
+    public static class SystemOperator
     {
+        /// <summary>
+        /// A Global Location Number (GLN) is a unique number that is assigned to locations
+        /// to enable them to be identified uniquely worldwide.
+        /// </summary>
         public static readonly string GlnNumber = "5790001330552";
 
+        /// <summary>
+        /// Only type of default charge is tariff, which only supports factor 1.
+        /// </summary>
         public static readonly int DefaultChargeLinkFactor = 1;
     }
 }

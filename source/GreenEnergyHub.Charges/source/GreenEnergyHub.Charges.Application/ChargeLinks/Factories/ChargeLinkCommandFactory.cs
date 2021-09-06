@@ -60,7 +60,7 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.Factories
                     },
                     Recipient = new MarketParticipant
                     {
-                        Id = DataHubConstant.GlnNumber,
+                        Id = SystemOperator.GlnNumber,
                         BusinessProcessRole = MarketParticipantRole.MeteringPointAdministrator,
                     },
                 },
@@ -73,7 +73,7 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.Factories
                     MeteringPointId = createLinkCommandEvent.MeteringPointId,
                     StartDateTime = defaultChargeLink.GetStartDateTime(createLinkCommandEvent.StartDateTime),
                     OperationId = Guid.NewGuid().ToString(),
-                    Factor = DataHubConstant.DefaultChargeLinkFactor,
+                    Factor = SystemOperator.DefaultChargeLinkFactor,
                 },
             };
             return chargeLinkCommand;

@@ -59,7 +59,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Factories
             actual.Document.Sender.BusinessProcessRole.Should().Be(MarketParticipantRole.SystemOperator);
             actual.Document.Sender.Id.Should().Be(charge.Owner);
             actual.Document.Recipient.BusinessProcessRole.Should().Be(MarketParticipantRole.MeteringPointAdministrator);
-            actual.Document.Recipient.Id.Should().Be(DataHubConstant.GlnNumber);
+            actual.Document.Recipient.Id.Should().Be(SystemOperator.GlnNumber);
             actual.ChargeLink.ChargeId.Should().Be(charge.Id);
             actual.ChargeLink.ChargeType.Should().Be(charge.Type);
             actual.ChargeLink.EndDateTime.Should().Be(charge.EndDateTime);
@@ -67,7 +67,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Factories
             actual.ChargeLink.MeteringPointId.Should().Be(createLinkCommandEvent.MeteringPointId);
             actual.ChargeLink.MeteringPointId.Should().Be(createLinkCommandEvent.MeteringPointId);
             actual.ChargeLink.StartDateTime.Should().Be(defaultChargeLink.GetStartDateTime(createLinkCommandEvent.StartDateTime));
-            actual.ChargeLink.Factor.Should().Be(DataHubConstant.DefaultChargeLinkFactor);
+            actual.ChargeLink.Factor.Should().Be(SystemOperator.DefaultChargeLinkFactor);
         }
     }
 }
