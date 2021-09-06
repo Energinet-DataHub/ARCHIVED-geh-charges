@@ -40,5 +40,16 @@ namespace GreenEnergyHub.Charges.IntegrationTests.TestHelpers
                 .ConfigureAwait(false);
             return chargeExists;
         }
+
+        public async Task<Charge> GetChargeAsync(
+            [NotNull] string chargeId, [NotNull] string owner, [NotNull] ChargeType chargeType)
+        {
+            await using var context = _serviceProvider.GetService<ChargesDatabaseContext>();
+            var chargeRepository = new ChargeRepository(context);
+            var chargeExists = await chargeRepository
+                .GetChargeAsync(chargeId, owner, chargeType)
+                .ConfigureAwait(false);
+            return chargeExists;
+        }
     }
 }
