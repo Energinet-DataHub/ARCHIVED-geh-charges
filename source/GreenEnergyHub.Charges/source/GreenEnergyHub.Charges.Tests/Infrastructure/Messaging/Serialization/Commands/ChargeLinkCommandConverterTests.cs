@@ -19,10 +19,7 @@ using System.Reflection;
 using System.Threading.Tasks;
 using System.Xml;
 using AutoFixture.Xunit2;
-using GreenEnergyHub.Charges.Core.Constants;
-using GreenEnergyHub.Charges.Domain.ChargeLinks;
 using GreenEnergyHub.Charges.Domain.ChargeLinks.Command;
-using GreenEnergyHub.Charges.Domain.ChargeLinks.Events.Local;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.MarketDocument;
 using GreenEnergyHub.Charges.Infrastructure.Messaging;
@@ -64,7 +61,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Messaging.Serialization.Co
             Assert.Equal(BusinessReasonCode.UpdateMasterDataSettlement, result.Document.BusinessReasonCode);
             Assert.Equal("8100000000016", result.Document.Sender.Id);
             Assert.Equal(MarketParticipantRole.GridAccessProvider, result.Document.Sender.BusinessProcessRole);
-            Assert.Equal(SystemOperator.GlnNumber, result.Document.Recipient.Id);
+            Assert.Equal("5790001330552", result.Document.Recipient.Id);
             Assert.Equal(MarketParticipantRole.MeteringPointAdministrator, result.Document.Recipient.BusinessProcessRole);
             Assert.Equal(InstantPattern.ExtendedIso.Parse("2021-07-05T13:20:02.387Z").Value, result.Document.CreatedDateTime);
 

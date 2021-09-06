@@ -16,7 +16,6 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application.Charges.Repositories;
-using GreenEnergyHub.Charges.Core.Constants;
 using GreenEnergyHub.Charges.Domain.ChargeLinks.Command;
 using GreenEnergyHub.Charges.Domain.ChargeLinks.Events.Integration;
 using GreenEnergyHub.Charges.Domain.Charges;
@@ -60,7 +59,7 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.Factories
                     },
                     Recipient = new MarketParticipant
                     {
-                        Id = SystemOperator.GlnNumber,
+                        Id = DefaultChargeLink.GlnNumber,
                         BusinessProcessRole = MarketParticipantRole.MeteringPointAdministrator,
                     },
                 },
@@ -73,7 +72,7 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.Factories
                     MeteringPointId = createLinkCommandEvent.MeteringPointId,
                     StartDateTime = defaultChargeLink.GetStartDateTime(createLinkCommandEvent.StartDateTime),
                     OperationId = Guid.NewGuid().ToString(),
-                    Factor = SystemOperator.DefaultChargeLinkFactor,
+                    Factor = DefaultChargeLink.Factor,
                 },
             };
             return chargeLinkCommand;

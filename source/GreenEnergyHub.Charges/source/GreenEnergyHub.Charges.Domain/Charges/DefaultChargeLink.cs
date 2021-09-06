@@ -74,5 +74,18 @@ namespace GreenEnergyHub.Charges.Domain.Charges
         /// it is only applicable for linking when EndDateTime is later than the StartDateTime
         /// </summary>
         public Instant? EndDateTime { get; }
+
+        /// <summary>
+        /// A Global Location Number (GLN) is a unique number used to identify a Market Participant.
+        /// Ref: https://www.gs1.org/standards/id-keys/gln
+        /// Note: This is the GLN number of the danish Green Energy Hub.
+        /// </summary>
+        public static string GlnNumber => "5790001330552";
+
+        /// <summary>
+        /// Only type of default charge is tariff, which only supports factor 1.
+        /// Used when creating the default charge link.
+        /// </summary>
+        public static int Factor => 1;
     }
 }
