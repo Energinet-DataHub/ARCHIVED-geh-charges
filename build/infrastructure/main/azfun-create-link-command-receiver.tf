@@ -31,6 +31,9 @@ module "azfun_create_link_command_receiver" {
     INTEGRATIONEVENT_LISTENER_CONNECTION_STRING  = module.sbnar_charges_listener.primary_connection_string #Temporarily set to our own servicebus
     CREATE_LINK_COMMAND_TOPIC_NAME               = module.sbt_create_link_command.name
     CREATE_LINK_COMMAND_SUBSCRIPTION_NAME        = azurerm_servicebus_subscription.sbs_create_link_command_charges.name
+    CHARGE_DB_CONNECTION_STRING                  = local.CHARGE_DB_CONNECTION_STRING
+    CHARGE_LINK_RECEIVED_TOPIC_NAME              = module.sbt_link_command_received.name
+    CHARGE_LINK_RECEIVED_SENDER_CONNECTION_STRING = trimsuffix(module.sbtar_link_command_received_sender.primary_connection_string, ";EntityPath=${module.sbt_link_command_received.name}")
   } 
   dependencies                                   = [
     module.appi.dependent_on,

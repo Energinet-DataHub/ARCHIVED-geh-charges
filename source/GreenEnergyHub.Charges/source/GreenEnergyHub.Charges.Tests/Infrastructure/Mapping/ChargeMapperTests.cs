@@ -76,7 +76,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Mapping
         [Theory]
         [InlineAutoMoqData]
         public void MapDomainChargeToCharge_WhenNoEndTimeIsUsed_MapsEndTimeToNull(
-            [NotNull] Domain.Charges.Charge charge,
+            [NotNull] Charges.Domain.Charges.Charge charge,
             MarketParticipant marketParticipant)
         {
             // Arrange
@@ -115,7 +115,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Mapping
             [NotNull] MarketParticipant marketParticipant)
         {
             // Arrange
-            Domain.Charges.Charge? charge = null;
+            Charges.Domain.Charges.Charge? charge = null;
 
             // Act / Assert
             Assert.Throws<ArgumentNullException>(
@@ -125,7 +125,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Mapping
         [Theory]
         [InlineAutoMoqData]
         public void MapDomainChargeToCharge_IfMarketParticipantIsNull_ThrowsArgumentNullException(
-            [NotNull] Domain.Charges.Charge charge)
+            [NotNull] Charges.Domain.Charges.Charge charge)
         {
             // Arrange
             MarketParticipant? marketParticipant = null;

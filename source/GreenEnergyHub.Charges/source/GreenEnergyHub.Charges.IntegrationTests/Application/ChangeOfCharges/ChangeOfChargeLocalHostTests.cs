@@ -16,6 +16,7 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
+using FluentAssertions;
 using GreenEnergyHub.Charges.Application;
 using GreenEnergyHub.Charges.Application.Charges.Handlers;
 using GreenEnergyHub.Charges.ChargeCommandReceiver;
@@ -140,20 +141,21 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
                 .ConfigureAwait(false);
             _testOutputHelper.WriteLine($"Message accepted by ChargeCommandEndpoint: {commandAcceptedResult.receivedMessage.CorrelationId}");
 
-            var chargeExists = await _chargeDbQueries
-                .ChargeExistsAsync(
+            var charge = await _chargeDbQueries
+                .GetChargeAsync(
                     chargeCommand.ChargeOperation.ChargeId,
                     chargeCommand.ChargeOperation.ChargeOwner,
                     chargeCommand.ChargeOperation.Type)
                 .ConfigureAwait(false);
 
             // assert
-            Assert.Equal(200, messageReceiverResult!.StatusCode!.Value);
-            Assert.Equal(executionContext.InvocationId.ToString(), commandReceivedResult.receivedMessage.CorrelationId);
-            Assert.Equal(executionContext.InvocationId.ToString(), commandAcceptedResult.receivedMessage.CorrelationId);
-            Assert.True(commandReceivedResult.receivedMessage.Body.Length > 0);
-            Assert.True(commandAcceptedResult.receivedMessage.Body.Length > 0);
-            Assert.True(chargeExists);
+            messageReceiverResult!.StatusCode!.Value.Should().Be(200);
+            executionContext.InvocationId.ToString().Should().Be(commandReceivedResult.receivedMessage.CorrelationId);
+            executionContext.InvocationId.ToString().Should().Be(commandAcceptedResult.receivedMessage.CorrelationId);
+            commandReceivedResult.receivedMessage.Body.Length.Should().BeGreaterThan(0);
+            commandAcceptedResult.receivedMessage.Body.Length.Should().BeGreaterThan(0);
+            charge.Should().NotBeNull();
+            charge.Points.Should().NotBeNullOrEmpty();
         }
 
         [Theory(Timeout = 60000)]
@@ -201,12 +203,12 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
                 .ConfigureAwait(false);
 
             // assert
-            Assert.Equal(200, messageReceiverResult!.StatusCode!.Value);
-            Assert.Equal(executionContext.InvocationId.ToString(), commandReceivedResult.receivedEvent.CorrelationId);
-            Assert.Equal(executionContext.InvocationId.ToString(), commandRejectedResult.receivedEvent.CorrelationId);
-            Assert.True(commandReceivedResult.receivedMessage.Body.Length > 0);
-            Assert.True(commandRejectedResult.receivedMessage.Body.Length > 0);
-            Assert.False(chargeExists);
+            messageReceiverResult!.StatusCode!.Value.Should().Be(200);
+            executionContext.InvocationId.ToString().Should().Be(commandReceivedResult.receivedMessage.CorrelationId);
+            executionContext.InvocationId.ToString().Should().Be(commandRejectedResult.receivedMessage.CorrelationId);
+            commandReceivedResult.receivedMessage.Body.Length.Should().BeGreaterThan(0);
+            commandRejectedResult.receivedMessage.Body.Length.Should().BeGreaterThan(0);
+            chargeExists.Should().BeFalse();
         }
 
         private async Task<OkObjectResult> RunMessageReceiver(Mock<ILogger> logger, ExecutionContext executionContext, DefaultHttpRequest req)

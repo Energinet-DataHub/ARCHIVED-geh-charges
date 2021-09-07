@@ -12,24 +12,19 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
+using GreenEnergyHub.Charges.Domain.ChargeLinks.Command;
+using GreenEnergyHub.Charges.Domain.ChargeLinks.Events.Integration;
 using GreenEnergyHub.Charges.Domain.Charges;
 
-namespace GreenEnergyHub.Charges.Application.Charges.Repositories
+namespace GreenEnergyHub.Charges.Application.ChargeLinks.Factories
 {
-    /// <summary>
-    /// Contract defining the capabilities of the infrastructure component facilitating interaction with the charges data store.
-    /// </summary>
-    public interface IChargeRepository
+    public interface IChargeLinkCommandFactory
     {
-        Task StoreChargeAsync(Charge newCharge);
-
-        Task<Charge> GetChargeAsync(string chargeId, string owner, ChargeType chargeType);
-
-        Task<Charge> GetChargeAsync(int chargeRowId);
-
-        Task<bool> CheckIfChargeExistsAsync(string chargeId, string owner, ChargeType chargeType);
-
-        Task<bool> CheckIfChargeExistsByCorrelationIdAsync(string correlationId);
+        Task<ChargeLinkCommand> CreateAsync(
+            [NotNull] CreateLinkCommandEvent createLinkCommandEvent,
+            [NotNull] DefaultChargeLink defaultChargeLink,
+            string correlationId);
     }
 }

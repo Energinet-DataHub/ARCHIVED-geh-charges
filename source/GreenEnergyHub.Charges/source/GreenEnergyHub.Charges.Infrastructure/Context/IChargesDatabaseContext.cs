@@ -60,6 +60,11 @@ namespace GreenEnergyHub.Charges.Infrastructure.Context
         DbSet<ChargeLink> ChargeLinks { get; }
 
         /// <summary>
+        /// DefaultChargeLink available in the database.
+        /// </summary>
+        DbSet<DefaultChargeLink> DefaultChargeLinks { get; }
+
+        /// <summary>
         /// Saves changes to the database.
         /// </summary>
         Task<int> SaveChangesAsync();
