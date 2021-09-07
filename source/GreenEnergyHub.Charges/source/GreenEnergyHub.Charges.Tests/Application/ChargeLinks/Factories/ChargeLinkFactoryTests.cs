@@ -71,7 +71,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Factories
                 .Should().Be(expectedEvent.ChargeLinkCommand.ChargeLink.Factor);
             actual.Operations.First().CorrelationId
                 .Should().Be(expectedEvent.CorrelationId);
-            actual.Operations.First().Id
+            actual.Operations.First().CustomerProvidedId
                 .Should().Be(expectedEvent.ChargeLinkCommand.ChargeLink.OperationId);
         }
 
