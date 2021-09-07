@@ -12,24 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Domain.Charges;
+using GreenEnergyHub.Charges.Domain.MeteringPoints;
+using NodaTime;
 
 namespace GreenEnergyHub.Charges.Application.Charges.Repositories
 {
-    /// <summary>
-    /// Contract defining the capabilities of the infrastructure component facilitating interaction with the charges data store.
-    /// </summary>
-    public interface IChargeRepository
+    public interface IDefaultChargeLinkRepository
     {
-        Task StoreChargeAsync(Charge newCharge);
-
-        Task<Charge> GetChargeAsync(string chargeId, string owner, ChargeType chargeType);
-
-        Task<Charge> GetChargeAsync(int chargeRowId);
-
-        Task<bool> CheckIfChargeExistsAsync(string chargeId, string owner, ChargeType chargeType);
-
-        Task<bool> CheckIfChargeExistsByCorrelationIdAsync(string correlationId);
+        Task<IEnumerable<DefaultChargeLink>> GetAsync(MeteringPointType meteringPointType);
     }
 }
