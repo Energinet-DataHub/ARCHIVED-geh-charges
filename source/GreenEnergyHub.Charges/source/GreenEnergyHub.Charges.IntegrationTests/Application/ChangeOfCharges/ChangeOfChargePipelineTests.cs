@@ -18,6 +18,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
+using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.Charges.Acknowledgements;
 using GreenEnergyHub.Charges.Domain.Charges.Commands;
 using GreenEnergyHub.Charges.Domain.Charges.Message;
@@ -95,18 +96,19 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
 
             _testOutputHelper.WriteLine($"CommandAcceptedMessage: {receivedMessage.CorrelationId}");
 
-            var chargeExists = await _chargeDbQueries
-                .ChargeExistsAsync(
+            var charge = await _chargeDbQueries
+                .GetChargeAsync(
                     chargeCommand.ChargeOperation.ChargeId,
                     chargeCommand.ChargeOperation.ChargeOwner,
                     chargeCommand.ChargeOperation.Type)
                 .ConfigureAwait(false);
 
             // assert
-            Assert.True(changeOfChargesMessageResult.IsSucceeded);
-            Assert.Equal(chargeCommand.ChargeOperation.Id, receivedEvent.OriginalTransactionReference);
-            Assert.NotNull(receivedEvent);
-            Assert.True(chargeExists);
+            changeOfChargesMessageResult.IsSucceeded.Should().BeTrue();
+            chargeCommand.ChargeOperation.Id.Should().Be(receivedEvent.OriginalTransactionReference);
+            receivedEvent.Should().NotBeNull();
+            charge.Should().NotBeNull();
+            charge.Points.Should().NotBeNullOrEmpty();
         }
 
         [Theory(Timeout = 120000)]
@@ -150,10 +152,10 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
                 .ConfigureAwait(false);
 
             // assert
-            Assert.True(changeOfChargesMessageResult.IsSucceeded);
-            Assert.Equal(chargeCommand.ChargeOperation.Id, receivedEvent.OriginalTransactionReference);
-            Assert.NotNull(receivedEvent);
-            Assert.False(chargeExists);
+            changeOfChargesMessageResult.IsSucceeded.Should().BeTrue();
+            chargeCommand.ChargeOperation.Id.Should().Be(receivedEvent.OriginalTransactionReference);
+            receivedEvent.Should().NotBeNull();
+            chargeExists.Should().BeFalse();
         }
 
         private async Task<ChargesMessageResult> RunMessageReceiver([NotNull] string json)
