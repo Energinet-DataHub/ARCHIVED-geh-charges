@@ -15,6 +15,7 @@
 using System;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Domain.ChargeLinks;
+using GreenEnergyHub.Charges.Infrastructure.Context.EntityConfigurations;
 using GreenEnergyHub.Charges.Infrastructure.Context.Model;
 using Microsoft.EntityFrameworkCore;
 using NodaTime;
@@ -61,62 +62,8 @@ namespace GreenEnergyHub.Charges.Infrastructure.Context
             modelBuilder.Entity<MarketParticipant>().ToTable("MarketParticipant");
             modelBuilder.Entity<MeteringPoint>().ToTable("MeteringPoint");
             modelBuilder.Entity<DefaultChargeLink>().ToTable("DefaultChargeLink");
-            modelBuilder.Entity<ChargeLink>(builder =>
-            {
-                builder.ToTable("ChargeLink");
 
-                builder.HasKey(c => c.Id);
-
-                builder.Property(c => c.ChargeId).HasColumnName("ChargeId");
-
-                builder.Property(c => c.MeteringPointId).HasColumnName("MeteringPointId");
-
-                builder
-                    .OwnsMany<ChargeLinkOperation>("_operations", operations =>
-                    {
-                        operations.WithOwner().HasForeignKey("ChargeLinkId");
-
-                        operations.ToTable("ChargeLinkOperation");
-
-                        operations.HasKey(o => o.Id);
-
-                        operations.Property(o => o.Id).ValueGeneratedNever();
-
-                        operations.Property(o => o.CustomerProvidedId).HasColumnName("CustomerProvidedId");
-
-                        operations.Property(o => o.WriteDateTime)
-                            .ValueGeneratedOnAdd()
-                            .HasColumnName("WriteDateTime")
-                            .HasConversion(toDbValue => toDbValue.Value.ToDateTimeUtc(), fromDbValue => Instant.FromDateTimeUtc(fromDbValue.ToUniversalTime()));
-
-                        operations.Property(o => o.CorrelationId).HasColumnName("CorrelationId");
-                    });
-                builder
-                    .OwnsMany<ChargeLinkPeriodDetails>("_periodDetails", details =>
-                    {
-                        details.WithOwner().HasForeignKey("ChargeLinkId");
-
-                        details.ToTable("ChargeLinkPeriodDetails");
-
-                        details.HasKey(p => p.Id);
-
-                        details.Property(p => p.Id).ValueGeneratedNever();
-
-                        details.Property(d => d.Factor).HasColumnName("Factor");
-
-                        details.Property(d => d.CreatedByOperationId).HasColumnName("CreatedByOperationId");
-
-                        details.Property(d => d.RetiredByOperationId).HasColumnName("RetiredByOperationId");
-
-                        details.Property(d => d.StartDateTime)
-                            .HasColumnName("StartDateTime")
-                            .HasConversion(toDbValue => toDbValue.ToDateTimeUtc(), fromDbValue => Instant.FromDateTimeUtc(fromDbValue.ToUniversalTime()));
-
-                        details.Property(d => d.EndDateTime)
-                            .HasColumnName("EndDateTime")
-                            .HasConversion(toDbValue => toDbValue.Value.ToDateTimeUtc(), fromDbValue => Instant.FromDateTimeUtc(fromDbValue.ToUniversalTime()));
-                    });
-            });
+            modelBuilder.ApplyConfiguration(new ChargeLinkEntityConfiguration());
 
             base.OnModelCreating(modelBuilder);
         }
