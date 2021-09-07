@@ -14,9 +14,9 @@
 
 using System;
 using GreenEnergyHub.Charges.Domain.ChargeLinks;
+using GreenEnergyHub.Charges.Infrastructure.Context.EntityConfigurationExtensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using NodaTime;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Context.EntityConfigurations
 {
@@ -52,15 +52,11 @@ namespace GreenEnergyHub.Charges.Infrastructure.Context.EntityConfigurations
 
             details.Property(d => d.StartDateTime)
                 .HasColumnName("StartDateTime")
-                .HasConversion(
-                    toDbValue => toDbValue.ToDateTimeUtc(),
-                    fromDbValue => Instant.FromDateTimeUtc(fromDbValue.ToUniversalTime()));
+                .HasNodaTimeInstantConversion();
 
             details.Property(d => d.EndDateTime)
                 .HasColumnName("EndDateTime")
-                .HasConversion(
-                    toDbValue => toDbValue!.Value.ToDateTimeUtc(),
-                    fromDbValue => Instant.FromDateTimeUtc(fromDbValue.ToUniversalTime()));
+                .HasNodaTimeInstantConversion();
         }
 
         private static void ConfigureOperations(OwnedNavigationBuilder<ChargeLink, ChargeLinkOperation> operations)
@@ -77,9 +73,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Context.EntityConfigurations
             operations.Property(o => o.WriteDateTime)
                 .ValueGeneratedOnAdd()
                 .HasColumnName("WriteDateTime")
-                .HasConversion(
-                    toDbValue => toDbValue!.Value.ToDateTimeUtc(),
-                    fromDbValue => Instant.FromDateTimeUtc(fromDbValue.ToUniversalTime()));
+                .HasNodaTimeInstantConversion();
 
             operations.Property(o => o.CorrelationId).HasColumnName("CorrelationId");
         }
