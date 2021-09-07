@@ -59,9 +59,9 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Factories
             var actual = await sut.CreateAsync(expectedEvent).ConfigureAwait(false);
 
             // Assert
-            actual.ChargeRowId
+            actual.ChargeId
                 .Should().Be(expectedCharge.RowId);
-            actual.MeteringPointRowId
+            actual.MeteringPointId
                 .Should().Be(expectedMeteringPoint.RowId);
             actual.PeriodDetails.First().StartDateTime
                 .Should().Be(expectedEvent.ChargeLinkCommand.ChargeLink.StartDateTime);
