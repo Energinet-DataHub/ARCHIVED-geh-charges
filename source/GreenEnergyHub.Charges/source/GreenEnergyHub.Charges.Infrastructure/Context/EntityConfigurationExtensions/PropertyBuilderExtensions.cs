@@ -29,7 +29,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Context.EntityConfigurationExten
 
             return builder.HasConversion(
                 toDbValue => toDbValue.ToDateTimeUtc(),
-                fromDbValue => Instant.FromDateTimeUtc(fromDbValue.ToUniversalTime()));
+                fromDbValue => Instant.FromDateTimeUtc(DateTime.SpecifyKind(fromDbValue, DateTimeKind.Utc)));
         }
 
         /// <summary>
@@ -41,7 +41,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Context.EntityConfigurationExten
 
             return builder.HasConversion(
                 toDbValue => toDbValue!.Value.ToDateTimeUtc(),
-                fromDbValue => Instant.FromDateTimeUtc(fromDbValue.ToUniversalTime()));
+                fromDbValue => Instant.FromDateTimeUtc(DateTime.SpecifyKind(fromDbValue, DateTimeKind.Utc)));
         }
     }
 }
