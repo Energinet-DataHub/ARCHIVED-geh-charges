@@ -14,10 +14,20 @@
 
 using System;
 using Energinet.DataHub.MeteringPoints.IntegrationEventContracts;
+using GreenEnergyHub.Charges.Application.ChargeLinks.Handlers;
+using GreenEnergyHub.Charges.Application.Charges.Repositories;
+using GreenEnergyHub.Charges.Domain.ChargeLinks.Events.Local;
+using GreenEnergyHub.Charges.Infrastructure.Context;
+using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandReceived;
+using GreenEnergyHub.Charges.Infrastructure.Messaging;
 using GreenEnergyHub.Charges.Infrastructure.Messaging.Registration;
+using GreenEnergyHub.Charges.Infrastructure.Repositories;
 using GreenEnergyHub.Messaging.Protobuf;
+using GreenEnergyHub.Messaging.Transport;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using NodaTime;
 
 namespace GreenEnergyHub.Charges.CreateLinkCommandReceiver
 {
@@ -36,8 +46,25 @@ namespace GreenEnergyHub.Charges.CreateLinkCommandReceiver
         private static void ConfigureServices(HostBuilderContext hostBuilderContext, IServiceCollection serviceCollection)
         {
             serviceCollection.AddLogging();
+            serviceCollection.AddScoped(typeof(IClock), _ => SystemClock.Instance);
 
             ConfigureMessaging(serviceCollection);
+            ConfigurePersistence(serviceCollection);
+
+            serviceCollection.AddScoped<ICreateLinkCommandEventHandler, CreateLinkCommandEventHandler>();
+        }
+
+        private static void ConfigurePersistence(IServiceCollection services)
+        {
+            var connectionString = Environment.GetEnvironmentVariable("CHARGE_DB_CONNECTION_STRING") ??
+                                   throw new ArgumentNullException(
+                                       "CHARGE_DB_CONNECTION_STRING",
+                                       "does not exist in configuration settings");
+            services.AddDbContext<ChargesDatabaseContext>(
+                options => options.UseSqlServer(connectionString));
+            services.AddScoped<IChargesDatabaseContext, ChargesDatabaseContext>();
+            services.AddScoped<IDefaultChargeLinkRepository, DefaultChargeLinkRepository>();
+            services.AddScoped<IChargeRepository, ChargeRepository>();
         }
 
         private static void ConfigureMessaging(IServiceCollection serviceCollection)
@@ -45,6 +72,13 @@ namespace GreenEnergyHub.Charges.CreateLinkCommandReceiver
             serviceCollection.AddMessagingProtobuf();
             serviceCollection.ReceiveProtobuf<CreateLinkCommandContract>(
                 configuration => configuration.WithParser(() => CreateLinkCommandContract.Parser));
+
+            serviceCollection.SendProtobuf<ChargeLinkCommandReceivedContract>();
+            serviceCollection.AddSingleton<Channel, ServiceBusChannel<ChargeLinkCommandReceivedEvent>>();
+            serviceCollection.AddScoped<MessageDispatcher>();
+            serviceCollection.AddMessagingProtobuf().AddMessageDispatcher<ChargeLinkCommandReceivedEvent>(
+                GetEnv("CHARGE_LINK_RECEIVED_SENDER_CONNECTION_STRING"),
+                GetEnv("CHARGE_LINK_RECEIVED_TOPIC_NAME"));
         }
 
         private static string GetEnv(string variableName)

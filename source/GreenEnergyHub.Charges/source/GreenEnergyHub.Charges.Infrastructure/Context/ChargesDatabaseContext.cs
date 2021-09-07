@@ -41,6 +41,8 @@ namespace GreenEnergyHub.Charges.Infrastructure.Context
 
         public DbSet<MeteringPoint> MeteringPoints { get; set; }
 
+        public DbSet<DefaultChargeLink> DefaultChargeLinks { get; set; }
+
         public DbSet<ChargeLink> ChargeLinks { get; set; }
 
         public Task<int> SaveChangesAsync()
@@ -58,6 +60,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Context
             modelBuilder.Entity<Charge>().ToTable("Charge");
             modelBuilder.Entity<MarketParticipant>().ToTable("MarketParticipant");
             modelBuilder.Entity<MeteringPoint>().ToTable("MeteringPoint");
+            modelBuilder.Entity<DefaultChargeLink>().ToTable("DefaultChargeLink");
             modelBuilder.Entity<ChargeLink>(builder =>
             {
                 builder.ToTable("ChargeLink");

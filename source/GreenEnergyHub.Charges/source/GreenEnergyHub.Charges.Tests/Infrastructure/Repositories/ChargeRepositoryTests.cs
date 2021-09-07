@@ -123,6 +123,24 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
                 .ConfigureAwait(false);
         }
 
+        [Fact]
+        public async Task GetChargeAsync_WithRowId_ThenSuccessReturnedAsync()
+        {
+            await using var chargesDatabaseContext = await SquadronContextFactory
+                .GetDatabaseContextAsync(_resource)
+                .ConfigureAwait(false);
+
+            // Arrange
+            var sut = new ChargeRepository(chargesDatabaseContext);
+            const int chargeRowId = 1; // we seed a charge through the upgrade engine.
+
+            // Act
+            var expected = await sut.GetChargeAsync(chargeRowId).ConfigureAwait(false);
+
+            // Assert
+            Assert.NotNull(expected);
+        }
+
         private static Charge GetValidCharge()
         {
             var transaction = new Charge
@@ -147,7 +165,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
                     Type = DocumentType.RequestUpdateChargeInformation,
                     IndustryClassification = IndustryClassification.Electricity,
                     CreatedDateTime = SystemClock.Instance.GetCurrentInstant(),
-                    Sender = new Domain.MarketDocument.MarketParticipant
+                    Sender = new Charges.Domain.MarketDocument.MarketParticipant
                     {
                         Id = MarketParticipantId,
                         BusinessProcessRole = (MarketParticipantRole)1,

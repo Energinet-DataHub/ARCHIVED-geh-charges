@@ -17,7 +17,7 @@ limitations under the License.
     <PropertyGroup>
         <TargetFramework>net5.0</TargetFramework>
         <LangVersion>preview</LangVersion>
-        <AzureFunctionsVersion>V3</AzureFunctionsVersion>
+        <AzureFunctionsVersion>v3</AzureFunctionsVersion>
         <OutputType>Exe</OutputType>
         <_FunctionsSkipCleanOutput>true</_FunctionsSkipCleanOutput>
         <Nullable>enable</Nullable>

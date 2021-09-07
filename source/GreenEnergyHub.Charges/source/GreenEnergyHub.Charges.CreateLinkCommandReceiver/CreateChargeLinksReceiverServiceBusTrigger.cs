@@ -14,7 +14,8 @@
 
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Domain.ChargeLinks;
+using GreenEnergyHub.Charges.Application;
+using GreenEnergyHub.Charges.Application.ChargeLinks.Handlers;
 using GreenEnergyHub.Charges.Domain.ChargeLinks.Events.Integration;
 using GreenEnergyHub.Charges.Infrastructure.Messaging;
 using GreenEnergyHub.Messaging.Transport;
@@ -33,14 +34,17 @@ namespace GreenEnergyHub.Charges.CreateLinkCommandReceiver
         private readonly ICorrelationContext _correlationContext;
         private readonly MessageExtractor _messageExtractor;
         private readonly ILogger _log;
+        private readonly ICreateLinkCommandEventHandler _createLinkCommandEventHandler;
 
         public CreateLinkCommandReceiverServiceBusTrigger(
             ICorrelationContext correlationContext,
             MessageExtractor messageExtractor,
-            [NotNull] ILoggerFactory loggerFactory)
+            [NotNull] ILoggerFactory loggerFactory,
+            ICreateLinkCommandEventHandler createLinkCommandEventHandler)
         {
             _correlationContext = correlationContext;
             _messageExtractor = messageExtractor;
+            _createLinkCommandEventHandler = createLinkCommandEventHandler;
 
             _log = loggerFactory.CreateLogger(nameof(CreateLinkCommandReceiverServiceBusTrigger));
         }
@@ -54,11 +58,18 @@ namespace GreenEnergyHub.Charges.CreateLinkCommandReceiver
             [NotNull] byte[] message,
             [NotNull] FunctionContext context)
         {
-            _log.LogInformation("Function {FunctionName} started to process a request with size {Size}", FunctionName, message.Length);
+            _log.LogInformation(
+                "Function {FunctionName} started to process a request with size {Size}",
+                FunctionName,
+                message.Length);
 
             SetupCorrelationContext(context);
 
-            var createLinkCommandEvent = (CreateLinkCommandEvent)await _messageExtractor.ExtractAsync(message).ConfigureAwait(false);
+            var createLinkCommandEvent =
+                (CreateLinkCommandEvent)await _messageExtractor.ExtractAsync(message).ConfigureAwait(false);
+
+            await _createLinkCommandEventHandler
+                .HandleAsync(createLinkCommandEvent, _correlationContext.CorrelationId).ConfigureAwait(false);
 
             _log.LogInformation(
                 "Received create link command for metering point id '{MeteringPointId}' of type '{MeteringPointType}' on '{StartDateTime}'",
