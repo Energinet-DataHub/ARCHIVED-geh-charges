@@ -32,7 +32,7 @@ using MeteringPoint = GreenEnergyHub.Charges.Infrastructure.Context.Model.Meteri
 namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
 {
     /// <summary>
-    /// Tests <see cref="ChargeRepository"/> using an SQLite in-memory database.
+    /// Tests <see cref="ChargeRepository"/> using a SQL database.
     /// </summary>
     [UnitTest]
     public class ChargeLinkRepositoryTest : IClassFixture<SqlServerResource<SqlServerOptions>>
