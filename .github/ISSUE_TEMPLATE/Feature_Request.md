@@ -8,7 +8,7 @@ assignees: ''
 ---
 
 ## Problem Description
-New Product: “The current state of the [domain] has focussed primarily on [customer segments, pain points, etc]. What existing products/services fail to address is [this gap] Our product/service will address this gap by [vision/strategy] Our initial focus
+New Product: “The current state of the [domain] has focused primarily on [customer segments, pain points, etc]. What existing products/services fail to address is [this gap]. Our product/service will address this gap by [vision/strategy]. Our initial focus
 
 ### Benefit Hypothesis
 The proposed measurable benefit to the end user or business: "We believe this [business outcome] will be achieved if [these users/actors/society] successfully achieve [this user/actors/society outcome] with [this feature]"
