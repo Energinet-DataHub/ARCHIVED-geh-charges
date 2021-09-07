@@ -17,7 +17,6 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.ChargeLinks;
-using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.MeteringPoints;
 using GreenEnergyHub.Charges.Infrastructure.Context;
 using GreenEnergyHub.Charges.Infrastructure.Repositories;
@@ -71,7 +70,6 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
                 .GetDatabaseContextAsync(_resource)
                 .ConfigureAwait(false);
 
-            // Assert - implicitly asserts ChargeRowId and MeteringPointRowId of the actual charge link
             var actual = await chargesDatabaseReadContext.ChargeLinks.SingleAsync(
                     c => c.ChargeId == ids.chargeRowId && c.MeteringPointId == ids.meteringPointRowId)
                 .ConfigureAwait(false);
@@ -105,11 +103,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
             var charge = new Charges.Infrastructure.Context.Model.Charge
             {
                 Currency = "DKK",
-                Resolution = (int)Resolution.P1M,
                 ChargeId = "charge id",
-                ChargeType = (int)ChargeType.Fee,
-                TaxIndicator = true,
-                TransparentInvoicing = true,
                 MarketParticipantRowId = marketParticipant.RowId,
             };
             context.Charges.Add(charge);
