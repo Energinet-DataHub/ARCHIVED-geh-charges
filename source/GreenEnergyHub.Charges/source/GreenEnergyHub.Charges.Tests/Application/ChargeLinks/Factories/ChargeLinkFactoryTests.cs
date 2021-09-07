@@ -35,51 +35,44 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Factories
         [Theory]
         [InlineAutoDomainData]
         public async Task CreateAsync_WhenCalled_ShouldCreateChargeLinkCorrectly(
-            [NotNull] ChargeLinkCommandReceivedEvent actualChargeLink,
-            [NotNull] Charge returnedCharge,
-            [NotNull] MeteringPoint returnedMeteringPoint,
-            [Frozen] [NotNull] Mock<IChargeRepository> chargeRepository,
-            [Frozen] [NotNull] Mock<IMeteringPointRepository> meteringPointRepository,
+            [NotNull] ChargeLinkCommandReceivedEvent expectedEvent,
+            [NotNull] Charge expectedCharge,
+            [NotNull] MeteringPoint expectedMeteringPoint,
+            [NotNull] [Frozen] Mock<IChargeRepository> chargeRepository,
+            [NotNull] [Frozen] Mock<IMeteringPointRepository> meteringPointRepository,
             [NotNull] ChargeLinkFactory sut)
         {
             // Arrange
-            actualChargeLink.SetCorrelationId(Guid.NewGuid().ToString("N"));
-            returnedCharge.RowId = 11;
-            returnedMeteringPoint.RowId = 22;
+            expectedEvent.SetCorrelationId(Guid.NewGuid().ToString("N"));
+            expectedCharge.RowId = 11;
+            expectedMeteringPoint.RowId = 22;
 
             chargeRepository
                 .Setup(x => x.GetChargeAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<ChargeType>()))
-                .ReturnsAsync(returnedCharge);
+                .ReturnsAsync(expectedCharge);
 
             meteringPointRepository
                 .Setup(x => x.GetMeteringPointAsync(It.IsAny<string>()))
-                .ReturnsAsync(returnedMeteringPoint);
+                .ReturnsAsync(expectedMeteringPoint);
 
             // Act
-            var result = await sut.CreateAsync(actualChargeLink).ConfigureAwait(false);
+            var actual = await sut.CreateAsync(expectedEvent).ConfigureAwait(false);
 
             // Assert
-            result.ChargeRowId
-                .Should()
-                .Be(returnedCharge.RowId);
-            result.MeteringPointRowId
-                .Should()
-                .Be(returnedMeteringPoint.RowId);
-            result.PeriodDetails.First().StartDateTime
-                .Should()
-                .Be(actualChargeLink.ChargeLinkCommand.ChargeLink.StartDateTime);
-            result.PeriodDetails.First().EndDateTime
-                .Should()
-                .Be(actualChargeLink.ChargeLinkCommand.ChargeLink.EndDateTime);
-            result.PeriodDetails.First().Factor
-                .Should()
-                .Be(actualChargeLink.ChargeLinkCommand.ChargeLink.Factor);
-            result.Operations.First().CorrelationId
-                .Should()
-                .Be(actualChargeLink.CorrelationId);
-            result.Operations.First().Id
-                .Should()
-                .Be(actualChargeLink.ChargeLinkCommand.ChargeLink.OperationId);
+            actual.ChargeRowId
+                .Should().Be(expectedCharge.RowId);
+            actual.MeteringPointRowId
+                .Should().Be(expectedMeteringPoint.RowId);
+            actual.PeriodDetails.First().StartDateTime
+                .Should().Be(expectedEvent.ChargeLinkCommand.ChargeLink.StartDateTime);
+            actual.PeriodDetails.First().EndDateTime
+                .Should().Be(expectedEvent.ChargeLinkCommand.ChargeLink.EndDateTime);
+            actual.PeriodDetails.First().Factor
+                .Should().Be(expectedEvent.ChargeLinkCommand.ChargeLink.Factor);
+            actual.Operations.First().CorrelationId
+                .Should().Be(expectedEvent.CorrelationId);
+            actual.Operations.First().Id
+                .Should().Be(expectedEvent.ChargeLinkCommand.ChargeLink.OperationId);
         }
 
         [Theory]
