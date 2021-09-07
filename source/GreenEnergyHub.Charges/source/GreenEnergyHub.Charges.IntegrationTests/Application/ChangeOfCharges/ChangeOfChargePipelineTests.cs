@@ -37,7 +37,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
     {
         private readonly bool _runPipelineTests;
         private readonly ITestOutputHelper _testOutputHelper;
-        private readonly string _messageReceiverHostname;
+        private readonly string _chargeReceiverHostname;
         private readonly string _postOfficeSubscriptionName;
         private readonly string _postOfficeTopicName;
         private readonly string _postOfficeConnectionString;
@@ -51,13 +51,13 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
 
             _runPipelineTests = Environment.GetEnvironmentVariable("RUN_PIPELINE_TESTS")?.ToUpperInvariant() != "FALSE";
 
-            _messageReceiverHostname = Environment.GetEnvironmentVariable("MESSAGE_RECEIVER_HOSTNAME") ?? string.Empty;
+            _chargeReceiverHostname = Environment.GetEnvironmentVariable("MESSAGE_RECEIVER_HOSTNAME") ?? string.Empty;
             _postOfficeSubscriptionName = Environment.GetEnvironmentVariable("POST_OFFICE_SUBSCRIPTION_NAME") ?? string.Empty;
             _postOfficeTopicName = Environment.GetEnvironmentVariable("POST_OFFICE_TOPIC_NAME") ?? string.Empty;
             _postOfficeConnectionString = Environment.GetEnvironmentVariable("POST_OFFICE_LISTENER_CONNECTION_STRING") ?? string.Empty;
 
             _testOutputHelper.WriteLine($"{nameof(ChangeOfChargePipelineTests)} Configuration: " +
-                                        $"{_messageReceiverHostname}," +
+                                        $"{_chargeReceiverHostname}," +
                                         $"{_postOfficeSubscriptionName}, " +
                                         $"{_postOfficeTopicName}");
         }
@@ -82,8 +82,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
             _testOutputHelper.WriteLine($"ChargeCommand.ChargeOperation.Id: {chargeCommand.ChargeOperation.Id}");
 
             // act
-            var changeOfChargesMessageResult = await RunMessageReceiver(chargeJson).ConfigureAwait(false);
-            _testOutputHelper.WriteLine($"MessageReceiver response is succeeded: {changeOfChargesMessageResult.IsSucceeded}");
+            var changeOfChargesMessageResult = await RunChargeReceiver(chargeJson).ConfigureAwait(false);
+            _testOutputHelper.WriteLine($"ChargeReceiver response is succeeded: {changeOfChargesMessageResult.IsSucceeded}");
 
             var (receivedEvent, receivedMessage) = await serviceBusTestHelper
                 .GetMessageFromServiceBusAsync<ChargeConfirmation>(
@@ -129,8 +129,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
             _testOutputHelper.WriteLine($"ChargeCommand.ChargeOperation.ID: {chargeCommand.ChargeOperation.Id}");
 
             // act
-            var changeOfChargesMessageResult = await RunMessageReceiver(chargeJson).ConfigureAwait(false);
-            _testOutputHelper.WriteLine($"MessageReceiver is succeeded: {changeOfChargesMessageResult.IsSucceeded}");
+            var changeOfChargesMessageResult = await RunChargeReceiver(chargeJson).ConfigureAwait(false);
+            _testOutputHelper.WriteLine($"ChargeReceiver is succeeded: {changeOfChargesMessageResult.IsSucceeded}");
 
             var (receivedEvent, receivedMessage) = await serviceBusTestHelper
                 .GetMessageFromServiceBusAsync<ChargeRejection>(
@@ -156,13 +156,13 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
             Assert.False(chargeExists);
         }
 
-        private async Task<ChargesMessageResult> RunMessageReceiver([NotNull] string json)
+        private async Task<ChargesMessageResult> RunChargeReceiver([NotNull] string json)
         {
             using var client = new HttpClient();
             client.DefaultRequestHeaders.Accept.Clear();
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
-            var requestUri = new Uri($"https://{_messageReceiverHostname}/api/chargehttptrigger/");
+            var requestUri = new Uri($"https://{_chargeReceiverHostname}/api/chargehttptrigger/");
             var stringContent = new StringContent(json, Encoding.UTF8, "application/json");
             var response = await client.PostAsync(requestUri, stringContent).ConfigureAwait(false);
             stringContent.Dispose();
