@@ -17,33 +17,33 @@ using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Domain.ChargeLinks;
 using GreenEnergyHub.Charges.Infrastructure.Context.Model;
 using Microsoft.EntityFrameworkCore;
+using NodaTime;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Context
 {
     public class ChargesDatabaseContext : DbContext, IChargesDatabaseContext
     {
-#pragma warning disable CS8618 // Non-nullable field is uninitialized. Consider declaring as nullable.
+        #nullable disable
         public ChargesDatabaseContext(DbContextOptions<ChargesDatabaseContext> options)
             : base(options)
         {
         }
-#pragma warning restore CS8618 // Non-nullable field is uninitialized. Consider declaring as nullable.
 
-        public DbSet<ChargePrice> ChargePrices { get; set; }
+        public DbSet<ChargePrice> ChargePrices { get; private set; }
 
-        public DbSet<ChargeOperation> ChargeOperations { get; set; }
+        public DbSet<ChargeOperation> ChargeOperations { get; private set; }
 
-        public DbSet<ChargePeriodDetails> ChargePeriodDetails { get; set; }
+        public DbSet<ChargePeriodDetails> ChargePeriodDetails { get; private set; }
 
-        public DbSet<Charge> Charges { get; set; }
+        public DbSet<Charge> Charges { get; private set; }
 
-        public DbSet<MarketParticipant> MarketParticipants { get; set; }
+        public DbSet<MarketParticipant> MarketParticipants { get; private set; }
 
-        public DbSet<MeteringPoint> MeteringPoints { get; set; }
+        public DbSet<MeteringPoint> MeteringPoints { get; private set; }
 
-        public DbSet<DefaultChargeLink> DefaultChargeLinks { get; set; }
+        public DbSet<DefaultChargeLink> DefaultChargeLinks { get; private set; }
 
-        public DbSet<ChargeLink> ChargeLinks { get; set; }
+        public DbSet<ChargeLink> ChargeLinks { get; private set; }
 
         public Task<int> SaveChangesAsync()
            => base.SaveChangesAsync();
@@ -64,13 +64,58 @@ namespace GreenEnergyHub.Charges.Infrastructure.Context
             modelBuilder.Entity<ChargeLink>(builder =>
             {
                 builder.ToTable("ChargeLink");
-                builder.HasKey(c => c.RowId);
+
+                builder.HasKey(c => c.Id);
+
+                builder.Property(c => c.ChargeId).HasColumnName("ChargeId");
+
+                builder.Property(c => c.MeteringPointId).HasColumnName("MeteringPointId");
+
                 builder
-                    .OwnsMany<ChargeLinkOperation>(cl => cl.Operations)
-                    .HasKey(o => o.RowId);
+                    .OwnsMany<ChargeLinkOperation>("_operations", operations =>
+                    {
+                        operations.WithOwner().HasForeignKey("ChargeLinkId");
+
+                        operations.ToTable("ChargeLinkOperation");
+
+                        operations.HasKey(o => o.Id);
+
+                        operations.Property(o => o.Id).ValueGeneratedNever();
+
+                        operations.Property(o => o.CustomerProvidedId).HasColumnName("CustomerProvidedId");
+
+                        operations.Property(o => o.WriteDateTime)
+                            .ValueGeneratedOnAdd()
+                            .HasColumnName("WriteDateTime")
+                            .HasConversion(toDbValue => toDbValue.Value.ToDateTimeUtc(), fromDbValue => Instant.FromDateTimeUtc(fromDbValue.ToUniversalTime()));
+
+                        operations.Property(o => o.CorrelationId).HasColumnName("CorrelationId");
+                    });
                 builder
-                    .OwnsMany<ChargeLinkPeriodDetails>(cl => cl.PeriodDetails)
-                    .HasKey(o => o.RowId);
+                    .OwnsMany<ChargeLinkPeriodDetails>("_periodDetails", details =>
+                    {
+                        details.WithOwner().HasForeignKey("ChargeLinkId");
+
+                        details.ToTable("ChargeLinkPeriodDetails");
+
+                        details.HasKey(p => p.Id);
+
+                        details.Property(p => p.Id).ValueGeneratedNever();
+
+                        details.Property(d => d.Factor).HasColumnName("Factor");
+
+                        details.Property(d => d.CreatedByOperationId).HasColumnName("CreatedByOperationId");
+
+                        details.Property(d => d.RetiredByOperationId).HasColumnName("RetiredByOperationId");
+
+                        details.Property(d => d.StartDateTime)
+                            .HasColumnName("StartDateTime")
+                            .HasConversion(toDbValue => toDbValue.ToDateTimeUtc(), fromDbValue => Instant.FromDateTimeUtc(fromDbValue.ToUniversalTime()));
+
+                        details.Property(d => d.EndDateTime)
+                            .HasColumnName("EndDateTime")
+                            .HasConversion(toDbValue => toDbValue.Value.ToDateTimeUtc(), fromDbValue => Instant.FromDateTimeUtc(fromDbValue.ToUniversalTime()));
+                    });
             });
 
             base.OnModelCreating(modelBuilder);

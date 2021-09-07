@@ -49,10 +49,10 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
         [Fact]
         public async Task GetChargeAsync_WhenChargeIsCreated_ThenSuccessReturnedAsync()
         {
+            // Arrange
             await using var chargesDatabaseContext = await SquadronContextFactory
                 .GetDatabaseContextAsync(_resource)
                 .ConfigureAwait(false);
-            // Arrange
             var charge = GetValidCharge();
             await SeedDatabase(chargesDatabaseContext).ConfigureAwait(false);
             var sut = new ChargeRepository(chargesDatabaseContext);

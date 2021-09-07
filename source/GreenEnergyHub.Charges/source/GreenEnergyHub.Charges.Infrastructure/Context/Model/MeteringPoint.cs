@@ -37,7 +37,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Context.Model
         }
 
         [Key]
-        public int RowId { get; set; }
+        public int? RowId { get; private set; }
 
         public string MeteringPointId { get; set; }
 

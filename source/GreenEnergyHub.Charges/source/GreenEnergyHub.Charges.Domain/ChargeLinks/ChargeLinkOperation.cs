@@ -22,31 +22,26 @@ namespace GreenEnergyHub.Charges.Domain.ChargeLinks
         private const int MaxIdLength = 100;
         private const int MaxCorrelationIdLength = 36;
 
-        public ChargeLinkOperation(string id, string correlationId)
+        public ChargeLinkOperation(string customerProvidedId, string correlationId)
         {
-            if (id == null) throw new ArgumentNullException(nameof(id));
-            if (id.Length > MaxIdLength) throw new ArgumentException($"Must not exceed {MaxIdLength} characters.", nameof(id));
+            if (customerProvidedId == null) throw new ArgumentNullException(nameof(customerProvidedId));
+            if (customerProvidedId.Length > MaxIdLength) throw new ArgumentException($"Must not exceed {MaxIdLength} characters.", nameof(customerProvidedId));
 
             if (correlationId == null) throw new ArgumentNullException(nameof(correlationId));
             if (correlationId.Length > MaxCorrelationIdLength) throw new ArgumentException($"Must not exceed {MaxCorrelationIdLength} characters.", nameof(correlationId));
 
-            Id = id;
+            Id = Guid.NewGuid();
+            CustomerProvidedId = customerProvidedId;
             CorrelationId = correlationId;
-        }
-
-        // Temporary workaround to silence EFCore until persistence is finished in upcoming PR
-#pragma warning disable 8618
-        private ChargeLinkOperation()
-#pragma warning restore 8618
-        {
         }
 
         /// <summary>
         ///  Used by persistence to hydrate. So don't risc failing hydration by validating here.
         /// </summary>
-        private ChargeLinkOperation(string id, string correlationId, Instant writeDateTime)
+        private ChargeLinkOperation(Guid id, string customerProvidedId, string correlationId, Instant writeDateTime)
         {
             Id = id;
+            CustomerProvidedId = customerProvidedId;
             CorrelationId = correlationId;
             WriteDateTime = writeDateTime;
         }
@@ -54,19 +49,19 @@ namespace GreenEnergyHub.Charges.Domain.ChargeLinks
         /// <summary>
         /// Globally unique identifier of the charge link operation.
         /// </summary>
-        public int? RowId { get; set; }
+        public Guid Id { get; }
 
         /// <summary>
         /// Operation ID provided by customer.
-        /// TODO: Rename to e.g. CustomerOperationId?
+        /// Note: There is currently no requirements about this ID being unique in any way.
         /// </summary>
-        public string Id { get; }
+        public string CustomerProvidedId { get; }
 
         public string CorrelationId { get; }
 
         /// <summary>
         /// Time of persistence. Database generated value.
         /// </summary>
-        public Instant WriteDateTime { get; }
+        public Instant? WriteDateTime { get; }
     }
 }
