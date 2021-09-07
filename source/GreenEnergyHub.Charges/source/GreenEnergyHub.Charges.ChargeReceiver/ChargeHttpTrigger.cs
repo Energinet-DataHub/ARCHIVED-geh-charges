@@ -14,7 +14,6 @@
 
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Application;
 using GreenEnergyHub.Charges.Application.Charges;
 using GreenEnergyHub.Charges.Application.Charges.Handlers;
 using GreenEnergyHub.Charges.Domain.Charges.Commands;
@@ -26,7 +25,7 @@ using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.Extensions.Logging;
 
-namespace GreenEnergyHub.Charges.MessageReceiver
+namespace GreenEnergyHub.Charges.ChargeReceiver
 {
     public class ChargeHttpTrigger
     {
