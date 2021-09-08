@@ -1,0 +1,2 @@
+﻿INSERT INTO [Charges].[MeteringPoint] VALUES ('571313180000000005', 1, 800, '2021-01-01', 1, 3)
+GO
