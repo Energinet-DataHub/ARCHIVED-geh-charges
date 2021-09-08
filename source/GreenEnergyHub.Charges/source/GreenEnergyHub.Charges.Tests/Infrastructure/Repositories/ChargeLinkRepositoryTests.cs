@@ -50,32 +50,31 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
             _resource = resource;
         }
 
-        [Fact(Skip = "temp")]
-        public async Task StoreAsync_StoresChargeLink()
-        {
-            // Arrange
-            await using var chargesDatabaseWriteContext = await SquadronContextFactory
-                .GetDatabaseContextAsync(_resource)
-                .ConfigureAwait(false);
-
-            var ids = SeedDatabase(chargesDatabaseWriteContext);
-            var expected = CreateNewExpectedChargeLink(ids);
-            var sut = new ChargeLinkRepository(chargesDatabaseWriteContext);
-
-            // Act
-            await sut.StoreAsync(expected).ConfigureAwait(false);
-
-            // Assert
-            await using var chargesDatabaseReadContext = await SquadronContextFactory
-                .GetDatabaseContextAsync(_resource)
-                .ConfigureAwait(false);
-
-            var actual = await chargesDatabaseReadContext.ChargeLinks.SingleAsync(
-                    c => c.ChargeId == ids.chargeRowId && c.MeteringPointId == ids.meteringPointRowId)
-                .ConfigureAwait(false);
-            actual.Should().BeEquivalentTo(expected);
-        }
-
+        // [Fact(Skip = "temp")]
+        // public async Task StoreAsync_StoresChargeLink()
+        // {
+        //     // Arrange
+        //     await using var chargesDatabaseWriteContext = await SquadronContextFactory
+        //         .GetDatabaseContextAsync(_resource)
+        //         .ConfigureAwait(false);
+        //
+        //     var ids = SeedDatabase(chargesDatabaseWriteContext);
+        //     var expected = CreateNewExpectedChargeLink(ids);
+        //     var sut = new ChargeLinkRepository(chargesDatabaseWriteContext);
+        //
+        //     // Act
+        //     await sut.StoreAsync(expected).ConfigureAwait(false);
+        //
+        //     // Assert
+        //     await using var chargesDatabaseReadContext = await SquadronContextFactory
+        //         .GetDatabaseContextAsync(_resource)
+        //         .ConfigureAwait(false);
+        //
+        //     var actual = await chargesDatabaseReadContext.ChargeLinks.SingleAsync(
+        //             c => c.ChargeId == ids.chargeRowId && c.MeteringPointId == ids.meteringPointRowId)
+        //         .ConfigureAwait(false);
+        //     actual.Should().BeEquivalentTo(expected);
+        // }
         private ChargeLink CreateNewExpectedChargeLink((int chargeRowId, int meteringPointRowId) ids)
         {
             var operation = new ChargeLinkOperation(ExpectedOperationId, ExpectedCorrelationId);
