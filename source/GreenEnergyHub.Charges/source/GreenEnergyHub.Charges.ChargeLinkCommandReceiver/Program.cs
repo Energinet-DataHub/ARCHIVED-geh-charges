@@ -13,14 +13,17 @@
 // limitations under the License.
 
 using System;
+using GreenEnergyHub.Charges.Application.ChangeOfCharges.Repositories;
 using GreenEnergyHub.Charges.Application.ChargeLinks.Factories;
 using GreenEnergyHub.Charges.Application.ChargeLinks.Handlers;
 using GreenEnergyHub.Charges.Application.ChargeLinks.Mapping;
 using GreenEnergyHub.Charges.Application.Charges.Repositories;
 using GreenEnergyHub.Charges.Domain.ChargeLinks.Events.Local;
+using GreenEnergyHub.Charges.Infrastructure.Context;
 using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandAccepted;
 using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandReceived;
 using GreenEnergyHub.Charges.Infrastructure.Messaging.Registration;
+using GreenEnergyHub.Charges.Infrastructure.Repositories;
 using GreenEnergyHub.Messaging.Protobuf;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -49,6 +52,8 @@ namespace GreenEnergyHub.Charges.ChargeLinkCommandReceiver
             serviceCollection.AddScoped<IChargeLinkCommandReceivedHandler, ChargeLinkCommandReceivedHandler>();
             serviceCollection.AddScoped<IChargeLinkFactory, ChargeLinkFactory>();
             serviceCollection.AddScoped<IChargeRepository, IChargeRepository>();
+            serviceCollection.AddScoped<IMeteringPointRepository, MeteringPointRepository>();
+            serviceCollection.AddScoped<IChargesDatabaseContext, ChargesDatabaseContext>();
 
             serviceCollection.AddSingleton<IChargeLinkCommandMapper, ChargeLinkCommandMapper>();
 
