@@ -16,6 +16,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using FluentAssertions;
+using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.Domain.ChargeLinks;
 using GreenEnergyHub.Charges.Domain.MeteringPoints;
 using GreenEnergyHub.Charges.Infrastructure.Context;
@@ -81,7 +82,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
 
             var periodDetails = new ChargeLinkPeriodDetails(
                 _expectedPeriodDetailsStartDateTime,
-                null,
+                ((Instant?)null).TimeOrEndDefault(),
                 ExpectedOperationDetailsFactor,
                 operation.Id);
 

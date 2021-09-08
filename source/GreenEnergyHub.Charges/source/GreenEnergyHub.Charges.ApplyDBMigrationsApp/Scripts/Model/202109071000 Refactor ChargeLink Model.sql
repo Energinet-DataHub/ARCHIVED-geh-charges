@@ -22,7 +22,7 @@ CREATE TABLE [Charges].[ChargeLinkOperation]
     Id UNIQUEIDENTIFIER NOT NULL,
     ChargeLinkId UNIQUEIDENTIFIER NOT NULL FOREIGN KEY REFERENCES [Charges].ChargeLink(Id),
     CorrelationId nvarchar(36) NOT NULL,
-    CustomerProvidedId nvarchar(100) NOT NULL,
+    SenderProvidedId nvarchar(100) NOT NULL,
     WriteDateTime DateTime2 NOT NULL DEFAULT(GETDATE())
         CONSTRAINT [PK_ChargeLinkOperation] PRIMARY KEY NONCLUSTERED
             (

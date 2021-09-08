@@ -68,7 +68,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Context.EntityConfigurations
             operations.HasKey(o => o.Id);
 
             operations.Property(o => o.Id).ValueGeneratedNever();
-            operations.Property(o => o.CustomerProvidedId).HasColumnName("CustomerProvidedId");
+            operations.Property(o => o.SenderProvidedId).HasColumnName("SenderProvidedId");
 
             operations.Property(o => o.WriteDateTime)
                 .ValueGeneratedOnAdd()

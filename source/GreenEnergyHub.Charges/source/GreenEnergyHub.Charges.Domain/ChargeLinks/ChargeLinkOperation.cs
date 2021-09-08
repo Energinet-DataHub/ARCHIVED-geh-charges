@@ -22,26 +22,26 @@ namespace GreenEnergyHub.Charges.Domain.ChargeLinks
         private const int MaxIdLength = 100;
         private const int MaxCorrelationIdLength = 36;
 
-        public ChargeLinkOperation(string customerProvidedId, string correlationId)
+        public ChargeLinkOperation(string senderProvidedId, string correlationId)
         {
-            if (customerProvidedId == null) throw new ArgumentNullException(nameof(customerProvidedId));
-            if (customerProvidedId.Length > MaxIdLength) throw new ArgumentException($"Must not exceed {MaxIdLength} characters.", nameof(customerProvidedId));
+            if (senderProvidedId == null) throw new ArgumentNullException(nameof(senderProvidedId));
+            if (senderProvidedId.Length > MaxIdLength) throw new ArgumentException($"Must not exceed {MaxIdLength} characters.", nameof(senderProvidedId));
 
             if (correlationId == null) throw new ArgumentNullException(nameof(correlationId));
             if (correlationId.Length > MaxCorrelationIdLength) throw new ArgumentException($"Must not exceed {MaxCorrelationIdLength} characters.", nameof(correlationId));
 
             Id = Guid.NewGuid();
-            CustomerProvidedId = customerProvidedId;
+            SenderProvidedId = senderProvidedId;
             CorrelationId = correlationId;
         }
 
         /// <summary>
         ///  Used by persistence to hydrate. So don't risc failing hydration by validating here.
         /// </summary>
-        private ChargeLinkOperation(Guid id, string customerProvidedId, string correlationId, Instant writeDateTime)
+        private ChargeLinkOperation(Guid id, string senderProvidedId, string correlationId, Instant writeDateTime)
         {
             Id = id;
-            CustomerProvidedId = customerProvidedId;
+            SenderProvidedId = senderProvidedId;
             CorrelationId = correlationId;
             WriteDateTime = writeDateTime;
         }
@@ -55,7 +55,7 @@ namespace GreenEnergyHub.Charges.Domain.ChargeLinks
         /// Contains an ID for the specific Charge Link Operation, provided by the sender.
         /// Uniqueness cannot be guaranteed.
         /// </summary>
-        public string CustomerProvidedId { get; }
+        public string SenderProvidedId { get; }
 
         public string CorrelationId { get; }
 
