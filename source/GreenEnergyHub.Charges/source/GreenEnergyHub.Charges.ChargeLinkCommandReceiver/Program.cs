@@ -77,7 +77,7 @@ namespace GreenEnergyHub.Charges.ChargeLinkCommandReceiver
             serviceCollection.AddDbContext<ChargesDatabaseContext>(
                 options => options.UseSqlServer(connectionString));
             serviceCollection.AddScoped<IChargesDatabaseContext, ChargesDatabaseContext>();
-            serviceCollection.AddScoped<IChargeRepository, IChargeRepository>();
+            serviceCollection.AddScoped<IChargeRepository, ChargeRepository>();
             serviceCollection.AddScoped<IChargeLinkRepository, ChargeLinkRepository>();
             serviceCollection.AddScoped<IMeteringPointRepository, MeteringPointRepository>();
         }
