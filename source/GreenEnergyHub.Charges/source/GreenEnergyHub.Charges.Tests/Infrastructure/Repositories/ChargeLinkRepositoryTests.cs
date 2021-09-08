@@ -57,7 +57,6 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
             await using var chargesDatabaseWriteContext = await SquadronContextFactory
                 .GetDatabaseContextAsync(_resource)
                 .ConfigureAwait(false);
-
             var ids = SeedDatabase(chargesDatabaseWriteContext);
             var expected = CreateNewExpectedChargeLink(ids);
             var sut = new ChargeLinkRepository(chargesDatabaseWriteContext);
