@@ -17,6 +17,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application;
+using GreenEnergyHub.Charges.ChargeReceiver;
 using GreenEnergyHub.Charges.Domain.Charges.Commands;
 using GreenEnergyHub.Charges.Domain.Charges.Events.Local;
 using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeCommandReceived;
@@ -29,11 +30,11 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace GreenEnergyHub.Charges.IntegrationTests.TestHelpers
 {
-    public class MessageReceiverConfiguration : MessageReceiver.Startup
+    public class ChargeReceiverConfiguration : Startup
     {
         private readonly ITopicClient _topicClient;
 
-        public MessageReceiverConfiguration(ITopicClient topicClient)
+        public ChargeReceiverConfiguration(ITopicClient topicClient)
         {
             _topicClient = topicClient;
         }
