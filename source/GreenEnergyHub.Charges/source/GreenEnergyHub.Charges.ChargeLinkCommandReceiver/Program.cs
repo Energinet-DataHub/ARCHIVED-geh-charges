@@ -13,15 +13,21 @@
 // limitations under the License.
 
 using System;
+using System.Diagnostics.CodeAnalysis;
+using GreenEnergyHub.Charges.Application.ChangeOfCharges.Repositories;
 using GreenEnergyHub.Charges.Application.ChargeLinks.Factories;
 using GreenEnergyHub.Charges.Application.ChargeLinks.Handlers;
 using GreenEnergyHub.Charges.Application.ChargeLinks.Mapping;
+using GreenEnergyHub.Charges.Application.ChargeLinks.Repositories;
 using GreenEnergyHub.Charges.Application.Charges.Repositories;
 using GreenEnergyHub.Charges.Domain.ChargeLinks.Events.Local;
+using GreenEnergyHub.Charges.Infrastructure.Context;
 using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandAccepted;
 using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandReceived;
 using GreenEnergyHub.Charges.Infrastructure.Messaging.Registration;
+using GreenEnergyHub.Charges.Infrastructure.Repositories;
 using GreenEnergyHub.Messaging.Protobuf;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using NodaTime;
@@ -48,11 +54,11 @@ namespace GreenEnergyHub.Charges.ChargeLinkCommandReceiver
             serviceCollection.AddLogging();
             serviceCollection.AddScoped<IChargeLinkCommandReceivedHandler, ChargeLinkCommandReceivedHandler>();
             serviceCollection.AddScoped<IChargeLinkFactory, ChargeLinkFactory>();
-            serviceCollection.AddScoped<IChargeRepository, IChargeRepository>();
 
             serviceCollection.AddSingleton<IChargeLinkCommandMapper, ChargeLinkCommandMapper>();
 
             ConfigureMessaging(serviceCollection);
+            ConfigurePersistence(serviceCollection);
         }
 
         private static void ConfigureMessaging(IServiceCollection services)
@@ -63,6 +69,17 @@ namespace GreenEnergyHub.Charges.ChargeLinkCommandReceiver
             services.AddMessagingProtobuf().AddMessageDispatcher<ChargeLinkCommandAcceptedEvent>(
                 GetEnv("CHARGE_LINK_ACCEPTED_SENDER_CONNECTION_STRING"),
                 GetEnv("CHARGE_LINK_ACCEPTED_TOPIC_NAME"));
+        }
+
+        private static void ConfigurePersistence([NotNull] IServiceCollection serviceCollection)
+        {
+            var connectionString = GetEnv("CHARGE_DB_CONNECTION_STRING");
+            serviceCollection.AddDbContext<ChargesDatabaseContext>(
+                options => options.UseSqlServer(connectionString));
+            serviceCollection.AddScoped<IChargesDatabaseContext, ChargesDatabaseContext>();
+            serviceCollection.AddScoped<IChargeRepository, ChargeRepository>();
+            serviceCollection.AddScoped<IChargeLinkRepository, ChargeLinkRepository>();
+            serviceCollection.AddScoped<IMeteringPointRepository, MeteringPointRepository>();
         }
 
         private static string GetEnv(string variableName)
