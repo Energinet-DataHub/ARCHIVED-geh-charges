@@ -52,7 +52,7 @@ namespace GreenEnergyHub.Charges.Domain.ChargeLinks
         public Guid Id { get; }
 
         /// <summary>
-        /// Operation ID provided by customer.
+        /// Contains an ID for the specific Charge Link Operation, provided by the sender. Uniqueness cannot be guaranteed.
         /// Note: There is currently no requirements about this ID being unique in any way.
         /// </summary>
         public string CustomerProvidedId { get; }
