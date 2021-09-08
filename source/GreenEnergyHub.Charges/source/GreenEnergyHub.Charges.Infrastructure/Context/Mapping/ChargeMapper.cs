@@ -36,6 +36,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Context.Mapping
 
             return new Domain.Charges.Charge
             {
+                RowId = charge.RowId,
                 Id = charge.ChargeId,
                 Type = (ChargeType)charge.ChargeType,
                 Name = currentChargeDetails.Name,
