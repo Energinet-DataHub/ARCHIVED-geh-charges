@@ -30,7 +30,7 @@ namespace GreenEnergyHub.Charges.Domain.Charges
         /// <summary>
         /// Globally unique identifier of the charge.
         /// </summary>
-        public int RowId { get; private set; }
+        public int RowId { get; set; }
 
         public Document Document { get; set; }
 

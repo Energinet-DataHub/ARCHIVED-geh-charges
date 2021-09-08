@@ -14,6 +14,7 @@
 
 using System;
 using Energinet.DataHub.MeteringPoints.IntegrationEventContracts;
+using GreenEnergyHub.Charges.Application.ChargeLinks.Factories;
 using GreenEnergyHub.Charges.Application.ChargeLinks.Handlers;
 using GreenEnergyHub.Charges.Application.Charges.Repositories;
 using GreenEnergyHub.Charges.Domain.ChargeLinks.Events.Local;
@@ -52,6 +53,7 @@ namespace GreenEnergyHub.Charges.CreateLinkCommandReceiver
             ConfigurePersistence(serviceCollection);
 
             serviceCollection.AddScoped<ICreateLinkCommandEventHandler, CreateLinkCommandEventHandler>();
+            serviceCollection.AddScoped<IChargeLinkCommandFactory, ChargeLinkCommandFactory>();
         }
 
         private static void ConfigurePersistence(IServiceCollection services)
