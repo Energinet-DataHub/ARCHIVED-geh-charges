@@ -1,7 +1,10 @@
 ---
-name: 🤔 Question
+name: "\U0001F914 Question"
 about: Use this template for asking questions.
+title: ''
 labels: question
+assignees: ''
+
 ---
 
 ### Question
