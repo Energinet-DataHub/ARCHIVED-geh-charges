@@ -39,7 +39,7 @@ CREATE TABLE [Charges].[ChargeLinkPeriodDetails]
     Id UNIQUEIDENTIFIER NOT NULL,
     ChargeLinkId UNIQUEIDENTIFIER NOT NULL FOREIGN KEY REFERENCES [Charges].ChargeLink(Id),
     StartDateTime DateTime2 NOT NULL,
-    EndDateTime DateTime2,
+    EndDateTime DateTime2 NOT NULL,
     Factor int NOT NULL,
     CreatedByOperationId UNIQUEIDENTIFIER NOT NULL FOREIGN KEY REFERENCES [Charges].ChargeLinkOperation(Id),
     RetiredByOperationId UNIQUEIDENTIFIER FOREIGN KEY REFERENCES [Charges].ChargeLinkOperation(Id)
