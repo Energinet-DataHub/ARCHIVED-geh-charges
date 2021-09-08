@@ -15,7 +15,7 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
-using GreenEnergyHub.Charges.MessageReceiver;
+using GreenEnergyHub.Charges.ChargeReceiver;
 using Microsoft.Azure.Functions.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
