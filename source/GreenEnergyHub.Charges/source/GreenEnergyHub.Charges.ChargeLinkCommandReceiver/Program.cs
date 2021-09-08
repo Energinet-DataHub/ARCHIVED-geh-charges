@@ -13,10 +13,10 @@
 // limitations under the License.
 
 using System;
-using GreenEnergyHub.Charges.Application.ChargeLinks;
+using GreenEnergyHub.Charges.Application.ChargeLinks.Factories;
 using GreenEnergyHub.Charges.Application.ChargeLinks.Handlers;
 using GreenEnergyHub.Charges.Application.ChargeLinks.Mapping;
-using GreenEnergyHub.Charges.Domain.ChargeLinks;
+using GreenEnergyHub.Charges.Application.Charges.Repositories;
 using GreenEnergyHub.Charges.Domain.ChargeLinks.Events.Local;
 using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandAccepted;
 using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandReceived;
@@ -47,6 +47,8 @@ namespace GreenEnergyHub.Charges.ChargeLinkCommandReceiver
             serviceCollection.AddScoped(typeof(IClock), _ => SystemClock.Instance);
             serviceCollection.AddLogging();
             serviceCollection.AddScoped<IChargeLinkCommandReceivedHandler, ChargeLinkCommandReceivedHandler>();
+            serviceCollection.AddScoped<IChargeLinkFactory, ChargeLinkFactory>();
+            serviceCollection.AddScoped<IChargeRepository, IChargeRepository>();
 
             serviceCollection.AddSingleton<IChargeLinkCommandMapper, ChargeLinkCommandMapper>();
 
