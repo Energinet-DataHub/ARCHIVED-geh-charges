@@ -26,10 +26,11 @@ namespace GreenEnergyHub.Charges.Infrastructure.Context.Mapping
             if (meteringPoint == null) throw new ArgumentNullException(nameof(meteringPoint));
 
             return new MeteringPoint(
+                meteringPoint.RowId,
                 meteringPoint.MeteringPointId,
                 meteringPoint.MeteringPointType,
                 meteringPoint.GridAreaId,
-                Instant.FromDateTimeUtc(meteringPoint.EffectiveDate),
+                Instant.FromDateTimeUtc(DateTime.SpecifyKind(meteringPoint.EffectiveDate, DateTimeKind.Utc)),
                 meteringPoint.ConnectionState,
                 meteringPoint.SettlementMethod);
         }
@@ -40,6 +41,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Context.Mapping
             if (meteringPoint == null) throw new ArgumentNullException(nameof(meteringPoint));
 
             return new Model.MeteringPoint(
+                meteringPoint.RowId,
                 meteringPoint.MeteringPointId,
                 meteringPoint.MeteringPointType,
                 meteringPoint.GridAreaId,
