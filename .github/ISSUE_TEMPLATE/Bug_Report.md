@@ -1,7 +1,10 @@
 ---
-name: 🐛 Bug Report
+name: "\U0001F41B Bug Report"
 about: Use this template for adding bug reports.
+title: ''
 labels: bug
+assignees: ''
+
 ---
 
 ### Current Behavior
