@@ -39,6 +39,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Repositories
                 .Include(x => x.ChargePeriodDetails)
                 .Include(x => x.ChargePrices)
                 .Include(x => x.MarketParticipant)
+                .Include(x => x.ChargeOperation)
                 .SingleAsync(x => x.ChargeId == chargeId &&
                                            x.MarketParticipant.MarketParticipantId == owner &&
                                            x.ChargeType == (int)chargeType).ConfigureAwait(false);

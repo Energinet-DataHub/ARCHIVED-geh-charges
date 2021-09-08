@@ -31,7 +31,8 @@ namespace GreenEnergyHub.Charges.TestCore.Squadron
 
             // Add "_" and upper case to and a random string to pass SQL Server password
             // policy requirements "N" removes '-' as they are not valid
-            var password = "_P" + Guid.NewGuid().ToString("N");
+            // See requirements at https://hub.docker.com/_/microsoft-mssql-server
+            var password = "PQaz27_!" + Guid.NewGuid().ToString("N");
             builder
                 .Name("mssql")
                 .Image("mcr.microsoft.com/mssql/server:2019-latest")

@@ -15,35 +15,36 @@
 using System;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Domain.ChargeLinks;
+using GreenEnergyHub.Charges.Infrastructure.Context.EntityConfigurations;
 using GreenEnergyHub.Charges.Infrastructure.Context.Model;
 using Microsoft.EntityFrameworkCore;
+using NodaTime;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Context
 {
     public class ChargesDatabaseContext : DbContext, IChargesDatabaseContext
     {
-#pragma warning disable CS8618 // Non-nullable field is uninitialized. Consider declaring as nullable.
+        #nullable disable
         public ChargesDatabaseContext(DbContextOptions<ChargesDatabaseContext> options)
             : base(options)
         {
         }
-#pragma warning restore CS8618 // Non-nullable field is uninitialized. Consider declaring as nullable.
 
-        public DbSet<ChargePrice> ChargePrices { get; set; }
+        public DbSet<ChargePrice> ChargePrices { get; private set; }
 
-        public DbSet<ChargeOperation> ChargeOperations { get; set; }
+        public DbSet<ChargeOperation> ChargeOperations { get; private set; }
 
-        public DbSet<ChargePeriodDetails> ChargePeriodDetails { get; set; }
+        public DbSet<ChargePeriodDetails> ChargePeriodDetails { get; private set; }
 
-        public DbSet<Charge> Charges { get; set; }
+        public DbSet<Charge> Charges { get; private set; }
 
-        public DbSet<MarketParticipant> MarketParticipants { get; set; }
+        public DbSet<MarketParticipant> MarketParticipants { get; private set; }
 
-        public DbSet<MeteringPoint> MeteringPoints { get; set; }
+        public DbSet<MeteringPoint> MeteringPoints { get; private set; }
 
-        public DbSet<DefaultChargeLink> DefaultChargeLinks { get; set; }
+        public DbSet<DefaultChargeLink> DefaultChargeLinks { get; private set; }
 
-        public DbSet<ChargeLink> ChargeLinks { get; set; }
+        public DbSet<ChargeLink> ChargeLinks { get; private set; }
 
         public Task<int> SaveChangesAsync()
            => base.SaveChangesAsync();
@@ -61,17 +62,8 @@ namespace GreenEnergyHub.Charges.Infrastructure.Context
             modelBuilder.Entity<MarketParticipant>().ToTable("MarketParticipant");
             modelBuilder.Entity<MeteringPoint>().ToTable("MeteringPoint");
             modelBuilder.Entity<DefaultChargeLink>().ToTable("DefaultChargeLink");
-            modelBuilder.Entity<ChargeLink>(builder =>
-            {
-                builder.ToTable("ChargeLink");
-                builder.HasKey(c => c.RowId);
-                builder
-                    .OwnsMany<ChargeLinkOperation>(cl => cl.Operations)
-                    .HasKey(o => o.RowId);
-                builder
-                    .OwnsMany<ChargeLinkPeriodDetails>(cl => cl.PeriodDetails)
-                    .HasKey(o => o.RowId);
-            });
+
+            modelBuilder.ApplyConfiguration(new ChargeLinkEntityConfiguration());
 
             base.OnModelCreating(modelBuilder);
         }

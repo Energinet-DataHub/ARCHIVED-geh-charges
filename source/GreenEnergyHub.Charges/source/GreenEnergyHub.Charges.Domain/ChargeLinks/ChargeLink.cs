@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Collections.Generic;
 
 namespace GreenEnergyHub.Charges.Domain.ChargeLinks
@@ -22,41 +23,53 @@ namespace GreenEnergyHub.Charges.Domain.ChargeLinks
     public class ChargeLink
     {
         public ChargeLink(
-            int chargeRowId,
-            int meteringPointRowId,
-            IReadOnlyCollection<ChargeLinkOperation> operations,
-            IReadOnlyCollection<ChargeLinkPeriodDetails> periodDetails)
+            int chargeId,
+            int meteringPointId,
+            List<ChargeLinkOperation> operations,
+            List<ChargeLinkPeriodDetails> periodDetails)
         {
-            ChargeRowId = chargeRowId;
-            MeteringPointRowId = meteringPointRowId;
-            Operations = operations;
-            PeriodDetails = periodDetails;
+            Id = Guid.NewGuid();
+            ChargeId = chargeId;
+            MeteringPointId = meteringPointId;
+            _operations = operations;
+            _periodDetails = periodDetails;
         }
 
-        // Temporary workaround to silence EFCore until persistence is finished in upcoming PR
-#pragma warning disable 8618
-        private ChargeLink()
-#pragma warning restore 8618
+        /// <summary>
+        /// Used implicitly by persistence.
+        /// </summary>
+        // ReSharper disable once UnusedMember.Local
+        private ChargeLink(int chargeId, int meteringPointId)
         {
+            Id = Guid.NewGuid();
+            ChargeId = chargeId;
+            MeteringPointId = meteringPointId;
+            _operations = new List<ChargeLinkOperation>();
+            _periodDetails = new List<ChargeLinkPeriodDetails>();
         }
 
         /// <summary>
         /// Globally unique identifier of the charge link.
         /// </summary>
-        public int? RowId { get; private set; }
+        public Guid Id { get; }
 
         /// <summary>
-        /// The charge that is linked to the metering point (<see cref="MeteringPointRowId"/>).
+        /// The charge that is linked to the metering point (<see cref="MeteringPointId"/>).
+        /// This is not
         /// </summary>
-        public int ChargeRowId { get; private set; }
+        public int ChargeId { get; }
 
         /// <summary>
-        /// The metering point that is linked to the charge (<see cref="ChargeRowId"/>).
+        /// The metering point that is linked to the charge (<see cref="ChargeId"/>).
         /// </summary>
-        public int MeteringPointRowId { get; private set; }
+        public int MeteringPointId { get; }
 
-        public IReadOnlyCollection<ChargeLinkOperation> Operations { get; private set; }
+        private readonly List<ChargeLinkOperation> _operations;
 
-        public IReadOnlyCollection<ChargeLinkPeriodDetails> PeriodDetails { get; private set; }
+        public IReadOnlyCollection<ChargeLinkOperation> Operations => _operations.AsReadOnly();
+
+        private readonly List<ChargeLinkPeriodDetails> _periodDetails;
+
+        public IReadOnlyCollection<ChargeLinkPeriodDetails> PeriodDetails => _periodDetails.AsReadOnly();
     }
 }

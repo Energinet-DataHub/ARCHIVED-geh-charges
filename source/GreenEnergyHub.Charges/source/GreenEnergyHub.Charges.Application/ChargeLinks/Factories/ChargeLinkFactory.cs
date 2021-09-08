@@ -48,10 +48,10 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.Factories
                 .ConfigureAwait(false);
 
             var operation = new ChargeLinkOperation(chargeLink.OperationId, chargeLinkEvent.CorrelationId);
-            var operations = new List<ChargeLinkOperation> { operation }.AsReadOnly();
+            var operations = new List<ChargeLinkOperation> { operation };
 
-            var periodDetails = new ChargeLinkPeriodDetails(chargeLink.StartDateTime, chargeLink.EndDateTime, chargeLink.Factor, operation);
-            var periodDetailsCollection = new List<ChargeLinkPeriodDetails> { periodDetails }.AsReadOnly();
+            var periodDetails = new ChargeLinkPeriodDetails(chargeLink.StartDateTime, chargeLink.EndDateTime, chargeLink.Factor, operation.Id);
+            var periodDetailsCollection = new List<ChargeLinkPeriodDetails> { periodDetails };
 
             return new ChargeLink(charge.RowId, meteringPoint.RowId!.Value, operations, periodDetailsCollection);
         }
