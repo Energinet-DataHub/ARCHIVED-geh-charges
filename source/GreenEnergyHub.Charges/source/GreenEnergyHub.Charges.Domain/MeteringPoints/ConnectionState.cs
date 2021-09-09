@@ -17,8 +17,9 @@ namespace GreenEnergyHub.Charges.Domain.MeteringPoints
     public enum ConnectionState
     {
         Unknown = 0,
-        Connected = 1,
-        Disconnected = 2,
-        ClosedDown = 3,
+        New = 1,
+        Connected = 2,
+        Disconnected = 3,
+        ClosedDown = 4,
     }
 }
