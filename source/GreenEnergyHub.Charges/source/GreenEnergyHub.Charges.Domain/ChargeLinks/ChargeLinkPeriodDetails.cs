@@ -12,31 +12,26 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using NodaTime;
 
 namespace GreenEnergyHub.Charges.Domain.ChargeLinks
 {
     public class ChargeLinkPeriodDetails
     {
-        public ChargeLinkPeriodDetails(Instant startDateTime, Instant? endDateTime, int factor, ChargeLinkOperation createdByOperation)
+        public ChargeLinkPeriodDetails(Instant startDateTime, Instant? endDateTime, int factor, Guid createdByOperationId)
         {
+            Id = Guid.NewGuid();
             StartDateTime = startDateTime;
             EndDateTime = endDateTime;
             Factor = factor;
-            CreatedByOperation = createdByOperation;
-        }
-
-        // Temporary workaround to silence EFCore until persistence is finished in upcoming PR
-#pragma warning disable 8618
-        private ChargeLinkPeriodDetails()
-#pragma warning restore 8618
-        {
+            CreatedByOperationId = createdByOperationId;
         }
 
         /// <summary>
         /// Globally unique identifier of the charge link period details.
         /// </summary>
-        public int? RowId { get; set; }
+        public Guid Id { get; }
 
         public Instant StartDateTime { get; }
 
@@ -44,6 +39,8 @@ namespace GreenEnergyHub.Charges.Domain.ChargeLinks
 
         public int Factor { get; }
 
-        public ChargeLinkOperation CreatedByOperation { get; }
+        public Guid CreatedByOperationId { get; }
+
+        public Guid? RetiredByOperationId { get; }
     }
 }

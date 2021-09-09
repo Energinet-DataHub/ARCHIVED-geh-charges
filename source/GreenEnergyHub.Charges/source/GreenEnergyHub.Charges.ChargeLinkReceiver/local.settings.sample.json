@@ -4,6 +4,7 @@
     "AzureWebJobsDashboard": "UseDevelopmentStorage=true",
     "AzureWebJobsStorage": "UseDevelopmentStorage=true",
     "FUNCTIONS_WORKER_RUNTIME": "dotnet-isolated",
+    "CHARGE_DB_CONNECTION_STRING": "<charge db connection string>",
     "CHARGE_LINK_RECEIVED_TOPIC_NAME": "sbt-link-command-received",
     "CHARGE_LINK_RECEIVED_SENDER_CONNECTION_STRING": "<connection string for charge link command received service bus>"
   }

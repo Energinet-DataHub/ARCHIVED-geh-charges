@@ -32,6 +32,7 @@ module "azfun_link_command_receiver" {
     CHARGE_LINK_RECEIVED_LISTENER_CONNECTION_STRING = module.sbnar_charges_listener.primary_connection_string
     CHARGE_LINK_ACCEPTED_TOPIC_NAME                 = module.sbt_link_command_accepted.name
     CHARGE_LINK_ACCEPTED_SENDER_CONNECTION_STRING   = module.sbnar_charges_sender.primary_connection_string
+    CHARGE_DB_CONNECTION_STRING                     = local.CHARGE_DB_CONNECTION_STRING
   }
   dependencies                              = [
     module.appi.dependent_on,
