@@ -21,6 +21,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Context.Model
     public class MeteringPoint
     {
         public MeteringPoint(
+            int? rowId,
             string meteringPointId,
             MeteringPointType meteringPointType,
             string gridAreaId,
@@ -28,6 +29,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Context.Model
             ConnectionState connectionState,
             SettlementMethod? settlementMethod)
         {
+            RowId = rowId;
             MeteringPointId = meteringPointId;
             MeteringPointType = meteringPointType;
             GridAreaId = gridAreaId;
@@ -37,7 +39,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Context.Model
         }
 
         [Key]
-        public int RowId { get; set; }
+        public int? RowId { get; set; }
 
         public string MeteringPointId { get; set; }
 
