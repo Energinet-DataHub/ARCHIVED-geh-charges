@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
+using System.Linq;
 using System.Threading.Tasks;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.MeteringPoints;
@@ -38,21 +40,24 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
         public async Task StoreMeteringPointAsync_WhenMeteringPointIsCreated_StoresMeteringPointInDatabase()
         {
             // Arrange
-            await using var chargesDatabaseContext = await SquadronContextFactory
+            await using var chargesDatabaseWriteContext = await SquadronContextFactory
                 .GetDatabaseContextAsync(_resource)
                 .ConfigureAwait(false);
             var expected = GetMeteringPointCreatedEvent();
-            var sut = new MeteringPointRepository(chargesDatabaseContext);
+            var sut = new MeteringPointRepository(chargesDatabaseWriteContext);
 
             // Act
             await sut.StoreMeteringPointAsync(expected).ConfigureAwait(false);
 
             // Assert
-            var actual = await sut.GetMeteringPointAsync(expected.MeteringPointId).ConfigureAwait(false);
+            await using var chargesDatabaseReadContext = await SquadronContextFactory
+                .GetDatabaseContextAsync(_resource)
+                .ConfigureAwait(false);
+            var actual = chargesDatabaseReadContext.MeteringPoints.Single(x => x.MeteringPointId == expected.MeteringPointId);
             actual.ConnectionState.Should().Be(expected.ConnectionState);
             actual.GridAreaId.Should().Be(expected.GridAreaId);
             actual.MeteringPointId.Should().Be(expected.MeteringPointId);
-            actual.EffectiveDate.Should().Be(expected.EffectiveDate);
+            Instant.FromDateTimeUtc(DateTime.SpecifyKind(actual.EffectiveDate, DateTimeKind.Utc)).Should().Be(expected.EffectiveDate);
             actual.SettlementMethod.Should().Be(expected.SettlementMethod);
         }
 

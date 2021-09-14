@@ -15,6 +15,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.MarketDocument;
@@ -50,62 +51,76 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
         public async Task GetChargeAsync_WhenChargeIsCreated_ThenSuccessReturnedAsync()
         {
             // Arrange
-            await using var chargesDatabaseContext = await SquadronContextFactory
+            await using var chargesDatabaseWriteContext = await SquadronContextFactory
                 .GetDatabaseContextAsync(_resource)
                 .ConfigureAwait(false);
             var charge = GetValidCharge();
-            await SeedDatabase(chargesDatabaseContext).ConfigureAwait(false);
-            var sut = new ChargeRepository(chargesDatabaseContext);
+            await SeedDatabase(chargesDatabaseWriteContext).ConfigureAwait(false);
+            var sut = new ChargeRepository(chargesDatabaseWriteContext);
 
             // Act
             await sut.StoreChargeAsync(charge).ConfigureAwait(false);
-            var expected = await sut.GetChargeAsync(charge.Id, charge.Owner, charge.Type).ConfigureAwait(false);
 
             // Assert
+            await using var chargesDatabaseReadContext = await SquadronContextFactory
+                .GetDatabaseContextAsync(_resource)
+                .ConfigureAwait(false);
+            var expected = await chargesDatabaseReadContext.Charges.SingleAsync(x =>
+                x.ChargeId == charge.Id &&
+                x.MarketParticipant.MarketParticipantId == charge.Owner &&
+                x.ChargeType == (int)charge.Type)
+                .ConfigureAwait(false);
+
             Assert.NotNull(expected);
         }
 
         [Fact]
         public async Task CheckIfChargeExistsAsync_WhenChargeIsCreated_ThenSuccessReturnedAsync()
         {
-            await using var chargesDatabaseContext = await SquadronContextFactory
+            await using var chargesDatabaseWriteContext = await SquadronContextFactory
                 .GetDatabaseContextAsync(_resource)
                 .ConfigureAwait(false);
             // Arrange
             var charge = GetValidCharge();
-            await SeedDatabase(chargesDatabaseContext).ConfigureAwait(false);
-            var sut = new ChargeRepository(chargesDatabaseContext);
+            await SeedDatabase(chargesDatabaseWriteContext).ConfigureAwait(false);
+            var sut = new ChargeRepository(chargesDatabaseWriteContext);
 
             // Act
             await sut.StoreChargeAsync(charge).ConfigureAwait(false);
 
-            var expected = await sut.CheckIfChargeExistsAsync(
-                charge.Id,
-                charge.Owner,
-                charge.Type).ConfigureAwait(false);
-
             // Assert
+            await using var chargesDatabaseReadContext = await SquadronContextFactory
+                .GetDatabaseContextAsync(_resource)
+                .ConfigureAwait(false);
+            var expected = chargesDatabaseReadContext.Charges.Any(x => x.ChargeId == charge.Id &&
+                                        x.MarketParticipant.MarketParticipantId == charge.Owner &&
+                                        x.ChargeType == (int)charge.Type);
+
             Assert.True(expected);
         }
 
         [Fact]
         public async Task CheckIfChargeExistsByCorrelationIdAsync_WhenChargeIsCreated_ThenSuccessReturnedAsync()
         {
-            await using var chargesDatabaseContext = await SquadronContextFactory
+            await using var chargesDatabaseWriteContext = await SquadronContextFactory
                 .GetDatabaseContextAsync(_resource)
                 .ConfigureAwait(false);
 
             // Arrange
             var charge = GetValidCharge();
-            await SeedDatabase(chargesDatabaseContext).ConfigureAwait(false);
-            var sut = new ChargeRepository(chargesDatabaseContext);
+            await SeedDatabase(chargesDatabaseWriteContext).ConfigureAwait(false);
+            var sut = new ChargeRepository(chargesDatabaseWriteContext);
 
             // Act
             await sut.StoreChargeAsync(charge).ConfigureAwait(false);
-            var expected =
-                await sut.CheckIfChargeExistsByCorrelationIdAsync(charge.CorrelationId).ConfigureAwait(false);
 
             // Assert
+            await using var chargesDatabaseReadContext = await SquadronContextFactory
+                .GetDatabaseContextAsync(_resource)
+                .ConfigureAwait(false);
+            var expected = chargesDatabaseReadContext
+                .Charges
+                .Any(x => x.ChargeOperation.CorrelationId == charge.CorrelationId);
             Assert.True(expected);
         }
 
