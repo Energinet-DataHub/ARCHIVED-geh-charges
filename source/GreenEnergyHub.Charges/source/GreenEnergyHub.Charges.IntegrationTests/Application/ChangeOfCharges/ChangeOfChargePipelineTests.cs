@@ -14,6 +14,7 @@
 
 using System;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
@@ -109,6 +110,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
             receivedEvent.Should().NotBeNull();
             charge.Should().NotBeNull();
             charge.Points.Should().NotBeNullOrEmpty();
+            charge.Points.First().Price.Should().Be(chargeCommand.ChargeOperation.Points.First().Price);
         }
 
         [Theory(Timeout = 120000)]
