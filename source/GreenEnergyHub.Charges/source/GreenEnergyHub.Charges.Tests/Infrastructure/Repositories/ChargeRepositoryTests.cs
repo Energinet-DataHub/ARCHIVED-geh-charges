@@ -66,14 +66,18 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
             await using var chargesDatabaseReadContext = await SquadronContextFactory
                 .GetDatabaseContextAsync(_resource)
                 .ConfigureAwait(false);
-            var expected = await chargesDatabaseReadContext.Charges.SingleAsync(x =>
+            var actual = await chargesDatabaseReadContext.Charges
+                .Include(x => x.ChargePrices)
+                .Include(x => x.ChargePeriodDetails)
+                .SingleAsync(x =>
                 x.ChargeId == charge.Id &&
                 x.MarketParticipant.MarketParticipantId == charge.Owner &&
                 x.ChargeType == (int)charge.Type)
                 .ConfigureAwait(false);
-            
-            expected.Should().NotBeNull();
-            expected.Points.Should().NotBeNullOrEmpty();
+
+            actual.Should().NotBeNull();
+            actual.ChargePrices.Should().NotBeNullOrEmpty();
+            actual.ChargePeriodDetails.Should().NotBeNullOrEmpty();
         }
 
         [Fact]
@@ -95,11 +99,11 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
             await using var chargesDatabaseReadContext = await SquadronContextFactory
                 .GetDatabaseContextAsync(_resource)
                 .ConfigureAwait(false);
-            var expected = chargesDatabaseReadContext.Charges.Any(x => x.ChargeId == charge.Id &&
-                                        x.MarketParticipant.MarketParticipantId == charge.Owner &&
-                                        x.ChargeType == (int)charge.Type);
+            var actual = chargesDatabaseReadContext.Charges.Any(x => x.ChargeId == charge.Id &&
+                                                                     x.MarketParticipant.MarketParticipantId == charge.Owner &&
+                                                                     x.ChargeType == (int)charge.Type);
 
-            Assert.True(expected);
+            Assert.True(actual);
         }
 
         [Fact]
@@ -121,10 +125,10 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
             await using var chargesDatabaseReadContext = await SquadronContextFactory
                 .GetDatabaseContextAsync(_resource)
                 .ConfigureAwait(false);
-            var expected = chargesDatabaseReadContext
+            var actual = chargesDatabaseReadContext
                 .Charges
                 .Any(x => x.ChargeOperation.CorrelationId == charge.CorrelationId);
-            Assert.True(expected);
+            Assert.True(actual);
         }
 
         [Theory]
@@ -153,10 +157,10 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
             const int chargeRowId = 1; // we seed a charge through the upgrade engine.
 
             // Act
-            var expected = await sut.GetChargeAsync(chargeRowId).ConfigureAwait(false);
+            var actual = await sut.GetChargeAsync(chargeRowId).ConfigureAwait(false);
 
             // Assert
-            Assert.NotNull(expected);
+            Assert.NotNull(actual);
         }
 
         private static Charge GetValidCharge()
