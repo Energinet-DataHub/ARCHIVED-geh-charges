@@ -148,8 +148,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
 
             // assert
             chargeReceiverResult!.StatusCode!.Value.Should().Be(200);
-            executionContext.InvocationId.ToString().Should().Be(commandReceivedResult.receivedMessage.CorrelationId);
-            executionContext.InvocationId.ToString().Should().Be(commandAcceptedResult.receivedMessage.CorrelationId);
+            commandReceivedResult.receivedMessage.CorrelationId.Should().Be(executionContext.InvocationId.ToString());
+            commandAcceptedResult.receivedMessage.CorrelationId.Should().Be(executionContext.InvocationId.ToString());
             commandReceivedResult.receivedMessage.Body.Length.Should().BeGreaterThan(0);
             commandAcceptedResult.receivedMessage.Body.Length.Should().BeGreaterThan(0);
             charge.Should().NotBeNull();
@@ -202,8 +202,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
 
             // assert
             chargeReceiverResult!.StatusCode!.Value.Should().Be(200);
-            executionContext.InvocationId.ToString().Should().Be(commandReceivedResult.receivedMessage.CorrelationId);
-            executionContext.InvocationId.ToString().Should().Be(commandRejectedResult.receivedMessage.CorrelationId);
+            commandReceivedResult.receivedMessage.CorrelationId.Should().Be(executionContext.InvocationId.ToString());
+            commandRejectedResult.receivedMessage.CorrelationId.Should().Be(executionContext.InvocationId.ToString());
             commandReceivedResult.receivedMessage.Body.Length.Should().BeGreaterThan(0);
             commandRejectedResult.receivedMessage.Body.Length.Should().BeGreaterThan(0);
             chargeExists.Should().BeFalse();
