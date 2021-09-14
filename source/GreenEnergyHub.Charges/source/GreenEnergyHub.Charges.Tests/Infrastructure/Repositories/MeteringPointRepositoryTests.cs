@@ -61,6 +61,29 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
             actual.SettlementMethod.Should().Be(expected.SettlementMethod);
         }
 
+        [Fact]
+        public async Task GetMeteringPointAsync_WithMeteringPointId_ThenSuccessReturnedAsync()
+        {
+            // Arrange
+            await using var chargesDatabaseWriteContext = await SquadronContextFactory
+                .GetDatabaseContextAsync(_resource)
+                .ConfigureAwait(false);
+            var expected = GetMeteringPointEntity();
+            await chargesDatabaseWriteContext.MeteringPoints.AddAsync(expected).ConfigureAwait(false);
+            await chargesDatabaseWriteContext.SaveChangesAsync().ConfigureAwait(false);
+
+            await using var chargesDatabaseReadContext = await SquadronContextFactory
+                .GetDatabaseContextAsync(_resource)
+                .ConfigureAwait(false);
+            var sut = new MeteringPointRepository(chargesDatabaseReadContext);
+
+            // Act
+            var actual = await sut.GetMeteringPointAsync(expected.MeteringPointId).ConfigureAwait(false);
+
+            // Assert
+            Assert.NotNull(actual);
+        }
+
         private static MeteringPoint GetMeteringPointCreatedEvent()
         {
             return new MeteringPoint(
@@ -70,6 +93,18 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
                 SystemClock.Instance.GetCurrentInstant(),
                 ConnectionState.Connected,
                 SettlementMethod.Flex);
+        }
+
+        private static Charges.Infrastructure.Context.Model.MeteringPoint GetMeteringPointEntity()
+        {
+            return new Charges.Infrastructure.Context.Model.MeteringPoint(
+                null,
+                "meteringPointId",
+                MeteringPointType.Consumption,
+                "grid area id",
+                DateTime.Now,
+                ConnectionState.Connected,
+                SettlementMethod.Profiled);
         }
     }
 }
