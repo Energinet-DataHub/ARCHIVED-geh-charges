@@ -17,6 +17,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
+using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.MarketDocument;
 using GreenEnergyHub.Charges.Infrastructure.Context;
@@ -70,8 +71,9 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
                 x.MarketParticipant.MarketParticipantId == charge.Owner &&
                 x.ChargeType == (int)charge.Type)
                 .ConfigureAwait(false);
-
-            Assert.NotNull(expected);
+            
+            expected.Should().NotBeNull();
+            expected.Points.Should().NotBeNullOrEmpty();
         }
 
         [Fact]
@@ -80,6 +82,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
             await using var chargesDatabaseWriteContext = await SquadronContextFactory
                 .GetDatabaseContextAsync(_resource)
                 .ConfigureAwait(false);
+
             // Arrange
             var charge = GetValidCharge();
             await SeedDatabase(chargesDatabaseWriteContext).ConfigureAwait(false);
