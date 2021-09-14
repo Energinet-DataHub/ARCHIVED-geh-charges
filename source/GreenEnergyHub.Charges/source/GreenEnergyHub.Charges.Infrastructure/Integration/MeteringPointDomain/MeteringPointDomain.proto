@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-/**
+/*
  * Metering Point Domain related messages.
  */
 syntax = "proto3";
@@ -22,7 +22,7 @@ syntax = "proto3";
 
 option csharp_namespace = "Energinet.DataHub.MeteringPoints.IntegrationEventContracts";
 
-/**
+/*
  * Represents the creation of a metering point.
  */
 message MeteringPointCreated {
@@ -41,7 +41,7 @@ message MeteringPointCreated {
     string parent_metering_point_id = 13; // Unique identifier of associated parent metering point. This field is empty if no parent is set upon creation.
     string effective_date = 14; // The date on which the metering point is created.
 }
-/**
+/*
  * Represents the connection of a metering point.
  */
 message MeteringPointConnected {
@@ -49,7 +49,7 @@ message MeteringPointConnected {
     string effective_date = 2; // The date on which the metering point is connected.
 }
 
-/**
+/*
  * Represents the disconnection of a metering point.
  */
 message MeteringPointDisconnected {
@@ -57,7 +57,7 @@ message MeteringPointDisconnected {
     string effective_date = 2; // The date on which the metering point is disconnected.
 }
 
-/**
+/*
  * Represents the closing of a metering point.
  */
 message MeteringPointClosed {
@@ -65,14 +65,14 @@ message MeteringPointClosed {
     string effective_date = 2; // The date on which the metering point is closed.
 }
 
-/**
+/*
  * Represents the cancellation of a metering point. This can only happen for MPs who have never had a supplier.
  */
 message MeteringPointCancelled {
     string metering_point_id = 1; // Unique metering point identifier.
 }
 
-/**
+/*
  * Represents the coupling of a parent to a eligible metering point.
  * If a parent is changed, ie. one is removed and another is coupled, both the coupling and the decoupling messages are sent.
  */
@@ -82,7 +82,7 @@ message ParentCoupled {
     string effective_date = 3; // The date on which the parent is coupled.
 }
 
-/**
+/*
  * Represents the decoupling of a parent to a eligible metering point.
  * If a parent is changed, ie. one is removed and another is coupled, both the coupling and the decoupling messages are sent.
  */
@@ -91,7 +91,7 @@ message ParentDecoupled {
     string effective_date = 2; // The date on which the parent is decoupled.
 }
 
-/**
+/*
  * Represents the changing of settlement details. Either the settlement method or the reading periodicity will be changed, or both will be changed.
  */
 message SettlementDetailsChanged {
@@ -101,7 +101,7 @@ message SettlementDetailsChanged {
     string effective_date = 4; // The date on which the settlement details are change.
 }
 
-/**
+/*
  * Represents the changing of the Metering Method.
  */
 message MeteringMethodChanged {
@@ -110,7 +110,7 @@ message MeteringMethodChanged {
     string effective_date = 3; // The date on which the metering method is changed.
 }
 
-/**
+/*
  * Represents the changing of the Net Settlement Group.
  */
 message NetSettlementGroupChanged {
