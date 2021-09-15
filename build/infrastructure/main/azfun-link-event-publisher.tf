@@ -37,24 +37,11 @@ module "azfun_link_event_publisher" {
   } 
   dependencies                                   = [
     module.appi.dependent_on,
-    module.azfun_link_event_publisher_plan.dependent_on,
+    module.asp_charges.dependent_on,
     module.azfun_link_event_publisher_stor.dependent_on,
     module.sbnar_charges_listener.dependent_on,
     module.sbt_link_command_accepted.dependent_on,
   ]
-}
-
-module "azfun_link_event_publisher_plan" {
-  source              = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//app-service-plan?ref=1.7.0"
-  name                = "asp-link-event-publisher-${var.project}-${var.organisation}-${var.environment}"
-  resource_group_name = data.azurerm_resource_group.main.name
-  location            = data.azurerm_resource_group.main.location
-  kind                = "FunctionApp"
-  sku                 = {
-    tier  = "Basic"
-    size  = "B1"
-  }
-  tags                = data.azurerm_resource_group.main.tags
 }
 
 module "azfun_link_event_publisher_stor" {
