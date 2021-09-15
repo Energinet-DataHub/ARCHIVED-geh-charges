@@ -17,7 +17,7 @@ module "azfun_charge_command_receiver" {
   resource_group_name                            = data.azurerm_resource_group.main.name
   location                                       = data.azurerm_resource_group.main.location
   storage_account_access_key                     = module.azfun_charge_command_receiver_stor.primary_access_key
-  app_service_plan_id                            = module.azfun_charge_command_receiver_plan.id
+  app_service_plan_id                            = module.asp_charges.id
   storage_account_name                           = module.azfun_charge_command_receiver_stor.name
   application_insights_instrumentation_key       = module.appi.instrumentation_key
   always_on                                      = true
@@ -40,7 +40,7 @@ module "azfun_charge_command_receiver" {
   } 
   dependencies                                   = [
     module.appi.dependent_on,
-    module.azfun_charge_command_receiver_plan.dependent_on,
+    module.asp_charges.dependent_on,
     module.azfun_charge_command_receiver_stor.dependent_on,
     module.sbtar_command_received_listener.dependent_on,
     module.sbtar_command_accepted_sender.dependent_on,
@@ -49,19 +49,6 @@ module "azfun_charge_command_receiver" {
     module.sbt_command_accepted.dependent_on,
     module.sbt_command_rejected.dependent_on,
   ]
-}
-
-module "azfun_charge_command_receiver_plan" {
-  source              = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//app-service-plan?ref=1.7.0"
-  name                = "asp-charge-command-receiver-${var.project}-${var.organisation}-${var.environment}"
-  resource_group_name = data.azurerm_resource_group.main.name
-  location            = data.azurerm_resource_group.main.location
-  kind                = "FunctionApp"
-  sku                 = {
-    tier  = "Basic"
-    size  = "B1"
-  }
-  tags                = data.azurerm_resource_group.main.tags
 }
 
 module "azfun_charge_command_receiver_stor" {
