@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-/**
+/*
  * Charge link Domain related messages.
  */
 syntax = "proto3";
@@ -22,7 +22,7 @@ import "google/protobuf/timestamp.proto";
 
 option csharp_namespace = "GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandReceived";
 
-/**
+/*
  * Represents a ChargeLinkCommandReceived event
  */
 
