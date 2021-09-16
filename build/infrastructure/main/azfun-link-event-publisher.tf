@@ -17,7 +17,7 @@ module "azfun_link_event_publisher" {
   resource_group_name                            = data.azurerm_resource_group.main.name
   location                                       = data.azurerm_resource_group.main.location
   storage_account_access_key                     = module.azfun_link_event_publisher_stor.primary_access_key
-  app_service_plan_id                            = module.azfun_link_event_publisher_plan.id
+  app_service_plan_id                            = module.asp_charges.id
   storage_account_name                           = module.azfun_link_event_publisher_stor.name
   application_insights_instrumentation_key       = module.appi.instrumentation_key
   always_on                                      = true
@@ -37,24 +37,11 @@ module "azfun_link_event_publisher" {
   } 
   dependencies                                   = [
     module.appi.dependent_on,
-    module.azfun_link_event_publisher_plan.dependent_on,
+    module.asp_charges.dependent_on,
     module.azfun_link_event_publisher_stor.dependent_on,
     module.sbnar_charges_listener.dependent_on,
     module.sbt_link_command_accepted.dependent_on,
   ]
-}
-
-module "azfun_link_event_publisher_plan" {
-  source              = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//app-service-plan?ref=1.7.0"
-  name                = "asp-link-event-publisher-${var.project}-${var.organisation}-${var.environment}"
-  resource_group_name = data.azurerm_resource_group.main.name
-  location            = data.azurerm_resource_group.main.location
-  kind                = "FunctionApp"
-  sku                 = {
-    tier  = "Basic"
-    size  = "B1"
-  }
-  tags                = data.azurerm_resource_group.main.tags
 }
 
 module "azfun_link_event_publisher_stor" {
