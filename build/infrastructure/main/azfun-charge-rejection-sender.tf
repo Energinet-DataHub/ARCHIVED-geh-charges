@@ -17,7 +17,7 @@ module "azfun_charge_rejection_sender" {
   resource_group_name                            = data.azurerm_resource_group.main.name
   location                                       = data.azurerm_resource_group.main.location
   storage_account_access_key                     = module.azfun_charge_rejection_sender_stor.primary_access_key
-  app_service_plan_id                            = module.azfun_charge_rejection_sender_plan.id
+  app_service_plan_id                            = module.asp_charges.id
   storage_account_name                           = module.azfun_charge_rejection_sender_stor.name
   application_insights_instrumentation_key       = module.appi.instrumentation_key
   always_on                                      = true
@@ -37,20 +37,16 @@ module "azfun_charge_rejection_sender" {
     POST_OFFICE_TOPIC_NAME                       = module.sbt_post_office.name
 
     LOCAL_TIMEZONENAME                           = local.LOCAL_TIMEZONENAME
-  } 
-}
-
-module "azfun_charge_rejection_sender_plan" {
-  source              = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//app-service-plan?ref=1.7.0"
-  name                = "asp-charge-rejection-sender-${var.project}-${var.organisation}-${var.environment}"
-  resource_group_name = data.azurerm_resource_group.main.name
-  location            = data.azurerm_resource_group.main.location
-  kind                = "FunctionApp"
-  sku                 = {
-    tier  = "Basic"
-    size  = "B1"
   }
-  tags                = data.azurerm_resource_group.main.tags
+  dependencies                                   = [
+    module.azfun_charge_rejection_sender_stor.dependent_on,
+    module.asp_charges.dependent_on,
+    module.appi.dependent_on,
+    module.sbtar_command_rejected_listener.dependent_on,
+    module.sbt_command_rejected.dependent_on,
+    module.sbtar_post_office_sender.dependent_on,
+    module.sbt_post_office.dependent_on,
+  ]
 }
 
 module "azfun_charge_rejection_sender_stor" {

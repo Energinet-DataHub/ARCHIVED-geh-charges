@@ -21,6 +21,7 @@ on:
       - source/GreenEnergyHub.Charges/**
       - .github/workflows/link-event-publisher-cd.yml
       - .github/actions/dotnet-build-and-test/**
+      - build/infrastructure/**
   workflow_dispatch: {}
 
 env:
