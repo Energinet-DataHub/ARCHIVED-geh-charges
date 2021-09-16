@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
@@ -29,20 +30,20 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NodaTime;
-using Squadron;
 using Xunit;
 using Xunit.Categories;
 
 namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
 {
     [IntegrationTest]
-    public class ChangeOfChargeSquadronTests
-        : IClassFixture<AzureCloudServiceBusResource<ChargesAzureCloudServiceBusOptions>>
+    public class ChangeOfChargeSquadronTests : IClassFixture<ChargesAzureCloudServiceBusResource>
     {
-        private readonly AzureCloudServiceBusResource<ChargesAzureCloudServiceBusOptions> _serviceBusResource;
+        private readonly bool _runPipelineTests;
+        private readonly ChargesAzureCloudServiceBusResource _serviceBusResource;
 
-        public ChangeOfChargeSquadronTests(AzureCloudServiceBusResource<ChargesAzureCloudServiceBusOptions> serviceBusResource)
+        public ChangeOfChargeSquadronTests(ChargesAzureCloudServiceBusResource serviceBusResource)
         {
+            _runPipelineTests = Environment.GetEnvironmentVariable("RUN_PIPELINE_TESTS")?.ToUpperInvariant() == "TRUE";
             _serviceBusResource = serviceBusResource;
         }
 
@@ -55,6 +56,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
             [NotNull] [Frozen] Mock<ILogger> logger,
             [NotNull] ExecutionContext executionContext)
         {
+            if (!_runPipelineTests) return;
+
             // arrange
             var subscriptionClient = _serviceBusResource.GetSubscriptionClient(
                 ChargesAzureCloudServiceBusOptions.ReceivedTopicName,
