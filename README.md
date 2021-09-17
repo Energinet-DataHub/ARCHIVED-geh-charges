@@ -51,7 +51,7 @@ In the current program increment (PI) the planned work is captured by the stated
 
 2. When a Grid Access Provider submits a **new metering point**, the Charges domain will link relevant TSO charges to the metering point, and if any of those charges are marked as tax a charge link message will be made available to the Grid Access Provider, so that a correct basis is provided for settling the customer(s) on the metering point.
 
-3. When a Grid Access Provider submits a **new charge link**, the Charges domain will store it and make a confirmation message available to the Grid Access Provider, so that the Grid Access Provider may maintain its' charge links.
+3. When a Grid Access Provider submits a **new charge link**, the Charges domain will store it and make a confirmation message available to the Grid Access Provider, so that the Grid Access Provider may maintain its charge links.
 (Out of scope: Updating and stopping charge links, validation)
 
 ## Where can I get more help?
