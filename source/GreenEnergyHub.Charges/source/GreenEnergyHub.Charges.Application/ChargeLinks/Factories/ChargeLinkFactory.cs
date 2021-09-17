@@ -17,6 +17,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application.ChangeOfCharges.Repositories;
 using GreenEnergyHub.Charges.Application.Charges.Repositories;
+using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.Domain.ChargeLinks;
 using GreenEnergyHub.Charges.Domain.ChargeLinks.Events.Local;
 
@@ -50,7 +51,11 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.Factories
             var operation = new ChargeLinkOperation(chargeLink.OperationId, chargeLinkEvent.CorrelationId);
             var operations = new List<ChargeLinkOperation> { operation };
 
-            var periodDetails = new ChargeLinkPeriodDetails(chargeLink.StartDateTime, chargeLink.EndDateTime, chargeLink.Factor, operation.Id);
+            var periodDetails = new ChargeLinkPeriodDetails(
+                chargeLink.StartDateTime,
+                chargeLink.EndDateTime.TimeOrEndDefault(), // TODO: EndDateTime: Is this the correct place to convert?
+                chargeLink.Factor,
+                operation.Id);
             var periodDetailsCollection = new List<ChargeLinkPeriodDetails> { periodDetails };
 
             return new ChargeLink(charge.RowId, meteringPoint.RowId!.Value, operations, periodDetailsCollection);

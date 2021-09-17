@@ -13,9 +13,11 @@
 // limitations under the License.
 
 using FluentAssertions;
+using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.MeteringPoints;
 using GreenEnergyHub.Charges.TestCore.Attributes;
+using NodaTime;
 using NodaTime.Text;
 using Xunit;
 using Xunit.Categories;
@@ -39,7 +41,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Charges
             var startDateTime = InstantPattern.General.Parse(startDate).Value;
 
             // Act
-            var sut = new DefaultChargeLink(startDateTime, null, 0, MeteringPointType.Consumption);
+            var sut = new DefaultChargeLink(startDateTime, ((Instant?)null).TimeOrEndDefault(), 0, MeteringPointType.Consumption);
 
             // Assert
             sut.GetStartDateTime(meteringPointCreatedDateTime).Should().BeEquivalentTo(InstantPattern.General.Parse(expectedStartDate).Value);
@@ -52,7 +54,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Charges
             var startDateTime = InstantPattern.General.Parse("2020-05-10T13:00:00Z").Value;
             var meteringPointCreatedDateTime = startDateTime;
 
-            var sut = new DefaultChargeLink(startDateTime, null, 0, MeteringPointType.Consumption);
+            var sut = new DefaultChargeLink(startDateTime, ((Instant?)null).TimeOrEndDefault(), 0, MeteringPointType.Consumption);
 
             // Act / Assert
             Assert.True(sut.ApplicableForLinking(meteringPointCreatedDateTime, MeteringPointType.Consumption));
@@ -93,7 +95,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Charges
             var startDateTime = InstantPattern.General.Parse("2020-05-10T13:00:00Z").Value;
             var meteringPointCreatedDateTime = startDateTime;
 
-            var sut = new DefaultChargeLink(startDateTime, null, 0, MeteringPointType.Consumption);
+            var sut = new DefaultChargeLink(startDateTime, ((Instant?)null).TimeOrEndDefault(), 0, MeteringPointType.Consumption);
 
             // Assert
             Assert.False(sut.ApplicableForLinking(meteringPointCreatedDateTime, MeteringPointType.Production));

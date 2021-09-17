@@ -34,7 +34,7 @@ namespace GreenEnergyHub.Charges.Domain.Charges
 
         public DefaultChargeLink(
             Instant startDateTime,
-            Instant? endDateTime,
+            Instant endDateTime,
             int chargeRowId,
             MeteringPointType meteringPointType)
         {
@@ -60,7 +60,7 @@ namespace GreenEnergyHub.Charges.Domain.Charges
         ///
         public bool ApplicableForLinking(Instant meteringPointCreatedDateTime, MeteringPointType meteringPointType)
         {
-            return (EndDateTime == null || EndDateTime.Value > GetStartDateTime(meteringPointCreatedDateTime))
+            return EndDateTime > GetStartDateTime(meteringPointCreatedDateTime)
                    && _meteringPointType == meteringPointType;
         }
 
@@ -70,10 +70,9 @@ namespace GreenEnergyHub.Charges.Domain.Charges
         public int ChargeRowId { get; }
 
         /// <summary>
-        /// If the DefaultChargeLink has an EndDateTime,
-        /// it is only applicable for linking when EndDateTime is later than the StartDateTime
+        /// If the DefaultChargeLink is only applicable for linking when EndDateTime is later than the StartDateTime
         /// </summary>
-        public Instant? EndDateTime { get; }
+        public Instant EndDateTime { get; }
 
         /// <summary>
         /// A Global Location Number (GLN) is a unique number used to identify a Market Participant.

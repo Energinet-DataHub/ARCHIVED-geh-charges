@@ -21,6 +21,7 @@ using FluentAssertions;
 using GreenEnergyHub.Charges.Application.ChangeOfCharges.Repositories;
 using GreenEnergyHub.Charges.Application.ChargeLinks.Factories;
 using GreenEnergyHub.Charges.Application.Charges.Repositories;
+using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.Domain.ChargeLinks.Events.Local;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.MeteringPoints;
@@ -66,7 +67,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Factories
             actual.PeriodDetails.First().StartDateTime
                 .Should().Be(expectedEvent.ChargeLinkCommand.ChargeLink.StartDateTime);
             actual.PeriodDetails.First().EndDateTime
-                .Should().Be(expectedEvent.ChargeLinkCommand.ChargeLink.EndDateTime);
+                .Should().Be(expectedEvent.ChargeLinkCommand.ChargeLink.EndDateTime.TimeOrEndDefault());
             actual.PeriodDetails.First().Factor
                 .Should().Be(expectedEvent.ChargeLinkCommand.ChargeLink.Factor);
             actual.Operations.First().CorrelationId

@@ -21,16 +21,11 @@ namespace GreenEnergyHub.Charges.Infrastructure.Context.Mapping
 {
     public static class DefaultChargeLinkMapper
     {
-        public static Domain.Charges.DefaultChargeLink Map(
-            [NotNull]DefaultChargeLink defaultChargeLink)
+        public static Domain.Charges.DefaultChargeLink Map([NotNull]DefaultChargeLink defaultChargeLink)
         {
-            var endDateTime = defaultChargeLink.EndDateTime != null ?
-                Instant.FromDateTimeUtc(defaultChargeLink.EndDateTime.Value.ToUniversalTime()) :
-                (Instant?)null;
-
             return new Domain.Charges.DefaultChargeLink(
                 Instant.FromDateTimeUtc(defaultChargeLink.StartDateTime.ToUniversalTime()),
-                endDateTime,
+                Instant.FromDateTimeUtc(defaultChargeLink.EndDateTime.ToUniversalTime()),
                 defaultChargeLink.ChargeRowId,
                 (MeteringPointType)defaultChargeLink.MeteringPointType);
         }

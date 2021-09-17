@@ -31,7 +31,7 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.Factories
                 command.ChargeLink.ChargeOwner,
                 new ChargeLinkPeriod(
                     command.ChargeLink.StartDateTime,
-                    command.ChargeLink.EndDateTime.TimeOrEndDefault(),
+                    command.ChargeLink.EndDateTime.TimeOrEndDefault(), // TODO: EndDateTime: is this the correct place to convert?
                     command.ChargeLink.Factor));
         }
     }
