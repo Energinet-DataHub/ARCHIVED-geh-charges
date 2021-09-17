@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-/**
+/*
  * Charge link Created event contract.
  */
 syntax = "proto3";
