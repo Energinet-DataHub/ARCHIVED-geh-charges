@@ -46,18 +46,13 @@ This sections documents the data flows to and from the Charges domain.
 
 In the current program increment (PI) the planned work is captured by the stated PI goals:
 
-1. When a (consumption) metering point created event is published in the Metering Point domain, the Charges domain will add new charge links for mandatory TSO tariffs to the metering point.
-2. When receiving a new charge (tariff) link request from a Grid Access Provider, the charge link is stored with the specified time period.
-3. The monitoring of the Charges domain is extended to cover charge links.
-4. Extend (2) with fees and subscriptions.
+1. When a Grid Access Provider submits a **new charge**, the Charges domain will store it and make a confirmation message available to the Grid Access Provider, so that the Grid Access Provider may maintain its' charges.
+(Out of scope: Updating and stopping charges, some input and business validations)
 
-Recent program increment goals:
+2. When a Grid Access Provider submits a **new metering point**, the Charges domain will link relevant TSO charges to the metering point, and if any of those charges are marked as tax a charge link message will be made available to the Grid Access Provider, so that a correct basis is provided for settling the customer(s) on the metering point.
 
-1. Charges are moved to its own Charges domain (and GitHub repository), in order to ensure flexibility, independence of other domains, and stability.
-2. The domain can validate, create, update and stop charges.
-3. The domain delivers change of charge messages to the [Post Office](https://github.com/Energinet-DataHub/geh-post-office) domain.
-4. The domain supports retrieval of historic charges for audit purposes.
-5. The domain can be surveilled by a dashboard (one step closer to working software).
+3. When a Grid Access Provider submits a **new charge link**, the Charges domain will store it and make a confirmation message available to the Grid Access Provider, so that the Grid Access Provider may maintain its' charge links.
+(Out of scope: Updating and stopping charge links, validation)
 
 ## Where can I get more help?
 
