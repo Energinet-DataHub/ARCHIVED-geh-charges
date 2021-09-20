@@ -34,7 +34,7 @@ limitations under the License.
       <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="3.1.18" />
       <PackageReference Include="NodaTime" Version="3.0.5" />
       <PackageReference Include="Squadron.Core" Version="0.12.0" />
-      <PackageReference Include="Squadron.SqlServer" Version="0.12.0" />
+      <PackageReference Include="Squadron.SqlServer" Version="0.12.1" />
       <PackageReference Include="System.ComponentModel.TypeConverter" Version="4.3.0" />
       <PackageReference Include="xunit.extensibility.core" Version="2.4.1" />
       <PackageReference Include="Google.Protobuf" Version="3.17.3" />
