@@ -22,13 +22,11 @@ using GreenEnergyHub.Charges.Domain.MeteringPoints;
 using GreenEnergyHub.Charges.Infrastructure.Context;
 using GreenEnergyHub.Charges.Infrastructure.Repositories;
 using GreenEnergyHub.Charges.TestCore.Squadron;
-using Microsoft.EntityFrameworkCore;
 using NodaTime;
 using Squadron;
 using Xunit;
 using Xunit.Categories;
 using MarketParticipant = GreenEnergyHub.Charges.Infrastructure.Context.Model.MarketParticipant;
-using MeteringPoint = GreenEnergyHub.Charges.Infrastructure.Context.Model.MeteringPoint;
 
 namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
 {
@@ -113,7 +111,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
                 "some-id",
                 MeteringPointType.ElectricalHeating,
                 "some-area-id",
-                DateTime.Now,
+                SystemClock.Instance.GetCurrentInstant(),
                 ConnectionState.Connected,
                 SettlementMethod.Flex);
             context.MeteringPoints.Add(meteringPoint);
