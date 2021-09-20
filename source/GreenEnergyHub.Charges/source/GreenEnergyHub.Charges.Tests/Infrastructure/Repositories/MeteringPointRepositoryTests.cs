@@ -19,6 +19,7 @@ using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.MeteringPoints;
 using GreenEnergyHub.Charges.Infrastructure.Repositories;
 using GreenEnergyHub.Charges.TestCore.Squadron;
+using GreenEnergyHub.TestHelpers;
 using NodaTime;
 using Squadron;
 using Xunit;
@@ -59,6 +60,15 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
             actual.MeteringPointId.Should().Be(expected.MeteringPointId);
             actual.EffectiveDate.Should().Be(expected.EffectiveDate);
             actual.SettlementMethod.Should().Be(expected.SettlementMethod);
+        }
+
+        [Theory]
+        [InlineAutoDomainData]
+        public async Task StoreMeteringPointAsync_WhenMeteringPointIsNull_ShouldThrow(MeteringPointRepository sut)
+        {
+            await Assert
+                .ThrowsAsync<ArgumentNullException>(() => sut.StoreMeteringPointAsync(null!))
+                .ConfigureAwait(false);
         }
 
         [Fact]
