@@ -40,7 +40,7 @@ namespace GreenEnergyHub.Charges.TestCore.Squadron
                 .Username("sa")
                 .Password(password)
                 .AddEnvironmentVariable("ACCEPT_EULA=Y")
-                .AddEnvironmentVariable($"SA_PASSWORD={password}");
+                .AddEnvironmentVariable($"MSSQL_SA_PASSWORD={password}");
         }
     }
 }
