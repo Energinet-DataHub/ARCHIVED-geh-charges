@@ -50,7 +50,7 @@ az account set --subscription "your subscription id"
 
 This describes what values to use for the various values in the `localhost.tfvars` file.
 
-It is assumed that `Azure CLI` for Windows and the Azure AD module for `powershell` is installed. If not, guides can be found found later in this file.
+It is assumed that `Azure CLI` for Windows is installed. If not, guides can be found found later in this file.
 
 ### `environment`
 
@@ -104,19 +104,19 @@ So if you are deploying to your own resource group from your own machine, this h
 
 If the Object ID is unknown, it can be found with using `powershell`.
 
-First, login to the Azure AD with the the account that has access to the resource group. Run the following command and supply your login information:
+First, login to the Azure AD with the the account that has access to the resource group. 
 
 ```PowerShell
-Connect-AzureAd
+az login
 ```
 
 Then, ask the Azure AD for your object ID by using the following command:
 
 ```PowerShell
-Get-AzureADUser -searchstring "username@yourdomain.com"
+az ad signed-in-user show --query objectId -o tsv
 ```
 
-The object ID should now be displayed as the first column in the result.
+The object ID should now be displayed.
 
 This ID is the value you need for `object_id` (hint: it looks like a `GUID`)
 
@@ -142,16 +142,6 @@ The email address that should receive notifications of alerts raised by the infr
 ### Installing `Azure CLI`
 
 Follow the [guide](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli).
-
-### Installing `Azure AD for powershell`
-
-Run your `powershell` as an administrator.
-
-The following command installs the module:
-
-```PowerShell
-Install-Module -Name AzureAD
-```
 
 ## Working with Multiple Environments
 
