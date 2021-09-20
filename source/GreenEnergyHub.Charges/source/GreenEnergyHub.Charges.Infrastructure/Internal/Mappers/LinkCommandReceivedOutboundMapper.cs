@@ -79,7 +79,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
                 Factor = chargeLink.Factor,
                 ChargeType = (ChargeTypeContract)chargeLink.ChargeType,
                 StartDateTime = chargeLink.StartDateTime.ToTimestamp(),
-                EndDateTime = chargeLink.EndDateTime.TimeOrEndDefault().ToTimestamp(),
+                EndDateTime = chargeLink.EndDateTime.TimeOrEndDefault().ToTimestamp(), // TODO: EndDateTime: is this the correct place to convert?
             };
         }
     }

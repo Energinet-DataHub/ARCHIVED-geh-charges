@@ -15,12 +15,12 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using GreenEnergyHub.Charges.Domain.MarketDocument;
 using GreenEnergyHub.Charges.Infrastructure.Context.Mapping;
 using GreenEnergyHub.Charges.Infrastructure.Context.Model;
-using GreenEnergyHub.Charges.TestCore;
 using GreenEnergyHub.Charges.TestCore.Attributes;
 using NodaTime;
+using NodaTime.Extensions;
+using NodaTime.Text;
 using Xunit;
 using Xunit.Categories;
 using MarketParticipant = GreenEnergyHub.Charges.Infrastructure.Context.Model.MarketParticipant;
@@ -75,12 +75,12 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Mapping
 
         [Theory]
         [InlineAutoMoqData]
-        public void MapDomainChargeToCharge_WhenNoEndTimeIsUsed_MapsEndTimeToNull(
+        public void MapDomainChargeToCharge_WhenNoEndTimeIsUsed_MapsEndTimeToDecidedMaxValue(
             [NotNull] Charges.Domain.Charges.Charge charge,
             MarketParticipant marketParticipant)
         {
             // Arrange
-            charge.EndDateTime = null;
+            charge.EndDateTime = InstantPattern.General.Parse("9999-12-31T23:59:59Z").Value;
 
             // Set all other times to a valid time and not just a random which can get the test to blink
             var now = SystemClock.Instance.GetCurrentInstant();
@@ -95,7 +95,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Mapping
             var result = ChargeMapper.MapDomainChargeToCharge(charge, marketParticipant);
 
             // Assert
-            Assert.Null(result.ChargePeriodDetails.First().EndDateTime);
+            Assert.Equal(charge.EndDateTime, result.ChargePeriodDetails.First().EndDateTime.ToInstant());
         }
 
         [Fact]

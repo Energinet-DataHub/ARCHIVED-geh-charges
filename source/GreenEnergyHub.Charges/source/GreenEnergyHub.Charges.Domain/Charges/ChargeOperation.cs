@@ -62,7 +62,7 @@ namespace GreenEnergyHub.Charges.Domain.Charges
         /// <summary>
         /// Valid to, of a charge price list.
         /// </summary>
-        public Instant? EndDateTime { get; set; }
+        public Instant EndDateTime { get; set; }
 
         public VatClassification VatClassification { get; set; }
 

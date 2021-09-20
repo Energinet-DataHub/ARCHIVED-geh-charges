@@ -37,6 +37,7 @@ limitations under the License.
       <EmbeddedResource Include="Scripts\Model\202109071000 Refactor ChargeLink Model.sql" />
       <EmbeddedResource Include="Scripts\Model\202109011409 Rename to DefaultChargeLink.sql" />
       <EmbeddedResource Include="Scripts\Model\202109171524 Refactor DefaultChargeLink.sql" />
+      <EmbeddedResource Include="Scripts\Model\202109201555 Refactor ChargePeriodDetails.sql" />
       <EmbeddedResource Include="Scripts\Test\202105201033 New MarketParticipants.sql" />
       <EmbeddedResource Include="Scripts\Model\202105191329 New charge model.sql" />
       <EmbeddedResource Include="Scripts\Model\202107011226 New Metering Point.sql" />

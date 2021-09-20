@@ -62,7 +62,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Factories
             actual.Document.Recipient.Id.Should().Be("5790001330552");
             actual.ChargeLink.ChargeId.Should().Be(charge.Id);
             actual.ChargeLink.ChargeType.Should().Be(charge.Type);
-            actual.ChargeLink.EndDateTime.Should().Be(charge.EndDateTime.TimeOrEndDefault()); // TODO: EndDateTime: charge.EndDateTime also not nullable?
+            actual.ChargeLink.EndDateTime.Should().Be(charge.EndDateTime);
             actual.ChargeLink.ChargeOwner.Should().Be(charge.Owner);
             actual.ChargeLink.MeteringPointId.Should().Be(createLinkCommandEvent.MeteringPointId);
             actual.ChargeLink.StartDateTime.Should().Be(defaultChargeLink.GetStartDateTime(createLinkCommandEvent.StartDateTime));

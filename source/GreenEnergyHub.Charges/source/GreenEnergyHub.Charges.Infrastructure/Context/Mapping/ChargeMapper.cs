@@ -48,8 +48,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Context.Mapping
                 TransparentInvoicing = Convert.ToBoolean(charge.TransparentInvoicing),
                 VatClassification = (VatClassification)currentChargeDetails.VatClassification,
                 ChargeOperationId = charge.ChargeOperation.ChargeOperationId,
-                EndDateTime = currentChargeDetails.EndDateTime != null ?
-                    Instant.FromDateTimeUtc(currentChargeDetails.EndDateTime.Value.ToUniversalTime()) : (Instant?)null,
+                EndDateTime = Instant.FromDateTimeUtc(currentChargeDetails.EndDateTime.ToUniversalTime()),
                 Points = charge.ChargePrices.Select(x => new Point
                 {
                     Position = 0,
@@ -119,7 +118,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Context.Mapping
                 Description = charge.Description,
                 Name = charge.Name,
                 VatClassification = (int)charge.VatClassification,
-                EndDateTime = charge.EndDateTime?.ToDateTimeUtc(),
+                EndDateTime = charge.EndDateTime.ToDateTimeUtc(),
                 StartDateTime = charge.StartDateTime.ToDateTimeUtc(),
                 ChargeOperation = chargeOperation,
             };

@@ -63,7 +63,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
                 ChargeOwner = charge.ChargeOwner,
                 Type = (ChargeTypeContract)charge.Type,
                 StartDateTime = charge.StartDateTime.ToTimestamp().TruncateToSeconds(),
-                EndDateTime = charge.EndDateTime.TimeOrEndDefault().ToTimestamp().TruncateToSeconds(),
+                EndDateTime = charge.EndDateTime.ToTimestamp().TruncateToSeconds(),
                 Resolution = (ResolutionContract)charge.Resolution,
                 ChargeDescription = charge.ChargeDescription,
                 ChargeName = charge.ChargeName,

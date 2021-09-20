@@ -4,6 +4,7 @@ SET EndDateTime = '9999-12-31T23:59:59' -- Equivalent to InstantExtensions.TimeO
 WHERE EndDateTime is null
 
 DROP INDEX [i1] ON [Charges].[DefaultChargeLink]
+GO
 
 ALTER TABLE [Charges].[DefaultChargeLink] ALTER COLUMN EndDateTime datetime2 NOT NULL
 GO
