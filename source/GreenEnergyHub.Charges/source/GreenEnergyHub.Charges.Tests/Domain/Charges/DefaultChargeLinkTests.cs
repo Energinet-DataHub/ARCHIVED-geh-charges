@@ -39,9 +39,10 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Charges
             // Arrange
             var meteringPointCreatedDateTime = InstantPattern.General.Parse(meteringPointDate).Value;
             var startDateTime = InstantPattern.General.Parse(startDate).Value;
+            var endDateTime = InstantPattern.General.Parse("9999-12-31T23:56:59Z").Value;
 
             // Act
-            var sut = new DefaultChargeLink(startDateTime, ((Instant?)null).TimeOrEndDefault(), 0, MeteringPointType.Consumption);
+            var sut = new DefaultChargeLink(startDateTime, endDateTime, 0, MeteringPointType.Consumption);
 
             // Assert
             sut.GetStartDateTime(meteringPointCreatedDateTime).Should().BeEquivalentTo(InstantPattern.General.Parse(expectedStartDate).Value);
@@ -52,9 +53,10 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Charges
         {
             // Arrange
             var startDateTime = InstantPattern.General.Parse("2020-05-10T13:00:00Z").Value;
+            var endDateTime = InstantPattern.General.Parse("9999-12-31T23:56:59Z").Value;
             var meteringPointCreatedDateTime = startDateTime;
 
-            var sut = new DefaultChargeLink(startDateTime, ((Instant?)null).TimeOrEndDefault(), 0, MeteringPointType.Consumption);
+            var sut = new DefaultChargeLink(startDateTime, endDateTime, 0, MeteringPointType.Consumption);
 
             // Act / Assert
             Assert.True(sut.ApplicableForLinking(meteringPointCreatedDateTime, MeteringPointType.Consumption));
@@ -93,9 +95,10 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Charges
         {
             // Arrange
             var startDateTime = InstantPattern.General.Parse("2020-05-10T13:00:00Z").Value;
+            var endDateTime = InstantPattern.General.Parse("9999-12-31T23:56:59Z").Value;
             var meteringPointCreatedDateTime = startDateTime;
 
-            var sut = new DefaultChargeLink(startDateTime, ((Instant?)null).TimeOrEndDefault(), 0, MeteringPointType.Consumption);
+            var sut = new DefaultChargeLink(startDateTime, endDateTime, 0, MeteringPointType.Consumption);
 
             // Assert
             Assert.False(sut.ApplicableForLinking(meteringPointCreatedDateTime, MeteringPointType.Production));
