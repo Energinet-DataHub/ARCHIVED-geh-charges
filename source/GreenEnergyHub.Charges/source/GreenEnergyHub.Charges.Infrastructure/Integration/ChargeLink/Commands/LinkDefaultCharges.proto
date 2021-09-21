@@ -21,8 +21,9 @@ syntax = "proto3";
 option csharp_namespace = "GreenEnergyHub.Charges.Infrastructure.Integration.LinkDefaultChargesReply";
 
 message LinkDefaultChargesContract {
-  string correlation_id = 1;
-  string process_id = 2; // Unique process id of the create metering point process.
-  string command_id = 3;
-  string metering_point_id = 4; // The metering point to link default charges to.
+  string metering_point_id = 1; // The metering point to link default charges to.
 }
+
+/* TODO - by prtandrup:
+- clarify what is needed in the meta data of a command (command_id? process_id?)
+

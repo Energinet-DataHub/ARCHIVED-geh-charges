@@ -20,8 +20,11 @@ syntax = "proto3";
 
 option csharp_namespace = "GreenEnergyHub.Charges.Infrastructure.Integration.LinkDefaultCharges";
 
-message LinkDefaultChargesReplyContract {
-  string correlation_id = 1;
-  string process_id = 2; // Unique process id of the create metering point process.
-  string command_id = 3;
+message LinkDefaultChargesReplyContract 
+  string status = 1; // Result of operation
+  string error_code = 2; // Defined by Charges or generic codes or both?
+  string metering_point_id = 3; // The metering point to link default charges to.
 }
+
+/* TODO - by prtandrup: 
+- Clarify what is needed in the reply meta data e.g. reply_to_command_id?
