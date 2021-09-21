@@ -61,7 +61,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
                                         $"{_postOfficeTopicName}");
         }
 
-        [IgnoreWhenMissingEnvironmentVariables(Timeout = 120000)]
+        [PipelineIntegrationTestTheory(Timeout = 120000)]
         [Trait(HostingEnvironmentTraitConstants.HostingEnvironment, HostingEnvironmentTraitConstants.Development)]
         [InlineAutoMoqData("TestFiles/ValidCreateTariffCommand.json")]
         public async Task Test_ChargeCommandCompleteFlow_is_Accepted(
@@ -108,7 +108,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
             charge.Points.First().Price.Should().Be(chargeCommand.ChargeOperation.Points.First().Price);
         }
 
-        [IgnoreWhenMissingEnvironmentVariables(Timeout = 120000)]
+        [PipelineIntegrationTestTheory(Timeout = 120000)]
         [Trait(HostingEnvironmentTraitConstants.HostingEnvironment, HostingEnvironmentTraitConstants.Development)]
         [InlineAutoMoqData("TestFiles/InvalidCreateTariffCommand.json")]
         public async Task Test_ChargeCommandCompleteFlow_is_Rejected(

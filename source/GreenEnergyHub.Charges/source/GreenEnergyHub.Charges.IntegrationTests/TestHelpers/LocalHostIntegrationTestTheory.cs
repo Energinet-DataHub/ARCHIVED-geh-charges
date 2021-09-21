@@ -16,17 +16,19 @@ using Xunit;
 
 namespace GreenEnergyHub.Charges.IntegrationTests.TestHelpers
 {
-    public sealed class IgnoreWhenMissingEnvironmentVariables : TheoryAttribute
+    public sealed class LocalHostIntegrationTestTheory : TheoryAttribute
     {
-        public IgnoreWhenMissingEnvironmentVariables()
+        public LocalHostIntegrationTestTheory()
         {
+            FunctionHostConfigurationHelper.ConfigureEnvironmentVariables();
+
             var runPipelineTests = System.Environment
-                .GetEnvironmentVariable("RUN_PIPELINE_TESTS")?
+                .GetEnvironmentVariable("RUN_LOCALHOST_TESTS")?
                 .ToUpperInvariant() == "TRUE";
 
             if (runPipelineTests == false)
             {
-                Skip = "Ignoring integration test due to missing local.settings.json";
+                Skip = "Ignoring localhost integration test due to missing integrationtest.local.settings.json";
             }
         }
     }

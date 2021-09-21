@@ -95,7 +95,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
             _commandRejectedConnectionString = Environment.GetEnvironmentVariable("COMMAND_REJECTED_LISTENER_CONNECTION_STRING") ?? string.Empty;
         }
 
-        [IgnoreWhenMissingEnvironmentVariables(Timeout = 60000)]
+        [LocalHostIntegrationTestTheory(Timeout = 60000)]
         [Trait(HostingEnvironmentTraitConstants.HostingEnvironment, HostingEnvironmentTraitConstants.LocalHost)]
         [InlineAutoMoqData("TestFiles/ValidCreateTariffCommand.json")]
         public async Task Test_ChargeCommand_is_Accepted(
@@ -149,7 +149,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
             charge.Points.Should().NotBeNullOrEmpty();
         }
 
-        [IgnoreWhenMissingEnvironmentVariables(Timeout = 60000)]
+        [PipelineIntegrationTestTheory(Timeout = 60000)]
         [Trait(HostingEnvironmentTraitConstants.HostingEnvironment, HostingEnvironmentTraitConstants.LocalHost)]
         [InlineAutoMoqData("TestFiles/InvalidCreateTariffCommand.json")]
         public async Task Test_ChargeCommand_is_Rejected(
