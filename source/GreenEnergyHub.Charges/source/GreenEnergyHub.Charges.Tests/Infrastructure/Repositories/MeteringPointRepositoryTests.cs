@@ -97,6 +97,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
         private static MeteringPoint GetMeteringPointCreatedEvent()
         {
             return new MeteringPoint(
+                null,
                 "123",
                 MeteringPointType.Consumption,
                 "234",
@@ -108,6 +109,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
         private static MeteringPoint GetMeteringPoint()
         {
             return new MeteringPoint(
+                null,
                 "meteringPointId",
                 MeteringPointType.Consumption,
                 "grid area id",

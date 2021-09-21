@@ -107,6 +107,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
             context.Charges.Add(charge);
 
             var meteringPoint = new MeteringPoint(
+                null,
                 "some-id",
                 MeteringPointType.ElectricalHeating,
                 "some-area-id",
