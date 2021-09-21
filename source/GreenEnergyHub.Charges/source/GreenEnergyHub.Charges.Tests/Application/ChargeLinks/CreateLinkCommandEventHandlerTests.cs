@@ -30,6 +30,7 @@ using GreenEnergyHub.Charges.Domain.MeteringPoints;
 using GreenEnergyHub.TestHelpers;
 using Moq;
 using NodaTime;
+using NodaTime.Text;
 using Xunit;
 using Xunit.Categories;
 
@@ -57,7 +58,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks
 
             var defaultChargeLink = new DefaultChargeLink(
                 SystemClock.Instance.GetCurrentInstant(),
-                ((Instant?)null).TimeOrEndDefault(),
+                InstantPattern.General.Parse("9999-12-31T23:59:59Z").Value,
                 1,
                 MeteringPointType.Consumption);
 
