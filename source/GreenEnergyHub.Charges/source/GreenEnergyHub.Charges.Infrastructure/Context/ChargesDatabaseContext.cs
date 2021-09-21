@@ -15,6 +15,7 @@
 using System;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Domain.ChargeLinks;
+using GreenEnergyHub.Charges.Domain.MeteringPoints;
 using GreenEnergyHub.Charges.Infrastructure.Context.EntityConfigurations;
 using GreenEnergyHub.Charges.Infrastructure.Context.Model;
 using Microsoft.EntityFrameworkCore;
@@ -60,10 +61,10 @@ namespace GreenEnergyHub.Charges.Infrastructure.Context
             modelBuilder.Entity<ChargePeriodDetails>().ToTable("ChargePeriodDetails");
             modelBuilder.Entity<Charge>().ToTable("Charge");
             modelBuilder.Entity<MarketParticipant>().ToTable("MarketParticipant");
-            modelBuilder.Entity<MeteringPoint>().ToTable("MeteringPoint");
             modelBuilder.Entity<DefaultChargeLink>().ToTable("DefaultChargeLink");
 
             modelBuilder.ApplyConfiguration(new ChargeLinkEntityConfiguration());
+            modelBuilder.ApplyConfiguration(new MeteringPointEntityConfiguration());
 
             base.OnModelCreating(modelBuilder);
         }

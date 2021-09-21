@@ -14,7 +14,6 @@
 
 using System;
 using GreenEnergyHub.Charges.Domain.ChargeLinks;
-using GreenEnergyHub.Charges.Infrastructure.Context.EntityConfigurationExtensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -49,14 +48,8 @@ namespace GreenEnergyHub.Charges.Infrastructure.Context.EntityConfigurations
             details.Property(d => d.Factor).HasColumnName("Factor");
             details.Property(d => d.CreatedByOperationId).HasColumnName("CreatedByOperationId");
             details.Property(d => d.RetiredByOperationId).HasColumnName("RetiredByOperationId");
-
-            details.Property(d => d.StartDateTime)
-                .HasColumnName("StartDateTime")
-                .HasNodaTimeInstantConversion();
-
-            details.Property(d => d.EndDateTime)
-                .HasColumnName("EndDateTime")
-                .HasNodaTimeInstantConversion();
+            details.Property(d => d.StartDateTime).HasColumnName("StartDateTime");
+            details.Property(d => d.EndDateTime).HasColumnName("EndDateTime");
         }
 
         private static void ConfigureOperations(OwnedNavigationBuilder<ChargeLink, ChargeLinkOperation> operations)
@@ -72,8 +65,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Context.EntityConfigurations
 
             operations.Property(o => o.WriteDateTime)
                 .ValueGeneratedOnAdd()
-                .HasColumnName("WriteDateTime")
-                .HasNodaTimeInstantConversion();
+                .HasColumnName("WriteDateTime");
 
             operations.Property(o => o.CorrelationId).HasColumnName("CorrelationId");
         }
