@@ -37,7 +37,6 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
     [IntegrationTest]
     public class ChangeOfChargePipelineTests : IClassFixture<DbContextRegistrator>
     {
-        private readonly bool _runPipelineTests;
         private readonly ITestOutputHelper _testOutputHelper;
         private readonly string _chargeReceiverHostname;
         private readonly string _postOfficeSubscriptionName;
@@ -51,8 +50,6 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
             _testOutputHelper.WriteLine($"{nameof(ChangeOfChargePipelineTests)} constructor invoked");
             _chargeDbQueries = new ChargeDbQueries(dbContextRegistrator.ServiceProvider);
 
-            _runPipelineTests = Environment.GetEnvironmentVariable("RUN_PIPELINE_TESTS")?.ToUpperInvariant() != "FALSE";
-
             _chargeReceiverHostname = Environment.GetEnvironmentVariable("MESSAGE_RECEIVER_HOSTNAME") ?? string.Empty;
             _postOfficeSubscriptionName = Environment.GetEnvironmentVariable("POST_OFFICE_SUBSCRIPTION_NAME") ?? string.Empty;
             _postOfficeTopicName = Environment.GetEnvironmentVariable("POST_OFFICE_TOPIC_NAME") ?? string.Empty;
@@ -64,7 +61,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
                                         $"{_postOfficeTopicName}");
         }
 
-        [Theory(Timeout = 120000)]
+        [PipelineIntegrationTestTheory(Timeout = 120000)]
         [Trait(HostingEnvironmentTraitConstants.HostingEnvironment, HostingEnvironmentTraitConstants.Development)]
         [InlineAutoMoqData("TestFiles/ValidCreateTariffCommand.json")]
         public async Task Test_ChargeCommandCompleteFlow_is_Accepted(
@@ -72,8 +69,6 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
             [NotNull] ExecutionContext executionContext,
             [NotNull] ServiceBusTestHelper serviceBusTestHelper)
         {
-            if (!_runPipelineTests) return;
-
             _testOutputHelper.WriteLine($"Run {nameof(Test_ChargeCommandCompleteFlow_is_Accepted)} for CorrelationId: {executionContext.InvocationId}");
 
             // arrange
@@ -113,7 +108,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
             charge.Points.First().Price.Should().Be(chargeCommand.ChargeOperation.Points.First().Price);
         }
 
-        [Theory(Timeout = 120000)]
+        [PipelineIntegrationTestTheory(Timeout = 120000)]
         [Trait(HostingEnvironmentTraitConstants.HostingEnvironment, HostingEnvironmentTraitConstants.Development)]
         [InlineAutoMoqData("TestFiles/InvalidCreateTariffCommand.json")]
         public async Task Test_ChargeCommandCompleteFlow_is_Rejected(
@@ -121,8 +116,6 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
             [NotNull] ExecutionContext executionContext,
             [NotNull] ServiceBusTestHelper serviceBusTestHelper)
         {
-            if (!_runPipelineTests) return;
-
             _testOutputHelper.WriteLine($"Run {nameof(Test_ChargeCommandCompleteFlow_is_Rejected)} for CorrelationId: {executionContext.InvocationId}");
 
             // arrange
