@@ -20,7 +20,7 @@ syntax = "proto3";
 
 option csharp_namespace = "GreenEnergyHub.Charges.Infrastructure.Integration.LinkDefaultCharges";
 
-message LinkDefaultChargesContract {
+message LinkDefaultChargesReplyContract {
   string correlation_id = 1;
   string process_id = 2; // Unique process id of the create metering point process.
   string command_id = 3;
