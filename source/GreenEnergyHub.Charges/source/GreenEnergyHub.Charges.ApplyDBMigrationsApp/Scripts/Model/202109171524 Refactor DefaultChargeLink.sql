@@ -1,6 +1,6 @@
 
 UPDATE [Charges].[DefaultChargeLink]
-SET EndDateTime = '9999-12-31T23:59:59' -- Equivalent to InstantExtensions.TimeOrEndDefault()
+SET EndDateTime = '9999-12-31 23:59:59' -- Equivalent to InstantExtensions.TimeOrEndDefault()
 WHERE EndDateTime is null
 
 DROP INDEX [i1] ON [Charges].[DefaultChargeLink]
