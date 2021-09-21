@@ -38,16 +38,14 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
     [IntegrationTest]
     public class ChangeOfChargeSquadronTests : IClassFixture<ChargesAzureCloudServiceBusResource>
     {
-        private readonly bool _runPipelineTests;
         private readonly ChargesAzureCloudServiceBusResource _serviceBusResource;
 
         public ChangeOfChargeSquadronTests(ChargesAzureCloudServiceBusResource serviceBusResource)
         {
-            _runPipelineTests = Environment.GetEnvironmentVariable("RUN_PIPELINE_TESTS")?.ToUpperInvariant() == "TRUE";
             _serviceBusResource = serviceBusResource;
         }
 
-        [Theory(Timeout = 30000)]
+        [IgnoreWhenMissingEnvironmentVariables(Timeout = 30000)]
         [Trait(HostingEnvironmentTraitConstants.HostingEnvironment, HostingEnvironmentTraitConstants.PullRequestGate)]
         [InlineAutoMoqData("TestFiles/ValidCreateTariffCommand.json")]
         [InlineAutoMoqData("TestFiles/InvalidCreateTariffCommand.json")]
@@ -56,8 +54,6 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
             [NotNull] [Frozen] Mock<ILogger> logger,
             [NotNull] ExecutionContext executionContext)
         {
-            if (!_runPipelineTests) return;
-
             // arrange
             var subscriptionClient = _serviceBusResource.GetSubscriptionClient(
                 ChargesAzureCloudServiceBusOptions.ReceivedTopicName,

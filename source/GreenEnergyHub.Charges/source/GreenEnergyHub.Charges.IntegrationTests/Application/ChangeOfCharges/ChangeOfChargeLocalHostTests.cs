@@ -52,7 +52,6 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
     [IntegrationTest]
     public class ChangeOfChargeLocalHostTests : IClassFixture<DbContextRegistrator>
     {
-        private readonly bool _runLocalhostTests;
         private readonly ITestOutputHelper _testOutputHelper;
         private readonly ChargeDbQueries _chargeDbQueries;
         private readonly ChargeHttpTrigger? _chargeHttpTrigger;
@@ -71,10 +70,6 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
         {
             _testOutputHelper = testOutputHelper;
             _chargeDbQueries = new ChargeDbQueries(dbContextRegistrator.ServiceProvider);
-
-            _runLocalhostTests = Environment.GetEnvironmentVariable("RUN_LOCALHOST_TESTS")?.ToUpperInvariant() == "TRUE";
-
-            if (!_runLocalhostTests) return;
 
             var chargeReceiverHost = FunctionHostConfigurationHelper.SetupHost(new ChargeReceiver.Startup());
             var chargeCommandReceiverHost = FunctionHostConfigurationHelper.SetupHost(new ChargeCommandReceiver.Startup());
@@ -100,7 +95,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
             _commandRejectedConnectionString = Environment.GetEnvironmentVariable("COMMAND_REJECTED_LISTENER_CONNECTION_STRING") ?? string.Empty;
         }
 
-        [Theory(Timeout = 60000)]
+        [IgnoreWhenMissingEnvironmentVariables(Timeout = 60000)]
         [Trait(HostingEnvironmentTraitConstants.HostingEnvironment, HostingEnvironmentTraitConstants.LocalHost)]
         [InlineAutoMoqData("TestFiles/ValidCreateTariffCommand.json")]
         public async Task Test_ChargeCommand_is_Accepted(
@@ -109,8 +104,6 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
             [NotNull] ExecutionContext executionContext,
             [NotNull] ServiceBusTestHelper serviceBusTestHelper)
         {
-            if (!_runLocalhostTests) return;
-
             // arrange
             IClock clock = SystemClock.Instance;
             var chargeJson = EmbeddedResourceHelper.GetInputJson(testFilePath, clock);
@@ -156,7 +149,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
             charge.Points.Should().NotBeNullOrEmpty();
         }
 
-        [Theory(Timeout = 60000)]
+        [IgnoreWhenMissingEnvironmentVariables(Timeout = 60000)]
         [Trait(HostingEnvironmentTraitConstants.HostingEnvironment, HostingEnvironmentTraitConstants.LocalHost)]
         [InlineAutoMoqData("TestFiles/InvalidCreateTariffCommand.json")]
         public async Task Test_ChargeCommand_is_Rejected(
@@ -165,8 +158,6 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
             [NotNull] ExecutionContext executionContext,
             [NotNull] ServiceBusTestHelper serviceBusTestHelper)
         {
-            if (!_runLocalhostTests) return;
-
             // arrange
             IClock clock = SystemClock.Instance;
             var chargeJson = EmbeddedResourceHelper.GetInputJson(testFilePath, clock);
