@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using FluentAssertions;
@@ -28,7 +27,6 @@ using Squadron;
 using Xunit;
 using Xunit.Categories;
 using MarketParticipant = GreenEnergyHub.Charges.Infrastructure.Context.Model.MarketParticipant;
-using MeteringPoint = GreenEnergyHub.Charges.Infrastructure.Context.Model.MeteringPoint;
 
 namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
 {
@@ -114,7 +112,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
                 "some-id",
                 MeteringPointType.ElectricalHeating,
                 "some-area-id",
-                DateTime.Now,
+                SystemClock.Instance.GetCurrentInstant(),
                 ConnectionState.Connected,
                 SettlementMethod.Flex);
             context.MeteringPoints.Add(meteringPoint);

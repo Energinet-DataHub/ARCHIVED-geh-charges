@@ -35,6 +35,7 @@ namespace GreenEnergyHub.Charges.Application.Mapping
                 : Enum.Parse<SettlementMethod>(meteringPointCreatedEvent.SettlementMethod);
 
             return new MeteringPoint(
+                null,
                 meteringPointCreatedEvent.MeteringPointId,
                 meteringPointType,
                 meteringPointCreatedEvent.GridAreaId,

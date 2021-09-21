@@ -25,6 +25,7 @@ limitations under the License.
         <LangVersion>9</LangVersion>
     </PropertyGroup>
     <ItemGroup>
+        <PackageReference Include="EntityFrameworkCore.SqlServer.NodaTime" Version="0.2.1" />
         <PackageReference Include="Microsoft.Azure.Functions.Worker" Version="1.5.1" />
         <PackageReference Include="Microsoft.Azure.Functions.Worker.Extensions.Http" Version="3.0.13" />
         <PackageReference Include="Microsoft.Azure.Functions.Worker.Extensions.ServiceBus" Version="4.2.1" />
