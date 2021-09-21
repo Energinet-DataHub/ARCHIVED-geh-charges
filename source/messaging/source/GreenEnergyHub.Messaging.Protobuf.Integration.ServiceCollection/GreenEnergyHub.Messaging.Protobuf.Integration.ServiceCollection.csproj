@@ -26,8 +26,8 @@ limitations under the License.
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Google.Protobuf" Version="3.17.3" />
-        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="3.1.18" />
+        <PackageReference Include="Google.Protobuf" Version="3.18.0" />
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="3.1.19" />
     </ItemGroup>
 
     <ItemGroup>

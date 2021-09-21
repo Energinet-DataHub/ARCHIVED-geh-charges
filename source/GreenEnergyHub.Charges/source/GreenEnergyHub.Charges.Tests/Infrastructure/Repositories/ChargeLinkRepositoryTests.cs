@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using FluentAssertions;
@@ -28,7 +27,6 @@ using Squadron;
 using Xunit;
 using Xunit.Categories;
 using MarketParticipant = GreenEnergyHub.Charges.Infrastructure.Context.Model.MarketParticipant;
-using MeteringPoint = GreenEnergyHub.Charges.Infrastructure.Context.Model.MeteringPoint;
 
 namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
 {
@@ -51,31 +49,32 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
             _resource = resource;
         }
 
-        // [Fact]
-        // public async Task StoreAsync_StoresChargeLink()
-        // {
-        //     // Arrange
-        //     await using var chargesDatabaseWriteContext = await SquadronContextFactory
-        //         .GetDatabaseContextAsync(_resource)
-        //         .ConfigureAwait(false);
-        //
-        //     var ids = SeedDatabase(chargesDatabaseWriteContext);
-        //     var expected = CreateNewExpectedChargeLink(ids);
-        //     var sut = new ChargeLinkRepository(chargesDatabaseWriteContext);
-        //
-        //     // Act
-        //     await sut.StoreAsync(expected).ConfigureAwait(false);
-        //
-        //     // Assert
-        //     await using var chargesDatabaseReadContext = await SquadronContextFactory
-        //         .GetDatabaseContextAsync(_resource)
-        //         .ConfigureAwait(false);
-        //
-        //     var actual = await chargesDatabaseReadContext.ChargeLinks.SingleAsync(
-        //             c => c.ChargeId == ids.chargeRowId && c.MeteringPointId == ids.meteringPointRowId)
-        //         .ConfigureAwait(false);
-        //     actual.Should().BeEquivalentTo(expected);
-        // }
+        [Fact]
+        public async Task StoreAsync_StoresChargeLink()
+        {
+            // Arrange
+            await using var chargesDatabaseWriteContext = await SquadronContextFactory
+                .GetDatabaseContextAsync(_resource)
+                .ConfigureAwait(false);
+
+            var ids = SeedDatabase(chargesDatabaseWriteContext);
+            var expected = CreateNewExpectedChargeLink(ids);
+            var sut = new ChargeLinkRepository(chargesDatabaseWriteContext);
+
+            // Act
+            await sut.StoreAsync(expected).ConfigureAwait(false);
+
+            // Assert
+            await using var chargesDatabaseReadContext = await SquadronContextFactory
+                .GetDatabaseContextAsync(_resource)
+                .ConfigureAwait(false);
+
+            var actual = await chargesDatabaseReadContext.ChargeLinks.SingleAsync(
+                    c => c.ChargeId == ids.chargeRowId && c.MeteringPointId == ids.meteringPointRowId)
+                .ConfigureAwait(false);
+            actual.Should().BeEquivalentTo(expected);
+        }
+
         private ChargeLink CreateNewExpectedChargeLink((int chargeRowId, int meteringPointRowId) ids)
         {
             var operation = new ChargeLinkOperation(ExpectedOperationId, ExpectedCorrelationId);
@@ -113,7 +112,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
                 "some-id",
                 MeteringPointType.ElectricalHeating,
                 "some-area-id",
-                DateTime.Now,
+                SystemClock.Instance.GetCurrentInstant(),
                 ConnectionState.Connected,
                 SettlementMethod.Flex);
             context.MeteringPoints.Add(meteringPoint);

@@ -31,8 +31,8 @@ limitations under the License.
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.18" />
-      <PackageReference Include="Google.Protobuf" Version="3.17.3" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.19" />
+      <PackageReference Include="Google.Protobuf" Version="3.18.0" />
       <PackageReference Include="Grpc.Tools" Version="2.40.0" PrivateAssets="All" />
     </ItemGroup>
 

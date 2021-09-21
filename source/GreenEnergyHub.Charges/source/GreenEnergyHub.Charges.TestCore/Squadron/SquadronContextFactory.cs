@@ -14,6 +14,7 @@
 
 using System;
 using System.Threading.Tasks;
+using EntityFrameworkCore.SqlServer.NodaTime.Extensions;
 using GreenEnergyHub.Charges.ApplyDBMigrationsApp.Helpers;
 using GreenEnergyHub.Charges.Infrastructure.Context;
 using Microsoft.EntityFrameworkCore;
@@ -31,7 +32,7 @@ namespace GreenEnergyHub.Charges.TestCore.Squadron
                     .ConfigureAwait(false);
             DbContextOptions<ChargesDatabaseContext> dbContextOptions =
                 new DbContextOptionsBuilder<ChargesDatabaseContext>()
-                    .UseSqlServer(connectionString)
+                    .UseSqlServer(connectionString, options => options.UseNodaTime())
                     .Options;
 
             var chargesContext = new ChargesDatabaseContext(dbContextOptions);
