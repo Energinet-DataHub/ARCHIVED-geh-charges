@@ -36,6 +36,7 @@ namespace GreenEnergyHub.Charges.TestCore.Squadron
             builder
                 .Name("mssql")
                 .Image("mcr.microsoft.com/mssql/server:2019-latest")
+                .WaitTimeout(10)
                 .InternalPort(1433)
                 .Username("sa")
                 .Password(password)
