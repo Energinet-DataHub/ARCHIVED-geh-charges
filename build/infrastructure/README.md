@@ -104,7 +104,7 @@ So if you are deploying to your own resource group from your own machine, this h
 
 If the Object ID is unknown, it can be found with using `powershell`.
 
-First, login to the Azure AD with the the account that has access to the resource group. 
+First, login to the Azure AD with the the account that has access to the resource group.
 
 ```PowerShell
 az login
