@@ -36,11 +36,12 @@ namespace GreenEnergyHub.Charges.TestCore.Squadron
             builder
                 .Name("mssql")
                 .Image("mcr.microsoft.com/mssql/server:2019-latest")
+                .WaitTimeout(120)
                 .InternalPort(1433)
                 .Username("sa")
                 .Password(password)
                 .AddEnvironmentVariable("ACCEPT_EULA=Y")
-                .AddEnvironmentVariable($"SA_PASSWORD={password}");
+                .AddEnvironmentVariable($"MSSQL_SA_PASSWORD={password}");
         }
     }
 }
