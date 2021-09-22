@@ -45,19 +45,19 @@ namespace GreenEnergyHub.Charges.Infrastructure.Repositories
             return ChargeMapper.MapChargeToChargeDomainModel(charge);
         }
 
-        public async Task<Charge> GetChargeAsync(Guid chargeId)
+        public async Task<Charge> GetChargeAsync(Guid id)
         {
             var charge = await GetChargesAsQueryable()
-                .SingleAsync(x => x.Id == chargeId)
+                .SingleAsync(x => x.Id == id)
                 .ConfigureAwait(false);
 
             return ChargeMapper.MapChargeToChargeDomainModel(charge);
         }
 
-        public async Task<bool> CheckIfChargeExistsAsync(string chargeId, string owner, ChargeType chargeType)
+        public async Task<bool> CheckIfChargeExistsAsync(string senderProvidedChargeId, string owner, ChargeType chargeType)
         {
             return await _chargesDatabaseContext.Charges
-                .AnyAsync(x => x.SenderProvidedChargeId == chargeId &&
+                .AnyAsync(x => x.SenderProvidedChargeId == senderProvidedChargeId &&
                                         x.MarketParticipant.MarketParticipantId == owner &&
                                         x.ChargeType == (int)chargeType)
                 .ConfigureAwait(false);

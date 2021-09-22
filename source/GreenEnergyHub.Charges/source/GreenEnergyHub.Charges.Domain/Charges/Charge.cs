@@ -59,6 +59,10 @@ namespace GreenEnergyHub.Charges.Domain.Charges
             TaxIndicator = taxIndicator;
         }
 
+        /// <summary>
+        /// This constructor should not be used.
+        /// By any other than the Moq framework.
+        /// </summary>
 #pragma warning disable 8618
         public Charge()
 #pragma warning restore 8618
