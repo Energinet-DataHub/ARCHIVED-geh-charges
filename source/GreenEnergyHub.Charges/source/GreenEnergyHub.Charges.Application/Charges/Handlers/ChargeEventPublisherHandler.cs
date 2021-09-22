@@ -15,6 +15,7 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using GreenEnergyHub.Charges.Application.Charges.Factories;
 using GreenEnergyHub.Charges.Domain.Charges.Acknowledgements;
 using GreenEnergyHub.Charges.Domain.Charges.Events.Local;
 
@@ -24,12 +25,18 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
     {
         private readonly IMessageDispatcher<ChargeCreated> _messageChargeDispatcher;
         private readonly IMessageDispatcher<ChargePricesUpdated> _messagePricesDispatcher;
+        private readonly IChargeCreatedFactory _createdFactory;
+        private readonly IChargePricesUpdatedFactory _chargePricesUpdatedFactory;
 
         public ChargeEventPublisherHandler(
             IMessageDispatcher<ChargeCreated> messageChargeDispatcher,
-            IMessageDispatcher<ChargePricesUpdated> messagePricesDispatcher)
+            IMessageDispatcher<ChargePricesUpdated> messagePricesDispatcher,
+            IChargeCreatedFactory createdFactory,
+            IChargePricesUpdatedFactory chargePricesUpdatedFactory)
         {
             _messagePricesDispatcher = messagePricesDispatcher;
+            _createdFactory = createdFactory;
+            _chargePricesUpdatedFactory = chargePricesUpdatedFactory;
             _messageChargeDispatcher = messageChargeDispatcher;
         }
 
@@ -37,14 +44,17 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
         {
             if (chargeCommandAcceptedEvent == null) throw new ArgumentNullException(nameof(chargeCommandAcceptedEvent));
 
+            var chargeCreated = _createdFactory.Create(chargeCommandAcceptedEvent);
+
             if (chargeCommandAcceptedEvent.Command.ChargeOperation.Points.Any())
             {
-                await _messageChargeDispatcher.DispatchAsync(null!).ConfigureAwait(false);
-                await _messagePricesDispatcher.DispatchAsync(null!).ConfigureAwait(false);
+                var prices = _chargePricesUpdatedFactory.Create(chargeCommandAcceptedEvent);
+                await _messageChargeDispatcher.DispatchAsync(chargeCreated).ConfigureAwait(false);
+                await _messagePricesDispatcher.DispatchAsync(prices).ConfigureAwait(false);
             }
             else
             {
-                await _messageChargeDispatcher.DispatchAsync(null!).ConfigureAwait(false);
+                await _messageChargeDispatcher.DispatchAsync(chargeCreated).ConfigureAwait(false);
             }
         }
     }
