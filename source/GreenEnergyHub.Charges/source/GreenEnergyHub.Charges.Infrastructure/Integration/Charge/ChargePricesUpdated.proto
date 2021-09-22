@@ -1,0 +1,44 @@
+﻿/* Copyright 2020 Energinet DataHub A/S
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License2");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+/*
+ * Charge link Domain related messages.
+ */
+syntax = "proto3";
+
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "GreenEnergyHub.Charges.Infrastructure.Integration.ChargeConfirmation";
+
+message ChargePricesUpdatedContract {
+  string charge_id = 1; // A charge identifier. Combined with Charge Owner and Charge Type it becomes unique
+  ChargeTypeContract charge_type_contract = 2; // The type of charge; tariff, fee or subscription
+  string charge_owner = 3; // A charge owner identification, e.g. the Market Participant's GLN or EIC number
+  google.protobuf.Timestamp update_period_start_date = 4;
+  repeated ChargePriceContract points = 5;
+}
+
+enum ChargeTypeContract {
+  CT_UNKNOWN = 0;
+  CT_SUBSCRIPTION = 1;
+  CT_FEE = 2;
+  CT_TARIFF = 3;
+}
+
+message ChargePriceContract
+{
+  double price = 1;
+  google.protobuf.Timestamp time = 2; // A point in time, where the price applies.
+}
