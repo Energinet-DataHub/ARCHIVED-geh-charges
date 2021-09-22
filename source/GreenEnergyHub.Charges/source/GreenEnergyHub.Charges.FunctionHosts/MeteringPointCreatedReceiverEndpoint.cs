@@ -12,14 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application;
 using GreenEnergyHub.Charges.Domain.Charges.Events.Integration;
+using GreenEnergyHub.Charges.Infrastructure.Messaging;
 using GreenEnergyHub.Messaging.Transport;
-using Microsoft.Azure.WebJobs;
+using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Logging;
 
-namespace GreenEnergyHub.Charges.MeteringPointCreatedReceiver
+namespace GreenEnergyHub.Charges.FunctionHosts
 {
     public class MeteringPointCreatedReceiverEndpoint
     {
@@ -28,29 +30,44 @@ namespace GreenEnergyHub.Charges.MeteringPointCreatedReceiver
         /// Function name affects the URL and thus possibly dependent infrastructure.
         /// </summary>
         private const string FunctionName = nameof(MeteringPointCreatedReceiverEndpoint);
+        private readonly ICorrelationContext _correlationContext;
         private readonly MessageExtractor _messageExtractor;
         private readonly IMeteringPointCreatedEventHandler _meteringPointCreatedEventHandler;
+        private readonly ILogger _log;
 
-        public MeteringPointCreatedReceiverEndpoint(MessageExtractor messageExtractor, IMeteringPointCreatedEventHandler meteringPointCreatedEventHandler)
+        public MeteringPointCreatedReceiverEndpoint(
+            ICorrelationContext correlationContext,
+            MessageExtractor messageExtractor,
+            IMeteringPointCreatedEventHandler meteringPointCreatedEventHandler,
+            [NotNull] ILoggerFactory loggerFactory)
         {
+            _correlationContext = correlationContext;
             _messageExtractor = messageExtractor;
             _meteringPointCreatedEventHandler = meteringPointCreatedEventHandler;
+            _log = loggerFactory.CreateLogger(nameof(MeteringPointCreatedReceiverEndpoint));
         }
 
-        [FunctionName(FunctionName)]
+        [Function(FunctionName)]
         public async Task RunAsync(
             [ServiceBusTrigger(
                 "%METERING_POINT_CREATED_TOPIC_NAME%",
                 "%METERING_POINT_CREATED_SUBSCRIPTION_NAME%",
-                Connection = "METERING_POINT_CREATED_LISTENER_CONNECTION_STRING")]
-            byte[] data,
-            ILogger log)
+                Connection = "INTEGRATIONEVENT_LISTENER_CONNECTION_STRING")]
+            [NotNull] byte[] message,
+            [NotNull] FunctionContext context)
         {
-            var meteringPointCreatedEvent = (MeteringPointCreatedEvent)await _messageExtractor.ExtractAsync(data).ConfigureAwait(false);
+            SetupCorrelationContext(context);
+
+            var meteringPointCreatedEvent = (MeteringPointCreatedEvent)await _messageExtractor.ExtractAsync(message).ConfigureAwait(false);
 
             await _meteringPointCreatedEventHandler.HandleAsync(meteringPointCreatedEvent).ConfigureAwait(false);
 
-            log.LogInformation("Received metering point created event '{@MeteringPointId}'", meteringPointCreatedEvent.MeteringPointId);
+            _log.LogInformation("Received metering point created event '{@MeteringPointId}'", meteringPointCreatedEvent.MeteringPointId);
+        }
+
+        private void SetupCorrelationContext(FunctionContext context)
+        {
+            _correlationContext.CorrelationId = context.InvocationId.Replace("-", string.Empty);
         }
     }
 }
