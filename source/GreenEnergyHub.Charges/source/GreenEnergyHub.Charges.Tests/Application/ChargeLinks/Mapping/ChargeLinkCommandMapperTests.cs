@@ -31,10 +31,10 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Mapping
             [NotNull] ChargeLinkCommandReceivedEvent chargeLinkCommandReceivedEvent)
         {
             // Arrange
-            var mapper = new ChargeLinkCommandAcceptedEventFactory();
+            var factory = new ChargeLinkCommandAcceptedEventFactory();
 
             // Act
-            var chargeLinkCommandAcceptedEvent = mapper.Map(chargeLinkCommandReceivedEvent);
+            var chargeLinkCommandAcceptedEvent = factory.Create(chargeLinkCommandReceivedEvent);
 
             // Assert
             chargeLinkCommandAcceptedEvent.Document.Should().BeEquivalentTo(chargeLinkCommandReceivedEvent.ChargeLinkCommand.Document);

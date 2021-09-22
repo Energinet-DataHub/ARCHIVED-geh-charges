@@ -36,7 +36,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks
         public async Task HandleAsync_WhenCalledWithValidChargeLinkXML_ShouldReturnOk(
             [NotNull] [Frozen] Mock<IMessageDispatcher<ChargeLinkCommandAcceptedEvent>> messageDispatcher,
             [NotNull] [Frozen] Mock<IChargeLinkFactory> chargeLinkFactory,
-            [NotNull] [Frozen] Mock<IChargeLinkCommandAcceptedEventFactory> chargeLinkCommandMapper,
+            [NotNull] [Frozen] Mock<IChargeLinkCommandAcceptedEventFactory> chargeLinkCommandAcceptedEventFactory,
             [NotNull] ChargeLinkCommandReceivedEvent chargeLinkCommandReceivedEvent,
             [NotNull] ChargeLinkCommandAcceptedEvent chargeLinkCommandAcceptedEvent,
             [NotNull] ChargeLinkCommandReceivedHandler sut)
@@ -47,7 +47,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks
                 .ReturnsAsync((ChargeLink)null!);
 
             // Arrange - configure mapper
-            chargeLinkCommandMapper.Setup(x => x.Map(chargeLinkCommandReceivedEvent))
+            chargeLinkCommandAcceptedEventFactory.Setup(x => x.Create(chargeLinkCommandReceivedEvent))
                 .Returns(chargeLinkCommandAcceptedEvent);
 
             // Act

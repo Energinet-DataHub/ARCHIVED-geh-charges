@@ -45,7 +45,7 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
             var chargeLink = await _chargeLinkFactory.CreateAsync(chargeLinkCommand).ConfigureAwait(false);
             await _chargeLinkRepository.StoreAsync(chargeLink).ConfigureAwait(false);
 
-            var chargeCommandAcceptedEvent = _chargeLinkCommandAcceptedEventFactory.Map(chargeLinkCommand);
+            var chargeCommandAcceptedEvent = _chargeLinkCommandAcceptedEventFactory.Create(chargeLinkCommand);
             await _messageDispatcher.DispatchAsync(chargeCommandAcceptedEvent).ConfigureAwait(false);
         }
     }
