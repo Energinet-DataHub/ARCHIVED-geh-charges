@@ -16,7 +16,7 @@ module "azfun_link_command_receiver" {
   name                                      = "azfun-link-command-receiver-${var.project}-${var.organisation}-${var.environment}"
   resource_group_name                       = data.azurerm_resource_group.main.name
   location                                  = data.azurerm_resource_group.main.location
-  storage_account_access_key                = module.azfun_link_receiver_stor.primary_access_key
+  storage_account_access_key                = module.azfun_link_command_receiver_stor.primary_access_key
   app_service_plan_id                       = module.asp_charges.id
   storage_account_name                      = module.azfun_link_command_receiver_stor.name
   application_insights_instrumentation_key  = module.appi.instrumentation_key
