@@ -56,7 +56,7 @@ namespace GreenEnergyHub.Charges.FunctionHosts
             [NotNull] byte[] message,
             [NotNull] FunctionContext context)
         {
-            SetupCorrelationContext(context);
+            SetupCorrelationContext(context); // TODO Add this as a method in correlation context instead once integration project has been upgraded to .5.0, avoiding multiple of the same implementations
 
             var meteringPointCreatedEvent = (MeteringPointCreatedEvent)await _messageExtractor.ExtractAsync(message).ConfigureAwait(false);
 
