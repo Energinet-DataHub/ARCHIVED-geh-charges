@@ -14,13 +14,11 @@
 
 using System;
 using System.Diagnostics.CodeAnalysis;
-using GreenEnergyHub.Charges.Application.ChangeOfCharges.Repositories;
-using GreenEnergyHub.Charges.Application.ChargeLinks.Factories;
 using GreenEnergyHub.Charges.Application.ChargeLinks.Handlers;
-using GreenEnergyHub.Charges.Application.ChargeLinks.Mapping;
-using GreenEnergyHub.Charges.Application.ChargeLinks.Repositories;
-using GreenEnergyHub.Charges.Application.Charges.Repositories;
-using GreenEnergyHub.Charges.Domain.ChargeLinks.Events.Local;
+using GreenEnergyHub.Charges.Domain.ChargeLinkCommandAcceptedEvents;
+using GreenEnergyHub.Charges.Domain.ChargeLinks;
+using GreenEnergyHub.Charges.Domain.Charges;
+using GreenEnergyHub.Charges.Domain.MeteringPoints;
 using GreenEnergyHub.Charges.Infrastructure.Context;
 using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandAccepted;
 using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandReceived;
@@ -55,7 +53,7 @@ namespace GreenEnergyHub.Charges.ChargeLinkCommandReceiver
             serviceCollection.AddScoped<IChargeLinkCommandReceivedHandler, ChargeLinkCommandReceivedHandler>();
             serviceCollection.AddScoped<IChargeLinkFactory, ChargeLinkFactory>();
 
-            serviceCollection.AddSingleton<IChargeLinkCommandMapper, ChargeLinkCommandMapper>();
+            serviceCollection.AddSingleton<IChargeLinkCommandAcceptedEventFactory, ChargeLinkCommandAcceptedEventFactory>();
 
             ConfigureMessaging(serviceCollection);
             ConfigurePersistence(serviceCollection);

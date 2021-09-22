@@ -14,7 +14,6 @@
 
 using System;
 using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Application.ChangeOfCharges.Repositories;
 using GreenEnergyHub.Charges.Domain.MeteringPoints;
 using GreenEnergyHub.Charges.Infrastructure.Context;
 using GreenEnergyHub.Charges.Infrastructure.Context.Mapping;

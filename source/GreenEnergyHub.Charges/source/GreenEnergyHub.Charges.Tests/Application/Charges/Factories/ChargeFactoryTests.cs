@@ -15,8 +15,8 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using FluentAssertions;
-using GreenEnergyHub.Charges.Application.Charges.Factories;
-using GreenEnergyHub.Charges.Domain.Charges.Commands;
+using GreenEnergyHub.Charges.Domain.ChargeCommands;
+using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.TestCore.Attributes;
 using GreenEnergyHub.TestHelpers.FluentAssertionsExtensions;
 using Xunit;

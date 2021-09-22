@@ -14,9 +14,9 @@
 
 using System.Diagnostics.CodeAnalysis;
 using FluentAssertions;
-using GreenEnergyHub.Charges.Application.Charges.Validation;
-using GreenEnergyHub.Charges.Application.Charges.Validation.BusinessValidation.ValidationRules;
-using GreenEnergyHub.Charges.Domain.MarketDocument;
+using GreenEnergyHub.Charges.Domain.ChargeCommands.Validation;
+using GreenEnergyHub.Charges.Domain.ChargeCommands.Validation.BusinessValidation.ValidationRules;
+using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.TestCore.Attributes;
 using GreenEnergyHub.TestHelpers;
 using Xunit;

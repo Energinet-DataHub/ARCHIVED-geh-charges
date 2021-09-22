@@ -14,10 +14,11 @@
 
 using System;
 using Energinet.DataHub.MeteringPoints.IntegrationEventContracts;
-using GreenEnergyHub.Charges.Application.ChargeLinks.Factories;
 using GreenEnergyHub.Charges.Application.ChargeLinks.Handlers;
-using GreenEnergyHub.Charges.Application.Charges.Repositories;
-using GreenEnergyHub.Charges.Domain.ChargeLinks.Events.Local;
+using GreenEnergyHub.Charges.Domain.ChargeLinkCommandReceivedEvents;
+using GreenEnergyHub.Charges.Domain.ChargeLinkCommands;
+using GreenEnergyHub.Charges.Domain.Charges;
+using GreenEnergyHub.Charges.Domain.DefaultChargeLinks;
 using GreenEnergyHub.Charges.Infrastructure.Context;
 using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandReceived;
 using GreenEnergyHub.Charges.Infrastructure.Messaging;

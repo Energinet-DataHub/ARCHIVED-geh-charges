@@ -17,11 +17,10 @@ using System.Threading;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
 using GreenEnergyHub.Charges.Application;
-using GreenEnergyHub.Charges.Application.ChargeLinks.Factories;
 using GreenEnergyHub.Charges.Application.ChargeLinks.Handlers;
-using GreenEnergyHub.Charges.Application.ChargeLinks.Mapping;
+using GreenEnergyHub.Charges.Domain.ChargeLinkCommandAcceptedEvents;
+using GreenEnergyHub.Charges.Domain.ChargeLinkCommandReceivedEvents;
 using GreenEnergyHub.Charges.Domain.ChargeLinks;
-using GreenEnergyHub.Charges.Domain.ChargeLinks.Events.Local;
 using GreenEnergyHub.TestHelpers;
 using Moq;
 using Xunit;
@@ -37,7 +36,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks
         public async Task HandleAsync_WhenCalledWithValidChargeLinkXML_ShouldReturnOk(
             [NotNull] [Frozen] Mock<IMessageDispatcher<ChargeLinkCommandAcceptedEvent>> messageDispatcher,
             [NotNull] [Frozen] Mock<IChargeLinkFactory> chargeLinkFactory,
-            [NotNull] [Frozen] Mock<IChargeLinkCommandMapper> chargeLinkCommandMapper,
+            [NotNull] [Frozen] Mock<IChargeLinkCommandAcceptedEventFactory> chargeLinkCommandMapper,
             [NotNull] ChargeLinkCommandReceivedEvent chargeLinkCommandReceivedEvent,
             [NotNull] ChargeLinkCommandAcceptedEvent chargeLinkCommandAcceptedEvent,
             [NotNull] ChargeLinkCommandReceivedHandler sut)

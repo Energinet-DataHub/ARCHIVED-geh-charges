@@ -15,10 +15,10 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
-using GreenEnergyHub.Charges.Application.Charges.Validation;
-using GreenEnergyHub.Charges.Application.Charges.Validation.BusinessValidation;
-using GreenEnergyHub.Charges.Application.Charges.Validation.BusinessValidation.Factories;
-using GreenEnergyHub.Charges.Domain.Charges.Commands;
+using GreenEnergyHub.Charges.Domain.ChargeCommands;
+using GreenEnergyHub.Charges.Domain.ChargeCommands.Validation;
+using GreenEnergyHub.Charges.Domain.ChargeCommands.Validation.BusinessValidation;
+using GreenEnergyHub.Charges.Domain.ChargeCommands.Validation.BusinessValidation.Factories;
 using GreenEnergyHub.Charges.TestCore.Attributes;
 using Moq;
 using Xunit;

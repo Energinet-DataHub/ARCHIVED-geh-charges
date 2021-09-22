@@ -13,7 +13,7 @@
 // limitations under the License.
 
 using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Domain.ChargeLinks.Events.Local;
+using GreenEnergyHub.Charges.Domain.ChargeLinkCommandAcceptedEvents;
 
 namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
 {

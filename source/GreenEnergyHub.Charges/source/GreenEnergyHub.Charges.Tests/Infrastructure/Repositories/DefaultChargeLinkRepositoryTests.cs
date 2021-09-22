@@ -17,7 +17,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.Charges;
-using GreenEnergyHub.Charges.Domain.MarketDocument;
 using GreenEnergyHub.Charges.Domain.MeteringPoints;
 using GreenEnergyHub.Charges.Infrastructure.Context;
 using GreenEnergyHub.Charges.Infrastructure.Context.Model;
@@ -64,7 +63,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
 
             // Assert
             var actualDefaultChargeLinkSettings =
-                actual as Charges.Domain.Charges.DefaultChargeLink[] ?? actual.ToArray();
+                actual as Charges.Domain.DefaultChargeLinks.DefaultChargeLink[] ?? actual.ToArray();
 
             actualDefaultChargeLinkSettings.Should().NotBeNullOrEmpty();
         }

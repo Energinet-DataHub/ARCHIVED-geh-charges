@@ -14,12 +14,12 @@
 
 using System;
 using GreenEnergyHub.Charges.Application.Charges;
-using GreenEnergyHub.Charges.Domain.Charges.Commands;
+using GreenEnergyHub.Charges.Domain.ChargeCommands;
 using GreenEnergyHub.Charges.Tests.Builders;
 using GreenEnergyHub.TestHelpers;
 using Xunit;
 using Xunit.Categories;
-using MarketParticipant = GreenEnergyHub.Charges.Domain.MarketDocument.MarketParticipant;
+using MarketParticipant = GreenEnergyHub.Charges.Domain.MarketParticipants.MarketParticipant;
 
 namespace GreenEnergyHub.Charges.Tests.Application.Charges
 {
