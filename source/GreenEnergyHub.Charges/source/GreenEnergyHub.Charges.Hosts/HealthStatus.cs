@@ -13,8 +13,7 @@
 // limitations under the License.
 
 using System.Diagnostics.CodeAnalysis;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+using System.Net;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
 using Microsoft.Extensions.Logging;
@@ -34,22 +33,17 @@ namespace GreenEnergyHub.Charges.Hosts
         /// HTTP GET endpoint that can be used to monitor the health of the function app.
         /// </summary>
         [Function(nameof(HealthStatus))]
-        public Task<IActionResult> RunAsync(
+        public HttpResponseData Run(
             [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = null)]
             [NotNull] HttpRequestData req,
             [NotNull] FunctionContext context)
         {
-            _log.LogInformation("Health Status API invoked");
             _log.LogDebug("Workaround for unused method arguments", req, context);
 
             /* Consider checking access to used Service Bus topics and other health checks */
 
-            var status = new
-            {
-                FunctionAppIsAlive = true,
-            };
-
-            return Task.FromResult<IActionResult>(new JsonResult(status));
+            var response = req.CreateResponse(HttpStatusCode.OK);
+            return response;
         }
     }
 }
