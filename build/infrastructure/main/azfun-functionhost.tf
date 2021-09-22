@@ -11,14 +11,14 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-module "azfun_charges" {
+module "azfun_functionhost" {
   source                                    = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//function-app?ref=1.7.0"
-  name                                      = "azfun-link-receiver-${var.project}-${var.organisation}-${var.environment}"
+  name                                      = "azfun-functionhost-${var.project}-${var.organisation}-${var.environment}"
   resource_group_name                       = data.azurerm_resource_group.main.name
   location                                  = data.azurerm_resource_group.main.location
-  storage_account_access_key                = module.azfun_charges_stor.primary_access_key
+  storage_account_access_key                = module.azfun_functionhost_stor.primary_access_key
   app_service_plan_id                       = module.asp_charges.id
-  storage_account_name                      = module.azfun_charges_stor.name
+  storage_account_name                      = module.azfun_functionhost_stor.name
   application_insights_instrumentation_key  = module.appi.instrumentation_key
   tags                                      = data.azurerm_resource_group.main.tags
   app_settings                              = {
@@ -37,15 +37,15 @@ module "azfun_charges" {
   dependencies                              = [
     module.appi.dependent_on,
     module.asp_charges.dependent_on,
-    module.azfun_charges_stor.dependent_on,
+    module.azfun_functionhost_stor.dependent_on,
     module.sbnar_charges_sender.dependent_on,
     module.sbt_link_command_received.dependent_on,
   ]
 }
 
-module "azfun_charges_stor" {
+module "azfun_functionhost_stor" {
   source                    = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//storage-account?ref=1.7.0"
-  name                      = "storcharges${random_string.charges.result}"
+  name                      = "storhosts${random_string.functionhost.result}"
   resource_group_name       = data.azurerm_resource_group.main.name
   location                  = data.azurerm_resource_group.main.location
   account_replication_type  = "LRS"
@@ -55,34 +55,34 @@ module "azfun_charges_stor" {
 }
 
 # Since all functions need a storage connected we just generate a random name
-resource "random_string" "charges" {
+resource "random_string" "functionhost" {
   length  = 6
   special = false
   upper   = false
 }
 
-module "ping_webtest_charges" {
+module "ping_webtest_functionhost" {
   source                          = "../modules/ping-webtest" # Repo geh-terraform-modules doesn't have a webtest module at the time of this writing
-  name                            = "ping-webtest-charges-${var.project}-${var.organisation}-${var.environment}"
+  name                            = "ping-webtest-functionhost-${var.project}-${var.organisation}-${var.environment}"
   resource_group_name             = data.azurerm_resource_group.main.name
   location                        = data.azurerm_resource_group.main.location
   tags                            = data.azurerm_resource_group.main.tags
   application_insights_id         = module.appi.id
-  url                             = "https://${module.azfun_charges.default_hostname}/api/HealthStatus"
-  dependencies                    = [module.azfun_charges.dependent_on]
+  url                             = "https://${module.azfun_functionhost.default_hostname}/api/HealthStatus"
+  dependencies                    = [module.azfun_functionhost.dependent_on]
 }
 
-module "mma_ping_webtest_charges" {
+module "mma_ping_webtest_functionhost" {
   source                   = "../modules/availability-alert"
-  name                     = "mma-charges-${var.project}-${var.organisation}-${var.environment}"
+  name                     = "mma-functionhost-${var.project}-${var.organisation}-${var.environment}"
   resource_group_name      = data.azurerm_resource_group.main.name
   application_insight_id   = module.appi.id
-  ping_test_name           = module.ping_webtest_charges.name
+  ping_test_name           = module.ping_webtest_functionhost.name
   action_group_id          = module.mag_availability_group.id
   tags                     = data.azurerm_resource_group.main.tags
   dependencies             = [
     module.appi.dependent_on,
-    module.ping_webtest_charges.dependent_on,
+    module.ping_webtest_functionhost.dependent_on,
     module.mag_availability_group.dependent_on
   ]
 }
