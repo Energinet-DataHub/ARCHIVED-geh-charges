@@ -19,16 +19,6 @@ namespace GreenEnergyHub.Charges.Domain.MeteringPoints
 {
     public class MeteringPoint
     {
-        /// <summary>
-        /// Used implicitly by persistence.
-        /// </summary>
-        /// <param name="id"></param>
-        /// <param name="meteringPointId"></param>
-        /// <param name="meteringPointType"></param>
-        /// <param name="gridAreaId"></param>
-        /// <param name="effectiveDate"></param>
-        /// <param name="connectionState"></param>
-        /// <param name="settlementMethod"></param>
         private MeteringPoint(
             Guid id,
             string meteringPointId,

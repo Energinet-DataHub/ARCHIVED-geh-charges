@@ -29,7 +29,6 @@ namespace GreenEnergyHub.Charges.Domain.Charges
             string name,
             string description,
             string owner,
-            string lastUpdatedBy,
             string correlationId,
             Instant startDateTime,
             Instant? endDateTime,
@@ -48,7 +47,6 @@ namespace GreenEnergyHub.Charges.Domain.Charges
             Name = name;
             Description = description;
             Owner = owner;
-            LastUpdatedBy = lastUpdatedBy;
             CorrelationId = correlationId;
             StartDateTime = startDateTime;
             EndDateTime = endDateTime;
@@ -126,11 +124,6 @@ namespace GreenEnergyHub.Charges.Domain.Charges
         public string Owner { get; }
 
         public Resolution Resolution { get; }
-
-        /// <summary>
-        /// PTA: Is this relevant for an incoming charge command?
-        /// </summary>
-        public string LastUpdatedBy { get; }
 
         public List<Point> Points { get; }
 

@@ -32,7 +32,6 @@ namespace GreenEnergyHub.Charges.Application.Charges.Factories
                 command.ChargeOperation.ChargeName,
                 command.ChargeOperation.ChargeDescription,
                 command.ChargeOperation.ChargeOwner,
-                "Volt",
                 command.CorrelationId,
                 command.ChargeOperation.StartDateTime,
                 command.ChargeOperation.EndDateTime,

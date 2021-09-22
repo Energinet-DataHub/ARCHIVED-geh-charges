@@ -94,7 +94,6 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Mapping
                 "Name",
                 "description",
                 "owner",
-                "LastUpdatedBy",
                 "CorrelationId",
                 now,
                 null,

@@ -195,7 +195,6 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
                 "Name",
                 "description",
                 MarketParticipantOwner,
-                "LastUpdatedBy",
                 "CorrelationId",
                 SystemClock.Instance.GetCurrentInstant(),
                 null,

@@ -46,7 +46,6 @@ namespace GreenEnergyHub.Charges.Infrastructure.Context.Mapping
                 currentChargeDetails.Name,
                 currentChargeDetails.Description,
                 charge.MarketParticipant.MarketParticipantId,
-                "Volt",
                 charge.ChargeOperation.CorrelationId,
                 Instant.FromDateTimeUtc(currentChargeDetails.StartDateTime.ToUniversalTime()),
                 fromDateTimeUtc,
