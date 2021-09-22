@@ -37,14 +37,14 @@ namespace GreenEnergyHub.Charges.FunctionHosts
         /// </summary>
         private const string FunctionName = "ChargeLinkHttpTrigger";
         private readonly ICorrelationContext _correlationContext;
-        private readonly MessageExtractor _messageExtractor;
+        private readonly MessageExtractor<ChargeLinkCommand> _messageExtractor;
         private readonly IChargeLinkCommandHandler _chargeLinkCommandHandler;
         private readonly ILogger _log;
 
         public ChargeLinkHttpTrigger(
             ICorrelationContext correlationContext,
             IChargeLinkCommandHandler chargeLinkCommandHandler,
-            MessageExtractor messageExtractor,
+            MessageExtractor<ChargeLinkCommand> messageExtractor,
             [NotNull] ILoggerFactory loggerFactory)
         {
             _correlationContext = correlationContext;
