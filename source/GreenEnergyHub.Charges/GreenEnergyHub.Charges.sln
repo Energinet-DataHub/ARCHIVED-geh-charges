@@ -70,8 +70,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GreenEnergyHub.Messaging.Pr
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GreenEnergyHub.Messaging.Protobuf.Integration.ServiceCollection", "..\messaging\source\GreenEnergyHub.Messaging.Protobuf.Integration.ServiceCollection\GreenEnergyHub.Messaging.Protobuf.Integration.ServiceCollection.csproj", "{26DFABDA-7D73-42A5-A502-A666479454D5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GreenEnergyHub.Charges.MeteringPointCreatedReceiver", "source\GreenEnergyHub.Charges.MeteringPointCreatedReceiver\GreenEnergyHub.Charges.MeteringPointCreatedReceiver.csproj", "{FF989652-97EB-4237-8A9B-22CA48E963AE}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GreenEnergyHub.Charges.ChargeLinkEventPublisher", "source\GreenEnergyHub.Charges.ChargeLinkEventPublisher\GreenEnergyHub.Charges.ChargeLinkEventPublisher.csproj", "{01617B72-B9AB-4FBF-AE67-154666584BB7}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GreenEnergyHub.Charges.ChargeLinkCommandReceiver", "source\GreenEnergyHub.Charges.ChargeLinkCommandReceiver\GreenEnergyHub.Charges.ChargeLinkCommandReceiver.csproj", "{5F9930C2-C8B8-45F2-B8E0-1AB3D7100FB8}"
@@ -180,10 +178,6 @@ Global
 		{26DFABDA-7D73-42A5-A502-A666479454D5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{26DFABDA-7D73-42A5-A502-A666479454D5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{26DFABDA-7D73-42A5-A502-A666479454D5}.Release|Any CPU.Build.0 = Release|Any CPU
-		{FF989652-97EB-4237-8A9B-22CA48E963AE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{FF989652-97EB-4237-8A9B-22CA48E963AE}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{FF989652-97EB-4237-8A9B-22CA48E963AE}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{FF989652-97EB-4237-8A9B-22CA48E963AE}.Release|Any CPU.Build.0 = Release|Any CPU
 		{01617B72-B9AB-4FBF-AE67-154666584BB7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{01617B72-B9AB-4FBF-AE67-154666584BB7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{01617B72-B9AB-4FBF-AE67-154666584BB7}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -221,7 +215,6 @@ Global
 		{539A7F51-A284-4268-AA14-98BB6122F5EB} = {832447E5-7A46-4381-817C-5D73A20510C2}
 		{46E01A80-BCAE-498E-8250-6DE0C18ABC36} = {9FE16521-EC21-4551-9E51-0C6702D21098}
 		{26DFABDA-7D73-42A5-A502-A666479454D5} = {9FE16521-EC21-4551-9E51-0C6702D21098}
-		{FF989652-97EB-4237-8A9B-22CA48E963AE} = {832447E5-7A46-4381-817C-5D73A20510C2}
 		{01617B72-B9AB-4FBF-AE67-154666584BB7} = {832447E5-7A46-4381-817C-5D73A20510C2}
 		{5F9930C2-C8B8-45F2-B8E0-1AB3D7100FB8} = {832447E5-7A46-4381-817C-5D73A20510C2}
 		{01785244-6F01-4D84-B17F-635F3E21E6B3} = {832447E5-7A46-4381-817C-5D73A20510C2}
