@@ -21,14 +21,19 @@ namespace GreenEnergyHub.Charges.Infrastructure.Context.Model
 {
     public class ChargePrice
     {
+        public ChargePrice()
+        {
+            Id = Guid.NewGuid();
+        }
+
         [Key]
-        public int RowId { get; set; }
+        public Guid Id { get; set; }
 
         [ForeignKey("Charge")]
-        public int ChargeRowId { get; set; }
+        public Guid ChargeId { get; set; }
 
         [ForeignKey("ChargeOperation")]
-        public int ChargeOperationRowId { get; set; }
+        public Guid ChargeOperationId { get; set; }
 
         public DateTime Time { get; set; }
 

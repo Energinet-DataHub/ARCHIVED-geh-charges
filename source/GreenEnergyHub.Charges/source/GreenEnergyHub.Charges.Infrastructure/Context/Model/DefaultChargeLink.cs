@@ -22,11 +22,16 @@ namespace GreenEnergyHub.Charges.Infrastructure.Context.Model
 {
     public class DefaultChargeLink
     {
+        public DefaultChargeLink()
+        {
+            Id = Guid.NewGuid();
+        }
+
         [Key]
-        public int RowId { get; set; }
+        public Guid Id { get; set; }
 
         [ForeignKey("Charge")]
-        public int ChargeRowId { get; set; }
+        public Guid ChargeId { get; set; }
 
         public int MeteringPointType { get; set; }
 

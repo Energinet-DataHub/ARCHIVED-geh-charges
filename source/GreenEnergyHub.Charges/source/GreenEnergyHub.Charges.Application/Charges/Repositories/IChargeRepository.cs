@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Domain.Charges;
 
@@ -24,9 +25,9 @@ namespace GreenEnergyHub.Charges.Application.Charges.Repositories
     {
         Task StoreChargeAsync(Charge newCharge);
 
-        Task<Charge> GetChargeAsync(string chargeId, string owner, ChargeType chargeType);
+        Task<Charge> GetChargeAsync(string senderProvidedChargeId, string owner, ChargeType chargeType);
 
-        Task<Charge> GetChargeAsync(int chargeRowId);
+        Task<Charge> GetChargeAsync(Guid chargeId);
 
         Task<bool> CheckIfChargeExistsAsync(string chargeId, string owner, ChargeType chargeType);
 

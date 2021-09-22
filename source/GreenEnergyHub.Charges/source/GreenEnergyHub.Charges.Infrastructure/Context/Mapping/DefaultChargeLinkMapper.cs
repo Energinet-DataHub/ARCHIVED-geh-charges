@@ -31,7 +31,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Context.Mapping
             return new Domain.Charges.DefaultChargeLink(
                 Instant.FromDateTimeUtc(defaultChargeLink.StartDateTime.ToUniversalTime()),
                 endDateTime,
-                defaultChargeLink.ChargeRowId,
+                defaultChargeLink.ChargeId,
                 (MeteringPointType)defaultChargeLink.MeteringPointType);
         }
     }

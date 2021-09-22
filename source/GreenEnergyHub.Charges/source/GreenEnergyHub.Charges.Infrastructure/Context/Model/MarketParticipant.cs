@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.ComponentModel.DataAnnotations;
 
 #pragma warning disable 8618
@@ -20,8 +21,13 @@ namespace GreenEnergyHub.Charges.Infrastructure.Context.Model
 {
     public class MarketParticipant
     {
+        public MarketParticipant()
+        {
+            Id = Guid.NewGuid();
+        }
+
         [Key]
-        public int RowId { get; set; }
+        public Guid Id { get; set; }
 
         public string MarketParticipantId { get; set; }
 

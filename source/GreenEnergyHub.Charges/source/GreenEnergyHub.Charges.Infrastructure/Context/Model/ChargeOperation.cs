@@ -22,13 +22,18 @@ namespace GreenEnergyHub.Charges.Infrastructure.Context.Model
 {
     public class ChargeOperation
     {
+        public ChargeOperation()
+        {
+            Id = Guid.NewGuid();
+        }
+
         [Key]
-        public int RowId { get; set; }
+        public Guid Id { get; set; }
 
         public string ChargeOperationId { get; set; }
 
         [ForeignKey("Charge")]
-        public int ChargeRowId { get; set; }
+        public Guid ChargeId { get; set; }
 
         public string CorrelationId { get; set; }
 

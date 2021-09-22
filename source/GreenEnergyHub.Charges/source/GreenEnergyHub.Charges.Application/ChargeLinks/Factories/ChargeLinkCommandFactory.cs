@@ -40,7 +40,7 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.Factories
             [NotNull] DefaultChargeLink defaultChargeLink,
             string correlationId)
         {
-            var charge = await _chargeRepository.GetChargeAsync(defaultChargeLink.ChargeRowId).ConfigureAwait(false);
+            var charge = await _chargeRepository.GetChargeAsync(defaultChargeLink.ChargeId).ConfigureAwait(false);
             var currentTime = _clock.GetCurrentInstant();
             var chargeLinkCommand = new ChargeLinkCommand(correlationId)
             {
@@ -66,7 +66,7 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.Factories
                 ChargeLink = new ChargeLinkDto
                 {
                     ChargeType = charge.Type,
-                    ChargeId = charge.Id,
+                    ChargeId = charge.SenderProvidedChargeId,
                     EndDateTime = defaultChargeLink.EndDateTime,
                     ChargeOwner = charge.Owner,
                     MeteringPointId = createLinkCommandEvent.MeteringPointId,
