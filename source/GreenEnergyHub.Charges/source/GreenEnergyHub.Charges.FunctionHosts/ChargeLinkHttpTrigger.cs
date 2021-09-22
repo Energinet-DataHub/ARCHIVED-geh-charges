@@ -15,13 +15,9 @@
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Application.ChargeLinks;
 using GreenEnergyHub.Charges.Application.ChargeLinks.Handlers;
-using GreenEnergyHub.Charges.Domain.ChargeLinks;
 using GreenEnergyHub.Charges.Domain.ChargeLinks.Command;
-using GreenEnergyHub.Charges.Domain.ChargeLinks.Events.Local;
 using GreenEnergyHub.Charges.Infrastructure.Messaging;
-using GreenEnergyHub.Messaging.Transport;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
