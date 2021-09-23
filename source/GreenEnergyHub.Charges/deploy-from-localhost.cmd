@@ -45,7 +45,7 @@ IF /I not "%deployChargeReceiver%" == "n" (
 
 IF /I not "%functionHosts%" == "n" (
     pushd source\GreenEnergyHub.Charges.FunctionHosts\bin\Release\net5.0
-    start "Deploy: FunctionHosts" cmd /c "func azure functionapp publish azfun-charges-%organization%-s & pause"
+    start "Deploy: FunctionHosts" cmd /c "func azure functionapp publish azfun-functionhost-%organization%-s & pause"
     popd
 )
 
