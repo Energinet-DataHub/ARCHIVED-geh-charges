@@ -23,7 +23,7 @@ using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
 using Microsoft.Extensions.Logging;
 
-namespace GreenEnergyHub.Charges.FunctionHost
+namespace GreenEnergyHub.Charges.FunctionHost.ChargeLinks
 {
     public class ChargeLinkHttpTrigger
     {
