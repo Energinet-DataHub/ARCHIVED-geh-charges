@@ -20,6 +20,6 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
 {
     public interface IChargeLinkCommandReceivedHandler
     {
-        Task HandleAsync([NotNull] ChargeLinkCommandReceivedEvent chargeLinkCommand);
+        Task HandleAsync([NotNull] ChargeLinkCommandReceivedEvent chargeLinkCommandReceivedEvent);
     }
 }

@@ -13,11 +13,14 @@
 // limitations under the License.
 
 using GreenEnergyHub.Charges.Domain.ChargeLinkCommandReceivedEvents;
+using GreenEnergyHub.Charges.Domain.ChargeLinkCommands;
 
 namespace GreenEnergyHub.Charges.Domain.ChargeLinkCommandAcceptedEvents
 {
     public interface IChargeLinkCommandAcceptedEventFactory
     {
-        ChargeLinkCommandAcceptedEvent Create(ChargeLinkCommandReceivedEvent commandReceived);
+        ChargeLinkCommandAcceptedEvent Create(ChargeLinkCommandReceivedEvent chargeCommandLinkReceivedEvent);
+
+        ChargeLinkCommandAcceptedEvent Create(ChargeLinkCommand chargeLinkCommand, string correlationId);
     }
 }

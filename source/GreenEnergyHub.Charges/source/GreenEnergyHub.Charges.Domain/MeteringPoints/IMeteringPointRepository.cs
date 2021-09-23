@@ -33,5 +33,12 @@ namespace GreenEnergyHub.Charges.Domain.MeteringPoints
         /// <param name="meteringPointId"></param>
         /// <returns>Metering Point</returns>
         Task<MeteringPoint> GetMeteringPointAsync(string meteringPointId);
+
+        /// <summary>
+        /// Used to find a Metering Point by RowId.
+        /// </summary>
+        /// <param name="rowId"></param>
+        /// <returns>Metering Point</returns>
+        Task<MeteringPoint> GetMeteringPointAsync(int rowId);
     }
 }

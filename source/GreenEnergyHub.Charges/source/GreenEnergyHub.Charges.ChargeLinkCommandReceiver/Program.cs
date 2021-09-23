@@ -17,6 +17,7 @@ using System.Diagnostics.CodeAnalysis;
 using EntityFrameworkCore.SqlServer.NodaTime.Extensions;
 using GreenEnergyHub.Charges.Application.ChargeLinks.Handlers;
 using GreenEnergyHub.Charges.Domain.ChargeLinkCommandAcceptedEvents;
+using GreenEnergyHub.Charges.Domain.ChargeLinkCommands;
 using GreenEnergyHub.Charges.Domain.ChargeLinks;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.MeteringPoints;
@@ -53,6 +54,7 @@ namespace GreenEnergyHub.Charges.ChargeLinkCommandReceiver
             serviceCollection.AddLogging();
             serviceCollection.AddScoped<IChargeLinkCommandReceivedHandler, ChargeLinkCommandReceivedHandler>();
             serviceCollection.AddScoped<IChargeLinkFactory, ChargeLinkFactory>();
+            serviceCollection.AddScoped<IChargeLinkCommandFactory, ChargeLinkCommandFactory>();
 
             serviceCollection.AddSingleton<IChargeLinkCommandAcceptedEventFactory, ChargeLinkCommandAcceptedEventFactory>();
 

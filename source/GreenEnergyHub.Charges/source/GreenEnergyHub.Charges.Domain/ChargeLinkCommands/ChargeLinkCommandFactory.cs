@@ -15,10 +15,12 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
+using GreenEnergyHub.Charges.Domain.ChargeLinks;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.CreateLinkCommandEvents;
 using GreenEnergyHub.Charges.Domain.DefaultChargeLinks;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
+using GreenEnergyHub.Charges.Domain.MeteringPoints;
 using NodaTime;
 
 namespace GreenEnergyHub.Charges.Domain.ChargeLinkCommands
@@ -26,12 +28,17 @@ namespace GreenEnergyHub.Charges.Domain.ChargeLinkCommands
     public class ChargeLinkCommandFactory : IChargeLinkCommandFactory
     {
         private readonly IChargeRepository _chargeRepository;
+        private readonly IMeteringPointRepository _meteringPointRepository;
         private readonly IClock _clock;
 
-        public ChargeLinkCommandFactory(IChargeRepository chargeRepository, IClock clock)
+        public ChargeLinkCommandFactory(
+            IChargeRepository chargeRepository,
+            IMeteringPointRepository meteringPointRepository,
+            IClock clock)
         {
             _chargeRepository = chargeRepository;
             _clock = clock;
+            _meteringPointRepository = meteringPointRepository;
         }
 
         public async Task<ChargeLinkCommand> CreateAsync(
@@ -40,6 +47,39 @@ namespace GreenEnergyHub.Charges.Domain.ChargeLinkCommands
             string correlationId)
         {
             var charge = await _chargeRepository.GetChargeAsync(defaultChargeLink.ChargeRowId).ConfigureAwait(false);
+            return CreateChargeLinkCommand(
+                createLinkCommandEvent.MeteringPointId,
+                correlationId,
+                charge,
+                defaultChargeLink.GetStartDateTime(createLinkCommandEvent.StartDateTime),
+                defaultChargeLink.EndDateTime);
+        }
+
+        public async Task<ChargeLinkCommand> CreateFromChargeLinkAsync(
+            [NotNull] ChargeLink chargeLink,
+            [NotNull] ChargeLinkPeriodDetails chargeLinkPeriodDetails,
+            string correlationId)
+        {
+            var charge = await _chargeRepository.GetChargeAsync(chargeLink.ChargeId).ConfigureAwait(false);
+            var meteringPoint = await _meteringPointRepository
+                .GetMeteringPointAsync(chargeLink.MeteringPointId)
+                .ConfigureAwait(false);
+
+            return CreateChargeLinkCommand(
+                meteringPoint.MeteringPointId,
+                correlationId,
+                charge,
+                chargeLinkPeriodDetails.StartDateTime, // TODO: do need to compare with meteringpoint startDateTime?
+                chargeLinkPeriodDetails.EndDateTime);
+        }
+
+        private ChargeLinkCommand CreateChargeLinkCommand(
+            string meteringPointId,
+            string correlationId,
+            Charge charge,
+            Instant startDateTime,
+            Instant? endDateTime)
+        {
             var currentTime = _clock.GetCurrentInstant();
             var chargeLinkCommand = new ChargeLinkCommand(correlationId)
             {
@@ -66,15 +106,37 @@ namespace GreenEnergyHub.Charges.Domain.ChargeLinkCommands
                 {
                     ChargeType = charge.Type,
                     ChargeId = charge.Id,
-                    EndDateTime = defaultChargeLink.EndDateTime,
+                    EndDateTime = endDateTime,
                     ChargeOwner = charge.Owner,
-                    MeteringPointId = createLinkCommandEvent.MeteringPointId,
-                    StartDateTime = defaultChargeLink.GetStartDateTime(createLinkCommandEvent.StartDateTime),
+                    MeteringPointId = meteringPointId,
+                    StartDateTime = startDateTime,
                     OperationId = Guid.NewGuid().ToString(),
                     Factor = DefaultChargeLink.Factor,
                 },
             };
             return chargeLinkCommand;
         }
+
+        // if (chargeLinkEvent == null) throw new ArgumentNullException(nameof(chargeLinkEvent));
+        //
+        // var chargeLink = chargeLinkEvent.ChargeLinkCommand.ChargeLink;
+        //
+        // var charge = await _chargeRepository
+        //     .GetChargeAsync(chargeLink.ChargeId, chargeLink.ChargeOwner, chargeLink.ChargeType)
+        //     .ConfigureAwait(false);
+        //
+        // var meteringPoint = await _meteringPointRepository
+        //     .GetMeteringPointAsync(chargeLink.MeteringPointId)
+        //     .ConfigureAwait(false);
+        //
+        // var operation = new ChargeLinkOperation(chargeLink.OperationId, chargeLinkEvent.CorrelationId);
+        // var operations = new List<ChargeLinkOperation> { operation };
+        //
+        // var periodDetails = new ChargeLinkPeriodDetails(
+        //     chargeLink.StartDateTime,
+        //     chargeLink.EndDateTime.TimeOrEndDefault(),
+        //     chargeLink.Factor,
+        //     operation.Id);
+        // var periodDetailsCollection = new List<ChargeLinkPeriodDetails> { periodDetails };
     }
 }

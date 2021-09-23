@@ -52,7 +52,7 @@ namespace GreenEnergyHub.Charges.Domain.ChargeLinks
 
             var periodDetails = new ChargeLinkPeriodDetails(
                 chargeLink.StartDateTime,
-                chargeLink.EndDateTime.TimeOrEndDefault(), // TODO: EndDateTime: Is this the correct place to convert?
+                chargeLink.EndDateTime.TimeOrEndDefault(),
                 chargeLink.Factor,
                 operation.Id);
             var periodDetailsCollection = new List<ChargeLinkPeriodDetails> { periodDetails };

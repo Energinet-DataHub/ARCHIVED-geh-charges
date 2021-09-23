@@ -14,18 +14,28 @@
 
 using System.Diagnostics.CodeAnalysis;
 using GreenEnergyHub.Charges.Domain.ChargeLinkCommandReceivedEvents;
+using GreenEnergyHub.Charges.Domain.ChargeLinkCommands;
 
 namespace GreenEnergyHub.Charges.Domain.ChargeLinkCommandAcceptedEvents
 {
     public class ChargeLinkCommandAcceptedEventFactory : IChargeLinkCommandAcceptedEventFactory
     {
-        public ChargeLinkCommandAcceptedEvent Create([NotNull] ChargeLinkCommandReceivedEvent commandReceived)
+        public ChargeLinkCommandAcceptedEvent Create([NotNull] ChargeLinkCommandReceivedEvent chargeCommandLinkReceivedEvent)
         {
-            return new ChargeLinkCommandAcceptedEvent(commandReceived.CorrelationId)
+            return new ChargeLinkCommandAcceptedEvent(chargeCommandLinkReceivedEvent.CorrelationId)
             {
-                Document = commandReceived.ChargeLinkCommand.Document,
-                ChargeLink = commandReceived.ChargeLinkCommand.ChargeLink,
-                Transaction = commandReceived.Transaction,
+                Document = chargeCommandLinkReceivedEvent.ChargeLinkCommand.Document,
+                ChargeLink = chargeCommandLinkReceivedEvent.ChargeLinkCommand.ChargeLink,
+                Transaction = chargeCommandLinkReceivedEvent.Transaction,
+            };
+        }
+
+        public ChargeLinkCommandAcceptedEvent Create([NotNull] ChargeLinkCommand chargeLinkCommand, string correlationId)
+        {
+            return new ChargeLinkCommandAcceptedEvent(correlationId)
+            {
+                Document = chargeLinkCommand.Document,
+                ChargeLink = chargeLinkCommand.ChargeLink,
             };
         }
     }
