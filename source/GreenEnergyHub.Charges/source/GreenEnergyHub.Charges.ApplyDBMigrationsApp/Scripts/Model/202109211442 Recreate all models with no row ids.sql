@@ -25,7 +25,7 @@ CREATE TABLE [Charges].[MarketParticipant]
 CREATE TABLE [Charges].[Charge]
 (
     Id UNIQUEIDENTIFIER NOT NULL,
-    SenderProvidedChargeId nvarchar(100) NOT NULL,
+    SenderProvidedChargeId nvarchar(35) NOT NULL,
     ChargeType int NOT NULL,
     MarketParticipantId UNIQUEIDENTIFIER NOT NULL FOREIGN KEY REFERENCES [Charges].MarketParticipant(Id),
     TaxIndicator bit NOT NULL,
@@ -39,7 +39,7 @@ CREATE TABLE [Charges].[Charge]
     ) ON [PRIMARY]
     GO
 
-CREATE INDEX IX_SenderProvidedId_ChargeType_MarketParticipantId ON [Charges].[Charge] (SenderProvidedChargeId ASC, ChargeType ASC, MarketParticipantId ASC);
+CREATE INDEX IX_SenderProvidedChargeId_ChargeType_MarketParticipantId ON [Charges].[Charge] (SenderProvidedChargeId ASC, ChargeType ASC, MarketParticipantId ASC);
 GO
 
 CREATE TABLE [Charges].[ChargeOperation]
@@ -56,7 +56,7 @@ CREATE TABLE [Charges].[ChargeOperation]
     ) ON [PRIMARY]
     GO
 
-CREATE INDEX IX_ChargeOpertionId ON [Charges].[ChargeOperation] (ChargeId DESC, WriteDateTime DESC);
+CREATE INDEX IX_ChargeId_WriteDateTime ON [Charges].[ChargeOperation] (ChargeId DESC, WriteDateTime DESC);
 GO
 
 CREATE TABLE [Charges].[ChargePeriodDetails]
@@ -144,7 +144,7 @@ CREATE TABLE [Charges].[ChargeLink]
     ) ON [PRIMARY]
     GO
 
-CREATE INDEX IX_MeteringPointId ON [Charges].[ChargeLink] (MeteringPointId DESC, ChargeId DESC);
+CREATE INDEX IX_MeteringPointId_ChargeId ON [Charges].[ChargeLink] (MeteringPointId DESC, ChargeId DESC);
 GO
 
 CREATE TABLE [Charges].[ChargeLinkOperation]
@@ -161,7 +161,7 @@ CREATE TABLE [Charges].[ChargeLinkOperation]
     ) ON [PRIMARY]
     GO
 
-CREATE INDEX IX_ChargeLinkId ON [Charges].[ChargeLinkOperation] (ChargeLinkId DESC, WriteDateTime DESC);
+CREATE INDEX IX_ChargeLinkId_WriteDateTime ON [Charges].[ChargeLinkOperation] (ChargeLinkId DESC, WriteDateTime DESC);
 GO
 
 CREATE TABLE [Charges].[ChargeLinkPeriodDetails]
@@ -181,6 +181,6 @@ CREATE TABLE [Charges].[ChargeLinkPeriodDetails]
     GO
 
 CREATE INDEX IX_ChargeLinkId_StartDateTime_EndDateTime ON [Charges].[ChargeLinkPeriodDetails] (ChargeLinkId DESC, StartDateTime DESC, EndDateTime DESC);
-CREATE INDEX IX_ChargeLinkOperationId ON [Charges].[ChargeLinkPeriodDetails] (CreatedByOperationId ASC);
+CREATE INDEX IX_CreatedByOperationId ON [Charges].[ChargeLinkPeriodDetails] (CreatedByOperationId ASC);
 CREATE INDEX IX_RetiredByOperationId ON [Charges].[ChargeLinkPeriodDetails] (RetiredByOperationId ASC);
 GO
