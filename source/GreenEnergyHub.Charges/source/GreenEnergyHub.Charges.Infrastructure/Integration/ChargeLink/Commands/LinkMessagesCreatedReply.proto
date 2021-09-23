@@ -26,16 +26,11 @@
 
 syntax = "proto3";
 
-option csharp_namespace = "GreenEnergyHub.Charges.Infrastructure.Integration.CreateChargeLinksReply";
+option csharp_namespace = "GreenEnergyHub.Charges.Infrastructure.Integration.LinkMessagesCreatedReply";
 
-message CreateChargeLinksReply 
-  string metering_point_id = 1; // The metering point to link default charges to.
+message LinkMessagesCreatedReply 
+  string metering_point_id = 1; // The metering point that charge link messages were created for.
   bool status = 2; // Operation result: 0 = success, 1 = failed
-  bool links_created = 3; // 0 = created, 1 = not
-  int error_code = 4; // 0 = no error, do we want some generic codes, e.g. 1 = Metering Point Unknown.
+  int error_code = 3; // 0 = no error, do we want some generic codes, e.g. 1 = Metering Point Unknown.
+  string message_id = 4; // Work in progress - probably not a string but a repeating field for the message ids used in the messages made available, UUID.
 }
-
-/* 
-* So if status = 0, links_created = 0 and error code = 0, then the request was succesfully processed but no links were added, 
-* e.g. because no default charges exist for the given metering point type
-*/
