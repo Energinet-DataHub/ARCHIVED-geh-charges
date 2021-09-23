@@ -19,6 +19,8 @@ using GreenEnergyHub.Charges.Application.ChargeLinks.Handlers;
 using GreenEnergyHub.Charges.Application.MeteringPoints.Handlers;
 using GreenEnergyHub.Charges.Domain.ChargeLinkCommandReceivedEvents;
 using GreenEnergyHub.Charges.Domain.ChargeLinkCommands;
+using GreenEnergyHub.Charges.Domain.Charges;
+using GreenEnergyHub.Charges.Domain.DefaultChargeLinks;
 using GreenEnergyHub.Charges.Domain.MeteringPoints;
 using GreenEnergyHub.Charges.Infrastructure.Context;
 using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandReceived;
@@ -54,6 +56,7 @@ namespace GreenEnergyHub.Charges.FunctionHost
 
             ConfigureChargeLinkReceiver(serviceCollection);
             ConfigureMeteringPointCreatedReceiver(serviceCollection);
+            ConfigureCreateChargeLinkReceiver(serviceCollection);
         }
 
         private static void ConfigureSharedServices(IServiceCollection serviceCollection)
@@ -61,9 +64,8 @@ namespace GreenEnergyHub.Charges.FunctionHost
             serviceCollection.AddScoped(typeof(IClock), _ => SystemClock.Instance);
             serviceCollection.AddLogging();
 
-            serviceCollection.AddScoped<MessageDispatcher>();
-
             ConfigureSharedDatabase(serviceCollection);
+            ConfigureSharedMessaging(serviceCollection);
         }
 
         private static void ConfigureSharedDatabase(IServiceCollection serviceCollection)
@@ -75,6 +77,19 @@ namespace GreenEnergyHub.Charges.FunctionHost
             serviceCollection.AddDbContext<ChargesDatabaseContext>(
                 options => options.UseSqlServer(connectionString, options => options.UseNodaTime()));
             serviceCollection.AddScoped<IChargesDatabaseContext, ChargesDatabaseContext>();
+
+            serviceCollection.AddScoped<IChargeRepository, ChargeRepository>();
+        }
+
+        private static void ConfigureSharedMessaging(IServiceCollection serviceCollection)
+        {
+            serviceCollection.AddScoped<MessageDispatcher>();
+            serviceCollection.ConfigureProtobufReception();
+
+            serviceCollection.SendProtobuf<ChargeLinkCommandReceivedContract>();
+            serviceCollection.AddMessagingProtobuf().AddMessageDispatcher<ChargeLinkCommandReceivedEvent>(
+                GetEnv("DOMAINEVENT_SENDER_CONNECTION_STRING"),
+                GetEnv("CHARGE_LINK_RECEIVED_TOPIC_NAME"));
         }
 
         private static void ConfigureChargeLinkReceiver(IServiceCollection serviceCollection)
@@ -83,18 +98,23 @@ namespace GreenEnergyHub.Charges.FunctionHost
             serviceCollection.AddScoped<MessageExtractor<ChargeLinkCommand>>();
             serviceCollection.AddScoped<MessageDeserializer<ChargeLinkCommand>, ChargeLinkCommandDeserializer>();
 
-            serviceCollection.SendProtobuf<ChargeLinkCommandReceivedContract>();
-
-            serviceCollection.AddMessagingProtobuf().AddMessageDispatcher<ChargeLinkCommandReceivedEvent>(
-                GetEnv("DOMAINEVENT_SENDER_CONNECTION_STRING"),
-                GetEnv("CHARGE_LINK_RECEIVED_TOPIC_NAME"));
-
             serviceCollection.AddScoped<IChargeLinkCommandHandler, ChargeLinkCommandHandler>();
+        }
+
+        private static void ConfigureCreateChargeLinkReceiver(IServiceCollection serviceCollection)
+        {
+            serviceCollection.AddScoped<ICreateLinkCommandEventHandler, CreateLinkCommandEventHandler>();
+            serviceCollection.AddScoped<IChargeLinkCommandFactory, ChargeLinkCommandFactory>();
+
+            serviceCollection.ReceiveProtobufMessage<CreateLinkCommandContract>(
+                configuration => configuration.WithParser(() => CreateLinkCommandContract.Parser));
+
+            serviceCollection.AddScoped<IDefaultChargeLinkRepository, DefaultChargeLinkRepository>();
         }
 
         private static void ConfigureMeteringPointCreatedReceiver(IServiceCollection serviceCollection)
         {
-            serviceCollection.ReceiveProtobuf<MeteringPointCreated>(
+            serviceCollection.ReceiveProtobufMessage<MeteringPointCreated>(
                 configuration => configuration.WithParser(() => MeteringPointCreated.Parser));
 
             serviceCollection.AddScoped<IMeteringPointCreatedEventHandler, MeteringPointCreatedEventHandler>();

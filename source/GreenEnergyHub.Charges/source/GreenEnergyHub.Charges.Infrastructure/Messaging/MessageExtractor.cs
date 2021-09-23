@@ -24,19 +24,18 @@ namespace GreenEnergyHub.Charges.Infrastructure.Messaging
 {
     // TODO BJARKE: Unit tests
     public class MessageExtractor<TInboundMessage> : MessageExtractor
-        where TInboundMessage : IInboundMessage
     {
         public MessageExtractor([NotNull] MessageDeserializer<TInboundMessage> deserializer)
             : base(deserializer)
         {
         }
 
-        public new async Task<TInboundMessage> ExtractAsync(byte[] data, CancellationToken cancellationToken = default)
+        public new async Task<IInboundMessage> ExtractAsync(byte[] data, CancellationToken cancellationToken = default)
         {
-            return (TInboundMessage)await base.ExtractAsync(data, cancellationToken).ConfigureAwait(false);
+            return await base.ExtractAsync(data, cancellationToken).ConfigureAwait(false);
         }
 
-        public async Task<TInboundMessage> ExtractAsync(Stream data, CancellationToken cancellationToken = default)
+        public async Task<IInboundMessage> ExtractAsync(Stream data, CancellationToken cancellationToken = default)
         {
             if (data == null) throw new ArgumentNullException(nameof(data));
 
