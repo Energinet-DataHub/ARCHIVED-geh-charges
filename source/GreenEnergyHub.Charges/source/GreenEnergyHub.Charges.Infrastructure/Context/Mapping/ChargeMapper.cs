@@ -119,7 +119,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Context.Mapping
                 Description = charge.Description,
                 Name = charge.Name,
                 VatClassification = (int)charge.VatClassification,
-                EndDateTime = charge.EndDateTime.ToDateTimeUtc(),
+                EndDateTime = charge.EndDateTime.TimeOrEndDefault().ToDateTimeUtc(),
                 StartDateTime = charge.StartDateTime.ToDateTimeUtc(),
                 ChargeOperation = chargeOperation,
             };
