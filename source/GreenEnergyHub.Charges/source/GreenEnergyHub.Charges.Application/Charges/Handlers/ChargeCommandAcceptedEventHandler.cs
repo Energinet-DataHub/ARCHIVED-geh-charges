@@ -36,7 +36,7 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
                 .SendChargeCreatedAsync(chargeCommandAcceptedEvent)
                 .ConfigureAwait(false);
 
-            if (chargeCommandAcceptedEvent.HasPrices)
+            if (chargeCommandAcceptedEvent.HasPrices())
             {
                 await _chargeCommandAcceptedEventSender
                     .SendChargePricesAsync(chargeCommandAcceptedEvent)
