@@ -14,7 +14,6 @@
 
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Application;
 using GreenEnergyHub.Charges.Application.ChargeLinks.Handlers;
 using GreenEnergyHub.Charges.Domain.CreateLinkCommandEvents;
 using GreenEnergyHub.Charges.Infrastructure.Messaging;
@@ -30,7 +29,7 @@ namespace GreenEnergyHub.Charges.CreateLinkCommandReceiver
         /// The name of the function.
         /// Function name affects the URL and thus possibly dependent infrastructure.
         /// </summary>
-        private const string FunctionName = "CreateLinkCommandReceiverServiceBusTrigger";
+        public const string FunctionName = "CreateLinkCommandReceiverServiceBusTrigger";
         private readonly ICorrelationContext _correlationContext;
         private readonly MessageExtractor _messageExtractor;
         private readonly ILogger _log;

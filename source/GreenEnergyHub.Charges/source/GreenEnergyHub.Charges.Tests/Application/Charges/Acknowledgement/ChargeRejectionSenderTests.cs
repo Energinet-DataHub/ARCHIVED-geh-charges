@@ -34,7 +34,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Acknowledgement
         public async Task HandleAsync_WhenCalled_DispatchRejection(
             [Frozen] [NotNull] Mock<IMessageDispatcher<ChargeRejection>> dispatcher,
             [NotNull] ChargeCommandRejectedEvent rejectedEvent,
-            [NotNull] ChargeRejectionSender sut)
+            [NotNull] GreenEnergyHub.Charges.Application.Charges.Acknowledgement.ChargeRejectionSender sut)
         {
             // Arrange
             var dispatched = false;

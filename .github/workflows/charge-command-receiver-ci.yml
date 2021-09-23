@@ -22,7 +22,7 @@ on:
 env:
   CSPROJ_FILE_PATH: 'source/GreenEnergyHub.Charges/source/GreenEnergyHub.Charges.ChargeCommandReceiver/GreenEnergyHub.Charges.ChargeCommandReceiver.csproj'
   SOLUTION_FILE_PATH: source/GreenEnergyHub.Charges/GreenEnergyHub.Charges.sln
-  DOTNET_VERSION: '3.1'
+  DOTNET_VERSION: '5.0.202'
 
 jobs:
   pre_job:
@@ -50,6 +50,11 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@master
+
+      - name: Setup .NET 3.1 environment
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: '3.1.x'
 
       - name: Setup .NET ${{ env.DOTNET_VERSION }} environment
         uses: actions/setup-dotnet@v1

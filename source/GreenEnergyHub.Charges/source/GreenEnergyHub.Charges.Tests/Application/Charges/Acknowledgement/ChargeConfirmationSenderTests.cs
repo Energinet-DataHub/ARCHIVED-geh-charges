@@ -34,7 +34,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Acknowledgement
         public async Task HandleAsync_WhenCalled_DispatchConfirmation(
             [Frozen] [NotNull] Mock<IMessageDispatcher<ChargeConfirmation>> dispatcher,
             [NotNull] ChargeCommandAcceptedEvent acceptedEvent,
-            [NotNull] ChargeConfirmationSender sut)
+            [NotNull] GreenEnergyHub.Charges.Application.Charges.Acknowledgement.ChargeConfirmationSender sut)
         {
             // Arrange
             var dispatched = false;
