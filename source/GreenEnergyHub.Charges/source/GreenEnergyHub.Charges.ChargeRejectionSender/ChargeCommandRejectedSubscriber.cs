@@ -24,7 +24,7 @@ namespace GreenEnergyHub.Charges.ChargeRejectionSender
 {
     public class ChargeCommandRejectedSubscriber
     {
-        private const string FunctionName = nameof(ChargeCommandRejectedSubscriber);
+        public const string FunctionName = nameof(ChargeCommandRejectedSubscriber);
         private readonly IChargeRejectionSender _chargeRejectionSender;
         private readonly ICorrelationContext _correlationContext;
         private readonly MessageExtractor _messageExtractor;
