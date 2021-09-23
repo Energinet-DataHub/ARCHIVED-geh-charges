@@ -16,11 +16,10 @@ using GreenEnergyHub.Charges.ChargeCommandReceiver;
 using GreenEnergyHub.Charges.ChargeConfirmationSender;
 using GreenEnergyHub.Charges.ChargeLinkCommandReceiver;
 using GreenEnergyHub.Charges.ChargeLinkEventPublisher;
-using GreenEnergyHub.Charges.ChargeLinkReceiver;
 using GreenEnergyHub.Charges.ChargeReceiver;
 using GreenEnergyHub.Charges.ChargeRejectionSender;
-using GreenEnergyHub.Charges.CreateLinkCommandReceiver;
-using GreenEnergyHub.Charges.MeteringPointCreatedReceiver;
+using GreenEnergyHub.Charges.FunctionHost.ChargeLinks;
+using GreenEnergyHub.Charges.FunctionHost.MeteringPoint;
 using Xunit;
 
 namespace GreenEnergyHub.Charges.Tests.FunctionHost

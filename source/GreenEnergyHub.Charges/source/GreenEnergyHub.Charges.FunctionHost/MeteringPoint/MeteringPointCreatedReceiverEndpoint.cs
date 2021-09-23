@@ -29,7 +29,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.MeteringPoint
         /// The name of the function.
         /// Function name affects the URL and thus possibly dependent infrastructure.
         /// </summary>
-        private const string FunctionName = nameof(MeteringPointCreatedReceiverEndpoint);
+        public const string FunctionName = nameof(MeteringPointCreatedReceiverEndpoint);
         private readonly ICorrelationContext _correlationContext;
         private readonly MessageExtractor<MeteringPointCreated> _messageExtractor;
         private readonly IMeteringPointCreatedEventHandler _meteringPointCreatedEventHandler;
