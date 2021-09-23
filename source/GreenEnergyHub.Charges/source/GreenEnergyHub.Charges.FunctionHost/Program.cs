@@ -15,11 +15,11 @@
 using System;
 using Energinet.DataHub.MeteringPoints.IntegrationEventContracts;
 using EntityFrameworkCore.SqlServer.NodaTime.Extensions;
-using GreenEnergyHub.Charges.Application;
-using GreenEnergyHub.Charges.Application.ChangeOfCharges.Repositories;
 using GreenEnergyHub.Charges.Application.ChargeLinks.Handlers;
-using GreenEnergyHub.Charges.Domain.ChargeLinks.Command;
-using GreenEnergyHub.Charges.Domain.ChargeLinks.Events.Local;
+using GreenEnergyHub.Charges.Application.MeteringPoints.Handlers;
+using GreenEnergyHub.Charges.Domain.ChargeLinkCommandReceivedEvents;
+using GreenEnergyHub.Charges.Domain.ChargeLinkCommands;
+using GreenEnergyHub.Charges.Domain.MeteringPoints;
 using GreenEnergyHub.Charges.Infrastructure.Context;
 using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandReceived;
 using GreenEnergyHub.Charges.Infrastructure.Messaging;
