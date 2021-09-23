@@ -28,7 +28,7 @@ namespace GreenEnergyHub.Charges.Application.Charges.Factories
                 chargeCommandAcceptedEvent.Command.ChargeOperation.ChargeOwner,
                 chargeCommandAcceptedEvent.Command.ChargeOperation.StartDateTime,
                 chargeCommandAcceptedEvent.Command.ChargeOperation.EndDateTime.GetValueOrDefault(),
-                null!,
+                chargeCommandAcceptedEvent.Command.ChargeOperation.Points,
                 chargeCommandAcceptedEvent.CorrelationId);
         }
     }
