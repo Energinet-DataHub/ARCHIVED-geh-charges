@@ -19,7 +19,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.Charges;
-using GreenEnergyHub.Charges.Domain.MarketDocument;
+using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.Infrastructure.Context;
 using GreenEnergyHub.Charges.Infrastructure.Repositories;
 using GreenEnergyHub.Charges.TestCore.Attributes;
@@ -183,7 +183,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
                     Type = DocumentType.RequestUpdateChargeInformation,
                     IndustryClassification = IndustryClassification.Electricity,
                     CreatedDateTime = SystemClock.Instance.GetCurrentInstant(),
-                    Sender = new Charges.Domain.MarketDocument.MarketParticipant
+                    Sender = new Charges.Domain.MarketParticipants.MarketParticipant
                     {
                         Id = MarketParticipantOwner,
                         BusinessProcessRole = (MarketParticipantRole)1,

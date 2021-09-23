@@ -18,8 +18,7 @@ using System.Threading.Tasks;
 using AutoFixture.Xunit2;
 using GreenEnergyHub.Charges.Application;
 using GreenEnergyHub.Charges.Application.Charges.Acknowledgement;
-using GreenEnergyHub.Charges.Domain.Charges.Acknowledgements;
-using GreenEnergyHub.Charges.Domain.Charges.Events.Local;
+using GreenEnergyHub.Charges.Domain.ChargeCommandAcceptedEvents;
 using GreenEnergyHub.Charges.TestCore.Attributes;
 using Moq;
 using Xunit;
@@ -35,7 +34,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Acknowledgement
         public async Task HandleAsync_WhenCalled_DispatchConfirmation(
             [Frozen] [NotNull] Mock<IMessageDispatcher<ChargeConfirmation>> dispatcher,
             [NotNull] ChargeCommandAcceptedEvent acceptedEvent,
-            [NotNull] ChargeConfirmationSender sut)
+            [NotNull] GreenEnergyHub.Charges.Application.Charges.Acknowledgement.ChargeConfirmationSender sut)
         {
             // Arrange
             var dispatched = false;

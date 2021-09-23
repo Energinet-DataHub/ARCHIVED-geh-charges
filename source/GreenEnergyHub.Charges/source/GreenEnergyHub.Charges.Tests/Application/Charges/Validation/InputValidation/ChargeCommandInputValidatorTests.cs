@@ -14,9 +14,9 @@
 
 using System.Diagnostics.CodeAnalysis;
 using AutoFixture.Xunit2;
-using GreenEnergyHub.Charges.Application.Charges.Validation;
-using GreenEnergyHub.Charges.Application.Charges.Validation.InputValidation;
-using GreenEnergyHub.Charges.Domain.Charges.Commands;
+using GreenEnergyHub.Charges.Domain.ChargeCommands;
+using GreenEnergyHub.Charges.Domain.ChargeCommands.Validation;
+using GreenEnergyHub.Charges.Domain.ChargeCommands.Validation.InputValidation;
 using Xunit;
 using Xunit.Categories;
 
