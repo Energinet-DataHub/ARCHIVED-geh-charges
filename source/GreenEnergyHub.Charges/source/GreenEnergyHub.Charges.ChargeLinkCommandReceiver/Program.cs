@@ -15,8 +15,6 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 using EntityFrameworkCore.SqlServer.NodaTime.Extensions;
-using GreenEnergyHub.Charges.Application.ChangeOfCharges.Repositories;
-using GreenEnergyHub.Charges.Application.ChargeLinks.Factories;
 using GreenEnergyHub.Charges.Application.ChargeLinks.Handlers;
 using GreenEnergyHub.Charges.Domain.ChargeLinkCommandAcceptedEvents;
 using GreenEnergyHub.Charges.Domain.ChargeLinks;
