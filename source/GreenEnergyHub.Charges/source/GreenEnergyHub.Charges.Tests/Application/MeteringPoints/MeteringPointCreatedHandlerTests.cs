@@ -37,11 +37,17 @@ namespace GreenEnergyHub.Charges.Tests.Application.MeteringPoints
         [InlineAutoDomainData]
         public async Task HandleAsync_WhenCalled_ShouldCallRepository(
             [NotNull][Frozen] Mock<IMeteringPointRepository> meteringPointRepository,
-            [NotNull][Frozen] Mock<ILogger> logger,
-            [NotNull] MeteringPointCreatedEventHandler sut)
+            [NotNull][Frozen] Mock<ILoggerFactory> loggerFactory,
+            [NotNull] Mock<ILogger> logger)
         {
             // Arrange
             var meteringPointCreatedEvent = GetMeteringPointCreatedEvent();
+            loggerFactory.Setup(
+                x => x.CreateLogger(
+                        It.IsAny<string>()))
+                    .Returns(logger.Object);
+
+            var sut = new MeteringPointCreatedEventHandler(meteringPointRepository.Object, loggerFactory.Object);
 
             // Act
             await sut.HandleAsync(meteringPointCreatedEvent).ConfigureAwait(false);
