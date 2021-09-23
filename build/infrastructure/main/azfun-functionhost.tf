@@ -30,7 +30,10 @@ module "azfun_functionhost" {
     CHARGE_DB_CONNECTION_STRING                   = local.CHARGE_DB_CONNECTION_STRING
     INTEGRATIONEVENT_LISTENER_CONNECTION_STRING   = data.azurerm_key_vault_secret.integration_events_listener_connection_string.value
     DOMAINEVENT_SENDER_CONNECTION_STRING          = module.sbnar_charges_sender.primary_connection_string
+    DOMAINEVENT_LISTENER_CONNECTION_STRING        = module.sbnar_charges_listener.primary_connection_string
     CHARGE_LINK_RECEIVED_TOPIC_NAME               = module.sbt_link_command_received.name
+    CREATE_LINK_COMMAND_TOPIC_NAME                = module.sbt_create_link_command.name
+    CREATE_LINK_COMMAND_SUBSCRIPTION_NAME         = azurerm_servicebus_subscription.sbs_create_link_command_charges.name
     METERING_POINT_CREATED_TOPIC_NAME             = local.METERING_POINT_CREATED_TOPIC_NAME
     METERING_POINT_CREATED_SUBSCRIPTION_NAME      = local.METERING_POINT_CREATED_SUBSCRIPTION_NAME
   }
