@@ -21,7 +21,7 @@ using GreenEnergyHub.Charges.Infrastructure.Messaging;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Logging;
 
-namespace GreenEnergyHub.Charges.FunctionHost.ChargeLinks
+namespace GreenEnergyHub.Charges.FunctionHost.MeteringPoint
 {
     public class CreateLinkCommandReceiverServiceBusTrigger
     {
