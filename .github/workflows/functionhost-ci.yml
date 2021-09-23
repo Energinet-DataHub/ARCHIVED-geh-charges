@@ -11,7 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-name: Metering Point Created Receiver CI
+name: FunctionHost CI
 
 on:
   pull_request:
@@ -20,9 +20,9 @@ on:
   workflow_dispatch: {}
 
 env:
-  CSPROJ_FILE_PATH: 'source/GreenEnergyHub.Charges/source/GreenEnergyHub.Charges.MeteringPointCreatedReceiver/GreenEnergyHub.Charges.MeteringPointCreatedReceiver.csproj'
+  CSPROJ_FILE_PATH: source/GreenEnergyHub.Charges/source/GreenEnergyHub.Charges.FunctionHost/GreenEnergyHub.Charges.FunctionHost.csproj
   SOLUTION_FILE_PATH: source/GreenEnergyHub.Charges/GreenEnergyHub.Charges.sln
-  DOTNET_VERSION: '3.1'
+  DOTNET_VERSION: '5.0.202'
 
 jobs:
   pre_job:
@@ -37,19 +37,24 @@ jobs:
           github_token: ${{ github.token }}
           paths: '[
             "source/GreenEnergyHub.Charges/**",
-            ".github/workflows/metering-point-created-receiver-ci.yml",
+            ".github/workflows/link-receiver-ci.yml",
             ".github/actions/dotnet-build-and-test/**",
             ".github/actions/azure-core-tools-install/**"
           ]'
 
-  validate_function:
+  validate_build_functionhost:
     needs: pre_job
     if: ${{ needs.pre_job.outputs.should_skip != 'true' }}
-    name: Validate build function
+    name: Validate build FunctionHost
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@master
+
+      - name: Setup .NET 3.1 environment
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: '3.1.x'
 
       - name: Setup .NET ${{ env.DOTNET_VERSION }} environment
         uses: actions/setup-dotnet@v1
