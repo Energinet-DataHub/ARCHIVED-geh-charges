@@ -27,9 +27,11 @@ using GreenEnergyHub.Charges.Domain.MeteringPoints;
 using GreenEnergyHub.TestHelpers;
 using Moq;
 using Xunit;
+using Xunit.Categories;
 
 namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Factories
 {
+    [UnitTest]
     public class ChargeLinkFactoryTests
     {
         [Theory]
