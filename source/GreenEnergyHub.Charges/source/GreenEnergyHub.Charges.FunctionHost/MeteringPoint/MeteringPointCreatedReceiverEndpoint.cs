@@ -21,7 +21,7 @@ using GreenEnergyHub.Messaging.Transport;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Logging;
 
-namespace GreenEnergyHub.Charges.FunctionHosts
+namespace GreenEnergyHub.Charges.FunctionHost
 {
     public class MeteringPointCreatedReceiverEndpoint
     {

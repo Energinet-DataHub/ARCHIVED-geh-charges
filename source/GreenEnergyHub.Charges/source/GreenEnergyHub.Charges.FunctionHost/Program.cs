@@ -34,7 +34,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using NodaTime;
 
-namespace GreenEnergyHub.Charges.FunctionHosts
+namespace GreenEnergyHub.Charges.FunctionHost
 {
     public static class Program
     {
