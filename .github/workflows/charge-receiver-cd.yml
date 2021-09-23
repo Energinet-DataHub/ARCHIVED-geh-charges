@@ -142,6 +142,8 @@ jobs:
       - name: Integration test
         if: ${{ matrix.environment.short == 'u' }}
         uses: ./.github/actions/integration-test
+        env:
+            RUN_PIPELINE_TESTS: 'TRUE'
         with:
           key_vault_name: ${{ env.KEY_VAULT_NAME }}
           test_dll: ${{ github.workspace }}/output-integration-test/${{ env.INTEGRATION_TEST_DLL }}

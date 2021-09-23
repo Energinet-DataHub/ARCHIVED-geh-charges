@@ -26,8 +26,6 @@ namespace GreenEnergyHub.Charges.IntegrationTests.TestHelpers
 
         public override void Configure([NotNull] ServiceBusOptionsBuilder builder)
         {
-            FunctionHostConfigurationHelper.ConfigureEnvironmentVariables();
-
             var projectName = Environment.GetEnvironmentVariable("PROJECT_NAME") ?? string.Empty;
             var organisationName = Environment.GetEnvironmentVariable("ORGANISATION_NAME") ?? string.Empty;
             var environmentShort = Environment.GetEnvironmentVariable("ENVIRONMENT_SHORT") ?? string.Empty;

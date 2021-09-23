@@ -13,8 +13,8 @@
 // limitations under the License.
 
 using System.Diagnostics.CodeAnalysis;
+using GreenEnergyHub.Charges.Domain.ChargeCommandAcceptedEvents;
 using GreenEnergyHub.Charges.Domain.Charges.Acknowledgements;
-using GreenEnergyHub.Charges.Domain.Charges.Events.Local;
 
 namespace GreenEnergyHub.Charges.Application.Charges.Factories
 {
