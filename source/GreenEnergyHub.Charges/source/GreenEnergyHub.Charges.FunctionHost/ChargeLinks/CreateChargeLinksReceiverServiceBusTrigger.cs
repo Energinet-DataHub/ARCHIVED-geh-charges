@@ -79,7 +79,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.ChargeLinks
 
         private void SetupCorrelationContext(FunctionContext context)
         {
-            _correlationContext.CorrelationId = context.InvocationId;
+            _correlationContext.CorrelationId = context.InvocationId.Replace("-", string.Empty);
         }
     }
 }
