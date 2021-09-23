@@ -29,7 +29,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.ChargeLinks
         /// The name of the function.
         /// Function name affects the URL and thus possibly dependent infrastructure.
         /// </summary>
-        private const string FunctionName = "CreateLinkCommandReceiverServiceBusTrigger";
+        public const string FunctionName = "CreateLinkCommandReceiverServiceBusTrigger";
         private readonly ICorrelationContext _correlationContext;
         private readonly MessageExtractor<CreateLinkCommandContract> _messageExtractor;
         private readonly ILogger _log;
