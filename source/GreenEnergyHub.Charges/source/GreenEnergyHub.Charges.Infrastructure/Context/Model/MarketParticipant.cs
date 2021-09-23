@@ -13,7 +13,6 @@
 // limitations under the License.
 
 using System;
-using System.ComponentModel.DataAnnotations;
 
 #pragma warning disable 8618
 
