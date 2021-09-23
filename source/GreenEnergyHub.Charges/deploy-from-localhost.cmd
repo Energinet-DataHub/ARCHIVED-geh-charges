@@ -21,7 +21,6 @@ set /p deployCommandReceiver=Deploy command receiver ([y]/n)?
 set /p deployConfirmationSender=Deploy confirmation sender ([y]/n)?
 set /p deployRejectionSender=Deploy rejection sender ([y]/n)?
 set /p chargeLinkCommandReceiver=Deploy charge link command receiver([y]/n)?
-set /p createLinkCommandReceiver=Deploy create link command receiver ([y]/n)?
 
 IF /I not "%doBuild%" == "n" (
     rem Clean is necessary if e.g. a function project name has changed because otherwise both assemblies will be picked up by deployment
@@ -76,12 +75,6 @@ IF /I not "%deployRejectionSender%" == "n" (
 IF /I not "%chargeLinkCommandReceiver%" == "n" (
     pushd source\GreenEnergyHub.Charges.ChargeLinkCommandReceiver\bin\Release\net5.0
     start "Deploy: Charge Link Command Receiver" cmd /c "func azure functionapp publish azfun-link-command-receiver-charges-%organization%-s & pause"
-    popd
-)
-
-IF /I not "%createLinkCommandReceiver%" == "n" (
-    pushd source\GreenEnergyHub.Charges.CreateLinkCommandReceiver\bin\Release\net5.0
-    start "Deploy: Create Link Command Receiver" cmd /c "func azure functionapp publish azfun-create-link-command-receiver-charges-%organization%-s & pause"
     popd
 )
 
