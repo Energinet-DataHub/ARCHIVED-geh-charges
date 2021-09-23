@@ -32,7 +32,7 @@ BEGIN
           AND ChargeType = 3), /* ChargeId */
       NEWID(), /* CorrelationId */
       CONCAT('Seed ', GETUTCDATE()), /* ChargeOperationId */
-      CONVERT(datetime, GETUTCDATE())) /* WriteDateTime */
+      CONVERT(datetime2, GETUTCDATE())) /* WriteDateTime */
 
     INSERT INTO [Charges].[ChargePeriodDetails] (Id, ChargeId, StartDateTime, EndDateTime, Name, Description, VatClassification, Retired, RetiredDateTime, ChargeOperationId) VALUES (
 	  NEWID(),
@@ -90,7 +90,7 @@ BEGIN
           AND ChargeType = 3), /* ChargeId */
       NEWID(), /* CorrelationId */
       CONCAT('Seed ', GETUTCDATE()), /* ChargeOperationId */
-      CONVERT(datetime, GETUTCDATE())) /* WriteDateTime */
+      CONVERT(datetime2, GETUTCDATE())) /* WriteDateTime */
 
     INSERT INTO [Charges].[ChargePeriodDetails] (Id, ChargeId, StartDateTime, EndDateTime, Name, Description, VatClassification, Retired, RetiredDateTime, ChargeOperationId) VALUES (
 	  NEWID(),
@@ -148,7 +148,7 @@ BEGIN
           AND ChargeType = 3), /* ChargeId */
       NEWID(), /* CorrelationId */
       CONCAT('Seed ', GETUTCDATE()), /* ChargeOperationId */
-      CONVERT(datetime, GETUTCDATE())) /* WriteDateTime */
+      CONVERT(datetime2, GETUTCDATE())) /* WriteDateTime */
 
     INSERT INTO [Charges].[ChargePeriodDetails] (Id, ChargeId, StartDateTime, EndDateTime, Name, Description, VatClassification, Retired, RetiredDateTime, ChargeOperationId) VALUES (
 	  NEWID(),
@@ -206,7 +206,7 @@ BEGIN
           AND ChargeType = 3), /* ChargeId */
       NEWID(), /* CorrelationId */
       CONCAT('Seed ', GETUTCDATE()), /* ChargeOperationId */
-      CONVERT(datetime, GETUTCDATE())) /* WriteDateTime */
+      CONVERT(datetime2, GETUTCDATE())) /* WriteDateTime */
 
     INSERT INTO [Charges].[ChargePeriodDetails] (Id, ChargeId, StartDateTime, EndDateTime, Name, Description, VatClassification, Retired, RetiredDateTime, ChargeOperationId) VALUES (
 	  NEWID(),
@@ -264,7 +264,7 @@ BEGIN
           AND ChargeType = 3), /* ChargeId */
       NEWID(), /* CorrelationId */
       CONCAT('Seed ', GETUTCDATE()), /* ChargeOperationId */
-      CONVERT(datetime, GETUTCDATE())) /* WriteDateTime */
+      CONVERT(datetime2, GETUTCDATE())) /* WriteDateTime */
 
     INSERT INTO [Charges].[ChargePeriodDetails] (Id, ChargeId, StartDateTime, EndDateTime, Name, Description, VatClassification, Retired, RetiredDateTime, ChargeOperationId) VALUES (
 	  NEWID(),
@@ -322,7 +322,7 @@ BEGIN
           AND ChargeType = 3), /* ChargeId */
       NEWID(), /* CorrelationId */
       CONCAT('Seed ', GETUTCDATE()), /* ChargeOperationId */
-      CONVERT(datetime, GETUTCDATE())) /* WriteDateTime */
+      CONVERT(datetime2, GETUTCDATE())) /* WriteDateTime */
 
     INSERT INTO [Charges].[ChargePeriodDetails] (Id, ChargeId, StartDateTime, EndDateTime, Name, Description, VatClassification, Retired, RetiredDateTime, ChargeOperationId) VALUES (
 	  NEWID(),
@@ -380,7 +380,7 @@ BEGIN
           AND ChargeType = 3), /* ChargeId */
       NEWID(), /* CorrelationId */
       CONCAT('Seed ', GETUTCDATE()), /* ChargeOperationId */
-      CONVERT(datetime, GETUTCDATE())) /* WriteDateTime */
+      CONVERT(datetime2, GETUTCDATE())) /* WriteDateTime */
 
     INSERT INTO [Charges].[ChargePeriodDetails] (Id, ChargeId, StartDateTime, EndDateTime, Name, Description, VatClassification, Retired, RetiredDateTime, ChargeOperationId) VALUES (
 	  NEWID(),
