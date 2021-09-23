@@ -98,6 +98,9 @@ CREATE TABLE [Charges].[ChargePrice]
     ) ON [PRIMARY]
     GO
 
+CREATE INDEX IX_ChargeId_Time_ChargeOperationId ON [Charges].[ChargePrice] (ChargeId DESC, Time DESC, ChargeOperationId DESC);
+GO
+
 CREATE TABLE [Charges].[DefaultChargeLink]
 (
     Id UNIQUEIDENTIFIER NOT NULL,
@@ -131,6 +134,8 @@ CREATE TABLE [Charges].[MeteringPoint]
     ) ON [PRIMARY]
     GO
 
+CREATE INDEX IX_MeteringPointId ON [Charges].[MeteringPoint] (MeteringPointId DESC);
+GO
 
 CREATE TABLE [Charges].[ChargeLink]
 (
