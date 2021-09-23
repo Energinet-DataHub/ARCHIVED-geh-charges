@@ -29,7 +29,6 @@ namespace GreenEnergyHub.Charges.Infrastructure.Context.Model
             ChargePeriodDetails = new List<ChargePeriodDetails>();
         }
 
-        [Key]
         public Guid Id { get; set; }
 
         public string SenderProvidedChargeId { get; set; }

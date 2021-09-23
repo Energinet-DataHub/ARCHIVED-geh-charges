@@ -26,7 +26,6 @@ namespace GreenEnergyHub.Charges.Infrastructure.Context.Model
             Id = Guid.NewGuid();
         }
 
-        [Key]
         public Guid Id { get; set; }
 
         [ForeignKey("Charge")]
