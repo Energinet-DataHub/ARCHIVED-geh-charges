@@ -50,47 +50,56 @@ namespace GreenEnergyHub.Charges.FunctionHost
 
         private static void ConfigureServices(HostBuilderContext hostBuilderContext, IServiceCollection serviceCollection)
         {
+            ConfigureSharedServices(serviceCollection);
+
+            ConfigureChargeLinkReceiver(serviceCollection);
+            ConfigureMeteringPointCreatedReceiver(serviceCollection);
+        }
+
+        private static void ConfigureSharedServices(IServiceCollection serviceCollection)
+        {
             serviceCollection.AddScoped(typeof(IClock), _ => SystemClock.Instance);
             serviceCollection.AddLogging();
 
-            ConfigureDatabase(serviceCollection);
-            ConfigureMessaging(serviceCollection);
-            ConfigureHandlers(serviceCollection);
+            serviceCollection.AddScoped<MessageDispatcher>();
+
+            ConfigureSharedDatabase(serviceCollection);
         }
 
-        private static void ConfigureDatabase(IServiceCollection services)
+        private static void ConfigureSharedDatabase(IServiceCollection serviceCollection)
         {
             var connectionString = Environment.GetEnvironmentVariable("CHARGE_DB_CONNECTION_STRING") ??
                                    throw new ArgumentNullException(
                                        "CHARGE_DB_CONNECTION_STRING",
                                        "does not exist in configuration settings");
-            services.AddDbContext<ChargesDatabaseContext>(
+            serviceCollection.AddDbContext<ChargesDatabaseContext>(
                 options => options.UseSqlServer(connectionString, options => options.UseNodaTime()));
-            services.AddScoped<IChargesDatabaseContext, ChargesDatabaseContext>();
-            services.AddScoped<IMeteringPointRepository, MeteringPointRepository>();
+            serviceCollection.AddScoped<IChargesDatabaseContext, ChargesDatabaseContext>();
         }
 
-        private static void ConfigureMessaging(IServiceCollection services)
+        private static void ConfigureChargeLinkReceiver(IServiceCollection serviceCollection)
         {
-            services.ReceiveProtobuf<MeteringPointCreated>(
-                configuration => configuration.WithParser(() => MeteringPointCreated.Parser));
+            serviceCollection.AddScoped<ChargeLinkCommandConverter>();
+            serviceCollection.AddScoped<MessageExtractor<ChargeLinkCommand>>();
+            serviceCollection.AddScoped<MessageDeserializer<ChargeLinkCommand>, ChargeLinkCommandDeserializer>();
 
-            services.AddScoped<ChargeLinkCommandConverter>();
-            services.AddScoped<MessageExtractor<ChargeLinkCommand>>();
-            services.AddScoped<MessageDeserializer<ChargeLinkCommand>, ChargeLinkCommandDeserializer>();
-            services.SendProtobuf<ChargeLinkCommandReceivedContract>();
-            // services.AddSingleton<Channel, ServiceBusChannel<ChargeLinkCommandReceivedEvent>>();
-            services.AddScoped<MessageDispatcher>();
+            serviceCollection.SendProtobuf<ChargeLinkCommandReceivedContract>();
 
-            services.AddMessagingProtobuf().AddMessageDispatcher<ChargeLinkCommandReceivedEvent>(
+            serviceCollection.AddMessagingProtobuf().AddMessageDispatcher<ChargeLinkCommandReceivedEvent>(
                 GetEnv("DOMAINEVENT_SENDER_CONNECTION_STRING"),
                 GetEnv("CHARGE_LINK_RECEIVED_TOPIC_NAME"));
+
+            serviceCollection.AddScoped<IChargeLinkCommandHandler, ChargeLinkCommandHandler>();
         }
 
-        private static void ConfigureHandlers(IServiceCollection services)
+        private static void ConfigureMeteringPointCreatedReceiver(IServiceCollection serviceCollection)
         {
-            services.AddScoped<IChargeLinkCommandHandler, ChargeLinkCommandHandler>();
-            services.AddScoped<IMeteringPointCreatedEventHandler, MeteringPointCreatedEventHandler>();
+            serviceCollection.ReceiveProtobuf<MeteringPointCreated>(
+                configuration => configuration.WithParser(() => MeteringPointCreated.Parser));
+
+            serviceCollection.AddScoped<IMeteringPointCreatedEventHandler, MeteringPointCreatedEventHandler>();
+
+            serviceCollection.AddScoped<IMeteringPointRepository, MeteringPointRepository>();
         }
 
         private static string GetEnv(string variableName)
