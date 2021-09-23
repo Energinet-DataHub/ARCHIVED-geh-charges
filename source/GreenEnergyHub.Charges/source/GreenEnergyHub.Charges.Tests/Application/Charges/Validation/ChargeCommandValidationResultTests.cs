@@ -15,7 +15,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using GreenEnergyHub.Charges.Application.Charges.Validation;
+using GreenEnergyHub.Charges.Domain.ChargeCommands.Validation;
 using Xunit;
 using Xunit.Categories;
 

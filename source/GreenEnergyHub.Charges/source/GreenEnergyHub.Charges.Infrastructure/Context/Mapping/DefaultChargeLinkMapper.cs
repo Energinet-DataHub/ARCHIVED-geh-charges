@@ -21,9 +21,9 @@ namespace GreenEnergyHub.Charges.Infrastructure.Context.Mapping
 {
     public static class DefaultChargeLinkMapper
     {
-        public static Domain.Charges.DefaultChargeLink Map([NotNull]DefaultChargeLink defaultChargeLink)
+        public static Domain.DefaultChargeLinks.DefaultChargeLink Map([NotNull]DefaultChargeLink defaultChargeLink)
         {
-            return new Domain.Charges.DefaultChargeLink(
+            return new Domain.DefaultChargeLinks.DefaultChargeLink(
                 Instant.FromDateTimeUtc(defaultChargeLink.StartDateTime.ToUniversalTime()),
                 Instant.FromDateTimeUtc(defaultChargeLink.EndDateTime.ToUniversalTime()),
                 defaultChargeLink.ChargeRowId,

@@ -13,7 +13,7 @@
 // limitations under the License.
 
 using System.Collections.Generic;
-using GreenEnergyHub.Charges.Application.Charges.Validation;
+using GreenEnergyHub.Charges.Domain.ChargeCommands.Validation;
 using Moq;
 using Xunit;
 using Xunit.Categories;

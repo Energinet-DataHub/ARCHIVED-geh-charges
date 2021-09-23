@@ -14,8 +14,8 @@
 
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Domain.Charges.Commands;
-using GreenEnergyHub.Charges.Domain.Charges.Events.Local;
+using GreenEnergyHub.Charges.Domain.ChargeCommandReceivedEvents;
+using GreenEnergyHub.Charges.Domain.ChargeCommands;
 using NodaTime;
 
 namespace GreenEnergyHub.Charges.Application.Charges.Handlers

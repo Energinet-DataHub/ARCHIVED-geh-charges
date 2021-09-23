@@ -14,7 +14,8 @@
 
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application;
-using GreenEnergyHub.Charges.Domain.Charges.Events.Integration;
+using GreenEnergyHub.Charges.Application.MeteringPoints.Handlers;
+using GreenEnergyHub.Charges.Domain.MeteringPointCreatedEvents;
 using GreenEnergyHub.Messaging.Transport;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Extensions.Logging;
