@@ -14,7 +14,6 @@
 
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Application;
 using GreenEnergyHub.Charges.Application.ChargeLinks.Handlers;
 using GreenEnergyHub.Charges.Domain.ChargeLinks.Events.Integration;
 using GreenEnergyHub.Charges.Infrastructure.Messaging;
@@ -22,7 +21,7 @@ using GreenEnergyHub.Messaging.Transport;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Logging;
 
-namespace GreenEnergyHub.Charges.CreateLinkCommandReceiver
+namespace GreenEnergyHub.Charges.FunctionHost.ChargeLinks
 {
     public class CreateLinkCommandReceiverServiceBusTrigger
     {
