@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using GreenEnergyHub.Charges.Domain.Charges.Commands;
 using GreenEnergyHub.Charges.Domain.Messages.Events;
 using NodaTime;
@@ -31,5 +32,7 @@ namespace GreenEnergyHub.Charges.Domain.Charges.Events.Local
         }
 
         public ChargeCommand Command { get; }
+
+        public bool HasPrices => Command.ChargeOperation.Points.Any();
     }
 }

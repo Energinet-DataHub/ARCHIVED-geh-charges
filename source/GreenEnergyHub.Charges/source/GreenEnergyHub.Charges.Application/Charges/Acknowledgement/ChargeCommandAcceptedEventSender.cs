@@ -12,50 +12,42 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
-using System.Linq;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application.Charges.Factories;
 using GreenEnergyHub.Charges.Domain.Charges.Acknowledgements;
 using GreenEnergyHub.Charges.Domain.Charges.Events.Local;
 
-namespace GreenEnergyHub.Charges.Application.Charges.Handlers
+namespace GreenEnergyHub.Charges.Application.Charges.Acknowledgement
 {
-    public class ChargeEventPublisherHandler
+    public class ChargeCommandAcceptedEventSender : IChargeCommandAcceptedEventSender
     {
         private readonly IMessageDispatcher<ChargeCreated> _messageChargeDispatcher;
         private readonly IMessageDispatcher<ChargePricesUpdated> _messagePricesDispatcher;
         private readonly IChargeCreatedFactory _createdFactory;
         private readonly IChargePricesUpdatedFactory _chargePricesUpdatedFactory;
 
-        public ChargeEventPublisherHandler(
+        public ChargeCommandAcceptedEventSender(
             IMessageDispatcher<ChargeCreated> messageChargeDispatcher,
             IMessageDispatcher<ChargePricesUpdated> messagePricesDispatcher,
             IChargeCreatedFactory createdFactory,
             IChargePricesUpdatedFactory chargePricesUpdatedFactory)
         {
+            _messageChargeDispatcher = messageChargeDispatcher;
             _messagePricesDispatcher = messagePricesDispatcher;
             _createdFactory = createdFactory;
             _chargePricesUpdatedFactory = chargePricesUpdatedFactory;
-            _messageChargeDispatcher = messageChargeDispatcher;
         }
 
-        public async Task HandleAsync(ChargeCommandAcceptedEvent chargeCommandAcceptedEvent)
+        public async Task SendChargeCreatedAsync(ChargeCommandAcceptedEvent chargeCommandAcceptedEvent)
         {
-            if (chargeCommandAcceptedEvent == null) throw new ArgumentNullException(nameof(chargeCommandAcceptedEvent));
-
             var chargeCreated = _createdFactory.Create(chargeCommandAcceptedEvent);
+            await _messageChargeDispatcher.DispatchAsync(chargeCreated).ConfigureAwait(false);
+        }
 
-            if (chargeCommandAcceptedEvent.Command.ChargeOperation.Points.Any())
-            {
-                var prices = _chargePricesUpdatedFactory.Create(chargeCommandAcceptedEvent);
-                await _messageChargeDispatcher.DispatchAsync(chargeCreated).ConfigureAwait(false);
-                await _messagePricesDispatcher.DispatchAsync(prices).ConfigureAwait(false);
-            }
-            else
-            {
-                await _messageChargeDispatcher.DispatchAsync(chargeCreated).ConfigureAwait(false);
-            }
+        public async Task SendChargePricesAsync(ChargeCommandAcceptedEvent chargeCommandAcceptedEvent)
+        {
+            var prices = _chargePricesUpdatedFactory.Create(chargeCommandAcceptedEvent);
+            await _messagePricesDispatcher.DispatchAsync(prices).ConfigureAwait(false);
         }
     }
 }
