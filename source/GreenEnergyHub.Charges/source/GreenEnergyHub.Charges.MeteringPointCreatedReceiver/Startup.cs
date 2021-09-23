@@ -15,6 +15,7 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 using Energinet.DataHub.MeteringPoints.IntegrationEventContracts;
+using EntityFrameworkCore.SqlServer.NodaTime.Extensions;
 using GreenEnergyHub.Charges.Application;
 using GreenEnergyHub.Charges.Application.MeteringPoints.Handlers;
 using GreenEnergyHub.Charges.Domain.MeteringPoints;
@@ -41,7 +42,7 @@ namespace GreenEnergyHub.Charges.MeteringPointCreatedReceiver
                                        "CHARGE_DB_CONNECTION_STRING",
                                        "does not exist in configuration settings");
             builder.Services.AddDbContext<ChargesDatabaseContext>(
-                options => options.UseSqlServer(connectionString));
+                options => options.UseSqlServer(connectionString, options => options.UseNodaTime()));
             builder.Services.AddScoped<IChargesDatabaseContext, ChargesDatabaseContext>();
             builder.Services.AddScoped<IMeteringPointRepository, MeteringPointRepository>();
             builder.Services.AddScoped<IMeteringPointCreatedEventHandler, MeteringPointCreatedEventHandler>();

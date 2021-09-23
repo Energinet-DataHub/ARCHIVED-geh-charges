@@ -14,6 +14,7 @@
 
 using System;
 using System.Diagnostics.CodeAnalysis;
+using EntityFrameworkCore.SqlServer.NodaTime.Extensions;
 using GreenEnergyHub.Charges.Application;
 using GreenEnergyHub.Charges.Application.Charges.Acknowledgement;
 using GreenEnergyHub.Charges.Application.Charges.Handlers;
@@ -90,7 +91,7 @@ namespace GreenEnergyHub.Charges.ChargeCommandReceiver
                                        "CHARGE_DB_CONNECTION_STRING",
                                        "does not exist in configuration settings");
             builder.Services.AddDbContext<ChargesDatabaseContext>(
-                options => options.UseSqlServer(connectionString));
+                options => options.UseSqlServer(connectionString, options => options.UseNodaTime()));
             builder.Services.AddScoped<IChargesDatabaseContext, ChargesDatabaseContext>();
             builder.Services.AddScoped<IChargeRepository, ChargeRepository>();
             builder.Services.AddScoped<IMarketParticipantRepository, MarketParticipantRepository>();

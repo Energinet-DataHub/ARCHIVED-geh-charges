@@ -34,6 +34,7 @@ namespace GreenEnergyHub.Charges.Domain.MeteringPoints
                 : Enum.Parse<SettlementMethod>(meteringPointCreatedEvent.SettlementMethod);
 
             return new MeteringPoint(
+                null,
                 meteringPointCreatedEvent.MeteringPointId,
                 meteringPointType,
                 meteringPointCreatedEvent.GridAreaId,

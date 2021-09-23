@@ -16,7 +16,6 @@ using System;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Domain.MeteringPoints;
 using GreenEnergyHub.Charges.Infrastructure.Context;
-using GreenEnergyHub.Charges.Infrastructure.Context.Mapping;
 using Microsoft.EntityFrameworkCore;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Repositories
@@ -33,8 +32,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Repositories
         public async Task StoreMeteringPointAsync(MeteringPoint meteringPoint)
         {
             if (meteringPoint == null) throw new ArgumentNullException(nameof(meteringPoint));
-            var entityModel = MeteringPointMapper.MapMeteringPointToEntity(meteringPoint);
-            await _chargesDatabaseContext.MeteringPoints.AddAsync(entityModel).ConfigureAwait(false);
+            await _chargesDatabaseContext.MeteringPoints.AddAsync(meteringPoint).ConfigureAwait(false);
             await _chargesDatabaseContext.SaveChangesAsync().ConfigureAwait(false);
         }
 
@@ -45,7 +43,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Repositories
                 .SingleAsync(x => x.MeteringPointId == meteringPointId)
                 .ConfigureAwait(false);
 
-            return MeteringPointMapper.MapMeteringPointToDomainModel(meteringPoint);
+            return meteringPoint;
         }
     }
 }

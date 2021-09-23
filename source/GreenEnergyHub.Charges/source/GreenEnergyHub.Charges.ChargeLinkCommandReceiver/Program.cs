@@ -14,6 +14,9 @@
 
 using System;
 using System.Diagnostics.CodeAnalysis;
+using EntityFrameworkCore.SqlServer.NodaTime.Extensions;
+using GreenEnergyHub.Charges.Application.ChangeOfCharges.Repositories;
+using GreenEnergyHub.Charges.Application.ChargeLinks.Factories;
 using GreenEnergyHub.Charges.Application.ChargeLinks.Handlers;
 using GreenEnergyHub.Charges.Domain.ChargeLinkCommandAcceptedEvents;
 using GreenEnergyHub.Charges.Domain.ChargeLinks;
@@ -73,7 +76,7 @@ namespace GreenEnergyHub.Charges.ChargeLinkCommandReceiver
         {
             var connectionString = GetEnv("CHARGE_DB_CONNECTION_STRING");
             serviceCollection.AddDbContext<ChargesDatabaseContext>(
-                options => options.UseSqlServer(connectionString));
+                options => options.UseSqlServer(connectionString, options => options.UseNodaTime()));
             serviceCollection.AddScoped<IChargesDatabaseContext, ChargesDatabaseContext>();
             serviceCollection.AddScoped<IChargeRepository, ChargeRepository>();
             serviceCollection.AddScoped<IChargeLinkRepository, ChargeLinkRepository>();

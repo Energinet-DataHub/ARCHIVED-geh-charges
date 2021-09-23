@@ -12,24 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
 using System.Linq;
 using System.Threading.Tasks;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.MeteringPoints;
-using GreenEnergyHub.Charges.Infrastructure.Context;
-using GreenEnergyHub.Charges.Infrastructure.Context.Model;
 using GreenEnergyHub.Charges.Infrastructure.Repositories;
 using GreenEnergyHub.Charges.TestCore.Squadron;
-using Microsoft.EntityFrameworkCore;
 using Squadron;
 using Xunit;
 using Xunit.Categories;
-using Charge = GreenEnergyHub.Charges.Infrastructure.Context.Model.Charge;
-using ChargeOperation = GreenEnergyHub.Charges.Infrastructure.Context.Model.ChargeOperation;
-using DefaultChargeLink = GreenEnergyHub.Charges.Infrastructure.Context.Model.DefaultChargeLink;
-using MarketParticipant = GreenEnergyHub.Charges.Infrastructure.Context.Model.MarketParticipant;
 
 namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
 {

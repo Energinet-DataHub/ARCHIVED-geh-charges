@@ -12,11 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
+using System.Linq;
 using System.Threading.Tasks;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.MeteringPoints;
 using GreenEnergyHub.Charges.Infrastructure.Repositories;
 using GreenEnergyHub.Charges.TestCore.Squadron;
+using GreenEnergyHub.TestHelpers;
 using NodaTime;
 using Squadron;
 using Xunit;
@@ -38,17 +41,20 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
         public async Task StoreMeteringPointAsync_WhenMeteringPointIsCreated_StoresMeteringPointInDatabase()
         {
             // Arrange
-            await using var chargesDatabaseContext = await SquadronContextFactory
+            await using var chargesDatabaseWriteContext = await SquadronContextFactory
                 .GetDatabaseContextAsync(_resource)
                 .ConfigureAwait(false);
             var expected = GetMeteringPointCreatedEvent();
-            var sut = new MeteringPointRepository(chargesDatabaseContext);
+            var sut = new MeteringPointRepository(chargesDatabaseWriteContext);
 
             // Act
             await sut.StoreMeteringPointAsync(expected).ConfigureAwait(false);
 
             // Assert
-            var actual = await sut.GetMeteringPointAsync(expected.MeteringPointId).ConfigureAwait(false);
+            await using var chargesDatabaseReadContext = await SquadronContextFactory
+                .GetDatabaseContextAsync(_resource)
+                .ConfigureAwait(false);
+            var actual = chargesDatabaseReadContext.MeteringPoints.Single(x => x.MeteringPointId == expected.MeteringPointId);
             actual.ConnectionState.Should().Be(expected.ConnectionState);
             actual.GridAreaId.Should().Be(expected.GridAreaId);
             actual.MeteringPointId.Should().Be(expected.MeteringPointId);
@@ -56,15 +62,60 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
             actual.SettlementMethod.Should().Be(expected.SettlementMethod);
         }
 
+        [Theory]
+        [InlineAutoDomainData]
+        public async Task StoreMeteringPointAsync_WhenMeteringPointIsNull_ShouldThrow(MeteringPointRepository sut)
+        {
+            await Assert
+                .ThrowsAsync<ArgumentNullException>(() => sut.StoreMeteringPointAsync(null!))
+                .ConfigureAwait(false);
+        }
+
+        [Fact]
+        public async Task GetMeteringPointAsync_WithMeteringPointId_ThenSuccessReturnedAsync()
+        {
+            // Arrange
+            await using var chargesDatabaseWriteContext = await SquadronContextFactory
+                .GetDatabaseContextAsync(_resource)
+                .ConfigureAwait(false);
+            var expected = GetMeteringPoint();
+            await chargesDatabaseWriteContext.MeteringPoints.AddAsync(expected).ConfigureAwait(false);
+            await chargesDatabaseWriteContext.SaveChangesAsync().ConfigureAwait(false);
+
+            await using var chargesDatabaseReadContext = await SquadronContextFactory
+                .GetDatabaseContextAsync(_resource)
+                .ConfigureAwait(false);
+            var sut = new MeteringPointRepository(chargesDatabaseReadContext);
+
+            // Act
+            var actual = await sut.GetMeteringPointAsync(expected.MeteringPointId).ConfigureAwait(false);
+
+            // Assert
+            Assert.NotNull(actual);
+        }
+
         private static MeteringPoint GetMeteringPointCreatedEvent()
         {
             return new MeteringPoint(
+                null,
                 "123",
                 MeteringPointType.Consumption,
                 "234",
                 SystemClock.Instance.GetCurrentInstant(),
                 ConnectionState.Connected,
                 SettlementMethod.Flex);
+        }
+
+        private static MeteringPoint GetMeteringPoint()
+        {
+            return new MeteringPoint(
+                null,
+                "meteringPointId",
+                MeteringPointType.Consumption,
+                "grid area id",
+                SystemClock.Instance.GetCurrentInstant(),
+                ConnectionState.Connected,
+                SettlementMethod.Profiled);
         }
     }
 }
