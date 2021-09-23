@@ -13,9 +13,9 @@
 // limitations under the License.
 
 using System.Collections.Generic;
+using GreenEnergyHub.Charges.Domain.ChargeCommands;
 using GreenEnergyHub.Charges.Domain.Charges;
-using GreenEnergyHub.Charges.Domain.Charges.Commands;
-using GreenEnergyHub.Charges.Domain.MarketDocument;
+using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using NodaTime;
 
 namespace GreenEnergyHub.Charges.Tests.Builders

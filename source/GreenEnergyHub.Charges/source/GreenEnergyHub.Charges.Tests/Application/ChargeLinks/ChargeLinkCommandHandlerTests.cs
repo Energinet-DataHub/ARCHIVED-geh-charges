@@ -16,7 +16,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Application.ChargeLinks.Handlers;
-using GreenEnergyHub.Charges.Domain.ChargeLinks.Command;
+using GreenEnergyHub.Charges.Domain.ChargeLinkCommands;
 using GreenEnergyHub.TestHelpers;
 using Xunit;
 using Xunit.Categories;

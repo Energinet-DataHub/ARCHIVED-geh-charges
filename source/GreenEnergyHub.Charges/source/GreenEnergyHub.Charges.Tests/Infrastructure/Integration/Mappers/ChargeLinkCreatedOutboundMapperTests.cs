@@ -14,7 +14,7 @@
 
 using System;
 using System.Diagnostics.CodeAnalysis;
-using GreenEnergyHub.Charges.Domain.ChargeLinks.Events.Integration;
+using GreenEnergyHub.Charges.Domain.ChargeLinkCreatedEvents;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Infrastructure.Integration.ChargeLinkCreated;
 using GreenEnergyHub.Charges.Infrastructure.Integration.Mappers;
