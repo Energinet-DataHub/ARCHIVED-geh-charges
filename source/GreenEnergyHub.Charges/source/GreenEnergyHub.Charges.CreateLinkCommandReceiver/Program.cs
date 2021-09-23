@@ -14,6 +14,7 @@
 
 using System;
 using Energinet.DataHub.MeteringPoints.IntegrationEventContracts;
+using EntityFrameworkCore.SqlServer.NodaTime.Extensions;
 using GreenEnergyHub.Charges.Application.ChargeLinks.Factories;
 using GreenEnergyHub.Charges.Application.ChargeLinks.Handlers;
 using GreenEnergyHub.Charges.Application.Charges.Repositories;
@@ -63,7 +64,7 @@ namespace GreenEnergyHub.Charges.CreateLinkCommandReceiver
                                        "CHARGE_DB_CONNECTION_STRING",
                                        "does not exist in configuration settings");
             services.AddDbContext<ChargesDatabaseContext>(
-                options => options.UseSqlServer(connectionString));
+                options => options.UseSqlServer(connectionString, options => options.UseNodaTime()));
             services.AddScoped<IChargesDatabaseContext, ChargesDatabaseContext>();
             services.AddScoped<IDefaultChargeLinkRepository, DefaultChargeLinkRepository>();
             services.AddScoped<IChargeRepository, ChargeRepository>();
