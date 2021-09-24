@@ -42,8 +42,6 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Handlers
             [NotNull] [Frozen] Mock<IChargeLinkFactory> chargeLinkFactory,
             [NotNull] [Frozen] Mock<IChargeLinkCommandFactory> chargeLinkCommandFactory,
             [NotNull] [Frozen] Mock<ChargeLinkCommand> chargeLinkCommand,
-            // [NotNull] [Frozen] Mock<ChargeLink> chargeLink,
-            // [NotNull] [Frozen] Mock<string> correlationId,
             [NotNull] [Frozen] Mock<IChargeLinkCommandAcceptedEventFactory> chargeLinkCommandAcceptedEventFactory,
             [NotNull] ChargeLinkCommandReceivedEvent chargeLinkCommandReceivedEvent,
             [NotNull] ChargeLinkCommandAcceptedEvent chargeLinkCommandAcceptedEvent,
