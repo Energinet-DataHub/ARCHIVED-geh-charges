@@ -12,11 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using GreenEnergyHub.Messaging.Transport;
+using GreenEnergyHub.Messaging.Protobuf;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Messaging.Serialization
 {
-    public abstract class MessageDeserializer<TInboundMessage> : MessageDeserializer
+    public abstract class ProtobufParser<TProtoContract> : ProtobufParser
     {
     }
 }

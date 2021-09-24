@@ -15,14 +15,12 @@ set /p doBuild=Build solution ([y]/n)?
 rem If you don't know the password, perhaps you can obtain it from the configuration settings of the deployed ChargeCommandReceiver function in Azure portal
 set /p sqlPassword=Enter SQL password for 'gehdbadmin' to update db or empty to skip: 
 set /p deployChargeReceiver=Deploy charge receiver ([y]/n)?
-set /p deployChargeLinkReceiver=Deploy charge link receiver ([y]/n)?
+set /p functionHosts=Deploy function hosts ([y]/n)?
 set /p deployChargeLinkEventPublisher=Deploy charge link event publisher ([y]/n)?
 set /p deployCommandReceiver=Deploy command receiver ([y]/n)?
 set /p deployConfirmationSender=Deploy confirmation sender ([y]/n)?
 set /p deployRejectionSender=Deploy rejection sender ([y]/n)?
-set /p meteringPointCreatedReceiver=Deploy metering point created receiver ([y]/n)?
 set /p chargeLinkCommandReceiver=Deploy charge link command receiver([y]/n)?
-set /p createLinkCommandReceiver=Deploy create link command receiver ([y]/n)?
 
 IF /I not "%doBuild%" == "n" (
     rem Clean is necessary if e.g. a function project name has changed because otherwise both assemblies will be picked up by deployment
@@ -44,9 +42,9 @@ IF /I not "%deployChargeReceiver%" == "n" (
     popd
 )
 
-IF /I not "%deployChargeLinkReceiver%" == "n" (
-    pushd source\GreenEnergyHub.Charges.ChargeLinkReceiver\bin\Release\net5.0
-    start "Deploy: Charge Link Receiver" cmd /c "func azure functionapp publish azfun-link-receiver-charges-%organization%-s & pause"
+IF /I not "%functionHosts%" == "n" (
+    pushd source\GreenEnergyHub.Charges.FunctionHost\bin\Release\net5.0
+    start "Deploy: FunctionHosts" cmd /c "func azure functionapp publish azfun-functionhost-charges-%organization%-s & pause"
     popd
 )
 
@@ -74,21 +72,9 @@ IF /I not "%deployRejectionSender%" == "n" (
     popd
 )
 
-IF /I not "%meteringPointCreatedReceiver%" == "n" (
-    pushd source\GreenEnergyHub.Charges.MeteringPointCreatedReceiver\bin\Release\netcoreapp3.1
-    start "Deploy: Metering Point Created Receiver" cmd /c "func azure functionapp publish azfun-metering-point-created-receiver-charges-%organization%-s & pause"
-    popd
-)
-
 IF /I not "%chargeLinkCommandReceiver%" == "n" (
     pushd source\GreenEnergyHub.Charges.ChargeLinkCommandReceiver\bin\Release\net5.0
     start "Deploy: Charge Link Command Receiver" cmd /c "func azure functionapp publish azfun-link-command-receiver-charges-%organization%-s & pause"
-    popd
-)
-
-IF /I not "%createLinkCommandReceiver%" == "n" (
-    pushd source\GreenEnergyHub.Charges.CreateLinkCommandReceiver\bin\Release\net5.0
-    start "Deploy: Create Link Command Receiver" cmd /c "func azure functionapp publish azfun-create-link-command-receiver-charges-%organization%-s & pause"
     popd
 )
 
