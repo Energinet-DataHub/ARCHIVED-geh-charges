@@ -13,9 +13,7 @@
 // limitations under the License.
 
 using System;
-using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoFixture;
@@ -23,13 +21,10 @@ using AutoFixture.AutoMoq;
 using AutoFixture.Xunit2;
 using GreenEnergyHub.Charges.Application;
 using GreenEnergyHub.Charges.Application.ChargeLinks.Handlers;
-using GreenEnergyHub.Charges.Core.AutoFixtureExtensions;
 using GreenEnergyHub.Charges.Domain.ChargeLinkCommandAcceptedEvents;
 using GreenEnergyHub.Charges.Domain.ChargeLinkCommandReceivedEvents;
 using GreenEnergyHub.Charges.Domain.ChargeLinkCommands;
 using GreenEnergyHub.Charges.Domain.ChargeLinks;
-using GreenEnergyHub.Charges.Domain.CreateLinkCommandEvents;
-using GreenEnergyHub.Charges.Domain.DefaultChargeLinks;
 using GreenEnergyHub.TestHelpers;
 using Moq;
 using Xunit;
