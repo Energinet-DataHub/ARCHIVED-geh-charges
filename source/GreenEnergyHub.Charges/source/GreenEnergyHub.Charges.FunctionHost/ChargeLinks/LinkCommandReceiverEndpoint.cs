@@ -16,21 +16,21 @@ using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application.ChargeLinks.Handlers;
 using GreenEnergyHub.Charges.Domain.ChargeLinkCommandReceivedEvents;
+using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandReceived;
 using GreenEnergyHub.Charges.Infrastructure.Messaging;
-using GreenEnergyHub.Messaging.Transport;
 using Microsoft.Azure.Functions.Worker;
 
-namespace GreenEnergyHub.Charges.ChargeLinkCommandReceiver
+namespace GreenEnergyHub.Charges.FunctionHost.ChargeLinks
 {
     public class LinkCommandReceiverEndpoint
     {
         public const string FunctionName = nameof(LinkCommandReceiverEndpoint);
-        private readonly MessageExtractor _messageExtractor;
+        private readonly MessageExtractor<ChargeLinkCommandReceivedContract> _messageExtractor;
         private readonly IChargeLinkCommandReceivedHandler _chargeLinkCommandReceivedHandler;
         private readonly ICorrelationContext _correlationContext;
 
         public LinkCommandReceiverEndpoint(
-            MessageExtractor messageExtractor,
+            MessageExtractor<ChargeLinkCommandReceivedContract> messageExtractor,
             ICorrelationContext correlationContext,
             IChargeLinkCommandReceivedHandler chargeLinkCommandReceivedHandler)
         {
@@ -44,7 +44,7 @@ namespace GreenEnergyHub.Charges.ChargeLinkCommandReceiver
             [ServiceBusTrigger(
                 "%CHARGE_LINK_RECEIVED_TOPIC_NAME%",
                 "%CHARGE_LINK_RECEIVED_SUBSCRIPTION_NAME%",
-                Connection = "CHARGE_LINK_RECEIVED_LISTENER_CONNECTION_STRING")]
+                Connection = "DOMAINEVENT_LISTENER_CONNECTION_STRING")]
             byte[] data,
             [NotNull] FunctionContext context)
         {
