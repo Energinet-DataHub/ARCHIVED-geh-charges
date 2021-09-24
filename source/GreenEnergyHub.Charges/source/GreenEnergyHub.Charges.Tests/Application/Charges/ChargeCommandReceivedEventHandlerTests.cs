@@ -39,6 +39,8 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges
             [Frozen] [NotNull] Mock<IChargeCommandValidator> validator,
             [Frozen] [NotNull] Mock<IChargeRepository> repository,
             [Frozen] [NotNull] Mock<IChargeCommandConfirmationService> confirmationService,
+            [Frozen] [NotNull] Mock<ChargeCommand> chargeCommand,
+            [Frozen] [NotNull] Mock<IChargeCommandFactory> chargeCommandFactory,
             [NotNull] ChargeCommandReceivedEvent receivedEvent,
             [NotNull] ChargeCommandReceivedEventHandler sut)
         {
@@ -63,6 +65,11 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges
                         It.IsAny<ChargeCommand>()))
                 .Callback<ChargeCommand>(
                     (_) => confirmed = true);
+
+            chargeCommandFactory.Setup(
+                    s => s.CreateFromChargeAsync(
+                        It.IsAny<Charge>()))
+                .Returns(Task.FromResult(chargeCommand.Object));
 
             // Act
             await sut.HandleAsync(receivedEvent).ConfigureAwait(false);
