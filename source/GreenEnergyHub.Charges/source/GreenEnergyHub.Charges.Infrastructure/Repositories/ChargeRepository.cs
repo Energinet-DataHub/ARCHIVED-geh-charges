@@ -62,13 +62,6 @@ namespace GreenEnergyHub.Charges.Infrastructure.Repositories
                 .ConfigureAwait(false);
         }
 
-        public async Task<bool> CheckIfChargeExistsByCorrelationIdAsync(string correlationId)
-        {
-            return await _chargesDatabaseContext.ChargeOperations
-                .AnyAsync(x => x.CorrelationId == correlationId)
-                .ConfigureAwait(false);
-        }
-
         public async Task StoreChargeAsync(Charge newCharge)
         {
             if (newCharge == null) throw new ArgumentNullException(nameof(newCharge));

@@ -116,27 +116,5 @@ namespace GreenEnergyHub.Charges.Domain.ChargeLinkCommands
             };
             return chargeLinkCommand;
         }
-
-        // if (chargeLinkEvent == null) throw new ArgumentNullException(nameof(chargeLinkEvent));
-        //
-        // var chargeLink = chargeLinkEvent.ChargeLinkCommand.ChargeLink;
-        //
-        // var charge = await _chargeRepository
-        //     .GetChargeAsync(chargeLink.ChargeId, chargeLink.ChargeOwner, chargeLink.ChargeType)
-        //     .ConfigureAwait(false);
-        //
-        // var meteringPoint = await _meteringPointRepository
-        //     .GetMeteringPointAsync(chargeLink.MeteringPointId)
-        //     .ConfigureAwait(false);
-        //
-        // var operation = new ChargeLinkOperation(chargeLink.OperationId, chargeLinkEvent.CorrelationId);
-        // var operations = new List<ChargeLinkOperation> { operation };
-        //
-        // var periodDetails = new ChargeLinkPeriodDetails(
-        //     chargeLink.StartDateTime,
-        //     chargeLink.EndDateTime.TimeOrEndDefault(),
-        //     chargeLink.Factor,
-        //     operation.Id);
-        // var periodDetailsCollection = new List<ChargeLinkPeriodDetails> { periodDetails };
     }
 }
