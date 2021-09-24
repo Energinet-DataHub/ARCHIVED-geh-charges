@@ -21,7 +21,7 @@ using GreenEnergyHub.TestHelpers;
 using Xunit;
 using Xunit.Categories;
 
-namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks
+namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Handlers
 {
     [UnitTest]
     public class ChargeLinkCommandHandlerTests
