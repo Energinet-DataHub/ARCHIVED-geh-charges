@@ -28,8 +28,9 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Functions
     /// </summary>
     public class ChargeLinkReceiverTests
     {
-        [Collection(nameof(ChargeLinkReceiverFunctionAppCollectionFixture))]
-        public class GetHealthAsync : FunctionAppTestBase<ChargeLinkReceiverFunctionAppFixture>
+        // UNDONE: For now we just create one collection to span both apps; we have also implemented collection fixtures.
+        [Collection("FunctionApp")]
+        public class GetHealthAsync : FunctionAppTestBase<ChargeLinkReceiverFunctionAppFixture>, IClassFixture<ChargeLinkReceiverFunctionAppFixture>
         {
             public GetHealthAsync(ChargeLinkReceiverFunctionAppFixture fixture, ITestOutputHelper testOutputHelper)
                 : base(fixture, testOutputHelper)
@@ -52,6 +53,20 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Functions
 
                 var context = await actualResponse.Content.ReadAsStringAsync();
                 context.Should().Contain("\"FunctionAppIsAlive\": true");
+            }
+
+            // .NET 5.0 => ChargeLinkReceiver
+            [Fact]
+            public async Task When_Net50RequestingUnknownEndpoint_Then_ReturnStatusNotFound()
+            {
+                // Arrange
+                var requestUri = "api/unknown";
+
+                // Act
+                var actualResponse = await Fixture.HostManager.HttpClient.GetAsync(requestUri);
+
+                // Assert
+                actualResponse.StatusCode.Should().Be(HttpStatusCode.NotFound);
             }
         }
     }
