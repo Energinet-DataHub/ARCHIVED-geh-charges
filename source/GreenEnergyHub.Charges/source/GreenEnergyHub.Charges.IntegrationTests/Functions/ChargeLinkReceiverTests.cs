@@ -26,19 +26,19 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Functions
     /// <summary>
     /// Proof-of-concept on integration testing a function.
     /// </summary>
-    public class ChargeReceiverTests
+    public class ChargeLinkReceiverTests
     {
-        [Collection(nameof(ChargeReceiverFunctionAppCollectionFixture))]
-        public class GetHealthAsync : FunctionAppTestBase<ChargeReceiverFunctionAppFixture>
+        [Collection(nameof(ChargeLinkReceiverFunctionAppCollectionFixture))]
+        public class GetHealthAsync : FunctionAppTestBase<ChargeLinkReceiverFunctionAppFixture>
         {
-            public GetHealthAsync(ChargeReceiverFunctionAppFixture fixture, ITestOutputHelper testOutputHelper)
+            public GetHealthAsync(ChargeLinkReceiverFunctionAppFixture fixture, ITestOutputHelper testOutputHelper)
                 : base(fixture, testOutputHelper)
             {
             }
 
-            // .NET 3.1 => ChargeReceiver
+            // .NET 5.0 => ChargeLinkReceiver
             [Fact]
-            public async Task When_Net31RequestingHealthStatus_Then_ReturnStatusOKAndHealthy()
+            public async Task When_Net50RequestingHealthStatus_Then_ReturnStatusOKAndHealthy()
             {
                 // Arrange
                 var requestUri = "api/HealthStatus";
@@ -51,7 +51,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Functions
                 actualResponse.StatusCode.Should().Be(HttpStatusCode.OK);
 
                 var context = await actualResponse.Content.ReadAsStringAsync();
-                context.Should().Be("{\"functionAppIsAlive\":true}");
+                context.Should().Contain("\"FunctionAppIsAlive\": true");
             }
         }
     }

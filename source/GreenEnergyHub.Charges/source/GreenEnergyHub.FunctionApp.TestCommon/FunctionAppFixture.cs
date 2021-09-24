@@ -41,8 +41,8 @@ namespace GreenEnergyHub.FunctionApp.TestCommon
             HostConfigurationBuilder = new FunctionAppHostConfigurationBuilder();
             HostStartupLog = new List<string>();
 
-            // At the moment we never override HostSettings, so we can load them here.
             var hostSettings = HostConfigurationBuilder.CreateFunctionAppHostSettings();
+            OnConfigureHostSettings(hostSettings);
             HostManager = new FunctionAppHostManager(hostSettings, TestLogger);
         }
 
@@ -108,6 +108,12 @@ namespace GreenEnergyHub.FunctionApp.TestCommon
         {
             TestLogger.TestOutputHelper = testOutputHelper;
         }
+
+        /// <summary>
+        /// Configure host settings to match the name, framework and configuration (debug/release) of the
+        /// function app under test.
+        /// </summary>
+        protected abstract void OnConfigureHostSettings(FunctionAppHostSettings hostSettings);
 
         /// <summary>
         /// Before starting the host or creating supporting manager/services, we set environment variables

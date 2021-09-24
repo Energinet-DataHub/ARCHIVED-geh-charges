@@ -23,9 +23,9 @@ using Microsoft.Extensions.Configuration;
 
 namespace GreenEnergyHub.Charges.IntegrationTests.Functions.Fixtures
 {
-    public class ChargeReceiverFunctionAppFixture : FunctionAppFixture
+    public class ChargeLinkReceiverFunctionAppFixture : FunctionAppFixture
     {
-        public ChargeReceiverFunctionAppFixture()
+        public ChargeLinkReceiverFunctionAppFixture()
         {
             AzuriteManager = new AzuriteManager();
 
@@ -37,7 +37,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Functions.Fixtures
         /// <inheritdoc/>
         protected override void OnConfigureHostSettings(FunctionAppHostSettings hostSettings)
         {
-            hostSettings.FunctionApplicationPath = "..\\..\\..\\..\\GreenEnergyHub.Charges.ChargeReceiver\\bin\\Debug\\netcoreapp3.1";
+            hostSettings.FunctionApplicationPath = "..\\..\\..\\..\\GreenEnergyHub.Charges.ChargeLinkReceiver\\bin\\Debug\\net5.0";
         }
 
         /// <inheritdoc/>
