@@ -47,6 +47,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
 
             // Arrange
             var sut = new DefaultChargeLinkRepository(chargesDatabaseContext);
+            var x = chargesDatabaseContext.DefaultChargeLinks.ToList();
 
             // Act
             var actual = await

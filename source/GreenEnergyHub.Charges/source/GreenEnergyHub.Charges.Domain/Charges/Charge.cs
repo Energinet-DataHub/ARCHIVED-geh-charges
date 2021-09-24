@@ -39,7 +39,6 @@ namespace GreenEnergyHub.Charges.Domain.Charges
             bool taxIndicator,
             List<Point> points)
         {
-            Points = points;
             Id = id;
             Document = document;
             ChargeOperationId = chargeOperationId;
@@ -55,6 +54,7 @@ namespace GreenEnergyHub.Charges.Domain.Charges
             Resolution = resolution;
             TransparentInvoicing = transparentInvoicing;
             TaxIndicator = taxIndicator;
+            Points = points;
         }
 
         /// <summary>
