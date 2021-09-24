@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using FluentAssertions;
@@ -70,12 +71,12 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
                 .ConfigureAwait(false);
 
             var actual = await chargesDatabaseReadContext.ChargeLinks.SingleAsync(
-                    c => c.ChargeId == ids.chargeRowId && c.MeteringPointId == ids.meteringPointRowId)
+                    c => c.ChargeId == ids.chargeId && c.MeteringPointId == ids.meteringPointId)
                 .ConfigureAwait(false);
             actual.Should().BeEquivalentTo(expected);
         }
 
-        private ChargeLink CreateNewExpectedChargeLink((int chargeRowId, int meteringPointRowId) ids)
+        private ChargeLink CreateNewExpectedChargeLink((Guid chargeId, Guid meteringPointId) ids)
         {
             var operation = new ChargeLinkOperation(ExpectedOperationId, ExpectedCorrelationId);
 
@@ -86,13 +87,13 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
                 operation.Id);
 
             return new ChargeLink(
-                ids.chargeRowId,
-                ids.meteringPointRowId,
+                ids.chargeId,
+                ids.meteringPointId,
                 new List<ChargeLinkOperation> { operation },
                 new List<ChargeLinkPeriodDetails> { periodDetails });
         }
 
-        private static (int chargeRowId, int meteringPointRowId) SeedDatabase(ChargesDatabaseContext context)
+        private static (Guid chargeId, Guid meteringPointId) SeedDatabase(ChargesDatabaseContext context)
         {
             var marketParticipant = new MarketParticipant { Name = "Name", Role = 1, MarketParticipantId = "MarketParticipantId" };
 
@@ -102,13 +103,12 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
             var charge = new Charges.Infrastructure.Context.Model.Charge
             {
                 Currency = "DKK",
-                ChargeId = "charge id",
-                MarketParticipantRowId = marketParticipant.RowId,
+                SenderProvidedChargeId = "charge id",
+                MarketParticipantId = marketParticipant.Id,
             };
             context.Charges.Add(charge);
 
-            var meteringPoint = new MeteringPoint(
-                null,
+            var meteringPoint = MeteringPoint.Create(
                 "some-id",
                 MeteringPointType.ElectricalHeating,
                 "some-area-id",
@@ -119,7 +119,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
 
             context.SaveChanges();
 
-            return (charge.RowId, meteringPoint.RowId!.Value);
+            return (charge.Id, meteringPoint.Id);
         }
     }
 }

@@ -33,8 +33,7 @@ namespace GreenEnergyHub.Charges.Domain.MeteringPoints
                 ? null as SettlementMethod?
                 : Enum.Parse<SettlementMethod>(meteringPointCreatedEvent.SettlementMethod);
 
-            return new MeteringPoint(
-                null,
+            return MeteringPoint.Create(
                 meteringPointCreatedEvent.MeteringPointId,
                 meteringPointType,
                 meteringPointCreatedEvent.GridAreaId,

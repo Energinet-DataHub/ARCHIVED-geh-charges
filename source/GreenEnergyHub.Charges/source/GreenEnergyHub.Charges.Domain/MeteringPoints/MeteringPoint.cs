@@ -12,14 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using NodaTime;
 
 namespace GreenEnergyHub.Charges.Domain.MeteringPoints
 {
     public class MeteringPoint
     {
-        public MeteringPoint(
-            int? rowId,
+        private MeteringPoint(
+            Guid id,
             string meteringPointId,
             MeteringPointType meteringPointType,
             string gridAreaId,
@@ -27,7 +28,7 @@ namespace GreenEnergyHub.Charges.Domain.MeteringPoints
             ConnectionState connectionState,
             SettlementMethod? settlementMethod)
         {
-            RowId = rowId;
+            Id = id;
             MeteringPointId = meteringPointId;
             MeteringPointType = meteringPointType;
             GridAreaId = gridAreaId;
@@ -36,7 +37,26 @@ namespace GreenEnergyHub.Charges.Domain.MeteringPoints
             SettlementMethod = settlementMethod;
         }
 
-        public int? RowId { get; set; }
+        public static MeteringPoint Create(
+            string meteringPointId,
+            MeteringPointType meteringPointType,
+            string gridAreaId,
+            Instant effectiveDate,
+            ConnectionState connectionState,
+            SettlementMethod? settlementMethod)
+        {
+            var id = Guid.NewGuid();
+            return new MeteringPoint(
+                id,
+                meteringPointId,
+                meteringPointType,
+                gridAreaId,
+                effectiveDate,
+                connectionState,
+                settlementMethod);
+        }
+
+        public Guid Id { get; set; }
 
         public string MeteringPointId { get; }
 

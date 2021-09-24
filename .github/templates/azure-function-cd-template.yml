@@ -26,7 +26,7 @@ on:
 env:
   CSPROJ_FILE_PATH: TEMPLATE_REPLACE__YOUR_CSPROJ_FILE_PATH # eg. 'source/hello-world/source/HelloWorld.HelloWorldFunction/HelloWorld.HelloWorldFunction.csproj'
   SOLUTION_FILE_PATH: TEMPLATE_REPLACE__YOUR_SLN_FILE_PATH # eg. 'source/hello-world/HelloWorld.sln'
-  DOTNET_VERSION: '3.1'
+  DOTNET_VERSION: '5.0.202'
   ORGANISATION_NAME: 'endk'
   AZURE_FUNCTIONAPP_NAME: TEMPLATE_REPLACE__YOUR_FUNCTION_BASE_NAME_LOWERCASE_NO_SYMBOLS # eg. 'helloworld'
   PROJECT_NAME: TEMPLATE_REPLACE__YOUR_DOMAIN_NAME_LOWERCASE_NO_SYMBOLS # eg. domaintemplaterepository
@@ -39,6 +39,11 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@master
+
+      - name: Setup .NET 3.1 environment
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: '3.1.x'
 
       - name: Setup .NET ${{ env.DOTNET_VERSION }} environment
         uses: actions/setup-dotnet@v1
