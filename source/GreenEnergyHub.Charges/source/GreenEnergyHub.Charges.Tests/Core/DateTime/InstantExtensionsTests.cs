@@ -23,7 +23,7 @@ namespace GreenEnergyHub.Charges.Tests.Core.DateTime
     public class InstantExtensionsTests
     {
         [Fact]
-        public void TimeOrEndDefault_WhenInstantIsNotNull_ItReturnsInput()
+        public void TimeOrEndDefault_WhenInstantIsNotNull_ReturnsInput()
         {
             // Arrange
             Instant? instant = SystemClock.Instance.GetCurrentInstant();
