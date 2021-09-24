@@ -31,6 +31,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Validation.BusinessVa
         [InlineAutoDomainData]
         public void IsValid_WhenVatPayerInCommandDoesNotMatchCharge_IsFalse([NotNull]ChargeCommand command, [NotNull] Charge charge)
         {
+            command.ChargeOperation.VatClassification = (VatClassification)5;
             var sut = new ChangingTariffVatValueNotAllowedRule(command, charge);
             Assert.False(sut.IsValid);
         }

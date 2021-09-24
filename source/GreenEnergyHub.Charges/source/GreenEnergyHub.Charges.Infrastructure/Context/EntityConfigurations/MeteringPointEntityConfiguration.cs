@@ -27,7 +27,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Context.EntityConfigurations
 
             builder.ToTable("MeteringPoint", "Charges");
 
-            builder.HasKey(x => x.RowId);
+            builder.HasKey(x => x.Id);
 
             builder
                 .Property(x => x.ConnectionState)

@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 
 #pragma warning disable 8618
 #pragma warning disable CA2227
@@ -28,14 +28,13 @@ namespace GreenEnergyHub.Charges.Infrastructure.Context.Model
             ChargePeriodDetails = new List<ChargePeriodDetails>();
         }
 
-        [Key]
-        public int RowId { get; set; }
+        public Guid Id { get; set; }
 
-        public string ChargeId { get; set; }
+        public string SenderProvidedChargeId { get; set; }
 
         public int ChargeType { get; set; }
 
-        public int MarketParticipantRowId { get; set; }
+        public Guid MarketParticipantId { get; set; }
 
         public bool TaxIndicator { get; set; }
 
