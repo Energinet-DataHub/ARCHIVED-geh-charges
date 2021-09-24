@@ -16,7 +16,8 @@
   //"FunctionAppHostPath": "C:\\Tools\\nvm\\v12.22.1\\node_modules\\azure-functions-core-tools\\bin\\func.dll",
 
   // Notice you will need to update this according to the build configuration (Debug/Release) and .NET Core version.
-  "FunctionApplicationPath": "..\\..\\..\\..\\GreenEnergyHub.Charges.ChargeReceiver\\bin\\Debug\\netcoreapp3.1",
+  //"FunctionApplicationPath": "..\\..\\..\\..\\GreenEnergyHub.Charges.ChargeReceiver\\bin\\Debug\\netcoreapp3.1",
+  "FunctionApplicationPath": "..\\..\\..\\..\\GreenEnergyHub.Charges.ChargeLinkReceiver\\bin\\Debug\\net5.0",
 
   "UseShellExecute": "false",
   "Port": "7001",

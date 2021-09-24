@@ -36,8 +36,9 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Functions
             {
             }
 
+            // .NET 3.1 => ChargeReceiver
             [Fact]
-            public async Task When_RequestingHealthStatus_Then_ReturnStatusOKAndHealthy()
+            public async Task When_Net31RequestingHealthStatus_Then_ReturnStatusOKAndHealthy()
             {
                 // Arrange
                 var requestUri = "api/HealthStatus";
@@ -51,6 +52,24 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Functions
 
                 var context = await actualResponse.Content.ReadAsStringAsync();
                 context.Should().Be("{\"functionAppIsAlive\":true}");
+            }
+
+            // .NET 5.0 => ChargeLinkReceiver
+            [Fact]
+            public async Task When_Net50RequestingHealthStatus_Then_ReturnStatusOKAndHealthy()
+            {
+                // Arrange
+                var requestUri = "api/HealthStatus";
+
+                // Act
+                var actualResponse = await Fixture.HostManager.HttpClient.GetAsync(requestUri);
+
+                // Assert
+                using var assertionScope = new AssertionScope();
+                actualResponse.StatusCode.Should().Be(HttpStatusCode.OK);
+
+                var context = await actualResponse.Content.ReadAsStringAsync();
+                context.Should().Contain("\"FunctionAppIsAlive\": true");
             }
         }
     }
