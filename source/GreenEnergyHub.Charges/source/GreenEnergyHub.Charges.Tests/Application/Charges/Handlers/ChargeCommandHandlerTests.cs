@@ -25,7 +25,7 @@ using Xunit;
 using Xunit.Categories;
 using ChargeCommandHandler = GreenEnergyHub.Charges.Application.Charges.Handlers.ChargeCommandHandler;
 
-namespace GreenEnergyHub.Charges.Tests.Application.Charges
+namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
 {
     [UnitTest]
     public class ChargeCommandHandlerTests
