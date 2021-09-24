@@ -18,13 +18,12 @@ using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application.ChargeLinks.Handlers;
 using GreenEnergyHub.Charges.Domain.ChargeLinkCommands;
 using GreenEnergyHub.Charges.Infrastructure.Messaging;
-using GreenEnergyHub.Messaging.Transport;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
 using Microsoft.Extensions.Logging;
 
-namespace GreenEnergyHub.Charges.ChargeLinkReceiver
+namespace GreenEnergyHub.Charges.FunctionHost.ChargeLinks
 {
     public class ChargeLinkHttpTrigger
     {
@@ -34,14 +33,14 @@ namespace GreenEnergyHub.Charges.ChargeLinkReceiver
         /// </summary>
         public const string FunctionName = "ChargeLinkHttpTrigger";
         private readonly ICorrelationContext _correlationContext;
-        private readonly MessageExtractor _messageExtractor;
+        private readonly MessageExtractor<ChargeLinkCommand> _messageExtractor;
         private readonly IChargeLinkCommandHandler _chargeLinkCommandHandler;
         private readonly ILogger _log;
 
         public ChargeLinkHttpTrigger(
             ICorrelationContext correlationContext,
             IChargeLinkCommandHandler chargeLinkCommandHandler,
-            MessageExtractor messageExtractor,
+            MessageExtractor<ChargeLinkCommand> messageExtractor,
             [NotNull] ILoggerFactory loggerFactory)
         {
             _correlationContext = correlationContext;

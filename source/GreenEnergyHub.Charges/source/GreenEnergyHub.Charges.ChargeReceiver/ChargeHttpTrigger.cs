@@ -76,7 +76,7 @@ namespace GreenEnergyHub.Charges.ChargeReceiver
             HttpRequest req)
         {
             var message = new ChargesMessage();
-            var command = await _messageExtractor.ExtractAsync(req.Body).ConfigureAwait(false);
+            var command = (ChargeCommand)await _messageExtractor.ExtractAsync(req.Body).ConfigureAwait(false);
 
             command.SetCorrelationId(_correlationContext.CorrelationId);
             message.Transactions.Add(command);

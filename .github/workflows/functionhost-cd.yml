@@ -19,23 +19,23 @@ on:
       - main
     paths:
       - source/GreenEnergyHub.Charges/**
-      - .github/workflows/link-receiver-cd.yml
+      - .github/workflows/functionhost-cd.yml
       - .github/actions/dotnet-build-and-test/**
       - build/infrastructure/**
   workflow_dispatch: {}
 
 env:
-  CSPROJ_FILE_PATH: 'source/GreenEnergyHub.Charges/source/GreenEnergyHub.Charges.ChargeLinkReceiver/GreenEnergyHub.Charges.ChargeLinkReceiver.csproj'
+  CSPROJ_FILE_PATH: 'source/GreenEnergyHub.Charges/source/GreenEnergyHub.Charges.FunctionHost/GreenEnergyHub.Charges.FunctionHost.csproj'
   SOLUTION_FILE_PATH: 'source/GreenEnergyHub.Charges/GreenEnergyHub.Charges.sln'
   DOTNET_VERSION: '5.0.202'
   ORGANISATION_NAME: 'endk'
-  AZURE_FUNCTIONAPP_NAME: 'link-receiver'
+  AZURE_FUNCTIONAPP_NAME: 'functionhost'
   PROJECT_NAME: charges
   REPOSITORY_NAME: Energinet-DataHub/geh-charges
 
 jobs:
-  build_linkreceiver:
-    name: Build Charge Link Receiver
+  build_functionhost:
+    name: Build FunctionHost
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -66,7 +66,7 @@ jobs:
     
   deploy_function:
     name: Deploy function to ${{ matrix.environment.name }} - ${{ matrix.environment.long }}
-    needs: build_linkreceiver
+    needs: build_functionhost
     runs-on: ubuntu-latest
     strategy:
       matrix:

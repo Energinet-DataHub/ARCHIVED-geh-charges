@@ -12,36 +12,38 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Azure.WebJobs;
-using Microsoft.Azure.WebJobs.Extensions.Http;
+using System.Diagnostics.CodeAnalysis;
+using System.Net;
+using Microsoft.Azure.Functions.Worker;
+using Microsoft.Azure.Functions.Worker.Http;
 using Microsoft.Extensions.Logging;
 
-namespace GreenEnergyHub.Charges.MeteringPointCreatedReceiver
+namespace GreenEnergyHub.Charges.FunctionHost.Health
 {
-    public static class HealthStatus
+    public class HealthStatus
     {
+        private readonly ILogger _log;
+
+        public HealthStatus([NotNull] ILoggerFactory loggerFactory)
+        {
+            _log = loggerFactory.CreateLogger(nameof(HealthStatus));
+        }
+
         /// <summary>
         /// HTTP GET endpoint that can be used to monitor the health of the function app.
         /// </summary>
-        [FunctionName(nameof(HealthStatus))]
-        public static Task<IActionResult> RunAsync(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = null)] HttpRequest req,
-            ILogger log)
+        [Function(nameof(HealthStatus))]
+        public HttpResponseData Run(
+            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = null)]
+            [NotNull] HttpRequestData req,
+            [NotNull] FunctionContext context)
         {
-            log.LogInformation("Health Status API invoked");
-            log.LogDebug("Workaround for unused method argument", req);
+            _log.LogDebug("Workaround for unused method arguments", req, context);
 
             /* Consider checking access to used Service Bus topics and other health checks */
 
-            var status = new
-            {
-                FunctionAppIsAlive = true,
-            };
-
-            return Task.FromResult<IActionResult>(new JsonResult(status));
+            var response = req.CreateResponse(HttpStatusCode.OK);
+            return response;
         }
     }
 }
