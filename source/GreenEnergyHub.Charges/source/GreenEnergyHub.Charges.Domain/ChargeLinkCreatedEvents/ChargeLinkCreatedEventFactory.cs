@@ -30,7 +30,7 @@ namespace GreenEnergyHub.Charges.Domain.ChargeLinkCreatedEvents
                 command.ChargeLink.ChargeOwner,
                 new ChargeLinkPeriod(
                     command.ChargeLink.StartDateTime,
-                    command.ChargeLink.EndDateTime.TimeOrEndDefault(), // TODO: EndDateTime: is this the correct place to convert?
+                    command.ChargeLink.EndDateTime.TimeOrEndDefault(),
                     command.ChargeLink.Factor));
         }
     }
