@@ -1,0 +1,24 @@
+﻿{
+  //
+  // See class FunctionAppHostSettings for a description of settings in this file.
+  //
+
+  // Notice we previously used %ProgramFiles% but experienced problems as it sometimes resolved to "...\Program Files (x86)\"
+  "DotnetExecutablePath": "C:\\Program Files\\dotnet\\dotnet.exe",
+
+  // Notice:
+  // * %APPDATA% resolves to "C:\Users\<username>\AppData\Roaming".
+  // * Path contains Node.js version; this MUST be a Angular AND Azure Functions Tools compatible version.
+  //"FunctionAppHostPath": "%APPDATA%\\nvm\\v12.22.1\\node_modules\\azure-functions-core-tools\\bin\\func.dll",
+
+  // TODO: Ensure developers has this path
+  "FunctionAppHostPath": "%APPDATA%\\..\\Local\\AzureFunctionsTools\\Releases\\3.23.5\\cli_x64\\func.dll",
+  //"FunctionAppHostPath": "C:\\Tools\\nvm\\v12.22.1\\node_modules\\azure-functions-core-tools\\bin\\func.dll",
+
+  // Notice you will need to update this according to the build configuration (Debug/Release) and .NET Core version.
+  "FunctionApplicationPath": "..\\..\\..\\..\\GreenEnergyHub.Charges.ChargeReceiver\\bin\\Debug\\netcoreapp3.1",
+
+  "UseShellExecute": "false",
+  "Port": "7001",
+  "MaxWaitSeconds": "120"
+}
