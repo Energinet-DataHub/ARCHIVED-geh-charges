@@ -14,14 +14,14 @@
 
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
+using Energinet.DataHub.MeteringPoints.IntegrationEventContracts;
 using GreenEnergyHub.Charges.Application.ChargeLinks.Handlers;
 using GreenEnergyHub.Charges.Domain.CreateLinkCommandEvents;
 using GreenEnergyHub.Charges.Infrastructure.Messaging;
-using GreenEnergyHub.Messaging.Transport;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Logging;
 
-namespace GreenEnergyHub.Charges.CreateLinkCommandReceiver
+namespace GreenEnergyHub.Charges.FunctionHost.MeteringPoint
 {
     public class CreateLinkCommandReceiverServiceBusTrigger
     {
@@ -31,13 +31,13 @@ namespace GreenEnergyHub.Charges.CreateLinkCommandReceiver
         /// </summary>
         public const string FunctionName = "CreateLinkCommandReceiverServiceBusTrigger";
         private readonly ICorrelationContext _correlationContext;
-        private readonly MessageExtractor _messageExtractor;
+        private readonly MessageExtractor<CreateLinkCommandContract> _messageExtractor;
         private readonly ILogger _log;
         private readonly ICreateLinkCommandEventHandler _createLinkCommandEventHandler;
 
         public CreateLinkCommandReceiverServiceBusTrigger(
             ICorrelationContext correlationContext,
-            MessageExtractor messageExtractor,
+            MessageExtractor<CreateLinkCommandContract> messageExtractor,
             [NotNull] ILoggerFactory loggerFactory,
             ICreateLinkCommandEventHandler createLinkCommandEventHandler)
         {
@@ -53,7 +53,7 @@ namespace GreenEnergyHub.Charges.CreateLinkCommandReceiver
             [ServiceBusTrigger(
                 "%CREATE_LINK_COMMAND_TOPIC_NAME%",
                 "%CREATE_LINK_COMMAND_SUBSCRIPTION_NAME%",
-                Connection = "INTEGRATIONEVENT_LISTENER_CONNECTION_STRING")]
+                Connection = "DOMAINEVENT_LISTENER_CONNECTION_STRING")]
             [NotNull] byte[] message,
             [NotNull] FunctionContext context)
         {
@@ -79,7 +79,7 @@ namespace GreenEnergyHub.Charges.CreateLinkCommandReceiver
 
         private void SetupCorrelationContext(FunctionContext context)
         {
-            _correlationContext.CorrelationId = context.InvocationId;
+            _correlationContext.CorrelationId = context.InvocationId.Replace("-", string.Empty);
         }
     }
 }

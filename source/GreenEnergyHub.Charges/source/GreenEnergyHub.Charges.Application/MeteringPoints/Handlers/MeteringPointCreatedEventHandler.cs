@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Domain.MeteringPointCreatedEvents;
 using GreenEnergyHub.Charges.Domain.MeteringPoints;
@@ -25,10 +26,12 @@ namespace GreenEnergyHub.Charges.Application.MeteringPoints.Handlers
         private readonly IMeteringPointRepository _meteringPointRepository;
         private readonly ILogger _logger;
 
-        public MeteringPointCreatedEventHandler(IMeteringPointRepository meteringPointRepository, ILogger logger)
+        public MeteringPointCreatedEventHandler(
+            IMeteringPointRepository meteringPointRepository,
+            [NotNull] ILoggerFactory loggerFactory)
         {
             _meteringPointRepository = meteringPointRepository;
-            _logger = logger;
+            _logger = loggerFactory.CreateLogger(nameof(MeteringPointCreatedEventHandler));
         }
 
         public async Task HandleAsync(MeteringPointCreatedEvent meteringPointCreatedEvent)
