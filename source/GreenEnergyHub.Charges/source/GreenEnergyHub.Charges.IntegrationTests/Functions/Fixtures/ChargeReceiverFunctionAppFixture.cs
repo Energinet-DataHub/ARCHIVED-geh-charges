@@ -27,6 +27,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Functions.Fixtures
         public ChargeReceiverFunctionAppFixture()
         {
             AzuriteManager = new AzuriteManager();
+
+            //// TODO: Create resource managers here, but do not start them until OnInitializeFunctionAppDependenciesAsync.
         }
 
         private AzuriteManager AzuriteManager { get; }
