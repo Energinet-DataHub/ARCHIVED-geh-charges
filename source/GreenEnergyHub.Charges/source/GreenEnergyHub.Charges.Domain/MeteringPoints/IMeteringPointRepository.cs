@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Threading.Tasks;
 
 namespace GreenEnergyHub.Charges.Domain.MeteringPoints
@@ -35,10 +36,9 @@ namespace GreenEnergyHub.Charges.Domain.MeteringPoints
         Task<MeteringPoint> GetMeteringPointAsync(string meteringPointId);
 
         /// <summary>
-        /// Used to find a Metering Point by RowId.
+        /// Used to find a Metering Point by Id.
         /// </summary>
-        /// <param name="rowId"></param>
         /// <returns>Metering Point</returns>
-        Task<MeteringPoint> GetMeteringPointAsync(int rowId);
+        Task<MeteringPoint> GetMeteringPointAsync(Guid id);
     }
 }

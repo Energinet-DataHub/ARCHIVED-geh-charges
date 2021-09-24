@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using GreenEnergyHub.Charges.Domain.MeteringPoints;
 using NodaTime;
 
@@ -35,13 +36,13 @@ namespace GreenEnergyHub.Charges.Domain.DefaultChargeLinks
         public DefaultChargeLink(
             Instant startDateTime,
             Instant endDateTime,
-            int chargeRowId,
+            Guid chargeId,
             MeteringPointType meteringPointType)
         {
             _startDateTime = startDateTime;
             EndDateTime = endDateTime;
             _meteringPointType = meteringPointType;
-            ChargeRowId = chargeRowId;
+            ChargeId = chargeId;
         }
 
         /// <summary>
@@ -67,7 +68,7 @@ namespace GreenEnergyHub.Charges.Domain.DefaultChargeLinks
         /// <summary>
         /// A reference to the charge in the Charge table
         /// </summary>
-        public int ChargeRowId { get; }
+        public Guid ChargeId { get; }
 
         /// <summary>
         /// If the DefaultChargeLink is only applicable for linking when EndDateTime is later than the StartDateTime

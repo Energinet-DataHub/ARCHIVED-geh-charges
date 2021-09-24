@@ -46,7 +46,7 @@ namespace GreenEnergyHub.Charges.Domain.ChargeLinkCommands
             [NotNull] DefaultChargeLink defaultChargeLink,
             string correlationId)
         {
-            var charge = await _chargeRepository.GetChargeAsync(defaultChargeLink.ChargeRowId).ConfigureAwait(false);
+            var charge = await _chargeRepository.GetChargeAsync(defaultChargeLink.ChargeId).ConfigureAwait(false);
             return CreateChargeLinkCommand(
                 createLinkCommandEvent.MeteringPointId,
                 correlationId,
@@ -69,7 +69,7 @@ namespace GreenEnergyHub.Charges.Domain.ChargeLinkCommands
                 meteringPoint.MeteringPointId,
                 correlationId,
                 charge,
-                chargeLinkPeriodDetails.StartDateTime, // TODO: do need to compare with meteringpoint startDateTime?
+                chargeLinkPeriodDetails.StartDateTime,
                 chargeLinkPeriodDetails.EndDateTime);
         }
 
@@ -105,7 +105,7 @@ namespace GreenEnergyHub.Charges.Domain.ChargeLinkCommands
                 ChargeLink = new ChargeLinkDto
                 {
                     ChargeType = charge.Type,
-                    ChargeId = charge.Id,
+                    ChargeId = charge.SenderProvidedChargeId,
                     EndDateTime = endDateTime,
                     ChargeOwner = charge.Owner,
                     MeteringPointId = meteringPointId,

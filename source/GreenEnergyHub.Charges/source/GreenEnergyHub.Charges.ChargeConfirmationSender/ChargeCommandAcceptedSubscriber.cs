@@ -24,7 +24,7 @@ namespace GreenEnergyHub.Charges.ChargeConfirmationSender
 {
     public class ChargeCommandAcceptedSubscriber
     {
-        private const string FunctionName = nameof(ChargeCommandAcceptedSubscriber);
+        public const string FunctionName = nameof(ChargeCommandAcceptedSubscriber);
         private readonly IChargeConfirmationSender _chargeConfirmationSender;
         private readonly ICorrelationContext _correlationContext;
         private readonly MessageExtractor _messageExtractor;

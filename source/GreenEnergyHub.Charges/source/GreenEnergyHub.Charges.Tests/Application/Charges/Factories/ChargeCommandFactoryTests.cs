@@ -17,7 +17,7 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.ChargeCommands;
 using GreenEnergyHub.Charges.Domain.Charges;
-using GreenEnergyHub.Charges.TestCore.Attributes;
+using GreenEnergyHub.TestHelpers;
 using GreenEnergyHub.TestHelpers.FluentAssertionsExtensions;
 using Xunit;
 using Xunit.Categories;
@@ -28,7 +28,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Factories
     public class ChargeCommandFactoryTests
     {
         [Theory]
-        [InlineAutoMoqData]
+        [InlineAutoDomainData]
         public async Task CreateFromChargeAsync_ChargeCommand_HasNoNullsOrEmptyCollections(
             [NotNull] Charge charge,
             [NotNull] ChargeCommandFactory sut)

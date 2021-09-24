@@ -29,7 +29,7 @@ namespace GreenEnergyHub.Charges.Domain.ChargeCommands
                 {
                     Id = charge.ChargeOperationId,
                     Type = charge.Type,
-                    ChargeId = charge.Id,
+                    ChargeId = charge.SenderProvidedChargeId,
                     ChargeName = charge.Name,
                     ChargeDescription = charge.Description,
                     ChargeOwner = charge.Owner,

@@ -13,7 +13,6 @@
 // limitations under the License.
 
 using System;
-using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 #pragma warning disable 8618
@@ -22,13 +21,17 @@ namespace GreenEnergyHub.Charges.Infrastructure.Context.Model
 {
     public class ChargeOperation
     {
-        [Key]
-        public int RowId { get; set; }
+        public ChargeOperation()
+        {
+            Id = Guid.NewGuid();
+        }
+
+        public Guid Id { get; set; }
 
         public string ChargeOperationId { get; set; }
 
         [ForeignKey("Charge")]
-        public int ChargeRowId { get; set; }
+        public Guid ChargeId { get; set; }
 
         public string CorrelationId { get; set; }
 

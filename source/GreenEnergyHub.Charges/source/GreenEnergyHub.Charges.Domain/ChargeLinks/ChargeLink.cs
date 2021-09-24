@@ -23,8 +23,8 @@ namespace GreenEnergyHub.Charges.Domain.ChargeLinks
     public class ChargeLink
     {
         public ChargeLink(
-            int chargeId,
-            int meteringPointId,
+            Guid chargeId,
+            Guid meteringPointId,
             List<ChargeLinkOperation> operations,
             List<ChargeLinkPeriodDetails> periodDetails)
         {
@@ -39,9 +39,8 @@ namespace GreenEnergyHub.Charges.Domain.ChargeLinks
         /// Used implicitly by persistence.
         /// </summary>
         // ReSharper disable once UnusedMember.Local
-        private ChargeLink(int chargeId, int meteringPointId)
+        private ChargeLink(Guid chargeId, Guid meteringPointId)
         {
-            Id = Guid.NewGuid();
             ChargeId = chargeId;
             MeteringPointId = meteringPointId;
             _operations = new List<ChargeLinkOperation>();
@@ -57,12 +56,12 @@ namespace GreenEnergyHub.Charges.Domain.ChargeLinks
         /// The charge that is linked to the metering point (<see cref="MeteringPointId"/>).
         /// This is not
         /// </summary>
-        public int ChargeId { get; }
+        public Guid ChargeId { get; }
 
         /// <summary>
         /// The metering point that is linked to the charge (<see cref="ChargeId"/>).
         /// </summary>
-        public int MeteringPointId { get; }
+        public Guid MeteringPointId { get; }
 
         private readonly List<ChargeLinkOperation> _operations;
 

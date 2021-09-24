@@ -57,7 +57,7 @@ namespace GreenEnergyHub.Charges.Domain.ChargeLinks
                 operation.Id);
             var periodDetailsCollection = new List<ChargeLinkPeriodDetails> { periodDetails };
 
-            return new ChargeLink(charge.RowId, meteringPoint.RowId!.Value, operations, periodDetailsCollection);
+            return new ChargeLink(charge.Id, meteringPoint.Id, operations, periodDetailsCollection);
         }
     }
 }

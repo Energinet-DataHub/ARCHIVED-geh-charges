@@ -13,7 +13,6 @@
 // limitations under the License.
 
 using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Application;
 using GreenEnergyHub.Charges.Application.MeteringPoints.Handlers;
 using GreenEnergyHub.Charges.Domain.MeteringPointCreatedEvents;
 using GreenEnergyHub.Messaging.Transport;
@@ -28,7 +27,7 @@ namespace GreenEnergyHub.Charges.MeteringPointCreatedReceiver
         /// The name of the function.
         /// Function name affects the URL and thus possibly dependent infrastructure.
         /// </summary>
-        private const string FunctionName = nameof(MeteringPointCreatedReceiverEndpoint);
+        public const string FunctionName = nameof(MeteringPointCreatedReceiverEndpoint);
         private readonly MessageExtractor _messageExtractor;
         private readonly IMeteringPointCreatedEventHandler _meteringPointCreatedEventHandler;
 

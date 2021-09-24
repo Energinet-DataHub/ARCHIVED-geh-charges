@@ -18,6 +18,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.Domain.Charges;
+using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.Infrastructure.Context.Model;
 using NodaTime;
 using Charge = GreenEnergyHub.Charges.Infrastructure.Context.Model.Charge;
@@ -35,28 +36,26 @@ namespace GreenEnergyHub.Charges.Infrastructure.Context.Mapping
             var currentChargeDetails = charge.ChargePeriodDetails
                 .OrderBy(x => Math.Abs((x.StartDateTime - DateTime.UtcNow).Ticks)).First();
 
-            return new Domain.Charges.Charge
-            {
-                RowId = charge.RowId,
-                Id = charge.ChargeId,
-                Type = (ChargeType)charge.ChargeType,
-                Name = currentChargeDetails.Name,
-                Description = currentChargeDetails.Description,
-                StartDateTime = Instant.FromDateTimeUtc(currentChargeDetails.StartDateTime.ToUniversalTime()),
-                Owner = charge.MarketParticipant.MarketParticipantId,
-                Resolution = (Resolution)charge.Resolution,
-                TaxIndicator = Convert.ToBoolean(charge.TaxIndicator),
-                TransparentInvoicing = Convert.ToBoolean(charge.TransparentInvoicing),
-                VatClassification = (VatClassification)currentChargeDetails.VatClassification,
-                ChargeOperationId = charge.ChargeOperation.ChargeOperationId,
-                EndDateTime = Instant.FromDateTimeUtc(currentChargeDetails.EndDateTime.ToUniversalTime()),
-                Points = charge.ChargePrices.Select(x => new Point
+            return new Domain.Charges.Charge(
+                charge.Id,
+                new Document(),
+                charge.ChargeOperation.ChargeOperationId,
+                charge.SenderProvidedChargeId,
+                currentChargeDetails.Name,
+                currentChargeDetails.Description,
+                charge.MarketParticipant.MarketParticipantId,
+                charge.ChargeOperation.CorrelationId,
+                Instant.FromDateTimeUtc(currentChargeDetails.StartDateTime.ToUniversalTime()),
+                Instant.FromDateTimeUtc(currentChargeDetails.EndDateTime.ToUniversalTime()),
+                (ChargeType)charge.ChargeType,
+                (VatClassification)currentChargeDetails.VatClassification,
+                (Resolution)charge.Resolution,
+                Convert.ToBoolean(charge.TransparentInvoicing),
+                Convert.ToBoolean(charge.TaxIndicator),
+                charge.ChargePrices.Select(x => new Point
                 {
-                    Position = 0,
-                    Price = x.Price,
-                    Time = Instant.FromDateTimeUtc(x.Time.ToUniversalTime()),
-                }).ToList(),
-            };
+                    Position = 0, Price = x.Price, Time = Instant.FromDateTimeUtc(x.Time.ToUniversalTime()),
+                }).ToList());
         }
 
         public static Charge MapDomainChargeToCharge(
@@ -70,9 +69,10 @@ namespace GreenEnergyHub.Charges.Infrastructure.Context.Mapping
 
             return new Charge
             {
+                Id = charge.Id,
                 Currency = "DKK",
-                MarketParticipantRowId = marketParticipant.RowId,
-                ChargeId = charge.Id,
+                MarketParticipantId = marketParticipant.Id,
+                SenderProvidedChargeId = charge.SenderProvidedChargeId,
                 ChargeType = (int)charge.Type,
                 Resolution = (int)charge.Resolution,
                 TaxIndicator = charge.TaxIndicator,
@@ -119,7 +119,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Context.Mapping
                 Description = charge.Description,
                 Name = charge.Name,
                 VatClassification = (int)charge.VatClassification,
-                EndDateTime = charge.EndDateTime.TimeOrEndDefault().ToDateTimeUtc(),
+                EndDateTime = charge.EndDateTime.ToDateTimeUtc(),
                 StartDateTime = charge.StartDateTime.ToDateTimeUtc(),
                 ChargeOperation = chargeOperation,
             };

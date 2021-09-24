@@ -26,9 +26,11 @@ using GreenEnergyHub.Charges.Domain.MeteringPoints;
 using GreenEnergyHub.TestHelpers;
 using Moq;
 using Xunit;
+using Xunit.Categories;
 
 namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Factories
 {
+    [UnitTest]
     public class ChargeLinkFactoryTests
     {
         [Theory]
@@ -43,8 +45,6 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Factories
         {
             // Arrange
             expectedEvent.SetCorrelationId(Guid.NewGuid().ToString("N"));
-            expectedCharge.RowId = 11;
-            expectedMeteringPoint.RowId = 22;
 
             chargeRepository
                 .Setup(x => x.GetChargeAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<ChargeType>()))
@@ -59,9 +59,9 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Factories
 
             // Assert
             actual.ChargeId
-                .Should().Be(expectedCharge.RowId);
+                .Should().Be(expectedCharge.Id);
             actual.MeteringPointId
-                .Should().Be(expectedMeteringPoint.RowId);
+                .Should().Be(expectedMeteringPoint.Id);
             actual.PeriodDetails.First().StartDateTime
                 .Should().Be(expectedEvent.ChargeLinkCommand.ChargeLink.StartDateTime);
             actual.PeriodDetails.First().EndDateTime

@@ -29,7 +29,7 @@ env:
   CSPROJ_FILE_PATH: 'source/GreenEnergyHub.Charges/source/GreenEnergyHub.Charges.ChargeCommandReceiver/GreenEnergyHub.Charges.ChargeCommandReceiver.csproj'
   SOLUTION_FILE_PATH: 'source/GreenEnergyHub.Charges/GreenEnergyHub.Charges.sln'
   INTEGRATION_TEST_DLL: GreenEnergyHub.Charges.IntegrationTests.dll
-  DOTNET_VERSION: '3.1'
+  DOTNET_VERSION: '5.0.202'
   ORGANISATION_NAME: 'endk'
   AZURE_FUNCTIONAPP_NAME: 'charge-command-receiver'
   PROJECT_NAME: charges
@@ -43,7 +43,12 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@master
-        
+
+      - name: Setup .NET 3.1 environment
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: '3.1.x'
+
       - name: Setup .NET ${{ env.DOTNET_VERSION }} environment
         uses: actions/setup-dotnet@v1
         with:

@@ -12,8 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
+using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.Domain.ChargeCommands;
 
 namespace GreenEnergyHub.Charges.Domain.Charges
@@ -22,27 +24,24 @@ namespace GreenEnergyHub.Charges.Domain.Charges
     {
         public Task<Charge> CreateFromCommandAsync([NotNull]ChargeCommand command)
         {
-            var c = new Charge
-            {
-                Document = command.Document,
-                Id = command.ChargeOperation.ChargeId,
-                Description = command.ChargeOperation.ChargeDescription,
-                Name = command.ChargeOperation.ChargeName,
-                Owner = command.ChargeOperation.ChargeOwner,
-                Points = command.ChargeOperation.Points,
-                Resolution = command.ChargeOperation.Resolution,
-                TaxIndicator = command.ChargeOperation.TaxIndicator,
-                Type = command.ChargeOperation.Type,
-                VatClassification = command.ChargeOperation.VatClassification,
-                TransparentInvoicing = command.ChargeOperation.TransparentInvoicing,
-                EndDateTime = command.ChargeOperation.EndDateTime,
-                StartDateTime = command.ChargeOperation.StartDateTime,
-                ChargeOperationId = command.ChargeOperation.Id,
-                LastUpdatedBy = "Volt", // This should be used to identify the user.
-            };
+            var c = new Charge(
+                Guid.NewGuid(),
+                command.Document,
+                command.ChargeOperation.Id,
+                command.ChargeOperation.ChargeId,
+                command.ChargeOperation.ChargeName,
+                command.ChargeOperation.ChargeDescription,
+                command.ChargeOperation.ChargeOwner,
+                command.CorrelationId,
+                command.ChargeOperation.StartDateTime,
+                command.ChargeOperation.EndDateTime.TimeOrEndDefault(),
+                command.ChargeOperation.Type,
+                command.ChargeOperation.VatClassification,
+                command.ChargeOperation.Resolution,
+                command.ChargeOperation.TransparentInvoicing,
+                command.ChargeOperation.TaxIndicator,
+                command.ChargeOperation.Points);
 
-            // Right now CorrelationId is not a part of the Charge, but its needed for persistence.
-            c.CorrelationId = command.CorrelationId;
             return Task.FromResult(c);
         }
     }
