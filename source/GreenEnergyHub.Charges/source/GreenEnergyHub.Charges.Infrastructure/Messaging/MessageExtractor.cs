@@ -22,7 +22,6 @@ using GreenEnergyHub.Messaging.Transport;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Messaging
 {
-    // TODO BJARKE: Unit tests
     public class MessageExtractor<TInboundMessage> : MessageExtractor
     {
         public MessageExtractor([NotNull] MessageDeserializer<TInboundMessage> deserializer)
