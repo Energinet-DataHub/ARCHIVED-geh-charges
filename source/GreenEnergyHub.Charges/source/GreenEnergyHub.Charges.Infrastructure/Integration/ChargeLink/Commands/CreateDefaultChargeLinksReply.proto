@@ -15,7 +15,7 @@
 
 syntax = "proto3";
 
-option csharp_namespace = "GreenEnergyHub.Charges.Infrastructure.Integration.CreateChargeLinksReply";
+option csharp_namespace = "GreenEnergyHub.Charges.Commands";
 
 /*
 * Reply to be sent by the Charges domain to the Metering Point domain once the request has been processed.
@@ -34,7 +34,7 @@ option csharp_namespace = "GreenEnergyHub.Charges.Infrastructure.Integration.Cre
 * This reply is sent when no default charges exist for the given metering point type.
 * When the Metering Point domain receives this reply there is no reason to send a CreateLinkMessagesRequest.
 */
-message CreateChargeLinksReply {
+message CreateDefaultChargeLinksReply {
   string metering_point_id = 1; // The metering point to link default charges to.
   bool succeeded = 2;
   byte charge_link_count = 3;
