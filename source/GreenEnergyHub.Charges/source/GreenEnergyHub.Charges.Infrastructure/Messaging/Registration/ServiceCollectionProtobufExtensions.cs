@@ -18,7 +18,6 @@ using System.Reflection;
 using Google.Protobuf;
 using GreenEnergyHub.Charges.Infrastructure.Messaging.Serialization;
 using GreenEnergyHub.Messaging.Protobuf;
-using GreenEnergyHub.Messaging.Transport;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Messaging.Registration
