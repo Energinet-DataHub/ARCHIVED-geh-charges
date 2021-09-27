@@ -19,8 +19,6 @@ namespace GreenEnergyHub.Charges.Domain.ChargeLinkCommandAcceptedEvents
 {
     public interface IChargeLinkCommandAcceptedEventFactory
     {
-        ChargeLinkCommandAcceptedEvent Create(ChargeLinkCommandReceivedEvent chargeCommandLinkReceivedEvent);
-
         ChargeLinkCommandAcceptedEvent Create(ChargeLinkCommand chargeLinkCommand, string correlationId);
     }
 }

@@ -13,23 +13,12 @@
 // limitations under the License.
 
 using System.Diagnostics.CodeAnalysis;
-using GreenEnergyHub.Charges.Domain.ChargeLinkCommandReceivedEvents;
 using GreenEnergyHub.Charges.Domain.ChargeLinkCommands;
 
 namespace GreenEnergyHub.Charges.Domain.ChargeLinkCommandAcceptedEvents
 {
     public class ChargeLinkCommandAcceptedEventFactory : IChargeLinkCommandAcceptedEventFactory
     {
-        public ChargeLinkCommandAcceptedEvent Create([NotNull] ChargeLinkCommandReceivedEvent chargeCommandLinkReceivedEvent)
-        {
-            return new ChargeLinkCommandAcceptedEvent(chargeCommandLinkReceivedEvent.CorrelationId)
-            {
-                Document = chargeCommandLinkReceivedEvent.ChargeLinkCommand.Document,
-                ChargeLink = chargeCommandLinkReceivedEvent.ChargeLinkCommand.ChargeLink,
-                Transaction = chargeCommandLinkReceivedEvent.Transaction,
-            };
-        }
-
         public ChargeLinkCommandAcceptedEvent Create([NotNull] ChargeLinkCommand chargeLinkCommand, string correlationId)
         {
             return new ChargeLinkCommandAcceptedEvent(correlationId)

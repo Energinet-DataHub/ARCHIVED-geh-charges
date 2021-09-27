@@ -15,7 +15,6 @@
 using System.Diagnostics.CodeAnalysis;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.ChargeLinkCommandAcceptedEvents;
-using GreenEnergyHub.Charges.Domain.ChargeLinkCommandReceivedEvents;
 using GreenEnergyHub.Charges.Domain.ChargeLinkCommands;
 using GreenEnergyHub.Charges.TestCore.Attributes;
 using Xunit;
@@ -26,25 +25,6 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Mapping
     [UnitTest]
     public class ChargeLinkCommandMapperTests
     {
-        [Theory]
-        [InlineAutoMoqData]
-        public void Map_WhenCalled_ShouldMapFromReceivedToAcceptedWithCorrectValues(
-            [NotNull] ChargeLinkCommandReceivedEvent chargeLinkCommandReceivedEvent)
-        {
-            // Arrange
-            var factory = new ChargeLinkCommandAcceptedEventFactory();
-
-            // Act
-            var chargeLinkCommandAcceptedEvent = factory.Create(chargeLinkCommandReceivedEvent);
-
-            // Assert
-            chargeLinkCommandAcceptedEvent.Document.Should().BeEquivalentTo(chargeLinkCommandReceivedEvent.ChargeLinkCommand.Document);
-            chargeLinkCommandAcceptedEvent.ChargeLink.Should().BeEquivalentTo(chargeLinkCommandReceivedEvent.ChargeLinkCommand.ChargeLink);
-
-            // TODO: LRN Transaction is newed when "mapping", after chargeLinkCommandAcceptedEvent Inheritance from InternalEventBase this will be sorted.
-            // chargeLinkCommandAcceptedEvent.ChargeLink.Should().BeEquivalentTo(chargeLinkCommandReceivedEvent.ChargeLinkCommand.Transaction);
-        }
-
         [Theory]
         [InlineAutoMoqData]
         public void Map_WhenCalled_ShouldMapFrom_ChargeLinkCommand_ToAcceptedEventWithCorrectValues(
