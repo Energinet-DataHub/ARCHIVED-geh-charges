@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Domain.ChargeLinkCommandAcceptedEvents;
@@ -49,6 +50,8 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
             var chargeLink = await _chargeLinkFactory.CreateAsync(chargeLinkCommandReceivedEvent).ConfigureAwait(false);
             await _chargeLinkRepository.StoreAsync(chargeLink).ConfigureAwait(false);
 
+            var chargeLinkCommandAcceptedEvents = new List<ChargeLinkCommandAcceptedEvent>();
+
             foreach (var period in chargeLink.PeriodDetails)
             {
                 var chargeLinkCommand = await _chargeLinkCommandFactory.CreateFromChargeLinkAsync(
@@ -57,10 +60,13 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
                         chargeLinkCommandReceivedEvent.CorrelationId)
                     .ConfigureAwait(false);
 
-                var chargeCommandAcceptedEvent = _chargeLinkCommandAcceptedEventFactory.Create(
-                    chargeLinkCommand, chargeLinkCommandReceivedEvent.CorrelationId);
+                chargeLinkCommandAcceptedEvents.Add(_chargeLinkCommandAcceptedEventFactory.Create(
+                    chargeLinkCommand, chargeLinkCommandReceivedEvent.CorrelationId));
+            }
 
-                await _messageDispatcher.DispatchAsync(chargeCommandAcceptedEvent).ConfigureAwait(false);
+            foreach (var chargeLinkCommandAcceptedEvent in chargeLinkCommandAcceptedEvents)
+            {
+                await _messageDispatcher.DispatchAsync(chargeLinkCommandAcceptedEvent).ConfigureAwait(false);
             }
         }
     }
