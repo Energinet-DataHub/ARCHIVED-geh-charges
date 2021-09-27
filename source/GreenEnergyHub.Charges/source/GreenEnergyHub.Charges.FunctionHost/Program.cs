@@ -17,12 +17,15 @@ using Energinet.DataHub.MeteringPoints.IntegrationEventContracts;
 using EntityFrameworkCore.SqlServer.NodaTime.Extensions;
 using GreenEnergyHub.Charges.Application.ChargeLinks.Handlers;
 using GreenEnergyHub.Charges.Application.MeteringPoints.Handlers;
+using GreenEnergyHub.Charges.Domain.ChargeLinkCommandAcceptedEvents;
 using GreenEnergyHub.Charges.Domain.ChargeLinkCommandReceivedEvents;
 using GreenEnergyHub.Charges.Domain.ChargeLinkCommands;
+using GreenEnergyHub.Charges.Domain.ChargeLinks;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.DefaultChargeLinks;
 using GreenEnergyHub.Charges.Domain.MeteringPoints;
 using GreenEnergyHub.Charges.Infrastructure.Context;
+using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandAccepted;
 using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandReceived;
 using GreenEnergyHub.Charges.Infrastructure.Messaging;
 using GreenEnergyHub.Charges.Infrastructure.Messaging.Registration;
@@ -55,6 +58,7 @@ namespace GreenEnergyHub.Charges.FunctionHost
             ConfigureSharedServices(serviceCollection);
 
             ConfigureChargeLinkReceiver(serviceCollection);
+            ConfigureChargeLinkCommandReceiver(serviceCollection);
             ConfigureMeteringPointCreatedReceiver(serviceCollection);
             ConfigureCreateChargeLinkReceiver(serviceCollection);
         }
@@ -79,6 +83,7 @@ namespace GreenEnergyHub.Charges.FunctionHost
             serviceCollection.AddScoped<IChargesDatabaseContext, ChargesDatabaseContext>();
 
             serviceCollection.AddScoped<IChargeRepository, ChargeRepository>();
+            serviceCollection.AddScoped<IMeteringPointRepository, MeteringPointRepository>();
         }
 
         private static void ConfigureSharedMessaging(IServiceCollection serviceCollection)
@@ -101,6 +106,22 @@ namespace GreenEnergyHub.Charges.FunctionHost
             serviceCollection.AddScoped<IChargeLinkCommandHandler, ChargeLinkCommandHandler>();
         }
 
+        private static void ConfigureChargeLinkCommandReceiver(IServiceCollection serviceCollection)
+        {
+            serviceCollection.AddScoped<IChargeLinkCommandReceivedHandler, ChargeLinkCommandReceivedHandler>();
+            serviceCollection.AddScoped<IChargeLinkFactory, ChargeLinkFactory>();
+            serviceCollection.AddSingleton<IChargeLinkCommandAcceptedEventFactory, ChargeLinkCommandAcceptedEventFactory>();
+
+            serviceCollection.ReceiveProtobufMessage<ChargeLinkCommandReceivedContract>(
+                configuration => configuration.WithParser(() => ChargeLinkCommandReceivedContract.Parser));
+            serviceCollection.SendProtobuf<ChargeLinkCommandAcceptedContract>();
+            serviceCollection.AddMessagingProtobuf().AddMessageDispatcher<ChargeLinkCommandAcceptedEvent>(
+                GetEnv("DOMAINEVENT_SENDER_CONNECTION_STRING"),
+                GetEnv("CHARGE_LINK_ACCEPTED_TOPIC_NAME"));
+
+            serviceCollection.AddScoped<IChargeLinkRepository, ChargeLinkRepository>();
+        }
+
         private static void ConfigureCreateChargeLinkReceiver(IServiceCollection serviceCollection)
         {
             serviceCollection.AddScoped<ICreateLinkCommandEventHandler, CreateLinkCommandEventHandler>();
@@ -118,8 +139,6 @@ namespace GreenEnergyHub.Charges.FunctionHost
                 configuration => configuration.WithParser(() => MeteringPointCreated.Parser));
 
             serviceCollection.AddScoped<IMeteringPointCreatedEventHandler, MeteringPointCreatedEventHandler>();
-
-            serviceCollection.AddScoped<IMeteringPointRepository, MeteringPointRepository>();
         }
 
         private static string GetEnv(string variableName)
