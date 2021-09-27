@@ -17,7 +17,6 @@ set /p sqlPassword=Enter SQL password for 'gehdbadmin' to update db or empty to 
 set /p deployChargeReceiver=Deploy charge receiver ([y]/n)?
 set /p functionHost=Deploy function host ([y]/n)?
 set /p deployCommandReceiver=Deploy command receiver ([y]/n)?
-set /p deployRejectionSender=Deploy rejection sender ([y]/n)?
 
 IF /I not "%doBuild%" == "n" (
     rem Clean is necessary if e.g. a function project name has changed because otherwise both assemblies will be picked up by deployment
@@ -48,12 +47,6 @@ IF /I not "%functionHost%" == "n" (
 IF /I not "%deployCommandReceiver%" == "n" (
     pushd source\GreenEnergyHub.Charges.ChargeCommandReceiver\bin\Release\netcoreapp3.1
     start "Deploy: Charge Command Receiver" cmd /c "func azure functionapp publish azfun-charge-command-receiver-charges-%organization%-s & pause"
-    popd
-)
-
-IF /I not "%deployRejectionSender%" == "n" (
-    pushd source\GreenEnergyHub.Charges.ChargeRejectionSender\bin\Release\netcoreapp3.1
-	start "Deploy: Charge Rejection Sender" cmd /c "func azure functionapp publish azfun-charge-rejection-sender-charges-%organization%-s & pause"
     popd
 )
 
