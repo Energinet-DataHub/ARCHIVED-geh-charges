@@ -22,7 +22,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Logging;
 
-namespace GreenEnergyHub.Charges.ChargeLinkEventPublisher
+namespace GreenEnergyHub.Charges.FunctionHost.ChargeLinks
 {
     public class ChargeLinkEventPublisherServiceBusTrigger
     {
@@ -50,7 +50,7 @@ namespace GreenEnergyHub.Charges.ChargeLinkEventPublisher
         }
 
         [Function(FunctionName)]
-        public async Task<IActionResult> RunAsync(
+        public async Task RunAsync(
             [ServiceBusTrigger(
                 "%LINK_ACCEPTED_TOPIC_NAME%",
                 "%LINK_ACCEPTED_SUBSCRIPTION_NAME%",
@@ -65,13 +65,11 @@ namespace GreenEnergyHub.Charges.ChargeLinkEventPublisher
             var acceptedChargeLinkCommand = (ChargeLinkCommandAcceptedEvent)await _messageExtractor.ExtractAsync(message).ConfigureAwait(false);
 
             await _chargeLinkEventPublishHandler.HandleAsync(acceptedChargeLinkCommand).ConfigureAwait(false);
-
-            return new OkResult();
         }
 
         private void SetupCorrelationContext(FunctionContext context)
         {
-            _correlationContext.CorrelationId = context.InvocationId;
+            _correlationContext.CorrelationId = context.InvocationId.Replace("-", string.Empty);
         }
     }
 }
