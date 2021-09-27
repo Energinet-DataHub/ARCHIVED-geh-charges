@@ -40,6 +40,7 @@ module "azfun_functionhost" {
     CHARGE_LINK_RECEIVED_SUBSCRIPTION_NAME        = azurerm_servicebus_subscription.sbs_link_command_received_receiver.name
     COMMAND_ACCEPTED_TOPIC_NAME                   = module.sbt_command_accepted.name
     COMMAND_ACCEPTED_SUBSCRIPTION_NAME            = azurerm_servicebus_subscription.sbs_command_accepted.name
+    COMMAND_RECEIVED_TOPIC_NAME                   = module.sbt_command_received.name
     COMMAND_REJECTED_TOPIC_NAME                   = module.sbt_command_rejected.name
     COMMAND_REJECTED_SUBSCRIPTION_NAME            = azurerm_servicebus_subscription.sbs_command_rejected.name
     CREATE_LINK_COMMAND_TOPIC_NAME                = module.sbt_create_link_command.name
