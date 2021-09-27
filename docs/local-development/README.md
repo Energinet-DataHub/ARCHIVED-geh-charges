@@ -17,7 +17,7 @@ FAQ
 
 Instructions are [here](../../build/infrastructure/README.md).
 
-There is a little utility script that can be used for subsequent Terraform deployments [here](../../build/infrastructure/deploy-from-localhost.cmd).
+There is a utility script that can be used for subsequent Terraform deployments [here](../../build/infrastructure/deploy-infrastructure-from-localhost.cmd).
 
 ## Create database ##
 
@@ -30,6 +30,8 @@ TODO: `includeSeedData` and `includeTestData`
 ## Publish Azure Functions ##
 
 Instructions are [here](publish-function-azure-sandbox.md).
+
+There is a utility script that can be used for Azure Publish [here](../../source/GreenEnergyHub.Charges/publish-functions-from-localhost.cmd)
 
 ## Test by executing a business process ##
 
