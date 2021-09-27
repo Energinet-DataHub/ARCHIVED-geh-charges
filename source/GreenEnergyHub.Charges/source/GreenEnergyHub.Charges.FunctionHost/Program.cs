@@ -16,6 +16,7 @@ using System;
 using Energinet.DataHub.MeteringPoints.IntegrationEventContracts;
 using EntityFrameworkCore.SqlServer.NodaTime.Extensions;
 using GreenEnergyHub.Charges.Application.ChargeLinks.Handlers;
+using GreenEnergyHub.Charges.Application.Charges.Acknowledgement;
 using GreenEnergyHub.Charges.Application.MeteringPoints.Handlers;
 using GreenEnergyHub.Charges.Domain.ChargeLinkCommandAcceptedEvents;
 using GreenEnergyHub.Charges.Domain.ChargeLinkCommandReceivedEvents;
@@ -26,7 +27,9 @@ using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.DefaultChargeLinks;
 using GreenEnergyHub.Charges.Domain.MeteringPoints;
 using GreenEnergyHub.Charges.Infrastructure.Context;
+using GreenEnergyHub.Charges.Infrastructure.Integration.ChargeConfirmation;
 using GreenEnergyHub.Charges.Infrastructure.Integration.ChargeLinkCreated;
+using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeCommandAccepted;
 using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandAccepted;
 using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandReceived;
 using GreenEnergyHub.Charges.Infrastructure.Messaging;
@@ -59,6 +62,7 @@ namespace GreenEnergyHub.Charges.FunctionHost
         {
             ConfigureSharedServices(serviceCollection);
 
+            ConfigureChargeConfirmationSender(serviceCollection);
             ConfigureChargeLinkReceiver(serviceCollection);
             ConfigureChargeLinkCommandReceiver(serviceCollection);
             ConfigureChargeLinkEventPublisher(serviceCollection);
@@ -98,6 +102,18 @@ namespace GreenEnergyHub.Charges.FunctionHost
             serviceCollection.AddMessagingProtobuf().AddMessageDispatcher<ChargeLinkCommandReceivedEvent>(
                 GetEnv("DOMAINEVENT_SENDER_CONNECTION_STRING"),
                 GetEnv("CHARGE_LINK_RECEIVED_TOPIC_NAME"));
+        }
+
+        private static void ConfigureChargeConfirmationSender(IServiceCollection serviceCollection)
+        {
+            serviceCollection.AddScoped<IChargeConfirmationSender, ChargeConfirmationSender>();
+
+            serviceCollection.ReceiveProtobufMessage<ChargeCommandAcceptedContract>(
+                configuration => configuration.WithParser(() => ChargeCommandAcceptedContract.Parser));
+            serviceCollection.SendProtobuf<ChargeConfirmationContract>();
+            serviceCollection.AddMessagingProtobuf().AddMessageDispatcher<ChargeConfirmation>(
+                GetEnv("DOMAINEVENT_SENDER_CONNECTION_STRING"),
+                GetEnv("POST_OFFICE_TOPIC_NAME"));
         }
 
         private static void ConfigureChargeLinkReceiver(IServiceCollection serviceCollection)
