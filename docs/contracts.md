@@ -15,6 +15,13 @@
     - [ChargeLinkCreated](#.ChargeLinkCreated)
         - [ChargeLinkPeriod](#.ChargeLinkPeriod)
     - [ChargeLinkUpdated](#.ChargeLinkUpdated)
+- [Charge link requests and replies](#.ChargeLinkRequestsAndReplies)
+    - [CreateDefaultChargeLinksRequest](#.CreateDefaultChargeLinksRequest)
+    - [CreateDefaultChargeLinksSucceeded](#.CreateDefaultChargeLinksSucceeded)
+    - [CreateDefaultChargeLinksFailed](#.CreateDefaultChargeLinksFailed)
+    - [CreateDefaultChargeLinkMessagesRequest](#.CreateDefaultChargeLinkMessagesRequest)
+    - [CreateDefaultChargeLinkMessagesSucceeded](#.CreateDefaultChargeLinkMessagesSucceeded)
+    - [CreateDefaultChargeLinkMessagesFailed](#.CreateDefaultChargeLinkMessagesFailed)
 
 <a name="IntegrationEventContract.proto"></a>
 
@@ -169,3 +176,44 @@ Represents the update of one or more charge links.
 | UpdatedPeriodStartDateTime | Timestamp | required | In UTC. Time interval covering the entire period of charge link updates within this event. The start equals the StartDateTime of the earliest charge link in the Periods list |
 | UpdatedPeriodEndDateTime | Timestamp | required | In UTC. Time interval covering the entire period of charge link updates within this event. The end equals the EndDateTime of the latest charge link in the Periods list |
 | Periods | [ChargeLinkPeriod](#.ChargeLinkPeriod) | required | A list of charge link periods and factor values |
+
+<br>
+<a name=".ChargeLinkRequestsAndReplies"></a>
+
+## Charge link requests and replies
+
+<a name=".CreateDefaultChargeLinksRequest"></a>
+
+### CreateDefaultChargeLinksRequest
+
+Go to contract.
+
+<a name=".CreateDefaultChargeLinksSucceded"></a>
+
+### CreateDefaultChargeLinksSucceeded
+
+Go to contract.
+
+<a name=".CreateDefaultChargeLinksFailed"></a>
+
+### CreateDefaultChargeLinksFailed
+
+Go to contract.
+
+<a name=".CreateDefaultChargeLinkMessagesRequest"></a>
+
+### CreateDefaultChargeLinkMessagesRequest
+
+Go to contract.
+
+<a name=".CreateDefaultChargeLinkMessagesSucceeded"></a>
+
+### CreateDefaultChargeLinkMessagesSucceeded
+
+Go to contract.
+
+<a name=".CreateDefaultChargeLinkMessagesFailed"></a>
+
+### CreateDefaultChargeLinkMessagesFailed
+
+Go to contract.

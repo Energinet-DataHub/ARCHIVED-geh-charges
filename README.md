@@ -44,7 +44,7 @@ This sections documents the data flows to and from the Charges domain.
 
 ## Public contracts
 
-If you are interested in the public contracts of the Charges domain, please visit this [page](docs/business-processes/change-of-subscription.md).
+If you are interested in the public contracts of the Charges domain, please visit this [page](docs/contracts.md).
 
 ## Domain Road Map
 
