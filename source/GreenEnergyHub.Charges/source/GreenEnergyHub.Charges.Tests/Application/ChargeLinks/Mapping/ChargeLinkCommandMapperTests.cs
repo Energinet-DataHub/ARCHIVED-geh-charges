@@ -27,7 +27,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Mapping
     {
         [Theory]
         [InlineAutoMoqData]
-        public void Map_WhenCalled_ShouldMapFrom_ChargeLinkCommand_ToAcceptedEventWithCorrectValues(
+        public void Map_MapsFrom_ChargeLinkCommand_ToAcceptedEventWithCorrectValues(
             [NotNull] ChargeLinkCommand chargeLinkCommand)
         {
             // Arrange
