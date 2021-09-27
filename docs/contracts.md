@@ -186,9 +186,9 @@ Represents the update of one or more charge links.
 
 ### CreateDefaultChargeLinksRequest
 
-Go to contract.
+Go to [contract](.././source/GreenEnergyHub.Charges/Readme.md).
 
-<a name=".CreateDefaultChargeLinksSucceded"></a>
+<a name=".CreateDefaultChargeLinksSucceeded"></a>
 
 ### CreateDefaultChargeLinksSucceeded
 
