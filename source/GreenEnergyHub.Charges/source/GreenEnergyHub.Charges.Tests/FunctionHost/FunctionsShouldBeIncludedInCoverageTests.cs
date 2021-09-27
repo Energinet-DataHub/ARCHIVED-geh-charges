@@ -37,12 +37,12 @@ namespace GreenEnergyHub.Charges.Tests.FunctionHost
         {
             Assert.Equal("ChargeCommandEndpoint", ChargeCommandEndpoint.FunctionName);
             Assert.Equal("ChargeCommandAcceptedSubscriber", ChargeConfirmationSenderEndpoint.FunctionName);
-            Assert.Equal("LinkCommandReceiverEndpoint", LinkCommandReceiverEndpoint.FunctionName);
-            Assert.Equal("ChargeLinkEventPublisherServiceBusTrigger", ChargeLinkEventPublisherServiceBusTrigger.FunctionName);
+            Assert.Equal("LinkCommandReceiverEndpoint", ChargeLinkCommandReceiverEndpoint.FunctionName);
+            Assert.Equal("ChargeLinkEventPublisherServiceBusTrigger", ChargeLinkEventPublisherEndpoint.FunctionName);
             Assert.Equal("ChargeLinkHttpTrigger", ChargeLinkHttpTrigger.FunctionName);
             Assert.Equal("ChargeHttpTrigger", ChargeHttpTrigger.FunctionName);
             Assert.Equal("ChargeCommandRejectedSubscriber", ChargeRejectionSenderEndpoint.FunctionName);
-            Assert.Equal("CreateLinkCommandReceiverServiceBusTrigger", CreateLinkCommandReceiverServiceBusTrigger.FunctionName);
+            Assert.Equal("CreateLinkCommandReceiverServiceBusTrigger", CreateChargeLinkReceiverEndpoint.FunctionName);
             Assert.Equal("MeteringPointCreatedReceiverEndpoint", MeteringPointCreatedReceiverEndpoint.FunctionName);
         }
     }

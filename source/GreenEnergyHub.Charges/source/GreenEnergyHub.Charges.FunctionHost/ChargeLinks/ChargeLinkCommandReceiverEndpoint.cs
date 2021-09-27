@@ -22,14 +22,14 @@ using Microsoft.Azure.Functions.Worker;
 
 namespace GreenEnergyHub.Charges.FunctionHost.ChargeLinks
 {
-    public class LinkCommandReceiverEndpoint
+    public class ChargeLinkCommandReceiverEndpoint
     {
-        public const string FunctionName = nameof(LinkCommandReceiverEndpoint);
+        public const string FunctionName = nameof(ChargeLinkCommandReceiverEndpoint);
         private readonly MessageExtractor<ChargeLinkCommandReceivedContract> _messageExtractor;
         private readonly IChargeLinkCommandReceivedHandler _chargeLinkCommandReceivedHandler;
         private readonly ICorrelationContext _correlationContext;
 
-        public LinkCommandReceiverEndpoint(
+        public ChargeLinkCommandReceiverEndpoint(
             MessageExtractor<ChargeLinkCommandReceivedContract> messageExtractor,
             ICorrelationContext correlationContext,
             IChargeLinkCommandReceivedHandler chargeLinkCommandReceivedHandler)
