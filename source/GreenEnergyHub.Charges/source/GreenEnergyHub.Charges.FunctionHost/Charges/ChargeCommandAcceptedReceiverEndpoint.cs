@@ -16,6 +16,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application.Charges.Handlers;
 using GreenEnergyHub.Charges.Domain.ChargeCommandAcceptedEvents;
+using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeCommandAccepted;
 using GreenEnergyHub.Charges.Infrastructure.Messaging;
 using Microsoft.Azure.Functions.Worker;
 
@@ -25,12 +26,12 @@ namespace GreenEnergyHub.Charges.FunctionHost.Charges
     {
         public const string FunctionName = nameof(ChargeCommandAcceptedReceiverEndpoint);
         private readonly ICorrelationContext _correlationContext;
-        private readonly MessageExtractor<ChargeCommandAcceptedEvent> _messageExtractor;
+        private readonly MessageExtractor<ChargeCommandAcceptedContract> _messageExtractor;
         private readonly IChargeCommandAcceptedEventHandler _chargeCommandAcceptedEventHandler;
 
         public ChargeCommandAcceptedReceiverEndpoint(
             ICorrelationContext correlationContext,
-            MessageExtractor<ChargeCommandAcceptedEvent> messageExtractor,
+            MessageExtractor<ChargeCommandAcceptedContract> messageExtractor,
             IChargeCommandAcceptedEventHandler chargeCommandAcceptedEventHandler)
         {
             _correlationContext = correlationContext;
