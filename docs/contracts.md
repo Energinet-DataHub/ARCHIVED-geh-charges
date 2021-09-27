@@ -184,7 +184,7 @@ Represents the update of one or more charge links.
 
 <a name=".CreateDefaultChargeLinks"></a>
 
-### CreateDefaultChargeLinks
+### [CreateDefaultChargeLinks](.././source/GreenEnergyHub.Charges/source/GreenEnergyHub.Charges.Infrastructure/Integration/ChargeLink/Commands/CreateDefaultChargeLinks.proto)
 
 This [request](.././source/GreenEnergyHub.Charges/source/GreenEnergyHub.Charges.Infrastructure/Integration/ChargeLink/Commands/CreateDefaultChargeLinks.proto) is used by the Metering Point domain as part of the 'Create metering point' process to request the Charges domain to link default charges a the newly created metering point.
 
