@@ -67,9 +67,9 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
                     (_) => confirmed = true);
 
             chargeCommandFactory.Setup(
-                    s => s.CreateFromChargeAsync(
+                    s => s.CreateFromCharge(
                         It.IsAny<Charge>()))
-                .Returns(Task.FromResult(chargeCommand.Object));
+                .Returns(chargeCommand.Object);
 
             // Act
             await sut.HandleAsync(receivedEvent).ConfigureAwait(false);

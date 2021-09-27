@@ -19,6 +19,6 @@ namespace GreenEnergyHub.Charges.Domain.ChargeCommands
 {
     public interface IChargeCommandFactory
     {
-        Task<ChargeCommand> CreateFromChargeAsync(Charge charge);
+        ChargeCommand CreateFromCharge(Charge charge);
     }
 }

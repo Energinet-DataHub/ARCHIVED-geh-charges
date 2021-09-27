@@ -13,14 +13,13 @@
 // limitations under the License.
 
 using System.Diagnostics.CodeAnalysis;
-using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Domain.Charges;
 
 namespace GreenEnergyHub.Charges.Domain.ChargeCommands
 {
     public class ChargeCommandFactory : IChargeCommandFactory
     {
-        public Task<ChargeCommand> CreateFromChargeAsync([NotNull]Charge charge)
+        public ChargeCommand CreateFromCharge([NotNull]Charge charge)
         {
             var chargeCommand = new ChargeCommand(charge.CorrelationId)
             {
@@ -43,7 +42,7 @@ namespace GreenEnergyHub.Charges.Domain.ChargeCommands
                 },
             };
 
-            return Task.FromResult(chargeCommand);
+            return chargeCommand;
         }
     }
 }

@@ -15,7 +15,6 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Threading.Tasks;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.ChargeCommands;
 using GreenEnergyHub.Charges.Domain.Charges;
@@ -33,11 +32,11 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Factories
     {
         [Theory]
         [InlineAutoDomainData]
-        public async Task CreateFromChargeAsync_ChargeCommand_HasNoNullsOrEmptyCollections(
+        public void CreateFromChargeAsync_ChargeCommand_HasNoNullsOrEmptyCollections(
             [NotNull] ChargeCommandFactory sut)
         {
             // Act
-            var actual = await sut.CreateFromChargeAsync(new Charge(
+            var actual = sut.CreateFromCharge(new Charge(
                 Guid.NewGuid(),
                 new Document
                 {
@@ -74,7 +73,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Factories
                 new List<Point>
                 {
                     new Point { Position = 0, Time = SystemClock.Instance.GetCurrentInstant(), Price = 200m },
-                })).ConfigureAwait(false);
+                }));
 
             // Assert
             actual.Should().NotContainNullsOrEmptyEnumerables();
