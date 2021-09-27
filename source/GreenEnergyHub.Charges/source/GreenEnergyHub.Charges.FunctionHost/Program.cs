@@ -17,7 +17,10 @@ using Energinet.DataHub.MeteringPoints.IntegrationEventContracts;
 using EntityFrameworkCore.SqlServer.NodaTime.Extensions;
 using GreenEnergyHub.Charges.Application.ChargeLinks.Handlers;
 using GreenEnergyHub.Charges.Application.Charges.Acknowledgement;
+using GreenEnergyHub.Charges.Application.Charges.Handlers;
 using GreenEnergyHub.Charges.Application.MeteringPoints.Handlers;
+using GreenEnergyHub.Charges.Domain.ChargeCommandReceivedEvents;
+using GreenEnergyHub.Charges.Domain.ChargeCommands;
 using GreenEnergyHub.Charges.Domain.ChargeLinkCommandAcceptedEvents;
 using GreenEnergyHub.Charges.Domain.ChargeLinkCommandReceivedEvents;
 using GreenEnergyHub.Charges.Domain.ChargeLinkCommands;
@@ -31,6 +34,7 @@ using GreenEnergyHub.Charges.Infrastructure.Integration.ChargeConfirmation;
 using GreenEnergyHub.Charges.Infrastructure.Integration.ChargeLinkCreated;
 using GreenEnergyHub.Charges.Infrastructure.Integration.ChargeRejection;
 using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeCommandAccepted;
+using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeCommandReceived;
 using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeCommandRejected;
 using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandAccepted;
 using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandReceived;
@@ -64,6 +68,7 @@ namespace GreenEnergyHub.Charges.FunctionHost
         {
             ConfigureSharedServices(serviceCollection);
 
+            ConfigureChargeIngestion(serviceCollection);
             ConfigureChargeConfirmationSender(serviceCollection);
             ConfigureChargeRejectionSender(serviceCollection);
             ConfigureChargeLinkReceiver(serviceCollection);
@@ -105,6 +110,19 @@ namespace GreenEnergyHub.Charges.FunctionHost
             serviceCollection.AddMessagingProtobuf().AddMessageDispatcher<ChargeLinkCommandReceivedEvent>(
                 GetEnv("DOMAINEVENT_SENDER_CONNECTION_STRING"),
                 GetEnv("CHARGE_LINK_RECEIVED_TOPIC_NAME"));
+        }
+
+        private static void ConfigureChargeIngestion(IServiceCollection serviceCollection)
+        {
+            serviceCollection.AddScoped<IChargesMessageHandler, ChargesMessageHandler>();
+            serviceCollection.AddScoped<IChargeCommandHandler, ChargeCommandHandler>();
+            serviceCollection
+                .AddMessaging()
+                .AddMessageExtractor<ChargeCommand>();
+            serviceCollection.SendProtobuf<ChargeCommandReceivedContract>();
+            serviceCollection.AddMessagingProtobuf().AddMessageDispatcher<ChargeCommandReceivedEvent>(
+                    GetEnv("DOMAINEVENT_SENDER_CONNECTION_STRING"),
+                    GetEnv("COMMAND_RECEIVED_TOPIC_NAME"));
         }
 
         private static void ConfigureChargeConfirmationSender(IServiceCollection serviceCollection)
