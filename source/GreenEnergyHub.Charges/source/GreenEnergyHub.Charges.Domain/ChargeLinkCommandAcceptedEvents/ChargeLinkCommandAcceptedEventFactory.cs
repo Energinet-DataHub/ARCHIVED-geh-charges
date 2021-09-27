@@ -21,11 +21,10 @@ namespace GreenEnergyHub.Charges.Domain.ChargeLinkCommandAcceptedEvents
     {
         public ChargeLinkCommandAcceptedEvent Create([NotNull] ChargeLinkCommand chargeLinkCommand, string correlationId)
         {
-            return new ChargeLinkCommandAcceptedEvent(correlationId)
-            {
-                Document = chargeLinkCommand.Document,
-                ChargeLink = chargeLinkCommand.ChargeLink,
-            };
+            return new ChargeLinkCommandAcceptedEvent(
+                correlationId,
+                chargeLinkCommand.Document,
+                chargeLinkCommand.ChargeLink);
         }
     }
 }
