@@ -16,10 +16,10 @@
         - [ChargeLinkPeriod](#.ChargeLinkPeriod)
     - [ChargeLinkUpdated](#.ChargeLinkUpdated)
 - [Charge link requests and replies](#.ChargeLinkRequestsAndReplies)
-    - [CreateDefaultChargeLinksRequest](#.CreateDefaultChargeLinksRequest)
+    - [CreateDefaultChargeLinks](#.CreateDefaultChargeLinks)
     - [CreateDefaultChargeLinksSucceeded](#.CreateDefaultChargeLinksSucceeded)
     - [CreateDefaultChargeLinksFailed](#.CreateDefaultChargeLinksFailed)
-    - [CreateDefaultChargeLinkMessagesRequest](#.CreateDefaultChargeLinkMessagesRequest)
+    - [CreateDefaultChargeLinkMessages](#.CreateDefaultChargeLinkMessages)
     - [CreateDefaultChargeLinkMessagesSucceeded](#.CreateDefaultChargeLinkMessagesSucceeded)
     - [CreateDefaultChargeLinkMessagesFailed](#.CreateDefaultChargeLinkMessagesFailed)
 
@@ -182,9 +182,9 @@ Represents the update of one or more charge links.
 
 ## Charge link requests and replies
 
-<a name=".CreateDefaultChargeLinksRequest"></a>
+<a name=".CreateDefaultChargeLinks"></a>
 
-### CreateDefaultChargeLinksRequest
+### CreateDefaultChargeLinks
 
 Used by Metering Point domain as part of the 'Create metering point' process to request the Charges domain to link default charges to the newly created metering point.
 Go to the [contract](.././source/GreenEnergyHub.Charges/source/GreenEnergyHub.Charges.Infrastructure/Integration/ChargeLink/Commands/CreateDefaultChargeLinks.proto).
@@ -201,9 +201,9 @@ Go to [contract](.././source/GreenEnergyHub.Charges/source/GreenEnergyHub.Charge
 
 Go to [contract](.././source/GreenEnergyHub.Charges/source/GreenEnergyHub.Charges.Infrastructure/Integration/ChargeLink/Commands/CreateDefaultChargeLinksFailed.proto).
 
-<a name=".CreateDefaultChargeLinkMessagesRequest"></a>
+<a name=".CreateDefaultChargeLinkMessages"></a>
 
-### CreateDefaultChargeLinkMessagesRequest
+### CreateDefaultChargeLinkMessages
 
 Go to [contract](.././source/GreenEnergyHub.Charges/source/GreenEnergyHub.Charges.Infrastructure/Integration/ChargeLink/Commands/CreateDefaultChargeLinkMessages.proto).
 
