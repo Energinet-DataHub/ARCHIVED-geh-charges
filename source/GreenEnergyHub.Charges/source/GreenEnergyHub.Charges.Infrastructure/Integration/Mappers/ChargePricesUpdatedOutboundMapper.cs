@@ -29,7 +29,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Integration.Mappers
             {
                 ChargeId = chargePricesUpdated.ChargeId,
                 ChargeOwner = chargePricesUpdated.ChargeOwner,
-                ChargeTypeContract = (ChargeTypeContract)chargePricesUpdated.ChargeType,
+                ChargeType = (ChargeTypeContract)chargePricesUpdated.ChargeType,
                 UpdatePeriodStartDate = chargePricesUpdated.UpdatePeriodStartDate.ToTimestamp(),
                 UpdatePeriodEndDate = chargePricesUpdated.UpdatePeriodEndDate.ToTimestamp(),
             };

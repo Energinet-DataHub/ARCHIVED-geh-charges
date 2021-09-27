@@ -24,7 +24,7 @@ option csharp_namespace = "GreenEnergyHub.Charges.Infrastructure.Integration.Cha
 
 message ChargeCreatedContract {
   string charge_id = 1;// A charge identifier. Combined with Charge Owner and Charge Type it becomes unique
-  ChargeTypeContract charge_type_contract = 2;// The type of charge; tariff, fee or subscription
+  ChargeTypeContract charge_type = 2;// The type of charge; tariff, fee or subscription
   string charge_owner = 3; // A charge owner identification, e.g. the Market Participant's GLN or EIC number
   string currency = 4;
   ResolutionContract resolution = 5;

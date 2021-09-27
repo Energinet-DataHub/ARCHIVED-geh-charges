@@ -27,15 +27,15 @@ namespace GreenEnergyHub.Charges.Infrastructure.Integration.Mappers
             return new ChargeCreatedContract
             {
                 ChargeId = chargeCreated.ChargeId,
-                ChargeTypeContract = (ChargeTypeContract)chargeCreated.ChargeType,
+                ChargeType = (ChargeTypeContract)chargeCreated.ChargeType,
                 ChargeOwner = chargeCreated.ChargeOwner,
                 Currency = chargeCreated.Currency,
                 Resolution = (ResolutionContract)chargeCreated.Resolution,
                 TaxIndicator = chargeCreated.TaxIndicator,
                 ChargePeriod = new ChargePeriodContract
                 {
-                    StartDateTime = chargeCreated.ChargePeriod.StartTime.ToTimestamp(),
-                    EndDateTime = chargeCreated.ChargePeriod.EndTime.ToTimestamp(),
+                    StartDateTime = chargeCreated.ChargePeriod.StartDateTime.ToTimestamp(),
+                    EndDateTime = chargeCreated.ChargePeriod.EndDateTime.ToTimestamp(),
                 },
             };
         }

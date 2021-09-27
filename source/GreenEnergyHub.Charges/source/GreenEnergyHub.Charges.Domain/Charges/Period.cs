@@ -18,14 +18,14 @@ namespace GreenEnergyHub.Charges.Domain.Charges
 {
     public class Period
     {
-        public Period(Instant startTime, Instant endTime)
+        public Period(Instant startDateTime, Instant endDateTime)
         {
-            StartTime = startTime;
-            EndTime = endTime;
+            StartDateTime = startDateTime;
+            EndDateTime = endDateTime;
         }
 
-        public Instant StartTime { get; }
+        public Instant StartDateTime { get; }
 
-        public Instant EndTime { get; }
+        public Instant EndDateTime { get; }
     }
 }
