@@ -28,10 +28,13 @@ module "azfun_functionhost" {
     WEBSITES_ENABLE_APP_SERVICE_STORAGE           = true
     FUNCTIONS_WORKER_RUNTIME                      = "dotnet-isolated"
     CHARGE_DB_CONNECTION_STRING                   = local.CHARGE_DB_CONNECTION_STRING
+    INTEGRATIONEVENT_SENDER_CONNECTION_STRING     = data.azurerm_key_vault_secret.integration_events_sender_connection_string.value
     INTEGRATIONEVENT_LISTENER_CONNECTION_STRING   = data.azurerm_key_vault_secret.integration_events_listener_connection_string.value
     DOMAINEVENT_SENDER_CONNECTION_STRING          = module.sbnar_charges_sender.primary_connection_string
     DOMAINEVENT_LISTENER_CONNECTION_STRING        = module.sbnar_charges_listener.primary_connection_string
     CHARGE_LINK_ACCEPTED_TOPIC_NAME               = module.sbt_link_command_accepted.name
+    CHARGE_LINK_ACCEPTED_SUBSCRIPTION_NAME        = "sbs-link-command-accepted-event-publisher"
+    CHARGE_LINK_CREATED_TOPIC_NAME                = local.CHARGE_LINK_CREATED_TOPIC_NAME
     CHARGE_LINK_RECEIVED_TOPIC_NAME               = module.sbt_link_command_received.name
     CHARGE_LINK_RECEIVED_SUBSCRIPTION_NAME        = "sbs-link-command-received-receiver"
     CREATE_LINK_COMMAND_TOPIC_NAME                = module.sbt_create_link_command.name
