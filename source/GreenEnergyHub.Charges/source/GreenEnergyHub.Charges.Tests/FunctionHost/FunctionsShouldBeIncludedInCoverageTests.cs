@@ -34,14 +34,14 @@ namespace GreenEnergyHub.Charges.Tests.FunctionHost
         [Fact]
         public void AllFunctionsShouldBeIncludedInCoverage()
         {
-            Assert.Equal("ChargeCommandEndpoint", ChargeCommandEndpoint.FunctionName);
+            Assert.Equal("ChargeCommandReceiverEndpoint", ChargeCommandReceiverEndpoint.FunctionName);
             Assert.Equal("ChargeConfirmationSenderEndpoint", ChargeConfirmationSenderEndpoint.FunctionName);
             Assert.Equal("ChargeLinkCommandReceiverEndpoint", ChargeLinkCommandReceiverEndpoint.FunctionName);
-            Assert.Equal("ChargeLinkEventPublisherServiceBusTrigger", ChargeLinkEventPublisherEndpoint.FunctionName);
+            Assert.Equal("ChargeLinkEventPublisherEndpoint", ChargeLinkEventPublisherEndpoint.FunctionName);
             Assert.Equal("ChargeLinkIngestion", ChargeLinkIngestion.FunctionName);
             Assert.Equal("ChargeIngestion", ChargeIngestion.FunctionName);
             Assert.Equal("ChargeRejectionSenderEndpoint", ChargeRejectionSenderEndpoint.FunctionName);
-            Assert.Equal("CreateLinkCommandReceiverServiceBusTrigger", CreateChargeLinkReceiverEndpoint.FunctionName);
+            Assert.Equal("CreateChargeLinkReceiverEndpoint", CreateChargeLinkReceiverEndpoint.FunctionName);
             Assert.Equal("MeteringPointCreatedReceiverEndpoint", MeteringPointCreatedReceiverEndpoint.FunctionName);
         }
     }
