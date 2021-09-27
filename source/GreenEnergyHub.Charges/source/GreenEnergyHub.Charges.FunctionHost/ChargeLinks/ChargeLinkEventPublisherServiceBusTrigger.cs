@@ -16,6 +16,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application.ChargeLinks.Handlers;
 using GreenEnergyHub.Charges.Domain.ChargeLinkCommandAcceptedEvents;
+using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandAccepted;
 using GreenEnergyHub.Charges.Infrastructure.Messaging;
 using GreenEnergyHub.Messaging.Transport;
 using Microsoft.Azure.Functions.Worker;
@@ -31,13 +32,13 @@ namespace GreenEnergyHub.Charges.FunctionHost.ChargeLinks
         /// </summary>
         public const string FunctionName = "ChargeLinkEventPublisherServiceBusTrigger";
         private readonly ICorrelationContext _correlationContext;
-        private readonly MessageExtractor _messageExtractor;
+        private readonly MessageExtractor<ChargeLinkCommandAcceptedContract> _messageExtractor;
         private readonly IChargeLinkEventPublishHandler _chargeLinkEventPublishHandler;
         private readonly ILogger _log;
 
         public ChargeLinkEventPublisherServiceBusTrigger(
             ICorrelationContext correlationContext,
-            MessageExtractor messageExtractor,
+            MessageExtractor<ChargeLinkCommandAcceptedContract> messageExtractor,
             IChargeLinkEventPublishHandler chargeLinkEventPublishHandler,
             [NotNull] ILoggerFactory loggerFactory)
         {
