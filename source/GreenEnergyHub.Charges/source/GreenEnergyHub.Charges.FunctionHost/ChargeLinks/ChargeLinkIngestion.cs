@@ -31,7 +31,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.ChargeLinks
         /// The name of the function.
         /// Function name affects the URL and thus possibly dependent infrastructure.
         /// </summary>
-        public const string FunctionName = "ChargeLinkHttpTrigger";
+        public const string FunctionName = "ChargeLinkIngestion";
         private readonly ICorrelationContext _correlationContext;
         private readonly MessageExtractor<ChargeLinkCommand> _messageExtractor;
         private readonly IChargeLinkCommandHandler _chargeLinkCommandHandler;
