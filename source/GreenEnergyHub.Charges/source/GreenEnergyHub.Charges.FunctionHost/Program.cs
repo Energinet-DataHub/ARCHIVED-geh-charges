@@ -19,8 +19,15 @@ using GreenEnergyHub.Charges.Application.ChargeLinks.Handlers;
 using GreenEnergyHub.Charges.Application.Charges.Acknowledgement;
 using GreenEnergyHub.Charges.Application.Charges.Handlers;
 using GreenEnergyHub.Charges.Application.MeteringPoints.Handlers;
+using GreenEnergyHub.Charges.Core.DateTime;
+using GreenEnergyHub.Charges.Domain.ChargeCommandAcceptedEvents;
 using GreenEnergyHub.Charges.Domain.ChargeCommandReceivedEvents;
+using GreenEnergyHub.Charges.Domain.ChargeCommandRejectedEvents;
 using GreenEnergyHub.Charges.Domain.ChargeCommands;
+using GreenEnergyHub.Charges.Domain.ChargeCommands.Validation;
+using GreenEnergyHub.Charges.Domain.ChargeCommands.Validation.BusinessValidation;
+using GreenEnergyHub.Charges.Domain.ChargeCommands.Validation.BusinessValidation.Factories;
+using GreenEnergyHub.Charges.Domain.ChargeCommands.Validation.InputValidation;
 using GreenEnergyHub.Charges.Domain.ChargeLinkCommandAcceptedEvents;
 using GreenEnergyHub.Charges.Domain.ChargeLinkCommandReceivedEvents;
 using GreenEnergyHub.Charges.Domain.ChargeLinkCommands;
@@ -28,8 +35,10 @@ using GreenEnergyHub.Charges.Domain.ChargeLinkCreatedEvents;
 using GreenEnergyHub.Charges.Domain.ChargeLinks;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.DefaultChargeLinks;
+using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.Domain.MeteringPoints;
 using GreenEnergyHub.Charges.Infrastructure.Context;
+using GreenEnergyHub.Charges.Infrastructure.Context.Mapping;
 using GreenEnergyHub.Charges.Infrastructure.Integration.ChargeConfirmation;
 using GreenEnergyHub.Charges.Infrastructure.Integration.ChargeLinkCreated;
 using GreenEnergyHub.Charges.Infrastructure.Integration.ChargeRejection;
@@ -43,6 +52,7 @@ using GreenEnergyHub.Charges.Infrastructure.Messaging.Registration;
 using GreenEnergyHub.Charges.Infrastructure.Messaging.Serialization;
 using GreenEnergyHub.Charges.Infrastructure.Messaging.Serialization.Commands;
 using GreenEnergyHub.Charges.Infrastructure.Repositories;
+using GreenEnergyHub.Iso8601;
 using GreenEnergyHub.Messaging.Protobuf;
 using GreenEnergyHub.Messaging.Transport;
 using Microsoft.EntityFrameworkCore;
@@ -69,9 +79,10 @@ namespace GreenEnergyHub.Charges.FunctionHost
             ConfigureSharedServices(serviceCollection);
 
             ConfigureChargeIngestion(serviceCollection);
+            ConfigureChargeCommandReceiver(serviceCollection);
             ConfigureChargeConfirmationSender(serviceCollection);
             ConfigureChargeRejectionSender(serviceCollection);
-            ConfigureChargeLinkReceiver(serviceCollection);
+            ConfigureChargeLinkIngestion(serviceCollection);
             ConfigureChargeLinkCommandReceiver(serviceCollection);
             ConfigureChargeLinkEventPublisher(serviceCollection);
             ConfigureMeteringPointCreatedReceiver(serviceCollection);
@@ -125,6 +136,51 @@ namespace GreenEnergyHub.Charges.FunctionHost
                     GetEnv("COMMAND_RECEIVED_TOPIC_NAME"));
         }
 
+        private static void ConfigureChargeCommandReceiver(IServiceCollection serviceCollection)
+        {
+            serviceCollection.AddScoped<IChargeCommandConfirmationService, ChargeCommandConfirmationService>();
+            serviceCollection.AddScoped<IChargeCommandReceivedEventHandler, ChargeCommandReceivedEventHandler>();
+            serviceCollection.AddScoped<IChargeFactory, ChargeFactory>();
+            serviceCollection.AddScoped<IChargeCommandAcceptedEventFactory, ChargeCommandAcceptedEventFactory>();
+            serviceCollection.AddScoped<IChargeCommandRejectedEventFactory, ChargeCommandRejectedEventFactory>();
+
+            // DB
+            serviceCollection.AddScoped<IMarketParticipantRepository, MarketParticipantRepository>();
+            serviceCollection.AddScoped<IMarketParticipantMapper, MarketParticipantMapper>();
+
+            // Validation
+            serviceCollection.AddScoped<IBusinessValidationRulesFactory, BusinessValidationRulesFactory>();
+            serviceCollection.AddScoped<IInputValidationRulesFactory, InputValidationRulesFactory>();
+            serviceCollection.AddScoped<IRulesConfigurationRepository, RulesConfigurationRepository>();
+            serviceCollection.AddScoped<IChargeCommandInputValidator, ChargeCommandInputValidator>();
+            serviceCollection.AddScoped<IChargeCommandBusinessValidator, ChargeCommandBusinessValidator>();
+            serviceCollection.AddScoped<IChargeCommandValidator, ChargeCommandValidator>();
+
+            // ISO 8601
+            const string timeZoneIdString = "LOCAL_TIMEZONENAME";
+            var timeZoneId = Environment.GetEnvironmentVariable(timeZoneIdString) ??
+                             throw new ArgumentNullException(
+                                 timeZoneIdString,
+                                 "does not exist in configuration settings");
+            var timeZoneConfiguration = new Iso8601ConversionConfiguration(timeZoneId);
+            serviceCollection.AddSingleton<IIso8601ConversionConfiguration>(timeZoneConfiguration);
+            serviceCollection.AddScoped<IZonedDateTimeService, ZonedDateTimeService>();
+
+            // Messaging
+            serviceCollection.ReceiveProtobufMessage<ChargeCommandReceivedContract>(
+                configuration => configuration.WithParser(() => ChargeCommandReceivedContract.Parser));
+
+            serviceCollection.SendProtobuf<ChargeCommandAcceptedContract>();
+            serviceCollection.AddMessagingProtobuf().AddMessageDispatcher<ChargeCommandAcceptedEvent>(
+                GetEnv("DOMAINEVENT_SENDER_CONNECTION_STRING"),
+                GetEnv("COMMAND_ACCEPTED_TOPIC_NAME"));
+
+            serviceCollection.SendProtobuf<ChargeCommandRejectedContract>();
+            serviceCollection.AddMessagingProtobuf().AddMessageDispatcher<ChargeCommandRejectedEvent>(
+                GetEnv("DOMAINEVENT_SENDER_CONNECTION_STRING"),
+                GetEnv("COMMAND_REJECTED_TOPIC_NAME"));
+        }
+
         private static void ConfigureChargeConfirmationSender(IServiceCollection serviceCollection)
         {
             serviceCollection.AddScoped<IChargeConfirmationSender, ChargeConfirmationSender>();
@@ -149,7 +205,7 @@ namespace GreenEnergyHub.Charges.FunctionHost
                 GetEnv("POST_OFFICE_TOPIC_NAME"));
         }
 
-        private static void ConfigureChargeLinkReceiver(IServiceCollection serviceCollection)
+        private static void ConfigureChargeLinkIngestion(IServiceCollection serviceCollection)
         {
             serviceCollection.AddScoped<ChargeLinkCommandConverter>();
             serviceCollection.AddScoped<MessageExtractor<ChargeLinkCommand>>();
