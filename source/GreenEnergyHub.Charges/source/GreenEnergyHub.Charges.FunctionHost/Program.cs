@@ -29,7 +29,9 @@ using GreenEnergyHub.Charges.Domain.MeteringPoints;
 using GreenEnergyHub.Charges.Infrastructure.Context;
 using GreenEnergyHub.Charges.Infrastructure.Integration.ChargeConfirmation;
 using GreenEnergyHub.Charges.Infrastructure.Integration.ChargeLinkCreated;
+using GreenEnergyHub.Charges.Infrastructure.Integration.ChargeRejection;
 using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeCommandAccepted;
+using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeCommandRejected;
 using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandAccepted;
 using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandReceived;
 using GreenEnergyHub.Charges.Infrastructure.Messaging;
@@ -63,6 +65,7 @@ namespace GreenEnergyHub.Charges.FunctionHost
             ConfigureSharedServices(serviceCollection);
 
             ConfigureChargeConfirmationSender(serviceCollection);
+            ConfigureChargeRejectionSender(serviceCollection);
             ConfigureChargeLinkReceiver(serviceCollection);
             ConfigureChargeLinkCommandReceiver(serviceCollection);
             ConfigureChargeLinkEventPublisher(serviceCollection);
@@ -112,6 +115,18 @@ namespace GreenEnergyHub.Charges.FunctionHost
                 configuration => configuration.WithParser(() => ChargeCommandAcceptedContract.Parser));
             serviceCollection.SendProtobuf<ChargeConfirmationContract>();
             serviceCollection.AddMessagingProtobuf().AddMessageDispatcher<ChargeConfirmation>(
+                GetEnv("DOMAINEVENT_SENDER_CONNECTION_STRING"),
+                GetEnv("POST_OFFICE_TOPIC_NAME"));
+        }
+
+        private static void ConfigureChargeRejectionSender(IServiceCollection serviceCollection)
+        {
+            serviceCollection.AddScoped<IChargeRejectionSender, ChargeRejectionSender>();
+
+            serviceCollection.ReceiveProtobufMessage<ChargeCommandRejectedContract>(
+                configuration => configuration.WithParser(() => ChargeCommandRejectedContract.Parser));
+            serviceCollection.SendProtobuf<ChargeRejectionContract>();
+            serviceCollection.AddMessagingProtobuf().AddMessageDispatcher<ChargeRejection>(
                 GetEnv("DOMAINEVENT_SENDER_CONNECTION_STRING"),
                 GetEnv("POST_OFFICE_TOPIC_NAME"));
         }
