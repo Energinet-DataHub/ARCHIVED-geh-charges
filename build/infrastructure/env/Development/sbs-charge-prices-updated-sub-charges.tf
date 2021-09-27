@@ -24,7 +24,7 @@ on the existing Service Bus Namespace.
 */
 
 resource "azurerm_servicebus_subscription" "sbs_charge_prices_updated_charge" {
-  depends_on          = [module.sbt_charge_prices_updated_created]
+  depends_on          = [module.sbt_charge_prices_updated]
   name                = "charge-prices-updated-sub-charges"
   resource_group_name = data.azurerm_resource_group.main.name
   namespace_name      = module.sbn_external_integration_events.name

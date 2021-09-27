@@ -13,7 +13,7 @@
 # limitations under the License.
 
 resource "azurerm_servicebus_subscription" "sbs_command_accepted_charge_command_accepted_receiver" {
-  name                = "sbs_command_accepted_charge_command_accepted_receiver"
+  name                = "sbs-charge-command-accepted-receiver"
   resource_group_name = data.azurerm_resource_group.main.name
   namespace_name      = module.sbn_charges.name
   topic_name          = module.sbt_command_accepted.name

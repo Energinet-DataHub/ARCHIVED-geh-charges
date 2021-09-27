@@ -40,7 +40,7 @@ namespace GreenEnergyHub.Charges.ChargeConfirmationSender
 
         private static void ConfigureMessaging(IServiceCollection services)
         {
-            services.ReceiveProtobuf<ChargeCommandAcceptedContract>(
+            services.ReceiveProtobufMessage<ChargeCommandAcceptedContract>(
                 configuration => configuration.WithParser(() => ChargeCommandAcceptedContract.Parser));
             services.SendProtobuf<ChargeConfirmationContract>();
             services.AddMessagingProtobuf().AddMessageDispatcher<ChargeConfirmation>(
