@@ -13,9 +13,7 @@
 // limitations under the License.
 
 using GreenEnergyHub.Charges.ChargeCommandReceiver;
-using GreenEnergyHub.Charges.ChargeConfirmationSender;
 using GreenEnergyHub.Charges.ChargeReceiver;
-using GreenEnergyHub.Charges.ChargeRejectionSender;
 using GreenEnergyHub.Charges.FunctionHost.ChargeLinks;
 using GreenEnergyHub.Charges.FunctionHost.Charges;
 using GreenEnergyHub.Charges.FunctionHost.MeteringPoint;
@@ -43,7 +41,7 @@ namespace GreenEnergyHub.Charges.Tests.FunctionHost
             Assert.Equal("ChargeLinkEventPublisherServiceBusTrigger", ChargeLinkEventPublisherServiceBusTrigger.FunctionName);
             Assert.Equal("ChargeLinkHttpTrigger", ChargeLinkHttpTrigger.FunctionName);
             Assert.Equal("ChargeHttpTrigger", ChargeHttpTrigger.FunctionName);
-            Assert.Equal("ChargeCommandRejectedSubscriber", ChargeCommandRejectedSubscriber.FunctionName);
+            Assert.Equal("ChargeCommandRejectedSubscriber", ChargeRejectionSenderEndpoint.FunctionName);
             Assert.Equal("CreateLinkCommandReceiverServiceBusTrigger", CreateLinkCommandReceiverServiceBusTrigger.FunctionName);
             Assert.Equal("MeteringPointCreatedReceiverEndpoint", MeteringPointCreatedReceiverEndpoint.FunctionName);
         }
