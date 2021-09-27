@@ -45,7 +45,7 @@ limitations under the License.
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\GreenEnergyHub.FunctionApp.TestCommon\FunctionApp.TestCommon.csproj" />
+    <ProjectReference Include="..\GreenEnergyHub.FunctionApp.TestCommon\GreenEnergyHub.FunctionApp.TestCommon.csproj" />
   </ItemGroup>
 
   <ItemGroup>
