@@ -58,16 +58,6 @@ namespace GreenEnergyHub.Charges.Domain.Charges
         }
 
         /// <summary>
-        /// This constructor should not be used.
-        /// By any other than the Moq framework.
-        /// </summary>
-#pragma warning disable 8618
-        public Charge()
-#pragma warning restore 8618
-        {
-        }
-
-        /// <summary>
         /// Globally unique identifier of the charge.
         /// </summary>
         public Guid Id { get; }

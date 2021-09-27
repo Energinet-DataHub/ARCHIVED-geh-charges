@@ -35,7 +35,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
     /// Tests <see cref="ChargeRepository"/> using a SQL database.
     /// </summary>
     [UnitTest]
-    public class ChargeLinkRepositoryTest : IClassFixture<SqlServerResource<SqlServerOptions>>
+    public class ChargeLinkRepositoryTests : IClassFixture<SqlServerResource<SqlServerOptions>>
     {
         private const string ExpectedOperationId = "expected-operation-id";
         private const string ExpectedCorrelationId = "expected-correlation-id";
@@ -45,7 +45,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
 
         private readonly SqlServerResource<SqlServerOptions> _resource;
 
-        public ChargeLinkRepositoryTest(SqlServerResource<SqlServerOptions> resource)
+        public ChargeLinkRepositoryTests(SqlServerResource<SqlServerOptions> resource)
         {
             _resource = resource;
         }

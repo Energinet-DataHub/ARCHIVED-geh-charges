@@ -38,12 +38,12 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
     /// Tests <see cref="ChargeRepository"/> using a database created with squadron.
     /// </summary>
     [UnitTest]
-    public class ChargeRepositoryTest : IClassFixture<SqlServerResource<SqlServerOptions>>
+    public class ChargeRepositoryTests : IClassFixture<SqlServerResource<SqlServerOptions>>
     {
         private const string MarketParticipantOwner = "MarketParticipantId";
         private readonly SqlServerResource<SqlServerOptions> _resource;
 
-        public ChargeRepositoryTest(SqlServerResource<SqlServerOptions> resource)
+        public ChargeRepositoryTests(SqlServerResource<SqlServerOptions> resource)
         {
             _resource = resource;
         }

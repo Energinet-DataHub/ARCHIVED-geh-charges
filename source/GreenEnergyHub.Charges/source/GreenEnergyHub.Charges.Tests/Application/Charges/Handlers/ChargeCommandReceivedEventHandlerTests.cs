@@ -40,7 +40,9 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
             [Frozen] [NotNull] Mock<IChargeRepository> repository,
             [Frozen] [NotNull] Mock<IChargeCommandConfirmationService> confirmationService,
             [Frozen] [NotNull] Mock<ChargeCommand> chargeCommand,
+            [Frozen] [NotNull] Mock<Charge> charge,
             [Frozen] [NotNull] Mock<IChargeCommandFactory> chargeCommandFactory,
+            [Frozen] [NotNull] Mock<IChargeFactory> chargeFactory,
             [NotNull] ChargeCommandReceivedEvent receivedEvent,
             [NotNull] ChargeCommandReceivedEventHandler sut)
         {
@@ -70,6 +72,10 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
                     s => s.CreateFromCharge(
                         It.IsAny<Charge>()))
                 .Returns(chargeCommand.Object);
+
+            chargeFactory.Setup(s => s.CreateFromCommandAsync(
+                    It.IsAny<ChargeCommand>()))
+                .Returns(Task.FromResult(charge.Object));
 
             // Act
             await sut.HandleAsync(receivedEvent).ConfigureAwait(false);
