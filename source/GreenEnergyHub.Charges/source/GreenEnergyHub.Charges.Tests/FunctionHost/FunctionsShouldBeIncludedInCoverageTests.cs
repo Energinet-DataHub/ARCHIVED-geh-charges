@@ -14,8 +14,6 @@
 
 using GreenEnergyHub.Charges.ChargeCommandReceiver;
 using GreenEnergyHub.Charges.ChargeConfirmationSender;
-using GreenEnergyHub.Charges.ChargeLinkCommandReceiver;
-using GreenEnergyHub.Charges.ChargeLinkEventPublisher;
 using GreenEnergyHub.Charges.ChargeReceiver;
 using GreenEnergyHub.Charges.ChargeRejectionSender;
 using GreenEnergyHub.Charges.FunctionHost.ChargeLinks;
