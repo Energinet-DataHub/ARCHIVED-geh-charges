@@ -16,13 +16,20 @@ using System;
 using Energinet.DataHub.MeteringPoints.IntegrationEventContracts;
 using EntityFrameworkCore.SqlServer.NodaTime.Extensions;
 using GreenEnergyHub.Charges.Application.ChargeLinks.Handlers;
+using GreenEnergyHub.Charges.Application.Charges.Acknowledgement;
+using GreenEnergyHub.Charges.Application.Charges.Factories;
+using GreenEnergyHub.Charges.Application.Charges.Handlers;
 using GreenEnergyHub.Charges.Application.MeteringPoints.Handlers;
+using GreenEnergyHub.Charges.Domain.ChargeCommandAcceptedEvents;
 using GreenEnergyHub.Charges.Domain.ChargeLinkCommandReceivedEvents;
 using GreenEnergyHub.Charges.Domain.ChargeLinkCommands;
 using GreenEnergyHub.Charges.Domain.Charges;
+using GreenEnergyHub.Charges.Domain.Charges.Acknowledgements;
 using GreenEnergyHub.Charges.Domain.DefaultChargeLinks;
 using GreenEnergyHub.Charges.Domain.MeteringPoints;
 using GreenEnergyHub.Charges.Infrastructure.Context;
+using GreenEnergyHub.Charges.Infrastructure.Integration.ChargeCreated;
+using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeCommandAccepted;
 using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandReceived;
 using GreenEnergyHub.Charges.Infrastructure.Messaging;
 using GreenEnergyHub.Charges.Infrastructure.Messaging.Registration;
@@ -56,6 +63,7 @@ namespace GreenEnergyHub.Charges.FunctionHost
 
             ConfigureChargeLinkReceiver(serviceCollection);
             ConfigureMeteringPointCreatedReceiver(serviceCollection);
+            ConfigureChargeCommandAcceptedReceiver(serviceCollection);
             ConfigureCreateChargeLinkReceiver(serviceCollection);
         }
 
@@ -120,6 +128,27 @@ namespace GreenEnergyHub.Charges.FunctionHost
             serviceCollection.AddScoped<IMeteringPointCreatedEventHandler, MeteringPointCreatedEventHandler>();
 
             serviceCollection.AddScoped<IMeteringPointRepository, MeteringPointRepository>();
+        }
+
+        private static void ConfigureChargeCommandAcceptedReceiver(IServiceCollection serviceCollection)
+        {
+            serviceCollection.ReceiveProtobufMessage<ChargeCommandAcceptedContract>(
+                configuration => configuration.WithParser(() => ChargeCommandAcceptedContract.Parser));
+
+            serviceCollection.AddScoped<MessageExtractor<ChargeCommandAcceptedEvent>>();
+            serviceCollection.AddScoped<IChargeCreatedFactory, ChargeCreatedFactory>();
+            serviceCollection.AddScoped<IChargePricesUpdatedFactory, ChargePricesUpdatedFactory>();
+            serviceCollection.AddScoped<IChargeCommandAcceptedEventSender, ChargeCommandAcceptedEventSender>();
+            serviceCollection.AddScoped<IChargeCommandAcceptedEventHandler, ChargeCommandAcceptedEventHandler>();
+
+            serviceCollection.SendProtobuf<ChargeCreatedContract>();
+            serviceCollection.AddMessagingProtobuf().AddMessageDispatcher<ChargeCreated>(
+                GetEnv("INTEGRATIONEVENT_SENDER_CONNECTION_STRING"),
+                GetEnv("CHARGE_CREATED_TOPIC_NAME"));
+
+            serviceCollection.AddMessagingProtobuf().AddMessageDispatcher<ChargePricesUpdated>(
+                GetEnv("INTEGRATIONEVENT_SENDER_CONNECTION_STRING"),
+                GetEnv("CHARGE_PRICES_UPDATED_TOPIC_NAME"));
         }
 
         private static string GetEnv(string variableName)

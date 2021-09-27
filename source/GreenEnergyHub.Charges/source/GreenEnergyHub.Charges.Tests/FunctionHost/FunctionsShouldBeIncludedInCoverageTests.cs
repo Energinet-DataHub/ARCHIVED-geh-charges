@@ -19,6 +19,7 @@ using GreenEnergyHub.Charges.ChargeLinkEventPublisher;
 using GreenEnergyHub.Charges.ChargeReceiver;
 using GreenEnergyHub.Charges.ChargeRejectionSender;
 using GreenEnergyHub.Charges.FunctionHost.ChargeLinks;
+using GreenEnergyHub.Charges.FunctionHost.Charges;
 using GreenEnergyHub.Charges.FunctionHost.MeteringPoint;
 using Xunit;
 
@@ -47,6 +48,7 @@ namespace GreenEnergyHub.Charges.Tests.FunctionHost
             Assert.Equal("ChargeCommandRejectedSubscriber", ChargeCommandRejectedSubscriber.FunctionName);
             Assert.Equal("CreateLinkCommandReceiverServiceBusTrigger", CreateLinkCommandReceiverServiceBusTrigger.FunctionName);
             Assert.Equal("MeteringPointCreatedReceiverEndpoint", MeteringPointCreatedReceiverEndpoint.FunctionName);
+            Assert.Equal("ChargeCommandAcceptedReceiverEndpoint", ChargeCommandAcceptedReceiverEndpoint.FunctionName);
         }
     }
 }

@@ -28,6 +28,7 @@ module "azfun_functionhost" {
     WEBSITES_ENABLE_APP_SERVICE_STORAGE           = true
     FUNCTIONS_WORKER_RUNTIME                      = "dotnet-isolated"
     CHARGE_DB_CONNECTION_STRING                   = local.CHARGE_DB_CONNECTION_STRING
+    INTEGRATIONEVENT_SENDER_CONNECTION_STRING     = data.azurerm_key_vault_secret.integration_events_sender_connection_string.value
     INTEGRATIONEVENT_LISTENER_CONNECTION_STRING   = data.azurerm_key_vault_secret.integration_events_listener_connection_string.value
     DOMAINEVENT_SENDER_CONNECTION_STRING          = module.sbnar_charges_sender.primary_connection_string
     DOMAINEVENT_LISTENER_CONNECTION_STRING        = module.sbnar_charges_listener.primary_connection_string
@@ -36,6 +37,9 @@ module "azfun_functionhost" {
     CREATE_LINK_COMMAND_SUBSCRIPTION_NAME         = azurerm_servicebus_subscription.sbs_create_link_command_charges.name
     METERING_POINT_CREATED_TOPIC_NAME             = local.METERING_POINT_CREATED_TOPIC_NAME
     METERING_POINT_CREATED_SUBSCRIPTION_NAME      = local.METERING_POINT_CREATED_SUBSCRIPTION_NAME
+    COMMAND_ACCEPTED_RECEIVER_SUBSCRIPTION_NAME   = local.COMMAND_ACCEPTED_RECEIVER_SUBSCRIPTION_NAME
+    CHARGE_CREATED_TOPIC_NAME                     = local.CHARGE_CREATED_TOPIC_NAME
+    CHARGE_PRICES_UPDATED_TOPIC_NAME              = local.CHARGE_PRICES_UPDATED
   }
   dependencies                              = [
     module.appi.dependent_on,

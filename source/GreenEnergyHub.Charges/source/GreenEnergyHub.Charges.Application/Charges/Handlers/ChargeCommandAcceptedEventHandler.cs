@@ -19,7 +19,7 @@ using GreenEnergyHub.Charges.Domain.ChargeCommandAcceptedEvents;
 
 namespace GreenEnergyHub.Charges.Application.Charges.Handlers
 {
-    public class ChargeCommandAcceptedEventHandler
+    public class ChargeCommandAcceptedEventHandler : IChargeCommandAcceptedEventHandler
     {
         private readonly IChargeCommandAcceptedEventSender _chargeCommandAcceptedEventSender;
 
