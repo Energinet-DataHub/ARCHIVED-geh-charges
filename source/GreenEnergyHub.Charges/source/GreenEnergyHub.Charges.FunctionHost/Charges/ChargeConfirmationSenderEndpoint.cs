@@ -12,52 +12,58 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application.Charges.Acknowledgement;
 using GreenEnergyHub.Charges.Domain.ChargeCommandAcceptedEvents;
 using GreenEnergyHub.Charges.Infrastructure.Messaging;
 using GreenEnergyHub.Messaging.Transport;
-using Microsoft.Azure.WebJobs;
+using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Logging;
 
-namespace GreenEnergyHub.Charges.ChargeConfirmationSender
+namespace GreenEnergyHub.Charges.FunctionHost.Charges
 {
-    public class ChargeCommandAcceptedSubscriber
+    public class ChargeConfirmationSenderEndpoint
     {
-        public const string FunctionName = nameof(ChargeCommandAcceptedSubscriber);
+        public const string FunctionName = nameof(ChargeConfirmationSenderEndpoint);
         private readonly IChargeConfirmationSender _chargeConfirmationSender;
         private readonly ICorrelationContext _correlationContext;
         private readonly MessageExtractor _messageExtractor;
+        private readonly ILogger _log;
 
-        public ChargeCommandAcceptedSubscriber(
+        public ChargeConfirmationSenderEndpoint(
             IChargeConfirmationSender chargeConfirmationSender,
             ICorrelationContext correlationContext,
-            MessageExtractor messageExtractor)
+            MessageExtractor messageExtractor,
+            [NotNull] ILoggerFactory loggerFactory)
         {
             _chargeConfirmationSender = chargeConfirmationSender;
             _correlationContext = correlationContext;
             _messageExtractor = messageExtractor;
+
+            _log = loggerFactory.CreateLogger(nameof(ChargeConfirmationSenderEndpoint));
         }
 
-        [FunctionName(FunctionName)]
+        [Function(FunctionName)]
         public async Task RunAsync(
             [ServiceBusTrigger(
-            "%COMMAND_ACCEPTED_TOPIC_NAME%",
-            "%COMMAND_ACCEPTED_SUBSCRIPTION_NAME%",
-            Connection = "COMMAND_ACCEPTED_LISTENER_CONNECTION_STRING")]
-            byte[] message,
-            ILogger log)
+                "%COMMAND_ACCEPTED_TOPIC_NAME%",
+                "%COMMAND_ACCEPTED_SUBSCRIPTION_NAME%",
+                Connection = "DOMAINEVENT_LISTENER_CONNECTION_STRING")]
+            [NotNull] byte[] message,
+            [NotNull] FunctionContext context)
         {
+            SetCorrelationContext(context);
             var acceptedEvent = (ChargeCommandAcceptedEvent)await _messageExtractor.ExtractAsync(message).ConfigureAwait(false);
-            SetCorrelationContext(acceptedEvent);
+            SetCorrelationContext(context);
             await _chargeConfirmationSender.HandleAsync(acceptedEvent).ConfigureAwait(false);
 
-            log.LogDebug("Received event with correlation ID '{CorrelationId}'", acceptedEvent.CorrelationId);
+            _log.LogDebug("Received event with correlation ID '{CorrelationId}'", acceptedEvent.CorrelationId);
         }
 
-        private void SetCorrelationContext(ChargeCommandAcceptedEvent acceptedEvent)
+        private void SetCorrelationContext(FunctionContext context)
         {
-            _correlationContext.CorrelationId = acceptedEvent.CorrelationId;
+            _correlationContext.CorrelationId = context.InvocationId.Replace("-", string.Empty);
         }
     }
 }

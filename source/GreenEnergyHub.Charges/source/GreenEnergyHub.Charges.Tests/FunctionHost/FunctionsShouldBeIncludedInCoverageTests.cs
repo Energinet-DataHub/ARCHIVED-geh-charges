@@ -17,6 +17,7 @@ using GreenEnergyHub.Charges.ChargeConfirmationSender;
 using GreenEnergyHub.Charges.ChargeReceiver;
 using GreenEnergyHub.Charges.ChargeRejectionSender;
 using GreenEnergyHub.Charges.FunctionHost.ChargeLinks;
+using GreenEnergyHub.Charges.FunctionHost.Charges;
 using GreenEnergyHub.Charges.FunctionHost.MeteringPoint;
 using Xunit;
 
@@ -37,7 +38,7 @@ namespace GreenEnergyHub.Charges.Tests.FunctionHost
         public void AllFunctionsShouldBeIncludedInCoverage()
         {
             Assert.Equal("ChargeCommandEndpoint", ChargeCommandEndpoint.FunctionName);
-            Assert.Equal("ChargeCommandAcceptedSubscriber", ChargeCommandAcceptedSubscriber.FunctionName);
+            Assert.Equal("ChargeCommandAcceptedSubscriber", ChargeConfirmationSenderEndpoint.FunctionName);
             Assert.Equal("LinkCommandReceiverEndpoint", LinkCommandReceiverEndpoint.FunctionName);
             Assert.Equal("ChargeLinkEventPublisherServiceBusTrigger", ChargeLinkEventPublisherServiceBusTrigger.FunctionName);
             Assert.Equal("ChargeLinkHttpTrigger", ChargeLinkHttpTrigger.FunctionName);
