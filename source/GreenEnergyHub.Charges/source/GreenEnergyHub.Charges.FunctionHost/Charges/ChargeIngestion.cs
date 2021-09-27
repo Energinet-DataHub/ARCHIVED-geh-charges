@@ -25,7 +25,7 @@ using Microsoft.Extensions.Logging;
 
 namespace GreenEnergyHub.Charges.FunctionHost.Charges
 {
-    public class ChargeHttpTrigger
+    public class ChargeIngestion
     {
         /// <summary>
         /// The name of the function.
@@ -37,7 +37,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Charges
         private readonly MessageExtractor<ChargeCommand> _messageExtractor;
         private readonly ILogger _log;
 
-        public ChargeHttpTrigger(
+        public ChargeIngestion(
             IChargesMessageHandler chargesMessageHandler,
             ICorrelationContext correlationContext,
             MessageExtractor<ChargeCommand> messageExtractor,
@@ -47,7 +47,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Charges
             _correlationContext = correlationContext;
             _messageExtractor = messageExtractor;
 
-            _log = loggerFactory.CreateLogger(nameof(ChargeHttpTrigger));
+            _log = loggerFactory.CreateLogger(nameof(ChargeIngestion));
         }
 
         [Function(FunctionName)]
