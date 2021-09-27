@@ -25,15 +25,23 @@ namespace GreenEnergyHub.Charges.Infrastructure.Integration.Mappers
     {
         protected override IMessage Convert([NotNull]ChargePricesUpdated chargePricesUpdated)
         {
-            return new ChargePricesUpdatedContract
+            var chargePricesUpdatedContract = new ChargePricesUpdatedContract
             {
                 ChargeId = chargePricesUpdated.ChargeId,
                 ChargeOwner = chargePricesUpdated.ChargeOwner,
                 ChargeTypeContract = (ChargeTypeContract)chargePricesUpdated.ChargeType,
                 UpdatePeriodStartDate = chargePricesUpdated.UpdatePeriodStartDate.ToTimestamp(),
                 UpdatePeriodEndDate = chargePricesUpdated.UpdatePeriodEndDate.ToTimestamp(),
-                // Points
             };
+
+            foreach (var point in chargePricesUpdated.Points)
+            {
+                var mappedPoint = new ChargePriceContract { Price = (double)point.Price, Time = point.Time.ToTimestamp(), };
+
+                chargePricesUpdatedContract.Points.Add(mappedPoint);
+            }
+
+            return chargePricesUpdatedContract;
         }
     }
 }
