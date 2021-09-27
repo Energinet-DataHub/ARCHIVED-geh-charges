@@ -13,9 +13,8 @@
 // limitations under the License.
 
 using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Application;
 using GreenEnergyHub.Charges.Application.Charges.Handlers;
-using GreenEnergyHub.Charges.Domain.Charges.Events.Local;
+using GreenEnergyHub.Charges.Domain.ChargeCommandReceivedEvents;
 using GreenEnergyHub.Charges.Infrastructure.Messaging;
 using GreenEnergyHub.Messaging.Transport;
 using Microsoft.Azure.WebJobs;
@@ -25,7 +24,7 @@ namespace GreenEnergyHub.Charges.ChargeCommandReceiver
 {
     public class ChargeCommandEndpoint
     {
-        private const string FunctionName = nameof(ChargeCommandEndpoint);
+        public const string FunctionName = nameof(ChargeCommandEndpoint);
         private readonly IChargeCommandReceivedEventHandler _chargeCommandReceivedEventHandler;
         private readonly ICorrelationContext _correlationContext;
         private readonly MessageExtractor _messageExtractor;

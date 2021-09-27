@@ -14,18 +14,19 @@
 
 using System;
 using System.Diagnostics.CodeAnalysis;
-using GreenEnergyHub.Charges.Application;
+using EntityFrameworkCore.SqlServer.NodaTime.Extensions;
 using GreenEnergyHub.Charges.Application.Charges.Acknowledgement;
-using GreenEnergyHub.Charges.Application.Charges.Factories;
 using GreenEnergyHub.Charges.Application.Charges.Handlers;
-using GreenEnergyHub.Charges.Application.Charges.Repositories;
-using GreenEnergyHub.Charges.Application.Charges.Validation;
-using GreenEnergyHub.Charges.Application.Charges.Validation.BusinessValidation;
-using GreenEnergyHub.Charges.Application.Charges.Validation.BusinessValidation.Factories;
-using GreenEnergyHub.Charges.Application.Charges.Validation.InputValidation;
 using GreenEnergyHub.Charges.ChargeCommandReceiver;
 using GreenEnergyHub.Charges.Core.DateTime;
-using GreenEnergyHub.Charges.Domain.Charges.Events.Local;
+using GreenEnergyHub.Charges.Domain.ChargeCommandAcceptedEvents;
+using GreenEnergyHub.Charges.Domain.ChargeCommandRejectedEvents;
+using GreenEnergyHub.Charges.Domain.ChargeCommands.Validation;
+using GreenEnergyHub.Charges.Domain.ChargeCommands.Validation.BusinessValidation;
+using GreenEnergyHub.Charges.Domain.ChargeCommands.Validation.BusinessValidation.Factories;
+using GreenEnergyHub.Charges.Domain.ChargeCommands.Validation.InputValidation;
+using GreenEnergyHub.Charges.Domain.Charges;
+using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.Infrastructure.Context;
 using GreenEnergyHub.Charges.Infrastructure.Context.Mapping;
 using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeCommandAccepted;
@@ -89,7 +90,7 @@ namespace GreenEnergyHub.Charges.ChargeCommandReceiver
                                        "CHARGE_DB_CONNECTION_STRING",
                                        "does not exist in configuration settings");
             builder.Services.AddDbContext<ChargesDatabaseContext>(
-                options => options.UseSqlServer(connectionString));
+                options => options.UseSqlServer(connectionString, options => options.UseNodaTime()));
             builder.Services.AddScoped<IChargesDatabaseContext, ChargesDatabaseContext>();
             builder.Services.AddScoped<IChargeRepository, ChargeRepository>();
             builder.Services.AddScoped<IMarketParticipantRepository, MarketParticipantRepository>();

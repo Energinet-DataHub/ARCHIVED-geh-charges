@@ -13,16 +13,19 @@
 // limitations under the License.
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using GreenEnergyHub.Charges.Domain.MarketDocument;
+using GreenEnergyHub.Charges.Domain.Charges;
+using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.Infrastructure.Context.Mapping;
 using GreenEnergyHub.Charges.Infrastructure.Context.Model;
-using GreenEnergyHub.Charges.TestCore;
 using GreenEnergyHub.Charges.TestCore.Attributes;
 using NodaTime;
 using Xunit;
 using Xunit.Categories;
+using Charge = GreenEnergyHub.Charges.Infrastructure.Context.Model.Charge;
+using ChargeOperation = GreenEnergyHub.Charges.Infrastructure.Context.Model.ChargeOperation;
 using MarketParticipant = GreenEnergyHub.Charges.Infrastructure.Context.Model.MarketParticipant;
 
 namespace GreenEnergyHub.Charges.Tests.Infrastructure.Mapping
@@ -46,17 +49,14 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Mapping
                     new ChargePeriodDetails
                     {
                         StartDateTime = future,
-                        RowId = 1,
                     },
                     new ChargePeriodDetails
                     {
                         StartDateTime = past,
-                        RowId = 2,
                     },
                     new ChargePeriodDetails
                     {
                         StartDateTime = expected,
-                        RowId = 3,
                     },
                 },
                 MarketParticipant = new MarketParticipant
@@ -76,20 +76,32 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Mapping
         [Theory]
         [InlineAutoMoqData]
         public void MapDomainChargeToCharge_WhenNoEndTimeIsUsed_MapsEndTimeToNull(
-            [NotNull] Charges.Domain.Charges.Charge charge,
             MarketParticipant marketParticipant)
         {
             // Arrange
-            charge.EndDateTime = null;
+            var now = SystemClock.Instance.GetCurrentInstant();
 
             // Set all other times to a valid time and not just a random which can get the test to blink
-            var now = SystemClock.Instance.GetCurrentInstant();
-            charge.StartDateTime = now;
-            charge.Document.RequestDate = now;
-            foreach (var point in charge.Points)
-            {
-                point.Time = now;
-            }
+            var charge = new Charges.Domain.Charges.Charge(
+                Guid.NewGuid(),
+                new Document
+                {
+                    RequestDate = now,
+                },
+                "ChargeOperationId",
+                "SenderProvidedId",
+                "Name",
+                "description",
+                "owner",
+                "CorrelationId",
+                now,
+                null,
+                ChargeType.Fee,
+                VatClassification.Unknown,
+                Resolution.P1D,
+                true,
+                false,
+                new List<Point>());
 
             // Act
             var result = ChargeMapper.MapDomainChargeToCharge(charge, marketParticipant);

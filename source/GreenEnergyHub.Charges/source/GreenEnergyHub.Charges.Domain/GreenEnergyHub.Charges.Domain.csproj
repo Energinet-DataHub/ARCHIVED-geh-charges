@@ -31,6 +31,7 @@ limitations under the License.
 
     <ItemGroup>
       <ProjectReference Include="..\..\..\messaging\source\GreenEnergyHub.Messaging\GreenEnergyHub.Messaging.csproj" />
+      <ProjectReference Include="..\GreenEnergyHub.Charges.Core\GreenEnergyHub.Charges.Core.csproj" />
     </ItemGroup>
 
 </Project>

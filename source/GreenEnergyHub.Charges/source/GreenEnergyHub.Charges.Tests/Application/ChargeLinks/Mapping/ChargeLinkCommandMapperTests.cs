@@ -14,8 +14,8 @@
 
 using System.Diagnostics.CodeAnalysis;
 using FluentAssertions;
-using GreenEnergyHub.Charges.Application.ChargeLinks.Mapping;
-using GreenEnergyHub.Charges.Domain.ChargeLinks.Events.Local;
+using GreenEnergyHub.Charges.Domain.ChargeLinkCommandAcceptedEvents;
+using GreenEnergyHub.Charges.Domain.ChargeLinkCommandReceivedEvents;
 using GreenEnergyHub.Charges.TestCore.Attributes;
 using Xunit;
 using Xunit.Categories;
@@ -31,10 +31,10 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Mapping
             [NotNull] ChargeLinkCommandReceivedEvent chargeLinkCommandReceivedEvent)
         {
             // Arrange
-            var mapper = new ChargeLinkCommandMapper();
+            var factory = new ChargeLinkCommandAcceptedEventFactory();
 
             // Act
-            var chargeLinkCommandAcceptedEvent = mapper.Map(chargeLinkCommandReceivedEvent);
+            var chargeLinkCommandAcceptedEvent = factory.Create(chargeLinkCommandReceivedEvent);
 
             // Assert
             chargeLinkCommandAcceptedEvent.Document.Should().BeEquivalentTo(chargeLinkCommandReceivedEvent.ChargeLinkCommand.Document);

@@ -14,10 +14,10 @@
 
 using System.Diagnostics.CodeAnalysis;
 using FluentAssertions;
-using GreenEnergyHub.Charges.Application.Charges.Validation;
-using GreenEnergyHub.Charges.Application.Charges.Validation.BusinessValidation.ValidationRules;
+using GreenEnergyHub.Charges.Domain.ChargeCommands;
+using GreenEnergyHub.Charges.Domain.ChargeCommands.Validation;
+using GreenEnergyHub.Charges.Domain.ChargeCommands.Validation.BusinessValidation.ValidationRules;
 using GreenEnergyHub.Charges.Domain.Charges;
-using GreenEnergyHub.Charges.Domain.Charges.Commands;
 using GreenEnergyHub.TestHelpers;
 using Xunit;
 using Xunit.Categories;
@@ -31,6 +31,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Validation.BusinessVa
         [InlineAutoDomainData]
         public void IsValid_WhenVatPayerInCommandDoesNotMatchCharge_IsFalse([NotNull]ChargeCommand command, [NotNull] Charge charge)
         {
+            command.ChargeOperation.VatClassification = (VatClassification)5;
             var sut = new ChangingTariffVatValueNotAllowedRule(command, charge);
             Assert.False(sut.IsValid);
         }

@@ -19,6 +19,7 @@ using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.MeteringPoints;
 using GreenEnergyHub.Charges.Infrastructure.Repositories;
 using GreenEnergyHub.Charges.TestCore.Squadron;
+using GreenEnergyHub.TestHelpers;
 using NodaTime;
 using Squadron;
 using Xunit;
@@ -57,8 +58,17 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
             actual.ConnectionState.Should().Be(expected.ConnectionState);
             actual.GridAreaId.Should().Be(expected.GridAreaId);
             actual.MeteringPointId.Should().Be(expected.MeteringPointId);
-            Instant.FromDateTimeUtc(DateTime.SpecifyKind(actual.EffectiveDate, DateTimeKind.Utc)).Should().Be(expected.EffectiveDate);
+            actual.EffectiveDate.Should().Be(expected.EffectiveDate);
             actual.SettlementMethod.Should().Be(expected.SettlementMethod);
+        }
+
+        [Theory]
+        [InlineAutoDomainData]
+        public async Task StoreMeteringPointAsync_WhenMeteringPointIsNull_ShouldThrow(MeteringPointRepository sut)
+        {
+            await Assert
+                .ThrowsAsync<ArgumentNullException>(() => sut.StoreMeteringPointAsync(null!))
+                .ConfigureAwait(false);
         }
 
         [Fact]
@@ -68,7 +78,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
             await using var chargesDatabaseWriteContext = await SquadronContextFactory
                 .GetDatabaseContextAsync(_resource)
                 .ConfigureAwait(false);
-            var expected = GetMeteringPointEntity();
+            var expected = GetMeteringPoint();
             await chargesDatabaseWriteContext.MeteringPoints.AddAsync(expected).ConfigureAwait(false);
             await chargesDatabaseWriteContext.SaveChangesAsync().ConfigureAwait(false);
 
@@ -86,7 +96,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
 
         private static MeteringPoint GetMeteringPointCreatedEvent()
         {
-            return new MeteringPoint(
+            return MeteringPoint.Create(
                 "123",
                 MeteringPointType.Consumption,
                 "234",
@@ -95,14 +105,13 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
                 SettlementMethod.Flex);
         }
 
-        private static Charges.Infrastructure.Context.Model.MeteringPoint GetMeteringPointEntity()
+        private static MeteringPoint GetMeteringPoint()
         {
-            return new Charges.Infrastructure.Context.Model.MeteringPoint(
-                null,
+            return MeteringPoint.Create(
                 "meteringPointId",
                 MeteringPointType.Consumption,
                 "grid area id",
-                DateTime.Now,
+                SystemClock.Instance.GetCurrentInstant(),
                 ConnectionState.Connected,
                 SettlementMethod.Profiled);
         }

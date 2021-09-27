@@ -13,7 +13,7 @@
 // limitations under the License.
 
 using System.Diagnostics.CodeAnalysis;
-using GreenEnergyHub.Charges.Domain.MarketDocument;
+using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.Infrastructure.Integration.ChargeConfirmation;
 using GreenEnergyHub.Messaging.Protobuf;
 using GreenEnergyHub.Messaging.Transport;
@@ -24,7 +24,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Integration.Mappers
     {
         protected override IInboundMessage Convert([NotNull]ChargeConfirmationContract confirmationContract)
         {
-            return new Domain.Charges.Acknowledgements.ChargeConfirmation(
+            return new Application.Charges.Acknowledgement.ChargeConfirmation(
                 confirmationContract.CorrelationId,
                 confirmationContract.Receiver,
                 (MarketParticipantRole)confirmationContract.ReceiverMarketParticipantRole,

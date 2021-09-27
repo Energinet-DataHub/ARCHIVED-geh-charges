@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System;
+using EntityFrameworkCore.SqlServer.NodaTime.Extensions;
 using GreenEnergyHub.Charges.Infrastructure.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -29,7 +30,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.TestHelpers
             var serviceCollection = new ServiceCollection();
             serviceCollection
                 .AddDbContext<ChargesDatabaseContext>(
-                    options => options.UseSqlServer(connectionString!),
+                    options => options.UseSqlServer(connectionString!, options => options.UseNodaTime()),
                     ServiceLifetime.Transient);
 
             ServiceProvider = serviceCollection.BuildServiceProvider();

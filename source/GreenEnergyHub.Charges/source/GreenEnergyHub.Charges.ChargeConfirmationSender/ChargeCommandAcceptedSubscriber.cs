@@ -14,7 +14,7 @@
 
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application.Charges.Acknowledgement;
-using GreenEnergyHub.Charges.Domain.Charges.Events.Local;
+using GreenEnergyHub.Charges.Domain.ChargeCommandAcceptedEvents;
 using GreenEnergyHub.Charges.Infrastructure.Messaging;
 using GreenEnergyHub.Messaging.Transport;
 using Microsoft.Azure.WebJobs;
@@ -24,7 +24,7 @@ namespace GreenEnergyHub.Charges.ChargeConfirmationSender
 {
     public class ChargeCommandAcceptedSubscriber
     {
-        private const string FunctionName = nameof(ChargeCommandAcceptedSubscriber);
+        public const string FunctionName = nameof(ChargeCommandAcceptedSubscriber);
         private readonly IChargeConfirmationSender _chargeConfirmationSender;
         private readonly ICorrelationContext _correlationContext;
         private readonly MessageExtractor _messageExtractor;

@@ -16,11 +16,11 @@ using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
 using FluentAssertions;
-using GreenEnergyHub.Charges.Application.ChargeLinks.Factories;
-using GreenEnergyHub.Charges.Application.Charges.Repositories;
-using GreenEnergyHub.Charges.Domain.ChargeLinks.Events.Integration;
+using GreenEnergyHub.Charges.Domain.ChargeLinkCommands;
 using GreenEnergyHub.Charges.Domain.Charges;
-using GreenEnergyHub.Charges.Domain.MarketDocument;
+using GreenEnergyHub.Charges.Domain.CreateLinkCommandEvents;
+using GreenEnergyHub.Charges.Domain.DefaultChargeLinks;
+using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.TestCore.Attributes;
 using Moq;
 using Xunit;
@@ -43,7 +43,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Factories
         {
             // Arrange
             chargeRepository.Setup(
-                    f => f.GetChargeAsync(defaultChargeLink.ChargeRowId))
+                    f => f.GetChargeAsync(defaultChargeLink.ChargeId))
                 .ReturnsAsync(charge);
 
             // Act
@@ -59,9 +59,9 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Factories
             actual.Document.Sender.Id.Should().Be(charge.Owner);
             actual.Document.Recipient.BusinessProcessRole.Should().Be(MarketParticipantRole.MeteringPointAdministrator);
             actual.Document.Recipient.Id.Should().Be("5790001330552");
-            actual.ChargeLink.ChargeId.Should().Be(charge.Id);
+            actual.ChargeLink.ChargeId.Should().Be(charge.SenderProvidedChargeId);
             actual.ChargeLink.ChargeType.Should().Be(charge.Type);
-            actual.ChargeLink.EndDateTime.Should().Be(charge.EndDateTime);
+            actual.ChargeLink.EndDateTime.Should().Be(defaultChargeLink.EndDateTime);
             actual.ChargeLink.ChargeOwner.Should().Be(charge.Owner);
             actual.ChargeLink.MeteringPointId.Should().Be(createLinkCommandEvent.MeteringPointId);
             actual.ChargeLink.StartDateTime.Should().Be(defaultChargeLink.GetStartDateTime(createLinkCommandEvent.StartDateTime));

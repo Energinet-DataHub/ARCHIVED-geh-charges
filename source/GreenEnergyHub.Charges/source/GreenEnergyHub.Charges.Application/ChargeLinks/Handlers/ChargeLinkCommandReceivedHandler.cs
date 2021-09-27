@@ -14,28 +14,27 @@
 
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Application.ChargeLinks.Factories;
-using GreenEnergyHub.Charges.Application.ChargeLinks.Mapping;
-using GreenEnergyHub.Charges.Application.ChargeLinks.Repositories;
-using GreenEnergyHub.Charges.Domain.ChargeLinks.Events.Local;
+using GreenEnergyHub.Charges.Domain.ChargeLinkCommandAcceptedEvents;
+using GreenEnergyHub.Charges.Domain.ChargeLinkCommandReceivedEvents;
+using GreenEnergyHub.Charges.Domain.ChargeLinks;
 
 namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
 {
     public class ChargeLinkCommandReceivedHandler : IChargeLinkCommandReceivedHandler
     {
         private readonly IMessageDispatcher<ChargeLinkCommandAcceptedEvent> _messageDispatcher;
-        private readonly IChargeLinkCommandMapper _chargeLinkCommandMapper;
+        private readonly IChargeLinkCommandAcceptedEventFactory _chargeLinkCommandAcceptedEventFactory;
         private readonly IChargeLinkFactory _chargeLinkFactory;
         private readonly IChargeLinkRepository _chargeLinkRepository;
 
         public ChargeLinkCommandReceivedHandler(
             IMessageDispatcher<ChargeLinkCommandAcceptedEvent> messageDispatcher,
-            IChargeLinkCommandMapper chargeLinkCommandMapper,
+            IChargeLinkCommandAcceptedEventFactory chargeLinkCommandAcceptedEventFactory,
             IChargeLinkFactory chargeLinkFactory,
             IChargeLinkRepository chargeLinkRepository)
         {
             _messageDispatcher = messageDispatcher;
-            _chargeLinkCommandMapper = chargeLinkCommandMapper;
+            _chargeLinkCommandAcceptedEventFactory = chargeLinkCommandAcceptedEventFactory;
             _chargeLinkFactory = chargeLinkFactory;
             _chargeLinkRepository = chargeLinkRepository;
         }
@@ -46,7 +45,7 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
             var chargeLink = await _chargeLinkFactory.CreateAsync(chargeLinkCommand).ConfigureAwait(false);
             await _chargeLinkRepository.StoreAsync(chargeLink).ConfigureAwait(false);
 
-            var chargeCommandAcceptedEvent = _chargeLinkCommandMapper.Map(chargeLinkCommand);
+            var chargeCommandAcceptedEvent = _chargeLinkCommandAcceptedEventFactory.Create(chargeLinkCommand);
             await _messageDispatcher.DispatchAsync(chargeCommandAcceptedEvent).ConfigureAwait(false);
         }
     }
