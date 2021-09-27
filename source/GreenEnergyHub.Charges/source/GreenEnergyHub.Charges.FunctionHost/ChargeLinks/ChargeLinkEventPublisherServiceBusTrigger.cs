@@ -18,7 +18,6 @@ using GreenEnergyHub.Charges.Application.ChargeLinks.Handlers;
 using GreenEnergyHub.Charges.Domain.ChargeLinkCommandAcceptedEvents;
 using GreenEnergyHub.Charges.Infrastructure.Messaging;
 using GreenEnergyHub.Messaging.Transport;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Logging;
 
@@ -54,7 +53,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.ChargeLinks
             [ServiceBusTrigger(
                 "%LINK_ACCEPTED_TOPIC_NAME%",
                 "%LINK_ACCEPTED_SUBSCRIPTION_NAME%",
-                Connection = "LINK_ACCEPTED_LISTENER_CONNECTION_STRING")]
+                Connection = "DOMAINEVENT_LISTENER_CONNECTION_STRING")]
             [NotNull] byte[] message,
             [NotNull] FunctionContext context)
         {
