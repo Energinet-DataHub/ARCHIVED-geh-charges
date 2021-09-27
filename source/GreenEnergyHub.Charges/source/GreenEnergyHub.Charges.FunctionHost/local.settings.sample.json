@@ -25,7 +25,7 @@
     "COMMAND_REJECTED_SUBSCRIPTION_NAME": "sbs-command-rejected",
     "CREATE_LINK_COMMAND_TOPIC_NAME": "sbt-create-link-command",
     "CREATE_LINK_COMMAND_SUBSCRIPTION_NAME": "sbs-create-link-command-charges",
-    "METERING_POINT_CREATED_TOPIC_NAME": "metering-point-created",
+    "METERING_POINT_CREATED_TOPIC_NAME": "metering-point-cgreated",
     "METERING_POINT_CREATED_SUBSCRIPTION_NAME": "metering-point-created-sub-charges",
     "POST_OFFICE_TOPIC_NAME": "sbt-post-office"
   }
