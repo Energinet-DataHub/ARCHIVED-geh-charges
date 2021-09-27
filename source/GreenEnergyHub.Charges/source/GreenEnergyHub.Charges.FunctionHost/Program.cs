@@ -20,11 +20,13 @@ using GreenEnergyHub.Charges.Application.MeteringPoints.Handlers;
 using GreenEnergyHub.Charges.Domain.ChargeLinkCommandAcceptedEvents;
 using GreenEnergyHub.Charges.Domain.ChargeLinkCommandReceivedEvents;
 using GreenEnergyHub.Charges.Domain.ChargeLinkCommands;
+using GreenEnergyHub.Charges.Domain.ChargeLinkCreatedEvents;
 using GreenEnergyHub.Charges.Domain.ChargeLinks;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.DefaultChargeLinks;
 using GreenEnergyHub.Charges.Domain.MeteringPoints;
 using GreenEnergyHub.Charges.Infrastructure.Context;
+using GreenEnergyHub.Charges.Infrastructure.Integration.ChargeLinkCreated;
 using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandAccepted;
 using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandReceived;
 using GreenEnergyHub.Charges.Infrastructure.Messaging;
@@ -59,6 +61,7 @@ namespace GreenEnergyHub.Charges.FunctionHost
 
             ConfigureChargeLinkReceiver(serviceCollection);
             ConfigureChargeLinkCommandReceiver(serviceCollection);
+            ConfigureChargeLinkEventPublisher(serviceCollection);
             ConfigureMeteringPointCreatedReceiver(serviceCollection);
             ConfigureCreateChargeLinkReceiver(serviceCollection);
         }
@@ -120,6 +123,20 @@ namespace GreenEnergyHub.Charges.FunctionHost
                 GetEnv("CHARGE_LINK_ACCEPTED_TOPIC_NAME"));
 
             serviceCollection.AddScoped<IChargeLinkRepository, ChargeLinkRepository>();
+        }
+
+        private static void ConfigureChargeLinkEventPublisher(IServiceCollection serviceCollection)
+        {
+            serviceCollection.AddScoped<IChargeLinkCreatedEventFactory, ChargeLinkCreatedEventFactory>();
+            serviceCollection.AddScoped<IChargeLinkEventPublishHandler, ChargeLinkEventPublishHandler>();
+
+            serviceCollection.ReceiveProtobufMessage<ChargeLinkCommandAcceptedContract>(
+                configuration => configuration.WithParser(() => ChargeLinkCommandAcceptedContract.Parser));
+
+            serviceCollection.SendProtobuf<ChargeLinkCreatedContract>();
+            serviceCollection.AddMessagingProtobuf().AddMessageDispatcher<ChargeLinkCreatedEvent>(
+                GetEnv("INTEGRATIONEVENT_SENDER_CONNECTION_STRING"),
+                GetEnv("CHARGE_LINK_CREATED_TOPIC_NAME"));
         }
 
         private static void ConfigureCreateChargeLinkReceiver(IServiceCollection serviceCollection)
