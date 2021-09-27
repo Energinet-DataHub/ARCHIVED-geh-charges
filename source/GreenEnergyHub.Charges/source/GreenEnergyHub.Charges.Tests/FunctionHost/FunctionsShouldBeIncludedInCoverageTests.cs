@@ -13,7 +13,6 @@
 // limitations under the License.
 
 using GreenEnergyHub.Charges.ChargeCommandReceiver;
-using GreenEnergyHub.Charges.ChargeReceiver;
 using GreenEnergyHub.Charges.FunctionHost.ChargeLinks;
 using GreenEnergyHub.Charges.FunctionHost.Charges;
 using GreenEnergyHub.Charges.FunctionHost.MeteringPoint;
