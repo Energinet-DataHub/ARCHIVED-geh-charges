@@ -40,6 +40,21 @@ enum ChargeTypeContract {
 
 message ChargePriceContract
 {
-  double price = 1;
+  DecimalValue price = 1;
   google.protobuf.Timestamp time = 2; // A point in time, where the price applies.
+}
+
+/* ProtoBuf doesn't support decimal.
+ * This implementation is inspired by https://docs.microsoft.com/en-us/aspnet/core/grpc/protobuf?view=aspnetcore-5.0#decimals.
+ * The type is a candidate for separating out into a reusable package. This is however not (yet) done
+ * due to challenges with multi-file contracts in PySpark.
+ *
+ * Example: 12345.6789 -> { units = 12345, nanos = 678900000 }
+*/
+message DecimalValue {
+  // Whole units part of the amount
+  int64 units = 1;
+  // Nano units of the amount (10^-9)
+  // Must be same sign as units
+  sfixed32 nanos = 2;
 }
