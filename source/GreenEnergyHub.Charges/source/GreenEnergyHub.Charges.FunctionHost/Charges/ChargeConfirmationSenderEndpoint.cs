@@ -16,8 +16,8 @@ using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application.Charges.Acknowledgement;
 using GreenEnergyHub.Charges.Domain.ChargeCommandAcceptedEvents;
+using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeCommandAccepted;
 using GreenEnergyHub.Charges.Infrastructure.Messaging;
-using GreenEnergyHub.Messaging.Transport;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Logging;
 
@@ -28,13 +28,13 @@ namespace GreenEnergyHub.Charges.FunctionHost.Charges
         public const string FunctionName = nameof(ChargeConfirmationSenderEndpoint);
         private readonly IChargeConfirmationSender _chargeConfirmationSender;
         private readonly ICorrelationContext _correlationContext;
-        private readonly MessageExtractor _messageExtractor;
+        private readonly MessageExtractor<ChargeCommandAcceptedContract> _messageExtractor;
         private readonly ILogger _log;
 
         public ChargeConfirmationSenderEndpoint(
             IChargeConfirmationSender chargeConfirmationSender,
             ICorrelationContext correlationContext,
-            MessageExtractor messageExtractor,
+            MessageExtractor<ChargeCommandAcceptedContract> messageExtractor,
             [NotNull] ILoggerFactory loggerFactory)
         {
             _chargeConfirmationSender = chargeConfirmationSender;
