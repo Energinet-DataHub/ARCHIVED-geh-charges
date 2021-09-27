@@ -36,7 +36,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Factories
             [NotNull] ChargeCommandFactory sut)
         {
             // Act
-            var actual = sut.CreateFromCharge(new Charge(
+            var charge = new Charge(
                 Guid.NewGuid(),
                 new Document
                 {
@@ -73,7 +73,10 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Factories
                 new List<Point>
                 {
                     new Point { Position = 0, Time = SystemClock.Instance.GetCurrentInstant(), Price = 200m },
-                }));
+                });
+
+            // Act
+            var actual = sut.CreateFromCharge(charge);
 
             // Assert
             actual.Should().NotContainNullsOrEmptyEnumerables();
