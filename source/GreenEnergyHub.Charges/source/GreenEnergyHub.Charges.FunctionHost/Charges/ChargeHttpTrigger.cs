@@ -18,13 +18,12 @@ using GreenEnergyHub.Charges.Application.Charges.Handlers;
 using GreenEnergyHub.Charges.Application.Charges.Handlers.Message;
 using GreenEnergyHub.Charges.Domain.ChargeCommands;
 using GreenEnergyHub.Charges.Infrastructure.Messaging;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Azure.WebJobs;
-using Microsoft.Azure.WebJobs.Extensions.Http;
+using Microsoft.Azure.Functions.Worker;
+using Microsoft.Azure.Functions.Worker.Http;
 using Microsoft.Extensions.Logging;
 
-namespace GreenEnergyHub.Charges.ChargeReceiver
+namespace GreenEnergyHub.Charges.FunctionHost.Charges
 {
     public class ChargeHttpTrigger
     {
@@ -36,25 +35,28 @@ namespace GreenEnergyHub.Charges.ChargeReceiver
         private readonly IChargesMessageHandler _chargesMessageHandler;
         private readonly ICorrelationContext _correlationContext;
         private readonly MessageExtractor<ChargeCommand> _messageExtractor;
+        private readonly ILogger _log;
 
         public ChargeHttpTrigger(
             IChargesMessageHandler chargesMessageHandler,
             ICorrelationContext correlationContext,
-            MessageExtractor<ChargeCommand> messageExtractor)
+            MessageExtractor<ChargeCommand> messageExtractor,
+            [NotNull] ILoggerFactory loggerFactory)
         {
             _chargesMessageHandler = chargesMessageHandler;
             _correlationContext = correlationContext;
             _messageExtractor = messageExtractor;
+
+            _log = loggerFactory.CreateLogger(nameof(ChargeHttpTrigger));
         }
 
-        [FunctionName(FunctionName)]
+        [Function(FunctionName)]
         public async Task<IActionResult> RunAsync(
             [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = null)]
-            [NotNull] HttpRequest req,
-            [NotNull] ExecutionContext context,
-            ILogger log)
+            [NotNull] HttpRequestData req,
+            [NotNull] FunctionContext context)
         {
-            log.LogInformation("Function {FunctionName} started to process a request", FunctionName);
+            _log.LogInformation("Function {FunctionName} started to process a request", FunctionName);
 
             SetupCorrelationContext(context);
 
@@ -73,7 +75,7 @@ namespace GreenEnergyHub.Charges.ChargeReceiver
         }
 
         private async Task<ChargesMessage> GetChargesMessageAsync(
-            HttpRequest req)
+            HttpRequestData req)
         {
             var message = new ChargesMessage();
             var command = (ChargeCommand)await _messageExtractor.ExtractAsync(req.Body).ConfigureAwait(false);
@@ -83,9 +85,9 @@ namespace GreenEnergyHub.Charges.ChargeReceiver
             return message;
         }
 
-        private void SetupCorrelationContext(ExecutionContext context)
+        private void SetupCorrelationContext(FunctionContext context)
         {
-            _correlationContext.CorrelationId = context.InvocationId.ToString();
+            _correlationContext.CorrelationId = context.InvocationId.Replace("-", string.Empty);
         }
     }
 }
