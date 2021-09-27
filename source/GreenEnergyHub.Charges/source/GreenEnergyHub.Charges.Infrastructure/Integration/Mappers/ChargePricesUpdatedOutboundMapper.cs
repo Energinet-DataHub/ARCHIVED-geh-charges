@@ -36,7 +36,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Integration.Mappers
 
             foreach (var point in chargePricesUpdated.Points)
             {
-                var mappedPoint = new ChargePriceContract { Price = (double)point.Price, Time = point.Time.ToTimestamp(), };
+                var mappedPoint = new ChargePriceContract { Price = point.Price, Time = point.Time.ToTimestamp(), };
 
                 chargePricesUpdatedContract.Points.Add(mappedPoint);
             }
