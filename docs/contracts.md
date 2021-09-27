@@ -186,34 +186,35 @@ Represents the update of one or more charge links.
 
 ### CreateDefaultChargeLinksRequest
 
-Go to [contract](.././source/GreenEnergyHub.Charges/Readme.md).
+Used by Metering Point domain as part of the 'Create metering point' process to request the Charges domain to link default charges to the newly created metering point.
+Go to the [contract](.././source/GreenEnergyHub.Charges/source/GreenEnergyHub.Charges.Infrastructure/Integration/ChargeLink/Commands/CreateDefaultChargeLinks.proto).
 
 <a name=".CreateDefaultChargeLinksSucceeded"></a>
 
 ### CreateDefaultChargeLinksSucceeded
 
-Go to contract.
+Go to [contract](.././source/GreenEnergyHub.Charges/source/GreenEnergyHub.Charges.Infrastructure/Integration/ChargeLink/Commands/CreateDefaultChargeLinksSucceeded.proto).
 
 <a name=".CreateDefaultChargeLinksFailed"></a>
 
 ### CreateDefaultChargeLinksFailed
 
-Go to contract.
+Go to [contract](.././source/GreenEnergyHub.Charges/source/GreenEnergyHub.Charges.Infrastructure/Integration/ChargeLink/Commands/CreateDefaultChargeLinksFailed.proto).
 
 <a name=".CreateDefaultChargeLinkMessagesRequest"></a>
 
 ### CreateDefaultChargeLinkMessagesRequest
 
-Go to contract.
+Go to [contract](.././source/GreenEnergyHub.Charges/source/GreenEnergyHub.Charges.Infrastructure/Integration/ChargeLink/Commands/CreateDefaultChargeLinkMessages.proto).
 
 <a name=".CreateDefaultChargeLinkMessagesSucceeded"></a>
 
 ### CreateDefaultChargeLinkMessagesSucceeded
 
-Go to contract.
+Go to [contract](.././source/GreenEnergyHub.Charges/source/GreenEnergyHub.Charges.Infrastructure/Integration/ChargeLink/Commands/CreateDefaultChargeLinkMessagesSucceeded.proto).
 
 <a name=".CreateDefaultChargeLinkMessagesFailed"></a>
 
 ### CreateDefaultChargeLinkMessagesFailed
 
-Go to contract.
+Go to [contract](.././source/GreenEnergyHub.Charges/source/GreenEnergyHub.Charges.Infrastructure/Integration/ChargeLink/Commands/CreateDefaultChargeLinkMessagesFailed.proto).
