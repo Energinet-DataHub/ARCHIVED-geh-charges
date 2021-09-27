@@ -34,7 +34,7 @@ namespace GreenEnergyHub.Charges.Domain.Charges
                 command.ChargeOperation.ChargeOwner,
                 command.CorrelationId,
                 command.ChargeOperation.StartDateTime,
-                command.ChargeOperation.EndDateTime.TimeOrEndDefault(),
+                command.ChargeOperation.EndDateTime,
                 command.ChargeOperation.Type,
                 command.ChargeOperation.VatClassification,
                 command.ChargeOperation.Resolution,

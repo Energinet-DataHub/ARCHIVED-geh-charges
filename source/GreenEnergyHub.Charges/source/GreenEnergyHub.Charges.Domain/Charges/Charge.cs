@@ -14,6 +14,7 @@
 
 using System;
 using System.Collections.Generic;
+using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using NodaTime;
 
@@ -31,7 +32,7 @@ namespace GreenEnergyHub.Charges.Domain.Charges
             string owner,
             string correlationId,
             Instant startDateTime,
-            Instant endDateTime,
+            Instant? endDateTime,
             ChargeType type,
             VatClassification vatClassification,
             Resolution resolution,
@@ -48,7 +49,7 @@ namespace GreenEnergyHub.Charges.Domain.Charges
             Owner = owner;
             CorrelationId = correlationId;
             StartDateTime = startDateTime;
-            EndDateTime = endDateTime;
+            EndDateTime = endDateTime.TimeOrEndDefault();
             Type = type;
             VatClassification = vatClassification;
             Resolution = resolution;
