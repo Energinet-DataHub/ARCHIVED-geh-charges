@@ -13,11 +13,12 @@ az login
 ```
 
 ## Azure Function Publish
-### Automated:
+
+### Automated
 
 Script to automated Azure function publish is located  [here](../../source/GreenEnergyHub.Charges/publish-functions-from-localhost.cmd)
 
-## Manually:
+## Manually
 
 ```PowerShell
 func azure functionapp publish {Azure function name}
