@@ -33,11 +33,11 @@ using Xunit.Categories;
 namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Handlers
 {
     [UnitTest]
-    public class ChargeLinkCommandAcceptedHandlerTests
+    public class ChargeLinkCommandReceivedHandlerTests
     {
         [Theory]
         [InlineAutoDomainData]
-        public async Task HandleAsync_WhenCalledWithValidChargeLinkXML_ShouldReturnOk(
+        public async Task HandleAsync_ShouldDispatch_AcceptedEvent(
             [NotNull] [Frozen] Mock<IMessageDispatcher<ChargeLinkCommandAcceptedEvent>> messageDispatcher,
             [NotNull] [Frozen] Mock<IChargeLinkFactory> chargeLinkFactory,
             [NotNull] [Frozen] Mock<IChargeLinkCommandFactory> chargeLinkCommandFactory,
