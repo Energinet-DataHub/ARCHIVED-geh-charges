@@ -20,6 +20,7 @@ using System.Threading.Tasks;
 using AutoFixture.Xunit2;
 using GreenEnergyHub.Charges.Application;
 using GreenEnergyHub.Charges.Application.ChargeLinks.Handlers;
+using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.Domain.ChargeLinkCommandReceivedEvents;
 using GreenEnergyHub.Charges.Domain.ChargeLinkCommands;
 using GreenEnergyHub.Charges.Domain.CreateLinkCommandEvents;
@@ -28,6 +29,7 @@ using GreenEnergyHub.Charges.Domain.MeteringPoints;
 using GreenEnergyHub.TestHelpers;
 using Moq;
 using NodaTime;
+using NodaTime.Text;
 using Xunit;
 using Xunit.Categories;
 
@@ -47,6 +49,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Handlers
             [NotNull] CreateLinkCommandEventHandler sut)
         {
             // Arrange
+            chargeLinkCommand.ChargeLink.EndDateTime = null;
             var createLinkCommandEvent = new CreateLinkCommandEvent(
                 correlationId,
                 MeteringPointType.Consumption,
@@ -54,7 +57,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Handlers
 
             var defaultChargeLink = new DefaultChargeLink(
                 SystemClock.Instance.GetCurrentInstant(),
-                null,
+                InstantPattern.General.Parse("9999-12-31T23:59:59Z").Value,
                 Guid.NewGuid(),
                 MeteringPointType.Consumption);
 
