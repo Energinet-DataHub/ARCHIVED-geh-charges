@@ -28,5 +28,5 @@ option csharp_namespace = "GreenEnergyHub.Charges.Commands";
 * ReplyTo - Sending domain provides a reply-path to a location where the reply must be sent
 */
 message CreateDefaultChargeLinks {
-  string metering_point_id = 1; /// The metering point to link default charges to.
+  string metering_point_id = 1; /// Identifies the metering point to link default charges to. For the Danish version of Green Energy Hub, this is the 18-digits metering point id.
 }
