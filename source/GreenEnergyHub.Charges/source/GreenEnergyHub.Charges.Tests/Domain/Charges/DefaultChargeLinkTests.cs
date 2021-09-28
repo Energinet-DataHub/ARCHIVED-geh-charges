@@ -51,20 +51,6 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Charges
         }
 
         [Fact]
-        public void ApplicableForLinking_WhenEndDateTimeIsNullAndMpTypeMatch_ReturnsTrue()
-        {
-            // Arrange
-            var startDateTime = InstantPattern.General.Parse("2020-05-10T13:00:00Z").Value;
-            var endDateTime = InstantPattern.General.Parse("9999-12-31T23:59:59Z").Value;
-            var meteringPointCreatedDateTime = startDateTime;
-
-            var sut = new DefaultChargeLink(startDateTime, endDateTime, Guid.NewGuid(), MeteringPointType.Consumption);
-
-            // Act / Assert
-            Assert.True(sut.ApplicableForLinking(meteringPointCreatedDateTime, MeteringPointType.Consumption));
-        }
-
-        [Fact]
         public void ApplicableForLinking_WhenEndDateTimeIsLaterThanStartDateTimeAndMpTypeMatch_ReturnsTrue()
         {
             // Arrange
