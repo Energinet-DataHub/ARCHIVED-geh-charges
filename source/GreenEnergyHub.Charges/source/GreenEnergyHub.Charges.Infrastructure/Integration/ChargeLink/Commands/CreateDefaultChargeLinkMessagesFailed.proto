@@ -30,8 +30,8 @@ option csharp_namespace = "GreenEnergyHub.Charges.Commands";
 message CreateDefaultChargeLinkMessagesFailed {
   string metering_point_id = 1; // The metering point for which the process of creating default charge link messages failed.
     enum ErrorCode {
-    ERROR_NOT_DETERMINED = 0;
-    METERING_POINT_UNKNOWN = 1;
+    EC_ERROR_NOT_DETERMINED = 0;
+    EC_METERING_POINT_UNKNOWN = 1;
     }
 
   ErrorCode error_code = 2;
