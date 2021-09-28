@@ -11,7 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-
+/*
 using System;
 using EntityFrameworkCore.SqlServer.NodaTime.Extensions;
 using GreenEnergyHub.Charges.Infrastructure.Context;
@@ -39,3 +39,4 @@ namespace GreenEnergyHub.Charges.IntegrationTests.TestHelpers
         public ServiceProvider ServiceProvider { get; private set; }
     }
 }
+*/

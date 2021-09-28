@@ -23,19 +23,19 @@ using Microsoft.Extensions.Logging;
 
 namespace GreenEnergyHub.Charges.FunctionHost.MeteringPoint
 {
-    public class CreateLinkCommandReceiverServiceBusTrigger
+    public class CreateChargeLinkReceiverEndpoint
     {
         /// <summary>
         /// The name of the function.
         /// Function name affects the URL and thus possibly dependent infrastructure.
         /// </summary>
-        public const string FunctionName = "CreateLinkCommandReceiverServiceBusTrigger";
+        public const string FunctionName = nameof(CreateChargeLinkReceiverEndpoint);
         private readonly ICorrelationContext _correlationContext;
         private readonly MessageExtractor<CreateLinkCommandContract> _messageExtractor;
         private readonly ILogger _log;
         private readonly ICreateLinkCommandEventHandler _createLinkCommandEventHandler;
 
-        public CreateLinkCommandReceiverServiceBusTrigger(
+        public CreateChargeLinkReceiverEndpoint(
             ICorrelationContext correlationContext,
             MessageExtractor<CreateLinkCommandContract> messageExtractor,
             [NotNull] ILoggerFactory loggerFactory,
@@ -45,7 +45,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.MeteringPoint
             _messageExtractor = messageExtractor;
             _createLinkCommandEventHandler = createLinkCommandEventHandler;
 
-            _log = loggerFactory.CreateLogger(nameof(CreateLinkCommandReceiverServiceBusTrigger));
+            _log = loggerFactory.CreateLogger(nameof(CreateChargeLinkReceiverEndpoint));
         }
 
         [Function(FunctionName)]
