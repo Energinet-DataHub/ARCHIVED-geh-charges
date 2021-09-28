@@ -40,7 +40,7 @@ limitations under the License.
         <PackageReference Include="AutoFixture" Version="4.17.0" />
         <PackageReference Include="AutoFixture.AutoMoq" Version="4.17.0" />
         <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
-        <PackageReference Include="NodaTime.Testing" Version="3.0.5" />
+        <PackageReference Include="NodaTime.Testing" Version="3.0.6" />
         <PackageReference Include="Squadron.Core" Version="0.13.0" />
         <PackageReference Include="Squadron.SqlServer" Version="0.13.0" />
         <PackageReference Include="System.ComponentModel.TypeConverter" Version="4.3.0" />
