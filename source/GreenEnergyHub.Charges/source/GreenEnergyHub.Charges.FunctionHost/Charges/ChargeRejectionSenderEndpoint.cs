@@ -12,52 +12,58 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application.Charges.Acknowledgement;
 using GreenEnergyHub.Charges.Domain.ChargeCommandRejectedEvents;
+using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeCommandRejected;
 using GreenEnergyHub.Charges.Infrastructure.Messaging;
 using GreenEnergyHub.Messaging.Transport;
-using Microsoft.Azure.WebJobs;
+using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Logging;
 
-namespace GreenEnergyHub.Charges.ChargeRejectionSender
+namespace GreenEnergyHub.Charges.FunctionHost.Charges
 {
-    public class ChargeCommandRejectedSubscriber
+    public class ChargeRejectionSenderEndpoint
     {
-        public const string FunctionName = nameof(ChargeCommandRejectedSubscriber);
+        public const string FunctionName = nameof(ChargeRejectionSenderEndpoint);
         private readonly IChargeRejectionSender _chargeRejectionSender;
         private readonly ICorrelationContext _correlationContext;
-        private readonly MessageExtractor _messageExtractor;
+        private readonly MessageExtractor<ChargeCommandRejectedContract> _messageExtractor;
+        private readonly ILogger _log;
 
-        public ChargeCommandRejectedSubscriber(
+        public ChargeRejectionSenderEndpoint(
             IChargeRejectionSender chargeRejectionSender,
             ICorrelationContext correlationContext,
-            MessageExtractor messageExtractor)
+            MessageExtractor<ChargeCommandRejectedContract> messageExtractor,
+            [NotNull] ILoggerFactory loggerFactory)
         {
             _chargeRejectionSender = chargeRejectionSender;
             _correlationContext = correlationContext;
             _messageExtractor = messageExtractor;
+
+            _log = loggerFactory.CreateLogger(nameof(ChargeRejectionSenderEndpoint));
         }
 
-        [FunctionName(FunctionName)]
+        [Function(FunctionName)]
         public async Task RunAsync(
             [ServiceBusTrigger(
-            "%COMMAND_REJECTED_TOPIC_NAME%",
-            "%COMMAND_REJECTED_SUBSCRIPTION_NAME%",
-            Connection = "COMMAND_REJECTED_LISTENER_CONNECTION_STRING")]
-            byte[] message,
-            ILogger log)
+                "%COMMAND_REJECTED_TOPIC_NAME%",
+                "%COMMAND_REJECTED_SUBSCRIPTION_NAME%",
+                Connection = "DOMAINEVENT_LISTENER_CONNECTION_STRING")]
+            [NotNull] byte[] message,
+            [NotNull] FunctionContext context)
         {
+            SetCorrelationContext(context);
             var rejectedEvent = (ChargeCommandRejectedEvent)await _messageExtractor.ExtractAsync(message).ConfigureAwait(false);
-            SetCorrelationContext(rejectedEvent);
             await _chargeRejectionSender.HandleAsync(rejectedEvent).ConfigureAwait(false);
 
-            log.LogDebug("Received event with correlation ID '{CorrelationId}'", rejectedEvent.CorrelationId);
+            _log.LogDebug("Received event with correlation ID '{CorrelationId}'", rejectedEvent.CorrelationId);
         }
 
-        private void SetCorrelationContext(ChargeCommandRejectedEvent rejectedEvent)
+        private void SetCorrelationContext(FunctionContext context)
         {
-            _correlationContext.CorrelationId = rejectedEvent.CorrelationId;
+            _correlationContext.CorrelationId = context.InvocationId.Replace("-", string.Empty);
         }
     }
 }

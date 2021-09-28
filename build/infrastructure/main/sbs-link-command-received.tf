@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-resource "azurerm_servicebus_subscription" "sbs-link-command-received-receiver" {
+resource "azurerm_servicebus_subscription" "sbs_link_command_received_receiver" {
   depends_on          = [module.sbt_link_command_accepted]
   name                = "sbs-link-command-received-receiver"
   resource_group_name = data.azurerm_resource_group.main.name

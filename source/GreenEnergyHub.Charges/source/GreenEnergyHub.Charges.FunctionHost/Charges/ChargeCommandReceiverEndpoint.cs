@@ -12,52 +12,58 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application.Charges.Handlers;
 using GreenEnergyHub.Charges.Domain.ChargeCommandReceivedEvents;
+using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeCommandReceived;
 using GreenEnergyHub.Charges.Infrastructure.Messaging;
 using GreenEnergyHub.Messaging.Transport;
-using Microsoft.Azure.WebJobs;
+using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Logging;
 
-namespace GreenEnergyHub.Charges.ChargeCommandReceiver
+namespace GreenEnergyHub.Charges.FunctionHost.Charges
 {
-    public class ChargeCommandEndpoint
+    public class ChargeCommandReceiverEndpoint
     {
-        public const string FunctionName = nameof(ChargeCommandEndpoint);
+        public const string FunctionName = nameof(ChargeCommandReceiverEndpoint);
         private readonly IChargeCommandReceivedEventHandler _chargeCommandReceivedEventHandler;
         private readonly ICorrelationContext _correlationContext;
-        private readonly MessageExtractor _messageExtractor;
+        private readonly MessageExtractor<ChargeCommandReceivedContract> _messageExtractor;
+        private readonly ILogger _log;
 
-        public ChargeCommandEndpoint(
+        public ChargeCommandReceiverEndpoint(
             IChargeCommandReceivedEventHandler chargeCommandReceivedEventHandler,
             ICorrelationContext correlationContext,
-            MessageExtractor messageExtractor)
+            MessageExtractor<ChargeCommandReceivedContract> messageExtractor,
+            [NotNull] ILoggerFactory loggerFactory)
         {
             _chargeCommandReceivedEventHandler = chargeCommandReceivedEventHandler;
             _correlationContext = correlationContext;
             _messageExtractor = messageExtractor;
+
+            _log = loggerFactory.CreateLogger(nameof(ChargeCommandReceiverEndpoint));
         }
 
-        [FunctionName(FunctionName)]
+        [Function(FunctionName)]
         public async Task RunAsync(
             [ServiceBusTrigger(
-            "%COMMAND_RECEIVED_TOPIC_NAME%",
-            "%COMMAND_RECEIVED_SUBSCRIPTION_NAME%",
-            Connection = "COMMAND_RECEIVED_LISTENER_CONNECTION_STRING")]
-            byte[] data,
-            ILogger log)
+                "%COMMAND_RECEIVED_TOPIC_NAME%",
+                "%COMMAND_RECEIVED_SUBSCRIPTION_NAME%",
+                Connection = "DOMAINEVENT_LISTENER_CONNECTION_STRING")]
+            [NotNull] byte[] message,
+            [NotNull] FunctionContext context)
         {
-            var receivedEvent = (ChargeCommandReceivedEvent)await _messageExtractor.ExtractAsync(data).ConfigureAwait(false);
-            SetCorrelationContext(receivedEvent);
+            SetCorrelationContext(context);
+            var receivedEvent = (ChargeCommandReceivedEvent)await _messageExtractor.ExtractAsync(message).ConfigureAwait(false);
             await _chargeCommandReceivedEventHandler.HandleAsync(receivedEvent).ConfigureAwait(false);
 
-            log.LogDebug("Received command with charge ID '{ID}'", receivedEvent.Command.ChargeOperation.ChargeId);
+            _log.LogDebug("Received command with charge ID '{ID}'", receivedEvent.Command.ChargeOperation.ChargeId);
         }
 
-        private void SetCorrelationContext(ChargeCommandReceivedEvent command)
+        private void SetCorrelationContext(FunctionContext context)
         {
-            _correlationContext.CorrelationId = command.CorrelationId;
+            _correlationContext.CorrelationId = context.InvocationId.Replace("-", string.Empty);
         }
     }
 }
