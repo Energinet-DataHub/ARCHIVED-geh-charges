@@ -13,42 +13,41 @@
 // limitations under the License.
 
 using System.Diagnostics.CodeAnalysis;
-using System.IO;
 using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Application.ChargeLinks.Handlers;
-using GreenEnergyHub.Charges.Domain.ChargeLinkCommands;
+using GreenEnergyHub.Charges.Application.Charges.Handlers;
+using GreenEnergyHub.Charges.Application.Charges.Handlers.Message;
+using GreenEnergyHub.Charges.Domain.ChargeCommands;
 using GreenEnergyHub.Charges.Infrastructure.Messaging;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
 using Microsoft.Extensions.Logging;
 
-namespace GreenEnergyHub.Charges.FunctionHost.ChargeLinks
+namespace GreenEnergyHub.Charges.FunctionHost.Charges
 {
-    public class ChargeLinkHttpTrigger
+    public class ChargeIngestion
     {
         /// <summary>
         /// The name of the function.
         /// Function name affects the URL and thus possibly dependent infrastructure.
         /// </summary>
-        public const string FunctionName = "ChargeLinkHttpTrigger";
+        public const string FunctionName = "ChargeIngestion";
+        private readonly IChargesMessageHandler _chargesMessageHandler;
         private readonly ICorrelationContext _correlationContext;
-        private readonly MessageExtractor<ChargeLinkCommand> _messageExtractor;
-        private readonly IChargeLinkCommandHandler _chargeLinkCommandHandler;
+        private readonly MessageExtractor<ChargeCommand> _messageExtractor;
         private readonly ILogger _log;
 
-        public ChargeLinkHttpTrigger(
+        public ChargeIngestion(
+            IChargesMessageHandler chargesMessageHandler,
             ICorrelationContext correlationContext,
-            IChargeLinkCommandHandler chargeLinkCommandHandler,
-            MessageExtractor<ChargeLinkCommand> messageExtractor,
+            MessageExtractor<ChargeCommand> messageExtractor,
             [NotNull] ILoggerFactory loggerFactory)
         {
+            _chargesMessageHandler = chargesMessageHandler;
             _correlationContext = correlationContext;
-
             _messageExtractor = messageExtractor;
 
-            _chargeLinkCommandHandler = chargeLinkCommandHandler;
-            _log = loggerFactory.CreateLogger(nameof(ChargeLinkHttpTrigger));
+            _log = loggerFactory.CreateLogger(nameof(ChargeIngestion));
         }
 
         [Function(FunctionName)]
@@ -61,31 +60,34 @@ namespace GreenEnergyHub.Charges.FunctionHost.ChargeLinks
 
             SetupCorrelationContext(context);
 
-            var command = await GetChargeLinkCommandAsync(req.Body).ConfigureAwait(false);
+            var message = await GetChargesMessageAsync(req).ConfigureAwait(false);
 
-            var chargeLinksMessageResult = await _chargeLinkCommandHandler.HandleAsync(command).ConfigureAwait(false);
+            foreach (var messageTransaction in message.Transactions)
+            {
+                ChargeCommandNullChecker.ThrowExceptionIfRequiredPropertyIsNull(messageTransaction);
+            }
 
-            return new OkObjectResult(chargeLinksMessageResult);
+            var messageResult = await _chargesMessageHandler.HandleAsync(message)
+                .ConfigureAwait(false);
+            messageResult.CorrelationId = _correlationContext.CorrelationId;
+
+            return new OkObjectResult(messageResult);
         }
 
-        private async Task<ChargeLinkCommand> GetChargeLinkCommandAsync(Stream stream)
+        private async Task<ChargesMessage> GetChargesMessageAsync(
+            HttpRequestData req)
         {
-            var message = await ConvertStreamToBytesAsync(stream).ConfigureAwait(false);
-            var command = (ChargeLinkCommand)await _messageExtractor.ExtractAsync(message).ConfigureAwait(false);
+            var message = new ChargesMessage();
+            var command = (ChargeCommand)await _messageExtractor.ExtractAsync(req.Body).ConfigureAwait(false);
 
-            return command;
-        }
-
-        private static async Task<byte[]> ConvertStreamToBytesAsync(Stream stream)
-        {
-            await using var ms = new MemoryStream();
-            await stream.CopyToAsync(ms).ConfigureAwait(false);
-            return ms.ToArray();
+            command.SetCorrelationId(_correlationContext.CorrelationId);
+            message.Transactions.Add(command);
+            return message;
         }
 
         private void SetupCorrelationContext(FunctionContext context)
         {
-            _correlationContext.CorrelationId = context.InvocationId;
+            _correlationContext.CorrelationId = context.InvocationId.Replace("-", string.Empty);
         }
     }
 }

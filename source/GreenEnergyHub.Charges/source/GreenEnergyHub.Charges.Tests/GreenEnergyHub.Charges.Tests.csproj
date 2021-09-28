@@ -30,12 +30,6 @@ limitations under the License.
       <ProjectReference Include="..\..\..\Shared\GreenEnergyHub\source\GreenEnergyHub.TestHelpers\GreenEnergyHub.TestHelpers.csproj" />
       <ProjectReference Include="..\GreenEnergyHub.Charges.Application\GreenEnergyHub.Charges.Application.csproj" />
       <ProjectReference Include="..\GreenEnergyHub.Charges.ApplyDBMigrationsApp\GreenEnergyHub.Charges.ApplyDBMigrationsApp.csproj" />
-      <ProjectReference Include="..\GreenEnergyHub.Charges.ChargeCommandReceiver\GreenEnergyHub.Charges.ChargeCommandReceiver.csproj" />
-      <ProjectReference Include="..\GreenEnergyHub.Charges.ChargeConfirmationSender\GreenEnergyHub.Charges.ChargeConfirmationSender.csproj" />
-      <ProjectReference Include="..\GreenEnergyHub.Charges.ChargeLinkCommandReceiver\GreenEnergyHub.Charges.ChargeLinkCommandReceiver.csproj" />
-      <ProjectReference Include="..\GreenEnergyHub.Charges.ChargeLinkEventPublisher\GreenEnergyHub.Charges.ChargeLinkEventPublisher.csproj" />
-      <ProjectReference Include="..\GreenEnergyHub.Charges.ChargeReceiver\GreenEnergyHub.Charges.ChargeReceiver.csproj" />
-      <ProjectReference Include="..\GreenEnergyHub.Charges.ChargeRejectionSender\GreenEnergyHub.Charges.ChargeRejectionSender.csproj" />
       <ProjectReference Include="..\GreenEnergyHub.Charges.Domain\GreenEnergyHub.Charges.Domain.csproj" />
       <ProjectReference Include="..\GreenEnergyHub.Charges.FunctionHost\GreenEnergyHub.Charges.FunctionHost.csproj" />
       <ProjectReference Include="..\GreenEnergyHub.Charges.Infrastructure\GreenEnergyHub.Charges.Infrastructure.csproj" />
