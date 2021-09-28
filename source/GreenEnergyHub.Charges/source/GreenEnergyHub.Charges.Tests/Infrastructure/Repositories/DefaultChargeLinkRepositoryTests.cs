@@ -47,11 +47,11 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
 
             // Arrange
             var sut = new DefaultChargeLinkRepository(chargesDatabaseContext);
+            var x = chargesDatabaseContext.DefaultChargeLinks.ToList();
 
             // Act
             var actual = await
-                sut.GetAsync(
-                    MeteringPointType.Consumption).ConfigureAwait(false);
+                sut.GetAsync(MeteringPointType.Consumption).ConfigureAwait(false);
 
             // Assert
             var actualDefaultChargeLinkSettings =

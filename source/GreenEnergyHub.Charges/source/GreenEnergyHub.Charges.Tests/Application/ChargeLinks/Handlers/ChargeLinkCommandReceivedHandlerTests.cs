@@ -12,14 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Threading.Tasks;
+using AutoFixture;
+using AutoFixture.AutoMoq;
 using AutoFixture.Xunit2;
 using GreenEnergyHub.Charges.Application;
 using GreenEnergyHub.Charges.Application.ChargeLinks.Handlers;
 using GreenEnergyHub.Charges.Domain.ChargeLinkCommandAcceptedEvents;
 using GreenEnergyHub.Charges.Domain.ChargeLinkCommandReceivedEvents;
+using GreenEnergyHub.Charges.Domain.ChargeLinkCommands;
 using GreenEnergyHub.Charges.Domain.ChargeLinks;
 using GreenEnergyHub.TestHelpers;
 using Moq;
@@ -29,25 +33,40 @@ using Xunit.Categories;
 namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Handlers
 {
     [UnitTest]
-    public class ChargeLinkCommandAcceptedHandlerTests
+    public class ChargeLinkCommandReceivedHandlerTests
     {
         [Theory]
         [InlineAutoDomainData]
-        public async Task HandleAsync_WhenCalledWithValidChargeLinkXML_ShouldReturnOk(
+        public async Task HandleAsync_ShouldDispatch_AcceptedEvent(
             [NotNull] [Frozen] Mock<IMessageDispatcher<ChargeLinkCommandAcceptedEvent>> messageDispatcher,
             [NotNull] [Frozen] Mock<IChargeLinkFactory> chargeLinkFactory,
+            [NotNull] [Frozen] Mock<IChargeLinkCommandFactory> chargeLinkCommandFactory,
+            [NotNull] [Frozen] Mock<ChargeLinkCommand> chargeLinkCommand,
             [NotNull] [Frozen] Mock<IChargeLinkCommandAcceptedEventFactory> chargeLinkCommandAcceptedEventFactory,
             [NotNull] ChargeLinkCommandReceivedEvent chargeLinkCommandReceivedEvent,
             [NotNull] ChargeLinkCommandAcceptedEvent chargeLinkCommandAcceptedEvent,
             [NotNull] ChargeLinkCommandReceivedHandler sut)
         {
-            // Arrange - prevent exception
+            // Arrange
+            var fixture = new Fixture().Customize(new AutoMoqCustomization());
+            fixture.Customizations.Add(new StringGenerator(() => Guid.NewGuid().ToString()[..16]));
+            var chargeLink = fixture.Create<ChargeLink>();
+
             chargeLinkFactory
                 .Setup(x => x.CreateAsync(It.IsAny<ChargeLinkCommandReceivedEvent>()))
-                .ReturnsAsync((ChargeLink)null!);
+                .ReturnsAsync(chargeLink);
 
-            // Arrange - configure mapper
-            chargeLinkCommandAcceptedEventFactory.Setup(x => x.Create(chargeLinkCommandReceivedEvent))
+            chargeLinkCommandFactory.Setup(
+                    c => c.CreateFromChargeLinkAsync(
+                        It.IsAny<ChargeLink>(),
+                        It.IsAny<ChargeLinkPeriodDetails>(),
+                        It.IsAny<string>()))
+                .Returns(Task.FromResult(chargeLinkCommand.Object));
+
+            chargeLinkCommandAcceptedEventFactory.Setup(
+                    x => x.Create(
+                        It.IsAny<ChargeLinkCommand>(),
+                        It.IsAny<string>()))
                 .Returns(chargeLinkCommandAcceptedEvent);
 
             // Act

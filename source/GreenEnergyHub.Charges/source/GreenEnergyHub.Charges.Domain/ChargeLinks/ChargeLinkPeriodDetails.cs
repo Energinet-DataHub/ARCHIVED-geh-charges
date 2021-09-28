@@ -19,7 +19,7 @@ namespace GreenEnergyHub.Charges.Domain.ChargeLinks
 {
     public class ChargeLinkPeriodDetails
     {
-        public ChargeLinkPeriodDetails(Instant startDateTime, Instant? endDateTime, int factor, Guid createdByOperationId)
+        public ChargeLinkPeriodDetails(Instant startDateTime, Instant endDateTime, int factor, Guid createdByOperationId)
         {
             Id = Guid.NewGuid();
             StartDateTime = startDateTime;
@@ -35,7 +35,7 @@ namespace GreenEnergyHub.Charges.Domain.ChargeLinks
 
         public Instant StartDateTime { get; }
 
-        public Instant? EndDateTime { get; }
+        public Instant EndDateTime { get; }
 
         public int Factor { get; }
 

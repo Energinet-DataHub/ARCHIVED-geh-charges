@@ -14,6 +14,7 @@
 
 using System;
 using System.Collections.Generic;
+using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using NodaTime;
 
@@ -39,7 +40,6 @@ namespace GreenEnergyHub.Charges.Domain.Charges
             bool taxIndicator,
             List<Point> points)
         {
-            Points = points;
             Id = id;
             Document = document;
             ChargeOperationId = chargeOperationId;
@@ -49,22 +49,13 @@ namespace GreenEnergyHub.Charges.Domain.Charges
             Owner = owner;
             CorrelationId = correlationId;
             StartDateTime = startDateTime;
-            EndDateTime = endDateTime;
+            EndDateTime = endDateTime.TimeOrEndDefault();
             Type = type;
             VatClassification = vatClassification;
             Resolution = resolution;
             TransparentInvoicing = transparentInvoicing;
             TaxIndicator = taxIndicator;
-        }
-
-        /// <summary>
-        /// This constructor should not be used.
-        /// By any other than the Moq framework.
-        /// </summary>
-#pragma warning disable 8618
-        public Charge()
-#pragma warning restore 8618
-        {
+            Points = points;
         }
 
         /// <summary>
@@ -103,7 +94,7 @@ namespace GreenEnergyHub.Charges.Domain.Charges
         /// <summary>
         /// Valid to, of a charge price list.
         /// </summary>
-        public Instant? EndDateTime { get; }
+        public Instant EndDateTime { get; }
 
         public VatClassification VatClassification { get; }
 
