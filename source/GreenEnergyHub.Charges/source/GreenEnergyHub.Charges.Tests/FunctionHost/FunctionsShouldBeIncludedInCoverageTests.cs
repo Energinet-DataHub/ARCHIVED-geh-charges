@@ -12,12 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using GreenEnergyHub.Charges.ChargeCommandReceiver;
-using GreenEnergyHub.Charges.ChargeConfirmationSender;
-using GreenEnergyHub.Charges.ChargeLinkCommandReceiver;
-using GreenEnergyHub.Charges.ChargeLinkEventPublisher;
-using GreenEnergyHub.Charges.ChargeReceiver;
-using GreenEnergyHub.Charges.ChargeRejectionSender;
 using GreenEnergyHub.Charges.FunctionHost.ChargeLinks;
 using GreenEnergyHub.Charges.FunctionHost.Charges;
 using GreenEnergyHub.Charges.FunctionHost.MeteringPoint;
@@ -39,14 +33,7 @@ namespace GreenEnergyHub.Charges.Tests.FunctionHost
         [Fact]
         public void AllFunctionsShouldBeIncludedInCoverage()
         {
-            Assert.Equal("ChargeCommandEndpoint", ChargeCommandEndpoint.FunctionName);
-            Assert.Equal("ChargeCommandAcceptedSubscriber", ChargeCommandAcceptedSubscriber.FunctionName);
-            Assert.Equal("LinkCommandReceiverEndpoint", LinkCommandReceiverEndpoint.FunctionName);
-            Assert.Equal("ChargeLinkEventPublisherServiceBusTrigger", ChargeLinkEventPublisherServiceBusTrigger.FunctionName);
-            Assert.Equal("ChargeLinkHttpTrigger", ChargeLinkHttpTrigger.FunctionName);
-            Assert.Equal("ChargeHttpTrigger", ChargeHttpTrigger.FunctionName);
-            Assert.Equal("ChargeCommandRejectedSubscriber", ChargeCommandRejectedSubscriber.FunctionName);
-            Assert.Equal("CreateLinkCommandReceiverServiceBusTrigger", CreateLinkCommandReceiverServiceBusTrigger.FunctionName);
+            Assert.Equal("ChargeCommandReceiverEndpoint", ChargeCommandReceiverEndpoint.FunctionName);
             Assert.Equal("MeteringPointCreatedReceiverEndpoint", MeteringPointCreatedReceiverEndpoint.FunctionName);
             Assert.Equal("ChargeCommandAcceptedReceiverEndpoint", ChargeCommandAcceptedReceiverEndpoint.FunctionName);
         }

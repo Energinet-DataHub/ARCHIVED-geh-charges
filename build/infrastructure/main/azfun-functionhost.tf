@@ -27,12 +27,23 @@ module "azfun_functionhost" {
     WEBSITE_RUN_FROM_PACKAGE                      = 1
     WEBSITES_ENABLE_APP_SERVICE_STORAGE           = true
     FUNCTIONS_WORKER_RUNTIME                      = "dotnet-isolated"
+    LOCAL_TIMEZONENAME                            = local.LOCAL_TIMEZONENAME
     CHARGE_DB_CONNECTION_STRING                   = local.CHARGE_DB_CONNECTION_STRING
     INTEGRATIONEVENT_SENDER_CONNECTION_STRING     = data.azurerm_key_vault_secret.integration_events_sender_connection_string.value
     INTEGRATIONEVENT_LISTENER_CONNECTION_STRING   = data.azurerm_key_vault_secret.integration_events_listener_connection_string.value
     DOMAINEVENT_SENDER_CONNECTION_STRING          = module.sbnar_charges_sender.primary_connection_string
     DOMAINEVENT_LISTENER_CONNECTION_STRING        = module.sbnar_charges_listener.primary_connection_string
+    CHARGE_LINK_ACCEPTED_TOPIC_NAME               = module.sbt_link_command_accepted.name
+    CHARGE_LINK_ACCEPTED_SUBSCRIPTION_NAME        = azurerm_servicebus_subscription.sbs_link_command_accepted_event_publisher.name
+    CHARGE_LINK_CREATED_TOPIC_NAME                = local.CHARGE_LINK_CREATED_TOPIC_NAME
     CHARGE_LINK_RECEIVED_TOPIC_NAME               = module.sbt_link_command_received.name
+    CHARGE_LINK_RECEIVED_SUBSCRIPTION_NAME        = azurerm_servicebus_subscription.sbs_link_command_received_receiver.name
+    COMMAND_ACCEPTED_TOPIC_NAME                   = module.sbt_command_accepted.name
+    COMMAND_ACCEPTED_SUBSCRIPTION_NAME            = azurerm_servicebus_subscription.sbs_command_accepted.name
+    COMMAND_RECEIVED_TOPIC_NAME                   = module.sbt_command_received.name
+    COMMAND_RECEIVED_SUBSCRIPTION_NAME            = azurerm_servicebus_subscription.sbs_command_received.name
+    COMMAND_REJECTED_TOPIC_NAME                   = module.sbt_command_rejected.name
+    COMMAND_REJECTED_SUBSCRIPTION_NAME            = azurerm_servicebus_subscription.sbs_command_rejected.name
     CREATE_LINK_COMMAND_TOPIC_NAME                = module.sbt_create_link_command.name
     CREATE_LINK_COMMAND_SUBSCRIPTION_NAME         = azurerm_servicebus_subscription.sbs_create_link_command_charges.name
     METERING_POINT_CREATED_TOPIC_NAME             = local.METERING_POINT_CREATED_TOPIC_NAME
@@ -42,6 +53,7 @@ module "azfun_functionhost" {
     COMMAND_ACCEPTED_RECEIVER_SUBSCRIPTION_NAME   = local.COMMAND_ACCEPTED_RECEIVER_SUBSCRIPTION_NAME
     CHARGE_CREATED_TOPIC_NAME                     = local.CHARGE_CREATED_TOPIC_NAME
     CHARGE_PRICES_UPDATED_TOPIC_NAME              = local.CHARGE_PRICES_UPDATED_TOPIC_NAME
+    POST_OFFICE_TOPIC_NAME                        = module.sbt_post_office.name
   }
   dependencies                              = [
     module.appi.dependent_on,
