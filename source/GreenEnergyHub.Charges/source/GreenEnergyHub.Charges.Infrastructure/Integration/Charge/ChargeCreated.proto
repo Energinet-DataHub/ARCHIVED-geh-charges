@@ -26,7 +26,7 @@ message ChargeCreated {
   string charge_id = 1;// A charge identifier. Combined with Charge Owner and Charge Type it becomes unique
   ChargeType charge_type = 2;// The type of charge; tariff, fee or subscription
   string charge_owner = 3; // A charge owner identification, e.g. the Market Participant's GLN or EIC number
-  string currency = 4;
+  string currency = 4; // ISO 4217 currency code
   Resolution resolution = 5;
   bool tax_indicator = 6; // Indicates whether the Charge is tax or not.
   ChargePeriod charge_period = 7;
