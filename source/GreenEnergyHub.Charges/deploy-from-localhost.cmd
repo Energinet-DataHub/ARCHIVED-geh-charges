@@ -30,7 +30,7 @@ IF not "%sqlPassword%" == "" (
 
 IF /I not "%functionHost%" == "n" (
     pushd source\GreenEnergyHub.Charges.FunctionHost\bin\Release\net5.0
-    start "Deploy: FunctionHosts" cmd /c "func azure functionapp publish azfun-functionhost-charges-%organization%-s & pause"
+    func azure functionapp publish azfun-functionhost-charges-%organization%-s & pause
     popd
 )
 
