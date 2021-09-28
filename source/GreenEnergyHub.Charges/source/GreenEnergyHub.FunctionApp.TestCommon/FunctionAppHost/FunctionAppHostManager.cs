@@ -19,7 +19,7 @@ using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
-using GreenEnergyHub.FunctionApp.TestCommon.Diagnostics;
+using GreenEnergyHub.TestCommon.Diagnostics;
 
 namespace GreenEnergyHub.FunctionApp.TestCommon.FunctionAppHost
 {

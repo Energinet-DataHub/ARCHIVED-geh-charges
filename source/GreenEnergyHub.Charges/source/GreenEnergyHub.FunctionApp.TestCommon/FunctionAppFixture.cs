@@ -15,8 +15,8 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using GreenEnergyHub.FunctionApp.TestCommon.Diagnostics;
 using GreenEnergyHub.FunctionApp.TestCommon.FunctionAppHost;
+using GreenEnergyHub.TestCommon.Diagnostics;
 using Microsoft.Extensions.Configuration;
 using Xunit;
 using Xunit.Abstractions;

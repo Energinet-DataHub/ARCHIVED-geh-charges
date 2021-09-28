@@ -16,7 +16,7 @@ using System;
 using System.Diagnostics;
 using Xunit.Abstractions;
 
-namespace GreenEnergyHub.FunctionApp.TestCommon.Diagnostics
+namespace GreenEnergyHub.TestCommon.Diagnostics
 {
     /// <inheritdoc cref="ITestDiagnosticsLogger"/>
     public class TestDiagnosticsLogger : ITestDiagnosticsLogger
@@ -40,9 +40,7 @@ namespace GreenEnergyHub.FunctionApp.TestCommon.Diagnostics
             // Running the command 'dotnet test --logger "console;verbosity=detailed"' will show the
             // test output in the console.
             if (TestOutputHelper != null)
-            {
                 TestOutputHelper.WriteLine(message);
-            }
         }
     }
 }
