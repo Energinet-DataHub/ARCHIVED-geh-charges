@@ -24,9 +24,11 @@ on the existing Service Bus Namespace.
 */
 
 module "sbt_charge_prices_updated" {
-  source              = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//service-bus-topic?ref=1.7.0"
-  name                = local.CHARGE_PRICES_UPDATED_TOPIC_NAME
+  source              = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//service-bus-topic?ref=2.0.0"
+  name                = "charge-prices-updated"
   namespace_name      = module.sbn_external_integration_events.name
   resource_group_name = data.azurerm_resource_group.main.name
-  dependencies        = [module.sbn_external_integration_events.dependent_on]
+  dependencies        = [
+    module.sbn_external_integration_events.dependent_on
+    ]
 }
