@@ -78,7 +78,7 @@ namespace GreenEnergyHub.Charges.Domain.ChargeLinkCommands
             string correlationId,
             Charge charge,
             Instant startDateTime,
-            Instant? endDateTime)
+            Instant endDateTime)
         {
             var currentTime = _clock.GetCurrentInstant();
             var chargeLinkCommand = new ChargeLinkCommand(correlationId)
