@@ -81,11 +81,9 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Mapping
             MarketParticipant marketParticipant)
         {
             // Arrange
-
             // Set all other times to a valid time and not just a random which can get the test to blink
             var now = InstantPattern.General.Parse("9999-12-31T23:59:59Z").Value;
 
-            // Set all other times to a valid time and not just a random which can get the test to blink
             var charge = new Charges.Domain.Charges.Charge(
                 Guid.NewGuid(),
                 new Document
@@ -99,7 +97,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Mapping
                 "owner",
                 "CorrelationId",
                 now,
-                now,
+                null,
                 ChargeType.Fee,
                 VatClassification.Unknown,
                 Resolution.P1D,
