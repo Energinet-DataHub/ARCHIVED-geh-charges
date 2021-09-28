@@ -31,6 +31,6 @@ option csharp_namespace = "GreenEnergyHub.Charges.Commands";
 * When the Metering Point domain receives above reply there is no reason to send a CreateDefaultChargeLinkMessages request.
 */
 message CreateDefaultChargeLinksSucceeded {
-  string metering_point_id = 1; // The metering point for which default charge link were created
-  bool did_create_charge_links = 2; // Used by the receiving domain to evaluate if the next request (CreateDefaultChargeLinkMessages) is to be sent or not; True = send, False = not.
+  string metering_point_id = 1; /// The metering point for which default charge link were created
+  bool did_create_charge_links = 2; /// Did the request result in any default charge links being added to the metering point (True = yes, False = no)
 }
