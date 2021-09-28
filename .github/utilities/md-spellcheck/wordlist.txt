@@ -19,7 +19,6 @@ ChargePricesUpdated
 ChargeType
 CIM
 codecov
-CreateDefaultChargeLinks
 CreateDefaultChargeLinksFailed
 CreateDefaultChargeLinksSucceeded
 CreateDefaultChargeLinkMessages
