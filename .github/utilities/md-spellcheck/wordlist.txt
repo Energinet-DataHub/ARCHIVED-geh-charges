@@ -19,11 +19,6 @@ ChargePricesUpdated
 ChargeType
 CIM
 codecov
-CreateDefaultChargeLinksFailed
-CreateDefaultChargeLinksSucceeded
-CreateDefaultChargeLinkMessages
-CreateDefaultChargeLinkMessagesFailed
-CreateDefaultChargeLinkMessagesSucceeded
 UpdatedPeriodEndDateTime
 UpdatedPeriodStartDateTime
 composable
