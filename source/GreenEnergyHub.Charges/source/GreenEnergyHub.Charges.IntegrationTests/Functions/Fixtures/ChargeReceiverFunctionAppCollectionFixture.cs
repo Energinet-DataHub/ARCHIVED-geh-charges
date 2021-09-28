@@ -16,6 +16,12 @@ using Xunit;
 
 namespace GreenEnergyHub.Charges.IntegrationTests.Functions.Fixtures
 {
+    /// <summary>
+    /// A xUnit collection fixture for ensuring tests don't run in parallel.
+    ///
+    /// xUnit documentation of collection fixtures:
+    ///  * https://xunit.github.io/docs/shared-context
+    /// </summary>
     [CollectionDefinition(nameof(ChargeReceiverFunctionAppCollectionFixture))]
     public class ChargeReceiverFunctionAppCollectionFixture : ICollectionFixture<ChargeReceiverFunctionAppFixture>
     {
