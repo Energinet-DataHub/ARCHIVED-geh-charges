@@ -28,11 +28,10 @@ namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
     {
         protected override IInboundMessage Convert([NotNull]ChargeLinkCommandAcceptedContract chargeLinkCommandAcceptedContract)
         {
-            return new ChargeLinkCommandAcceptedEvent(chargeLinkCommandAcceptedContract.CorrelationId)
-            {
-                Document = ConvertDocument(chargeLinkCommandAcceptedContract.Document),
-                ChargeLink = ConvertChargeLink(chargeLinkCommandAcceptedContract.ChargeLink),
-            };
+            return new ChargeLinkCommandAcceptedEvent(
+                chargeLinkCommandAcceptedContract.CorrelationId,
+                ConvertDocument(chargeLinkCommandAcceptedContract.Document),
+                ConvertChargeLink(chargeLinkCommandAcceptedContract.ChargeLink));
         }
 
         private static Document ConvertDocument(DocumentContract document)
