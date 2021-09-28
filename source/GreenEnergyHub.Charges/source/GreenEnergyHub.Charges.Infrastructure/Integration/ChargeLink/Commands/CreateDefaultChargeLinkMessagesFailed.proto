@@ -28,7 +28,7 @@ option csharp_namespace = "GreenEnergyHub.Charges.Commands";
 * ProcessId - For traceability - UUID of the 'create metering point process'
 */
 message CreateDefaultChargeLinkMessagesFailed {
-  string metering_point_id = 1; /// The metering point for which the process of creating default charge link messages failed. For the Danish version of Green Energy Hub, this is the 18-digits metering point id.
+  string metering_point_id = 1; // The metering point for which the process of creating default charge link messages failed. For the Danish version of Green Energy Hub, this is the 18-digits metering point id.
     enum ErrorCode {
     EC_ERROR_NOT_DETERMINED = 0;
     EC_METERING_POINT_UNKNOWN = 1;

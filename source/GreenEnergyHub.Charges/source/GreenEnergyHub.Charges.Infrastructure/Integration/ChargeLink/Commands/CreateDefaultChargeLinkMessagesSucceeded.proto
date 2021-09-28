@@ -28,5 +28,5 @@ option csharp_namespace = "GreenEnergyHub.Charges.Commands";
 * ProcessId - For traceability - UUID of the 'create metering point process'
 */
 message CreateDefaultChargeLinkMessagesSucceeded {
-  string metering_point_id = 1; /// The metering point that default charge link messages were created for. For the Danish version of Green Energy Hub, this is the 18-digits metering point id.
+  string metering_point_id = 1; // The metering point that default charge link messages were created for. For the Danish version of Green Energy Hub, this is the 18-digits metering point id.
 }
