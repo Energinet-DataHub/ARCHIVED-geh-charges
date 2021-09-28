@@ -16,29 +16,28 @@ using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application.ChargeLinks.Handlers;
 using GreenEnergyHub.Charges.Domain.ChargeLinkCommandAcceptedEvents;
+using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandAccepted;
 using GreenEnergyHub.Charges.Infrastructure.Messaging;
-using GreenEnergyHub.Messaging.Transport;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Logging;
 
-namespace GreenEnergyHub.Charges.ChargeLinkEventPublisher
+namespace GreenEnergyHub.Charges.FunctionHost.ChargeLinks
 {
-    public class ChargeLinkEventPublisherServiceBusTrigger
+    public class ChargeLinkEventPublisherEndpoint
     {
         /// <summary>
         /// The name of the function.
         /// Function name affects the URL and thus possibly dependent infrastructure.
         /// </summary>
-        public const string FunctionName = "ChargeLinkEventPublisherServiceBusTrigger";
+        public const string FunctionName = nameof(ChargeLinkEventPublisherEndpoint);
         private readonly ICorrelationContext _correlationContext;
-        private readonly MessageExtractor _messageExtractor;
+        private readonly MessageExtractor<ChargeLinkCommandAcceptedContract> _messageExtractor;
         private readonly IChargeLinkEventPublishHandler _chargeLinkEventPublishHandler;
         private readonly ILogger _log;
 
-        public ChargeLinkEventPublisherServiceBusTrigger(
+        public ChargeLinkEventPublisherEndpoint(
             ICorrelationContext correlationContext,
-            MessageExtractor messageExtractor,
+            MessageExtractor<ChargeLinkCommandAcceptedContract> messageExtractor,
             IChargeLinkEventPublishHandler chargeLinkEventPublishHandler,
             [NotNull] ILoggerFactory loggerFactory)
         {
@@ -46,15 +45,15 @@ namespace GreenEnergyHub.Charges.ChargeLinkEventPublisher
             _messageExtractor = messageExtractor;
             _chargeLinkEventPublishHandler = chargeLinkEventPublishHandler;
 
-            _log = loggerFactory.CreateLogger(nameof(ChargeLinkEventPublisherServiceBusTrigger));
+            _log = loggerFactory.CreateLogger(nameof(ChargeLinkEventPublisherEndpoint));
         }
 
         [Function(FunctionName)]
-        public async Task<IActionResult> RunAsync(
+        public async Task RunAsync(
             [ServiceBusTrigger(
-                "%LINK_ACCEPTED_TOPIC_NAME%",
-                "%LINK_ACCEPTED_SUBSCRIPTION_NAME%",
-                Connection = "LINK_ACCEPTED_LISTENER_CONNECTION_STRING")]
+                "%CHARGE_LINK_ACCEPTED_TOPIC_NAME%",
+                "%CHARGE_LINK_ACCEPTED_SUBSCRIPTION_NAME%",
+                Connection = "DOMAINEVENT_LISTENER_CONNECTION_STRING")]
             [NotNull] byte[] message,
             [NotNull] FunctionContext context)
         {
@@ -65,13 +64,11 @@ namespace GreenEnergyHub.Charges.ChargeLinkEventPublisher
             var acceptedChargeLinkCommand = (ChargeLinkCommandAcceptedEvent)await _messageExtractor.ExtractAsync(message).ConfigureAwait(false);
 
             await _chargeLinkEventPublishHandler.HandleAsync(acceptedChargeLinkCommand).ConfigureAwait(false);
-
-            return new OkResult();
         }
 
         private void SetupCorrelationContext(FunctionContext context)
         {
-            _correlationContext.CorrelationId = context.InvocationId;
+            _correlationContext.CorrelationId = context.InvocationId.Replace("-", string.Empty);
         }
     }
 }

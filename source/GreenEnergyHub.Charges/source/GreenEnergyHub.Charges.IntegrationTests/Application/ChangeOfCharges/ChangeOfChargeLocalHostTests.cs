@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
+/*using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
@@ -22,6 +22,7 @@ using GreenEnergyHub.Charges.ChargeCommandReceiver;
 using GreenEnergyHub.Charges.ChargeReceiver;
 using GreenEnergyHub.Charges.Core.Json;
 using GreenEnergyHub.Charges.Domain.ChargeCommandAcceptedEvents;
+using GreenEnergyHub.Charges.Domain.ChargeCommandReceivedEvents;
 using GreenEnergyHub.Charges.Domain.ChargeCommandRejectedEvents;
 using GreenEnergyHub.Charges.Domain.ChargeCommands;
 using GreenEnergyHub.Charges.Infrastructure.Messaging;
@@ -114,7 +115,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
             // act
             var chargeReceiverResult = await RunChargeReceiver(logger, executionContext, req).ConfigureAwait(false);
             var commandReceivedResult = await serviceBusTestHelper
-                .GetMessageFromServiceBusAsync<ChargeCommandAcceptedEvent>(
+                .GetMessageFromServiceBusAsync<ChargeCommandReceivedEvent>(
                     _commandReceivedConnectionString ?? string.Empty,
                     _commandReceivedTopicName ?? string.Empty,
                     _commandReceivedSubscriptionName ?? string.Empty,
@@ -167,7 +168,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
 
             // act
             var chargeReceiverResult = await RunChargeReceiver(logger, executionContext, req).ConfigureAwait(false);
-            var commandReceivedResult = await serviceBusTestHelper.GetMessageFromServiceBusAsync<ChargeCommand>(
+            var commandReceivedResult = await serviceBusTestHelper.GetMessageFromServiceBusAsync<ChargeCommandReceivedEvent>(
                     _commandReceivedConnectionString ?? string.Empty,
                     _commandReceivedTopicName ?? string.Empty,
                     _commandReceivedSubscriptionName ?? string.Empty,
@@ -208,3 +209,4 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
         }
     }
 }
+*/

@@ -4,14 +4,29 @@
     "AzureWebJobsDashboard": "UseDevelopmentStorage=true",
     "AzureWebJobsStorage": "UseDevelopmentStorage=true",
     "FUNCTIONS_WORKER_RUNTIME": "dotnet-isolated",
+    
+    "LOCAL_TIMEZONENAME": "<Your time zone ID, e.g.Europe/Copenhagen, see https://en.wikipedia.org/wiki/List_of_tz_database_time_zones for others>",
     "CHARGE_DB_CONNECTION_STRING": "<charge db connection string>",
+    "INTEGRATIONEVENT_SENDER_CONNECTION_STRING": "<sb sender connection string for integration events (without EntityPath)>",
     "INTEGRATIONEVENT_LISTENER_CONNECTION_STRING": "<sb listener connection string for integration events (without EntityPath)>",
     "DOMAINEVENT_SENDER_CONNECTION_STRING": "<connection string for sending domain events to the service bus (without entity path)>",
     "DOMAINEVENT_LISTENER_CONNECTION_STRING": "<connection string for listening for domain events on the service bus (without entity path)>",
+    
+    "CHARGE_LINK_ACCEPTED_TOPIC_NAME": "sbt-link-command-accepted",
+    "CHARGE_LINK_ACCEPTED_SUBSCRIPTION_NAME": "sbs-link-command-accepted-event-publisher",
+    "CHARGE_LINK_CREATED_TOPIC_NAME": "charge-link-created",
     "CHARGE_LINK_RECEIVED_TOPIC_NAME": "sbt-link-command-received",
+    "CHARGE_LINK_RECEIVED_SUBSCRIPTION_NAME": "sbs-link-command-received-receiver",
+    "COMMAND_ACCEPTED_TOPIC_NAME": "sbt-command-accepted",
+    "COMMAND_ACCEPTED_SUBSCRIPTION_NAME": "sbs-command-accepted",
+    "COMMAND_RECEIVED_TOPIC_NAME": "sbt-command-received",
+    "COMMAND_RECEIVED_SUBSCRIPTION_NAME": "sbs-command-received",
+    "COMMAND_REJECTED_TOPIC_NAME": "sbt-command-rejected",
+    "COMMAND_REJECTED_SUBSCRIPTION_NAME": "sbs-command-rejected",
     "CREATE_LINK_COMMAND_TOPIC_NAME": "sbt-create-link-command",
     "CREATE_LINK_COMMAND_SUBSCRIPTION_NAME": "sbs-create-link-command-charges",
     "METERING_POINT_CREATED_TOPIC_NAME": "metering-point-created",
     "METERING_POINT_CREATED_SUBSCRIPTION_NAME": "metering-point-created-sub-charges",
+    "POST_OFFICE_TOPIC_NAME": "sbt-post-office"
   }
 }
