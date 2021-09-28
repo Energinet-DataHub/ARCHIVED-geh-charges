@@ -141,8 +141,8 @@ namespace GreenEnergyHub.Charges.FunctionHost
             serviceCollection.AddScoped<IChargeCommandAcceptedEventSender, ChargeCommandAcceptedEventSender>();
             serviceCollection.AddScoped<IChargeCommandAcceptedEventHandler, ChargeCommandAcceptedEventHandler>();
 
-            serviceCollection.SendProtobuf<ChargeCreatedContract>();
-            serviceCollection.AddMessagingProtobuf().AddMessageDispatcher<ChargeCreated>(
+            serviceCollection.SendProtobuf<Infrastructure.Integration.ChargeCreated.ChargeCreated>();
+            serviceCollection.AddMessagingProtobuf().AddMessageDispatcher<GreenEnergyHub.Charges.Domain.Charges.Acknowledgements.ChargeCreated>(
                 GetEnv("INTEGRATIONEVENT_SENDER_CONNECTION_STRING"),
                 GetEnv("CHARGE_CREATED_TOPIC_NAME"));
 

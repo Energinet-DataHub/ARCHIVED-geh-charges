@@ -21,22 +21,22 @@ using GreenEnergyHub.Messaging.Protobuf;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Integration.Mappers
 {
-    public class ChargePricesUpdatedOutboundMapper : ProtobufOutboundMapper<ChargePricesUpdated>
+    public class ChargePricesUpdatedOutboundMapper : ProtobufOutboundMapper<Domain.Charges.Acknowledgements.ChargePricesUpdated>
     {
-        protected override IMessage Convert([NotNull]ChargePricesUpdated chargePricesUpdated)
+        protected override IMessage Convert([NotNull]GreenEnergyHub.Charges.Domain.Charges.Acknowledgements.ChargePricesUpdated chargePricesUpdated)
         {
-            var chargePricesUpdatedContract = new ChargePricesUpdatedContract
+            var chargePricesUpdatedContract = new ChargeConfirmation.ChargePricesUpdated
             {
                 ChargeId = chargePricesUpdated.ChargeId,
                 ChargeOwner = chargePricesUpdated.ChargeOwner,
-                ChargeType = (ChargeTypeContract)chargePricesUpdated.ChargeType,
+                ChargeType = (ChargeType)chargePricesUpdated.ChargeType,
                 UpdatePeriodStartDate = chargePricesUpdated.UpdatePeriodStartDate.ToTimestamp(),
                 UpdatePeriodEndDate = chargePricesUpdated.UpdatePeriodEndDate.ToTimestamp(),
             };
 
             foreach (var point in chargePricesUpdated.Points)
             {
-                var mappedPoint = new ChargePriceContract { Price = point.Price, Time = point.Time.ToTimestamp(), };
+                var mappedPoint = new ChargePrice { Price = point.Price, Time = point.Time.ToTimestamp(), };
 
                 chargePricesUpdatedContract.Points.Add(mappedPoint);
             }

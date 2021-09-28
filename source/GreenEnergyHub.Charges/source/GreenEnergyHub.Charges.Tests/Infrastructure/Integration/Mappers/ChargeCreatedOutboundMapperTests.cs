@@ -14,16 +14,15 @@
 
 using System;
 using System.Diagnostics.CodeAnalysis;
-using GreenEnergyHub.Charges.Domain.Charges;
-using GreenEnergyHub.Charges.Domain.Charges.Acknowledgements;
-using GreenEnergyHub.Charges.Infrastructure.Integration.ChargeCreated;
 using GreenEnergyHub.Charges.Infrastructure.Integration.Mappers;
 using GreenEnergyHub.Charges.TestCore.Attributes;
 using GreenEnergyHub.Charges.TestCore.Protobuf;
 using NodaTime;
 using Xunit;
 using Xunit.Categories;
+using ChargeType = GreenEnergyHub.Charges.Domain.Charges.ChargeType;
 using Period = GreenEnergyHub.Charges.Domain.Charges.Period;
+using Resolution = GreenEnergyHub.Charges.Domain.Charges.Resolution;
 
 namespace GreenEnergyHub.Charges.Tests.Infrastructure.Integration.Mappers
 {
@@ -36,7 +35,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Integration.Mappers
             [NotNull] ChargeCreatedOutboundMapper sut)
         {
             var createdEvent = GetChargeCreated();
-            var result = (ChargeCreatedContract)sut.Convert(createdEvent);
+            var result = (GreenEnergyHub.Charges.Infrastructure.Integration.ChargeCreated.ChargeCreated)sut.Convert(createdEvent);
             ProtobufAssert.OutgoingContractIsSubset(createdEvent, result);
         }
 
@@ -47,9 +46,9 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Integration.Mappers
             Assert.Throws<InvalidOperationException>(() => sut.Convert(null!));
         }
 
-        private static ChargeCreated GetChargeCreated()
+        private static GreenEnergyHub.Charges.Domain.Charges.Acknowledgements.ChargeCreated GetChargeCreated()
         {
-            return new ChargeCreated(
+            return new GreenEnergyHub.Charges.Domain.Charges.Acknowledgements.ChargeCreated(
                 "chargeId",
                 ChargeType.Tariff,
                 "chargeOwner",

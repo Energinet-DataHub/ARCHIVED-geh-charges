@@ -22,23 +22,23 @@ import "google/protobuf/timestamp.proto";
 
 option csharp_namespace = "GreenEnergyHub.Charges.Infrastructure.Integration.ChargeConfirmation";
 
-message ChargePricesUpdatedContract {
+message ChargePricesUpdated {
   string charge_id = 1; // A charge identifier. Combined with Charge Owner and Charge Type it becomes unique
-  ChargeTypeContract charge_type = 2; // The type of charge; tariff, fee or subscription
+  ChargeType charge_type = 2; // The type of charge; tariff, fee or subscription
   string charge_owner = 3; // A charge owner identification, e.g. the Market Participant's GLN or EIC number
   google.protobuf.Timestamp update_period_start_date = 4;
   google.protobuf.Timestamp update_period_end_date = 5;
-  repeated ChargePriceContract points = 6;
+  repeated ChargePrice points = 6;
 }
 
-enum ChargeTypeContract {
+enum ChargeType {
   CT_UNKNOWN = 0;
   CT_SUBSCRIPTION = 1;
   CT_FEE = 2;
   CT_TARIFF = 3;
 }
 
-message ChargePriceContract
+message ChargePrice
 {
   DecimalValue price = 1;
   google.protobuf.Timestamp time = 2; // A point in time, where the price applies.

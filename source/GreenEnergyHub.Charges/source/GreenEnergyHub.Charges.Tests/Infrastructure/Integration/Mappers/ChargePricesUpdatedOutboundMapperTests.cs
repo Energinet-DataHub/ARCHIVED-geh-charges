@@ -15,17 +15,14 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using FluentAssertions;
-using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.Domain.Charges;
-using GreenEnergyHub.Charges.Domain.Charges.Acknowledgements;
-using GreenEnergyHub.Charges.Infrastructure.Integration.ChargeConfirmation;
 using GreenEnergyHub.Charges.Infrastructure.Integration.Mappers;
 using GreenEnergyHub.Charges.TestCore.Attributes;
 using GreenEnergyHub.Charges.TestCore.Protobuf;
 using NodaTime;
 using Xunit;
 using Xunit.Categories;
+using ChargeType = GreenEnergyHub.Charges.Domain.Charges.ChargeType;
 
 namespace GreenEnergyHub.Charges.Tests.Infrastructure.Integration.Mappers
 {
@@ -41,7 +38,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Integration.Mappers
             var chargePricesUpdated = GetChargePricesUpdated();
 
             // Act
-            var actual = (ChargePricesUpdatedContract)sut.Convert(chargePricesUpdated);
+            var actual = (GreenEnergyHub.Charges.Infrastructure.Integration.ChargeConfirmation.ChargePricesUpdated)sut.Convert(chargePricesUpdated);
 
             // Assert
             ProtobufAssert.OutgoingContractIsSubset(chargePricesUpdated, actual);
@@ -54,9 +51,9 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Integration.Mappers
             Assert.Throws<InvalidOperationException>(() => sut.Convert(null!));
         }
 
-        private static ChargePricesUpdated GetChargePricesUpdated()
+        private static GreenEnergyHub.Charges.Domain.Charges.Acknowledgements.ChargePricesUpdated GetChargePricesUpdated()
         {
-            return new ChargePricesUpdated(
+            return new GreenEnergyHub.Charges.Domain.Charges.Acknowledgements.ChargePricesUpdated(
                 "chargeId",
                 ChargeType.Fee,
                 "owner",

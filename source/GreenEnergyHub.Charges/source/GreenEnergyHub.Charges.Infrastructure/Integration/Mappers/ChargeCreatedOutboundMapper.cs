@@ -24,15 +24,15 @@ namespace GreenEnergyHub.Charges.Infrastructure.Integration.Mappers
     {
         protected override IMessage Convert([NotNull] Domain.Charges.Acknowledgements.ChargeCreated chargeCreated)
         {
-            return new ChargeCreatedContract
+            return new ChargeCreated.ChargeCreated
             {
                 ChargeId = chargeCreated.ChargeId,
-                ChargeType = (ChargeTypeContract)chargeCreated.ChargeType,
+                ChargeType = (ChargeType)chargeCreated.ChargeType,
                 ChargeOwner = chargeCreated.ChargeOwner,
                 Currency = chargeCreated.Currency,
-                Resolution = (ResolutionContract)chargeCreated.Resolution,
+                Resolution = (Resolution)chargeCreated.Resolution,
                 TaxIndicator = chargeCreated.TaxIndicator,
-                ChargePeriod = new ChargePeriodContract
+                ChargePeriod = new ChargePeriod
                 {
                     StartDateTime = chargeCreated.ChargePeriod.StartDateTime.ToTimestamp(),
                     EndDateTime = chargeCreated.ChargePeriod.EndDateTime.ToTimestamp(),
