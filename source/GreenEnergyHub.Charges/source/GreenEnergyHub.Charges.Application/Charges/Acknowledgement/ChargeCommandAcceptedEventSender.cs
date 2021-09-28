@@ -23,24 +23,24 @@ namespace GreenEnergyHub.Charges.Application.Charges.Acknowledgement
     {
         private readonly IMessageDispatcher<ChargeCreated> _messageChargeDispatcher;
         private readonly IMessageDispatcher<ChargePricesUpdated> _messagePricesDispatcher;
-        private readonly IChargeCreatedFactory _createdFactory;
+        private readonly IChargeCreatedFactory _chargeCreatedFactory;
         private readonly IChargePricesUpdatedFactory _chargePricesUpdatedFactory;
 
         public ChargeCommandAcceptedEventSender(
             IMessageDispatcher<ChargeCreated> messageChargeDispatcher,
             IMessageDispatcher<ChargePricesUpdated> messagePricesDispatcher,
-            IChargeCreatedFactory createdFactory,
+            IChargeCreatedFactory chargeCreatedFactory,
             IChargePricesUpdatedFactory chargePricesUpdatedFactory)
         {
             _messageChargeDispatcher = messageChargeDispatcher;
             _messagePricesDispatcher = messagePricesDispatcher;
-            _createdFactory = createdFactory;
+            _chargeCreatedFactory = chargeCreatedFactory;
             _chargePricesUpdatedFactory = chargePricesUpdatedFactory;
         }
 
         public async Task SendChargeCreatedAsync(ChargeCommandAcceptedEvent chargeCommandAcceptedEvent)
         {
-            var chargeCreated = _createdFactory.Create(chargeCommandAcceptedEvent);
+            var chargeCreated = _chargeCreatedFactory.Create(chargeCommandAcceptedEvent);
             await _messageChargeDispatcher.DispatchAsync(chargeCreated).ConfigureAwait(false);
         }
 
