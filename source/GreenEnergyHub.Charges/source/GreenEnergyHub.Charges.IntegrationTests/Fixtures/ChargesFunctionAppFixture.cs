@@ -67,7 +67,10 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures
             ServiceBusListenerMock = new ServiceBusListenerMock(ServiceBusResource.ConnectionString, TestLogger);
 
             var topicClient = ServiceBusResource.GetTopicClient("topic");
+
+            // Overwrites the setting so the function uses the name we have control of in the test
             Environment.SetEnvironmentVariable("POST_OFFICE_TOPIC_NAME", topicClient.TopicName);
+
             await ServiceBusListenerMock.AddTopicSubscriptionListenerAsync(topicClient.TopicName, "defaultSubscription");
             await topicClient.CloseAsync();
 
