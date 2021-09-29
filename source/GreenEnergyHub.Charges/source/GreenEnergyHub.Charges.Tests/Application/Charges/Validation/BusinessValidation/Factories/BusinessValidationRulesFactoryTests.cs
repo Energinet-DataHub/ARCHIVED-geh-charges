@@ -71,19 +71,27 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Validation.BusinessVa
             [NotNull][Frozen] Mock<IChargeRepository> repository,
             [NotNull][Frozen] Mock<IRulesConfigurationRepository> rulesConfigurationRepository,
             [NotNull] BusinessValidationRulesFactory sut,
-            [NotNull] TestableChargeCommand chargeCommand)
+            [NotNull] TestableChargeCommand chargeCommand,
+            [NotNull] Charge charge)
         {
             // Arrange
             chargeCommand.ChargeOperation.Type = ChargeType.Fee;
             ConfigureRepositoryMock(rulesConfigurationRepository);
 
-            var chargeExists = true;
+            const bool chargeExists = true;
             repository.Setup(
                 r => r.CheckIfChargeExistsAsync(
                     It.IsAny<string>(),
                     It.IsAny<string>(),
                     It.IsAny<ChargeType>()))
                 .Returns(Task.FromResult(chargeExists));
+
+            repository.Setup(
+                    r => r.GetChargeAsync(
+                        It.IsAny<string>(),
+                        It.IsAny<string>(),
+                        It.IsAny<ChargeType>()))
+                .Returns(Task.FromResult(charge));
 
             // Act
             var actual = await sut.CreateRulesForChargeCommandAsync(chargeCommand).ConfigureAwait(false);
@@ -104,19 +112,27 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Validation.BusinessVa
             [NotNull][Frozen] Mock<IChargeRepository> repository,
             [NotNull][Frozen] Mock<IRulesConfigurationRepository> rulesConfigurationRepository,
             [NotNull] BusinessValidationRulesFactory sut,
-            [NotNull] TestableChargeCommand chargeCommand)
+            [NotNull] TestableChargeCommand chargeCommand,
+            [NotNull] Charge charge)
         {
             // Arrange
             chargeCommand.ChargeOperation.Type = ChargeType.Tariff;
             ConfigureRepositoryMock(rulesConfigurationRepository);
 
-            var chargeExists = true;
+            const bool chargeExists = true;
             repository.Setup(
                 r => r.CheckIfChargeExistsAsync(
                     It.IsAny<string>(),
                     It.IsAny<string>(),
                     It.IsAny<ChargeType>()))
                 .Returns(Task.FromResult(chargeExists));
+
+            repository.Setup(
+                    r => r.GetChargeAsync(
+                        It.IsAny<string>(),
+                        It.IsAny<string>(),
+                        It.IsAny<ChargeType>()))
+                .Returns(Task.FromResult(charge));
 
             // Act
             var actual = await sut.CreateRulesForChargeCommandAsync(chargeCommand).ConfigureAwait(false);

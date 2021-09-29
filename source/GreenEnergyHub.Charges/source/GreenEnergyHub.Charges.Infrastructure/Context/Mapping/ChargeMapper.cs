@@ -16,6 +16,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.Infrastructure.Context.Model;
@@ -35,9 +36,6 @@ namespace GreenEnergyHub.Charges.Infrastructure.Context.Mapping
             var currentChargeDetails = charge.ChargePeriodDetails
                 .OrderBy(x => Math.Abs((x.StartDateTime - DateTime.UtcNow).Ticks)).First();
 
-            var fromDateTimeUtc = currentChargeDetails.EndDateTime != null ?
-                Instant.FromDateTimeUtc(currentChargeDetails.EndDateTime.Value.ToUniversalTime()) : (Instant?)null;
-
             return new Domain.Charges.Charge(
                 charge.Id,
                 new Document(),
@@ -48,7 +46,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Context.Mapping
                 charge.MarketParticipant.MarketParticipantId,
                 charge.ChargeOperation.CorrelationId,
                 Instant.FromDateTimeUtc(currentChargeDetails.StartDateTime.ToUniversalTime()),
-                fromDateTimeUtc,
+                Instant.FromDateTimeUtc(currentChargeDetails.EndDateTime.ToUniversalTime()),
                 (ChargeType)charge.ChargeType,
                 (VatClassification)currentChargeDetails.VatClassification,
                 (Resolution)charge.Resolution,
@@ -121,7 +119,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Context.Mapping
                 Description = charge.Description,
                 Name = charge.Name,
                 VatClassification = (int)charge.VatClassification,
-                EndDateTime = charge.EndDateTime?.ToDateTimeUtc(),
+                EndDateTime = charge.EndDateTime.ToDateTimeUtc(),
                 StartDateTime = charge.StartDateTime.ToDateTimeUtc(),
                 ChargeOperation = chargeOperation,
             };

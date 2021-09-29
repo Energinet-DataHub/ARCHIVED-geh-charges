@@ -10,7 +10,7 @@ INSERT INTO [Charges].[DefaultChargeLink] (Id, MeteringPointType, ChargeId, Star
       AND MarketParticipantId IN (SELECT Id FROM [Charges].[MarketParticipant] WHERE MarketParticipantId = '5790000432752')
       AND ChargeType = 3), /* ChargeRowId */
   '2014-12-31 23:00', /* StartDateTime */
-  NULL) /* EndDateTime */
+  '9999-12-31 23:59:59') /* EndDateTime */
   
 /* Charge 40010, production */
 INSERT INTO [Charges].[DefaultChargeLink] (Id, MeteringPointType, ChargeId, StartDateTime, EndDateTime) VALUES (
@@ -22,7 +22,7 @@ INSERT INTO [Charges].[DefaultChargeLink] (Id, MeteringPointType, ChargeId, Star
       AND MarketParticipantId IN (SELECT Id FROM [Charges].[MarketParticipant] WHERE MarketParticipantId = '5790000432752')
       AND ChargeType = 3), /* ChargeRowId */
   '2014-12-31 23:00', /* StartDateTime */
-  NULL) /* EndDateTime */
+  '9999-12-31 23:59:59') /* EndDateTime */
 
 /* Charge 41000, consumption */
 INSERT INTO [Charges].[DefaultChargeLink] (Id, MeteringPointType, ChargeId, StartDateTime, EndDateTime) VALUES (
@@ -34,7 +34,7 @@ INSERT INTO [Charges].[DefaultChargeLink] (Id, MeteringPointType, ChargeId, Star
       AND MarketParticipantId IN (SELECT Id FROM [Charges].[MarketParticipant] WHERE MarketParticipantId = '5790000432752')
       AND ChargeType = 3), /* ChargeRowId */
   '2014-12-31 23:00', /* StartDateTime */
-  NULL) /* EndDateTime */
+  '9999-12-31 23:59:59') /* EndDateTime */
   
 /* Charge 45012, production */
 INSERT INTO [Charges].[DefaultChargeLink] (Id, MeteringPointType, ChargeId, StartDateTime, EndDateTime) VALUES (
@@ -46,7 +46,7 @@ INSERT INTO [Charges].[DefaultChargeLink] (Id, MeteringPointType, ChargeId, Star
       AND MarketParticipantId IN (SELECT Id FROM [Charges].[MarketParticipant] WHERE MarketParticipantId = '5790000432752')
       AND ChargeType = 3), /* ChargeRowId */
   '2014-12-31 23:00', /* StartDateTime */
-  NULL) /* EndDateTime */
+  '9999-12-31 23:59:59') /* EndDateTime */
   
 /* Charge 45013, consumption */
 INSERT INTO [Charges].[DefaultChargeLink] (Id, MeteringPointType, ChargeId, StartDateTime, EndDateTime) VALUES (
@@ -58,7 +58,7 @@ INSERT INTO [Charges].[DefaultChargeLink] (Id, MeteringPointType, ChargeId, Star
       AND MarketParticipantId IN (SELECT Id FROM [Charges].[MarketParticipant] WHERE MarketParticipantId = '5790000432752')
       AND ChargeType = 3), /* ChargeRowId */
   '2014-12-31 23:00', /* StartDateTime */
-  NULL) /* EndDateTime */
+  '9999-12-31 23:59:59') /* EndDateTime */
   
 /* Charge EA-001, consumption */
 INSERT INTO [Charges].[DefaultChargeLink] (Id, MeteringPointType, ChargeId, StartDateTime, EndDateTime) VALUES (
@@ -70,7 +70,7 @@ INSERT INTO [Charges].[DefaultChargeLink] (Id, MeteringPointType, ChargeId, Star
       AND MarketParticipantId IN (SELECT Id FROM [Charges].[MarketParticipant] WHERE MarketParticipantId = '5790000432752')
       AND ChargeType = 3), /* ChargeRowId */
   '2014-12-31 23:00', /* StartDateTime */
-  NULL) /* EndDateTime */
+  '9999-12-31 23:59:59') /* EndDateTime */
   
 /* Charge EA-001, electrical heating */
 INSERT INTO [Charges].[DefaultChargeLink] (Id, MeteringPointType, ChargeId, StartDateTime, EndDateTime) VALUES (
@@ -82,7 +82,7 @@ INSERT INTO [Charges].[DefaultChargeLink] (Id, MeteringPointType, ChargeId, Star
       AND MarketParticipantId IN (SELECT Id FROM [Charges].[MarketParticipant] WHERE MarketParticipantId = '5790000432752')
       AND ChargeType = 3), /* ChargeRowId */
   '2014-12-31 23:00', /* StartDateTime */
-  NULL) /* EndDateTime */
+  '9999-12-31 23:59:59') /* EndDateTime */
   
 /* Charge EA-003, electrical heating */
 INSERT INTO [Charges].[DefaultChargeLink] (Id, MeteringPointType, ChargeId, StartDateTime, EndDateTime) VALUES (
@@ -94,5 +94,5 @@ INSERT INTO [Charges].[DefaultChargeLink] (Id, MeteringPointType, ChargeId, Star
       AND MarketParticipantId IN (SELECT Id FROM [Charges].[MarketParticipant] WHERE MarketParticipantId = '5790000432752')
       AND ChargeType = 3), /* ChargeRowId */
   '2014-12-31 23:00', /* StartDateTime */
-  NULL) /* EndDateTime */
+  '9999-12-31 23:59:59') /* EndDateTime */
 GO

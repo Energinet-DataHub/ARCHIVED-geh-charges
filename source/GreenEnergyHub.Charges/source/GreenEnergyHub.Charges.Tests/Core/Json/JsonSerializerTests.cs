@@ -48,7 +48,7 @@ namespace GreenEnergyHub.Charges.Tests.Core.Json
 	""ChargeOperation"": {
 		    ""Id"": ""MD2021-05-05T13:56:29.301Z"",
 		    ""StartDateTime"": ""2021-06-30T22:00:00Z"",
-		    ""EndDateTime"": null,
+		    ""EndDateTime"": ""9999-12-31T23:59:59Z"",
 		    ""OperationType"": 2,
             ""ChargeId"": ""VoltTPostman978"",
             ""ChargeName"": ""Electric charge"",

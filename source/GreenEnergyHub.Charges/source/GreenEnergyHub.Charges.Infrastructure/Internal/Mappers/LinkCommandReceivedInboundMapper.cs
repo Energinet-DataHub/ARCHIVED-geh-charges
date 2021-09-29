@@ -73,7 +73,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
                 Factor = chargeLink.Factor,
                 ChargeType = (ChargeType)chargeLink.ChargeType,
                 StartDateTime = chargeLink.StartDateTime.ToInstant(),
-                EndDateTime = chargeLink.EndDateTime.ToInstant(),
+                EndDateTime = chargeLink.EndDateTime?.ToInstant(),
             };
         }
     }

@@ -12,22 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Diagnostics.CodeAnalysis;
-using GreenEnergyHub.Charges.Domain.ChargeLinkCommands;
-using GreenEnergyHub.Charges.Domain.MarketParticipants;
+using System.Threading.Tasks;
+using GreenEnergyHub.Charges.Domain.Charges;
 
-namespace GreenEnergyHub.Charges.Domain.ChargeLinkCommandAcceptedEvents
+namespace GreenEnergyHub.Charges.Domain.ChargeCommands
 {
-    public class ChargeLinkCommandAcceptedEvent : ChargeLinkCommand
+    public interface IChargeCommandFactory
     {
-        public ChargeLinkCommandAcceptedEvent(
-            [NotNull] string correlationId,
-            Document document,
-            ChargeLinkDto chargeLink)
-            : base(correlationId)
-        {
-            Document = document;
-            ChargeLink = chargeLink;
-        }
+        ChargeCommand CreateFromCharge(Charge charge);
     }
 }
