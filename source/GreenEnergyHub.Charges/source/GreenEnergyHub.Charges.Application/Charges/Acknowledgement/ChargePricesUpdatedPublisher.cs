@@ -19,12 +19,12 @@ using GreenEnergyHub.Charges.Domain.Charges.Acknowledgements;
 
 namespace GreenEnergyHub.Charges.Application.Charges.Acknowledgement
 {
-    public class ChargePricesUpdatedSender : IChargePricesUpdatedSender
+    public class ChargePricesUpdatedPublisher : IChargePricesUpdatedPublisher
     {
         private readonly IMessageDispatcher<ChargePricesUpdated> _messagePricesDispatcher;
         private readonly IChargePricesUpdatedFactory _chargePricesUpdatedFactory;
 
-        public ChargePricesUpdatedSender(
+        public ChargePricesUpdatedPublisher(
             IMessageDispatcher<ChargePricesUpdated> messagePricesDispatcher,
             IChargePricesUpdatedFactory chargePricesUpdatedFactory)
         {

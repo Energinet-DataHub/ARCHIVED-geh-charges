@@ -284,8 +284,8 @@ namespace GreenEnergyHub.Charges.FunctionHost
             serviceCollection.AddScoped<MessageExtractor<ChargeCommandAcceptedEvent>>();
             serviceCollection.AddScoped<IChargeCreatedFactory, ChargeCreatedFactory>();
             serviceCollection.AddScoped<IChargePricesUpdatedFactory, ChargePricesUpdatedFactory>();
-            serviceCollection.AddScoped<IChargeSender, ChargeSender>();
-            serviceCollection.AddScoped<IChargePricesUpdatedSender, ChargePricesUpdatedSender>();
+            serviceCollection.AddScoped<IChargePublisher, ChargePublisher>();
+            serviceCollection.AddScoped<IChargePricesUpdatedPublisher, ChargePricesUpdatedPublisher>();
             serviceCollection.AddScoped<IChargeCommandAcceptedEventHandler, ChargeCommandAcceptedEventHandler>();
 
             serviceCollection.SendProtobuf<Infrastructure.Integration.ChargeCreated.ChargeCreated>();

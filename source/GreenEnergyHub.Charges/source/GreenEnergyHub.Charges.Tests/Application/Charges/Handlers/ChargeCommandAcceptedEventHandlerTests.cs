@@ -31,8 +31,8 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
         [Theory]
         [InlineAutoDomainData]
         public async Task HandleAsync_WhenCalledWithPrices_ShouldCallBothSenders(
-            [NotNull] [Frozen] Mock<IChargeSender> chargeSender,
-            [NotNull] [Frozen] Mock<IChargePricesUpdatedSender> chargePricesUpdatedSender,
+            [NotNull] [Frozen] Mock<IChargePublisher> chargeSender,
+            [NotNull] [Frozen] Mock<IChargePricesUpdatedPublisher> chargePricesUpdatedSender,
             [NotNull] ChargeCommandAcceptedEvent chargeCommandAcceptedEvent,
             [NotNull] ChargeCommandAcceptedEventHandler sut)
         {
@@ -47,8 +47,8 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
         [Theory]
         [InlineAutoDomainData]
         public async Task HandleAsync_WhenCalledWithoutPrices_ShouldOnlyCallChargeCreatedSender(
-            [NotNull] [Frozen] Mock<IChargeSender> chargeSender,
-            [NotNull] [Frozen] Mock<IChargePricesUpdatedSender> chargePricesUpdatedSender,
+            [NotNull] [Frozen] Mock<IChargePublisher> chargeSender,
+            [NotNull] [Frozen] Mock<IChargePricesUpdatedPublisher> chargePricesUpdatedSender,
             [NotNull] ChargeCommandAcceptedEvent chargeCommandAcceptedEvent,
             [NotNull] ChargeCommandAcceptedEventHandler sut)
         {

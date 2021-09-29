@@ -17,7 +17,7 @@ using GreenEnergyHub.Charges.Domain.ChargeCommandAcceptedEvents;
 
 namespace GreenEnergyHub.Charges.Application.Charges.Acknowledgement
 {
-    public interface IChargePricesUpdatedSender
+    public interface IChargePricesUpdatedPublisher
     {
         Task SendChargePricesAsync(ChargeCommandAcceptedEvent chargeCommandAcceptedEvent);
     }
