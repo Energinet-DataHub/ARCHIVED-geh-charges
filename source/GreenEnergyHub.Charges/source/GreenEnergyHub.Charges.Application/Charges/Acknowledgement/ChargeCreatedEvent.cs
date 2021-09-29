@@ -18,9 +18,9 @@ using GreenEnergyHub.Messaging.MessageTypes.Common;
 
 namespace GreenEnergyHub.Charges.Domain.Charges.Acknowledgements
 {
-    public class ChargeCreated : IMessage
+    public class ChargeCreatedEvent : IMessage
     {
-        public ChargeCreated(
+        public ChargeCreatedEvent(
             string chargeId,
             ChargeType chargeType,
             string chargeOwner,

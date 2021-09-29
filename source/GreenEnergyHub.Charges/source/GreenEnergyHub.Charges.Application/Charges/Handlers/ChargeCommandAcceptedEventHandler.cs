@@ -38,13 +38,13 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
             if (chargeCommandAcceptedEvent == null) throw new ArgumentNullException(nameof(chargeCommandAcceptedEvent));
 
             await _chargePublisher
-                .SendChargeCreatedAsync(chargeCommandAcceptedEvent)
+                .PublishChargeCreatedAsync(chargeCommandAcceptedEvent)
                 .ConfigureAwait(false);
 
             if (chargeCommandAcceptedEvent.Command.ChargeOperation.Points.Any())
             {
                 await _chargePricesUpdatedPublisher
-                    .SendChargePricesAsync(chargeCommandAcceptedEvent)
+                    .PublishChargePricesAsync(chargeCommandAcceptedEvent)
                     .ConfigureAwait(false);
             }
         }

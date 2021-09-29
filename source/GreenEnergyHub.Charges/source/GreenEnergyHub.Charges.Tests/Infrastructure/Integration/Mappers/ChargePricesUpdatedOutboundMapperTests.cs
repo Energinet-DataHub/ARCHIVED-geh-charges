@@ -15,6 +15,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using GreenEnergyHub.Charges.Application.Charges.Acknowledgement;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Infrastructure.Integration.Mappers;
 using GreenEnergyHub.Charges.TestCore.Attributes;
@@ -51,9 +52,9 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Integration.Mappers
             Assert.Throws<InvalidOperationException>(() => sut.Convert(null!));
         }
 
-        private static GreenEnergyHub.Charges.Domain.Charges.Acknowledgements.ChargePricesUpdated GetChargePricesUpdated()
+        private static ChargePricesUpdatedEvent GetChargePricesUpdated()
         {
-            return new GreenEnergyHub.Charges.Domain.Charges.Acknowledgements.ChargePricesUpdated(
+            return new ChargePricesUpdatedEvent(
                 "chargeId",
                 ChargeType.Fee,
                 "owner",

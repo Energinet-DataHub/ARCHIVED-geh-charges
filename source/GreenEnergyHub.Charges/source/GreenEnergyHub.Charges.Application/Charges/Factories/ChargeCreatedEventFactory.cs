@@ -21,18 +21,18 @@ using GreenEnergyHub.Charges.Domain.Charges.Acknowledgements;
 
 namespace GreenEnergyHub.Charges.Application.Charges.Factories
 {
-    public class ChargeCreatedFactory : IChargeCreatedFactory
+    public class ChargeCreatedEventFactory : IChargeCreatedEventFactory
     {
         private readonly CurrencyConfigurationIso4217 _currencyConfigurationIso4217;
 
-        public ChargeCreatedFactory(CurrencyConfigurationIso4217 currencyConfigurationIso4217)
+        public ChargeCreatedEventFactory(CurrencyConfigurationIso4217 currencyConfigurationIso4217)
         {
             _currencyConfigurationIso4217 = currencyConfigurationIso4217;
         }
 
-        public ChargeCreated Create([NotNull] ChargeCommandAcceptedEvent chargeCommandAcceptedEvent)
+        public ChargeCreatedEvent Create([NotNull] ChargeCommandAcceptedEvent chargeCommandAcceptedEvent)
         {
-            return new ChargeCreated(
+            return new ChargeCreatedEvent(
                 chargeCommandAcceptedEvent.Command.ChargeOperation.ChargeId,
                 chargeCommandAcceptedEvent.Command.ChargeOperation.Type,
                 chargeCommandAcceptedEvent.Command.ChargeOperation.ChargeOwner,

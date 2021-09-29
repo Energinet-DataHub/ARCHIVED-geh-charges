@@ -14,6 +14,7 @@
 
 using System.Diagnostics.CodeAnalysis;
 using Google.Protobuf;
+using GreenEnergyHub.Charges.Application.Charges.Acknowledgement;
 using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.Core.Enumeration;
 using GreenEnergyHub.Charges.Domain.Charges.Acknowledgements;
@@ -22,20 +23,20 @@ using GreenEnergyHub.Messaging.Protobuf;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Integration.Mappers
 {
-    public class ChargePricesUpdatedOutboundMapper : ProtobufOutboundMapper<Domain.Charges.Acknowledgements.ChargePricesUpdated>
+    public class ChargePricesUpdatedOutboundMapper : ProtobufOutboundMapper<ChargePricesUpdatedEvent>
     {
-        protected override IMessage Convert([NotNull]GreenEnergyHub.Charges.Domain.Charges.Acknowledgements.ChargePricesUpdated chargePricesUpdated)
+        protected override IMessage Convert([NotNull]ChargePricesUpdatedEvent chargePricesUpdatedEvent)
         {
             var chargePricesUpdatedContract = new ChargeConfirmation.ChargePricesUpdated
             {
-                ChargeId = chargePricesUpdated.ChargeId,
-                ChargeOwner = chargePricesUpdated.ChargeOwner,
-                ChargeType = chargePricesUpdated.ChargeType.Cast<ChargeType>(),
-                UpdatePeriodStartDate = chargePricesUpdated.UpdatePeriodStartDate.ToTimestamp(),
-                UpdatePeriodEndDate = chargePricesUpdated.UpdatePeriodEndDate.ToTimestamp(),
+                ChargeId = chargePricesUpdatedEvent.ChargeId,
+                ChargeOwner = chargePricesUpdatedEvent.ChargeOwner,
+                ChargeType = chargePricesUpdatedEvent.ChargeType.Cast<ChargeType>(),
+                UpdatePeriodStartDate = chargePricesUpdatedEvent.UpdatePeriodStartDate.ToTimestamp(),
+                UpdatePeriodEndDate = chargePricesUpdatedEvent.UpdatePeriodEndDate.ToTimestamp(),
             };
 
-            foreach (var point in chargePricesUpdated.Points)
+            foreach (var point in chargePricesUpdatedEvent.Points)
             {
                 var mappedPoint = new ChargePrice { Price = point.Price, Time = point.Time.ToTimestamp(), };
 

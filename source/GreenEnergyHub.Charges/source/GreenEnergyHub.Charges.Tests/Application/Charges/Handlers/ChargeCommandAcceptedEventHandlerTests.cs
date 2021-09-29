@@ -40,8 +40,8 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
             await sut.HandleAsync(chargeCommandAcceptedEvent).ConfigureAwait(false);
 
             // Assert
-            chargeSender.Verify(x => x.SendChargeCreatedAsync(It.IsAny<ChargeCommandAcceptedEvent>()), Times.Once);
-            chargePricesUpdatedSender.Verify(x => x.SendChargePricesAsync(It.IsAny<ChargeCommandAcceptedEvent>()), Times.Once);
+            chargeSender.Verify(x => x.PublishChargeCreatedAsync(It.IsAny<ChargeCommandAcceptedEvent>()), Times.Once);
+            chargePricesUpdatedSender.Verify(x => x.PublishChargePricesAsync(It.IsAny<ChargeCommandAcceptedEvent>()), Times.Once);
         }
 
         [Theory]
@@ -59,8 +59,8 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
             await sut.HandleAsync(chargeCommandAcceptedEvent).ConfigureAwait(false);
 
             // Assert
-            chargeSender.Verify(x => x.SendChargeCreatedAsync(It.IsAny<ChargeCommandAcceptedEvent>()), Times.Once);
-            chargePricesUpdatedSender.Verify(x => x.SendChargePricesAsync(It.IsAny<ChargeCommandAcceptedEvent>()), Times.Never);
+            chargeSender.Verify(x => x.PublishChargeCreatedAsync(It.IsAny<ChargeCommandAcceptedEvent>()), Times.Once);
+            chargePricesUpdatedSender.Verify(x => x.PublishChargePricesAsync(It.IsAny<ChargeCommandAcceptedEvent>()), Times.Never);
         }
     }
 }

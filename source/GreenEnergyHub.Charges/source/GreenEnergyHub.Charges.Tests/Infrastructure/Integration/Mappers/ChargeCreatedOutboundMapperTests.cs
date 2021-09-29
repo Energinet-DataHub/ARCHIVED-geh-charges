@@ -33,11 +33,11 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Integration.Mappers
         [Theory]
         [InlineAutoMoqData]
         public void Convert_WhenCalled_MapsToCorrectValues(
-            [NotNull] ChargeCreated chargeCreated,
+            [NotNull] ChargeCreatedEvent chargeCreatedEvent,
             [NotNull] ChargeCreatedOutboundMapper sut)
         {
-            var result = (GreenEnergyHub.Charges.Infrastructure.Integration.ChargeCreated.ChargeCreated)sut.Convert(chargeCreated);
-            ProtobufAssert.OutgoingContractIsSubset(chargeCreated, result);
+            var result = (GreenEnergyHub.Charges.Infrastructure.Integration.ChargeCreated.ChargeCreated)sut.Convert(chargeCreatedEvent);
+            ProtobufAssert.OutgoingContractIsSubset(chargeCreatedEvent, result);
         }
 
         [Theory]

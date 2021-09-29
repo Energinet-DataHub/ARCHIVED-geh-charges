@@ -21,22 +21,22 @@ using GreenEnergyHub.Messaging.Protobuf;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Integration.Mappers
 {
-    public class ChargeCreatedOutboundMapper : ProtobufOutboundMapper<Domain.Charges.Acknowledgements.ChargeCreated>
+    public class ChargeCreatedOutboundMapper : ProtobufOutboundMapper<Domain.Charges.Acknowledgements.ChargeCreatedEvent>
     {
-        protected override IMessage Convert([NotNull] Domain.Charges.Acknowledgements.ChargeCreated chargeCreated)
+        protected override IMessage Convert([NotNull] Domain.Charges.Acknowledgements.ChargeCreatedEvent chargeCreatedEvent)
         {
             return new ChargeCreated.ChargeCreated
             {
-                ChargeId = chargeCreated.ChargeId,
-                ChargeType = chargeCreated.ChargeType.Cast<ChargeType>(),
-                ChargeOwner = chargeCreated.ChargeOwner,
-                Currency = chargeCreated.Currency,
-                Resolution = chargeCreated.Resolution.Cast<Resolution>(),
-                TaxIndicator = chargeCreated.TaxIndicator,
+                ChargeId = chargeCreatedEvent.ChargeId,
+                ChargeType = chargeCreatedEvent.ChargeType.Cast<ChargeType>(),
+                ChargeOwner = chargeCreatedEvent.ChargeOwner,
+                Currency = chargeCreatedEvent.Currency,
+                Resolution = chargeCreatedEvent.Resolution.Cast<Resolution>(),
+                TaxIndicator = chargeCreatedEvent.TaxIndicator,
                 ChargePeriod = new ChargePeriod
                 {
-                    StartDateTime = chargeCreated.ChargePeriod.StartDateTime.ToTimestamp(),
-                    EndDateTime = chargeCreated.ChargePeriod.EndDateTime.ToTimestamp(),
+                    StartDateTime = chargeCreatedEvent.ChargePeriod.StartDateTime.ToTimestamp(),
+                    EndDateTime = chargeCreatedEvent.ChargePeriod.EndDateTime.ToTimestamp(),
                 },
             };
         }

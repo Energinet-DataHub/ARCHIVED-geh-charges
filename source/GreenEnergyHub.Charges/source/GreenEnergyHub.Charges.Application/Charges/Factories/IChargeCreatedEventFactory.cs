@@ -18,18 +18,8 @@ using GreenEnergyHub.Charges.Domain.Charges.Acknowledgements;
 
 namespace GreenEnergyHub.Charges.Application.Charges.Factories
 {
-    public class ChargePricesUpdatedFactory : IChargePricesUpdatedFactory
+    public interface IChargeCreatedEventFactory
     {
-        public ChargePricesUpdated Create([NotNull] ChargeCommandAcceptedEvent chargeCommandAcceptedEvent)
-        {
-            return new ChargePricesUpdated(
-                chargeCommandAcceptedEvent.Command.ChargeOperation.ChargeId,
-                chargeCommandAcceptedEvent.Command.ChargeOperation.Type,
-                chargeCommandAcceptedEvent.Command.ChargeOperation.ChargeOwner,
-                chargeCommandAcceptedEvent.Command.ChargeOperation.StartDateTime,
-                chargeCommandAcceptedEvent.Command.ChargeOperation.EndDateTime.GetValueOrDefault(),
-                chargeCommandAcceptedEvent.Command.ChargeOperation.Points,
-                chargeCommandAcceptedEvent.CorrelationId);
-        }
+        ChargeCreatedEvent Create([NotNull] ChargeCommandAcceptedEvent chargeCommandAcceptedEvent);
     }
 }

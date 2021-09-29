@@ -21,20 +21,20 @@ namespace GreenEnergyHub.Charges.Application.Charges.Acknowledgement
 {
     public class ChargePricesUpdatedPublisher : IChargePricesUpdatedPublisher
     {
-        private readonly IMessageDispatcher<ChargePricesUpdated> _messagePricesDispatcher;
-        private readonly IChargePricesUpdatedFactory _chargePricesUpdatedFactory;
+        private readonly IMessageDispatcher<ChargePricesUpdatedEvent> _messagePricesDispatcher;
+        private readonly IChargePricesUpdatedEventFactory _chargePricesUpdatedEventFactory;
 
         public ChargePricesUpdatedPublisher(
-            IMessageDispatcher<ChargePricesUpdated> messagePricesDispatcher,
-            IChargePricesUpdatedFactory chargePricesUpdatedFactory)
+            IMessageDispatcher<ChargePricesUpdatedEvent> messagePricesDispatcher,
+            IChargePricesUpdatedEventFactory chargePricesUpdatedEventFactory)
         {
             _messagePricesDispatcher = messagePricesDispatcher;
-            _chargePricesUpdatedFactory = chargePricesUpdatedFactory;
+            _chargePricesUpdatedEventFactory = chargePricesUpdatedEventFactory;
         }
 
-        public async Task SendChargePricesAsync(ChargeCommandAcceptedEvent chargeCommandAcceptedEvent)
+        public async Task PublishChargePricesAsync(ChargeCommandAcceptedEvent chargeCommandAcceptedEvent)
         {
-            var prices = _chargePricesUpdatedFactory.Create(chargeCommandAcceptedEvent);
+            var prices = _chargePricesUpdatedEventFactory.Create(chargeCommandAcceptedEvent);
             await _messagePricesDispatcher.DispatchAsync(prices).ConfigureAwait(false);
         }
     }

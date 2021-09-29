@@ -282,18 +282,18 @@ namespace GreenEnergyHub.Charges.FunctionHost
                 configuration => configuration.WithParser(() => ChargeCommandAcceptedContract.Parser));
 
             serviceCollection.AddScoped<MessageExtractor<ChargeCommandAcceptedEvent>>();
-            serviceCollection.AddScoped<IChargeCreatedFactory, ChargeCreatedFactory>();
-            serviceCollection.AddScoped<IChargePricesUpdatedFactory, ChargePricesUpdatedFactory>();
+            serviceCollection.AddScoped<IChargeCreatedEventFactory, ChargeCreatedEventFactory>();
+            serviceCollection.AddScoped<IChargePricesUpdatedEventFactory, ChargePricesUpdatedEventFactory>();
             serviceCollection.AddScoped<IChargePublisher, ChargePublisher>();
             serviceCollection.AddScoped<IChargePricesUpdatedPublisher, ChargePricesUpdatedPublisher>();
             serviceCollection.AddScoped<IChargeCommandAcceptedEventHandler, ChargeCommandAcceptedEventHandler>();
 
             serviceCollection.SendProtobuf<Infrastructure.Integration.ChargeCreated.ChargeCreated>();
-            serviceCollection.AddMessagingProtobuf().AddMessageDispatcher<GreenEnergyHub.Charges.Domain.Charges.Acknowledgements.ChargeCreated>(
+            serviceCollection.AddMessagingProtobuf().AddMessageDispatcher<GreenEnergyHub.Charges.Domain.Charges.Acknowledgements.ChargeCreatedEvent>(
                 GetEnv("INTEGRATIONEVENT_SENDER_CONNECTION_STRING"),
                 GetEnv("CHARGE_CREATED_TOPIC_NAME"));
 
-            serviceCollection.AddMessagingProtobuf().AddMessageDispatcher<GreenEnergyHub.Charges.Domain.Charges.Acknowledgements.ChargePricesUpdated>(
+            serviceCollection.AddMessagingProtobuf().AddMessageDispatcher<ChargePricesUpdatedEvent>(
                 GetEnv("INTEGRATIONEVENT_SENDER_CONNECTION_STRING"),
                 GetEnv("CHARGE_PRICES_UPDATED_TOPIC_NAME"));
         }

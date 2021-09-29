@@ -13,13 +13,14 @@
 // limitations under the License.
 
 using System.Diagnostics.CodeAnalysis;
+using GreenEnergyHub.Charges.Application.Charges.Acknowledgement;
 using GreenEnergyHub.Charges.Domain.ChargeCommandAcceptedEvents;
 using GreenEnergyHub.Charges.Domain.Charges.Acknowledgements;
 
 namespace GreenEnergyHub.Charges.Application.Charges.Factories
 {
-    public interface IChargeCreatedFactory
+    public interface IChargePricesUpdatedEventFactory
     {
-        ChargeCreated Create([NotNull] ChargeCommandAcceptedEvent chargeCommandAcceptedEvent);
+        ChargePricesUpdatedEvent Create([NotNull] ChargeCommandAcceptedEvent chargeCommandAcceptedEvent);
     }
 }

@@ -13,15 +13,16 @@
 // limitations under the License.
 
 using System.Collections.Generic;
+using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Messages;
 using GreenEnergyHub.Messaging.MessageTypes.Common;
 using NodaTime;
 
-namespace GreenEnergyHub.Charges.Domain.Charges.Acknowledgements
+namespace GreenEnergyHub.Charges.Application.Charges.Acknowledgement
 {
-    public class ChargePricesUpdated : IMessage
+    public class ChargePricesUpdatedEvent : IMessage
     {
-        public ChargePricesUpdated(
+        public ChargePricesUpdatedEvent(
             string chargeId,
             ChargeType chargeType,
             string chargeOwner,
