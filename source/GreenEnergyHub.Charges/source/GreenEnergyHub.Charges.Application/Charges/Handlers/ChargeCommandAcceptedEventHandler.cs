@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application.Charges.Acknowledgement;
 using GreenEnergyHub.Charges.Domain.ChargeCommandAcceptedEvents;
@@ -40,7 +41,7 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
                 .SendChargeCreatedAsync(chargeCommandAcceptedEvent)
                 .ConfigureAwait(false);
 
-            if (chargeCommandAcceptedEvent.HasPrices())
+            if (chargeCommandAcceptedEvent.Command.ChargeOperation.Points.Any())
             {
                 await _chargePricesUpdatedPublisher
                     .SendChargePricesAsync(chargeCommandAcceptedEvent)

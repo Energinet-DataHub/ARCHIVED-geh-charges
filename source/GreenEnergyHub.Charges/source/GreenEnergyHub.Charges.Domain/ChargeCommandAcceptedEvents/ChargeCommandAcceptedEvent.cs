@@ -32,7 +32,5 @@ namespace GreenEnergyHub.Charges.Domain.ChargeCommandAcceptedEvents
         }
 
         public ChargeCommand Command { get; }
-
-        public bool HasPrices() => Command.ChargeOperation.Points.Any();
     }
 }
