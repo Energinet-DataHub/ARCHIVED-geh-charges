@@ -14,6 +14,7 @@
 
 using System;
 using System.Diagnostics.CodeAnalysis;
+using GreenEnergyHub.Charges.Domain.Charges.Acknowledgements;
 using GreenEnergyHub.Charges.Infrastructure.Integration.Mappers;
 using GreenEnergyHub.Charges.TestCore.Attributes;
 using GreenEnergyHub.Charges.TestCore.Protobuf;
@@ -32,11 +33,11 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Integration.Mappers
         [Theory]
         [InlineAutoMoqData]
         public void Convert_WhenCalled_MapsToCorrectValues(
+            [NotNull] ChargeCreated chargeCreated,
             [NotNull] ChargeCreatedOutboundMapper sut)
         {
-            var createdEvent = GetChargeCreated();
-            var result = (GreenEnergyHub.Charges.Infrastructure.Integration.ChargeCreated.ChargeCreated)sut.Convert(createdEvent);
-            ProtobufAssert.OutgoingContractIsSubset(createdEvent, result);
+            var result = (GreenEnergyHub.Charges.Infrastructure.Integration.ChargeCreated.ChargeCreated)sut.Convert(chargeCreated);
+            ProtobufAssert.OutgoingContractIsSubset(chargeCreated, result);
         }
 
         [Theory]
@@ -44,21 +45,6 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Integration.Mappers
         public void Convert_WhenCalledWithNull_ShouldThrow([NotNull]ChargeCreatedOutboundMapper sut)
         {
             Assert.Throws<InvalidOperationException>(() => sut.Convert(null!));
-        }
-
-        private static GreenEnergyHub.Charges.Domain.Charges.Acknowledgements.ChargeCreated GetChargeCreated()
-        {
-            return new GreenEnergyHub.Charges.Domain.Charges.Acknowledgements.ChargeCreated(
-                "chargeId",
-                ChargeType.Tariff,
-                "chargeOwner",
-                "dkk",
-                Resolution.PT15M,
-                true,
-                new Period(
-                    Instant.FromUtc(2021, 8, 31, 22, 0, 0),
-                    Instant.FromUtc(2021, 9, 30, 22, 0, 0)),
-                "sdf");
         }
     }
 }
