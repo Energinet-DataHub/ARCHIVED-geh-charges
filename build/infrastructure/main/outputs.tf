@@ -11,8 +11,8 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-output "sql_connection_string_keyvaultsecretname" {
-  description = "Name of the secret in the keyvault containing the username for the charges sql database"
+output "sql_connection_string" {
+  description = "SQL Database connection string"
   value = local.CHARGE_DB_CONNECTION_STRING
   sensitive = true
 }

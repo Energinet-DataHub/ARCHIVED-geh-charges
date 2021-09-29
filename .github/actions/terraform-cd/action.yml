@@ -45,6 +45,10 @@ inputs:
     required: true
   TERRAFORM_BACKEND_FILE_PATH:
     required: true
+outputs:
+  sql-connection-string:
+    description: "The SQL server connection string"
+    value: ${{ steps.terraform-apply.outputs.sql-connection-string }}
 
 runs:
   using: composite
@@ -134,3 +138,4 @@ runs:
       working-directory: ./build/infrastructure/main
       run: | 
         terraform apply -no-color -auto-approve
+        echo "::set-output name=sql-connection-string::$(terraform output sql_connection_string)"

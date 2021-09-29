@@ -14,7 +14,7 @@
 
 locals {
     sqlServerAdminName                            = "gehdbadmin"
-    CHARGE_DB_CONNECTION_STRING                   = "Server=tcp:${data.azurerm_key_vault_secret.SHARED_RESOURCES_DB_URL.value},1433;Initial Catalog=${module.sqldb_charges.name};Persist Security Info=False;User ID=${data.azurerm_key_vault_secret.SHARED_RESOURCES_DB_ADMIN_NAME.value};Password=${data.azurerm_key_vault_secret.SHARED_RESOURCES_DB_ADMIN_PASSWORD.value};MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;"
+    CHARGE_DB_CONNECTION_STRING                   = "Server=tcp:${data.azurerm_key_vault_secret.SHARED_RESOURCES_DB_URL.value},1433;Database=${module.sqldb_charges.name};Initial Catalog=${module.sqldb_charges.name};Persist Security Info=False;User ID=${data.azurerm_key_vault_secret.SHARED_RESOURCES_DB_ADMIN_NAME.value};Password=${data.azurerm_key_vault_secret.SHARED_RESOURCES_DB_ADMIN_PASSWORD.value};MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;"
     LOCAL_TIMEZONENAME                            = "Europe/Copenhagen"
     # All below this line must match the names used in the repo geh-shared-resources
     CHARGE_LINK_CREATED_TOPIC_NAME                = "charge-link-created"
