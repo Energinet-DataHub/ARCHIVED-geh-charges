@@ -36,15 +36,15 @@ limitations under the License.
         <PackageReference Include="AutoFixture" Version="4.17.0" />
         <PackageReference Include="AutoFixture.AutoMoq" Version="4.17.0" />
         <PackageReference Include="Azure.Messaging.ServiceBus" Version="7.3.0" />
-        <PackageReference Include="EntityFrameworkCore.SqlServer.NodaTime" Version="0.2.1" />
+        <PackageReference Include="EntityFrameworkCore.SqlServer.NodaTime" Version="5.0.1" />
         <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.2.2" />
-        <PackageReference Include="Microsoft.Azure.Management.ServiceBus" Version="2.1.0" />
+        <PackageReference Include="Microsoft.Azure.Management.ServiceBus" Version="3.0.0" />
         <PackageReference Include="Microsoft.Azure.WebJobs.Extensions" Version="4.0.1" />
         <PackageReference Include="Microsoft.Azure.WebJobs.Host.TestCommon" Version="3.0.30" />
-        <PackageReference Include="Microsoft.Extensions.Configuration" Version="3.1.19" />
-        <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="3.1.19" />
-        <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="3.1.19" />
-        <PackageReference Include="Microsoft.Extensions.Hosting" Version="3.1.19" />
+        <PackageReference Include="Microsoft.Extensions.Configuration" Version="5.0.0" />
+        <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="5.0.0" />
+        <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="5.0.0" />
+        <PackageReference Include="Microsoft.Extensions.Hosting" Version="5.0.0" />
         <PackageReference Include="Squadron.AzureCloudServiceBus" Version="0.13.0" />
         <PackageReference Include="Squadron.Core" Version="0.13.0" />
         <PackageReference Include="System.ComponentModel.TypeConverter" Version="4.3.0" />
