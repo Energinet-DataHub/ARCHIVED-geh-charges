@@ -38,7 +38,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Functions
             }
 
             [Fact]
-            public async Task When_RequestingHealthStatus_Then_ReturnStatusOKAndHealthy()
+            public async Task When_RequestingHealthStatus_Then_ReturnStatusOK()
             {
                 // Arrange
                 var requestUri = "api/HealthStatus";
@@ -49,9 +49,6 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Functions
                 // Assert
                 using var assertionScope = new AssertionScope();
                 actualResponse.StatusCode.Should().Be(HttpStatusCode.OK);
-
-                var context = await actualResponse.Content.ReadAsStringAsync();
-                context.Should().Contain("\"FunctionAppIsAlive\": true");
             }
 
             [Fact]
