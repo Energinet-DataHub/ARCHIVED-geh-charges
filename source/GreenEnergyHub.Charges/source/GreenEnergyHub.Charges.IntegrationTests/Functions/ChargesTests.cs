@@ -12,12 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Net;
+using System.Net.Http;
+using System.Text;
 using System.Threading.Tasks;
 using FluentAssertions;
 using FluentAssertions.Execution;
 using GreenEnergyHub.Charges.IntegrationTests.Functions.Fixtures;
+using GreenEnergyHub.Charges.IntegrationTests.TestHelpers;
 using GreenEnergyHub.FunctionApp.TestCommon;
+using GreenEnergyHub.FunctionApp.TestCommon.ServiceBus.ListenerMock;
+using NodaTime;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -30,11 +36,22 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Functions
     {
         // UNDONE: For now we just create one collection to span both apps; we have also implemented collection fixtures.
         [Collection("FunctionApp")]
-        public class GetHealthAsync : FunctionAppTestBase<ChargesFunctionAppFixture>, IClassFixture<ChargesFunctionAppFixture>
+        public class GetHealthAsync : FunctionAppTestBase<ChargesFunctionAppFixture>, IClassFixture<ChargesFunctionAppFixture>, IAsyncLifetime
         {
             public GetHealthAsync(ChargesFunctionAppFixture fixture, ITestOutputHelper testOutputHelper)
                 : base(fixture, testOutputHelper)
             {
+            }
+
+            public Task InitializeAsync()
+            {
+                return Task.CompletedTask;
+            }
+
+            public Task DisposeAsync()
+            {
+                Fixture.ServiceBusListenerMock.ResetMessageHandlersAndReceivedMessages();
+                return Task.CompletedTask;
             }
 
             [Fact]
@@ -47,7 +64,6 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Functions
                 var actualResponse = await Fixture.HostManager.HttpClient.GetAsync(requestUri);
 
                 // Assert
-                using var assertionScope = new AssertionScope();
                 actualResponse.StatusCode.Should().Be(HttpStatusCode.OK);
             }
 
@@ -62,6 +78,36 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Functions
 
                 // Assert
                 actualResponse.StatusCode.Should().Be(HttpStatusCode.NotFound);
+            }
+
+            [Fact]
+            public async Task When_CallingChargeIngestion_Then_RequestIsProcessedAndMessageIsSendToPostOffice()
+            {
+                // Arrange
+                var testFilePath = "TestFiles/ValidCreateTariffCommand.json";
+                IClock clock = SystemClock.Instance;
+                var chargeJson = EmbeddedResourceHelper.GetInputJson(testFilePath, clock);
+
+                var request = new HttpRequestMessage(HttpMethod.Post, "api/ChargeIngestion");
+                var expectedBody = chargeJson;
+                request.Content = new StringContent(expectedBody, Encoding.UTF8, "application/json");
+
+                using var isMessageReceivedEvent = await Fixture.ServiceBusListenerMock
+                    .WhenAny()
+                    .VerifyOnceAsync();
+
+                // Act
+                var actualResponse = await Fixture.HostManager.HttpClient.SendAsync(request);
+
+                // Assert
+                using var assertionScope = new AssertionScope();
+
+                // => Http response
+                actualResponse.StatusCode.Should().Be(HttpStatusCode.OK);
+
+                // => Service Bus
+                var isMessageReceived = isMessageReceivedEvent.Wait(TimeSpan.FromSeconds(60));
+                isMessageReceived.Should().BeTrue();
             }
         }
     }

@@ -15,24 +15,35 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using GreenEnergyHub.FunctionApp.TestCommon;
 using GreenEnergyHub.FunctionApp.TestCommon.Azurite;
 using GreenEnergyHub.FunctionApp.TestCommon.FunctionAppHost;
+using GreenEnergyHub.FunctionApp.TestCommon.ServiceBus.ListenerMock;
 using Microsoft.Extensions.Configuration;
+using Squadron;
+using Xunit.Abstractions;
 
 namespace GreenEnergyHub.Charges.IntegrationTests.Functions.Fixtures
 {
     public class ChargesFunctionAppFixture : FunctionAppFixture
     {
-        public ChargesFunctionAppFixture()
+        public ChargesFunctionAppFixture(IMessageSink messageSink)
         {
             AzuriteManager = new AzuriteManager();
+
+            ServiceBusResource = new AzureCloudServiceBusResource<ChargesFunctionAppServiceBusOptions>(messageSink);
 
             //// TODO: Create resource managers here, but do not start them until OnInitializeFunctionAppDependenciesAsync.
         }
 
+        [NotNull]
+        public ServiceBusListenerMock? ServiceBusListenerMock { get; private set; }
+
         private AzuriteManager AzuriteManager { get; }
+
+        private AzureCloudServiceBusResource<ChargesFunctionAppServiceBusOptions> ServiceBusResource { get; }
 
         /// <inheritdoc/>
         protected override void OnConfigureHostSettings(FunctionAppHostSettings hostSettings)
@@ -43,17 +54,24 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Functions.Fixtures
         /// <inheritdoc/>
         protected override void OnConfigureEnvironment()
         {
-            Environment.SetEnvironmentVariable("AzureWebJobsStorage", "UseDevelopmentStorage =true");
+            Environment.SetEnvironmentVariable("AzureWebJobsStorage", "UseDevelopmentStorage=true");
         }
 
         /// <inheritdoc/>
-        protected override Task OnInitializeFunctionAppDependenciesAsync(IConfiguration localSettingsSnapshot)
+        protected override async Task OnInitializeFunctionAppDependenciesAsync(IConfiguration localSettingsSnapshot)
         {
             AzuriteManager.StartAzurite();
 
-            //// TODO: Initialize/start resource managers and create dependent resources (e.g. database, service bus)
+            await ServiceBusResource.InitializeAsync();
 
-            return Task.CompletedTask;
+            ServiceBusListenerMock = new ServiceBusListenerMock(ServiceBusResource.ConnectionString, TestLogger);
+
+            var topicClient = ServiceBusResource.GetTopicClient("topic");
+            Environment.SetEnvironmentVariable("POST_OFFICE_TOPIC_NAME", topicClient.TopicName);
+            await ServiceBusListenerMock.AddTopicSubscriptionListenerAsync(topicClient.TopicName, "defaultSubscription");
+            await topicClient.CloseAsync();
+
+            //// TODO: Initialize/start resource managers and create dependent resources (e.g. database, service bus)
         }
 
         /// <inheritdoc/>
@@ -68,13 +86,15 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Functions.Fixtures
         }
 
         /// <inheritdoc/>
-        protected override Task OnDisposeFunctionAppDependenciesAsync()
+        protected override async Task OnDisposeFunctionAppDependenciesAsync()
         {
             AzuriteManager.Dispose();
 
-            //// TODO: Dispose/stop resource managers and delete created dependent resources (e.g. database, service bus)
+            await ServiceBusListenerMock.DisposeAsync();
 
-            return Task.CompletedTask;
+            await ServiceBusResource.DisposeAsync();
+
+            //// TODO: Dispose/stop resource managers and delete created dependent resources (e.g. database, service bus)
         }
     }
 }
