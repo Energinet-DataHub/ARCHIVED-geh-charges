@@ -21,24 +21,28 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
 {
     public class ChargeCommandAcceptedEventHandler : IChargeCommandAcceptedEventHandler
     {
-        private readonly IChargeCommandAcceptedEventSender _chargeCommandAcceptedEventSender;
+        private readonly IChargeSender _chargeSender;
+        private readonly IChargePricesUpdatedSender _chargePricesUpdatedSender;
 
-        public ChargeCommandAcceptedEventHandler(IChargeCommandAcceptedEventSender chargeCommandAcceptedEventSender)
+        public ChargeCommandAcceptedEventHandler(
+            IChargeSender chargeSender,
+            IChargePricesUpdatedSender chargePricesUpdatedSender)
         {
-            _chargeCommandAcceptedEventSender = chargeCommandAcceptedEventSender;
+            _chargeSender = chargeSender;
+            _chargePricesUpdatedSender = chargePricesUpdatedSender;
         }
 
         public async Task HandleAsync(ChargeCommandAcceptedEvent chargeCommandAcceptedEvent)
         {
             if (chargeCommandAcceptedEvent == null) throw new ArgumentNullException(nameof(chargeCommandAcceptedEvent));
 
-            await _chargeCommandAcceptedEventSender
+            await _chargeSender
                 .SendChargeCreatedAsync(chargeCommandAcceptedEvent)
                 .ConfigureAwait(false);
 
             if (chargeCommandAcceptedEvent.HasPrices())
             {
-                await _chargeCommandAcceptedEventSender
+                await _chargePricesUpdatedSender
                     .SendChargePricesAsync(chargeCommandAcceptedEvent)
                     .ConfigureAwait(false);
             }

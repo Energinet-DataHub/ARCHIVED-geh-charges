@@ -31,7 +31,8 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
         [Theory]
         [InlineAutoDomainData]
         public async Task HandleAsync_WhenCalledWithPrices_ShouldCallBothSenders(
-            [NotNull] [Frozen] Mock<IChargeCommandAcceptedEventSender> sender,
+            [NotNull] [Frozen] Mock<IChargeSender> chargeSender,
+            [NotNull] [Frozen] Mock<IChargePricesUpdatedSender> chargePricesUpdatedSender,
             [NotNull] ChargeCommandAcceptedEvent chargeCommandAcceptedEvent,
             [NotNull] ChargeCommandAcceptedEventHandler sut)
         {
@@ -39,14 +40,15 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
             await sut.HandleAsync(chargeCommandAcceptedEvent).ConfigureAwait(false);
 
             // Assert
-            sender.Verify(x => x.SendChargeCreatedAsync(It.IsAny<ChargeCommandAcceptedEvent>()), Times.Once);
-            sender.Verify(x => x.SendChargePricesAsync(It.IsAny<ChargeCommandAcceptedEvent>()), Times.Once);
+            chargeSender.Verify(x => x.SendChargeCreatedAsync(It.IsAny<ChargeCommandAcceptedEvent>()), Times.Once);
+            chargePricesUpdatedSender.Verify(x => x.SendChargePricesAsync(It.IsAny<ChargeCommandAcceptedEvent>()), Times.Once);
         }
 
         [Theory]
         [InlineAutoDomainData]
         public async Task HandleAsync_WhenCalledWithoutPrices_ShouldOnlyCallChargeCreatedSender(
-            [NotNull] [Frozen] Mock<IChargeCommandAcceptedEventSender> sender,
+            [NotNull] [Frozen] Mock<IChargeSender> chargeSender,
+            [NotNull] [Frozen] Mock<IChargePricesUpdatedSender> chargePricesUpdatedSender,
             [NotNull] ChargeCommandAcceptedEvent chargeCommandAcceptedEvent,
             [NotNull] ChargeCommandAcceptedEventHandler sut)
         {
@@ -57,8 +59,8 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
             await sut.HandleAsync(chargeCommandAcceptedEvent).ConfigureAwait(false);
 
             // Assert
-            sender.Verify(x => x.SendChargeCreatedAsync(It.IsAny<ChargeCommandAcceptedEvent>()), Times.Once);
-            sender.Verify(x => x.SendChargePricesAsync(It.IsAny<ChargeCommandAcceptedEvent>()), Times.Never);
+            chargeSender.Verify(x => x.SendChargeCreatedAsync(It.IsAny<ChargeCommandAcceptedEvent>()), Times.Once);
+            chargePricesUpdatedSender.Verify(x => x.SendChargePricesAsync(It.IsAny<ChargeCommandAcceptedEvent>()), Times.Never);
         }
     }
 }
