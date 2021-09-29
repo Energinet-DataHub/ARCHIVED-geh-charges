@@ -13,17 +13,13 @@
 // limitations under the License.
 
 using System;
-using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using GreenEnergyHub.Charges.Application.Charges.Acknowledgement;
-using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Infrastructure.Integration.Mappers;
 using GreenEnergyHub.Charges.TestCore.Attributes;
 using GreenEnergyHub.Charges.TestCore.Protobuf;
-using NodaTime;
 using Xunit;
 using Xunit.Categories;
-using ChargeType = GreenEnergyHub.Charges.Domain.Charges.ChargeType;
 
 namespace GreenEnergyHub.Charges.Tests.Infrastructure.Integration.Mappers
 {
@@ -33,16 +29,11 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Integration.Mappers
         [Theory]
         [InlineAutoMoqData]
         public void Convert_WhenCalled_MapsToCorrectValues(
+            [NotNull] ChargePricesUpdatedEvent chargePricesUpdatedEvent,
             [NotNull] ChargePricesUpdatedOutboundMapper sut)
         {
-            // Arrange
-            var chargePricesUpdated = GetChargePricesUpdated();
-
-            // Act
-            var actual = (GreenEnergyHub.Charges.Infrastructure.Integration.ChargeConfirmation.ChargePricesUpdated)sut.Convert(chargePricesUpdated);
-
-            // Assert
-            ProtobufAssert.OutgoingContractIsSubset(chargePricesUpdated, actual);
+            var actual = (GreenEnergyHub.Charges.Infrastructure.Integration.ChargeConfirmation.ChargePricesUpdated)sut.Convert(chargePricesUpdatedEvent);
+            ProtobufAssert.OutgoingContractIsSubset(chargePricesUpdatedEvent, actual);
         }
 
         [Theory]
@@ -50,22 +41,6 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Integration.Mappers
         public void Convert_WhenCalledWithNull_ShouldThrow([NotNull]ChargePricesUpdatedOutboundMapper sut)
         {
             Assert.Throws<InvalidOperationException>(() => sut.Convert(null!));
-        }
-
-        private static ChargePricesUpdatedEvent GetChargePricesUpdated()
-        {
-            return new ChargePricesUpdatedEvent(
-                "chargeId",
-                ChargeType.Fee,
-                "owner",
-                Instant.FromUtc(2021, 8, 15, 22, 0, 0),
-                Instant.FromUtc(2021, 9, 17, 22, 0, 0),
-                new List<Point>
-                {
-                    new () { Position = 1, Price = 2.2m, Time = Instant.FromUtc(2021, 8, 15, 22, 0, 0) },
-                    new () { Position = 1, Price = 2.2m, Time = Instant.FromUtc(2021, 9, 17, 22, 0, 0) },
-                },
-                "cor id");
         }
     }
 }
