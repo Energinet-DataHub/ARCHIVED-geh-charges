@@ -15,6 +15,7 @@
 using System.Diagnostics.CodeAnalysis;
 using Google.Protobuf;
 using GreenEnergyHub.Charges.Core.DateTime;
+using GreenEnergyHub.Charges.Core.Enumeration;
 using GreenEnergyHub.Charges.Domain.Charges.Acknowledgements;
 using GreenEnergyHub.Charges.Infrastructure.Integration.ChargeConfirmation;
 using GreenEnergyHub.Messaging.Protobuf;
@@ -29,7 +30,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Integration.Mappers
             {
                 ChargeId = chargePricesUpdated.ChargeId,
                 ChargeOwner = chargePricesUpdated.ChargeOwner,
-                ChargeType = (ChargeType)chargePricesUpdated.ChargeType,
+                ChargeType = chargePricesUpdated.ChargeType.Cast<ChargeType>(),
                 UpdatePeriodStartDate = chargePricesUpdated.UpdatePeriodStartDate.ToTimestamp(),
                 UpdatePeriodEndDate = chargePricesUpdated.UpdatePeriodEndDate.ToTimestamp(),
             };

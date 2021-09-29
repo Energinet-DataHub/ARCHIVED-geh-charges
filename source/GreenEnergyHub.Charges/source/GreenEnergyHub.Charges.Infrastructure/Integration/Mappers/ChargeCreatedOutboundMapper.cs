@@ -15,6 +15,7 @@
 using System.Diagnostics.CodeAnalysis;
 using Google.Protobuf;
 using GreenEnergyHub.Charges.Core.DateTime;
+using GreenEnergyHub.Charges.Core.Enumeration;
 using GreenEnergyHub.Charges.Infrastructure.Integration.ChargeCreated;
 using GreenEnergyHub.Messaging.Protobuf;
 
@@ -27,10 +28,10 @@ namespace GreenEnergyHub.Charges.Infrastructure.Integration.Mappers
             return new ChargeCreated.ChargeCreated
             {
                 ChargeId = chargeCreated.ChargeId,
-                ChargeType = (ChargeType)chargeCreated.ChargeType,
+                ChargeType = chargeCreated.ChargeType.Cast<ChargeType>(),
                 ChargeOwner = chargeCreated.ChargeOwner,
                 Currency = chargeCreated.Currency,
-                Resolution = (Resolution)chargeCreated.Resolution,
+                Resolution = chargeCreated.Resolution.Cast<Resolution>(),
                 TaxIndicator = chargeCreated.TaxIndicator,
                 ChargePeriod = new ChargePeriod
                 {
