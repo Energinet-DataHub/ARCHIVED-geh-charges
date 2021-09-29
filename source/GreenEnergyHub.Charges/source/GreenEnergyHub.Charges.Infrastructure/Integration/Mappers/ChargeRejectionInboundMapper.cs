@@ -15,7 +15,7 @@
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using Google.Protobuf.Collections;
-using GreenEnergyHub.Charges.Domain.MarketDocument;
+using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.Infrastructure.Integration.ChargeRejection;
 using GreenEnergyHub.Messaging.Protobuf;
 using GreenEnergyHub.Messaging.Transport;
@@ -26,7 +26,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Integration.Mappers
     {
         protected override IInboundMessage Convert([NotNull]ChargeRejectionContract rejectionContract)
         {
-            return new Domain.Acknowledgements.ChargeRejection(
+            return new Application.Charges.Acknowledgement.ChargeRejection(
                 rejectionContract.CorrelationId,
                 rejectionContract.Receiver,
                 (MarketParticipantRole)rejectionContract.ReceiverMarketParticipantRole,

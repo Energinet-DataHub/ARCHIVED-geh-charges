@@ -28,27 +28,25 @@ limitations under the License.
     <ItemGroup>
       <ProjectReference Include="..\..\..\Shared\GreenEnergyHub\source\GreenEnergyHub.TestHelpers\GreenEnergyHub.TestHelpers.csproj" />
       <ProjectReference Include="..\GreenEnergyHub.Charges.Application\GreenEnergyHub.Charges.Application.csproj" />
-      <ProjectReference Include="..\GreenEnergyHub.Charges.ChargeCommandReceiver\GreenEnergyHub.Charges.ChargeCommandReceiver.csproj" />
       <ProjectReference Include="..\GreenEnergyHub.Charges.Domain\GreenEnergyHub.Charges.Domain.csproj" />
-      <ProjectReference Include="..\GreenEnergyHub.Charges.MessageReceiver\GreenEnergyHub.Charges.MessageReceiver.csproj" />
       <ProjectReference Include="..\GreenEnergyHub.Charges.TestCore\GreenEnergyHub.Charges.TestCore.csproj" />
     </ItemGroup>
 
     <ItemGroup>
         <PackageReference Include="AutoFixture" Version="4.17.0" />
         <PackageReference Include="AutoFixture.AutoMoq" Version="4.17.0" />
-        <PackageReference Include="Azure.Messaging.ServiceBus" Version="7.2.1" />
+        <PackageReference Include="Azure.Messaging.ServiceBus" Version="7.3.0" />
+        <PackageReference Include="EntityFrameworkCore.SqlServer.NodaTime" Version="0.2.1" />
         <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.2.2" />
         <PackageReference Include="Microsoft.Azure.Management.ServiceBus" Version="2.1.0" />
         <PackageReference Include="Microsoft.Azure.WebJobs.Extensions" Version="4.0.1" />
-        <PackageReference Include="Microsoft.Azure.WebJobs.Host.TestCommon" Version="3.0.27" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="3.1.18" />
-        <PackageReference Include="Microsoft.Extensions.Configuration" Version="3.1.18" />
-        <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="3.1.18" />
-        <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="3.1.18" />
-        <PackageReference Include="Microsoft.Extensions.Hosting" Version="3.1.18" />
-        <PackageReference Include="Squadron.AzureCloudServiceBus" Version="0.12.0" />
-        <PackageReference Include="Squadron.Core" Version="0.12.0" />
+        <PackageReference Include="Microsoft.Azure.WebJobs.Host.TestCommon" Version="3.0.30" />
+        <PackageReference Include="Microsoft.Extensions.Configuration" Version="3.1.19" />
+        <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="3.1.19" />
+        <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="3.1.19" />
+        <PackageReference Include="Microsoft.Extensions.Hosting" Version="3.1.19" />
+        <PackageReference Include="Squadron.AzureCloudServiceBus" Version="0.13.0" />
+        <PackageReference Include="Squadron.Core" Version="0.13.0" />
         <PackageReference Include="System.ComponentModel.TypeConverter" Version="4.3.0" />
         <PackageReference Include="xunit" Version="2.4.1" />
         <PackageReference Include="FluentAssertions" Version="6.1.0" />

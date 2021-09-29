@@ -16,9 +16,12 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
+using GreenEnergyHub.Charges.Core.DateTime;
+using GreenEnergyHub.Charges.Domain.Charges;
+using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.Infrastructure.Context.Model;
 using NodaTime;
+using Charge = GreenEnergyHub.Charges.Infrastructure.Context.Model.Charge;
 using ChargeOperation = GreenEnergyHub.Charges.Infrastructure.Context.Model.ChargeOperation;
 using MarketParticipant = GreenEnergyHub.Charges.Infrastructure.Context.Model.MarketParticipant;
 
@@ -26,39 +29,37 @@ namespace GreenEnergyHub.Charges.Infrastructure.Context.Mapping
 {
     public static class ChargeMapper
     {
-        public static Domain.Charge MapChargeToChargeDomainModel(Charge charge)
+        public static Domain.Charges.Charge MapChargeToChargeDomainModel(Charge charge)
         {
             if (charge == null) throw new ArgumentNullException(nameof(charge));
 
             var currentChargeDetails = charge.ChargePeriodDetails
                 .OrderBy(x => Math.Abs((x.StartDateTime - DateTime.UtcNow).Ticks)).First();
 
-            return new Domain.Charge
-            {
-                Id = charge.ChargeId,
-                Type = (ChargeType)charge.ChargeType,
-                Name = currentChargeDetails.Name,
-                Description = currentChargeDetails.Description,
-                StartDateTime = Instant.FromDateTimeUtc(currentChargeDetails.StartDateTime),
-                Owner = charge.MarketParticipant.MarketParticipantId,
-                Resolution = (Resolution)charge.Resolution,
-                TaxIndicator = Convert.ToBoolean(charge.TaxIndicator),
-                TransparentInvoicing = Convert.ToBoolean(charge.TransparentInvoicing),
-                VatClassification = (VatClassification)currentChargeDetails.VatClassification,
-                ChargeOperationId = charge.ChargeOperation.ChargeOperationId,
-                EndDateTime = currentChargeDetails.EndDateTime != null ?
-                    Instant.FromDateTimeUtc(currentChargeDetails.EndDateTime.Value) : (Instant?)null,
-                Points = charge.ChargePrices.Select(x => new Point
+            return new Domain.Charges.Charge(
+                charge.Id,
+                new Document(),
+                charge.ChargeOperation.ChargeOperationId,
+                charge.SenderProvidedChargeId,
+                currentChargeDetails.Name,
+                currentChargeDetails.Description,
+                charge.MarketParticipant.MarketParticipantId,
+                charge.ChargeOperation.CorrelationId,
+                Instant.FromDateTimeUtc(currentChargeDetails.StartDateTime.ToUniversalTime()),
+                Instant.FromDateTimeUtc(currentChargeDetails.EndDateTime.ToUniversalTime()),
+                (ChargeType)charge.ChargeType,
+                (VatClassification)currentChargeDetails.VatClassification,
+                (Resolution)charge.Resolution,
+                Convert.ToBoolean(charge.TransparentInvoicing),
+                Convert.ToBoolean(charge.TaxIndicator),
+                charge.ChargePrices.Select(x => new Point
                 {
-                    Position = 0,
-                    Price = x.Price,
-                    Time = Instant.FromDateTimeUtc(x.Time),
-                }).ToList(),
-            };
+                    Position = 0, Price = x.Price, Time = Instant.FromDateTimeUtc(x.Time.ToUniversalTime()),
+                }).ToList());
         }
 
         public static Charge MapDomainChargeToCharge(
-            [NotNull] Domain.Charge charge,
+            [NotNull] Domain.Charges.Charge charge,
             MarketParticipant marketParticipant)
         {
             if (charge == null) throw new ArgumentNullException(nameof(charge));
@@ -68,13 +69,14 @@ namespace GreenEnergyHub.Charges.Infrastructure.Context.Mapping
 
             return new Charge
             {
+                Id = charge.Id,
                 Currency = "DKK",
-                MarketParticipantRowId = marketParticipant.RowId,
-                ChargeId = charge.Id,
+                MarketParticipantId = marketParticipant.Id,
+                SenderProvidedChargeId = charge.SenderProvidedChargeId,
                 ChargeType = (int)charge.Type,
                 Resolution = (int)charge.Resolution,
-                TaxIndicator = Convert.ToByte(charge.TaxIndicator),
-                TransparentInvoicing = Convert.ToByte(charge.TransparentInvoicing),
+                TaxIndicator = charge.TaxIndicator,
+                TransparentInvoicing = charge.TransparentInvoicing,
                 ChargePrices = MapChargeToChargePrice(charge, chargeOperation).ToList(),
                 ChargePeriodDetails = new List<ChargePeriodDetails>
                 {
@@ -86,18 +88,18 @@ namespace GreenEnergyHub.Charges.Infrastructure.Context.Mapping
         }
 
         private static ChargeOperation MapToChargeOperation(
-            [NotNull] Domain.Charge charge)
+            [NotNull] Domain.Charges.Charge charge)
         {
             return new ChargeOperation
             {
                 CorrelationId = charge.CorrelationId,
-                WriteDateTime = charge.Document.RequestDate.ToDateTimeUtc(),
+                WriteDateTime = charge.Document.RequestDate.ToDateTimeUtc().ToUniversalTime(),
                 ChargeOperationId = charge.ChargeOperationId,
             };
         }
 
         private static IEnumerable<ChargePrice> MapChargeToChargePrice(
-            [NotNull] Domain.Charge charge,
+            [NotNull] Domain.Charges.Charge charge,
             ChargeOperation chargeOperation)
         {
             return charge.Points.Select(point => new ChargePrice
@@ -109,7 +111,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Context.Mapping
         }
 
         private static ChargePeriodDetails MapChargeToChargePeriodDetails(
-            [NotNull] Domain.Charge charge,
+            [NotNull] Domain.Charges.Charge charge,
             ChargeOperation chargeOperation)
         {
             return new ChargePeriodDetails
@@ -117,7 +119,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Context.Mapping
                 Description = charge.Description,
                 Name = charge.Name,
                 VatClassification = (int)charge.VatClassification,
-                EndDateTime = charge.EndDateTime?.ToDateTimeUtc(),
+                EndDateTime = charge.EndDateTime.ToDateTimeUtc(),
                 StartDateTime = charge.StartDateTime.ToDateTimeUtc(),
                 ChargeOperation = chargeOperation,
             };

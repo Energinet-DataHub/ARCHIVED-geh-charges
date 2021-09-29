@@ -39,7 +39,7 @@ BEGIN
           AND MarketParticipantRowId IN (SELECT RowId FROM [Charges].[MarketParticipant] WHERE MarketParticipantId = '5790000432752')
           AND ChargeType = 3), /* ChargeRowId */
       '2014-12-31 23:00', /* StartDateTime */
-      NULL, /* EndDateTime */
+      '9999-12-31 23:59:59', /* EndDateTime */
       'Transmissions nettarif', /* Name */
       'Netafgiften, for både forbrugere og producenter, dækker omkostninger til drift og vedligehold af det overordnede elnet (132/150 og 400 kv nettet) og drift og vedligehold af udlandsforbindelserne', /* Description */
       2, /* VatClassification, 25% */
@@ -94,7 +94,7 @@ BEGIN
           AND MarketParticipantRowId IN (SELECT RowId FROM [Charges].[MarketParticipant] WHERE MarketParticipantId = '5790000432752')
           AND ChargeType = 3), /* ChargeRowId */
       '2014-12-31 23:00', /* StartDateTime */
-      NULL, /* EndDateTime */
+      '9999-12-31 23:59:59', /* EndDateTime */
       'Indfødningstarif produktion', /* Name */
       'Netafgiften, for både forbrugere og producenter, dækker omkostninger til drift og vedligehold af det overordnede elnet (132/150 og 400 kv nettet) og drift og vedligehold af udlandsforbindelserne.', /* Description */
       2, /* VatClassification, 25% */
@@ -149,7 +149,7 @@ BEGIN
           AND MarketParticipantRowId IN (SELECT RowId FROM [Charges].[MarketParticipant] WHERE MarketParticipantId = '5790000432752')
           AND ChargeType = 3), /* ChargeRowId */
       '2014-12-31 23:00', /* StartDateTime */
-      NULL, /* EndDateTime */
+      '9999-12-31 23:59:59', /* EndDateTime */
       'Systemtarif', /* Name */
       'Systemafgiften dækker omkostninger til forsyningssikkerhed og elforsyningens kvalitet.', /* Description */
       2, /* VatClassification, 25% */
@@ -204,7 +204,7 @@ BEGIN
           AND MarketParticipantRowId IN (SELECT RowId FROM [Charges].[MarketParticipant] WHERE MarketParticipantId = '5790000432752')
           AND ChargeType = 3), /* ChargeRowId */
       '2014-12-31 23:00', /* StartDateTime */
-      NULL, /* EndDateTime */
+      '9999-12-31 23:59:59', /* EndDateTime */
       'Balancetarif for produktion', /* Name */
       'Balancetarif for produktion', /* Description */
       2, /* VatClassification, 25% */
@@ -259,7 +259,7 @@ BEGIN
           AND MarketParticipantRowId IN (SELECT RowId FROM [Charges].[MarketParticipant] WHERE MarketParticipantId = '5790000432752')
           AND ChargeType = 3), /* ChargeRowId */
       '2014-12-31 23:00', /* StartDateTime */
-      NULL, /* EndDateTime */
+      '9999-12-31 23:59:59', /* EndDateTime */
       'Balancetarif for forbrug', /* Name */
       'Balancetarif for forbrug', /* Description */
       2, /* VatClassification, 25% */
@@ -314,7 +314,7 @@ BEGIN
           AND MarketParticipantRowId IN (SELECT RowId FROM [Charges].[MarketParticipant] WHERE MarketParticipantId = '5790000432752')
           AND ChargeType = 3), /* ChargeRowId */
       '2014-12-31 23:00', /* StartDateTime */
-      NULL, /* EndDateTime */
+      '9999-12-31 23:59:59', /* EndDateTime */
       'Elafgift', /* Name */
       'Elafgiften', /* Description */
       2, /* VatClassification, 25% */
@@ -369,7 +369,7 @@ BEGIN
           AND MarketParticipantRowId IN (SELECT RowId FROM [Charges].[MarketParticipant] WHERE MarketParticipantId = '5790000432752')
           AND ChargeType = 3), /* ChargeRowId */
       '2014-12-31 23:00', /* StartDateTime */
-      NULL, /* EndDateTime */
+      '9999-12-31 23:59:59', /* EndDateTime */
       'Negativt reduceret elafgift', /* Name */
       'Negativ reduceret elafgift for elvarmekunder til brug for modregning af den almindelige reducerede elafgift for elvarmekunder. Bruges kun sammen med D14 målepunkter.', /* Description */
       2, /* VatClassification, 25% */

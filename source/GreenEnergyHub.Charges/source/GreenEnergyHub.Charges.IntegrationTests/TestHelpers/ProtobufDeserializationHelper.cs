@@ -13,10 +13,17 @@
 // limitations under the License.
 
 using System;
-using GreenEnergyHub.Charges.Domain.Acknowledgements;
+using GreenEnergyHub.Charges.Application.Charges.Acknowledgement;
+using GreenEnergyHub.Charges.Domain.ChargeCommandAcceptedEvents;
+using GreenEnergyHub.Charges.Domain.ChargeCommandReceivedEvents;
+using GreenEnergyHub.Charges.Domain.ChargeCommandRejectedEvents;
 using GreenEnergyHub.Charges.Infrastructure.Integration.ChargeConfirmation;
 using GreenEnergyHub.Charges.Infrastructure.Integration.ChargeRejection;
 using GreenEnergyHub.Charges.Infrastructure.Integration.Mappers;
+using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeCommandAccepted;
+using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeCommandReceived;
+using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeCommandRejected;
+using GreenEnergyHub.Charges.Infrastructure.Internal.Mappers;
 using GreenEnergyHub.Messaging.Transport;
 
 namespace GreenEnergyHub.Charges.IntegrationTests.TestHelpers
@@ -25,6 +32,21 @@ namespace GreenEnergyHub.Charges.IntegrationTests.TestHelpers
     {
         public static T Deserialize<T>(byte[] data)
         {
+            if (typeof(T) == typeof(ChargeCommandReceivedEvent))
+            {
+                return (T)DeserializeChargeCommandReceivedEvent(data);
+            }
+
+            if (typeof(T) == typeof(ChargeCommandAcceptedEvent))
+            {
+                return (T)DeserializeChargeCommandAcceptedEvent(data);
+            }
+
+            if (typeof(T) == typeof(ChargeCommandRejectedEvent))
+            {
+                return (T)DeserializeChargeCommandRejectedEvent(data);
+            }
+
             if (typeof(T) == typeof(ChargeConfirmation))
             {
                 return (T)DeserializeChargeConfirmation(data);
@@ -36,6 +58,30 @@ namespace GreenEnergyHub.Charges.IntegrationTests.TestHelpers
             }
 
             throw new NotImplementedException("Missing implementation on how to deserialize " + typeof(T).FullName);
+        }
+
+        private static IInboundMessage DeserializeChargeCommandReceivedEvent(byte[] data)
+        {
+            var mapper = new ChargeCommandReceivedInboundMapper();
+            var parsed = ChargeCommandReceivedContract.Parser.ParseFrom(data);
+            var mapped = mapper.Convert(parsed);
+            return mapped;
+        }
+
+        private static IInboundMessage DeserializeChargeCommandAcceptedEvent(byte[] data)
+        {
+            var mapper = new ChargeCommandAcceptedInboundMapper();
+            var parsed = ChargeCommandAcceptedContract.Parser.ParseFrom(data);
+            var mapped = mapper.Convert(parsed);
+            return mapped;
+        }
+
+        private static IInboundMessage DeserializeChargeCommandRejectedEvent(byte[] data)
+        {
+            var mapper = new ChargeCommandRejectedInboundMapper();
+            var parsed = ChargeCommandRejectedContract.Parser.ParseFrom(data);
+            var mapped = mapper.Convert(parsed);
+            return mapped;
         }
 
         private static IInboundMessage DeserializeChargeConfirmation(byte[] data)

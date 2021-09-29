@@ -17,15 +17,16 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using Google.Protobuf.Collections;
 using GreenEnergyHub.Charges.Core.DateTime;
-using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
-using GreenEnergyHub.Charges.Domain.Events.Local;
-using GreenEnergyHub.Charges.Domain.MarketDocument;
+using GreenEnergyHub.Charges.Domain.ChargeCommandReceivedEvents;
+using GreenEnergyHub.Charges.Domain.ChargeCommands;
+using GreenEnergyHub.Charges.Domain.Charges;
+using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeCommandReceived;
 using GreenEnergyHub.Messaging.MessageTypes.Common;
 using GreenEnergyHub.Messaging.Protobuf;
 using GreenEnergyHub.Messaging.Transport;
 using NodaTime;
-using MarketParticipant = GreenEnergyHub.Charges.Domain.MarketDocument.MarketParticipant;
+using MarketParticipant = GreenEnergyHub.Charges.Domain.MarketParticipants.MarketParticipant;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
 {
@@ -84,7 +85,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
                 TransparentInvoicing = chargeOperation.TransparentInvoicing,
                 VatClassification = (VatClassification)chargeOperation.VatClassification,
                 StartDateTime = chargeOperation.StartDateTime.ToInstant(),
-                EndDateTime = chargeOperation.EndDateTime.ToInstant(),
+                EndDateTime = chargeOperation.EndDateTime?.ToInstant(),
                 Points = ConvertPoints(chargeOperation.Points),
             };
         }

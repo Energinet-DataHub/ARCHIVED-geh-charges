@@ -134,7 +134,7 @@ jobs:
           keyvault-name: ${{ steps.terraform.outputs.kv-charges-name }}
           environment-name: Test
 
-  infra_deploy_preproduction:
+  infra_deploy_preprod:
     name: Deploy infrastructure to rg-DataHub-Charges-B
     needs: infra_deploy_test
     runs-on: ubuntu-latest
@@ -185,9 +185,9 @@ jobs:
           keyvault-name: ${{ steps.terraform.outputs.kv-charges-name }}
           environment-name: Preproduction
 
-  infra_deploy_production:
+  infra_deploy_prod:
     name: Deploy infrastructure to rg-DataHub-Charges-P
-    needs: infra_deploy_preproduction
+    needs: infra_deploy_preprod
     runs-on: ubuntu-latest
     environment:
       name: rg-DataHub-Charges-P

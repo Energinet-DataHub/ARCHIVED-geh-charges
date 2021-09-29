@@ -12,16 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+/*using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
-using GreenEnergyHub.Charges.Application.ChangeOfCharges;
+using GreenEnergyHub.Charges.Application.Charges.Handlers;
+using GreenEnergyHub.Charges.ChargeReceiver;
 using GreenEnergyHub.Charges.Core.Json;
-using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
-using GreenEnergyHub.Charges.Domain.Events.Local;
+using GreenEnergyHub.Charges.Domain.ChargeCommandReceivedEvents;
+using GreenEnergyHub.Charges.Domain.ChargeCommands;
 using GreenEnergyHub.Charges.Infrastructure.Messaging;
 using GreenEnergyHub.Charges.IntegrationTests.TestHelpers;
-using GreenEnergyHub.Charges.MessageReceiver;
 using GreenEnergyHub.Charges.TestCore.Attributes;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Azure.WebJobs;
@@ -29,28 +30,26 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NodaTime;
-using Squadron;
 using Xunit;
 using Xunit.Categories;
 
 namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
 {
     [IntegrationTest]
-    public class ChangeOfChargeSquadronTests
-        : IClassFixture<AzureCloudServiceBusResource<ChargesAzureCloudServiceBusOptions>>
+    public class ChangeOfChargeSquadronTests : IClassFixture<ChargesAzureCloudServiceBusResource>
     {
-        private readonly AzureCloudServiceBusResource<ChargesAzureCloudServiceBusOptions> _serviceBusResource;
+        private readonly ChargesAzureCloudServiceBusResource _serviceBusResource;
 
-        public ChangeOfChargeSquadronTests(AzureCloudServiceBusResource<ChargesAzureCloudServiceBusOptions> serviceBusResource)
+        public ChangeOfChargeSquadronTests(ChargesAzureCloudServiceBusResource serviceBusResource)
         {
             _serviceBusResource = serviceBusResource;
         }
 
-        [Theory(Timeout = 30000)]
+        [PipelineIntegrationTestTheory(Timeout = 30000)]
         [Trait(HostingEnvironmentTraitConstants.HostingEnvironment, HostingEnvironmentTraitConstants.PullRequestGate)]
         [InlineAutoMoqData("TestFiles/ValidCreateTariffCommand.json")]
         [InlineAutoMoqData("TestFiles/InvalidCreateTariffCommand.json")]
-        public async Task MessageReceiver_receives_message(
+        public async Task ChargeReceiver_receives_message(
             string testFilePath,
             [NotNull] [Frozen] Mock<ILogger> logger,
             [NotNull] ExecutionContext executionContext)
@@ -62,9 +61,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
 
             var completion = new TaskCompletionSource<ChargeCommandReceivedEvent?>();
 
-            ServiceBusTestHelper.RegisterSubscriptionClientMessageHandler(
-                    subscriptionClient,
-                    completion);
+            ServiceBusTestHelper.RegisterSubscriptionClientMessageHandler(subscriptionClient, completion);
 
             IClock clock = SystemClock.Instance;
             var chargeJson = EmbeddedResourceHelper.GetInputJson(testFilePath, clock);
@@ -72,7 +69,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
             var httpRequest = HttpRequestFactory.CreateHttpRequest(chargeJson);
 
             // act
-            await CallMessageReceiver(logger, executionContext, httpRequest).ConfigureAwait(false);
+            await CallChargeReceiver(logger, executionContext, httpRequest).ConfigureAwait(false);
             var receivedEvent = await completion.Task.ConfigureAwait(false);
 
             // assert
@@ -82,18 +79,18 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
             Assert.Equal(chargeCommand.ChargeOperation.ChargeId, receivedEvent?.Command.ChargeOperation.ChargeId);
         }
 
-        private async Task CallMessageReceiver(
+        private async Task CallChargeReceiver(
             IMock<ILogger> logger,
             ExecutionContext executionContext,
             HttpRequest req)
         {
             var topicClient = _serviceBusResource.GetTopicClient(ChargesAzureCloudServiceBusOptions.ReceivedTopicName);
-            var messageReceiverHost = FunctionHostConfigurationHelper.SetupHost(new MessageReceiverConfiguration(topicClient));
+            var chargeReceiverHost = FunctionHostConfigurationHelper.SetupHost(new ChargeReceiverConfiguration(topicClient));
 
             var chargeHttpTrigger = new ChargeHttpTrigger(
-                messageReceiverHost.Services.GetRequiredService<IChangeOfChargesMessageHandler>(),
-                messageReceiverHost.Services.GetRequiredService<ICorrelationContext>(),
-                messageReceiverHost.Services.GetRequiredService<MessageExtractor<ChargeCommand>>());
+                chargeReceiverHost.Services.GetRequiredService<IChargesMessageHandler>(),
+                chargeReceiverHost.Services.GetRequiredService<ICorrelationContext>(),
+                chargeReceiverHost.Services.GetRequiredService<MessageExtractor<ChargeCommand>>());
 
             await chargeHttpTrigger
                 .RunAsync(req, executionContext, logger.Object)
@@ -101,3 +98,4 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
         }
     }
 }
+*/

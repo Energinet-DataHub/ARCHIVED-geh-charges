@@ -13,6 +13,8 @@
 // limitations under the License.
 
 using System.Threading.Tasks;
+using GreenEnergyHub.Charges.Domain.ChargeLinks;
+using GreenEnergyHub.Charges.Domain.MeteringPoints;
 using GreenEnergyHub.Charges.Infrastructure.Context.Model;
 using Microsoft.EntityFrameworkCore;
 
@@ -52,6 +54,16 @@ namespace GreenEnergyHub.Charges.Infrastructure.Context
         /// Metering Point available in the database.
         /// </summary>
         DbSet<MeteringPoint> MeteringPoints { get; }
+
+        /// <summary>
+        /// Charge links available in the database.
+        /// </summary>
+        DbSet<ChargeLink> ChargeLinks { get; }
+
+        /// <summary>
+        /// DefaultChargeLink available in the database.
+        /// </summary>
+        DbSet<DefaultChargeLink> DefaultChargeLinks { get; }
 
         /// <summary>
         /// Saves changes to the database.

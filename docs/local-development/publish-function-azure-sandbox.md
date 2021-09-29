@@ -12,7 +12,13 @@ Azure login:
 az login
 ```
 
-Publish Azure function:
+## Azure Function Publish
+
+### Automated
+
+Script to automated Azure function publish is located  [here](../../source/GreenEnergyHub.Charges/publish-functions-from-localhost.cmd)
+
+## Manually
 
 ```PowerShell
 func azure functionapp publish {Azure function name}
@@ -25,3 +31,5 @@ Azure function naming: `azfun-[name]-[project]-[organisation]-[environment]`, eg
 Azure Functions Core Tools: [`Azure Functions Core Tools download`](https://docs.microsoft.com/en-us/azure/azure-functions/functions-run-local?tabs=windows%2Ccsharp%2Cbash#v2)
 
 Install `v3.x - Windows 64-bit`.
+
+Create a `local.settings.json` as a copy of `local.settings.sample.json` file for each Azure function to ensure trouble-free publish.

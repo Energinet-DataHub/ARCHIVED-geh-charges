@@ -13,9 +13,9 @@
 // limitations under the License.
 
 using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Application.Validation.BusinessValidation;
-using GreenEnergyHub.Charges.Application.Validation.BusinessValidation.ValidationRules;
 using GreenEnergyHub.Charges.Core;
+using GreenEnergyHub.Charges.Domain.ChargeCommands.Validation.BusinessValidation;
+using GreenEnergyHub.Charges.Domain.ChargeCommands.Validation.BusinessValidation.ValidationRules;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Repositories
 {

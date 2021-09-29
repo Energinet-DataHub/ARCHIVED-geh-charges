@@ -17,7 +17,7 @@ The steps needed are:
   (The format is the same as other Terraform configuration files)
 - Make sure that you're logged in with an account that has access permissions to the selected resource group.
   (Use `az login` from `Azure CLI` to switch account as needed)
-- Execute the helper script `deploy-from-localhost.cmd`
+- Execute the helper script `deploy-infrastructure-from-localhost.cmd`
 
 Information about the settings:
 
@@ -50,27 +50,28 @@ az account set --subscription "your subscription id"
 
 This describes what values to use for the various values in the `localhost.tfvars` file.
 
-It is assumed that `Azure CLI` for Windows and the Azure AD module for `powershell` is installed. If not, guides can be found found later in this file.
+It is assumed that `Azure CLI` for Windows is installed. If not, guides can be found found later in this file.
 
 ### `environment`
 
 The value of this need to be 1-3 characters.
+The deployment scripts in the Charges domain assumes that the value of `environment`is `s`.
 
-#### Warning
-
-The environment value will be appended to the name of some of your Azure resources as some names need to be unique worldwide.
-
-This means that unless you are targeting a shared environment, you should probably use a 3 character word to have the best chance not to clash with others working on the Green Energy Hub. This could for example be your initials.
-
-Please avoid using single character environment names as these are likely to clash with shared environments, meaning that you could end up blocking one of these.
+This value will be used as part of the naming scheme for your Azure resources.
 
 ### `organisation`
 
-This value should be 4 characters and describe the organisation you represent.
+This value should be 4 characters. In test and production environments it describes the organisation you represent.
 
-For Energinet, this should be set to `endk`
+This value will be used as part of the naming scheme for your Azure resources.
 
-This value will also be used as part of the naming scheme for your Azure resources.
+#### Warning
+
+A key consisting of `project`-`organisation`-`environment` will be appended to the name of some of your Azure resources as some names need to be unique worldwide.
+
+This means that unless you are targeting a shared environment, you should probably use a 3-5 character word to have the best chance not to clash with others working on the Green Energy Hub. This could for example be your initials.
+
+Please avoid using your organisation name or a single character organisation name it is likely to clash with shared environments, meaning that you could end up blocking one of these.
 
 ### `resource_group_name`
 
@@ -83,6 +84,8 @@ This should be set to the name of the project this deployment is part of, usuall
 For use with this domain, the recommended value is `charges`, but it really is up to developer.
 
 Make sure it does not get any longer than 7 characters.
+
+This value will be used as part of the naming scheme for your Azure resources.
 
 ### `tenant_id`
 
@@ -104,19 +107,19 @@ So if you are deploying to your own resource group from your own machine, this h
 
 If the Object ID is unknown, it can be found with using `powershell`.
 
-First, login to the Azure AD with the the account that has access to the resource group. Run the following command and supply your login information:
+First, login to the Azure AD with the the account that has access to the resource group.
 
 ```PowerShell
-Connect-AzureAd
+az login
 ```
 
 Then, ask the Azure AD for your object ID by using the following command:
 
 ```PowerShell
-Get-AzureADUser -searchstring "username@yourdomain.com"
+az ad signed-in-user show --query objectId -o tsv
 ```
 
-The object ID should now be displayed as the first column in the result.
+The object ID should now be displayed.
 
 This ID is the value you need for `object_id` (hint: it looks like a `GUID`)
 
@@ -142,16 +145,6 @@ The email address that should receive notifications of alerts raised by the infr
 ### Installing `Azure CLI`
 
 Follow the [guide](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli).
-
-### Installing `Azure AD for powershell`
-
-Run your `powershell` as an administrator.
-
-The following command installs the module:
-
-```PowerShell
-Install-Module -Name AzureAD
-```
 
 ## Working with Multiple Environments
 

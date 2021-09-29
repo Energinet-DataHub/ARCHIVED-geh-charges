@@ -17,7 +17,6 @@ using GreenEnergyHub.Messaging.Transport;
 namespace GreenEnergyHub.Charges.Infrastructure.Messaging.Serialization
 {
     public abstract class MessageDeserializer<TInboundMessage> : MessageDeserializer
-        where TInboundMessage : IInboundMessage
     {
     }
 }

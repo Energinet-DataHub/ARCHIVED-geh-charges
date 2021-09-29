@@ -12,37 +12,49 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
+using System.Linq;
 using System.Threading.Tasks;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.MeteringPoints;
-using GreenEnergyHub.Charges.Infrastructure.Context;
 using GreenEnergyHub.Charges.Infrastructure.Repositories;
-using Microsoft.EntityFrameworkCore;
+using GreenEnergyHub.Charges.TestCore.Squadron;
+using GreenEnergyHub.TestHelpers;
 using NodaTime;
+using Squadron;
 using Xunit;
 using Xunit.Categories;
 
 namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
 {
     [UnitTest]
-    public class MeteringPointRepositoryTests
+    public class MeteringPointRepositoryTests : IClassFixture<SqlServerResource<SqlServerOptions>>
     {
+        private readonly SqlServerResource<SqlServerOptions> _resource;
+
+        public MeteringPointRepositoryTests(SqlServerResource<SqlServerOptions> resource)
+        {
+            _resource = resource;
+        }
+
         [Fact]
         public async Task StoreMeteringPointAsync_WhenMeteringPointIsCreated_StoresMeteringPointInDatabase()
         {
             // Arrange
-            EnsureDatabaseCreated(nameof(StoreMeteringPointAsync_WhenMeteringPointIsCreated_StoresMeteringPointInDatabase));
-            await using var chargesDatabaseContext = new ChargesDatabaseContext(
-                GetDatabaseContext(
-                    nameof(StoreMeteringPointAsync_WhenMeteringPointIsCreated_StoresMeteringPointInDatabase)));
+            await using var chargesDatabaseWriteContext = await SquadronContextFactory
+                .GetDatabaseContextAsync(_resource)
+                .ConfigureAwait(false);
             var expected = GetMeteringPointCreatedEvent();
-            var sut = new MeteringPointRepository(chargesDatabaseContext);
+            var sut = new MeteringPointRepository(chargesDatabaseWriteContext);
 
             // Act
             await sut.StoreMeteringPointAsync(expected).ConfigureAwait(false);
 
             // Assert
-            var actual = await sut.GetMeteringPointAsync(expected.MeteringPointId).ConfigureAwait(false);
+            await using var chargesDatabaseReadContext = await SquadronContextFactory
+                .GetDatabaseContextAsync(_resource)
+                .ConfigureAwait(false);
+            var actual = chargesDatabaseReadContext.MeteringPoints.Single(x => x.MeteringPointId == expected.MeteringPointId);
             actual.ConnectionState.Should().Be(expected.ConnectionState);
             actual.GridAreaId.Should().Be(expected.GridAreaId);
             actual.MeteringPointId.Should().Be(expected.MeteringPointId);
@@ -50,9 +62,41 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
             actual.SettlementMethod.Should().Be(expected.SettlementMethod);
         }
 
+        [Theory]
+        [InlineAutoDomainData]
+        public async Task StoreMeteringPointAsync_WhenMeteringPointIsNull_ShouldThrow(MeteringPointRepository sut)
+        {
+            await Assert
+                .ThrowsAsync<ArgumentNullException>(() => sut.StoreMeteringPointAsync(null!))
+                .ConfigureAwait(false);
+        }
+
+        [Fact]
+        public async Task GetMeteringPointAsync_WithMeteringPointId_ThenSuccessReturnedAsync()
+        {
+            // Arrange
+            await using var chargesDatabaseWriteContext = await SquadronContextFactory
+                .GetDatabaseContextAsync(_resource)
+                .ConfigureAwait(false);
+            var expected = GetMeteringPoint();
+            await chargesDatabaseWriteContext.MeteringPoints.AddAsync(expected).ConfigureAwait(false);
+            await chargesDatabaseWriteContext.SaveChangesAsync().ConfigureAwait(false);
+
+            await using var chargesDatabaseReadContext = await SquadronContextFactory
+                .GetDatabaseContextAsync(_resource)
+                .ConfigureAwait(false);
+            var sut = new MeteringPointRepository(chargesDatabaseReadContext);
+
+            // Act
+            var actual = await sut.GetMeteringPointAsync(expected.MeteringPointId).ConfigureAwait(false);
+
+            // Assert
+            Assert.NotNull(actual);
+        }
+
         private static MeteringPoint GetMeteringPointCreatedEvent()
         {
-            return new MeteringPoint(
+            return MeteringPoint.Create(
                 "123",
                 MeteringPointType.Consumption,
                 "234",
@@ -61,21 +105,15 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
                 SettlementMethod.Flex);
         }
 
-        private static void EnsureDatabaseCreated(string sqlFileName)
+        private static MeteringPoint GetMeteringPoint()
         {
-            using var context = new ChargesDatabaseContext(GetDatabaseContext(sqlFileName));
-            context.Database.EnsureDeleted();
-            context.Database.EnsureCreated();
-        }
-
-        private static DbContextOptions<ChargesDatabaseContext> GetDatabaseContext(string sqlFileName)
-        {
-            DbContextOptions<ChargesDatabaseContext> dbContextOptions =
-                new DbContextOptionsBuilder<ChargesDatabaseContext>()
-                    .UseSqlite($"Filename={sqlFileName}.db")
-                    .Options;
-
-            return dbContextOptions;
+            return MeteringPoint.Create(
+                "meteringPointId",
+                MeteringPointType.Consumption,
+                "grid area id",
+                SystemClock.Instance.GetCurrentInstant(),
+                ConnectionState.Connected,
+                SettlementMethod.Profiled);
         }
     }
 }

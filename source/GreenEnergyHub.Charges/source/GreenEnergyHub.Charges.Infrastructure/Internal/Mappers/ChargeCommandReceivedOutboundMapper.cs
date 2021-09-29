@@ -17,9 +17,9 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using Google.Protobuf.WellKnownTypes;
 using GreenEnergyHub.Charges.Core.DateTime;
-using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
-using GreenEnergyHub.Charges.Domain.Events.Local;
-using GreenEnergyHub.Charges.Domain.MarketDocument;
+using GreenEnergyHub.Charges.Domain.ChargeCommandReceivedEvents;
+using GreenEnergyHub.Charges.Domain.Charges;
+using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeCommandReceived;
 using GreenEnergyHub.Messaging.Protobuf;
 
@@ -55,7 +55,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
                 ChargeOwner = charge.ChargeOwner,
                 Type = (ChargeTypeContract)charge.Type,
                 StartDateTime = charge.StartDateTime.ToTimestamp().TruncateToSeconds(),
-                EndDateTime = charge.EndDateTime.TimeOrEndDefault().ToTimestamp().TruncateToSeconds(),
+                EndDateTime = charge.EndDateTime?.ToTimestamp().TruncateToSeconds(),
                 Resolution = (ResolutionContract)charge.Resolution,
                 ChargeDescription = charge.ChargeDescription,
                 ChargeName = charge.ChargeName,

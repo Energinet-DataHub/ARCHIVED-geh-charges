@@ -12,12 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
 using System.Diagnostics.CodeAnalysis;
-using Google.Protobuf.WellKnownTypes;
 using GreenEnergyHub.Charges.Core.DateTime;
-using GreenEnergyHub.Charges.Domain.ChargeLinks;
-using GreenEnergyHub.Charges.Domain.MarketDocument;
+using GreenEnergyHub.Charges.Domain.ChargeLinkCommandAcceptedEvents;
+using GreenEnergyHub.Charges.Domain.ChargeLinkCommands;
+using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandAccepted;
 using GreenEnergyHub.Messaging.Protobuf;
 
@@ -61,11 +60,11 @@ namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
             };
         }
 
-        private static ChargeLinkContract ConvertChargeLink(ChargeLinkCommandAcceptedEvent chargeLinkCommandAcceptedEvent, ChargeLink chargeLink)
+        private static ChargeLinkContract ConvertChargeLink(ChargeLinkCommandAcceptedEvent chargeLinkCommandAcceptedEvent, ChargeLinkDto chargeLink)
         {
             return new ChargeLinkContract
             {
-                Id = chargeLinkCommandAcceptedEvent.ChargeLink.Id,
+                OperationId = chargeLinkCommandAcceptedEvent.ChargeLink.OperationId,
                 MeteringPointId = chargeLink.MeteringPointId,
                 ChargeId = chargeLink.ChargeId,
                 ChargeOwner = chargeLink.ChargeOwner,

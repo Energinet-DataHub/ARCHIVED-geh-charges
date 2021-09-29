@@ -12,20 +12,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
+/*using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
-using GreenEnergyHub.Charges.Application;
-using GreenEnergyHub.Charges.Application.ChangeOfCharges;
+using FluentAssertions;
+using GreenEnergyHub.Charges.Application.Charges.Handlers;
 using GreenEnergyHub.Charges.ChargeCommandReceiver;
+using GreenEnergyHub.Charges.ChargeReceiver;
 using GreenEnergyHub.Charges.Core.Json;
-using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
-using GreenEnergyHub.Charges.Domain.Events.Local;
+using GreenEnergyHub.Charges.Domain.ChargeCommandAcceptedEvents;
+using GreenEnergyHub.Charges.Domain.ChargeCommandReceivedEvents;
+using GreenEnergyHub.Charges.Domain.ChargeCommandRejectedEvents;
+using GreenEnergyHub.Charges.Domain.ChargeCommands;
 using GreenEnergyHub.Charges.Infrastructure.Messaging;
 using GreenEnergyHub.Charges.IntegrationTests.TestHelpers;
-using GreenEnergyHub.Charges.MessageReceiver;
-using GreenEnergyHub.Charges.TestCore;
 using GreenEnergyHub.Charges.TestCore.Attributes;
 using GreenEnergyHub.Messaging.Transport;
 using Microsoft.AspNetCore.Http.Internal;
@@ -53,7 +54,6 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
     [IntegrationTest]
     public class ChangeOfChargeLocalHostTests : IClassFixture<DbContextRegistrator>
     {
-        private readonly bool _runLocalhostTests;
         private readonly ITestOutputHelper _testOutputHelper;
         private readonly ChargeDbQueries _chargeDbQueries;
         private readonly ChargeHttpTrigger? _chargeHttpTrigger;
@@ -73,20 +73,16 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
             _testOutputHelper = testOutputHelper;
             _chargeDbQueries = new ChargeDbQueries(dbContextRegistrator.ServiceProvider);
 
-            _runLocalhostTests = Environment.GetEnvironmentVariable("RUN_LOCALHOST_TESTS")?.ToUpperInvariant() == "TRUE";
-
-            if (!_runLocalhostTests) return;
-
-            var messageReceiverHost = FunctionHostConfigurationHelper.SetupHost(new MessageReceiver.Startup());
+            var chargeReceiverHost = FunctionHostConfigurationHelper.SetupHost(new ChargeReceiver.Startup());
             var chargeCommandReceiverHost = FunctionHostConfigurationHelper.SetupHost(new ChargeCommandReceiver.Startup());
 
             _chargeHttpTrigger = new ChargeHttpTrigger(
-                messageReceiverHost.Services.GetRequiredService<IChangeOfChargesMessageHandler>(),
-                messageReceiverHost.Services.GetRequiredService<ICorrelationContext>(),
-                messageReceiverHost.Services.GetRequiredService<MessageExtractor<ChargeCommand>>());
+                chargeReceiverHost.Services.GetRequiredService<IChargesMessageHandler>(),
+                chargeReceiverHost.Services.GetRequiredService<ICorrelationContext>(),
+                chargeReceiverHost.Services.GetRequiredService<MessageExtractor<ChargeCommand>>());
 
             _chargeCommandEndpoint = new ChargeCommandEndpoint(
-                chargeCommandReceiverHost.Services.GetRequiredService<IChargeCommandHandler>(),
+                chargeCommandReceiverHost.Services.GetRequiredService<IChargeCommandReceivedEventHandler>(),
                 chargeCommandReceiverHost.Services.GetRequiredService<ICorrelationContext>(),
                 chargeCommandReceiverHost.Services.GetRequiredService<MessageExtractor>());
 
@@ -101,7 +97,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
             _commandRejectedConnectionString = Environment.GetEnvironmentVariable("COMMAND_REJECTED_LISTENER_CONNECTION_STRING") ?? string.Empty;
         }
 
-        [Theory(Timeout = 60000)]
+        [LocalHostIntegrationTestTheory(Timeout = 60000)]
         [Trait(HostingEnvironmentTraitConstants.HostingEnvironment, HostingEnvironmentTraitConstants.LocalHost)]
         [InlineAutoMoqData("TestFiles/ValidCreateTariffCommand.json")]
         public async Task Test_ChargeCommand_is_Accepted(
@@ -110,8 +106,6 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
             [NotNull] ExecutionContext executionContext,
             [NotNull] ServiceBusTestHelper serviceBusTestHelper)
         {
-            if (!_runLocalhostTests) return;
-
             // arrange
             IClock clock = SystemClock.Instance;
             var chargeJson = EmbeddedResourceHelper.GetInputJson(testFilePath, clock);
@@ -119,9 +113,9 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
             var chargeCommand = new JsonSerializer().Deserialize<ChargeCommand>(chargeJson);
 
             // act
-            var messageReceiverResult = await RunMessageReceiver(logger, executionContext, req).ConfigureAwait(false);
+            var chargeReceiverResult = await RunChargeReceiver(logger, executionContext, req).ConfigureAwait(false);
             var commandReceivedResult = await serviceBusTestHelper
-                .GetMessageFromServiceBusAsync<ChargeCommandAcceptedEvent>(
+                .GetMessageFromServiceBusAsync<ChargeCommandReceivedEvent>(
                     _commandReceivedConnectionString ?? string.Empty,
                     _commandReceivedTopicName ?? string.Empty,
                     _commandReceivedSubscriptionName ?? string.Empty,
@@ -140,23 +134,24 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
                 .ConfigureAwait(false);
             _testOutputHelper.WriteLine($"Message accepted by ChargeCommandEndpoint: {commandAcceptedResult.receivedMessage.CorrelationId}");
 
-            var chargeExists = await _chargeDbQueries
-                .ChargeExistsAsync(
+            var charge = await _chargeDbQueries
+                .GetChargeAsync(
                     chargeCommand.ChargeOperation.ChargeId,
                     chargeCommand.ChargeOperation.ChargeOwner,
                     chargeCommand.ChargeOperation.Type)
                 .ConfigureAwait(false);
 
             // assert
-            Assert.Equal(200, messageReceiverResult!.StatusCode!.Value);
-            Assert.Equal(executionContext.InvocationId.ToString(), commandReceivedResult.receivedMessage.CorrelationId);
-            Assert.Equal(executionContext.InvocationId.ToString(), commandAcceptedResult.receivedMessage.CorrelationId);
-            Assert.True(commandReceivedResult.receivedMessage.Body.Length > 0);
-            Assert.True(commandAcceptedResult.receivedMessage.Body.Length > 0);
-            Assert.True(chargeExists);
+            chargeReceiverResult!.StatusCode!.Value.Should().Be(200);
+            commandReceivedResult.receivedMessage.CorrelationId.Should().Be(executionContext.InvocationId.ToString());
+            commandAcceptedResult.receivedMessage.CorrelationId.Should().Be(executionContext.InvocationId.ToString());
+            commandReceivedResult.receivedMessage.Body.Length.Should().BeGreaterThan(0);
+            commandAcceptedResult.receivedMessage.Body.Length.Should().BeGreaterThan(0);
+            charge.Should().NotBeNull();
+            charge.Points.Should().NotBeNullOrEmpty();
         }
 
-        [Theory(Timeout = 60000)]
+        [PipelineIntegrationTestTheory(Timeout = 60000)]
         [Trait(HostingEnvironmentTraitConstants.HostingEnvironment, HostingEnvironmentTraitConstants.LocalHost)]
         [InlineAutoMoqData("TestFiles/InvalidCreateTariffCommand.json")]
         public async Task Test_ChargeCommand_is_Rejected(
@@ -165,8 +160,6 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
             [NotNull] ExecutionContext executionContext,
             [NotNull] ServiceBusTestHelper serviceBusTestHelper)
         {
-            if (!_runLocalhostTests) return;
-
             // arrange
             IClock clock = SystemClock.Instance;
             var chargeJson = EmbeddedResourceHelper.GetInputJson(testFilePath, clock);
@@ -174,8 +167,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
             var chargeCommand = new JsonSerializer().Deserialize<ChargeCommand>(chargeJson);
 
             // act
-            var messageReceiverResult = await RunMessageReceiver(logger, executionContext, req).ConfigureAwait(false);
-            var commandReceivedResult = await serviceBusTestHelper.GetMessageFromServiceBusAsync<ChargeCommand>(
+            var chargeReceiverResult = await RunChargeReceiver(logger, executionContext, req).ConfigureAwait(false);
+            var commandReceivedResult = await serviceBusTestHelper.GetMessageFromServiceBusAsync<ChargeCommandReceivedEvent>(
                     _commandReceivedConnectionString ?? string.Empty,
                     _commandReceivedTopicName ?? string.Empty,
                     _commandReceivedSubscriptionName ?? string.Empty,
@@ -201,18 +194,19 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
                 .ConfigureAwait(false);
 
             // assert
-            Assert.Equal(200, messageReceiverResult!.StatusCode!.Value);
-            Assert.Equal(executionContext.InvocationId.ToString(), commandReceivedResult.receivedEvent.CorrelationId);
-            Assert.Equal(executionContext.InvocationId.ToString(), commandRejectedResult.receivedEvent.CorrelationId);
-            Assert.True(commandReceivedResult.receivedMessage.Body.Length > 0);
-            Assert.True(commandRejectedResult.receivedMessage.Body.Length > 0);
-            Assert.False(chargeExists);
+            chargeReceiverResult!.StatusCode!.Value.Should().Be(200);
+            commandReceivedResult.receivedMessage.CorrelationId.Should().Be(executionContext.InvocationId.ToString());
+            commandRejectedResult.receivedMessage.CorrelationId.Should().Be(executionContext.InvocationId.ToString());
+            commandReceivedResult.receivedMessage.Body.Length.Should().BeGreaterThan(0);
+            commandRejectedResult.receivedMessage.Body.Length.Should().BeGreaterThan(0);
+            chargeExists.Should().BeFalse();
         }
 
-        private async Task<OkObjectResult> RunMessageReceiver(Mock<ILogger> logger, ExecutionContext executionContext, DefaultHttpRequest req)
+        private async Task<OkObjectResult> RunChargeReceiver(Mock<ILogger> logger, ExecutionContext executionContext, DefaultHttpRequest req)
         {
             return (OkObjectResult)await _chargeHttpTrigger!
                 .RunAsync(req, executionContext, logger.Object).ConfigureAwait(false);
         }
     }
 }
+*/

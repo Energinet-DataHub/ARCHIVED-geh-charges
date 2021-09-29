@@ -21,6 +21,8 @@ locals {
     CHARGE_LINK_UPDATED_TOPIC_NAME                = "charge-link-updated"
     METERING_POINT_CREATED_TOPIC_NAME             = "metering-point-created"
     METERING_POINT_CREATED_SUBSCRIPTION_NAME      = "metering-point-created-sub-charges"
+    # The string value is the shared keyvault key name
     INTEGRATION_EVENTS_LISTENER_CONNECTION_STRING = "INTEGRATION-EVENTS-LISTENER-CONNECTION-STRING"
+    # The string value is the shared keyvault key name
     INTEGRATION_EVENTS_SENDER_CONNECTION_STRING   = "INTEGRATION-EVENTS-SENDER-CONNECTION-STRING"
 }

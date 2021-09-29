@@ -13,8 +13,8 @@
 // limitations under the License.
 
 using System.Collections.Generic;
-using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Message;
-using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
+using GreenEnergyHub.Charges.Application.Charges.Handlers.Message;
+using GreenEnergyHub.Charges.Domain.ChargeCommands;
 
 namespace GreenEnergyHub.Charges.Tests.Builders
 {
@@ -28,9 +28,9 @@ namespace GreenEnergyHub.Charges.Tests.Builders
             return this;
         }
 
-        public ChangeOfChargesMessage Build()
+        public ChargesMessage Build()
         {
-            var changeOfChargesMessage = new ChangeOfChargesMessage();
+            var changeOfChargesMessage = new ChargesMessage();
             changeOfChargesMessage.Transactions.AddRange(_transactions);
             return changeOfChargesMessage;
         }

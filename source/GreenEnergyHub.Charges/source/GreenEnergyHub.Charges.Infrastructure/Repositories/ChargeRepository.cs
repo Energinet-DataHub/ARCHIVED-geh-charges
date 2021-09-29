@@ -13,13 +13,14 @@
 // limitations under the License.
 
 using System;
+using System.Linq;
 using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Application.ChangeOfCharges.Repositories;
-using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
+using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Infrastructure.Context;
 using GreenEnergyHub.Charges.Infrastructure.Context.Mapping;
 using GreenEnergyHub.Charges.Infrastructure.Context.Model;
 using Microsoft.EntityFrameworkCore;
+using Charge = GreenEnergyHub.Charges.Domain.Charges.Charge;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Repositories
 {
@@ -32,51 +33,59 @@ namespace GreenEnergyHub.Charges.Infrastructure.Repositories
             _chargesDatabaseContext = chargesDatabaseContext;
         }
 
-        public async Task<GreenEnergyHub.Charges.Domain.Charge> GetChargeAsync(string chargeId, string owner, ChargeType chargeType)
+        public async Task<Charge> GetChargeAsync(string senderProvidedChargeId, string owner, ChargeType chargeType)
         {
-            var charge = await _chargesDatabaseContext.Charges
-                .Include(x => x.ChargePeriodDetails)
-                .Include(x => x.ChargePrices)
-                .Include(x => x.MarketParticipant)
-                .SingleAsync(x => x.ChargeId == chargeId &&
+            var charge = await GetChargesAsQueryable()
+                .SingleAsync(x => x.SenderProvidedChargeId == senderProvidedChargeId &&
                                            x.MarketParticipant.MarketParticipantId == owner &&
-                                           x.ChargeType == (int)chargeType).ConfigureAwait(false);
+                                           x.ChargeType == (int)chargeType)
+                .ConfigureAwait(false);
 
             return ChargeMapper.MapChargeToChargeDomainModel(charge);
         }
 
-        public async Task<bool> CheckIfChargeExistsAsync(string chargeId, string owner, ChargeType chargeType)
+        public async Task<Charge> GetChargeAsync(Guid id)
         {
-            return await _chargesDatabaseContext.Charges
-                .AnyAsync(x => x.ChargeId == chargeId &&
-                                        x.MarketParticipant.MarketParticipantId == owner &&
-                                        x.ChargeType == (int)chargeType).ConfigureAwait(false);
+            var charge = await GetChargesAsQueryable()
+                .SingleAsync(x => x.Id == id)
+                .ConfigureAwait(false);
+
+            return ChargeMapper.MapChargeToChargeDomainModel(charge);
         }
 
-        public async Task<bool> CheckIfChargeExistsByCorrelationIdAsync(string correlationId)
+        public async Task<bool> CheckIfChargeExistsAsync(string senderProvidedChargeId, string owner, ChargeType chargeType)
         {
-            return await _chargesDatabaseContext.ChargeOperations
-                .AnyAsync(x => x.CorrelationId == correlationId)
+            return await _chargesDatabaseContext.Charges
+                .AnyAsync(x => x.SenderProvidedChargeId == senderProvidedChargeId &&
+                                        x.MarketParticipant.MarketParticipantId == owner &&
+                                        x.ChargeType == (int)chargeType)
                 .ConfigureAwait(false);
         }
 
-        public async Task StoreChargeAsync(GreenEnergyHub.Charges.Domain.Charge newCharge)
+        public async Task StoreChargeAsync(Charge newCharge)
         {
             if (newCharge == null) throw new ArgumentNullException(nameof(newCharge));
-
             var marketParticipant = await GetMarketParticipantAsync(newCharge.Document.Sender.Id).ConfigureAwait(false);
-
             var charge = ChargeMapper.MapDomainChargeToCharge(newCharge, marketParticipant);
-
             await _chargesDatabaseContext.Charges.AddAsync(charge).ConfigureAwait(false);
-
             await _chargesDatabaseContext.SaveChangesAsync().ConfigureAwait(false);
+        }
+
+        private IQueryable<Context.Model.Charge> GetChargesAsQueryable()
+        {
+            return _chargesDatabaseContext.Charges
+                .Include(x => x.ChargePeriodDetails)
+                .Include(x => x.ChargePrices)
+                .Include(x => x.MarketParticipant)
+                .Include(x => x.ChargeOperation)
+                .AsQueryable();
         }
 
         private async Task<MarketParticipant> GetMarketParticipantAsync(string marketParticipantId)
         {
-            return await _chargesDatabaseContext.MarketParticipants.SingleAsync(x =>
-                x.MarketParticipantId == marketParticipantId).ConfigureAwait(false);
+            return await _chargesDatabaseContext.MarketParticipants
+                .SingleAsync(x => x.MarketParticipantId == marketParticipantId)
+                .ConfigureAwait(false);
         }
     }
 }

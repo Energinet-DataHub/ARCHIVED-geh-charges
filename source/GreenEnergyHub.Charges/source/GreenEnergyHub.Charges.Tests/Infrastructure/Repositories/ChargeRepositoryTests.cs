@@ -15,87 +15,125 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
-using GreenEnergyHub.Charges.Domain.MarketDocument;
+using FluentAssertions;
+using GreenEnergyHub.Charges.Domain.Charges;
+using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.Infrastructure.Context;
 using GreenEnergyHub.Charges.Infrastructure.Repositories;
 using GreenEnergyHub.Charges.TestCore.Attributes;
+using GreenEnergyHub.Charges.TestCore.Squadron;
 using Microsoft.EntityFrameworkCore;
 using NodaTime;
+using Squadron;
 using Xunit;
 using Xunit.Categories;
-using Charge = GreenEnergyHub.Charges.Domain.Charge;
+using Charge = GreenEnergyHub.Charges.Domain.Charges.Charge;
 using MarketParticipant = GreenEnergyHub.Charges.Infrastructure.Context.Model.MarketParticipant;
 
 namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
 {
     /// <summary>
-    /// Tests <see cref="ChargeRepository"/> using an SQLite in-memory database.
+    /// Tests <see cref="ChargeRepository"/> using a database created with squadron.
     /// </summary>
     [UnitTest]
-    public class ChargeRepositoryTest
+    public class ChargeRepositoryTests : IClassFixture<SqlServerResource<SqlServerOptions>>
     {
-        private const string MarketParticipantId = "MarketParticipantId";
+        private const string MarketParticipantOwner = "MarketParticipantId";
+        private readonly SqlServerResource<SqlServerOptions> _resource;
+
+        public ChargeRepositoryTests(SqlServerResource<SqlServerOptions> resource)
+        {
+            _resource = resource;
+        }
 
         [Fact]
         public async Task GetChargeAsync_WhenChargeIsCreated_ThenSuccessReturnedAsync()
         {
             // Arrange
+            await using var chargesDatabaseWriteContext = await SquadronContextFactory
+                .GetDatabaseContextAsync(_resource)
+                .ConfigureAwait(false);
             var charge = GetValidCharge();
-            CreateAndSeedDatabase(nameof(GetChargeAsync_WhenChargeIsCreated_ThenSuccessReturnedAsync));
-            await using var chargesDatabaseContext =
-                new ChargesDatabaseContext(
-                    GetDatabaseContext(nameof(GetChargeAsync_WhenChargeIsCreated_ThenSuccessReturnedAsync)));
-            var sut = new ChargeRepository(chargesDatabaseContext);
+            await SeedDatabase(chargesDatabaseWriteContext).ConfigureAwait(false);
+            var sut = new ChargeRepository(chargesDatabaseWriteContext);
 
             // Act
             await sut.StoreChargeAsync(charge).ConfigureAwait(false);
-            var expected = await sut.GetChargeAsync(charge.Id, charge.Owner, charge.Type).ConfigureAwait(false);
 
             // Assert
-            Assert.NotNull(expected);
+            await using var chargesDatabaseReadContext = await SquadronContextFactory
+                .GetDatabaseContextAsync(_resource)
+                .ConfigureAwait(false);
+
+            var actual = await chargesDatabaseReadContext.Charges
+                .Include(x => x.ChargePrices)
+                .Include(x => x.ChargePeriodDetails)
+                .SingleOrDefaultAsync(x =>
+                    x.Id == charge.Id &&
+                    x.SenderProvidedChargeId == charge.SenderProvidedChargeId &&
+                    x.MarketParticipant.MarketParticipantId == charge.Owner &&
+                    x.ChargeType == (int)charge.Type)
+                .ConfigureAwait(false);
+
+            var list = chargesDatabaseReadContext.Charges.Include(x => x.MarketParticipant).ToList();
+
+            list.Should().NotBeEmpty();
+            actual.Should().NotBeNull();
+            actual.ChargePrices.Should().NotBeNullOrEmpty();
+            actual.ChargePeriodDetails.Should().NotBeNullOrEmpty();
         }
 
         [Fact]
         public async Task CheckIfChargeExistsAsync_WhenChargeIsCreated_ThenSuccessReturnedAsync()
         {
+            await using var chargesDatabaseWriteContext = await SquadronContextFactory
+                .GetDatabaseContextAsync(_resource)
+                .ConfigureAwait(false);
+
             // Arrange
             var charge = GetValidCharge();
-            CreateAndSeedDatabase(nameof(CheckIfChargeExistsAsync_WhenChargeIsCreated_ThenSuccessReturnedAsync));
-            await using var chargesDatabaseContext = new ChargesDatabaseContext(
-                GetDatabaseContext(nameof(CheckIfChargeExistsAsync_WhenChargeIsCreated_ThenSuccessReturnedAsync)));
-            var sut = new ChargeRepository(chargesDatabaseContext);
+            await SeedDatabase(chargesDatabaseWriteContext).ConfigureAwait(false);
+            var sut = new ChargeRepository(chargesDatabaseWriteContext);
 
             // Act
             await sut.StoreChargeAsync(charge).ConfigureAwait(false);
 
-            var expected = await sut.CheckIfChargeExistsAsync(
-                charge.Id,
-                charge.Owner,
-                charge.Type).ConfigureAwait(false);
-
             // Assert
-            Assert.True(expected);
+            await using var chargesDatabaseReadContext = await SquadronContextFactory
+                .GetDatabaseContextAsync(_resource)
+                .ConfigureAwait(false);
+            var actual = chargesDatabaseReadContext.Charges.Any(x => x.SenderProvidedChargeId == charge.SenderProvidedChargeId &&
+                                                                     x.MarketParticipant.MarketParticipantId == charge.Owner &&
+                                                                     x.ChargeType == (int)charge.Type);
+
+            Assert.True(actual);
         }
 
         [Fact]
         public async Task CheckIfChargeExistsByCorrelationIdAsync_WhenChargeIsCreated_ThenSuccessReturnedAsync()
         {
+            await using var chargesDatabaseWriteContext = await SquadronContextFactory
+                .GetDatabaseContextAsync(_resource)
+                .ConfigureAwait(false);
+
             // Arrange
             var charge = GetValidCharge();
-            CreateAndSeedDatabase(nameof(CheckIfChargeExistsByCorrelationIdAsync_WhenChargeIsCreated_ThenSuccessReturnedAsync));
-            await using var chargesDatabaseContext = new ChargesDatabaseContext(
-                GetDatabaseContext(nameof(CheckIfChargeExistsByCorrelationIdAsync_WhenChargeIsCreated_ThenSuccessReturnedAsync)));
-            var sut = new ChargeRepository(chargesDatabaseContext);
+            await SeedDatabase(chargesDatabaseWriteContext).ConfigureAwait(false);
+            var sut = new ChargeRepository(chargesDatabaseWriteContext);
 
             // Act
             await sut.StoreChargeAsync(charge).ConfigureAwait(false);
-            var expected =
-                await sut.CheckIfChargeExistsByCorrelationIdAsync(charge.CorrelationId).ConfigureAwait(false);
 
             // Assert
-            Assert.True(expected);
+            await using var chargesDatabaseReadContext = await SquadronContextFactory
+                .GetDatabaseContextAsync(_resource)
+                .ConfigureAwait(false);
+            var actual = chargesDatabaseReadContext
+                .Charges
+                .Any(x => x.ChargeOperation.CorrelationId == charge.CorrelationId);
+            Assert.True(actual);
         }
 
         [Theory]
@@ -112,62 +150,81 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
                 .ConfigureAwait(false);
         }
 
+        [Fact]
+        public async Task GetChargeAsync_WithId_ThenSuccessReturnedAsync()
+        {
+            await using var chargesDatabaseContext = await SquadronContextFactory
+                .GetDatabaseContextAsync(_resource)
+                .ConfigureAwait(false);
+
+            // Arrange
+            var sut = new ChargeRepository(chargesDatabaseContext);
+            var charge = GetValidCharge();
+            await sut.StoreChargeAsync(charge).ConfigureAwait(false);
+            await using var chargesDatabaseReadContext = await SquadronContextFactory
+                .GetDatabaseContextAsync(_resource)
+                .ConfigureAwait(false);
+            var createdCharge = chargesDatabaseReadContext.
+                Charges.First(x => x.SenderProvidedChargeId == charge.SenderProvidedChargeId &&
+                                                                     x.MarketParticipant.MarketParticipantId == charge.Owner &&
+                                                                     x.ChargeType == (int)charge.Type);
+            // Act
+            var actual = await sut.GetChargeAsync(createdCharge.Id).ConfigureAwait(false);
+
+            // Assert
+            Assert.NotNull(actual);
+        }
+
         private static Charge GetValidCharge()
         {
-            var transaction = new Charge
-            {
-                Name = "description",
-                Id = "Id",
-                Owner = MarketParticipantId,
-                StartDateTime = SystemClock.Instance.GetCurrentInstant(),
-                Points = new List<Point>
-                    {
-                        new Point { Position = 0, Time = SystemClock.Instance.GetCurrentInstant(), Price = 200m },
-                    },
-                Resolution = Resolution.P1D,
-                Type = ChargeType.Fee,
-                VatClassification = VatClassification.NoVat,
-                Description = "LongDescription",
-
-                Document = new Document
+            var charge = new Charge(
+                Guid.NewGuid(),
+                new Document
                 {
                     Id = "id",
                     RequestDate = SystemClock.Instance.GetCurrentInstant(),
                     Type = DocumentType.RequestUpdateChargeInformation,
                     IndustryClassification = IndustryClassification.Electricity,
                     CreatedDateTime = SystemClock.Instance.GetCurrentInstant(),
-                    Sender = new Domain.MarketDocument.MarketParticipant
+                    Sender = new Charges.Domain.MarketParticipants.MarketParticipant
                     {
-                        Id = MarketParticipantId,
+                        Id = MarketParticipantOwner,
                         BusinessProcessRole = (MarketParticipantRole)1,
                     },
                     BusinessReasonCode = BusinessReasonCode.UpdateChargeInformation,
                 },
-                ChargeOperationId = "id",
-                LastUpdatedBy = "LastUpdatedBy",
-                CorrelationId = "CorrelationId",
-            };
-            return transaction;
+                "ChargeOperationId",
+                "SenderProvidedId",
+                "Name",
+                "description",
+                MarketParticipantOwner,
+                "CorrelationId",
+                SystemClock.Instance.GetCurrentInstant(),
+                Instant.FromUtc(9999, 12, 31, 23, 59, 59),
+                ChargeType.Fee,
+                VatClassification.Unknown,
+                Resolution.P1D,
+                true,
+                false,
+                new List<Point>
+                {
+                    new Point { Position = 0, Time = SystemClock.Instance.GetCurrentInstant(), Price = 200m },
+                });
+
+            return charge;
         }
 
-        private static void CreateAndSeedDatabase(string sqlFileName)
+        private static async Task SeedDatabase(ChargesDatabaseContext context)
         {
-            using var context = new ChargesDatabaseContext(GetDatabaseContext(sqlFileName));
-            context.Database.EnsureDeleted();
-            context.Database.EnsureCreated();
-            context.MarketParticipants.Add(
-                            new MarketParticipant { Name = "Name", Role = 1, MarketParticipantId = MarketParticipantId });
-            context.SaveChanges();
-        }
+            var marketParticipant = await context.MarketParticipants.SingleOrDefaultAsync(x => x.MarketParticipantId == MarketParticipantOwner)
+                .ConfigureAwait(false);
 
-        private static DbContextOptions<ChargesDatabaseContext> GetDatabaseContext(string sqlFileName)
-        {
-            DbContextOptions<ChargesDatabaseContext> dbContextOptions =
-                new DbContextOptionsBuilder<ChargesDatabaseContext>()
-                    .UseSqlite($"Filename={sqlFileName}.db")
-                    .Options;
-
-            return dbContextOptions;
+            if (marketParticipant == null)
+            {
+                context.MarketParticipants.Add(
+                                new MarketParticipant { Name = "Name", Role = 1, MarketParticipantId = MarketParticipantOwner });
+                await context.SaveChangesAsync().ConfigureAwait(false);
+            }
         }
     }
 }

@@ -16,8 +16,8 @@ using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Threading.Tasks;
 using System.Xml;
-using GreenEnergyHub.Charges.Domain.ChargeLinks;
-using GreenEnergyHub.Charges.Domain.MarketDocument;
+using GreenEnergyHub.Charges.Domain.ChargeLinkCommands;
+using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.Infrastructure.Messaging.Serialization.MarketDocument;
 using GreenEnergyHub.Messaging.Transport;
 using NodaTime;
@@ -42,26 +42,23 @@ namespace GreenEnergyHub.Charges.Infrastructure.Messaging.Serialization.Commands
         {
             var correlationId = _correlationContext.CorrelationId;
 
-            var command = new ChargeLinkCommandReceivedEvent(correlationId)
-            {
-                Document = document,
-            };
-
-            command.ChargeLink = await ParseChargeLinkAsync(reader).ConfigureAwait(false);
-
-            return command;
+            return new ChargeLinkCommand(correlationId)
+                {
+                    Document = document,
+                    ChargeLink = await ParseChargeLinkAsync(reader).ConfigureAwait(false),
+                };
         }
 
-        private static async Task<ChargeLink> ParseChargeLinkAsync(XmlReader reader)
+        private static async Task<ChargeLinkDto> ParseChargeLinkAsync(XmlReader reader)
         {
-            var link = new ChargeLink();
+            var link = new ChargeLinkDto();
 
             while (await reader.ReadAsync().ConfigureAwait(false))
             {
                 if (reader.Is(CimChargeLinkCommandConstants.Id, CimChargeLinkCommandConstants.Namespace))
                 {
                     var content = await reader.ReadElementContentAsStringAsync().ConfigureAwait(false);
-                    link.Id = content;
+                    link.OperationId = content;
                 }
                 else if (reader.Is(CimChargeLinkCommandConstants.MeteringPointId, CimChargeLinkCommandConstants.Namespace))
                 {

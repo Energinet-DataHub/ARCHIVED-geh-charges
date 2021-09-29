@@ -12,38 +12,63 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
-using GreenEnergyHub.Charges.Domain.Events.Local;
-using GreenEnergyHub.Messaging.Transport;
-using NodaTime;
-
-#pragma warning disable 8618
+using System;
+using System.Collections.Generic;
 
 namespace GreenEnergyHub.Charges.Domain.ChargeLinks
 {
-    public class ChargeLink : InboundIntegrationEvent, IOutboundMessage
+    /// <summary>
+    /// The link between a metering point and a charge.
+    /// </summary>
+    public class ChargeLink
     {
-        public ChargeLink()
-            : base(Messaging.MessageTypes.Common.Transaction.NewTransaction())
-        { }
+        public ChargeLink(
+            Guid chargeId,
+            Guid meteringPointId,
+            List<ChargeLinkOperation> operations,
+            List<ChargeLinkPeriodDetails> periodDetails)
+        {
+            Id = Guid.NewGuid();
+            ChargeId = chargeId;
+            MeteringPointId = meteringPointId;
+            _operations = operations;
+            _periodDetails = periodDetails;
+        }
 
         /// <summary>
-        /// Contains a ID for the specific link, provided by the sender. Combined with sender.id it becomes unique.
+        /// Used implicitly by persistence.
         /// </summary>
-        public string Id { get; set; }
+        // ReSharper disable once UnusedMember.Local
+        private ChargeLink(Guid chargeId, Guid meteringPointId)
+        {
+            ChargeId = chargeId;
+            MeteringPointId = meteringPointId;
+            _operations = new List<ChargeLinkOperation>();
+            _periodDetails = new List<ChargeLinkPeriodDetails>();
+        }
 
-        public string MeteringPointId { get; set; }
+        /// <summary>
+        /// Globally unique identifier of the charge link.
+        /// </summary>
+        public Guid Id { get; }
 
-        public Instant StartDateTime { get; set; }
+        /// <summary>
+        /// The charge that is linked to the metering point (<see cref="MeteringPointId"/>).
+        /// This is not
+        /// </summary>
+        public Guid ChargeId { get; }
 
-        public Instant? EndDateTime { get; set; }
+        /// <summary>
+        /// The metering point that is linked to the charge (<see cref="ChargeId"/>).
+        /// </summary>
+        public Guid MeteringPointId { get; }
 
-        public string ChargeId { get; set; }
+        private readonly List<ChargeLinkOperation> _operations;
 
-        public int Factor { get; set; }
+        public IReadOnlyCollection<ChargeLinkOperation> Operations => _operations.AsReadOnly();
 
-        public string ChargeOwner { get; set; }
+        private readonly List<ChargeLinkPeriodDetails> _periodDetails;
 
-        public ChargeType ChargeType { get; set; }
+        public IReadOnlyCollection<ChargeLinkPeriodDetails> PeriodDetails => _periodDetails.AsReadOnly();
     }
 }

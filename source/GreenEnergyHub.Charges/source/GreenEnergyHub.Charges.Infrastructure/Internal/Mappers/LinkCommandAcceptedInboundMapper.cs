@@ -12,16 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
 using System.Diagnostics.CodeAnalysis;
 using GreenEnergyHub.Charges.Core.DateTime;
-using GreenEnergyHub.Charges.Domain.ChangeOfCharges.Transaction;
-using GreenEnergyHub.Charges.Domain.ChargeLinks;
-using GreenEnergyHub.Charges.Domain.MarketDocument;
+using GreenEnergyHub.Charges.Domain.ChargeLinkCommandAcceptedEvents;
+using GreenEnergyHub.Charges.Domain.ChargeLinkCommands;
+using GreenEnergyHub.Charges.Domain.Charges;
+using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandAccepted;
 using GreenEnergyHub.Messaging.Protobuf;
 using GreenEnergyHub.Messaging.Transport;
-using NodaTime;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
 {
@@ -29,11 +28,10 @@ namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
     {
         protected override IInboundMessage Convert([NotNull]ChargeLinkCommandAcceptedContract chargeLinkCommandAcceptedContract)
         {
-            return new ChargeLinkCommandAcceptedEvent(chargeLinkCommandAcceptedContract.CorrelationId)
-            {
-                Document = ConvertDocument(chargeLinkCommandAcceptedContract.Document),
-                ChargeLink = ConvertChargeLink(chargeLinkCommandAcceptedContract.ChargeLink),
-            };
+            return new ChargeLinkCommandAcceptedEvent(
+                chargeLinkCommandAcceptedContract.CorrelationId,
+                ConvertDocument(chargeLinkCommandAcceptedContract.Document),
+                ConvertChargeLink(chargeLinkCommandAcceptedContract.ChargeLink));
         }
 
         private static Document ConvertDocument(DocumentContract document)
@@ -60,11 +58,11 @@ namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
             };
         }
 
-        private static ChargeLink ConvertChargeLink(ChargeLinkContract link)
+        private static ChargeLinkDto ConvertChargeLink(ChargeLinkContract link)
         {
-            return new ChargeLink
+            return new ChargeLinkDto
             {
-                Id = link.Id,
+                OperationId = link.OperationId,
                 MeteringPointId = link.MeteringPointId,
                 StartDateTime = link.StartDateTime.ToInstant(),
                 EndDateTime = link.EndDateTime.ToInstant(),

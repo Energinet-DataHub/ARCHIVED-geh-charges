@@ -18,9 +18,9 @@ using GreenEnergyHub.Messaging.Protobuf;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Integration.Mappers
 {
-    public class ChargeRejectionOutboundMapper : ProtobufOutboundMapper<Domain.Acknowledgements.ChargeRejection>
+    public class ChargeRejectionOutboundMapper : ProtobufOutboundMapper<Application.Charges.Acknowledgement.ChargeRejection>
     {
-        protected override Google.Protobuf.IMessage Convert([NotNull]Domain.Acknowledgements.ChargeRejection rejection)
+        protected override Google.Protobuf.IMessage Convert([NotNull]Application.Charges.Acknowledgement.ChargeRejection rejection)
         {
             var chargeRejection = new ChargeRejectionContract
             {

@@ -11,8 +11,9 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-
+/*
 using System;
+using EntityFrameworkCore.SqlServer.NodaTime.Extensions;
 using GreenEnergyHub.Charges.Infrastructure.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -29,7 +30,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.TestHelpers
             var serviceCollection = new ServiceCollection();
             serviceCollection
                 .AddDbContext<ChargesDatabaseContext>(
-                    options => options.UseSqlServer(connectionString!),
+                    options => options.UseSqlServer(connectionString!, options => options.UseNodaTime()),
                     ServiceLifetime.Transient);
 
             ServiceProvider = serviceCollection.BuildServiceProvider();
@@ -38,3 +39,4 @@ namespace GreenEnergyHub.Charges.IntegrationTests.TestHelpers
         public ServiceProvider ServiceProvider { get; private set; }
     }
 }
+*/
