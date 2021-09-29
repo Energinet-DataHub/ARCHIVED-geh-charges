@@ -25,7 +25,7 @@ using Microsoft.Extensions.Configuration;
 using Squadron;
 using Xunit.Abstractions;
 
-namespace GreenEnergyHub.Charges.IntegrationTests.Functions.Fixtures
+namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures
 {
     public class ChargesFunctionAppFixture : FunctionAppFixture
     {
@@ -78,9 +78,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Functions.Fixtures
         protected override Task OnFunctionAppHostFailedAsync(IReadOnlyList<string> hostLogSnapshot, Exception exception)
         {
             if (Debugger.IsAttached)
-            {
                 Debugger.Break();
-            }
 
             return base.OnFunctionAppHostFailedAsync(hostLogSnapshot, exception);
         }

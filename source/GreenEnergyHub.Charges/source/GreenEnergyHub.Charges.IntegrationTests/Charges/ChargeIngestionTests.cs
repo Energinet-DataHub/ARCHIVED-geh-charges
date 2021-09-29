@@ -19,7 +19,7 @@ using System.Text;
 using System.Threading.Tasks;
 using FluentAssertions;
 using FluentAssertions.Execution;
-using GreenEnergyHub.Charges.IntegrationTests.Functions.Fixtures;
+using GreenEnergyHub.Charges.IntegrationTests.Fixtures;
 using GreenEnergyHub.Charges.IntegrationTests.TestHelpers;
 using GreenEnergyHub.FunctionApp.TestCommon;
 using GreenEnergyHub.FunctionApp.TestCommon.ServiceBus.ListenerMock;
@@ -27,18 +27,17 @@ using NodaTime;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace GreenEnergyHub.Charges.IntegrationTests.Functions
+namespace GreenEnergyHub.Charges.IntegrationTests.Charges
 {
     /// <summary>
     /// Proof-of-concept on integration testing a function.
     /// </summary>
-    public class ChargesTests
+    public class ChargeIngestionTests
     {
-        // UNDONE: For now we just create one collection to span both apps; we have also implemented collection fixtures.
-        [Collection("FunctionApp")]
-        public class GetHealthAsync : FunctionAppTestBase<ChargesFunctionAppFixture>, IClassFixture<ChargesFunctionAppFixture>, IAsyncLifetime
+        [Collection(nameof(ChargesFunctionAppCollectionFixture))]
+        public class RunAsync : FunctionAppTestBase<ChargesFunctionAppFixture>, IAsyncLifetime
         {
-            public GetHealthAsync(ChargesFunctionAppFixture fixture, ITestOutputHelper testOutputHelper)
+            public RunAsync(ChargesFunctionAppFixture fixture, ITestOutputHelper testOutputHelper)
                 : base(fixture, testOutputHelper)
             {
             }
@@ -55,37 +54,11 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Functions
             }
 
             [Fact]
-            public async Task When_RequestingHealthStatus_Then_ReturnStatusOK()
-            {
-                // Arrange
-                var requestUri = "api/HealthStatus";
-
-                // Act
-                var actualResponse = await Fixture.HostManager.HttpClient.GetAsync(requestUri);
-
-                // Assert
-                actualResponse.StatusCode.Should().Be(HttpStatusCode.OK);
-            }
-
-            [Fact]
-            public async Task When_RequestingUnknownEndpoint_Then_ReturnStatusNotFound()
-            {
-                // Arrange
-                var requestUri = "api/unknown";
-
-                // Act
-                var actualResponse = await Fixture.HostManager.HttpClient.GetAsync(requestUri);
-
-                // Assert
-                actualResponse.StatusCode.Should().Be(HttpStatusCode.NotFound);
-            }
-
-            [Fact]
             public async Task When_CallingChargeIngestion_Then_RequestIsProcessedAndMessageIsSendToPostOffice()
             {
                 // Arrange
                 var testFilePath = "TestFiles/ValidCreateTariffCommand.json";
-                IClock clock = SystemClock.Instance;
+                var clock = SystemClock.Instance;
                 var chargeJson = EmbeddedResourceHelper.GetInputJson(testFilePath, clock);
 
                 var request = new HttpRequestMessage(HttpMethod.Post, "api/ChargeIngestion");

@@ -17,7 +17,7 @@ using System.IO;
 using Squadron;
 using Squadron.AzureCloud;
 
-namespace GreenEnergyHub.Charges.IntegrationTests.Functions.Fixtures
+namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures
 {
     public class ChargesFunctionAppServiceBusOptions : AzureCloudServiceBusOptions
     {
