@@ -27,7 +27,8 @@ namespace GreenEnergyHub.Charges.Core.Enumeration
             var isDefined = Enum.IsDefined(typeof(TOutputEnum), (int)(object)inputEnum);
             if (!isDefined)
             {
-                var message = $"Cannot cast enum '{inputEnum.GetType().Name}.{inputEnum}={(int)(object)inputEnum}' to enum type '{typeof(TOutputEnum).Name}' because it has no corresponding value.";
+                var message = $"Cannot cast enum '{inputEnum.GetType().Name}.{inputEnum}={(int)(object)inputEnum}' " +
+                                   $"to enum type '{typeof(TOutputEnum).Name}' because it has no corresponding value.";
                 throw new InvalidCastException(message);
             }
 
