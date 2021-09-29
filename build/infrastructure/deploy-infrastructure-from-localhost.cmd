@@ -2,7 +2,7 @@
 rem Simple helper script for developers to ease deployment of Terraform
 rem -----------------------------------------------------------------------------------
 rem Set up prerequisites as outlined in README.md and then
-rem simply issue the command "deploy-from-localhost" in a command prompt in this folder
+rem simply issue the command "deploy-infrastructure-from-localhost" in a command prompt in this folder
 
 rem Merge main and development into new folder
 

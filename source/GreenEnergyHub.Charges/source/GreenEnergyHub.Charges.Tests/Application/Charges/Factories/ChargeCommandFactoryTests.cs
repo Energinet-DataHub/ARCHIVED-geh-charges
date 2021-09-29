@@ -12,29 +12,32 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Threading.Tasks;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.ChargeCommands;
 using GreenEnergyHub.Charges.Domain.Charges;
-using GreenEnergyHub.TestHelpers;
+using GreenEnergyHub.Charges.Domain.MarketParticipants;
+using GreenEnergyHub.Charges.TestCore.Attributes;
 using GreenEnergyHub.TestHelpers.FluentAssertionsExtensions;
+using NodaTime;
 using Xunit;
 using Xunit.Categories;
 
 namespace GreenEnergyHub.Charges.Tests.Application.Charges.Factories
 {
     [UnitTest]
-    public class ChargeFactoryTests
+    public class ChargeCommandFactoryTests
     {
         [Theory]
-        [InlineAutoDomainData]
-        public async Task CreateFromCommandAsync_Charge_HasNoNullsOrEmptyCollections(
-            ChargeCommand chargeCommand,
-            [NotNull] ChargeFactory sut)
+        [InlineAutoMoqData]
+        public void CreateFromChargeAsync_ChargeCommand_HasNoNullsOrEmptyCollections(
+            Charge charge,
+            [NotNull] ChargeCommandFactory sut)
         {
             // Act
-            var actual = await sut.CreateFromCommandAsync(chargeCommand).ConfigureAwait(false);
+            var actual = sut.CreateFromCharge(charge);
 
             // Assert
             actual.Should().NotContainNullsOrEmptyEnumerables();

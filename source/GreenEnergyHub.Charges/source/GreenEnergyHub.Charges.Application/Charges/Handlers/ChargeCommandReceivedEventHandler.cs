@@ -16,6 +16,7 @@ using System;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application.Charges.Acknowledgement;
 using GreenEnergyHub.Charges.Domain.ChargeCommandReceivedEvents;
+using GreenEnergyHub.Charges.Domain.ChargeCommands;
 using GreenEnergyHub.Charges.Domain.ChargeCommands.Validation;
 using GreenEnergyHub.Charges.Domain.Charges;
 
@@ -27,17 +28,20 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
         private readonly IChargeCommandValidator _chargeCommandValidator;
         private readonly IChargeRepository _chargeRepository;
         private readonly IChargeFactory _chargeFactory;
+        private readonly IChargeCommandFactory _chargeCommandFactory;
 
         public ChargeCommandReceivedEventHandler(
             IChargeCommandConfirmationService chargeCommandConfirmationService,
             IChargeCommandValidator chargeCommandValidator,
             IChargeRepository chargeRepository,
-            IChargeFactory chargeFactory)
+            IChargeFactory chargeFactory,
+            IChargeCommandFactory chargeCommandFactory)
         {
             _chargeCommandConfirmationService = chargeCommandConfirmationService;
             _chargeCommandValidator = chargeCommandValidator;
             _chargeRepository = chargeRepository;
             _chargeFactory = chargeFactory;
+            _chargeCommandFactory = chargeCommandFactory;
         }
 
         public async Task HandleAsync(ChargeCommandReceivedEvent commandReceivedEvent)
@@ -53,7 +57,9 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
 
             var charge = await _chargeFactory.CreateFromCommandAsync(commandReceivedEvent.Command).ConfigureAwait(false);
             await _chargeRepository.StoreChargeAsync(charge).ConfigureAwait(false);
-            await _chargeCommandConfirmationService.AcceptAsync(commandReceivedEvent.Command).ConfigureAwait(false);
+
+            var chargeCommand = _chargeCommandFactory.CreateFromCharge(charge);
+            await _chargeCommandConfirmationService.AcceptAsync(chargeCommand).ConfigureAwait(false);
         }
     }
 }

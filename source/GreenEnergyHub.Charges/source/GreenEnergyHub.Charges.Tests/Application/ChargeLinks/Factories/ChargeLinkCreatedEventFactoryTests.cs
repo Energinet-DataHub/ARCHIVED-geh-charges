@@ -44,7 +44,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Factories
             Assert.Equal(command.ChargeLink.ChargeType, result.ChargeType);
             Assert.Equal(command.ChargeLink.ChargeOwner, result.ChargeOwner);
             Assert.Equal(command.ChargeLink.StartDateTime, result.ChargeLinkPeriod.StartDateTime);
-            Assert.Equal(command.ChargeLink.EndDateTime.TimeOrEndDefault(), result.ChargeLinkPeriod.EndDateTime);
+            Assert.Equal(command.ChargeLink.EndDateTime, result.ChargeLinkPeriod.EndDateTime);
             Assert.Equal(command.ChargeLink.Factor, result.ChargeLinkPeriod.Factor);
         }
     }
