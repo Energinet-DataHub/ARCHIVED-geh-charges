@@ -24,9 +24,23 @@ option csharp_namespace = "GreenEnergyHub.Charges.Infrastructure.Integration.Cha
 
 message ChargeCreated {
   string charge_id = 1;// A charge identifier. Combined with Charge Owner and Charge Type it becomes unique
+  enum ChargeType {
+    CT_UNKNOWN = 0;
+    CT_SUBSCRIPTION = 1;
+    CT_FEE = 2;
+    CT_TARIFF = 3;
+  }
   ChargeType charge_type = 2;// The type of charge; tariff, fee or subscription
   string charge_owner = 3; // A charge owner identification, e.g. the Market Participant's GLN or EIC number
   string currency = 4; // ISO 4217 currency code
+  enum Resolution
+  {
+    R_UNKNOWN = 0;
+    R_PT15m = 1;
+    R_PT1H = 2;
+    R_P1D = 3;
+    R_P1M = 4;
+  }
   Resolution resolution = 5;
   bool tax_indicator = 6; // Indicates whether the Charge is tax or not.
   ChargePeriod charge_period = 7;
@@ -35,20 +49,4 @@ message ChargeCreated {
 message ChargePeriod {
   google.protobuf.Timestamp StartDateTime = 1;
   google.protobuf.Timestamp EndDateTime = 2;
-}
-
-enum ChargeType {
-  CT_UNKNOWN = 0;
-  CT_SUBSCRIPTION = 1;
-  CT_FEE = 2;
-  CT_TARIFF = 3;
-}
-
-enum Resolution
-{
-  R_UNKNOWN = 0;
-  R_PT15m = 1;
-  R_PT1H = 2;
-  R_P1D = 3;
-  R_P1M = 4;
 }

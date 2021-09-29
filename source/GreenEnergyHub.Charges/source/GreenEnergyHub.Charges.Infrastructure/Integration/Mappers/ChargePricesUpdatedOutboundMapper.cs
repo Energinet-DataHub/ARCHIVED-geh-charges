@@ -17,7 +17,6 @@ using Google.Protobuf;
 using GreenEnergyHub.Charges.Application.Charges.Acknowledgement;
 using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.Core.Enumeration;
-using GreenEnergyHub.Charges.Domain.Charges.Acknowledgements;
 using GreenEnergyHub.Charges.Infrastructure.Integration.ChargeConfirmation;
 using GreenEnergyHub.Messaging.Protobuf;
 
@@ -27,11 +26,11 @@ namespace GreenEnergyHub.Charges.Infrastructure.Integration.Mappers
     {
         protected override IMessage Convert([NotNull]ChargePricesUpdatedEvent chargePricesUpdatedEvent)
         {
-            var chargePricesUpdatedContract = new ChargeConfirmation.ChargePricesUpdated
+            var chargePricesUpdatedContract = new ChargePricesUpdated
             {
                 ChargeId = chargePricesUpdatedEvent.ChargeId,
                 ChargeOwner = chargePricesUpdatedEvent.ChargeOwner,
-                ChargeType = chargePricesUpdatedEvent.ChargeType.Cast<ChargeType>(),
+                ChargeType = chargePricesUpdatedEvent.ChargeType.Cast<ChargePricesUpdated.Types.ChargeType>(),
                 UpdatePeriodStartDate = chargePricesUpdatedEvent.UpdatePeriodStartDate.ToTimestamp(),
                 UpdatePeriodEndDate = chargePricesUpdatedEvent.UpdatePeriodEndDate.ToTimestamp(),
             };

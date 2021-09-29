@@ -12,9 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using GreenEnergyHub.Charges.FunctionHost.ChargeLinks;
 using GreenEnergyHub.Charges.FunctionHost.Charges;
-using GreenEnergyHub.Charges.FunctionHost.MeteringPoint;
 using Xunit;
 
 namespace GreenEnergyHub.Charges.Tests.FunctionHost
@@ -34,8 +32,6 @@ namespace GreenEnergyHub.Charges.Tests.FunctionHost
         public void AllFunctionsShouldBeIncludedInCoverage()
         {
             Assert.Equal("ChargeCommandReceiverEndpoint", ChargeCommandReceiverEndpoint.FunctionName);
-            Assert.Equal("MeteringPointCreatedReceiverEndpoint", MeteringPointCreatedReceiverEndpoint.FunctionName);
-            Assert.Equal("ChargeCommandAcceptedReceiverEndpoint", ChargeCommandAcceptedReceiverEndpoint.FunctionName);
         }
     }
 }

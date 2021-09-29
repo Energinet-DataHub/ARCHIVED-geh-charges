@@ -18,12 +18,8 @@ using GreenEnergyHub.Charges.Domain.Charges.Acknowledgements;
 using GreenEnergyHub.Charges.Infrastructure.Integration.Mappers;
 using GreenEnergyHub.Charges.TestCore.Attributes;
 using GreenEnergyHub.Charges.TestCore.Protobuf;
-using NodaTime;
 using Xunit;
 using Xunit.Categories;
-using ChargeType = GreenEnergyHub.Charges.Domain.Charges.ChargeType;
-using Period = GreenEnergyHub.Charges.Core.Period;
-using Resolution = GreenEnergyHub.Charges.Domain.Charges.Resolution;
 
 namespace GreenEnergyHub.Charges.Tests.Infrastructure.Integration.Mappers
 {

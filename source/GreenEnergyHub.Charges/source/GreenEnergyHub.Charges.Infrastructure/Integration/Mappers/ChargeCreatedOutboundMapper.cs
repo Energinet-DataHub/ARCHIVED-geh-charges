@@ -28,10 +28,10 @@ namespace GreenEnergyHub.Charges.Infrastructure.Integration.Mappers
             return new ChargeCreated.ChargeCreated
             {
                 ChargeId = chargeCreatedEvent.ChargeId,
-                ChargeType = chargeCreatedEvent.ChargeType.Cast<ChargeType>(),
+                ChargeType = chargeCreatedEvent.ChargeType.Cast<ChargeCreated.ChargeCreated.Types.ChargeType>(),
                 ChargeOwner = chargeCreatedEvent.ChargeOwner,
                 Currency = chargeCreatedEvent.Currency,
-                Resolution = chargeCreatedEvent.Resolution.Cast<Resolution>(),
+                Resolution = chargeCreatedEvent.Resolution.Cast<ChargeCreated.ChargeCreated.Types.Resolution>(),
                 TaxIndicator = chargeCreatedEvent.TaxIndicator,
                 ChargePeriod = new ChargePeriod
                 {

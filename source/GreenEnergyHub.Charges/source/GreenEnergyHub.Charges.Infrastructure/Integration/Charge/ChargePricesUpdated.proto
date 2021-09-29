@@ -24,18 +24,17 @@ option csharp_namespace = "GreenEnergyHub.Charges.Infrastructure.Integration.Cha
 
 message ChargePricesUpdated {
   string charge_id = 1; // A charge identifier. Combined with Charge Owner and Charge Type it becomes unique
+  enum ChargeType {
+      CT_UNKNOWN = 0;
+      CT_SUBSCRIPTION = 1;
+      CT_FEE = 2;
+      CT_TARIFF = 3;
+  }
   ChargeType charge_type = 2; // The type of charge; tariff, fee or subscription
   string charge_owner = 3; // A charge owner identification, e.g. the Market Participant's GLN or EIC number
   google.protobuf.Timestamp update_period_start_date = 4;
   google.protobuf.Timestamp update_period_end_date = 5;
   repeated ChargePrice points = 6;
-}
-
-enum ChargeType {
-  CT_UNKNOWN = 0;
-  CT_SUBSCRIPTION = 1;
-  CT_FEE = 2;
-  CT_TARIFF = 3;
 }
 
 message ChargePrice
