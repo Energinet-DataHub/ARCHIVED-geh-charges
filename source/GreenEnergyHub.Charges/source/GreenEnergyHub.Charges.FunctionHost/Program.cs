@@ -20,6 +20,7 @@ using GreenEnergyHub.Charges.Application.Charges.Acknowledgement;
 using GreenEnergyHub.Charges.Application.Charges.Factories;
 using GreenEnergyHub.Charges.Application.Charges.Handlers;
 using GreenEnergyHub.Charges.Application.MeteringPoints.Handlers;
+using GreenEnergyHub.Charges.Core.Currency;
 using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.Domain.ChargeCommandAcceptedEvents;
 using GreenEnergyHub.Charges.Domain.ChargeCommandReceivedEvents;
@@ -158,7 +159,7 @@ namespace GreenEnergyHub.Charges.FunctionHost
             serviceCollection.AddScoped<IChargeCommandBusinessValidator, ChargeCommandBusinessValidator>();
             serviceCollection.AddScoped<IChargeCommandValidator, ChargeCommandValidator>();
 
-            // ISO 8601
+            // ISO 8601 (Timezones)
             const string timeZoneIdString = "LOCAL_TIMEZONENAME";
             var timeZoneId = Environment.GetEnvironmentVariable(timeZoneIdString) ??
                              throw new ArgumentNullException(
@@ -167,6 +168,15 @@ namespace GreenEnergyHub.Charges.FunctionHost
             var timeZoneConfiguration = new Iso8601ConversionConfiguration(timeZoneId);
             serviceCollection.AddSingleton<IIso8601ConversionConfiguration>(timeZoneConfiguration);
             serviceCollection.AddScoped<IZonedDateTimeService, ZonedDateTimeService>();
+
+            // ISO 4217 (Currencies)
+            const string currencyString = "CURRENCY";
+            var currency = Environment.GetEnvironmentVariable(currencyString) ??
+                             throw new ArgumentNullException(
+                                 currencyString,
+                                 "does not exist in configuration settings");
+            var iso4217Currency = new Iso4217CurrencyConfiguration(currency);
+            serviceCollection.AddSingleton(iso4217Currency);
 
             // Messaging
             serviceCollection.ReceiveProtobufMessage<ChargeCommandReceivedContract>(

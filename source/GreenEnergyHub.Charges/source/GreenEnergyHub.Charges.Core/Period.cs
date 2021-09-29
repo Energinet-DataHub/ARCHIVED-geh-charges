@@ -14,7 +14,7 @@
 
 using NodaTime;
 
-namespace GreenEnergyHub.Charges.Domain.Charges
+namespace GreenEnergyHub.Charges.Core
 {
     public class Period
     {

@@ -28,6 +28,7 @@ module "azfun_functionhost" {
     WEBSITES_ENABLE_APP_SERVICE_STORAGE           = true
     FUNCTIONS_WORKER_RUNTIME                      = "dotnet-isolated"
     LOCAL_TIMEZONENAME                            = local.LOCAL_TIMEZONENAME
+    CURRENCY                                      = local.CURRENCY
     CHARGE_DB_CONNECTION_STRING                   = local.CHARGE_DB_CONNECTION_STRING
     INTEGRATIONEVENT_SENDER_CONNECTION_STRING     = data.azurerm_key_vault_secret.integration_events_sender_connection_string.value
     INTEGRATIONEVENT_LISTENER_CONNECTION_STRING   = data.azurerm_key_vault_secret.integration_events_listener_connection_string.value

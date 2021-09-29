@@ -13,6 +13,8 @@
 // limitations under the License.
 
 using System.Diagnostics.CodeAnalysis;
+using GreenEnergyHub.Charges.Core;
+using GreenEnergyHub.Charges.Core.Currency;
 using GreenEnergyHub.Charges.Domain.ChargeCommandAcceptedEvents;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Charges.Acknowledgements;
@@ -21,13 +23,20 @@ namespace GreenEnergyHub.Charges.Application.Charges.Factories
 {
     public class ChargeCreatedFactory : IChargeCreatedFactory
     {
+        private readonly Iso4217CurrencyConfiguration _iso4217CurrencyConfiguration;
+
+        public ChargeCreatedFactory(Iso4217CurrencyConfiguration iso4217CurrencyConfiguration)
+        {
+            _iso4217CurrencyConfiguration = iso4217CurrencyConfiguration;
+        }
+
         public ChargeCreated Create([NotNull] ChargeCommandAcceptedEvent chargeCommandAcceptedEvent)
         {
             return new ChargeCreated(
                 chargeCommandAcceptedEvent.Command.ChargeOperation.ChargeId,
                 chargeCommandAcceptedEvent.Command.ChargeOperation.Type,
                 chargeCommandAcceptedEvent.Command.ChargeOperation.ChargeOwner,
-                "DKK",
+                _iso4217CurrencyConfiguration.Currency,
                 chargeCommandAcceptedEvent.Command.ChargeOperation.Resolution,
                 chargeCommandAcceptedEvent.Command.ChargeOperation.TaxIndicator,
                 new Period(
