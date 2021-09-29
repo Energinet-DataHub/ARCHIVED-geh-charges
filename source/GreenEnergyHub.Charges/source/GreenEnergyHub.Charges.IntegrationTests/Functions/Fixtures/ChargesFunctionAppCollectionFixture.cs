@@ -22,8 +22,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Functions.Fixtures
     /// xUnit documentation of collection fixtures:
     ///  * https://xunit.github.io/docs/shared-context
     /// </summary>
-    [CollectionDefinition(nameof(ChargeLinkReceiverFunctionAppCollectionFixture))]
-    public class ChargeLinkReceiverFunctionAppCollectionFixture : ICollectionFixture<ChargeLinkReceiverFunctionAppFixture>
+    [CollectionDefinition(nameof(ChargesFunctionAppCollectionFixture))]
+    public class ChargesFunctionAppCollectionFixture : ICollectionFixture<ChargesFunctionAppFixture>
     {
     }
 }

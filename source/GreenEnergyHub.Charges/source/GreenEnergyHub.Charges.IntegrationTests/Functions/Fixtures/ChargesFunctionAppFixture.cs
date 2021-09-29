@@ -23,9 +23,9 @@ using Microsoft.Extensions.Configuration;
 
 namespace GreenEnergyHub.Charges.IntegrationTests.Functions.Fixtures
 {
-    public class ChargeLinkReceiverFunctionAppFixture : FunctionAppFixture
+    public class ChargesFunctionAppFixture : FunctionAppFixture
     {
-        public ChargeLinkReceiverFunctionAppFixture()
+        public ChargesFunctionAppFixture()
         {
             AzuriteManager = new AzuriteManager();
 
@@ -37,7 +37,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Functions.Fixtures
         /// <inheritdoc/>
         protected override void OnConfigureHostSettings(FunctionAppHostSettings hostSettings)
         {
-            hostSettings.FunctionApplicationPath = "..\\..\\..\\..\\GreenEnergyHub.Charges.ChargeLinkReceiver\\bin\\Debug\\net5.0";
+            //// TODO: If we need to overwrite the settings specified in the file we can do it here / or by setting environment variables.
         }
 
         /// <inheritdoc/>

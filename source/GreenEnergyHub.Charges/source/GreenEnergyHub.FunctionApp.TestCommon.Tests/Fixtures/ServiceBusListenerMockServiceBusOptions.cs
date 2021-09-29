@@ -13,7 +13,7 @@
 // limitations under the License.
 
 using System;
-using GreenEnergyHub.Charges.IntegrationTests.TestHelpers;
+using System.IO;
 using Squadron;
 using Squadron.AzureCloud;
 
@@ -41,8 +41,8 @@ namespace GreenEnergyHub.FunctionApp.TestCommon.Tests.Fixtures
 
         private AzureResourceConfiguration ConfigurationResolver()
         {
-            // TODO: Bad dependency/reference !!! (<ProjectReference Include="..\GreenEnergyHub.Charges.IntegrationTests\GreenEnergyHub.Charges.IntegrationTests.csproj" />)
-            FunctionHostConfigurationHelper.ConfigureEnvironmentVariables();
+            // TODO: We should probably find another solution.
+            ConfigureEnvironmentVariables();
 
             var secret = Environment.GetEnvironmentVariable("CLIENT_SECRET") ?? string.Empty;
             var clientId = Environment.GetEnvironmentVariable("CLIENT_ID") ?? string.Empty;
@@ -83,6 +83,27 @@ namespace GreenEnergyHub.FunctionApp.TestCommon.Tests.Fixtures
             };
 
             return azureResourceConfiguration;
+        }
+
+        /// <summary>
+        /// EnvironmentVariables are not automatically loaded when running XUnit integrationstests.
+        /// This method follows the suggested workaround mentioned here:
+        /// https://github.com/Azure/azure-functions-host/issues/6953
+        /// </summary>
+        private static void ConfigureEnvironmentVariables()
+        {
+            var path = Path.GetDirectoryName(typeof(ServiceBusListenerMockServiceBusOptions).Assembly.Location);
+            var settingsFile = Path.Join(path, "integrationtest.local.settings.json");
+            if (!File.Exists(settingsFile))
+                return;
+
+            var json = File.ReadAllText(settingsFile);
+            var parsed = Newtonsoft.Json.Linq.JObject.Parse(json).Value<Newtonsoft.Json.Linq.JObject>("Values");
+
+            foreach (var item in parsed!)
+            {
+                Environment.SetEnvironmentVariable(item.Key, item.Value?.ToString());
+            }
         }
     }
 }

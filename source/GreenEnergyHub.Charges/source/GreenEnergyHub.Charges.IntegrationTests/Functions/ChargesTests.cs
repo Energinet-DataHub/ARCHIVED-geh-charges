@@ -26,20 +26,19 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Functions
     /// <summary>
     /// Proof-of-concept on integration testing a function.
     /// </summary>
-    public class ChargeReceiverTests
+    public class ChargesTests
     {
         // UNDONE: For now we just create one collection to span both apps; we have also implemented collection fixtures.
         [Collection("FunctionApp")]
-        public class GetHealthAsync : FunctionAppTestBase<ChargeReceiverFunctionAppFixture>, IClassFixture<ChargeReceiverFunctionAppFixture>
+        public class GetHealthAsync : FunctionAppTestBase<ChargesFunctionAppFixture>, IClassFixture<ChargesFunctionAppFixture>
         {
-            public GetHealthAsync(ChargeReceiverFunctionAppFixture fixture, ITestOutputHelper testOutputHelper)
+            public GetHealthAsync(ChargesFunctionAppFixture fixture, ITestOutputHelper testOutputHelper)
                 : base(fixture, testOutputHelper)
             {
             }
 
-            // .NET 3.1 => ChargeReceiver
             [Fact]
-            public async Task When_Net31RequestingHealthStatus_Then_ReturnStatusOKAndHealthy()
+            public async Task When_RequestingHealthStatus_Then_ReturnStatusOKAndHealthy()
             {
                 // Arrange
                 var requestUri = "api/HealthStatus";
@@ -52,12 +51,11 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Functions
                 actualResponse.StatusCode.Should().Be(HttpStatusCode.OK);
 
                 var context = await actualResponse.Content.ReadAsStringAsync();
-                context.Should().Be("{\"functionAppIsAlive\":true}");
+                context.Should().Contain("\"FunctionAppIsAlive\": true");
             }
 
-            // .NET 3.1 => ChargeReceiver
             [Fact]
-            public async Task When_Net31RequestingUnknownEndpoint_Then_ReturnStatusNotFound()
+            public async Task When_RequestingUnknownEndpoint_Then_ReturnStatusNotFound()
             {
                 // Arrange
                 var requestUri = "api/unknown";

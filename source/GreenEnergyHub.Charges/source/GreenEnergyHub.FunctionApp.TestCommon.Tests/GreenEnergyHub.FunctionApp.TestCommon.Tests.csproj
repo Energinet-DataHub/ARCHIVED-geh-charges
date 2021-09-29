@@ -47,7 +47,6 @@ limitations under the License.
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\GreenEnergyHub.Charges.IntegrationTests\GreenEnergyHub.Charges.IntegrationTests.csproj" />
     <ProjectReference Include="..\GreenEnergyHub.FunctionApp.TestCommon\GreenEnergyHub.FunctionApp.TestCommon.csproj" />
   </ItemGroup>
 
