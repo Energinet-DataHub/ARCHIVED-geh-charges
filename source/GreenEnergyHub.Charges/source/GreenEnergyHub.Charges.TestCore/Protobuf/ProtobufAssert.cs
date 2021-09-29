@@ -46,6 +46,11 @@ namespace GreenEnergyHub.Charges.TestCore.Protobuf
                             .Should().Be(((Timestamp)s.Subject).Seconds))
                         .WhenTypeIs<Instant>();
 
+                    // Overrides the compare of NodaTime instant and protobuf Timestamp
+                    options.Using<object>(s => ((decimal)s.Expectation)
+                            .Should().Be(((DecimalValue)s.Subject).ToDecimal()))
+                        .WhenTypeIs<decimal>();
+
                     // Enforce member comparision of protobuf objects that override object.Equals
                     options.ComparingByMembers<IMessage>();
 
