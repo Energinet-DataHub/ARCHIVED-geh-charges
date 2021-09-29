@@ -34,7 +34,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.TestHelpers
             [NotNull] string chargeId, [NotNull] string owner, [NotNull] ChargeType chargeType)
         {
             await using var context = _serviceProvider.GetService<ChargesDatabaseContext>();
-            var chargeRepository = new ChargeRepository(context);
+            var chargeRepository = new ChargeRepository(context!);
             var chargeExists = await chargeRepository
                 .CheckIfChargeExistsAsync(chargeId, owner, chargeType)
                 .ConfigureAwait(false);
@@ -45,7 +45,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.TestHelpers
             [NotNull] string chargeId, [NotNull] string owner, [NotNull] ChargeType chargeType)
         {
             await using var context = _serviceProvider.GetService<ChargesDatabaseContext>();
-            var chargeRepository = new ChargeRepository(context);
+            var chargeRepository = new ChargeRepository(context!);
             var chargeExists = await chargeRepository
                 .GetChargeAsync(chargeId, owner, chargeType)
                 .ConfigureAwait(false);
