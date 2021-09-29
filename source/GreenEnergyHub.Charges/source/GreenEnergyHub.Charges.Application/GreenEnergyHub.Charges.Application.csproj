@@ -34,7 +34,7 @@ limitations under the License.
 
   <ItemGroup>
     <PackageReference Include="Azure.Messaging.ServiceBus" Version="7.3.0" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="3.1.19" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="5.0.0" />
   </ItemGroup>
 
 </Project>
