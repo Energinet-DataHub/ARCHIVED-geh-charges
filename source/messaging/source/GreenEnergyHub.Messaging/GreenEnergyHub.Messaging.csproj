@@ -22,13 +22,13 @@ limitations under the License.
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
         <RootNamespace>GreenEnergyHub.Messaging</RootNamespace>
         <LangVersion>9</LangVersion>
-        <TargetFramework>netcoreapp3.1</TargetFramework>
+        <TargetFramework>net5.0</TargetFramework>
     </PropertyGroup>
 
     <ItemGroup>
         <PackageReference Include="FluentValidation" Version="9.5.4" />
         <PackageReference Include="MediatR" Version="9.0.0" />
-        <PackageReference Include="NodaTime" Version="3.0.5" />
+        <PackageReference Include="NodaTime" Version="3.0.6" />
     </ItemGroup>
 
   <ItemGroup>
