@@ -14,11 +14,14 @@
 
 namespace GreenEnergyHub.Charges.Core.Currency
 {
-    public class Iso4217CurrencyConfiguration
+    public class CurrencyConfigurationIso4217
     {
+        /// <summary>
+        /// See https://en.wikipedia.org/wiki/ISO_4217#Active_codes for active codes
+        /// </summary>
         public string Currency { get; }
 
-        public Iso4217CurrencyConfiguration(string currency)
+        public CurrencyConfigurationIso4217(string currency)
         {
             Currency = currency;
         }

@@ -176,7 +176,7 @@ namespace GreenEnergyHub.Charges.FunctionHost
                              throw new ArgumentNullException(
                                  currencyString,
                                  "does not exist in configuration settings");
-            var iso4217Currency = new Iso4217CurrencyConfiguration(currency);
+            var iso4217Currency = new CurrencyConfigurationIso4217(currency);
             serviceCollection.AddSingleton(iso4217Currency);
 
             // Messaging

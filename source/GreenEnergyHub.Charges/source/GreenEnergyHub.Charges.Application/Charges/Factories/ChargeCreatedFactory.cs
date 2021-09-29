@@ -23,11 +23,11 @@ namespace GreenEnergyHub.Charges.Application.Charges.Factories
 {
     public class ChargeCreatedFactory : IChargeCreatedFactory
     {
-        private readonly Iso4217CurrencyConfiguration _iso4217CurrencyConfiguration;
+        private readonly CurrencyConfigurationIso4217 _currencyConfigurationIso4217;
 
-        public ChargeCreatedFactory(Iso4217CurrencyConfiguration iso4217CurrencyConfiguration)
+        public ChargeCreatedFactory(CurrencyConfigurationIso4217 currencyConfigurationIso4217)
         {
-            _iso4217CurrencyConfiguration = iso4217CurrencyConfiguration;
+            _currencyConfigurationIso4217 = currencyConfigurationIso4217;
         }
 
         public ChargeCreated Create([NotNull] ChargeCommandAcceptedEvent chargeCommandAcceptedEvent)
@@ -36,7 +36,7 @@ namespace GreenEnergyHub.Charges.Application.Charges.Factories
                 chargeCommandAcceptedEvent.Command.ChargeOperation.ChargeId,
                 chargeCommandAcceptedEvent.Command.ChargeOperation.Type,
                 chargeCommandAcceptedEvent.Command.ChargeOperation.ChargeOwner,
-                _iso4217CurrencyConfiguration.Currency,
+                _currencyConfigurationIso4217.Currency,
                 chargeCommandAcceptedEvent.Command.ChargeOperation.Resolution,
                 chargeCommandAcceptedEvent.Command.ChargeOperation.TaxIndicator,
                 new Period(
