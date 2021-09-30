@@ -61,14 +61,14 @@ namespace GreenEnergyHub.Charges.Tests.Application.MeteringPoints.Handlers
 
         [Theory]
         [InlineAutoMoqData]
-        public async Task HandleAsync_WhenCalledWithUnknownEnum_ThrowsArgumentException(
+        public async Task HandleAsync_WhenCalledWithUnknownEnum_ThrowsInvalidCastException(
             [NotNull] ConsumptionMeteringPointCreatedEventHandler sut)
         {
             // Arrange
             ConsumptionMeteringPointCreatedEvent consumptionMeteringPointCreatedEvent = GetMeteringPointCreatedEventWithInvalidEnum();
 
             // Act / Assert
-            await Assert.ThrowsAsync<ArgumentException>(
+            await Assert.ThrowsAsync<InvalidCastException>(
                     () => sut.HandleAsync(consumptionMeteringPointCreatedEvent!))
                 .ConfigureAwait(false);
         }
@@ -98,7 +98,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.MeteringPoints.Handlers
                 MeterReadingPeriodicity.Hourly,
                 NetSettlementGroup.One,
                 ProductType.Tariff,
-                "some date");
+                SystemClock.Instance.GetCurrentInstant().ToString());
         }
 
         private static ConsumptionMeteringPointCreatedEvent GetMeteringPointCreatedEventWithInvalidEnum()
@@ -107,12 +107,12 @@ namespace GreenEnergyHub.Charges.Tests.Application.MeteringPoints.Handlers
                 "123",
                 "234",
                 "2",
-                SettlementMethod.Unknown,
+                (SettlementMethod)1000,
                 MeteringMethod.Calculated,
                 MeterReadingPeriodicity.Hourly,
                 NetSettlementGroup.One,
                 ProductType.Tariff,
-                "some date");
+                SystemClock.Instance.GetCurrentInstant().ToString());
         }
     }
 }
