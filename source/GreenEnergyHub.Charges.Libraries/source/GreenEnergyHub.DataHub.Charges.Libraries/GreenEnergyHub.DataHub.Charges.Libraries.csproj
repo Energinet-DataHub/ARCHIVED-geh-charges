@@ -20,17 +20,17 @@ limitations under the License.
     <LangVersion>9</LangVersion>
     <Nullable>enable</Nullable>
     <ProjectGuid>{0444C070-2B3E-4C5D-870D-FED55C22C94E}</ProjectGuid>
-    <AssemblyName>GreenEnergyHub.DataHub.Charges.Clients</AssemblyName>
-    <RootNamespace>GreenEnergyHub.DataHub.Charges.Clients</RootNamespace>
+    <AssemblyName>GreenEnergyHub.DataHub.Charges.Libraries</AssemblyName>
+    <RootNamespace>GreenEnergyHub.DataHub.Charges.Libraries</RootNamespace>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <IsPackable>true</IsPackable>
     <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
   </PropertyGroup>
 
   <PropertyGroup>
-    <PackageId>GreenEnergyHub.DataHub.Charges.Clients</PackageId>
+    <PackageId>GreenEnergyHub.DataHub.Charges.Libraries</PackageId>
     <PackageVersion>1.0.0$(VersionSuffix)</PackageVersion>
-    <Title>GreenEnergyHub.DataHub.Charges.Clients</Title>
+    <Title>GreenEnergyHub.DataHub.Charges.Libraries</Title>
     <Company>Energinet-DataHub</Company>
     <Authors>DataHub</Authors>
     <RepositoryUrl>https://github.com/Energinet-DataHub/geh-charges</RepositoryUrl>
