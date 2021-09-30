@@ -1,4 +1,4 @@
-/* Copyright 2020 Energinet DataHub A/S
+﻿/* Copyright 2020 Energinet DataHub A/S
  *
  * Licensed under the Apache License, Version 2.0 (the "License2");
  * you may not use this file except in compliance with the License.
@@ -30,4 +30,4 @@ option csharp_namespace = "GreenEnergyHub.Charges.Commands";
 */
 message CreateDefaultChargeLinkMessages {
   string metering_point_id = 1; // Identifies the metering point to create default charge link messages for. For the Danish version of Green Energy Hub, this is the 18-digits metering point id.
-} 
+}

@@ -20,7 +20,6 @@ limitations under the License.
     <LangVersion>9</LangVersion>
     <Nullable>enable</Nullable>
     <ProjectGuid>{0444C070-2B3E-4C5D-870D-FED55C22C94E}</ProjectGuid>
-    <AssemblyName>GreenEnergyHub.DataHub.Charges.Libraries</AssemblyName>
     <RootNamespace>GreenEnergyHub.DataHub.Charges.Libraries</RootNamespace>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <IsPackable>true</IsPackable>
@@ -28,7 +27,7 @@ limitations under the License.
   </PropertyGroup>
 
   <PropertyGroup>
-    <PackageId>GreenEnergyHub.DataHub.Charges.Libraries</PackageId>
+    <PackageId>GreenEnergyHub.DataHub.Charges.Clients</PackageId>
     <PackageVersion>1.0.0$(VersionSuffix)</PackageVersion>
     <Title>GreenEnergyHub.DataHub.Charges.Libraries</Title>
     <Company>Energinet-DataHub</Company>
@@ -74,13 +73,13 @@ limitations under the License.
   </ItemGroup>
 
   <ItemGroup>
-    <None Remove="CreateDefaultChargeLinkMessages.proto" />
-    <Protobuf Include="CreateDefaultChargeLinkMessages.proto">
+    <Protobuf Include="DefaultChargeLinkRequest\Contracts\CreateDefaultChargeLinks.proto">
       <GrpcServices>None</GrpcServices>
       <Access>Internal</Access>
       <ProtoCompile>True</ProtoCompile>
       <CompileOutputs>True</CompileOutputs>
       <OutputDir>obj\Debug\net5.0\</OutputDir>
+      <Generator>MSBuild:Compile</Generator>
     </Protobuf>
   </ItemGroup>
 

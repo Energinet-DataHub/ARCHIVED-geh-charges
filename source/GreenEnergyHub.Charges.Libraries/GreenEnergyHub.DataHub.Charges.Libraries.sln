@@ -22,9 +22,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "GreenEnergyHub.DataHub.Char
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "source", "source", "{2BF2F6B8-E02B-4D7F-99BC-D28B3B3643A9}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GreenEnergyHub.DataHub.Charges.Libraries.Tests", "source\GreenEnergyHub.DataHub.Charges.Libraries.Tests\GreenEnergyHub.DataHub.Charges.Libraries.Tests.csproj", "{20AD2920-0C12-4F83-A641-346B5196388D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GreenEnergyHub.DataHub.Charges.Clients.Tests", "source\GreenEnergyHub.DataHub.Charges.Clients.Tests\GreenEnergyHub.DataHub.Charges.Clients.Tests.csproj", "{20AD2920-0C12-4F83-A641-346B5196388D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GreenEnergyHub.DataHub.Charges.Libraries", "source\GreenEnergyHub.DataHub.Charges.Libraries\GreenEnergyHub.DataHub.Charges.Libraries.csproj", "{E9F64300-834B-4657-850F-BEF4CED5D180}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GreenEnergyHub.DataHub.Charges.Clients", "source\GreenEnergyHub.DataHub.Charges.Clients\GreenEnergyHub.DataHub.Charges.Clients.csproj", "{E9F64300-834B-4657-850F-BEF4CED5D180}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
