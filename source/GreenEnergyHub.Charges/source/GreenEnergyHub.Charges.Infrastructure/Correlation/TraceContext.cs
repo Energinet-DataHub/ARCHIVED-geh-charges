@@ -14,7 +14,7 @@
 
 using System.Diagnostics.CodeAnalysis;
 
-namespace GreenEnergyHub.Charges.Infrastructure.Messaging
+namespace GreenEnergyHub.Charges.Infrastructure.Correlation
 {
     /// <summary>
     /// Implementation of w3c trace context

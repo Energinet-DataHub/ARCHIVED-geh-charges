@@ -14,7 +14,7 @@
 
 using System;
 
-namespace GreenEnergyHub.Charges.Infrastructure.Messaging
+namespace GreenEnergyHub.Charges.Infrastructure.Correlation
 {
     public class CorrelationContext : ICorrelationContext
     {
