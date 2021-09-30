@@ -85,7 +85,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
                 TransparentInvoicing = chargeOperation.TransparentInvoicing,
                 VatClassification = (VatClassification)chargeOperation.VatClassification,
                 StartDateTime = chargeOperation.StartDateTime.ToInstant(),
-                EndDateTime = chargeOperation.EndDateTime.ToInstant(),
+                EndDateTime = chargeOperation.EndDateTime?.ToInstant(),
                 Points = ConvertPoints(chargeOperation.Points),
             };
         }

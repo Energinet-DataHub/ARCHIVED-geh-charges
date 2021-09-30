@@ -14,14 +14,20 @@
 
 using System.Diagnostics.CodeAnalysis;
 using GreenEnergyHub.Charges.Domain.ChargeLinkCommands;
+using GreenEnergyHub.Charges.Domain.MarketParticipants;
 
 namespace GreenEnergyHub.Charges.Domain.ChargeLinkCommandAcceptedEvents
 {
     public class ChargeLinkCommandAcceptedEvent : ChargeLinkCommand
     {
-        public ChargeLinkCommandAcceptedEvent([NotNull] string correlationId)
+        public ChargeLinkCommandAcceptedEvent(
+            [NotNull] string correlationId,
+            Document document,
+            ChargeLinkDto chargeLink)
             : base(correlationId)
         {
+            Document = document;
+            ChargeLink = chargeLink;
         }
     }
 }

@@ -17,8 +17,10 @@ using Energinet.DataHub.MeteringPoints.IntegrationEventContracts;
 using EntityFrameworkCore.SqlServer.NodaTime.Extensions;
 using GreenEnergyHub.Charges.Application.ChargeLinks.Handlers;
 using GreenEnergyHub.Charges.Application.Charges.Acknowledgement;
+using GreenEnergyHub.Charges.Application.Charges.Factories;
 using GreenEnergyHub.Charges.Application.Charges.Handlers;
 using GreenEnergyHub.Charges.Application.MeteringPoints.Handlers;
+using GreenEnergyHub.Charges.Core.Currency;
 using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.Domain.ChargeCommandAcceptedEvents;
 using GreenEnergyHub.Charges.Domain.ChargeCommandReceivedEvents;
@@ -86,6 +88,7 @@ namespace GreenEnergyHub.Charges.FunctionHost
             ConfigureChargeLinkCommandReceiver(serviceCollection);
             ConfigureChargeLinkEventPublisher(serviceCollection);
             ConfigureMeteringPointCreatedReceiver(serviceCollection);
+            ConfigureChargeCommandAcceptedReceiver(serviceCollection);
             ConfigureCreateChargeLinkReceiver(serviceCollection);
         }
 
@@ -141,6 +144,7 @@ namespace GreenEnergyHub.Charges.FunctionHost
             serviceCollection.AddScoped<IChargeCommandConfirmationService, ChargeCommandConfirmationService>();
             serviceCollection.AddScoped<IChargeCommandReceivedEventHandler, ChargeCommandReceivedEventHandler>();
             serviceCollection.AddScoped<IChargeFactory, ChargeFactory>();
+            serviceCollection.AddScoped<IChargeCommandFactory, ChargeCommandFactory>();
             serviceCollection.AddScoped<IChargeCommandAcceptedEventFactory, ChargeCommandAcceptedEventFactory>();
             serviceCollection.AddScoped<IChargeCommandRejectedEventFactory, ChargeCommandRejectedEventFactory>();
 
@@ -156,7 +160,7 @@ namespace GreenEnergyHub.Charges.FunctionHost
             serviceCollection.AddScoped<IChargeCommandBusinessValidator, ChargeCommandBusinessValidator>();
             serviceCollection.AddScoped<IChargeCommandValidator, ChargeCommandValidator>();
 
-            // ISO 8601
+            // ISO 8601 (Timezones)
             const string timeZoneIdString = "LOCAL_TIMEZONENAME";
             var timeZoneId = Environment.GetEnvironmentVariable(timeZoneIdString) ??
                              throw new ArgumentNullException(
@@ -165,6 +169,15 @@ namespace GreenEnergyHub.Charges.FunctionHost
             var timeZoneConfiguration = new Iso8601ConversionConfiguration(timeZoneId);
             serviceCollection.AddSingleton<IIso8601ConversionConfiguration>(timeZoneConfiguration);
             serviceCollection.AddScoped<IZonedDateTimeService, ZonedDateTimeService>();
+
+            // ISO 4217 (Currencies)
+            const string currencyString = "CURRENCY";
+            var currency = Environment.GetEnvironmentVariable(currencyString) ??
+                             throw new ArgumentNullException(
+                                 currencyString,
+                                 "does not exist in configuration settings");
+            var iso4217Currency = new CurrencyConfigurationIso4217(currency);
+            serviceCollection.AddSingleton(iso4217Currency);
 
             // Messaging
             serviceCollection.ReceiveProtobufMessage<ChargeCommandReceivedContract>(
@@ -261,6 +274,28 @@ namespace GreenEnergyHub.Charges.FunctionHost
                 configuration => configuration.WithParser(() => ConsumptionMeteringPointCreated.Parser));
 
             serviceCollection.AddScoped<IConsumptionMeteringPointCreatedEventHandler, ConsumptionMeteringPointCreatedEventHandler>();
+        }
+
+        private static void ConfigureChargeCommandAcceptedReceiver(IServiceCollection serviceCollection)
+        {
+            serviceCollection.ReceiveProtobufMessage<ChargeCommandAcceptedContract>(
+                configuration => configuration.WithParser(() => ChargeCommandAcceptedContract.Parser));
+
+            serviceCollection.AddScoped<MessageExtractor<ChargeCommandAcceptedEvent>>();
+            serviceCollection.AddScoped<IChargeCreatedEventFactory, ChargeCreatedEventFactory>();
+            serviceCollection.AddScoped<IChargePricesUpdatedEventFactory, ChargePricesUpdatedEventFactory>();
+            serviceCollection.AddScoped<IChargePublisher, ChargePublisher>();
+            serviceCollection.AddScoped<IChargePricesUpdatedPublisher, ChargePricesUpdatedPublisher>();
+            serviceCollection.AddScoped<IChargeCommandAcceptedEventHandler, ChargeCommandAcceptedEventHandler>();
+
+            serviceCollection.SendProtobuf<Infrastructure.Integration.ChargeCreated.ChargeCreated>();
+            serviceCollection.AddMessagingProtobuf().AddMessageDispatcher<GreenEnergyHub.Charges.Domain.Charges.Acknowledgements.ChargeCreatedEvent>(
+                GetEnv("INTEGRATIONEVENT_SENDER_CONNECTION_STRING"),
+                GetEnv("CHARGE_CREATED_TOPIC_NAME"));
+
+            serviceCollection.AddMessagingProtobuf().AddMessageDispatcher<ChargePricesUpdatedEvent>(
+                GetEnv("INTEGRATIONEVENT_SENDER_CONNECTION_STRING"),
+                GetEnv("CHARGE_PRICES_UPDATED_TOPIC_NAME"));
         }
 
         private static string GetEnv(string variableName)

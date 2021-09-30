@@ -38,12 +38,12 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
     /// Tests <see cref="ChargeRepository"/> using a database created with squadron.
     /// </summary>
     [UnitTest]
-    public class ChargeRepositoryTest : IClassFixture<SqlServerResource<SqlServerOptions>>
+    public class ChargeRepositoryTests : IClassFixture<SqlServerResource<SqlServerOptions>>
     {
         private const string MarketParticipantOwner = "MarketParticipantId";
         private readonly SqlServerResource<SqlServerOptions> _resource;
 
-        public ChargeRepositoryTest(SqlServerResource<SqlServerOptions> resource)
+        public ChargeRepositoryTests(SqlServerResource<SqlServerOptions> resource)
         {
             _resource = resource;
         }
@@ -66,17 +66,20 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
             await using var chargesDatabaseReadContext = await SquadronContextFactory
                 .GetDatabaseContextAsync(_resource)
                 .ConfigureAwait(false);
-            var f = chargesDatabaseReadContext.Charges.Include(x => x.MarketParticipant).ToList();
 
             var actual = await chargesDatabaseReadContext.Charges
                 .Include(x => x.ChargePrices)
                 .Include(x => x.ChargePeriodDetails)
-                .SingleAsync(x =>
-                x.SenderProvidedChargeId == charge.SenderProvidedChargeId &&
-                x.MarketParticipant.MarketParticipantId == charge.Owner &&
-                x.ChargeType == (int)charge.Type)
+                .SingleOrDefaultAsync(x =>
+                    x.Id == charge.Id &&
+                    x.SenderProvidedChargeId == charge.SenderProvidedChargeId &&
+                    x.MarketParticipant.MarketParticipantId == charge.Owner &&
+                    x.ChargeType == (int)charge.Type)
                 .ConfigureAwait(false);
 
+            var list = chargesDatabaseReadContext.Charges.Include(x => x.MarketParticipant).ToList();
+
+            list.Should().NotBeEmpty();
             actual.Should().NotBeNull();
             actual.ChargePrices.Should().NotBeNullOrEmpty();
             actual.ChargePeriodDetails.Should().NotBeNullOrEmpty();
@@ -197,7 +200,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
                 MarketParticipantOwner,
                 "CorrelationId",
                 SystemClock.Instance.GetCurrentInstant(),
-                null,
+                Instant.FromUtc(9999, 12, 31, 23, 59, 59),
                 ChargeType.Fee,
                 VatClassification.Unknown,
                 Resolution.P1D,

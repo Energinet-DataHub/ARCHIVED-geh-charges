@@ -18,12 +18,14 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
 using FluentAssertions;
+using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.Domain.ChargeLinkCommandReceivedEvents;
 using GreenEnergyHub.Charges.Domain.ChargeLinks;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.MeteringPoints;
 using GreenEnergyHub.TestHelpers;
 using Moq;
+using NodaTime;
 using Xunit;
 using Xunit.Categories;
 
@@ -64,7 +66,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Factories
             actual.PeriodDetails.First().StartDateTime
                 .Should().Be(expectedEvent.ChargeLinkCommand.ChargeLink.StartDateTime);
             actual.PeriodDetails.First().EndDateTime
-                .Should().Be(expectedEvent.ChargeLinkCommand.ChargeLink.EndDateTime);
+                .Should().Be((Instant)expectedEvent.ChargeLinkCommand.ChargeLink.EndDateTime!);
             actual.PeriodDetails.First().Factor
                 .Should().Be(expectedEvent.ChargeLinkCommand.ChargeLink.Factor);
             actual.Operations.First().CorrelationId

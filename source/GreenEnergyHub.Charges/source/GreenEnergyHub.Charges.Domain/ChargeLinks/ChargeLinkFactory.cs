@@ -15,6 +15,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.Domain.ChargeLinkCommandReceivedEvents;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.MeteringPoints;
@@ -49,7 +50,11 @@ namespace GreenEnergyHub.Charges.Domain.ChargeLinks
             var operation = new ChargeLinkOperation(chargeLink.OperationId, chargeLinkEvent.CorrelationId);
             var operations = new List<ChargeLinkOperation> { operation };
 
-            var periodDetails = new ChargeLinkPeriodDetails(chargeLink.StartDateTime, chargeLink.EndDateTime, chargeLink.Factor, operation.Id);
+            var periodDetails = new ChargeLinkPeriodDetails(
+                chargeLink.StartDateTime,
+                chargeLink.EndDateTime.TimeOrEndDefault(),
+                chargeLink.Factor,
+                operation.Id);
             var periodDetailsCollection = new List<ChargeLinkPeriodDetails> { periodDetails };
 
             return new ChargeLink(charge.Id, meteringPoint.Id, operations, periodDetailsCollection);
