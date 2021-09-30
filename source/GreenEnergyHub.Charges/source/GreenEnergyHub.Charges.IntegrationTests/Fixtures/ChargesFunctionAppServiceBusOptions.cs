@@ -14,6 +14,7 @@
 
 using System;
 using System.IO;
+using GreenEnergyHub.Charges.FunctionHost.Common;
 using Squadron;
 using Squadron.AzureCloud;
 
@@ -21,19 +22,22 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures
 {
     public class ChargesFunctionAppServiceBusOptions : AzureCloudServiceBusOptions
     {
+        public const string PostOfficeTopicKey = "postOffice";
+
+        public const string PostOfficeTopicSubscriptionName = "defaultSubscription";
+
         public override void Configure(ServiceBusOptionsBuilder builder)
         {
             builder.SetConfigResolver(ConfigurationResolver);
 
-            // TODO: Maybe use another namespace on build agent?
-            ////var serviceBusNamespace = "integrationtest-sb-dev-datahub";
-            ////builder.Namespace(serviceBusNamespace);
+            var domainEventListenerConnectionString = Environment
+                .GetEnvironmentVariable(EnvironmentSettingNames.DomainEventSenderConnectionString)
+                ?? string.Empty;
 
-            var topicName = "topic";
             builder
                 .Namespace("sbn-charges-xdas-s")
-                .AddTopic(topicName)
-                .AddSubscription("defaultSubscription");
+                .AddTopic(PostOfficeTopicKey)
+                .AddSubscription(PostOfficeTopicSubscriptionName);
         }
 
         private AzureResourceConfiguration ConfigurationResolver()
@@ -83,7 +87,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures
         }
 
         /// <summary>
-        /// EnvironmentVariables are not automatically loaded when running XUnit integrationstests.
+        /// EnvironmentVariables are not automatically loaded when running xUnit integrationstests.
         /// This method follows the suggested workaround mentioned here:
         /// https://github.com/Azure/azure-functions-host/issues/6953
         /// </summary>

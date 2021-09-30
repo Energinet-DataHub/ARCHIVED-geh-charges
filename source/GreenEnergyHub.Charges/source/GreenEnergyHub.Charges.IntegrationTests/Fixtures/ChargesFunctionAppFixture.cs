@@ -17,6 +17,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
+using GreenEnergyHub.Charges.FunctionHost.Common;
 using GreenEnergyHub.FunctionApp.TestCommon;
 using GreenEnergyHub.FunctionApp.TestCommon.Azurite;
 using GreenEnergyHub.FunctionApp.TestCommon.FunctionAppHost;
@@ -54,7 +55,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures
         /// <inheritdoc/>
         protected override void OnConfigureEnvironment()
         {
-            Environment.SetEnvironmentVariable("AzureWebJobsStorage", "UseDevelopmentStorage=true");
+            Environment.SetEnvironmentVariable(EnvironmentSettingNames.AzureWebJobsStorage, "UseDevelopmentStorage=true");
         }
 
         /// <inheritdoc/>
@@ -64,15 +65,13 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures
 
             await ServiceBusResource.InitializeAsync();
 
-            ServiceBusListenerMock = new ServiceBusListenerMock(ServiceBusResource.ConnectionString, TestLogger);
-
-            var topicClient = ServiceBusResource.GetTopicClient("topic");
+            var postOfficeTopicName = await GetTopicNameFromKeyAsync(ChargesFunctionAppServiceBusOptions.PostOfficeTopicKey);
 
             // Overwrites the setting so the function uses the name we have control of in the test
-            Environment.SetEnvironmentVariable("POST_OFFICE_TOPIC_NAME", topicClient.TopicName);
+            Environment.SetEnvironmentVariable(EnvironmentSettingNames.PostOfficeTopicName, postOfficeTopicName);
 
-            await ServiceBusListenerMock.AddTopicSubscriptionListenerAsync(topicClient.TopicName, "defaultSubscription");
-            await topicClient.CloseAsync();
+            ServiceBusListenerMock = new ServiceBusListenerMock(ServiceBusResource.ConnectionString, TestLogger);
+            await ServiceBusListenerMock.AddTopicSubscriptionListenerAsync(postOfficeTopicName, ChargesFunctionAppServiceBusOptions.PostOfficeTopicSubscriptionName);
 
             //// TODO: Initialize/start resource managers and create dependent resources (e.g. database, service bus)
         }
@@ -96,6 +95,15 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures
             await ServiceBusResource.DisposeAsync();
 
             //// TODO: Dispose/stop resource managers and delete created dependent resources (e.g. database, service bus)
+        }
+
+        protected async Task<string> GetTopicNameFromKeyAsync(string topicKey)
+        {
+            var topicClient = ServiceBusResource.GetTopicClient(topicKey);
+            var topicName = topicClient.TopicName;
+            await topicClient.CloseAsync();
+
+            return topicName;
         }
     }
 }

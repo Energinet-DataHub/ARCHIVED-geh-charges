@@ -65,9 +65,15 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Charges
                 var expectedBody = chargeJson;
                 request.Content = new StringContent(expectedBody, Encoding.UTF8, "application/json");
 
+                var body = Array.Empty<byte>();
                 using var isMessageReceivedEvent = await Fixture.ServiceBusListenerMock
                     .WhenAny()
-                    .VerifyOnceAsync();
+                    .VerifyOnceAsync(receivedMessage =>
+                    {
+                        body = receivedMessage.Body;
+
+                        return Task.CompletedTask;
+                    });
 
                 // Act
                 var actualResponse = await Fixture.HostManager.HttpClient.SendAsync(request);
@@ -81,6 +87,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Charges
                 // => Service Bus
                 var isMessageReceived = isMessageReceivedEvent.Wait(TimeSpan.FromSeconds(5));
                 isMessageReceived.Should().BeTrue();
+
+                body.Should().NotBeEmpty();
             }
         }
     }
