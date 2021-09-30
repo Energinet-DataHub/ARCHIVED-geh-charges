@@ -33,18 +33,24 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures
         {
             builder.SetConfigResolver(ConfigurationResolver);
 
-            var localSettingsSnapshot = new FunctionAppHostConfigurationBuilder().BuildLocalSettingsConfiguration();
-            var domainEventListenerConnectionString = localSettingsSnapshot.GetValue(EnvironmentSettingNames.DomainEventSenderConnectionString);
-
-            // Example value: 'Endpoint=sb://sbn-charges-xdas-s.servicebus.windows.net/;'
-            var namespaceMatchPattern = @"Endpoint=sb://(.*?).servicebus.windows.net/";
-            var match = Regex.Match(domainEventListenerConnectionString, namespaceMatchPattern, RegexOptions.IgnoreCase);
-            var domainEventListenerNamespace = match.Groups[1].Value;
+            var domainEventListenerNamespace = GetNamespaceFromSetting(EnvironmentSettingNames.DomainEventSenderConnectionString);
 
             builder
                 .Namespace(domainEventListenerNamespace)
                 .AddTopic(PostOfficeTopicKey)
                 .AddSubscription(PostOfficeTopicSubscriptionName);
+        }
+
+        private static string GetNamespaceFromSetting(string settingName)
+        {
+            var localSettingsSnapshot = new FunctionAppHostConfigurationBuilder().BuildLocalSettingsConfiguration();
+            var domainEventListenerConnectionString = localSettingsSnapshot.GetValue(settingName);
+
+            // Example value: 'Endpoint=sb://xxx.servicebus.windows.net/;'
+            var namespaceMatchPattern = @"Endpoint=sb://(.*?).servicebus.windows.net/";
+            var match = Regex.Match(domainEventListenerConnectionString, namespaceMatchPattern, RegexOptions.IgnoreCase);
+            var domainEventListenerNamespace = match.Groups[1].Value;
+            return domainEventListenerNamespace;
         }
 
         private AzureResourceConfiguration ConfigurationResolver()
