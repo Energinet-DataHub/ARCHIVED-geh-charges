@@ -39,19 +39,14 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Integration.Mappers
 
             // Assert
             converted.Should().NotContainNullsOrEmptyEnumerables();
-            converted.ConnectionState.Should().BeEquivalentTo(meteringPointCreatedEvent.ConnectionState);
+            converted.MeteringPointId.Should().Be(meteringPointCreatedEvent.MeteringPointId);
             converted.EffectiveDate.Should().BeEquivalentTo(meteringPointCreatedEvent.EffectiveDate);
-            converted.FromGrid.Should().BeEquivalentTo(meteringPointCreatedEvent.FromGrid);
-            converted.MeteringMethod.Should().BeEquivalentTo(meteringPointCreatedEvent.MeteringMethod);
-            converted.QuantityUnit.Should().BeEquivalentTo(meteringPointCreatedEvent.QuantityUnit);
-            converted.SettlementMethod.Should().BeEquivalentTo(meteringPointCreatedEvent.SettlementMethod);
-            converted.ToGrid.Should().BeEquivalentTo(meteringPointCreatedEvent.ToGrid);
-            converted.GridAreaId.Should().BeEquivalentTo(meteringPointCreatedEvent.MeteringGridArea);
-            converted.MeteringPointId.Should().BeEquivalentTo(meteringPointCreatedEvent.MeteringPointId);
-            converted.MeteringPointType.Should().BeEquivalentTo(meteringPointCreatedEvent.MeteringPointType);
-            converted.MeterReadingPeriodicity.Should().BeEquivalentTo(meteringPointCreatedEvent.MeterReadingPeriodicity);
-            converted.NetSettlementGroup.Should().BeEquivalentTo(meteringPointCreatedEvent.NetSettlementGroup);
-            converted.ParentMeteringPointId.Should().BeEquivalentTo(meteringPointCreatedEvent.ParentMeteringPointId);
+            converted.GridAreaCode.Should().BeEquivalentTo(meteringPointCreatedEvent.GridAreaCode);
+            converted.SettlementMethod.ToString().Should().BeEquivalentTo(meteringPointCreatedEvent.SettlementMethod.ToString());
+            converted.MeteringMethod.ToString().Should().BeEquivalentTo(meteringPointCreatedEvent.MeteringMethod.ToString());
+            converted.MeterReadingPeriodicity.ToString().Should().BeEquivalentTo(meteringPointCreatedEvent.MeterReadingPeriodicity.ToString());
+            converted.NetSettlementGroup.ToString().Should().BeEquivalentTo(meteringPointCreatedEvent.NetSettlementGroup.ToString());
+            converted.ProductType.ToString().Should().BeEquivalentTo(meteringPointCreatedEvent.Product.ToString());
         }
 
         [Theory]

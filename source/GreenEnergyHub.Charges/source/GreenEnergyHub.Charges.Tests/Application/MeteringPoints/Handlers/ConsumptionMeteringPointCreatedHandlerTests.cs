@@ -91,38 +91,28 @@ namespace GreenEnergyHub.Charges.Tests.Application.MeteringPoints.Handlers
         {
             return new ConsumptionMeteringPointCreatedEvent(
                 "123",
-                MeteringPointType.Consumption.ToString(),
                 "234",
                 "2",
-                "1",
-                "1",
-                "mrp",
-                "456",
-                "567",
-                "678",
-                "product",
-                "1",
-                SystemClock.Instance.GetCurrentInstant().ToString(),
-                "890");
+                SettlementMethod.Flex,
+                MeteringMethod.Calculated,
+                MeterReadingPeriodicity.Hourly,
+                NetSettlementGroup.One,
+                ProductType.Tariff,
+                "some date");
         }
 
         private static ConsumptionMeteringPointCreatedEvent GetMeteringPointCreatedEventWithInvalidEnum()
         {
             return new ConsumptionMeteringPointCreatedEvent(
                 "123",
-                MeteringPointType.Consumption.ToString(),
                 "234",
                 "2",
-                "1",
-                "sdf",
-                "mrp",
-                "456",
-                "567",
-                "678",
-                "product",
-                "1",
-                SystemClock.Instance.GetCurrentInstant().ToString(),
-                "890");
+                SettlementMethod.Unknown,
+                MeteringMethod.Calculated,
+                MeterReadingPeriodicity.Hourly,
+                NetSettlementGroup.One,
+                ProductType.Tariff,
+                "some date");
         }
     }
 }

@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System;
+using GreenEnergyHub.Charges.Core.Enumeration;
 using GreenEnergyHub.Charges.Domain.MeteringPointCreatedEvents;
 using NodaTime.Text;
 
@@ -27,18 +28,14 @@ namespace GreenEnergyHub.Charges.Domain.MeteringPoints
                 throw new ArgumentNullException(nameof(consumptionMeteringPointCreatedEvent));
 
             var effectiveDate = InstantPattern.General.Parse(consumptionMeteringPointCreatedEvent.EffectiveDate).Value;
-            var meteringPointType = Enum.Parse<MeteringPointType>(consumptionMeteringPointCreatedEvent.MeteringPointType);
-            var connectionState = Enum.Parse<ConnectionState>(consumptionMeteringPointCreatedEvent.ConnectionState);
-            var settlementMethod = consumptionMeteringPointCreatedEvent.SettlementMethod == null
-                ? null as SettlementMethod?
-                : Enum.Parse<SettlementMethod>(consumptionMeteringPointCreatedEvent.SettlementMethod);
+            var settlementMethod = consumptionMeteringPointCreatedEvent.SettlementMethod.Cast<SettlementMethod>();
 
             return MeteringPoint.Create(
                 consumptionMeteringPointCreatedEvent.MeteringPointId,
-                meteringPointType,
-                consumptionMeteringPointCreatedEvent.GridAreaId,
+                MeteringPointType.Consumption,
+                consumptionMeteringPointCreatedEvent.GridAreaCode,
                 effectiveDate,
-                connectionState,
+                ConnectionState.New,
                 settlementMethod);
         }
     }
