@@ -37,27 +37,3 @@ module "sbnar_charges_sender" {
   send                      = true
   dependencies              = [module.sbn_charges]
 }
-
-module "sbt_command_received" {
-  source              = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//service-bus-topic?ref=1.7.0"
-  name                = "sbt-command-received"
-  namespace_name      = module.sbn_charges.name
-  resource_group_name = data.azurerm_resource_group.main.name
-  dependencies        = [module.sbn_charges]
-}
-
-module "sbt_command_accepted" {
-  source              = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//service-bus-topic?ref=1.7.0"
-  name                = "sbt-command-accepted"
-  namespace_name      = module.sbn_charges.name
-  resource_group_name = data.azurerm_resource_group.main.name
-  dependencies        = [module.sbn_charges]
-}
-
-module "sbt_command_rejected" {
-  source              = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//service-bus-topic?ref=1.7.0"
-  name                = "sbt-command-rejected"
-  namespace_name      = module.sbn_charges.name
-  resource_group_name = data.azurerm_resource_group.main.name
-  dependencies        = [module.sbn_charges]
-}
