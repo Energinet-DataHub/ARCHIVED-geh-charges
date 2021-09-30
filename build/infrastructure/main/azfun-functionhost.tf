@@ -34,11 +34,14 @@ module "azfun_functionhost" {
     INTEGRATIONEVENT_LISTENER_CONNECTION_STRING   = data.azurerm_key_vault_secret.integration_events_listener_connection_string.value
     DOMAINEVENT_SENDER_CONNECTION_STRING          = module.sbnar_charges_sender.primary_connection_string
     DOMAINEVENT_LISTENER_CONNECTION_STRING        = module.sbnar_charges_listener.primary_connection_string
+    CHARGE_CREATED_TOPIC_NAME                     = local.CHARGE_CREATED_TOPIC_NAME
+    CHARGE_PRICES_UPDATED_TOPIC_NAME              = local.CHARGE_PRICES_UPDATED_TOPIC_NAME
     CHARGE_LINK_ACCEPTED_TOPIC_NAME               = module.sbt_link_command_accepted.name
     CHARGE_LINK_ACCEPTED_SUBSCRIPTION_NAME        = azurerm_servicebus_subscription.sbs_link_command_accepted_event_publisher.name
     CHARGE_LINK_CREATED_TOPIC_NAME                = local.CHARGE_LINK_CREATED_TOPIC_NAME
     CHARGE_LINK_RECEIVED_TOPIC_NAME               = module.sbt_link_command_received.name
     CHARGE_LINK_RECEIVED_SUBSCRIPTION_NAME        = azurerm_servicebus_subscription.sbs_link_command_received_receiver.name
+    COMMAND_ACCEPTED_RECEIVER_SUBSCRIPTION_NAME   = azurerm_servicebus_subscription.sbs_charge_command_accepted_receiver.name
     COMMAND_ACCEPTED_TOPIC_NAME                   = module.sbt_command_accepted.name
     COMMAND_ACCEPTED_SUBSCRIPTION_NAME            = azurerm_servicebus_subscription.sbs_command_accepted.name
     COMMAND_RECEIVED_TOPIC_NAME                   = module.sbt_command_received.name
@@ -48,12 +51,7 @@ module "azfun_functionhost" {
     CREATE_LINK_COMMAND_TOPIC_NAME                = module.sbt_create_link_command.name
     CREATE_LINK_COMMAND_SUBSCRIPTION_NAME         = azurerm_servicebus_subscription.sbs_create_link_command_charges.name
     METERING_POINT_CREATED_TOPIC_NAME             = local.METERING_POINT_CREATED_TOPIC_NAME
-    METERING_POINT_CREATED_SUBSCRIPTION_NAME      = local.METERING_POINT_CREATED_SUBSCRIPTION_NAME
-    COMMAND_ACCEPTED_LISTENER_CONNECTION_STRING   = trimsuffix(module.sbtar_command_accepted_listener.primary_connection_string, ";EntityPath=${module.sbt_command_accepted.name}")
-    COMMAND_ACCEPTED_TOPIC_NAME                   = local.COMMAND_ACCEPTED_TOPIC_NAME
-    COMMAND_ACCEPTED_RECEIVER_SUBSCRIPTION_NAME   = local.COMMAND_ACCEPTED_RECEIVER_SUBSCRIPTION_NAME
-    CHARGE_CREATED_TOPIC_NAME                     = local.CHARGE_CREATED_TOPIC_NAME
-    CHARGE_PRICES_UPDATED_TOPIC_NAME              = local.CHARGE_PRICES_UPDATED_TOPIC_NAME
+    METERING_POINT_CREATED_SUBSCRIPTION_NAME      = local.METERING_POINT_CREATED_SUBSCRIPTION_NAME    
     POST_OFFICE_TOPIC_NAME                        = module.sbt_post_office.name
   }
   dependencies                              = [
@@ -62,7 +60,6 @@ module "azfun_functionhost" {
     module.azfun_functionhost_stor.dependent_on,
     module.sbnar_charges_sender.dependent_on,
     module.sbt_link_command_received.dependent_on,
-    module.sbtar_command_accepted_listener.dependent_on,
   ]
 }
 
