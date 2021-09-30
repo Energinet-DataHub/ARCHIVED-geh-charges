@@ -37,6 +37,8 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
             serviceCollection.AddScoped(typeof(IClock), _ => SystemClock.Instance);
             serviceCollection.AddLogging();
             serviceCollection.AddScoped<CorrelationIdMiddleware>();
+            serviceCollection.AddApplicationInsightsTelemetryWorkerService(
+                EnvironmentHelper.GetEnv("APPINSIGHTS_INSTRUMENTATIONKEY"));
 
             ConfigureSharedDatabase(serviceCollection);
             ConfigureSharedMessaging(serviceCollection);
