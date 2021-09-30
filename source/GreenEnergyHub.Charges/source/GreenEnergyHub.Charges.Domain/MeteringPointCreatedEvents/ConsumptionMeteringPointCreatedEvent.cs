@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using GreenEnergyHub.Charges.Domain.Messages.Events;
+using GreenEnergyHub.Charges.Domain.MeteringPoints;
 using GreenEnergyHub.Messaging.MessageTypes.Common;
 
 namespace GreenEnergyHub.Charges.Domain.MeteringPointCreatedEvents
@@ -21,63 +22,43 @@ namespace GreenEnergyHub.Charges.Domain.MeteringPointCreatedEvents
     {
         public ConsumptionMeteringPointCreatedEvent(
             string meteringPointId,
-            string meteringPointType,
-            string gridAreaId,
-            string? settlementMethod,
-            string meteringMethod,
-            string connectionState,
-            string meterReadingPeriodicity,
-            string netSettlementGroup,
-            string toGrid,
-            string fromGrid,
-            string product,
-            string quantityUnit,
-            string effectiveDate,
-            string parentMeteringPointId)
+            string gsrnNumber,
+            string gridAreaCode,
+            SettlementMethod settlementMethod,
+            MeteringMethod meteringMethod,
+            MeterReadingPeriodicity meterReadingPeriodicity,
+            NetSettlementGroup netSettlementGroup,
+            ProductType productType,
+            string effectiveDate)
             : base(Transaction.NewTransaction())
         {
             MeteringPointId = meteringPointId;
-            MeteringPointType = meteringPointType;
-            GridAreaId = gridAreaId;
+            GsrnNumber = gsrnNumber;
+            GridAreaCode = gridAreaCode;
             SettlementMethod = settlementMethod;
             MeteringMethod = meteringMethod;
-            ConnectionState = connectionState;
             MeterReadingPeriodicity = meterReadingPeriodicity;
             NetSettlementGroup = netSettlementGroup;
-            ToGrid = toGrid;
-            FromGrid = fromGrid;
-            Product = product;
-            QuantityUnit = quantityUnit;
+            ProductType = productType;
             EffectiveDate = effectiveDate;
-            ParentMeteringPointId = parentMeteringPointId;
         }
 
         public string MeteringPointId { get; }
 
-        public string MeteringPointType { get; }
+        public string GsrnNumber { get; }
 
-        public string GridAreaId { get; }
+        public string GridAreaCode { get; }
 
-        public string? SettlementMethod { get; }
+        public SettlementMethod SettlementMethod { get; }
 
-        public string MeteringMethod { get; }
+        public MeteringMethod MeteringMethod { get; }
 
-        public string ConnectionState { get; }
+        public MeterReadingPeriodicity MeterReadingPeriodicity { get; }
 
-        public string MeterReadingPeriodicity { get; }
+        public NetSettlementGroup NetSettlementGroup { get; }
 
-        public string NetSettlementGroup { get; }
-
-        public string ToGrid { get; }
-
-        public string FromGrid { get; }
-
-        public string Product { get; }
-
-        public string QuantityUnit { get; }
+        public ProductType ProductType { get; }
 
         public string EffectiveDate { get; }
-
-        public string ParentMeteringPointId { get; }
     }
 }

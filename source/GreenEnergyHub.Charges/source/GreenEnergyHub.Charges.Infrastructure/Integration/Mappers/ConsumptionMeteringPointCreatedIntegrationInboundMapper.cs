@@ -15,6 +15,7 @@
 using System.Diagnostics.CodeAnalysis;
 using Energinet.DataHub.MeteringPoints.IntegrationEventContracts;
 using GreenEnergyHub.Charges.Domain.MeteringPointCreatedEvents;
+using GreenEnergyHub.Charges.Domain.MeteringPoints;
 using GreenEnergyHub.Messaging.Protobuf;
 using GreenEnergyHub.Messaging.Transport;
 
@@ -26,19 +27,14 @@ namespace GreenEnergyHub.Charges.Infrastructure.Integration.Mappers
         {
             return new ConsumptionMeteringPointCreatedEvent(
                 obj.MeteringPointId,
-                obj.MeteringPointType,
-                obj.MeteringGridArea,
+                obj.GsrnNumber,
+                obj.GridAreaCode,
                 obj.SettlementMethod,
                 obj.MeteringMethod,
-                obj.ConnectionState,
                 obj.MeterReadingPeriodicity,
                 obj.NetSettlementGroup,
-                obj.ToGrid,
-                obj.FromGrid,
                 obj.Product,
-                obj.QuantityUnit,
-                obj.EffectiveDate,
-                obj.ParentMeteringPointId);
+                obj.EffectiveDate);
         }
     }
 }
