@@ -14,13 +14,12 @@
 
 using System;
 using System.Diagnostics.CodeAnalysis;
-using GreenEnergyHub.Charges.Infrastructure.Messaging;
-using GreenEnergyHub.Charges.TestCore;
+using GreenEnergyHub.Charges.Infrastructure.Correlation;
 using GreenEnergyHub.Charges.TestCore.Attributes;
 using Xunit;
 using Xunit.Categories;
 
-namespace GreenEnergyHub.Charges.Tests.Infrastructure.Messaging
+namespace GreenEnergyHub.Charges.Tests.Infrastructure.Correlation
 {
     [UnitTest]
     public class CorrelationContextTests
@@ -31,10 +30,10 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Messaging
         {
             // Arrange
             var correlationId = Guid.NewGuid().ToString();
-            sut.CorrelationId = correlationId;
+            sut.SetId(correlationId);
 
             // Act
-            var result = sut.CorrelationId;
+            var result = sut.Id;
 
             // Assert
             Assert.Equal(correlationId, result);

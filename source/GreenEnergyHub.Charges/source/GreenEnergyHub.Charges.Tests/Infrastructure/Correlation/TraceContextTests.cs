@@ -13,11 +13,11 @@
 // limitations under the License.
 
 using FluentAssertions;
-using GreenEnergyHub.Charges.Infrastructure.Messaging;
+using GreenEnergyHub.Charges.Infrastructure.Correlation;
 using Xunit;
 using Xunit.Categories;
 
-namespace GreenEnergyHub.Charges.Tests.Infrastructure.Messaging
+namespace GreenEnergyHub.Charges.Tests.Infrastructure.Correlation
 {
     [UnitTest]
     public class TraceContextTests
