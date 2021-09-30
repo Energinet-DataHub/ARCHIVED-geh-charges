@@ -24,5 +24,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Common
         public const string DomainEventSenderConnectionString = "DOMAINEVENT_SENDER_CONNECTION_STRING";
 
         public const string PostOfficeTopicName = "POST_OFFICE_TOPIC_NAME";
+
+        public const string ChargeDbConnectionString = "CHARGE_DB_CONNECTION_STRING";
     }
 }

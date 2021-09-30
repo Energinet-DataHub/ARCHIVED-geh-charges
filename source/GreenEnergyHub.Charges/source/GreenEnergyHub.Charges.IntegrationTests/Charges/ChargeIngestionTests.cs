@@ -85,7 +85,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Charges
                 actualResponse.StatusCode.Should().Be(HttpStatusCode.OK);
 
                 // => Service Bus
-                var isMessageReceived = isMessageReceivedEvent.Wait(TimeSpan.FromSeconds(5));
+                var isMessageReceived = isMessageReceivedEvent.Wait(TimeSpan.FromSeconds(120));
                 isMessageReceived.Should().BeTrue();
 
                 body.Should().NotBeEmpty();

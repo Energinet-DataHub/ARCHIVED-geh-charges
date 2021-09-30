@@ -17,7 +17,9 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
+using GreenEnergyHub.Charges.ApplyDBMigrationsApp.Helpers;
 using GreenEnergyHub.Charges.FunctionHost.Common;
+using GreenEnergyHub.Charges.TestCore.Squadron;
 using GreenEnergyHub.FunctionApp.TestCommon;
 using GreenEnergyHub.FunctionApp.TestCommon.Azurite;
 using GreenEnergyHub.FunctionApp.TestCommon.FunctionAppHost;
@@ -35,6 +37,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures
             AzuriteManager = new AzuriteManager();
 
             ServiceBusResource = new AzureCloudServiceBusResource<ChargesFunctionAppServiceBusOptions>(messageSink);
+            SqlServerResource = new SqlServerResource<SqlServerOptions>();
 
             //// TODO: Create resource managers here, but do not start them until OnInitializeFunctionAppDependenciesAsync.
         }
@@ -45,6 +48,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures
         private AzuriteManager AzuriteManager { get; }
 
         private AzureCloudServiceBusResource<ChargesFunctionAppServiceBusOptions> ServiceBusResource { get; }
+
+        private SqlServerResource<SqlServerOptions> SqlServerResource { get; }
 
         /// <inheritdoc/>
         protected override void OnConfigureHostSettings(FunctionAppHostSettings hostSettings)
@@ -63,6 +68,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures
         {
             AzuriteManager.StartAzurite();
 
+            // => Service Bus
             await ServiceBusResource.InitializeAsync();
 
             var postOfficeTopicName = await GetTopicNameFromKeyAsync(ChargesFunctionAppServiceBusOptions.PostOfficeTopicKey);
@@ -72,6 +78,22 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures
 
             ServiceBusListenerMock = new ServiceBusListenerMock(ServiceBusResource.ConnectionString, TestLogger);
             await ServiceBusListenerMock.AddTopicSubscriptionListenerAsync(postOfficeTopicName, ChargesFunctionAppServiceBusOptions.PostOfficeTopicSubscriptionName);
+
+            // => Database
+            await SqlServerResource.InitializeAsync();
+
+            const string databaseName = "chargeDatabase";
+            var chargeDbConnectionString = await SqlServerResource.CreateDatabaseAsync(databaseName);
+
+            // Overwrites the setting so the function uses the name we have control of in the test
+            Environment.SetEnvironmentVariable(EnvironmentSettingNames.ChargeDbConnectionString, chargeDbConnectionString);
+
+            var upgrader = UpgradeFactory.GetUpgradeEngine(chargeDbConnectionString, _ => true);
+            var result = upgrader.PerformUpgrade();
+            if (result.Successful is false)
+            {
+                throw new Exception("Database migration failed", result.Error);
+            }
 
             //// TODO: Initialize/start resource managers and create dependent resources (e.g. database, service bus)
         }
@@ -90,9 +112,12 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures
         {
             AzuriteManager.Dispose();
 
+            // => Service Bus
             await ServiceBusListenerMock.DisposeAsync();
-
             await ServiceBusResource.DisposeAsync();
+
+            // => Database
+            await SqlServerResource.DisposeAsync();
 
             //// TODO: Dispose/stop resource managers and delete created dependent resources (e.g. database, service bus)
         }
