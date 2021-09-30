@@ -19,8 +19,8 @@ locals {
     # All below this line must match the names used in the repo geh-shared-resources
     CHARGE_LINK_CREATED_TOPIC_NAME                = "charge-link-created"
     CHARGE_LINK_UPDATED_TOPIC_NAME                = "charge-link-updated"
-    METERING_POINT_CREATED_TOPIC_NAME             = "metering-point-created"
-    METERING_POINT_CREATED_SUBSCRIPTION_NAME      = "metering-point-created-sub-charges"
+    CONSUMPTION_METERING_POINT_CREATED_TOPIC_NAME             = "metering-point-created"
+    CONSUMPTION_METERING_POINT_CREATED_SUBSCRIPTION_NAME      = "metering-point-created-sub-charges"
     # The string value is the shared keyvault key name
     INTEGRATION_EVENTS_LISTENER_CONNECTION_STRING = "INTEGRATION-EVENTS-LISTENER-CONNECTION-STRING"
     # The string value is the shared keyvault key name
