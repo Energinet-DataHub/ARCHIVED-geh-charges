@@ -34,7 +34,7 @@ Cons:
 */
 
 module "kv_shared_stub" {
-  source                          = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//key-vault?ref=1.7.0"
+  source                          = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//key-vault?ref=2.0.0"
   name                            = "kvsharedst${var.project}${var.organisation}${var.environment}"
   resource_group_name             = data.azurerm_resource_group.main.name
   location                        = data.azurerm_resource_group.main.location
@@ -55,7 +55,7 @@ module "kv_shared_stub" {
 }
 
 module "kvs_integrationevents_listener_connection_string" {
-  source        = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//key-vault-secret?ref=1.7.0"
+  source        = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//key-vault-secret?ref=2.0.0"
   name          = local.INTEGRATION_EVENTS_LISTENER_CONNECTION_STRING
   value         = module.sbnar_integrationevents_listener.primary_connection_string
   key_vault_id  = module.kv_shared_stub.id
@@ -66,7 +66,7 @@ module "kvs_integrationevents_listener_connection_string" {
 }
 
 module "kvs_integrationevents_sender_connection_string" {
-  source        = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//key-vault-secret?ref=1.7.0"
+  source        = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//key-vault-secret?ref=2.0.0"
   name          = local.INTEGRATION_EVENTS_SENDER_CONNECTION_STRING
   value         = module.sbnar_integrationevents_sender.primary_connection_string
   key_vault_id  = module.kv_shared_stub.id
