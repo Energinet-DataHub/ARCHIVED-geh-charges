@@ -45,7 +45,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Messaging.Serialization.Co
         {
             // Arrange
             var correlationId = Guid.NewGuid().ToString();
-            context.Setup(c => c.CorrelationId).Returns(correlationId);
+            context.Setup(c => c.Id).Returns(correlationId);
 
             var stream = GetEmbeddedResource("GreenEnergyHub.Charges.Tests.TestFiles.Valid_CIM_ChargeLink.xml");
             using var reader = XmlReader.Create(stream, new XmlReaderSettings { Async = true });
@@ -85,7 +85,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Messaging.Serialization.Co
         {
             // Arrange
             var correlationId = Guid.NewGuid().ToString();
-            context.Setup(c => c.CorrelationId).Returns(correlationId);
+            context.Setup(c => c.Id).Returns(correlationId);
 
             var stream = GetEmbeddedResource("GreenEnergyHub.Charges.Tests.TestFiles.Valid_CIM_ChargeLink_WithUnusedCimContent.xml");
             using var reader = XmlReader.Create(stream, new XmlReaderSettings { Async = true });
@@ -108,7 +108,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Messaging.Serialization.Co
         {
             // Arrange
             var correlationId = Guid.NewGuid().ToString();
-            context.Setup(c => c.CorrelationId).Returns(correlationId);
+            context.Setup(c => c.Id).Returns(correlationId);
 
             var stream = GetEmbeddedResource("GreenEnergyHub.Charges.Tests.TestFiles.Valid_CIM_ChargeLink_WithoutEndDate.xml");
             using var reader = XmlReader.Create(stream, new XmlReaderSettings { Async = true });
