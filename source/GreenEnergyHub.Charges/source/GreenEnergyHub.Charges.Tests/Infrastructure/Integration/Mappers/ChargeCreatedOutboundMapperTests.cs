@@ -14,51 +14,33 @@
 
 using System;
 using System.Diagnostics.CodeAnalysis;
-using GreenEnergyHub.Charges.Domain.ChargeLinkCreatedEvents;
-using GreenEnergyHub.Charges.Domain.Charges;
-using GreenEnergyHub.Charges.Infrastructure.Integration.ChargeLinkCreated;
+using GreenEnergyHub.Charges.Domain.Charges.Acknowledgements;
 using GreenEnergyHub.Charges.Infrastructure.Integration.Mappers;
 using GreenEnergyHub.Charges.TestCore.Attributes;
 using GreenEnergyHub.Charges.TestCore.Protobuf;
-using NodaTime;
 using Xunit;
 using Xunit.Categories;
 
 namespace GreenEnergyHub.Charges.Tests.Infrastructure.Integration.Mappers
 {
     [UnitTest]
-    public class ChargeLinkCreatedOutboundMapperTests
+    public class ChargeCreatedOutboundMapperTests
     {
         [Theory]
         [InlineAutoMoqData]
         public void Convert_WhenCalled_MapsToCorrectValues(
-            [NotNull] ChargeLinkCreatedOutboundMapper sut)
+            [NotNull] ChargeCreatedEvent chargeCreatedEvent,
+            [NotNull] ChargeCreatedOutboundMapper sut)
         {
-            var createdEvent = GetCreatedEvent();
-            var result = (ChargeLinkCreatedContract)sut.Convert(createdEvent);
-            ProtobufAssert.OutgoingContractIsSubset(createdEvent, result);
+            var result = (GreenEnergyHub.Charges.Infrastructure.Integration.ChargeCreated.ChargeCreated)sut.Convert(chargeCreatedEvent);
+            ProtobufAssert.OutgoingContractIsSubset(chargeCreatedEvent, result);
         }
 
         [Theory]
         [InlineAutoMoqData]
-        public void Convert_WhenCalledWithNull_ShouldThrow([NotNull]ChargeLinkCreatedOutboundMapper sut)
+        public void Convert_WhenCalledWithNull_ShouldThrow([NotNull]ChargeCreatedOutboundMapper sut)
         {
             Assert.Throws<InvalidOperationException>(() => sut.Convert(null!));
-        }
-
-        private static ChargeLinkCreatedEvent GetCreatedEvent()
-        {
-            var period = new ChargeLinkPeriod(
-                Instant.FromUtc(2021, 8, 31, 22, 0, 0),
-                Instant.FromUtc(2021, 9, 30, 22, 0, 0),
-                5);
-            return new ChargeLinkCreatedEvent(
-                "chargeLinkId",
-                "meteringPointId",
-                "chargeId",
-                ChargeType.Tariff,
-                "chargeOwner",
-                period);
         }
     }
 }
