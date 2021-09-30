@@ -4,7 +4,7 @@ using Azure.Messaging.ServiceBus;
 using Google.Protobuf;
 using GreenEnergyHub.Charges.Commands;
 
-namespace GreenEnergyHub.DataHub.Charges.Clients
+namespace GreenEnergyHub.DataHub.Charges.Libraries
 {
     public sealed class CreateDefaultChargeLinkClient : IAsyncDisposable
     {
