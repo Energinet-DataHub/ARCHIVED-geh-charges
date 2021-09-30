@@ -32,7 +32,6 @@ namespace GreenEnergyHub.Charges.FunctionHost.Charges
         /// The name of the function.
         /// Function name affects the URL and thus possibly dependent infrastructure.
         /// </summary>
-        public const string FunctionName = "ChargeIngestion";
         private readonly IChargesMessageHandler _chargesMessageHandler;
         private readonly ICorrelationContext _correlationContext;
         private readonly MessageExtractor<ChargeCommand> _messageExtractor;
@@ -51,12 +50,12 @@ namespace GreenEnergyHub.Charges.FunctionHost.Charges
             _log = loggerFactory.CreateLogger(nameof(ChargeIngestion));
         }
 
-        [Function(FunctionName)]
+        [Function(IngestionFunctionNames.ChargeIngestion)]
         public async Task<IActionResult> RunAsync(
             [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = null)]
             [NotNull] HttpRequestData req)
         {
-            _log.LogInformation("Function {FunctionName} started to process a request", FunctionName);
+            _log.LogInformation("Function {FunctionName} started to process a request", IngestionFunctionNames.ChargeIngestion);
 
             var message = await GetChargesMessageAsync(req).ConfigureAwait(false);
 
