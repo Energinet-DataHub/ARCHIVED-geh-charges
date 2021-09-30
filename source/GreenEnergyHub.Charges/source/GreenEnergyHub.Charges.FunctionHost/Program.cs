@@ -257,10 +257,10 @@ namespace GreenEnergyHub.Charges.FunctionHost
 
         private static void ConfigureMeteringPointCreatedReceiver(IServiceCollection serviceCollection)
         {
-            serviceCollection.ReceiveProtobufMessage<MeteringPointCreated>(
-                configuration => configuration.WithParser(() => MeteringPointCreated.Parser));
+            serviceCollection.ReceiveProtobufMessage<ConsumptionMeteringPointCreated>(
+                configuration => configuration.WithParser(() => ConsumptionMeteringPointCreated.Parser));
 
-            serviceCollection.AddScoped<IMeteringPointCreatedEventHandler, MeteringPointCreatedEventHandler>();
+            serviceCollection.AddScoped<IConsumptionMeteringPointCreatedEventHandler, ConsumptionMeteringPointCreatedEventHandler>();
         }
 
         private static string GetEnv(string variableName)

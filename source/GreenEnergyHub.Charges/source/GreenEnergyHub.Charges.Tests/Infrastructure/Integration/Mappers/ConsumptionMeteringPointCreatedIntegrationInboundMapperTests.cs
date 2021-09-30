@@ -26,16 +26,16 @@ using Xunit.Categories;
 namespace GreenEnergyHub.Charges.Tests.Infrastructure.Integration.Mappers
 {
     [UnitTest]
-    public class MeteringPointCreatedIntegrationInboundMapperTests
+    public class ConsumptionMeteringPointCreatedIntegrationInboundMapperTests
     {
         [Theory]
         [InlineAutoMoqData]
-        public void MeteringPointCreatedIntegrationInboundMapper_WhenCalled_ShouldMapToProtobufWithCorrectValues(
-            [NotNull] MeteringPointCreated meteringPointCreatedEvent,
-            [NotNull] MeteringPointCreatedIntegrationInboundMapper sut)
+        public void ConsumptionMeteringPointCreatedIntegrationInboundMapper_WhenCalled_ShouldMapToProtobufWithCorrectValues(
+            [NotNull] ConsumptionMeteringPointCreated meteringPointCreatedEvent,
+            [NotNull] ConsumptionMeteringPointCreatedIntegrationInboundMapper sut)
         {
             // Act
-            var converted = (MeteringPointCreatedEvent)sut.Convert(meteringPointCreatedEvent);
+            var converted = (ConsumptionMeteringPointCreatedEvent)sut.Convert(meteringPointCreatedEvent);
 
             // Assert
             converted.Should().NotContainNullsOrEmptyEnumerables();
@@ -56,7 +56,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Integration.Mappers
 
         [Theory]
         [InlineAutoMoqData]
-        public void Convert_WhenCalledWithNull_ShouldThrow([NotNull]MeteringPointCreatedIntegrationInboundMapper sut)
+        public void Convert_WhenCalledWithNull_ShouldThrow([NotNull]ConsumptionMeteringPointCreatedIntegrationInboundMapper sut)
         {
             Assert.Throws<InvalidOperationException>(() => sut.Convert(null!));
         }

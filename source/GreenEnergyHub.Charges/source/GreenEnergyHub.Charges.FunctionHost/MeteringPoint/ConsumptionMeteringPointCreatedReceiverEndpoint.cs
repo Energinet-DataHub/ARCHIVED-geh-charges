@@ -23,28 +23,28 @@ using Microsoft.Extensions.Logging;
 
 namespace GreenEnergyHub.Charges.FunctionHost.MeteringPoint
 {
-    public class MeteringPointCreatedReceiverEndpoint
+    public class ConsumptionMeteringPointCreatedReceiverEndpoint
     {
         /// <summary>
         /// The name of the function.
         /// Function name affects the URL and thus possibly dependent infrastructure.
         /// </summary>
-        public const string FunctionName = nameof(MeteringPointCreatedReceiverEndpoint);
+        public const string FunctionName = nameof(ConsumptionMeteringPointCreatedReceiverEndpoint);
         private readonly ICorrelationContext _correlationContext;
-        private readonly MessageExtractor<MeteringPointCreated> _messageExtractor;
-        private readonly IMeteringPointCreatedEventHandler _meteringPointCreatedEventHandler;
+        private readonly MessageExtractor<ConsumptionMeteringPointCreated> _messageExtractor;
+        private readonly IConsumptionMeteringPointCreatedEventHandler _consumptionMeteringPointCreatedEventHandler;
         private readonly ILogger _log;
 
-        public MeteringPointCreatedReceiverEndpoint(
+        public ConsumptionMeteringPointCreatedReceiverEndpoint(
             ICorrelationContext correlationContext,
-            MessageExtractor<MeteringPointCreated> messageExtractor,
-            IMeteringPointCreatedEventHandler meteringPointCreatedEventHandler,
+            MessageExtractor<ConsumptionMeteringPointCreated> messageExtractor,
+            IConsumptionMeteringPointCreatedEventHandler consumptionMeteringPointCreatedEventHandler,
             [NotNull] ILoggerFactory loggerFactory)
         {
             _correlationContext = correlationContext;
             _messageExtractor = messageExtractor;
-            _meteringPointCreatedEventHandler = meteringPointCreatedEventHandler;
-            _log = loggerFactory.CreateLogger(nameof(MeteringPointCreatedReceiverEndpoint));
+            _consumptionMeteringPointCreatedEventHandler = consumptionMeteringPointCreatedEventHandler;
+            _log = loggerFactory.CreateLogger(nameof(ConsumptionMeteringPointCreatedReceiverEndpoint));
         }
 
         [Function(FunctionName)]
@@ -58,9 +58,9 @@ namespace GreenEnergyHub.Charges.FunctionHost.MeteringPoint
         {
             SetupCorrelationContext(context); // TODO Add this as a method in correlation context instead once integration project has been upgraded to .5.0, avoiding multiple of the same implementations
 
-            var meteringPointCreatedEvent = (MeteringPointCreatedEvent)await _messageExtractor.ExtractAsync(message).ConfigureAwait(false);
+            var meteringPointCreatedEvent = (ConsumptionMeteringPointCreatedEvent)await _messageExtractor.ExtractAsync(message).ConfigureAwait(false);
 
-            await _meteringPointCreatedEventHandler.HandleAsync(meteringPointCreatedEvent).ConfigureAwait(false);
+            await _consumptionMeteringPointCreatedEventHandler.HandleAsync(meteringPointCreatedEvent).ConfigureAwait(false);
 
             _log.LogInformation("Received metering point created event '{@MeteringPointId}'", meteringPointCreatedEvent.MeteringPointId);
         }

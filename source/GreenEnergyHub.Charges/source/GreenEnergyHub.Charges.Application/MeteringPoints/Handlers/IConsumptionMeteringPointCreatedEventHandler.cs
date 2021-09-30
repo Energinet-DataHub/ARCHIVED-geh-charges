@@ -17,8 +17,8 @@ using GreenEnergyHub.Charges.Domain.MeteringPointCreatedEvents;
 
 namespace GreenEnergyHub.Charges.Application.MeteringPoints.Handlers
 {
-    public interface IMeteringPointCreatedEventHandler
+    public interface IConsumptionMeteringPointCreatedEventHandler
     {
-        Task HandleAsync(MeteringPointCreatedEvent meteringPointCreatedEvent);
+        Task HandleAsync(ConsumptionMeteringPointCreatedEvent consumptionMeteringPointCreatedEvent);
     }
 }

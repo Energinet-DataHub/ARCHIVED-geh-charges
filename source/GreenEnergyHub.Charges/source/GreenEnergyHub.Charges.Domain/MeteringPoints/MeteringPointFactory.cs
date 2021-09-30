@@ -21,22 +21,22 @@ namespace GreenEnergyHub.Charges.Domain.MeteringPoints
     public static class MeteringPointFactory
     {
         public static MeteringPoint Create(
-            MeteringPointCreatedEvent meteringPointCreatedEvent)
+            ConsumptionMeteringPointCreatedEvent consumptionMeteringPointCreatedEvent)
         {
-            if (meteringPointCreatedEvent == null)
-                throw new ArgumentNullException(nameof(meteringPointCreatedEvent));
+            if (consumptionMeteringPointCreatedEvent == null)
+                throw new ArgumentNullException(nameof(consumptionMeteringPointCreatedEvent));
 
-            var effectiveDate = InstantPattern.General.Parse(meteringPointCreatedEvent.EffectiveDate).Value;
-            var meteringPointType = Enum.Parse<MeteringPointType>(meteringPointCreatedEvent.MeteringPointType);
-            var connectionState = Enum.Parse<ConnectionState>(meteringPointCreatedEvent.ConnectionState);
-            var settlementMethod = meteringPointCreatedEvent.SettlementMethod == null
+            var effectiveDate = InstantPattern.General.Parse(consumptionMeteringPointCreatedEvent.EffectiveDate).Value;
+            var meteringPointType = Enum.Parse<MeteringPointType>(consumptionMeteringPointCreatedEvent.MeteringPointType);
+            var connectionState = Enum.Parse<ConnectionState>(consumptionMeteringPointCreatedEvent.ConnectionState);
+            var settlementMethod = consumptionMeteringPointCreatedEvent.SettlementMethod == null
                 ? null as SettlementMethod?
-                : Enum.Parse<SettlementMethod>(meteringPointCreatedEvent.SettlementMethod);
+                : Enum.Parse<SettlementMethod>(consumptionMeteringPointCreatedEvent.SettlementMethod);
 
             return MeteringPoint.Create(
-                meteringPointCreatedEvent.MeteringPointId,
+                consumptionMeteringPointCreatedEvent.MeteringPointId,
                 meteringPointType,
-                meteringPointCreatedEvent.GridAreaId,
+                consumptionMeteringPointCreatedEvent.GridAreaId,
                 effectiveDate,
                 connectionState,
                 settlementMethod);

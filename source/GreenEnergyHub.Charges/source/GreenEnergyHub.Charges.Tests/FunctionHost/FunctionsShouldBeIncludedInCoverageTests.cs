@@ -34,7 +34,7 @@ namespace GreenEnergyHub.Charges.Tests.FunctionHost
         public void AllFunctionsShouldBeIncludedInCoverage()
         {
             Assert.Equal("ChargeCommandReceiverEndpoint", ChargeCommandReceiverEndpoint.FunctionName);
-            Assert.Equal("MeteringPointCreatedReceiverEndpoint", MeteringPointCreatedReceiverEndpoint.FunctionName);
+            Assert.Equal("ConsumptionMeteringPointCreatedReceiverEndpoint", ConsumptionMeteringPointCreatedReceiverEndpoint.FunctionName);
         }
     }
 }

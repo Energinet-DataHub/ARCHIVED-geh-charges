@@ -25,7 +25,7 @@ option csharp_namespace = "Energinet.DataHub.MeteringPoints.IntegrationEventCont
 /*
  * Represents the creation of a metering point.
  */
-message MeteringPointCreated {
+message ConsumptionMeteringPointCreated {
     string metering_point_id = 1; // Unique metering point identifier.
     string metering_point_type = 2; // Defines the type of metering point created.
     string metering_grid_area = 3; // Indicates the metering grid area in which the metering point is created.
@@ -121,7 +121,7 @@ message NetSettlementGroupChanged {
 
 message IntegrationEventEnvelope {
     oneof IntegrationEventMessages {
-        MeteringPointCreated meteringPointCreatedMessage = 1;
+        ConsumptionMeteringPointCreated meteringPointCreatedMessage = 1;
         MeteringPointConnected meteringPointConnectedMessage = 2;
         MeteringPointDisconnected meteringPointDisconnectedMessage = 3;
         MeteringPointClosed meteringPointClosedMessage = 4;

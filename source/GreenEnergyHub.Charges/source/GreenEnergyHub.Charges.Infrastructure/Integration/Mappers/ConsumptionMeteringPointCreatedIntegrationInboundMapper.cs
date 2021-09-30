@@ -20,11 +20,11 @@ using GreenEnergyHub.Messaging.Transport;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Integration.Mappers
 {
-    public class MeteringPointCreatedIntegrationInboundMapper : ProtobufInboundMapper<MeteringPointCreated>
+    public class ConsumptionMeteringPointCreatedIntegrationInboundMapper : ProtobufInboundMapper<ConsumptionMeteringPointCreated>
     {
-        protected override IInboundMessage Convert([NotNull]MeteringPointCreated obj)
+        protected override IInboundMessage Convert([NotNull] ConsumptionMeteringPointCreated obj)
         {
-            return new MeteringPointCreatedEvent(
+            return new ConsumptionMeteringPointCreatedEvent(
                 obj.MeteringPointId,
                 obj.MeteringPointType,
                 obj.MeteringGridArea,

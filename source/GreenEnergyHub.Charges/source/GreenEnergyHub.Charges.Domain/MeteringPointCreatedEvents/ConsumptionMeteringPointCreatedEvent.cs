@@ -17,9 +17,9 @@ using GreenEnergyHub.Messaging.MessageTypes.Common;
 
 namespace GreenEnergyHub.Charges.Domain.MeteringPointCreatedEvents
 {
-    public class MeteringPointCreatedEvent : InboundIntegrationEvent
+    public class ConsumptionMeteringPointCreatedEvent : InboundIntegrationEvent
     {
-        public MeteringPointCreatedEvent(
+        public ConsumptionMeteringPointCreatedEvent(
             string meteringPointId,
             string meteringPointType,
             string gridAreaId,
