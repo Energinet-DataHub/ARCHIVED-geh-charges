@@ -14,7 +14,10 @@
 
 using System;
 using System.IO;
+using System.Text.RegularExpressions;
 using GreenEnergyHub.Charges.FunctionHost.Common;
+using GreenEnergyHub.FunctionApp.TestCommon;
+using GreenEnergyHub.FunctionApp.TestCommon.FunctionAppHost;
 using Squadron;
 using Squadron.AzureCloud;
 
@@ -30,12 +33,16 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures
         {
             builder.SetConfigResolver(ConfigurationResolver);
 
-            var domainEventListenerConnectionString = Environment
-                .GetEnvironmentVariable(EnvironmentSettingNames.DomainEventSenderConnectionString)
-                ?? string.Empty;
+            var localSettingsSnapshot = new FunctionAppHostConfigurationBuilder().BuildLocalSettingsConfiguration();
+            var domainEventListenerConnectionString = localSettingsSnapshot.GetValue(EnvironmentSettingNames.DomainEventSenderConnectionString);
+
+            // Example value: 'Endpoint=sb://sbn-charges-xdas-s.servicebus.windows.net/;'
+            var namespaceMatchPattern = @"Endpoint=sb://(.*?).servicebus.windows.net/";
+            var match = Regex.Match(domainEventListenerConnectionString, namespaceMatchPattern, RegexOptions.IgnoreCase);
+            var domainEventListenerNamespace = match.Groups[1].Value;
 
             builder
-                .Namespace("sbn-charges-xdas-s")
+                .Namespace(domainEventListenerNamespace)
                 .AddTopic(PostOfficeTopicKey)
                 .AddSubscription(PostOfficeTopicSubscriptionName);
         }
