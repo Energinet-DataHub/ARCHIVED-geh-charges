@@ -45,7 +45,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Charges
             [ServiceBusTrigger(
                 "%COMMAND_ACCEPTED_TOPIC_NAME%",
                 "%COMMAND_ACCEPTED_RECEIVER_SUBSCRIPTION_NAME%",
-                Connection = "COMMAND_ACCEPTED_LISTENER_CONNECTION_STRING")]
+                Connection = "DOMAINEVENT_LISTENER_CONNECTION_STRING")]
             [NotNull] byte[] message)
         {
             var chargeCommandAcceptedEvent = (ChargeCommandAcceptedEvent)await _messageExtractor
