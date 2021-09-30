@@ -9,12 +9,12 @@ namespace GreenEnergyHub.DataHub.Charges.Libraries.DefaultChargeLinkRequest
     public sealed class DefaultChargeLinkRequestClient : IAsyncDisposable
     {
         private readonly ServiceBusClient _serviceBusClient;
-        private readonly string _respondQueName;
+        private readonly string _respondQueue;
 
-        public DefaultChargeLinkRequestClient(string serviceBusConnectionString, string respondQueName)
+        public DefaultChargeLinkRequestClient(string serviceBusConnectionString, string respondQueue)
         {
             _serviceBusClient = new ServiceBusClient(serviceBusConnectionString);
-            _respondQueName = respondQueName;
+            _respondQueue = respondQueue;
         }
 
         public async Task CreateDefaultChargeLinksRequestAsync(
@@ -31,7 +31,7 @@ namespace GreenEnergyHub.DataHub.Charges.Libraries.DefaultChargeLinkRequest
             await sender.SendMessageAsync(new ServiceBusMessage
             {
                 Body = new BinaryData(createDefaultChargeLinks.ToByteArray()),
-                ReplyTo = _respondQueName,
+                ReplyTo = _respondQueue,
                 CorrelationId = correlationId,
             }).ConfigureAwait(false);
         }
