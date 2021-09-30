@@ -23,7 +23,7 @@ on the existing Service Bus Namespace.
 =================================================================================
 */
 
-resource "azurerm_servicebus_subscription" "sbs_consumption_metering_point_created" {
+resource "azurerm_servicebus_subscription" "sbs_metering_point_created" {
   depends_on          = [module.sbt_consumption_metering_point_created]
   name                = local.CONSUMPTION_METERING_POINT_CREATED_SUBSCRIPTION_NAME
   resource_group_name = data.azurerm_resource_group.main.name
