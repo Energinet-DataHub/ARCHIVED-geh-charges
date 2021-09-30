@@ -13,7 +13,7 @@
 # limitations under the License.
 
 module "sbt_command_accepted" {
-  source              = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//service-bus-topic?ref=1.7.0"
+  source              = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//service-bus-topic?ref=2.0.0"
   name                = "sbt-command-accepted"
   namespace_name      = module.sbn_charges.name
   resource_group_name = data.azurerm_resource_group.main.name
