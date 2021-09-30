@@ -46,7 +46,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures
             var localSettingsSnapshot = new FunctionAppHostConfigurationBuilder().BuildLocalSettingsConfiguration();
             var domainEventListenerConnectionString = localSettingsSnapshot.GetValue(settingName);
 
-            // Example value: 'Endpoint=sb://xxx.servicebus.windows.net/;'
+            // Example connection string: 'Endpoint=sb://xxx.servicebus.windows.net/;'
             var namespaceMatchPattern = @"Endpoint=sb://(.*?).servicebus.windows.net/";
             var match = Regex.Match(domainEventListenerConnectionString, namespaceMatchPattern, RegexOptions.IgnoreCase);
             var domainEventListenerNamespace = match.Groups[1].Value;
