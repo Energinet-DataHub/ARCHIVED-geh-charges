@@ -18,6 +18,7 @@ using System.Threading.Tasks;
 using System.Xml;
 using GreenEnergyHub.Charges.Domain.ChargeLinkCommands;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
+using GreenEnergyHub.Charges.Infrastructure.Correlation;
 using GreenEnergyHub.Charges.Infrastructure.Messaging.Serialization.MarketDocument;
 using GreenEnergyHub.Messaging.Transport;
 using NodaTime;

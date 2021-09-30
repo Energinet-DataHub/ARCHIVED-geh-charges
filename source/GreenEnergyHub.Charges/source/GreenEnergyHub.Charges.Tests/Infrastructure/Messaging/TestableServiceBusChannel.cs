@@ -15,6 +15,7 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Threading.Tasks;
+using GreenEnergyHub.Charges.Infrastructure.Correlation;
 using GreenEnergyHub.Charges.Infrastructure.Messaging;
 using GreenEnergyHub.Messaging.Transport;
 

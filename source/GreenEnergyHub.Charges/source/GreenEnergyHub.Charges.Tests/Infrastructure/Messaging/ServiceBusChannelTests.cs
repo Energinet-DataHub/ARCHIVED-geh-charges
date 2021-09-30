@@ -20,6 +20,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
 using Azure.Messaging.ServiceBus;
+using GreenEnergyHub.Charges.Infrastructure.Correlation;
 using GreenEnergyHub.Charges.Infrastructure.Messaging;
 using GreenEnergyHub.TestHelpers;
 using Moq;

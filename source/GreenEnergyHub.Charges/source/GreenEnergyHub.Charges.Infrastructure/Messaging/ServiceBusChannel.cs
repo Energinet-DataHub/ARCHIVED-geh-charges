@@ -16,6 +16,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Threading.Tasks;
 using Azure.Messaging.ServiceBus;
+using GreenEnergyHub.Charges.Infrastructure.Correlation;
 using GreenEnergyHub.Messaging.Transport;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Messaging

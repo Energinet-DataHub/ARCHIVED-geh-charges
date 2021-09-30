@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using GreenEnergyHub.Charges.Domain.ChargeCommandAcceptedEvents;
+using GreenEnergyHub.Charges.Infrastructure.Correlation;
 using GreenEnergyHub.Charges.Infrastructure.Messaging.Serialization;
 using GreenEnergyHub.Json;
 using GreenEnergyHub.Messaging.Transport;

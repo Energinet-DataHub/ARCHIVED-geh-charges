@@ -22,6 +22,7 @@ using AutoFixture.Xunit2;
 using GreenEnergyHub.Charges.Domain.ChargeLinkCommands;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
+using GreenEnergyHub.Charges.Infrastructure.Correlation;
 using GreenEnergyHub.Charges.Infrastructure.Messaging;
 using GreenEnergyHub.Charges.Infrastructure.Messaging.Serialization.Commands;
 using GreenEnergyHub.Charges.TestCore;
