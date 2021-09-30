@@ -12,25 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Diagnostics.CodeAnalysis;
-using System.Linq;
-using GreenEnergyHub.Charges.Domain.ChargeCommands;
-using GreenEnergyHub.Charges.Domain.Messages.Events;
-using NodaTime;
+using System.Threading.Tasks;
+using GreenEnergyHub.Charges.Domain.ChargeCommandAcceptedEvents;
 
-namespace GreenEnergyHub.Charges.Domain.ChargeCommandAcceptedEvents
+namespace GreenEnergyHub.Charges.Application.Charges.Acknowledgement
 {
-    public class ChargeCommandAcceptedEvent : InternalEventBase
+    public interface IChargePricesUpdatedPublisher
     {
-        public ChargeCommandAcceptedEvent(
-            Instant publishedTime,
-            string correlationId,
-            [NotNull] ChargeCommand command)
-            : base(publishedTime, correlationId)
-        {
-            Command = command;
-        }
-
-        public ChargeCommand Command { get; }
+        Task PublishChargePricesAsync(ChargeCommandAcceptedEvent chargeCommandAcceptedEvent);
     }
 }

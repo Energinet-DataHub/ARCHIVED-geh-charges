@@ -13,24 +13,13 @@
 // limitations under the License.
 
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
-using GreenEnergyHub.Charges.Domain.ChargeCommands;
-using GreenEnergyHub.Charges.Domain.Messages.Events;
-using NodaTime;
+using GreenEnergyHub.Charges.Domain.ChargeCommandAcceptedEvents;
+using GreenEnergyHub.Charges.Domain.Charges.Acknowledgements;
 
-namespace GreenEnergyHub.Charges.Domain.ChargeCommandAcceptedEvents
+namespace GreenEnergyHub.Charges.Application.Charges.Factories
 {
-    public class ChargeCommandAcceptedEvent : InternalEventBase
+    public interface IChargeCreatedEventFactory
     {
-        public ChargeCommandAcceptedEvent(
-            Instant publishedTime,
-            string correlationId,
-            [NotNull] ChargeCommand command)
-            : base(publishedTime, correlationId)
-        {
-            Command = command;
-        }
-
-        public ChargeCommand Command { get; }
+        ChargeCreatedEvent Create([NotNull] ChargeCommandAcceptedEvent chargeCommandAcceptedEvent);
     }
 }

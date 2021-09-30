@@ -18,6 +18,7 @@ using FluentAssertions;
 using Google.Protobuf;
 using Google.Protobuf.WellKnownTypes;
 using GreenEnergyHub.Charges.Core.Enumeration;
+using GreenEnergyHub.Charges.Infrastructure.Integration.ChargeConfirmation;
 using NodaTime;
 using Xunit;
 using Xunit.Sdk;
@@ -81,6 +82,11 @@ namespace GreenEnergyHub.Charges.TestCore.Protobuf
                     options.Using<object>(s => ((Instant)s.Subject).ToUnixTimeSeconds()
                             .Should().Be(((Timestamp)s.Expectation).Seconds))
                         .WhenTypeIs<Timestamp>();
+
+                    // Overrides the compare of decimal and the custom DecimalValue
+                    options.Using<object>(s => ((decimal)s.Subject)
+                            .Should().Be(((DecimalValue)s.Expectation).ToDecimal()))
+                        .WhenTypeIs<DecimalValue>();
 
                     // Enforce member comparision of protobuf objects that override object.Equals
                     options.ComparingByMembers<IMessage>();

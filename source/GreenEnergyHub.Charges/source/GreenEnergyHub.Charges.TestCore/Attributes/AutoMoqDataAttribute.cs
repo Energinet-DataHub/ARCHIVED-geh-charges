@@ -16,6 +16,7 @@ using AutoFixture;
 using AutoFixture.AutoMoq;
 using AutoFixture.Xunit2;
 using GreenEnergyHub.Charges.TestCore.Protobuf;
+using MicroElements.AutoFixture.NodaTime;
 
 namespace GreenEnergyHub.Charges.TestCore.Attributes
 {
@@ -25,7 +26,8 @@ namespace GreenEnergyHub.Charges.TestCore.Attributes
             : base(() => new Fixture().Customize(
                 new CompositeCustomization(
                     new AutoMoqCustomization(),
-                    new ProtobufCustomization())))
+                    new ProtobufCustomization(),
+                    new NodaTimeCustomization())))
         {
         }
     }
