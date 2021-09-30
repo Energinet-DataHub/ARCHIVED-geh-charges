@@ -14,6 +14,7 @@
 
 using GreenEnergyHub.Charges.Application.Charges.Acknowledgement;
 using GreenEnergyHub.Charges.Application.Charges.Handlers;
+using GreenEnergyHub.Charges.Core.Currency;
 using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.Domain.ChargeCommandAcceptedEvents;
 using GreenEnergyHub.Charges.Domain.ChargeCommandRejectedEvents;
@@ -49,7 +50,8 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
 
             ConfigureDatabase(serviceCollection);
             ConfigureValidation(serviceCollection);
-            ConfigureIso601(serviceCollection);
+            ConfigureIso8601Timezones(serviceCollection);
+            ConfigureIso4217Currency(serviceCollection);
             ConfigureMessaging(serviceCollection);
         }
 
@@ -69,12 +71,19 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
             serviceCollection.AddScoped<IChargeCommandValidator, ChargeCommandValidator>();
         }
 
-        private static void ConfigureIso601(IServiceCollection serviceCollection)
+        private static void ConfigureIso8601Timezones(IServiceCollection serviceCollection)
         {
             var timeZoneId = EnvironmentHelper.GetEnv("LOCAL_TIMEZONENAME");
             var timeZoneConfiguration = new Iso8601ConversionConfiguration(timeZoneId);
             serviceCollection.AddSingleton<IIso8601ConversionConfiguration>(timeZoneConfiguration);
             serviceCollection.AddScoped<IZonedDateTimeService, ZonedDateTimeService>();
+        }
+
+        private static void ConfigureIso4217Currency(IServiceCollection serviceCollection)
+        {
+            var currency = EnvironmentHelper.GetEnv("CURRENCY");
+            var iso4217Currency = new CurrencyConfigurationIso4217(currency);
+            serviceCollection.AddSingleton(iso4217Currency);
         }
 
         private static void ConfigureMessaging(IServiceCollection serviceCollection)

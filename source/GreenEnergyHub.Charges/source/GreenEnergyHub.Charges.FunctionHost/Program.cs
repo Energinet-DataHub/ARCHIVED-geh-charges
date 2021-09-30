@@ -39,6 +39,7 @@ namespace GreenEnergyHub.Charges.FunctionHost
             SharedConfiguration.ConfigureServices(serviceCollection);
 
             ChargeIngestionConfiguration.ConfigureServices(serviceCollection);
+            ChargeCommandAcceptedReceiverConfiguration.ConfigureServices(serviceCollection);
             ChargeCommandReceiverConfiguration.ConfigureServices(serviceCollection);
             ChargeConfirmationSenderConfiguration.ConfigureServices(serviceCollection);
             ChargeRejectionSenderConfiguration.ConfigureServices(serviceCollection);

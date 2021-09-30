@@ -28,6 +28,7 @@ module "azfun_functionhost" {
     WEBSITES_ENABLE_APP_SERVICE_STORAGE           = true
     FUNCTIONS_WORKER_RUNTIME                      = "dotnet-isolated"
     LOCAL_TIMEZONENAME                            = local.LOCAL_TIMEZONENAME
+    CURRENCY                                      = local.CURRENCY
     CHARGE_DB_CONNECTION_STRING                   = local.CHARGE_DB_CONNECTION_STRING
     INTEGRATIONEVENT_SENDER_CONNECTION_STRING     = data.azurerm_key_vault_secret.integration_events_sender_connection_string.value
     INTEGRATIONEVENT_LISTENER_CONNECTION_STRING   = data.azurerm_key_vault_secret.integration_events_listener_connection_string.value
@@ -48,6 +49,11 @@ module "azfun_functionhost" {
     CREATE_LINK_COMMAND_SUBSCRIPTION_NAME         = azurerm_servicebus_subscription.sbs_create_link_command_charges.name
     METERING_POINT_CREATED_TOPIC_NAME             = local.METERING_POINT_CREATED_TOPIC_NAME
     METERING_POINT_CREATED_SUBSCRIPTION_NAME      = local.METERING_POINT_CREATED_SUBSCRIPTION_NAME
+    COMMAND_ACCEPTED_LISTENER_CONNECTION_STRING   = trimsuffix(module.sbtar_command_accepted_listener.primary_connection_string, ";EntityPath=${module.sbt_command_accepted.name}")
+    COMMAND_ACCEPTED_TOPIC_NAME                   = local.COMMAND_ACCEPTED_TOPIC_NAME
+    COMMAND_ACCEPTED_RECEIVER_SUBSCRIPTION_NAME   = local.COMMAND_ACCEPTED_RECEIVER_SUBSCRIPTION_NAME
+    CHARGE_CREATED_TOPIC_NAME                     = local.CHARGE_CREATED_TOPIC_NAME
+    CHARGE_PRICES_UPDATED_TOPIC_NAME              = local.CHARGE_PRICES_UPDATED_TOPIC_NAME
     POST_OFFICE_TOPIC_NAME                        = module.sbt_post_office.name
   }
   dependencies                              = [
@@ -56,6 +62,7 @@ module "azfun_functionhost" {
     module.azfun_functionhost_stor.dependent_on,
     module.sbnar_charges_sender.dependent_on,
     module.sbt_link_command_received.dependent_on,
+    module.sbtar_command_accepted_listener.dependent_on,
   ]
 }
 
