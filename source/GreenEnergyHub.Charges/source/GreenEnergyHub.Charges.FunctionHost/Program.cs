@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using GreenEnergyHub.Charges.FunctionHost.Configuration;
+using GreenEnergyHub.Charges.Infrastructure.Correlation;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
@@ -23,7 +24,10 @@ namespace GreenEnergyHub.Charges.FunctionHost
         public static void Main()
         {
             var host = new HostBuilder()
-                .ConfigureFunctionsWorkerDefaults()
+                .ConfigureFunctionsWorkerDefaults(builder =>
+                {
+                    builder.UseMiddleware<CorrelationIdMiddleware>();
+                })
                 .ConfigureServices(ConfigureServices)
                 .Build();
 
