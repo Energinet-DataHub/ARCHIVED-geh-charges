@@ -47,8 +47,8 @@ module "azfun_functionhost" {
     COMMAND_REJECTED_SUBSCRIPTION_NAME                    = azurerm_servicebus_subscription.sbs_command_rejected.name
     CREATE_LINK_COMMAND_TOPIC_NAME                        = module.sbt_create_link_command.name
     CREATE_LINK_COMMAND_SUBSCRIPTION_NAME                 = azurerm_servicebus_subscription.sbs_create_link_command_charges.name
-    CONSUMPTION_METERING_POINT_CREATED_TOPIC_NAME         = local.METERING_POINT_CREATED_TOPIC_NAME
-    CONSUMPTION_METERING_POINT_CREATED_SUBSCRIPTION_NAME  = local.METERING_POINT_CREATED_SUBSCRIPTION_NAME
+    CONSUMPTION_METERING_POINT_CREATED_TOPIC_NAME         = local.CONSUMPTION_METERING_POINT_CREATED_TOPIC_NAME
+    CONSUMPTION_METERING_POINT_CREATED_SUBSCRIPTION_NAME  = local.CONSUMPTION_METERING_POINT_CREATED_SUBSCRIPTION_NAME
     COMMAND_ACCEPTED_LISTENER_CONNECTION_STRING           = trimsuffix(module.sbtar_command_accepted_listener.primary_connection_string, ";EntityPath=${module.sbt_command_accepted.name}")
     COMMAND_ACCEPTED_TOPIC_NAME                           = local.COMMAND_ACCEPTED_TOPIC_NAME
     COMMAND_ACCEPTED_RECEIVER_SUBSCRIPTION_NAME           = local.COMMAND_ACCEPTED_RECEIVER_SUBSCRIPTION_NAME
