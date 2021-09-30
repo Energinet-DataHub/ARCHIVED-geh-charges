@@ -40,7 +40,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Messaging.Serialization.Commands
             [NotNull] XmlReader reader,
             [NotNull] Document document)
         {
-            var correlationId = _correlationContext.CorrelationId;
+            var correlationId = _correlationContext.Id;
 
             return new ChargeLinkCommand(correlationId)
                 {
