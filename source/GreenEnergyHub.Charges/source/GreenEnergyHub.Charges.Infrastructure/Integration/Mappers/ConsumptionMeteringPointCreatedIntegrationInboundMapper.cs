@@ -14,6 +14,7 @@
 
 using System.Diagnostics.CodeAnalysis;
 using Energinet.DataHub.MeteringPoints.IntegrationEventContracts;
+using GreenEnergyHub.Charges.Core.Enumeration;
 using GreenEnergyHub.Charges.Domain.MeteringPointCreatedEvents;
 using GreenEnergyHub.Charges.Domain.MeteringPoints;
 using GreenEnergyHub.Messaging.Protobuf;
@@ -29,11 +30,11 @@ namespace GreenEnergyHub.Charges.Infrastructure.Integration.Mappers
                 obj.MeteringPointId,
                 obj.GsrnNumber,
                 obj.GridAreaCode,
-                obj.SettlementMethod,
-                obj.MeteringMethod,
-                obj.MeterReadingPeriodicity,
-                obj.NetSettlementGroup,
-                obj.Product,
+                obj.SettlementMethod.Cast<SettlementMethod>(),
+                obj.MeteringMethod.Cast<MeteringMethod>(),
+                obj.MeterReadingPeriodicity.Cast<MeterReadingPeriodicity>(),
+                obj.NetSettlementGroup.Cast<NetSettlementGroup>(),
+                obj.Product.Cast<ProductType>(),
                 obj.EffectiveDate);
         }
     }
