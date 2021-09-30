@@ -12,15 +12,38 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
+
 namespace GreenEnergyHub.Charges.Infrastructure.Messaging
 {
     public class CorrelationContext : ICorrelationContext
     {
-        public CorrelationContext()
+        private string? _id;
+
+        private string? _parentId;
+
+        public string Id => _id ?? throw new InvalidOperationException("Correlation id not set");
+
+        public string? ParentId => _parentId;
+
+        public void SetId(string id)
         {
-            CorrelationId = string.Empty;
+            _id = id;
         }
 
-        public string CorrelationId { get; set; }
+        public void SetParentId(string parentId)
+        {
+            _parentId = parentId;
+        }
+
+        public string AsTraceContext()
+        {
+            if (string.IsNullOrEmpty(_id) || string.IsNullOrEmpty(_parentId))
+            {
+                return string.Empty;
+            }
+
+            return $"00-{_id}-{_parentId}-00";
+        }
     }
 }

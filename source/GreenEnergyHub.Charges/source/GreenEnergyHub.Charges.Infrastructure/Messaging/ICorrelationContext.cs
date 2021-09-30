@@ -15,13 +15,33 @@
 namespace GreenEnergyHub.Charges.Infrastructure.Messaging
 {
     /// <summary>
-    /// Interface for class exposing a correlation context
+    /// Context for the current scope identified by a correlation id.
     /// </summary>
     public interface ICorrelationContext
     {
         /// <summary>
-        /// The correlation ID which can be used to link different operations together
+        /// Get the current correlation id.
         /// </summary>
-        string CorrelationId { get; set; }
+        string Id { get; }
+
+        /// <summary>
+        /// Get the parent's id.
+        /// </summary>
+        string? ParentId { get; }
+
+        /// <summary>
+        /// Set the current correlation/operation id.
+        /// </summary>
+        void SetId(string id);
+
+        /// <summary>
+        /// Set the id of the parent operation.
+        /// </summary>
+        void SetParentId(string parentId);
+
+        /// <summary>
+        /// Return the id and parent in trace context format.
+        /// </summary>
+        string AsTraceContext();
     }
 }
