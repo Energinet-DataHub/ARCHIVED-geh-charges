@@ -43,7 +43,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Correlation
                 return string.Empty;
             }
 
-            return $"00-{_id}-{_parentId}-00";
+            return $"00-{_id}-{_parentId}-00"; // Specification of format can be found here: https://www.w3.org/TR/trace-context/#trace-id
         }
     }
 }
