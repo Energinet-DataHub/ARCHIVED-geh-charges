@@ -15,6 +15,13 @@
     - [ChargeLinkCreated](#.ChargeLinkCreated)
         - [ChargeLinkPeriod](#.ChargeLinkPeriod)
     - [ChargeLinkUpdated](#.ChargeLinkUpdated)
+- [Charge link requests and replies](#.ChargeLinkRequestsAndReplies)
+    - [CreateDefaultChargeLinks](#.CreateDefaultChargeLinks)
+    - [CreateDefaultChargeLinksSucceeded](#.CreateDefaultChargeLinksSucceeded)
+    - [CreateDefaultChargeLinksFailed](#.CreateDefaultChargeLinksFailed)
+    - [CreateDefaultChargeLinkMessages](#.CreateDefaultChargeLinkMessages)
+    - [CreateDefaultChargeLinkMessagesSucceeded](#.CreateDefaultChargeLinkMessagesSucceeded)
+    - [CreateDefaultChargeLinkMessagesFailed](#.CreateDefaultChargeLinkMessagesFailed)
 
 <a name="IntegrationEventContract.proto"></a>
 
@@ -169,3 +176,44 @@ Represents the update of one or more charge links.
 | UpdatedPeriodStartDateTime | Timestamp | required | In UTC. Time interval covering the entire period of charge link updates within this event. The start equals the StartDateTime of the earliest charge link in the Periods list |
 | UpdatedPeriodEndDateTime | Timestamp | required | In UTC. Time interval covering the entire period of charge link updates within this event. The end equals the EndDateTime of the latest charge link in the Periods list |
 | Periods | [ChargeLinkPeriod](#.ChargeLinkPeriod) | required | A list of charge link periods and factor values |
+
+<br>
+<a name=".ChargeLinkRequestsAndReplies"></a>
+
+## Charge link requests and replies
+
+<a name=".CreateDefaultChargeLinks"></a>
+
+### [CreateDefaultChargeLinks](.././source/GreenEnergyHub.Charges/source/GreenEnergyHub.Charges.Infrastructure/Integration/ChargeLink/Commands/CreateDefaultChargeLinks.proto)
+
+This request is used by the Metering Point domain as part of the 'Create metering point' process to request the Charges domain to link default charges a the newly created metering point.
+
+<a name=".CreateDefaultChargeLinksSucceeded"></a>
+
+### [CreateDefaultChargeLinksSucceeded](.././source/GreenEnergyHub.Charges/source/GreenEnergyHub.Charges.Infrastructure/Integration/ChargeLink/Commands/CreateDefaultChargeLinksSucceeded.proto)
+
+The Charges domain will use this reply to inform the Metering Point domain when the `CreateDefaultChargeLinks` request has been processed successfully.
+
+<a name=".CreateDefaultChargeLinksFailed"></a>
+
+### [CreateDefaultChargeLinksFailed](.././source/GreenEnergyHub.Charges/source/GreenEnergyHub.Charges.Infrastructure/Integration/ChargeLink/Commands/CreateDefaultChargeLinksFailed.proto)
+
+In case the Charges domain fails to process a `CreateDefaultChargeLinks` request this reply will be used to inform the Metering Point domain.
+
+<a name=".CreateDefaultChargeLinkMessages"></a>
+
+### [CreateDefaultChargeLinkMessages](.././source/GreenEnergyHub.Charges/source/GreenEnergyHub.Charges.Infrastructure/Integration/ChargeLink/Commands/CreateDefaultChargeLinkMessages.proto)
+
+This request is used by the Metering Point domain as part of the 'Create metering point' process to request the Charges domain to create messages containing the default charge links for a specific metering point and make them available to the relevant Market Participants.
+
+<a name=".CreateDefaultChargeLinkMessagesSucceeded"></a>
+
+### [CreateDefaultChargeLinkMessagesSucceeded](.././source/GreenEnergyHub.Charges/source/GreenEnergyHub.Charges.Infrastructure/Integration/ChargeLink/Commands/CreateDefaultChargeLinkMessagesSucceeded.proto)
+
+The Charges domain will use this reply to inform the Metering Point domain when the `CreateDefaultChargeLinkMessages` request has been processed successfully.
+
+<a name=".CreateDefaultChargeLinkMessagesFailed"></a>
+
+### [CreateDefaultChargeLinkMessagesFailed](.././source/GreenEnergyHub.Charges/source/GreenEnergyHub.Charges.Infrastructure/Integration/ChargeLink/Commands/CreateDefaultChargeLinkMessagesFailed.proto)
+
+In case the Charges domain fails to process a `CreateDefaultChargeLinkMessages` request this reply will be used to inform the Metering Point domain.
