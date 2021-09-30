@@ -26,7 +26,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Correlation
     {
         [Theory]
         [InlineAutoMoqData]
-        public void CorrelationId_WhenSet_CanBeRetrieved([NotNull] CorrelationContext sut)
+        public void Id_WhenSet_CanBeRetrieved([NotNull] CorrelationContext sut)
         {
             // Arrange
             var correlationId = Guid.NewGuid().ToString();
@@ -37,6 +37,47 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Correlation
 
             // Assert
             Assert.Equal(correlationId, result);
+        }
+
+        [Theory]
+        [InlineAutoMoqData]
+        public void ParentId_WhenSet_CanBeRetrieved([NotNull] CorrelationContext sut)
+        {
+            // Arrange
+            var parentId = Guid.NewGuid().ToString();
+            sut.SetParentId(parentId);
+
+            // Act
+            var result = sut.ParentId;
+
+            // Assert
+            Assert.Equal(parentId, result);
+        }
+
+        [Theory]
+        [InlineAutoMoqData]
+        public void Id_WhenNotSet_ThrowsException([NotNull] CorrelationContext sut)
+        {
+            Assert.Throws<InvalidOperationException>(() => sut.Id);
+        }
+
+        [Theory]
+        [InlineAutoMoqData]
+        public void AsTraceContext_WhenSet_ReturnsCorrectValue(
+            string id,
+            string parentId,
+            [NotNull] CorrelationContext sut)
+        {
+            // Arrange
+            var expected = "00-" + id + "-" + parentId + "-00";
+            sut.SetId(id);
+            sut.SetParentId(parentId);
+
+            // Act
+            var actual = sut.AsTraceContext();
+
+            // Assert
+            Assert.Equal(expected, actual);
         }
     }
 }
