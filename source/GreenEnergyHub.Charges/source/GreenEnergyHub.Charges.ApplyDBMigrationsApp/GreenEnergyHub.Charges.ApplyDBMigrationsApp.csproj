@@ -1,4 +1,4 @@
-<!--
+﻿<!--
 Copyright 2020 Energinet DataHub A/S
 
 Licensed under the Apache License, Version 2.0 (the "License2");
@@ -36,6 +36,8 @@ limitations under the License.
       <EmbeddedResource Include="Scripts\Model\202108310833 Add ChargeLink Model.sql" />
       <EmbeddedResource Include="Scripts\Model\202109071000 Refactor ChargeLink Model.sql" />
       <EmbeddedResource Include="Scripts\Model\202109011409 Rename to DefaultChargeLink.sql" />
+      <EmbeddedResource Include="Scripts\Model\202109301025 ChargePeriodDetails enddatetime set values and alter not null.sql" />
+      <EmbeddedResource Include="Scripts\Model\202109301024 DefaultChargeLink enddatetime alter not null.sql" />
       <EmbeddedResource Include="Scripts\Model\202109171524 Refactor DefaultChargeLink.sql" />
       <EmbeddedResource Include="Scripts\Model\202109201555 Refactor ChargePeriodDetails.sql" />
       <EmbeddedResource Include="Scripts\Test\202105201033 New MarketParticipants.sql" />
