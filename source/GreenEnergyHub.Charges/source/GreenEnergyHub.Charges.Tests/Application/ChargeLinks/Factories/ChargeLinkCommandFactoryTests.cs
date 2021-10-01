@@ -40,8 +40,10 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Factories
         [InlineAutoMoqData]
         public async Task WhenCreateIsCalled_WithDefaultChargeLinkAndCreateLinkCommandEvent_NewChargeLinkCommandIsCreated(
             [Frozen] [NotNull] Mock<IChargeRepository> chargeRepository,
+            [Frozen] [NotNull] Mock<IMeteringPointRepository> meteringPointRepository,
             [NotNull] DefaultChargeLink defaultChargeLink,
             [NotNull] Charge charge,
+            [NotNull] MeteringPoint meteringPoint,
             [NotNull] CreateLinkCommandEvent createLinkCommandEvent,
             [NotNull] string correlationId,
             [NotNull] ChargeLinkCommandFactory sut)
@@ -50,6 +52,10 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Factories
             chargeRepository.Setup(
                     f => f.GetChargeAsync(defaultChargeLink.ChargeId))
                 .ReturnsAsync(charge);
+
+            meteringPointRepository.Setup(
+                    f => f.GetMeteringPointAsync(createLinkCommandEvent.MeteringPointId))
+                .ReturnsAsync(meteringPoint);
 
             // Act
             var actual = await sut.CreateAsync(createLinkCommandEvent, defaultChargeLink, correlationId)
@@ -69,7 +75,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Factories
             actual.ChargeLink.EndDateTime.Should().Be(defaultChargeLink.EndDateTime);
             actual.ChargeLink.ChargeOwner.Should().Be(charge.Owner);
             actual.ChargeLink.MeteringPointId.Should().Be(createLinkCommandEvent.MeteringPointId);
-            actual.ChargeLink.StartDateTime.Should().Be(defaultChargeLink.GetStartDateTime(createLinkCommandEvent.StartDateTime));
+            actual.ChargeLink.StartDateTime.Should().Be(defaultChargeLink.GetStartDateTime(meteringPoint.EffectiveDate));
             actual.ChargeLink.Factor.Should().Be(1);
         }
 

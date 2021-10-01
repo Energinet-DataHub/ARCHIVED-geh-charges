@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Azure.Messaging.ServiceBus;
-using Energinet.DataHub.MeteringPoints.IntegrationEventContracts;
 using Google.Protobuf;
-using Google.Protobuf.WellKnownTypes;
 using GreenEnergyHub.Charges.Commands;
-using NodaTime;
 
 namespace GreenEnergyHub.DataHub.Charges.Libraries.DefaultChargeLinkRequest
 {
@@ -29,13 +26,7 @@ namespace GreenEnergyHub.DataHub.Charges.Libraries.DefaultChargeLinkRequest
 
             await using var sender = _serviceBusClient.CreateSender("sbt-create-link-command");
 
-            //var createDefaultChargeLinks = new CreateDefaultChargeLinks { MeteringPointId = meteringPointId };
-            var createDefaultChargeLinks = new CreateLinkCommandContract
-            {
-                MeteringPointId = meteringPointId,
-                MeteringPointType = (MeteringPointTypeContract)2,
-                StartDateTime = Timestamp.FromDateTime(DateTime.Now.ToUniversalTime()),
-            };
+            var createDefaultChargeLinks = new CreateDefaultChargeLinks { MeteringPointId = meteringPointId };
 
             await sender.SendMessageAsync(new ServiceBusMessage
             {

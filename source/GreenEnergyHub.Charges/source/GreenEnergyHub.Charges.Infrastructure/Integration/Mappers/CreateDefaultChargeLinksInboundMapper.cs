@@ -12,22 +12,22 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Diagnostics.CodeAnalysis;
 using Energinet.DataHub.MeteringPoints.IntegrationEventContracts;
+using GreenEnergyHub.Charges.Commands;
+using GreenEnergyHub.Charges.Domain.CreateLinkCommandEvents;
 using GreenEnergyHub.Charges.Domain.MeteringPoints;
-using GreenEnergyHub.Charges.TestCore;
-using GreenEnergyHub.Charges.TestCore.Protobuf;
-using Xunit;
-using Xunit.Categories;
+using GreenEnergyHub.Messaging.Protobuf;
+using GreenEnergyHub.Messaging.Transport;
+using NodaTime;
 
-namespace GreenEnergyHub.Charges.Tests.Infrastructure.Integration
+namespace GreenEnergyHub.Charges.Infrastructure.Integration.Mappers
 {
-    [UnitTest]
-    public class CreateLinkCommandContractEnumTests
+    public class CreateDefaultChargeLinksInboundMapper : ProtobufInboundMapper<CreateDefaultChargeLinks>
     {
-        [Fact]
-        public void MeteringPointTypeContract_ShouldBeSubsetOfMeteringPointType()
+        protected override IInboundMessage Convert([NotNull] CreateDefaultChargeLinks command)
         {
-            ProtobufAssert.ContractEnumIsSubSet<MeteringPointTypeContract, MeteringPointType>();
+            return new CreateLinkCommandEvent(command.MeteringPointId);
         }
     }
 }
