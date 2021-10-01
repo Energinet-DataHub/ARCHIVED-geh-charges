@@ -17,7 +17,6 @@ using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.IntegrationEventContracts;
 using GreenEnergyHub.Charges.Application.MeteringPoints.Handlers;
 using GreenEnergyHub.Charges.Domain.MeteringPointCreatedEvents;
-using GreenEnergyHub.Charges.Infrastructure.Correlation;
 using GreenEnergyHub.Charges.Infrastructure.Messaging;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Logging;
@@ -53,11 +52,16 @@ namespace GreenEnergyHub.Charges.FunctionHost.MeteringPoint
                 Connection = "INTEGRATIONEVENT_LISTENER_CONNECTION_STRING")]
             [NotNull] byte[] message)
         {
-            var meteringPointCreatedEvent = (ConsumptionMeteringPointCreatedEvent)await _messageExtractor.ExtractAsync(message).ConfigureAwait(false);
+            var consumptionMeteringPointCreatedEvent =
+                (ConsumptionMeteringPointCreatedEvent)await _messageExtractor.ExtractAsync(message).ConfigureAwait(false);
 
-            await _consumptionMeteringPointCreatedEventHandler.HandleAsync(meteringPointCreatedEvent).ConfigureAwait(false);
+            await _consumptionMeteringPointCreatedEventHandler
+                .HandleAsync(consumptionMeteringPointCreatedEvent)
+                .ConfigureAwait(false);
 
-            _log.LogInformation("Received metering point created event '{@MeteringPointId}'", meteringPointCreatedEvent.MeteringPointId);
+            _log.LogInformation(
+                "Received metering point created event '{@MeteringPointId}'",
+                consumptionMeteringPointCreatedEvent.MeteringPointId);
         }
     }
 }

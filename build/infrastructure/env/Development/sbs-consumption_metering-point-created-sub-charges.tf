@@ -23,7 +23,8 @@ on the existing Service Bus Namespace.
 =================================================================================
 */
 
-resource "azurerm_servicebus_subscription" "sbs_metering_point_created" {
+module "sbs_consumption_metering_point_created" {
+  source              = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//service-bus-subscription?ref=2.0.0"
   depends_on          = [module.sbt_consumption_metering_point_created]
   name                = local.CONSUMPTION_METERING_POINT_CREATED_SUBSCRIPTION_NAME
   resource_group_name = data.azurerm_resource_group.main.name
