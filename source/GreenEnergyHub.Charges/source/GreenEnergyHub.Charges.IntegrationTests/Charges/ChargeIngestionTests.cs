@@ -84,7 +84,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Charges
                 // => Http response
                 actualResponse.StatusCode.Should().Be(HttpStatusCode.OK);
 
-                // => Service Bus
+                // => Service Bus (timeout should not be more than 5 secs. - currently it's high so we can break during demo).
                 var isMessageReceived = isMessageReceivedEvent.Wait(TimeSpan.FromSeconds(120));
                 isMessageReceived.Should().BeTrue();
 
