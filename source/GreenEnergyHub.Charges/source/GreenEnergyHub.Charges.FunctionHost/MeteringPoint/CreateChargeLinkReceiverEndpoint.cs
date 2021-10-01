@@ -17,6 +17,7 @@ using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.IntegrationEventContracts;
 using GreenEnergyHub.Charges.Application.ChargeLinks.Handlers;
 using GreenEnergyHub.Charges.Domain.CreateLinkCommandEvents;
+using GreenEnergyHub.Charges.Infrastructure.Correlation;
 using GreenEnergyHub.Charges.Infrastructure.Messaging;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Logging;
@@ -54,32 +55,24 @@ namespace GreenEnergyHub.Charges.FunctionHost.MeteringPoint
                 "%CREATE_LINK_COMMAND_TOPIC_NAME%",
                 "%CREATE_LINK_COMMAND_SUBSCRIPTION_NAME%",
                 Connection = "DOMAINEVENT_LISTENER_CONNECTION_STRING")]
-            [NotNull] byte[] message,
-            [NotNull] FunctionContext context)
+            [NotNull] byte[] message)
         {
             _log.LogInformation(
                 "Function {FunctionName} started to process a request with size {Size}",
                 FunctionName,
                 message.Length);
 
-            SetupCorrelationContext(context);
-
             var createLinkCommandEvent =
                 (CreateLinkCommandEvent)await _messageExtractor.ExtractAsync(message).ConfigureAwait(false);
 
             await _createLinkCommandEventHandler
-                .HandleAsync(createLinkCommandEvent, _correlationContext.CorrelationId).ConfigureAwait(false);
+                .HandleAsync(createLinkCommandEvent, _correlationContext.Id).ConfigureAwait(false);
 
             _log.LogInformation(
                 "Received create link command for metering point id '{MeteringPointId}' of type '{MeteringPointType}' on '{StartDateTime}'",
                 createLinkCommandEvent.MeteringPointId,
                 createLinkCommandEvent.MeteringPointType,
                 createLinkCommandEvent.StartDateTime);
-        }
-
-        private void SetupCorrelationContext(FunctionContext context)
-        {
-            _correlationContext.CorrelationId = context.InvocationId.Replace("-", string.Empty);
         }
     }
 }

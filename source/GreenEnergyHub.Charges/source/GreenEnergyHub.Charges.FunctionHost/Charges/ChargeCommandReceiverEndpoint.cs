@@ -16,6 +16,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application.Charges.Handlers;
 using GreenEnergyHub.Charges.Domain.ChargeCommandReceivedEvents;
+using GreenEnergyHub.Charges.Infrastructure.Correlation;
 using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeCommandReceived;
 using GreenEnergyHub.Charges.Infrastructure.Messaging;
 using GreenEnergyHub.Messaging.Transport;
@@ -51,19 +52,12 @@ namespace GreenEnergyHub.Charges.FunctionHost.Charges
                 "%COMMAND_RECEIVED_TOPIC_NAME%",
                 "%COMMAND_RECEIVED_SUBSCRIPTION_NAME%",
                 Connection = "DOMAINEVENT_LISTENER_CONNECTION_STRING")]
-            [NotNull] byte[] message,
-            [NotNull] FunctionContext context)
+            [NotNull] byte[] message)
         {
-            SetCorrelationContext(context);
             var receivedEvent = (ChargeCommandReceivedEvent)await _messageExtractor.ExtractAsync(message).ConfigureAwait(false);
             await _chargeCommandReceivedEventHandler.HandleAsync(receivedEvent).ConfigureAwait(false);
 
             _log.LogDebug("Received command with charge ID '{ID}'", receivedEvent.Command.ChargeOperation.ChargeId);
-        }
-
-        private void SetCorrelationContext(FunctionContext context)
-        {
-            _correlationContext.CorrelationId = context.InvocationId.Replace("-", string.Empty);
         }
     }
 }

@@ -12,32 +12,25 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
-using System.Diagnostics.CodeAnalysis;
-using GreenEnergyHub.Charges.Infrastructure.Messaging;
-using GreenEnergyHub.Charges.TestCore;
-using GreenEnergyHub.Charges.TestCore.Attributes;
+using FluentAssertions;
+using GreenEnergyHub.Charges.Infrastructure.Correlation;
 using Xunit;
 using Xunit.Categories;
 
-namespace GreenEnergyHub.Charges.Tests.Infrastructure.Messaging
+namespace GreenEnergyHub.Charges.Tests.Infrastructure.Correlation
 {
     [UnitTest]
-    public class CorrelationContextTests
+    public class TraceContextTests
     {
         [Theory]
-        [InlineAutoMoqData]
-        public void CorrelationId_WhenSet_CanBeRetrieved([NotNull] CorrelationContext sut)
+        [InlineData("", false)]
+        [InlineData("00,0af7651916cd43dd8448eb211c80319c,b9c7c989f97918e1,00", false)]
+        [InlineData("00-0af7651916cd43dd8448eb211c80319c-b9c7c989f97918e1-00", true)]
+        public void TraceContextShouldParse(string traceContextString, bool validated)
         {
-            // Arrange
-            var correlationId = Guid.NewGuid().ToString();
-            sut.CorrelationId = correlationId;
+            var traceContext = TraceContext.Parse(traceContextString);
 
-            // Act
-            var result = sut.CorrelationId;
-
-            // Assert
-            Assert.Equal(correlationId, result);
+            traceContext.IsValid.Should().Be(validated);
         }
     }
 }

@@ -11,11 +11,12 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-module "appi" {
-  source              = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//application-insights?ref=2.0.0"
 
-  name                = "appi-${var.project}-${var.organisation}-${var.environment}"
+resource "azurerm_servicebus_subscription" "sbs_command_accepted" {
+  depends_on          = [module.sbt_command_accepted]
+  name                = "sbs-command-accepted"
   resource_group_name = data.azurerm_resource_group.main.name
-  location            = data.azurerm_resource_group.main.location
-  tags                = data.azurerm_resource_group.main.tags
+  namespace_name      = module.sbn_charges.name
+  topic_name          = module.sbt_command_accepted.name
+  max_delivery_count  = 1
 }

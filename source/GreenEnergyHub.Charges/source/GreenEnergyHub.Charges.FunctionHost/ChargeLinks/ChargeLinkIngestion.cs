@@ -17,6 +17,7 @@ using System.IO;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application.ChargeLinks.Handlers;
 using GreenEnergyHub.Charges.Domain.ChargeLinkCommands;
+using GreenEnergyHub.Charges.Infrastructure.Correlation;
 using GreenEnergyHub.Charges.Infrastructure.Messaging;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.Functions.Worker;
@@ -31,7 +32,6 @@ namespace GreenEnergyHub.Charges.FunctionHost.ChargeLinks
         /// The name of the function.
         /// Function name affects the URL and thus possibly dependent infrastructure.
         /// </summary>
-        public const string FunctionName = "ChargeLinkIngestion";
         private readonly ICorrelationContext _correlationContext;
         private readonly MessageExtractor<ChargeLinkCommand> _messageExtractor;
         private readonly IChargeLinkCommandHandler _chargeLinkCommandHandler;
@@ -51,15 +51,12 @@ namespace GreenEnergyHub.Charges.FunctionHost.ChargeLinks
             _log = loggerFactory.CreateLogger(nameof(ChargeLinkIngestion));
         }
 
-        [Function(FunctionName)]
+        [Function(IngestionFunctionNames.ChargeLinkIngestion)]
         public async Task<IActionResult> RunAsync(
             [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = null)]
-            [NotNull] HttpRequestData req,
-            [NotNull] FunctionContext context)
+            [NotNull] HttpRequestData req)
         {
-            _log.LogInformation("Function {FunctionName} started to process a request", FunctionName);
-
-            SetupCorrelationContext(context);
+            _log.LogInformation("Function {FunctionName} started to process a request", IngestionFunctionNames.ChargeLinkIngestion);
 
             var command = await GetChargeLinkCommandAsync(req.Body).ConfigureAwait(false);
 
@@ -81,11 +78,6 @@ namespace GreenEnergyHub.Charges.FunctionHost.ChargeLinks
             await using var ms = new MemoryStream();
             await stream.CopyToAsync(ms).ConfigureAwait(false);
             return ms.ToArray();
-        }
-
-        private void SetupCorrelationContext(FunctionContext context)
-        {
-            _correlationContext.CorrelationId = context.InvocationId;
         }
     }
 }

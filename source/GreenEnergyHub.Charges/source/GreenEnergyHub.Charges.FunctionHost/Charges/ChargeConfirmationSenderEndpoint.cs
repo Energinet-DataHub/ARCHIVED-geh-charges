@@ -16,6 +16,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application.Charges.Acknowledgement;
 using GreenEnergyHub.Charges.Domain.ChargeCommandAcceptedEvents;
+using GreenEnergyHub.Charges.Infrastructure.Correlation;
 using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeCommandAccepted;
 using GreenEnergyHub.Charges.Infrastructure.Messaging;
 using Microsoft.Azure.Functions.Worker;
@@ -50,20 +51,12 @@ namespace GreenEnergyHub.Charges.FunctionHost.Charges
                 "%COMMAND_ACCEPTED_TOPIC_NAME%",
                 "%COMMAND_ACCEPTED_SUBSCRIPTION_NAME%",
                 Connection = "DOMAINEVENT_LISTENER_CONNECTION_STRING")]
-            [NotNull] byte[] message,
-            [NotNull] FunctionContext context)
+            [NotNull] byte[] message)
         {
-            SetCorrelationContext(context);
             var acceptedEvent = (ChargeCommandAcceptedEvent)await _messageExtractor.ExtractAsync(message).ConfigureAwait(false);
-            SetCorrelationContext(context);
             await _chargeConfirmationSender.HandleAsync(acceptedEvent).ConfigureAwait(false);
 
             _log.LogDebug("Received event with correlation ID '{CorrelationId}'", acceptedEvent.CorrelationId);
-        }
-
-        private void SetCorrelationContext(FunctionContext context)
-        {
-            _correlationContext.CorrelationId = context.InvocationId.Replace("-", string.Empty);
         }
     }
 }
