@@ -31,18 +31,15 @@ namespace GreenEnergyHub.Charges.FunctionHost.MeteringPoint
         /// Function name affects the URL and thus possibly dependent infrastructure.
         /// </summary>
         public const string FunctionName = nameof(ConsumptionMeteringPointCreatedReceiverEndpoint);
-        private readonly ICorrelationContext _correlationContext;
         private readonly MessageExtractor<ConsumptionMeteringPointCreated> _messageExtractor;
         private readonly IConsumptionMeteringPointCreatedEventHandler _consumptionMeteringPointCreatedEventHandler;
         private readonly ILogger _log;
 
         public ConsumptionMeteringPointCreatedReceiverEndpoint(
-            ICorrelationContext correlationContext,
             MessageExtractor<ConsumptionMeteringPointCreated> messageExtractor,
             IConsumptionMeteringPointCreatedEventHandler consumptionMeteringPointCreatedEventHandler,
             [NotNull] ILoggerFactory loggerFactory)
         {
-            _correlationContext = correlationContext;
             _messageExtractor = messageExtractor;
             _consumptionMeteringPointCreatedEventHandler = consumptionMeteringPointCreatedEventHandler;
             _log = loggerFactory.CreateLogger(nameof(ConsumptionMeteringPointCreatedReceiverEndpoint));
@@ -51,8 +48,8 @@ namespace GreenEnergyHub.Charges.FunctionHost.MeteringPoint
         [Function(FunctionName)]
         public async Task RunAsync(
             [ServiceBusTrigger(
-                "%METERING_POINT_CREATED_TOPIC_NAME%",
-                "%METERING_POINT_CREATED_SUBSCRIPTION_NAME%",
+                "%CONSUMPTION_METERING_POINT_CREATED_TOPIC_NAME%",
+                "%CONSUMPTION_METERING_POINT_CREATED_SUBSCRIPTION_NAME%",
                 Connection = "INTEGRATIONEVENT_LISTENER_CONNECTION_STRING")]
             [NotNull] byte[] message)
         {
