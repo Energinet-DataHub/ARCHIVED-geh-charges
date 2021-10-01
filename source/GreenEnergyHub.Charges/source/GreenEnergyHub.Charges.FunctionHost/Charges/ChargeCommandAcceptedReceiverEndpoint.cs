@@ -16,6 +16,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application.Charges.Handlers;
 using GreenEnergyHub.Charges.Domain.ChargeCommandAcceptedEvents;
+using GreenEnergyHub.Charges.Infrastructure.Correlation;
 using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeCommandAccepted;
 using GreenEnergyHub.Charges.Infrastructure.Messaging;
 using Microsoft.Azure.Functions.Worker;
@@ -44,22 +45,14 @@ namespace GreenEnergyHub.Charges.FunctionHost.Charges
             [ServiceBusTrigger(
                 "%COMMAND_ACCEPTED_TOPIC_NAME%",
                 "%COMMAND_ACCEPTED_RECEIVER_SUBSCRIPTION_NAME%",
-                Connection = "COMMAND_ACCEPTED_LISTENER_CONNECTION_STRING")]
-            [NotNull] byte[] message,
-            [NotNull] FunctionContext context)
+                Connection = "DOMAINEVENT_LISTENER_CONNECTION_STRING")]
+            [NotNull] byte[] message)
         {
-            SetupCorrelationContext(context); // TODO Add this as a method in correlation context instead once integration project has been upgraded to .5.0, avoiding multiple of the same implementations
-
             var chargeCommandAcceptedEvent = (ChargeCommandAcceptedEvent)await _messageExtractor
                 .ExtractAsync(message)
                 .ConfigureAwait(false);
 
             await _chargeCommandAcceptedEventHandler.HandleAsync(chargeCommandAcceptedEvent).ConfigureAwait(false);
-        }
-
-        private void SetupCorrelationContext(FunctionContext context)
-        {
-            _correlationContext.CorrelationId = context.InvocationId.Replace("-", string.Empty);
         }
     }
 }

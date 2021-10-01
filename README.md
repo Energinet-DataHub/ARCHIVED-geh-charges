@@ -42,6 +42,10 @@ This sections documents the data flows to and from the Charges domain.
 
 ![Context stream](./docs/images/ChargesContextStreams.png "Charges context streams")
 
+## Public contracts
+
+If you are interested in the public contracts of the Charges domain, please visit this [page](docs/contracts.md).
+
 ## Domain Road Map
 
 In the current program increment (PI) the planned work is captured by the stated PI goals:

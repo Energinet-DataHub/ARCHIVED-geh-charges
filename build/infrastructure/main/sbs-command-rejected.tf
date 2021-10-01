@@ -12,10 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-resource "azurerm_servicebus_subscription" "sbs_command_accepted_charge_command_accepted_receiver" {
-  name                = "sbs-charge-command-accepted-receiver"
+resource "azurerm_servicebus_subscription" "sbs_command_rejected" {
+  depends_on          = [module.sbt_command_rejected]
+  name                = "sbs-command-rejected"
   resource_group_name = data.azurerm_resource_group.main.name
   namespace_name      = module.sbn_charges.name
-  topic_name          = module.sbt_command_accepted.name
+  topic_name          = module.sbt_command_rejected.name
   max_delivery_count  = 1
 }

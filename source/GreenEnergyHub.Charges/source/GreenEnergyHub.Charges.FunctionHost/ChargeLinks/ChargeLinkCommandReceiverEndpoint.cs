@@ -16,6 +16,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application.ChargeLinks.Handlers;
 using GreenEnergyHub.Charges.Domain.ChargeLinkCommandReceivedEvents;
+using GreenEnergyHub.Charges.Infrastructure.Correlation;
 using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandReceived;
 using GreenEnergyHub.Charges.Infrastructure.Messaging;
 using Microsoft.Azure.Functions.Worker;
@@ -45,20 +46,12 @@ namespace GreenEnergyHub.Charges.FunctionHost.ChargeLinks
                 "%CHARGE_LINK_RECEIVED_TOPIC_NAME%",
                 "%CHARGE_LINK_RECEIVED_SUBSCRIPTION_NAME%",
                 Connection = "DOMAINEVENT_LISTENER_CONNECTION_STRING")]
-            byte[] data,
-            [NotNull] FunctionContext context)
+            byte[] data)
         {
-            SetupCorrelationContext(context);
-
             var chargeLinkCommandMessage =
                 await _messageExtractor.ExtractAsync(data).ConfigureAwait(false);
             await _chargeLinkCommandReceivedHandler
                 .HandleAsync((ChargeLinkCommandReceivedEvent)chargeLinkCommandMessage).ConfigureAwait(false);
-        }
-
-        private void SetupCorrelationContext(FunctionContext context)
-        {
-            _correlationContext.CorrelationId = context.InvocationId;
         }
     }
 }

@@ -17,6 +17,7 @@ using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application.Charges.Handlers;
 using GreenEnergyHub.Charges.Application.Charges.Handlers.Message;
 using GreenEnergyHub.Charges.Domain.ChargeCommands;
+using GreenEnergyHub.Charges.Infrastructure.Correlation;
 using GreenEnergyHub.Charges.Infrastructure.Messaging;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.Functions.Worker;
@@ -31,7 +32,6 @@ namespace GreenEnergyHub.Charges.FunctionHost.Charges
         /// The name of the function.
         /// Function name affects the URL and thus possibly dependent infrastructure.
         /// </summary>
-        public const string FunctionName = "ChargeIngestion";
         private readonly IChargesMessageHandler _chargesMessageHandler;
         private readonly ICorrelationContext _correlationContext;
         private readonly MessageExtractor<ChargeCommand> _messageExtractor;
@@ -50,15 +50,12 @@ namespace GreenEnergyHub.Charges.FunctionHost.Charges
             _log = loggerFactory.CreateLogger(nameof(ChargeIngestion));
         }
 
-        [Function(FunctionName)]
+        [Function(IngestionFunctionNames.ChargeIngestion)]
         public async Task<IActionResult> RunAsync(
             [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = null)]
-            [NotNull] HttpRequestData req,
-            [NotNull] FunctionContext context)
+            [NotNull] HttpRequestData req)
         {
-            _log.LogInformation("Function {FunctionName} started to process a request", FunctionName);
-
-            SetupCorrelationContext(context);
+            _log.LogInformation("Function {FunctionName} started to process a request", IngestionFunctionNames.ChargeIngestion);
 
             var message = await GetChargesMessageAsync(req).ConfigureAwait(false);
 
@@ -69,7 +66,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Charges
 
             var messageResult = await _chargesMessageHandler.HandleAsync(message)
                 .ConfigureAwait(false);
-            messageResult.CorrelationId = _correlationContext.CorrelationId;
+            messageResult.CorrelationId = _correlationContext.Id;
 
             return new OkObjectResult(messageResult);
         }
@@ -80,14 +77,9 @@ namespace GreenEnergyHub.Charges.FunctionHost.Charges
             var message = new ChargesMessage();
             var command = (ChargeCommand)await _messageExtractor.ExtractAsync(req.Body).ConfigureAwait(false);
 
-            command.SetCorrelationId(_correlationContext.CorrelationId);
+            command.SetCorrelationId(_correlationContext.Id);
             message.Transactions.Add(command);
             return message;
-        }
-
-        private void SetupCorrelationContext(FunctionContext context)
-        {
-            _correlationContext.CorrelationId = context.InvocationId.Replace("-", string.Empty);
         }
     }
 }
