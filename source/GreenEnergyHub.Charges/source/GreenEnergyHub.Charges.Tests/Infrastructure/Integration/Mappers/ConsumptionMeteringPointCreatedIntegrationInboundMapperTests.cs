@@ -42,7 +42,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Integration.Mappers
             converted.MeteringPointId.Should().Be(meteringPointCreatedEvent.MeteringPointId);
             converted.EffectiveDate.Should().BeEquivalentTo(meteringPointCreatedEvent.EffectiveDate);
             converted.GridAreaCode.Should().BeEquivalentTo(meteringPointCreatedEvent.GridAreaCode);
-            // TODO Should enums have Unknown = 0 ?
+            // TODO not sure how to test this without making xunit theories with all possibilities
             // converted.SettlementMethod.ToString().Should().BeEquivalentTo(meteringPointCreatedEvent.SettlementMethod.ToString());
             // converted.MeteringMethod.ToString().Should().BeEquivalentTo(meteringPointCreatedEvent.MeteringMethod.ToString());
             // converted.MeterReadingPeriodicity.ToString().Should().BeEquivalentTo(meteringPointCreatedEvent.MeterReadingPeriodicity.ToString());

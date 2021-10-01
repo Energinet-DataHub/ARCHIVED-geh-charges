@@ -20,7 +20,8 @@ namespace GreenEnergyHub.Charges.Domain.MeteringPoints
         Zero = 1,
         One = 2,
         Two = 3,
-        Six = 4,
-        NinetyNine = 5,
+        Three = 4,
+        Six = 5,
+        NinetyNine = 6,
     }
 }
