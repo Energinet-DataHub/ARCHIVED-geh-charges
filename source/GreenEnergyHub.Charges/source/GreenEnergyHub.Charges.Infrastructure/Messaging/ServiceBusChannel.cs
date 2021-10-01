@@ -16,6 +16,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Threading.Tasks;
 using Azure.Messaging.ServiceBus;
+using GreenEnergyHub.Charges.Infrastructure.Correlation;
 using GreenEnergyHub.Messaging.Transport;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Messaging
@@ -53,7 +54,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Messaging
 
         private ServiceBusMessage GetServiceBusMessage(byte[] data)
         {
-            return new ServiceBusMessage(data) { CorrelationId = _correlationContext.CorrelationId, };
+            return new ServiceBusMessage(data) { CorrelationId = _correlationContext.Id, };
         }
     }
 }

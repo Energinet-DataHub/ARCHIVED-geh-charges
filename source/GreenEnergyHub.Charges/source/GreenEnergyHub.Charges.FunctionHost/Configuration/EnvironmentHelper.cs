@@ -12,16 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace GreenEnergyHub.Charges.Infrastructure.Messaging
+using System;
+
+namespace GreenEnergyHub.Charges.FunctionHost.Configuration
 {
-    /// <summary>
-    /// Interface for class exposing a correlation context
-    /// </summary>
-    public interface ICorrelationContext
+    internal static class EnvironmentHelper
     {
-        /// <summary>
-        /// The correlation ID which can be used to link different operations together
-        /// </summary>
-        string CorrelationId { get; set; }
+        internal static string GetEnv(string variableName)
+        {
+            return Environment.GetEnvironmentVariable(variableName) ??
+                   throw new Exception($"Function app is missing required environment variable '{variableName}'");
+        }
     }
 }

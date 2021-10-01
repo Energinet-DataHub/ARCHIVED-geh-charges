@@ -16,7 +16,6 @@ using System.Diagnostics.CodeAnalysis;
 using GreenEnergyHub.Charges.Core;
 using GreenEnergyHub.Charges.Core.Currency;
 using GreenEnergyHub.Charges.Domain.ChargeCommandAcceptedEvents;
-using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Charges.Acknowledgements;
 
 namespace GreenEnergyHub.Charges.Application.Charges.Factories

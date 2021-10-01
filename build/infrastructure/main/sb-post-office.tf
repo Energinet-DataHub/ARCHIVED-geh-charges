@@ -24,14 +24,14 @@ on the existing Service Bus Namespace.
 */
 
 module "sbt_post_office" {
-  source              = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//service-bus-topic?ref=1.7.0"
+  source              = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//service-bus-topic?ref=2.0.0"
   name                = "sbt-post-office"
   namespace_name      = module.sbn_charges.name
   resource_group_name = data.azurerm_resource_group.main.name
 }
 
 module "kv_post_office_topic_name" {
-  source        = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//key-vault-secret?ref=1.7.0"
+  source        = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//key-vault-secret?ref=2.0.0"
   name          = "POST-OFFICE-TOPIC-NAME"
   value         = "sbt-post-office"
   key_vault_id  = module.kv_charges.id
@@ -40,7 +40,7 @@ module "kv_post_office_topic_name" {
 }
 
 module "sbtar_post_office_listener" {
-  source                    = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//service-bus-topic-auth-rule?ref=1.7.0"
+  source                    = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//service-bus-topic-auth-rule?ref=2.0.0"
   name                      = "sbtar-post-office-listener"
   namespace_name            = module.sbn_charges.name
   resource_group_name       = data.azurerm_resource_group.main.name
@@ -49,7 +49,7 @@ module "sbtar_post_office_listener" {
 }
 
 module "kv_post_office_listener_connection_string" {
-  source        = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//key-vault-secret?ref=1.7.0"
+  source        = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//key-vault-secret?ref=2.0.0"
   name          = "POST-OFFICE-LISTENER-CONNECTION-STRING"
   value         = trimsuffix(module.sbtar_post_office_listener.primary_connection_string, ";EntityPath=${module.sbt_post_office.name}")
   key_vault_id  = module.kv_charges.id
@@ -58,7 +58,7 @@ module "kv_post_office_listener_connection_string" {
 }
 
 module "sbtar_post_office_sender" {
-  source                    = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//service-bus-topic-auth-rule?ref=1.7.0"
+  source                    = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//service-bus-topic-auth-rule?ref=2.0.0"
   name                      = "sbtar-post-office-sender"
   namespace_name            = module.sbn_charges.name
   resource_group_name       = data.azurerm_resource_group.main.name
@@ -75,7 +75,7 @@ resource "azurerm_servicebus_subscription" "sbs_post_office" {
 }
 
 module "kv_sbs_post_office" {
-  source        = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//key-vault-secret?ref=1.7.0"
+  source        = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//key-vault-secret?ref=2.0.0"
   name          = "POST-OFFICE-SUBSCRIPTION-NAME"
   value         = "sbs-post-office"
   key_vault_id  = module.kv_charges.id

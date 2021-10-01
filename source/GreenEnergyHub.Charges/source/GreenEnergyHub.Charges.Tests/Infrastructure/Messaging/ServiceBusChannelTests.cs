@@ -20,6 +20,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
 using Azure.Messaging.ServiceBus;
+using GreenEnergyHub.Charges.Infrastructure.Correlation;
 using GreenEnergyHub.Charges.Infrastructure.Messaging;
 using GreenEnergyHub.TestHelpers;
 using Moq;
@@ -50,7 +51,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Messaging
                 .Callback<ServiceBusMessage, CancellationToken>((message, _) => receivedMessage = message);
             var genericSender = new ServiceBusSender<TestOutboundMessage>(serviceBusSender.Object);
 
-            correlationContext.Setup(c => c.CorrelationId).Returns(string.Empty);
+            correlationContext.Setup(c => c.Id).Returns(string.Empty);
 
             var sut = new TestableServiceBusChannel<TestOutboundMessage>(genericSender, correlationContext.Object);
 
@@ -79,7 +80,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Messaging
                     It.IsAny<CancellationToken>()))
                 .Callback<ServiceBusMessage, CancellationToken>((message, _) => receivedMessage = message);
 
-            correlationContext.Setup(c => c.CorrelationId).Returns(correlationId);
+            correlationContext.Setup(c => c.Id).Returns(correlationId);
             var genericSender = new ServiceBusSender<TestOutboundMessage>(serviceBusSender.Object);
 
             var sut = new TestableServiceBusChannel<TestOutboundMessage>(genericSender, correlationContext.Object);
@@ -97,7 +98,8 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Messaging
         public async Task WriteAsync_WhenManuallyRun_EndsUpOnServiceBus()
         {
             // Arrange
-            var correlationContext = new CorrelationContext { CorrelationId = Guid.NewGuid().ToString() };
+            var correlationContext = new CorrelationContext();
+            correlationContext.SetId(Guid.NewGuid().ToString().Replace("-", string.Empty));
 
             var connectionString = "<your service bus connection string>";
             await using ServiceBusClient client = new (connectionString);

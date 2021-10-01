@@ -18,6 +18,7 @@ using System.Threading.Tasks;
 using System.Xml;
 using GreenEnergyHub.Charges.Domain.ChargeLinkCommands;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
+using GreenEnergyHub.Charges.Infrastructure.Correlation;
 using GreenEnergyHub.Charges.Infrastructure.Messaging.Serialization.MarketDocument;
 using GreenEnergyHub.Messaging.Transport;
 using NodaTime;
@@ -40,7 +41,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Messaging.Serialization.Commands
             [NotNull] XmlReader reader,
             [NotNull] Document document)
         {
-            var correlationId = _correlationContext.CorrelationId;
+            var correlationId = _correlationContext.Id;
 
             return new ChargeLinkCommand(correlationId)
                 {
