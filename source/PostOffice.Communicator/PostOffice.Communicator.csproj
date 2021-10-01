@@ -1,0 +1,110 @@
+﻿<!--
+Copyright 2020 Energinet DataHub A/S
+
+Licensed under the Apache License, Version 2.0 (the "License2");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+    <LangVersion>9</LangVersion>
+    <Nullable>enable</Nullable>
+    <ProjectGuid>{E9F64300-834B-4657-850F-BEF4CED5D180}</ProjectGuid>
+    <AssemblyName>GreenEnergyHub.PostOffice.Communicator</AssemblyName>
+    <RootNamespace>GreenEnergyHub.PostOffice.Communicator</RootNamespace>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <IsPackable>true</IsPackable>
+    <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <PackageId>GreenEnergyHub.PostOffice.Communicator</PackageId>
+    <PackageVersion>1.0.0$(VersionSuffix)</PackageVersion>
+    <Title>PostOffice.Communicator library</Title>
+    <Company>Energinet-DataHub</Company>
+    <Authors>Titans</Authors>
+    <RepositoryUrl>https://github.com/Energinet-DataHub/geh-post-office</RepositoryUrl>
+    <PackageReleaseNotes>
+      [Release Notes](https://github.com/Energinet-DataHub/geh-post-office/blob/master/source/PostOffice.Communicator/documents/release-notes/release-notes.md)
+      [Documentation](https://github.com/Energinet-DataHub/geh-post-office/blob/master/source/PostOffice.Communicator/documents/documentation.md)
+    </PackageReleaseNotes>
+    <PackageDescription>
+      [Release Notes](https://github.com/Energinet-DataHub/geh-post-office/blob/master/source/PostOffice.Communicator/documents/release-notes/release-notes.md)
+      [Documentation](https://github.com/Energinet-DataHub/geh-post-office/blob/master/source/PostOffice.Communicator/documents/documentation.md)
+    </PackageDescription>
+    <Description>Library containing communication API for GreenEnergyHub.PostOffice</Description>
+    <PackageTags>geh;library</PackageTags>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
+  </PropertyGroup>
+
+  <!-- Enable Source Link (https://github.com/dotnet/sourcelink/blob/master/README.md) -->
+  <PropertyGroup>
+    <!-- Publish the repository URL in the built .nupkg (in the NuSpec <Repository> element) -->
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Azure.Messaging.ServiceBus" Version="7.3.0" />
+    <PackageReference Include="Google.Protobuf" Version="3.18.0" />
+    <PackageReference Include="Grpc.Tools" Version="2.41.0-pre2">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.VisualStudio.Threading.Analyzers" Version="16.10.56">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="Protobuf\DataAvailableNotificationContract.proto" />
+    <Protobuf Include="Protobuf\DataAvailableNotificationContract.proto">
+	  <GrpcServices>None</GrpcServices>
+      <Access>Internal</Access>
+      <ProtoCompile>True</ProtoCompile>
+	  <CompileOutputs>True</CompileOutputs>
+      <OutputDir>obj\Debug\net5.0\</OutputDir>
+    </Protobuf>
+    <Protobuf Include="Protobuf\DequeueContract.proto">
+      <GrpcServices>None</GrpcServices>
+      <Access>Internal</Access>
+      <ProtoCompile>True</ProtoCompile>
+      <CompileOutputs>True</CompileOutputs>
+      <OutputDir>obj\Debug\net5.0\</OutputDir>
+      <Generator>MSBuild:Compile</Generator>
+    </Protobuf>
+    <Protobuf Include="Protobuf\RequestBundleRequest.proto">
+	  <GrpcServices>None</GrpcServices>
+      <Access>Public</Access>
+      <ProtoCompile>True</ProtoCompile>
+	  <CompileOutputs>True</CompileOutputs>
+      <OutputDir>obj\Debug\net5.0\</OutputDir>
+    </Protobuf>
+    <Protobuf Include="Protobuf\RequestBundleResponse.proto">
+	  <GrpcServices>None</GrpcServices>
+      <Access>Public</Access>
+      <ProtoCompile>True</ProtoCompile>
+	  <CompileOutputs>True</CompileOutputs>
+      <OutputDir>obj\Debug\net5.0\</OutputDir>
+    </Protobuf>
+  </ItemGroup>
+
+
+</Project>
