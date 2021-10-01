@@ -20,7 +20,7 @@ namespace GreenEnergyHub.FunctionApp.TestCommon.Tests.Fixtures
     /// Only one Azurite process can be running at the same time.
     ///
     /// xUnit documentation of collection fixtures:
-    ///  * https://xunit.github.io/docs/shared-context
+    ///  * https://xunit.net/docs/shared-context#collection-fixture
     /// </summary>
     [CollectionDefinition(nameof(AzuriteCollectionFixture))]
     public class AzuriteCollectionFixture
