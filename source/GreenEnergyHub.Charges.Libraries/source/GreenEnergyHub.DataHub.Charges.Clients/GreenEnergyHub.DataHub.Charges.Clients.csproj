@@ -29,17 +29,17 @@ limitations under the License.
   <PropertyGroup>
     <PackageId>GreenEnergyHub.DataHub.Charges.Clients</PackageId>
     <PackageVersion>1.0.0$(VersionSuffix)</PackageVersion>
-    <Title>GreenEnergyHub.DataHub.Charges.Libraries</Title>
+    <Title>GreenEnergyHub.DataHub.Charges.Clients</Title>
     <Company>Energinet-DataHub</Company>
     <Authors>DataHub</Authors>
     <RepositoryUrl>https://github.com/Energinet-DataHub/geh-charges</RepositoryUrl>
     <PackageReleaseNotes>
-      [Release Notes](https://github.com/Energinet-DataHub/geh-post-office/blob/master/source/PostOffice.Communicator/documents/release-notes/release-notes.md)
-      [Documentation](https://github.com/Energinet-DataHub/geh-post-office/blob/master/source/PostOffice.Communicator/documents/documentation.md)
+      [Release Notes](https://github.com/Energinet-DataHub/geh-charges/source/GreenEnergyHub.Charges.Libraries/source/GreenEnergyHub.DataHub.Charges.Clients/documents/release-notes/release-notes.md)
+      [Documentation](https://github.com/Energinet-DataHub/geh-charges/source/GreenEnergyHub.Charges.Libraries/source/GreenEnergyHub.DataHub.Charges.Clients/documents/documentation.md)
     </PackageReleaseNotes>
     <PackageDescription>
-      [Release Notes](https://github.com/Energinet-DataHub/geh-post-office/blob/master/source/PostOffice.Communicator/documents/release-notes/release-notes.md)
-      [Documentation](https://github.com/Energinet-DataHub/geh-post-office/blob/master/source/PostOffice.Communicator/documents/documentation.md)
+      [Release Notes](https://github.com/Energinet-DataHub/geh-charges/source/GreenEnergyHub.Charges.Libraries/source/GreenEnergyHub.DataHub.Charges.Clients/documents/release-notes/release-notes.md)
+      [Documentation](https://github.com/Energinet-DataHub/geh-charges/source/GreenEnergyHub.Charges.Libraries/source/GreenEnergyHub.DataHub.Charges.Clients/documents/documentation.md)
     </PackageDescription>
     <Description>Library containing communication API for Charges Clients</Description>
     <PackageTags>geh;library</PackageTags>
@@ -83,6 +83,5 @@ limitations under the License.
       <Generator>MSBuild:Compile</Generator>
     </Protobuf>
   </ItemGroup>
-
-
+  
 </Project>
