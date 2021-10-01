@@ -23,27 +23,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Integration.Mappers
 {
     public class ConsumptionMeteringPointCreatedIntegrationInboundMapper : ProtobufInboundMapper<ConsumptionMeteringPointCreated>
     {
-        protected override IInboundMessage Convert([NotNull] ConsumptionMeteringPointCreated obj)
-        {
-            var settlementMethod = MapSettlementMethod(obj.SettlementMethod);
-            var meterMethod = MapMeterMethod(obj.MeteringMethod);
-            var meterReadingPeriodicity = MapMeterReadingPeriodicity(obj.MeterReadingPeriodicity);
-            var netSettlementMethod = MapNetSettlementMethod(obj.NetSettlementGroup);
-            var productType = MapProductType(obj.Product);
-
-            return new ConsumptionMeteringPointCreatedEvent(
-                obj.MeteringPointId,
-                obj.GsrnNumber,
-                obj.GridAreaCode,
-                settlementMethod,
-                meterMethod,
-                meterReadingPeriodicity,
-                netSettlementMethod,
-                productType,
-                obj.EffectiveDate);
-        }
-
-        private static SettlementMethod MapSettlementMethod(ConsumptionMeteringPointCreated.Types.SettlementMethod settlementMethod)
+        public static SettlementMethod MapSettlementMethod(ConsumptionMeteringPointCreated.Types.SettlementMethod settlementMethod)
         {
             switch (settlementMethod)
             {
@@ -58,7 +38,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Integration.Mappers
             }
         }
 
-        private static MeteringMethod MapMeterMethod(ConsumptionMeteringPointCreated.Types.MeteringMethod meteringMethod)
+        public static MeteringMethod MapMeterMethod(ConsumptionMeteringPointCreated.Types.MeteringMethod meteringMethod)
         {
             switch (meteringMethod)
             {
@@ -73,7 +53,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Integration.Mappers
             }
         }
 
-        private static MeterReadingPeriodicity MapMeterReadingPeriodicity(ConsumptionMeteringPointCreated.Types.MeterReadingPeriodicity meterReadingPeriodicity)
+        public static MeterReadingPeriodicity MapMeterReadingPeriodicity(ConsumptionMeteringPointCreated.Types.MeterReadingPeriodicity meterReadingPeriodicity)
         {
             switch (meterReadingPeriodicity)
             {
@@ -90,7 +70,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Integration.Mappers
             }
         }
 
-        private static NetSettlementGroup MapNetSettlementMethod(ConsumptionMeteringPointCreated.Types.NetSettlementGroup netSettlementGroup)
+        public static NetSettlementGroup MapNetSettlementMethod(ConsumptionMeteringPointCreated.Types.NetSettlementGroup netSettlementGroup)
         {
             switch (netSettlementGroup)
             {
@@ -111,7 +91,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Integration.Mappers
             }
         }
 
-        private static ProductType MapProductType(ConsumptionMeteringPointCreated.Types.ProductType product)
+        public static ProductType MapProductType(ConsumptionMeteringPointCreated.Types.ProductType product)
         {
             switch (product)
             {
@@ -130,6 +110,26 @@ namespace GreenEnergyHub.Charges.Infrastructure.Integration.Mappers
                 default:
                     return ProductType.Unknown;
             }
+        }
+
+        protected override IInboundMessage Convert([NotNull] ConsumptionMeteringPointCreated obj)
+        {
+            var settlementMethod = MapSettlementMethod(obj.SettlementMethod);
+            var meterMethod = MapMeterMethod(obj.MeteringMethod);
+            var meterReadingPeriodicity = MapMeterReadingPeriodicity(obj.MeterReadingPeriodicity);
+            var netSettlementMethod = MapNetSettlementMethod(obj.NetSettlementGroup);
+            var productType = MapProductType(obj.Product);
+
+            return new ConsumptionMeteringPointCreatedEvent(
+                obj.MeteringPointId,
+                obj.GsrnNumber,
+                obj.GridAreaCode,
+                settlementMethod,
+                meterMethod,
+                meterReadingPeriodicity,
+                netSettlementMethod,
+                productType,
+                obj.EffectiveDate);
         }
     }
 }

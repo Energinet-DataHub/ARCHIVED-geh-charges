@@ -17,6 +17,7 @@ using System.Diagnostics.CodeAnalysis;
 using Energinet.DataHub.MeteringPoints.IntegrationEventContracts;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.MeteringPointCreatedEvents;
+using GreenEnergyHub.Charges.Domain.MeteringPoints;
 using GreenEnergyHub.Charges.Infrastructure.Integration.Mappers;
 using GreenEnergyHub.Charges.TestCore.Attributes;
 using GreenEnergyHub.TestHelpers.FluentAssertionsExtensions;
@@ -42,12 +43,10 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Integration.Mappers
             converted.MeteringPointId.Should().Be(meteringPointCreatedEvent.MeteringPointId);
             converted.EffectiveDate.Should().BeEquivalentTo(meteringPointCreatedEvent.EffectiveDate);
             converted.GridAreaCode.Should().BeEquivalentTo(meteringPointCreatedEvent.GridAreaCode);
-            // TODO not sure how to test this without making xunit theories with all possibilities
-            // converted.SettlementMethod.ToString().Should().BeEquivalentTo(meteringPointCreatedEvent.SettlementMethod.ToString());
-            // converted.MeteringMethod.ToString().Should().BeEquivalentTo(meteringPointCreatedEvent.MeteringMethod.ToString());
-            // converted.MeterReadingPeriodicity.ToString().Should().BeEquivalentTo(meteringPointCreatedEvent.MeterReadingPeriodicity.ToString());
-            // converted.NetSettlementGroup.ToString().Should().BeEquivalentTo(meteringPointCreatedEvent.NetSettlementGroup.ToString());
-            // converted.ProductType.ToString().Should().BeEquivalentTo(meteringPointCreatedEvent.Product.ToString());
+            converted.SettlementMethod.Should().NotBe(SettlementMethod.Unknown);
+            converted.MeteringMethod.Should().NotBe(MeteringMethod.Unknown);
+            converted.NetSettlementGroup.Should().NotBe(NetSettlementGroup.Unknown);
+            converted.ProductType.Should().NotBe(ProductType.Unknown);
         }
 
         [Theory]
@@ -55,6 +54,59 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Integration.Mappers
         public void Convert_WhenCalledWithNull_ShouldThrow([NotNull]ConsumptionMeteringPointCreatedIntegrationInboundMapper sut)
         {
             Assert.Throws<InvalidOperationException>(() => sut.Convert(null!));
+        }
+
+        [Theory]
+        [InlineData(ConsumptionMeteringPointCreated.Types.SettlementMethod.SmFlex, SettlementMethod.Flex)]
+        [InlineData(ConsumptionMeteringPointCreated.Types.SettlementMethod.SmNonprofiled, SettlementMethod.NonProfiled)]
+        [InlineData(ConsumptionMeteringPointCreated.Types.SettlementMethod.SmProfiled, SettlementMethod.Profiled)]
+        public void MapSettlementMethod_WhenCalled_ShouldMapCorrectly(ConsumptionMeteringPointCreated.Types.SettlementMethod protoSettlementMethod, SettlementMethod expectedSettlementMethod)
+        {
+            var actual =
+                ConsumptionMeteringPointCreatedIntegrationInboundMapper.MapSettlementMethod(protoSettlementMethod);
+
+            actual.Should().Be(expectedSettlementMethod);
+        }
+
+        [Theory]
+        [InlineData(ConsumptionMeteringPointCreated.Types.MeteringMethod.MmCalculated, MeteringMethod.Calculated)]
+        [InlineData(ConsumptionMeteringPointCreated.Types.MeteringMethod.MmVirtual, MeteringMethod.Virtual)]
+        [InlineData(ConsumptionMeteringPointCreated.Types.MeteringMethod.MmPhysical, MeteringMethod.Physical)]
+        public void MapMeterMethod_WhenCalled_ShouldMapCorrectly(ConsumptionMeteringPointCreated.Types.MeteringMethod protoMeterMethod, MeteringMethod expectedMeterMethod)
+        {
+            var actual =
+                ConsumptionMeteringPointCreatedIntegrationInboundMapper.MapMeterMethod(protoMeterMethod);
+
+            actual.Should().Be(expectedMeterMethod);
+        }
+
+        [Theory]
+        [InlineData(ConsumptionMeteringPointCreated.Types.NetSettlementGroup.NsgZero, NetSettlementGroup.Zero)]
+        [InlineData(ConsumptionMeteringPointCreated.Types.NetSettlementGroup.NsgOne, NetSettlementGroup.One)]
+        [InlineData(ConsumptionMeteringPointCreated.Types.NetSettlementGroup.NsgTwo, NetSettlementGroup.Two)]
+        [InlineData(ConsumptionMeteringPointCreated.Types.NetSettlementGroup.NsgThree, NetSettlementGroup.Three)]
+        [InlineData(ConsumptionMeteringPointCreated.Types.NetSettlementGroup.NsgSix, NetSettlementGroup.Six)]
+        [InlineData(ConsumptionMeteringPointCreated.Types.NetSettlementGroup.NsgNinetynine, NetSettlementGroup.NinetyNine)]
+        public void MapNetSettlementGroup_WhenCalled_ShouldMapCorrectly(ConsumptionMeteringPointCreated.Types.NetSettlementGroup protoNetSettlementGroup, NetSettlementGroup expectedNetSettlementGroup)
+        {
+            var actual =
+                ConsumptionMeteringPointCreatedIntegrationInboundMapper.MapNetSettlementMethod(protoNetSettlementGroup);
+
+            actual.Should().Be(expectedNetSettlementGroup);
+        }
+
+        [Theory]
+        [InlineData(ConsumptionMeteringPointCreated.Types.ProductType.PtTariff, ProductType.Tariff)]
+        [InlineData(ConsumptionMeteringPointCreated.Types.ProductType.PtEnergyactive, ProductType.EnergyActive)]
+        [InlineData(ConsumptionMeteringPointCreated.Types.ProductType.PtEnergyreactive, ProductType.EnergyReActive)]
+        [InlineData(ConsumptionMeteringPointCreated.Types.ProductType.PtPoweractive, ProductType.PowerActive)]
+        [InlineData(ConsumptionMeteringPointCreated.Types.ProductType.PtPowerreactive, ProductType.PowerReActive)]
+        public void MapProductType_WhenCalled_ShouldMapCorrectly(ConsumptionMeteringPointCreated.Types.ProductType protoProductType, ProductType expectedProductType)
+        {
+            var actual =
+                ConsumptionMeteringPointCreatedIntegrationInboundMapper.MapProductType(protoProductType);
+
+            actual.Should().Be(expectedProductType);
         }
     }
 }
