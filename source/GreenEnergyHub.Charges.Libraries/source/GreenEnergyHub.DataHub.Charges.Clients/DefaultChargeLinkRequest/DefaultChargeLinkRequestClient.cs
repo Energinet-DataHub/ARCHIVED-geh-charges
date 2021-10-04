@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using Azure.Messaging.ServiceBus;
 using Google.Protobuf;
@@ -23,21 +24,20 @@ namespace GreenEnergyHub.DataHub.Charges.Libraries.DefaultChargeLinkRequest
     public sealed class DefaultChargeLinkRequestClient : IAsyncDisposable, IDefaultChargeLinkRequestClient
     {
         private readonly ServiceBusClient _serviceBusClient;
-        private readonly string _respondQueue;
+        private readonly string _respondQueueName;
 
-        public DefaultChargeLinkRequestClient(string serviceBusConnectionString, string respondQueue)
+        public DefaultChargeLinkRequestClient(
+            [NotNull] string serviceBusConnectionString,
+            [NotNull] string respondQueueName)
         {
             _serviceBusClient = new ServiceBusClient(serviceBusConnectionString);
-            _respondQueue = respondQueue;
+            _respondQueueName = respondQueueName;
         }
 
         public async Task CreateDefaultChargeLinksRequestAsync(
-            string meteringPointId,
-            string correlationId)
+            [NotNull] string meteringPointId,
+            [NotNull] string correlationId)
         {
-            if (meteringPointId == null)
-                throw new ArgumentNullException(nameof(meteringPointId));
-
             await using var sender = _serviceBusClient.CreateSender("sbt-create-link-command");
 
             var createDefaultChargeLinks = new CreateDefaultChargeLinks { MeteringPointId = meteringPointId };
@@ -45,7 +45,7 @@ namespace GreenEnergyHub.DataHub.Charges.Libraries.DefaultChargeLinkRequest
             await sender.SendMessageAsync(new ServiceBusMessage
             {
                 Body = new BinaryData(createDefaultChargeLinks.ToByteArray()),
-                ReplyTo = _respondQueue,
+                ReplyTo = _respondQueueName,
                 CorrelationId = correlationId,
             }).ConfigureAwait(false);
         }
