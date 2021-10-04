@@ -53,7 +53,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.MeteringPoint
         [Function(FunctionName)]
         public async Task RunAsync(
             [ServiceBusTrigger(
-                "%CREATE_LINK_COMMAND_QUEUE_NAME%",
+                "%CREATE_LINK_REQUEST_QUEUE_NAME%",
                 Connection = "INTEGRATIONEVENT_LISTENER_CONNECTION_STRING")]
             [NotNull] byte[] message)
         {

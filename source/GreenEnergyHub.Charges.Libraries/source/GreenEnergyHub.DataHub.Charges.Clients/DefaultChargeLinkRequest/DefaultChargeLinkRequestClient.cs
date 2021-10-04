@@ -38,7 +38,7 @@ namespace GreenEnergyHub.DataHub.Charges.Libraries.DefaultChargeLinkRequest
             if (meteringPointId == null)
                 throw new ArgumentNullException(nameof(meteringPointId));
 
-            await using var sender = _serviceBusClient.CreateSender("create-link-command");
+            await using var sender = _serviceBusClient.CreateSender("create-link-request");
 
             var createDefaultChargeLinks = new CreateDefaultChargeLinks { MeteringPointId = meteringPointId };
 
