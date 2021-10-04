@@ -48,8 +48,8 @@ module "azfun_functionhost" {
     COMMAND_RECEIVED_SUBSCRIPTION_NAME            = azurerm_servicebus_subscription.sbs_command_received.name
     COMMAND_REJECTED_TOPIC_NAME                   = module.sbt_command_rejected.name
     COMMAND_REJECTED_SUBSCRIPTION_NAME            = azurerm_servicebus_subscription.sbs_command_rejected.name
-    CREATE_LINK_COMMAND_TOPIC_NAME                = module.sbt_create_link_command.name
-    CREATE_LINK_COMMAND_SUBSCRIPTION_NAME         = azurerm_servicebus_subscription.sbs_create_link_command_charges.name
+    CREATE_LINK_COMMAND_QUEUE_NAME                = local.CREATE_LINK_COMMAND_QUEUE_NAME
+    CREATE_LINK_COMMAND_REPLY_QUEUE_NAME          = local.CREATE_LINK_COMMAND_REPLY_QUEUE_NAME
     METERING_POINT_CREATED_TOPIC_NAME             = local.METERING_POINT_CREATED_TOPIC_NAME
     METERING_POINT_CREATED_SUBSCRIPTION_NAME      = local.METERING_POINT_CREATED_SUBSCRIPTION_NAME    
     POST_OFFICE_TOPIC_NAME                        = module.sbt_post_office.name
