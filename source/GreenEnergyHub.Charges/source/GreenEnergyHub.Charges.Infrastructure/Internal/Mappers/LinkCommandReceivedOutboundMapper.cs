@@ -74,7 +74,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
             {
                 OperationId = chargeLink.OperationId,
                 MeteringPointId = chargeLink.MeteringPointId,
-                ChargeId = chargeLink.ChargeId,
+                ChargeId = chargeLink.SenderProvidedChargeId,
                 ChargeOwner = chargeLink.ChargeOwner,
                 Factor = chargeLink.Factor,
                 ChargeType = (ChargeTypeContract)chargeLink.ChargeType,

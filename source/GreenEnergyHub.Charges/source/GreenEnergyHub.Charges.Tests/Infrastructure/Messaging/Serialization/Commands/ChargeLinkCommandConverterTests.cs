@@ -71,7 +71,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Messaging.Serialization.Co
             Assert.Equal("578032999778756222", result.ChargeLink.MeteringPointId);
             Assert.Equal(InstantPattern.ExtendedIso.Parse("2021-09-27T22:00:00Z").Value, result.ChargeLink.StartDateTime);
             Assert.Equal(InstantPattern.ExtendedIso.Parse("2021-11-05T23:00:00Z").Value, result.ChargeLink.EndDateTime);
-            Assert.Equal("ChargeId01", result.ChargeLink.ChargeId);
+            Assert.Equal("ChargeId01", result.ChargeLink.SenderProvidedChargeId);
             Assert.Equal(1, result.ChargeLink.Factor);
             Assert.Equal("8100000000016", result.ChargeLink.ChargeOwner);
             Assert.Equal(ChargeType.Tariff, result.ChargeLink.ChargeType);

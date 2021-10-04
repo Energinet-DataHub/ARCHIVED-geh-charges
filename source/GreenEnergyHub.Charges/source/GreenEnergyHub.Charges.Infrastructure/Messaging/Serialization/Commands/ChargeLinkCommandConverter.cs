@@ -77,7 +77,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Messaging.Serialization.Commands
                 else if (reader.Is(CimChargeLinkCommandConstants.ChargeId, CimChargeLinkCommandConstants.Namespace))
                 {
                     var content = await reader.ReadElementContentAsStringAsync().ConfigureAwait(false);
-                    link.ChargeId = content;
+                    link.SenderProvidedChargeId = content;
                 }
                 else if (reader.Is(CimChargeLinkCommandConstants.Factor, CimChargeLinkCommandConstants.Namespace))
                 {

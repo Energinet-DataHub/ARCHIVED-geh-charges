@@ -51,7 +51,7 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.PostOffice
             var link = chargeLinkCommandAcceptedEvent.ChargeLink;
 
             var charge = await _chargeRepository
-                .GetChargeAsync(link.ChargeId, link.ChargeOwner, link.ChargeType)
+                .GetChargeAsync(link.SenderProvidedChargeId, link.ChargeOwner, link.ChargeType)
                 .ConfigureAwait(false);
 
             if (!charge.TaxIndicator) return;
