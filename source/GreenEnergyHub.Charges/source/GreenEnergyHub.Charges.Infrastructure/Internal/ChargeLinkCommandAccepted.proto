@@ -53,7 +53,7 @@ message ChargeLinkContract {
   string metering_point_id = 2; // A unique metering point identifier
   google.protobuf.Timestamp start_date_time = 3; // In UTC. The charge link period's valid from date and time
   google.protobuf.Timestamp end_date_time = 4; // In UTC. The charge link period's valid to date and time. The default value will be the equivalent to 9999-12-31T23:59:59Z without milliseconds
-  string charge_id = 5; // A charge identifier. Combined with Charge Owner and Charge Type it becomes unique
+  string sender_provided_charge_id = 5; // A charge identifier provided by the sender. Combined with Charge Owner and Charge Type it becomes unique
   int32 factor = 6; // Indicates the number of times the same fee or subscription must be collected. Always 1 for tariffs
   string charge_owner = 7; // A charge owner identification, e.g. the Market Participant's GLN or EIC number
   ChargeTypeContract charge_type = 8; // The type of charge; tariff, fee or subscription
