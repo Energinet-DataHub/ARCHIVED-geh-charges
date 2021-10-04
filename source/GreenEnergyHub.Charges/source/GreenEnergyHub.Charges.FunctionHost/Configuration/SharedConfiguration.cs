@@ -24,7 +24,12 @@ using GreenEnergyHub.Charges.Infrastructure.Messaging.Registration;
 using GreenEnergyHub.Charges.Infrastructure.Repositories;
 using GreenEnergyHub.Messaging.Protobuf;
 using GreenEnergyHub.Messaging.Transport;
+using GreenEnergyHub.PostOffice.Communicator.DataAvailable;
+using GreenEnergyHub.PostOffice.Communicator.Dequeue;
+using GreenEnergyHub.PostOffice.Communicator.Factories;
+using GreenEnergyHub.PostOffice.Communicator.Peek;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using NodaTime;
 
@@ -42,6 +47,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
 
             ConfigureSharedDatabase(serviceCollection);
             ConfigureSharedMessaging(serviceCollection);
+            ConfigureSharedPostOfficeCommunication(serviceCollection, "POST_OFFICE_DATA_AVAILABLE_CONNECTION_STRING");
         }
 
         private static void ConfigureSharedDatabase(IServiceCollection serviceCollection)
@@ -67,6 +73,44 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
             serviceCollection.AddMessagingProtobuf().AddMessageDispatcher<ChargeLinkCommandReceivedEvent>(
                 EnvironmentHelper.GetEnv("DOMAINEVENT_SENDER_CONNECTION_STRING"),
                 EnvironmentHelper.GetEnv("CHARGE_LINK_RECEIVED_TOPIC_NAME"));
+        }
+
+        /// <summary>
+        /// Post office provides a NuGet package to handle the configuration, but it's for SimpleInjector
+        /// and thus not applicable in this function host. See also
+        /// https://github.com/Energinet-DataHub/geh-post-office/blob/main/source/PostOffice.Communicator.SimpleInjector/source/PostOffice.Communicator.SimpleInjector/ContainerExtensions.cs
+        /// </summary>
+        private static void ConfigureSharedPostOfficeCommunication(IServiceCollection serviceCollection, string serviceBusConnectionStringConfigKey)
+        {
+            serviceCollection.AddPostOfficeServiceBus(serviceBusConnectionStringConfigKey);
+            serviceCollection.AddPostOfficeApplicationServices();
+        }
+
+        private static void AddPostOfficeServiceBus(this IServiceCollection serviceCollection, string serviceBusConnectionStringConfigKey)
+        {
+            serviceCollection.AddSingleton<IServiceBusClientFactory>(provider =>
+            {
+                var configuration = provider.GetService<IConfiguration>();
+                var connectionString = configuration.GetConnectionString(serviceBusConnectionStringConfigKey)
+                                       ?? configuration?[serviceBusConnectionStringConfigKey];
+
+                if (string.IsNullOrEmpty(connectionString))
+                {
+                    throw new InvalidOperationException(
+                        "Please specify a valid ServiceBus in the appSettings.json file or your Azure Functions Settings.");
+                }
+
+                return new ServiceBusClientFactory(connectionString);
+            });
+        }
+
+        private static void AddPostOfficeApplicationServices(this IServiceCollection serviceCollection)
+        {
+            serviceCollection.AddSingleton<IDataAvailableNotificationSender, DataAvailableNotificationSender>();
+            serviceCollection.AddSingleton<IRequestBundleParser, RequestBundleParser>();
+            serviceCollection.AddSingleton<IResponseBundleParser, ResponseBundleParser>();
+            serviceCollection.AddSingleton<IDataBundleResponseSender, DataBundleResponseSender>();
+            serviceCollection.AddSingleton<IDequeueNotificationParser, DequeueNotificationParser>();
         }
     }
 }
