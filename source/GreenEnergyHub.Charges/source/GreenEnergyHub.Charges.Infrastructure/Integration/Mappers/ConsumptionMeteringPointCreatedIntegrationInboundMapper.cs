@@ -14,6 +14,7 @@
 
 using System.Diagnostics.CodeAnalysis;
 using Energinet.DataHub.MeteringPoints.IntegrationEventContracts;
+using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.Domain.MeteringPointCreatedEvents;
 using GreenEnergyHub.Charges.Domain.MeteringPoints;
 using GreenEnergyHub.Messaging.Protobuf;
@@ -46,7 +47,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Integration.Mappers
                 obj.GsrnNumber,
                 obj.GridAreaCode,
                 settlementMethod,
-                obj.EffectiveDate);
+                obj.EffectiveDate.ToInstant());
         }
     }
 }

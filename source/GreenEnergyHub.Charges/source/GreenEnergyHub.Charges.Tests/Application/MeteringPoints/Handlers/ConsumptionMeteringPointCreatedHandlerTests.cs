@@ -93,7 +93,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.MeteringPoints.Handlers
                 "123",
                 "2",
                 SettlementMethod.Flex,
-                SystemClock.Instance.GetCurrentInstant().ToString());
+                SystemClock.Instance.GetCurrentInstant());
         }
 
         private static ConsumptionMeteringPointCreatedEvent GetMeteringPointCreatedEventWithInvalidEnum()
@@ -102,7 +102,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.MeteringPoints.Handlers
                 "123",
                 "2",
                 (SettlementMethod)1000,
-                SystemClock.Instance.GetCurrentInstant().ToString());
+                SystemClock.Instance.GetCurrentInstant());
         }
     }
 }

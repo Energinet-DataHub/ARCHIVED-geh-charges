@@ -16,11 +16,14 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using Energinet.DataHub.MeteringPoints.IntegrationEventContracts;
 using FluentAssertions;
+using Google.Protobuf.WellKnownTypes;
+using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.Domain.MeteringPointCreatedEvents;
 using GreenEnergyHub.Charges.Domain.MeteringPoints;
 using GreenEnergyHub.Charges.Infrastructure.Integration.Mappers;
 using GreenEnergyHub.Charges.TestCore.Attributes;
 using GreenEnergyHub.TestHelpers.FluentAssertionsExtensions;
+using NodaTime;
 using Xunit;
 using Xunit.Categories;
 
@@ -35,14 +38,16 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Integration.Mappers
             [NotNull] ConsumptionMeteringPointCreated meteringPointCreatedEvent,
             [NotNull] ConsumptionMeteringPointCreatedIntegrationInboundMapper sut)
         {
+            meteringPointCreatedEvent.EffectiveDate = Timestamp.FromDateTime(new DateTime(2021, 10, 31, 23, 00, 00, 00, DateTimeKind.Utc));
+
             // Act
             var converted = (ConsumptionMeteringPointCreatedEvent)sut.Convert(meteringPointCreatedEvent);
 
             // Assert
             converted.Should().NotContainNullsOrEmptyEnumerables();
             converted.MeteringPointId.Should().Be(meteringPointCreatedEvent.GsrnNumber);
-            converted.EffectiveDate.Should().BeEquivalentTo(meteringPointCreatedEvent.EffectiveDate);
-            converted.GridAreaId.Should().BeEquivalentTo(meteringPointCreatedEvent.GridAreaCode);
+            converted.EffectiveDate.Should().Be(meteringPointCreatedEvent.EffectiveDate.ToInstant());
+            converted.GridAreaId.Should().Be(meteringPointCreatedEvent.GridAreaCode);
             converted.SettlementMethod.Should().NotBe(SettlementMethod.Unknown);
         }
 

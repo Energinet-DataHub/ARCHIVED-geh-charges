@@ -15,6 +15,7 @@
 using GreenEnergyHub.Charges.Domain.Messages.Events;
 using GreenEnergyHub.Charges.Domain.MeteringPoints;
 using GreenEnergyHub.Messaging.MessageTypes.Common;
+using NodaTime;
 
 namespace GreenEnergyHub.Charges.Domain.MeteringPointCreatedEvents
 {
@@ -24,7 +25,7 @@ namespace GreenEnergyHub.Charges.Domain.MeteringPointCreatedEvents
             string meteringPointId,
             string gridAreaId,
             SettlementMethod settlementMethod,
-            string effectiveDate)
+            Instant effectiveDate)
             : base(Transaction.NewTransaction())
         {
             MeteringPointId = meteringPointId;
@@ -39,6 +40,6 @@ namespace GreenEnergyHub.Charges.Domain.MeteringPointCreatedEvents
 
         public SettlementMethod SettlementMethod { get; }
 
-        public string EffectiveDate { get; }
+        public Instant EffectiveDate { get; }
     }
 }

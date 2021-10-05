@@ -27,14 +27,13 @@ namespace GreenEnergyHub.Charges.Domain.MeteringPoints
             if (consumptionMeteringPointCreatedEvent == null)
                 throw new ArgumentNullException(nameof(consumptionMeteringPointCreatedEvent));
 
-            var effectiveDate = InstantPattern.General.Parse(consumptionMeteringPointCreatedEvent.EffectiveDate).Value;
             var settlementMethod = consumptionMeteringPointCreatedEvent.SettlementMethod.Cast<SettlementMethod>();
 
             return MeteringPoint.Create(
                 consumptionMeteringPointCreatedEvent.MeteringPointId,
                 MeteringPointType.Consumption,
                 consumptionMeteringPointCreatedEvent.GridAreaId,
-                effectiveDate,
+                consumptionMeteringPointCreatedEvent.EffectiveDate,
                 ConnectionState.New,
                 settlementMethod);
         }
