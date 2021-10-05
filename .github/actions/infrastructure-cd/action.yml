@@ -1,0 +1,54 @@
+name: Infrastructure CD
+description: Composite action for deploying infrastructure to a single environment specified by inputs
+
+inputs:
+  environment_short:
+    required: true
+  environment_long:
+    required: true
+  environment_name:
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v1.2.1
+      with:
+        terraform_wrapper: false
+        terraform_version: 0.14.10
+
+    - name: Setup domain specific Terraform options
+      uses: ./.github/actions/setup-terraform-options
+      with:
+        notification_email: ${{ secrets.NOTIFICATION_EMAIL }}
+
+    - name: Terraform CD
+      uses: ./.github/actions/terraform-cd
+      with:
+        SECRETS_SHARED_RESOURCES_KEYVAULT_NAME: ${{ secrets.SHARED_RESOURCES_KEYVAULT_NAME }}
+        SECRETS_SHARED_RESOURCES_RESOURCE_GROUP_NAME: ${{ secrets.SHARED_RESOURCES_RESOURCE_GROUP_NAME }}
+        SECRETS_SHARED_RESOURCES_SQL_SERVER_NAME: ${{ secrets.SHARED_RESOURCES_SQL_SERVER_NAME }}
+        SECRETS_PAT_TOKEN: ${{ secrets.PAT_TOKEN }}
+        SECRETS_TENANT_ID: ${{ secrets.TENANT_ID }}
+        SECRETS_SPN_ID: ${{ secrets.SPN_ID }}
+        SECRETS_SPN_OBJECT_ID: ${{ secrets.SPN_OBJECT_ID }}
+        SECRETS_SPN_SECRET: ${{ secrets.SPN_SECRET }}
+        SECRETS_SUBSCRIPTION_ID: ${{ secrets.SUBSCRIPTION_ID }}
+        PROJECT_NAME: ${{ env.PROJECT_NAME }}
+        ORGANISATION_NAME: ${{ env.ORGANISATION_NAME }}
+        ENVIRONMENT_SHORT: ${{ inputs.environment_short }}
+        ENVIRONMENT_LONG: ${{ inputs.environment_long }}
+        ENVIRONMENT_NAME: ${{ inputs.environment_name }}
+        TERRAFORM_BACKEND_FILE_PATH: "./build/infrastructure/main/backend.tf"
+
+    - name: Obtain Terraform output
+      uses: ./.github/actions/obtain-terraform-output
+      id: terraform
+
+    - name: Applying charges migrations
+      uses: ./.github/actions/charges-apply-db-migrations
+      with:
+        sql-connection-string-keyvaultsecretname: ${{ steps.terraform.outputs.sql-connection-string-keyvaultsecretname }}
+        keyvault-name: ${{ steps.terraform.outputs.kv-charges-name }}
+        environment-name: ${{ inputs.environment_name }}
