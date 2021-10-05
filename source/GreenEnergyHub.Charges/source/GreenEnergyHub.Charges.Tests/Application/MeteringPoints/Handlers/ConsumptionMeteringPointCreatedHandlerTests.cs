@@ -61,20 +61,6 @@ namespace GreenEnergyHub.Charges.Tests.Application.MeteringPoints.Handlers
 
         [Theory]
         [InlineAutoMoqData]
-        public async Task HandleAsync_WhenCalledWithUnknownEnum_ThrowsInvalidCastException(
-            [NotNull] ConsumptionMeteringPointCreatedEventHandler sut)
-        {
-            // Arrange
-            ConsumptionMeteringPointCreatedEvent consumptionMeteringPointCreatedEvent = GetMeteringPointCreatedEventWithInvalidEnum();
-
-            // Act / Assert
-            await Assert.ThrowsAsync<InvalidCastException>(
-                    () => sut.HandleAsync(consumptionMeteringPointCreatedEvent!))
-                .ConfigureAwait(false);
-        }
-
-        [Theory]
-        [InlineAutoMoqData]
         public async Task HandleAsync_WhenEventIsNull_ThrowsArgumentNullException(
             [NotNull] ConsumptionMeteringPointCreatedEventHandler sut)
         {
@@ -93,16 +79,6 @@ namespace GreenEnergyHub.Charges.Tests.Application.MeteringPoints.Handlers
                 "123",
                 "2",
                 SettlementMethod.Flex,
-                ConnectionState.New,
-                SystemClock.Instance.GetCurrentInstant());
-        }
-
-        private static ConsumptionMeteringPointCreatedEvent GetMeteringPointCreatedEventWithInvalidEnum()
-        {
-            return new ConsumptionMeteringPointCreatedEvent(
-                "123",
-                "2",
-                (SettlementMethod)1000,
                 ConnectionState.New,
                 SystemClock.Instance.GetCurrentInstant());
         }
