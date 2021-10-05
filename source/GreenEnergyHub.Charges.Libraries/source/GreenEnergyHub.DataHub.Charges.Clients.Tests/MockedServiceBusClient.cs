@@ -46,18 +46,6 @@ namespace GreenEnergyHub.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests
             throw new ArgumentException($"{nameof(queueOrTopicName)}: '{queueOrTopicName}' did not match configured queue: '{_queue}'", nameof(queueOrTopicName));
         }
 
-        public override Task<ServiceBusSessionReceiver> AcceptSessionAsync(
-            string queueName,
-            string sessionId,
-            ServiceBusSessionReceiverOptions options = default,
-            CancellationToken cancellationToken = default)
-        {
-            if (queueName == _replyQueue)
-                return Task.FromResult(_serviceBusSessionReceiver);
-
-            throw new ArgumentException($"{nameof(queueName)}: '{queueName}' did not match configured queue: '{_replyQueue}'", nameof(queueName));
-        }
-
         public override async ValueTask DisposeAsync()
         {
             try
