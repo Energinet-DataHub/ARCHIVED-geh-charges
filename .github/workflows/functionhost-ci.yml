@@ -23,6 +23,19 @@ env:
   CSPROJ_FILE_PATH: source/GreenEnergyHub.Charges/source/GreenEnergyHub.Charges.FunctionHost/GreenEnergyHub.Charges.FunctionHost.csproj
   SOLUTION_FILE_PATH: source/GreenEnergyHub.Charges/GreenEnergyHub.Charges.sln
   DOTNET_VERSION: '5.0.202'
+  AZURITE_VERSION: '3.14.0'
+  AZURE_FUNCTIONS_CORE_TOOLS_VERSION: '3.0.3568'  
+  # Variables necessary to manage Azure resources for tests (similar to local use of 'integrationtest.local.settings.json')
+  SUBSCRIPTION_ID: ''
+  RESOURCE_GROUP_NAME: ''
+  DEFAULT_LOCATION: ''
+  TENANT_ID: ''
+  CLIENT_ID: ''
+  CLIENT_SECRET: ''
+  # Variables that overrides settings in 'functionhost.settings.json'
+  DotnetExecutablePath: ''
+  FunctionAppHostPath: ''
+  FunctionApplicationPath: ''
 
 jobs:
   pre_job:
@@ -49,7 +62,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@master
+        uses: actions/checkout@master # UNDONE: Why do we use version 'master' instead of a version tag? Using a branch is fragile.
 
       - name: Setup .NET 3.1 environment
         uses: actions/setup-dotnet@v1
@@ -60,6 +73,22 @@ jobs:
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Install Azurite v${{ env.AZURITE_VERSION }}
+        run: npm install -g azurite@${{ env.AZURITE_VERSION }}
+
+      - name: Install Azure Functions Core Tools v${{ env.AZURE_FUNCTIONS_CORE_TOOLS_VERSION }}
+        run: npm install -g azure-functions-core-tools@${{ env.AZURE_FUNCTIONS_CORE_TOOLS_VERSION }}
+
+      # TODO: Remove when integration tests are working
+      # - name: Test Azurite
+      #   if: ${{ success() || failure() }}
+      #   run: azurite --version
+
+      # TODO: Remove when integration tests are working
+      # - name: Test Azure Functions Core Tools
+      #   if: ${{ success() || failure() }}
+      #   run: func --version
 
       - name: Build and test project
         uses: ./.github/actions/dotnet-build-and-test
