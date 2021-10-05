@@ -19,12 +19,14 @@ using FluentAssertions;
 using GreenEnergyHub.FunctionApp.TestCommon.Azurite;
 using GreenEnergyHub.FunctionApp.TestCommon.Tests.Fixtures;
 using Xunit;
+using Xunit.Categories;
 
 namespace GreenEnergyHub.FunctionApp.TestCommon.Tests.Integration.Azurite
 {
     public class AzuriteManagerTests
     {
         [Collection(nameof(AzuriteCollectionFixture))]
+        [UnitTest]
         public class MakeSureAzuriteCanBeStartedTwice
         {
             [Fact]

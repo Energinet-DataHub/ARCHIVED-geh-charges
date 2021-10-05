@@ -26,6 +26,9 @@ inputs:
   csproj_file_path:
     description: 'Path to the csproj file.'
     required: true
+  test_csproj_file_path:
+    description: 'Path to the test csproj file.'
+    required: true
   solution_file_path:
     description: 'Path to the solution file.'
     required: true
@@ -45,4 +48,4 @@ runs:
       shell: pwsh
       run: |
         dotnet tool install --tool-path ./temp/reportgenerator dotnet-reportgenerator-globaltool
-        dotnet test ${{ inputs.solution_file_path }} --filter "Category=UnitTest" -p:CollectCoverage=true -p:CoverletOutput=${{ inputs.output_path }}/ -p:CoverletOutputFormat=cobertura -p:Threshold=0
+        dotnet test ${{ inputs.test_csproj_file_path }} --filter "Category=UnitTest" -p:CollectCoverage=true -p:CoverletOutput=${{ inputs.output_path }}/ -p:CoverletOutputFormat=cobertura -p:Threshold=0
