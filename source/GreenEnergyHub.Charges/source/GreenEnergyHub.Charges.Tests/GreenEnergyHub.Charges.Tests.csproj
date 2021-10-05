@@ -40,7 +40,7 @@ limitations under the License.
         <PackageReference Include="AutoFixture" Version="4.17.0" />
         <PackageReference Include="AutoFixture.AutoMoq" Version="4.17.0" />
         <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
-        <PackageReference Include="NodaTime.Testing" Version="3.0.6" />
+        <PackageReference Include="NodaTime.Testing" Version="3.0.7" />
         <PackageReference Include="Squadron.Core" Version="0.13.0" />
         <PackageReference Include="Squadron.SqlServer" Version="0.13.0" />
         <PackageReference Include="System.ComponentModel.TypeConverter" Version="4.3.0" />
@@ -50,7 +50,7 @@ limitations under the License.
         <PackageReference Include="xunit.runner.visualstudio" Version="2.4.3" />
         <PackageReference Include="coverlet.collector" Version="3.1.0" />
         <PackageReference Include="Google.Protobuf" Version="3.18.0" />
-        <PackageReference Include="Grpc.Tools" Version="2.40.0" PrivateAssets="All" />
+        <PackageReference Include="Grpc.Tools" Version="2.41.0" PrivateAssets="All" />
     </ItemGroup>
 
     <ItemGroup>
