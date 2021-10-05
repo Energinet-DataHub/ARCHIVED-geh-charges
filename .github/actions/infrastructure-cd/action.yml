@@ -8,13 +8,30 @@ inputs:
     required: true
   environment_name:
     required: true
+  notification_email:
+    required: true
+  shared_resources_keyvault_name:
+    required: true
+  shared_resources_resource_group_name:
+    required: true
+  shared_resources_sql_server_name:
+    required: true
+  pat_token:
+    required: true
+  tenant_id:
+    required: true
+  spn_id:
+    required: true
+  spn_object_id:
+    required: true
+  spn_secret:
+    required: true
+  subscription_id:
+    required: true
 
 runs:
   using: composite
   steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
-
     - name: Setup Terraform
       uses: hashicorp/setup-terraform@v1.2.1
       with:
@@ -24,20 +41,20 @@ runs:
     - name: Setup domain specific Terraform options
       uses: ./.github/actions/setup-terraform-options
       with:
-        notification_email: ${{ secrets.NOTIFICATION_EMAIL }}
+        notification_email: ${{ inputs.notification_email }}
 
     - name: Terraform CD
       uses: ./.github/actions/terraform-cd
       with:
-        SECRETS_SHARED_RESOURCES_KEYVAULT_NAME: ${{ secrets.SHARED_RESOURCES_KEYVAULT_NAME }}
-        SECRETS_SHARED_RESOURCES_RESOURCE_GROUP_NAME: ${{ secrets.SHARED_RESOURCES_RESOURCE_GROUP_NAME }}
-        SECRETS_SHARED_RESOURCES_SQL_SERVER_NAME: ${{ secrets.SHARED_RESOURCES_SQL_SERVER_NAME }}
-        SECRETS_PAT_TOKEN: ${{ secrets.PAT_TOKEN }}
-        SECRETS_TENANT_ID: ${{ secrets.TENANT_ID }}
-        SECRETS_SPN_ID: ${{ secrets.SPN_ID }}
-        SECRETS_SPN_OBJECT_ID: ${{ secrets.SPN_OBJECT_ID }}
-        SECRETS_SPN_SECRET: ${{ secrets.SPN_SECRET }}
-        SECRETS_SUBSCRIPTION_ID: ${{ secrets.SUBSCRIPTION_ID }}
+        SECRETS_SHARED_RESOURCES_KEYVAULT_NAME: ${{ inputs.shared_resources_keyvault_name }}
+        SECRETS_SHARED_RESOURCES_RESOURCE_GROUP_NAME: ${{ inputs.shared_resources_resource_group_name }}
+        SECRETS_SHARED_RESOURCES_SQL_SERVER_NAME: ${{ inputs.shared_resources_sql_server_name }}
+        SECRETS_PAT_TOKEN: ${{ inputs.pat_token }}
+        SECRETS_TENANT_ID: ${{ inputs.tenant_id }}
+        SECRETS_SPN_ID: ${{ inputs.spn_id }}
+        SECRETS_SPN_OBJECT_ID: ${{ inputs.spn_object_id }}
+        SECRETS_SPN_SECRET: ${{ inputs.spn_secret }}
+        SECRETS_SUBSCRIPTION_ID: ${{ inputs.subscription_id }}
         PROJECT_NAME: ${{ env.PROJECT_NAME }}
         ORGANISATION_NAME: ${{ env.ORGANISATION_NAME }}
         ENVIRONMENT_SHORT: ${{ inputs.environment_short }}
