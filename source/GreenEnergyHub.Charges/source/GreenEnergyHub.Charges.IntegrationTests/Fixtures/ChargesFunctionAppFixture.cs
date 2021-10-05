@@ -50,6 +50,11 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures
         private SqlServerResource<SqlServerOptions> SqlServerResource { get; }
 
         /// <inheritdoc/>
+        protected override void OnConfigureHostSettings(FunctionAppHostSettings hostSettings)
+        {
+        }
+
+        /// <inheritdoc/>
         protected override void OnConfigureEnvironment()
         {
             Environment.SetEnvironmentVariable(EnvironmentSettingNames.AzureWebJobsStorage, "UseDevelopmentStorage=true");
