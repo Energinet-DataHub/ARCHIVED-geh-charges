@@ -12,9 +12,6 @@ inputs:
 runs:
   using: composite
   steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
-
     - name: Setup Terraform
       uses: hashicorp/setup-terraform@v1.2.1
       with:
