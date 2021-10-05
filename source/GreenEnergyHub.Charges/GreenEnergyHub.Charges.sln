@@ -62,8 +62,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GreenEnergyHub.Messaging.Pr
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GreenEnergyHub.Messaging.Protobuf.Integration.ServiceCollection", "..\messaging\source\GreenEnergyHub.Messaging.Protobuf.Integration.ServiceCollection\GreenEnergyHub.Messaging.Protobuf.Integration.ServiceCollection.csproj", "{26DFABDA-7D73-42A5-A502-A666479454D5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PostOffice.Communicator", "..\PostOffice.Communicator\PostOffice.Communicator.csproj", "{E9F64300-834B-4657-850F-BEF4CED5D180}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -150,10 +148,6 @@ Global
 		{26DFABDA-7D73-42A5-A502-A666479454D5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{26DFABDA-7D73-42A5-A502-A666479454D5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{26DFABDA-7D73-42A5-A502-A666479454D5}.Release|Any CPU.Build.0 = Release|Any CPU
-		{E9F64300-834B-4657-850F-BEF4CED5D180}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E9F64300-834B-4657-850F-BEF4CED5D180}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{E9F64300-834B-4657-850F-BEF4CED5D180}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E9F64300-834B-4657-850F-BEF4CED5D180}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -175,7 +169,6 @@ Global
 		{539A7F51-A284-4268-AA14-98BB6122F5EB} = {832447E5-7A46-4381-817C-5D73A20510C2}
 		{46E01A80-BCAE-498E-8250-6DE0C18ABC36} = {9FE16521-EC21-4551-9E51-0C6702D21098}
 		{26DFABDA-7D73-42A5-A502-A666479454D5} = {9FE16521-EC21-4551-9E51-0C6702D21098}
-		{E9F64300-834B-4657-850F-BEF4CED5D180} = {9FE16521-EC21-4551-9E51-0C6702D21098}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {19228BC9-BC51-4044-842C-ACD1F68D4008}
