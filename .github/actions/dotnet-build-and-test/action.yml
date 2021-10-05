@@ -41,11 +41,11 @@ runs:
   using: composite
   steps:
     - name: Build project
-      shell: bash
+      shell: pwsh
       run: |
         dotnet build ${{ inputs.csproj_file_path }} --configuration Release --output ${{ inputs.output_path }}
     - name: test and publish report
-      shell: bash
+      shell: pwsh
       run: |
         dotnet tool install --tool-path ./temp/reportgenerator dotnet-reportgenerator-globaltool
         dotnet test ${{ inputs.test_csproj_file_path }} --filter "Category=UnitTest" -p:CollectCoverage=true -p:CoverletOutput=${{ inputs.output_path }}/ -p:CoverletOutputFormat=cobertura -p:Threshold=0
