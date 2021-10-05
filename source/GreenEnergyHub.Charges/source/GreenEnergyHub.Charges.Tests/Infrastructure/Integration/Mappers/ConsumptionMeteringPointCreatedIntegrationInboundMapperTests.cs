@@ -44,7 +44,6 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Integration.Mappers
             converted.EffectiveDate.Should().BeEquivalentTo(meteringPointCreatedEvent.EffectiveDate);
             converted.GridAreaCode.Should().BeEquivalentTo(meteringPointCreatedEvent.GridAreaCode);
             converted.SettlementMethod.Should().NotBe(SettlementMethod.Unknown);
-            converted.NetSettlementGroup.Should().NotBe(NetSettlementGroup.Unknown);
         }
 
         [Theory]
@@ -64,21 +63,6 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Integration.Mappers
                 ConsumptionMeteringPointCreatedIntegrationInboundMapper.MapSettlementMethod(protoSettlementMethod);
 
             actual.Should().Be(expectedSettlementMethod);
-        }
-
-        [Theory]
-        [InlineData(ConsumptionMeteringPointCreated.Types.NetSettlementGroup.NsgZero, NetSettlementGroup.Zero)]
-        [InlineData(ConsumptionMeteringPointCreated.Types.NetSettlementGroup.NsgOne, NetSettlementGroup.One)]
-        [InlineData(ConsumptionMeteringPointCreated.Types.NetSettlementGroup.NsgTwo, NetSettlementGroup.Two)]
-        [InlineData(ConsumptionMeteringPointCreated.Types.NetSettlementGroup.NsgThree, NetSettlementGroup.Three)]
-        [InlineData(ConsumptionMeteringPointCreated.Types.NetSettlementGroup.NsgSix, NetSettlementGroup.Six)]
-        [InlineData(ConsumptionMeteringPointCreated.Types.NetSettlementGroup.NsgNinetynine, NetSettlementGroup.NinetyNine)]
-        public void MapNetSettlementGroup_WhenCalled_ShouldMapCorrectly(ConsumptionMeteringPointCreated.Types.NetSettlementGroup protoNetSettlementGroup, NetSettlementGroup expectedNetSettlementGroup)
-        {
-            var actual =
-                ConsumptionMeteringPointCreatedIntegrationInboundMapper.MapNetSettlementMethod(protoNetSettlementGroup);
-
-            actual.Should().Be(expectedNetSettlementGroup);
         }
     }
 }

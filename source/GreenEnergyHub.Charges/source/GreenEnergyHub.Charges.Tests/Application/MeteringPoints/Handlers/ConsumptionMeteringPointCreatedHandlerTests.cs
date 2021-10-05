@@ -94,7 +94,6 @@ namespace GreenEnergyHub.Charges.Tests.Application.MeteringPoints.Handlers
                 "234",
                 "2",
                 SettlementMethod.Flex,
-                NetSettlementGroup.One,
                 SystemClock.Instance.GetCurrentInstant().ToString());
         }
 
@@ -105,7 +104,6 @@ namespace GreenEnergyHub.Charges.Tests.Application.MeteringPoints.Handlers
                 "234",
                 "2",
                 (SettlementMethod)1000,
-                NetSettlementGroup.One,
                 SystemClock.Instance.GetCurrentInstant().ToString());
         }
     }

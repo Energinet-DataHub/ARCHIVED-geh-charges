@@ -25,7 +25,6 @@ namespace GreenEnergyHub.Charges.Domain.MeteringPointCreatedEvents
             string gsrnNumber,
             string gridAreaCode,
             SettlementMethod settlementMethod,
-            NetSettlementGroup netSettlementGroup,
             string effectiveDate)
             : base(Transaction.NewTransaction())
         {
@@ -33,7 +32,6 @@ namespace GreenEnergyHub.Charges.Domain.MeteringPointCreatedEvents
             GsrnNumber = gsrnNumber;
             GridAreaCode = gridAreaCode;
             SettlementMethod = settlementMethod;
-            NetSettlementGroup = netSettlementGroup;
             EffectiveDate = effectiveDate;
         }
 
@@ -44,8 +42,6 @@ namespace GreenEnergyHub.Charges.Domain.MeteringPointCreatedEvents
         public string GridAreaCode { get; }
 
         public SettlementMethod SettlementMethod { get; }
-
-        public NetSettlementGroup NetSettlementGroup { get; }
 
         public string EffectiveDate { get; }
     }

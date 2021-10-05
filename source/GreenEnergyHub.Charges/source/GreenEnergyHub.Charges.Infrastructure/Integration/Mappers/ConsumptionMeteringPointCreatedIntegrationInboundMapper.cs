@@ -38,38 +38,15 @@ namespace GreenEnergyHub.Charges.Infrastructure.Integration.Mappers
             }
         }
 
-        public static NetSettlementGroup MapNetSettlementMethod(ConsumptionMeteringPointCreated.Types.NetSettlementGroup netSettlementGroup)
-        {
-            switch (netSettlementGroup)
-            {
-                case ConsumptionMeteringPointCreated.Types.NetSettlementGroup.NsgZero:
-                    return NetSettlementGroup.Zero;
-                case ConsumptionMeteringPointCreated.Types.NetSettlementGroup.NsgOne:
-                    return NetSettlementGroup.One;
-                case ConsumptionMeteringPointCreated.Types.NetSettlementGroup.NsgTwo:
-                    return NetSettlementGroup.Two;
-                case ConsumptionMeteringPointCreated.Types.NetSettlementGroup.NsgThree:
-                    return NetSettlementGroup.Three;
-                case ConsumptionMeteringPointCreated.Types.NetSettlementGroup.NsgSix:
-                    return NetSettlementGroup.Six;
-                case ConsumptionMeteringPointCreated.Types.NetSettlementGroup.NsgNinetynine:
-                    return NetSettlementGroup.NinetyNine;
-                default:
-                    return NetSettlementGroup.Unknown;
-            }
-        }
-
         protected override IInboundMessage Convert([NotNull] ConsumptionMeteringPointCreated obj)
         {
             var settlementMethod = MapSettlementMethod(obj.SettlementMethod);
-            var netSettlementMethod = MapNetSettlementMethod(obj.NetSettlementGroup);
 
             return new ConsumptionMeteringPointCreatedEvent(
                 obj.MeteringPointId,
                 obj.GsrnNumber,
                 obj.GridAreaCode,
                 settlementMethod,
-                netSettlementMethod,
                 obj.EffectiveDate);
         }
     }
