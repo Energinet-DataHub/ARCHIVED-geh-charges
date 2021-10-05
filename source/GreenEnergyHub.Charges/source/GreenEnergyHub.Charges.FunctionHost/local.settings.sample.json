@@ -13,7 +13,6 @@
     "INTEGRATIONEVENT_LISTENER_CONNECTION_STRING": "<sb listener connection string for integration events (without EntityPath)>",
     "DOMAINEVENT_SENDER_CONNECTION_STRING": "<connection string for sending domain events to the service bus (without entity path)>",
     "DOMAINEVENT_LISTENER_CONNECTION_STRING": "<connection string for listening for domain events on the service bus (without entity path)>",
-    "POST_OFFICE_DATA_AVAILABLE_CONNECTION_STRING": "<connection string for post office data available notification service bus>",
 
     "CHARGE_LINK_ACCEPTED_TOPIC_NAME": "sbt-link-command-accepted",
     "CHARGE_LINK_ACCEPTED_SUBSCRIPTION_NAME": "sbs-link-command-accepted-event-publisher",

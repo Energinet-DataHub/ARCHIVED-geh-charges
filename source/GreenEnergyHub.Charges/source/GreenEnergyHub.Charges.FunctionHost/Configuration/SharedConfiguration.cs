@@ -47,7 +47,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
 
             ConfigureSharedDatabase(serviceCollection);
             ConfigureSharedMessaging(serviceCollection);
-            ConfigureSharedPostOfficeCommunication(serviceCollection, "POST_OFFICE_DATA_AVAILABLE_CONNECTION_STRING");
+            ConfigureSharedPostOfficeCommunication(serviceCollection, "INTEGRATIONEVENT_SENDER_CONNECTION_STRING");
         }
 
         private static void ConfigureSharedDatabase(IServiceCollection serviceCollection)
