@@ -27,8 +27,6 @@ namespace GreenEnergyHub.Charges.Domain.MeteringPoints
             if (consumptionMeteringPointCreatedEvent == null)
                 throw new ArgumentNullException(nameof(consumptionMeteringPointCreatedEvent));
 
-            var settlementMethod = consumptionMeteringPointCreatedEvent.SettlementMethod.Cast<SettlementMethod>();
-
             return MeteringPoint.Create(
                 consumptionMeteringPointCreatedEvent.MeteringPointId,
                 MeteringPointType.Consumption,
