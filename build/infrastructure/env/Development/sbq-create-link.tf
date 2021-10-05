@@ -33,9 +33,9 @@ module "sbq_create_link_request" {
     ]
 }
 
-module "sbq_create_link_command_reply" {
+module "sbq_create_link_reply" {
   source              = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//service-bus-queue?ref=2.0.0"
-  name                = local.CREATE_LINK_REQUEST_REPLY_QUEUE_NAME
+  name                = local.CREATE_LINK_REPLY_QUEUE_NAME
   namespace_name      = module.sbn_external_integration_events.name
   resource_group_name = data.azurerm_resource_group.main.name
   dependencies        = [
