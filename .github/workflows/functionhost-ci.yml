@@ -20,8 +20,8 @@ on:
   workflow_dispatch: {}
 
 env:
-  CSPROJ_FILE_PATH: source/GreenEnergyHub.Charges/source/GreenEnergyHub.Charges.FunctionHost/GreenEnergyHub.Charges.FunctionHost.csproj
-  SOLUTION_FILE_PATH: source/GreenEnergyHub.Charges/GreenEnergyHub.Charges.sln
+  CSPROJ_FILE_PATH: source\GreenEnergyHub.Charges\source\GreenEnergyHub.Charges.FunctionHost\GreenEnergyHub.Charges.FunctionHost.csproj
+  SOLUTION_FILE_PATH: source\GreenEnergyHub.Charges\GreenEnergyHub.Charges.sln
   DOTNET_VERSION: '5.0.202'
   AZURITE_VERSION: '3.14.0'
   AZURE_FUNCTIONS_CORE_TOOLS_VERSION: '3.0.3568'  
