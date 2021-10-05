@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using Energinet.DataHub.MeteringPoints.IntegrationEventContracts;
 using GreenEnergyHub.Charges.Core.DateTime;
@@ -35,18 +36,31 @@ namespace GreenEnergyHub.Charges.Infrastructure.Integration.Mappers
                 case ConsumptionMeteringPointCreated.Types.SettlementMethod.SmNonprofiled:
                     return SettlementMethod.NonProfiled;
                 default:
-                    return SettlementMethod.Unknown;
+                    throw new InvalidEnumArgumentException($"Provided SettlementMethod value: {settlementMethod} is invalid and cannot be mapped.");
+            }
+        }
+
+        public static ConnectionState MapConnectionState(ConsumptionMeteringPointCreated.Types.ConnectionState connectionState)
+        {
+            switch (connectionState)
+            {
+                case ConsumptionMeteringPointCreated.Types.ConnectionState.CsNew:
+                    return ConnectionState.New;
+                default:
+                    throw new InvalidEnumArgumentException($"Provided ConnectionState value: {connectionState} is invalid and cannot be mapped.");
             }
         }
 
         protected override IInboundMessage Convert([NotNull] ConsumptionMeteringPointCreated obj)
         {
             var settlementMethod = MapSettlementMethod(obj.SettlementMethod);
+            var connectionState = MapConnectionState(obj.ConnectionState);
 
             return new ConsumptionMeteringPointCreatedEvent(
                 obj.GsrnNumber,
                 obj.GridAreaCode,
                 settlementMethod,
+                connectionState,
                 obj.EffectiveDate.ToInstant());
         }
     }

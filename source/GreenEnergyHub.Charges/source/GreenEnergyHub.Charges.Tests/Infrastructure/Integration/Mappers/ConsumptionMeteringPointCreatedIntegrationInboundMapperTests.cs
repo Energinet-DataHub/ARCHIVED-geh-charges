@@ -23,7 +23,6 @@ using GreenEnergyHub.Charges.Domain.MeteringPoints;
 using GreenEnergyHub.Charges.Infrastructure.Integration.Mappers;
 using GreenEnergyHub.Charges.TestCore.Attributes;
 using GreenEnergyHub.TestHelpers.FluentAssertionsExtensions;
-using NodaTime;
 using Xunit;
 using Xunit.Categories;
 
@@ -49,6 +48,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Integration.Mappers
             converted.EffectiveDate.Should().Be(meteringPointCreatedEvent.EffectiveDate.ToInstant());
             converted.GridAreaId.Should().Be(meteringPointCreatedEvent.GridAreaCode);
             converted.SettlementMethod.Should().NotBe(SettlementMethod.Unknown);
+            converted.ConnectionState.Should().NotBe(ConnectionState.Unknown);
         }
 
         [Theory]
@@ -68,6 +68,17 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Integration.Mappers
                 ConsumptionMeteringPointCreatedIntegrationInboundMapper.MapSettlementMethod(protoSettlementMethod);
 
             actual.Should().Be(expectedSettlementMethod);
+        }
+
+        [Theory]
+        [InlineData(ConsumptionMeteringPointCreated.Types.ConnectionState.CsNew, ConnectionState.New)]
+        public void MapConnectionState_WhenCalled_ShouldMapCorrectly(
+            ConsumptionMeteringPointCreated.Types.ConnectionState protoConnectionState,
+            ConnectionState expectedConnectionState)
+        {
+            var actual = ConsumptionMeteringPointCreatedIntegrationInboundMapper.MapConnectionState(protoConnectionState);
+
+            actual.Should().Be(expectedConnectionState);
         }
     }
 }

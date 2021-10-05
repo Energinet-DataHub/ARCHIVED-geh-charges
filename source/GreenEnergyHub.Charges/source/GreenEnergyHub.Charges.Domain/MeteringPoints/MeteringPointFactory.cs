@@ -34,8 +34,8 @@ namespace GreenEnergyHub.Charges.Domain.MeteringPoints
                 MeteringPointType.Consumption,
                 consumptionMeteringPointCreatedEvent.GridAreaId,
                 consumptionMeteringPointCreatedEvent.EffectiveDate,
-                ConnectionState.New,
-                settlementMethod);
+                consumptionMeteringPointCreatedEvent.ConnectionState,
+                consumptionMeteringPointCreatedEvent.SettlementMethod);
         }
     }
 }
