@@ -56,14 +56,14 @@ namespace GreenEnergyHub.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.D
             var serviceBusClientFactory = new Mock<IServiceBusClientFactory>();
             serviceBusClientFactory.Setup(x => x.Create()).Returns(mockedServiceBusClient);
 
-            await using var target = new DefaultChargeLinkRequestClient(serviceBusClientFactory.Object, RespondQueue);
+            await using var sut = new DefaultChargeLinkRequestClient(serviceBusClientFactory.Object, RespondQueue);
 
             var createDefaultChargeLinksDto = new CreateDefaultChargeLinksDto(
                 "F9A5115D-44EB-4AD4-BC7E-E8E8A0BC425E",
                 "fake_value");
 
             // Act
-            await target.CreateDefaultChargeLinksRequestAsync(createDefaultChargeLinksDto).ConfigureAwait(false);
+            await sut.CreateDefaultChargeLinksRequestAsync(createDefaultChargeLinksDto).ConfigureAwait(false);
 
             // Assert
             serviceBusSenderMock.Verify(x => x.SendMessageAsync(It.IsAny<ServiceBusMessage>(), default), Times.Once);

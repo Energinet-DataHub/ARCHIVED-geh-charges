@@ -30,7 +30,7 @@ limitations under the License.
     <PackageId>GreenEnergyHub.DataHub.Charges.Clients</PackageId>
     <PackageVersion>1.0.0$(VersionSuffix)</PackageVersion>
     <Title>GreenEnergyHub.DataHub.Charges.Clients</Title>
-    <Company>Energinet-DataHub</Company>
+    <Company>Energinet DataHub A/S</Company>
     <Authors>DataHub</Authors>
     <RepositoryUrl>https://github.com/Energinet-DataHub/geh-charges</RepositoryUrl>
     <PackageReleaseNotes>
@@ -42,7 +42,7 @@ limitations under the License.
       [Documentation](https://github.com/Energinet-DataHub/geh-charges/source/GreenEnergyHub.Charges.Libraries/source/GreenEnergyHub.DataHub.Charges.Clients/documents/documentation.md)
     </PackageDescription>
     <Description>Library containing communication API for Charges Clients</Description>
-    <PackageTags>geh;library</PackageTags>
+    <PackageTags>green-energy-hub;datahub;library</PackageTags>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
   </PropertyGroup>
@@ -79,7 +79,7 @@ limitations under the License.
       <Access>Internal</Access>
       <ProtoCompile>True</ProtoCompile>
       <CompileOutputs>True</CompileOutputs>
-      <OutputDir>obj\Debug\net5.0\</OutputDir>
+      <OutputDir>obj\contracts\</OutputDir>
       <Generator>MSBuild:Compile</Generator>
     </Protobuf>
   </ItemGroup>
