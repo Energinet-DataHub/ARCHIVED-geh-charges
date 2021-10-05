@@ -40,7 +40,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Integration.Mappers
 
             // Assert
             converted.Should().NotContainNullsOrEmptyEnumerables();
-            converted.MeteringPointId.Should().Be(meteringPointCreatedEvent.MeteringPointId);
+            converted.MeteringPointId.Should().Be(meteringPointCreatedEvent.GsrnNumber);
             converted.EffectiveDate.Should().BeEquivalentTo(meteringPointCreatedEvent.EffectiveDate);
             converted.GridAreaCode.Should().BeEquivalentTo(meteringPointCreatedEvent.GridAreaCode);
             converted.SettlementMethod.Should().NotBe(SettlementMethod.Unknown);

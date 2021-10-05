@@ -43,7 +43,6 @@ namespace GreenEnergyHub.Charges.Infrastructure.Integration.Mappers
             var settlementMethod = MapSettlementMethod(obj.SettlementMethod);
 
             return new ConsumptionMeteringPointCreatedEvent(
-                obj.MeteringPointId,
                 obj.GsrnNumber,
                 obj.GridAreaCode,
                 settlementMethod,

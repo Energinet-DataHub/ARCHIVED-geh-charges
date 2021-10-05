@@ -55,7 +55,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.MeteringPoints.Handlers
             meteringPointRepository
                 .Verify(v => v.StoreMeteringPointAsync(It.IsAny<MeteringPoint>()), Times.Exactly(1));
             logger.VerifyLoggerWasCalled(
-                $"Finished persisting metering point with id: {meteringPointCreatedEvent.GsrnNumber}",
+                $"Finished persisting metering point with id: {meteringPointCreatedEvent.MeteringPointId}",
                 LogLevel.Information);
         }
 
@@ -91,7 +91,6 @@ namespace GreenEnergyHub.Charges.Tests.Application.MeteringPoints.Handlers
         {
             return new ConsumptionMeteringPointCreatedEvent(
                 "123",
-                "234",
                 "2",
                 SettlementMethod.Flex,
                 SystemClock.Instance.GetCurrentInstant().ToString());
@@ -101,7 +100,6 @@ namespace GreenEnergyHub.Charges.Tests.Application.MeteringPoints.Handlers
         {
             return new ConsumptionMeteringPointCreatedEvent(
                 "123",
-                "234",
                 "2",
                 (SettlementMethod)1000,
                 SystemClock.Instance.GetCurrentInstant().ToString());
