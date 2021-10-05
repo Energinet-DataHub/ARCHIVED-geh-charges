@@ -12,19 +12,22 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Threading;
-using System.Threading.Tasks;
 using Azure.Messaging.ServiceBus;
 
-namespace GreenEnergyHub.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.TestHelpers
+namespace GreenEnergyHub.PostOffice.Communicator.Factories
 {
-    public class MockableServiceBusSender : ServiceBusSender
+    public sealed class ServiceBusClientFactory : IServiceBusClientFactory
     {
-        public override async Task SendMessageAsync(
-            ServiceBusMessage message,
-            CancellationToken cancellationToken = default)
+        private readonly string _connectionString;
+
+        public ServiceBusClientFactory(string connectionString)
         {
-            await Task.FromResult(Task.CompletedTask).ConfigureAwait(false);
+            _connectionString = connectionString;
+        }
+
+        public ServiceBusClient Create()
+        {
+            return new ServiceBusClient(_connectionString);
         }
     }
 }

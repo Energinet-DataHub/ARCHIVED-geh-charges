@@ -12,18 +12,19 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Threading.Tasks;
-using GreenEnergyHub.DataHub.Charges.Libraries.Models;
+using Azure.Messaging.ServiceBus;
 
-namespace GreenEnergyHub.DataHub.Charges.Libraries.DefaultChargeLinkRequest
+namespace GreenEnergyHub.PostOffice.Communicator.Factories
 {
-    public interface IDefaultChargeLinkRequestClient
+    /// <summary>
+    /// Factory creating a new <see cref="ServiceBusClient"/>
+    /// </summary>
+    public interface IServiceBusClientFactory
     {
         /// <summary>
-        /// Request the Charges domain to create default charge links
-        /// based on the supplied meteringPointIds entity's MeteringPointType.
+        /// Create a new <see cref="ServiceBusClient"/>
         /// </summary>
-        /// <param name="createDefaultChargeLinksDto"></param>
-        Task CreateDefaultChargeLinksRequestAsync(CreateDefaultChargeLinksDto createDefaultChargeLinksDto);
+        /// <returns><see cref="ServiceBusClient"/></returns>
+        public ServiceBusClient Create();
     }
 }

@@ -17,42 +17,52 @@ using System.Threading.Tasks;
 using Azure.Messaging.ServiceBus;
 using Google.Protobuf;
 using GreenEnergyHub.Charges.Commands;
+using GreenEnergyHub.DataHub.Charges.Libraries.Models;
+using GreenEnergyHub.PostOffice.Communicator.Factories;
 
 namespace GreenEnergyHub.DataHub.Charges.Libraries.DefaultChargeLinkRequest
 {
     public sealed class DefaultChargeLinkRequestClient : IAsyncDisposable, IDefaultChargeLinkRequestClient
     {
-        private readonly ServiceBusClient _serviceBusClient;
+        private readonly IServiceBusClientFactory _serviceBusClientFactory;
         private readonly string _respondQueue;
+        private ServiceBusClient? _serviceBusClient;
 
-        public DefaultChargeLinkRequestClient(string serviceBusConnectionString, string respondQueue)
+        public DefaultChargeLinkRequestClient(IServiceBusClientFactory serviceBusClientFactory, string respondQueue)
         {
-            _serviceBusClient = new ServiceBusClient(serviceBusConnectionString);
+            _serviceBusClientFactory = serviceBusClientFactory;
             _respondQueue = respondQueue;
         }
 
-        public async Task CreateDefaultChargeLinksRequestAsync(
-            string meteringPointId,
-            string correlationId)
+        public async Task CreateDefaultChargeLinksRequestAsync(CreateDefaultChargeLinksDto createDefaultChargeLinksDto)
         {
-            if (meteringPointId == null)
-                throw new ArgumentNullException(nameof(meteringPointId));
+            if (createDefaultChargeLinksDto == null)
+                throw new ArgumentNullException(nameof(createDefaultChargeLinksDto));
+
+            _serviceBusClient ??= _serviceBusClientFactory.Create();
 
             await using var sender = _serviceBusClient.CreateSender("create-link-request");
 
-            var createDefaultChargeLinks = new CreateDefaultChargeLinks { MeteringPointId = meteringPointId };
+            var createDefaultChargeLinks = new CreateDefaultChargeLinks
+            {
+                MeteringPointId = createDefaultChargeLinksDto.meteringPointId,
+            };
 
             await sender.SendMessageAsync(new ServiceBusMessage
             {
                 Body = new BinaryData(createDefaultChargeLinks.ToByteArray()),
                 ReplyTo = _respondQueue,
-                CorrelationId = correlationId,
+                CorrelationId = createDefaultChargeLinksDto.correlationId,
             }).ConfigureAwait(false);
         }
 
         public async ValueTask DisposeAsync()
         {
-            await _serviceBusClient.DisposeAsync().ConfigureAwait(false);
+            if (_serviceBusClient != null)
+            {
+                await _serviceBusClient.DisposeAsync().ConfigureAwait(false);
+                _serviceBusClient = null;
+            }
         }
     }
 }
