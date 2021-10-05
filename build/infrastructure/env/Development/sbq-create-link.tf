@@ -23,7 +23,7 @@ on the existing Service Bus Namespace.
 =================================================================================
 */
 
-module "sbq_create_link_command" {
+module "sbq_create_link_request" {
   source              = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//service-bus-queue?ref=2.0.0"
   name                = local.CREATE_LINK_REQUEST_QUEUE_NAME
   namespace_name      = module.sbn_external_integration_events.name
