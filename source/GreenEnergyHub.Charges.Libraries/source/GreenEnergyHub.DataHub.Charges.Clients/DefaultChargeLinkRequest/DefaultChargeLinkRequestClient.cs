@@ -17,8 +17,8 @@ using System.Threading.Tasks;
 using Azure.Messaging.ServiceBus;
 using Google.Protobuf;
 using GreenEnergyHub.Charges.Commands;
+using GreenEnergyHub.DataHub.Charges.Libraries.Factories;
 using GreenEnergyHub.DataHub.Charges.Libraries.Models;
-using GreenEnergyHub.PostOffice.Communicator.Factories;
 
 namespace GreenEnergyHub.DataHub.Charges.Libraries.DefaultChargeLinkRequest
 {

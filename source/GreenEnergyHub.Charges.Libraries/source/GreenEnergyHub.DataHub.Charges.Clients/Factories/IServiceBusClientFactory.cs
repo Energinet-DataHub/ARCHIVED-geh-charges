@@ -14,7 +14,7 @@
 
 using Azure.Messaging.ServiceBus;
 
-namespace GreenEnergyHub.PostOffice.Communicator.Factories
+namespace GreenEnergyHub.DataHub.Charges.Libraries.Factories
 {
     /// <summary>
     /// Factory creating a new <see cref="ServiceBusClient"/>
