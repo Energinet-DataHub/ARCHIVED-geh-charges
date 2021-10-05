@@ -38,6 +38,9 @@ jobs:
     environment:
       name: rg-DataHub-Charges-U
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
       - name: Deploy infrastructure
         uses: ./.github/actions/infrastructure-cd
         with:
@@ -52,6 +55,9 @@ jobs:
     environment:
       name: rg-DataHub-Charges-T
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
       - name: Deploy infrastructure
         uses: ./.github/actions/infrastructure-cd
         with:
@@ -66,6 +72,9 @@ jobs:
     environment:
       name: rg-DataHub-Charges-B
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
       - name: Deploy infrastructure
         uses: ./.github/actions/infrastructure-cd
         with:
@@ -80,6 +89,9 @@ jobs:
     environment:
       name: rg-DataHub-Charges-P
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
       - name: Deploy infrastructure
         uses: ./.github/actions/infrastructure-cd
         with:
