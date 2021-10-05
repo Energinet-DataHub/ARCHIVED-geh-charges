@@ -55,7 +55,6 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures
 
         private AzureResourceConfiguration ConfigurationResolver()
         {
-            // TODO: We should probably find another solution.
             ConfigureEnvironmentVariables();
 
             var secret = Environment.GetEnvironmentVariable("CLIENT_SECRET") ?? string.Empty;

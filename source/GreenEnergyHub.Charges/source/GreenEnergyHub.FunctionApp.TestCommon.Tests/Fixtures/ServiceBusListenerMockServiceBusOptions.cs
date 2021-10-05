@@ -25,10 +25,6 @@ namespace GreenEnergyHub.FunctionApp.TestCommon.Tests.Fixtures
         {
             builder.SetConfigResolver(ConfigurationResolver);
 
-            // TODO: Maybe use another namespace on build agent?
-            ////var serviceBusNamespace = "integrationtest-sb-dev-datahub";
-            ////builder.Namespace(serviceBusNamespace);
-
             var queueName = "queue";
             builder
                 .AddQueue(queueName);
@@ -41,7 +37,6 @@ namespace GreenEnergyHub.FunctionApp.TestCommon.Tests.Fixtures
 
         private AzureResourceConfiguration ConfigurationResolver()
         {
-            // TODO: We should probably find another solution.
             ConfigureEnvironmentVariables();
 
             var secret = Environment.GetEnvironmentVariable("CLIENT_SECRET") ?? string.Empty;

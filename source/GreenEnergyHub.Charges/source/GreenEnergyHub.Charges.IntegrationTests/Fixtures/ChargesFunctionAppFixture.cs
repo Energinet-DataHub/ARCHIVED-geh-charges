@@ -38,8 +38,6 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures
 
             ServiceBusResource = new AzureCloudServiceBusResource<ChargesFunctionAppServiceBusOptions>(messageSink);
             SqlServerResource = new SqlServerResource<SqlServerOptions>();
-
-            //// TODO: Create resource managers here, but do not start them until OnInitializeFunctionAppDependenciesAsync.
         }
 
         [NotNull]
@@ -50,12 +48,6 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures
         private AzureCloudServiceBusResource<ChargesFunctionAppServiceBusOptions> ServiceBusResource { get; }
 
         private SqlServerResource<SqlServerOptions> SqlServerResource { get; }
-
-        /// <inheritdoc/>
-        protected override void OnConfigureHostSettings(FunctionAppHostSettings hostSettings)
-        {
-            //// TODO: If we need to overwrite the settings specified in the file we can do it here / or by setting environment variables.
-        }
 
         /// <inheritdoc/>
         protected override void OnConfigureEnvironment()
@@ -94,8 +86,6 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures
             {
                 throw new Exception("Database migration failed", result.Error);
             }
-
-            //// TODO: Initialize/start resource managers and create dependent resources (e.g. database, service bus)
         }
 
         /// <inheritdoc/>
@@ -118,8 +108,6 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures
 
             // => Database
             await SqlServerResource.DisposeAsync();
-
-            //// TODO: Dispose/stop resource managers and delete created dependent resources (e.g. database, service bus)
         }
 
         protected async Task<string> GetTopicNameFromKeyAsync(string topicKey)
