@@ -26,12 +26,14 @@ using GreenEnergyHub.TestCommon.AutoFixture.Extensions;
 using GreenEnergyHub.TestCommon.Diagnostics;
 using Microsoft.Azure.ServiceBus;
 using Xunit;
+using Xunit.Categories;
 
 namespace GreenEnergyHub.FunctionApp.TestCommon.Tests.Integration.ServiceBus.ListenerMock
 {
     public class ServiceBusMockTests
     {
         [Collection(nameof(ServiceBusListenerMockCollectionFixture))]
+        [UnitTest]
         public class AddQueueListenerAsync : ServiceBusListenerMockTestsBase
         {
             public AddQueueListenerAsync(ServiceBusListenerMockFixture serviceBusListenerMockFixture)
