@@ -16,12 +16,14 @@ using System;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Xunit;
+using Xunit.Categories;
 using Xunit.Sdk;
 
 namespace GreenEnergyHub.TestCommon.Tests.Unit
 {
     public class AwaiterTests
     {
+        [UnitTest]
         public class WaitUntilConditionAsync
         {
             [Fact]
@@ -75,6 +77,7 @@ namespace GreenEnergyHub.TestCommon.Tests.Unit
             }
         }
 
+        [UnitTest]
         public class TryWaitUntilConditionAsync
         {
             [Fact]
