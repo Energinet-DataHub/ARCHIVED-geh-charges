@@ -33,7 +33,7 @@ namespace GreenEnergyHub.Charges.Domain.MeteringPoints
             return MeteringPoint.Create(
                 consumptionMeteringPointCreatedEvent.MeteringPointId,
                 MeteringPointType.Consumption,
-                consumptionMeteringPointCreatedEvent.GridAreaCode,
+                consumptionMeteringPointCreatedEvent.GridAreaId,
                 effectiveDate,
                 ConnectionState.New,
                 settlementMethod);

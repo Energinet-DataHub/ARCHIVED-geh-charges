@@ -22,20 +22,20 @@ namespace GreenEnergyHub.Charges.Domain.MeteringPointCreatedEvents
     {
         public ConsumptionMeteringPointCreatedEvent(
             string meteringPointId,
-            string gridAreaCode,
+            string gridAreaId,
             SettlementMethod settlementMethod,
             string effectiveDate)
             : base(Transaction.NewTransaction())
         {
             MeteringPointId = meteringPointId;
-            GridAreaCode = gridAreaCode;
+            GridAreaId = gridAreaId;
             SettlementMethod = settlementMethod;
             EffectiveDate = effectiveDate;
         }
 
         public string MeteringPointId { get; }
 
-        public string GridAreaCode { get; }
+        public string GridAreaId { get; }
 
         public SettlementMethod SettlementMethod { get; }
 
