@@ -17,6 +17,7 @@ using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.IntegrationEventContracts;
 using GreenEnergyHub.Charges.Application.MeteringPoints.Handlers;
 using GreenEnergyHub.Charges.Domain.MeteringPointCreatedEvents;
+using GreenEnergyHub.Charges.Infrastructure.Correlation;
 using GreenEnergyHub.Charges.Infrastructure.Messaging;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Logging;
@@ -53,21 +54,13 @@ namespace GreenEnergyHub.Charges.FunctionHost.MeteringPoint
                 "%METERING_POINT_CREATED_TOPIC_NAME%",
                 "%METERING_POINT_CREATED_SUBSCRIPTION_NAME%",
                 Connection = "INTEGRATIONEVENT_LISTENER_CONNECTION_STRING")]
-            [NotNull] byte[] message,
-            [NotNull] FunctionContext context)
+            [NotNull] byte[] message)
         {
-            SetupCorrelationContext(context); // TODO Add this as a method in correlation context instead once integration project has been upgraded to .5.0, avoiding multiple of the same implementations
-
             var meteringPointCreatedEvent = (MeteringPointCreatedEvent)await _messageExtractor.ExtractAsync(message).ConfigureAwait(false);
 
             await _meteringPointCreatedEventHandler.HandleAsync(meteringPointCreatedEvent).ConfigureAwait(false);
 
             _log.LogInformation("Received metering point created event '{@MeteringPointId}'", meteringPointCreatedEvent.MeteringPointId);
-        }
-
-        private void SetupCorrelationContext(FunctionContext context)
-        {
-            _correlationContext.CorrelationId = context.InvocationId.Replace("-", string.Empty);
         }
     }
 }

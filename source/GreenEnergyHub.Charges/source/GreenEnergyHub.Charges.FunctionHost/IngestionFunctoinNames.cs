@@ -12,16 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace GreenEnergyHub.Charges.Infrastructure.Messaging
+namespace GreenEnergyHub.Charges.FunctionHost
 {
     /// <summary>
-    /// Interface for class exposing a correlation context
+    /// Values in this class should be changed with caution, as it has
+    /// direct impact of part of the url used to call the ingestion
+    /// functions
     /// </summary>
-    public interface ICorrelationContext
+    public static class IngestionFunctionNames
     {
-        /// <summary>
-        /// The correlation ID which can be used to link different operations together
-        /// </summary>
-        string CorrelationId { get; set; }
+        public const string ChargeIngestion = "ChargeIngestion";
+
+        public const string ChargeLinkIngestion = "ChargeLinkIngestion";
     }
 }

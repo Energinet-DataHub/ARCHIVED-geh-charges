@@ -12,15 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace GreenEnergyHub.Charges.Infrastructure.Messaging
-{
-    public class CorrelationContext : ICorrelationContext
-    {
-        public CorrelationContext()
-        {
-            CorrelationId = string.Empty;
-        }
+using System.Diagnostics.CodeAnalysis;
+using GreenEnergyHub.Charges.Domain.ChargeCommandAcceptedEvents;
+using GreenEnergyHub.Charges.Domain.Charges.Acknowledgements;
 
-        public string CorrelationId { get; set; }
+namespace GreenEnergyHub.Charges.Application.Charges.Factories
+{
+    public interface IChargeCreatedEventFactory
+    {
+        ChargeCreatedEvent Create([NotNull] ChargeCommandAcceptedEvent chargeCommandAcceptedEvent);
     }
 }
