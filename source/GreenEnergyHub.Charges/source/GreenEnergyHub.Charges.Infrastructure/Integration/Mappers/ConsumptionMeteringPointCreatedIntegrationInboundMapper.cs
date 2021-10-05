@@ -91,34 +91,12 @@ namespace GreenEnergyHub.Charges.Infrastructure.Integration.Mappers
             }
         }
 
-        public static ProductType MapProductType(ConsumptionMeteringPointCreated.Types.ProductType product)
-        {
-            switch (product)
-            {
-                case ConsumptionMeteringPointCreated.Types.ProductType.PtTariff:
-                    return ProductType.Tariff;
-                case ConsumptionMeteringPointCreated.Types.ProductType.PtFuelquantity:
-                    return ProductType.FuelQuantity;
-                case ConsumptionMeteringPointCreated.Types.ProductType.PtPoweractive:
-                    return ProductType.PowerActive;
-                case ConsumptionMeteringPointCreated.Types.ProductType.PtPowerreactive:
-                    return ProductType.PowerReActive;
-                case ConsumptionMeteringPointCreated.Types.ProductType.PtEnergyactive:
-                    return ProductType.EnergyActive;
-                case ConsumptionMeteringPointCreated.Types.ProductType.PtEnergyreactive:
-                    return ProductType.EnergyReActive;
-                default:
-                    return ProductType.Unknown;
-            }
-        }
-
         protected override IInboundMessage Convert([NotNull] ConsumptionMeteringPointCreated obj)
         {
             var settlementMethod = MapSettlementMethod(obj.SettlementMethod);
             var meterMethod = MapMeterMethod(obj.MeteringMethod);
             var meterReadingPeriodicity = MapMeterReadingPeriodicity(obj.MeterReadingPeriodicity);
             var netSettlementMethod = MapNetSettlementMethod(obj.NetSettlementGroup);
-            var productType = MapProductType(obj.Product);
 
             return new ConsumptionMeteringPointCreatedEvent(
                 obj.MeteringPointId,
@@ -128,7 +106,6 @@ namespace GreenEnergyHub.Charges.Infrastructure.Integration.Mappers
                 meterMethod,
                 meterReadingPeriodicity,
                 netSettlementMethod,
-                productType,
                 obj.EffectiveDate);
         }
     }

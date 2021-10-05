@@ -46,7 +46,6 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Integration.Mappers
             converted.SettlementMethod.Should().NotBe(SettlementMethod.Unknown);
             converted.MeteringMethod.Should().NotBe(MeteringMethod.Unknown);
             converted.NetSettlementGroup.Should().NotBe(NetSettlementGroup.Unknown);
-            converted.ProductType.Should().NotBe(ProductType.Unknown);
         }
 
         [Theory]
@@ -93,20 +92,6 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Integration.Mappers
                 ConsumptionMeteringPointCreatedIntegrationInboundMapper.MapNetSettlementMethod(protoNetSettlementGroup);
 
             actual.Should().Be(expectedNetSettlementGroup);
-        }
-
-        [Theory]
-        [InlineData(ConsumptionMeteringPointCreated.Types.ProductType.PtTariff, ProductType.Tariff)]
-        [InlineData(ConsumptionMeteringPointCreated.Types.ProductType.PtEnergyactive, ProductType.EnergyActive)]
-        [InlineData(ConsumptionMeteringPointCreated.Types.ProductType.PtEnergyreactive, ProductType.EnergyReActive)]
-        [InlineData(ConsumptionMeteringPointCreated.Types.ProductType.PtPoweractive, ProductType.PowerActive)]
-        [InlineData(ConsumptionMeteringPointCreated.Types.ProductType.PtPowerreactive, ProductType.PowerReActive)]
-        public void MapProductType_WhenCalled_ShouldMapCorrectly(ConsumptionMeteringPointCreated.Types.ProductType protoProductType, ProductType expectedProductType)
-        {
-            var actual =
-                ConsumptionMeteringPointCreatedIntegrationInboundMapper.MapProductType(protoProductType);
-
-            actual.Should().Be(expectedProductType);
         }
     }
 }

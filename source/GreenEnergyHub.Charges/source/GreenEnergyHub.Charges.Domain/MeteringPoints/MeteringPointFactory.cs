@@ -31,7 +31,7 @@ namespace GreenEnergyHub.Charges.Domain.MeteringPoints
             var settlementMethod = consumptionMeteringPointCreatedEvent.SettlementMethod.Cast<SettlementMethod>();
 
             return MeteringPoint.Create(
-                consumptionMeteringPointCreatedEvent.MeteringPointId,
+                consumptionMeteringPointCreatedEvent.GsrnNumber,
                 MeteringPointType.Consumption,
                 consumptionMeteringPointCreatedEvent.GridAreaCode,
                 effectiveDate,

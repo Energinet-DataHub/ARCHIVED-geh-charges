@@ -28,7 +28,6 @@ namespace GreenEnergyHub.Charges.Domain.MeteringPointCreatedEvents
             MeteringMethod meteringMethod,
             MeterReadingPeriodicity meterReadingPeriodicity,
             NetSettlementGroup netSettlementGroup,
-            ProductType productType,
             string effectiveDate)
             : base(Transaction.NewTransaction())
         {
@@ -39,7 +38,6 @@ namespace GreenEnergyHub.Charges.Domain.MeteringPointCreatedEvents
             MeteringMethod = meteringMethod;
             MeterReadingPeriodicity = meterReadingPeriodicity;
             NetSettlementGroup = netSettlementGroup;
-            ProductType = productType;
             EffectiveDate = effectiveDate;
         }
 
@@ -56,8 +54,6 @@ namespace GreenEnergyHub.Charges.Domain.MeteringPointCreatedEvents
         public MeterReadingPeriodicity MeterReadingPeriodicity { get; }
 
         public NetSettlementGroup NetSettlementGroup { get; }
-
-        public ProductType ProductType { get; }
 
         public string EffectiveDate { get; }
     }
