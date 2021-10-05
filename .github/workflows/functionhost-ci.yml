@@ -39,7 +39,7 @@ env:
 
 jobs:
   pre_job:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     outputs:
       should_skip: ${{ steps.skip_check.outputs.should_skip }}
     steps:
@@ -59,7 +59,7 @@ jobs:
     needs: pre_job
     if: ${{ needs.pre_job.outputs.should_skip != 'true' }}
     name: Validate build FunctionHost
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@master # UNDONE: Why do we use version 'master' instead of a version tag? Using a branch is fragile.
