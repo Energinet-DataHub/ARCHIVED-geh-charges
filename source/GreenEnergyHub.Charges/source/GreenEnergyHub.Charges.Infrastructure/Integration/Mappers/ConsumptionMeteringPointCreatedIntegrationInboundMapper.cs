@@ -38,21 +38,6 @@ namespace GreenEnergyHub.Charges.Infrastructure.Integration.Mappers
             }
         }
 
-        public static MeteringMethod MapMeterMethod(ConsumptionMeteringPointCreated.Types.MeteringMethod meteringMethod)
-        {
-            switch (meteringMethod)
-            {
-                case ConsumptionMeteringPointCreated.Types.MeteringMethod.MmPhysical:
-                    return MeteringMethod.Physical;
-                case ConsumptionMeteringPointCreated.Types.MeteringMethod.MmVirtual:
-                    return MeteringMethod.Virtual;
-                case ConsumptionMeteringPointCreated.Types.MeteringMethod.MmCalculated:
-                    return MeteringMethod.Calculated;
-                default:
-                    return MeteringMethod.Unknown;
-            }
-        }
-
         public static MeterReadingPeriodicity MapMeterReadingPeriodicity(ConsumptionMeteringPointCreated.Types.MeterReadingPeriodicity meterReadingPeriodicity)
         {
             switch (meterReadingPeriodicity)
@@ -94,7 +79,6 @@ namespace GreenEnergyHub.Charges.Infrastructure.Integration.Mappers
         protected override IInboundMessage Convert([NotNull] ConsumptionMeteringPointCreated obj)
         {
             var settlementMethod = MapSettlementMethod(obj.SettlementMethod);
-            var meterMethod = MapMeterMethod(obj.MeteringMethod);
             var meterReadingPeriodicity = MapMeterReadingPeriodicity(obj.MeterReadingPeriodicity);
             var netSettlementMethod = MapNetSettlementMethod(obj.NetSettlementGroup);
 
@@ -103,7 +87,6 @@ namespace GreenEnergyHub.Charges.Infrastructure.Integration.Mappers
                 obj.GsrnNumber,
                 obj.GridAreaCode,
                 settlementMethod,
-                meterMethod,
                 meterReadingPeriodicity,
                 netSettlementMethod,
                 obj.EffectiveDate);

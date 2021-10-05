@@ -25,7 +25,6 @@ namespace GreenEnergyHub.Charges.Domain.MeteringPointCreatedEvents
             string gsrnNumber,
             string gridAreaCode,
             SettlementMethod settlementMethod,
-            MeteringMethod meteringMethod,
             MeterReadingPeriodicity meterReadingPeriodicity,
             NetSettlementGroup netSettlementGroup,
             string effectiveDate)
@@ -35,7 +34,6 @@ namespace GreenEnergyHub.Charges.Domain.MeteringPointCreatedEvents
             GsrnNumber = gsrnNumber;
             GridAreaCode = gridAreaCode;
             SettlementMethod = settlementMethod;
-            MeteringMethod = meteringMethod;
             MeterReadingPeriodicity = meterReadingPeriodicity;
             NetSettlementGroup = netSettlementGroup;
             EffectiveDate = effectiveDate;
@@ -48,8 +46,6 @@ namespace GreenEnergyHub.Charges.Domain.MeteringPointCreatedEvents
         public string GridAreaCode { get; }
 
         public SettlementMethod SettlementMethod { get; }
-
-        public MeteringMethod MeteringMethod { get; }
 
         public MeterReadingPeriodicity MeterReadingPeriodicity { get; }
 

@@ -44,7 +44,6 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Integration.Mappers
             converted.EffectiveDate.Should().BeEquivalentTo(meteringPointCreatedEvent.EffectiveDate);
             converted.GridAreaCode.Should().BeEquivalentTo(meteringPointCreatedEvent.GridAreaCode);
             converted.SettlementMethod.Should().NotBe(SettlementMethod.Unknown);
-            converted.MeteringMethod.Should().NotBe(MeteringMethod.Unknown);
             converted.NetSettlementGroup.Should().NotBe(NetSettlementGroup.Unknown);
         }
 
@@ -65,18 +64,6 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Integration.Mappers
                 ConsumptionMeteringPointCreatedIntegrationInboundMapper.MapSettlementMethod(protoSettlementMethod);
 
             actual.Should().Be(expectedSettlementMethod);
-        }
-
-        [Theory]
-        [InlineData(ConsumptionMeteringPointCreated.Types.MeteringMethod.MmCalculated, MeteringMethod.Calculated)]
-        [InlineData(ConsumptionMeteringPointCreated.Types.MeteringMethod.MmVirtual, MeteringMethod.Virtual)]
-        [InlineData(ConsumptionMeteringPointCreated.Types.MeteringMethod.MmPhysical, MeteringMethod.Physical)]
-        public void MapMeterMethod_WhenCalled_ShouldMapCorrectly(ConsumptionMeteringPointCreated.Types.MeteringMethod protoMeterMethod, MeteringMethod expectedMeterMethod)
-        {
-            var actual =
-                ConsumptionMeteringPointCreatedIntegrationInboundMapper.MapMeterMethod(protoMeterMethod);
-
-            actual.Should().Be(expectedMeterMethod);
         }
 
         [Theory]
