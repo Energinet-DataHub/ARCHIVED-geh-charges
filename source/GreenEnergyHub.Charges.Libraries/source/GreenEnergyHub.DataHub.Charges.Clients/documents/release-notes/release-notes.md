@@ -1,4 +1,5 @@
-# GreenEnergyHub.Charges.Libararies Release notes
+# GreenEnergyHub.Charges.Libraries Release notes
 
-## Version 1.0.0:
+## Version 1.0.0
+
 - Preparing package for release.
