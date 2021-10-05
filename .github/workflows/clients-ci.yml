@@ -42,10 +42,10 @@ jobs:
             ".github/actions/azure-core-tools-install/**"
           ]'
 
-  validate_build_functionhost:
+  validate_build_clients:
     needs: pre_job
     if: ${{ needs.pre_job.outputs.should_skip != 'true' }}
-    name: Validate build FunctionHost
+    name: Validate build Clients
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
