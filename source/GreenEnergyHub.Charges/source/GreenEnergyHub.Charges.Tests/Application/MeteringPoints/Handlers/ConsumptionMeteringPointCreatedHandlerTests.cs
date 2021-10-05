@@ -94,8 +94,6 @@ namespace GreenEnergyHub.Charges.Tests.Application.MeteringPoints.Handlers
                 "234",
                 "2",
                 SettlementMethod.Flex,
-                MeteringMethod.Calculated,
-                MeterReadingPeriodicity.Hourly,
                 NetSettlementGroup.One,
                 SystemClock.Instance.GetCurrentInstant().ToString());
         }
@@ -107,8 +105,6 @@ namespace GreenEnergyHub.Charges.Tests.Application.MeteringPoints.Handlers
                 "234",
                 "2",
                 (SettlementMethod)1000,
-                MeteringMethod.Calculated,
-                MeterReadingPeriodicity.Hourly,
                 NetSettlementGroup.One,
                 SystemClock.Instance.GetCurrentInstant().ToString());
         }

@@ -38,23 +38,6 @@ namespace GreenEnergyHub.Charges.Infrastructure.Integration.Mappers
             }
         }
 
-        public static MeterReadingPeriodicity MapMeterReadingPeriodicity(ConsumptionMeteringPointCreated.Types.MeterReadingPeriodicity meterReadingPeriodicity)
-        {
-            switch (meterReadingPeriodicity)
-            {
-                case ConsumptionMeteringPointCreated.Types.MeterReadingPeriodicity.MrpYearly:
-                    return MeterReadingPeriodicity.Yearly;
-                case ConsumptionMeteringPointCreated.Types.MeterReadingPeriodicity.MrpMonthly:
-                    return MeterReadingPeriodicity.Monthly;
-                case ConsumptionMeteringPointCreated.Types.MeterReadingPeriodicity.MrpHourly:
-                    return MeterReadingPeriodicity.Hourly;
-                case ConsumptionMeteringPointCreated.Types.MeterReadingPeriodicity.MrpQuarterly:
-                    return MeterReadingPeriodicity.Quarterly;
-                default:
-                    return MeterReadingPeriodicity.Unknown;
-            }
-        }
-
         public static NetSettlementGroup MapNetSettlementMethod(ConsumptionMeteringPointCreated.Types.NetSettlementGroup netSettlementGroup)
         {
             switch (netSettlementGroup)
@@ -79,7 +62,6 @@ namespace GreenEnergyHub.Charges.Infrastructure.Integration.Mappers
         protected override IInboundMessage Convert([NotNull] ConsumptionMeteringPointCreated obj)
         {
             var settlementMethod = MapSettlementMethod(obj.SettlementMethod);
-            var meterReadingPeriodicity = MapMeterReadingPeriodicity(obj.MeterReadingPeriodicity);
             var netSettlementMethod = MapNetSettlementMethod(obj.NetSettlementGroup);
 
             return new ConsumptionMeteringPointCreatedEvent(
@@ -87,7 +69,6 @@ namespace GreenEnergyHub.Charges.Infrastructure.Integration.Mappers
                 obj.GsrnNumber,
                 obj.GridAreaCode,
                 settlementMethod,
-                meterReadingPeriodicity,
                 netSettlementMethod,
                 obj.EffectiveDate);
         }
