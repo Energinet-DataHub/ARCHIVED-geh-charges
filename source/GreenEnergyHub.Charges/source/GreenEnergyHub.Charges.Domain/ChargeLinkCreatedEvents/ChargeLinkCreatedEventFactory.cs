@@ -25,7 +25,7 @@ namespace GreenEnergyHub.Charges.Domain.ChargeLinkCreatedEvents
             return new ChargeLinkCreatedEvent(
                 command.ChargeLink.OperationId,
                 command.ChargeLink.MeteringPointId,
-                command.ChargeLink.ChargeId,
+                command.ChargeLink.SenderProvidedChargeId,
                 command.ChargeLink.ChargeType,
                 command.ChargeLink.ChargeOwner,
                 new ChargeLinkPeriod(

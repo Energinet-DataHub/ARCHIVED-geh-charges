@@ -70,7 +70,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Factories
             actual.Document.Sender.Id.Should().Be(charge.Owner);
             actual.Document.Recipient.BusinessProcessRole.Should().Be(MarketParticipantRole.MeteringPointAdministrator);
             actual.Document.Recipient.Id.Should().Be("5790001330552");
-            actual.ChargeLink.ChargeId.Should().Be(charge.SenderProvidedChargeId);
+            actual.ChargeLink.SenderProvidedChargeId.Should().Be(charge.SenderProvidedChargeId);
             actual.ChargeLink.ChargeType.Should().Be(charge.Type);
             actual.ChargeLink.EndDateTime.Should().Be(defaultChargeLink.EndDateTime);
             actual.ChargeLink.ChargeOwner.Should().Be(charge.Owner);
@@ -117,7 +117,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Factories
             actual.Document.Sender.Id.Should().Be(charge.Owner);
             actual.Document.Recipient.BusinessProcessRole.Should().Be(MarketParticipantRole.MeteringPointAdministrator);
             actual.Document.Recipient.Id.Should().Be("5790001330552");
-            actual.ChargeLink.ChargeId.Should().Be(charge.SenderProvidedChargeId);
+            actual.ChargeLink.SenderProvidedChargeId.Should().Be(charge.SenderProvidedChargeId);
             actual.ChargeLink.ChargeType.Should().Be(charge.Type);
             actual.ChargeLink.StartDateTime.Should().Be(chargeLinkPeriodDetails.StartDateTime);
             actual.ChargeLink.EndDateTime.Should().Be(chargeLinkPeriodDetails.EndDateTime);

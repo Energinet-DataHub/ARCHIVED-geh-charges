@@ -109,7 +109,7 @@ namespace GreenEnergyHub.Charges.Domain.ChargeLinkCommands
                 ChargeLink = new ChargeLinkDto
                 {
                     ChargeType = charge.Type,
-                    ChargeId = charge.SenderProvidedChargeId,
+                    SenderProvidedChargeId = charge.SenderProvidedChargeId,
                     EndDateTime = endDateTime,
                     ChargeOwner = charge.Owner,
                     MeteringPointId = meteringPointId,
