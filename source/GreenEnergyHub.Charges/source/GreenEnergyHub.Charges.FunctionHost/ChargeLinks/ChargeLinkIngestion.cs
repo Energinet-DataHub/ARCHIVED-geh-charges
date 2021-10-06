@@ -32,19 +32,15 @@ namespace GreenEnergyHub.Charges.FunctionHost.ChargeLinks
         /// The name of the function.
         /// Function name affects the URL and thus possibly dependent infrastructure.
         /// </summary>
-        private readonly ICorrelationContext _correlationContext;
         private readonly MessageExtractor<ChargeLinkCommand> _messageExtractor;
         private readonly IChargeLinkCommandHandler _chargeLinkCommandHandler;
         private readonly ILogger _log;
 
         public ChargeLinkIngestion(
-            ICorrelationContext correlationContext,
             IChargeLinkCommandHandler chargeLinkCommandHandler,
             MessageExtractor<ChargeLinkCommand> messageExtractor,
             [NotNull] ILoggerFactory loggerFactory)
         {
-            _correlationContext = correlationContext;
-
             _messageExtractor = messageExtractor;
 
             _chargeLinkCommandHandler = chargeLinkCommandHandler;
