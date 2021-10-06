@@ -21,7 +21,8 @@ on:
 
 env:
   CSPROJ_FILE_PATH: source/GreenEnergyHub.Charges/source/GreenEnergyHub.Charges.FunctionHost/GreenEnergyHub.Charges.FunctionHost.csproj
-  TEST_CSPROJ_FILE_PATH: source/GreenEnergyHub.Charges/source/GreenEnergyHub.FunctionApp.TestCommon.Tests/GreenEnergyHub.FunctionApp.TestCommon.Tests.csproj
+  #TEST_CSPROJ_FILE_PATH: source/GreenEnergyHub.Charges/source/GreenEnergyHub.FunctionApp.TestCommon.Tests/GreenEnergyHub.FunctionApp.TestCommon.Tests.csproj
+  TEST_CSPROJ_FILE_PATH: source/GreenEnergyHub.Charges/source/GreenEnergyHub.Charges.IntegrationTests/GreenEnergyHub.Charges.IntegrationTests.csproj
   SOLUTION_FILE_PATH: source/GreenEnergyHub.Charges/GreenEnergyHub.Charges.sln
   DOTNET_VERSION: '5.0.202'
   AZURITE_VERSION: '3.14.0'
@@ -33,10 +34,16 @@ env:
   TENANT_ID: ${{ secrets.XDAST_TENANT_ID }}
   CLIENT_ID: ${{ secrets.XDAST_CLIENT_ID }}
   CLIENT_SECRET: ${{ secrets.XDAST_CLIENT_SECRET }}  
+  # Variables necessary to start function for tests
+  APPINSIGHTS_INSTRUMENTATIONKEY: ${{ secrets.APPINSIGHTS_INSTRUMENTATIONKEY }}
+  INTEGRATIONEVENT_SENDER_CONNECTION_STRING: ${{ secrets.INTEGRATIONEVENT_SENDER_CONNECTION_STRING }}
+  INTEGRATIONEVENT_LISTENER_CONNECTION_STRING: ${{ secrets.INTEGRATIONEVENT_LISTENER_CONNECTION_STRING }}
+  DOMAINEVENT_SENDER_CONNECTION_STRING: ${{ secrets.DOMAINEVENT_SENDER_CONNECTION_STRING }}
+  DOMAINEVENT_LISTENER_CONNECTION_STRING: ${{ secrets.DOMAINEVENT_LISTENER_CONNECTION_STRING }}
   # Variables that overrides settings in 'functionhost.settings.json'
-  DotnetExecutablePath: ''
+  #DotnetExecutablePath: ''
   FunctionAppHostPath: ''
-  FunctionApplicationPath: ''
+  FunctionApplicationPath: '..\\..\\..\\..\\GreenEnergyHub.Charges.FunctionHost\\bin\\Release\\net5.0'
 
 jobs:
   pre_job:
@@ -78,8 +85,8 @@ jobs:
       - name: Install Azurite v${{ env.AZURITE_VERSION }}
         run: npm install -g azurite@${{ env.AZURITE_VERSION }}
 
-      # - name: Install Azure Functions Core Tools v${{ env.AZURE_FUNCTIONS_CORE_TOOLS_VERSION }}
-      #   run: npm install -g azure-functions-core-tools@${{ env.AZURE_FUNCTIONS_CORE_TOOLS_VERSION }}
+      - name: Install Azure Functions Core Tools v${{ env.AZURE_FUNCTIONS_CORE_TOOLS_VERSION }}
+        run: npm install -g azure-functions-core-tools@${{ env.AZURE_FUNCTIONS_CORE_TOOLS_VERSION }}
 
       # TODO: Remove when integration tests are working
       # - name: Test Azurite
@@ -91,13 +98,17 @@ jobs:
       #   if: ${{ success() || failure() }}
       #   run: func --version
 
-      - name: Build and test project
-        uses: ./.github/actions/dotnet-build-and-test
-        with:
-          CSPROJ_FILE_PATH: ${{ env.CSPROJ_FILE_PATH }}
-          TEST_CSPROJ_FILE_PATH: ${{ env.TEST_CSPROJ_FILE_PATH }}
-          SOLUTION_FILE_PATH: ${{ env.SOLUTION_FILE_PATH }}
-          OUTPUT_PATH: '${{ github.workspace }}/output'
+      - name: Find node modules path
+        if: ${{ success() || failure() }}
+        run: npm root
+
+      # - name: Build and test project
+      #   uses: ./.github/actions/dotnet-build-and-test
+      #   with:
+      #     CSPROJ_FILE_PATH: ${{ env.CSPROJ_FILE_PATH }}
+      #     TEST_CSPROJ_FILE_PATH: ${{ env.TEST_CSPROJ_FILE_PATH }}
+      #     SOLUTION_FILE_PATH: ${{ env.SOLUTION_FILE_PATH }}
+      #     OUTPUT_PATH: '${{ github.workspace }}/output'
 
       # - name: Publish artifact
       #   uses: actions/upload-artifact@v2
