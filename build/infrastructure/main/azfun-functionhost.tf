@@ -37,7 +37,8 @@ module "azfun_functionhost" {
     CHARGE_CREATED_TOPIC_NAME                     = local.CHARGE_CREATED_TOPIC_NAME
     CHARGE_PRICES_UPDATED_TOPIC_NAME              = local.CHARGE_PRICES_UPDATED_TOPIC_NAME
     CHARGE_LINK_ACCEPTED_TOPIC_NAME               = module.sbt_link_command_accepted.name
-    CHARGE_LINK_ACCEPTED_SUBSCRIPTION_NAME        = azurerm_servicebus_subscription.sbs_link_command_accepted_event_publisher.name
+    CHARGELINKACCEPTED_SUB_EVENTPUBLISHER         = azurerm_servicebus_subscription.sbs_chargelinkaccepted_sub_eventpublisher.name
+    CHARGELINKACCEPTED_SUB_DATAAVAILABLENOTIFIER  = azurerm_servicebus_subscription.sbs_chargelinkaccepted_sub_dataavailablenotifier.name
     CHARGE_LINK_CREATED_TOPIC_NAME                = local.CHARGE_LINK_CREATED_TOPIC_NAME
     CHARGE_LINK_RECEIVED_TOPIC_NAME               = module.sbt_link_command_received.name
     CHARGE_LINK_RECEIVED_SUBSCRIPTION_NAME        = azurerm_servicebus_subscription.sbs_link_command_received_receiver.name
