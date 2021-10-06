@@ -26,13 +26,6 @@ env:
   DOTNET_VERSION: '5.0.202'
   AZURITE_VERSION: '3.14.0'
   AZURE_FUNCTIONS_CORE_TOOLS_VERSION: '3.0.3568'  
-  # Variables necessary to manage Azure resources for tests (similar to local use of 'integrationtest.local.settings.json')
-  SUBSCRIPTION_ID: ${{ secrets.XDAST_SUBSCRIPTION_ID }}
-  RESOURCE_GROUP_NAME: 'rg-DataHub-IntegrationTest-U'
-  DEFAULT_LOCATION: 'westeurope'
-  TENANT_ID: ${{ secrets.XDAST_TENANT_ID }}
-  CLIENT_ID: ${{ secrets.XDAST_SPN_ID }}
-  CLIENT_SECRET: ${{ secrets.XDAST_SPN_SECRET }}  
   # Variables that overrides settings in 'functionhost.settings.json'
   DotnetExecutablePath: ''
   FunctionAppHostPath: ''
@@ -78,8 +71,8 @@ jobs:
       - name: Install Azurite v${{ env.AZURITE_VERSION }}
         run: npm install -g azurite@${{ env.AZURITE_VERSION }}
 
-      - name: Install Azure Functions Core Tools v${{ env.AZURE_FUNCTIONS_CORE_TOOLS_VERSION }}
-        run: npm install -g azure-functions-core-tools@${{ env.AZURE_FUNCTIONS_CORE_TOOLS_VERSION }}
+      # - name: Install Azure Functions Core Tools v${{ env.AZURE_FUNCTIONS_CORE_TOOLS_VERSION }}
+      #   run: npm install -g azure-functions-core-tools@${{ env.AZURE_FUNCTIONS_CORE_TOOLS_VERSION }}
 
       # TODO: Remove when integration tests are working
       # - name: Test Azurite
@@ -91,16 +84,29 @@ jobs:
       #   if: ${{ success() || failure() }}
       #   run: func --version
 
-      - name: Build and test project
-        uses: ./.github/actions/dotnet-build-and-test
-        with:
-          CSPROJ_FILE_PATH: ${{ env.CSPROJ_FILE_PATH }}
-          TEST_CSPROJ_FILE_PATH: ${{ env.TEST_CSPROJ_FILE_PATH }}
-          SOLUTION_FILE_PATH: ${{ env.SOLUTION_FILE_PATH }}
-          OUTPUT_PATH: '${{ github.workspace }}/output'
+    - name: test and publish report
+      shell: pwsh
+      run: |
+        dotnet test ${{ env.TEST_CSPROJ_FILE_PATH }} --filter "Category=UnitTest" -p:CollectCoverage=true -p:CoverletOutput=${{ github.workspace }}/output/ -p:CoverletOutputFormat=cobertura -p:Threshold=0
+      env:
+        # Variables necessary to manage Azure resources for tests (similar to local use of 'integrationtest.local.settings.json')
+        SUBSCRIPTION_ID: ${{ secrets.XDAST_SUBSCRIPTION_ID }}
+        RESOURCE_GROUP_NAME: 'rg-DataHub-IntegrationTest-U'
+        DEFAULT_LOCATION: 'westeurope'
+        TENANT_ID: ${{ secrets.XDAST_TENANT_ID }}
+        CLIENT_ID: ${{ secrets.XDAST_SPN_ID }}
+        CLIENT_SECRET: ${{ secrets.XDAST_SPN_SECRET }}  
 
-      - name: Publish artifact
-        uses: actions/upload-artifact@v2
-        with:
-          name: drop
-          path: '${{ github.workspace }}/output'
+      # - name: Build and test project
+      #   uses: ./.github/actions/dotnet-build-and-test
+      #   with:
+      #     CSPROJ_FILE_PATH: ${{ env.CSPROJ_FILE_PATH }}
+      #     TEST_CSPROJ_FILE_PATH: ${{ env.TEST_CSPROJ_FILE_PATH }}
+      #     SOLUTION_FILE_PATH: ${{ env.SOLUTION_FILE_PATH }}
+      #     OUTPUT_PATH: '${{ github.workspace }}/output'
+
+      # - name: Publish artifact
+      #   uses: actions/upload-artifact@v2
+      #   with:
+      #     name: drop
+      #     path: '${{ github.workspace }}/output'
