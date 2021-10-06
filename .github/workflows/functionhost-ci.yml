@@ -107,6 +107,12 @@ jobs:
       - name: Find docker images
         if: ${{ success() || failure() }}
         run: docker images
+      - name: Pull sql server
+        if: ${{ success() || failure() }}
+        run: docker pull mcr.microsoft.com/mssql/server:2019-latest
+      - name: Find docker images
+        if: ${{ success() || failure() }}
+        run: docker images
 
       # - name: Test
       #   shell: pwsh
