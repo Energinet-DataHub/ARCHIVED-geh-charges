@@ -103,10 +103,10 @@ jobs:
       #   if: ${{ success() || failure() }}
       #   run: npm root
 
-    - name: Test
-      shell: pwsh
-      run: |
-        dotnet test ${{ env.TEST_CSPROJ_FILE_PATH }} -p:CollectCoverage=true -p:CoverletOutput='${{ github.workspace }}/output/' -p:CoverletOutputFormat=cobertura -p:Threshold=0
+      - name: Test
+        shell: pwsh
+        run: |
+          dotnet test ${{ env.TEST_CSPROJ_FILE_PATH }} -p:CollectCoverage=true -p:CoverletOutput='${{ github.workspace }}/output/' -p:CoverletOutputFormat=cobertura -p:Threshold=0
 
       # - name: Build and test project
       #   uses: ./.github/actions/dotnet-build-and-test
