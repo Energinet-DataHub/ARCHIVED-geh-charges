@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using GreenEnergyHub.Charges.Application.Charges.Acknowledgement;
+using GreenEnergyHub.Charges.FunctionHost.Common;
 using GreenEnergyHub.Charges.Infrastructure.Integration.ChargeRejection;
 using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeCommandRejected;
 using GreenEnergyHub.Charges.Infrastructure.Messaging.Registration;
@@ -31,8 +32,8 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
                 configuration => configuration.WithParser(() => ChargeCommandRejectedContract.Parser));
             serviceCollection.SendProtobuf<ChargeRejectionContract>();
             serviceCollection.AddMessagingProtobuf().AddMessageDispatcher<ChargeRejection>(
-                EnvironmentHelper.GetEnv("DOMAINEVENT_SENDER_CONNECTION_STRING"),
-                EnvironmentHelper.GetEnv("POST_OFFICE_TOPIC_NAME"));
+                EnvironmentHelper.GetEnv(EnvironmentSettingNames.DomainEventSenderConnectionString),
+                EnvironmentHelper.GetEnv(EnvironmentSettingNames.PostOfficeTopicName));
         }
     }
 }

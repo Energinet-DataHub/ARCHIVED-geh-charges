@@ -41,7 +41,19 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures
         }
 
         [NotNull]
-        public ServiceBusListenerMock? ServiceBusListenerMock { get; private set; }
+        public ServiceBusListenerMock? ChargeCommandReceivedEventServiceBusListenerMock { get; private set; }
+
+        /// <summary>
+        /// Listener for accepted charge link commands.
+        /// </summary>
+        [NotNull]
+        public ServiceBusListenerMock? ChargeLinkCommandAcceptedServiceBusListenerMock { get; private set; }
+
+        /// <summary>
+        /// Listener for data-available notifications sent to the post office.
+        /// </summary>
+        [NotNull]
+        public ServiceBusListenerMock? PostOfficeDataAvailableServiceBusListenerMock { get; private set; }
 
         private AzuriteManager AzuriteManager { get; }
 
@@ -73,8 +85,21 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures
             // Overwrites the setting so the function uses the name we have control of in the test
             Environment.SetEnvironmentVariable(EnvironmentSettingNames.PostOfficeTopicName, postOfficeTopicName);
 
-            ServiceBusListenerMock = new ServiceBusListenerMock(ServiceBusResource.ConnectionString, TestLogger);
-            await ServiceBusListenerMock.AddTopicSubscriptionListenerAsync(postOfficeTopicName, ChargesFunctionAppServiceBusOptions.PostOfficeTopicSubscriptionName);
+            ChargeCommandReceivedEventServiceBusListenerMock = new ServiceBusListenerMock(ServiceBusResource.ConnectionString, TestLogger);
+            await ChargeCommandReceivedEventServiceBusListenerMock.AddTopicSubscriptionListenerAsync(postOfficeTopicName, ChargesFunctionAppServiceBusOptions.PostOfficeTopicSubscriptionName);
+
+            PostOfficeDataAvailableServiceBusListenerMock = new ServiceBusListenerMock(ServiceBusResource.ConnectionString, TestLogger);
+            await PostOfficeDataAvailableServiceBusListenerMock.AddQueueListenerAsync(ChargesFunctionAppServiceBusOptions.PostOfficeDataAvailableQueueName);
+
+            var chargeLinkCommandAcceptedTopicName = await GetTopicNameFromKeyAsync(ChargesFunctionAppServiceBusOptions.ChargeLinkCommandAcceptedTopicKey);
+
+            // Overwrites the setting so the function uses the name we have control of in the test
+            Environment.SetEnvironmentVariable(EnvironmentSettingNames.ChargeLinkAcceptedTopicName, chargeLinkCommandAcceptedTopicName);
+
+            ChargeLinkCommandAcceptedServiceBusListenerMock = new ServiceBusListenerMock(ServiceBusResource.ConnectionString, TestLogger);
+            await ChargeLinkCommandAcceptedServiceBusListenerMock.AddTopicSubscriptionListenerAsync(
+                ChargesFunctionAppServiceBusOptions.ChargeLinkCommandAcceptedTopicKey,
+                ChargesFunctionAppServiceBusOptions.ChargeLinkCommandAcceptedTopicSubscriptionName);
 
             // => Database
             await SqlServerResource.InitializeAsync();
@@ -108,7 +133,9 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures
             AzuriteManager.Dispose();
 
             // => Service Bus
-            await ServiceBusListenerMock.DisposeAsync();
+            await ChargeCommandReceivedEventServiceBusListenerMock.DisposeAsync();
+            await PostOfficeDataAvailableServiceBusListenerMock.DisposeAsync();
+            await ChargeLinkCommandAcceptedServiceBusListenerMock.DisposeAsync();
             await ServiceBusResource.DisposeAsync();
 
             // => Database

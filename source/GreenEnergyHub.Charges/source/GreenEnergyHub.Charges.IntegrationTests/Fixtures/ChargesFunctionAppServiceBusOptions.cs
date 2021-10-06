@@ -25,20 +25,44 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures
 {
     public class ChargesFunctionAppServiceBusOptions : AzureCloudServiceBusOptions
     {
+        /// <summary>
+        /// Deprecated.
+        /// </summary>
         public const string PostOfficeTopicKey = "postOffice";
 
+        /// <summary>
+        /// Deprecated.
+        /// </summary>
         public const string PostOfficeTopicSubscriptionName = "defaultSubscription";
+
+        /// <summary>
+        /// This name is determined by the post office NuGet package.
+        /// </summary>
+        public const string PostOfficeDataAvailableQueueName = "sbq-dataavailable";
+
+        public const string ChargeLinkCommandAcceptedTopicKey = "chargeLinkCommandAccepted";
+        public const string ChargeLinkCommandAcceptedTopicSubscriptionName = "chargeLinkCommandAccepted";
 
         public override void Configure(ServiceBusOptionsBuilder builder)
         {
             builder.SetConfigResolver(ConfigurationResolver);
 
             var domainEventListenerNamespace = GetNamespaceFromSetting(EnvironmentSettingNames.DomainEventSenderConnectionString);
-
             builder
                 .Namespace(domainEventListenerNamespace)
                 .AddTopic(PostOfficeTopicKey)
                 .AddSubscription(PostOfficeTopicSubscriptionName);
+
+            var integrationEventListenerNamespace =
+                GetNamespaceFromSetting(EnvironmentSettingNames.DataHubListenerConnectionString);
+            builder
+                .Namespace(integrationEventListenerNamespace)
+                .AddQueue(PostOfficeDataAvailableQueueName);
+
+            builder
+                .Namespace(domainEventListenerNamespace)
+                .AddTopic(ChargeLinkCommandAcceptedTopicKey)
+                .AddSubscription(ChargeLinkCommandAcceptedTopicSubscriptionName);
         }
 
         private static string GetNamespaceFromSetting(string settingName)

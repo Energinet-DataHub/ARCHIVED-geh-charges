@@ -14,6 +14,7 @@
 
 using GreenEnergyHub.Charges.Application.ChargeLinks.Handlers;
 using GreenEnergyHub.Charges.Domain.ChargeLinkCreatedEvents;
+using GreenEnergyHub.Charges.FunctionHost.Common;
 using GreenEnergyHub.Charges.Infrastructure.Integration.ChargeLinkCreated;
 using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandAccepted;
 using GreenEnergyHub.Charges.Infrastructure.Messaging.Registration;
@@ -34,7 +35,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
 
             serviceCollection.SendProtobuf<ChargeLinkCreatedContract>();
             serviceCollection.AddMessagingProtobuf().AddMessageDispatcher<ChargeLinkCreatedEvent>(
-                EnvironmentHelper.GetEnv("INTEGRATIONEVENT_SENDER_CONNECTION_STRING"),
+                EnvironmentHelper.GetEnv(EnvironmentSettingNames.DataHubSenderConnectionString),
                 EnvironmentHelper.GetEnv("CHARGE_LINK_CREATED_TOPIC_NAME"));
         }
     }

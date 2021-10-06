@@ -17,6 +17,7 @@ using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.IntegrationEventContracts;
 using GreenEnergyHub.Charges.Application.ChargeLinks.Handlers;
 using GreenEnergyHub.Charges.Domain.CreateLinkCommandEvents;
+using GreenEnergyHub.Charges.FunctionHost.Common;
 using GreenEnergyHub.Charges.Infrastructure.Correlation;
 using GreenEnergyHub.Charges.Infrastructure.Messaging;
 using Microsoft.Azure.Functions.Worker;
@@ -54,7 +55,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.MeteringPoint
             [ServiceBusTrigger(
                 "%CREATE_LINK_COMMAND_TOPIC_NAME%",
                 "%CREATE_LINK_COMMAND_SUBSCRIPTION_NAME%",
-                Connection = "DOMAINEVENT_LISTENER_CONNECTION_STRING")]
+                Connection = EnvironmentSettingNames.DomainEventListenerConnectionString)]
             [NotNull] byte[] message)
         {
             _log.LogInformation(

@@ -16,6 +16,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application.Charges.Handlers;
 using GreenEnergyHub.Charges.Domain.ChargeCommandAcceptedEvents;
+using GreenEnergyHub.Charges.FunctionHost.Common;
 using GreenEnergyHub.Charges.Infrastructure.Correlation;
 using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeCommandAccepted;
 using GreenEnergyHub.Charges.Infrastructure.Messaging;
@@ -45,7 +46,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Charges
             [ServiceBusTrigger(
                 "%COMMAND_ACCEPTED_TOPIC_NAME%",
                 "%COMMAND_ACCEPTED_RECEIVER_SUBSCRIPTION_NAME%",
-                Connection = "DOMAINEVENT_LISTENER_CONNECTION_STRING")]
+                Connection = EnvironmentSettingNames.DomainEventListenerConnectionString)]
             [NotNull] byte[] message)
         {
             var chargeCommandAcceptedEvent = (ChargeCommandAcceptedEvent)await _messageExtractor

@@ -19,20 +19,19 @@ using System.Text;
 using System.Threading.Tasks;
 using FluentAssertions;
 using FluentAssertions.Execution;
+using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandAccepted;
 using GreenEnergyHub.Charges.IntegrationTests.Fixtures;
 using GreenEnergyHub.Charges.IntegrationTests.TestHelpers;
+using GreenEnergyHub.Charges.TestCore.Attributes;
 using GreenEnergyHub.FunctionApp.TestCommon;
 using GreenEnergyHub.FunctionApp.TestCommon.ServiceBus.ListenerMock;
 using NodaTime;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace GreenEnergyHub.Charges.IntegrationTests.Charges
+namespace GreenEnergyHub.Charges.IntegrationTests.Functions.ChargeLinks.PostOffice
 {
-    /// <summary>
-    /// Proof-of-concept on integration testing a function.
-    /// </summary>
-    public class ChargeIngestionTests
+    public class ChargeLinkCreatedDataAvailableNotifierEndpointTests
     {
         [Collection(nameof(ChargesFunctionAppCollectionFixture))]
         public class RunAsync : FunctionAppTestBase<ChargesFunctionAppFixture>, IAsyncLifetime
@@ -49,24 +48,21 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Charges
 
             public Task DisposeAsync()
             {
-                Fixture.ServiceBusListenerMock.ResetMessageHandlersAndReceivedMessages();
+                Fixture.PostOfficeDataAvailableServiceBusListenerMock.ResetMessageHandlersAndReceivedMessages();
                 return Task.CompletedTask;
             }
 
-            [Fact]
-            public async Task When_CallingChargeIngestion_Then_RequestIsProcessedAndMessageIsSendToPostOffice()
+            [Theory]
+            [InlineAutoMoqData]
+            public async Task When_CallingChargeIngestion_Then_RequestIsProcessedAndMessageIsSendToPostOffice(ChargeLinkCommandAcceptedContract inputContract)
             {
+                // TODO: Temp workaround for unused arg
+                Console.WriteLine(inputContract);
+
                 // Arrange
-                var testFilePath = "TestFiles/ValidCreateTariffCommand.json";
-                var clock = SystemClock.Instance;
-                var chargeJson = EmbeddedResourceHelper.GetInputJson(testFilePath, clock);
-
-                var request = new HttpRequestMessage(HttpMethod.Post, "api/ChargeIngestion");
-                var expectedBody = chargeJson;
-                request.Content = new StringContent(expectedBody, Encoding.UTF8, "application/json");
-
+                // TODO: How to seed database with charge corresponding with inputContract?
                 var body = Array.Empty<byte>();
-                using var isMessageReceivedEvent = await Fixture.ServiceBusListenerMock
+                using var isMessageReceivedEvent = await Fixture.PostOfficeDataAvailableServiceBusListenerMock
                     .WhenAny()
                     .VerifyOnceAsync(receivedMessage =>
                     {
@@ -76,16 +72,12 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Charges
                     });
 
                 // Act
-                var actualResponse = await Fixture.HostManager.HttpClient.SendAsync(request);
+                // TODO: How to add inputContract to input queue?
+                //await Fixture.ChargeLinkCommandAcceptedServiceBusListenerMock...
 
                 // Assert
-                using var assertionScope = new AssertionScope();
-
-                // => Http response
-                actualResponse.StatusCode.Should().Be(HttpStatusCode.OK);
-
-                // => Service Bus (timeout should not be more than 5 secs. - currently it's high so we can break during demo).
-                var isMessageReceived = isMessageReceivedEvent.Wait(TimeSpan.FromSeconds(120));
+                // => Service Bus (timeout should not be more than 5 secs).
+                var isMessageReceived = isMessageReceivedEvent.Wait(TimeSpan.FromSeconds(5));
                 isMessageReceived.Should().BeTrue();
 
                 body.Should().NotBeEmpty();

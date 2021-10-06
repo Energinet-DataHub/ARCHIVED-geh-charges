@@ -17,6 +17,7 @@ using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.IntegrationEventContracts;
 using GreenEnergyHub.Charges.Application.MeteringPoints.Handlers;
 using GreenEnergyHub.Charges.Domain.MeteringPointCreatedEvents;
+using GreenEnergyHub.Charges.FunctionHost.Common;
 using GreenEnergyHub.Charges.Infrastructure.Correlation;
 using GreenEnergyHub.Charges.Infrastructure.Messaging;
 using Microsoft.Azure.Functions.Worker;
@@ -53,7 +54,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.MeteringPoint
             [ServiceBusTrigger(
                 "%METERING_POINT_CREATED_TOPIC_NAME%",
                 "%METERING_POINT_CREATED_SUBSCRIPTION_NAME%",
-                Connection = "INTEGRATIONEVENT_LISTENER_CONNECTION_STRING")]
+                Connection = EnvironmentSettingNames.DataHubListenerConnectionString)]
             [NotNull] byte[] message)
         {
             var meteringPointCreatedEvent = (MeteringPointCreatedEvent)await _messageExtractor.ExtractAsync(message).ConfigureAwait(false);
