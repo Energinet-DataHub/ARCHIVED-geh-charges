@@ -12,9 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-resource "azurerm_servicebus_subscription" "sbs_link_command_accepted_event_publisher" {
-  depends_on          = [module.sbt_link_command_accepted]
-  name                = "sbs-link-command-accepted-event-publisher"
+resource "azurerm_servicebus_subscription" "sbs_chargelinkaccepted_sub_eventpublisher" {
+  name                = "sbs-chargelinkaccepted-sub-eventpublisher"
   resource_group_name = data.azurerm_resource_group.main.name
   namespace_name      = module.sbn_charges.name
   topic_name          = module.sbt_link_command_accepted.name
