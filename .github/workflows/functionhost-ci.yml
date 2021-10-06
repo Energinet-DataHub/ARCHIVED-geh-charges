@@ -84,18 +84,18 @@ jobs:
       #   if: ${{ success() || failure() }}
       #   run: func --version
 
-    - name: test and publish report
-      shell: pwsh
-      run: |
-        dotnet test ${{ env.TEST_CSPROJ_FILE_PATH }} --filter "Category=UnitTest" -p:CollectCoverage=true -p:CoverletOutput=${{ github.workspace }}/output/ -p:CoverletOutputFormat=cobertura -p:Threshold=0
-      env:
-        # Variables necessary to manage Azure resources for tests (similar to local use of 'integrationtest.local.settings.json')
-        SUBSCRIPTION_ID: ${{ secrets.XDAST_SUBSCRIPTION_ID }}
-        RESOURCE_GROUP_NAME: 'rg-DataHub-IntegrationTest-U'
-        DEFAULT_LOCATION: 'westeurope'
-        TENANT_ID: ${{ secrets.XDAST_TENANT_ID }}
-        CLIENT_ID: ${{ secrets.XDAST_SPN_ID }}
-        CLIENT_SECRET: ${{ secrets.XDAST_SPN_SECRET }}  
+      - name: test and publish report
+        shell: pwsh
+        run: |
+          dotnet test ${{ env.TEST_CSPROJ_FILE_PATH }} --filter "Category=UnitTest" -p:CollectCoverage=true -p:CoverletOutput=${{ github.workspace }}/output/ -p:CoverletOutputFormat=cobertura -p:Threshold=0
+        env:
+          # Variables necessary to manage Azure resources for tests (similar to local use of 'integrationtest.local.settings.json')
+          SUBSCRIPTION_ID: ${{ secrets.XDAST_SUBSCRIPTION_ID }}
+          RESOURCE_GROUP_NAME: 'rg-DataHub-IntegrationTest-U'
+          DEFAULT_LOCATION: 'westeurope'
+          TENANT_ID: ${{ secrets.XDAST_TENANT_ID }}
+          CLIENT_ID: ${{ secrets.XDAST_SPN_ID }}
+          CLIENT_SECRET: ${{ secrets.XDAST_SPN_SECRET }}  
 
       # - name: Build and test project
       #   uses: ./.github/actions/dotnet-build-and-test
