@@ -66,7 +66,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
                 MeteringPointId = link.MeteringPointId,
                 StartDateTime = link.StartDateTime.ToInstant(),
                 EndDateTime = link.EndDateTime.ToInstant(),
-                ChargeId = link.ChargeId,
+                SenderProvidedChargeId = link.SenderProvidedChargeId,
                 Factor = link.Factor,
                 ChargeOwner = link.ChargeOwner,
                 ChargeType = (ChargeType)link.ChargeType,

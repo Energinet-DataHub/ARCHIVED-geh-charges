@@ -32,7 +32,7 @@ namespace GreenEnergyHub.Charges.Domain.ChargeLinkCommands
 
         public Instant? EndDateTime { get; set; }
 
-        public string ChargeId { get; set; }
+        public string SenderProvidedChargeId { get; set; }
 
         public int Factor { get; set; }
 
