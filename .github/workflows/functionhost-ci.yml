@@ -26,6 +26,13 @@ env:
   DOTNET_VERSION: '5.0.202'
   AZURITE_VERSION: '3.14.0'
   AZURE_FUNCTIONS_CORE_TOOLS_VERSION: '3.0.3568'  
+  # Variables necessary to manage Azure resources for tests (similar to local use of 'integrationtest.local.settings.json')
+  SUBSCRIPTION_ID: ${{ secrets.XDAST_SUBSCRIPTION_ID }}
+  RESOURCE_GROUP_NAME: 'rg-DataHub-IntegrationTest-U'
+  DEFAULT_LOCATION: 'westeurope'
+  TENANT_ID: ${{ secrets.XDAST_TENANT_ID }}
+  CLIENT_ID: ${{ secrets.XDAST_SPN_ID }}
+  CLIENT_SECRET: ${{ secrets.XDAST_SPN_SECRET }}  
   # Variables that overrides settings in 'functionhost.settings.json'
   DotnetExecutablePath: ''
   FunctionAppHostPath: ''

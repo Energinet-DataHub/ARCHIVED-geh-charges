@@ -49,11 +49,3 @@ runs:
       run: |
         dotnet tool install --tool-path ./temp/reportgenerator dotnet-reportgenerator-globaltool
         dotnet test ${{ inputs.test_csproj_file_path }} --filter "Category=UnitTest" -p:CollectCoverage=true -p:CoverletOutput=${{ inputs.output_path }}/ -p:CoverletOutputFormat=cobertura -p:Threshold=0
-      env:
-        # Variables necessary to manage Azure resources for tests (similar to local use of 'integrationtest.local.settings.json')
-        SUBSCRIPTION_ID: ${{ secrets.XDAST_SUBSCRIPTION_ID }}
-        RESOURCE_GROUP_NAME: 'rg-DataHub-IntegrationTest-U'
-        DEFAULT_LOCATION: 'westeurope'
-        TENANT_ID: ${{ secrets.XDAST_TENANT_ID }}
-        CLIENT_ID: ${{ secrets.XDAST_SPN_ID }}
-        CLIENT_SECRET: ${{ secrets.XDAST_SPN_SECRET }}
