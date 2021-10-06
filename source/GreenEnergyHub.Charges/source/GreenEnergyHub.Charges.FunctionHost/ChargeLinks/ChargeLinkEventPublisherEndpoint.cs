@@ -50,7 +50,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.ChargeLinks
         public async Task RunAsync(
             [ServiceBusTrigger(
                 "%CHARGE_LINK_ACCEPTED_TOPIC_NAME%",
-                "%CHARGE_LINK_ACCEPTED_SUBSCRIPTION_NAME%",
+                "%CHARGELINKACCEPTED_SUB_EVENTPUBLISHER%",
                 Connection = "DOMAINEVENT_LISTENER_CONNECTION_STRING")]
             [NotNull] byte[] message)
         {
