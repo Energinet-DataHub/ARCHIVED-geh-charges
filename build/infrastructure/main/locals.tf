@@ -25,7 +25,7 @@ locals {
     METERING_POINT_CREATED_TOPIC_NAME             = "metering-point-created"
     METERING_POINT_CREATED_SUBSCRIPTION_NAME      = "metering-point-created-sub-charges"
     CREATE_LINK_REQUEST_QUEUE_NAME                = "create-link-request"
-    CREATE_LINK_REPLY_QUEUE_NAME                  = "create-link-request-reply"
+    CREATE_LINK_REPLY_QUEUE_NAME                  = "create-link-reply"
     # The string value is the shared keyvault key name
     INTEGRATION_EVENTS_LISTENER_CONNECTION_STRING = "INTEGRATION-EVENTS-LISTENER-CONNECTION-STRING"
     # The string value is the shared keyvault key name
