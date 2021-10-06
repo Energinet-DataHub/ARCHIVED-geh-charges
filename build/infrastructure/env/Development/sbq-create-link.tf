@@ -28,9 +28,6 @@ module "sbq_create_link_request" {
   name                = local.CREATE_LINK_REQUEST_QUEUE_NAME
   namespace_name      = module.sbn_external_integration_events.name
   resource_group_name = data.azurerm_resource_group.main.name
-  dependencies        = [
-    module.sbn_external_integration_events.dependent_on
-    ]
 }
 
 module "sbq_create_link_reply" {
@@ -38,7 +35,4 @@ module "sbq_create_link_reply" {
   name                = local.CREATE_LINK_REPLY_QUEUE_NAME
   namespace_name      = module.sbn_external_integration_events.name
   resource_group_name = data.azurerm_resource_group.main.name
-  dependencies        = [
-    module.sbn_external_integration_events.dependent_on
-    ]
 }
