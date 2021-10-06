@@ -17,13 +17,11 @@ using FluentAssertions;
 using FluentAssertions.Execution;
 using GreenEnergyHub.TestCommon.AutoFixture.Extensions;
 using Xunit;
-using Xunit.Categories;
 
 namespace GreenEnergyHub.TestCommon.Tests.Unit.AutoFixture
 {
     public class AutoFixtureExtensionsTests
     {
-        [UnitTest]
         public class ForConstructorOn
         {
             [Fact]
