@@ -91,11 +91,11 @@ jobs:
         env:
           # Variables necessary to manage Azure resources for tests (similar to local use of 'integrationtest.local.settings.json')
           SUBSCRIPTION_ID: ${{ secrets.XDAST_SUBSCRIPTION_ID }}
-          RESOURCE_GROUP_NAME: 'rg-DataHub-IntegrationTest-U'
+          RESOURCE_GROUP_NAME: ${{ secrets.XDAST_RESOURCE_GROUP_NAME }}
           DEFAULT_LOCATION: 'westeurope'
           TENANT_ID: ${{ secrets.XDAST_TENANT_ID }}
-          CLIENT_ID: ${{ secrets.XDAST_SPN_ID }}
-          CLIENT_SECRET: ${{ secrets.XDAST_SPN_SECRET }}  
+          CLIENT_ID: ${{ secrets.XDAST_CLIENT_ID }}
+          CLIENT_SECRET: ${{ secrets.XDAST_CLIENT_SECRET }}  
 
       # - name: Build and test project
       #   uses: ./.github/actions/dotnet-build-and-test
