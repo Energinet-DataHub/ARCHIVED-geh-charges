@@ -13,11 +13,14 @@
 // limitations under the License.
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
+using AutoFixture.Xunit2;
 using Azure.Messaging.ServiceBus;
 using GreenEnergyHub.DataHub.Charges.Libraries.DefaultChargeLinkRequest;
 using GreenEnergyHub.DataHub.Charges.Libraries.Factories;
 using GreenEnergyHub.DataHub.Charges.Libraries.Models;
+using GreenEnergyHub.TestHelpers;
 using Moq;
 using Xunit;
 using Xunit.Categories;
@@ -29,34 +32,33 @@ namespace GreenEnergyHub.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.D
     {
         private const string RespondQueue = "RespondQueue";
 
-        [Fact]
-        public async Task SendAsync_NullArgument_ThrowsException()
+        [Theory]
+        [InlineAutoData]
+        public async Task SendAsync_NullArgument_ThrowsException(
+            [NotNull] [Frozen] Mock<IServiceBusClientFactory> serviceBusClientFactoryMock)
         {
             // Arrange
-            var serviceBusClientFactory = new Mock<IServiceBusClientFactory>();
-            await using var target = new DefaultChargeLinkRequestClient(serviceBusClientFactory.Object, RespondQueue);
+            await using var target = new DefaultChargeLinkRequestClient(serviceBusClientFactoryMock.Object, RespondQueue);
 
             // Act + Assert
             await Assert.ThrowsAsync<ArgumentNullException>(() => target.CreateDefaultChargeLinksRequestAsync(null!)).ConfigureAwait(false);
         }
 
-        [Fact]
-        public async Task CreateDefaultChargeLinksRequestAsync_ValidInput_SendsMessage()
+        [Theory]
+        [InlineAutoDomainData]
+        public async Task CreateDefaultChargeLinksRequestAsync_ValidInput_SendsMessage(
+            [NotNull] [Frozen] Mock<ServiceBusClient> serviceBusClientMock,
+            [NotNull] [Frozen] Mock<IServiceBusClientFactory> serviceBusClientFactoryMock)
         {
             // Arrange
             var serviceBusSenderMock = new Mock<ServiceBusSender>();
-            var serviceBusSessionReceiverMock = new Mock<ServiceBusSessionReceiver>();
 
-            await using var mockedServiceBusClient = new MockedServiceBusClient(
-                "create-link-request",
-                string.Empty,
-                serviceBusSenderMock.Object,
-                serviceBusSessionReceiverMock.Object);
+            serviceBusClientMock.Setup(x => x.CreateSender("create-link-request"))
+                 .Returns(serviceBusSenderMock.Object);
+            serviceBusClientMock.Setup(x => x.DisposeAsync()).Returns(default(ValueTask));
+            serviceBusClientFactoryMock.Setup(x => x.Create()).Returns(serviceBusClientMock.Object);
 
-            var serviceBusClientFactory = new Mock<IServiceBusClientFactory>();
-            serviceBusClientFactory.Setup(x => x.Create()).Returns(mockedServiceBusClient);
-
-            await using var sut = new DefaultChargeLinkRequestClient(serviceBusClientFactory.Object, RespondQueue);
+            await using var sut = new DefaultChargeLinkRequestClient(serviceBusClientFactoryMock.Object, RespondQueue);
 
             var createDefaultChargeLinksDto = new CreateDefaultChargeLinksDto(
                 "F9A5115D-44EB-4AD4-BC7E-E8E8A0BC425E",
