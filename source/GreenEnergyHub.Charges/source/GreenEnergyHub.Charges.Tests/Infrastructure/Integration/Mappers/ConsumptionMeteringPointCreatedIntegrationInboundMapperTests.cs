@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System;
+using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using FluentAssertions;
 using Google.Protobuf.WellKnownTypes;
@@ -70,6 +71,13 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Integration.Mappers
             actual.Should().Be(expectedSettlementMethod);
         }
 
+        [Fact]
+        public void MapSettlementMethod_WhenCalledWithInvalidEnum_Throws()
+        {
+            Assert.Throws<InvalidEnumArgumentException>(
+                () => ConsumptionMeteringPointCreatedIntegrationInboundMapper.MapSettlementMethod((ConsumptionMeteringPointCreated.Types.SettlementMethod)9999));
+        }
+
         [Theory]
         [InlineData(ConsumptionMeteringPointCreated.Types.ConnectionState.CsNew, ConnectionState.New)]
         public void MapConnectionState_WhenCalled_ShouldMapCorrectly(
@@ -79,6 +87,13 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Integration.Mappers
             var actual = ConsumptionMeteringPointCreatedIntegrationInboundMapper.MapConnectionState(protoConnectionState);
 
             actual.Should().Be(expectedConnectionState);
+        }
+
+        [Fact]
+        public void MapConnectionState_WhenCalledWithInvalidEnum_Throws()
+        {
+            Assert.Throws<InvalidEnumArgumentException>(
+                () => ConsumptionMeteringPointCreatedIntegrationInboundMapper.MapConnectionState((ConsumptionMeteringPointCreated.Types.ConnectionState)9999));
         }
     }
 }
