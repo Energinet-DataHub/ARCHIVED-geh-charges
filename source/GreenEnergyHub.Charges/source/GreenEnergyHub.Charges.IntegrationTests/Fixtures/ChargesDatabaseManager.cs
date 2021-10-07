@@ -13,7 +13,9 @@
 // limitations under the License.
 
 using System;
+using System.Threading.Tasks;
 using EntityFrameworkCore.SqlServer.NodaTime.Extensions;
+using GreenEnergyHub.Charges.ApplyDBMigrationsApp.Helpers;
 using GreenEnergyHub.Charges.Infrastructure.Context;
 using GreenEnergyHub.FunctionApp.TestCommon.Database;
 using Microsoft.EntityFrameworkCore;
@@ -35,6 +37,29 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures
                 .UseSqlServer(ConnectionString, options => options.UseNodaTime());
 
             return new ChargesDatabaseContext(optionsBuilder.Options);
+        }
+
+        /// <summary>
+        /// Creates the database schema using DbUp instead of a database context.
+        /// </summary>
+        protected override Task<bool> CreateDatabaseSchemaAsync(ChargesDatabaseContext context)
+        {
+            return Task.FromResult(CreateDatabaseSchema(context));
+        }
+
+        /// <summary>
+        /// Creates the database schema using DbUp instead of a database context.
+        /// </summary>
+        protected override bool CreateDatabaseSchema(ChargesDatabaseContext context)
+        {
+            var upgrader = UpgradeFactory.GetUpgradeEngine(ConnectionString, _ => true);
+            var result = upgrader.PerformUpgrade();
+            if (result.Successful is false)
+            {
+                throw new Exception("Database migration failed", result.Error);
+            }
+
+            return true;
         }
     }
 }

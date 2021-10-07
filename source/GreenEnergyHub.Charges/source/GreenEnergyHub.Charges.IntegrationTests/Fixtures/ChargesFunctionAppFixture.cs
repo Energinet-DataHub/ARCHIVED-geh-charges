@@ -106,17 +106,10 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures
             await ServiceBusListenerMock.AddTopicSubscriptionListenerAsync(postOfficeTopicName, ChargesFunctionAppServiceBusOptions.PostOfficeTopicSubscriptionName);
 
             // => Database
-            await DatabaseManager.CreateDatabaseAsync(withSchema: false);
+            await DatabaseManager.CreateDatabaseAsync();
 
             // Overwrites the setting so the function uses the name we have control of in the test
             Environment.SetEnvironmentVariable(EnvironmentSettingNames.ChargeDbConnectionString, DatabaseManager.ConnectionString);
-
-            var upgrader = UpgradeFactory.GetUpgradeEngine(DatabaseManager.ConnectionString, _ => true);
-            var result = upgrader.PerformUpgrade();
-            if (result.Successful is false)
-            {
-                throw new Exception("Database migration failed", result.Error);
-            }
         }
 
         /// <inheritdoc/>

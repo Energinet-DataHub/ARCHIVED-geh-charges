@@ -32,7 +32,7 @@ namespace GreenEnergyHub.FunctionApp.TestCommon.Database
     public abstract class SqlServerDatabaseManager<TContextImplementation>
         where TContextImplementation : DbContext
     {
-        private const string CollationName = "SQL_Latin1_General_CP1_CI_AS";
+        public const string DefaultCollationName = "SQL_Latin1_General_CP1_CI_AS";
 
         protected SqlServerDatabaseManager(string prefixForDatabaseName)
         {
@@ -52,33 +52,23 @@ namespace GreenEnergyHub.FunctionApp.TestCommon.Database
         public abstract TContextImplementation CreateDbContext();
 
         /// <summary>
-        /// IMPORTANT: The database is not migrated. The intention is to create a new database
-        /// with the full schema and <see cref="DeleteDatabaseAsync"/> after testing is done.
-        /// Note: Attempts to create a database with a name already existing, will do nothing.
+        /// The intention is to create a database with the default collation and a schema.
         /// </summary>
-        public async Task CreateDatabaseAsync(bool withSchema = true)
+        public async Task<bool> CreateDatabaseAsync()
         {
-            //// TODO: Update method description if this technique works on the build agent
-
             await using var context = CreateDbContext();
             CreateLocalDatabaseWithoutSchema(context);
-
-            if (withSchema)
-            {
-                await context.Database.EnsureCreatedAsync().ConfigureAwait(false);
-            }
+            return await CreateDatabaseSchemaAsync(context).ConfigureAwait(false);
         }
 
         /// <summary>
-        /// IMPORTANT: The database is not migrated. The intention is to create a new database
-        /// with the full schema and <see cref="DeleteDatabase"/> after testing is done.
-        /// Note: Attempts to create a database with a name already existing, will do nothing.
+        /// The intention is to create a database with the default collation and a schema.
         /// </summary>
-        public bool CreateDatabase(bool withSchema = true)
+        public bool CreateDatabase()
         {
             using var context = CreateDbContext();
             CreateLocalDatabaseWithoutSchema(context);
-            return context.Database.EnsureCreated();
+            return CreateDatabaseSchema(context);
         }
 
         /// <summary>
@@ -99,6 +89,30 @@ namespace GreenEnergyHub.FunctionApp.TestCommon.Database
         {
             using var context = CreateDbContext();
             return context.Database.EnsureDeleted();
+        }
+
+        /// <summary>
+        /// When using the database context to create the database, the database is not migrated.
+        /// The intention here is to create a new database with the full schema and call
+        /// <see cref="DeleteDatabaseAsync"/> after testing is done.
+        /// Attempts to create a database with a name already existing, will do nothing.
+        /// To use other strategies, override this method and implement it within.
+        /// </summary>
+        protected virtual Task<bool> CreateDatabaseSchemaAsync(TContextImplementation context)
+        {
+            return context.Database.EnsureCreatedAsync();
+        }
+
+        /// <summary>
+        /// When using the database context to create the database, the database is not migrated.
+        /// The intention here is to create a new database with the full schema and call
+        /// <see cref="DeleteDatabase"/> after testing is done.
+        /// Attempts to create a database with a name already existing, will do nothing.
+        /// To use other strategies, override this method and implement it within.
+        /// </summary>
+        protected virtual bool CreateDatabaseSchema(TContextImplementation context)
+        {
+            return context.Database.EnsureCreated();
         }
 
         /// <summary>
@@ -173,7 +187,7 @@ namespace GreenEnergyHub.FunctionApp.TestCommon.Database
         private static string BuildCreateDatabaseCommandText(string databaseName)
         {
             return
-                $"CREATE DATABASE [{databaseName}] COLLATE {CollationName};" +
+                $"CREATE DATABASE [{databaseName}] COLLATE {DefaultCollationName};" +
                 $"ALTER DATABASE [{databaseName}] SET READ_COMMITTED_SNAPSHOT ON;";
         }
 
