@@ -18,10 +18,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Azure.Messaging.ServiceBus;
+using Azure.Messaging.ServiceBus.Administration;
 using GreenEnergyHub.TestCommon.Diagnostics;
-using Microsoft.Azure.ServiceBus;
-using Microsoft.Azure.ServiceBus.Core;
-using Microsoft.Azure.ServiceBus.Management;
 
 namespace GreenEnergyHub.FunctionApp.TestCommon.ServiceBus.ListenerMock
 {
@@ -43,32 +42,35 @@ namespace GreenEnergyHub.FunctionApp.TestCommon.ServiceBus.ListenerMock
             TestLogger = testLogger
                 ?? throw new ArgumentNullException(nameof(testLogger));
 
-            ManagementClient = new ManagementClient(ConnectionString);
+            AdministrationClient = new ServiceBusAdministrationClient(ConnectionString);
+            Client = new ServiceBusClient(ConnectionString);
 
             MutableReceivedMessagesLock = new SemaphoreSlim(1, 1);
-            MessageReceivers = new Dictionary<string, IReceiverClient>();
-            MessageHandlers = new ConcurrentDictionary<Func<Message, bool>, Func<Message, Task>>();
+            MessageReceivers = new Dictionary<string, ServiceBusProcessor>();
+            MessageHandlers = new ConcurrentDictionary<Func<ServiceBusReceivedMessage, bool>, Func<ServiceBusReceivedMessage, Task>>();
 
-            var mutableReceivedMessages = new BlockingCollection<Message>();
+            var mutableReceivedMessages = new BlockingCollection<ServiceBusReceivedMessage>();
             MutableReceivedMessages = mutableReceivedMessages;
             ReceivedMessages = mutableReceivedMessages;
         }
 
         public string ConnectionString { get; }
 
-        public IReadOnlyCollection<Message> ReceivedMessages { get; private set; }
+        public IReadOnlyCollection<ServiceBusReceivedMessage> ReceivedMessages { get; private set; }
 
         private SemaphoreSlim MutableReceivedMessagesLock { get; }
 
         private ITestDiagnosticsLogger TestLogger { get; }
 
-        private ManagementClient ManagementClient { get; }
+        private ServiceBusAdministrationClient AdministrationClient { get; }
 
-        private IDictionary<string, IReceiverClient> MessageReceivers { get; }
+        private ServiceBusClient Client { get; }
 
-        private IDictionary<Func<Message, bool>, Func<Message, Task>> MessageHandlers { get; }
+        private IDictionary<string, ServiceBusProcessor> MessageReceivers { get; }
 
-        private BlockingCollection<Message> MutableReceivedMessages { get; set; }
+        private IDictionary<Func<ServiceBusReceivedMessage, bool>, Func<ServiceBusReceivedMessage, Task>> MessageHandlers { get; }
+
+        private BlockingCollection<ServiceBusReceivedMessage> MutableReceivedMessages { get; set; }
 
         /// <summary>
         /// Close listeners and dispose resources.
@@ -91,12 +93,14 @@ namespace GreenEnergyHub.FunctionApp.TestCommon.ServiceBus.ListenerMock
                 throw new ArgumentException("Value cannot be null or whitespace.", nameof(queueName));
             }
 
-            if (!await ManagementClient.QueueExistsAsync(queueName).ConfigureAwait(false))
+            if (!await AdministrationClient.QueueExistsAsync(queueName).ConfigureAwait(false))
             {
                 throw new InvalidOperationException($"Queue '{queueName}' does not exists.");
             }
 
-            AddMessageReceiver(queueName);
+            var options = CreateDefaultProcessorOptions();
+            var receiver = Client.CreateProcessor(queueName, options);
+            await AddMessageReceiverAsync(queueName, receiver).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -117,12 +121,14 @@ namespace GreenEnergyHub.FunctionApp.TestCommon.ServiceBus.ListenerMock
                 throw new ArgumentException("Value cannot be null or whitespace.", nameof(subscriptionName));
             }
 
-            if (!await ManagementClient.SubscriptionExistsAsync(topicName, subscriptionName).ConfigureAwait(false))
+            if (!await AdministrationClient.SubscriptionExistsAsync(topicName, subscriptionName).ConfigureAwait(false))
             {
                 throw new InvalidOperationException($"Topic '{topicName}' with subscription '{subscriptionName}' does not exists.");
             }
 
-            AddMessageReceiver(EntityNameHelper.FormatSubscriptionPath(topicName, subscriptionName));
+            var options = CreateDefaultProcessorOptions();
+            var receiver = Client.CreateProcessor(topicName, subscriptionName, options);
+            await AddMessageReceiverAsync($"{topicName}-{subscriptionName}", receiver).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -130,9 +136,9 @@ namespace GreenEnergyHub.FunctionApp.TestCommon.ServiceBus.ListenerMock
         /// If multiple message handlers can be matched with a message, then only one will be used (no guarantee for which one).
         /// NOTE: The handler supplied will be invoked for all messages already received and currently present in the ReceivedMessages collection.
         /// </summary>
-        public async Task AddMessageHandlerAsync(Func<Message, bool> messageMatcher, Func<Message, Task> messageHandler)
+        public async Task AddMessageHandlerAsync(Func<ServiceBusReceivedMessage, bool> messageMatcher, Func<ServiceBusReceivedMessage, Task> messageHandler)
         {
-            var alreadyReceivedMessages = new List<Message>();
+            var alreadyReceivedMessages = new List<ServiceBusReceivedMessage>();
             await MutableReceivedMessagesLock.WaitAsync().ConfigureAwait(false);
             try
             {
@@ -155,7 +161,7 @@ namespace GreenEnergyHub.FunctionApp.TestCommon.ServiceBus.ListenerMock
         }
 
         /// <summary>
-        /// Reset all listener.
+        /// Reset all listeners.
         /// </summary>
         /// <remarks>Avoid using this, unless you are removing the queue or topic</remarks>
         public async Task ResetMessageReceiversAsync()
@@ -173,45 +179,58 @@ namespace GreenEnergyHub.FunctionApp.TestCommon.ServiceBus.ListenerMock
             ClearReceivedMessages();
         }
 
-        private static bool IsDefaultMessageHandler(KeyValuePair<Func<Message, bool>, Func<Message, Task>> messageHandler)
+        private static ServiceBusProcessorOptions CreateDefaultProcessorOptions()
         {
-            return messageHandler.Equals(default(KeyValuePair<Func<Message, bool>, Func<Message, Task>>));
+            return new ServiceBusProcessorOptions
+            {
+                // By default or when AutoCompleteMessages is set to true, the processor will complete the message after executing the message handler
+                // Set AutoCompleteMessages to false to [settle messages](https://docs.microsoft.com/en-us/azure/service-bus-messaging/message-transfers-locks-settlement#peeklock) on your own.
+                // In both cases, if the message handler throws an exception without settling the message, the processor will abandon the message.
+                AutoCompleteMessages = true,
+
+                MaxConcurrentCalls = 1,
+            };
+        }
+
+        private static bool IsDefaultMessageHandler(KeyValuePair<Func<ServiceBusReceivedMessage, bool>, Func<ServiceBusReceivedMessage, Task>> messageHandler)
+        {
+            return messageHandler.Equals(default(KeyValuePair<Func<ServiceBusReceivedMessage, bool>, Func<ServiceBusReceivedMessage, Task>>));
         }
 
         /// <summary>
         /// Default message handler.
         /// </summary>
-        private static Func<Message, Task> DefaultMessageHandler()
+        private static Func<ServiceBusReceivedMessage, Task> DefaultMessageHandler()
         {
             return message => Task.CompletedTask;
         }
 
-        private void AddMessageReceiver(string entityPath)
+        private Task AddMessageReceiverAsync(string entityPath, ServiceBusProcessor receiver)
         {
             if (MessageReceivers.Keys.Contains(entityPath))
             {
                 throw new InvalidOperationException($"A listener for entity path '{entityPath}' already exists.");
             }
 
-            var messageReceiver = new MessageReceiver(ConnectionString, entityPath, ReceiveMode.PeekLock);
-            messageReceiver.RegisterMessageHandler(HandleMessageReceivedAsync, HandleMessagePumpExceptionAsync);
+            MessageReceivers.Add(new KeyValuePair<string, ServiceBusProcessor>(entityPath, receiver));
 
-            MessageReceivers.Add(new KeyValuePair<string, IReceiverClient>(entityPath, messageReceiver));
+            receiver.ProcessMessageAsync += HandleMessageReceivedAsync;
+            receiver.ProcessErrorAsync += HandleMessagePumpExceptionAsync;
+
+            return receiver.StartProcessingAsync();
         }
 
         /// <summary>
         /// All messages received by all message receivers arrives here.
         /// </summary>
-        private async Task HandleMessageReceivedAsync(Message message, CancellationToken cancellationToken)
+        private async Task HandleMessageReceivedAsync(ProcessMessageEventArgs arg)
         {
-            var messageClone = message.Clone();
-
-            Func<Message, Task> messageHandler;
-            await MutableReceivedMessagesLock.WaitAsync(cancellationToken).ConfigureAwait(false);
+            Func<ServiceBusReceivedMessage, Task> messageHandler;
+            await MutableReceivedMessagesLock.WaitAsync(arg.CancellationToken).ConfigureAwait(false);
             try
             {
-                MutableReceivedMessages.Add(messageClone, cancellationToken);
-                messageHandler = GetMessageHandler(messageClone);
+                MutableReceivedMessages.Add(arg.Message, arg.CancellationToken);
+                messageHandler = GetMessageHandler(arg.Message);
             }
             finally
             {
@@ -220,7 +239,7 @@ namespace GreenEnergyHub.FunctionApp.TestCommon.ServiceBus.ListenerMock
 
             try
             {
-                await messageHandler(message).ConfigureAwait(false);
+                await messageHandler(arg.Message).ConfigureAwait(false);
             }
             catch
             {
@@ -228,7 +247,7 @@ namespace GreenEnergyHub.FunctionApp.TestCommon.ServiceBus.ListenerMock
             }
         }
 
-        private Func<Message, Task> GetMessageHandler(Message message)
+        private Func<ServiceBusReceivedMessage, Task> GetMessageHandler(ServiceBusReceivedMessage message)
         {
             var messageHandler = MessageHandlers.FirstOrDefault(x => x.Key(message));
             return IsDefaultMessageHandler(messageHandler)
@@ -239,7 +258,7 @@ namespace GreenEnergyHub.FunctionApp.TestCommon.ServiceBus.ListenerMock
         /// <summary>
         /// If the underlying message pump throws an exception it will arrive here.
         /// </summary>
-        private Task HandleMessagePumpExceptionAsync(ExceptionReceivedEventArgs eventArgs)
+        private Task HandleMessagePumpExceptionAsync(ProcessErrorEventArgs eventArgs)
         {
             TestLogger.WriteLine($"{nameof(ServiceBusListenerMock)}: {eventArgs.Exception}");
             return Task.CompletedTask;
@@ -251,7 +270,7 @@ namespace GreenEnergyHub.FunctionApp.TestCommon.ServiceBus.ListenerMock
         {
             await ResetMessageReceiversAsync().ConfigureAwait(false);
             ResetMessageHandlersAndReceivedMessages();
-            await ManagementClient.CloseAsync().ConfigureAwait(false);
+            await Client.DisposeAsync().ConfigureAwait(false);
         }
 
         private async Task CleanupMessageReceiversAsync()
@@ -259,8 +278,8 @@ namespace GreenEnergyHub.FunctionApp.TestCommon.ServiceBus.ListenerMock
             foreach (var registration in MessageReceivers)
             {
                 var receiver = registration.Value;
-                await receiver.UnregisterMessageHandlerAsync(TimeSpan.FromSeconds(5));
-                await receiver.CloseAsync().ConfigureAwait(false);
+                await receiver.StopProcessingAsync().ConfigureAwait(false);
+                await receiver.DisposeAsync().ConfigureAwait(false);
             }
 
             MessageReceivers.Clear();
@@ -272,7 +291,7 @@ namespace GreenEnergyHub.FunctionApp.TestCommon.ServiceBus.ListenerMock
             MutableReceivedMessages.Dispose();
 
             // As soon as we have called "CompleteAdding" we must create a new instance.
-            var mutableReceivedMessages = new BlockingCollection<Message>();
+            var mutableReceivedMessages = new BlockingCollection<ServiceBusReceivedMessage>();
             MutableReceivedMessages = mutableReceivedMessages;
             ReceivedMessages = mutableReceivedMessages;
         }

@@ -21,18 +21,21 @@ namespace GreenEnergyHub.FunctionApp.TestCommon.Tests.Fixtures
 {
     public class ServiceBusListenerMockServiceBusOptions : AzureCloudServiceBusOptions
     {
+        public const string QueueName = "queue";
+
+        public const string TopicName = "queue";
+        public const string SubscriptionName = "defaultSubscription";
+
         public override void Configure(ServiceBusOptionsBuilder builder)
         {
             builder.SetConfigResolver(ConfigurationResolver);
 
-            var queueName = "queue";
             builder
-                .AddQueue(queueName);
+                .AddQueue(QueueName);
 
-            var topicName = "topic";
             builder
-                .AddTopic(topicName)
-                .AddSubscription("defaultSubscription");
+                .AddTopic(TopicName)
+                .AddSubscription(SubscriptionName);
         }
 
         private AzureResourceConfiguration ConfigurationResolver()

@@ -14,7 +14,7 @@
 
 using System;
 using System.Linq;
-using Microsoft.Azure.ServiceBus;
+using Azure.Messaging.ServiceBus;
 
 namespace GreenEnergyHub.FunctionApp.TestCommon.ServiceBus.ListenerMock
 {
@@ -27,7 +27,7 @@ namespace GreenEnergyHub.FunctionApp.TestCommon.ServiceBus.ListenerMock
         /// <summary>
         /// Assert we have received expected message exactly once.
         /// </summary>
-        public static void AssertReceived(this ServiceBusListenerMock mock, Func<Message, bool> matcher)
+        public static void AssertReceived(this ServiceBusListenerMock mock, Func<ServiceBusReceivedMessage, bool> matcher)
         {
             AssertReceived(mock, expectedCount: 1, matcher);
         }
@@ -35,7 +35,7 @@ namespace GreenEnergyHub.FunctionApp.TestCommon.ServiceBus.ListenerMock
         /// <summary>
         /// Assert we have received expected message a number of times.
         /// </summary>
-        public static void AssertReceived(this ServiceBusListenerMock mock, int expectedCount, Func<Message, bool> matcher)
+        public static void AssertReceived(this ServiceBusListenerMock mock, int expectedCount, Func<ServiceBusReceivedMessage, bool> matcher)
         {
             var count = mock.ReceivedMessages.Count(matcher);
             if (count != expectedCount)
