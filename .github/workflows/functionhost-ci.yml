@@ -85,8 +85,8 @@ jobs:
       - name: Install Azurite v${{ env.AZURITE_VERSION }}
         run: npm install -g azurite@${{ env.AZURITE_VERSION }}
 
-      # - name: Install Azure Functions Core Tools v${{ env.AZURE_FUNCTIONS_CORE_TOOLS_VERSION }}
-      #   run: npm install -g azure-functions-core-tools@${{ env.AZURE_FUNCTIONS_CORE_TOOLS_VERSION }}
+      - name: Install Azure Functions Core Tools v${{ env.AZURE_FUNCTIONS_CORE_TOOLS_VERSION }}
+        run: npm install -g azure-functions-core-tools@${{ env.AZURE_FUNCTIONS_CORE_TOOLS_VERSION }}
 
       # TODO: Remove when integration tests are working
       # - name: Test Azurite
