@@ -51,17 +51,17 @@ namespace GreenEnergyHub.Charges.Infrastructure.Integration.Mappers
             }
         }
 
-        protected override IInboundMessage Convert([NotNull] ConsumptionMeteringPointCreated obj)
+        protected override IInboundMessage Convert([NotNull] ConsumptionMeteringPointCreated consumptionMeteringPointCreated)
         {
-            var settlementMethod = MapSettlementMethod(obj.SettlementMethod);
-            var connectionState = MapConnectionState(obj.ConnectionState);
+            var settlementMethod = MapSettlementMethod(consumptionMeteringPointCreated.SettlementMethod);
+            var connectionState = MapConnectionState(consumptionMeteringPointCreated.ConnectionState);
 
             return new ConsumptionMeteringPointCreatedEvent(
-                obj.GsrnNumber,
-                obj.GridAreaCode,
+                consumptionMeteringPointCreated.GsrnNumber,
+                consumptionMeteringPointCreated.GridAreaCode,
                 settlementMethod,
                 connectionState,
-                obj.EffectiveDate.ToInstant());
+                consumptionMeteringPointCreated.EffectiveDate.ToInstant());
         }
     }
 }
