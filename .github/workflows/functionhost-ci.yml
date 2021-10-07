@@ -88,32 +88,6 @@ jobs:
       - name: Install Azure Functions Core Tools v${{ env.AZURE_FUNCTIONS_CORE_TOOLS_VERSION }}
         run: npm install -g azure-functions-core-tools@${{ env.AZURE_FUNCTIONS_CORE_TOOLS_VERSION }}
 
-      # TODO: Remove when integration tests are working
-      # - name: Test Azurite
-      #   if: ${{ success() || failure() }}
-      #   run: azurite --version
-
-      # TODO: Remove when integration tests are working
-      # - name: Test Azure Functions Core Tools
-      #   if: ${{ success() || failure() }}
-      #   run: func --version
-
-      # TODO: Remove when integration tests are working
-      # - name: Find node modules path
-      #   if: ${{ success() || failure() }}
-      #   run: npm root
-
-      # TODO: Remove when integration tests are working
-      # - name: Find docker images
-      #   if: ${{ success() || failure() }}
-      #   run: docker images
-      # - name: Pull sql server
-      #   if: ${{ success() || failure() }}
-      #   run: docker pull mcr.microsoft.com/mssql/server:2019-latest
-      # - name: Find docker images
-      #   if: ${{ success() || failure() }}
-      #   run: docker images
-
       - name: Build and test
         shell: pwsh
         run: |
