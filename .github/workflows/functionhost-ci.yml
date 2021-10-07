@@ -114,10 +114,11 @@ jobs:
       #   if: ${{ success() || failure() }}
       #   run: docker images
 
-      - name: Test
+      - name: Build and test
         shell: pwsh
         run: |
-          dotnet test ${{ env.TEST_CSPROJ_FILE_PATH }} -p:CollectCoverage=true -p:CoverletOutput='${{ github.workspace }}/output/' -p:CoverletOutputFormat=cobertura -p:Threshold=0
+          dotnet build ${{ env.SOLUTION_FILE_PATH }} --configuration Release --output '${{ github.workspace }}/output/'
+          dotnet test --no-build ${{ env.TEST_CSPROJ_FILE_PATH }} -p:CollectCoverage=true -p:CoverletOutput='${{ github.workspace }}/output/' -p:CoverletOutputFormat=cobertura -p:Threshold=0
 
       # - name: Build and test project
       #   uses: ./.github/actions/dotnet-build-and-test
