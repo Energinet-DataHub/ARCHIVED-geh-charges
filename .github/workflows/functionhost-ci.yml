@@ -21,8 +21,8 @@ on:
 
 env:
   CSPROJ_FILE_PATH: source/GreenEnergyHub.Charges/source/GreenEnergyHub.Charges.FunctionHost/GreenEnergyHub.Charges.FunctionHost.csproj
-  TEST_CSPROJ_FILE_PATH: source/GreenEnergyHub.Charges/source/GreenEnergyHub.FunctionApp.TestCommon.Tests/GreenEnergyHub.FunctionApp.TestCommon.Tests.csproj
-  #TEST_CSPROJ_FILE_PATH: source/GreenEnergyHub.Charges/source/GreenEnergyHub.Charges.IntegrationTests/GreenEnergyHub.Charges.IntegrationTests.csproj
+  #TEST_CSPROJ_FILE_PATH: source/GreenEnergyHub.Charges/source/GreenEnergyHub.FunctionApp.TestCommon.Tests/GreenEnergyHub.FunctionApp.TestCommon.Tests.csproj
+  TEST_CSPROJ_FILE_PATH: source/GreenEnergyHub.Charges/source/GreenEnergyHub.Charges.IntegrationTests/GreenEnergyHub.Charges.IntegrationTests.csproj
   SOLUTION_FILE_PATH: source/GreenEnergyHub.Charges/GreenEnergyHub.Charges.sln
   DOTNET_VERSION: '5.0.202'
   AZURITE_VERSION: '3.14.0'
