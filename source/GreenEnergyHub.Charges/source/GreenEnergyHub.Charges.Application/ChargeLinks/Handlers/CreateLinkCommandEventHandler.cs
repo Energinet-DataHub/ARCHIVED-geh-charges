@@ -18,6 +18,7 @@ using GreenEnergyHub.Charges.Domain.ChargeLinkCommandReceivedEvents;
 using GreenEnergyHub.Charges.Domain.ChargeLinkCommands;
 using GreenEnergyHub.Charges.Domain.CreateLinkCommandEvents;
 using GreenEnergyHub.Charges.Domain.DefaultChargeLinks;
+using GreenEnergyHub.Charges.Domain.MeteringPoints;
 using NodaTime;
 
 namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
@@ -28,29 +29,34 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
         private readonly IChargeLinkCommandFactory _chargeLinkCommandFactory;
         private readonly IMessageDispatcher<ChargeLinkCommandReceivedEvent> _messageDispatcher;
         private readonly IClock _clock;
+        private readonly IMeteringPointRepository _meteringPointRepository;
 
         public CreateLinkCommandEventHandler(
             IDefaultChargeLinkRepository defaultChargeLinkRepository,
             IChargeLinkCommandFactory chargeLinkCommandFactory,
             IMessageDispatcher<ChargeLinkCommandReceivedEvent> messageDispatcher,
-            IClock clock)
+            IClock clock,
+            IMeteringPointRepository meteringPointRepository)
         {
             _defaultChargeLinkRepository = defaultChargeLinkRepository;
             _chargeLinkCommandFactory = chargeLinkCommandFactory;
             _messageDispatcher = messageDispatcher;
             _clock = clock;
+            _meteringPointRepository = meteringPointRepository;
         }
 
         public async Task HandleAsync([NotNull] CreateLinkCommandEvent createLinkCommandEvent, string correlationId)
         {
+            var meteringPoint = await _meteringPointRepository
+                .GetMeteringPointAsync(createLinkCommandEvent.MeteringPointId).ConfigureAwait(false);
             var defaultChargeLinks = await _defaultChargeLinkRepository
-                .GetAsync(createLinkCommandEvent.MeteringPointType).ConfigureAwait(false);
+                .GetAsync(meteringPoint.MeteringPointType).ConfigureAwait(false);
 
             foreach (var defaultChargeLink in defaultChargeLinks)
             {
                 if (defaultChargeLink.ApplicableForLinking(
-                    createLinkCommandEvent.StartDateTime,
-                    createLinkCommandEvent.MeteringPointType))
+                    meteringPoint.EffectiveDate,
+                    meteringPoint.MeteringPointType))
                 {
                     var chargeLinkCommand =
                         await _chargeLinkCommandFactory.CreateAsync(

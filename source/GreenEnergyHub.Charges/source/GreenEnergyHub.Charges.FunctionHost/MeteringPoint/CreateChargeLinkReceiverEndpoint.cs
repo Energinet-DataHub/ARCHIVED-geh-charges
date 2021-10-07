@@ -16,6 +16,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.IntegrationEventContracts;
 using GreenEnergyHub.Charges.Application.ChargeLinks.Handlers;
+using GreenEnergyHub.Charges.Commands;
 using GreenEnergyHub.Charges.Domain.CreateLinkCommandEvents;
 using GreenEnergyHub.Charges.Infrastructure.Correlation;
 using GreenEnergyHub.Charges.Infrastructure.Messaging;
@@ -32,13 +33,13 @@ namespace GreenEnergyHub.Charges.FunctionHost.MeteringPoint
         /// </summary>
         public const string FunctionName = nameof(CreateChargeLinkReceiverEndpoint);
         private readonly ICorrelationContext _correlationContext;
-        private readonly MessageExtractor<CreateLinkCommandContract> _messageExtractor;
+        private readonly MessageExtractor<CreateDefaultChargeLinks> _messageExtractor;
         private readonly ILogger _log;
         private readonly ICreateLinkCommandEventHandler _createLinkCommandEventHandler;
 
         public CreateChargeLinkReceiverEndpoint(
             ICorrelationContext correlationContext,
-            MessageExtractor<CreateLinkCommandContract> messageExtractor,
+            MessageExtractor<CreateDefaultChargeLinks> messageExtractor,
             [NotNull] ILoggerFactory loggerFactory,
             ICreateLinkCommandEventHandler createLinkCommandEventHandler)
         {
@@ -52,9 +53,8 @@ namespace GreenEnergyHub.Charges.FunctionHost.MeteringPoint
         [Function(FunctionName)]
         public async Task RunAsync(
             [ServiceBusTrigger(
-                "%CREATE_LINK_COMMAND_TOPIC_NAME%",
-                "%CREATE_LINK_COMMAND_SUBSCRIPTION_NAME%",
-                Connection = "DOMAINEVENT_LISTENER_CONNECTION_STRING")]
+                "%CREATE_LINK_REQUEST_QUEUE_NAME%",
+                Connection = "INTEGRATIONEVENT_LISTENER_CONNECTION_STRING")]
             [NotNull] byte[] message)
         {
             _log.LogInformation(
@@ -69,10 +69,8 @@ namespace GreenEnergyHub.Charges.FunctionHost.MeteringPoint
                 .HandleAsync(createLinkCommandEvent, _correlationContext.Id).ConfigureAwait(false);
 
             _log.LogInformation(
-                "Received create link command for metering point id '{MeteringPointId}' of type '{MeteringPointType}' on '{StartDateTime}'",
-                createLinkCommandEvent.MeteringPointId,
-                createLinkCommandEvent.MeteringPointType,
-                createLinkCommandEvent.StartDateTime);
+                "Received create link command for metering point id '{MeteringPointId}'",
+                createLinkCommandEvent.MeteringPointId);
         }
     }
 }
