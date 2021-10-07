@@ -60,7 +60,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.MeteringPoint
                 .ConfigureAwait(false);
 
             _log.LogInformation(
-                "Received metering point created event '{@MeteringPointId}'",
+                "Consumption metering point received '{@MeteringPointId}'",
                 consumptionMeteringPointCreatedEvent.MeteringPointId);
         }
     }
