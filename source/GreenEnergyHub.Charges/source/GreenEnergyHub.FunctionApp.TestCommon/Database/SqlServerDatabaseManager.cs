@@ -32,7 +32,7 @@ namespace GreenEnergyHub.FunctionApp.TestCommon.Database
     public abstract class SqlServerDatabaseManager<TContextImplementation>
         where TContextImplementation : DbContext
     {
-        private const string CollationName = "SQL_Danish_Pref_CP1_CI_AS";
+        private const string CollationName = "SQL_Latin1_General_CP1_CI_AS";
 
         protected SqlServerDatabaseManager(string prefixForDatabaseName)
         {
@@ -56,11 +56,17 @@ namespace GreenEnergyHub.FunctionApp.TestCommon.Database
         /// with the full schema and <see cref="DeleteDatabaseAsync"/> after testing is done.
         /// Note: Attempts to create a database with a name already existing, will do nothing.
         /// </summary>
-        public async Task<bool> CreateDatabaseAsync()
+        public async Task CreateDatabaseAsync(bool withSchema = true)
         {
+            //// TODO: Update method description if this technique works on the build agent
+
             await using var context = CreateDbContext();
             CreateLocalDatabaseWithoutSchema(context);
-            return await context.Database.EnsureCreatedAsync().ConfigureAwait(false);
+
+            if (withSchema)
+            {
+                await context.Database.EnsureCreatedAsync().ConfigureAwait(false);
+            }
         }
 
         /// <summary>
@@ -68,7 +74,7 @@ namespace GreenEnergyHub.FunctionApp.TestCommon.Database
         /// with the full schema and <see cref="DeleteDatabase"/> after testing is done.
         /// Note: Attempts to create a database with a name already existing, will do nothing.
         /// </summary>
-        public bool CreateDatabase()
+        public bool CreateDatabase(bool withSchema = true)
         {
             using var context = CreateDbContext();
             CreateLocalDatabaseWithoutSchema(context);

@@ -19,7 +19,6 @@ using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.ApplyDBMigrationsApp.Helpers;
 using GreenEnergyHub.Charges.FunctionHost.Common;
-using GreenEnergyHub.Charges.TestCore.Squadron;
 using GreenEnergyHub.FunctionApp.TestCommon;
 using GreenEnergyHub.FunctionApp.TestCommon.Azurite;
 using GreenEnergyHub.FunctionApp.TestCommon.FunctionAppHost;
@@ -35,10 +34,11 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures
         public ChargesFunctionAppFixture(IMessageSink messageSink)
         {
             AzuriteManager = new AzuriteManager();
-
+            DatabaseManager = new ChargesDatabaseManager();
             ServiceBusResource = new AzureCloudServiceBusResource<ChargesFunctionAppServiceBusOptions>(messageSink);
-            SqlServerResource = new SqlServerResource<SqlServerOptions>();
         }
+
+        public ChargesDatabaseManager DatabaseManager { get; }
 
         [NotNull]
         public ServiceBusListenerMock? ServiceBusListenerMock { get; private set; }
@@ -46,8 +46,6 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures
         private AzuriteManager AzuriteManager { get; }
 
         private AzureCloudServiceBusResource<ChargesFunctionAppServiceBusOptions> ServiceBusResource { get; }
-
-        private SqlServerResource<SqlServerOptions> SqlServerResource { get; }
 
         /// <inheritdoc/>
         protected override void OnConfigureHostSettings(FunctionAppHostSettings hostSettings)
@@ -108,15 +106,12 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures
             await ServiceBusListenerMock.AddTopicSubscriptionListenerAsync(postOfficeTopicName, ChargesFunctionAppServiceBusOptions.PostOfficeTopicSubscriptionName);
 
             // => Database
-            await SqlServerResource.InitializeAsync();
-
-            const string databaseName = "chargeDatabase";
-            var chargeDbConnectionString = await SqlServerResource.CreateDatabaseAsync(databaseName);
+            await DatabaseManager.CreateDatabaseAsync(withSchema: false);
 
             // Overwrites the setting so the function uses the name we have control of in the test
-            Environment.SetEnvironmentVariable(EnvironmentSettingNames.ChargeDbConnectionString, chargeDbConnectionString);
+            Environment.SetEnvironmentVariable(EnvironmentSettingNames.ChargeDbConnectionString, DatabaseManager.ConnectionString);
 
-            var upgrader = UpgradeFactory.GetUpgradeEngine(chargeDbConnectionString, _ => true);
+            var upgrader = UpgradeFactory.GetUpgradeEngine(DatabaseManager.ConnectionString, _ => true);
             var result = upgrader.PerformUpgrade();
             if (result.Successful is false)
             {
@@ -143,7 +138,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures
             await ServiceBusResource.DisposeAsync();
 
             // => Database
-            await SqlServerResource.DisposeAsync();
+            await DatabaseManager.DeleteDatabaseAsync();
         }
 
         protected async Task<string> GetTopicNameFromKeyAsync(string topicKey)
