@@ -20,7 +20,7 @@ using GreenEnergyHub.Charges.Infrastructure.Context;
 using GreenEnergyHub.FunctionApp.TestCommon.Database;
 using Microsoft.EntityFrameworkCore;
 
-namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures
+namespace GreenEnergyHub.Charges.TestCore.Database
 {
     public class ChargesDatabaseManager : SqlServerDatabaseManager<ChargesDatabaseContext>
     {
@@ -55,9 +55,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures
             var upgrader = UpgradeFactory.GetUpgradeEngine(ConnectionString, _ => true);
             var result = upgrader.PerformUpgrade();
             if (result.Successful is false)
-            {
                 throw new Exception("Database migration failed", result.Error);
-            }
 
             return true;
         }

@@ -15,11 +15,9 @@
 using System.Linq;
 using System.Threading.Tasks;
 using FluentAssertions;
-using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.MeteringPoints;
 using GreenEnergyHub.Charges.Infrastructure.Repositories;
-using GreenEnergyHub.Charges.TestCore.Squadron;
-using Squadron;
+using GreenEnergyHub.Charges.TestCore.Database;
 using Xunit;
 using Xunit.Categories;
 
@@ -29,21 +27,19 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
     /// Tests <see cref="DefaultChargeLinkRepository"/> using an SQLite in-memory database.
     /// </summary>
     [UnitTest]
-    public class DefaultChargeLinkRepositoryTests : IClassFixture<SqlServerResource<SqlServerOptions>>
+    public class DefaultChargeLinkRepositoryTests : IClassFixture<ChargesDatabaseFixture>
     {
-        private readonly SqlServerResource<SqlServerOptions> _resource;
+        private readonly ChargesDatabaseManager _databaseManager;
 
-        public DefaultChargeLinkRepositoryTests(SqlServerResource<SqlServerOptions> resource)
+        public DefaultChargeLinkRepositoryTests(ChargesDatabaseFixture fixture)
         {
-            _resource = resource;
+            _databaseManager = fixture.DatabaseManager;
         }
 
         [Fact]
         public async Task GetDefaultChargeLinks_WhenCalledWithMeteringPointType_ReturnsDefaultCharges()
         {
-            await using var chargesDatabaseContext = await SquadronContextFactory
-                .GetDatabaseContextAsync(_resource)
-                .ConfigureAwait(false);
+            await using var chargesDatabaseContext = _databaseManager.CreateDbContext();
 
             // Arrange
             var sut = new DefaultChargeLinkRepository(chargesDatabaseContext);

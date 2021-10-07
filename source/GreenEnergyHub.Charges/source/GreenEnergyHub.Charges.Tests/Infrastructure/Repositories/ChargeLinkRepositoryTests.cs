@@ -21,10 +21,9 @@ using GreenEnergyHub.Charges.Domain.ChargeLinks;
 using GreenEnergyHub.Charges.Domain.MeteringPoints;
 using GreenEnergyHub.Charges.Infrastructure.Context;
 using GreenEnergyHub.Charges.Infrastructure.Repositories;
-using GreenEnergyHub.Charges.TestCore.Squadron;
+using GreenEnergyHub.Charges.TestCore.Database;
 using Microsoft.EntityFrameworkCore;
 using NodaTime;
-using Squadron;
 using Xunit;
 using Xunit.Categories;
 using MarketParticipant = GreenEnergyHub.Charges.Infrastructure.Context.Model.MarketParticipant;
@@ -35,7 +34,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
     /// Tests <see cref="ChargeRepository"/> using a SQL database.
     /// </summary>
     [UnitTest]
-    public class ChargeLinkRepositoryTests : IClassFixture<SqlServerResource<SqlServerOptions>>
+    public class ChargeLinkRepositoryTests : IClassFixture<ChargesDatabaseFixture>
     {
         private const string ExpectedOperationId = "expected-operation-id";
         private const string ExpectedCorrelationId = "expected-correlation-id";
@@ -43,20 +42,18 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
 
         private readonly Instant _expectedPeriodDetailsStartDateTime = SystemClock.Instance.GetCurrentInstant();
 
-        private readonly SqlServerResource<SqlServerOptions> _resource;
+        private readonly ChargesDatabaseManager _databaseManager;
 
-        public ChargeLinkRepositoryTests(SqlServerResource<SqlServerOptions> resource)
+        public ChargeLinkRepositoryTests(ChargesDatabaseFixture fixture)
         {
-            _resource = resource;
+            _databaseManager = fixture.DatabaseManager;
         }
 
         [Fact]
         public async Task StoreAsync_StoresChargeLink()
         {
             // Arrange
-            await using var chargesDatabaseWriteContext = await SquadronContextFactory
-                .GetDatabaseContextAsync(_resource)
-                .ConfigureAwait(false);
+            await using var chargesDatabaseWriteContext = _databaseManager.CreateDbContext();
 
             var ids = SeedDatabase(chargesDatabaseWriteContext);
             var expected = CreateNewExpectedChargeLink(ids);
@@ -66,9 +63,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
             await sut.StoreAsync(expected).ConfigureAwait(false);
 
             // Assert
-            await using var chargesDatabaseReadContext = await SquadronContextFactory
-                .GetDatabaseContextAsync(_resource)
-                .ConfigureAwait(false);
+            await using var chargesDatabaseReadContext = _databaseManager.CreateDbContext();
 
             var actual = await chargesDatabaseReadContext.ChargeLinks.SingleAsync(
                     c => c.ChargeId == ids.chargeId && c.MeteringPointId == ids.meteringPointId)
