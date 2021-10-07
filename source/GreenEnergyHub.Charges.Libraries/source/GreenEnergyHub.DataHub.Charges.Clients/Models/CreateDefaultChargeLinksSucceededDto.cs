@@ -15,9 +15,10 @@
 namespace GreenEnergyHub.DataHub.Charges.Libraries.Models
 {
     /// <summary>
-    /// The required data needed by the Charges domain to create Default charge links.
+    /// The data needed by the Metering Point domain as a reply
+    /// to a successful Create Default Charge Links request
     /// </summary>
     /// <param name="meteringPointId"></param>
-    /// A unique id to specify the metering point.
-    public sealed record CreateDefaultChargeLinksDto(string meteringPointId);
+    /// <param name="didCreateChargeLinks"></param>
+    public sealed record CreateDefaultChargeLinksSucceededDto(string meteringPointId, bool didCreateChargeLinks);
 }
