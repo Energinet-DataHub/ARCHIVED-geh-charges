@@ -14,12 +14,12 @@
 
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
-using Energinet.DataHub.MeteringPoints.IntegrationEventContracts;
 using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.Domain.MeteringPointCreatedEvents;
 using GreenEnergyHub.Charges.Domain.MeteringPoints;
 using GreenEnergyHub.Messaging.Protobuf;
 using GreenEnergyHub.Messaging.Transport;
+using GreenEnergyHub.MeteringPoints.IntegrationEventContracts;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Integration.Mappers
 {
@@ -36,7 +36,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Integration.Mappers
                 case ConsumptionMeteringPointCreated.Types.SettlementMethod.SmNonprofiled:
                     return SettlementMethod.NonProfiled;
                 default:
-                    throw new InvalidEnumArgumentException($"Provided SettlementMethod value: {settlementMethod} is invalid and cannot be mapped.");
+                    throw new InvalidEnumArgumentException($"Provided SettlementMethod value '{settlementMethod}' is invalid and cannot be mapped.");
             }
         }
 
@@ -47,7 +47,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Integration.Mappers
                 case ConsumptionMeteringPointCreated.Types.ConnectionState.CsNew:
                     return ConnectionState.New;
                 default:
-                    throw new InvalidEnumArgumentException($"Provided ConnectionState value: {connectionState} is invalid and cannot be mapped.");
+                    throw new InvalidEnumArgumentException($"Provided ConnectionState value '{connectionState}' is invalid and cannot be mapped.");
             }
         }
 

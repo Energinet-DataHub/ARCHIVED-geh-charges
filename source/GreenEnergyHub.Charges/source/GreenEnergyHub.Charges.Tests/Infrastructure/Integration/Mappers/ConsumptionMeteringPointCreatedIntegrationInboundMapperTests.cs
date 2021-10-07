@@ -14,7 +14,6 @@
 
 using System;
 using System.Diagnostics.CodeAnalysis;
-using Energinet.DataHub.MeteringPoints.IntegrationEventContracts;
 using FluentAssertions;
 using Google.Protobuf.WellKnownTypes;
 using GreenEnergyHub.Charges.Core.DateTime;
@@ -22,6 +21,7 @@ using GreenEnergyHub.Charges.Domain.MeteringPointCreatedEvents;
 using GreenEnergyHub.Charges.Domain.MeteringPoints;
 using GreenEnergyHub.Charges.Infrastructure.Integration.Mappers;
 using GreenEnergyHub.Charges.TestCore.Attributes;
+using GreenEnergyHub.MeteringPoints.IntegrationEventContracts;
 using GreenEnergyHub.TestHelpers.FluentAssertionsExtensions;
 using Xunit;
 using Xunit.Categories;

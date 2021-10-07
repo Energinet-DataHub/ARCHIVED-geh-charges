@@ -14,10 +14,10 @@
 
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
-using Energinet.DataHub.MeteringPoints.IntegrationEventContracts;
 using GreenEnergyHub.Charges.Application.MeteringPoints.Handlers;
 using GreenEnergyHub.Charges.Domain.MeteringPointCreatedEvents;
 using GreenEnergyHub.Charges.Infrastructure.Messaging;
+using GreenEnergyHub.MeteringPoints.IntegrationEventContracts;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Logging;
 
