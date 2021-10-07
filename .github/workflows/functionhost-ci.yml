@@ -42,7 +42,7 @@ env:
   DOMAINEVENT_LISTENER_CONNECTION_STRING: ${{ secrets.XDAST_DOMAINEVENT_LISTENER_CONNECTION_STRING }}
   # Variables that overrides settings in 'functionhost.settings.json'
   #DotnetExecutablePath: ''
-  FunctionAppHostPath: '${{ github.workspace }}\\node_modules\\azure-functions-core-tools\\bin\\func.dll'
+  FunctionAppHostPath: 'C:\npm\prefix\node_modules\azure-functions-core-tools\bin\func.dll'
   FunctionApplicationPath: '..\\..\\..\\..\\GreenEnergyHub.Charges.FunctionHost\\bin\\Release\\net5.0'
 
 jobs:
