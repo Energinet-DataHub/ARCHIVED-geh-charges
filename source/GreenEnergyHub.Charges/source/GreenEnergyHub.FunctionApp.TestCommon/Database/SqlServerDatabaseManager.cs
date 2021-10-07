@@ -56,9 +56,12 @@ namespace GreenEnergyHub.FunctionApp.TestCommon.Database
         /// </summary>
         public async Task<bool> CreateDatabaseAsync()
         {
-            await using var context = CreateDbContext();
-            CreateLocalDatabaseWithoutSchema(context);
-            return await CreateDatabaseSchemaAsync(context).ConfigureAwait(false);
+            var context = CreateDbContext();
+            await using (context.ConfigureAwait(false))
+            {
+                CreateLocalDatabaseWithoutSchema(context);
+                return await CreateDatabaseSchemaAsync(context).ConfigureAwait(false);
+            }
         }
 
         /// <summary>
@@ -77,8 +80,11 @@ namespace GreenEnergyHub.FunctionApp.TestCommon.Database
         /// </summary>
         public async Task<bool> DeleteDatabaseAsync()
         {
-            await using var context = CreateDbContext();
-            return await context.Database.EnsureDeletedAsync().ConfigureAwait(false);
+            var context = CreateDbContext();
+            await using (context.ConfigureAwait(false))
+            {
+                return await context.Database.EnsureDeletedAsync().ConfigureAwait(false);
+            }
         }
 
         /// <summary>
