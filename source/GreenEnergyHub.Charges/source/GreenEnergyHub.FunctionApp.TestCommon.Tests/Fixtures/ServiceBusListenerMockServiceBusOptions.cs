@@ -23,7 +23,7 @@ namespace GreenEnergyHub.FunctionApp.TestCommon.Tests.Fixtures
     {
         public const string QueueName = "queue";
 
-        public const string TopicName = "queue";
+        public const string TopicName = "topic";
         public const string SubscriptionName = "defaultSubscription";
 
         public override void Configure(ServiceBusOptionsBuilder builder)
