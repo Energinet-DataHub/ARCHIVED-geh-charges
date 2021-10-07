@@ -20,9 +20,5 @@ namespace GreenEnergyHub.DataHub.Charges.Libraries.Models
     /// </summary>
     /// <param name="meteringPointId"></param>
     /// A unique id to specify the metering point.
-    /// <param name="correlationId"></param>
-    /// Forward the correlationId to be able to track the request.
-    public sealed record CreateDefaultChargeLinksDto(
-        string meteringPointId,
-        string correlationId);
+    public sealed record CreateDefaultChargeLinksDto(string meteringPointId);
 }

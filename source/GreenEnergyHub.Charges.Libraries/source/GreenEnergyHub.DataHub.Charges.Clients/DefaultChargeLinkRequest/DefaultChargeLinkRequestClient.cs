@@ -35,10 +35,15 @@ namespace GreenEnergyHub.DataHub.Charges.Libraries.DefaultChargeLinkRequest
             _responseQueue = responseQueue;
         }
 
-        public async Task CreateDefaultChargeLinksRequestAsync(CreateDefaultChargeLinksDto createDefaultChargeLinksDto)
+        public async Task CreateDefaultChargeLinksRequestAsync(
+            CreateDefaultChargeLinksDto createDefaultChargeLinksDto,
+            string correlationId)
         {
             if (createDefaultChargeLinksDto == null)
                 throw new ArgumentNullException(nameof(createDefaultChargeLinksDto));
+
+            if (string.IsNullOrWhiteSpace(correlationId))
+                throw new ArgumentNullException(nameof(correlationId));
 
             _serviceBusClient ??= _serviceBusClientFactory.Create();
 
@@ -53,7 +58,7 @@ namespace GreenEnergyHub.DataHub.Charges.Libraries.DefaultChargeLinkRequest
             {
                 Body = new BinaryData(createDefaultChargeLinks.ToByteArray()),
                 ReplyTo = _responseQueue,
-                CorrelationId = createDefaultChargeLinksDto.correlationId,
+                CorrelationId = correlationId,
             }).ConfigureAwait(false);
         }
 

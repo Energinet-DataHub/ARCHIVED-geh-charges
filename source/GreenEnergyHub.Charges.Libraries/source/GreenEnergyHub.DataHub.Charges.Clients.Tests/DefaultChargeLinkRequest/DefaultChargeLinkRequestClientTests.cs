@@ -17,6 +17,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
 using Azure.Messaging.ServiceBus;
+using GreenEnergyHub.Charges.TestCore.Attributes;
 using GreenEnergyHub.DataHub.Charges.Libraries.DefaultChargeLinkRequest;
 using GreenEnergyHub.DataHub.Charges.Libraries.Factories;
 using GreenEnergyHub.DataHub.Charges.Libraries.Models;
@@ -31,17 +32,26 @@ namespace GreenEnergyHub.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.D
     public class DefaultChargeLinkRequestClientTests
     {
         private const string RespondQueue = "RespondQueue";
+        private const string MeteringPointId = "F9A5115D-44EB-4AD4-BC7E-E8E8A0BC425E";
+        private const string CorrelationId = "fake_value";
 
         [Theory]
-        [InlineAutoData]
+        [InlineAutoMoqData(MeteringPointId, null)]
+        [InlineAutoMoqData(null, CorrelationId)]
+        [InlineAutoMoqData(null, null)]
         public async Task SendAsync_NullArgument_ThrowsException(
+            string meteringPointId,
+            string correlationId,
             [NotNull] [Frozen] Mock<IServiceBusClientFactory> serviceBusClientFactoryMock)
         {
             // Arrange
+            var createDefaultChargeLinksDto = meteringPointId != null ? new CreateDefaultChargeLinksDto(meteringPointId) : null;
             await using var target = new DefaultChargeLinkRequestClient(serviceBusClientFactoryMock.Object, RespondQueue);
 
             // Act + Assert
-            await Assert.ThrowsAsync<ArgumentNullException>(() => target.CreateDefaultChargeLinksRequestAsync(null!)).ConfigureAwait(false);
+            await Assert.ThrowsAsync<ArgumentNullException>(() => target
+                .CreateDefaultChargeLinksRequestAsync(createDefaultChargeLinksDto!, correlationId))
+                .ConfigureAwait(false);
         }
 
         [Theory]
@@ -60,12 +70,10 @@ namespace GreenEnergyHub.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.D
 
             await using var sut = new DefaultChargeLinkRequestClient(serviceBusClientFactoryMock.Object, RespondQueue);
 
-            var createDefaultChargeLinksDto = new CreateDefaultChargeLinksDto(
-                "F9A5115D-44EB-4AD4-BC7E-E8E8A0BC425E",
-                "fake_value");
+            var createDefaultChargeLinksDto = new CreateDefaultChargeLinksDto(MeteringPointId);
 
             // Act
-            await sut.CreateDefaultChargeLinksRequestAsync(createDefaultChargeLinksDto).ConfigureAwait(false);
+            await sut.CreateDefaultChargeLinksRequestAsync(createDefaultChargeLinksDto, CorrelationId).ConfigureAwait(false);
 
             // Assert
             serviceBusSenderMock.Verify(x => x.SendMessageAsync(It.IsAny<ServiceBusMessage>(), default), Times.Once);

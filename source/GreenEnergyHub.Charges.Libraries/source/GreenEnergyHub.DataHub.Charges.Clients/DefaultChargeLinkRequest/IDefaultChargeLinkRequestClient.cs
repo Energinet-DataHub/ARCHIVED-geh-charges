@@ -24,6 +24,9 @@ namespace GreenEnergyHub.DataHub.Charges.Libraries.DefaultChargeLinkRequest
         /// based on the supplied meteringPointIds entity's MeteringPointType.
         /// </summary>
         /// <param name="createDefaultChargeLinksDto"></param>
-        Task CreateDefaultChargeLinksRequestAsync(CreateDefaultChargeLinksDto createDefaultChargeLinksDto);
+        /// <param name="correlationId"></param>
+        Task CreateDefaultChargeLinksRequestAsync(
+            CreateDefaultChargeLinksDto createDefaultChargeLinksDto,
+            string correlationId);
     }
 }
