@@ -13,23 +13,18 @@
 // limitations under the License.
 
 using System.Diagnostics.CodeAnalysis;
-using Energinet.DataHub.MeteringPoints.IntegrationEventContracts;
+using GreenEnergyHub.Charges.Commands;
 using GreenEnergyHub.Charges.Domain.CreateLinkCommandEvents;
-using GreenEnergyHub.Charges.Domain.MeteringPoints;
 using GreenEnergyHub.Messaging.Protobuf;
 using GreenEnergyHub.Messaging.Transport;
-using NodaTime;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Integration.Mappers
 {
-    public class CreateLinkCommandInboundMapper : ProtobufInboundMapper<CreateLinkCommandContract>
+    public class CreateDefaultChargeLinksInboundMapper : ProtobufInboundMapper<CreateDefaultChargeLinks>
     {
-        protected override IInboundMessage Convert([NotNull] CreateLinkCommandContract command)
+        protected override IInboundMessage Convert([NotNull] CreateDefaultChargeLinks command)
         {
-            return new CreateLinkCommandEvent(
-                command.MeteringPointId,
-                (MeteringPointType)command.MeteringPointType,
-                Instant.FromUnixTimeSeconds(command.StartDateTime.Seconds));
+            return new CreateLinkCommandEvent(command.MeteringPointId);
         }
     }
 }

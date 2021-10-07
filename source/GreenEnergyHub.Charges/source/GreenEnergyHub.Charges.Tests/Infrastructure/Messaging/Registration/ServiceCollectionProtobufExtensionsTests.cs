@@ -13,8 +13,7 @@
 // limitations under the License.
 
 using System.Diagnostics.CodeAnalysis;
-using Energinet.DataHub.MeteringPoints.IntegrationEventContracts;
-using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeCommandReceived;
+using GreenEnergyHub.Charges.Commands;
 using GreenEnergyHub.Charges.Infrastructure.Messaging;
 using GreenEnergyHub.Charges.Infrastructure.Messaging.Registration;
 using GreenEnergyHub.Charges.Infrastructure.Messaging.Serialization;
@@ -50,15 +49,15 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Messaging.Registration
         {
             // Act
             serviceCollection.ConfigureProtobufReception();
-            serviceCollection.ReceiveProtobufMessage<CreateLinkCommandContract>(
-                configuration => configuration.WithParser(() => CreateLinkCommandContract.Parser));
+            serviceCollection.ReceiveProtobufMessage<CreateDefaultChargeLinks>(
+                configuration => configuration.WithParser(() => CreateDefaultChargeLinks.Parser));
 
             // Assert
             var provider = serviceCollection.BuildServiceProvider();
-            var extractor = provider.GetRequiredService<MessageExtractor<CreateLinkCommandContract>>();
-            var deserializer = provider.GetRequiredService<MessageDeserializer<CreateLinkCommandContract>>();
-            var mapper = provider.GetRequiredService<ProtobufInboundMapper<CreateLinkCommandContract>>();
-            var parser = provider.GetRequiredService<ProtobufParser<CreateLinkCommandContract>>();
+            var extractor = provider.GetRequiredService<MessageExtractor<CreateDefaultChargeLinks>>();
+            var deserializer = provider.GetRequiredService<MessageDeserializer<CreateDefaultChargeLinks>>();
+            var mapper = provider.GetRequiredService<ProtobufInboundMapper<CreateDefaultChargeLinks>>();
+            var parser = provider.GetRequiredService<ProtobufParser<CreateDefaultChargeLinks>>();
             Assert.NotNull(extractor);
             Assert.NotNull(deserializer);
             Assert.NotNull(mapper);

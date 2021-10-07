@@ -13,7 +13,7 @@
 // limitations under the License.
 
 using System.Diagnostics.CodeAnalysis;
-using Energinet.DataHub.MeteringPoints.IntegrationEventContracts;
+using GreenEnergyHub.Charges.Commands;
 using GreenEnergyHub.Charges.Domain.CreateLinkCommandEvents;
 using GreenEnergyHub.Charges.Infrastructure.Integration.Mappers;
 using GreenEnergyHub.Charges.TestCore.Attributes;
@@ -29,11 +29,11 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Integration.Mappers
         [Theory]
         [InlineAutoMoqData]
         public void Convert_WhenCalled_ShouldMapToDomainObjectWithCorrectValues(
-            [NotNull] CreateLinkCommandContract createLinkCommandContract,
-            [NotNull] CreateLinkCommandInboundMapper sut)
+            [NotNull] CreateDefaultChargeLinks createDefaultChargeLinks,
+            [NotNull] CreateDefaultChargeLinksInboundMapper sut)
         {
-            var result = (CreateLinkCommandEvent)sut.Convert(createLinkCommandContract);
-            ProtobufAssert.IncomingContractIsSuperset(result, createLinkCommandContract);
+            var result = (CreateLinkCommandEvent)sut.Convert(createDefaultChargeLinks);
+            ProtobufAssert.IncomingContractIsSuperset(result, createDefaultChargeLinks);
         }
     }
 }

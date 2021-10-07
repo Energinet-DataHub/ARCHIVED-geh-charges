@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.MeteringPoints.IntegrationEventContracts;
 using GreenEnergyHub.Charges.Application.ChargeLinks.Handlers;
+using GreenEnergyHub.Charges.Commands;
 using GreenEnergyHub.Charges.Domain.ChargeLinkCommands;
 using GreenEnergyHub.Charges.Domain.DefaultChargeLinks;
 using GreenEnergyHub.Charges.Infrastructure.Messaging.Registration;
@@ -29,8 +29,8 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
             serviceCollection.AddScoped<ICreateLinkCommandEventHandler, CreateLinkCommandEventHandler>();
             serviceCollection.AddScoped<IChargeLinkCommandFactory, ChargeLinkCommandFactory>();
 
-            serviceCollection.ReceiveProtobufMessage<CreateLinkCommandContract>(
-                configuration => configuration.WithParser(() => CreateLinkCommandContract.Parser));
+            serviceCollection.ReceiveProtobufMessage<CreateDefaultChargeLinks>(
+                configuration => configuration.WithParser(() => CreateDefaultChargeLinks.Parser));
 
             serviceCollection.AddScoped<IDefaultChargeLinkRepository, DefaultChargeLinkRepository>();
         }

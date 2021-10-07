@@ -47,11 +47,15 @@ namespace GreenEnergyHub.Charges.Domain.ChargeLinkCommands
             string correlationId)
         {
             var charge = await _chargeRepository.GetChargeAsync(defaultChargeLink.ChargeId).ConfigureAwait(false);
+            var mp = await _meteringPointRepository.GetMeteringPointAsync(
+                    createLinkCommandEvent.MeteringPointId)
+                .ConfigureAwait(false);
+
             return CreateChargeLinkCommand(
                 createLinkCommandEvent.MeteringPointId,
                 correlationId,
                 charge,
-                defaultChargeLink.GetStartDateTime(createLinkCommandEvent.StartDateTime),
+                defaultChargeLink.GetStartDateTime(mp.EffectiveDate),
                 defaultChargeLink.EndDateTime);
         }
 
