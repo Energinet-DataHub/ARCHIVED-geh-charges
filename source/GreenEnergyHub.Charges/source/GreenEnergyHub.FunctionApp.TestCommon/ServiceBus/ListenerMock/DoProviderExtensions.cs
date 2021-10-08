@@ -15,13 +15,13 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Azure.ServiceBus;
+using Azure.Messaging.ServiceBus;
 
 namespace GreenEnergyHub.FunctionApp.TestCommon.ServiceBus.ListenerMock
 {
     public static class DoProviderExtensions
     {
-        public static async Task<CountdownEvent> VerifyCountAsync(this DoProvider provider, int expectedCount, Func<Message, Task> messageHandler)
+        public static async Task<CountdownEvent> VerifyCountAsync(this DoProvider provider, int expectedCount, Func<ServiceBusReceivedMessage, Task> messageHandler)
         {
             var whenAllReceivedEvent = new CountdownEvent(expectedCount);
 
@@ -39,7 +39,7 @@ namespace GreenEnergyHub.FunctionApp.TestCommon.ServiceBus.ListenerMock
             return VerifyCountAsync(provider, expectedCount, _ => Task.CompletedTask);
         }
 
-        public static async Task<ManualResetEventSlim> VerifyOnceAsync(this DoProvider provider, Func<Message, Task> messageHandler)
+        public static async Task<ManualResetEventSlim> VerifyOnceAsync(this DoProvider provider, Func<ServiceBusReceivedMessage, Task> messageHandler)
         {
             var whenOnceEvent = new ManualResetEventSlim(false);
 
