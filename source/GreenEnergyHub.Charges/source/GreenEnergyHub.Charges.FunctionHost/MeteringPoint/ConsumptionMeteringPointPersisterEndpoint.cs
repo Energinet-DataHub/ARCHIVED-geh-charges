@@ -31,12 +31,12 @@ namespace GreenEnergyHub.Charges.FunctionHost.MeteringPoint
         /// </summary>
         public const string FunctionName = nameof(ConsumptionMeteringPointPersisterEndpoint);
         private readonly MessageExtractor<ConsumptionMeteringPointCreated> _messageExtractor;
-        private readonly IConsumptionMeteringPointCreatedEventHandler _consumptionMeteringPointCreatedEventHandler;
+        private readonly IConsumptionMeteringPointPersister _consumptionMeteringPointCreatedEventHandler;
         private readonly ILogger _log;
 
         public ConsumptionMeteringPointPersisterEndpoint(
             MessageExtractor<ConsumptionMeteringPointCreated> messageExtractor,
-            IConsumptionMeteringPointCreatedEventHandler consumptionMeteringPointCreatedEventHandler,
+            IConsumptionMeteringPointPersister consumptionMeteringPointCreatedEventHandler,
             [NotNull] ILoggerFactory loggerFactory)
         {
             _messageExtractor = messageExtractor;
@@ -56,7 +56,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.MeteringPoint
                 (ConsumptionMeteringPointCreatedEvent)await _messageExtractor.ExtractAsync(message).ConfigureAwait(false);
 
             await _consumptionMeteringPointCreatedEventHandler
-                .HandleAsync(consumptionMeteringPointCreatedEvent)
+                .PersistAsync(consumptionMeteringPointCreatedEvent)
                 .ConfigureAwait(false);
 
             _log.LogInformation(

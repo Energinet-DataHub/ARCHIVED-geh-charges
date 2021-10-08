@@ -26,7 +26,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
             serviceCollection.ReceiveProtobufMessage<ConsumptionMeteringPointCreated>(
                 configuration => configuration.WithParser(() => ConsumptionMeteringPointCreated.Parser));
 
-            serviceCollection.AddScoped<IConsumptionMeteringPointCreatedEventHandler, ConsumptionMeteringPointCreatedEventHandler>();
+            serviceCollection.AddScoped<IConsumptionMeteringPointPersister, ConsumptionMeteringPointPersister>();
         }
     }
 }

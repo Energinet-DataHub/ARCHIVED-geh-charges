@@ -21,20 +21,20 @@ using Microsoft.Extensions.Logging;
 
 namespace GreenEnergyHub.Charges.Application.MeteringPoints.Handlers
 {
-    public class ConsumptionMeteringPointCreatedEventHandler : IConsumptionMeteringPointCreatedEventHandler
+    public class ConsumptionMeteringPointPersister : IConsumptionMeteringPointPersister
     {
         private readonly IMeteringPointRepository _meteringPointRepository;
         private readonly ILogger _logger;
 
-        public ConsumptionMeteringPointCreatedEventHandler(
+        public ConsumptionMeteringPointPersister(
             IMeteringPointRepository meteringPointRepository,
             [NotNull] ILoggerFactory loggerFactory)
         {
             _meteringPointRepository = meteringPointRepository;
-            _logger = loggerFactory.CreateLogger(nameof(ConsumptionMeteringPointCreatedEventHandler));
+            _logger = loggerFactory.CreateLogger(nameof(ConsumptionMeteringPointPersister));
         }
 
-        public async Task HandleAsync(ConsumptionMeteringPointCreatedEvent consumptionMeteringPointCreatedEvent)
+        public async Task PersistAsync(ConsumptionMeteringPointCreatedEvent consumptionMeteringPointCreatedEvent)
         {
             if (consumptionMeteringPointCreatedEvent == null)
                 throw new ArgumentNullException(nameof(consumptionMeteringPointCreatedEvent));

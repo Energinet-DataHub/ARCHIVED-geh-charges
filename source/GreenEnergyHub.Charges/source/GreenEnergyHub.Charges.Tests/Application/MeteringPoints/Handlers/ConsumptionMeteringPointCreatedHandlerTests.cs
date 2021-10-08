@@ -46,10 +46,10 @@ namespace GreenEnergyHub.Charges.Tests.Application.MeteringPoints.Handlers
                         It.IsAny<string>()))
                     .Returns(logger.Object);
 
-            var sut = new ConsumptionMeteringPointCreatedEventHandler(meteringPointRepository.Object, loggerFactory.Object);
+            var sut = new ConsumptionMeteringPointPersister(meteringPointRepository.Object, loggerFactory.Object);
 
             // Act
-            await sut.HandleAsync(meteringPointCreatedEvent).ConfigureAwait(false);
+            await sut.PersistAsync(meteringPointCreatedEvent).ConfigureAwait(false);
 
             // Assert
             meteringPointRepository
@@ -62,14 +62,14 @@ namespace GreenEnergyHub.Charges.Tests.Application.MeteringPoints.Handlers
         [Theory]
         [InlineAutoMoqData]
         public async Task HandleAsync_WhenEventIsNull_ThrowsArgumentNullException(
-            [NotNull] ConsumptionMeteringPointCreatedEventHandler sut)
+            [NotNull] ConsumptionMeteringPointPersister sut)
         {
             // Arrange
             ConsumptionMeteringPointCreatedEvent? meteringPointCreatedEvent = null;
 
             // Act / Assert
             await Assert.ThrowsAsync<ArgumentNullException>(
-                    () => sut.HandleAsync(meteringPointCreatedEvent!))
+                    () => sut.PersistAsync(meteringPointCreatedEvent!))
                 .ConfigureAwait(false);
         }
 
