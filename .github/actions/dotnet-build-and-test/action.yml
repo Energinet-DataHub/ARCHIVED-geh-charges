@@ -41,8 +41,7 @@ runs:
       shell: pwsh
       run: |
         dotnet build ${{ inputs.csproj_file_path }} --configuration Release --output ${{ inputs.output_path }}
-    - name: test and publish report
+    - name: Run test
       shell: pwsh
       run: |
-        dotnet tool install --tool-path ./temp/reportgenerator dotnet-reportgenerator-globaltool
-        dotnet test --configuration Release ${{ inputs.solution_file_path }} -p:CollectCoverage=true -p:CoverletOutput=${{ inputs.output_path }}/ -p:CoverletOutputFormat=cobertura -p:Threshold=0
+        dotnet test --configuration Release ${{ inputs.solution_file_path }}
