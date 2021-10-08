@@ -26,8 +26,37 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures
     public class ChargesFunctionAppServiceBusOptions : AzureCloudServiceBusOptions
     {
         public const string PostOfficeTopicKey = "postOffice";
+        public const string PostOfficeSubscriptionName = "defaultSubscription";
 
-        public const string PostOfficeTopicSubscriptionName = "defaultSubscription";
+        public const string ChargeLinkAcceptedTopicKey = "sbt-link-command-accepted";
+        public const string ChargeLinkAcceptedDataAvailableNotifierSubscriptionName = "sbs-chargelinkaccepted-sub-dataavailablenotifier";
+        public const string ChargeLinkAcceptedEventPublisherSubscriptionName = "sbs-chargelinkaccepted-sub-eventpublisher";
+
+        public const string ChargeLinkCreatedTopicKey = "charge-link-created";
+
+        public const string ChargeLinkReceivedTopicKey = "sbt-link-command-received";
+        public const string ChargeLinkReceivedSubscriptionName = "sbs-link-command-received-receiver";
+
+        public const string CommandAcceptedTopicKey = "sbt-command-accepted";
+        public const string CommandAcceptedSubscriptionName = "sbs-command-accepted";
+        public const string CommandAcceptedReceiverSubscriptionName = "sbs-charge-command-accepted-receiver";
+
+        public const string CommandReceivedTopicKey = "sbt-command-received";
+        public const string CommandReceivedSubscriptionName = "sbs-command-received";
+
+        public const string CommandRejectedTopicKey = "sbt-command-rejected";
+        public const string CommandRejectedSubscriptionName = "sbs-command-rejected";
+
+        public const string CreateLinkRequestQueueKey = "create-link-request";
+
+        public const string CreateLinkReplyQueueKey = "create-link-reply";
+
+        public const string MeteringPointCreatedTopicKey = "metering-point-created";
+        public const string MeteringPointCreatedSubscriptionName = "metering-point-created-sub-charges";
+
+        public const string ChargeCreatedTopicKey = "charge-created";
+
+        public const string ChargePricesUpdatedTopicKey = "charge-prices-updated";
 
         public override void Configure(ServiceBusOptionsBuilder builder)
         {
@@ -37,9 +66,52 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures
             var serviceBusNamespace = GetNamespaceFromSetting(EnvironmentSettingNames.DomainEventSenderConnectionString);
 
             builder
-                .Namespace(serviceBusNamespace)
+                .Namespace(serviceBusNamespace);
+
+            builder
                 .AddTopic(PostOfficeTopicKey)
-                .AddSubscription(PostOfficeTopicSubscriptionName);
+                .AddSubscription(PostOfficeSubscriptionName);
+
+            builder
+                .AddTopic(ChargeLinkAcceptedTopicKey)
+                .AddSubscription(ChargeLinkAcceptedDataAvailableNotifierSubscriptionName)
+                .AddSubscription(ChargeLinkAcceptedEventPublisherSubscriptionName);
+
+            builder
+                .AddTopic(ChargeLinkCreatedTopicKey);
+
+            builder
+                .AddTopic(ChargeLinkReceivedTopicKey)
+                .AddSubscription(ChargeLinkReceivedSubscriptionName);
+
+            builder
+                .AddTopic(CommandAcceptedTopicKey)
+                .AddSubscription(CommandAcceptedSubscriptionName)
+                .AddSubscription(CommandAcceptedReceiverSubscriptionName);
+
+            builder
+                .AddTopic(CommandReceivedTopicKey)
+                .AddSubscription(CommandReceivedSubscriptionName);
+
+            builder
+                .AddTopic(CommandRejectedTopicKey)
+                .AddSubscription(CommandRejectedSubscriptionName);
+
+            builder
+                .AddQueue(CreateLinkRequestQueueKey);
+
+            builder
+                .AddQueue(CreateLinkReplyQueueKey);
+
+            builder
+                .AddTopic(MeteringPointCreatedTopicKey)
+                .AddSubscription(MeteringPointCreatedSubscriptionName);
+
+            builder
+                .AddTopic(ChargeCreatedTopicKey);
+
+            builder
+                .AddTopic(ChargePricesUpdatedTopicKey);
         }
 
         private static string GetNamespaceFromSetting(string settingName)

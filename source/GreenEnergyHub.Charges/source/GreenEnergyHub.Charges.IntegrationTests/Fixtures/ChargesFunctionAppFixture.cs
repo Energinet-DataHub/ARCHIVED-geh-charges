@@ -55,39 +55,16 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures
         /// <inheritdoc/>
         protected override void OnConfigureEnvironment()
         {
+            // NOTICE:
+            // Currently the following settings must be set on the build agent OR be available in local.settings.json:
+            // * APPINSIGHTS_INSTRUMENTATIONKEY
+            // * DOMAINEVENT_SENDER_CONNECTION_STRING
+            //
+            // All other settings are overwritten somewhere within this class.
             Environment.SetEnvironmentVariable(EnvironmentSettingNames.AzureWebJobsStorage, "UseDevelopmentStorage=true");
 
             Environment.SetEnvironmentVariable("CURRENCY", "DKK");
             Environment.SetEnvironmentVariable("LOCAL_TIMEZONENAME", "Europe/Copenhagen");
-
-            Environment.SetEnvironmentVariable("CHARGE_LINK_ACCEPTED_TOPIC_NAME", "sbt-link-command-accepted");
-            Environment.SetEnvironmentVariable("CHARGELINKACCEPTED_SUB_DATAAVAILABLENOTIFIER", "sbs-chargelinkaccepted-sub-dataavailablenotifier");
-            Environment.SetEnvironmentVariable("CHARGELINKACCEPTED_SUB_EVENTPUBLISHER", "sbs-chargelinkaccepted-sub-eventpublisher");
-
-            Environment.SetEnvironmentVariable("CHARGE_LINK_CREATED_TOPIC_NAME", "charge-link-created");
-
-            Environment.SetEnvironmentVariable("CHARGE_LINK_RECEIVED_TOPIC_NAME", "sbt-link-command-received");
-            Environment.SetEnvironmentVariable("CHARGE_LINK_RECEIVED_SUBSCRIPTION_NAME", "sbs-link-command-received-receiver");
-
-            Environment.SetEnvironmentVariable("COMMAND_ACCEPTED_TOPIC_NAME", "sbt-command-accepted");
-            Environment.SetEnvironmentVariable("COMMAND_ACCEPTED_SUBSCRIPTION_NAME", "sbs-command-accepted");
-
-            Environment.SetEnvironmentVariable("COMMAND_RECEIVED_TOPIC_NAME", "sbt-command-received");
-            Environment.SetEnvironmentVariable("COMMAND_RECEIVED_SUBSCRIPTION_NAME", "sbs-command-received");
-
-            Environment.SetEnvironmentVariable("COMMAND_REJECTED_TOPIC_NAME", "sbt-command-rejected");
-            Environment.SetEnvironmentVariable("COMMAND_REJECTED_SUBSCRIPTION_NAME", "sbs-command-rejected");
-
-            Environment.SetEnvironmentVariable("CREATE_LINK_REQUEST_QUEUE_NAME", "create-link-request");
-            Environment.SetEnvironmentVariable("CREATE_LINK_REPLY_QUEUE_NAME", "create-link-reply");
-
-            Environment.SetEnvironmentVariable("METERING_POINT_CREATED_TOPIC_NAME", "metering-point-created");
-            Environment.SetEnvironmentVariable("METERING_POINT_CREATED_SUBSCRIPTION_NAME", "metering-point-created-sub-charges");
-
-            Environment.SetEnvironmentVariable("COMMAND_ACCEPTED_RECEIVER_SUBSCRIPTION_NAME", "sbs-charge-command-accepted-receiver");
-
-            Environment.SetEnvironmentVariable("CHARGE_CREATED_TOPIC_NAME", "charge-created");
-            Environment.SetEnvironmentVariable("CHARGE_PRICES_UPDATED_TOPIC_NAME", "charge-prices-updated");
         }
 
         /// <inheritdoc/>
@@ -98,18 +75,63 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures
             // => Service Bus
             await ServiceBusResource.InitializeAsync();
 
+            // Overwrite service bus related settings, so the function app uses the names we have control of in the test
             var postOfficeTopicName = await GetTopicNameFromKeyAsync(ChargesFunctionAppServiceBusOptions.PostOfficeTopicKey);
-
-            // Overwrites the setting so the function uses the name we have control of in the test
             Environment.SetEnvironmentVariable(EnvironmentSettingNames.PostOfficeTopicName, postOfficeTopicName);
-
             ServiceBusListenerMock = new ServiceBusListenerMock(ServiceBusResource.ConnectionString, TestLogger);
-            await ServiceBusListenerMock.AddTopicSubscriptionListenerAsync(postOfficeTopicName, ChargesFunctionAppServiceBusOptions.PostOfficeTopicSubscriptionName);
+            await ServiceBusListenerMock.AddTopicSubscriptionListenerAsync(postOfficeTopicName, ChargesFunctionAppServiceBusOptions.PostOfficeSubscriptionName);
+
+            // We also overwrite all the service bus connection strings, since we created all topic/queues in just one of them
+            Environment.SetEnvironmentVariable(EnvironmentSettingNames.DomainEventSenderConnectionString, ServiceBusResource.ConnectionString);
+            Environment.SetEnvironmentVariable("DOMAINEVENT_LISTENER_CONNECTION_STRING", ServiceBusResource.ConnectionString);
+            Environment.SetEnvironmentVariable("INTEGRATIONEVENT_SENDER_CONNECTION_STRING", ServiceBusResource.ConnectionString);
+            Environment.SetEnvironmentVariable("INTEGRATIONEVENT_LISTENER_CONNECTION_STRING", ServiceBusResource.ConnectionString);
+
+            var chargeLinkAcceptedTopicName = await GetTopicNameFromKeyAsync(ChargesFunctionAppServiceBusOptions.ChargeLinkAcceptedTopicKey);
+            Environment.SetEnvironmentVariable("CHARGE_LINK_ACCEPTED_TOPIC_NAME", chargeLinkAcceptedTopicName);
+            Environment.SetEnvironmentVariable("CHARGELINKACCEPTED_SUB_DATAAVAILABLENOTIFIER", ChargesFunctionAppServiceBusOptions.ChargeLinkAcceptedDataAvailableNotifierSubscriptionName);
+            Environment.SetEnvironmentVariable("CHARGELINKACCEPTED_SUB_EVENTPUBLISHER", ChargesFunctionAppServiceBusOptions.ChargeLinkAcceptedEventPublisherSubscriptionName);
+
+            var chargeLinkCreatedTopicName = await GetTopicNameFromKeyAsync(ChargesFunctionAppServiceBusOptions.ChargeLinkCreatedTopicKey);
+            Environment.SetEnvironmentVariable("CHARGE_LINK_CREATED_TOPIC_NAME", chargeLinkCreatedTopicName);
+
+            var chargeLinkReceivedTopicName = await GetTopicNameFromKeyAsync(ChargesFunctionAppServiceBusOptions.ChargeLinkReceivedTopicKey);
+            Environment.SetEnvironmentVariable("CHARGE_LINK_RECEIVED_TOPIC_NAME", chargeLinkReceivedTopicName);
+            Environment.SetEnvironmentVariable("CHARGE_LINK_RECEIVED_SUBSCRIPTION_NAME", ChargesFunctionAppServiceBusOptions.ChargeLinkReceivedSubscriptionName);
+
+            var commandAcceptedTopicName = await GetTopicNameFromKeyAsync(ChargesFunctionAppServiceBusOptions.CommandAcceptedTopicKey);
+            Environment.SetEnvironmentVariable("COMMAND_ACCEPTED_TOPIC_NAME", commandAcceptedTopicName);
+            Environment.SetEnvironmentVariable("COMMAND_ACCEPTED_SUBSCRIPTION_NAME", ChargesFunctionAppServiceBusOptions.CommandAcceptedSubscriptionName);
+            Environment.SetEnvironmentVariable("COMMAND_ACCEPTED_RECEIVER_SUBSCRIPTION_NAME", ChargesFunctionAppServiceBusOptions.CommandAcceptedReceiverSubscriptionName);
+
+            var commandReceivedTopicName = await GetTopicNameFromKeyAsync(ChargesFunctionAppServiceBusOptions.CommandReceivedTopicKey);
+            Environment.SetEnvironmentVariable("COMMAND_RECEIVED_TOPIC_NAME", commandReceivedTopicName);
+            Environment.SetEnvironmentVariable("COMMAND_RECEIVED_SUBSCRIPTION_NAME", ChargesFunctionAppServiceBusOptions.CommandReceivedSubscriptionName);
+
+            var commandRejectedTopicName = await GetTopicNameFromKeyAsync(ChargesFunctionAppServiceBusOptions.CommandRejectedTopicKey);
+            Environment.SetEnvironmentVariable("COMMAND_REJECTED_TOPIC_NAME", commandRejectedTopicName);
+            Environment.SetEnvironmentVariable("COMMAND_REJECTED_SUBSCRIPTION_NAME", ChargesFunctionAppServiceBusOptions.CommandRejectedSubscriptionName);
+
+            var createLinkRequestQueueName = await GetQueueNameFromKeyAsync(ChargesFunctionAppServiceBusOptions.CreateLinkRequestQueueKey);
+            Environment.SetEnvironmentVariable("CREATE_LINK_REQUEST_QUEUE_NAME", createLinkRequestQueueName);
+
+            var createLinkReplyQueueName = await GetQueueNameFromKeyAsync(ChargesFunctionAppServiceBusOptions.CreateLinkReplyQueueKey);
+            Environment.SetEnvironmentVariable("CREATE_LINK_REPLY_QUEUE_NAME", createLinkReplyQueueName);
+
+            var meteringPointCreatedTopicName = await GetTopicNameFromKeyAsync(ChargesFunctionAppServiceBusOptions.MeteringPointCreatedTopicKey);
+            Environment.SetEnvironmentVariable("METERING_POINT_CREATED_TOPIC_NAME", meteringPointCreatedTopicName);
+            Environment.SetEnvironmentVariable("METERING_POINT_CREATED_SUBSCRIPTION_NAME", ChargesFunctionAppServiceBusOptions.MeteringPointCreatedSubscriptionName);
+
+            var chargeCreatedTopicName = await GetTopicNameFromKeyAsync(ChargesFunctionAppServiceBusOptions.ChargeCreatedTopicKey);
+            Environment.SetEnvironmentVariable("CHARGE_CREATED_TOPIC_NAME", chargeCreatedTopicName);
+
+            var chargePricesUpdatedTopicName = await GetTopicNameFromKeyAsync(ChargesFunctionAppServiceBusOptions.ChargePricesUpdatedTopicKey);
+            Environment.SetEnvironmentVariable("CHARGE_PRICES_UPDATED_TOPIC_NAME", chargePricesUpdatedTopicName);
 
             // => Database
             await DatabaseManager.CreateDatabaseAsync();
 
-            // Overwrites the setting so the function uses the name we have control of in the test
+            // Overwrites the setting so the function app uses the database we have control of in the test
             Environment.SetEnvironmentVariable(EnvironmentSettingNames.ChargeDbConnectionString, DatabaseManager.ConnectionString);
         }
 
@@ -135,13 +157,22 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures
             await DatabaseManager.DeleteDatabaseAsync();
         }
 
-        protected async Task<string> GetTopicNameFromKeyAsync(string topicKey)
+        private async Task<string> GetTopicNameFromKeyAsync(string topicKey)
         {
             var topicClient = ServiceBusResource.GetTopicClient(topicKey);
             var topicName = topicClient.TopicName;
             await topicClient.CloseAsync();
 
             return topicName;
+        }
+
+        private async Task<string> GetQueueNameFromKeyAsync(string queueKey)
+        {
+            var queueClient = ServiceBusResource.GetQueueClient(queueKey);
+            var queueName = queueClient.QueueName;
+            await queueClient.CloseAsync();
+
+            return queueName;
         }
     }
 }
