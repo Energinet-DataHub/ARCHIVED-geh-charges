@@ -12,7 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-resource "azurerm_servicebus_subscription" "sbs_chargelinkaccepted_sub_eventpublisher" {
+module "sbs_chargelinkaccepted_sub_eventpublisher" {
+  source              = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//service-bus-subscription?ref=2.0.0"
   name                = "sbs-chargelinkaccepted-sub-eventpublisher"
   resource_group_name = data.azurerm_resource_group.main.name
   namespace_name      = module.sbn_charges.name
