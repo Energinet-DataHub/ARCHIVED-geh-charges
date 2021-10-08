@@ -19,7 +19,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace GreenEnergyHub.Charges.FunctionHost.Configuration
 {
-    internal static class ConsumptionMeteringPointCreatedReceiverConfiguration
+    internal static class ConsumptionMeteringPointPersisterConfiguration
     {
         internal static void ConfigureServices(IServiceCollection serviceCollection)
         {

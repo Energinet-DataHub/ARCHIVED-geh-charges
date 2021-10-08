@@ -23,25 +23,25 @@ using Microsoft.Extensions.Logging;
 
 namespace GreenEnergyHub.Charges.FunctionHost.MeteringPoint
 {
-    public class ConsumptionMeteringPointCreatedReceiverEndpoint
+    public class ConsumptionMeteringPointPersisterEndpoint
     {
         /// <summary>
         /// The name of the function.
         /// Function name affects the URL and thus possibly dependent infrastructure.
         /// </summary>
-        public const string FunctionName = nameof(ConsumptionMeteringPointCreatedReceiverEndpoint);
+        public const string FunctionName = nameof(ConsumptionMeteringPointPersisterEndpoint);
         private readonly MessageExtractor<ConsumptionMeteringPointCreated> _messageExtractor;
         private readonly IConsumptionMeteringPointCreatedEventHandler _consumptionMeteringPointCreatedEventHandler;
         private readonly ILogger _log;
 
-        public ConsumptionMeteringPointCreatedReceiverEndpoint(
+        public ConsumptionMeteringPointPersisterEndpoint(
             MessageExtractor<ConsumptionMeteringPointCreated> messageExtractor,
             IConsumptionMeteringPointCreatedEventHandler consumptionMeteringPointCreatedEventHandler,
             [NotNull] ILoggerFactory loggerFactory)
         {
             _messageExtractor = messageExtractor;
             _consumptionMeteringPointCreatedEventHandler = consumptionMeteringPointCreatedEventHandler;
-            _log = loggerFactory.CreateLogger(nameof(ConsumptionMeteringPointCreatedReceiverEndpoint));
+            _log = loggerFactory.CreateLogger(nameof(ConsumptionMeteringPointPersisterEndpoint));
         }
 
         [Function(FunctionName)]
