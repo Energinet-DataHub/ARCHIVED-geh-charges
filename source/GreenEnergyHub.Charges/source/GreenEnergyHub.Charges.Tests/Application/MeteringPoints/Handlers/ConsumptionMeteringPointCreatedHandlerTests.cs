@@ -30,7 +30,7 @@ using Xunit.Categories;
 namespace GreenEnergyHub.Charges.Tests.Application.MeteringPoints.Handlers
 {
     [UnitTest]
-    public class MeteringPointCreatedHandlerTests
+    public class ConsumptionMeteringPointCreatedHandlerTests
     {
         [Theory]
         [InlineAutoDomainData]
@@ -46,10 +46,10 @@ namespace GreenEnergyHub.Charges.Tests.Application.MeteringPoints.Handlers
                         It.IsAny<string>()))
                     .Returns(logger.Object);
 
-            var sut = new MeteringPointCreatedEventHandler(meteringPointRepository.Object, loggerFactory.Object);
+            var sut = new ConsumptionMeteringPointPersister(meteringPointRepository.Object, loggerFactory.Object);
 
             // Act
-            await sut.HandleAsync(meteringPointCreatedEvent).ConfigureAwait(false);
+            await sut.PersistAsync(meteringPointCreatedEvent).ConfigureAwait(false);
 
             // Assert
             meteringPointRepository
@@ -61,68 +61,26 @@ namespace GreenEnergyHub.Charges.Tests.Application.MeteringPoints.Handlers
 
         [Theory]
         [InlineAutoMoqData]
-        public async Task HandleAsync_WhenCalledWithUnknownEnum_ThrowsArgumentException(
-            [NotNull] MeteringPointCreatedEventHandler sut)
-        {
-            // Arrange
-            MeteringPointCreatedEvent meteringPointCreatedEvent = GetMeteringPointCreatedEventWithInvalidEnum();
-
-            // Act / Assert
-            await Assert.ThrowsAsync<ArgumentException>(
-                    () => sut.HandleAsync(meteringPointCreatedEvent!))
-                .ConfigureAwait(false);
-        }
-
-        [Theory]
-        [InlineAutoMoqData]
         public async Task HandleAsync_WhenEventIsNull_ThrowsArgumentNullException(
-            [NotNull] MeteringPointCreatedEventHandler sut)
+            [NotNull] ConsumptionMeteringPointPersister sut)
         {
             // Arrange
-            MeteringPointCreatedEvent? meteringPointCreatedEvent = null;
+            ConsumptionMeteringPointCreatedEvent? meteringPointCreatedEvent = null;
 
             // Act / Assert
             await Assert.ThrowsAsync<ArgumentNullException>(
-                    () => sut.HandleAsync(meteringPointCreatedEvent!))
+                    () => sut.PersistAsync(meteringPointCreatedEvent!))
                 .ConfigureAwait(false);
         }
 
-        private static MeteringPointCreatedEvent GetMeteringPointCreatedEvent()
+        private static ConsumptionMeteringPointCreatedEvent GetMeteringPointCreatedEvent()
         {
-            return new MeteringPointCreatedEvent(
+            return new ConsumptionMeteringPointCreatedEvent(
                 "123",
-                MeteringPointType.Consumption.ToString(),
-                "234",
                 "2",
-                "1",
-                "1",
-                "mrp",
-                "456",
-                "567",
-                "678",
-                "product",
-                "1",
-                SystemClock.Instance.GetCurrentInstant().ToString(),
-                "890");
-        }
-
-        private static MeteringPointCreatedEvent GetMeteringPointCreatedEventWithInvalidEnum()
-        {
-            return new MeteringPointCreatedEvent(
-                "123",
-                MeteringPointType.Consumption.ToString(),
-                "234",
-                "2",
-                "1",
-                "sdf",
-                "mrp",
-                "456",
-                "567",
-                "678",
-                "product",
-                "1",
-                SystemClock.Instance.GetCurrentInstant().ToString(),
-                "890");
+                SettlementMethod.Flex,
+                ConnectionState.New,
+                SystemClock.Instance.GetCurrentInstant());
         }
     }
 }

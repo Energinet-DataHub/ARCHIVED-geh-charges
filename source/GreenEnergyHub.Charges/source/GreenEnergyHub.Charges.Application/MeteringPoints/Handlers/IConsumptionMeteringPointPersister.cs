@@ -12,19 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Diagnostics.CodeAnalysis;
-using GreenEnergyHub.Charges.Commands;
-using GreenEnergyHub.Charges.Domain.CreateLinkCommandEvents;
-using GreenEnergyHub.Messaging.Protobuf;
-using GreenEnergyHub.Messaging.Transport;
+using System.Threading.Tasks;
+using GreenEnergyHub.Charges.Domain.MeteringPointCreatedEvents;
 
-namespace GreenEnergyHub.Charges.Infrastructure.Integration.Mappers
+namespace GreenEnergyHub.Charges.Application.MeteringPoints.Handlers
 {
-    public class CreateDefaultChargeLinksInboundMapper : ProtobufInboundMapper<CreateDefaultChargeLinks>
+    public interface IConsumptionMeteringPointPersister
     {
-        protected override IInboundMessage Convert([NotNull] CreateDefaultChargeLinks command)
-        {
-            return new CreateLinkCommandEvent(command.MeteringPointId);
-        }
+        Task PersistAsync(ConsumptionMeteringPointCreatedEvent consumptionMeteringPointCreatedEvent);
     }
 }
