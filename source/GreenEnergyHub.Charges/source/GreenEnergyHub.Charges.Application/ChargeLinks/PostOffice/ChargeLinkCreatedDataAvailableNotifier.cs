@@ -15,10 +15,10 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
+using Energinet.DataHub.MessageHub.Client.DataAvailable;
+using Energinet.DataHub.MessageHub.Client.Model;
 using GreenEnergyHub.Charges.Domain.ChargeLinkCommandAcceptedEvents;
 using GreenEnergyHub.Charges.Domain.Charges;
-using GreenEnergyHub.PostOffice.Communicator.DataAvailable;
-using GreenEnergyHub.PostOffice.Communicator.Model;
 
 namespace GreenEnergyHub.Charges.Application.ChargeLinks.PostOffice
 {

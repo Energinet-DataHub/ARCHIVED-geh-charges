@@ -13,6 +13,10 @@
 // limitations under the License.
 
 using System;
+using Energinet.DataHub.MessageHub.Client.DataAvailable;
+using Energinet.DataHub.MessageHub.Client.Dequeue;
+using Energinet.DataHub.MessageHub.Client.Factories;
+using Energinet.DataHub.MessageHub.Client.Peek;
 using EntityFrameworkCore.SqlServer.NodaTime.Extensions;
 using GreenEnergyHub.Charges.Domain.ChargeLinkCommandReceivedEvents;
 using GreenEnergyHub.Charges.Domain.Charges;
@@ -24,10 +28,6 @@ using GreenEnergyHub.Charges.Infrastructure.Messaging.Registration;
 using GreenEnergyHub.Charges.Infrastructure.Repositories;
 using GreenEnergyHub.Messaging.Protobuf;
 using GreenEnergyHub.Messaging.Transport;
-using GreenEnergyHub.PostOffice.Communicator.DataAvailable;
-using GreenEnergyHub.PostOffice.Communicator.Dequeue;
-using GreenEnergyHub.PostOffice.Communicator.Factories;
-using GreenEnergyHub.PostOffice.Communicator.Peek;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
