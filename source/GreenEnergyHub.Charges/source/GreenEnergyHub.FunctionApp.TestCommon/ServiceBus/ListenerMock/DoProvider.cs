@@ -14,13 +14,13 @@
 
 using System;
 using System.Threading.Tasks;
-using Microsoft.Azure.ServiceBus;
+using Azure.Messaging.ServiceBus;
 
 namespace GreenEnergyHub.FunctionApp.TestCommon.ServiceBus.ListenerMock
 {
     public class DoProvider
     {
-        internal DoProvider(ServiceBusListenerMock parent, Func<Message, bool> messageMatcher)
+        internal DoProvider(ServiceBusListenerMock parent, Func<ServiceBusReceivedMessage, bool> messageMatcher)
         {
             Parent = parent;
             MessageMatcher = messageMatcher;
@@ -28,12 +28,12 @@ namespace GreenEnergyHub.FunctionApp.TestCommon.ServiceBus.ListenerMock
 
         private ServiceBusListenerMock Parent { get; }
 
-        private Func<Message, bool> MessageMatcher { get; }
+        private Func<ServiceBusReceivedMessage, bool> MessageMatcher { get; }
 
         /// <summary>
         /// Add message handler.
         /// </summary>
-        public async Task<ServiceBusListenerMock> DoAsync(Func<Message, Task> messageHandler)
+        public async Task<ServiceBusListenerMock> DoAsync(Func<ServiceBusReceivedMessage, Task> messageHandler)
         {
             await Parent.AddMessageHandlerAsync(MessageMatcher, messageHandler).ConfigureAwait(false);
             return Parent;

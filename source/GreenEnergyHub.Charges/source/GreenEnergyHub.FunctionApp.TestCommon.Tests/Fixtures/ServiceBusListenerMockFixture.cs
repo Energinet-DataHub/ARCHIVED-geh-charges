@@ -14,7 +14,7 @@
 
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
-using Microsoft.Azure.ServiceBus.Core;
+using Azure.Messaging.ServiceBus;
 using Squadron;
 using Xunit;
 using Xunit.Abstractions;
@@ -32,7 +32,7 @@ namespace GreenEnergyHub.FunctionApp.TestCommon.Tests.Fixtures
             ////QueueSenderClient = QueueManager.CreateSenderClient();
 
             ////TopicName = CreateUserPrefixedName("topic");
-            SubscriptionName = "defaultSubscription";
+            SubscriptionName = ServiceBusListenerMockServiceBusOptions.SubscriptionName;
             ////TopicManager = new ServiceBusTopicManager(ConnectionString, TopicName);
             ////TopicSenderClient = TopicManager.CreateSenderClient();
 
@@ -46,7 +46,7 @@ namespace GreenEnergyHub.FunctionApp.TestCommon.Tests.Fixtures
             = string.Empty;
 
         [NotNull]
-        public ISenderClient? QueueSenderClient { get; private set; }
+        public ServiceBusSender? QueueSenderClient { get; private set; }
 
         public string TopicName { get; private set; }
             = string.Empty;
@@ -55,9 +55,12 @@ namespace GreenEnergyHub.FunctionApp.TestCommon.Tests.Fixtures
             = string.Empty;
 
         [NotNull]
-        public ISenderClient? TopicSenderClient { get; private set; }
+        public ServiceBusSender? TopicSenderClient { get; private set; }
 
         private AzureCloudServiceBusResource<ServiceBusListenerMockServiceBusOptions> ServiceBusResource { get; }
+
+        [NotNull]
+        private ServiceBusClient? Client { get; set; }
 
         public async Task InitializeAsync()
         {
@@ -74,15 +77,13 @@ namespace GreenEnergyHub.FunctionApp.TestCommon.Tests.Fixtures
 
             ConnectionString = ServiceBusResource.ConnectionString;
 
-            var queueName = "queue";
-            var queueClient = ServiceBusResource.GetQueueClient(queueName);
-            QueueName = queueClient.QueueName;
-            QueueSenderClient = queueClient;
+            Client = new ServiceBusClient(ConnectionString);
 
-            var topicName = "topic";
-            var topicClient = ServiceBusResource.GetTopicClient(topicName);
-            TopicName = topicClient.TopicName;
-            TopicSenderClient = topicClient;
+            QueueName = ServiceBusListenerMockServiceBusOptions.QueueName;
+            QueueSenderClient = Client.CreateSender(QueueName);
+
+            TopicName = ServiceBusListenerMockServiceBusOptions.TopicName;
+            TopicSenderClient = Client.CreateSender(TopicName);
         }
 
         public async Task DisposeAsync()
@@ -98,6 +99,8 @@ namespace GreenEnergyHub.FunctionApp.TestCommon.Tests.Fixtures
             ////await TopicManager.DisposeAsync();
 
             ////await SubscriptionManager.DisposeAsync();
+
+            await Client.DisposeAsync();
 
             await ServiceBusResource.DisposeAsync();
         }

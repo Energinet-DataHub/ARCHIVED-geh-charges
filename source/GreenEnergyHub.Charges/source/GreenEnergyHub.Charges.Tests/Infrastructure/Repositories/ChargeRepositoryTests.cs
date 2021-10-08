@@ -23,10 +23,9 @@ using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.Infrastructure.Context;
 using GreenEnergyHub.Charges.Infrastructure.Repositories;
 using GreenEnergyHub.Charges.TestCore.Attributes;
-using GreenEnergyHub.Charges.TestCore.Squadron;
+using GreenEnergyHub.Charges.TestCore.Database;
 using Microsoft.EntityFrameworkCore;
 using NodaTime;
-using Squadron;
 using Xunit;
 using Xunit.Categories;
 using Charge = GreenEnergyHub.Charges.Domain.Charges.Charge;
@@ -38,23 +37,22 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
     /// Tests <see cref="ChargeRepository"/> using a database created with squadron.
     /// </summary>
     [UnitTest]
-    public class ChargeRepositoryTests : IClassFixture<SqlServerResource<SqlServerOptions>>
+    public class ChargeRepositoryTests : IClassFixture<ChargesDatabaseFixture>
     {
         private const string MarketParticipantOwner = "MarketParticipantId";
-        private readonly SqlServerResource<SqlServerOptions> _resource;
 
-        public ChargeRepositoryTests(SqlServerResource<SqlServerOptions> resource)
+        private readonly ChargesDatabaseManager _databaseManager;
+
+        public ChargeRepositoryTests(ChargesDatabaseFixture fixture)
         {
-            _resource = resource;
+            _databaseManager = fixture.DatabaseManager;
         }
 
         [Fact]
         public async Task GetChargeAsync_WhenChargeIsCreated_ThenSuccessReturnedAsync()
         {
             // Arrange
-            await using var chargesDatabaseWriteContext = await SquadronContextFactory
-                .GetDatabaseContextAsync(_resource)
-                .ConfigureAwait(false);
+            await using var chargesDatabaseWriteContext = _databaseManager.CreateDbContext();
             var charge = GetValidCharge();
             await SeedDatabase(chargesDatabaseWriteContext).ConfigureAwait(false);
             var sut = new ChargeRepository(chargesDatabaseWriteContext);
@@ -63,9 +61,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
             await sut.StoreChargeAsync(charge).ConfigureAwait(false);
 
             // Assert
-            await using var chargesDatabaseReadContext = await SquadronContextFactory
-                .GetDatabaseContextAsync(_resource)
-                .ConfigureAwait(false);
+            await using var chargesDatabaseReadContext = _databaseManager.CreateDbContext();
 
             var actual = await chargesDatabaseReadContext.Charges
                 .Include(x => x.ChargePrices)
@@ -88,9 +84,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
         [Fact]
         public async Task CheckIfChargeExistsAsync_WhenChargeIsCreated_ThenSuccessReturnedAsync()
         {
-            await using var chargesDatabaseWriteContext = await SquadronContextFactory
-                .GetDatabaseContextAsync(_resource)
-                .ConfigureAwait(false);
+            await using var chargesDatabaseWriteContext = _databaseManager.CreateDbContext();
 
             // Arrange
             var charge = GetValidCharge();
@@ -101,9 +95,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
             await sut.StoreChargeAsync(charge).ConfigureAwait(false);
 
             // Assert
-            await using var chargesDatabaseReadContext = await SquadronContextFactory
-                .GetDatabaseContextAsync(_resource)
-                .ConfigureAwait(false);
+            await using var chargesDatabaseReadContext = _databaseManager.CreateDbContext();
             var actual = chargesDatabaseReadContext.Charges.Any(x => x.SenderProvidedChargeId == charge.SenderProvidedChargeId &&
                                                                      x.MarketParticipant.MarketParticipantId == charge.Owner &&
                                                                      x.ChargeType == (int)charge.Type);
@@ -114,9 +106,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
         [Fact]
         public async Task CheckIfChargeExistsByCorrelationIdAsync_WhenChargeIsCreated_ThenSuccessReturnedAsync()
         {
-            await using var chargesDatabaseWriteContext = await SquadronContextFactory
-                .GetDatabaseContextAsync(_resource)
-                .ConfigureAwait(false);
+            await using var chargesDatabaseWriteContext = _databaseManager.CreateDbContext();
 
             // Arrange
             var charge = GetValidCharge();
@@ -127,9 +117,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
             await sut.StoreChargeAsync(charge).ConfigureAwait(false);
 
             // Assert
-            await using var chargesDatabaseReadContext = await SquadronContextFactory
-                .GetDatabaseContextAsync(_resource)
-                .ConfigureAwait(false);
+            await using var chargesDatabaseReadContext = _databaseManager.CreateDbContext();
             var actual = chargesDatabaseReadContext
                 .Charges
                 .Any(x => x.ChargeOperation.CorrelationId == charge.CorrelationId);
@@ -153,17 +141,13 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
         [Fact]
         public async Task GetChargeAsync_WithId_ThenSuccessReturnedAsync()
         {
-            await using var chargesDatabaseContext = await SquadronContextFactory
-                .GetDatabaseContextAsync(_resource)
-                .ConfigureAwait(false);
+            await using var chargesDatabaseContext = _databaseManager.CreateDbContext();
 
             // Arrange
             var sut = new ChargeRepository(chargesDatabaseContext);
             var charge = GetValidCharge();
             await sut.StoreChargeAsync(charge).ConfigureAwait(false);
-            await using var chargesDatabaseReadContext = await SquadronContextFactory
-                .GetDatabaseContextAsync(_resource)
-                .ConfigureAwait(false);
+            await using var chargesDatabaseReadContext = _databaseManager.CreateDbContext();
             var createdCharge = chargesDatabaseReadContext.
                 Charges.First(x => x.SenderProvidedChargeId == charge.SenderProvidedChargeId &&
                                                                      x.MarketParticipant.MarketParticipantId == charge.Owner &&
