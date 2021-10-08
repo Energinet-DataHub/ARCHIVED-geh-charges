@@ -49,7 +49,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Functions.Charges
 
             public Task DisposeAsync()
             {
-                Fixture.ChargeCommandReceivedEventServiceBusListenerMock.ResetMessageHandlersAndReceivedMessages();
+                Fixture.ServiceBusListenerMock.ResetMessageHandlersAndReceivedMessages();
                 return Task.CompletedTask;
             }
 
@@ -66,7 +66,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Functions.Charges
                 request.Content = new StringContent(expectedBody, Encoding.UTF8, "application/json");
 
                 var body = Array.Empty<byte>();
-                using var isMessageReceivedEvent = await Fixture.ChargeCommandReceivedEventServiceBusListenerMock
+                using var isMessageReceivedEvent = await Fixture.ServiceBusListenerMock
                     .WhenAny()
                     .VerifyOnceAsync(receivedMessage =>
                     {

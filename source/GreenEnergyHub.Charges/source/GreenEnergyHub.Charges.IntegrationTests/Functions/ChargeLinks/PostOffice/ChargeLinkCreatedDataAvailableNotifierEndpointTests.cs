@@ -13,19 +13,12 @@
 // limitations under the License.
 
 using System;
-using System.Net;
-using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 using FluentAssertions;
-using FluentAssertions.Execution;
-using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandAccepted;
 using GreenEnergyHub.Charges.IntegrationTests.Fixtures;
-using GreenEnergyHub.Charges.IntegrationTests.TestHelpers;
 using GreenEnergyHub.Charges.TestCore.Attributes;
 using GreenEnergyHub.FunctionApp.TestCommon;
 using GreenEnergyHub.FunctionApp.TestCommon.ServiceBus.ListenerMock;
-using NodaTime;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -48,21 +41,19 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Functions.ChargeLinks.PostOffi
 
             public Task DisposeAsync()
             {
-                Fixture.PostOfficeDataAvailableServiceBusListenerMock.ResetMessageHandlersAndReceivedMessages();
+                Fixture.ServiceBusListenerMock.ResetMessageHandlersAndReceivedMessages();
                 return Task.CompletedTask;
             }
 
-            [Theory]
-            [InlineAutoMoqData]
-            public async Task When_CallingChargeIngestion_Then_RequestIsProcessedAndMessageIsSendToPostOffice(ChargeLinkCommandAcceptedContract inputContract)
+            [Fact]
+            public async Task When_CallingChargeIngestion_Then_RequestIsProcessedAndMessageIsSendToPostOffice()
             {
-                // TODO: Temp workaround for unused arg
-                Console.WriteLine(inputContract);
+                // TODO: Send CIM XML
 
                 // Arrange
                 // TODO: How to seed database with charge corresponding with inputContract?
                 var body = Array.Empty<byte>();
-                using var isMessageReceivedEvent = await Fixture.PostOfficeDataAvailableServiceBusListenerMock
+                using var isMessageReceivedEvent = await Fixture.ServiceBusListenerMock
                     .WhenAny()
                     .VerifyOnceAsync(receivedMessage =>
                     {
