@@ -17,9 +17,8 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
-using GreenEnergyHub.Charges.ApplyDBMigrationsApp.Helpers;
 using GreenEnergyHub.Charges.FunctionHost.Common;
-using GreenEnergyHub.Charges.TestCore.Squadron;
+using GreenEnergyHub.Charges.TestCore.Database;
 using GreenEnergyHub.FunctionApp.TestCommon;
 using GreenEnergyHub.FunctionApp.TestCommon.Azurite;
 using GreenEnergyHub.FunctionApp.TestCommon.FunctionAppHost;
@@ -35,10 +34,11 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures
         public ChargesFunctionAppFixture(IMessageSink messageSink)
         {
             AzuriteManager = new AzuriteManager();
-
+            DatabaseManager = new ChargesDatabaseManager();
             ServiceBusResource = new AzureCloudServiceBusResource<ChargesFunctionAppServiceBusOptions>(messageSink);
-            SqlServerResource = new SqlServerResource<SqlServerOptions>();
         }
+
+        public ChargesDatabaseManager DatabaseManager { get; }
 
         [NotNull]
         public ServiceBusListenerMock? ServiceBusListenerMock { get; private set; }
@@ -46,8 +46,6 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures
         private AzuriteManager AzuriteManager { get; }
 
         private AzureCloudServiceBusResource<ChargesFunctionAppServiceBusOptions> ServiceBusResource { get; }
-
-        private SqlServerResource<SqlServerOptions> SqlServerResource { get; }
 
         /// <inheritdoc/>
         protected override void OnConfigureHostSettings(FunctionAppHostSettings hostSettings)
@@ -58,6 +56,37 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures
         protected override void OnConfigureEnvironment()
         {
             Environment.SetEnvironmentVariable(EnvironmentSettingNames.AzureWebJobsStorage, "UseDevelopmentStorage=true");
+
+            Environment.SetEnvironmentVariable("CURRENCY", "DKK");
+            Environment.SetEnvironmentVariable("LOCAL_TIMEZONENAME", "Europe/Copenhagen");
+
+            Environment.SetEnvironmentVariable("CHARGE_LINK_ACCEPTED_TOPIC_NAME", "sbt-link-command-accepted");
+            Environment.SetEnvironmentVariable("CHARGE_LINK_ACCEPTED_SUBSCRIPTION_NAME", "sbs-link-command-accepted-event-publisher");
+
+            Environment.SetEnvironmentVariable("CHARGE_LINK_CREATED_TOPIC_NAME", "charge-link-created");
+
+            Environment.SetEnvironmentVariable("CHARGE_LINK_RECEIVED_TOPIC_NAME", "sbt-link-command-received");
+            Environment.SetEnvironmentVariable("CHARGE_LINK_RECEIVED_SUBSCRIPTION_NAME", "sbs-link-command-received-receiver");
+
+            Environment.SetEnvironmentVariable("COMMAND_ACCEPTED_TOPIC_NAME", "sbt-command-accepted");
+            Environment.SetEnvironmentVariable("COMMAND_ACCEPTED_SUBSCRIPTION_NAME", "sbs-command-accepted");
+
+            Environment.SetEnvironmentVariable("COMMAND_RECEIVED_TOPIC_NAME", "sbt-command-received");
+            Environment.SetEnvironmentVariable("COMMAND_RECEIVED_SUBSCRIPTION_NAME", "sbs-command-received");
+
+            Environment.SetEnvironmentVariable("COMMAND_REJECTED_TOPIC_NAME", "sbt-command-rejected");
+            Environment.SetEnvironmentVariable("COMMAND_REJECTED_SUBSCRIPTION_NAME", "sbs-command-rejected");
+
+            Environment.SetEnvironmentVariable("CREATE_LINK_COMMAND_TOPIC_NAME", "sbt-create-link-command");
+            Environment.SetEnvironmentVariable("CREATE_LINK_COMMAND_SUBSCRIPTION_NAME", "sbs-create-link-command-charges");
+
+            Environment.SetEnvironmentVariable("METERING_POINT_CREATED_TOPIC_NAME", "metering-point-created");
+            Environment.SetEnvironmentVariable("METERING_POINT_CREATED_SUBSCRIPTION_NAME", "metering-point-created-sub-charges");
+
+            Environment.SetEnvironmentVariable("COMMAND_ACCEPTED_RECEIVER_SUBSCRIPTION_NAME", "sbs-charge-command-accepted-receiver");
+
+            Environment.SetEnvironmentVariable("CHARGE_CREATED_TOPIC_NAME", "charge-created");
+            Environment.SetEnvironmentVariable("CHARGE_PRICES_UPDATED_TOPIC_NAME", "charge-prices-updated");
         }
 
         /// <inheritdoc/>
@@ -79,20 +108,10 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures
             await ServiceBusListenerMock.AddQueueListenerAsync(ChargesFunctionAppServiceBusOptions.PostOfficeDataAvailableQueueName);
 
             // => Database
-            await SqlServerResource.InitializeAsync();
-
-            const string databaseName = "chargeDatabase";
-            var chargeDbConnectionString = await SqlServerResource.CreateDatabaseAsync(databaseName);
+            await DatabaseManager.CreateDatabaseAsync();
 
             // Overwrites the setting so the function uses the name we have control of in the test
-            Environment.SetEnvironmentVariable(EnvironmentSettingNames.ChargeDbConnectionString, chargeDbConnectionString);
-
-            var upgrader = UpgradeFactory.GetUpgradeEngine(chargeDbConnectionString, _ => true);
-            var result = upgrader.PerformUpgrade();
-            if (result.Successful is false)
-            {
-                throw new Exception("Database migration failed", result.Error);
-            }
+            Environment.SetEnvironmentVariable(EnvironmentSettingNames.ChargeDbConnectionString, DatabaseManager.ConnectionString);
         }
 
         /// <inheritdoc/>
@@ -114,7 +133,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures
             await ServiceBusResource.DisposeAsync();
 
             // => Database
-            await SqlServerResource.DisposeAsync();
+            await DatabaseManager.DeleteDatabaseAsync();
         }
 
         protected async Task<string> GetTopicNameFromKeyAsync(string topicKey)

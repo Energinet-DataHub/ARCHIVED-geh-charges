@@ -29,18 +29,15 @@ namespace GreenEnergyHub.Charges.FunctionHost.Charges
     {
         public const string FunctionName = nameof(ChargeRejectionSenderEndpoint);
         private readonly IChargeRejectionSender _chargeRejectionSender;
-        private readonly ICorrelationContext _correlationContext;
         private readonly MessageExtractor<ChargeCommandRejectedContract> _messageExtractor;
         private readonly ILogger _log;
 
         public ChargeRejectionSenderEndpoint(
             IChargeRejectionSender chargeRejectionSender,
-            ICorrelationContext correlationContext,
             MessageExtractor<ChargeCommandRejectedContract> messageExtractor,
             [NotNull] ILoggerFactory loggerFactory)
         {
             _chargeRejectionSender = chargeRejectionSender;
-            _correlationContext = correlationContext;
             _messageExtractor = messageExtractor;
 
             _log = loggerFactory.CreateLogger(nameof(ChargeRejectionSenderEndpoint));

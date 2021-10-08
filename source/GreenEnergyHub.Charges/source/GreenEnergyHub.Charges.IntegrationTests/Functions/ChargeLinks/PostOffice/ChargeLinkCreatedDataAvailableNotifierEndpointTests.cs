@@ -57,8 +57,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Functions.ChargeLinks.PostOffi
                     .WhenAny()
                     .VerifyOnceAsync(receivedMessage =>
                     {
-                        body = receivedMessage.Body;
-
+                        // body = receivedMessage.Body;
                         return Task.CompletedTask;
                     });
 

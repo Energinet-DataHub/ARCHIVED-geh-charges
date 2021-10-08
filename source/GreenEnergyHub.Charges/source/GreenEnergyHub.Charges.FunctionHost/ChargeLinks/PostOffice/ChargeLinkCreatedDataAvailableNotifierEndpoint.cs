@@ -50,7 +50,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.ChargeLinks.PostOffice
         public async Task RunAsync(
             [ServiceBusTrigger(
                 "%" + EnvironmentSettingNames.ChargeLinkAcceptedTopicName + "%",
-                "%CHARGE_LINK_ACCEPTED_SUBSCRIPTION_NAME%",
+                "%CHARGELINKACCEPTED_SUB_DATAAVAILABLENOTIFIER%",
                 Connection = EnvironmentSettingNames.DomainEventListenerConnectionString)]
             [NotNull] byte[] message)
         {

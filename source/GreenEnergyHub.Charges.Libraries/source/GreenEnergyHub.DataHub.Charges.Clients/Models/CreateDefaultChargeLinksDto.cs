@@ -12,22 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.MeteringPoints.IntegrationEventContracts;
-using GreenEnergyHub.Charges.Domain.MeteringPoints;
-using GreenEnergyHub.Charges.TestCore;
-using GreenEnergyHub.Charges.TestCore.Protobuf;
-using Xunit;
-using Xunit.Categories;
-
-namespace GreenEnergyHub.Charges.Tests.Infrastructure.Integration
+namespace GreenEnergyHub.DataHub.Charges.Libraries.Models
 {
-    [UnitTest]
-    public class CreateLinkCommandContractEnumTests
-    {
-        [Fact]
-        public void MeteringPointTypeContract_ShouldBeSubsetOfMeteringPointType()
-        {
-            ProtobufAssert.ContractEnumIsSubSet<MeteringPointTypeContract, MeteringPointType>();
-        }
-    }
+    /// <summary>
+    /// The required data for needed by the Charges domain to create
+    /// Default charge links.
+    /// </summary>
+    /// <param name="meteringPointId"></param>
+    /// A unique id to specify the metering point.
+    public sealed record CreateDefaultChargeLinksDto(string meteringPointId);
 }

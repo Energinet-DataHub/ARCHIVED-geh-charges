@@ -29,15 +29,12 @@ namespace GreenEnergyHub.Charges.FunctionHost.ChargeLinks
         public const string FunctionName = nameof(ChargeLinkCommandReceiverEndpoint);
         private readonly MessageExtractor<ChargeLinkCommandReceivedContract> _messageExtractor;
         private readonly IChargeLinkCommandReceivedHandler _chargeLinkCommandReceivedHandler;
-        private readonly ICorrelationContext _correlationContext;
 
         public ChargeLinkCommandReceiverEndpoint(
             MessageExtractor<ChargeLinkCommandReceivedContract> messageExtractor,
-            ICorrelationContext correlationContext,
             IChargeLinkCommandReceivedHandler chargeLinkCommandReceivedHandler)
         {
             _messageExtractor = messageExtractor;
-            _correlationContext = correlationContext;
             _chargeLinkCommandReceivedHandler = chargeLinkCommandReceivedHandler;
         }
 

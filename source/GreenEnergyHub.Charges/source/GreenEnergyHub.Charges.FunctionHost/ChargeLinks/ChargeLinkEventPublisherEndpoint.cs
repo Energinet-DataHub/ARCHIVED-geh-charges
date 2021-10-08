@@ -32,18 +32,15 @@ namespace GreenEnergyHub.Charges.FunctionHost.ChargeLinks
         /// Function name affects the URL and thus possibly dependent infrastructure.
         /// </summary>
         public const string FunctionName = nameof(ChargeLinkEventPublisherEndpoint);
-        private readonly ICorrelationContext _correlationContext;
         private readonly MessageExtractor<ChargeLinkCommandAcceptedContract> _messageExtractor;
         private readonly IChargeLinkEventPublishHandler _chargeLinkEventPublishHandler;
         private readonly ILogger _log;
 
         public ChargeLinkEventPublisherEndpoint(
-            ICorrelationContext correlationContext,
             MessageExtractor<ChargeLinkCommandAcceptedContract> messageExtractor,
             IChargeLinkEventPublishHandler chargeLinkEventPublishHandler,
             [NotNull] ILoggerFactory loggerFactory)
         {
-            _correlationContext = correlationContext;
             _messageExtractor = messageExtractor;
             _chargeLinkEventPublishHandler = chargeLinkEventPublishHandler;
 
@@ -54,7 +51,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.ChargeLinks
         public async Task RunAsync(
             [ServiceBusTrigger(
                 "%" + EnvironmentSettingNames.ChargeLinkAcceptedTopicName + "%",
-                "%CHARGE_LINK_ACCEPTED_SUBSCRIPTION_NAME%",
+                "%CHARGELINKACCEPTED_SUB_EVENTPUBLISHER%",
                 Connection = EnvironmentSettingNames.DomainEventListenerConnectionString)]
             [NotNull] byte[] message)
         {

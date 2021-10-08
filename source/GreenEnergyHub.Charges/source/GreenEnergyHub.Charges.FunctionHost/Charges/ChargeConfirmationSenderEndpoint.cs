@@ -29,18 +29,15 @@ namespace GreenEnergyHub.Charges.FunctionHost.Charges
     {
         public const string FunctionName = nameof(ChargeConfirmationSenderEndpoint);
         private readonly IChargeConfirmationSender _chargeConfirmationSender;
-        private readonly ICorrelationContext _correlationContext;
         private readonly MessageExtractor<ChargeCommandAcceptedContract> _messageExtractor;
         private readonly ILogger _log;
 
         public ChargeConfirmationSenderEndpoint(
             IChargeConfirmationSender chargeConfirmationSender,
-            ICorrelationContext correlationContext,
             MessageExtractor<ChargeCommandAcceptedContract> messageExtractor,
             [NotNull] ILoggerFactory loggerFactory)
         {
             _chargeConfirmationSender = chargeConfirmationSender;
-            _correlationContext = correlationContext;
             _messageExtractor = messageExtractor;
 
             _log = loggerFactory.CreateLogger(nameof(ChargeConfirmationSenderEndpoint));

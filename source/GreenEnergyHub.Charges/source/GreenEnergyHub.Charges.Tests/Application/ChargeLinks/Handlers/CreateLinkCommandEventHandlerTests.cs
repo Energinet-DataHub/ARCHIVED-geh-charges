@@ -42,18 +42,17 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Handlers
         [InlineAutoDomainData]
         public async Task HandleAsync_WhenCalled_UsesFactoryToCreateEventAndDispatchesIt(
             [Frozen] [NotNull] Mock<IDefaultChargeLinkRepository> defaultChargeLinkRepository,
+            [Frozen] [NotNull] Mock<IMeteringPointRepository> meteringPointRepository,
             [Frozen] [NotNull] Mock<IChargeLinkCommandFactory> chargeLinkCommandFactory,
             [Frozen] [NotNull] Mock<IMessageDispatcher<ChargeLinkCommandReceivedEvent>> dispatcher,
             [NotNull] string correlationId,
             [NotNull] ChargeLinkCommand chargeLinkCommand,
+            [NotNull] string meteringPointId,
             [NotNull] CreateLinkCommandEventHandler sut)
         {
             // Arrange
             chargeLinkCommand.ChargeLink.EndDateTime = null;
-            var createLinkCommandEvent = new CreateLinkCommandEvent(
-                correlationId,
-                MeteringPointType.Consumption,
-                SystemClock.Instance.GetCurrentInstant());
+            var createLinkCommandEvent = new CreateLinkCommandEvent(meteringPointId);
 
             var defaultChargeLink = new DefaultChargeLink(
                 SystemClock.Instance.GetCurrentInstant(),
@@ -65,6 +64,17 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Handlers
                     f => f.GetAsync(
                         It.IsAny<MeteringPointType>()))
                 .ReturnsAsync(new List<DefaultChargeLink> { defaultChargeLink });
+
+            meteringPointRepository.Setup(
+                    f => f.GetMeteringPointAsync(
+                        It.IsAny<string>()))
+                .ReturnsAsync(MeteringPoint.Create(
+                    meteringPointId,
+                    MeteringPointType.Consumption,
+                    "gridArea",
+                    SystemClock.Instance.GetCurrentInstant(),
+                    ConnectionState.New,
+                    null));
 
             chargeLinkCommandFactory.Setup(
                     f => f.CreateAsync(

@@ -32,18 +32,15 @@ namespace GreenEnergyHub.Charges.FunctionHost.MeteringPoint
         /// Function name affects the URL and thus possibly dependent infrastructure.
         /// </summary>
         public const string FunctionName = nameof(MeteringPointCreatedReceiverEndpoint);
-        private readonly ICorrelationContext _correlationContext;
         private readonly MessageExtractor<MeteringPointCreated> _messageExtractor;
         private readonly IMeteringPointCreatedEventHandler _meteringPointCreatedEventHandler;
         private readonly ILogger _log;
 
         public MeteringPointCreatedReceiverEndpoint(
-            ICorrelationContext correlationContext,
             MessageExtractor<MeteringPointCreated> messageExtractor,
             IMeteringPointCreatedEventHandler meteringPointCreatedEventHandler,
             [NotNull] ILoggerFactory loggerFactory)
         {
-            _correlationContext = correlationContext;
             _messageExtractor = messageExtractor;
             _meteringPointCreatedEventHandler = meteringPointCreatedEventHandler;
             _log = loggerFactory.CreateLogger(nameof(MeteringPointCreatedReceiverEndpoint));

@@ -12,7 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-resource "azurerm_servicebus_subscription" "sbs_charge_command_accepted_receiver" {
+module "sbs_charge_command_accepted_receiver" {
+  source              = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//service-bus-subscription?ref=2.0.0"
   name                = "sbs-charge-command-accepted-receiver"
   resource_group_name = data.azurerm_resource_group.main.name
   namespace_name      = module.sbn_charges.name

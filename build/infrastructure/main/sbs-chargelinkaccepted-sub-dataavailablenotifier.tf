@@ -12,10 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-module "sbt_create_link_command" {
-  source              = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//service-bus-topic?ref=2.0.0"
-  name                = "sbt-create-link-command"
-  namespace_name      = module.sbn_charges.name
+module "sbs_chargelinkaccepted_sub_dataavailablenotifier" {
+  source              = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//service-bus-subscription?ref=2.0.0"
+  name                = "sbs-chargelinkaccepted-sub-dataavailablenotifier"
   resource_group_name = data.azurerm_resource_group.main.name
-  dependencies        = [module.sbn_charges.dependent_on]
+  namespace_name      = module.sbn_charges.name
+  topic_name          = module.sbt_link_command_accepted.name
+  max_delivery_count  = 1
 }

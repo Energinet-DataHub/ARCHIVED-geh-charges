@@ -18,13 +18,13 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoFixture;
+using Azure.Messaging.ServiceBus;
 using FluentAssertions;
 using GreenEnergyHub.FunctionApp.TestCommon.ServiceBus.ListenerMock;
 using GreenEnergyHub.FunctionApp.TestCommon.Tests.Fixtures;
 using GreenEnergyHub.TestCommon;
 using GreenEnergyHub.TestCommon.AutoFixture.Extensions;
 using GreenEnergyHub.TestCommon.Diagnostics;
-using Microsoft.Azure.ServiceBus;
 using Xunit;
 
 namespace GreenEnergyHub.FunctionApp.TestCommon.Tests.Integration.ServiceBus.ListenerMock
@@ -45,14 +45,14 @@ namespace GreenEnergyHub.FunctionApp.TestCommon.Tests.Integration.ServiceBus.Lis
                 // Arrange
                 await Sut.AddQueueListenerAsync(ServiceBusListenerMockFixture.QueueName);
 
-                var message = Fixture.Create<Message>();
+                var message = Fixture.Create<ServiceBusMessage>();
 
                 using var isReceivedEvent = await Sut
                     .WhenAny()
                     .VerifyOnceAsync();
 
                 // Act
-                await ServiceBusListenerMockFixture.QueueSenderClient.SendAsync(message);
+                await ServiceBusListenerMockFixture.QueueSenderClient.SendMessageAsync(message);
 
                 // Assert
                 var isReceived = isReceivedEvent.Wait(DefaultTimeout);
@@ -86,14 +86,14 @@ namespace GreenEnergyHub.FunctionApp.TestCommon.Tests.Integration.ServiceBus.Lis
                 // Arrange
                 await Sut.AddTopicSubscriptionListenerAsync(ServiceBusListenerMockFixture.TopicName, ServiceBusListenerMockFixture.SubscriptionName);
 
-                var message = Fixture.Create<Message>();
+                var message = Fixture.Create<ServiceBusMessage>();
 
                 using var isReceivedEvent = await Sut
                     .WhenAny()
                     .VerifyOnceAsync();
 
                 // Act
-                await ServiceBusListenerMockFixture.TopicSenderClient.SendAsync(message);
+                await ServiceBusListenerMockFixture.TopicSenderClient.SendMessageAsync(message);
 
                 // Assert
                 var isReceived = isReceivedEvent.Wait(DefaultTimeout);
@@ -130,15 +130,15 @@ namespace GreenEnergyHub.FunctionApp.TestCommon.Tests.Integration.ServiceBus.Lis
                     .WhenAny()
                     .VerifyOnceAsync();
 
-                var message = Fixture.Create<Message>();
-                await ServiceBusListenerMockFixture.QueueSenderClient.SendAsync(message);
+                var message = Fixture.Create<ServiceBusMessage>();
+                await ServiceBusListenerMockFixture.QueueSenderClient.SendMessageAsync(message);
 
                 return isReceivedEvent.Wait(DefaultTimeout);
             }
         }
 
         /// <summary>
-        /// Test <see cref="WhenProvider.When(ServiceBusListenerMock, Func{Message, bool})"/>
+        /// Test <see cref="WhenProvider.When(ServiceBusListenerMock, Func{ServiceBusReceivedMessage, bool})"/>
         /// and <see cref="DoProvider.DoAsync"/>,
         /// including related extensions.
         /// </summary>
@@ -157,12 +157,12 @@ namespace GreenEnergyHub.FunctionApp.TestCommon.Tests.Integration.ServiceBus.Lis
             public async Task When_MessageMatch_Then_DoIsTriggered()
             {
                 // Arrange
-                var message = Fixture.Create<Message>();
+                var message = Fixture.Create<ServiceBusMessage>();
                 using var isReceivedEvent = new ManualResetEventSlim(false);
 
                 await Sut.When(receivedMessage =>
                         receivedMessage.MessageId == message.MessageId
-                        && receivedMessage.Label == message.Label)
+                        && receivedMessage.Subject == message.Subject)
                     .DoAsync(_ =>
                     {
                         isReceivedEvent.Set();
@@ -170,7 +170,7 @@ namespace GreenEnergyHub.FunctionApp.TestCommon.Tests.Integration.ServiceBus.Lis
                     });
 
                 // Act
-                await ServiceBusListenerMockFixture.QueueSenderClient.SendAsync(message);
+                await ServiceBusListenerMockFixture.QueueSenderClient.SendMessageAsync(message);
 
                 // Assert
                 var isReceived = isReceivedEvent.Wait(DefaultTimeout);
@@ -181,8 +181,8 @@ namespace GreenEnergyHub.FunctionApp.TestCommon.Tests.Integration.ServiceBus.Lis
             public async Task When_AnyMessageAlreadyReceived_Then_DoIsTriggered()
             {
                 // Arrange
-                var message = Fixture.Create<Message>();
-                await ServiceBusListenerMockFixture.QueueSenderClient.SendAsync(message);
+                var message = Fixture.Create<ServiceBusMessage>();
+                await ServiceBusListenerMockFixture.QueueSenderClient.SendMessageAsync(message);
                 await Awaiter.WaitUntilConditionAsync(() => Sut.ReceivedMessages.Count == 1, TimeSpan.FromSeconds(5));
 
                 // Act
@@ -199,11 +199,11 @@ namespace GreenEnergyHub.FunctionApp.TestCommon.Tests.Integration.ServiceBus.Lis
             public async Task When_OneMessageAlreadyReceivedAndSecondMessageIsSentAfterSettingUpHandler_Then_DoIsTriggered()
             {
                 // Arrange
-                var message1 = Fixture.Create<Message>();
-                await ServiceBusListenerMockFixture.QueueSenderClient.SendAsync(message1);
+                var message1 = Fixture.Create<ServiceBusMessage>();
+                await ServiceBusListenerMockFixture.QueueSenderClient.SendMessageAsync(message1);
                 await Awaiter.WaitUntilConditionAsync(() => Sut.ReceivedMessages.Count == 1, TimeSpan.FromSeconds(5));
 
-                var messagesReceivedInHandler = new List<Message>();
+                var messagesReceivedInHandler = new List<ServiceBusReceivedMessage>();
                 using var isReceivedEvent = await Sut
                     .WhenAny()
                     .VerifyCountAsync(
@@ -214,10 +214,10 @@ namespace GreenEnergyHub.FunctionApp.TestCommon.Tests.Integration.ServiceBus.Lis
                             return Task.CompletedTask;
                         });
 
-                var message2 = Fixture.Create<Message>();
+                var message2 = Fixture.Create<ServiceBusMessage>();
 
                 // Act
-                await ServiceBusListenerMockFixture.QueueSenderClient.SendAsync(message2);
+                await ServiceBusListenerMockFixture.QueueSenderClient.SendMessageAsync(message2);
 
                 // Assert
                 var isReceived = isReceivedEvent.Wait(DefaultTimeout);
@@ -232,7 +232,7 @@ namespace GreenEnergyHub.FunctionApp.TestCommon.Tests.Integration.ServiceBus.Lis
             public async Task When_AnyMessage_Then_DoIsTriggered()
             {
                 // Arrange
-                var message = Fixture.Create<Message>();
+                var message = Fixture.Create<ServiceBusMessage>();
                 using var isReceivedEvent = new ManualResetEventSlim(false);
 
                 await Sut.WhenAny()
@@ -243,7 +243,7 @@ namespace GreenEnergyHub.FunctionApp.TestCommon.Tests.Integration.ServiceBus.Lis
                     });
 
                 // Act
-                await ServiceBusListenerMockFixture.QueueSenderClient.SendAsync(message);
+                await ServiceBusListenerMockFixture.QueueSenderClient.SendMessageAsync(message);
 
                 // Assert
                 var isReceived = isReceivedEvent.Wait(DefaultTimeout);
@@ -254,14 +254,14 @@ namespace GreenEnergyHub.FunctionApp.TestCommon.Tests.Integration.ServiceBus.Lis
             public async Task When_AnyMessage_Then_VerifyOnce()
             {
                 // Arrange
-                var message = Fixture.Create<Message>();
+                var message = Fixture.Create<ServiceBusMessage>();
 
                 using var isReceivedEvent = await Sut
                     .WhenAny()
                     .VerifyOnceAsync();
 
                 // Act
-                await ServiceBusListenerMockFixture.QueueSenderClient.SendAsync(message);
+                await ServiceBusListenerMockFixture.QueueSenderClient.SendMessageAsync(message);
 
                 // Assert
                 var isReceived = isReceivedEvent.Wait(DefaultTimeout);
@@ -274,7 +274,7 @@ namespace GreenEnergyHub.FunctionApp.TestCommon.Tests.Integration.ServiceBus.Lis
             public async Task When_MessageIdFilter_Then_VerifyOnceIfMatch(string messageId, string matchMessageId, bool expectDoIsTriggered)
             {
                 // Arrange
-                var message = Fixture.Create<Message>();
+                var message = Fixture.Create<ServiceBusMessage>();
                 message.MessageId = messageId;
 
                 using var isReceivedEvent = await Sut
@@ -282,7 +282,7 @@ namespace GreenEnergyHub.FunctionApp.TestCommon.Tests.Integration.ServiceBus.Lis
                     .VerifyOnceAsync();
 
                 // Act
-                await ServiceBusListenerMockFixture.QueueSenderClient.SendAsync(message);
+                await ServiceBusListenerMockFixture.QueueSenderClient.SendMessageAsync(message);
 
                 // Assert
                 var isReceived = isReceivedEvent.Wait(DefaultTimeout);
@@ -295,10 +295,10 @@ namespace GreenEnergyHub.FunctionApp.TestCommon.Tests.Integration.ServiceBus.Lis
             public async Task When_MessageIdFilterAndMessageIsReplayed_Then_VerifyOnceIfMatch(string messageId, string matchMessageId, bool expectDoIsTriggered)
             {
                 // Arrange
-                var message = Fixture.Create<Message>();
+                var message = Fixture.Create<ServiceBusMessage>();
                 message.MessageId = messageId;
 
-                await ServiceBusListenerMockFixture.QueueSenderClient.SendAsync(message);
+                await ServiceBusListenerMockFixture.QueueSenderClient.SendMessageAsync(message);
                 await Awaiter.WaitUntilConditionAsync(() => Sut.ReceivedMessages.Count == 1, TimeSpan.FromSeconds(5));
 
                 // Act
@@ -314,18 +314,18 @@ namespace GreenEnergyHub.FunctionApp.TestCommon.Tests.Integration.ServiceBus.Lis
             [Theory]
             [InlineData("PropelData", "PropelData", true)]
             [InlineData("PropelData", "MeteringData", false)]
-            public async Task When_LabelFilter_Then_VerifyOnceIfMatch(string messageLabel, string matchLabel, bool expectDoIsTriggered)
+            public async Task When_SubjectFilter_Then_VerifyOnceIfMatch(string messageSubject, string matchSubject, bool expectDoIsTriggered)
             {
                 // Arrange
-                var message = Fixture.Create<Message>();
-                message.Label = messageLabel;
+                var message = Fixture.Create<ServiceBusMessage>();
+                message.Subject = messageSubject;
 
                 using var isReceivedEvent = await Sut
-                    .WhenLabel(matchLabel)
+                    .WhenSubject(matchSubject)
                     .VerifyOnceAsync();
 
                 // Act
-                await ServiceBusListenerMockFixture.QueueSenderClient.SendAsync(message);
+                await ServiceBusListenerMockFixture.QueueSenderClient.SendMessageAsync(message);
 
                 // Assert
                 var isReceived = isReceivedEvent.Wait(DefaultTimeout);
@@ -344,8 +344,8 @@ namespace GreenEnergyHub.FunctionApp.TestCommon.Tests.Integration.ServiceBus.Lis
                 // Act
                 for (var i = 0; i < expectedCount; i++)
                 {
-                    var message = Fixture.Create<Message>();
-                    _ = ServiceBusListenerMockFixture.QueueSenderClient.SendAsync(message);
+                    var message = Fixture.Create<ServiceBusMessage>();
+                    _ = ServiceBusListenerMockFixture.QueueSenderClient.SendMessageAsync(message);
                 }
 
                 // Assert
@@ -377,21 +377,21 @@ namespace GreenEnergyHub.FunctionApp.TestCommon.Tests.Integration.ServiceBus.Lis
             public async Task When_MessageIsSent_Then_ReceivedMessagesContainsExpectedMessage()
             {
                 // Arrange
-                var message = Fixture.Create<Message>();
+                var message = Fixture.Create<ServiceBusMessage>();
 
                 using var isReceivedEvent = await Sut
                     .WhenAny()
                     .VerifyOnceAsync();
 
                 // Act
-                await ServiceBusListenerMockFixture.QueueSenderClient.SendAsync(message);
+                await ServiceBusListenerMockFixture.QueueSenderClient.SendMessageAsync(message);
 
                 // Assert
                 isReceivedEvent.Wait(DefaultTimeout);
 
                 Sut.AssertReceived(receivedMessage =>
                     receivedMessage.MessageId == message.MessageId
-                    && receivedMessage.Label == message.Label
+                    && receivedMessage.Subject == message.Subject
                     && receivedMessage.CorrelationId == message.CorrelationId);
             }
 
@@ -399,14 +399,14 @@ namespace GreenEnergyHub.FunctionApp.TestCommon.Tests.Integration.ServiceBus.Lis
             public async Task When_MessageWithBodyIsSent_Then_ReceivedMessagesContainsMessageWithBodyAsString()
             {
                 // Arrange
-                var message = Fixture.Create<Message>();
+                var message = Fixture.Create<ServiceBusMessage>();
 
                 using var isReceivedEvent = await Sut
                     .WhenAny()
                     .VerifyOnceAsync();
 
                 // Act
-                await ServiceBusListenerMockFixture.QueueSenderClient.SendAsync(message);
+                await ServiceBusListenerMockFixture.QueueSenderClient.SendMessageAsync(message);
 
                 // Assert
                 isReceivedEvent.Wait(DefaultTimeout);
@@ -436,11 +436,11 @@ namespace GreenEnergyHub.FunctionApp.TestCommon.Tests.Integration.ServiceBus.Lis
                 Fixture.Inject<ITestDiagnosticsLogger>(new TestDiagnosticsLogger());
                 Fixture.ForConstructorOn<ServiceBusListenerMock>()
                     .SetParameter("connectionString").To(ServiceBusListenerMockFixture.ConnectionString);
-                Fixture.Customize<Message>(composer => composer
+                Fixture.Customize<ServiceBusMessage>(composer => composer
                     .OmitAutoProperties()
                     .With(p => p.MessageId)
-                    .With(p => p.Label)
-                    .With(p => p.Body, () => Encoding.UTF8.GetBytes(DefaultBody)));
+                    .With(p => p.Subject)
+                    .With(p => p.Body, new BinaryData(DefaultBody)));
 
                 Sut.ResetMessageHandlersAndReceivedMessages();
             }

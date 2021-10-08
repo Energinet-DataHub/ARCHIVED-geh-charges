@@ -13,7 +13,7 @@
 // limitations under the License.
 
 using System;
-using Microsoft.Azure.ServiceBus;
+using Azure.Messaging.ServiceBus;
 
 namespace GreenEnergyHub.FunctionApp.TestCommon.ServiceBus.ListenerMock
 {
@@ -23,7 +23,7 @@ namespace GreenEnergyHub.FunctionApp.TestCommon.ServiceBus.ListenerMock
     /// </summary>
     public static class WhenProvider
     {
-        public static DoProvider When(this ServiceBusListenerMock provider, Func<Message, bool> messageMatcher)
+        public static DoProvider When(this ServiceBusListenerMock provider, Func<ServiceBusReceivedMessage, bool> messageMatcher)
         {
             return new DoProvider(provider, messageMatcher);
         }
