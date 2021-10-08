@@ -61,7 +61,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures
             Environment.SetEnvironmentVariable("LOCAL_TIMEZONENAME", "Europe/Copenhagen");
 
             Environment.SetEnvironmentVariable("CHARGE_LINK_ACCEPTED_TOPIC_NAME", "sbt-link-command-accepted");
-            Environment.SetEnvironmentVariable("CHARGE_LINK_ACCEPTED_SUBSCRIPTION_NAME", "sbs-link-command-accepted-event-publisher");
+            Environment.SetEnvironmentVariable("CHARGELINKACCEPTED_SUB_DATAAVAILABLENOTIFIER", "sbs-chargelinkaccepted-sub-dataavailablenotifier");
+            Environment.SetEnvironmentVariable("CHARGELINKACCEPTED_SUB_EVENTPUBLISHER", "sbs-chargelinkaccepted-sub-eventpublisher");
 
             Environment.SetEnvironmentVariable("CHARGE_LINK_CREATED_TOPIC_NAME", "charge-link-created");
 
@@ -77,8 +78,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures
             Environment.SetEnvironmentVariable("COMMAND_REJECTED_TOPIC_NAME", "sbt-command-rejected");
             Environment.SetEnvironmentVariable("COMMAND_REJECTED_SUBSCRIPTION_NAME", "sbs-command-rejected");
 
-            Environment.SetEnvironmentVariable("CREATE_LINK_COMMAND_TOPIC_NAME", "sbt-create-link-command");
-            Environment.SetEnvironmentVariable("CREATE_LINK_COMMAND_SUBSCRIPTION_NAME", "sbs-create-link-command-charges");
+            Environment.SetEnvironmentVariable("CREATE_LINK_REQUEST_QUEUE_NAME", "create-link-request");
+            Environment.SetEnvironmentVariable("CREATE_LINK_REPLY_QUEUE_NAME", "create-link-reply");
 
             Environment.SetEnvironmentVariable("METERING_POINT_CREATED_TOPIC_NAME", "metering-point-created");
             Environment.SetEnvironmentVariable("METERING_POINT_CREATED_SUBSCRIPTION_NAME", "metering-point-created-sub-charges");
