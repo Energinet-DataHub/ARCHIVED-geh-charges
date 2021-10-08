@@ -33,10 +33,11 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures
         {
             builder.SetConfigResolver(ConfigurationResolver);
 
-            var domainEventListenerNamespace = GetNamespaceFromSetting(EnvironmentSettingNames.DomainEventSenderConnectionString);
+            // We extract the service bus namespace from one of the connection strings
+            var serviceBusNamespace = GetNamespaceFromSetting(EnvironmentSettingNames.DomainEventSenderConnectionString);
 
             builder
-                .Namespace(domainEventListenerNamespace)
+                .Namespace(serviceBusNamespace)
                 .AddTopic(PostOfficeTopicKey)
                 .AddSubscription(PostOfficeTopicSubscriptionName);
         }
