@@ -39,7 +39,6 @@ env:
   DOMAINEVENT_SENDER_CONNECTION_STRING: ${{ secrets.XDAST_DOMAINEVENT_SENDER_CONNECTION_STRING }}
   DOMAINEVENT_LISTENER_CONNECTION_STRING: ${{ secrets.XDAST_DOMAINEVENT_LISTENER_CONNECTION_STRING }}
   # Variables that overrides settings in 'functionhost.settings.json'
-  #DotnetExecutablePath: ''
   FunctionAppHostPath: 'C:\npm\prefix\node_modules\azure-functions-core-tools\bin\func.dll'
   FunctionApplicationPath: '..\\..\\..\\..\\GreenEnergyHub.Charges.FunctionHost\\bin\\Release\\net5.0'
 
@@ -68,8 +67,10 @@ jobs:
     runs-on: windows-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@master # UNDONE: Why do we use version 'master' instead of a version tag? Using a branch is fragile.
+        uses: actions/checkout@master
 
+      # Functions v3 still has a dependency to .NET 3.1
+      # See issue: https://github.com/Azure/azure-functions-dotnet-worker/wiki/Known-issues#net-core-31-dependency
       - name: Setup .NET 3.1 environment
         uses: actions/setup-dotnet@v1
         with:
