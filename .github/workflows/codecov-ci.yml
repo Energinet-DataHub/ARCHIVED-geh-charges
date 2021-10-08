@@ -53,7 +53,7 @@ jobs:
     needs: pre_job
     if: ${{ needs.pre_job.outputs.should_skip != 'true' || github.ref == 'refs/heads/main' }}
     name: Collect code coverage .NET
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     strategy:
       matrix:
         project: [

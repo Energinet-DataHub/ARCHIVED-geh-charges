@@ -12,20 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
-using Azure.Messaging.ServiceBus;
+using Xunit;
 
-namespace GreenEnergyHub.FunctionApp.TestCommon.ServiceBus.ListenerMock
+namespace GreenEnergyHub.FunctionApp.TestCommon.Tests.Fixtures
 {
     /// <summary>
-    /// Actually service bus listener mock extensions, but we want to separate the fluent API
-    /// and make it stand out on its own.
+    /// A xUnit collection fixture for ensuring tests don't run in parallel.
+    ///
+    /// xUnit documentation of collection fixtures:
+    ///  * https://xunit.net/docs/shared-context#collection-fixture
     /// </summary>
-    public static class WhenProvider
+    [CollectionDefinition(nameof(SqlServerDatabaseCollectionFixture))]
+    public class SqlServerDatabaseCollectionFixture
     {
-        public static DoProvider When(this ServiceBusListenerMock provider, Func<ServiceBusReceivedMessage, bool> messageMatcher)
-        {
-            return new DoProvider(provider, messageMatcher);
-        }
     }
 }
