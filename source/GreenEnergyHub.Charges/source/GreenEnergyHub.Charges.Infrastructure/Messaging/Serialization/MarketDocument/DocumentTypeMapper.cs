@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.ComponentModel;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Messaging.Serialization.MarketDocument
@@ -23,8 +24,20 @@ namespace GreenEnergyHub.Charges.Infrastructure.Messaging.Serialization.MarketDo
             return value switch
             {
                 "D05" => DocumentType.RequestChangeBillingMasterData,
+                "D07" => DocumentType.NotifyBillingMasterData,
                 "D10" => DocumentType.RequestUpdateChargeInformation,
                 _ => DocumentType.Unknown,
+            };
+        }
+
+        public static string Map(DocumentType documentType)
+        {
+            return documentType switch
+            {
+                DocumentType.NotifyBillingMasterData => "D07",
+                DocumentType.RequestUpdateChargeInformation => "D10",
+                DocumentType.RequestChangeBillingMasterData => "D05",
+                _ => throw new InvalidEnumArgumentException($"Provided DocumentType value '{documentType}' is invalid and cannot be mapped.")
             };
         }
     }
