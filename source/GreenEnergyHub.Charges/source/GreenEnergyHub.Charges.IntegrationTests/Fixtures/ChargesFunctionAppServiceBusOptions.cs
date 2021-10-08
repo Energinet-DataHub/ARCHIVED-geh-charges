@@ -51,8 +51,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures
 
         public const string CreateLinkReplyQueueKey = "create-link-reply";
 
-        public const string MeteringPointCreatedTopicKey = "metering-point-created";
-        public const string MeteringPointCreatedSubscriptionName = "metering-point-created-sub-charges";
+        public const string ConsumptionMeteringPointCreatedTopicKey = "consumption-metering-point-created";
+        public const string ConsumptionMeteringPointCreatedSubscriptionName = "consumption-metering-point-created-sub-charges";
 
         public const string ChargeCreatedTopicKey = "charge-created";
 
@@ -104,8 +104,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures
                 .AddQueue(CreateLinkReplyQueueKey);
 
             builder
-                .AddTopic(MeteringPointCreatedTopicKey)
-                .AddSubscription(MeteringPointCreatedSubscriptionName);
+                .AddTopic(ConsumptionMeteringPointCreatedTopicKey)
+                .AddSubscription(ConsumptionMeteringPointCreatedSubscriptionName);
 
             builder
                 .AddTopic(ChargeCreatedTopicKey);
