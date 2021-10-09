@@ -25,7 +25,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures
 {
     public class ChargesFunctionAppServiceBusOptions : AzureCloudServiceBusOptions
     {
-        public const string PostOfficeTopicKey = "postOffice";
+        public const string PostOfficeTopicKey = "sbt-post-office";
         public const string PostOfficeSubscriptionName = "defaultSubscription";
 
         public const string ChargeLinkAcceptedTopicKey = "sbt-link-command-accepted";
