@@ -25,9 +25,11 @@ using GreenEnergyHub.Charges.TestCore.Attributes;
 using GreenEnergyHub.Charges.TestCore.Reflection;
 using Moq;
 using Xunit;
+using Xunit.Categories;
 
 namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.PostOffice
 {
+    [UnitTest]
     public class ChargeLinkCreatedDataAvailableNotifierTests
     {
         [Theory]
