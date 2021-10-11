@@ -66,7 +66,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Handlers
 
             chargeLinkCommandAcceptedEventFactory.Setup(
                     x => x.Create(
-                        It.IsAny<ChargeLinkCommand>(),
+                        It.IsAny<IReadOnlyCollection<ChargeLinkCommand>>(),
                         It.IsAny<string>()))
                 .Returns(chargeLinkCommandAcceptedEvent);
 

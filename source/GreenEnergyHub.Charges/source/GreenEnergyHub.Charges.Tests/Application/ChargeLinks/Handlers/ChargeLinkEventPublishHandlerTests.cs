@@ -19,6 +19,7 @@ using AutoFixture.Xunit2;
 using GreenEnergyHub.Charges.Application;
 using GreenEnergyHub.Charges.Application.ChargeLinks.Handlers;
 using GreenEnergyHub.Charges.Domain.ChargeLinkCommandAcceptedEvents;
+using GreenEnergyHub.Charges.Domain.ChargeLinkCommands;
 using GreenEnergyHub.Charges.Domain.ChargeLinkCreatedEvents;
 using GreenEnergyHub.TestHelpers;
 using Moq;
@@ -42,7 +43,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Handlers
             // Arrange
             factory.Setup(
                     f => f.CreateEvent(
-                        It.IsAny<ChargeLinkCommandAcceptedEvent>()))
+                        It.IsAny<ChargeLinkCommand>()))
                 .Returns(createdEvent);
 
             var dispatched = false;

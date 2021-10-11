@@ -12,11 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.ChargeLinkCommandAcceptedEvents;
 using GreenEnergyHub.Charges.Domain.ChargeLinkCommands;
 using GreenEnergyHub.Charges.TestCore.Attributes;
+using NodaTime;
+using NodaTime.Testing;
 using Xunit;
 using Xunit.Categories;
 
@@ -31,14 +35,15 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Mapping
             [NotNull] ChargeLinkCommand chargeLinkCommand)
         {
             // Arrange
-            var factory = new ChargeLinkCommandAcceptedEventFactory();
+            var factory = new ChargeLinkCommandAcceptedEventFactory(new FakeClock(Instant.MinValue));
 
             // Act
-            var chargeLinkCommandAcceptedEvent = factory.Create(chargeLinkCommand, chargeLinkCommand.CorrelationId);
+            var chargeLinkCommandAcceptedEvent = factory.Create(new List<ChargeLinkCommand> { chargeLinkCommand }, chargeLinkCommand.CorrelationId);
+            var actual = chargeLinkCommandAcceptedEvent.ChargeLinkCommands.First();
 
             // Assert
-            chargeLinkCommandAcceptedEvent.Document.Should().BeEquivalentTo(chargeLinkCommand.Document);
-            chargeLinkCommandAcceptedEvent.ChargeLink.Should().BeEquivalentTo(chargeLinkCommand.ChargeLink);
+            actual.Document.Should().BeEquivalentTo(chargeLinkCommand.Document);
+            actual.ChargeLink.Should().BeEquivalentTo(chargeLinkCommand.ChargeLink);
         }
     }
 }

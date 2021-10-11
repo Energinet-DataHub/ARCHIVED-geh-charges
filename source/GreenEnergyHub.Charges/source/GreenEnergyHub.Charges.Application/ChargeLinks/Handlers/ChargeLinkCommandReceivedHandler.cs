@@ -51,25 +51,12 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
             foreach (var chargeLink in chargeLinks)
             {
                 await _chargeLinkRepository.StoreAsync(chargeLink).ConfigureAwait(false);
-                var chargeLinkCommandAcceptedEvents = new List<ChargeLinkCommandAcceptedEvent>();
-
-                foreach (var period in chargeLink.PeriodDetails)
-                {
-                    var chargeLinkCommand = await _chargeLinkCommandFactory.CreateFromChargeLinkAsync(
-                            chargeLink,
-                            period,
-                            chargeLinkCommandReceivedEvent.CorrelationId)
-                        .ConfigureAwait(false);
-
-                    chargeLinkCommandAcceptedEvents.Add(_chargeLinkCommandAcceptedEventFactory.Create(
-                        chargeLinkCommand, chargeLinkCommandReceivedEvent.CorrelationId));
-                }
-
-                foreach (var chargeLinkCommandAcceptedEvent in chargeLinkCommandAcceptedEvents)
-                {
-                    await _messageDispatcher.DispatchAsync(chargeLinkCommandAcceptedEvent).ConfigureAwait(false);
-                }
             }
+
+            var chargeLinkCommandAcceptedEvent = _chargeLinkCommandAcceptedEventFactory.Create(
+                chargeLinkCommandReceivedEvent.ChargeLinkCommands, chargeLinkCommandReceivedEvent.CorrelationId);
+
+            await _messageDispatcher.DispatchAsync(chargeLinkCommandAcceptedEvent).ConfigureAwait(false);
         }
     }
 }

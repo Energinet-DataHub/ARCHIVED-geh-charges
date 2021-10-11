@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.Domain.ChargeLinkCommandAcceptedEvents;
 using GreenEnergyHub.Charges.Domain.ChargeLinkCommands;
@@ -26,15 +27,23 @@ namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
     {
         protected override Google.Protobuf.IMessage Convert([NotNull]ChargeLinkCommandAcceptedEvent chargeLinkCommandAcceptedEvent)
         {
-            var document = chargeLinkCommandAcceptedEvent.Document;
-            var chargeLink = chargeLinkCommandAcceptedEvent.ChargeLink;
-
-            return new ChargeLinkCommandAcceptedContract
+            var chargeLinkCommandAcceptedContract = new ChargeLinkCommandAcceptedContract
             {
-                Document = ConvertDocument(document),
-                ChargeLink = ConvertChargeLink(chargeLinkCommandAcceptedEvent, chargeLink),
                 CorrelationId = chargeLinkCommandAcceptedEvent.CorrelationId,
+                PublishedTime = chargeLinkCommandAcceptedEvent.PublishedTime.ToTimestamp(),
             };
+
+            foreach (var chargeLinkCommand in chargeLinkCommandAcceptedEvent.ChargeLinkCommands)
+            {
+             chargeLinkCommandAcceptedContract.ChargeLinkCommands.Add(new ChargeLinkCommandContract
+             {
+                 Document = ConvertDocument(chargeLinkCommand.Document),
+                 ChargeLink = ConvertChargeLink(chargeLinkCommand.ChargeLink),
+                 CorrelationId = chargeLinkCommand.CorrelationId,
+             });
+            }
+
+            return chargeLinkCommandAcceptedContract;
         }
 
         private static DocumentContract ConvertDocument(Document document)
@@ -60,11 +69,11 @@ namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
             };
         }
 
-        private static ChargeLinkContract ConvertChargeLink(ChargeLinkCommandAcceptedEvent chargeLinkCommandAcceptedEvent, ChargeLinkDto chargeLink)
+        private static ChargeLinkContract ConvertChargeLink(ChargeLinkDto chargeLink)
         {
             return new ChargeLinkContract
             {
-                OperationId = chargeLinkCommandAcceptedEvent.ChargeLink.OperationId,
+                OperationId = chargeLink.OperationId,
                 MeteringPointId = chargeLink.MeteringPointId,
                 SenderProvidedChargeId = chargeLink.SenderProvidedChargeId,
                 ChargeOwner = chargeLink.ChargeOwner,

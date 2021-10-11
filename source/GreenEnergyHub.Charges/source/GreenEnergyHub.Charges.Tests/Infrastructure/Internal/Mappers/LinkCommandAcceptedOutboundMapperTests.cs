@@ -37,7 +37,11 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Internal.Mappers
             [NotNull] ChargeLinkCommandAcceptedEvent chargeLinkCommandAcceptedEvent,
             [NotNull] LinkCommandAcceptedOutboundMapper sut)
         {
-            UpdateInstantsToValidTimes(chargeLinkCommandAcceptedEvent);
+            foreach (var chargeLinkCommand in chargeLinkCommandAcceptedEvent.ChargeLinkCommands)
+            {
+                UpdateInstantsToValidTimes(chargeLinkCommand);
+            }
+
             var result = (ChargeLinkCommandAcceptedContract)sut.Convert(chargeLinkCommandAcceptedEvent);
             ProtobufAssert.OutgoingContractIsSubset(chargeLinkCommandAcceptedEvent, result);
         }
