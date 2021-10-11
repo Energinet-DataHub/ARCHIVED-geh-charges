@@ -15,33 +15,33 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
+using GreenEnergyHub.Charges.Commands;
 using GreenEnergyHub.DataHub.Charges.Libraries.Enums;
 using GreenEnergyHub.DataHub.Charges.Libraries.Models;
+using GreenEnergyHub.DataHub.Charges.Libraries.Protobuf;
 
 namespace GreenEnergyHub.DataHub.Charges.Libraries.DefaultChargeLinkReply
 {
-    public delegate Task OnSuccess(CreateDefaultChargeLinksSucceededDto createDefaultChargeLinksSucceeded);
-
-    public delegate Task OnFailure(CreateDefaultChargeLinksFailedDto createDefaultChargeLinksSucceeded);
-
-    public sealed class DefaultChargeLinkReplyDeserializer : IDefaultChargeLinkReplyDeserializer
+    public sealed class DefaultChargeLinkReplyDeserializer : DefaultChargeLinkReplyDeserializerBase
     {
         private readonly OnSuccess _handleSuccess;
         private readonly OnFailure _handleFailure;
 
-        public DefaultChargeLinkReplyDeserializer(
-            [NotNull] OnSuccess handleSuccess,
-            [NotNull] OnFailure handleFailure)
+        public DefaultChargeLinkReplyDeserializer([NotNull] OnSuccess handleSuccess, [NotNull] OnFailure handleFailure)
         {
             _handleSuccess = handleSuccess;
             _handleFailure = handleFailure;
         }
 
-        public async Task DeserializeMessageAsync(byte[] data, MessageType messageType)
+        public override async Task DeserializeMessageAsync(byte[] data, MessageType messageType)
         {
             switch (messageType)
             {
                 case MessageType.RequestSucceeded:
+                    var createDefaultChargeLinksSucceededParser = CreateDefaultChargeLinksSucceeded.Parser;
+                    var createDefaultChargeLinksSucceeded = createDefaultChargeLinksSucceededParser.ParseFrom(data);
+                    var createDefaultChargeLinksSucceededDto =
+                        CreateDefaultChargeLinksSucceededInboundMapper.Convert(createDefaultChargeLinksSucceeded);
 
                     const string fakeKnownMeteringPointIdFromProto = "knownMeteringPointId1234";
                     const bool fakeDidCreateChargeLinks = true;
@@ -54,6 +54,11 @@ namespace GreenEnergyHub.DataHub.Charges.Libraries.DefaultChargeLinkReply
                     break;
 
                 case MessageType.RequestFailed:
+                    var createDefaultChargeLinksFailedParser = CreateDefaultChargeLinksFailed.Parser;
+                    var createDefaultChargeLinksFailed = createDefaultChargeLinksFailedParser.ParseFrom(data);
+                    var createDefaultChargeLinksFailedDto =
+                        CreateDefaultChargeLinksFailedInboundMapper.Convert(createDefaultChargeLinksFailed);
+
                     const string fakeUnknownMeteringPointIdFromProto = "unknownMeteringPointId9876";
                     const ErrorCode errorCode = ErrorCode.MeteringPointUnknown;
 

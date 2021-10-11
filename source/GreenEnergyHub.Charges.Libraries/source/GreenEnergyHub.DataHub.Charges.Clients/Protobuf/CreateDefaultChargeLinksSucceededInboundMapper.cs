@@ -12,18 +12,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Threading.Tasks;
-using GreenEnergyHub.DataHub.Charges.Libraries.Enums;
+using System.Diagnostics.CodeAnalysis;
+using GreenEnergyHub.Charges.Commands;
+using GreenEnergyHub.DataHub.Charges.Libraries.Models;
 
-namespace GreenEnergyHub.DataHub.Charges.Libraries.DefaultChargeLinkReply
+namespace GreenEnergyHub.DataHub.Charges.Libraries.Protobuf
 {
-    public interface IDefaultChargeLinkReplyDeserializer
+    internal class CreateDefaultChargeLinksSucceededInboundMapper
     {
-        /// <summary>
-        /// Deserialize reply to a Create Default Charge Links request
-        /// </summary>
-        /// <param name="data"></param>
-        /// <param name="messageType"></param>
-        Task DeserializeMessageAsync(byte[] data, MessageType messageType);
+        protected internal static CreateDefaultChargeLinksSucceededDto Convert(
+            [NotNull] CreateDefaultChargeLinksSucceeded createDefaultChargeLinksSucceeded)
+        {
+            return new (
+                createDefaultChargeLinksSucceeded.MeteringPointId,
+                createDefaultChargeLinksSucceeded.DidCreateChargeLinks);
+        }
     }
 }
