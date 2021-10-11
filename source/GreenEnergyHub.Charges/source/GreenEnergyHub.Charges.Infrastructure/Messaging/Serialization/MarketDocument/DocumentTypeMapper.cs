@@ -19,13 +19,17 @@ namespace GreenEnergyHub.Charges.Infrastructure.Messaging.Serialization.MarketDo
 {
     public static class DocumentTypeMapper
     {
+        private const string CimRequestChangeBillingMasterData = "D05";
+        private const string CimNotifyBillingMasterData = "D07";
+        private const string CimRequestUpdateChargeInformation = "D10";
+
         public static DocumentType Map(string value)
         {
             return value switch
             {
-                "D05" => DocumentType.RequestChangeBillingMasterData,
-                "D07" => DocumentType.NotifyBillingMasterData,
-                "D10" => DocumentType.RequestUpdateChargeInformation,
+                CimRequestChangeBillingMasterData => DocumentType.RequestChangeBillingMasterData,
+                CimNotifyBillingMasterData => DocumentType.NotifyBillingMasterData,
+                CimRequestUpdateChargeInformation => DocumentType.RequestUpdateChargeInformation,
                 _ => DocumentType.Unknown,
             };
         }
@@ -34,10 +38,10 @@ namespace GreenEnergyHub.Charges.Infrastructure.Messaging.Serialization.MarketDo
         {
             return documentType switch
             {
-                DocumentType.NotifyBillingMasterData => "D07",
-                DocumentType.RequestUpdateChargeInformation => "D10",
-                DocumentType.RequestChangeBillingMasterData => "D05",
-                _ => throw new InvalidEnumArgumentException($"Provided DocumentType value '{documentType}' is invalid and cannot be mapped.")
+                DocumentType.NotifyBillingMasterData => CimNotifyBillingMasterData,
+                DocumentType.RequestUpdateChargeInformation => CimRequestUpdateChargeInformation,
+                DocumentType.RequestChangeBillingMasterData => CimRequestChangeBillingMasterData,
+                _ => throw new InvalidEnumArgumentException($"Provided DocumentType value '{documentType}' is invalid and cannot be mapped."),
             };
         }
     }

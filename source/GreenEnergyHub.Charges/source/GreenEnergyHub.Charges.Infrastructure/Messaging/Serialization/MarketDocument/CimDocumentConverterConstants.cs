@@ -40,5 +40,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Messaging.Serialization.MarketDo
         internal const string RecipientBusinessProcessRole = "receiver_MarketParticipant.marketRole.type";
 
         internal const string CreatedDateTime = "createdDateTime";
+
+        internal const string SchemaLocation = "schemaLocation";
     }
 }

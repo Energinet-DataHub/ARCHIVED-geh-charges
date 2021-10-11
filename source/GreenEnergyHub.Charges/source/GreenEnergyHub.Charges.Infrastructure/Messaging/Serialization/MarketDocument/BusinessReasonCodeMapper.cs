@@ -12,19 +12,34 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.ComponentModel;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Messaging.Serialization.MarketDocument
 {
     public static class BusinessReasonCodeMapper
     {
+        private const string CimUpdateMasterDataSettlement = "D17";
+        private const string CimUpdateChargeInformation = "D18";
+
         public static BusinessReasonCode Map(string value)
         {
             return value switch
             {
-                "D17" => BusinessReasonCode.UpdateMasterDataSettlement,
-                "D18" => BusinessReasonCode.UpdateChargeInformation,
+                CimUpdateMasterDataSettlement => BusinessReasonCode.UpdateMasterDataSettlement,
+                CimUpdateChargeInformation => BusinessReasonCode.UpdateChargeInformation,
                 _ => BusinessReasonCode.Unknown,
+            };
+        }
+
+        public static string Map(BusinessReasonCode businessReasonCode)
+        {
+            return businessReasonCode switch
+            {
+                BusinessReasonCode.UpdateChargeInformation => CimUpdateChargeInformation,
+                BusinessReasonCode.UpdateMasterDataSettlement => CimUpdateMasterDataSettlement,
+                _ => throw new InvalidEnumArgumentException(
+                    $"Provided BusinessReasonCode value '{businessReasonCode}' is invalid and cannot be mapped."),
             };
         }
     }
