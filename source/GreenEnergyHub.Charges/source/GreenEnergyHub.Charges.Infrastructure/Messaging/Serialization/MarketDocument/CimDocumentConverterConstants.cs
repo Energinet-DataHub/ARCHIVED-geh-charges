@@ -42,5 +42,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Messaging.Serialization.MarketDo
         internal const string CreatedDateTime = "createdDateTime";
 
         internal const string SchemaLocation = "schemaLocation";
+
+        internal const string CodingScheme = "codingScheme";
     }
 }
