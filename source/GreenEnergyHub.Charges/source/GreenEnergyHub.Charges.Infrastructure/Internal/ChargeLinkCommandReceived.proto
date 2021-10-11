@@ -28,7 +28,7 @@ option csharp_namespace = "GreenEnergyHub.Charges.Infrastructure.Internal.Charge
 
 message ChargeLinkCommandReceivedContract {
   google.protobuf.Timestamp published_time = 1;
-  ChargeLinkCommandContract charge_link_command = 2;
+  repeated ChargeLinkCommandContract charge_link_commands = 2;
   string correlation_id = 3; // Unique identifier used inside GEH to identify a message across domains and inside domains
 }
 

@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.Domain.ChargeLinkCommandReceivedEvents;
 using GreenEnergyHub.Charges.Domain.ChargeLinkCommands;
@@ -29,14 +30,17 @@ namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
     {
         protected override IInboundMessage Convert([NotNull]ChargeLinkCommandReceivedContract chargeLinkCommandReceivedContract)
         {
-            return new ChargeLinkCommandReceivedEvent(
+            var chargeLinkCommandReceivedEvent = new ChargeLinkCommandReceivedEvent(
                 chargeLinkCommandReceivedContract.PublishedTime.ToInstant(),
                 chargeLinkCommandReceivedContract.CorrelationId,
-                new ChargeLinkCommand(chargeLinkCommandReceivedContract.ChargeLinkCommand.CorrelationId)
+                chargeLinkCommandReceivedContract.ChargeLinkCommands.Select(linkCommandContract =>
+                    new ChargeLinkCommand(linkCommandContract.CorrelationId)
                 {
-                    Document = ConvertDocument(chargeLinkCommandReceivedContract.ChargeLinkCommand.Document),
-                    ChargeLink = ConvertChargeLink(chargeLinkCommandReceivedContract.ChargeLinkCommand.ChargeLink),
-                });
+                    Document = ConvertDocument(linkCommandContract.Document),
+                    ChargeLink = ConvertChargeLink(linkCommandContract.ChargeLink),
+                }).ToList());
+
+            return chargeLinkCommandReceivedEvent;
         }
 
         private static Document ConvertDocument(DocumentContract document)

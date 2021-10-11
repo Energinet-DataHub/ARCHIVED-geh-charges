@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Threading.Tasks;
@@ -54,7 +55,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Handlers
 
             chargeLinkFactory
                 .Setup(x => x.CreateAsync(It.IsAny<ChargeLinkCommandReceivedEvent>()))
-                .ReturnsAsync(chargeLink);
+                .ReturnsAsync(new List<ChargeLink> { chargeLink });
 
             chargeLinkCommandFactory.Setup(
                     c => c.CreateFromChargeLinkAsync(

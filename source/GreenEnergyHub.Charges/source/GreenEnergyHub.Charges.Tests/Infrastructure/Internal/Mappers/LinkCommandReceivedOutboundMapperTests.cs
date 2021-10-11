@@ -13,7 +13,9 @@
 // limitations under the License.
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using GreenEnergyHub.Charges.Domain.ChargeLinkCommandReceivedEvents;
 using GreenEnergyHub.Charges.Domain.ChargeLinkCommands;
 using GreenEnergyHub.Charges.Domain.ChargeLinks;
@@ -38,8 +40,11 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Internal.Mappers
             [NotNull] LinkCommandReceivedOutboundMapper sut)
         {
             // Arrange
-            ChargeLinkCommandReceivedEvent chargeLinkCommandReceivedEvent = new (SystemClock.Instance.GetCurrentInstant(), chargeLinkCommand.CorrelationId, chargeLinkCommand);
-            UpdateInstantsToValidTimes(chargeLinkCommandReceivedEvent.ChargeLinkCommand);
+            UpdateInstantsToValidTimes(chargeLinkCommand);
+
+            ChargeLinkCommandReceivedEvent chargeLinkCommandReceivedEvent =
+                new (SystemClock.Instance.GetCurrentInstant(), chargeLinkCommand.CorrelationId,
+                    new List<ChargeLinkCommand> { chargeLinkCommand });
 
             // Act
             var result = (ChargeLinkCommandReceivedContract)sut.Convert(chargeLinkCommandReceivedEvent);
