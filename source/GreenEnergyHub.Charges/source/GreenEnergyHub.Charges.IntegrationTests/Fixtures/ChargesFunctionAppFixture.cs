@@ -56,7 +56,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures
         protected override void OnConfigureEnvironment()
         {
             // NOTICE:
-            // Currently the following settings must be set on the build agent OR be available in local.settings.json:
+            // Currently the following settings must be set on the build agent OR be available in local.settings.json of the function app:
             // * APPINSIGHTS_INSTRUMENTATIONKEY
             // * DOMAINEVENT_SENDER_CONNECTION_STRING
             //
