@@ -34,7 +34,7 @@ namespace GreenEnergyHub.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.D
 
         [Theory]
         [InlineAutoMoqData(MessageType.RequestSucceeded)]
-        public async Task DeserializeMessageAsync_Test_Success(MessageType messageType)
+        public async Task DeserializeMessageAsync_Test_OnSuccess(MessageType messageType)
         {
             // Arrange
             var target = new DefaultChargeLinkReplyDeserializer(HandleSuccess, HandleFailure);
@@ -50,7 +50,7 @@ namespace GreenEnergyHub.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.D
 
         [Theory]
         [InlineAutoMoqData(MessageType.RequestFailed)]
-        public async Task DeserializeMessageAsync_Test_Failure(MessageType messageType)
+        public async Task DeserializeMessageAsync_Test_OnFailure(MessageType messageType)
         {
             // Arrange
             var target = new DefaultChargeLinkReplyDeserializer(HandleSuccess, HandleFailure);
