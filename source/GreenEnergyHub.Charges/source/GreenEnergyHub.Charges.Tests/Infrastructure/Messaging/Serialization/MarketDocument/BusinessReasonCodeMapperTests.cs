@@ -23,12 +23,9 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Messaging.Serialization.Ma
     [UnitTest]
     public class BusinessReasonCodeMapperTests
     {
-        private const string CimUpdateChargeInformation = "D18";
-        private const string CimUpdateMasterDataSettlement = "D17";
-
         [Theory]
-        [InlineData(CimUpdateChargeInformation, BusinessReasonCode.UpdateChargeInformation)]
-        [InlineData(CimUpdateMasterDataSettlement, BusinessReasonCode.UpdateMasterDataSettlement)]
+        [InlineData("D17", BusinessReasonCode.UpdateMasterDataSettlement)]
+        [InlineData("D18", BusinessReasonCode.UpdateChargeInformation)]
         [InlineData("", BusinessReasonCode.Unknown)]
         [InlineData("DoesNotExist", BusinessReasonCode.Unknown)]
         [InlineData(null, BusinessReasonCode.Unknown)]
@@ -39,8 +36,8 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Messaging.Serialization.Ma
         }
 
         [Theory]
-        [InlineData(BusinessReasonCode.UpdateChargeInformation, CimUpdateChargeInformation)]
-        [InlineData(BusinessReasonCode.UpdateMasterDataSettlement, CimUpdateMasterDataSettlement)]
+        [InlineData(BusinessReasonCode.UpdateChargeInformation, "D18")]
+        [InlineData(BusinessReasonCode.UpdateMasterDataSettlement, "D17")]
         public void Map_WhenGivenKnownInput_MapsToCorrectString(BusinessReasonCode businessReasonCode, string expected)
         {
             var actual = BusinessReasonCodeMapper.Map(businessReasonCode);
