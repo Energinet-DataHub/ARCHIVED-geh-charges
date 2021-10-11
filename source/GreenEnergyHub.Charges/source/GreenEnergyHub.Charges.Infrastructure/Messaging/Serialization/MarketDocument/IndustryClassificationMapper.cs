@@ -12,18 +12,31 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.ComponentModel;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Messaging.Serialization.MarketDocument
 {
     public static class IndustryClassificationMapper
     {
+        private const string CimElectricity = "23";
+
         public static IndustryClassification Map(string value)
         {
             return value switch
             {
                 "23" => IndustryClassification.Electricity,
                 _ => IndustryClassification.Unknown,
+            };
+        }
+
+        public static string Map(IndustryClassification industryClassification)
+        {
+            return industryClassification switch
+            {
+                IndustryClassification.Electricity => CimElectricity,
+                _ => throw new InvalidEnumArgumentException(
+                    $"Provided IndustryClassification value '{industryClassification}' is invalid and cannot be mapped.")
             };
         }
     }

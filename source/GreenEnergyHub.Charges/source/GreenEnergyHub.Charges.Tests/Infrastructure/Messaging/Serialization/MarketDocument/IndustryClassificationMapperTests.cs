@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.ComponentModel;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.Infrastructure.Messaging.Serialization.MarketDocument;
 using Xunit;
@@ -30,7 +31,22 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Messaging.Serialization.Ma
         public void Map_WhenGivenInput_MapsToCorrectEnum(string unit, IndustryClassification expected)
         {
             var actual = IndustryClassificationMapper.Map(unit);
-            Assert.Equal(actual, expected);
+            Assert.Equal(expected, actual);
+        }
+
+        [Theory]
+        [InlineData(IndustryClassification.Electricity, "23")]
+        public void Map_WhenGivenKnownInput_MapsToCorrectString(IndustryClassification industryClassification, string expected)
+        {
+            var actual = IndustryClassificationMapper.Map(industryClassification);
+            Assert.Equal(expected, actual);
+        }
+
+        [Theory]
+        [InlineData(IndustryClassification.Unknown)]
+        public void Map_WhenGivenUnknownInput_ThrowsExceptions(IndustryClassification industryClassification)
+        {
+            Assert.Throws<InvalidEnumArgumentException>(() => IndustryClassificationMapper.Map(industryClassification));
         }
     }
 }
