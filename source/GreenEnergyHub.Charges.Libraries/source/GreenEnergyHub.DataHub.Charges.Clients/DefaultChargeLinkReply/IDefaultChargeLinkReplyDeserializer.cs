@@ -12,12 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace GreenEnergyHub.DataHub.Charges.Libraries.Models
+using System.Threading.Tasks;
+using GreenEnergyHub.DataHub.Charges.Libraries.Enums;
+
+namespace GreenEnergyHub.DataHub.Charges.Libraries.DefaultChargeLinkReply
 {
-    /// <summary>
-    /// The required data needed by the Charges domain to create Default charge links.
-    /// </summary>
-    /// <param name="meteringPointId"></param>
-    /// A unique id to specify the metering point.
-    public sealed record CreateDefaultChargeLinksDto(string meteringPointId);
+    public interface IDefaultChargeLinkReplyDeserializer
+    {
+        /// <summary>
+        /// Deserialize reply to a Create Default Charge Links request
+        /// </summary>
+        /// <param name="data"></param>
+        /// <param name="messageType"></param>
+        Task DeserializeMessageAsync(byte[] data, MessageType messageType);
+    }
 }

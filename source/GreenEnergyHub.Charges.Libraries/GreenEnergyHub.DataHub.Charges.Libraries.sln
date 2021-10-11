@@ -20,7 +20,7 @@ VisualStudioVersion = 16.0.30114.105
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "GreenEnergyHub.DataHub.Charges.Libraries", "GreenEnergyHub.DataHub.Charges.Libraries", "{D79C7D37-ADE1-42D3-9FED-1E5D784E6E7D}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "source", "source", "{2BF2F6B8-E02B-4D7F-99BC-D28B3B3643A9}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Source", "Source", "{2BF2F6B8-E02B-4D7F-99BC-D28B3B3643A9}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GreenEnergyHub.DataHub.Charges.Clients", "source\GreenEnergyHub.DataHub.Charges.Clients\GreenEnergyHub.DataHub.Charges.Clients.csproj", "{E9F64300-834B-4657-850F-BEF4CED5D180}"
 EndProject
@@ -28,7 +28,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GreenEnergyHub.TestHelpers"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "GreenEnergyHub", "GreenEnergyHub", "{7FFCDBEA-F969-40C6-8461-A898784445FC}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{68B83582-7A4C-49F3-AA04-36D390BDA5F0}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{68B83582-7A4C-49F3-AA04-36D390BDA5F0}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GreenEnergyHub.DataHub.Charges.Clients.Tests", "source\GreenEnergyHub.DataHub.Charges.Clients.Tests\GreenEnergyHub.DataHub.Charges.Clients.Tests.csproj", "{B2D07074-0796-4553-AF4D-768AAC624528}"
 EndProject
