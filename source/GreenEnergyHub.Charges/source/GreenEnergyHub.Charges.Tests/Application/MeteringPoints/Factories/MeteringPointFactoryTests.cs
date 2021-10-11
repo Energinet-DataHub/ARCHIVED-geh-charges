@@ -12,13 +12,22 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Threading.Tasks;
+using System;
 using GreenEnergyHub.Charges.Domain.MeteringPointCreatedEvents;
+using GreenEnergyHub.Charges.Domain.MeteringPoints;
+using Xunit;
+using Xunit.Categories;
 
-namespace GreenEnergyHub.Charges.Application.MeteringPoints.Handlers
+namespace GreenEnergyHub.Charges.Tests.Application.MeteringPoints.Factories
 {
-    public interface IMeteringPointCreatedEventHandler
+    [UnitTest]
+    public class MeteringPointFactoryTests
     {
-        Task HandleAsync(MeteringPointCreatedEvent meteringPointCreatedEvent);
+        [Fact]
+        public void Create_WhenCalledWithNull_ThrowsException()
+        {
+            ConsumptionMeteringPointCreatedEvent? input = null;
+            Assert.Throws<ArgumentNullException>(() => MeteringPointFactory.Create(input!));
+        }
     }
 }

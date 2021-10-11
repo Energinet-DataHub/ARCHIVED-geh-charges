@@ -46,7 +46,7 @@ namespace GreenEnergyHub.Charges.FunctionHost
             ChargeLinkIngestionConfiguration.ConfigureServices(serviceCollection);
             ChargeLinkCommandReceiverConfiguration.ConfigureServices(serviceCollection);
             ChargeLinkEventPublisherConfiguration.ConfigureServices(serviceCollection);
-            MeteringPointCreatedReceiverConfiguration.ConfigureServices(serviceCollection);
+            ConsumptionMeteringPointPersisterConfiguration.ConfigureServices(serviceCollection);
             CreateChargeLinkReceiverConfiguration.ConfigureServices(serviceCollection);
         }
     }

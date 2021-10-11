@@ -25,15 +25,38 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures
 {
     public class ChargesFunctionAppServiceBusOptions : AzureCloudServiceBusOptions
     {
-        /// <summary>
-        /// Deprecated.
-        /// </summary>
-        public const string PostOfficeTopicKey = "postOffice";
+        public const string PostOfficeTopicKey = "sbt-post-office";
+        public const string PostOfficeSubscriptionName = "defaultSubscription";
 
-        /// <summary>
-        /// Deprecated.
-        /// </summary>
-        public const string PostOfficeTopicSubscriptionName = "defaultSubscription";
+        public const string ChargeLinkAcceptedTopicKey = "sbt-link-command-accepted";
+        public const string ChargeLinkAcceptedDataAvailableNotifierSubscriptionName = "sbs-chargelinkaccepted-sub-dataavailablenotifier";
+        public const string ChargeLinkAcceptedEventPublisherSubscriptionName = "sbs-chargelinkaccepted-sub-eventpublisher";
+
+        public const string ChargeLinkCreatedTopicKey = "charge-link-created";
+
+        public const string ChargeLinkReceivedTopicKey = "sbt-link-command-received";
+        public const string ChargeLinkReceivedSubscriptionName = "sbs-link-command-received-receiver";
+
+        public const string CommandAcceptedTopicKey = "sbt-command-accepted";
+        public const string CommandAcceptedSubscriptionName = "sbs-command-accepted";
+        public const string CommandAcceptedReceiverSubscriptionName = "sbs-charge-command-accepted-receiver";
+
+        public const string CommandReceivedTopicKey = "sbt-command-received";
+        public const string CommandReceivedSubscriptionName = "sbs-command-received";
+
+        public const string CommandRejectedTopicKey = "sbt-command-rejected";
+        public const string CommandRejectedSubscriptionName = "sbs-command-rejected";
+
+        public const string CreateLinkRequestQueueKey = "create-link-request";
+
+        public const string CreateLinkReplyQueueKey = "create-link-reply";
+
+        public const string ConsumptionMeteringPointCreatedTopicKey = "consumption-metering-point-created";
+        public const string ConsumptionMeteringPointCreatedSubscriptionName = "consumption-metering-point-created-sub-charges";
+
+        public const string ChargeCreatedTopicKey = "charge-created";
+
+        public const string ChargePricesUpdatedTopicKey = "charge-prices-updated";
 
         /// <summary>
         /// This name is determined by the post office NuGet package.
@@ -47,22 +70,56 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures
         {
             builder.SetConfigResolver(ConfigurationResolver);
 
-            var domainEventListenerNamespace = GetNamespaceFromSetting(EnvironmentSettingNames.DomainEventSenderConnectionString);
+            // We extract the service bus namespace from one of the connection strings
+            var serviceBusNamespace = GetNamespaceFromSetting(EnvironmentSettingNames.DomainEventSenderConnectionString);
+
             builder
-                .Namespace(domainEventListenerNamespace)
+                .Namespace(serviceBusNamespace);
+
+            builder
                 .AddTopic(PostOfficeTopicKey)
-                .AddSubscription(PostOfficeTopicSubscriptionName);
-
-            var integrationEventListenerNamespace =
-                GetNamespaceFromSetting(EnvironmentSettingNames.DataHubListenerConnectionString);
-            builder
-                .Namespace(integrationEventListenerNamespace)
-                .AddQueue(PostOfficeDataAvailableQueueName);
+                .AddSubscription(PostOfficeSubscriptionName);
 
             builder
-                .Namespace(domainEventListenerNamespace)
-                .AddTopic(ChargeLinkCommandAcceptedTopicKey)
-                .AddSubscription(ChargeLinkCommandAcceptedTopicSubscriptionName);
+                .AddTopic(ChargeLinkAcceptedTopicKey)
+                .AddSubscription(ChargeLinkAcceptedDataAvailableNotifierSubscriptionName)
+                .AddSubscription(ChargeLinkAcceptedEventPublisherSubscriptionName);
+
+            builder
+                .AddTopic(ChargeLinkCreatedTopicKey);
+
+            builder
+                .AddTopic(ChargeLinkReceivedTopicKey)
+                .AddSubscription(ChargeLinkReceivedSubscriptionName);
+
+            builder
+                .AddTopic(CommandAcceptedTopicKey)
+                .AddSubscription(CommandAcceptedSubscriptionName)
+                .AddSubscription(CommandAcceptedReceiverSubscriptionName);
+
+            builder
+                .AddTopic(CommandReceivedTopicKey)
+                .AddSubscription(CommandReceivedSubscriptionName);
+
+            builder
+                .AddTopic(CommandRejectedTopicKey)
+                .AddSubscription(CommandRejectedSubscriptionName);
+
+            builder
+                .AddQueue(CreateLinkRequestQueueKey);
+
+            builder
+                .AddQueue(CreateLinkReplyQueueKey);
+
+            builder
+                .AddTopic(ConsumptionMeteringPointCreatedTopicKey)
+                .AddSubscription(ConsumptionMeteringPointCreatedSubscriptionName);
+
+            builder
+                .AddTopic(ChargeCreatedTopicKey);
+
+            builder
+                .AddTopic(ChargePricesUpdatedTopicKey);
         }
 
         private static string GetNamespaceFromSetting(string settingName)

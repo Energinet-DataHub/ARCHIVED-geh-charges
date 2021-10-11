@@ -21,25 +21,25 @@ using Microsoft.Extensions.Logging;
 
 namespace GreenEnergyHub.Charges.Application.MeteringPoints.Handlers
 {
-    public class MeteringPointCreatedEventHandler : IMeteringPointCreatedEventHandler
+    public class ConsumptionMeteringPointPersister : IConsumptionMeteringPointPersister
     {
         private readonly IMeteringPointRepository _meteringPointRepository;
         private readonly ILogger _logger;
 
-        public MeteringPointCreatedEventHandler(
+        public ConsumptionMeteringPointPersister(
             IMeteringPointRepository meteringPointRepository,
             [NotNull] ILoggerFactory loggerFactory)
         {
             _meteringPointRepository = meteringPointRepository;
-            _logger = loggerFactory.CreateLogger(nameof(MeteringPointCreatedEventHandler));
+            _logger = loggerFactory.CreateLogger(nameof(ConsumptionMeteringPointPersister));
         }
 
-        public async Task HandleAsync(MeteringPointCreatedEvent meteringPointCreatedEvent)
+        public async Task PersistAsync(ConsumptionMeteringPointCreatedEvent consumptionMeteringPointCreatedEvent)
         {
-            if (meteringPointCreatedEvent == null)
-                throw new ArgumentNullException(nameof(meteringPointCreatedEvent));
+            if (consumptionMeteringPointCreatedEvent == null)
+                throw new ArgumentNullException(nameof(consumptionMeteringPointCreatedEvent));
 
-            var meteringPoint = MeteringPointFactory.Create(meteringPointCreatedEvent);
+            var meteringPoint = MeteringPointFactory.Create(consumptionMeteringPointCreatedEvent);
             await _meteringPointRepository.StoreMeteringPointAsync(meteringPoint).ConfigureAwait(false);
             _logger.LogInformation("Finished persisting metering point with id: {meteringPointId}", meteringPoint.MeteringPointId);
         }

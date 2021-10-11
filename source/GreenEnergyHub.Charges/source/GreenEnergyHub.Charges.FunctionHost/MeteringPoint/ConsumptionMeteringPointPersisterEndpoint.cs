@@ -14,51 +14,55 @@
 
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
-using Energinet.DataHub.MeteringPoints.IntegrationEventContracts;
 using GreenEnergyHub.Charges.Application.MeteringPoints.Handlers;
 using GreenEnergyHub.Charges.Domain.MeteringPointCreatedEvents;
 using GreenEnergyHub.Charges.FunctionHost.Common;
-using GreenEnergyHub.Charges.Infrastructure.Correlation;
 using GreenEnergyHub.Charges.Infrastructure.Messaging;
+using GreenEnergyHub.MeteringPoints.IntegrationEventContracts;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Logging;
 
 namespace GreenEnergyHub.Charges.FunctionHost.MeteringPoint
 {
-    public class MeteringPointCreatedReceiverEndpoint
+    public class ConsumptionMeteringPointPersisterEndpoint
     {
         /// <summary>
         /// The name of the function.
         /// Function name affects the URL and thus possibly dependent infrastructure.
         /// </summary>
-        public const string FunctionName = nameof(MeteringPointCreatedReceiverEndpoint);
-        private readonly MessageExtractor<MeteringPointCreated> _messageExtractor;
-        private readonly IMeteringPointCreatedEventHandler _meteringPointCreatedEventHandler;
+        public const string FunctionName = nameof(ConsumptionMeteringPointPersisterEndpoint);
+        private readonly MessageExtractor<ConsumptionMeteringPointCreated> _messageExtractor;
+        private readonly IConsumptionMeteringPointPersister _consumptionMeteringPointCreatedEventHandler;
         private readonly ILogger _log;
 
-        public MeteringPointCreatedReceiverEndpoint(
-            MessageExtractor<MeteringPointCreated> messageExtractor,
-            IMeteringPointCreatedEventHandler meteringPointCreatedEventHandler,
+        public ConsumptionMeteringPointPersisterEndpoint(
+            MessageExtractor<ConsumptionMeteringPointCreated> messageExtractor,
+            IConsumptionMeteringPointPersister consumptionMeteringPointCreatedEventHandler,
             [NotNull] ILoggerFactory loggerFactory)
         {
             _messageExtractor = messageExtractor;
-            _meteringPointCreatedEventHandler = meteringPointCreatedEventHandler;
-            _log = loggerFactory.CreateLogger(nameof(MeteringPointCreatedReceiverEndpoint));
+            _consumptionMeteringPointCreatedEventHandler = consumptionMeteringPointCreatedEventHandler;
+            _log = loggerFactory.CreateLogger(nameof(ConsumptionMeteringPointPersisterEndpoint));
         }
 
         [Function(FunctionName)]
         public async Task RunAsync(
             [ServiceBusTrigger(
-                "%METERING_POINT_CREATED_TOPIC_NAME%",
-                "%METERING_POINT_CREATED_SUBSCRIPTION_NAME%",
+                "%CONSUMPTION_METERING_POINT_CREATED_TOPIC_NAME%",
+                "%CONSUMPTION_METERING_POINT_CREATED_SUBSCRIPTION_NAME%",
                 Connection = EnvironmentSettingNames.DataHubListenerConnectionString)]
             [NotNull] byte[] message)
         {
-            var meteringPointCreatedEvent = (MeteringPointCreatedEvent)await _messageExtractor.ExtractAsync(message).ConfigureAwait(false);
+            var consumptionMeteringPointCreatedEvent =
+                (ConsumptionMeteringPointCreatedEvent)await _messageExtractor.ExtractAsync(message).ConfigureAwait(false);
 
-            await _meteringPointCreatedEventHandler.HandleAsync(meteringPointCreatedEvent).ConfigureAwait(false);
+            await _consumptionMeteringPointCreatedEventHandler
+                .PersistAsync(consumptionMeteringPointCreatedEvent)
+                .ConfigureAwait(false);
 
-            _log.LogInformation("Received metering point created event '{@MeteringPointId}'", meteringPointCreatedEvent.MeteringPointId);
+            _log.LogInformation(
+                "Consumption metering point received '{@MeteringPointId}'",
+                consumptionMeteringPointCreatedEvent.MeteringPointId);
         }
     }
 }
