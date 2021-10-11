@@ -36,7 +36,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Messaging.Serialization.MarketDo
             {
                 IndustryClassification.Electricity => CimElectricity,
                 _ => throw new InvalidEnumArgumentException(
-                    $"Provided IndustryClassification value '{industryClassification}' is invalid and cannot be mapped.")
+                    $"Provided IndustryClassification value '{industryClassification}' is invalid and cannot be mapped."),
             };
         }
     }

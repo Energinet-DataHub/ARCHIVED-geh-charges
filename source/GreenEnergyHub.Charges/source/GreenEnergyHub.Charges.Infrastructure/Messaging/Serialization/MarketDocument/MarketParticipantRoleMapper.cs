@@ -12,24 +12,49 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.ComponentModel;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Messaging.Serialization.MarketDocument
 {
     public static class MarketParticipantRoleMapper
     {
+        private const string CimEnergyAgency = "STS";
+        private const string CimEnergySupplier = "DDQ";
+        private const string CimGridAccessProvider = "DDM";
+        private const string CimMeteredDataAdministrator = "DGL";
+        private const string CimMeteredDataResponsible = "MDR";
+        private const string CimMeteringPointAdministrator = "DDZ";
+        private const string CimSystemOperator = "EZ";
+
         public static MarketParticipantRole Map(string value)
         {
             return value switch
             {
-                "DDQ" => MarketParticipantRole.EnergySupplier,
-                "DDM" => MarketParticipantRole.GridAccessProvider,
-                "EZ" => MarketParticipantRole.SystemOperator,
-                "MDR" => MarketParticipantRole.MeteredDataResponsible,
-                "STS" => MarketParticipantRole.EnergyAgency,
-                "DGL" => MarketParticipantRole.MeteredDataAdministrator,
-                "DDZ" => MarketParticipantRole.MeteringPointAdministrator,
+                CimEnergyAgency => MarketParticipantRole.EnergyAgency,
+                CimEnergySupplier => MarketParticipantRole.EnergySupplier,
+                CimGridAccessProvider => MarketParticipantRole.GridAccessProvider,
+                CimSystemOperator => MarketParticipantRole.SystemOperator,
+                CimMeteredDataResponsible => MarketParticipantRole.MeteredDataResponsible,
+                CimMeteredDataAdministrator => MarketParticipantRole.MeteredDataAdministrator,
+                CimMeteringPointAdministrator => MarketParticipantRole.MeteringPointAdministrator,
                 _ => MarketParticipantRole.Unknown,
+            };
+        }
+
+        public static string Map(MarketParticipantRole marketParticipantRole)
+        {
+            return marketParticipantRole switch
+            {
+                MarketParticipantRole.EnergyAgency => CimEnergyAgency,
+                MarketParticipantRole.EnergySupplier => CimEnergySupplier,
+                MarketParticipantRole.GridAccessProvider => CimGridAccessProvider,
+                MarketParticipantRole.MeteredDataAdministrator => CimMeteredDataAdministrator,
+                MarketParticipantRole.MeteredDataResponsible => CimMeteredDataResponsible,
+                MarketParticipantRole.MeteringPointAdministrator => CimMeteringPointAdministrator,
+                MarketParticipantRole.SystemOperator => CimSystemOperator,
+                _ => throw new InvalidEnumArgumentException(
+                    $"Provided MarketParticipantRole value '{marketParticipantRole}' is invalid and cannot be mapped."),
             };
         }
     }

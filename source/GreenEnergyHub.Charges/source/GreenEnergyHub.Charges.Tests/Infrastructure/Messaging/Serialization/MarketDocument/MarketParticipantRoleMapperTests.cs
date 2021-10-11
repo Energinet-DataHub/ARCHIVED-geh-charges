@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.ComponentModel;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.Infrastructure.Messaging.Serialization.MarketDocument;
 using Xunit;
@@ -37,6 +38,27 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Messaging.Serialization.Ma
         {
             var actual = MarketParticipantRoleMapper.Map(unit);
             Assert.Equal(actual, expected);
+        }
+
+        [Theory]
+        [InlineData(MarketParticipantRole.EnergyAgency, "STS")]
+        [InlineData(MarketParticipantRole.EnergySupplier, "DDQ")]
+        [InlineData(MarketParticipantRole.GridAccessProvider, "DDM")]
+        [InlineData(MarketParticipantRole.MeteredDataAdministrator, "DGL")]
+        [InlineData(MarketParticipantRole.MeteredDataResponsible, "MDR")]
+        [InlineData(MarketParticipantRole.MeteringPointAdministrator, "DDZ")]
+        [InlineData(MarketParticipantRole.SystemOperator, "EZ")]
+        public void Map_WhenGivenKnownInput_MapsToCorrectString(MarketParticipantRole marketParticipantRole, string expected)
+        {
+            var actual = MarketParticipantRoleMapper.Map(marketParticipantRole);
+            Assert.Equal(expected, actual);
+        }
+
+        [Theory]
+        [InlineData(MarketParticipantRole.Unknown)]
+        public void Map_WhenGivenUnknownInput_ThrowsExceptions(MarketParticipantRole marketParticipantRole)
+        {
+            Assert.Throws<InvalidEnumArgumentException>(() => MarketParticipantRoleMapper.Map(marketParticipantRole));
         }
     }
 }
