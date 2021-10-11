@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.ComponentModel;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.Infrastructure.Messaging.Serialization.MarketDocument;
 using Xunit;
@@ -22,16 +23,35 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Messaging.Serialization.Ma
     [UnitTest]
     public class BusinessReasonCodeMapperTests
     {
+        private const string CimUpdateChargeInformation = "D18";
+        private const string CimUpdateMasterDataSettlement = "D17";
+
         [Theory]
-        [InlineData("D18", BusinessReasonCode.UpdateChargeInformation)]
-        [InlineData("D17", BusinessReasonCode.UpdateMasterDataSettlement)]
+        [InlineData(CimUpdateChargeInformation, BusinessReasonCode.UpdateChargeInformation)]
+        [InlineData(CimUpdateMasterDataSettlement, BusinessReasonCode.UpdateMasterDataSettlement)]
         [InlineData("", BusinessReasonCode.Unknown)]
         [InlineData("DoesNotExist", BusinessReasonCode.Unknown)]
         [InlineData(null, BusinessReasonCode.Unknown)]
         public void Map_WhenGivenInput_MapsToCorrectEnum(string unit, BusinessReasonCode expected)
         {
             var actual = BusinessReasonCodeMapper.Map(unit);
-            Assert.Equal(actual, expected);
+            Assert.Equal(expected, actual);
+        }
+
+        [Theory]
+        [InlineData(BusinessReasonCode.UpdateChargeInformation, CimUpdateChargeInformation)]
+        [InlineData(BusinessReasonCode.UpdateMasterDataSettlement, CimUpdateMasterDataSettlement)]
+        public void Map_WhenGivenKnownInput_MapsToCorrectString(BusinessReasonCode businessReasonCode, string expected)
+        {
+            var actual = BusinessReasonCodeMapper.Map(businessReasonCode);
+            Assert.Equal(expected, actual);
+        }
+
+        [Theory]
+        [InlineData(BusinessReasonCode.Unknown)]
+        public void Map_WhenGivenUnknownInput_ThrowsExceptions(BusinessReasonCode businessReasonCode)
+        {
+            Assert.Throws<InvalidEnumArgumentException>(() => BusinessReasonCodeMapper.Map(businessReasonCode));
         }
     }
 }
