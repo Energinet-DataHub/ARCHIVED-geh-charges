@@ -12,21 +12,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.MeteringPoints.IntegrationEventContracts;
 using GreenEnergyHub.Charges.Application.MeteringPoints.Handlers;
 using GreenEnergyHub.Charges.Infrastructure.Messaging.Registration;
+using GreenEnergyHub.MeteringPoints.IntegrationEventContracts;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace GreenEnergyHub.Charges.FunctionHost.Configuration
 {
-    internal static class MeteringPointCreatedReceiverConfiguration
+    internal static class ConsumptionMeteringPointPersisterConfiguration
     {
         internal static void ConfigureServices(IServiceCollection serviceCollection)
         {
-            serviceCollection.ReceiveProtobufMessage<MeteringPointCreated>(
-                configuration => configuration.WithParser(() => MeteringPointCreated.Parser));
+            serviceCollection.ReceiveProtobufMessage<ConsumptionMeteringPointCreated>(
+                configuration => configuration.WithParser(() => ConsumptionMeteringPointCreated.Parser));
 
-            serviceCollection.AddScoped<IMeteringPointCreatedEventHandler, MeteringPointCreatedEventHandler>();
+            serviceCollection.AddScoped<IConsumptionMeteringPointPersister, ConsumptionMeteringPointPersister>();
         }
     }
 }

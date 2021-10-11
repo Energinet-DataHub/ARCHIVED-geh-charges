@@ -15,6 +15,7 @@
 using System;
 using GreenEnergyHub.Charges.Core.Enumeration;
 using Xunit;
+using Xunit.Categories;
 
 namespace GreenEnergyHub.Charges.Tests.Core.Enumeration
 {
@@ -29,6 +30,7 @@ namespace GreenEnergyHub.Charges.Tests.Core.Enumeration
         X = 1,
     }
 
+    [UnitTest]
     public class EnumExtensionsTests
     {
         [Fact]

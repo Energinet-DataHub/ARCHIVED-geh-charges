@@ -109,15 +109,6 @@ runs:
         sed -i 's/@resource_group_name/${{ inputs.ENVIRONMENT_LONG }}/' ${{ inputs.TERRAFORM_BACKEND_FILE_PATH }}
         sed -i 's/@storage_account_name/${{ env.TERRAFORM_STORAGE_NAME }}/' ${{ inputs.TERRAFORM_BACKEND_FILE_PATH }}
 
-    # Override/overwrite with environment specific infrastructure
-    - name: Configure environment specific infrastructure
-      shell: bash
-      working-directory: ./build/infrastructure
-      run: |
-        if [ -d "./env/${{ inputs.ENVIRONMENT_NAME }}" ]; then
-          cp -fR ./env/${{ inputs.ENVIRONMENT_NAME }}/* ./main
-        fi
-
     - name: Terraform Init
       shell: bash
       working-directory: ./build/infrastructure/main

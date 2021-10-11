@@ -13,9 +13,7 @@
 // limitations under the License.
 
 using System.Diagnostics.CodeAnalysis;
-using Energinet.DataHub.MeteringPoints.IntegrationEventContracts;
 using GreenEnergyHub.Charges.Commands;
-using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeCommandReceived;
 using GreenEnergyHub.Charges.Infrastructure.Messaging;
 using GreenEnergyHub.Charges.Infrastructure.Messaging.Registration;
 using GreenEnergyHub.Charges.Infrastructure.Messaging.Serialization;

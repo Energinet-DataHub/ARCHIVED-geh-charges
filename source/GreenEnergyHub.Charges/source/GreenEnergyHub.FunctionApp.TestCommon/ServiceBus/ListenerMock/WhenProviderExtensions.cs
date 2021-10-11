@@ -31,10 +31,10 @@ namespace GreenEnergyHub.FunctionApp.TestCommon.ServiceBus.ListenerMock
                 request.MessageId == messageId);
         }
 
-        public static DoProvider WhenLabel(this ServiceBusListenerMock provider, string? label = null)
+        public static DoProvider WhenSubject(this ServiceBusListenerMock provider, string? subject = null)
         {
             return provider.When(request =>
-                request.Label == label);
+                request.Subject == subject);
         }
     }
 }

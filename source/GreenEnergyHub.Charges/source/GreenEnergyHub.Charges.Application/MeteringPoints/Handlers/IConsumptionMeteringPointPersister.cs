@@ -12,20 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
-using Azure.Messaging.ServiceBus;
+using System.Threading.Tasks;
+using GreenEnergyHub.Charges.Domain.MeteringPointCreatedEvents;
 
-namespace GreenEnergyHub.FunctionApp.TestCommon.ServiceBus.ListenerMock
+namespace GreenEnergyHub.Charges.Application.MeteringPoints.Handlers
 {
-    /// <summary>
-    /// Actually service bus listener mock extensions, but we want to separate the fluent API
-    /// and make it stand out on its own.
-    /// </summary>
-    public static class WhenProvider
+    public interface IConsumptionMeteringPointPersister
     {
-        public static DoProvider When(this ServiceBusListenerMock provider, Func<ServiceBusReceivedMessage, bool> messageMatcher)
-        {
-            return new DoProvider(provider, messageMatcher);
-        }
+        Task PersistAsync(ConsumptionMeteringPointCreatedEvent consumptionMeteringPointCreatedEvent);
     }
 }

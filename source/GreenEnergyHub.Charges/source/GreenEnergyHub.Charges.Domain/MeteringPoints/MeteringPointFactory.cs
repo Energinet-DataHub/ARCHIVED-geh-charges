@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System;
+using GreenEnergyHub.Charges.Core.Enumeration;
 using GreenEnergyHub.Charges.Domain.MeteringPointCreatedEvents;
 using NodaTime.Text;
 
@@ -21,25 +22,18 @@ namespace GreenEnergyHub.Charges.Domain.MeteringPoints
     public static class MeteringPointFactory
     {
         public static MeteringPoint Create(
-            MeteringPointCreatedEvent meteringPointCreatedEvent)
+            ConsumptionMeteringPointCreatedEvent consumptionMeteringPointCreatedEvent)
         {
-            if (meteringPointCreatedEvent == null)
-                throw new ArgumentNullException(nameof(meteringPointCreatedEvent));
-
-            var effectiveDate = InstantPattern.General.Parse(meteringPointCreatedEvent.EffectiveDate).Value;
-            var meteringPointType = Enum.Parse<MeteringPointType>(meteringPointCreatedEvent.MeteringPointType);
-            var connectionState = Enum.Parse<ConnectionState>(meteringPointCreatedEvent.ConnectionState);
-            var settlementMethod = meteringPointCreatedEvent.SettlementMethod == null
-                ? null as SettlementMethod?
-                : Enum.Parse<SettlementMethod>(meteringPointCreatedEvent.SettlementMethod);
+            if (consumptionMeteringPointCreatedEvent == null)
+                throw new ArgumentNullException(nameof(consumptionMeteringPointCreatedEvent));
 
             return MeteringPoint.Create(
-                meteringPointCreatedEvent.MeteringPointId,
-                meteringPointType,
-                meteringPointCreatedEvent.GridAreaId,
-                effectiveDate,
-                connectionState,
-                settlementMethod);
+                consumptionMeteringPointCreatedEvent.MeteringPointId,
+                MeteringPointType.Consumption,
+                consumptionMeteringPointCreatedEvent.GridAreaId,
+                consumptionMeteringPointCreatedEvent.EffectiveDate,
+                consumptionMeteringPointCreatedEvent.ConnectionState,
+                consumptionMeteringPointCreatedEvent.SettlementMethod);
         }
     }
 }
