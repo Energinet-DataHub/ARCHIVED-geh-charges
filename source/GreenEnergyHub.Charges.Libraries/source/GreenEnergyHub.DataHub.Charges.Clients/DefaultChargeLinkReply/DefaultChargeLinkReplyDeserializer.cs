@@ -15,9 +15,8 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Commands;
+using GreenEnergyHub.Charges.Contracts;
 using GreenEnergyHub.DataHub.Charges.Libraries.Enums;
-using GreenEnergyHub.DataHub.Charges.Libraries.Models;
 using GreenEnergyHub.DataHub.Charges.Libraries.Protobuf;
 
 namespace GreenEnergyHub.DataHub.Charges.Libraries.DefaultChargeLinkReply
@@ -38,33 +37,19 @@ namespace GreenEnergyHub.DataHub.Charges.Libraries.DefaultChargeLinkReply
             switch (messageType)
             {
                 case MessageType.RequestSucceeded:
-                    var createDefaultChargeLinksSucceededParser = CreateDefaultChargeLinksSucceeded.Parser;
-                    var createDefaultChargeLinksSucceeded = createDefaultChargeLinksSucceededParser.ParseFrom(data);
-                    var createDefaultChargeLinksSucceededDto =
-                        CreateDefaultChargeLinksSucceededInboundMapper.Convert(createDefaultChargeLinksSucceeded);
-
-                    const string fakeKnownMeteringPointIdFromProto = "knownMeteringPointId1234";
-                    const bool fakeDidCreateChargeLinks = true;
-
-                    var succeededDto = new CreateDefaultChargeLinksSucceededDto(
-                        fakeKnownMeteringPointIdFromProto,
-                        fakeDidCreateChargeLinks);
+                    var succeededParser = CreateDefaultChargeLinksSucceeded.Parser;
+                    var createDefaultChargeLinksSucceeded = succeededParser.ParseFrom(data);
+                    var succeededDto = CreateDefaultChargeLinksSucceededInboundMapper
+                        .Convert(createDefaultChargeLinksSucceeded);
 
                     await _handleSuccess(succeededDto).ConfigureAwait(false);
                     break;
 
                 case MessageType.RequestFailed:
-                    var createDefaultChargeLinksFailedParser = CreateDefaultChargeLinksFailed.Parser;
-                    var createDefaultChargeLinksFailed = createDefaultChargeLinksFailedParser.ParseFrom(data);
-                    var createDefaultChargeLinksFailedDto =
-                        CreateDefaultChargeLinksFailedInboundMapper.Convert(createDefaultChargeLinksFailed);
-
-                    const string fakeUnknownMeteringPointIdFromProto = "unknownMeteringPointId9876";
-                    const ErrorCode errorCode = ErrorCode.MeteringPointUnknown;
-
-                    var failedDto = new CreateDefaultChargeLinksFailedDto(
-                        fakeUnknownMeteringPointIdFromProto,
-                        errorCode);
+                    var failedParser = CreateDefaultChargeLinksFailed.Parser;
+                    var createDefaultChargeLinksFailed = failedParser.ParseFrom(data);
+                    var failedDto = CreateDefaultChargeLinksFailedInboundMapper
+                        .Convert(createDefaultChargeLinksFailed);
 
                     await _handleFailure(failedDto).ConfigureAwait(false);
                     break;

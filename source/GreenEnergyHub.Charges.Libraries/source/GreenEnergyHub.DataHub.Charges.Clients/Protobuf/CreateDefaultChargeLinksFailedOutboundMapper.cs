@@ -20,22 +20,24 @@ using GreenEnergyHub.DataHub.Charges.Libraries.Models;
 
 namespace GreenEnergyHub.DataHub.Charges.Libraries.Protobuf
 {
-    internal class CreateDefaultChargeLinksFailedInboundMapper
+    public static class CreateDefaultChargeLinksFailedOutboundMapper
     {
-        protected internal static CreateDefaultChargeLinksFailedDto Convert(
-            [NotNull] CreateDefaultChargeLinksFailed createDefaultChargeLinksFailed)
+        internal static CreateDefaultChargeLinksFailed Convert(
+            [NotNull] CreateDefaultChargeLinksFailedDto createDefaultChargeLinksFailedDto)
         {
-            return new (
-                createDefaultChargeLinksFailed.MeteringPointId,
-                ConvertErrorCode(createDefaultChargeLinksFailed.ErrorCode));
+            return new ()
+            {
+                MeteringPointId = createDefaultChargeLinksFailedDto.meteringPointId,
+                ErrorCode = ConvertErrorCode(createDefaultChargeLinksFailedDto.errorCode),
+            };
         }
 
-        private static ErrorCode ConvertErrorCode(CreateDefaultChargeLinksFailed.Types.ErrorCode errorCode)
+        private static CreateDefaultChargeLinksFailed.Types.ErrorCode ConvertErrorCode(ErrorCode errorCode)
         {
             return errorCode switch
             {
-                CreateDefaultChargeLinksFailed.Types.ErrorCode.EcErrorNotDetermined => ErrorCode.ErrorNotDetermined,
-                CreateDefaultChargeLinksFailed.Types.ErrorCode.EcMeteringPointUnknown => ErrorCode.MeteringPointUnknown,
+                ErrorCode.ErrorNotDetermined => CreateDefaultChargeLinksFailed.Types.ErrorCode.EcErrorNotDetermined,
+                ErrorCode.MeteringPointUnknown => CreateDefaultChargeLinksFailed.Types.ErrorCode.EcMeteringPointUnknown,
                 _ => throw new ArgumentOutOfRangeException(nameof(errorCode), $"Value: {errorCode.ToString()}")
             };
         }

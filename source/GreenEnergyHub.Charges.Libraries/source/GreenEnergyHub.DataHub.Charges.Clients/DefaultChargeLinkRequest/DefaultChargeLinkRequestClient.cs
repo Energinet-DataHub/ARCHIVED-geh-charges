@@ -16,7 +16,7 @@ using System;
 using System.Threading.Tasks;
 using Azure.Messaging.ServiceBus;
 using Google.Protobuf;
-using GreenEnergyHub.Charges.Commands;
+using GreenEnergyHub.Charges.Contracts;
 using GreenEnergyHub.DataHub.Charges.Libraries.Factories;
 using GreenEnergyHub.DataHub.Charges.Libraries.Models;
 

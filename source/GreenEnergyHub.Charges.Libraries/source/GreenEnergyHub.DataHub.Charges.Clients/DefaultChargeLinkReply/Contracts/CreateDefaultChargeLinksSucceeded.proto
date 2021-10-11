@@ -15,7 +15,7 @@
 
 syntax = "proto3";
 
-option csharp_namespace = "GreenEnergyHub.Charges.Commands";
+option csharp_namespace = "GreenEnergyHub.Charges.Contracts";
 
 /*
 * This reply is sent by the Charges domain to the Metering Point domain once the request has been processed successfully.

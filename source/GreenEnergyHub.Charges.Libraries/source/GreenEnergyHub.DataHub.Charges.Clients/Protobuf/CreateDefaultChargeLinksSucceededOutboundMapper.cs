@@ -18,14 +18,16 @@ using GreenEnergyHub.DataHub.Charges.Libraries.Models;
 
 namespace GreenEnergyHub.DataHub.Charges.Libraries.Protobuf
 {
-    internal class CreateDefaultChargeLinksSucceededInboundMapper
+    internal class CreateDefaultChargeLinksSucceededOutboundMapper
     {
-        protected internal static CreateDefaultChargeLinksSucceededDto Convert(
-            [NotNull] CreateDefaultChargeLinksSucceeded createDefaultChargeLinksSucceeded)
+        protected internal static CreateDefaultChargeLinksSucceeded Convert(
+            [NotNull] CreateDefaultChargeLinksSucceededDto createDefaultChargeLinksSucceededDto)
         {
-            return new (
-                createDefaultChargeLinksSucceeded.MeteringPointId,
-                createDefaultChargeLinksSucceeded.DidCreateChargeLinks);
+            return new ()
+            {
+                MeteringPointId = createDefaultChargeLinksSucceededDto.meteringPointId,
+                DidCreateChargeLinks = createDefaultChargeLinksSucceededDto.didCreateChargeLinks,
+            };
         }
     }
 }
