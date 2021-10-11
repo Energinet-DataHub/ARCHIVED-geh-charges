@@ -13,9 +13,8 @@
 // limitations under the License.
 
 using System.ComponentModel;
-using GreenEnergyHub.Charges.Domain.MarketParticipants;
 
-namespace GreenEnergyHub.Charges.Infrastructure.Messaging.Serialization.MarketDocument
+namespace GreenEnergyHub.Charges.Infrastructure.MarketDocument.Cim
 {
     public static class CodingSchemeMapper
     {

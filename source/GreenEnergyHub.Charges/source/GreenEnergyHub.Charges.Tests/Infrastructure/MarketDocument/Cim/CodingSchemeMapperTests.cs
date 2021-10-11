@@ -13,12 +13,11 @@
 // limitations under the License.
 
 using System.ComponentModel;
-using GreenEnergyHub.Charges.Domain.MarketParticipants;
-using GreenEnergyHub.Charges.Infrastructure.Messaging.Serialization.MarketDocument;
+using GreenEnergyHub.Charges.Infrastructure.MarketDocument.Cim;
 using Xunit;
 using Xunit.Categories;
 
-namespace GreenEnergyHub.Charges.Tests.Infrastructure.Messaging.Serialization.MarketDocument
+namespace GreenEnergyHub.Charges.Tests.Infrastructure.MarketDocument.Cim
 {
     [UnitTest]
     public class CodingSchemeMapperTests
