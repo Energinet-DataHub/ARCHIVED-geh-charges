@@ -39,9 +39,16 @@ namespace GreenEnergyHub.Charges.Application.MeteringPoints.Handlers
             if (consumptionMeteringPointCreatedEvent == null)
                 throw new ArgumentNullException(nameof(consumptionMeteringPointCreatedEvent));
 
-            var meteringPoint = MeteringPointFactory.Create(consumptionMeteringPointCreatedEvent);
-            await _meteringPointRepository.StoreMeteringPointAsync(meteringPoint).ConfigureAwait(false);
-            _logger.LogInformation("Finished persisting metering point with id: {meteringPointId}", meteringPoint.MeteringPointId);
+            if (await _meteringPointRepository.CheckIfMeteringPointExistsAsync(consumptionMeteringPointCreatedEvent.MeteringPointId))
+            {
+                throw new Exception($"Metering Point ID '{consumptionMeteringPointCreatedEvent.MeteringPointId}' already exists in storage");
+            }
+            else
+            {
+                var meteringPoint = MeteringPointFactory.Create(consumptionMeteringPointCreatedEvent);
+                await _meteringPointRepository.StoreMeteringPointAsync(meteringPoint).ConfigureAwait(false);
+                _logger.LogInformation($"Finished persisting metering point with id: '{meteringPoint.MeteringPointId}'");
+            }
         }
     }
 }

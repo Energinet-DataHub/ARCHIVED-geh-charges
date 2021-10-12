@@ -40,5 +40,12 @@ namespace GreenEnergyHub.Charges.Domain.MeteringPoints
         /// </summary>
         /// <returns>Metering Point</returns>
         Task<MeteringPoint> GetMeteringPointAsync(Guid id);
+
+        /// <summary>
+        /// Check if the metering point id is already stored
+        /// </summary>
+        /// <param name="meteringPointId"></param>
+        /// <returns>bool</returns>
+        Task<bool> CheckIfMeteringPointExistsAsync(string meteringPointId);
     }
 }
