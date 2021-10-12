@@ -47,10 +47,10 @@ namespace GreenEnergyHub.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.D
 
             var data = createDefaultChargeLinksFailed.ToByteArray();
 
-            var target = new DefaultChargeLinkReplyDeserializer(HandleSuccess, HandleFailure);
+            var target = new DefaultChargeLinkReplyReader(HandleSuccess, HandleFailure);
 
             // Act
-            await target.DeserializeMessageAsync(data, messageType).ConfigureAwait(false);
+            await target.ReadAsync(data, messageType).ConfigureAwait(false);
 
             // Assert
             target.Should().NotBeNull();
@@ -71,10 +71,10 @@ namespace GreenEnergyHub.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.D
 
             var data = createDefaultChargeLinksFailed.ToByteArray();
 
-            var target = new DefaultChargeLinkReplyDeserializer(HandleSuccess, HandleFailure);
+            var target = new DefaultChargeLinkReplyReader(HandleSuccess, HandleFailure);
 
             // Act
-            await target.DeserializeMessageAsync(data, messageType).ConfigureAwait(false);
+            await target.ReadAsync(data, messageType).ConfigureAwait(false);
 
             // Assert
             target.Should().NotBeNull();

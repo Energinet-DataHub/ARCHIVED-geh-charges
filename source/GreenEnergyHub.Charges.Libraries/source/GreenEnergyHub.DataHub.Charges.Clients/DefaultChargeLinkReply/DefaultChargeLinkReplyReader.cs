@@ -21,12 +21,12 @@ using GreenEnergyHub.DataHub.Charges.Libraries.Protobuf;
 
 namespace GreenEnergyHub.DataHub.Charges.Libraries.DefaultChargeLinkReply
 {
-    public sealed class DefaultChargeLinkReplyDeserializer : DefaultChargeLinkReplyDeserializerBase
+    public sealed class DefaultChargeLinkReplyReader : DefaultChargeLinkReplyReaderBase
     {
         private readonly OnSuccess _handleSuccess;
         private readonly OnFailure _handleFailure;
 
-        public DefaultChargeLinkReplyDeserializer([NotNull] OnSuccess handleSuccess, [NotNull] OnFailure handleFailure)
+        public DefaultChargeLinkReplyReader([NotNull] OnSuccess handleSuccess, [NotNull] OnFailure handleFailure)
         {
             _handleSuccess = handleSuccess;
             _handleFailure = handleFailure;

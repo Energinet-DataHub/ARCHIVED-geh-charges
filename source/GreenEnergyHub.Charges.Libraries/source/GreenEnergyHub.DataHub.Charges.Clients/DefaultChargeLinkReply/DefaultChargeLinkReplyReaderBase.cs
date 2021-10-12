@@ -22,8 +22,8 @@ namespace GreenEnergyHub.DataHub.Charges.Libraries.DefaultChargeLinkReply
 
     public delegate Task OnFailure(CreateDefaultChargeLinksFailedDto createDefaultChargeLinksSucceeded);
 
-    public abstract class DefaultChargeLinkReplyDeserializerBase
+    public abstract class DefaultChargeLinkReplyReaderBase
     {
-        public abstract Task DeserializeMessageAsync(byte[] data, MessageType messageType);
+        public abstract Task ReadAsync(byte[] data, MessageType messageType);
     }
 }
