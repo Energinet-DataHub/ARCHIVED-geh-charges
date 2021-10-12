@@ -46,23 +46,18 @@ jobs:
   pre_job:
     runs-on: windows-latest
     outputs:
-      should_skip: ${{ steps.skip_check.outputs.should_skip }}
+      has_changes: ${{ steps.changes.outputs.src == 'true' }}
     steps:
-      - name: Should skip?
-        id: skip_check
-        uses: fkirc/skip-duplicate-actions@v1.4.0
+      - uses: dorny/paths-filter@v2
+        id: changes
         with:
-          github_token: ${{ github.token }}
-          paths: '[
-            "source/GreenEnergyHub.Charges/**",
-            ".github/workflows/link-receiver-ci.yml",
-            ".github/actions/dotnet-build-and-test/**",
-            ".github/actions/azure-core-tools-install/**"
-          ]'
+          filters: |
+            src:
+              - "source/GreenEnergyHub.Charges/**"
 
   validate_build_functionhost:
     needs: pre_job
-    if: ${{ needs.pre_job.outputs.should_skip != 'true' }}
+    if: ${{ needs.pre_job.outputs.has_changes }}
     name: Validate build FunctionHost
     runs-on: windows-latest
     steps:
