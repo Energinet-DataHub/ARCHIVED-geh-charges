@@ -23,6 +23,12 @@ namespace GreenEnergyHub.Charges.Infrastructure.MarketDocument.Cim
     /// </summary>
     internal static class CimMarketDocumentConstants
     {
+        internal const string SchemaValidationNamespace = "http://www.w3.org/2001/XMLSchema-instance";
+
+        internal const string SchemaNamespaceAbbreviation = "xsi";
+
+        internal const string CimNamespaceAbbreviation = "cim";
+
         internal const string Id = "mRID";
 
         internal const string Type = "type";
