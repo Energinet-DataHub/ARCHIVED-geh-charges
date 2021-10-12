@@ -25,7 +25,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.MarketDocument.Cim
             return codingScheme switch
             {
                 CodingScheme.GS1 => CimGS1,
-                _ => throw new InvalidEnumArgumentException($"Provided CodingScheme value '{codingScheme}' is invalid and cannot be mapped.")
+                _ => throw new InvalidEnumArgumentException($"Provided CodingScheme value '{codingScheme}' is invalid and cannot be mapped."),
             };
         }
     }
