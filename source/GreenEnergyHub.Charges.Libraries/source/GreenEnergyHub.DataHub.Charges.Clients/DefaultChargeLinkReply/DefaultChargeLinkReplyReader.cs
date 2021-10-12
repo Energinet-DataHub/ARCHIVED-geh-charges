@@ -32,7 +32,13 @@ namespace GreenEnergyHub.DataHub.Charges.Libraries.DefaultChargeLinkReply
             _handleFailure = handleFailure;
         }
 
-        public override async Task DeserializeMessageAsync(byte[] data, MessageType messageType)
+        /// <summary>
+        /// Read data
+        /// </summary>
+        /// <param name="data">data reply to deserialized</param>
+        /// <param name="messageType">messageType contains information on whether data contains
+        /// a reply to a succeeded failed <see cref="CreateDefaultChargeLinks" /> request</param>
+        public override async Task ReadAsync(byte[] data, MessageType messageType)
         {
             switch (messageType)
             {

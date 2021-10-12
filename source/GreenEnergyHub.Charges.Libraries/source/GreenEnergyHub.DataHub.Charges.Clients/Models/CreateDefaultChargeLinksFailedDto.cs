@@ -12,15 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using GreenEnergyHub.Charges.Contracts;
 using GreenEnergyHub.DataHub.Charges.Libraries.Enums;
 
 namespace GreenEnergyHub.DataHub.Charges.Libraries.Models
 {
     /// <summary>
     /// The data needed by the Metering Point domain as a reply
-    /// to a failed Create Default Charge Links request
+    /// to a failed <see cref="CreateDefaultChargeLinks" /> request
     /// </summary>
-    /// <param name="meteringPointId"></param>
-    /// <param name="errorCode"></param>
+    /// <param name="meteringPointId">A unique id to specify the metering point.</param>
+    /// <param name="errorCode">Tells why the <see cref="CreateDefaultChargeLinks" /> request has failed.</param>
     public sealed record CreateDefaultChargeLinksFailedDto(string meteringPointId, ErrorCode errorCode);
 }
