@@ -46,7 +46,7 @@ jobs:
   pre_job:
     runs-on: windows-latest
     outputs:
-      has_changes: ${{ steps.changes.outputs.src == 'true' }}
+      has_changes: ${{ steps.changes.outputs.src != 'true' }}
     steps:
       - uses: dorny/paths-filter@v2
         id: changes
