@@ -39,16 +39,40 @@ namespace GreenEnergyHub.Charges.Application.MeteringPoints.Handlers
             if (consumptionMeteringPointCreatedEvent == null)
                 throw new ArgumentNullException(nameof(consumptionMeteringPointCreatedEvent));
 
-            if (await _meteringPointRepository.CheckIfMeteringPointExistsAsync(consumptionMeteringPointCreatedEvent.MeteringPointId))
+            var meteringPoint = MeteringPointFactory.Create(consumptionMeteringPointCreatedEvent);
+
+            if (await _meteringPointRepository.CheckIfMeteringPointExistsAsync(meteringPoint.MeteringPointId))
             {
-                throw new Exception($"Metering Point ID '{consumptionMeteringPointCreatedEvent.MeteringPointId}' already exists in storage");
+                _logger.LogError(
+                    $"Metering Point ID '{meteringPoint.MeteringPointId}' already exists in storage.");
+
+                var existingMeteringPoint = await _meteringPointRepository.GetMeteringPointAsync(meteringPoint.MeteringPointId);
+
+                // Compare and log differences between the integration event data and the persisted metering point's data
+                CompareMeteringPoints(meteringPoint, existingMeteringPoint);
             }
             else
             {
-                var meteringPoint = MeteringPointFactory.Create(consumptionMeteringPointCreatedEvent);
                 await _meteringPointRepository.StoreMeteringPointAsync(meteringPoint).ConfigureAwait(false);
-                _logger.LogInformation($"Finished persisting metering point with id: '{meteringPoint.MeteringPointId}'");
+                _logger.LogInformation($"Metering Point ID '{meteringPoint.MeteringPointId}' has been persisted");
             }
+        }
+
+        /// <summary>
+        /// Compares a subset of properties of two metering point domain objects
+        /// </summary>
+        /// <param name="incoming">The Metering Point from the integration event</param>
+        /// <param name="existing">The Metering Point from storage</param>
+        private void CompareMeteringPoints(MeteringPoint incoming, MeteringPoint existing)
+        {
+            if (incoming.MeteringPointType != existing.MeteringPointType)
+                _logger.LogError($"Received 'metering point type' event data '{incoming.MeteringPointType}' was not equal to the already persisted value '{existing.MeteringPointType}' for Metering Point ID '{incoming.MeteringPointId}'");
+
+            if (incoming.SettlementMethod != existing.SettlementMethod)
+                _logger.LogError($"Received 'settlement method' event data '{incoming.SettlementMethod}' was not equal to the already persisted value '{existing.SettlementMethod}' for Metering Point ID '{incoming.MeteringPointId}'");
+
+            if (incoming.GridAreaId != existing.GridAreaId)
+                _logger.LogError($"Received 'grid area id' event data '{incoming.GridAreaId}' was not equal to the already persisted value '{existing.GridAreaId}' for Metering Point ID '{incoming.MeteringPointId}'");
         }
     }
 }

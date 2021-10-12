@@ -55,7 +55,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.MeteringPoints.Handlers
             meteringPointRepository
                 .Verify(v => v.StoreMeteringPointAsync(It.IsAny<MeteringPoint>()), Times.Exactly(1));
             logger.VerifyLoggerWasCalled(
-                $"Finished persisting metering point with id: {meteringPointCreatedEvent.MeteringPointId}",
+                $"Metering Point ID '{meteringPointCreatedEvent.MeteringPointId}' has been persisted",
                 LogLevel.Information);
         }
 
