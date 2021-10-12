@@ -57,7 +57,7 @@ jobs:
 
   validate_build_functionhost:
     needs: pre_job
-    if: ${{ needs.pre_job.outputs.has_changes }}
+    if: needs.pre_job.outputs.has_changes
     name: Validate build FunctionHost
     runs-on: windows-latest
     steps:
