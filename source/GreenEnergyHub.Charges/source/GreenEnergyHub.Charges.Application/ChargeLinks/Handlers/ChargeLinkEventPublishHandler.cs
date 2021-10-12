@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Domain.ChargeLinkCommandAcceptedEvents;
@@ -35,7 +34,6 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
 
         public async Task HandleAsync(ChargeLinkCommandAcceptedEvent command)
         {
-            // TODO: LRN should the created events be grouped?
             var chargeLinkCreatedEvents =
                 command.ChargeLinkCommands.Select(
                     chargeLinkCommand => _createdEventFactory.CreateEvent(chargeLinkCommand)).ToList();

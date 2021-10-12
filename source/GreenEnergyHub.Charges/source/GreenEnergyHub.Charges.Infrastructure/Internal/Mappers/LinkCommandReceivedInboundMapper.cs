@@ -28,9 +28,10 @@ namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
 {
     public class LinkCommandReceivedInboundMapper : ProtobufInboundMapper<ChargeLinkCommandReceivedContract>
     {
-        protected override IInboundMessage Convert([NotNull]ChargeLinkCommandReceivedContract chargeLinkCommandReceivedContract)
+        protected override IInboundMessage Convert(
+            [NotNull]ChargeLinkCommandReceivedContract chargeLinkCommandReceivedContract)
         {
-            var chargeLinkCommandReceivedEvent = new ChargeLinkCommandReceivedEvent(
+            return new ChargeLinkCommandReceivedEvent(
                 chargeLinkCommandReceivedContract.PublishedTime.ToInstant(),
                 chargeLinkCommandReceivedContract.CorrelationId,
                 chargeLinkCommandReceivedContract.ChargeLinkCommands.Select(linkCommandContract =>
@@ -39,8 +40,6 @@ namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
                     Document = ConvertDocument(linkCommandContract.Document),
                     ChargeLink = ConvertChargeLink(linkCommandContract.ChargeLink),
                 }).ToList());
-
-            return chargeLinkCommandReceivedEvent;
         }
 
         private static Document ConvertDocument(DocumentContract document)
