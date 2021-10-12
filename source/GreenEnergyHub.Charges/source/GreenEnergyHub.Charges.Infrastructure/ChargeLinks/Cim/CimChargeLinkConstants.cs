@@ -16,13 +16,20 @@ namespace GreenEnergyHub.Charges.Infrastructure.ChargeLinks.Cim
 {
     /// <summary>
     /// Strings used in CIM/XML for elements, namespaces or attributes that we need to
-    /// use when parsing a XML document
+    /// use when parsing and generating a XML document
     ///
     /// This class is responsible for string that are used in the document area of the XML
-    /// which is shared between multiple CIM/XML document types
+    /// which is specific to charge link messages
     /// </summary>
     internal static class CimChargeLinkConstants
     {
+        internal const string NotifyNamespace = "urn:ediel.org:structure:notifybillingmasterdata:0:1";
+
+        internal const string NotifySchemaLocation =
+            "urn:ediel.org:structure:notifybillingmasterdata:0:1 urn-ediel-org-structure-notifybillingmasterdata-0-1.xsd";
+
+        internal const string NotifyRootElement = "NotifyBillingMasterData_MarketDocument";
+
         internal const string MarketActivityRecordId = "mRID";
 
         internal const string MeteringPointId = "marketEvaluationPoint.mRID";
@@ -30,5 +37,17 @@ namespace GreenEnergyHub.Charges.Infrastructure.ChargeLinks.Cim
         internal const string StartDateTime = "start_DateAndOrTime.dateTime";
 
         internal const string EndDateTime = "end_DateAndOrTime.dateTime";
+
+        internal const string ChargeGroup = "ChargeGroup";
+
+        internal const string ChargeTypeElement = "ChargeType";
+
+        internal const string Owner = "chargeTypeOwner_MarketParticipant.mRID";
+
+        internal const string ChargeType = "type";
+
+        internal const string ChargeId = "mRID";
+
+        internal const string Factor = "factor";
     }
 }
