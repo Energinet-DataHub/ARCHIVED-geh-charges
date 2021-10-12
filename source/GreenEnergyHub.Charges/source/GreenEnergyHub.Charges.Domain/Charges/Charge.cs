@@ -107,7 +107,8 @@ namespace GreenEnergyHub.Charges.Domain.Charges
         /// <summary>
         /// Indicates whether the Charge is tax or not.
         /// </summary>
-        public bool TaxIndicator { get; }
+        // ReSharper disable once AutoPropertyCanBeMadeGetOnly.Local - private setter used in unit test
+        public bool TaxIndicator { get; private set; }
 
         /// <summary>
         ///  Charge Owner, e.g. the GLN or EIC identification number.
