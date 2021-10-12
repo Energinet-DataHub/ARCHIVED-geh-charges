@@ -30,7 +30,7 @@ using Xunit.Categories;
 namespace GreenEnergyHub.Charges.Tests.Application.MeteringPoints.Handlers
 {
     [UnitTest]
-    public class ConsumptionMeteringPointCreatedHandlerTests
+    public class ConsumptionMeteringPointCreatedPersisterTests
     {
         [Theory]
         [InlineAutoDomainData]
@@ -55,7 +55,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.MeteringPoints.Handlers
             meteringPointRepository
                 .Verify(v => v.StoreMeteringPointAsync(It.IsAny<MeteringPoint>()), Times.Exactly(1));
             logger.VerifyLoggerWasCalled(
-                $"Metering Point ID '{meteringPointCreatedEvent.MeteringPointId}' has been persisted",
+                $"Consumption Metering Point ID '{meteringPointCreatedEvent.MeteringPointId}' has been persisted",
                 LogLevel.Information);
         }
 
