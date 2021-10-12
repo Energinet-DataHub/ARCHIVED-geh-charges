@@ -66,13 +66,13 @@ namespace GreenEnergyHub.Charges.Application.MeteringPoints.Handlers
         private void CompareMeteringPoints(MeteringPoint incoming, MeteringPoint existing)
         {
             if (incoming.MeteringPointType != existing.MeteringPointType)
-                _logger.LogError($"Received 'metering point type' event data '{incoming.MeteringPointType}' was not equal to the already persisted value '{existing.MeteringPointType}' for Metering Point ID '{incoming.MeteringPointId}'");
+                _logger.LogInformation($"Received 'metering point type' event data '{incoming.MeteringPointType}' was not equal to the already persisted value '{existing.MeteringPointType}' for Metering Point ID '{incoming.MeteringPointId}'");
 
             if (incoming.SettlementMethod != existing.SettlementMethod)
-                _logger.LogError($"Received 'settlement method' event data '{incoming.SettlementMethod}' was not equal to the already persisted value '{existing.SettlementMethod}' for Metering Point ID '{incoming.MeteringPointId}'");
+                _logger.LogInformation($"Received 'settlement method' event data '{incoming.SettlementMethod}' was not equal to the already persisted value '{existing.SettlementMethod}' for Metering Point ID '{incoming.MeteringPointId}'");
 
             if (incoming.GridAreaId != existing.GridAreaId)
-                _logger.LogError($"Received 'grid area id' event data '{incoming.GridAreaId}' was not equal to the already persisted value '{existing.GridAreaId}' for Metering Point ID '{incoming.MeteringPointId}'");
+                _logger.LogInformation($"Received 'grid area id' event data '{incoming.GridAreaId}' was not equal to the already persisted value '{existing.GridAreaId}' for Metering Point ID '{incoming.MeteringPointId}'");
         }
     }
 }
