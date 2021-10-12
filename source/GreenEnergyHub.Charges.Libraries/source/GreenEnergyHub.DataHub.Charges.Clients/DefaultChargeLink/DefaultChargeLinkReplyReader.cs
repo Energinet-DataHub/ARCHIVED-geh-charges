@@ -19,13 +19,21 @@ using GreenEnergyHub.Charges.Contracts;
 using GreenEnergyHub.DataHub.Charges.Libraries.Enums;
 using GreenEnergyHub.DataHub.Charges.Libraries.Protobuf;
 
-namespace GreenEnergyHub.DataHub.Charges.Libraries.DefaultChargeLinkReply
+namespace GreenEnergyHub.DataHub.Charges.Libraries.DefaultChargeLink
 {
     public sealed class DefaultChargeLinkReplyReader : DefaultChargeLinkReplyReaderBase
     {
         private readonly OnSuccess _handleSuccess;
         private readonly OnFailure _handleFailure;
 
+        /// <summary>
+        /// Provides functionality to read and map data received from a reply to
+        /// a <see cref="CreateDefaultChargeLinks" /> request. Caller must provide
+        /// delegates intended to handle handle replies for successful and failed
+        /// requests.
+        /// </summary>
+        /// <param name="handleSuccess">Delegate to handle successful <see cref="CreateDefaultChargeLinks" /> request</param>
+        /// <param name="handleFailure">Delegate to handle failed <see cref="CreateDefaultChargeLinks" /> request</param>
         public DefaultChargeLinkReplyReader([NotNull] OnSuccess handleSuccess, [NotNull] OnFailure handleFailure)
         {
             _handleSuccess = handleSuccess;
@@ -33,11 +41,13 @@ namespace GreenEnergyHub.DataHub.Charges.Libraries.DefaultChargeLinkReply
         }
 
         /// <summary>
-        /// Read data
+        /// Read and map data to be handled by provided delegates.
         /// </summary>
-        /// <param name="data">data reply to deserialized</param>
-        /// <param name="messageType">messageType contains information on whether data contains
-        /// a reply to a succeeded failed <see cref="CreateDefaultChargeLinks" /> request</param>
+        /// <param name="data">Data reply to deserialized</param>
+        /// <param name="messageType">
+        /// MessageType contains information on whether data contains
+        /// a reply to a succeeded failed <see cref="CreateDefaultChargeLinks" /> request
+        /// </param>
         public override async Task ReadAsync(byte[] data, MessageType messageType)
         {
             switch (messageType)

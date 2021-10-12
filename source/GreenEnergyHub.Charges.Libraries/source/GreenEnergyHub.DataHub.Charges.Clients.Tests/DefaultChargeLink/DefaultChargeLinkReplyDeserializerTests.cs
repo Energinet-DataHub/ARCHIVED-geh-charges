@@ -17,14 +17,14 @@ using FluentAssertions;
 using Google.Protobuf;
 using GreenEnergyHub.Charges.Contracts;
 using GreenEnergyHub.Charges.TestCore.Attributes;
-using GreenEnergyHub.DataHub.Charges.Libraries.DefaultChargeLinkReply;
+using GreenEnergyHub.DataHub.Charges.Libraries.DefaultChargeLink;
 using GreenEnergyHub.DataHub.Charges.Libraries.Enums;
 using GreenEnergyHub.DataHub.Charges.Libraries.Models;
 using Xunit;
 using Xunit.Categories;
 using ErrorCode = GreenEnergyHub.DataHub.Charges.Libraries.Enums.ErrorCode;
 
-namespace GreenEnergyHub.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.DefaultChargeLinkReply
+namespace GreenEnergyHub.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.DefaultChargeLink
 {
     [UnitTest]
     public class DefaultChargeLinkReplyDeserializerTests

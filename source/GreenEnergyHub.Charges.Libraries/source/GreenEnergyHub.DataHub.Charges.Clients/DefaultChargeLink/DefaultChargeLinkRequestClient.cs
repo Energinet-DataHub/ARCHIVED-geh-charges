@@ -20,7 +20,7 @@ using GreenEnergyHub.Charges.Contracts;
 using GreenEnergyHub.DataHub.Charges.Libraries.Factories;
 using GreenEnergyHub.DataHub.Charges.Libraries.Models;
 
-namespace GreenEnergyHub.DataHub.Charges.Libraries.DefaultChargeLinkRequest
+namespace GreenEnergyHub.DataHub.Charges.Libraries.DefaultChargeLink
 {
     public sealed class DefaultChargeLinkRequestClient : IAsyncDisposable, IDefaultChargeLinkRequestClient
     {
