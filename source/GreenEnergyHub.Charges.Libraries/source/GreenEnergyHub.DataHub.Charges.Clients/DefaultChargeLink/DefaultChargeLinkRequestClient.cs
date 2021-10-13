@@ -51,10 +51,6 @@ namespace GreenEnergyHub.DataHub.Charges.Libraries.DefaultChargeLink
             await SendRequestAsync(correlationId, createDefaultChargeLinks).ConfigureAwait(false);
         }
 
-        // public async Task CreateDefaultChargeLinksReplyAsync()
-        // {
-        //
-        // }
         public async ValueTask DisposeAsync()
         {
             await _serviceBusClient.DisposeAsync().ConfigureAwait(false);
