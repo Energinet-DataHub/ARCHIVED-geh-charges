@@ -16,6 +16,8 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
+using System.Reflection;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
 using GreenEnergyHub.Charges.Application;
@@ -23,6 +25,7 @@ using GreenEnergyHub.Charges.Domain.ChargeLinks;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.Infrastructure.ChargeLinks.Cim;
+using GreenEnergyHub.Charges.TestCore;
 using GreenEnergyHub.TestHelpers;
 using Moq;
 using NodaTime;
@@ -36,24 +39,39 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.ChargeLinks.Cim
     {
         private const int NoOfLinksInBundle = 10;
 
-        [Theory/*(Skip = "Manually run test to save the generated file to disk")*/]
+        [Theory]
         [InlineAutoDomainData]
-        public async Task SerializeAsync_WhenCalled_ReturnsSerializedStream(
-            [NotNull] [Frozen] Mock<IHubSenderConfiguration> hubSenderConfigration,
+        public async Task SerializeAsync_WhenCalled_StreamHasSerializedResult(
+            [NotNull] [Frozen] Mock<IHubSenderConfiguration> hubSenderConfiguration,
             [NotNull] [Frozen] Mock<IClock> clock,
             [NotNull] ChargeLinkCimSerializer sut)
         {
-            hubSenderConfigration.Setup(
-                    h => h.GetSenderMarketParticipant())
-                .Returns(new MarketParticipant
-                {
-                    Id = "5790001330552", BusinessProcessRole = MarketParticipantRole.MeteringPointAdministrator,
-                });
+            // Arrange
+            SetupMocks(hubSenderConfiguration, clock);
+            await using var stream = new MemoryStream();
 
-            var currentTime = Instant.FromUtc(2021, 10, 12, 13, 37, 43).PlusNanoseconds(4);
-            clock.Setup(
-                    c => c.GetCurrentInstant())
-                .Returns(currentTime);
+            var expected =
+                GetExpectedValue("GreenEnergyHub.Charges.Tests.TestFiles.ExpectedOutputChargeLinkCimSerializer.xml");
+
+            var chargeLinks = GetChargeLinks();
+
+            // Act
+            await sut.SerializeToStreamAsync(chargeLinks, stream);
+
+            // Assert
+            var actual = GetStreamAsStringWithReplacedGuids(stream);
+
+            Assert.Equal(expected, actual);
+        }
+
+        [Theory(Skip = "Manually run test to save the generated file to disk")]
+        [InlineAutoDomainData]
+        public async Task SerializeAsync_WhenCalled_SaveSerializedStream(
+            [NotNull] [Frozen] Mock<IHubSenderConfiguration> hubSenderConfiguration,
+            [NotNull] [Frozen] Mock<IClock> clock,
+            [NotNull] ChargeLinkCimSerializer sut)
+        {
+            SetupMocks(hubSenderConfiguration, clock);
 
             var chargeLinks = GetChargeLinks();
 
@@ -64,6 +82,23 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.ChargeLinks.Cim
             await using var fileStream = File.Create("C:\\Temp\\Test" + Guid.NewGuid() + ".txt");
 
             await stream.CopyToAsync(fileStream);
+        }
+
+        private void SetupMocks(
+            Mock<IHubSenderConfiguration> hubSenderConfiguration,
+            Mock<IClock> clock)
+        {
+            hubSenderConfiguration.Setup(
+                    h => h.GetSenderMarketParticipant())
+                .Returns(new MarketParticipant
+                {
+                    Id = "5790001330552", BusinessProcessRole = MarketParticipantRole.MeteringPointAdministrator,
+                });
+
+            var currentTime = Instant.FromUtc(2021, 10, 12, 13, 37, 43).PlusNanoseconds(4);
+            clock.Setup(
+                    c => c.GetCurrentInstant())
+                .Returns(currentTime);
         }
 
         private List<ChargeLinkTransmissionDto> GetChargeLinks()
@@ -95,6 +130,35 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.ChargeLinks.Cim
                 no,
                 Instant.FromUtc(2020, 12, 31, 23, 0, 0),
                 validTo);
+        }
+
+        private static string GetStreamAsStringWithReplacedGuids(Stream stream)
+        {
+            var text = GetStreamAsString(stream);
+            return ReplaceGuids(text);
+        }
+
+        private static string GetExpectedValue(string path)
+        {
+            var assembly = Assembly.GetExecutingAssembly();
+            using var stream = EmbeddedStreamHelper.GetInputStream(assembly, path);
+            return GetStreamAsStringWithReplacedGuids(stream);
+        }
+
+        private static string GetStreamAsString(Stream stream)
+        {
+            using var reader = new StreamReader(stream);
+            return reader.ReadToEnd();
+        }
+
+        private static string ReplaceGuids(string input)
+        {
+            // The following regex will watch guids regardless of case
+            var result = Regex.Replace(
+                input,
+                @"[0-9A-Fa-f]{8}-([0-9A-Fa-f]{4}-){3}[0-9A-Fa-f]{12}",
+                Guid.Empty.ToString());
+            return result;
         }
     }
 }

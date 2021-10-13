@@ -20,7 +20,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using GreenEnergyHub.Charges.Application;
-using GreenEnergyHub.Charges.Application.ChargeLinks.MessageHub;
 using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.Domain.ChargeLinks;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
