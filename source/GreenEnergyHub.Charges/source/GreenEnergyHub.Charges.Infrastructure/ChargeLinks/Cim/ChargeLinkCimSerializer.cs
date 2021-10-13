@@ -29,12 +29,12 @@ using NodaTime;
 
 namespace GreenEnergyHub.Charges.Infrastructure.ChargeLinks.Cim
 {
-    public class ChargeLinkPostOfficeSerializer : IChargeLinkPostOfficeSerializer
+    public class ChargeLinkCimSerializer : IChargeLinkCimSerializer
     {
         private IHubSenderConfiguration _hubSenderConfiguration;
         private IClock _clock;
 
-        public ChargeLinkPostOfficeSerializer(
+        public ChargeLinkCimSerializer(
             IHubSenderConfiguration hubSenderConfiguration,
             IClock clock)
         {

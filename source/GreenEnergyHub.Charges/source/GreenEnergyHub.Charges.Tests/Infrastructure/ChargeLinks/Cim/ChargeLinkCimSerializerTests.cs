@@ -32,7 +32,7 @@ using Xunit.Categories;
 namespace GreenEnergyHub.Charges.Tests.Infrastructure.ChargeLinks.Cim
 {
     [UnitTest]
-    public class ChargeLinkPostOfficeSerializerTests
+    public class ChargeLinkCimSerializerTests
     {
         private const int NoOfLinksInBundle = 10;
 
@@ -41,7 +41,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.ChargeLinks.Cim
         public async Task SerializeAsync_WhenCalled_ReturnsSerializedStream(
             [NotNull] [Frozen] Mock<IHubSenderConfiguration> hubSenderConfigration,
             [NotNull] [Frozen] Mock<IClock> clock,
-            [NotNull] ChargeLinkPostOfficeSerializer sut)
+            [NotNull] ChargeLinkCimSerializer sut)
         {
             hubSenderConfigration.Setup(
                     h => h.GetSenderMarketParticipant())

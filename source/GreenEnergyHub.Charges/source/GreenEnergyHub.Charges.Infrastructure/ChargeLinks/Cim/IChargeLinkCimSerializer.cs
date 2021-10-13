@@ -17,9 +17,9 @@ using System.IO;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Domain.ChargeLinks;
 
-namespace GreenEnergyHub.Charges.Application.ChargeLinks.MessageHub
+namespace GreenEnergyHub.Charges.Infrastructure.ChargeLinks.Cim
 {
-    public interface IChargeLinkPostOfficeSerializer
+    public interface IChargeLinkCimSerializer
     {
         Task SerializeToStreamAsync(IEnumerable<ChargeLinkTransmissionDto> chargeLinks, Stream stream);
     }
