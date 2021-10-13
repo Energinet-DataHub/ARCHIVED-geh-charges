@@ -14,6 +14,7 @@
 
 using System;
 using System.Threading.Tasks;
+using GreenEnergyHub.Charges.Domain.ChargeLinkHistory;
 using GreenEnergyHub.Charges.Domain.ChargeLinks;
 using GreenEnergyHub.Charges.Domain.MeteringPoints;
 using GreenEnergyHub.Charges.Infrastructure.Context.EntityConfigurations;
@@ -46,6 +47,8 @@ namespace GreenEnergyHub.Charges.Infrastructure.Context
         public DbSet<DefaultChargeLink> DefaultChargeLinks { get; private set; }
 
         public DbSet<ChargeLink> ChargeLinks { get; private set; }
+
+        public DbSet<ChargeLinkHistory> ChargeLinkHistories { get; private set; }
 
         public Task<int> SaveChangesAsync()
            => base.SaveChangesAsync();
