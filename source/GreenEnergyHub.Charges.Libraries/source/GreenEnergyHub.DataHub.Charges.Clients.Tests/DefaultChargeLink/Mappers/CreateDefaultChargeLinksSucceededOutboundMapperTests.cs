@@ -35,10 +35,13 @@ namespace GreenEnergyHub.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.D
         [Fact]
         public void Convert_WhenCalled_ShouldMapToProtobufWithCorrectValues()
         {
+            // Arrange
             var createDefaultChargeLinksSucceededDto = _fixture.Create<CreateDefaultChargeLinksSucceededDto>();
 
+            // Act
             var actual = CreateDefaultChargeLinksSucceededOutboundMapper.Convert(createDefaultChargeLinksSucceededDto);
 
+            // Assert
             actual.MeteringPointId.Should().Be(createDefaultChargeLinksSucceededDto.meteringPointId);
             actual.DidCreateChargeLinks.Should().Be(createDefaultChargeLinksSucceededDto.didCreateChargeLinks);
         }
