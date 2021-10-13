@@ -35,17 +35,21 @@ namespace GreenEnergyHub.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.D
         private bool _didCreateChargeLinksTestResult;
 
         [Theory]
-        [InlineAutoMoqData(MessageType.RequestSucceeded, "knownMeteringPointId1234")]
-        public async Task DeserializeMessageAsync_Test_OnSuccess(MessageType messageType, string meteringPointId)
+        [InlineAutoMoqData(MessageType.RequestSucceeded, "knownMeteringPointId1234", true)]
+        [InlineAutoMoqData(MessageType.RequestSucceeded, "knownMeteringPointId5678", false)]
+        public async Task DefaultChargeLinksCreationSucceeded(
+            MessageType messageType,
+            string meteringPointId,
+            bool didCreateChargeLinks)
         {
             // Arrange
-            var createDefaultChargeLinksFailed = new CreateDefaultChargeLinksFailed
+            var createDefaultChargeLinksSucceeded = new CreateDefaultChargeLinksSucceeded
             {
                 MeteringPointId = meteringPointId,
-                ErrorCode = CreateDefaultChargeLinksFailed.Types.ErrorCode.EcMeteringPointUnknown,
+                DidCreateChargeLinks = didCreateChargeLinks,
             };
 
-            var data = createDefaultChargeLinksFailed.ToByteArray();
+            var data = createDefaultChargeLinksSucceeded.ToByteArray();
 
             var target = new DefaultChargeLinkReplyReader(HandleSuccess, HandleFailure);
 
@@ -55,12 +59,12 @@ namespace GreenEnergyHub.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.D
             // Assert
             target.Should().NotBeNull();
             _knownMeteringPointIdTestResult.Should().Be(meteringPointId);
-            _didCreateChargeLinksTestResult.Should().BeTrue();
+            _didCreateChargeLinksTestResult.Should().Be(didCreateChargeLinks);
         }
 
         [Theory]
         [InlineAutoMoqData(MessageType.RequestFailed, "unknownMeteringPointId9876")]
-        public async Task DeserializeMessageAsync_Test_OnFailure(MessageType messageType, string meteringPointId)
+        public async Task DefaultChargeLinksCreationFailed(MessageType messageType, string meteringPointId)
         {
             // Arrange
             var createDefaultChargeLinksFailed = new CreateDefaultChargeLinksFailed
