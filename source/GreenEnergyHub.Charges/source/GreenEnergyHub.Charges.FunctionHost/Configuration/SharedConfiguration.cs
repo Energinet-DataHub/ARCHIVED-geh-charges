@@ -17,6 +17,7 @@ using Energinet.DataHub.MessageHub.Client.DataAvailable;
 using Energinet.DataHub.MessageHub.Client.Dequeue;
 using Energinet.DataHub.MessageHub.Client.Factories;
 using Energinet.DataHub.MessageHub.Client.Peek;
+using Energinet.DataHub.MessageHub.Client.Storage;
 using EntityFrameworkCore.SqlServer.NodaTime.Extensions;
 using GreenEnergyHub.Charges.Domain.ChargeLinkCommandReceivedEvents;
 using GreenEnergyHub.Charges.Domain.Charges;
@@ -111,6 +112,8 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
             serviceCollection.AddSingleton<IResponseBundleParser, ResponseBundleParser>();
             serviceCollection.AddSingleton<IDataBundleResponseSender, DataBundleResponseSender>();
             serviceCollection.AddSingleton<IDequeueNotificationParser, DequeueNotificationParser>();
+            serviceCollection.AddSingleton<IStorageHandler, StorageHandler>();
+            serviceCollection.AddSingleton<IStorageServiceClientFactory, StorageServiceClientFactory>();
         }
     }
 }

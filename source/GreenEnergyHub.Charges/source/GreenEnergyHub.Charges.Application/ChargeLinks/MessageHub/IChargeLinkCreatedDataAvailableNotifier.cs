@@ -15,7 +15,7 @@
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Domain.ChargeLinkCommandAcceptedEvents;
 
-namespace GreenEnergyHub.Charges.Application.ChargeLinks.PostOffice
+namespace GreenEnergyHub.Charges.Application.ChargeLinks.MessageHub
 {
     /// <summary>
     /// Contract for notifying the post office that data about a charge link that has been created

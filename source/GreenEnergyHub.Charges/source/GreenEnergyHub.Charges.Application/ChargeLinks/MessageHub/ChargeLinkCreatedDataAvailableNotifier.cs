@@ -20,21 +20,14 @@ using Energinet.DataHub.MessageHub.Client.Model;
 using GreenEnergyHub.Charges.Domain.ChargeLinkCommandAcceptedEvents;
 using GreenEnergyHub.Charges.Domain.Charges;
 
-namespace GreenEnergyHub.Charges.Application.ChargeLinks.PostOffice
+namespace GreenEnergyHub.Charges.Application.ChargeLinks.MessageHub
 {
     public class ChargeLinkCreatedDataAvailableNotifier : IChargeLinkCreatedDataAvailableNotifier
     {
         /// <summary>
-        /// The anticipated weight contribution to the final bundle from the charge link created event.
+        /// The upper anticipated weight (kilobytes) contribution to the final bundle from the charge link created event.
         /// </summary>
-        private const int MessageWeight = 1;
-
-        /// <summary>
-        /// All messages with the same type can be bundled together.
-        /// Post office handles the type case-insensitive.
-        /// Only change with caution as it affects the post office.
-        /// </summary>
-        private const string MessageType = "ChargeLinkCreated";
+        private const int MessageWeight = 2;
 
         private readonly IDataAvailableNotificationSender _dataAvailableNotificationSender;
         private readonly IChargeRepository _chargeRepository;
@@ -73,10 +66,14 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.PostOffice
             // the receiver of the confirmation
             var receiver = createdChargeLink.Document.Sender.Id;
 
+            // Different processes must not be bundled together.
+            // The can be differentiated by business reason codes.
+            var messageType = createdChargeLink.Document.BusinessReasonCode.ToString();
+
             return new DataAvailableNotificationDto(
                 chargeDomainReferenceId,
                 new GlobalLocationNumberDto(receiver),
-                new MessageTypeDto(MessageType),
+                new MessageTypeDto(messageType),
                 DomainOrigin.Charges,
                 SupportsBundling: true,
                 MessageWeight);

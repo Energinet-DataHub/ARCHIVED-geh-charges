@@ -14,14 +14,14 @@
 
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Application.ChargeLinks.PostOffice;
+using GreenEnergyHub.Charges.Application.ChargeLinks.MessageHub;
 using GreenEnergyHub.Charges.Domain.ChargeLinkCommandAcceptedEvents;
 using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandAccepted;
 using GreenEnergyHub.Charges.Infrastructure.Messaging;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Logging;
 
-namespace GreenEnergyHub.Charges.FunctionHost.ChargeLinks.PostOffice
+namespace GreenEnergyHub.Charges.FunctionHost.ChargeLinks.MessageHub
 {
     /// <summary>
     /// The function will initiate the communication with the post office

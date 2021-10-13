@@ -18,7 +18,7 @@ using AutoFixture.Xunit2;
 using Energinet.DataHub.MessageHub.Client.DataAvailable;
 using Energinet.DataHub.MessageHub.Client.Model;
 using FluentAssertions;
-using GreenEnergyHub.Charges.Application.ChargeLinks.PostOffice;
+using GreenEnergyHub.Charges.Application.ChargeLinks.MessageHub;
 using GreenEnergyHub.Charges.Domain.ChargeLinkCommandAcceptedEvents;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.TestCore.Attributes;

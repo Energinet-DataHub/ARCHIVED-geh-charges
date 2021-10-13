@@ -13,19 +13,19 @@
 // limitations under the License.
 
 using GreenEnergyHub.Charges.Application.ChargeLinks.MessageHub;
+using GreenEnergyHub.Charges.Application.ChargeLinks.MessageHub.Infrastructure;
+using GreenEnergyHub.Charges.Infrastructure.ChargeLinkCreated.MessageHub;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace GreenEnergyHub.Charges.FunctionHost.Configuration
 {
-    internal static class ChargeLinkCreatedDataAvailableNotifierConfiguration
+    public static class ChargeLinkCreatedBundleSenderConfiguration
     {
-        internal static void ConfigureServices(IServiceCollection serviceCollection)
+        public static void ConfigureServices(IServiceCollection serviceCollection)
         {
-            serviceCollection.AddScoped<IChargeLinkCreatedDataAvailableNotifier, ChargeLinkCreatedDataAvailableNotifier>();
-
-            // This would be redundant as it is already registered for ChargeLinkEventPublisherConfigurationEndpoint
-            //serviceCollection.ReceiveProtobufMessage<ChargeLinkCommandAcceptedContract>(
-            //    configuration => configuration.WithParser(() => ChargeLinkCommandAcceptedContract.Parser));
+            serviceCollection.AddScoped<IChargeLinkCreatedBundleSender, ChargeLinkCreatedBundleSender>();
+            serviceCollection.AddScoped<IChargeLinkCreatedBundleCreator, ChargeLinkCreatedBundleCreator>();
+            serviceCollection.AddScoped<IChargeLinkCreatedBundleReplier, ChargeLinkCreatedBundleReplier>();
         }
     }
 }
