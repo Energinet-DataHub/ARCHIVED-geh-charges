@@ -23,7 +23,18 @@ namespace GreenEnergyHub.Charges.Domain.ChargeLinkHistory
         public ChargeLinkHistory MapChargeLinkCommandAcceptedEvent(
             ChargeLinkCommandAcceptedEvent chargeLinkCommandAcceptedEvent, MarketParticipant marketParticipant)
         {
-            throw new NotImplementedException();
+            return new ChargeLinkHistory(
+                marketParticipant.Id,
+                MarketParticipantRole.Unknown, // TODO where
+                chargeLinkCommandAcceptedEvent.Document.BusinessReasonCode,
+                "unknown", // TODO where
+                chargeLinkCommandAcceptedEvent.ChargeLink.MeteringPointId,
+                chargeLinkCommandAcceptedEvent.Document.Sender.Id,
+                chargeLinkCommandAcceptedEvent.ChargeLink.Factor,
+                chargeLinkCommandAcceptedEvent.ChargeLink.ChargeType,
+                chargeLinkCommandAcceptedEvent.ChargeLink.StartDateTime,
+                chargeLinkCommandAcceptedEvent.ChargeLink.EndDateTime.GetValueOrDefault(), // TODO nullable?
+                Guid.NewGuid()); // TODO to be parsed on from somewhere?
         }
     }
 }

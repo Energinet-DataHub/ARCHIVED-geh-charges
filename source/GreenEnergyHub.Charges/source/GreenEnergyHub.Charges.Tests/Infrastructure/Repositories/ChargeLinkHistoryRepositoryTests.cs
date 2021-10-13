@@ -68,7 +68,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
 
         [Theory]
         [InlineAutoMoqData]
-        public async Task GetMeteringPointAsync_WithMeteringPointId_ThenSuccessReturnedAsync([Frozen] Mock<IChargeLinkFactory> chargeLinkFactory)
+        public async Task GetChargeHistoriesAsync_WithMeteringPointId_ThenSuccessReturnedAsync([Frozen] Mock<IChargeLinkFactory> chargeLinkFactory)
         {
             // Arrange
             await using var chargesDatabaseWriteContext = _databaseManager.CreateDbContext();
