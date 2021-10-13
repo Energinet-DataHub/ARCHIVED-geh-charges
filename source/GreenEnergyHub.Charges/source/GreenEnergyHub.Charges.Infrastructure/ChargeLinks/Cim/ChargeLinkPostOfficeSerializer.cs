@@ -42,16 +42,12 @@ namespace GreenEnergyHub.Charges.Infrastructure.ChargeLinks.Cim
             _clock = clock;
         }
 
-        public async Task<Stream> SerializeAsync(IEnumerable<ChargeLinkTransmissionDto> chargeLinks)
+        public async Task SerializeToStreamAsync(IEnumerable<ChargeLinkTransmissionDto> chargeLinks, Stream stream)
         {
-            var stream = new MemoryStream();
-
             var document = GetDocument(chargeLinks);
             await document.SaveAsync(stream, SaveOptions.None, CancellationToken.None);
 
             stream.Position = 0;
-
-            return stream;
         }
 
         private XDocument GetDocument(IEnumerable<ChargeLinkTransmissionDto> chargeLinks)

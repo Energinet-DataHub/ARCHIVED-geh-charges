@@ -21,6 +21,6 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.MessageHub
 {
     public interface IChargeLinkPostOfficeSerializer
     {
-        Task<Stream> SerializeAsync(IEnumerable<ChargeLinkTransmissionDto> chargeLinks);
+        Task SerializeToStreamAsync(IEnumerable<ChargeLinkTransmissionDto> chargeLinks, Stream stream);
     }
 }

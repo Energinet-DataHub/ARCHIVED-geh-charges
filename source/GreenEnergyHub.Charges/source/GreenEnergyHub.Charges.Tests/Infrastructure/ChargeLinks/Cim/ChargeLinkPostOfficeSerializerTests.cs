@@ -57,7 +57,9 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.ChargeLinks.Cim
 
             var chargeLinks = GetChargeLinks();
 
-            await using var stream = await sut.SerializeAsync(chargeLinks);
+            await using var stream = new MemoryStream();
+
+            await sut.SerializeToStreamAsync(chargeLinks, stream);
 
             await using var fileStream = File.Create("C:\\Temp\\Test" + Guid.NewGuid() + ".txt");
 
