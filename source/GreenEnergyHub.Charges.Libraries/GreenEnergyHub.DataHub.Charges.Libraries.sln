@@ -34,8 +34,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GreenEnergyHub.DataHub.Char
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GreenEnergyHub.Charges.TestCore", "..\GreenEnergyHub.Charges\source\GreenEnergyHub.Charges.TestCore\GreenEnergyHub.Charges.TestCore.csproj", "{FB658C7F-FDF7-422D-B906-B884E5C1E8D9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GreenEnergyHub.Charges.Infrastructure", "..\GreenEnergyHub.Charges\source\GreenEnergyHub.Charges.Infrastructure\GreenEnergyHub.Charges.Infrastructure.csproj", "{50C8B478-1009-4A64-8C88-08F6F54D5DD7}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GreenEnergyHub.FunctionApp.TestCommon", "..\GreenEnergyHub.Charges\source\GreenEnergyHub.FunctionApp.TestCommon\GreenEnergyHub.FunctionApp.TestCommon.csproj", "{06B44BDA-BE24-4828-B415-9676B744D9B1}"
 EndProject
 Global
@@ -96,18 +94,6 @@ Global
 		{FB658C7F-FDF7-422D-B906-B884E5C1E8D9}.Release|x64.Build.0 = Release|Any CPU
 		{FB658C7F-FDF7-422D-B906-B884E5C1E8D9}.Release|x86.ActiveCfg = Release|Any CPU
 		{FB658C7F-FDF7-422D-B906-B884E5C1E8D9}.Release|x86.Build.0 = Release|Any CPU
-		{50C8B478-1009-4A64-8C88-08F6F54D5DD7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{50C8B478-1009-4A64-8C88-08F6F54D5DD7}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{50C8B478-1009-4A64-8C88-08F6F54D5DD7}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{50C8B478-1009-4A64-8C88-08F6F54D5DD7}.Debug|x64.Build.0 = Debug|Any CPU
-		{50C8B478-1009-4A64-8C88-08F6F54D5DD7}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{50C8B478-1009-4A64-8C88-08F6F54D5DD7}.Debug|x86.Build.0 = Debug|Any CPU
-		{50C8B478-1009-4A64-8C88-08F6F54D5DD7}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{50C8B478-1009-4A64-8C88-08F6F54D5DD7}.Release|Any CPU.Build.0 = Release|Any CPU
-		{50C8B478-1009-4A64-8C88-08F6F54D5DD7}.Release|x64.ActiveCfg = Release|Any CPU
-		{50C8B478-1009-4A64-8C88-08F6F54D5DD7}.Release|x64.Build.0 = Release|Any CPU
-		{50C8B478-1009-4A64-8C88-08F6F54D5DD7}.Release|x86.ActiveCfg = Release|Any CPU
-		{50C8B478-1009-4A64-8C88-08F6F54D5DD7}.Release|x86.Build.0 = Release|Any CPU
 		{06B44BDA-BE24-4828-B415-9676B744D9B1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{06B44BDA-BE24-4828-B415-9676B744D9B1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{06B44BDA-BE24-4828-B415-9676B744D9B1}.Debug|x64.ActiveCfg = Debug|Any CPU
@@ -131,7 +117,6 @@ Global
 		{68B83582-7A4C-49F3-AA04-36D390BDA5F0} = {D79C7D37-ADE1-42D3-9FED-1E5D784E6E7D}
 		{B2D07074-0796-4553-AF4D-768AAC624528} = {68B83582-7A4C-49F3-AA04-36D390BDA5F0}
 		{FB658C7F-FDF7-422D-B906-B884E5C1E8D9} = {68B83582-7A4C-49F3-AA04-36D390BDA5F0}
-		{50C8B478-1009-4A64-8C88-08F6F54D5DD7} = {2BF2F6B8-E02B-4D7F-99BC-D28B3B3643A9}
 		{06B44BDA-BE24-4828-B415-9676B744D9B1} = {7FFCDBEA-F969-40C6-8461-A898784445FC}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution

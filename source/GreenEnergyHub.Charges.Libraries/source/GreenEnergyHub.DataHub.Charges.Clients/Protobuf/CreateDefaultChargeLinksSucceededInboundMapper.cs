@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Diagnostics.CodeAnalysis;
 using GreenEnergyHub.Charges.Contracts;
 using GreenEnergyHub.DataHub.Charges.Libraries.Models;
@@ -23,7 +24,10 @@ namespace GreenEnergyHub.DataHub.Charges.Libraries.Protobuf
         protected internal static CreateDefaultChargeLinksSucceededDto Convert(
             [NotNull] CreateDefaultChargeLinksSucceeded createDefaultChargeLinksSucceeded)
         {
-            return new (
+            if (createDefaultChargeLinksSucceeded == null)
+                throw new InvalidOperationException();
+
+            return new CreateDefaultChargeLinksSucceededDto(
                 createDefaultChargeLinksSucceeded.MeteringPointId,
                 createDefaultChargeLinksSucceeded.DidCreateChargeLinks);
         }

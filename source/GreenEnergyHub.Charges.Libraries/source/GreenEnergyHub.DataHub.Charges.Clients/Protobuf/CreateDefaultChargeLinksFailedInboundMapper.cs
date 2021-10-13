@@ -25,7 +25,10 @@ namespace GreenEnergyHub.DataHub.Charges.Libraries.Protobuf
         protected internal static CreateDefaultChargeLinksFailedDto Convert(
             [NotNull] CreateDefaultChargeLinksFailed createDefaultChargeLinksFailed)
         {
-            return new (
+            if (createDefaultChargeLinksFailed == null)
+                throw new InvalidOperationException();
+
+            return new CreateDefaultChargeLinksFailedDto(
                 createDefaultChargeLinksFailed.MeteringPointId,
                 ConvertErrorCode(createDefaultChargeLinksFailed.ErrorCode));
         }
