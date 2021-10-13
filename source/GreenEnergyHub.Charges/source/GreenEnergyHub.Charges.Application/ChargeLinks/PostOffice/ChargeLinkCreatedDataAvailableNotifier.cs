@@ -18,7 +18,9 @@ using System.Threading.Tasks;
 using Energinet.DataHub.MessageHub.Client.DataAvailable;
 using Energinet.DataHub.MessageHub.Client.Model;
 using GreenEnergyHub.Charges.Domain.ChargeLinkCommandAcceptedEvents;
+using GreenEnergyHub.Charges.Domain.ChargeLinkHistory;
 using GreenEnergyHub.Charges.Domain.Charges;
+using GreenEnergyHub.Charges.Domain.MarketParticipants;
 
 namespace GreenEnergyHub.Charges.Application.ChargeLinks.PostOffice
 {
@@ -38,11 +40,16 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.PostOffice
 
         private readonly IDataAvailableNotificationSender _dataAvailableNotificationSender;
         private readonly IChargeRepository _chargeRepository;
+        private readonly IChargeLinkHistoryRepository _chargeLinkHistoryRepository;
 
-        public ChargeLinkCreatedDataAvailableNotifier(IDataAvailableNotificationSender dataAvailableNotificationSender, IChargeRepository chargeRepository)
+        public ChargeLinkCreatedDataAvailableNotifier(
+            IDataAvailableNotificationSender dataAvailableNotificationSender,
+            IChargeRepository chargeRepository,
+            IChargeLinkHistoryRepository chargeLinkHistoryRepository)
         {
             _dataAvailableNotificationSender = dataAvailableNotificationSender;
             _chargeRepository = chargeRepository;
+            _chargeLinkHistoryRepository = chargeLinkHistoryRepository;
         }
 
         public async Task NotifyAsync([NotNull] ChargeLinkCommandAcceptedEvent chargeLinkCommandAcceptedEvent)
@@ -56,6 +63,9 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.PostOffice
                 .ConfigureAwait(false);
 
             if (!charge.TaxIndicator) return;
+
+            var marketParticipant = new MarketParticipant();
+            await _chargeLinkHistoryRepository.StoreAsync(chargeLinkCommandAcceptedEvent, marketParticipant);
 
             var dataAvailableNotification = CreateDataAvailableNotificationDto(chargeLinkCommandAcceptedEvent);
             await _dataAvailableNotificationSender

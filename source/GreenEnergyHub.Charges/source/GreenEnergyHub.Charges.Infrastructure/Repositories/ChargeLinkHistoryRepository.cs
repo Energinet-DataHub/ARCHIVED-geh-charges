@@ -18,6 +18,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Domain.ChargeLinkCommandAcceptedEvents;
 using GreenEnergyHub.Charges.Domain.ChargeLinkHistory;
+using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.Infrastructure.Context;
 using Microsoft.EntityFrameworkCore;
 
@@ -34,10 +35,10 @@ namespace GreenEnergyHub.Charges.Infrastructure.Repositories
             _chargeLinkFactory = chargeLinkFactory;
         }
 
-        public async Task StoreAsync(ChargeLinkCommandAcceptedEvent chargeLinkCommandAcceptedEvent)
+        public async Task StoreAsync(ChargeLinkCommandAcceptedEvent chargeLinkCommandAcceptedEvent, MarketParticipant marketParticipant)
         {
-            ChargeLinkHistory chargeLinkHistory =
-                _chargeLinkFactory.MapChargeLinkCommandAcceptedEvent(chargeLinkCommandAcceptedEvent);
+            var chargeLinkHistory =
+                _chargeLinkFactory.MapChargeLinkCommandAcceptedEvent(chargeLinkCommandAcceptedEvent, marketParticipant);
             await _context.ChargeLinkHistories.AddAsync(chargeLinkHistory);
             await _context.SaveChangesAsync();
         }

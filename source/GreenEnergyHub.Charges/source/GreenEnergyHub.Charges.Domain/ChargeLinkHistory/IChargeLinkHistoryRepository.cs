@@ -16,14 +16,13 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Domain.ChargeLinkCommandAcceptedEvents;
-using GreenEnergyHub.Charges.Domain.ChargeLinkHistory;
-using GreenEnergyHub.Charges.Infrastructure.Context.Model;
+using GreenEnergyHub.Charges.Domain.MarketParticipants;
 
-namespace GreenEnergyHub.Charges.Infrastructure.Repositories
+namespace GreenEnergyHub.Charges.Domain.ChargeLinkHistory
 {
     public interface IChargeLinkHistoryRepository
     {
-        Task StoreAsync(ChargeLinkCommandAcceptedEvent chargeLinkCommandAcceptedEvent);
+        Task StoreAsync(ChargeLinkCommandAcceptedEvent chargeLinkCommandAcceptedEvent, MarketParticipant marketParticipant);
 
         Task<List<ChargeLinkHistory>> GetChargeHistoriesAsync(IEnumerable<Guid> postOfficeIds);
     }

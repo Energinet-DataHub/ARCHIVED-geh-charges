@@ -14,13 +14,14 @@
 
 using System;
 using GreenEnergyHub.Charges.Domain.ChargeLinkCommandAcceptedEvents;
+using GreenEnergyHub.Charges.Domain.MarketParticipants;
 
 namespace GreenEnergyHub.Charges.Domain.ChargeLinkHistory
 {
     public class ChargeLinkFactory : IChargeLinkFactory
     {
         public ChargeLinkHistory MapChargeLinkCommandAcceptedEvent(
-            ChargeLinkCommandAcceptedEvent chargeLinkCommandAcceptedEvent)
+            ChargeLinkCommandAcceptedEvent chargeLinkCommandAcceptedEvent, MarketParticipant marketParticipant)
         {
             throw new NotImplementedException();
         }

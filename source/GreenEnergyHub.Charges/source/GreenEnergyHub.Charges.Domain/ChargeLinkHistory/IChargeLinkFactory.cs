@@ -13,12 +13,13 @@
 // limitations under the License.
 
 using GreenEnergyHub.Charges.Domain.ChargeLinkCommandAcceptedEvents;
+using GreenEnergyHub.Charges.Domain.MarketParticipants;
 
 namespace GreenEnergyHub.Charges.Domain.ChargeLinkHistory
 {
     public interface IChargeLinkFactory
     {
         ChargeLinkHistory MapChargeLinkCommandAcceptedEvent(
-            ChargeLinkCommandAcceptedEvent chargeLinkCommandAcceptedEvent);
+            ChargeLinkCommandAcceptedEvent chargeLinkCommandAcceptedEvent, MarketParticipant marketParticipant);
     }
 }

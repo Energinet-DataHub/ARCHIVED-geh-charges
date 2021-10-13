@@ -52,13 +52,13 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
 
             var expected = CreateChargeLinkHistory();
             chargeLinkFactory
-                .Setup(x => x.MapChargeLinkCommandAcceptedEvent(It.IsAny<ChargeLinkCommandAcceptedEvent>()))
+                .Setup(x => x.MapChargeLinkCommandAcceptedEvent(It.IsAny<ChargeLinkCommandAcceptedEvent>(), It.IsAny<MarketParticipant>()))
                 .Returns(expected);
 
             var sut = new ChargeLinkHistoryRepository(chargesDatabaseWriteContext, chargeLinkFactory.Object);
 
             // Act
-            await sut.StoreAsync(null!).ConfigureAwait(false);
+            await sut.StoreAsync(null!, null!).ConfigureAwait(false);
 
             // Assert
             await using var chargesDatabaseReadContext = _databaseManager.CreateDbContext();
