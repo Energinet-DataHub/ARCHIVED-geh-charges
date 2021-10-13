@@ -68,6 +68,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Context
 
             modelBuilder.ApplyConfiguration(new ChargeLinkEntityConfiguration());
             modelBuilder.ApplyConfiguration(new MeteringPointEntityConfiguration());
+            modelBuilder.ApplyConfiguration(new ChargeLinkHistoryConfiguration());
 
             base.OnModelCreating(modelBuilder);
         }

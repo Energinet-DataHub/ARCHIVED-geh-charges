@@ -34,7 +34,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Repositories
             _chargeLinkFactory = chargeLinkFactory;
         }
 
-        public async Task StoreChargeLinkHistoryAsync(ChargeLinkCommandAcceptedEvent chargeLinkCommandAcceptedEvent)
+        public async Task StoreAsync(ChargeLinkCommandAcceptedEvent chargeLinkCommandAcceptedEvent)
         {
             ChargeLinkHistory chargeLinkHistory =
                 _chargeLinkFactory.MapChargeLinkCommandAcceptedEvent(chargeLinkCommandAcceptedEvent);
