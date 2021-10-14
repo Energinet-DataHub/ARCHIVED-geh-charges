@@ -28,6 +28,7 @@ env:
   CSPROJ_FILE_PATH: 'source/GreenEnergyHub.Charges/source/GreenEnergyHub.Charges.FunctionHost/GreenEnergyHub.Charges.FunctionHost.csproj'
   SOLUTION_FILE_PATH: 'source/GreenEnergyHub.Charges/GreenEnergyHub.Charges.sln'
   DOTNET_VERSION: '5.0.202'
+  # Variables for deployment
   ORGANISATION_NAME: 'endk'
   AZURE_FUNCTIONAPP_NAME: 'functionhost'
   PROJECT_NAME: charges
@@ -36,34 +37,34 @@ env:
 jobs:
   build_functionhost:
     name: Build FunctionHost
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@master
 
+      # Functions v3 still has a dependency to .NET 3.1
+      # See issue: https://github.com/Azure/azure-functions-dotnet-worker/wiki/Known-issues#net-core-31-dependency
       - name: Setup .NET 3.1 environment
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: '3.1.x'
-       
+
       - name: Setup .NET ${{ env.DOTNET_VERSION }} environment
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
 
-      - name: Build and test project
-        uses: ./.github/actions/dotnet-build-and-test
-        with:
-          CSPROJ_FILE_PATH: ${{ env.CSPROJ_FILE_PATH }}
-          SOLUTION_FILE_PATH: ${{ env.SOLUTION_FILE_PATH }}
-          OUTPUT_PATH: '${{ github.workspace }}/output'
+      - name: Build project
+        shell: pwsh
+        run: |
+          dotnet build ${{ env.CSPROJ_FILE_PATH }} --configuration Release --output '${{ github.workspace }}/output'
 
       - name: Publish artifact
         uses: actions/upload-artifact@v2
         with:
           name: drop
           path: '${{ github.workspace }}/output'
-    
+
   deploy_function:
     name: Deploy function to ${{ matrix.environment.name }} - ${{ matrix.environment.long }}
     needs: build_functionhost

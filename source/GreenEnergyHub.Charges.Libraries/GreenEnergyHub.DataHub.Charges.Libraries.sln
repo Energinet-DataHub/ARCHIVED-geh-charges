@@ -20,7 +20,7 @@ VisualStudioVersion = 16.0.30114.105
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "GreenEnergyHub.DataHub.Charges.Libraries", "GreenEnergyHub.DataHub.Charges.Libraries", "{D79C7D37-ADE1-42D3-9FED-1E5D784E6E7D}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "source", "source", "{2BF2F6B8-E02B-4D7F-99BC-D28B3B3643A9}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Source", "Source", "{2BF2F6B8-E02B-4D7F-99BC-D28B3B3643A9}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GreenEnergyHub.DataHub.Charges.Clients", "source\GreenEnergyHub.DataHub.Charges.Clients\GreenEnergyHub.DataHub.Charges.Clients.csproj", "{E9F64300-834B-4657-850F-BEF4CED5D180}"
 EndProject
@@ -28,11 +28,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GreenEnergyHub.TestHelpers"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "GreenEnergyHub", "GreenEnergyHub", "{7FFCDBEA-F969-40C6-8461-A898784445FC}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{68B83582-7A4C-49F3-AA04-36D390BDA5F0}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{68B83582-7A4C-49F3-AA04-36D390BDA5F0}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GreenEnergyHub.DataHub.Charges.Clients.Tests", "source\GreenEnergyHub.DataHub.Charges.Clients.Tests\GreenEnergyHub.DataHub.Charges.Clients.Tests.csproj", "{B2D07074-0796-4553-AF4D-768AAC624528}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GreenEnergyHub.Charges.TestCore", "..\GreenEnergyHub.Charges\source\GreenEnergyHub.Charges.TestCore\GreenEnergyHub.Charges.TestCore.csproj", "{FB658C7F-FDF7-422D-B906-B884E5C1E8D9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GreenEnergyHub.FunctionApp.TestCommon", "..\GreenEnergyHub.Charges\source\GreenEnergyHub.FunctionApp.TestCommon\GreenEnergyHub.FunctionApp.TestCommon.csproj", "{06B44BDA-BE24-4828-B415-9676B744D9B1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -92,6 +94,18 @@ Global
 		{FB658C7F-FDF7-422D-B906-B884E5C1E8D9}.Release|x64.Build.0 = Release|Any CPU
 		{FB658C7F-FDF7-422D-B906-B884E5C1E8D9}.Release|x86.ActiveCfg = Release|Any CPU
 		{FB658C7F-FDF7-422D-B906-B884E5C1E8D9}.Release|x86.Build.0 = Release|Any CPU
+		{06B44BDA-BE24-4828-B415-9676B744D9B1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{06B44BDA-BE24-4828-B415-9676B744D9B1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{06B44BDA-BE24-4828-B415-9676B744D9B1}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{06B44BDA-BE24-4828-B415-9676B744D9B1}.Debug|x64.Build.0 = Debug|Any CPU
+		{06B44BDA-BE24-4828-B415-9676B744D9B1}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{06B44BDA-BE24-4828-B415-9676B744D9B1}.Debug|x86.Build.0 = Debug|Any CPU
+		{06B44BDA-BE24-4828-B415-9676B744D9B1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{06B44BDA-BE24-4828-B415-9676B744D9B1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{06B44BDA-BE24-4828-B415-9676B744D9B1}.Release|x64.ActiveCfg = Release|Any CPU
+		{06B44BDA-BE24-4828-B415-9676B744D9B1}.Release|x64.Build.0 = Release|Any CPU
+		{06B44BDA-BE24-4828-B415-9676B744D9B1}.Release|x86.ActiveCfg = Release|Any CPU
+		{06B44BDA-BE24-4828-B415-9676B744D9B1}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -103,6 +117,7 @@ Global
 		{68B83582-7A4C-49F3-AA04-36D390BDA5F0} = {D79C7D37-ADE1-42D3-9FED-1E5D784E6E7D}
 		{B2D07074-0796-4553-AF4D-768AAC624528} = {68B83582-7A4C-49F3-AA04-36D390BDA5F0}
 		{FB658C7F-FDF7-422D-B906-B884E5C1E8D9} = {68B83582-7A4C-49F3-AA04-36D390BDA5F0}
+		{06B44BDA-BE24-4828-B415-9676B744D9B1} = {7FFCDBEA-F969-40C6-8461-A898784445FC}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {AFC1A6A3-7235-4DB1-A2E4-35B72C1FEA28}
