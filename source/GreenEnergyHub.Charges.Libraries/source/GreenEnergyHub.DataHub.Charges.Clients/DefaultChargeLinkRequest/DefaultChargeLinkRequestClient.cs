@@ -13,10 +13,12 @@
 // limitations under the License.
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using Azure.Messaging.ServiceBus;
 using Google.Protobuf;
-using GreenEnergyHub.Charges.Commands;
+using GreenEnergyHub.Charges.Contracts;
+using GreenEnergyHub.DataHub.Charges.Libraries.Factories;
 using GreenEnergyHub.DataHub.Charges.Libraries.Models;
 
 namespace GreenEnergyHub.DataHub.Charges.Libraries.DefaultChargeLinkRequest
@@ -24,13 +26,17 @@ namespace GreenEnergyHub.DataHub.Charges.Libraries.DefaultChargeLinkRequest
     public sealed class DefaultChargeLinkRequestClient : IAsyncDisposable, IDefaultChargeLinkRequestClient
     {
         private const string CreateLinkRequestQueueName = "create-link-request";
-        private readonly string _responseQueue;
         private readonly ServiceBusClient _serviceBusClient;
+        private readonly ServiceBusRequestSender _serviceBusRequestSender;
 
-        public DefaultChargeLinkRequestClient(ServiceBusClient serviceBusClient, string responseQueue)
+        public DefaultChargeLinkRequestClient(
+            [NotNull] ServiceBusClient serviceBusClient,
+            [NotNull] IServiceBusRequestSenderFactory serviceBusRequestSenderFactory,
+            string replyToQueueName)
         {
             _serviceBusClient = serviceBusClient;
-            _responseQueue = responseQueue;
+            _serviceBusRequestSender = serviceBusRequestSenderFactory.Create(
+                serviceBusClient, CreateLinkRequestQueueName, replyToQueueName);
         }
 
         public async Task CreateDefaultChargeLinksRequestAsync(
@@ -43,29 +49,18 @@ namespace GreenEnergyHub.DataHub.Charges.Libraries.DefaultChargeLinkRequest
             if (string.IsNullOrWhiteSpace(correlationId))
                 throw new ArgumentNullException(nameof(correlationId));
 
-            var createDefaultChargeLinks = new CreateDefaultChargeLinks
+            var createDefaultChargeLinks = new CreateDefaultChargeLinkMessages
             {
                 MeteringPointId = createDefaultChargeLinksDto.meteringPointId,
             };
 
-            await SendRequestAsync(correlationId, createDefaultChargeLinks).ConfigureAwait(false);
+            await _serviceBusRequestSender.SendRequestAsync(
+                    createDefaultChargeLinks.ToByteArray(), correlationId).ConfigureAwait(false);
         }
 
         public async ValueTask DisposeAsync()
         {
             await _serviceBusClient.DisposeAsync().ConfigureAwait(false);
-        }
-
-        // TODO: Move to separate class, that can be used by CreateDefaultChargeLinksMessages as well
-        private async Task SendRequestAsync(string correlationId, CreateDefaultChargeLinks? createDefaultChargeLinks)
-        {
-            await using var sender = _serviceBusClient.CreateSender(CreateLinkRequestQueueName);
-            await sender.SendMessageAsync(new ServiceBusMessage
-            {
-                Body = new BinaryData(createDefaultChargeLinks.ToByteArray()),
-                ReplyTo = _responseQueue,
-                CorrelationId = correlationId,
-            }).ConfigureAwait(false);
         }
     }
 }
