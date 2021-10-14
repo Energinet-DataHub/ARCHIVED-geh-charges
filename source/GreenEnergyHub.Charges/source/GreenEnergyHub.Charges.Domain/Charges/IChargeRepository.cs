@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace GreenEnergyHub.Charges.Domain.Charges
@@ -24,10 +25,12 @@ namespace GreenEnergyHub.Charges.Domain.Charges
     {
         Task StoreChargeAsync(Charge newCharge);
 
-        Task<Charge> GetChargeAsync(string senderProvidedChargeId, string owner, ChargeType chargeType);
+        Task<Charge> GetChargeAsync(ChargeSenderIdentifier chargeSenderIdentifier);
+
+        Task<IReadOnlyCollection<Charge>> GetChargesAsync(IReadOnlyCollection<ChargeSenderIdentifier> chargeSenderIdentifiers);
 
         Task<Charge> GetChargeAsync(Guid id);
 
-        Task<bool> CheckIfChargeExistsAsync(string senderProvidedChargeId, string owner, ChargeType chargeType);
+        Task<bool> CheckIfChargeExistsAsync(ChargeSenderIdentifier chargeSenderIdentifier);
     }
 }

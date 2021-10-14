@@ -49,9 +49,10 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Validation.BusinessVa
             Charge? charge = null;
             repository.Setup(
                 r => r.GetChargeAsync(
+                        new ChargeSenderIdentifier(
                     It.IsAny<string>(),
                     It.IsAny<string>(),
-                    It.IsAny<ChargeType>()))
+                    It.IsAny<ChargeType>())))
                 .Returns(Task.FromResult(charge!));
 
             // Act
@@ -81,16 +82,18 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Validation.BusinessVa
             const bool chargeExists = true;
             repository.Setup(
                 r => r.CheckIfChargeExistsAsync(
+                        new ChargeSenderIdentifier(
                     It.IsAny<string>(),
                     It.IsAny<string>(),
-                    It.IsAny<ChargeType>()))
+                    It.IsAny<ChargeType>())))
                 .Returns(Task.FromResult(chargeExists));
 
             repository.Setup(
                     r => r.GetChargeAsync(
+                            new ChargeSenderIdentifier(
                         It.IsAny<string>(),
                         It.IsAny<string>(),
-                        It.IsAny<ChargeType>()))
+                        It.IsAny<ChargeType>())))
                 .Returns(Task.FromResult(charge));
 
             // Act
@@ -122,16 +125,18 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Validation.BusinessVa
             const bool chargeExists = true;
             repository.Setup(
                 r => r.CheckIfChargeExistsAsync(
+                        new ChargeSenderIdentifier(
                     It.IsAny<string>(),
                     It.IsAny<string>(),
-                    It.IsAny<ChargeType>()))
+                    It.IsAny<ChargeType>())))
                 .Returns(Task.FromResult(chargeExists));
 
             repository.Setup(
                     r => r.GetChargeAsync(
+                            new ChargeSenderIdentifier(
                         It.IsAny<string>(),
                         It.IsAny<string>(),
-                        It.IsAny<ChargeType>()))
+                        It.IsAny<ChargeType>())))
                 .Returns(Task.FromResult(charge));
 
             // Act

@@ -61,9 +61,10 @@ namespace GreenEnergyHub.Charges.Domain.ChargeCommands.Validation.BusinessValida
             if (chargeExists)
             {
                 var charge = await _chargeRepository.GetChargeAsync(
-                    chargeCommand.ChargeOperation.ChargeId,
-                    chargeCommand.ChargeOperation.ChargeOwner,
-                    chargeCommand.ChargeOperation.Type).ConfigureAwait(false);
+                    new ChargeSenderIdentifier(
+                        chargeCommand.ChargeOperation.ChargeId,
+                        chargeCommand.ChargeOperation.ChargeOwner,
+                        chargeCommand.ChargeOperation.Type)).ConfigureAwait(false);
 
                 if (chargeCommand.ChargeOperation.Type == ChargeType.Tariff)
                 {
@@ -108,9 +109,10 @@ namespace GreenEnergyHub.Charges.Domain.ChargeCommands.Validation.BusinessValida
             var chargeType = command.ChargeOperation.Type;
 
             var result = await _chargeRepository.CheckIfChargeExistsAsync(
-                chargeId,
-                chargeOperationChargeOwner,
-                chargeType).ConfigureAwait(false);
+                new ChargeSenderIdentifier(
+                    chargeId,
+                    chargeOperationChargeOwner,
+                    chargeType)).ConfigureAwait(false);
 
             return result;
         }

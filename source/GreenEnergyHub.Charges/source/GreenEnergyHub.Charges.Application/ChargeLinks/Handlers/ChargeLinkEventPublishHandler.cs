@@ -38,10 +38,9 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
                 command.ChargeLinkCommands.Select(
                     chargeLinkCommand => _createdEventFactory.CreateEvent(chargeLinkCommand)).ToList();
 
-            foreach (var chargeLinkCreatedEvent in chargeLinkCreatedEvents)
-            {
-                await _createdDispatcher.DispatchAsync(chargeLinkCreatedEvent).ConfigureAwait(false);
-            }
+            await Task.WhenAll(
+                chargeLinkCreatedEvents
+                    .Select(x => _createdDispatcher.DispatchAsync(x))).ConfigureAwait(false);
         }
     }
 }

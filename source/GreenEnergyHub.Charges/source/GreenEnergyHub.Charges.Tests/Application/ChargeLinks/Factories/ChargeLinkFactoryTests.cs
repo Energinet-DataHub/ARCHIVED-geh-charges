@@ -48,7 +48,11 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Factories
             expectedEvent.SetCorrelationId(Guid.NewGuid().ToString("N"));
 
             chargeRepository
-                .Setup(x => x.GetChargeAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<ChargeType>()))
+                .Setup(x => x.GetChargeAsync(
+                    new ChargeSenderIdentifier(
+                        It.IsAny<string>(),
+                        It.IsAny<string>(),
+                        It.IsAny<ChargeType>())))
                 .ReturnsAsync(expectedCharge);
 
             meteringPointRepository

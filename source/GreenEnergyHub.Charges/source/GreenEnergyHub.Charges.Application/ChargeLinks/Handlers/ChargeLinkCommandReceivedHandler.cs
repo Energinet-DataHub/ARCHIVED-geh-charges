@@ -48,10 +48,7 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
         {
             // Upcoming stories will cover the update scenarios where charge link already exists
             var chargeLinks = await _chargeLinkFactory.CreateAsync(chargeLinkCommandReceivedEvent).ConfigureAwait(false);
-            foreach (var chargeLink in chargeLinks)
-            {
-                await _chargeLinkRepository.StoreAsync(chargeLink).ConfigureAwait(false);
-            }
+            await _chargeLinkRepository.StoreAsync(chargeLinks).ConfigureAwait(false);
 
             var chargeLinkCommandAcceptedEvent = _chargeLinkCommandAcceptedEventFactory.Create(
                 chargeLinkCommandReceivedEvent.ChargeLinkCommands, chargeLinkCommandReceivedEvent.CorrelationId);

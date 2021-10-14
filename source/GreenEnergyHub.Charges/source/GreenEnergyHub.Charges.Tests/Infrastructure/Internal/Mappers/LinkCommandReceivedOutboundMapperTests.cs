@@ -40,8 +40,6 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Internal.Mappers
             [NotNull] LinkCommandReceivedOutboundMapper sut)
         {
             // Arrange
-            UpdateInstantsToValidTimes(chargeLinkCommand);
-
             ChargeLinkCommandReceivedEvent chargeLinkCommandReceivedEvent =
                 new (SystemClock.Instance.GetCurrentInstant(), chargeLinkCommand.CorrelationId,
                     new List<ChargeLinkCommand> { chargeLinkCommand });
@@ -58,14 +56,6 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Internal.Mappers
         public void Convert_WhenCalledWithNull_ShouldThrow([NotNull]LinkCommandReceivedOutboundMapper sut)
         {
             Assert.Throws<InvalidOperationException>(() => sut.Convert(null!));
-        }
-
-        private static void UpdateInstantsToValidTimes([NotNull] ChargeLinkCommand command)
-        {
-            command.Document.RequestDate = Instant.FromUtc(2021, 7, 21, 11, 42, 25);
-            command.Document.CreatedDateTime = Instant.FromUtc(2021, 7, 21, 12, 14, 43);
-            command.ChargeLink.StartDateTime = Instant.FromUtc(2021, 8, 31, 22, 0);
-            command.ChargeLink.EndDateTime = Instant.FromUtc(2021, 9, 30, 22, 0);
         }
     }
 }

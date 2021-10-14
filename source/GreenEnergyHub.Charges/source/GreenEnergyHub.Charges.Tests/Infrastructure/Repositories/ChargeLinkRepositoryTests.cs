@@ -60,7 +60,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
             var sut = new ChargeLinkRepository(chargesDatabaseWriteContext);
 
             // Act
-            await sut.StoreAsync(expected).ConfigureAwait(false);
+            await sut.StoreAsync(new List<ChargeLink> { expected }).ConfigureAwait(false);
 
             // Assert
             await using var chargesDatabaseReadContext = _databaseManager.CreateDbContext();

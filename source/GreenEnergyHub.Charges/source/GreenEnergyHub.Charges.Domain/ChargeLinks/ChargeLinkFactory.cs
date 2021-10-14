@@ -44,7 +44,7 @@ namespace GreenEnergyHub.Charges.Domain.ChargeLinks
                 var chargeLink = chargeLinkCommand.ChargeLink;
 
                 var charge = await _chargeRepository
-                    .GetChargeAsync(chargeLink.SenderProvidedChargeId, chargeLink.ChargeOwner, chargeLink.ChargeType)
+                    .GetChargeAsync(new ChargeSenderIdentifier(chargeLink.SenderProvidedChargeId, chargeLink.ChargeOwner, chargeLink.ChargeType))
                     .ConfigureAwait(false);
 
                 var meteringPoint = await _meteringPointRepository

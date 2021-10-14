@@ -13,13 +13,14 @@
 // limitations under the License.
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using System.Threading.Tasks;
 using Energinet.DataHub.MessageHub.Client.DataAvailable;
 using Energinet.DataHub.MessageHub.Client.Model;
 using GreenEnergyHub.Charges.Domain.ChargeLinkCommandAcceptedEvents;
 using GreenEnergyHub.Charges.Domain.Charges;
-using GreenEnergyHub.Charges.Domain.MarketParticipants;
 
 namespace GreenEnergyHub.Charges.Application.ChargeLinks.PostOffice
 {
@@ -50,32 +51,40 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.PostOffice
         {
             if (chargeLinkCommandAcceptedEvent == null) throw new ArgumentNullException(nameof(chargeLinkCommandAcceptedEvent));
 
-            foreach (var chargeLinkCommand in chargeLinkCommandAcceptedEvent.ChargeLinkCommands)
+            var chargeSenderIdentifiers =
+                chargeLinkCommandAcceptedEvent.ChargeLinkCommands.Select(x =>
+                new ChargeSenderIdentifier(
+                    x.ChargeLink.SenderProvidedChargeId,
+                    x.ChargeLink.ChargeOwner,
+                    x.ChargeLink.ChargeType)).ToList();
+
+            var charges = await _chargeRepository
+                .GetChargesAsync(chargeSenderIdentifiers).ConfigureAwait(false);
+
+            var dataAvailableNotificationDtos = new List<DataAvailableNotificationDto>();
+
+            foreach (var charge in charges)
             {
-                var link = chargeLinkCommand.ChargeLink;
-
-                var charge = await _chargeRepository
-                    .GetChargeAsync(link.SenderProvidedChargeId, link.ChargeOwner, link.ChargeType)
-                    .ConfigureAwait(false);
-
                 if (!charge.TaxIndicator) return;
 
-                var dataAvailableNotification = CreateDataAvailableNotificationDto(chargeLinkCommand.Document);
-                await _dataAvailableNotificationSender
-                    .SendAsync(dataAvailableNotification)
-                    .ConfigureAwait(false);
+                dataAvailableNotificationDtos.Add(CreateDataAvailableNotificationDto(charge));
             }
+
+            var dataAvailableNotificationSenderTasks = dataAvailableNotificationDtos
+                .Select(x => _dataAvailableNotificationSender.SendAsync(x));
+
+            await Task.WhenAll(dataAvailableNotificationSenderTasks).ConfigureAwait(false);
         }
 
         private static DataAvailableNotificationDto CreateDataAvailableNotificationDto(
-            Document document)
+            Charge charge)
         {
             // The ID that the charges domain must handle when peeking
             var chargeDomainReferenceId = Guid.NewGuid();
 
             // The grid operator initiating the creation of the charge link is also
             // the receiver of the confirmation
-            var receiver = document.Sender.Id;
+            var receiver = charge.Document.Sender.Id;
 
             return new DataAvailableNotificationDto(
                 chargeDomainReferenceId,
