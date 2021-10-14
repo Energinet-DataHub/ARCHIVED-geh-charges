@@ -52,8 +52,6 @@ namespace GreenEnergyHub.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.D
             await using var target = new DefaultChargeLinkRequestClient(
                 serviceBusClientMock.Object, serviceBusRequestSenderFactoryMock.Object, ReplyToQueueName);
 
-            // Todo: set up serviceBusRequestSenderFactoryMock
-
             // Act + Assert
             await Assert.ThrowsAsync<ArgumentNullException>(() => target
                 .CreateDefaultChargeLinksRequestAsync(createDefaultChargeLinksDto!, correlationId))
