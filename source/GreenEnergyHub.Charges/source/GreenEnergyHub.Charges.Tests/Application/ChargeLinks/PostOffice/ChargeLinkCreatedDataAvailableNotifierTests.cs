@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
@@ -57,8 +58,8 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.PostOffice
             var link = chargeLinkCommandAcceptedEvent.ChargeLinkCommands.First().ChargeLink;
             charge.SetPrivateProperty(c => c.TaxIndicator, true);
             chargeRepositoryMock.Setup(
-                    repository => repository.GetChargeAsync(new ChargeSenderIdentifier(link.SenderProvidedChargeId, link.ChargeOwner, link.ChargeType)))
-                .ReturnsAsync(charge);
+                    repository => repository.GetChargesAsync(It.IsAny<List<ChargeSenderIdentifier>>()))
+                .ReturnsAsync(new List<Charge> { charge });
 
             // Act
             await sut.NotifyAsync(chargeLinkCommandAcceptedEvent);
@@ -69,8 +70,8 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.PostOffice
                     It.Is<DataAvailableNotificationDto>(
                         dto => dto.Origin == DomainOrigin.Charges
                                && dto.SupportsBundling
-                               && dto.Recipient.Equals(
-                                   new GlobalLocationNumberDto(chargeLinkCommandAcceptedEvent.ChargeLinkCommands.First().Document.Sender.Id))
+                                && dto.Recipient.Equals(
+                                    new GlobalLocationNumberDto(charge.Document.Sender.Id))
                                && dto.Uuid != Guid.Empty
                                && dto.RelativeWeight > 0)),
                 Times.Once);
@@ -89,7 +90,10 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.PostOffice
             var link = chargeLinkCommandAcceptedEvent.ChargeLinkCommands.First().ChargeLink;
             charge.SetPrivateProperty(c => c.TaxIndicator, false);
             chargeRepositoryMock.Setup(repository =>
-                    repository.GetChargeAsync(new ChargeSenderIdentifier(link.SenderProvidedChargeId, link.ChargeOwner, link.ChargeType)))
+                    repository.GetChargeAsync(new ChargeSenderIdentifier(
+                        It.IsAny<string>(),
+                        It.IsAny<string>(),
+                        It.IsAny<ChargeType>())))
                 .ReturnsAsync(charge);
 
             // Act

@@ -49,10 +49,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Factories
 
             chargeRepository
                 .Setup(x => x.GetChargeAsync(
-                    new ChargeSenderIdentifier(
-                        It.IsAny<string>(),
-                        It.IsAny<string>(),
-                        It.IsAny<ChargeType>())))
+                        It.IsAny<ChargeSenderIdentifier>()))
                 .ReturnsAsync(expectedCharge);
 
             meteringPointRepository
