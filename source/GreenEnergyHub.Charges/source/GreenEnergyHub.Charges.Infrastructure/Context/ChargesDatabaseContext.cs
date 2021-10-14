@@ -48,7 +48,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Context
 
         public DbSet<ChargeLink> ChargeLinks { get; private set; }
 
-        public DbSet<ChargeLinkHistory> ChargeLinkHistories { get; private set; }
+        public DbSet<ChargeLinkTransmissionRequest> ChargeLinkTransmissionRequests { get; private set; }
 
         public Task<int> SaveChangesAsync()
            => base.SaveChangesAsync();
@@ -68,7 +68,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Context
 
             modelBuilder.ApplyConfiguration(new ChargeLinkEntityConfiguration());
             modelBuilder.ApplyConfiguration(new MeteringPointEntityConfiguration());
-            modelBuilder.ApplyConfiguration(new ChargeLinkHistoryConfiguration());
+            modelBuilder.ApplyConfiguration(new ChargeLinkTransmissionRequestConfiguration());
 
             base.OnModelCreating(modelBuilder);
         }

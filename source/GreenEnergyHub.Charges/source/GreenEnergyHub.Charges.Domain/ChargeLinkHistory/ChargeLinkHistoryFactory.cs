@@ -18,14 +18,14 @@ using GreenEnergyHub.Charges.Domain.MarketParticipants;
 
 namespace GreenEnergyHub.Charges.Domain.ChargeLinkHistory
 {
-    public class ChargeLinkFactory : IChargeLinkFactory
+    public class ChargeLinkTransmissionRequestFactory : IChargeLinkTransmissionRequestFactory
     {
-        public ChargeLinkHistory MapChargeLinkCommandAcceptedEvent(
+        public ChargeLinkTransmissionRequest MapChargeLinkCommandAcceptedEvent(
             ChargeLinkCommandAcceptedEvent chargeLinkCommandAcceptedEvent,
             MarketParticipant marketParticipant,
             Guid messageHubId)
         {
-            return new ChargeLinkHistory(
+            return new ChargeLinkTransmissionRequest(
                 marketParticipant.Id,
                 marketParticipant.BusinessProcessRole,
                 chargeLinkCommandAcceptedEvent.Document.BusinessReasonCode,

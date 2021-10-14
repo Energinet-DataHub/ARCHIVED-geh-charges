@@ -1,4 +1,4 @@
-CREATE TABLE [Charges].ChargeLinkHistory (
+CREATE TABLE [Charges].ChargeLinkTransmissionRequest (
 	Id uniqueidentifier not null primary key,
     Recipient varchar(70) not null,
     RecipientRole int not null,

@@ -19,9 +19,9 @@ using NodaTime;
 
 namespace GreenEnergyHub.Charges.Domain.ChargeLinkHistory
 {
-    public class ChargeLinkHistory
+    public class ChargeLinkTransmissionRequest
     {
-        public ChargeLinkHistory(
+        public ChargeLinkTransmissionRequest(
             string recipient,
             MarketParticipantRole recipientRole,
             BusinessReasonCode businessReasonCode,

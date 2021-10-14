@@ -40,16 +40,16 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.PostOffice
 
         private readonly IDataAvailableNotificationSender _dataAvailableNotificationSender;
         private readonly IChargeRepository _chargeRepository;
-        private readonly IChargeLinkHistoryRepository _chargeLinkHistoryRepository;
+        private readonly IChargeLinkTransmissionRequestRepository _chargeLinkTransmissionRequestRepository;
 
         public ChargeLinkCreatedDataAvailableNotifier(
             IDataAvailableNotificationSender dataAvailableNotificationSender,
             IChargeRepository chargeRepository,
-            IChargeLinkHistoryRepository chargeLinkHistoryRepository)
+            IChargeLinkTransmissionRequestRepository chargeLinkTransmissionRequestRepository)
         {
             _dataAvailableNotificationSender = dataAvailableNotificationSender;
             _chargeRepository = chargeRepository;
-            _chargeLinkHistoryRepository = chargeLinkHistoryRepository;
+            _chargeLinkTransmissionRequestRepository = chargeLinkTransmissionRequestRepository;
         }
 
         public async Task NotifyAsync([NotNull] ChargeLinkCommandAcceptedEvent chargeLinkCommandAcceptedEvent)
@@ -68,7 +68,7 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.PostOffice
 
             var dataAvailableNotification = CreateDataAvailableNotificationDto(chargeLinkCommandAcceptedEvent);
 
-            await _chargeLinkHistoryRepository.StoreAsync(chargeLinkCommandAcceptedEvent, marketParticipant, dataAvailableNotification.Uuid);
+            await _chargeLinkTransmissionRequestRepository.StoreAsync(chargeLinkCommandAcceptedEvent, marketParticipant, dataAvailableNotification.Uuid);
 
             await _dataAvailableNotificationSender
                 .SendAsync(dataAvailableNotification)

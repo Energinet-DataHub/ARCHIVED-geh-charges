@@ -13,16 +13,20 @@
 // limitations under the License.
 
 using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Domain.ChargeLinkCommandAcceptedEvents;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 
 namespace GreenEnergyHub.Charges.Domain.ChargeLinkHistory
 {
-    public interface IChargeLinkFactory
+    public interface IChargeLinkTransmissionRequestRepository
     {
-        ChargeLinkHistory MapChargeLinkCommandAcceptedEvent(
+        Task StoreAsync(
             ChargeLinkCommandAcceptedEvent chargeLinkCommandAcceptedEvent,
             MarketParticipant marketParticipant,
             Guid messageHubId);
+
+        Task<List<ChargeLinkTransmissionRequest>> GetChargeLinkTransmissionRequestsAsync(IEnumerable<Guid> postOfficeIds);
     }
 }

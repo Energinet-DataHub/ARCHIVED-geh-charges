@@ -21,14 +21,14 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Context.EntityConfigurations
 {
-    public class ChargeLinkHistoryConfiguration : IEntityTypeConfiguration<ChargeLinkHistory>
+    public class ChargeLinkTransmissionRequestConfiguration : IEntityTypeConfiguration<ChargeLinkTransmissionRequest>
     {
-        public void Configure(EntityTypeBuilder<ChargeLinkHistory> builder)
+        public void Configure(EntityTypeBuilder<ChargeLinkTransmissionRequest> builder)
         {
             if (builder == null)
                 throw new ArgumentNullException(nameof(builder));
 
-            builder.ToTable("ChargeLinkHistory", "Charges");
+            builder.ToTable("ChargeLinkTransmissionRequest", "Charges");
 
             builder.HasKey(x => x.Id);
 

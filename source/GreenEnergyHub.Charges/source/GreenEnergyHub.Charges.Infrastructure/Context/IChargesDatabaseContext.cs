@@ -69,7 +69,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Context
         /// <summary>
         /// ChargeLinkHistory available in the database.
         /// </summary>
-        DbSet<ChargeLinkHistory> ChargeLinkHistories { get; }
+        DbSet<ChargeLinkTransmissionRequest> ChargeLinkTransmissionRequests { get; }
 
         /// <summary>
         /// Saves changes to the database.

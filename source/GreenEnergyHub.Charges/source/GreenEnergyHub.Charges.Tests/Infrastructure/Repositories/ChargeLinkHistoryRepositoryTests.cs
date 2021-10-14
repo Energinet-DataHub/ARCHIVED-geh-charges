@@ -44,8 +44,8 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
         [Theory]
         [InlineAutoMoqData]
         public async Task StoreAsync_StoresChargeLinkHistory(
-            [Frozen] Mock<IChargeLinkFactory> chargeLinkFactory,
-            [NotNull] ChargeLinkHistory expected)
+            [Frozen] Mock<IChargeLinkTransmissionRequestFactory> chargeLinkFactory,
+            [NotNull] ChargeLinkTransmissionRequest expected)
         {
             // Arrange
             await using var chargesDatabaseWriteContext = _databaseManager.CreateDbContext();
@@ -58,7 +58,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
                         It.IsAny<Guid>()))
                 .Returns(expected);
 
-            var sut = new ChargeLinkHistoryRepository(chargesDatabaseWriteContext, chargeLinkFactory.Object);
+            var sut = new ChargeLinkTransmissionRequestRepository(chargesDatabaseWriteContext, chargeLinkFactory.Object);
 
             // Act
             await sut.StoreAsync(null!, null!, Guid.NewGuid()).ConfigureAwait(false);
@@ -66,27 +66,27 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
             // Assert
             await using var chargesDatabaseReadContext = _databaseManager.CreateDbContext();
             var actual =
-                chargesDatabaseReadContext.ChargeLinkHistories.Single(x => x.MessageHubId == expected.MessageHubId);
+                chargesDatabaseReadContext.ChargeLinkTransmissionRequests.Single(x => x.MessageHubId == expected.MessageHubId);
             actual.ChargeOwner.Should().Be(expected.ChargeOwner);
         }
 
         [Theory]
         [InlineAutoMoqData]
         public async Task GetChargeHistoriesAsync_WithMeteringPointId_ThenSuccessReturnedAsync(
-            [Frozen] Mock<IChargeLinkFactory> chargeLinkFactory,
-            [NotNull] ChargeLinkHistory expected)
+            [Frozen] Mock<IChargeLinkTransmissionRequestFactory> chargeLinkFactory,
+            [NotNull] ChargeLinkTransmissionRequest expected)
         {
             // Arrange
             await using var chargesDatabaseWriteContext = _databaseManager.CreateDbContext();
-            await chargesDatabaseWriteContext.ChargeLinkHistories.AddAsync(expected).ConfigureAwait(false);
+            await chargesDatabaseWriteContext.ChargeLinkTransmissionRequests.AddAsync(expected).ConfigureAwait(false);
             await chargesDatabaseWriteContext.SaveChangesAsync().ConfigureAwait(false);
 
             await using var chargesDatabaseReadContext = _databaseManager.CreateDbContext();
-            var sut = new ChargeLinkHistoryRepository(chargesDatabaseReadContext, chargeLinkFactory.Object);
+            var sut = new ChargeLinkTransmissionRequestRepository(chargesDatabaseReadContext, chargeLinkFactory.Object);
 
             // Act
             var actual =
-                await sut.GetChargeHistoriesAsync(new List<Guid> { expected.MessageHubId })
+                await sut.GetChargeLinkTransmissionRequestsAsync(new List<Guid> { expected.MessageHubId })
                 .ConfigureAwait(false);
 
             // Assert

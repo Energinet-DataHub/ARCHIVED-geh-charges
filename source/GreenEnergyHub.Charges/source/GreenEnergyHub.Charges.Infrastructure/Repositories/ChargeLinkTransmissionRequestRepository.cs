@@ -24,15 +24,15 @@ using Microsoft.EntityFrameworkCore;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Repositories
 {
-    public class ChargeLinkHistoryRepository : IChargeLinkHistoryRepository
+    public class ChargeLinkTransmissionRequestRepository : IChargeLinkTransmissionRequestRepository
     {
         private readonly IChargesDatabaseContext _context;
-        private readonly IChargeLinkFactory _chargeLinkFactory;
+        private readonly IChargeLinkTransmissionRequestFactory _chargeLinkTransmissionRequestFactory;
 
-        public ChargeLinkHistoryRepository(IChargesDatabaseContext context, IChargeLinkFactory chargeLinkFactory)
+        public ChargeLinkTransmissionRequestRepository(IChargesDatabaseContext context, IChargeLinkTransmissionRequestFactory chargeLinkTransmissionRequestFactory)
         {
             _context = context;
-            _chargeLinkFactory = chargeLinkFactory;
+            _chargeLinkTransmissionRequestFactory = chargeLinkTransmissionRequestFactory;
         }
 
         public async Task StoreAsync(
@@ -40,15 +40,15 @@ namespace GreenEnergyHub.Charges.Infrastructure.Repositories
             MarketParticipant marketParticipant,
             Guid messageHubId)
         {
-            var chargeLinkHistory =
-                _chargeLinkFactory.MapChargeLinkCommandAcceptedEvent(chargeLinkCommandAcceptedEvent, marketParticipant, messageHubId);
-            await _context.ChargeLinkHistories.AddAsync(chargeLinkHistory);
+            var chargeLinkTransmissionRequest =
+                _chargeLinkTransmissionRequestFactory.MapChargeLinkCommandAcceptedEvent(chargeLinkCommandAcceptedEvent, marketParticipant, messageHubId);
+            await _context.ChargeLinkTransmissionRequests.AddAsync(chargeLinkTransmissionRequest);
             await _context.SaveChangesAsync();
         }
 
-        public Task<List<ChargeLinkHistory>> GetChargeHistoriesAsync(IEnumerable<Guid> postOfficeIds)
+        public Task<List<ChargeLinkTransmissionRequest>> GetChargeLinkTransmissionRequestsAsync(IEnumerable<Guid> postOfficeIds)
         {
-            var queryable = _context.ChargeLinkHistories.Where(x => postOfficeIds.Contains(x.MessageHubId));
+            var queryable = _context.ChargeLinkTransmissionRequests.Where(x => postOfficeIds.Contains(x.MessageHubId));
             return queryable.ToListAsync();
         }
     }
