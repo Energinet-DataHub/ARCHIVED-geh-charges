@@ -16,9 +16,6 @@
 # reporting, but today actions cannot call other actions. This is being worked
 # on, and once the issue below is resolved, this file should be updated to
 # include those steps.
-#
-# https://github.com/actions/runner/pull/612
-# https://github.com/actions/runner/issues/646
 
 name: 'Pack and publish nuget package'
 description: 'Pack and publish nuget package'
