@@ -66,15 +66,14 @@ namespace GreenEnergyHub.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.D
             [NotNull] [Frozen] Mock<IServiceBusRequestSender> serviceBusRequestSenderMock)
         {
             // Arrange
-            const string queueName = "create-link-request";
+            const string createLinkRequestQueueName = "create-link-request";
             var serviceBusSenderMock = new Mock<ServiceBusSender>();
 
-            serviceBusClientMock.Setup(x => x.CreateSender(queueName))
-                 .Returns(serviceBusSenderMock.Object);
+            serviceBusClientMock.Setup(x => x.CreateSender(createLinkRequestQueueName)).Returns(serviceBusSenderMock.Object);
             serviceBusClientMock.Setup(x => x.DisposeAsync()).Returns(default(ValueTask));
 
             serviceBusRequestSenderFactoryMock.Setup(x => x
-                    .Create(serviceBusClientMock.Object, queueName, ReplyToQueueName))
+                    .Create(serviceBusClientMock.Object, createLinkRequestQueueName, ReplyToQueueName))
                 .Returns(serviceBusRequestSenderMock.Object);
 
             await using var sut = new DefaultChargeLinkRequestClient(
