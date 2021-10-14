@@ -28,20 +28,17 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
         private readonly IChargeLinkCommandAcceptedEventFactory _chargeLinkCommandAcceptedEventFactory;
         private readonly IChargeLinkFactory _chargeLinkFactory;
         private readonly IChargeLinkRepository _chargeLinkRepository;
-        private readonly IChargeLinkCommandFactory _chargeLinkCommandFactory;
 
         public ChargeLinkCommandReceivedHandler(
             IMessageDispatcher<ChargeLinkCommandAcceptedEvent> messageDispatcher,
             IChargeLinkCommandAcceptedEventFactory chargeLinkCommandAcceptedEventFactory,
             IChargeLinkFactory chargeLinkFactory,
-            IChargeLinkRepository chargeLinkRepository,
-            IChargeLinkCommandFactory chargeLinkCommandFactory)
+            IChargeLinkRepository chargeLinkRepository)
         {
             _messageDispatcher = messageDispatcher;
             _chargeLinkCommandAcceptedEventFactory = chargeLinkCommandAcceptedEventFactory;
             _chargeLinkFactory = chargeLinkFactory;
             _chargeLinkRepository = chargeLinkRepository;
-            _chargeLinkCommandFactory = chargeLinkCommandFactory;
         }
 
         public async Task HandleAsync([NotNull] ChargeLinkCommandReceivedEvent chargeLinkCommandReceivedEvent)
