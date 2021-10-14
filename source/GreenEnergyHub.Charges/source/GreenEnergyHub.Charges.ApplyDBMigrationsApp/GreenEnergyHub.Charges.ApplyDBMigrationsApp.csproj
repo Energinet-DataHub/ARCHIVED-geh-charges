@@ -57,7 +57,6 @@ limitations under the License.
       <EmbeddedResource Include="Scripts\Test\202109211448 New MarketParticipants no rowId.sql" />
       <EmbeddedResource Include="Scripts\Test\202109211449 Metering Point Test Data no rowId.sql" />
       <None Remove="Scripts\Model\202110121245 Create ChargeLinkHistory table.sql" />
-      <EmbeddedResource Include="Scripts\Model\202110121245 Create ChargeLinkHistory table.sql" />
     </ItemGroup>
 
     <ItemGroup>
