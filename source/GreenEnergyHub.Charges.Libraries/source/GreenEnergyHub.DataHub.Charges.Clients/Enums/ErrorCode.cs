@@ -16,7 +16,7 @@ namespace GreenEnergyHub.DataHub.Charges.Libraries.Enums
 {
     public enum ErrorCode
     {
-        ErrorNotDetermined = 0,
+        Unspecified = 0,
         MeteringPointUnknown = 1,
     }
 }

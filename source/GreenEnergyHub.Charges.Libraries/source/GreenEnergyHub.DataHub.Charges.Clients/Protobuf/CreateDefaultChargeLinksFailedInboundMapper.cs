@@ -37,7 +37,7 @@ namespace GreenEnergyHub.DataHub.Charges.Libraries.Protobuf
         {
             return errorCode switch
             {
-                CreateDefaultChargeLinksFailed.Types.ErrorCode.EcErrorNotDetermined => ErrorCode.ErrorNotDetermined,
+                CreateDefaultChargeLinksFailed.Types.ErrorCode.EcUnspecified => ErrorCode.Unspecified,
                 CreateDefaultChargeLinksFailed.Types.ErrorCode.EcMeteringPointUnknown => ErrorCode.MeteringPointUnknown,
                 _ => throw new ArgumentOutOfRangeException(nameof(errorCode), $"Value: {errorCode.ToString()}")
             };
