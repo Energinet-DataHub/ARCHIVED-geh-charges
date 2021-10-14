@@ -1,4 +1,4 @@
-name: License Check CI
+name: License Check
 
 on:
   pull_request:
