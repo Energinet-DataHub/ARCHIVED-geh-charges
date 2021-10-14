@@ -15,9 +15,9 @@
 using System;
 using System.IO;
 using System.Text.RegularExpressions;
+using Energinet.DataHub.Core.FunctionApp.TestCommon;
+using Energinet.DataHub.Core.FunctionApp.TestCommon.FunctionAppHost;
 using GreenEnergyHub.Charges.FunctionHost.Common;
-using GreenEnergyHub.FunctionApp.TestCommon;
-using GreenEnergyHub.FunctionApp.TestCommon.FunctionAppHost;
 using Squadron;
 using Squadron.AzureCloud;
 
