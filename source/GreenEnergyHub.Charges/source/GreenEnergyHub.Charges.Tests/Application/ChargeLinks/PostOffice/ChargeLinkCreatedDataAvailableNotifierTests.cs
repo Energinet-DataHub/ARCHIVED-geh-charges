@@ -55,7 +55,6 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.PostOffice
             ChargeLinkCreatedDataAvailableNotifier sut)
         {
             // Arrange
-            var link = chargeLinkCommandAcceptedEvent.ChargeLinkCommands.First().ChargeLink;
             charge.SetPrivateProperty(c => c.TaxIndicator, true);
             chargeRepositoryMock.Setup(
                     repository => repository.GetChargesAsync(It.IsAny<List<ChargeSenderIdentifier>>()))
@@ -87,13 +86,9 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.PostOffice
             ChargeLinkCreatedDataAvailableNotifier sut)
         {
             // Arrange
-            var link = chargeLinkCommandAcceptedEvent.ChargeLinkCommands.First().ChargeLink;
             charge.SetPrivateProperty(c => c.TaxIndicator, false);
             chargeRepositoryMock.Setup(repository =>
-                    repository.GetChargeAsync(new ChargeSenderIdentifier(
-                        It.IsAny<string>(),
-                        It.IsAny<string>(),
-                        It.IsAny<ChargeType>())))
+                    repository.GetChargeAsync(It.IsAny<ChargeSenderIdentifier>()))
                 .ReturnsAsync(charge);
 
             // Act
