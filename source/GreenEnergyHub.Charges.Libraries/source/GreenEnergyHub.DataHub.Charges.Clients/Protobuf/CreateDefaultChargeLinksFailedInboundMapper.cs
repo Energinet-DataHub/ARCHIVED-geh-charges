@@ -26,7 +26,7 @@ namespace GreenEnergyHub.DataHub.Charges.Libraries.Protobuf
             [NotNull] CreateDefaultChargeLinksFailed createDefaultChargeLinksFailed)
         {
             if (createDefaultChargeLinksFailed == null)
-                throw new InvalidOperationException();
+                throw new ArgumentNullException(nameof(createDefaultChargeLinksFailed));
 
             return new CreateDefaultChargeLinksFailedDto(
                 createDefaultChargeLinksFailed.MeteringPointId,

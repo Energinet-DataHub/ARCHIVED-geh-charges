@@ -26,7 +26,7 @@ namespace GreenEnergyHub.DataHub.Charges.Libraries.Protobuf
             [NotNull] CreateDefaultChargeLinksFailedDto createDefaultChargeLinksFailedDto)
         {
             if (createDefaultChargeLinksFailedDto == null)
-                throw new InvalidOperationException();
+                throw new ArgumentNullException(nameof(createDefaultChargeLinksFailedDto));
 
             return new CreateDefaultChargeLinksFailed
             {

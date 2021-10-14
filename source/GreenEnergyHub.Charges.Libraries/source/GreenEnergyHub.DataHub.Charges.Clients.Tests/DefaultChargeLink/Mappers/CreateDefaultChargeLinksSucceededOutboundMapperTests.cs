@@ -49,7 +49,7 @@ namespace GreenEnergyHub.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.D
         [Fact]
         public void Convert_WhenCalledWithNull_ShouldThrow()
         {
-            Assert.Throws<InvalidOperationException>(() => CreateDefaultChargeLinksSucceededOutboundMapper.Convert(null!));
+            Assert.Throws<ArgumentNullException>(() => CreateDefaultChargeLinksSucceededOutboundMapper.Convert(null!));
         }
     }
 }
