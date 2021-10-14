@@ -12,15 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.IO;
-using System.Threading.Tasks;
-using Energinet.DataHub.MessageHub.Client.Model;
-using GreenEnergyHub.Charges.Application.SeedWork.SyncRequest;
-
-namespace GreenEnergyHub.Charges.Application.ChargeLinks.MessageHub.Infrastructure
+namespace GreenEnergyHub.Charges.Application.SeedWork.SyncRequest
 {
-    public interface IChargeLinkCreatedBundleReplier
+    public interface ISyncRequestMetadata
     {
-        Task ReplyAsync(Stream bundleStream, DataBundleRequestDto request, ISyncRequestMetadata metadata);
+        string SessionId { get; }
     }
 }

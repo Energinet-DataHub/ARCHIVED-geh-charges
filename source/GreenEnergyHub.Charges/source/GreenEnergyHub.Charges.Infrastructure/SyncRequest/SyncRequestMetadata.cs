@@ -12,15 +12,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.IO;
-using System.Threading.Tasks;
-using Energinet.DataHub.MessageHub.Client.Model;
+using System;
 using GreenEnergyHub.Charges.Application.SeedWork.SyncRequest;
 
-namespace GreenEnergyHub.Charges.Application.ChargeLinks.MessageHub.Infrastructure
+namespace GreenEnergyHub.Charges.Infrastructure.SyncRequest
 {
-    public interface IChargeLinkCreatedBundleReplier
+    public class SyncRequestMetadata : ISyncRequestMetadata
     {
-        Task ReplyAsync(Stream bundleStream, DataBundleRequestDto request, ISyncRequestMetadata metadata);
+#pragma warning disable 8618
+        public string SessionId { get; set; }
+#pragma warning restore 8618
+
+        public void ValidateOrThrow()
+        {
+            if (SessionId == null)
+                throw new InvalidOperationException($"Property '{nameof(SessionId)}' is missing");
+        }
     }
 }

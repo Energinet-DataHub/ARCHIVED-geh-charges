@@ -18,6 +18,7 @@ using Energinet.DataHub.MessageHub.Client.Model;
 using Energinet.DataHub.MessageHub.Client.Peek;
 using Energinet.DataHub.MessageHub.Client.Storage;
 using GreenEnergyHub.Charges.Application.ChargeLinks.MessageHub.Infrastructure;
+using GreenEnergyHub.Charges.Application.SeedWork.SyncRequest;
 
 namespace GreenEnergyHub.Charges.Infrastructure.ChargeLinkCreated.MessageHub
 {
@@ -32,15 +33,16 @@ namespace GreenEnergyHub.Charges.Infrastructure.ChargeLinkCreated.MessageHub
             _dataBundleResponseSender = dataBundleResponseSender;
         }
 
-        public async Task ReplyAsync(Stream bundleStream, DataBundleRequestDto request)
+        public async Task ReplyAsync(Stream bundleStream, DataBundleRequestDto request, ISyncRequestMetadata metadata)
         {
             var path = await _storageHandler.AddStreamToStorageAsync(bundleStream, request);
 
+            // TODO BJARKE: This will be allowed in upcoming post office NuGet update
+            // var response = request.CreateResponse(path);
             var response = new DataBundleResponseDto(path, request.DataAvailableNotificationIds);
 
-            // TODO BJARKE: Fix session ID
             await _dataBundleResponseSender
-                .SendAsync(response, request, "sessionId")
+                .SendAsync(response, request, metadata.SessionId)
                 .ConfigureAwait(false);
         }
     }

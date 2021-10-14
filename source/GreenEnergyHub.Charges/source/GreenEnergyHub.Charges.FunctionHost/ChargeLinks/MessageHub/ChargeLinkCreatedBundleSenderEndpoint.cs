@@ -15,6 +15,7 @@
 using System.Threading.Tasks;
 using Energinet.DataHub.MessageHub.Client.Peek;
 using GreenEnergyHub.Charges.Application.ChargeLinks.MessageHub;
+using GreenEnergyHub.Charges.Infrastructure.SyncRequest;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Logging;
 
@@ -26,26 +27,31 @@ namespace GreenEnergyHub.Charges.FunctionHost.ChargeLinks.MessageHub
         private readonly IChargeLinkCreatedBundleSender _chargeLinkCreatedBundleSender;
         private readonly ILogger _log;
         private readonly IRequestBundleParser _requestBundleParser;
+        private readonly ISyncRequestMetaDataFactory _syncRequestMetaDataFactory;
 
         public ChargeLinkCreatedBundleSenderEndpoint(
             IChargeLinkCreatedBundleSender chargeLinkCreatedBundleSender,
             ILoggerFactory loggerFactory,
-            IRequestBundleParser requestBundleParser)
+            IRequestBundleParser requestBundleParser,
+            ISyncRequestMetaDataFactory syncRequestMetaDataFactory)
         {
             _chargeLinkCreatedBundleSender = chargeLinkCreatedBundleSender;
             _requestBundleParser = requestBundleParser;
+            _syncRequestMetaDataFactory = syncRequestMetaDataFactory;
             _log = loggerFactory.CreateLogger(nameof(ChargeLinkCreatedDataAvailableNotifierEndpoint));
         }
 
         [Function(FunctionName)]
         public async Task RunAsync(
             [ServiceBusTrigger("sbq-charges", Connection = "INTEGRATIONEVENT_LISTENER_CONNECTION_STRING")]
-            byte[] data)
+            byte[] data,
+            FunctionContext functionContext)
         {
             _log.LogInformation("Function {FunctionName} started to process a request with size {Size}", FunctionName, data.Length);
 
             var request = _requestBundleParser.Parse(data);
-            await _chargeLinkCreatedBundleSender.SendAsync(request).ConfigureAwait(false);
+            var metadata = _syncRequestMetaDataFactory.Create(functionContext);
+            await _chargeLinkCreatedBundleSender.SendAsync(request, metadata).ConfigureAwait(false);
         }
     }
 }

@@ -14,11 +14,12 @@
 
 using System.Threading.Tasks;
 using Energinet.DataHub.MessageHub.Client.Model;
+using GreenEnergyHub.Charges.Application.SeedWork.SyncRequest;
 
 namespace GreenEnergyHub.Charges.Application.ChargeLinks.MessageHub
 {
     public interface IChargeLinkCreatedBundleSender
     {
-        Task SendAsync(DataBundleRequestDto request);
+        Task SendAsync(DataBundleRequestDto request, ISyncRequestMetadata metadata);
     }
 }
