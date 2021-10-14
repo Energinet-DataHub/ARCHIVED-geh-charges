@@ -14,20 +14,18 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.ChargeLinkCommandAcceptedEvents;
-using GreenEnergyHub.Charges.Domain.ChargeLinkCommands;
 using GreenEnergyHub.Charges.Domain.ChargeLinkHistory;
-using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.Infrastructure.Repositories;
 using GreenEnergyHub.Charges.TestCore.Attributes;
 using GreenEnergyHub.Charges.TestCore.Database;
 using Moq;
-using NodaTime;
 using Xunit;
 using Xunit.Categories;
 
@@ -45,20 +43,25 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
 
         [Theory]
         [InlineAutoMoqData]
-        public async Task StoreAsync_StoresChargeLinkHistory([Frozen] Mock<IChargeLinkFactory> chargeLinkFactory)
+        public async Task StoreAsync_StoresChargeLinkHistory(
+            [Frozen] Mock<IChargeLinkFactory> chargeLinkFactory,
+            [NotNull] ChargeLinkHistory expected)
         {
             // Arrange
             await using var chargesDatabaseWriteContext = _databaseManager.CreateDbContext();
 
-            var expected = CreateChargeLinkHistory();
             chargeLinkFactory
-                .Setup(x => x.MapChargeLinkCommandAcceptedEvent(It.IsAny<ChargeLinkCommandAcceptedEvent>(), It.IsAny<MarketParticipant>()))
+                .Setup(x =>
+                    x.MapChargeLinkCommandAcceptedEvent(
+                        It.IsAny<ChargeLinkCommandAcceptedEvent>(),
+                        It.IsAny<MarketParticipant>(),
+                        It.IsAny<Guid>()))
                 .Returns(expected);
 
             var sut = new ChargeLinkHistoryRepository(chargesDatabaseWriteContext, chargeLinkFactory.Object);
 
             // Act
-            await sut.StoreAsync(null!, null!).ConfigureAwait(false);
+            await sut.StoreAsync(null!, null!, Guid.NewGuid()).ConfigureAwait(false);
 
             // Assert
             await using var chargesDatabaseReadContext = _databaseManager.CreateDbContext();
@@ -68,11 +71,12 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
 
         [Theory]
         [InlineAutoMoqData]
-        public async Task GetChargeHistoriesAsync_WithMeteringPointId_ThenSuccessReturnedAsync([Frozen] Mock<IChargeLinkFactory> chargeLinkFactory)
+        public async Task GetChargeHistoriesAsync_WithMeteringPointId_ThenSuccessReturnedAsync(
+            [Frozen] Mock<IChargeLinkFactory> chargeLinkFactory,
+            [NotNull] ChargeLinkHistory expected)
         {
             // Arrange
             await using var chargesDatabaseWriteContext = _databaseManager.CreateDbContext();
-            var expected = CreateChargeLinkHistory();
             await chargesDatabaseWriteContext.ChargeLinkHistories.AddAsync(expected).ConfigureAwait(false);
             await chargesDatabaseWriteContext.SaveChangesAsync().ConfigureAwait(false);
 
@@ -81,29 +85,11 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
 
             // Act
             var actual =
-                await sut.GetChargeHistoriesAsync(new List<Guid> { expected.PostOfficeId })
+                await sut.GetChargeHistoriesAsync(new List<Guid> { expected.MessageHubId })
                 .ConfigureAwait(false);
 
             // Assert
             Assert.NotNull(actual);
-        }
-
-        private ChargeLinkHistory CreateChargeLinkHistory()
-        {
-            var chargeLinkHistory = new ChargeLinkHistory(
-                "some recipient",
-                MarketParticipantRole.EnergyAgency,
-                BusinessReasonCode.UpdateChargeInformation,
-                "charge id",
-                "mp id",
-                "some owner",
-                5,
-                ChargeType.Fee,
-                SystemClock.Instance.GetCurrentInstant(),
-                SystemClock.Instance.GetCurrentInstant(),
-                Guid.NewGuid());
-
-            return chargeLinkHistory;
         }
     }
 }

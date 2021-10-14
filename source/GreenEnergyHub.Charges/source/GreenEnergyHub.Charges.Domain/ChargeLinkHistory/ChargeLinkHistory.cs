@@ -32,7 +32,7 @@ namespace GreenEnergyHub.Charges.Domain.ChargeLinkHistory
             ChargeType chargeType,
             Instant validFrom,
             Instant validTo,
-            Guid postOfficeId)
+            Guid messageHubId)
         {
             Id = Guid.NewGuid();
             Recipient = recipient;
@@ -45,7 +45,7 @@ namespace GreenEnergyHub.Charges.Domain.ChargeLinkHistory
             ChargeType = chargeType;
             ValidFrom = validFrom;
             ValidTo = validTo;
-            PostOfficeId = postOfficeId;
+            MessageHubId = messageHubId;
         }
 
         public Guid Id { get; set; }
@@ -70,6 +70,6 @@ namespace GreenEnergyHub.Charges.Domain.ChargeLinkHistory
 
         public Instant ValidTo { get; }
 
-        public Guid PostOfficeId { get; }
+        public Guid MessageHubId { get; }
     }
 }

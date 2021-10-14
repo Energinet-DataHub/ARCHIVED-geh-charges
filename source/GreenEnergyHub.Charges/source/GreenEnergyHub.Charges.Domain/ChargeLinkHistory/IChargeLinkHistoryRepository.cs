@@ -22,7 +22,10 @@ namespace GreenEnergyHub.Charges.Domain.ChargeLinkHistory
 {
     public interface IChargeLinkHistoryRepository
     {
-        Task StoreAsync(ChargeLinkCommandAcceptedEvent chargeLinkCommandAcceptedEvent, MarketParticipant marketParticipant);
+        Task StoreAsync(
+            ChargeLinkCommandAcceptedEvent chargeLinkCommandAcceptedEvent,
+            MarketParticipant marketParticipant,
+            Guid messageHubId);
 
         Task<List<ChargeLinkHistory>> GetChargeHistoriesAsync(IEnumerable<Guid> postOfficeIds);
     }

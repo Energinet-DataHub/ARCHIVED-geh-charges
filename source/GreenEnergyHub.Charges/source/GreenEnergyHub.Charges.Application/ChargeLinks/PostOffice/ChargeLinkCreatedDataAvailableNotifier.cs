@@ -65,9 +65,11 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.PostOffice
             if (!charge.TaxIndicator) return;
 
             var marketParticipant = new MarketParticipant();
-            await _chargeLinkHistoryRepository.StoreAsync(chargeLinkCommandAcceptedEvent, marketParticipant);
 
             var dataAvailableNotification = CreateDataAvailableNotificationDto(chargeLinkCommandAcceptedEvent);
+
+            await _chargeLinkHistoryRepository.StoreAsync(chargeLinkCommandAcceptedEvent, marketParticipant, dataAvailableNotification.Uuid);
+
             await _dataAvailableNotificationSender
                 .SendAsync(dataAvailableNotification)
                 .ConfigureAwait(false);

@@ -82,8 +82,8 @@ namespace GreenEnergyHub.Charges.Infrastructure.Context.EntityConfigurations
                 .HasColumnName("ValidTo");
 
             builder
-                .Property(x => x.PostOfficeId)
-                .HasColumnName("PostOfficeId");
+                .Property(x => x.MessageHubId)
+                .HasColumnName("MessageHubId");
         }
     }
 }

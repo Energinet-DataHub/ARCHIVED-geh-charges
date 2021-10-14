@@ -35,17 +35,20 @@ namespace GreenEnergyHub.Charges.Infrastructure.Repositories
             _chargeLinkFactory = chargeLinkFactory;
         }
 
-        public async Task StoreAsync(ChargeLinkCommandAcceptedEvent chargeLinkCommandAcceptedEvent, MarketParticipant marketParticipant)
+        public async Task StoreAsync(
+            ChargeLinkCommandAcceptedEvent chargeLinkCommandAcceptedEvent,
+            MarketParticipant marketParticipant,
+            Guid messageHubId)
         {
             var chargeLinkHistory =
-                _chargeLinkFactory.MapChargeLinkCommandAcceptedEvent(chargeLinkCommandAcceptedEvent, marketParticipant);
+                _chargeLinkFactory.MapChargeLinkCommandAcceptedEvent(chargeLinkCommandAcceptedEvent, marketParticipant, messageHubId);
             await _context.ChargeLinkHistories.AddAsync(chargeLinkHistory);
             await _context.SaveChangesAsync();
         }
 
         public Task<List<ChargeLinkHistory>> GetChargeHistoriesAsync(IEnumerable<Guid> postOfficeIds)
         {
-            var queryable = _context.ChargeLinkHistories.Where(x => postOfficeIds.Contains(x.PostOfficeId));
+            var queryable = _context.ChargeLinkHistories.Where(x => postOfficeIds.Contains(x.MessageHubId));
             return queryable.ToListAsync();
         }
     }
