@@ -16,10 +16,10 @@ using System;
 using System.Threading.Tasks;
 using Azure.Messaging.ServiceBus;
 using Google.Protobuf;
-using GreenEnergyHub.Charges.Commands;
+using GreenEnergyHub.Charges.Contracts;
 using GreenEnergyHub.DataHub.Charges.Libraries.Models;
 
-namespace GreenEnergyHub.DataHub.Charges.Libraries.DefaultChargeLinkRequest
+namespace GreenEnergyHub.DataHub.Charges.Libraries.DefaultChargeLink
 {
     public sealed class DefaultChargeLinkRequestClient : IAsyncDisposable, IDefaultChargeLinkRequestClient
     {

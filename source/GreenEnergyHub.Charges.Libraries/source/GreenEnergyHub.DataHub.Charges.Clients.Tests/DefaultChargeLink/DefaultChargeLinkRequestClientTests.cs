@@ -18,14 +18,14 @@ using System.Threading.Tasks;
 using AutoFixture.Xunit2;
 using Azure.Messaging.ServiceBus;
 using GreenEnergyHub.Charges.TestCore.Attributes;
-using GreenEnergyHub.DataHub.Charges.Libraries.DefaultChargeLinkRequest;
+using GreenEnergyHub.DataHub.Charges.Libraries.DefaultChargeLink;
 using GreenEnergyHub.DataHub.Charges.Libraries.Models;
 using GreenEnergyHub.TestHelpers;
 using Moq;
 using Xunit;
 using Xunit.Categories;
 
-namespace GreenEnergyHub.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.DefaultChargeLinkRequest
+namespace GreenEnergyHub.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.DefaultChargeLink
 {
     [UnitTest]
     public class DefaultChargeLinkRequestClientTests
