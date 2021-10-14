@@ -33,7 +33,7 @@ namespace GreenEnergyHub.Messaging.Protobuf
         /// <exception cref="InvalidOperationException">If <paramref name="obj"></paramref> is not of <typeparamref name="TMessage"></typeparamref> type</exception>
         public override IInboundMessage Convert(IMessage obj)
         {
-            if (obj is TMessage outboundMessage) return Convert(outboundMessage);
+            if (obj is TMessage inboundMessage) return Convert(inboundMessage);
 
             throw new InvalidOperationException();
         }

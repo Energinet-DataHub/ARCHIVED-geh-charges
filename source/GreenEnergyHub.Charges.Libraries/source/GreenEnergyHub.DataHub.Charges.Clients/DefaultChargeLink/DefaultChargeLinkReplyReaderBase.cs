@@ -13,20 +13,17 @@
 // limitations under the License.
 
 using System.Threading.Tasks;
+using GreenEnergyHub.DataHub.Charges.Libraries.Enums;
 using GreenEnergyHub.DataHub.Charges.Libraries.Models;
 
-namespace GreenEnergyHub.DataHub.Charges.Libraries.DefaultChargeLinkRequest
+namespace GreenEnergyHub.DataHub.Charges.Libraries.DefaultChargeLink
 {
-    public interface IDefaultChargeLinkRequestClient
+    public delegate Task OnSuccess(CreateDefaultChargeLinksSucceededDto createDefaultChargeLinksSucceeded);
+
+    public delegate Task OnFailure(CreateDefaultChargeLinksFailedDto createDefaultChargeLinksSucceeded);
+
+    public abstract class DefaultChargeLinkReplyReaderBase
     {
-        /// <summary>
-        /// Request the Charges domain to create default charge links
-        /// based on the supplied meteringPointIds entity's MeteringPointType.
-        /// </summary>
-        /// <param name="createDefaultChargeLinksDto"></param>
-        /// <param name="correlationId"></param>
-        Task CreateDefaultChargeLinksRequestAsync(
-            CreateDefaultChargeLinksDto createDefaultChargeLinksDto,
-            string correlationId);
+        public abstract Task ReadAsync(byte[] data, RequestStatus requestStatus);
     }
 }
