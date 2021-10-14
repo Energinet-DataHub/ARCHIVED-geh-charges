@@ -16,9 +16,9 @@ using System;
 using System.Threading.Tasks;
 using Azure.Messaging.ServiceBus;
 
-namespace GreenEnergyHub.DataHub.Charges.Libraries.DefaultChargeLinkRequest
+namespace GreenEnergyHub.DataHub.Charges.Libraries.ServiceBus
 {
-    public sealed class ServiceBusRequestSender
+    public sealed class ServiceBusRequestSender : IServiceBusRequestSender
     {
         private readonly ServiceBusClient _serviceBusClient;
         private readonly string _createLinkRequestQueueName;

@@ -12,17 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Azure.Messaging.ServiceBus;
-using GreenEnergyHub.DataHub.Charges.Libraries.ServiceBus;
+using System.Threading.Tasks;
 
-namespace GreenEnergyHub.DataHub.Charges.Libraries.Factories
+namespace GreenEnergyHub.DataHub.Charges.Libraries.ServiceBus
 {
-    public class ServiceBusRequestSenderFactory : IServiceBusRequestSenderFactory
+    public interface IServiceBusRequestSender
     {
-        public IServiceBusRequestSender Create(
-            ServiceBusClient serviceBusClient, string createLinkRequestQueueName, string replyToQueueName)
-        {
-            return new ServiceBusRequestSender(serviceBusClient, createLinkRequestQueueName, replyToQueueName);
-        }
+        Task SendRequestAsync(byte[] data, string correlationId);
     }
 }

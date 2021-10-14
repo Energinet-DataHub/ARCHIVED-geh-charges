@@ -18,9 +18,9 @@ using System.Threading.Tasks;
 using Azure.Messaging.ServiceBus;
 using Google.Protobuf;
 using GreenEnergyHub.Charges.Contracts;
-using GreenEnergyHub.DataHub.Charges.Libraries.DefaultChargeLinkRequest;
 using GreenEnergyHub.DataHub.Charges.Libraries.Factories;
 using GreenEnergyHub.DataHub.Charges.Libraries.Models;
+using GreenEnergyHub.DataHub.Charges.Libraries.ServiceBus;
 
 namespace GreenEnergyHub.DataHub.Charges.Libraries.DefaultChargeLinkMessages
 {
@@ -28,7 +28,7 @@ namespace GreenEnergyHub.DataHub.Charges.Libraries.DefaultChargeLinkMessages
     {
         private const string CreateLinkMessagesRequestQueueName = "create-link-messages-request";
         private readonly ServiceBusClient _serviceBusClient;
-        private readonly ServiceBusRequestSender _serviceBusRequestSender;
+        private readonly IServiceBusRequestSender _serviceBusRequestSender;
 
         public DefaultChargeLinkMessagesRequestClient(
             [NotNull] ServiceBusClient serviceBusClient,

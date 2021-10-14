@@ -13,12 +13,12 @@
 // limitations under the License.
 
 using Azure.Messaging.ServiceBus;
-using GreenEnergyHub.DataHub.Charges.Libraries.DefaultChargeLinkRequest;
+using GreenEnergyHub.DataHub.Charges.Libraries.ServiceBus;
 
 namespace GreenEnergyHub.DataHub.Charges.Libraries.Factories
 {
     public interface IServiceBusRequestSenderFactory
     {
-        ServiceBusRequestSender Create(ServiceBusClient serviceBusClient, string createLinkRequestQueueName, string replyToQueueName);
+        IServiceBusRequestSender Create(ServiceBusClient serviceBusClient, string createLinkRequestQueueName, string replyToQueueName);
     }
 }

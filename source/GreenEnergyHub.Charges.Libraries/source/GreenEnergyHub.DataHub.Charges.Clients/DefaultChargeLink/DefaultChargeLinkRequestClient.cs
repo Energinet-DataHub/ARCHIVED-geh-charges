@@ -20,6 +20,7 @@ using Google.Protobuf;
 using GreenEnergyHub.Charges.Contracts;
 using GreenEnergyHub.DataHub.Charges.Libraries.Factories;
 using GreenEnergyHub.DataHub.Charges.Libraries.Models;
+using GreenEnergyHub.DataHub.Charges.Libraries.ServiceBus;
 
 namespace GreenEnergyHub.DataHub.Charges.Libraries.DefaultChargeLink
 {
@@ -27,7 +28,7 @@ namespace GreenEnergyHub.DataHub.Charges.Libraries.DefaultChargeLink
     {
         private const string CreateLinkRequestQueueName = "create-link-request";
         private readonly ServiceBusClient _serviceBusClient;
-        private readonly ServiceBusRequestSender _serviceBusRequestSender;
+        private readonly IServiceBusRequestSender _serviceBusRequestSender;
 
         public DefaultChargeLinkRequestClient(
             [NotNull] ServiceBusClient serviceBusClient,
