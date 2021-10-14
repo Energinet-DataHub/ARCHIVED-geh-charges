@@ -14,9 +14,9 @@
 
 namespace GreenEnergyHub.DataHub.Charges.Libraries.Enums
 {
-    public enum MessageType
+    public enum RequestStatus
     {
-        RequestSucceeded = 1,
-        RequestFailed = 2,
+        Succeeded = 1,
+        Failed = 2,
     }
 }

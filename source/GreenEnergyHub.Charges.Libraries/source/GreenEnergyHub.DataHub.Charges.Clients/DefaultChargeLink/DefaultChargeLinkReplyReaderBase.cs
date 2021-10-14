@@ -24,6 +24,6 @@ namespace GreenEnergyHub.DataHub.Charges.Libraries.DefaultChargeLink
 
     public abstract class DefaultChargeLinkReplyReaderBase
     {
-        public abstract Task ReadAsync(byte[] data, MessageType messageType);
+        public abstract Task ReadAsync(byte[] data, RequestStatus requestStatus);
     }
 }

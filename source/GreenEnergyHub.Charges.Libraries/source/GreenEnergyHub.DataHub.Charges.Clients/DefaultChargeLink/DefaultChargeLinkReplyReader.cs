@@ -44,15 +44,15 @@ namespace GreenEnergyHub.DataHub.Charges.Libraries.DefaultChargeLink
         /// Read and map data to be handled by provided delegates.
         /// </summary>
         /// <param name="data">Data reply to deserialized</param>
-        /// <param name="messageType">
+        /// <param name="requestStatus">
         /// MessageType contains information on whether data contains
         /// a reply to a succeeded failed <see cref="CreateDefaultChargeLinks" /> request
         /// </param>
-        public override async Task ReadAsync(byte[] data, MessageType messageType)
+        public override async Task ReadAsync(byte[] data, RequestStatus requestStatus)
         {
-            switch (messageType)
+            switch (requestStatus)
             {
-                case MessageType.RequestSucceeded:
+                case RequestStatus.Succeeded:
                     var succeededParser = CreateDefaultChargeLinksSucceeded.Parser;
                     var createDefaultChargeLinksSucceeded = succeededParser.ParseFrom(data);
                     var succeededDto = CreateDefaultChargeLinksSucceededInboundMapper
@@ -61,7 +61,7 @@ namespace GreenEnergyHub.DataHub.Charges.Libraries.DefaultChargeLink
                     await _handleSuccess(succeededDto).ConfigureAwait(false);
                     break;
 
-                case MessageType.RequestFailed:
+                case RequestStatus.Failed:
                     var failedParser = CreateDefaultChargeLinksFailed.Parser;
                     var createDefaultChargeLinksFailed = failedParser.ParseFrom(data);
                     var failedDto = CreateDefaultChargeLinksFailedInboundMapper
@@ -71,7 +71,7 @@ namespace GreenEnergyHub.DataHub.Charges.Libraries.DefaultChargeLink
                     break;
 
                 default:
-                    throw new ArgumentOutOfRangeException(nameof(messageType), messageType, null);
+                    throw new ArgumentOutOfRangeException(nameof(requestStatus), requestStatus, null);
             }
         }
     }
