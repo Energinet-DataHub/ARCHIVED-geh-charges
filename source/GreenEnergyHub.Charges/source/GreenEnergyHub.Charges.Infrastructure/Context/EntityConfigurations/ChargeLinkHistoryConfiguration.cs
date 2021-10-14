@@ -37,8 +37,8 @@ namespace GreenEnergyHub.Charges.Infrastructure.Context.EntityConfigurations
                 .HasColumnName("Recipient");
 
             builder
-                .Property(x => x.MarketParticipantRole)
-                .HasColumnName("MarketParticipantRole")
+                .Property(x => x.RecipientRole)
+                .HasColumnName("RecipientRole")
                 .HasConversion(
                     toDbValue => (int)toDbValue,
                     fromDbValue => (MarketParticipantRole)fromDbValue);
@@ -55,16 +55,8 @@ namespace GreenEnergyHub.Charges.Infrastructure.Context.EntityConfigurations
                 .HasColumnName("ChargeId");
 
             builder
-                .Property(x => x.MeteringPointId)
-                .HasColumnName("MeteringPointId");
-
-            builder
-                .Property(x => x.Owner)
-                .HasColumnName("Owner");
-
-            builder
-                .Property(x => x.Factor)
-                .HasColumnName("Factor");
+                .Property(x => x.ChargeOwner)
+                .HasColumnName("ChargeOwner");
 
             builder
                 .Property(x => x.ChargeType)
@@ -74,12 +66,20 @@ namespace GreenEnergyHub.Charges.Infrastructure.Context.EntityConfigurations
                     fromDbValue => (ChargeType)fromDbValue);
 
             builder
-                .Property(x => x.ValidFrom)
-                .HasColumnName("ValidFrom");
+                .Property(x => x.MeteringPointId)
+                .HasColumnName("MeteringPointId");
 
             builder
-                .Property(x => x.ValidTo)
-                .HasColumnName("ValidTo");
+                .Property(x => x.Factor)
+                .HasColumnName("Factor");
+
+            builder
+                .Property(x => x.StartDateTime)
+                .HasColumnName("StartDateTime");
+
+            builder
+                .Property(x => x.EndDateTime)
+                .HasColumnName("EndDateTime");
 
             builder
                 .Property(x => x.MessageHubId)

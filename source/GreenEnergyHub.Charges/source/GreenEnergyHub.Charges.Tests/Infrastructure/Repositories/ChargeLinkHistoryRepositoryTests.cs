@@ -65,8 +65,9 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
 
             // Assert
             await using var chargesDatabaseReadContext = _databaseManager.CreateDbContext();
-            var actual = chargesDatabaseReadContext.ChargeLinkHistories.First();
-            actual.Owner.Should().Be(expected.Owner);
+            var actual =
+                chargesDatabaseReadContext.ChargeLinkHistories.Single(x => x.MessageHubId == expected.MessageHubId);
+            actual.ChargeOwner.Should().Be(expected.ChargeOwner);
         }
 
         [Theory]

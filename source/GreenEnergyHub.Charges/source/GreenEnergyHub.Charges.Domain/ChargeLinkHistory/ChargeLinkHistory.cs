@@ -23,28 +23,28 @@ namespace GreenEnergyHub.Charges.Domain.ChargeLinkHistory
     {
         public ChargeLinkHistory(
             string recipient,
-            MarketParticipantRole marketParticipantRole,
+            MarketParticipantRole recipientRole,
             BusinessReasonCode businessReasonCode,
             string chargeId,
-            string meteringPointId,
-            string owner,
-            int factor,
+            string chargeOwner,
             ChargeType chargeType,
-            Instant validFrom,
-            Instant validTo,
+            string meteringPointId,
+            int factor,
+            Instant startDateTime,
+            Instant endDateTime,
             Guid messageHubId)
         {
             Id = Guid.NewGuid();
             Recipient = recipient;
-            MarketParticipantRole = marketParticipantRole;
+            RecipientRole = recipientRole;
             BusinessReasonCode = businessReasonCode;
             ChargeId = chargeId;
-            MeteringPointId = meteringPointId;
-            Owner = owner;
-            Factor = factor;
+            ChargeOwner = chargeOwner;
             ChargeType = chargeType;
-            ValidFrom = validFrom;
-            ValidTo = validTo;
+            MeteringPointId = meteringPointId;
+            Factor = factor;
+            StartDateTime = startDateTime;
+            EndDateTime = endDateTime;
             MessageHubId = messageHubId;
         }
 
@@ -52,23 +52,23 @@ namespace GreenEnergyHub.Charges.Domain.ChargeLinkHistory
 
         public string Recipient { get; }
 
-        public MarketParticipantRole MarketParticipantRole { get; }
+        public MarketParticipantRole RecipientRole { get; }
 
         public BusinessReasonCode BusinessReasonCode { get; }
 
-        public string ChargeId { get; }
-
         public string MeteringPointId { get; }
 
-        public string Owner { get; }
+        public string ChargeId { get; }
 
-        public int Factor { get; }
+        public string ChargeOwner { get; }
 
         public ChargeType ChargeType { get; }
 
-        public Instant ValidFrom { get; }
+        public int Factor { get; }
 
-        public Instant ValidTo { get; }
+        public Instant StartDateTime { get; }
+
+        public Instant EndDateTime { get; }
 
         public Guid MessageHubId { get; }
     }

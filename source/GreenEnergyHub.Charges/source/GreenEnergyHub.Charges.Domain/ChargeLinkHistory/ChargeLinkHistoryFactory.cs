@@ -30,10 +30,10 @@ namespace GreenEnergyHub.Charges.Domain.ChargeLinkHistory
                 marketParticipant.BusinessProcessRole,
                 chargeLinkCommandAcceptedEvent.Document.BusinessReasonCode,
                 chargeLinkCommandAcceptedEvent.ChargeLink.SenderProvidedChargeId,
-                chargeLinkCommandAcceptedEvent.ChargeLink.MeteringPointId,
                 chargeLinkCommandAcceptedEvent.Document.Sender.Id,
-                chargeLinkCommandAcceptedEvent.ChargeLink.Factor,
                 chargeLinkCommandAcceptedEvent.ChargeLink.ChargeType,
+                chargeLinkCommandAcceptedEvent.ChargeLink.MeteringPointId,
+                chargeLinkCommandAcceptedEvent.ChargeLink.Factor,
                 chargeLinkCommandAcceptedEvent.ChargeLink.StartDateTime,
                 chargeLinkCommandAcceptedEvent.ChargeLink.EndDateTime.GetValueOrDefault(),
                 messageHubId);
