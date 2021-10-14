@@ -19,7 +19,7 @@ on:
       - main
     paths:
       - source/GreenEnergyHub.Charges.Libraries/source/GreenEnergyHub.DataHub.Charges.Clients/**
-      - .github/workflows/clients-publish.yml.yml
+      - .github/workflows/clients-publish.yml
       - .github/actions/dotnet-publish-nuget/**
   workflow_dispatch: {}
 
