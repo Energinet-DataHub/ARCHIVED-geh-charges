@@ -88,18 +88,14 @@ namespace GreenEnergyHub.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.D
 
         private async Task HandleFailure(CreateDefaultChargeLinksFailedDto createDefaultChargeLinksFailed)
         {
-            var (meteringPointId, errorCode) = createDefaultChargeLinksFailed;
-            _unknownMeteringPointIdTestResult = meteringPointId;
-            _errorCodeTestResult = errorCode;
+            (_unknownMeteringPointIdTestResult, _errorCodeTestResult) = createDefaultChargeLinksFailed;
 
             await Task.CompletedTask.ConfigureAwait(false);
         }
 
         private async Task HandleSuccess(CreateDefaultChargeLinksSucceededDto createDefaultChargeLinksSucceeded)
         {
-            var (meteringPointId, didCreateChargeLinks) = createDefaultChargeLinksSucceeded;
-            _knownMeteringPointIdTestResult = meteringPointId;
-            _didCreateChargeLinksTestResult = didCreateChargeLinks;
+            (_knownMeteringPointIdTestResult, _didCreateChargeLinksTestResult) = createDefaultChargeLinksSucceeded;
 
             await Task.CompletedTask.ConfigureAwait(false);
         }
