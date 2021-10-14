@@ -13,7 +13,7 @@
 // limitations under the License.
 
 using GreenEnergyHub.Charges.Application.ChargeLinks.PostOffice;
-using GreenEnergyHub.Charges.Domain.ChargeLinkHistory;
+using GreenEnergyHub.Charges.Domain.ChargeLinkTransmissionRequest;
 using GreenEnergyHub.Charges.Infrastructure.Repositories;
 using Microsoft.Extensions.DependencyInjection;
 

@@ -20,7 +20,7 @@ using System.Threading.Tasks;
 using AutoFixture.Xunit2;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.ChargeLinkCommandAcceptedEvents;
-using GreenEnergyHub.Charges.Domain.ChargeLinkHistory;
+using GreenEnergyHub.Charges.Domain.ChargeLinkTransmissionRequest;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.Infrastructure.Repositories;
 using GreenEnergyHub.Charges.TestCore.Attributes;

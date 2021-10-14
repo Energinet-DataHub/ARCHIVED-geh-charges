@@ -16,7 +16,7 @@ using System;
 using GreenEnergyHub.Charges.Domain.ChargeLinkCommandAcceptedEvents;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 
-namespace GreenEnergyHub.Charges.Domain.ChargeLinkHistory
+namespace GreenEnergyHub.Charges.Domain.ChargeLinkTransmissionRequest
 {
     public class ChargeLinkTransmissionRequestFactory : IChargeLinkTransmissionRequestFactory
     {

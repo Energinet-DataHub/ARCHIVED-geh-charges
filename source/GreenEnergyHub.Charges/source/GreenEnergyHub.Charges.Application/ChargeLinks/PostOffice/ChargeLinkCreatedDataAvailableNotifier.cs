@@ -18,7 +18,7 @@ using System.Threading.Tasks;
 using Energinet.DataHub.MessageHub.Client.DataAvailable;
 using Energinet.DataHub.MessageHub.Client.Model;
 using GreenEnergyHub.Charges.Domain.ChargeLinkCommandAcceptedEvents;
-using GreenEnergyHub.Charges.Domain.ChargeLinkHistory;
+using GreenEnergyHub.Charges.Domain.ChargeLinkTransmissionRequest;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 

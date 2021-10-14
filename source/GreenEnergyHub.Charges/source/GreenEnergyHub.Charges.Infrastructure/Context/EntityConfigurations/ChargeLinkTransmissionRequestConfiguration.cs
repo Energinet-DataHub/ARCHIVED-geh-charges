@@ -13,7 +13,7 @@
 // limitations under the License.
 
 using System;
-using GreenEnergyHub.Charges.Domain.ChargeLinkHistory;
+using GreenEnergyHub.Charges.Domain.ChargeLinkTransmissionRequest;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using Microsoft.EntityFrameworkCore;

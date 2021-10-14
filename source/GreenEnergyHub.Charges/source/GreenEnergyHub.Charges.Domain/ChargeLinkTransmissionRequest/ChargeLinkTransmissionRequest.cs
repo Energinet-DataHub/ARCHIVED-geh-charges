@@ -17,7 +17,7 @@ using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using NodaTime;
 
-namespace GreenEnergyHub.Charges.Domain.ChargeLinkHistory
+namespace GreenEnergyHub.Charges.Domain.ChargeLinkTransmissionRequest
 {
     public class ChargeLinkTransmissionRequest
     {
