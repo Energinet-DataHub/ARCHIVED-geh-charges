@@ -1,0 +1,71 @@
+# Copyright 2020 Energinet DataHub A/S
+#
+# Licensed under the Apache License, Version 2.0 (the "License2");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+# NOTE:
+# This should be able to handle setup, linting, building, testing, and
+# reporting, but today actions cannot call other actions. This is being worked
+# on, and once the issue below is resolved, this file should be updated to
+# include those steps.
+#
+# https://github.com/actions/runner/pull/612
+# https://github.com/actions/runner/issues/646
+
+name: 'Pack and publish nuget package'
+description: 'Pack and publish nuget package'
+inputs:
+  dotnet_version:
+    description: 'Version of .NET to use for packing'
+    required: true
+  csproj_file_path:
+    description: 'Path to the project file.'
+    required: true
+  binary_path:
+    description: 'Path to the binary nuget package'
+    required: true
+  nuget_token:
+    description: 'NuGet.org API key'
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - name: Setup .NET ${{ inputs.dotnet_version }} environment
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: ${{ inputs.dotnet_version }}
+
+    - name: Determine version suffix property use
+      id: determine_version_suffix
+      shell: bash
+      run: |
+        echo ${{ env.BRANCH }}
+        if [[ ${{ env.BRANCH }} == 'master' || ${{ env.BRANCH }} == 'main' ]]
+        then
+          echo "##[set-output name=property;]$(echo '')"
+        else
+          echo "##[set-output name=property;]$(echo '-p:VersionSuffix=-alpha-$(date +'%Y%m%dT%H%M%S')')"
+        fi
+      env:
+        BRANCH: ${GITHUB_REF#refs/heads/}
+
+    - name: Pack project
+      shell: bash
+      run: |
+        dotnet pack ${{ inputs.csproj_file_path }} --configuration Release --include-symbols -p:SymbolPackageFormat=snupkg -p:RepositoryCommit=${{ github.sha }} ${{ steps.determine_version_suffix.outputs.property }}
+
+    - name: Push to NuGet.org
+      shell: bash
+      run: |
+        dotnet nuget push ${{ inputs.binary_path }} --api-key ${{ inputs.nuget_token }} --source ${{ env.NUGET_FEED_PATH }}
+      env:
+        NUGET_FEED_PATH: 'https://api.nuget.org/v3/index.json'
