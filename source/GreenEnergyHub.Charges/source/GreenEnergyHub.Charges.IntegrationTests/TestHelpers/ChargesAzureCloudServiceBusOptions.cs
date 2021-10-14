@@ -34,7 +34,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.TestHelpers
             builder.SetConfigResolver(ChargesAzureResourceConfigurationResolver);
 
             builder
-                .Namespace(serviceBusNamespace)
+                /*.Namespace(serviceBusNamespace)*/ // Temporarily disabled to check if reuse of namespace is causing issue
                 .AddTopic(ReceivedTopicName)
                 .AddSubscription(SubscriptionName);
         }
