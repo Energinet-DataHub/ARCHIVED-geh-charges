@@ -32,18 +32,18 @@ using Xunit.Categories;
 namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
 {
     [UnitTest]
-    public class ChargeLinkHistoryRepositoryTests : IClassFixture<ChargesDatabaseFixture>
+    public class ChargeLinkTransmissionRequestsRepositoryTests : IClassFixture<ChargesDatabaseFixture>
     {
         private readonly ChargesDatabaseManager _databaseManager;
 
-        public ChargeLinkHistoryRepositoryTests(ChargesDatabaseFixture fixture)
+        public ChargeLinkTransmissionRequestsRepositoryTests(ChargesDatabaseFixture fixture)
         {
             _databaseManager = fixture.DatabaseManager;
         }
 
         [Theory]
         [InlineAutoMoqData]
-        public async Task StoreAsync_StoresChargeLinkHistory(
+        public async Task StoreAsync_StoresChargeLinkTransmissionRequests(
             [Frozen] Mock<IChargeLinkTransmissionRequestFactory> chargeLinkFactory,
             [NotNull] ChargeLinkTransmissionRequest expected)
         {
