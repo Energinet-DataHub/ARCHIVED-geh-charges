@@ -65,8 +65,9 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures
             // We extract the service bus namespace from one of the connection strings
             var serviceBusNamespace = GetNamespaceFromSetting(EnvironmentSettingNames.DomainEventSenderConnectionString);
 
-            builder
-                .Namespace(serviceBusNamespace);
+            // Temporarily disabled to see if this is causing the issues in the pipelines
+            /*builder
+                .Namespace(serviceBusNamespace);*/
 
             builder
                 .AddTopic(PostOfficeTopicKey)
