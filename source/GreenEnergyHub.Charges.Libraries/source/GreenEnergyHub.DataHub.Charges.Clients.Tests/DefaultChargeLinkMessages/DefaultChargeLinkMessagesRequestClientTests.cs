@@ -18,7 +18,7 @@ using System.Threading.Tasks;
 using AutoFixture.Xunit2;
 using Azure.Messaging.ServiceBus;
 using GreenEnergyHub.Charges.TestCore.Attributes;
-using GreenEnergyHub.DataHub.Charges.Libraries.DefaultChargeLink;
+using GreenEnergyHub.DataHub.Charges.Libraries.DefaultChargeLinkMessages;
 using GreenEnergyHub.DataHub.Charges.Libraries.Factories;
 using GreenEnergyHub.DataHub.Charges.Libraries.Models;
 using GreenEnergyHub.DataHub.Charges.Libraries.ServiceBus;
@@ -27,10 +27,10 @@ using Moq;
 using Xunit;
 using Xunit.Categories;
 
-namespace GreenEnergyHub.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.DefaultChargeLink
+namespace GreenEnergyHub.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.DefaultChargeLinkMessages
 {
     [UnitTest]
-    public class DefaultChargeLinkRequestClientTests
+    public class DefaultChargeLinkMessagesRequestClientTests
     {
         private const string ReplyToQueueName = "ReplyToQueue";
         private const string MeteringPointId = "F9A5115D-44EB-4AD4-BC7E-E8E8A0BC425E";
@@ -48,41 +48,40 @@ namespace GreenEnergyHub.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.D
         {
             // Arrange
             serviceBusClientMock.Setup(x => x.DisposeAsync()).Returns(default(ValueTask));
-            var createDefaultChargeLinksDto = meteringPointId != null ? new CreateDefaultChargeLinksDto(meteringPointId) : null;
-            await using var target = new DefaultChargeLinkRequestClient(
+            var createDefaultChargeLinkMessagesDto = meteringPointId != null ? new CreateDefaultChargeLinkMessagesDto(meteringPointId) : null;
+            await using var target = new DefaultChargeLinkMessagesRequestClient(
                 serviceBusClientMock.Object, serviceBusRequestSenderFactoryMock.Object, ReplyToQueueName);
 
             // Act + Assert
             await Assert.ThrowsAsync<ArgumentNullException>(() => target
-                .CreateDefaultChargeLinksRequestAsync(createDefaultChargeLinksDto!, correlationId))
+                .CreateDefaultChargeLinkMessagesRequestAsync(createDefaultChargeLinkMessagesDto!, correlationId))
                 .ConfigureAwait(false);
         }
 
         [Theory]
         [InlineAutoDomainData]
-        public async Task CreateDefaultChargeLinksRequestAsync_ValidInput_SendsMessage(
+        public async Task CreateDefaultChargeLinkMessagesRequestAsync_ValidInput_SendsMessage(
             [NotNull] [Frozen] Mock<ServiceBusClient> serviceBusClientMock,
             [NotNull] [Frozen] Mock<IServiceBusRequestSenderFactory> serviceBusRequestSenderFactoryMock,
             [NotNull] [Frozen] Mock<IServiceBusRequestSender> serviceBusRequestSenderMock)
         {
             // Arrange
-            const string createLinkRequestQueueName = "create-link-request";
+            const string createLinkMessagesRequestQueueName = "create-link-messages-request";
             var serviceBusSenderMock = new Mock<ServiceBusSender>();
 
-            serviceBusClientMock.Setup(x => x.CreateSender(createLinkRequestQueueName)).Returns(serviceBusSenderMock.Object);
+            serviceBusClientMock.Setup(x => x.CreateSender(createLinkMessagesRequestQueueName)).Returns(serviceBusSenderMock.Object);
             serviceBusClientMock.Setup(x => x.DisposeAsync()).Returns(default(ValueTask));
 
-            serviceBusRequestSenderFactoryMock.Setup(x => x
-                    .Create(serviceBusClientMock.Object, ReplyToQueueName))
+            serviceBusRequestSenderFactoryMock.Setup(x => x.Create(serviceBusClientMock.Object, ReplyToQueueName))
                 .Returns(serviceBusRequestSenderMock.Object);
 
-            await using var sut = new DefaultChargeLinkRequestClient(
+            await using var sut = new DefaultChargeLinkMessagesRequestClient(
                 serviceBusClientMock.Object, serviceBusRequestSenderFactoryMock.Object, ReplyToQueueName);
 
-            var createDefaultChargeLinksDto = new CreateDefaultChargeLinksDto(MeteringPointId);
+            var defaultChargeLinkMessagesDto = new CreateDefaultChargeLinkMessagesDto(MeteringPointId);
 
             // Act
-            await sut.CreateDefaultChargeLinksRequestAsync(createDefaultChargeLinksDto, CorrelationId).ConfigureAwait(false);
+            await sut.CreateDefaultChargeLinkMessagesRequestAsync(defaultChargeLinkMessagesDto, CorrelationId).ConfigureAwait(false);
 
             // Assert
             serviceBusRequestSenderMock.Verify(

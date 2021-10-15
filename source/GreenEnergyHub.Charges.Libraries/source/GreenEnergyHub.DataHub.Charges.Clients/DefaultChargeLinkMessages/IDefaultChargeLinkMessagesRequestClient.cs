@@ -14,17 +14,20 @@
 
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
-using GreenEnergyHub.DataHub.Charges.Libraries.Enums;
 using GreenEnergyHub.DataHub.Charges.Libraries.Models;
 
-namespace GreenEnergyHub.DataHub.Charges.Libraries.DefaultChargeLink
+namespace GreenEnergyHub.DataHub.Charges.Libraries.DefaultChargeLinkMessages
 {
-    public delegate Task OnSuccess(CreateDefaultChargeLinksSucceededDto createDefaultChargeLinksSucceeded);
-
-    public delegate Task OnFailure(CreateDefaultChargeLinksFailedDto createDefaultChargeLinksSucceeded);
-
-    public abstract class DefaultChargeLinkReplyReaderBase
+    public interface IDefaultChargeLinkMessagesRequestClient
     {
-        public abstract Task ReadAsync([NotNull] byte[] data, [NotNull] RequestStatus requestStatus);
+        /// <summary>
+        /// Request the Charges domain to create default charge links
+        /// based on the supplied meteringPointIds entity's MeteringPointType.
+        /// </summary>
+        /// <param name="createDefaultChargeLinkMessagesDto"></param>
+        /// <param name="correlationId"></param>
+        Task CreateDefaultChargeLinkMessagesRequestAsync(
+            [NotNull] CreateDefaultChargeLinkMessagesDto createDefaultChargeLinkMessagesDto,
+            [NotNull] string correlationId);
     }
 }
