@@ -14,9 +14,9 @@
 
 using System.Net;
 using System.Threading.Tasks;
+using Energinet.DataHub.Core.FunctionApp.TestCommon;
 using FluentAssertions;
 using GreenEnergyHub.Charges.IntegrationTests.Fixtures;
-using GreenEnergyHub.FunctionApp.TestCommon;
 using Xunit;
 using Xunit.Abstractions;
 
