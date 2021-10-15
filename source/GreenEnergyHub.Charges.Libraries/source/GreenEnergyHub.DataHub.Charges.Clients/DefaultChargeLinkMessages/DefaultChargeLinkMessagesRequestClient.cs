@@ -36,8 +36,7 @@ namespace GreenEnergyHub.DataHub.Charges.Libraries.DefaultChargeLinkMessages
             string replyToQueueName)
         {
             _serviceBusClient = serviceBusClient;
-            _serviceBusRequestSender = serviceBusRequestSenderFactory.Create(
-                serviceBusClient, CreateLinkMessagesRequestQueueName, replyToQueueName);
+            _serviceBusRequestSender = serviceBusRequestSenderFactory.Create(serviceBusClient, replyToQueueName);
         }
 
         public async Task CreateDefaultChargeLinkMessagesRequestAsync(
@@ -56,7 +55,8 @@ namespace GreenEnergyHub.DataHub.Charges.Libraries.DefaultChargeLinkMessages
             };
 
             await _serviceBusRequestSender.SendRequestAsync(
-                    createDefaultChargeLinkMessages.ToByteArray(), correlationId).ConfigureAwait(false);
+                    createDefaultChargeLinkMessages.ToByteArray(), CreateLinkMessagesRequestQueueName, correlationId)
+                .ConfigureAwait(false);
         }
 
         public async ValueTask DisposeAsync()

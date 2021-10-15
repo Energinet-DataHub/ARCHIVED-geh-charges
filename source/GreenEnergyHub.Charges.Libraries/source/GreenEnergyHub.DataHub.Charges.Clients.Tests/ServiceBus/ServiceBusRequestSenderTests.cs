@@ -46,12 +46,14 @@ namespace GreenEnergyHub.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.S
 
             serviceBusSenderMock.Setup(x => x.SendMessageAsync(It.IsAny<ServiceBusMessage>(), default));
 
-            var sut = new ServiceBusRequestSender(serviceBusClientMock.Object, createLinkRequestQueueName, replyToQueueName);
+            var sut = new ServiceBusRequestSender(serviceBusClientMock.Object, replyToQueueName);
 
             var defaultChargeLinks = new CreateDefaultChargeLinks { MeteringPointId = meteringPointId };
 
             // Act
-            await sut.SendRequestAsync(defaultChargeLinks.ToByteArray(), correlationId).ConfigureAwait(false);
+            await sut.SendRequestAsync(
+                defaultChargeLinks.ToByteArray(), createLinkRequestQueueName, correlationId)
+                .ConfigureAwait(false);
 
             // Act // Assert
             serviceBusSenderMock.Verify(x => x.SendMessageAsync(It.IsAny<ServiceBusMessage>(), default), Times.Once);

@@ -72,8 +72,7 @@ namespace GreenEnergyHub.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.D
             serviceBusClientMock.Setup(x => x.CreateSender(createLinkMessagesRequestQueueName)).Returns(serviceBusSenderMock.Object);
             serviceBusClientMock.Setup(x => x.DisposeAsync()).Returns(default(ValueTask));
 
-            serviceBusRequestSenderFactoryMock.Setup(x => x
-                    .Create(serviceBusClientMock.Object, createLinkMessagesRequestQueueName, ReplyToQueueName))
+            serviceBusRequestSenderFactoryMock.Setup(x => x.Create(serviceBusClientMock.Object, ReplyToQueueName))
                 .Returns(serviceBusRequestSenderMock.Object);
 
             await using var sut = new DefaultChargeLinkMessagesRequestClient(
@@ -85,7 +84,8 @@ namespace GreenEnergyHub.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.D
             await sut.CreateDefaultChargeLinkMessagesRequestAsync(defaultChargeLinkMessagesDto, CorrelationId).ConfigureAwait(false);
 
             // Assert
-            serviceBusRequestSenderMock.Verify(x => x.SendRequestAsync(It.IsAny<byte[]>(), It.IsAny<string>()), Times.Once);
+            serviceBusRequestSenderMock.Verify(
+                x => x.SendRequestAsync(It.IsAny<byte[]>(), It.IsAny<string>(), It.IsAny<string>()), Times.Once);
         }
     }
 }

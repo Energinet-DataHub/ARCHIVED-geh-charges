@@ -20,9 +20,9 @@ namespace GreenEnergyHub.DataHub.Charges.Libraries.Factories
     public class ServiceBusRequestSenderFactory : IServiceBusRequestSenderFactory
     {
         public IServiceBusRequestSender Create(
-            ServiceBusClient serviceBusClient, string createLinkRequestQueueName, string replyToQueueName)
+            ServiceBusClient serviceBusClient, string replyToQueueName)
         {
-            return new ServiceBusRequestSender(serviceBusClient, createLinkRequestQueueName, replyToQueueName);
+            return new ServiceBusRequestSender(serviceBusClient, replyToQueueName);
         }
     }
 }

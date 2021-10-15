@@ -21,20 +21,17 @@ namespace GreenEnergyHub.DataHub.Charges.Libraries.ServiceBus
     public sealed class ServiceBusRequestSender : IServiceBusRequestSender
     {
         private readonly ServiceBusClient _serviceBusClient;
-        private readonly string _createLinkRequestQueueName;
         private readonly string _replyToQueueName;
 
-        public ServiceBusRequestSender(
-            ServiceBusClient serviceBusClient, string createLinkRequestQueueName, string replyToQueueName)
+        public ServiceBusRequestSender(ServiceBusClient serviceBusClient, string replyToQueueName)
         {
             _serviceBusClient = serviceBusClient;
-            _createLinkRequestQueueName = createLinkRequestQueueName;
             _replyToQueueName = replyToQueueName;
         }
 
-        public async Task SendRequestAsync(byte[] data, string correlationId)
+        public async Task SendRequestAsync(byte[] data, string createLinkRequestQueueName, string correlationId)
         {
-            await using var sender = _serviceBusClient.CreateSender(_createLinkRequestQueueName);
+            await using var sender = _serviceBusClient.CreateSender(createLinkRequestQueueName);
 
             await sender.SendMessageAsync(new ServiceBusMessage
             {
