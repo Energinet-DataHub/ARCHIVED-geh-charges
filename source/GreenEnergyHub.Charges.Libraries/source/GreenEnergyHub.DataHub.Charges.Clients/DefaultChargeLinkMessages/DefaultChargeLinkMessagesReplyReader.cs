@@ -19,22 +19,22 @@ using GreenEnergyHub.Charges.Contracts;
 using GreenEnergyHub.DataHub.Charges.Libraries.Enums;
 using GreenEnergyHub.DataHub.Charges.Libraries.Protobuf;
 
-namespace GreenEnergyHub.DataHub.Charges.Libraries.DefaultChargeLink
+namespace GreenEnergyHub.DataHub.Charges.Libraries.DefaultChargeLinkMessages
 {
-    public sealed class DefaultChargeLinkReplyReader : DefaultChargeLinkReplyReaderBase
+    public sealed class DefaultChargeLinkMessagesReplyReader : DefaultChargeLinkMessagesReplyReaderBase
     {
         private readonly OnSuccess _handleSuccess;
         private readonly OnFailure _handleFailure;
 
         /// <summary>
         /// Provides functionality to read and map data received from a reply to
-        /// a <see cref="CreateDefaultChargeLinks" /> request. Caller must provide
+        /// a <see cref="CreateDefaultChargeLinkMessages" /> request. Caller must provide
         /// delegates intended to handle handle replies for successful and failed
         /// requests.
         /// </summary>
-        /// <param name="handleSuccess">Delegate to handle successful <see cref="CreateDefaultChargeLinks" /> request</param>
-        /// <param name="handleFailure">Delegate to handle failed <see cref="CreateDefaultChargeLinks" /> request</param>
-        public DefaultChargeLinkReplyReader([NotNull] OnSuccess handleSuccess, [NotNull] OnFailure handleFailure)
+        /// <param name="handleSuccess">Delegate to handle successful <see cref="CreateDefaultChargeLinkMessages" /> request</param>
+        /// <param name="handleFailure">Delegate to handle failed <see cref="CreateDefaultChargeLinkMessages" /> request</param>
+        public DefaultChargeLinkMessagesReplyReader([NotNull] OnSuccess handleSuccess, [NotNull] OnFailure handleFailure)
         {
             _handleSuccess = handleSuccess;
             _handleFailure = handleFailure;
@@ -43,29 +43,29 @@ namespace GreenEnergyHub.DataHub.Charges.Libraries.DefaultChargeLink
         /// <summary>
         /// Read and map data to be handled by provided delegates.
         /// </summary>
-        /// <param name="data">Data reply to deserialize</param>
+        /// <param name="data">Data reply to deserialize.</param>
         /// <param name="requestStatus">
         /// Contains information on whether data contains a reply to a succeeded
-        /// or failed <see cref="CreateDefaultChargeLinks" /> request
+        /// or failed <see cref="CreateDefaultChargeLinkMessages" /> request.
         /// </param>
         public override async Task ReadAsync(byte[] data, RequestStatus requestStatus)
         {
             switch (requestStatus)
             {
                 case RequestStatus.Succeeded:
-                    var succeededParser = CreateDefaultChargeLinksSucceeded.Parser;
-                    var createDefaultChargeLinksSucceeded = succeededParser.ParseFrom(data);
-                    var succeededDto = CreateDefaultChargeLinksSucceededInboundMapper
-                        .Convert(createDefaultChargeLinksSucceeded);
+                    var succeededParser = CreateDefaultChargeLinkMessagesSucceeded.Parser;
+                    var createDefaultChargeLinkMessagesSucceeded = succeededParser.ParseFrom(data);
+                    var succeededDto = CreateDefaultChargeLinkMessagesSucceededInboundMapper
+                        .Convert(createDefaultChargeLinkMessagesSucceeded);
 
                     await _handleSuccess(succeededDto).ConfigureAwait(false);
                     break;
 
                 case RequestStatus.Failed:
-                    var failedParser = CreateDefaultChargeLinksFailed.Parser;
-                    var createDefaultChargeLinksFailed = failedParser.ParseFrom(data);
-                    var failedDto = CreateDefaultChargeLinksFailedInboundMapper
-                        .Convert(createDefaultChargeLinksFailed);
+                    var failedParser = CreateDefaultChargeLinkMessagesFailed.Parser;
+                    var createDefaultChargeLinkMessagesFailed = failedParser.ParseFrom(data);
+                    var failedDto = CreateDefaultChargeLinkMessagesFailedInboundMapper
+                        .Convert(createDefaultChargeLinkMessagesFailed);
 
                     await _handleFailure(failedDto).ConfigureAwait(false);
                     break;

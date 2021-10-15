@@ -17,41 +17,37 @@ using FluentAssertions;
 using Google.Protobuf;
 using GreenEnergyHub.Charges.Contracts;
 using GreenEnergyHub.Charges.TestCore.Attributes;
-using GreenEnergyHub.DataHub.Charges.Libraries.DefaultChargeLink;
+using GreenEnergyHub.DataHub.Charges.Libraries.DefaultChargeLinkMessages;
 using GreenEnergyHub.DataHub.Charges.Libraries.Enums;
 using GreenEnergyHub.DataHub.Charges.Libraries.Models;
 using Xunit;
 using Xunit.Categories;
 using ErrorCode = GreenEnergyHub.DataHub.Charges.Libraries.Enums.ErrorCode;
 
-namespace GreenEnergyHub.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.DefaultChargeLink
+namespace GreenEnergyHub.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.DefaultChargeLinkMessages
 {
     [UnitTest]
-    public class DefaultChargeLinkReplyDeserializerTests
+    public class DefaultChargeLinkMessagesReplyReaderTests
     {
         private ErrorCode _errorCodeTestResult;
         private string _knownMeteringPointIdTestResult;
         private string _unknownMeteringPointIdTestResult;
-        private bool _didCreateChargeLinksTestResult;
 
         [Theory]
-        [InlineAutoMoqData(RequestStatus.Succeeded, "knownMeteringPointId1234", true)]
-        [InlineAutoMoqData(RequestStatus.Succeeded, "knownMeteringPointId5678", false)]
-        public async Task DefaultChargeLinksCreationSucceeded(
-            RequestStatus requestStatus,
-            string meteringPointId,
-            bool didCreateChargeLinks)
+        [InlineAutoMoqData(RequestStatus.Succeeded, "knownMeteringPointId1234")]
+        [InlineAutoMoqData(RequestStatus.Succeeded, "knownMeteringPointId5678")]
+        public async Task DefaultChargeLinkMessagesCreationSucceeded(
+            RequestStatus requestStatus, string meteringPointId)
         {
             // Arrange
-            var createDefaultChargeLinksSucceeded = new CreateDefaultChargeLinksSucceeded
+            var createDefaultChargeLinkMessagesSucceeded = new CreateDefaultChargeLinkMessagesSucceeded
             {
                 MeteringPointId = meteringPointId,
-                DidCreateChargeLinks = didCreateChargeLinks,
             };
 
-            var data = createDefaultChargeLinksSucceeded.ToByteArray();
+            var data = createDefaultChargeLinkMessagesSucceeded.ToByteArray();
 
-            var target = new DefaultChargeLinkReplyReader(HandleSuccess, HandleFailure);
+            var target = new DefaultChargeLinkMessagesReplyReader(HandleSuccess, HandleFailure);
 
             // Act
             await target.ReadAsync(data, requestStatus).ConfigureAwait(false);
@@ -59,23 +55,23 @@ namespace GreenEnergyHub.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.D
             // Assert
             target.Should().NotBeNull();
             _knownMeteringPointIdTestResult.Should().Be(meteringPointId);
-            _didCreateChargeLinksTestResult.Should().Be(didCreateChargeLinks);
         }
 
         [Theory]
         [InlineAutoMoqData(RequestStatus.Failed, "unknownMeteringPointId9876")]
-        public async Task DefaultChargeLinksCreationFailed(RequestStatus requestStatus, string meteringPointId)
+        public async Task DefaultChargeLinkMessagesCreationFailed(
+            RequestStatus requestStatus, string meteringPointId)
         {
             // Arrange
-            var createDefaultChargeLinksFailed = new CreateDefaultChargeLinksFailed
+            var createDefaultChargeLinkMessagesFailed = new CreateDefaultChargeLinkMessagesFailed
                 {
                     MeteringPointId = meteringPointId,
-                    ErrorCode = CreateDefaultChargeLinksFailed.Types.ErrorCode.EcMeteringPointUnknown,
+                    ErrorCode = CreateDefaultChargeLinkMessagesFailed.Types.ErrorCode.EcMeteringPointUnknown,
                 };
 
-            var data = createDefaultChargeLinksFailed.ToByteArray();
+            var data = createDefaultChargeLinkMessagesFailed.ToByteArray();
 
-            var target = new DefaultChargeLinkReplyReader(HandleSuccess, HandleFailure);
+            var target = new DefaultChargeLinkMessagesReplyReader(HandleSuccess, HandleFailure);
 
             // Act
             await target.ReadAsync(data, requestStatus).ConfigureAwait(false);
@@ -86,16 +82,16 @@ namespace GreenEnergyHub.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.D
             _errorCodeTestResult.Should().Be(ErrorCode.MeteringPointUnknown);
         }
 
-        private async Task HandleFailure(CreateDefaultChargeLinksFailedDto createDefaultChargeLinksFailed)
+        private async Task HandleFailure(CreateDefaultChargeLinkMessagesFailedDto createDefaultChargeLinkMessagesFailed)
         {
-            (_unknownMeteringPointIdTestResult, _errorCodeTestResult) = createDefaultChargeLinksFailed;
+            (_unknownMeteringPointIdTestResult, _errorCodeTestResult) = createDefaultChargeLinkMessagesFailed;
 
             await Task.CompletedTask.ConfigureAwait(false);
         }
 
-        private async Task HandleSuccess(CreateDefaultChargeLinksSucceededDto createDefaultChargeLinksSucceeded)
+        private async Task HandleSuccess(CreateDefaultChargeLinkMessagesSucceededDto createDefaultChargeLinkMessagesSucceeded)
         {
-            (_knownMeteringPointIdTestResult, _didCreateChargeLinksTestResult) = createDefaultChargeLinksSucceeded;
+            _knownMeteringPointIdTestResult = createDefaultChargeLinkMessagesSucceeded.meteringPointId;
 
             await Task.CompletedTask.ConfigureAwait(false);
         }
