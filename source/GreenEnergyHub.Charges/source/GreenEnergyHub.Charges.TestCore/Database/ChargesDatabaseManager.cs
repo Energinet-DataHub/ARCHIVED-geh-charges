@@ -14,10 +14,10 @@
 
 using System;
 using System.Threading.Tasks;
+using Energinet.DataHub.Core.FunctionApp.TestCommon.Database;
 using EntityFrameworkCore.SqlServer.NodaTime.Extensions;
 using GreenEnergyHub.Charges.ApplyDBMigrationsApp.Helpers;
 using GreenEnergyHub.Charges.Infrastructure.Context;
-using GreenEnergyHub.FunctionApp.TestCommon.Database;
 using Microsoft.EntityFrameworkCore;
 
 namespace GreenEnergyHub.Charges.TestCore.Database
