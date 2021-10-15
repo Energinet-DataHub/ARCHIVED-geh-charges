@@ -58,16 +58,17 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.PostOffice
                     x.ChargeLink.ChargeOwner,
                     x.ChargeLink.ChargeType)).ToList();
 
-            var charges = await _chargeRepository
-                .GetChargesAsync(chargeSenderIdentifiers).ConfigureAwait(false);
-
             var dataAvailableNotificationDtos = new List<DataAvailableNotificationDto>();
 
-            foreach (var charge in charges)
+            foreach (var chargeSenderIdentifier in chargeSenderIdentifiers)
             {
-                if (!charge.TaxIndicator) return;
+                var charge = await _chargeRepository
+                    .GetChargeAsync(chargeSenderIdentifier).ConfigureAwait(false);
 
-                dataAvailableNotificationDtos.Add(CreateDataAvailableNotificationDto(charge));
+                if (charge.TaxIndicator)
+                {
+                    dataAvailableNotificationDtos.Add(CreateDataAvailableNotificationDto(charge));
+                }
             }
 
             var dataAvailableNotificationSenderTasks = dataAvailableNotificationDtos

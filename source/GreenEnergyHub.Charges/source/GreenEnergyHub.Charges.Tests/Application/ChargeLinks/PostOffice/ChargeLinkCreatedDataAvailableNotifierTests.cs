@@ -57,8 +57,8 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.PostOffice
             // Arrange
             charge.SetPrivateProperty(c => c.TaxIndicator, true);
             chargeRepositoryMock.Setup(
-                    repository => repository.GetChargesAsync(It.IsAny<List<ChargeSenderIdentifier>>()))
-                .ReturnsAsync(new List<Charge> { charge });
+                    repository => repository.GetChargeAsync(It.IsAny<ChargeSenderIdentifier>()))
+                .ReturnsAsync(charge);
 
             // Act
             await sut.NotifyAsync(chargeLinkCommandAcceptedEvent);
@@ -73,7 +73,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.PostOffice
                                     new GlobalLocationNumberDto(charge.Document.Sender.Id))
                                && dto.Uuid != Guid.Empty
                                && dto.RelativeWeight > 0)),
-                Times.Once);
+                Times.AtLeastOnce);
         }
 
         [Theory]
