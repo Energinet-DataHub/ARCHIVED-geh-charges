@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Diagnostics.CodeAnalysis;
 using Azure.Messaging.ServiceBus;
 using GreenEnergyHub.DataHub.Charges.Libraries.ServiceBus;
 
@@ -20,7 +21,7 @@ namespace GreenEnergyHub.DataHub.Charges.Libraries.Factories
     public class ServiceBusRequestSenderFactory : IServiceBusRequestSenderFactory
     {
         public IServiceBusRequestSender Create(
-            ServiceBusClient serviceBusClient, string replyToQueueName)
+            [NotNull] ServiceBusClient serviceBusClient, [NotNull] string replyToQueueName)
         {
             return new ServiceBusRequestSender(serviceBusClient, replyToQueueName);
         }

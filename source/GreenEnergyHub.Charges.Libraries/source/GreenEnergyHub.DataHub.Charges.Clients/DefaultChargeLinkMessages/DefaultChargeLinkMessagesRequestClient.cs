@@ -33,15 +33,15 @@ namespace GreenEnergyHub.DataHub.Charges.Libraries.DefaultChargeLinkMessages
         public DefaultChargeLinkMessagesRequestClient(
             [NotNull] ServiceBusClient serviceBusClient,
             [NotNull] IServiceBusRequestSenderFactory serviceBusRequestSenderFactory,
-            string replyToQueueName)
+            [NotNull] string replyToQueueName)
         {
             _serviceBusClient = serviceBusClient;
             _serviceBusRequestSender = serviceBusRequestSenderFactory.Create(serviceBusClient, replyToQueueName);
         }
 
         public async Task CreateDefaultChargeLinkMessagesRequestAsync(
-            CreateDefaultChargeLinkMessagesDto createDefaultChargeLinkMessagesDto,
-            string correlationId)
+            [NotNull] CreateDefaultChargeLinkMessagesDto createDefaultChargeLinkMessagesDto,
+            [NotNull] string correlationId)
         {
             if (createDefaultChargeLinkMessagesDto == null)
                 throw new ArgumentNullException(nameof(createDefaultChargeLinkMessagesDto));

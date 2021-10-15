@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using Azure.Messaging.ServiceBus;
 
@@ -23,13 +24,13 @@ namespace GreenEnergyHub.DataHub.Charges.Libraries.ServiceBus
         private readonly ServiceBusClient _serviceBusClient;
         private readonly string _replyToQueueName;
 
-        public ServiceBusRequestSender(ServiceBusClient serviceBusClient, string replyToQueueName)
+        public ServiceBusRequestSender([NotNull] ServiceBusClient serviceBusClient, [NotNull] string replyToQueueName)
         {
             _serviceBusClient = serviceBusClient;
             _replyToQueueName = replyToQueueName;
         }
 
-        public async Task SendRequestAsync(byte[] data, string requestQueueName, string correlationId)
+        public async Task SendRequestAsync([NotNull] byte[] data, [NotNull] string requestQueueName, [NotNull] string correlationId)
         {
             await using var sender = _serviceBusClient.CreateSender(requestQueueName);
 

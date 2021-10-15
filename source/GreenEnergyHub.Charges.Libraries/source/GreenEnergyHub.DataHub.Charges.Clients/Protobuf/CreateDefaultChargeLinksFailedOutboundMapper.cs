@@ -35,7 +35,7 @@ namespace GreenEnergyHub.DataHub.Charges.Libraries.Protobuf
             };
         }
 
-        private static CreateDefaultChargeLinksFailed.Types.ErrorCode ConvertErrorCode(ErrorCode errorCode)
+        private static CreateDefaultChargeLinksFailed.Types.ErrorCode ConvertErrorCode([NotNull] ErrorCode errorCode)
         {
             return errorCode switch
             {

@@ -12,12 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 
 namespace GreenEnergyHub.DataHub.Charges.Libraries.ServiceBus
 {
     public interface IServiceBusRequestSender
     {
-        Task SendRequestAsync(byte[] data, string requestQueueName, string correlationId);
+        Task SendRequestAsync([NotNull] byte[] data, [NotNull] string requestQueueName, [NotNull] string correlationId);
     }
 }

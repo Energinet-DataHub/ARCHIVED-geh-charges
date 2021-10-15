@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using GreenEnergyHub.DataHub.Charges.Libraries.Models;
 
@@ -27,7 +28,7 @@ namespace GreenEnergyHub.DataHub.Charges.Libraries.DefaultChargeLink
         /// Contains data needed by the Charges Domain to create default charges links.</param>
         /// <param name="correlationId">CorrelationId specifies message context.</param>
         Task CreateDefaultChargeLinksRequestAsync(
-            CreateDefaultChargeLinksDto createDefaultChargeLinksDto,
-            string correlationId);
+            [NotNull] CreateDefaultChargeLinksDto createDefaultChargeLinksDto,
+            [NotNull] string correlationId);
     }
 }

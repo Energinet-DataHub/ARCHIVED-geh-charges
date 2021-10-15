@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using GreenEnergyHub.DataHub.Charges.Libraries.Enums;
 using GreenEnergyHub.DataHub.Charges.Libraries.Models;
@@ -24,6 +25,6 @@ namespace GreenEnergyHub.DataHub.Charges.Libraries.DefaultChargeLink
 
     public abstract class DefaultChargeLinkReplyReaderBase
     {
-        public abstract Task ReadAsync(byte[] data, RequestStatus requestStatus);
+        public abstract Task ReadAsync([NotNull] byte[] data, [NotNull] RequestStatus requestStatus);
     }
 }
