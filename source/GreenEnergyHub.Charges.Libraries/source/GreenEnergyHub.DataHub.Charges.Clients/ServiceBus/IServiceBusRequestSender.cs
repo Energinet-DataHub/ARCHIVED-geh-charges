@@ -18,6 +18,6 @@ namespace GreenEnergyHub.DataHub.Charges.Libraries.ServiceBus
 {
     public interface IServiceBusRequestSender
     {
-        Task SendRequestAsync(byte[] data, string createLinkRequestQueueName, string correlationId);
+        Task SendRequestAsync(byte[] data, string requestQueueName, string correlationId);
     }
 }

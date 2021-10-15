@@ -34,13 +34,13 @@ namespace GreenEnergyHub.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.S
         public async Task SendsMessage(
             [NotNull] [Frozen] Mock<ServiceBusClient> serviceBusClientMock,
             string meteringPointId,
-            string createLinkRequestQueueName,
+            string requestQueueName,
             string replyToQueueName,
             string correlationId)
         {
             // Arrange
             var serviceBusSenderMock = new Mock<ServiceBusSender>();
-            serviceBusClientMock.Setup(x => x.CreateSender(createLinkRequestQueueName))
+            serviceBusClientMock.Setup(x => x.CreateSender(requestQueueName))
                 .Returns(serviceBusSenderMock.Object);
             serviceBusClientMock.Setup(x => x.DisposeAsync()).Returns(default(ValueTask));
 
@@ -51,8 +51,7 @@ namespace GreenEnergyHub.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.S
             var defaultChargeLinks = new CreateDefaultChargeLinks { MeteringPointId = meteringPointId };
 
             // Act
-            await sut.SendRequestAsync(
-                defaultChargeLinks.ToByteArray(), createLinkRequestQueueName, correlationId)
+            await sut.SendRequestAsync(defaultChargeLinks.ToByteArray(), requestQueueName, correlationId)
                 .ConfigureAwait(false);
 
             // Act // Assert

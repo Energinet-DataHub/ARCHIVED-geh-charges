@@ -29,9 +29,9 @@ namespace GreenEnergyHub.DataHub.Charges.Libraries.ServiceBus
             _replyToQueueName = replyToQueueName;
         }
 
-        public async Task SendRequestAsync(byte[] data, string createLinkRequestQueueName, string correlationId)
+        public async Task SendRequestAsync(byte[] data, string requestQueueName, string correlationId)
         {
-            await using var sender = _serviceBusClient.CreateSender(createLinkRequestQueueName);
+            await using var sender = _serviceBusClient.CreateSender(requestQueueName);
 
             await sender.SendMessageAsync(new ServiceBusMessage
             {
