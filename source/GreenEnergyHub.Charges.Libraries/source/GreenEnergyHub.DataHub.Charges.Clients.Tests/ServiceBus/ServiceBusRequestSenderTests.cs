@@ -34,24 +34,24 @@ namespace GreenEnergyHub.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.S
         public async Task SendsMessage(
             [NotNull] [Frozen] Mock<ServiceBusClient> serviceBusClientMock,
             string meteringPointId,
-            string createLinkRequestQueueName,
+            string requestQueueName,
             string replyToQueueName,
             string correlationId)
         {
             // Arrange
             var serviceBusSenderMock = new Mock<ServiceBusSender>();
-            serviceBusClientMock.Setup(x => x.CreateSender(createLinkRequestQueueName))
+            serviceBusClientMock.Setup(x => x.CreateSender(requestQueueName))
                 .Returns(serviceBusSenderMock.Object);
             serviceBusClientMock.Setup(x => x.DisposeAsync()).Returns(default(ValueTask));
 
             serviceBusSenderMock.Setup(x => x.SendMessageAsync(It.IsAny<ServiceBusMessage>(), default));
 
-            var sut = new ServiceBusRequestSender(serviceBusClientMock.Object, createLinkRequestQueueName, replyToQueueName);
+            var sut = new ServiceBusRequestSender(serviceBusClientMock.Object, replyToQueueName);
 
             var defaultChargeLinks = new CreateDefaultChargeLinks { MeteringPointId = meteringPointId };
 
             // Act
-            await sut.SendRequestAsync(defaultChargeLinks.ToByteArray(), correlationId).ConfigureAwait(false);
+            await sut.SendRequestAsync(defaultChargeLinks.ToByteArray(), requestQueueName, correlationId).ConfigureAwait(false);
 
             // Act // Assert
             serviceBusSenderMock.Verify(x => x.SendMessageAsync(It.IsAny<ServiceBusMessage>(), default), Times.Once);

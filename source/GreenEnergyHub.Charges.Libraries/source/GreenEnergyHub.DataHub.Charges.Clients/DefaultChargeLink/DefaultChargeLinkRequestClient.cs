@@ -33,16 +33,15 @@ namespace GreenEnergyHub.DataHub.Charges.Libraries.DefaultChargeLink
         public DefaultChargeLinkRequestClient(
             [NotNull] ServiceBusClient serviceBusClient,
             [NotNull] IServiceBusRequestSenderFactory serviceBusRequestSenderFactory,
-            string replyToQueueName)
+            [NotNull] string replyToQueueName)
         {
             _serviceBusClient = serviceBusClient;
-            _serviceBusRequestSender = serviceBusRequestSenderFactory.Create(
-                serviceBusClient, CreateLinkRequestQueueName, replyToQueueName);
+            _serviceBusRequestSender = serviceBusRequestSenderFactory.Create(serviceBusClient, replyToQueueName);
         }
 
         public async Task CreateDefaultChargeLinksRequestAsync(
-            CreateDefaultChargeLinksDto createDefaultChargeLinksDto,
-            string correlationId)
+            [NotNull] CreateDefaultChargeLinksDto createDefaultChargeLinksDto,
+            [NotNull] string correlationId)
         {
             if (createDefaultChargeLinksDto == null)
                 throw new ArgumentNullException(nameof(createDefaultChargeLinksDto));
@@ -56,7 +55,8 @@ namespace GreenEnergyHub.DataHub.Charges.Libraries.DefaultChargeLink
             };
 
             await _serviceBusRequestSender.SendRequestAsync(
-                    createDefaultChargeLinks.ToByteArray(), correlationId).ConfigureAwait(false);
+                createDefaultChargeLinks.ToByteArray(), CreateLinkRequestQueueName, correlationId)
+                .ConfigureAwait(false);
         }
 
         public async ValueTask DisposeAsync()

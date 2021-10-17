@@ -48,7 +48,7 @@ namespace GreenEnergyHub.DataHub.Charges.Libraries.DefaultChargeLink
         /// Contains information on whether data contains a reply to a succeeded
         /// or failed <see cref="CreateDefaultChargeLinks" /> request
         /// </param>
-        public override async Task ReadAsync(byte[] data, RequestStatus requestStatus)
+        public override async Task ReadAsync([NotNull] byte[] data, [NotNull] RequestStatus requestStatus)
         {
             switch (requestStatus)
             {

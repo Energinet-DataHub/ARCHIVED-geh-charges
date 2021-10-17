@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using GreenEnergyHub.DataHub.Charges.Libraries.Models;
 
@@ -26,7 +27,7 @@ namespace GreenEnergyHub.DataHub.Charges.Libraries.DefaultChargeLinkMessages
         /// <param name="createDefaultChargeLinkMessagesDto"></param>
         /// <param name="correlationId"></param>
         Task CreateDefaultChargeLinkMessagesRequestAsync(
-            CreateDefaultChargeLinkMessagesDto createDefaultChargeLinkMessagesDto,
-            string correlationId);
+            [NotNull] CreateDefaultChargeLinkMessagesDto createDefaultChargeLinkMessagesDto,
+            [NotNull] string correlationId);
     }
 }
