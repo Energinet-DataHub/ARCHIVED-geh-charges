@@ -49,7 +49,7 @@ namespace GreenEnergyHub.DataHub.Charges.Libraries.DefaultChargeLink
             if (string.IsNullOrWhiteSpace(correlationId))
                 throw new ArgumentNullException(nameof(correlationId));
 
-            var createDefaultChargeLinks = new CreateDefaultChargeLinkMessages
+            var createDefaultChargeLinks = new CreateDefaultChargeLinks
             {
                 MeteringPointId = createDefaultChargeLinksDto.meteringPointId,
             };
