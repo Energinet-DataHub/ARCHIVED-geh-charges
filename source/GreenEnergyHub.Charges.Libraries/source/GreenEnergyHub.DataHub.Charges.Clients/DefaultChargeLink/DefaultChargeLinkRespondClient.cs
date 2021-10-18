@@ -24,13 +24,13 @@ using GreenEnergyHub.DataHub.Charges.Libraries.ServiceBus;
 
 namespace GreenEnergyHub.DataHub.Charges.Libraries.DefaultChargeLink
 {
-    public sealed class DefaultChargeLinkRequestClient : IAsyncDisposable, IDefaultChargeLinkRequestClient
+    public sealed class DefaultChargeLinkRespondClient : IAsyncDisposable, IDefaultChargeLinkRequestClient
     {
         private const string CreateLinkRequestQueueName = "create-link-request";
         private readonly ServiceBusClient _serviceBusClient;
         private readonly IServiceBusRequestSender _serviceBusRequestSender;
 
-        public DefaultChargeLinkRequestClient(
+        public DefaultChargeLinkRespondClient(
             [NotNull] ServiceBusClient serviceBusClient,
             [NotNull] IServiceBusRequestSenderFactory serviceBusRequestSenderFactory,
             [NotNull] string replyToQueueName)
