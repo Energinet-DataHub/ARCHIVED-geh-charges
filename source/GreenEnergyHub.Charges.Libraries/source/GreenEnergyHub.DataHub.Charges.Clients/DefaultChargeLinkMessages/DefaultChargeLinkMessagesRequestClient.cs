@@ -22,15 +22,15 @@ using GreenEnergyHub.DataHub.Charges.Libraries.Factories;
 using GreenEnergyHub.DataHub.Charges.Libraries.Models;
 using GreenEnergyHub.DataHub.Charges.Libraries.ServiceBus;
 
-namespace GreenEnergyHub.DataHub.Charges.Libraries.DefaultChargeLink
+namespace GreenEnergyHub.DataHub.Charges.Libraries.DefaultChargeLinkMessages
 {
-    public sealed class DefaultChargeLinkRequestClient : IAsyncDisposable, IDefaultChargeLinkRequestClient
+    public sealed class DefaultChargeLinkMessagesRequestClient : IAsyncDisposable, IDefaultChargeLinkMessagesRequestClient
     {
-        private const string CreateLinkRequestQueueName = "create-link-request";
+        private const string CreateLinkMessagesRequestQueueName = "create-link-messages-request";
         private readonly ServiceBusClient _serviceBusClient;
         private readonly IServiceBusRequestSender _serviceBusRequestSender;
 
-        public DefaultChargeLinkRequestClient(
+        public DefaultChargeLinkMessagesRequestClient(
             [NotNull] ServiceBusClient serviceBusClient,
             [NotNull] IServiceBusRequestSenderFactory serviceBusRequestSenderFactory,
             [NotNull] string replyToQueueName)
@@ -39,23 +39,23 @@ namespace GreenEnergyHub.DataHub.Charges.Libraries.DefaultChargeLink
             _serviceBusRequestSender = serviceBusRequestSenderFactory.Create(serviceBusClient, replyToQueueName);
         }
 
-        public async Task CreateDefaultChargeLinksRequestAsync(
-            [NotNull] CreateDefaultChargeLinksDto createDefaultChargeLinksDto,
+        public async Task CreateDefaultChargeLinkMessagesRequestAsync(
+            [NotNull] CreateDefaultChargeLinkMessagesDto createDefaultChargeLinkMessagesDto,
             [NotNull] string correlationId)
         {
-            if (createDefaultChargeLinksDto == null)
-                throw new ArgumentNullException(nameof(createDefaultChargeLinksDto));
+            if (createDefaultChargeLinkMessagesDto == null)
+                throw new ArgumentNullException(nameof(createDefaultChargeLinkMessagesDto));
 
             if (string.IsNullOrWhiteSpace(correlationId))
                 throw new ArgumentNullException(nameof(correlationId));
 
-            var createDefaultChargeLinks = new CreateDefaultChargeLinks
+            var createDefaultChargeLinkMessages = new CreateDefaultChargeLinkMessages
             {
-                MeteringPointId = createDefaultChargeLinksDto.meteringPointId,
+                MeteringPointId = createDefaultChargeLinkMessagesDto.meteringPointId,
             };
 
             await _serviceBusRequestSender.SendRequestAsync(
-                createDefaultChargeLinks.ToByteArray(), CreateLinkRequestQueueName, correlationId)
+                    createDefaultChargeLinkMessages.ToByteArray(), CreateLinkMessagesRequestQueueName, correlationId)
                 .ConfigureAwait(false);
         }
 

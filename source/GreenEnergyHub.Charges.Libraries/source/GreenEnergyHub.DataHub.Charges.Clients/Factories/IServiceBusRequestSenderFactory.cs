@@ -13,12 +13,13 @@
 // limitations under the License.
 
 using System.Diagnostics.CodeAnalysis;
+using Azure.Messaging.ServiceBus;
+using GreenEnergyHub.DataHub.Charges.Libraries.ServiceBus;
 
-namespace GreenEnergyHub.DataHub.Charges.Libraries.Models
+namespace GreenEnergyHub.DataHub.Charges.Libraries.Factories
 {
-    /// <summary>
-    /// The required data needed by the Charges domain to create Default charge links.
-    /// </summary>
-    /// <param name="meteringPointId">A unique id to specify the metering point.</param>
-    public sealed record CreateDefaultChargeLinksDto(string meteringPointId);
+    public interface IServiceBusRequestSenderFactory
+    {
+        IServiceBusRequestSender Create([NotNull] ServiceBusClient serviceBusClient, [NotNull] string replyToQueueName);
+    }
 }

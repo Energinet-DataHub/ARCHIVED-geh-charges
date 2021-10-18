@@ -17,8 +17,8 @@ using System.Diagnostics.CodeAnalysis;
 namespace GreenEnergyHub.DataHub.Charges.Libraries.Models
 {
     /// <summary>
-    /// The required data needed by the Charges domain to create Default charge links.
+    /// The required data needed by the Charges domain to create Default charge link messages.
     /// </summary>
-    /// <param name="meteringPointId">A unique id to specify the metering point.</param>
-    public sealed record CreateDefaultChargeLinksDto(string meteringPointId);
+    /// <param name="meteringPointId"> A unique id to specify the metering point.</param>
+    public sealed record CreateDefaultChargeLinkMessagesDto(string meteringPointId);
 }
