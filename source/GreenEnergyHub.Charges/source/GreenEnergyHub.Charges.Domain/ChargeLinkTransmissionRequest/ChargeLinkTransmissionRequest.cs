@@ -22,7 +22,7 @@ namespace GreenEnergyHub.Charges.Domain.ChargeLinkTransmissionRequest
     public class ChargeLinkTransmissionRequest
     {
         public ChargeLinkTransmissionRequest(
-            string recipient,
+            string recipientId,
             MarketParticipantRole recipientRole,
             BusinessReasonCode businessReasonCode,
             string chargeId,
@@ -35,7 +35,7 @@ namespace GreenEnergyHub.Charges.Domain.ChargeLinkTransmissionRequest
             Guid messageHubId)
         {
             Id = Guid.NewGuid();
-            Recipient = recipient;
+            RecipientId = recipientId;
             RecipientRole = recipientRole;
             BusinessReasonCode = businessReasonCode;
             ChargeId = chargeId;
@@ -50,7 +50,7 @@ namespace GreenEnergyHub.Charges.Domain.ChargeLinkTransmissionRequest
 
         public Guid Id { get; set; }
 
-        public string Recipient { get; }
+        public string RecipientId { get; }
 
         public MarketParticipantRole RecipientRole { get; }
 

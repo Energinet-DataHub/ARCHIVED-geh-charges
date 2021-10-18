@@ -42,7 +42,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Factories
 
             // Assert
             actual.Should().NotContainNullsOrEmptyEnumerables();
-            actual.Recipient.Should().Be(marketParticipant.Id);
+            actual.RecipientId.Should().Be(marketParticipant.Id);
             actual.RecipientRole.Should().Be(marketParticipant.BusinessProcessRole);
             actual.BusinessReasonCode.Should().Be(chargeLinkCommandAcceptedEvent.Document.BusinessReasonCode);
             actual.ChargeId.Should().Be(chargeLinkCommandAcceptedEvent.ChargeLink.SenderProvidedChargeId);

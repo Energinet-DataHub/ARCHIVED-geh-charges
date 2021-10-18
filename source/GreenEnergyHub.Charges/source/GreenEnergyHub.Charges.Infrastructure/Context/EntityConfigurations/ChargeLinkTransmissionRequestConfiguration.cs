@@ -33,8 +33,8 @@ namespace GreenEnergyHub.Charges.Infrastructure.Context.EntityConfigurations
             builder.HasKey(x => x.Id);
 
             builder
-                .Property(x => x.Recipient)
-                .HasColumnName("Recipient");
+                .Property(x => x.RecipientId)
+                .HasColumnName("RecipientId");
 
             builder
                 .Property(x => x.RecipientRole)
