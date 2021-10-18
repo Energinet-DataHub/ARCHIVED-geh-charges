@@ -24,7 +24,7 @@ namespace GreenEnergyHub.Charges.Core.Enumeration
             {
                 EnumComparisonStrategy.Exact => new ExactValueNameComparisonStrategy(),
                 EnumComparisonStrategy.ProtobufLenient => new ProtobufLenientValueNameComparisonStrategy(),
-                _ => throw new NotImplementedException("The supplied strategy has not been implemented: " + strategy)
+                _ => throw new NotImplementedException("The supplied strategy has not been implemented: " + strategy),
             };
         }
     }

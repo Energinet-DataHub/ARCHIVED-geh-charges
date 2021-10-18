@@ -47,7 +47,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
 
         private static Document ConvertDocument(DocumentContract document)
         {
-            return new ()
+            return new()
             {
                 Id = document.Id,
                 Sender =
@@ -72,7 +72,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
 
         private static ChargeOperation ConvertChargeOperation(ChargeOperationContract chargeOperation)
         {
-            return new ()
+            return new()
             {
                 Id = chargeOperation.Id,
                 Resolution = (Resolution)chargeOperation.Resolution,

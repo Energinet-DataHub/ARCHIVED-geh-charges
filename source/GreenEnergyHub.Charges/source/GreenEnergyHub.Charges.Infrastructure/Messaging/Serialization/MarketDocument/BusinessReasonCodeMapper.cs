@@ -24,7 +24,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Messaging.Serialization.MarketDo
             {
                 "D17" => BusinessReasonCode.UpdateMasterDataSettlement,
                 "D18" => BusinessReasonCode.UpdateChargeInformation,
-                _ => BusinessReasonCode.Unknown
+                _ => BusinessReasonCode.Unknown,
             };
         }
     }

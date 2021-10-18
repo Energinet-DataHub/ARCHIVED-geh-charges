@@ -37,7 +37,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Internal.Mappers
         {
             // Arrange
             ChargeCommandAcceptedEvent chargeCommandAcceptedEvent =
-                new (SystemClock.Instance.GetCurrentInstant(), chargeCommand.CorrelationId, chargeCommand);
+                new(SystemClock.Instance.GetCurrentInstant(), chargeCommand.CorrelationId, chargeCommand);
 
             UpdateInstantsToValidTimes(chargeCommandAcceptedEvent);
 

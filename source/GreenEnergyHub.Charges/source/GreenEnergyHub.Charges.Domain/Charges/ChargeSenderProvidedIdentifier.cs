@@ -14,5 +14,5 @@
 
 namespace GreenEnergyHub.Charges.Domain.Charges
 {
-    public record ChargeIdentifier(string senderProvidedChargeId, string owner, ChargeType chargeType);
+    public record ChargeIdentifier(string SenderProvidedChargeId, string Owner, ChargeType ChargeType);
 }

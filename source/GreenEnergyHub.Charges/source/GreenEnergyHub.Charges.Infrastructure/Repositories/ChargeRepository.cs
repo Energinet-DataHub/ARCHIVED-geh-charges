@@ -37,8 +37,8 @@ namespace GreenEnergyHub.Charges.Infrastructure.Repositories
         {
             var charge = await GetChargesAsQueryable()
                 .SingleAsync(x => x.SenderProvidedChargeId == chargeIdentifier.SenderProvidedChargeId &&
-                                           x.MarketParticipant.MarketParticipantId == chargeIdentifier.owner &&
-                                           x.ChargeType == (int)chargeIdentifier.chargeType)
+                                           x.MarketParticipant.MarketParticipantId == chargeIdentifier.Owner &&
+                                           x.ChargeType == (int)chargeIdentifier.ChargeType)
                 .ConfigureAwait(false);
 
             return ChargeMapper.MapChargeToChargeDomainModel(charge);
@@ -57,8 +57,8 @@ namespace GreenEnergyHub.Charges.Infrastructure.Repositories
         {
             return await _chargesDatabaseContext.Charges
                 .AnyAsync(x => x.SenderProvidedChargeId == chargeIdentifier.SenderProvidedChargeId &&
-                                        x.MarketParticipant.MarketParticipantId == chargeIdentifier.owner &&
-                                        x.ChargeType == (int)chargeIdentifier.chargeType)
+                                        x.MarketParticipant.MarketParticipantId == chargeIdentifier.Owner &&
+                                        x.ChargeType == (int)chargeIdentifier.ChargeType)
                 .ConfigureAwait(false);
         }
 

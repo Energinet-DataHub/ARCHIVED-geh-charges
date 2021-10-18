@@ -66,12 +66,12 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
             await using var chargesDatabaseReadContext = _databaseManager.CreateDbContext();
 
             var actual = await chargesDatabaseReadContext.ChargeLinks.SingleAsync(
-                    c => c.ChargeId == ids.chargeId && c.MeteringPointId == ids.meteringPointId)
+                    c => c.ChargeId == ids.ChargeId && c.MeteringPointId == ids.MeteringPointId)
                 .ConfigureAwait(false);
             actual.Should().BeEquivalentTo(expected);
         }
 
-        private ChargeLink CreateNewExpectedChargeLink((Guid chargeId, Guid meteringPointId) ids)
+        private ChargeLink CreateNewExpectedChargeLink((Guid ChargeId, Guid MeteringPointId) ids)
         {
             var operation = new ChargeLinkOperation(ExpectedOperationId, ExpectedCorrelationId);
 
@@ -82,13 +82,13 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
                 operation.Id);
 
             return new ChargeLink(
-                ids.chargeId,
-                ids.meteringPointId,
+                ids.ChargeId,
+                ids.MeteringPointId,
                 new List<ChargeLinkOperation> { operation },
                 new List<ChargeLinkPeriodDetails> { periodDetails });
         }
 
-        private static (Guid chargeId, Guid meteringPointId) SeedDatabase(ChargesDatabaseContext context)
+        private static (Guid ChargeId, Guid MeteringPointId) SeedDatabase(ChargesDatabaseContext context)
         {
             var marketParticipant = new MarketParticipant { Name = "Name", Role = 1, MarketParticipantId = "MarketParticipantId" };
 
