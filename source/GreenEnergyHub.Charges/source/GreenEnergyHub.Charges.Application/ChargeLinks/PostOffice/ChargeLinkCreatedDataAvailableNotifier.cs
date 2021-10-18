@@ -60,11 +60,10 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.PostOffice
 
             var dataAvailableNotificationDtos = new List<DataAvailableNotificationDto>();
 
-            foreach (var chargeSenderIdentifier in chargeSenderIdentifiers)
-            {
-                var charge = await _chargeRepository
-                    .GetChargeAsync(chargeSenderIdentifier).ConfigureAwait(false);
+            var charges = await _chargeRepository.GetChargesAsync(chargeSenderIdentifiers).ConfigureAwait(false);
 
+            foreach (var charge in charges)
+            {
                 if (charge.TaxIndicator)
                 {
                     dataAvailableNotificationDtos.Add(CreateDataAvailableNotificationDto(charge));

@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Domain.Charges;
@@ -42,6 +43,23 @@ namespace GreenEnergyHub.Charges.Infrastructure.Repositories
                 .ConfigureAwait(false);
 
             return ChargeMapper.MapChargeToChargeDomainModel(charge);
+        }
+
+        /// <summary>
+        /// Please note that this is a slow implementation, all charges are retrieved in multiple roundtrip.
+        /// </summary>
+        /// <param name="chargeSenderIdentifiers"></param>
+        public async Task<IReadOnlyCollection<Charge>> GetChargesAsync(
+            IReadOnlyCollection<ChargeSenderIdentifier> chargeSenderIdentifiers)
+        {
+            var charges = new List<Charge>();
+
+            foreach (var chargeSenderIdentifier in chargeSenderIdentifiers)
+            {
+                charges.Add(await GetChargeAsync(chargeSenderIdentifier).ConfigureAwait(false));
+            }
+
+            return charges;
         }
 
         public async Task<Charge> GetChargeAsync(Guid id)
