@@ -13,7 +13,6 @@
 // limitations under the License.
 
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Domain.Charges;
@@ -34,32 +33,15 @@ namespace GreenEnergyHub.Charges.Infrastructure.Repositories
             _chargesDatabaseContext = chargesDatabaseContext;
         }
 
-        public async Task<Charge> GetChargeAsync(ChargeSenderIdentifier chargeSenderIdentifier)
+        public async Task<Charge> GetChargeAsync(ChargeIdentifier chargeIdentifier)
         {
             var charge = await GetChargesAsQueryable()
-                .SingleAsync(x => x.SenderProvidedChargeId == chargeSenderIdentifier.senderProvidedChargeId &&
-                                           x.MarketParticipant.MarketParticipantId == chargeSenderIdentifier.owner &&
-                                           x.ChargeType == (int)chargeSenderIdentifier.chargeType)
+                .SingleAsync(x => x.SenderProvidedChargeId == chargeIdentifier.SenderProvidedChargeId &&
+                                           x.MarketParticipant.MarketParticipantId == chargeIdentifier.owner &&
+                                           x.ChargeType == (int)chargeIdentifier.chargeType)
                 .ConfigureAwait(false);
 
             return ChargeMapper.MapChargeToChargeDomainModel(charge);
-        }
-
-        /// <summary>
-        /// Please note that this is a slow implementation, all charges are retrieved in multiple roundtrip.
-        /// </summary>
-        /// <param name="chargeSenderIdentifiers"></param>
-        public async Task<IReadOnlyCollection<Charge>> GetChargesAsync(
-            IReadOnlyCollection<ChargeSenderIdentifier> chargeSenderIdentifiers)
-        {
-            var charges = new List<Charge>();
-
-            foreach (var chargeSenderIdentifier in chargeSenderIdentifiers)
-            {
-                charges.Add(await GetChargeAsync(chargeSenderIdentifier).ConfigureAwait(false));
-            }
-
-            return charges;
         }
 
         public async Task<Charge> GetChargeAsync(Guid id)
@@ -71,12 +53,12 @@ namespace GreenEnergyHub.Charges.Infrastructure.Repositories
             return ChargeMapper.MapChargeToChargeDomainModel(charge);
         }
 
-        public async Task<bool> CheckIfChargeExistsAsync(ChargeSenderIdentifier chargeSenderIdentifier)
+        public async Task<bool> CheckIfChargeExistsAsync(ChargeIdentifier chargeIdentifier)
         {
             return await _chargesDatabaseContext.Charges
-                .AnyAsync(x => x.SenderProvidedChargeId == chargeSenderIdentifier.senderProvidedChargeId &&
-                                        x.MarketParticipant.MarketParticipantId == chargeSenderIdentifier.owner &&
-                                        x.ChargeType == (int)chargeSenderIdentifier.chargeType)
+                .AnyAsync(x => x.SenderProvidedChargeId == chargeIdentifier.SenderProvidedChargeId &&
+                                        x.MarketParticipant.MarketParticipantId == chargeIdentifier.owner &&
+                                        x.ChargeType == (int)chargeIdentifier.chargeType)
                 .ConfigureAwait(false);
         }
 

@@ -57,7 +57,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.PostOffice
             // Arrange
             charge.SetPrivateProperty(c => c.TaxIndicator, true);
             chargeRepositoryMock.Setup(
-                    repository => repository.GetChargeAsync(It.IsAny<ChargeSenderIdentifier>()))
+                    repository => repository.GetChargeAsync(It.IsAny<ChargeIdentifier>()))
                 .ReturnsAsync(charge);
 
             // Act
@@ -70,7 +70,8 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.PostOffice
                         dto => dto.Origin == DomainOrigin.Charges
                                && dto.SupportsBundling
                                 && dto.Recipient.Equals(
-                                    new GlobalLocationNumberDto(charge.Document.Sender.Id))
+                                    new GlobalLocationNumberDto(chargeLinkCommandAcceptedEvent
+                                        .ChargeLinkCommands.First().Document.Sender.Id))
                                && dto.Uuid != Guid.Empty
                                && dto.RelativeWeight > 0)),
                 Times.AtLeastOnce);
@@ -88,7 +89,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.PostOffice
             // Arrange
             charge.SetPrivateProperty(c => c.TaxIndicator, false);
             chargeRepositoryMock.Setup(repository =>
-                    repository.GetChargeAsync(It.IsAny<ChargeSenderIdentifier>()))
+                    repository.GetChargeAsync(It.IsAny<ChargeIdentifier>()))
                 .ReturnsAsync(charge);
 
             // Act

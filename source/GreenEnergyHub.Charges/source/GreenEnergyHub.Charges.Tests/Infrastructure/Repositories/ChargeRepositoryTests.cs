@@ -157,45 +157,10 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
             var actual = await sut.GetChargeAsync(createdCharge.Id).ConfigureAwait(false);
 
             // Assert
-            actual.Should().BeNull();
+            actual.Should().NotBeNull();
         }
 
-        [Fact]
-        public async Task GetChargesAsync_WithChargeIdentifiers_ThenSuccessReturnedAsync()
-        {
-            // Arrange
-            await using var chargesDatabaseContext = _databaseManager.CreateDbContext();
-            await SeedDatabaseAsync(chargesDatabaseContext);
-            var readRepository = new ChargeRepository(chargesDatabaseContext);
-            var firstCharge = GetValidCharge("firstChargeId");
-            var secondCharge = GetValidCharge("secondChargeId");
-            await readRepository.StoreChargeAsync(firstCharge).ConfigureAwait(false);
-            await readRepository.StoreChargeAsync(secondCharge).ConfigureAwait(false);
-            var chargeSenderIdentifiers = new List<ChargeSenderIdentifier>
-            {
-                new ChargeSenderIdentifier(
-                    firstCharge.SenderProvidedChargeId,
-                    firstCharge.Owner,
-                    firstCharge.Type),
-
-                new ChargeSenderIdentifier(
-                    secondCharge.SenderProvidedChargeId,
-                    secondCharge.Owner,
-                    secondCharge.Type),
-            };
-
-            await using var chargesDatabaseReadContext = _databaseManager.CreateDbContext();
-            var sut = new ChargeRepository(chargesDatabaseContext);
-
-            // Act
-            var actual = await sut.GetChargesAsync(chargeSenderIdentifiers).ConfigureAwait(false);
-
-            // Assert
-            actual.Should().NotBeEmpty();
-            actual.Should().HaveCount(2);
-        }
-
-        private static Charge GetValidCharge(string senderProvidedId = null!)
+        private static Charge GetValidCharge()
         {
             var charge = new Charge(
                 Guid.NewGuid(),
@@ -214,7 +179,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
                     BusinessReasonCode = BusinessReasonCode.UpdateChargeInformation,
                 },
                 "ChargeOperationId",
-                senderProvidedId,
+                "SenderProvidedId",
                 "Name",
                 "description",
                 MarketParticipantOwner,
