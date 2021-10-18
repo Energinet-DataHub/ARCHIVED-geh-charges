@@ -85,6 +85,39 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
             Assert.NotNull(actual);
         }
 
+        [Fact]
+        public async Task GetOrNullAsync_WithExistingMeteringPointId_ReturnsMeteringPoint()
+        {
+            // Arrange
+            await using var chargesDatabaseWriteContext = _databaseManager.CreateDbContext();
+            var expected = GetMeteringPoint();
+            await chargesDatabaseWriteContext.MeteringPoints.AddAsync(expected).ConfigureAwait(false);
+            await chargesDatabaseWriteContext.SaveChangesAsync().ConfigureAwait(false);
+
+            await using var chargesDatabaseReadContext = _databaseManager.CreateDbContext();
+            var sut = new MeteringPointRepository(chargesDatabaseReadContext);
+
+            // Act
+            var actual = await sut.GetOrNullAsync(expected.MeteringPointId).ConfigureAwait(false);
+
+            // Assert
+            Assert.Equal(expected.MeteringPointId, actual?.MeteringPointId);
+        }
+
+        [Fact]
+        public async Task GetOrNullAsync_WithUnknownMeteringPointId_ReturnsNull()
+        {
+            // Arrange
+            await using var chargeDatabaseReadContext = _databaseManager.CreateDbContext();
+            var sut = new MeteringPointRepository(chargeDatabaseReadContext);
+
+            // Act
+            var actual = await sut.GetOrNullAsync("1234567890").ConfigureAwait(false);
+
+            // Assert
+            Assert.Null(actual);
+        }
+
         private static MeteringPoint GetMeteringPointCreatedEvent()
         {
             return MeteringPoint.Create(

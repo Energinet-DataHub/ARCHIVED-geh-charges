@@ -47,5 +47,12 @@ namespace GreenEnergyHub.Charges.Domain.MeteringPoints
         /// <param name="meteringPointId"></param>
         /// <returns>bool</returns>
         Task<bool> ExistsAsync(string meteringPointId);
+
+        /// <summary>
+        /// Used to check if metering point exist in storage and if so gets it.
+        /// </summary>
+        /// <param name="meteringPointId"></param>
+        /// <returns>Metering Point</returns>
+        Task<MeteringPoint?> GetOrNullAsync(string meteringPointId);
     }
 }
