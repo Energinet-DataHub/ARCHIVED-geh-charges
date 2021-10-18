@@ -37,11 +37,11 @@ namespace GreenEnergyHub.Charges.Infrastructure.Repositories
 
         public async Task StoreAsync(
             ChargeLinkCommandAcceptedEvent chargeLinkCommandAcceptedEvent,
-            MarketParticipant marketParticipant,
+            MarketParticipant recipient,
             Guid messageHubId)
         {
             var chargeLinkTransmissionRequest =
-                _chargeLinkTransmissionRequestFactory.MapChargeLinkCommandAcceptedEvent(chargeLinkCommandAcceptedEvent, marketParticipant, messageHubId);
+                _chargeLinkTransmissionRequestFactory.MapChargeLinkCommandAcceptedEvent(chargeLinkCommandAcceptedEvent, recipient, messageHubId);
             await _context.ChargeLinkTransmissionRequests.AddAsync(chargeLinkTransmissionRequest);
             await _context.SaveChangesAsync();
         }

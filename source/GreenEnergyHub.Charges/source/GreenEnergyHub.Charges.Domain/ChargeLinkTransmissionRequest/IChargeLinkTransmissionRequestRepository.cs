@@ -24,7 +24,7 @@ namespace GreenEnergyHub.Charges.Domain.ChargeLinkTransmissionRequest
     {
         Task StoreAsync(
             ChargeLinkCommandAcceptedEvent chargeLinkCommandAcceptedEvent,
-            MarketParticipant marketParticipant,
+            MarketParticipant recipient,
             Guid messageHubId);
 
         Task<List<ChargeLinkTransmissionRequest>> GetChargeLinkTransmissionRequestsAsync(IEnumerable<Guid> postOfficeIds);

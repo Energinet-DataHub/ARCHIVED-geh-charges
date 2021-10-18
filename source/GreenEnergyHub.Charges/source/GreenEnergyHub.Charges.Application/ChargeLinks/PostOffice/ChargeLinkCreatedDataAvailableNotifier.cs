@@ -41,15 +41,18 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.PostOffice
         private readonly IDataAvailableNotificationSender _dataAvailableNotificationSender;
         private readonly IChargeRepository _chargeRepository;
         private readonly IChargeLinkTransmissionRequestRepository _chargeLinkTransmissionRequestRepository;
+        private readonly IMarketParticipantRepository _marketParticipantRepository;
 
         public ChargeLinkCreatedDataAvailableNotifier(
             IDataAvailableNotificationSender dataAvailableNotificationSender,
             IChargeRepository chargeRepository,
-            IChargeLinkTransmissionRequestRepository chargeLinkTransmissionRequestRepository)
+            IChargeLinkTransmissionRequestRepository chargeLinkTransmissionRequestRepository,
+            IMarketParticipantRepository marketParticipantRepository)
         {
             _dataAvailableNotificationSender = dataAvailableNotificationSender;
             _chargeRepository = chargeRepository;
             _chargeLinkTransmissionRequestRepository = chargeLinkTransmissionRequestRepository;
+            _marketParticipantRepository = marketParticipantRepository;
         }
 
         public async Task NotifyAsync([NotNull] ChargeLinkCommandAcceptedEvent chargeLinkCommandAcceptedEvent)
@@ -64,11 +67,15 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.PostOffice
 
             if (!charge.TaxIndicator) return;
 
-            var marketParticipant = new MarketParticipant();
+            // It is the responsibility of the Charge Domain to find the recipient and
+            // not considered part of the Create Metering Point orchestration.
+            var recipient =
+                _marketParticipantRepository.GetGridAccessProvider(chargeLinkCommandAcceptedEvent.ChargeLink
+                    .MeteringPointId);
 
             var dataAvailableNotification = CreateDataAvailableNotificationDto(chargeLinkCommandAcceptedEvent);
 
-            await _chargeLinkTransmissionRequestRepository.StoreAsync(chargeLinkCommandAcceptedEvent, marketParticipant, dataAvailableNotification.Uuid);
+            await _chargeLinkTransmissionRequestRepository.StoreAsync(chargeLinkCommandAcceptedEvent, recipient, dataAvailableNotification.Uuid);
 
             await _dataAvailableNotificationSender
                 .SendAsync(dataAvailableNotification)

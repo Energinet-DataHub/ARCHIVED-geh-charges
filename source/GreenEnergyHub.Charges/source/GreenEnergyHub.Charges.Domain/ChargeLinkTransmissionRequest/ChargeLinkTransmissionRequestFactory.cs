@@ -22,12 +22,12 @@ namespace GreenEnergyHub.Charges.Domain.ChargeLinkTransmissionRequest
     {
         public ChargeLinkTransmissionRequest MapChargeLinkCommandAcceptedEvent(
             ChargeLinkCommandAcceptedEvent chargeLinkCommandAcceptedEvent,
-            MarketParticipant marketParticipant,
+            MarketParticipant recipient,
             Guid messageHubId)
         {
             return new ChargeLinkTransmissionRequest(
-                marketParticipant.Id,
-                marketParticipant.BusinessProcessRole,
+                recipient.Id,
+                recipient.BusinessProcessRole,
                 chargeLinkCommandAcceptedEvent.Document.BusinessReasonCode,
                 chargeLinkCommandAcceptedEvent.ChargeLink.SenderProvidedChargeId,
                 chargeLinkCommandAcceptedEvent.Document.Sender.Id,
