@@ -12,13 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Diagnostics.CodeAnalysis;
-
-namespace GreenEnergyHub.DataHub.Charges.Libraries.Models
+namespace GreenEnergyHub.DataHub.Charges.Libraries.Enums
 {
-    /// <summary>
-    /// The required data needed by the Charges domain to create Default charge links.
-    /// </summary>
-    /// <param name="meteringPointId">A unique id to specify the metering point.</param>
-    public sealed record CreateDefaultChargeLinksDto(string meteringPointId);
+    public enum RequestStatus
+    {
+        Succeeded = 1,
+        Failed = 2,
+    }
 }

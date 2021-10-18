@@ -13,12 +13,18 @@
 // limitations under the License.
 
 using System.Diagnostics.CodeAnalysis;
+using System.Threading.Tasks;
+using GreenEnergyHub.DataHub.Charges.Libraries.Enums;
+using GreenEnergyHub.DataHub.Charges.Libraries.Models;
 
-namespace GreenEnergyHub.DataHub.Charges.Libraries.Models
+namespace GreenEnergyHub.DataHub.Charges.Libraries.DefaultChargeLink
 {
-    /// <summary>
-    /// The required data needed by the Charges domain to create Default charge links.
-    /// </summary>
-    /// <param name="meteringPointId">A unique id to specify the metering point.</param>
-    public sealed record CreateDefaultChargeLinksDto(string meteringPointId);
+    public delegate Task OnSuccess(CreateDefaultChargeLinksSucceededDto createDefaultChargeLinksSucceeded);
+
+    public delegate Task OnFailure(CreateDefaultChargeLinksFailedDto createDefaultChargeLinksSucceeded);
+
+    public abstract class DefaultChargeLinkReplyReaderBase
+    {
+        public abstract Task ReadAsync([NotNull] byte[] data, [NotNull] RequestStatus requestStatus);
+    }
 }
