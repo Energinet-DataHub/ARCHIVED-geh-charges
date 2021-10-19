@@ -16,9 +16,9 @@ using System;
 
 namespace GreenEnergyHub.Charges.FunctionHost.Configuration
 {
-    internal static class EnvironmentHelper
+    public static class EnvironmentHelper
     {
-        internal static string GetEnv(string variableName)
+        public static string GetEnv(string variableName)
         {
             return Environment.GetEnvironmentVariable(variableName) ??
                    throw new Exception($"Function app is missing required environment variable '{variableName}'");
