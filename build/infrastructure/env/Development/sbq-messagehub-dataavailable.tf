@@ -14,7 +14,7 @@
 
 module "sbq_messagehub_dataavailable" {
   source              = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//service-bus-queue?ref=2.0.0"
-  name                = "sbq-dataavailable"
+  name                = local.MESSAGEHUB_DATAAVAILABLE_QUEUE
   namespace_name      = module.sbn_external_integration_events.name
   resource_group_name = data.azurerm_resource_group.main.name
 }
