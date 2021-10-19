@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Diagnostics.CodeAnalysis;
 using Energinet.Charges.Contracts;
 
 namespace Energinet.DataHub.Charges.Libraries.Models
@@ -21,8 +20,8 @@ namespace Energinet.DataHub.Charges.Libraries.Models
     /// The data needed by the Metering Point domain as a reply
     /// to a successful <see cref="CreateDefaultChargeLinks" /> request
     /// </summary>
-    /// <param name="meteringPointId">A unique id to specify the metering point.</param>
-    /// <param name="didCreateChargeLinks">True if the <see cref="CreateDefaultChargeLinks" /> request
+    /// <param name="MeteringPointId">A unique id to specify the metering point.</param>
+    /// <param name="DidCreateChargeLinks">True if the <see cref="CreateDefaultChargeLinks" /> request
     /// led to the creation of Charge Links within Charges Domain.</param>
-    public sealed record CreateDefaultChargeLinksSucceededDto(string meteringPointId, bool didCreateChargeLinks);
+    public sealed record CreateDefaultChargeLinksSucceededDto(string MeteringPointId, bool DidCreateChargeLinks);
 }

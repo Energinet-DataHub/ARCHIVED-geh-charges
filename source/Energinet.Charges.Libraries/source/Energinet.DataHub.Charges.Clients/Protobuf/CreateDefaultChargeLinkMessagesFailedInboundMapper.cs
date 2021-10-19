@@ -20,24 +20,22 @@ using Energinet.DataHub.Charges.Libraries.Models;
 
 namespace Energinet.DataHub.Charges.Libraries.Protobuf
 {
-    public static class CreateDefaultChargeLinksFailedOutboundMapper
+    internal class CreateDefaultChargeLinkMessagesFailedInboundMapper
     {
-        internal static CreateDefaultChargeLinksFailed Convert(
-            [NotNull] CreateDefaultChargeLinksFailedDto createDefaultChargeLinksFailedDto)
+        protected internal static CreateDefaultChargeLinkMessagesFailedDto Convert(
+            [NotNull] CreateDefaultChargeLinkMessagesFailed createDefaultChargeLinkMessagesFailed)
         {
-            return new()
-            {
-                MeteringPointId = createDefaultChargeLinksFailedDto.MeteringPointId,
-                ErrorCode = ConvertErrorCode(createDefaultChargeLinksFailedDto.ErrorCode),
-            };
+            return new(
+                createDefaultChargeLinkMessagesFailed.MeteringPointId,
+                ConvertErrorCode(createDefaultChargeLinkMessagesFailed.ErrorCode));
         }
 
-        private static CreateDefaultChargeLinksFailed.Types.ErrorCode ConvertErrorCode([NotNull] ErrorCode errorCode)
+        private static ErrorCode ConvertErrorCode(CreateDefaultChargeLinkMessagesFailed.Types.ErrorCode errorCode)
         {
             return errorCode switch
             {
-                ErrorCode.Unspecified => CreateDefaultChargeLinksFailed.Types.ErrorCode.EcUnspecified,
-                ErrorCode.MeteringPointUnknown => CreateDefaultChargeLinksFailed.Types.ErrorCode.EcMeteringPointUnknown,
+                CreateDefaultChargeLinkMessagesFailed.Types.ErrorCode.EcUnspecified => ErrorCode.Unspecified,
+                CreateDefaultChargeLinkMessagesFailed.Types.ErrorCode.EcMeteringPointUnknown => ErrorCode.MeteringPointUnknown,
                 _ => throw new ArgumentOutOfRangeException(nameof(errorCode), $"Value: {errorCode.ToString()}"),
             };
         }
