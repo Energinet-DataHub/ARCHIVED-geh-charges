@@ -64,17 +64,19 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.PostOffice
             await sut.NotifyAsync(chargeLinkCommandAcceptedEvent);
 
             // Assert
-            dataAvailableNotificationSenderMock.Verify(
-                sender => sender.SendAsync(
-                    It.Is<DataAvailableNotificationDto>(
-                        dto => dto.Origin == DomainOrigin.Charges
-                               && dto.SupportsBundling
-                                && dto.Recipient.Equals(
-                                    new GlobalLocationNumberDto(chargeLinkCommandAcceptedEvent
-                                        .ChargeLinkCommands.First().Document.Sender.Id))
-                               && dto.Uuid != Guid.Empty
-                               && dto.RelativeWeight > 0)),
-                Times.Exactly(3));
+            foreach (var chargeLinkCommand in chargeLinkCommandAcceptedEvent.ChargeLinkCommands)
+            {
+                dataAvailableNotificationSenderMock.Verify(
+                    sender => sender.SendAsync(
+                        It.Is<DataAvailableNotificationDto>(
+                            dto => dto.Origin == DomainOrigin.Charges
+                                   && dto.SupportsBundling
+                                   && dto.Recipient.Equals(
+                                       new GlobalLocationNumberDto(chargeLinkCommand.Document.Sender.Id))
+                                   && dto.Uuid != Guid.Empty
+                                   && dto.RelativeWeight > 0)),
+                    Times.Once);
+            }
         }
 
         [Theory]
