@@ -49,7 +49,7 @@ namespace Energinet.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.Defaul
         [Fact]
         public void Convert_WhenCalledWithNull_ShouldThrow()
         {
-            Assert.Throws<ArgumentNullException>(() => CreateDefaultChargeLinksSucceededOutboundMapper.Convert(null!));
+            Assert.Throws<NullReferenceException>(() => CreateDefaultChargeLinksSucceededOutboundMapper.Convert(null!));
         }
     }
 }

@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
 using System.Diagnostics.CodeAnalysis;
 using Energinet.Charges.Contracts;
 using Energinet.DataHub.Charges.Libraries.Models;
@@ -24,11 +23,7 @@ namespace Energinet.DataHub.Charges.Libraries.Protobuf
         protected internal static CreateDefaultChargeLinkMessagesSucceededDto Convert(
             [NotNull] CreateDefaultChargeLinkMessagesSucceeded createDefaultChargeLinksSucceeded)
         {
-            if (createDefaultChargeLinksSucceeded == null)
-                throw new ArgumentNullException(nameof(createDefaultChargeLinksSucceeded));
-
-            return new CreateDefaultChargeLinkMessagesSucceededDto(
-                createDefaultChargeLinksSucceeded.MeteringPointId);
+            return new (createDefaultChargeLinksSucceeded.MeteringPointId);
         }
     }
 }

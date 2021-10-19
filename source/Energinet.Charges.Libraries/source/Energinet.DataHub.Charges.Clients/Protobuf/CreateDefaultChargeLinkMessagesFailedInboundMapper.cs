@@ -25,10 +25,7 @@ namespace Energinet.DataHub.Charges.Libraries.Protobuf
         protected internal static CreateDefaultChargeLinkMessagesFailedDto Convert(
             [NotNull] CreateDefaultChargeLinkMessagesFailed createDefaultChargeLinkMessagesFailed)
         {
-            if (createDefaultChargeLinkMessagesFailed == null)
-                throw new ArgumentNullException(nameof(createDefaultChargeLinkMessagesFailed));
-
-            return new CreateDefaultChargeLinkMessagesFailedDto(
+            return new (
                 createDefaultChargeLinkMessagesFailed.MeteringPointId,
                 ConvertErrorCode(createDefaultChargeLinkMessagesFailed.ErrorCode));
         }
