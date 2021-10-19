@@ -10,7 +10,7 @@ echo ===========================================================================
 
 setlocal
 
-set /p organization=Enter organization used with Terraform (perhaps your initials uppercased?): 
+set /p organization=Enter organization used with Terraform (perhaps your initials?): 
 set /p doBuild=Build solution ([y]/n)?
 rem If you don't know the password, perhaps you can obtain it from the configuration settings of the deployed ChargeCommandReceiver function in Azure portal
 set /p sqlPassword=Enter SQL password for 'gehdbadmin' to update db or empty to skip: 
