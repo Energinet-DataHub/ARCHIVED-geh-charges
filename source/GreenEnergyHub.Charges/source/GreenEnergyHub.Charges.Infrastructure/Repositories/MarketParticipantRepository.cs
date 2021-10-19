@@ -41,5 +41,23 @@ namespace GreenEnergyHub.Charges.Infrastructure.Repositories
                 .Select(_mapper.ToDomainObject)
                 .SingleOrDefault();
         }
+
+        /// <summary>
+        /// This implementation is temp until grid areas and market participants are implemented in their own
+        /// domains and integration event are used  to update a query model in the charges domain.
+        ///
+        /// Later we need to use the metering point ID to find the grid area and then find the responsible market
+        /// participant of the grid area.
+        /// </summary>
+        /// <param name="meteringPointId">ID of the metering point to find the grid access provider for</param>
+        /// <returns>The grid access provider responsible for the metering point</returns>
+        public MarketParticipant GetGridAccessProvider(string meteringPointId)
+        {
+            return new MarketParticipant
+            {
+                Id = "recipient id",
+                BusinessProcessRole = MarketParticipantRole.EnergySupplier,
+            };
+        }
     }
 }
