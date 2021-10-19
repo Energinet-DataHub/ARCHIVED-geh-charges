@@ -43,6 +43,6 @@ jobs:
         uses: ./.github/actions/dotnet-publish-nuget
         with:
           dotnet_version: ${{ env.DOTNET_VERSION }}
-          csproj_file_path: ${{ env.CSPROJ_FILE_PATH }}
+          csproj_file_path: ${{ env.CSPROJ_FILE_PATH }}
           binary_path: ${{ env.BINARY_PATH }}
           nuget_token: ${{ secrets.NUGET_TOKEN }}
