@@ -27,6 +27,6 @@ namespace GreenEnergyHub.Charges.Domain.AvailableChargeLinksData
             MarketParticipant recipient,
             Guid messageHubId);
 
-        Task<List<AvailableChargeLinksData>> GetAvailableChargeLinksDataAsync(IEnumerable<Guid> postOfficeIds);
+        Task<List<AvailableChargeLinksData>> GetAvailableChargeLinksDataAsync(IEnumerable<Guid> dataReferenceId);
     }
 }
