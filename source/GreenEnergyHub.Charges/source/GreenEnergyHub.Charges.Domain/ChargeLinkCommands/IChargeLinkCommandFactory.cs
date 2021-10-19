@@ -14,7 +14,6 @@
 
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Domain.ChargeLinks;
 using GreenEnergyHub.Charges.Domain.CreateLinkCommandEvents;
 using GreenEnergyHub.Charges.Domain.DefaultChargeLinks;
 
@@ -25,11 +24,6 @@ namespace GreenEnergyHub.Charges.Domain.ChargeLinkCommands
         Task<ChargeLinkCommand> CreateAsync(
             [NotNull] CreateLinkCommandEvent createLinkCommandEvent,
             [NotNull] DefaultChargeLink defaultChargeLink,
-            string correlationId);
-
-        Task<ChargeLinkCommand> CreateFromChargeLinkAsync(
-            ChargeLink chargeLink,
-            ChargeLinkPeriodDetails chargeLinkPeriodDetails,
             string correlationId);
     }
 }

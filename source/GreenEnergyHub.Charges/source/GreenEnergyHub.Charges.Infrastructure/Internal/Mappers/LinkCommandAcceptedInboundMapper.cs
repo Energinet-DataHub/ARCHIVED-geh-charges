@@ -35,7 +35,8 @@ namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
             return new ChargeLinkCommandAcceptedEvent(
                 chargeLinkCommandAcceptedContract.CorrelationId,
                 chargeLinkCommandAcceptedContract.ChargeLinkCommands.Select(
-                    chargeLinkCommandContract => new ChargeLinkCommand(chargeLinkCommandContract.CorrelationId)
+                    chargeLinkCommandContract =>
+                        new ChargeLinkCommand(chargeLinkCommandContract.CorrelationId)
                 {
                   Document = ConvertDocument(chargeLinkCommandContract.Document),
                   ChargeLink = ConvertChargeLink(chargeLinkCommandContract.ChargeLink),

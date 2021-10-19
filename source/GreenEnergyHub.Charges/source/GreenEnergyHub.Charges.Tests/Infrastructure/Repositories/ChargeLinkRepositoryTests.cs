@@ -14,6 +14,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Core.DateTime;
@@ -56,7 +57,9 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
             await using var chargesDatabaseWriteContext = _databaseManager.CreateDbContext();
 
             var ids = SeedDatabase(chargesDatabaseWriteContext);
-            var expected = CreateNewExpectedChargeLink(ids);
+            var operation = new ChargeLinkOperation(ExpectedOperationId, ExpectedCorrelationId);
+
+            var expected = CreateNewExpectedChargeLink(ids, operation);
             var sut = new ChargeLinkRepository(chargesDatabaseWriteContext);
 
             // Act
@@ -71,20 +74,49 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
             actual.Should().BeEquivalentTo(expected);
         }
 
-        private ChargeLink CreateNewExpectedChargeLink((Guid ChargeId, Guid MeteringPointId) ids)
+        [Fact]
+        public async Task StoreAsync_StoresMultipleChargeLink()
         {
-            var operation = new ChargeLinkOperation(ExpectedOperationId, ExpectedCorrelationId);
+            // Arrange
+            await using var chargesDatabaseWriteContext = _databaseManager.CreateDbContext();
+            var ids = SeedDatabase(chargesDatabaseWriteContext);
 
+            var firstOperation = new ChargeLinkOperation(ExpectedOperationId, ExpectedCorrelationId);
+            var firstExpected = CreateNewExpectedChargeLink(ids, firstOperation);
+
+            var secondOperation = new ChargeLinkOperation("second" + ExpectedOperationId, "second" + ExpectedCorrelationId);
+            var secondExpected = CreateNewExpectedChargeLink(ids, secondOperation);
+
+            var sut = new ChargeLinkRepository(chargesDatabaseWriteContext);
+
+            // Act
+            await sut.StoreAsync(new List<ChargeLink> { firstExpected, secondExpected }).ConfigureAwait(false);
+
+            // Assert
+            await using var chargesDatabaseReadContext = _databaseManager.CreateDbContext();
+
+            var actual = await chargesDatabaseReadContext.ChargeLinks.Where(
+                    c => c.ChargeId == ids.ChargeId && c.MeteringPointId == ids.MeteringPointId).ToListAsync()
+                .ConfigureAwait(false);
+
+            actual.Should().Contain(x => x.Id == firstExpected.Id);
+            actual.Should().Contain(x => x.Id == secondExpected.Id);
+        }
+
+        private ChargeLink CreateNewExpectedChargeLink(
+            (Guid ChargeId, Guid MeteringPointId) ids,
+            ChargeLinkOperation chargeLinkOperation)
+        {
             var periodDetails = new ChargeLinkPeriodDetails(
                 _expectedPeriodDetailsStartDateTime,
                 ((Instant?)null).TimeOrEndDefault(),
                 ExpectedOperationDetailsFactor,
-                operation.Id);
+                chargeLinkOperation.Id);
 
             return new ChargeLink(
                 ids.ChargeId,
                 ids.MeteringPointId,
-                new List<ChargeLinkOperation> { operation },
+                new List<ChargeLinkOperation> { chargeLinkOperation },
                 new List<ChargeLinkPeriodDetails> { periodDetails });
         }
 
