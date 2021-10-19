@@ -15,13 +15,9 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using GreenEnergyHub.Charges.Domain.ChargeLinkCommandReceivedEvents;
-using GreenEnergyHub.Charges.Domain.ChargeLinkCommands;
-using GreenEnergyHub.Charges.Domain.ChargeLinks;
 using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandReceived;
 using GreenEnergyHub.Charges.Infrastructure.Internal.Mappers;
-using GreenEnergyHub.Charges.TestCore;
 using GreenEnergyHub.Charges.TestCore.Attributes;
 using GreenEnergyHub.Charges.TestCore.Protobuf;
 using NodaTime;
@@ -36,16 +32,16 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Internal.Mappers
         [Theory]
         [InlineAutoMoqData]
         public void Convert_WhenCalled_ShouldMapToProtobufWithCorrectValues(
-            [NotNull] ChargeLinkCommand chargeLinkCommand,
+            [NotNull] Charges.Domain.ChargeLinkCommands.ChargeLinkCommand chargeLinkCommand,
             [NotNull] LinkCommandReceivedOutboundMapper sut)
         {
             // Arrange
             ChargeLinkCommandReceivedEvent chargeLinkCommandReceivedEvent =
                 new(SystemClock.Instance.GetCurrentInstant(), chargeLinkCommand.CorrelationId,
-                    new List<ChargeLinkCommand> { chargeLinkCommand });
+                    new List<Charges.Domain.ChargeLinkCommands.ChargeLinkCommand> { chargeLinkCommand });
 
             // Act
-            var result = (ChargeLinkCommandReceivedContract)sut.Convert(chargeLinkCommandReceivedEvent);
+            var result = (ChargeLinkCommandReceived)sut.Convert(chargeLinkCommandReceivedEvent);
 
             // Assert
             ProtobufAssert.OutgoingContractIsSubset(chargeLinkCommandReceivedEvent, result);
