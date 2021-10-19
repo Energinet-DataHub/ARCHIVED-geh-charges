@@ -18,7 +18,6 @@ using System.Threading.Tasks;
 using Energinet.DataHub.MessageHub.Client.DataAvailable;
 using Energinet.DataHub.MessageHub.Client.Model;
 using GreenEnergyHub.Charges.Domain.ChargeLinkCommandAcceptedEvents;
-using GreenEnergyHub.Charges.Domain.Charges;
 
 namespace GreenEnergyHub.Charges.Application.ChargeLinks.MessageHub
 {
@@ -30,25 +29,15 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.MessageHub
         private const int MessageWeight = 2;
 
         private readonly IDataAvailableNotificationSender _dataAvailableNotificationSender;
-        private readonly IChargeRepository _chargeRepository;
 
-        public ChargeLinkCreatedDataAvailableNotifier(IDataAvailableNotificationSender dataAvailableNotificationSender, IChargeRepository chargeRepository)
+        public ChargeLinkCreatedDataAvailableNotifier(IDataAvailableNotificationSender dataAvailableNotificationSender)
         {
             _dataAvailableNotificationSender = dataAvailableNotificationSender;
-            _chargeRepository = chargeRepository;
         }
 
         public async Task NotifyAsync([NotNull] ChargeLinkCommandAcceptedEvent chargeLinkCommandAcceptedEvent)
         {
             if (chargeLinkCommandAcceptedEvent == null) throw new ArgumentNullException(nameof(chargeLinkCommandAcceptedEvent));
-
-            var link = chargeLinkCommandAcceptedEvent.ChargeLink;
-
-            var charge = await _chargeRepository
-                .GetChargeAsync(link.SenderProvidedChargeId, link.ChargeOwner, link.ChargeType)
-                .ConfigureAwait(false);
-
-            if (!charge.TaxIndicator) return;
 
             var dataAvailableNotification = CreateDataAvailableNotificationDto(chargeLinkCommandAcceptedEvent);
             await _dataAvailableNotificationSender
@@ -62,7 +51,7 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.MessageHub
             // The ID that the charges domain must handle when peeking
             var chargeDomainReferenceId = Guid.NewGuid();
 
-            // The grid operator initiating the creation of the charge link is also
+            // The market participant initiating the creation of the charge link is also
             // the receiver of the confirmation
             var receiver = createdChargeLink.Document.Sender.Id;
 

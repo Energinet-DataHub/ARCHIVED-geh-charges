@@ -74,29 +74,5 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.MessageHub
                                && dto.RelativeWeight > 0)),
                 Times.Once);
         }
-
-        [Theory]
-        [InlineAutoMoqData]
-        public async Task NotifyAsync_WhenChargeIsNotTaxIndicator_DoesNotSendDataAvailableNotification(
-            ChargeLinkCommandAcceptedEvent chargeLinkCommandAcceptedEvent,
-            Charge charge,
-            [Frozen] Mock<IChargeRepository> chargeRepositoryMock,
-            [Frozen] Mock<IDataAvailableNotificationSender> dataAvailableNotificationSenderMock,
-            ChargeLinkCreatedDataAvailableNotifier sut)
-        {
-            // Arrange
-            var link = chargeLinkCommandAcceptedEvent.ChargeLink;
-            charge.SetPrivateProperty(c => c.TaxIndicator, false);
-            chargeRepositoryMock.Setup(repository =>
-                    repository.GetChargeAsync(link.SenderProvidedChargeId, link.ChargeOwner, link.ChargeType))
-                .ReturnsAsync(charge);
-
-            // Act
-            await sut.NotifyAsync(chargeLinkCommandAcceptedEvent);
-
-            // Assert
-            dataAvailableNotificationSenderMock.Verify(
-                sender => sender.SendAsync(It.IsAny<DataAvailableNotificationDto>()), Times.Never);
-        }
     }
 }
