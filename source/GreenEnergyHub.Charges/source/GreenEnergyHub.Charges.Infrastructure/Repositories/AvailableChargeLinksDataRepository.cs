@@ -31,9 +31,9 @@ namespace GreenEnergyHub.Charges.Infrastructure.Repositories
             _context = context;
         }
 
-        public async Task StoreAsync(AvailableChargeLinksData availableChargeLinksData)
+        public async Task StoreAsync(List<AvailableChargeLinksData> availableChargeLinksData)
         {
-            await _context.AvailableChargeLinksData.AddAsync(availableChargeLinksData);
+            await _context.AvailableChargeLinksData.AddRangeAsync(availableChargeLinksData);
             await _context.SaveChangesAsync();
         }
 

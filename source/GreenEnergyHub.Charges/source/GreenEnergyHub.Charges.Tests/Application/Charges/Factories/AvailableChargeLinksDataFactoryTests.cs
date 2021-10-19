@@ -17,6 +17,7 @@ using System.Diagnostics.CodeAnalysis;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.AvailableChargeLinksData;
 using GreenEnergyHub.Charges.Domain.ChargeLinkCommandAcceptedEvents;
+using GreenEnergyHub.Charges.Domain.ChargeLinkCommands;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.TestHelpers;
 using GreenEnergyHub.TestHelpers.FluentAssertionsExtensions;
@@ -32,7 +33,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Factories
         [Theory]
         [InlineAutoDomainData]
         public void CreateFromCommandAsync_Charge_HasNoNullsOrEmptyCollections(
-            [NotNull] ChargeLinkCommandAcceptedEvent chargeLinkCommandAcceptedEvent,
+            [NotNull] ChargeLinkCommand chargeLinkCommand,
             [NotNull] MarketParticipant marketParticipant,
             [NotNull] Instant now,
             [NotNull] Guid messageHubId,
@@ -40,20 +41,20 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Factories
         {
             // Act
             var actual =
-                sut.CreateAvailableChargeLinksData(chargeLinkCommandAcceptedEvent, marketParticipant, now, messageHubId);
+                sut.CreateAvailableChargeLinksData(chargeLinkCommand, marketParticipant, now, messageHubId);
 
             // Assert
             actual.Should().NotContainNullsOrEmptyEnumerables();
             actual.RecipientId.Should().Be(marketParticipant.Id);
             actual.RecipientRole.Should().Be(marketParticipant.BusinessProcessRole);
-            actual.BusinessReasonCode.Should().Be(chargeLinkCommandAcceptedEvent.Document.BusinessReasonCode);
-            actual.ChargeId.Should().Be(chargeLinkCommandAcceptedEvent.ChargeLink.SenderProvidedChargeId);
-            actual.ChargeOwner.Should().Be(chargeLinkCommandAcceptedEvent.Document.Sender.Id);
-            actual.ChargeType.Should().Be(chargeLinkCommandAcceptedEvent.ChargeLink.ChargeType);
-            actual.MeteringPointId.Should().Be(chargeLinkCommandAcceptedEvent.ChargeLink.MeteringPointId);
-            actual.Factor.Should().Be(chargeLinkCommandAcceptedEvent.ChargeLink.Factor);
-            actual.StartDateTime.Should().Be(chargeLinkCommandAcceptedEvent.ChargeLink.StartDateTime);
-            actual.EndDateTime.Should().Be(chargeLinkCommandAcceptedEvent.ChargeLink.EndDateTime.GetValueOrDefault());
+            actual.BusinessReasonCode.Should().Be(chargeLinkCommand.Document.BusinessReasonCode);
+            actual.ChargeId.Should().Be(chargeLinkCommand.ChargeLink.SenderProvidedChargeId);
+            actual.ChargeOwner.Should().Be(chargeLinkCommand.Document.Sender.Id);
+            actual.ChargeType.Should().Be(chargeLinkCommand.ChargeLink.ChargeType);
+            actual.MeteringPointId.Should().Be(chargeLinkCommand.ChargeLink.MeteringPointId);
+            actual.Factor.Should().Be(chargeLinkCommand.ChargeLink.Factor);
+            actual.StartDateTime.Should().Be(chargeLinkCommand.ChargeLink.StartDateTime);
+            actual.EndDateTime.Should().Be(chargeLinkCommand.ChargeLink.EndDateTime.GetValueOrDefault());
             actual.RequestTime.Should().Be(now);
             actual.AvailableDataReferenceId.Should().Be(messageHubId);
         }

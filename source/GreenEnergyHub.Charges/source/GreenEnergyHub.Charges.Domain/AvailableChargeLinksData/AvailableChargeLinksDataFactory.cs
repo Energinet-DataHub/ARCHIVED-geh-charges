@@ -13,7 +13,10 @@
 // limitations under the License.
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using GreenEnergyHub.Charges.Domain.ChargeLinkCommandAcceptedEvents;
+using GreenEnergyHub.Charges.Domain.ChargeLinkCommands;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using NodaTime;
 
@@ -22,7 +25,7 @@ namespace GreenEnergyHub.Charges.Domain.AvailableChargeLinksData
     public class AvailableChargeLinksDataFactory : IAvailableChargeLinksDataFactory
     {
         public AvailableChargeLinksData CreateAvailableChargeLinksData(
-            ChargeLinkCommandAcceptedEvent chargeLinkCommandAcceptedEvent,
+            ChargeLinkCommand chargeLinkCommand,
             MarketParticipant recipient,
             Instant requestTime,
             Guid messageHubId)
@@ -30,14 +33,14 @@ namespace GreenEnergyHub.Charges.Domain.AvailableChargeLinksData
             return new AvailableChargeLinksData(
                 recipient.Id,
                 recipient.BusinessProcessRole,
-                chargeLinkCommandAcceptedEvent.Document.BusinessReasonCode,
-                chargeLinkCommandAcceptedEvent.ChargeLink.SenderProvidedChargeId,
-                chargeLinkCommandAcceptedEvent.Document.Sender.Id,
-                chargeLinkCommandAcceptedEvent.ChargeLink.ChargeType,
-                chargeLinkCommandAcceptedEvent.ChargeLink.MeteringPointId,
-                chargeLinkCommandAcceptedEvent.ChargeLink.Factor,
-                chargeLinkCommandAcceptedEvent.ChargeLink.StartDateTime,
-                chargeLinkCommandAcceptedEvent.ChargeLink.EndDateTime.GetValueOrDefault(),
+                chargeLinkCommand.Document.BusinessReasonCode,
+                chargeLinkCommand.ChargeLink.SenderProvidedChargeId,
+                chargeLinkCommand.Document.Sender.Id,
+                chargeLinkCommand.ChargeLink.ChargeType,
+                chargeLinkCommand.ChargeLink.MeteringPointId,
+                chargeLinkCommand.ChargeLink.Factor,
+                chargeLinkCommand.ChargeLink.StartDateTime,
+                chargeLinkCommand.ChargeLink.EndDateTime.GetValueOrDefault(),
                 requestTime,
                 messageHubId);
         }

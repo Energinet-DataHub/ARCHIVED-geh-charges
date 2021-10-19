@@ -43,7 +43,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
 
         [Theory]
         [InlineAutoMoqData]
-        public async Task StoreAsync_StoresAvailableChargeLinksData([NotNull] AvailableChargeLinksData expected)
+        public async Task StoreAsync_StoresAvailableChargeLinksData([NotNull] List<AvailableChargeLinksData> expectedList)
         {
             // Arrange
             await using var chargesDatabaseWriteContext = _databaseManager.CreateDbContext();
@@ -51,13 +51,16 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
             var sut = new AvailableChargeLinksDataRepository(chargesDatabaseWriteContext);
 
             // Act
-            await sut.StoreAsync(expected).ConfigureAwait(false);
+            await sut.StoreAsync(expectedList).ConfigureAwait(false);
 
             // Assert
             await using var chargesDatabaseReadContext = _databaseManager.CreateDbContext();
-            var actual =
-                chargesDatabaseReadContext.AvailableChargeLinksData.Single(x => x.AvailableDataReferenceId == expected.AvailableDataReferenceId);
-            actual.ChargeOwner.Should().Be(expected.ChargeOwner);
+            foreach (var expected in expectedList)
+            {
+                var actual =
+                    chargesDatabaseReadContext.AvailableChargeLinksData.Single(x => x.AvailableDataReferenceId == expected.AvailableDataReferenceId);
+                actual.ChargeOwner.Should().Be(expected.ChargeOwner);
+            }
         }
 
         [Theory]

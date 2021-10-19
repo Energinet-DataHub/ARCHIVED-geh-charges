@@ -20,7 +20,7 @@ namespace GreenEnergyHub.Charges.Domain.AvailableChargeLinksData
 {
     public interface IAvailableChargeLinksDataRepository
     {
-        Task StoreAsync(AvailableChargeLinksData availableChargeLinksData);
+        Task StoreAsync(List<AvailableChargeLinksData> availableChargeLinksData);
 
         Task<List<AvailableChargeLinksData>> GetAvailableChargeLinksDataAsync(IEnumerable<Guid> dataReferenceId);
     }

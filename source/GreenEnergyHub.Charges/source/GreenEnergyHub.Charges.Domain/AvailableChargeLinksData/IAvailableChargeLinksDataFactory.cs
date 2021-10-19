@@ -13,7 +13,9 @@
 // limitations under the License.
 
 using System;
+using System.Collections.Generic;
 using GreenEnergyHub.Charges.Domain.ChargeLinkCommandAcceptedEvents;
+using GreenEnergyHub.Charges.Domain.ChargeLinkCommands;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using NodaTime;
 
@@ -22,7 +24,7 @@ namespace GreenEnergyHub.Charges.Domain.AvailableChargeLinksData
     public interface IAvailableChargeLinksDataFactory
     {
         AvailableChargeLinksData CreateAvailableChargeLinksData(
-            ChargeLinkCommandAcceptedEvent chargeLinkCommandAcceptedEvent,
+            ChargeLinkCommand chargeLinkCommand,
             MarketParticipant recipient,
             Instant requestTime,
             Guid messageHubId);

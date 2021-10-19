@@ -23,6 +23,7 @@ using FluentAssertions;
 using GreenEnergyHub.Charges.Application.ChargeLinks.PostOffice;
 using GreenEnergyHub.Charges.Domain.AvailableChargeLinksData;
 using GreenEnergyHub.Charges.Domain.ChargeLinkCommandAcceptedEvents;
+using GreenEnergyHub.Charges.Domain.ChargeLinkCommands;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.TestCore.Attributes;
@@ -66,7 +67,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.PostOffice
                 .ReturnsAsync(charge);
             availableChargeLinksDataFactoryMock.Setup(
                     factory => factory.CreateAvailableChargeLinksData(
-                        It.IsAny<ChargeLinkCommandAcceptedEvent>(),
+                        It.IsAny<ChargeLinkCommand>(),
                         It.IsAny<MarketParticipant>(),
                         It.IsAny<Instant>(),
                         It.IsAny<Guid>()))

@@ -68,6 +68,18 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.PostOffice
 
             var dataAvailableNotificationDtos = new List<DataAvailableNotificationDto>();
 
+            // It is the responsibility of the Charge Domain to find the recipient and
+            // not considered part of the Create Metering Point orchestration.
+            // We select the first as all bundled messages will have the same recipient
+            var recipient =
+                _marketParticipantRepository.GetGridAccessProvider(
+                    chargeLinkCommandAcceptedEvent.ChargeLinkCommands.First()
+                        .ChargeLink.MeteringPointId);
+
+            // When available this should be parsed on from API management to be more precise.
+            var now = SystemClock.Instance.GetCurrentInstant();
+            var availableChargeLinksData = new List<AvailableChargeLinksData>();
+
             foreach (var chargeLinkCommand in chargeLinkCommandAcceptedEvent.ChargeLinkCommands)
             {
                 var charge = await _chargeRepository.GetChargeAsync(new ChargeIdentifier(
@@ -77,32 +89,18 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.PostOffice
 
                 if (charge.TaxIndicator)
                 {
-                    dataAvailableNotificationDtos.Add(CreateDataAvailableNotificationDto(chargeLinkCommand));
+                    var dataAvailableNotificationDto = CreateDataAvailableNotificationDto(chargeLinkCommand);
+                    dataAvailableNotificationDtos.Add(dataAvailableNotificationDto);
+                    availableChargeLinksData.Add(_availableChargeLinksDataFactory.CreateAvailableChargeLinksData(
+                        chargeLinkCommand,
+                        recipient,
+                        now,
+                        dataAvailableNotificationDto.Uuid));
                 }
             }
 
-            // It is the responsibility of the Charge Domain to find the recipient and
-            // not considered part of the Create Metering Point orchestration.
-            var recipient =
-                _marketParticipantRepository.GetGridAccessProvider(chargeLinkCommandAcceptedEvent.ChargeLink
-                    .MeteringPointId);
-
-            var dataAvailableNotification = CreateDataAvailableNotificationDto(chargeLinkCommandAcceptedEvent);
-
-            // When available this should be parsed on from API management to be more precise.
-            var now = SystemClock.Instance.GetCurrentInstant();
-
-            var availableChargeLinksData =
-                _availableChargeLinksDataFactory.CreateAvailableChargeLinksData(
-                    chargeLinkCommandAcceptedEvent,
-                    recipient,
-                    now,
-                    dataAvailableNotification.Uuid);
             await _availableChargeLinksDataRepository.StoreAsync(availableChargeLinksData);
 
-            await _dataAvailableNotificationSender
-                .SendAsync(dataAvailableNotification)
-                .ConfigureAwait(false);
             var dataAvailableNotificationSenderTasks = dataAvailableNotificationDtos
                 .Select(x => _dataAvailableNotificationSender.SendAsync(x));
 
