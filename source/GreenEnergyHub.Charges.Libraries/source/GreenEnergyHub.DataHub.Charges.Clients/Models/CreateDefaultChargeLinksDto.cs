@@ -12,13 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Diagnostics.CodeAnalysis;
+
 namespace GreenEnergyHub.DataHub.Charges.Libraries.Models
 {
     /// <summary>
-    /// The required data for needed by the Charges domain to create
-    /// Default charge links.
+    /// The required data needed by the Charges domain to create Default charge links.
     /// </summary>
-    /// <param name="meteringPointId"></param>
-    /// A unique id to specify the metering point.
+    /// <param name="meteringPointId">A unique id to specify the metering point.</param>
     public sealed record CreateDefaultChargeLinksDto(string meteringPointId);
 }

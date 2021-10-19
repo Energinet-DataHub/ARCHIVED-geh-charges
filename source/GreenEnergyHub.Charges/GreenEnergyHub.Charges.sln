@@ -1,4 +1,5 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
+#
 # Copyright 2020 Energinet DataHub A/S
 #
 # Licensed under the Apache License, Version 2.0 (the "License2");
@@ -61,18 +62,6 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GreenEnergyHub.Messaging.Protobuf", "..\messaging\source\GreenEnergyHub.Messaging.Protobuf\GreenEnergyHub.Messaging.Protobuf.csproj", "{46E01A80-BCAE-498E-8250-6DE0C18ABC36}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GreenEnergyHub.Messaging.Protobuf.Integration.ServiceCollection", "..\messaging\source\GreenEnergyHub.Messaging.Protobuf.Integration.ServiceCollection\GreenEnergyHub.Messaging.Protobuf.Integration.ServiceCollection.csproj", "{26DFABDA-7D73-42A5-A502-A666479454D5}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TestCommon", "TestCommon", "{38BC603E-98AC-4BEF-85A9-AD150091CFAF}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GreenEnergyHub.FunctionApp.TestCommon", "source\GreenEnergyHub.FunctionApp.TestCommon\GreenEnergyHub.FunctionApp.TestCommon.csproj", "{06B44BDA-BE24-4828-B415-9676B744D9B1}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GreenEnergyHub.FunctionApp.TestCommon.Tests", "source\GreenEnergyHub.FunctionApp.TestCommon.Tests\GreenEnergyHub.FunctionApp.TestCommon.Tests.csproj", "{68F3FA93-576F-4B43-939D-EC5CFA1A5E06}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GreenEnergyHub.TestCommon", "source\GreenEnergyHub.TestCommon\GreenEnergyHub.TestCommon.csproj", "{0D91CD97-4BEC-4DE3-891E-FFF1042C492E}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GreenEnergyHub.TestCommon.Tests", "source\GreenEnergyHub.TestCommon.Tests\GreenEnergyHub.TestCommon.Tests.csproj", "{9864A246-EDD4-4864-BCC2-ED78BC1C5BAC}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GreenEnergyHub.Charges.TestFunctionHost", "source\GreenEnergyHub.Charges.TestFunctionHost\GreenEnergyHub.Charges.TestFunctionHost.csproj", "{1FF37AE8-06EE-44C0-8840-E34C0E8846BB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -160,26 +149,6 @@ Global
 		{26DFABDA-7D73-42A5-A502-A666479454D5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{26DFABDA-7D73-42A5-A502-A666479454D5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{26DFABDA-7D73-42A5-A502-A666479454D5}.Release|Any CPU.Build.0 = Release|Any CPU
-		{06B44BDA-BE24-4828-B415-9676B744D9B1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{06B44BDA-BE24-4828-B415-9676B744D9B1}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{06B44BDA-BE24-4828-B415-9676B744D9B1}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{06B44BDA-BE24-4828-B415-9676B744D9B1}.Release|Any CPU.Build.0 = Release|Any CPU
-		{68F3FA93-576F-4B43-939D-EC5CFA1A5E06}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{68F3FA93-576F-4B43-939D-EC5CFA1A5E06}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{68F3FA93-576F-4B43-939D-EC5CFA1A5E06}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{68F3FA93-576F-4B43-939D-EC5CFA1A5E06}.Release|Any CPU.Build.0 = Release|Any CPU
-		{0D91CD97-4BEC-4DE3-891E-FFF1042C492E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{0D91CD97-4BEC-4DE3-891E-FFF1042C492E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{0D91CD97-4BEC-4DE3-891E-FFF1042C492E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{0D91CD97-4BEC-4DE3-891E-FFF1042C492E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{9864A246-EDD4-4864-BCC2-ED78BC1C5BAC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9864A246-EDD4-4864-BCC2-ED78BC1C5BAC}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{9864A246-EDD4-4864-BCC2-ED78BC1C5BAC}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{9864A246-EDD4-4864-BCC2-ED78BC1C5BAC}.Release|Any CPU.Build.0 = Release|Any CPU
-		{1FF37AE8-06EE-44C0-8840-E34C0E8846BB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{1FF37AE8-06EE-44C0-8840-E34C0E8846BB}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{1FF37AE8-06EE-44C0-8840-E34C0E8846BB}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{1FF37AE8-06EE-44C0-8840-E34C0E8846BB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -201,11 +170,6 @@ Global
 		{539A7F51-A284-4268-AA14-98BB6122F5EB} = {832447E5-7A46-4381-817C-5D73A20510C2}
 		{46E01A80-BCAE-498E-8250-6DE0C18ABC36} = {9FE16521-EC21-4551-9E51-0C6702D21098}
 		{26DFABDA-7D73-42A5-A502-A666479454D5} = {9FE16521-EC21-4551-9E51-0C6702D21098}
-		{06B44BDA-BE24-4828-B415-9676B744D9B1} = {38BC603E-98AC-4BEF-85A9-AD150091CFAF}
-		{68F3FA93-576F-4B43-939D-EC5CFA1A5E06} = {38BC603E-98AC-4BEF-85A9-AD150091CFAF}
-		{0D91CD97-4BEC-4DE3-891E-FFF1042C492E} = {38BC603E-98AC-4BEF-85A9-AD150091CFAF}
-		{9864A246-EDD4-4864-BCC2-ED78BC1C5BAC} = {38BC603E-98AC-4BEF-85A9-AD150091CFAF}
-		{1FF37AE8-06EE-44C0-8840-E34C0E8846BB} = {05DE980B-A2A7-4235-AE53-3167E94699DD}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {AFC8647C-38F2-4CB1-9225-7985A66DFE71}
