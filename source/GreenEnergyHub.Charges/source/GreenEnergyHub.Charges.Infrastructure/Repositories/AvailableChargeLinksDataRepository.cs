@@ -40,7 +40,9 @@ namespace GreenEnergyHub.Charges.Infrastructure.Repositories
         public Task<List<AvailableChargeLinksData>> GetAvailableChargeLinksDataAsync(IEnumerable<Guid> dataReferenceId)
         {
             var queryable = _context.AvailableChargeLinksData.Where(x => dataReferenceId.Contains(x.AvailableDataReferenceId));
-            return queryable.ToListAsync();
+            return queryable
+                .OrderBy(x => x.RequestTime)
+                .ToListAsync();
         }
     }
 }
