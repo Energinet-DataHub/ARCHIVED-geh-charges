@@ -12,11 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace Energinet.DataHub.Charges.Libraries.Models
+using System.Threading.Tasks;
+using Energinet.DataHub.Charges.Libraries.Enums;
+using Energinet.DataHub.Charges.Libraries.Models;
+
+namespace Energinet.DataHub.Charges.Libraries.DefaultChargeLinkMessages
 {
-    /// <summary>
-    /// The required data needed by the Charges domain to create Default charge links.
-    /// </summary>
-    /// <param name="MeteringPointId">A unique id to specify the metering point.</param>
-    public sealed record CreateDefaultChargeLinksDto(string MeteringPointId);
+    public delegate Task OnSuccess(CreateDefaultChargeLinkMessagesSucceededDto createDefaultChargeLinksSucceeded);
+
+    public delegate Task OnFailure(CreateDefaultChargeLinkMessagesFailedDto createDefaultChargeLinksSucceeded);
+
+    public abstract class DefaultChargeLinkMessagesReplyReaderBase
+    {
+        public abstract Task ReadAsync(byte[] data, RequestStatus requestStatus);
+    }
 }
