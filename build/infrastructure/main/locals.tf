@@ -17,7 +17,11 @@ locals {
     CHARGE_DB_CONNECTION_STRING                         = "Server=${module.sqlsrv_charges.fully_qualified_domain_name};Database=${module.sqldb_charges.name};Uid=${local.sqlServerAdminName};Pwd=${random_password.sqlsrv_admin_password.result};"
     LOCAL_TIMEZONENAME                                  = "Europe/Copenhagen"
     CURRENCY                                            = "DKK"
+
+    ###########################################################################################
     # All below this line must match the names used in the repo geh-shared-resources
+    ###########################################################################################
+
     CHARGE_LINK_CREATED_TOPIC_NAME                      = "charge-link-created"
     CHARGE_LINK_UPDATED_TOPIC_NAME                      = "charge-link-updated"
     CHARGE_CREATED_TOPIC_NAME                           = "charge-created"
@@ -32,4 +36,11 @@ locals {
     INTEGRATION_EVENTS_LISTENER_CONNECTION_STRING       = "INTEGRATION-EVENTS-LISTENER-CONNECTION-STRING"
     # The string value is the shared keyvault key name
     INTEGRATION_EVENTS_SENDER_CONNECTION_STRING         = "INTEGRATION-EVENTS-SENDER-CONNECTION-STRING"
+
+    # Message Hub
+    MESSAGEHUB_STORAGE_CONNECTIONSTRING_KEY             = "SHARED-RESOURCES-MARKETOPERATOR-RESPONSE-CONNECTION-STRING"
+    MESSAGEHUB_STORAGE_CONTAINER_KEY                    = "SHARED-RESOURCES-MARKETOPERATOR-CONTAINER-REPLY-NAME"
+    MESSAGEHUB_DATAAVAILABLE_QUEUE                      = "sbq-dataavailable"
+    MESSAGEHUB_BUNDLEREQUEST_QUEUE                      = "sbq-charges"
+    MESSAGEHUB_BUNDLEREPLY_QUEUE                        = "sbq-charges-reply"
 }

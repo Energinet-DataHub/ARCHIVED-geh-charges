@@ -13,6 +13,8 @@
     "INTEGRATIONEVENT_LISTENER_CONNECTION_STRING": "<sb listener connection string for integration events (without EntityPath)>",
     "DOMAINEVENT_SENDER_CONNECTION_STRING": "<connection string for sending domain events to the service bus (without entity path)>",
     "DOMAINEVENT_LISTENER_CONNECTION_STRING": "<connection string for listening for domain events on the service bus (without entity path)>",
+    "MESSAGEHUB_STORAGE_CONNECTIONSTRING": "<connection string for writing to the Message Hub storage account for bundles>",
+    "MESSAGEHUB_STORAGE_CONTAINER": "<name of the container in the Message Hub storage account for bundles>",
 
     "CHARGE_LINK_ACCEPTED_TOPIC_NAME": "sbt-link-command-accepted",
     "CHARGELINKACCEPTED_SUB_DATAAVAILABLENOTIFIER": "sbs-chargelinkaccepted-sub-dataavailablenotifier",
@@ -30,9 +32,13 @@
     "CREATE_LINK_REPLY_QUEUE_NAME": "create-link-reply",
     "CONSUMPTION_METERING_POINT_CREATED_TOPIC_NAME": "consumption-metering-point-created",
     "CONSUMPTION_METERING_POINT_CREATED_SUBSCRIPTION_NAME": "consumption-metering-point-created-sub-charges",
-    "POST_OFFICE_TOPIC_NAME": "sbt-post-office",
     "COMMAND_ACCEPTED_RECEIVER_SUBSCRIPTION_NAME": "sbs-charge-command-accepted-receiver",
     "CHARGE_CREATED_TOPIC_NAME": "charge-created",
-    "CHARGE_PRICES_UPDATED_TOPIC_NAME": "charge-prices-updated"
+    "CHARGE_PRICES_UPDATED_TOPIC_NAME": "charge-prices-updated",
+
+    "POST_OFFICE_TOPIC_NAME": "sbt-post-office",
+    "MESSAGEHUB_DATAAVAILABLE_QUEUE": "sbq-dataavailable",
+    "MESSAGEHUB_BUNDLEREQUEST_QUEUE": "sbq-charges",
+    "MESSAGEHUB_BUNDLEREPLY_QUEUE": "sbq-charges-reply"
   }
 }

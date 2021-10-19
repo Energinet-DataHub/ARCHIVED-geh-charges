@@ -13,7 +13,7 @@
 # limitations under the License.
 module "sbq_messagehub_charges" {
   source              = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//service-bus-queue?ref=2.0.0"
-  name                = "sbq-charges"
+  name                = local.MESSAGEHUB_BUNDLEREQUEST_QUEUE
   namespace_name      = module.sbn_external_integration_events.name
   resource_group_name = data.azurerm_resource_group.main.name
   requires_session    = true
@@ -21,15 +21,8 @@ module "sbq_messagehub_charges" {
 
 module "sbq_messagehub_charges_reply" {
   source              = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//service-bus-queue?ref=2.0.0"
-  name                = "sbq-charges-reply"
+  name                = local.MESSAGEHUB_BUNDLEREPLY_QUEUE
   namespace_name      = module.sbn_external_integration_events.name
   resource_group_name = data.azurerm_resource_group.main.name
   requires_session    = true
-}
-
-module "sbq_messagehub_charges_dequeue" {
-  source              = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//service-bus-queue?ref=2.0.0"
-  name                = "sbq-charges-dequeue"
-  namespace_name      = module.sbn_external_integration_events.name
-  resource_group_name = data.azurerm_resource_group.main.name
 }

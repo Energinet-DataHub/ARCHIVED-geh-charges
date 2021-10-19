@@ -43,7 +43,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.ChargeLinks.MessageHub
 
         [Function(FunctionName)]
         public async Task RunAsync(
-            [ServiceBusTrigger("sbq-charges", Connection = "INTEGRATIONEVENT_LISTENER_CONNECTION_STRING", IsSessionsEnabled = true)]
+            [ServiceBusTrigger("%MESSAGEHUB_BUNDLEREQUEST_QUEUE%", Connection = "INTEGRATIONEVENT_LISTENER_CONNECTION_STRING", IsSessionsEnabled = true)]
             byte[] data,
             FunctionContext functionContext)
         {

@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System;
+using Energinet.DataHub.MessageHub.Client;
 using Energinet.DataHub.MessageHub.Client.DataAvailable;
 using Energinet.DataHub.MessageHub.Client.Dequeue;
 using Energinet.DataHub.MessageHub.Client.Factories;
@@ -30,7 +31,6 @@ using GreenEnergyHub.Charges.Infrastructure.Repositories;
 using GreenEnergyHub.Messaging.Protobuf;
 using GreenEnergyHub.Messaging.Transport;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using NodaTime;
 
@@ -48,7 +48,18 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
 
             ConfigureSharedDatabase(serviceCollection);
             ConfigureSharedMessaging(serviceCollection);
-            ConfigureSharedPostOfficeCommunication(serviceCollection, "INTEGRATIONEVENT_SENDER_CONNECTION_STRING");
+
+            var serviceBusConnectionString = EnvironmentHelper.GetEnv("INTEGRATIONEVENT_SENDER_CONNECTION_STRING");
+            var dataAvailableQueue = EnvironmentHelper.GetEnv("MESSAGEHUB_DATAAVAILABLE_QUEUE");
+            var domainReplyQueue = EnvironmentHelper.GetEnv("MESSAGEHUB_BUNDLEREPLY_QUEUE");
+            var storageServiceConnectionString = EnvironmentHelper.GetEnv("MESSAGEHUB_STORAGE_CONNECTIONSTRING");
+            var azureBlobStorageContainerName = EnvironmentHelper.GetEnv("MESSAGEHUB_STORAGE_CONTAINER");
+            AddPostOfficeCommunication(
+                serviceCollection,
+                serviceBusConnectionString,
+                new MessageHubConfig(dataAvailableQueue, domainReplyQueue),
+                storageServiceConnectionString,
+                new StorageConfig(azureBlobStorageContainerName));
         }
 
         private static void ConfigureSharedDatabase(IServiceCollection serviceCollection)
@@ -81,39 +92,72 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
         /// and thus not applicable in this function host. See also
         /// https://github.com/Energinet-DataHub/geh-post-office/blob/main/source/PostOffice.Communicator.SimpleInjector/source/PostOffice.Communicator.SimpleInjector/ContainerExtensions.cs
         /// </summary>
-        private static void ConfigureSharedPostOfficeCommunication(IServiceCollection serviceCollection, string serviceBusConnectionStringConfigKey)
+        private static void AddPostOfficeCommunication(
+            IServiceCollection serviceCollection,
+            string serviceBusConnectionString,
+            MessageHubConfig messageHubConfig,
+            string storageServiceConnectionString,
+            StorageConfig storageConfig)
         {
-            serviceCollection.AddPostOfficeServiceBus(serviceBusConnectionStringConfigKey);
-            serviceCollection.AddPostOfficeApplicationServices();
+            if (serviceCollection == null)
+                throw new ArgumentNullException(nameof(serviceCollection));
+
+            if (string.IsNullOrWhiteSpace(serviceBusConnectionString))
+                throw new ArgumentNullException(nameof(serviceBusConnectionString));
+
+            if (messageHubConfig == null)
+                throw new ArgumentNullException(nameof(messageHubConfig));
+
+            if (string.IsNullOrWhiteSpace(storageServiceConnectionString))
+                throw new ArgumentNullException(nameof(storageServiceConnectionString));
+
+            if (storageConfig == null)
+                throw new ArgumentNullException(nameof(storageConfig));
+
+            serviceCollection.AddSingleton(_ => messageHubConfig);
+            serviceCollection.AddSingleton(_ => storageConfig);
+            serviceCollection.AddServiceBus(serviceBusConnectionString);
+            serviceCollection.AddApplicationServices();
+            serviceCollection.AddStorageHandler(storageServiceConnectionString);
         }
 
-        private static void AddPostOfficeServiceBus(this IServiceCollection serviceCollection, string serviceBusConnectionStringConfigKey)
+        private static void AddServiceBus(this IServiceCollection serviceCollection, string serviceBusConnectionString)
         {
-            serviceCollection.AddSingleton<IServiceBusClientFactory>(provider =>
+            serviceCollection.AddSingleton<IServiceBusClientFactory>(_ =>
             {
-                var configuration = provider.GetService<IConfiguration>();
-                var connectionString = configuration.GetConnectionString(serviceBusConnectionStringConfigKey)
-                                       ?? configuration?[serviceBusConnectionStringConfigKey];
-
-                if (string.IsNullOrEmpty(connectionString))
+                if (string.IsNullOrWhiteSpace(serviceBusConnectionString))
                 {
                     throw new InvalidOperationException(
                         "Please specify a valid ServiceBus in the appSettings.json file or your Azure Functions Settings.");
                 }
 
-                return new ServiceBusClientFactory(connectionString);
+                return new ServiceBusClientFactory(serviceBusConnectionString);
             });
         }
 
-        private static void AddPostOfficeApplicationServices(this IServiceCollection serviceCollection)
+        private static void AddApplicationServices(this IServiceCollection serviceCollection)
         {
             serviceCollection.AddSingleton<IDataAvailableNotificationSender, DataAvailableNotificationSender>();
             serviceCollection.AddSingleton<IRequestBundleParser, RequestBundleParser>();
             serviceCollection.AddSingleton<IResponseBundleParser, ResponseBundleParser>();
             serviceCollection.AddSingleton<IDataBundleResponseSender, DataBundleResponseSender>();
             serviceCollection.AddSingleton<IDequeueNotificationParser, DequeueNotificationParser>();
+        }
+
+        private static void AddStorageHandler(this IServiceCollection serviceCollection, string storageServiceConnectionString)
+        {
+            serviceCollection.AddSingleton<IStorageServiceClientFactory>(_ =>
+            {
+                if (string.IsNullOrWhiteSpace(storageServiceConnectionString))
+                {
+                    throw new InvalidOperationException(
+                        "Please specify a valid BlobStorageConnectionString in the appSettings.json file or your Azure Functions Settings.");
+                }
+
+                return new StorageServiceClientFactory(storageServiceConnectionString);
+            });
+
             serviceCollection.AddSingleton<IStorageHandler, StorageHandler>();
-            serviceCollection.AddSingleton<IStorageServiceClientFactory, StorageServiceClientFactory>();
         }
     }
 }

@@ -59,10 +59,6 @@ module "kvs_integrationevents_listener_connection_string" {
   name          = local.INTEGRATION_EVENTS_LISTENER_CONNECTION_STRING
   value         = module.sbnar_integrationevents_listener.primary_connection_string
   key_vault_id  = module.kv_shared_stub.id
-  dependencies  = [
-    module.kv_shared_stub.dependent_on,
-    module.sbnar_integrationevents_listener.dependent_on,
-  ]
 }
 
 module "kvs_integrationevents_sender_connection_string" {
@@ -70,8 +66,18 @@ module "kvs_integrationevents_sender_connection_string" {
   name          = local.INTEGRATION_EVENTS_SENDER_CONNECTION_STRING
   value         = module.sbnar_integrationevents_sender.primary_connection_string
   key_vault_id  = module.kv_shared_stub.id
-  dependencies  = [
-    module.kv_shared_stub.dependent_on,
-    module.sbnar_integrationevents_sender.dependent_on
-  ]
+}
+
+module "kvs_messagehub_storage_connectionstring" {
+  source        = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//key-vault-secret?ref=2.0.0"
+  name          = local.MESSAGEHUB_STORAGE_CONNECTIONSTRING_KEY
+  value         = module.st_marketoperator_response.primary_connection_string
+  key_vault_id  = module.kv_shared_stub.id
+}
+
+module "kvs_messagehub_storage_container" {
+  source        = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//key-vault-secret?ref=2.0.0"
+  name          = local.MESSAGEHUB_STORAGE_CONTAINER_KEY
+  value         = module.container_postoffice_reply.name
+  key_vault_id  = module.kv_shared_stub.id
 }
