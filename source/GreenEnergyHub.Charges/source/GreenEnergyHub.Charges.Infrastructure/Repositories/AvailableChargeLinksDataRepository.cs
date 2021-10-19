@@ -17,8 +17,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Domain.AvailableChargeLinksData;
-using GreenEnergyHub.Charges.Domain.ChargeLinkCommandAcceptedEvents;
-using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.Infrastructure.Context;
 using Microsoft.EntityFrameworkCore;
 
@@ -27,21 +25,14 @@ namespace GreenEnergyHub.Charges.Infrastructure.Repositories
     public class AvailableChargeLinksDataRepository : IAvailableChargeLinksDataRepository
     {
         private readonly IChargesDatabaseContext _context;
-        private readonly IAvailableChargeLinksDataFactory _availableChargeLinksDataFactory;
 
-        public AvailableChargeLinksDataRepository(IChargesDatabaseContext context, IAvailableChargeLinksDataFactory availableChargeLinksDataFactory)
+        public AvailableChargeLinksDataRepository(IChargesDatabaseContext context)
         {
             _context = context;
-            _availableChargeLinksDataFactory = availableChargeLinksDataFactory;
         }
 
-        public async Task StoreAsync(
-            ChargeLinkCommandAcceptedEvent chargeLinkCommandAcceptedEvent,
-            MarketParticipant recipient,
-            Guid messageHubId)
+        public async Task StoreAsync(AvailableChargeLinksData availableChargeLinksData)
         {
-            var availableChargeLinksData =
-                _availableChargeLinksDataFactory.CreateAvailableChargeLinksData(chargeLinkCommandAcceptedEvent, recipient, messageHubId);
             await _context.AvailableChargeLinksData.AddAsync(availableChargeLinksData);
             await _context.SaveChangesAsync();
         }

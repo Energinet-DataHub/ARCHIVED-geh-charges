@@ -43,25 +43,15 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
 
         [Theory]
         [InlineAutoMoqData]
-        public async Task StoreAsync_StoresAvailableChargeLinksData(
-            [Frozen] Mock<IAvailableChargeLinksDataFactory> chargeLinkFactory,
-            [NotNull] AvailableChargeLinksData expected)
+        public async Task StoreAsync_StoresAvailableChargeLinksData([NotNull] AvailableChargeLinksData expected)
         {
             // Arrange
             await using var chargesDatabaseWriteContext = _databaseManager.CreateDbContext();
 
-            chargeLinkFactory
-                .Setup(x =>
-                    x.CreateAvailableChargeLinksData(
-                        It.IsAny<ChargeLinkCommandAcceptedEvent>(),
-                        It.IsAny<MarketParticipant>(),
-                        It.IsAny<Guid>()))
-                .Returns(expected);
-
-            var sut = new AvailableChargeLinksDataRepository(chargesDatabaseWriteContext, chargeLinkFactory.Object);
+            var sut = new AvailableChargeLinksDataRepository(chargesDatabaseWriteContext);
 
             // Act
-            await sut.StoreAsync(null!, null!, Guid.NewGuid()).ConfigureAwait(false);
+            await sut.StoreAsync(expected).ConfigureAwait(false);
 
             // Assert
             await using var chargesDatabaseReadContext = _databaseManager.CreateDbContext();
@@ -73,7 +63,6 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
         [Theory]
         [InlineAutoMoqData]
         public async Task GetChargeHistoriesAsync_WithMeteringPointId_ThenSuccessReturnedAsync(
-            [Frozen] Mock<IAvailableChargeLinksDataFactory> chargeLinkFactory,
             [NotNull] AvailableChargeLinksData expected)
         {
             // Arrange
@@ -82,7 +71,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
             await chargesDatabaseWriteContext.SaveChangesAsync().ConfigureAwait(false);
 
             await using var chargesDatabaseReadContext = _databaseManager.CreateDbContext();
-            var sut = new AvailableChargeLinksDataRepository(chargesDatabaseReadContext, chargeLinkFactory.Object);
+            var sut = new AvailableChargeLinksDataRepository(chargesDatabaseReadContext);
 
             // Act
             var actual =

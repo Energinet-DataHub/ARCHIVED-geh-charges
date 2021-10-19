@@ -15,17 +15,12 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Domain.ChargeLinkCommandAcceptedEvents;
-using GreenEnergyHub.Charges.Domain.MarketParticipants;
 
 namespace GreenEnergyHub.Charges.Domain.AvailableChargeLinksData
 {
     public interface IAvailableChargeLinksDataRepository
     {
-        Task StoreAsync(
-            ChargeLinkCommandAcceptedEvent chargeLinkCommandAcceptedEvent,
-            MarketParticipant recipient,
-            Guid messageHubId);
+        Task StoreAsync(AvailableChargeLinksData availableChargeLinksData);
 
         Task<List<AvailableChargeLinksData>> GetAvailableChargeLinksDataAsync(IEnumerable<Guid> dataReferenceId);
     }
