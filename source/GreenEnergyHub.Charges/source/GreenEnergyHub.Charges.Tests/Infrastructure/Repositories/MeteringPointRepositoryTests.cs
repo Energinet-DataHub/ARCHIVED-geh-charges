@@ -41,7 +41,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
         {
             // Arrange
             await using var chargesDatabaseWriteContext = _databaseManager.CreateDbContext();
-            var expected = GetMeteringPointCreatedEvent();
+            var expected = GetMeteringPoint();
             var sut = new MeteringPointRepository(chargesDatabaseWriteContext);
 
             // Act
@@ -118,26 +118,15 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
             Assert.Null(actual);
         }
 
-        private static MeteringPoint GetMeteringPointCreatedEvent()
-        {
-            return MeteringPoint.Create(
-                "123",
-                MeteringPointType.Consumption,
-                "234",
-                SystemClock.Instance.GetCurrentInstant(),
-                ConnectionState.Connected,
-                SettlementMethod.Flex);
-        }
-
         private static MeteringPoint GetMeteringPoint()
         {
             return MeteringPoint.Create(
-                "meteringPointId",
+                Guid.NewGuid().ToString("N"),
                 MeteringPointType.Consumption,
                 "grid area id",
                 SystemClock.Instance.GetCurrentInstant(),
                 ConnectionState.Connected,
-                SettlementMethod.Profiled);
+                SettlementMethod.Flex);
         }
     }
 }
