@@ -56,7 +56,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
 
         private static ChargeOperationContract ConvertChargeOperation(ChargeOperation charge)
         {
-            return new()
+            return new ChargeOperationContract
             {
                 Id = charge.Id,
                 ChargeId = charge.ChargeId,
@@ -75,7 +75,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
 
         private static DocumentContract ConvertDocument(Document document)
         {
-            return new()
+            return new DocumentContract
             {
                 Id = document.Id,
                 RequestDate = document.RequestDate.ToTimestamp().TruncateToSeconds(),

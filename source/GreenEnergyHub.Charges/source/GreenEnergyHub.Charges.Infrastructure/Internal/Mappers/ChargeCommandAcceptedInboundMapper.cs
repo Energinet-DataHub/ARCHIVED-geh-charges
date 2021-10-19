@@ -46,7 +46,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
 
         private static Document ConvertDocument(DocumentContract document)
         {
-            return new()
+            return new Document
             {
                 Id = document.Id,
                 Sender =

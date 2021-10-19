@@ -61,12 +61,12 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Validation
 
         private static List<IValidationRule> CreateValidRules()
         {
-            return new() { new ValidationRule(true, ValidationRuleIdentifier.StartDateValidation) };
+            return new List<IValidationRule> { new ValidationRule(true, ValidationRuleIdentifier.StartDateValidation) };
         }
 
         private static List<IValidationRule> CreateInvalidRules()
         {
-            return new() { new ValidationRule(false, ValidationRuleIdentifier.StartDateValidation) };
+            return new List<IValidationRule> { new ValidationRule(false, ValidationRuleIdentifier.StartDateValidation) };
         }
     }
 }

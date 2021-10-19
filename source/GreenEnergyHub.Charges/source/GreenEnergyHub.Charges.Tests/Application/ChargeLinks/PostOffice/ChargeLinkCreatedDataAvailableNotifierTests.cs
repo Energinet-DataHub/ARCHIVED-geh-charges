@@ -74,7 +74,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.PostOffice
                                         .ChargeLinkCommands.First().Document.Sender.Id))
                                && dto.Uuid != Guid.Empty
                                && dto.RelativeWeight > 0)),
-                Times.AtLeastOnce);
+                Times.Exactly(3));
         }
 
         [Theory]
