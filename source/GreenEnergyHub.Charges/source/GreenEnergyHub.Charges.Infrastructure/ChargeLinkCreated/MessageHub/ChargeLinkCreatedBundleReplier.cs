@@ -14,6 +14,7 @@
 
 using System.IO;
 using System.Threading.Tasks;
+using Energinet.DataHub.MessageHub.Client.Extensions;
 using Energinet.DataHub.MessageHub.Client.Model;
 using Energinet.DataHub.MessageHub.Client.Peek;
 using Energinet.DataHub.MessageHub.Client.Storage;
@@ -37,9 +38,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.ChargeLinkCreated.MessageHub
         {
             var path = await _storageHandler.AddStreamToStorageAsync(bundleStream, request);
 
-            // TODO BJARKE: This will be allowed in upcoming post office NuGet update
-            // var response = request.CreateResponse(path);
-            var response = new DataBundleResponseDto(path, request.DataAvailableNotificationIds);
+            var response = request.CreateResponse(path);
 
             await _dataBundleResponseSender
                 .SendAsync(response, request, metadata.SessionId)
