@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application.ChargeLinks.Handlers.Message;
@@ -36,7 +37,11 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
 
         public async Task<ChargeLinksMessageResult> HandleAsync([NotNull]ChargeLinkCommand command)
         {
-            var receivedEvent = new ChargeLinkCommandReceivedEvent(_clock.GetCurrentInstant(), command.CorrelationId!, command);
+            var receivedEvent = new ChargeLinkCommandReceivedEvent(
+                _clock.GetCurrentInstant(),
+                command.CorrelationId!,
+                new List<ChargeLinkCommand> { command });
+
             await _messageDispatcher.DispatchAsync(receivedEvent).ConfigureAwait(false);
 
             var chargeLinksMessageResult = ChargeLinksMessageResult.CreateSuccess();

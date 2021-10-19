@@ -13,12 +13,15 @@
 // limitations under the License.
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using System.Threading.Tasks;
 using Energinet.DataHub.MessageHub.Client.DataAvailable;
 using Energinet.DataHub.MessageHub.Client.Model;
 using GreenEnergyHub.Charges.Domain.AvailableChargeLinksData;
 using GreenEnergyHub.Charges.Domain.ChargeLinkCommandAcceptedEvents;
+using GreenEnergyHub.Charges.Domain.ChargeLinkCommands;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using NodaTime;
@@ -63,13 +66,20 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.PostOffice
         {
             if (chargeLinkCommandAcceptedEvent == null) throw new ArgumentNullException(nameof(chargeLinkCommandAcceptedEvent));
 
-            var link = chargeLinkCommandAcceptedEvent.ChargeLink;
+            var dataAvailableNotificationDtos = new List<DataAvailableNotificationDto>();
 
-            var charge = await _chargeRepository
-                .GetChargeAsync(link.SenderProvidedChargeId, link.ChargeOwner, link.ChargeType)
-                .ConfigureAwait(false);
+            foreach (var chargeLinkCommand in chargeLinkCommandAcceptedEvent.ChargeLinkCommands)
+            {
+                var charge = await _chargeRepository.GetChargeAsync(new ChargeIdentifier(
+                    chargeLinkCommand.ChargeLink.SenderProvidedChargeId,
+                    chargeLinkCommand.ChargeLink.ChargeOwner,
+                    chargeLinkCommand.ChargeLink.ChargeType)).ConfigureAwait(false);
 
-            if (!charge.TaxIndicator) return;
+                if (charge.TaxIndicator)
+                {
+                    dataAvailableNotificationDtos.Add(CreateDataAvailableNotificationDto(chargeLinkCommand));
+                }
+            }
 
             // It is the responsibility of the Charge Domain to find the recipient and
             // not considered part of the Create Metering Point orchestration.
@@ -93,17 +103,21 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.PostOffice
             await _dataAvailableNotificationSender
                 .SendAsync(dataAvailableNotification)
                 .ConfigureAwait(false);
+            var dataAvailableNotificationSenderTasks = dataAvailableNotificationDtos
+                .Select(x => _dataAvailableNotificationSender.SendAsync(x));
+
+            await Task.WhenAll(dataAvailableNotificationSenderTasks).ConfigureAwait(false);
         }
 
         private static DataAvailableNotificationDto CreateDataAvailableNotificationDto(
-            ChargeLinkCommandAcceptedEvent createdChargeLink)
+            ChargeLinkCommand chargeLinkCommand)
         {
             // The ID that the charges domain must handle when peeking
             var chargeDomainReferenceId = Guid.NewGuid();
 
             // The grid operator initiating the creation of the charge link is also
             // the receiver of the confirmation
-            var receiver = createdChargeLink.Document.Sender.Id;
+            var receiver = chargeLinkCommand.Document.Sender.Id;
 
             return new DataAvailableNotificationDto(
                 chargeDomainReferenceId,

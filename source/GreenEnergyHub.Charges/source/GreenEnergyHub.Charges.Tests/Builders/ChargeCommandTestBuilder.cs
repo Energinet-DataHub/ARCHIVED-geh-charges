@@ -79,7 +79,7 @@ namespace GreenEnergyHub.Charges.Tests.Builders
 
         public ChargeCommand Build()
         {
-            return new ("some-correlation-id")
+            return new("some-correlation-id")
             {
                 Document = new Document
                 {

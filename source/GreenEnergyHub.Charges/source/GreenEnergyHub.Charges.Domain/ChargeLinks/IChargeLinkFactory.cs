@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Domain.ChargeLinkCommandReceivedEvents;
 
@@ -19,6 +20,6 @@ namespace GreenEnergyHub.Charges.Domain.ChargeLinks
 {
     public interface IChargeLinkFactory
     {
-        Task<ChargeLink> CreateAsync(ChargeLinkCommandReceivedEvent chargeLinkEvent);
+        Task<IReadOnlyCollection<ChargeLink>> CreateAsync(ChargeLinkCommandReceivedEvent chargeLinkEvent);
     }
 }
