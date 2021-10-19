@@ -27,7 +27,7 @@ using Moq;
 using Xunit;
 using Xunit.Categories;
 
-namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.PostOffice
+namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.MessageHub
 {
     [UnitTest]
     public class ChargeLinkCreatedDataAvailableNotifierTests
