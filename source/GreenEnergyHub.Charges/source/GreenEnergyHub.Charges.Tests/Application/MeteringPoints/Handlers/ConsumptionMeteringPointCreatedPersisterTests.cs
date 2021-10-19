@@ -42,15 +42,9 @@ namespace GreenEnergyHub.Charges.Tests.Application.MeteringPoints.Handlers
         {
             // Arrange
             var meteringPointCreatedEvent = GetMeteringPointCreatedEvent();
-            loggerFactory.Setup(
-                x => x.CreateLogger(
-                        It.IsAny<string>()))
-                    .Returns(logger.Object);
+            loggerFactory.Setup(x => x.CreateLogger(It.IsAny<string>())).Returns(logger.Object);
 
-            meteringPointRepository.Setup(
-                x => x.GetOrNullAsync(
-                    It.IsAny<string>()))
-                .ReturnsAsync(() => null);
+            meteringPointRepository.Setup(x => x.GetOrNullAsync(It.IsAny<string>())).ReturnsAsync(() => null);
 
             var sut = new ConsumptionMeteringPointPersister(meteringPointRepository.Object, loggerFactory.Object);
 
@@ -75,17 +69,11 @@ namespace GreenEnergyHub.Charges.Tests.Application.MeteringPoints.Handlers
             // Arrange
             var meteringPointCreatedEvent = GetMeteringPointCreatedEvent();
 
-            loggerFactory.Setup(
-                x => x.CreateLogger(
-                        It.IsAny<string>()))
-                    .Returns(logger.Object);
+            loggerFactory.Setup(x => x.CreateLogger(It.IsAny<string>())).Returns(logger.Object);
 
             var existingMeteringPoint = GetConsumptionMeteringPoint(meteringPointCreatedEvent);
 
-            meteringPointRepository.Setup(
-                x => x.GetOrNullAsync(
-                    It.IsAny<string>()))
-                .ReturnsAsync(existingMeteringPoint);
+            meteringPointRepository.Setup(x => x.GetOrNullAsync(It.IsAny<string>())).ReturnsAsync(existingMeteringPoint);
 
             var sut = new ConsumptionMeteringPointPersister(meteringPointRepository.Object, loggerFactory.Object);
 
@@ -111,10 +99,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.MeteringPoints.Handlers
             var meteringPointCreatedEvent = GetMeteringPointCreatedEvent();
             var meteringPoint = GetConsumptionMeteringPoint(meteringPointCreatedEvent);
 
-            loggerFactory.Setup(
-                x => x.CreateLogger(
-                        It.IsAny<string>()))
-                    .Returns(logger.Object);
+            loggerFactory.Setup(x => x.CreateLogger(It.IsAny<string>())).Returns(logger.Object);
 
             var existingMeteringPoint = MeteringPoint.Create(
                 meteringPointCreatedEvent.MeteringPointId,
@@ -124,10 +109,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.MeteringPoints.Handlers
                 meteringPointCreatedEvent.ConnectionState,
                 SettlementMethod.NonProfiled);
 
-            meteringPointRepository.Setup(
-                x => x.GetOrNullAsync(
-                    It.IsAny<string>()))
-                .ReturnsAsync(existingMeteringPoint);
+            meteringPointRepository.Setup(x => x.GetOrNullAsync(It.IsAny<string>())).ReturnsAsync(existingMeteringPoint);
 
             var sut = new ConsumptionMeteringPointPersister(meteringPointRepository.Object, loggerFactory.Object);
 
