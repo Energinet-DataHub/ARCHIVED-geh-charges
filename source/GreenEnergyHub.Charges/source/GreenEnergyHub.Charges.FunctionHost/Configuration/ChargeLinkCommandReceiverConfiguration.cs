@@ -32,9 +32,9 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
             serviceCollection.AddScoped<IChargeLinkFactory, ChargeLinkFactory>();
             serviceCollection.AddSingleton<IChargeLinkCommandAcceptedEventFactory, ChargeLinkCommandAcceptedEventFactory>();
 
-            serviceCollection.ReceiveProtobufMessage<ChargeLinkCommandReceivedContract>(
-                configuration => configuration.WithParser(() => ChargeLinkCommandReceivedContract.Parser));
-            serviceCollection.SendProtobuf<ChargeLinkCommandAcceptedContract>();
+            serviceCollection.ReceiveProtobufMessage<ChargeLinkCommandReceived>(
+                configuration => configuration.WithParser(() => ChargeLinkCommandReceived.Parser));
+            serviceCollection.SendProtobuf<ChargeLinkCommandAccepted>();
             serviceCollection.AddMessagingProtobuf().AddMessageDispatcher<ChargeLinkCommandAcceptedEvent>(
                 EnvironmentHelper.GetEnv("DOMAINEVENT_SENDER_CONNECTION_STRING"),
                 EnvironmentHelper.GetEnv("CHARGE_LINK_ACCEPTED_TOPIC_NAME"));

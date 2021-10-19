@@ -13,13 +13,11 @@
 // limitations under the License.
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using GreenEnergyHub.Charges.Domain.ChargeLinkCommandReceivedEvents;
-using GreenEnergyHub.Charges.Domain.ChargeLinkCommands;
-using GreenEnergyHub.Charges.Domain.ChargeLinks;
 using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandReceived;
 using GreenEnergyHub.Charges.Infrastructure.Internal.Mappers;
-using GreenEnergyHub.Charges.TestCore;
 using GreenEnergyHub.Charges.TestCore.Attributes;
 using GreenEnergyHub.Charges.TestCore.Protobuf;
 using NodaTime;
@@ -34,15 +32,16 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Internal.Mappers
         [Theory]
         [InlineAutoMoqData]
         public void Convert_WhenCalled_ShouldMapToProtobufWithCorrectValues(
-            [NotNull] ChargeLinkCommand chargeLinkCommand,
+            [NotNull] Charges.Domain.ChargeLinkCommands.ChargeLinkCommand chargeLinkCommand,
             [NotNull] LinkCommandReceivedOutboundMapper sut)
         {
             // Arrange
-            ChargeLinkCommandReceivedEvent chargeLinkCommandReceivedEvent = new (SystemClock.Instance.GetCurrentInstant(), chargeLinkCommand.CorrelationId, chargeLinkCommand);
-            UpdateInstantsToValidTimes(chargeLinkCommandReceivedEvent.ChargeLinkCommand);
+            ChargeLinkCommandReceivedEvent chargeLinkCommandReceivedEvent =
+                new(SystemClock.Instance.GetCurrentInstant(), chargeLinkCommand.CorrelationId,
+                    new List<Charges.Domain.ChargeLinkCommands.ChargeLinkCommand> { chargeLinkCommand });
 
             // Act
-            var result = (ChargeLinkCommandReceivedContract)sut.Convert(chargeLinkCommandReceivedEvent);
+            var result = (ChargeLinkCommandReceived)sut.Convert(chargeLinkCommandReceivedEvent);
 
             // Assert
             ProtobufAssert.OutgoingContractIsSubset(chargeLinkCommandReceivedEvent, result);
@@ -53,14 +52,6 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Internal.Mappers
         public void Convert_WhenCalledWithNull_ShouldThrow([NotNull]LinkCommandReceivedOutboundMapper sut)
         {
             Assert.Throws<InvalidOperationException>(() => sut.Convert(null!));
-        }
-
-        private static void UpdateInstantsToValidTimes([NotNull] ChargeLinkCommand command)
-        {
-            command.Document.RequestDate = Instant.FromUtc(2021, 7, 21, 11, 42, 25);
-            command.Document.CreatedDateTime = Instant.FromUtc(2021, 7, 21, 12, 14, 43);
-            command.ChargeLink.StartDateTime = Instant.FromUtc(2021, 8, 31, 22, 0);
-            command.ChargeLink.EndDateTime = Instant.FromUtc(2021, 9, 30, 22, 0);
         }
     }
 }
