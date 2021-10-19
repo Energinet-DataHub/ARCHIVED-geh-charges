@@ -12,21 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace GreenEnergyHub.Charges.Domain.MarketParticipants
-{
-    /// <summary>
-    /// Repository for managing market participants.
-    /// </summary>
-    public interface IMarketParticipantRepository
-    {
-        /// <summary>
-        /// Get all energy suppliers.
-        /// </summary>
-        MarketParticipant? GetMarketParticipantOrNull(string id);
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
-        /// <summary>
-        /// Using MeteringPointId find the Grid Access Provider of that MP
-        /// </summary>
-        MarketParticipant GetGridAccessProvider(string meteringPointId);
+namespace GreenEnergyHub.Charges.Domain.AvailableChargeLinksData
+{
+    public interface IAvailableChargeLinksDataRepository
+    {
+        Task StoreAsync(List<AvailableChargeLinksData> availableChargeLinksData);
+
+        Task<List<AvailableChargeLinksData>> GetAvailableChargeLinksDataAsync(IEnumerable<Guid> dataReferenceId);
     }
 }

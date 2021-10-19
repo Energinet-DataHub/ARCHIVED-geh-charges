@@ -12,21 +12,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace GreenEnergyHub.Charges.Domain.MarketParticipants
-{
-    /// <summary>
-    /// Repository for managing market participants.
-    /// </summary>
-    public interface IMarketParticipantRepository
-    {
-        /// <summary>
-        /// Get all energy suppliers.
-        /// </summary>
-        MarketParticipant? GetMarketParticipantOrNull(string id);
+using System;
+using System.Collections.Generic;
+using GreenEnergyHub.Charges.Domain.ChargeLinkCommandAcceptedEvents;
+using GreenEnergyHub.Charges.Domain.ChargeLinkCommands;
+using GreenEnergyHub.Charges.Domain.MarketParticipants;
+using NodaTime;
 
-        /// <summary>
-        /// Using MeteringPointId find the Grid Access Provider of that MP
-        /// </summary>
-        MarketParticipant GetGridAccessProvider(string meteringPointId);
+namespace GreenEnergyHub.Charges.Domain.AvailableChargeLinksData
+{
+    public interface IAvailableChargeLinksDataFactory
+    {
+        AvailableChargeLinksData CreateAvailableChargeLinksData(
+            ChargeLinkCommand chargeLinkCommand,
+            MarketParticipant recipient,
+            Instant requestTime,
+            Guid messageHubId);
     }
 }
