@@ -49,6 +49,10 @@ limitations under the License.
         <PackageReference Include="coverlet.collector" Version="3.1.0" />
         <PackageReference Include="Google.Protobuf" Version="3.18.1" />
         <PackageReference Include="Grpc.Tools" Version="2.41.0" PrivateAssets="All" />
+        <PackageReference Update="StyleCop.Analyzers" Version="1.2.0-beta.354">
+          <PrivateAssets>all</PrivateAssets>
+          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
     </ItemGroup>
 
     <ItemGroup>

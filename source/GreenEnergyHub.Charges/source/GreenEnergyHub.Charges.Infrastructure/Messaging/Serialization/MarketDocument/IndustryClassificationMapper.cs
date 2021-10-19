@@ -23,7 +23,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Messaging.Serialization.MarketDo
             return value switch
             {
                 "23" => IndustryClassification.Electricity,
-                _ => IndustryClassification.Unknown
+                _ => IndustryClassification.Unknown,
             };
         }
     }

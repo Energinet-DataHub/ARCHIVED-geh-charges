@@ -48,7 +48,8 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Factories
             expectedEvent.SetCorrelationId(Guid.NewGuid().ToString("N"));
 
             chargeRepository
-                .Setup(x => x.GetChargeAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<ChargeType>()))
+                .Setup(x => x.GetChargeAsync(
+                        It.IsAny<ChargeIdentifier>()))
                 .ReturnsAsync(expectedCharge);
 
             meteringPointRepository
@@ -59,20 +60,22 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Factories
             var actual = await sut.CreateAsync(expectedEvent).ConfigureAwait(false);
 
             // Assert
-            actual.ChargeId
+            var actualFirst = actual.First();
+
+            actualFirst.ChargeId
                 .Should().Be(expectedCharge.Id);
-            actual.MeteringPointId
+            actualFirst.MeteringPointId
                 .Should().Be(expectedMeteringPoint.Id);
-            actual.PeriodDetails.First().StartDateTime
-                .Should().Be(expectedEvent.ChargeLinkCommand.ChargeLink.StartDateTime);
-            actual.PeriodDetails.First().EndDateTime
-                .Should().Be((Instant)expectedEvent.ChargeLinkCommand.ChargeLink.EndDateTime!);
-            actual.PeriodDetails.First().Factor
-                .Should().Be(expectedEvent.ChargeLinkCommand.ChargeLink.Factor);
-            actual.Operations.First().CorrelationId
+            actualFirst.PeriodDetails.First().StartDateTime
+                .Should().Be(expectedEvent.ChargeLinkCommands.First().ChargeLink.StartDateTime);
+            actualFirst.PeriodDetails.First().EndDateTime
+                .Should().Be((Instant)expectedEvent.ChargeLinkCommands.First().ChargeLink.EndDateTime!);
+            actualFirst.PeriodDetails.First().Factor
+                .Should().Be(expectedEvent.ChargeLinkCommands.First().ChargeLink.Factor);
+            actualFirst.Operations.First().CorrelationId
                 .Should().Be(expectedEvent.CorrelationId);
-            actual.Operations.First().SenderProvidedId
-                .Should().Be(expectedEvent.ChargeLinkCommand.ChargeLink.OperationId);
+            actualFirst.Operations.First().SenderProvidedId
+                .Should().Be(expectedEvent.ChargeLinkCommands.First().ChargeLink.OperationId);
         }
 
         [Theory]

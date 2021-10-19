@@ -69,7 +69,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
             serviceCollection.AddScoped<MessageDispatcher>();
             serviceCollection.ConfigureProtobufReception();
 
-            serviceCollection.SendProtobuf<ChargeLinkCommandReceivedContract>();
+            serviceCollection.SendProtobuf<ChargeLinkCommandReceived>();
             serviceCollection.AddMessagingProtobuf().AddMessageDispatcher<ChargeLinkCommandReceivedEvent>(
                 EnvironmentHelper.GetEnv("DOMAINEVENT_SENDER_CONNECTION_STRING"),
                 EnvironmentHelper.GetEnv("CHARGE_LINK_RECEIVED_TOPIC_NAME"));

@@ -29,6 +29,10 @@ limitations under the License.
         <PackageReference Include="FluentValidation" Version="9.5.4" />
         <PackageReference Include="MediatR" Version="9.0.0" />
         <PackageReference Include="NodaTime" Version="3.0.7" />
+        <PackageReference Update="StyleCop.Analyzers" Version="1.2.0-beta.354">
+          <PrivateAssets>all</PrivateAssets>
+          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
     </ItemGroup>
 
   <ItemGroup>

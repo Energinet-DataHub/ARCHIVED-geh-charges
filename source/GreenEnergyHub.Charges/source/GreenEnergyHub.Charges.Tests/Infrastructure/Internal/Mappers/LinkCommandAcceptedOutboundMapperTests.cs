@@ -37,8 +37,9 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Internal.Mappers
             [NotNull] ChargeLinkCommandAcceptedEvent chargeLinkCommandAcceptedEvent,
             [NotNull] LinkCommandAcceptedOutboundMapper sut)
         {
-            UpdateInstantsToValidTimes(chargeLinkCommandAcceptedEvent);
-            var result = (ChargeLinkCommandAcceptedContract)sut.Convert(chargeLinkCommandAcceptedEvent);
+            var result =
+                (GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandAccepted.ChargeLinkCommandAccepted)sut
+                    .Convert(chargeLinkCommandAcceptedEvent);
             ProtobufAssert.OutgoingContractIsSubset(chargeLinkCommandAcceptedEvent, result);
         }
 
@@ -47,14 +48,6 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Internal.Mappers
         public void Convert_WhenCalledWithNull_ShouldThrow([NotNull]LinkCommandAcceptedOutboundMapper sut)
         {
             Assert.Throws<InvalidOperationException>(() => sut.Convert(null!));
-        }
-
-        private static void UpdateInstantsToValidTimes([NotNull] ChargeLinkCommand chargeLinkCommand)
-        {
-            chargeLinkCommand.Document.RequestDate = Instant.FromUtc(2021, 7, 21, 11, 42, 25);
-            chargeLinkCommand.Document.CreatedDateTime = Instant.FromUtc(2021, 7, 21, 12, 14, 43);
-            chargeLinkCommand.ChargeLink.StartDateTime = Instant.FromUtc(2021, 8, 31, 22, 0);
-            chargeLinkCommand.ChargeLink.EndDateTime = Instant.FromUtc(2021, 9, 30, 22, 0);
         }
     }
 }

@@ -29,7 +29,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Messaging.Serialization.MarketDo
                 "STS" => MarketParticipantRole.EnergyAgency,
                 "DGL" => MarketParticipantRole.MeteredDataAdministrator,
                 "DDZ" => MarketParticipantRole.MeteringPointAdministrator,
-                _ => MarketParticipantRole.Unknown
+                _ => MarketParticipantRole.Unknown,
             };
         }
     }
