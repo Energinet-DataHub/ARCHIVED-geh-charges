@@ -54,7 +54,7 @@ namespace GreenEnergyHub.Charges.Application.MeteringPoints.Handlers
                     $"Metering Point ID '{meteringPoint.MeteringPointId}' already exists in storage");
 
                 // Compare and log differences between the integration event data and the persisted metering point's data
-                CompareMeteringPoints(meteringPoint, existingMeteringPoint);
+                EnsureMeteringPointsAreIdentical(meteringPoint, existingMeteringPoint);
             }
         }
 
@@ -63,7 +63,7 @@ namespace GreenEnergyHub.Charges.Application.MeteringPoints.Handlers
         /// </summary>
         /// <param name="meteringPoint">The Metering Point from the integration event</param>
         /// <param name="existingMeteringPoint">The Metering Point from storage</param>
-        private void CompareMeteringPoints(MeteringPoint meteringPoint, MeteringPoint existingMeteringPoint)
+        private void EnsureMeteringPointsAreIdentical(MeteringPoint meteringPoint, MeteringPoint existingMeteringPoint)
         {
             if (!meteringPoint.HasSameMeteringPointType(existingMeteringPoint))
                 _logger.LogError($"Received 'metering point type' event data '{meteringPoint.MeteringPointType}' was not equal to the already persisted value '{existingMeteringPoint.MeteringPointType}' for Metering Point ID '{meteringPoint.MeteringPointId}'");
