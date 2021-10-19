@@ -30,12 +30,12 @@ namespace GreenEnergyHub.Charges.FunctionHost.ChargeLinks.MessageHub
     public class ChargeLinkCreatedDataAvailableNotifierEndpoint
     {
         private const string FunctionName = nameof(ChargeLinkCreatedDataAvailableNotifierEndpoint);
-        private readonly MessageExtractor<ChargeLinkCommandAcceptedContract> _messageExtractor;
+        private readonly MessageExtractor<ChargeLinkCommandAccepted> _messageExtractor;
         private readonly IChargeLinkCreatedDataAvailableNotifier _chargeLinkCreatedDataAvailableNotifier;
         private readonly ILogger _log;
 
         public ChargeLinkCreatedDataAvailableNotifierEndpoint(
-            MessageExtractor<ChargeLinkCommandAcceptedContract> messageExtractor,
+            MessageExtractor<ChargeLinkCommandAccepted> messageExtractor,
             IChargeLinkCreatedDataAvailableNotifier chargeLinkCreatedDataAvailableNotifier,
             [NotNull] ILoggerFactory loggerFactory)
         {

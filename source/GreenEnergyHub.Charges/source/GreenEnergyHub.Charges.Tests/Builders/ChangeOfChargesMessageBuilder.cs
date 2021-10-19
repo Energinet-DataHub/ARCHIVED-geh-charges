@@ -20,7 +20,7 @@ namespace GreenEnergyHub.Charges.Tests.Builders
 {
     public class ChangeOfChargesMessageBuilder
     {
-        private readonly List<ChargeCommand> _transactions = new ();
+        private readonly List<ChargeCommand> _transactions = new();
 
         public ChangeOfChargesMessageBuilder WithTransaction(ChargeCommand command)
         {

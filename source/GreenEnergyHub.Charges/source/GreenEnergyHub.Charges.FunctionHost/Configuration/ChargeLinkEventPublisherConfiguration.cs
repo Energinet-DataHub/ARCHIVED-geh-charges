@@ -29,8 +29,8 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
             serviceCollection.AddScoped<IChargeLinkCreatedEventFactory, ChargeLinkCreatedEventFactory>();
             serviceCollection.AddScoped<IChargeLinkEventPublishHandler, ChargeLinkEventPublishHandler>();
 
-            serviceCollection.ReceiveProtobufMessage<ChargeLinkCommandAcceptedContract>(
-                configuration => configuration.WithParser(() => ChargeLinkCommandAcceptedContract.Parser));
+            serviceCollection.ReceiveProtobufMessage<ChargeLinkCommandAccepted>(
+                configuration => configuration.WithParser(() => ChargeLinkCommandAccepted.Parser));
 
             serviceCollection.SendProtobuf<ChargeLinkCreatedContract>();
             serviceCollection.AddMessagingProtobuf().AddMessageDispatcher<ChargeLinkCreatedEvent>(

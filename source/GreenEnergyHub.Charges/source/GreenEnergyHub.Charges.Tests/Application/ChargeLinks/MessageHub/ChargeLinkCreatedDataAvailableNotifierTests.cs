@@ -19,11 +19,15 @@ using Energinet.DataHub.MessageHub.Client.DataAvailable;
 using Energinet.DataHub.MessageHub.Client.Model;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Application.ChargeLinks.MessageHub;
+using GreenEnergyHub.Charges.Domain.AvailableChargeLinksData;
 using GreenEnergyHub.Charges.Domain.ChargeLinkCommandAcceptedEvents;
+using GreenEnergyHub.Charges.Domain.ChargeLinkCommands;
 using GreenEnergyHub.Charges.Domain.Charges;
+using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.TestCore.Attributes;
 using GreenEnergyHub.Charges.TestCore.Reflection;
 using Moq;
+using NodaTime;
 using Xunit;
 using Xunit.Categories;
 
@@ -48,15 +52,57 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.MessageHub
         public async Task NotifyAsync_WhenChargeIsTaxIndicator_SendsDataAvailableNotification(
             ChargeLinkCommandAcceptedEvent chargeLinkCommandAcceptedEvent,
             Charge charge,
+            AvailableChargeLinksData availableChargeLinksData,
+            [Frozen] Mock<IChargeRepository> chargeRepositoryMock,
+            [Frozen] Mock<IDataAvailableNotificationSender> dataAvailableNotificationSenderMock,
+            [Frozen] Mock<IAvailableChargeLinksDataFactory> availableChargeLinksDataFactoryMock,
+            ChargeLinkCreatedDataAvailableNotifier sut)
+        {
+            // Arrange
+            charge.SetPrivateProperty(c => c.TaxIndicator, true);
+            chargeRepositoryMock.Setup(
+                    repository => repository.GetChargeAsync(It.IsAny<ChargeIdentifier>()))
+                .ReturnsAsync(charge);
+            availableChargeLinksDataFactoryMock.Setup(
+                    factory => factory.CreateAvailableChargeLinksData(
+                        It.IsAny<ChargeLinkCommand>(),
+                        It.IsAny<MarketParticipant>(),
+                        It.IsAny<Instant>(),
+                        It.IsAny<Guid>()))
+                .Returns(availableChargeLinksData);
+
+            // Act
+            await sut.NotifyAsync(chargeLinkCommandAcceptedEvent);
+
+            // Assert
+            foreach (var chargeLinkCommand in chargeLinkCommandAcceptedEvent.ChargeLinkCommands)
+            {
+                dataAvailableNotificationSenderMock.Verify(
+                    sender => sender.SendAsync(
+                        It.Is<DataAvailableNotificationDto>(
+                            dto => dto.Origin == DomainOrigin.Charges
+                                   && dto.SupportsBundling
+                                   && dto.Recipient.Equals(
+                                       new GlobalLocationNumberDto(chargeLinkCommand.Document.Sender.Id))
+                                   && dto.Uuid != Guid.Empty
+                                   && dto.RelativeWeight > 0)),
+                    Times.Once);
+            }
+        }
+
+        [Theory]
+        [InlineAutoMoqData]
+        public async Task NotifyAsync_WhenChargeIsNotTaxIndicator_DoesNotSendDataAvailableNotification(
+            ChargeLinkCommandAcceptedEvent chargeLinkCommandAcceptedEvent,
+            Charge charge,
             [Frozen] Mock<IChargeRepository> chargeRepositoryMock,
             [Frozen] Mock<IDataAvailableNotificationSender> dataAvailableNotificationSenderMock,
             ChargeLinkCreatedDataAvailableNotifier sut)
         {
             // Arrange
-            var link = chargeLinkCommandAcceptedEvent.ChargeLink;
-            charge.SetPrivateProperty(c => c.TaxIndicator, true);
-            chargeRepositoryMock.Setup(
-                    repository => repository.GetChargeAsync(link.SenderProvidedChargeId, link.ChargeOwner, link.ChargeType))
+            charge.SetPrivateProperty(c => c.TaxIndicator, false);
+            chargeRepositoryMock.Setup(repository =>
+                    repository.GetChargeAsync(It.IsAny<ChargeIdentifier>()))
                 .ReturnsAsync(charge);
 
             // Act
@@ -64,15 +110,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.MessageHub
 
             // Assert
             dataAvailableNotificationSenderMock.Verify(
-                sender => sender.SendAsync(
-                    It.Is<DataAvailableNotificationDto>(
-                        dto => dto.Origin == DomainOrigin.Charges
-                               && dto.SupportsBundling
-                               && dto.Recipient.Equals(
-                                   new GlobalLocationNumberDto(chargeLinkCommandAcceptedEvent.Document.Sender.Id))
-                               && dto.Uuid != Guid.Empty
-                               && dto.RelativeWeight > 0)),
-                Times.Once);
+                sender => sender.SendAsync(It.IsAny<DataAvailableNotificationDto>()), Times.Never);
         }
     }
 }

@@ -25,7 +25,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Messaging.Serialization.Commands
                 "D01" => ChargeType.Subscription,
                 "D02" => ChargeType.Fee,
                 "D03" => ChargeType.Tariff,
-                _ => ChargeType.Unknown
+                _ => ChargeType.Unknown,
             };
         }
     }
