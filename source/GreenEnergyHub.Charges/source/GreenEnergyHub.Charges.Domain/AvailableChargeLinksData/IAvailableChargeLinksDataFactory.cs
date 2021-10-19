@@ -15,6 +15,7 @@
 using System;
 using GreenEnergyHub.Charges.Domain.ChargeLinkCommandAcceptedEvents;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
+using NodaTime;
 
 namespace GreenEnergyHub.Charges.Domain.AvailableChargeLinksData
 {
@@ -23,6 +24,7 @@ namespace GreenEnergyHub.Charges.Domain.AvailableChargeLinksData
         AvailableChargeLinksData CreateAvailableChargeLinksData(
             ChargeLinkCommandAcceptedEvent chargeLinkCommandAcceptedEvent,
             MarketParticipant recipient,
+            Instant requestTime,
             Guid messageHubId);
     }
 }

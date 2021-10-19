@@ -32,6 +32,7 @@ namespace GreenEnergyHub.Charges.Domain.AvailableChargeLinksData
             int factor,
             Instant startDateTime,
             Instant endDateTime,
+            Instant requestTime,
             Guid availableDataReferenceId)
         {
             Id = Guid.NewGuid();
@@ -45,11 +46,15 @@ namespace GreenEnergyHub.Charges.Domain.AvailableChargeLinksData
             Factor = factor;
             StartDateTime = startDateTime;
             EndDateTime = endDateTime;
+            RequestTime = requestTime;
             AvailableDataReferenceId = availableDataReferenceId;
         }
 
         public Guid Id { get; set; }
 
+        /// <summary>
+        /// Market Participant Id of Recipient.
+        /// </summary>
         public string RecipientId { get; }
 
         public MarketParticipantRole RecipientRole { get; }
@@ -60,6 +65,9 @@ namespace GreenEnergyHub.Charges.Domain.AvailableChargeLinksData
 
         public string ChargeId { get; }
 
+        /// <summary>
+        /// Market Participant Id of Owner.
+        /// </summary>
         public string ChargeOwner { get; }
 
         public ChargeType ChargeType { get; }
@@ -69,6 +77,8 @@ namespace GreenEnergyHub.Charges.Domain.AvailableChargeLinksData
         public Instant StartDateTime { get; }
 
         public Instant EndDateTime { get; }
+
+        public Instant RequestTime { get; }
 
         public Guid AvailableDataReferenceId { get; }
     }

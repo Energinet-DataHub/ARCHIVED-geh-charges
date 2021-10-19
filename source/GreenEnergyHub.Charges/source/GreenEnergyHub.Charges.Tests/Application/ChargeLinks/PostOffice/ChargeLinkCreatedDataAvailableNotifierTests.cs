@@ -26,6 +26,7 @@ using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.TestCore.Attributes;
 using GreenEnergyHub.Charges.TestCore.Reflection;
 using Moq;
+using NodaTime;
 using Xunit;
 using Xunit.Categories;
 
@@ -66,6 +67,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.PostOffice
                     factory => factory.CreateAvailableChargeLinksData(
                         It.IsAny<ChargeLinkCommandAcceptedEvent>(),
                         It.IsAny<MarketParticipant>(),
+                        It.IsAny<Instant>(),
                         It.IsAny<Guid>()))
                 .Returns(availableChargeLinksData);
 

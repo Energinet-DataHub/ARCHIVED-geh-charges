@@ -21,6 +21,7 @@ using GreenEnergyHub.Charges.Domain.AvailableChargeLinksData;
 using GreenEnergyHub.Charges.Domain.ChargeLinkCommandAcceptedEvents;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
+using NodaTime;
 
 namespace GreenEnergyHub.Charges.Application.ChargeLinks.PostOffice
 {
@@ -78,10 +79,14 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.PostOffice
 
             var dataAvailableNotification = CreateDataAvailableNotificationDto(chargeLinkCommandAcceptedEvent);
 
+            // When available this should be parsed on from API management to be more precise.
+            var now = SystemClock.Instance.GetCurrentInstant();
+
             var availableChargeLinksData =
                 _availableChargeLinksDataFactory.CreateAvailableChargeLinksData(
                     chargeLinkCommandAcceptedEvent,
                     recipient,
+                    now,
                     dataAvailableNotification.Uuid);
             await _availableChargeLinksDataRepository.StoreAsync(availableChargeLinksData);
 

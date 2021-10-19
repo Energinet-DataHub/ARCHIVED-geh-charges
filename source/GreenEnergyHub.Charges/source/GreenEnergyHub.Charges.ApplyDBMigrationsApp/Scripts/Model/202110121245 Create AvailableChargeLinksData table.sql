@@ -13,6 +13,7 @@ CREATE TABLE [MessageHub].AvailableChargeLinksData (
     Factor int not null,
     StartDateTime datetime2 not null,
     EndDateTime datetime2 not null,
+    RequestTime datetime2 not null,
     AvailableDataReferenceId uniqueidentifier not null
 );
 GO

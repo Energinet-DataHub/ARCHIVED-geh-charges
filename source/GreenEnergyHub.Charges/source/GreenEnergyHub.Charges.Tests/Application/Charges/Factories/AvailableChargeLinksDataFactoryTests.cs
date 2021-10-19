@@ -20,6 +20,7 @@ using GreenEnergyHub.Charges.Domain.ChargeLinkCommandAcceptedEvents;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.TestHelpers;
 using GreenEnergyHub.TestHelpers.FluentAssertionsExtensions;
+using NodaTime;
 using Xunit;
 using Xunit.Categories;
 
@@ -33,12 +34,13 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Factories
         public void CreateFromCommandAsync_Charge_HasNoNullsOrEmptyCollections(
             [NotNull] ChargeLinkCommandAcceptedEvent chargeLinkCommandAcceptedEvent,
             [NotNull] MarketParticipant marketParticipant,
+            [NotNull] Instant now,
             [NotNull] Guid messageHubId,
             [NotNull] AvailableChargeLinksDataFactory sut)
         {
             // Act
             var actual =
-                sut.CreateAvailableChargeLinksData(chargeLinkCommandAcceptedEvent, marketParticipant, messageHubId);
+                sut.CreateAvailableChargeLinksData(chargeLinkCommandAcceptedEvent, marketParticipant, now, messageHubId);
 
             // Assert
             actual.Should().NotContainNullsOrEmptyEnumerables();
@@ -52,6 +54,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Factories
             actual.Factor.Should().Be(chargeLinkCommandAcceptedEvent.ChargeLink.Factor);
             actual.StartDateTime.Should().Be(chargeLinkCommandAcceptedEvent.ChargeLink.StartDateTime);
             actual.EndDateTime.Should().Be(chargeLinkCommandAcceptedEvent.ChargeLink.EndDateTime.GetValueOrDefault());
+            actual.RequestTime.Should().Be(now);
             actual.AvailableDataReferenceId.Should().Be(messageHubId);
         }
     }
