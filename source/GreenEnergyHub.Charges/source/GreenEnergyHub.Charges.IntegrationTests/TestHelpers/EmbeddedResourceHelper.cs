@@ -25,7 +25,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.TestHelpers
         public static string GetInputJson(string filePath, [NotNull] IClock clock)
         {
             var basePath = Assembly.GetExecutingAssembly().Location;
-            var path = Path.Combine(Directory.GetParent(basePath) !.FullName, filePath);
+            var path = Path.Combine(Directory.GetParent(basePath)!.FullName, filePath);
             var fileText = File.ReadAllText(path);
             return ReplaceMergeFields(clock, fileText);
         }

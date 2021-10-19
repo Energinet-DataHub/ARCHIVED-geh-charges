@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.Domain.ChargeLinkCommandAcceptedEvents;
 using GreenEnergyHub.Charges.Domain.ChargeLinkCommands;
@@ -21,44 +22,53 @@ using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandAccepted;
 using GreenEnergyHub.Messaging.Protobuf;
 using GreenEnergyHub.Messaging.Transport;
+using ChargeLinkCommand = GreenEnergyHub.Charges.Domain.ChargeLinkCommands.ChargeLinkCommand;
+using Document = GreenEnergyHub.Charges.Domain.MarketParticipants.Document;
+using MarketParticipant = GreenEnergyHub.Charges.Domain.MarketParticipants.MarketParticipant;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
 {
-    public class LinkCommandAcceptedInboundMapper : ProtobufInboundMapper<ChargeLinkCommandAcceptedContract>
+    public class LinkCommandAcceptedInboundMapper : ProtobufInboundMapper<GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandAccepted.ChargeLinkCommandAccepted>
     {
-        protected override IInboundMessage Convert([NotNull]ChargeLinkCommandAcceptedContract chargeLinkCommandAcceptedContract)
+        protected override IInboundMessage Convert([NotNull]GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandAccepted.ChargeLinkCommandAccepted chargeLinkCommandAcceptedContract)
         {
             return new ChargeLinkCommandAcceptedEvent(
                 chargeLinkCommandAcceptedContract.CorrelationId,
-                ConvertDocument(chargeLinkCommandAcceptedContract.Document),
-                ConvertChargeLink(chargeLinkCommandAcceptedContract.ChargeLink));
+                chargeLinkCommandAcceptedContract.ChargeLinkCommands.Select(
+                    chargeLinkCommandContract =>
+                        new ChargeLinkCommand(chargeLinkCommandContract.CorrelationId)
+                {
+                  Document = ConvertDocument(chargeLinkCommandContract.Document),
+                  ChargeLink = ConvertChargeLink(chargeLinkCommandContract.ChargeLink),
+                }).ToList(),
+                chargeLinkCommandAcceptedContract.PublishedTime.ToInstant());
         }
 
-        private static Document ConvertDocument(DocumentContract document)
+        private static Document ConvertDocument(GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandAccepted.Document document)
         {
             return new Document
             {
                 Id = document.Id,
                 RequestDate = document.RequestDate.ToInstant(),
-                Type = (DocumentType)document.Type,
+                Type = (GreenEnergyHub.Charges.Domain.MarketParticipants.DocumentType)document.Type,
                 CreatedDateTime = document.CreatedDateTime.ToInstant(),
                 Sender = MapMarketParticipant(document.Sender),
                 Recipient = MapMarketParticipant(document.Recipient),
-                IndustryClassification = (IndustryClassification)document.IndustryClassification,
-                BusinessReasonCode = (BusinessReasonCode)document.BusinessReasonCode,
+                IndustryClassification = (GreenEnergyHub.Charges.Domain.MarketParticipants.IndustryClassification)document.IndustryClassification,
+                BusinessReasonCode = (GreenEnergyHub.Charges.Domain.MarketParticipants.BusinessReasonCode)document.BusinessReasonCode,
             };
         }
 
-        private static MarketParticipant MapMarketParticipant(MarketParticipantContract marketParticipant)
+        private static MarketParticipant MapMarketParticipant(GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandAccepted.MarketParticipant marketParticipant)
         {
             return new MarketParticipant
             {
                 Id = marketParticipant.Id,
-                BusinessProcessRole = (MarketParticipantRole)marketParticipant.BusinessProcessRole,
+                BusinessProcessRole = (GreenEnergyHub.Charges.Domain.MarketParticipants.MarketParticipantRole)marketParticipant.BusinessProcessRole,
             };
         }
 
-        private static ChargeLinkDto ConvertChargeLink(ChargeLinkContract link)
+        private static ChargeLinkDto ConvertChargeLink(GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandAccepted.ChargeLink link)
         {
             return new ChargeLinkDto
             {
@@ -69,7 +79,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
                 SenderProvidedChargeId = link.SenderProvidedChargeId,
                 Factor = link.Factor,
                 ChargeOwner = link.ChargeOwner,
-                ChargeType = (ChargeType)link.ChargeType,
+                ChargeType = (GreenEnergyHub.Charges.Domain.Charges.ChargeType)link.ChargeType,
             };
         }
     }
