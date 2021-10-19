@@ -16,16 +16,16 @@ using System;
 using GreenEnergyHub.Charges.Domain.ChargeLinkCommandAcceptedEvents;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 
-namespace GreenEnergyHub.Charges.Domain.ChargeLinkTransmissionRequest
+namespace GreenEnergyHub.Charges.Domain.AvailableChargeLinksData
 {
-    public class ChargeLinkTransmissionRequestFactory : IChargeLinkTransmissionRequestFactory
+    public class AvailableChargeLinksDataFactory : IAvailableChargeLinksDataFactory
     {
-        public ChargeLinkTransmissionRequest MapChargeLinkCommandAcceptedEvent(
+        public AvailableChargeLinksData MapChargeLinkCommandAcceptedEvent(
             ChargeLinkCommandAcceptedEvent chargeLinkCommandAcceptedEvent,
             MarketParticipant recipient,
             Guid messageHubId)
         {
-            return new ChargeLinkTransmissionRequest(
+            return new AvailableChargeLinksData(
                 recipient.Id,
                 recipient.BusinessProcessRole,
                 chargeLinkCommandAcceptedEvent.Document.BusinessReasonCode,

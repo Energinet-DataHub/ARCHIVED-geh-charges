@@ -15,8 +15,8 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 using FluentAssertions;
+using GreenEnergyHub.Charges.Domain.AvailableChargeLinksData;
 using GreenEnergyHub.Charges.Domain.ChargeLinkCommandAcceptedEvents;
-using GreenEnergyHub.Charges.Domain.ChargeLinkTransmissionRequest;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.TestHelpers;
 using GreenEnergyHub.TestHelpers.FluentAssertionsExtensions;
@@ -26,7 +26,7 @@ using Xunit.Categories;
 namespace GreenEnergyHub.Charges.Tests.Application.Charges.Factories
 {
     [UnitTest]
-    public class ChargeLinkTransmissionRequestFactoryTests
+    public class AvailableChargeLinksDataFactoryTests
     {
         [Theory]
         [InlineAutoDomainData]
@@ -34,7 +34,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Factories
             [NotNull] ChargeLinkCommandAcceptedEvent chargeLinkCommandAcceptedEvent,
             [NotNull] MarketParticipant marketParticipant,
             [NotNull] Guid messageHubId,
-            [NotNull] ChargeLinkTransmissionRequestFactory sut)
+            [NotNull] AvailableChargeLinksDataFactory sut)
         {
             // Act
             var actual =
@@ -52,7 +52,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Factories
             actual.Factor.Should().Be(chargeLinkCommandAcceptedEvent.ChargeLink.Factor);
             actual.StartDateTime.Should().Be(chargeLinkCommandAcceptedEvent.ChargeLink.StartDateTime);
             actual.EndDateTime.Should().Be(chargeLinkCommandAcceptedEvent.ChargeLink.EndDateTime.GetValueOrDefault());
-            actual.MessageHubId.Should().Be(messageHubId);
+            actual.AvailableDataReferenceId.Should().Be(messageHubId);
         }
     }
 }

@@ -1,4 +1,7 @@
-CREATE TABLE [Charges].ChargeLinkTransmissionRequest (
+CREATE SCHEMA MessageHub;
+GO
+
+CREATE TABLE [MessageHub].AvailableChargeLinksData (
 	Id uniqueidentifier not null primary key,
     RecipientId varchar(70) not null,
     RecipientRole int not null,
@@ -10,6 +13,6 @@ CREATE TABLE [Charges].ChargeLinkTransmissionRequest (
     Factor int not null,
     StartDateTime datetime2 not null,
     EndDateTime datetime2 not null,
-    MessageHubId uniqueidentifier not null
+    AvailableDataReferenceId uniqueidentifier not null
 );
 GO

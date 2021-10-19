@@ -13,7 +13,7 @@
 // limitations under the License.
 
 using GreenEnergyHub.Charges.Application.ChargeLinks.PostOffice;
-using GreenEnergyHub.Charges.Domain.ChargeLinkTransmissionRequest;
+using GreenEnergyHub.Charges.Domain.AvailableChargeLinksData;
 using GreenEnergyHub.Charges.Infrastructure.Repositories;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -24,9 +24,9 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
         internal static void ConfigureServices(IServiceCollection serviceCollection)
         {
             serviceCollection.AddScoped<IChargeLinkCreatedDataAvailableNotifier, ChargeLinkCreatedDataAvailableNotifier>();
-            serviceCollection.AddScoped<IChargeLinkTransmissionRequestFactory, ChargeLinkTransmissionRequestFactory>();
+            serviceCollection.AddScoped<IAvailableChargeLinksDataFactory, AvailableChargeLinksDataFactory>();
             serviceCollection
-                .AddScoped<IChargeLinkTransmissionRequestRepository, ChargeLinkTransmissionRequestRepository>();
+                .AddScoped<IAvailableChargeLinksDataRepository, AvailableChargeLinksDataRepository>();
 
             // This would be redundant as it is already registered for ChargeLinkEventPublisherConfigurationEndpoint
             //serviceCollection.ReceiveProtobufMessage<ChargeLinkCommandAcceptedContract>(

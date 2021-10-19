@@ -13,7 +13,7 @@
 // limitations under the License.
 
 using System;
-using GreenEnergyHub.Charges.Domain.ChargeLinkTransmissionRequest;
+using GreenEnergyHub.Charges.Domain.AvailableChargeLinksData;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using Microsoft.EntityFrameworkCore;
@@ -21,14 +21,14 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Context.EntityConfigurations
 {
-    public class ChargeLinkTransmissionRequestConfiguration : IEntityTypeConfiguration<ChargeLinkTransmissionRequest>
+    public class AvailableChargeLinksDataConfiguration : IEntityTypeConfiguration<AvailableChargeLinksData>
     {
-        public void Configure(EntityTypeBuilder<ChargeLinkTransmissionRequest> builder)
+        public void Configure(EntityTypeBuilder<AvailableChargeLinksData> builder)
         {
             if (builder == null)
                 throw new ArgumentNullException(nameof(builder));
 
-            builder.ToTable("ChargeLinkTransmissionRequest", "Charges");
+            builder.ToTable("AvailableChargeLinksData", "MessageHub");
 
             builder.HasKey(x => x.Id);
 
@@ -82,8 +82,8 @@ namespace GreenEnergyHub.Charges.Infrastructure.Context.EntityConfigurations
                 .HasColumnName("EndDateTime");
 
             builder
-                .Property(x => x.MessageHubId)
-                .HasColumnName("MessageHubId");
+                .Property(x => x.AvailableDataReferenceId)
+                .HasColumnName("AvailableDataReferenceId");
         }
     }
 }

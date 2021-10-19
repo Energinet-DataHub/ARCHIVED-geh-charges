@@ -17,11 +17,11 @@ using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using NodaTime;
 
-namespace GreenEnergyHub.Charges.Domain.ChargeLinkTransmissionRequest
+namespace GreenEnergyHub.Charges.Domain.AvailableChargeLinksData
 {
-    public class ChargeLinkTransmissionRequest
+    public class AvailableChargeLinksData
     {
-        public ChargeLinkTransmissionRequest(
+        public AvailableChargeLinksData(
             string recipientId,
             MarketParticipantRole recipientRole,
             BusinessReasonCode businessReasonCode,
@@ -32,7 +32,7 @@ namespace GreenEnergyHub.Charges.Domain.ChargeLinkTransmissionRequest
             int factor,
             Instant startDateTime,
             Instant endDateTime,
-            Guid messageHubId)
+            Guid availableDataReferenceId)
         {
             Id = Guid.NewGuid();
             RecipientId = recipientId;
@@ -45,7 +45,7 @@ namespace GreenEnergyHub.Charges.Domain.ChargeLinkTransmissionRequest
             Factor = factor;
             StartDateTime = startDateTime;
             EndDateTime = endDateTime;
-            MessageHubId = messageHubId;
+            AvailableDataReferenceId = availableDataReferenceId;
         }
 
         public Guid Id { get; set; }
@@ -70,6 +70,6 @@ namespace GreenEnergyHub.Charges.Domain.ChargeLinkTransmissionRequest
 
         public Instant EndDateTime { get; }
 
-        public Guid MessageHubId { get; }
+        public Guid AvailableDataReferenceId { get; }
     }
 }

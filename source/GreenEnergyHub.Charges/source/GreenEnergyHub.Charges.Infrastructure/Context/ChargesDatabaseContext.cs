@@ -14,13 +14,12 @@
 
 using System;
 using System.Threading.Tasks;
+using GreenEnergyHub.Charges.Domain.AvailableChargeLinksData;
 using GreenEnergyHub.Charges.Domain.ChargeLinks;
-using GreenEnergyHub.Charges.Domain.ChargeLinkTransmissionRequest;
 using GreenEnergyHub.Charges.Domain.MeteringPoints;
 using GreenEnergyHub.Charges.Infrastructure.Context.EntityConfigurations;
 using GreenEnergyHub.Charges.Infrastructure.Context.Model;
 using Microsoft.EntityFrameworkCore;
-using NodaTime;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Context
 {
@@ -48,7 +47,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Context
 
         public DbSet<ChargeLink> ChargeLinks { get; private set; }
 
-        public DbSet<ChargeLinkTransmissionRequest> ChargeLinkTransmissionRequests { get; private set; }
+        public DbSet<AvailableChargeLinksData> AvailableChargeLinksData { get; private set; }
 
         public Task<int> SaveChangesAsync()
            => base.SaveChangesAsync();
@@ -68,7 +67,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Context
 
             modelBuilder.ApplyConfiguration(new ChargeLinkEntityConfiguration());
             modelBuilder.ApplyConfiguration(new MeteringPointEntityConfiguration());
-            modelBuilder.ApplyConfiguration(new ChargeLinkTransmissionRequestConfiguration());
+            modelBuilder.ApplyConfiguration(new AvailableChargeLinksDataConfiguration());
 
             base.OnModelCreating(modelBuilder);
         }

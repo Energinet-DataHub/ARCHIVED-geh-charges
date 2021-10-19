@@ -16,23 +16,23 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using GreenEnergyHub.Charges.Domain.AvailableChargeLinksData;
 using GreenEnergyHub.Charges.Domain.ChargeLinkCommandAcceptedEvents;
-using GreenEnergyHub.Charges.Domain.ChargeLinkTransmissionRequest;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.Infrastructure.Context;
 using Microsoft.EntityFrameworkCore;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Repositories
 {
-    public class ChargeLinkTransmissionRequestRepository : IChargeLinkTransmissionRequestRepository
+    public class AvailableChargeLinksDataRepository : IAvailableChargeLinksDataRepository
     {
         private readonly IChargesDatabaseContext _context;
-        private readonly IChargeLinkTransmissionRequestFactory _chargeLinkTransmissionRequestFactory;
+        private readonly IAvailableChargeLinksDataFactory _availableChargeLinksDataFactory;
 
-        public ChargeLinkTransmissionRequestRepository(IChargesDatabaseContext context, IChargeLinkTransmissionRequestFactory chargeLinkTransmissionRequestFactory)
+        public AvailableChargeLinksDataRepository(IChargesDatabaseContext context, IAvailableChargeLinksDataFactory availableChargeLinksDataFactory)
         {
             _context = context;
-            _chargeLinkTransmissionRequestFactory = chargeLinkTransmissionRequestFactory;
+            _availableChargeLinksDataFactory = availableChargeLinksDataFactory;
         }
 
         public async Task StoreAsync(
@@ -40,15 +40,15 @@ namespace GreenEnergyHub.Charges.Infrastructure.Repositories
             MarketParticipant recipient,
             Guid messageHubId)
         {
-            var chargeLinkTransmissionRequest =
-                _chargeLinkTransmissionRequestFactory.MapChargeLinkCommandAcceptedEvent(chargeLinkCommandAcceptedEvent, recipient, messageHubId);
-            await _context.ChargeLinkTransmissionRequests.AddAsync(chargeLinkTransmissionRequest);
+            var availableChargeLinksData =
+                _availableChargeLinksDataFactory.MapChargeLinkCommandAcceptedEvent(chargeLinkCommandAcceptedEvent, recipient, messageHubId);
+            await _context.AvailableChargeLinksData.AddAsync(availableChargeLinksData);
             await _context.SaveChangesAsync();
         }
 
-        public Task<List<ChargeLinkTransmissionRequest>> GetChargeLinkTransmissionRequestsAsync(IEnumerable<Guid> postOfficeIds)
+        public Task<List<AvailableChargeLinksData>> GetAvailableChargeLinksDataAsync(IEnumerable<Guid> postOfficeIds)
         {
-            var queryable = _context.ChargeLinkTransmissionRequests.Where(x => postOfficeIds.Contains(x.MessageHubId));
+            var queryable = _context.AvailableChargeLinksData.Where(x => postOfficeIds.Contains(x.AvailableDataReferenceId));
             return queryable.ToListAsync();
         }
     }

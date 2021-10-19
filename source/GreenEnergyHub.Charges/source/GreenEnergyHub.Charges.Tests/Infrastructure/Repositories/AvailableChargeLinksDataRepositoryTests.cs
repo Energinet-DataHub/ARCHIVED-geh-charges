@@ -19,8 +19,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
 using FluentAssertions;
+using GreenEnergyHub.Charges.Domain.AvailableChargeLinksData;
 using GreenEnergyHub.Charges.Domain.ChargeLinkCommandAcceptedEvents;
-using GreenEnergyHub.Charges.Domain.ChargeLinkTransmissionRequest;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.Infrastructure.Repositories;
 using GreenEnergyHub.Charges.TestCore.Attributes;
@@ -32,20 +32,20 @@ using Xunit.Categories;
 namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
 {
     [UnitTest]
-    public class ChargeLinkTransmissionRequestsRepositoryTests : IClassFixture<ChargesDatabaseFixture>
+    public class AvailableChargeLinksDataRepositoryTests : IClassFixture<ChargesDatabaseFixture>
     {
         private readonly ChargesDatabaseManager _databaseManager;
 
-        public ChargeLinkTransmissionRequestsRepositoryTests(ChargesDatabaseFixture fixture)
+        public AvailableChargeLinksDataRepositoryTests(ChargesDatabaseFixture fixture)
         {
             _databaseManager = fixture.DatabaseManager;
         }
 
         [Theory]
         [InlineAutoMoqData]
-        public async Task StoreAsync_StoresChargeLinkTransmissionRequests(
-            [Frozen] Mock<IChargeLinkTransmissionRequestFactory> chargeLinkFactory,
-            [NotNull] ChargeLinkTransmissionRequest expected)
+        public async Task StoreAsync_StoresAvailableChargeLinksData(
+            [Frozen] Mock<IAvailableChargeLinksDataFactory> chargeLinkFactory,
+            [NotNull] AvailableChargeLinksData expected)
         {
             // Arrange
             await using var chargesDatabaseWriteContext = _databaseManager.CreateDbContext();
@@ -58,7 +58,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
                         It.IsAny<Guid>()))
                 .Returns(expected);
 
-            var sut = new ChargeLinkTransmissionRequestRepository(chargesDatabaseWriteContext, chargeLinkFactory.Object);
+            var sut = new AvailableChargeLinksDataRepository(chargesDatabaseWriteContext, chargeLinkFactory.Object);
 
             // Act
             await sut.StoreAsync(null!, null!, Guid.NewGuid()).ConfigureAwait(false);
@@ -66,27 +66,27 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
             // Assert
             await using var chargesDatabaseReadContext = _databaseManager.CreateDbContext();
             var actual =
-                chargesDatabaseReadContext.ChargeLinkTransmissionRequests.Single(x => x.MessageHubId == expected.MessageHubId);
+                chargesDatabaseReadContext.AvailableChargeLinksData.Single(x => x.AvailableDataReferenceId == expected.AvailableDataReferenceId);
             actual.ChargeOwner.Should().Be(expected.ChargeOwner);
         }
 
         [Theory]
         [InlineAutoMoqData]
         public async Task GetChargeHistoriesAsync_WithMeteringPointId_ThenSuccessReturnedAsync(
-            [Frozen] Mock<IChargeLinkTransmissionRequestFactory> chargeLinkFactory,
-            [NotNull] ChargeLinkTransmissionRequest expected)
+            [Frozen] Mock<IAvailableChargeLinksDataFactory> chargeLinkFactory,
+            [NotNull] AvailableChargeLinksData expected)
         {
             // Arrange
             await using var chargesDatabaseWriteContext = _databaseManager.CreateDbContext();
-            await chargesDatabaseWriteContext.ChargeLinkTransmissionRequests.AddAsync(expected).ConfigureAwait(false);
+            await chargesDatabaseWriteContext.AvailableChargeLinksData.AddAsync(expected).ConfigureAwait(false);
             await chargesDatabaseWriteContext.SaveChangesAsync().ConfigureAwait(false);
 
             await using var chargesDatabaseReadContext = _databaseManager.CreateDbContext();
-            var sut = new ChargeLinkTransmissionRequestRepository(chargesDatabaseReadContext, chargeLinkFactory.Object);
+            var sut = new AvailableChargeLinksDataRepository(chargesDatabaseReadContext, chargeLinkFactory.Object);
 
             // Act
             var actual =
-                await sut.GetChargeLinkTransmissionRequestsAsync(new List<Guid> { expected.MessageHubId })
+                await sut.GetAvailableChargeLinksDataAsync(new List<Guid> { expected.AvailableDataReferenceId })
                 .ConfigureAwait(false);
 
             // Assert

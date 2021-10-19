@@ -18,15 +18,15 @@ using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Domain.ChargeLinkCommandAcceptedEvents;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 
-namespace GreenEnergyHub.Charges.Domain.ChargeLinkTransmissionRequest
+namespace GreenEnergyHub.Charges.Domain.AvailableChargeLinksData
 {
-    public interface IChargeLinkTransmissionRequestRepository
+    public interface IAvailableChargeLinksDataRepository
     {
         Task StoreAsync(
             ChargeLinkCommandAcceptedEvent chargeLinkCommandAcceptedEvent,
             MarketParticipant recipient,
             Guid messageHubId);
 
-        Task<List<ChargeLinkTransmissionRequest>> GetChargeLinkTransmissionRequestsAsync(IEnumerable<Guid> postOfficeIds);
+        Task<List<AvailableChargeLinksData>> GetAvailableChargeLinksDataAsync(IEnumerable<Guid> postOfficeIds);
     }
 }
