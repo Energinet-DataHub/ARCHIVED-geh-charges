@@ -20,6 +20,6 @@ namespace Energinet.DataHub.Charges.Libraries.Models
     /// The data needed by the Metering Point domain as a reply
     /// to a successful <see cref="CreateDefaultChargeLinkMessages" /> request
     /// </summary>
-    /// <param name="meteringPointId">A unique id to specify the metering point.</param>
-    public sealed record CreateDefaultChargeLinkMessagesSucceededDto(string meteringPointId);
+    /// <param name="MeteringPointId">A unique id to specify the metering point.</param>
+    public sealed record CreateDefaultChargeLinkMessagesSucceededDto(string MeteringPointId);
 }

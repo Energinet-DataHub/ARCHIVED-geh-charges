@@ -91,7 +91,7 @@ namespace Energinet.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.Defaul
 
         private async Task HandleSuccess(CreateDefaultChargeLinkMessagesSucceededDto createDefaultChargeLinkMessagesSucceeded)
         {
-            _knownMeteringPointIdTestResult = createDefaultChargeLinkMessagesSucceeded.meteringPointId;
+            _knownMeteringPointIdTestResult = createDefaultChargeLinkMessagesSucceeded.MeteringPointId;
 
             await Task.CompletedTask.ConfigureAwait(false);
         }

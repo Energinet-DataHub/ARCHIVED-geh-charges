@@ -21,7 +21,7 @@ namespace Energinet.DataHub.Charges.Libraries.Models
     /// The data needed by the Metering Point domain as a reply
     /// to a failed <see cref="CreateDefaultChargeLinks" /> request
     /// </summary>
-    /// <param name="meteringPointId">A unique id to specify the metering point.</param>
-    /// <param name="errorCode">Tells why the <see cref="CreateDefaultChargeLinks" /> request has failed.</param>
-    public sealed record CreateDefaultChargeLinksFailedDto(string meteringPointId, ErrorCode errorCode);
+    /// <param name="MeteringPointId">A unique id to specify the metering point.</param>
+    /// <param name="ErrorCode">Tells why the <see cref="CreateDefaultChargeLinks" /> request has failed.</param>
+    public sealed record CreateDefaultChargeLinksFailedDto(string MeteringPointId, ErrorCode ErrorCode);
 }

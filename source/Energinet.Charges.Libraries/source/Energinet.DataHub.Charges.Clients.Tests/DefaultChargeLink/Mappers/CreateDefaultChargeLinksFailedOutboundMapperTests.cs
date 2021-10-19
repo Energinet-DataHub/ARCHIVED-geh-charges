@@ -42,8 +42,8 @@ namespace Energinet.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.Defaul
             var actual = CreateDefaultChargeLinksFailedOutboundMapper.Convert(createDefaultChargeLinksFailedDto);
 
             // Assert
-            actual.MeteringPointId.Should().Be(createDefaultChargeLinksFailedDto.meteringPointId);
-            ((int)actual.ErrorCode).Should().Be((int)createDefaultChargeLinksFailedDto.errorCode);
+            actual.MeteringPointId.Should().Be(createDefaultChargeLinksFailedDto.MeteringPointId);
+            ((int)actual.ErrorCode).Should().Be((int)createDefaultChargeLinksFailedDto.ErrorCode);
         }
 
         [Fact]

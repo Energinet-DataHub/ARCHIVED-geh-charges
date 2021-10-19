@@ -24,10 +24,10 @@ namespace Energinet.DataHub.Charges.Libraries.Protobuf
         protected internal static CreateDefaultChargeLinksSucceeded Convert(
             [NotNull] CreateDefaultChargeLinksSucceededDto createDefaultChargeLinksSucceededDto)
         {
-            return new ()
+            return new()
             {
-                MeteringPointId = createDefaultChargeLinksSucceededDto.meteringPointId,
-                DidCreateChargeLinks = createDefaultChargeLinksSucceededDto.didCreateChargeLinks,
+                MeteringPointId = createDefaultChargeLinksSucceededDto.MeteringPointId,
+                DidCreateChargeLinks = createDefaultChargeLinksSucceededDto.DidCreateChargeLinks,
             };
         }
     }

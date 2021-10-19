@@ -25,10 +25,10 @@ namespace Energinet.DataHub.Charges.Libraries.Protobuf
         internal static CreateDefaultChargeLinksFailed Convert(
             [NotNull] CreateDefaultChargeLinksFailedDto createDefaultChargeLinksFailedDto)
         {
-            return new ()
+            return new()
             {
-                MeteringPointId = createDefaultChargeLinksFailedDto.meteringPointId,
-                ErrorCode = ConvertErrorCode(createDefaultChargeLinksFailedDto.errorCode),
+                MeteringPointId = createDefaultChargeLinksFailedDto.MeteringPointId,
+                ErrorCode = ConvertErrorCode(createDefaultChargeLinksFailedDto.ErrorCode),
             };
         }
 
@@ -38,7 +38,7 @@ namespace Energinet.DataHub.Charges.Libraries.Protobuf
             {
                 ErrorCode.Unspecified => CreateDefaultChargeLinksFailed.Types.ErrorCode.EcUnspecified,
                 ErrorCode.MeteringPointUnknown => CreateDefaultChargeLinksFailed.Types.ErrorCode.EcMeteringPointUnknown,
-                _ => throw new ArgumentOutOfRangeException(nameof(errorCode), $"Value: {errorCode.ToString()}")
+                _ => throw new ArgumentOutOfRangeException(nameof(errorCode), $"Value: {errorCode.ToString()}"),
             };
         }
     }

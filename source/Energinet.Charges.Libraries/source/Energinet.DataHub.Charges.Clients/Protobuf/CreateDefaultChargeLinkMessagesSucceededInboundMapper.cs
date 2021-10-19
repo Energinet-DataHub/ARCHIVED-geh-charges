@@ -23,7 +23,7 @@ namespace Energinet.DataHub.Charges.Libraries.Protobuf
         protected internal static CreateDefaultChargeLinkMessagesSucceededDto Convert(
             [NotNull] CreateDefaultChargeLinkMessagesSucceeded createDefaultChargeLinksSucceeded)
         {
-            return new (createDefaultChargeLinksSucceeded.MeteringPointId);
+            return new(createDefaultChargeLinksSucceeded.MeteringPointId);
         }
     }
 }
