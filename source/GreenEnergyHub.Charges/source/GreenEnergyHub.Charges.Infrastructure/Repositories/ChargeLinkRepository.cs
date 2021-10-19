@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Domain.ChargeLinks;
 using GreenEnergyHub.Charges.Infrastructure.Context;
@@ -27,9 +28,9 @@ namespace GreenEnergyHub.Charges.Infrastructure.Repositories
             _context = context;
         }
 
-        public async Task StoreAsync(ChargeLink chargeLink)
+        public async Task StoreAsync(IReadOnlyCollection<ChargeLink> chargeLink)
         {
-            _context.ChargeLinks.Add(chargeLink);
+            await _context.ChargeLinks.AddRangeAsync(chargeLink);
             await _context.SaveChangesAsync().ConfigureAwait(false);
         }
     }

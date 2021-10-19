@@ -12,19 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using GreenEnergyHub.Charges.Domain.MarketParticipants;
-
-namespace GreenEnergyHub.Charges.Infrastructure.Messaging.Serialization.MarketDocument
+namespace GreenEnergyHub.Charges.Domain.Charges
 {
-    public static class IndustryClassificationMapper
-    {
-        public static IndustryClassification Map(string value)
-        {
-            return value switch
-            {
-                "23" => IndustryClassification.Electricity,
-                _ => IndustryClassification.Unknown,
-            };
-        }
-    }
+    public record ChargeIdentifier(string SenderProvidedChargeId, string Owner, ChargeType ChargeType);
 }

@@ -16,9 +16,11 @@ using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
+using FluentAssertions;
 using GreenEnergyHub.Charges.Application;
 using GreenEnergyHub.Charges.Application.ChargeLinks.Handlers;
 using GreenEnergyHub.Charges.Domain.ChargeLinkCommandAcceptedEvents;
+using GreenEnergyHub.Charges.Domain.ChargeLinkCommands;
 using GreenEnergyHub.Charges.Domain.ChargeLinkCreatedEvents;
 using GreenEnergyHub.TestHelpers;
 using Moq;
@@ -42,7 +44,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Handlers
             // Arrange
             factory.Setup(
                     f => f.CreateEvent(
-                        It.IsAny<ChargeLinkCommandAcceptedEvent>()))
+                        It.IsAny<ChargeLinkCommand>()))
                 .Returns(createdEvent);
 
             var dispatched = false;
@@ -57,7 +59,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Handlers
             await sut.HandleAsync(command).ConfigureAwait(false);
 
             // Assert
-            Assert.True(dispatched);
+            dispatched.Should().BeTrue();
         }
     }
 }

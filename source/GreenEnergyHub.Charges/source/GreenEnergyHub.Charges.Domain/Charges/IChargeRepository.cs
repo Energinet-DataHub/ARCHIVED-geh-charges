@@ -24,10 +24,10 @@ namespace GreenEnergyHub.Charges.Domain.Charges
     {
         Task StoreChargeAsync(Charge newCharge);
 
-        Task<Charge> GetChargeAsync(string senderProvidedChargeId, string owner, ChargeType chargeType);
+        Task<Charge> GetChargeAsync(ChargeIdentifier chargeIdentifier);
 
         Task<Charge> GetChargeAsync(Guid id);
 
-        Task<bool> CheckIfChargeExistsAsync(string senderProvidedChargeId, string owner, ChargeType chargeType);
+        Task<bool> CheckIfChargeExistsAsync(ChargeIdentifier chargeIdentifier);
     }
 }

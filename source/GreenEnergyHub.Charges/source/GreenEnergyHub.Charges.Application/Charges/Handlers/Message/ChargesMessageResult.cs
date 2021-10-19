@@ -22,7 +22,7 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers.Message
 
         public static ChargesMessageResult CreateSuccess()
         {
-            return new () { IsSucceeded = true };
+            return new ChargesMessageResult { IsSucceeded = true };
         }
     }
 }

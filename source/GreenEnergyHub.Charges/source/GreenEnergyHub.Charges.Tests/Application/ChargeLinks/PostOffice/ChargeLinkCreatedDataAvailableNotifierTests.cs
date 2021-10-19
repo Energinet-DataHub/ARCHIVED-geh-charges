@@ -13,6 +13,8 @@
 // limitations under the License.
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
 using Energinet.DataHub.MessageHub.Client.DataAvailable;
@@ -53,26 +55,28 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.PostOffice
             ChargeLinkCreatedDataAvailableNotifier sut)
         {
             // Arrange
-            var link = chargeLinkCommandAcceptedEvent.ChargeLink;
             charge.SetPrivateProperty(c => c.TaxIndicator, true);
             chargeRepositoryMock.Setup(
-                    repository => repository.GetChargeAsync(link.SenderProvidedChargeId, link.ChargeOwner, link.ChargeType))
+                    repository => repository.GetChargeAsync(It.IsAny<ChargeIdentifier>()))
                 .ReturnsAsync(charge);
 
             // Act
             await sut.NotifyAsync(chargeLinkCommandAcceptedEvent);
 
             // Assert
-            dataAvailableNotificationSenderMock.Verify(
-                sender => sender.SendAsync(
-                    It.Is<DataAvailableNotificationDto>(
-                        dto => dto.Origin == DomainOrigin.Charges
-                               && dto.SupportsBundling
-                               && dto.Recipient.Equals(
-                                   new GlobalLocationNumberDto(chargeLinkCommandAcceptedEvent.Document.Sender.Id))
-                               && dto.Uuid != Guid.Empty
-                               && dto.RelativeWeight > 0)),
-                Times.Once);
+            foreach (var chargeLinkCommand in chargeLinkCommandAcceptedEvent.ChargeLinkCommands)
+            {
+                dataAvailableNotificationSenderMock.Verify(
+                    sender => sender.SendAsync(
+                        It.Is<DataAvailableNotificationDto>(
+                            dto => dto.Origin == DomainOrigin.Charges
+                                   && dto.SupportsBundling
+                                   && dto.Recipient.Equals(
+                                       new GlobalLocationNumberDto(chargeLinkCommand.Document.Sender.Id))
+                                   && dto.Uuid != Guid.Empty
+                                   && dto.RelativeWeight > 0)),
+                    Times.Once);
+            }
         }
 
         [Theory]
@@ -85,10 +89,9 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.PostOffice
             ChargeLinkCreatedDataAvailableNotifier sut)
         {
             // Arrange
-            var link = chargeLinkCommandAcceptedEvent.ChargeLink;
             charge.SetPrivateProperty(c => c.TaxIndicator, false);
             chargeRepositoryMock.Setup(repository =>
-                    repository.GetChargeAsync(link.SenderProvidedChargeId, link.ChargeOwner, link.ChargeType))
+                    repository.GetChargeAsync(It.IsAny<ChargeIdentifier>()))
                 .ReturnsAsync(charge);
 
             // Act

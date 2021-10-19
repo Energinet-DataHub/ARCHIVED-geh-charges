@@ -33,31 +33,47 @@ namespace GreenEnergyHub.Charges.Domain.ChargeLinks
             _meteringPointRepository = meteringPointRepository;
         }
 
-        public async Task<ChargeLink> CreateAsync(ChargeLinkCommandReceivedEvent chargeLinkEvent)
+        public async Task<IReadOnlyCollection<ChargeLink>> CreateAsync(ChargeLinkCommandReceivedEvent chargeLinkEvent)
         {
             if (chargeLinkEvent == null) throw new ArgumentNullException(nameof(chargeLinkEvent));
 
-            var chargeLink = chargeLinkEvent.ChargeLinkCommand.ChargeLink;
+            var chargeLinksCreated = new List<ChargeLink>();
 
-            var charge = await _chargeRepository
-                .GetChargeAsync(chargeLink.SenderProvidedChargeId, chargeLink.ChargeOwner, chargeLink.ChargeType)
-                .ConfigureAwait(false);
+            foreach (var chargeLinkCommand in chargeLinkEvent.ChargeLinkCommands)
+            {
+                var chargeLink = chargeLinkCommand.ChargeLink;
 
-            var meteringPoint = await _meteringPointRepository
-                .GetMeteringPointAsync(chargeLink.MeteringPointId)
-                .ConfigureAwait(false);
+                var charge = await _chargeRepository
+                    .GetChargeAsync(new ChargeIdentifier(
+                        chargeLink.SenderProvidedChargeId,
+                        chargeLink.ChargeOwner,
+                        chargeLink.ChargeType))
+                    .ConfigureAwait(false);
 
-            var operation = new ChargeLinkOperation(chargeLink.OperationId, chargeLinkEvent.CorrelationId);
-            var operations = new List<ChargeLinkOperation> { operation };
+                var meteringPoint = await _meteringPointRepository
+                    .GetMeteringPointAsync(chargeLink.MeteringPointId)
+                    .ConfigureAwait(false);
 
-            var periodDetails = new ChargeLinkPeriodDetails(
-                chargeLink.StartDateTime,
-                chargeLink.EndDateTime.TimeOrEndDefault(),
-                chargeLink.Factor,
-                operation.Id);
-            var periodDetailsCollection = new List<ChargeLinkPeriodDetails> { periodDetails };
+                var operation = new ChargeLinkOperation(
+                    chargeLink.OperationId,
+                    chargeLinkEvent.CorrelationId);
+                var operations = new List<ChargeLinkOperation> { operation };
 
-            return new ChargeLink(charge.Id, meteringPoint.Id, operations, periodDetailsCollection);
+                var periodDetails = new ChargeLinkPeriodDetails(
+                    chargeLink.StartDateTime,
+                    chargeLink.EndDateTime.TimeOrEndDefault(),
+                    chargeLink.Factor,
+                    operation.Id);
+                var periodDetailsCollection = new List<ChargeLinkPeriodDetails> { periodDetails };
+
+                chargeLinksCreated.Add(new ChargeLink(
+                    charge.Id,
+                    meteringPoint.Id,
+                    operations,
+                    periodDetailsCollection));
+            }
+
+            return chargeLinksCreated;
         }
     }
 }

@@ -54,7 +54,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
             // Arrange
             await using var chargesDatabaseWriteContext = _databaseManager.CreateDbContext();
             var charge = GetValidCharge();
-            await SeedDatabase(chargesDatabaseWriteContext).ConfigureAwait(false);
+            await SeedDatabaseAsync(chargesDatabaseWriteContext).ConfigureAwait(false);
             var sut = new ChargeRepository(chargesDatabaseWriteContext);
 
             // Act
@@ -88,7 +88,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
 
             // Arrange
             var charge = GetValidCharge();
-            await SeedDatabase(chargesDatabaseWriteContext).ConfigureAwait(false);
+            await SeedDatabaseAsync(chargesDatabaseWriteContext).ConfigureAwait(false);
             var sut = new ChargeRepository(chargesDatabaseWriteContext);
 
             // Act
@@ -100,7 +100,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
                                                                      x.MarketParticipant.MarketParticipantId == charge.Owner &&
                                                                      x.ChargeType == (int)charge.Type);
 
-            Assert.True(actual);
+            actual.Should().BeTrue();
         }
 
         [Fact]
@@ -110,7 +110,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
 
             // Arrange
             var charge = GetValidCharge();
-            await SeedDatabase(chargesDatabaseWriteContext).ConfigureAwait(false);
+            await SeedDatabaseAsync(chargesDatabaseWriteContext).ConfigureAwait(false);
             var sut = new ChargeRepository(chargesDatabaseWriteContext);
 
             // Act
@@ -121,7 +121,8 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
             var actual = chargesDatabaseReadContext
                 .Charges
                 .Any(x => x.ChargeOperation.CorrelationId == charge.CorrelationId);
-            Assert.True(actual);
+
+            actual.Should().BeTrue();
         }
 
         [Theory]
@@ -156,7 +157,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
             var actual = await sut.GetChargeAsync(createdCharge.Id).ConfigureAwait(false);
 
             // Assert
-            Assert.NotNull(actual);
+            actual.Should().NotBeNull();
         }
 
         private static Charge GetValidCharge()
@@ -198,7 +199,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
             return charge;
         }
 
-        private static async Task SeedDatabase(ChargesDatabaseContext context)
+        private static async Task SeedDatabaseAsync(ChargesDatabaseContext context)
         {
             var marketParticipant = await context.MarketParticipants.SingleOrDefaultAsync(x => x.MarketParticipantId == MarketParticipantOwner)
                 .ConfigureAwait(false);

@@ -12,12 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace GreenEnergyHub.Charges.Domain.ChargeLinks
 {
     public interface IChargeLinkRepository
     {
-        Task StoreAsync(ChargeLink chargeLink);
+        Task StoreAsync(IReadOnlyCollection<ChargeLink> chargeLinks);
     }
 }
