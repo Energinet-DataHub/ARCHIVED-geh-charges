@@ -52,7 +52,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
 
             chargeLinkFactory
                 .Setup(x =>
-                    x.MapChargeLinkCommandAcceptedEvent(
+                    x.CreateAvailableChargeLinksData(
                         It.IsAny<ChargeLinkCommandAcceptedEvent>(),
                         It.IsAny<MarketParticipant>(),
                         It.IsAny<Guid>()))

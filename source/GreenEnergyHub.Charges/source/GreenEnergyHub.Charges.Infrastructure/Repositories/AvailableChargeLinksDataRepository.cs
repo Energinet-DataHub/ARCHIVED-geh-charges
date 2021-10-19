@@ -41,7 +41,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Repositories
             Guid messageHubId)
         {
             var availableChargeLinksData =
-                _availableChargeLinksDataFactory.MapChargeLinkCommandAcceptedEvent(chargeLinkCommandAcceptedEvent, recipient, messageHubId);
+                _availableChargeLinksDataFactory.CreateAvailableChargeLinksData(chargeLinkCommandAcceptedEvent, recipient, messageHubId);
             await _context.AvailableChargeLinksData.AddAsync(availableChargeLinksData);
             await _context.SaveChangesAsync();
         }

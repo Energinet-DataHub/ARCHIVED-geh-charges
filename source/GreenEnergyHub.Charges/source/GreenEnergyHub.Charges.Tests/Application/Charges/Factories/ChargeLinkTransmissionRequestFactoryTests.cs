@@ -38,7 +38,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Factories
         {
             // Act
             var actual =
-                sut.MapChargeLinkCommandAcceptedEvent(chargeLinkCommandAcceptedEvent, marketParticipant, messageHubId);
+                sut.CreateAvailableChargeLinksData(chargeLinkCommandAcceptedEvent, marketParticipant, messageHubId);
 
             // Assert
             actual.Should().NotContainNullsOrEmptyEnumerables();

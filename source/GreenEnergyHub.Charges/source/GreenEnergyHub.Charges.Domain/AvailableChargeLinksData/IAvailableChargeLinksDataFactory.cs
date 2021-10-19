@@ -20,7 +20,7 @@ namespace GreenEnergyHub.Charges.Domain.AvailableChargeLinksData
 {
     public interface IAvailableChargeLinksDataFactory
     {
-        AvailableChargeLinksData MapChargeLinkCommandAcceptedEvent(
+        AvailableChargeLinksData CreateAvailableChargeLinksData(
             ChargeLinkCommandAcceptedEvent chargeLinkCommandAcceptedEvent,
             MarketParticipant recipient,
             Guid messageHubId);
