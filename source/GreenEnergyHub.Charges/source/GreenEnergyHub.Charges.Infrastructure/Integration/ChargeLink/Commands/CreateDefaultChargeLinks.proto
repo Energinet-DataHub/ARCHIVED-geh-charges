@@ -18,6 +18,10 @@ syntax = "proto3";
 option csharp_namespace = "GreenEnergyHub.Charges.Commands";
 
 /*
+* Todo: remove this contract as soon as create charge links uses Charges.Clients NuGet package
+*/
+
+/*
 * This request is sent by the Metering Point domain to the Charges domain requesting default charges to be linked to a new metering point.
 *
 * Expected request meta data besides what ADR-0008 already requires for integration events:
