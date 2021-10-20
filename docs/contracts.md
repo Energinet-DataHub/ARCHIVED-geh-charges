@@ -184,36 +184,36 @@ Represents the update of one or more charge links.
 
 <a name=".CreateDefaultChargeLinks"></a>
 
-### [CreateDefaultChargeLinks](.././source/GreenEnergyHub.Charges/source/GreenEnergyHub.Charges.Infrastructure/Integration/ChargeLink/Commands/CreateDefaultChargeLinks.proto)
+### [CreateDefaultChargeLinks](.././source/Energinet.Charges.Libraries/source/Energinet.DataHub.Charges.Clients/DefaultChargeLink/Contracts/CreateDefaultChargeLinks.proto)
 
 This request is used by the Metering Point domain as part of the 'Create metering point' process to request the Charges domain to link default charges a the newly created metering point.
 
 <a name=".CreateDefaultChargeLinksSucceeded"></a>
 
-### [CreateDefaultChargeLinksSucceeded](.././source/GreenEnergyHub.Charges/source/GreenEnergyHub.Charges.Infrastructure/Integration/ChargeLink/Commands/CreateDefaultChargeLinksSucceeded.proto)
+### [CreateDefaultChargeLinksSucceeded](.././source/Energinet.Charges.Libraries/source/Energinet.DataHub.Charges.Clients/DefaultChargeLink/Contracts/CreateDefaultChargeLinksSucceeded.proto)
 
 The Charges domain will use this reply to inform the Metering Point domain when the `CreateDefaultChargeLinks` request has been processed successfully.
 
 <a name=".CreateDefaultChargeLinksFailed"></a>
 
-### [CreateDefaultChargeLinksFailed](.././source/GreenEnergyHub.Charges/source/GreenEnergyHub.Charges.Infrastructure/Integration/ChargeLink/Commands/CreateDefaultChargeLinksFailed.proto)
+### [CreateDefaultChargeLinksFailed](.././source/Energinet.Charges.Libraries/source/Energinet.DataHub.Charges.Clients/DefaultChargeLink/Contracts/CreateDefaultChargeLinksFailed.proto)
 
 In case the Charges domain fails to process a `CreateDefaultChargeLinks` request this reply will be used to inform the Metering Point domain.
 
 <a name=".CreateDefaultChargeLinkMessages"></a>
 
-### [CreateDefaultChargeLinkMessages](.././source/GreenEnergyHub.Charges/source/GreenEnergyHub.Charges.Infrastructure/Integration/ChargeLink/Commands/CreateDefaultChargeLinkMessages.proto)
+### [CreateDefaultChargeLinkMessages](.././source/Energinet.Charges.Libraries/source/Energinet.DataHub.Charges.Clients/DefaultChargeLinkMessages/Contracts/CreateDefaultChargeLinkMessages.proto)
 
 This request is used by the Metering Point domain as part of the 'Create metering point' process to request the Charges domain to create messages containing the default charge links for a specific metering point and make them available to the relevant Market Participants.
 
 <a name=".CreateDefaultChargeLinkMessagesSucceeded"></a>
 
-### [CreateDefaultChargeLinkMessagesSucceeded](.././source/GreenEnergyHub.Charges/source/GreenEnergyHub.Charges.Infrastructure/Integration/ChargeLink/Commands/CreateDefaultChargeLinkMessagesSucceeded.proto)
+### [CreateDefaultChargeLinkMessagesSucceeded](.././source/Energinet.Charges.Libraries/source/Energinet.DataHub.Charges.Clients/DefaultChargeLinkMessages/Contracts/CreateDefaultChargeLinkMessagesSucceeded.proto)
 
 The Charges domain will use this reply to inform the Metering Point domain when the `CreateDefaultChargeLinkMessages` request has been processed successfully.
 
 <a name=".CreateDefaultChargeLinkMessagesFailed"></a>
 
-### [CreateDefaultChargeLinkMessagesFailed](.././source/GreenEnergyHub.Charges/source/GreenEnergyHub.Charges.Infrastructure/Integration/ChargeLink/Commands/CreateDefaultChargeLinkMessagesFailed.proto)
+### [CreateDefaultChargeLinkMessagesFailed](.././source/Energinet.Charges.Libraries/source/Energinet.DataHub.Charges.Clients/DefaultChargeLinkMessages/Contracts/CreateDefaultChargeLinkMessagesFailed.proto)
 
 In case the Charges domain fails to process a `CreateDefaultChargeLinkMessages` request this reply will be used to inform the Metering Point domain.
