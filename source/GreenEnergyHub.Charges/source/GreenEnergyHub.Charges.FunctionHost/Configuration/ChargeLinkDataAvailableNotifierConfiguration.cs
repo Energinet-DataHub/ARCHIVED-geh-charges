@@ -19,7 +19,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace GreenEnergyHub.Charges.FunctionHost.Configuration
 {
-    internal static class ChargeLinkCreatedDataAvailableNotifierConfiguration
+    internal static class ChargeLinkDataAvailableNotifierConfiguration
     {
         internal static void ConfigureServices(IServiceCollection serviceCollection)
         {

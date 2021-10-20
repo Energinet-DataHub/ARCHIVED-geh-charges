@@ -19,7 +19,7 @@ using GreenEnergyHub.Charges.Application.SeedWork.SyncRequest;
 
 namespace GreenEnergyHub.Charges.Application.ChargeLinks.MessageHub.Infrastructure
 {
-    public interface IChargeLinkCreatedBundleReplier
+    public interface IChargeLinkBundleReplier
     {
         Task ReplyAsync(Stream bundleStream, DataBundleRequestDto request, ISyncRequestMetadata metadata);
     }

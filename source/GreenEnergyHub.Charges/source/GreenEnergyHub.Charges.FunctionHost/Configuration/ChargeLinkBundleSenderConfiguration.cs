@@ -14,18 +14,18 @@
 
 using GreenEnergyHub.Charges.Application.ChargeLinks.MessageHub;
 using GreenEnergyHub.Charges.Application.ChargeLinks.MessageHub.Infrastructure;
-using GreenEnergyHub.Charges.Infrastructure.ChargeLinkCreated.MessageHub;
+using GreenEnergyHub.Charges.Infrastructure.ChargeLinkBundle.MessageHub;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace GreenEnergyHub.Charges.FunctionHost.Configuration
 {
-    public static class ChargeLinkCreatedBundleSenderConfiguration
+    public static class ChargeLinkBundleSenderConfiguration
     {
         public static void ConfigureServices(IServiceCollection serviceCollection)
         {
-            serviceCollection.AddScoped<IChargeLinkCreatedBundleSender, ChargeLinkCreatedBundleSender>();
-            serviceCollection.AddScoped<IChargeLinkCreatedBundleCreator, ChargeLinkCreatedBundleCreator>();
-            serviceCollection.AddScoped<IChargeLinkCreatedBundleReplier, ChargeLinkCreatedBundleReplier>();
+            serviceCollection.AddScoped<IChargeLinkBundleSender, ChargeLinkBundleSender>();
+            serviceCollection.AddScoped<IChargeLinkBundleCreator, ChargeLinkBundleCreator>();
+            serviceCollection.AddScoped<IChargeLinkBundleReplier, ChargeLinkBundleReplier>();
         }
     }
 }

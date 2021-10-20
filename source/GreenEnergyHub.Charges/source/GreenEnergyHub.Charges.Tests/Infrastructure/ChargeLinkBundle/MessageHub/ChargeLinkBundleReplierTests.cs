@@ -20,29 +20,30 @@ using Energinet.DataHub.MessageHub.Client.Model;
 using Energinet.DataHub.MessageHub.Client.Peek;
 using Energinet.DataHub.MessageHub.Client.Storage;
 using GreenEnergyHub.Charges.Application.SeedWork.SyncRequest;
-using GreenEnergyHub.Charges.Infrastructure.ChargeLinkCreated.MessageHub;
+using GreenEnergyHub.Charges.Infrastructure.ChargeLinkBundle.MessageHub;
 using GreenEnergyHub.Charges.TestCore.Attributes;
 using Moq;
 using Xunit;
 using Xunit.Categories;
 
-namespace GreenEnergyHub.Charges.Tests.Infrastructure.ChargeLinkCreated.MessageHub
+namespace GreenEnergyHub.Charges.Tests.Infrastructure.ChargeLinkBundle.MessageHub
 {
     [UnitTest]
-    public class ChargeLinkCreatedBundleReplierTests
+    public class ChargeLinkBundleReplierTests
     {
         [Theory]
         [InlineAutoMoqData]
         public async Task ReplyAsync_SendsAResponseAsync(
             [Frozen] Mock<IStorageHandler> storageHandlerMock,
             [Frozen] Mock<IDataBundleResponseSender> sender,
-            ChargeLinkCreatedBundleReplier sut,
+            ChargeLinkBundleReplier sut,
             Mock<MemoryStream> anyBundleStreamMock,
             DataBundleRequestDto request,
             ISyncRequestMetadata anyMetadata,
             Uri anyUri)
         {
-            storageHandlerMock.Setup(handler => handler.AddStreamToStorageAsync(anyBundleStreamMock.Object, request))
+            storageHandlerMock
+                .Setup(handler => handler.AddStreamToStorageAsync(anyBundleStreamMock.Object, request))
                 .ReturnsAsync(anyUri);
 
             await sut.ReplyAsync(anyBundleStreamMock.Object, request, anyMetadata);
@@ -56,7 +57,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.ChargeLinkCreated.MessageH
         public async Task ReplyAsync_SendsWithSessionIdFromMetadataAsync(
             [Frozen] Mock<IStorageHandler> storageHandlerMock,
             [Frozen] Mock<IDataBundleResponseSender> sender,
-            ChargeLinkCreatedBundleReplier sut,
+            ChargeLinkBundleReplier sut,
             Mock<MemoryStream> anyBundleStreamMock,
             DataBundleRequestDto request,
             ISyncRequestMetadata anyMetadata,

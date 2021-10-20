@@ -17,9 +17,9 @@ using System.Threading.Tasks;
 using Energinet.DataHub.MessageHub.Client.Model;
 using GreenEnergyHub.Charges.Application.ChargeLinks.MessageHub.Infrastructure;
 
-namespace GreenEnergyHub.Charges.Infrastructure.ChargeLinkCreated.MessageHub
+namespace GreenEnergyHub.Charges.Infrastructure.ChargeLinkBundle.MessageHub
 {
-    public class ChargeLinkCreatedBundleCreator : IChargeLinkCreatedBundleCreator
+    public class ChargeLinkBundleCreator : IChargeLinkBundleCreator
     {
         public Task CreateAsync(DataBundleRequestDto request, Stream outputStream)
         {

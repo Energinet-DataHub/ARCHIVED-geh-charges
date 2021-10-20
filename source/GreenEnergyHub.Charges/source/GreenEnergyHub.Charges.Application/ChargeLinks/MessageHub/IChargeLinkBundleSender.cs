@@ -12,14 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.IO;
 using System.Threading.Tasks;
 using Energinet.DataHub.MessageHub.Client.Model;
+using GreenEnergyHub.Charges.Application.SeedWork.SyncRequest;
 
-namespace GreenEnergyHub.Charges.Application.ChargeLinks.MessageHub.Infrastructure
+namespace GreenEnergyHub.Charges.Application.ChargeLinks.MessageHub
 {
-    public interface IChargeLinkCreatedBundleCreator
+    public interface IChargeLinkBundleSender
     {
-        Task CreateAsync(DataBundleRequestDto request, Stream outputStream);
+        Task SendAsync(DataBundleRequestDto request, ISyncRequestMetadata metadata);
     }
 }

@@ -13,7 +13,7 @@
     "INTEGRATIONEVENT_LISTENER_CONNECTION_STRING": "<sb listener connection string for integration events (without EntityPath)>",
     "DOMAINEVENT_SENDER_CONNECTION_STRING": "<connection string for sending domain events to the service bus (without entity path)>",
     "DOMAINEVENT_LISTENER_CONNECTION_STRING": "<connection string for listening for domain events on the service bus (without entity path)>",
-    "MESSAGEHUB_STORAGE_CONNECTIONSTRING": "<connection string for writing to the Message Hub storage account for bundles>",
+    "MESSAGEHUB_STORAGE_CONNECTION_STRING": "<connection string for writing to the Message Hub storage account for bundles>",
     "MESSAGEHUB_STORAGE_CONTAINER": "<name of the container in the Message Hub storage account for bundles>",
 
     "CHARGE_LINK_ACCEPTED_TOPIC_NAME": "sbt-link-command-accepted",

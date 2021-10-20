@@ -20,24 +20,24 @@ using GreenEnergyHub.Charges.Application.SeedWork.SyncRequest;
 
 namespace GreenEnergyHub.Charges.Application.ChargeLinks.MessageHub
 {
-    public class ChargeLinkCreatedBundleSender : IChargeLinkCreatedBundleSender
+    public class ChargeLinkBundleSender : IChargeLinkBundleSender
     {
-        private readonly IChargeLinkCreatedBundleCreator _chargeLinkCreatedBundleCreator;
-        private readonly IChargeLinkCreatedBundleReplier _chargeLinkCreatedBundleReplier;
+        private readonly IChargeLinkBundleCreator _chargeLinkBundleCreator;
+        private readonly IChargeLinkBundleReplier _chargeLinkBundleReplier;
 
-        public ChargeLinkCreatedBundleSender(
-            IChargeLinkCreatedBundleCreator chargeLinkCreatedBundleCreator,
-            IChargeLinkCreatedBundleReplier chargeLinkCreatedBundleReplier)
+        public ChargeLinkBundleSender(
+            IChargeLinkBundleCreator chargeLinkBundleCreator,
+            IChargeLinkBundleReplier chargeLinkBundleReplier)
         {
-            _chargeLinkCreatedBundleCreator = chargeLinkCreatedBundleCreator;
-            _chargeLinkCreatedBundleReplier = chargeLinkCreatedBundleReplier;
+            _chargeLinkBundleCreator = chargeLinkBundleCreator;
+            _chargeLinkBundleReplier = chargeLinkBundleReplier;
         }
 
         public async Task SendAsync(DataBundleRequestDto request, ISyncRequestMetadata metadata)
         {
             await using var bundleStream = new MemoryStream();
-            await _chargeLinkCreatedBundleCreator.CreateAsync(request, bundleStream);
-            await _chargeLinkCreatedBundleReplier.ReplyAsync(bundleStream, request, metadata);
+            await _chargeLinkBundleCreator.CreateAsync(request, bundleStream);
+            await _chargeLinkBundleReplier.ReplyAsync(bundleStream, request, metadata);
         }
     }
 }

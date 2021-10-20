@@ -21,24 +21,29 @@ using Microsoft.Extensions.Logging;
 
 namespace GreenEnergyHub.Charges.FunctionHost.ChargeLinks.MessageHub
 {
-    public class ChargeLinkCreatedBundleSenderEndpoint
+    /// <summary>
+    /// Trigger on request from MessageHub to create a bundle
+    /// and create bundle and send response to MessageHub.
+    /// This is the RSM-031 CIM XML 'NotifyBillingMasterData'.
+    /// </summary>
+    public class ChargeLinkBundleSenderEndpoint
     {
-        private const string FunctionName = nameof(ChargeLinkCreatedBundleSenderEndpoint);
-        private readonly IChargeLinkCreatedBundleSender _chargeLinkCreatedBundleSender;
+        private const string FunctionName = nameof(ChargeLinkBundleSenderEndpoint);
+        private readonly IChargeLinkBundleSender _chargeLinkBundleSender;
         private readonly ILogger _log;
         private readonly IRequestBundleParser _requestBundleParser;
         private readonly ISyncRequestMetaDataFactory _syncRequestMetaDataFactory;
 
-        public ChargeLinkCreatedBundleSenderEndpoint(
-            IChargeLinkCreatedBundleSender chargeLinkCreatedBundleSender,
+        public ChargeLinkBundleSenderEndpoint(
+            IChargeLinkBundleSender chargeLinkBundleSender,
             ILoggerFactory loggerFactory,
             IRequestBundleParser requestBundleParser,
             ISyncRequestMetaDataFactory syncRequestMetaDataFactory)
         {
-            _chargeLinkCreatedBundleSender = chargeLinkCreatedBundleSender;
+            _chargeLinkBundleSender = chargeLinkBundleSender;
             _requestBundleParser = requestBundleParser;
             _syncRequestMetaDataFactory = syncRequestMetaDataFactory;
-            _log = loggerFactory.CreateLogger(nameof(ChargeLinkDataAvailableNotifierEndpoint));
+            _log = loggerFactory.CreateLogger(nameof(ChargeLinkBundleSenderEndpoint));
         }
 
         [Function(FunctionName)]
@@ -51,7 +56,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.ChargeLinks.MessageHub
 
             var request = _requestBundleParser.Parse(data);
             var metadata = _syncRequestMetaDataFactory.Create(functionContext);
-            await _chargeLinkCreatedBundleSender.SendAsync(request, metadata).ConfigureAwait(false);
+            await _chargeLinkBundleSender.SendAsync(request, metadata).ConfigureAwait(false);
         }
     }
 }

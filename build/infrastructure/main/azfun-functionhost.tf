@@ -56,7 +56,7 @@ module "azfun_functionhost" {
     
     # Message Hub
     POST_OFFICE_TOPIC_NAME                               = module.sbt_post_office.name
-    MESSAGEHUB_STORAGE_CONNECTIONSTRING                  = data.azurerm_key_vault_secret.messagehub_storage_connectionstring.value
+    MESSAGEHUB_STORAGE_CONNECTION_STRING                 = data.azurerm_key_vault_secret.messagehub_storage_connection_string.value
     MESSAGEHUB_STORAGE_CONTAINER                         = data.azurerm_key_vault_secret.messagehub_storage_container.value
     MESSAGEHUB_DATAAVAILABLE_QUEUE                       = local.MESSAGEHUB_DATAAVAILABLE_QUEUE
     MESSAGEHUB_BUNDLEREQUEST_QUEUE                       = local.MESSAGEHUB_BUNDLEREQUEST_QUEUE

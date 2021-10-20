@@ -68,9 +68,9 @@ module "kvs_integrationevents_sender_connection_string" {
   key_vault_id  = module.kv_shared_stub.id
 }
 
-module "kvs_messagehub_storage_connectionstring" {
+module "kvs_messagehub_storage_connection_string" {
   source        = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//key-vault-secret?ref=2.0.0"
-  name          = local.MESSAGEHUB_STORAGE_CONNECTIONSTRING_KEY
+  name          = local.MESSAGEHUB_STORAGE_CONNECTION_STRING_KEY
   value         = module.st_marketoperator_response.primary_connection_string
   key_vault_id  = module.kv_shared_stub.id
 }

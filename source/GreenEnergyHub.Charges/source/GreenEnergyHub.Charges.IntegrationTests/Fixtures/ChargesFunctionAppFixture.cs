@@ -137,7 +137,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures
             var messageHubReplyQueueName = await GetQueueNameFromKeyAsync(ChargesFunctionAppServiceBusOptions.MessageHubReplyQueueKey);
             Environment.SetEnvironmentVariable("MESSAGEHUB_BUNDLEREPLY_QUEUE", messageHubReplyQueueName);
 
-            Environment.SetEnvironmentVariable("MESSAGEHUB_STORAGE_CONNECTIONSTRING", ChargesFunctionAppServiceBusOptions.MessageHubStorageConnectionString);
+            Environment.SetEnvironmentVariable("MESSAGEHUB_STORAGE_CONNECTION_STRING", ChargesFunctionAppServiceBusOptions.MessageHubStorageConnectionString);
 
             Environment.SetEnvironmentVariable("MESSAGEHUB_STORAGE_CONTAINER", ChargesFunctionAppServiceBusOptions.MessageHubStorageContainerName);
 

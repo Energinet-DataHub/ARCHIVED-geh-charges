@@ -38,6 +38,7 @@ env:
   INTEGRATIONEVENT_LISTENER_CONNECTION_STRING: ${{ secrets.INTEGRATIONTEST_SERVICEBUS_CONNECTIONSTRING }}
   DOMAINEVENT_SENDER_CONNECTION_STRING: ${{ secrets.INTEGRATIONTEST_SERVICEBUS_CONNECTIONSTRING }}
   DOMAINEVENT_LISTENER_CONNECTION_STRING: ${{ secrets.INTEGRATIONTEST_SERVICEBUS_CONNECTIONSTRING }}
+  
   # Variables that overrides settings in 'functionhost.settings.json'
   FunctionAppHostPath: 'C:\npm\prefix\node_modules\azure-functions-core-tools\bin\func.dll'
   FunctionApplicationPath: '..\\..\\..\\..\\GreenEnergyHub.Charges.FunctionHost\\bin\\Release\\net5.0'

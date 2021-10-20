@@ -27,14 +27,14 @@ using Xunit.Categories;
 namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.MessageHub
 {
     [UnitTest]
-    public class ChargeLinkCreatedBundleSenderTests
+    public class ChargeLinkBundleSenderTests
     {
         [Theory]
         [InlineAutoMoqData]
         public async Task SendAsync_RepliesWithCreatedBundle(
-            [Frozen] Mock<IChargeLinkCreatedBundleCreator> creatorMock,
-            [Frozen] Mock<IChargeLinkCreatedBundleReplier> replierMock,
-            ChargeLinkCreatedBundleSender sut,
+            [Frozen] Mock<IChargeLinkBundleCreator> creatorMock,
+            [Frozen] Mock<IChargeLinkBundleReplier> replierMock,
+            ChargeLinkBundleSender sut,
             DataBundleRequestDto anyRequest,
             ISyncRequestMetadata anyMetadata)
         {

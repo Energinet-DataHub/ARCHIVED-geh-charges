@@ -21,14 +21,14 @@ using Energinet.DataHub.MessageHub.Client.Storage;
 using GreenEnergyHub.Charges.Application.ChargeLinks.MessageHub.Infrastructure;
 using GreenEnergyHub.Charges.Application.SeedWork.SyncRequest;
 
-namespace GreenEnergyHub.Charges.Infrastructure.ChargeLinkCreated.MessageHub
+namespace GreenEnergyHub.Charges.Infrastructure.ChargeLinkBundle.MessageHub
 {
-    public class ChargeLinkCreatedBundleReplier : IChargeLinkCreatedBundleReplier
+    public class ChargeLinkBundleReplier : IChargeLinkBundleReplier
     {
         private readonly IStorageHandler _storageHandler;
         private readonly IDataBundleResponseSender _dataBundleResponseSender;
 
-        public ChargeLinkCreatedBundleReplier(IStorageHandler storageHandler, IDataBundleResponseSender dataBundleResponseSender)
+        public ChargeLinkBundleReplier(IStorageHandler storageHandler, IDataBundleResponseSender dataBundleResponseSender)
         {
             _storageHandler = storageHandler;
             _dataBundleResponseSender = dataBundleResponseSender;
