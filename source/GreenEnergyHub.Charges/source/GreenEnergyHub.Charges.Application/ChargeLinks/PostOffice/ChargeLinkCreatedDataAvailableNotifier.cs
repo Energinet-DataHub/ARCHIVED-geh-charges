@@ -19,9 +19,12 @@ using System.Linq;
 using System.Threading.Tasks;
 using Energinet.DataHub.MessageHub.Client.DataAvailable;
 using Energinet.DataHub.MessageHub.Client.Model;
+using GreenEnergyHub.Charges.Domain.AvailableChargeLinksData;
 using GreenEnergyHub.Charges.Domain.ChargeLinkCommandAcceptedEvents;
 using GreenEnergyHub.Charges.Domain.ChargeLinkCommands;
 using GreenEnergyHub.Charges.Domain.Charges;
+using GreenEnergyHub.Charges.Domain.MarketParticipants;
+using NodaTime;
 
 namespace GreenEnergyHub.Charges.Application.ChargeLinks.PostOffice
 {
@@ -41,11 +44,22 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.PostOffice
 
         private readonly IDataAvailableNotificationSender _dataAvailableNotificationSender;
         private readonly IChargeRepository _chargeRepository;
+        private readonly IAvailableChargeLinksDataRepository _availableChargeLinksDataRepository;
+        private readonly IMarketParticipantRepository _marketParticipantRepository;
+        private readonly IAvailableChargeLinksDataFactory _availableChargeLinksDataFactory;
 
-        public ChargeLinkCreatedDataAvailableNotifier(IDataAvailableNotificationSender dataAvailableNotificationSender, IChargeRepository chargeRepository)
+        public ChargeLinkCreatedDataAvailableNotifier(
+            IDataAvailableNotificationSender dataAvailableNotificationSender,
+            IChargeRepository chargeRepository,
+            IAvailableChargeLinksDataRepository availableChargeLinksDataRepository,
+            IMarketParticipantRepository marketParticipantRepository,
+            IAvailableChargeLinksDataFactory availableChargeLinksDataFactory)
         {
             _dataAvailableNotificationSender = dataAvailableNotificationSender;
             _chargeRepository = chargeRepository;
+            _availableChargeLinksDataRepository = availableChargeLinksDataRepository;
+            _marketParticipantRepository = marketParticipantRepository;
+            _availableChargeLinksDataFactory = availableChargeLinksDataFactory;
         }
 
         public async Task NotifyAsync([NotNull] ChargeLinkCommandAcceptedEvent chargeLinkCommandAcceptedEvent)
@@ -53,6 +67,18 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.PostOffice
             if (chargeLinkCommandAcceptedEvent == null) throw new ArgumentNullException(nameof(chargeLinkCommandAcceptedEvent));
 
             var dataAvailableNotificationDtos = new List<DataAvailableNotificationDto>();
+
+            // It is the responsibility of the Charge Domain to find the recipient and
+            // not considered part of the Create Metering Point orchestration.
+            // We select the first as all bundled messages will have the same recipient
+            var recipient =
+                _marketParticipantRepository.GetGridAccessProvider(
+                    chargeLinkCommandAcceptedEvent.ChargeLinkCommands.First()
+                        .ChargeLink.MeteringPointId);
+
+            // When available this should be parsed on from API management to be more precise.
+            var now = SystemClock.Instance.GetCurrentInstant();
+            var availableChargeLinksData = new List<AvailableChargeLinksData>();
 
             foreach (var chargeLinkCommand in chargeLinkCommandAcceptedEvent.ChargeLinkCommands)
             {
@@ -63,9 +89,17 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.PostOffice
 
                 if (charge.TaxIndicator)
                 {
-                    dataAvailableNotificationDtos.Add(CreateDataAvailableNotificationDto(chargeLinkCommand));
+                    var dataAvailableNotificationDto = CreateDataAvailableNotificationDto(chargeLinkCommand);
+                    dataAvailableNotificationDtos.Add(dataAvailableNotificationDto);
+                    availableChargeLinksData.Add(_availableChargeLinksDataFactory.CreateAvailableChargeLinksData(
+                        chargeLinkCommand,
+                        recipient,
+                        now,
+                        dataAvailableNotificationDto.Uuid));
                 }
             }
+
+            await _availableChargeLinksDataRepository.StoreAsync(availableChargeLinksData);
 
             var dataAvailableNotificationSenderTasks = dataAvailableNotificationDtos
                 .Select(x => _dataAvailableNotificationSender.SendAsync(x));

@@ -51,7 +51,7 @@ namespace Energinet.DataHub.Charges.Libraries.DefaultChargeLink
 
             var createDefaultChargeLinks = new CreateDefaultChargeLinks
             {
-                MeteringPointId = createDefaultChargeLinksDto.meteringPointId,
+                MeteringPointId = createDefaultChargeLinksDto.MeteringPointId,
             };
 
             await _serviceBusRequestSender.SendRequestAsync(

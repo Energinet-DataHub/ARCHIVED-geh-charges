@@ -12,11 +12,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace Energinet.DataHub.Charges.Libraries.Models
+using System;
+using System.Collections.Generic;
+using GreenEnergyHub.Charges.Domain.ChargeLinkCommandAcceptedEvents;
+using GreenEnergyHub.Charges.Domain.ChargeLinkCommands;
+using GreenEnergyHub.Charges.Domain.MarketParticipants;
+using NodaTime;
+
+namespace GreenEnergyHub.Charges.Domain.AvailableChargeLinksData
 {
-    /// <summary>
-    /// The required data needed by the Charges domain to create Default charge links.
-    /// </summary>
-    /// <param name="MeteringPointId">A unique id to specify the metering point.</param>
-    public sealed record CreateDefaultChargeLinksDto(string MeteringPointId);
+    public interface IAvailableChargeLinksDataFactory
+    {
+        AvailableChargeLinksData CreateAvailableChargeLinksData(
+            ChargeLinkCommand chargeLinkCommand,
+            MarketParticipant recipient,
+            Instant requestTime,
+            Guid messageHubId);
+    }
 }

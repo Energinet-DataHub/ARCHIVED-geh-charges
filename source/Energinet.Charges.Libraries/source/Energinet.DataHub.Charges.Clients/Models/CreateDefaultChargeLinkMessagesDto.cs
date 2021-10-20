@@ -12,13 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Diagnostics.CodeAnalysis;
-
 namespace Energinet.DataHub.Charges.Libraries.Models
 {
     /// <summary>
     /// The required data needed by the Charges domain to create Default charge link messages.
     /// </summary>
-    /// <param name="meteringPointId"> A unique id to specify the metering point.</param>
-    public sealed record CreateDefaultChargeLinkMessagesDto(string meteringPointId);
+    /// <param name="MeteringPointId"> A unique id to specify the metering point.</param>
+    public sealed record CreateDefaultChargeLinkMessagesDto(string MeteringPointId);
 }
