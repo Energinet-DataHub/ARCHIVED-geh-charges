@@ -12,13 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Azure.Messaging.ServiceBus.Administration;
+using GreenEnergyHub.Charges.FunctionHost.Configuration;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
 using Microsoft.Extensions.Logging;
@@ -59,18 +59,23 @@ namespace GreenEnergyHub.Charges.FunctionHost.Health
         private async Task<Dictionary<string, bool>> GetDeepHealthCheckStatusAsync()
         {
             /* Consider checking access to database, Service Bus topics and queues, and other health checks */
+
+            // TODO: This connection string does not have permissions to verify queue existence
+            var connectionString = EnvironmentHelper.GetEnv("INTEGRATIONEVENT_SENDER_CONNECTION_STRING");
+
             return new Dictionary<string, bool>
             {
-                { "PostOfficeDataAvailableQueueExists", await PostOfficeDataAvailableQueueExistsAsync() },
+                { "MessageHubDataAvailableQueueExists", await QueueExistsAsync(connectionString, "MESSAGEHUB_DATAAVAILABLE_QUEUE") },
+                { "MessageHubRequestQueueExists", await QueueExistsAsync(connectionString, "MESSAGEHUB_BUNDLEREQUEST_QUEUE") },
+                { "MessageHubResponseQueueExists", await QueueExistsAsync(connectionString, "MESSAGEHUB_BUNDLEREPLY_QUEUE") },
             };
         }
 
-        private async Task<bool> PostOfficeDataAvailableQueueExistsAsync()
+        private async Task<bool> QueueExistsAsync(string connectionString, string queueNameEnvVariable)
         {
-            // TODO: Replace hardcoded strings - awaits other PRs and update of post office NuGet package
-            var connectionString = Environment.GetEnvironmentVariable("INTEGRATIONEVENT_SENDER_CONNECTION_STRING");
             var client = new ServiceBusAdministrationClient(connectionString);
-            return await client.QueueExistsAsync("sbq-dataavailable");
+            var queueName = EnvironmentHelper.GetEnv(queueNameEnvVariable);
+            return await client.QueueExistsAsync(queueName);
         }
     }
 }
