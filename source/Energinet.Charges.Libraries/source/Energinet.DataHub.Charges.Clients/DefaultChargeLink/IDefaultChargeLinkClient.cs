@@ -18,7 +18,7 @@ using Energinet.DataHub.Charges.Libraries.Models;
 
 namespace Energinet.DataHub.Charges.Libraries.DefaultChargeLink
 {
-    public interface IDefaultChargeLinkRequestClient
+    public interface IDefaultChargeLinkClient
     {
         /// <summary>
         /// Request the Charges domain to create default charge links

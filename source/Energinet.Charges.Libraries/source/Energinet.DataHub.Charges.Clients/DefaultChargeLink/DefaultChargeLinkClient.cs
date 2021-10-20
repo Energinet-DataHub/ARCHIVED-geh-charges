@@ -24,13 +24,13 @@ using Google.Protobuf;
 
 namespace Energinet.DataHub.Charges.Libraries.DefaultChargeLink
 {
-    public sealed class DefaultChargeLinkRequestClient : IAsyncDisposable, IDefaultChargeLinkRequestClient
+    public sealed class DefaultChargeLinkClient : IAsyncDisposable, IDefaultChargeLinkClient
     {
         private const string CreateLinkRequestQueueName = "create-link-request";
         private readonly ServiceBusClient _serviceBusClient;
         private readonly IServiceBusRequestSender _serviceBusRequestSender;
 
-        public DefaultChargeLinkRequestClient(
+        public DefaultChargeLinkClient(
             [NotNull] ServiceBusClient serviceBusClient,
             [NotNull] IServiceBusRequestSenderFactory serviceBusRequestSenderFactory,
             [NotNull] string replyToQueueName)
@@ -75,8 +75,8 @@ namespace Energinet.DataHub.Charges.Libraries.DefaultChargeLink
 
             var createDefaultChargeLinks = new CreateDefaultChargeLinksSucceeded
             {
-                MeteringPointId = createDefaultChargeLinksSucceededDto.meteringPointId,
-                DidCreateChargeLinks = createDefaultChargeLinksSucceededDto.didCreateChargeLinks,
+                MeteringPointId = createDefaultChargeLinksSucceededDto.MeteringPointId,
+                DidCreateChargeLinks = createDefaultChargeLinksSucceededDto.DidCreateChargeLinks,
             };
 
             await _serviceBusRequestSender.SendRequestAsync(
@@ -100,8 +100,8 @@ namespace Energinet.DataHub.Charges.Libraries.DefaultChargeLink
 
             var createDefaultChargeLinks = new CreateDefaultChargeLinksFailed
             {
-                MeteringPointId = createDefaultChargeLinksFailedDto.meteringPointId,
-                ErrorCode = (CreateDefaultChargeLinksFailed.Types.ErrorCode)createDefaultChargeLinksFailedDto.errorCode,
+                MeteringPointId = createDefaultChargeLinksFailedDto.MeteringPointId,
+                ErrorCode = (CreateDefaultChargeLinksFailed.Types.ErrorCode)createDefaultChargeLinksFailedDto.ErrorCode,
             };
 
             await _serviceBusRequestSender.SendRequestAsync(
