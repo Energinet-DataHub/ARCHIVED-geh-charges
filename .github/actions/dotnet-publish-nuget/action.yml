@@ -45,15 +45,7 @@ runs:
       id: determine_version_suffix
       shell: bash
       run: |
-        echo ${{ env.BRANCH }}
-        if [[ '${{ env.BRANCH }}' == 'refs/heads/master' || '${{ env.BRANCH }}' == 'refs/heads/main' ]]
-        then
-          echo "##[set-output name=property;]$(echo '')"
-        else
           echo "##[set-output name=property;]$(echo '-p:VersionSuffix=-alpha-$(date +'%Y%m%dT%H%M%S')')"
-        fi
-      env:
-        BRANCH: ${{ github.ref }}
 
     - name: Pack project
       shell: bash
