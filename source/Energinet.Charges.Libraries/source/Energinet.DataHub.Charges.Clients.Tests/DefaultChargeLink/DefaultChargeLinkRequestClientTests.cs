@@ -62,7 +62,7 @@ namespace Energinet.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.Defaul
 
         [Theory]
         [InlineAutoDomainData]
-        public async Task CreateDefaultChargeLinksRequestAsync_ValidInput_SendsMessage(
+        public async Task CreateDefaultChargeLinksRequestAsync_WhenInputIsValid_SendsMessage(
             [NotNull] [Frozen] Mock<ServiceBusClient> serviceBusClientMock,
             [NotNull] [Frozen] Mock<IServiceBusRequestSenderFactory> serviceBusRequestSenderFactoryMock,
             [NotNull] [Frozen] Mock<IServiceBusRequestSender> serviceBusRequestSenderMock)
@@ -128,7 +128,7 @@ namespace Energinet.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.Defaul
 
         [Theory]
         [InlineAutoDomainData]
-        public async Task CreateDefaultChargeLinksSucceededRespondAsync_ValidInput_SendsMessage(
+        public async Task CreateDefaultChargeLinksSucceededRespondAsync_WhenInputIsValid_SendsMessage(
             [NotNull] [Frozen] Mock<ServiceBusClient> serviceBusClientMock,
             [NotNull] [Frozen] Mock<IServiceBusRequestSenderFactory> serviceBusRequestSenderFactoryMock,
             [NotNull] [Frozen] Mock<IServiceBusRequestSender> serviceBusRequestSenderMock)
@@ -196,7 +196,7 @@ namespace Energinet.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.Defaul
 
         [Theory]
         [InlineAutoDomainData]
-        public async Task CreateDefaultChargeLinksFailedRespondAsync_ValidInput_SendsMessage(
+        public async Task CreateDefaultChargeLinksFailedRespondAsync_WhenInputIsValid_SendsMessage(
             [NotNull] [Frozen] Mock<ServiceBusClient> serviceBusClientMock,
             [NotNull] [Frozen] Mock<IServiceBusRequestSenderFactory> serviceBusRequestSenderFactoryMock,
             [NotNull] [Frozen] Mock<IServiceBusRequestSender> serviceBusRequestSenderMock)
