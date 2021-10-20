@@ -12,16 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
+using GreenEnergyHub.Charges.Application.SeedWork.SyncRequest;
+using Microsoft.Azure.Functions.Worker;
 
-namespace GreenEnergyHub.Charges.FunctionHost.Configuration
+namespace GreenEnergyHub.Charges.Infrastructure.SyncRequest
 {
-    public static class EnvironmentHelper
+    public interface ISyncRequestMetaDataFactory
     {
-        public static string GetEnv(string variableName)
-        {
-            return Environment.GetEnvironmentVariable(variableName) ??
-                   throw new Exception($"Function app is missing required environment variable '{variableName}'");
-        }
+        ISyncRequestMetadata Create(FunctionContext bindingContextBindingData);
     }
 }

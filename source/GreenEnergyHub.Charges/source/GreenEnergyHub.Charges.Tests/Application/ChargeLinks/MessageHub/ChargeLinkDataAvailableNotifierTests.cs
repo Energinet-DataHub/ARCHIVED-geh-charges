@@ -20,7 +20,7 @@ using AutoFixture.Xunit2;
 using Energinet.DataHub.MessageHub.Client.DataAvailable;
 using Energinet.DataHub.MessageHub.Client.Model;
 using FluentAssertions;
-using GreenEnergyHub.Charges.Application.ChargeLinks.PostOffice;
+using GreenEnergyHub.Charges.Application.ChargeLinks.MessageHub;
 using GreenEnergyHub.Charges.Domain.AvailableChargeLinksData;
 using GreenEnergyHub.Charges.Domain.ChargeLinkCommandAcceptedEvents;
 using GreenEnergyHub.Charges.Domain.ChargeLinkCommands;
@@ -33,15 +33,15 @@ using NodaTime;
 using Xunit;
 using Xunit.Categories;
 
-namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.PostOffice
+namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.MessageHub
 {
     [UnitTest]
-    public class ChargeLinkCreatedDataAvailableNotifierTests
+    public class ChargeLinkDataAvailableNotifierTests
     {
         [Theory]
         [InlineAutoMoqData]
         public async Task NotifyAsync_WhenEventIsNull_ThrowsArgumentNullException(
-            ChargeLinkCreatedDataAvailableNotifier sut)
+            ChargeLinkDataAvailableNotifier sut)
         {
             await sut
                 .Invoking(notifier => notifier.NotifyAsync(null!))
@@ -51,20 +51,31 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.PostOffice
 
         [Theory]
         [InlineAutoMoqData]
-        public async Task NotifyAsync_WhenChargeIsTaxIndicator_SendsDataAvailableNotification(
+        public async Task NotifyAsync_WhenChargeIsTaxIndicator_SendsDataAvailableNotificationPerCommand(
             ChargeLinkCommandAcceptedEvent chargeLinkCommandAcceptedEvent,
             Charge charge,
+            MarketParticipant gridAccessProvider,
             AvailableChargeLinksData availableChargeLinksData,
             [Frozen] Mock<IChargeRepository> chargeRepositoryMock,
             [Frozen] Mock<IDataAvailableNotificationSender> dataAvailableNotificationSenderMock,
             [Frozen] Mock<IAvailableChargeLinksDataFactory> availableChargeLinksDataFactoryMock,
-            ChargeLinkCreatedDataAvailableNotifier sut)
+            [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepositoryMock,
+            ChargeLinkDataAvailableNotifier sut)
         {
             // Arrange
             charge.SetPrivateProperty(c => c.TaxIndicator, true);
-            chargeRepositoryMock.Setup(
-                    repository => repository.GetChargeAsync(It.IsAny<ChargeIdentifier>()))
+
+            FixMeteringPointIds(chargeLinkCommandAcceptedEvent.ChargeLinkCommands);
+
+            chargeRepositoryMock
+                .Setup(repository => repository.GetChargeAsync(It.IsAny<ChargeIdentifier>()))
                 .ReturnsAsync(charge);
+
+            marketParticipantRepositoryMock
+                .Setup(repository => repository.GetGridAccessProvider(
+                    chargeLinkCommandAcceptedEvent.ChargeLinkCommands.First().ChargeLink.MeteringPointId))
+                .Returns(gridAccessProvider);
+
             availableChargeLinksDataFactoryMock.Setup(
                     factory => factory.CreateAvailableChargeLinksData(
                         It.IsAny<ChargeLinkCommand>(),
@@ -77,19 +88,18 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.PostOffice
             await sut.NotifyAsync(chargeLinkCommandAcceptedEvent);
 
             // Assert
-            foreach (var chargeLinkCommand in chargeLinkCommandAcceptedEvent.ChargeLinkCommands)
-            {
-                dataAvailableNotificationSenderMock.Verify(
-                    sender => sender.SendAsync(
-                        It.Is<DataAvailableNotificationDto>(
-                            dto => dto.Origin == DomainOrigin.Charges
-                                   && dto.SupportsBundling
-                                   && dto.Recipient.Equals(
-                                       new GlobalLocationNumberDto(chargeLinkCommand.Document.Sender.Id))
-                                   && dto.Uuid != Guid.Empty
-                                   && dto.RelativeWeight > 0)),
-                    Times.Once);
-            }
+            dataAvailableNotificationSenderMock.Verify(
+                sender => sender.SendAsync(
+                    It.Is<DataAvailableNotificationDto>(
+                        dto => dto.Origin == DomainOrigin.Charges
+                               && dto.SupportsBundling
+                               && dto.Recipient.Equals(
+                                   new GlobalLocationNumberDto(gridAccessProvider.Id))
+                               && dto.Uuid != Guid.Empty
+                               && dto.RelativeWeight > 0)),
+                Times.Exactly(chargeLinkCommandAcceptedEvent.ChargeLinkCommands.Count));
+
+            dataAvailableNotificationSenderMock.VerifyNoOtherCalls();
         }
 
         [Theory]
@@ -99,10 +109,13 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.PostOffice
             Charge charge,
             [Frozen] Mock<IChargeRepository> chargeRepositoryMock,
             [Frozen] Mock<IDataAvailableNotificationSender> dataAvailableNotificationSenderMock,
-            ChargeLinkCreatedDataAvailableNotifier sut)
+            ChargeLinkDataAvailableNotifier sut)
         {
             // Arrange
+            FixMeteringPointIds(chargeLinkCommandAcceptedEvent.ChargeLinkCommands);
+
             charge.SetPrivateProperty(c => c.TaxIndicator, false);
+
             chargeRepositoryMock.Setup(repository =>
                     repository.GetChargeAsync(It.IsAny<ChargeIdentifier>()))
                 .ReturnsAsync(charge);
@@ -111,8 +124,18 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.PostOffice
             await sut.NotifyAsync(chargeLinkCommandAcceptedEvent);
 
             // Assert
-            dataAvailableNotificationSenderMock.Verify(
-                sender => sender.SendAsync(It.IsAny<DataAvailableNotificationDto>()), Times.Never);
+            dataAvailableNotificationSenderMock.VerifyNoOtherCalls();
+        }
+
+        // This is a workaround because the model contains multiple metering point IDs while
+        // business does not.
+        private void FixMeteringPointIds(IReadOnlyCollection<ChargeLinkCommand> chargeLinkCommands)
+        {
+            var meteringPointId = chargeLinkCommands.First().ChargeLink.MeteringPointId;
+            foreach (var command in chargeLinkCommands)
+            {
+                command.ChargeLink.MeteringPointId = meteringPointId;
+            }
         }
     }
 }

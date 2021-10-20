@@ -12,17 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.IO;
 using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Domain.ChargeLinkCommandAcceptedEvents;
+using Energinet.DataHub.MessageHub.Client.Model;
+using GreenEnergyHub.Charges.Application.SeedWork.SyncRequest;
 
-namespace GreenEnergyHub.Charges.Application.ChargeLinks.PostOffice
+namespace GreenEnergyHub.Charges.Application.ChargeLinks.MessageHub.Infrastructure
 {
-    /// <summary>
-    /// Contract for notifying the post office that data about a charge link that has been created
-    /// is available.
-    /// </summary>
-    public interface IChargeLinkCreatedDataAvailableNotifier
+    public interface IChargeLinkBundleReplier
     {
-        Task NotifyAsync(ChargeLinkCommandAcceptedEvent chargeLinkCommandAcceptedEvent);
+        Task ReplyAsync(Stream bundleStream, DataBundleRequestDto request, ISyncRequestMetadata metadata);
     }
 }

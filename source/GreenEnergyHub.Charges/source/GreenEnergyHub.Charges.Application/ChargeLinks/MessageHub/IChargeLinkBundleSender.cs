@@ -12,16 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
+using System.Threading.Tasks;
+using Energinet.DataHub.MessageHub.Client.Model;
+using GreenEnergyHub.Charges.Application.SeedWork.SyncRequest;
 
-namespace GreenEnergyHub.Charges.FunctionHost.Configuration
+namespace GreenEnergyHub.Charges.Application.ChargeLinks.MessageHub
 {
-    public static class EnvironmentHelper
+    public interface IChargeLinkBundleSender
     {
-        public static string GetEnv(string variableName)
-        {
-            return Environment.GetEnvironmentVariable(variableName) ??
-                   throw new Exception($"Function app is missing required environment variable '{variableName}'");
-        }
+        Task SendAsync(DataBundleRequestDto request, ISyncRequestMetadata metadata);
     }
 }
