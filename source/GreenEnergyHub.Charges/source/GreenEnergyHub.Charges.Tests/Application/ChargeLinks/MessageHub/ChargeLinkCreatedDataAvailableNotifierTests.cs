@@ -39,7 +39,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.MessageHub
         [Theory]
         [InlineAutoMoqData]
         public async Task NotifyAsync_WhenEventIsNull_ThrowsArgumentNullException(
-            ChargeLinkCreatedDataAvailableNotifier sut)
+            ChargeLinkDataAvailableNotifier sut)
         {
             await sut
                 .Invoking(notifier => notifier.NotifyAsync(null!))
@@ -56,7 +56,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.MessageHub
             [Frozen] Mock<IChargeRepository> chargeRepositoryMock,
             [Frozen] Mock<IDataAvailableNotificationSender> dataAvailableNotificationSenderMock,
             [Frozen] Mock<IAvailableChargeLinksDataFactory> availableChargeLinksDataFactoryMock,
-            ChargeLinkCreatedDataAvailableNotifier sut)
+            ChargeLinkDataAvailableNotifier sut)
         {
             // Arrange
             charge.SetPrivateProperty(c => c.TaxIndicator, true);
@@ -97,7 +97,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.MessageHub
             Charge charge,
             [Frozen] Mock<IChargeRepository> chargeRepositoryMock,
             [Frozen] Mock<IDataAvailableNotificationSender> dataAvailableNotificationSenderMock,
-            ChargeLinkCreatedDataAvailableNotifier sut)
+            ChargeLinkDataAvailableNotifier sut)
         {
             // Arrange
             charge.SetPrivateProperty(c => c.TaxIndicator, false);

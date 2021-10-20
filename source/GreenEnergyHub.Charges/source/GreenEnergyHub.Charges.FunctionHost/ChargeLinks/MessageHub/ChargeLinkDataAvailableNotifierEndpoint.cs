@@ -26,23 +26,24 @@ namespace GreenEnergyHub.Charges.FunctionHost.ChargeLinks.MessageHub
     /// <summary>
     /// The function will initiate the communication with the post office
     /// by notifying that a charge link has been created.
+    /// This is the RSM-031 CIM XML 'NotifyBillingMasterData'.
     /// </summary>
-    public class ChargeLinkCreatedDataAvailableNotifierEndpoint
+    public class ChargeLinkDataAvailableNotifierEndpoint
     {
-        private const string FunctionName = nameof(ChargeLinkCreatedDataAvailableNotifierEndpoint);
+        private const string FunctionName = nameof(ChargeLinkDataAvailableNotifierEndpoint);
         private readonly MessageExtractor<ChargeLinkCommandAccepted> _messageExtractor;
-        private readonly IChargeLinkCreatedDataAvailableNotifier _chargeLinkCreatedDataAvailableNotifier;
+        private readonly IChargeLinkDataAvailableNotifier _chargeLinkDataAvailableNotifier;
         private readonly ILogger _log;
 
-        public ChargeLinkCreatedDataAvailableNotifierEndpoint(
+        public ChargeLinkDataAvailableNotifierEndpoint(
             MessageExtractor<ChargeLinkCommandAccepted> messageExtractor,
-            IChargeLinkCreatedDataAvailableNotifier chargeLinkCreatedDataAvailableNotifier,
+            IChargeLinkDataAvailableNotifier chargeLinkDataAvailableNotifier,
             [NotNull] ILoggerFactory loggerFactory)
         {
             _messageExtractor = messageExtractor;
-            _chargeLinkCreatedDataAvailableNotifier = chargeLinkCreatedDataAvailableNotifier;
+            _chargeLinkDataAvailableNotifier = chargeLinkDataAvailableNotifier;
 
-            _log = loggerFactory.CreateLogger(nameof(ChargeLinkCreatedDataAvailableNotifierEndpoint));
+            _log = loggerFactory.CreateLogger(nameof(ChargeLinkDataAvailableNotifierEndpoint));
         }
 
         [Function(FunctionName)]
@@ -57,7 +58,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.ChargeLinks.MessageHub
 
             var chargeLinkCommandAcceptedEvent = (ChargeLinkCommandAcceptedEvent)await _messageExtractor.ExtractAsync(message).ConfigureAwait(false);
 
-            await _chargeLinkCreatedDataAvailableNotifier.NotifyAsync(chargeLinkCommandAcceptedEvent).ConfigureAwait(false);
+            await _chargeLinkDataAvailableNotifier.NotifyAsync(chargeLinkCommandAcceptedEvent).ConfigureAwait(false);
         }
     }
 }

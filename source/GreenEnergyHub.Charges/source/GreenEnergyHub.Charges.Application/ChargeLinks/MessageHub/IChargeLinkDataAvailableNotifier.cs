@@ -18,10 +18,11 @@ using GreenEnergyHub.Charges.Domain.ChargeLinkCommandAcceptedEvents;
 namespace GreenEnergyHub.Charges.Application.ChargeLinks.MessageHub
 {
     /// <summary>
-    /// Contract for notifying the post office that data about a charge link that has been created
+    /// Contract for notifying the MessageHub that data about a charge link that has been created
     /// is available.
+    /// This is the RSM-031 CIM XML 'NotifyBillingMasterData'.
     /// </summary>
-    public interface IChargeLinkCreatedDataAvailableNotifier
+    public interface IChargeLinkDataAvailableNotifier
     {
         Task NotifyAsync(ChargeLinkCommandAcceptedEvent chargeLinkCommandAcceptedEvent);
     }

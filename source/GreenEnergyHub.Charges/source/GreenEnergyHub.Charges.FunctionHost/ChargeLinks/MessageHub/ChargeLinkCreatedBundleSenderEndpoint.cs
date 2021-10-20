@@ -38,7 +38,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.ChargeLinks.MessageHub
             _chargeLinkCreatedBundleSender = chargeLinkCreatedBundleSender;
             _requestBundleParser = requestBundleParser;
             _syncRequestMetaDataFactory = syncRequestMetaDataFactory;
-            _log = loggerFactory.CreateLogger(nameof(ChargeLinkCreatedDataAvailableNotifierEndpoint));
+            _log = loggerFactory.CreateLogger(nameof(ChargeLinkDataAvailableNotifierEndpoint));
         }
 
         [Function(FunctionName)]
