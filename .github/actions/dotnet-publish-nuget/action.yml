@@ -53,7 +53,7 @@ runs:
           echo "##[set-output name=property;]$(echo '-p:VersionSuffix=-alpha-$(date +'%Y%m%dT%H%M%S')')"
         fi
       env:
-        BRANCH: ${GITHUB_REF#refs/heads/}
+        BRANCH: ${{GITHUB_REF#refs/heads/}}
 
     - name: Pack project
       shell: bash
