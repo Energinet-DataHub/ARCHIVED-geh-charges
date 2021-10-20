@@ -12,16 +12,19 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
+using System.IO;
+using System.Threading.Tasks;
+using Energinet.DataHub.MessageHub.Client.Model;
+using GreenEnergyHub.Charges.Application.ChargeLinks.MessageHub.Infrastructure;
 
-namespace GreenEnergyHub.Charges.FunctionHost.Configuration
+namespace GreenEnergyHub.Charges.Infrastructure.ChargeLinkBundle.MessageHub
 {
-    public static class EnvironmentHelper
+    public class ChargeLinkBundleCreator : IChargeLinkBundleCreator
     {
-        public static string GetEnv(string variableName)
+        public Task CreateAsync(DataBundleRequestDto request, Stream outputStream)
         {
-            return Environment.GetEnvironmentVariable(variableName) ??
-                   throw new Exception($"Function app is missing required environment variable '{variableName}'");
+            // Will be implemented in other issue or PR
+            return Task.CompletedTask;
         }
     }
 }

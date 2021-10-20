@@ -12,16 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
+using System.Threading.Tasks;
+using GreenEnergyHub.Charges.Domain.ChargeLinkCommandAcceptedEvents;
 
-namespace GreenEnergyHub.Charges.FunctionHost.Configuration
+namespace GreenEnergyHub.Charges.Application.ChargeLinks.MessageHub
 {
-    public static class EnvironmentHelper
+    /// <summary>
+    /// Contract for notifying the MessageHub that data about a charge link that has been created
+    /// is available.
+    /// This is the RSM-031 CIM XML 'NotifyBillingMasterData'.
+    /// </summary>
+    public interface IChargeLinkDataAvailableNotifier
     {
-        public static string GetEnv(string variableName)
-        {
-            return Environment.GetEnvironmentVariable(variableName) ??
-                   throw new Exception($"Function app is missing required environment variable '{variableName}'");
-        }
+        Task NotifyAsync(ChargeLinkCommandAcceptedEvent chargeLinkCommandAcceptedEvent);
     }
 }

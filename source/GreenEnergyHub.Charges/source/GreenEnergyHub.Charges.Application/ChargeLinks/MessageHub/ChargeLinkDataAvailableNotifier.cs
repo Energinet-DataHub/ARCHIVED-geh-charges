@@ -26,40 +26,36 @@ using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using NodaTime;
 
-namespace GreenEnergyHub.Charges.Application.ChargeLinks.PostOffice
+namespace GreenEnergyHub.Charges.Application.ChargeLinks.MessageHub
 {
-    public class ChargeLinkCreatedDataAvailableNotifier : IChargeLinkCreatedDataAvailableNotifier
+    public class ChargeLinkDataAvailableNotifier : IChargeLinkDataAvailableNotifier
     {
         /// <summary>
-        /// The anticipated weight contribution to the final bundle from the charge link created event.
+        /// The upper anticipated weight (kilobytes) contribution to the final bundle from the charge link created event.
         /// </summary>
-        private const int MessageWeight = 1;
-
-        /// <summary>
-        /// All messages with the same type can be bundled together.
-        /// Post office handles the type case-insensitive.
-        /// Only change with caution as it affects the post office.
-        /// </summary>
-        private const string MessageType = "ChargeLinkCreated";
+        private const int MessageWeight = 2;
 
         private readonly IDataAvailableNotificationSender _dataAvailableNotificationSender;
         private readonly IChargeRepository _chargeRepository;
         private readonly IAvailableChargeLinksDataRepository _availableChargeLinksDataRepository;
         private readonly IMarketParticipantRepository _marketParticipantRepository;
         private readonly IAvailableChargeLinksDataFactory _availableChargeLinksDataFactory;
+        private readonly IClock _clock;
 
-        public ChargeLinkCreatedDataAvailableNotifier(
+        public ChargeLinkDataAvailableNotifier(
             IDataAvailableNotificationSender dataAvailableNotificationSender,
             IChargeRepository chargeRepository,
             IAvailableChargeLinksDataRepository availableChargeLinksDataRepository,
             IMarketParticipantRepository marketParticipantRepository,
-            IAvailableChargeLinksDataFactory availableChargeLinksDataFactory)
+            IAvailableChargeLinksDataFactory availableChargeLinksDataFactory,
+            IClock clock)
         {
             _dataAvailableNotificationSender = dataAvailableNotificationSender;
             _chargeRepository = chargeRepository;
             _availableChargeLinksDataRepository = availableChargeLinksDataRepository;
             _marketParticipantRepository = marketParticipantRepository;
             _availableChargeLinksDataFactory = availableChargeLinksDataFactory;
+            _clock = clock;
         }
 
         public async Task NotifyAsync([NotNull] ChargeLinkCommandAcceptedEvent chargeLinkCommandAcceptedEvent)
@@ -71,13 +67,11 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.PostOffice
             // It is the responsibility of the Charge Domain to find the recipient and
             // not considered part of the Create Metering Point orchestration.
             // We select the first as all bundled messages will have the same recipient
-            var recipient =
-                _marketParticipantRepository.GetGridAccessProvider(
-                    chargeLinkCommandAcceptedEvent.ChargeLinkCommands.First()
-                        .ChargeLink.MeteringPointId);
+            var meteringPointId = SingleMeteringPointId(chargeLinkCommandAcceptedEvent);
+            var recipient = _marketParticipantRepository.GetGridAccessProvider(meteringPointId);
 
             // When available this should be parsed on from API management to be more precise.
-            var now = SystemClock.Instance.GetCurrentInstant();
+            var now = _clock.GetCurrentInstant();
             var availableChargeLinksData = new List<AvailableChargeLinksData>();
 
             foreach (var chargeLinkCommand in chargeLinkCommandAcceptedEvent.ChargeLinkCommands)
@@ -89,7 +83,7 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.PostOffice
 
                 if (charge.TaxIndicator)
                 {
-                    var dataAvailableNotificationDto = CreateDataAvailableNotificationDto(chargeLinkCommand);
+                    var dataAvailableNotificationDto = CreateDataAvailableNotificationDto(chargeLinkCommand, recipient.Id);
                     dataAvailableNotificationDtos.Add(dataAvailableNotificationDto);
                     availableChargeLinksData.Add(_availableChargeLinksDataFactory.CreateAvailableChargeLinksData(
                         chargeLinkCommand,
@@ -107,20 +101,34 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.PostOffice
             await Task.WhenAll(dataAvailableNotificationSenderTasks).ConfigureAwait(false);
         }
 
+        private static string SingleMeteringPointId(ChargeLinkCommandAcceptedEvent chargeLinkCommandAcceptedEvent)
+        {
+            var isSameMeteringPoint = chargeLinkCommandAcceptedEvent
+                .ChargeLinkCommands
+                .Select(command => command.ChargeLink.MeteringPointId)
+                .Distinct()
+                .Count() == 1;
+
+            if (!isSameMeteringPoint)
+                throw new InvalidOperationException("All commands in accepted event must be for same metering point.");
+
+            return chargeLinkCommandAcceptedEvent.ChargeLinkCommands.First().ChargeLink.MeteringPointId;
+        }
+
         private static DataAvailableNotificationDto CreateDataAvailableNotificationDto(
-            ChargeLinkCommand chargeLinkCommand)
+            ChargeLinkCommand chargeLinkCommand, string recipientId)
         {
             // The ID that the charges domain must handle when peeking
             var chargeDomainReferenceId = Guid.NewGuid();
 
-            // The grid operator initiating the creation of the charge link is also
-            // the receiver of the confirmation
-            var receiver = chargeLinkCommand.Document.Sender.Id;
+            // Different processes must not be bundled together.
+            // The can be differentiated by business reason codes.
+            var messageType = chargeLinkCommand.Document.BusinessReasonCode.ToString();
 
             return new DataAvailableNotificationDto(
                 chargeDomainReferenceId,
-                new GlobalLocationNumberDto(receiver),
-                new MessageTypeDto(MessageType),
+                new GlobalLocationNumberDto(recipientId),
+                new MessageTypeDto(messageType),
                 DomainOrigin.Charges,
                 SupportsBundling: true,
                 MessageWeight);
