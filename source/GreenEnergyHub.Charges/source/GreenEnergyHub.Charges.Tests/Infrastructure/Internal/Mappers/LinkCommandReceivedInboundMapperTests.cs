@@ -32,7 +32,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Internal.Mappers
         [Theory]
         [InlineAutoMoqData]
         public void Convert_WhenCalled_ShouldMapToProtobufWithCorrectValues(
-            [NotNull] ChargeLinkCommandReceivedContract chargeLinkCommandReceivedContract,
+            [NotNull] ChargeLinkCommandReceived chargeLinkCommandReceivedContract,
             [NotNull] LinkCommandReceivedInboundMapper sut)
         {
             var result = (ChargeLinkCommandReceivedEvent)sut.Convert(chargeLinkCommandReceivedContract);

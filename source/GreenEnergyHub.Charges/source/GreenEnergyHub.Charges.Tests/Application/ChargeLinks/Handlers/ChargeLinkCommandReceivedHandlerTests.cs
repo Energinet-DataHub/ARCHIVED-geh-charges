@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Threading.Tasks;
@@ -40,8 +41,6 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Handlers
         public async Task HandleAsync_ShouldDispatch_AcceptedEvent(
             [NotNull] [Frozen] Mock<IMessageDispatcher<ChargeLinkCommandAcceptedEvent>> messageDispatcher,
             [NotNull] [Frozen] Mock<IChargeLinkFactory> chargeLinkFactory,
-            [NotNull] [Frozen] Mock<IChargeLinkCommandFactory> chargeLinkCommandFactory,
-            [NotNull] [Frozen] Mock<ChargeLinkCommand> chargeLinkCommand,
             [NotNull] [Frozen] Mock<IChargeLinkCommandAcceptedEventFactory> chargeLinkCommandAcceptedEventFactory,
             [NotNull] ChargeLinkCommandReceivedEvent chargeLinkCommandReceivedEvent,
             [NotNull] ChargeLinkCommandAcceptedEvent chargeLinkCommandAcceptedEvent,
@@ -54,18 +53,11 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Handlers
 
             chargeLinkFactory
                 .Setup(x => x.CreateAsync(It.IsAny<ChargeLinkCommandReceivedEvent>()))
-                .ReturnsAsync(chargeLink);
-
-            chargeLinkCommandFactory.Setup(
-                    c => c.CreateFromChargeLinkAsync(
-                        It.IsAny<ChargeLink>(),
-                        It.IsAny<ChargeLinkPeriodDetails>(),
-                        It.IsAny<string>()))
-                .Returns(Task.FromResult(chargeLinkCommand.Object));
+                .ReturnsAsync(new List<ChargeLink> { chargeLink, chargeLink });
 
             chargeLinkCommandAcceptedEventFactory.Setup(
                     x => x.Create(
-                        It.IsAny<ChargeLinkCommand>(),
+                        It.IsAny<IReadOnlyCollection<ChargeLinkCommand>>(),
                         It.IsAny<string>()))
                 .Returns(chargeLinkCommandAcceptedEvent);
 

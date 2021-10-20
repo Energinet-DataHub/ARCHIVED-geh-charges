@@ -17,12 +17,12 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
+using Energinet.DataHub.Core.FunctionApp.TestCommon;
+using Energinet.DataHub.Core.FunctionApp.TestCommon.Azurite;
+using Energinet.DataHub.Core.FunctionApp.TestCommon.FunctionAppHost;
+using Energinet.DataHub.Core.FunctionApp.TestCommon.ServiceBus.ListenerMock;
 using GreenEnergyHub.Charges.FunctionHost.Common;
 using GreenEnergyHub.Charges.TestCore.Database;
-using GreenEnergyHub.FunctionApp.TestCommon;
-using GreenEnergyHub.FunctionApp.TestCommon.Azurite;
-using GreenEnergyHub.FunctionApp.TestCommon.FunctionAppHost;
-using GreenEnergyHub.FunctionApp.TestCommon.ServiceBus.ListenerMock;
 using Microsoft.Extensions.Configuration;
 using Squadron;
 using Xunit.Abstractions;
@@ -127,6 +127,19 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures
 
             var chargePricesUpdatedTopicName = await GetTopicNameFromKeyAsync(ChargesFunctionAppServiceBusOptions.ChargePricesUpdatedTopicKey);
             Environment.SetEnvironmentVariable("CHARGE_PRICES_UPDATED_TOPIC_NAME", chargePricesUpdatedTopicName);
+
+            var messageHubDataAvailableQueueName = await GetQueueNameFromKeyAsync(ChargesFunctionAppServiceBusOptions.MessageHubDataAvailableQueueKey);
+            Environment.SetEnvironmentVariable("MESSAGEHUB_DATAAVAILABLE_QUEUE", messageHubDataAvailableQueueName);
+
+            var messageHubRequestQueueName = await GetQueueNameFromKeyAsync(ChargesFunctionAppServiceBusOptions.MessageHubRequestQueueKey);
+            Environment.SetEnvironmentVariable("MESSAGEHUB_BUNDLEREQUEST_QUEUE", messageHubRequestQueueName);
+
+            var messageHubReplyQueueName = await GetQueueNameFromKeyAsync(ChargesFunctionAppServiceBusOptions.MessageHubReplyQueueKey);
+            Environment.SetEnvironmentVariable("MESSAGEHUB_BUNDLEREPLY_QUEUE", messageHubReplyQueueName);
+
+            Environment.SetEnvironmentVariable("MESSAGEHUB_STORAGE_CONNECTION_STRING", ChargesFunctionAppServiceBusOptions.MessageHubStorageConnectionString);
+
+            Environment.SetEnvironmentVariable("MESSAGEHUB_STORAGE_CONTAINER", ChargesFunctionAppServiceBusOptions.MessageHubStorageContainerName);
 
             // => Database
             await DatabaseManager.CreateDatabaseAsync();

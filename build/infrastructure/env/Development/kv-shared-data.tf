@@ -32,3 +32,17 @@ data "azurerm_key_vault_secret" "integration_events_sender_connection_string" {
   key_vault_id = module.kv_shared_stub.id
   depends_on   = [ module.kvs_integrationevents_sender_connection_string.name ]
 }
+
+# Purpose of this overwrite (not override) is to depend on and use the shared key vault stub.
+data "azurerm_key_vault_secret" "messagehub_storage_connection_string" {
+  name         = local.MESSAGEHUB_STORAGE_CONNECTION_STRING_KEY
+  key_vault_id = module.kv_shared_stub.id
+  depends_on   = [ module.kvs_messagehub_storage_connection_string.name ]
+}
+
+# Purpose of this overwrite (not override) is to depend on and use the shared key vault stub.
+data "azurerm_key_vault_secret" "messagehub_storage_container" {
+  name         = local.MESSAGEHUB_STORAGE_CONTAINER_KEY
+  key_vault_id = module.kv_shared_stub.id
+  depends_on   = [ module.kvs_messagehub_storage_container.name ]
+}

@@ -105,7 +105,7 @@ namespace GreenEnergyHub.Charges.TestCore.Protobuf
         {
             var functionType = typeof(ProtobufCustomizationFunction<>)
                 .MakeGenericType(messageType);
-            return Activator.CreateInstance(functionType, new object[] { fixture }) !;
+            return Activator.CreateInstance(functionType, new object[] { fixture })!;
         }
     }
 }

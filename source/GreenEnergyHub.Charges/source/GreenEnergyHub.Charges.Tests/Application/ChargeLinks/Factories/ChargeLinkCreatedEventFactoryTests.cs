@@ -13,8 +13,10 @@
 // limitations under the License.
 
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.Domain.ChargeLinkCommandAcceptedEvents;
+using GreenEnergyHub.Charges.Domain.ChargeLinkCommands;
 using GreenEnergyHub.Charges.Domain.ChargeLinkCreatedEvents;
 using GreenEnergyHub.Charges.TestCore.Attributes;
 using Xunit;
@@ -28,7 +30,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Factories
         [Theory]
         [InlineAutoMoqData]
         public void CreateEvent_WhenCalled_CreatesEventWithCorrectValues(
-            [NotNull] ChargeLinkCommandAcceptedEvent command,
+            [NotNull] ChargeLinkCommand command,
             [NotNull] ChargeLinkCreatedEventFactory sut)
         {
             // Arrange

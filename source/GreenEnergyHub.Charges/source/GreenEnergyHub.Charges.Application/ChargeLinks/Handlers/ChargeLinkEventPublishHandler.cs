@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Linq;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Domain.ChargeLinkCommandAcceptedEvents;
 using GreenEnergyHub.Charges.Domain.ChargeLinkCreatedEvents;
@@ -33,9 +34,14 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
 
         public async Task HandleAsync(ChargeLinkCommandAcceptedEvent command)
         {
-            var createdEvent = _createdEventFactory.CreateEvent(command);
+            var chargeLinkCreatedEvents =
+                command.ChargeLinkCommands.Select(
+                    chargeLinkCommand => _createdEventFactory.CreateEvent(chargeLinkCommand)).ToList();
 
-            await _createdDispatcher.DispatchAsync(createdEvent).ConfigureAwait(false);
+            await Task.WhenAll(
+                chargeLinkCreatedEvents
+                    .Select(chargeLinkCreatedEvent
+                        => _createdDispatcher.DispatchAsync(chargeLinkCreatedEvent))).ConfigureAwait(false);
         }
     }
 }

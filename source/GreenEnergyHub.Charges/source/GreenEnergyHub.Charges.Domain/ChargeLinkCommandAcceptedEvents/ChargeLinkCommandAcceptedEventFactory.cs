@@ -12,19 +12,28 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using GreenEnergyHub.Charges.Domain.ChargeLinkCommands;
+using NodaTime;
 
 namespace GreenEnergyHub.Charges.Domain.ChargeLinkCommandAcceptedEvents
 {
     public class ChargeLinkCommandAcceptedEventFactory : IChargeLinkCommandAcceptedEventFactory
     {
-        public ChargeLinkCommandAcceptedEvent Create([NotNull] ChargeLinkCommand chargeLinkCommand, string correlationId)
+        private readonly IClock _clock;
+
+        public ChargeLinkCommandAcceptedEventFactory(IClock clock)
+        {
+            _clock = clock;
+        }
+
+        public ChargeLinkCommandAcceptedEvent Create([NotNull] IReadOnlyCollection<ChargeLinkCommand> chargeLinkCommands, string correlationId)
         {
             return new ChargeLinkCommandAcceptedEvent(
                 correlationId,
-                chargeLinkCommand.Document,
-                chargeLinkCommand.ChargeLink);
+                chargeLinkCommands,
+                _clock.GetCurrentInstant());
         }
     }
 }

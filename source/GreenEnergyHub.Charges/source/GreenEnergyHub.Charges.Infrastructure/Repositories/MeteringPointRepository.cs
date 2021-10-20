@@ -55,5 +55,15 @@ namespace GreenEnergyHub.Charges.Infrastructure.Repositories
 
             return meteringPoint;
         }
+
+        public async Task<MeteringPoint?> GetOrNullAsync(string meteringPointId)
+        {
+            var meteringPoint = await _chargesDatabaseContext
+                .MeteringPoints
+                .FirstOrDefaultAsync(x => x.MeteringPointId == meteringPointId)
+                .ConfigureAwait(false);
+
+            return meteringPoint;
+        }
     }
 }

@@ -50,12 +50,12 @@ namespace GreenEnergyHub.Charges.Domain.ChargeCommands.Validation
 
         public static ChargeCommandValidationResult CreateSuccess()
         {
-            return new ();
+            return new ChargeCommandValidationResult();
         }
 
         public static ChargeCommandValidationResult CreateFailure(IList<IValidationRule> invalidRules)
         {
-            return new (invalidRules.ToArray());
+            return new ChargeCommandValidationResult(invalidRules.ToArray());
         }
     }
 }

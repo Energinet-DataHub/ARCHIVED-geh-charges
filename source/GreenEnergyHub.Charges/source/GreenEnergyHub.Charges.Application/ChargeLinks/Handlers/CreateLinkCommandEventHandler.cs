@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Domain.ChargeLinkCommandReceivedEvents;
@@ -52,26 +53,27 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
             var defaultChargeLinks = await _defaultChargeLinkRepository
                 .GetAsync(meteringPoint.MeteringPointType).ConfigureAwait(false);
 
+            var chargeLinkCommands = new List<ChargeLinkCommand>();
+
             foreach (var defaultChargeLink in defaultChargeLinks)
             {
                 if (defaultChargeLink.ApplicableForLinking(
                     meteringPoint.EffectiveDate,
                     meteringPoint.MeteringPointType))
                 {
-                    var chargeLinkCommand =
-                        await _chargeLinkCommandFactory.CreateAsync(
-                            createLinkCommandEvent,
-                            defaultChargeLink,
-                            correlationId).ConfigureAwait(false);
-
-                    var chargeLinkCommandReceivedEvent = new ChargeLinkCommandReceivedEvent(
-                        _clock.GetCurrentInstant(),
-                        correlationId,
-                        chargeLinkCommand);
-
-                    await _messageDispatcher.DispatchAsync(chargeLinkCommandReceivedEvent).ConfigureAwait(false);
+                    chargeLinkCommands.Add(await _chargeLinkCommandFactory.CreateAsync(
+                        createLinkCommandEvent,
+                        defaultChargeLink,
+                        correlationId).ConfigureAwait(false));
                 }
             }
+
+            var chargeLinkCommandReceivedEvent = new ChargeLinkCommandReceivedEvent(
+                _clock.GetCurrentInstant(),
+                correlationId,
+                chargeLinkCommands);
+
+            await _messageDispatcher.DispatchAsync(chargeLinkCommandReceivedEvent).ConfigureAwait(false);
         }
     }
 }

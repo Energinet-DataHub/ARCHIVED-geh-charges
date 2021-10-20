@@ -69,5 +69,20 @@ namespace GreenEnergyHub.Charges.Domain.MeteringPoints
         public ConnectionState ConnectionState { get; }
 
         public SettlementMethod? SettlementMethod { get; }
+
+        public bool HasSameMeteringPointType(MeteringPoint otherMeteringPoint)
+        {
+            return MeteringPointType == otherMeteringPoint.MeteringPointType;
+        }
+
+        public bool HasSameSettlementMethod(MeteringPoint otherMeteringPoint)
+        {
+            return SettlementMethod == otherMeteringPoint.SettlementMethod;
+        }
+
+        public bool HasSameGridAreaId(MeteringPoint otherMeteringPoint)
+        {
+            return GridAreaId == otherMeteringPoint.GridAreaId;
+        }
     }
 }

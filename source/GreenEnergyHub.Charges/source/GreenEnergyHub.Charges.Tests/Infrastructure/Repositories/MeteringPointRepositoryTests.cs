@@ -41,7 +41,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
         {
             // Arrange
             await using var chargesDatabaseWriteContext = _databaseManager.CreateDbContext();
-            var expected = GetMeteringPointCreatedEvent();
+            var expected = GetMeteringPoint();
             var sut = new MeteringPointRepository(chargesDatabaseWriteContext);
 
             // Act
@@ -85,26 +85,48 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
             Assert.NotNull(actual);
         }
 
-        private static MeteringPoint GetMeteringPointCreatedEvent()
+        [Fact]
+        public async Task GetOrNullAsync_WithExistingMeteringPointId_ReturnsMeteringPoint()
         {
-            return MeteringPoint.Create(
-                "123",
-                MeteringPointType.Consumption,
-                "234",
-                SystemClock.Instance.GetCurrentInstant(),
-                ConnectionState.Connected,
-                SettlementMethod.Flex);
+            // Arrange
+            await using var chargesDatabaseWriteContext = _databaseManager.CreateDbContext();
+            var expected = GetMeteringPoint();
+            await chargesDatabaseWriteContext.MeteringPoints.AddAsync(expected).ConfigureAwait(false);
+            await chargesDatabaseWriteContext.SaveChangesAsync().ConfigureAwait(false);
+
+            await using var chargesDatabaseReadContext = _databaseManager.CreateDbContext();
+            var sut = new MeteringPointRepository(chargesDatabaseReadContext);
+
+            // Act
+            var actual = await sut.GetOrNullAsync(expected.MeteringPointId).ConfigureAwait(false);
+
+            // Assert
+            Assert.Equal(expected.MeteringPointId, actual?.MeteringPointId);
+        }
+
+        [Fact]
+        public async Task GetOrNullAsync_WithUnknownMeteringPointId_ReturnsNull()
+        {
+            // Arrange
+            await using var chargeDatabaseReadContext = _databaseManager.CreateDbContext();
+            var sut = new MeteringPointRepository(chargeDatabaseReadContext);
+
+            // Act
+            var actual = await sut.GetOrNullAsync("1234567890").ConfigureAwait(false);
+
+            // Assert
+            Assert.Null(actual);
         }
 
         private static MeteringPoint GetMeteringPoint()
         {
             return MeteringPoint.Create(
-                "meteringPointId",
+                Guid.NewGuid().ToString("N"),
                 MeteringPointType.Consumption,
                 "grid area id",
                 SystemClock.Instance.GetCurrentInstant(),
                 ConnectionState.Connected,
-                SettlementMethod.Profiled);
+                SettlementMethod.Flex);
         }
     }
 }
