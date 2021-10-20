@@ -38,9 +38,8 @@ namespace Energinet.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.Defaul
         private const string CorrelationId = "fake_value";
 
         [Theory]
-        [InlineAutoMoqData(MeteringPointId, null)]
-        [InlineAutoMoqData(null, CorrelationId)]
-        [InlineAutoMoqData(null, null)]
+        [InlineAutoMoqData(MeteringPointId, null!)]
+        [InlineAutoMoqData(null!, CorrelationId)]
         public async Task SendAsync_WhenAnyArgumentIsNull_ThrowsException(
             string meteringPointId,
             string correlationId,
@@ -49,8 +48,7 @@ namespace Energinet.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.Defaul
         {
             // Arrange
             serviceBusClientMock.Setup(x => x.DisposeAsync()).Returns(default(ValueTask));
-            var createDefaultChargeLinksDto = meteringPointId != null ?
-                new CreateDefaultChargeLinksDto(meteringPointId) : null;
+            var createDefaultChargeLinksDto = meteringPointId != null ? new CreateDefaultChargeLinksDto(meteringPointId) : null;
             await using var sut = new DefaultChargeLinkClient(
                 serviceBusClientMock.Object, serviceBusRequestSenderFactoryMock.Object, ReplyToQueueName);
 
@@ -100,9 +98,9 @@ namespace Energinet.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.Defaul
         }
 
         [Theory]
-        [InlineAutoMoqData(MeteringPointId, null, ReplyToQueueName)]
-        [InlineAutoMoqData(null, CorrelationId, ReplyToQueueName)]
-        [InlineAutoMoqData(null, null, null)]
+        [InlineAutoMoqData(MeteringPointId, null!, ReplyToQueueName)]
+        [InlineAutoMoqData(null!, CorrelationId, ReplyToQueueName)]
+        [InlineAutoMoqData(MeteringPointId, CorrelationId, null!)]
         public async Task CreateDefaultChargeLinksSucceededRespondAsync_WhenAnyArgumentIsNull_ThrowsException(
             string meteringPointId,
             string correlationId,
@@ -168,9 +166,9 @@ namespace Energinet.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.Defaul
         }
 
         [Theory]
-        [InlineAutoMoqData(MeteringPointId, null, ReplyToQueueName)]
-        [InlineAutoMoqData(null, CorrelationId, ReplyToQueueName)]
-        [InlineAutoMoqData(null, null, null)]
+        [InlineAutoMoqData(MeteringPointId, null!, ReplyToQueueName)]
+        [InlineAutoMoqData(null!, CorrelationId, ReplyToQueueName)]
+        [InlineAutoMoqData(MeteringPointId, CorrelationId, null!)]
         public async Task CreateDefaultChargeLinksFailedRespondAsync_WhenAnyArgumentIsNull_ThrowsException(
             string meteringPointId,
             string correlationId,
