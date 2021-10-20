@@ -37,9 +37,9 @@ namespace Energinet.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.Defaul
         private const string CorrelationId = "fake_value";
 
         [Theory]
-        [InlineAutoMoqData(MeteringPointId, null)]
-        [InlineAutoMoqData(null, CorrelationId)]
-        [InlineAutoMoqData(null, null)]
+        [InlineAutoMoqData(MeteringPointId, null!)]
+        [InlineAutoMoqData(null!, CorrelationId)]
+        [InlineAutoMoqData(null!, null!)]
         public async Task SendAsync_NullArgument_ThrowsException(
             string meteringPointId,
             string correlationId,
