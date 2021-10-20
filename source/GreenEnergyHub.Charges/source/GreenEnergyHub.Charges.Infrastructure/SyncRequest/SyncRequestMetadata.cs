@@ -13,15 +13,20 @@
 // limitations under the License.
 
 using System;
+using GreenEnergyHub.Charges.Application.SeedWork.SyncRequest;
 
-namespace GreenEnergyHub.Charges.FunctionHost.Configuration
+namespace GreenEnergyHub.Charges.Infrastructure.SyncRequest
 {
-    public static class EnvironmentHelper
+    public class SyncRequestMetadata : ISyncRequestMetadata
     {
-        public static string GetEnv(string variableName)
+#pragma warning disable 8618
+        public string SessionId { get; set; }
+#pragma warning restore 8618
+
+        public void ValidateOrThrow()
         {
-            return Environment.GetEnvironmentVariable(variableName) ??
-                   throw new Exception($"Function app is missing required environment variable '{variableName}'");
+            if (SessionId == null)
+                throw new InvalidOperationException($"Property '{nameof(SessionId)}' is missing");
         }
     }
 }

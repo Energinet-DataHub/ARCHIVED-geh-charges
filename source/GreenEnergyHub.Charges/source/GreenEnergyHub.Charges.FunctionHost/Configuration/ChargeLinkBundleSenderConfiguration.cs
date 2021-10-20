@@ -12,16 +12,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
+using GreenEnergyHub.Charges.Application.ChargeLinks.MessageHub;
+using GreenEnergyHub.Charges.Application.ChargeLinks.MessageHub.Infrastructure;
+using GreenEnergyHub.Charges.Infrastructure.ChargeLinkBundle.MessageHub;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace GreenEnergyHub.Charges.FunctionHost.Configuration
 {
-    public static class EnvironmentHelper
+    public static class ChargeLinkBundleSenderConfiguration
     {
-        public static string GetEnv(string variableName)
+        public static void ConfigureServices(IServiceCollection serviceCollection)
         {
-            return Environment.GetEnvironmentVariable(variableName) ??
-                   throw new Exception($"Function app is missing required environment variable '{variableName}'");
+            serviceCollection.AddScoped<IChargeLinkBundleSender, ChargeLinkBundleSender>();
+            serviceCollection.AddScoped<IChargeLinkBundleCreator, ChargeLinkBundleCreator>();
+            serviceCollection.AddScoped<IChargeLinkBundleReplier, ChargeLinkBundleReplier>();
         }
     }
 }
