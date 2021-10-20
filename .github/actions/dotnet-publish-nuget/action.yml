@@ -46,7 +46,7 @@ runs:
       shell: bash
       run: |
         echo ${{ env.BRANCH }}
-        if [[ ${{ env.BRANCH }} == 'master' || ${{ env.BRANCH }} == 'main' ]]
+        if [[ ${{ env.BRANCH }} == 'refs/heads/master' || ${{ env.BRANCH }} == 'refs/heads/main' ]]
         then
           echo "##[set-output name=property;]$(echo '')"
         else
