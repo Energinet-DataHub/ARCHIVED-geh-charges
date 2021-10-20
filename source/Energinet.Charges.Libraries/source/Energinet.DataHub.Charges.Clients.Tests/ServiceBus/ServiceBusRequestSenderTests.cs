@@ -51,8 +51,7 @@ namespace Energinet.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.Servic
             var defaultChargeLinks = new CreateDefaultChargeLinks { MeteringPointId = meteringPointId };
 
             // Act
-            await sut.SendRequestAsync(defaultChargeLinks.ToByteArray(), requestQueueName, correlationId)
-                .ConfigureAwait(false);
+            await sut.SendRequestAsync(defaultChargeLinks.ToByteArray(), requestQueueName, correlationId).ConfigureAwait(false);
 
             // Act // Assert
             serviceBusSenderMock.Verify(x => x.SendMessageAsync(It.IsAny<ServiceBusMessage>(), default), Times.Once);

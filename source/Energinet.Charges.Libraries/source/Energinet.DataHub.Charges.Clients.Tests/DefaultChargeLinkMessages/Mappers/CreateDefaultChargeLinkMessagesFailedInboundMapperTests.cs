@@ -20,14 +20,14 @@ using FluentAssertions;
 using Xunit;
 using Xunit.Categories;
 
-namespace Energinet.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.DefaultChargeLink.Mappers
+namespace Energinet.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.DefaultChargeLinkMessages.Mappers
 {
     [UnitTest]
-    public class CreateDefaultChargeLinksFailedInboundMapperTests
+    public class CreateDefaultChargeLinkMessagesFailedInboundMapperTests
     {
         private readonly Fixture _fixture;
 
-        public CreateDefaultChargeLinksFailedInboundMapperTests()
+        public CreateDefaultChargeLinkMessagesFailedInboundMapperTests()
         {
             _fixture = new Fixture();
         }

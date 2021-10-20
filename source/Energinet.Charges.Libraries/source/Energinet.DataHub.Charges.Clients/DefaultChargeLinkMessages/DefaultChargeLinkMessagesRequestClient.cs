@@ -51,7 +51,7 @@ namespace Energinet.DataHub.Charges.Libraries.DefaultChargeLinkMessages
 
             var createDefaultChargeLinkMessages = new CreateDefaultChargeLinkMessages
             {
-                MeteringPointId = createDefaultChargeLinkMessagesDto.meteringPointId,
+                MeteringPointId = createDefaultChargeLinkMessagesDto.MeteringPointId,
             };
 
             await _serviceBusRequestSender.SendRequestAsync(
