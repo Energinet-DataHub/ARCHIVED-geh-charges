@@ -35,6 +35,10 @@
 						<cim:position>1</cim:position>
 						<cim:price.amount>100</cim:price.amount>
 					</cim:Point>
+                    <cim:Point>
+                        <cim:position>2</cim:position>
+                        <cim:price.amount>200</cim:price.amount>
+                    </cim:Point>                    
 				</cim:Series_Period>
 			</cim:ChargeType>
 		</cim:ChargeGroup>
