@@ -30,8 +30,8 @@ namespace Energinet.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.Defaul
     public class DefaultChargeLinkReplyReaderTests
     {
         private ErrorCode _errorCodeTestResult;
-        private string _knownMeteringPointIdTestResult;
-        private string _unknownMeteringPointIdTestResult;
+        private string? _knownMeteringPointIdTestResult;
+        private string? _unknownMeteringPointIdTestResult;
         private bool _didCreateChargeLinksTestResult;
 
         [Theory]
