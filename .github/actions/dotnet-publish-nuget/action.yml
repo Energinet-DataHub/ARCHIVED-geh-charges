@@ -41,22 +41,19 @@ runs:
       with:
         dotnet-version: ${{ inputs.dotnet_version }}
 
-    - name: Extract branch name
-      shell: bash
-      run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
-      id: extract_branch
-
     - name: Determine version suffix property use
       id: determine_version_suffix
       shell: bash
       run: |
-        echo ${{ extract_branch.outputs.branch }}
-        if [[ ${{ extract_branch.outputs.branch }} == 'master' || ${{ extract_branch.outputs.branch }} == 'main' ]]
+        echo ${{ env.BRANCH }}
+        if [[ ${{ env.BRANCH }} == 'master' || ${{ env.BRANCH }} == 'main' ]]
         then
           echo "##[set-output name=property;]$(echo '')"
         else
           echo "##[set-output name=property;]$(echo '-p:VersionSuffix=-alpha-$(date +'%Y%m%dT%H%M%S')')"
         fi
+      env:
+        BRANCH: ${{GITHUB_REF#refs/heads/}}
 
     - name: Pack project
       shell: bash
