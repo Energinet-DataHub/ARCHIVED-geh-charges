@@ -217,12 +217,12 @@ namespace Energinet.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.Defaul
             await using var sut = new DefaultChargeLinkClient(
                 serviceBusClientMock.Object, serviceBusRequestSenderFactoryMock.Object, ReplyToQueueName);
 
-            var createDefaultChargeLinksSucceededDto =
+            var createDefaultChargeLinksFailedDto =
                 new CreateDefaultChargeLinksFailedDto(MeteringPointId, ErrorCode.MeteringPointUnknown);
 
             // Act
             await sut.CreateDefaultChargeLinksFailedReplyAsync(
-                createDefaultChargeLinksSucceededDto,
+                createDefaultChargeLinksFailedDto,
                 CorrelationId,
                 respondQueueName).ConfigureAwait(false);
 
