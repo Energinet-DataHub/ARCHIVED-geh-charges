@@ -59,7 +59,7 @@ namespace Energinet.DataHub.Charges.Libraries.DefaultChargeLink
                 .ConfigureAwait(false);
         }
 
-        public async Task CreateDefaultChargeLinksSucceededRespondAsync(
+        public async Task CreateDefaultChargeLinksSucceededReplyAsync(
             [NotNull] CreateDefaultChargeLinksSucceededDto createDefaultChargeLinksSucceededDto,
             [NotNull] string correlationId,
             [NotNull] string replyQueueName)
@@ -84,7 +84,7 @@ namespace Energinet.DataHub.Charges.Libraries.DefaultChargeLink
                 .ConfigureAwait(false);
         }
 
-        public async Task CreateDefaultChargeLinksFailedRespondAsync(
+        public async Task CreateDefaultChargeLinksFailedReplyAsync(
             [NotNull] CreateDefaultChargeLinksFailedDto createDefaultChargeLinksFailedDto,
             [NotNull] string correlationId,
             [NotNull] string replyQueueName)

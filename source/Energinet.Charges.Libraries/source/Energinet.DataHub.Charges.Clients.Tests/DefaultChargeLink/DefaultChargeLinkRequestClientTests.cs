@@ -119,7 +119,7 @@ namespace Energinet.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.Defaul
 
             // Act + Assert
             await Assert.ThrowsAsync<ArgumentNullException>(() => sut
-                    .CreateDefaultChargeLinksSucceededRespondAsync(
+                    .CreateDefaultChargeLinksSucceededReplyAsync(
                         createDefaultChargeLinksSucceededDto!,
                         correlationId,
                         replyQueue))
@@ -153,7 +153,7 @@ namespace Energinet.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.Defaul
                 new CreateDefaultChargeLinksSucceededDto(MeteringPointId, true);
 
             // Act
-            await sut.CreateDefaultChargeLinksSucceededRespondAsync(
+            await sut.CreateDefaultChargeLinksSucceededReplyAsync(
                 createDefaultChargeLinksSucceededDto,
                 CorrelationId,
                 respondQueueName).ConfigureAwait(false);
@@ -187,7 +187,7 @@ namespace Energinet.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.Defaul
 
             // Act + Assert
             await Assert.ThrowsAsync<ArgumentNullException>(() => sut
-                    .CreateDefaultChargeLinksFailedRespondAsync(
+                    .CreateDefaultChargeLinksFailedReplyAsync(
                         createDefaultChargeLinksFailedDto!,
                         correlationId,
                         replyQueue))
@@ -221,7 +221,7 @@ namespace Energinet.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.Defaul
                 new CreateDefaultChargeLinksFailedDto(MeteringPointId, ErrorCode.MeteringPointUnknown);
 
             // Act
-            await sut.CreateDefaultChargeLinksFailedRespondAsync(
+            await sut.CreateDefaultChargeLinksFailedReplyAsync(
                 createDefaultChargeLinksSucceededDto,
                 CorrelationId,
                 respondQueueName).ConfigureAwait(false);
