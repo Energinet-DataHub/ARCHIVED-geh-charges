@@ -46,14 +46,14 @@ runs:
       shell: bash
       run: |
         echo ${{ env.BRANCH }}
-        if [[ ${{ env.BRANCH }} == 'master' || ${{ env.BRANCH }} == 'main' ]]
+        if [[ ${{ env.BRANCH }} == 'refs/heads/master' || ${{ env.BRANCH }} == 'refs/heads/main' ]]
         then
           echo "##[set-output name=property;]$(echo '')"
         else
           echo "##[set-output name=property;]$(echo '-p:VersionSuffix=-alpha-$(date +'%Y%m%dT%H%M%S')')"
         fi
       env:
-        BRANCH: ${{GITHUB_REF#refs/heads/}}
+        BRANCH: ${{ github.head_ref }}
 
     - name: Pack project
       shell: bash
