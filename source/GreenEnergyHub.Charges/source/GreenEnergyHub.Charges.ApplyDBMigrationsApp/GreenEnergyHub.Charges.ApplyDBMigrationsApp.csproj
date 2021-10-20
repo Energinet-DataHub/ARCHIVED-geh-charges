@@ -22,11 +22,6 @@ limitations under the License.
     </PropertyGroup>
 
     <ItemGroup>
-      <None Remove="Scripts\Model\202108250923 MP grid area id and nullable settlement method.sql" />
-      <None Remove="Scripts\Model\202108300923 Rename MP grid area id.sql" />
-    </ItemGroup>
-
-    <ItemGroup>
       <PackageReference Include="dbup-sqlserver" Version="4.5.0" />
       <PackageReference Update="StyleCop.Analyzers" Version="1.2.0-beta.354">
         <PrivateAssets>all</PrivateAssets>
@@ -44,6 +39,7 @@ limitations under the License.
       <EmbeddedResource Include="Scripts\Model\202109301024 DefaultChargeLink enddatetime alter not null.sql" />
       <EmbeddedResource Include="Scripts\Model\202109171524 Refactor DefaultChargeLink.sql" />
       <EmbeddedResource Include="Scripts\Model\202109201555 Refactor ChargePeriodDetails.sql" />
+      <EmbeddedResource Include="Scripts\Model\202110191245 Remove duplicated MPs and set unique constraint on MP ID.sql" />
       <EmbeddedResource Include="Scripts\Test\202105201033 New MarketParticipants.sql" />
       <EmbeddedResource Include="Scripts\Model\202105191329 New charge model.sql" />
       <EmbeddedResource Include="Scripts\Model\202107011226 New Metering Point.sql" />
