@@ -98,7 +98,7 @@ namespace Energinet.DataHub.Charges.Libraries.DefaultChargeLink
             if (string.IsNullOrWhiteSpace(replyQueueName))
                 throw new ArgumentNullException(nameof(replyQueueName));
 
-            var createDefaultChargeLinks = new CreateDefaultChargeLinksFailed()
+            var createDefaultChargeLinks = new CreateDefaultChargeLinksFailed
             {
                 MeteringPointId = createDefaultChargeLinksFailedDto.meteringPointId,
                 ErrorCode = (CreateDefaultChargeLinksFailed.Types.ErrorCode)createDefaultChargeLinksFailedDto.errorCode,
