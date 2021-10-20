@@ -202,18 +202,18 @@ In case the Charges domain fails to process a `CreateDefaultChargeLinks` request
 
 <a name=".CreateDefaultChargeLinkMessages"></a>
 
-### [CreateDefaultChargeLinkMessages](.././source/Energinet.Charges.Libraries/source/Energinet.DataHub.Charges.Clients/DefaultChargeLink/Contracts/CreateDefaultChargeLinkMessages.proto)
+### [CreateDefaultChargeLinkMessages](.././source/Energinet.Charges.Libraries/source/Energinet.DataHub.Charges.Clients/DefaultChargeLinkMessages/Contracts/CreateDefaultChargeLinkMessages.proto)
 
 This request is used by the Metering Point domain as part of the 'Create metering point' process to request the Charges domain to create messages containing the default charge links for a specific metering point and make them available to the relevant Market Participants.
 
 <a name=".CreateDefaultChargeLinkMessagesSucceeded"></a>
 
-### [CreateDefaultChargeLinkMessagesSucceeded](.././source/Energinet.Charges.Libraries/source/Energinet.DataHub.Charges.Clients/DefaultChargeLink/Contracts/CreateDefaultChargeLinkMessagesSucceeded.proto)
+### [CreateDefaultChargeLinkMessagesSucceeded](.././source/Energinet.Charges.Libraries/source/Energinet.DataHub.Charges.Clients/DefaultChargeLinkMessages/Contracts/CreateDefaultChargeLinkMessagesSucceeded.proto)
 
 The Charges domain will use this reply to inform the Metering Point domain when the `CreateDefaultChargeLinkMessages` request has been processed successfully.
 
 <a name=".CreateDefaultChargeLinkMessagesFailed"></a>
 
-### [CreateDefaultChargeLinkMessagesFailed](.././source/Energinet.Charges.Libraries/source/Energinet.DataHub.Charges.Clients/DefaultChargeLink/Contracts/CreateDefaultChargeLinkMessagesFailed.proto)
+### [CreateDefaultChargeLinkMessagesFailed](.././source/Energinet.Charges.Libraries/source/Energinet.DataHub.Charges.Clients/DefaultChargeLinkMessages/Contracts/CreateDefaultChargeLinkMessagesFailed.proto)
 
 In case the Charges domain fails to process a `CreateDefaultChargeLinkMessages` request this reply will be used to inform the Metering Point domain.
