@@ -12,11 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace Energinet.DataHub.Charges.Libraries.Models
+using System.Diagnostics.CodeAnalysis;
+using Energinet.Charges.Contracts;
+using Energinet.DataHub.Charges.Libraries.Models;
+
+namespace Energinet.DataHub.Charges.Libraries.Protobuf
 {
-    /// <summary>
-    /// The required data needed by the Charges domain to create Default charge links.
-    /// </summary>
-    /// <param name="MeteringPointId">A unique id to specify the metering point.</param>
-    public sealed record CreateDefaultChargeLinksDto(string MeteringPointId);
+    internal class CreateDefaultChargeLinkMessagesSucceededInboundMapper
+    {
+        protected internal static CreateDefaultChargeLinkMessagesSucceededDto Convert(
+            [NotNull] CreateDefaultChargeLinkMessagesSucceeded createDefaultChargeLinksSucceeded)
+        {
+            return new(createDefaultChargeLinksSucceeded.MeteringPointId);
+        }
+    }
 }

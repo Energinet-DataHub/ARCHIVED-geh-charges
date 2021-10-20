@@ -21,11 +21,15 @@ using Energinet.DataHub.MessageHub.Client.DataAvailable;
 using Energinet.DataHub.MessageHub.Client.Model;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Application.ChargeLinks.PostOffice;
+using GreenEnergyHub.Charges.Domain.AvailableChargeLinksData;
 using GreenEnergyHub.Charges.Domain.ChargeLinkCommandAcceptedEvents;
+using GreenEnergyHub.Charges.Domain.ChargeLinkCommands;
 using GreenEnergyHub.Charges.Domain.Charges;
+using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.TestCore.Attributes;
 using GreenEnergyHub.Charges.TestCore.Reflection;
 using Moq;
+using NodaTime;
 using Xunit;
 using Xunit.Categories;
 
@@ -50,8 +54,10 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.PostOffice
         public async Task NotifyAsync_WhenChargeIsTaxIndicator_SendsDataAvailableNotification(
             ChargeLinkCommandAcceptedEvent chargeLinkCommandAcceptedEvent,
             Charge charge,
+            AvailableChargeLinksData availableChargeLinksData,
             [Frozen] Mock<IChargeRepository> chargeRepositoryMock,
             [Frozen] Mock<IDataAvailableNotificationSender> dataAvailableNotificationSenderMock,
+            [Frozen] Mock<IAvailableChargeLinksDataFactory> availableChargeLinksDataFactoryMock,
             ChargeLinkCreatedDataAvailableNotifier sut)
         {
             // Arrange
@@ -59,6 +65,13 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.PostOffice
             chargeRepositoryMock.Setup(
                     repository => repository.GetChargeAsync(It.IsAny<ChargeIdentifier>()))
                 .ReturnsAsync(charge);
+            availableChargeLinksDataFactoryMock.Setup(
+                    factory => factory.CreateAvailableChargeLinksData(
+                        It.IsAny<ChargeLinkCommand>(),
+                        It.IsAny<MarketParticipant>(),
+                        It.IsAny<Instant>(),
+                        It.IsAny<Guid>()))
+                .Returns(availableChargeLinksData);
 
             // Act
             await sut.NotifyAsync(chargeLinkCommandAcceptedEvent);
