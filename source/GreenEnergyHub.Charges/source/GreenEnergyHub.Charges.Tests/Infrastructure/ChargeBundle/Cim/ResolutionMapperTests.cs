@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.ComponentModel;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Infrastructure.ChargeBundle.Cim;
 using Xunit;
@@ -34,6 +35,24 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.ChargeBundle.Cim
         {
             var actual = ResolutionMapper.Map(resolution);
             Assert.Equal(expected, actual);
+        }
+
+        [Theory]
+        [InlineData(Resolution.P1D, "P1D")]
+        [InlineData(Resolution.P1M, "P1M")]
+        [InlineData(Resolution.PT1H, "PT1H")]
+        [InlineData(Resolution.PT15M, "PT15M")]
+        public void Map_WhenGivenKnownInput_MapsToCorrectString(Resolution resolution, string expected)
+        {
+            var actual = ResolutionMapper.Map(resolution);
+            Assert.Equal(expected, actual);
+        }
+
+        [Theory]
+        [InlineData(Resolution.Unknown)]
+        public void Map_WhenGivenUnknownInput_ThrowsExceptions(Resolution resolution)
+        {
+            Assert.Throws<InvalidEnumArgumentException>(() => ResolutionMapper.Map(resolution));
         }
     }
 }

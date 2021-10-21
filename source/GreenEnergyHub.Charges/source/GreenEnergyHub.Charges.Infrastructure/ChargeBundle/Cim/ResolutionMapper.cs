@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.ComponentModel;
 using GreenEnergyHub.Charges.Domain.Charges;
 
 namespace GreenEnergyHub.Charges.Infrastructure.ChargeBundle.Cim
@@ -32,6 +33,19 @@ namespace GreenEnergyHub.Charges.Infrastructure.ChargeBundle.Cim
                 CimP1D => Resolution.P1D,
                 CimP1M => Resolution.P1M,
                 _ => Resolution.Unknown,
+            };
+        }
+
+        public static string Map(Resolution resolution)
+        {
+            return resolution switch
+            {
+                Resolution.PT15M => CimPT15M,
+                Resolution.PT1H => CimPT1H,
+                Resolution.P1D => CimP1D,
+                Resolution.P1M => CimP1M,
+                _ => throw new InvalidEnumArgumentException(
+                    $"Provided Resolution value '{resolution}' is invalid and cannot be mapped."),
             };
         }
     }
