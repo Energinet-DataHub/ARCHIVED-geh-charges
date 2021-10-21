@@ -8,8 +8,6 @@ All process flows within the Charges domain will be gathered here.
 |[Charge Link Flow](#Charge-Link-Flow)|
 <br>
 
-<a name=".ChargePriceListFlow"></a>
-
 ## Charge Price List Flow
 
 The following image depicts the charge price list flow.
@@ -28,9 +26,7 @@ All paths outline the exact database tables it needs to interact with and when e
 The rule set assumes the incoming charge has been converted to an internal model, i.e. the Charge Command, and it has passed both input and business validations.
 
 ![Persist charge](images/PersistingChargesRuleSet_ProcessFlow.png)
-
 <br>
-<a name=".ChargeLinkFlow"></a>
 
 ## Charge Link Flow
 
