@@ -31,7 +31,6 @@ Charges domain related integration events.
 
 Note: The integration events adhere to the architecture decision record ([ADR-0008](https://github.com/Energinet-DataHub/green-energy-hub/blob/main/docs/architecture-decision-record/ADR-0008%20Integration%20events.md)), which among other things defines the integration event's [meta data](https://github.com/Energinet-DataHub/green-energy-hub/blob/main/docs/architecture-decision-record/ADR-0008%20Integration%20events.md#message-metadata).
 
-<br>
 <a name=".ChargesAndChargePricesEvents"></a>
 
 ## Charges and charge prices events
@@ -96,29 +95,10 @@ Represents the cancellation of the charge discontinuation.
 
 <a name=".ChargePricesUpdated"></a>
 
-### ChargePricesUpdated
+### [ChargePricesUpdated](.././source/GreenEnergyHub.Charges/source/GreenEnergyHub.Charges.Infrastructure/Integration/Charge/ChargePricesUpdated.proto)
 
 Represents the creation and update of one or more charge prices.
 
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| ChargeId | string | required | A charge identifier provided by the Market Participant. Combined with Charge Owner and Charge Type it becomes unique  |
-| ChargeType | enum | required | The type of charge; tariff, fee or subscription |
-| ChargeOwner | string | required | A charge owner identification, e.g. the Market Participant's GLN or EIC number |
-| UpdatedPeriodStartDateTime | Timestamp | required | In UTC. The start of the charge prices period. The start equals the time of the earliest charge price in the list |
-| UpdatedPeriodEndDateTime | Timestamp | required | In UTC. The end of the charge prices period. The end is to be considered an up to (excluding) date time which equals the end of the latest charge price in the list. This is a calculated value that adds a single duration equal to the charge's resolution, e.g. hourly, to the latest charge price's time |
-| Points | [ChargePrice](#.ChargePrice) | required | A list with charge prices |
-
-<a name=".ChargePrice"></a>
-
-#### ChargePrice
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| Time | Timestamp | required | In UTC. Point in time where the charge price applies |
-| Price | Decimal(14,6) | required | Charge price |
-
-<br>
 <a name=".ChargeLinkEvents"></a>
 
 ## Charge link events
