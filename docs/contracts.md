@@ -13,8 +13,8 @@
         - [ChargePrice](#.ChargePrice)
 - [Charge link events](#.ChargeLinkEvents)
     - [ChargeLinkCreated](#.ChargeLinkCreated)
-        - [ChargeLinkPeriod](#.ChargeLinkPeriod)
     - [ChargeLinkUpdated](#.ChargeLinkUpdated)
+        - [ChargeLinkPeriod](#.ChargeLinkPeriod)
 - [Charge link requests and replies](#.ChargeLinkRequestsAndReplies)
     - [CreateDefaultChargeLinks](#.CreateDefaultChargeLinks)
     - [CreateDefaultChargeLinksSucceeded](#.CreateDefaultChargeLinksSucceeded)
@@ -105,30 +105,9 @@ Represents the creation and update of one or more charge prices.
 
 <a name=".ChargeLinkCreated"></a>
 
-### ChargeLinkCreated
+### [ChargeLinkCreated](.././source/GreenEnergyHub.Charges/source/GreenEnergyHub.Charges.Infrastructure/Integration/ChargeLink/ChargeLinkCreated.proto)
 
 Represents the creation of a new charge link
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| ChargeLinkId | string | required | An identifier for the charge link event. Provided by the Market Participant. Uniqueness cannot be guaranteed |
-| MeteringPointId | string | required | A unique metering point identifier |
-| ChargeId | string | required | A charge identifier. Combined with Charge Owner and Charge Type it becomes unique  |
-| ChargeType | enum | required | The type of charge; tariff, fee or subscription |
-| ChargeOwner | string | required | A charge owner identification, e.g. the Market Participant's GLN or EIC number |
-| ChargeLinkPeriod | [ChargeLinkPeriod](#.ChargeLinkPeriod) | required | Contains the charge link's validity period and factor (quantity) |
-
-<a name=".ChargeLinkPeriod"></a>
-
-#### ChargeLinkPeriod
-
-Represents a charge link period.
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| StartDateTime | Timestamp | required | In UTC. The charge link period's valid from date and time |
-| EndDateTime | Timestamp | optional with default value | In UTC. The charge link period's valid to date and time. The default value will be the equivalent to 9999-12-31T23:59:59Z without milliseconds |
-| Factor | int | required | Indicates the number of times the same fee or subscription must be collected. Always 1 for tariffs |
 
 <a name=".ChargeLinkUpdated"></a>
 
@@ -146,6 +125,18 @@ Represents the update of one or more charge links.
 | UpdatedPeriodStartDateTime | Timestamp | required | In UTC. Time interval covering the entire period of charge link updates within this event. The start equals the StartDateTime of the earliest charge link in the Periods list |
 | UpdatedPeriodEndDateTime | Timestamp | required | In UTC. Time interval covering the entire period of charge link updates within this event. The end equals the EndDateTime of the latest charge link in the Periods list |
 | Periods | [ChargeLinkPeriod](#.ChargeLinkPeriod) | required | A list of charge link periods and factor values |
+
+<a name=".ChargeLinkPeriod"></a>
+
+#### ChargeLinkPeriod
+
+Represents a charge link period.
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| StartDateTime | Timestamp | required | In UTC. The charge link period's valid from date and time |
+| EndDateTime | Timestamp | optional with default value | In UTC. The charge link period's valid to date and time. The default value will be the equivalent to 9999-12-31T23:59:59Z without milliseconds |
+| Factor | int | required | Indicates the number of times the same fee or subscription must be collected. Always 1 for tariffs |
 
 <br>
 <a name=".ChargeLinkRequestsAndReplies"></a>
