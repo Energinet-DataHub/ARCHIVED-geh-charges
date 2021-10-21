@@ -6,7 +6,7 @@
 - [Charges and charge prices events](#.ChargesAndChargePricesEvents)
     - [ChargeCreated](#.ChargeCreated)
     - [ChargePeriodUpdated](#.ChargePeriodUpdated)
-            - [ChargePeriod](#.ChargePeriod)
+        - [ChargePeriod](#.ChargePeriod)
     - [ChargeDiscontinued](#.ChargeDiscontinued)
     - [ChargeDiscontinuationCancelled](#.ChargeDiscontinuationCancelled)
     - [ChargePricesUpdated](#.ChargePricesUpdated)
@@ -29,7 +29,7 @@
 
 Charges domain related integration events.
 
-Note: The integration events adhere to the architecture decision record ([ADR-0008](https://github.com/Energinet-DataHub/green-energy-hub/blob/main/docs/architecture-decision-record/ADR-0008%20Integration%20events.md)), which among other things also defines the integration event's [meta data](https://github.com/Energinet-DataHub/green-energy-hub/blob/main/docs/architecture-decision-record/ADR-0008%20Integration%20events.md#message-metadata).
+Note: The integration events adhere to the architecture decision record ([ADR-0008](https://github.com/Energinet-DataHub/green-energy-hub/blob/main/docs/architecture-decision-record/ADR-0008%20Integration%20events.md)), which among other things defines the integration event's [meta data](https://github.com/Energinet-DataHub/green-energy-hub/blob/main/docs/architecture-decision-record/ADR-0008%20Integration%20events.md#message-metadata).
 
 <br>
 <a name=".ChargesAndChargePricesEvents"></a>
