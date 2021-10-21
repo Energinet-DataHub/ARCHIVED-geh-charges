@@ -12,18 +12,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.ComponentModel;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
-using GreenEnergyHub.Charges.Infrastructure.Messaging.Serialization.MarketDocument;
+using GreenEnergyHub.Charges.Infrastructure.MarketDocument.Cim;
 using Xunit;
 using Xunit.Categories;
 
-namespace GreenEnergyHub.Charges.Tests.Infrastructure.Messaging.Serialization.MarketDocument
+namespace GreenEnergyHub.Charges.Tests.Infrastructure.MarketDocument.Cim
 {
     [UnitTest]
     public class DocumentTypeMapperTests
     {
         [Theory]
         [InlineData("D05", DocumentType.RequestChangeBillingMasterData)]
+        [InlineData("D07", DocumentType.NotifyBillingMasterData)]
         [InlineData("D10", DocumentType.RequestUpdateChargeInformation)]
         [InlineData("", DocumentType.Unknown)]
         [InlineData("DoesNotExist", DocumentType.Unknown)]
@@ -31,7 +33,24 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Messaging.Serialization.Ma
         public void Map_WhenGivenInput_MapsToCorrectEnum(string unit, DocumentType expected)
         {
             var actual = DocumentTypeMapper.Map(unit);
-            Assert.Equal(actual, expected);
+            Assert.Equal(expected, actual);
+        }
+
+        [Theory]
+        [InlineData(DocumentType.RequestChangeBillingMasterData, "D05")]
+        [InlineData(DocumentType.NotifyBillingMasterData, "D07")]
+        [InlineData(DocumentType.RequestUpdateChargeInformation, "D10")]
+        public void Map_WhenGivenKnownInput_MapsToCorrectString(DocumentType documentType, string expected)
+        {
+            var actual = DocumentTypeMapper.Map(documentType);
+            Assert.Equal(expected, actual);
+        }
+
+        [Theory]
+        [InlineData(DocumentType.Unknown)]
+        public void Map_WhenGivenUnknownInput_ThrowsExceptions(DocumentType documentType)
+        {
+            Assert.Throws<InvalidEnumArgumentException>(() => DocumentTypeMapper.Map(documentType));
         }
     }
 }

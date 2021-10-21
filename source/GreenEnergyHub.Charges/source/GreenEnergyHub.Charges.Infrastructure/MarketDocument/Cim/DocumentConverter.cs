@@ -16,10 +16,11 @@ using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using System.Xml;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
+using GreenEnergyHub.Charges.Infrastructure.Messaging.Serialization;
 using GreenEnergyHub.Messaging.Transport;
 using NodaTime;
 
-namespace GreenEnergyHub.Charges.Infrastructure.Messaging.Serialization.MarketDocument
+namespace GreenEnergyHub.Charges.Infrastructure.MarketDocument.Cim
 {
     public abstract class DocumentConverter
     {
@@ -70,47 +71,47 @@ namespace GreenEnergyHub.Charges.Infrastructure.Messaging.Serialization.MarketDo
                     rootElement = reader.LocalName;
                     ns = reader.NamespaceURI;
                 }
-                else if (reader.Is(CimDocumentConverterConstants.Id, ns))
+                else if (reader.Is(CimMarketDocumentConstants.Id, ns))
                 {
                     var content = await reader.ReadElementContentAsStringAsync().ConfigureAwait(false);
                     document.Id = content;
                 }
-                else if (reader.Is(CimDocumentConverterConstants.Type, ns))
+                else if (reader.Is(CimMarketDocumentConstants.Type, ns))
                 {
                     var content = await reader.ReadElementContentAsStringAsync().ConfigureAwait(false);
                     document.Type = DocumentTypeMapper.Map(content);
                 }
-                else if (reader.Is(CimDocumentConverterConstants.BusinessReasonCode, ns))
+                else if (reader.Is(CimMarketDocumentConstants.BusinessReasonCode, ns))
                 {
                     var content = await reader.ReadElementContentAsStringAsync().ConfigureAwait(false);
                     document.BusinessReasonCode = BusinessReasonCodeMapper.Map(content);
                 }
-                else if (reader.Is(CimDocumentConverterConstants.IndustryClassification, ns))
+                else if (reader.Is(CimMarketDocumentConstants.IndustryClassification, ns))
                 {
                     var content = await reader.ReadElementContentAsStringAsync().ConfigureAwait(false);
                     document.IndustryClassification = IndustryClassificationMapper.Map(content);
                 }
-                else if (reader.Is(CimDocumentConverterConstants.SenderId, ns))
+                else if (reader.Is(CimMarketDocumentConstants.SenderId, ns))
                 {
                     var content = await reader.ReadElementContentAsStringAsync().ConfigureAwait(false);
                     document.Sender.Id = content;
                 }
-                else if (reader.Is(CimDocumentConverterConstants.SenderBusinessProcessRole, ns))
+                else if (reader.Is(CimMarketDocumentConstants.SenderBusinessProcessRole, ns))
                 {
                     var content = await reader.ReadElementContentAsStringAsync().ConfigureAwait(false);
                     document.Sender.BusinessProcessRole = MarketParticipantRoleMapper.Map(content);
                 }
-                else if (reader.Is(CimDocumentConverterConstants.RecipientId, ns))
+                else if (reader.Is(CimMarketDocumentConstants.RecipientId, ns))
                 {
                     var content = await reader.ReadElementContentAsStringAsync().ConfigureAwait(false);
                     document.Recipient.Id = content;
                 }
-                else if (reader.Is(CimDocumentConverterConstants.RecipientBusinessProcessRole, ns))
+                else if (reader.Is(CimMarketDocumentConstants.RecipientBusinessProcessRole, ns))
                 {
                     var content = await reader.ReadElementContentAsStringAsync().ConfigureAwait(false);
                     document.Recipient.BusinessProcessRole = MarketParticipantRoleMapper.Map(content);
                 }
-                else if (reader.Is(CimDocumentConverterConstants.CreatedDateTime, ns))
+                else if (reader.Is(CimMarketDocumentConstants.CreatedDateTime, ns))
                 {
                     document.CreatedDateTime = Instant.FromDateTimeUtc(reader.ReadElementContentAsDateTime());
                 }

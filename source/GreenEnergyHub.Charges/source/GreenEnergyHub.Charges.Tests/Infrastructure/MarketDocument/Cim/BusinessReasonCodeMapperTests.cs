@@ -12,26 +12,43 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.ComponentModel;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
-using GreenEnergyHub.Charges.Infrastructure.Messaging.Serialization.MarketDocument;
+using GreenEnergyHub.Charges.Infrastructure.MarketDocument.Cim;
 using Xunit;
 using Xunit.Categories;
 
-namespace GreenEnergyHub.Charges.Tests.Infrastructure.Messaging.Serialization.MarketDocument
+namespace GreenEnergyHub.Charges.Tests.Infrastructure.MarketDocument.Cim
 {
     [UnitTest]
     public class BusinessReasonCodeMapperTests
     {
         [Theory]
-        [InlineData("D18", BusinessReasonCode.UpdateChargeInformation)]
         [InlineData("D17", BusinessReasonCode.UpdateMasterDataSettlement)]
+        [InlineData("D18", BusinessReasonCode.UpdateChargeInformation)]
         [InlineData("", BusinessReasonCode.Unknown)]
         [InlineData("DoesNotExist", BusinessReasonCode.Unknown)]
         [InlineData(null, BusinessReasonCode.Unknown)]
         public void Map_WhenGivenInput_MapsToCorrectEnum(string unit, BusinessReasonCode expected)
         {
             var actual = BusinessReasonCodeMapper.Map(unit);
-            Assert.Equal(actual, expected);
+            Assert.Equal(expected, actual);
+        }
+
+        [Theory]
+        [InlineData(BusinessReasonCode.UpdateChargeInformation, "D18")]
+        [InlineData(BusinessReasonCode.UpdateMasterDataSettlement, "D17")]
+        public void Map_WhenGivenKnownInput_MapsToCorrectString(BusinessReasonCode businessReasonCode, string expected)
+        {
+            var actual = BusinessReasonCodeMapper.Map(businessReasonCode);
+            Assert.Equal(expected, actual);
+        }
+
+        [Theory]
+        [InlineData(BusinessReasonCode.Unknown)]
+        public void Map_WhenGivenUnknownInput_ThrowsExceptions(BusinessReasonCode businessReasonCode)
+        {
+            Assert.Throws<InvalidEnumArgumentException>(() => BusinessReasonCodeMapper.Map(businessReasonCode));
         }
     }
 }

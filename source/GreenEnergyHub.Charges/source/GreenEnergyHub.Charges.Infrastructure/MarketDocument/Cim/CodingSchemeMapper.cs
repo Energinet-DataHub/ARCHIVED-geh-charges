@@ -12,16 +12,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace GreenEnergyHub.Charges.Domain.MarketParticipants
+using System.ComponentModel;
+
+namespace GreenEnergyHub.Charges.Infrastructure.MarketDocument.Cim
 {
-    /// <summary>
-    /// The document type indicates the intended business context of this business message.
-    /// </summary>
-    public enum DocumentType
+    public static class CodingSchemeMapper
     {
-        Unknown = 0,
-        RequestChangeBillingMasterData = 1,
-        RequestUpdateChargeInformation = 2,
-        NotifyBillingMasterData = 3,
+        private const string CimGS1 = "A10";
+
+        public static string Map(CodingScheme codingScheme)
+        {
+            return codingScheme switch
+            {
+                CodingScheme.GS1 => CimGS1,
+                _ => throw new InvalidEnumArgumentException($"Provided CodingScheme value '{codingScheme}' is invalid and cannot be mapped."),
+            };
+        }
     }
 }

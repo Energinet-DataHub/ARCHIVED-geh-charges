@@ -12,12 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.ComponentModel;
 using GreenEnergyHub.Charges.Domain.Charges;
-using GreenEnergyHub.Charges.Infrastructure.Messaging.Serialization.Commands;
+using GreenEnergyHub.Charges.Infrastructure.ChargeLinkBundle.Cim;
 using Xunit;
 using Xunit.Categories;
 
-namespace GreenEnergyHub.Charges.Tests.Infrastructure.Messaging.Serialization.Commands
+namespace GreenEnergyHub.Charges.Tests.Infrastructure.ChargeLinkBundle.Cim
 {
     [UnitTest]
     public class ChargeTypeMapperTests
@@ -33,6 +34,23 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Messaging.Serialization.Co
         {
             var actual = ChargeTypeMapper.Map(unit);
             Assert.Equal(actual, expected);
+        }
+
+        [Theory]
+        [InlineData(ChargeType.Fee, "D02")]
+        [InlineData(ChargeType.Subscription, "D01")]
+        [InlineData(ChargeType.Tariff, "D03")]
+        public void Map_WhenGivenKnownInput_MapsToCorrectString(ChargeType chargeType, string expected)
+        {
+            var actual = ChargeTypeMapper.Map(chargeType);
+            Assert.Equal(expected, actual);
+        }
+
+        [Theory]
+        [InlineData(ChargeType.Unknown)]
+        public void Map_WhenGivenUnknownInput_ThrowsExceptions(ChargeType chargeType)
+        {
+            Assert.Throws<InvalidEnumArgumentException>(() => ChargeTypeMapper.Map(chargeType));
         }
     }
 }

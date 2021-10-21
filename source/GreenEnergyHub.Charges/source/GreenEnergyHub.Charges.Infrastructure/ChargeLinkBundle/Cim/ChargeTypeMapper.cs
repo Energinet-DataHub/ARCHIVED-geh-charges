@@ -12,20 +12,37 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.ComponentModel;
 using GreenEnergyHub.Charges.Domain.Charges;
 
-namespace GreenEnergyHub.Charges.Infrastructure.Messaging.Serialization.Commands
+namespace GreenEnergyHub.Charges.Infrastructure.ChargeLinkBundle.Cim
 {
     public static class ChargeTypeMapper
     {
+        private const string CimFee = "D02";
+        private const string CimSubscription = "D01";
+        private const string CimTariff = "D03";
+
         public static ChargeType Map(string value)
         {
             return value switch
             {
-                "D01" => ChargeType.Subscription,
-                "D02" => ChargeType.Fee,
-                "D03" => ChargeType.Tariff,
+                CimFee => ChargeType.Fee,
+                CimSubscription => ChargeType.Subscription,
+                CimTariff => ChargeType.Tariff,
                 _ => ChargeType.Unknown,
+            };
+        }
+
+        public static string Map(ChargeType chargeType)
+        {
+            return chargeType switch
+            {
+                ChargeType.Fee => CimFee,
+                ChargeType.Subscription => CimSubscription,
+                ChargeType.Tariff => CimTariff,
+                _ => throw new InvalidEnumArgumentException(
+                    $"Provided ChargeType value '{chargeType}' is invalid and cannot be mapped."),
             };
         }
     }
