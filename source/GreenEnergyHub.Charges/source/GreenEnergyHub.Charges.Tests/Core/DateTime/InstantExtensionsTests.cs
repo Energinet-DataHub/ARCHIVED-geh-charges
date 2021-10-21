@@ -23,6 +23,14 @@ namespace GreenEnergyHub.Charges.Tests.Core.DateTime
     public class InstantExtensionsTests
     {
         [Fact]
+        public void GetEndDefault_ReturnsCorrectValue()
+        {
+            var expected = Instant.FromUtc(9999, 12, 31, 23, 59, 59);
+            var actual = InstantExtensions.GetEndDefault();
+            Assert.Equal(expected, actual);
+        }
+
+        [Fact]
         public void TimeOrEndDefault_WhenInstantIsNotNull_ReturnsInput()
         {
             // Arrange
@@ -55,6 +63,19 @@ namespace GreenEnergyHub.Charges.Tests.Core.DateTime
             var instant = Instant.FromUtc(1992, 6, 26, 20, 15); // Start time of the match where Denmark won the European Football Championship
             var result = instant.ToTimestamp();
             Assert.Equal(instant.ToDateTimeOffset(), result.ToDateTimeOffset()); // Not a direct comparison, but the simplest way to assert the result
+        }
+
+        [Theory]
+        [InlineData(1999, 12, 31, 23, 0, 0, false)]
+        [InlineData(2021, 10, 12, 14, 27, 59, false)]
+        [InlineData(9999, 12, 31, 23, 59, 59, true)]
+        public void IsEndDefault_ReturnsExpectedResult(int year, int month, int day, int hour, int minute, int second, bool expected)
+        {
+            var sut = Instant.FromUtc(year, month, day, hour, minute, second);
+
+            var actual = sut.IsEndDefault();
+
+            Assert.Equal(expected, actual);
         }
     }
 }

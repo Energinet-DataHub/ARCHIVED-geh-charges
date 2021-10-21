@@ -25,12 +25,6 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
         {
             serviceCollection.AddScoped<IChargeLinkDataAvailableNotifier, ChargeLinkDataAvailableNotifier>();
             serviceCollection.AddScoped<IAvailableChargeLinksDataFactory, AvailableChargeLinksDataFactory>();
-            serviceCollection
-                .AddScoped<IAvailableChargeLinksDataRepository, AvailableChargeLinksDataRepository>();
-
-            // This would be redundant as it is already registered for ChargeLinkEventPublisherConfigurationEndpoint
-            //serviceCollection.ReceiveProtobufMessage<ChargeLinkCommandAcceptedContract>(
-            //    configuration => configuration.WithParser(() => ChargeLinkCommandAcceptedContract.Parser));
         }
     }
 }

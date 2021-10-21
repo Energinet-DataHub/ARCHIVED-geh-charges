@@ -12,19 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using GreenEnergyHub.Charges.Domain.MarketParticipants;
-
-namespace GreenEnergyHub.Charges.Infrastructure.Messaging.Serialization.MarketDocument
+namespace GreenEnergyHub.Charges.Infrastructure.MarketDocument.Cim
 {
-    public static class IndustryClassificationMapper
+    public enum CodingScheme
     {
-        public static IndustryClassification Map(string value)
-        {
-            return value switch
-            {
-                "23" => IndustryClassification.Electricity,
-                _ => IndustryClassification.Unknown,
-            };
-        }
+        GS1 = 1,
     }
 }

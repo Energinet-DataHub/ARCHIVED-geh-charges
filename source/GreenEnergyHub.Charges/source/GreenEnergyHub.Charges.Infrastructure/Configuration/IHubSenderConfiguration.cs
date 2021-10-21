@@ -14,18 +14,18 @@
 
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 
-namespace GreenEnergyHub.Charges.Infrastructure.Messaging.Serialization.MarketDocument
+namespace GreenEnergyHub.Charges.Infrastructure.Configuration
 {
-    public static class DocumentTypeMapper
+    /// <summary>
+    /// Interface used to determine which ID and code should be used when sending
+    /// message from the hub out onto the world
+    /// </summary>
+    public interface IHubSenderConfiguration
     {
-        public static DocumentType Map(string value)
-        {
-            return value switch
-            {
-                "D05" => DocumentType.RequestChangeBillingMasterData,
-                "D10" => DocumentType.RequestUpdateChargeInformation,
-                _ => DocumentType.Unknown,
-            };
-        }
+        /// <summary>
+        /// Retrieves the market participant used to send messages from the hub
+        /// </summary>
+        /// <returns>The market participant to use</returns>
+        MarketParticipant GetSenderMarketParticipant();
     }
 }

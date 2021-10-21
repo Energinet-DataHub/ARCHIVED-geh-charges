@@ -12,16 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace GreenEnergyHub.Charges.Domain.MarketParticipants
+using System.Collections.Generic;
+using System.IO;
+using System.Threading.Tasks;
+using GreenEnergyHub.Charges.Domain.AvailableChargeLinksData;
+
+namespace GreenEnergyHub.Charges.Infrastructure.ChargeLinkBundle.Cim
 {
-    /// <summary>
-    /// The document type indicates the intended business context of this business message.
-    /// </summary>
-    public enum DocumentType
+    public interface IChargeLinkCimSerializer
     {
-        Unknown = 0,
-        RequestChangeBillingMasterData = 1,
-        RequestUpdateChargeInformation = 2,
-        NotifyBillingMasterData = 3,
+        Task SerializeToStreamAsync(IEnumerable<AvailableChargeLinksData> chargeLinks, Stream stream);
     }
 }
