@@ -16,22 +16,18 @@ using GreenEnergyHub.Charges.Domain.Charges;
 
 namespace GreenEnergyHub.Charges.Infrastructure.ChargeBundle.Cim
 {
-    public static class ResolutionMapper
+    public static class VatClassificationMapper
     {
-        private const string CimPT15M = "PT15M";
-        private const string CimPT1H = "PT1H";
-        private const string CimP1D = "P1D";
-        private const string CimP1M = "P1M";
+        private const string CimNoVat = "D01";
+        private const string CimVat25 = "D02";
 
-        public static Resolution Map(string value)
+        public static VatClassification Map(string value)
         {
             return value switch
             {
-                CimPT15M => Resolution.PT15M,
-                CimPT1H => Resolution.PT1H,
-                CimP1D => Resolution.P1D,
-                CimP1M => Resolution.P1M,
-                _ => Resolution.Unknown,
+                CimNoVat => VatClassification.NoVat,
+                CimVat25 => VatClassification.Vat25,
+                _ => VatClassification.Unknown,
             };
         }
     }
