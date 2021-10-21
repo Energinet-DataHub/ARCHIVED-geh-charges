@@ -21,7 +21,7 @@ using System.Threading.Tasks;
 using System.Xml.Linq;
 using GreenEnergyHub.Charges.Application;
 using GreenEnergyHub.Charges.Core.DateTime;
-using GreenEnergyHub.Charges.Domain.ChargeLinks;
+using GreenEnergyHub.Charges.Domain.AvailableChargeLinksData;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.Infrastructure.MarketDocument.Cim;
 using NodaTime;
@@ -41,7 +41,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.ChargeLinks.Cim
             _clock = clock;
         }
 
-        public async Task SerializeToStreamAsync(IEnumerable<ChargeLinkTransmissionDto> chargeLinks, Stream stream)
+        public async Task SerializeToStreamAsync(IEnumerable<AvailableChargeLinksData> chargeLinks, Stream stream)
         {
             var document = GetDocument(chargeLinks);
             await document.SaveAsync(stream, SaveOptions.None, CancellationToken.None);
@@ -49,7 +49,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.ChargeLinks.Cim
             stream.Position = 0;
         }
 
-        private XDocument GetDocument(IEnumerable<ChargeLinkTransmissionDto> chargeLinks)
+        private XDocument GetDocument(IEnumerable<AvailableChargeLinksData> chargeLinks)
         {
             XNamespace cimNamespace = CimChargeLinkConstants.NotifyNamespace;
             XNamespace xmlSchemaNamespace = CimMarketDocumentConstants.SchemaValidationNamespace;
@@ -71,7 +71,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.ChargeLinks.Cim
                     GetActivityRecords(cimNamespace, chargeLinks)));
         }
 
-        private IEnumerable<XElement> GetMarketDocumentHeader(XNamespace cimNamespace, ChargeLinkTransmissionDto chargeLink)
+        private IEnumerable<XElement> GetMarketDocumentHeader(XNamespace cimNamespace, AvailableChargeLinksData chargeLink)
         {
             return new List<XElement>()
             {
@@ -101,10 +101,10 @@ namespace GreenEnergyHub.Charges.Infrastructure.ChargeLinks.Cim
                     new XAttribute(
                         CimMarketDocumentConstants.CodingScheme,
                         CodingSchemeMapper.Map(CodingScheme.GS1)),
-                    chargeLink.Recipient),
+                    chargeLink.RecipientId),
                 new XElement(
                     cimNamespace + CimMarketDocumentConstants.RecipientBusinessProcessRole,
-                    MarketParticipantRoleMapper.Map(chargeLink.MarketParticipantRole)),
+                    MarketParticipantRoleMapper.Map(chargeLink.RecipientRole)),
                 new XElement(
                     cimNamespace + CimMarketDocumentConstants.CreatedDateTime,
                     _clock.GetCurrentInstant().ToString()),
@@ -113,14 +113,14 @@ namespace GreenEnergyHub.Charges.Infrastructure.ChargeLinks.Cim
 
         private static IEnumerable<XElement> GetActivityRecords(
             XNamespace cimNamespace,
-            IEnumerable<ChargeLinkTransmissionDto> chargeLinks)
+            IEnumerable<AvailableChargeLinksData> chargeLinks)
         {
             return chargeLinks.Select(chargeLink => GetActivityRecord(cimNamespace, chargeLink));
         }
 
         private static XElement GetActivityRecord(
             XNamespace cimNamespace,
-            ChargeLinkTransmissionDto chargeLink)
+            AvailableChargeLinksData chargeLink)
         {
             return new XElement(
                 cimNamespace + CimMarketDocumentConstants.MarketActivityRecord,
@@ -131,8 +131,8 @@ namespace GreenEnergyHub.Charges.Infrastructure.ChargeLinks.Cim
                         CimMarketDocumentConstants.CodingScheme,
                         CodingSchemeMapper.Map(CodingScheme.GS1)),
                     chargeLink.MeteringPointId),
-                new XElement(cimNamespace + CimChargeLinkConstants.StartDateTime, chargeLink.ValidFrom.ToString()),
-                GetEndDateTimeOnlyIfNotEndDefault(cimNamespace, chargeLink.ValidTo),
+                new XElement(cimNamespace + CimChargeLinkConstants.StartDateTime, chargeLink.StartDateTime.ToString()),
+                GetEndDateTimeOnlyIfNotEndDefault(cimNamespace, chargeLink.EndDateTime),
                 GetChargeGroupElement(cimNamespace, chargeLink));
         }
 
@@ -148,7 +148,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.ChargeLinks.Cim
 
         private static XElement GetChargeGroupElement(
             XNamespace cimNamespace,
-            ChargeLinkTransmissionDto chargeLink)
+            AvailableChargeLinksData chargeLink)
         {
             return new XElement(
                 cimNamespace + CimChargeLinkConstants.ChargeGroup,
@@ -157,7 +157,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.ChargeLinks.Cim
 
         private static XElement GetChargeTypeElement(
             XNamespace cimNamespace,
-            ChargeLinkTransmissionDto chargeLink)
+            AvailableChargeLinksData chargeLink)
         {
             return new XElement(
                 cimNamespace + CimChargeLinkConstants.ChargeTypeElement,
@@ -166,7 +166,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.ChargeLinks.Cim
                     new XAttribute(
                         CimMarketDocumentConstants.CodingScheme,
                         CodingSchemeMapper.Map(CodingScheme.GS1)),
-                    chargeLink.Owner),
+                    chargeLink.ChargeOwner),
                 new XElement(cimNamespace + CimChargeLinkConstants.ChargeType, ChargeTypeMapper.Map(chargeLink.ChargeType)),
                 new XElement(cimNamespace + CimChargeLinkConstants.ChargeId, chargeLink.ChargeId),
                 new XElement(cimNamespace + CimChargeLinkConstants.Factor, chargeLink.Factor));

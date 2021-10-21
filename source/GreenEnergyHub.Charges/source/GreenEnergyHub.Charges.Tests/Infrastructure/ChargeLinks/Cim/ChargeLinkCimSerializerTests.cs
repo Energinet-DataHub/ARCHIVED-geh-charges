@@ -21,7 +21,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
 using GreenEnergyHub.Charges.Application;
-using GreenEnergyHub.Charges.Domain.ChargeLinks;
+using GreenEnergyHub.Charges.Domain.AvailableChargeLinksData;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.Infrastructure.ChargeLinks.Cim;
@@ -53,7 +53,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.ChargeLinks.Cim
             var expected =
                 GetExpectedValue("GreenEnergyHub.Charges.Tests.TestFiles.ExpectedOutputChargeLinkCimSerializer.xml");
 
-            var chargeLinks = GetChargeLinks();
+            var chargeLinks = GetChargeLinks(clock.Object);
 
             // Act
             await sut.SerializeToStreamAsync(chargeLinks, stream);
@@ -73,13 +73,13 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.ChargeLinks.Cim
         {
             SetupMocks(hubSenderConfiguration, clock);
 
-            var chargeLinks = GetChargeLinks();
+            var chargeLinks = GetChargeLinks(clock.Object);
 
             await using var stream = new MemoryStream();
 
             await sut.SerializeToStreamAsync(chargeLinks, stream);
 
-            await using var fileStream = File.Create("C:\\Temp\\Test" + Guid.NewGuid() + ".txt");
+            await using var fileStream = File.Create("C:\\Temp\\TestChargeLinkBundle" + Guid.NewGuid() + ".xml");
 
             await stream.CopyToAsync(fileStream);
         }
@@ -101,35 +101,37 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.ChargeLinks.Cim
                 .Returns(currentTime);
         }
 
-        private List<ChargeLinkTransmissionDto> GetChargeLinks()
+        private List<AvailableChargeLinksData> GetChargeLinks(IClock clock)
         {
-            var chargeLinks = new List<ChargeLinkTransmissionDto>();
+            var chargeLinks = new List<AvailableChargeLinksData>();
 
             for (var i = 1; i <= NoOfLinksInBundle; i++)
             {
-                chargeLinks.Add(GetChargeLink(i));
+                chargeLinks.Add(GetChargeLink(i, clock));
             }
 
             return chargeLinks;
         }
 
-        private ChargeLinkTransmissionDto GetChargeLink(int no)
+        private AvailableChargeLinksData GetChargeLink(int no, IClock clock)
         {
             var validTo = no % 2 == 0 ?
                 Instant.FromUtc(9999, 12, 31, 23, 59, 59) :
                 Instant.FromUtc(2021, 4, 30, 22, 0, 0);
 
-            return new ChargeLinkTransmissionDto(
+            return new AvailableChargeLinksData(
                 "TestRecipient1111",
                 MarketParticipantRole.GridAccessProvider,
                 BusinessReasonCode.UpdateMasterDataSettlement,
                 "Charge" + no,
+                "Owner" + no,
                 ChargeType.Tariff,
                 "MeteringPoint" + no,
-                "Owner" + no,
                 no,
                 Instant.FromUtc(2020, 12, 31, 23, 0, 0),
-                validTo);
+                validTo,
+                clock.GetCurrentInstant(),
+                Guid.NewGuid());
         }
 
         private static string GetStreamAsStringWithReplacedGuids(Stream stream)

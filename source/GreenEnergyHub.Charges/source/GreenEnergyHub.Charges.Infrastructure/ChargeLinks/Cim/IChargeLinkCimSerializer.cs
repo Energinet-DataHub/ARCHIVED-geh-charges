@@ -15,12 +15,12 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Domain.ChargeLinks;
+using GreenEnergyHub.Charges.Domain.AvailableChargeLinksData;
 
 namespace GreenEnergyHub.Charges.Infrastructure.ChargeLinks.Cim
 {
     public interface IChargeLinkCimSerializer
     {
-        Task SerializeToStreamAsync(IEnumerable<ChargeLinkTransmissionDto> chargeLinks, Stream stream);
+        Task SerializeToStreamAsync(IEnumerable<AvailableChargeLinksData> chargeLinks, Stream stream);
     }
 }
