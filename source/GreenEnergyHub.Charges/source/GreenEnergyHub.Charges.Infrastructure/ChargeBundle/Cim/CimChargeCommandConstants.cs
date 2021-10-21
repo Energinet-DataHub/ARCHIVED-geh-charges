@@ -36,5 +36,25 @@ namespace GreenEnergyHub.Charges.Infrastructure.ChargeBundle.Cim
         internal const string ChargeDescription = "description";
 
         internal const string Resolution = "priceTimeFrame_Period.resolution";
+
+        internal const string StartDateTime = "effectiveDate";
+
+        internal const string EndDateTime = "terminationDate";
+
+        internal const string VatClassification = "VATPayer";
+
+        internal const string TransparentInvoicing = "transparentInvoicing";
+
+        internal const string TaxIndicator = "taxIndicator";
+
+        internal const string SeriesPeriod = "Series_Period";
+
+        internal const string PeriodResolution = "resolution";
+
+        internal const string Point = "Point";
+
+        internal const string Position = "position";
+
+        internal const string Price = "price.amount";
     }
 }
