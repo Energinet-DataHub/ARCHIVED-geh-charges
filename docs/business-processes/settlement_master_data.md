@@ -20,4 +20,4 @@ is responsible for correctly linking to a metering point.
 Green Energy Hub passes on all links to the relevant energy suppliers, and links relating to tariffs
 marked as taxes to the relevant Grid Access Provider.
 
-For further details on how a Charge Link is processed within the system, please see the [charge link flow](../process-flows/README.md/#charge-link-flow).
+For further details on how a Charge Link is processed within the system, please see the [charge link flow](../process-flows/README.md/#.ChargeLinkFlow).
