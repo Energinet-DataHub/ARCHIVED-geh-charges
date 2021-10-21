@@ -1,7 +1,11 @@
 CREATE TABLE [MessageHub].AvailableChargeData (
 	Id uniqueidentifier not null primary key,
 
-    AvailableDataReferenceId uniqueidentifier not null
+    AvailableDataReferenceId uniqueidentifier not null,
+    TaxIndicator bit not null,
+    TransparentInvoicing bit not null,
+    VatClassification int not null,
+    RequestTime datetime2 not null,
 );
 GO
 
