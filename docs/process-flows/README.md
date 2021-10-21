@@ -5,7 +5,7 @@ All process flows within the Charges domain will be gathered here.
 | Process flows |
 |-------------------|
 |[Charge Price List Flow](#Charge-Price-List-Flow)|
-|[Create Charge Link Flow](#Create-Charge-Link-Flow)|
+|[Charge Link Flow](#Charge-Link-Flow)|
 <br>
 
 ## Charge Price List Flow
