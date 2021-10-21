@@ -15,7 +15,7 @@
 using System.ComponentModel;
 using GreenEnergyHub.Charges.Domain.Charges;
 
-namespace GreenEnergyHub.Charges.Infrastructure.ChargeLinks.Cim
+namespace GreenEnergyHub.Charges.Infrastructure.ChargeLinkBundle.Cim
 {
     public static class ChargeTypeMapper
     {

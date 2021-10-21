@@ -63,10 +63,6 @@ limitations under the License.
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Infrastructure\Messaging\Serialization\MarketDocument" />
-    </ItemGroup>
-
-    <ItemGroup>
       <Protobuf Include="**/*.proto">
         <GrpcServices>None</GrpcServices>
         <Access>Public</Access>

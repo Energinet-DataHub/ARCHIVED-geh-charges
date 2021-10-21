@@ -24,7 +24,7 @@ using GreenEnergyHub.Charges.Infrastructure.Messaging.Serialization;
 using GreenEnergyHub.Messaging.Transport;
 using NodaTime;
 
-namespace GreenEnergyHub.Charges.Infrastructure.ChargeLinks.Cim
+namespace GreenEnergyHub.Charges.Infrastructure.ChargeLinkBundle.Cim
 {
     public class ChargeLinkCommandConverter : DocumentConverter
     {

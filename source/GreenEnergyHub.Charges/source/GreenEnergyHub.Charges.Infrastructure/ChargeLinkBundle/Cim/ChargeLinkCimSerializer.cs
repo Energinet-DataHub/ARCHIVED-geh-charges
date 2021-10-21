@@ -26,7 +26,7 @@ using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.Infrastructure.MarketDocument.Cim;
 using NodaTime;
 
-namespace GreenEnergyHub.Charges.Infrastructure.ChargeLinks.Cim
+namespace GreenEnergyHub.Charges.Infrastructure.ChargeLinkBundle.Cim
 {
     public class ChargeLinkCimSerializer : IChargeLinkCimSerializer
     {

@@ -14,11 +14,11 @@
 
 using System.ComponentModel;
 using GreenEnergyHub.Charges.Domain.Charges;
-using GreenEnergyHub.Charges.Infrastructure.ChargeLinks.Cim;
+using GreenEnergyHub.Charges.Infrastructure.ChargeLinkBundle.Cim;
 using Xunit;
 using Xunit.Categories;
 
-namespace GreenEnergyHub.Charges.Tests.Infrastructure.ChargeLinks.Cim
+namespace GreenEnergyHub.Charges.Tests.Infrastructure.ChargeLinkBundle.Cim
 {
     [UnitTest]
     public class ChargeTypeMapperTests

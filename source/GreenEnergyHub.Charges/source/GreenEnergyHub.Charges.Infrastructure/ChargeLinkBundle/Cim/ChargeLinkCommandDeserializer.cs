@@ -20,7 +20,7 @@ using GreenEnergyHub.Charges.Domain.ChargeLinkCommands;
 using GreenEnergyHub.Charges.Infrastructure.Messaging.Serialization;
 using GreenEnergyHub.Messaging.Transport;
 
-namespace GreenEnergyHub.Charges.Infrastructure.ChargeLinks.Cim
+namespace GreenEnergyHub.Charges.Infrastructure.ChargeLinkBundle.Cim
 {
     public class ChargeLinkCommandDeserializer : MessageDeserializer<ChargeLinkCommand>
     {

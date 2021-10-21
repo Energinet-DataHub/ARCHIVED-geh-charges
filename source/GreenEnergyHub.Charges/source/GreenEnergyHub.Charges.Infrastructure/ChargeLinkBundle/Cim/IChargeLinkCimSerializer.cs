@@ -17,7 +17,7 @@ using System.IO;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Domain.AvailableChargeLinksData;
 
-namespace GreenEnergyHub.Charges.Infrastructure.ChargeLinks.Cim
+namespace GreenEnergyHub.Charges.Infrastructure.ChargeLinkBundle.Cim
 {
     public interface IChargeLinkCimSerializer
     {

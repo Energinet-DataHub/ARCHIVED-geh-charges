@@ -22,7 +22,7 @@ using AutoFixture.Xunit2;
 using GreenEnergyHub.Charges.Domain.ChargeLinkCommands;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
-using GreenEnergyHub.Charges.Infrastructure.ChargeLinks.Cim;
+using GreenEnergyHub.Charges.Infrastructure.ChargeLinkBundle.Cim;
 using GreenEnergyHub.Charges.Infrastructure.Correlation;
 using GreenEnergyHub.Charges.TestCore;
 using GreenEnergyHub.Charges.TestCore.Attributes;
@@ -31,7 +31,7 @@ using NodaTime.Text;
 using Xunit;
 using Xunit.Categories;
 
-namespace GreenEnergyHub.Charges.Tests.Infrastructure.ChargeLinks.Cim
+namespace GreenEnergyHub.Charges.Tests.Infrastructure.ChargeLinkBundle.Cim
 {
     [UnitTest]
     public class ChargeLinkCommandConverterTests
