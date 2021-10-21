@@ -13,6 +13,10 @@
 // limitations under the License.
 
 using System;
+using Azure.Messaging.ServiceBus;
+using Energinet.DataHub.Charges.Libraries.DefaultChargeLink;
+using Energinet.DataHub.Charges.Libraries.Factories;
+using Energinet.DataHub.Charges.Libraries.ServiceBus;
 using Energinet.DataHub.MessageHub.Client;
 using Energinet.DataHub.MessageHub.Client.DataAvailable;
 using Energinet.DataHub.MessageHub.Client.Dequeue;
@@ -26,6 +30,7 @@ using GreenEnergyHub.Charges.Domain.MeteringPoints;
 using GreenEnergyHub.Charges.Infrastructure.Context;
 using GreenEnergyHub.Charges.Infrastructure.Correlation;
 using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandReceived;
+using GreenEnergyHub.Charges.Infrastructure.MessageMetaData;
 using GreenEnergyHub.Charges.Infrastructure.Messaging.Registration;
 using GreenEnergyHub.Charges.Infrastructure.Repositories;
 using GreenEnergyHub.Messaging.Protobuf;
@@ -43,6 +48,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
             serviceCollection.AddScoped(typeof(IClock), _ => SystemClock.Instance);
             serviceCollection.AddLogging();
             serviceCollection.AddScoped<CorrelationIdMiddleware>();
+            serviceCollection.AddScoped<MessageMetaDataMiddleware>();
             serviceCollection.AddApplicationInsightsTelemetryWorkerService(
                 EnvironmentHelper.GetEnv("APPINSIGHTS_INSTRUMENTATIONKEY"));
 
@@ -54,12 +60,25 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
             var domainReplyQueue = EnvironmentHelper.GetEnv("MESSAGEHUB_BUNDLEREPLY_QUEUE");
             var storageServiceConnectionString = EnvironmentHelper.GetEnv("MESSAGEHUB_STORAGE_CONNECTION_STRING");
             var azureBlobStorageContainerName = EnvironmentHelper.GetEnv("MESSAGEHUB_STORAGE_CONTAINER");
+            serviceCollection.AddServiceBus(serviceBusConnectionString);
             AddPostOfficeCommunication(
                 serviceCollection,
-                serviceBusConnectionString,
                 new MessageHubConfig(dataAvailableQueue, domainReplyQueue),
                 storageServiceConnectionString,
                 new StorageConfig(azureBlobStorageContainerName));
+            AddDefaultChargeLinkClient(serviceCollection, serviceBusConnectionString);
+        }
+
+        private static void AddDefaultChargeLinkClient(
+            IServiceCollection serviceCollection,
+            string serviceBusConnectionString)
+        {
+            var replyToQueueName = EnvironmentHelper.GetEnv("CREATE_LINK_REPLY_QUEUE_NAME");
+            var serviceBusClient = new ServiceBusClient(serviceBusConnectionString);
+
+            serviceCollection.AddScoped<IServiceBusRequestSenderFactory>(_ => new ServiceBusRequestSenderFactory());
+            serviceCollection.AddScoped<IServiceBusRequestSender>(_ => new ServiceBusRequestSender(serviceBusClient, replyToQueueName));
+            serviceCollection.AddSingleton<IDefaultChargeLinkClient>(_ => new DefaultChargeLinkClient(serviceBusClient, new ServiceBusRequestSenderFactory(), replyToQueueName));
         }
 
         private static void ConfigureSharedDatabase(IServiceCollection serviceCollection)
@@ -94,16 +113,12 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
         /// </summary>
         private static void AddPostOfficeCommunication(
             IServiceCollection serviceCollection,
-            string serviceBusConnectionString,
             MessageHubConfig messageHubConfig,
             string storageServiceConnectionString,
             StorageConfig storageConfig)
         {
             if (serviceCollection == null)
                 throw new ArgumentNullException(nameof(serviceCollection));
-
-            if (string.IsNullOrWhiteSpace(serviceBusConnectionString))
-                throw new ArgumentNullException(nameof(serviceBusConnectionString));
 
             if (messageHubConfig == null)
                 throw new ArgumentNullException(nameof(messageHubConfig));
@@ -116,7 +131,6 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
 
             serviceCollection.AddSingleton(_ => messageHubConfig);
             serviceCollection.AddSingleton(_ => storageConfig);
-            serviceCollection.AddServiceBus(serviceBusConnectionString);
             serviceCollection.AddApplicationServices();
             serviceCollection.AddStorageHandler(storageServiceConnectionString);
         }
