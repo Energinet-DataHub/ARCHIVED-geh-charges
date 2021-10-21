@@ -4,12 +4,11 @@ All process flows within the Charges domain will be gathered here.
 
 | Process flows |
 |-------------------|
-|[Change charge price list](#Change-charge-price-list)|
-|[Persist charge](#Persist-charge)|
-|[Create charge link](#Create-charge-link)|
+|[Charge Price List Flow](#Charge-Price-List-Flow)|
+|[Create Charge Link Flow](#Create-Charge-Link-Flow)|
 <br>
 
-## Change Charge Price List
+## Charge Price List Flow
 
 The following process flow depicts the different paths a change of charge price list can take through the domain.
 It also shows the micro services involved along with the activities they perform.
@@ -26,7 +25,7 @@ The rule set assumes the incoming charge has been converted to an internal model
 
 ![Persist charge](images/PersistingChargesRuleSet_ProcessFlow.png)
 
-## Create Charge Link
+## Create Charge Link Flow
 
 The following image depicts the process flow of creating charge links in the domain.
 It also shows the micro services involved along with the activities they perform.
