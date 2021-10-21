@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System.Threading.Tasks;
+using GreenEnergyHub.Charges.Domain.AvailableChargeData;
 using GreenEnergyHub.Charges.Domain.AvailableChargeLinksData;
 using GreenEnergyHub.Charges.Domain.ChargeLinks;
 using GreenEnergyHub.Charges.Domain.MeteringPoints;
@@ -70,6 +71,11 @@ namespace GreenEnergyHub.Charges.Infrastructure.Context
         /// AvailableChargeLinksData available in the database.
         /// </summary>
         DbSet<AvailableChargeLinksData> AvailableChargeLinksData { get; }
+
+        /// <summary>
+        /// AvailableChargeData available in the database.
+        /// </summary>
+        DbSet<AvailableChargeData> AvailableChargeData { get; }
 
         /// <summary>
         /// Saves changes to the database.
