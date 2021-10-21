@@ -22,9 +22,8 @@ using AutoFixture.Xunit2;
 using GreenEnergyHub.Charges.Domain.ChargeLinkCommands;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
+using GreenEnergyHub.Charges.Infrastructure.ChargeLinkBundle.Cim;
 using GreenEnergyHub.Charges.Infrastructure.Correlation;
-using GreenEnergyHub.Charges.Infrastructure.Messaging;
-using GreenEnergyHub.Charges.Infrastructure.Messaging.Serialization.Commands;
 using GreenEnergyHub.Charges.TestCore;
 using GreenEnergyHub.Charges.TestCore.Attributes;
 using Moq;
@@ -32,7 +31,7 @@ using NodaTime.Text;
 using Xunit;
 using Xunit.Categories;
 
-namespace GreenEnergyHub.Charges.Tests.Infrastructure.Messaging.Serialization.Commands
+namespace GreenEnergyHub.Charges.Tests.Infrastructure.ChargeLinkBundle.Cim
 {
     [UnitTest]
     public class ChargeLinkCommandConverterTests

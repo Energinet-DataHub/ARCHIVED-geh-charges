@@ -14,18 +14,24 @@
 
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 
-namespace GreenEnergyHub.Charges.Infrastructure.Messaging.Serialization.MarketDocument
+namespace GreenEnergyHub.Charges.Infrastructure.Configuration
 {
-    public static class BusinessReasonCodeMapper
+    public class HubSenderConfiguration : IHubSenderConfiguration
     {
-        public static BusinessReasonCode Map(string value)
+        private readonly MarketParticipant _marketParticipant;
+
+        public HubSenderConfiguration(string senderId, MarketParticipantRole senderRole)
         {
-            return value switch
+            _marketParticipant = new MarketParticipant
             {
-                "D17" => BusinessReasonCode.UpdateMasterDataSettlement,
-                "D18" => BusinessReasonCode.UpdateChargeInformation,
-                _ => BusinessReasonCode.Unknown,
+                Id = senderId,
+                BusinessProcessRole = senderRole,
             };
+        }
+
+        public MarketParticipant GetSenderMarketParticipant()
+        {
+            return _marketParticipant;
         }
     }
 }

@@ -20,16 +20,26 @@ namespace GreenEnergyHub.Charges.Core.DateTime
 {
     public static class InstantExtensions
     {
+        public static Instant GetEndDefault()
+        {
+            return Instant.FromUtc(9999, 12, 31, 23, 59, 59);
+        }
+
         public static Instant TimeOrEndDefault(this Instant? instant)
         {
             // This value is decided for the ProtoBuf contracts.
             // It should thus not be replaced by e.g. Instant.MaxValue.
-            return instant ?? Instant.FromUtc(9999, 12, 31, 23, 59, 59);
+            return instant ?? GetEndDefault();
         }
 
         public static Timestamp ToTimestamp([NotNull] this Instant instant)
         {
             return Timestamp.FromDateTimeOffset(instant.ToDateTimeOffset());
+        }
+
+        public static bool IsEndDefault(this Instant instant)
+        {
+            return instant == GetEndDefault();
         }
     }
 }

@@ -19,11 +19,12 @@ using System.Xml;
 using GreenEnergyHub.Charges.Domain.ChargeLinkCommands;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.Infrastructure.Correlation;
-using GreenEnergyHub.Charges.Infrastructure.Messaging.Serialization.MarketDocument;
+using GreenEnergyHub.Charges.Infrastructure.MarketDocument.Cim;
+using GreenEnergyHub.Charges.Infrastructure.Messaging.Serialization;
 using GreenEnergyHub.Messaging.Transport;
 using NodaTime;
 
-namespace GreenEnergyHub.Charges.Infrastructure.Messaging.Serialization.Commands
+namespace GreenEnergyHub.Charges.Infrastructure.ChargeLinkBundle.Cim
 {
     public class ChargeLinkCommandConverter : DocumentConverter
     {

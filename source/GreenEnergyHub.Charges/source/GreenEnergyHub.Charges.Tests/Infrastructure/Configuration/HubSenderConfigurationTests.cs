@@ -13,24 +13,31 @@
 // limitations under the License.
 
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
-using GreenEnergyHub.Charges.Infrastructure.Messaging.Serialization.MarketDocument;
+using GreenEnergyHub.Charges.Infrastructure.Configuration;
+using GreenEnergyHub.TestHelpers;
 using Xunit;
 using Xunit.Categories;
 
-namespace GreenEnergyHub.Charges.Tests.Infrastructure.Messaging.Serialization.MarketDocument
+namespace GreenEnergyHub.Charges.Tests.Infrastructure.Configuration
 {
     [UnitTest]
-    public class IndustryClassificationMapperTests
+    public class HubSenderConfigurationTests
     {
         [Theory]
-        [InlineData("23", IndustryClassification.Electricity)]
-        [InlineData("", IndustryClassification.Unknown)]
-        [InlineData("DoesNotExist", IndustryClassification.Unknown)]
-        [InlineData(null, IndustryClassification.Unknown)]
-        public void Map_WhenGivenInput_MapsToCorrectEnum(string unit, IndustryClassification expected)
+        [InlineAutoDomainData]
+        public void GetDefaultSender_WhenCalled_ReturnsCorrectValues(
+            string senderId,
+            MarketParticipantRole senderRole)
         {
-            var actual = IndustryClassificationMapper.Map(unit);
-            Assert.Equal(actual, expected);
+            // Arrange
+            var sut = new HubSenderConfiguration(senderId, senderRole);
+
+            // Act
+            var actual = sut.GetSenderMarketParticipant();
+
+            // Assert
+            Assert.Equal(senderId, actual.Id);
+            Assert.Equal(senderRole, actual.BusinessProcessRole);
         }
     }
 }
