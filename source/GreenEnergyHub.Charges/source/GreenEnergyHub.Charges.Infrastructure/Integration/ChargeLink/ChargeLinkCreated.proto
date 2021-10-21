@@ -23,12 +23,12 @@ import "google/protobuf/timestamp.proto";
 option csharp_namespace = "GreenEnergyHub.Charges.Infrastructure.Integration.ChargeLinkCreated";
 
 message ChargeLinkCreatedContract {
-  string charge_link_id = 1;
-  string metering_point_id = 2;
-  string charge_id = 3;
-  ChargeTypeContract charge_type = 4;
-  string charge_owner = 5;
-  ChargeLinkPeriodContract charge_link_period = 6;
+  string charge_link_id = 1; // An identifier for the charge link event. Provided by the Market Participant. Uniqueness cannot be guaranteed
+  string metering_point_id = 2; // A unique metering point identifier. For the Danish version of Green Energy Hub, this is the 18-digits metering point id.
+  string charge_id = 3; // A charge identifier. Combined with Charge Owner and Charge Type it becomes unique
+  ChargeTypeContract charge_type = 4; // The type of charge; tariff, fee or subscription
+  string charge_owner = 5; // A charge owner identification, e.g. the Market Participant's GLN or EIC number
+  ChargeLinkPeriodContract charge_link_period = 6; // Contains the charge link's validity period and factor (quantity)
 }
 
 message ChargeLinkPeriodContract {

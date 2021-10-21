@@ -53,7 +53,18 @@ module "azfun_functionhost" {
     CREATE_LINK_REPLY_QUEUE_NAME                         = local.CREATE_LINK_REPLY_QUEUE_NAME
     CONSUMPTION_METERING_POINT_CREATED_TOPIC_NAME        = local.CONSUMPTION_METERING_POINT_CREATED_TOPIC_NAME
     CONSUMPTION_METERING_POINT_CREATED_SUBSCRIPTION_NAME = local.CONSUMPTION_METERING_POINT_CREATED_SUBSCRIPTION_NAME  
+    
+    # Message Hub
     POST_OFFICE_TOPIC_NAME                               = module.sbt_post_office.name
+    MESSAGEHUB_STORAGE_CONNECTION_STRING                 = data.azurerm_key_vault_secret.messagehub_storage_connection_string.value
+    MESSAGEHUB_STORAGE_CONTAINER                         = data.azurerm_key_vault_secret.messagehub_storage_container.value
+    MESSAGEHUB_DATAAVAILABLE_QUEUE                       = local.MESSAGEHUB_DATAAVAILABLE_QUEUE
+    MESSAGEHUB_BUNDLEREQUEST_QUEUE                       = local.MESSAGEHUB_BUNDLEREQUEST_QUEUE
+    MESSAGEHUB_BUNDLEREPLY_QUEUE                         = local.MESSAGEHUB_BUNDLEREPLY_QUEUE
+	
+	# Hub identification
+    HUB_SENDER_ID                                        = "5790001330552"
+    HUB_SENDER_ROLE_INT_ENUM_VALUE                       = "7"
   }
   dependencies                                          = [
     module.appi.dependent_on,

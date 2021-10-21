@@ -23,14 +23,14 @@ import "google/protobuf/timestamp.proto";
 option csharp_namespace = "GreenEnergyHub.Charges.Infrastructure.Integration.ChargeCreated";
 
 message ChargeCreated {
-  string charge_id = 1;// A charge identifier. Combined with Charge Owner and Charge Type it becomes unique
+  string charge_id = 1; // A charge identifier provided by the Market Participant. Combined with Charge Owner and Charge Type it becomes unique
   enum ChargeType {
     CT_UNKNOWN = 0;
     CT_SUBSCRIPTION = 1;
     CT_FEE = 2;
     CT_TARIFF = 3;
   }
-  ChargeType charge_type = 2;// The type of charge; tariff, fee or subscription
+  ChargeType charge_type = 2; // The type of charge; tariff, fee or subscription
   string charge_owner = 3; // A charge owner identification, e.g. the Market Participant's GLN or EIC number
   string currency = 4; // ISO 4217 currency code
   enum Resolution
@@ -41,12 +41,12 @@ message ChargeCreated {
     R_P1D = 3;
     R_P1M = 4;
   }
-  Resolution resolution = 5;
-  bool tax_indicator = 6; // Indicates whether the Charge is tax or not.
-  ChargePeriod charge_period = 7;
+  Resolution resolution = 5;  // The resolution of a charge price list, e.g. 15 min, hourly, daily, monthly
+  bool tax_indicator = 6; // Indicates whether a tariff is considered a tax or not
+  ChargePeriod charge_period = 7; // Contains the charge's validity period
 }
 
 message ChargePeriod {
-  google.protobuf.Timestamp StartDateTime = 1;
-  google.protobuf.Timestamp EndDateTime = 2;
+  google.protobuf.Timestamp StartDateTime = 1; // In UTC. The charge period's valid from date and time
+  google.protobuf.Timestamp EndDateTime = 2; // In UTC. The charge period's valid to date and time. The default value will be the equivalent to 9999-12-31T23:59:59Z without milliseconds
 }
