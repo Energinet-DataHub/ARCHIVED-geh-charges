@@ -29,8 +29,12 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
             serviceCollection.AddScoped<IChargeLinkBundleSender, ChargeLinkBundleSender>();
             serviceCollection.AddScoped<IChargeLinkBundleCreator, ChargeLinkBundleCreator>();
             serviceCollection.AddScoped<IChargeLinkBundleReplier, ChargeLinkBundleReplier>();
-            serviceCollection.AddScoped<IHubSenderConfiguration>(
-                _ => new HubSenderConfiguration("5790001330552", MarketParticipantRole.MeteringPointAdministrator));
+            serviceCollection.AddScoped<IHubSenderConfiguration>(_ =>
+            {
+                var senderId = EnvironmentHelper.GetEnv("HUB_SENDER_ID");
+                var roleIntText = EnvironmentHelper.GetEnv("HUB_SENDER_ROLE_INT_ENUM_VALUE");
+                return new HubSenderConfiguration(senderId, (MarketParticipantRole)int.Parse(roleIntText));
+            });
             serviceCollection.AddScoped<IChargeLinkCimSerializer, ChargeLinkCimSerializer>();
         }
     }
