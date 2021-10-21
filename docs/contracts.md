@@ -10,7 +10,6 @@
     - [ChargeDiscontinued](#.ChargeDiscontinued)
     - [ChargeDiscontinuationCancelled](#.ChargeDiscontinuationCancelled)
     - [ChargePricesUpdated](#.ChargePricesUpdated)
-        - [ChargePrice](#.ChargePrice)
 - [Charge link events](#.ChargeLinkEvents)
     - [ChargeLinkCreated](#.ChargeLinkCreated)
     - [ChargeLinkUpdated](#.ChargeLinkUpdated)
