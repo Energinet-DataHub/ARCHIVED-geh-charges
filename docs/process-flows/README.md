@@ -4,8 +4,9 @@ All process flows within the Charges domain will be gathered here.
 
 | Process flows |
 |-------------------|
-|[Charge Price List Flow](#Charge-Price-List-Flow)|
-|[Charge Link Flow](#Charge-Link-Flow)|
+|<b>[Charge Price List Flow](#Charge-Price-List-Flow)</b>|
+|   - [Persist Charge and Charge Prices](#Persist-Charge-And-Charge-Prices)|
+|<b>[Charge Link Flow](#Charge-Link-Flow)<b>|
 <br>
 
 ## Charge Price List Flow
