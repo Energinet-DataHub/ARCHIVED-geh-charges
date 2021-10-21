@@ -14,7 +14,7 @@
 
 using GreenEnergyHub.Charges.Domain.Charges;
 
-namespace GreenEnergyHub.Charges.Infrastructure.Charges.Cim
+namespace GreenEnergyHub.Charges.Infrastructure.ChargeBundle.Cim
 {
     public static class ResolutionMapper
     {

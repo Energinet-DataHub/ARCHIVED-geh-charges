@@ -13,11 +13,11 @@
 // limitations under the License.
 
 using GreenEnergyHub.Charges.Domain.Charges;
-using GreenEnergyHub.Charges.Infrastructure.Charges.Cim;
+using GreenEnergyHub.Charges.Infrastructure.ChargeBundle.Cim;
 using Xunit;
 using Xunit.Categories;
 
-namespace GreenEnergyHub.Charges.Tests.Infrastructure.Charges.Cim
+namespace GreenEnergyHub.Charges.Tests.Infrastructure.ChargeBundle.Cim
 {
     [UnitTest]
     public class ResolutionMapperTests

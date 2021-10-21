@@ -18,14 +18,14 @@ using System.Xml;
 using GreenEnergyHub.Charges.Domain.ChargeCommands;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
+using GreenEnergyHub.Charges.Infrastructure.ChargeLinkBundle.Cim;
 using GreenEnergyHub.Charges.Infrastructure.Correlation;
+using GreenEnergyHub.Charges.Infrastructure.MarketDocument.Cim;
 using GreenEnergyHub.Charges.Infrastructure.Messaging.Serialization;
-using GreenEnergyHub.Charges.Infrastructure.Messaging.Serialization.Commands;
-using GreenEnergyHub.Charges.Infrastructure.Messaging.Serialization.MarketDocument;
 using GreenEnergyHub.Messaging.Transport;
 using NodaTime;
 
-namespace GreenEnergyHub.Charges.Infrastructure.Charges.Cim
+namespace GreenEnergyHub.Charges.Infrastructure.ChargeBundle.Cim
 {
     public class ChargeCommandConverter : DocumentConverter
     {
