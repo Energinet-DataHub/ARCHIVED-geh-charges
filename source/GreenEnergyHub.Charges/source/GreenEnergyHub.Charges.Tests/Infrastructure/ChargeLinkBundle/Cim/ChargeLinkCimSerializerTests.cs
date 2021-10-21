@@ -20,7 +20,6 @@ using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
-using GreenEnergyHub.Charges.Application;
 using GreenEnergyHub.Charges.Domain.AvailableChargeLinksData;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
@@ -60,7 +59,8 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.ChargeLinkBundle.Cim
             await sut.SerializeToStreamAsync(chargeLinks, stream);
 
             // Assert
-            var actual = GetStreamAsStringWithReplacedGuids(stream);
+            var text = GetStreamAsStringWithReplacedGuids(stream);
+            var actual = RemoveCarriageReturn(text);
 
             Assert.Equal(expected, actual);
         }
@@ -144,8 +144,10 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.ChargeLinkBundle.Cim
         private static string GetExpectedValue(string path)
         {
             var assembly = Assembly.GetExecutingAssembly();
-            using var stream = EmbeddedStreamHelper.GetInputStream(assembly, path);
-            return GetStreamAsStringWithReplacedGuids(stream);
+            using var xmlStream = EmbeddedStreamHelper.GetInputStream(assembly, path);
+            var text = GetStreamAsStringWithReplacedGuids(xmlStream);
+            text = RemoveLicense(text);
+            return RemoveCarriageReturn(text);
         }
 
         private static string GetStreamAsString(Stream stream)
@@ -156,12 +158,25 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.ChargeLinkBundle.Cim
 
         private static string ReplaceGuids(string input)
         {
-            // The following regex will watch guids regardless of case
+            // The following regex will match guids regardless of case
             var result = Regex.Replace(
                 input,
                 @"[0-9A-Fa-f]{8}-([0-9A-Fa-f]{4}-){3}[0-9A-Fa-f]{12}",
                 Guid.Empty.ToString());
             return result;
+        }
+
+        private static string RemoveLicense(string input)
+        {
+            var assembly = Assembly.GetExecutingAssembly();
+            using var stream = EmbeddedStreamHelper.GetInputStream(assembly, "GreenEnergyHub.Charges.Tests.TestFiles.License.txt");
+            var license = GetStreamAsString(stream);
+            return input.Replace(license, string.Empty);
+        }
+
+        private static string RemoveCarriageReturn(string input)
+        {
+            return input.Replace("\r", string.Empty);
         }
     }
 }
