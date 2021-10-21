@@ -5,8 +5,8 @@
 - [IntegrationEventContract.proto](#IntegrationEventContract.proto)
 - [Charges and charge prices events](#.ChargesAndChargePricesEvents)
     - [ChargeCreated](#.ChargeCreated)
-        - [ChargePeriod](#.ChargePeriod)
     - [ChargePeriodUpdated](#.ChargePeriodUpdated)
+            - [ChargePeriod](#.ChargePeriod)
     - [ChargeDiscontinued](#.ChargeDiscontinued)
     - [ChargeDiscontinuationCancelled](#.ChargeDiscontinuationCancelled)
     - [ChargePricesUpdated](#.ChargePricesUpdated)
@@ -38,32 +38,9 @@ Note: Correlation Id is expected to be available on integration events as part o
 
 <a name=".ChargeCreated"></a>
 
-### ChargeCreated
+### [ChargeCreated](.././source/GreenEnergyHub.Charges/source/GreenEnergyHub.Charges.Infrastructure/Integration/Charge/ChargeCreated.proto)
 
 Represents the creation of a new charge.
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| ChargeId | string | required | A charge identifier provided by the Market Participant. Combined with Charge Owner and Charge Type it becomes unique  |
-| ChargeType | enum | required | The type of charge; tariff, fee or subscription |
-| ChargeOwner | string | required | A charge owner identification, e.g. the Market Participant's GLN or EIC number |
-| Currency | string | required | The charge price currency |
-| Resolution | enum | required | The resolution of a charge price list, e.g. 15 min, hourly, daily, monthly |
-| TaxIndicator | bool | required | Indicates whether a tariff is considered a tax or not |
-| ChargePeriod | [ChargePeriod](#.ChargePeriod) | required | Contains the charge's validity period  |
-
-<a name=".ChargePeriod"></a>
-
-#### ChargePeriod
-
-Represents a charge period.
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| StartDateTime | Timestamp | required | In UTC. The charge period's valid from date and time |
-| EndDateTime | Timestamp | optional with default value | In UTC. The charge period's valid to date and time. The default value will be the equivalent to 9999-12-31T23:59:59Z without milliseconds |
-
-The Timestamp type is documented [here](https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#timestamp).
 
 <a name=".ChargePeriodUpdated"></a>
 
@@ -77,6 +54,19 @@ Represents the update of a charge period.
 | ChargeType | enum | required | The type of charge; tariff, fee or subscription |
 | ChargeOwner | string | required | A charge owner identification, e.g. the Market Participant's GLN or EIC number |
 | ChargePeriod | [ChargePeriod](#.ChargePeriod) | required | Contains the charge's changed validity period |
+
+<a name=".ChargePeriod"></a>
+
+#### ChargePeriod
+
+Represents a charge period.
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| StartDateTime | Timestamp | required | In UTC. The charge period's valid from date and time |
+| EndDateTime | Timestamp | optional with default value | In UTC. The charge period's valid to date and time. The default value will be the equivalent to 9999-12-31T23:59:59Z without milliseconds |
+
+The Timestamp type is documented [here](https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#timestamp).
 
 <a name=".ChargeDiscontinued"></a>
 
