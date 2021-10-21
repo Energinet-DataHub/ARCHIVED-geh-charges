@@ -26,7 +26,9 @@ using GreenEnergyHub.Charges.Infrastructure.ChargeBundle.Cim;
 using GreenEnergyHub.Charges.Infrastructure.Correlation;
 using GreenEnergyHub.Charges.TestCore;
 using GreenEnergyHub.Charges.TestCore.Attributes;
+using GreenEnergyHub.Iso8601;
 using Moq;
+using NodaTime;
 using NodaTime.Text;
 using Xunit;
 using Xunit.Categories;
@@ -40,11 +42,20 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.ChargeBundle.Cim
         [InlineAutoMoqData]
         public async Task ConvertAsync_WhenCalledWithValidCimMessage_ReturnsParsedObject(
             [NotNull][Frozen] Mock<ICorrelationContext> context,
+            [NotNull][Frozen] Mock<IIso8601Durations> iso8601Durations,
             [NotNull] ChargeCommandConverter sut)
         {
             // Arrange
             var correlationId = Guid.NewGuid().ToString();
             context.Setup(c => c.Id).Returns(correlationId);
+
+            var expectedTime = InstantPattern.ExtendedIso.Parse("2020-12-17T23:00:00Z").Value;
+            iso8601Durations.Setup(
+                    i => i.AddDuration(
+                        It.IsAny<Instant>(),
+                        It.IsAny<string>(),
+                        It.IsAny<int>()))
+                .Returns(expectedTime);
 
             var stream = GetEmbeddedResource("GreenEnergyHub.Charges.Tests.TestFiles.Valid_CIM_Charge.xml");
             using var reader = XmlReader.Create(stream, new XmlReaderSettings { Async = true });
@@ -73,15 +84,35 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.ChargeBundle.Cim
             Assert.Equal("Elafgift 2019", result.ChargeOperation.ChargeName);
             Assert.Equal("Dette er elafgiftssatsten for 2019", result.ChargeOperation.ChargeDescription);
             Assert.Equal(Resolution.PT1H, result.ChargeOperation.Resolution);
-            /*// ChargeLink
-            Assert.Equal("rId_Valid_001", result.ChargeLink.OperationId);
-            Assert.Equal("578032999778756222", result.ChargeLink.MeteringPointId);
-            Assert.Equal(InstantPattern.ExtendedIso.Parse("2021-09-27T22:00:00Z").Value, result.ChargeLink.StartDateTime);
-            Assert.Equal(InstantPattern.ExtendedIso.Parse("2021-11-05T23:00:00Z").Value, result.ChargeLink.EndDateTime);
-            Assert.Equal("ChargeId01", result.ChargeLink.SenderProvidedChargeId);
-            Assert.Equal(1, result.ChargeLink.Factor);
-            Assert.Equal("8100000000016", result.ChargeLink.ChargeOwner);
-            Assert.Equal(ChargeType.Tariff, result.ChargeLink.ChargeType);*/
+            Assert.Equal(expectedTime, result.ChargeOperation.StartDateTime);
+            Assert.Equal(InstantPattern.ExtendedIso.Parse("2031-12-17T23:00:00Z").Value, result.ChargeOperation.EndDateTime);
+            Assert.Equal(VatClassification.Vat25, result.ChargeOperation.VatClassification);
+            Assert.True(result.ChargeOperation.TransparentInvoicing);
+            Assert.True(result.ChargeOperation.TaxIndicator);
+
+            // Points
+            Assert.Equal(2, result.ChargeOperation.Points.Count);
+            Assert.Equal(1, result.ChargeOperation.Points[0].Position);
+            Assert.Equal(expectedTime, result.ChargeOperation.Points[0].Time);
+            Assert.Equal(100m, result.ChargeOperation.Points[0].Price);
+            Assert.Equal(2, result.ChargeOperation.Points[1].Position);
+            Assert.Equal(expectedTime, result.ChargeOperation.Points[1].Time);
+            Assert.Equal(200m, result.ChargeOperation.Points[1].Price);
+
+            // Verify Iso8601Durations was used correctly
+            iso8601Durations.Verify(
+                i => i.AddDuration(
+                    expectedTime,
+                    "PT1H",
+                    0),
+                Times.Once);
+
+            iso8601Durations.Verify(
+                i => i.AddDuration(
+                    expectedTime,
+                    "PT1H",
+                    1),
+                Times.Once);
         }
 
 /*        [Theory]
