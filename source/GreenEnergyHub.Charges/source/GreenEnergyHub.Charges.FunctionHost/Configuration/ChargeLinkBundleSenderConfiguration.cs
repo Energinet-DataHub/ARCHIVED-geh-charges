@@ -14,7 +14,10 @@
 
 using GreenEnergyHub.Charges.Application.ChargeLinks.MessageHub;
 using GreenEnergyHub.Charges.Application.ChargeLinks.MessageHub.Infrastructure;
+using GreenEnergyHub.Charges.Domain.MarketParticipants;
+using GreenEnergyHub.Charges.Infrastructure.ChargeLinkBundle.Cim;
 using GreenEnergyHub.Charges.Infrastructure.ChargeLinkBundle.MessageHub;
+using GreenEnergyHub.Charges.Infrastructure.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace GreenEnergyHub.Charges.FunctionHost.Configuration
@@ -26,6 +29,9 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
             serviceCollection.AddScoped<IChargeLinkBundleSender, ChargeLinkBundleSender>();
             serviceCollection.AddScoped<IChargeLinkBundleCreator, ChargeLinkBundleCreator>();
             serviceCollection.AddScoped<IChargeLinkBundleReplier, ChargeLinkBundleReplier>();
+            serviceCollection.AddScoped<IHubSenderConfiguration>(
+                _ => new HubSenderConfiguration("5790001330552", MarketParticipantRole.MeteringPointAdministrator));
+            serviceCollection.AddScoped<IChargeLinkCimSerializer, ChargeLinkCimSerializer>();
         }
     }
 }
