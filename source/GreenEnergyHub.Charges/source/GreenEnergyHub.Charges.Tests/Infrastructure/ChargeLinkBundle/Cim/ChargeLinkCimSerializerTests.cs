@@ -25,6 +25,7 @@ using GreenEnergyHub.Charges.Domain.AvailableChargeLinksData;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.Infrastructure.ChargeLinkBundle.Cim;
+using GreenEnergyHub.Charges.Infrastructure.Configuration;
 using GreenEnergyHub.Charges.TestCore;
 using GreenEnergyHub.TestHelpers;
 using Moq;

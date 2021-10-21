@@ -12,13 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using GreenEnergyHub.Charges.Application;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
+using GreenEnergyHub.Charges.Infrastructure.Configuration;
 using GreenEnergyHub.TestHelpers;
 using Xunit;
 using Xunit.Categories;
 
-namespace GreenEnergyHub.Charges.Tests.Application.Configuration
+namespace GreenEnergyHub.Charges.Tests.Infrastructure.Configuration
 {
     [UnitTest]
     public class HubSenderConfigurationTests

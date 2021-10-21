@@ -23,6 +23,7 @@ using GreenEnergyHub.Charges.Application;
 using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.Domain.AvailableChargeLinksData;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
+using GreenEnergyHub.Charges.Infrastructure.Configuration;
 using GreenEnergyHub.Charges.Infrastructure.MarketDocument.Cim;
 using NodaTime;
 

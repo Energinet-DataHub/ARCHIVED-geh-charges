@@ -34,8 +34,8 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.ChargeLinkBundle.MessageHu
         [Theory]
         [InlineAutoDomainData]
         public async Task CreateAsync_WhenCalled_UsesRepositoryAndSerializer(
-            [NotNull] [Frozen] Mock<IAvailableChargeLinksDataRepository> respository,
-            [NotNull] [Frozen] Mock<IChargeLinkCimSerializer> serializer,
+            [Frozen] Mock<IAvailableChargeLinksDataRepository> respository,
+            [Frozen] Mock<IChargeLinkCimSerializer> serializer,
             DataBundleRequestDto dataBundleRequestDto,
             List<AvailableChargeLinksData> availableChargeLinksData,
             Stream stream,

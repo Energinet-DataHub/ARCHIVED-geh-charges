@@ -14,24 +14,18 @@
 
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 
-namespace GreenEnergyHub.Charges.Application
+namespace GreenEnergyHub.Charges.Infrastructure.Configuration
 {
-    public class HubSenderConfiguration : IHubSenderConfiguration
+    /// <summary>
+    /// Interface used to determine which ID and code should be used when sending
+    /// message from the hub out onto the world
+    /// </summary>
+    public interface IHubSenderConfiguration
     {
-        private readonly MarketParticipant _marketParticipant;
-
-        public HubSenderConfiguration(string senderId, MarketParticipantRole senderRole)
-        {
-            _marketParticipant = new MarketParticipant
-            {
-                Id = senderId,
-                BusinessProcessRole = senderRole,
-            };
-        }
-
-        public MarketParticipant GetSenderMarketParticipant()
-        {
-            return _marketParticipant;
-        }
+        /// <summary>
+        /// Retrieves the market participant used to send messages from the hub
+        /// </summary>
+        /// <returns>The market participant to use</returns>
+        MarketParticipant GetSenderMarketParticipant();
     }
 }
