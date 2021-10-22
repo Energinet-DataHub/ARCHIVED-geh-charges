@@ -58,7 +58,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.ChargeBundle.Cim
 
         internal const string EndDateTime = "terminationDate";
 
-        internal const string VatIdentification = "VATPayer";
+        internal const string VatClassification = "VATPayer";
 
         internal const string TransparentInvoicing = "transparentInvoicing";
 
