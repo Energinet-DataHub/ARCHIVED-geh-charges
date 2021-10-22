@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Infrastructure.ChargeBundle.Cim;
 using Xunit;
@@ -19,22 +20,19 @@ using Xunit.Categories;
 
 namespace GreenEnergyHub.Charges.Tests.Infrastructure.ChargeBundle.Cim
 {
+    [UnitTest]
     public class VatClassificationMapperTests
     {
-        [UnitTest]
-        public class ResolutionMapperTests
+        [Theory]
+        [InlineData("D01", VatClassification.NoVat)]
+        [InlineData("D02", VatClassification.Vat25)]
+        [InlineData("", VatClassification.Unknown)]
+        [InlineData("DoesNotExist", VatClassification.Unknown)]
+        [InlineData(null, VatClassification.Unknown)]
+        public void Map_WhenGivenInput_MapsToCorrectEnum(string vatClassification, VatClassification expected)
         {
-            [Theory]
-            [InlineData("D01", VatClassification.NoVat)]
-            [InlineData("D02", VatClassification.Vat25)]
-            [InlineData("", VatClassification.Unknown)]
-            [InlineData("DoesNotExist", VatClassification.Unknown)]
-            [InlineData(null, VatClassification.Unknown)]
-            public void Map_WhenGivenInput_MapsToCorrectEnum(string vatClassification, VatClassification expected)
-            {
-                var actual = VatClassificationMapper.Map(vatClassification);
-                Assert.Equal(expected, actual);
-            }
+            var actual = VatClassificationMapper.Map(vatClassification);
+            actual.Should().Be(expected);
         }
     }
 }

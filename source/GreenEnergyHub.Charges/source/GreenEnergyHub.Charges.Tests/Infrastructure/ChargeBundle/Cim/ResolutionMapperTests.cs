@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System.ComponentModel;
+using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Infrastructure.ChargeBundle.Cim;
 using Xunit;
@@ -34,7 +35,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.ChargeBundle.Cim
         public void Map_WhenGivenInput_MapsToCorrectEnum(string resolution, Resolution expected)
         {
             var actual = ResolutionMapper.Map(resolution);
-            Assert.Equal(expected, actual);
+            actual.Should().Be(expected);
         }
 
         [Theory]
@@ -45,7 +46,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.ChargeBundle.Cim
         public void Map_WhenGivenKnownInput_MapsToCorrectString(Resolution resolution, string expected)
         {
             var actual = ResolutionMapper.Map(resolution);
-            Assert.Equal(expected, actual);
+            actual.Should().Be(expected);
         }
 
         [Theory]
