@@ -61,6 +61,10 @@ module "azfun_functionhost" {
     MESSAGEHUB_DATAAVAILABLE_QUEUE                       = local.MESSAGEHUB_DATAAVAILABLE_QUEUE
     MESSAGEHUB_BUNDLEREQUEST_QUEUE                       = local.MESSAGEHUB_BUNDLEREQUEST_QUEUE
     MESSAGEHUB_BUNDLEREPLY_QUEUE                         = local.MESSAGEHUB_BUNDLEREPLY_QUEUE
+	
+	# Hub identification
+    HUB_SENDER_ID                                        = "5790001330552"
+    HUB_SENDER_ROLE_INT_ENUM_VALUE                       = "7"
   }
   dependencies                                          = [
     module.appi.dependent_on,

@@ -39,6 +39,9 @@
     "POST_OFFICE_TOPIC_NAME": "sbt-post-office",
     "MESSAGEHUB_DATAAVAILABLE_QUEUE": "sbq-dataavailable",
     "MESSAGEHUB_BUNDLEREQUEST_QUEUE": "sbq-charges",
-    "MESSAGEHUB_BUNDLEREPLY_QUEUE": "sbq-charges-reply"
+    "MESSAGEHUB_BUNDLEREPLY_QUEUE": "sbq-charges-reply",
+  
+    "HUB_SENDER_ID": "5790001330552",
+    "HUB_SENDER_ROLE_INT_ENUM_VALUE": "7",
   }
 }
