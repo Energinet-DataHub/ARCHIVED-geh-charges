@@ -23,5 +23,6 @@ namespace GreenEnergyHub.Charges.Domain.MarketParticipants
         RequestChangeBillingMasterData = 1,
         RequestUpdateChargeInformation = 2,
         NotifyBillingMasterData = 3,
+        NotifyPriceList = 4,
     }
 }
