@@ -22,13 +22,16 @@ limitations under the License.
     <RunAnalyzersDuringBuild>true</RunAnalyzersDuringBuild>
     <LangVersion>9</LangVersion>
     <IsPackable>false</IsPackable>
-    <RootNamespace>Energinet.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests</RootNamespace>
+    <OutputType>Library</OutputType>
+    <RootNamespace>Energinet.DataHub.Charges.Clients.IntegrationTests</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Azure.Messaging.ServiceBus" Version="7.4.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.11.0" />
     <PackageReference Include="Moq" Version="4.16.1" />
+    <PackageReference Include="Squadron.AzureCloud" Version="0.13.0" />
+    <PackageReference Include="Squadron.AzureCloudServiceBus" Version="0.13.0" />
     <PackageReference Include="xunit" Version="2.4.1" />
     <PackageReference Include="xunit.categories" Version="2.0.5" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.4.3">
@@ -49,6 +52,15 @@ limitations under the License.
     <ProjectReference Include="..\..\..\GreenEnergyHub.Charges\source\GreenEnergyHub.Charges.TestCore\GreenEnergyHub.Charges.TestCore.csproj" />
     <ProjectReference Include="..\..\..\Shared\GreenEnergyHub\source\GreenEnergyHub.TestHelpers\GreenEnergyHub.TestHelpers.csproj" />
     <ProjectReference Include="..\Energinet.DataHub.Charges.Clients\Energinet.DataHub.Charges.Clients.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="functionapphost.settings.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="integrationtest.local.settings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>
