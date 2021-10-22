@@ -22,7 +22,7 @@ using Energinet.DataHub.Core.FunctionApp.TestCommon.FunctionAppHost;
 using Squadron;
 using Squadron.AzureCloud;
 
-namespace Energinet.DataHub.Charges.Clients.CreateDefaultChargeMessagesLink.Tests.Fixtures
+namespace Energinet.DataHub.Charges.Clients.IntegrationTests.Fixtures
 {
     public class ChargesClientsServiceBusOptions : AzureCloudServiceBusOptions
     {

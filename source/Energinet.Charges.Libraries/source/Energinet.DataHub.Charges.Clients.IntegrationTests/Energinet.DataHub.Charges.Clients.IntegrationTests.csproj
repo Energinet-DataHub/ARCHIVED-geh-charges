@@ -23,7 +23,7 @@ limitations under the License.
     <LangVersion>9</LangVersion>
     <IsPackable>false</IsPackable>
     <OutputType>Library</OutputType>
-    <RootNamespace>Energinet.DataHub.Charges.Clients.CreateDefaultChargeMessagesLink.Tests</RootNamespace>
+    <RootNamespace>Energinet.DataHub.Charges.Clients.IntegrationTests</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>

@@ -26,7 +26,7 @@ using Microsoft.Extensions.Configuration;
 using Squadron;
 using Xunit.Abstractions;
 
-namespace Energinet.DataHub.Charges.Clients.CreateDefaultChargeMessagesLink.Tests.Fixtures
+namespace Energinet.DataHub.Charges.Clients.IntegrationTests.Fixtures
 {
     public class ChargesClientsFixture : FunctionAppFixture
     {

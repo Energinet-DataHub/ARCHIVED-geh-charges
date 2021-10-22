@@ -16,7 +16,7 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using Azure.Messaging.ServiceBus;
-using Energinet.DataHub.Charges.Clients.CreateDefaultChargeMessagesLink.Tests.Fixtures;
+using Energinet.DataHub.Charges.Clients.IntegrationTests.Fixtures;
 using Energinet.DataHub.Charges.Libraries.Common;
 using Energinet.DataHub.Charges.Libraries.DefaultChargeLink;
 using Energinet.DataHub.Charges.Libraries.Factories;
@@ -28,7 +28,7 @@ using GreenEnergyHub.TestHelpers;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace Energinet.DataHub.Charges.Clients.CreateDefaultChargeMessagesLink.Tests.DefaultChargeLink
+namespace Energinet.DataHub.Charges.Clients.IntegrationTests.DefaultChargeLink
 {
     public static class DefaultChargeLinkTests
     {

@@ -14,7 +14,7 @@
 
 using Xunit;
 
-namespace Energinet.DataHub.Charges.Clients.CreateDefaultChargeMessagesLink.Tests.Fixtures
+namespace Energinet.DataHub.Charges.Clients.IntegrationTests.Fixtures
 {
     /// <summary>
     /// A xUnit collection fixture for ensuring tests don't run in parallel.
