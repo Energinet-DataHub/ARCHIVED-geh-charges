@@ -62,6 +62,8 @@ limitations under the License.
       <EmbeddedResource Include="TestFiles\ExpectedOutputChargeLinkCimSerializer.xml" />
       <EmbeddedResource Include="TestFiles\License.txt" />
       <EmbeddedResource Include="TestFiles\Valid_CIM_Charge.xml" />
+      <EmbeddedResource Include="TestFiles\Valid_CIM_Charge_Prices_Without_Master_Data.xml" />
+      <EmbeddedResource Include="TestFiles\Valid_CIM_Charge_Without_Prices.xml" />
     </ItemGroup>
 
     <ItemGroup>

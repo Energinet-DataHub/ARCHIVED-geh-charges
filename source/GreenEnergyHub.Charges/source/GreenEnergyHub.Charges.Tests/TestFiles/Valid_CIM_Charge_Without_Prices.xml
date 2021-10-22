@@ -29,31 +29,15 @@ limitations under the License.
 		<cim:ChargeGroup>
 			<cim:ChargeType>
 				<cim:chargeTypeOwner_MarketParticipant.mRID codingScheme="NRO">5799999925698</cim:chargeTypeOwner_MarketParticipant.mRID>
-				<cim:type>D03</cim:type>
-				<cim:mRID>253C</cim:mRID>
-				<cim:name>Elafgift 2019</cim:name>
-				<cim:description>Dette er elafgiftssatsten for 2019</cim:description>
-				<cim:priceTimeFrame_Period.resolution>PT1H</cim:priceTimeFrame_Period.resolution> <!--  -->								
+				<cim:type>D02</cim:type>
+				<cim:mRID>888</cim:mRID>
+				<cim:name>Test 888</cim:name>
+				<cim:description>Description 888</cim:description>
+				<cim:priceTimeFrame_Period.resolution>PT15M</cim:priceTimeFrame_Period.resolution>							
 				<cim:effectiveDate>2020-12-17T23:00:00Z</cim:effectiveDate>
-				<cim:terminationDate>2031-12-17T23:00:00Z</cim:terminationDate>
-				<cim:VATPayer>D02</cim:VATPayer>
-				<cim:transparentInvoicing>true</cim:transparentInvoicing>
-				<cim:taxIndicator>true</cim:taxIndicator>
-				<cim:Series_Period>
-					<cim:resolution>PT1H</cim:resolution>
-					<cim:timeInterval>
-						<cim:start>2021-01-01T23:00Z</cim:start> 
-						<cim:end>2021-02-01T22:00Z</cim:end>
-					</cim:timeInterval>
-					<cim:Point>
-						<cim:position>1</cim:position>
-						<cim:price.amount>100</cim:price.amount>
-					</cim:Point>
-                    <cim:Point>
-                        <cim:position>2</cim:position>
-                        <cim:price.amount>200</cim:price.amount>
-                    </cim:Point>                    
-				</cim:Series_Period>
+				<cim:VATPayer>D01</cim:VATPayer>
+				<cim:transparentInvoicing>false</cim:transparentInvoicing>
+				<cim:taxIndicator>false</cim:taxIndicator>
 			</cim:ChargeType>
 		</cim:ChargeGroup>
 	</cim:MktActivityRecord>
