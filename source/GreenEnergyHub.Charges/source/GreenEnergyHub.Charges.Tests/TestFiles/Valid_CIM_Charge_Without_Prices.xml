@@ -25,16 +25,16 @@ limitations under the License.
 	<cim:receiver_MarketParticipant.marketRole.type>DDZ</cim:receiver_MarketParticipant.marketRole.type>
 	<cim:createdDateTime>2021-12-17T09:30:47Z</cim:createdDateTime>
 	<cim:MktActivityRecord>
-		<cim:mRID>36251478</cim:mRID>
+		<cim:mRID>36251479</cim:mRID>
 		<cim:ChargeGroup>
 			<cim:ChargeType>
-				<cim:chargeTypeOwner_MarketParticipant.mRID codingScheme="NRO">5799999925698</cim:chargeTypeOwner_MarketParticipant.mRID>
+				<cim:chargeTypeOwner_MarketParticipant.mRID codingScheme="NRO">5799999925699</cim:chargeTypeOwner_MarketParticipant.mRID>
 				<cim:type>D02</cim:type>
 				<cim:mRID>888</cim:mRID>
 				<cim:name>Test 888</cim:name>
 				<cim:description>Description 888</cim:description>
 				<cim:priceTimeFrame_Period.resolution>PT15M</cim:priceTimeFrame_Period.resolution>							
-				<cim:effectiveDate>2020-12-17T23:00:00Z</cim:effectiveDate>
+				<cim:effectiveDate>2021-04-17T22:00:00Z</cim:effectiveDate>
 				<cim:VATPayer>D01</cim:VATPayer>
 				<cim:transparentInvoicing>false</cim:transparentInvoicing>
 				<cim:taxIndicator>false</cim:taxIndicator>
