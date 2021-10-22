@@ -96,7 +96,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.ChargeBundle.Cim
                     Id = "5790001330552", BusinessProcessRole = MarketParticipantRole.MeteringPointAdministrator,
                 });
 
-            var currentTime = Instant.FromUtc(2021, 10, 12, 13, 37, 43).PlusNanoseconds(4);
+            var currentTime = Instant.FromUtc(2021, 10, 22, 15, 30, 41).PlusNanoseconds(4);
             clock.Setup(
                     c => c.GetCurrentInstant())
                 .Returns(currentTime);
