@@ -50,7 +50,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.ChargeBundle.Cim
         {
             // Arrange
             var correlationId = Guid.NewGuid().ToString();
-            var expectedTime = InstantPattern.ExtendedIso.Parse("2020-12-17T23:00:00Z").Value;
+            var expectedTime = InstantPattern.ExtendedIso.Parse("2021-01-01T23:00:00Z").Value;
             using var reader = GetReaderAndArrangeTest(
                 context,
                 iso8601Durations,
@@ -82,7 +82,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.ChargeBundle.Cim
             actual.ChargeOperation.ChargeName.Should().Be("Elafgift 2019");
             actual.ChargeOperation.ChargeDescription.Should().Be("Dette er elafgiftssatsten for 2019");
             actual.ChargeOperation.Resolution.Should().Be(Resolution.PT1H);
-            actual.ChargeOperation.StartDateTime.Should().Be(expectedTime);
+            actual.ChargeOperation.StartDateTime.Should().Be(InstantPattern.ExtendedIso.Parse("2020-12-17T23:00:00Z").Value);
             actual.ChargeOperation.EndDateTime.Should()
                 .Be(InstantPattern.ExtendedIso.Parse("2031-12-17T23:00:00Z").Value);
             actual.ChargeOperation.VatClassification.Should().Be(VatClassification.Vat25);

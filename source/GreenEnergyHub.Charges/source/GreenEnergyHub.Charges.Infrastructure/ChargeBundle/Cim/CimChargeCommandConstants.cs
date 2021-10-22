@@ -51,6 +51,10 @@ namespace GreenEnergyHub.Charges.Infrastructure.ChargeBundle.Cim
 
         internal const string PeriodResolution = "resolution";
 
+        internal const string TimeInterval = "timeInterval";
+
+        internal const string TimeIntervalStart = "start";
+
         internal const string Point = "Point";
 
         internal const string Position = "position";

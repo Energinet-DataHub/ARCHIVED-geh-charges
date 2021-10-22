@@ -168,6 +168,9 @@ namespace GreenEnergyHub.Charges.Infrastructure.ChargeBundle.Cim
 
         private async Task ParseSeriesPeriodIntoOperationAsync(XmlReader reader, ChargeOperation operation)
         {
+            // We use the effective start date time unless the period is later specified
+            var startDateTime = operation.StartDateTime;
+
             while (await reader.ReadAsync().ConfigureAwait(false))
             {
                 if (reader.Is(CimChargeCommandConstants.PeriodResolution, CimChargeCommandConstants.Namespace))
@@ -180,9 +183,13 @@ namespace GreenEnergyHub.Charges.Infrastructure.ChargeBundle.Cim
                         operation.Resolution = ResolutionMapper.Map(content);
                     }
                 }
+                else if (reader.Is(CimChargeCommandConstants.TimeInterval, CimChargeCommandConstants.Namespace))
+                {
+                    startDateTime = await ParseTimeIntervalAsync(reader, startDateTime).ConfigureAwait(false);
+                }
                 else if (reader.Is(CimChargeCommandConstants.Point, CimChargeCommandConstants.Namespace))
                 {
-                    var point = await ParsePointAsync(reader, operation).ConfigureAwait(false);
+                    var point = await ParsePointAsync(reader, operation, startDateTime).ConfigureAwait(false);
                     operation.Points.Add(point);
                 }
                 else if (reader.Is(
@@ -195,7 +202,27 @@ namespace GreenEnergyHub.Charges.Infrastructure.ChargeBundle.Cim
             }
         }
 
-        private async Task<Point> ParsePointAsync(XmlReader reader, ChargeOperation operation)
+        private async Task<Instant> ParseTimeIntervalAsync(XmlReader reader, Instant startDateTime)
+        {
+            while (await reader.ReadAsync().ConfigureAwait(false))
+            {
+                if (reader.Is(CimChargeCommandConstants.TimeIntervalStart, CimChargeCommandConstants.Namespace))
+                {
+                    return Instant.FromDateTimeUtc(reader.ReadElementContentAsDateTime());
+                }
+                else if (reader.Is(
+                    CimChargeCommandConstants.SeriesPeriod,
+                    CimChargeCommandConstants.Namespace,
+                    XmlNodeType.EndElement))
+                {
+                    break;
+                }
+            }
+
+            return startDateTime;
+        }
+
+        private async Task<Point> ParsePointAsync(XmlReader reader, ChargeOperation operation, Instant startDateTime)
         {
             var point = new Point();
 
@@ -217,7 +244,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.ChargeBundle.Cim
                     XmlNodeType.EndElement))
                 {
                     point.Time = _iso8601Durations.AddDuration(
-                        operation.StartDateTime,
+                        startDateTime,
                         ResolutionMapper.Map(operation.Resolution),
                         point.Position - 1);
                     break;
