@@ -25,6 +25,6 @@ namespace Energinet.DataHub.Charges.Libraries.DefaultChargeLink
 
     public abstract class DefaultChargeLinkReplyReaderBase
     {
-        public abstract Task ReadAsync([NotNull] byte[] data, [NotNull] RequestStatus requestStatus);
+        public abstract Task ReadAsync([NotNull] byte[] data, [NotNull] MessageType messageType);
     }
 }

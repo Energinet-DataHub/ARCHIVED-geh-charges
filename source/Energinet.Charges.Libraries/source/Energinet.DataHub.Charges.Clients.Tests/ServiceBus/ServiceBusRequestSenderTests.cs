@@ -17,6 +17,7 @@ using System.Threading.Tasks;
 using AutoFixture.Xunit2;
 using Azure.Messaging.ServiceBus;
 using Energinet.Charges.Contracts;
+using Energinet.DataHub.Charges.Libraries.Enums;
 using Energinet.DataHub.Charges.Libraries.ServiceBus;
 using Google.Protobuf;
 using GreenEnergyHub.TestHelpers;
@@ -51,7 +52,11 @@ namespace Energinet.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.Servic
             var defaultChargeLinks = new CreateDefaultChargeLinks { MeteringPointId = meteringPointId };
 
             // Act
-            await sut.SendRequestAsync(defaultChargeLinks.ToByteArray(), requestQueueName, correlationId).ConfigureAwait(false);
+            await sut.SendRequestAsync(
+                defaultChargeLinks.ToByteArray(),
+                requestQueueName,
+                correlationId,
+                MessageType.CreateDefaultLinksMessagesRequest).ConfigureAwait(false);
 
             // Act // Assert
             serviceBusSenderMock.Verify(x => x.SendMessageAsync(It.IsAny<ServiceBusMessage>(), default), Times.Once);

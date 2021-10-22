@@ -44,15 +44,15 @@ namespace Energinet.DataHub.Charges.Libraries.DefaultChargeLink
         /// Read and map data to be handled by provided delegates.
         /// </summary>
         /// <param name="data">Data reply to deserialize</param>
-        /// <param name="requestStatus">
+        /// <param name="messageType">
         /// Contains information on whether data contains a reply to a succeeded
         /// or failed <see cref="CreateDefaultChargeLinks" /> request
         /// </param>
-        public override async Task ReadAsync([NotNull] byte[] data, [NotNull] RequestStatus requestStatus)
+        public override async Task ReadAsync([NotNull] byte[] data, [NotNull] MessageType messageType)
         {
-            switch (requestStatus)
+            switch (messageType)
             {
-                case RequestStatus.Succeeded:
+                case MessageType.CreateDefaultLinksSucceeded:
                     var succeededParser = CreateDefaultChargeLinksSucceeded.Parser;
                     var createDefaultChargeLinksSucceeded = succeededParser.ParseFrom(data);
                     var succeededDto = CreateDefaultChargeLinksSucceededInboundMapper
@@ -61,7 +61,7 @@ namespace Energinet.DataHub.Charges.Libraries.DefaultChargeLink
                     await _handleSuccess(succeededDto).ConfigureAwait(false);
                     break;
 
-                case RequestStatus.Failed:
+                case MessageType.CreateDefaultLinksFailed:
                     var failedParser = CreateDefaultChargeLinksFailed.Parser;
                     var createDefaultChargeLinksFailed = failedParser.ParseFrom(data);
                     var failedDto = CreateDefaultChargeLinksFailedInboundMapper
@@ -71,7 +71,7 @@ namespace Energinet.DataHub.Charges.Libraries.DefaultChargeLink
                     break;
 
                 default:
-                    throw new ArgumentOutOfRangeException(nameof(requestStatus), requestStatus, null);
+                    throw new ArgumentOutOfRangeException(nameof(messageType), messageType, null);
             }
         }
     }

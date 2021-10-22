@@ -17,6 +17,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using Azure.Messaging.ServiceBus;
+using Energinet.DataHub.Charges.Libraries.Enums;
 
 namespace Energinet.DataHub.Charges.Libraries.ServiceBus
 {
@@ -31,16 +32,24 @@ namespace Energinet.DataHub.Charges.Libraries.ServiceBus
             _replyToQueueName = replyToQueueName;
         }
 
-        public async Task SendRequestAsync([NotNull] byte[] data, [NotNull] string requestQueueName, [NotNull] string correlationId)
+        public async Task SendRequestAsync(
+            [NotNull] byte[] data,
+            [NotNull] string requestQueueName,
+            [NotNull] string correlationId,
+            [NotNull] MessageType messageType)
         {
             await using var sender = _serviceBusClient.CreateSender(requestQueueName);
 
-            await sender.SendMessageAsync(new ServiceBusMessage
+            var serviceBusMessage = new ServiceBusMessage
             {
                 Body = new BinaryData(data),
-                ApplicationProperties = { new KeyValuePair<string, object>("ReplyTo", _replyToQueueName) },
                 CorrelationId = correlationId,
-            }).ConfigureAwait(false);
+            };
+            serviceBusMessage.ApplicationProperties.Add("ReplyTo", _replyToQueueName);
+            serviceBusMessage.ApplicationProperties.Add("MessageType", messageType);
+
+            await sender.SendMessageAsync(
+                serviceBusMessage).ConfigureAwait(false);
         }
     }
 }

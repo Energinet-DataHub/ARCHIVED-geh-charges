@@ -14,9 +14,13 @@
 
 namespace Energinet.DataHub.Charges.Libraries.Enums
 {
-    public enum RequestStatus
+    public enum MessageType
     {
-        Succeeded = 1,
-        Failed = 2,
+        CreateDefaultLinksSucceeded = 1,
+        CreateDefaultLinksFailed = 2,
+        CreateDefaultLinksRequest = 3,
+        CreateDefaultLinksMessagesSucceeded = 4,
+        CreateDefaultLinksMessagesFailed = 5,
+        CreateDefaultLinksMessagesRequest = 6,
     }
 }

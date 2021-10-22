@@ -17,6 +17,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using Azure.Messaging.ServiceBus;
 using Energinet.Charges.Contracts;
+using Energinet.DataHub.Charges.Libraries.Enums;
 using Energinet.DataHub.Charges.Libraries.Factories;
 using Energinet.DataHub.Charges.Libraries.Models;
 using Energinet.DataHub.Charges.Libraries.ServiceBus;
@@ -55,7 +56,10 @@ namespace Energinet.DataHub.Charges.Libraries.DefaultChargeLinkMessages
             };
 
             await _serviceBusRequestSender.SendRequestAsync(
-                    createDefaultChargeLinkMessages.ToByteArray(), CreateLinkMessagesRequestQueueName, correlationId)
+                    createDefaultChargeLinkMessages.ToByteArray(),
+                    CreateLinkMessagesRequestQueueName,
+                    correlationId,
+                    MessageType.CreateDefaultLinksMessagesRequest)
                 .ConfigureAwait(false);
         }
 

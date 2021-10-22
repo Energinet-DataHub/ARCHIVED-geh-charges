@@ -17,6 +17,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using Azure.Messaging.ServiceBus;
 using Energinet.Charges.Contracts;
+using Energinet.DataHub.Charges.Libraries.Enums;
 using Energinet.DataHub.Charges.Libraries.Factories;
 using Energinet.DataHub.Charges.Libraries.Models;
 using Energinet.DataHub.Charges.Libraries.ServiceBus;
@@ -57,7 +58,10 @@ namespace Energinet.DataHub.Charges.Libraries.DefaultChargeLink
             };
 
             await _serviceBusRequestSender.SendRequestAsync(
-                createDefaultChargeLinks.ToByteArray(), _createLinkRequestQueueName, correlationId)
+                createDefaultChargeLinks.ToByteArray(),
+                _createLinkRequestQueueName,
+                correlationId,
+                MessageType.CreateDefaultLinksRequest)
                 .ConfigureAwait(false);
         }
 
@@ -82,7 +86,10 @@ namespace Energinet.DataHub.Charges.Libraries.DefaultChargeLink
             };
 
             await _serviceBusRequestSender.SendRequestAsync(
-                    createDefaultChargeLinks.ToByteArray(), replyQueueName, correlationId)
+                    createDefaultChargeLinks.ToByteArray(),
+                    replyQueueName,
+                    correlationId,
+                    MessageType.CreateDefaultLinksSucceeded)
                 .ConfigureAwait(false);
         }
 
@@ -107,7 +114,10 @@ namespace Energinet.DataHub.Charges.Libraries.DefaultChargeLink
             };
 
             await _serviceBusRequestSender.SendRequestAsync(
-                    createDefaultChargeLinks.ToByteArray(), replyQueueName, correlationId)
+                    createDefaultChargeLinks.ToByteArray(),
+                    replyQueueName,
+                    correlationId,
+                    MessageType.CreateDefaultLinksFailed)
                 .ConfigureAwait(false);
         }
 

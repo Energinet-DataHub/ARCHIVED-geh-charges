@@ -44,15 +44,15 @@ namespace Energinet.DataHub.Charges.Libraries.DefaultChargeLinkMessages
         /// Read and map data to be handled by provided delegates.
         /// </summary>
         /// <param name="data">Data reply to deserialize.</param>
-        /// <param name="requestStatus">
+        /// <param name="messageType">
         /// Contains information on whether data contains a reply to a succeeded
         /// or failed <see cref="CreateDefaultChargeLinkMessages" /> request.
         /// </param>
-        public override async Task ReadAsync(byte[] data, RequestStatus requestStatus)
+        public override async Task ReadAsync(byte[] data, MessageType messageType)
         {
-            switch (requestStatus)
+            switch (messageType)
             {
-                case RequestStatus.Succeeded:
+                case MessageType.CreateDefaultLinksSucceeded:
                     var succeededParser = CreateDefaultChargeLinkMessagesSucceeded.Parser;
                     var createDefaultChargeLinkMessagesSucceeded = succeededParser.ParseFrom(data);
                     var succeededDto = CreateDefaultChargeLinkMessagesSucceededInboundMapper
@@ -61,7 +61,7 @@ namespace Energinet.DataHub.Charges.Libraries.DefaultChargeLinkMessages
                     await _handleSuccess(succeededDto).ConfigureAwait(false);
                     break;
 
-                case RequestStatus.Failed:
+                case MessageType.CreateDefaultLinksFailed:
                     var failedParser = CreateDefaultChargeLinkMessagesFailed.Parser;
                     var createDefaultChargeLinkMessagesFailed = failedParser.ParseFrom(data);
                     var failedDto = CreateDefaultChargeLinkMessagesFailedInboundMapper
@@ -71,7 +71,7 @@ namespace Energinet.DataHub.Charges.Libraries.DefaultChargeLinkMessages
                     break;
 
                 default:
-                    throw new ArgumentOutOfRangeException(nameof(requestStatus), requestStatus, null);
+                    throw new ArgumentOutOfRangeException(nameof(messageType), messageType, null);
             }
         }
     }

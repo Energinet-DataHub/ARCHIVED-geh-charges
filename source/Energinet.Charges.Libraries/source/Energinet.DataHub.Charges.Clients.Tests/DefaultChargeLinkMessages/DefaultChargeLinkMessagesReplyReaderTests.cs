@@ -34,10 +34,10 @@ namespace Energinet.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.Defaul
         private string? _unknownMeteringPointIdTestResult;
 
         [Theory]
-        [InlineAutoMoqData(RequestStatus.Succeeded, "knownMeteringPointId1234")]
-        [InlineAutoMoqData(RequestStatus.Succeeded, "knownMeteringPointId5678")]
+        [InlineAutoMoqData(MessageType.CreateDefaultLinksSucceeded, "knownMeteringPointId1234")]
+        [InlineAutoMoqData(MessageType.CreateDefaultLinksSucceeded, "knownMeteringPointId5678")]
         public async Task DefaultChargeLinkMessagesCreationSucceeded(
-            RequestStatus requestStatus, string meteringPointId)
+            MessageType messageType, string meteringPointId)
         {
             // Arrange
             var createDefaultChargeLinkMessagesSucceeded = new CreateDefaultChargeLinkMessagesSucceeded
@@ -50,7 +50,7 @@ namespace Energinet.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.Defaul
             var target = new DefaultChargeLinkMessagesReplyReader(HandleSuccess, HandleFailure);
 
             // Act
-            await target.ReadAsync(data, requestStatus).ConfigureAwait(false);
+            await target.ReadAsync(data, messageType).ConfigureAwait(false);
 
             // Assert
             target.Should().NotBeNull();
@@ -58,9 +58,9 @@ namespace Energinet.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.Defaul
         }
 
         [Theory]
-        [InlineAutoMoqData(RequestStatus.Failed, "unknownMeteringPointId9876")]
+        [InlineAutoMoqData(MessageType.CreateDefaultLinksFailed, "unknownMeteringPointId9876")]
         public async Task DefaultChargeLinkMessagesCreationFailed(
-            RequestStatus requestStatus, string meteringPointId)
+            MessageType messageType, string meteringPointId)
         {
             // Arrange
             var createDefaultChargeLinkMessagesFailed = new CreateDefaultChargeLinkMessagesFailed
@@ -74,7 +74,7 @@ namespace Energinet.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.Defaul
             var target = new DefaultChargeLinkMessagesReplyReader(HandleSuccess, HandleFailure);
 
             // Act
-            await target.ReadAsync(data, requestStatus).ConfigureAwait(false);
+            await target.ReadAsync(data, messageType).ConfigureAwait(false);
 
             // Assert
             target.Should().NotBeNull();

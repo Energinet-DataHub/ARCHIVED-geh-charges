@@ -35,10 +35,10 @@ namespace Energinet.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.Defaul
         private bool _didCreateChargeLinksTestResult;
 
         [Theory]
-        [InlineAutoMoqData(RequestStatus.Succeeded, "knownMeteringPointId1234", true)]
-        [InlineAutoMoqData(RequestStatus.Succeeded, "knownMeteringPointId5678", false)]
+        [InlineAutoMoqData(MessageType.CreateDefaultLinksSucceeded, "knownMeteringPointId1234", true)]
+        [InlineAutoMoqData(MessageType.CreateDefaultLinksSucceeded, "knownMeteringPointId5678", false)]
         public async Task DefaultChargeLinksCreationSucceeded(
-            RequestStatus requestStatus,
+            MessageType messageType,
             string meteringPointId,
             bool didCreateChargeLinks)
         {
@@ -54,7 +54,7 @@ namespace Energinet.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.Defaul
             var target = new DefaultChargeLinkReplyReader(HandleSuccess, HandleFailure);
 
             // Act
-            await target.ReadAsync(data, requestStatus).ConfigureAwait(false);
+            await target.ReadAsync(data, messageType).ConfigureAwait(false);
 
             // Assert
             target.Should().NotBeNull();
@@ -63,8 +63,8 @@ namespace Energinet.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.Defaul
         }
 
         [Theory]
-        [InlineAutoMoqData(RequestStatus.Failed, "unknownMeteringPointId9876")]
-        public async Task DefaultChargeLinksCreationFailed(RequestStatus requestStatus, string meteringPointId)
+        [InlineAutoMoqData(MessageType.CreateDefaultLinksFailed, "unknownMeteringPointId9876")]
+        public async Task DefaultChargeLinksCreationFailed(MessageType messageType, string meteringPointId)
         {
             // Arrange
             var createDefaultChargeLinksFailed = new CreateDefaultChargeLinksFailed
@@ -78,7 +78,7 @@ namespace Energinet.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.Defaul
             var target = new DefaultChargeLinkReplyReader(HandleSuccess, HandleFailure);
 
             // Act
-            await target.ReadAsync(data, requestStatus).ConfigureAwait(false);
+            await target.ReadAsync(data, messageType).ConfigureAwait(false);
 
             // Assert
             target.Should().NotBeNull();

@@ -93,7 +93,8 @@ namespace Energinet.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.Defaul
                 x => x.SendRequestAsync(
                     It.IsAny<byte[]>(),
                     It.IsAny<string>(),
-                    It.IsAny<string>()),
+                    It.IsAny<string>(),
+                    It.IsAny<MessageType>()),
                 Times.Once);
         }
 
@@ -161,7 +162,8 @@ namespace Energinet.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.Defaul
                 x => x.SendRequestAsync(
                     It.IsAny<byte[]>(),
                     It.IsAny<string>(),
-                    It.IsAny<string>()),
+                    It.IsAny<string>(),
+                    It.IsAny<MessageType>()),
                 Times.Once);
         }
 
@@ -229,7 +231,8 @@ namespace Energinet.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.Defaul
                 x => x.SendRequestAsync(
                     It.IsAny<byte[]>(),
                     It.IsAny<string>(),
-                    It.IsAny<string>()),
+                    It.IsAny<string>(),
+                    It.IsAny<MessageType>()),
                 Times.Once);
         }
     }

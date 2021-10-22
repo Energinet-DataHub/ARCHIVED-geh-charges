@@ -18,6 +18,7 @@ using System.Threading.Tasks;
 using AutoFixture.Xunit2;
 using Azure.Messaging.ServiceBus;
 using Energinet.DataHub.Charges.Libraries.DefaultChargeLinkMessages;
+using Energinet.DataHub.Charges.Libraries.Enums;
 using Energinet.DataHub.Charges.Libraries.Factories;
 using Energinet.DataHub.Charges.Libraries.Models;
 using Energinet.DataHub.Charges.Libraries.ServiceBus;
@@ -85,7 +86,12 @@ namespace Energinet.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.Defaul
 
             // Assert
             serviceBusRequestSenderMock.Verify(
-                x => x.SendRequestAsync(It.IsAny<byte[]>(), It.IsAny<string>(), It.IsAny<string>()), Times.Once);
+                x => x.SendRequestAsync(
+                    It.IsAny<byte[]>(),
+                    It.IsAny<string>(),
+                    It.IsAny<string>(),
+                    It.IsAny<MessageType>()),
+                Times.Once);
         }
     }
 }
