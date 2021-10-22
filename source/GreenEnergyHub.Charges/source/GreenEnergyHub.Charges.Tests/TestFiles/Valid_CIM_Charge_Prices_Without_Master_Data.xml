@@ -28,7 +28,7 @@ limitations under the License.
 		<cim:mRID>36251480</cim:mRID>
 		<cim:ChargeGroup>
 			<cim:ChargeType>
-				<cim:chargeTypeOwner_MarketParticipant.mRID codingScheme="NRO">5799999925600</cim:chargeTypeOwner_MarketParticipant.mRID>
+				<cim:chargeTypeOwner_MarketParticipant.mRID codingScheme="A10">5799999925600</cim:chargeTypeOwner_MarketParticipant.mRID>
 				<cim:type>D01</cim:type>
 				<cim:mRID>444</cim:mRID>
 				<cim:effectiveDate>2020-12-31T23:00:00Z</cim:effectiveDate>

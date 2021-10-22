@@ -28,7 +28,7 @@ limitations under the License.
 		<cim:mRID>36251479</cim:mRID>
 		<cim:ChargeGroup>
 			<cim:ChargeType>
-				<cim:chargeTypeOwner_MarketParticipant.mRID codingScheme="NRO">5799999925699</cim:chargeTypeOwner_MarketParticipant.mRID>
+				<cim:chargeTypeOwner_MarketParticipant.mRID codingScheme="A10">5799999925699</cim:chargeTypeOwner_MarketParticipant.mRID>
 				<cim:type>D02</cim:type>
 				<cim:mRID>888</cim:mRID>
 				<cim:name>Test 888</cim:name>
