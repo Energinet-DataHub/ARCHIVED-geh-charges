@@ -63,8 +63,8 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
             var azureBlobStorageContainerName = EnvironmentHelper.GetEnv("MESSAGEHUB_STORAGE_CONTAINER");
             AddPostOfficeCommunication(
                 serviceCollection,
-                new MessageHubConfig(dataAvailableQueue, domainReplyQueue),
                 serviceBusConnectionString,
+                new MessageHubConfig(dataAvailableQueue, domainReplyQueue),
                 storageServiceConnectionString,
                 new StorageConfig(azureBlobStorageContainerName));
             AddDefaultChargeLinkClient(serviceCollection, serviceBusConnectionString);
@@ -119,13 +119,16 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
         /// </summary>
         private static void AddPostOfficeCommunication(
             IServiceCollection serviceCollection,
-            MessageHubConfig messageHubConfig,
             string serviceBusConnectionString,
+            MessageHubConfig messageHubConfig,
             string storageServiceConnectionString,
             StorageConfig storageConfig)
         {
             if (serviceCollection == null)
                 throw new ArgumentNullException(nameof(serviceCollection));
+
+            if (string.IsNullOrWhiteSpace(serviceBusConnectionString))
+                throw new ArgumentNullException(nameof(serviceBusConnectionString));
 
             if (messageHubConfig == null)
                 throw new ArgumentNullException(nameof(messageHubConfig));
