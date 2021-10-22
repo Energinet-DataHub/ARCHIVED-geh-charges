@@ -34,8 +34,8 @@ namespace Energinet.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.Defaul
         private string? _unknownMeteringPointIdTestResult;
 
         [Theory]
-        [InlineAutoMoqData(MessageType.CreateDefaultLinksSucceeded, "knownMeteringPointId1234")]
-        [InlineAutoMoqData(MessageType.CreateDefaultLinksSucceeded, "knownMeteringPointId5678")]
+        [InlineAutoMoqData(MessageType.CreateDefaultLinksMessagesSucceeded, "knownMeteringPointId1234")]
+        [InlineAutoMoqData(MessageType.CreateDefaultLinksMessagesSucceeded, "knownMeteringPointId5678")]
         public async Task DefaultChargeLinkMessagesCreationSucceeded(
             MessageType messageType, string meteringPointId)
         {
@@ -58,7 +58,7 @@ namespace Energinet.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.Defaul
         }
 
         [Theory]
-        [InlineAutoMoqData(MessageType.CreateDefaultLinksFailed, "unknownMeteringPointId9876")]
+        [InlineAutoMoqData(MessageType.CreateDefaultLinksMessagesFailed, "unknownMeteringPointId9876")]
         public async Task DefaultChargeLinkMessagesCreationFailed(
             MessageType messageType, string meteringPointId)
         {

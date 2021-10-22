@@ -52,7 +52,7 @@ namespace Energinet.DataHub.Charges.Libraries.DefaultChargeLinkMessages
         {
             switch (messageType)
             {
-                case MessageType.CreateDefaultLinksSucceeded:
+                case MessageType.CreateDefaultLinksMessagesSucceeded:
                     var succeededParser = CreateDefaultChargeLinkMessagesSucceeded.Parser;
                     var createDefaultChargeLinkMessagesSucceeded = succeededParser.ParseFrom(data);
                     var succeededDto = CreateDefaultChargeLinkMessagesSucceededInboundMapper
@@ -61,7 +61,7 @@ namespace Energinet.DataHub.Charges.Libraries.DefaultChargeLinkMessages
                     await _handleSuccess(succeededDto).ConfigureAwait(false);
                     break;
 
-                case MessageType.CreateDefaultLinksFailed:
+                case MessageType.CreateDefaultLinksMessagesFailed:
                     var failedParser = CreateDefaultChargeLinkMessagesFailed.Parser;
                     var createDefaultChargeLinkMessagesFailed = failedParser.ParseFrom(data);
                     var failedDto = CreateDefaultChargeLinkMessagesFailedInboundMapper
