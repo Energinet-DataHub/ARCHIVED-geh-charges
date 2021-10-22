@@ -38,7 +38,7 @@ env:
   INTEGRATIONEVENT_LISTENER_CONNECTION_STRING: ${{ secrets.INTEGRATIONTEST_SERVICEBUS_CONNECTIONSTRING }}
   # Variables that overrides settings in 'functionhost.settings.json'
   FunctionAppHostPath: 'C:\npm\prefix\node_modules\azure-functions-core-tools\bin\func.dll'
-  FunctionApplicationPath: '..\\..\\..\\..\\GreenEnergyHub.Charges.FunctionHost\\bin\\Release\\net5.0'
+  FunctionApplicationPath: '..\\..\\..\\..\\Energinet.DataHub.Charges.Clients\\bin\\Release\\net5.0'
 
 jobs:
   pre_job:
