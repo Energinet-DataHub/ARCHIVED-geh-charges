@@ -16,15 +16,31 @@ using System.IO;
 using System.Threading.Tasks;
 using Energinet.DataHub.MessageHub.Client.Model;
 using GreenEnergyHub.Charges.Application.ChargeLinks.MessageHub.Infrastructure;
+using GreenEnergyHub.Charges.Domain.AvailableChargeLinksData;
+using GreenEnergyHub.Charges.Infrastructure.ChargeLinkBundle.Cim;
 
 namespace GreenEnergyHub.Charges.Infrastructure.ChargeLinkBundle.MessageHub
 {
     public class ChargeLinkBundleCreator : IChargeLinkBundleCreator
     {
-        public Task CreateAsync(DataBundleRequestDto request, Stream outputStream)
+        private readonly IAvailableChargeLinksDataRepository _availableChargeLinksDataRepository;
+        private readonly IChargeLinkCimSerializer _chargeLinkCimSerializer;
+
+        public ChargeLinkBundleCreator(
+            IAvailableChargeLinksDataRepository availableChargeLinksDataRepository,
+            IChargeLinkCimSerializer chargeLinkCimSerializer)
         {
-            // Will be implemented in other issue or PR
-            return Task.CompletedTask;
+            _availableChargeLinksDataRepository = availableChargeLinksDataRepository;
+            _chargeLinkCimSerializer = chargeLinkCimSerializer;
+        }
+
+        public async Task CreateAsync(DataBundleRequestDto request, Stream outputStream)
+        {
+            var availableData = await _availableChargeLinksDataRepository
+                .GetAvailableChargeLinksDataAsync(request.DataAvailableNotificationIds)
+                .ConfigureAwait(false);
+
+            await _chargeLinkCimSerializer.SerializeToStreamAsync(availableData, outputStream).ConfigureAwait(false);
         }
     }
 }
