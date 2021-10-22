@@ -23,6 +23,7 @@ env:
   CSPROJ_FILE_PATH: source/Energinet.Charges.Libraries/source/Energinet.DataHub.Charges.Clients/Energinet.DataHub.Charges.Clients.csproj
   SOLUTION_FILE_PATH: source/Energinet.Charges.Libraries/Energinet.DataHub.Charges.Libraries.sln
   DOTNET_VERSION: '5.0.202'
+  AZURITE_VERSION: '3.14.0'
 
 jobs:
   pre_job:
@@ -55,6 +56,9 @@ jobs:
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Install Azurite v${{ env.AZURITE_VERSION }}
+        run: npm install -g azurite@${{ env.AZURITE_VERSION }}
 
       - name: Build and test project
         uses: ./.github/actions/dotnet-build-and-test
