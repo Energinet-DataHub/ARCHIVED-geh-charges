@@ -20,8 +20,8 @@ on:
   workflow_dispatch: {}
 
 env:
-  CSPROJ_FILE_PATH: source/GreenEnergyHub.Charges.Libraries/source/GreenEnergyHub.DataHub.Charges.Clients/GreenEnergyHub.DataHub.Charges.Clients.csproj
-  SOLUTION_FILE_PATH: source/GreenEnergyHub.Charges.Libraries/GreenEnergyHub.DataHub.Charges.Libraries.sln
+  CSPROJ_FILE_PATH: source/Energinet.Charges.Libraries/source/Energinet.DataHub.Charges.Clients/Energinet.DataHub.Charges.Clients.csproj
+  SOLUTION_FILE_PATH: source/Energinet.Charges.Libraries/Energinet.DataHub.Charges.Libraries.sln
   DOTNET_VERSION: '5.0.202'
 
 jobs:
@@ -36,7 +36,7 @@ jobs:
         with:
           github_token: ${{ github.token }}
           paths: '[
-            "source/GreenEnergyHub.DataHub.Charges.Clients/**",
+            "source/Energinet.Charges.Libraries/**",
             ".github/workflows/clients-ci.yml",
             ".github/actions/dotnet-build-and-test/**",
             ".github/actions/azure-core-tools-install/**"
