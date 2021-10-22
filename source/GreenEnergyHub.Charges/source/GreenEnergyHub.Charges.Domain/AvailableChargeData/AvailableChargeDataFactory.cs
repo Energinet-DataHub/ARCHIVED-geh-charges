@@ -32,10 +32,12 @@ namespace GreenEnergyHub.Charges.Domain.AvailableChargeData
                     .ToList();
 
             return new AvailableChargeData(
-                chargeCommand.Document.Sender.Id,
+                chargeCommand.ChargeOperation.ChargeOwner,
                 chargeCommand.ChargeOperation.Type,
+                chargeCommand.ChargeOperation.ChargeName,
+                chargeCommand.ChargeOperation.ChargeDescription,
                 chargeCommand.ChargeOperation.StartDateTime,
-                chargeCommand.ChargeOperation.EndDateTime ?? Instant.MaxValue,
+                chargeCommand.ChargeOperation.EndDateTime.GetValueOrDefault(),
                 chargeCommand.ChargeOperation.VatClassification,
                 chargeCommand.ChargeOperation.TaxIndicator,
                 chargeCommand.ChargeOperation.TransparentInvoicing,

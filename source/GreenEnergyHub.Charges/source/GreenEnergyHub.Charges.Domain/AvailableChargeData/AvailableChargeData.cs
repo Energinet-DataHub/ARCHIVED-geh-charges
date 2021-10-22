@@ -24,6 +24,8 @@ namespace GreenEnergyHub.Charges.Domain.AvailableChargeData
         public AvailableChargeData(
             string chargeOwner,
             ChargeType chargeType,
+            string chargeName,
+            string chargeDescription,
             Instant startDateTime,
             Instant endDateTime,
             VatClassification vatClassification,
@@ -37,6 +39,8 @@ namespace GreenEnergyHub.Charges.Domain.AvailableChargeData
             Id = Guid.NewGuid();
             ChargeOwner = chargeOwner;
             ChargeType = chargeType;
+            ChargeName = chargeName;
+            ChargeDescription = chargeDescription;
             StartDateTime = startDateTime;
             EndDateTime = endDateTime;
             VatClassification = vatClassification;
@@ -52,10 +56,12 @@ namespace GreenEnergyHub.Charges.Domain.AvailableChargeData
         /// Used implicitly by persistence.
         /// </summary>
         // ReSharper disable once UnusedMember.Local
-        private AvailableChargeData(string chargeOwner)
+        private AvailableChargeData(string chargeOwner, string chargeName, string chargeDescription)
         {
             _points = new List<AvailableChargeDataPoint>();
             ChargeOwner = chargeOwner;
+            ChargeName = chargeName;
+            ChargeDescription = chargeDescription;
         }
 
         public Guid Id { get; }
@@ -63,6 +69,10 @@ namespace GreenEnergyHub.Charges.Domain.AvailableChargeData
         public string ChargeOwner { get; }
 
         public ChargeType ChargeType { get; }
+
+        public string ChargeName { get; }
+
+        public string ChargeDescription { get; }
 
         public Instant StartDateTime { get; }
 
