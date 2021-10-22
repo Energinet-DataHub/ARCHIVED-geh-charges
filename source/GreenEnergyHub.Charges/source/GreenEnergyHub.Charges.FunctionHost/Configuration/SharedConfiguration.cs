@@ -60,10 +60,10 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
             var domainReplyQueue = EnvironmentHelper.GetEnv("MESSAGEHUB_BUNDLEREPLY_QUEUE");
             var storageServiceConnectionString = EnvironmentHelper.GetEnv("MESSAGEHUB_STORAGE_CONNECTION_STRING");
             var azureBlobStorageContainerName = EnvironmentHelper.GetEnv("MESSAGEHUB_STORAGE_CONTAINER");
-            serviceCollection.AddServiceBus(serviceBusConnectionString);
             AddPostOfficeCommunication(
                 serviceCollection,
                 new MessageHubConfig(dataAvailableQueue, domainReplyQueue),
+                serviceBusConnectionString,
                 storageServiceConnectionString,
                 new StorageConfig(azureBlobStorageContainerName));
             AddDefaultChargeLinkClient(serviceCollection, serviceBusConnectionString);
@@ -76,9 +76,12 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
             var replyToQueueName = EnvironmentHelper.GetEnv("CREATE_LINK_REPLY_QUEUE_NAME");
             var serviceBusClient = new ServiceBusClient(serviceBusConnectionString);
 
-            serviceCollection.AddScoped<IServiceBusRequestSenderFactory>(_ => new ServiceBusRequestSenderFactory());
-            serviceCollection.AddScoped<IServiceBusRequestSender>(_ => new ServiceBusRequestSender(serviceBusClient, replyToQueueName));
-            serviceCollection.AddSingleton<IDefaultChargeLinkClient>(_ => new DefaultChargeLinkClient(serviceBusClient, new ServiceBusRequestSenderFactory(), replyToQueueName));
+            serviceCollection.AddScoped<IServiceBusRequestSenderFactory>(_ =>
+                new ServiceBusRequestSenderFactory());
+            serviceCollection.AddScoped<IServiceBusRequestSender>(_ =>
+                new ServiceBusRequestSender(serviceBusClient, replyToQueueName));
+            serviceCollection.AddSingleton<IDefaultChargeLinkClient>(_ =>
+                new DefaultChargeLinkClient(serviceBusClient, new ServiceBusRequestSenderFactory(), replyToQueueName));
         }
 
         private static void ConfigureSharedDatabase(IServiceCollection serviceCollection)
@@ -114,6 +117,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
         private static void AddPostOfficeCommunication(
             IServiceCollection serviceCollection,
             MessageHubConfig messageHubConfig,
+            string serviceBusConnectionString,
             string storageServiceConnectionString,
             StorageConfig storageConfig)
         {
@@ -131,6 +135,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
 
             serviceCollection.AddSingleton(_ => messageHubConfig);
             serviceCollection.AddSingleton(_ => storageConfig);
+            serviceCollection.AddServiceBus(serviceBusConnectionString);
             serviceCollection.AddApplicationServices();
             serviceCollection.AddStorageHandler(storageServiceConnectionString);
         }
