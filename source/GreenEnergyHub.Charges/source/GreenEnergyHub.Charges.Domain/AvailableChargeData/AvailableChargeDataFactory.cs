@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System;
+using System.Linq;
 using GreenEnergyHub.Charges.Domain.ChargeCommands;
 using NodaTime;
 
@@ -25,10 +26,21 @@ namespace GreenEnergyHub.Charges.Domain.AvailableChargeData
             Instant requestTime,
             Guid messageHubId)
         {
+            var points =
+                chargeCommand.ChargeOperation.Points
+                    .Select(x => new AvailableChargeDataPoint(x.Position, x.Price))
+                    .ToList();
+
             return new AvailableChargeData(
+                chargeCommand.Document.Sender.Id,
+                chargeCommand.ChargeOperation.Type,
+                chargeCommand.ChargeOperation.StartDateTime,
+                chargeCommand.ChargeOperation.EndDateTime ?? Instant.MaxValue,
                 chargeCommand.ChargeOperation.VatClassification,
                 chargeCommand.ChargeOperation.TaxIndicator,
                 chargeCommand.ChargeOperation.TransparentInvoicing,
+                chargeCommand.ChargeOperation.Resolution,
+                points,
                 requestTime,
                 messageHubId);
         }

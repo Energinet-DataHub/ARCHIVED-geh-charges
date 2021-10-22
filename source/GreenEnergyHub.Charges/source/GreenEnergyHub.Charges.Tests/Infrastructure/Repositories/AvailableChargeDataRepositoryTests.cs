@@ -55,6 +55,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
                 chargesDatabaseReadContext.AvailableChargeData
                     .Single(x => x.AvailableDataReferenceId == expected.AvailableDataReferenceId);
             actual.VatClassification.Should().Be(expected.VatClassification);
+            actual.Points.Should().BeEquivalentTo(expected.Points);
         }
 
         [Theory]

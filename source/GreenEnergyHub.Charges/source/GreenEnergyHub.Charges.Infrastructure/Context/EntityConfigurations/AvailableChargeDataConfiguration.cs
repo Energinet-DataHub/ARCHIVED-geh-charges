@@ -28,31 +28,41 @@ namespace GreenEnergyHub.Charges.Infrastructure.Context.EntityConfigurations
                 throw new ArgumentNullException(nameof(builder));
 
             builder.ToTable("AvailableChargeData", "MessageHub");
-
             builder.HasKey(x => x.Id);
-
+            builder.Property(p => p.Id).ValueGeneratedNever();
+            builder.Property(x => x.ChargeOwner).HasColumnName("ChargeOwner");
+            builder.Property(x => x.ChargeType).HasColumnName("ChargeType")
+                .HasConversion(
+                    toDbValue => (int)toDbValue,
+                    fromDbValue => (ChargeType)fromDbValue);
             builder
-                .Property(x => x.VatClassification)
-                .HasColumnName("VatClassification")
+                .Property(x => x.VatClassification).HasColumnName("VatClassification")
                 .HasConversion(
                     toDbValue => (int)toDbValue,
                     fromDbValue => (VatClassification)fromDbValue);
-
+            builder.Property(x => x.StartDateTime).HasColumnName("StartDateTime");
+            builder.Property(x => x.EndDateTime).HasColumnName("EndDateTime");
+            builder.Property(x => x.TaxIndicator).HasColumnName("TaxIndicator");
+            builder.Property(x => x.TransparentInvoicing).HasColumnName("TransparentInvoicing");
             builder
-                .Property(x => x.TaxIndicator)
-                .HasColumnName("TaxIndicator");
+                .Property(x => x.Resolution).HasColumnName("Resolution")
+                .HasConversion(
+                    toDbValue => (int)toDbValue,
+                    fromDbValue => (Resolution)fromDbValue);
+            builder.Property(x => x.RequestTime).HasColumnName("RequestTime");
+            builder.Property(x => x.AvailableDataReferenceId).HasColumnName("AvailableDataReferenceId");
+            builder.Ignore(c => c.Points);
+            builder.OwnsMany<AvailableChargeDataPoint>("_points", ConfigurePoints);
+        }
 
-            builder
-                .Property(x => x.TransparentInvoicing)
-                .HasColumnName("TransparentInvoicing");
-
-            builder
-                .Property(x => x.RequestTime)
-                .HasColumnName("RequestTime");
-
-            builder
-                .Property(x => x.AvailableDataReferenceId)
-                .HasColumnName("AvailableDataReferenceId");
+        private static void ConfigurePoints(OwnedNavigationBuilder<AvailableChargeData, AvailableChargeDataPoint> points)
+        {
+            points.WithOwner().HasForeignKey("AvailableChargeDataId");
+            points.ToTable("AvailableChargeDataPoints", "MessageHub");
+            points.HasKey(p => p.Id);
+            points.Property(p => p.Id).ValueGeneratedNever();
+            points.Property(d => d.Position).HasColumnName("Position");
+            points.Property(d => d.Price).HasColumnName("Price");
         }
     }
 }

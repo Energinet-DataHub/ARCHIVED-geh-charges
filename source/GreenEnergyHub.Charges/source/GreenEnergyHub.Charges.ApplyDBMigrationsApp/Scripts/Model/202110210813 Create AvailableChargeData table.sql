@@ -1,10 +1,15 @@
 CREATE TABLE [MessageHub].AvailableChargeData (
 	Id uniqueidentifier not null,
-    AvailableDataReferenceId uniqueidentifier not null,
+    ChargeOwner varchar(70) not null,
+    ChargeType int not null,
+    StartDateTime datetime2 not null,
+    EndDateTime datetime2 not null,
     TaxIndicator bit not null,
     TransparentInvoicing bit not null,
     VatClassification int not null,
+    Resolution int not null,
     RequestTime datetime2 not null,
+    AvailableDataReferenceId uniqueidentifier not null,
     CONSTRAINT [PK_AvailableChargeData] PRIMARY KEY NONCLUSTERED
         (
          ID ASC

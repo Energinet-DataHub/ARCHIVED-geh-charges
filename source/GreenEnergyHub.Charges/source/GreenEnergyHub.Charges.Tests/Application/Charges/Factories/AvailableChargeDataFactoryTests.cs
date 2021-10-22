@@ -46,8 +46,16 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Factories
 
             // Assert
             actual.Should().NotContainNullsOrEmptyEnumerables();
+            actual.ChargeOwner.Should().Be(chargeCommand.ChargeOperation.ChargeOwner);
+            actual.ChargeType.Should().Be(chargeCommand.ChargeOperation.Type);
+            actual.StartDateTime.Should().Be(chargeCommand.ChargeOperation.StartDateTime);
+            actual.EndDateTime.Should().Be(chargeCommand.ChargeOperation.EndDateTime ?? Instant.MaxValue);
+            actual.VatClassification.Should().Be(chargeCommand.ChargeOperation.VatClassification);
+            actual.TaxIndicator.Should().Be(chargeCommand.ChargeOperation.TaxIndicator);
+            actual.TransparentInvoicing.Should().Be(chargeCommand.ChargeOperation.TransparentInvoicing);
             actual.RequestTime.Should().Be(now);
             actual.AvailableDataReferenceId.Should().Be(messageHubId);
+            actual.Points.Should().BeEquivalentTo(chargeCommand.ChargeOperation.Points);
         }
     }
 }
