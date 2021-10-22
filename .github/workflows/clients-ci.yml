@@ -67,6 +67,13 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@master
 
+      # Functions v3 still has a dependency to .NET 3.1
+      # See issue: https://github.com/Azure/azure-functions-dotnet-worker/wiki/Known-issues#net-core-31-dependency
+      - name: Setup .NET 3.1 environment
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: '3.1.x'
+
       - name: Setup .NET ${{ env.DOTNET_VERSION }} environment
         uses: actions/setup-dotnet@v1
         with:
