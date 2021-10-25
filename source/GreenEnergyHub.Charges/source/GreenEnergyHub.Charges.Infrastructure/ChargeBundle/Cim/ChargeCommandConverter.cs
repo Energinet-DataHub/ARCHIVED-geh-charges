@@ -211,7 +211,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.ChargeBundle.Cim
                     return Instant.FromDateTimeUtc(reader.ReadElementContentAsDateTime());
                 }
                 else if (reader.Is(
-                    CimChargeCommandConstants.SeriesPeriod,
+                    CimChargeCommandConstants.TimeInterval,
                     CimChargeCommandConstants.Namespace,
                     XmlNodeType.EndElement))
                 {
