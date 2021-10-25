@@ -56,7 +56,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.ChargeBundle.Cim
                 iso8601Durations,
                 correlationId,
                 expectedTime,
-                "GreenEnergyHub.Charges.Tests.TestFiles.Valid_CIM_Charge.xml");
+                "GreenEnergyHub.Charges.Tests.TestFiles.Syntax_Valid_CIM_Charge.xml");
 
             // Act
             var actual = (ChargeCommand)await sut.ConvertAsync(reader).ConfigureAwait(false);
