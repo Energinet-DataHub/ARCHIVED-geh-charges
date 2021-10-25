@@ -32,7 +32,7 @@ limitations under the License.
     <PackageReference Include="Microsoft.Azure.Functions.Extensions" Version="1.1.0" />
     <PackageReference Include="Microsoft.Azure.Functions.Worker.Extensions.Http" Version="3.0.13" />
     <PackageReference Include="Microsoft.Azure.Functions.Worker.Extensions.ServiceBus" Version="4.2.1" />
-    <PackageReference Include="Microsoft.Azure.Functions.Worker.Sdk" Version="1.0.4" />
+    <PackageReference Include="Microsoft.Azure.Functions.Worker.Sdk" Version="1.2.0" />
     <PackageReference Include="Microsoft.Azure.Functions.Worker" Version="1.5.2" />
     <PackageReference Update="StyleCop.Analyzers" Version="1.2.0-beta.354">
       <PrivateAssets>all</PrivateAssets>
