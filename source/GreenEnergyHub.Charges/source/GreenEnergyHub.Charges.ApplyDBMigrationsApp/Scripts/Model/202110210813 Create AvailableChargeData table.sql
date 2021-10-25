@@ -2,6 +2,7 @@ CREATE TABLE [MessageHub].AvailableChargeData (
 	Id uniqueidentifier not null,
     RecipientId varchar(70) not null,
     RecipientRole int not null,
+    BusinessReasonCode int not null,
     ChargeId varchar(70) not null,
     ChargeOwner varchar(70) not null,
     ChargeType int not null,

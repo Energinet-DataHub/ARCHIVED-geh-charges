@@ -36,6 +36,7 @@ namespace GreenEnergyHub.Charges.Domain.AvailableChargeData
             return new AvailableChargeData(
                 recipient.Id,
                 recipient.BusinessProcessRole,
+                chargeCommand.Document.BusinessReasonCode,
                 chargeCommand.ChargeOperation.ChargeId,
                 chargeCommand.ChargeOperation.ChargeOwner,
                 chargeCommand.ChargeOperation.Type,

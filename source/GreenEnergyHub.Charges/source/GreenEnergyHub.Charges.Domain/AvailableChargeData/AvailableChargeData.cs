@@ -25,6 +25,7 @@ namespace GreenEnergyHub.Charges.Domain.AvailableChargeData
         public AvailableChargeData(
             string recipientId,
             MarketParticipantRole recipientRole,
+            BusinessReasonCode businessReasonCode,
             string chargeId,
             string chargeOwner,
             ChargeType chargeType,
@@ -43,6 +44,7 @@ namespace GreenEnergyHub.Charges.Domain.AvailableChargeData
             Id = Guid.NewGuid();
             RecipientId = recipientId;
             RecipientRole = recipientRole;
+            BusinessReasonCode = businessReasonCode;
             ChargeId = chargeId;
             ChargeOwner = chargeOwner;
             ChargeType = chargeType;
@@ -81,6 +83,8 @@ namespace GreenEnergyHub.Charges.Domain.AvailableChargeData
         public string RecipientId { get; }
 
         public MarketParticipantRole RecipientRole { get; }
+
+        public BusinessReasonCode BusinessReasonCode { get; }
 
         public string ChargeId { get; }
 

@@ -49,6 +49,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Factories
             actual.Should().NotContainNullsOrEmptyEnumerables();
             actual.RecipientId.Should().Be(recipient.Id);
             actual.RecipientRole.Should().Be(recipient.BusinessProcessRole);
+            actual.BusinessReasonCode.Should().Be(chargeCommand.Document.BusinessReasonCode);
             actual.ChargeId.Should().Be(chargeCommand.ChargeOperation.ChargeId);
             actual.ChargeOwner.Should().Be(chargeCommand.ChargeOperation.ChargeOwner);
             actual.ChargeType.Should().Be(chargeCommand.ChargeOperation.Type);
