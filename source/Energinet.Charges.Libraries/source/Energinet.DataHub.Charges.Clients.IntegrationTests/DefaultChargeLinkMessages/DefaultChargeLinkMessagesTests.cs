@@ -18,7 +18,7 @@ using System.Threading.Tasks;
 using Azure.Messaging.ServiceBus;
 using Energinet.DataHub.Charges.Clients.IntegrationTests.Fixtures;
 using Energinet.DataHub.Charges.Libraries.Common;
-using Energinet.DataHub.Charges.Libraries.DefaultChargeLink;
+using Energinet.DataHub.Charges.Libraries.DefaultChargeLinkMessages;
 using Energinet.DataHub.Charges.Libraries.Factories;
 using Energinet.DataHub.Charges.Libraries.Models;
 using Energinet.DataHub.Core.FunctionApp.TestCommon;
@@ -28,19 +28,19 @@ using GreenEnergyHub.TestHelpers;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace Energinet.DataHub.Charges.Clients.IntegrationTests.DefaultChargeLink
+namespace Energinet.DataHub.Charges.Clients.IntegrationTests.DefaultChargeLinkMessages
 {
-    public static class DefaultChargeLinkTests
+    public static class DefaultChargeLinkMessagesTests
     {
         [Collection(nameof(ChargesClientsCollectionFixture))]
         [SuppressMessage("ReSharper", "CA1034", Justification = "done")] // TODO: Why is this necessary here, but not in Charges.IntegrationTests.Health.HealthStatusTests?
-        public class CreateDefaultChargeLinksRequestAsync : FunctionAppTestBase<ChargesClientsFixture>, IAsyncLifetime
+        public class CreateDefaultChargeLinkMessagesAsync : FunctionAppTestBase<ChargesClientsFixture>, IAsyncLifetime
         {
             private readonly string _serviceBusConnectionString;
             private readonly string _replyToQueueName;
             private readonly string _requestQueueName;
 
-            public CreateDefaultChargeLinksRequestAsync(ChargesClientsFixture fixture, ITestOutputHelper testOutputHelper)
+            public CreateDefaultChargeLinkMessagesAsync(ChargesClientsFixture fixture, ITestOutputHelper testOutputHelper)
                 : base(fixture, testOutputHelper)
             {
                 _serviceBusConnectionString = EnvironmentVariableReader.GetEnvironmentVariable(
@@ -64,8 +64,8 @@ namespace Energinet.DataHub.Charges.Clients.IntegrationTests.DefaultChargeLink
 
             [Theory]
             [AutoDomainData]
-            public async Task When_CreateDefaultChargeLinksRequestAsync_Then_RequestIsSendToCharges(
-                CreateDefaultChargeLinksDto createDefaultChargeLinksDto, string correlationId)
+            public async Task When_CreateDefaultChargeLinkMessagesAsync_Then_RequestIsSendToCharges(
+                CreateDefaultChargeLinkMessagesDto createDefaultChargeLinkMessagesDto, string correlationId)
             {
                 // Arrange
                 var body = new BinaryData(Array.Empty<byte>());
@@ -81,11 +81,11 @@ namespace Energinet.DataHub.Charges.Clients.IntegrationTests.DefaultChargeLink
 
                 var serviceBusRequestSenderFactory = new ServiceBusRequestSenderFactory();
                 await using var serviceBusClient = new ServiceBusClient(_serviceBusConnectionString);
-                await using var sut = new DefaultChargeLinkClient(
+                await using var sut = new DefaultChargeLinkMessagesRequestClient(
                     serviceBusClient, serviceBusRequestSenderFactory, _replyToQueueName, _requestQueueName);
 
                 // Act
-                await sut.CreateDefaultChargeLinksRequestAsync(createDefaultChargeLinksDto, correlationId).ConfigureAwait(false);
+                await sut.CreateDefaultChargeLinkMessagesRequestAsync(createDefaultChargeLinkMessagesDto, correlationId).ConfigureAwait(false);
 
                 // Assert
                 // => Service Bus (timeout should not be more than 5 secs).
