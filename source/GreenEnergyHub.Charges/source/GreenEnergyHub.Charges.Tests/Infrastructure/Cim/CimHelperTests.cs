@@ -21,7 +21,7 @@ using GreenEnergyHub.Charges.TestCore.Attributes;
 using Xunit;
 using Xunit.Categories;
 
-namespace GreenEnergyHub.Charges.Tests.Cim
+namespace GreenEnergyHub.Charges.Tests.Infrastructure.Cim
 {
     [UnitTest]
     public class CimHelperTests
