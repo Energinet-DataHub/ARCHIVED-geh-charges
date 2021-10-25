@@ -24,6 +24,7 @@ using GreenEnergyHub.Charges.Domain.AvailableChargeLinksData;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.Infrastructure.ChargeLinkBundle.Cim;
+using GreenEnergyHub.Charges.Infrastructure.Cim;
 using GreenEnergyHub.Charges.Infrastructure.Configuration;
 using GreenEnergyHub.Charges.TestCore;
 using GreenEnergyHub.TestHelpers;
@@ -38,16 +39,18 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.ChargeLinkBundle.Cim
     public class ChargeLinkCimSerializerTests
     {
         private const int NoOfLinksInBundle = 10;
+        private const string CimTestId = "00000000000000000000000000000000";
 
         [Theory]
         [InlineAutoDomainData]
         public async Task SerializeAsync_WhenCalled_StreamHasSerializedResult(
-            [NotNull] [Frozen] Mock<IHubSenderConfiguration> hubSenderConfiguration,
-            [NotNull] [Frozen] Mock<IClock> clock,
-            [NotNull] ChargeLinkCimSerializer sut)
+            [Frozen] Mock<IHubSenderConfiguration> hubSenderConfiguration,
+            [Frozen] Mock<IClock> clock,
+            [Frozen] Mock<ICimIdProvider> cimIdProvider,
+            ChargeLinkCimSerializer sut)
         {
             // Arrange
-            SetupMocks(hubSenderConfiguration, clock);
+            SetupMocks(hubSenderConfiguration, clock, cimIdProvider);
             await using var stream = new MemoryStream();
 
             var expected =
@@ -59,7 +62,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.ChargeLinkBundle.Cim
             await sut.SerializeToStreamAsync(chargeLinks, stream);
 
             // Assert
-            var text = GetStreamAsStringWithReplacedGuids(stream);
+            var text = GetStreamAsString(stream);
             var actual = RemoveCarriageReturn(text);
 
             Assert.Equal(expected, actual);
@@ -68,11 +71,12 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.ChargeLinkBundle.Cim
         [Theory(Skip = "Manually run test to save the generated file to disk")]
         [InlineAutoDomainData]
         public async Task SerializeAsync_WhenCalled_SaveSerializedStream(
-            [NotNull] [Frozen] Mock<IHubSenderConfiguration> hubSenderConfiguration,
-            [NotNull] [Frozen] Mock<IClock> clock,
-            [NotNull] ChargeLinkCimSerializer sut)
+            [Frozen] Mock<IHubSenderConfiguration> hubSenderConfiguration,
+            [Frozen] Mock<IClock> clock,
+            [Frozen] Mock<ICimIdProvider> cimIdProvider,
+            ChargeLinkCimSerializer sut)
         {
-            SetupMocks(hubSenderConfiguration, clock);
+            SetupMocks(hubSenderConfiguration, clock, cimIdProvider);
 
             var chargeLinks = GetChargeLinks(clock.Object);
 
@@ -87,7 +91,8 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.ChargeLinkBundle.Cim
 
         private void SetupMocks(
             Mock<IHubSenderConfiguration> hubSenderConfiguration,
-            Mock<IClock> clock)
+            Mock<IClock> clock,
+            Mock<ICimIdProvider> cimIdProvider)
         {
             hubSenderConfiguration.Setup(
                     h => h.GetSenderMarketParticipant())
@@ -100,6 +105,10 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.ChargeLinkBundle.Cim
             clock.Setup(
                     c => c.GetCurrentInstant())
                 .Returns(currentTime);
+
+            cimIdProvider.Setup(
+                    c => c.GetUniqueId())
+                .Returns(CimTestId);
         }
 
         private List<AvailableChargeLinksData> GetChargeLinks(IClock clock)
@@ -135,17 +144,11 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.ChargeLinkBundle.Cim
                 Guid.NewGuid());
         }
 
-        private static string GetStreamAsStringWithReplacedGuids(Stream stream)
-        {
-            var text = GetStreamAsString(stream);
-            return ReplaceGuids(text);
-        }
-
         private static string GetExpectedValue(string path)
         {
             var assembly = Assembly.GetExecutingAssembly();
             using var xmlStream = EmbeddedStreamHelper.GetInputStream(assembly, path);
-            var text = GetStreamAsStringWithReplacedGuids(xmlStream);
+            var text = GetStreamAsString(xmlStream);
             text = RemoveLicense(text);
             return RemoveCarriageReturn(text);
         }
@@ -154,16 +157,6 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.ChargeLinkBundle.Cim
         {
             using var reader = new StreamReader(stream);
             return reader.ReadToEnd();
-        }
-
-        private static string ReplaceGuids(string input)
-        {
-            // The following regex will match guids regardless of case
-            var result = Regex.Replace(
-                input,
-                @"[0-9A-Fa-f]{8}-([0-9A-Fa-f]{4}-){3}[0-9A-Fa-f]{12}",
-                Guid.Empty.ToString());
-            return result;
         }
 
         private static string RemoveLicense(string input)

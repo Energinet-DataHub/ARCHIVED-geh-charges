@@ -33,13 +33,16 @@ namespace GreenEnergyHub.Charges.Infrastructure.ChargeLinkBundle.Cim
     {
         private IHubSenderConfiguration _hubSenderConfiguration;
         private IClock _clock;
+        private ICimIdProvider _cimIdProvider;
 
         public ChargeLinkCimSerializer(
             IHubSenderConfiguration hubSenderConfiguration,
-            IClock clock)
+            IClock clock,
+            ICimIdProvider cimIdProvider)
         {
             _hubSenderConfiguration = hubSenderConfiguration;
             _clock = clock;
+            _cimIdProvider = cimIdProvider;
         }
 
         public async Task SerializeToStreamAsync(IEnumerable<AvailableChargeLinksData> chargeLinks, Stream stream)
@@ -78,7 +81,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.ChargeLinkBundle.Cim
         {
             return new List<XElement>()
             {
-                new XElement(cimNamespace + CimMarketDocumentConstants.Id, Guid.NewGuid()),
+                new XElement(cimNamespace + CimMarketDocumentConstants.Id, _cimIdProvider.GetUniqueId()),
                 new XElement(
                     cimNamespace + CimMarketDocumentConstants.Type,
                     DocumentTypeMapper.Map(DocumentType.NotifyBillingMasterData)),
@@ -114,20 +117,20 @@ namespace GreenEnergyHub.Charges.Infrastructure.ChargeLinkBundle.Cim
             };
         }
 
-        private static IEnumerable<XElement> GetActivityRecords(
+        private IEnumerable<XElement> GetActivityRecords(
             XNamespace cimNamespace,
             IEnumerable<AvailableChargeLinksData> chargeLinks)
         {
             return chargeLinks.Select(chargeLink => GetActivityRecord(cimNamespace, chargeLink));
         }
 
-        private static XElement GetActivityRecord(
+        private XElement GetActivityRecord(
             XNamespace cimNamespace,
             AvailableChargeLinksData chargeLink)
         {
             return new XElement(
                 cimNamespace + CimMarketDocumentConstants.MarketActivityRecord,
-                new XElement(cimNamespace + CimChargeLinkConstants.MarketActivityRecordId, Guid.NewGuid().ToString()),
+                new XElement(cimNamespace + CimChargeLinkConstants.MarketActivityRecordId, _cimIdProvider.GetUniqueId()),
                 new XElement(
                     cimNamespace + CimChargeLinkConstants.MeteringPointId,
                     new XAttribute(
