@@ -73,48 +73,16 @@ namespace GreenEnergyHub.Charges.Infrastructure.ChargeLinkBundle.Cim
                         xmlSchemaLocation),
                     // Note: The list will always have same recipient and business reason code,
                     // so we just take those values from the first element
-                    GetMarketDocumentHeader(cimNamespace, chargeLinks.First()),
+                    MarketDocumentSerializationHelper.Serialize(
+                        cimNamespace,
+                        _cimIdProvider,
+                        DocumentType.NotifyBillingMasterData,
+                        chargeLinks.First().BusinessReasonCode,
+                        _hubSenderConfiguration,
+                        chargeLinks.First().RecipientId,
+                        chargeLinks.First().RecipientRole,
+                        _clock),
                     GetActivityRecords(cimNamespace, chargeLinks)));
-        }
-
-        private IEnumerable<XElement> GetMarketDocumentHeader(XNamespace cimNamespace, AvailableChargeLinksData chargeLink)
-        {
-            return new List<XElement>()
-            {
-                new XElement(cimNamespace + CimMarketDocumentConstants.Id, _cimIdProvider.GetUniqueId()),
-                new XElement(
-                    cimNamespace + CimMarketDocumentConstants.Type,
-                    DocumentTypeMapper.Map(DocumentType.NotifyBillingMasterData)),
-                new XElement(
-                    cimNamespace +
-                    CimMarketDocumentConstants.BusinessReasonCode,
-                    BusinessReasonCodeMapper.Map(chargeLink.BusinessReasonCode)),
-                new XElement(
-                    cimNamespace + CimMarketDocumentConstants.IndustryClassification,
-                    IndustryClassificationMapper.Map(IndustryClassification.Electricity)),
-                new XElement(
-                    cimNamespace + CimMarketDocumentConstants.SenderId,
-                    new XAttribute(
-                        CimMarketDocumentConstants.CodingScheme,
-                        CodingSchemeMapper.Map(CodingScheme.GS1)),
-                    _hubSenderConfiguration.GetSenderMarketParticipant().Id),
-                new XElement(
-                    cimNamespace + CimMarketDocumentConstants.SenderBusinessProcessRole,
-                    MarketParticipantRoleMapper.Map(
-                        _hubSenderConfiguration.GetSenderMarketParticipant().BusinessProcessRole)),
-                new XElement(
-                    cimNamespace + CimMarketDocumentConstants.RecipientId,
-                    new XAttribute(
-                        CimMarketDocumentConstants.CodingScheme,
-                        CodingSchemeMapper.Map(CodingScheme.GS1)),
-                    chargeLink.RecipientId),
-                new XElement(
-                    cimNamespace + CimMarketDocumentConstants.RecipientBusinessProcessRole,
-                    MarketParticipantRoleMapper.Map(chargeLink.RecipientRole)),
-                new XElement(
-                    cimNamespace + CimMarketDocumentConstants.CreatedDateTime,
-                    _clock.GetCurrentInstant().ToString()),
-            };
         }
 
         private IEnumerable<XElement> GetActivityRecords(
