@@ -19,10 +19,10 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Xml.Linq;
-using GreenEnergyHub.Charges.Application;
 using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.Domain.AvailableChargeLinksData;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
+using GreenEnergyHub.Charges.Infrastructure.Cim;
 using GreenEnergyHub.Charges.Infrastructure.Configuration;
 using GreenEnergyHub.Charges.Infrastructure.MarketDocument.Cim;
 using NodaTime;
@@ -68,7 +68,9 @@ namespace GreenEnergyHub.Charges.Infrastructure.ChargeLinkBundle.Cim
                     new XAttribute(
                         xmlSchemaNamespace + CimMarketDocumentConstants.SchemaLocation,
                         xmlSchemaLocation),
-                    GetMarketDocumentHeader(cimNamespace, chargeLinks.First()), // Note: The list will always have same recipient and business reason code, so we just take those values from the first element
+                    // Note: The list will always have same recipient and business reason code,
+                    // so we just take those values from the first element
+                    GetMarketDocumentHeader(cimNamespace, chargeLinks.First()),
                     GetActivityRecords(cimNamespace, chargeLinks)));
         }
 
@@ -133,18 +135,12 @@ namespace GreenEnergyHub.Charges.Infrastructure.ChargeLinkBundle.Cim
                         CodingSchemeMapper.Map(CodingScheme.GS1)),
                     chargeLink.MeteringPointId),
                 new XElement(cimNamespace + CimChargeLinkConstants.StartDateTime, chargeLink.StartDateTime.ToString()),
-                GetEndDateTimeOnlyIfNotEndDefault(cimNamespace, chargeLink.EndDateTime),
+                CimHelper.GetElementIfNeeded(
+                    cimNamespace,
+                    chargeLink.EndDateTime.IsEndDefault(),
+                    CimChargeLinkConstants.EndDateTime,
+                    () => chargeLink.EndDateTime.ToString()),
                 GetChargeGroupElement(cimNamespace, chargeLink));
-        }
-
-        private static IEnumerable<XElement> GetEndDateTimeOnlyIfNotEndDefault(XNamespace cimNamespace, Instant endDateTime)
-        {
-            return endDateTime.IsEndDefault()
-                ? new List<XElement>()
-                : new List<XElement>
-                {
-                    new XElement(cimNamespace + CimChargeLinkConstants.EndDateTime, endDateTime.ToString()),
-                };
         }
 
         private static XElement GetChargeGroupElement(
