@@ -86,7 +86,11 @@ namespace Energinet.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.Defaul
 
             // Assert
             serviceBusRequestSenderMock.Verify(
-                x => x.SendRequestAsync(It.IsAny<byte[]>(), It.IsAny<string>(), It.IsAny<string>()), Times.Once);
+                x => x.SendRequestAsync(
+                    It.IsAny<byte[]>(),
+                    createLinkMessagesRequestQueueName,
+                    CorrelationId),
+                Times.Once);
         }
 
         [Theory]
@@ -152,8 +156,8 @@ namespace Energinet.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.Defaul
             serviceBusRequestSenderMock.Verify(
                 x => x.SendRequestAsync(
                     It.IsAny<byte[]>(),
-                    It.IsAny<string>(),
-                    It.IsAny<string>()),
+                    respondQueueName,
+                    CorrelationId),
                 Times.Once);
         }
 
@@ -220,8 +224,8 @@ namespace Energinet.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.Defaul
             serviceBusRequestSenderMock.Verify(
                 x => x.SendRequestAsync(
                     It.IsAny<byte[]>(),
-                    It.IsAny<string>(),
-                    It.IsAny<string>()),
+                    respondQueueName,
+                    CorrelationId),
                 Times.Once);
         }
     }
