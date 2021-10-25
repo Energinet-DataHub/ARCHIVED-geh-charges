@@ -12,26 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Collections.Generic;
 using System.Threading.Tasks;
+using GreenEnergyHub.Charges.Domain.ChargeCommandAcceptedEvents;
 
-namespace GreenEnergyHub.Charges.Domain.MarketParticipants
+namespace GreenEnergyHub.Charges.Application.ChargeLinks.MessageHub
 {
     /// <summary>
-    /// Repository for managing market participants.
+    /// Contract for notifying the MessageHub that data about a charge that has been created
+    /// is available.
+    /// This is the RSM-031 CIM XML 'NotifyBillingMasterData'.
     /// </summary>
-    public interface IMarketParticipantRepository
+    public interface IChargeDataAvailableNotifier
     {
-        /// <summary>
-        /// Get all energy suppliers.
-        /// </summary>
-        MarketParticipant? GetMarketParticipantOrNull(string id);
-
-        /// <summary>
-        /// Using MeteringPointId find the Grid Access Provider of that MP
-        /// </summary>
-        MarketParticipant GetGridAccessProvider(string meteringPointId);
-
-        Task<List<MarketParticipant>> GetActiveGridAccessProvidersAsync();
+        Task NotifyAsync(ChargeCommandAcceptedEvent chargeCommandAcceptedEvent);
     }
 }

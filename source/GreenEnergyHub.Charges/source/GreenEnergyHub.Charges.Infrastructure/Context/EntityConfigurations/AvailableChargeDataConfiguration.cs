@@ -15,6 +15,7 @@
 using System;
 using GreenEnergyHub.Charges.Domain.AvailableChargeData;
 using GreenEnergyHub.Charges.Domain.Charges;
+using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -30,6 +31,12 @@ namespace GreenEnergyHub.Charges.Infrastructure.Context.EntityConfigurations
             builder.ToTable("AvailableChargeData", "MessageHub");
             builder.HasKey(x => x.Id);
             builder.Property(p => p.Id).ValueGeneratedNever();
+            builder.Property(x => x.RecipientId).HasColumnName("RecipientId");
+            builder.Property(x => x.RecipientRole).HasColumnName("RecipientRole")
+                .HasConversion(
+                    toDbValue => (int)toDbValue,
+                    fromDbValue => (MarketParticipantRole)fromDbValue);
+            builder.Property(x => x.ChargeId).HasColumnName("ChargeId");
             builder.Property(x => x.ChargeOwner).HasColumnName("ChargeOwner");
             builder.Property(x => x.ChargeType).HasColumnName("ChargeType")
                 .HasConversion(

@@ -15,14 +15,16 @@
 using System;
 using System.Linq;
 using GreenEnergyHub.Charges.Domain.ChargeCommands;
+using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using NodaTime;
 
 namespace GreenEnergyHub.Charges.Domain.AvailableChargeData
 {
-    public class AvailableChargeDataFactory
+    public class AvailableChargeDataFactory : IAvailableChargeDataFactory
     {
         public AvailableChargeData Create(
             ChargeCommand chargeCommand,
+            MarketParticipant recipient,
             Instant requestTime,
             Guid messageHubId)
         {
@@ -32,6 +34,9 @@ namespace GreenEnergyHub.Charges.Domain.AvailableChargeData
                     .ToList();
 
             return new AvailableChargeData(
+                recipient.Id,
+                recipient.BusinessProcessRole,
+                chargeCommand.ChargeOperation.ChargeId,
                 chargeCommand.ChargeOperation.ChargeOwner,
                 chargeCommand.ChargeOperation.Type,
                 chargeCommand.ChargeOperation.ChargeName,

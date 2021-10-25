@@ -36,16 +36,20 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Factories
         [InlineAutoDomainData]
         public void CreateFromCommandAsync_Charge_HasNoNullsOrEmptyCollections(
             [NotNull] ChargeCommand chargeCommand,
+            [NotNull] MarketParticipant recipient,
             [NotNull] Instant now,
             [NotNull] Guid messageHubId,
             [NotNull] AvailableChargeDataFactory sut)
         {
             // Act
             var actual =
-                sut.Create(chargeCommand, now, messageHubId);
+                sut.Create(chargeCommand, recipient, now, messageHubId);
 
             // Assert
             actual.Should().NotContainNullsOrEmptyEnumerables();
+            actual.RecipientId.Should().Be(recipient.Id);
+            actual.RecipientRole.Should().Be(recipient.BusinessProcessRole);
+            actual.ChargeId.Should().Be(chargeCommand.ChargeOperation.ChargeId);
             actual.ChargeOwner.Should().Be(chargeCommand.ChargeOperation.ChargeOwner);
             actual.ChargeType.Should().Be(chargeCommand.ChargeOperation.Type);
             actual.ChargeName.Should().Be(chargeCommand.ChargeOperation.ChargeName);

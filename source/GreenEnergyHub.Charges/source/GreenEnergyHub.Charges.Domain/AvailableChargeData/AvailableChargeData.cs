@@ -15,6 +15,7 @@
 using System;
 using System.Collections.Generic;
 using GreenEnergyHub.Charges.Domain.Charges;
+using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using NodaTime;
 
 namespace GreenEnergyHub.Charges.Domain.AvailableChargeData
@@ -22,6 +23,9 @@ namespace GreenEnergyHub.Charges.Domain.AvailableChargeData
     public class AvailableChargeData
     {
         public AvailableChargeData(
+            string recipientId,
+            MarketParticipantRole recipientRole,
+            string chargeId,
             string chargeOwner,
             ChargeType chargeType,
             string chargeName,
@@ -37,6 +41,9 @@ namespace GreenEnergyHub.Charges.Domain.AvailableChargeData
             Guid availableDataReferenceId)
         {
             Id = Guid.NewGuid();
+            RecipientId = recipientId;
+            RecipientRole = recipientRole;
+            ChargeId = chargeId;
             ChargeOwner = chargeOwner;
             ChargeType = chargeType;
             ChargeName = chargeName;
@@ -56,15 +63,26 @@ namespace GreenEnergyHub.Charges.Domain.AvailableChargeData
         /// Used implicitly by persistence.
         /// </summary>
         // ReSharper disable once UnusedMember.Local
-        private AvailableChargeData(string chargeOwner, string chargeName, string chargeDescription)
+        private AvailableChargeData(string recipientId, string chargeId, string chargeOwner, string chargeName, string chargeDescription)
         {
-            _points = new List<AvailableChargeDataPoint>();
+            RecipientId = recipientId;
+            ChargeId = chargeId;
             ChargeOwner = chargeOwner;
             ChargeName = chargeName;
             ChargeDescription = chargeDescription;
+            _points = new List<AvailableChargeDataPoint>();
         }
 
         public Guid Id { get; }
+
+        /// <summary>
+        /// Market Participant Id of Recipient.
+        /// </summary>
+        public string RecipientId { get; }
+
+        public MarketParticipantRole RecipientRole { get; }
+
+        public string ChargeId { get; }
 
         public string ChargeOwner { get; }
 

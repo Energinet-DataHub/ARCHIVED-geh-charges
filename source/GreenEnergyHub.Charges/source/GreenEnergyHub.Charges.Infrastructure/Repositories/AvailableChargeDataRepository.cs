@@ -22,7 +22,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Repositories
 {
-    public class AvailableChargeDataRepository
+    public class AvailableChargeDataRepository : IAvailableChargeDataRepository
     {
         private readonly IChargesDatabaseContext _context;
 
