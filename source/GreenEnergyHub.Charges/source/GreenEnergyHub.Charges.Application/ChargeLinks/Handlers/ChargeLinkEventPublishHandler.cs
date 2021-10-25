@@ -47,7 +47,7 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
         {
             if (_messageMetaDataContext.ReplyTo != null)
             {
-                // A refactor of ChargeLinkCommands will end with the commands being wrapped by a entity with only one meteringPointId.
+                // TODO:  A refactor of ChargeLinkCommands will end with the commands being wrapped by a entity with only one meteringPointId.
                 var meteringPointId = command.ChargeLinkCommands.First().ChargeLink.MeteringPointId;
 
                 await _defaultChargeLinkClient
