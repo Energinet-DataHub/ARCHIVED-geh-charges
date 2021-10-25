@@ -24,16 +24,20 @@ using GreenEnergyHub.Charges.Domain.AvailableChargeLinksData;
 using GreenEnergyHub.Charges.Domain.ChargeLinkCommandReceivedEvents;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.MeteringPoints;
+using GreenEnergyHub.Charges.Infrastructure.Cim;
+using GreenEnergyHub.Charges.Infrastructure.Configuration;
 using GreenEnergyHub.Charges.Infrastructure.Context;
 using GreenEnergyHub.Charges.Infrastructure.Correlation;
 using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandReceived;
 using GreenEnergyHub.Charges.Infrastructure.Messaging.Registration;
 using GreenEnergyHub.Charges.Infrastructure.Repositories;
+using GreenEnergyHub.Iso8601;
 using GreenEnergyHub.Messaging.Protobuf;
 using GreenEnergyHub.Messaging.Transport;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using NodaTime;
+using MarketParticipantRole = GreenEnergyHub.Charges.Domain.MarketParticipants.MarketParticipantRole;
 
 namespace GreenEnergyHub.Charges.FunctionHost.Configuration
 {
@@ -49,6 +53,8 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
 
             ConfigureSharedDatabase(serviceCollection);
             ConfigureSharedMessaging(serviceCollection);
+            ConfigureIso8601Services(serviceCollection);
+            ConfigureSharedCim(serviceCollection);
 
             var serviceBusConnectionString = EnvironmentHelper.GetEnv("INTEGRATIONEVENT_SENDER_CONNECTION_STRING");
             var dataAvailableQueue = EnvironmentHelper.GetEnv("MESSAGEHUB_DATAAVAILABLE_QUEUE");
@@ -88,6 +94,27 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
             serviceCollection.AddMessagingProtobuf().AddMessageDispatcher<ChargeLinkCommandReceivedEvent>(
                 EnvironmentHelper.GetEnv("DOMAINEVENT_SENDER_CONNECTION_STRING"),
                 EnvironmentHelper.GetEnv("CHARGE_LINK_RECEIVED_TOPIC_NAME"));
+        }
+
+        private static void ConfigureSharedCim(IServiceCollection serviceCollection)
+        {
+            serviceCollection.AddScoped<ICimIdProvider, CimIdProvider>();
+            serviceCollection.AddScoped<IHubSenderConfiguration>(_ =>
+            {
+                var senderId = EnvironmentHelper.GetEnv("HUB_SENDER_ID");
+                var roleIntText = EnvironmentHelper.GetEnv("HUB_SENDER_ROLE_INT_ENUM_VALUE");
+                return new HubSenderConfiguration(
+                    senderId,
+                    (MarketParticipantRole)int.Parse(roleIntText));
+            });
+        }
+
+        private static void ConfigureIso8601Services(IServiceCollection serviceCollection)
+        {
+            var timeZoneId = EnvironmentHelper.GetEnv("LOCAL_TIMEZONENAME");
+            var timeZoneConfiguration = new Iso8601ConversionConfiguration(timeZoneId);
+            serviceCollection.AddSingleton<IIso8601ConversionConfiguration>(timeZoneConfiguration);
+            serviceCollection.AddSingleton<IIso8601Durations, Iso8601Durations>();
         }
 
         /// <summary>

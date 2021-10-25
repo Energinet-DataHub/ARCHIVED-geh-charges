@@ -20,7 +20,6 @@ using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeCommandReceived;
 using GreenEnergyHub.Charges.Infrastructure.Messaging;
 using GreenEnergyHub.Charges.Infrastructure.Messaging.Registration;
 using GreenEnergyHub.Charges.Infrastructure.Messaging.Serialization;
-using GreenEnergyHub.Iso8601;
 using GreenEnergyHub.Messaging.Protobuf;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -30,8 +29,6 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
     {
         internal static void ConfigureServices(IServiceCollection serviceCollection)
         {
-            ConfigureIso8601Services(serviceCollection);
-
             serviceCollection.AddScoped<ChargeCommandConverter>();
             serviceCollection.AddScoped<MessageExtractor<ChargeCommand>>();
             serviceCollection.AddScoped<MessageDeserializer<ChargeCommand>, ChargeCommandDeserializer>();
@@ -43,14 +40,6 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
             serviceCollection.AddMessagingProtobuf().AddMessageDispatcher<ChargeCommandReceivedEvent>(
                     EnvironmentHelper.GetEnv("DOMAINEVENT_SENDER_CONNECTION_STRING"),
                     EnvironmentHelper.GetEnv("COMMAND_RECEIVED_TOPIC_NAME"));
-        }
-
-        private static void ConfigureIso8601Services(IServiceCollection serviceCollection)
-        {
-            var timeZoneId = EnvironmentHelper.GetEnv("LOCAL_TIMEZONENAME");
-            var timeZoneConfiguration = new Iso8601ConversionConfiguration(timeZoneId);
-            serviceCollection.AddSingleton<IIso8601ConversionConfiguration>(timeZoneConfiguration);
-            serviceCollection.AddSingleton<IIso8601Durations, Iso8601Durations>();
         }
     }
 }
