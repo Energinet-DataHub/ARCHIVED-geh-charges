@@ -20,6 +20,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
 using Azure.Messaging.ServiceBus;
+using FluentAssertions;
 using GreenEnergyHub.Charges.Application;
 using GreenEnergyHub.Charges.Infrastructure.Correlation;
 using GreenEnergyHub.Charges.Infrastructure.MessageMetaData;
@@ -65,9 +66,9 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Messaging
             await sut.WriteToAsync(content).ConfigureAwait(false);
 
             // Assert
-            Assert.NotNull(receivedMessage);
-            Assert.Empty(receivedMessage!.CorrelationId);
-            Assert.True(content.SequenceEqual(receivedMessage.Body.ToArray()));
+            receivedMessage!.Should().NotBeNull();
+            receivedMessage!.CorrelationId.Should().BeEquivalentTo(string.Empty);
+            content.SequenceEqual(receivedMessage.Body.ToArray()).Should().BeTrue();
         }
 
         [Theory]
@@ -97,9 +98,9 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Messaging
             await sut.WriteToAsync(content).ConfigureAwait(false);
 
             // Assert
-            Assert.NotNull(receivedMessage);
-            Assert.Equal(correlationId, receivedMessage!.CorrelationId);
-            Assert.True(content.SequenceEqual(receivedMessage.Body.ToArray()));
+            receivedMessage!.Should().NotBeNull();
+            correlationId.Should().BeEquivalentTo(receivedMessage!.CorrelationId);
+            content.SequenceEqual(receivedMessage.Body.ToArray()).Should().BeTrue();
         }
 
         [Fact(Skip = "Manually run test to see the class can communicate with the service bus")]
@@ -125,6 +126,79 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Messaging
 
             // Act
             await sut.WriteToAsync(message).ConfigureAwait(false);
+        }
+
+        [Theory]
+        [InlineAutoDomainData]
+        public async Task WriteAsync_WhenNoReplyTo_SendsMessageWithoutReplyTo(
+            [NotNull] [Frozen] Mock<ICorrelationContext> correlationContext,
+            [NotNull] [Frozen] Mock<IMessageMetaDataContext> messageMetaDataContext,
+            [NotNull] [Frozen] Mock<MockableServiceBusSender> serviceBusSender,
+            [NotNull] string correlationId,
+            [NotNull] byte[] content)
+        {
+            // Arrange
+            ServiceBusMessage? receivedMessage = null;
+            serviceBusSender
+                .Setup(s => s.SendMessageAsync(
+                    It.IsAny<ServiceBusMessage>(),
+                    It.IsAny<CancellationToken>()))
+                .Callback<ServiceBusMessage, CancellationToken>((message, _) => receivedMessage = message);
+            var genericSender = new ServiceBusSender<TestOutboundMessage>(serviceBusSender.Object);
+
+            correlationContext.Setup(c => c.Id).Returns(correlationId);
+            messageMetaDataContext.Setup(c => c.ReplyTo).Returns(string.Empty);
+
+            var sut = new TestableServiceBusChannel<TestOutboundMessage>(
+                genericSender,
+                correlationContext.Object,
+                messageMetaDataContext.Object);
+
+            // Act
+            await sut.WriteToAsync(content).ConfigureAwait(false);
+
+            // Assert
+            receivedMessage!.Should().NotBeNull();
+            var replyTo = receivedMessage!.ApplicationProperties["ReplyTo"];
+            replyTo.Should().BeEquivalentTo(string.Empty);
+            content.SequenceEqual(receivedMessage.Body.ToArray()).Should().BeTrue();
+        }
+
+        [Theory]
+        [InlineAutoDomainData]
+        public async Task WriteAsync_WhenReplyTo_SendsMessageWithoutReplyTo(
+            [NotNull] [Frozen] Mock<ICorrelationContext> correlationContext,
+            [NotNull] [Frozen] Mock<IMessageMetaDataContext> messageMetaDataContext,
+            [NotNull] [Frozen] Mock<MockableServiceBusSender> serviceBusSender,
+            [NotNull] string replyToExpected,
+            [NotNull] string correlationId,
+            [NotNull] byte[] content)
+        {
+            // Arrange
+            ServiceBusMessage? receivedMessage = null;
+            serviceBusSender
+                .Setup(s => s.SendMessageAsync(
+                    It.IsAny<ServiceBusMessage>(),
+                    It.IsAny<CancellationToken>()))
+                .Callback<ServiceBusMessage, CancellationToken>((message, _) => receivedMessage = message);
+            var genericSender = new ServiceBusSender<TestOutboundMessage>(serviceBusSender.Object);
+
+            correlationContext.Setup(c => c.Id).Returns(correlationId);
+            messageMetaDataContext.Setup(c => c.ReplyTo).Returns(replyToExpected);
+
+            var sut = new TestableServiceBusChannel<TestOutboundMessage>(
+                genericSender,
+                correlationContext.Object,
+                messageMetaDataContext.Object);
+
+            // Act
+            await sut.WriteToAsync(content).ConfigureAwait(false);
+
+            // Assert
+            receivedMessage!.Should().NotBeNull();
+            var replyTo = receivedMessage!.ApplicationProperties["ReplyTo"];
+            replyToExpected.Should().BeEquivalentTo(replyTo.ToString());
+            content.SequenceEqual(receivedMessage.Body.ToArray()).Should().BeTrue();
         }
     }
 }
