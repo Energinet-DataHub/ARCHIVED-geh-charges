@@ -49,3 +49,14 @@ module "sbnar_integrationevents_sender" {
   send                      = true
   dependencies              = [module.sbn_external_integration_events]
 }
+
+module "sbnar_integrationevents_manager" {
+  source                    = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//service-bus-namespace-auth-rule?ref=2.0.0"
+  name                      = "sbnar-integrationevents-manager"
+  namespace_name            = module.sbn_external_integration_events.name
+  resource_group_name       = data.azurerm_resource_group.main.name
+  manage                    = true
+  send                      = true
+  listen                    = true
+  dependencies              = [module.sbn_external_integration_events]
+}
