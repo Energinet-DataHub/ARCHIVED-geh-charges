@@ -36,6 +36,12 @@ namespace GreenEnergyHub.Charges.Infrastructure.Context.EntityConfigurations
                 .HasConversion(
                     toDbValue => (int)toDbValue,
                     fromDbValue => (MarketParticipantRole)fromDbValue);
+            builder
+                .Property(x => x.BusinessReasonCode)
+                .HasColumnName("BusinessReasonCode")
+                .HasConversion(
+                    toDbValue => (int)toDbValue,
+                    fromDbValue => (BusinessReasonCode)fromDbValue);
             builder.Property(x => x.ChargeId).HasColumnName("ChargeId");
             builder.Property(x => x.ChargeOwner).HasColumnName("ChargeOwner");
             builder.Property(x => x.ChargeType).HasColumnName("ChargeType")
