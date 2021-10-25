@@ -36,16 +36,15 @@ namespace Energinet.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.Defaul
         public void Convert_WhenCalled_ShouldMapToDtoWithCorrectValues()
         {
             // Arrange
-            var createDefaultChargeLinksReply = _fixture.Create<CreateDefaultChargeLinksReply>();
-            var createDefaultChargeLinksSucceeded = _fixture.Create<CreateDefaultChargeLinksSucceeded>();
-            createDefaultChargeLinksReply.CreateDefaultChargeLinksSucceeded = createDefaultChargeLinksSucceeded;
+            var createDefaultChargeLinkMessagesReply = _fixture.Create<CreateDefaultChargeLinkMessagesReply>();
+            var createDefaultChargeLinkMessagesSucceeded = _fixture.Create<CreateDefaultChargeLinkMessagesSucceeded>();
+            createDefaultChargeLinkMessagesReply.CreateDefaultChargeLinkMessagesSucceeded = createDefaultChargeLinkMessagesSucceeded;
 
             // Act
-            var result = CreateDefaultChargeLinksSucceededInboundMapper.Convert(createDefaultChargeLinksReply);
+            var result = CreateDefaultChargeLinkMessagesSucceededInboundMapper.Convert(createDefaultChargeLinkMessagesReply);
 
             // Assert
-            result.MeteringPointId.Should().Be(createDefaultChargeLinksReply.MeteringPointId);
-            result.DidCreateChargeLinks.Should().Be(createDefaultChargeLinksSucceeded.DidCreateChargeLinks);
+            result.MeteringPointId.Should().Be(createDefaultChargeLinkMessagesReply.MeteringPointId);
         }
 
         [Fact]

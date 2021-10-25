@@ -20,6 +20,7 @@ namespace Energinet.DataHub.Charges.Libraries.Protobuf
 {
     internal class CreateDefaultChargeLinksSucceededOutboundMapper
     {
+        // Todo: Not in use?
         protected internal static CreateDefaultChargeLinksReply Convert(
             [NotNull] CreateDefaultChargeLinksSucceededDto createDefaultChargeLinksSucceededDto)
         {

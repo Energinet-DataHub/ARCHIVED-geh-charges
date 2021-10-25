@@ -20,6 +20,7 @@ using Energinet.DataHub.Charges.Libraries.Models;
 
 namespace Energinet.DataHub.Charges.Libraries.Protobuf
 {
+    // Todo: Not in use?
     public static class CreateDefaultChargeLinksFailedOutboundMapper
     {
         internal static CreateDefaultChargeLinksReply Convert(
