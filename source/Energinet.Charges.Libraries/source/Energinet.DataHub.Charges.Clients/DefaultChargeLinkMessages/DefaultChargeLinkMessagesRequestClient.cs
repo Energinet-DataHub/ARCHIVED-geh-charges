@@ -59,6 +59,56 @@ namespace Energinet.DataHub.Charges.Libraries.DefaultChargeLinkMessages
                 .ConfigureAwait(false);
         }
 
+        public async Task CreateDefaultChargeLinkMessagesSucceededRequestAsync(
+            [NotNull] CreateDefaultChargeLinkMessagesSucceededDto createDefaultChargeLinkMessagesSucceededDto,
+            [NotNull] string correlationId,
+            [NotNull] string replyQueueName)
+        {
+            if (createDefaultChargeLinkMessagesSucceededDto == null)
+                throw new ArgumentNullException(nameof(createDefaultChargeLinkMessagesSucceededDto));
+
+            if (string.IsNullOrWhiteSpace(correlationId))
+                throw new ArgumentNullException(nameof(correlationId));
+
+            if (string.IsNullOrWhiteSpace(replyQueueName))
+                throw new ArgumentNullException(nameof(replyQueueName));
+
+            var createDefaultChargeLinks = new CreateDefaultChargeLinkMessagesSucceeded
+            {
+                MeteringPointId = createDefaultChargeLinkMessagesSucceededDto.MeteringPointId,
+            };
+
+            await _serviceBusRequestSender.SendRequestAsync(
+                    createDefaultChargeLinks.ToByteArray(), replyQueueName, correlationId)
+                .ConfigureAwait(false);
+        }
+
+        public async Task CreateDefaultChargeLinkMessagesFailedRequestAsync(
+            [NotNull] CreateDefaultChargeLinkMessagesFailedDto createDefaultChargeLinkMessagesFailedDto,
+            [NotNull] string correlationId,
+            [NotNull] string replyQueueName)
+        {
+            if (createDefaultChargeLinkMessagesFailedDto == null)
+                throw new ArgumentNullException(nameof(createDefaultChargeLinkMessagesFailedDto));
+
+            if (string.IsNullOrWhiteSpace(correlationId))
+                throw new ArgumentNullException(nameof(correlationId));
+
+            if (string.IsNullOrWhiteSpace(replyQueueName))
+                throw new ArgumentNullException(nameof(replyQueueName));
+
+            var createDefaultChargeLinks = new CreateDefaultChargeLinkMessagesFailed
+            {
+                MeteringPointId = createDefaultChargeLinkMessagesFailedDto.MeteringPointId,
+                ErrorCode =
+                    (CreateDefaultChargeLinkMessagesFailed.Types.ErrorCode)createDefaultChargeLinkMessagesFailedDto.ErrorCode,
+            };
+
+            await _serviceBusRequestSender.SendRequestAsync(
+                    createDefaultChargeLinks.ToByteArray(), replyQueueName, correlationId)
+                .ConfigureAwait(false);
+        }
+
         public async ValueTask DisposeAsync()
         {
             await _serviceBusClient.DisposeAsync().ConfigureAwait(false);
