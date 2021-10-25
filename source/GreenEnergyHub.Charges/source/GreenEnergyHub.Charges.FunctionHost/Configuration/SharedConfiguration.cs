@@ -20,6 +20,7 @@ using Energinet.DataHub.MessageHub.Client.Factories;
 using Energinet.DataHub.MessageHub.Client.Peek;
 using Energinet.DataHub.MessageHub.Client.Storage;
 using EntityFrameworkCore.SqlServer.NodaTime.Extensions;
+using GreenEnergyHub.Charges.Domain.AvailableChargeData;
 using GreenEnergyHub.Charges.Domain.AvailableChargeLinksData;
 using GreenEnergyHub.Charges.Domain.ChargeLinkCommandReceivedEvents;
 using GreenEnergyHub.Charges.Domain.Charges;
@@ -77,6 +78,8 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
             serviceCollection.AddScoped<IMeteringPointRepository, MeteringPointRepository>();
             serviceCollection
                 .AddScoped<IAvailableChargeLinksDataRepository, AvailableChargeLinksDataRepository>();
+            serviceCollection
+                .AddScoped<IAvailableChargeDataRepository, AvailableChargeDataRepository>();
         }
 
         private static void ConfigureSharedMessaging(IServiceCollection serviceCollection)

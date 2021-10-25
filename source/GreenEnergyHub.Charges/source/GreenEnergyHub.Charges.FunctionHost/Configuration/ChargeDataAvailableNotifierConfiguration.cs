@@ -13,17 +13,17 @@
 // limitations under the License.
 
 using GreenEnergyHub.Charges.Application.ChargeLinks.MessageHub;
-using GreenEnergyHub.Charges.Domain.AvailableChargeLinksData;
+using GreenEnergyHub.Charges.Domain.AvailableChargeData;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace GreenEnergyHub.Charges.FunctionHost.Configuration
 {
-    internal static class ChargeLinkDataAvailableNotifierConfiguration
+    internal static class ChargeDataAvailableNotifierConfiguration
     {
         internal static void ConfigureServices(IServiceCollection serviceCollection)
         {
-            serviceCollection.AddScoped<IChargeLinkDataAvailableNotifier, ChargeLinkDataAvailableNotifier>();
-            serviceCollection.AddScoped<IAvailableChargeLinksDataFactory, AvailableChargeLinksDataFactory>();
+            serviceCollection.AddScoped<IChargeDataAvailableNotifier, ChargeDataAvailableNotifier>();
+            serviceCollection.AddScoped<IAvailableChargeDataFactory, AvailableChargeDataFactory>();
         }
     }
 }
