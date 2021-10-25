@@ -112,7 +112,7 @@ namespace GreenEnergyHub.Iso8601
                 "P1D" => GetStartOfDay(time),
                 "PT1H" => GetStartOfHour(time),
                 "PT15M" => GetStartOfQuarterOfHour(time),
-                _ => throw new InvalidEnumArgumentException($"Unsupported time resolution: {duration}"),
+                _ => throw new ArgumentException($"Unsupported time resolution: {duration}"),
             };
         }
 

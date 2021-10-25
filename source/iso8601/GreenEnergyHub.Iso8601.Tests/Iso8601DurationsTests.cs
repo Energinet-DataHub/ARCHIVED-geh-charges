@@ -300,5 +300,19 @@ namespace GreenEnergyHub.Iso8601.Tests
             // Assert
             actual.Should().Be(expectedTime);
         }
+
+        [Theory]
+        [InlineAutoDomainData("P1Y")]
+        public void GetTimeFixedToDuration_WhenUnsupportedDuration_ThrowArgumentException(
+            string duration,
+            int hours,
+            Iso8601Durations iso8601Durations)
+        {
+            // Arrange
+            var startTime = SystemClock.Instance.GetCurrentInstant();
+
+            // Act and assert
+            Assert.Throws<ArgumentException>(() => iso8601Durations.GetTimeFixedToDuration(startTime, duration, 1));
+        }
     }
 }
