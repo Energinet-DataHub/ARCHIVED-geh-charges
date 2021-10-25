@@ -49,7 +49,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Functions.Charges
 
             public Task DisposeAsync()
             {
-                Fixture.ServiceBusListenerMock.ResetMessageHandlersAndReceivedMessages();
+                Fixture.PostOfficeListenerMock.ResetMessageHandlersAndReceivedMessages();
                 return Task.CompletedTask;
             }
 
@@ -59,14 +59,14 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Functions.Charges
                 // Arrange
                 var testFilePath = "TestFiles/ValidCreateTariffCommand.xml";
                 var clock = SystemClock.Instance;
-                var chargeJson = EmbeddedResourceHelper.GetInputJson(testFilePath, clock);
+                var chargeJson = EmbeddedResourceHelper.GetEmbeddedFile(testFilePath, clock);
 
                 var request = new HttpRequestMessage(HttpMethod.Post, "api/ChargeIngestion");
                 var expectedBody = chargeJson;
                 request.Content = new StringContent(expectedBody, Encoding.UTF8, "application/json");
 
                 var body = string.Empty;
-                using var isMessageReceivedEvent = await Fixture.ServiceBusListenerMock
+                using var isMessageReceivedEvent = await Fixture.PostOfficeListenerMock
                     .WhenAny()
                     .VerifyOnceAsync(receivedMessage =>
                     {

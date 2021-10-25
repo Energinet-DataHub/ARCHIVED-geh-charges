@@ -41,7 +41,10 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures
         public ChargesDatabaseManager DatabaseManager { get; }
 
         [NotNull]
-        public ServiceBusListenerMock? ServiceBusListenerMock { get; private set; }
+        public ServiceBusListenerMock? PostOfficeListenerMock { get; private set; }
+
+        [NotNull]
+        public ServiceBusListenerMock? DataAvailableListenerMock { get; private set; }
 
         private AzuriteManager AzuriteManager { get; }
 
@@ -78,8 +81,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures
             // Overwrite service bus related settings, so the function app uses the names we have control of in the test
             var postOfficeTopicName = await GetTopicNameFromKeyAsync(ChargesFunctionAppServiceBusOptions.PostOfficeTopicKey);
             Environment.SetEnvironmentVariable(EnvironmentSettingNames.PostOfficeTopicName, postOfficeTopicName);
-            ServiceBusListenerMock = new ServiceBusListenerMock(ServiceBusResource.ConnectionString, TestLogger);
-            await ServiceBusListenerMock.AddTopicSubscriptionListenerAsync(postOfficeTopicName, ChargesFunctionAppServiceBusOptions.PostOfficeSubscriptionName);
+            PostOfficeListenerMock = new ServiceBusListenerMock(ServiceBusResource.ConnectionString, TestLogger);
+            await PostOfficeListenerMock.AddTopicSubscriptionListenerAsync(postOfficeTopicName, ChargesFunctionAppServiceBusOptions.PostOfficeSubscriptionName);
 
             // We also overwrite all the service bus connection strings, since we created all topic/queues in just one of them
             Environment.SetEnvironmentVariable(EnvironmentSettingNames.DomainEventSenderConnectionString, ServiceBusResource.ConnectionString);
@@ -131,6 +134,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures
 
             var messageHubDataAvailableQueueName = await GetQueueNameFromKeyAsync(ChargesFunctionAppServiceBusOptions.MessageHubDataAvailableQueueKey);
             Environment.SetEnvironmentVariable("MESSAGEHUB_DATAAVAILABLE_QUEUE", messageHubDataAvailableQueueName);
+            DataAvailableListenerMock = new ServiceBusListenerMock(ServiceBusResource.ConnectionString, TestLogger);
+            await DataAvailableListenerMock.AddQueueListenerAsync(messageHubDataAvailableQueueName);
 
             var messageHubRequestQueueName = await GetQueueNameFromKeyAsync(ChargesFunctionAppServiceBusOptions.MessageHubRequestQueueKey);
             Environment.SetEnvironmentVariable("MESSAGEHUB_BUNDLEREQUEST_QUEUE", messageHubRequestQueueName);
@@ -164,7 +169,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures
             AzuriteManager.Dispose();
 
             // => Service Bus
-            await ServiceBusListenerMock.DisposeAsync();
+            await PostOfficeListenerMock.DisposeAsync();
+            await DataAvailableListenerMock.DisposeAsync();
             await ServiceBusResource.DisposeAsync();
 
             // => Database
