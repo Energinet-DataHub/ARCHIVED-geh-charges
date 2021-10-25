@@ -23,7 +23,7 @@ import "google/protobuf/timestamp.proto";
 option csharp_namespace = "GreenEnergyHub.Charges.Infrastructure.Integration.ChargeConfirmation";
 
 message ChargePricesUpdated {
-  string charge_id = 1; // A charge identifier. Combined with Charge Owner and Charge Type it becomes unique
+  string charge_id = 1; // A charge identifier provided by the Market Participant. Combined with Charge Owner and Charge Type it becomes unique
   enum ChargeType {
       CT_UNKNOWN = 0;
       CT_SUBSCRIPTION = 1;
@@ -32,15 +32,15 @@ message ChargePricesUpdated {
   }
   ChargeType charge_type = 2; // The type of charge; tariff, fee or subscription
   string charge_owner = 3; // A charge owner identification, e.g. the Market Participant's GLN or EIC number
-  google.protobuf.Timestamp update_period_start_date = 4;
-  google.protobuf.Timestamp update_period_end_date = 5;
-  repeated ChargePrice points = 6;
+  google.protobuf.Timestamp update_period_start_date = 4; // In UTC. The start of the charge prices period. The start equals the time of the earliest charge price in the list
+  google.protobuf.Timestamp update_period_end_date = 5; // In UTC. The end of the charge prices period. The end is to be considered an up to (excluding) date time which equals the end of the latest charge price in the list. This is a calculated value that adds a single duration equal to the charge's resolution, e.g. hourly, to the latest charge price's time
+  repeated ChargePrice points = 6; // A list with charge prices
 }
 
 message ChargePrice
 {
-  DecimalValue price = 1;
-  google.protobuf.Timestamp time = 2; // A point in time, where the price applies.
+  DecimalValue price = 1; // Charge price
+  google.protobuf.Timestamp time = 2; // In UTC. Point in time where the charge price applies
 }
 
 /* ProtoBuf doesn't support decimal.
