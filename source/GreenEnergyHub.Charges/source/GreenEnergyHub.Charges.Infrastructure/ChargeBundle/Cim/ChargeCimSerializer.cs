@@ -74,7 +74,9 @@ namespace GreenEnergyHub.Charges.Infrastructure.ChargeBundle.Cim
                     new XAttribute(
                         xmlSchemaNamespace + CimMarketDocumentConstants.SchemaLocation,
                         xmlSchemaLocation),
-                    GetMarketDocumentHeader(cimNamespace, charges.First()), // Note: The list will always have same recipient and business reason code, so we just take those values from the first element
+                    // Note: The list will always have same recipient and business reason code,
+                    // so we just take those values from the first element
+                    GetMarketDocumentHeader(cimNamespace, charges.First()),
                     GetActivityRecords(cimNamespace, charges)));
         }
 
@@ -86,10 +88,10 @@ namespace GreenEnergyHub.Charges.Infrastructure.ChargeBundle.Cim
                 new XElement(
                     cimNamespace + CimMarketDocumentConstants.Type,
                     DocumentTypeMapper.Map(DocumentType.NotifyPriceList)),
-                /*new XElement(
+                new XElement(
                     cimNamespace +
                     CimMarketDocumentConstants.BusinessReasonCode,
-                    BusinessReasonCodeMapper.Map(charge.BusinessReasonCode)),*/
+                    BusinessReasonCodeMapper.Map(charge.BusinessReasonCode)),
                 new XElement(
                     cimNamespace + CimMarketDocumentConstants.IndustryClassification,
                     IndustryClassificationMapper.Map(IndustryClassification.Electricity)),
@@ -103,7 +105,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.ChargeBundle.Cim
                     cimNamespace + CimMarketDocumentConstants.SenderBusinessProcessRole,
                     MarketParticipantRoleMapper.Map(
                         _hubSenderConfiguration.GetSenderMarketParticipant().BusinessProcessRole)),
-                /*new XElement(
+                new XElement(
                     cimNamespace + CimMarketDocumentConstants.RecipientId,
                     new XAttribute(
                         CimMarketDocumentConstants.CodingScheme,
@@ -111,7 +113,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.ChargeBundle.Cim
                     charge.RecipientId),
                 new XElement(
                     cimNamespace + CimMarketDocumentConstants.RecipientBusinessProcessRole,
-                    MarketParticipantRoleMapper.Map(charge.RecipientRole)),*/
+                    MarketParticipantRoleMapper.Map(charge.RecipientRole)),
                 new XElement(
                     cimNamespace + CimMarketDocumentConstants.CreatedDateTime,
                     _clock.GetCurrentInstant().ToString()),
@@ -158,7 +160,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.ChargeBundle.Cim
                         CodingSchemeMapper.Map(CodingScheme.GS1)),
                     charge.ChargeOwner),
                 new XElement(cimNamespace + CimChargeConstants.ChargeType, ChargeTypeMapper.Map(charge.ChargeType)),
-                /*new XElement(cimNamespace + CimChargeConstants.ChargeId, charge.ChargeId),*/
+                new XElement(cimNamespace + CimChargeConstants.ChargeId, charge.ChargeId),
                 // Charge name
                 CimHelper.GetElementIfNeeded(
                     cimNamespace,

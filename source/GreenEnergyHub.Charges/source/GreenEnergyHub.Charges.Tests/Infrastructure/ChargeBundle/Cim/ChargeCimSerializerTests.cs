@@ -131,6 +131,10 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.ChargeBundle.Cim
                 Instant.FromUtc(2021, 4, 30, 22, 0, 0);
 
             return new AvailableChargeData(
+                "Recipient" + no,
+                MarketParticipantRole.GridAccessProvider,
+                BusinessReasonCode.UpdateChargeInformation,
+                "ChargeId" + no,
                 "Owner" + no,
                 GetChargeType(no),
                 "Name" + no,
