@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -37,15 +36,18 @@ namespace GreenEnergyHub.Charges.Infrastructure.ChargeBundle.Cim
         private IHubSenderConfiguration _hubSenderConfiguration;
         private IClock _clock;
         private IIso8601Durations _iso8601Durations;
+        private ICimIdProvider _cimIdProvider;
 
         public ChargeCimSerializer(
             IHubSenderConfiguration hubSenderConfiguration,
             IClock clock,
-            IIso8601Durations iso8601Durations)
+            IIso8601Durations iso8601Durations,
+            ICimIdProvider cimIdProvider)
         {
             _hubSenderConfiguration = hubSenderConfiguration;
             _clock = clock;
             _iso8601Durations = iso8601Durations;
+            _cimIdProvider = cimIdProvider;
         }
 
         public async Task SerializeToStreamAsync(IEnumerable<AvailableChargeData> charges, Stream stream)
@@ -84,7 +86,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.ChargeBundle.Cim
         {
             return new List<XElement>()
             {
-                new XElement(cimNamespace + CimMarketDocumentConstants.Id, Guid.NewGuid()),
+                new XElement(cimNamespace + CimMarketDocumentConstants.Id, _cimIdProvider.GetUniqueId()),
                 new XElement(
                     cimNamespace + CimMarketDocumentConstants.Type,
                     DocumentTypeMapper.Map(DocumentType.NotifyPriceList)),
@@ -133,7 +135,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.ChargeBundle.Cim
         {
             return new XElement(
                 cimNamespace + CimMarketDocumentConstants.MarketActivityRecord,
-                new XElement(cimNamespace + CimChargeConstants.MarketActivityRecordId, Guid.NewGuid().ToString()),
+                new XElement(cimNamespace + CimChargeConstants.MarketActivityRecordId, _cimIdProvider.GetUniqueId()),
                 new XElement(cimNamespace + CimChargeConstants.SnapshotDateTime, charge.RequestTime.ToString()),
                 GetChargeGroupElement(cimNamespace, charge));
         }
@@ -205,7 +207,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.ChargeBundle.Cim
                     cimNamespace,
                     // Right now, charge name is our best bet of determining whether to include tax indicator
                     string.IsNullOrEmpty(charge.ChargeName),
-                    CimChargeConstants.TransparentInvoicing,
+                    CimChargeConstants.TaxIndicator,
                     () => charge.TaxIndicator),
                 GetSeriesPeriod(cimNamespace, charge));
         }

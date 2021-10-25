@@ -24,6 +24,7 @@ using GreenEnergyHub.Charges.Domain.AvailableChargeData;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.Infrastructure.ChargeBundle.Cim;
+using GreenEnergyHub.Charges.Infrastructure.Cim;
 using GreenEnergyHub.Charges.Infrastructure.Configuration;
 using GreenEnergyHub.Charges.TestCore;
 using GreenEnergyHub.Iso8601;
@@ -39,6 +40,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.ChargeBundle.Cim
     public class ChargeCimSerializerTests
     {
         private const int NoOfChargesInBundle = 10;
+        private const string CimTestId = "00000000000000000000000000000000";
 
 /*        [Theory]
         [InlineAutoDomainData]
@@ -72,9 +74,10 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.ChargeBundle.Cim
             [NotNull] [Frozen] Mock<IHubSenderConfiguration> hubSenderConfiguration,
             [NotNull] [Frozen] Mock<IClock> clock,
             [NotNull] [Frozen] Mock<IIso8601Durations> iso8601Durations,
+            [NotNull] [Frozen] Mock<ICimIdProvider> cimIdProvider,
             [NotNull] ChargeCimSerializer sut)
         {
-            SetupMocks(hubSenderConfiguration, clock, iso8601Durations);
+            SetupMocks(hubSenderConfiguration, clock, iso8601Durations, cimIdProvider);
 
             var charges = GetCharges(clock.Object);
 
@@ -90,7 +93,8 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.ChargeBundle.Cim
         private void SetupMocks(
             Mock<IHubSenderConfiguration> hubSenderConfiguration,
             Mock<IClock> clock,
-            Mock<IIso8601Durations> iso8601Durations)
+            Mock<IIso8601Durations> iso8601Durations,
+            Mock<ICimIdProvider> cimIdProvider)
         {
             hubSenderConfiguration.Setup(
                     h => h.GetSenderMarketParticipant())
@@ -110,6 +114,10 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.ChargeBundle.Cim
                         It.IsAny<string>(),
                         It.IsAny<int>()))
                 .Returns(Instant.FromUtc(2100, 3, 31, 22, 0, 0));
+
+            cimIdProvider.Setup(
+                    c => c.GetUniqueId())
+                .Returns(CimTestId);
         }
 
         private List<AvailableChargeData> GetCharges(IClock clock)
