@@ -26,16 +26,18 @@ namespace Energinet.DataHub.Charges.Libraries.DefaultChargeLink
 {
     public sealed class DefaultChargeLinkClient : IAsyncDisposable, IDefaultChargeLinkClient
     {
-        private const string CreateLinkRequestQueueName = "create-link-request";
         private readonly ServiceBusClient _serviceBusClient;
+        private readonly string _createLinkRequestQueueName;
         private readonly IServiceBusRequestSender _serviceBusRequestSender;
 
         public DefaultChargeLinkClient(
             [NotNull] ServiceBusClient serviceBusClient,
             [NotNull] IServiceBusRequestSenderFactory serviceBusRequestSenderFactory,
-            [NotNull] string replyToQueueName)
+            [NotNull] string replyToQueueName,
+            [NotNull] string createLinkRequestQueueName = "create-link-request")
         {
             _serviceBusClient = serviceBusClient;
+            _createLinkRequestQueueName = createLinkRequestQueueName;
             _serviceBusRequestSender = serviceBusRequestSenderFactory.Create(serviceBusClient, replyToQueueName);
         }
 
@@ -55,7 +57,7 @@ namespace Energinet.DataHub.Charges.Libraries.DefaultChargeLink
             };
 
             await _serviceBusRequestSender.SendRequestAsync(
-                createDefaultChargeLinks.ToByteArray(), CreateLinkRequestQueueName, correlationId)
+                createDefaultChargeLinks.ToByteArray(), _createLinkRequestQueueName, correlationId)
                 .ConfigureAwait(false);
         }
 
