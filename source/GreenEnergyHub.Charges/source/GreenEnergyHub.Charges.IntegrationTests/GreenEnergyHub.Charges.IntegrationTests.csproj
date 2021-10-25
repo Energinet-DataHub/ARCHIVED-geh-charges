@@ -62,8 +62,8 @@ limitations under the License.
     </ItemGroup>
 
     <ItemGroup>
-      <Content Include="TestFiles\InvalidCreateTariffCommand.json" CopyToOutputDirectory="Always" />
-      <Content Include="TestFiles\ValidCreateTariffCommand.json" CopyToOutputDirectory="Always" />
+      <None Include="TestFiles\InvalidCreateTariffCommand.xml" CopyToOutputDirectory="Always" />
+      <None Include="TestFiles\ValidCreateTariffCommand.xml" CopyToOutputDirectory="Always" />
       <None Remove="appsettings.json" />
     </ItemGroup>
 
