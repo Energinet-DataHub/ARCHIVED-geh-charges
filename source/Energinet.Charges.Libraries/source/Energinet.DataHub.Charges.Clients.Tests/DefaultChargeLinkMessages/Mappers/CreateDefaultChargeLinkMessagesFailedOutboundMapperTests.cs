@@ -43,7 +43,8 @@ namespace Energinet.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.Defaul
 
             // Assert
             actual.MeteringPointId.Should().Be(createDefaultChargeLinksFailedDto.MeteringPointId);
-            ((int)actual.ErrorCode).Should().Be((int)createDefaultChargeLinksFailedDto.ErrorCode);
+            ((int)actual.CreateDefaultChargeLinksFailed.ErrorCode)
+                .Should().Be((int)createDefaultChargeLinksFailedDto.ErrorCode);
         }
 
         [Fact]
