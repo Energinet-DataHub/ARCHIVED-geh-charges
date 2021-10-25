@@ -31,6 +31,12 @@ data "azurerm_key_vault_secret" "integration_events_sender_connection_string" {
 }
 
 # IMPORTANT: This is being overwritten (not just overridden) in Development environment
+data "azurerm_key_vault_secret" "integration_events_manager_connection_string" {
+  name         = local.INTEGRATION_EVENTS_MANAGER_CONNECTION_STRING
+  key_vault_id = data.azurerm_key_vault.kv_sharedresources.id
+}
+
+# IMPORTANT: This is being overwritten (not just overridden) in Development environment
 data "azurerm_key_vault_secret" "messagehub_storage_connection_string" {
   name         = local.MESSAGEHUB_STORAGE_CONNECTION_STRING_KEY
   key_vault_id = data.azurerm_key_vault.kv_sharedresources.id

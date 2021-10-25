@@ -61,7 +61,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Health
             /* Consider checking access to database, Service Bus topics and queues, and other health checks */
 
             // TODO: This connection string does not have permissions to verify queue existence
-            var connectionString = EnvironmentHelper.GetEnv("INTEGRATIONEVENT_SENDER_CONNECTION_STRING");
+            var connectionString = EnvironmentHelper.GetEnv("INTEGRATIONEVENT_MANAGER_CONNECTION_STRING");
 
             return new Dictionary<string, bool>
             {
