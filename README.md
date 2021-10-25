@@ -36,13 +36,13 @@ The diagrams depict the architecture of `Charge and Charge Prices` and `Charge L
 
 ### Charge and charge prices architecture
 
-![ChargeAndChargePrices](ARCHITECTURE-ChargeAndChargePrices.png)
+![Charge And Charge Prices](ARCHITECTURE-ChargeAndChargePrices.png)
 
 Note: As the integration between the Charges and Post Office domains is yet to be established, the `ChargeConfirmation` and `ChargeRejection` events are temporarily placed in the Charges domain's Service Bus.
 
 ### Charge links architecture
 
-![ChargeLinks](ARCHITECTURE-ChargeLinks.png)
+![Charge Links](ARCHITECTURE-ChargeLinks.png)
 
 ## Context Streams
 
