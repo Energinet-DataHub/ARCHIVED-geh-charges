@@ -14,11 +14,10 @@
 
 using System;
 using System.Threading.Tasks;
+using Energinet.DataHub.Core.FunctionApp.TestCommon;
+using Energinet.DataHub.Core.FunctionApp.TestCommon.ServiceBus.ListenerMock;
 using FluentAssertions;
 using GreenEnergyHub.Charges.IntegrationTests.Fixtures;
-using GreenEnergyHub.Charges.TestCore.Attributes;
-using GreenEnergyHub.FunctionApp.TestCommon;
-using GreenEnergyHub.FunctionApp.TestCommon.ServiceBus.ListenerMock;
 using Xunit;
 using Xunit.Abstractions;
 

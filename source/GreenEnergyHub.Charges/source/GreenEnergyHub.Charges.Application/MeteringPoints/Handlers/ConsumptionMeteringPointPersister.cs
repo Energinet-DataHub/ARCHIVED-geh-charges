@@ -40,8 +40,39 @@ namespace GreenEnergyHub.Charges.Application.MeteringPoints.Handlers
                 throw new ArgumentNullException(nameof(consumptionMeteringPointCreatedEvent));
 
             var meteringPoint = MeteringPointFactory.Create(consumptionMeteringPointCreatedEvent);
-            await _meteringPointRepository.StoreMeteringPointAsync(meteringPoint).ConfigureAwait(false);
-            _logger.LogInformation("Finished persisting metering point with id: {meteringPointId}", meteringPoint.MeteringPointId);
+
+            var existingMeteringPoint = await _meteringPointRepository.GetOrNullAsync(meteringPoint.MeteringPointId);
+
+            if (existingMeteringPoint == null)
+            {
+                await _meteringPointRepository.StoreMeteringPointAsync(meteringPoint).ConfigureAwait(false);
+                _logger.LogInformation($"Consumption Metering Point ID '{meteringPoint.MeteringPointId}' has been persisted");
+            }
+            else
+            {
+                _logger.LogInformation(
+                    $"Metering Point ID '{meteringPoint.MeteringPointId}' already exists in storage");
+
+                // Compare and log differences between the integration event data and the persisted metering point's data
+                EnsureMeteringPointsAreIdentical(meteringPoint, existingMeteringPoint);
+            }
+        }
+
+        /// <summary>
+        /// Compares a subset of properties of two metering point domain objects
+        /// </summary>
+        /// <param name="meteringPoint">The Metering Point from the integration event</param>
+        /// <param name="existingMeteringPoint">The Metering Point from storage</param>
+        private void EnsureMeteringPointsAreIdentical(MeteringPoint meteringPoint, MeteringPoint existingMeteringPoint)
+        {
+            if (!meteringPoint.HasSameMeteringPointType(existingMeteringPoint))
+                _logger.LogError($"Received 'metering point type' event data '{meteringPoint.MeteringPointType}' was not equal to the already persisted value '{existingMeteringPoint.MeteringPointType}' for Metering Point ID '{meteringPoint.MeteringPointId}'");
+
+            if (!meteringPoint.HasSameSettlementMethod(existingMeteringPoint))
+                _logger.LogError($"Received 'settlement method' event data '{meteringPoint.SettlementMethod}' was not equal to the already persisted value '{existingMeteringPoint.SettlementMethod}' for Metering Point ID '{meteringPoint.MeteringPointId}'");
+
+            if (!meteringPoint.HasSameGridAreaId(existingMeteringPoint))
+                _logger.LogError($"Received 'grid area id' event data '{meteringPoint.GridAreaId}' was not equal to the already persisted value '{existingMeteringPoint.GridAreaId}' for Metering Point ID '{meteringPoint.MeteringPointId}'");
         }
     }
 }

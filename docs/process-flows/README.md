@@ -4,24 +4,34 @@ All process flows within the Charges domain will be gathered here.
 
 | Process flows |
 |-------------------|
-|[Change of charge price list](#Change-of-charge-price-list-flow)|
-|[Persisting charges rule set](#Persisting-charges-rule-set)|
-|...|
+|<b>[Charge Price List Flow](#Charge-Price-List-Flow)</b>|
+|   - [Persist Charge and Charge Prices](#Persist-Charge-And-Charge-Prices)|
+|<b>[Charge Link Flow](#Charge-Link-Flow)<b>|
 <br>
 
-## Change of charge price list flow
+## Charge Price List Flow
 
-The following process flow depicts the different paths a change of charge price list can take through the domain.
+The following image depicts the charge price list flow.
 It also shows the micro services involved along with the activities they perform.
 
-![Process flow](.././images/ChargePriceListProcessFlow.png)
+![Charge flow](images/ChargePriceListProcessFlow.png)
 
-## Persisting charges rule set
+### Persist Charge and Charge Prices
 
-Below process flow depicts the rule set for persisting an incoming charge in the SQL database.
+OBS: This rule set is pending complete implementation.
+
+Below process flow depicts the rule set used by the `ChargeCommandReceiverEndpoint` for persisting an incoming charge and prices in the SQL database.
 The rule set documents the different persistence paths the system can take given circumstances like charge already exist (same Charge ID and Owner) and if so, whether the incoming charge has a period that overlaps any of the existing charge's periods.
 All paths outline the exact database tables it needs to interact with and when existing charge data, e.g periods or prices need to be retired.
 
 The rule set assumes the incoming charge has been converted to an internal model, i.e. the Charge Command, and it has passed both input and business validations.
 
-![Persisting charges rule set](.././images/PersistingChargesRuleSet_ProcessFlow.png)
+![Persist charge](images/PersistingChargesRuleSet_ProcessFlow.png)
+<br>
+
+## Charge Link Flow
+
+The following image depicts the charge link process flow.
+It also shows the micro services involved along with the activities they perform.
+
+![Charge link flow](images/CreateChargeLinkProcessFlow.png)

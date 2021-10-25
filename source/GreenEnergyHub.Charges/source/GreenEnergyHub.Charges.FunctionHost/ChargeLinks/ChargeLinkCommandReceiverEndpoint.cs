@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application.ChargeLinks.Handlers;
 using GreenEnergyHub.Charges.Domain.ChargeLinkCommandReceivedEvents;
@@ -27,11 +26,11 @@ namespace GreenEnergyHub.Charges.FunctionHost.ChargeLinks
     public class ChargeLinkCommandReceiverEndpoint
     {
         public const string FunctionName = nameof(ChargeLinkCommandReceiverEndpoint);
-        private readonly MessageExtractor<ChargeLinkCommandReceivedContract> _messageExtractor;
+        private readonly MessageExtractor<ChargeLinkCommandReceived> _messageExtractor;
         private readonly IChargeLinkCommandReceivedHandler _chargeLinkCommandReceivedHandler;
 
         public ChargeLinkCommandReceiverEndpoint(
-            MessageExtractor<ChargeLinkCommandReceivedContract> messageExtractor,
+            MessageExtractor<ChargeLinkCommandReceived> messageExtractor,
             IChargeLinkCommandReceivedHandler chargeLinkCommandReceivedHandler)
         {
             _messageExtractor = messageExtractor;

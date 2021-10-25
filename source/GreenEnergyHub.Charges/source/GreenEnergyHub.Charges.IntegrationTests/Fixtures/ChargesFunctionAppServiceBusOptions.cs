@@ -15,9 +15,9 @@
 using System;
 using System.IO;
 using System.Text.RegularExpressions;
+using Energinet.DataHub.Core.FunctionApp.TestCommon;
+using Energinet.DataHub.Core.FunctionApp.TestCommon.FunctionAppHost;
 using GreenEnergyHub.Charges.FunctionHost.Common;
-using GreenEnergyHub.FunctionApp.TestCommon;
-using GreenEnergyHub.FunctionApp.TestCommon.FunctionAppHost;
 using Squadron;
 using Squadron.AzureCloud;
 
@@ -58,13 +58,11 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures
 
         public const string ChargePricesUpdatedTopicKey = "charge-prices-updated";
 
-        /// <summary>
-        /// This name is determined by the post office NuGet package.
-        /// </summary>
-        public const string PostOfficeDataAvailableQueueName = "sbq-dataavailable";
-
-        public const string ChargeLinkCommandAcceptedTopicKey = "chargeLinkCommandAccepted";
-        public const string ChargeLinkCommandAcceptedTopicSubscriptionName = "chargeLinkCommandAccepted";
+        public const string MessageHubDataAvailableQueueKey = "message-hub-data-available";
+        public const string MessageHubRequestQueueKey = "message-hub-request";
+        public const string MessageHubReplyQueueKey = "message-hub-reply";
+        public const string MessageHubStorageConnectionString = "UseDevelopmentStorage=true";
+        public const string MessageHubStorageContainerName = "messagehub-bundles";
 
         public override void Configure(ServiceBusOptionsBuilder builder)
         {
@@ -73,8 +71,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures
             // We extract the service bus namespace from one of the connection strings
             var serviceBusNamespace = GetNamespaceFromSetting(EnvironmentSettingNames.DomainEventSenderConnectionString);
 
-            builder
-                .Namespace(serviceBusNamespace);
+            builder.Namespace(serviceBusNamespace);
 
             builder
                 .AddTopic(PostOfficeTopicKey)
@@ -85,8 +82,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures
                 .AddSubscription(ChargeLinkAcceptedDataAvailableNotifierSubscriptionName)
                 .AddSubscription(ChargeLinkAcceptedEventPublisherSubscriptionName);
 
-            builder
-                .AddTopic(ChargeLinkCreatedTopicKey);
+            builder.AddTopic(ChargeLinkCreatedTopicKey);
 
             builder
                 .AddTopic(ChargeLinkReceivedTopicKey)
@@ -105,21 +101,21 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures
                 .AddTopic(CommandRejectedTopicKey)
                 .AddSubscription(CommandRejectedSubscriptionName);
 
-            builder
-                .AddQueue(CreateLinkRequestQueueKey);
+            builder.AddQueue(CreateLinkRequestQueueKey);
 
-            builder
-                .AddQueue(CreateLinkReplyQueueKey);
+            builder.AddQueue(CreateLinkReplyQueueKey);
 
             builder
                 .AddTopic(ConsumptionMeteringPointCreatedTopicKey)
                 .AddSubscription(ConsumptionMeteringPointCreatedSubscriptionName);
 
-            builder
-                .AddTopic(ChargeCreatedTopicKey);
+            builder.AddTopic(ChargeCreatedTopicKey);
 
-            builder
-                .AddTopic(ChargePricesUpdatedTopicKey);
+            builder.AddTopic(ChargePricesUpdatedTopicKey);
+
+            builder.AddQueue(MessageHubDataAvailableQueueKey);
+            builder.AddQueue(MessageHubRequestQueueKey);
+            builder.AddQueue(MessageHubReplyQueueKey);
         }
 
         private static string GetNamespaceFromSetting(string settingName)

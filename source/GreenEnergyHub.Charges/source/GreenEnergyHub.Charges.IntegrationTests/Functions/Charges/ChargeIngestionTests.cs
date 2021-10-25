@@ -17,12 +17,12 @@ using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using Energinet.DataHub.Core.FunctionApp.TestCommon;
+using Energinet.DataHub.Core.FunctionApp.TestCommon.ServiceBus.ListenerMock;
 using FluentAssertions;
 using FluentAssertions.Execution;
 using GreenEnergyHub.Charges.IntegrationTests.Fixtures;
 using GreenEnergyHub.Charges.IntegrationTests.TestHelpers;
-using GreenEnergyHub.FunctionApp.TestCommon;
-using GreenEnergyHub.FunctionApp.TestCommon.ServiceBus.ListenerMock;
 using NodaTime;
 using Xunit;
 using Xunit.Abstractions;
@@ -57,7 +57,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Functions.Charges
             public async Task When_CallingChargeIngestion_Then_RequestIsProcessedAndMessageIsSendToPostOffice()
             {
                 // Arrange
-                var testFilePath = "TestFiles/ValidCreateTariffCommand.json";
+                var testFilePath = "TestFiles/ValidCreateTariffCommand.xml";
                 var clock = SystemClock.Instance;
                 var chargeJson = EmbeddedResourceHelper.GetInputJson(testFilePath, clock);
 

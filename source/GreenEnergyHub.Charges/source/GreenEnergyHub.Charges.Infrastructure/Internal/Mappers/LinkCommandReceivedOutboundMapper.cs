@@ -15,9 +15,10 @@
 using System.Diagnostics.CodeAnalysis;
 using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.Domain.ChargeLinkCommandReceivedEvents;
+using GreenEnergyHub.Charges.Domain.ChargeLinkCommands;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
-using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandReceived;
 using GreenEnergyHub.Messaging.Protobuf;
+using Document = GreenEnergyHub.Charges.Domain.MarketParticipants.Document;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
 {
@@ -25,57 +26,60 @@ namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
     {
         protected override Google.Protobuf.IMessage Convert([NotNull]ChargeLinkCommandReceivedEvent chargeLinkCommandReceivedEvent)
         {
-            var document = chargeLinkCommandReceivedEvent.ChargeLinkCommand.Document;
-
-            return new ChargeLinkCommandReceivedContract
+            var chargeLinkCommandReceived = new GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandReceived.ChargeLinkCommandReceived
             {
                 PublishedTime = chargeLinkCommandReceivedEvent.PublishedTime.ToTimestamp().TruncateToSeconds(),
-                ChargeLinkCommand = new ChargeLinkCommandContract
-                {
-                    Document = ConvertDocument(document),
-                    ChargeLink = ConvertChargeLink(chargeLinkCommandReceivedEvent),
-                    CorrelationId = chargeLinkCommandReceivedEvent.ChargeLinkCommand.CorrelationId,
-                },
                 CorrelationId = chargeLinkCommandReceivedEvent.CorrelationId,
             };
+
+            foreach (var chargeLinkCommand in chargeLinkCommandReceivedEvent.ChargeLinkCommands)
+            {
+                chargeLinkCommandReceived.ChargeLinkCommands.Add(new GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandReceived.ChargeLinkCommand
+                {
+                    Document = ConvertDocument(chargeLinkCommand.Document),
+                    ChargeLink = ConvertChargeLink(chargeLinkCommand.ChargeLink),
+                    CorrelationId = chargeLinkCommandReceivedEvent.CorrelationId,
+                });
+            }
+
+            return chargeLinkCommandReceived;
         }
 
-        private static DocumentContract ConvertDocument(Document document)
+        private static GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandReceived.Document ConvertDocument(Document document)
         {
-            return new DocumentContract
+            return new GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandReceived.Document
             {
                 Id = document.Id,
                 RequestDate = document.RequestDate.ToTimestamp(),
-                Type = (DocumentTypeContract)document.Type,
+                Type = (GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandReceived.DocumentType)document.Type,
                 CreatedDateTime = document.CreatedDateTime.ToTimestamp(),
-                Sender = new MarketParticipantContract
+                Sender = new GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandReceived.MarketParticipant
                 {
                     Id = document.Sender.Id,
-                    BusinessProcessRole = (MarketParticipantRoleContract)document.Sender.BusinessProcessRole,
+                    BusinessProcessRole = (GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandReceived.MarketParticipantRole)document.Sender.BusinessProcessRole,
                 },
-                Recipient = new MarketParticipantContract
+                Recipient = new GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandReceived.MarketParticipant
                 {
                     Id = document.Recipient.Id,
-                    BusinessProcessRole = (MarketParticipantRoleContract)document.Recipient.BusinessProcessRole,
+                    BusinessProcessRole = (GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandReceived.MarketParticipantRole)document.Recipient.BusinessProcessRole,
                 },
-                IndustryClassification = (IndustryClassificationContract)document.IndustryClassification,
-                BusinessReasonCode = (BusinessReasonCodeContract)document.BusinessReasonCode,
+                IndustryClassification = (GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandReceived.IndustryClassification)document.IndustryClassification,
+                BusinessReasonCode = (GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandReceived.BusinessReasonCode)document.BusinessReasonCode,
             };
         }
 
-        private static ChargeLinkContract ConvertChargeLink(ChargeLinkCommandReceivedEvent chargeLinkCommandReceivedEvent)
+        private static GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandReceived.ChargeLink ConvertChargeLink(ChargeLinkDto chargeLinkDto)
         {
-            var chargeLink = chargeLinkCommandReceivedEvent.ChargeLinkCommand.ChargeLink;
-            return new ChargeLinkContract
+            return new GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandReceived.ChargeLink
             {
-                OperationId = chargeLink.OperationId,
-                MeteringPointId = chargeLink.MeteringPointId,
-                SenderProvidedChargeId = chargeLink.SenderProvidedChargeId,
-                ChargeOwner = chargeLink.ChargeOwner,
-                Factor = chargeLink.Factor,
-                ChargeType = (ChargeTypeContract)chargeLink.ChargeType,
-                StartDateTime = chargeLink.StartDateTime.ToTimestamp(),
-                EndDateTime = chargeLink.EndDateTime?.ToTimestamp(),
+                OperationId = chargeLinkDto.OperationId,
+                MeteringPointId = chargeLinkDto.MeteringPointId,
+                SenderProvidedChargeId = chargeLinkDto.SenderProvidedChargeId,
+                ChargeOwner = chargeLinkDto.ChargeOwner,
+                Factor = chargeLinkDto.Factor,
+                ChargeType = (GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandReceived.ChargeType)chargeLinkDto.ChargeType,
+                StartDateTime = chargeLinkDto.StartDateTime.ToTimestamp(),
+                EndDateTime = chargeLinkDto.EndDateTime?.ToTimestamp(),
             };
         }
     }

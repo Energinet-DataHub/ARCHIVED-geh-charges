@@ -23,5 +23,10 @@ namespace GreenEnergyHub.Charges.Domain.MarketParticipants
         /// Get all energy suppliers.
         /// </summary>
         MarketParticipant? GetMarketParticipantOrNull(string id);
+
+        /// <summary>
+        /// Using MeteringPointId find the Grid Access Provider of that MP
+        /// </summary>
+        MarketParticipant GetGridAccessProvider(string meteringPointId);
     }
 }

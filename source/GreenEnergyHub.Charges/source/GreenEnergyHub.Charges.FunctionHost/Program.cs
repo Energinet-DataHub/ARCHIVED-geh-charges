@@ -38,16 +38,23 @@ namespace GreenEnergyHub.Charges.FunctionHost
         {
             SharedConfiguration.ConfigureServices(serviceCollection);
 
+            // Charges
             ChargeIngestionConfiguration.ConfigureServices(serviceCollection);
             ChargeCommandAcceptedReceiverConfiguration.ConfigureServices(serviceCollection);
             ChargeCommandReceiverConfiguration.ConfigureServices(serviceCollection);
             ChargeConfirmationSenderConfiguration.ConfigureServices(serviceCollection);
             ChargeRejectionSenderConfiguration.ConfigureServices(serviceCollection);
+
+            // Charge links
             ChargeLinkIngestionConfiguration.ConfigureServices(serviceCollection);
             ChargeLinkCommandReceiverConfiguration.ConfigureServices(serviceCollection);
             ChargeLinkEventPublisherConfiguration.ConfigureServices(serviceCollection);
-            ConsumptionMeteringPointPersisterConfiguration.ConfigureServices(serviceCollection);
             CreateChargeLinkReceiverConfiguration.ConfigureServices(serviceCollection);
+            ChargeLinkDataAvailableNotifierConfiguration.ConfigureServices(serviceCollection);
+            ChargeLinkBundleSenderConfiguration.ConfigureServices(serviceCollection);
+
+            // Metering points
+            ConsumptionMeteringPointPersisterConfiguration.ConfigureServices(serviceCollection);
         }
     }
 }

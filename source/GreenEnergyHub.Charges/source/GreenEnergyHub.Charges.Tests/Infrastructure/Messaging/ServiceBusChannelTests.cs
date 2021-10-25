@@ -102,7 +102,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Messaging
             correlationContext.SetId(Guid.NewGuid().ToString().Replace("-", string.Empty));
 
             var connectionString = "<your service bus connection string>";
-            await using ServiceBusClient client = new (connectionString);
+            await using ServiceBusClient client = new(connectionString);
 
             var topic = "<your service bus topic>";
             var sender = client.CreateSender(topic);

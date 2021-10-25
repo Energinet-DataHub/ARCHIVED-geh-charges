@@ -15,12 +15,13 @@
 using System.Diagnostics.CodeAnalysis;
 using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.Domain.ChargeLinkCommandAcceptedEvents;
+using GreenEnergyHub.Charges.Domain.ChargeLinkCommands;
 
 namespace GreenEnergyHub.Charges.Domain.ChargeLinkCreatedEvents
 {
     public class ChargeLinkCreatedEventFactory : IChargeLinkCreatedEventFactory
     {
-        public ChargeLinkCreatedEvent CreateEvent([NotNull] ChargeLinkCommandAcceptedEvent command)
+        public ChargeLinkCreatedEvent CreateEvent([NotNull] ChargeLinkCommand command)
         {
             return new ChargeLinkCreatedEvent(
                 command.ChargeLink.OperationId,

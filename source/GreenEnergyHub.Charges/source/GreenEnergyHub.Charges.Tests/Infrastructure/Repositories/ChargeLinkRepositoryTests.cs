@@ -14,6 +14,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Core.DateTime;
@@ -56,39 +57,70 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
             await using var chargesDatabaseWriteContext = _databaseManager.CreateDbContext();
 
             var ids = SeedDatabase(chargesDatabaseWriteContext);
-            var expected = CreateNewExpectedChargeLink(ids);
+            var operation = new ChargeLinkOperation(ExpectedOperationId, ExpectedCorrelationId);
+
+            var expected = CreateNewExpectedChargeLink(ids, operation);
             var sut = new ChargeLinkRepository(chargesDatabaseWriteContext);
 
             // Act
-            await sut.StoreAsync(expected).ConfigureAwait(false);
+            await sut.StoreAsync(new List<ChargeLink> { expected }).ConfigureAwait(false);
 
             // Assert
             await using var chargesDatabaseReadContext = _databaseManager.CreateDbContext();
 
             var actual = await chargesDatabaseReadContext.ChargeLinks.SingleAsync(
-                    c => c.ChargeId == ids.chargeId && c.MeteringPointId == ids.meteringPointId)
+                    c => c.ChargeId == ids.ChargeId && c.MeteringPointId == ids.MeteringPointId)
                 .ConfigureAwait(false);
             actual.Should().BeEquivalentTo(expected);
         }
 
-        private ChargeLink CreateNewExpectedChargeLink((Guid chargeId, Guid meteringPointId) ids)
+        [Fact]
+        public async Task StoreAsync_StoresMultipleChargeLink()
         {
-            var operation = new ChargeLinkOperation(ExpectedOperationId, ExpectedCorrelationId);
+            // Arrange
+            await using var chargesDatabaseWriteContext = _databaseManager.CreateDbContext();
+            var ids = SeedDatabase(chargesDatabaseWriteContext);
 
+            var firstOperation = new ChargeLinkOperation(ExpectedOperationId, ExpectedCorrelationId);
+            var firstExpected = CreateNewExpectedChargeLink(ids, firstOperation);
+
+            var secondOperation = new ChargeLinkOperation("second" + ExpectedOperationId, "second" + ExpectedCorrelationId);
+            var secondExpected = CreateNewExpectedChargeLink(ids, secondOperation);
+
+            var sut = new ChargeLinkRepository(chargesDatabaseWriteContext);
+
+            // Act
+            await sut.StoreAsync(new List<ChargeLink> { firstExpected, secondExpected }).ConfigureAwait(false);
+
+            // Assert
+            await using var chargesDatabaseReadContext = _databaseManager.CreateDbContext();
+
+            var actual = await chargesDatabaseReadContext.ChargeLinks.Where(
+                    c => c.ChargeId == ids.ChargeId && c.MeteringPointId == ids.MeteringPointId).ToListAsync()
+                .ConfigureAwait(false);
+
+            actual.Should().Contain(x => x.Id == firstExpected.Id);
+            actual.Should().Contain(x => x.Id == secondExpected.Id);
+        }
+
+        private ChargeLink CreateNewExpectedChargeLink(
+            (Guid ChargeId, Guid MeteringPointId) ids,
+            ChargeLinkOperation chargeLinkOperation)
+        {
             var periodDetails = new ChargeLinkPeriodDetails(
                 _expectedPeriodDetailsStartDateTime,
                 ((Instant?)null).TimeOrEndDefault(),
                 ExpectedOperationDetailsFactor,
-                operation.Id);
+                chargeLinkOperation.Id);
 
             return new ChargeLink(
-                ids.chargeId,
-                ids.meteringPointId,
-                new List<ChargeLinkOperation> { operation },
+                ids.ChargeId,
+                ids.MeteringPointId,
+                new List<ChargeLinkOperation> { chargeLinkOperation },
                 new List<ChargeLinkPeriodDetails> { periodDetails });
         }
 
-        private static (Guid chargeId, Guid meteringPointId) SeedDatabase(ChargesDatabaseContext context)
+        private static (Guid ChargeId, Guid MeteringPointId) SeedDatabase(ChargesDatabaseContext context)
         {
             var marketParticipant = new MarketParticipant { Name = "Name", Role = 1, MarketParticipantId = "MarketParticipantId" };
 
@@ -104,7 +136,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
             context.Charges.Add(charge);
 
             var meteringPoint = MeteringPoint.Create(
-                "some-id",
+                Guid.NewGuid().ToString("N"),
                 MeteringPointType.ElectricalHeating,
                 "some-area-id",
                 SystemClock.Instance.GetCurrentInstant(),

@@ -47,21 +47,23 @@ limitations under the License.
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.11.0" />
         <PackageReference Include="xunit.runner.visualstudio" Version="2.4.3" />
         <PackageReference Include="coverlet.collector" Version="3.1.0" />
-        <PackageReference Include="Google.Protobuf" Version="3.18.0" />
+        <PackageReference Include="Google.Protobuf" Version="3.18.1" />
         <PackageReference Include="Grpc.Tools" Version="2.41.0" PrivateAssets="All" />
+        <PackageReference Update="StyleCop.Analyzers" Version="1.2.0-beta.354">
+          <PrivateAssets>all</PrivateAssets>
+          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
     </ItemGroup>
 
     <ItemGroup>
-      <None Remove="TestFiles\Valid_CIM_ChargeLink.xml" />
       <EmbeddedResource Include="TestFiles\Valid_CIM_ChargeLink.xml" />
-      <None Remove="TestFiles\Valid_CIM_ChargeLink_WithUnusedCimContent.xml" />
       <EmbeddedResource Include="TestFiles\Valid_CIM_ChargeLink_WithUnusedCimContent.xml" />
-      <None Remove="TestFiles\Valid_CIM_ChargeLink_WithoutEndDate.xml" />
       <EmbeddedResource Include="TestFiles\Valid_CIM_ChargeLink_WithoutEndDate.xml" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Folder Include="Infrastructure\Messaging\Serialization\MarketDocument" />
+      <EmbeddedResource Include="TestFiles\ExpectedOutputChargeLinkCimSerializer.xml" />
+      <EmbeddedResource Include="TestFiles\License.txt" />
+      <EmbeddedResource Include="TestFiles\Syntax_Valid_CIM_Charge.xml" />
+      <EmbeddedResource Include="TestFiles\Valid_CIM_Charge_Prices_Without_Master_Data.xml" />
+      <EmbeddedResource Include="TestFiles\Valid_CIM_Charge_Without_Prices.xml" />
     </ItemGroup>
 
     <ItemGroup>
