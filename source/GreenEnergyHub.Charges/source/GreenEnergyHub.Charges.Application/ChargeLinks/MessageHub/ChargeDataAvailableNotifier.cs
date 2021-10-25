@@ -13,6 +13,8 @@
 // limitations under the License.
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Energinet.DataHub.MessageHub.Client.DataAvailable;
 using Energinet.DataHub.MessageHub.Client.Model;
@@ -57,6 +59,7 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.MessageHub
             if (chargeCommandAcceptedEvent == null) throw new ArgumentNullException(nameof(chargeCommandAcceptedEvent));
 
             var now = _clock.GetCurrentInstant();
+            var dataAvailableNotificationDtos = new List<DataAvailableNotificationDto>();
 
             var gridAccessProviders = await _marketParticipantRepository.GetActiveGridAccessProvidersAsync();
 
@@ -70,6 +73,7 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.MessageHub
                     chargeCommandAcceptedEvent.Command,
                     provider.Id,
                     messageWeight);
+                dataAvailableNotificationDtos.Add(dataAvailableNotificationDto);
 
                 var availableChargeData = _availableChargeDataFactory.Create(
                     chargeCommandAcceptedEvent.Command,
@@ -77,9 +81,11 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.MessageHub
                     now,
                     dataAvailableNotificationDto.Uuid);
                 await _availableChargeDataRepository.StoreAsync(availableChargeData);
-
-                await _dataAvailableNotificationSender.SendAsync(dataAvailableNotificationDto);
             }
+
+            var dataAvailableNotificationSenderTasks = dataAvailableNotificationDtos
+                .Select(x => _dataAvailableNotificationSender.SendAsync(x));
+            await Task.WhenAll(dataAvailableNotificationSenderTasks).ConfigureAwait(false);
         }
 
         private static DataAvailableNotificationDto CreateDataAvailableNotificationDto(
