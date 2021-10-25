@@ -62,6 +62,8 @@ namespace GreenEnergyHub.Charges.Infrastructure.ChargeBundle.Cim
 
         internal const string TransparentInvoicing = "transparentInvoicing";
 
+        internal const string TaxIndicator = "taxIndicator";
+
         internal const string SeriesPeriod = "Series_Period";
 
         internal const string PeriodResolution = "resolution";

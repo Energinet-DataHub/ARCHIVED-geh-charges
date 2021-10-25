@@ -26,6 +26,7 @@ using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.Infrastructure.ChargeBundle.Cim;
 using GreenEnergyHub.Charges.Infrastructure.Configuration;
 using GreenEnergyHub.Charges.TestCore;
+using GreenEnergyHub.Iso8601;
 using GreenEnergyHub.TestHelpers;
 using Moq;
 using NodaTime;
@@ -70,9 +71,10 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.ChargeBundle.Cim
         public async Task SerializeAsync_WhenCalled_SaveSerializedStream(
             [NotNull] [Frozen] Mock<IHubSenderConfiguration> hubSenderConfiguration,
             [NotNull] [Frozen] Mock<IClock> clock,
+            [NotNull] [Frozen] Mock<IIso8601Durations> iso8601Durations,
             [NotNull] ChargeCimSerializer sut)
         {
-            SetupMocks(hubSenderConfiguration, clock);
+            SetupMocks(hubSenderConfiguration, clock, iso8601Durations);
 
             var charges = GetCharges(clock.Object);
 
@@ -87,7 +89,8 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.ChargeBundle.Cim
 
         private void SetupMocks(
             Mock<IHubSenderConfiguration> hubSenderConfiguration,
-            Mock<IClock> clock)
+            Mock<IClock> clock,
+            Mock<IIso8601Durations> iso8601Durations)
         {
             hubSenderConfiguration.Setup(
                     h => h.GetSenderMarketParticipant())
@@ -100,6 +103,13 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.ChargeBundle.Cim
             clock.Setup(
                     c => c.GetCurrentInstant())
                 .Returns(currentTime);
+
+            iso8601Durations.Setup(
+                    i => i.GetTimeFixedToDuration(
+                        It.IsAny<Instant>(),
+                        It.IsAny<string>(),
+                        It.IsAny<int>()))
+                .Returns(Instant.FromUtc(2100, 3, 31, 22, 0, 0));
         }
 
         private List<AvailableChargeData> GetCharges(IClock clock)

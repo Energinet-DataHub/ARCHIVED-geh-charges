@@ -26,6 +26,7 @@ using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.Infrastructure.ChargeLinkBundle.Cim;
 using GreenEnergyHub.Charges.Infrastructure.Configuration;
 using GreenEnergyHub.Charges.Infrastructure.MarketDocument.Cim;
+using GreenEnergyHub.Iso8601;
 using NodaTime;
 
 namespace GreenEnergyHub.Charges.Infrastructure.ChargeBundle.Cim
@@ -34,13 +35,16 @@ namespace GreenEnergyHub.Charges.Infrastructure.ChargeBundle.Cim
     {
         private IHubSenderConfiguration _hubSenderConfiguration;
         private IClock _clock;
+        private IIso8601Durations _iso8601Durations;
 
         public ChargeCimSerializer(
             IHubSenderConfiguration hubSenderConfiguration,
-            IClock clock)
+            IClock clock,
+            IIso8601Durations iso8601Durations)
         {
             _hubSenderConfiguration = hubSenderConfiguration;
             _clock = clock;
+            _iso8601Durations = iso8601Durations;
         }
 
         public async Task SerializeToStreamAsync(IEnumerable<AvailableChargeData> charges, Stream stream)
@@ -113,14 +117,14 @@ namespace GreenEnergyHub.Charges.Infrastructure.ChargeBundle.Cim
             };
         }
 
-        private static IEnumerable<XElement> GetActivityRecords(
+        private IEnumerable<XElement> GetActivityRecords(
             XNamespace cimNamespace,
             IEnumerable<AvailableChargeData> charges)
         {
             return charges.Select(charge => GetActivityRecord(cimNamespace, charge));
         }
 
-        private static XElement GetActivityRecord(
+        private XElement GetActivityRecord(
             XNamespace cimNamespace,
             AvailableChargeData charge)
         {
@@ -143,7 +147,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.ChargeBundle.Cim
                 };
         }*/
 
-        private static XElement GetChargeGroupElement(
+        private XElement GetChargeGroupElement(
             XNamespace cimNamespace,
             AvailableChargeData charge)
         {
@@ -152,7 +156,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.ChargeBundle.Cim
                 GetChargeTypeElement(cimNamespace, charge));
         }
 
-        private static XElement GetChargeTypeElement(
+        private XElement GetChargeTypeElement(
             XNamespace cimNamespace,
             AvailableChargeData charge)
         {
@@ -181,7 +185,8 @@ namespace GreenEnergyHub.Charges.Infrastructure.ChargeBundle.Cim
                 // Charge resolution
                 GetElementIfNeeded(
                     cimNamespace,
-                    charge.Points.Count > 0, // Charge resolution is not needed if the are prices, as it will be added in that section
+                    // Charge resolution is not needed if there are prices, as it will be added in that section
+                    charge.Points.Count > 0,
                     CimChargeConstants.ChargeResolution,
                     /*() => ResolutionMapper.Map(charge.Resolution)*/ () => charge.Resolution.ToString()),
                 new XElement(cimNamespace + CimChargeConstants.StartDateTime, charge.StartDateTime.ToString()),
@@ -196,14 +201,68 @@ namespace GreenEnergyHub.Charges.Infrastructure.ChargeBundle.Cim
                     cimNamespace,
                     charge.VatClassification == VatClassification.Unknown,
                     CimChargeConstants.VatClassification,
-                    /*() => VatClassificationMapper.Map(charge.VatClassification)*/ () => charge.VatClassification.ToString()));
+                    /*() => VatClassificationMapper.Map(charge.VatClassification)*/
+                    () => charge.VatClassification.ToString()),
+                // TransparentInvoicing
+                GetElementIfNeeded(
+                    cimNamespace,
+                    // Right now, charge name is our best bet of determining whether to include transparent invoicing
+                    string.IsNullOrEmpty(charge.ChargeName),
+                    CimChargeConstants.TransparentInvoicing,
+                    () => charge.TransparentInvoicing),
+                // TaxIndicator
+                GetElementIfNeeded(
+                    cimNamespace,
+                    // Right now, charge name is our best bet of determining whether to include tax indicator
+                    string.IsNullOrEmpty(charge.ChargeName),
+                    CimChargeConstants.TransparentInvoicing,
+                    () => charge.TaxIndicator),
+                GetSeriesPeriod(cimNamespace, charge));
+        }
+
+        private IEnumerable<XElement> GetSeriesPeriod(XNamespace cimNamespace, AvailableChargeData charge)
+        {
+            var seriesPeriod = new List<XElement>();
+
+            if (charge.Points.Count > 0)
+            {
+                seriesPeriod.Add(
+                    new XElement(
+                        cimNamespace + CimChargeConstants.SeriesPeriod,
+                        new XElement(cimNamespace + CimChargeConstants.PeriodResolution, /*ResolutionMapper.Map(charge.Resolution))*/ charge.Resolution.ToString()),
+                        GetTimeInterval(cimNamespace, charge),
+                        charge.Points.Select(p => GetPoint(cimNamespace, p))));
+            }
+
+            return seriesPeriod;
+        }
+
+        private XElement GetTimeInterval(XNamespace cimNamespace, AvailableChargeData charge)
+        {
+            return new XElement(
+                cimNamespace + CimChargeConstants.TimeInterval,
+                new XElement(cimNamespace + CimChargeConstants.TimeIntervalStart, charge.StartDateTime),
+                new XElement(
+                    cimNamespace + CimChargeConstants.TimeIntervalEnd,
+                    _iso8601Durations.GetTimeFixedToDuration(
+                        charge.StartDateTime,
+                        /*ResolutionMapper.Map(charge.Resolution),*/charge.Resolution.ToString(),
+                        charge.Points.Count)));
+        }
+
+        private static XElement GetPoint(XNamespace cimNamespace, AvailableChargeDataPoint point)
+        {
+            return new XElement(
+                cimNamespace + CimChargeConstants.Point,
+                new XElement(cimNamespace + CimChargeConstants.Position, point.Position),
+                new XElement(cimNamespace + CimChargeConstants.Price, point.Price));
         }
 
         private static IEnumerable<XElement> GetElementIfNeeded(
             XNamespace cimNamespace,
             bool notNeeded,
             string elementName,
-            Func<string> getValue)
+            Func<object> getValue)
         {
             return notNeeded
                 ? new List<XElement>()
