@@ -37,7 +37,6 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.MessageHub
 
         private readonly IDataAvailableNotificationSender _dataAvailableNotificationSender;
         private readonly IAvailableChargeDataRepository _availableChargeDataRepository;
-        private readonly IChargeRepository _chargeRepository;
         private readonly IAvailableChargeDataFactory _availableChargeDataFactory;
         private readonly IMarketParticipantRepository _marketParticipantRepository;
         private readonly IClock _clock;
@@ -45,14 +44,12 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.MessageHub
         public ChargeDataAvailableNotifier(
             IDataAvailableNotificationSender dataAvailableNotificationSender,
             IAvailableChargeDataRepository availableChargeDataRepository,
-            IChargeRepository chargeRepository,
             IAvailableChargeDataFactory availableChargeDataFactory,
             IMarketParticipantRepository marketParticipantRepository,
             IClock clock)
         {
             _dataAvailableNotificationSender = dataAvailableNotificationSender;
             _availableChargeDataRepository = availableChargeDataRepository;
-            _chargeRepository = chargeRepository;
             _availableChargeDataFactory = availableChargeDataFactory;
             _marketParticipantRepository = marketParticipantRepository;
             _clock = clock;
@@ -65,12 +62,7 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.MessageHub
             // When available this should be parsed on from API management to be more precise.
             var now = _clock.GetCurrentInstant();
 
-            var charge = await _chargeRepository.GetChargeAsync(new ChargeIdentifier(
-                chargeCommandAcceptedEvent.Command.ChargeOperation.ChargeId,
-                chargeCommandAcceptedEvent.Command.ChargeOperation.ChargeOwner,
-                chargeCommandAcceptedEvent.Command.ChargeOperation.Type)).ConfigureAwait(false);
-
-            if (charge.TaxIndicator is false)
+            if (chargeCommandAcceptedEvent.Command.ChargeOperation.TaxIndicator is false)
                 return;
 
             var dataAvailableNotificationDtos =

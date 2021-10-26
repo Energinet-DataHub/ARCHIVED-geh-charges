@@ -54,23 +54,18 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.MessageHub
         public async Task NotifyAsync_WhenChargeIsTaxIndicator_SendsDataAvailableNotificationPerCommand(
             ChargeCommandAcceptedEvent chargeCommandAcceptedEvent,
             List<MarketParticipant> gridAccessProviders,
-            Charge charge,
             AvailableChargeData availableChargesData,
             [Frozen] Mock<IDataAvailableNotificationSender> dataAvailableNotificationSenderMock,
             [Frozen] Mock<IAvailableChargeDataFactory> availableChargesDataFactoryMock,
-            [Frozen] Mock<IChargeRepository> chargeRepositoryMock,
             [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepositoryMock,
             ChargeDataAvailableNotifier sut)
         {
             // Arrange
-            charge.SetPrivateProperty(c => c.TaxIndicator, true);
+            chargeCommandAcceptedEvent
+                .Command.ChargeOperation.SetPrivateProperty(c => c.TaxIndicator, true);
             marketParticipantRepositoryMock
                 .Setup(repository => repository.GetActiveGridAccessProvidersAsync())
                 .ReturnsAsync(gridAccessProviders);
-
-            chargeRepositoryMock
-                .Setup(repository => repository.GetChargeAsync(It.IsAny<ChargeIdentifier>()))
-                .ReturnsAsync(charge);
 
             availableChargesDataFactoryMock.Setup(
                     factory => factory.Create(
@@ -102,15 +97,10 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.MessageHub
         [InlineAutoMoqData]
         public async Task NotifyAsync_WhenChargeIsNotTaxIndicator_DoesNotSendDataAvailableNotification(
             ChargeCommandAcceptedEvent chargeCommandAcceptedEvent,
-            Charge charge,
-            [Frozen] Mock<IChargeRepository> chargeRepositoryMock,
             [Frozen] Mock<IDataAvailableNotificationSender> dataAvailableNotificationSenderMock,
             ChargeDataAvailableNotifier sut)
         {
             // Arrange
-            chargeRepositoryMock.Setup(repository =>
-                    repository.GetChargeAsync(It.IsAny<ChargeIdentifier>()))
-                .ReturnsAsync(charge);
 
             // Act
             await sut.NotifyAsync(chargeCommandAcceptedEvent);
