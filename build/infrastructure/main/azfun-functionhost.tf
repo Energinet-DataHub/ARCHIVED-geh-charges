@@ -27,11 +27,10 @@ module "azfun_functionhost" {
     WEBSITE_RUN_FROM_PACKAGE                             = 1
     WEBSITES_ENABLE_APP_SERVICE_STORAGE                  = true
     FUNCTIONS_WORKER_RUNTIME                             = "dotnet-isolated"
+
     LOCAL_TIMEZONENAME                                   = local.LOCAL_TIMEZONENAME
     CURRENCY                                             = local.CURRENCY
     CHARGE_DB_CONNECTION_STRING                          = local.CHARGE_DB_CONNECTION_STRING
-    INTEGRATIONEVENT_SENDER_CONNECTION_STRING            = data.azurerm_key_vault_secret.integration_events_sender_connection_string.value
-    INTEGRATIONEVENT_LISTENER_CONNECTION_STRING          = data.azurerm_key_vault_secret.integration_events_listener_connection_string.value
     DOMAINEVENT_SENDER_CONNECTION_STRING                 = module.sbnar_charges_sender.primary_connection_string
     DOMAINEVENT_LISTENER_CONNECTION_STRING               = module.sbnar_charges_listener.primary_connection_string
     CHARGE_CREATED_TOPIC_NAME                            = local.CHARGE_CREATED_TOPIC_NAME
@@ -55,7 +54,12 @@ module "azfun_functionhost" {
     CREATE_LINK_REPLY_QUEUE_NAME                         = local.CREATE_LINK_REPLY_QUEUE_NAME
     CONSUMPTION_METERING_POINT_CREATED_TOPIC_NAME        = local.CONSUMPTION_METERING_POINT_CREATED_TOPIC_NAME
     CONSUMPTION_METERING_POINT_CREATED_SUBSCRIPTION_NAME = local.CONSUMPTION_METERING_POINT_CREATED_SUBSCRIPTION_NAME  
-    
+
+    # Shared resources
+    INTEGRATIONEVENT_SENDER_CONNECTION_STRING            = data.azurerm_key_vault_secret.integration_events_sender_connection_string.value
+    INTEGRATIONEVENT_LISTENER_CONNECTION_STRING          = data.azurerm_key_vault_secret.integration_events_listener_connection_string.value
+    INTEGRATIONEVENT_MANAGER_CONNECTION_STRING           = data.azurerm_key_vault_secret.integration_events_manager_connection_string.value
+
     # Message Hub
     POST_OFFICE_TOPIC_NAME                               = module.sbt_post_office.name
     MESSAGEHUB_STORAGE_CONNECTION_STRING                 = data.azurerm_key_vault_secret.messagehub_storage_connection_string.value
@@ -64,7 +68,7 @@ module "azfun_functionhost" {
     MESSAGEHUB_BUNDLEREQUEST_QUEUE                       = local.MESSAGEHUB_BUNDLEREQUEST_QUEUE
     MESSAGEHUB_BUNDLEREPLY_QUEUE                         = local.MESSAGEHUB_BUNDLEREPLY_QUEUE
 	
-	# Hub identification
+  	# Hub identification
     HUB_SENDER_ID                                        = "5790001330552"
     HUB_SENDER_ROLE_INT_ENUM_VALUE                       = "7"
   }
