@@ -57,7 +57,9 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.ChargeBundle.Cim
             SetupMocks(hubSenderConfiguration, clock, iso8601Durations, cimIdProvider);
             await using var stream = new MemoryStream();
 
-            var expected = GetExpectedValue(embeddedResource);
+            var expected = EmbeddedStreamHelper.GetEmbeddedStreamAsString(
+                Assembly.GetExecutingAssembly(),
+                embeddedResource);
 
             var charges = GetCharges(clock.Object, includeMasterData, includePrices);
 
@@ -65,7 +67,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.ChargeBundle.Cim
             await sut.SerializeToStreamAsync(charges, stream);
 
             // Assert
-            var actual = GetStreamAsString(stream);
+            var actual = stream.AsString();
 
             Assert.Equal(expected, actual);
         }
@@ -234,19 +236,6 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.ChargeBundle.Cim
             }
 
             return points;
-        }
-
-        private static string GetExpectedValue(string path)
-        {
-            var assembly = Assembly.GetExecutingAssembly();
-            using var xmlStream = EmbeddedStreamHelper.GetInputStream(assembly, path);
-            return GetStreamAsString(xmlStream);
-        }
-
-        private static string GetStreamAsString(Stream stream)
-        {
-            using var reader = new StreamReader(stream);
-            return reader.ReadToEnd();
         }
     }
 }
