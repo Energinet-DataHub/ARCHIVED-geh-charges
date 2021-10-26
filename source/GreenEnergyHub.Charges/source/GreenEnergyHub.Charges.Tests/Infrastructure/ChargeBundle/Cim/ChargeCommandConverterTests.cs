@@ -100,14 +100,14 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.ChargeBundle.Cim
 
             // Verify Iso8601Durations was used correctly
             iso8601Durations.Verify(
-                i => i.AddDuration(
+                i => i.GetTimeFixedToDuration(
                     expectedTime,
                     "PT1H",
                     0),
                 Times.Once);
 
             iso8601Durations.Verify(
-                i => i.AddDuration(
+                i => i.GetTimeFixedToDuration(
                     expectedTime,
                     "PT1H",
                     1),
@@ -154,7 +154,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.ChargeBundle.Cim
             // Prices, should not be any
             actual.ChargeOperation.Points.Should().BeEmpty();
             iso8601Durations.Verify(
-                i => i.AddDuration(
+                i => i.GetTimeFixedToDuration(
                     It.IsAny<Instant>(),
                     It.IsAny<string>(),
                     It.IsAny<int>()),
@@ -209,14 +209,14 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.ChargeBundle.Cim
 
             // Verify Iso8601Durations was used correctly
             iso8601Durations.Verify(
-                i => i.AddDuration(
+                i => i.GetTimeFixedToDuration(
                     expectedTime,
                     "P1M",
                     0),
                 Times.Once);
 
             iso8601Durations.Verify(
-                i => i.AddDuration(
+                i => i.GetTimeFixedToDuration(
                     expectedTime,
                     "P1M",
                     1),
@@ -233,7 +233,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.ChargeBundle.Cim
             context.Setup(c => c.Id).Returns(correlationId);
 
             iso8601Durations.Setup(
-                    i => i.AddDuration(
+                    i => i.GetTimeFixedToDuration(
                         It.IsAny<Instant>(),
                         It.IsAny<string>(),
                         It.IsAny<int>()))
