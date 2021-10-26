@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
-using Energinet.DataHub.Charges.Libraries.Enums;
 using Energinet.DataHub.Charges.Libraries.Models;
 
 namespace Energinet.DataHub.Charges.Libraries.DefaultChargeLinkMessages
@@ -24,6 +24,6 @@ namespace Energinet.DataHub.Charges.Libraries.DefaultChargeLinkMessages
 
     public abstract class DefaultChargeLinkMessagesReplyReaderBase
     {
-        public abstract Task ReadAsync(byte[] data, RequestStatus requestStatus);
+        public abstract Task ReadAsync([NotNull] byte[] data);
     }
 }
