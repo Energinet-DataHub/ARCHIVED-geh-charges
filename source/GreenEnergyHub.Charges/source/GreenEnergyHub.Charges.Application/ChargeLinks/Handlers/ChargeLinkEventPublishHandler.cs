@@ -12,11 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Energinet.DataHub.Charges.Libraries.DefaultChargeLink;
-using Energinet.DataHub.Charges.Libraries.Models;
 using GreenEnergyHub.Charges.Domain.ChargeLinkCommandAcceptedEvents;
 using GreenEnergyHub.Charges.Domain.ChargeLinkCreatedEvents;
 
@@ -25,42 +22,18 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
     public class ChargeLinkEventPublishHandler : IChargeLinkEventPublishHandler
     {
         private readonly IMessageDispatcher<ChargeLinkCreatedEvent> _createdDispatcher;
-        private readonly IMessageMetaDataContext _messageMetaDataContext;
-        private readonly IDefaultChargeLinkClient _defaultChargeLinkClient;
-        private readonly ICorrelationContext _correlationContext;
         private readonly IChargeLinkCreatedEventFactory _createdEventFactory;
 
         public ChargeLinkEventPublishHandler(
             IChargeLinkCreatedEventFactory createdEventFactory,
-            IMessageDispatcher<ChargeLinkCreatedEvent> createdDispatcher,
-            IMessageMetaDataContext messageMetaDataContext,
-            IDefaultChargeLinkClient defaultChargeLinkClient,
-            ICorrelationContext correlationContext)
+            IMessageDispatcher<ChargeLinkCreatedEvent> createdDispatcher)
         {
             _createdEventFactory = createdEventFactory;
             _createdDispatcher = createdDispatcher;
-            _messageMetaDataContext = messageMetaDataContext;
-            _defaultChargeLinkClient = defaultChargeLinkClient;
-            _correlationContext = correlationContext;
         }
 
         public async Task HandleAsync(ChargeLinkCommandAcceptedEvent command)
         {
-            if (_messageMetaDataContext.IsReplyToSet())
-            {
-                // TODO:  A refactor of ChargeLinkCommands will end with the commands being wrapped by a entity with only one meteringPointId.
-                CheckAllMeteringPointIdsAreTheSame(command);
-                var meteringPointId = command.ChargeLinkCommands.First().ChargeLink.MeteringPointId;
-
-                await _defaultChargeLinkClient
-                    .CreateDefaultChargeLinksSucceededReplyAsync(
-                        new CreateDefaultChargeLinksSucceededDto(
-                            meteringPointId,
-                            true),
-                        _correlationContext.Id,
-                        _messageMetaDataContext.ReplyTo).ConfigureAwait(false);
-            }
-
             var chargeLinkCreatedEvents =
                 command.ChargeLinkCommands.Select(
                     chargeLinkCommand => _createdEventFactory.CreateEvent(chargeLinkCommand)).ToList();
@@ -69,19 +42,6 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
                 chargeLinkCreatedEvents
                     .Select(chargeLinkCreatedEvent
                         => _createdDispatcher.DispatchAsync(chargeLinkCreatedEvent))).ConfigureAwait(false);
-        }
-
-        private void CheckAllMeteringPointIdsAreTheSame(ChargeLinkCommandAcceptedEvent chargeLinkCommandAcceptedEvent)
-        {
-            var chargeLinkMeteringPointId = chargeLinkCommandAcceptedEvent.ChargeLinkCommands.First().ChargeLink.MeteringPointId;
-            var chargeLinkMeteringPointIds = chargeLinkCommandAcceptedEvent.ChargeLinkCommands
-                .Select(c => c.ChargeLink.MeteringPointId).ToList();
-
-            foreach (var meteringPointId in chargeLinkMeteringPointIds)
-            {
-                if (meteringPointId != chargeLinkMeteringPointId)
-                    throw new InvalidOperationException($"not all metering point Id are the same on {nameof(ChargeLinkCommandAcceptedEvent)}");
-            }
         }
     }
 }
