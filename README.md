@@ -30,11 +30,19 @@ Learn how to get a development environment up and running for development, debug
 
 ## Architecture
 
-The architecture diagram below illustrates both current state of the Charges domain as well as future work, last-mentioned being illustrated by grey arrows and components with lowered opacity.
+The architecture diagrams below illustrate both current state of the Charges domain as well as future work, last-mentioned being illustrated by grey arrows and components with lowered opacity.
 
-![design](ARCHITECTURE.png)
+The diagrams depict the architecture of `Charge and Charge Prices` and `Charge Links`, respectively.
+
+### Charge and charge prices architecture
+
+![Charge And Charge Prices](ARCHITECTURE-ChargeAndChargePrices.png)
 
 Note: As the integration between the Charges and Post Office domains is yet to be established, the `ChargeConfirmation` and `ChargeRejection` events are temporarily placed in the Charges domain's Service Bus.
+
+### Charge links architecture
+
+![Charge Links](ARCHITECTURE-ChargeLinks.png)
 
 ## Context Streams
 

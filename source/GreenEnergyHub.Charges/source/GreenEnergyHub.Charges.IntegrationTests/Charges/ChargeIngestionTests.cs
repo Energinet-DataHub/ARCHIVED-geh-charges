@@ -57,7 +57,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Charges
             public async Task When_CallingChargeIngestion_Then_RequestIsProcessedAndMessageIsSendToPostOffice()
             {
                 // Arrange
-                var testFilePath = "TestFiles/ValidCreateTariffCommand.json";
+                var testFilePath = "TestFiles/ValidCreateTariffCommand.xml";
                 var clock = SystemClock.Instance;
                 var chargeJson = EmbeddedResourceHelper.GetInputJson(testFilePath, clock);
 
