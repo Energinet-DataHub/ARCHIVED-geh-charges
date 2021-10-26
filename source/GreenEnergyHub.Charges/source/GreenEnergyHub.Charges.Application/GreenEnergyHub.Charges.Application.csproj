@@ -43,4 +43,8 @@ limitations under the License.
     </PackageReference>
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="SeedWork" />
+  </ItemGroup>
+
 </Project>

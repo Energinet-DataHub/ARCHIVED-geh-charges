@@ -38,6 +38,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.MessageMetaData
             {
                 var eventMetadata = _jsonSerializer.Deserialize<EventMetadata>(metadata.ToString());
                 _messageMetaDataContext.SetReplyTo(eventMetadata.ReplyTo);
+                _messageMetaDataContext.SetSessionId(eventMetadata.SessionId);
             }
 
             await next(context).ConfigureAwait(false);

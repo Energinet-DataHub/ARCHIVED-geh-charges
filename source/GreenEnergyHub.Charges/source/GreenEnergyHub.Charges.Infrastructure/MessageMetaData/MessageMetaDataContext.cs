@@ -12,17 +12,46 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using GreenEnergyHub.Charges.Application;
 
 namespace GreenEnergyHub.Charges.Infrastructure.MessageMetaData
 {
     public class MessageMetaDataContext : IMessageMetaDataContext
     {
-        public string? ReplyTo { get; private set; }
+        private string? _replyTo;
+        private string? _sessionId;
+
+        public string ReplyTo
+        {
+            get
+            {
+                if (_replyTo == null)
+                    throw new InvalidOperationException($"Property '{nameof(ReplyTo)}' is missing");
+
+                return _replyTo;
+            }
+        }
+
+        public string SessionId
+        {
+            get
+            {
+                if (_sessionId == null)
+                    throw new InvalidOperationException($"Property '{nameof(SessionId)}' is missing");
+
+                return _sessionId;
+            }
+        }
 
         public void SetReplyTo(string? messageType)
         {
-            ReplyTo = messageType;
+            _replyTo = messageType;
+        }
+
+        public void SetSessionId(string? sessionId)
+        {
+            _sessionId = sessionId;
         }
     }
 }

@@ -15,12 +15,11 @@
 using System.IO;
 using System.Threading.Tasks;
 using Energinet.DataHub.MessageHub.Client.Model;
-using GreenEnergyHub.Charges.Application.SeedWork.SyncRequest;
 
 namespace GreenEnergyHub.Charges.Application.ChargeLinks.MessageHub.Infrastructure
 {
     public interface IChargeLinkBundleReplier
     {
-        Task ReplyAsync(Stream bundleStream, DataBundleRequestDto request, ISyncRequestMetadata metadata);
+        Task ReplyAsync(Stream bundleStream, DataBundleRequestDto request);
     }
 }

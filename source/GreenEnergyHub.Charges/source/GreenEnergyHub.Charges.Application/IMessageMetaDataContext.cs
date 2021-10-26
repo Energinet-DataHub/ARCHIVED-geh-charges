@@ -16,8 +16,12 @@ namespace GreenEnergyHub.Charges.Application
 {
     public interface IMessageMetaDataContext
     {
-        string? ReplyTo { get; }
+        string ReplyTo { get; }
+
+        string SessionId { get; }
 
         void SetReplyTo(string? messageType);
+
+        void SetSessionId(string? sessionId);
     }
 }

@@ -108,7 +108,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Handlers
         {
             // Arrange
             chargeLinkCommand.ChargeLink.EndDateTime = null;
-            messageMetaDataContext.Setup(m => m.ReplyTo).Returns((string?)null);
+            messageMetaDataContext.Setup(m => m.ReplyTo).Returns((string)null!);
             var createLinkCommandEvent = new CreateLinkCommandEvent(meteringPointId);
 
             // Act & Assert
