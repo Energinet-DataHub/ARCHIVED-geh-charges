@@ -51,7 +51,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Handlers
             [NotNull] string replyTo,
             [NotNull] ChargeLinkCommand chargeLinkCommand,
             [NotNull] string meteringPointId,
-            [NotNull] CreateLinkCommandEventHandler sut)
+            [NotNull] CreateLinkCommandRequestHandler sut)
         {
             // Arrange
             chargeLinkCommand.ChargeLink.EndDateTime = null;
@@ -105,7 +105,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Handlers
             [NotNull] string correlationId,
             [NotNull] ChargeLinkCommand chargeLinkCommand,
             [NotNull] string meteringPointId,
-            [NotNull] CreateLinkCommandEventHandler sut)
+            [NotNull] CreateLinkCommandRequestHandler sut)
         {
             // Arrange
             chargeLinkCommand.ChargeLink.EndDateTime = null;
@@ -129,7 +129,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Handlers
             [NotNull] ChargeLinkCommand chargeLinkCommand,
             [NotNull] CreateDefaultChargeLinksFailedDto createDefaultChargeLinksFailedDto,
             [NotNull] string meteringPointId,
-            [NotNull] CreateLinkCommandEventHandler sut)
+            [NotNull] CreateLinkCommandRequestHandler sut)
         {
             // Arrange
             chargeLinkCommand.ChargeLink.EndDateTime = null;
@@ -178,7 +178,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Handlers
             [NotNull] string replyTo,
             [NotNull] ChargeLinkCommand chargeLinkCommand,
             [NotNull] string meteringPointId,
-            [NotNull] CreateLinkCommandEventHandler sut)
+            [NotNull] CreateLinkCommandRequestHandler sut)
         {
             // Arrange
             chargeLinkCommand.ChargeLink.EndDateTime = null;

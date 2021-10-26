@@ -39,8 +39,6 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
 
         public async Task HandleAsync(ChargeLinkCommandAcceptedEvent command)
         {
-            if (_messageMetaDataContext.IsReplyToSet())
-            {
                 // TODO:  A refactor of ChargeLinkCommands will end with the commands being wrapped by a entity with only one meteringPointId.
                 CheckAllMeteringPointIdsAreTheSame(command);
                 var meteringPointId = command.ChargeLinkCommands.First().ChargeLink.MeteringPointId;
@@ -52,7 +50,6 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
                             true),
                         _correlationContext.Id,
                         _messageMetaDataContext.ReplyTo).ConfigureAwait(false);
-            }
         }
 
         private void CheckAllMeteringPointIdsAreTheSame(ChargeLinkCommandAcceptedEvent chargeLinkCommandAcceptedEvent)
@@ -61,10 +58,9 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
             var chargeLinkMeteringPointIds = chargeLinkCommandAcceptedEvent.ChargeLinkCommands
                 .Select(c => c.ChargeLink.MeteringPointId).ToList();
 
-            foreach (var meteringPointId in chargeLinkMeteringPointIds)
+            if (chargeLinkMeteringPointIds.Any(meteringPointId => meteringPointId != chargeLinkMeteringPointId))
             {
-                if (meteringPointId != chargeLinkMeteringPointId)
-                    throw new InvalidOperationException($"not all metering point Id are the same on {nameof(ChargeLinkCommandAcceptedEvent)}");
+                throw new InvalidOperationException($"not all metering point Ids are the same on {nameof(ChargeLinkCommandAcceptedEvent)}");
             }
         }
     }

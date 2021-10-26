@@ -21,9 +21,5 @@ namespace GreenEnergyHub.Charges.Application
         bool IsReplyToSet();
 
         string SessionId { get; }
-
-        void SetReplyTo(string? messageType);
-
-        void SetSessionId(string? sessionId);
     }
 }

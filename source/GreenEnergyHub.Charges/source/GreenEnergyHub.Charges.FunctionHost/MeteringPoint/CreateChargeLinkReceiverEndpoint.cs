@@ -38,17 +38,17 @@ namespace GreenEnergyHub.Charges.FunctionHost.MeteringPoint
         private readonly ICorrelationContext _correlationContext;
         private readonly MessageExtractor<CreateDefaultChargeLinks> _messageExtractor;
         private readonly ILogger _log;
-        private readonly ICreateLinkCommandEventHandler _createLinkCommandEventHandler;
+        private readonly ICreateLinkCommandRequestHandler _createLinkCommandRequestHandler;
 
         public CreateChargeLinkReceiverEndpoint(
             ICorrelationContext correlationContext,
             MessageExtractor<CreateDefaultChargeLinks> messageExtractor,
             [NotNull] ILoggerFactory loggerFactory,
-            ICreateLinkCommandEventHandler createLinkCommandEventHandler)
+            ICreateLinkCommandRequestHandler createLinkCommandRequestHandler)
         {
             _correlationContext = correlationContext;
             _messageExtractor = messageExtractor;
-            _createLinkCommandEventHandler = createLinkCommandEventHandler;
+            _createLinkCommandRequestHandler = createLinkCommandRequestHandler;
             _log = loggerFactory.CreateLogger(nameof(CreateChargeLinkReceiverEndpoint));
         }
 
@@ -67,7 +67,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.MeteringPoint
             var createLinkCommandEvent =
                 (CreateLinkCommandEvent)await _messageExtractor.ExtractAsync(message).ConfigureAwait(false);
 
-            await _createLinkCommandEventHandler
+            await _createLinkCommandRequestHandler
                 .HandleAsync(createLinkCommandEvent, _correlationContext.Id).ConfigureAwait(false);
 
             _log.LogInformation(

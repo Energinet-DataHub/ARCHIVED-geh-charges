@@ -14,7 +14,7 @@
 
 namespace GreenEnergyHub.Charges.Infrastructure.MessageMetaData
 {
-    public class EventMetadata
+    public class MessageMetadata
     {
         public string? ReplyTo { get; set; }
 

@@ -166,7 +166,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Messaging
 
         [Theory]
         [InlineAutoDomainData]
-        public async Task WriteAsync_WhenReplyTo_SendsMessageWithoutReplyTo(
+        public async Task WriteAsync_WhenReplyTo_SendsMessageReplyTo(
             [NotNull] [Frozen] Mock<ICorrelationContext> correlationContext,
             [NotNull] [Frozen] Mock<IMessageMetaDataContext> messageMetaDataContext,
             [NotNull] [Frozen] Mock<MockableServiceBusSender> serviceBusSender,

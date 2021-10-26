@@ -30,7 +30,7 @@ using NodaTime;
 
 namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
 {
-    public class CreateLinkCommandEventHandler : ICreateLinkCommandEventHandler
+    public class CreateLinkCommandRequestHandler : ICreateLinkCommandRequestHandler
     {
         private readonly IDefaultChargeLinkRepository _defaultChargeLinkRepository;
         private readonly IChargeLinkCommandFactory _chargeLinkCommandFactory;
@@ -41,7 +41,7 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
         private readonly IMessageMetaDataContext _messageMetaDataContext;
         private readonly ILogger _logger;
 
-        public CreateLinkCommandEventHandler(
+        public CreateLinkCommandRequestHandler(
             IDefaultChargeLinkRepository defaultChargeLinkRepository,
             IChargeLinkCommandFactory chargeLinkCommandFactory,
             IMessageDispatcher<ChargeLinkCommandReceivedEvent> messageDispatcher,
@@ -58,7 +58,7 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
             _meteringPointRepository = meteringPointRepository;
             _defaultChargeLinkClient = defaultChargeLinkClient;
             _messageMetaDataContext = messageMetaDataContext;
-            _logger = loggerFactory.CreateLogger(nameof(CreateLinkCommandEventHandler));
+            _logger = loggerFactory.CreateLogger(nameof(CreateLinkCommandRequestHandler));
         }
 
         public async Task HandleAsync([NotNull] CreateLinkCommandEvent createLinkCommandEvent, string correlationId)
@@ -87,14 +87,14 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
             if (!defaultChargeLinks.Any())
                 return;
 
-            await CreateAndDispatchCreateLinkCommandEventIfApplicableForLinkingAsync(
+            await CreateAndDispatchChargeLinkCommandReceivedEventIfApplicableForLinkingAsync(
                 createLinkCommandEvent,
                 correlationId,
                 defaultChargeLinks,
                 meteringPoint);
         }
 
-        private async Task CreateAndDispatchCreateLinkCommandEventIfApplicableForLinkingAsync(
+        private async Task CreateAndDispatchChargeLinkCommandReceivedEventIfApplicableForLinkingAsync(
             CreateLinkCommandEvent createLinkCommandEvent,
             string correlationId,
             List<DefaultChargeLink> defaultChargeLinks,
@@ -152,13 +152,10 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
             string correlationId,
             string replyQueueName)
         {
-            var defaultChargeLinks = await _defaultChargeLinkRepository
-                .GetAsync(meteringPoint.MeteringPointType).ConfigureAwait(false);
+            var defaultChargeLinks = (await _defaultChargeLinkRepository
+                .GetAsync(meteringPoint.MeteringPointType).ConfigureAwait(false)).ToList();
 
-            var defaultChargeLinksOrReplyWithSucceededAsync =
-                defaultChargeLinks as DefaultChargeLink[] ?? defaultChargeLinks.ToArray();
-
-            if (!defaultChargeLinksOrReplyWithSucceededAsync.Any())
+            if (!defaultChargeLinks.Any())
             {
                 await _defaultChargeLinkClient
                     .CreateDefaultChargeLinksSucceededReplyAsync(
@@ -170,7 +167,7 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
                 return new List<DefaultChargeLink>();
             }
 
-            return defaultChargeLinksOrReplyWithSucceededAsync;
+            return defaultChargeLinks;
         }
     }
 }

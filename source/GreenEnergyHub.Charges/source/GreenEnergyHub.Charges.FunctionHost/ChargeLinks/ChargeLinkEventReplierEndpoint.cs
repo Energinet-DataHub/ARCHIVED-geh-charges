@@ -14,6 +14,7 @@
 
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
+using GreenEnergyHub.Charges.Application;
 using GreenEnergyHub.Charges.Application.ChargeLinks.Handlers;
 using GreenEnergyHub.Charges.Domain.ChargeLinkCommandAcceptedEvents;
 using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandAccepted;
@@ -32,15 +33,18 @@ namespace GreenEnergyHub.Charges.FunctionHost.ChargeLinks
         public const string FunctionName = nameof(ChargeLinkEventReplierEndpoint);
         private readonly MessageExtractor<ChargeLinkCommandAccepted> _messageExtractor;
         private readonly IChargeLinkEventReplyHandler _chargeLinkEventReplyHandler;
+        private readonly IMessageMetaDataContext _messageMetaDataContext;
         private readonly ILogger _log;
 
         public ChargeLinkEventReplierEndpoint(
             MessageExtractor<ChargeLinkCommandAccepted> messageExtractor,
             IChargeLinkEventReplyHandler chargeLinkEventReplyHandler,
+            IMessageMetaDataContext messageMetaDataContext,
             [NotNull] ILoggerFactory loggerFactory)
         {
             _messageExtractor = messageExtractor;
             _chargeLinkEventReplyHandler = chargeLinkEventReplyHandler;
+            _messageMetaDataContext = messageMetaDataContext;
 
             _log = loggerFactory.CreateLogger(nameof(ChargeLinkEventReplierEndpoint));
         }
@@ -49,7 +53,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.ChargeLinks
         public async Task RunAsync(
             [ServiceBusTrigger(
                 "%CHARGE_LINK_ACCEPTED_TOPIC_NAME%",
-                "%CHARGELINKACCEPTED_SUB_EVENTPUBLISHER%",
+                "%CHARGELINKACCEPTED_SUB_REPLIER%",
                 Connection = "DOMAINEVENT_LISTENER_CONNECTION_STRING")]
             [NotNull] byte[] message)
         {
@@ -57,7 +61,8 @@ namespace GreenEnergyHub.Charges.FunctionHost.ChargeLinks
 
             var acceptedChargeLinkCommand = (ChargeLinkCommandAcceptedEvent)await _messageExtractor.ExtractAsync(message).ConfigureAwait(false);
 
-            await _chargeLinkEventReplyHandler.HandleAsync(acceptedChargeLinkCommand).ConfigureAwait(false);
+            if (_messageMetaDataContext.IsReplyToSet())
+                await _chargeLinkEventReplyHandler.HandleAsync(acceptedChargeLinkCommand).ConfigureAwait(false);
         }
     }
 }

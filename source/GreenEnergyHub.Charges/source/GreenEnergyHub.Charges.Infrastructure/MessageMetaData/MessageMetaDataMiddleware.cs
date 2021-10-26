@@ -36,9 +36,9 @@ namespace GreenEnergyHub.Charges.Infrastructure.MessageMetaData
             context.BindingContext.BindingData.TryGetValue("UserProperties", out var metadata);
             if (metadata != null)
             {
-                var eventMetadata = _jsonSerializer.Deserialize<EventMetadata>(metadata.ToString());
-                _messageMetaDataContext.SetReplyTo(eventMetadata.ReplyTo);
-                _messageMetaDataContext.SetSessionId(eventMetadata.SessionId);
+                var eventMetadata = _jsonSerializer.Deserialize<MessageMetadata>(metadata.ToString());
+                ((MessageMetaDataContext)_messageMetaDataContext).SetReplyTo(eventMetadata.ReplyTo);
+                ((MessageMetaDataContext)_messageMetaDataContext).SetSessionId(eventMetadata.SessionId);
             }
 
             await next(context).ConfigureAwait(false);

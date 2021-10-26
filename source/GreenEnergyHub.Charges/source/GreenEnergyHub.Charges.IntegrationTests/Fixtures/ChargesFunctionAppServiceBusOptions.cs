@@ -31,6 +31,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures
         public const string ChargeLinkAcceptedTopicKey = "sbt-link-command-accepted";
         public const string ChargeLinkAcceptedDataAvailableNotifierSubscriptionName = "sbs-chargelinkaccepted-sub-dataavailablenotifier";
         public const string ChargeLinkAcceptedEventPublisherSubscriptionName = "sbs-chargelinkaccepted-sub-eventpublisher";
+        public const string ChargeLinkAcceptedEventReplierSubscriptionName = "sbs-chargelinkaccepted-sub-replier";
 
         public const string ChargeLinkCreatedTopicKey = "charge-link-created";
 

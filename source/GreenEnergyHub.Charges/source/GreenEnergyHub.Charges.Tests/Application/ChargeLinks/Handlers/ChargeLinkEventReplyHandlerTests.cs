@@ -63,32 +63,6 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Handlers
 
         [Theory]
         [InlineAutoDomainData]
-        public async Task HandleAsync_WhenCalledWithReplyToBeingNull_DoesNotCallDefaultChargeLinkClientWithSucceeded(
-            [Frozen] [NotNull] Mock<IMessageMetaDataContext> messageMetaDataContext,
-            [Frozen] [NotNull] Mock<IDefaultChargeLinkClient> defaultChargeLinkClient,
-            [NotNull] string replyTo,
-            [NotNull] string correlationId,
-            [NotNull] ChargeLinkEventReplyHandler sut)
-        {
-            // Arrange
-            messageMetaDataContext.Setup(m => m.ReplyTo).Returns((string?)null!);
-
-            var command = GetChargeLinkCommandAcceptedEvent(correlationId);
-
-            // Act
-            await sut.HandleAsync(command).ConfigureAwait(false);
-
-            // Assert
-            defaultChargeLinkClient.Verify(
-                x => x.CreateDefaultChargeLinksSucceededReplyAsync(
-                    It.IsAny<CreateDefaultChargeLinksSucceededDto>(),
-                    correlationId,
-                    replyTo),
-                Times.Never);
-        }
-
-        [Theory]
-        [InlineAutoDomainData]
         public async Task HandleAsync_WhenCalled_ThrowsInvalidOperationExceptionIfMeteringPointIdsDiffer(
             [Frozen] [NotNull] Mock<IMessageMetaDataContext> messageMetaDataContext,
             [NotNull] string replyTo,

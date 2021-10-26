@@ -34,6 +34,7 @@ using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandReceived;
 using GreenEnergyHub.Charges.Infrastructure.MessageMetaData;
 using GreenEnergyHub.Charges.Infrastructure.Messaging.Registration;
 using GreenEnergyHub.Charges.Infrastructure.Repositories;
+using GreenEnergyHub.Json;
 using GreenEnergyHub.Messaging.Protobuf;
 using GreenEnergyHub.Messaging.Transport;
 using Microsoft.EntityFrameworkCore;
@@ -47,6 +48,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
         internal static void ConfigureServices(IServiceCollection serviceCollection)
         {
             serviceCollection.AddScoped(typeof(IClock), _ => SystemClock.Instance);
+            serviceCollection.AddSingleton<IJsonSerializer, JsonSerializer>();
             serviceCollection.AddLogging();
             serviceCollection.AddScoped<CorrelationIdMiddleware>();
             serviceCollection.AddScoped<MessageMetaDataMiddleware>();
