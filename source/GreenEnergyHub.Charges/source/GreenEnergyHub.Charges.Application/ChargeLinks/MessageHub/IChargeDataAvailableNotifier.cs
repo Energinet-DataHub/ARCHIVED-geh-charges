@@ -20,7 +20,7 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.MessageHub
     /// <summary>
     /// Contract for notifying the MessageHub that data about a charge that has been created
     /// is available.
-    /// This is the RSM-031 CIM XML 'NotifyBillingMasterData'.
+    /// This is the RSM-034 CIM XML 'NotifyPriceList'.
     /// </summary>
     public interface IChargeDataAvailableNotifier
     {
