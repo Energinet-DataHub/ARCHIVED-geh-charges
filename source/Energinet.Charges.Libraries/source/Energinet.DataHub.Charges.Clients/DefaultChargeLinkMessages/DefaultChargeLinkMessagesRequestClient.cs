@@ -26,16 +26,18 @@ namespace Energinet.DataHub.Charges.Libraries.DefaultChargeLinkMessages
 {
     public sealed class DefaultChargeLinkMessagesRequestClient : IAsyncDisposable, IDefaultChargeLinkMessagesRequestClient
     {
-        private const string CreateLinkMessagesRequestQueueName = "create-link-messages-request";
         private readonly ServiceBusClient _serviceBusClient;
+        private readonly string _createLinkMessagesRequestQueueName;
         private readonly IServiceBusRequestSender _serviceBusRequestSender;
 
         public DefaultChargeLinkMessagesRequestClient(
             [NotNull] ServiceBusClient serviceBusClient,
             [NotNull] IServiceBusRequestSenderFactory serviceBusRequestSenderFactory,
-            [NotNull] string replyToQueueName)
+            [NotNull] string replyToQueueName,
+            [NotNull] string createLinkMessagesRequestQueueName = "create-link-messages-request")
         {
             _serviceBusClient = serviceBusClient;
+            _createLinkMessagesRequestQueueName = createLinkMessagesRequestQueueName;
             _serviceBusRequestSender = serviceBusRequestSenderFactory.Create(serviceBusClient, replyToQueueName);
         }
 
@@ -55,7 +57,7 @@ namespace Energinet.DataHub.Charges.Libraries.DefaultChargeLinkMessages
             };
 
             await _serviceBusRequestSender.SendRequestAsync(
-                    createDefaultChargeLinkMessages.ToByteArray(), CreateLinkMessagesRequestQueueName, correlationId)
+                    createDefaultChargeLinkMessages.ToByteArray(), _createLinkMessagesRequestQueueName, correlationId)
                 .ConfigureAwait(false);
         }
 
