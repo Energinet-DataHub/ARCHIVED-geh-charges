@@ -2,7 +2,7 @@
 
 As a developer, you can run all unit tests and integration tests locally.
 
-Integration tests require access to Azure and some local recources and setup.
+Integration tests require access to Azure and some local resources and setup.
 
 ## Installing prerequisites
 
@@ -39,5 +39,5 @@ npm install -g azure-functions-core-tools@3.0.3568
 
 ### Set up local settings
 
-You will need to make a local copy of all local.settings.json.sample and integrationtest.local.settings.json.sample 
+You will need to make a local copy of all `local.settings.json.sample` and `integrationtest.local.settings.json.sample`
 files and fill in your own settings, like Azure tenant and subscription id's etc.
