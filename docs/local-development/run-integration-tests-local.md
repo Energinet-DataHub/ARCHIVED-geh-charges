@@ -13,10 +13,13 @@ Integration tests require access to Azure and some local recources and setup.
 
 ### Install Node and NPM using NVM
 
-Run Command Prompt as Administrator and run the following
+If you have any version of Node installed, you should uninstall it before you proceed.
+
+Run Command Prompt as Administrator and run the following:
 
 ```Prompt
-nvm install
+nvm install lts
+nvm use 14.18.1
 ```
 
 Afterwards you can check your installation and versions
