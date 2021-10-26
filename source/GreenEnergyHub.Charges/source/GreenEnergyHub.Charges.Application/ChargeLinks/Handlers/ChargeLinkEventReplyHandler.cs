@@ -39,8 +39,9 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
 
         public async Task HandleAsync(ChargeLinkCommandAcceptedEvent command)
         {
-                // TODO:  A refactor of ChargeLinkCommands will end with the commands being wrapped by a entity with only one meteringPointId.
                 CheckAllMeteringPointIdsAreTheSame(command);
+
+                // TODO:  A refactor of ChargeLinkCommands will end with the commands being wrapped by a entity with only one meteringPointId.
                 var meteringPointId = command.ChargeLinkCommands.First().ChargeLink.MeteringPointId;
 
                 await _defaultChargeLinkClient
@@ -52,10 +53,12 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
                         _messageMetaDataContext.ReplyTo).ConfigureAwait(false);
         }
 
-        private void CheckAllMeteringPointIdsAreTheSame(ChargeLinkCommandAcceptedEvent chargeLinkCommandAcceptedEvent)
+        private static void CheckAllMeteringPointIdsAreTheSame(ChargeLinkCommandAcceptedEvent chargeLinkCommandAcceptedEvent)
         {
-            var chargeLinkMeteringPointId = chargeLinkCommandAcceptedEvent.ChargeLinkCommands.First().ChargeLink.MeteringPointId;
-            var chargeLinkMeteringPointIds = chargeLinkCommandAcceptedEvent.ChargeLinkCommands
+            var chargeLinkMeteringPointId =
+                chargeLinkCommandAcceptedEvent.ChargeLinkCommands.First().ChargeLink.MeteringPointId;
+            var chargeLinkMeteringPointIds =
+                chargeLinkCommandAcceptedEvent.ChargeLinkCommands
                 .Select(c => c.ChargeLink.MeteringPointId).ToList();
 
             if (chargeLinkMeteringPointIds.Any(meteringPointId => meteringPointId != chargeLinkMeteringPointId))

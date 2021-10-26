@@ -16,10 +16,19 @@ namespace GreenEnergyHub.Charges.Application
 {
     public interface IMessageMetaDataContext
     {
+        /// <summary>
+        /// Returns the ReplyTo value from the Message's Metadata, if no value is present a exception is thrown.
+        /// </summary>
         string ReplyTo { get; }
 
+        /// <summary>
+        /// Returns true if ReplyTo is set to value that is not empty.
+        /// </summary>
         bool IsReplyToSet();
 
+        /// <summary>
+        /// Returns the SessionId value from the Message's Metadata, if no value is present a exception is thrown.
+        /// </summary>
         string SessionId { get; }
     }
 }
