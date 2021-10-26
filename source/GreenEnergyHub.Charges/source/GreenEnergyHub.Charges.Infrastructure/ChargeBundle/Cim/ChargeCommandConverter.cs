@@ -243,7 +243,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.ChargeBundle.Cim
                     CimChargeCommandConstants.Namespace,
                     XmlNodeType.EndElement))
                 {
-                    point.Time = _iso8601Durations.AddDuration(
+                    point.Time = _iso8601Durations.GetTimeFixedToDuration(
                         startDateTime,
                         ResolutionMapper.Map(operation.Resolution),
                         point.Position - 1);
