@@ -21,7 +21,6 @@ using Energinet.DataHub.MessageHub.Client.Model;
 using GreenEnergyHub.Charges.Domain.AvailableChargeData;
 using GreenEnergyHub.Charges.Domain.ChargeCommandAcceptedEvents;
 using GreenEnergyHub.Charges.Domain.ChargeCommands;
-using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using NodaTime;
 
@@ -78,9 +77,10 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.MessageHub
             Instant now)
         {
             var dataAvailableNotificationDtos = new List<DataAvailableNotificationDto>();
-            var messageWeight =
-                (int)(chargeCommandAcceptedEvent.Command.ChargeOperation.Points.Count * ChargePointMessageWeight) +
-                (int)ChargeMessageWeight;
+            var pointsCount = chargeCommandAcceptedEvent.Command.ChargeOperation.Points.Count;
+            var messageWeight = (int)Math.Round(
+                (pointsCount * ChargePointMessageWeight) + ChargeMessageWeight,
+                MidpointRounding.AwayFromZero);
 
             var activeGridAccessProviders = await _marketParticipantRepository.GetActiveGridAccessProvidersAsync();
 
