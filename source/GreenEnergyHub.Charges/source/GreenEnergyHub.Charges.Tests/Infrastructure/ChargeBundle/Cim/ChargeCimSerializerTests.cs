@@ -17,7 +17,6 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Reflection;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
 using GreenEnergyHub.Charges.Domain.AvailableChargeData;
@@ -42,31 +41,34 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.ChargeBundle.Cim
         private const int NoOfChargesInBundle = 10;
         private const string CimTestId = "00000000000000000000000000000000";
 
-/*        [Theory]
-        [InlineAutoDomainData]
+        [Theory]
+        [InlineAutoDomainData("GreenEnergyHub.Charges.Tests.TestFiles.ExpectedOutputChargeCimSerializerMasterDataAndPrices.blob", true, true)]
         public async Task SerializeAsync_WhenCalled_StreamHasSerializedResult(
-            [NotNull] [Frozen] Mock<IHubSenderConfiguration> hubSenderConfiguration,
-            [NotNull] [Frozen] Mock<IClock> clock,
-            [NotNull] ChargeLinkCimSerializer sut)
+            string embeddedResource,
+            bool includeMasterData,
+            bool includePrices,
+            [Frozen] Mock<IHubSenderConfiguration> hubSenderConfiguration,
+            [Frozen] Mock<IClock> clock,
+            [Frozen] Mock<IIso8601Durations> iso8601Durations,
+            [Frozen] Mock<ICimIdProvider> cimIdProvider,
+            ChargeCimSerializer sut)
         {
             // Arrange
-            SetupMocks(hubSenderConfiguration, clock);
+            SetupMocks(hubSenderConfiguration, clock, iso8601Durations, cimIdProvider);
             await using var stream = new MemoryStream();
 
-            var expected =
-                GetExpectedValue("GreenEnergyHub.Charges.Tests.TestFiles.ExpectedOutputChargeLinkCimSerializer.xml");
+            var expected = GetExpectedValue(embeddedResource);
 
-            var chargeLinks = GetChargeLinks(clock.Object);
+            var charges = GetCharges(clock.Object, includeMasterData, includePrices);
 
             // Act
-            await sut.SerializeToStreamAsync(chargeLinks, stream);
+            await sut.SerializeToStreamAsync(charges, stream);
 
             // Assert
-            var text = GetStreamAsStringWithReplacedGuids(stream);
-            var actual = RemoveCarriageReturn(text);
+            var actual = GetStreamAsString(stream);
 
             Assert.Equal(expected, actual);
-        }*/
+        }
 
         [Theory/*(Skip = "Manually run test to save the generated file to disk")*/]
         [InlineAutoDomainData]
@@ -79,7 +81,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.ChargeBundle.Cim
         {
             SetupMocks(hubSenderConfiguration, clock, iso8601Durations, cimIdProvider);
 
-            var charges = GetCharges(clock.Object);
+            var charges = GetCharges(clock.Object, false, true);
 
             await using var stream = new MemoryStream();
 
@@ -120,26 +122,33 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.ChargeBundle.Cim
                 .Returns(CimTestId);
         }
 
-        private List<AvailableChargeData> GetCharges(IClock clock)
+        private List<AvailableChargeData> GetCharges(IClock clock, bool includeMasterData, bool includePrices)
         {
-            var chargeLinks = new List<AvailableChargeData>();
+            var charges = new List<AvailableChargeData>();
 
             for (var i = 1; i <= NoOfChargesInBundle; i++)
             {
-                chargeLinks.Add(GetCharge(i, clock));
+                if (includeMasterData)
+                {
+                    charges.Add(GetChargeWithMasterData(i, clock, includePrices));
+                }
+                else
+                {
+                    charges.Add(GetChargeWithoutMasterData(i, clock, includePrices));
+                }
             }
 
-            return chargeLinks;
+            return charges;
         }
 
-        private AvailableChargeData GetCharge(int no, IClock clock)
+        private AvailableChargeData GetChargeWithMasterData(int no, IClock clock, bool includePrices)
         {
             var validTo = no % 2 == 0 ?
                 Instant.FromUtc(9999, 12, 31, 23, 59, 59) :
                 Instant.FromUtc(2021, 4, 30, 22, 0, 0);
 
             return new AvailableChargeData(
-                "Recipient" + no,
+                "Recipient",
                 MarketParticipantRole.GridAccessProvider,
                 BusinessReasonCode.UpdateChargeInformation,
                 "ChargeId" + no,
@@ -153,7 +162,29 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.ChargeBundle.Cim
                 true,
                 false,
                 GetResolution(no),
-                GetPoints(GetNoOfPoints(no)),
+                GetPoints(GetNoOfPoints(no, includePrices)),
+                clock.GetCurrentInstant(),
+                Guid.NewGuid());
+        }
+
+        private AvailableChargeData GetChargeWithoutMasterData(int no, IClock clock, bool includePrices)
+        {
+            return new AvailableChargeData(
+                "Recipient",
+                MarketParticipantRole.GridAccessProvider,
+                BusinessReasonCode.UpdateChargeInformation,
+                "ChargeId" + no,
+                "Owner" + no,
+                GetChargeType(no),
+                string.Empty,
+                string.Empty,
+                Instant.FromUtc(2020, 12, 31, 23, 0, 0),
+                Instant.FromUtc(9999, 12, 31, 23, 59, 59),
+                VatClassification.Unknown,
+                false,
+                false,
+                GetResolution(no),
+                GetPoints(GetNoOfPoints(no, includePrices)),
                 clock.GetCurrentInstant(),
                 Guid.NewGuid());
         }
@@ -178,8 +209,13 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.ChargeBundle.Cim
             };
         }
 
-        private static int GetNoOfPoints(int no)
+        private static int GetNoOfPoints(int no, bool includePrices)
         {
+            if (!includePrices)
+            {
+                return 0;
+            }
+
             return (no % 3) switch
             {
                 0 => 1,
@@ -200,48 +236,17 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.ChargeBundle.Cim
             return points;
         }
 
-        private static string GetStreamAsStringWithReplacedGuids(Stream stream)
-        {
-            var text = GetStreamAsString(stream);
-            return ReplaceGuids(text);
-        }
-
         private static string GetExpectedValue(string path)
         {
             var assembly = Assembly.GetExecutingAssembly();
             using var xmlStream = EmbeddedStreamHelper.GetInputStream(assembly, path);
-            var text = GetStreamAsStringWithReplacedGuids(xmlStream);
-            text = RemoveLicense(text);
-            return RemoveCarriageReturn(text);
+            return GetStreamAsString(xmlStream);
         }
 
         private static string GetStreamAsString(Stream stream)
         {
             using var reader = new StreamReader(stream);
             return reader.ReadToEnd();
-        }
-
-        private static string ReplaceGuids(string input)
-        {
-            // The following regex will match guids regardless of case
-            var result = Regex.Replace(
-                input,
-                @"[0-9A-Fa-f]{8}-([0-9A-Fa-f]{4}-){3}[0-9A-Fa-f]{12}",
-                Guid.Empty.ToString());
-            return result;
-        }
-
-        private static string RemoveLicense(string input)
-        {
-            var assembly = Assembly.GetExecutingAssembly();
-            using var stream = EmbeddedStreamHelper.GetInputStream(assembly, "GreenEnergyHub.Charges.Tests.TestFiles.License.txt");
-            var license = GetStreamAsString(stream);
-            return input.Replace(license, string.Empty);
-        }
-
-        private static string RemoveCarriageReturn(string input)
-        {
-            return input.Replace("\r", string.Empty);
         }
     }
 }
