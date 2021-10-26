@@ -73,14 +73,26 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.MessageHub
             if (charge.TaxIndicator is false)
                 return;
 
-            var gridAccessProviders = await _marketParticipantRepository.GetActiveGridAccessProvidersAsync();
+            var dataAvailableNotificationDtos =
+                await GenerateDataAvailableNotificationDtosAsync(chargeCommandAcceptedEvent, now);
 
+            var dataAvailableNotificationSenderTasks = dataAvailableNotificationDtos
+                .Select(x => _dataAvailableNotificationSender.SendAsync(x));
+            await Task.WhenAll(dataAvailableNotificationSenderTasks).ConfigureAwait(false);
+        }
+
+        private async Task<List<DataAvailableNotificationDto>> GenerateDataAvailableNotificationDtosAsync(
+            ChargeCommandAcceptedEvent chargeCommandAcceptedEvent,
+            Instant now)
+        {
+            var dataAvailableNotificationDtos = new List<DataAvailableNotificationDto>();
             var messageWeight =
                 (int)(chargeCommandAcceptedEvent.Command.ChargeOperation.Points.Count * ChargePointMessageWeight) +
                 (int)ChargeMessageWeight;
 
-            var dataAvailableNotificationDtos = new List<DataAvailableNotificationDto>();
-            foreach (var provider in gridAccessProviders)
+            var activeGridAccessProviders = await _marketParticipantRepository.GetActiveGridAccessProvidersAsync();
+
+            foreach (var provider in activeGridAccessProviders)
             {
                 var dataAvailableNotificationDto = CreateDataAvailableNotificationDto(
                     chargeCommandAcceptedEvent.Command,
@@ -96,9 +108,7 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.MessageHub
                 await _availableChargeDataRepository.StoreAsync(availableChargeData);
             }
 
-            var dataAvailableNotificationSenderTasks = dataAvailableNotificationDtos
-                .Select(x => _dataAvailableNotificationSender.SendAsync(x));
-            await Task.WhenAll(dataAvailableNotificationSenderTasks).ConfigureAwait(false);
+            return dataAvailableNotificationDtos;
         }
 
         private static DataAvailableNotificationDto CreateDataAvailableNotificationDto(
