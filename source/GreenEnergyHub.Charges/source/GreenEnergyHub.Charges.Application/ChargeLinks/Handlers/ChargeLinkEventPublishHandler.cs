@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Energinet.DataHub.Charges.Libraries.DefaultChargeLink;
@@ -45,9 +46,10 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
 
         public async Task HandleAsync(ChargeLinkCommandAcceptedEvent command)
         {
-            if (_messageMetaDataContext.ReplyTo != null)
+            if (_messageMetaDataContext.IsReplyToSet())
             {
                 // TODO:  A refactor of ChargeLinkCommands will end with the commands being wrapped by a entity with only one meteringPointId.
+                CheckAllMeteringPointIdsAreTheSame(command);
                 var meteringPointId = command.ChargeLinkCommands.First().ChargeLink.MeteringPointId;
 
                 await _defaultChargeLinkClient
@@ -67,6 +69,19 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
                 chargeLinkCreatedEvents
                     .Select(chargeLinkCreatedEvent
                         => _createdDispatcher.DispatchAsync(chargeLinkCreatedEvent))).ConfigureAwait(false);
+        }
+
+        private void CheckAllMeteringPointIdsAreTheSame(ChargeLinkCommandAcceptedEvent chargeLinkCommandAcceptedEvent)
+        {
+            var chargeLinkMeteringPointId = chargeLinkCommandAcceptedEvent.ChargeLinkCommands.First().ChargeLink.MeteringPointId;
+            var chargeLinkMeteringPointIds = chargeLinkCommandAcceptedEvent.ChargeLinkCommands
+                .Select(c => c.ChargeLink.MeteringPointId).ToList();
+
+            foreach (var meteringPointId in chargeLinkMeteringPointIds)
+            {
+                if (meteringPointId != chargeLinkMeteringPointId)
+                    throw new InvalidOperationException($"not all metering point Id are the same on {nameof(ChargeLinkCommandAcceptedEvent)}");
+            }
         }
     }
 }

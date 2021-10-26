@@ -63,12 +63,9 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
 
         public async Task HandleAsync([NotNull] CreateLinkCommandEvent createLinkCommandEvent, string correlationId)
         {
-            if (_messageMetaDataContext.ReplyTo == null || !_messageMetaDataContext.ReplyTo.Any())
+            if (!_messageMetaDataContext.IsReplyToSet())
             {
-                _logger.LogError("The reply queue name was absent or empty, could not handle request" +
-                                 " CreateDefaultChargeLinks on metering point " +
-                                 $"with id: {createLinkCommandEvent.MeteringPointId} " +
-                                 $"and correlation id: {correlationId}");
+                _logger.LogError($"The reply queue name was absent or empty, could not handle request CreateDefaultChargeLinks on metering point with id: {createLinkCommandEvent.MeteringPointId} and correlation id: {correlationId}");
 
                 throw new ArgumentNullException(nameof(_messageMetaDataContext.ReplyTo));
             }

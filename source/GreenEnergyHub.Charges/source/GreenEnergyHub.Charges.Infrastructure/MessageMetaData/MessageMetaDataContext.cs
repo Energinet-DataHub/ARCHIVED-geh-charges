@@ -26,7 +26,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.MessageMetaData
         {
             get
             {
-                if (_replyTo == null)
+                if (string.IsNullOrEmpty(_replyTo))
                     throw new InvalidOperationException($"Property '{nameof(ReplyTo)}' is missing");
 
                 return _replyTo;
@@ -37,11 +37,16 @@ namespace GreenEnergyHub.Charges.Infrastructure.MessageMetaData
         {
             get
             {
-                if (_sessionId == null)
+                if (string.IsNullOrEmpty(_sessionId))
                     throw new InvalidOperationException($"Property '{nameof(SessionId)}' is missing");
 
                 return _sessionId;
             }
+        }
+
+        public bool IsReplyToSet()
+        {
+            return !string.IsNullOrEmpty(_replyTo);
         }
 
         public void SetReplyTo(string? messageType)

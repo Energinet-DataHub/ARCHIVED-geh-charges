@@ -18,6 +18,8 @@ namespace GreenEnergyHub.Charges.Application
     {
         string ReplyTo { get; }
 
+        bool IsReplyToSet();
+
         string SessionId { get; }
 
         void SetReplyTo(string? messageType);

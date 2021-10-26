@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Threading.Tasks;
@@ -26,6 +27,7 @@ using GreenEnergyHub.Charges.Domain.ChargeLinkCommands;
 using GreenEnergyHub.Charges.Domain.ChargeLinkCreatedEvents;
 using GreenEnergyHub.TestHelpers;
 using Moq;
+using NodaTime;
 using Xunit;
 using Xunit.Categories;
 
@@ -79,6 +81,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Handlers
             [NotNull] ChargeLinkEventPublishHandler sut)
         {
             // Arrange
+            messageMetaDataContext.Setup(m => m.IsReplyToSet()).Returns(true);
             messageMetaDataContext.Setup(m => m.ReplyTo).Returns(replyTo);
             correlationContext.Setup(c => c.Id).Returns(correlationId);
             factory.Setup(
@@ -143,6 +146,36 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Handlers
                     correlationId,
                     replyTo),
                 Times.Never);
+        }
+
+        [Theory]
+        [InlineAutoDomainData]
+        public async Task HandleAsync_WhenCalled_ThrowsInvalidOperationExceptionIfMeteringPointIdsDiffer(
+            [Frozen] [NotNull] Mock<IMessageMetaDataContext> messageMetaDataContext,
+            [NotNull] string replyTo,
+            [NotNull] string correlationId,
+            [NotNull] ChargeLinkEventPublishHandler sut)
+        {
+            // Arrange
+            messageMetaDataContext.Setup(m => m.IsReplyToSet()).Returns(true);
+            messageMetaDataContext.Setup(m => m.ReplyTo).Returns(replyTo);
+            var command = new ChargeLinkCommandAcceptedEvent(
+                correlationId,
+                new[]
+                {
+                    new ChargeLinkCommand(correlationId)
+                    {
+                        ChargeLink = new ChargeLinkDto { MeteringPointId = "first" },
+                    },
+                    new ChargeLinkCommand(correlationId)
+                    {
+                        ChargeLink = new ChargeLinkDto { MeteringPointId = "second" },
+                    },
+                },
+                Instant.MinValue);
+
+            // Act & Assert
+            await Assert.ThrowsAsync<InvalidOperationException>(() => sut.HandleAsync(command));
         }
     }
 }
