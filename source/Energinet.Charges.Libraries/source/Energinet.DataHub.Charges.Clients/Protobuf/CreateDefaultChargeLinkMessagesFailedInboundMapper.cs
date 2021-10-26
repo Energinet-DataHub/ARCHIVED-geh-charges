@@ -23,11 +23,11 @@ namespace Energinet.DataHub.Charges.Libraries.Protobuf
     internal class CreateDefaultChargeLinkMessagesFailedInboundMapper
     {
         protected internal static CreateDefaultChargeLinkMessagesFailedDto Convert(
-            [NotNull] CreateDefaultChargeLinkMessagesFailed createDefaultChargeLinkMessagesFailed)
+            [NotNull] CreateDefaultChargeLinkMessagesReply createDefaultChargeLinkMessagesReply)
         {
             return new(
-                createDefaultChargeLinkMessagesFailed.MeteringPointId,
-                ConvertErrorCode(createDefaultChargeLinkMessagesFailed.ErrorCode));
+                createDefaultChargeLinkMessagesReply.MeteringPointId,
+                ConvertErrorCode(createDefaultChargeLinkMessagesReply.CreateDefaultChargeLinkMessagesFailed.ErrorCode));
         }
 
         private static ErrorCode ConvertErrorCode(CreateDefaultChargeLinkMessagesFailed.Types.ErrorCode errorCode)

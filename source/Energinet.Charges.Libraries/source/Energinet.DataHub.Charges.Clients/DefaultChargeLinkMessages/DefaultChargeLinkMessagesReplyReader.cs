@@ -16,7 +16,6 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using Energinet.Charges.Contracts;
-using Energinet.DataHub.Charges.Libraries.Enums;
 using Energinet.DataHub.Charges.Libraries.Protobuf;
 
 namespace Energinet.DataHub.Charges.Libraries.DefaultChargeLinkMessages
@@ -44,34 +43,39 @@ namespace Energinet.DataHub.Charges.Libraries.DefaultChargeLinkMessages
         /// Read and map data to be handled by provided delegates.
         /// </summary>
         /// <param name="data">Data reply to deserialize.</param>
-        /// <param name="requestStatus">
-        /// Contains information on whether data contains a reply to a succeeded
-        /// or failed <see cref="CreateDefaultChargeLinkMessages" /> request.
-        /// </param>
-        public override async Task ReadAsync(byte[] data, RequestStatus requestStatus)
+        public override async Task ReadAsync([NotNull] byte[] data)
         {
-            switch (requestStatus)
+            var replyParser = CreateDefaultChargeLinkMessagesReply.Parser;
+            var createDefaultChargeLinkMessagesReply = replyParser.ParseFrom(data);
+
+            await MapAsync(createDefaultChargeLinkMessagesReply).ConfigureAwait(false);
+        }
+
+        private async Task MapAsync([NotNull] CreateDefaultChargeLinkMessagesReply createDefaultChargeLinkMessagesReply)
+        {
+            switch (createDefaultChargeLinkMessagesReply.ReplyCase)
             {
-                case RequestStatus.Succeeded:
-                    var succeededParser = CreateDefaultChargeLinkMessagesSucceeded.Parser;
-                    var createDefaultChargeLinkMessagesSucceeded = succeededParser.ParseFrom(data);
+                case CreateDefaultChargeLinkMessagesReply.ReplyOneofCase.None:
+                    throw new ArgumentException(
+                        $"Unknown type: {nameof(createDefaultChargeLinkMessagesReply.ReplyCase)}");
+
+                case CreateDefaultChargeLinkMessagesReply.ReplyOneofCase.CreateDefaultChargeLinkMessagesSucceeded:
                     var succeededDto = CreateDefaultChargeLinkMessagesSucceededInboundMapper
-                        .Convert(createDefaultChargeLinkMessagesSucceeded);
+                        .Convert(createDefaultChargeLinkMessagesReply);
 
                     await _handleSuccess(succeededDto).ConfigureAwait(false);
                     break;
 
-                case RequestStatus.Failed:
-                    var failedParser = CreateDefaultChargeLinkMessagesFailed.Parser;
-                    var createDefaultChargeLinkMessagesFailed = failedParser.ParseFrom(data);
+                case CreateDefaultChargeLinkMessagesReply.ReplyOneofCase.CreateDefaultChargeLinkMessagesFailed:
                     var failedDto = CreateDefaultChargeLinkMessagesFailedInboundMapper
-                        .Convert(createDefaultChargeLinkMessagesFailed);
+                        .Convert(createDefaultChargeLinkMessagesReply);
 
                     await _handleFailure(failedDto).ConfigureAwait(false);
                     break;
 
                 default:
-                    throw new ArgumentOutOfRangeException(nameof(requestStatus), requestStatus, null);
+                    throw new ArgumentException(
+                        $"Unknown type: {nameof(createDefaultChargeLinkMessagesReply.ReplyCase)}");
             }
         }
     }
