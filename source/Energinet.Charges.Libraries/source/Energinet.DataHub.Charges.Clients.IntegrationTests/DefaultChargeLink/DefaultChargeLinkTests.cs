@@ -21,7 +21,6 @@ using Energinet.DataHub.Charges.Libraries.Common;
 using Energinet.DataHub.Charges.Libraries.DefaultChargeLink;
 using Energinet.DataHub.Charges.Libraries.Factories;
 using Energinet.DataHub.Charges.Libraries.Models;
-using Energinet.DataHub.Core.FunctionApp.TestCommon;
 using Energinet.DataHub.Core.FunctionApp.TestCommon.ServiceBus.ListenerMock;
 using FluentAssertions;
 using GreenEnergyHub.TestHelpers;
@@ -34,7 +33,7 @@ namespace Energinet.DataHub.Charges.Clients.IntegrationTests.DefaultChargeLink
     {
         [Collection(nameof(ChargesClientsCollectionFixture))]
         [SuppressMessage("ReSharper", "CA1034", Justification = "done")] // TODO: Why is this necessary here, but not in Charges.IntegrationTests.Health.HealthStatusTests?
-        public class CreateDefaultChargeLinksRequestAsync : FunctionAppTestBase<ChargesClientsFixture>, IAsyncLifetime
+        public class CreateDefaultChargeLinksRequestAsync : LibraryTestBase<ChargesClientsFixture>, IAsyncLifetime
         {
             private readonly string _serviceBusConnectionString;
             private readonly string _replyToQueueName;
