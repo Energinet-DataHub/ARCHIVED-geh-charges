@@ -6,7 +6,7 @@
   <cim:businessSector.type>23</cim:businessSector.type>
   <cim:sender_MarketParticipant.mRID codingScheme="A10">5790001330552</cim:sender_MarketParticipant.mRID>
   <cim:sender_MarketParticipant.marketRole.type>DDZ</cim:sender_MarketParticipant.marketRole.type>
-  <cim:receiver_MarketParticipant.mRID codingScheme="A10">Recipient1</cim:receiver_MarketParticipant.mRID>
+  <cim:receiver_MarketParticipant.mRID codingScheme="A10">Recipient</cim:receiver_MarketParticipant.mRID>
   <cim:receiver_MarketParticipant.marketRole.type>DDM</cim:receiver_MarketParticipant.marketRole.type>
   <cim:createdDateTime>2021-10-22T15:30:41Z</cim:createdDateTime>
   <cim:MktActivityRecord>
