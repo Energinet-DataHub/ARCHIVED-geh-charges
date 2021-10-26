@@ -14,10 +14,8 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Reflection;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
 using GreenEnergyHub.Charges.Domain.AvailableChargeLinksData;
@@ -53,8 +51,9 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.ChargeLinkBundle.Cim
             SetupMocks(hubSenderConfiguration, clock, cimIdProvider);
             await using var stream = new MemoryStream();
 
-            var expected =
-                GetExpectedValue("GreenEnergyHub.Charges.Tests.TestFiles.ExpectedOutputChargeLinkCimSerializer.xml");
+            var expected = EmbeddedStreamHelper.GetEmbeddedStreamAsString(
+                Assembly.GetExecutingAssembly(),
+                "GreenEnergyHub.Charges.Tests.TestFiles.ExpectedOutputChargeLinkCimSerializer.blob");
 
             var chargeLinks = GetChargeLinks(clock.Object);
 
@@ -62,8 +61,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.ChargeLinkBundle.Cim
             await sut.SerializeToStreamAsync(chargeLinks, stream);
 
             // Assert
-            var text = GetStreamAsString(stream);
-            var actual = RemoveCarriageReturn(text);
+            var actual = stream.AsString();
 
             Assert.Equal(expected, actual);
         }
@@ -142,34 +140,6 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.ChargeLinkBundle.Cim
                 validTo,
                 clock.GetCurrentInstant(),
                 Guid.NewGuid());
-        }
-
-        private static string GetExpectedValue(string path)
-        {
-            var assembly = Assembly.GetExecutingAssembly();
-            using var xmlStream = EmbeddedStreamHelper.GetInputStream(assembly, path);
-            var text = GetStreamAsString(xmlStream);
-            text = RemoveLicense(text);
-            return RemoveCarriageReturn(text);
-        }
-
-        private static string GetStreamAsString(Stream stream)
-        {
-            using var reader = new StreamReader(stream);
-            return reader.ReadToEnd();
-        }
-
-        private static string RemoveLicense(string input)
-        {
-            var assembly = Assembly.GetExecutingAssembly();
-            using var stream = EmbeddedStreamHelper.GetInputStream(assembly, "GreenEnergyHub.Charges.Tests.TestFiles.License.txt");
-            var license = GetStreamAsString(stream);
-            return input.Replace(license, string.Empty);
-        }
-
-        private static string RemoveCarriageReturn(string input)
-        {
-            return input.Replace("\r", string.Empty);
         }
     }
 }
