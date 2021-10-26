@@ -37,7 +37,6 @@
     "CHARGE_CREATED_TOPIC_NAME": "charge-created",
     "CHARGE_PRICES_UPDATED_TOPIC_NAME": "charge-prices-updated",
     "CHARGEACCEPTED_SUB_DATAAVAILABLENOTIFIER": "sbs-chargeaccepted-sub-dataavailablenotifier",
-    "CHARGEACCEPTED_SUB_EVENTPUBLISHER": "sbs-chargeaccepted-sub-eventpublisher",
 
     "POST_OFFICE_TOPIC_NAME": "sbt-post-office",
     "MESSAGEHUB_DATAAVAILABLE_QUEUE": "sbq-dataavailable",
