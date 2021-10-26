@@ -30,7 +30,7 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.MessageHub
     public class ChargeDataAvailableNotifier : IChargeDataAvailableNotifier
     {
         /// <summary>
-        /// The upper anticipated weight (kilobytes) contribution to the final bundle from the charge link created event.
+        /// The upper anticipated weight (kilobytes) contribution to the final bundle from the charge created event.
         /// </summary>
         private const decimal ChargeMessageWeight = 2m;
         private const decimal ChargePointMessageWeight = 0.1m;
