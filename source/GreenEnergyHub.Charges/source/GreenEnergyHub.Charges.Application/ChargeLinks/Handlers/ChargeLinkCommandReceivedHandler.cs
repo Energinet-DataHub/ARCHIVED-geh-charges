@@ -12,12 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Domain.ChargeLinkCommandAcceptedEvents;
 using GreenEnergyHub.Charges.Domain.ChargeLinkCommandReceivedEvents;
-using GreenEnergyHub.Charges.Domain.ChargeLinkCommands;
 using GreenEnergyHub.Charges.Domain.ChargeLinks;
 
 namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
