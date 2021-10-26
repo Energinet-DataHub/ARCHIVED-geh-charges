@@ -1,6 +1,7 @@
 ﻿### This file contains the list of words to be ignored by spell check
 ADR
 Architechtural
+Azurite
 bool
 CancelledEndDateTime
 ChargeCreated
@@ -40,9 +41,11 @@ mergeable
 MeteringPointId
 MPL
 namespace
+NPM
 NRules
 NuGet
 nullable
+NVM
 PI
 POCO
 proto
