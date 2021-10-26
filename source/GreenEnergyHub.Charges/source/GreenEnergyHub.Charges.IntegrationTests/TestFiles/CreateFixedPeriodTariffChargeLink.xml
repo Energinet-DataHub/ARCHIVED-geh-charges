@@ -31,9 +31,7 @@ limitations under the License.
         <cim:mRID>clId{{$isoTimestamp}}</cim:mRID>
         <cim:marketEvaluationPoint.mRID codingScheme="NRO">571313180000000005</cim:marketEvaluationPoint.mRID>
         <cim:start_DateAndOrTime.dateTime>2021-09-27T22:00:00Z</cim:start_DateAndOrTime.dateTime>
-        <cim:chargeGroup.chargeType.chargeTypeOwner_MarketParticipant.mRID codingScheme="NFI">
-            5790000432752
-        </cim:chargeGroup.chargeType.chargeTypeOwner_MarketParticipant.mRID>
+        <cim:chargeGroup.chargeType.chargeTypeOwner_MarketParticipant.mRID codingScheme="NFI">5790000432752</cim:chargeGroup.chargeType.chargeTypeOwner_MarketParticipant.mRID>
         <cim:chargeGroup.chargeType.type>D03</cim:chargeGroup.chargeType.type>
         <cim:chargeGroup.chargeType.mRID>EA-001</cim:chargeGroup.chargeType.mRID>
         <cim:chargeGroup.chargeType.factor>1</cim:chargeGroup.chargeType.factor>
