@@ -43,6 +43,8 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.ChargeBundle.Cim
 
         [Theory]
         [InlineAutoDomainData("GreenEnergyHub.Charges.Tests.TestFiles.ExpectedOutputChargeCimSerializerMasterDataAndPrices.blob", true, true)]
+        [InlineAutoDomainData("GreenEnergyHub.Charges.Tests.TestFiles.ExpectedOutputChargeCimSerializerMasterDataWithoutPrices.blob", true, false)]
+        [InlineAutoDomainData("GreenEnergyHub.Charges.Tests.TestFiles.ExpectedOutputChargeCimSerializerPricesWithoutMasterData.blob", false, true)]
         public async Task SerializeAsync_WhenCalled_StreamHasSerializedResult(
             string embeddedResource,
             bool includeMasterData,
