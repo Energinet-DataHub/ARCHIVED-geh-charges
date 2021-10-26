@@ -18,6 +18,7 @@ using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.Infrastructure.ChargeLinkBundle.Cim;
 using GreenEnergyHub.Charges.Infrastructure.ChargeLinkBundle.MessageHub;
 using GreenEnergyHub.Charges.Infrastructure.Configuration;
+using GreenEnergyHub.Charges.Infrastructure.SyncRequest;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace GreenEnergyHub.Charges.FunctionHost.Configuration
@@ -26,6 +27,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
     {
         public static void ConfigureServices(IServiceCollection serviceCollection)
         {
+            serviceCollection.AddScoped<ISyncRequestMetaDataFactory, SyncRequestMetaDataFactory>();
             serviceCollection.AddScoped<IChargeLinkBundleSender, ChargeLinkBundleSender>();
             serviceCollection.AddScoped<IChargeLinkBundleCreator, ChargeLinkBundleCreator>();
             serviceCollection.AddScoped<IChargeLinkBundleReplier, ChargeLinkBundleReplier>();
