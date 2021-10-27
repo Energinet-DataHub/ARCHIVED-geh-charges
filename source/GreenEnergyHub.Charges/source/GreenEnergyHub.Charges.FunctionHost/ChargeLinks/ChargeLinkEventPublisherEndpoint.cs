@@ -16,6 +16,8 @@ using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application.ChargeLinks.Handlers;
 using GreenEnergyHub.Charges.Domain.ChargeLinkCommandAcceptedEvents;
+using GreenEnergyHub.Charges.FunctionHost.Common;
+using GreenEnergyHub.Charges.Infrastructure.Correlation;
 using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandAccepted;
 using GreenEnergyHub.Charges.Infrastructure.Messaging;
 using Microsoft.Azure.Functions.Worker;
@@ -48,9 +50,9 @@ namespace GreenEnergyHub.Charges.FunctionHost.ChargeLinks
         [Function(FunctionName)]
         public async Task RunAsync(
             [ServiceBusTrigger(
-                "%CHARGE_LINK_ACCEPTED_TOPIC_NAME%",
+                "%" + EnvironmentSettingNames.ChargeLinkAcceptedTopicName + "%",
                 "%CHARGELINKACCEPTED_SUB_EVENTPUBLISHER%",
-                Connection = "DOMAINEVENT_LISTENER_CONNECTION_STRING")]
+                Connection = EnvironmentSettingNames.DomainEventListenerConnectionString)]
             [NotNull] byte[] message)
         {
             _log.LogInformation("Function {FunctionName} started to process a request with size {Size}", FunctionName, message.Length);
