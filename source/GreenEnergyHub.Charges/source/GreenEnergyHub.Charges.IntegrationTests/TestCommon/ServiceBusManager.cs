@@ -24,7 +24,7 @@ namespace Energinet.DataHub.Core.FunctionApp.TestCommon.ServiceBus
     ///
     /// The queue/topic names are build using a combination of the given name as well as an
     /// manager instance name. This ensures we can easily identity resources from a certain test run;
-    /// and avoid name clashing if the test suite is executed by tow identities at the same time.
+    /// and avoid name clashing if the test suite is executed by two identities at the same time.
     ///
     /// Also contains factory methods for easily creation of related sender clients.
     /// </summary>
