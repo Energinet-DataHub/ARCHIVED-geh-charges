@@ -16,6 +16,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application.MeteringPoints.Handlers;
 using GreenEnergyHub.Charges.Domain.MeteringPointCreatedEvents;
+using GreenEnergyHub.Charges.FunctionHost.Common;
 using GreenEnergyHub.Charges.Infrastructure.Messaging;
 using GreenEnergyHub.MeteringPoints.IntegrationEventContracts;
 using Microsoft.Azure.Functions.Worker;
@@ -49,7 +50,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.MeteringPoint
             [ServiceBusTrigger(
                 "%CONSUMPTION_METERING_POINT_CREATED_TOPIC_NAME%",
                 "%CONSUMPTION_METERING_POINT_CREATED_SUBSCRIPTION_NAME%",
-                Connection = "INTEGRATIONEVENT_LISTENER_CONNECTION_STRING")]
+                Connection = EnvironmentSettingNames.DataHubListenerConnectionString)]
             [NotNull] byte[] message)
         {
             var consumptionMeteringPointCreatedEvent =

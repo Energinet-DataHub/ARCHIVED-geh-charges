@@ -25,6 +25,7 @@ using GreenEnergyHub.Charges.Domain.ChargeCommands.Validation.BusinessValidation
 using GreenEnergyHub.Charges.Domain.ChargeCommands.Validation.InputValidation;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
+using GreenEnergyHub.Charges.FunctionHost.Common;
 using GreenEnergyHub.Charges.Infrastructure.Context.Mapping;
 using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeCommandAccepted;
 using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeCommandReceived;
@@ -93,12 +94,12 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
 
             serviceCollection.SendProtobuf<ChargeCommandAcceptedContract>();
             serviceCollection.AddMessagingProtobuf().AddMessageDispatcher<ChargeCommandAcceptedEvent>(
-                EnvironmentHelper.GetEnv("DOMAINEVENT_SENDER_CONNECTION_STRING"),
+                EnvironmentHelper.GetEnv(EnvironmentSettingNames.DomainEventSenderConnectionString),
                 EnvironmentHelper.GetEnv("COMMAND_ACCEPTED_TOPIC_NAME"));
 
             serviceCollection.SendProtobuf<ChargeCommandRejectedContract>();
             serviceCollection.AddMessagingProtobuf().AddMessageDispatcher<ChargeCommandRejectedEvent>(
-                EnvironmentHelper.GetEnv("DOMAINEVENT_SENDER_CONNECTION_STRING"),
+                EnvironmentHelper.GetEnv(EnvironmentSettingNames.DomainEventSenderConnectionString),
                 EnvironmentHelper.GetEnv("COMMAND_REJECTED_TOPIC_NAME"));
         }
     }
