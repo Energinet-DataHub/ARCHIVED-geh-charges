@@ -36,13 +36,15 @@ namespace Energinet.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.Defaul
         public void Convert_WhenCalled_ShouldMapToDtoWithCorrectValues()
         {
             // Arrange
+            var createDefaultChargeLinksReply = _fixture.Create<CreateDefaultChargeLinksReply>();
             var createDefaultChargeLinksFailed = _fixture.Create<CreateDefaultChargeLinksFailed>();
+            createDefaultChargeLinksReply.CreateDefaultChargeLinksFailed = createDefaultChargeLinksFailed;
 
             // Act
-            var (meteringPointId, errorCode) = CreateDefaultChargeLinksFailedInboundMapper.Convert(createDefaultChargeLinksFailed);
+            var (meteringPointId, errorCode) = CreateDefaultChargeLinksFailedInboundMapper.Convert(createDefaultChargeLinksReply);
 
             // Assert
-            meteringPointId.Should().Be(createDefaultChargeLinksFailed.MeteringPointId);
+            meteringPointId.Should().Be(createDefaultChargeLinksReply.MeteringPointId);
             ((int)errorCode).Should().Be((int)createDefaultChargeLinksFailed.ErrorCode);
         }
 

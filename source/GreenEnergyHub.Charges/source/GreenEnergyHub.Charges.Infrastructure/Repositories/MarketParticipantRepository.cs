@@ -58,8 +58,8 @@ namespace GreenEnergyHub.Charges.Infrastructure.Repositories
         {
             return new MarketParticipant
             {
-                Id = "recipient id",
-                BusinessProcessRole = MarketParticipantRole.EnergySupplier,
+                Id = "8100000000030",
+                BusinessProcessRole = MarketParticipantRole.GridAccessProvider,
             };
         }
 
