@@ -22,6 +22,8 @@ using Google.Protobuf;
 using GreenEnergyHub.Charges.TestCore.Attributes;
 using Xunit;
 using Xunit.Categories;
+using CreateDefaultChargeLinkMessagesFailed =
+    Energinet.Charges.Contracts.CreateDefaultChargeLinkMessagesReply.Types.CreateDefaultChargeLinkMessagesFailed;
 using CreateDefaultChargeLinkMessagesSucceeded =
     Energinet.Charges.Contracts.CreateDefaultChargeLinkMessagesReply.Types.CreateDefaultChargeLinkMessagesSucceeded;
 using ErrorCode = Energinet.DataHub.Charges.Libraries.Enums.ErrorCode;
@@ -67,9 +69,9 @@ namespace Energinet.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.Defaul
             var createDefaultChargeLinkMessagesReply = new CreateDefaultChargeLinkMessagesReply
                 {
                     MeteringPointId = meteringPointId,
-                    CreateDefaultChargeLinkMessagesFailed = new CreateDefaultChargeLinkMessagesReply.Types.CreateDefaultChargeLinkMessagesFailed
+                    CreateDefaultChargeLinkMessagesFailed = new CreateDefaultChargeLinkMessagesFailed
                     {
-                        ErrorCode = CreateDefaultChargeLinkMessagesReply.Types.CreateDefaultChargeLinkMessagesFailed.Types.ErrorCode.EcMeteringPointUnknown,
+                        ErrorCode = CreateDefaultChargeLinkMessagesFailed.Types.ErrorCode.EcMeteringPointUnknown,
                     },
                 };
 
