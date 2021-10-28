@@ -74,18 +74,17 @@ namespace Energinet.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.Defaul
             serviceBusClientMock.Setup(
                 x =>
                     x.CreateSender(anyCreateLinkMessagesRequestQueueName)).Returns(serviceBusSenderMock.Object);
-            serviceBusClientMock.Setup(
-                x => x.DisposeAsync()).Returns(default(ValueTask));
+            serviceBusClientMock.Setup(x => x.DisposeAsync()).Returns(default(ValueTask));
 
             serviceBusRequestSenderFactoryMock
                 .Setup(x =>
-                    x.Create(serviceBusClientMock.Object, anyCreateLinkMessagesRequestQueueName))
+                    x.Create(serviceBusClientMock.Object, ReplyToQueueName))
                 .Returns(serviceBusRequestSenderMock.Object);
 
             await using var sut = new DefaultChargeLinkMessagesRequestClient(
                 serviceBusClientMock.Object,
                 serviceBusRequestSenderFactoryMock.Object,
-                anyCreateLinkMessagesRequestQueueName,
+                ReplyToQueueName,
                 anyCreateLinkMessagesRequestQueueName);
 
             var defaultChargeLinkMessagesDto = new CreateDefaultChargeLinkMessagesDto(MeteringPointId);
@@ -214,8 +213,7 @@ namespace Energinet.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.Defaul
 
             serviceBusClientMock.Setup(
                 x => x.CreateSender(anyReplyQueue)).Returns(serviceBusSenderMock.Object);
-            serviceBusClientMock.Setup(
-                x => x.DisposeAsync()).Returns(default(ValueTask));
+            serviceBusClientMock.Setup(x => x.DisposeAsync()).Returns(default(ValueTask));
 
             serviceBusRequestSenderFactoryMock.Setup(x => x
                     .Create(serviceBusClientMock.Object, anyReplyQueue))
