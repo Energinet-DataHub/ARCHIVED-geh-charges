@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application;
 using GreenEnergyHub.Json;
@@ -33,15 +34,27 @@ namespace GreenEnergyHub.Charges.Infrastructure.MessageMetaData
 
         public async Task Invoke(FunctionContext context, FunctionExecutionDelegate next)
         {
-            context.BindingContext.BindingData.TryGetValue("UserProperties", out var metadata);
-            if (metadata != null)
-            {
-                var eventMetadata = _jsonSerializer.Deserialize<MessageMetadata>(metadata.ToString());
-                ((MessageMetaDataContext)_messageMetaDataContext).SetReplyTo(eventMetadata.ReplyTo);
-                ((MessageMetaDataContext)_messageMetaDataContext).SetSessionId(eventMetadata.SessionId);
-            }
+            var sessionId = GetSessionId(context);
+            var messageMetaData = GetMessageMetaData(context);
+            ((MessageMetaDataContext)_messageMetaDataContext).SetReplyTo(messageMetaData.ReplyTo);
+            ((MessageMetaDataContext)_messageMetaDataContext).SetSessionId(sessionId);
 
             await next(context).ConfigureAwait(false);
+        }
+
+        private string GetSessionId(FunctionContext context)
+        {
+            var session = (string)context.BindingContext.BindingData["MessageSession"]!;
+            var sessionData = _jsonSerializer.Deserialize<Dictionary<string, object>>(session);
+            return sessionData["SessionId"].ToString()!;
+        }
+
+        private MessageMetadata GetMessageMetaData(FunctionContext context)
+        {
+            context.BindingContext.BindingData.TryGetValue("UserProperties", out var metadata);
+            var eventMetadata = _jsonSerializer.Deserialize<MessageMetadata>(metadata!.ToString());
+
+            return eventMetadata;
         }
     }
 }
