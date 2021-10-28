@@ -81,7 +81,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures
             builder
                 .AddTopic(ChargeLinkAcceptedTopicKey)
                 .AddSubscription(ChargeLinkAcceptedDataAvailableNotifierSubscriptionName)
-                .AddSubscription(ChargeLinkAcceptedEventPublisherSubscriptionName);
+                .AddSubscription(ChargeLinkAcceptedEventPublisherSubscriptionName)
+                .AddSubscription(ChargeLinkAcceptedEventReplierSubscriptionName);
 
             builder.AddTopic(ChargeLinkCreatedTopicKey);
 
