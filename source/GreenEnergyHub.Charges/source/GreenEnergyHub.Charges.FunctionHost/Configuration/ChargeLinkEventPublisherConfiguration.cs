@@ -36,7 +36,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
             serviceCollection.SendProtobuf<ChargeLinkCreatedContract>();
             serviceCollection.AddMessagingProtobuf().AddMessageDispatcher<ChargeLinkCreatedEvent>(
                 EnvironmentHelper.GetEnv(EnvironmentSettingNames.DataHubSenderConnectionString),
-                EnvironmentHelper.GetEnv("CHARGE_LINK_CREATED_TOPIC_NAME"));
+                EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargeLinkCreatedTopicName));
         }
     }
 }

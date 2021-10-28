@@ -15,6 +15,7 @@
 using GreenEnergyHub.Charges.Application.ChargeLinks.MessageHub;
 using GreenEnergyHub.Charges.Application.ChargeLinks.MessageHub.Infrastructure;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
+using GreenEnergyHub.Charges.FunctionHost.Common;
 using GreenEnergyHub.Charges.Infrastructure.ChargeLinkBundle.Cim;
 using GreenEnergyHub.Charges.Infrastructure.ChargeLinkBundle.MessageHub;
 using GreenEnergyHub.Charges.Infrastructure.Configuration;
@@ -35,8 +36,8 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
             serviceCollection.AddScoped<IChargeLinkBundleReplier, ChargeLinkBundleReplier>();
             serviceCollection.AddScoped<IHubSenderConfiguration>(_ =>
             {
-                var senderId = EnvironmentHelper.GetEnv("HUB_SENDER_ID");
-                var roleIntText = EnvironmentHelper.GetEnv("HUB_SENDER_ROLE_INT_ENUM_VALUE");
+                var senderId = EnvironmentHelper.GetEnv(EnvironmentSettingNames.HubSenderId);
+                var roleIntText = EnvironmentHelper.GetEnv(EnvironmentSettingNames.HubSenderRoleIntEnumValue);
                 return new HubSenderConfiguration(senderId, (MarketParticipantRole)int.Parse(roleIntText));
             });
             serviceCollection.AddScoped<IChargeLinkCimSerializer, ChargeLinkCimSerializer>();
