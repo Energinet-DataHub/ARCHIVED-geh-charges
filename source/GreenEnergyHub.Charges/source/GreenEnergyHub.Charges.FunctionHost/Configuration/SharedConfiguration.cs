@@ -77,7 +77,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
             IServiceCollection serviceCollection,
             string serviceBusConnectionString)
         {
-            var replyToQueueName = EnvironmentHelper.GetEnv("CREATE_LINK_REPLY_QUEUE_NAME");
+            var replyToQueueName = EnvironmentHelper.GetEnv(EnvironmentSettingNames.CreateLinkReplyQueueName);
             var serviceBusClient = new ServiceBusClient(serviceBusConnectionString);
 
             serviceCollection.AddScoped<IServiceBusRequestSenderFactory>(_ =>
