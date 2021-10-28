@@ -25,7 +25,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.TestHelpers
         public DbContextRegistrator()
         {
             FunctionHostConfigurationHelper.ConfigureEnvironmentVariables();
-            var connectionString = Environment.GetEnvironmentVariable("CHARGE_DB_CONNECTION_STRING") ?? string.Empty;
+            var connectionString = Environment.GetEnvironmentVariable(EnvironmentSettingNames.ChargeDbConnectionString) ?? string.Empty;
 
             var serviceCollection = new ServiceCollection();
             serviceCollection

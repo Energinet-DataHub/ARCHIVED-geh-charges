@@ -25,6 +25,7 @@ using GreenEnergyHub.Charges.Domain.AvailableChargeLinksData;
 using GreenEnergyHub.Charges.Domain.ChargeLinkCommandReceivedEvents;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.MeteringPoints;
+using GreenEnergyHub.Charges.FunctionHost.Common;
 using GreenEnergyHub.Charges.Infrastructure.Context;
 using GreenEnergyHub.Charges.Infrastructure.Correlation;
 using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandReceived;
@@ -66,12 +67,12 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
 
         private static void ConfigureSharedDatabase(IServiceCollection serviceCollection)
         {
-            var connectionString = Environment.GetEnvironmentVariable("CHARGE_DB_CONNECTION_STRING") ??
+            var connectionString = Environment.GetEnvironmentVariable(EnvironmentSettingNames.ChargeDbConnectionString) ??
                                    throw new ArgumentNullException(
-                                       "CHARGE_DB_CONNECTION_STRING",
+                                       EnvironmentSettingNames.ChargeDbConnectionString,
                                        "does not exist in configuration settings");
             serviceCollection.AddDbContext<ChargesDatabaseContext>(
-                options => options.UseSqlServer(connectionString, options => options.UseNodaTime()));
+                options => options.UseSqlServer(connectionString, o => o.UseNodaTime()));
             serviceCollection.AddScoped<IChargesDatabaseContext, ChargesDatabaseContext>();
 
             serviceCollection.AddScoped<IChargeRepository, ChargeRepository>();
@@ -89,7 +90,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
 
             serviceCollection.SendProtobuf<ChargeLinkCommandReceived>();
             serviceCollection.AddMessagingProtobuf().AddMessageDispatcher<ChargeLinkCommandReceivedEvent>(
-                EnvironmentHelper.GetEnv("DOMAINEVENT_SENDER_CONNECTION_STRING"),
+                EnvironmentHelper.GetEnv(EnvironmentSettingNames.DomainEventSenderConnectionString),
                 EnvironmentHelper.GetEnv("CHARGE_LINK_RECEIVED_TOPIC_NAME"));
         }
 

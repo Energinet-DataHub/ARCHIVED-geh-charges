@@ -27,12 +27,9 @@ using NodaTime;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace GreenEnergyHub.Charges.IntegrationTests.Charges
+namespace GreenEnergyHub.Charges.IntegrationTests.Functions.ChargeLinks.MessageHub
 {
-    /// <summary>
-    /// Proof-of-concept on integration testing a function.
-    /// </summary>
-    public class ChargeIngestionTests
+    public class ChargeLinkDataAvailableNotifierEndpointTests
     {
         [Collection(nameof(ChargesFunctionAppCollectionFixture))]
         public class RunAsync : FunctionAppTestBase<ChargesFunctionAppFixture>, IAsyncLifetime
@@ -49,31 +46,25 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Charges
 
             public Task DisposeAsync()
             {
-                Fixture.ServiceBusListenerMock.ResetMessageHandlersAndReceivedMessages();
+                Fixture.DataAvailableListenerMock.ResetMessageHandlersAndReceivedMessages();
                 return Task.CompletedTask;
             }
 
             [Fact]
-            public async Task When_CallingChargeIngestion_Then_RequestIsProcessedAndMessageIsSendToPostOffice()
+            public async Task When_ReceivingChargeLinkMessage_Then_MessageHubIsNotifiedAboutAvailableData()
             {
                 // Arrange
-                var testFilePath = "TestFiles/ValidCreateTariffCommand.xml";
+                var testFilePath = "TestFiles/CreateFixedPeriodTariffChargeLink.xml";
                 var clock = SystemClock.Instance;
-                var chargeJson = EmbeddedResourceHelper.GetInputJson(testFilePath, clock);
+                var messageString = EmbeddedResourceHelper.GetEmbeddedFile(testFilePath, clock);
 
-                var request = new HttpRequestMessage(HttpMethod.Post, "api/ChargeIngestion");
-                var expectedBody = chargeJson;
+                var request = new HttpRequestMessage(HttpMethod.Post, "api/ChargeLinkIngestion");
+                var expectedBody = messageString;
                 request.Content = new StringContent(expectedBody, Encoding.UTF8, "application/json");
 
-                var body = string.Empty;
-                using var isMessageReceivedEvent = await Fixture.ServiceBusListenerMock
+                using var isMessageReceivedEvent = await Fixture.DataAvailableListenerMock
                     .WhenAny()
-                    .VerifyOnceAsync(receivedMessage =>
-                    {
-                        body = receivedMessage.Body.ToString();
-
-                        return Task.CompletedTask;
-                    });
+                    .VerifyOnceAsync(_ => Task.CompletedTask);
 
                 // Act
                 var actualResponse = await Fixture.HostManager.HttpClient.SendAsync(request);
@@ -85,10 +76,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Charges
                 actualResponse.StatusCode.Should().Be(HttpStatusCode.OK);
 
                 // => Service Bus (timeout should not be more than 5 secs. - currently it's high so we can break during demo).
-                var isMessageReceived = isMessageReceivedEvent.Wait(TimeSpan.FromSeconds(120));
+                var isMessageReceived = isMessageReceivedEvent.Wait(TimeSpan.FromSeconds(200));
                 isMessageReceived.Should().BeTrue();
-
-                body.Should().NotBeEmpty();
             }
         }
     }

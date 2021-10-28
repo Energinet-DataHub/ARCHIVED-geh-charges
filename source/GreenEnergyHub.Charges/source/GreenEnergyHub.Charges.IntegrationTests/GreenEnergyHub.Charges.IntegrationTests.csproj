@@ -65,6 +65,9 @@ limitations under the License.
       <None Include="TestFiles\InvalidCreateTariffCommand.xml" CopyToOutputDirectory="Always" />
       <None Include="TestFiles\ValidCreateTariffCommand.xml" CopyToOutputDirectory="Always" />
       <None Remove="appsettings.json" />
+      <None Update="TestFiles\CreateFixedPeriodTariffChargeLink.xml">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
     </ItemGroup>
 
     <ItemGroup>
