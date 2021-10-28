@@ -42,6 +42,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
         public async Task StoreAsync_StoresAvailableChargeData([NotNull] AvailableChargeData expected)
         {
             // Arrange
+            expected = RepositoryAutoMoqDataFixer.FixAvailableChargeData(expected);
             await using var chargesDatabaseWriteContext = _databaseManager.CreateDbContext();
 
             var sut = new AvailableChargeDataRepository(chargesDatabaseWriteContext);
@@ -64,6 +65,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
             [NotNull] AvailableChargeData expected)
         {
             // Arrange
+            expected = RepositoryAutoMoqDataFixer.FixAvailableChargeData(expected);
             await using var chargesDatabaseWriteContext = _databaseManager.CreateDbContext();
             await chargesDatabaseWriteContext.AvailableChargeData.AddAsync(expected).ConfigureAwait(false);
             await chargesDatabaseWriteContext.SaveChangesAsync().ConfigureAwait(false);
