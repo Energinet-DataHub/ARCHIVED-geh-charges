@@ -28,6 +28,8 @@ option csharp_namespace = "Energinet.Charges.Contracts";
 * ProcessId - For traceability - UUID of the 'create metering point process'
 */
 message CreateDefaultChargeLinkMessagesReply {
+  string metering_point_id = 1; // The metering point for which default charge link were created. For the Danish version of Green Energy Hub, this is the 18-digits metering point id.
+  
   /*
   * This message is included in the reply sent by the Charges domain to the Metering Point domain once the request has been processed successfully.
   */
@@ -44,7 +46,6 @@ message CreateDefaultChargeLinkMessagesReply {
     ErrorCode error_code = 1; // The error_code specifies a reason for the failed request 
   }
 
-  string metering_point_id = 1; // The metering point for which default charge link were created. For the Danish version of Green Energy Hub, this is the 18-digits metering point id.
   oneof Reply {
     CreateDefaultChargeLinkMessagesSucceeded createDefaultChargeLinkMessagesSucceeded = 2;
     CreateDefaultChargeLinkMessagesFailed createDefaultChargeLinkMessagesFailed = 3;
