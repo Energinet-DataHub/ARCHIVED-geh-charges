@@ -70,28 +70,73 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
                 throw new ArgumentNullException(nameof(_messageMetaDataContext.ReplyTo));
             }
 
-            var meteringPoint = await GetMeteringPointOrReplyWithFailedAsync(
-                createLinkCommandEvent.MeteringPointId,
-                correlationId,
-                _messageMetaDataContext.ReplyTo).ConfigureAwait(false);
+            var meteringPoint =
+                await GetMeteringPointAsync(createLinkCommandEvent.MeteringPointId).ConfigureAwait(false);
 
             if (meteringPoint == null)
+            {
+                await ReplyWithFailedAsync(
+                    createLinkCommandEvent.MeteringPointId,
+                    correlationId,
+                    _messageMetaDataContext.ReplyTo).ConfigureAwait(false);
                 return;
+            }
 
             var defaultChargeLinks =
-                (await GetDefaultChargeLinksOrReplyWithSucceededAsync(
-                    meteringPoint,
-                    correlationId,
-                    _messageMetaDataContext.ReplyTo).ConfigureAwait(false)).ToList();
+                (await GetDefaultChargeLinksAsync(meteringPoint).ConfigureAwait(false)).ToList();
 
             if (!defaultChargeLinks.Any())
+            {
+                await ReplyWithSucceededAsync(
+                    meteringPoint.MeteringPointId,
+                    correlationId,
+                    _messageMetaDataContext.ReplyTo).ConfigureAwait(false);
                 return;
+            }
 
             await CreateAndDispatchChargeLinkCommandReceivedEventIfApplicableForLinkingAsync(
                 createLinkCommandEvent,
                 correlationId,
                 defaultChargeLinks,
                 meteringPoint);
+        }
+
+        private async Task<MeteringPoint?> GetMeteringPointAsync(string meteringPointId)
+        {
+            var meteringPoint = await _meteringPointRepository
+                .GetOrNullAsync(meteringPointId).ConfigureAwait(false);
+            return meteringPoint;
+        }
+
+        private async Task<IEnumerable<DefaultChargeLink>> GetDefaultChargeLinksAsync(
+            MeteringPoint meteringPoint)
+        {
+            var defaultChargeLinks = (await _defaultChargeLinkRepository
+                .GetAsync(meteringPoint.MeteringPointType).ConfigureAwait(false)).ToList();
+
+            return defaultChargeLinks;
+        }
+
+        private async Task ReplyWithFailedAsync(string meteringPointId, string correlationId, string replyTo)
+        {
+            await _defaultChargeLinkClient
+                .CreateDefaultChargeLinksFailedReplyAsync(
+                    new CreateDefaultChargeLinksFailedDto(
+                        meteringPointId,
+                        ErrorCode.MeteringPointUnknown),
+                    correlationId,
+                    replyTo).ConfigureAwait(false);
+        }
+
+        private async Task ReplyWithSucceededAsync(string meteringPointId, string correlationId, string replyTo)
+        {
+            await _defaultChargeLinkClient
+                .CreateDefaultChargeLinksSucceededReplyAsync(
+                    new CreateDefaultChargeLinksSucceededDto(
+                        meteringPointId,
+                        false),
+                    correlationId,
+                    replyTo).ConfigureAwait(false);
         }
 
         private async Task CreateAndDispatchChargeLinkCommandReceivedEventIfApplicableForLinkingAsync(
@@ -121,53 +166,6 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
                 chargeLinkCommands);
 
             await _messageDispatcher.DispatchAsync(chargeLinkCommandReceivedEvent).ConfigureAwait(false);
-        }
-
-        private async Task<MeteringPoint?> GetMeteringPointOrReplyWithFailedAsync(
-            string meteringPointId,
-            string correlationId,
-            string replyQueueName)
-        {
-            var meteringPoint = await _meteringPointRepository
-                .GetOrNullAsync(meteringPointId).ConfigureAwait(false);
-
-            if (meteringPoint == null)
-            {
-                await _defaultChargeLinkClient
-                    .CreateDefaultChargeLinksFailedReplyAsync(
-                        new CreateDefaultChargeLinksFailedDto(
-                            meteringPointId,
-                            ErrorCode.MeteringPointUnknown),
-                        correlationId,
-                        replyQueueName).ConfigureAwait(false);
-
-                return null;
-            }
-
-            return meteringPoint;
-        }
-
-        private async Task<IEnumerable<DefaultChargeLink>> GetDefaultChargeLinksOrReplyWithSucceededAsync(
-            MeteringPoint meteringPoint,
-            string correlationId,
-            string replyQueueName)
-        {
-            var defaultChargeLinks = (await _defaultChargeLinkRepository
-                .GetAsync(meteringPoint.MeteringPointType).ConfigureAwait(false)).ToList();
-
-            if (!defaultChargeLinks.Any())
-            {
-                await _defaultChargeLinkClient
-                    .CreateDefaultChargeLinksSucceededReplyAsync(
-                        new CreateDefaultChargeLinksSucceededDto(
-                            meteringPoint.MeteringPointId,
-                            false),
-                        correlationId,
-                        replyQueueName).ConfigureAwait(false);
-                return new List<DefaultChargeLink>();
-            }
-
-            return defaultChargeLinks;
         }
     }
 }

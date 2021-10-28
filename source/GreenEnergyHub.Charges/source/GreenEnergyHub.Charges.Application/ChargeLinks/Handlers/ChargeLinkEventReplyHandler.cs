@@ -55,13 +55,11 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
 
         private static void CheckAllMeteringPointIdsAreTheSame(ChargeLinkCommandAcceptedEvent chargeLinkCommandAcceptedEvent)
         {
-            var chargeLinkMeteringPointId =
-                chargeLinkCommandAcceptedEvent.ChargeLinkCommands.First().ChargeLink.MeteringPointId;
-            var chargeLinkMeteringPointIds =
-                chargeLinkCommandAcceptedEvent.ChargeLinkCommands
-                .Select(c => c.ChargeLink.MeteringPointId).ToList();
+            var allChargeLinkMeteringPointIdsAreTheSame = chargeLinkCommandAcceptedEvent.ChargeLinkCommands
+                .All(c => c.ChargeLink.MeteringPointId == chargeLinkCommandAcceptedEvent.ChargeLinkCommands
+                    .First().ChargeLink.MeteringPointId);
 
-            if (chargeLinkMeteringPointIds.Any(meteringPointId => meteringPointId != chargeLinkMeteringPointId))
+            if (!allChargeLinkMeteringPointIdsAreTheSame)
             {
                 throw new InvalidOperationException($"not all metering point Ids are the same on {nameof(ChargeLinkCommandAcceptedEvent)}");
             }
