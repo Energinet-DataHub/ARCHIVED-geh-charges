@@ -72,26 +72,17 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Handlers
             // Arrange
             messageMetaDataContext.Setup(m => m.IsReplyToSet()).Returns(true);
             messageMetaDataContext.Setup(m => m.ReplyTo).Returns(replyTo);
-            var command = new ChargeLinkCommandAcceptedEvent(
-                correlationId,
-                new[]
-                {
-                    new ChargeLinkCommand(correlationId)
-                    {
-                        ChargeLink = new ChargeLinkDto { MeteringPointId = "first" },
-                    },
-                    new ChargeLinkCommand(correlationId)
-                    {
-                        ChargeLink = new ChargeLinkDto { MeteringPointId = "second" },
-                    },
-                },
-                Instant.MinValue);
+
+            const string optionalMeteringPointId = "optionalMeteringPointId";
+            var command = GetChargeLinkCommandAcceptedEvent(correlationId, optionalMeteringPointId);
 
             // Act & Assert
             await Assert.ThrowsAsync<InvalidOperationException>(() => sut.HandleAsync(command));
         }
 
-        private static ChargeLinkCommandAcceptedEvent GetChargeLinkCommandAcceptedEvent(string correlationId)
+        private static ChargeLinkCommandAcceptedEvent GetChargeLinkCommandAcceptedEvent(
+            string correlationId,
+            string optionalMeteringPointId = "first")
         {
             const string meteringPointId = "first";
 
@@ -105,7 +96,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Handlers
                     },
                     new ChargeLinkCommand(correlationId)
                     {
-                        ChargeLink = new ChargeLinkDto { MeteringPointId = meteringPointId },
+                        ChargeLink = new ChargeLinkDto { MeteringPointId = optionalMeteringPointId },
                     },
                 },
                 Instant.MinValue);
