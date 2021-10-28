@@ -22,7 +22,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.TestHelpers
 {
     public static class EmbeddedResourceHelper
     {
-        public static string GetInputJson(string filePath, [NotNull] IClock clock)
+        public static string GetEmbeddedFile(string filePath, [NotNull] IClock clock)
         {
             var basePath = Assembly.GetExecutingAssembly().Location;
             var path = Path.Combine(Directory.GetParent(basePath)!.FullName, filePath);

@@ -16,7 +16,7 @@ using GreenEnergyHub.Charges.Application.Charges.Acknowledgement;
 using GreenEnergyHub.Charges.Application.Charges.Factories;
 using GreenEnergyHub.Charges.Application.Charges.Handlers;
 using GreenEnergyHub.Charges.Domain.ChargeCommandAcceptedEvents;
-using GreenEnergyHub.Charges.Infrastructure.Integration.ChargeCreated;
+using GreenEnergyHub.Charges.FunctionHost.Common;
 using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeCommandAccepted;
 using GreenEnergyHub.Charges.Infrastructure.Messaging;
 using GreenEnergyHub.Charges.Infrastructure.Messaging.Registration;
@@ -41,11 +41,11 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
 
             serviceCollection.SendProtobuf<Infrastructure.Integration.ChargeCreated.ChargeCreated>();
             serviceCollection.AddMessagingProtobuf().AddMessageDispatcher<GreenEnergyHub.Charges.Domain.Charges.Acknowledgements.ChargeCreatedEvent>(
-                EnvironmentHelper.GetEnv("INTEGRATIONEVENT_SENDER_CONNECTION_STRING"),
+                EnvironmentHelper.GetEnv(EnvironmentSettingNames.DataHubSenderConnectionString),
                 EnvironmentHelper.GetEnv("CHARGE_CREATED_TOPIC_NAME"));
 
             serviceCollection.AddMessagingProtobuf().AddMessageDispatcher<ChargePricesUpdatedEvent>(
-                EnvironmentHelper.GetEnv("INTEGRATIONEVENT_SENDER_CONNECTION_STRING"),
+                EnvironmentHelper.GetEnv(EnvironmentSettingNames.DataHubSenderConnectionString),
                 EnvironmentHelper.GetEnv("CHARGE_PRICES_UPDATED_TOPIC_NAME"));
         }
     }
