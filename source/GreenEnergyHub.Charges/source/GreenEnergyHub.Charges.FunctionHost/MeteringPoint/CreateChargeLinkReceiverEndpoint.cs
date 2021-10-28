@@ -19,6 +19,7 @@ using GreenEnergyHub.Charges.Application;
 using GreenEnergyHub.Charges.Application.ChargeLinks.Handlers;
 using GreenEnergyHub.Charges.Commands;
 using GreenEnergyHub.Charges.Domain.CreateLinkCommandEvents;
+using GreenEnergyHub.Charges.FunctionHost.Common;
 using GreenEnergyHub.Charges.Infrastructure.Correlation;
 using GreenEnergyHub.Charges.Infrastructure.MessageMetaData;
 using GreenEnergyHub.Charges.Infrastructure.Messaging;
@@ -56,7 +57,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.MeteringPoint
         public async Task RunAsync(
             [ServiceBusTrigger(
                 "%CREATE_LINK_REQUEST_QUEUE_NAME%",
-                Connection = "INTEGRATIONEVENT_LISTENER_CONNECTION_STRING")]
+                Connection = EnvironmentSettingNames.DataHubListenerConnectionString)]
             [NotNull] byte[] message)
         {
             _log.LogInformation(

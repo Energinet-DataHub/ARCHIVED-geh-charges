@@ -17,7 +17,5 @@ namespace GreenEnergyHub.Charges.Infrastructure.MessageMetaData
     public class MessageMetadata
     {
         public string? ReplyTo { get; set; }
-
-        public string? SessionId { get; set; }
     }
 }

@@ -23,8 +23,22 @@ namespace GreenEnergyHub.Charges.FunctionHost.Common
 
         public const string DomainEventSenderConnectionString = "DOMAINEVENT_SENDER_CONNECTION_STRING";
 
+        public const string DomainEventListenerConnectionString = "DOMAINEVENT_LISTENER_CONNECTION_STRING";
+
+        public const string DataHubSenderConnectionString = "INTEGRATIONEVENT_SENDER_CONNECTION_STRING";
+
+        public const string DataHubListenerConnectionString = "INTEGRATIONEVENT_LISTENER_CONNECTION_STRING";
+
+        public const string CreateLinkReplyQueueName = "CREATE_LINK_REPLY_QUEUE_NAME";
+
+        /// <summary>
+        /// Deprecated: This is from an old implementation where we mimicked sending to the post office
+        /// by sending to a topic we provisioned ourselves in the charges domain.
+        /// </summary>
         public const string PostOfficeTopicName = "POST_OFFICE_TOPIC_NAME";
 
         public const string ChargeDbConnectionString = "CHARGE_DB_CONNECTION_STRING";
+
+        public const string ChargeLinkAcceptedTopicName = "CHARGE_LINK_ACCEPTED_TOPIC_NAME";
     }
 }

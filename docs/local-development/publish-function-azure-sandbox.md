@@ -28,8 +28,6 @@ Azure function naming: `azfun-[name]-[project]-[organisation]-[environment]`, eg
 
 ## Prerequisites
 
-Azure Functions Core Tools: [`Azure Functions Core Tools download`](https://docs.microsoft.com/en-us/azure/azure-functions/functions-run-local?tabs=windows%2Ccsharp%2Cbash#v2)
-
-Install `v3.x - Windows 64-bit`.
+Install Azure Functions Core Tools as [documented here](run-integration-tests-local.md)
 
 Create a `local.settings.json` as a copy of `local.settings.sample.json` file for each Azure function to ensure trouble-free publish.

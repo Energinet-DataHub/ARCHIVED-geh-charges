@@ -33,6 +33,10 @@ Instructions are [here](publish-function-azure-sandbox.md).
 
 There is a utility script that can be used for Azure Publish [here](../../source/GreenEnergyHub.Charges/publish-functions-from-localhost.cmd)
 
+## Test by executing integration tests ##
+
+Run integration tests as [documented here](run-integration-tests-local.md)
+
 ## Test by executing a business process ##
 
 TODO
@@ -58,4 +62,4 @@ TODO
 
 ### How do I use a local SQL Server when doing db development? ###
 
-TODO
+Install local SQL server as [documented here](install-local-sql-server.md)
