@@ -15,6 +15,8 @@
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application.ChargeLinks.Handlers;
 using GreenEnergyHub.Charges.Domain.ChargeLinkCommandReceivedEvents;
+using GreenEnergyHub.Charges.FunctionHost.Common;
+using GreenEnergyHub.Charges.Infrastructure.Correlation;
 using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandReceived;
 using GreenEnergyHub.Charges.Infrastructure.Messaging;
 using Microsoft.Azure.Functions.Worker;
@@ -40,7 +42,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.ChargeLinks
             [ServiceBusTrigger(
                 "%CHARGE_LINK_RECEIVED_TOPIC_NAME%",
                 "%CHARGE_LINK_RECEIVED_SUBSCRIPTION_NAME%",
-                Connection = "DOMAINEVENT_LISTENER_CONNECTION_STRING")]
+                Connection = EnvironmentSettingNames.DomainEventListenerConnectionString)]
             byte[] data)
         {
             var chargeLinkCommandMessage =
