@@ -32,5 +32,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Context.Model
         public string Name { get; set; }
 
         public int Role { get; set; }
+
+        public bool Active { get; set; }
     }
 }

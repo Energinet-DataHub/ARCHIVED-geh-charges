@@ -63,19 +63,15 @@ namespace GreenEnergyHub.Charges.Infrastructure.Repositories
             };
         }
 
-        // Later we need to only get the active grid access providers
         public async Task<List<MarketParticipant>> GetActiveGridAccessProvidersAsync()
         {
             var activeGridAccessProviders = await _chargesDatabaseContext.MarketParticipants
-                .Where(x => x.Role == (int)MarketParticipantRole.GridAccessProvider).ToListAsync();
+                .Where(x =>
+                    x.Role == (int)MarketParticipantRole.GridAccessProvider &&
+                    x.Active == true)
+                .ToListAsync();
 
-            return activeGridAccessProviders.Select(provider =>
-                    new MarketParticipant
-                        {
-                            Id = provider.Id.ToString(),
-                            BusinessProcessRole = (MarketParticipantRole)provider.Role,
-                        })
-                .ToList();
+            return activeGridAccessProviders.Select(_mapper.ToDomainObject).ToList();
         }
     }
 }
