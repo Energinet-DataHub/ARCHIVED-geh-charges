@@ -22,6 +22,10 @@ using Google.Protobuf;
 using GreenEnergyHub.Charges.TestCore.Attributes;
 using Xunit;
 using Xunit.Categories;
+using CreateDefaultChargeLinksFailed =
+    Energinet.Charges.Contracts.CreateDefaultChargeLinksReply.Types.CreateDefaultChargeLinksFailed;
+using CreateDefaultChargeLinksSucceeded =
+    Energinet.Charges.Contracts.CreateDefaultChargeLinksReply.Types.CreateDefaultChargeLinksSucceeded;
 using ErrorCode = Energinet.DataHub.Charges.Libraries.Enums.ErrorCode;
 
 namespace Energinet.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.DefaultChargeLink
