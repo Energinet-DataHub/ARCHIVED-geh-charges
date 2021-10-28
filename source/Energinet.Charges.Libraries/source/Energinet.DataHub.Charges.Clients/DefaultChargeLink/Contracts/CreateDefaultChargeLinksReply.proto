@@ -35,7 +35,7 @@ message CreateDefaultChargeLinksReply {
   * When the Metering Point domain receives above reply there is no reason to send a CreateDefaultChargeLinkMessages request.
   */
     message CreateDefaultChargeLinksSucceeded {
-      bool did_create_charge_links = 2; // Did the request result in any default charge links being added to the metering point (True = yes, False = no)
+      bool did_create_charge_links = 1; // Did the request result in any default charge links being added to the metering point (True = yes, False = no)
     }
   
     /*
@@ -46,8 +46,7 @@ message CreateDefaultChargeLinksReply {
         EC_UNSPECIFIED = 0;
         EC_METERING_POINT_UNKNOWN = 1;
       }
-  
-      ErrorCode error_code = 2; // The error_code specifies a reason for the failed request
+      ErrorCode error_code = 1; // The error_code specifies a reason for the failed request
     }
   
   string metering_point_id = 1; // The metering point for which default charge link were created. For the Danish version of Green Energy Hub, this is the 18-digits metering point id.
