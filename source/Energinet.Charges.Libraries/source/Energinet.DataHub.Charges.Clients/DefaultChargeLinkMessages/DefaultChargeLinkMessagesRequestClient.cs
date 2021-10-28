@@ -21,6 +21,10 @@ using Energinet.DataHub.Charges.Libraries.Factories;
 using Energinet.DataHub.Charges.Libraries.Models;
 using Energinet.DataHub.Charges.Libraries.ServiceBus;
 using Google.Protobuf;
+using CreateDefaultChargeLinkMessagesFailed =
+    Energinet.Charges.Contracts.CreateDefaultChargeLinkMessagesReply.Types.CreateDefaultChargeLinkMessagesFailed;
+using CreateDefaultChargeLinkMessagesSucceeded =
+    Energinet.Charges.Contracts.CreateDefaultChargeLinkMessagesReply.Types.CreateDefaultChargeLinkMessagesSucceeded;
 
 namespace Energinet.DataHub.Charges.Libraries.DefaultChargeLinkMessages
 {
@@ -75,9 +79,10 @@ namespace Energinet.DataHub.Charges.Libraries.DefaultChargeLinkMessages
             if (string.IsNullOrWhiteSpace(replyQueueName))
                 throw new ArgumentNullException(nameof(replyQueueName));
 
-            var createDefaultChargeLinks = new CreateDefaultChargeLinkMessagesSucceeded
+            var createDefaultChargeLinks = new CreateDefaultChargeLinkMessagesReply
             {
                 MeteringPointId = createDefaultChargeLinkMessagesSucceededDto.MeteringPointId,
+                CreateDefaultChargeLinkMessagesSucceeded = new CreateDefaultChargeLinkMessagesSucceeded(),
             };
 
             await _serviceBusRequestSender.SendRequestAsync(
@@ -101,7 +106,6 @@ namespace Energinet.DataHub.Charges.Libraries.DefaultChargeLinkMessages
 
             var createDefaultChargeLinks = new CreateDefaultChargeLinkMessagesFailed
             {
-                MeteringPointId = createDefaultChargeLinkMessagesFailedDto.MeteringPointId,
                 ErrorCode =
                     (CreateDefaultChargeLinkMessagesFailed.Types.ErrorCode)createDefaultChargeLinkMessagesFailedDto.ErrorCode,
             };
