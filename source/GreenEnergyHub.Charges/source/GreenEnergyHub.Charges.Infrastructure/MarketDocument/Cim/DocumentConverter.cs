@@ -41,7 +41,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.MarketDocument.Cim
             return message;
         }
 
-        protected abstract Task<IInboundMessage> ConvertSpecializedContentAsync(XmlReader reader, DocumentDto documentDto);
+        protected abstract Task<IInboundMessage> ConvertSpecializedContentAsync(XmlReader reader, DocumentDto document);
 
         private static bool RootElementNotFound(XmlReader reader, string rootElement, string rootNamespace)
         {

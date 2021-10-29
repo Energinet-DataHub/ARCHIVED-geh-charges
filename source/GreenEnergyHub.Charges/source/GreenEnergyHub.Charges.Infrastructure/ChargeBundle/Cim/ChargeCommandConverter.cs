@@ -47,13 +47,13 @@ namespace GreenEnergyHub.Charges.Infrastructure.ChargeBundle.Cim
 
         protected override async Task<IInboundMessage> ConvertSpecializedContentAsync(
             [NotNull] XmlReader reader,
-            [NotNull] DocumentDto documentDto)
+            [NotNull] DocumentDto document)
         {
             var correlationId = _correlationContext.Id;
 
             return new ChargeCommand(correlationId)
                 {
-                    Document = documentDto,
+                    Document = document,
                     ChargeOperation = await ParseChargeOperationAsync(reader).ConfigureAwait(false),
                 };
         }
