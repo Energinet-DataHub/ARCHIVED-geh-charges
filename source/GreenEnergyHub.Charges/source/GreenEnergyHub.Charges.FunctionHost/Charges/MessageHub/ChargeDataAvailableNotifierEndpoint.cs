@@ -25,9 +25,9 @@ using Microsoft.Extensions.Logging;
 namespace GreenEnergyHub.Charges.FunctionHost.Charges.MessageHub
 {
     /// <summary>
-    /// The function will initiate the communication with the post office
-    /// by notifying that a charge link has been created.
-    /// This is the RSM-031 CIM XML 'NotifyBillingMasterData'.
+    /// The function will initiate the communication with MessageHub
+    /// by notifying that charge and/or charge price data is available
+    /// This is the RSM-034 CIM XML 'NotifyPriceList'.
     /// </summary>
     public class ChargeDataAvailableNotifierEndpoint
     {
