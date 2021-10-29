@@ -58,15 +58,17 @@ namespace GreenEnergyHub.Charges.Infrastructure.Messaging
 
         private ServiceBusMessage GetServiceBusMessage(byte[] data)
         {
-            var serviceBusMessage = _messageMetaDataContext.ReplyTo == null ?
-                new ServiceBusMessage(data) { CorrelationId = _correlationContext.Id, } :
-                new ServiceBusMessage(data)
+            if (_messageMetaDataContext.IsReplyToSet())
+            {
+                return new ServiceBusMessage(data)
                 {
-                    CorrelationId = _correlationContext.Id,
-                    ApplicationProperties =
+                        CorrelationId = _correlationContext.Id,
+                        ApplicationProperties =
                         { new KeyValuePair<string, object>("ReplyTo", _messageMetaDataContext.ReplyTo), },
                 };
-            return serviceBusMessage;
+            }
+
+            return new ServiceBusMessage(data) { CorrelationId = _correlationContext.Id, };
         }
     }
 }

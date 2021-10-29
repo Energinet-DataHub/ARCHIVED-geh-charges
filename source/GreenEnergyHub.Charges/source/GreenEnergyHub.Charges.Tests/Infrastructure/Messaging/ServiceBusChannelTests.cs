@@ -159,8 +159,8 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Messaging
 
             // Assert
             receivedMessage!.Should().NotBeNull();
-            var replyTo = receivedMessage!.ApplicationProperties["ReplyTo"];
-            replyTo.Should().BeEquivalentTo(string.Empty);
+            receivedMessage!.ApplicationProperties.TryGetValue("ReplyTo", out var replyTo);
+            replyTo.Should().BeNull();
             content.SequenceEqual(receivedMessage.Body.ToArray()).Should().BeTrue();
         }
 
@@ -184,6 +184,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Messaging
             var genericSender = new ServiceBusSender<TestOutboundMessage>(serviceBusSender.Object);
 
             correlationContext.Setup(c => c.Id).Returns(correlationId);
+            messageMetaDataContext.Setup(c => c.IsReplyToSet()).Returns(true);
             messageMetaDataContext.Setup(c => c.ReplyTo).Returns(replyToExpected);
 
             var sut = new TestableServiceBusChannel<TestOutboundMessage>(

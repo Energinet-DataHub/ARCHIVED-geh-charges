@@ -42,19 +42,30 @@ namespace GreenEnergyHub.Charges.Infrastructure.MessageMetaData
             await next(context).ConfigureAwait(false);
         }
 
-        private string GetSessionId(FunctionContext context)
+        private string? GetSessionId(FunctionContext context)
         {
-            var session = (string)context.BindingContext.BindingData["MessageSession"]!;
-            var sessionData = _jsonSerializer.Deserialize<Dictionary<string, object>>(session);
-            return sessionData["SessionId"].ToString()!;
+            context.BindingContext.BindingData.TryGetValue("MessageSession", out var session);
+
+            if (session != null)
+            {
+                var sessionData = _jsonSerializer.Deserialize<Dictionary<string, object>>(session.ToString());
+                return sessionData["SessionId"].ToString()!;
+            }
+
+            return null;
         }
 
         private MessageMetadata GetMessageMetaData(FunctionContext context)
         {
             context.BindingContext.BindingData.TryGetValue("UserProperties", out var metadata);
-            var eventMetadata = _jsonSerializer.Deserialize<MessageMetadata>(metadata!.ToString());
 
-            return eventMetadata;
+            if (metadata != null)
+            {
+                var eventMetadata = _jsonSerializer.Deserialize<MessageMetadata>(metadata.ToString());
+                return eventMetadata;
+            }
+
+            return new MessageMetadata();
         }
     }
 }
