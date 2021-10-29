@@ -12,14 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.IO;
-using System.Threading.Tasks;
-using Energinet.DataHub.MessageHub.Client.Model;
+using System;
 
-namespace GreenEnergyHub.Charges.Application.ChargeLinks.MessageHub.Infrastructure
+namespace Energinet.DataHub.Charges.Clients.IntegrationTests
 {
-    public interface IChargeLinkBundleReplier
+    public static class EnvironmentVariableReader
     {
-        Task ReplyAsync(Stream bundleStream, DataBundleRequestDto request);
+        public static string GetEnvironmentVariable(string name, string defaultValue)
+            => Environment.GetEnvironmentVariable(name) is { Length: > 0 } v ? v : defaultValue;
     }
 }

@@ -36,6 +36,7 @@ module "azfun_functionhost" {
     CHARGE_CREATED_TOPIC_NAME                            = local.CHARGE_CREATED_TOPIC_NAME
     CHARGE_PRICES_UPDATED_TOPIC_NAME                     = local.CHARGE_PRICES_UPDATED_TOPIC_NAME
     CHARGE_LINK_ACCEPTED_TOPIC_NAME                      = module.sbt_link_command_accepted.name
+    CHARGELINKACCEPTED_SUB_REPLIER                       = module.sbs_chargelinkaccepted_sub_replier.name
     CHARGELINKACCEPTED_SUB_EVENTPUBLISHER                = module.sbs_chargelinkaccepted_sub_eventpublisher.name
     CHARGELINKACCEPTED_SUB_DATAAVAILABLENOTIFIER         = module.sbs_chargelinkaccepted_sub_dataavailablenotifier.name
     CHARGE_LINK_CREATED_TOPIC_NAME                       = local.CHARGE_LINK_CREATED_TOPIC_NAME

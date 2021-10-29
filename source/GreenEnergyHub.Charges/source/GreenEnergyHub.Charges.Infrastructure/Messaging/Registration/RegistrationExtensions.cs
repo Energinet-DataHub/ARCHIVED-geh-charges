@@ -12,8 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using GreenEnergyHub.Charges.Application;
 using GreenEnergyHub.Charges.Domain.ChargeCommandAcceptedEvents;
 using GreenEnergyHub.Charges.Infrastructure.Correlation;
+using GreenEnergyHub.Charges.Infrastructure.MessageMetaData;
 using GreenEnergyHub.Charges.Infrastructure.Messaging.Serialization;
 using GreenEnergyHub.Json;
 using GreenEnergyHub.Messaging.Transport;
@@ -26,6 +28,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Messaging.Registration
         public static MessagingRegistrator AddMessaging(this IServiceCollection services)
         {
             services.AddScoped<ICorrelationContext, CorrelationContext>();
+            services.AddScoped<IMessageMetaDataContext, MessageMetaDataContext>();
             services.AddScoped<MessageExtractor>();
             services.AddSingleton<IJsonSerializer, Core.Json.JsonSerializer>();
             services.AddScoped<MessageDeserializer, JsonMessageDeserializer<ChargeCommandAcceptedEvent>>();
@@ -35,6 +38,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Messaging.Registration
         public static MessagingRegistrator AddMessagingProtobuf(this IServiceCollection services)
         {
             services.AddScoped<ICorrelationContext, CorrelationContext>();
+            services.AddScoped<IMessageMetaDataContext, MessageMetaDataContext>();
             services.AddScoped<MessageExtractor>();
 
             return new MessagingRegistrator(services);

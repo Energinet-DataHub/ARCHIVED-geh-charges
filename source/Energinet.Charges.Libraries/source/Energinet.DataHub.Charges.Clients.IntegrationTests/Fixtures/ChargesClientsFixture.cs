@@ -13,14 +13,10 @@
 // limitations under the License.
 
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using Energinet.DataHub.Charges.Libraries.Common;
-using Energinet.DataHub.Core.FunctionApp.TestCommon;
 using Energinet.DataHub.Core.FunctionApp.TestCommon.Azurite;
-using Energinet.DataHub.Core.FunctionApp.TestCommon.FunctionAppHost;
 using Energinet.DataHub.Core.FunctionApp.TestCommon.ServiceBus.ListenerMock;
 using Microsoft.Extensions.Configuration;
 using Squadron;
@@ -28,7 +24,7 @@ using Xunit.Abstractions;
 
 namespace Energinet.DataHub.Charges.Clients.IntegrationTests.Fixtures
 {
-    public class ChargesClientsFixture : FunctionAppFixture
+    public class ChargesClientsFixture : LibraryFixture
     {
         public ChargesClientsFixture(IMessageSink messageSink)
         {
@@ -42,11 +38,6 @@ namespace Energinet.DataHub.Charges.Clients.IntegrationTests.Fixtures
         private AzuriteManager AzuriteManager { get; }
 
         private AzureCloudServiceBusResource<ChargesClientsServiceBusOptions> ServiceBusResource { get; }
-
-        /// <inheritdoc/>
-        protected override void OnConfigureHostSettings(FunctionAppHostSettings hostSettings)
-        {
-        }
 
         /// <inheritdoc/>
         protected override void OnConfigureEnvironment()
@@ -64,7 +55,7 @@ namespace Energinet.DataHub.Charges.Clients.IntegrationTests.Fixtures
         }
 
         /// <inheritdoc/>
-        protected override async Task OnInitializeFunctionAppDependenciesAsync(IConfiguration localSettingsSnapshot)
+        protected override async Task OnInitializeLibraryDependenciesAsync(IConfiguration localSettingsSnapshot)
         {
             AzuriteManager.StartAzurite();
 
@@ -90,21 +81,12 @@ namespace Energinet.DataHub.Charges.Clients.IntegrationTests.Fixtures
         }
 
         /// <inheritdoc/>
-        protected override Task OnFunctionAppHostFailedAsync(IReadOnlyList<string> hostLogSnapshot, Exception exception)
-        {
-            if (Debugger.IsAttached)
-                Debugger.Break();
-
-            return base.OnFunctionAppHostFailedAsync(hostLogSnapshot, exception);
-        }
-
-        /// <inheritdoc/>
-        protected override async Task OnDisposeFunctionAppDependenciesAsync()
+        protected override async Task OnDisposeLibraryDependenciesAsync()
         {
             AzuriteManager.Dispose();
 
             // => Service Bus
-            // ServiceBusListenerMock CAN be null, if something goes wrong in OnInitializeFunctionAppDependenciesAsync()
+            // ServiceBusListenerMock CAN be null, if something goes wrong in OnInitializeLibraryDependenciesAsync()
             if (ServiceBusListenerMock != null)
                 await ServiceBusListenerMock.DisposeAsync().ConfigureAwait(false);
 

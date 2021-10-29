@@ -12,11 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Threading.Tasks;
 using Azure.Messaging.ServiceBus;
-using GreenEnergyHub.Charges.Infrastructure.Correlation;
+using GreenEnergyHub.Charges.Application;
 using GreenEnergyHub.Messaging.Transport;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Messaging
@@ -32,13 +33,16 @@ namespace GreenEnergyHub.Charges.Infrastructure.Messaging
     {
         private readonly ServiceBusSender _serviceBusSender;
         private readonly ICorrelationContext _correlationContext;
+        private readonly IMessageMetaDataContext _messageMetaDataContext;
 
         public ServiceBusChannel(
             [NotNull] IServiceBusSender<TOutboundMessage> serviceBusSender,
-            ICorrelationContext correlationContext)
+            ICorrelationContext correlationContext,
+            IMessageMetaDataContext messageMetaDataContext)
         {
             _serviceBusSender = serviceBusSender.Instance;
             _correlationContext = correlationContext;
+            _messageMetaDataContext = messageMetaDataContext;
         }
 
         /// <summary>
@@ -54,6 +58,16 @@ namespace GreenEnergyHub.Charges.Infrastructure.Messaging
 
         private ServiceBusMessage GetServiceBusMessage(byte[] data)
         {
+            if (_messageMetaDataContext.IsReplyToSet())
+            {
+                return new ServiceBusMessage(data)
+                {
+                        CorrelationId = _correlationContext.Id,
+                        ApplicationProperties =
+                        { new KeyValuePair<string, object>("ReplyTo", _messageMetaDataContext.ReplyTo), },
+                };
+            }
+
             return new ServiceBusMessage(data) { CorrelationId = _correlationContext.Id, };
         }
     }

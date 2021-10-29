@@ -19,7 +19,7 @@ using AutoFixture.Xunit2;
 using Energinet.DataHub.MessageHub.Client.Model;
 using Energinet.DataHub.MessageHub.Client.Peek;
 using Energinet.DataHub.MessageHub.Client.Storage;
-using GreenEnergyHub.Charges.Application.SeedWork.SyncRequest;
+using GreenEnergyHub.Charges.Application;
 using GreenEnergyHub.Charges.Infrastructure.ChargeLinkBundle.MessageHub;
 using GreenEnergyHub.Charges.TestCore.Attributes;
 using Moq;
@@ -39,14 +39,13 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.ChargeLinkBundle.MessageHu
             ChargeLinkBundleReplier sut,
             Mock<MemoryStream> anyBundleStreamMock,
             DataBundleRequestDto request,
-            ISyncRequestMetadata anyMetadata,
             Uri anyUri)
         {
             storageHandlerMock
                 .Setup(handler => handler.AddStreamToStorageAsync(anyBundleStreamMock.Object, request))
                 .ReturnsAsync(anyUri);
 
-            await sut.ReplyAsync(anyBundleStreamMock.Object, request, anyMetadata);
+            await sut.ReplyAsync(anyBundleStreamMock.Object, request);
 
             sender.Verify(s =>
                 s.SendAsync(It.IsAny<DataBundleResponseDto>(), It.IsAny<DataBundleRequestDto>(), It.IsAny<string>()));
@@ -57,23 +56,28 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.ChargeLinkBundle.MessageHu
         public async Task ReplyAsync_SendsWithSessionIdFromMetadataAsync(
             [Frozen] Mock<IStorageHandler> storageHandlerMock,
             [Frozen] Mock<IDataBundleResponseSender> sender,
+            [Frozen] Mock<IMessageMetaDataContext> messageMetaDataContext,
             ChargeLinkBundleReplier sut,
+            string expectedSessionId,
             Mock<MemoryStream> anyBundleStreamMock,
             DataBundleRequestDto request,
-            ISyncRequestMetadata anyMetadata,
             Uri anyUri)
         {
             // Arrange
-            var expectedSessionId = anyMetadata.SessionId;
-            storageHandlerMock.Setup(handler => handler.AddStreamToStorageAsync(anyBundleStreamMock.Object, request))
+            messageMetaDataContext.Setup(m => m.SessionId).Returns(expectedSessionId);
+            storageHandlerMock.Setup(
+                    handler => handler.AddStreamToStorageAsync(anyBundleStreamMock.Object, request))
                 .ReturnsAsync(anyUri);
 
             // Act
-            await sut.ReplyAsync(anyBundleStreamMock.Object, request, anyMetadata);
+            await sut.ReplyAsync(anyBundleStreamMock.Object, request);
 
             // Assert
             sender.Verify(s =>
-                s.SendAsync(It.IsAny<DataBundleResponseDto>(), It.IsAny<DataBundleRequestDto>(), expectedSessionId));
+                s.SendAsync(
+                    It.IsAny<DataBundleResponseDto>(),
+                    It.IsAny<DataBundleRequestDto>(),
+                    expectedSessionId));
         }
     }
 }
