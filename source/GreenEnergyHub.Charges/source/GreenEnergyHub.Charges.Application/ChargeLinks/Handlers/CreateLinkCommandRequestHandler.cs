@@ -147,17 +147,13 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
         {
             var chargeLinkCommands = new List<ChargeLinkCommand>();
 
-            foreach (var defaultChargeLink in defaultChargeLinks)
+            foreach (var defaultChargeLink in defaultChargeLinks.
+                Where(d => d.ApplicableForLinking(meteringPoint.EffectiveDate, meteringPoint.MeteringPointType)))
             {
-                if (defaultChargeLink.ApplicableForLinking(
-                    meteringPoint.EffectiveDate,
-                    meteringPoint.MeteringPointType))
-                {
-                    chargeLinkCommands.Add(await _chargeLinkCommandFactory.CreateAsync(
-                        createLinkCommandEvent,
-                        defaultChargeLink,
-                        correlationId).ConfigureAwait(false));
-                }
+                chargeLinkCommands.Add(await _chargeLinkCommandFactory.CreateAsync(
+                    createLinkCommandEvent,
+                    defaultChargeLink,
+                    correlationId).ConfigureAwait(false));
             }
 
             var chargeLinkCommandReceivedEvent = new ChargeLinkCommandReceivedEvent(
