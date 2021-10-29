@@ -14,6 +14,7 @@
 
 using System;
 using System.Linq;
+using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.Domain.ChargeCommands;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using NodaTime;
@@ -43,7 +44,7 @@ namespace GreenEnergyHub.Charges.Domain.AvailableChargeData
                 chargeCommand.ChargeOperation.ChargeName,
                 chargeCommand.ChargeOperation.ChargeDescription,
                 chargeCommand.ChargeOperation.StartDateTime,
-                chargeCommand.ChargeOperation.EndDateTime.GetValueOrDefault(),
+                chargeCommand.ChargeOperation.EndDateTime.TimeOrEndDefault(),
                 chargeCommand.ChargeOperation.VatClassification,
                 chargeCommand.ChargeOperation.TaxIndicator,
                 chargeCommand.ChargeOperation.TransparentInvoicing,
