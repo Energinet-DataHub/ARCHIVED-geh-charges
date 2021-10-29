@@ -15,11 +15,9 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 using FluentAssertions;
+using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.Domain.AvailableChargeData;
-using GreenEnergyHub.Charges.Domain.AvailableChargeLinksData;
 using GreenEnergyHub.Charges.Domain.ChargeCommands;
-using GreenEnergyHub.Charges.Domain.ChargeLinkCommandAcceptedEvents;
-using GreenEnergyHub.Charges.Domain.ChargeLinkCommands;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.TestHelpers;
 using GreenEnergyHub.TestHelpers.FluentAssertionsExtensions;
@@ -56,7 +54,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Factories
             actual.ChargeName.Should().Be(chargeCommand.ChargeOperation.ChargeName);
             actual.ChargeDescription.Should().Be(chargeCommand.ChargeOperation.ChargeDescription);
             actual.StartDateTime.Should().Be(chargeCommand.ChargeOperation.StartDateTime);
-            actual.EndDateTime.Should().Be(chargeCommand.ChargeOperation.EndDateTime.GetValueOrDefault());
+            actual.EndDateTime.Should().Be(chargeCommand.ChargeOperation.EndDateTime.TimeOrEndDefault());
             actual.VatClassification.Should().Be(chargeCommand.ChargeOperation.VatClassification);
             actual.TaxIndicator.Should().Be(chargeCommand.ChargeOperation.TaxIndicator);
             actual.TransparentInvoicing.Should().Be(chargeCommand.ChargeOperation.TransparentInvoicing);
