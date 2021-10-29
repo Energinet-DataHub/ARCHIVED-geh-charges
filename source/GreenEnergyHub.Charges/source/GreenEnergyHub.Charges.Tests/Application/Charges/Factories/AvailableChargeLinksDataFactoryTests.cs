@@ -49,7 +49,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Factories
             actual.RecipientRole.Should().Be(marketParticipant.BusinessProcessRole);
             actual.BusinessReasonCode.Should().Be(chargeLinkCommand.Document.BusinessReasonCode);
             actual.ChargeId.Should().Be(chargeLinkCommand.ChargeLink.SenderProvidedChargeId);
-            actual.ChargeOwner.Should().Be(chargeLinkCommand.Document.Sender.Id);
+            actual.ChargeOwner.Should().Be(chargeLinkCommand.ChargeLink.ChargeOwner);
             actual.ChargeType.Should().Be(chargeLinkCommand.ChargeLink.ChargeType);
             actual.MeteringPointId.Should().Be(chargeLinkCommand.ChargeLink.MeteringPointId);
             actual.Factor.Should().Be(chargeLinkCommand.ChargeLink.Factor);
