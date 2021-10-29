@@ -61,8 +61,8 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
                         It.IsAny<Charge>(),
                         It.IsAny<string>(),
                         It.IsAny<DateTime>()))
-                .Callback<Charge>(
-                    (_) => stored = true);
+                .Callback<Charge, string, DateTime>(
+                    (c, s, date) => stored = true);
 
             var confirmed = false;
             confirmationService.Setup(
