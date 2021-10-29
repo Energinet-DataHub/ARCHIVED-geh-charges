@@ -35,7 +35,7 @@ namespace GreenEnergyHub.Charges.Domain.AvailableChargeLinksData
                 recipient.BusinessProcessRole,
                 chargeLinkCommand.Document.BusinessReasonCode,
                 chargeLinkCommand.ChargeLink.SenderProvidedChargeId,
-                chargeLinkCommand.Document.Sender.Id,
+                chargeLinkCommand.ChargeLink.ChargeOwner,
                 chargeLinkCommand.ChargeLink.ChargeType,
                 chargeLinkCommand.ChargeLink.MeteringPointId,
                 chargeLinkCommand.ChargeLink.Factor,

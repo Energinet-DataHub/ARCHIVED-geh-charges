@@ -18,7 +18,6 @@ using System.IO;
 using System.Text.RegularExpressions;
 using Energinet.DataHub.Charges.Libraries.Common;
 using Energinet.DataHub.Core.FunctionApp.TestCommon;
-using Energinet.DataHub.Core.FunctionApp.TestCommon.FunctionAppHost;
 using Squadron;
 using Squadron.AzureCloud;
 
@@ -50,7 +49,7 @@ namespace Energinet.DataHub.Charges.Clients.IntegrationTests.Fixtures
 
         private static string GetNamespaceFromSetting(string settingName)
         {
-            var localSettingsSnapshot = new FunctionAppHostConfigurationBuilder().BuildLocalSettingsConfiguration();
+            var localSettingsSnapshot = LibraryConfigurationBuilder.BuildLocalSettingsConfiguration();
             var domainEventListenerConnectionString = localSettingsSnapshot.GetValue(settingName);
 
             // Example connection string: 'Endpoint=sb://xxx.servicebus.windows.net/;'
