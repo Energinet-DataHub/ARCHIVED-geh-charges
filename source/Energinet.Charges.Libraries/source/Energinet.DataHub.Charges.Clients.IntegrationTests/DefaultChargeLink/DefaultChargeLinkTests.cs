@@ -21,8 +21,6 @@ using Energinet.DataHub.Charges.Libraries.Common;
 using Energinet.DataHub.Charges.Libraries.DefaultChargeLink;
 using Energinet.DataHub.Charges.Libraries.Factories;
 using Energinet.DataHub.Charges.Libraries.Models;
-using Energinet.DataHub.Core.FunctionApp.TestCommon;
-using Energinet.DataHub.Core.FunctionApp.TestCommon.ServiceBus.ListenerMock;
 using FluentAssertions;
 using GreenEnergyHub.TestHelpers;
 using Xunit;
@@ -33,20 +31,29 @@ namespace Energinet.DataHub.Charges.Clients.IntegrationTests.DefaultChargeLink
     public static class DefaultChargeLinkTests
     {
         [Collection(nameof(ChargesClientsCollectionFixture))]
-        [SuppressMessage("ReSharper", "CA1034", Justification = "done")] // TODO: Why is this necessary here, but not in Charges.IntegrationTests.Health.HealthStatusTests?
-        public class CreateDefaultChargeLinksRequestAsync : FunctionAppTestBase<ChargesClientsFixture>, IAsyncLifetime
+        [SuppressMessage("ReSharper", "CA1034", Justification = "Integration test")]
+        public class CreateDefaultChargeLinksRequestAsync : LibraryTestBase<ChargesClientsFixture>, IAsyncLifetime
         {
-            private readonly string _serviceBusConnectionString;
             private readonly string _replyToQueueName;
             private readonly string _requestQueueName;
+            private readonly ServiceBusClient _serviceBusClient;
+            private readonly ServiceBusTestListener _serviceBusTestListener;
+            private readonly ServiceBusRequestSenderFactory _serviceBusRequestSenderFactory;
 
             public CreateDefaultChargeLinksRequestAsync(ChargesClientsFixture fixture, ITestOutputHelper testOutputHelper)
                 : base(fixture, testOutputHelper)
             {
-                _serviceBusConnectionString = GetEnvironmentVariable(
+                _replyToQueueName = EnvironmentVariableReader.GetEnvironmentVariable(
+                    EnvironmentSettingNames.CreateLinkReplyQueueName, string.Empty);
+                _requestQueueName = EnvironmentVariableReader.GetEnvironmentVariable(
+                    EnvironmentSettingNames.CreateLinkRequestQueueName, string.Empty);
+
+                string serviceBusConnectionString = EnvironmentVariableReader.GetEnvironmentVariable(
                     EnvironmentSettingNames.IntegrationEventSenderConnectionString, string.Empty);
-                _replyToQueueName = GetEnvironmentVariable(EnvironmentSettingNames.CreateLinkReplyQueueName, string.Empty);
-                _requestQueueName = GetEnvironmentVariable(EnvironmentSettingNames.CreateLinkRequestQueueName, string.Empty);
+                _serviceBusClient = new ServiceBusClient(serviceBusConnectionString);
+
+                _serviceBusTestListener = new ServiceBusTestListener(Fixture);
+                _serviceBusRequestSenderFactory = new ServiceBusRequestSenderFactory();
             }
 
             public Task InitializeAsync()
@@ -54,10 +61,10 @@ namespace Energinet.DataHub.Charges.Clients.IntegrationTests.DefaultChargeLink
                 return Task.CompletedTask;
             }
 
-            public Task DisposeAsync()
+            public async Task DisposeAsync()
             {
                 Fixture.ServiceBusListenerMock.ResetMessageHandlersAndReceivedMessages();
-                return Task.CompletedTask;
+                await _serviceBusClient.DisposeAsync().ConfigureAwait(false);
             }
 
             [Theory]
@@ -66,36 +73,67 @@ namespace Energinet.DataHub.Charges.Clients.IntegrationTests.DefaultChargeLink
                 CreateDefaultChargeLinksDto createDefaultChargeLinksDto, string correlationId)
             {
                 // Arrange
-                var body = new BinaryData(Array.Empty<byte>());
-                string actualCorrelationId = string.Empty;
-                using var isMessageReceivedEvent = await Fixture.ServiceBusListenerMock
-                    .WhenAny()
-                    .VerifyOnceAsync(receivedMessage =>
-                    {
-                        body = receivedMessage.Body;
-                        actualCorrelationId = receivedMessage.CorrelationId;
-                        return Task.CompletedTask;
-                    }).ConfigureAwait(false);
-
-                var serviceBusRequestSenderFactory = new ServiceBusRequestSenderFactory();
-                await using var serviceBusClient = new ServiceBusClient(_serviceBusConnectionString);
+                using var result = await _serviceBusTestListener.ListenForMessageAsync().ConfigureAwait(false);
                 await using var sut = new DefaultChargeLinkClient(
-                    serviceBusClient, serviceBusRequestSenderFactory, _replyToQueueName, _requestQueueName);
+                    _serviceBusClient, _serviceBusRequestSenderFactory, _replyToQueueName, _requestQueueName);
 
                 // Act
                 await sut.CreateDefaultChargeLinksRequestAsync(createDefaultChargeLinksDto, correlationId).ConfigureAwait(false);
 
                 // Assert
                 // => Service Bus (timeout should not be more than 5 secs).
-                var isMessageReceived = isMessageReceivedEvent.Wait(TimeSpan.FromSeconds(5));
-                isMessageReceived.Should().BeTrue();
-                actualCorrelationId.Should().Be(correlationId);
+                var isMessageReceived = result.IsMessageReceivedEvent!.Wait(TimeSpan.FromSeconds(5));
 
-                body.Should().NotBeNull();
+                isMessageReceived.Should().BeTrue();
+                result.CorrelationId.Should().Be(correlationId);
+                result.Body.Should().NotBeNull();
+            }
+
+            [Theory]
+            [AutoDomainData]
+            public async Task When_CreateDefaultChargeLinksSucceededReplyAsync_Then_ReplyIsSendFromCharges(
+                CreateDefaultChargeLinksSucceededDto createDefaultChargeLinksSucceededDto, string correlationId)
+            {
+                // Arrange
+                using var result = await _serviceBusTestListener.ListenForMessageAsync().ConfigureAwait(false);
+                await using var sut = new DefaultChargeLinkClient(
+                    _serviceBusClient, _serviceBusRequestSenderFactory, _replyToQueueName, _requestQueueName);
+
+                // Act
+                await sut.CreateDefaultChargeLinksSucceededReplyAsync(
+                    createDefaultChargeLinksSucceededDto, correlationId, _replyToQueueName).ConfigureAwait(false);
+
+                // Assert
+                // => Service Bus (timeout should not be more than 5 secs).
+                var isMessageReceived = result.IsMessageReceivedEvent!.Wait(TimeSpan.FromSeconds(5));
+
+                isMessageReceived.Should().BeTrue();
+                result.CorrelationId.Should().Be(correlationId);
+                result.Body.Should().NotBeNull();
+            }
+
+            [Theory]
+            [AutoDomainData]
+            public async Task When_CreateDefaultChargeLinksFailedReplyAsync_Then_ReplyIsSendFromCharges(
+                CreateDefaultChargeLinksFailedDto createDefaultChargeLinksFailedDto, string correlationId)
+            {
+                // Arrange
+                using var result = await _serviceBusTestListener.ListenForMessageAsync().ConfigureAwait(false);
+                await using var sut = new DefaultChargeLinkClient(
+                    _serviceBusClient, _serviceBusRequestSenderFactory, _replyToQueueName, _requestQueueName);
+
+                // Act
+                await sut.CreateDefaultChargeLinksFailedReplyAsync(
+                    createDefaultChargeLinksFailedDto, correlationId, _replyToQueueName).ConfigureAwait(false);
+
+                // Assert
+                // => Service Bus (timeout should not be more than 5 secs).
+                var isMessageReceived = result.IsMessageReceivedEvent!.Wait(TimeSpan.FromSeconds(5));
+
+                isMessageReceived.Should().BeTrue();
+                result.Body.Should().NotBeNull();
+                result.CorrelationId.Should().Be(correlationId);
             }
         }
-
-        private static string GetEnvironmentVariable(string name, string defaultValue)
-            => Environment.GetEnvironmentVariable(name) is { Length: > 0 } v ? v : defaultValue;
     }
 }

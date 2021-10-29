@@ -52,7 +52,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
 
             _chargeReceiverHostname = Environment.GetEnvironmentVariable("MESSAGE_RECEIVER_HOSTNAME") ?? string.Empty;
             _postOfficeSubscriptionName = Environment.GetEnvironmentVariable("POST_OFFICE_SUBSCRIPTION_NAME") ?? string.Empty;
-            _postOfficeTopicName = Environment.GetEnvironmentVariable("POST_OFFICE_TOPIC_NAME") ?? string.Empty;
+            _postOfficeTopicName = Environment.GetEnvironmentVariable(EnvironmentSettingNames.PostOfficeTopicName) ?? string.Empty;
             _postOfficeConnectionString = Environment.GetEnvironmentVariable("POST_OFFICE_LISTENER_CONNECTION_STRING") ?? string.Empty;
 
             _testOutputHelper.WriteLine($"{nameof(ChangeOfChargePipelineTests)} Configuration: " +

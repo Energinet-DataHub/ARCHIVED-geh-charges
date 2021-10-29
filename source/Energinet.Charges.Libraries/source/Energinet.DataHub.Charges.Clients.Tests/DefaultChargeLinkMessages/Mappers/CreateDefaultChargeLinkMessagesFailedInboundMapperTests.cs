@@ -19,6 +19,8 @@ using Energinet.DataHub.Charges.Libraries.Protobuf;
 using FluentAssertions;
 using Xunit;
 using Xunit.Categories;
+using CreateDefaultChargeLinkMessagesFailed =
+    Energinet.Charges.Contracts.CreateDefaultChargeLinkMessagesReply.Types.CreateDefaultChargeLinkMessagesFailed;
 
 namespace Energinet.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.DefaultChargeLinkMessages.Mappers
 {
@@ -36,14 +38,17 @@ namespace Energinet.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.Defaul
         public void Convert_WhenCalled_ShouldMapToDtoWithCorrectValues()
         {
             // Arrange
-            var createDefaultChargeLinksFailed = _fixture.Create<CreateDefaultChargeLinksFailed>();
+            var createDefaultChargeLinkMessagesReply = _fixture.Create<CreateDefaultChargeLinkMessagesReply>();
+            var createDefaultChargeLinkMessagesFailed = _fixture.Create<CreateDefaultChargeLinkMessagesFailed>();
+            createDefaultChargeLinkMessagesReply.CreateDefaultChargeLinkMessagesFailed = createDefaultChargeLinkMessagesFailed;
 
             // Act
-            var (meteringPointId, errorCode) = CreateDefaultChargeLinksFailedInboundMapper.Convert(createDefaultChargeLinksFailed);
+            var (meteringPointId, errorCode) = CreateDefaultChargeLinkMessagesFailedInboundMapper
+                .Convert(createDefaultChargeLinkMessagesReply);
 
             // Assert
-            meteringPointId.Should().Be(createDefaultChargeLinksFailed.MeteringPointId);
-            ((int)errorCode).Should().Be((int)createDefaultChargeLinksFailed.ErrorCode);
+            meteringPointId.Should().Be(createDefaultChargeLinkMessagesReply.MeteringPointId);
+            ((int)errorCode).Should().Be((int)createDefaultChargeLinkMessagesFailed.ErrorCode);
         }
 
         [Fact]

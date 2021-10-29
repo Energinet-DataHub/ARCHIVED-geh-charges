@@ -12,11 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace Energinet.DataHub.Charges.Libraries.Enums
+using System;
+
+namespace Energinet.DataHub.Charges.Clients.IntegrationTests
 {
-    public enum RequestStatus
+    public static class EnvironmentVariableReader
     {
-        Succeeded = 1,
-        Failed = 2,
+        public static string GetEnvironmentVariable(string name, string defaultValue)
+            => Environment.GetEnvironmentVariable(name) is { Length: > 0 } v ? v : defaultValue;
     }
 }

@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
+using System.Collections.Generic;
 using GreenEnergyHub.Charges.Application.SeedWork.SyncRequest;
 using GreenEnergyHub.Json;
 using Microsoft.Azure.Functions.Worker;
@@ -30,17 +30,11 @@ namespace GreenEnergyHub.Charges.Infrastructure.SyncRequest
 
         public ISyncRequestMetadata Create(FunctionContext functionContext)
         {
-            functionContext.BindingContext.BindingData.TryGetValue("UserProperties", out var userProperties);
+            var session = (string)functionContext.BindingContext.BindingData["MessageSession"]!;
+            var sessionData = _jsonSerializer.Deserialize<Dictionary<string, object>>(session);
+            var sessionId = sessionData["SessionId"].ToString()!;
 
-            if (userProperties is null)
-                throw new InvalidOperationException("Metadata must be specified as 'UserProperties' attributes");
-
-            var metadata = _jsonSerializer.Deserialize<SyncRequestMetadata>(userProperties.ToString())
-                           ?? throw new InvalidOperationException($"Unable to create {nameof(SyncRequestMetadata)} from user properties.");
-
-            metadata.ValidateOrThrow();
-
-            return metadata;
+            return new SyncRequestMetadata() { SessionId = sessionId, };
         }
     }
 }

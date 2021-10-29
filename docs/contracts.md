@@ -16,11 +16,9 @@
         - [ChargeLinkPeriod](#.ChargeLinkPeriod)
 - [Charge link requests and replies](#.ChargeLinkRequestsAndReplies)
     - [CreateDefaultChargeLinks](#.CreateDefaultChargeLinks)
-    - [CreateDefaultChargeLinksSucceeded](#.CreateDefaultChargeLinksSucceeded)
-    - [CreateDefaultChargeLinksFailed](#.CreateDefaultChargeLinksFailed)
+    - [CreateDefaultChargeLinksReply](#.CreateDefaultChargeLinksReply)
     - [CreateDefaultChargeLinkMessages](#.CreateDefaultChargeLinkMessages)
-    - [CreateDefaultChargeLinkMessagesSucceeded](#.CreateDefaultChargeLinkMessagesSucceeded)
-    - [CreateDefaultChargeLinkMessagesFailed](#.CreateDefaultChargeLinkMessagesFailed)
+    - [CreateDefaultChargeLinkMessagesReply](#.CreateDefaultChargeLinkMessagesReply)
 
 <a name="IntegrationEventContract.proto"></a>
 
@@ -148,17 +146,11 @@ Represents a charge link period.
 
 This request is used by the Metering Point domain as part of the 'Create metering point' process to request the Charges domain to link default charges a the newly created metering point.
 
-<a name=".CreateDefaultChargeLinksSucceeded"></a>
+<a name=".CreateDefaultChargeLinksReply"></a>
 
-### [CreateDefaultChargeLinksSucceeded](.././source/Energinet.Charges.Libraries/source/Energinet.DataHub.Charges.Clients/DefaultChargeLink/Contracts/CreateDefaultChargeLinksSucceeded.proto)
+### [CreateDefaultChargeLinksReply](.././source/Energinet.Charges.Libraries/source/Energinet.DataHub.Charges.Clients/DefaultChargeLink/Contracts/CreateDefaultChargeLinksReply.proto)
 
-The Charges domain will use this reply to inform the Metering Point domain when the `CreateDefaultChargeLinks` request has been processed successfully.
-
-<a name=".CreateDefaultChargeLinksFailed"></a>
-
-### [CreateDefaultChargeLinksFailed](.././source/Energinet.Charges.Libraries/source/Energinet.DataHub.Charges.Clients/DefaultChargeLink/Contracts/CreateDefaultChargeLinksFailed.proto)
-
-In case the Charges domain fails to process a `CreateDefaultChargeLinks` request this reply will be used to inform the Metering Point domain.
+The Charges domain will use this reply to inform the Metering Point domain when the `CreateDefaultChargeLinks` request has been processed.
 
 <a name=".CreateDefaultChargeLinkMessages"></a>
 
@@ -166,14 +158,8 @@ In case the Charges domain fails to process a `CreateDefaultChargeLinks` request
 
 This request is used by the Metering Point domain as part of the 'Create metering point' process to request the Charges domain to create messages containing the default charge links for a specific metering point and make them available to the relevant Market Participants.
 
-<a name=".CreateDefaultChargeLinkMessagesSucceeded"></a>
+<a name=".CreateDefaultChargeLinkMessagesReply"></a>
 
-### [CreateDefaultChargeLinkMessagesSucceeded](.././source/Energinet.Charges.Libraries/source/Energinet.DataHub.Charges.Clients/DefaultChargeLinkMessages/Contracts/CreateDefaultChargeLinkMessagesSucceeded.proto)
+### [CreateDefaultChargeLinkMessagesReply](.././source/Energinet.Charges.Libraries/source/Energinet.DataHub.Charges.Clients/DefaultChargeLinkMessages/Contracts/CreateDefaultChargeLinkMessagesReply.proto)
 
-The Charges domain will use this reply to inform the Metering Point domain when the `CreateDefaultChargeLinkMessages` request has been processed successfully.
-
-<a name=".CreateDefaultChargeLinkMessagesFailed"></a>
-
-### [CreateDefaultChargeLinkMessagesFailed](.././source/Energinet.Charges.Libraries/source/Energinet.DataHub.Charges.Clients/DefaultChargeLinkMessages/Contracts/CreateDefaultChargeLinkMessagesFailed.proto)
-
-In case the Charges domain fails to process a `CreateDefaultChargeLinkMessages` request this reply will be used to inform the Metering Point domain.
+The Charges domain will use this reply to inform the Metering Point domain when the `CreateDefaultChargeLinkMessages` request has been processed.

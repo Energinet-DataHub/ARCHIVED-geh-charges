@@ -161,6 +161,23 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
             actual.Should().NotBeNull();
         }
 
+        [Fact]
+        public async Task GetChargeAsync_ReturnsCharge()
+        {
+            // Arrange
+            await using var chargesDatabaseContext = _databaseManager.CreateDbContext();
+            var sut = new ChargeRepository(chargesDatabaseContext);
+
+            // Arrange => Matching data from seeded test data
+            var identifier = new ChargeIdentifier("EA-001", "5790000432752", ChargeType.Tariff);
+
+            // Act
+            var actual = await sut.GetChargeAsync(identifier);
+
+            // Assert
+            actual.Should().NotBeNull();
+        }
+
         private static Charge GetValidCharge()
         {
             var charge = new Charge(
