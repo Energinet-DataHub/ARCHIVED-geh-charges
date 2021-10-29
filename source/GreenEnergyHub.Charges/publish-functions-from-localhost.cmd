@@ -18,7 +18,7 @@ set /p functionHost=Deploy function host ([y]/n)?
 
 IF not "%sqlPassword%" == "" (
     dotnet run --project source\GreenEnergyHub.Charges.ApplyDBMigrationsApp --configuration Release --^
-        "Server=sqlsrv-charges-%organization%-s.database.windows.net;Database=sqldb-charges;Uid=gehdbadmin;Pwd=%sqlPassword%;TrustServerCertificate=true;Persist Security Info=True;"^
+        "Server=(localdb)\mssqllocaldb;Database=ChargesDatabase;Trusted_Connection=True;"^
         includeSeedData includeTestData
 )
 
