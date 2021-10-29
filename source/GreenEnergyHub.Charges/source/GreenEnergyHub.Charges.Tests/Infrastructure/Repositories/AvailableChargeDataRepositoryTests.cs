@@ -61,7 +61,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
 
         [Theory]
         [InlineAutoMoqData]
-        public async Task GetChargeHistoriesAsync_WithMeteringPointId_ThenSuccessReturnedAsync(
+        public async Task GetChargeHistoriesAsync_GivenAnExistingAvailableDataReferenceId_ReturnsAvailableChargeData(
             [NotNull] AvailableChargeData expected)
         {
             // Arrange
