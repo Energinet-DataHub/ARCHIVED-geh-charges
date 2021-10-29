@@ -14,6 +14,7 @@
 
 using GreenEnergyHub.Charges.FunctionHost.Configuration;
 using GreenEnergyHub.Charges.Infrastructure.Correlation;
+using GreenEnergyHub.Charges.Infrastructure.MessageMetaData;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
@@ -27,6 +28,7 @@ namespace GreenEnergyHub.Charges.FunctionHost
                 .ConfigureFunctionsWorkerDefaults(builder =>
                 {
                     builder.UseMiddleware<CorrelationIdMiddleware>();
+                    builder.UseMiddleware<MessageMetaDataMiddleware>();
                 })
                 .ConfigureServices(ConfigureServices)
                 .Build();
@@ -49,6 +51,7 @@ namespace GreenEnergyHub.Charges.FunctionHost
             ChargeLinkIngestionConfiguration.ConfigureServices(serviceCollection);
             ChargeLinkCommandReceiverConfiguration.ConfigureServices(serviceCollection);
             ChargeLinkEventPublisherConfiguration.ConfigureServices(serviceCollection);
+            ChargeLinkEventReplierConfiguration.ConfigureServices(serviceCollection);
             CreateChargeLinkReceiverConfiguration.ConfigureServices(serviceCollection);
             ChargeLinkDataAvailableNotifierConfiguration.ConfigureServices(serviceCollection);
             ChargeLinkBundleSenderConfiguration.ConfigureServices(serviceCollection);

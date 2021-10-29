@@ -13,26 +13,23 @@
 // limitations under the License.
 
 using GreenEnergyHub.Charges.Application.ChargeLinks.Handlers;
-using GreenEnergyHub.Charges.Commands;
-using GreenEnergyHub.Charges.Domain.ChargeLinkCommands;
-using GreenEnergyHub.Charges.Domain.DefaultChargeLinks;
+using GreenEnergyHub.Charges.Domain.ChargeLinkCreatedEvents;
+using GreenEnergyHub.Charges.Infrastructure.Integration.ChargeLinkCreated;
+using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandAccepted;
 using GreenEnergyHub.Charges.Infrastructure.Messaging.Registration;
-using GreenEnergyHub.Charges.Infrastructure.Repositories;
+using GreenEnergyHub.Messaging.Protobuf;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace GreenEnergyHub.Charges.FunctionHost.Configuration
 {
-    internal static class CreateChargeLinkReceiverConfiguration
+    internal static class ChargeLinkEventReplierConfiguration
     {
         internal static void ConfigureServices(IServiceCollection serviceCollection)
         {
-            serviceCollection.AddScoped<ICreateLinkCommandRequestHandler, CreateLinkCommandRequestHandler>();
-            serviceCollection.AddScoped<IChargeLinkCommandFactory, ChargeLinkCommandFactory>();
+            serviceCollection.AddScoped<IChargeLinkEventReplyHandler, ChargeLinkEventReplyHandler>();
 
-            serviceCollection.ReceiveProtobufMessage<CreateDefaultChargeLinks>(
-                configuration => configuration.WithParser(() => CreateDefaultChargeLinks.Parser));
-
-            serviceCollection.AddScoped<IDefaultChargeLinkRepository, DefaultChargeLinkRepository>();
+            serviceCollection.ReceiveProtobufMessage<ChargeLinkCommandAccepted>(
+                configuration => configuration.WithParser(() => ChargeLinkCommandAccepted.Parser));
         }
     }
 }

@@ -20,6 +20,7 @@
     "CHARGE_LINK_ACCEPTED_TOPIC_NAME": "sbt-link-command-accepted",
     "CHARGELINKACCEPTED_SUB_DATAAVAILABLENOTIFIER": "sbs-chargelinkaccepted-sub-dataavailablenotifier",
     "CHARGELINKACCEPTED_SUB_EVENTPUBLISHER": "sbs-chargelinkaccepted-sub-eventpublisher",
+    "CHARGELINKACCEPTED_SUB_REPLIER": "sbs-chargelinkaccepted-sub-replier",
     "CHARGE_LINK_CREATED_TOPIC_NAME": "charge-link-created",
     "CHARGE_LINK_RECEIVED_TOPIC_NAME": "sbt-link-command-received",
     "CHARGE_LINK_RECEIVED_SUBSCRIPTION_NAME": "sbs-link-command-received-receiver",

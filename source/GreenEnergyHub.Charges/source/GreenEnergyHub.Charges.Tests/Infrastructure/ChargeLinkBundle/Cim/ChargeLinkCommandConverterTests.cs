@@ -19,6 +19,7 @@ using System.Reflection;
 using System.Threading.Tasks;
 using System.Xml;
 using AutoFixture.Xunit2;
+using GreenEnergyHub.Charges.Application;
 using GreenEnergyHub.Charges.Domain.ChargeLinkCommands;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
