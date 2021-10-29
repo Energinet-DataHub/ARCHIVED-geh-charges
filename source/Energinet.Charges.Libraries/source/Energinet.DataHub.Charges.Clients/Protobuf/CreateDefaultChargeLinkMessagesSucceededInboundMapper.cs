@@ -21,9 +21,9 @@ namespace Energinet.DataHub.Charges.Libraries.Protobuf
     internal class CreateDefaultChargeLinkMessagesSucceededInboundMapper
     {
         protected internal static CreateDefaultChargeLinkMessagesSucceededDto Convert(
-            [NotNull] CreateDefaultChargeLinkMessagesSucceeded createDefaultChargeLinksSucceeded)
+            [NotNull] CreateDefaultChargeLinkMessagesReply createDefaultChargeLinkMessagesReply)
         {
-            return new(createDefaultChargeLinksSucceeded.MeteringPointId);
+            return new(createDefaultChargeLinkMessagesReply.MeteringPointId);
         }
     }
 }

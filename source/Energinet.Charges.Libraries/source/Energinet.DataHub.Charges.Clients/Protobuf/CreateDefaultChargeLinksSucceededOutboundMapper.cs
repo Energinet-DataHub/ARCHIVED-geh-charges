@@ -12,22 +12,27 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
 using System.Diagnostics.CodeAnalysis;
 using Energinet.Charges.Contracts;
 using Energinet.DataHub.Charges.Libraries.Models;
+using CreateDefaultChargeLinksSucceeded =
+    Energinet.Charges.Contracts.CreateDefaultChargeLinksReply.Types.CreateDefaultChargeLinksSucceeded;
 
 namespace Energinet.DataHub.Charges.Libraries.Protobuf
 {
     internal class CreateDefaultChargeLinksSucceededOutboundMapper
     {
-        protected internal static CreateDefaultChargeLinksSucceeded Convert(
+        // Todo: Not in use?
+        protected internal static CreateDefaultChargeLinksReply Convert(
             [NotNull] CreateDefaultChargeLinksSucceededDto createDefaultChargeLinksSucceededDto)
         {
             return new()
             {
                 MeteringPointId = createDefaultChargeLinksSucceededDto.MeteringPointId,
-                DidCreateChargeLinks = createDefaultChargeLinksSucceededDto.DidCreateChargeLinks,
+                CreateDefaultChargeLinksSucceeded = new CreateDefaultChargeLinksSucceeded
+                {
+                    DidCreateChargeLinks = createDefaultChargeLinksSucceededDto.DidCreateChargeLinks,
+                },
             };
         }
     }

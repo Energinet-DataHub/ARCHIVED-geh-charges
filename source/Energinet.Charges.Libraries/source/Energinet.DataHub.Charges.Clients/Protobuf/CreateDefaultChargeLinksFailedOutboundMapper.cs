@@ -17,18 +17,24 @@ using System.Diagnostics.CodeAnalysis;
 using Energinet.Charges.Contracts;
 using Energinet.DataHub.Charges.Libraries.Enums;
 using Energinet.DataHub.Charges.Libraries.Models;
+using CreateDefaultChargeLinksFailed =
+    Energinet.Charges.Contracts.CreateDefaultChargeLinksReply.Types.CreateDefaultChargeLinksFailed;
 
 namespace Energinet.DataHub.Charges.Libraries.Protobuf
 {
+    // Todo: Not in use?
     public static class CreateDefaultChargeLinksFailedOutboundMapper
     {
-        internal static CreateDefaultChargeLinksFailed Convert(
+        internal static CreateDefaultChargeLinksReply Convert(
             [NotNull] CreateDefaultChargeLinksFailedDto createDefaultChargeLinksFailedDto)
         {
             return new()
             {
                 MeteringPointId = createDefaultChargeLinksFailedDto.MeteringPointId,
-                ErrorCode = ConvertErrorCode(createDefaultChargeLinksFailedDto.ErrorCode),
+                CreateDefaultChargeLinksFailed = new CreateDefaultChargeLinksFailed
+                {
+                    ErrorCode = ConvertErrorCode(createDefaultChargeLinksFailedDto.ErrorCode),
+                },
             };
         }
 

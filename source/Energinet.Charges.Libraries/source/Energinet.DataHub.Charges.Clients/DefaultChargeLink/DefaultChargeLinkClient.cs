@@ -21,6 +21,10 @@ using Energinet.DataHub.Charges.Libraries.Factories;
 using Energinet.DataHub.Charges.Libraries.Models;
 using Energinet.DataHub.Charges.Libraries.ServiceBus;
 using Google.Protobuf;
+using CreateDefaultChargeLinksFailed =
+    Energinet.Charges.Contracts.CreateDefaultChargeLinksReply.Types.CreateDefaultChargeLinksFailed;
+using CreateDefaultChargeLinksSucceeded =
+    Energinet.Charges.Contracts.CreateDefaultChargeLinksReply.Types.CreateDefaultChargeLinksSucceeded;
 
 namespace Energinet.DataHub.Charges.Libraries.DefaultChargeLink
 {
@@ -75,10 +79,13 @@ namespace Energinet.DataHub.Charges.Libraries.DefaultChargeLink
             if (string.IsNullOrWhiteSpace(replyQueueName))
                 throw new ArgumentNullException(nameof(replyQueueName));
 
-            var createDefaultChargeLinks = new CreateDefaultChargeLinksSucceeded
+            var createDefaultChargeLinks = new CreateDefaultChargeLinksReply
             {
                 MeteringPointId = createDefaultChargeLinksSucceededDto.MeteringPointId,
-                DidCreateChargeLinks = createDefaultChargeLinksSucceededDto.DidCreateChargeLinks,
+                CreateDefaultChargeLinksSucceeded = new CreateDefaultChargeLinksSucceeded
+                {
+                    DidCreateChargeLinks = createDefaultChargeLinksSucceededDto.DidCreateChargeLinks,
+                },
             };
 
             await _serviceBusRequestSender.SendRequestAsync(
@@ -100,10 +107,13 @@ namespace Energinet.DataHub.Charges.Libraries.DefaultChargeLink
             if (string.IsNullOrWhiteSpace(replyQueueName))
                 throw new ArgumentNullException(nameof(replyQueueName));
 
-            var createDefaultChargeLinks = new CreateDefaultChargeLinksFailed
+            var createDefaultChargeLinks = new CreateDefaultChargeLinksReply
             {
                 MeteringPointId = createDefaultChargeLinksFailedDto.MeteringPointId,
-                ErrorCode = (CreateDefaultChargeLinksFailed.Types.ErrorCode)createDefaultChargeLinksFailedDto.ErrorCode,
+                CreateDefaultChargeLinksFailed = new CreateDefaultChargeLinksFailed
+                {
+                    ErrorCode = (CreateDefaultChargeLinksFailed.Types.ErrorCode)createDefaultChargeLinksFailedDto.ErrorCode,
+                },
             };
 
             await _serviceBusRequestSender.SendRequestAsync(
