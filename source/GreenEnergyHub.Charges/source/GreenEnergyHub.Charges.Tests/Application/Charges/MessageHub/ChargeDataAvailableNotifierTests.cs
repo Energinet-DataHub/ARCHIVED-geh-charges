@@ -51,7 +51,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.MessageHub
 
         [Theory]
         [InlineAutoMoqData]
-        public async Task NotifyAsync_WhenChargeIsTaxIndicator_SendsDataAvailableNotificationPerCommand(
+        public async Task NotifyAsync_WhenChargeIsTaxIndicator_SendsDataAvailableNotificationPerGridAccessProvider(
             ChargeCommandAcceptedEvent chargeCommandAcceptedEvent,
             List<MarketParticipant> gridAccessProviders,
             AvailableChargeData availableChargesData,
