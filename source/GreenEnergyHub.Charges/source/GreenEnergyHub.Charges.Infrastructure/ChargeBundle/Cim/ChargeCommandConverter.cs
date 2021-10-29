@@ -19,6 +19,7 @@ using System.Xml;
 using GreenEnergyHub.Charges.Domain.ChargeCommands;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
+using GreenEnergyHub.Charges.Domain.SharedDtos;
 using GreenEnergyHub.Charges.Infrastructure.ChargeLinkBundle.Cim;
 using GreenEnergyHub.Charges.Infrastructure.Correlation;
 using GreenEnergyHub.Charges.Infrastructure.MarketDocument.Cim;
@@ -46,13 +47,13 @@ namespace GreenEnergyHub.Charges.Infrastructure.ChargeBundle.Cim
 
         protected override async Task<IInboundMessage> ConvertSpecializedContentAsync(
             [NotNull] XmlReader reader,
-            [NotNull] Document document)
+            [NotNull] DocumentDto documentDto)
         {
             var correlationId = _correlationContext.Id;
 
             return new ChargeCommand(correlationId)
                 {
-                    Document = document,
+                    Document = documentDto,
                     ChargeOperation = await ParseChargeOperationAsync(reader).ConfigureAwait(false),
                 };
         }

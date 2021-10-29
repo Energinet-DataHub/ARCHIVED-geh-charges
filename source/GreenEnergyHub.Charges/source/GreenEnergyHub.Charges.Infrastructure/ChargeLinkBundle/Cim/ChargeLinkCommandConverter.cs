@@ -18,6 +18,7 @@ using System.Threading.Tasks;
 using System.Xml;
 using GreenEnergyHub.Charges.Domain.ChargeLinkCommands;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
+using GreenEnergyHub.Charges.Domain.SharedDtos;
 using GreenEnergyHub.Charges.Infrastructure.Correlation;
 using GreenEnergyHub.Charges.Infrastructure.MarketDocument.Cim;
 using GreenEnergyHub.Charges.Infrastructure.Messaging.Serialization;
@@ -40,13 +41,13 @@ namespace GreenEnergyHub.Charges.Infrastructure.ChargeLinkBundle.Cim
 
         protected override async Task<IInboundMessage> ConvertSpecializedContentAsync(
             [NotNull] XmlReader reader,
-            [NotNull] Document document)
+            [NotNull] DocumentDto documentDto)
         {
             var correlationId = _correlationContext.Id;
 
             return new ChargeLinkCommand(correlationId)
                 {
-                    Document = document,
+                    Document = documentDto,
                     ChargeLink = await ParseChargeLinkAsync(reader).ConfigureAwait(false),
                 };
         }

@@ -22,7 +22,7 @@ namespace GreenEnergyHub.Charges.Domain.Charges
     /// </summary>
     public interface IChargeRepository
     {
-        Task StoreChargeAsync(Charge newCharge);
+        Task StoreChargeAsync(Charge newCharge, string senderId, DateTime writeDateTime);
 
         Task<Charge> GetChargeAsync(ChargeIdentifier chargeIdentifier);
 

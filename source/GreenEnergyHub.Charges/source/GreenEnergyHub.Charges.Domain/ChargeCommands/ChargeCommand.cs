@@ -16,6 +16,7 @@ using System.Diagnostics.CodeAnalysis;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.Domain.Messages.Command;
+using GreenEnergyHub.Charges.Domain.SharedDtos;
 
 #pragma warning disable 8618
 
@@ -31,7 +32,7 @@ namespace GreenEnergyHub.Charges.Domain.ChargeCommands
         {
         }
 
-        public Document Document { get; set; }
+        public DocumentDto Document { get; set; }
 
         public ChargeOperation ChargeOperation { get; set; }
     }

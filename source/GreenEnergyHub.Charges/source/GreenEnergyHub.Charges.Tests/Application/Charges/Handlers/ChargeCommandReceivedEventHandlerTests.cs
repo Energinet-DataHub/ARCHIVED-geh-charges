@@ -23,6 +23,7 @@ using GreenEnergyHub.Charges.Domain.ChargeCommandReceivedEvents;
 using GreenEnergyHub.Charges.Domain.ChargeCommands;
 using GreenEnergyHub.Charges.Domain.ChargeCommands.Validation;
 using GreenEnergyHub.Charges.Domain.Charges;
+using GreenEnergyHub.Charges.Domain.SharedDtos;
 using GreenEnergyHub.Charges.TestCore.Attributes;
 using Moq;
 using Xunit;
@@ -57,7 +58,9 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
             var stored = false;
             repository.Setup(
                     r => r.StoreChargeAsync(
-                        It.IsAny<Charge>()))
+                        It.IsAny<Charge>(),
+                        It.IsAny<string>(),
+                        It.IsAny<DateTime>()))
                 .Callback<Charge>(
                     (_) => stored = true);
 
@@ -70,7 +73,8 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
 
             chargeCommandFactory.Setup(
                     s => s.CreateFromCharge(
-                        It.IsAny<Charge>()))
+                        It.IsAny<Charge>(),
+                        It.IsAny<DocumentDto>()))
                 .Returns(chargeCommand.Object);
 
             chargeFactory.Setup(s => s.CreateFromCommandAsync(
