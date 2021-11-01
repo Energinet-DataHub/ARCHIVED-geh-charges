@@ -46,16 +46,25 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures
         public ServiceBusListenerMock? PostOfficeListenerMock { get; private set; }
 
         [NotNull]
-        public ServiceBusListenerMock? DataAvailableListenerMock { get; private set; }
+        public ServiceBusListenerMock? MessageHubDataAvailableListenerMock { get; private set; }
+
+        [NotNull]
+        public ServiceBusListenerMock? MessageHubBundleResponseListenerMock { get; private set; }
+
+        [NotNull]
+        public MessageHubMock? MessageHubMock { get; private set; }
 
         private AzuriteManager AzuriteManager { get; }
 
         private AzureCloudServiceBusResource<ChargesFunctionAppServiceBusOptions> ServiceBusResource { get; }
 
+        [NotNull]
         private ServiceBusManager? ServiceBusManager { get; set; }
 
+        [NotNull]
         private QueueProperties? BundleReplyQueue { get; set; }
 
+        [NotNull]
         private QueueProperties? BundleRequestQueue { get; set; }
 
         /// <inheritdoc/>
@@ -146,15 +155,18 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures
 
             var messageHubDataAvailableQueueName = await GetQueueNameFromKeyAsync(ChargesFunctionAppServiceBusOptions.MessageHubDataAvailableQueueKey);
             Environment.SetEnvironmentVariable("MESSAGEHUB_DATAAVAILABLE_QUEUE", messageHubDataAvailableQueueName);
-            DataAvailableListenerMock = new ServiceBusListenerMock(ServiceBusResource.ConnectionString, TestLogger);
-            await DataAvailableListenerMock.AddQueueListenerAsync(messageHubDataAvailableQueueName);
+            MessageHubDataAvailableListenerMock = new ServiceBusListenerMock(ServiceBusResource.ConnectionString, TestLogger);
+            await MessageHubDataAvailableListenerMock.AddQueueListenerAsync(messageHubDataAvailableQueueName);
 
             BundleRequestQueue = await ServiceBusManager.CreateQueueAsync(ChargesFunctionAppServiceBusOptions.MessageHubRequestQueueKey, 1, null, true);
             Environment.SetEnvironmentVariable("MESSAGEHUB_BUNDLEREQUEST_QUEUE", BundleRequestQueue.Name);
 
             BundleReplyQueue = await ServiceBusManager.CreateQueueAsync(ChargesFunctionAppServiceBusOptions.MessageHubReplyQueueKey, 1, null, true);
             Environment.SetEnvironmentVariable("MESSAGEHUB_BUNDLEREPLY_QUEUE", BundleReplyQueue.Name);
+            MessageHubBundleResponseListenerMock = new ServiceBusListenerMock(ServiceBusResource.ConnectionString, TestLogger);
+            await MessageHubBundleResponseListenerMock.AddQueueListenerAsync(BundleReplyQueue.Name);
 
+            MessageHubMock = new MessageHubMock(ServiceBusResource.ConnectionString, BundleRequestQueue.Name, BundleReplyQueue.Name);
             Environment.SetEnvironmentVariable("MESSAGEHUB_STORAGE_CONNECTION_STRING", ChargesFunctionAppServiceBusOptions.MessageHubStorageConnectionString);
 
             Environment.SetEnvironmentVariable("MESSAGEHUB_STORAGE_CONTAINER", ChargesFunctionAppServiceBusOptions.MessageHubStorageContainerName);
@@ -182,19 +194,13 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures
 
             // => Service Bus
             await PostOfficeListenerMock.DisposeAsync();
-            await DataAvailableListenerMock.DisposeAsync();
+            await MessageHubDataAvailableListenerMock.DisposeAsync();
+            await MessageHubBundleResponseListenerMock.DisposeAsync();
             await ServiceBusResource.DisposeAsync();
 
-            if (ServiceBusManager != null)
-            {
-                if (BundleRequestQueue != null)
-                    await ServiceBusManager.DeleteQueueAsync(BundleRequestQueue.Name);
-
-                if (BundleReplyQueue != null)
-                    await ServiceBusManager.DeleteQueueAsync(BundleReplyQueue.Name);
-
-                await ServiceBusManager.DisposeAsync();
-            }
+            await ServiceBusManager.DeleteQueueAsync(BundleRequestQueue.Name);
+            await ServiceBusManager.DeleteQueueAsync(BundleReplyQueue.Name);
+            await ServiceBusManager.DisposeAsync();
 
             // => Database
             await DatabaseManager.DeleteDatabaseAsync();
