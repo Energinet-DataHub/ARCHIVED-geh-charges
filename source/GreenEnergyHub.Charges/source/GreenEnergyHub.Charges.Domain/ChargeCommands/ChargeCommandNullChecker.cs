@@ -14,7 +14,7 @@
 
 using System;
 using GreenEnergyHub.Charges.Domain.Charges;
-using GreenEnergyHub.Charges.Domain.MarketParticipants;
+using GreenEnergyHub.Charges.Domain.SharedDtos;
 using MarketParticipant = GreenEnergyHub.Charges.Domain.MarketParticipants.MarketParticipant;
 
 namespace GreenEnergyHub.Charges.Domain.ChargeCommands
@@ -37,7 +37,7 @@ namespace GreenEnergyHub.Charges.Domain.ChargeCommands
             if (string.IsNullOrWhiteSpace(chargeOperation.ChargeDescription)) throw new ArgumentException(chargeOperation.ChargeDescription);
         }
 
-        private static void CheckDocument(Document document)
+        private static void CheckDocument(DocumentDto document)
         {
             if (document == null) throw new ArgumentNullException(nameof(document));
             if (string.IsNullOrWhiteSpace(document.Id)) throw new ArgumentException(document.Id);

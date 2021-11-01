@@ -15,7 +15,6 @@
 using System;
 using System.Collections.Generic;
 using GreenEnergyHub.Charges.Core.DateTime;
-using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using NodaTime;
 
 namespace GreenEnergyHub.Charges.Domain.Charges
@@ -24,7 +23,6 @@ namespace GreenEnergyHub.Charges.Domain.Charges
     {
         public Charge(
             Guid id,
-            Document document,
             string chargeOperationId,
             string senderProvidedChargeId,
             string name,
@@ -41,7 +39,6 @@ namespace GreenEnergyHub.Charges.Domain.Charges
             List<Point> points)
         {
             Id = id;
-            Document = document;
             ChargeOperationId = chargeOperationId;
             SenderProvidedChargeId = senderProvidedChargeId;
             Name = name;
@@ -62,8 +59,6 @@ namespace GreenEnergyHub.Charges.Domain.Charges
         /// Globally unique identifier of the charge.
         /// </summary>
         public Guid Id { get; }
-
-        public Document Document { get; }
 
         /// <summary>
         /// Contains a unique ID for the specific Charge Event, provided by the sender.

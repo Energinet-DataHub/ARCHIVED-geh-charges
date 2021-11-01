@@ -14,11 +14,10 @@
 
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using Google.Protobuf.WellKnownTypes;
 using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.Domain.ChargeCommandAcceptedEvents;
 using GreenEnergyHub.Charges.Domain.Charges;
-using GreenEnergyHub.Charges.Domain.MarketParticipants;
+using GreenEnergyHub.Charges.Domain.SharedDtos;
 using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeCommandAccepted;
 using GreenEnergyHub.Messaging.Protobuf;
 
@@ -45,7 +44,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
             return chargeCommandAcceptedContract;
         }
 
-        private static DocumentContract ConvertDocument(Document document)
+        private static DocumentContract ConvertDocument(DocumentDto document)
         {
             return new DocumentContract
             {

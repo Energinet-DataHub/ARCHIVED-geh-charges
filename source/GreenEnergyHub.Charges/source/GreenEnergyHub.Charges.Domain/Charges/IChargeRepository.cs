@@ -14,6 +14,7 @@
 
 using System;
 using System.Threading.Tasks;
+using NodaTime;
 
 namespace GreenEnergyHub.Charges.Domain.Charges
 {
@@ -22,7 +23,7 @@ namespace GreenEnergyHub.Charges.Domain.Charges
     /// </summary>
     public interface IChargeRepository
     {
-        Task StoreChargeAsync(Charge newCharge);
+        Task StoreChargeAsync(Charge newCharge, string senderId, Instant writeDateTime);
 
         Task<Charge> GetChargeAsync(ChargeIdentifier chargeIdentifier);
 

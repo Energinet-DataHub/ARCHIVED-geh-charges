@@ -16,6 +16,7 @@ using System.Collections.Generic;
 using GreenEnergyHub.Charges.Domain.ChargeCommands;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
+using GreenEnergyHub.Charges.Domain.SharedDtos;
 using NodaTime;
 
 namespace GreenEnergyHub.Charges.Tests.Builders
@@ -81,7 +82,7 @@ namespace GreenEnergyHub.Charges.Tests.Builders
         {
             return new("some-correlation-id")
             {
-                Document = new Document
+                Document = new DocumentDto
                 {
                     Id = "id",
                     Type = DocumentType.RequestUpdateChargeInformation,
