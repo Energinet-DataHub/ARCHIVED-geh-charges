@@ -12,11 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using NodaTime;
 
 #pragma warning disable 8618
 
-namespace GreenEnergyHub.Charges.Domain.MarketParticipants
+namespace GreenEnergyHub.Charges.Domain.SharedDtos
 {
     // Non-nullable member is uninitialized is ignored
     // Only properties which is allowed to be null is nullable
@@ -26,7 +27,7 @@ namespace GreenEnergyHub.Charges.Domain.MarketParticipants
     /// The Document class contains relevant information from the Business Message in which the ChargeEvent(s) were delivered to the Charges domain.
     /// This includes among other things sender and recipient details, An ID provided by the sender, and some business context related data.
     /// </summary>
-    public class Document
+    public class DocumentDto
     {
         /// <summary>
         /// An ID provided by the sender.

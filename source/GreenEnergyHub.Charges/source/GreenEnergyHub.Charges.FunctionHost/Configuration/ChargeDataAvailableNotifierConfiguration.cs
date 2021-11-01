@@ -12,13 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Domain.CreateLinkCommandEvents;
+using GreenEnergyHub.Charges.Application.ChargeLinks.MessageHub;
+using GreenEnergyHub.Charges.Domain.AvailableChargeData;
+using Microsoft.Extensions.DependencyInjection;
 
-namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
+namespace GreenEnergyHub.Charges.FunctionHost.Configuration
 {
-    public interface ICreateLinkCommandEventHandler
+    internal static class ChargeDataAvailableNotifierConfiguration
     {
-        Task HandleAsync(CreateLinkCommandEvent createLinkCommandEvent, string correlationId);
+        internal static void ConfigureServices(IServiceCollection serviceCollection)
+        {
+            serviceCollection.AddScoped<IChargeDataAvailableNotifier, ChargeDataAvailableNotifier>();
+            serviceCollection.AddScoped<IAvailableChargeDataFactory, AvailableChargeDataFactory>();
+        }
     }
 }

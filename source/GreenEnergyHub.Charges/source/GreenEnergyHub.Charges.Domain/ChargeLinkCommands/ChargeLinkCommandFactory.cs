@@ -21,6 +21,7 @@ using GreenEnergyHub.Charges.Domain.CreateLinkCommandEvents;
 using GreenEnergyHub.Charges.Domain.DefaultChargeLinks;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.Domain.MeteringPoints;
+using GreenEnergyHub.Charges.Domain.SharedDtos;
 using NodaTime;
 
 namespace GreenEnergyHub.Charges.Domain.ChargeLinkCommands
@@ -87,7 +88,7 @@ namespace GreenEnergyHub.Charges.Domain.ChargeLinkCommands
             var currentTime = _clock.GetCurrentInstant();
             var chargeLinkCommand = new ChargeLinkCommand(correlationId)
             {
-                Document = new Document
+                Document = new DocumentDto
                 {
                     Id = Guid.NewGuid().ToString(),
                     Type = DocumentType.RequestChangeBillingMasterData,
