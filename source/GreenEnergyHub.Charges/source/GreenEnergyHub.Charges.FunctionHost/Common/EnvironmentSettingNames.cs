@@ -29,6 +29,8 @@ namespace GreenEnergyHub.Charges.FunctionHost.Common
 
         public const string DataHubListenerConnectionString = "INTEGRATIONEVENT_LISTENER_CONNECTION_STRING";
 
+        public const string CreateLinkReplyQueueName = "CREATE_LINK_REPLY_QUEUE_NAME";
+
         /// <summary>
         /// Deprecated: This is from an old implementation where we mimicked sending to the post office
         /// by sending to a topic we provisioned ourselves in the charges domain.

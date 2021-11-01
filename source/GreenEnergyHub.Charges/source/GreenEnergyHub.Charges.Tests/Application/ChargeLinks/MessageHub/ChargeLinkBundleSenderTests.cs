@@ -18,7 +18,6 @@ using AutoFixture.Xunit2;
 using Energinet.DataHub.MessageHub.Client.Model;
 using GreenEnergyHub.Charges.Application.ChargeLinks.MessageHub;
 using GreenEnergyHub.Charges.Application.ChargeLinks.MessageHub.Infrastructure;
-using GreenEnergyHub.Charges.Application.SeedWork.SyncRequest;
 using GreenEnergyHub.Charges.TestCore.Attributes;
 using Moq;
 using Xunit;
@@ -35,8 +34,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.MessageHub
             [Frozen] Mock<IChargeLinkBundleCreator> creatorMock,
             [Frozen] Mock<IChargeLinkBundleReplier> replierMock,
             ChargeLinkBundleSender sut,
-            DataBundleRequestDto anyRequest,
-            ISyncRequestMetadata anyMetadata)
+            DataBundleRequestDto anyRequest)
         {
             // Arrange
             MemoryStream actualStream = null!;
@@ -45,13 +43,13 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.MessageHub
                 .Callback((DataBundleRequestDto _, Stream s) => actualStream = (MemoryStream)s);
 
             // Act
-            await sut.SendAsync(anyRequest, anyMetadata);
+            await sut.SendAsync(anyRequest);
 
             // Assert => creator was invoked with the expected stream
             creatorMock.Verify(creator => creator.CreateAsync(anyRequest, actualStream));
 
             // Assert => replier was invoked with the expected stream
-            replierMock.Verify(replier => replier.ReplyAsync(actualStream, anyRequest, anyMetadata));
+            replierMock.Verify(replier => replier.ReplyAsync(actualStream, anyRequest));
         }
     }
 }

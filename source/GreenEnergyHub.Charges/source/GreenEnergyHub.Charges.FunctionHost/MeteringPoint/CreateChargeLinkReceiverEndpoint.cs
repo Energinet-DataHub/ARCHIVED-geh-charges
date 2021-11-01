@@ -12,14 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
+using GreenEnergyHub.Charges.Application;
 using GreenEnergyHub.Charges.Application.ChargeLinks.Handlers;
 using GreenEnergyHub.Charges.Commands;
 using GreenEnergyHub.Charges.Domain.CreateLinkCommandEvents;
 using GreenEnergyHub.Charges.FunctionHost.Common;
 using GreenEnergyHub.Charges.Infrastructure.Correlation;
+using GreenEnergyHub.Charges.Infrastructure.MessageMetaData;
 using GreenEnergyHub.Charges.Infrastructure.Messaging;
+using GreenEnergyHub.Json;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Logging;
 
@@ -35,18 +39,17 @@ namespace GreenEnergyHub.Charges.FunctionHost.MeteringPoint
         private readonly ICorrelationContext _correlationContext;
         private readonly MessageExtractor<CreateDefaultChargeLinks> _messageExtractor;
         private readonly ILogger _log;
-        private readonly ICreateLinkCommandEventHandler _createLinkCommandEventHandler;
+        private readonly ICreateLinkCommandRequestHandler _createLinkCommandRequestHandler;
 
         public CreateChargeLinkReceiverEndpoint(
             ICorrelationContext correlationContext,
             MessageExtractor<CreateDefaultChargeLinks> messageExtractor,
             [NotNull] ILoggerFactory loggerFactory,
-            ICreateLinkCommandEventHandler createLinkCommandEventHandler)
+            ICreateLinkCommandRequestHandler createLinkCommandRequestHandler)
         {
             _correlationContext = correlationContext;
             _messageExtractor = messageExtractor;
-            _createLinkCommandEventHandler = createLinkCommandEventHandler;
-
+            _createLinkCommandRequestHandler = createLinkCommandRequestHandler;
             _log = loggerFactory.CreateLogger(nameof(CreateChargeLinkReceiverEndpoint));
         }
 
@@ -65,7 +68,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.MeteringPoint
             var createLinkCommandEvent =
                 (CreateLinkCommandEvent)await _messageExtractor.ExtractAsync(message).ConfigureAwait(false);
 
-            await _createLinkCommandEventHandler
+            await _createLinkCommandRequestHandler
                 .HandleAsync(createLinkCommandEvent, _correlationContext.Id).ConfigureAwait(false);
 
             _log.LogInformation(

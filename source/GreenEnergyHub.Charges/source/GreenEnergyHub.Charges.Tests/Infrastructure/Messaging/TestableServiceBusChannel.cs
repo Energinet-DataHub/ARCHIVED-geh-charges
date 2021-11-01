@@ -15,7 +15,7 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Infrastructure.Correlation;
+using GreenEnergyHub.Charges.Application;
 using GreenEnergyHub.Charges.Infrastructure.Messaging;
 using GreenEnergyHub.Messaging.Transport;
 
@@ -26,8 +26,9 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Messaging
     {
         public TestableServiceBusChannel(
             [NotNull] IServiceBusSender<TOutboundMessage> serviceBusSender,
-            [NotNull] ICorrelationContext correlationContext)
-            : base(serviceBusSender, correlationContext)
+            [NotNull] ICorrelationContext correlationContext,
+            [NotNull] IMessageMetaDataContext messageMetaDataContext)
+            : base(serviceBusSender, correlationContext, messageMetaDataContext)
         {
         }
 

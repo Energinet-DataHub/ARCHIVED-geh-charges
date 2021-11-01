@@ -16,7 +16,6 @@ using System.IO;
 using System.Threading.Tasks;
 using Energinet.DataHub.MessageHub.Client.Model;
 using GreenEnergyHub.Charges.Application.ChargeLinks.MessageHub.Infrastructure;
-using GreenEnergyHub.Charges.Application.SeedWork.SyncRequest;
 
 namespace GreenEnergyHub.Charges.Application.ChargeLinks.MessageHub
 {
@@ -33,11 +32,11 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.MessageHub
             _chargeLinkBundleReplier = chargeLinkBundleReplier;
         }
 
-        public async Task SendAsync(DataBundleRequestDto request, ISyncRequestMetadata metadata)
+        public async Task SendAsync(DataBundleRequestDto request)
         {
             await using var bundleStream = new MemoryStream();
             await _chargeLinkBundleCreator.CreateAsync(request, bundleStream);
-            await _chargeLinkBundleReplier.ReplyAsync(bundleStream, request, metadata);
+            await _chargeLinkBundleReplier.ReplyAsync(bundleStream, request);
         }
     }
 }
