@@ -14,6 +14,7 @@
 
 using System;
 using System.ComponentModel.DataAnnotations.Schema;
+using NodaTime;
 
 #pragma warning disable 8618
 
@@ -35,6 +36,6 @@ namespace GreenEnergyHub.Charges.Infrastructure.Context.Model
 
         public string CorrelationId { get; set; }
 
-        public DateTime? WriteDateTime { get; set; }
+        public Instant? WriteDateTime { get; set; }
     }
 }

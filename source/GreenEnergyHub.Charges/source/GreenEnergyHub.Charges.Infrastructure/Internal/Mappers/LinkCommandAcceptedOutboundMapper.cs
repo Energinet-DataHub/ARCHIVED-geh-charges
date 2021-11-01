@@ -18,9 +18,9 @@ using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.Domain.ChargeLinkCommandAcceptedEvents;
 using GreenEnergyHub.Charges.Domain.ChargeLinkCommands;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
+using GreenEnergyHub.Charges.Domain.SharedDtos;
 using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandAccepted;
 using GreenEnergyHub.Messaging.Protobuf;
-using Document = GreenEnergyHub.Charges.Domain.MarketParticipants.Document;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
 {
@@ -47,26 +47,26 @@ namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
             return chargeLinkCommandAcceptedContract;
         }
 
-        private static GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandAccepted.Document ConvertDocument(Document document)
+        private static GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandAccepted.Document ConvertDocument(DocumentDto documentDto)
         {
             return new GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandAccepted.Document
             {
-                Id = document.Id,
-                RequestDate = document.RequestDate.ToTimestamp(),
-                Type = (GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandAccepted.DocumentType)document.Type,
-                CreatedDateTime = document.CreatedDateTime.ToTimestamp(),
+                Id = documentDto.Id,
+                RequestDate = documentDto.RequestDate.ToTimestamp(),
+                Type = (GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandAccepted.DocumentType)documentDto.Type,
+                CreatedDateTime = documentDto.CreatedDateTime.ToTimestamp(),
                 Sender = new GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandAccepted.MarketParticipant
                 {
-                    Id = document.Sender.Id,
-                    BusinessProcessRole = (GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandAccepted.MarketParticipantRole)document.Sender.BusinessProcessRole,
+                    Id = documentDto.Sender.Id,
+                    BusinessProcessRole = (GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandAccepted.MarketParticipantRole)documentDto.Sender.BusinessProcessRole,
                 },
                 Recipient = new GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandAccepted.MarketParticipant
                 {
-                    Id = document.Recipient.Id,
-                    BusinessProcessRole = (GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandAccepted.MarketParticipantRole)document.Recipient.BusinessProcessRole,
+                    Id = documentDto.Recipient.Id,
+                    BusinessProcessRole = (GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandAccepted.MarketParticipantRole)documentDto.Recipient.BusinessProcessRole,
                 },
-                IndustryClassification = (GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandAccepted.IndustryClassification)document.IndustryClassification,
-                BusinessReasonCode = (GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandAccepted.BusinessReasonCode)document.BusinessReasonCode,
+                IndustryClassification = (GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandAccepted.IndustryClassification)documentDto.IndustryClassification,
+                BusinessReasonCode = (GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandAccepted.BusinessReasonCode)documentDto.BusinessReasonCode,
             };
         }
 
