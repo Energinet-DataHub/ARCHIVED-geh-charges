@@ -55,7 +55,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.MarketDocument.Cim
             return rootElement.Length == 0 && rootNamespace.Length == 0;
         }
 
-        private static async Task ParseFieldsAsync(XmlReader reader, DocumentDto documentDto)
+        private static async Task ParseFieldsAsync(XmlReader reader, DocumentDto document)
         {
             string rootElement = string.Empty;
             string ns = string.Empty;
@@ -75,46 +75,46 @@ namespace GreenEnergyHub.Charges.Infrastructure.MarketDocument.Cim
                 else if (reader.Is(CimMarketDocumentConstants.Id, ns))
                 {
                     var content = await reader.ReadElementContentAsStringAsync().ConfigureAwait(false);
-                    documentDto.Id = content;
+                    document.Id = content;
                 }
                 else if (reader.Is(CimMarketDocumentConstants.Type, ns))
                 {
                     var content = await reader.ReadElementContentAsStringAsync().ConfigureAwait(false);
-                    documentDto.Type = DocumentTypeMapper.Map(content);
+                    document.Type = DocumentTypeMapper.Map(content);
                 }
                 else if (reader.Is(CimMarketDocumentConstants.BusinessReasonCode, ns))
                 {
                     var content = await reader.ReadElementContentAsStringAsync().ConfigureAwait(false);
-                    documentDto.BusinessReasonCode = BusinessReasonCodeMapper.Map(content);
+                    document.BusinessReasonCode = BusinessReasonCodeMapper.Map(content);
                 }
                 else if (reader.Is(CimMarketDocumentConstants.IndustryClassification, ns))
                 {
                     var content = await reader.ReadElementContentAsStringAsync().ConfigureAwait(false);
-                    documentDto.IndustryClassification = IndustryClassificationMapper.Map(content);
+                    document.IndustryClassification = IndustryClassificationMapper.Map(content);
                 }
                 else if (reader.Is(CimMarketDocumentConstants.SenderId, ns))
                 {
                     var content = await reader.ReadElementContentAsStringAsync().ConfigureAwait(false);
-                    documentDto.Sender.Id = content;
+                    document.Sender.Id = content;
                 }
                 else if (reader.Is(CimMarketDocumentConstants.SenderBusinessProcessRole, ns))
                 {
                     var content = await reader.ReadElementContentAsStringAsync().ConfigureAwait(false);
-                    documentDto.Sender.BusinessProcessRole = MarketParticipantRoleMapper.Map(content);
+                    document.Sender.BusinessProcessRole = MarketParticipantRoleMapper.Map(content);
                 }
                 else if (reader.Is(CimMarketDocumentConstants.RecipientId, ns))
                 {
                     var content = await reader.ReadElementContentAsStringAsync().ConfigureAwait(false);
-                    documentDto.Recipient.Id = content;
+                    document.Recipient.Id = content;
                 }
                 else if (reader.Is(CimMarketDocumentConstants.RecipientBusinessProcessRole, ns))
                 {
                     var content = await reader.ReadElementContentAsStringAsync().ConfigureAwait(false);
-                    documentDto.Recipient.BusinessProcessRole = MarketParticipantRoleMapper.Map(content);
+                    document.Recipient.BusinessProcessRole = MarketParticipantRoleMapper.Map(content);
                 }
                 else if (reader.Is(CimMarketDocumentConstants.CreatedDateTime, ns))
                 {
-                    documentDto.CreatedDateTime = Instant.FromDateTimeUtc(reader.ReadElementContentAsDateTime());
+                    document.CreatedDateTime = Instant.FromDateTimeUtc(reader.ReadElementContentAsDateTime());
                 }
                 else if (reader.IsElement())
                 {

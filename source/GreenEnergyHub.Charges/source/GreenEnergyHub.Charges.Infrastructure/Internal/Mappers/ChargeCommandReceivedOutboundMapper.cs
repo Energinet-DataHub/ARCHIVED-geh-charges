@@ -12,14 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using Google.Protobuf.WellKnownTypes;
 using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.Domain.ChargeCommandReceivedEvents;
 using GreenEnergyHub.Charges.Domain.Charges;
-using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.Domain.SharedDtos;
 using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeCommandReceived;
 using GreenEnergyHub.Messaging.Protobuf;
@@ -66,26 +63,26 @@ namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
             };
         }
 
-        private static DocumentContract ConvertDocument(DocumentDto documentDto)
+        private static DocumentContract ConvertDocument(DocumentDto document)
         {
             return new DocumentContract
             {
-                Id = documentDto.Id,
-                RequestDate = documentDto.RequestDate.ToTimestamp().TruncateToSeconds(),
-                Type = (DocumentTypeContract)documentDto.Type,
-                CreatedDateTime = documentDto.CreatedDateTime.ToTimestamp().TruncateToSeconds(),
+                Id = document.Id,
+                RequestDate = document.RequestDate.ToTimestamp().TruncateToSeconds(),
+                Type = (DocumentTypeContract)document.Type,
+                CreatedDateTime = document.CreatedDateTime.ToTimestamp().TruncateToSeconds(),
                 Sender = new MarketParticipantContract
                 {
-                    Id = documentDto.Sender.Id,
-                    BusinessProcessRole = (MarketParticipantRoleContract)documentDto.Sender.BusinessProcessRole,
+                    Id = document.Sender.Id,
+                    BusinessProcessRole = (MarketParticipantRoleContract)document.Sender.BusinessProcessRole,
                 },
                 Recipient = new MarketParticipantContract
                 {
-                    Id = documentDto.Recipient.Id,
-                    BusinessProcessRole = (MarketParticipantRoleContract)documentDto.Recipient.BusinessProcessRole,
+                    Id = document.Recipient.Id,
+                    BusinessProcessRole = (MarketParticipantRoleContract)document.Recipient.BusinessProcessRole,
                 },
-                IndustryClassification = (IndustryClassificationContract)documentDto.IndustryClassification,
-                BusinessReasonCode = (BusinessReasonCodeContract)documentDto.BusinessReasonCode,
+                IndustryClassification = (IndustryClassificationContract)document.IndustryClassification,
+                BusinessReasonCode = (BusinessReasonCodeContract)document.BusinessReasonCode,
             };
         }
 
