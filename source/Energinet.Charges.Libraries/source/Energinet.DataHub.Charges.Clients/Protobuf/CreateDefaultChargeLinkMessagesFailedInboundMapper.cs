@@ -17,6 +17,8 @@ using System.Diagnostics.CodeAnalysis;
 using Energinet.Charges.Contracts;
 using Energinet.DataHub.Charges.Libraries.Enums;
 using Energinet.DataHub.Charges.Libraries.Models;
+using CreateDefaultChargeLinkMessagesFailed =
+    Energinet.Charges.Contracts.CreateDefaultChargeLinkMessagesReply.Types.CreateDefaultChargeLinkMessagesFailed;
 
 namespace Energinet.DataHub.Charges.Libraries.Protobuf
 {

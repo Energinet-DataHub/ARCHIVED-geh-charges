@@ -17,7 +17,7 @@ using GreenEnergyHub.Charges.Domain.CreateLinkCommandEvents;
 
 namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
 {
-    public interface ICreateLinkCommandEventHandler
+    public interface ICreateLinkCommandRequestHandler
     {
         Task HandleAsync(CreateLinkCommandEvent createLinkCommandEvent, string correlationId);
     }

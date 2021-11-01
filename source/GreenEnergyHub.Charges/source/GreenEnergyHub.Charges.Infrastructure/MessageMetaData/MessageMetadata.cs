@@ -12,13 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using GreenEnergyHub.Charges.Application.SeedWork.SyncRequest;
-using Microsoft.Azure.Functions.Worker;
-
-namespace GreenEnergyHub.Charges.Infrastructure.SyncRequest
+namespace GreenEnergyHub.Charges.Infrastructure.MessageMetaData
 {
-    public interface ISyncRequestMetaDataFactory
+    public class MessageMetadata
     {
-        ISyncRequestMetadata Create(FunctionContext bindingContextBindingData);
+        public string? ReplyTo { get; set; }
     }
 }

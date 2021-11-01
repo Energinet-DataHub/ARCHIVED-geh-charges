@@ -13,6 +13,10 @@
 // limitations under the License.
 
 using System;
+using Azure.Messaging.ServiceBus;
+using Energinet.DataHub.Charges.Libraries.DefaultChargeLink;
+using Energinet.DataHub.Charges.Libraries.Factories;
+using Energinet.DataHub.Charges.Libraries.ServiceBus;
 using Energinet.DataHub.MessageHub.Client;
 using Energinet.DataHub.MessageHub.Client.DataAvailable;
 using Energinet.DataHub.MessageHub.Client.Dequeue;
@@ -29,8 +33,10 @@ using GreenEnergyHub.Charges.FunctionHost.Common;
 using GreenEnergyHub.Charges.Infrastructure.Context;
 using GreenEnergyHub.Charges.Infrastructure.Correlation;
 using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandReceived;
+using GreenEnergyHub.Charges.Infrastructure.MessageMetaData;
 using GreenEnergyHub.Charges.Infrastructure.Messaging.Registration;
 using GreenEnergyHub.Charges.Infrastructure.Repositories;
+using GreenEnergyHub.Json;
 using GreenEnergyHub.Messaging.Protobuf;
 using GreenEnergyHub.Messaging.Transport;
 using Microsoft.EntityFrameworkCore;
@@ -44,8 +50,10 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
         internal static void ConfigureServices(IServiceCollection serviceCollection)
         {
             serviceCollection.AddScoped(typeof(IClock), _ => SystemClock.Instance);
+            serviceCollection.AddSingleton<IJsonSerializer, JsonSerializer>();
             serviceCollection.AddLogging();
             serviceCollection.AddScoped<CorrelationIdMiddleware>();
+            serviceCollection.AddScoped<MessageMetaDataMiddleware>();
             serviceCollection.AddApplicationInsightsTelemetryWorkerService(
                 EnvironmentHelper.GetEnv("APPINSIGHTS_INSTRUMENTATIONKEY"));
 
@@ -63,6 +71,22 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
                 new MessageHubConfig(dataAvailableQueue, domainReplyQueue),
                 storageServiceConnectionString,
                 new StorageConfig(azureBlobStorageContainerName));
+            AddDefaultChargeLinkClient(serviceCollection, serviceBusConnectionString);
+        }
+
+        private static void AddDefaultChargeLinkClient(
+            IServiceCollection serviceCollection,
+            string serviceBusConnectionString)
+        {
+            var replyToQueueName = EnvironmentHelper.GetEnv(EnvironmentSettingNames.CreateLinkReplyQueueName);
+            var serviceBusClient = new ServiceBusClient(serviceBusConnectionString);
+
+            serviceCollection.AddScoped<IServiceBusRequestSenderFactory>(_ =>
+                new ServiceBusRequestSenderFactory());
+            serviceCollection.AddScoped<IServiceBusRequestSender>(_ =>
+                new ServiceBusRequestSender(serviceBusClient, replyToQueueName));
+            serviceCollection.AddSingleton<IDefaultChargeLinkClient>(_ =>
+                new DefaultChargeLinkClient(serviceBusClient, new ServiceBusRequestSenderFactory(), replyToQueueName));
         }
 
         private static void ConfigureSharedDatabase(IServiceCollection serviceCollection)
