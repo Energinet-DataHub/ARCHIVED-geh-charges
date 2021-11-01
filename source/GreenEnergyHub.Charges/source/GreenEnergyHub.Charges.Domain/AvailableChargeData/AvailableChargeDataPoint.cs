@@ -14,25 +14,21 @@
 
 using System;
 
-#pragma warning disable 8618
-
-namespace GreenEnergyHub.Charges.Infrastructure.Context.Model
+namespace GreenEnergyHub.Charges.Domain.AvailableChargeData
 {
-    public class MarketParticipant
+    public class AvailableChargeDataPoint
     {
-        public MarketParticipant()
+        public AvailableChargeDataPoint(int position, decimal price)
         {
+            Position = position;
+            Price = price;
             Id = Guid.NewGuid();
         }
 
-        public Guid Id { get; set; }
+        public Guid Id { get; }
 
-        public string MarketParticipantId { get; set; }
+        public int Position { get; }
 
-        public string Name { get; set; }
-
-        public int Role { get; set; }
-
-        public bool Active { get; set; }
+        public decimal Price { get; }
     }
 }

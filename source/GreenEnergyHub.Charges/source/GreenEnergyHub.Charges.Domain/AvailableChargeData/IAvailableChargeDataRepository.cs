@@ -13,26 +13,15 @@
 // limitations under the License.
 
 using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
-#pragma warning disable 8618
-
-namespace GreenEnergyHub.Charges.Infrastructure.Context.Model
+namespace GreenEnergyHub.Charges.Domain.AvailableChargeData
 {
-    public class MarketParticipant
+    public interface IAvailableChargeDataRepository
     {
-        public MarketParticipant()
-        {
-            Id = Guid.NewGuid();
-        }
+        Task StoreAsync(AvailableChargeData availableChargeData);
 
-        public Guid Id { get; set; }
-
-        public string MarketParticipantId { get; set; }
-
-        public string Name { get; set; }
-
-        public int Role { get; set; }
-
-        public bool Active { get; set; }
+        Task<List<AvailableChargeData>> GetAvailableChargeDataAsync(IEnumerable<Guid> dataReferenceId);
     }
 }

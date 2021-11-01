@@ -13,26 +13,18 @@
 // limitations under the License.
 
 using System;
+using GreenEnergyHub.Charges.Domain.ChargeCommands;
+using GreenEnergyHub.Charges.Domain.MarketParticipants;
+using NodaTime;
 
-#pragma warning disable 8618
-
-namespace GreenEnergyHub.Charges.Infrastructure.Context.Model
+namespace GreenEnergyHub.Charges.Domain.AvailableChargeData
 {
-    public class MarketParticipant
+    public interface IAvailableChargeDataFactory
     {
-        public MarketParticipant()
-        {
-            Id = Guid.NewGuid();
-        }
-
-        public Guid Id { get; set; }
-
-        public string MarketParticipantId { get; set; }
-
-        public string Name { get; set; }
-
-        public int Role { get; set; }
-
-        public bool Active { get; set; }
+        AvailableChargeData Create(
+            ChargeCommand chargeCommand,
+            MarketParticipant recipient,
+            Instant requestTime,
+            Guid messageHubId);
     }
 }

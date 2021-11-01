@@ -12,27 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
+using GreenEnergyHub.Charges.Application.ChargeLinks.MessageHub;
+using GreenEnergyHub.Charges.Domain.AvailableChargeData;
+using Microsoft.Extensions.DependencyInjection;
 
-#pragma warning disable 8618
-
-namespace GreenEnergyHub.Charges.Infrastructure.Context.Model
+namespace GreenEnergyHub.Charges.FunctionHost.Configuration
 {
-    public class MarketParticipant
+    internal static class ChargeDataAvailableNotifierConfiguration
     {
-        public MarketParticipant()
+        internal static void ConfigureServices(IServiceCollection serviceCollection)
         {
-            Id = Guid.NewGuid();
+            serviceCollection.AddScoped<IChargeDataAvailableNotifier, ChargeDataAvailableNotifier>();
+            serviceCollection.AddScoped<IAvailableChargeDataFactory, AvailableChargeDataFactory>();
         }
-
-        public Guid Id { get; set; }
-
-        public string MarketParticipantId { get; set; }
-
-        public string Name { get; set; }
-
-        public int Role { get; set; }
-
-        public bool Active { get; set; }
     }
 }
