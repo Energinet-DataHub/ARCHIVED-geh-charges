@@ -20,7 +20,7 @@ limitations under the License.
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="Confluent.Kafka" Version="1.8.1" />
+      <PackageReference Include="Confluent.Kafka" Version="1.8.2" />
       <PackageReference Update="StyleCop.Analyzers" Version="1.2.0-beta.354">
         <PrivateAssets>all</PrivateAssets>
         <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
