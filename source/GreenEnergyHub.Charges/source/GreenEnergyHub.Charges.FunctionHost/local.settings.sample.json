@@ -4,7 +4,7 @@
     "AzureWebJobsDashboard": "UseDevelopmentStorage=true",
     "AzureWebJobsStorage": "UseDevelopmentStorage=true",
     "FUNCTIONS_WORKER_RUNTIME": "dotnet-isolated",
-    
+
     "APPINSIGHTS_INSTRUMENTATIONKEY": "<App insights instrumentation key>",
     "LOCAL_TIMEZONENAME": "<Your time zone ID, e.g.Europe/Copenhagen, see https://en.wikipedia.org/wiki/List_of_tz_database_time_zones for others>",
     "CURRENCY": "<Your system currency e.g. DKK, see https://en.wikipedia.org/wiki/ISO_4217>",
@@ -39,12 +39,13 @@
     "COMMAND_ACCEPTED_RECEIVER_SUBSCRIPTION_NAME": "sbs-charge-command-accepted-receiver",
     "CHARGE_CREATED_TOPIC_NAME": "charge-created",
     "CHARGE_PRICES_UPDATED_TOPIC_NAME": "charge-prices-updated",
+    "CHARGEACCEPTED_SUB_DATAAVAILABLENOTIFIER": "sbs-chargeaccepted-sub-dataavailablenotifier",
 
     "POST_OFFICE_TOPIC_NAME": "sbt-post-office",
     "MESSAGEHUB_DATAAVAILABLE_QUEUE": "sbq-dataavailable",
     "MESSAGEHUB_BUNDLEREQUEST_QUEUE": "sbq-charges",
     "MESSAGEHUB_BUNDLEREPLY_QUEUE": "sbq-charges-reply",
-  
+
     "HUB_SENDER_ID": "5790001330552",
     "HUB_SENDER_ROLE_INT_ENUM_VALUE": "7",
   }

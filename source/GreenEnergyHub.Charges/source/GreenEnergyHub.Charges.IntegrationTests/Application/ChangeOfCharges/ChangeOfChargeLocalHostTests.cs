@@ -86,12 +86,12 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Application.ChangeOfCharges
                 chargeCommandReceiverHost.Services.GetRequiredService<ICorrelationContext>(),
                 chargeCommandReceiverHost.Services.GetRequiredService<MessageExtractor>());
 
-            _commandReceivedSubscriptionName = Environment.GetEnvironmentVariable("COMMAND_RECEIVED_SUBSCRIPTION_NAME") ?? string.Empty;
-            _commandAcceptedSubscriptionName = Environment.GetEnvironmentVariable("COMMAND_ACCEPTED_SUBSCRIPTION_NAME") ?? string.Empty;
-            _commandRejectedSubscriptionName = Environment.GetEnvironmentVariable("COMMAND_REJECTED_SUBSCRIPTION_NAME") ?? string.Empty;
-            _commandReceivedTopicName = Environment.GetEnvironmentVariable("COMMAND_RECEIVED_TOPIC_NAME") ?? string.Empty;
-            _commandAcceptedTopicName = Environment.GetEnvironmentVariable("COMMAND_ACCEPTED_TOPIC_NAME") ?? string.Empty;
-            _commandRejectedTopicName = Environment.GetEnvironmentVariable("COMMAND_REJECTED_TOPIC_NAME") ?? string.Empty;
+            _commandReceivedSubscriptionName = Environment.GetEnvironmentVariable(EnvironmentSettingNames.CommandReceivedSubscriptionName) ?? string.Empty;
+            _commandAcceptedSubscriptionName = Environment.GetEnvironmentVariable(EnvironmentSettingNames.CommandAcceptedSubscriptionName) ?? string.Empty;
+            _commandRejectedSubscriptionName = Environment.GetEnvironmentVariable(EnvironmentSettingNames.CommandRejectedSubscriptionName) ?? string.Empty;
+            _commandReceivedTopicName = Environment.GetEnvironmentVariable(EnvironmentSettingNames.CommandReceivedTopicName) ?? string.Empty;
+            _commandAcceptedTopicName = Environment.GetEnvironmentVariable(EnvironmentSettingNames.CommandAcceptedTopicName) ?? string.Empty;
+            _commandRejectedTopicName = Environment.GetEnvironmentVariable(EnvironmentSettingNames.CommandRejectedTopicName) ?? string.Empty;
             _commandReceivedConnectionString = Environment.GetEnvironmentVariable("COMMAND_RECEIVED_LISTENER_CONNECTION_STRING") ?? string.Empty;
             _commandAcceptedConnectionString = Environment.GetEnvironmentVariable("COMMAND_ACCEPTED_LISTENER_CONNECTION_STRING") ?? string.Empty;
             _commandRejectedConnectionString = Environment.GetEnvironmentVariable("COMMAND_REJECTED_LISTENER_CONNECTION_STRING") ?? string.Empty;

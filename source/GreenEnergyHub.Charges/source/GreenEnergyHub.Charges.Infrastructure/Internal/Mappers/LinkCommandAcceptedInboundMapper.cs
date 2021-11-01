@@ -19,11 +19,11 @@ using GreenEnergyHub.Charges.Domain.ChargeLinkCommandAcceptedEvents;
 using GreenEnergyHub.Charges.Domain.ChargeLinkCommands;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
+using GreenEnergyHub.Charges.Domain.SharedDtos;
 using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandAccepted;
 using GreenEnergyHub.Messaging.Protobuf;
 using GreenEnergyHub.Messaging.Transport;
 using ChargeLinkCommand = GreenEnergyHub.Charges.Domain.ChargeLinkCommands.ChargeLinkCommand;
-using Document = GreenEnergyHub.Charges.Domain.MarketParticipants.Document;
 using MarketParticipant = GreenEnergyHub.Charges.Domain.MarketParticipants.MarketParticipant;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
@@ -44,9 +44,9 @@ namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
                 chargeLinkCommandAcceptedContract.PublishedTime.ToInstant());
         }
 
-        private static Document ConvertDocument(GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandAccepted.Document document)
+        private static DocumentDto ConvertDocument(GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandAccepted.Document document)
         {
-            return new Document
+            return new DocumentDto
             {
                 Id = document.Id,
                 RequestDate = document.RequestDate.ToInstant(),

@@ -14,11 +14,12 @@
 
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Domain.Charges;
+using GreenEnergyHub.Charges.Domain.SharedDtos;
 
 namespace GreenEnergyHub.Charges.Domain.ChargeCommands
 {
     public interface IChargeCommandFactory
     {
-        ChargeCommand CreateFromCharge(Charge charge);
+        ChargeCommand CreateFromCharge(Charge charge, DocumentDto document);
     }
 }

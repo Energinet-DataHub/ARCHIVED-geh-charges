@@ -14,16 +14,17 @@
 
 using System.Diagnostics.CodeAnalysis;
 using GreenEnergyHub.Charges.Domain.Charges;
+using GreenEnergyHub.Charges.Domain.SharedDtos;
 
 namespace GreenEnergyHub.Charges.Domain.ChargeCommands
 {
     public class ChargeCommandFactory : IChargeCommandFactory
     {
-        public ChargeCommand CreateFromCharge([NotNull]Charge charge)
+        public ChargeCommand CreateFromCharge([NotNull] Charge charge, DocumentDto document)
         {
             var chargeCommand = new ChargeCommand(charge.CorrelationId)
             {
-                Document = charge.Document,
+                Document = document,
                 ChargeOperation = new ChargeOperation
                 {
                     Id = charge.ChargeOperationId,

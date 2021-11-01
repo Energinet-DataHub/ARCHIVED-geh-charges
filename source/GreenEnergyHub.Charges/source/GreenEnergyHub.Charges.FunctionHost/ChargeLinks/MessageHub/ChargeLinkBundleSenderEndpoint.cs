@@ -15,6 +15,7 @@
 using System.Threading.Tasks;
 using Energinet.DataHub.MessageHub.Client.Peek;
 using GreenEnergyHub.Charges.Application.ChargeLinks.MessageHub;
+using GreenEnergyHub.Charges.FunctionHost.Common;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Logging;
 
@@ -44,7 +45,10 @@ namespace GreenEnergyHub.Charges.FunctionHost.ChargeLinks.MessageHub
 
         [Function(FunctionName)]
         public async Task RunAsync(
-            [ServiceBusTrigger("%MESSAGEHUB_BUNDLEREQUEST_QUEUE%", Connection = "INTEGRATIONEVENT_LISTENER_CONNECTION_STRING", IsSessionsEnabled = true)]
+            [ServiceBusTrigger(
+                "%" + EnvironmentSettingNames.MessageHubBundleRequestQueue + "%",
+                Connection = EnvironmentSettingNames.DataHubListenerConnectionString,
+                IsSessionsEnabled = true)]
             byte[] data,
             FunctionContext functionContext)
         {

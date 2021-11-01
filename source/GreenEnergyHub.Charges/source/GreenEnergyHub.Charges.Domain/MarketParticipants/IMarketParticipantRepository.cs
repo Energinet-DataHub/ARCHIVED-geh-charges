@@ -12,6 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Collections.Generic;
+using System.Threading.Tasks;
+
 namespace GreenEnergyHub.Charges.Domain.MarketParticipants
 {
     /// <summary>
@@ -28,5 +31,7 @@ namespace GreenEnergyHub.Charges.Domain.MarketParticipants
         /// Using MeteringPointId find the Grid Access Provider of that MP
         /// </summary>
         MarketParticipant GetGridAccessProvider(string meteringPointId);
+
+        Task<List<MarketParticipant>> GetActiveGridAccessProvidersAsync();
     }
 }

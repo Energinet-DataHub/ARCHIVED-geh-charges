@@ -19,8 +19,9 @@ using System.Text;
 using System.Threading.Tasks;
 using Energinet.DataHub.Core.FunctionApp.TestCommon;
 using Energinet.DataHub.Core.FunctionApp.TestCommon.ServiceBus.ListenerMock;
+using Energinet.DataHub.MessageHub.Client.DataAvailable;
+using Energinet.DataHub.MessageHub.Client.Model;
 using FluentAssertions;
-using FluentAssertions.Execution;
 using GreenEnergyHub.Charges.IntegrationTests.Fixtures;
 using GreenEnergyHub.Charges.IntegrationTests.TestHelpers;
 using NodaTime;
@@ -46,12 +47,13 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Functions.ChargeLinks.MessageH
 
             public Task DisposeAsync()
             {
-                Fixture.DataAvailableListenerMock.ResetMessageHandlersAndReceivedMessages();
+                Fixture.MessageHubDataAvailableListenerMock.ResetMessageHandlersAndReceivedMessages();
+                Fixture.MessageHubBundleResponseListenerMock.ResetMessageHandlersAndReceivedMessages();
                 return Task.CompletedTask;
             }
 
             [Fact]
-            public async Task When_ReceivingChargeLinkMessage_Then_MessageHubIsNotifiedAboutAvailableData()
+            public async Task When_ReceivingChargeLinkMessage_MessageHubIsNotifiedAboutAvailableData_And_Then_When_MessageHubRequestsTheBundle_Then_MessageHubReceivesBundleResponse()
             {
                 // Arrange
                 var testFilePath = "TestFiles/CreateFixedPeriodTariffChargeLink.xml";
@@ -62,7 +64,19 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Functions.ChargeLinks.MessageH
                 var expectedBody = messageString;
                 request.Content = new StringContent(expectedBody, Encoding.UTF8, "application/json");
 
-                using var isMessageReceivedEvent = await Fixture.DataAvailableListenerMock
+                // => Simulate that MessageHub requests a bundle when data available
+                DataAvailableNotificationDto? dataAvailableNotification;
+                using var dataAvailableAwaiter = await Fixture.MessageHubDataAvailableListenerMock
+                    .WhenAny()
+                    .VerifyOnceAsync(async receivedMessage =>
+                    {
+                        dataAvailableNotification =
+                            new DataAvailableNotificationParser().Parse(receivedMessage.Body.ToArray());
+                        await Fixture.MessageHubMock.RequestBundleAsync(dataAvailableNotification);
+                    });
+
+                // => Register the bundle response so we can assert it
+                using var bundleResponseAwaiter = await Fixture.MessageHubBundleResponseListenerMock
                     .WhenAny()
                     .VerifyOnceAsync(_ => Task.CompletedTask);
 
@@ -70,14 +84,19 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Functions.ChargeLinks.MessageH
                 var actualResponse = await Fixture.HostManager.HttpClient.SendAsync(request);
 
                 // Assert
-                using var assertionScope = new AssertionScope();
 
-                // => Http response
+                // => Did domain respond with an HTTP OK status?
                 actualResponse.StatusCode.Should().Be(HttpStatusCode.OK);
 
-                // => Service Bus (timeout should not be more than 5 secs. - currently it's high so we can break during demo).
-                var isMessageReceived = isMessageReceivedEvent.Wait(TimeSpan.FromSeconds(200));
-                isMessageReceived.Should().BeTrue();
+                // => Was data available notification sent from the domain?
+                //    (Timeout should not be more than 5 secs. - currently it's high so we can break during demo.)
+                var isDataAvailableReceived = dataAvailableAwaiter.Wait(TimeSpan.FromSeconds(15));
+                isDataAvailableReceived.Should().BeTrue();
+
+                // => Was bundle response sent from the domain?
+                //   (timeout should not be more than 5 secs. - currently it's high so we can break during demo).
+                var isBundleResponseReceived = dataAvailableAwaiter.Wait(TimeSpan.FromSeconds(15));
+                isBundleResponseReceived.Should().BeTrue();
             }
         }
     }
