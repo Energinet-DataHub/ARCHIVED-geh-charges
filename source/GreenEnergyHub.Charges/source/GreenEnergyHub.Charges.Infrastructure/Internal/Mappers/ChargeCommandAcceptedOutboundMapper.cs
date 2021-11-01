@@ -46,7 +46,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
             return chargeCommandAcceptedContract;
         }
 
-        private static DocumentContract ConvertDocument(DocumentDto documentDto)
+        private static DocumentContract ConvertDocument(DocumentDto document)
         {
             return new DocumentContract
             {
