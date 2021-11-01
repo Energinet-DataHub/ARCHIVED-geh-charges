@@ -80,7 +80,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Mapping
         [InlineAutoMoqData]
         public void MapDomainChargeToCharge_WhenNoEndTimeIsUsed_MapsEndTimeToDecidedMaxValue(
             MarketParticipant marketParticipant,
-            DateTime writeDateTime)
+            Instant writeDateTime)
         {
             // Arrange
             // Set all other times to a valid time and not just a random which can get the test to blink
@@ -124,7 +124,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Mapping
         [Theory]
         [InlineAutoMoqData]
         public void MapDomainChargeToCharge_IfChargeIsNull_ThrowsArgumentNullException(
-            [NotNull] MarketParticipant marketParticipant, [NotNull] DateTime writeDateTime)
+            [NotNull] MarketParticipant marketParticipant, [NotNull] Instant writeDateTime)
         {
             // Arrange
             Charges.Domain.Charges.Charge? charge = null;
@@ -137,7 +137,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Mapping
         [Theory]
         [InlineAutoMoqData]
         public void MapDomainChargeToCharge_IfMarketParticipantIsNull_ThrowsArgumentNullException(
-            [NotNull] Charges.Domain.Charges.Charge charge, [NotNull] DateTime writeDateTime)
+            [NotNull] Charges.Domain.Charges.Charge charge, [NotNull] Instant writeDateTime)
         {
             // Arrange
             MarketParticipant? marketParticipant = null;

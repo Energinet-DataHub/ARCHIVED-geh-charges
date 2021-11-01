@@ -59,7 +59,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
             var sut = new ChargeRepository(chargesDatabaseWriteContext);
 
             // Act
-            await sut.StoreChargeAsync(charge, MarketParticipantOwner, DateTime.Now).ConfigureAwait(false);
+            await sut.StoreChargeAsync(charge, MarketParticipantOwner, SystemClock.Instance.GetCurrentInstant()).ConfigureAwait(false);
 
             // Assert
             await using var chargesDatabaseReadContext = _databaseManager.CreateDbContext();
@@ -93,7 +93,8 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
             var sut = new ChargeRepository(chargesDatabaseWriteContext);
 
             // Act
-            await sut.StoreChargeAsync(charge, MarketParticipantOwner, DateTime.Now).ConfigureAwait(false);
+            await sut.StoreChargeAsync(charge, MarketParticipantOwner, SystemClock.Instance.GetCurrentInstant())
+                .ConfigureAwait(false);
 
             // Assert
             await using var chargesDatabaseReadContext = _databaseManager.CreateDbContext();
@@ -115,7 +116,8 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
             var sut = new ChargeRepository(chargesDatabaseWriteContext);
 
             // Act
-            await sut.StoreChargeAsync(charge, MarketParticipantOwner, DateTime.Now).ConfigureAwait(false);
+            await sut.StoreChargeAsync(charge, MarketParticipantOwner, SystemClock.Instance.GetCurrentInstant())
+                .ConfigureAwait(false);
 
             // Assert
             await using var chargesDatabaseReadContext = _databaseManager.CreateDbContext();
@@ -136,7 +138,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
 
             // Act / Assert
             await Assert.ThrowsAsync<ArgumentNullException>(
-                    () => sut.StoreChargeAsync(charge!, MarketParticipantOwner, DateTime.Now))
+                    () => sut.StoreChargeAsync(charge!, MarketParticipantOwner, SystemClock.Instance.GetCurrentInstant()))
                 .ConfigureAwait(false);
         }
 
@@ -148,7 +150,9 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
             // Arrange
             var sut = new ChargeRepository(chargesDatabaseContext);
             var charge = GetValidCharge();
-            await sut.StoreChargeAsync(charge, MarketParticipantOwner, DateTime.Now).ConfigureAwait(false);
+            await sut
+                .StoreChargeAsync(charge, MarketParticipantOwner, SystemClock.Instance.GetCurrentInstant())
+                .ConfigureAwait(false);
             await using var chargesDatabaseReadContext = _databaseManager.CreateDbContext();
             var createdCharge = chargesDatabaseReadContext.
                 Charges.First(x => x.SenderProvidedChargeId == charge.SenderProvidedChargeId &&

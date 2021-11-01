@@ -26,6 +26,7 @@ using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.SharedDtos;
 using GreenEnergyHub.Charges.TestCore.Attributes;
 using Moq;
+using NodaTime;
 using Xunit;
 using Xunit.Categories;
 
@@ -60,8 +61,8 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
                     r => r.StoreChargeAsync(
                         It.IsAny<Charge>(),
                         It.IsAny<string>(),
-                        It.IsAny<DateTime>()))
-                .Callback<Charge, string, DateTime>(
+                        It.IsAny<Instant>()))
+                .Callback<Charge, string, Instant>(
                     (c, s, date) => stored = true);
 
             var confirmed = false;

@@ -61,7 +61,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Context.Mapping
         public static Charge MapDomainChargeToCharge(
             [NotNull] Domain.Charges.Charge charge,
             MarketParticipant marketParticipant,
-            DateTime writeDateTime)
+            Instant writeDateTime)
         {
             if (charge == null) throw new ArgumentNullException(nameof(charge));
             if (marketParticipant == null) throw new ArgumentNullException(nameof(marketParticipant));
@@ -89,7 +89,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Context.Mapping
         }
 
         private static ChargeOperation MapToChargeOperation(
-            [NotNull] Domain.Charges.Charge charge, DateTime writeDateTime)
+            [NotNull] Domain.Charges.Charge charge, Instant writeDateTime)
         {
             return new ChargeOperation
             {

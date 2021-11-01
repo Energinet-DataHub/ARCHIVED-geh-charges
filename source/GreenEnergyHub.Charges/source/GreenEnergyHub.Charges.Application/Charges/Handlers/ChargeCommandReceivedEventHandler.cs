@@ -59,8 +59,7 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
             await _chargeRepository.StoreChargeAsync(
                     charge,
                     commandReceivedEvent.Command.Document.Sender.Id,
-                    commandReceivedEvent.Command.Document.RequestDate.ToDateTimeUtc()
-                        .ToUniversalTime())
+                    commandReceivedEvent.Command.Document.RequestDate)
                 .ConfigureAwait(false);
 
             var chargeCommand = _chargeCommandFactory.CreateFromCharge(charge, commandReceivedEvent.Command.Document);
