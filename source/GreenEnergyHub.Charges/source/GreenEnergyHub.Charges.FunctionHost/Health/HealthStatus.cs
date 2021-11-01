@@ -18,6 +18,7 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Azure.Messaging.ServiceBus.Administration;
+using GreenEnergyHub.Charges.FunctionHost.Common;
 using GreenEnergyHub.Charges.FunctionHost.Configuration;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
@@ -61,13 +62,13 @@ namespace GreenEnergyHub.Charges.FunctionHost.Health
             /* Consider checking access to database, Service Bus topics and queues, and other health checks */
 
             // TODO: This connection string does not have permissions to verify queue existence
-            var connectionString = EnvironmentHelper.GetEnv("INTEGRATIONEVENT_MANAGER_CONNECTION_STRING");
+            var connectionString = EnvironmentHelper.GetEnv(EnvironmentSettingNames.DataHubManagerConnectionString);
 
             return new Dictionary<string, bool>
             {
-                { "MessageHubDataAvailableQueueExists", await QueueExistsAsync(connectionString, "MESSAGEHUB_DATAAVAILABLE_QUEUE") },
-                { "MessageHubRequestQueueExists", await QueueExistsAsync(connectionString, "MESSAGEHUB_BUNDLEREQUEST_QUEUE") },
-                { "MessageHubResponseQueueExists", await QueueExistsAsync(connectionString, "MESSAGEHUB_BUNDLEREPLY_QUEUE") },
+                { "MessageHubDataAvailableQueueExists", await QueueExistsAsync(connectionString, EnvironmentSettingNames.MessageHubDataAvailableQueue) },
+                { "MessageHubRequestQueueExists", await QueueExistsAsync(connectionString, EnvironmentSettingNames.MessageHubBundleRequestQueue) },
+                { "MessageHubResponseQueueExists", await QueueExistsAsync(connectionString, EnvironmentSettingNames.MessageHubBundleReplyQueue) },
             };
         }
 

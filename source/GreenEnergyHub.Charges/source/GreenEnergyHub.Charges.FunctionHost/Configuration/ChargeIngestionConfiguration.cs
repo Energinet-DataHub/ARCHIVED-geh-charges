@@ -43,12 +43,12 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
             serviceCollection.SendProtobuf<ChargeCommandReceivedContract>();
             serviceCollection.AddMessagingProtobuf().AddMessageDispatcher<ChargeCommandReceivedEvent>(
                     EnvironmentHelper.GetEnv(EnvironmentSettingNames.DomainEventSenderConnectionString),
-                    EnvironmentHelper.GetEnv("COMMAND_RECEIVED_TOPIC_NAME"));
+                    EnvironmentHelper.GetEnv(EnvironmentSettingNames.CommandReceivedTopicName));
         }
 
         private static void ConfigureIso8601Services(IServiceCollection serviceCollection)
         {
-            var timeZoneId = EnvironmentHelper.GetEnv("LOCAL_TIMEZONENAME");
+            var timeZoneId = EnvironmentHelper.GetEnv(EnvironmentSettingNames.LocalTimeZoneName);
             var timeZoneConfiguration = new Iso8601ConversionConfiguration(timeZoneId);
             serviceCollection.AddSingleton<IIso8601ConversionConfiguration>(timeZoneConfiguration);
             serviceCollection.AddSingleton<IIso8601Durations, Iso8601Durations>();
