@@ -146,7 +146,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures
             Environment.SetEnvironmentVariable("CREATE_LINK_REPLY_QUEUE_NAME", createLinkReplyQueueName);
 
             var createLinkMessagesRequestQueueName = await GetQueueNameFromKeyAsync(ChargesFunctionAppServiceBusOptions.CreateLinkMessagesRequestQueueKey);
-            Environment.SetEnvironmentVariable("CREATE_LINK_MESSAGES_REQUEST_QUEUE_NAME", createLinkMessagesRequestQueueName);
+            Environment.SetEnvironmentVariable(EnvironmentSettingNames.CreateLinkMessagesRequestQueueName, createLinkMessagesRequestQueueName);
 
             var createLinkMessagesReplyQueueName = await GetQueueNameFromKeyAsync(ChargesFunctionAppServiceBusOptions.CreateLinkMessagesReplyQueueKey);
             Environment.SetEnvironmentVariable("CREATE_LINK_MESSAGES_REPLY_QUEUE_NAME", createLinkMessagesReplyQueueName);

@@ -110,8 +110,10 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures
                 .AddSubscription(CommandRejectedSubscriptionName);
 
             builder.AddQueue(CreateLinkRequestQueueKey);
-
             builder.AddQueue(CreateLinkReplyQueueKey);
+
+            builder.AddQueue(CreateLinkMessagesRequestQueueKey);
+            builder.AddQueue(CreateLinkMessagesReplyQueueKey);
 
             builder
                 .AddTopic(ConsumptionMeteringPointCreatedTopicKey)
