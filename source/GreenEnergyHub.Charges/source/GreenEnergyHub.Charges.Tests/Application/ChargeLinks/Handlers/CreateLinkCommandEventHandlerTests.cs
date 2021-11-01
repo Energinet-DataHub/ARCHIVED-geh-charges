@@ -18,9 +18,10 @@ using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
+using Energinet.DataHub.Charges.Libraries.DefaultChargeLink;
+using Energinet.DataHub.Charges.Libraries.Models;
 using GreenEnergyHub.Charges.Application;
 using GreenEnergyHub.Charges.Application.ChargeLinks.Handlers;
-using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.Domain.ChargeLinkCommandReceivedEvents;
 using GreenEnergyHub.Charges.Domain.ChargeLinkCommands;
 using GreenEnergyHub.Charges.Domain.CreateLinkCommandEvents;
@@ -45,13 +46,17 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Handlers
             [Frozen] [NotNull] Mock<IMeteringPointRepository> meteringPointRepository,
             [Frozen] [NotNull] Mock<IChargeLinkCommandFactory> chargeLinkCommandFactory,
             [Frozen] [NotNull] Mock<IMessageDispatcher<ChargeLinkCommandReceivedEvent>> dispatcher,
+            [Frozen] [NotNull] Mock<IMessageMetaDataContext> messageMetaDataContext,
             [NotNull] string correlationId,
+            [NotNull] string replyTo,
             [NotNull] ChargeLinkCommand chargeLinkCommand,
             [NotNull] string meteringPointId,
-            [NotNull] CreateLinkCommandEventHandler sut)
+            [NotNull] CreateLinkCommandRequestHandler sut)
         {
             // Arrange
             chargeLinkCommand.ChargeLink.EndDateTime = null;
+            messageMetaDataContext.Setup(m => m.IsReplyToSet()).Returns(true);
+            messageMetaDataContext.Setup(m => m.ReplyTo).Returns(replyTo);
             var createLinkCommandEvent = new CreateLinkCommandEvent(meteringPointId);
 
             var defaultChargeLink = new DefaultChargeLink(
@@ -66,7 +71,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Handlers
                 .ReturnsAsync(new List<DefaultChargeLink> { defaultChargeLink });
 
             meteringPointRepository.Setup(
-                    f => f.GetMeteringPointAsync(
+                    f => f.GetOrNullAsync(
                         It.IsAny<string>()))
                 .ReturnsAsync(MeteringPoint.Create(
                     meteringPointId,
@@ -91,6 +96,133 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Handlers
                 x => x.DispatchAsync(
                     It.IsAny<ChargeLinkCommandReceivedEvent>(),
                     It.IsAny<CancellationToken>()));
+        }
+
+        [Theory]
+        [InlineAutoDomainData]
+        public async Task HandleAsync_WhenCalledWithReplyBeingNull_ThrowsArgumentException(
+            [Frozen] [NotNull] Mock<IMessageMetaDataContext> messageMetaDataContext,
+            [NotNull] string correlationId,
+            [NotNull] ChargeLinkCommand chargeLinkCommand,
+            [NotNull] string meteringPointId,
+            [NotNull] CreateLinkCommandRequestHandler sut)
+        {
+            // Arrange
+            chargeLinkCommand.ChargeLink.EndDateTime = null;
+            messageMetaDataContext.Setup(m => m.ReplyTo).Returns((string)null!);
+            var createLinkCommandEvent = new CreateLinkCommandEvent(meteringPointId);
+
+            // Act & Assert
+            await Assert.ThrowsAsync<ArgumentNullException>(() =>
+                sut.HandleAsync(createLinkCommandEvent, correlationId));
+        }
+
+        [Theory]
+        [InlineAutoDomainData]
+        public async Task HandleAsync_WithUnknownMeteringPointId_CallDefaultLinkClientWithFailedDto(
+            [Frozen] [NotNull] Mock<IMeteringPointRepository> meteringPointRepository,
+            [Frozen] [NotNull] Mock<IMessageDispatcher<ChargeLinkCommandReceivedEvent>> dispatcher,
+            [Frozen] [NotNull] Mock<IMessageMetaDataContext> messageMetaDataContext,
+            [Frozen] [NotNull] Mock<IDefaultChargeLinkClient> defaultChargeLinkClient,
+            [NotNull] string correlationId,
+            [NotNull] string replyTo,
+            [NotNull] ChargeLinkCommand chargeLinkCommand,
+            [NotNull] CreateDefaultChargeLinksFailedDto createDefaultChargeLinksFailedDto,
+            [NotNull] string meteringPointId,
+            [NotNull] CreateLinkCommandRequestHandler sut)
+        {
+            // Arrange
+            chargeLinkCommand.ChargeLink.EndDateTime = null;
+            messageMetaDataContext.Setup(m => m.IsReplyToSet()).Returns(true);
+            messageMetaDataContext.Setup(m => m.ReplyTo).Returns(replyTo);
+            var createLinkCommandEvent = new CreateLinkCommandEvent(meteringPointId);
+
+            defaultChargeLinkClient.Setup(d =>
+                d.CreateDefaultChargeLinksFailedReplyAsync(
+                    createDefaultChargeLinksFailedDto,
+                    correlationId,
+                    replyTo));
+
+            meteringPointRepository.Setup(
+                    f => f.GetOrNullAsync(
+                        It.IsAny<string>()))
+                .ReturnsAsync((MeteringPoint?)null);
+
+            // Act
+            await sut.HandleAsync(createLinkCommandEvent, correlationId).ConfigureAwait(false);
+
+            // Assert
+            defaultChargeLinkClient.Verify(
+                x => x.CreateDefaultChargeLinksFailedReplyAsync(
+                    It.IsAny<CreateDefaultChargeLinksFailedDto>(),
+                    correlationId,
+                    replyTo));
+
+            dispatcher.Verify(
+                x => x.DispatchAsync(
+                    It.IsAny<ChargeLinkCommandReceivedEvent>(),
+                    It.IsAny<CancellationToken>()),
+                Times.Never());
+        }
+
+        [Theory]
+        [InlineAutoDomainData]
+        public async Task HandleAsync_WhenCalledWithMeteringPointTypeWhichHasNoDefaultLinks_ReplyWithDefaultChargeLinksSucceededDto(
+            [Frozen] [NotNull] Mock<IDefaultChargeLinkRepository> defaultChargeLinkRepository,
+            [Frozen] [NotNull] Mock<IMeteringPointRepository> meteringPointRepository,
+            [Frozen] [NotNull] Mock<IMessageDispatcher<ChargeLinkCommandReceivedEvent>> dispatcher,
+            [Frozen] [NotNull] Mock<IMessageMetaDataContext> messageMetaDataContext,
+            [Frozen] [NotNull] Mock<IDefaultChargeLinkClient> defaultChargeLinkClient,
+            [NotNull] CreateDefaultChargeLinksSucceededDto createDefaultChargeLinksSucceededDto,
+            [NotNull] string correlationId,
+            [NotNull] string replyTo,
+            [NotNull] ChargeLinkCommand chargeLinkCommand,
+            [NotNull] string meteringPointId,
+            [NotNull] CreateLinkCommandRequestHandler sut)
+        {
+            // Arrange
+            chargeLinkCommand.ChargeLink.EndDateTime = null;
+            messageMetaDataContext.Setup(m => m.IsReplyToSet()).Returns(true);
+            messageMetaDataContext.Setup(m => m.ReplyTo).Returns(replyTo);
+            var createLinkCommandEvent = new CreateLinkCommandEvent(meteringPointId);
+
+            defaultChargeLinkClient.Setup(d =>
+                d.CreateDefaultChargeLinksSucceededReplyAsync(
+                    createDefaultChargeLinksSucceededDto,
+                    correlationId,
+                    replyTo));
+
+            meteringPointRepository.Setup(
+                    f => f.GetOrNullAsync(
+                        It.IsAny<string>()))
+                .ReturnsAsync(MeteringPoint.Create(
+                    meteringPointId,
+                    MeteringPointType.Consumption,
+                    "gridArea",
+                    SystemClock.Instance.GetCurrentInstant(),
+                    ConnectionState.New,
+                    null));
+
+            defaultChargeLinkRepository.Setup(
+                    f => f.GetAsync(
+                        It.IsAny<MeteringPointType>()))
+                .ReturnsAsync(new List<DefaultChargeLink>());
+
+            // Act
+            await sut.HandleAsync(createLinkCommandEvent, correlationId).ConfigureAwait(false);
+
+            // Assert
+            defaultChargeLinkClient.Verify(
+                x => x.CreateDefaultChargeLinksSucceededReplyAsync(
+                    It.IsAny<CreateDefaultChargeLinksSucceededDto>(),
+                    correlationId,
+                    replyTo));
+
+            dispatcher.Verify(
+                x => x.DispatchAsync(
+                    It.IsAny<ChargeLinkCommandReceivedEvent>(),
+                    It.IsAny<CancellationToken>()),
+                Times.Never());
         }
     }
 }

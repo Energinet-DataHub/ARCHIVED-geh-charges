@@ -31,6 +31,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures
         public const string ChargeLinkAcceptedTopicKey = "sbt-link-command-accepted";
         public const string ChargeLinkAcceptedDataAvailableNotifierSubscriptionName = "sbs-chargelinkaccepted-sub-dataavailablenotifier";
         public const string ChargeLinkAcceptedEventPublisherSubscriptionName = "sbs-chargelinkaccepted-sub-eventpublisher";
+        public const string ChargeLinkAcceptedEventReplierSubscriptionName = "sbs-chargelinkaccepted-sub-replier";
 
         public const string ChargeLinkCreatedTopicKey = "charge-link-created";
 
@@ -58,6 +59,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures
 
         public const string ChargePricesUpdatedTopicKey = "charge-prices-updated";
 
+        public const string ChargeAcceptedDataAvailableNotifierSubscriptionName = "sbs-chargeaccepted-sub-dataavailablenotifier";
+
         public const string MessageHubDataAvailableQueueKey = "message-hub-data-available";
         public const string MessageHubRequestQueueKey = "message-hub-request";
         public const string MessageHubReplyQueueKey = "message-hub-reply";
@@ -80,7 +83,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures
             builder
                 .AddTopic(ChargeLinkAcceptedTopicKey)
                 .AddSubscription(ChargeLinkAcceptedDataAvailableNotifierSubscriptionName)
-                .AddSubscription(ChargeLinkAcceptedEventPublisherSubscriptionName);
+                .AddSubscription(ChargeLinkAcceptedEventPublisherSubscriptionName)
+                .AddSubscription(ChargeLinkAcceptedEventReplierSubscriptionName);
 
             builder.AddTopic(ChargeLinkCreatedTopicKey);
 

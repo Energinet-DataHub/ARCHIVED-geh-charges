@@ -12,21 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
-using GreenEnergyHub.Charges.Application.SeedWork.SyncRequest;
-
-namespace GreenEnergyHub.Charges.Infrastructure.SyncRequest
+namespace GreenEnergyHub.Charges.Infrastructure.MessageMetaData
 {
-    public class SyncRequestMetadata : ISyncRequestMetadata
+    public class MessageMetadata
     {
-#pragma warning disable 8618
-        public string SessionId { get; set; }
-#pragma warning restore 8618
-
-        public void ValidateOrThrow()
-        {
-            if (SessionId == null)
-                throw new InvalidOperationException($"Property '{nameof(SessionId)}' is missing");
-        }
+        public string? ReplyTo { get; set; }
     }
 }

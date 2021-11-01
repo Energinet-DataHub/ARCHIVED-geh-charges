@@ -21,6 +21,7 @@ using GreenEnergyHub.Charges.Domain.ChargeCommandRejectedEvents;
 using GreenEnergyHub.Charges.Domain.ChargeCommands;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
+using GreenEnergyHub.Charges.Domain.SharedDtos;
 using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeCommandRejected;
 using GreenEnergyHub.Messaging.MessageTypes.Common;
 using GreenEnergyHub.Messaging.Protobuf;
@@ -46,9 +47,9 @@ namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
                 rejectedContract.RejectReasons);
         }
 
-        private static Document ConvertDocument(DocumentContract document)
+        private static DocumentDto ConvertDocument(DocumentContract document)
         {
-            return new Document
+            return new DocumentDto
             {
                 Id = document.Id,
                 Sender =

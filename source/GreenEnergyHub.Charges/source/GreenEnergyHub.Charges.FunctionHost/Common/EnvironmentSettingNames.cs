@@ -39,6 +39,8 @@ namespace GreenEnergyHub.Charges.FunctionHost.Common
 
         public const string ChargeLinkAcceptedSubEventPublisher = "CHARGELINKACCEPTED_SUB_EVENTPUBLISHER";
         public const string ChargeLinkAcceptedSubDataAvailableNotifier = "CHARGELINKACCEPTED_SUB_DATAAVAILABLENOTIFIER";
+        public const string ChargeLinkAcceptedReplier = "CHARGELINKACCEPTED_SUB_REPLIER";
+        public const string CreateLinkReplyQueueName = "CREATE_LINK_REPLY_QUEUE_NAME";
 
         /// <summary>
         /// Deprecated: This is from an old implementation where we mimicked sending to the post office

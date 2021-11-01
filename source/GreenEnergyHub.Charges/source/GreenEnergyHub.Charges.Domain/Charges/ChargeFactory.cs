@@ -26,7 +26,6 @@ namespace GreenEnergyHub.Charges.Domain.Charges
         {
             var c = new Charge(
                 Guid.NewGuid(),
-                command.Document,
                 command.ChargeOperation.Id,
                 command.ChargeOperation.ChargeId,
                 command.ChargeOperation.ChargeName,
