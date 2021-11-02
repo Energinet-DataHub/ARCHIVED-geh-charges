@@ -19,12 +19,14 @@ using FluentAssertions;
 using GreenEnergyHub.Charges.IntegrationTests.Fixtures;
 using Xunit;
 using Xunit.Abstractions;
+using Xunit.Categories;
 
 namespace GreenEnergyHub.Charges.IntegrationTests.Health
 {
     /// <summary>
     /// Proof-of-concept on integration testing a function.
     /// </summary>
+    [IntegrationTest]
     public class HealthStatusTests
     {
         [Collection(nameof(ChargesFunctionAppCollectionFixture))]
