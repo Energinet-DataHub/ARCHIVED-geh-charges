@@ -14,7 +14,7 @@
 
 using System;
 using AutoFixture;
-using Energinet.DataHub.Charges.Libraries.Models;
+using Energinet.Charges.Contracts;
 using Energinet.DataHub.Charges.Libraries.Protobuf;
 using FluentAssertions;
 using Xunit;
@@ -23,34 +23,32 @@ using Xunit.Categories;
 namespace Energinet.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.DefaultChargeLink.Mappers
 {
     [UnitTest]
-    public class CreateDefaultChargeLinksSucceededOutboundMapperTests
+    public class CreateDefaultChargeLinksInboundMapperTests
     {
         private readonly Fixture _fixture;
 
-        public CreateDefaultChargeLinksSucceededOutboundMapperTests()
+        public CreateDefaultChargeLinksInboundMapperTests()
         {
             _fixture = new Fixture();
         }
 
         [Fact]
-        public void Convert_WhenCalled_ShouldMapToProtobufWithCorrectValues()
+        public void Convert_WhenCalled_ShouldMapToDtoWithCorrectValues()
         {
             // Arrange
-            var createDefaultChargeLinksSucceededDto = _fixture.Create<CreateDefaultChargeLinksSucceededDto>();
+            var createDefaultChargeLinks = _fixture.Create<CreateDefaultChargeLinks>();
 
             // Act
-            var actual = CreateDefaultChargeLinksSucceededOutboundMapper.Convert(createDefaultChargeLinksSucceededDto);
+            var result = CreateDefaultChargeLinksInboundMapper.Convert(createDefaultChargeLinks);
 
             // Assert
-            actual.MeteringPointId.Should().Be(createDefaultChargeLinksSucceededDto.MeteringPointId);
-            actual.CreateDefaultChargeLinksSucceeded.DidCreateChargeLinks
-                .Should().Be(createDefaultChargeLinksSucceededDto.DidCreateChargeLinks);
+            result.MeteringPointId.Should().Be(createDefaultChargeLinks.MeteringPointId);
         }
 
         [Fact]
         public void Convert_WhenCalledWithNull_ShouldThrow()
         {
-            Assert.Throws<NullReferenceException>(() => CreateDefaultChargeLinksSucceededOutboundMapper.Convert(null!));
+            Assert.Throws<NullReferenceException>(() => CreateDefaultChargeLinksInboundMapper.Convert(null!));
         }
     }
 }

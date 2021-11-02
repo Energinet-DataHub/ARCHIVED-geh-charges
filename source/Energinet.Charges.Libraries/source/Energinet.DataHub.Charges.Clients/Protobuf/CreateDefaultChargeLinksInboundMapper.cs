@@ -15,25 +15,15 @@
 using System.Diagnostics.CodeAnalysis;
 using Energinet.Charges.Contracts;
 using Energinet.DataHub.Charges.Libraries.Models;
-using CreateDefaultChargeLinksSucceeded =
-    Energinet.Charges.Contracts.CreateDefaultChargeLinksReply.Types.CreateDefaultChargeLinksSucceeded;
 
 namespace Energinet.DataHub.Charges.Libraries.Protobuf
 {
-    internal class CreateDefaultChargeLinksSucceededOutboundMapper
+    internal class CreateDefaultChargeLinksInboundMapper
     {
-        // Todo: Not in use?
-        protected internal static CreateDefaultChargeLinksReply Convert(
-            [NotNull] CreateDefaultChargeLinksSucceededDto createDefaultChargeLinksSucceededDto)
+        protected internal static CreateDefaultChargeLinksDto Convert(
+            [NotNull] CreateDefaultChargeLinks createDefaultChargeLinks)
         {
-            return new()
-            {
-                MeteringPointId = createDefaultChargeLinksSucceededDto.MeteringPointId,
-                CreateDefaultChargeLinksSucceeded = new CreateDefaultChargeLinksSucceeded
-                {
-                    DidCreateChargeLinks = createDefaultChargeLinksSucceededDto.DidCreateChargeLinks,
-                },
-            };
+            return new(createDefaultChargeLinks.MeteringPointId);
         }
     }
 }

@@ -40,7 +40,7 @@ namespace Energinet.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.Defaul
         [Theory]
         [InlineAutoMoqData("knownMeteringPointId1234")]
         [InlineAutoMoqData("knownMeteringPointId5678")]
-        public async Task DefaultChargeLinkMessagesCreationSucceeded(string meteringPointId)
+        public async Task ReadAsync_map_data_as_SucceededDto(string meteringPointId)
         {
             // Arrange
             var createDefaultChargeLinkMessagesReply = new CreateDefaultChargeLinkMessagesReply
@@ -63,7 +63,7 @@ namespace Energinet.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.Defaul
 
         [Theory]
         [InlineAutoMoqData("unknownMeteringPointId9876")]
-        public async Task DefaultChargeLinkMessagesCreationFailed(string meteringPointId)
+        public async Task ReadAsync_map_data_as_FailedDto(string meteringPointId)
         {
             // Arrange
             var createDefaultChargeLinkMessagesReply = new CreateDefaultChargeLinkMessagesReply
@@ -89,7 +89,7 @@ namespace Energinet.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.Defaul
         }
 
         [Fact]
-        public async Task DefaultChargeLinkMessagesCreation_Throws_Exception_When_Not_OneOf()
+        public async Task ReadAsync_throws_exception_when_not_oneOf()
         {
             // Arrange
             var data = new CreateDefaultChargeLinksReply().ToByteArray();
