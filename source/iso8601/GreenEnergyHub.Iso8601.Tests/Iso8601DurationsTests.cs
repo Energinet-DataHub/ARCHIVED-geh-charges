@@ -189,6 +189,8 @@ namespace GreenEnergyHub.Iso8601.Tests
         [InlineAutoDomainData("2021-01-05T05:00:00Z", 3, "Europe/Copenhagen", "2021-03-31T22:00:00Z")]
         [InlineAutoDomainData("2021-10-25T05:00:00Z", 1, "Europe/Copenhagen", "2021-10-31T23:00:00Z")]
         [InlineAutoDomainData("2021-10-25T05:03:01Z", 0, "Europe/Copenhagen", "2021-10-25T05:03:01Z")]
+        [InlineAutoDomainData("2021-10-25T05:03:01Z", 1, "Europe/Copenhagen", "2021-10-31T23:00:00Z")]
+        [InlineAutoDomainData("2024-02-02T05:03:01Z", 1, "Europe/Copenhagen", "2024-02-29T23:00:00Z")]
         public void GetTimeFixedToDuration_WhenDurationIsMonth_GivesCorrectTime(
             string startTimeString,
             int numberOfDurations,
@@ -219,6 +221,7 @@ namespace GreenEnergyHub.Iso8601.Tests
         [InlineAutoDomainData("2021-03-20T05:00:00Z", 10, "Europe/Copenhagen", "2021-03-29T22:00:00Z")]
         [InlineAutoDomainData("2021-10-25T05:00:00Z", 10, "Europe/Copenhagen", "2021-11-03T23:00:00Z")]
         [InlineAutoDomainData("2021-10-25T05:03:01Z", 0, "Europe/Copenhagen", "2021-10-25T05:03:01Z")]
+        [InlineAutoDomainData("2021-10-25T05:03:01Z", 1, "Europe/Copenhagen", "2021-10-25T22:00:00Z")]
         public void GetTimeFixedToDuration_WhenDurationIsDay_GivesCorrectTime(
             string startTimeString,
             int numberOfDurations,
@@ -247,6 +250,9 @@ namespace GreenEnergyHub.Iso8601.Tests
         [InlineAutoDomainData("2021-01-05T05:05:00Z", 1, "Europe/Copenhagen", "2021-01-05T06:00:00Z")]
         [InlineAutoDomainData("2021-01-05T05:05:00Z", 2, "Europe/Copenhagen", "2021-01-05T07:00:00Z")]
         [InlineAutoDomainData("2021-10-25T05:03:01Z", 0, "Europe/Copenhagen", "2021-10-25T05:03:01Z")]
+        [InlineAutoDomainData("2021-10-25T05:03:01Z", 1, "Europe/Copenhagen", "2021-10-25T06:00:00Z")]
+        [InlineAutoDomainData("2021-10-30T23:53:01Z", 1, "Europe/Copenhagen", "2021-10-31T00:00:00Z")]
+        [InlineAutoDomainData("2021-03-27T23:53:01Z", 1, "Europe/Copenhagen", "2021-03-28T00:00:00Z")]
         public void GetTimeFixedToDuration_WhenDurationIsHour_GivesCorrectTime(
             string startTimeString,
             int numberOfDurations,
@@ -281,6 +287,8 @@ namespace GreenEnergyHub.Iso8601.Tests
         [InlineAutoDomainData("2021-01-05T05:45:00Z", 2, "Europe/Copenhagen", "2021-01-05T06:15:00Z")]
         [InlineAutoDomainData("2021-01-05T05:53:00Z", 2, "Europe/Copenhagen", "2021-01-05T06:15:00Z")]
         [InlineAutoDomainData("2021-10-25T05:03:01Z", 0, "Europe/Copenhagen", "2021-10-25T05:03:01Z")]
+        [InlineAutoDomainData("2021-10-25T05:03:01Z", 1, "Europe/Copenhagen", "2021-10-25T05:15:00Z")]
+        [InlineAutoDomainData("2021-01-05T05:44:00Z", int.MaxValue, "Europe/Copenhagen", "6104-01-29T07:23:00Z")]
         public void GetTimeFixedToDuration_WhenDurationQuarterOfHour_GivesCorrectTime(
             string startTimeString,
             int numberOfDurations,
@@ -305,7 +313,6 @@ namespace GreenEnergyHub.Iso8601.Tests
         [InlineAutoDomainData("P1Y")]
         public void GetTimeFixedToDuration_WhenUnsupportedDuration_ThrowArgumentException(
             string duration,
-            int hours,
             Iso8601Durations iso8601Durations)
         {
             // Arrange
