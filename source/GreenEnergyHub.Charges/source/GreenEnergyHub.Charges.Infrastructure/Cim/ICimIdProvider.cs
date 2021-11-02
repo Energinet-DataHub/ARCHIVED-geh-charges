@@ -15,7 +15,7 @@
 namespace GreenEnergyHub.Charges.Infrastructure.Cim
 {
     /// <summary>
-    /// Interface for receiving CIM IDs
+    /// Interface for creating CIM IDs
     /// </summary>
     public interface ICimIdProvider
     {
