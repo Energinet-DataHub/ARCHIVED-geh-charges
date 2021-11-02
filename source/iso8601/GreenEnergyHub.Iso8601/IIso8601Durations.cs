@@ -29,5 +29,34 @@ namespace GreenEnergyHub.Iso8601
         /// <param name="numberOfDurations">Number of durations to add</param>
         /// <returns>End time for time interval</returns>
         Instant AddDuration(Instant startInstant, string duration, int numberOfDurations);
+
+        /// <summary>
+        /// Retrieves the time which occur by adding the required number of durations
+        /// to the start time, making sure that durations higher than 0 is at the nth start
+        /// of the duration based on the local timezone
+        ///
+        /// If numberOfDurations is zero then the start is simply returned even though
+        /// it might not match a fixed duration start. This will allows us to support
+        /// irregular time/price series points where the first position might be off from the
+        /// otherwise fixed intervals
+        ///
+        /// Example: P1M (monthly) in Europe/Copenhagen
+        /// Provided startInstant 2021-01-18T23:00:00Z
+        /// numberOfDurations 0 = 2021-01-18T23:00:00Z (provided start as is)
+        /// numberOfDurations 1 = 2021-01-31T23:00:00Z (first start of month after startInstant)
+        /// numberOfDurations 2 = 2021-02-28T23:00:00Z (second start of month after startInstant)
+        ///
+        /// Example: PT15M (quarter of hour) in Europe/Copenhagen
+        /// Provided startInstant 2021-01-18T23:11:00Z
+        /// numberOfDurations 0 = 2021-01-18T23:11:00Z (provided start as is)
+        /// numberOfDurations 1 = 2021-01-18T23:15:00Z (first start of quarter of hour after startInstant)
+        /// numberOfDurations 2 = 2021-01-18T23:30:00Z (second start of quarter of hour after startInstant)
+        /// </summary>
+        /// <param name="startInstant">The start instant for the time interval</param>
+        /// <param name="duration">ISO 8601 duration</param>
+        /// <param name="numberOfDurations">Number of durations to add</param>
+        /// <returns>The time going forward to the fixed start of the interval by the
+        /// requested number of durations</returns>
+        Instant GetTimeFixedToDuration(Instant startInstant, string duration, int numberOfDurations);
     }
 }
