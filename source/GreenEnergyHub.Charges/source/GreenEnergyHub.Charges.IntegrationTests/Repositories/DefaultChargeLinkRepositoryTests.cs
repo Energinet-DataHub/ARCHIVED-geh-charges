@@ -21,12 +21,12 @@ using GreenEnergyHub.Charges.TestCore.Database;
 using Xunit;
 using Xunit.Categories;
 
-namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
+namespace GreenEnergyHub.Charges.IntegrationTests.Repositories
 {
     /// <summary>
     /// Tests <see cref="DefaultChargeLinkRepository"/> using an SQLite in-memory database.
     /// </summary>
-    [UnitTest]
+    [IntegrationTest]
     public class DefaultChargeLinkRepositoryTests : IClassFixture<ChargesDatabaseFixture>
     {
         private readonly ChargesDatabaseManager _databaseManager;

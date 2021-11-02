@@ -16,7 +16,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using GreenEnergyHub.Charges.Domain.AvailableChargeData;
 
-namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
+namespace GreenEnergyHub.Charges.IntegrationTests.Repositories
 {
     public static class RepositoryAutoMoqDataFixer
     {
