@@ -18,6 +18,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
+using GreenEnergyHub.Charges.Domain.SharedDtos;
 using GreenEnergyHub.Charges.Infrastructure.Context.Mapping;
 using GreenEnergyHub.Charges.Infrastructure.Context.Model;
 using GreenEnergyHub.Charges.TestCore.Attributes;
@@ -78,7 +79,8 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Mapping
         [Theory]
         [InlineAutoMoqData]
         public void MapDomainChargeToCharge_WhenNoEndTimeIsUsed_MapsEndTimeToDecidedMaxValue(
-            MarketParticipant marketParticipant)
+            MarketParticipant marketParticipant,
+            Instant writeDateTime)
         {
             // Arrange
             // Set all other times to a valid time and not just a random which can get the test to blink
@@ -86,10 +88,6 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Mapping
 
             var charge = new Charges.Domain.Charges.Charge(
                 Guid.NewGuid(),
-                new Document
-                {
-                    RequestDate = now,
-                },
                 "ChargeOperationId",
                 "SenderProvidedId",
                 "Name",
@@ -106,7 +104,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Mapping
                 new List<Point>());
 
             // Act
-            var result = ChargeMapper.MapDomainChargeToCharge(charge, marketParticipant);
+            var result = ChargeMapper.MapDomainChargeToCharge(charge, marketParticipant, writeDateTime);
 
             // Assert
             Assert.Equal(charge.EndDateTime, result.ChargePeriodDetails.First().EndDateTime.ToInstant());
@@ -126,27 +124,27 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Mapping
         [Theory]
         [InlineAutoMoqData]
         public void MapDomainChargeToCharge_IfChargeIsNull_ThrowsArgumentNullException(
-            [NotNull] MarketParticipant marketParticipant)
+            [NotNull] MarketParticipant marketParticipant, [NotNull] Instant writeDateTime)
         {
             // Arrange
             Charges.Domain.Charges.Charge? charge = null;
 
             // Act / Assert
             Assert.Throws<ArgumentNullException>(
-                () => ChargeMapper.MapDomainChargeToCharge(charge!, marketParticipant));
+                () => ChargeMapper.MapDomainChargeToCharge(charge!, marketParticipant, writeDateTime));
         }
 
         [Theory]
         [InlineAutoMoqData]
         public void MapDomainChargeToCharge_IfMarketParticipantIsNull_ThrowsArgumentNullException(
-            [NotNull] Charges.Domain.Charges.Charge charge)
+            [NotNull] Charges.Domain.Charges.Charge charge, [NotNull] Instant writeDateTime)
         {
             // Arrange
             MarketParticipant? marketParticipant = null;
 
             // Act / Assert
             Assert.Throws<ArgumentNullException>(
-                () => ChargeMapper.MapDomainChargeToCharge(charge, marketParticipant!));
+                () => ChargeMapper.MapDomainChargeToCharge(charge, marketParticipant!, writeDateTime));
         }
     }
 }

@@ -12,10 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.Infrastructure.Context;
 using GreenEnergyHub.Charges.Infrastructure.Context.Mapping;
+using Microsoft.EntityFrameworkCore;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Repositories
 {
@@ -58,6 +61,17 @@ namespace GreenEnergyHub.Charges.Infrastructure.Repositories
                 Id = "8100000000030",
                 BusinessProcessRole = MarketParticipantRole.GridAccessProvider,
             };
+        }
+
+        public async Task<List<MarketParticipant>> GetActiveGridAccessProvidersAsync()
+        {
+            var activeGridAccessProviders = await _chargesDatabaseContext.MarketParticipants
+                .Where(x =>
+                    x.Role == (int)MarketParticipantRole.GridAccessProvider &&
+                    x.Active == true)
+                .ToListAsync();
+
+            return activeGridAccessProviders.Select(_mapper.ToDomainObject).ToList();
         }
     }
 }

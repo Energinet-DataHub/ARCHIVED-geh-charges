@@ -40,7 +40,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
             serviceCollection.SendProtobuf<ChargeCommandReceivedContract>();
             serviceCollection.AddMessagingProtobuf().AddMessageDispatcher<ChargeCommandReceivedEvent>(
                     EnvironmentHelper.GetEnv(EnvironmentSettingNames.DomainEventSenderConnectionString),
-                    EnvironmentHelper.GetEnv("COMMAND_RECEIVED_TOPIC_NAME"));
+                    EnvironmentHelper.GetEnv(EnvironmentSettingNames.CommandReceivedTopicName));
         }
     }
 }

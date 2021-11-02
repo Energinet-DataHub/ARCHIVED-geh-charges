@@ -48,8 +48,8 @@ namespace GreenEnergyHub.Charges.FunctionHost.MeteringPoint
         [Function(FunctionName)]
         public async Task RunAsync(
             [ServiceBusTrigger(
-                "%CONSUMPTION_METERING_POINT_CREATED_TOPIC_NAME%",
-                "%CONSUMPTION_METERING_POINT_CREATED_SUBSCRIPTION_NAME%",
+                "%" + EnvironmentSettingNames.ConsumptionMeteringPointCreatedTopicName + "%",
+                "%" + EnvironmentSettingNames.ConsumptionMeteringPointCreatdSubscriptionName + "%",
                 Connection = EnvironmentSettingNames.DataHubListenerConnectionString)]
             [NotNull] byte[] message)
         {

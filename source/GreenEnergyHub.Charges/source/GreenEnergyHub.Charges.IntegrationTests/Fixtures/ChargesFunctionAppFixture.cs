@@ -46,16 +46,25 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures
         public ServiceBusListenerMock? PostOfficeListenerMock { get; private set; }
 
         [NotNull]
-        public ServiceBusListenerMock? DataAvailableListenerMock { get; private set; }
+        public ServiceBusListenerMock? MessageHubDataAvailableListenerMock { get; private set; }
+
+        [NotNull]
+        public ServiceBusListenerMock? MessageHubBundleResponseListenerMock { get; private set; }
+
+        [NotNull]
+        public MessageHubMock? MessageHubMock { get; private set; }
 
         private AzuriteManager AzuriteManager { get; }
 
         private AzureCloudServiceBusResource<ChargesFunctionAppServiceBusOptions> ServiceBusResource { get; }
 
+        [NotNull]
         private ServiceBusManager? ServiceBusManager { get; set; }
 
+        [NotNull]
         private QueueProperties? BundleReplyQueue { get; set; }
 
+        [NotNull]
         private QueueProperties? BundleRequestQueue { get; set; }
 
         /// <inheritdoc/>
@@ -74,8 +83,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures
             // All other settings are overwritten somewhere within this class.
             Environment.SetEnvironmentVariable(EnvironmentSettingNames.AzureWebJobsStorage, "UseDevelopmentStorage=true");
 
-            Environment.SetEnvironmentVariable("CURRENCY", "DKK");
-            Environment.SetEnvironmentVariable("LOCAL_TIMEZONENAME", "Europe/Copenhagen");
+            Environment.SetEnvironmentVariable(EnvironmentSettingNames.Currency, "DKK");
+            Environment.SetEnvironmentVariable(EnvironmentSettingNames.LocalTimeZoneName, "Europe/Copenhagen");
         }
 
         /// <inheritdoc/>
@@ -95,67 +104,76 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures
 
             // We also overwrite all the service bus connection strings, since we created all topic/queues in just one of them
             Environment.SetEnvironmentVariable(EnvironmentSettingNames.DomainEventSenderConnectionString, ServiceBusResource.ConnectionString);
-            Environment.SetEnvironmentVariable("DOMAINEVENT_LISTENER_CONNECTION_STRING", ServiceBusResource.ConnectionString);
-            Environment.SetEnvironmentVariable("INTEGRATIONEVENT_SENDER_CONNECTION_STRING", ServiceBusResource.ConnectionString);
-            Environment.SetEnvironmentVariable("INTEGRATIONEVENT_LISTENER_CONNECTION_STRING", ServiceBusResource.ConnectionString);
-            Environment.SetEnvironmentVariable("INTEGRATIONEVENT_MANAGER_CONNECTION_STRING", ServiceBusResource.ConnectionString);
+            Environment.SetEnvironmentVariable(EnvironmentSettingNames.DomainEventListenerConnectionString, ServiceBusResource.ConnectionString);
+            Environment.SetEnvironmentVariable(EnvironmentSettingNames.DataHubSenderConnectionString, ServiceBusResource.ConnectionString);
+            Environment.SetEnvironmentVariable(EnvironmentSettingNames.DataHubListenerConnectionString, ServiceBusResource.ConnectionString);
+            Environment.SetEnvironmentVariable(EnvironmentSettingNames.DataHubManagerConnectionString, ServiceBusResource.ConnectionString);
 
             var chargeLinkAcceptedTopicName = await GetTopicNameFromKeyAsync(ChargesFunctionAppServiceBusOptions.ChargeLinkAcceptedTopicKey);
-            Environment.SetEnvironmentVariable("CHARGE_LINK_ACCEPTED_TOPIC_NAME", chargeLinkAcceptedTopicName);
-            Environment.SetEnvironmentVariable("CHARGELINKACCEPTED_SUB_DATAAVAILABLENOTIFIER", ChargesFunctionAppServiceBusOptions.ChargeLinkAcceptedDataAvailableNotifierSubscriptionName);
-            Environment.SetEnvironmentVariable("CHARGELINKACCEPTED_SUB_EVENTPUBLISHER", ChargesFunctionAppServiceBusOptions.ChargeLinkAcceptedEventPublisherSubscriptionName);
-            Environment.SetEnvironmentVariable("CHARGELINKACCEPTED_SUB_REPLIER", ChargesFunctionAppServiceBusOptions.ChargeLinkAcceptedEventReplierSubscriptionName);
+            Environment.SetEnvironmentVariable(EnvironmentSettingNames.ChargeLinkAcceptedTopicName, chargeLinkAcceptedTopicName);
+            Environment.SetEnvironmentVariable(EnvironmentSettingNames.ChargeLinkAcceptedSubDataAvailableNotifier, ChargesFunctionAppServiceBusOptions.ChargeLinkAcceptedDataAvailableNotifierSubscriptionName);
+            Environment.SetEnvironmentVariable(EnvironmentSettingNames.ChargeLinkAcceptedSubEventPublisher, ChargesFunctionAppServiceBusOptions.ChargeLinkAcceptedEventPublisherSubscriptionName);
+            Environment.SetEnvironmentVariable(EnvironmentSettingNames.ChargeLinkAcceptedTopicName, chargeLinkAcceptedTopicName);
+            Environment.SetEnvironmentVariable(EnvironmentSettingNames.ChargeLinkAcceptedSubDataAvailableNotifier, ChargesFunctionAppServiceBusOptions.ChargeLinkAcceptedDataAvailableNotifierSubscriptionName);
+            Environment.SetEnvironmentVariable(EnvironmentSettingNames.ChargeLinkAcceptedSubEventPublisher, ChargesFunctionAppServiceBusOptions.ChargeLinkAcceptedEventPublisherSubscriptionName);
+            Environment.SetEnvironmentVariable(EnvironmentSettingNames.ChargeLinkAcceptedReplier, ChargesFunctionAppServiceBusOptions.ChargeLinkAcceptedEventReplierSubscriptionName);
 
             var chargeLinkCreatedTopicName = await GetTopicNameFromKeyAsync(ChargesFunctionAppServiceBusOptions.ChargeLinkCreatedTopicKey);
-            Environment.SetEnvironmentVariable("CHARGE_LINK_CREATED_TOPIC_NAME", chargeLinkCreatedTopicName);
+            Environment.SetEnvironmentVariable(EnvironmentSettingNames.ChargeLinkCreatedTopicName, chargeLinkCreatedTopicName);
 
             var chargeLinkReceivedTopicName = await GetTopicNameFromKeyAsync(ChargesFunctionAppServiceBusOptions.ChargeLinkReceivedTopicKey);
-            Environment.SetEnvironmentVariable("CHARGE_LINK_RECEIVED_TOPIC_NAME", chargeLinkReceivedTopicName);
-            Environment.SetEnvironmentVariable("CHARGE_LINK_RECEIVED_SUBSCRIPTION_NAME", ChargesFunctionAppServiceBusOptions.ChargeLinkReceivedSubscriptionName);
+            Environment.SetEnvironmentVariable(EnvironmentSettingNames.ChargeLinkReceivedTopicName, chargeLinkReceivedTopicName);
+            Environment.SetEnvironmentVariable(EnvironmentSettingNames.ChargeLinkReceivedSubscriptionName, ChargesFunctionAppServiceBusOptions.ChargeLinkReceivedSubscriptionName);
 
             var commandAcceptedTopicName = await GetTopicNameFromKeyAsync(ChargesFunctionAppServiceBusOptions.CommandAcceptedTopicKey);
-            Environment.SetEnvironmentVariable("COMMAND_ACCEPTED_TOPIC_NAME", commandAcceptedTopicName);
-            Environment.SetEnvironmentVariable("COMMAND_ACCEPTED_SUBSCRIPTION_NAME", ChargesFunctionAppServiceBusOptions.CommandAcceptedSubscriptionName);
-            Environment.SetEnvironmentVariable("COMMAND_ACCEPTED_RECEIVER_SUBSCRIPTION_NAME", ChargesFunctionAppServiceBusOptions.CommandAcceptedReceiverSubscriptionName);
+            Environment.SetEnvironmentVariable(EnvironmentSettingNames.CommandAcceptedTopicName, commandAcceptedTopicName);
+            Environment.SetEnvironmentVariable(EnvironmentSettingNames.CommandAcceptedSubscriptionName, ChargesFunctionAppServiceBusOptions.CommandAcceptedSubscriptionName);
+            Environment.SetEnvironmentVariable(EnvironmentSettingNames.CommandAcceptedReceiverSubscriptionName, ChargesFunctionAppServiceBusOptions.CommandAcceptedReceiverSubscriptionName);
 
             var commandReceivedTopicName = await GetTopicNameFromKeyAsync(ChargesFunctionAppServiceBusOptions.CommandReceivedTopicKey);
-            Environment.SetEnvironmentVariable("COMMAND_RECEIVED_TOPIC_NAME", commandReceivedTopicName);
-            Environment.SetEnvironmentVariable("COMMAND_RECEIVED_SUBSCRIPTION_NAME", ChargesFunctionAppServiceBusOptions.CommandReceivedSubscriptionName);
+            Environment.SetEnvironmentVariable(EnvironmentSettingNames.CommandReceivedTopicName, commandReceivedTopicName);
+            Environment.SetEnvironmentVariable(EnvironmentSettingNames.CommandReceivedSubscriptionName, ChargesFunctionAppServiceBusOptions.CommandReceivedSubscriptionName);
 
             var commandRejectedTopicName = await GetTopicNameFromKeyAsync(ChargesFunctionAppServiceBusOptions.CommandRejectedTopicKey);
-            Environment.SetEnvironmentVariable("COMMAND_REJECTED_TOPIC_NAME", commandRejectedTopicName);
-            Environment.SetEnvironmentVariable("COMMAND_REJECTED_SUBSCRIPTION_NAME", ChargesFunctionAppServiceBusOptions.CommandRejectedSubscriptionName);
+            Environment.SetEnvironmentVariable(EnvironmentSettingNames.CommandRejectedTopicName, commandRejectedTopicName);
+            Environment.SetEnvironmentVariable(EnvironmentSettingNames.CommandRejectedSubscriptionName, ChargesFunctionAppServiceBusOptions.CommandRejectedSubscriptionName);
 
             var createLinkRequestQueueName = await GetQueueNameFromKeyAsync(ChargesFunctionAppServiceBusOptions.CreateLinkRequestQueueKey);
-            Environment.SetEnvironmentVariable("CREATE_LINK_REQUEST_QUEUE_NAME", createLinkRequestQueueName);
+            Environment.SetEnvironmentVariable(EnvironmentSettingNames.CreateLinkRequestQueueName, createLinkRequestQueueName);
 
+            // "CREATE_LINK_REPLY_QUEUE_NAME" should not be in EnvironmentSettingNames as it is only for testing
             var createLinkReplyQueueName = await GetQueueNameFromKeyAsync(ChargesFunctionAppServiceBusOptions.CreateLinkReplyQueueKey);
             Environment.SetEnvironmentVariable("CREATE_LINK_REPLY_QUEUE_NAME", createLinkReplyQueueName);
 
             var consumptionMeteringPointCreatedTopicName = await GetTopicNameFromKeyAsync(ChargesFunctionAppServiceBusOptions.ConsumptionMeteringPointCreatedTopicKey);
-            Environment.SetEnvironmentVariable("CONSUMPTION_METERING_POINT_CREATED_TOPIC_NAME", consumptionMeteringPointCreatedTopicName);
-            Environment.SetEnvironmentVariable("CONSUMPTION_METERING_POINT_CREATED_SUBSCRIPTION_NAME", ChargesFunctionAppServiceBusOptions.ConsumptionMeteringPointCreatedSubscriptionName);
+            Environment.SetEnvironmentVariable(EnvironmentSettingNames.ConsumptionMeteringPointCreatedTopicName, consumptionMeteringPointCreatedTopicName);
+            Environment.SetEnvironmentVariable(EnvironmentSettingNames.ConsumptionMeteringPointCreatdSubscriptionName, ChargesFunctionAppServiceBusOptions.ConsumptionMeteringPointCreatedSubscriptionName);
 
             var chargeCreatedTopicName = await GetTopicNameFromKeyAsync(ChargesFunctionAppServiceBusOptions.ChargeCreatedTopicKey);
-            Environment.SetEnvironmentVariable("CHARGE_CREATED_TOPIC_NAME", chargeCreatedTopicName);
+            Environment.SetEnvironmentVariable(EnvironmentSettingNames.ChargeLinkCreatedTopicName, chargeCreatedTopicName);
 
             var chargePricesUpdatedTopicName = await GetTopicNameFromKeyAsync(ChargesFunctionAppServiceBusOptions.ChargePricesUpdatedTopicKey);
-            Environment.SetEnvironmentVariable("CHARGE_PRICES_UPDATED_TOPIC_NAME", chargePricesUpdatedTopicName);
+            Environment.SetEnvironmentVariable(EnvironmentSettingNames.ChargePricesUpdatedTopicName, chargePricesUpdatedTopicName);
+
+            Environment.SetEnvironmentVariable("CHARGEACCEPTED_SUB_DATAAVAILABLENOTIFIER", ChargesFunctionAppServiceBusOptions.ChargeAcceptedDataAvailableNotifierSubscriptionName);
 
             var messageHubDataAvailableQueueName = await GetQueueNameFromKeyAsync(ChargesFunctionAppServiceBusOptions.MessageHubDataAvailableQueueKey);
-            Environment.SetEnvironmentVariable("MESSAGEHUB_DATAAVAILABLE_QUEUE", messageHubDataAvailableQueueName);
-            DataAvailableListenerMock = new ServiceBusListenerMock(ServiceBusResource.ConnectionString, TestLogger);
-            await DataAvailableListenerMock.AddQueueListenerAsync(messageHubDataAvailableQueueName);
+            Environment.SetEnvironmentVariable(EnvironmentSettingNames.MessageHubDataAvailableQueue, messageHubDataAvailableQueueName);
+            MessageHubDataAvailableListenerMock = new ServiceBusListenerMock(ServiceBusResource.ConnectionString, TestLogger);
+            await MessageHubDataAvailableListenerMock.AddQueueListenerAsync(messageHubDataAvailableQueueName);
 
             BundleRequestQueue = await ServiceBusManager.CreateQueueAsync(ChargesFunctionAppServiceBusOptions.MessageHubRequestQueueKey, 1, null, true);
-            Environment.SetEnvironmentVariable("MESSAGEHUB_BUNDLEREQUEST_QUEUE", BundleRequestQueue.Name);
+            Environment.SetEnvironmentVariable(EnvironmentSettingNames.MessageHubBundleRequestQueue, BundleRequestQueue.Name);
 
             BundleReplyQueue = await ServiceBusManager.CreateQueueAsync(ChargesFunctionAppServiceBusOptions.MessageHubReplyQueueKey, 1, null, true);
-            Environment.SetEnvironmentVariable("MESSAGEHUB_BUNDLEREPLY_QUEUE", BundleReplyQueue.Name);
+            Environment.SetEnvironmentVariable(EnvironmentSettingNames.MessageHubBundleReplyQueue, BundleReplyQueue.Name);
+            MessageHubBundleResponseListenerMock = new ServiceBusListenerMock(ServiceBusResource.ConnectionString, TestLogger);
+            await MessageHubBundleResponseListenerMock.AddQueueListenerAsync(BundleReplyQueue.Name);
 
-            Environment.SetEnvironmentVariable("MESSAGEHUB_STORAGE_CONNECTION_STRING", ChargesFunctionAppServiceBusOptions.MessageHubStorageConnectionString);
+            MessageHubMock = new MessageHubMock(ServiceBusResource.ConnectionString, BundleRequestQueue.Name, BundleReplyQueue.Name);
+            Environment.SetEnvironmentVariable(EnvironmentSettingNames.MessageHubStorageConnectionString, ChargesFunctionAppServiceBusOptions.MessageHubStorageConnectionString);
 
-            Environment.SetEnvironmentVariable("MESSAGEHUB_STORAGE_CONTAINER", ChargesFunctionAppServiceBusOptions.MessageHubStorageContainerName);
+            Environment.SetEnvironmentVariable(EnvironmentSettingNames.MessageHubStorageContainer, ChargesFunctionAppServiceBusOptions.MessageHubStorageContainerName);
 
             // => Database
             await DatabaseManager.CreateDatabaseAsync();
@@ -180,19 +198,13 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures
 
             // => Service Bus
             await PostOfficeListenerMock.DisposeAsync();
-            await DataAvailableListenerMock.DisposeAsync();
+            await MessageHubDataAvailableListenerMock.DisposeAsync();
+            await MessageHubBundleResponseListenerMock.DisposeAsync();
             await ServiceBusResource.DisposeAsync();
 
-            if (ServiceBusManager != null)
-            {
-                if (BundleRequestQueue != null)
-                    await ServiceBusManager.DeleteQueueAsync(BundleRequestQueue.Name);
-
-                if (BundleReplyQueue != null)
-                    await ServiceBusManager.DeleteQueueAsync(BundleReplyQueue.Name);
-
-                await ServiceBusManager.DisposeAsync();
-            }
+            await ServiceBusManager.DeleteQueueAsync(BundleRequestQueue.Name);
+            await ServiceBusManager.DeleteQueueAsync(BundleReplyQueue.Name);
+            await ServiceBusManager.DisposeAsync();
 
             // => Database
             await DatabaseManager.DeleteDatabaseAsync();

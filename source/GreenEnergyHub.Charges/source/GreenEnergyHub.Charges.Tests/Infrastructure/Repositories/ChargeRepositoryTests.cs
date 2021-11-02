@@ -20,6 +20,7 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
+using GreenEnergyHub.Charges.Domain.SharedDtos;
 using GreenEnergyHub.Charges.Infrastructure.Context;
 using GreenEnergyHub.Charges.Infrastructure.Repositories;
 using GreenEnergyHub.Charges.TestCore.Attributes;
@@ -58,7 +59,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
             var sut = new ChargeRepository(chargesDatabaseWriteContext);
 
             // Act
-            await sut.StoreChargeAsync(charge).ConfigureAwait(false);
+            await sut.StoreChargeAsync(charge, MarketParticipantOwner, SystemClock.Instance.GetCurrentInstant()).ConfigureAwait(false);
 
             // Assert
             await using var chargesDatabaseReadContext = _databaseManager.CreateDbContext();
@@ -92,7 +93,8 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
             var sut = new ChargeRepository(chargesDatabaseWriteContext);
 
             // Act
-            await sut.StoreChargeAsync(charge).ConfigureAwait(false);
+            await sut.StoreChargeAsync(charge, MarketParticipantOwner, SystemClock.Instance.GetCurrentInstant())
+                .ConfigureAwait(false);
 
             // Assert
             await using var chargesDatabaseReadContext = _databaseManager.CreateDbContext();
@@ -114,7 +116,8 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
             var sut = new ChargeRepository(chargesDatabaseWriteContext);
 
             // Act
-            await sut.StoreChargeAsync(charge).ConfigureAwait(false);
+            await sut.StoreChargeAsync(charge, MarketParticipantOwner, SystemClock.Instance.GetCurrentInstant())
+                .ConfigureAwait(false);
 
             // Assert
             await using var chargesDatabaseReadContext = _databaseManager.CreateDbContext();
@@ -135,7 +138,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
 
             // Act / Assert
             await Assert.ThrowsAsync<ArgumentNullException>(
-                    () => sut.StoreChargeAsync(charge!))
+                    () => sut.StoreChargeAsync(charge!, MarketParticipantOwner, SystemClock.Instance.GetCurrentInstant()))
                 .ConfigureAwait(false);
         }
 
@@ -147,7 +150,9 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
             // Arrange
             var sut = new ChargeRepository(chargesDatabaseContext);
             var charge = GetValidCharge();
-            await sut.StoreChargeAsync(charge).ConfigureAwait(false);
+            await sut
+                .StoreChargeAsync(charge, MarketParticipantOwner, SystemClock.Instance.GetCurrentInstant())
+                .ConfigureAwait(false);
             await using var chargesDatabaseReadContext = _databaseManager.CreateDbContext();
             var createdCharge = chargesDatabaseReadContext.
                 Charges.First(x => x.SenderProvidedChargeId == charge.SenderProvidedChargeId &&
@@ -181,20 +186,6 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
         {
             var charge = new Charge(
                 Guid.NewGuid(),
-                new Document
-                {
-                    Id = "id",
-                    RequestDate = SystemClock.Instance.GetCurrentInstant(),
-                    Type = DocumentType.RequestUpdateChargeInformation,
-                    IndustryClassification = IndustryClassification.Electricity,
-                    CreatedDateTime = SystemClock.Instance.GetCurrentInstant(),
-                    Sender = new Charges.Domain.MarketParticipants.MarketParticipant
-                    {
-                        Id = MarketParticipantOwner,
-                        BusinessProcessRole = (MarketParticipantRole)1,
-                    },
-                    BusinessReasonCode = BusinessReasonCode.UpdateChargeInformation,
-                },
                 "ChargeOperationId",
                 "SenderProvidedId",
                 "Name",

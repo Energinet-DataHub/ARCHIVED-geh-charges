@@ -45,8 +45,8 @@ namespace GreenEnergyHub.Charges.FunctionHost.Charges
         [Function(FunctionName)]
         public async Task RunAsync(
             [ServiceBusTrigger(
-                "%COMMAND_REJECTED_TOPIC_NAME%",
-                "%COMMAND_REJECTED_SUBSCRIPTION_NAME%",
+                "%" + EnvironmentSettingNames.CommandRejectedTopicName + "%",
+                "%" + EnvironmentSettingNames.CommandRejectedSubscriptionName + "%",
                 Connection = EnvironmentSettingNames.DomainEventListenerConnectionString)]
             [NotNull] byte[] message)
         {

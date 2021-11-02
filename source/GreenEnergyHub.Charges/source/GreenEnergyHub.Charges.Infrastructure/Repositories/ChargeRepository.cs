@@ -20,6 +20,7 @@ using GreenEnergyHub.Charges.Infrastructure.Context;
 using GreenEnergyHub.Charges.Infrastructure.Context.Mapping;
 using GreenEnergyHub.Charges.Infrastructure.Context.Model;
 using Microsoft.EntityFrameworkCore;
+using NodaTime;
 using Charge = GreenEnergyHub.Charges.Domain.Charges.Charge;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Repositories
@@ -62,11 +63,11 @@ namespace GreenEnergyHub.Charges.Infrastructure.Repositories
                 .ConfigureAwait(false);
         }
 
-        public async Task StoreChargeAsync(Charge newCharge)
+        public async Task StoreChargeAsync(Charge newCharge, string senderId, Instant writeDateTime)
         {
             if (newCharge == null) throw new ArgumentNullException(nameof(newCharge));
-            var marketParticipant = await GetMarketParticipantAsync(newCharge.Document.Sender.Id).ConfigureAwait(false);
-            var charge = ChargeMapper.MapDomainChargeToCharge(newCharge, marketParticipant);
+            var marketParticipant = await GetMarketParticipantAsync(senderId).ConfigureAwait(false);
+            var charge = ChargeMapper.MapDomainChargeToCharge(newCharge, marketParticipant, writeDateTime);
             await _chargesDatabaseContext.Charges.AddAsync(charge).ConfigureAwait(false);
             await _chargesDatabaseContext.SaveChangesAsync().ConfigureAwait(false);
         }

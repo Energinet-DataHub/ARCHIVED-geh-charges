@@ -19,6 +19,7 @@ using System.Linq;
 using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
+using GreenEnergyHub.Charges.Domain.SharedDtos;
 using GreenEnergyHub.Charges.Infrastructure.Context.Model;
 using NodaTime;
 using Charge = GreenEnergyHub.Charges.Infrastructure.Context.Model.Charge;
@@ -38,7 +39,6 @@ namespace GreenEnergyHub.Charges.Infrastructure.Context.Mapping
 
             return new Domain.Charges.Charge(
                 charge.Id,
-                new Document(),
                 charge.ChargeOperation.ChargeOperationId,
                 charge.SenderProvidedChargeId,
                 currentChargeDetails.Name,
@@ -60,12 +60,13 @@ namespace GreenEnergyHub.Charges.Infrastructure.Context.Mapping
 
         public static Charge MapDomainChargeToCharge(
             [NotNull] Domain.Charges.Charge charge,
-            MarketParticipant marketParticipant)
+            MarketParticipant marketParticipant,
+            Instant writeDateTime)
         {
             if (charge == null) throw new ArgumentNullException(nameof(charge));
             if (marketParticipant == null) throw new ArgumentNullException(nameof(marketParticipant));
 
-            var chargeOperation = MapToChargeOperation(charge);
+            var chargeOperation = MapToChargeOperation(charge, writeDateTime);
 
             return new Charge
             {
@@ -88,12 +89,12 @@ namespace GreenEnergyHub.Charges.Infrastructure.Context.Mapping
         }
 
         private static ChargeOperation MapToChargeOperation(
-            [NotNull] Domain.Charges.Charge charge)
+            [NotNull] Domain.Charges.Charge charge, Instant writeDateTime)
         {
             return new ChargeOperation
             {
                 CorrelationId = charge.CorrelationId,
-                WriteDateTime = charge.Document.RequestDate.ToDateTimeUtc().ToUniversalTime(),
+                WriteDateTime = writeDateTime,
                 ChargeOperationId = charge.ChargeOperationId,
             };
         }
