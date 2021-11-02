@@ -21,6 +21,13 @@ on:
       - source/Energinet.Charges.Libraries/source/Energinet.DataHub.Charges.Clients/**
       - .github/workflows/clients-publish.yml
       - .github/actions/dotnet-publish-nuget/**
+  pull_request:
+      branches:
+        - main
+      paths:
+      - source/Energinet.Charges.Libraries/source/Energinet.DataHub.Charges.Clients/**
+      - .github/workflows/clients-publish.yml
+      - .github/actions/dotnet-publish-nuget/**
   workflow_dispatch: {}
 
 env:
@@ -46,3 +53,4 @@ jobs:
           csproj_file_path: ${{ env.CSPROJ_FILE_PATH }}
           binary_path: ${{ env.BINARY_PATH }}
           nuget_token: ${{ secrets.NUGET_TOKEN }}
+          nuget_recurse_path: source/Energinet.Charges.Libraries
