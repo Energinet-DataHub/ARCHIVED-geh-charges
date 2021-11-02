@@ -21,6 +21,8 @@ on:
       - source/Energinet.Charges.Libraries/source/Energinet.DataHub.Charges.Clients/**
       - .github/workflows/clients-publish.yml
       - .github/actions/dotnet-publish-nuget/**
+  # The purpose of the pull-request trigger is to have the PR gate verify that the NuGet package version number
+  # isn't already published - in order to avoid breaking main
   pull_request:
       branches:
         - main
