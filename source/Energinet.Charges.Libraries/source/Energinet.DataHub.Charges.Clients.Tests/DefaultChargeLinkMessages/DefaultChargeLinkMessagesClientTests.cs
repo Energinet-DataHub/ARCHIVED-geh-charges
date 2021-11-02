@@ -31,7 +31,7 @@ using Xunit.Categories;
 namespace Energinet.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.DefaultChargeLinkMessages
 {
     [UnitTest]
-    public class DefaultChargeLinkMessagesRequestClientTests
+    public class DefaultChargeLinkMessagesClientTests
     {
         private const string ReplyToQueueName = "ReplyToQueue";
         private const string MeteringPointId = "F9A5115D-44EB-4AD4-BC7E-E8E8A0BC425E";
@@ -50,7 +50,7 @@ namespace Energinet.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.Defaul
             // Arrange
             serviceBusClientMock.Setup(x => x.DisposeAsync()).Returns(default(ValueTask));
             var createDefaultChargeLinkMessagesDto = meteringPointId != null ? new CreateDefaultChargeLinkMessagesDto(meteringPointId) : null;
-            await using var target = new DefaultChargeLinkMessagesRequestClient(
+            await using var target = new DefaultChargeLinkMessagesClient(
                 serviceBusClientMock.Object, serviceBusRequestSenderFactoryMock.Object, ReplyToQueueName);
 
             // Act + Assert
@@ -81,7 +81,7 @@ namespace Energinet.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.Defaul
                     x.Create(serviceBusClientMock.Object, ReplyToQueueName))
                 .Returns(serviceBusRequestSenderMock.Object);
 
-            await using var sut = new DefaultChargeLinkMessagesRequestClient(
+            await using var sut = new DefaultChargeLinkMessagesClient(
                 serviceBusClientMock.Object,
                 serviceBusRequestSenderFactoryMock.Object,
                 ReplyToQueueName,
@@ -118,12 +118,12 @@ namespace Energinet.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.Defaul
             serviceBusClientMock.Setup(x => x.DisposeAsync()).Returns(default(ValueTask));
             var createDefaultChargeLinksSucceededDto = meteringPointId != null ?
                 new CreateDefaultChargeLinkMessagesSucceededDto(meteringPointId) : null;
-            await using var sut = new DefaultChargeLinkMessagesRequestClient(
+            await using var sut = new DefaultChargeLinkMessagesClient(
                 serviceBusClientMock.Object, serviceBusRequestSenderFactoryMock.Object, replyQueue);
 
             // Act + Assert
             await Assert.ThrowsAsync<ArgumentNullException>(() => sut
-                    .CreateDefaultChargeLinkMessagesSucceededRequestAsync(
+                    .CreateDefaultChargeLinkMessagesSucceededReplyAsync(
                         createDefaultChargeLinksSucceededDto!,
                         correlationId,
                         replyQueue))
@@ -151,14 +151,14 @@ namespace Energinet.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.Defaul
                     .Create(serviceBusClientMock.Object, anyReplyQueueName))
                 .Returns(serviceBusRequestSenderMock.Object);
 
-            await using var sut = new DefaultChargeLinkMessagesRequestClient(
+            await using var sut = new DefaultChargeLinkMessagesClient(
                 serviceBusClientMock.Object, serviceBusRequestSenderFactoryMock.Object, anyReplyQueueName);
 
             var createDefaultChargeLinksSucceededDto =
                 new CreateDefaultChargeLinkMessagesSucceededDto(MeteringPointId);
 
             // Act
-            await sut.CreateDefaultChargeLinkMessagesSucceededRequestAsync(
+            await sut.CreateDefaultChargeLinkMessagesSucceededReplyAsync(
                 createDefaultChargeLinksSucceededDto,
                 anyCorrelationId,
                 anyReplyQueueName).ConfigureAwait(false);
@@ -187,12 +187,12 @@ namespace Energinet.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.Defaul
             serviceBusClientMock.Setup(x => x.DisposeAsync()).Returns(default(ValueTask));
             var createDefaultChargeLinksSucceededDto = meteringPointId != null ?
                 new CreateDefaultChargeLinkMessagesFailedDto(meteringPointId, ErrorCode.Unspecified) : null;
-            await using var sut = new DefaultChargeLinkMessagesRequestClient(
+            await using var sut = new DefaultChargeLinkMessagesClient(
                 serviceBusClientMock.Object, serviceBusRequestSenderFactoryMock.Object, anyReplyQueue);
 
             // Act + Assert
             await Assert.ThrowsAsync<ArgumentNullException>(() => sut
-                    .CreateDefaultChargeLinkMessagesFailedRequestAsync(
+                    .CreateDefaultChargeLinkMessagesFailedReplyAsync(
                         createDefaultChargeLinksSucceededDto!,
                         anyCorrelationId,
                         anyReplyQueue))
@@ -219,14 +219,14 @@ namespace Energinet.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.Defaul
                     .Create(serviceBusClientMock.Object, anyReplyQueue))
                 .Returns(serviceBusRequestSenderMock.Object);
 
-            await using var sut = new DefaultChargeLinkMessagesRequestClient(
+            await using var sut = new DefaultChargeLinkMessagesClient(
                 serviceBusClientMock.Object, serviceBusRequestSenderFactoryMock.Object, anyReplyQueue);
 
             var createDefaultChargeLinksSucceededDto =
                 new CreateDefaultChargeLinkMessagesFailedDto(MeteringPointId, ErrorCode.Unspecified);
 
             // Act
-            await sut.CreateDefaultChargeLinkMessagesFailedRequestAsync(
+            await sut.CreateDefaultChargeLinkMessagesFailedReplyAsync(
                 createDefaultChargeLinksSucceededDto,
                 anyCorrelationId,
                 anyReplyQueue).ConfigureAwait(false);

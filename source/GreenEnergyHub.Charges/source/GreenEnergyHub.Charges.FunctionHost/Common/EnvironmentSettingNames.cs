@@ -28,6 +28,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Common
         public const string HubSenderRoleIntEnumValue = "HUB_SENDER_ROLE_INT_ENUM_VALUE";
 
         public const string ChargeDbConnectionString = "CHARGE_DB_CONNECTION_STRING";
+        public const string ChargeAcceptedSubDataAvailableNotifier = "CHARGEACCEPTED_SUB_DATAAVAILABLENOTIFIER";
 
         public const string DomainEventSenderConnectionString = "DOMAINEVENT_SENDER_CONNECTION_STRING";
         public const string DomainEventListenerConnectionString = "DOMAINEVENT_LISTENER_CONNECTION_STRING";
@@ -41,6 +42,8 @@ namespace GreenEnergyHub.Charges.FunctionHost.Common
         public const string ChargeLinkAcceptedSubDataAvailableNotifier = "CHARGELINKACCEPTED_SUB_DATAAVAILABLENOTIFIER";
         public const string ChargeLinkAcceptedReplier = "CHARGELINKACCEPTED_SUB_REPLIER";
         public const string CreateLinkReplyQueueName = "CREATE_LINK_REPLY_QUEUE_NAME";
+
+        public const string CreateLinkMessagesReplyQueueName = "CREATE_LINK_MESSAGES_REPLY_QUEUE_NAME";
 
         /// <summary>
         /// Deprecated: This is from an old implementation where we mimicked sending to the post office
@@ -71,6 +74,8 @@ namespace GreenEnergyHub.Charges.FunctionHost.Common
         public const string CommandRejectedSubscriptionName = "COMMAND_REJECTED_SUBSCRIPTION_NAME";
 
         public const string CreateLinkRequestQueueName = "CREATE_LINK_REQUEST_QUEUE_NAME";
+
+        public const string CreateLinkMessagesRequestQueueName = "CREATE_LINK_MESSAGES_REQUEST_QUEUE_NAME";
 
         public const string ConsumptionMeteringPointCreatedTopicName = "CONSUMPTION_METERING_POINT_CREATED_TOPIC_NAME";
         public const string ConsumptionMeteringPointCreatdSubscriptionName = "CONSUMPTION_METERING_POINT_CREATED_SUBSCRIPTION_NAME";
