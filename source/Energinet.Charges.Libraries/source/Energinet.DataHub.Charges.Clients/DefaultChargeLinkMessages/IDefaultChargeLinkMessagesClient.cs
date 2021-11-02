@@ -18,7 +18,7 @@ using Energinet.DataHub.Charges.Libraries.Models;
 
 namespace Energinet.DataHub.Charges.Libraries.DefaultChargeLinkMessages
 {
-    public interface IDefaultChargeLinkMessagesRequestClient
+    public interface IDefaultChargeLinkMessagesClient
     {
         /// <summary>
         /// Request the Charges domain to create default charge links
@@ -36,7 +36,7 @@ namespace Energinet.DataHub.Charges.Libraries.DefaultChargeLinkMessages
         /// <param name="createDefaultChargeLinkMessagesFailedDto"></param>
         /// <param name="correlationId"></param>
         /// <param name="replyQueueName"></param>
-        public Task CreateDefaultChargeLinkMessagesFailedRequestAsync(
+        public Task CreateDefaultChargeLinkMessagesFailedReplyAsync(
             [NotNull] CreateDefaultChargeLinkMessagesFailedDto createDefaultChargeLinkMessagesFailedDto,
             [NotNull] string correlationId,
             [NotNull] string replyQueueName);
@@ -47,7 +47,7 @@ namespace Energinet.DataHub.Charges.Libraries.DefaultChargeLinkMessages
         /// <param name="createDefaultChargeLinkMessagesSucceededDto"></param>
         /// <param name="correlationId"></param>
         /// <param name="replyQueueName"></param>
-        public Task CreateDefaultChargeLinkMessagesSucceededRequestAsync(
+        public Task CreateDefaultChargeLinkMessagesSucceededReplyAsync(
             [NotNull] CreateDefaultChargeLinkMessagesSucceededDto createDefaultChargeLinkMessagesSucceededDto,
             [NotNull] string correlationId,
             [NotNull] string replyQueueName);
