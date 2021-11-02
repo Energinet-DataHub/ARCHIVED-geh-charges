@@ -77,7 +77,8 @@ namespace GreenEnergyHub.Charges.Infrastructure.Context.EntityConfigurations
             points.HasKey(p => p.Id);
             points.Property(p => p.Id).ValueGeneratedNever();
             points.Property(d => d.Position).HasColumnName("Position");
-            points.Property(d => d.Price).HasColumnName("Price");
+            points.Property(d => d.Price).HasColumnName("Price")
+                .HasColumnType("decimal(14,6)");
         }
     }
 }

@@ -28,6 +28,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Common
         public const string HubSenderRoleIntEnumValue = "HUB_SENDER_ROLE_INT_ENUM_VALUE";
 
         public const string ChargeDbConnectionString = "CHARGE_DB_CONNECTION_STRING";
+        public const string ChargeAcceptedSubDataAvailableNotifier = "CHARGEACCEPTED_SUB_DATAAVAILABLENOTIFIER";
 
         public const string DomainEventSenderConnectionString = "DOMAINEVENT_SENDER_CONNECTION_STRING";
         public const string DomainEventListenerConnectionString = "DOMAINEVENT_LISTENER_CONNECTION_STRING";
