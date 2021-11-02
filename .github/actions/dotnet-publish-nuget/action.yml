@@ -33,7 +33,8 @@ inputs:
     description: 'NuGet.org API key'
     required: true
   nuget_recurse_path:
-    description: Path of tree where to find 
+    description: Path of tree where to find
+    required: true
 
 runs:
   using: composite
@@ -63,7 +64,7 @@ runs:
         dotnet pack ${{ inputs.csproj_file_path }} --configuration Release --include-symbols -p:SymbolPackageFormat=snupkg -p:RepositoryCommit=${{ github.sha }} ${{ steps.determine_version_suffix.outputs.property }}
 
     - name: Check each NuGet package version does not exists (not looking at prereleases)
-      uses: https://github.com/Energinet-DataHub/geh-core/github/actions/nuget-assert-release-version
+      uses: Energinet-DataHub/geh-core/github/actions/nuget-assert-release-version
       with:
         NUPKG_RECURSE_PATH: ${{ inputs.nuget_recurse_path }}
         
