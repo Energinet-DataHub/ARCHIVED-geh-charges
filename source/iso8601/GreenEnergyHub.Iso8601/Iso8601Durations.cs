@@ -120,14 +120,14 @@ namespace GreenEnergyHub.Iso8601
         {
             var zonedTime = ConvertInstantToZonedTime(time);
 
-            var localStartOfDay = new LocalDateTime(
+            var localStartOfMonth = new LocalDateTime(
                 zonedTime.LocalDateTime.Year,
                 zonedTime.LocalDateTime.Month,
                 1,
                 0,
                 0);
 
-            return ConvertLocalTimeToUtc(localStartOfDay);
+            return ConvertLocalTimeToUtc(localStartOfMonth);
         }
 
         private Instant GetStartOfDay(Instant time)
@@ -148,27 +148,27 @@ namespace GreenEnergyHub.Iso8601
         {
             var zonedTime = ConvertInstantToZonedTime(time);
 
-            var localStartOfDay = new LocalDateTime(
+            var localStartOfHour = new LocalDateTime(
                 zonedTime.LocalDateTime.Year,
                 zonedTime.LocalDateTime.Month,
                 zonedTime.LocalDateTime.Day,
                 zonedTime.Hour,
                 0);
 
-            return ConvertLocalTimeToUtc(localStartOfDay);
+            return ConvertLocalTimeToUtc(localStartOfHour);
         }
 
         private Instant GetStartOfQuarterOfHour(Instant time)
         {
             var zonedTime = ConvertInstantToZonedTime(time);
-            var localStartOfDay = new LocalDateTime(
+            var localStartOfQuarterOfHour = new LocalDateTime(
                 zonedTime.LocalDateTime.Year,
                 zonedTime.LocalDateTime.Month,
                 zonedTime.LocalDateTime.Day,
                 zonedTime.Hour,
                 zonedTime.Minute / 15 * 15); // Integer division, so division and multiplication does not cancel each other out
 
-            return ConvertLocalTimeToUtc(localStartOfDay);
+            return ConvertLocalTimeToUtc(localStartOfQuarterOfHour);
         }
     }
 }
