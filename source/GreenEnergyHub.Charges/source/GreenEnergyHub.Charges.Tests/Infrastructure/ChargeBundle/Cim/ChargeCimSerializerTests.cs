@@ -74,7 +74,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.ChargeBundle.Cim
             Assert.Equal(expected, actual);
         }
 
-        [Theory/*(Skip = "Manually run test to save the generated file to disk")*/]
+        [Theory(Skip = "Manually run test to save the generated file to disk")]
         [InlineAutoDomainData]
         public async Task SerializeAsync_WhenCalled_SaveSerializedStream(
             [NotNull] [Frozen] Mock<IHubSenderConfiguration> hubSenderConfiguration,
