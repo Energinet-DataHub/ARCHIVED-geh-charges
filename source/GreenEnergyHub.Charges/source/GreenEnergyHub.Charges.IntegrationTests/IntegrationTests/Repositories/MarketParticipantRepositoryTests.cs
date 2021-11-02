@@ -20,7 +20,7 @@ using GreenEnergyHub.Charges.TestCore.Database;
 using Xunit;
 using Xunit.Categories;
 
-namespace GreenEnergyHub.Charges.IntegrationTests.Repositories
+namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
 {
     [IntegrationTest]
     public class MarketParticipantRepositoryTests : IClassFixture<ChargesDatabaseFixture>

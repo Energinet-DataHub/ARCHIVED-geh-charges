@@ -29,7 +29,7 @@ using Xunit;
 using Xunit.Categories;
 using MarketParticipant = GreenEnergyHub.Charges.Infrastructure.Context.Model.MarketParticipant;
 
-namespace GreenEnergyHub.Charges.IntegrationTests.Repositories
+namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
 {
     /// <summary>
     /// Tests <see cref="ChargeRepository"/> using a SQL database.

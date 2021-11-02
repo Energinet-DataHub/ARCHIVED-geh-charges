@@ -21,7 +21,7 @@ using GreenEnergyHub.Charges.TestCore.Database;
 using Xunit;
 using Xunit.Categories;
 
-namespace GreenEnergyHub.Charges.IntegrationTests.Repositories
+namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
 {
     /// <summary>
     /// Tests <see cref="DefaultChargeLinkRepository"/> using an SQLite in-memory database.

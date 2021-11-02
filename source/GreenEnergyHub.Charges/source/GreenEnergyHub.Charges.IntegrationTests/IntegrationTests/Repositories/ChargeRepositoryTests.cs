@@ -30,7 +30,7 @@ using Xunit.Categories;
 using Charge = GreenEnergyHub.Charges.Domain.Charges.Charge;
 using MarketParticipant = GreenEnergyHub.Charges.Infrastructure.Context.Model.MarketParticipant;
 
-namespace GreenEnergyHub.Charges.IntegrationTests.Repositories
+namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
 {
     /// <summary>
     /// Tests <see cref="ChargeRepository"/> using a database created with squadron.
