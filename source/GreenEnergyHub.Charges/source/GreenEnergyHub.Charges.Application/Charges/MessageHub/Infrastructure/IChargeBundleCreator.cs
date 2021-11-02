@@ -12,18 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.IO;
 using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Domain.ChargeCommandAcceptedEvents;
+using Energinet.DataHub.MessageHub.Client.Model;
 
-namespace GreenEnergyHub.Charges.Application.ChargeLinks.MessageHub
+namespace GreenEnergyHub.Charges.Application.Charges.MessageHub.Infrastructure
 {
-    /// <summary>
-    /// Contract for notifying the MessageHub that data about a charge that has been created
-    /// is available.
-    /// This is the RSM-034 CIM XML 'NotifyPriceList'.
-    /// </summary>
-    public interface IChargeDataAvailableNotifier
+    public interface IChargeBundleCreator
     {
-        Task NotifyAsync(ChargeCommandAcceptedEvent chargeCommandAcceptedEvent);
+        Task CreateAsync(DataBundleRequestDto request, Stream outputStream);
     }
 }

@@ -24,7 +24,7 @@ using GreenEnergyHub.Charges.Domain.ChargeCommands;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using NodaTime;
 
-namespace GreenEnergyHub.Charges.Application.ChargeLinks.MessageHub
+namespace GreenEnergyHub.Charges.Application.Charges.MessageHub
 {
     public class ChargeDataAvailableNotifier : IChargeDataAvailableNotifier
     {
