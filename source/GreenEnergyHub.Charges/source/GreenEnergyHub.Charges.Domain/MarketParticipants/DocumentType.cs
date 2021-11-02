@@ -20,9 +20,9 @@ namespace GreenEnergyHub.Charges.Domain.MarketParticipants
     public enum DocumentType
     {
         Unknown = 0,
-        RequestChangeBillingMasterData = 1,
-        RequestUpdateChargeInformation = 2,
-        NotifyBillingMasterData = 3,
-        NotifyPriceList = 4,
+        RequestChangeBillingMasterData = 1, // Document requesting to update links between metering points and charges
+        RequestUpdateChargeInformation = 2, // Document requesting to update charge master data and/or prices
+        NotifyBillingMasterData = 3, // Document containing changes to links between metering points and charges
+        NotifyPriceList = 4, // Document containing changes to charge master data or prices
     }
 }
