@@ -37,7 +37,7 @@ namespace GreenEnergyHub.Iso8601
         ///
         /// If numberOfDurations is zero then the start is simply returned even though
         /// it might not match a fixed duration start. This will allows us to support
-        /// irregular time series points where the first position might be off from the
+        /// irregular time/price series points where the first position might be off from the
         /// otherwise fixed intervals
         /// </summary>
         /// <param name="startInstant">The start instant for the time interval</param>
