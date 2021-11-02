@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System;
+using System.ComponentModel;
 using NodaTime;
 
 namespace GreenEnergyHub.Iso8601
@@ -38,13 +39,24 @@ namespace GreenEnergyHub.Iso8601
             };
         }
 
+        public Instant GetTimeFixedToDuration(Instant startInstant, string duration, int numberOfDurations)
+        {
+            if (numberOfDurations == 0)
+            {
+                return startInstant;
+            }
+
+            var fixedStart = GetFixedStartOfInterval(startInstant, duration);
+            return AddDuration(fixedStart, duration, numberOfDurations);
+        }
+
         private Instant AddMonthDuration(Instant startInstant, int numberOfDurations)
         {
             /* Month handling in time is tricky, as that requires an understanding of what a month is in local time, instead of UTC as we normally use.
              * As a result, we need to convert into a configurable time zone, use that time zones local time and then add the required number of months.
              * Afterwards we will then have to go back from localtime to the zoned time, and then back from that to UTC to return the result
              * If we do not do it this way, we will be thrown off by daylights savings, number of days in a month etc. */
-            var zonedTime = ConvertStartInstantToZonedTime(startInstant);
+            var zonedTime = ConvertInstantToZonedTime(startInstant);
 
             var localResult = zonedTime.LocalDateTime.PlusMonths(numberOfDurations);
 
@@ -57,18 +69,18 @@ namespace GreenEnergyHub.Iso8601
              * As a result, we need to convert into a configurable time zone, use that time zones local time and then add the required number of days.
              * Afterwards we will then have to go back from localtime to the zoned time, and then back from that to UTC to return the result
              * If we do not do it this way, we will be thrown off by daylights savings etc. */
-            var zonedTime = ConvertStartInstantToZonedTime(startInstant);
+            var zonedTime = ConvertInstantToZonedTime(startInstant);
 
             var localResult = zonedTime.LocalDateTime.PlusDays(numberOfDurations);
 
             return ConvertLocalTimeToUtc(localResult);
         }
 
-        private ZonedDateTime ConvertStartInstantToZonedTime(Instant startInstant)
+        private ZonedDateTime ConvertInstantToZonedTime(Instant instant)
         {
             var timeZone = GetTimeZone();
 
-            return startInstant.InZone(timeZone);
+            return instant.InZone(timeZone);
         }
 
         private Instant ConvertLocalTimeToUtc(LocalDateTime localTime)
@@ -89,6 +101,74 @@ namespace GreenEnergyHub.Iso8601
             if (timeZone == null) throw new ArgumentException("{timeZoneId} is not a supported time zone", timeZoneId);
 
             return timeZone!;
+        }
+
+        private Instant GetFixedStartOfInterval(Instant time, string duration)
+        {
+            // The fixed start will always be equal or earlier than the provided time
+            return duration switch
+            {
+                "P1M" => GetStartOfMonth(time),
+                "P1D" => GetStartOfDay(time),
+                "PT1H" => GetStartOfHour(time),
+                "PT15M" => GetStartOfQuarterOfHour(time),
+                _ => throw new ArgumentException($"Unsupported time resolution: {duration}"),
+            };
+        }
+
+        private Instant GetStartOfMonth(Instant time)
+        {
+            var zonedTime = ConvertInstantToZonedTime(time);
+
+            var localStartOfMonth = new LocalDateTime(
+                zonedTime.LocalDateTime.Year,
+                zonedTime.LocalDateTime.Month,
+                1,
+                0,
+                0);
+
+            return ConvertLocalTimeToUtc(localStartOfMonth);
+        }
+
+        private Instant GetStartOfDay(Instant time)
+        {
+            var zonedTime = ConvertInstantToZonedTime(time);
+
+            var localStartOfDay = new LocalDateTime(
+                zonedTime.LocalDateTime.Year,
+                zonedTime.LocalDateTime.Month,
+                zonedTime.LocalDateTime.Day,
+                0,
+                0);
+
+            return ConvertLocalTimeToUtc(localStartOfDay);
+        }
+
+        private Instant GetStartOfHour(Instant time)
+        {
+            var zonedTime = ConvertInstantToZonedTime(time);
+
+            var localStartOfHour = new LocalDateTime(
+                zonedTime.LocalDateTime.Year,
+                zonedTime.LocalDateTime.Month,
+                zonedTime.LocalDateTime.Day,
+                zonedTime.Hour,
+                0);
+
+            return ConvertLocalTimeToUtc(localStartOfHour);
+        }
+
+        private Instant GetStartOfQuarterOfHour(Instant time)
+        {
+            var zonedTime = ConvertInstantToZonedTime(time);
+            var localStartOfQuarterOfHour = new LocalDateTime(
+                zonedTime.LocalDateTime.Year,
+                zonedTime.LocalDateTime.Month,
+                zonedTime.LocalDateTime.Day,
+                zonedTime.Hour,
+                zonedTime.Minute / 15 * 15); // Integer division, so division and multiplication does not cancel each other out
+
+            return ConvertLocalTimeToUtc(localStartOfQuarterOfHour);
         }
     }
 }
