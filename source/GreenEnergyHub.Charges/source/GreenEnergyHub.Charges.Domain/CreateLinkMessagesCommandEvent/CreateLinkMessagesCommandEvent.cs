@@ -15,16 +15,16 @@
 using GreenEnergyHub.Charges.Domain.Messages.Events;
 using GreenEnergyHub.Messaging.MessageTypes.Common;
 
-namespace GreenEnergyHub.Charges.Domain.CreateLinkCommandEvents
+namespace GreenEnergyHub.Charges.Domain.CreateLinkMessagesCommandEvent
 {
-    public class CreateLinkCommandEvent : InboundIntegrationEvent
+    public class CreateLinkMessagesCommandEvent : InboundIntegrationEvent
     {
         /// <summary>
         /// Event raised by the MeteringPoint domain when the charge domain
-        /// is asked to add links to a metering point
+        /// is asked to create messages for default links to a metering point
         /// </summary>
         /// <param name="meteringPointId">The metering point to add links to</param>
-        public CreateLinkCommandEvent(
+        public CreateLinkMessagesCommandEvent(
             string meteringPointId)
             : base(Transaction.NewTransaction())
         {
