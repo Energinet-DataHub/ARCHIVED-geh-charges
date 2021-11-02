@@ -16,8 +16,8 @@ using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application.ChargeLinks.MessageHub;
 using GreenEnergyHub.Charges.Domain.ChargeCommandAcceptedEvents;
-using GreenEnergyHub.Charges.Domain.ChargeLinkCommandAcceptedEvents;
-using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandAccepted;
+using GreenEnergyHub.Charges.FunctionHost.Common;
+using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeCommandAccepted;
 using GreenEnergyHub.Charges.Infrastructure.Messaging;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Logging;
@@ -32,12 +32,12 @@ namespace GreenEnergyHub.Charges.FunctionHost.Charges.MessageHub
     public class ChargeDataAvailableNotifierEndpoint
     {
         private const string FunctionName = nameof(ChargeDataAvailableNotifierEndpoint);
-        private readonly MessageExtractor<ChargeCommandAcceptedEvent> _messageExtractor;
+        private readonly MessageExtractor<ChargeCommandAcceptedContract> _messageExtractor;
         private readonly IChargeDataAvailableNotifier _chargeDataAvailableNotifier;
         private readonly ILogger _log;
 
         public ChargeDataAvailableNotifierEndpoint(
-            MessageExtractor<ChargeCommandAcceptedEvent> messageExtractor,
+            MessageExtractor<ChargeCommandAcceptedContract> messageExtractor,
             IChargeDataAvailableNotifier chargeDataAvailableNotifier,
             [NotNull] ILoggerFactory loggerFactory)
         {
@@ -50,9 +50,9 @@ namespace GreenEnergyHub.Charges.FunctionHost.Charges.MessageHub
         [Function(FunctionName)]
         public async Task RunAsync(
             [ServiceBusTrigger(
-                "%CHARGE_ACCEPTED_TOPIC_NAME%",
-                "%CHARGEACCEPTED_SUB_DATAAVAILABLENOTIFIER%",
-                Connection = "DOMAINEVENT_LISTENER_CONNECTION_STRING")]
+                "%" + EnvironmentSettingNames.CommandAcceptedTopicName + "%",
+                "%" + EnvironmentSettingNames.ChargeAcceptedSubDataAvailableNotifier + "%",
+                Connection = EnvironmentSettingNames.DomainEventListenerConnectionString)]
             [NotNull] byte[] message)
         {
             _log.LogInformation("Function {FunctionName} started to process a request with size {Size}", FunctionName, message.Length);
