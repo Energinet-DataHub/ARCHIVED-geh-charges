@@ -20,6 +20,9 @@ namespace GreenEnergyHub.Charges.Infrastructure.Cim
     {
         public string GetUniqueId()
         {
+            /* A GUID ensure our uniqueness, and to comply with an ID that will not
+               give conversions to eBIX an issue, we limit it to below 35 characters
+               by stripping the '-' character */
             return Guid.NewGuid().ToString().Replace("-", string.Empty);
         }
     }
