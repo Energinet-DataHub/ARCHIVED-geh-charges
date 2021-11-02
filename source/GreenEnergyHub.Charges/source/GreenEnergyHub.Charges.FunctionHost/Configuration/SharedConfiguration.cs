@@ -15,6 +15,7 @@
 using System;
 using Azure.Messaging.ServiceBus;
 using Energinet.DataHub.Charges.Libraries.DefaultChargeLink;
+using Energinet.DataHub.Charges.Libraries.DefaultChargeLinkMessages;
 using Energinet.DataHub.Charges.Libraries.Factories;
 using Energinet.DataHub.Charges.Libraries.ServiceBus;
 using Energinet.DataHub.MessageHub.Client;
@@ -71,22 +72,34 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
                 new MessageHubConfig(dataAvailableQueue, domainReplyQueue),
                 storageServiceConnectionString,
                 new StorageConfig(azureBlobStorageContainerName));
-            AddDefaultChargeLinkClient(serviceCollection, serviceBusConnectionString);
+
+            var serviceBusClient = new ServiceBusClient(serviceBusConnectionString);
+            AddDefaultChargeLinkClient(serviceCollection, serviceBusClient);
+            AddDefaultChargeLinkMessagesClient(serviceCollection, serviceBusClient);
+        }
+
+        private static void AddDefaultChargeLinkMessagesClient(
+            IServiceCollection serviceCollection,
+            ServiceBusClient client)
+        {
+            var replyToQueueName = EnvironmentHelper.GetEnv(EnvironmentSettingNames.CreateLinkMessagesRequestQueueName);
+
+            serviceCollection.AddScoped<IServiceBusRequestSender>(_ =>
+                new ServiceBusRequestSender(client, replyToQueueName));
+            serviceCollection.AddSingleton<IDefaultChargeLinkMessagesRequestClient>(_ =>
+                new DefaultChargeLinkMessagesRequestClient(client, new ServiceBusRequestSenderFactory(), replyToQueueName));
         }
 
         private static void AddDefaultChargeLinkClient(
             IServiceCollection serviceCollection,
-            string serviceBusConnectionString)
+            ServiceBusClient client)
         {
             var replyToQueueName = EnvironmentHelper.GetEnv(EnvironmentSettingNames.CreateLinkReplyQueueName);
-            var serviceBusClient = new ServiceBusClient(serviceBusConnectionString);
 
-            serviceCollection.AddScoped<IServiceBusRequestSenderFactory>(_ =>
-                new ServiceBusRequestSenderFactory());
             serviceCollection.AddScoped<IServiceBusRequestSender>(_ =>
-                new ServiceBusRequestSender(serviceBusClient, replyToQueueName));
+                new ServiceBusRequestSender(client, replyToQueueName));
             serviceCollection.AddSingleton<IDefaultChargeLinkClient>(_ =>
-                new DefaultChargeLinkClient(serviceBusClient, new ServiceBusRequestSenderFactory(), replyToQueueName));
+                new DefaultChargeLinkClient(client, new ServiceBusRequestSenderFactory(), replyToQueueName));
         }
 
         private static void ConfigureSharedDatabase(IServiceCollection serviceCollection)

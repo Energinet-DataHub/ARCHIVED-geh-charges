@@ -36,22 +36,25 @@ namespace GreenEnergyHub.Charges.FunctionHost.ChargeLinks
         public const string FunctionName = nameof(CreateChargeLinkMessagesReceiverEndpoint);
         private readonly ICorrelationContext _correlationContext;
         private readonly MessageExtractor<CreateDefaultChargeLinkMessages> _messageExtractor;
+        private readonly ICreateLinkMessagesCommandRequestHandler _createLinkMessagesCommandRequestHandler;
         private readonly ILogger _log;
 
         public CreateChargeLinkMessagesReceiverEndpoint(
             ICorrelationContext correlationContext,
             MessageExtractor<CreateDefaultChargeLinkMessages> messageExtractor,
+            ICreateLinkMessagesCommandRequestHandler createLinkMessagesCommandRequestHandler,
             [NotNull] ILoggerFactory loggerFactory)
         {
             _correlationContext = correlationContext;
             _messageExtractor = messageExtractor;
+            _createLinkMessagesCommandRequestHandler = createLinkMessagesCommandRequestHandler;
             _log = loggerFactory.CreateLogger(nameof(CreateChargeLinkMessagesReceiverEndpoint));
         }
 
         [Function(FunctionName)]
         public async Task RunAsync(
             [ServiceBusTrigger(
-                "%" + EnvironmentSettingNames.CreateLinkRequestQueueName + "%",
+                "%" + EnvironmentSettingNames.CreateLinkMessagesRequestQueueName + "%",
                 Connection = EnvironmentSettingNames.DataHubListenerConnectionString)]
             [NotNull] byte[] message)
         {
@@ -63,9 +66,11 @@ namespace GreenEnergyHub.Charges.FunctionHost.ChargeLinks
             var createLinkCommandEvent =
                 (CreateLinkMessagesCommandEvent)await _messageExtractor.ExtractAsync(message).ConfigureAwait(false);
 
+            await _createLinkMessagesCommandRequestHandler.HandleAsync(createLinkCommandEvent, _correlationContext.Id)
+                .ConfigureAwait(false);
 
             _log.LogInformation(
-                "Received create link command for metering point id '{MeteringPointId}'",
+                "Received create link messages command for metering point id '{MeteringPointId}'",
                 createLinkCommandEvent.MeteringPointId);
         }
     }

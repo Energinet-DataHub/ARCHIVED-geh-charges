@@ -14,6 +14,7 @@
 
 using System.Threading.Tasks;
 using Energinet.DataHub.Charges.Libraries.DefaultChargeLinkMessages;
+using Energinet.DataHub.Charges.Libraries.Models;
 using GreenEnergyHub.Charges.Domain.CreateLinkMessagesCommandEvent;
 
 namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
@@ -21,15 +22,25 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
     public class CreateLinkMessagesCommandRequestHandler : ICreateLinkMessagesCommandRequestHandler
     {
         private readonly IDefaultChargeLinkMessagesRequestClient _messagesRequestClient;
+        private readonly IMessageMetaDataContext _messageMetaDataContext;
 
-        public CreateLinkMessagesCommandRequestHandler(IDefaultChargeLinkMessagesRequestClient messagesRequestClient)
+        public CreateLinkMessagesCommandRequestHandler(
+            IDefaultChargeLinkMessagesRequestClient messagesRequestClient,
+            IMessageMetaDataContext messageMetaDataContext)
         {
             _messagesRequestClient = messagesRequestClient;
+            _messageMetaDataContext = messageMetaDataContext;
         }
 
-        public Task HandleAsync(CreateLinkMessagesCommandEvent createLinkCommandEvent, string correlationId)
+        public async Task HandleAsync(CreateLinkMessagesCommandEvent createLinkCommandEvent, string correlationId)
         {
-            _messagesRequestClient.
+            // This is a stub implementation.
+            await _messagesRequestClient
+                .CreateDefaultChargeLinkMessagesSucceededRequestAsync(
+                    new CreateDefaultChargeLinkMessagesSucceededDto(createLinkCommandEvent.MeteringPointId),
+                    correlationId,
+                    _messageMetaDataContext.ReplyTo)
+                .ConfigureAwait(false);
         }
     }
 }

@@ -32,6 +32,7 @@
     "COMMAND_REJECTED_SUBSCRIPTION_NAME": "sbs-command-rejected",
     "CREATE_LINK_REQUEST_QUEUE_NAME": "create-link-request",
     "CREATE_LINK_REPLY_QUEUE_NAME": "create-link-reply",
+    "CREATE_LINK_MESSAGES_REQUEST_QUEUE_NAME": "create-link-messages-request",
     "CONSUMPTION_METERING_POINT_CREATED_TOPIC_NAME": "consumption-metering-point-created",
     "CONSUMPTION_METERING_POINT_CREATED_SUBSCRIPTION_NAME": "consumption-metering-point-created-sub-charges",
     "COMMAND_ACCEPTED_RECEIVER_SUBSCRIPTION_NAME": "sbs-charge-command-accepted-receiver",
