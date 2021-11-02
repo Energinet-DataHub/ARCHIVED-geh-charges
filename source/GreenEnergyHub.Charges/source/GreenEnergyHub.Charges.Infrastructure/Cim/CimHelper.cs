@@ -28,7 +28,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Cim
         /// <param name="elementName">The name of the element to possibly add</param>
         /// <param name="getValue">Method used to retrieve the value of the element. Note: Lazy, so only invoked if needed</param>
         /// <returns>Empty list if the element is not needed or a list with a single element if the element was needed.
-        /// This will allow us to make sure an element either is skipped or not easily</returns>
+        /// This will allow us to make sure an element either is skipped or not</returns>
         public static IEnumerable<XElement> GetElementIfNeeded(
             XNamespace cimNamespace,
             bool notNeeded,
