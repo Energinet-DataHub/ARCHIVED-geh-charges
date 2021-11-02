@@ -19,6 +19,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.MarketDocument.Cim
 {
     public static class DocumentTypeMapper
     {
+        // These values are ebix values which are used temporarily until CIM code lists are available
         private const string CimNotifyBillingMasterData = "D07";
         private const string CimNotifyPriceList = "D12";
         private const string CimRequestChangeBillingMasterData = "D05";
