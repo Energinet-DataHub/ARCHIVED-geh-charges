@@ -31,7 +31,7 @@ namespace Energinet.DataHub.Charges.Libraries.DefaultChargeLinkMessages
             [NotNull] string correlationId);
 
         /// <summary>
-        /// Used by the Charges domain to respond with failed to the request to create default charge links.
+        /// Used by the Charges domain to respond with failed to the request to create default charge links messages.
         /// </summary>
         /// <param name="createDefaultChargeLinkMessagesFailedDto"></param>
         /// <param name="correlationId"></param>
@@ -42,7 +42,7 @@ namespace Energinet.DataHub.Charges.Libraries.DefaultChargeLinkMessages
             [NotNull] string replyQueueName);
 
         /// <summary>
-        ///  Used by the Charges domain to respond with success to the request to create default charge links.
+        ///  Used by the Charges domain to respond with success to the request to create default charge links messages.
         /// </summary>
         /// <param name="createDefaultChargeLinkMessagesSucceededDto"></param>
         /// <param name="correlationId"></param>
