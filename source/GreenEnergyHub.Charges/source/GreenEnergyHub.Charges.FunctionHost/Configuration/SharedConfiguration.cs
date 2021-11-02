@@ -129,8 +129,8 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
             serviceCollection.AddScoped<ICimIdProvider, CimIdProvider>();
             serviceCollection.AddScoped<IHubSenderConfiguration>(_ =>
             {
-                var senderId = EnvironmentHelper.GetEnv("HUB_SENDER_ID");
-                var roleIntText = EnvironmentHelper.GetEnv("HUB_SENDER_ROLE_INT_ENUM_VALUE");
+                var senderId = EnvironmentHelper.GetEnv(EnvironmentSettingNames.HubSenderId);
+                var roleIntText = EnvironmentHelper.GetEnv(EnvironmentSettingNames.HubSenderRoleIntEnumValue);
                 return new HubSenderConfiguration(
                     senderId,
                     (MarketParticipantRole)int.Parse(roleIntText));
@@ -139,7 +139,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
 
         private static void ConfigureIso8601Services(IServiceCollection serviceCollection)
         {
-            var timeZoneId = EnvironmentHelper.GetEnv("LOCAL_TIMEZONENAME");
+            var timeZoneId = EnvironmentHelper.GetEnv(EnvironmentSettingNames.LocalTimeZoneName);
             var timeZoneConfiguration = new Iso8601ConversionConfiguration(timeZoneId);
             serviceCollection.AddSingleton<IIso8601ConversionConfiguration>(timeZoneConfiguration);
             serviceCollection.AddSingleton<IIso8601Durations, Iso8601Durations>();
