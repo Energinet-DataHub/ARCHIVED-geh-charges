@@ -34,12 +34,18 @@ limitations under the License.
     <Authors>DataHub</Authors>
     <RepositoryUrl>https://github.com/Energinet-DataHub/geh-charges</RepositoryUrl>
     <PackageReleaseNotes>
-      [Release Notes](https://github.com/Energinet-DataHub/geh-charges/source/Energinet.Charges.Libraries/source/Energinet.DataHub.Charges.Clients/documents/release-notes/release-notes.md)
-      [Documentation](https://github.com/Energinet-DataHub/geh-charges/source/Energinet.Charges.Libraries/source/Energinet.DataHub.Charges.Clients/documents/documentation.md)
+Release Notes
+https://github.com/Energinet-DataHub/geh-charges/source/Energinet.Charges.Libraries/source/Energinet.DataHub.Charges.Clients/documents/release-notes/release-notes.md
+
+Documentation
+https://github.com/Energinet-DataHub/geh-charges/source/Energinet.Charges.Libraries/source/Energinet.DataHub.Charges.Clients/documents/documentation.md)
     </PackageReleaseNotes>
     <PackageDescription>
-      [Release Notes](https://github.com/Energinet-DataHub/geh-charges/source/Energinet.Charges.Libraries/source/Energinet.DataHub.Charges.Clients/documents/release-notes/release-notes.md)
-      [Documentation](https://github.com/Energinet-DataHub/geh-charges/source/Energinet.Charges.Libraries/source/Energinet.DataHub.Charges.Clients/documents/documentation.md)
+Release Notes
+https://github.com/Energinet-DataHub/geh-charges/source/Energinet.Charges.Libraries/source/Energinet.DataHub.Charges.Clients/documents/release-notes/release-notes.md
+
+Documentation
+https://github.com/Energinet-DataHub/geh-charges/source/Energinet.Charges.Libraries/source/Energinet.DataHub.Charges.Clients/documents/documentation.md)
     </PackageDescription>
     <Description>Library containing communication API for Charges Clients</Description>
     <PackageTags>green-energy-hub;datahub;library</PackageTags>
