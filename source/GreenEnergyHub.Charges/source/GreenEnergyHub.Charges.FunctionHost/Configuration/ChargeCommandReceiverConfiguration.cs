@@ -74,7 +74,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
 
         private static void ConfigureIso8601Timezones(IServiceCollection serviceCollection)
         {
-            var timeZoneId = EnvironmentHelper.GetEnv("LOCAL_TIMEZONENAME");
+            var timeZoneId = EnvironmentHelper.GetEnv(EnvironmentSettingNames.LocalTimeZoneName);
             var timeZoneConfiguration = new Iso8601ConversionConfiguration(timeZoneId);
             serviceCollection.AddSingleton<IIso8601ConversionConfiguration>(timeZoneConfiguration);
             serviceCollection.AddScoped<IZonedDateTimeService, ZonedDateTimeService>();
@@ -82,7 +82,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
 
         private static void ConfigureIso4217Currency(IServiceCollection serviceCollection)
         {
-            var currency = EnvironmentHelper.GetEnv("CURRENCY");
+            var currency = EnvironmentHelper.GetEnv(EnvironmentSettingNames.Currency);
             var iso4217Currency = new CurrencyConfigurationIso4217(currency);
             serviceCollection.AddSingleton(iso4217Currency);
         }
@@ -95,12 +95,12 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
             serviceCollection.SendProtobuf<ChargeCommandAcceptedContract>();
             serviceCollection.AddMessagingProtobuf().AddMessageDispatcher<ChargeCommandAcceptedEvent>(
                 EnvironmentHelper.GetEnv(EnvironmentSettingNames.DomainEventSenderConnectionString),
-                EnvironmentHelper.GetEnv("COMMAND_ACCEPTED_TOPIC_NAME"));
+                EnvironmentHelper.GetEnv(EnvironmentSettingNames.CommandAcceptedTopicName));
 
             serviceCollection.SendProtobuf<ChargeCommandRejectedContract>();
             serviceCollection.AddMessagingProtobuf().AddMessageDispatcher<ChargeCommandRejectedEvent>(
                 EnvironmentHelper.GetEnv(EnvironmentSettingNames.DomainEventSenderConnectionString),
-                EnvironmentHelper.GetEnv("COMMAND_REJECTED_TOPIC_NAME"));
+                EnvironmentHelper.GetEnv(EnvironmentSettingNames.CommandRejectedTopicName));
         }
     }
 }
