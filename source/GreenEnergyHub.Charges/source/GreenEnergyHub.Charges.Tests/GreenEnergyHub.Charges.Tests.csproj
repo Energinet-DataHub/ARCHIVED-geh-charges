@@ -59,11 +59,13 @@ limitations under the License.
       <EmbeddedResource Include="TestFiles\Valid_CIM_ChargeLink.xml" />
       <EmbeddedResource Include="TestFiles\Valid_CIM_ChargeLink_WithUnusedCimContent.xml" />
       <EmbeddedResource Include="TestFiles\Valid_CIM_ChargeLink_WithoutEndDate.xml" />
-      <EmbeddedResource Include="TestFiles\ExpectedOutputChargeLinkCimSerializer.xml" />
-      <EmbeddedResource Include="TestFiles\License.txt" />
+      <EmbeddedResource Include="TestFiles\ExpectedOutputChargeLinkCimSerializer.blob" />
       <EmbeddedResource Include="TestFiles\Syntax_Valid_CIM_Charge.xml" />
       <EmbeddedResource Include="TestFiles\Valid_CIM_Charge_Prices_Without_Master_Data.xml" />
       <EmbeddedResource Include="TestFiles\Valid_CIM_Charge_Without_Prices.xml" />
+      <EmbeddedResource Include="TestFiles\ExpectedOutputChargeCimSerializerMasterDataAndPrices.blob" />
+      <EmbeddedResource Include="TestFiles\ExpectedOutputChargeCimSerializerMasterDataWithoutPrices.blob" />
+      <EmbeddedResource Include="TestFiles\ExpectedOutputChargeCimSerializerPricesWithoutMasterData.blob" />
     </ItemGroup>
 
     <ItemGroup>

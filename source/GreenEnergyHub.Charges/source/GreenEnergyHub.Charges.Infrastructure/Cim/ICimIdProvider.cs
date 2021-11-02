@@ -12,17 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace GreenEnergyHub.Charges.Domain.MarketParticipants
+namespace GreenEnergyHub.Charges.Infrastructure.Cim
 {
     /// <summary>
-    /// The document type indicates the intended business context of this business message.
+    /// Interface for creating CIM IDs
     /// </summary>
-    public enum DocumentType
+    public interface ICimIdProvider
     {
-        Unknown = 0,
-        RequestChangeBillingMasterData = 1, // Document requesting to update links between metering points and charges
-        RequestUpdateChargeInformation = 2, // Document requesting to update charge master data and/or prices
-        NotifyBillingMasterData = 3, // Document containing changes to links between metering points and charges
-        NotifyPriceList = 4, // Document containing changes to charge master data or prices
+        /// <summary>
+        /// Retrieves a unique ID which is CIM compatible
+        /// </summary>
+        /// <returns>A unique ID</returns>
+        string GetUniqueId();
     }
 }

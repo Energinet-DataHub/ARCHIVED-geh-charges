@@ -78,6 +78,16 @@ namespace Energinet.DataHub.Charges.Clients.IntegrationTests.Fixtures
                 ChargesClientsServiceBusOptions.CreateLinkReplyQueueKey).ConfigureAwait(false);
             Environment.SetEnvironmentVariable(EnvironmentSettingNames.CreateLinkReplyQueueName, createLinkReplyQueueName);
             await ServiceBusListenerMock.AddQueueListenerAsync(createLinkReplyQueueName).ConfigureAwait(false);
+
+            var createLinkMessagesRequestQueueName = await GetQueueNameFromKeyAsync(
+                ChargesClientsServiceBusOptions.CreateLinkMessagesRequestQueueKey).ConfigureAwait(false);
+            Environment.SetEnvironmentVariable(EnvironmentSettingNames.CreateLinkMessagesRequestQueueName, createLinkMessagesRequestQueueName);
+            await ServiceBusListenerMock.AddQueueListenerAsync(createLinkMessagesRequestQueueName).ConfigureAwait(false);
+
+            var createLinkMessagesReplyQueueName = await GetQueueNameFromKeyAsync(
+                ChargesClientsServiceBusOptions.CreateLinkMessagesReplyQueueKey).ConfigureAwait(false);
+            Environment.SetEnvironmentVariable(EnvironmentSettingNames.CreateLinkMessagesReplyQueueName, createLinkMessagesReplyQueueName);
+            await ServiceBusListenerMock.AddQueueListenerAsync(createLinkMessagesReplyQueueName).ConfigureAwait(false);
         }
 
         /// <inheritdoc/>
