@@ -13,5 +13,5 @@ Learn more about Energinet at https://energinet.dk/.
 
 The library provides
 
-- The type `Energinet.DataHub.Charges.Libraries.DefaultChargeLink.IDefaultChargeLinkClient` to request creation of charge links from defaults and handle the reply
-- The type `Energinet.DataHub.Charges.Libraries.DefaultChargeLinkMessages.IDefaultChargeLinkMessagesRequestClient` to request sending notifications to market actors about charge links created from defaults initiated from previous request - and handle the reply
+- The type [`IDefaultChargeLinkClient`](https://github.com/Energinet-DataHub/geh-charges/blob/main/source/Energinet.Charges.Libraries/source/Energinet.DataHub.Charges.Clients/DefaultChargeLink/IDefaultChargeLinkClient.cs) to request creation of charge links from defaults and handle the reply
+- The type [`IDefaultChargeLinkMessagesClient`](https://github.com/Energinet-DataHub/geh-charges/blob/main/source/Energinet.Charges.Libraries/source/Energinet.DataHub.Charges.Clients/DefaultChargeLinkMessages/IDefaultChargeLinkMessagesClient.cs) to request sending notifications to market actors about charge links created from defaults initiated from previous request - and handle the reply
