@@ -27,9 +27,11 @@ using GreenEnergyHub.Charges.IntegrationTests.TestHelpers;
 using NodaTime;
 using Xunit;
 using Xunit.Abstractions;
+using Xunit.Categories;
 
-namespace GreenEnergyHub.Charges.IntegrationTests.Functions.ChargeLinks.MessageHub
+namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests.ChargeLinks.MessageHub
 {
+    [IntegrationTest]
     public class ChargeLinkDataAvailableNotifierEndpointTests
     {
         [Collection(nameof(ChargesFunctionAppCollectionFixture))]

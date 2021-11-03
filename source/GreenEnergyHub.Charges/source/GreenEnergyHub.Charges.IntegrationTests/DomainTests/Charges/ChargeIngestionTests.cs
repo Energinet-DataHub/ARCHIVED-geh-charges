@@ -26,12 +26,14 @@ using GreenEnergyHub.Charges.IntegrationTests.TestHelpers;
 using NodaTime;
 using Xunit;
 using Xunit.Abstractions;
+using Xunit.Categories;
 
-namespace GreenEnergyHub.Charges.IntegrationTests.Functions.Charges
+namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests.Charges
 {
     /// <summary>
     /// Proof-of-concept on integration testing a function.
     /// </summary>
+    [IntegrationTest]
     public class ChargeIngestionTests
     {
         [Collection(nameof(ChargesFunctionAppCollectionFixture))]
