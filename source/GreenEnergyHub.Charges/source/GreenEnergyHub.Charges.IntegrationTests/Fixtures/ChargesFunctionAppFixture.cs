@@ -24,6 +24,7 @@ using Energinet.DataHub.Core.FunctionApp.TestCommon.FunctionAppHost;
 using Energinet.DataHub.Core.FunctionApp.TestCommon.ServiceBus;
 using Energinet.DataHub.Core.FunctionApp.TestCommon.ServiceBus.ListenerMock;
 using GreenEnergyHub.Charges.FunctionHost.Common;
+using GreenEnergyHub.Charges.IntegrationTests.TestCommon;
 using GreenEnergyHub.Charges.TestCore.Database;
 using Microsoft.Extensions.Configuration;
 using Squadron;
@@ -158,7 +159,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures
             var chargePricesUpdatedTopicName = await GetTopicNameFromKeyAsync(ChargesFunctionAppServiceBusOptions.ChargePricesUpdatedTopicKey);
             Environment.SetEnvironmentVariable(EnvironmentSettingNames.ChargePricesUpdatedTopicName, chargePricesUpdatedTopicName);
 
-            Environment.SetEnvironmentVariable("CHARGEACCEPTED_SUB_DATAAVAILABLENOTIFIER", ChargesFunctionAppServiceBusOptions.ChargeAcceptedDataAvailableNotifierSubscriptionName);
+            Environment.SetEnvironmentVariable(ChargesFunctionAppServiceBusOptions.ChargeAcceptedDataAvailableNotifierSubscriptionKey, ChargesFunctionAppServiceBusOptions.ChargeAcceptedDataAvailableNotifierSubscriptionName);
 
             var messageHubDataAvailableQueueName = await GetQueueNameFromKeyAsync(ChargesFunctionAppServiceBusOptions.MessageHubDataAvailableQueueKey);
             Environment.SetEnvironmentVariable(EnvironmentSettingNames.MessageHubDataAvailableQueue, messageHubDataAvailableQueueName);

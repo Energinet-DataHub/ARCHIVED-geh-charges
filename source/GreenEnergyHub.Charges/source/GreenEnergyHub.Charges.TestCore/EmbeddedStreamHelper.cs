@@ -31,5 +31,11 @@ namespace GreenEnergyHub.Charges.TestCore
 
             return result;
         }
+
+        public static string GetEmbeddedStreamAsString(Assembly assembly, string streamPath)
+        {
+            using var stream = GetInputStream(assembly, streamPath);
+            return stream.AsString();
+        }
     }
 }

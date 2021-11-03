@@ -44,7 +44,7 @@ limitations under the License.
         <PackageReference Include="System.ComponentModel.TypeConverter" Version="4.3.0" />
         <PackageReference Include="xunit" Version="2.4.1" />
         <PackageReference Include="FluentAssertions" Version="6.2.0" />
-        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.11.0" />
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.0.0" />
         <PackageReference Include="xunit.runner.visualstudio" Version="2.4.3" />
         <PackageReference Include="coverlet.collector" Version="3.1.0" />
         <PackageReference Include="Google.Protobuf" Version="3.19.1" />
@@ -59,11 +59,13 @@ limitations under the License.
       <EmbeddedResource Include="TestFiles\Valid_CIM_ChargeLink.xml" />
       <EmbeddedResource Include="TestFiles\Valid_CIM_ChargeLink_WithUnusedCimContent.xml" />
       <EmbeddedResource Include="TestFiles\Valid_CIM_ChargeLink_WithoutEndDate.xml" />
-      <EmbeddedResource Include="TestFiles\ExpectedOutputChargeLinkCimSerializer.xml" />
-      <EmbeddedResource Include="TestFiles\License.txt" />
+      <EmbeddedResource Include="TestFiles\ExpectedOutputChargeLinkCimSerializer.blob" />
       <EmbeddedResource Include="TestFiles\Syntax_Valid_CIM_Charge.xml" />
       <EmbeddedResource Include="TestFiles\Valid_CIM_Charge_Prices_Without_Master_Data.xml" />
       <EmbeddedResource Include="TestFiles\Valid_CIM_Charge_Without_Prices.xml" />
+      <EmbeddedResource Include="TestFiles\ExpectedOutputChargeCimSerializerMasterDataAndPrices.blob" />
+      <EmbeddedResource Include="TestFiles\ExpectedOutputChargeCimSerializerMasterDataWithoutPrices.blob" />
+      <EmbeddedResource Include="TestFiles\ExpectedOutputChargeCimSerializerPricesWithoutMasterData.blob" />
     </ItemGroup>
 
     <ItemGroup>

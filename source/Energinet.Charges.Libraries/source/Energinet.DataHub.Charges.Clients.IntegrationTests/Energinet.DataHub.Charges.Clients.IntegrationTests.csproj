@@ -28,7 +28,7 @@ limitations under the License.
 
   <ItemGroup>
     <PackageReference Include="Azure.Messaging.ServiceBus" Version="7.4.0" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.11.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.0.0" />
     <PackageReference Include="Moq" Version="4.16.1" />
     <PackageReference Include="Squadron.AzureCloud" Version="0.13.0" />
     <PackageReference Include="Squadron.AzureCloudServiceBus" Version="0.13.0" />

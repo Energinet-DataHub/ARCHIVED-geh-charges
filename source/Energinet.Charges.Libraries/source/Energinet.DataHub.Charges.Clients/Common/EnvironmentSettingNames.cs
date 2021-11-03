@@ -28,5 +28,7 @@ namespace Energinet.DataHub.Charges.Libraries.Common
 
         public const string CreateLinkRequestQueueName = "CREATE_LINK_REQUEST_QUEUE_NAME";
         public const string CreateLinkReplyQueueName = "CREATE_LINK_REPLY_QUEUE_NAME";
+        public const string CreateLinkMessagesRequestQueueName = "CREATE_LINK_MESSAGES_REQUEST_QUEUE_NAME";
+        public const string CreateLinkMessagesReplyQueueName = "CREATE_LINK_MESSAGES_REPLY_QUEUE_NAME";
     }
 }
