@@ -17,7 +17,6 @@ using Energinet.DataHub.MessageHub.Client.Peek;
 using GreenEnergyHub.Charges.Application.ChargeLinks.MessageHub;
 using GreenEnergyHub.Charges.FunctionHost.Common;
 using Microsoft.Azure.Functions.Worker;
-using Microsoft.Extensions.Logging;
 
 namespace GreenEnergyHub.Charges.FunctionHost.ChargeLinks.MessageHub
 {
@@ -30,17 +29,14 @@ namespace GreenEnergyHub.Charges.FunctionHost.ChargeLinks.MessageHub
     {
         private const string FunctionName = nameof(ChargeLinkBundleSenderEndpoint);
         private readonly IChargeLinkBundleSender _chargeLinkBundleSender;
-        private readonly ILogger _log;
         private readonly IRequestBundleParser _requestBundleParser;
 
         public ChargeLinkBundleSenderEndpoint(
             IChargeLinkBundleSender chargeLinkBundleSender,
-            ILoggerFactory loggerFactory,
             IRequestBundleParser requestBundleParser)
         {
             _chargeLinkBundleSender = chargeLinkBundleSender;
             _requestBundleParser = requestBundleParser;
-            _log = loggerFactory.CreateLogger(nameof(ChargeLinkBundleSenderEndpoint));
         }
 
         [Function(FunctionName)]
@@ -49,11 +45,8 @@ namespace GreenEnergyHub.Charges.FunctionHost.ChargeLinks.MessageHub
                 "%" + EnvironmentSettingNames.MessageHubBundleRequestQueue + "%",
                 Connection = EnvironmentSettingNames.DataHubListenerConnectionString,
                 IsSessionsEnabled = true)]
-            byte[] data,
-            FunctionContext functionContext)
+            byte[] data)
         {
-            _log.LogInformation("Function {FunctionName} started to process a request with size {Size}", FunctionName, data.Length);
-
             var request = _requestBundleParser.Parse(data);
             await _chargeLinkBundleSender.SendAsync(request).ConfigureAwait(false);
         }
