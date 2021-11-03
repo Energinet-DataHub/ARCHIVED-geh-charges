@@ -49,10 +49,11 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures
         public const string CommandRejectedSubscriptionName = "sbs-command-rejected";
 
         public const string CreateLinkRequestQueueKey = "create-link-request";
-        public const string CreateLinkMessagesRequestQueueKey = "create-link-messages-request";
 
         public const string CreateLinkReplyQueueName = "create-link-reply";
         public const string CreateLinkReplyQueueKey = "CREATE_LINK_REPLY_QUEUE_NAME";
+
+        public const string CreateLinkMessagesRequestQueueKey = "create-link-messages-request";
 
         public const string CreateLinkMessagesReplyQueueName = "create-link-messages-reply";
         public const string CreateLinkMessagesReplyQueueKey = "CREATE_LINK_MESSAGES_REPLY_QUEUE_NAME";
