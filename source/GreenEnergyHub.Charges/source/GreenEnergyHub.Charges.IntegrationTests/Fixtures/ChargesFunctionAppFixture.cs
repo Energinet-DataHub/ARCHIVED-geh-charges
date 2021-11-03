@@ -24,6 +24,7 @@ using Energinet.DataHub.Core.FunctionApp.TestCommon.FunctionAppHost;
 using Energinet.DataHub.Core.FunctionApp.TestCommon.ServiceBus;
 using Energinet.DataHub.Core.FunctionApp.TestCommon.ServiceBus.ListenerMock;
 using GreenEnergyHub.Charges.FunctionHost.Common;
+using GreenEnergyHub.Charges.IntegrationTests.TestCommon;
 using GreenEnergyHub.Charges.TestCore.Database;
 using Microsoft.Extensions.Configuration;
 using Squadron;
@@ -141,9 +142,14 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures
             var createLinkRequestQueueName = await GetQueueNameFromKeyAsync(ChargesFunctionAppServiceBusOptions.CreateLinkRequestQueueKey);
             Environment.SetEnvironmentVariable(EnvironmentSettingNames.CreateLinkRequestQueueName, createLinkRequestQueueName);
 
-            // "CREATE_LINK_REPLY_QUEUE_NAME" should not be in EnvironmentSettingNames as it is only for testing
-            var createLinkReplyQueueName = await GetQueueNameFromKeyAsync(ChargesFunctionAppServiceBusOptions.CreateLinkReplyQueueKey);
-            Environment.SetEnvironmentVariable("CREATE_LINK_REPLY_QUEUE_NAME", createLinkReplyQueueName);
+            var createLinkReplyQueueName = await GetQueueNameFromKeyAsync(ChargesFunctionAppServiceBusOptions.CreateLinkReplyQueueName);
+            Environment.SetEnvironmentVariable(ChargesFunctionAppServiceBusOptions.CreateLinkReplyQueueKey, createLinkReplyQueueName);
+
+            var createLinkMessagesRequestQueueName = await GetQueueNameFromKeyAsync(ChargesFunctionAppServiceBusOptions.CreateLinkMessagesRequestQueueKey);
+            Environment.SetEnvironmentVariable(EnvironmentSettingNames.CreateLinkMessagesRequestQueueName, createLinkMessagesRequestQueueName);
+
+            var createLinkMessagesReplyQueueName = await GetQueueNameFromKeyAsync(ChargesFunctionAppServiceBusOptions.CreateLinkMessagesReplyQueueName);
+            Environment.SetEnvironmentVariable(ChargesFunctionAppServiceBusOptions.CreateLinkMessagesReplyQueueKey, createLinkMessagesReplyQueueName);
 
             var consumptionMeteringPointCreatedTopicName = await GetTopicNameFromKeyAsync(ChargesFunctionAppServiceBusOptions.ConsumptionMeteringPointCreatedTopicKey);
             Environment.SetEnvironmentVariable(EnvironmentSettingNames.ConsumptionMeteringPointCreatedTopicName, consumptionMeteringPointCreatedTopicName);
@@ -155,7 +161,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures
             var chargePricesUpdatedTopicName = await GetTopicNameFromKeyAsync(ChargesFunctionAppServiceBusOptions.ChargePricesUpdatedTopicKey);
             Environment.SetEnvironmentVariable(EnvironmentSettingNames.ChargePricesUpdatedTopicName, chargePricesUpdatedTopicName);
 
-            Environment.SetEnvironmentVariable("CHARGEACCEPTED_SUB_DATAAVAILABLENOTIFIER", ChargesFunctionAppServiceBusOptions.ChargeAcceptedDataAvailableNotifierSubscriptionName);
+            Environment.SetEnvironmentVariable(ChargesFunctionAppServiceBusOptions.ChargeAcceptedDataAvailableNotifierSubscriptionKey, ChargesFunctionAppServiceBusOptions.ChargeAcceptedDataAvailableNotifierSubscriptionName);
 
             var messageHubDataAvailableQueueName = await GetQueueNameFromKeyAsync(ChargesFunctionAppServiceBusOptions.MessageHubDataAvailableQueueKey);
             Environment.SetEnvironmentVariable(EnvironmentSettingNames.MessageHubDataAvailableQueue, messageHubDataAvailableQueueName);

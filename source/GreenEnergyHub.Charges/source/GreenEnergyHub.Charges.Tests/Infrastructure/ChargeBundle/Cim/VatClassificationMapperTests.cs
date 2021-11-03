@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.ComponentModel;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Infrastructure.ChargeBundle.Cim;
@@ -33,6 +34,22 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.ChargeBundle.Cim
         {
             var actual = VatClassificationMapper.Map(vatClassification);
             actual.Should().Be(expected);
+        }
+
+        [Theory]
+        [InlineData(VatClassification.NoVat, "D01")]
+        [InlineData(VatClassification.Vat25, "D02")]
+        public void Map_WhenGivenKnownInput_MapsToCorrectString(VatClassification vatClassification, string expected)
+        {
+            var actual = VatClassificationMapper.Map(vatClassification);
+            actual.Should().Be(expected);
+        }
+
+        [Theory]
+        [InlineData(VatClassification.Unknown)]
+        public void Map_WhenGivenUnknownInput_ThrowsExceptions(VatClassification vatClassification)
+        {
+            Assert.Throws<InvalidEnumArgumentException>(() => VatClassificationMapper.Map(vatClassification));
         }
     }
 }
