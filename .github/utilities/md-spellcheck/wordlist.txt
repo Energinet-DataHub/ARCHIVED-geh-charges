@@ -38,6 +38,7 @@ Energinet
 IaC
 IntegrationEventContract
 mergeable
+MessageHub
 MeteringPointId
 MPL
 namespace
