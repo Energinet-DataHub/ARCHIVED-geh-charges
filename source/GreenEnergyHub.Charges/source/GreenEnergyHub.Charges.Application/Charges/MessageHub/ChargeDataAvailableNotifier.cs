@@ -31,8 +31,8 @@ namespace GreenEnergyHub.Charges.Application.Charges.MessageHub
         /// <summary>
         /// The upper anticipated weight (kilobytes) contribution to the final bundle from the charge created event.
         /// </summary>
-        private const decimal ChargeMessageWeight = 2m;
-        private const decimal ChargePointMessageWeight = 0.1m;
+        private const decimal ChargeMessageWeight = 5m;
+        private const decimal ChargePointMessageWeight = 0.2m;
 
         private readonly IDataAvailableNotificationSender _dataAvailableNotificationSender;
         private readonly IAvailableChargeDataRepository _availableChargeDataRepository;
