@@ -45,12 +45,12 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.ChargeBundle.MessageHub
             // Arrange
             var availableChargeData1 = new AvailableChargeDataBuilder().Build();
             var availableChargeData2 = new AvailableChargeDataBuilder().Build();
-            var availableChargeDatas = new List<AvailableChargeData> { availableChargeData1, availableChargeData2 };
+            var availableChargeData = new List<AvailableChargeData> { availableChargeData1, availableChargeData2 };
 
             respository.Setup(
                     r => r.GetAvailableChargeDataAsync(
                         dataBundleRequestDto.DataAvailableNotificationIds))
-                .Returns(Task.FromResult(availableChargeDatas));
+                .Returns(Task.FromResult(availableChargeData));
 
             // Act
             var ranSuccessfully = await sut.CreateSuccessfullyAsync(dataBundleRequestDto, stream).ConfigureAwait(false);
@@ -59,7 +59,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.ChargeBundle.MessageHub
             ranSuccessfully.Should().BeTrue();
             serializer.Verify(
                 s => s.SerializeToStreamAsync(
-                    availableChargeDatas,
+                    availableChargeData,
                     stream),
                 Times.Once);
         }
@@ -80,12 +80,12 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.ChargeBundle.MessageHub
             var availableChargeData2 = new AvailableChargeDataBuilder()
                 .WithBusinessReasonCode(BusinessReasonCode.UpdateMasterDataSettlement)
                 .Build();
-            var availableChargeDatas = new List<AvailableChargeData> { availableChargeData1, availableChargeData2 };
+            var availableChargeData = new List<AvailableChargeData> { availableChargeData1, availableChargeData2 };
 
             respository.Setup(
                     r => r.GetAvailableChargeDataAsync(
                         dataBundleRequestDto.DataAvailableNotificationIds))
-                .Returns(Task.FromResult(availableChargeDatas));
+                .Returns(Task.FromResult(availableChargeData));
 
             // Act
             var ranSuccessfully = await sut.CreateSuccessfullyAsync(dataBundleRequestDto, stream).ConfigureAwait(false);
@@ -94,7 +94,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.ChargeBundle.MessageHub
             ranSuccessfully.Should().BeFalse();
             serializer.Verify(
                 s => s.SerializeToStreamAsync(
-                    availableChargeDatas,
+                    availableChargeData,
                     stream),
                 Times.Never);
         }
