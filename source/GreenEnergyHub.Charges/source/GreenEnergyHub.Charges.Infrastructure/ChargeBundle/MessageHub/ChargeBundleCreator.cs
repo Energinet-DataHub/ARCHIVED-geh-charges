@@ -13,10 +13,12 @@
 // limitations under the License.
 
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using Energinet.DataHub.MessageHub.Client.Model;
 using GreenEnergyHub.Charges.Application.Charges.MessageHub.Infrastructure;
 using GreenEnergyHub.Charges.Domain.AvailableChargeData;
+using GreenEnergyHub.Charges.Infrastructure.ChargeBundle.Cim;
 
 namespace GreenEnergyHub.Charges.Infrastructure.ChargeBundle.MessageHub
 {
@@ -24,22 +26,27 @@ namespace GreenEnergyHub.Charges.Infrastructure.ChargeBundle.MessageHub
     {
         private readonly IAvailableChargeDataRepository _availableChargeDataRepository;
 
-        // private readonly IChargeCimSerializer _chargeCimSerializer;
+        private readonly IChargeCimSerializer _chargeCimSerializer;
+
         public ChargeBundleCreator(
-            IAvailableChargeDataRepository availableChargeDataRepository)
-            // IChargeCimSerializer chargeCimSerializer
+            IAvailableChargeDataRepository availableChargeDataRepository,
+            IChargeCimSerializer chargeCimSerializer)
         {
             _availableChargeDataRepository = availableChargeDataRepository;
-            // _chargeCimSerializer = chargeCimSerializer;
+            _chargeCimSerializer = chargeCimSerializer;
         }
 
-        public async Task CreateAsync(DataBundleRequestDto request, Stream outputStream)
+        public async Task<bool> CreateSuccessfullyAsync(DataBundleRequestDto request, Stream outputStream)
         {
             var availableData = await _availableChargeDataRepository
                 .GetAvailableChargeDataAsync(request.DataAvailableNotificationIds)
                 .ConfigureAwait(false);
 
-            // await _chargeCimSerializer.SerializeToStreamAsync(availableData, outputStream).ConfigureAwait(false);
+            if (availableData.GroupBy(x => x.BusinessReasonCode).Count() > 1)
+                return false;
+
+            await _chargeCimSerializer.SerializeToStreamAsync(availableData, outputStream).ConfigureAwait(false);
+            return true;
         }
     }
 }
