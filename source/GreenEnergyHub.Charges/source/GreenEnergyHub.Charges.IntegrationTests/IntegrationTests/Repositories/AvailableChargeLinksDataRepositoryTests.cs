@@ -17,21 +17,17 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
-using AutoFixture.Xunit2;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.AvailableChargeLinksData;
-using GreenEnergyHub.Charges.Domain.ChargeLinkCommandAcceptedEvents;
-using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.Infrastructure.Repositories;
 using GreenEnergyHub.Charges.TestCore.Attributes;
 using GreenEnergyHub.Charges.TestCore.Database;
-using Moq;
 using Xunit;
 using Xunit.Categories;
 
-namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
+namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
 {
-    [UnitTest]
+    [IntegrationTest]
     public class AvailableChargeLinksDataRepositoryTests : IClassFixture<ChargesDatabaseFixture>
     {
         private readonly ChargesDatabaseManager _databaseManager;

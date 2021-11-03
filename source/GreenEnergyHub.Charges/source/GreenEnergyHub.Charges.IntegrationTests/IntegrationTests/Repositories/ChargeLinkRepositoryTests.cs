@@ -29,12 +29,12 @@ using Xunit;
 using Xunit.Categories;
 using MarketParticipant = GreenEnergyHub.Charges.Infrastructure.Context.Model.MarketParticipant;
 
-namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
+namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
 {
     /// <summary>
     /// Tests <see cref="ChargeRepository"/> using a SQL database.
     /// </summary>
-    [UnitTest]
+    [IntegrationTest]
     public class ChargeLinkRepositoryTests : IClassFixture<ChargesDatabaseFixture>
     {
         private const string ExpectedOperationId = "expected-operation-id";

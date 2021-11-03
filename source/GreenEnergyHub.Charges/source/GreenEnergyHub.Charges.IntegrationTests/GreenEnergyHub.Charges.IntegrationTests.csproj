@@ -79,4 +79,9 @@ limitations under the License.
         <CopyToPublishDirectory>Never</CopyToPublishDirectory>
       </None>
     </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="DomainTests\ChargeLinks" />
+      <Folder Include="IntegrationTests" />
+    </ItemGroup>
 </Project>

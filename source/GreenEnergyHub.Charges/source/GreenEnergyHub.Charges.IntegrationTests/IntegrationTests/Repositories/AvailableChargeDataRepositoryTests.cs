@@ -25,9 +25,9 @@ using GreenEnergyHub.Charges.TestCore.Database;
 using Xunit;
 using Xunit.Categories;
 
-namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
+namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
 {
-    [UnitTest]
+    [IntegrationTest]
     public class AvailableChargeDataRepositoryTests : IClassFixture<ChargesDatabaseFixture>
     {
         private readonly ChargesDatabaseManager _databaseManager;

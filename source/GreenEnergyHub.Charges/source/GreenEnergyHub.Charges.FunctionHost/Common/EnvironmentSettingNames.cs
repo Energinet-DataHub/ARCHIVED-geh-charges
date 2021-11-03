@@ -43,6 +43,8 @@ namespace GreenEnergyHub.Charges.FunctionHost.Common
         public const string ChargeLinkAcceptedReplier = "CHARGELINKACCEPTED_SUB_REPLIER";
         public const string CreateLinkReplyQueueName = "CREATE_LINK_REPLY_QUEUE_NAME";
 
+        public const string CreateLinkMessagesReplyQueueName = "CREATE_LINK_MESSAGES_REPLY_QUEUE_NAME";
+
         /// <summary>
         /// Deprecated: This is from an old implementation where we mimicked sending to the post office
         /// by sending to a topic we provisioned ourselves in the charges domain.
@@ -72,6 +74,8 @@ namespace GreenEnergyHub.Charges.FunctionHost.Common
         public const string CommandRejectedSubscriptionName = "COMMAND_REJECTED_SUBSCRIPTION_NAME";
 
         public const string CreateLinkRequestQueueName = "CREATE_LINK_REQUEST_QUEUE_NAME";
+
+        public const string CreateLinkMessagesRequestQueueName = "CREATE_LINK_MESSAGES_REQUEST_QUEUE_NAME";
 
         public const string ConsumptionMeteringPointCreatedTopicName = "CONSUMPTION_METERING_POINT_CREATED_TOPIC_NAME";
         public const string ConsumptionMeteringPointCreatdSubscriptionName = "CONSUMPTION_METERING_POINT_CREATED_SUBSCRIPTION_NAME";

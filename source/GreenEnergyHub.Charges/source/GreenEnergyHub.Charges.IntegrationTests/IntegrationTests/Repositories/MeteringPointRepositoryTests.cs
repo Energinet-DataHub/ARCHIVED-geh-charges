@@ -24,9 +24,9 @@ using NodaTime;
 using Xunit;
 using Xunit.Categories;
 
-namespace GreenEnergyHub.Charges.Tests.Infrastructure.Repositories
+namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
 {
-    [UnitTest]
+    [IntegrationTest]
     public class MeteringPointRepositoryTests : IClassFixture<ChargesDatabaseFixture>
     {
         private readonly ChargesDatabaseManager _databaseManager;
