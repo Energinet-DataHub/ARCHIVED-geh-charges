@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# This action is copied from https://github.com/Energinet-DataHub/geh-core/blob/main/.github/actions/nuget-assert-release-version/action.yml
 name: Assert NuGet packages release version
 description: 'Ensure packages does not use a version number (not looking at prereleases) that already exists on NuGet.org'
 
