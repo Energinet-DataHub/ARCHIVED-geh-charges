@@ -26,22 +26,36 @@ limitations under the License.
     <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
   </PropertyGroup>
 
+  <!-- Configuration for NuGet package -->
   <PropertyGroup>
     <PackageId>Energinet.DataHub.Charges.Clients</PackageId>
-    <PackageVersion>1.0.5$(VersionSuffix)</PackageVersion>
+    <PackageVersion>1.0.6$(VersionSuffix)</PackageVersion>
     <Title>Energinet.DataHub.Charges.Clients</Title>
     <Company>Energinet DataHub A/S</Company>
     <Authors>DataHub</Authors>
     <RepositoryUrl>https://github.com/Energinet-DataHub/geh-charges</RepositoryUrl>
     <PackageReleaseNotes>
-      [Release Notes](https://github.com/Energinet-DataHub/geh-charges/source/Energinet.Charges.Libraries/source/Energinet.DataHub.Charges.Clients/documents/release-notes/release-notes.md)
-      [Documentation](https://github.com/Energinet-DataHub/geh-charges/source/Energinet.Charges.Libraries/source/Energinet.DataHub.Charges.Clients/documents/documentation.md)
+Release Notes
+https://github.com/Energinet-DataHub/geh-charges/tree/main/source/Energinet.Charges.Libraries/source/Energinet.DataHub.Charges.Clients/documents/release-notes/release-notes.md
+
+Documentation
+https://github.com/Energinet-DataHub/geh-charges/tree/main/source/Energinet.Charges.Libraries/source/Energinet.DataHub.Charges.Clients/documents/documentation.md
     </PackageReleaseNotes>
     <PackageDescription>
-      [Release Notes](https://github.com/Energinet-DataHub/geh-charges/source/Energinet.Charges.Libraries/source/Energinet.DataHub.Charges.Clients/documents/release-notes/release-notes.md)
-      [Documentation](https://github.com/Energinet-DataHub/geh-charges/source/Energinet.Charges.Libraries/source/Energinet.DataHub.Charges.Clients/documents/documentation.md)
+Release Notes
+https://github.com/Energinet-DataHub/geh-charges/tree/main/source/Energinet.Charges.Libraries/source/Energinet.DataHub.Charges.Clients/documents/release-notes/release-notes.md
+
+Documentation
+https://github.com/Energinet-DataHub/geh-charges/tree/main/source/Energinet.Charges.Libraries/source/Energinet.DataHub.Charges.Clients/documents/documentation.md
     </PackageDescription>
-    <Description>Library containing communication API for Charges Clients</Description>
+    <Description>
+      The NuGet package GreenEnergyHub.Charges.Libraries contains communication API for clients interacting with the Energinet DataHub charge domain. Energinet DataHub is built on the Green Energy Hub platform.
+
+      Learn more about the Green Energy Hub platform at https://github.com/Energinet-DataHub/green-energy-hub.
+
+      Learn more about the charge domain at https://github.com/Energinet-DataHub/geh-charges.
+
+      Learn more about Energinet at https://energinet.dk/.    </Description>
     <PackageTags>green-energy-hub;datahub;library</PackageTags>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
@@ -77,6 +91,7 @@ limitations under the License.
     <PackageReference Include="NodaTime" Version="3.0.9" />
   </ItemGroup>
 
+  <!-- Automatic generation of C# classes for protobuf contracts on build -->
   <ItemGroup>
     <Protobuf Include="*\Contracts\*.proto">
       <GrpcServices>None</GrpcServices>
