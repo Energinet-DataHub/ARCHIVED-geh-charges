@@ -21,7 +21,6 @@ using GreenEnergyHub.Charges.Infrastructure.Messaging;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
-using Microsoft.Extensions.Logging;
 
 namespace GreenEnergyHub.Charges.FunctionHost.ChargeLinks
 {
@@ -33,17 +32,13 @@ namespace GreenEnergyHub.Charges.FunctionHost.ChargeLinks
         /// </summary>
         private readonly MessageExtractor<ChargeLinkCommand> _messageExtractor;
         private readonly IChargeLinkCommandHandler _chargeLinkCommandHandler;
-        private readonly ILogger _log;
 
         public ChargeLinkIngestion(
             IChargeLinkCommandHandler chargeLinkCommandHandler,
-            MessageExtractor<ChargeLinkCommand> messageExtractor,
-            [NotNull] ILoggerFactory loggerFactory)
+            MessageExtractor<ChargeLinkCommand> messageExtractor)
         {
             _messageExtractor = messageExtractor;
-
             _chargeLinkCommandHandler = chargeLinkCommandHandler;
-            _log = loggerFactory.CreateLogger(nameof(ChargeLinkIngestion));
         }
 
         [Function(IngestionFunctionNames.ChargeLinkIngestion)]
@@ -51,8 +46,6 @@ namespace GreenEnergyHub.Charges.FunctionHost.ChargeLinks
             [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = null)]
             [NotNull] HttpRequestData req)
         {
-            _log.LogInformation("Function {FunctionName} started to process a request", IngestionFunctionNames.ChargeLinkIngestion);
-
             var command = await GetChargeLinkCommandAsync(req.Body).ConfigureAwait(false);
 
             var chargeLinksMessageResult = await _chargeLinkCommandHandler.HandleAsync(command).ConfigureAwait(false);
