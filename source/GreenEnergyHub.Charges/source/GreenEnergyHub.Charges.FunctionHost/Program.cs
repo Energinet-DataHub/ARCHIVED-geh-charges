@@ -53,6 +53,7 @@ namespace GreenEnergyHub.Charges.FunctionHost
             ChargeLinkCommandReceiverConfiguration.ConfigureServices(serviceCollection);
             ChargeLinkEventPublisherConfiguration.ConfigureServices(serviceCollection);
             ChargeLinkEventReplierConfiguration.ConfigureServices(serviceCollection);
+            CreateDefaultChargeLinksClientConfiguration.ConfigureServices(serviceCollection);
             CreateChargeLinkReceiverConfiguration.ConfigureServices(serviceCollection);
             CreateChargeLinkMessagesReceiverEndpointConfiguration.ConfigureServices(serviceCollection);
             ChargeLinkDataAvailableNotifierConfiguration.ConfigureServices(serviceCollection);

@@ -15,7 +15,7 @@
 using GreenEnergyHub.Charges.Domain.Messages.Events;
 using GreenEnergyHub.Messaging.MessageTypes.Common;
 
-namespace GreenEnergyHub.Charges.Domain.CreateLinkCommandEvents
+namespace GreenEnergyHub.Charges.Domain.CreateLinkRequest
 {
     public class CreateLinkCommandEvent : InboundIntegrationEvent
     {

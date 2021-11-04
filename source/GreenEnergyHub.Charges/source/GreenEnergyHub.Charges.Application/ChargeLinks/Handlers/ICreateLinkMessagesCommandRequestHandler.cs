@@ -13,12 +13,12 @@
 // limitations under the License.
 
 using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Domain.CreateLinkMessagesCommandEvent;
+using GreenEnergyHub.Charges.Domain.CreateLinkMessagesRequest;
 
 namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
 {
     public interface ICreateLinkMessagesCommandRequestHandler
     {
-        Task HandleAsync(CreateLinkMessagesCommandEvent createLinkCommandEvent, string correlationId);
+        Task HandleAsync(CreateLinkMessagesRequest createLinkRequest);
     }
 }

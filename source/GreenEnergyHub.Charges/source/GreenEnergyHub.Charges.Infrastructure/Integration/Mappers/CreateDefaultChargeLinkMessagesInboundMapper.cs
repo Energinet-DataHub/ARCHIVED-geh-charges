@@ -13,7 +13,7 @@
 // limitations under the License.
 
 using Energinet.Charges.Contracts;
-using GreenEnergyHub.Charges.Domain.CreateLinkMessagesCommandEvent;
+using GreenEnergyHub.Charges.Domain.CreateLinkMessagesRequest;
 using GreenEnergyHub.Messaging.Protobuf;
 using GreenEnergyHub.Messaging.Transport;
 
@@ -23,7 +23,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Integration.Mappers
     {
         protected override IInboundMessage Convert(CreateDefaultChargeLinkMessages createDefaultChargeLinkMessages)
         {
-            return new CreateLinkMessagesCommandEvent(createDefaultChargeLinkMessages.MeteringPointId);
+            return new CreateLinkMessagesRequest(createDefaultChargeLinkMessages.MeteringPointId);
         }
     }
 }

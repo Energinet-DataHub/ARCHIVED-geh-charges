@@ -78,34 +78,6 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
                 new MessageHubConfig(dataAvailableQueue, domainReplyQueue),
                 storageServiceConnectionString,
                 new StorageConfig(azureBlobStorageContainerName));
-
-            var serviceBusClient = new ServiceBusClient(serviceBusConnectionString);
-            AddDefaultChargeLinkClient(serviceCollection, serviceBusClient);
-            AddDefaultChargeLinkMessagesClient(serviceCollection, serviceBusClient);
-        }
-
-        private static void AddDefaultChargeLinkMessagesClient(
-            IServiceCollection serviceCollection,
-            ServiceBusClient client)
-        {
-            var replyToQueueName = EnvironmentHelper.GetEnv(EnvironmentSettingNames.CreateLinkMessagesRequestQueueName);
-
-            serviceCollection.AddScoped<IServiceBusRequestSender>(_ =>
-                new ServiceBusRequestSender(client, replyToQueueName));
-            serviceCollection.AddSingleton<IDefaultChargeLinkMessagesRequestClient>(_ =>
-                new DefaultChargeLinkMessagesRequestClient(client, new ServiceBusRequestSenderFactory(), replyToQueueName));
-        }
-
-        private static void AddDefaultChargeLinkClient(
-            IServiceCollection serviceCollection,
-            ServiceBusClient client)
-        {
-            var replyToQueueName = EnvironmentHelper.GetEnv(EnvironmentSettingNames.CreateLinkReplyQueueName);
-
-            serviceCollection.AddScoped<IServiceBusRequestSender>(_ =>
-                new ServiceBusRequestSender(client, replyToQueueName));
-            serviceCollection.AddSingleton<IDefaultChargeLinkClient>(_ =>
-                new DefaultChargeLinkClient(client, new ServiceBusRequestSenderFactory(), replyToQueueName));
         }
 
         private static void ConfigureSharedDatabase(IServiceCollection serviceCollection)

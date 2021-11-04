@@ -19,7 +19,7 @@ using Energinet.DataHub.Charges.Libraries.DefaultChargeLinkMessages;
 using Energinet.DataHub.Charges.Libraries.Models;
 using GreenEnergyHub.Charges.Application;
 using GreenEnergyHub.Charges.Application.ChargeLinks.Handlers;
-using GreenEnergyHub.Charges.Domain.CreateLinkMessagesCommandEvent;
+using GreenEnergyHub.Charges.Domain.CreateLinkMessagesRequest;
 using GreenEnergyHub.TestHelpers;
 using Moq;
 using Xunit;
@@ -36,7 +36,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Handlers
             [Frozen] [NotNull] Mock<IDefaultChargeLinkMessagesRequestClient> defaultChargeLinkMessagesClient,
             [NotNull] string replyTo,
             [NotNull] string correlationId,
-            [NotNull] CreateLinkMessagesCommandEvent createLinkMessagesCommandEvent,
+            [NotNull] CreateLinkMessagesRequest createLinkMessagesRequest,
             [NotNull] CreateLinkMessagesCommandRequestHandler sut)
         {
             // Arrange
@@ -45,7 +45,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Handlers
             correlationContext.Setup(c => c.Id).Returns(correlationId);
 
             // Act
-            await sut.HandleAsync(createLinkMessagesCommandEvent, correlationId).ConfigureAwait(false);
+            await sut.HandleAsync(createLinkMessagesRequest).ConfigureAwait(false);
 
             // Assert
             defaultChargeLinkMessagesClient.Verify(

@@ -18,8 +18,7 @@ using Energinet.Charges.Contracts;
 using GreenEnergyHub.Charges.Application;
 using GreenEnergyHub.Charges.Application.ChargeLinks.Handlers;
 using GreenEnergyHub.Charges.Commands;
-using GreenEnergyHub.Charges.Domain.CreateLinkCommandEvents;
-using GreenEnergyHub.Charges.Domain.CreateLinkMessagesCommandEvent;
+using GreenEnergyHub.Charges.Domain.CreateLinkMessagesRequest;
 using GreenEnergyHub.Charges.FunctionHost.Common;
 using GreenEnergyHub.Charges.Infrastructure.Messaging;
 using Microsoft.Azure.Functions.Worker;
@@ -34,18 +33,15 @@ namespace GreenEnergyHub.Charges.FunctionHost.ChargeLinks
         /// Function name affects the URL and thus possibly dependent infrastructure.
         /// </summary>
         public const string FunctionName = nameof(CreateChargeLinkMessagesReceiverEndpoint);
-        private readonly ICorrelationContext _correlationContext;
         private readonly MessageExtractor<CreateDefaultChargeLinkMessages> _messageExtractor;
         private readonly ICreateLinkMessagesCommandRequestHandler _createLinkMessagesCommandRequestHandler;
         private readonly ILogger _log;
 
         public CreateChargeLinkMessagesReceiverEndpoint(
-            ICorrelationContext correlationContext,
             MessageExtractor<CreateDefaultChargeLinkMessages> messageExtractor,
             ICreateLinkMessagesCommandRequestHandler createLinkMessagesCommandRequestHandler,
             [NotNull] ILoggerFactory loggerFactory)
         {
-            _correlationContext = correlationContext;
             _messageExtractor = messageExtractor;
             _createLinkMessagesCommandRequestHandler = createLinkMessagesCommandRequestHandler;
             _log = loggerFactory.CreateLogger(nameof(CreateChargeLinkMessagesReceiverEndpoint));
@@ -64,9 +60,9 @@ namespace GreenEnergyHub.Charges.FunctionHost.ChargeLinks
                 message.Length);
 
             var createLinkCommandEvent =
-                (CreateLinkMessagesCommandEvent)await _messageExtractor.ExtractAsync(message).ConfigureAwait(false);
+                (CreateLinkMessagesRequest)await _messageExtractor.ExtractAsync(message).ConfigureAwait(false);
 
-            await _createLinkMessagesCommandRequestHandler.HandleAsync(createLinkCommandEvent, _correlationContext.Id)
+            await _createLinkMessagesCommandRequestHandler.HandleAsync(createLinkCommandEvent)
                 .ConfigureAwait(false);
 
             _log.LogInformation(
