@@ -13,7 +13,7 @@ Updates dependency package versions.
 
 ## Version 1.0.4
 
-Adds functionality to reply when requested to create messages.
+The failed and succeeded methods included in public interface.
 
 ## Version 1.0.3
 
