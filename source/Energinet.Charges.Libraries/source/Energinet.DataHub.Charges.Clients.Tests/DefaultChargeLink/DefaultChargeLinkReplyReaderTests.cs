@@ -41,7 +41,7 @@ namespace Energinet.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.Defaul
         [Theory]
         [InlineAutoMoqData("knownMeteringPointId1234", true)]
         [InlineAutoMoqData("knownMeteringPointId5678", false)]
-        public async Task ReadAsync_When_DefaultChargeLinks_CreationSucceeded_MapsDataAsSucceededDto(
+        public async Task ReadAsync_WhenDefaultChargeLinksCreationSucceeded_MapsDataAsSucceededDto(
             string meteringPointId, bool didCreateChargeLinks)
         {
             // Arrange
