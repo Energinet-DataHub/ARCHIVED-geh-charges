@@ -14,10 +14,7 @@
 name: Clients CI
 
 on:
-  pull_request:
-    branches:
-      - main
-  workflow_dispatch: {}
+  workflow_call:
 
 env:
   CSPROJ_FILE_PATH: source/Energinet.Charges.Libraries/source/Energinet.DataHub.Charges.Clients/Energinet.DataHub.Charges.Clients.csproj
@@ -84,9 +81,3 @@ jobs:
           CSPROJ_FILE_PATH: ${{ env.CSPROJ_FILE_PATH }}
           SOLUTION_FILE_PATH: ${{ env.SOLUTION_FILE_PATH }}
           OUTPUT_PATH: '${{ github.workspace }}/output'
-
-      - name: Publish artifact
-        uses: actions/upload-artifact@v2
-        with:
-          name: drop
-          path: '${{ github.workspace }}/output'

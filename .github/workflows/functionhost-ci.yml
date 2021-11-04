@@ -14,10 +14,7 @@
 name: FunctionHost CI
 
 on:
-  pull_request:
-    branches:
-      - main
-  workflow_dispatch: {}
+  workflow_call:
 
 env:
   CSPROJ_FILE_PATH: source/GreenEnergyHub.Charges/source/GreenEnergyHub.Charges.FunctionHost/GreenEnergyHub.Charges.FunctionHost.csproj
