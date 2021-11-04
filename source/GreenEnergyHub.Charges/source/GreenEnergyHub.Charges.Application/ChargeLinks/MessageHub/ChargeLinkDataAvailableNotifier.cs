@@ -33,7 +33,8 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.MessageHub
         /// <summary>
         /// The upper anticipated weight (kilobytes) contribution to the final bundle from the charge link created event.
         /// </summary>
-        private const int MessageWeight = 2;
+        public const int MessageWeight = 2;
+        public const string ChargeLinkDataAvailableMessageTypePrefix = "ChargeDataAvailable";
 
         private readonly IDataAvailableNotificationSender _dataAvailableNotificationSender;
         private readonly IChargeRepository _chargeRepository;
@@ -123,7 +124,7 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.MessageHub
 
             // Different processes must not be bundled together.
             // The can be differentiated by business reason codes.
-            var messageType = chargeLinkCommand.Document.BusinessReasonCode.ToString();
+            var messageType = ChargeLinkDataAvailableMessageTypePrefix + "_" + chargeLinkCommand.Document.BusinessReasonCode;
 
             return new DataAvailableNotificationDto(
                 chargeDomainReferenceId,

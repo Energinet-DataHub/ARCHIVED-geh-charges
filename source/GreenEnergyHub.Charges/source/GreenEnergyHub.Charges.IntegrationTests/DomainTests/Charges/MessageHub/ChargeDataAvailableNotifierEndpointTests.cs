@@ -29,7 +29,7 @@ using Xunit;
 using Xunit.Abstractions;
 using Xunit.Categories;
 
-namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests.Charges
+namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests.Charges.MessageHub
 {
     /// <summary>
     /// This test that when receiving a valid charge, a notification is send and valid bundle is created for the message hub.
@@ -61,11 +61,11 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests.Charges
             public async Task When_ReceivingChargeLinkMessage_MessageHubIsNotifiedAboutAvailableData_And_Then_When_MessageHubRequestsTheBundle_Then_MessageHubReceivesBundleResponse()
             {
                 // Arrange
-                var testFilePath = "TestFiles/CreateFixedPeriodTariffChargeLink.xml";
+                var testFilePath = "TestFiles/ValidCreateTariffCommand.xml";
                 var clock = SystemClock.Instance;
                 var messageString = EmbeddedResourceHelper.GetEmbeddedFile(testFilePath, clock);
 
-                var request = new HttpRequestMessage(HttpMethod.Post, "api/ChargeLinkIngestion");
+                var request = new HttpRequestMessage(HttpMethod.Post, "api/ChargeIngestion");
                 var expectedBody = messageString;
                 request.Content = new StringContent(expectedBody, Encoding.UTF8, "application/json");
 

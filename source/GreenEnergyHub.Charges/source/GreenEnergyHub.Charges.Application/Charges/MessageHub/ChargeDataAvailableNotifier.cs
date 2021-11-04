@@ -31,8 +31,9 @@ namespace GreenEnergyHub.Charges.Application.Charges.MessageHub
         /// <summary>
         /// The upper anticipated weight (kilobytes) contribution to the final bundle from the charge created event.
         /// </summary>
-        private const decimal ChargeMessageWeight = 5m;
-        private const decimal ChargePointMessageWeight = 0.2m;
+        public const decimal ChargeMessageWeight = 5m;
+        public const decimal ChargePointMessageWeight = 0.2m;
+        public const string ChargeDataAvailableMessageTypePrefix = "ChargeDataAvailable";
 
         private readonly IDataAvailableNotificationSender _dataAvailableNotificationSender;
         private readonly IAvailableChargeDataRepository _availableChargeDataRepository;
@@ -111,7 +112,7 @@ namespace GreenEnergyHub.Charges.Application.Charges.MessageHub
 
             // Different processes must not be bundled together.
             // The can be differentiated by business reason codes.
-            var messageType = chargeCommand.Document.BusinessReasonCode.ToString();
+            var messageType = ChargeDataAvailableMessageTypePrefix + "_" + chargeCommand.Document.BusinessReasonCode;
 
             return new DataAvailableNotificationDto(
                 chargeDomainReferenceId,

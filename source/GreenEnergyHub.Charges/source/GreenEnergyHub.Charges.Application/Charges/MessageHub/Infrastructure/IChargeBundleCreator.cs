@@ -20,6 +20,6 @@ namespace GreenEnergyHub.Charges.Application.Charges.MessageHub.Infrastructure
 {
     public interface IChargeBundleCreator
     {
-        Task<bool> CreateSuccessfullyAsync(DataBundleRequestDto request, Stream outputStream);
+        Task CreateAsync(DataBundleRequestDto request, Stream outputStream);
     }
 }

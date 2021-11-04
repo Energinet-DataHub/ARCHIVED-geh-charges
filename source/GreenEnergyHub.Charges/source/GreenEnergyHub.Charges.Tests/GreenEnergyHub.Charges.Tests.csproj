@@ -78,4 +78,13 @@ limitations under the License.
         <Generator>MSBuild:Compile</Generator>
       </Protobuf>
     </ItemGroup>
+
+    <ItemGroup>
+      <None Update="TestFiles\ValidCreateTariffCommandMaxDocumentSizeNoPoints.xml">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+      <None Update="TestFiles\ValidCreateTariffCommandMaxDocumentSizeWithPoints.xml">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+    </ItemGroup>
 </Project>

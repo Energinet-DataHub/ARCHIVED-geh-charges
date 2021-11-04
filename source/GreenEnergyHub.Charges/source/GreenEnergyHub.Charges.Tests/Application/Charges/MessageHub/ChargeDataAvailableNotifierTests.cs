@@ -20,12 +20,10 @@ using AutoFixture.Xunit2;
 using Energinet.DataHub.MessageHub.Client.DataAvailable;
 using Energinet.DataHub.MessageHub.Client.Model;
 using FluentAssertions;
-using GreenEnergyHub.Charges.Application.ChargeLinks.MessageHub;
 using GreenEnergyHub.Charges.Application.Charges.MessageHub;
 using GreenEnergyHub.Charges.Domain.AvailableChargeData;
 using GreenEnergyHub.Charges.Domain.ChargeCommandAcceptedEvents;
 using GreenEnergyHub.Charges.Domain.ChargeCommands;
-using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.TestCore.Attributes;
 using GreenEnergyHub.Charges.TestCore.Reflection;
@@ -89,7 +87,8 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.MessageHub
                                    .Select(provider => new GlobalLocationNumberDto(provider.Id))
                                    .Contains(dto.Recipient)
                                && dto.Uuid != Guid.Empty
-                               && dto.RelativeWeight > 0)),
+                               && dto.RelativeWeight > 0
+                               && dto.MessageType.Value.StartsWith(ChargeDataAvailableNotifier.ChargeDataAvailableMessageTypePrefix))),
                 Times.Exactly(gridAccessProviders.Count));
             dataAvailableNotificationSenderMock.VerifyNoOtherCalls();
         }
@@ -108,6 +107,37 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.MessageHub
 
             // Assert
             dataAvailableNotificationSenderMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public void NotifyAsync_SizeOfMaximumDocument_ShouldNotExceedDefinedWeight()
+        {
+            // Arrange
+            var testFilePath = "TestFiles/ValidCreateTariffCommandMaxDocumentSizeNoPoints.xml";
+            var chargeMessageWeightInBytes = (long)ChargeDataAvailableNotifier.ChargeMessageWeight * 1000;
+
+            // Act
+            var xmlSizeInBytes = new System.IO.FileInfo(testFilePath).Length;
+
+            // Assert
+            xmlSizeInBytes.Should().BeLessOrEqualTo(chargeMessageWeightInBytes);
+        }
+
+        [Fact]
+        public void NotifyAsync_SizeOfMaximumDocumentWith1000Points_ShouldNotExceedDefinedWeight()
+        {
+            // Arrange
+            var testFilePath = "TestFiles/ValidCreateTariffCommandMaxDocumentSizeWithPoints.xml";
+            var chargeMessageWeightInBytes =
+                (long)(ChargeDataAvailableNotifier.ChargeMessageWeight +
+                       (ChargeDataAvailableNotifier.ChargePointMessageWeight * 1000)) // 1000 points
+                * 1000;
+
+            // Act
+            var xmlSizeInBytes = new System.IO.FileInfo(testFilePath).Length;
+
+            // Assert
+            xmlSizeInBytes.Should().BeLessOrEqualTo(chargeMessageWeightInBytes);
         }
     }
 }

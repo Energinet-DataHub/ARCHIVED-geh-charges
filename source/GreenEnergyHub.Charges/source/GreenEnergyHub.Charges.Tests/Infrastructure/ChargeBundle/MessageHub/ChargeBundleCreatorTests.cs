@@ -35,68 +35,29 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.ChargeBundle.MessageHub
     {
         [Theory]
         [InlineAutoDomainData]
-        public async Task CreateAsync_WhenCalled_UsesRepositoryAndSerializerAndReturnSuccess(
+        public async Task CreateAsync_WhenCalled_UsesRepositoryAndSerializer(
             [Frozen] Mock<IAvailableChargeDataRepository> respository,
             [Frozen] Mock<IChargeCimSerializer> serializer,
             DataBundleRequestDto dataBundleRequestDto,
+            List<AvailableChargeData> availableChargeData,
             Stream stream,
             ChargeBundleCreator sut)
         {
             // Arrange
-            var availableChargeData1 = new AvailableChargeDataBuilder().Build();
-            var availableChargeData2 = new AvailableChargeDataBuilder().Build();
-            var availableChargeData = new List<AvailableChargeData> { availableChargeData1, availableChargeData2 };
-
             respository.Setup(
                     r => r.GetAvailableChargeDataAsync(
                         dataBundleRequestDto.DataAvailableNotificationIds))
                 .Returns(Task.FromResult(availableChargeData));
 
             // Act
-            var ranSuccessfully = await sut.CreateSuccessfullyAsync(dataBundleRequestDto, stream).ConfigureAwait(false);
+            await sut.CreateAsync(dataBundleRequestDto, stream).ConfigureAwait(false);
 
             // Assert
-            ranSuccessfully.Should().BeTrue();
             serializer.Verify(
                 s => s.SerializeToStreamAsync(
                     availableChargeData,
                     stream),
                 Times.Once);
-        }
-
-        [Theory]
-        [InlineAutoDomainData]
-        public async Task CreateAsync_WhenCalledWithDifferentBusinessReasonCodes_ShouldNotSerializeAndReturnFailed(
-            [Frozen] Mock<IAvailableChargeDataRepository> respository,
-            [Frozen] Mock<IChargeCimSerializer> serializer,
-            DataBundleRequestDto dataBundleRequestDto,
-            Stream stream,
-            ChargeBundleCreator sut)
-        {
-            // Arrange
-            var availableChargeData1 = new AvailableChargeDataBuilder()
-                .WithBusinessReasonCode(BusinessReasonCode.UpdateChargeInformation)
-                .Build();
-            var availableChargeData2 = new AvailableChargeDataBuilder()
-                .WithBusinessReasonCode(BusinessReasonCode.UpdateMasterDataSettlement)
-                .Build();
-            var availableChargeData = new List<AvailableChargeData> { availableChargeData1, availableChargeData2 };
-
-            respository.Setup(
-                    r => r.GetAvailableChargeDataAsync(
-                        dataBundleRequestDto.DataAvailableNotificationIds))
-                .Returns(Task.FromResult(availableChargeData));
-
-            // Act
-            var ranSuccessfully = await sut.CreateSuccessfullyAsync(dataBundleRequestDto, stream).ConfigureAwait(false);
-
-            // Assert
-            ranSuccessfully.Should().BeFalse();
-            serializer.Verify(
-                s => s.SerializeToStreamAsync(
-                    availableChargeData,
-                    stream),
-                Times.Never);
         }
     }
 }

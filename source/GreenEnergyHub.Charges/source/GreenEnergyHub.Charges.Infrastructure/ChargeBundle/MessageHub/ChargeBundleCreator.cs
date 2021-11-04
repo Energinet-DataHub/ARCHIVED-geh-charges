@@ -13,7 +13,6 @@
 // limitations under the License.
 
 using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
 using Energinet.DataHub.MessageHub.Client.Model;
 using GreenEnergyHub.Charges.Application.Charges.MessageHub.Infrastructure;
@@ -36,17 +35,13 @@ namespace GreenEnergyHub.Charges.Infrastructure.ChargeBundle.MessageHub
             _chargeCimSerializer = chargeCimSerializer;
         }
 
-        public async Task<bool> CreateSuccessfullyAsync(DataBundleRequestDto request, Stream outputStream)
+        public async Task CreateAsync(DataBundleRequestDto request, Stream outputStream)
         {
             var availableData = await _availableChargeDataRepository
                 .GetAvailableChargeDataAsync(request.DataAvailableNotificationIds)
                 .ConfigureAwait(false);
 
-            if (availableData.GroupBy(x => x.BusinessReasonCode).Count() > 1)
-                return false;
-
             await _chargeCimSerializer.SerializeToStreamAsync(availableData, outputStream).ConfigureAwait(false);
-            return true;
         }
     }
 }

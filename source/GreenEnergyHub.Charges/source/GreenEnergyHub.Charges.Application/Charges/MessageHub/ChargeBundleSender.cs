@@ -35,8 +35,8 @@ namespace GreenEnergyHub.Charges.Application.Charges.MessageHub
         public async Task SendAsync(DataBundleRequestDto request, Stream outputStream)
         {
             await using var bundleStream = new MemoryStream();
-            var streamBundledCorrectly = await _chargeBundleCreator.CreateSuccessfullyAsync(request, bundleStream);
-            await _chargeBundleReplier.ReplyAsync(bundleStream, request, streamBundledCorrectly);
+            await _chargeBundleCreator.CreateAsync(request, bundleStream);
+            await _chargeBundleReplier.ReplyAsync(bundleStream, request);
         }
     }
 }

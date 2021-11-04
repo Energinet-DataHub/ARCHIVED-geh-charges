@@ -20,6 +20,6 @@ namespace GreenEnergyHub.Charges.Application.Charges.MessageHub.Infrastructure
 {
     public interface IChargeBundleReplier
     {
-        Task ReplyAsync(Stream bundleStream, DataBundleRequestDto request, bool streamBundledCorrectly);
+        Task ReplyAsync(Stream bundleStream, DataBundleRequestDto request);
     }
 }

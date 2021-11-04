@@ -39,14 +39,8 @@ namespace GreenEnergyHub.Charges.Infrastructure.ChargeBundle.MessageHub
             _messageMetaDataContext = messageMetaDataContext;
         }
 
-        public async Task ReplyAsync(Stream bundleStream, DataBundleRequestDto request, bool streamBundledCorrectly)
+        public async Task ReplyAsync(Stream bundleStream, DataBundleRequestDto request)
         {
-            if (streamBundledCorrectly is false)
-            {
-                var errorResponse = CreateErrorResponse(request);
-                await _dataBundleResponseSender.SendAsync(errorResponse, request, _messageMetaDataContext.SessionId);
-            }
-
             var path = await _storageHandler.AddStreamToStorageAsync(bundleStream, request);
 
             var response = request.CreateResponse(path);
@@ -54,17 +48,6 @@ namespace GreenEnergyHub.Charges.Infrastructure.ChargeBundle.MessageHub
             await _dataBundleResponseSender
                 .SendAsync(response, request, _messageMetaDataContext.SessionId)
                 .ConfigureAwait(false);
-        }
-
-        private static DataBundleResponseDto CreateErrorResponse(DataBundleRequestDto request)
-        {
-            return new DataBundleResponseDto(
-                new DataBundleResponseErrorDto
-                {
-                    Reason = DataBundleResponseErrorReason.InternalError,
-                    FailureDescription = "Multiple Business reason codes bundled",
-                },
-                request.DataAvailableNotificationIds);
         }
     }
 }
