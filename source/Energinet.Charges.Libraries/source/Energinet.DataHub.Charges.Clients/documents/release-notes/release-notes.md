@@ -17,7 +17,7 @@ The failed and succeeded methods included in public interface.
 
 ## Version 1.0.3
 
-Provide ReplyTo queuename as Service Bus message ApplicationProperty.
+Add functionality to reply when requested to create messages.
 
 ## Version 1.0.2
 
