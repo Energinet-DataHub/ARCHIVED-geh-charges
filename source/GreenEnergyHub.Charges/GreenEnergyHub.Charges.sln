@@ -63,6 +63,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GreenEnergyHub.Messaging.Pr
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GreenEnergyHub.Messaging.Protobuf.Integration.ServiceCollection", "..\messaging\source\GreenEnergyHub.Messaging.Protobuf.Integration.ServiceCollection\GreenEnergyHub.Messaging.Protobuf.Integration.ServiceCollection.csproj", "{26DFABDA-7D73-42A5-A502-A666479454D5}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GreenEnergyHub.Charges.IntegrationMapping", "source\GreenEnergyHub.Charges.IntegrationMapping\GreenEnergyHub.Charges.IntegrationMapping.csproj", "{090649F0-9E62-4343-A486-7DA0E249F522}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -149,6 +151,10 @@ Global
 		{26DFABDA-7D73-42A5-A502-A666479454D5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{26DFABDA-7D73-42A5-A502-A666479454D5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{26DFABDA-7D73-42A5-A502-A666479454D5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{090649F0-9E62-4343-A486-7DA0E249F522}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{090649F0-9E62-4343-A486-7DA0E249F522}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{090649F0-9E62-4343-A486-7DA0E249F522}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{090649F0-9E62-4343-A486-7DA0E249F522}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

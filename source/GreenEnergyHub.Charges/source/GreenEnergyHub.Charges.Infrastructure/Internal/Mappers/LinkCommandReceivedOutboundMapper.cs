@@ -16,7 +16,6 @@ using System.Diagnostics.CodeAnalysis;
 using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.Domain.ChargeLinkCommandReceivedEvents;
 using GreenEnergyHub.Charges.Domain.ChargeLinkCommands;
-using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.Domain.SharedDtos;
 using GreenEnergyHub.Messaging.Protobuf;
 

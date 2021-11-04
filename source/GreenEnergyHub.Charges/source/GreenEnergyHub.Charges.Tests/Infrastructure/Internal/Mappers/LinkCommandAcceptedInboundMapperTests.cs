@@ -15,10 +15,8 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 using GreenEnergyHub.Charges.Domain.ChargeLinkCommandAcceptedEvents;
-using GreenEnergyHub.Charges.Domain.ChargeLinks;
 using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandAccepted;
 using GreenEnergyHub.Charges.Infrastructure.Internal.Mappers;
-using GreenEnergyHub.Charges.TestCore;
 using GreenEnergyHub.Charges.TestCore.Attributes;
 using GreenEnergyHub.Charges.TestCore.Protobuf;
 using Xunit;
@@ -32,7 +30,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Internal.Mappers
         [Theory]
         [InlineAutoMoqData]
         public void Convert_WhenCalled_ShouldMapToDomainObjectWithCorrectValues(
-            [NotNull] GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandAccepted.ChargeLinkCommandAccepted chargeLinkCommandAccepted,
+            [NotNull] ChargeLinkCommandAccepted chargeLinkCommandAccepted,
             [NotNull] LinkCommandAcceptedInboundMapper sut)
         {
             var result = (ChargeLinkCommandAcceptedEvent)sut.Convert(chargeLinkCommandAccepted);

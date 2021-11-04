@@ -25,13 +25,13 @@ namespace GreenEnergyHub.Charges.Infrastructure.Integration.Mappers
     {
         protected override IMessage Convert([NotNull] Domain.Charges.Acknowledgements.ChargeCreatedEvent chargeCreatedEvent)
         {
-            return new ChargeCreated.ChargeCreated
+            return new Infrastructure.Integration.ChargeCreated.ChargeCreated
             {
                 ChargeId = chargeCreatedEvent.ChargeId,
-                ChargeType = chargeCreatedEvent.ChargeType.Cast<ChargeCreated.ChargeCreated.Types.ChargeType>(),
+                ChargeType = chargeCreatedEvent.ChargeType.Cast<Infrastructure.Integration.ChargeCreated.ChargeCreated.Types.ChargeType>(),
                 ChargeOwner = chargeCreatedEvent.ChargeOwner,
                 Currency = chargeCreatedEvent.Currency,
-                Resolution = chargeCreatedEvent.Resolution.Cast<ChargeCreated.ChargeCreated.Types.Resolution>(),
+                Resolution = chargeCreatedEvent.Resolution.Cast<Infrastructure.Integration.ChargeCreated.ChargeCreated.Types.Resolution>(),
                 TaxIndicator = chargeCreatedEvent.TaxIndicator,
                 ChargePeriod = new ChargePeriod
                 {

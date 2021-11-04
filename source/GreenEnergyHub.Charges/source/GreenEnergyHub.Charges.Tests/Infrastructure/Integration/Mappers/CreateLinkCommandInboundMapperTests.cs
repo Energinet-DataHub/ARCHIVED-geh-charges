@@ -13,9 +13,10 @@
 // limitations under the License.
 
 using System.Diagnostics.CodeAnalysis;
-using GreenEnergyHub.Charges.Commands;
+using Energinet.Charges.Contracts;
 using GreenEnergyHub.Charges.Domain.CreateLinkCommandEvents;
 using GreenEnergyHub.Charges.Infrastructure.Integration.Mappers;
+using GreenEnergyHub.Charges.IntegrationMapping.Mappers;
 using GreenEnergyHub.Charges.TestCore.Attributes;
 using GreenEnergyHub.Charges.TestCore.Protobuf;
 using Xunit;

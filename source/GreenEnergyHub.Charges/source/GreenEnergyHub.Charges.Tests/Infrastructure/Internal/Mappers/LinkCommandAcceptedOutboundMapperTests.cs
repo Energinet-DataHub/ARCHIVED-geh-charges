@@ -15,14 +15,10 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 using GreenEnergyHub.Charges.Domain.ChargeLinkCommandAcceptedEvents;
-using GreenEnergyHub.Charges.Domain.ChargeLinkCommands;
-using GreenEnergyHub.Charges.Domain.ChargeLinks;
 using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandAccepted;
 using GreenEnergyHub.Charges.Infrastructure.Internal.Mappers;
-using GreenEnergyHub.Charges.TestCore;
 using GreenEnergyHub.Charges.TestCore.Attributes;
 using GreenEnergyHub.Charges.TestCore.Protobuf;
-using NodaTime;
 using Xunit;
 using Xunit.Categories;
 
@@ -37,8 +33,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Internal.Mappers
             [NotNull] ChargeLinkCommandAcceptedEvent chargeLinkCommandAcceptedEvent,
             [NotNull] LinkCommandAcceptedOutboundMapper sut)
         {
-            var result =
-                (GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandAccepted.ChargeLinkCommandAccepted)sut
+            var result = (ChargeLinkCommandAccepted)sut
                     .Convert(chargeLinkCommandAcceptedEvent);
             ProtobufAssert.OutgoingContractIsSubset(chargeLinkCommandAcceptedEvent, result);
         }

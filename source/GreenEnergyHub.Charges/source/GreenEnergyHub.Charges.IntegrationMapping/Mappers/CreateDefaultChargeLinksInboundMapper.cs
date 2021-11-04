@@ -13,12 +13,12 @@
 // limitations under the License.
 
 using System.Diagnostics.CodeAnalysis;
-using GreenEnergyHub.Charges.Commands;
+using Energinet.Charges.Contracts;
 using GreenEnergyHub.Charges.Domain.CreateLinkCommandEvents;
 using GreenEnergyHub.Messaging.Protobuf;
 using GreenEnergyHub.Messaging.Transport;
 
-namespace GreenEnergyHub.Charges.Infrastructure.Integration.Mappers
+namespace GreenEnergyHub.Charges.IntegrationMapping.Mappers
 {
     public class CreateDefaultChargeLinksInboundMapper : ProtobufInboundMapper<CreateDefaultChargeLinks>
     {

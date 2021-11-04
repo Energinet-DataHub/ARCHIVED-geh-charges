@@ -60,7 +60,7 @@ limitations under the License.
 
   <ItemGroup>
     <PackageReference Include="Azure.Messaging.ServiceBus" Version="7.4.0" />
-    <PackageReference Include="Google.Protobuf" Version="3.18.0" />
+    <PackageReference Include="Google.Protobuf" Version="3.19.1" />
     <PackageReference Include="Grpc.Tools" Version="2.41.0-pre2">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -74,18 +74,7 @@ limitations under the License.
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="NodaTime" Version="3.0.7" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Protobuf Include="*\Contracts\*.proto">
-      <GrpcServices>None</GrpcServices>
-      <Access>Internal</Access>
-      <ProtoCompile>True</ProtoCompile>
-      <CompileOutputs>True</CompileOutputs>
-      <OutputDir>obj\contracts\</OutputDir>
-      <Generator>MSBuild:Compile</Generator>
-    </Protobuf>
+    <PackageReference Include="NodaTime" Version="3.0.9" />
   </ItemGroup>
 
   <ItemGroup>
@@ -106,6 +95,10 @@ limitations under the License.
     <None Update="local.settings.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\GreenEnergyHub.Charges\source\GreenEnergyHub.Charges.IntegrationMapping\GreenEnergyHub.Charges.IntegrationMapping.csproj" />
   </ItemGroup>
   
 </Project>
