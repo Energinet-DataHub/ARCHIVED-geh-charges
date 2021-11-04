@@ -28,13 +28,13 @@ using CreateDefaultChargeLinkMessagesSucceeded =
 
 namespace Energinet.DataHub.Charges.Libraries.DefaultChargeLinkMessages
 {
-    public sealed class DefaultChargeLinkMessagesRequestClient : IAsyncDisposable, IDefaultChargeLinkMessagesRequestClient
+    public sealed class DefaultChargeLinkMessagesClient : IAsyncDisposable, IDefaultChargeLinkMessagesRequestClient
     {
         private readonly ServiceBusClient _serviceBusClient;
         private readonly IServiceBusRequestSender _serviceBusRequestSender;
         private readonly string _requestQueueName;
 
-        public DefaultChargeLinkMessagesRequestClient(
+        public DefaultChargeLinkMessagesClient(
             [NotNull] ServiceBusClient serviceBusClient,
             [NotNull] IServiceBusRequestSenderFactory serviceBusRequestSenderFactory,
             [NotNull] string replyToQueueName,

@@ -75,7 +75,7 @@ namespace Energinet.DataHub.Charges.Clients.IntegrationTests.DefaultChargeLinkMe
                 // Arrange
                 using var result = await _serviceBusTestListener.ListenForMessageAsync().ConfigureAwait(false);
 
-                await using var sut = new DefaultChargeLinkMessagesRequestClient(
+                await using var sut = new DefaultChargeLinkMessagesClient(
                     _serviceBusClient, _serviceBusRequestSenderFactory, _replyToQueueName, _requestQueueName);
 
                 // Act

@@ -35,7 +35,7 @@ namespace Energinet.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.Defaul
         }
 
         [Fact]
-        public void Convert_WhenCalled_ShouldMapToDtoWithCorrectValues()
+        public void Convert_WhenCalled_MapsToDtoWithCorrectValues()
         {
             // Arrange
             var createDefaultChargeLinksReply = _fixture.Create<CreateDefaultChargeLinksReply>();
@@ -51,7 +51,7 @@ namespace Energinet.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.Defaul
         }
 
         [Fact]
-        public void Convert_WhenCalledWithNull_ShouldThrow()
+        public void Convert_WhenCalledWithNull_ThrowException()
         {
             Assert.Throws<NullReferenceException>(() => CreateDefaultChargeLinksFailedInboundMapper.Convert(null!));
         }
