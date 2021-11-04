@@ -50,7 +50,13 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures
 
         public const string CreateLinkRequestQueueKey = "create-link-request";
 
-        public const string CreateLinkReplyQueueKey = "create-link-reply";
+        public const string CreateLinkReplyQueueName = "create-link-reply";
+        public const string CreateLinkReplyQueueKey = "CREATE_LINK_REPLY_QUEUE_NAME";
+
+        public const string CreateLinkMessagesRequestQueueKey = "create-link-messages-request";
+
+        public const string CreateLinkMessagesReplyQueueName = "create-link-messages-reply";
+        public const string CreateLinkMessagesReplyQueueKey = "CREATE_LINK_MESSAGES_REPLY_QUEUE_NAME";
 
         public const string ConsumptionMeteringPointCreatedTopicKey = "consumption-metering-point-created";
         public const string ConsumptionMeteringPointCreatedSubscriptionName = "consumption-metering-point-created-sub-charges";
@@ -60,6 +66,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures
         public const string ChargePricesUpdatedTopicKey = "charge-prices-updated";
 
         public const string ChargeAcceptedDataAvailableNotifierSubscriptionName = "sbs-chargeaccepted-sub-dataavailablenotifier";
+        public const string ChargeAcceptedDataAvailableNotifierSubscriptionKey = "CHARGEACCEPTED_SUB_DATAAVAILABLENOTIFIER";
 
         public const string MessageHubDataAvailableQueueKey = "message-hub-data-available";
         public const string MessageHubRequestQueueKey = "message-hub-request";
@@ -106,8 +113,10 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures
                 .AddSubscription(CommandRejectedSubscriptionName);
 
             builder.AddQueue(CreateLinkRequestQueueKey);
+            builder.AddQueue(CreateLinkReplyQueueName);
 
-            builder.AddQueue(CreateLinkReplyQueueKey);
+            builder.AddQueue(CreateLinkMessagesRequestQueueKey);
+            builder.AddQueue(CreateLinkMessagesReplyQueueName);
 
             builder
                 .AddTopic(ConsumptionMeteringPointCreatedTopicKey)

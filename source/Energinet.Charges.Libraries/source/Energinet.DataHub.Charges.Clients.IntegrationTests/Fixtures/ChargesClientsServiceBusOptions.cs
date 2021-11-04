@@ -27,6 +27,8 @@ namespace Energinet.DataHub.Charges.Clients.IntegrationTests.Fixtures
     {
         public const string CreateLinkRequestQueueKey = "create-link-request";
         public const string CreateLinkReplyQueueKey = "create-link-reply";
+        public const string CreateLinkMessagesRequestQueueKey = "create-link-messages-request";
+        public const string CreateLinkMessagesReplyQueueKey = "create-link-messages-reply";
 
         public override void Configure([NotNull] ServiceBusOptionsBuilder builder)
         {
@@ -43,8 +45,9 @@ namespace Energinet.DataHub.Charges.Clients.IntegrationTests.Fixtures
             builder.AddTopic("fake-topic-name");
 
             builder.AddQueue(CreateLinkRequestQueueKey);
-
             builder.AddQueue(CreateLinkReplyQueueKey);
+            builder.AddQueue(CreateLinkMessagesRequestQueueKey);
+            builder.AddQueue(CreateLinkMessagesReplyQueueKey);
         }
 
         private static string GetNamespaceFromSetting(string settingName)

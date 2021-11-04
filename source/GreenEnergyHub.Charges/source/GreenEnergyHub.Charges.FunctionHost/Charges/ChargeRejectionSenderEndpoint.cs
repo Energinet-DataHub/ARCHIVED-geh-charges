@@ -20,7 +20,6 @@ using GreenEnergyHub.Charges.FunctionHost.Common;
 using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeCommandRejected;
 using GreenEnergyHub.Charges.Infrastructure.Messaging;
 using Microsoft.Azure.Functions.Worker;
-using Microsoft.Extensions.Logging;
 
 namespace GreenEnergyHub.Charges.FunctionHost.Charges
 {
@@ -29,17 +28,13 @@ namespace GreenEnergyHub.Charges.FunctionHost.Charges
         public const string FunctionName = nameof(ChargeRejectionSenderEndpoint);
         private readonly IChargeRejectionSender _chargeRejectionSender;
         private readonly MessageExtractor<ChargeCommandRejectedContract> _messageExtractor;
-        private readonly ILogger _log;
 
         public ChargeRejectionSenderEndpoint(
             IChargeRejectionSender chargeRejectionSender,
-            MessageExtractor<ChargeCommandRejectedContract> messageExtractor,
-            [NotNull] ILoggerFactory loggerFactory)
+            MessageExtractor<ChargeCommandRejectedContract> messageExtractor)
         {
             _chargeRejectionSender = chargeRejectionSender;
             _messageExtractor = messageExtractor;
-
-            _log = loggerFactory.CreateLogger(nameof(ChargeRejectionSenderEndpoint));
         }
 
         [Function(FunctionName)]
@@ -52,8 +47,6 @@ namespace GreenEnergyHub.Charges.FunctionHost.Charges
         {
             var rejectedEvent = (ChargeCommandRejectedEvent)await _messageExtractor.ExtractAsync(message).ConfigureAwait(false);
             await _chargeRejectionSender.HandleAsync(rejectedEvent).ConfigureAwait(false);
-
-            _log.LogDebug("Received event with correlation ID '{CorrelationId}'", rejectedEvent.CorrelationId);
         }
     }
 }

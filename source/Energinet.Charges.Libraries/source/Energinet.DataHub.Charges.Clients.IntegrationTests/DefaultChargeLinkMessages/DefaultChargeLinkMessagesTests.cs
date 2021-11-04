@@ -44,9 +44,9 @@ namespace Energinet.DataHub.Charges.Clients.IntegrationTests.DefaultChargeLinkMe
                 : base(fixture, testOutputHelper)
             {
                 _replyToQueueName = EnvironmentVariableReader.GetEnvironmentVariable(
-                    EnvironmentSettingNames.CreateLinkReplyQueueName, string.Empty);
+                    EnvironmentSettingNames.CreateLinkMessagesReplyQueueName, string.Empty);
                 _requestQueueName = EnvironmentVariableReader.GetEnvironmentVariable(
-                    EnvironmentSettingNames.CreateLinkRequestQueueName, string.Empty);
+                    EnvironmentSettingNames.CreateLinkMessagesRequestQueueName, string.Empty);
 
                 string serviceBusConnectionString = EnvironmentVariableReader.GetEnvironmentVariable(
                     EnvironmentSettingNames.IntegrationEventSenderConnectionString, string.Empty);
@@ -88,6 +88,52 @@ namespace Energinet.DataHub.Charges.Clients.IntegrationTests.DefaultChargeLinkMe
                 isMessageReceived.Should().BeTrue();
                 result.CorrelationId.Should().Be(correlationId);
                 result.Body.Should().NotBeNull();
+            }
+
+            [Theory]
+            [AutoDomainData]
+            public async Task When_CreateDefaultChargeLinkMessagesSucceededReplyAsync_Then_ReplyIsSendFromCharges(
+                CreateDefaultChargeLinkMessagesSucceededDto createDefaultChargeLinkMessagesSucceededDto, string correlationId)
+            {
+                // Arrange
+                using var result = await _serviceBusTestListener.ListenForMessageAsync().ConfigureAwait(false);
+                await using var sut = new DefaultChargeLinkMessagesClient(
+                    _serviceBusClient, _serviceBusRequestSenderFactory, _replyToQueueName, _requestQueueName);
+
+                // Act
+                await sut.CreateDefaultChargeLinkMessagesSucceededReplyAsync(
+                    createDefaultChargeLinkMessagesSucceededDto, correlationId, _replyToQueueName).ConfigureAwait(false);
+
+                // Assert
+                // => Service Bus (timeout should not be more than 5 secs).
+                var isMessageReceived = result.IsMessageReceivedEvent!.Wait(TimeSpan.FromSeconds(5));
+
+                isMessageReceived.Should().BeTrue();
+                result.CorrelationId.Should().Be(correlationId);
+                result.Body.Should().NotBeNull();
+            }
+
+            [Theory]
+            [AutoDomainData]
+            public async Task When_CreateDefaultChargeLinksFailedReplyAsync_Then_ReplyIsSendFromCharges(
+                CreateDefaultChargeLinkMessagesFailedDto createDefaultChargeLinkMessagesFailedDto, string correlationId)
+            {
+                // Arrange
+                using var result = await _serviceBusTestListener.ListenForMessageAsync().ConfigureAwait(false);
+                await using var sut = new DefaultChargeLinkMessagesClient(
+                    _serviceBusClient, _serviceBusRequestSenderFactory, _replyToQueueName, _requestQueueName);
+
+                // Act
+                await sut.CreateDefaultChargeLinkMessagesFailedReplyAsync(
+                    createDefaultChargeLinkMessagesFailedDto, correlationId, _replyToQueueName).ConfigureAwait(false);
+
+                // Assert
+                // => Service Bus (timeout should not be more than 5 secs).
+                var isMessageReceived = result.IsMessageReceivedEvent!.Wait(TimeSpan.FromSeconds(5));
+
+                isMessageReceived.Should().BeTrue();
+                result.Body.Should().NotBeNull();
+                result.CorrelationId.Should().Be(correlationId);
             }
         }
     }

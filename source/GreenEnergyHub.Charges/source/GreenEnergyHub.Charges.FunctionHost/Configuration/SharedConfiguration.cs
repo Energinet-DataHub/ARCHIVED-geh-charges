@@ -30,18 +30,23 @@ using GreenEnergyHub.Charges.Domain.ChargeLinkCommandReceivedEvents;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.MeteringPoints;
 using GreenEnergyHub.Charges.FunctionHost.Common;
+using GreenEnergyHub.Charges.Infrastructure.Cim;
+using GreenEnergyHub.Charges.Infrastructure.Configuration;
 using GreenEnergyHub.Charges.Infrastructure.Context;
 using GreenEnergyHub.Charges.Infrastructure.Correlation;
+using GreenEnergyHub.Charges.Infrastructure.Function;
 using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandReceived;
 using GreenEnergyHub.Charges.Infrastructure.MessageMetaData;
 using GreenEnergyHub.Charges.Infrastructure.Messaging.Registration;
 using GreenEnergyHub.Charges.Infrastructure.Repositories;
+using GreenEnergyHub.Iso8601;
 using GreenEnergyHub.Json;
 using GreenEnergyHub.Messaging.Protobuf;
 using GreenEnergyHub.Messaging.Transport;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using NodaTime;
+using MarketParticipantRole = GreenEnergyHub.Charges.Domain.MarketParticipants.MarketParticipantRole;
 
 namespace GreenEnergyHub.Charges.FunctionHost.Configuration
 {
@@ -54,11 +59,14 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
             serviceCollection.AddLogging();
             serviceCollection.AddScoped<CorrelationIdMiddleware>();
             serviceCollection.AddScoped<MessageMetaDataMiddleware>();
+            serviceCollection.AddScoped<FunctionInvocationLoggingMiddleware>();
             serviceCollection.AddApplicationInsightsTelemetryWorkerService(
                 EnvironmentHelper.GetEnv(EnvironmentSettingNames.AppInsightsInstrumentationKey));
 
             ConfigureSharedDatabase(serviceCollection);
             ConfigureSharedMessaging(serviceCollection);
+            ConfigureIso8601Services(serviceCollection);
+            ConfigureSharedCim(serviceCollection);
 
             var serviceBusConnectionString = EnvironmentHelper.GetEnv(EnvironmentSettingNames.DataHubSenderConnectionString);
             var dataAvailableQueue = EnvironmentHelper.GetEnv(EnvironmentSettingNames.MessageHubDataAvailableQueue);
@@ -116,6 +124,27 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
             serviceCollection.AddMessagingProtobuf().AddMessageDispatcher<ChargeLinkCommandReceivedEvent>(
                 EnvironmentHelper.GetEnv(EnvironmentSettingNames.DomainEventSenderConnectionString),
                 EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargeLinkReceivedTopicName));
+        }
+
+        private static void ConfigureSharedCim(IServiceCollection serviceCollection)
+        {
+            serviceCollection.AddScoped<ICimIdProvider, CimIdProvider>();
+            serviceCollection.AddScoped<IHubSenderConfiguration>(_ =>
+            {
+                var senderId = EnvironmentHelper.GetEnv(EnvironmentSettingNames.HubSenderId);
+                var roleIntText = EnvironmentHelper.GetEnv(EnvironmentSettingNames.HubSenderRoleIntEnumValue);
+                return new HubSenderConfiguration(
+                    senderId,
+                    (MarketParticipantRole)int.Parse(roleIntText));
+            });
+        }
+
+        private static void ConfigureIso8601Services(IServiceCollection serviceCollection)
+        {
+            var timeZoneId = EnvironmentHelper.GetEnv(EnvironmentSettingNames.LocalTimeZoneName);
+            var timeZoneConfiguration = new Iso8601ConversionConfiguration(timeZoneId);
+            serviceCollection.AddSingleton<IIso8601ConversionConfiguration>(timeZoneConfiguration);
+            serviceCollection.AddSingleton<IIso8601Durations, Iso8601Durations>();
         }
 
         /// <summary>

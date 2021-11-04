@@ -28,7 +28,7 @@ using CreateDefaultChargeLinkMessagesSucceeded =
 
 namespace Energinet.DataHub.Charges.Libraries.DefaultChargeLinkMessages
 {
-    public sealed class DefaultChargeLinkMessagesClient : IAsyncDisposable, IDefaultChargeLinkMessagesRequestClient
+    public sealed class DefaultChargeLinkMessagesClient : IAsyncDisposable, IDefaultChargeLinkMessagesClient
     {
         private readonly ServiceBusClient _serviceBusClient;
         private readonly IServiceBusRequestSender _serviceBusRequestSender;
@@ -65,7 +65,7 @@ namespace Energinet.DataHub.Charges.Libraries.DefaultChargeLinkMessages
                 .ConfigureAwait(false);
         }
 
-        public async Task CreateDefaultChargeLinkMessagesSucceededRequestAsync(
+        public async Task CreateDefaultChargeLinkMessagesSucceededReplyAsync(
             [NotNull] CreateDefaultChargeLinkMessagesSucceededDto createDefaultChargeLinkMessagesSucceededDto,
             [NotNull] string correlationId,
             [NotNull] string replyQueueName)
@@ -90,7 +90,7 @@ namespace Energinet.DataHub.Charges.Libraries.DefaultChargeLinkMessages
                 .ConfigureAwait(false);
         }
 
-        public async Task CreateDefaultChargeLinkMessagesFailedRequestAsync(
+        public async Task CreateDefaultChargeLinkMessagesFailedReplyAsync(
             [NotNull] CreateDefaultChargeLinkMessagesFailedDto createDefaultChargeLinkMessagesFailedDto,
             [NotNull] string correlationId,
             [NotNull] string replyQueueName)
