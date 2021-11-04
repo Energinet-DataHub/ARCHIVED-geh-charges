@@ -22,19 +22,11 @@ using GreenEnergyHub.Charges.FunctionHost.Common;
 using GreenEnergyHub.Charges.FunctionHost.Configuration;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
-using Microsoft.Extensions.Logging;
 
 namespace GreenEnergyHub.Charges.FunctionHost.Health
 {
     public class HealthStatus
     {
-        private readonly ILogger _log;
-
-        public HealthStatus([NotNull] ILoggerFactory loggerFactory)
-        {
-            _log = loggerFactory.CreateLogger(nameof(HealthStatus));
-        }
-
         /// <summary>
         /// HTTP GET endpoint that can be used to monitor the health of the function app.
         /// </summary>
@@ -44,8 +36,6 @@ namespace GreenEnergyHub.Charges.FunctionHost.Health
             [NotNull] HttpRequestData req,
             [NotNull] FunctionContext context)
         {
-            _log.LogDebug("Workaround for unused method arguments", req, context);
-
             var healthStatus = await GetDeepHealthCheckStatusAsync();
 
             var isHealthy = healthStatus.All(x => x.Value);

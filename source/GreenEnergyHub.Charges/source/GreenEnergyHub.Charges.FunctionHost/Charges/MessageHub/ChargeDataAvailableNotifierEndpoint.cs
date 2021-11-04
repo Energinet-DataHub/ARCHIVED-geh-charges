@@ -20,7 +20,6 @@ using GreenEnergyHub.Charges.FunctionHost.Common;
 using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeCommandAccepted;
 using GreenEnergyHub.Charges.Infrastructure.Messaging;
 using Microsoft.Azure.Functions.Worker;
-using Microsoft.Extensions.Logging;
 
 namespace GreenEnergyHub.Charges.FunctionHost.Charges.MessageHub
 {
@@ -34,17 +33,13 @@ namespace GreenEnergyHub.Charges.FunctionHost.Charges.MessageHub
         private const string FunctionName = nameof(ChargeDataAvailableNotifierEndpoint);
         private readonly MessageExtractor<ChargeCommandAcceptedContract> _messageExtractor;
         private readonly IChargeDataAvailableNotifier _chargeDataAvailableNotifier;
-        private readonly ILogger _log;
 
         public ChargeDataAvailableNotifierEndpoint(
             MessageExtractor<ChargeCommandAcceptedContract> messageExtractor,
-            IChargeDataAvailableNotifier chargeDataAvailableNotifier,
-            [NotNull] ILoggerFactory loggerFactory)
+            IChargeDataAvailableNotifier chargeDataAvailableNotifier)
         {
             _messageExtractor = messageExtractor;
             _chargeDataAvailableNotifier = chargeDataAvailableNotifier;
-
-            _log = loggerFactory.CreateLogger(nameof(ChargeDataAvailableNotifierEndpoint));
         }
 
         [Function(FunctionName)]
@@ -55,8 +50,6 @@ namespace GreenEnergyHub.Charges.FunctionHost.Charges.MessageHub
                 Connection = EnvironmentSettingNames.DomainEventListenerConnectionString)]
             [NotNull] byte[] message)
         {
-            _log.LogInformation("Function {FunctionName} started to process a request with size {Size}", FunctionName, message.Length);
-
             var chargeCommandAcceptedEvent = (ChargeCommandAcceptedEvent)await _messageExtractor.ExtractAsync(message).ConfigureAwait(false);
 
             await _chargeDataAvailableNotifier.NotifyAsync(chargeCommandAcceptedEvent).ConfigureAwait(false);
