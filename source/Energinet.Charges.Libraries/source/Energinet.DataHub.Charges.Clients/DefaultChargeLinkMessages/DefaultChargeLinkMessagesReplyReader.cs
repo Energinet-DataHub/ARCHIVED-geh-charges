@@ -20,7 +20,7 @@ using Energinet.DataHub.Charges.Libraries.Protobuf;
 
 namespace Energinet.DataHub.Charges.Libraries.DefaultChargeLinkMessages
 {
-    public sealed class DefaultChargeLinkMessagesReplyReader : DefaultChargeLinkMessagesReplyReaderBase
+    public sealed class DefaultChargeLinkMessagesReplyReader : IDefaultChargeLinkMessagesReplyReader
     {
         private readonly OnSuccess _handleSuccess;
         private readonly OnFailure _handleFailure;
@@ -43,7 +43,7 @@ namespace Energinet.DataHub.Charges.Libraries.DefaultChargeLinkMessages
         /// Read and map data to be handled by provided delegates.
         /// </summary>
         /// <param name="data">Data reply to deserialize.</param>
-        public override async Task ReadAsync([NotNull] byte[] data)
+        public async Task ReadAsync([NotNull] byte[] data)
         {
             var replyParser = CreateDefaultChargeLinkMessagesReply.Parser;
             var createDefaultChargeLinkMessagesReply = replyParser.ParseFrom(data);

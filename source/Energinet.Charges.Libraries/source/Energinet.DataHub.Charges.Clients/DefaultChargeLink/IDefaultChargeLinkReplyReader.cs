@@ -16,14 +16,14 @@ using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using Energinet.DataHub.Charges.Libraries.Models;
 
-namespace Energinet.DataHub.Charges.Libraries.DefaultChargeLinkMessages
+namespace Energinet.DataHub.Charges.Libraries.DefaultChargeLink
 {
-    public delegate Task OnSuccess(CreateDefaultChargeLinkMessagesSucceededDto createDefaultChargeLinksSucceeded);
+    public delegate Task OnSuccess(CreateDefaultChargeLinksSucceededDto createDefaultChargeLinksSucceeded);
 
-    public delegate Task OnFailure(CreateDefaultChargeLinkMessagesFailedDto createDefaultChargeLinksSucceeded);
+    public delegate Task OnFailure(CreateDefaultChargeLinksFailedDto createDefaultChargeLinksSucceeded);
 
-    public abstract class DefaultChargeLinkMessagesReplyReaderBase
+    public interface IDefaultChargeLinkReplyReader
     {
-        public abstract Task ReadAsync([NotNull] byte[] data);
+        Task ReadAsync([NotNull] byte[] data);
     }
 }
