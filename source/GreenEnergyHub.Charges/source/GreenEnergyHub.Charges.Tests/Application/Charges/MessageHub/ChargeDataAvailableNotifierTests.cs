@@ -128,10 +128,12 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.MessageHub
         {
             // Arrange
             var testFilePath = "TestFiles/ValidCreateTariffCommandMaxDocumentSizeWithPoints.xml";
+            var numberOfPointsInXml = 1000;
+            var convertMessageWeightToKb = 1000;
             var chargeMessageWeightInBytes =
                 (long)(ChargeDataAvailableNotifier.ChargeMessageWeight +
-                       (ChargeDataAvailableNotifier.ChargePointMessageWeight * 1000)) // 1000 points
-                * 1000;
+                       (ChargeDataAvailableNotifier.ChargePointMessageWeight * numberOfPointsInXml))
+                * convertMessageWeightToKb;
 
             // Act
             var xmlSizeInBytes = new System.IO.FileInfo(testFilePath).Length;
