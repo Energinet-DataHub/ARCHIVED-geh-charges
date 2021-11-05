@@ -17,9 +17,9 @@ The library provides
 - The type [`IDefaultChargeLinkMessagesClient`](https://github.com/Energinet-DataHub/geh-charges/blob/main/source/Energinet.Charges.Libraries/source/Energinet.DataHub.Charges.Clients/DefaultChargeLinkMessages/IDefaultChargeLinkMessagesClient.cs) to request sending notifications to market actors about charge links created from defaults initiated from previous request - and handle the reply
 
 ## Registration
-`IDefaultChargeLinkClient` should be registered as a singleton.
+`IDefaultChargeLinkClient` is thread safe and must be registered as a singleton.
 
-`IDefaultChargeLinkMessagesClient` should be used as a singleton.
+`IDefaultChargeLinkMessagesClient` is thread safe and must be used as a singleton.
 
 ### Example
 

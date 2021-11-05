@@ -27,6 +27,9 @@ using CreateDefaultChargeLinksSucceeded =
 
 namespace Energinet.DataHub.Charges.Libraries.DefaultChargeLink
 {
+    /// <summary>
+    /// This class must be thread safe.
+    /// </summary>
     public sealed class DefaultChargeLinkClient : IDefaultChargeLinkClient
     {
         private readonly IServiceBusRequestSender _serviceBusRequestSender;
