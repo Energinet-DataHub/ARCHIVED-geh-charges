@@ -12,13 +12,19 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Diagnostics.CodeAnalysis;
-using System.Threading.Tasks;
+using Azure.Messaging.ServiceBus;
 
-namespace Energinet.DataHub.Charges.Libraries.ServiceBus
+namespace Energinet.DataHub.Charges.Libraries.Providers
 {
-    public interface IServiceBusRequestSender
+    public class DefaultChargeLinkClientServiceBusRequestSenderProvider :
+        ServiceBusRequestSenderProviderBase, IDefaultChargeLinkClientServiceBusRequestSenderProvider
     {
-        Task SendRequestAsync([NotNull] byte[] data, [NotNull] string correlationId);
+        public DefaultChargeLinkClientServiceBusRequestSenderProvider(
+            ServiceBusClient serviceBusClient,
+            string replyToQueueName,
+            string requestQueueName = "create-link-request")
+            : base(serviceBusClient, replyToQueueName, requestQueueName)
+        {
+        }
     }
 }

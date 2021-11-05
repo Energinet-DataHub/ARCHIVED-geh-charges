@@ -22,20 +22,18 @@ namespace Energinet.DataHub.Charges.Libraries.ServiceBus
 {
     public sealed class ServiceBusRequestSender : IServiceBusRequestSender
     {
-        private readonly ServiceBusClient _serviceBusClient;
+        private readonly ServiceBusSender _serviceBusSender;
         private readonly string _replyToQueueName;
 
-        public ServiceBusRequestSender([NotNull] ServiceBusClient serviceBusClient, [NotNull] string replyToQueueName)
+        public ServiceBusRequestSender([NotNull] ServiceBusSender serviceBusSender, [NotNull] string replyToQueueName)
         {
-            _serviceBusClient = serviceBusClient;
+            _serviceBusSender = serviceBusSender;
             _replyToQueueName = replyToQueueName;
         }
 
-        public async Task SendRequestAsync([NotNull] byte[] data, [NotNull] string requestQueueName, [NotNull] string correlationId)
+        public async Task SendRequestAsync([NotNull] byte[] data, [NotNull] string correlationId)
         {
-            await using var sender = _serviceBusClient.CreateSender(requestQueueName);
-
-            await sender.SendMessageAsync(new ServiceBusMessage
+            await _serviceBusSender.SendMessageAsync(new ServiceBusMessage
             {
                 Body = new BinaryData(data),
                 ApplicationProperties = { new KeyValuePair<string, object>("ReplyTo", _replyToQueueName) },
