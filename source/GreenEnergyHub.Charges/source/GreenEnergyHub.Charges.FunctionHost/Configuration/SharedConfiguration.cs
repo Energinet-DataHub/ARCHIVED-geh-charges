@@ -58,6 +58,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
             serviceCollection.AddSingleton<IJsonSerializer, JsonSerializer>();
             serviceCollection.AddLogging();
             serviceCollection.AddScoped<CorrelationIdMiddleware>();
+            serviceCollection.AddScoped<FunctionTelemetryScopeMiddleware>();
             serviceCollection.AddScoped<MessageMetaDataMiddleware>();
             serviceCollection.AddScoped<FunctionInvocationLoggingMiddleware>();
             serviceCollection.AddApplicationInsightsTelemetryWorkerService(
