@@ -28,4 +28,3 @@ The library provides
                 new DefaultChargeLinkMessagesClientServiceBusRequestSenderProvider(client, replyToQueueName);
             serviceCollection.AddSingleton<IDefaultChargeLinkMessagesClient>(_ =>
                 new DefaultChargeLinkMessagesClient(defaultChargeLinkClientServiceBusRequestSenderProvider));
-
