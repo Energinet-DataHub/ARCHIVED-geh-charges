@@ -21,12 +21,12 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
 {
     public class CreateLinkMessagesCommandRequestHandler : ICreateLinkMessagesCommandRequestHandler
     {
-        private readonly IDefaultChargeLinkMessagesRequestClient _messagesRequestClient;
+        private readonly IDefaultChargeLinkMessagesClient _messagesRequestClient;
         private readonly ICorrelationContext _correlationContext;
         private readonly IMessageMetaDataContext _messageMetaDataContext;
 
         public CreateLinkMessagesCommandRequestHandler(
-            IDefaultChargeLinkMessagesRequestClient messagesRequestClient,
+            IDefaultChargeLinkMessagesClient messagesRequestClient,
             ICorrelationContext correlationContext,
             IMessageMetaDataContext messageMetaDataContext)
         {
@@ -39,7 +39,7 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
         {
             // This is a stub implementation.
             await _messagesRequestClient
-                .CreateDefaultChargeLinkMessagesSucceededRequestAsync(
+                .CreateDefaultChargeLinkMessagesSucceededReplyAsync(
                     new CreateDefaultChargeLinkMessagesSucceededDto(createLinkRequest.MeteringPointId),
                     _correlationContext.Id,
                     _messageMetaDataContext.ReplyTo)

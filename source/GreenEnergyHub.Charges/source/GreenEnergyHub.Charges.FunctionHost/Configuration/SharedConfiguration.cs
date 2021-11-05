@@ -13,11 +13,6 @@
 // limitations under the License.
 
 using System;
-using Azure.Messaging.ServiceBus;
-using Energinet.DataHub.Charges.Libraries.DefaultChargeLink;
-using Energinet.DataHub.Charges.Libraries.DefaultChargeLinkMessages;
-using Energinet.DataHub.Charges.Libraries.Factories;
-using Energinet.DataHub.Charges.Libraries.ServiceBus;
 using Energinet.DataHub.MessageHub.Client;
 using Energinet.DataHub.MessageHub.Client.DataAvailable;
 using Energinet.DataHub.MessageHub.Client.Dequeue;

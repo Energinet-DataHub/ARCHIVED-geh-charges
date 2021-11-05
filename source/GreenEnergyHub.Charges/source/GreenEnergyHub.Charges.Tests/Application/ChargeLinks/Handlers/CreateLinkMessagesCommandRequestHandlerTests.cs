@@ -33,7 +33,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Handlers
         public async Task HandleAsync_WhenCalledWithReplyToSetInMessageMetaDataContext_ReplyWithDefaultChargeLinkSucceededDto(
             [Frozen] [NotNull] Mock<IMessageMetaDataContext> messageMetaDataContext,
             [Frozen] [NotNull] Mock<ICorrelationContext> correlationContext,
-            [Frozen] [NotNull] Mock<IDefaultChargeLinkMessagesRequestClient> defaultChargeLinkMessagesClient,
+            [Frozen] [NotNull] Mock<IDefaultChargeLinkMessagesClient> defaultChargeLinkMessagesClient,
             [NotNull] string replyTo,
             [NotNull] string correlationId,
             [NotNull] CreateLinkMessagesRequest createLinkMessagesRequest,
@@ -49,7 +49,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Handlers
 
             // Assert
             defaultChargeLinkMessagesClient.Verify(
-                x => x.CreateDefaultChargeLinkMessagesSucceededRequestAsync(
+                x => x.CreateDefaultChargeLinkMessagesSucceededReplyAsync(
                     It.IsAny<CreateDefaultChargeLinkMessagesSucceededDto>(),
                     correlationId,
                     replyTo));

@@ -15,8 +15,7 @@
 using Azure.Messaging.ServiceBus;
 using Energinet.DataHub.Charges.Libraries.DefaultChargeLink;
 using Energinet.DataHub.Charges.Libraries.DefaultChargeLinkMessages;
-using Energinet.DataHub.Charges.Libraries.Factories;
-using Energinet.DataHub.Charges.Libraries.ServiceBus;
+using Energinet.DataHub.Charges.Libraries.Providers;
 using GreenEnergyHub.Charges.FunctionHost.Common;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -38,12 +37,11 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
             IServiceCollection serviceCollection,
             ServiceBusClient client)
         {
-            var replyToQueueName = EnvironmentHelper.GetEnv(EnvironmentSettingNames.CreateLinkMessagesRequestQueueName);
-
-            serviceCollection.AddScoped<IServiceBusRequestSender>(_ =>
-                new ServiceBusRequestSender(client, replyToQueueName));
-            serviceCollection.AddSingleton<IDefaultChargeLinkMessagesRequestClient>(_ =>
-                new DefaultChargeLinkMessagesRequestClient(client, new ServiceBusRequestSenderFactory(), replyToQueueName));
+            var replyToQueueName = EnvironmentHelper.GetEnv(EnvironmentSettingNames.CreateLinkMessagesReplyQueueName);
+            var defaultChargeLinkClientServiceBusRequestSenderProvider =
+                new DefaultChargeLinkMessagesClientServiceBusRequestSenderProvider(client, replyToQueueName);
+            serviceCollection.AddSingleton<IDefaultChargeLinkMessagesClient>(_ =>
+                new DefaultChargeLinkMessagesClient(defaultChargeLinkClientServiceBusRequestSenderProvider));
         }
 
         private static void AddDefaultChargeLinkClient(
@@ -52,10 +50,10 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
         {
             var replyToQueueName = EnvironmentHelper.GetEnv(EnvironmentSettingNames.CreateLinkReplyQueueName);
 
-            serviceCollection.AddScoped<IServiceBusRequestSender>(_ =>
-                new ServiceBusRequestSender(client, replyToQueueName));
+            var defaultChargeLinkClientServiceBusRequestSenderProvider =
+                new DefaultChargeLinkClientServiceBusRequestSenderProvider(client, replyToQueueName);
             serviceCollection.AddSingleton<IDefaultChargeLinkClient>(_ =>
-                new DefaultChargeLinkClient(client, new ServiceBusRequestSenderFactory(), replyToQueueName));
+                new DefaultChargeLinkClient(defaultChargeLinkClientServiceBusRequestSenderProvider));
         }
     }
 }
