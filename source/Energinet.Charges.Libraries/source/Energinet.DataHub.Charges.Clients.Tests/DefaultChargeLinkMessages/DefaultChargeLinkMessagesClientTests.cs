@@ -45,7 +45,7 @@ namespace Energinet.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.Defaul
             string meteringPointId,
             string correlationId,
             [NotNull] [Frozen] Mock<ServiceBusClient> serviceBusClientMock,
-            [NotNull] [Frozen] Mock<IServiceBusRequestSenderProvider> serviceBusRequestSenderProviderMock)
+            [NotNull] [Frozen] Mock<IDefaultChargeLinkMessagesClientServiceBusRequestSenderProvider> serviceBusRequestSenderProviderMock)
         {
             // Arrange
             serviceBusClientMock.Setup(x => x.DisposeAsync()).Returns(default(ValueTask));
@@ -61,7 +61,7 @@ namespace Energinet.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.Defaul
         [Theory]
         [InlineAutoDomainData]
         public async Task CreateDefaultChargeLinkMessagesRequestAsync_ValidInput_SendsMessage(
-            [NotNull] [Frozen] Mock<IServiceBusRequestSenderProvider> serviceBusRequestSenderProviderMock,
+            [NotNull] [Frozen] Mock<IDefaultChargeLinkMessagesClientServiceBusRequestSenderProvider> serviceBusRequestSenderProviderMock,
             [NotNull] [Frozen] Mock<IServiceBusRequestSender> serviceBusRequestSenderMock,
             string anyCorrelationId)
         {
@@ -99,7 +99,7 @@ namespace Energinet.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.Defaul
             string correlationId,
             string replyQueue,
             [NotNull] [Frozen] Mock<ServiceBusClient> serviceBusClientMock,
-            [NotNull] [Frozen] Mock<IServiceBusRequestSenderProvider> serviceBusRequestSenderProviderMock)
+            [NotNull] [Frozen] Mock<IDefaultChargeLinkMessagesClientServiceBusRequestSenderProvider> serviceBusRequestSenderProviderMock)
         {
             // Arrange
             serviceBusClientMock.Setup(x => x.DisposeAsync()).Returns(default(ValueTask));
@@ -120,7 +120,7 @@ namespace Energinet.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.Defaul
         [InlineAutoDomainData]
         public async Task CreateDefaultChargeLinksMessageSucceededReplyAsync_WhenInputIsValid_SendsMessage(
             [NotNull] [Frozen] Mock<ServiceBusClient> serviceBusClientMock,
-            [NotNull] [Frozen] Mock<IServiceBusRequestSenderProvider> serviceBusRequestSenderProviderMock,
+            [NotNull] [Frozen] Mock<IDefaultChargeLinkMessagesClientServiceBusRequestSenderProvider> serviceBusRequestSenderProviderMock,
             [NotNull] [Frozen] Mock<IServiceBusRequestSender> serviceBusRequestSenderMock,
             string anyCorrelationId,
             string anyReplyQueueName)
@@ -165,7 +165,7 @@ namespace Energinet.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.Defaul
             string anyCorrelationId,
             string anyReplyQueue,
             [NotNull] [Frozen] Mock<ServiceBusClient> serviceBusClientMock,
-            [NotNull] [Frozen] Mock<IServiceBusRequestSenderProvider> serviceBusRequestSenderProviderMock)
+            [NotNull] [Frozen] Mock<IDefaultChargeLinkMessagesClientServiceBusRequestSenderProvider> serviceBusRequestSenderProviderMock)
         {
             // Arrange
             serviceBusClientMock.Setup(x => x.DisposeAsync()).Returns(default(ValueTask));
@@ -186,7 +186,7 @@ namespace Energinet.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.Defaul
         [InlineAutoDomainData]
         public async Task CreateDefaultChargeLinksMessageFailedReplyAsync_WhenInputIsValid_SendsMessage(
         [NotNull] [Frozen] Mock<ServiceBusClient> serviceBusClientMock,
-        [NotNull] [Frozen] Mock<IServiceBusRequestSenderProvider> serviceBusRequestSenderProviderMock,
+        [NotNull] [Frozen] Mock<IDefaultChargeLinkMessagesClientServiceBusRequestSenderProvider> serviceBusRequestSenderProviderMock,
         [NotNull] [Frozen] Mock<IServiceBusRequestSender> serviceBusRequestSenderMock,
         string anyCorrelationId,
         string anyReplyQueue)

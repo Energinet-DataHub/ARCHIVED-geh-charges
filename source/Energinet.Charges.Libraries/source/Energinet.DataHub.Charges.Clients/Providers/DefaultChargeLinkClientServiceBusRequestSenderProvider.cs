@@ -16,7 +16,8 @@ using Azure.Messaging.ServiceBus;
 
 namespace Energinet.DataHub.Charges.Libraries.Providers
 {
-    public class DefaultChargeLinkClientServiceBusRequestSenderProvider : ServiceBusRequestSenderProviderBase, IServiceBusRequestSenderProvider
+    public class DefaultChargeLinkClientServiceBusRequestSenderProvider :
+        ServiceBusRequestSenderProviderBase, IDefaultChargeLinkClientServiceBusRequestSenderProvider
     {
         public DefaultChargeLinkClientServiceBusRequestSenderProvider(
             ServiceBusClient serviceBusClient,

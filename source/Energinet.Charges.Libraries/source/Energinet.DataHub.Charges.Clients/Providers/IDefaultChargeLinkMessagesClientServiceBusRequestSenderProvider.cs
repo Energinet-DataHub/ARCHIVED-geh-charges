@@ -12,19 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Azure.Messaging.ServiceBus;
+using Energinet.DataHub.Charges.Libraries.ServiceBus;
 
 namespace Energinet.DataHub.Charges.Libraries.Providers
 {
-    public class DefaultChargeLinkMessagesClientServiceBusRequestSenderProvider :
-        ServiceBusRequestSenderProviderBase, IDefaultChargeLinkMessagesClientServiceBusRequestSenderProvider
+    public interface IDefaultChargeLinkMessagesClientServiceBusRequestSenderProvider
     {
-        public DefaultChargeLinkMessagesClientServiceBusRequestSenderProvider(
-            ServiceBusClient serviceBusClient,
-            string replyToQueueName,
-            string requestQueueName = "create-link-messages-request")
-            : base(serviceBusClient, replyToQueueName, requestQueueName)
-        {
-        }
+        IServiceBusRequestSender GetInstance();
     }
 }

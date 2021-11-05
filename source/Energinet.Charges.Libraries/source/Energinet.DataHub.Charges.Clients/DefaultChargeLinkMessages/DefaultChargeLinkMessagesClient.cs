@@ -15,7 +15,6 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
-using Azure.Messaging.ServiceBus;
 using Energinet.Charges.Contracts;
 using Energinet.DataHub.Charges.Libraries.Models;
 using Energinet.DataHub.Charges.Libraries.Providers;
@@ -32,7 +31,8 @@ namespace Energinet.DataHub.Charges.Libraries.DefaultChargeLinkMessages
     {
         private readonly IServiceBusRequestSender _serviceBusRequestSender;
 
-        public DefaultChargeLinkMessagesClient([NotNull] IServiceBusRequestSenderProvider serviceBusRequestSenderProvider)
+        public DefaultChargeLinkMessagesClient(
+            [NotNull] IDefaultChargeLinkMessagesClientServiceBusRequestSenderProvider serviceBusRequestSenderProvider)
         {
             _serviceBusRequestSender = serviceBusRequestSenderProvider.GetInstance();
         }

@@ -37,7 +37,7 @@ namespace Energinet.DataHub.Charges.Clients.IntegrationTests.DefaultChargeLink
             private readonly string _replyToQueueName;
             private readonly ServiceBusClient _serviceBusClient;
             private readonly ServiceBusTestListener _serviceBusTestListener;
-            private readonly DefaultChargeLinkClientServiceBusRequestSenderProvider _defaultChargeLinkClientServiceBusRequestSenderProvider;
+            private readonly IDefaultChargeLinkClientServiceBusRequestSenderProvider _defaultChargeLinkClientServiceBusRequestSenderProvider;
 
             public CreateDefaultChargeLinksRequestAsync(ChargesClientsFixture fixture, ITestOutputHelper testOutputHelper)
                 : base(fixture, testOutputHelper)
