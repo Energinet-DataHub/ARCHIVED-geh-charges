@@ -25,7 +25,6 @@ using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeCommandAccepted;
 using GreenEnergyHub.Messaging.MessageTypes.Common;
 using GreenEnergyHub.Messaging.Protobuf;
 using GreenEnergyHub.Messaging.Transport;
-using NodaTime;
 using MarketParticipant = GreenEnergyHub.Charges.Domain.MarketParticipants.MarketParticipant;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
@@ -36,8 +35,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
         {
             return new ChargeCommandAcceptedEvent(
                 chargeCommandAcceptedContract.PublishedTime.ToInstant(),
-                chargeCommandAcceptedContract.CorrelationId,
-                new ChargeCommand(chargeCommandAcceptedContract.Command.CorrelationId)
+                new ChargeCommand
             {
                 Document = ConvertDocument(chargeCommandAcceptedContract.Command.Document),
                 ChargeOperation = ConvertChargeOperation(chargeCommandAcceptedContract.Command.ChargeOperation),

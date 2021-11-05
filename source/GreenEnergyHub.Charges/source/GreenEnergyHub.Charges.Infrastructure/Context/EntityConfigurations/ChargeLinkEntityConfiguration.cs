@@ -68,8 +68,6 @@ namespace GreenEnergyHub.Charges.Infrastructure.Context.EntityConfigurations
             operations.Property(o => o.WriteDateTime)
                 .ValueGeneratedOnAdd()
                 .HasColumnName("WriteDateTime");
-
-            operations.Property(o => o.CorrelationId).HasColumnName("CorrelationId");
         }
     }
 }

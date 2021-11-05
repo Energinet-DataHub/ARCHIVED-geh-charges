@@ -20,7 +20,6 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Validation.BusinessVa
     public class TestableChargeCommand : ChargeCommand
     {
         public TestableChargeCommand()
-            : base("some-correlation-id")
         {
             ChargeOperation = new ChargeOperation();
         }

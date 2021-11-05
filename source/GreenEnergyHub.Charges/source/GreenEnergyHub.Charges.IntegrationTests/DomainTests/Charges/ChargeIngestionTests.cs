@@ -20,9 +20,9 @@ using System.Threading.Tasks;
 using Energinet.DataHub.Core.FunctionApp.TestCommon;
 using Energinet.DataHub.Core.FunctionApp.TestCommon.ServiceBus.ListenerMock;
 using FluentAssertions;
-using GreenEnergyHub.Charges.Infrastructure.Integration.ChargeConfirmation;
 using GreenEnergyHub.Charges.Infrastructure.Integration.ChargeCreated;
 using GreenEnergyHub.Charges.IntegrationTests.Fixtures;
+using GreenEnergyHub.Charges.IntegrationTests.TestCommon;
 using GreenEnergyHub.Charges.IntegrationTests.TestHelpers;
 using NodaTime;
 using Xunit;
@@ -52,7 +52,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests.Charges
 
             public Task DisposeAsync()
             {
-                Fixture.PostOfficeListenerMock.ResetMessageHandlersAndReceivedMessages();
+                Fixture.PostOfficeListener.ResetMessageHandlersAndReceivedMessages();
                 return Task.CompletedTask;
             }
 
@@ -66,6 +66,16 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests.Charges
                 actualResponse.StatusCode.Should().Be(HttpStatusCode.OK);
             }
 
+            [Fact]
+            public async Task When_ChargeIsReceived_Then_HttpResponseHasCorrelationId()
+            {
+                var request = CreateTariffWithPricesRequest();
+
+                var actualResponse = await Fixture.HostManager.HttpClient.SendAsync(request);
+
+                actualResponse.GetCorrelationId().Should().NotBeEmpty();
+            }
+
             /// <summary>
             /// Test of old Message Hub simulating code. Will be refactored in upcoming stories.
             /// </summary>
@@ -76,7 +86,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests.Charges
                 var request = CreateTariffWithPricesRequest();
 
                 var body = string.Empty;
-                using var isMessageReceivedEvent = await Fixture.PostOfficeListenerMock
+                using var isMessageReceivedEvent = await Fixture.PostOfficeListener
                     .WhenAny()
                     .VerifyOnceAsync(receivedMessage =>
                     {
@@ -101,7 +111,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests.Charges
                 var request = CreateTariffWithPricesRequest();
 
                 ChargeCreated chargeCreated = null!;
-                using var chargeCreatedListenerAwaiter = await Fixture.ChargeCreatedListenerMock
+                using var chargeCreatedListenerAwaiter = await Fixture.ChargeCreatedListener
                     .WhenAny()
                     .VerifyOnceAsync(receivedMessage =>
                     {
@@ -132,32 +142,15 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests.Charges
             {
                 // Arrange
                 var request = CreateTariffWithPricesRequest();
-
-                ChargePricesUpdated chargePricesUpdated = null!;
-                using var chargePricesUpdatedListenerAwaiter = await Fixture.ChargePricesUpdatedListenerMock
-                    .WhenAny()
-                    .VerifyOnceAsync(receivedMessage =>
-                    {
-                        chargePricesUpdated = ChargePricesUpdated
-                            .Parser
-                            .ParseFrom(receivedMessage.Body);
-
-                        return Task.CompletedTask;
-                    });
+                using var eventualChargePriceUpdatedEvent = await Fixture.ChargePricesUpdatedListener.BeginListenForMessageAsync().ConfigureAwait(false);
 
                 // Act
-                await Fixture.HostManager.HttpClient.SendAsync(request);
+                var response = await Fixture.HostManager.HttpClient.SendAsync(request);
 
                 // Assert
-
-                // => Event is published
-                var isChargePricesUpdatedReceived = chargePricesUpdatedListenerAwaiter.Wait(TimeSpan.FromSeconds(10));
+                var isChargePricesUpdatedReceived = eventualChargePriceUpdatedEvent.MessageAwaiter!.Wait(TimeSpan.FromSeconds(5));
                 isChargePricesUpdatedReceived.Should().BeTrue();
-
-                // => The published event is the expected one
-                chargePricesUpdated.ChargeId.Should().Be("47123");
-                chargePricesUpdated.ChargeOwner.Should().Be("8100000000030");
-                chargePricesUpdated.ChargeType.Should().Be(ChargePricesUpdated.Types.ChargeType.CtTariff);
+                eventualChargePriceUpdatedEvent.CorrelationId.Should().Be(response.GetCorrelationId());
             }
 
             private static HttpRequestMessage CreateTariffWithPricesRequest()
@@ -167,8 +160,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests.Charges
                 var chargeJson = EmbeddedResourceHelper.GetEmbeddedFile(testFilePath, clock);
 
                 var request = new HttpRequestMessage(HttpMethod.Post, "api/ChargeIngestion");
-                var expectedBody = chargeJson;
-                request.Content = new StringContent(expectedBody, Encoding.UTF8, "application/xml");
+                request.Content = new StringContent(chargeJson, Encoding.UTF8, "application/xml");
                 return request;
             }
         }

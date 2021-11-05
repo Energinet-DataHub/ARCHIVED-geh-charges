@@ -23,7 +23,6 @@ namespace GreenEnergyHub.Charges.Domain.ChargeLinkCommands
     {
         Task<ChargeLinkCommand> CreateAsync(
             [NotNull] CreateLinkCommandEvent createLinkCommandEvent,
-            [NotNull] DefaultChargeLink defaultChargeLink,
-            string correlationId);
+            [NotNull] DefaultChargeLink defaultChargeLink);
     }
 }

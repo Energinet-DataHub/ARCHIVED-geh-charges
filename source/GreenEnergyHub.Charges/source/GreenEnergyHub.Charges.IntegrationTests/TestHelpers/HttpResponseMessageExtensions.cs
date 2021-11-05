@@ -12,14 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Diagnostics.CodeAnalysis;
-using GreenEnergyHub.Charges.Application.Charges.Acknowledgement;
-using GreenEnergyHub.Charges.Domain.ChargeCommandAcceptedEvents;
+using System.Linq;
+using System.Net.Http;
+using GreenEnergyHub.Charges.FunctionHost.Common;
 
-namespace GreenEnergyHub.Charges.Application.Charges.Factories
+namespace GreenEnergyHub.Charges.IntegrationTests.TestHelpers
 {
-    public interface IChargeCreatedEventFactory
+    public static class HttpResponseMessageExtensions
     {
-        ChargeCreatedEvent Create([NotNull] ChargeCommandAcceptedEvent chargeCommandAcceptedEvent);
+        public static string GetCorrelationId(this HttpResponseMessage response)
+        {
+            return response.Headers.GetValues(HttpResponseHeaders.CorrelationId).Single();
+        }
     }
 }

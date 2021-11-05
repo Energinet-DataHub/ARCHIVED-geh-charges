@@ -44,8 +44,7 @@ namespace GreenEnergyHub.Charges.Domain.ChargeLinkCommands
 
         public async Task<ChargeLinkCommand> CreateAsync(
             [NotNull] CreateLinkCommandEvent createLinkCommandEvent,
-            [NotNull] DefaultChargeLink defaultChargeLink,
-            string correlationId)
+            [NotNull] DefaultChargeLink defaultChargeLink)
         {
             var charge = await _chargeRepository.GetChargeAsync(defaultChargeLink.ChargeId).ConfigureAwait(false);
             var mp = await _meteringPointRepository.GetMeteringPointAsync(
@@ -54,7 +53,6 @@ namespace GreenEnergyHub.Charges.Domain.ChargeLinkCommands
 
             return CreateChargeLinkCommand(
                 createLinkCommandEvent.MeteringPointId,
-                correlationId,
                 charge,
                 defaultChargeLink.GetStartDateTime(mp.EffectiveDate),
                 defaultChargeLink.EndDateTime);
@@ -62,8 +60,7 @@ namespace GreenEnergyHub.Charges.Domain.ChargeLinkCommands
 
         public async Task<ChargeLinkCommand> CreateFromChargeLinkAsync(
             [NotNull] ChargeLink chargeLink,
-            [NotNull] ChargeLinkPeriodDetails chargeLinkPeriodDetails,
-            string correlationId)
+            [NotNull] ChargeLinkPeriodDetails chargeLinkPeriodDetails)
         {
             var charge = await _chargeRepository.GetChargeAsync(chargeLink.ChargeId).ConfigureAwait(false);
             var meteringPoint = await _meteringPointRepository
@@ -72,7 +69,6 @@ namespace GreenEnergyHub.Charges.Domain.ChargeLinkCommands
 
             return CreateChargeLinkCommand(
                 meteringPoint.MeteringPointId,
-                correlationId,
                 charge,
                 chargeLinkPeriodDetails.StartDateTime,
                 chargeLinkPeriodDetails.EndDateTime);
@@ -80,13 +76,12 @@ namespace GreenEnergyHub.Charges.Domain.ChargeLinkCommands
 
         private ChargeLinkCommand CreateChargeLinkCommand(
             string meteringPointId,
-            string correlationId,
             Charge charge,
             Instant startDateTime,
             Instant endDateTime)
         {
             var currentTime = _clock.GetCurrentInstant();
-            var chargeLinkCommand = new ChargeLinkCommand(correlationId)
+            var chargeLinkCommand = new ChargeLinkCommand()
             {
                 Document = new DocumentDto
                 {

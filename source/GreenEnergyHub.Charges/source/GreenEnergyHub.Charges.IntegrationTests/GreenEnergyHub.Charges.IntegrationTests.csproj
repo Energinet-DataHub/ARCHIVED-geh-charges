@@ -81,7 +81,6 @@ limitations under the License.
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="DomainTests\ChargeLinks" />
       <Folder Include="IntegrationTests" />
     </ItemGroup>
 </Project>

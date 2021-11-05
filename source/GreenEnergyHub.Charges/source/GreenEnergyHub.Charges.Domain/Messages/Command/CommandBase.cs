@@ -18,9 +18,5 @@ namespace GreenEnergyHub.Charges.Domain.Messages.Command
 {
     public abstract class CommandBase : MessageBase
     {
-        protected CommandBase([NotNull] string correlationId)
-            : base(correlationId)
-        {
-        }
     }
 }

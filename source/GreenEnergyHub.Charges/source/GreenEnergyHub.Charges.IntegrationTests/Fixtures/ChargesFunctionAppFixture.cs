@@ -43,19 +43,19 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures
         public ChargesDatabaseManager DatabaseManager { get; }
 
         [NotNull]
-        public ServiceBusListenerMock? ChargeCreatedListenerMock { get; private set; }
+        public ServiceBusListenerMock? ChargeCreatedListener { get; private set; }
 
         [NotNull]
-        public ServiceBusListenerMock? ChargePricesUpdatedListenerMock { get; private set; }
+        public ServiceBusTestListener? ChargePricesUpdatedListener { get; private set; }
 
         [NotNull]
-        public ServiceBusListenerMock? PostOfficeListenerMock { get; private set; }
+        public ServiceBusListenerMock? PostOfficeListener { get; private set; }
 
         [NotNull]
-        public ServiceBusListenerMock? MessageHubDataAvailableListenerMock { get; private set; }
+        public ServiceBusListenerMock? MessageHubDataAvailableListener { get; private set; }
 
         [NotNull]
-        public ServiceBusListenerMock? MessageHubReplyListenerMock { get; private set; }
+        public ServiceBusListenerMock? MessageHubReplyListener { get; private set; }
 
         [NotNull]
         public MessageHubMock? MessageHubMock { get; private set; }
@@ -105,8 +105,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures
             // Overwrite service bus related settings, so the function app uses the names we have control of in the test
             var postOfficeTopicName = await GetTopicNameFromKeyAsync(ChargesFunctionAppServiceBusOptions.PostOfficeTopicKey);
             Environment.SetEnvironmentVariable(EnvironmentSettingNames.PostOfficeTopicName, postOfficeTopicName);
-            PostOfficeListenerMock = new ServiceBusListenerMock(ServiceBusResource.ConnectionString, TestLogger);
-            await PostOfficeListenerMock.AddTopicSubscriptionListenerAsync(postOfficeTopicName, ChargesFunctionAppServiceBusOptions.PostOfficeSubscriptionName);
+            PostOfficeListener = new ServiceBusListenerMock(ServiceBusResource.ConnectionString, TestLogger);
+            await PostOfficeListener.AddTopicSubscriptionListenerAsync(postOfficeTopicName, ChargesFunctionAppServiceBusOptions.PostOfficeSubscriptionName);
 
             // We also overwrite all the service bus connection strings, since we created all topic/queues in just one of them
             Environment.SetEnvironmentVariable(EnvironmentSettingNames.DomainEventSenderConnectionString, ServiceBusResource.ConnectionString);
@@ -163,29 +163,31 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures
 
             var chargeCreatedTopicName = await GetTopicNameFromKeyAsync(ChargesFunctionAppServiceBusOptions.ChargeCreatedTopicKey);
             Environment.SetEnvironmentVariable(EnvironmentSettingNames.ChargeLinkCreatedTopicName, chargeCreatedTopicName);
-            ChargeCreatedListenerMock = new ServiceBusListenerMock(ServiceBusResource.ConnectionString, TestLogger);
-            await ChargeCreatedListenerMock.AddTopicSubscriptionListenerAsync(chargeCreatedTopicName, ChargesFunctionAppServiceBusOptions.ChargeCreatedSubscriptionName);
+            ChargeCreatedListener = new ServiceBusListenerMock(ServiceBusResource.ConnectionString, TestLogger);
+            await ChargeCreatedListener.AddTopicSubscriptionListenerAsync(chargeCreatedTopicName, ChargesFunctionAppServiceBusOptions.ChargeCreatedSubscriptionName);
 
             var chargePricesUpdatedTopicName = await GetTopicNameFromKeyAsync(ChargesFunctionAppServiceBusOptions.ChargePricesUpdatedTopicKey);
             Environment.SetEnvironmentVariable(EnvironmentSettingNames.ChargePricesUpdatedTopicName, chargePricesUpdatedTopicName);
-            ChargePricesUpdatedListenerMock = new ServiceBusListenerMock(ServiceBusResource.ConnectionString, TestLogger);
-            await ChargePricesUpdatedListenerMock.AddTopicSubscriptionListenerAsync(chargePricesUpdatedTopicName, ChargesFunctionAppServiceBusOptions.ChargePricesUpdatedSubscriptionName);
+            var chargePricesUpdatedListenerMock = new ServiceBusListenerMock(ServiceBusResource.ConnectionString, TestLogger);
+            await chargePricesUpdatedListenerMock.AddTopicSubscriptionListenerAsync(chargePricesUpdatedTopicName, ChargesFunctionAppServiceBusOptions.ChargePricesUpdatedSubscriptionName);
+            ChargePricesUpdatedListener = new ServiceBusTestListener(chargePricesUpdatedListenerMock);
 
             Environment.SetEnvironmentVariable(ChargesFunctionAppServiceBusOptions.ChargeAcceptedDataAvailableNotifierSubscriptionKey, ChargesFunctionAppServiceBusOptions.ChargeAcceptedDataAvailableNotifierSubscriptionName);
 
             var messageHubDataAvailableQueueName = await GetQueueNameFromKeyAsync(ChargesFunctionAppServiceBusOptions.MessageHubDataAvailableQueueKey);
             Environment.SetEnvironmentVariable(EnvironmentSettingNames.MessageHubDataAvailableQueue, messageHubDataAvailableQueueName);
-            MessageHubDataAvailableListenerMock = new ServiceBusListenerMock(ServiceBusResource.ConnectionString, TestLogger);
-            await MessageHubDataAvailableListenerMock.AddQueueListenerAsync(messageHubDataAvailableQueueName);
+            MessageHubDataAvailableListener = new ServiceBusListenerMock(ServiceBusResource.ConnectionString, TestLogger);
+            await MessageHubDataAvailableListener.AddQueueListenerAsync(messageHubDataAvailableQueueName);
 
             MessageHubRequestQueue = await ServiceBusManager.CreateQueueAsync(ChargesFunctionAppServiceBusOptions.MessageHubRequestQueueKey, 1, null, true);
             Environment.SetEnvironmentVariable(EnvironmentSettingNames.MessageHubRequestQueue, MessageHubRequestQueue.Name);
 
             MessageHubReplyQueue = await ServiceBusManager.CreateQueueAsync(ChargesFunctionAppServiceBusOptions.MessageHubReplyQueueKey, 1, null, true);
             Environment.SetEnvironmentVariable(EnvironmentSettingNames.MessageHubReplyQueue, MessageHubReplyQueue.Name);
-            MessageHubReplyListenerMock = new ServiceBusListenerMock(ServiceBusResource.ConnectionString, TestLogger);
-            await MessageHubReplyListenerMock.AddQueueListenerAsync(MessageHubReplyQueue.Name);
+            MessageHubReplyListener = new ServiceBusListenerMock(ServiceBusResource.ConnectionString, TestLogger);
 
+            // TODO: Re-add when solving bug https://github.com/Energinet-DataHub/geh-charges/issues/788
+            //await MessageHubReplyListener.AddQueueListenerAsync(MessageHubReplyQueue.Name);
             MessageHubMock = new MessageHubMock(ServiceBusResource.ConnectionString, MessageHubRequestQueue.Name, MessageHubReplyQueue.Name);
             Environment.SetEnvironmentVariable(EnvironmentSettingNames.MessageHubStorageConnectionString, ChargesFunctionAppServiceBusOptions.MessageHubStorageConnectionString);
 
@@ -213,9 +215,9 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures
             AzuriteManager.Dispose();
 
             // => Service Bus
-            await PostOfficeListenerMock.DisposeAsync();
-            await MessageHubDataAvailableListenerMock.DisposeAsync();
-            await MessageHubReplyListenerMock.DisposeAsync();
+            await PostOfficeListener.DisposeAsync();
+            await MessageHubDataAvailableListener.DisposeAsync();
+            await MessageHubReplyListener.DisposeAsync();
             await ServiceBusResource.DisposeAsync();
 
             await ServiceBusManager.DeleteQueueAsync(MessageHubRequestQueue.Name);

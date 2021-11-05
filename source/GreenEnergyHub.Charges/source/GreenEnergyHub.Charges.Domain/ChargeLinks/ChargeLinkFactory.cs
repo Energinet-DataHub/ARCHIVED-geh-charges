@@ -54,9 +54,7 @@ namespace GreenEnergyHub.Charges.Domain.ChargeLinks
                     .GetMeteringPointAsync(chargeLink.MeteringPointId)
                     .ConfigureAwait(false);
 
-                var operation = new ChargeLinkOperation(
-                    chargeLink.OperationId,
-                    chargeLinkEvent.CorrelationId);
+                var operation = new ChargeLinkOperation(chargeLink.OperationId);
                 var operations = new List<ChargeLinkOperation> { operation };
 
                 var periodDetails = new ChargeLinkPeriodDetails(

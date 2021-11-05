@@ -16,10 +16,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.Domain.Charges;
-using GreenEnergyHub.Charges.Domain.MarketParticipants;
-using GreenEnergyHub.Charges.Domain.SharedDtos;
 using GreenEnergyHub.Charges.Infrastructure.Context.Model;
 using NodaTime;
 using Charge = GreenEnergyHub.Charges.Infrastructure.Context.Model.Charge;
@@ -44,7 +41,6 @@ namespace GreenEnergyHub.Charges.Infrastructure.Context.Mapping
                 currentChargeDetails.Name,
                 currentChargeDetails.Description,
                 charge.MarketParticipant.MarketParticipantId,
-                charge.ChargeOperation.CorrelationId,
                 Instant.FromDateTimeUtc(currentChargeDetails.StartDateTime.ToUniversalTime()),
                 Instant.FromDateTimeUtc(currentChargeDetails.EndDateTime.ToUniversalTime()),
                 (ChargeType)charge.ChargeType,
@@ -93,7 +89,6 @@ namespace GreenEnergyHub.Charges.Infrastructure.Context.Mapping
         {
             return new ChargeOperation
             {
-                CorrelationId = charge.CorrelationId,
                 WriteDateTime = writeDateTime,
                 ChargeOperationId = charge.ChargeOperationId,
             };

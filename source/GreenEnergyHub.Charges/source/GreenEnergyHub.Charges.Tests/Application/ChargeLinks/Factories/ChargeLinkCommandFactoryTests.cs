@@ -45,7 +45,6 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Factories
             [NotNull] Charge charge,
             [NotNull] MeteringPoint meteringPoint,
             [NotNull] CreateLinkCommandEvent createLinkCommandEvent,
-            [NotNull] string correlationId,
             [NotNull] ChargeLinkCommandFactory sut)
         {
             // Arrange
@@ -58,7 +57,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Factories
                 .ReturnsAsync(meteringPoint);
 
             // Act
-            var actual = await sut.CreateAsync(createLinkCommandEvent, defaultChargeLink, correlationId)
+            var actual = await sut.CreateAsync(createLinkCommandEvent, defaultChargeLink)
                 .ConfigureAwait(false);
 
             // Assert
@@ -93,7 +92,6 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Factories
             var fixture = new Fixture().Customize(new AutoMoqCustomization());
             fixture.Customizations.Add(new StringGenerator(() => Guid.NewGuid().ToString()[..20]));
             var chargeLink = fixture.Create<ChargeLink>();
-            var correlationId = fixture.Create<string>();
 
             // Arrange
             chargeRepository.Setup(
@@ -105,7 +103,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Factories
                 .ReturnsAsync(meteringPoint);
 
             // Act
-            var actual = await sut.CreateFromChargeLinkAsync(chargeLink, chargeLinkPeriodDetails, correlationId)
+            var actual = await sut.CreateFromChargeLinkAsync(chargeLink, chargeLinkPeriodDetails)
                 .ConfigureAwait(false);
 
             // Assert

@@ -22,7 +22,7 @@ namespace GreenEnergyHub.Charges.Domain.ChargeCommands
     {
         public ChargeCommand CreateFromCharge([NotNull] Charge charge, DocumentDto document)
         {
-            var chargeCommand = new ChargeCommand(charge.CorrelationId)
+            var chargeCommand = new ChargeCommand
             {
                 Document = document,
                 ChargeOperation = new ChargeOperation

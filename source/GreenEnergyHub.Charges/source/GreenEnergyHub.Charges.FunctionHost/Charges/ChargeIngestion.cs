@@ -18,8 +18,8 @@ using GreenEnergyHub.Charges.Application;
 using GreenEnergyHub.Charges.Application.Charges.Handlers;
 using GreenEnergyHub.Charges.Application.Charges.Handlers.Message;
 using GreenEnergyHub.Charges.Domain.ChargeCommands;
+using GreenEnergyHub.Charges.FunctionHost.Common;
 using GreenEnergyHub.Charges.Infrastructure.Messaging;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
 
@@ -46,7 +46,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Charges
         }
 
         [Function(IngestionFunctionNames.ChargeIngestion)]
-        public async Task<IActionResult> RunAsync(
+        public async Task<HttpResponseData> RunAsync(
             [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = null)]
             [NotNull] HttpRequestData req)
         {
@@ -59,9 +59,12 @@ namespace GreenEnergyHub.Charges.FunctionHost.Charges
 
             var messageResult = await _chargesMessageHandler.HandleAsync(message)
                 .ConfigureAwait(false);
-            messageResult.CorrelationId = _correlationContext.Id;
 
-            return new OkObjectResult(messageResult);
+            var response = req.CreateResponse();
+            await response.WriteAsJsonAsync(messageResult);
+            response.Headers.Add(HttpResponseHeaders.CorrelationId, _correlationContext.Id);
+
+            return response;
         }
 
         private async Task<ChargesMessage> GetChargesMessageAsync(
@@ -70,7 +73,6 @@ namespace GreenEnergyHub.Charges.FunctionHost.Charges
             var message = new ChargesMessage();
             var command = (ChargeCommand)await _messageExtractor.ExtractAsync(req.Body).ConfigureAwait(false);
 
-            command.SetCorrelationId(_correlationContext.Id);
             message.Transactions.Add(command);
             return message;
         }

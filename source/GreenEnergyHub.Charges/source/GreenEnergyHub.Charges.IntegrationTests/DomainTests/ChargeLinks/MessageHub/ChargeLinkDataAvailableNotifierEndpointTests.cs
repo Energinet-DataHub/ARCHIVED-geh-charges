@@ -49,8 +49,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests.ChargeLinks.Messag
 
             public Task DisposeAsync()
             {
-                Fixture.MessageHubDataAvailableListenerMock.ResetMessageHandlersAndReceivedMessages();
-                Fixture.MessageHubReplyListenerMock.ResetMessageHandlersAndReceivedMessages();
+                Fixture.MessageHubDataAvailableListener.ResetMessageHandlersAndReceivedMessages();
+                Fixture.MessageHubReplyListener.ResetMessageHandlersAndReceivedMessages();
                 return Task.CompletedTask;
             }
 
@@ -68,7 +68,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests.ChargeLinks.Messag
 
                 // => Simulate that MessageHub requests a bundle when data available
                 DataAvailableNotificationDto? dataAvailableNotification;
-                using var dataAvailableAwaiter = await Fixture.MessageHubDataAvailableListenerMock
+                using var dataAvailableAwaiter = await Fixture.MessageHubDataAvailableListener
                     .WhenAny()
                     .VerifyOnceAsync(async receivedMessage =>
                     {
@@ -78,7 +78,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests.ChargeLinks.Messag
                     });
 
                 // => Register the bundle response so we can assert it
-                using var bundleResponseAwaiter = await Fixture.MessageHubReplyListenerMock
+                using var bundleResponseAwaiter = await Fixture.MessageHubReplyListener
                     .WhenAny()
                     .VerifyOnceAsync(_ => Task.CompletedTask);
 

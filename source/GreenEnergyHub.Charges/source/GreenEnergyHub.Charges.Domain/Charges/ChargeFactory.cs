@@ -15,7 +15,6 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.Domain.ChargeCommands;
 
 namespace GreenEnergyHub.Charges.Domain.Charges
@@ -31,7 +30,6 @@ namespace GreenEnergyHub.Charges.Domain.Charges
                 command.ChargeOperation.ChargeName,
                 command.ChargeOperation.ChargeDescription,
                 command.ChargeOperation.ChargeOwner,
-                command.CorrelationId,
                 command.ChargeOperation.StartDateTime,
                 command.ChargeOperation.EndDateTime,
                 command.ChargeOperation.Type,

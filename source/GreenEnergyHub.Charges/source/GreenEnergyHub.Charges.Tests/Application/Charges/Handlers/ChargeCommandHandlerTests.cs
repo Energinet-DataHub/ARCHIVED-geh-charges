@@ -46,8 +46,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
             localEventPublisher.Verify(
                 x => x.DispatchAsync(
                     It.Is<ChargeCommandReceivedEvent>(
-                        localEvent => localEvent.Command == transaction &&
-                                      localEvent.CorrelationId == transaction.CorrelationId),
+                        localEvent => localEvent.Command == transaction),
                     It.IsAny<CancellationToken>()));
         }
     }
