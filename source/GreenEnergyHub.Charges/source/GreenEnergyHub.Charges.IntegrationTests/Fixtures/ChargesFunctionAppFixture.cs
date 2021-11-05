@@ -141,7 +141,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures
 
             var commandRejectedTopic = await ServiceBusResourceProvider
                 .BuildTopic(ChargesServiceBusResourceNames.CommandRejectedTopicKey)
-                .AddSubscription(ChargesServiceBusResourceNames.CommandReceivedSubscriptionName)
+                .AddSubscription(ChargesServiceBusResourceNames.CommandRejectedSubscriptionName)
                 .CreateAsync();
 
             Environment.SetEnvironmentVariable("COMMAND_REJECTED_TOPIC_NAME", commandRejectedTopic.Name);
