@@ -15,32 +15,47 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
-using Azure.Messaging.ServiceBus;
 using Energinet.Charges.Contracts;
 using Google.Protobuf;
 using GreenEnergyHub.Charges.Application.ToBeRenamedAndSplitted;
 
 namespace GreenEnergyHub.Charges.Infrastructure.ToBeRenamedAndSplitted
 {
-    public sealed class DefaultChargeLinkClient : IAsyncDisposable, IDefaultChargeLinkClient
+    /// <summary>
+    /// This class must be thread safe.
+    /// </summary>
+    public sealed class DefaultChargeLinkMessagesClient : IDefaultChargeLinkMessagesClient
     {
-        private readonly ServiceBusClient _serviceBusClient;
-        private readonly string _createLinkRequestQueueName;
         private readonly IServiceBusRequestSender _serviceBusRequestSender;
 
-        public DefaultChargeLinkClient(
-            [NotNull] ServiceBusClient serviceBusClient,
-            [NotNull] IServiceBusRequestSenderFactory serviceBusRequestSenderFactory,
-            [NotNull] string replyToQueueName,
-            [NotNull] string createLinkRequestQueueName = "create-link-request")
+        public DefaultChargeLinkMessagesClient(
+            [NotNull] IDefaultChargeLinkMessagesClientServiceBusRequestSenderProvider serviceBusRequestSenderProvider)
         {
-            _serviceBusClient = serviceBusClient;
-            _createLinkRequestQueueName = createLinkRequestQueueName;
-            _serviceBusRequestSender = serviceBusRequestSenderFactory.Create(serviceBusClient, replyToQueueName);
+            _serviceBusRequestSender = serviceBusRequestSenderProvider.GetInstance();
         }
 
-        public async Task CreateDefaultChargeLinksSucceededReplyAsync(
-            [NotNull] CreateDefaultChargeLinksSucceededDto createDefaultChargeLinksSucceededDto,
+        public async Task CreateDefaultChargeLinkMessagesRequestAsync(
+            [NotNull] CreateDefaultChargeLinkMessagesDto createDefaultChargeLinkMessagesDto,
+            [NotNull] string correlationId)
+        {
+            if (createDefaultChargeLinkMessagesDto == null)
+                throw new ArgumentNullException(nameof(createDefaultChargeLinkMessagesDto));
+
+            if (string.IsNullOrWhiteSpace(correlationId))
+                throw new ArgumentNullException(nameof(correlationId));
+
+            var createDefaultChargeLinkMessages = new CreateDefaultChargeLinkMessages
+            {
+                MeteringPointId = createDefaultChargeLinkMessagesDto.MeteringPointId,
+            };
+
+            await _serviceBusRequestSender.SendRequestAsync(
+                    createDefaultChargeLinkMessages.ToByteArray(), correlationId)
+                .ConfigureAwait(false);
+        }
+
+        public async Task CreateDefaultChargeLinkMessagesSucceededReplyAsync(
+            [NotNull] CreateDefaultChargeLinkMessagesSucceededDto createDefaultChargeLinkMessagesSucceededDto,
             [NotNull] string correlationId,
             [NotNull] string replyQueueName)
         {
@@ -63,7 +78,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.ToBeRenamedAndSplitted
             };
 
             await _serviceBusRequestSender.SendRequestAsync(
-                    createDefaultChargeLinks.ToByteArray(), replyQueueName, correlationId)
+                    createDefaultChargeLinks.ToByteArray(), correlationId)
                 .ConfigureAwait(false);
         }
 
@@ -91,13 +106,8 @@ namespace GreenEnergyHub.Charges.Infrastructure.ToBeRenamedAndSplitted
             };
 
             await _serviceBusRequestSender.SendRequestAsync(
-                    createDefaultChargeLinks.ToByteArray(), replyQueueName, correlationId)
+                    createDefaultChargeLinks.ToByteArray(), correlationId)
                 .ConfigureAwait(false);
-        }
-
-        public async ValueTask DisposeAsync()
-        {
-            await _serviceBusClient.DisposeAsync().ConfigureAwait(false);
         }
     }
 }

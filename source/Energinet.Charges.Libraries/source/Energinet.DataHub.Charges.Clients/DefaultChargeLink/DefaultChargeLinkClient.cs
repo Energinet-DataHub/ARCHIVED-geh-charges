@@ -15,30 +15,25 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
-using Azure.Messaging.ServiceBus;
 using Energinet.Charges.Contracts;
-using Energinet.DataHub.Charges.Libraries.Factories;
 using Energinet.DataHub.Charges.Libraries.Models;
+using Energinet.DataHub.Charges.Libraries.Providers;
 using Energinet.DataHub.Charges.Libraries.ServiceBus;
 using Google.Protobuf;
 
 namespace Energinet.DataHub.Charges.Libraries.DefaultChargeLink
 {
-    public sealed class DefaultChargeLinkClient : IAsyncDisposable, IDefaultChargeLinkClient
+    /// <summary>
+    /// This class must be thread safe.
+    /// </summary>
+    public sealed class DefaultChargeLinkClient : IDefaultChargeLinkClient
     {
-        private readonly ServiceBusClient _serviceBusClient;
-        private readonly string _createLinkRequestQueueName;
         private readonly IServiceBusRequestSender _serviceBusRequestSender;
 
         public DefaultChargeLinkClient(
-            [NotNull] ServiceBusClient serviceBusClient,
-            [NotNull] IServiceBusRequestSenderFactory serviceBusRequestSenderFactory,
-            [NotNull] string replyToQueueName,
-            [NotNull] string createLinkRequestQueueName = "create-link-request")
+            [NotNull] IDefaultChargeLinkClientServiceBusRequestSenderProvider serviceBusRequestSenderProvider)
         {
-            _serviceBusClient = serviceBusClient;
-            _createLinkRequestQueueName = createLinkRequestQueueName;
-            _serviceBusRequestSender = serviceBusRequestSenderFactory.Create(serviceBusClient, replyToQueueName);
+            _serviceBusRequestSender = serviceBusRequestSenderProvider.GetInstance();
         }
 
         public async Task CreateDefaultChargeLinksRequestAsync(
@@ -57,7 +52,7 @@ namespace Energinet.DataHub.Charges.Libraries.DefaultChargeLink
             };
 
             await _serviceBusRequestSender.SendRequestAsync(
-                createDefaultChargeLinks.ToByteArray(), _createLinkRequestQueueName, correlationId)
+                createDefaultChargeLinks.ToByteArray(), correlationId)
                 .ConfigureAwait(false);
         }
 
@@ -85,7 +80,7 @@ namespace Energinet.DataHub.Charges.Libraries.DefaultChargeLink
         //     };
         //
         //     await _serviceBusRequestSender.SendRequestAsync(
-        //             createDefaultChargeLinks.ToByteArray(), replyQueueName, correlationId)
+        //             createDefaultChargeLinks.ToByteArray(), correlationId)
         //         .ConfigureAwait(false);
         // }
         //
@@ -113,12 +108,9 @@ namespace Energinet.DataHub.Charges.Libraries.DefaultChargeLink
         //     };
         //
         //     await _serviceBusRequestSender.SendRequestAsync(
-        //             createDefaultChargeLinks.ToByteArray(), replyQueueName, correlationId)
+        //             createDefaultChargeLinks.ToByteArray(), correlationId)
         //         .ConfigureAwait(false);
         // }
-        public async ValueTask DisposeAsync()
-        {
-            await _serviceBusClient.DisposeAsync().ConfigureAwait(false);
-        }
+
     }
 }
