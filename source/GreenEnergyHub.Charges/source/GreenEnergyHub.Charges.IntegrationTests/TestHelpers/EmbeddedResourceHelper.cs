@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Reflection;
@@ -22,19 +23,28 @@ namespace GreenEnergyHub.Charges.IntegrationTests.TestHelpers
 {
     public static class EmbeddedResourceHelper
     {
-        public static string GetEmbeddedFile(string filePath, [NotNull] IClock clock)
+        public static string GetEmbeddedFile(string filePath, [NotNull] IClock clock, IEnumerable<(string, string)>? replaceTokens = null)
         {
             var basePath = Assembly.GetExecutingAssembly().Location;
             var path = Path.Combine(Directory.GetParent(basePath)!.FullName, filePath);
             var fileText = File.ReadAllText(path);
-            return ReplaceMergeFields(clock, fileText);
+            return ReplaceMergeFields(clock, fileText, replaceTokens ?? new (string, string)[0]);
         }
 
-        private static string ReplaceMergeFields(IClock clock, string file)
+        private static string ReplaceMergeFields(
+            IClock clock,
+            string file,
+            IEnumerable<(string Name, string Value)> replaceTokens)
         {
             var currentInstant = clock.GetCurrentInstant();
             var now = currentInstant.ToString();
             var inThirtyoneDays = currentInstant.Plus(Duration.FromDays(31)).ToString();
+
+            foreach (var token in replaceTokens)
+            {
+                file = file.Replace(@"{{" + token.Name + "}}", token.Value);
+            }
+
             return file
                 .Replace("{{$randomCharacters}}", Guid.NewGuid().ToString("n")[..10])
                 .Replace("{{$isoTimestamp}}", now)

@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Text;
@@ -20,9 +21,7 @@ using System.Threading.Tasks;
 using Energinet.DataHub.Core.FunctionApp.TestCommon;
 using Energinet.DataHub.Core.FunctionApp.TestCommon.ServiceBus.ListenerMock;
 using FluentAssertions;
-using GreenEnergyHub.Charges.Infrastructure.Integration.ChargeCreated;
 using GreenEnergyHub.Charges.IntegrationTests.Fixtures;
-using GreenEnergyHub.Charges.IntegrationTests.TestCommon;
 using GreenEnergyHub.Charges.IntegrationTests.TestHelpers;
 using NodaTime;
 using Xunit;
@@ -59,7 +58,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests.Charges
             [Fact]
             public async Task When_ChargeIsReceived_Then_AHttp200ResponseIsReturned()
             {
-                var request = CreateTariffWithPricesRequest();
+                var request = CreateTariffWithPricesRequest("8000");
 
                 var actualResponse = await Fixture.HostManager.HttpClient.SendAsync(request);
 
@@ -69,7 +68,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests.Charges
             [Fact]
             public async Task When_ChargeIsReceived_Then_HttpResponseHasCorrelationId()
             {
-                var request = CreateTariffWithPricesRequest();
+                var request = CreateTariffWithPricesRequest("8001");
 
                 var actualResponse = await Fixture.HostManager.HttpClient.SendAsync(request);
 
@@ -83,7 +82,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests.Charges
             public async Task When_ChargeIsReceived_Then_MessageIsSentToPostOffice()
             {
                 // Arrange
-                var request = CreateTariffWithPricesRequest();
+                var request = CreateTariffWithPricesRequest("8002");
 
                 var body = string.Empty;
                 using var isMessageReceivedEvent = await Fixture.PostOfficeListener
@@ -99,7 +98,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests.Charges
                 await Fixture.HostManager.HttpClient.SendAsync(request);
 
                 // Assert
-                var isMessageReceived = isMessageReceivedEvent.Wait(TimeSpan.FromSeconds(10));
+                var isMessageReceived = isMessageReceivedEvent.Wait(TimeSpan.FromSeconds(5));
                 isMessageReceived.Should().BeTrue();
                 body.Should().NotBeEmpty();
             }
@@ -108,40 +107,23 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests.Charges
             public async Task When_ChargeIsReceived_Then_ChargeCreatedIntegrationEventIsPublished()
             {
                 // Arrange
-                var request = CreateTariffWithPricesRequest();
-
-                ChargeCreated chargeCreated = null!;
-                using var chargeCreatedListenerAwaiter = await Fixture.ChargeCreatedListener
-                    .WhenAny()
-                    .VerifyOnceAsync(receivedMessage =>
-                    {
-                        chargeCreated = ChargeCreated
-                            .Parser
-                            .ParseFrom(receivedMessage.Body);
-
-                        return Task.CompletedTask;
-                    });
+                var request = CreateTariffWithPricesRequest("8003");
+                using var eventualChargeCreatedEvent = await Fixture.ChargeCreatedListener.BeginListenForMessageAsync().ConfigureAwait(false);
 
                 // Act
-                await Fixture.HostManager.HttpClient.SendAsync(request);
+                var response = await Fixture.HostManager.HttpClient.SendAsync(request);
 
                 // Assert
-
-                // => Event is published
-                var isChargeCreatedReceived = chargeCreatedListenerAwaiter.Wait(TimeSpan.FromSeconds(10));
+                var isChargeCreatedReceived = eventualChargeCreatedEvent.MessageAwaiter!.Wait(TimeSpan.FromSeconds(5));
                 isChargeCreatedReceived.Should().BeTrue();
-
-                // => The published event is the expected one
-                chargeCreated!.ChargeId.Should().Be("47123");
-                chargeCreated.ChargeOwner.Should().Be("8100000000030");
-                chargeCreated.ChargeType.Should().Be(ChargeCreated.Types.ChargeType.CtTariff);
+                eventualChargeCreatedEvent.CorrelationId.Should().Be(response.GetCorrelationId());
             }
 
             [Fact]
             public async Task When_ChargeIncludingPriceIsReceived_Then_ChargePricesUpdatedIntegrationEventIsPublished()
             {
                 // Arrange
-                var request = CreateTariffWithPricesRequest();
+                var request = CreateTariffWithPricesRequest("8004");
                 using var eventualChargePriceUpdatedEvent = await Fixture.ChargePricesUpdatedListener.BeginListenForMessageAsync().ConfigureAwait(false);
 
                 // Act
@@ -153,15 +135,16 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests.Charges
                 eventualChargePriceUpdatedEvent.CorrelationId.Should().Be(response.GetCorrelationId());
             }
 
-            private static HttpRequestMessage CreateTariffWithPricesRequest()
+            private static HttpRequestMessage CreateTariffWithPricesRequest(string senderProvidedChargeId)
             {
-                var testFilePath = "TestFiles/ValidCreateTariffCommand.xml";
+                var testFilePath = "TestFiles/Charges/ValidCreateTariffCommand.xml";
                 var clock = SystemClock.Instance;
-                var chargeJson = EmbeddedResourceHelper.GetEmbeddedFile(testFilePath, clock);
+                var chargeJson = EmbeddedResourceHelper.GetEmbeddedFile(testFilePath, clock, new List<(string, string)> { ("sender-provided-charge-id", senderProvidedChargeId) });
 
-                var request = new HttpRequestMessage(HttpMethod.Post, "api/ChargeIngestion");
-                request.Content = new StringContent(chargeJson, Encoding.UTF8, "application/xml");
-                return request;
+                return new HttpRequestMessage(HttpMethod.Post, "api/ChargeIngestion")
+                {
+                    Content = new StringContent(chargeJson, Encoding.UTF8, "application/xml"),
+                };
             }
         }
     }

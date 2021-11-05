@@ -12,15 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
 using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using Energinet.DataHub.Core.FunctionApp.TestCommon;
-using Energinet.DataHub.Core.FunctionApp.TestCommon.ServiceBus.ListenerMock;
 using FluentAssertions;
-using GreenEnergyHub.Charges.Infrastructure.Integration.ChargeCreated;
 using GreenEnergyHub.Charges.IntegrationTests.Fixtures;
 using GreenEnergyHub.Charges.IntegrationTests.TestHelpers;
 using NodaTime;
@@ -51,7 +48,6 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests.ChargeLinks
 
             public Task DisposeAsync()
             {
-                Fixture.PostOfficeListener.ResetMessageHandlersAndReceivedMessages();
                 return Task.CompletedTask;
             }
 
@@ -77,13 +73,14 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests.ChargeLinks
 
             private static HttpRequestMessage CreateTariffWithPricesRequest()
             {
-                var testFilePath = "TestFiles/ValidCreateTariffCommand.xml";
+                var testFilePath = "TestFiles/ChargeLinks/CreateFixedPeriodTariffChargeLink.xml";
                 var clock = SystemClock.Instance;
                 var chargeJson = EmbeddedResourceHelper.GetEmbeddedFile(testFilePath, clock);
 
-                var request = new HttpRequestMessage(HttpMethod.Post, "api/ChargeIngestion");
-                request.Content = new StringContent(chargeJson, Encoding.UTF8, "application/xml");
-                return request;
+                return new HttpRequestMessage(HttpMethod.Post, "api/ChargeLinkIngestion")
+                {
+                    Content = new StringContent(chargeJson, Encoding.UTF8, "application/xml"),
+                };
             }
         }
     }

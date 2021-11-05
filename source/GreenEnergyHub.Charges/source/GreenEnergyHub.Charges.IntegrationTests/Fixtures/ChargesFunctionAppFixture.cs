@@ -43,7 +43,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures
         public ChargesDatabaseManager DatabaseManager { get; }
 
         [NotNull]
-        public ServiceBusListenerMock? ChargeCreatedListener { get; private set; }
+        public ServiceBusTestListener? ChargeCreatedListener { get; private set; }
 
         [NotNull]
         public ServiceBusTestListener? ChargePricesUpdatedListener { get; private set; }
@@ -163,8 +163,9 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures
 
             var chargeCreatedTopicName = await GetTopicNameFromKeyAsync(ChargesFunctionAppServiceBusOptions.ChargeCreatedTopicKey);
             Environment.SetEnvironmentVariable(EnvironmentSettingNames.ChargeLinkCreatedTopicName, chargeCreatedTopicName);
-            ChargeCreatedListener = new ServiceBusListenerMock(ServiceBusResource.ConnectionString, TestLogger);
-            await ChargeCreatedListener.AddTopicSubscriptionListenerAsync(chargeCreatedTopicName, ChargesFunctionAppServiceBusOptions.ChargeCreatedSubscriptionName);
+            var chargeCreatedListener = new ServiceBusListenerMock(ServiceBusResource.ConnectionString, TestLogger);
+            await chargeCreatedListener.AddTopicSubscriptionListenerAsync(chargeCreatedTopicName, ChargesFunctionAppServiceBusOptions.ChargeCreatedSubscriptionName);
+            ChargeCreatedListener = new ServiceBusTestListener(chargeCreatedListener);
 
             var chargePricesUpdatedTopicName = await GetTopicNameFromKeyAsync(ChargesFunctionAppServiceBusOptions.ChargePricesUpdatedTopicKey);
             Environment.SetEnvironmentVariable(EnvironmentSettingNames.ChargePricesUpdatedTopicName, chargePricesUpdatedTopicName);
