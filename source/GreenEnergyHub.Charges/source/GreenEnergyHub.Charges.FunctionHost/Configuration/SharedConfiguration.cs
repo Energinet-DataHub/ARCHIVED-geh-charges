@@ -30,6 +30,7 @@ using GreenEnergyHub.Charges.Infrastructure.Cim;
 using GreenEnergyHub.Charges.Infrastructure.Configuration;
 using GreenEnergyHub.Charges.Infrastructure.Context;
 using GreenEnergyHub.Charges.Infrastructure.Correlation;
+using GreenEnergyHub.Charges.Infrastructure.Function;
 using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandReceived;
 using GreenEnergyHub.Charges.Infrastructure.MessageMetaData;
 using GreenEnergyHub.Charges.Infrastructure.Messaging.Registration;
@@ -54,6 +55,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
             serviceCollection.AddLogging();
             serviceCollection.AddScoped<CorrelationIdMiddleware>();
             serviceCollection.AddScoped<MessageMetaDataMiddleware>();
+            serviceCollection.AddScoped<FunctionInvocationLoggingMiddleware>();
             serviceCollection.AddApplicationInsightsTelemetryWorkerService(
                 EnvironmentHelper.GetEnv(EnvironmentSettingNames.AppInsightsInstrumentationKey));
 
@@ -64,7 +66,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
 
             var serviceBusConnectionString = EnvironmentHelper.GetEnv(EnvironmentSettingNames.DataHubSenderConnectionString);
             var dataAvailableQueue = EnvironmentHelper.GetEnv(EnvironmentSettingNames.MessageHubDataAvailableQueue);
-            var domainReplyQueue = EnvironmentHelper.GetEnv(EnvironmentSettingNames.MessageHubBundleReplyQueue);
+            var domainReplyQueue = EnvironmentHelper.GetEnv(EnvironmentSettingNames.MessageHubReplyQueue);
             var storageServiceConnectionString = EnvironmentHelper.GetEnv(EnvironmentSettingNames.MessageHubStorageConnectionString);
             var azureBlobStorageContainerName = EnvironmentHelper.GetEnv(EnvironmentSettingNames.MessageHubStorageContainer);
             AddPostOfficeCommunication(

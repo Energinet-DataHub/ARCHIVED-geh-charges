@@ -14,6 +14,7 @@
 
 using GreenEnergyHub.Charges.FunctionHost.Configuration;
 using GreenEnergyHub.Charges.Infrastructure.Correlation;
+using GreenEnergyHub.Charges.Infrastructure.Function;
 using GreenEnergyHub.Charges.Infrastructure.MessageMetaData;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -29,6 +30,7 @@ namespace GreenEnergyHub.Charges.FunctionHost
                 {
                     builder.UseMiddleware<CorrelationIdMiddleware>();
                     builder.UseMiddleware<MessageMetaDataMiddleware>();
+                    builder.UseMiddleware<FunctionInvocationLoggingMiddleware>();
                 })
                 .ConfigureServices(ConfigureServices)
                 .Build();
