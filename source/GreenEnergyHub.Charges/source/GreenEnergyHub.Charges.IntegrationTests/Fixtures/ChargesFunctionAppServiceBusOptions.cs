@@ -61,9 +61,11 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures
         public const string ConsumptionMeteringPointCreatedTopicKey = "consumption-metering-point-created";
         public const string ConsumptionMeteringPointCreatedSubscriptionName = "consumption-metering-point-created-sub-charges";
 
-        public const string ChargeCreatedTopicKey = "charge-created";
+        public const string ChargeCreatedTopicKey = "sbt-charge-created";
+        public const string ChargeCreatedSubscriptionName = "sbs-charge-created-sub";
 
-        public const string ChargePricesUpdatedTopicKey = "charge-prices-updated";
+        public const string ChargePricesUpdatedTopicKey = "sbt-charge-prices-updated";
+        public const string ChargePricesUpdatedSubscriptionName = "sbs-charge-prices-updated";
 
         public const string ChargeAcceptedDataAvailableNotifierSubscriptionName = "sbs-chargeaccepted-sub-dataavailablenotifier";
         public const string ChargeAcceptedDataAvailableNotifierSubscriptionKey = "CHARGEACCEPTED_SUB_DATAAVAILABLENOTIFIER";
@@ -102,7 +104,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures
             builder
                 .AddTopic(CommandAcceptedTopicKey)
                 .AddSubscription(CommandAcceptedSubscriptionName)
-                .AddSubscription(CommandAcceptedReceiverSubscriptionName);
+                .AddSubscription(CommandAcceptedReceiverSubscriptionName)
+                .AddSubscription(ChargeAcceptedDataAvailableNotifierSubscriptionName);
 
             builder
                 .AddTopic(CommandReceivedTopicKey)
@@ -122,9 +125,13 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures
                 .AddTopic(ConsumptionMeteringPointCreatedTopicKey)
                 .AddSubscription(ConsumptionMeteringPointCreatedSubscriptionName);
 
-            builder.AddTopic(ChargeCreatedTopicKey);
+            builder
+                .AddTopic(ChargeCreatedTopicKey)
+                .AddSubscription(ChargeCreatedSubscriptionName);
 
-            builder.AddTopic(ChargePricesUpdatedTopicKey);
+            builder
+                .AddTopic(ChargePricesUpdatedTopicKey)
+                .AddSubscription(ChargePricesUpdatedSubscriptionName);
 
             builder.AddQueue(MessageHubDataAvailableQueueKey);
             builder.AddQueue(MessageHubRequestQueueKey);

@@ -42,7 +42,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.ChargeLinks.MessageHub
         [Function(FunctionName)]
         public async Task RunAsync(
             [ServiceBusTrigger(
-                "%" + EnvironmentSettingNames.MessageHubBundleRequestQueue + "%",
+                "%" + EnvironmentSettingNames.MessageHubRequestQueue + "%",
                 Connection = EnvironmentSettingNames.DataHubListenerConnectionString,
                 IsSessionsEnabled = true)]
             byte[] data)

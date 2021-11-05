@@ -12,13 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Diagnostics.CodeAnalysis;
-using System.Threading.Tasks;
+using Energinet.DataHub.Charges.Libraries.ServiceBus;
 
-namespace Energinet.DataHub.Charges.Libraries.ServiceBus
+namespace Energinet.DataHub.Charges.Libraries.Providers
 {
-    public interface IServiceBusRequestSender
+    public interface IServiceBusRequestSenderProvider
     {
-        Task SendRequestAsync([NotNull] byte[] data, [NotNull] string correlationId);
+        IServiceBusRequestSender GetInstance();
     }
 }
