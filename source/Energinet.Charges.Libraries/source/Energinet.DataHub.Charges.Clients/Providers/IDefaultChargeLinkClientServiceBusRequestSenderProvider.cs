@@ -12,18 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Diagnostics.CodeAnalysis;
-using Azure.Messaging.ServiceBus;
 using Energinet.DataHub.Charges.Libraries.ServiceBus;
 
-namespace Energinet.DataHub.Charges.Libraries.Factories
+namespace Energinet.DataHub.Charges.Libraries.Providers
 {
-    public class ServiceBusRequestSenderFactory : IServiceBusRequestSenderFactory
+    public interface IDefaultChargeLinkClientServiceBusRequestSenderProvider
     {
-        public IServiceBusRequestSender Create(
-            [NotNull] ServiceBusClient serviceBusClient, [NotNull] string replyToQueueName)
-        {
-            return new ServiceBusRequestSender(serviceBusClient, replyToQueueName);
-        }
+        IServiceBusRequestSender GetInstance();
     }
 }
