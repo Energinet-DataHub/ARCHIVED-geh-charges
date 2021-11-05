@@ -1,6 +1,6 @@
 # GreenEnergyHub.Charges.Libraries Release notes
 
-## Version 1.0.8
+## Version 1.0.7
 Introduced `DefaultChargeLinkClientServiceBusRequestSenderProvider` and `DefaultChargeLinkMessagesClientServiceBusRequestSenderProvider`
 which now are used when registering their respective dependent client.
 
