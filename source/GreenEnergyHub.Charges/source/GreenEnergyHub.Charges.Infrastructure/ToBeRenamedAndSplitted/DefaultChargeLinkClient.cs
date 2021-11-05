@@ -24,38 +24,18 @@ namespace GreenEnergyHub.Charges.Infrastructure.ToBeRenamedAndSplitted
     /// <summary>
     /// This class must be thread safe.
     /// </summary>
-    public sealed class DefaultChargeLinkMessagesClient : IDefaultChargeLinkMessagesClient
+    public sealed class DefaultChargeLinkClient : IDefaultChargeLinkClient
     {
         private readonly IServiceBusRequestSender _serviceBusRequestSender;
 
-        public DefaultChargeLinkMessagesClient(
-            [NotNull] IDefaultChargeLinkMessagesClientServiceBusRequestSenderProvider serviceBusRequestSenderProvider)
+        public DefaultChargeLinkClient(
+            [NotNull] IDefaultChargeLinkClientServiceBusRequestSenderProvider serviceBusRequestSenderProvider)
         {
             _serviceBusRequestSender = serviceBusRequestSenderProvider.GetInstance();
         }
 
-        public async Task CreateDefaultChargeLinkMessagesRequestAsync(
-            [NotNull] CreateDefaultChargeLinkMessagesDto createDefaultChargeLinkMessagesDto,
-            [NotNull] string correlationId)
-        {
-            if (createDefaultChargeLinkMessagesDto == null)
-                throw new ArgumentNullException(nameof(createDefaultChargeLinkMessagesDto));
-
-            if (string.IsNullOrWhiteSpace(correlationId))
-                throw new ArgumentNullException(nameof(correlationId));
-
-            var createDefaultChargeLinkMessages = new CreateDefaultChargeLinkMessages
-            {
-                MeteringPointId = createDefaultChargeLinkMessagesDto.MeteringPointId,
-            };
-
-            await _serviceBusRequestSender.SendRequestAsync(
-                    createDefaultChargeLinkMessages.ToByteArray(), correlationId)
-                .ConfigureAwait(false);
-        }
-
-        public async Task CreateDefaultChargeLinkMessagesSucceededReplyAsync(
-            [NotNull] CreateDefaultChargeLinkMessagesSucceededDto createDefaultChargeLinkMessagesSucceededDto,
+        public async Task CreateDefaultChargeLinksSucceededReplyAsync(
+            [NotNull] CreateDefaultChargeLinksSucceededDto createDefaultChargeLinksSucceededDto,
             [NotNull] string correlationId,
             [NotNull] string replyQueueName)
         {

@@ -12,13 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Diagnostics.CodeAnalysis;
-using Azure.Messaging.ServiceBus;
-
 namespace GreenEnergyHub.Charges.Infrastructure.ToBeRenamedAndSplitted
 {
-    public interface IServiceBusRequestSenderFactory
+    public interface IServiceBusRequestSenderProvider
     {
-        IServiceBusRequestSender Create([NotNull] ServiceBusClient serviceBusClient, [NotNull] string replyToQueueName);
+        IServiceBusRequestSender GetInstance();
     }
 }

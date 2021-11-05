@@ -12,33 +12,32 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
-using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
-using System.Threading.Tasks;
 using Azure.Messaging.ServiceBus;
 
 namespace GreenEnergyHub.Charges.Infrastructure.ToBeRenamedAndSplitted
 {
-    public sealed class ServiceBusRequestSender : IServiceBusRequestSender
+    public abstract class ServiceBusRequestSenderProviderBase
     {
-        private readonly ServiceBusSender _serviceBusSender;
+        private readonly ServiceBusClient _serviceBusClient;
         private readonly string _replyToQueueName;
+        private readonly string _requestQueueName;
+        private ServiceBusRequestSender? _sender;
 
-        public ServiceBusRequestSender([NotNull] ServiceBusSender serviceBusSender, [NotNull] string replyToQueueName)
+        protected ServiceBusRequestSenderProviderBase(
+            ServiceBusClient serviceBusClient,
+            string replyToQueueName,
+            string requestQueueName)
         {
-            _serviceBusSender = serviceBusSender;
+            _serviceBusClient = serviceBusClient;
             _replyToQueueName = replyToQueueName;
+            _requestQueueName = requestQueueName;
+            _sender = null;
         }
 
-        public async Task SendRequestAsync([NotNull] byte[] data, [NotNull] string correlationId)
+        public IServiceBusRequestSender GetInstance()
         {
-            await _serviceBusSender.SendMessageAsync(new ServiceBusMessage
-            {
-                Body = new BinaryData(data),
-                ApplicationProperties = { new KeyValuePair<string, object>("ReplyTo", _replyToQueueName) },
-                CorrelationId = correlationId,
-            }).ConfigureAwait(false);
+            return _sender ??=
+                new ServiceBusRequestSender(_serviceBusClient.CreateSender(_requestQueueName), _replyToQueueName);
         }
     }
 }

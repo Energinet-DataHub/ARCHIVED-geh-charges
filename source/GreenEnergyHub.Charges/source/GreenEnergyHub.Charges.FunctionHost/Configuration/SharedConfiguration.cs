@@ -83,18 +83,15 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
         }
 
         private static void AddDefaultChargeLinkClient(
-            IServiceCollection serviceCollection,
-            string serviceBusConnectionString)
+            IServiceCollection serviceCollection, string serviceBusConnectionString)
         {
             var replyToQueueName = EnvironmentHelper.GetEnv(EnvironmentSettingNames.CreateLinkReplyQueueName);
             var serviceBusClient = new ServiceBusClient(serviceBusConnectionString);
 
-            serviceCollection.AddScoped<IServiceBusRequestSenderFactory>(_ =>
-                new ServiceBusRequestSenderFactory());
-            serviceCollection.AddScoped<IServiceBusRequestSender>(_ =>
-                new ServiceBusRequestSender(serviceBusClient, replyToQueueName));
+            var defaultChargeLinkClientServiceBusRequestSenderProvider =
+                new DefaultChargeLinkClientServiceBusRequestSenderProvider(serviceBusClient, replyToQueueName);
             serviceCollection.AddSingleton<IDefaultChargeLinkClient>(_ =>
-                new DefaultChargeLinkClient(serviceBusClient, new ServiceBusRequestSenderFactory(), replyToQueueName));
+                new DefaultChargeLinkClient(defaultChargeLinkClientServiceBusRequestSenderProvider));
         }
 
         private static void ConfigureSharedDatabase(IServiceCollection serviceCollection)
