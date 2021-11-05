@@ -12,11 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace Energinet.DataHub.Charges.Libraries.Models
+using System.Diagnostics.CodeAnalysis;
+using Azure.Messaging.ServiceBus;
+
+namespace GreenEnergyHub.Charges.Infrastructure.ToBeRenamedAndSplitted
 {
-    /// <summary>
-    /// The required data needed by the Charges domain to create Default charge link messages.
-    /// </summary>
-    /// <param name="MeteringPointId"> A unique id to specify the metering point.</param>
-    public sealed record CreateDefaultChargeLinkMessagesDto(string MeteringPointId);
+    public class ServiceBusRequestSenderFactory : IServiceBusRequestSenderFactory
+    {
+        public IServiceBusRequestSender Create(
+            [NotNull] ServiceBusClient serviceBusClient, [NotNull] string replyToQueueName)
+        {
+            return new ServiceBusRequestSender(serviceBusClient, replyToQueueName);
+        }
+    }
 }

@@ -12,14 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.Charges.Contracts;
-
-namespace Energinet.DataHub.Charges.Libraries.Models
+namespace GreenEnergyHub.Charges.Application.ToBeRenamedAndSplitted
 {
-    /// <summary>
-    /// The data needed by the Metering Point domain as a reply
-    /// to a successful <see cref="CreateDefaultChargeLinkMessages" /> request
-    /// </summary>
-    /// <param name="MeteringPointId">A unique id to specify the metering point.</param>
-    public sealed record CreateDefaultChargeLinkMessagesSucceededDto(string MeteringPointId);
+    public enum ErrorCode
+    {
+        Unspecified = 0,
+        MeteringPointUnknown = 1,
+    }
 }

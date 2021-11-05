@@ -51,6 +51,5 @@ limitations under the License.
   <ItemGroup>
     <ProjectReference Include="..\..\..\messaging\source\GreenEnergyHub.Messaging.Protobuf.Integration.ServiceCollection\GreenEnergyHub.Messaging.Protobuf.Integration.ServiceCollection.csproj" />
     <ProjectReference Include="..\GreenEnergyHub.Charges.Infrastructure\GreenEnergyHub.Charges.Infrastructure.csproj" />
-    <ProjectReference Include="..\GreenEnergyHub.Charges.IntegrationMapping\GreenEnergyHub.Charges.IntegrationMapping.csproj" />
   </ItemGroup>
 </Project>

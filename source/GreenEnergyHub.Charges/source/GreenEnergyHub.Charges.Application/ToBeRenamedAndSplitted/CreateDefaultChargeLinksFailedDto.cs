@@ -12,18 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Diagnostics.CodeAnalysis;
-using Energinet.Charges.Contracts;
-using Energinet.DataHub.Charges.Libraries.Models;
-
-namespace Energinet.DataHub.Charges.Libraries.Protobuf
+namespace GreenEnergyHub.Charges.Application.ToBeRenamedAndSplitted
 {
-    internal class CreateDefaultChargeLinkMessagesSucceededInboundMapper
-    {
-        protected internal static CreateDefaultChargeLinkMessagesSucceededDto Convert(
-            [NotNull] CreateDefaultChargeLinkMessagesReply createDefaultChargeLinkMessagesReply)
-        {
-            return new(createDefaultChargeLinkMessagesReply.MeteringPointId);
-        }
-    }
+    /// <summary>
+    /// The data needed by the Metering Point domain as a reply
+    /// to a failed CreateDefaultChargeLinks request
+    /// </summary>
+    /// <param name="MeteringPointId">A unique id to specify the metering point.</param>
+    /// <param name="ErrorCode">Tells why the CreateDefaultChargeLinks request has failed.</param>
+    public sealed record CreateDefaultChargeLinksFailedDto(string MeteringPointId, ErrorCode ErrorCode);
 }

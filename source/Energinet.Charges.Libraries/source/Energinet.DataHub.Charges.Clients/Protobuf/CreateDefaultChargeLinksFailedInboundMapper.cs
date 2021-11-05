@@ -15,8 +15,7 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 using Energinet.Charges.Contracts;
-using Energinet.DataHub.Charges.Libraries.Enums;
-using Energinet.DataHub.Charges.Libraries.Models;
+using GreenEnergyHub.Charges.Application.ToBeRenamedAndSplitted;
 using CreateDefaultChargeLinksFailed =
     Energinet.Charges.Contracts.CreateDefaultChargeLinksReply.Types.CreateDefaultChargeLinksFailed;
 

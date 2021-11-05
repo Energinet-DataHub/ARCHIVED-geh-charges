@@ -13,17 +13,12 @@
 // limitations under the License.
 
 using System.Diagnostics.CodeAnalysis;
-using System.Threading.Tasks;
-using Energinet.DataHub.Charges.Libraries.Models;
+using Azure.Messaging.ServiceBus;
 
-namespace Energinet.DataHub.Charges.Libraries.DefaultChargeLinkMessages
+namespace GreenEnergyHub.Charges.Infrastructure.ToBeRenamedAndSplitted
 {
-    public delegate Task OnSuccess(CreateDefaultChargeLinkMessagesSucceededDto createDefaultChargeLinksSucceeded);
-
-    public delegate Task OnFailure(CreateDefaultChargeLinkMessagesFailedDto createDefaultChargeLinksSucceeded);
-
-    public interface IDefaultChargeLinkMessagesReplyReader
+    public interface IServiceBusRequestSenderFactory
     {
-        Task ReadAsync([NotNull] byte[] data);
+        IServiceBusRequestSender Create([NotNull] ServiceBusClient serviceBusClient, [NotNull] string replyToQueueName);
     }
 }

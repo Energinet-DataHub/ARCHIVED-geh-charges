@@ -89,51 +89,51 @@ namespace Energinet.DataHub.Charges.Clients.IntegrationTests.DefaultChargeLink
                 result.Body.Should().NotBeNull();
             }
 
-            [Theory]
-            [AutoDomainData]
-            public async Task When_CreateDefaultChargeLinksSucceededReplyAsync_Then_ReplyIsSendFromCharges(
-                CreateDefaultChargeLinksSucceededDto createDefaultChargeLinksSucceededDto, string correlationId)
-            {
-                // Arrange
-                using var result = await _serviceBusTestListener.ListenForMessageAsync().ConfigureAwait(false);
-                await using var sut = new DefaultChargeLinkClient(
-                    _serviceBusClient, _serviceBusRequestSenderFactory, _replyToQueueName, _requestQueueName);
-
-                // Act
-                await sut.CreateDefaultChargeLinksSucceededReplyAsync(
-                    createDefaultChargeLinksSucceededDto, correlationId, _replyToQueueName).ConfigureAwait(false);
-
-                // Assert
-                // => Service Bus (timeout should not be more than 5 secs).
-                var isMessageReceived = result.IsMessageReceivedEvent!.Wait(TimeSpan.FromSeconds(5));
-
-                isMessageReceived.Should().BeTrue();
-                result.CorrelationId.Should().Be(correlationId);
-                result.Body.Should().NotBeNull();
-            }
-
-            [Theory]
-            [AutoDomainData]
-            public async Task When_CreateDefaultChargeLinksFailedReplyAsync_Then_ReplyIsSendFromCharges(
-                CreateDefaultChargeLinksFailedDto createDefaultChargeLinksFailedDto, string correlationId)
-            {
-                // Arrange
-                using var result = await _serviceBusTestListener.ListenForMessageAsync().ConfigureAwait(false);
-                await using var sut = new DefaultChargeLinkClient(
-                    _serviceBusClient, _serviceBusRequestSenderFactory, _replyToQueueName, _requestQueueName);
-
-                // Act
-                await sut.CreateDefaultChargeLinksFailedReplyAsync(
-                    createDefaultChargeLinksFailedDto, correlationId, _replyToQueueName).ConfigureAwait(false);
-
-                // Assert
-                // => Service Bus (timeout should not be more than 5 secs).
-                var isMessageReceived = result.IsMessageReceivedEvent!.Wait(TimeSpan.FromSeconds(5));
-
-                isMessageReceived.Should().BeTrue();
-                result.Body.Should().NotBeNull();
-                result.CorrelationId.Should().Be(correlationId);
-            }
+            // [Theory]
+            // [AutoDomainData]
+            // public async Task When_CreateDefaultChargeLinksSucceededReplyAsync_Then_ReplyIsSendFromCharges(
+            //     CreateDefaultChargeLinksSucceededDto createDefaultChargeLinksSucceededDto, string correlationId)
+            // {
+            //     // Arrange
+            //     using var result = await _serviceBusTestListener.ListenForMessageAsync().ConfigureAwait(false);
+            //     await using var sut = new DefaultChargeLinkClient(
+            //         _serviceBusClient, _serviceBusRequestSenderFactory, _replyToQueueName, _requestQueueName);
+            //
+            //     // Act
+            //     await sut.CreateDefaultChargeLinksSucceededReplyAsync(
+            //         createDefaultChargeLinksSucceededDto, correlationId, _replyToQueueName).ConfigureAwait(false);
+            //
+            //     // Assert
+            //     // => Service Bus (timeout should not be more than 5 secs).
+            //     var isMessageReceived = result.IsMessageReceivedEvent!.Wait(TimeSpan.FromSeconds(5));
+            //
+            //     isMessageReceived.Should().BeTrue();
+            //     result.CorrelationId.Should().Be(correlationId);
+            //     result.Body.Should().NotBeNull();
+            // }
+            //
+            // [Theory]
+            // [AutoDomainData]
+            // public async Task When_CreateDefaultChargeLinksFailedReplyAsync_Then_ReplyIsSendFromCharges(
+            //     CreateDefaultChargeLinksFailedDto createDefaultChargeLinksFailedDto, string correlationId)
+            // {
+            //     // Arrange
+            //     using var result = await _serviceBusTestListener.ListenForMessageAsync().ConfigureAwait(false);
+            //     await using var sut = new DefaultChargeLinkClient(
+            //         _serviceBusClient, _serviceBusRequestSenderFactory, _replyToQueueName, _requestQueueName);
+            //
+            //     // Act
+            //     await sut.CreateDefaultChargeLinksFailedReplyAsync(
+            //         createDefaultChargeLinksFailedDto, correlationId, _replyToQueueName).ConfigureAwait(false);
+            //
+            //     // Assert
+            //     // => Service Bus (timeout should not be more than 5 secs).
+            //     var isMessageReceived = result.IsMessageReceivedEvent!.Wait(TimeSpan.FromSeconds(5));
+            //
+            //     isMessageReceived.Should().BeTrue();
+            //     result.Body.Should().NotBeNull();
+            //     result.CorrelationId.Should().Be(correlationId);
+            // }
         }
     }
 }

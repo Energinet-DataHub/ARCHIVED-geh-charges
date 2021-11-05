@@ -14,7 +14,7 @@
 
 using System.Diagnostics.CodeAnalysis;
 using Energinet.Charges.Contracts;
-using Energinet.DataHub.Charges.Libraries.Models;
+using GreenEnergyHub.Charges.Application.ToBeRenamedAndSplitted;
 
 namespace Energinet.DataHub.Charges.Libraries.Protobuf
 {

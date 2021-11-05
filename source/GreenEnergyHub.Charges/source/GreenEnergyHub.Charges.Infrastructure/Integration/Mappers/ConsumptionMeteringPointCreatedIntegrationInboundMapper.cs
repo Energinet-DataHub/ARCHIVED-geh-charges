@@ -21,7 +21,7 @@ using GreenEnergyHub.Messaging.Protobuf;
 using GreenEnergyHub.Messaging.Transport;
 using GreenEnergyHub.MeteringPoints.IntegrationEventContracts;
 
-namespace GreenEnergyHub.Charges.IntegrationMapping.Mappers
+namespace GreenEnergyHub.Charges.Infrastructure.Integration.Mappers
 {
     public class ConsumptionMeteringPointCreatedIntegrationInboundMapper : ProtobufInboundMapper<ConsumptionMeteringPointCreated>
     {

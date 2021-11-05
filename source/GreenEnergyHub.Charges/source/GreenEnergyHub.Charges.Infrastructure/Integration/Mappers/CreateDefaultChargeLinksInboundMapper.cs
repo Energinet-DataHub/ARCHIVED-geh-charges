@@ -12,16 +12,19 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Diagnostics.CodeAnalysis;
 using Energinet.Charges.Contracts;
+using GreenEnergyHub.Charges.Domain.CreateLinkCommandEvents;
+using GreenEnergyHub.Messaging.Protobuf;
+using GreenEnergyHub.Messaging.Transport;
 
-namespace Energinet.DataHub.Charges.Libraries.Models
+namespace GreenEnergyHub.Charges.Infrastructure.Integration.Mappers
 {
-    /// <summary>
-    /// The data needed by the Metering Point domain as a reply
-    /// to a successful <see cref="CreateDefaultChargeLinks" /> request
-    /// </summary>
-    /// <param name="MeteringPointId">A unique id to specify the metering point.</param>
-    /// <param name="DidCreateChargeLinks">True if the <see cref="CreateDefaultChargeLinks" /> request
-    /// led to the creation of Charge Links within Charges Domain.</param>
-    public sealed record CreateDefaultChargeLinksSucceededDto(string MeteringPointId, bool DidCreateChargeLinks);
+    public class CreateDefaultChargeLinksInboundMapper : ProtobufInboundMapper<CreateDefaultChargeLinks>
+    {
+        protected override IInboundMessage Convert([NotNull] CreateDefaultChargeLinks command)
+        {
+            return new CreateLinkCommandEvent(command.MeteringPointId);
+        }
+    }
 }
