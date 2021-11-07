@@ -1,5 +1,6 @@
 ﻿### This file contains the list of words to be ignored by spell check
 ADR
+ApplicationProperty
 Architechtural
 Azurite
 bool
@@ -38,6 +39,7 @@ Energinet
 IaC
 IntegrationEventContract
 mergeable
+MessageHub
 MeteringPointId
 MPL
 namespace
@@ -63,3 +65,5 @@ Url
 eg
 PreDeploy
 PostDeploy
+queuename
+ReplyTo

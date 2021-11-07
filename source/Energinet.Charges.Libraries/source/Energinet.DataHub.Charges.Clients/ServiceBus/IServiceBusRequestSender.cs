@@ -19,6 +19,6 @@ namespace Energinet.DataHub.Charges.Libraries.ServiceBus
 {
     public interface IServiceBusRequestSender
     {
-        Task SendRequestAsync([NotNull] byte[] data, [NotNull] string requestQueueName, [NotNull] string correlationId);
+        Task SendRequestAsync([NotNull] byte[] data, [NotNull] string correlationId);
     }
 }

@@ -55,8 +55,8 @@ namespace GreenEnergyHub.Charges.FunctionHost.Common
         public const string CommandReceivedTopicName = "COMMAND_RECEIVED_TOPIC_NAME";
 
         public const string MessageHubDataAvailableQueue = "MESSAGEHUB_DATAAVAILABLE_QUEUE";
-        public const string MessageHubBundleRequestQueue = "MESSAGEHUB_BUNDLEREQUEST_QUEUE";
-        public const string MessageHubBundleReplyQueue = "MESSAGEHUB_BUNDLEREPLY_QUEUE";
+        public const string MessageHubRequestQueue = "MESSAGEHUB_BUNDLEREQUEST_QUEUE";
+        public const string MessageHubReplyQueue = "MESSAGEHUB_BUNDLEREPLY_QUEUE";
         public const string MessageHubStorageConnectionString = "MESSAGEHUB_STORAGE_CONNECTION_STRING";
         public const string MessageHubStorageContainer = "MESSAGEHUB_STORAGE_CONTAINER";
 

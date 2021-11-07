@@ -17,7 +17,7 @@ using System.Threading.Tasks;
 using Azure.Messaging.ServiceBus;
 using Azure.Messaging.ServiceBus.Administration;
 
-namespace Energinet.DataHub.Core.FunctionApp.TestCommon.ServiceBus
+namespace GreenEnergyHub.Charges.IntegrationTests.TestCommon
 {
     /// <summary>
     /// Encapsulates creating/deleting resources in an existing Azure Service Bus namespace.
