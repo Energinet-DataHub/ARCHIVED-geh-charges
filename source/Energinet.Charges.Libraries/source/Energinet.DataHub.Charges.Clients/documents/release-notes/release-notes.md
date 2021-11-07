@@ -1,5 +1,9 @@
 # GreenEnergyHub.Charges.Libraries Release notes
 
+## Version 1.0.8
+
+Missing release notes added
+
 ## Version 1.0.7
 
 Introduced `DefaultChargeLinkClientServiceBusRequestSenderProvider` and `DefaultChargeLinkMessagesClientServiceBusRequestSenderProvider`
