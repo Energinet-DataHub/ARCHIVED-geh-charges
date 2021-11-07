@@ -1,5 +1,6 @@
 ﻿### This file contains the list of words to be ignored by spell check
 ADR
+ApplicationProperty
 Architechtural
 Azurite
 bool
@@ -64,3 +65,5 @@ Url
 eg
 PreDeploy
 PostDeploy
+queuename
+ReplyTo
