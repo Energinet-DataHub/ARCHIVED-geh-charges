@@ -14,6 +14,7 @@ which now are used when registering their respective dependent client.
 Fixes links to documentation and release notes on [nuget.org](https://www.nuget.org/packages/Energinet.DataHub.Charges.Clients/).
 
 Improves library documentation.
+
 ## Version 1.0.5
 
 Renames `IDefaultChargeLinkMessagesRequestClient` to `IDefaultChargeLinkMessagesClient`.
