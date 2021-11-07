@@ -26,7 +26,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.TestCommon
             _serviceBusListenerMock = serviceBusListenerMock;
         }
 
-        public async Task<EventualServiceBusMessage> BeginListenForMessageAsync()
+        public async Task<EventualServiceBusMessage> ListenForMessageAsync()
         {
             var result = new EventualServiceBusMessage();
             result.MessageAwaiter = await _serviceBusListenerMock
@@ -38,6 +38,15 @@ namespace GreenEnergyHub.Charges.IntegrationTests.TestCommon
                     return Task.CompletedTask;
                 }).ConfigureAwait(false);
             return result;
+        }
+
+        /// <summary>
+        /// Reset handlers and received messages.
+        /// </summary>
+        /// <remarks>Use this between tests.</remarks>
+        public void Reset()
+        {
+            _serviceBusListenerMock.ResetMessageHandlersAndReceivedMessages();
         }
     }
 }

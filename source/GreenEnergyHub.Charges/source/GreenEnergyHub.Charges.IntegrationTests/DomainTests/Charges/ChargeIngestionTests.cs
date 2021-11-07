@@ -108,7 +108,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests.Charges
             {
                 // Arrange
                 var request = CreateTariffWithPricesRequest("8003");
-                using var eventualChargeCreatedEvent = await Fixture.ChargeCreatedListener.BeginListenForMessageAsync().ConfigureAwait(false);
+                Fixture.ChargeCreatedListener.Reset();
+                using var eventualChargeCreatedEvent = await Fixture.ChargeCreatedListener.ListenForMessageAsync().ConfigureAwait(false);
 
                 // Act
                 var response = await Fixture.HostManager.HttpClient.SendAsync(request);
@@ -124,7 +125,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests.Charges
             {
                 // Arrange
                 var request = CreateTariffWithPricesRequest("8004");
-                using var eventualChargePriceUpdatedEvent = await Fixture.ChargePricesUpdatedListener.BeginListenForMessageAsync().ConfigureAwait(false);
+                Fixture.ChargePricesUpdatedListener.Reset();
+                using var eventualChargePriceUpdatedEvent = await Fixture.ChargePricesUpdatedListener.ListenForMessageAsync().ConfigureAwait(false);
 
                 // Act
                 var response = await Fixture.HostManager.HttpClient.SendAsync(request);
