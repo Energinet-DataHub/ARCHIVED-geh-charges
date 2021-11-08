@@ -128,6 +128,20 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.MessageHub
             dataAvailableNotificationSenderMock.VerifyNoOtherCalls();
         }
 
+        [Fact]
+        public void NotifyAsync_SizeOfMaximumDocument_ShouldNotExceedDefinedWeight()
+        {
+            // Arrange
+            var testFilePath = "TestFiles/ValidCreateTariffCommandMaxDocumentSizeNoPoints.xml";
+            var chargeMessageWeightInBytes = (long)ChargeLinkDataAvailableNotifier.MessageWeight * 1000;
+
+            // Act
+            var xmlSizeInBytes = new System.IO.FileInfo(testFilePath).Length;
+
+            // Assert
+            xmlSizeInBytes.Should().BeLessOrEqualTo(chargeMessageWeightInBytes);
+        }
+
         // This is a workaround because the model contains multiple metering point IDs while
         // business does not.
         private void FixMeteringPointIds(IReadOnlyCollection<ChargeLinkCommand> chargeLinkCommands)

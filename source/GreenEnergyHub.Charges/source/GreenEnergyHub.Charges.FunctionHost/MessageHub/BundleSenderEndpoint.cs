@@ -29,15 +29,15 @@ namespace GreenEnergyHub.Charges.FunctionHost.MessageHub
     /// and create bundle and send response to MessageHub.
     /// This is the RSM-034 CIM XML 'NotifyPriceList' and RSM-031 CIM XML 'NotifyBillingMasterData'.
     /// </summary>
-    public class ChargeBundleSenderEndpoint
+    public class BundleSenderEndpoint
     {
-        private const string FunctionName = nameof(ChargeBundleSenderEndpoint);
+        private const string FunctionName = nameof(BundleSenderEndpoint);
         private readonly IChargeBundleSender _chargeBundleSender;
         private readonly IChargeLinkBundleSender _chargeLinkBundleSender;
         private readonly ILogger _log;
         private readonly IRequestBundleParser _requestBundleParser;
 
-        public ChargeBundleSenderEndpoint(
+        public BundleSenderEndpoint(
             IChargeBundleSender chargeBundleSender,
             IChargeLinkBundleSender chargeLinkBundleSender,
             ILoggerFactory loggerFactory,
@@ -46,7 +46,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.MessageHub
             _chargeBundleSender = chargeBundleSender;
             _chargeLinkBundleSender = chargeLinkBundleSender;
             _requestBundleParser = requestBundleParser;
-            _log = loggerFactory.CreateLogger(nameof(ChargeBundleSenderEndpoint));
+            _log = loggerFactory.CreateLogger(nameof(BundleSenderEndpoint));
         }
 
         [Function(FunctionName)]
