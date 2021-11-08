@@ -17,12 +17,12 @@ using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application;
 using GreenEnergyHub.Charges.Application.ChargeLinks.Handlers;
 using GreenEnergyHub.Charges.Commands;
-using GreenEnergyHub.Charges.Domain.CreateLinkCommandEvents;
+using GreenEnergyHub.Charges.Domain.CreateLinkRequest;
 using GreenEnergyHub.Charges.FunctionHost.Common;
 using GreenEnergyHub.Charges.Infrastructure.Messaging;
 using Microsoft.Azure.Functions.Worker;
 
-namespace GreenEnergyHub.Charges.FunctionHost.MeteringPoint
+namespace GreenEnergyHub.Charges.FunctionHost.ChargeLinks
 {
     public class CreateChargeLinkReceiverEndpoint
     {

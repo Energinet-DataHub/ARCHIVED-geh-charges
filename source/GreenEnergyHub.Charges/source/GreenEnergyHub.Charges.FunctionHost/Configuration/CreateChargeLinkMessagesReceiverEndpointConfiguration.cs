@@ -12,21 +12,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using Energinet.Charges.Contracts;
 using GreenEnergyHub.Charges.Application.ChargeLinks.Handlers;
-using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandAccepted;
 using GreenEnergyHub.Charges.Infrastructure.Messaging.Registration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace GreenEnergyHub.Charges.FunctionHost.Configuration
 {
-    internal static class ChargeLinkEventReplierConfiguration
+    internal static class CreateChargeLinkMessagesReceiverEndpointConfiguration
     {
         internal static void ConfigureServices(IServiceCollection serviceCollection)
         {
-            serviceCollection.AddScoped<IChargeLinkEventReplyHandler, ChargeLinkEventReplyHandler>();
-
-            serviceCollection.ReceiveProtobufMessage<ChargeLinkCommandAccepted>(
-                configuration => configuration.WithParser(() => ChargeLinkCommandAccepted.Parser));
+            serviceCollection.AddScoped<ICreateLinkMessagesCommandRequestHandler, CreateLinkMessagesCommandRequestHandler>();
+            serviceCollection.ReceiveProtobufMessage<CreateDefaultChargeLinkMessages>(
+                configuration => configuration.WithParser(() => CreateDefaultChargeLinkMessages.Parser));
         }
     }
 }

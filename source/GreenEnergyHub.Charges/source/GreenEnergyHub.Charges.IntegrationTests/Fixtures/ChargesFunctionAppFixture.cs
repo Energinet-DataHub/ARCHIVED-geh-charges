@@ -148,14 +148,14 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures
             var createLinkRequestQueueName = await GetQueueNameFromKeyAsync(ChargesFunctionAppServiceBusOptions.CreateLinkRequestQueueKey);
             Environment.SetEnvironmentVariable(EnvironmentSettingNames.CreateLinkRequestQueueName, createLinkRequestQueueName);
 
-            var createLinkReplyQueueName = await GetQueueNameFromKeyAsync(ChargesFunctionAppServiceBusOptions.CreateLinkReplyQueueName);
-            Environment.SetEnvironmentVariable(ChargesFunctionAppServiceBusOptions.CreateLinkReplyQueueKey, createLinkReplyQueueName);
-
             var createLinkMessagesRequestQueueName = await GetQueueNameFromKeyAsync(ChargesFunctionAppServiceBusOptions.CreateLinkMessagesRequestQueueKey);
             Environment.SetEnvironmentVariable(EnvironmentSettingNames.CreateLinkMessagesRequestQueueName, createLinkMessagesRequestQueueName);
 
             var createLinkMessagesReplyQueueName = await GetQueueNameFromKeyAsync(ChargesFunctionAppServiceBusOptions.CreateLinkMessagesReplyQueueName);
             Environment.SetEnvironmentVariable(ChargesFunctionAppServiceBusOptions.CreateLinkMessagesReplyQueueKey, createLinkMessagesReplyQueueName);
+
+            var createLinkReplyQueueName = await GetQueueNameFromKeyAsync(ChargesFunctionAppServiceBusOptions.CreateLinkReplyQueueName);
+            Environment.SetEnvironmentVariable(ChargesFunctionAppServiceBusOptions.CreateLinkReplyQueueKey, createLinkReplyQueueName);
 
             var consumptionMeteringPointCreatedTopicName = await GetTopicNameFromKeyAsync(ChargesFunctionAppServiceBusOptions.ConsumptionMeteringPointCreatedTopicKey);
             Environment.SetEnvironmentVariable(EnvironmentSettingNames.ConsumptionMeteringPointCreatedTopicName, consumptionMeteringPointCreatedTopicName);

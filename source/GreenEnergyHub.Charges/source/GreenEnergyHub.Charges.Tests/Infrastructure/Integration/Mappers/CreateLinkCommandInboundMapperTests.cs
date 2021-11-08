@@ -14,7 +14,7 @@
 
 using System.Diagnostics.CodeAnalysis;
 using GreenEnergyHub.Charges.Commands;
-using GreenEnergyHub.Charges.Domain.CreateLinkCommandEvents;
+using GreenEnergyHub.Charges.Domain.CreateLinkRequest;
 using GreenEnergyHub.Charges.Infrastructure.Integration.Mappers;
 using GreenEnergyHub.Charges.TestCore.Attributes;
 using GreenEnergyHub.Charges.TestCore.Protobuf;

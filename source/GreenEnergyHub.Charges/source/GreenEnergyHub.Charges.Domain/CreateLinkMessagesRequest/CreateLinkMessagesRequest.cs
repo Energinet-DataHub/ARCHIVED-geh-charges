@@ -13,20 +13,18 @@
 // limitations under the License.
 
 using GreenEnergyHub.Charges.Domain.Messages.Events;
-using GreenEnergyHub.Charges.Domain.MeteringPoints;
 using GreenEnergyHub.Messaging.MessageTypes.Common;
-using NodaTime;
 
-namespace GreenEnergyHub.Charges.Domain.CreateLinkCommandEvents
+namespace GreenEnergyHub.Charges.Domain.CreateLinkMessagesRequest
 {
-    public class CreateLinkCommandEvent : InboundIntegrationEvent
+    public class CreateLinkMessagesRequest : InboundIntegrationEvent
     {
         /// <summary>
         /// Event raised by the MeteringPoint domain when the charge domain
-        /// is asked to add links to a metering point
+        /// is asked to create messages for default links to a metering point
         /// </summary>
         /// <param name="meteringPointId">The metering point to add links to</param>
-        public CreateLinkCommandEvent(
+        public CreateLinkMessagesRequest(
             string meteringPointId)
             : base(Transaction.NewTransaction())
         {
