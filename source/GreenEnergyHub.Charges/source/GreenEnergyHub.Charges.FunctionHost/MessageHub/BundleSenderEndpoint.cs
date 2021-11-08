@@ -62,13 +62,14 @@ namespace GreenEnergyHub.Charges.FunctionHost.MessageHub
 
             var request = _requestBundleParser.Parse(data);
             var messageType = (string)functionContext.Items.SingleOrDefault(x => (string)x.Key == "MessageType").Value;
-            if (messageType is null) throw new Exception();
+            if (messageType is null) throw new Exception("No MessageType ApplicationProperty defined");
 
             if (messageType.StartsWith(ChargeDataAvailableNotifier.ChargeDataAvailableMessageTypePrefix))
                 await _chargeBundleSender.SendAsync(request).ConfigureAwait(false);
             if (messageType.StartsWith(ChargeLinkDataAvailableNotifier.ChargeLinkDataAvailableMessageTypePrefix))
                 await _chargeLinkBundleSender.SendAsync(request).ConfigureAwait(false);
-            throw new ArgumentException("Unknown message type");
+            throw new ArgumentException(
+                $"Unknown message type: {messageType} with DataAvailableNotificationIds: {request.DataAvailableNotificationIds}");
         }
     }
 }
