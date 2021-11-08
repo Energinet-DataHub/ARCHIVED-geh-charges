@@ -132,7 +132,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.MessageHub
         public void NotifyAsync_SizeOfMaximumDocument_ShouldNotExceedDefinedWeight()
         {
             // Arrange
-            var testFilePath = "TestFiles/ValidCreateTariffCommandMaxDocumentSizeNoPoints.xml";
+            var testFilePath = "TestFiles/SingleChargeLinkCimSerializerWorstCase.blob";
             var chargeMessageWeightInBytes = (long)ChargeLinkDataAvailableNotifier.MessageWeight * 1000;
 
             // Act

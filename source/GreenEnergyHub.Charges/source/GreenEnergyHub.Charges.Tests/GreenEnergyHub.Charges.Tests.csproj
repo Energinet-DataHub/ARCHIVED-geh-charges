@@ -86,5 +86,8 @@ limitations under the License.
       <None Update="TestFiles\ValidCreateTariffCommandMaxDocumentSizeWithPoints.xml">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
+      <None Include="TestFiles\SingleChargeLinkCimSerializerWorstCase.blob">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
     </ItemGroup>
 </Project>
