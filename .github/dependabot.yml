@@ -8,3 +8,7 @@ updates:
     directory: "/source/GreenEnergyHub.Charges"
     schedule:
       interval: "weekly"
+  - package-ecosystem: "nuget"
+    directory: "/source/Energinet.Charges.Libraries"
+    schedule:
+      interval: "weekly"

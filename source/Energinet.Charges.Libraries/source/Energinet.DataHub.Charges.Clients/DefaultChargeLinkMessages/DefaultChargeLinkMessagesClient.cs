@@ -15,10 +15,9 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
-using Azure.Messaging.ServiceBus;
 using Energinet.Charges.Contracts;
-using Energinet.DataHub.Charges.Libraries.Factories;
 using Energinet.DataHub.Charges.Libraries.Models;
+using Energinet.DataHub.Charges.Libraries.Providers;
 using Energinet.DataHub.Charges.Libraries.ServiceBus;
 using Google.Protobuf;
 using CreateDefaultChargeLinkMessagesFailed =
@@ -28,21 +27,17 @@ using CreateDefaultChargeLinkMessagesSucceeded =
 
 namespace Energinet.DataHub.Charges.Libraries.DefaultChargeLinkMessages
 {
-    public sealed class DefaultChargeLinkMessagesClient : IAsyncDisposable, IDefaultChargeLinkMessagesClient
+    /// <summary>
+    /// This class must be thread safe.
+    /// </summary>
+    public sealed class DefaultChargeLinkMessagesClient : IDefaultChargeLinkMessagesClient
     {
-        private readonly ServiceBusClient _serviceBusClient;
         private readonly IServiceBusRequestSender _serviceBusRequestSender;
-        private readonly string _requestQueueName;
 
         public DefaultChargeLinkMessagesClient(
-            [NotNull] ServiceBusClient serviceBusClient,
-            [NotNull] IServiceBusRequestSenderFactory serviceBusRequestSenderFactory,
-            [NotNull] string replyToQueueName,
-            string requestQueueName = "create-link-messages-request")
+            [NotNull] IDefaultChargeLinkMessagesClientServiceBusRequestSenderProvider serviceBusRequestSenderProvider)
         {
-            _serviceBusClient = serviceBusClient;
-            _requestQueueName = requestQueueName;
-            _serviceBusRequestSender = serviceBusRequestSenderFactory.Create(serviceBusClient, replyToQueueName);
+            _serviceBusRequestSender = serviceBusRequestSenderProvider.GetInstance();
         }
 
         public async Task CreateDefaultChargeLinkMessagesRequestAsync(
@@ -61,7 +56,7 @@ namespace Energinet.DataHub.Charges.Libraries.DefaultChargeLinkMessages
             };
 
             await _serviceBusRequestSender.SendRequestAsync(
-                    createDefaultChargeLinkMessages.ToByteArray(), _requestQueueName, correlationId)
+                    createDefaultChargeLinkMessages.ToByteArray(), correlationId)
                 .ConfigureAwait(false);
         }
 
@@ -86,7 +81,7 @@ namespace Energinet.DataHub.Charges.Libraries.DefaultChargeLinkMessages
             };
 
             await _serviceBusRequestSender.SendRequestAsync(
-                    createDefaultChargeLinks.ToByteArray(), replyQueueName, correlationId)
+                    createDefaultChargeLinks.ToByteArray(), correlationId)
                 .ConfigureAwait(false);
         }
 
@@ -111,13 +106,8 @@ namespace Energinet.DataHub.Charges.Libraries.DefaultChargeLinkMessages
             };
 
             await _serviceBusRequestSender.SendRequestAsync(
-                    createDefaultChargeLinks.ToByteArray(), replyQueueName, correlationId)
+                    createDefaultChargeLinks.ToByteArray(), correlationId)
                 .ConfigureAwait(false);
-        }
-
-        public async ValueTask DisposeAsync()
-        {
-            await _serviceBusClient.DisposeAsync().ConfigureAwait(false);
         }
     }
 }
