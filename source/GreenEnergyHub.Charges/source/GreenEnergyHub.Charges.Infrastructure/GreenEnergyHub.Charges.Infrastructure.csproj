@@ -60,9 +60,4 @@ limitations under the License.
         <Generator>MSBuild:Compile</Generator>
       </Protobuf>
     </ItemGroup>
-
-    <ItemGroup>
-      <Folder Include="Integration\ChargeLink\Commands" />
-    </ItemGroup>
-
 </Project>
