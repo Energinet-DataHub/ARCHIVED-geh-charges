@@ -54,20 +54,11 @@ namespace GreenEnergyHub.Charges.FunctionHost.ChargeLinks
                 Connection = EnvironmentSettingNames.DataHubListenerConnectionString)]
             [NotNull] byte[] message)
         {
-            _log.LogInformation(
-                "Function {FunctionName} started to process a request with size {Size}",
-                FunctionName,
-                message.Length);
-
             var createLinkCommandEvent =
                 (CreateLinkMessagesRequest)await _messageExtractor.ExtractAsync(message).ConfigureAwait(false);
 
             await _createLinkMessagesCommandRequestHandler.HandleAsync(createLinkCommandEvent)
                 .ConfigureAwait(false);
-
-            _log.LogInformation(
-                "Received create link messages command for metering point id '{MeteringPointId}'",
-                createLinkCommandEvent.MeteringPointId);
         }
     }
 }
