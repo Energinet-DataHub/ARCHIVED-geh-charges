@@ -12,19 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Diagnostics.CodeAnalysis;
-using GreenEnergyHub.Charges.Commands;
-using GreenEnergyHub.Charges.Domain.CreateLinkRequest;
+using Energinet.Charges.Contracts;
+using GreenEnergyHub.Charges.Domain.CreateLinkMessagesRequest;
 using GreenEnergyHub.Messaging.Protobuf;
 using GreenEnergyHub.Messaging.Transport;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Integration.Mappers
 {
-    public class CreateDefaultChargeLinksInboundMapper : ProtobufInboundMapper<CreateDefaultChargeLinks>
+    public class CreateDefaultChargeLinkMessagesInboundMapper : ProtobufInboundMapper<CreateDefaultChargeLinkMessages>
     {
-        protected override IInboundMessage Convert([NotNull] CreateDefaultChargeLinks command)
+        protected override IInboundMessage Convert(CreateDefaultChargeLinkMessages createDefaultChargeLinkMessages)
         {
-            return new CreateLinkCommandEvent(command.MeteringPointId);
+            return new CreateLinkMessagesRequest(createDefaultChargeLinkMessages.MeteringPointId);
         }
     }
 }

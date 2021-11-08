@@ -14,49 +14,51 @@
 
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
+using Energinet.Charges.Contracts;
 using GreenEnergyHub.Charges.Application;
 using GreenEnergyHub.Charges.Application.ChargeLinks.Handlers;
 using GreenEnergyHub.Charges.Commands;
-using GreenEnergyHub.Charges.Domain.CreateLinkCommandEvents;
+using GreenEnergyHub.Charges.Domain.CreateLinkMessagesRequest;
 using GreenEnergyHub.Charges.FunctionHost.Common;
 using GreenEnergyHub.Charges.Infrastructure.Messaging;
 using Microsoft.Azure.Functions.Worker;
+using Microsoft.Extensions.Logging;
 
-namespace GreenEnergyHub.Charges.FunctionHost.MeteringPoint
+namespace GreenEnergyHub.Charges.FunctionHost.ChargeLinks
 {
-    public class CreateChargeLinkReceiverEndpoint
+    public class CreateChargeLinkMessagesReceiverEndpoint
     {
         /// <summary>
         /// The name of the function.
         /// Function name affects the URL and thus possibly dependent infrastructure.
         /// </summary>
-        public const string FunctionName = nameof(CreateChargeLinkReceiverEndpoint);
-        private readonly ICorrelationContext _correlationContext;
-        private readonly MessageExtractor<CreateDefaultChargeLinks> _messageExtractor;
-        private readonly ICreateLinkCommandRequestHandler _createLinkCommandRequestHandler;
+        public const string FunctionName = nameof(CreateChargeLinkMessagesReceiverEndpoint);
+        private readonly MessageExtractor<CreateDefaultChargeLinkMessages> _messageExtractor;
+        private readonly ICreateLinkMessagesCommandRequestHandler _createLinkMessagesCommandRequestHandler;
+        private readonly ILogger _log;
 
-        public CreateChargeLinkReceiverEndpoint(
-            ICorrelationContext correlationContext,
-            MessageExtractor<CreateDefaultChargeLinks> messageExtractor,
-            ICreateLinkCommandRequestHandler createLinkCommandRequestHandler)
+        public CreateChargeLinkMessagesReceiverEndpoint(
+            MessageExtractor<CreateDefaultChargeLinkMessages> messageExtractor,
+            ICreateLinkMessagesCommandRequestHandler createLinkMessagesCommandRequestHandler,
+            [NotNull] ILoggerFactory loggerFactory)
         {
-            _correlationContext = correlationContext;
             _messageExtractor = messageExtractor;
-            _createLinkCommandRequestHandler = createLinkCommandRequestHandler;
+            _createLinkMessagesCommandRequestHandler = createLinkMessagesCommandRequestHandler;
+            _log = loggerFactory.CreateLogger(nameof(CreateChargeLinkMessagesReceiverEndpoint));
         }
 
         [Function(FunctionName)]
         public async Task RunAsync(
             [ServiceBusTrigger(
-                "%" + EnvironmentSettingNames.CreateLinkRequestQueueName + "%",
+                "%" + EnvironmentSettingNames.CreateLinkMessagesRequestQueueName + "%",
                 Connection = EnvironmentSettingNames.DataHubListenerConnectionString)]
             [NotNull] byte[] message)
         {
             var createLinkCommandEvent =
-                (CreateLinkCommandEvent)await _messageExtractor.ExtractAsync(message).ConfigureAwait(false);
+                (CreateLinkMessagesRequest)await _messageExtractor.ExtractAsync(message).ConfigureAwait(false);
 
-            await _createLinkCommandRequestHandler
-                .HandleAsync(createLinkCommandEvent).ConfigureAwait(false);
+            await _createLinkMessagesCommandRequestHandler.HandleAsync(createLinkCommandEvent)
+                .ConfigureAwait(false);
         }
     }
 }
