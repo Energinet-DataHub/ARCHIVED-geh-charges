@@ -61,6 +61,8 @@ namespace GreenEnergyHub.Charges.FunctionHost.MessageHub
             _log.LogInformation("Function {FunctionName} started to process a request with size {Size}", FunctionName, data.Length);
 
             var request = _requestBundleParser.Parse(data);
+
+            // TODO MessageType will be moved to protocol buffer contract in later version of MessageHub
             var messageType = (string)functionContext.Items.SingleOrDefault(x => (string)x.Key == "MessageType").Value;
             if (messageType is null) throw new Exception("No MessageType ApplicationProperty defined");
 
