@@ -79,19 +79,6 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
                 new MessageHubConfig(dataAvailableQueue, domainReplyQueue),
                 storageServiceConnectionString,
                 new StorageConfig(azureBlobStorageContainerName));
-            AddDefaultChargeLinkClient(serviceCollection, serviceBusConnectionString);
-        }
-
-        private static void AddDefaultChargeLinkClient(
-            IServiceCollection serviceCollection, string serviceBusConnectionString)
-        {
-            var replyToQueueName = EnvironmentHelper.GetEnv(EnvironmentSettingNames.CreateLinkReplyQueueName);
-            var serviceBusClient = new ServiceBusClient(serviceBusConnectionString);
-
-            var defaultChargeLinkClientServiceBusRequestSenderProvider =
-                new DefaultChargeLinkClientServiceBusRequestSenderProvider(serviceBusClient, replyToQueueName);
-            serviceCollection.AddSingleton<IDefaultChargeLinkClient>(_ =>
-                new DefaultChargeLinkClient(defaultChargeLinkClientServiceBusRequestSenderProvider));
         }
 
         private static void ConfigureSharedDatabase(IServiceCollection serviceCollection)

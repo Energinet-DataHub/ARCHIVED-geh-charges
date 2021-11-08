@@ -31,7 +31,6 @@ namespace Energinet.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.Defaul
     [UnitTest]
     public class DefaultChargeLinkClientTests
     {
-        private const string ReplyToQueueName = "ReplyToQueueName";
         private const string MeteringPointId = "F9A5115D-44EB-4AD4-BC7E-E8E8A0BC425E";
         private const string CorrelationId = "fake_value";
 

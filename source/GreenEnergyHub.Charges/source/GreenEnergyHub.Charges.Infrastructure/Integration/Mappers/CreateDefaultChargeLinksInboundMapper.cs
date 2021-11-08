@@ -14,7 +14,7 @@
 
 using System.Diagnostics.CodeAnalysis;
 using Energinet.Charges.Contracts;
-using GreenEnergyHub.Charges.Domain.CreateLinkCommandEvents;
+using GreenEnergyHub.Charges.Domain.CreateLinkRequest;
 using GreenEnergyHub.Messaging.Protobuf;
 using GreenEnergyHub.Messaging.Transport;
 
