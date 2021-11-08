@@ -18,7 +18,6 @@ using Energinet.Charges.Contracts;
 using Energinet.DataHub.Charges.Libraries.DefaultChargeLink;
 using FluentAssertions;
 using Google.Protobuf;
-using GreenEnergyHub.Charges.Application.ToBeRenamedAndSplitted;
 using GreenEnergyHub.Charges.TestCore.Attributes;
 using Xunit;
 using Xunit.Categories;

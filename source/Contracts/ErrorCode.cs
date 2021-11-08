@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace GreenEnergyHub.Charges.Application.ToBeRenamedAndSplitted
+namespace Energinet.DataHub.Charges.Clients
 {
     public enum ErrorCode
     {

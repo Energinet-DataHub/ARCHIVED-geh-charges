@@ -42,4 +42,10 @@ limitations under the License.
     </PackageReference>
   </ItemGroup>
 
+  <ItemGroup>
+    <Compile Include="..\..\..\Contracts\ErrorCode.cs">
+      <Link>ToBeRenamedAndSplitted\ErrorCode.cs</Link>
+    </Compile>
+  </ItemGroup>
+
 </Project>
