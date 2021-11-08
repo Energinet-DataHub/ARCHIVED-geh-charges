@@ -112,18 +112,26 @@ https://github.com/Energinet-DataHub/geh-charges/tree/main/source/Energinet.Char
   </ItemGroup>
 
   <ItemGroup>
-    <Reference Include="GreenEnergyHub.Charges.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
-      <HintPath>..\..\..\GreenEnergyHub.Charges\source\GreenEnergyHub.Charges.Application\bin\Debug\net5.0\GreenEnergyHub.Charges.Application.dll</HintPath>
-    </Reference>
-    <Reference Include="GreenEnergyHub.Charges.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
-      <HintPath>..\..\..\GreenEnergyHub.Charges\source\GreenEnergyHub.Charges.Infrastructure\bin\Debug\net5.0\GreenEnergyHub.Charges.Infrastructure.dll</HintPath>
-    </Reference>
-  </ItemGroup>
-
-  <ItemGroup>
+    <Compile Include="..\..\..\Contracts\CreateDefaultChargeLinksFailedDto.cs">
+      <Link>Common\CreateDefaultChargeLinksFailedDto.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\Contracts\CreateDefaultChargeLinksSucceededDto.cs">
+      <Link>Common\CreateDefaultChargeLinksSucceededDto.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\Contracts\ErrorCode.cs">
       <Link>Common\ErrorCode.cs</Link>
     </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Protobuf Include="../../../Contracts/*.proto">
+      <GrpcServices>None</GrpcServices>
+      <Access>Public</Access>
+      <ProtoCompile>True</ProtoCompile>
+      <CompileOutputs>True</CompileOutputs>
+      <OutputDir>obj\Debug\net5.0\Integration</OutputDir>
+      <Generator>MSBuild:Compile</Generator>
+    </Protobuf>
   </ItemGroup>
   
 </Project>

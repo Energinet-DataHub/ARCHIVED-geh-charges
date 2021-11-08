@@ -14,7 +14,7 @@
 
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Application.ToBeRenamedAndSplitted;
+using GreenEnergyHub.Charges.InternalShared;
 
 namespace Energinet.DataHub.Charges.Libraries.DefaultChargeLink
 {

@@ -14,6 +14,7 @@
 
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
+using GreenEnergyHub.Charges.InternalShared;
 
 namespace GreenEnergyHub.Charges.Application.ToBeRenamedAndSplitted
 {

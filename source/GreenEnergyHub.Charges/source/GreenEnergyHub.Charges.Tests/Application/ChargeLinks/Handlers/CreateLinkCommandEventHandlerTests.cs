@@ -26,7 +26,7 @@ using GreenEnergyHub.Charges.Domain.ChargeLinkCommands;
 using GreenEnergyHub.Charges.Domain.CreateLinkRequest;
 using GreenEnergyHub.Charges.Domain.DefaultChargeLinks;
 using GreenEnergyHub.Charges.Domain.MeteringPoints;
-using GreenEnergyHub.Charges.Infrastructure.ToBeRenamedAndSplitted;
+using GreenEnergyHub.Charges.InternalShared;
 using GreenEnergyHub.TestHelpers;
 using Moq;
 using NodaTime;
