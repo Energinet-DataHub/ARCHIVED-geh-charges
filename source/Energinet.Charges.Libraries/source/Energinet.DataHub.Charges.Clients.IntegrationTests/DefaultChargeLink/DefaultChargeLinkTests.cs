@@ -34,7 +34,6 @@ namespace Energinet.DataHub.Charges.Clients.IntegrationTests.DefaultChargeLink
         [SuppressMessage("ReSharper", "CA1034", Justification = "Integration test")]
         public class CreateDefaultChargeLinksRequestAsync : LibraryTestBase<ChargesClientsFixture>, IAsyncLifetime
         {
-            private readonly string _replyToQueueName;
             private readonly ServiceBusClient _serviceBusClient;
             private readonly ServiceBusTestListener _serviceBusTestListener;
             private readonly IDefaultChargeLinkClientServiceBusRequestSenderProvider _defaultChargeLinkClientServiceBusRequestSenderProvider;
@@ -42,7 +41,7 @@ namespace Energinet.DataHub.Charges.Clients.IntegrationTests.DefaultChargeLink
             public CreateDefaultChargeLinksRequestAsync(ChargesClientsFixture fixture, ITestOutputHelper testOutputHelper)
                 : base(fixture, testOutputHelper)
             {
-                _replyToQueueName = EnvironmentVariableReader.GetEnvironmentVariable(
+                string replyToQueueName = EnvironmentVariableReader.GetEnvironmentVariable(
                     EnvironmentSettingNames.CreateLinkReplyQueueName, string.Empty);
                 var requestQueueName = EnvironmentVariableReader.GetEnvironmentVariable(
                     EnvironmentSettingNames.CreateLinkRequestQueueName, string.Empty);
@@ -53,7 +52,7 @@ namespace Energinet.DataHub.Charges.Clients.IntegrationTests.DefaultChargeLink
 
                 _serviceBusTestListener = new ServiceBusTestListener(Fixture);
                 _defaultChargeLinkClientServiceBusRequestSenderProvider =
-                    new DefaultChargeLinkClientServiceBusRequestSenderProvider(_serviceBusClient, _replyToQueueName, requestQueueName);
+                    new DefaultChargeLinkClientServiceBusRequestSenderProvider(_serviceBusClient, replyToQueueName, requestQueueName);
             }
 
             public Task InitializeAsync()

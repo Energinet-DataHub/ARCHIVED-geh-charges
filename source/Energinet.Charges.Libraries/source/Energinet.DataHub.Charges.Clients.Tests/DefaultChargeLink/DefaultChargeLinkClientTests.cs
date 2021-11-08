@@ -20,7 +20,7 @@ using Energinet.DataHub.Charges.Libraries.DefaultChargeLink;
 using Energinet.DataHub.Charges.Libraries.Models;
 using Energinet.DataHub.Charges.Libraries.Providers;
 using Energinet.DataHub.Charges.Libraries.ServiceBus;
-using GreenEnergyHub.Charges.TestCore.Attributes;
+using Energinet.DataHub.Charges.TestCore.Attributes;
 using GreenEnergyHub.TestHelpers;
 using Moq;
 using Xunit;

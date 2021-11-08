@@ -12,13 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace GreenEnergyHub.Charges.TestCore.Attributes
+using AutoFixture.Xunit2;
+
+namespace Energinet.DataHub.Charges.TestCore.Attributes
 {
-    public static class HostingEnvironmentTraitConstants
+    public class InlineAutoMoqDataAttribute : InlineAutoDataAttribute
     {
-        public const string HostingEnvironment = "HostingEnvironment";
-        public const string LocalHost = "LocalHost";
-        public const string Development = "Development";
-        public const string PullRequestGate = "PullRequestGate";
+        public InlineAutoMoqDataAttribute(params object[] objects)
+            : base(new AutoMoqDataAttribute(), objects) { }
     }
 }
