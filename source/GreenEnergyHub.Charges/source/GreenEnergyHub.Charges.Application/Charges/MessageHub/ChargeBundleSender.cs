@@ -32,7 +32,7 @@ namespace GreenEnergyHub.Charges.Application.Charges.MessageHub
             _chargeBundleReplier = chargeLinkBundleReplier;
         }
 
-        public async Task SendAsync(DataBundleRequestDto request, Stream outputStream)
+        public async Task SendAsync(DataBundleRequestDto request)
         {
             await using var bundleStream = new MemoryStream();
             await _chargeBundleCreator.CreateAsync(request, bundleStream);
