@@ -14,8 +14,8 @@
 
 namespace GreenEnergyHub.Charges.Infrastructure.ToBeRenamedAndSplitted
 {
-    public interface IDefaultChargeLinkClientServiceBusRequestSenderProvider
+    public interface IServiceBusRequestSenderProvider
     {
-        IServiceBusRequestSender GetInstance();
+        IServiceBusReplySender GetInstance();
     }
 }

@@ -12,13 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 
 namespace GreenEnergyHub.Charges.Infrastructure.ToBeRenamedAndSplitted
 {
-    public interface IServiceBusRequestSender
+    public interface IServiceBusReplySender
     {
-        Task SendRequestAsync([NotNull] byte[] data, [NotNull] string correlationId);
+        Task SendReplyAsync(byte[] data, string correlationId);
     }
 }

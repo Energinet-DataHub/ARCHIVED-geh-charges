@@ -20,23 +20,20 @@ using Azure.Messaging.ServiceBus;
 
 namespace GreenEnergyHub.Charges.Infrastructure.ToBeRenamedAndSplitted
 {
-    public sealed class ServiceBusRequestSender : IServiceBusRequestSender
+    public sealed class ServiceBusReplySender : IServiceBusReplySender
     {
         private readonly ServiceBusSender _serviceBusSender;
-        private readonly string _replyToQueueName;
 
-        public ServiceBusRequestSender([NotNull] ServiceBusSender serviceBusSender, [NotNull] string replyToQueueName)
+        public ServiceBusReplySender([NotNull] ServiceBusSender serviceBusSender)
         {
             _serviceBusSender = serviceBusSender;
-            _replyToQueueName = replyToQueueName;
         }
 
-        public async Task SendRequestAsync([NotNull] byte[] data, [NotNull] string correlationId)
+        public async Task SendReplyAsync(byte[] data, string correlationId)
         {
             await _serviceBusSender.SendMessageAsync(new ServiceBusMessage
             {
                 Body = new BinaryData(data),
-                ApplicationProperties = { new KeyValuePair<string, object>("ReplyTo", _replyToQueueName) },
                 CorrelationId = correlationId,
             }).ConfigureAwait(false);
         }
