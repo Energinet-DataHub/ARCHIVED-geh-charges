@@ -28,7 +28,6 @@ jobs:
     with:
       SOLUTION_FILE_PATH: 'source/GreenEnergyHub.Charges/GreenEnergyHub.Charges.sln'
       DOTNET_VERSION: '5.0'
-      OPERATING_SYSTEM: 'ubuntu-latest'
       INSTALL_AZURITE: true
 
   terraform_validate:
