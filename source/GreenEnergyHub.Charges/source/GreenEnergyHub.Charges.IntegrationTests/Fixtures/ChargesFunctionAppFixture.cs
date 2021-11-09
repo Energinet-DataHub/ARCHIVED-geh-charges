@@ -190,8 +190,9 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures
                 .CreateAsync();
 
             MessageHubReplyListener = new ServiceBusListenerMock(ServiceBusResourceProvider.ConnectionString, TestLogger);
-            await MessageHubReplyListener.AddQueueListenerAsync(messageHubReplyQueue.Name);
 
+            // BUG: This code doesn't work. See bug https://github.com/Energinet-DataHub/geh-charges/issues/788
+            //await MessageHubReplyListener.AddQueueListenerAsync(messageHubReplyQueue.Name);
             Environment.SetEnvironmentVariable(EnvironmentSettingNames.MessageHubStorageConnectionString, ChargesServiceBusResourceNames.MessageHubStorageConnectionString);
             Environment.SetEnvironmentVariable(EnvironmentSettingNames.MessageHubStorageContainer, ChargesServiceBusResourceNames.MessageHubStorageContainerName);
 
