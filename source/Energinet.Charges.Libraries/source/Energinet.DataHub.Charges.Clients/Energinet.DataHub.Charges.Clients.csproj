@@ -91,6 +91,18 @@ https://github.com/Energinet-DataHub/geh-charges/tree/main/source/Energinet.Char
     <PackageReference Include="NodaTime" Version="3.0.9" />
   </ItemGroup>
 
+  <!-- Automatic generation of C# classes for protobuf contracts on build -->
+  <ItemGroup>
+    <Protobuf Include="../../../Contracts/*.proto">
+      <GrpcServices>None</GrpcServices>
+      <Access>Public</Access>
+      <ProtoCompile>True</ProtoCompile>
+      <CompileOutputs>True</CompileOutputs>
+      <OutputDir>obj\Debug\net5.0\Integration</OutputDir>
+      <Generator>MSBuild:Compile</Generator>
+    </Protobuf>
+  </ItemGroup>
+  
   <ItemGroup>
 
     <!-- Make assembly visible to test assembly -->
@@ -121,17 +133,6 @@ https://github.com/Energinet-DataHub/geh-charges/tree/main/source/Energinet.Char
     <Compile Include="..\..\..\Contracts\ErrorCode.cs">
       <Link>Common\ErrorCode.cs</Link>
     </Compile>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Protobuf Include="../../../Contracts/*.proto">
-      <GrpcServices>None</GrpcServices>
-      <Access>Public</Access>
-      <ProtoCompile>True</ProtoCompile>
-      <CompileOutputs>True</CompileOutputs>
-      <OutputDir>obj\Debug\net5.0\Integration</OutputDir>
-      <Generator>MSBuild:Compile</Generator>
-    </Protobuf>
   </ItemGroup>
   
 </Project>
