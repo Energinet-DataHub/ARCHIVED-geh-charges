@@ -35,11 +35,14 @@ namespace GreenEnergyHub.Charges.Tests.Application.ToBeRenamedAndSplitted
         private const string CorrelationId = "fake_value";
 
         [Theory]
-        [InlineAutoMoqData]
-        public async Task CreateDefaultChargeLinksSucceededReplyAsync_WhenMeteringPointIsNull_ThrowsException(
-            [NotNull] [Frozen] Mock<IServiceBusReplySenderProvider> serviceBusReplySenderProviderMock,
-            [NotNull] [Frozen] Mock<ICorrelationContext> correlationContextMock,
-            [NotNull] [Frozen] Mock<IMessageMetaDataContext> messageMetaDataContextMock)
+        [InlineAutoMoqData(MeteringPointId, null!, ReplyToQueueName)]
+        [InlineAutoMoqData(null!, CorrelationId, ReplyToQueueName)]
+        [InlineAutoMoqData(MeteringPointId, CorrelationId, null!)]
+        public async Task CreateDefaultChargeLinksSucceededReplyAsync_WhenArgumentIsNull_ThrowsException(
+            string meteringPointId,
+            string correlationId,
+            string replyQueue,
+            [NotNull] [Frozen] Mock<IServiceBusReplySenderProvider> serviceBusReplySenderProviderMock)
         {
             // Arrange
             var sut = new DefaultChargeLinkClient(serviceBusReplySenderProviderMock.Object);
@@ -47,17 +50,13 @@ namespace GreenEnergyHub.Charges.Tests.Application.ToBeRenamedAndSplitted
             // Act + Assert
             await Assert.ThrowsAsync<ArgumentNullException>(() => sut
                     .CreateDefaultChargeLinksSucceededReplyAsync(
-                        null!,
-                        false,
-                        messageMetaDataContextMock.Object.ReplyTo,
-                        correlationContextMock.Object.Id))
+                        meteringPointId!, false, replyQueue!, correlationId!))
                 .ConfigureAwait(false);
         }
 
         [Theory]
         [InlineAutoDomainData]
         public async Task CreateDefaultChargeLinksSucceededReplyAsync_WhenInputIsValid_SendsMessage(
-            [NotNull] [Frozen] Mock<ICorrelationContext> correlationContextMock,
             [NotNull] [Frozen] Mock<IServiceBusReplySenderProvider> serviceBusReplySenderProviderMock,
             [NotNull] [Frozen] Mock<IServiceBusReplySender> serviceBusRequestSenderMock,
             [NotNull] [Frozen] Mock<IMessageMetaDataContext> messageMetaDataContextMock,
@@ -79,7 +78,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ToBeRenamedAndSplitted
                 anyMeteringPointId,
                 anyDidCreateDefaultCharges,
                 messageMetaDataContextMock.Object.ReplyTo,
-                correlationContextMock.Object.Id).ConfigureAwait(false);
+                CorrelationId).ConfigureAwait(false);
 
             // Assert
             serviceBusRequestSenderMock.Verify(x => x.SendReplyAsync(It.IsAny<byte[]>(), CorrelationId), Times.Once);
@@ -93,22 +92,16 @@ namespace GreenEnergyHub.Charges.Tests.Application.ToBeRenamedAndSplitted
             string meteringPointId,
             string correlationId,
             string replyQueue,
+            ErrorCode errorCode,
             [NotNull] [Frozen] Mock<IServiceBusReplySenderProvider> serviceBusRequestSenderProviderMock)
         {
             // Arrange
-            var createDefaultChargeLinksFailedDto = meteringPointId != null ?
-                new CreateDefaultChargeLinksFailedDto(meteringPointId, ErrorCode.MeteringPointUnknown) :
-                null;
-
             var sut = new DefaultChargeLinkClient(serviceBusRequestSenderProviderMock.Object);
 
             // Act + Assert
             await Assert.ThrowsAsync<ArgumentNullException>(() => sut
                     .CreateDefaultChargeLinksFailedReplyAsync(
-                        createDefaultChargeLinksFailedDto!.MeteringPointId,
-                        createDefaultChargeLinksFailedDto!.ErrorCode,
-                        correlationId,
-                        replyQueue))
+                        meteringPointId!, errorCode, replyQueue!, correlationId!))
                 .ConfigureAwait(false);
         }
 
@@ -116,13 +109,13 @@ namespace GreenEnergyHub.Charges.Tests.Application.ToBeRenamedAndSplitted
         [InlineAutoDomainData]
         public async Task CreateDefaultChargeLinksFailedReplyAsync_WhenInputIsValid_SendsMessage(
             [NotNull] [Frozen] Mock<IServiceBusReplySenderProvider> serviceBusReplySenderProviderMock,
-            [NotNull] [Frozen] Mock<IServiceBusReplySender> serviceBusRequestSenderMock)
+            [NotNull] [Frozen] Mock<IServiceBusReplySender> serviceBusReplySenderMock)
         {
             // Arrange
-            const string replyQueueName = "create-link-Reply";
+            const string replyQueueName = "create-link-reply";
 
             serviceBusReplySenderProviderMock.Setup(x => x.
-                    GetInstance(replyQueueName)).Returns(serviceBusRequestSenderMock.Object);
+                    GetInstance(replyQueueName)).Returns(serviceBusReplySenderMock.Object);
 
             var sut = new DefaultChargeLinkClient(serviceBusReplySenderProviderMock.Object);
 
@@ -133,11 +126,11 @@ namespace GreenEnergyHub.Charges.Tests.Application.ToBeRenamedAndSplitted
             await sut.CreateDefaultChargeLinksFailedReplyAsync(
                 createDefaultChargeLinksFailedDto.MeteringPointId,
                 createDefaultChargeLinksFailedDto.ErrorCode,
-                CorrelationId,
-                replyQueueName).ConfigureAwait(false);
+                replyQueueName,
+                CorrelationId).ConfigureAwait(false);
 
             // Assert
-            serviceBusRequestSenderMock.Verify(x => x.SendReplyAsync(It.IsAny<byte[]>(), CorrelationId), Times.Once);
+            serviceBusReplySenderMock.Verify(x => x.SendReplyAsync(It.IsAny<byte[]>(), CorrelationId), Times.Once);
         }
     }
 }

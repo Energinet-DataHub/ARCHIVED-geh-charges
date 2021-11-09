@@ -37,12 +37,17 @@ namespace GreenEnergyHub.Charges.Infrastructure.ToBeRenamedAndSplitted
         public async Task CreateDefaultChargeLinksSucceededReplyAsync(
             [NotNull] string meteringPointId,
             bool didCreateChargeLinks,
-            string replyTo,
-            string correlationId)
+            [NotNull] string replyTo,
+            [NotNull] string correlationId)
         {
             if (meteringPointId == null)
                 throw new ArgumentNullException(nameof(meteringPointId));
 
+            if (replyTo == null)
+                throw new ArgumentNullException(nameof(replyTo));
+
+            if (correlationId == null)
+                throw new ArgumentNullException(nameof(correlationId));
             var createDefaultChargeLinks = new CreateDefaultChargeLinksReply
             {
                 MeteringPointId = meteringPointId,
@@ -59,11 +64,17 @@ namespace GreenEnergyHub.Charges.Infrastructure.ToBeRenamedAndSplitted
         public async Task CreateDefaultChargeLinksFailedReplyAsync(
             [NotNull] string meteringPointId,
             ErrorCode errorCode,
-            string replyTo,
-            string correlationId)
+            [NotNull] string replyTo,
+            [NotNull] string correlationId)
         {
             if (meteringPointId == null)
                 throw new ArgumentNullException(nameof(meteringPointId));
+
+            if (replyTo == null)
+                throw new ArgumentNullException(nameof(replyTo));
+
+            if (correlationId == null)
+                throw new ArgumentNullException(nameof(correlationId));
 
             var createDefaultChargeLinks = new CreateDefaultChargeLinksReply
             {

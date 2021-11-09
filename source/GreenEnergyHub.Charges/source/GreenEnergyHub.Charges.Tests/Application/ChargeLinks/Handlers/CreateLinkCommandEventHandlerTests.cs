@@ -135,15 +135,14 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Handlers
             chargeLinkCommand.ChargeLink.EndDateTime = null;
             messageMetaDataContext.Setup(m => m.IsReplyToSet()).Returns(true);
             messageMetaDataContext.Setup(m => m.ReplyTo).Returns(replyTo);
+            errorCode = ErrorCode.MeteringPointUnknown;
             var createLinkCommandEvent = new CreateLinkCommandEvent(meteringPointId);
 
             defaultChargeLinkClient.Setup(d =>
                 d.CreateDefaultChargeLinksFailedReplyAsync(meteringPointId, errorCode, replyTo, correlationId));
 
             meteringPointRepository.Setup(
-                    f => f.GetOrNullAsync(
-                        It.IsAny<string>()))
-                .ReturnsAsync((MeteringPoint?)null);
+                    f => f.GetOrNullAsync(It.IsAny<string>())).ReturnsAsync((MeteringPoint?)null);
 
             // Act
             await sut.HandleAsync(createLinkCommandEvent, correlationId).ConfigureAwait(false);
