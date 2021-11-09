@@ -138,7 +138,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Handlers
             var createLinkCommandEvent = new CreateLinkCommandEvent(meteringPointId);
 
             defaultChargeLinkClient.Setup(d =>
-                d.CreateDefaultChargeLinksFailedReplyAsync(meteringPointId, errorCode));
+                d.CreateDefaultChargeLinksFailedReplyAsync(meteringPointId, errorCode, replyTo, correlationId));
 
             meteringPointRepository.Setup(
                     f => f.GetOrNullAsync(
@@ -150,7 +150,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Handlers
 
             // Assert
             defaultChargeLinkClient.Verify(
-                x => x.CreateDefaultChargeLinksFailedReplyAsync(meteringPointId, errorCode));
+                x => x.CreateDefaultChargeLinksFailedReplyAsync(meteringPointId, errorCode, replyTo, correlationId));
 
             dispatcher.Verify(
                 x => x.DispatchAsync(
@@ -180,7 +180,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Handlers
             var createLinkCommandEvent = new CreateLinkCommandEvent(meteringPointId);
 
             defaultChargeLinkClient.Setup(d =>
-                d.CreateDefaultChargeLinksSucceededReplyAsync(meteringPointId, true));
+                d.CreateDefaultChargeLinksSucceededReplyAsync(meteringPointId, true, replyTo, correlationId));
 
             meteringPointRepository.Setup(
                     f => f.GetOrNullAsync(
@@ -203,7 +203,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Handlers
 
             // Assert
             defaultChargeLinkClient.Verify(
-                x => x.CreateDefaultChargeLinksSucceededReplyAsync(meteringPointId, false));
+                x => x.CreateDefaultChargeLinksSucceededReplyAsync(meteringPointId, false, replyTo, correlationId));
 
             dispatcher.Verify(
                 x => x.DispatchAsync(

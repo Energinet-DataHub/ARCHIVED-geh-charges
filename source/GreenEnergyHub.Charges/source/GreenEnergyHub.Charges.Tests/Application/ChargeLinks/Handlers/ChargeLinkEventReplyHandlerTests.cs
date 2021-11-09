@@ -57,7 +57,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Handlers
 
             // Assert
             defaultChargeLinkClient.Verify(
-                x => x.CreateDefaultChargeLinksSucceededReplyAsync(MeteringPointId, false));
+                x => x.CreateDefaultChargeLinksSucceededReplyAsync(MeteringPointId, false, replyTo, correlationId));
         }
 
         [Theory]

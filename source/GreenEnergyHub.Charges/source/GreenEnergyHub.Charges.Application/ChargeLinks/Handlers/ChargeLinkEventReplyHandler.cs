@@ -17,7 +17,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application.ToBeRenamedAndSplitted;
 using GreenEnergyHub.Charges.Domain.ChargeLinkCommandAcceptedEvents;
-using GreenEnergyHub.Charges.InternalShared;
 
 namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
 {
