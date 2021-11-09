@@ -33,6 +33,8 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Handlers
     [UnitTest]
     public class ChargeLinkEventReplyHandlerTests
     {
+        private const string MeteringPointId = "first";
+
         [Theory]
         [InlineAutoDomainData]
         public async Task HandleAsync_WhenCalledWithReplyToSetInMessageMetaDataContext_ReplyWithDefaultChargeLinkSucceededDto(
@@ -55,10 +57,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Handlers
 
             // Assert
             defaultChargeLinkClient.Verify(
-                x => x.CreateDefaultChargeLinksSucceededReplyAsync(
-                    It.IsAny<CreateDefaultChargeLinksSucceededDto>(),
-                    correlationId,
-                    replyTo));
+                x => x.CreateDefaultChargeLinksSucceededReplyAsync(MeteringPointId, false));
         }
 
         [Theory]
@@ -84,15 +83,13 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Handlers
             string correlationId,
             string optionalMeteringPointId = "first")
         {
-            const string meteringPointId = "first";
-
             var command = new ChargeLinkCommandAcceptedEvent(
                 correlationId,
                 new[]
                 {
                     new ChargeLinkCommand(correlationId)
                     {
-                        ChargeLink = new ChargeLinkDto { MeteringPointId = meteringPointId },
+                        ChargeLink = new ChargeLinkDto { MeteringPointId = MeteringPointId },
                     },
                     new ChargeLinkCommand(correlationId)
                     {

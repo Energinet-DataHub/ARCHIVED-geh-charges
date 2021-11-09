@@ -46,11 +46,10 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
 
                 await _defaultChargeLinkClient
                     .CreateDefaultChargeLinksSucceededReplyAsync(
-                        new CreateDefaultChargeLinksSucceededDto(
-                            meteringPointId,
-                            true),
-                        _correlationContext.Id,
-                        _messageMetaDataContext.ReplyTo).ConfigureAwait(false);
+                        meteringPointId,
+                        true,
+                        _messageMetaDataContext.ReplyTo,
+                        _correlationContext.Id).ConfigureAwait(false);
         }
 
         private static void CheckAllMeteringPointIdsAreTheSame(ChargeLinkCommandAcceptedEvent chargeLinkCommandAcceptedEvent)

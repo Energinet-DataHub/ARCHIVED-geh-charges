@@ -15,7 +15,6 @@
 using Azure.Messaging.ServiceBus;
 using GreenEnergyHub.Charges.Application.ToBeRenamedAndSplitted;
 using GreenEnergyHub.Charges.FunctionHost.Common;
-using GreenEnergyHub.Charges.Infrastructure.MessageMetaData;
 using GreenEnergyHub.Charges.Infrastructure.ToBeRenamedAndSplitted;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -28,15 +27,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
             var serviceBusConnectionString =
                 EnvironmentHelper.GetEnv(EnvironmentSettingNames.DataHubSenderConnectionString);
             var serviceBusClient = new ServiceBusClient(serviceBusConnectionString);
-
-            AddDefaultChargeLinkClient(serviceCollection, serviceBusClient);
-        }
-
-        private static void AddDefaultChargeLinkClient(IServiceCollection serviceCollection, ServiceBusClient client)
-        {
-            var replyToQueueName = EnvironmentHelper.GetEnv(EnvironmentSettingNames.CreateLinkReplyQueueName); //TODO: LRN vi skal have fjernet dette fra infra.
-
-            serviceCollection.AddSingleton<IServiceBusRequestSenderProvider, ServiceBusRequestSenderProvider>();
+            serviceCollection.AddSingleton<IServiceBusReplySenderProvider>(_ => new ServiceBusReplySenderProvider(serviceBusClient));
             serviceCollection.AddSingleton<IDefaultChargeLinkClient, DefaultChargeLinkClient>();
         }
     }

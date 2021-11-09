@@ -14,8 +14,8 @@
 
 namespace GreenEnergyHub.Charges.Infrastructure.ToBeRenamedAndSplitted
 {
-    public interface IServiceBusRequestSenderProvider
+    public interface IServiceBusReplySenderProvider
     {
-        IServiceBusReplySender GetInstance();
+        IServiceBusReplySender GetInstance(string replyTo);
     }
 }
