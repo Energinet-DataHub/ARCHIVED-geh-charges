@@ -95,7 +95,7 @@ https://github.com/Energinet-DataHub/geh-charges/tree/main/source/Energinet.Char
   <ItemGroup>
     <Protobuf Include="../../../Contracts/*.proto">
       <GrpcServices>None</GrpcServices>
-      <Access>Public</Access>
+      <Access>Internal</Access>
       <ProtoCompile>True</ProtoCompile>
       <CompileOutputs>True</CompileOutputs>
       <OutputDir>obj\Debug\net5.0\Integration</OutputDir>
