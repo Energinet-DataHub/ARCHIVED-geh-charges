@@ -21,4 +21,18 @@ locals {
     # Message Hub
     MESSAGEHUB_STORAGE_CONNECTION_STRING_KEY            = "SHARED-RESOURCES-MARKETOPERATOR-RESPONSE-CONNECTION-STRING"
     MESSAGEHUB_STORAGE_CONTAINER_KEY                    = "SHARED-RESOURCES-MARKETOPERATOR-CONTAINER-REPLY-NAME"
+    CHARGE_LINK_CREATED_TOPIC_NAME                      = "charge-link-created"
+    CHARGE_CREATED_TOPIC_NAME                           = "charge-created"
+    CHARGE_PRICES_UPDATED_TOPIC_NAME                    = "charge-prices-updated"
+    CONSUMPTION_METERING_POINT_CREATED_TOPIC_NAME       = "consumption-metering-point-created"
+    CONSUMPTION_METERING_POINT_CREATED_SUBSCRIPTION_NAME= "consumption-metering-point-created-sub-charges"
+    CREATE_LINK_REQUEST_QUEUE_NAME                      = "create-link-request"
+    CREATE_LINK_REPLY_QUEUE_NAME                        = "create-link-reply"
+    CREATE_LINK_MESSAGES_REQUEST_QUEUE_NAME             = "create-link-messages-request"
+    CREATE_LINK_MESSAGES_REPLY_QUEUE_NAME               = "create-link-messages-reply"
+
+    # Message Hub
+    MESSAGEHUB_DATAAVAILABLE_QUEUE                      = "dataavailable"
+    MESSAGEHUB_BUNDLEREQUEST_QUEUE                      = "charges"
+    MESSAGEHUB_BUNDLEREPLY_QUEUE                        = "charges-reply"
 }

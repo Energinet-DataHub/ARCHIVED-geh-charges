@@ -25,7 +25,10 @@ runs:
       shell: bash
       run: |
         mkdir ${{ inputs.RELEASE_FOLDER_PATH }}
-        cp -fR ${{ inputs.REPO_FOLDER_PATH }}/build/infrastructure ${{ inputs.RELEASE_FOLDER_PATH }} 2>/dev/null || :
+        mkdir ${{ inputs.RELEASE_FOLDER_PATH }}/infrastructure
+        cp -fR ${{ inputs.REPO_FOLDER_PATH }}/build/infrastructure/main ${{ inputs.RELEASE_FOLDER_PATH }}/infrastructure/main 2>/dev/null || :
+        cp -fR ${{ inputs.REPO_FOLDER_PATH }}/build/infrastructure/env ${{ inputs.RELEASE_FOLDER_PATH }}/infrastructure/env 2>/dev/null || :
+        cp -fR ${{ inputs.REPO_FOLDER_PATH }}/build/infrastructure/modules ${{ inputs.RELEASE_FOLDER_PATH }}/infrastructure/modules 2>/dev/null || :
 
     - name: Publish Functionhost to release folder
       uses: actions/download-artifact@v2

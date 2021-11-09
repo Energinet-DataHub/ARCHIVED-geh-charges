@@ -40,7 +40,7 @@ jobs:
     environment: CI
     env:
       AZURITE_VERSION: '3.14.0'
-      DOTNET_VERSION: '5.0'
+      DOTNET_VERSION: '5.0.202'
       AZURE_FUNCTIONS_CORE_TOOLS_VERSION: '3.0.3568'
       # Variables necessary to manage Azure resources for tests (similar to local use of 'integrationtest.local.settings.json')
       SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
@@ -63,22 +63,25 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@master
               
+      - name: Install .NET 3.1.x
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: '3.1.x'
+              
       - name: Install .NET ${{ env.DOTNET_VERSION }}
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
-        
+
       - name: Install Azurite ${{ env.AZURITE_VERSION }}
         run: npm install -g azurite@${{ env.AZURITE_VERSION }}
 
       - name: Install Azure Functions Core Tools ${{ env.AZURE_FUNCTIONS_CORE_TOOLS_VERSION }}
         run: npm install -g azure-functions-core-tools@${{ env.AZURE_FUNCTIONS_CORE_TOOLS_VERSION }}
 
-      - name: Test and publish report
+      - name: Test
         shell: bash
-        run: |
-          dotnet tool install --tool-path ./temp/reportgenerator dotnet-reportgenerator-globaltool
-          dotnet test ${{ inputs.SOLUTION_FILE_PATH }} --collect:"XPlat Code Coverage" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=opencover --output ${{ github.workspace }}/output
+        run: dotnet test --configuration Release ${{ inputs.SOLUTION_FILE_PATH }}
 
       - name: Upload coverage
         uses: codecov/codecov-action@v1

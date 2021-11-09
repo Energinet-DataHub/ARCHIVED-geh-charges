@@ -21,7 +21,7 @@ module "func_functionhost" {
   resource_group_name                       = azurerm_resource_group.this.name
   location                                  = azurerm_resource_group.this.location
   app_service_plan_id                       = module.plan_shared.id
-  application_insights_instrumentation_key  = data.azurerm_key_vault_secret.appi_instrumentation_key.value
+  application_insights_instrumentation_key  = data.azurerm_key_vault_secret.appi_shared_instrumentation_key.value
   app_settings                              = {
     # Region: Default Values
     WEBSITE_ENABLE_SYNC_UPDATE_SITE                      = true
@@ -29,18 +29,18 @@ module "func_functionhost" {
     WEBSITES_ENABLE_APP_SERVICE_STORAGE                  = true
     FUNCTIONS_WORKER_RUNTIME                             = "dotnet-isolated"
 
-    LOCAL_TIMEZONENAME                                   = local.LOCAL_TIMEZONENAME
-    CURRENCY                                             = local.CURRENCY
+    LOCAL_TIMEZONENAME                                   = "Europe/Copenhagen"
+    CURRENCY                                             = "DKK"
     CHARGE_DB_CONNECTION_STRING                          = local.CHARGE_DB_CONNECTION_STRING
     DOMAINEVENT_SENDER_CONNECTION_STRING                 = module.sb_charges.primary_connection_strings["send"]
     DOMAINEVENT_LISTENER_CONNECTION_STRING               = module.sb_charges.primary_connection_strings["listen"]
-    CHARGE_CREATED_TOPIC_NAME                            = local.CHARGE_CREATED_TOPIC_NAME
-    CHARGE_PRICES_UPDATED_TOPIC_NAME                     = local.CHARGE_PRICES_UPDATED_TOPIC_NAME
+    CHARGE_CREATED_TOPIC_NAME                            = data.azurerm_key_vault_secret.sbt_charge_created_name.value
+    CHARGE_PRICES_UPDATED_TOPIC_NAME                     = data.azurerm_key_vault_secret.sbt_charge_prices_updated_name.value
     CHARGE_LINK_ACCEPTED_TOPIC_NAME                      = module.sbt_link_command_accepted.name
     CHARGELINKACCEPTED_SUB_REPLIER                       = "chargelinkaccepted-sub-replier"
     CHARGELINKACCEPTED_SUB_EVENTPUBLISHER                = "chargelinkaccepted-sub-eventpublisher"
     CHARGELINKACCEPTED_SUB_DATAAVAILABLENOTIFIER         = "chargelinkaccepted-sub-dataavailablenotifier"
-    CHARGE_LINK_CREATED_TOPIC_NAME                       = local.CHARGE_LINK_CREATED_TOPIC_NAME
+    CHARGE_LINK_CREATED_TOPIC_NAME                       = data.azurerm_key_vault_secret.sbt_charge_link_created_name.value
     CHARGE_LINK_RECEIVED_TOPIC_NAME                      = module.sbt_link_command_received.name
     CHARGE_LINK_RECEIVED_SUBSCRIPTION_NAME               = "link-command-received-receiver"
     COMMAND_ACCEPTED_TOPIC_NAME                          = module.sbt_command_accepted.name
@@ -51,25 +51,25 @@ module "func_functionhost" {
     COMMAND_RECEIVED_SUBSCRIPTION_NAME                   = "command-received"
     COMMAND_REJECTED_TOPIC_NAME                          = module.sbt_command_rejected.name
     COMMAND_REJECTED_SUBSCRIPTION_NAME                   = "command-rejected"
-    CREATE_LINK_REQUEST_QUEUE_NAME                       = local.CREATE_LINK_REQUEST_QUEUE_NAME
-    CREATE_LINK_REPLY_QUEUE_NAME                         = local.CREATE_LINK_REPLY_QUEUE_NAME
-    CREATE_LINK_MESSAGES_REQUEST_QUEUE_NAME              = local.CREATE_LINK_MESSAGES_REQUEST_QUEUE_NAME
-    CREATE_LINK_MESSAGES_REPLY_QUEUE_NAME                = local.CREATE_LINK_MESSAGES_REPLY_QUEUE_NAME
-    CONSUMPTION_METERING_POINT_CREATED_TOPIC_NAME        = local.CONSUMPTION_METERING_POINT_CREATED_TOPIC_NAME
-    CONSUMPTION_METERING_POINT_CREATED_SUBSCRIPTION_NAME = local.CONSUMPTION_METERING_POINT_CREATED_SUBSCRIPTION_NAME  
+    CREATE_LINK_REQUEST_QUEUE_NAME                       = data.azurerm_key_vault_secret.sbq_create_link_request_name.value
+    CREATE_LINK_REPLY_QUEUE_NAME                         = data.azurerm_key_vault_secret.sbq_create_link_reply_name.value
+    CREATE_LINK_MESSAGES_REQUEST_QUEUE_NAME              = data.azurerm_key_vault_secret.sbq_create_link_messages_request_name.value
+    CREATE_LINK_MESSAGES_REPLY_QUEUE_NAME                = data.azurerm_key_vault_secret.sbq_create_link_messages_reply_name.value
+    CONSUMPTION_METERING_POINT_CREATED_TOPIC_NAME        = data.azurerm_key_vault_secret.sbt_consumption_metering_point_created_name.value
+    CONSUMPTION_METERING_POINT_CREATED_SUBSCRIPTION_NAME = data.azurerm_key_vault_secret.sbs_consumption_metering_point_created_sub_charges_name.value
 
     # Shared resources
-    INTEGRATIONEVENT_SENDER_CONNECTION_STRING            = data.azurerm_key_vault_secret.sb-domain-relay-send-connection-string.value
-    INTEGRATIONEVENT_LISTENER_CONNECTION_STRING          = data.azurerm_key_vault_secret.sb-domain-relay-listen-connection-string.value
-    INTEGRATIONEVENT_MANAGER_CONNECTION_STRING           = data.azurerm_key_vault_secret.sb-domain-relay-manage-connection-string.value
+    INTEGRATIONEVENT_SENDER_CONNECTION_STRING            = data.azurerm_key_vault_secret.sb_domain_relay_send_connection_string.value
+    INTEGRATIONEVENT_LISTENER_CONNECTION_STRING          = data.azurerm_key_vault_secret.sb_domain_relay_listen_connection_string.value
+    INTEGRATIONEVENT_MANAGER_CONNECTION_STRING           = data.azurerm_key_vault_secret.sb_domain_relay_manage_connection_string.value
 
     # Message Hub
     POST_OFFICE_TOPIC_NAME                               = module.sbt_post_office.name
     MESSAGEHUB_STORAGE_CONNECTION_STRING                 = data.azurerm_key_vault_secret.messagehub_storage_connection_string.value
     MESSAGEHUB_STORAGE_CONTAINER                         = data.azurerm_key_vault_secret.messagehub_storage_container.value
-    MESSAGEHUB_DATAAVAILABLE_QUEUE                       = local.MESSAGEHUB_DATAAVAILABLE_QUEUE
-    MESSAGEHUB_BUNDLEREQUEST_QUEUE                       = local.MESSAGEHUB_BUNDLEREQUEST_QUEUE
-    MESSAGEHUB_BUNDLEREPLY_QUEUE                         = local.MESSAGEHUB_BUNDLEREPLY_QUEUE
+    MESSAGEHUB_DATAAVAILABLE_QUEUE                       = "dataavailable"
+    MESSAGEHUB_BUNDLEREQUEST_QUEUE                       = "charges"
+    MESSAGEHUB_BUNDLEREPLY_QUEUE                         = "charges-reply"
 	
   	# Hub identification
     HUB_SENDER_ID                                        = "5790001330552"
@@ -77,24 +77,4 @@ module "func_functionhost" {
   }
   
   tags                                      = azurerm_resource_group.this.tags
-}
-
-module "ping_webtest_functionhost" {
-  source                          = "../modules/ping-webtest" # Repo geh-terraform-modules doesn't have a webtest module at the time of this writing
-  name                            = "ping-webtest-functionhost-${lower(var.domain_name_short)}-${lower(var.environment_short)}-${lower(var.environment_instance)}"
-  resource_group_name             = azurerm_resource_group.this.name
-  location                        = azurerm_resource_group.this.location
-  tags                            = azurerm_resource_group.this.tags
-  application_insights_id         = data.azurerm_key_vault_secret.appi_instrumentation_key.value
-  url                             = "https://${module.func_functionhost.default_hostname}/api/HealthStatus"
-}
-
-module "mma_ping_webtest_functionhost" {
-  source                   = "../modules/availability-alert"
-  name                     = "mma-functionhost-${lower(var.domain_name_short)}-${lower(var.environment_short)}-${lower(var.environment_instance)}"
-  resource_group_name      = azurerm_resource_group.this.name
-  application_insight_id   = data.azurerm_key_vault_secret.appi_instrumentation_key.value
-  ping_test_name           = module.ping_webtest_functionhost.name
-  action_group_id          = module.mag_availability_group.id
-  tags                     = azurerm_resource_group.this.tags
 }

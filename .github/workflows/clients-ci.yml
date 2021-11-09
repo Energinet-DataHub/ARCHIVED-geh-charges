@@ -79,14 +79,7 @@ jobs:
         run: npm install -g azure-functions-core-tools@${{ env.AZURE_FUNCTIONS_CORE_TOOLS_VERSION }}
 
       - name: Build and test project
-        uses: ./.github/actions/dotnet-build-and-test
-        with:
-          CSPROJ_FILE_PATH: ${{ env.CSPROJ_FILE_PATH }}
-          SOLUTION_FILE_PATH: ${{ env.SOLUTION_FILE_PATH }}
-          OUTPUT_PATH: '${{ github.workspace }}/output'
-
-      - name: Publish artifact
-        uses: actions/upload-artifact@v2
-        with:
-          name: drop
-          path: '${{ github.workspace }}/output'
+        shell: bash
+        run: |
+          dotnet test --configuration Release ${{ env.SOLUTION_FILE_PATH }}
+          dotnet build ${{ env.CSPROJ_FILE_PATH }} --configuration Release --output ${{ github.workspace }}/output

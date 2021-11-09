@@ -15,7 +15,7 @@ variable subscription_id {
   type = string
 }
 
-variable "resource_group_name" {
+variable resource_group_name {
   type = string
 }
 
@@ -34,18 +34,17 @@ variable domain_name_short {
   description   = "Name of the project this infrastructure is a part of."
 }
 
-variable "shared_resources_key_vault_name" {
+variable shared_resources_keyvault_name {
   type          = string
-  description   = "Name of the Core keyvault, that contains shared secrets"
+  description   = "Name of the Key Vault, that contains the shared secrets"
 }
 
-variable "shared_resources_resource_group_name" {
+variable shared_resources_resource_group_name {
   type          = string
-  description   = "Resource group containing shared resources"
+  description   = "Name of the Resource Group, that contains the shared resources."
 }
 
-variable "notification_email" {
+variable notification_email {
   type          = string
   description   = "Email address to send notifications to"
 }
-

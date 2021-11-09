@@ -13,7 +13,7 @@
 # limitations under the License.
 
 data "azurerm_key_vault" "kv_shared_resources" {
-  name                = var.shared_resources_key_vault_name
+  name                = var.shared_resources_keyvault_name
   resource_group_name = var.shared_resources_resource_group_name
 }
 
@@ -47,27 +47,77 @@ data "azurerm_key_vault_secret" "messagehub_storage_container" {
   key_vault_id = data.azurerm_key_vault.kv_shared_resources.id
 }
 
-data "azurerm_key_vault_secret" "appi_instrumentation_key" {
+data "azurerm_key_vault_secret" "appi_shared_instrumentation_key" {
   name         = "appi-shared-instrumentation-key"
   key_vault_id = data.azurerm_key_vault.kv_shared_resources.id
 }
 
-data "azurerm_key_vault_secret" "appi_name" {
+data "azurerm_key_vault_secret" "appi_shared_name" {
   name         = "appi-shared-name"
   key_vault_id = data.azurerm_key_vault.kv_shared_resources.id
 }
 
-data "azurerm_key_vault_secret" "sb-domain-relay-send-connection-string" {
+data "azurerm_key_vault_secret" "appi_shared_id" {
+  name         = "appi-shared-id"
+  key_vault_id = data.azurerm_key_vault.kv_shared_resources.id
+}
+
+data "azurerm_key_vault_secret" "sb_domain_relay_send_connection_string" {
   name         = "sb-domain-relay-send-connection-string"
   key_vault_id = data.azurerm_key_vault.kv_shared_resources.id
 }
 
-data "azurerm_key_vault_secret" "sb-domain-relay-listen-connection-string" {
+data "azurerm_key_vault_secret" "sb_domain_relay_listen_connection_string" {
   name         = "sb-domain-relay-listen-connection-string"
   key_vault_id = data.azurerm_key_vault.kv_shared_resources.id
 }
 
-data "azurerm_key_vault_secret" "sb-domain-relay-manage-connection-string" {
+data "azurerm_key_vault_secret" "sb_domain_relay_manage_connection_string" {
   name         = "sb-domain-relay-manage-connection-string"
+  key_vault_id = data.azurerm_key_vault.kv_shared_resources.id
+}
+
+data "azurerm_key_vault_secret" "sbq_create_link_messages_request_name" {
+  name         = "sbq-create-link-messages-request-name"
+  key_vault_id = data.azurerm_key_vault.kv_shared_resources.id
+}
+
+data "azurerm_key_vault_secret" "sbq_create_link_messages_reply_name" {
+  name         = "sbq-create-link-messages-reply-name"
+  key_vault_id = data.azurerm_key_vault.kv_shared_resources.id
+}
+
+data "azurerm_key_vault_secret" "sbq_create_link_request_name" {
+  name         = "sbq-create-link-request-name"
+  key_vault_id = data.azurerm_key_vault.kv_shared_resources.id
+}
+
+data "azurerm_key_vault_secret" "sbq_create_link_reply_name" {
+  name         = "sbq-create-link-reply-name"
+  key_vault_id = data.azurerm_key_vault.kv_shared_resources.id
+}
+
+data "azurerm_key_vault_secret" "sbt_charge_created_name" {
+  name         = "sbt-charge-created-name"
+  key_vault_id = data.azurerm_key_vault.kv_shared_resources.id
+}
+
+data "azurerm_key_vault_secret" "sbt_charge_link_created_name" {
+  name         = "sbt-charge-link-created-name"
+  key_vault_id = data.azurerm_key_vault.kv_shared_resources.id
+}
+
+data "azurerm_key_vault_secret" "sbt_charge_prices_updated_name" {
+  name         = "sbt-charge-prices-updated-name"
+  key_vault_id = data.azurerm_key_vault.kv_shared_resources.id
+}
+
+data "azurerm_key_vault_secret" "sbt_consumption_metering_point_created_name" {
+  name         = "sbt-consumption-metering-point-created-name"
+  key_vault_id = data.azurerm_key_vault.kv_shared_resources.id
+}
+
+data "azurerm_key_vault_secret" "sbs_consumption_metering_point_created_sub_charges_name" {
+  name         = "sbs-consumption-metering-point-created-sub-charges-name"
   key_vault_id = data.azurerm_key_vault.kv_shared_resources.id
 }
