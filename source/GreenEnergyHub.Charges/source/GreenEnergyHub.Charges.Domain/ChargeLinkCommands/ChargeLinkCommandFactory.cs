@@ -57,7 +57,8 @@ namespace GreenEnergyHub.Charges.Domain.ChargeLinkCommands
                 correlationId,
                 charge,
                 defaultChargeLink.GetStartDateTime(mp.EffectiveDate),
-                defaultChargeLink.EndDateTime);
+                defaultChargeLink.EndDateTime,
+                DefaultChargeLink.Factor);
         }
 
         public async Task<ChargeLinkCommand> CreateFromChargeLinkAsync(
@@ -75,7 +76,8 @@ namespace GreenEnergyHub.Charges.Domain.ChargeLinkCommands
                 correlationId,
                 charge,
                 chargeLinkPeriodDetails.StartDateTime,
-                chargeLinkPeriodDetails.EndDateTime);
+                chargeLinkPeriodDetails.EndDateTime,
+                chargeLinkPeriodDetails.Factor);
         }
 
         private ChargeLinkCommand CreateChargeLinkCommand(
@@ -83,7 +85,8 @@ namespace GreenEnergyHub.Charges.Domain.ChargeLinkCommands
             string correlationId,
             Charge charge,
             Instant startDateTime,
-            Instant endDateTime)
+            Instant endDateTime,
+            int factor)
         {
             var currentTime = _clock.GetCurrentInstant();
             var chargeLinkCommand = new ChargeLinkCommand(correlationId)
@@ -116,7 +119,7 @@ namespace GreenEnergyHub.Charges.Domain.ChargeLinkCommands
                     MeteringPointId = meteringPointId,
                     StartDateTime = startDateTime,
                     OperationId = Guid.NewGuid().ToString(),
-                    Factor = DefaultChargeLink.Factor,
+                    Factor = factor,
                 },
             };
             return chargeLinkCommand;
