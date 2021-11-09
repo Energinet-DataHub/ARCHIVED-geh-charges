@@ -13,7 +13,7 @@
 # limitations under the License.
 
 locals {
-    CHARGE_DB_CONNECTION_STRING                         = "Server=${data.azurerm_key_vault_secret.sql_url.value};Database=${module.sqldb_charges.name};Uid=${data.azurerm_key_vault_secret.sql_admin_name.value};Pwd=${data.azurerm_key_vault_secret.sql_admin_password.value};"
+    CHARGE_DB_CONNECTION_STRING                         = "Server=${data.azurerm_key_vault_secret.sql_data_url.value};Database=${module.sqldb_charges.name};Uid=${data.azurerm_key_vault_secret.sql_data_admin_name.value};Pwd=${data.azurerm_key_vault_secret.sql_data_admin_password.value};"
     LOCAL_TIMEZONENAME                                  = "Europe/Copenhagen"
     CURRENCY                                            = "DKK"
 

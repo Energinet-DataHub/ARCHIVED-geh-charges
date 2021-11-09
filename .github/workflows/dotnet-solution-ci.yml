@@ -19,46 +19,59 @@ on:
       SOLUTION_FILE_PATH:
         required: true
         type: string
-      DOTNET_VERSION:
+    secrets:
+      AZURE_SUBSCRIPTION_ID:
         required: true
-        type: string
+      AZURE_RG_NAME:
+        required: true
+      AZURE_TENANT_ID:
+        required: true
+      AZURE_SPN_ID:
+        required: true
+      AZURE_SPN_SECRET:
+        required: true
+      AZURE_APPI_INSTRUMENTATION_KEY:
+        required: true
+      AZURE_SB_CONNECTION_STRING:
+        required: true
         
 jobs:
   function_ci:
+    environment: CI
     env:
       AZURITE_VERSION: '3.14.0'
+      DOTNET_VERSION: '5.0'
       AZURE_FUNCTIONS_CORE_TOOLS_VERSION: '3.0.3568'
       # Variables necessary to manage Azure resources for tests (similar to local use of 'integrationtest.local.settings.json')
-      SUBSCRIPTION_ID: ${{ secrets.INTEGRATIONTEST_SUBSCRIPTION_ID }}
-      RESOURCE_GROUP_NAME: ${{ secrets.INTEGRATIONTEST_RESOURCE_GROUP_NAME }}
+      SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+      RESOURCE_GROUP_NAME: ${{ secrets.AZURE_RG_NAME }}
       DEFAULT_LOCATION: 'westeurope'
-      TENANT_ID: ${{ secrets.INTEGRATIONTEST_TENANT_ID }}
-      CLIENT_ID: ${{ secrets.INTEGRATIONTEST_CLIENT_ID }}
-      CLIENT_SECRET: ${{ secrets.INTEGRATIONTEST_CLIENT_SECRET }} 
+      TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+      CLIENT_ID: ${{ secrets.AZURE_SPN_ID }}
+      CLIENT_SECRET: ${{ secrets.AZURE_SPN_SECRET }} 
       # Variables necessary to start function for tests (similar to local use of 'local.settings.json')
-      APPINSIGHTS_INSTRUMENTATIONKEY: ${{ secrets.INTEGRATIONTEST_APPINSIGHTS_INSTRUMENTATIONKEY }}
-      INTEGRATIONEVENT_SENDER_CONNECTION_STRING: ${{ secrets.INTEGRATIONTEST_SERVICEBUS_CONNECTIONSTRING }}
-      INTEGRATIONEVENT_LISTENER_CONNECTION_STRING: ${{ secrets.INTEGRATIONTEST_SERVICEBUS_CONNECTIONSTRING }}
-      DOMAINEVENT_SENDER_CONNECTION_STRING: ${{ secrets.INTEGRATIONTEST_SERVICEBUS_CONNECTIONSTRING }}
-      DOMAINEVENT_LISTENER_CONNECTION_STRING: ${{ secrets.INTEGRATIONTEST_SERVICEBUS_CONNECTIONSTRING }}
-    # Variables that overrides settings in 'functionhost.settings.json'
+      APPINSIGHTS_INSTRUMENTATIONKEY: ${{ secrets.AZURE_APPI_INSTRUMENTATION_KEY }}
+      INTEGRATIONEVENT_SENDER_CONNECTION_STRING: ${{ secrets.AZURE_SB_CONNECTION_STRING }}
+      INTEGRATIONEVENT_LISTENER_CONNECTION_STRING: ${{ secrets.AZURE_SB_CONNECTION_STRING }}
+      DOMAINEVENT_SENDER_CONNECTION_STRING: ${{ secrets.AZURE_SB_CONNECTION_STRING }}
+      DOMAINEVENT_LISTENER_CONNECTION_STRING: ${{ secrets.AZURE_SB_CONNECTION_STRING }}
+      # Variables that overrides settings in 'functionhost.settings.json'
       FunctionAppHostPath: 'C:\npm\prefix\node_modules\azure-functions-core-tools\bin\func.dll'
       FunctionApplicationPath: '..\\..\\..\\..\\GreenEnergyHub.Charges.FunctionHost\\bin\\Release\\net5.0'
-
     runs-on: 'windows-latest'
     steps:
       - name: Checkout repository
         uses: actions/checkout@master
               
-      - name: Setup .NET ${{ env.DOTNET_VERSION }} environment
+      - name: Install .NET ${{ env.DOTNET_VERSION }}
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
         
-      - name: Setup Azurite
+      - name: Install Azurite ${{ env.AZURITE_VERSION }}
         run: npm install -g azurite@${{ env.AZURITE_VERSION }}
 
-      - name: Install Azure Functions Core Tools v${{ env.AZURE_FUNCTIONS_CORE_TOOLS_VERSION }}
+      - name: Install Azure Functions Core Tools ${{ env.AZURE_FUNCTIONS_CORE_TOOLS_VERSION }}
         run: npm install -g azure-functions-core-tools@${{ env.AZURE_FUNCTIONS_CORE_TOOLS_VERSION }}
 
       - name: Test and publish report
