@@ -17,6 +17,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using Energinet.Charges.Contracts;
 using Google.Protobuf;
+using GreenEnergyHub.Charges.Application;
 using GreenEnergyHub.Charges.Application.ToBeRenamedAndSplitted;
 using GreenEnergyHub.Charges.InternalShared;
 
@@ -27,12 +28,15 @@ namespace GreenEnergyHub.Charges.Infrastructure.ToBeRenamedAndSplitted
     /// </summary>
     public sealed class DefaultChargeLinkClient : IDefaultChargeLinkClient
     {
-        private readonly IServiceBusRequestSender _serviceBusRequestSender;
+        private readonly IServiceBusRequestSenderProvider _serviceBusRequestSenderProvider;
+        private readonly ICorrelationContext _correlationContext;
 
         public DefaultChargeLinkClient(
-            [NotNull] IDefaultChargeLinkClientServiceBusRequestSenderProvider serviceBusRequestSenderProvider)
+            [NotNull] IServiceBusRequestSenderProvider serviceBusRequestSenderProvider,
+            ICorrelationContext correlationContext)
         {
-            _serviceBusRequestSender = serviceBusRequestSenderProvider.GetInstance();
+            _serviceBusRequestSenderProvider = serviceBusRequestSenderProvider;
+            _correlationContext = correlationContext;
         }
 
         public async Task CreateDefaultChargeLinksSucceededReplyAsync(
@@ -58,8 +62,9 @@ namespace GreenEnergyHub.Charges.Infrastructure.ToBeRenamedAndSplitted
                 },
             };
 
-            await _serviceBusRequestSender.SendRequestAsync(
-                    createDefaultChargeLinks.ToByteArray(), correlationId)
+            var sender = _serviceBusRequestSenderProvider.GetInstance();
+
+            await sender.SendReplyAsync(createDefaultChargeLinks.ToByteArray(), _correlationContext.Id)
                 .ConfigureAwait(false);
         }
 
@@ -86,8 +91,9 @@ namespace GreenEnergyHub.Charges.Infrastructure.ToBeRenamedAndSplitted
                 },
             };
 
-            await _serviceBusRequestSender.SendRequestAsync(
-                    createDefaultChargeLinks.ToByteArray(), correlationId)
+            var sender = _serviceBusRequestSenderProvider.GetInstance();
+
+            await sender.SendReplyAsync(createDefaultChargeLinks.ToByteArray(), _correlationContext.Id)
                 .ConfigureAwait(false);
         }
     }
