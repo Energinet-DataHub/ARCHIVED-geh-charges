@@ -42,7 +42,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
             serviceCollection.SendProtobuf<Infrastructure.Integration.ChargeCreated.ChargeCreated>();
             serviceCollection.AddMessagingProtobuf().AddMessageDispatcher<ChargeCreatedEvent>(
                 EnvironmentHelper.GetEnv(EnvironmentSettingNames.DataHubSenderConnectionString),
-                EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargeLinkCreatedTopicName));
+                EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargeCreatedTopicName));
 
             serviceCollection.AddMessagingProtobuf().AddMessageDispatcher<ChargePricesUpdatedEvent>(
                 EnvironmentHelper.GetEnv(EnvironmentSettingNames.DataHubSenderConnectionString),
