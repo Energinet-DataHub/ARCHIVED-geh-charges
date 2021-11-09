@@ -122,7 +122,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Factories
             actual.ChargeLink.StartDateTime.Should().Be(chargeLinkPeriodDetails.StartDateTime);
             actual.ChargeLink.EndDateTime.Should().Be(chargeLinkPeriodDetails.EndDateTime);
             actual.ChargeLink.ChargeOwner.Should().Be(charge.Owner);
-            actual.ChargeLink.Factor.Should().Be(1);
+            actual.ChargeLink.Factor.Should().Be(chargeLinkPeriodDetails.Factor);
         }
     }
 }
