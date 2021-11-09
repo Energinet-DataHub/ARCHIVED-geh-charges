@@ -11,11 +11,6 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-output "sql_connection_string_keyvaultsecretname" {
-  description = "Name of the secret in the keyvault containing the username for the charges sql database"
-  value = module.sqlsrv_charge_db_connection_string.name
-  sensitive = true
-}
 
 output "kv_charges_name" {
   description = "Name of the keyvault"

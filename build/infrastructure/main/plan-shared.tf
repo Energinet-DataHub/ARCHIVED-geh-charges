@@ -11,15 +11,20 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-module "asp_charges" {
-  source              = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//app-service-plan?ref=2.0.0"
-  name                = "asp-${var.project}-${var.organisation}-${var.environment}"
-  resource_group_name = data.azurerm_resource_group.main.name
-  location            = data.azurerm_resource_group.main.location
-  kind                = "FunctionApp"
-  sku                 = {
+module "plan_shared" {
+  source                = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//azure/app-service-plan?ref=5.1.0"
+
+  name                  = "shared"
+  project_name          = var.domain_name_short
+  environment_short     = var.environment_short
+  environment_instance  = var.environment_instance
+  resource_group_name   = azurerm_resource_group.this.name
+  location              = azurerm_resource_group.this.location
+  kind                  = "FunctionApp"
+  sku                   = {
     tier  = "Basic"
     size  = "B1"
   }
-  tags                = data.azurerm_resource_group.main.tags
+
+  tags                = azurerm_resource_group.this.tags
 }

@@ -12,38 +12,62 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# IMPORTANT: This is being overwritten (not just overridden) in Development environment
 data "azurerm_key_vault" "kv_sharedresources" {
-  name                = var.sharedresources_keyvault_name
-  resource_group_name = var.sharedresources_resource_group_name
+  name                = var.shared_resources_key_vault_name
+  resource_group_name = var.shared_resources_resource_group_name
 }
 
-# IMPORTANT: This is being overwritten (not just overridden) in Development environment
-data "azurerm_key_vault_secret" "integration_events_listener_connection_string" {
-  name         = local.INTEGRATION_EVENTS_LISTENER_CONNECTION_STRING
+data "azurerm_key_vault_secret" "sql_admin_name" {
+  name         = "sql-data-admin-user-name"
   key_vault_id = data.azurerm_key_vault.kv_sharedresources.id
 }
 
-# IMPORTANT: This is being overwritten (not just overridden) in Development environment
-data "azurerm_key_vault_secret" "integration_events_sender_connection_string" {
-  name         = local.INTEGRATION_EVENTS_SENDER_CONNECTION_STRING
+data "azurerm_key_vault_secret" "sql_admin_password" {
+  name         = "sql-data-admin-user-password"
   key_vault_id = data.azurerm_key_vault.kv_sharedresources.id
 }
 
-# IMPORTANT: This is being overwritten (not just overridden) in Development environment
-data "azurerm_key_vault_secret" "integration_events_manager_connection_string" {
-  name         = local.INTEGRATION_EVENTS_MANAGER_CONNECTION_STRING
+data "azurerm_key_vault_secret" "sql_url" {
+  name         = "sql-data-url"
   key_vault_id = data.azurerm_key_vault.kv_sharedresources.id
 }
 
-# IMPORTANT: This is being overwritten (not just overridden) in Development environment
+data "azurerm_key_vault_secret" "sql_data_name" {
+  name         = "sql-data-name"
+  key_vault_id = data.azurerm_key_vault.kv_sharedresources.id
+}
+
 data "azurerm_key_vault_secret" "messagehub_storage_connection_string" {
-  name         = local.MESSAGEHUB_STORAGE_CONNECTION_STRING_KEY
+  name         = "st-marketres-primary-connection-string"
   key_vault_id = data.azurerm_key_vault.kv_sharedresources.id
 }
 
-# IMPORTANT: This is being overwritten (not just overridden) in Development environment
 data "azurerm_key_vault_secret" "messagehub_storage_container" {
-  name         = local.MESSAGEHUB_STORAGE_CONTAINER_KEY
+  name         = "st-marketres-postofficereply-container-name"
+  key_vault_id = data.azurerm_key_vault.kv_sharedresources.id
+}
+
+data "azurerm_key_vault_secret" "appi_instrumentation_key" {
+  name         = "appi-shared-instrumentation-key"
+  key_vault_id = data.azurerm_key_vault.kv_sharedresources.id
+}
+
+data "azurerm_key_vault_secret" "appi_name" {
+  name         = "appi-shared-name"
+  key_vault_id = data.azurerm_key_vault.kv_sharedresources.id
+}
+
+data "azurerm_key_vault_secret" "sb-domain-relay-send-connection-string" {
+  name         = "sb-domain-relay-send-connection-string"
+  key_vault_id = data.azurerm_key_vault.kv_sharedresources.id
+}
+
+data "azurerm_key_vault_secret" "sb-domain-relay-listen-connection-string" {
+  name         = "sb-domain-relay-listen-connection-string"
+  key_vault_id = data.azurerm_key_vault.kv_sharedresources.id
+}
+
+data "azurerm_key_vault_secret" "sb-domain-relay-manage-connection-string" {
+  name         = "sb-domain-relay-manage-connection-string"
   key_vault_id = data.azurerm_key_vault.kv_sharedresources.id
 }

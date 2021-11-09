@@ -13,8 +13,7 @@
 # limitations under the License.
 
 locals {
-    sqlServerAdminName                                  = "gehdbadmin"
-    CHARGE_DB_CONNECTION_STRING                         = "Server=${module.sqlsrv_charges.fully_qualified_domain_name};Database=${module.sqldb_charges.name};Uid=${local.sqlServerAdminName};Pwd=${random_password.sqlsrv_admin_password.result};"
+    CHARGE_DB_CONNECTION_STRING                         = "Server=${data.azurerm_key_vault_secret.sql_url.value};Database=${module.sqldb_charges.name};Uid=${data.azurerm_key_vault_secret.sql_admin_name.value};Pwd=${data.azurerm_key_vault_secret.sql_admin_password.value};"
     LOCAL_TIMEZONENAME                                  = "Europe/Copenhagen"
     CURRENCY                                            = "DKK"
 
@@ -23,7 +22,6 @@ locals {
     ###########################################################################################
 
     CHARGE_LINK_CREATED_TOPIC_NAME                      = "charge-link-created"
-    CHARGE_LINK_UPDATED_TOPIC_NAME                      = "charge-link-updated"
     CHARGE_CREATED_TOPIC_NAME                           = "charge-created"
     CHARGE_PRICES_UPDATED_TOPIC_NAME                    = "charge-prices-updated"
     CONSUMPTION_METERING_POINT_CREATED_TOPIC_NAME       = "consumption-metering-point-created"
@@ -33,15 +31,8 @@ locals {
     CREATE_LINK_MESSAGES_REQUEST_QUEUE_NAME             = "create-link-messages-request"
     CREATE_LINK_MESSAGES_REPLY_QUEUE_NAME               = "create-link-messages-reply"
 
-    # The string value is the shared keyvault key name
-    INTEGRATION_EVENTS_LISTENER_CONNECTION_STRING       = "SHARED-RESOURCES--SB-INTEGRATIONEVENTS-LISTEN-CONNECTION-STRING"
-    INTEGRATION_EVENTS_SENDER_CONNECTION_STRING         = "SHARED-RESOURCES--SB-INTEGRATIONEVENTS-SEND-CONNECTION-STRING"
-    INTEGRATION_EVENTS_MANAGER_CONNECTION_STRING        = "SHARED-RESOURCES--SB-INTEGRATIONEVENTS-MANAGE-CONNECTION-STRING"
-
     # Message Hub
-    MESSAGEHUB_STORAGE_CONNECTION_STRING_KEY            = "SHARED-RESOURCES-MARKETOPERATOR-RESPONSE-CONNECTION-STRING"
-    MESSAGEHUB_STORAGE_CONTAINER_KEY                    = "SHARED-RESOURCES-MARKETOPERATOR-CONTAINER-REPLY-NAME"
-    MESSAGEHUB_DATAAVAILABLE_QUEUE                      = "sbq-dataavailable"
-    MESSAGEHUB_BUNDLEREQUEST_QUEUE                      = "sbq-charges"
-    MESSAGEHUB_BUNDLEREPLY_QUEUE                        = "sbq-charges-reply"
+    MESSAGEHUB_DATAAVAILABLE_QUEUE                      = "dataavailable"
+    MESSAGEHUB_BUNDLEREQUEST_QUEUE                      = "charges"
+    MESSAGEHUB_BUNDLEREPLY_QUEUE                        = "charges-reply"
 }

@@ -14,16 +14,13 @@
 
 module "mag_availability_group" {
   source              = "../modules/monitor-action-group-email" # Repo geh-terraform-modules doesn't have a monitor-action-group at the time of writting this
-  name                = "mag-availability-${var.project}-${var.organisation}-${var.environment}"
-  resource_group_name = data.azurerm_resource_group.main.name
-  short_name          = "a-${var.project}-${var.environment}"
+  name                = "mag-availability-${lower(var.domain_name_short)}-${lower(var.environment_short)}-${lower(var.environment_instance)}"
+  resource_group_name = azurerm_resource_group.this.name
+  short_name          = "a-${lower(var.domain_name_short)}-${lower(var.environment_short)}"
   enabled             = true
   email_receiver      = {
-    name              = "Availability notification - ${var.project}-${var.organisation}-${var.environment}"
+    name              = "Availability notification - ${lower(var.domain_name_short)}-${lower(var.environment_short)}-${lower(var.environment_instance)}"
     email_address     = var.notification_email
   }
-  tags                = data.azurerm_resource_group.main.tags
-  dependencies        = [
-    module.appi.dependent_on,
-  ]
+  tags                = azurerm_resource_group.this.tags
 }

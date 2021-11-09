@@ -11,13 +11,12 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+resource "azurerm_resource_group" "this" {
+  name      = var.resource_group_name
+  location  = "West Europe"
+  tags      = data.azurerm_subscription.this.tags
+}
 
-module "sbs_command_received" {
-  source              = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//service-bus-subscription?ref=2.0.0"
-  depends_on          = [module.sbt_command_received]
-  name                = "sbs-command-received"
-  resource_group_name = data.azurerm_resource_group.main.name
-  namespace_name      = module.sbn_charges.name
-  topic_name          = module.sbt_command_received.name
-  max_delivery_count  = 1
+data "azurerm_resource_group" "shared_resources" {
+  name = var.shared_resources_resource_group_name
 }
