@@ -14,7 +14,7 @@
 
 /*
 =================================================================================
-Infrastructure for a representation of the topics of externally published integration events.
+Infrastructure for a representation of the queues of externally published integration events.
 This is used to be able to fully explore and integration test the charges domain
 without relying on the external dependencies to other domains.
 
@@ -23,12 +23,11 @@ on the existing Service Bus Namespace.
 =================================================================================
 */
 
-module "sbt_charge_created" {
-  source              = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//service-bus-topic?ref=2.0.0"
-  name                = "charge-created"
+resource "azurerm_servicebus_subscription" "sbs_charge_link_created_charge" {
+  depends_on          = [module.sbt_charge_link_created]
+  name                = "charge-link-created-sub-charges"
+  resource_group_name = azurerm_resource_group.main.name
   namespace_name      = module.sbn_external_integration_events.name
-  resource_group_name = data.azurerm_resource_group.main.name
-  dependencies        = [
-    module.sbn_external_integration_events.dependent_on
-    ]
+  topic_name          = module.sbt_charge_link_created.name
+  max_delivery_count  = 1
 }

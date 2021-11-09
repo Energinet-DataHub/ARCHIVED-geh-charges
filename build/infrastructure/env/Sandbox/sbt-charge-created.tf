@@ -23,10 +23,12 @@ on the existing Service Bus Namespace.
 =================================================================================
 */
 
-module "sbt_charge_link_created" {
+module "sbt_charge_created" {
   source              = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//service-bus-topic?ref=2.0.0"
-  name                = local.CHARGE_LINK_CREATED_TOPIC_NAME
+  name                = "charge-created"
   namespace_name      = module.sbn_external_integration_events.name
-  resource_group_name = data.azurerm_resource_group.main.name
-  dependencies        = [module.sbn_external_integration_events.dependent_on]
+  resource_group_name = azurerm_resource_group.main.name
+  dependencies        = [
+    module.sbn_external_integration_events.dependent_on
+    ]
 }

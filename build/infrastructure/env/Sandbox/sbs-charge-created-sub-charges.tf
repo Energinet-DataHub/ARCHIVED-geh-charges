@@ -26,7 +26,7 @@ on the existing Service Bus Namespace.
 module "sbs_charge_created_charge" {
   source              = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//service-bus-subscription?ref=2.0.0"
   name                = "charge-created-sub-charges"
-  resource_group_name = data.azurerm_resource_group.main.name
+  resource_group_name = azurerm_resource_group.main.name
   namespace_name      = module.sbn_external_integration_events.name
   topic_name          = module.sbt_charge_created.name
   max_delivery_count  = 1

@@ -36,9 +36,9 @@ Cons:
 module "kv_shared_stub" {
   source                          = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//key-vault?ref=2.0.0"
   name                            = "kvsharedst${var.project}${var.organisation}${var.environment}"
-  resource_group_name             = data.azurerm_resource_group.main.name
-  location                        = data.azurerm_resource_group.main.location
-  tags                            = data.azurerm_resource_group.main.tags
+  resource_group_name             = azurerm_resource_group.main.name
+  location                        = azurerm_resource_group.main.location
+  tags                            = azurerm_resource_group.main.tags
   enabled_for_template_deployment = true
   sku_name                        = "standard"
   

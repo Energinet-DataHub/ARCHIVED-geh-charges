@@ -15,7 +15,7 @@
 # Purpose of this overwrite (not override) is to depend on and use the shared key vault stub.
 data "azurerm_key_vault" "kv_sharedresources" {
   name                = module.kv_shared_stub.name
-  resource_group_name = data.azurerm_resource_group.main.name
+  resource_group_name = azurerm_resource_group.main.name
   depends_on          = [ module.kv_shared_stub.name ]
 }
 

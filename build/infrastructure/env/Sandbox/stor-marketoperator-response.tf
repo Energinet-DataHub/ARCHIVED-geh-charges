@@ -19,13 +19,13 @@ module "st_marketoperator_response" {
   source                    = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//storage-account?ref=1.8.0"
 
   name                      = "stout${lower(var.project)}${lower(var.organisation)}${lower(var.environment)}"
-  resource_group_name       = data.azurerm_resource_group.main.name
-  location                  = data.azurerm_resource_group.main.location
+  resource_group_name       = azurerm_resource_group.main.name
+  location                  = azurerm_resource_group.main.location
   account_replication_type  = "LRS"
   access_tier               = "Hot"
   account_tier              = "Standard"
 
-  tags                      = data.azurerm_resource_group.main.tags
+  tags                      = azurerm_resource_group.main.tags
 }
 
 module "container_postoffice_reply" {
