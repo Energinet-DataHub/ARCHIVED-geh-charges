@@ -13,13 +13,10 @@
 // limitations under the License.
 
 using System.Diagnostics.CodeAnalysis;
-using System.IO;
 using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Application;
 using GreenEnergyHub.Charges.Application.ChargeLinks.Handlers;
 using GreenEnergyHub.Charges.Application.ChargeLinks.Handlers.Message;
 using GreenEnergyHub.Charges.Domain.ChargeLinkCommands;
-using GreenEnergyHub.Charges.FunctionHost.Common;
 using GreenEnergyHub.Charges.Infrastructure.Messaging;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
@@ -34,15 +31,12 @@ namespace GreenEnergyHub.Charges.FunctionHost.ChargeLinks
         /// </summary>
         private readonly MessageExtractor<ChargeLinkCommand> _messageExtractor;
         private readonly IChargeLinkCommandHandler _chargeLinkCommandHandler;
-        private readonly ICorrelationContext _correlationContext;
 
         public ChargeLinkIngestion(
             IChargeLinkCommandHandler chargeLinkCommandHandler,
-            MessageExtractor<ChargeLinkCommand> messageExtractor,
-            ICorrelationContext correlationContext)
+            MessageExtractor<ChargeLinkCommand> messageExtractor)
         {
             _messageExtractor = messageExtractor;
-            _correlationContext = correlationContext;
             _chargeLinkCommandHandler = chargeLinkCommandHandler;
         }
 
@@ -51,34 +45,19 @@ namespace GreenEnergyHub.Charges.FunctionHost.ChargeLinks
             [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = null)]
             [NotNull] HttpRequestData req)
         {
-            var command = await GetChargeLinkCommandAsync(req.Body).ConfigureAwait(false);
+            var command = (ChargeLinkCommand)await _messageExtractor.ExtractAsync(req.Body).ConfigureAwait(false);
 
             var chargeLinksMessageResult = await _chargeLinkCommandHandler.HandleAsync(command).ConfigureAwait(false);
 
-            return await CreateResponseAsync(req, chargeLinksMessageResult).ConfigureAwait(false);
+            return await CreateJsonResponseAsync(req, chargeLinksMessageResult).ConfigureAwait(false);
         }
 
-        private async Task<HttpResponseData> CreateResponseAsync(HttpRequestData req, ChargeLinksMessageResult? chargeLinksMessageResult)
+        private async Task<HttpResponseData> CreateJsonResponseAsync(HttpRequestData req, ChargeLinksMessageResult? chargeLinksMessageResult)
         {
             var response = req.CreateResponse();
             await response.WriteAsJsonAsync(chargeLinksMessageResult);
-            response.Headers.Add(HttpResponseHeaders.CorrelationId, _correlationContext.Id);
+
             return response;
-        }
-
-        private async Task<ChargeLinkCommand> GetChargeLinkCommandAsync(Stream stream)
-        {
-            var message = await ConvertStreamToBytesAsync(stream).ConfigureAwait(false);
-            var command = (ChargeLinkCommand)await _messageExtractor.ExtractAsync(message).ConfigureAwait(false);
-
-            return command;
-        }
-
-        private static async Task<byte[]> ConvertStreamToBytesAsync(Stream stream)
-        {
-            await using var ms = new MemoryStream();
-            await stream.CopyToAsync(ms).ConfigureAwait(false);
-            return ms.ToArray();
         }
     }
 }

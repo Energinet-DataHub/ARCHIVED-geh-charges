@@ -13,7 +13,6 @@
 // limitations under the License.
 
 using System;
-using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Text;
@@ -37,42 +36,21 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests.Charges
     public class ChargeIngestionTests
     {
         [Collection(nameof(ChargesFunctionAppCollectionFixture))]
-        public class RunAsync : FunctionAppTestBase<ChargesFunctionAppFixture>, IAsyncLifetime
+        public class RunAsync : FunctionAppTestBase<ChargesFunctionAppFixture>
         {
             public RunAsync(ChargesFunctionAppFixture fixture, ITestOutputHelper testOutputHelper)
                 : base(fixture, testOutputHelper)
             {
             }
 
-            public Task InitializeAsync()
-            {
-                return Task.CompletedTask;
-            }
-
-            public Task DisposeAsync()
-            {
-                Fixture.PostOfficeListener.ResetMessageHandlersAndReceivedMessages();
-                return Task.CompletedTask;
-            }
-
             [Fact]
             public async Task When_ChargeIsReceived_Then_AHttp200ResponseIsReturned()
             {
-                var request = CreateTariffWithPricesRequest("8000");
+                var request = CreateTariffWithPricesRequest(out string _);
 
                 var actualResponse = await Fixture.HostManager.HttpClient.SendAsync(request);
 
                 actualResponse.StatusCode.Should().Be(HttpStatusCode.OK);
-            }
-
-            [Fact]
-            public async Task When_ChargeIsReceived_Then_HttpResponseHasCorrelationId()
-            {
-                var request = CreateTariffWithPricesRequest("8001");
-
-                var actualResponse = await Fixture.HostManager.HttpClient.SendAsync(request);
-
-                actualResponse.GetCorrelationId().Should().NotBeEmpty();
             }
 
             /// <summary>
@@ -82,7 +60,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests.Charges
             public async Task When_ChargeIsReceived_Then_MessageIsSentToPostOffice()
             {
                 // Arrange
-                var request = CreateTariffWithPricesRequest("8002");
+                Fixture.PostOfficeListener.ResetMessageHandlersAndReceivedMessages();
+                var request = CreateTariffWithPricesRequest(out string _);
 
                 var body = string.Empty;
                 using var isMessageReceivedEvent = await Fixture.PostOfficeListener
@@ -107,46 +86,68 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests.Charges
             public async Task When_ChargeIsReceived_Then_ChargeCreatedIntegrationEventIsPublished()
             {
                 // Arrange
-                var request = CreateTariffWithPricesRequest("8003");
+                var request = CreateTariffWithPricesRequest(out string correlationId);
                 Fixture.ChargeCreatedListener.Reset();
-                using var eventualChargeCreatedEvent = await Fixture.ChargeCreatedListener.ListenForMessageAsync().ConfigureAwait(false);
+                using var eventualChargeCreatedEvent = await Fixture
+                    .ChargeCreatedListener
+                    .ListenForMessageAsync(correlationId)
+                    .ConfigureAwait(false);
 
                 // Act
-                var response = await Fixture.HostManager.HttpClient.SendAsync(request);
+                await Fixture.HostManager.HttpClient.SendAsync(request);
 
                 // Assert
-                var isChargeCreatedReceived = eventualChargeCreatedEvent.MessageAwaiter!.Wait(TimeSpan.FromSeconds(5));
+                var isChargeCreatedReceived = eventualChargeCreatedEvent.MessageAwaiter!.Wait(TimeSpan.FromSeconds(10));
                 isChargeCreatedReceived.Should().BeTrue();
-                eventualChargeCreatedEvent.CorrelationId.Should().Be(response.GetCorrelationId());
             }
 
             [Fact]
             public async Task When_ChargeIncludingPriceIsReceived_Then_ChargePricesUpdatedIntegrationEventIsPublished()
             {
                 // Arrange
-                var request = CreateTariffWithPricesRequest("8004");
+                var request = CreateTariffWithPricesRequest(out string correlationId);
                 Fixture.ChargePricesUpdatedListener.Reset();
-                using var eventualChargePriceUpdatedEvent = await Fixture.ChargePricesUpdatedListener.ListenForMessageAsync().ConfigureAwait(false);
+                using var eventualChargePriceUpdatedEvent = await Fixture
+                    .ChargePricesUpdatedListener
+                    .ListenForMessageAsync(correlationId)
+                    .ConfigureAwait(false);
 
                 // Act
-                var response = await Fixture.HostManager.HttpClient.SendAsync(request);
+                await Fixture.HostManager.HttpClient.SendAsync(request);
 
                 // Assert
-                var isChargePricesUpdatedReceived = eventualChargePriceUpdatedEvent.MessageAwaiter!.Wait(TimeSpan.FromSeconds(5));
+                var isChargePricesUpdatedReceived = eventualChargePriceUpdatedEvent.MessageAwaiter!.Wait(TimeSpan.FromSeconds(10));
                 isChargePricesUpdatedReceived.Should().BeTrue();
-                eventualChargePriceUpdatedEvent.CorrelationId.Should().Be(response.GetCorrelationId());
             }
 
-            private static HttpRequestMessage CreateTariffWithPricesRequest(string senderProvidedChargeId)
+            private static HttpRequestMessage CreateTariffWithPricesRequest(
+                out string correlationId)
             {
                 var testFilePath = "TestFiles/Charges/ValidCreateTariffCommand.xml";
                 var clock = SystemClock.Instance;
-                var chargeJson = EmbeddedResourceHelper.GetEmbeddedFile(testFilePath, clock, new List<(string, string)> { ("sender-provided-charge-id", senderProvidedChargeId) });
+                var chargeJson = EmbeddedResourceHelper.GetEmbeddedFile(testFilePath, clock);
+                correlationId = CreateCorrelationId();
+                var traceParent = CreateTraceParentHttpHeaderValue(correlationId);
 
-                return new HttpRequestMessage(HttpMethod.Post, "api/ChargeIngestion")
+                var request = new HttpRequestMessage(HttpMethod.Post, "api/ChargeIngestion")
                 {
                     Content = new StringContent(chargeJson, Encoding.UTF8, "application/xml"),
                 };
+
+                // See https://tsuyoshiushio.medium.com/correlation-with-activity-with-application-insights-3-w3c-tracecontext-d9fb143c0ce2
+                request.Headers.Add("traceparent", traceParent);
+
+                return request;
+            }
+
+            private static string CreateTraceParentHttpHeaderValue(string correlationId)
+            {
+                return $"00-{correlationId}-b7ad6b7169203331-01";
+            }
+
+            private static string CreateCorrelationId()
+            {
+                return Guid.NewGuid().ToString().Replace("-", string.Empty);
             }
         }
     }

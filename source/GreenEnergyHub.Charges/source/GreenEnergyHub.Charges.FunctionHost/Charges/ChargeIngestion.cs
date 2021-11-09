@@ -14,11 +14,9 @@
 
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Application;
 using GreenEnergyHub.Charges.Application.Charges.Handlers;
 using GreenEnergyHub.Charges.Application.Charges.Handlers.Message;
 using GreenEnergyHub.Charges.Domain.ChargeCommands;
-using GreenEnergyHub.Charges.FunctionHost.Common;
 using GreenEnergyHub.Charges.Infrastructure.Messaging;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
@@ -32,16 +30,13 @@ namespace GreenEnergyHub.Charges.FunctionHost.Charges
         /// Function name affects the URL and thus possibly dependent infrastructure.
         /// </summary>
         private readonly IChargesMessageHandler _chargesMessageHandler;
-        private readonly ICorrelationContext _correlationContext;
         private readonly MessageExtractor<ChargeCommand> _messageExtractor;
 
         public ChargeIngestion(
             IChargesMessageHandler chargesMessageHandler,
-            ICorrelationContext correlationContext,
             MessageExtractor<ChargeCommand> messageExtractor)
         {
             _chargesMessageHandler = chargesMessageHandler;
-            _correlationContext = correlationContext;
             _messageExtractor = messageExtractor;
         }
 
@@ -60,11 +55,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Charges
             var messageResult = await _chargesMessageHandler.HandleAsync(message)
                 .ConfigureAwait(false);
 
-            var response = req.CreateResponse();
-            await response.WriteAsJsonAsync(messageResult);
-            response.Headers.Add(HttpResponseHeaders.CorrelationId, _correlationContext.Id);
-
-            return response;
+            return await CreateJsonResponseAsync(req, messageResult);
         }
 
         private async Task<ChargesMessage> GetChargesMessageAsync(
@@ -75,6 +66,14 @@ namespace GreenEnergyHub.Charges.FunctionHost.Charges
 
             message.Transactions.Add(command);
             return message;
+        }
+
+        private static async Task<HttpResponseData> CreateJsonResponseAsync(HttpRequestData req, ChargesMessageResult messageResult)
+        {
+            var response = req.CreateResponse();
+            await response.WriteAsJsonAsync(messageResult);
+
+            return response;
         }
     }
 }

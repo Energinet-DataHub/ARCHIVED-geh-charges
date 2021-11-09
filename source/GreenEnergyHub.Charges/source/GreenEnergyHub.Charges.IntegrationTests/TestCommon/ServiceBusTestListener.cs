@@ -26,11 +26,11 @@ namespace GreenEnergyHub.Charges.IntegrationTests.TestCommon
             _serviceBusListenerMock = serviceBusListenerMock;
         }
 
-        public async Task<EventualServiceBusMessage> ListenForMessageAsync()
+        public async Task<EventualServiceBusMessage> ListenForMessageAsync(string correlationId)
         {
             var result = new EventualServiceBusMessage();
             result.MessageAwaiter = await _serviceBusListenerMock
-                .WhenAny()
+                .WhenCorrelationId(correlationId)
                 .VerifyOnceAsync(receivedMessage =>
                 {
                     result.Body = receivedMessage.Body;

@@ -61,16 +61,6 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests.ChargeLinks
                 actualResponse.StatusCode.Should().Be(HttpStatusCode.OK);
             }
 
-            [Fact]
-            public async Task When_ChargeIsReceived_Then_HttpResponseHasCorrelationId()
-            {
-                var request = CreateTariffWithPricesRequest();
-
-                var actualResponse = await Fixture.HostManager.HttpClient.SendAsync(request);
-
-                actualResponse.GetCorrelationId().Should().NotBeEmpty();
-            }
-
             private static HttpRequestMessage CreateTariffWithPricesRequest()
             {
                 var testFilePath = "TestFiles/ChargeLinks/CreateFixedPeriodTariffChargeLink.xml";
