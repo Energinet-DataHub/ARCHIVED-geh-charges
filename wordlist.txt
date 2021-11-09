@@ -116,3 +116,6 @@ xunit
 geh
 dk
 energinet
+AutoMock
+Grpc
+msbuild
