@@ -32,7 +32,6 @@ namespace Energinet.DataHub.Charges.Clients.IntegrationTests.Fixtures
         protected LibraryFixture()
         {
             RandomSuffix = $"{DateTimeOffset.UtcNow:yyyy.MM.ddTHH.mm.ss}-{Guid.NewGuid()}";
-
             TestLogger = new TestDiagnosticsLogger();
         }
 
@@ -56,13 +55,6 @@ namespace Energinet.DataHub.Charges.Clients.IntegrationTests.Fixtures
             await Task.CompletedTask.ConfigureAwait(false);
 
             await OnDisposeLibraryDependenciesAsync().ConfigureAwait(false);
-        }
-
-        public string CreateUserRandomName(string commonNamePart)
-        {
-            return string.IsNullOrWhiteSpace(commonNamePart)
-                ? throw new ArgumentException("Value cannot be null or whitespace.", nameof(commonNamePart))
-                : $"{Environment.UserName}-{commonNamePart}-{RandomSuffix}";
         }
 
         /// <summary>
