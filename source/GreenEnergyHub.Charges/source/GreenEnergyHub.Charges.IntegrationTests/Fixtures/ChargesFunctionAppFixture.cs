@@ -151,6 +151,10 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures
                 .BuildQueue(ChargesServiceBusResourceNames.CreateLinkReplyQueueKey).SetEnvironmentVariableToQueueName(EnvironmentSettingNames.CreateLinkReplyQueueName)
                 .CreateAsync();
 
+            await ServiceBusResourceProvider
+                .BuildQueue(ChargesServiceBusResourceNames.CreateLinkMessagesRequestQueueKey).SetEnvironmentVariableToQueueName(EnvironmentSettingNames.CreateLinkMessagesRequestQueueName)
+                .CreateAsync();
+
             var consumptionMeteringPointCreatedTopic = await ServiceBusResourceProvider
                 .BuildTopic(ChargesServiceBusResourceNames.ConsumptionMeteringPointCreatedTopicKey).SetEnvironmentVariableToTopicName(EnvironmentSettingNames.ConsumptionMeteringPointCreatedTopicName)
                 .AddSubscription(ChargesServiceBusResourceNames.ConsumptionMeteringPointCreatedSubscriptionName).SetEnvironmentVariableToSubscriptionName(EnvironmentSettingNames.ConsumptionMeteringPointCreatdSubscriptionName)
