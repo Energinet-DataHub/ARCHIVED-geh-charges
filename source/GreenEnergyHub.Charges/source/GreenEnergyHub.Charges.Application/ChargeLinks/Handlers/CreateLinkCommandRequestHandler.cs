@@ -120,22 +120,21 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
         {
             await _defaultChargeLinkClient
                 .CreateDefaultChargeLinksFailedReplyAsync(
-                    new CreateDefaultChargeLinksFailedDto(
                         meteringPointId,
-                        ErrorCode.MeteringPointUnknown),
-                    correlationId,
-                    replyTo).ConfigureAwait(false);
+                        ErrorCode.MeteringPointUnknown,
+                        replyTo,
+                        correlationId).ConfigureAwait(false);
         }
 
         private async Task ReplyWithSucceededAsync(string meteringPointId, string correlationId, string replyTo)
         {
             await _defaultChargeLinkClient
                 .CreateDefaultChargeLinksSucceededReplyAsync(
-                    new CreateDefaultChargeLinksSucceededDto(
-                        meteringPointId,
-                        false),
-                    correlationId,
-                    replyTo).ConfigureAwait(false);
+                    meteringPointId,
+                    false,
+                    replyTo,
+                    correlationId)
+                .ConfigureAwait(false);
         }
 
         private async Task CreateAndDispatchChargeLinkCommandReceivedEventIfApplicableForLinkingAsync(

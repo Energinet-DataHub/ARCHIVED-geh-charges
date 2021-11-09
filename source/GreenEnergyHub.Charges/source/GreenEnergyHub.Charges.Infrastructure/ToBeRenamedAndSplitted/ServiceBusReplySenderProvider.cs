@@ -14,34 +14,30 @@
 
 using System.Collections.Generic;
 using Azure.Messaging.ServiceBus;
-using GreenEnergyHub.Charges.Application;
 
 namespace GreenEnergyHub.Charges.Infrastructure.ToBeRenamedAndSplitted
 {
-    public class ServiceBusRequestSenderProvider : IServiceBusRequestSenderProvider
+    public class ServiceBusReplySenderProvider : IServiceBusReplySenderProvider
     {
         private readonly ServiceBusClient _serviceBusClient;
-        private readonly IMessageMetaDataContext _messageMetaDataContext;
         private readonly Dictionary<string, ServiceBusReplySender?> _senders;
 
-        public ServiceBusRequestSenderProvider(
-            ServiceBusClient serviceBusClient,
-            IMessageMetaDataContext messageMetaDataContext)
+        public ServiceBusReplySenderProvider(ServiceBusClient serviceBusClient)
         {
             _serviceBusClient = serviceBusClient;
-            _messageMetaDataContext = messageMetaDataContext;
             _senders = new Dictionary<string, ServiceBusReplySender?>();
         }
 
-        public IServiceBusReplySender GetInstance()
+        public IServiceBusReplySender GetInstance(string replyTo)
         {
-            _senders.TryGetValue(_messageMetaDataContext.ReplyTo, out var instantiatedServiceBusReplySender);
+            _senders.TryGetValue(replyTo, out var instantiatedServiceBusReplySender);
 
             if (instantiatedServiceBusReplySender != null)
                 return instantiatedServiceBusReplySender;
 
-            var serviceBusReplySender = new ServiceBusReplySender(_serviceBusClient.CreateSender(_messageMetaDataContext.ReplyTo));
-            _senders.Add(_messageMetaDataContext.ReplyTo, serviceBusReplySender);
+            var serviceBusReplySender =
+                new ServiceBusReplySender(_serviceBusClient.CreateSender(replyTo));
+            _senders.Add(replyTo, serviceBusReplySender);
 
             return serviceBusReplySender;
         }
