@@ -13,7 +13,7 @@
 // limitations under the License.
 
 using Azure.Messaging.ServiceBus;
-using GreenEnergyHub.Charges.Application.ToBeRenamedAndSplitted;
+using GreenEnergyHub.Charges.Application.ChargeLinks.CreateDefaultChargeLinkReplier;
 using GreenEnergyHub.Charges.FunctionHost.Common;
 using GreenEnergyHub.Charges.Infrastructure.CreateDefaultChargeLinkReplier;
 using Microsoft.Extensions.DependencyInjection;

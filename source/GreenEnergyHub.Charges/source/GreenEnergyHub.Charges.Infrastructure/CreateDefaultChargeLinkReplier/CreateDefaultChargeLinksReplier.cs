@@ -17,7 +17,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using Energinet.Charges.Contracts;
 using Google.Protobuf;
-using GreenEnergyHub.Charges.Application.ToBeRenamedAndSplitted;
+using GreenEnergyHub.Charges.Application.ChargeLinks.CreateDefaultChargeLinkReplier;
 using GreenEnergyHub.Charges.InternalShared;
 
 namespace GreenEnergyHub.Charges.Infrastructure.CreateDefaultChargeLinkReplier

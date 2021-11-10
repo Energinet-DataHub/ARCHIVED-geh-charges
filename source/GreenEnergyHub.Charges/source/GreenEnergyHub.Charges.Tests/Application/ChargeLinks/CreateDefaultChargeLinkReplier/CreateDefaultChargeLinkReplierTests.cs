@@ -25,10 +25,10 @@ using Moq;
 using Xunit;
 using Xunit.Categories;
 
-namespace GreenEnergyHub.Charges.Tests.Application.ToBeRenamedAndSplitted
+namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.CreateDefaultChargeLinkReplier
 {
     [UnitTest]
-    public class DefaultChargeLinkClientTests
+    public class CreateDefaultChargeLinkReplierTests
     {
         private const string ReplyToQueueName = "ReplyToQueue";
         private const string MeteringPointId = "F9A5115D-44EB-4AD4-BC7E-E8E8A0BC425E";
@@ -38,7 +38,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ToBeRenamedAndSplitted
         [InlineAutoMoqData(MeteringPointId, null!, ReplyToQueueName)]
         [InlineAutoMoqData(null!, CorrelationId, ReplyToQueueName)]
         [InlineAutoMoqData(MeteringPointId, CorrelationId, null!)]
-        public async Task CreateDefaultChargeLinksSucceededReplyAsync_WhenArgumentIsNull_ThrowsException(
+        public async Task ReplyWithSucceededAsync_WhenArgumentIsNull_ThrowsException(
             string meteringPointId,
             string correlationId,
             string replyQueue,
@@ -56,7 +56,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ToBeRenamedAndSplitted
 
         [Theory]
         [InlineAutoDomainData]
-        public async Task CreateDefaultChargeLinksSucceededReplyAsync_WhenInputIsValid_SendsMessage(
+        public async Task ReplyWithSucceededAsync_WhenInputIsValid_SendsMessage(
             [NotNull] [Frozen] Mock<IServiceBusReplySenderProvider> serviceBusReplySenderProviderMock,
             [NotNull] [Frozen] Mock<IServiceBusReplySender> serviceBusRequestSenderMock,
             [NotNull] [Frozen] Mock<IMessageMetaDataContext> messageMetaDataContextMock,
@@ -88,7 +88,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ToBeRenamedAndSplitted
         [InlineAutoMoqData(MeteringPointId, null!, ReplyToQueueName)]
         [InlineAutoMoqData(null!, CorrelationId, ReplyToQueueName)]
         [InlineAutoMoqData(MeteringPointId, CorrelationId, null!)]
-        public async Task CreateDefaultChargeLinksFailedReplyAsync_WhenAnyArgumentIsNull_ThrowsException(
+        public async Task ReplyWithFailedAsync_WhenAnyArgumentIsNull_ThrowsException(
             string meteringPointId,
             string correlationId,
             string replyQueue,
@@ -107,7 +107,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ToBeRenamedAndSplitted
 
         [Theory]
         [InlineAutoDomainData]
-        public async Task CreateDefaultChargeLinksFailedReplyAsync_WhenInputIsValid_SendsMessage(
+        public async Task ReplyWithFailedAsync_WhenInputIsValid_SendsMessage(
             [NotNull] [Frozen] Mock<IServiceBusReplySenderProvider> serviceBusReplySenderProviderMock,
             [NotNull] [Frozen] Mock<IServiceBusReplySender> serviceBusReplySenderMock,
             string meteringPointId,
