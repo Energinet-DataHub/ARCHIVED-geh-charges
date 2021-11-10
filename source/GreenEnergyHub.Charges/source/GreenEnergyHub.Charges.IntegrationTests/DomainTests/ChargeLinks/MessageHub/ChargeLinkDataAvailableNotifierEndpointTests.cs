@@ -49,8 +49,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests.ChargeLinks.Messag
 
             public Task DisposeAsync()
             {
-                Fixture.MessageHubDataAvailableListenerMock.ResetMessageHandlersAndReceivedMessages();
-                Fixture.MessageHubReplyListenerMock.ResetMessageHandlersAndReceivedMessages();
+                Fixture.MessageHubDataAvailableListener.ResetMessageHandlersAndReceivedMessages();
+                Fixture.MessageHubReplyListener.ResetMessageHandlersAndReceivedMessages();
                 return Task.CompletedTask;
             }
 
@@ -58,7 +58,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests.ChargeLinks.Messag
             public async Task When_ReceivingChargeLinkMessage_MessageHubIsNotifiedAboutAvailableData_And_Then_When_MessageHubRequestsTheBundle_Then_MessageHubReceivesBundleResponse()
             {
                 // Arrange
-                var testFilePath = "TestFiles/CreateFixedPeriodTariffChargeLink.xml";
+                var testFilePath = "TestFiles/ChargeLinks/CreateFixedPeriodTariffChargeLink.xml";
                 var clock = SystemClock.Instance;
                 var messageString = EmbeddedResourceHelper.GetEmbeddedFile(testFilePath, clock);
 
@@ -68,7 +68,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests.ChargeLinks.Messag
 
                 // => Simulate that MessageHub requests a bundle when data available
                 DataAvailableNotificationDto? dataAvailableNotification;
-                using var dataAvailableAwaiter = await Fixture.MessageHubDataAvailableListenerMock
+                using var dataAvailableAwaiter = await Fixture.MessageHubDataAvailableListener
                     .WhenAny()
                     .VerifyOnceAsync(async receivedMessage =>
                     {
@@ -78,7 +78,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests.ChargeLinks.Messag
                     });
 
                 // => Register the bundle response so we can assert it
-                using var bundleResponseAwaiter = await Fixture.MessageHubReplyListenerMock
+                using var bundleResponseAwaiter = await Fixture.MessageHubReplyListener
                     .WhenAny()
                     .VerifyOnceAsync(_ => Task.CompletedTask);
 
@@ -92,14 +92,14 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests.ChargeLinks.Messag
 
                 // => Was data available notification sent from the domain?
                 //    (Timeout should not be more than 5 secs. - currently it's high so we can break during demo.)
-                var isDataAvailableReceived = dataAvailableAwaiter.Wait(TimeSpan.FromSeconds(10));
+                var isDataAvailableReceived = dataAvailableAwaiter.Wait(TimeSpan.FromSeconds(5));
                 isDataAvailableReceived.Should().BeTrue();
 
                 // => Was bundle response sent from the domain?
                 //   (timeout should not be more than 5 secs. - currently it's high so we can break during demo).
 
                 // BUG: This code doesn't work. See bug https://github.com/Energinet-DataHub/geh-charges/issues/788
-                //var isBundleResponseReceived = bundleResponseAwaiter.Wait(TimeSpan.FromSeconds(10));
+                //var isBundleResponseReceived = bundleResponseAwaiter.Wait(TimeSpan.FromSeconds(5));
                 //isBundleResponseReceived.Should().BeTrue();
             }
         }

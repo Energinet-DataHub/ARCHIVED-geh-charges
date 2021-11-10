@@ -18,7 +18,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
 using FluentAssertions;
-using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.Domain.ChargeLinkCommandReceivedEvents;
 using GreenEnergyHub.Charges.Domain.ChargeLinks;
 using GreenEnergyHub.Charges.Domain.Charges;
@@ -45,8 +44,6 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Factories
             [NotNull] ChargeLinkFactory sut)
         {
             // Arrange
-            expectedEvent.SetCorrelationId(Guid.NewGuid().ToString("N"));
-
             chargeRepository
                 .Setup(x => x.GetChargeAsync(
                         It.IsAny<ChargeIdentifier>()))
@@ -72,8 +69,6 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Factories
                 .Should().Be((Instant)expectedEvent.ChargeLinkCommands.First().ChargeLink.EndDateTime!);
             actualFirst.PeriodDetails.First().Factor
                 .Should().Be(expectedEvent.ChargeLinkCommands.First().ChargeLink.Factor);
-            actualFirst.Operations.First().CorrelationId
-                .Should().Be(expectedEvent.CorrelationId);
             actualFirst.Operations.First().SenderProvidedId
                 .Should().Be(expectedEvent.ChargeLinkCommands.First().ChargeLink.OperationId);
         }

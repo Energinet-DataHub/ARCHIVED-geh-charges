@@ -21,7 +21,6 @@ syntax = "proto3";
 option csharp_namespace = "GreenEnergyHub.Charges.Infrastructure.Integration.ChargeRejection";
 
 message ChargeRejectionContract {
-  string correlation_id = 1;
   string receiver = 2;
   MarketParticipantRoleContract receiver_market_participant_role = 3;
   string original_transaction_reference = 4;

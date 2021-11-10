@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using Google.Protobuf.Collections;
@@ -37,8 +36,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
         {
             return new ChargeCommandRejectedEvent(
                 rejectedContract.PublishedTime.ToInstant(),
-                rejectedContract.CorrelationId,
-                new ChargeCommand(rejectedContract.Command.CorrelationId)
+                new ChargeCommand
                 {
                     Document = ConvertDocument(rejectedContract.Command.Document),
                     ChargeOperation = ConvertChargeOperation(rejectedContract.Command.ChargeOperation),

@@ -25,14 +25,12 @@ option csharp_namespace = "GreenEnergyHub.Charges.Infrastructure.Internal.Charge
 message ChargeCommandRejectedContract {
   google.protobuf.Timestamp published_time = 1;
   ChargeCommandContract command = 2;
-  string correlation_id = 3; // Unique identifier used inside GEH to identify a message across domains and inside domains
   repeated string reject_reasons = 4;
 }
 
 message ChargeCommandContract {
     DocumentContract document = 1;
     ChargeOperationContract charge_operation = 2;
-    string correlation_id = 3; // Unique identifier used inside GEH to identify a message across domains and inside domains
 }
 
 message DocumentContract {

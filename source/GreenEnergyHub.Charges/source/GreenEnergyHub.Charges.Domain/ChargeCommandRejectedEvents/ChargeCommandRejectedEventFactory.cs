@@ -36,7 +36,6 @@ namespace GreenEnergyHub.Charges.Domain.ChargeCommandRejectedEvents
         {
             return new ChargeCommandRejectedEvent(
                 _clock.GetCurrentInstant(),
-                command.CorrelationId,
                 command,
                 chargeCommandValidationResult.InvalidRules.Select(x => x.ValidationRuleIdentifier.ToString()).ToArray());
         }
@@ -47,7 +46,6 @@ namespace GreenEnergyHub.Charges.Domain.ChargeCommandRejectedEvents
         {
             return new ChargeCommandRejectedEvent(
                 _clock.GetCurrentInstant(),
-                command.CorrelationId,
                 command,
                 new[] { exception.Message });
         }

@@ -34,9 +34,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
                 {
                     Document = ConvertDocument(chargeCommandReceivedEvent.Command.Document),
                     ChargeOperation = ConvertChargeOperation(chargeCommandReceivedEvent.Command.ChargeOperation),
-                    CorrelationId = chargeCommandReceivedEvent.Command.CorrelationId,
                 },
-                CorrelationId = chargeCommandReceivedEvent.CorrelationId,
             };
 
             ConvertPoints(chargeCommandReceivedContract, chargeCommandReceivedEvent.Command.ChargeOperation.Points);

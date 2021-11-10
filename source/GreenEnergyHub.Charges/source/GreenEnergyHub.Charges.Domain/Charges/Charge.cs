@@ -28,7 +28,6 @@ namespace GreenEnergyHub.Charges.Domain.Charges
             string name,
             string description,
             string owner,
-            string correlationId,
             Instant startDateTime,
             Instant? endDateTime,
             ChargeType type,
@@ -44,7 +43,6 @@ namespace GreenEnergyHub.Charges.Domain.Charges
             Name = name;
             Description = description;
             Owner = owner;
-            CorrelationId = correlationId;
             StartDateTime = startDateTime;
             EndDateTime = endDateTime.TimeOrEndDefault();
             Type = type;
@@ -113,7 +111,5 @@ namespace GreenEnergyHub.Charges.Domain.Charges
         public Resolution Resolution { get; }
 
         public List<Point> Points { get; }
-
-        public string CorrelationId { get; }
     }
 }

@@ -39,13 +39,11 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
         {
             var receivedEvent = new ChargeLinkCommandReceivedEvent(
                 _clock.GetCurrentInstant(),
-                command.CorrelationId!,
                 new List<ChargeLinkCommand> { command });
 
             await _messageDispatcher.DispatchAsync(receivedEvent).ConfigureAwait(false);
 
             var chargeLinksMessageResult = ChargeLinksMessageResult.CreateSuccess();
-            chargeLinksMessageResult.CorrelationId = command.CorrelationId;
 
             return chargeLinksMessageResult;
         }

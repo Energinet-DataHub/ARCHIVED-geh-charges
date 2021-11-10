@@ -40,8 +40,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Mapping
 
             // Act
             var chargeLinkCommandAcceptedEvent = factory.Create(
-                new List<ChargeLinkCommand> { firstChargeLinkCommand, secondChargeLinkCommand },
-                firstChargeLinkCommand.CorrelationId);
+                new List<ChargeLinkCommand> { firstChargeLinkCommand, secondChargeLinkCommand });
 
             // Assert
             var firstChargeLinkCommandOnEvent = chargeLinkCommandAcceptedEvent

@@ -25,7 +25,6 @@ namespace GreenEnergyHub.Charges.Infrastructure.Integration.Mappers
         protected override IInboundMessage Convert([NotNull]ChargeConfirmationContract confirmationContract)
         {
             return new Application.Charges.Acknowledgement.ChargeConfirmation(
-                confirmationContract.CorrelationId,
                 confirmationContract.Receiver,
                 (MarketParticipantRole)confirmationContract.ReceiverMarketParticipantRole,
                 confirmationContract.OriginalTransactionReference,

@@ -30,7 +30,6 @@ namespace GreenEnergyHub.Charges.Application.Charges.Acknowledgement
         public async Task HandleAsync([NotNull] ChargeCommandAcceptedEvent acceptedEvent)
         {
             var confirmation = new ChargeConfirmation(
-                acceptedEvent.CorrelationId,
                 acceptedEvent.Command.Document.Sender.Id,
                 acceptedEvent.Command.Document.Sender.BusinessProcessRole,
                 acceptedEvent.Command.ChargeOperation.Id,

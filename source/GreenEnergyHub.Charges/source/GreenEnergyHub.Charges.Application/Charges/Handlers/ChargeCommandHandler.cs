@@ -33,7 +33,7 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
 
         public async Task HandleAsync([NotNull] ChargeCommand command)
         {
-            var receivedEvent = new ChargeCommandReceivedEvent(_clock.GetCurrentInstant(), command.CorrelationId!, command);
+            var receivedEvent = new ChargeCommandReceivedEvent(_clock.GetCurrentInstant(), command);
             await _messageDispatcher.DispatchAsync(receivedEvent).ConfigureAwait(false);
         }
     }

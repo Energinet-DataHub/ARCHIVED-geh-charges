@@ -30,10 +30,9 @@ namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
         protected override IInboundMessage Convert([NotNull]GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandAccepted.ChargeLinkCommandAccepted chargeLinkCommandAcceptedContract)
         {
             return new ChargeLinkCommandAcceptedEvent(
-                chargeLinkCommandAcceptedContract.CorrelationId,
                 chargeLinkCommandAcceptedContract.ChargeLinkCommands.Select(
                     chargeLinkCommandContract =>
-                        new ChargeLinkCommand(chargeLinkCommandContract.CorrelationId)
+                        new ChargeLinkCommand
                 {
                   Document = ConvertDocument(chargeLinkCommandContract.Document),
                   ChargeLink = ConvertChargeLink(chargeLinkCommandContract.ChargeLink),
