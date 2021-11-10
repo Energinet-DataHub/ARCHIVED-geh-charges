@@ -142,12 +142,12 @@ Represents a charge link period.
 
 <a name=".CreateDefaultChargeLinks"></a>
 
-### [CreateDefaultChargeLinks](.././source/Energinet.Charges.Libraries/source/Contracts/CreateDefaultChargeLinks.proto)
+### [CreateDefaultChargeLinks](.././source/Contracts/CreateDefaultChargeLinks.proto)
 
 This request is used by the Metering Point domain as part of the 'Create metering point' process to request the Charges domain to link default charges for the newly created metering point and to create messages containing the default charge links and make them available to the relevant Market Participants.
 
 <a name=".CreateDefaultChargeLinksReply"></a>
 
-### [CreateDefaultChargeLinksReply](.././source/Energinet.Charges.Libraries/source/Contracts/CreateDefaultChargeLinksReply.proto)
+### [CreateDefaultChargeLinksReply](.././source/Contracts/CreateDefaultChargeLinksReply.proto)
 
 The Charges domain will use this reply to inform the Metering Point domain when the `CreateDefaultChargeLinks` request has been processed.
