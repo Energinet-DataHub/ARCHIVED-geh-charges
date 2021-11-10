@@ -11,46 +11,40 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-variable "resource_group_name" {
+variable subscription_id {
   type = string
 }
 
-variable "environment" {
-  type          = string
-  description   = "Short for environment name. Helps ensuring global uniqueness of resource names"
+variable resource_group_name {
+  type = string
 }
 
-variable "project" {
+variable environment_short {
   type          = string
-  description   = "Project that is running the infrastructure code"
+  description   = "Enviroment that the infrastructure code is deployed into."
 }
 
-variable "organisation" {
+variable environment_instance {
   type          = string
-  description   = "Organisation that is running the infrastructure code"
+  description   = "Enviroment instance that the infrastructure code is deployed into."
 }
 
-variable "tenant_id" {
+variable domain_name_short {
   type          = string
-  description   = "tenant id"
+  description   = "Name of the project this infrastructure is a part of."
 }
 
-variable "spn_object_id" {
+variable shared_resources_keyvault_name {
   type          = string
-  description   = "spn_object_id"
+  description   = "Name of the Key Vault, that contains the shared secrets"
 }
 
-variable "sharedresources_keyvault_name" {
+variable shared_resources_resource_group_name {
   type          = string
-  description   = "Name of key vault for shared secrets"
+  description   = "Name of the Resource Group, that contains the shared resources."
 }
 
-variable "sharedresources_resource_group_name" {
-  type          = string
-  description   = "Resource group containing shared resources"
-}
-
-variable "notification_email" {
+variable notification_email {
   type          = string
   description   = "Email address to send notifications to"
 }

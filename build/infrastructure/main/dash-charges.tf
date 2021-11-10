@@ -11,22 +11,20 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-data "azurerm_subscription" "current" {}
-
 data "template_file" "dash_charges_template" {
   template = file("${path.module}/dash-charges-template.json")
   vars = {
-	subscription_id          = data.azurerm_subscription.current.subscription_id
-	resouce_group_name       = data.azurerm_resource_group.main.name
-	application_insight_name = module.appi.name
-    service_bus_namespace    = module.sbn_charges.name
+    subscription_id          = data.azurerm_subscription.this.subscription_id
+    resouce_group_name       = azurerm_resource_group.this.name
+    application_insight_name = data.azurerm_key_vault_secret.appi_shared_name.value
+    service_bus_namespace    = module.sb_charges.name
   }
 }
 
 resource "azurerm_dashboard" "dash_charges" {
-  name                = "dash-${var.project}-${var.organisation}-${var.environment}"
-  resource_group_name = data.azurerm_resource_group.main.name
-  location            = data.azurerm_resource_group.main.location
+  name                = "dash-${lower(var.domain_name_short)}-${lower(var.environment_short)}-${lower(var.environment_instance)}"
+  resource_group_name = azurerm_resource_group.this.name
+  location            = azurerm_resource_group.this.location
   tags = {
     source         = "terraform",
     "hidden-title" = "Charges Domain"

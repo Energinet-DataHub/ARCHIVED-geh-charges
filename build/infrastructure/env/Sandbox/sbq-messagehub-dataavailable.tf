@@ -12,16 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-module "sbt_link_command_received" {
-  source              = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//azure/service-bus-topic?ref=5.1.0"
-
-  name                = "link-command-received"
-  namespace_name      = module.sb_charges.name
-  resource_group_name = azurerm_resource_group.this.name
-  subscriptions       = [
-    {
-      name                = "link-command-received-receiver"
-      max_delivery_count  = 1
-    },
-  ]
+module "sbq_messagehub_dataavailable" {
+  source              = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//service-bus-queue?ref=2.0.0"
+  name                = local.MESSAGEHUB_DATAAVAILABLE_QUEUE
+  namespace_name      = module.sbn_external_integration_events.name
+  resource_group_name = azurerm_resource_group.main.name
 }
