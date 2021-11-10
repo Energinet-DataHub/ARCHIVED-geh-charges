@@ -13,32 +13,46 @@
 // limitations under the License.
 
 using Azure.Messaging.ServiceBus;
+using Energinet.DataHub.Charges.Libraries.Models;
 using Energinet.DataHub.Charges.Libraries.ServiceBus;
 
 namespace Energinet.DataHub.Charges.Libraries.Providers
 {
     public class ServiceBusRequestSenderProvider : IServiceBusRequestSenderProvider
     {
+        private const string RequestQueueName = "create-link-request";
         private readonly ServiceBusClient _serviceBusClient;
-        private readonly string _replyToQueueName;
-        private readonly string _requestQueueName;
+        private readonly IServiceBusRequestSenderConfiguration _serviceBusRequestSenderConfiguration;
+        private readonly bool _useTestConfiguration;
         private ServiceBusRequestSender? _sender;
 
         public ServiceBusRequestSenderProvider(
             ServiceBusClient serviceBusClient,
-            string replyToQueueName,
-            string requestQueueName = "create-link-request")
+            IServiceBusRequestSenderConfiguration serviceBusRequestSenderConfiguration)
         {
             _serviceBusClient = serviceBusClient;
-            _replyToQueueName = replyToQueueName;
-            _requestQueueName = requestQueueName;
+            _serviceBusRequestSenderConfiguration = serviceBusRequestSenderConfiguration;
             _sender = null;
+            if (_serviceBusRequestSenderConfiguration is ServiceBusRequestSenderTestConfiguration)
+                _useTestConfiguration = true;
         }
 
         public IServiceBusRequestSender GetInstance()
         {
+            if (_useTestConfiguration)
+            {
+                var serviceBusRequestSenderTestConfiguration =
+                    (ServiceBusRequestSenderTestConfiguration)_serviceBusRequestSenderConfiguration;
+                _sender ??=
+                    new ServiceBusRequestSender(
+                        _serviceBusClient.CreateSender(serviceBusRequestSenderTestConfiguration.RequestQueueName),
+                        serviceBusRequestSenderTestConfiguration.ReplyQueueName);
+            }
+
             return _sender ??=
-                new ServiceBusRequestSender(_serviceBusClient.CreateSender(_requestQueueName), _replyToQueueName);
+                new ServiceBusRequestSender(
+                    _serviceBusClient.CreateSender(RequestQueueName),
+                    _serviceBusRequestSenderConfiguration.ReplyQueueName);
         }
     }
 }
