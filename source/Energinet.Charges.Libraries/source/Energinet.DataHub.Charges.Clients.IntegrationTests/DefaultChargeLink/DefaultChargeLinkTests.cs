@@ -36,7 +36,7 @@ namespace Energinet.DataHub.Charges.Clients.IntegrationTests.DefaultChargeLink
         {
             private readonly ServiceBusClient _serviceBusClient;
             private readonly ServiceBusTestListener _serviceBusTestListener;
-            private readonly IDefaultChargeLinkClientServiceBusRequestSenderProvider _defaultChargeLinkClientServiceBusRequestSenderProvider;
+            private readonly IServiceBusRequestSenderProvider _serviceBusRequestSenderProvider;
 
             public CreateDefaultChargeLinksRequestAsync(ChargesClientsFixture fixture, ITestOutputHelper testOutputHelper)
                 : base(fixture, testOutputHelper)
@@ -51,8 +51,8 @@ namespace Energinet.DataHub.Charges.Clients.IntegrationTests.DefaultChargeLink
                 _serviceBusClient = new ServiceBusClient(serviceBusConnectionString);
 
                 _serviceBusTestListener = new ServiceBusTestListener(Fixture);
-                _defaultChargeLinkClientServiceBusRequestSenderProvider =
-                    new DefaultChargeLinkClientServiceBusRequestSenderProvider(_serviceBusClient, replyToQueueName, requestQueueName);
+                _serviceBusRequestSenderProvider =
+                    new ServiceBusRequestSenderProvider(_serviceBusClient, replyToQueueName, requestQueueName);
             }
 
             public Task InitializeAsync()
@@ -73,7 +73,7 @@ namespace Energinet.DataHub.Charges.Clients.IntegrationTests.DefaultChargeLink
             {
                 // Arrange
                 using var result = await _serviceBusTestListener.ListenForMessageAsync().ConfigureAwait(false);
-                var sut = new DefaultChargeLinkClient(_defaultChargeLinkClientServiceBusRequestSenderProvider);
+                var sut = new DefaultChargeLinkClient(_serviceBusRequestSenderProvider);
 
                 // Act
                 await sut.CreateDefaultChargeLinksRequestAsync(createDefaultChargeLinksDto, correlationId).ConfigureAwait(false);

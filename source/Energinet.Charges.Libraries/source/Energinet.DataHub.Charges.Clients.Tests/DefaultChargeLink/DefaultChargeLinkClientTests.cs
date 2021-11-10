@@ -40,7 +40,7 @@ namespace Energinet.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.Defaul
         public async Task SendAsync_WhenAnyArgumentIsNull_ThrowsException(
             string meteringPointId,
             string correlationId,
-            [NotNull] [Frozen] Mock<IDefaultChargeLinkClientServiceBusRequestSenderProvider> serviceBusRequestSenderProviderMock)
+            [NotNull] [Frozen] Mock<IServiceBusRequestSenderProvider> serviceBusRequestSenderProviderMock)
         {
             // Arrange
             var createDefaultChargeLinksDto = meteringPointId != null ? new CreateDefaultChargeLinksDto(meteringPointId) : null;
@@ -56,7 +56,7 @@ namespace Energinet.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.Defaul
         [Theory]
         [InlineAutoDomainData]
         public async Task CreateDefaultChargeLinksRequestAsync_WhenInputIsValid_SendsMessage(
-            [NotNull] [Frozen] Mock<IDefaultChargeLinkClientServiceBusRequestSenderProvider> serviceBusRequestSenderProviderMock,
+            [NotNull] [Frozen] Mock<IServiceBusRequestSenderProvider> serviceBusRequestSenderProviderMock,
             [NotNull] [Frozen] Mock<IServiceBusRequestSender> serviceBusRequestSenderMock)
         {
             // Arrange
