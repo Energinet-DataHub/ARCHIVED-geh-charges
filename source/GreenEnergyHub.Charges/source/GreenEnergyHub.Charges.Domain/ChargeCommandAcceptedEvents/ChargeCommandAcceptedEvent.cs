@@ -13,7 +13,6 @@
 // limitations under the License.
 
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using GreenEnergyHub.Charges.Domain.ChargeCommands;
 using GreenEnergyHub.Charges.Domain.Messages.Events;
 using NodaTime;
@@ -24,9 +23,8 @@ namespace GreenEnergyHub.Charges.Domain.ChargeCommandAcceptedEvents
     {
         public ChargeCommandAcceptedEvent(
             Instant publishedTime,
-            string correlationId,
             [NotNull] ChargeCommand command)
-            : base(publishedTime, correlationId)
+            : base(publishedTime)
         {
             Command = command;
         }

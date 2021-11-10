@@ -38,7 +38,6 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
     public class ChargeLinkRepositoryTests : IClassFixture<ChargesDatabaseFixture>
     {
         private const string ExpectedOperationId = "expected-operation-id";
-        private const string ExpectedCorrelationId = "expected-correlation-id";
         private const int ExpectedOperationDetailsFactor = 127;
 
         private readonly Instant _expectedPeriodDetailsStartDateTime = SystemClock.Instance.GetCurrentInstant();
@@ -57,7 +56,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
             await using var chargesDatabaseWriteContext = _databaseManager.CreateDbContext();
 
             var ids = SeedDatabase(chargesDatabaseWriteContext);
-            var operation = new ChargeLinkOperation(ExpectedOperationId, ExpectedCorrelationId);
+            var operation = new ChargeLinkOperation(ExpectedOperationId);
 
             var expected = CreateNewExpectedChargeLink(ids, operation);
             var sut = new ChargeLinkRepository(chargesDatabaseWriteContext);
@@ -81,10 +80,10 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
             await using var chargesDatabaseWriteContext = _databaseManager.CreateDbContext();
             var ids = SeedDatabase(chargesDatabaseWriteContext);
 
-            var firstOperation = new ChargeLinkOperation(ExpectedOperationId, ExpectedCorrelationId);
+            var firstOperation = new ChargeLinkOperation(ExpectedOperationId);
             var firstExpected = CreateNewExpectedChargeLink(ids, firstOperation);
 
-            var secondOperation = new ChargeLinkOperation("second" + ExpectedOperationId, "second" + ExpectedCorrelationId);
+            var secondOperation = new ChargeLinkOperation("second" + ExpectedOperationId);
             var secondExpected = CreateNewExpectedChargeLink(ids, secondOperation);
 
             var sut = new ChargeLinkRepository(chargesDatabaseWriteContext);
@@ -127,7 +126,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
             context.MarketParticipants.Add(marketParticipant);
             context.SaveChanges(); // Sets marketParticipant.RowId
 
-            var charge = new Charges.Infrastructure.Context.Model.Charge
+            var charge = new Infrastructure.Context.Model.Charge
             {
                 Currency = "DKK",
                 SenderProvidedChargeId = "charge id",

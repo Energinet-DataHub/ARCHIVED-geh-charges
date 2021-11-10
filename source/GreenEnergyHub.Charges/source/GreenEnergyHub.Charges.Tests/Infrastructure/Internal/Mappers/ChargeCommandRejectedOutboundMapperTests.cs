@@ -19,7 +19,6 @@ using GreenEnergyHub.Charges.Domain.ChargeCommandRejectedEvents;
 using GreenEnergyHub.Charges.Domain.ChargeCommands;
 using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeCommandRejected;
 using GreenEnergyHub.Charges.Infrastructure.Internal.Mappers;
-using GreenEnergyHub.Charges.TestCore;
 using GreenEnergyHub.Charges.TestCore.Attributes;
 using GreenEnergyHub.Charges.TestCore.Protobuf;
 using NodaTime;
@@ -54,7 +53,6 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Internal.Mappers
             var reasons = new List<string> { "reason 1", "reason 2" };
             var chargeCommandRejectedEvent = new ChargeCommandRejectedEvent(
                 SystemClock.Instance.GetCurrentInstant(),
-                chargeCommand.CorrelationId,
                 chargeCommand,
                 reasons);
             UpdateInstantsToValidTimes(chargeCommandRejectedEvent);

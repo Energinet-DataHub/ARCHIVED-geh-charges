@@ -13,12 +13,11 @@
 // limitations under the License.
 
 using System.Diagnostics.CodeAnalysis;
-using System.IO;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application.ChargeLinks.Handlers;
+using GreenEnergyHub.Charges.Application.ChargeLinks.Handlers.Message;
 using GreenEnergyHub.Charges.Domain.ChargeLinkCommands;
 using GreenEnergyHub.Charges.Infrastructure.Messaging;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
 
@@ -42,30 +41,23 @@ namespace GreenEnergyHub.Charges.FunctionHost.ChargeLinks
         }
 
         [Function(IngestionFunctionNames.ChargeLinkIngestion)]
-        public async Task<IActionResult> RunAsync(
+        public async Task<HttpResponseData> RunAsync(
             [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = null)]
             [NotNull] HttpRequestData req)
         {
-            var command = await GetChargeLinkCommandAsync(req.Body).ConfigureAwait(false);
+            var command = (ChargeLinkCommand)await _messageExtractor.ExtractAsync(req.Body).ConfigureAwait(false);
 
             var chargeLinksMessageResult = await _chargeLinkCommandHandler.HandleAsync(command).ConfigureAwait(false);
 
-            return new OkObjectResult(chargeLinksMessageResult);
+            return await CreateJsonResponseAsync(req, chargeLinksMessageResult).ConfigureAwait(false);
         }
 
-        private async Task<ChargeLinkCommand> GetChargeLinkCommandAsync(Stream stream)
+        private async Task<HttpResponseData> CreateJsonResponseAsync(HttpRequestData req, ChargeLinksMessageResult? chargeLinksMessageResult)
         {
-            var message = await ConvertStreamToBytesAsync(stream).ConfigureAwait(false);
-            var command = (ChargeLinkCommand)await _messageExtractor.ExtractAsync(message).ConfigureAwait(false);
+            var response = req.CreateResponse();
+            await response.WriteAsJsonAsync(chargeLinksMessageResult);
 
-            return command;
-        }
-
-        private static async Task<byte[]> ConvertStreamToBytesAsync(Stream stream)
-        {
-            await using var ms = new MemoryStream();
-            await stream.CopyToAsync(ms).ConfigureAwait(false);
-            return ms.ToArray();
+            return response;
         }
     }
 }

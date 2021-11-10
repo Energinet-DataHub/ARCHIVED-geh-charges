@@ -56,7 +56,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.ChargeLinks
                 (CreateLinkCommandEvent)await _messageExtractor.ExtractAsync(message).ConfigureAwait(false);
 
             await _createLinkCommandRequestHandler
-                .HandleAsync(createLinkCommandEvent, _correlationContext.Id).ConfigureAwait(false);
+                .HandleAsync(createLinkCommandEvent).ConfigureAwait(false);
         }
     }
 }

@@ -29,13 +29,11 @@ option csharp_namespace = "GreenEnergyHub.Charges.Infrastructure.Internal.Charge
 message ChargeLinkCommandAccepted {
    google.protobuf.Timestamp published_time = 1;
    repeated ChargeLinkCommand charge_link_commands = 2;
-   string correlation_id = 3; // Unique identifier used inside GEH to identify a message across domains and inside domains
-  }
+}
 
 message ChargeLinkCommand {
   Document document = 1;
   ChargeLink charge_link = 2;
-  string correlation_id = 3; // Unique identifier used inside GEH to identify a message across domains and inside domains
 }
 
 message Document {

@@ -29,6 +29,7 @@ namespace GreenEnergyHub.Charges.FunctionHost
                 .ConfigureFunctionsWorkerDefaults(builder =>
                 {
                     builder.UseMiddleware<CorrelationIdMiddleware>();
+                    builder.UseMiddleware<FunctionTelemetryScopeMiddleware>();
                     builder.UseMiddleware<MessageMetaDataMiddleware>();
                     builder.UseMiddleware<FunctionInvocationLoggingMiddleware>();
                 })

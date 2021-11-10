@@ -27,7 +27,6 @@ namespace GreenEnergyHub.Charges.Infrastructure.Integration.Mappers
         protected override IInboundMessage Convert([NotNull]ChargeRejectionContract rejectionContract)
         {
             return new Application.Charges.Acknowledgement.ChargeRejection(
-                rejectionContract.CorrelationId,
                 rejectionContract.Receiver,
                 (MarketParticipantRole)rejectionContract.ReceiverMarketParticipantRole,
                 rejectionContract.OriginalTransactionReference,

@@ -24,7 +24,6 @@ namespace GreenEnergyHub.Charges.Domain.ChargeCommands
         public static void ThrowExceptionIfRequiredPropertyIsNull(ChargeCommand chargeCommand)
         {
             if (chargeCommand == null) throw new ArgumentNullException(nameof(chargeCommand));
-            if (string.IsNullOrWhiteSpace(chargeCommand.CorrelationId)) throw new ArgumentException(chargeCommand.CorrelationId);
 
             CheckDocument(chargeCommand.Document);
             CheckChargeOperation(chargeCommand.ChargeOperation);

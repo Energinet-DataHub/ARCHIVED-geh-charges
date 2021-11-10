@@ -25,10 +25,5 @@ namespace GreenEnergyHub.Charges.Domain.Messages.Events
         /// The time the event occurred.
         /// </summary>
         Instant PublishedTime { get; }
-
-        /// <summary>
-        /// An ID that correlates data to an original message.
-        /// </summary>
-        string CorrelationId { get; }
     }
 }

@@ -16,11 +16,8 @@ using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Threading.Tasks;
 using System.Xml;
-using GreenEnergyHub.Charges.Application;
 using GreenEnergyHub.Charges.Domain.ChargeLinkCommands;
-using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.Domain.SharedDtos;
-using GreenEnergyHub.Charges.Infrastructure.Correlation;
 using GreenEnergyHub.Charges.Infrastructure.MarketDocument.Cim;
 using GreenEnergyHub.Charges.Infrastructure.Messaging.Serialization;
 using GreenEnergyHub.Messaging.Transport;
@@ -30,23 +27,16 @@ namespace GreenEnergyHub.Charges.Infrastructure.ChargeLinkBundle.Cim
 {
     public class ChargeLinkCommandConverter : DocumentConverter
     {
-        private readonly ICorrelationContext _correlationContext;
-
-        public ChargeLinkCommandConverter(
-            ICorrelationContext correlationContext,
-            IClock clock)
+        public ChargeLinkCommandConverter(IClock clock)
             : base(clock)
         {
-            _correlationContext = correlationContext;
         }
 
         protected override async Task<IInboundMessage> ConvertSpecializedContentAsync(
             [NotNull] XmlReader reader,
             [NotNull] DocumentDto document)
         {
-            var correlationId = _correlationContext.Id;
-
-            return new ChargeLinkCommand(correlationId)
+            return new ChargeLinkCommand
                 {
                     Document = document,
                     ChargeLink = await ParseChargeLinkAsync(reader).ConfigureAwait(false),

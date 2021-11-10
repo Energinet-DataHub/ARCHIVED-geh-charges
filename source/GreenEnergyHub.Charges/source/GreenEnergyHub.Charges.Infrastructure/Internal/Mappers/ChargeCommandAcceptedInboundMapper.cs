@@ -35,8 +35,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
         {
             return new ChargeCommandAcceptedEvent(
                 chargeCommandAcceptedContract.PublishedTime.ToInstant(),
-                chargeCommandAcceptedContract.CorrelationId,
-                new ChargeCommand(chargeCommandAcceptedContract.Command.CorrelationId)
+                new ChargeCommand
             {
                 Document = ConvertDocument(chargeCommandAcceptedContract.Command.Document),
                 ChargeOperation = ConvertChargeOperation(chargeCommandAcceptedContract.Command.ChargeOperation),
