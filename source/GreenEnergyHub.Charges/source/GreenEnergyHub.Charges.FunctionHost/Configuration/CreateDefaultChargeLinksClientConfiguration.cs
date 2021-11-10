@@ -16,6 +16,7 @@ using Azure.Messaging.ServiceBus;
 using GreenEnergyHub.Charges.Application.ChargeLinks.CreateDefaultChargeLinkReplier;
 using GreenEnergyHub.Charges.FunctionHost.Common;
 using GreenEnergyHub.Charges.Infrastructure.CreateDefaultChargeLinkReplier;
+using GreenEnergyHub.Charges.Infrastructure.ServiceBusReplySenderProvider;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace GreenEnergyHub.Charges.FunctionHost.Configuration
