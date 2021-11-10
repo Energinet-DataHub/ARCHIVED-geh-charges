@@ -38,7 +38,6 @@ using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandReceived;
 using GreenEnergyHub.Charges.Infrastructure.MessageMetaData;
 using GreenEnergyHub.Charges.Infrastructure.Messaging.Registration;
 using GreenEnergyHub.Charges.Infrastructure.Repositories;
-using GreenEnergyHub.Charges.Infrastructure.ToBeRenamedAndSplitted;
 using GreenEnergyHub.Iso8601;
 using GreenEnergyHub.Json;
 using GreenEnergyHub.Messaging.Protobuf;

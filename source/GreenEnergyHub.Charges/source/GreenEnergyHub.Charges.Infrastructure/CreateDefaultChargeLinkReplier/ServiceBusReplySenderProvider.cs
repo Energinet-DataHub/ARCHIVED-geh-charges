@@ -15,7 +15,7 @@
 using System.Collections.Generic;
 using Azure.Messaging.ServiceBus;
 
-namespace GreenEnergyHub.Charges.Infrastructure.ToBeRenamedAndSplitted
+namespace GreenEnergyHub.Charges.Infrastructure.CreateDefaultChargeLinkReplier
 {
     public class ServiceBusReplySenderProvider : IServiceBusReplySenderProvider
     {

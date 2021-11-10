@@ -17,7 +17,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using Azure.Messaging.ServiceBus;
 
-namespace GreenEnergyHub.Charges.Infrastructure.ToBeRenamedAndSplitted
+namespace GreenEnergyHub.Charges.Infrastructure.CreateDefaultChargeLinkReplier
 {
     public sealed class ServiceBusReplySender : IServiceBusReplySender
     {

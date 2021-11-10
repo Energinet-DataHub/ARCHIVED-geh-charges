@@ -36,7 +36,7 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
         private readonly IMessageDispatcher<ChargeLinkCommandReceivedEvent> _messageDispatcher;
         private readonly IClock _clock;
         private readonly IMeteringPointRepository _meteringPointRepository;
-        private readonly IDefaultChargeLinkClient _defaultChargeLinkClient;
+        private readonly ICreateDefaultChargeLinksReplier _createDefaultChargeLinksReplier;
         private readonly IMessageMetaDataContext _messageMetaDataContext;
         private readonly ILogger _logger;
 
@@ -46,7 +46,7 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
             IMessageDispatcher<ChargeLinkCommandReceivedEvent> messageDispatcher,
             IClock clock,
             IMeteringPointRepository meteringPointRepository,
-            IDefaultChargeLinkClient defaultChargeLinkClient,
+            ICreateDefaultChargeLinksReplier createDefaultChargeLinksReplier,
             IMessageMetaDataContext messageMetaDataContext,
             ILoggerFactory loggerFactory)
         {
@@ -55,7 +55,7 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
             _messageDispatcher = messageDispatcher;
             _clock = clock;
             _meteringPointRepository = meteringPointRepository;
-            _defaultChargeLinkClient = defaultChargeLinkClient;
+            _createDefaultChargeLinksReplier = createDefaultChargeLinksReplier;
             _messageMetaDataContext = messageMetaDataContext;
             _logger = loggerFactory.CreateLogger(nameof(CreateLinkCommandRequestHandler));
         }
@@ -118,8 +118,8 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
 
         private async Task ReplyWithFailedAsync(string meteringPointId, string correlationId, string replyTo)
         {
-            await _defaultChargeLinkClient
-                .CreateDefaultChargeLinksFailedReplyAsync(
+            await _createDefaultChargeLinksReplier
+                .ReplyWithFailedAsync(
                         meteringPointId,
                         ErrorCode.MeteringPointUnknown,
                         replyTo,
@@ -128,8 +128,8 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
 
         private async Task ReplyWithSucceededAsync(string meteringPointId, string correlationId, string replyTo)
         {
-            await _defaultChargeLinkClient
-                .CreateDefaultChargeLinksSucceededReplyAsync(
+            await _createDefaultChargeLinksReplier
+                .ReplyWithSucceededAsync(
                     meteringPointId,
                     false,
                     replyTo,

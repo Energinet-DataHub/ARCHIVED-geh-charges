@@ -18,15 +18,15 @@ using GreenEnergyHub.Charges.InternalShared;
 
 namespace GreenEnergyHub.Charges.Application.ToBeRenamedAndSplitted
 {
-    public interface IDefaultChargeLinkClient
+    public interface ICreateDefaultChargeLinksReplier
     {
-        Task CreateDefaultChargeLinksFailedReplyAsync(
+        Task ReplyWithFailedAsync(
             [NotNull] string meteringPointId,
             ErrorCode errorCode,
             string replyTo,
             string correlationId);
 
-        Task CreateDefaultChargeLinksSucceededReplyAsync(
+        Task ReplyWithSucceededAsync(
             [NotNull] string meteringPointId,
             bool didCreateChargeLinks,
             string replyTo,

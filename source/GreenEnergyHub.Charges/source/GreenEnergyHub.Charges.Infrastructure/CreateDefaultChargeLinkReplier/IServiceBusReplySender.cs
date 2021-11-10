@@ -14,8 +14,11 @@
 
 using System.Threading.Tasks;
 
-namespace GreenEnergyHub.Charges.Infrastructure.ToBeRenamedAndSplitted
+namespace GreenEnergyHub.Charges.Infrastructure.CreateDefaultChargeLinkReplier
 {
+    /// <summary>
+    /// Sends the reply to the recipient queue configured in the ServiceBusReplySender.
+    /// </summary>
     public interface IServiceBusReplySender
     {
         Task SendReplyAsync(byte[] data, string correlationId);

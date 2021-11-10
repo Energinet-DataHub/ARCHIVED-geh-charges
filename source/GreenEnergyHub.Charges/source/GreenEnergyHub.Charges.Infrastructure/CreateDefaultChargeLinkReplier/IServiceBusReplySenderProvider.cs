@@ -12,10 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace GreenEnergyHub.Charges.Infrastructure.ToBeRenamedAndSplitted
+namespace GreenEnergyHub.Charges.Infrastructure.CreateDefaultChargeLinkReplier
 {
     public interface IServiceBusReplySenderProvider
     {
+        /// <summary>
+        /// Returns existing sender, or creates a new based on recipient queue name.
+        /// </summary>
+        /// <param name="replyTo"></param>
         IServiceBusReplySender GetInstance(string replyTo);
     }
 }

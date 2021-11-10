@@ -15,7 +15,7 @@
 using Azure.Messaging.ServiceBus;
 using GreenEnergyHub.Charges.Application.ToBeRenamedAndSplitted;
 using GreenEnergyHub.Charges.FunctionHost.Common;
-using GreenEnergyHub.Charges.Infrastructure.ToBeRenamedAndSplitted;
+using GreenEnergyHub.Charges.Infrastructure.CreateDefaultChargeLinkReplier;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace GreenEnergyHub.Charges.FunctionHost.Configuration
@@ -28,7 +28,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
                 EnvironmentHelper.GetEnv(EnvironmentSettingNames.DataHubSenderConnectionString);
             var serviceBusClient = new ServiceBusClient(serviceBusConnectionString);
             serviceCollection.AddSingleton<IServiceBusReplySenderProvider>(_ => new ServiceBusReplySenderProvider(serviceBusClient));
-            serviceCollection.AddSingleton<IDefaultChargeLinkClient, DefaultChargeLinkClient>();
+            serviceCollection.AddSingleton<ICreateDefaultChargeLinksReplier, CreateDefaultChargeLinksReplier>();
         }
     }
 }

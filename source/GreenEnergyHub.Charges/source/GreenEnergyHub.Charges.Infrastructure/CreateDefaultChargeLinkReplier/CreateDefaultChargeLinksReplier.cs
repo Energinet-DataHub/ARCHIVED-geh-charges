@@ -20,34 +20,28 @@ using Google.Protobuf;
 using GreenEnergyHub.Charges.Application.ToBeRenamedAndSplitted;
 using GreenEnergyHub.Charges.InternalShared;
 
-namespace GreenEnergyHub.Charges.Infrastructure.ToBeRenamedAndSplitted
+namespace GreenEnergyHub.Charges.Infrastructure.CreateDefaultChargeLinkReplier
 {
     /// <summary>
     /// This class must be thread safe.
     /// </summary>
-    public sealed class DefaultChargeLinkClient : IDefaultChargeLinkClient
+    public sealed class CreateDefaultChargeLinksReplier : ICreateDefaultChargeLinksReplier
     {
         private readonly IServiceBusReplySenderProvider _serviceBusReplySenderProvider;
 
-        public DefaultChargeLinkClient([NotNull] IServiceBusReplySenderProvider serviceBusReplySenderProvider)
+        public CreateDefaultChargeLinksReplier([NotNull] IServiceBusReplySenderProvider serviceBusReplySenderProvider)
         {
             _serviceBusReplySenderProvider = serviceBusReplySenderProvider;
         }
 
-        public async Task CreateDefaultChargeLinksSucceededReplyAsync(
+        public async Task ReplyWithSucceededAsync(
             [NotNull] string meteringPointId,
             bool didCreateChargeLinks,
             [NotNull] string replyTo,
             [NotNull] string correlationId)
         {
-            if (meteringPointId == null)
-                throw new ArgumentNullException(nameof(meteringPointId));
+            ValidateParameters(meteringPointId, replyTo, correlationId);
 
-            if (replyTo == null)
-                throw new ArgumentNullException(nameof(replyTo));
-
-            if (correlationId == null)
-                throw new ArgumentNullException(nameof(correlationId));
             var createDefaultChargeLinks = new CreateDefaultChargeLinksReply
             {
                 MeteringPointId = meteringPointId,
@@ -58,23 +52,16 @@ namespace GreenEnergyHub.Charges.Infrastructure.ToBeRenamedAndSplitted
                 },
             };
 
-            await SendReplyAsync(replyTo, correlationId, createDefaultChargeLinks);
+            await SendReplyAsync(createDefaultChargeLinks, replyTo, correlationId);
         }
 
-        public async Task CreateDefaultChargeLinksFailedReplyAsync(
+        public async Task ReplyWithFailedAsync(
             [NotNull] string meteringPointId,
             ErrorCode errorCode,
             [NotNull] string replyTo,
             [NotNull] string correlationId)
         {
-            if (meteringPointId == null)
-                throw new ArgumentNullException(nameof(meteringPointId));
-
-            if (replyTo == null)
-                throw new ArgumentNullException(nameof(replyTo));
-
-            if (correlationId == null)
-                throw new ArgumentNullException(nameof(correlationId));
+            ValidateParameters(meteringPointId, replyTo, correlationId);
 
             var createDefaultChargeLinks = new CreateDefaultChargeLinksReply
             {
@@ -87,18 +74,30 @@ namespace GreenEnergyHub.Charges.Infrastructure.ToBeRenamedAndSplitted
                     },
             };
 
-            await SendReplyAsync(replyTo, correlationId, createDefaultChargeLinks);
+            await SendReplyAsync(createDefaultChargeLinks, replyTo, correlationId);
         }
 
         private async Task SendReplyAsync(
+            CreateDefaultChargeLinksReply createDefaultChargeLinks,
             string replyTo,
-            string correlationId,
-            CreateDefaultChargeLinksReply createDefaultChargeLinks)
+            string correlationId)
         {
             var sender = _serviceBusReplySenderProvider.GetInstance(replyTo);
 
             await sender.SendReplyAsync(createDefaultChargeLinks.ToByteArray(), correlationId)
                 .ConfigureAwait(false);
+        }
+
+        private static void ValidateParameters(string meteringPointId, string replyTo, string correlationId)
+        {
+            if (meteringPointId == null)
+                throw new ArgumentNullException(nameof(meteringPointId));
+
+            if (replyTo == null)
+                throw new ArgumentNullException(nameof(replyTo));
+
+            if (correlationId == null)
+                throw new ArgumentNullException(nameof(correlationId));
         }
     }
 }
