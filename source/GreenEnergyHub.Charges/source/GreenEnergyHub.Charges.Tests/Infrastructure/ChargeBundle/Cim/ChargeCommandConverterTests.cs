@@ -25,12 +25,9 @@ using GreenEnergyHub.Charges.Domain.ChargeCommands;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.Infrastructure.ChargeBundle.Cim;
-using GreenEnergyHub.Charges.Infrastructure.Correlation;
 using GreenEnergyHub.Charges.TestCore;
 using GreenEnergyHub.Charges.TestCore.Attributes;
 using GreenEnergyHub.Iso8601;
-using Microsoft.Azure.Amqp.Framing;
-using Microsoft.Extensions.Azure;
 using Moq;
 using NodaTime;
 using NodaTime.Text;
@@ -63,7 +60,6 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.ChargeBundle.Cim
             var actual = (ChargeCommand)await sut.ConvertAsync(reader).ConfigureAwait(false);
 
             // Assert
-            actual.CorrelationId.Should().Be(correlationId);
 
             // Document
             actual.Document.Id.Should().Be("25369874");
@@ -136,7 +132,6 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.ChargeBundle.Cim
             var actual = (ChargeCommand)await sut.ConvertAsync(reader).ConfigureAwait(false);
 
             // Assert
-            actual.CorrelationId.Should().Be(correlationId);
 
             // Charge operation
             actual.ChargeOperation.Id.Should().Be("36251479");
@@ -183,7 +178,6 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.ChargeBundle.Cim
             var actual = (ChargeCommand)await sut.ConvertAsync(reader).ConfigureAwait(false);
 
             // Assert
-            actual.CorrelationId.Should().Be(correlationId);
 
             // Charge operation, should only be partially filled
             actual.ChargeOperation.Id.Should().Be("36251480");
@@ -242,15 +236,6 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.ChargeBundle.Cim
 
             var stream = GetEmbeddedResource(embeddedFile);
             return XmlReader.Create(stream, new XmlReaderSettings { Async = true });
-        }
-
-        private static async Task<byte[]> GetEmbeddedResourceAsBytes(string path)
-        {
-            var input = GetEmbeddedResource(path);
-
-            var byteInput = new byte[input.Length];
-            await input.ReadAsync(byteInput.AsMemory(0, (int)input.Length)).ConfigureAwait(false);
-            return byteInput;
         }
 
         private static Stream GetEmbeddedResource(string path)

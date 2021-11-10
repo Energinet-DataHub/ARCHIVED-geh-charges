@@ -27,14 +27,14 @@ namespace GreenEnergyHub.Charges.FunctionHost.Charges
     {
         public const string FunctionName = nameof(ChargeCommandAcceptedReceiverEndpoint);
         private readonly MessageExtractor<ChargeCommandAcceptedContract> _messageExtractor;
-        private readonly IChargeCommandAcceptedEventHandler _chargeCommandAcceptedEventHandler;
+        private readonly IChargeIntegrationEventsPublisher _chargeIntegrationEventsPublisher;
 
         public ChargeCommandAcceptedReceiverEndpoint(
             MessageExtractor<ChargeCommandAcceptedContract> messageExtractor,
-            IChargeCommandAcceptedEventHandler chargeCommandAcceptedEventHandler)
+            IChargeIntegrationEventsPublisher chargeIntegrationEventsPublisher)
         {
             _messageExtractor = messageExtractor;
-            _chargeCommandAcceptedEventHandler = chargeCommandAcceptedEventHandler;
+            _chargeIntegrationEventsPublisher = chargeIntegrationEventsPublisher;
         }
 
         [Function(FunctionName)]
@@ -49,7 +49,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Charges
                 .ExtractAsync(message)
                 .ConfigureAwait(false);
 
-            await _chargeCommandAcceptedEventHandler.HandleAsync(chargeCommandAcceptedEvent).ConfigureAwait(false);
+            await _chargeIntegrationEventsPublisher.PublishAsync(chargeCommandAcceptedEvent).ConfigureAwait(false);
         }
     }
 }

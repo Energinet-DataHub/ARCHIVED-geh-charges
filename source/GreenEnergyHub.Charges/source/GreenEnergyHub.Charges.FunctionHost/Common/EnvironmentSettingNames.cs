@@ -79,6 +79,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Common
         public const string ConsumptionMeteringPointCreatedTopicName = "CONSUMPTION_METERING_POINT_CREATED_TOPIC_NAME";
         public const string ConsumptionMeteringPointCreatdSubscriptionName = "CONSUMPTION_METERING_POINT_CREATED_SUBSCRIPTION_NAME";
 
+        public const string ChargeCreatedTopicName = "CHARGE_CREATED_TOPIC_NAME";
         public const string ChargePricesUpdatedTopicName = "CHARGE_PRICES_UPDATED_TOPIC_NAME";
     }
 }

@@ -36,8 +36,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Internal.Mappers
             [NotNull]ChargeCommandReceivedOutboundMapper sut)
         {
             // Arrange
-            var guid = Guid.NewGuid().ToString();
-            ChargeCommandReceivedEvent chargeCommandReceivedEvent = new(SystemClock.Instance.GetCurrentInstant(), guid, chargeCommand);
+            ChargeCommandReceivedEvent chargeCommandReceivedEvent = new(SystemClock.Instance.GetCurrentInstant(), chargeCommand);
             UpdateInstantsToValidTimes(chargeCommandReceivedEvent);
 
             // Act

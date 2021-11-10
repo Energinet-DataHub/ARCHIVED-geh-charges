@@ -30,7 +30,7 @@ limitations under the License.
             <cim:ChargeType>
                 <cim:chargeTypeOwner_MarketParticipant.mRID codingScheme="A10">8100000000030</cim:chargeTypeOwner_MarketParticipant.mRID>
                 <cim:type>D03</cim:type>
-                <cim:mRID>47123</cim:mRID>
+                <cim:mRID>{{$randomCharacters}}</cim:mRID>
                 <cim:name>Electric charge</cim:name>
                 <cim:description>The charge description</cim:description>
                 <cim:priceTimeFrame_Period.resolution>P1D</cim:priceTimeFrame_Period.resolution>

@@ -23,11 +23,6 @@ namespace GreenEnergyHub.Charges.Domain.ChargeLinkCommands
 {
     public class ChargeLinkCommand : CommandBase
     {
-        public ChargeLinkCommand([NotNull] string correlationId)
-            : base(correlationId)
-        {
-        }
-
         public DocumentDto Document { get; set; }
 
         public ChargeLinkDto ChargeLink { get; set; }
