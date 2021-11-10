@@ -13,9 +13,15 @@
 # limitations under the License.
 
 module "sbt_command_rejected" {
-  source              = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//service-bus-topic?ref=2.0.0"
-  name                = "sbt-command-rejected"
-  namespace_name      = module.sbn_charges.name
-  resource_group_name = data.azurerm_resource_group.main.name
-  dependencies        = [module.sbn_charges]
+  source              = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//azure/service-bus-topic?ref=5.1.0"
+
+  name                = "command-rejected"
+  namespace_name      = module.sb_charges.name
+  resource_group_name = azurerm_resource_group.this.name
+  subscriptions       = [
+    {
+      name                = "command-rejected"
+      max_delivery_count  = 1
+    },
+  ]
 }
