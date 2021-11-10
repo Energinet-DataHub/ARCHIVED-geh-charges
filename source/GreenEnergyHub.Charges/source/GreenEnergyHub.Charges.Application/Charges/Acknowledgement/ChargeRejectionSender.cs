@@ -30,7 +30,6 @@ namespace GreenEnergyHub.Charges.Application.Charges.Acknowledgement
         public async Task HandleAsync([NotNull] ChargeCommandRejectedEvent rejectedEvent)
         {
             var chargeRejection = new ChargeRejection(
-                rejectedEvent.CorrelationId,
                 rejectedEvent.Command.Document.Sender.Id,
                 rejectedEvent.Command.Document.Sender.BusinessProcessRole,
                 rejectedEvent.Command.ChargeOperation.Id,

@@ -18,19 +18,11 @@ namespace GreenEnergyHub.Charges.Domain.Messages
 {
     public abstract class MessageBase : IMessage
     {
-        protected MessageBase(string correlationId)
+        protected MessageBase()
         {
             Transaction = Transaction.NewTransaction();
-            CorrelationId = correlationId;
         }
 
         public Transaction Transaction { get; set; }
-
-        public string CorrelationId { get; private set; }
-
-        public void SetCorrelationId(string correlationId)
-        {
-            CorrelationId = correlationId;
-        }
     }
 }

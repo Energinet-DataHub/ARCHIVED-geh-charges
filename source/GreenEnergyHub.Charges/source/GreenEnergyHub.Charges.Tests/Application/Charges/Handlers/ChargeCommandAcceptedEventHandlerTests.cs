@@ -36,10 +36,10 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
             [NotNull] [Frozen] Mock<IChargePublisher> chargeSender,
             [NotNull] [Frozen] Mock<IChargePricesUpdatedPublisher> chargePricesUpdatedSender,
             [NotNull] ChargeCommandAcceptedEvent chargeCommandAcceptedEvent,
-            [NotNull] ChargeCommandAcceptedEventHandler sut)
+            [NotNull] ChargeIntegrationEventsPublisher sut)
         {
             // Act
-            await sut.HandleAsync(chargeCommandAcceptedEvent).ConfigureAwait(false);
+            await sut.PublishAsync(chargeCommandAcceptedEvent).ConfigureAwait(false);
 
             // Assert
             chargeSender.Verify(x => x.PublishChargeCreatedAsync(It.IsAny<ChargeCommandAcceptedEvent>()), Times.Once);
@@ -52,13 +52,13 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
             [NotNull] [Frozen] Mock<IChargePublisher> chargeSender,
             [NotNull] [Frozen] Mock<IChargePricesUpdatedPublisher> chargePricesUpdatedSender,
             [NotNull] ChargeCommandAcceptedEvent chargeCommandAcceptedEvent,
-            [NotNull] ChargeCommandAcceptedEventHandler sut)
+            [NotNull] ChargeIntegrationEventsPublisher sut)
         {
             // Arrange
             chargeCommandAcceptedEvent.Command.ChargeOperation.Points = new List<Point>();
 
             // Act
-            await sut.HandleAsync(chargeCommandAcceptedEvent).ConfigureAwait(false);
+            await sut.PublishAsync(chargeCommandAcceptedEvent).ConfigureAwait(false);
 
             // Assert
             chargeSender.Verify(x => x.PublishChargeCreatedAsync(It.IsAny<ChargeCommandAcceptedEvent>()), Times.Once);

@@ -13,7 +13,6 @@
 // limitations under the License.
 
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using GreenEnergyHub.Charges.Domain.ChargeLinkCommands;
 using GreenEnergyHub.Charges.Domain.Messages.Events;
 using NodaTime;
@@ -25,10 +24,9 @@ namespace GreenEnergyHub.Charges.Domain.ChargeLinkCommandAcceptedEvents
         public IReadOnlyCollection<ChargeLinkCommand> ChargeLinkCommands { get; }
 
         public ChargeLinkCommandAcceptedEvent(
-            [NotNull] string correlationId,
             IReadOnlyCollection<ChargeLinkCommand> chargeLinkCommands,
             Instant publishedTime)
-            : base(publishedTime, correlationId)
+            : base(publishedTime)
         {
             ChargeLinkCommands = chargeLinkCommands;
         }

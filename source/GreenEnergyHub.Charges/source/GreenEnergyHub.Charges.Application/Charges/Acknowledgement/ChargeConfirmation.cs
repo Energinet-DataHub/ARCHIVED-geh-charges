@@ -21,21 +21,17 @@ namespace GreenEnergyHub.Charges.Application.Charges.Acknowledgement
     public class ChargeConfirmation : IMessage
     {
         public ChargeConfirmation(
-            string correlationId,
             string receiver,
             MarketParticipantRole receiverMarketParticipantRole,
             string originalTransactionReference,
             BusinessReasonCode businessReasonCode)
         {
-            CorrelationId = correlationId;
             Receiver = receiver;
             ReceiverMarketParticipantRole = receiverMarketParticipantRole;
             OriginalTransactionReference = originalTransactionReference;
             BusinessReasonCode = businessReasonCode;
             Transaction = Transaction.NewTransaction();
         }
-
-        public string CorrelationId { get; }
 
         public string Receiver { get; }
 

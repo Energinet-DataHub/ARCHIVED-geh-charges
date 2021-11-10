@@ -16,7 +16,6 @@ using System.Diagnostics.CodeAnalysis;
 using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.Domain.ChargeLinkCommandReceivedEvents;
 using GreenEnergyHub.Charges.Domain.ChargeLinkCommands;
-using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.Domain.SharedDtos;
 using GreenEnergyHub.Messaging.Protobuf;
 
@@ -29,7 +28,6 @@ namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
             var chargeLinkCommandReceived = new GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandReceived.ChargeLinkCommandReceived
             {
                 PublishedTime = chargeLinkCommandReceivedEvent.PublishedTime.ToTimestamp().TruncateToSeconds(),
-                CorrelationId = chargeLinkCommandReceivedEvent.CorrelationId,
             };
 
             foreach (var chargeLinkCommand in chargeLinkCommandReceivedEvent.ChargeLinkCommands)
@@ -38,7 +36,6 @@ namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
                 {
                     Document = ConvertDocument(chargeLinkCommand.Document),
                     ChargeLink = ConvertChargeLink(chargeLinkCommand.ChargeLink),
-                    CorrelationId = chargeLinkCommandReceivedEvent.CorrelationId,
                 });
             }
 

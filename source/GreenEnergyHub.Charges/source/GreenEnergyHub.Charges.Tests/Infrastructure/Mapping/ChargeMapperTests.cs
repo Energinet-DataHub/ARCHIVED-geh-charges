@@ -93,7 +93,6 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Mapping
                 "Name",
                 "description",
                 "owner",
-                "CorrelationId",
                 now,
                 null,
                 ChargeType.Fee,

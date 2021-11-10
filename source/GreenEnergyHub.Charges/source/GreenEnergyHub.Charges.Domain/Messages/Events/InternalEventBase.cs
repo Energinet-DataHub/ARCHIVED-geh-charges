@@ -18,8 +18,7 @@ namespace GreenEnergyHub.Charges.Domain.Messages.Events
 {
     public abstract class InternalEventBase : MessageBase, IInternalEvent
     {
-        protected InternalEventBase(Instant publishedTime, string correlationId)
-            : base(correlationId)
+        protected InternalEventBase(Instant publishedTime)
         {
             PublishedTime = publishedTime;
         }

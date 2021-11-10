@@ -40,6 +40,7 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
         private readonly IDefaultChargeLinkClient _defaultChargeLinkClient;
         private readonly IMessageMetaDataContext _messageMetaDataContext;
         private readonly ILogger _logger;
+        private readonly ICorrelationContext _correlationIdContext;
 
         public CreateLinkCommandRequestHandler(
             IDefaultChargeLinkRepository defaultChargeLinkRepository,
@@ -49,7 +50,8 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
             IMeteringPointRepository meteringPointRepository,
             IDefaultChargeLinkClient defaultChargeLinkClient,
             IMessageMetaDataContext messageMetaDataContext,
-            ILoggerFactory loggerFactory)
+            ILoggerFactory loggerFactory,
+            ICorrelationContext correlationIdContext)
         {
             _defaultChargeLinkRepository = defaultChargeLinkRepository;
             _chargeLinkCommandFactory = chargeLinkCommandFactory;
@@ -58,14 +60,15 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
             _meteringPointRepository = meteringPointRepository;
             _defaultChargeLinkClient = defaultChargeLinkClient;
             _messageMetaDataContext = messageMetaDataContext;
+            _correlationIdContext = correlationIdContext;
             _logger = loggerFactory.CreateLogger(nameof(CreateLinkCommandRequestHandler));
         }
 
-        public async Task HandleAsync([NotNull] CreateLinkCommandEvent createLinkCommandEvent, string correlationId)
+        public async Task HandleAsync([NotNull] CreateLinkCommandEvent createLinkCommandEvent)
         {
             if (!_messageMetaDataContext.IsReplyToSet())
             {
-                _logger.LogError($"The reply queue name was absent or empty, could not handle request CreateDefaultChargeLinks on metering point with id: {createLinkCommandEvent.MeteringPointId} and correlation id: {correlationId}");
+                _logger.LogError($"The reply queue name was absent or empty, could not handle request CreateDefaultChargeLinks on metering point with id: {createLinkCommandEvent.MeteringPointId} and correlation id: {_correlationIdContext.Id}");
 
                 throw new ArgumentNullException(nameof(_messageMetaDataContext.ReplyTo));
             }
@@ -77,7 +80,6 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
             {
                 await ReplyWithFailedAsync(
                     createLinkCommandEvent.MeteringPointId,
-                    correlationId,
                     _messageMetaDataContext.ReplyTo).ConfigureAwait(false);
                 return;
             }
@@ -89,14 +91,12 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
             {
                 await ReplyWithSucceededAsync(
                     meteringPoint.MeteringPointId,
-                    correlationId,
                     _messageMetaDataContext.ReplyTo).ConfigureAwait(false);
                 return;
             }
 
             await CreateAndDispatchChargeLinkCommandReceivedEventIfApplicableForLinkingAsync(
                 createLinkCommandEvent,
-                correlationId,
                 defaultChargeLinks,
                 meteringPoint);
         }
@@ -117,31 +117,30 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
             return defaultChargeLinks;
         }
 
-        private async Task ReplyWithFailedAsync(string meteringPointId, string correlationId, string replyTo)
+        private async Task ReplyWithFailedAsync(string meteringPointId, string replyTo)
         {
             await _defaultChargeLinkClient
                 .CreateDefaultChargeLinksFailedReplyAsync(
                     new CreateDefaultChargeLinksFailedDto(
                         meteringPointId,
                         ErrorCode.MeteringPointUnknown),
-                    correlationId,
+                    _correlationIdContext.Id,
                     replyTo).ConfigureAwait(false);
         }
 
-        private async Task ReplyWithSucceededAsync(string meteringPointId, string correlationId, string replyTo)
+        private async Task ReplyWithSucceededAsync(string meteringPointId, string replyTo)
         {
             await _defaultChargeLinkClient
                 .CreateDefaultChargeLinksSucceededReplyAsync(
                     new CreateDefaultChargeLinksSucceededDto(
                         meteringPointId,
                         false),
-                    correlationId,
+                    _correlationIdContext.Id,
                     replyTo).ConfigureAwait(false);
         }
 
         private async Task CreateAndDispatchChargeLinkCommandReceivedEventIfApplicableForLinkingAsync(
             CreateLinkCommandEvent createLinkCommandEvent,
-            string correlationId,
             List<DefaultChargeLink> defaultChargeLinks,
             MeteringPoint meteringPoint)
         {
@@ -152,13 +151,11 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
             {
                 chargeLinkCommands.Add(await _chargeLinkCommandFactory.CreateAsync(
                     createLinkCommandEvent,
-                    defaultChargeLink,
-                    correlationId).ConfigureAwait(false));
+                    defaultChargeLink).ConfigureAwait(false));
             }
 
             var chargeLinkCommandReceivedEvent = new ChargeLinkCommandReceivedEvent(
                 _clock.GetCurrentInstant(),
-                correlationId,
                 chargeLinkCommands);
 
             await _messageDispatcher.DispatchAsync(chargeLinkCommandReceivedEvent).ConfigureAwait(false);

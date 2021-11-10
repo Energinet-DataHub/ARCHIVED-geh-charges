@@ -15,7 +15,6 @@
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application.Charges.Factories;
 using GreenEnergyHub.Charges.Domain.ChargeCommandAcceptedEvents;
-using GreenEnergyHub.Charges.Domain.Charges.Acknowledgements;
 
 namespace GreenEnergyHub.Charges.Application.Charges.Acknowledgement
 {

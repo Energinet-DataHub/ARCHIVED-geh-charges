@@ -37,7 +37,7 @@ limitations under the License.
         <PackageReference Include="AutoFixture" Version="4.17.0" />
         <PackageReference Include="AutoFixture.AutoMoq" Version="4.17.0" />
         <PackageReference Include="Azure.Messaging.ServiceBus" Version="7.4.0" />
-        <PackageReference Include="Energinet.DataHub.Core.FunctionApp.TestCommon" Version="0.0.1" />
+        <PackageReference Include="Energinet.DataHub.Core.FunctionApp.TestCommon" Version="1.0.1" />
         <PackageReference Include="EntityFrameworkCore.SqlServer.NodaTime" Version="5.0.1" />
         <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.2.2" />
         <PackageReference Include="Microsoft.Azure.Management.ServiceBus" Version="3.0.0" />
@@ -47,8 +47,6 @@ limitations under the License.
         <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="5.0.0" />
         <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="5.0.0" />
         <PackageReference Include="Microsoft.Extensions.Hosting" Version="5.0.0" />
-        <PackageReference Include="Squadron.AzureCloudServiceBus" Version="0.13.0" />
-        <PackageReference Include="Squadron.Core" Version="0.13.0" />
         <PackageReference Include="System.ComponentModel.TypeConverter" Version="4.3.0" />
         <PackageReference Include="xunit" Version="2.4.1" />
         <PackageReference Include="FluentAssertions" Version="6.2.0" />
@@ -62,10 +60,14 @@ limitations under the License.
     </ItemGroup>
 
     <ItemGroup>
-      <None Include="TestFiles\InvalidCreateTariffCommand.xml" CopyToOutputDirectory="Always" />
-      <None Include="TestFiles\ValidCreateTariffCommand.xml" CopyToOutputDirectory="Always" />
       <None Remove="appsettings.json" />
-      <None Update="TestFiles\CreateFixedPeriodTariffChargeLink.xml">
+      <None Update="TestFiles\Charges\InvalidCreateTariffCommand.xml">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+      <None Update="TestFiles\Charges\ValidCreateTariffCommand.xml">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+      <None Update="TestFiles\ChargeLinks\CreateFixedPeriodTariffChargeLink.xml">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
     </ItemGroup>
@@ -81,7 +83,6 @@ limitations under the License.
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="DomainTests\ChargeLinks" />
       <Folder Include="IntegrationTests" />
     </ItemGroup>
 </Project>

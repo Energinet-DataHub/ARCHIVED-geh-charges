@@ -30,7 +30,6 @@ namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
         {
             var chargeLinkCommandAcceptedContract = new GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandAccepted.ChargeLinkCommandAccepted()
             {
-                CorrelationId = chargeLinkCommandAcceptedEvent.CorrelationId,
                 PublishedTime = chargeLinkCommandAcceptedEvent.PublishedTime.ToTimestamp(),
             };
 
@@ -40,7 +39,6 @@ namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
              {
                  Document = ConvertDocument(chargeLinkCommand.Document),
                  ChargeLink = ConvertChargeLink(chargeLinkCommand.ChargeLink),
-                 CorrelationId = chargeLinkCommand.CorrelationId,
              });
             }
 

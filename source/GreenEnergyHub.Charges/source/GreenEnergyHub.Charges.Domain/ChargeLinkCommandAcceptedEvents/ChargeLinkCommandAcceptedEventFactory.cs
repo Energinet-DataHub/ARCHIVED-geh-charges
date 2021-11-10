@@ -28,10 +28,9 @@ namespace GreenEnergyHub.Charges.Domain.ChargeLinkCommandAcceptedEvents
             _clock = clock;
         }
 
-        public ChargeLinkCommandAcceptedEvent Create([NotNull] IReadOnlyCollection<ChargeLinkCommand> chargeLinkCommands, string correlationId)
+        public ChargeLinkCommandAcceptedEvent Create([NotNull] IReadOnlyCollection<ChargeLinkCommand> chargeLinkCommands)
         {
             return new ChargeLinkCommandAcceptedEvent(
-                correlationId,
                 chargeLinkCommands,
                 _clock.GetCurrentInstant());
         }

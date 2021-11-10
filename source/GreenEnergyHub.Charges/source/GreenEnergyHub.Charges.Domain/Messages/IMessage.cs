@@ -21,6 +21,5 @@ namespace GreenEnergyHub.Charges.Domain.Messages
     /// </summary>
     public interface IMessage : IOutboundMessage, IInboundMessage
     {
-        public string CorrelationId { get; }
     }
 }

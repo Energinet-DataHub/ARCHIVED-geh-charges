@@ -17,8 +17,8 @@ using GreenEnergyHub.Charges.Domain.ChargeCommandAcceptedEvents;
 
 namespace GreenEnergyHub.Charges.Application.Charges.Handlers
 {
-    public interface IChargeCommandAcceptedEventHandler
+    public interface IChargeIntegrationEventsPublisher
     {
-        Task HandleAsync(ChargeCommandAcceptedEvent chargeCommandAcceptedEvent);
+        Task PublishAsync(ChargeCommandAcceptedEvent chargeCommandAcceptedEvent);
     }
 }
