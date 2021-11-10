@@ -109,7 +109,9 @@ namespace GreenEnergyHub.Charges.Tests.Application.ToBeRenamedAndSplitted
         [InlineAutoDomainData]
         public async Task CreateDefaultChargeLinksFailedReplyAsync_WhenInputIsValid_SendsMessage(
             [NotNull] [Frozen] Mock<IServiceBusReplySenderProvider> serviceBusReplySenderProviderMock,
-            [NotNull] [Frozen] Mock<IServiceBusReplySender> serviceBusReplySenderMock)
+            [NotNull] [Frozen] Mock<IServiceBusReplySender> serviceBusReplySenderMock,
+            string meteringPointId,
+            ErrorCode errorCode)
         {
             // Arrange
             const string replyQueueName = "create-link-reply";
@@ -119,13 +121,10 @@ namespace GreenEnergyHub.Charges.Tests.Application.ToBeRenamedAndSplitted
 
             var sut = new DefaultChargeLinkClient(serviceBusReplySenderProviderMock.Object);
 
-            var createDefaultChargeLinksFailedDto =
-                new CreateDefaultChargeLinksFailedDto(MeteringPointId, ErrorCode.MeteringPointUnknown);
-
             // Act
             await sut.CreateDefaultChargeLinksFailedReplyAsync(
-                createDefaultChargeLinksFailedDto.MeteringPointId,
-                createDefaultChargeLinksFailedDto.ErrorCode,
+                meteringPointId,
+                errorCode,
                 replyQueueName,
                 CorrelationId).ConfigureAwait(false);
 

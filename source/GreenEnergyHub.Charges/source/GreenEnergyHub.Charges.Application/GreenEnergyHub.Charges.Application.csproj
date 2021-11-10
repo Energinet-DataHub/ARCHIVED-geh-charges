@@ -43,12 +43,6 @@ limitations under the License.
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Include="..\..\..\Contracts\CreateDefaultChargeLinksFailedDto.cs">
-      <Link>ToBeRenamedAndSplitted\CreateDefaultChargeLinksFailedDto.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\Contracts\CreateDefaultChargeLinksSucceededDto.cs">
-      <Link>ToBeRenamedAndSplitted\CreateDefaultChargeLinksSucceededDto.cs</Link>
-    </Compile>
     <Compile Include="..\..\..\Contracts\ErrorCode.cs">
       <Link>ToBeRenamedAndSplitted\ErrorCode.cs</Link>
     </Compile>

@@ -14,7 +14,7 @@
 
 using System.Diagnostics.CodeAnalysis;
 using Energinet.Charges.Contracts;
-using GreenEnergyHub.Charges.InternalShared;
+using Energinet.DataHub.Charges.Libraries.Models;
 
 namespace Energinet.DataHub.Charges.Libraries.Mappers
 {

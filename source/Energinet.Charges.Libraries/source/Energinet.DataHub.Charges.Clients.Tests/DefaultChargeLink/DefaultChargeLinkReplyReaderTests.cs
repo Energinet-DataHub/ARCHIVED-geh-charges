@@ -16,6 +16,7 @@ using System;
 using System.Threading.Tasks;
 using Energinet.Charges.Contracts;
 using Energinet.DataHub.Charges.Libraries.DefaultChargeLink;
+using Energinet.DataHub.Charges.Libraries.Models;
 using Energinet.DataHub.Charges.TestCore.Attributes;
 using FluentAssertions;
 using Google.Protobuf;

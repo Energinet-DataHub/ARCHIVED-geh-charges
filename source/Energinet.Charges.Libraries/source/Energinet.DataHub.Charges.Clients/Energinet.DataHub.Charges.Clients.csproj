@@ -121,15 +121,12 @@ https://github.com/Energinet-DataHub/geh-charges/tree/main/source/Energinet.Char
     <None Update="local.settings.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="..\..\..\Contracts\CreateDefaultChargeLinks.proto">
+      <Link>Contracts\CreateDefaultChargeLinks.proto</Link>
+    </None>
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Include="..\..\..\Contracts\CreateDefaultChargeLinksFailedDto.cs">
-      <Link>Common\CreateDefaultChargeLinksFailedDto.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\Contracts\CreateDefaultChargeLinksSucceededDto.cs">
-      <Link>Common\CreateDefaultChargeLinksSucceededDto.cs</Link>
-    </Compile>
     <Compile Include="..\..\..\Contracts\ErrorCode.cs">
       <Link>Common\ErrorCode.cs</Link>
     </Compile>

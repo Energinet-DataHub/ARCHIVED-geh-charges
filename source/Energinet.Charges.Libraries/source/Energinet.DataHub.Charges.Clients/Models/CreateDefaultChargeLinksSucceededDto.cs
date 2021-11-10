@@ -12,13 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace GreenEnergyHub.Charges.InternalShared
+namespace Energinet.DataHub.Charges.Libraries.Models
 {
     /// <summary>
     /// The data needed by the Metering Point domain as a reply
-    /// to a failed CreateDefaultChargeLinks request
+    /// to a successful CreateDefaultChargeLinks request
     /// </summary>
     /// <param name="MeteringPointId">A unique id to specify the metering point.</param>
-    /// <param name="ErrorCode">Tells why the CreateDefaultChargeLinks request has failed.</param>
-    public sealed record CreateDefaultChargeLinksFailedDto(string MeteringPointId, ErrorCode ErrorCode);
+    /// <param name="DidCreateChargeLinks">True if the CreateDefaultChargeLinks request
+    /// led to the creation of Charge Links within Charges Domain.</param>
+    public sealed record CreateDefaultChargeLinksSucceededDto(string MeteringPointId, bool DidCreateChargeLinks);
 }
