@@ -31,7 +31,7 @@ namespace Energinet.DataHub.Charges.Libraries.DefaultChargeLink
         private readonly IServiceBusRequestSender _serviceBusRequestSender;
 
         public DefaultChargeLinkClient(
-            [NotNull] IDefaultChargeLinkClientServiceBusRequestSenderProvider serviceBusRequestSenderProvider)
+            [NotNull] IServiceBusRequestSenderProvider serviceBusRequestSenderProvider)
         {
             _serviceBusRequestSender = serviceBusRequestSenderProvider.GetInstance();
         }
