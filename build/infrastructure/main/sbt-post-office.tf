@@ -12,16 +12,27 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-module "sbt_link_command_received" {
+/*
+=================================================================================
+Infrastructure for a representation of the Post Office.
+This is used to be able to fully explore and integration test the charges domain
+without relying on the external dependency to Post Office.
+
+In order to make it lightweight we implement it as an additional topic
+on the existing Service Bus Namespace.
+=================================================================================
+*/
+
+module "sbt_post_office" {
   source              = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//azure/service-bus-topic?ref=5.1.0"
 
-  name                = "link-command-received"
+  name                = "post-office"
   namespace_name      = module.sb_charges.name
   resource_group_name = azurerm_resource_group.this.name
   subscriptions       = [
     {
-      name                = "link-command-received-receiver"
-      max_delivery_count  = 1
+      name                = "post-office",
+      max_delivery_count  = 1,
     },
   ]
 }
