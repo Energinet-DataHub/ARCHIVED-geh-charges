@@ -52,7 +52,9 @@ namespace Energinet.DataHub.Charges.Clients.IntegrationTests.DefaultChargeLink
 
                 _serviceBusTestListener = new ServiceBusTestListener(Fixture);
                 _serviceBusRequestSenderProvider =
-                    new ServiceBusRequestSenderProvider(_serviceBusClient, replyToQueueName, requestQueueName);
+                    new ServiceBusRequestSenderProvider(
+                        _serviceBusClient,
+                        new ServiceBusRequestSenderTestConfiguration(replyToQueueName, replyToQueueName));
             }
 
             public Task InitializeAsync()
