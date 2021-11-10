@@ -17,14 +17,13 @@ on:
   pull_request:
     branches:
       - main
-      - djorgensen/new-sub
 
 jobs:
   ci_base:
     uses: Energinet-DataHub/.github/.github/workflows/ci-base.yml@1.13.0
   
   # dotnet_solution_ci:
-  #   uses: Energinet-DataHub/geh-charges/.github/workflows/dotnet-solution-ci.yml@djorgensen/new-sub-charges
+  #   uses: Energinet-DataHub/geh-charges/.github/workflows/dotnet-solution-ci.yml@main
   #   with:
   #     SOLUTION_FILE_PATH: 'source/GreenEnergyHub.Charges/GreenEnergyHub.Charges.sln'
   #   secrets:
@@ -47,7 +46,7 @@ jobs:
     uses: Energinet-DataHub/.github/.github/workflows/dotnet-create-function-artifact.yml@1.13.0
     with:
       CSPROJ_FILE_PATH: 'source/GreenEnergyHub.Charges/source/GreenEnergyHub.Charges.FunctionHost/GreenEnergyHub.Charges.FunctionHost.csproj'
-      DOTNET_VERSION: '5.0'
+      DOTNET_VERSION: '5.0.202'
       ARTIFACT_NAME: functionhost
 
   database_migration_ci:
@@ -55,7 +54,7 @@ jobs:
     uses: Energinet-DataHub/.github/.github/workflows/dotnet-create-function-artifact.yml@1.13.0
     with:
       CSPROJ_FILE_PATH: 'source/GreenEnergyHub.Charges/source/GreenEnergyHub.Charges.ApplyDBMigrationsApp/GreenEnergyHub.Charges.ApplyDBMigrationsApp.csproj'
-      DOTNET_VERSION: '5.0'
+      DOTNET_VERSION: '5.0.202'
       ARTIFACT_NAME: databasemigration
 
   create_prerelease:
