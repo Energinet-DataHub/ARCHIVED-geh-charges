@@ -14,7 +14,7 @@
 
 using System.Threading.Tasks;
 
-namespace GreenEnergyHub.Charges.Infrastructure.CreateDefaultChargeLinkReplier
+namespace GreenEnergyHub.Charges.Infrastructure.ServiceBusReplySenderProvider
 {
     /// <summary>
     /// Sends the reply to the recipient queue configured in the ServiceBusReplySender.

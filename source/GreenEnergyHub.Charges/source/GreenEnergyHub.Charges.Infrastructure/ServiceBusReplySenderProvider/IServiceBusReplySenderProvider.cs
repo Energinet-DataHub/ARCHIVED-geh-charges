@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace GreenEnergyHub.Charges.Infrastructure.CreateDefaultChargeLinkReplier
+namespace GreenEnergyHub.Charges.Infrastructure.ServiceBusReplySenderProvider
 {
     public interface IServiceBusReplySenderProvider
     {
