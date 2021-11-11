@@ -22,18 +22,14 @@ jobs:
   ci_base:
     uses: Energinet-DataHub/.github/.github/workflows/ci-base.yml@1.13.0
   
-  # dotnet_solution_ci:
-  #   uses: Energinet-DataHub/geh-charges/.github/workflows/dotnet-solution-ci.yml@main
-  #   with:
-  #     SOLUTION_FILE_PATH: 'source/GreenEnergyHub.Charges/GreenEnergyHub.Charges.sln'
-  #   secrets:
-  #     AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-  #     AZURE_RG_NAME: ${{ secrets.AZURE_RG_NAME }}
-  #     AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
-  #     AZURE_SPN_ID: ${{ secrets.AZURE_SPN_ID }}
-  #     AZURE_SPN_SECRET: ${{ secrets.AZURE_SPN_SECRET }}
-  #     AZURE_APPI_INSTRUMENTATION_KEY: ${{ secrets.AZURE_APPI_INSTRUMENTATION_KEY }}
-  #     AZURE_SB_CONNECTION_STRING: ${{ secrets.AZURE_SB_CONNECTION_STRING }}
+    dotnet_solution_ci:
+      uses: Energinet-DataHub/geh-charges/.github/workflows/dotnet-solution-ci.yml@main
+      with:
+        SOLUTION_FILE_PATH: 'source/GreenEnergyHub.Charges/GreenEnergyHub.Charges.sln'
+      secrets:
+        AZURE_KEYVAULT_URL: ${{ secrets.AZURE_KEYVAULT_URL }}
+        AZURE_APPI_INSTRUMENTATION_KEY: ${{ secrets.AZURE_APPI_INSTRUMENTATION_KEY }}
+        AZURE_SB_CONNECTION_STRING: ${{ secrets.AZURE_SB_CONNECTION_STRING }}
 
   terraform_validate:
     uses: Energinet-DataHub/.github/.github/workflows/terraform-validate.yml@1.13.0

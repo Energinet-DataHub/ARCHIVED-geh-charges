@@ -27,7 +27,7 @@ env:
   AZURE_FUNCTIONS_CORE_TOOLS_VERSION: '3.0.3568'
   # Variables necessary to manage Azure resources for tests (similar to local use of 'integrationtest.local.settings.json')
   AZURE_KEYVAULT_URL: ${{ secrets.AZURE_KEYVAULT_URL }}
-   # Variables necessary to start function for tests (similar to local use of 'local.settings.json')
+  # Variables necessary to start function for tests (similar to local use of 'local.settings.json')
   APPINSIGHTS_INSTRUMENTATIONKEY: ${{ secrets.INTEGRATIONTEST_APPINSIGHTS_INSTRUMENTATIONKEY }}
   INTEGRATIONEVENT_SENDER_CONNECTION_STRING: ${{ secrets.INTEGRATIONTEST_SERVICEBUS_CONNECTIONSTRING }}
   INTEGRATIONEVENT_LISTENER_CONNECTION_STRING: ${{ secrets.INTEGRATIONTEST_SERVICEBUS_CONNECTIONSTRING }}
