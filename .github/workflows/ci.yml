@@ -27,6 +27,7 @@ jobs:
     with:
       SOLUTION_FILE_PATH: 'source/GreenEnergyHub.Charges/GreenEnergyHub.Charges.sln'
     secrets:
+      AZURE_KEYVAULT_URL: {{ secrets.AZURE_KEYVAULT_URL }}
       AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
       AZURE_RG_NAME: ${{ secrets.AZURE_RG_NAME }}
       AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
