@@ -22,6 +22,16 @@ on:
     secrets:
       AZURE_KEYVAULT_URL:
         required: true
+      AZURE_SUBSCRIPTION_ID:
+        required: true
+      AZURE_RG_NAME:
+        required: true
+      AZURE_TENANT_ID:
+        required: true
+      AZURE_SPN_ID:
+        required: true
+      AZURE_SPN_SECRET:
+        required: true
       AZURE_APPI_INSTRUMENTATION_KEY:
         required: true
       AZURE_SB_CONNECTION_STRING:
