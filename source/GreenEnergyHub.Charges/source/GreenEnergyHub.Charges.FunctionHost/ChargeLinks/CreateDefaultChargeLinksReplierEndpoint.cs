@@ -24,18 +24,18 @@ using Microsoft.Azure.Functions.Worker;
 
 namespace GreenEnergyHub.Charges.FunctionHost.ChargeLinks
 {
-    public class ChargeLinkEventReplierEndpoint
+    public class CreateDefaultChargeLinksReplierEndpoint
     {
         /// <summary>
         /// The name of the function.
         /// Function name affects the URL and thus possibly dependent infrastructure.
         /// </summary>
-        public const string FunctionName = nameof(ChargeLinkEventReplierEndpoint);
+        public const string FunctionName = nameof(CreateDefaultChargeLinksReplierEndpoint);
         private readonly MessageExtractor<ChargeLinkCommandAccepted> _messageExtractor;
         private readonly IChargeLinkEventReplyHandler _chargeLinkEventReplyHandler;
         private readonly IMessageMetaDataContext _messageMetaDataContext;
 
-        public ChargeLinkEventReplierEndpoint(
+        public CreateDefaultChargeLinksReplierEndpoint(
             MessageExtractor<ChargeLinkCommandAccepted> messageExtractor,
             IChargeLinkEventReplyHandler chargeLinkEventReplyHandler,
             IMessageMetaDataContext messageMetaDataContext)
