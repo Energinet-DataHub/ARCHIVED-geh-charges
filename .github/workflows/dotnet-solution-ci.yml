@@ -20,15 +20,7 @@ on:
         required: true
         type: string
     secrets:
-      AZURE_SUBSCRIPTION_ID:
-        required: true
-      AZURE_RG_NAME:
-        required: true
-      AZURE_TENANT_ID:
-        required: true
-      AZURE_SPN_ID:
-        required: true
-      AZURE_SPN_SECRET:
+      AZURE_KEYVAULT_URL:
         required: true
       AZURE_APPI_INSTRUMENTATION_KEY:
         required: true
@@ -43,12 +35,7 @@ jobs:
       DOTNET_VERSION: '5.0.202'
       AZURE_FUNCTIONS_CORE_TOOLS_VERSION: '3.0.3568'
       # Variables necessary to manage Azure resources for tests (similar to local use of 'integrationtest.local.settings.json')
-      SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-      RESOURCE_GROUP_NAME: ${{ secrets.AZURE_RG_NAME }}
-      DEFAULT_LOCATION: 'westeurope'
-      TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
-      CLIENT_ID: ${{ secrets.AZURE_SPN_ID }}
-      CLIENT_SECRET: ${{ secrets.AZURE_SPN_SECRET }} 
+      AZURE_KEYVAULT_URL: ${{ secrets.AZURE_KEYVAULT_URL }}
       # Variables necessary to start function for tests (similar to local use of 'local.settings.json')
       APPINSIGHTS_INSTRUMENTATIONKEY: ${{ secrets.AZURE_APPI_INSTRUMENTATION_KEY }}
       INTEGRATIONEVENT_SENDER_CONNECTION_STRING: ${{ secrets.AZURE_SB_CONNECTION_STRING }}
