@@ -20,7 +20,7 @@ on:
 
 jobs:
   ci_base:
-    uses: Energinet-DataHub/.github/.github/workflows/ci-base.yml@1.13.0
+    uses: Energinet-DataHub/.github/.github/workflows/ci-base.yml@Reenable_integrationtests_in_pipeline
   
   dotnet_solution_ci:
     uses: Energinet-DataHub/geh-charges/.github/workflows/dotnet-solution-ci.yml@1.13.0
