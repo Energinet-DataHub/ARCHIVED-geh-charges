@@ -22,6 +22,7 @@ using Energinet.DataHub.MessageHub.Client.Peek;
 using Energinet.DataHub.MessageHub.Client.Storage;
 using EntityFrameworkCore.SqlServer.NodaTime.Extensions;
 using GreenEnergyHub.Charges.Application;
+using GreenEnergyHub.Charges.Application.ChargeLinks.CreateDefaultChargeLinkReplier;
 using GreenEnergyHub.Charges.Domain.AvailableChargeData;
 using GreenEnergyHub.Charges.Domain.AvailableChargeLinksData;
 using GreenEnergyHub.Charges.Domain.ChargeLinkCommandReceivedEvents;
@@ -32,11 +33,13 @@ using GreenEnergyHub.Charges.Infrastructure.Cim;
 using GreenEnergyHub.Charges.Infrastructure.Configuration;
 using GreenEnergyHub.Charges.Infrastructure.Context;
 using GreenEnergyHub.Charges.Infrastructure.Correlation;
+using GreenEnergyHub.Charges.Infrastructure.CreateDefaultChargeLinkReplier;
 using GreenEnergyHub.Charges.Infrastructure.Function;
 using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandReceived;
 using GreenEnergyHub.Charges.Infrastructure.MessageMetaData;
 using GreenEnergyHub.Charges.Infrastructure.Messaging.Registration;
 using GreenEnergyHub.Charges.Infrastructure.Repositories;
+using GreenEnergyHub.Charges.Infrastructure.ServiceBusReplySenderProvider;
 using GreenEnergyHub.Iso8601;
 using GreenEnergyHub.Json;
 using GreenEnergyHub.Messaging.Protobuf;
@@ -72,12 +75,25 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
             var domainReplyQueue = EnvironmentHelper.GetEnv(EnvironmentSettingNames.MessageHubReplyQueue);
             var storageServiceConnectionString = EnvironmentHelper.GetEnv(EnvironmentSettingNames.MessageHubStorageConnectionString);
             var azureBlobStorageContainerName = EnvironmentHelper.GetEnv(EnvironmentSettingNames.MessageHubStorageContainer);
+
+            var serviceBusClient = new ServiceBusClient(serviceBusConnectionString);
+
+            AddCreateDefaultChargeLinksReplier(serviceCollection, serviceBusClient);
             AddPostOfficeCommunication(
                 serviceCollection,
                 serviceBusConnectionString,
                 new MessageHubConfig(dataAvailableQueue, domainReplyQueue),
                 storageServiceConnectionString,
                 new StorageConfig(azureBlobStorageContainerName));
+        }
+
+        private static void AddCreateDefaultChargeLinksReplier(
+            IServiceCollection serviceCollection,
+            ServiceBusClient serviceBusClient)
+        {
+            serviceCollection.AddSingleton<IServiceBusReplySenderProvider>(_ =>
+                new ServiceBusReplySenderProvider(serviceBusClient));
+            serviceCollection.AddSingleton<ICreateDefaultChargeLinksReplier, CreateDefaultChargeLinksReplier>();
         }
 
         private static void ConfigureSharedDatabase(IServiceCollection serviceCollection)

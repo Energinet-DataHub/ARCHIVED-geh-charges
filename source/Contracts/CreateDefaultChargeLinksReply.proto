@@ -45,8 +45,7 @@ message CreateDefaultChargeLinksReply {
   */
   message CreateDefaultChargeLinksFailed {
     enum ErrorCode {
-      EC_UNSPECIFIED = 0;
-      EC_METERING_POINT_UNKNOWN = 1;
+      EC_METERING_POINT_UNKNOWN = 0;
     }
     ErrorCode error_code = 1; // The error_code specifies a reason for the failed request
   }

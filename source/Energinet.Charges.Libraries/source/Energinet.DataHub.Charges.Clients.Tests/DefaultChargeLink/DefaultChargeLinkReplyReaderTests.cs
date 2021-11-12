@@ -20,7 +20,7 @@ using Energinet.DataHub.Charges.Libraries.Models;
 using Energinet.DataHub.Charges.TestCore.Attributes;
 using FluentAssertions;
 using Google.Protobuf;
-using GreenEnergyHub.Charges.InternalShared;
+using GreenEnergyHub.Charges.Collective.Models;
 using Xunit;
 using Xunit.Categories;
 using CreateDefaultChargeLinksFailed =
@@ -33,7 +33,7 @@ namespace Energinet.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.Defaul
     [UnitTest]
     public class DefaultChargeLinkReplyReaderTests
     {
-        private ErrorCode _errorCodeTestResult;
+        private ErrorCode _errorCodeTestResult = ErrorCode.MeteringPointUnknown;
         private string? _knownMeteringPointIdTestResult;
         private string? _unknownMeteringPointIdTestResult;
         private bool _didCreateChargeLinksTestResult;

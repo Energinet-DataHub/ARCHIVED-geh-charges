@@ -20,38 +20,24 @@ namespace Energinet.DataHub.Charges.Libraries.Providers
 {
     public class ServiceBusRequestSenderProvider : IServiceBusRequestSenderProvider
     {
-        private const string RequestQueueName = "create-link-request";
-        private readonly ServiceBusClient _serviceBusClient;
-        private readonly IServiceBusRequestSenderConfiguration _serviceBusRequestSenderConfiguration;
-        private readonly bool _useTestConfiguration;
-        private ServiceBusRequestSender? _sender;
+       private readonly ServiceBusClient _serviceBusClient;
+       private readonly IServiceBusRequestSenderConfiguration _serviceBusRequestSenderConfiguration;
+       private ServiceBusRequestSender? _sender;
 
-        public ServiceBusRequestSenderProvider(
+       public ServiceBusRequestSenderProvider(
             ServiceBusClient serviceBusClient,
             IServiceBusRequestSenderConfiguration serviceBusRequestSenderConfiguration)
         {
             _serviceBusClient = serviceBusClient;
             _serviceBusRequestSenderConfiguration = serviceBusRequestSenderConfiguration;
             _sender = null;
-            if (_serviceBusRequestSenderConfiguration is ServiceBusRequestSenderTestConfiguration)
-                _useTestConfiguration = true;
         }
 
-        public IServiceBusRequestSender GetInstance()
+       public IServiceBusRequestSender GetInstance()
         {
-            if (_useTestConfiguration)
-            {
-                var serviceBusRequestSenderTestConfiguration =
-                    (ServiceBusRequestSenderTestConfiguration)_serviceBusRequestSenderConfiguration;
-                _sender ??=
-                    new ServiceBusRequestSender(
-                        _serviceBusClient.CreateSender(serviceBusRequestSenderTestConfiguration.RequestQueueName),
-                        serviceBusRequestSenderTestConfiguration.ReplyQueueName);
-            }
-
             return _sender ??=
                 new ServiceBusRequestSender(
-                    _serviceBusClient.CreateSender(RequestQueueName),
+                    _serviceBusClient.CreateSender(_serviceBusRequestSenderConfiguration.RequestQueueName),
                     _serviceBusRequestSenderConfiguration.ReplyQueueName);
         }
     }

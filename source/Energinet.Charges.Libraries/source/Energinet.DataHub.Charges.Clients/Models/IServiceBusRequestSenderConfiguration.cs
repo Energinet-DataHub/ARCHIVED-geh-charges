@@ -17,5 +17,7 @@ namespace Energinet.DataHub.Charges.Libraries.Models
     public interface IServiceBusRequestSenderConfiguration
     {
         string ReplyQueueName { get; }
+
+        string RequestQueueName { get;  }
     }
 }

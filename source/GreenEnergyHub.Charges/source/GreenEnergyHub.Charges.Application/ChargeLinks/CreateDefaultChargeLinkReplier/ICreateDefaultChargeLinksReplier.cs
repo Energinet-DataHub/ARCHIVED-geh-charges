@@ -14,7 +14,7 @@
 
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
-using GreenEnergyHub.Charges.InternalShared;
+using GreenEnergyHub.Charges.Collective.Models;
 
 namespace GreenEnergyHub.Charges.Application.ChargeLinks.CreateDefaultChargeLinkReplier
 {

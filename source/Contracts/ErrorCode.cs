@@ -12,11 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace GreenEnergyHub.Charges.InternalShared
+namespace GreenEnergyHub.Charges.Collective.Models
 {
     public enum ErrorCode
     {
-        Unspecified = 0,
-        MeteringPointUnknown = 1,
+        MeteringPointUnknown = 0,
     }
 }

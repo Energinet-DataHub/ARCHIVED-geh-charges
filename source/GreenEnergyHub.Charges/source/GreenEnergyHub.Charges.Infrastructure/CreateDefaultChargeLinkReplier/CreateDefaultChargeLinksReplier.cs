@@ -18,8 +18,8 @@ using System.Threading.Tasks;
 using Energinet.Charges.Contracts;
 using Google.Protobuf;
 using GreenEnergyHub.Charges.Application.ChargeLinks.CreateDefaultChargeLinkReplier;
+using GreenEnergyHub.Charges.Collective.Models;
 using GreenEnergyHub.Charges.Infrastructure.ServiceBusReplySenderProvider;
-using GreenEnergyHub.Charges.InternalShared;
 
 namespace GreenEnergyHub.Charges.Infrastructure.CreateDefaultChargeLinkReplier
 {
@@ -41,7 +41,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.CreateDefaultChargeLinkReplier
             [NotNull] string replyTo,
             [NotNull] string correlationId)
         {
-            ValidateParameters(meteringPointId, replyTo, correlationId);
+            ValidateParametersOrThrow(meteringPointId, replyTo, correlationId);
 
             var createDefaultChargeLinks = new CreateDefaultChargeLinksReply
             {
@@ -62,7 +62,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.CreateDefaultChargeLinkReplier
             [NotNull] string replyTo,
             [NotNull] string correlationId)
         {
-            ValidateParameters(meteringPointId, replyTo, correlationId);
+            ValidateParametersOrThrow(meteringPointId, replyTo, correlationId);
 
             var createDefaultChargeLinks = new CreateDefaultChargeLinksReply
             {
@@ -89,7 +89,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.CreateDefaultChargeLinkReplier
                 .ConfigureAwait(false);
         }
 
-        private static void ValidateParameters(string meteringPointId, string replyTo, string correlationId)
+        private static void ValidateParametersOrThrow(string meteringPointId, string replyTo, string correlationId)
         {
             if (meteringPointId == null)
                 throw new ArgumentNullException(nameof(meteringPointId));

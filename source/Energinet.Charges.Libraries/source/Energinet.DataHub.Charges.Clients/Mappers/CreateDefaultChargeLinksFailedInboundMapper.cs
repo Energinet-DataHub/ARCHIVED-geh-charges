@@ -16,7 +16,7 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using Energinet.Charges.Contracts;
 using Energinet.DataHub.Charges.Libraries.Models;
-using GreenEnergyHub.Charges.InternalShared;
+using GreenEnergyHub.Charges.Collective.Models;
 using CreateDefaultChargeLinksFailed =
     Energinet.Charges.Contracts.CreateDefaultChargeLinksReply.Types.CreateDefaultChargeLinksFailed;
 
@@ -36,7 +36,6 @@ namespace Energinet.DataHub.Charges.Libraries.Mappers
         {
             return errorCode switch
             {
-                CreateDefaultChargeLinksFailed.Types.ErrorCode.EcUnspecified => ErrorCode.Unspecified,
                 CreateDefaultChargeLinksFailed.Types.ErrorCode.EcMeteringPointUnknown => ErrorCode.MeteringPointUnknown,
                 _ => throw new ArgumentOutOfRangeException(nameof(errorCode), $"Value: {errorCode.ToString()}"),
             };

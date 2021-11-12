@@ -22,6 +22,9 @@ namespace Energinet.DataHub.Charges.Libraries.Models
     {
         public string ReplyQueueName { get; }
 
+        // This is the queue created in the shared environment to receive the request. Only rename in accordance with infrastructure.
+        public string RequestQueueName => "create-link-request";
+
         public ServiceBusRequestSenderConfiguration(string replyQueueName)
         {
             ReplyQueueName = replyQueueName;

@@ -37,7 +37,7 @@ namespace Energinet.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.Defaul
         [Theory]
         [InlineAutoMoqData(MeteringPointId, null!)]
         [InlineAutoMoqData(null!, CorrelationId)]
-        public async Task SendAsync_WhenAnyArgumentIsNull_ThrowsException(
+        public async Task SendAsync_WhenAnyArgumentIsNull_ThrowsArgumentNullException(
             string meteringPointId,
             string correlationId,
             [NotNull] [Frozen] Mock<IServiceBusRequestSenderProvider> serviceBusRequestSenderProviderMock)

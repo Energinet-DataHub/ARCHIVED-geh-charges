@@ -121,9 +121,6 @@ https://github.com/Energinet-DataHub/geh-charges/tree/main/source/Energinet.Char
     <None Update="local.settings.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="..\..\..\Contracts\CreateDefaultChargeLinks.proto">
-      <Link>Contracts\CreateDefaultChargeLinks.proto</Link>
-    </None>
   </ItemGroup>
 
   <ItemGroup>
