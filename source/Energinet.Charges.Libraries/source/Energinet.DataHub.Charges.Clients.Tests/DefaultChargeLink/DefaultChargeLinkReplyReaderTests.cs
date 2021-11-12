@@ -20,7 +20,7 @@ using Energinet.DataHub.Charges.Libraries.Models;
 using Energinet.DataHub.Charges.TestCore.Attributes;
 using FluentAssertions;
 using Google.Protobuf;
-using GreenEnergyHub.Charges.Collective.Models;
+using GreenEnergyHub.Charges.Contracts;
 using Xunit;
 using Xunit.Categories;
 using CreateDefaultChargeLinksFailed =

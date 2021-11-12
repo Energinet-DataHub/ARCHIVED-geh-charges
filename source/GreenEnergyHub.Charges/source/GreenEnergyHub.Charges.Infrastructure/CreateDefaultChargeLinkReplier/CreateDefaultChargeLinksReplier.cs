@@ -23,9 +23,6 @@ using GreenEnergyHub.Charges.Infrastructure.ServiceBusReplySenderProvider;
 
 namespace GreenEnergyHub.Charges.Infrastructure.CreateDefaultChargeLinkReplier
 {
-    /// <summary>
-    /// This class must be thread safe.
-    /// </summary>
     public sealed class CreateDefaultChargeLinksReplier : ICreateDefaultChargeLinksReplier
     {
         private readonly IServiceBusReplySenderProvider _serviceBusReplySenderProvider;

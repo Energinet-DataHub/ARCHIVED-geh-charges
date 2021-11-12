@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace GreenEnergyHub.Charges.Collective.Models
+namespace GreenEnergyHub.Charges.Contracts
 {
     public enum ErrorCode
     {
