@@ -98,7 +98,7 @@ https://github.com/Energinet-DataHub/geh-charges/tree/main/source/Energinet.Char
       <Access>Internal</Access>
       <ProtoCompile>True</ProtoCompile>
       <CompileOutputs>True</CompileOutputs>
-      <OutputDir>obj\Debug\net5.0\Integration</OutputDir>
+      <OutputDir>obj\contracts\</OutputDir>
       <Generator>MSBuild:Compile</Generator>
     </Protobuf>
   </ItemGroup>
