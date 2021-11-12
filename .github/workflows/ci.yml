@@ -23,7 +23,7 @@ jobs:
     uses: Energinet-DataHub/.github/.github/workflows/ci-base.yml@1.13.0
   
   dotnet_solution_ci:
-    uses: Energinet-DataHub/geh-charges/.github/workflows/dotnet-solution-ci.yml
+    uses: Energinet-DataHub/geh-charges/.github/workflows/dotnet-solution-ci.yml@1.13.0
     with:
       SOLUTION_FILE_PATH: 'source/GreenEnergyHub.Charges/GreenEnergyHub.Charges.sln'
     secrets:
