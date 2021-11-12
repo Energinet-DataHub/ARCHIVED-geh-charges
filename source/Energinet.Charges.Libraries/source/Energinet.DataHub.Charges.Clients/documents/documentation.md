@@ -21,7 +21,10 @@ The library provides
 
 ### Example
 
-            var ServiceBusRequestSenderProvider =
-                new ServiceBusRequestSenderProvider(client, replyToQueueName);
+            var serviceBusRequestSenderProvider =
+                new ServiceBusRequestSenderProvider(
+                    serviceBusClient,
+                    new ServiceBusRequestSenderConfiguration(requestQueueName));
+
             serviceCollection.AddSingleton<IDefaultChargeLinkMessagesClient>(_ =>
-                new DefaultChargeLinkMessagesClient(ServiceBusRequestSenderProvider));
+                new DefaultChargeLinkMessagesClient(serviceBusRequestSenderProvider));
