@@ -20,10 +20,10 @@ on:
 
 jobs:
   ci_base:
-    uses: Energinet-DataHub/.github/.github/workflows/ci-base.yml@Reenable_integrationtests_in_pipeline
+    uses: Energinet-DataHub/.github/.github/workflows/ci-base.yml@1.13.0
   
   dotnet_solution_ci:
-    uses: Energinet-DataHub/geh-charges/.github/workflows/dotnet-solution-ci.yml@1.13.0
+    uses: Energinet-DataHub/geh-charges/.github/workflows/dotnet-solution-ci.yml@Reenable_integrationtests_in_pipeline
     with:
       SOLUTION_FILE_PATH: 'source/GreenEnergyHub.Charges/GreenEnergyHub.Charges.sln'
     secrets:
