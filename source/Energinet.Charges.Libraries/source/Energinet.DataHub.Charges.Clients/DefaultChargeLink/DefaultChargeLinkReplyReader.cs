@@ -20,17 +20,12 @@ using Energinet.DataHub.Charges.Libraries.Mappers;
 
 namespace Energinet.DataHub.Charges.Libraries.DefaultChargeLink
 {
+    /// <inheritdoc/>
     internal sealed class DefaultChargeLinkReplyReader : IDefaultChargeLinkReplyReader
     {
         private readonly OnSuccess _handleSuccess;
         private readonly OnFailure _handleFailure;
 
-        /// <summary>
-        /// Provides functionality to read and map data received from a reply to
-        /// a <see cref="CreateDefaultChargeLinks" /> request. Caller must provide
-        /// delegates intended to handle handle replies for successful and failed
-        /// requests.
-        /// </summary>
         /// <param name="handleSuccess">Delegate to handle successful <see cref="CreateDefaultChargeLinks" /> request</param>
         /// <param name="handleFailure">Delegate to handle failed <see cref="CreateDefaultChargeLinks" /> request</param>
         public DefaultChargeLinkReplyReader([NotNull] OnSuccess handleSuccess, [NotNull] OnFailure handleFailure)
@@ -39,14 +34,11 @@ namespace Energinet.DataHub.Charges.Libraries.DefaultChargeLink
             _handleFailure = handleFailure;
         }
 
-        /// <summary>
-        /// Read and map data to be handled by provided delegates.
-        /// </summary>
-        /// <param name="data">Data reply to deserialize</param>
-        public async Task ReadAsync([NotNull] byte[] data)
+        /// <inheritdoc/>
+        public async Task ReadAsync([NotNull] byte[] serializedReplyMessageBody)
         {
             var replyParser = CreateDefaultChargeLinksReply.Parser;
-            var createDefaultChargeLinksReply = replyParser.ParseFrom(data);
+            var createDefaultChargeLinksReply = replyParser.ParseFrom(serializedReplyMessageBody);
 
             await MapAsync(createDefaultChargeLinksReply).ConfigureAwait(false);
         }
