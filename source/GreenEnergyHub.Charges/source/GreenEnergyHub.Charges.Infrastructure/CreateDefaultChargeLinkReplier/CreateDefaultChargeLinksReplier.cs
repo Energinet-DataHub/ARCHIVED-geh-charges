@@ -43,7 +43,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.CreateDefaultChargeLinkReplier
         {
             ValidateParametersOrThrow(meteringPointId, replyTo, correlationId);
 
-            var createDefaultChargeLinks = new CreateDefaultChargeLinksReply
+            var createDefaultChargeLinksReplySucceeded = new CreateDefaultChargeLinksReply
             {
                 MeteringPointId = meteringPointId,
                 CreateDefaultChargeLinksSucceeded =
@@ -53,7 +53,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.CreateDefaultChargeLinkReplier
                 },
             };
 
-            await SendReplyAsync(createDefaultChargeLinks, replyTo, correlationId);
+            await SendReplyAsync(createDefaultChargeLinksReplySucceeded, replyTo, correlationId);
         }
 
         public async Task ReplyWithFailedAsync(
@@ -64,7 +64,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.CreateDefaultChargeLinkReplier
         {
             ValidateParametersOrThrow(meteringPointId, replyTo, correlationId);
 
-            var createDefaultChargeLinks = new CreateDefaultChargeLinksReply
+            var createDefaultChargeLinksReplyFailed = new CreateDefaultChargeLinksReply
             {
                 MeteringPointId = meteringPointId,
                 CreateDefaultChargeLinksFailed =
@@ -75,7 +75,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.CreateDefaultChargeLinkReplier
                     },
             };
 
-            await SendReplyAsync(createDefaultChargeLinks, replyTo, correlationId);
+            await SendReplyAsync(createDefaultChargeLinksReplyFailed, replyTo, correlationId);
         }
 
         private async Task SendReplyAsync(
