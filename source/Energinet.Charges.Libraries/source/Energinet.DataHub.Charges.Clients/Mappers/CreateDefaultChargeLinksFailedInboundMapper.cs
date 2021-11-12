@@ -16,7 +16,7 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using Energinet.Charges.Contracts;
 using Energinet.DataHub.Charges.Libraries.Models;
-using GreenEnergyHub.Charges.Collective.Models;
+using GreenEnergyHub.Charges.Contracts;
 using CreateDefaultChargeLinksFailed =
     Energinet.Charges.Contracts.CreateDefaultChargeLinksReply.Types.CreateDefaultChargeLinksFailed;
 

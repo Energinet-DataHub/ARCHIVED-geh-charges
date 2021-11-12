@@ -39,7 +39,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.CreateDefaultChar
         [InlineAutoMoqData(MeteringPointId, null!, ReplyToQueueName)]
         [InlineAutoMoqData(null!, CorrelationId, ReplyToQueueName)]
         [InlineAutoMoqData(MeteringPointId, CorrelationId, null!)]
-        public async Task ReplyWithSucceededAsync_WhenArgumentIsNull_ThrowsException(
+        public async Task ReplyWithSucceededAsync_WhenArgumentIsNull_ThrowsArgumentNullException(
             string meteringPointId,
             string correlationId,
             string replyQueue,
@@ -89,7 +89,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.CreateDefaultChar
         [InlineAutoMoqData(MeteringPointId, null!, ReplyToQueueName)]
         [InlineAutoMoqData(null!, CorrelationId, ReplyToQueueName)]
         [InlineAutoMoqData(MeteringPointId, CorrelationId, null!)]
-        public async Task ReplyWithFailedAsync_WhenAnyArgumentIsNull_ThrowsException(
+        public async Task ReplyWithFailedAsync_WhenAnyArgumentIsNull_ThrowsArgumentNullException(
             string meteringPointId,
             string correlationId,
             string replyQueue,
