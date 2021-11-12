@@ -20,7 +20,7 @@ using Energinet.DataHub.Charges.Libraries.Mappers;
 
 namespace Energinet.DataHub.Charges.Libraries.DefaultChargeLink
 {
-    public sealed class DefaultChargeLinkReplyReader : IDefaultChargeLinkReplyReader
+    internal sealed class DefaultChargeLinkReplyReader : IDefaultChargeLinkReplyReader
     {
         private readonly OnSuccess _handleSuccess;
         private readonly OnFailure _handleFailure;
