@@ -23,9 +23,6 @@ using Google.Protobuf;
 
 namespace Energinet.DataHub.Charges.Libraries.DefaultChargeLink
 {
-    /// <summary>
-    /// This class must be thread safe.
-    /// </summary>
     internal sealed class DefaultChargeLinkClient : IDefaultChargeLinkClient
     {
         private readonly IServiceBusRequestSender _serviceBusRequestSender;

@@ -18,6 +18,7 @@ using Energinet.DataHub.Charges.Libraries.ServiceBus;
 
 namespace Energinet.DataHub.Charges.Libraries.Providers
 {
+    // This class must be registered as a singleton.
     public class ServiceBusRequestSenderProvider : IServiceBusRequestSenderProvider
     {
        private readonly ServiceBusClient _serviceBusClient;

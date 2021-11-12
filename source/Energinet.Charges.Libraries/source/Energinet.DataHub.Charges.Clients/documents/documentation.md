@@ -17,7 +17,9 @@ The library provides
 
 ## Registration
 
-`IDefaultChargeLinkClient` is thread safe and must be registered as a singleton.
+`IDefaultChargeLinkClient` should be registered as scoped.
+
+`ServiceBusRequestSenderProvider` should be registered as a singleton.
 
 ### Example
 

@@ -18,7 +18,7 @@ using System.Threading.Tasks;
 using Energinet.Charges.Contracts;
 using Google.Protobuf;
 using GreenEnergyHub.Charges.Application.ChargeLinks.CreateDefaultChargeLinkReplier;
-using GreenEnergyHub.Charges.Collective.Models;
+using GreenEnergyHub.Charges.Contracts;
 using GreenEnergyHub.Charges.Infrastructure.ServiceBusReplySenderProvider;
 
 namespace GreenEnergyHub.Charges.Infrastructure.CreateDefaultChargeLinkReplier
