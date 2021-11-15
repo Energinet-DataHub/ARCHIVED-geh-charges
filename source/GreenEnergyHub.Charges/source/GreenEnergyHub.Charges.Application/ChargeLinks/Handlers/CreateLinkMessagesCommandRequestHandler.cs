@@ -15,7 +15,7 @@
 using System.Threading.Tasks;
 using Energinet.DataHub.Charges.Libraries.DefaultChargeLinkMessages;
 using Energinet.DataHub.Charges.Libraries.Models;
-using GreenEnergyHub.Charges.Domain.CreateLinkMessagesRequest;
+using GreenEnergyHub.Charges.Domain.Dtos.CreateLinkMessagesRequest;
 
 namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
 {

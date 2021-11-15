@@ -14,7 +14,7 @@
 
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Domain.ChargeLinkCommandReceivedEvents;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinkCommandReceivedEvents;
 
 namespace GreenEnergyHub.Charges.Domain.ChargeLinks
 {

@@ -17,7 +17,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Energinet.DataHub.Charges.Libraries.DefaultChargeLink;
 using Energinet.DataHub.Charges.Libraries.Models;
-using GreenEnergyHub.Charges.Domain.ChargeLinkCommandAcceptedEvents;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinkCommandAcceptedEvents;
 
 namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
 {
