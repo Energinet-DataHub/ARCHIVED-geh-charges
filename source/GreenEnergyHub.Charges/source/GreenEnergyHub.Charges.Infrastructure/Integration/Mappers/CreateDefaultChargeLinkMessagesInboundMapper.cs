@@ -13,7 +13,7 @@
 // limitations under the License.
 
 using Energinet.Charges.Contracts;
-using GreenEnergyHub.Charges.Domain.CreateLinkMessagesRequest;
+using GreenEnergyHub.Charges.Domain.Dtos.CreateLinkMessagesRequest;
 using GreenEnergyHub.Messaging.Protobuf;
 using GreenEnergyHub.Messaging.Transport;
 
