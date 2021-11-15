@@ -23,10 +23,4 @@ The library provides
 
 ### Example
 
-            var serviceBusRequestSenderProvider =
-                new ServiceBusRequestSenderProvider(
-                    serviceBusClient,
-                    new ServiceBusRequestSenderConfiguration(requestQueueName));
-
-            serviceCollection.AddSingleton<IDefaultChargeLinkMessagesClient>(_ =>
-                new DefaultChargeLinkMessagesClient(serviceBusRequestSenderProvider));
+Please refer to this [class](https://github.com/Energinet-DataHub/geh-charges/blob/main/source/Energinet.Charges.Libraries/source/Energinet.DataHub.Charges.Clients/DefaultChargeLink/Configuration/DefaultChargeLinkClientConfiguration.cs) for registration
