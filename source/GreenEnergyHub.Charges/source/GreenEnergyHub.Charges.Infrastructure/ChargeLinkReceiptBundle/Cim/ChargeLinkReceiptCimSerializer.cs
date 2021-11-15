@@ -74,7 +74,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.ChargeLinkReceiptBundle.Cim
                     MarketDocumentSerializationHelper.Serialize(
                         cimNamespace,
                         _cimIdProvider,
-                        DocumentType.NotifyBillingMasterData,
+                        DocumentType.ChargeLinkReceipt,
                         receipts.First().BusinessReasonCode,
                         _hubSenderConfiguration,
                         receipts.First().RecipientId,
