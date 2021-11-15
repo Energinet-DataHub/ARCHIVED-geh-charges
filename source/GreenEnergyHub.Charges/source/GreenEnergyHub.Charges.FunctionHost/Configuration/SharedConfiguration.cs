@@ -93,7 +93,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
         {
             serviceCollection.AddSingleton<IServiceBusReplySenderProvider>(_ =>
                 new ServiceBusReplySenderProvider(serviceBusClient));
-            serviceCollection.AddSingleton<ICreateDefaultChargeLinksReplier, CreateDefaultChargeLinksReplier>();
+            serviceCollection.AddScoped<ICreateDefaultChargeLinksReplier, CreateDefaultChargeLinksReplier>();
         }
 
         private static void ConfigureSharedDatabase(IServiceCollection serviceCollection)

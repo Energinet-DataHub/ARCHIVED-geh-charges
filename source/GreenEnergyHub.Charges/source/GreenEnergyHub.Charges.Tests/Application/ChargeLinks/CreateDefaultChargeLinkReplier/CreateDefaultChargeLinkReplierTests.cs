@@ -41,17 +41,22 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.CreateDefaultChar
         [InlineAutoMoqData(MeteringPointId, CorrelationId, null!)]
         public async Task ReplyWithSucceededAsync_WhenArgumentIsNull_ThrowsArgumentNullException(
             string meteringPointId,
-            string correlationId,
             string replyQueue,
+            string correlationId,
+            [NotNull] [Frozen] Mock<ICorrelationContext> correlationContext,
             [NotNull] [Frozen] Mock<IServiceBusReplySenderProvider> serviceBusReplySenderProviderMock)
         {
             // Arrange
-            var sut = new CreateDefaultChargeLinksReplier(serviceBusReplySenderProviderMock.Object);
+            var sut = new CreateDefaultChargeLinksReplier(
+                correlationContext.Object,
+                serviceBusReplySenderProviderMock.Object);
+
+            correlationContext.Setup(x => x.Id).Returns(correlationId);
 
             // Act + Assert
             await Assert.ThrowsAsync<ArgumentNullException>(() => sut
                     .ReplyWithSucceededAsync(
-                        meteringPointId!, false, replyQueue!, correlationId!))
+                        meteringPointId!, false, replyQueue!))
                 .ConfigureAwait(false);
         }
 
@@ -61,28 +66,36 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.CreateDefaultChar
             [NotNull] [Frozen] Mock<IServiceBusReplySenderProvider> serviceBusReplySenderProviderMock,
             [NotNull] [Frozen] Mock<IServiceBusReplySender> serviceBusRequestSenderMock,
             [NotNull] [Frozen] Mock<IMessageMetaDataContext> messageMetaDataContextMock,
+            [NotNull] [Frozen] Mock<ICorrelationContext> correlationContext,
+            string correlationId,
             string anyMeteringPointId,
             string replyTo,
             bool anyDidCreateDefaultCharges)
         {
             // Arrange
             messageMetaDataContextMock.Setup(x => x.ReplyTo).Returns(replyTo);
+            correlationContext.Setup(x => x.Id).Returns(correlationId);
 
             serviceBusReplySenderProviderMock.Setup(x => x
                     .GetInstance(replyTo))
                 .Returns(serviceBusRequestSenderMock.Object);
 
-            var sut = new CreateDefaultChargeLinksReplier(serviceBusReplySenderProviderMock.Object);
+            var sut = new CreateDefaultChargeLinksReplier(
+                correlationContext.Object,
+                serviceBusReplySenderProviderMock.Object);
 
             // Act
             await sut.ReplyWithSucceededAsync(
                 anyMeteringPointId,
                 anyDidCreateDefaultCharges,
-                messageMetaDataContextMock.Object.ReplyTo,
-                CorrelationId).ConfigureAwait(false);
+                messageMetaDataContextMock.Object.ReplyTo).ConfigureAwait(false);
 
             // Assert
-            serviceBusRequestSenderMock.Verify(x => x.SendReplyAsync(It.IsAny<byte[]>(), CorrelationId), Times.Once);
+            serviceBusRequestSenderMock.Verify(
+                x => x.SendReplyAsync(
+                    It.IsAny<byte[]>(),
+                    correlationContext.Object.Id),
+                Times.Once);
         }
 
         [Theory]
@@ -91,18 +104,23 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.CreateDefaultChar
         [InlineAutoMoqData(MeteringPointId, CorrelationId, null!)]
         public async Task ReplyWithFailedAsync_WhenAnyArgumentIsNull_ThrowsArgumentNullException(
             string meteringPointId,
-            string correlationId,
             string replyQueue,
+            string correlationId,
             ErrorCode errorCode,
+            [NotNull] [Frozen] Mock<ICorrelationContext> correlationContext,
             [NotNull] [Frozen] Mock<IServiceBusReplySenderProvider> serviceBusRequestSenderProviderMock)
         {
             // Arrange
-            var sut = new CreateDefaultChargeLinksReplier(serviceBusRequestSenderProviderMock.Object);
+            var sut = new CreateDefaultChargeLinksReplier(
+                correlationContext.Object,
+                serviceBusRequestSenderProviderMock.Object);
+
+            correlationContext.Setup(x => x.Id).Returns(correlationId);
 
             // Act + Assert
             await Assert.ThrowsAsync<ArgumentNullException>(() => sut
                     .ReplyWithFailedAsync(
-                        meteringPointId!, errorCode, replyQueue!, correlationId!))
+                        meteringPointId!, errorCode, replyQueue!))
                 .ConfigureAwait(false);
         }
 
@@ -111,6 +129,8 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.CreateDefaultChar
         public async Task ReplyWithFailedAsync_WhenInputIsValid_SendsMessage(
             [NotNull] [Frozen] Mock<IServiceBusReplySenderProvider> serviceBusReplySenderProviderMock,
             [NotNull] [Frozen] Mock<IServiceBusReplySender> serviceBusReplySenderMock,
+            [NotNull] [Frozen] Mock<ICorrelationContext> correlationContext,
+            string correlationId,
             string meteringPointId,
             ErrorCode errorCode)
         {
@@ -120,17 +140,24 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.CreateDefaultChar
             serviceBusReplySenderProviderMock.Setup(x => x.
                     GetInstance(replyQueueName)).Returns(serviceBusReplySenderMock.Object);
 
-            var sut = new CreateDefaultChargeLinksReplier(serviceBusReplySenderProviderMock.Object);
+            correlationContext.Setup(x => x.Id).Returns(correlationId);
+
+            var sut = new CreateDefaultChargeLinksReplier(
+                correlationContext.Object,
+                serviceBusReplySenderProviderMock.Object);
 
             // Act
             await sut.ReplyWithFailedAsync(
                 meteringPointId,
                 errorCode,
-                replyQueueName,
-                CorrelationId).ConfigureAwait(false);
+                replyQueueName).ConfigureAwait(false);
 
             // Assert
-            serviceBusReplySenderMock.Verify(x => x.SendReplyAsync(It.IsAny<byte[]>(), CorrelationId), Times.Once);
+            serviceBusReplySenderMock.Verify(
+                x => x.SendReplyAsync(
+                    It.IsAny<byte[]>(),
+                    correlationContext.Object.Id),
+                Times.Once);
         }
     }
 }

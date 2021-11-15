@@ -56,11 +56,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Handlers
 
             // Assert
             defaultChargeLinkClient.Verify(
-                x => x.ReplyWithSucceededAsync(MeteringPointId, It.IsAny<bool>(), replyTo, correlationId));
-
-            // TODO: Will fail since sut.HandleAsync set it to true
-            // defaultChargeLinkClient.Verify(
-            //     x => x.CreateDefaultChargeLinksSucceededReplyAsync(MeteringPointId, false, replyTo, correlationId));
+                x => x.ReplyWithSucceededAsync(MeteringPointId, true, replyTo));
         }
 
         [Theory]

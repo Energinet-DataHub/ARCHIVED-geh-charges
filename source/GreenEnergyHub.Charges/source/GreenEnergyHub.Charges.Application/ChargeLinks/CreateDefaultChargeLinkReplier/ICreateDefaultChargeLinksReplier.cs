@@ -23,13 +23,11 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.CreateDefaultChargeLink
         Task ReplyWithFailedAsync(
             [NotNull] string meteringPointId,
             ErrorCode errorCode,
-            string replyTo,
-            string correlationId);
+            string replyTo);
 
         Task ReplyWithSucceededAsync(
             [NotNull] string meteringPointId,
             bool didCreateChargeLinks,
-            string replyTo,
-            string correlationId);
+            string replyTo);
     }
 }

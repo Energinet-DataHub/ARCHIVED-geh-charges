@@ -17,6 +17,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using Energinet.Charges.Contracts;
 using Google.Protobuf;
+using GreenEnergyHub.Charges.Application;
 using GreenEnergyHub.Charges.Application.ChargeLinks.CreateDefaultChargeLinkReplier;
 using GreenEnergyHub.Charges.Contracts;
 using GreenEnergyHub.Charges.Infrastructure.ServiceBusReplySenderProvider;
@@ -25,20 +26,23 @@ namespace GreenEnergyHub.Charges.Infrastructure.CreateDefaultChargeLinkReplier
 {
     public sealed class CreateDefaultChargeLinksReplier : ICreateDefaultChargeLinksReplier
     {
+        private readonly ICorrelationContext _correlationContext;
         private readonly IServiceBusReplySenderProvider _serviceBusReplySenderProvider;
 
-        public CreateDefaultChargeLinksReplier([NotNull] IServiceBusReplySenderProvider serviceBusReplySenderProvider)
+        public CreateDefaultChargeLinksReplier(
+            [NotNull] ICorrelationContext correlationContext,
+            [NotNull] IServiceBusReplySenderProvider serviceBusReplySenderProvider)
         {
+            _correlationContext = correlationContext;
             _serviceBusReplySenderProvider = serviceBusReplySenderProvider;
         }
 
         public async Task ReplyWithSucceededAsync(
             [NotNull] string meteringPointId,
             bool didCreateChargeLinks,
-            [NotNull] string replyTo,
-            [NotNull] string correlationId)
+            [NotNull] string replyTo)
         {
-            ValidateParametersOrThrow(meteringPointId, replyTo, correlationId);
+            ValidateParametersOrThrow(meteringPointId, replyTo, _correlationContext.Id);
 
             var createDefaultChargeLinksReplySucceeded = new CreateDefaultChargeLinksReply
             {
@@ -50,16 +54,15 @@ namespace GreenEnergyHub.Charges.Infrastructure.CreateDefaultChargeLinkReplier
                 },
             };
 
-            await SendReplyAsync(createDefaultChargeLinksReplySucceeded, replyTo, correlationId);
+            await SendReplyAsync(createDefaultChargeLinksReplySucceeded, replyTo, _correlationContext.Id);
         }
 
         public async Task ReplyWithFailedAsync(
             [NotNull] string meteringPointId,
             ErrorCode errorCode,
-            [NotNull] string replyTo,
-            [NotNull] string correlationId)
+            [NotNull] string replyTo)
         {
-            ValidateParametersOrThrow(meteringPointId, replyTo, correlationId);
+            ValidateParametersOrThrow(meteringPointId, replyTo, _correlationContext.Id);
 
             var createDefaultChargeLinksReplyFailed = new CreateDefaultChargeLinksReply
             {
@@ -72,7 +75,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.CreateDefaultChargeLinkReplier
                     },
             };
 
-            await SendReplyAsync(createDefaultChargeLinksReplyFailed, replyTo, correlationId);
+            await SendReplyAsync(createDefaultChargeLinksReplyFailed, replyTo, _correlationContext.Id);
         }
 
         private async Task SendReplyAsync(
