@@ -14,7 +14,7 @@
 
 using System.Diagnostics.CodeAnalysis;
 using Google.Protobuf.WellKnownTypes;
-using GreenEnergyHub.Charges.Domain.ChargeLinkCreatedEvents;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinkCreatedEvents;
 using GreenEnergyHub.Charges.Infrastructure.Integration.ChargeLinkCreated;
 using GreenEnergyHub.Messaging.Protobuf;
 

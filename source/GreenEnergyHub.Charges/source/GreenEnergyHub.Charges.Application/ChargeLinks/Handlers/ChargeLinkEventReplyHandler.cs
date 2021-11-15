@@ -16,7 +16,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application.ChargeLinks.CreateDefaultChargeLinkReplier;
-using GreenEnergyHub.Charges.Domain.ChargeLinkCommandAcceptedEvents;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinkCommandAcceptedEvents;
 
 namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
 {

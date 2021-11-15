@@ -13,8 +13,8 @@
 // limitations under the License.
 
 using System.Collections.Generic;
+using GreenEnergyHub.Charges.Domain.Dtos.Messages;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
-using GreenEnergyHub.Charges.Domain.Messages;
 using GreenEnergyHub.Messaging.MessageTypes.Common;
 
 namespace GreenEnergyHub.Charges.Application.Charges.Acknowledgement

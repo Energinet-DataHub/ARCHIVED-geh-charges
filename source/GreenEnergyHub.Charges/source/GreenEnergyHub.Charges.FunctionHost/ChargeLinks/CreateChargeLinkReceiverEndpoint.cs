@@ -17,7 +17,7 @@ using System.Threading.Tasks;
 using Energinet.Charges.Contracts;
 using GreenEnergyHub.Charges.Application;
 using GreenEnergyHub.Charges.Application.ChargeLinks.Handlers;
-using GreenEnergyHub.Charges.Domain.CreateLinkRequest;
+using GreenEnergyHub.Charges.Domain.Dtos.CreateLinkRequest;
 using GreenEnergyHub.Charges.FunctionHost.Common;
 using GreenEnergyHub.Charges.Infrastructure.Messaging;
 using Microsoft.Azure.Functions.Worker;
