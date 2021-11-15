@@ -19,7 +19,6 @@ namespace Energinet.DataHub.Charges.Libraries.Models
     /// to a successful CreateDefaultChargeLinks request
     /// </summary>
     /// <param name="MeteringPointId">A unique id to specify the metering point.</param>
-    /// <param name="DidCreateChargeLinks">True if the CreateDefaultChargeLinks request
-    /// led to the creation of Charge Links within Charges Domain.</param>
-    public sealed record CreateDefaultChargeLinksSucceededDto(string MeteringPointId, bool DidCreateChargeLinks);
+    /// <param name="DidCreateChargeLinks">True if any charge links was created.</param>
+    public sealed record DefaultChargeLinksCreatedSuccessfullyDto(string MeteringPointId, bool DidCreateChargeLinks);
 }

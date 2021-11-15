@@ -34,18 +34,18 @@ namespace Energinet.DataHub.Charges.Libraries.DefaultChargeLink
         }
 
         public async Task CreateDefaultChargeLinksRequestAsync(
-            [NotNull] CreateDefaultChargeLinksDto createDefaultChargeLinksDto,
+            [NotNull] RequestDefaultChargeLinksForMeteringPointDto requestDefaultChargeLinksForMeteringPointDto,
             [NotNull] string correlationId)
         {
-            if (createDefaultChargeLinksDto == null)
-                throw new ArgumentNullException(nameof(createDefaultChargeLinksDto));
+            if (requestDefaultChargeLinksForMeteringPointDto == null)
+                throw new ArgumentNullException(nameof(requestDefaultChargeLinksForMeteringPointDto));
 
             if (string.IsNullOrWhiteSpace(correlationId))
                 throw new ArgumentNullException(nameof(correlationId));
 
             var createDefaultChargeLinks = new CreateDefaultChargeLinks
             {
-                MeteringPointId = createDefaultChargeLinksDto.MeteringPointId,
+                MeteringPointId = requestDefaultChargeLinksForMeteringPointDto.MeteringPointId,
             };
 
             await _serviceBusRequestSender.SendRequestAsync(

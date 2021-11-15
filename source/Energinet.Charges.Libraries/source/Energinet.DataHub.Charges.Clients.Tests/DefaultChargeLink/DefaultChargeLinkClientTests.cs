@@ -43,7 +43,7 @@ namespace Energinet.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.Defaul
             [NotNull] [Frozen] Mock<IServiceBusRequestSenderProvider> serviceBusRequestSenderProviderMock)
         {
             // Arrange
-            var createDefaultChargeLinksDto = meteringPointId != null ? new CreateDefaultChargeLinksDto(meteringPointId) : null;
+            var createDefaultChargeLinksDto = meteringPointId != null ? new RequestDefaultChargeLinksForMeteringPointDto(meteringPointId) : null;
 
             var sut = new DefaultChargeLinkClient(serviceBusRequestSenderProviderMock.Object);
 
@@ -66,7 +66,7 @@ namespace Energinet.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.Defaul
 
             var sut = new DefaultChargeLinkClient(serviceBusRequestSenderProviderMock.Object);
 
-            var createDefaultChargeLinksDto = new CreateDefaultChargeLinksDto(MeteringPointId);
+            var createDefaultChargeLinksDto = new RequestDefaultChargeLinksForMeteringPointDto(MeteringPointId);
 
             // Act
             await sut.CreateDefaultChargeLinksRequestAsync(

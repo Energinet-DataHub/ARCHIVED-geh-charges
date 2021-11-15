@@ -71,14 +71,14 @@ namespace Energinet.DataHub.Charges.Clients.IntegrationTests.DefaultChargeLink
             [Theory]
             [AutoDomainData]
             public async Task When_CreateDefaultChargeLinksRequestAsync_Then_RequestIsSendToCharges(
-                CreateDefaultChargeLinksDto createDefaultChargeLinksDto, string correlationId)
+                RequestDefaultChargeLinksForMeteringPointDto requestDefaultChargeLinksForMeteringPointDto, string correlationId)
             {
                 // Arrange
                 using var result = await _serviceBusTestListener.ListenForMessageAsync().ConfigureAwait(false);
                 var sut = new DefaultChargeLinkClient(_serviceBusRequestSenderProvider);
 
                 // Act
-                await sut.CreateDefaultChargeLinksRequestAsync(createDefaultChargeLinksDto, correlationId).ConfigureAwait(false);
+                await sut.CreateDefaultChargeLinksRequestAsync(requestDefaultChargeLinksForMeteringPointDto, correlationId).ConfigureAwait(false);
 
                 // Assert
                 // => Service Bus (timeout should not be more than 5 secs).

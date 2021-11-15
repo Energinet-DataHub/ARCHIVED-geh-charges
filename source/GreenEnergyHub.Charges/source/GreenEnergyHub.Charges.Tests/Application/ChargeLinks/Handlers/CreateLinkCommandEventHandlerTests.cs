@@ -21,7 +21,7 @@ using AutoFixture.Xunit2;
 using GreenEnergyHub.Charges.Application;
 using GreenEnergyHub.Charges.Application.ChargeLinks.CreateDefaultChargeLinkReplier;
 using GreenEnergyHub.Charges.Application.ChargeLinks.Handlers;
-using GreenEnergyHub.Charges.Collective.Models;
+using GreenEnergyHub.Charges.Contracts;
 using GreenEnergyHub.Charges.Domain.ChargeLinkCommandReceivedEvents;
 using GreenEnergyHub.Charges.Domain.ChargeLinkCommands;
 using GreenEnergyHub.Charges.Domain.CreateLinkRequest;

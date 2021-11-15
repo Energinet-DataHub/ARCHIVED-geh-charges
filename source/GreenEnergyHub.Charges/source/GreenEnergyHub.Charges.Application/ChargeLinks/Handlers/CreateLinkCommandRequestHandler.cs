@@ -18,7 +18,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application.ChargeLinks.CreateDefaultChargeLinkReplier;
-using GreenEnergyHub.Charges.Collective.Models;
+using GreenEnergyHub.Charges.Contracts;
 using GreenEnergyHub.Charges.Domain.ChargeLinkCommandReceivedEvents;
 using GreenEnergyHub.Charges.Domain.ChargeLinkCommands;
 using GreenEnergyHub.Charges.Domain.CreateLinkRequest;

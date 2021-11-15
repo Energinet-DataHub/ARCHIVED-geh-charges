@@ -17,7 +17,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
 using GreenEnergyHub.Charges.Application;
-using GreenEnergyHub.Charges.Collective.Models;
+using GreenEnergyHub.Charges.Contracts;
 using GreenEnergyHub.Charges.Infrastructure.CreateDefaultChargeLinkReplier;
 using GreenEnergyHub.Charges.Infrastructure.ServiceBusReplySenderProvider;
 using GreenEnergyHub.Charges.TestCore.Attributes;

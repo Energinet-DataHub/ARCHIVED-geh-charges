@@ -24,7 +24,7 @@ namespace Energinet.DataHub.Charges.Libraries.Mappers
 {
     internal class CreateDefaultChargeLinksFailedInboundMapper
     {
-        protected internal static CreateDefaultChargeLinksFailedDto Convert(
+        protected internal static DefaultChargeLinksCreationFailedStatusDto Convert(
             [NotNull] CreateDefaultChargeLinksReply createDefaultChargeLinksReply)
         {
             return new(
