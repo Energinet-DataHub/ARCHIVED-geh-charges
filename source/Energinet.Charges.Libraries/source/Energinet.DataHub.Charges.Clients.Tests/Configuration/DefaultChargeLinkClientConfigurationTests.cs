@@ -12,8 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
+using System.Diagnostics.CodeAnalysis;
+using System.Linq;
+using Azure.Messaging.ServiceBus;
+using Energinet.DataHub.Charges.Libraries.Configuration;
+using Energinet.DataHub.Charges.Libraries.DefaultChargeLink;
+using Energinet.DataHub.Charges.Libraries.Models;
+using Energinet.DataHub.Charges.Libraries.Providers;
 using FluentAssertions;
 using GreenEnergyHub.TestHelpers;
+using Microsoft.Extensions.DependencyInjection;
+using Moq;
 using Xunit;
 using Xunit.Categories;
 
@@ -24,14 +34,25 @@ namespace Energinet.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.Config
     {
         [Theory]
         [InlineAutoDomainData]
-        public void WhenCalled_WithConfigureServices_RegistrationIsCorrect(bool stuff)
+        public void WhenCalled_WithConfigureServices_RegistrationIsCorrect(
+            [NotNull] string anyReplyQueueName,
+            [NotNull] Mock<ServiceBusClient> serviceBusClient)
         {
-            // Arrange
-
             // Act
+            var sut = new ServiceCollection();
+            sut.ConfigureDefaultChargeLinkClientConfiguration(
+                serviceBusClient.Object,
+                new ServiceBusRequestSenderConfiguration(anyReplyQueueName));
 
-            // Act // Assert
-            stuff.Should().BeTrue();
+            var defaultChargeLinkClientRegistration
+                = sut.First(x => x.ServiceType == typeof(IDefaultChargeLinkClient));
+
+            var serviceBusRequestSenderConfiguration
+                 = sut.First(x => x.ServiceType == typeof(IServiceBusRequestSenderProvider));
+
+            // Assert
+            defaultChargeLinkClientRegistration.Lifetime.Should().Be(ServiceLifetime.Scoped);
+            serviceBusRequestSenderConfiguration.Lifetime.Should().Be(ServiceLifetime.Singleton);
         }
     }
 }

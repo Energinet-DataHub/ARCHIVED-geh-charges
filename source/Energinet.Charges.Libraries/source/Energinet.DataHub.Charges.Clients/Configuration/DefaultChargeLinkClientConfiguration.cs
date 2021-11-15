@@ -22,15 +22,15 @@ namespace Energinet.DataHub.Charges.Libraries.Configuration
 {
     public static class DefaultChargeLinkClientConfiguration
     {
-        public static void ConfigureServices(
-            IServiceCollection serviceCollection,
+        public static void ConfigureDefaultChargeLinkClientConfiguration(
+            this IServiceCollection serviceCollection,
             ServiceBusClient serviceBusClient,
-            string replyQueueName)
+            IServiceBusRequestSenderConfiguration serviceBusRequestSenderConfiguration)
         {
             serviceCollection.AddSingleton<IServiceBusRequestSenderProvider>(
                 _ => new ServiceBusRequestSenderProvider(
                     serviceBusClient,
-                    new ServiceBusRequestSenderConfiguration(replyQueueName)));
+                    serviceBusRequestSenderConfiguration));
 
             serviceCollection.AddScoped<IDefaultChargeLinkClient>();
         }
