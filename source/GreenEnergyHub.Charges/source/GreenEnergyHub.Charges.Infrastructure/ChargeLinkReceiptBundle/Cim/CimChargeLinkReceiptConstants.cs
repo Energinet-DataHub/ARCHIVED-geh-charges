@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace GreenEnergyHub.Charges.Infrastructure.ChargeLinkBundle.Cim
+namespace GreenEnergyHub.Charges.Infrastructure.ChargeLinkReceiptBundle.Cim
 {
     /// <summary>
     /// Strings used in CIM/XML for elements, namespaces or attributes that we need to
@@ -29,6 +29,8 @@ namespace GreenEnergyHub.Charges.Infrastructure.ChargeLinkBundle.Cim
             "urn:ediel.org:structure:confirmrequestchangebillingmasterdata:0:1 urn-ediel-org-structure-confirmrequestchangebillingmasterdata-0-1.xsd";
 
         internal const string ConfirmRootElement = "ConfirmRequestChangeBillingMasterData_MarketDocument";
+
+        internal const string ReceiptStatus = "reason.code";
 
         internal const string MarketActivityRecordId = "mRID";
 
