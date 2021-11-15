@@ -41,7 +41,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Handlers
             [Frozen] [NotNull] Mock<IDefaultChargeLinkClient> defaultChargeLinkClient,
             [NotNull] string replyTo,
             [NotNull] string correlationId,
-            [NotNull] ChargeLinkEventReplyHandler sut)
+            [NotNull] CreateDefaultChargeLinksReplierHandler sut)
         {
             // Arrange
             messageMetaDataContext.Setup(m => m.IsReplyToSet()).Returns(true);
@@ -66,7 +66,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Handlers
         public async Task HandleAsync_WhenCalled_ThrowsInvalidOperationExceptionIfMeteringPointIdsDiffer(
             [Frozen] [NotNull] Mock<IMessageMetaDataContext> messageMetaDataContext,
             [NotNull] string replyTo,
-            [NotNull] ChargeLinkEventReplyHandler sut)
+            [NotNull] CreateDefaultChargeLinksReplierHandler sut)
         {
             // Arrange
             messageMetaDataContext.Setup(m => m.IsReplyToSet()).Returns(true);

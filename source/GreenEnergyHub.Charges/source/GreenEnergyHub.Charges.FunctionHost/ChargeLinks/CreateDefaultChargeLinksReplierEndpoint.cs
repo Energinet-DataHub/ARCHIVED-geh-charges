@@ -32,31 +32,31 @@ namespace GreenEnergyHub.Charges.FunctionHost.ChargeLinks
         /// </summary>
         public const string FunctionName = nameof(CreateDefaultChargeLinksReplierEndpoint);
         private readonly MessageExtractor<ChargeLinkCommandAccepted> _messageExtractor;
-        private readonly IChargeLinkEventReplyHandler _chargeLinkEventReplyHandler;
+        private readonly ICreateDefaultChargeLinksReplierHandler _createDefaultChargeLinksReplierHandler;
         private readonly IMessageMetaDataContext _messageMetaDataContext;
 
         public CreateDefaultChargeLinksReplierEndpoint(
             MessageExtractor<ChargeLinkCommandAccepted> messageExtractor,
-            IChargeLinkEventReplyHandler chargeLinkEventReplyHandler,
+            ICreateDefaultChargeLinksReplierHandler createDefaultChargeLinksReplierHandler,
             IMessageMetaDataContext messageMetaDataContext)
         {
             _messageExtractor = messageExtractor;
-            _chargeLinkEventReplyHandler = chargeLinkEventReplyHandler;
+            _createDefaultChargeLinksReplierHandler = createDefaultChargeLinksReplierHandler;
             _messageMetaDataContext = messageMetaDataContext;
         }
 
         [Function(FunctionName)]
         public async Task RunAsync(
             [ServiceBusTrigger(
-                "%" + EnvironmentSettingNames.ChargeLinkAcceptedTopicName + "%",
-                "%" + EnvironmentSettingNames.ChargeLinkAcceptedReplier + "%",
+                "%" + EnvironmentSettingNames.DefaultChargeLinksDataAvailableNotifiedTopicName + "%",
+                "%" + EnvironmentSettingNames.DefaultChargeLinksDataAvailableNotifiedSubscription + "%",
                 Connection = EnvironmentSettingNames.DomainEventListenerConnectionString)]
             [NotNull] byte[] message)
         {
             var acceptedChargeLinkCommand = (ChargeLinkCommandAcceptedEvent)await _messageExtractor.ExtractAsync(message).ConfigureAwait(false);
 
             if (_messageMetaDataContext.IsReplyToSet())
-                await _chargeLinkEventReplyHandler.HandleAsync(acceptedChargeLinkCommand).ConfigureAwait(false);
+                await _createDefaultChargeLinksReplierHandler.HandleAsync(acceptedChargeLinkCommand).ConfigureAwait(false);
         }
     }
 }

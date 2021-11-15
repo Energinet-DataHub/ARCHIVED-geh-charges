@@ -13,12 +13,23 @@
 // limitations under the License.
 
 using System.Threading.Tasks;
+using GreenEnergyHub.Charges.Domain.ChargeCommandReceivedEvents;
 using GreenEnergyHub.Charges.Domain.ChargeLinkCommandAcceptedEvents;
 
 namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
 {
-    public interface IChargeLinkEventReplyHandler
+    public class ChargeLinkDataAvailableNotifierEndpointHandler : IChargeLinkDataAvailableNotifierEndpointHandler
     {
-        Task HandleAsync(ChargeLinkCommandAcceptedEvent command);
+        private readonly IMessageDispatcher<ChargeCommandReceivedEvent> _messageDispatcher;
+
+        public ChargeLinkDataAvailableNotifierEndpointHandler(IMessageDispatcher<ChargeCommandReceivedEvent> messageDispatcher)
+        {
+            _messageDispatcher = messageDispatcher;
+        }
+
+        public async Task HandleAsync(ChargeLinkCommandAcceptedEvent chargeLinkCommandAcceptedEvent)
+        {
+            await _messageDispatcher.DispatchAsync(chargeLinkCommandAcceptedEvent);
+        }
     }
 }
