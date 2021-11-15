@@ -15,7 +15,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using GreenEnergyHub.Charges.Domain.ChargeLinkCommandReceivedEvents;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinkCommandReceivedEvents;
 using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandReceived;
 using GreenEnergyHub.Charges.Infrastructure.Internal.Mappers;
 using GreenEnergyHub.Charges.TestCore.Attributes;
@@ -23,6 +23,7 @@ using GreenEnergyHub.Charges.TestCore.Protobuf;
 using NodaTime;
 using Xunit;
 using Xunit.Categories;
+using ChargeLinkCommand = GreenEnergyHub.Charges.Domain.Dtos.ChargeLinkCommands.ChargeLinkCommand;
 
 namespace GreenEnergyHub.Charges.Tests.Infrastructure.Internal.Mappers
 {
@@ -32,13 +33,13 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Internal.Mappers
         [Theory]
         [InlineAutoMoqData]
         public void Convert_WhenCalled_ShouldMapToProtobufWithCorrectValues(
-            [NotNull] Charges.Domain.ChargeLinkCommands.ChargeLinkCommand chargeLinkCommand,
+            [NotNull] ChargeLinkCommand chargeLinkCommand,
             [NotNull] LinkCommandReceivedOutboundMapper sut)
         {
             // Arrange
             ChargeLinkCommandReceivedEvent chargeLinkCommandReceivedEvent =
                 new(SystemClock.Instance.GetCurrentInstant(),
-                    new List<Charges.Domain.ChargeLinkCommands.ChargeLinkCommand> { chargeLinkCommand });
+                    new List<ChargeLinkCommand> { chargeLinkCommand });
 
             // Act
             var result = (ChargeLinkCommandReceived)sut.Convert(chargeLinkCommandReceivedEvent);

@@ -19,8 +19,8 @@ using System.Threading.Tasks;
 using Energinet.DataHub.MessageHub.Client.DataAvailable;
 using Energinet.DataHub.MessageHub.Client.Model;
 using GreenEnergyHub.Charges.Domain.AvailableChargeData;
-using GreenEnergyHub.Charges.Domain.ChargeCommandAcceptedEvents;
-using GreenEnergyHub.Charges.Domain.ChargeCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandAcceptedEvents;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using NodaTime;
 

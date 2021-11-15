@@ -19,7 +19,7 @@ using Energinet.DataHub.Charges.Libraries.DefaultChargeLinkMessages;
 using Energinet.DataHub.Charges.Libraries.Models;
 using GreenEnergyHub.Charges.Application;
 using GreenEnergyHub.Charges.Application.ChargeLinks.Handlers;
-using GreenEnergyHub.Charges.Domain.CreateLinkMessagesRequest;
+using GreenEnergyHub.Charges.Domain.Dtos.CreateLinkMessagesRequest;
 using GreenEnergyHub.TestHelpers;
 using Moq;
 using Xunit;

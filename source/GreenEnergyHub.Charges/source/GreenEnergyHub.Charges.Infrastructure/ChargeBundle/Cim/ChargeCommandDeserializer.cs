@@ -16,7 +16,7 @@ using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Xml;
-using GreenEnergyHub.Charges.Domain.ChargeCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
 using GreenEnergyHub.Charges.Infrastructure.Messaging.Serialization;
 using GreenEnergyHub.Messaging.Transport;
 

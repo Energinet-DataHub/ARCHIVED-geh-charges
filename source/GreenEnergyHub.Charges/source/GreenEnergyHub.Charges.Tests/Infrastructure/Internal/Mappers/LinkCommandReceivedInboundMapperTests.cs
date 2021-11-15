@@ -14,8 +14,8 @@
 
 using System;
 using System.Diagnostics.CodeAnalysis;
-using GreenEnergyHub.Charges.Domain.ChargeLinkCommandReceivedEvents;
 using GreenEnergyHub.Charges.Domain.ChargeLinks;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinkCommandReceivedEvents;
 using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandReceived;
 using GreenEnergyHub.Charges.Infrastructure.Internal.Mappers;
 using GreenEnergyHub.Charges.TestCore;

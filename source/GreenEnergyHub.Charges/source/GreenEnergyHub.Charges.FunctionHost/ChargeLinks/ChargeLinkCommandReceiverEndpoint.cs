@@ -14,7 +14,7 @@
 
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application.ChargeLinks.Handlers;
-using GreenEnergyHub.Charges.Domain.ChargeLinkCommandReceivedEvents;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinkCommandReceivedEvents;
 using GreenEnergyHub.Charges.FunctionHost.Common;
 using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandReceived;
 using GreenEnergyHub.Charges.Infrastructure.Messaging;

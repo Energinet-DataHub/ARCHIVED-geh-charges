@@ -17,7 +17,7 @@ using System.Diagnostics.CodeAnalysis;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.Domain.AvailableChargeData;
-using GreenEnergyHub.Charges.Domain.ChargeCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.TestHelpers;
 using GreenEnergyHub.TestHelpers.FluentAssertionsExtensions;

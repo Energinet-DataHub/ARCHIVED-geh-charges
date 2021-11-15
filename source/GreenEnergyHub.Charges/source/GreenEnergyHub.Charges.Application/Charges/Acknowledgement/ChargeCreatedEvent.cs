@@ -14,7 +14,7 @@
 
 using GreenEnergyHub.Charges.Core;
 using GreenEnergyHub.Charges.Domain.Charges;
-using GreenEnergyHub.Charges.Domain.Messages;
+using GreenEnergyHub.Charges.Domain.Dtos.Messages;
 using GreenEnergyHub.Messaging.MessageTypes.Common;
 
 namespace GreenEnergyHub.Charges.Application.Charges.Acknowledgement

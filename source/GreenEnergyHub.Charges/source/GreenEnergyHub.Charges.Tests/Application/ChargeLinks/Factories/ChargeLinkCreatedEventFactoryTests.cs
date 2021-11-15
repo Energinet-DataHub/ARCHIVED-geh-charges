@@ -15,9 +15,8 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using GreenEnergyHub.Charges.Core.DateTime;
-using GreenEnergyHub.Charges.Domain.ChargeLinkCommandAcceptedEvents;
-using GreenEnergyHub.Charges.Domain.ChargeLinkCommands;
-using GreenEnergyHub.Charges.Domain.ChargeLinkCreatedEvents;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinkCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinkCreatedEvents;
 using GreenEnergyHub.Charges.TestCore.Attributes;
 using Xunit;
 using Xunit.Categories;
