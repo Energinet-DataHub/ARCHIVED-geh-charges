@@ -24,7 +24,8 @@ namespace GreenEnergyHub.Charges.Domain.AvailableChargeLinkReceiptData
             MarketParticipantRole recipientRole,
             BusinessReasonCode businessReasonCode,
             ReceiptStatus receiptStatus,
-            string originalOperationId)
+            string originalOperationId,
+            string meteringPointId)
         {
             Id = Guid.NewGuid();
             RecipientId = recipientId;
@@ -32,6 +33,7 @@ namespace GreenEnergyHub.Charges.Domain.AvailableChargeLinkReceiptData
             BusinessReasonCode = businessReasonCode;
             ReceiptStatus = receiptStatus;
             OriginalOperationId = originalOperationId;
+            MeteringPointId = meteringPointId;
         }
 
         public Guid Id { get; }
@@ -45,5 +47,7 @@ namespace GreenEnergyHub.Charges.Domain.AvailableChargeLinkReceiptData
         public ReceiptStatus ReceiptStatus { get; }
 
         public string OriginalOperationId { get; }
+
+        public string MeteringPointId { get; }
     }
 }
