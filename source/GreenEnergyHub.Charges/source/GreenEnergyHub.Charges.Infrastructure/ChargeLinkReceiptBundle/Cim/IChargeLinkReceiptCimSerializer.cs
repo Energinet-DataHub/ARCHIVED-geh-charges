@@ -19,7 +19,7 @@ using GreenEnergyHub.Charges.Domain.AvailableChargeLinkReceiptData;
 
 namespace GreenEnergyHub.Charges.Infrastructure.ChargeLinkReceiptBundle.Cim
 {
-    public interface IChargeLinkReceiptSerializer
+    public interface IChargeLinkReceiptCimSerializer
     {
         Task SerializeToStreamAsync(IEnumerable<AvailableChargeLinkReceiptData> receipts, Stream stream);
     }
