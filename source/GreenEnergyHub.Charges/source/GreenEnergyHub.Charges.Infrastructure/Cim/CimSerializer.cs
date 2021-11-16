@@ -56,7 +56,9 @@ namespace GreenEnergyHub.Charges.Infrastructure.Cim
             stream.Position = 0;
         }
 
-        public virtual IEnumerable<XElement> GetAdditionalDocumentFields(IEnumerable<T> records)
+        public virtual IEnumerable<XElement> GetAdditionalDocumentFields(
+            XNamespace cimNamespace,
+            IEnumerable<T> records)
         {
             return new List<XElement>();
         }
@@ -104,7 +106,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Cim
                         recipientId,
                         recipientRole,
                         Clock),
-                    GetAdditionalDocumentFields(records),
+                    GetAdditionalDocumentFields(cimNamespace, records),
                     GetActivityRecords(cimNamespace, records)));
         }
 

@@ -30,12 +30,18 @@ namespace GreenEnergyHub.Charges.Infrastructure.ChargeLinkReceiptBundle.Cim
 
         internal const string ConfirmRootElement = "ConfirmRequestChangeBillingMasterData_MarketDocument";
 
-        internal const string ReceiptStatus = "reason.code";
+        internal const string ReceiptStatus = "reason.code"; // Note: There are two reason codes in the CIM document
 
         internal const string MarketActivityRecordId = "mRID";
 
         internal const string MeteringPointId = "marketEvaluationPoint.mRID";
 
         internal const string OriginalOperationId = "originalTransactionIDReference_MktActivityRecord.mRID";
+
+        internal const string ReasonElement = "Reason";
+
+        internal const string ReasonCode = "code"; // Note: There are two reason codes in the CIM document
+
+        internal const string ReasonText = "text";
     }
 }

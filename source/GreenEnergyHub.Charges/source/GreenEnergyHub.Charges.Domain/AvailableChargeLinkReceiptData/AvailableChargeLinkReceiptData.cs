@@ -59,7 +59,7 @@ namespace GreenEnergyHub.Charges.Domain.AvailableChargeLinkReceiptData
 
         private readonly List<AvailableChargeLinkReceiptDataReasonCode> _reasonCodes;
 
-        public IReadOnlyCollection<AvailableChargeLinkReceiptDataReasonCode> Points => _reasonCodes.AsReadOnly();
+        public IReadOnlyCollection<AvailableChargeLinkReceiptDataReasonCode> ReasonCodes => _reasonCodes.AsReadOnly();
 
         public Instant RequestTime { get; }
 

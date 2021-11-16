@@ -38,6 +38,16 @@ namespace GreenEnergyHub.Charges.Infrastructure.ChargeLinkReceiptBundle.Cim
         {
         }
 
+        public override IEnumerable<XElement> GetAdditionalDocumentFields(XNamespace cimNamespace, IEnumerable<AvailableChargeLinkReceiptData> records)
+        {
+            return new List<XElement>
+            {
+                new XElement(
+                    cimNamespace + CimChargeLinkReceiptConstants.ReceiptStatus,
+                    ReceiptStatusMapper.Map(records.First().ReceiptStatus)),
+            };
+        }
+
         protected override XNamespace GetNamespace(IEnumerable<AvailableChargeLinkReceiptData> records)
         {
             return CimChargeLinkReceiptConstants.ConfirmNamespace;
@@ -75,7 +85,30 @@ namespace GreenEnergyHub.Charges.Infrastructure.ChargeLinkReceiptBundle.Cim
                     new XAttribute(
                         CimMarketDocumentConstants.CodingScheme,
                         CodingSchemeMapper.Map(CodingScheme.GS1)),
-                    receipt.MeteringPointId));
+                    receipt.MeteringPointId),
+                GetReasonCodes(cimNamespace, receipt));
+        }
+
+        private IEnumerable<XElement> GetReasonCodes(
+            XNamespace cimNamespace,
+            AvailableChargeLinkReceiptData receipt)
+        {
+            var result = new List<XElement>();
+            if (receipt.ReceiptStatus != ReceiptStatus.Rejected) return result;
+
+            result.AddRange(receipt.ReasonCodes.Select(reasonCode => GetReasonCode(cimNamespace, reasonCode)));
+
+            return result;
+        }
+
+        private XElement GetReasonCode(
+            XNamespace cimNamespace,
+            AvailableChargeLinkReceiptDataReasonCode reasonCode)
+        {
+            return new XElement(
+                cimNamespace + CimChargeLinkReceiptConstants.ReasonElement,
+                new XElement(cimNamespace + CimChargeLinkReceiptConstants.ReasonCode, ReasonCodeMapper.Map(reasonCode.ReasonCode)),
+                new XElement(cimNamespace + CimChargeLinkReceiptConstants.ReasonText, reasonCode.Text));
         }
     }
 }

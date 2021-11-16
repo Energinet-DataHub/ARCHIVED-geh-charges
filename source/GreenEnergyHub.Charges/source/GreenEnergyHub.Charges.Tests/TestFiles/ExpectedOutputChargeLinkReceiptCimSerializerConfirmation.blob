@@ -9,6 +9,7 @@
   <cim:receiver_MarketParticipant.mRID codingScheme="A10">TestRecipient1111</cim:receiver_MarketParticipant.mRID>
   <cim:receiver_MarketParticipant.marketRole.type>DDM</cim:receiver_MarketParticipant.marketRole.type>
   <cim:createdDateTime>2021-10-12T13:37:43Z</cim:createdDateTime>
+  <cim:reason.code>A01</cim:reason.code>
   <cim:MktActivityRecord>
     <cim:mRID>00000000000000000000000000000000</cim:mRID>
     <cim:originalTransactionIDReference_MktActivityRecord.mRID>OriginalOperationId1</cim:originalTransactionIDReference_MktActivityRecord.mRID>
