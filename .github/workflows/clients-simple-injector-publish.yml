@@ -34,7 +34,7 @@ on:
 
 env:
   DOTNET_VERSION: '5.0'
-  CSPROJ_FILE_PATH: 'source/Energinet.Charges.Libraries/source/Energinet.DataHub.Charges.Clients/Energinet.DataHub.Charges.Clients.SimpleInjector.csproj'
+  CSPROJ_FILE_PATH: 'source/Energinet.Charges.Libraries/source/Energinet.DataHub.Charges.Clients.SimpleInjector/Energinet.DataHub.Charges.Clients.SimpleInjector.csproj'
   BINARY_PATH: 'source/Energinet.Charges.Libraries/source/Energinet.DataHub.Charges.Clients.SimpleInjector/bin/Release/*.nupkg'
 
 jobs:
