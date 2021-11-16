@@ -1,5 +1,9 @@
 # GreenEnergyHub.Charges.Libraries Release notes
 
+## Version 1.0.10
+
+Updated the documentation to refer a NuGet package help with registration when using SimpleInjector
+
 ## Version 1.0.9
 
 Protobuf contracts common for both Energinet.Charges.Libraries and elsewhere in the Charges domain are now located in one common place to avoid duplication.

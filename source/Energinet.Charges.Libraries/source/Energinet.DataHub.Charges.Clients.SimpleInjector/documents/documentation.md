@@ -1,6 +1,6 @@
 # Documentation
 
-The NuGet package [`GreenEnergyHub.Charges.Libraries.Clients.SimpleInjector`](https://www.nuget.org/packages/Energinet.DataHub.Charges.Clients.SimpleInjector/) contains functionality to register the GreenEnergyHub.Charges.Libraries.Clients NuGet package.
+The NuGet package [`GreenEnergyHub.Charges.Libraries.Clients.SimpleInjector`] contains functionality to register the GreenEnergyHub.Charges.Libraries.Clients NuGet package.
 
 Learn more about the Green Energy Hub platform at [github.com/Energinet-DataHub/green-energy-hub](https://github.com/Energinet-DataHub/green-energy-hub).
 
