@@ -14,6 +14,7 @@
 
 using System;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
+using NodaTime;
 
 namespace GreenEnergyHub.Charges.Domain.AvailableChargeLinkReceiptData
 {
@@ -25,7 +26,9 @@ namespace GreenEnergyHub.Charges.Domain.AvailableChargeLinkReceiptData
             BusinessReasonCode businessReasonCode,
             ReceiptStatus receiptStatus,
             string originalOperationId,
-            string meteringPointId)
+            string meteringPointId,
+            Instant requestTime,
+            Guid availableDataReferenceId)
         {
             Id = Guid.NewGuid();
             RecipientId = recipientId;
@@ -34,6 +37,8 @@ namespace GreenEnergyHub.Charges.Domain.AvailableChargeLinkReceiptData
             ReceiptStatus = receiptStatus;
             OriginalOperationId = originalOperationId;
             MeteringPointId = meteringPointId;
+            RequestTime = requestTime;
+            AvailableDataReferenceId = availableDataReferenceId;
         }
 
         public Guid Id { get; }
@@ -49,5 +54,9 @@ namespace GreenEnergyHub.Charges.Domain.AvailableChargeLinkReceiptData
         public string OriginalOperationId { get; }
 
         public string MeteringPointId { get; }
+
+        public Instant RequestTime { get; }
+
+        public Guid AvailableDataReferenceId { get; }
     }
 }

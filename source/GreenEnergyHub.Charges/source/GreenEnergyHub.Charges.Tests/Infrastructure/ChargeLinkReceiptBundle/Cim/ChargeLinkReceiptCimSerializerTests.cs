@@ -27,6 +27,7 @@ using GreenEnergyHub.Charges.TestCore;
 using GreenEnergyHub.TestHelpers;
 using Moq;
 using NodaTime;
+using NodaTime.Extensions;
 using Xunit;
 using Xunit.Categories;
 
@@ -55,7 +56,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.ChargeLinkReceiptBundle.Ci
                 Assembly.GetExecutingAssembly(),
                 "GreenEnergyHub.Charges.Tests.TestFiles.ExpectedOutputChargeLinkReceiptCimSerializerConfirmation.blob");
 
-            var receipts = GetReceipts(ReceiptStatus.Confirmed);
+            var receipts = GetReceipts(ReceiptStatus.Confirmed, clock.Object);
 
             // Act
             await sut.SerializeToStreamAsync(
@@ -81,7 +82,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.ChargeLinkReceiptBundle.Ci
         {
             SetupMocks(hubSenderConfiguration, clock, cimIdProvider);
 
-            var receipts = GetReceipts(ReceiptStatus.Confirmed);
+            var receipts = GetReceipts(ReceiptStatus.Confirmed, clock.Object);
 
             await using var stream = new MemoryStream();
 
@@ -119,19 +120,19 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.ChargeLinkReceiptBundle.Ci
                 .Returns(CimTestId);
         }
 
-        private List<AvailableChargeLinkReceiptData> GetReceipts(ReceiptStatus receiptStatus)
+        private List<AvailableChargeLinkReceiptData> GetReceipts(ReceiptStatus receiptStatus, IClock clock)
         {
             var chargeLinks = new List<AvailableChargeLinkReceiptData>();
 
             for (var i = 1; i <= NoOfReceiptsInBundle; i++)
             {
-                chargeLinks.Add(GetReceipt(i, receiptStatus));
+                chargeLinks.Add(GetReceipt(i, receiptStatus, clock));
             }
 
             return chargeLinks;
         }
 
-        private AvailableChargeLinkReceiptData GetReceipt(int no, ReceiptStatus receiptStatus)
+        private AvailableChargeLinkReceiptData GetReceipt(int no, ReceiptStatus receiptStatus, IClock clock)
         {
             return new AvailableChargeLinkReceiptData(
                 RecipientId,
@@ -139,7 +140,9 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.ChargeLinkReceiptBundle.Ci
                 BusinessReasonCode.UpdateMasterDataSettlement,
                 receiptStatus,
                 "OriginalOperationId" + no,
-                "MeteringPoint" + no);
+                "MeteringPoint" + no,
+                clock.GetCurrentInstant(),
+                Guid.NewGuid());
         }
     }
 }
