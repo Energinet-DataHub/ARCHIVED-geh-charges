@@ -19,6 +19,7 @@ namespace Energinet.DataHub.Charges.Libraries.Common
     /// </summary>
     internal static class EnvironmentSettingNames
     {
+        public const string AppInsightsInstrumentationKey = "APPINSIGHTS_INSTRUMENTATIONKEY";
         public const string AzureWebJobsStorage = "AzureWebJobsStorage";
         public const string LocalTimezoneName = "LOCAL_TIMEZONENAME";
         public const string Currency = "CURRENCY";

@@ -36,6 +36,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures
         public ChargesFunctionAppFixture()
         {
             AzuriteManager = new AzuriteManager();
+            IntegrationTestConfiguration = new IntegrationTestConfiguration();
             DatabaseManager = new ChargesDatabaseManager();
 
             var integrationTestConfiguration = new IntegrationTestConfiguration();
@@ -64,6 +65,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures
 
         private AzuriteManager AzuriteManager { get; }
 
+        private IntegrationTestConfiguration IntegrationTestConfiguration { get; }
+
         private ServiceBusResourceProvider ServiceBusResourceProvider { get; }
 
         /// <inheritdoc/>
@@ -85,6 +88,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures
             // * DOMAINEVENT_SENDER_CONNECTION_STRING
             //
             // All other settings are overwritten somewhere within this class.
+            // Environment.SetEnvironmentVariable("INTERNAL_SERVICEBUS_RETRY_COUNT", "3");
+            Environment.SetEnvironmentVariable(EnvironmentSettingNames.AppInsightsInstrumentationKey, IntegrationTestConfiguration.ApplicationInsightsInstrumentationKey);
             Environment.SetEnvironmentVariable(EnvironmentSettingNames.AzureWebJobsStorage, "UseDevelopmentStorage=true");
 
             Environment.SetEnvironmentVariable(EnvironmentSettingNames.Currency, "DKK");

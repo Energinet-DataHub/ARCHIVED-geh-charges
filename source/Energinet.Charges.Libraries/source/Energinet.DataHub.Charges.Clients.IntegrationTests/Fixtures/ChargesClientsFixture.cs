@@ -45,13 +45,8 @@ namespace Energinet.DataHub.Charges.Clients.IntegrationTests.Fixtures
         /// <inheritdoc/>
         protected override void OnConfigureEnvironment()
         {
-            // NOTICE:
-            // Currently the following settings must be set on the build agent
-            // OR be available in local.settings.json of the Charges Client package:
-            // * APPINSIGHTS_INSTRUMENTATIONKEY
-            // * DOMAINEVENT_SENDER_CONNECTION_STRING
-            //
-            // All other settings are overwritten somewhere within this class.
+            // Environment.SetEnvironmentVariable("INTERNAL_SERVICEBUS_RETRY_COUNT", "3");
+            // Environment.SetEnvironmentVariable(EnvironmentSettingNames.AppInsightsInstrumentationKey, IntegrationTestConfiguration.ApplicationInsightsInstrumentationKey);
             Environment.SetEnvironmentVariable(EnvironmentSettingNames.AzureWebJobsStorage, "UseDevelopmentStorage=true");
             Environment.SetEnvironmentVariable(EnvironmentSettingNames.Currency, "DKK");
             Environment.SetEnvironmentVariable(EnvironmentSettingNames.LocalTimezoneName, "Europe/Copenhagen");
