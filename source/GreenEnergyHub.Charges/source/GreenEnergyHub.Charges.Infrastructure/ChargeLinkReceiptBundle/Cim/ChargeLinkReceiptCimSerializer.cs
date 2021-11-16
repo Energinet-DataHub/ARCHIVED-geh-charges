@@ -13,10 +13,7 @@
 // limitations under the License.
 
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Xml.Linq;
 using GreenEnergyHub.Charges.Domain.AvailableChargeLinkReceiptData;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
@@ -50,17 +47,20 @@ namespace GreenEnergyHub.Charges.Infrastructure.ChargeLinkReceiptBundle.Cim
 
         protected override XNamespace GetNamespace(IEnumerable<AvailableChargeLinkReceiptData> records)
         {
-            return CimChargeLinkReceiptConstants.ConfirmNamespace;
+            return IsConfirmation(records) ?
+                CimChargeLinkReceiptConstants.ConfirmNamespace : CimChargeLinkReceiptConstants.RejectNamespace;
         }
 
         protected override XNamespace GetSchemaLocation(IEnumerable<AvailableChargeLinkReceiptData> records)
         {
-            return CimChargeLinkReceiptConstants.ConfirmSchemaLocation;
+            return IsConfirmation(records) ?
+                CimChargeLinkReceiptConstants.ConfirmSchemaLocation : CimChargeLinkReceiptConstants.RejectSchemaLocation;
         }
 
         protected override string GetRootElementName(IEnumerable<AvailableChargeLinkReceiptData> records)
         {
-            return CimChargeLinkReceiptConstants.ConfirmRootElement;
+            return IsConfirmation(records) ?
+                CimChargeLinkReceiptConstants.ConfirmRootElement : CimChargeLinkReceiptConstants.RejectRootElement;
         }
 
         protected override DocumentType GetDocumentType(IEnumerable<AvailableChargeLinkReceiptData> records)
@@ -109,6 +109,11 @@ namespace GreenEnergyHub.Charges.Infrastructure.ChargeLinkReceiptBundle.Cim
                 cimNamespace + CimChargeLinkReceiptConstants.ReasonElement,
                 new XElement(cimNamespace + CimChargeLinkReceiptConstants.ReasonCode, ReasonCodeMapper.Map(reasonCode.ReasonCode)),
                 new XElement(cimNamespace + CimChargeLinkReceiptConstants.ReasonText, reasonCode.Text));
+        }
+
+        private bool IsConfirmation(IEnumerable<AvailableChargeLinkReceiptData> receipts)
+        {
+            return receipts.First().ReceiptStatus == ReceiptStatus.Confirmed;
         }
     }
 }

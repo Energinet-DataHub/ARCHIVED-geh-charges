@@ -30,6 +30,13 @@ namespace GreenEnergyHub.Charges.Infrastructure.ChargeLinkReceiptBundle.Cim
 
         internal const string ConfirmRootElement = "ConfirmRequestChangeBillingMasterData_MarketDocument";
 
+        internal const string RejectNamespace = "urn:ediel.org:structure:rejectrequestchangebillingmasterdata:0:1";
+
+        internal const string RejectSchemaLocation =
+            "urn:ediel.org:structure:rejectrequestchangebillingmasterdata:0:1 urn-ediel-org-structure-rejectrequestchangebillingmasterdata-0-1.xsd";
+
+        internal const string RejectRootElement = "RejectRequestChangeBillingMasterData_MarketDocument";
+
         internal const string ReceiptStatus = "reason.code"; // Note: There are two reason codes in the CIM document
 
         internal const string MarketActivityRecordId = "mRID";
