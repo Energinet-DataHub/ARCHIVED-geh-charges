@@ -31,6 +31,7 @@ namespace Energinet.DataHub.Charges.Clients.SimpleInjectorTests
     [UnitTest]
     public class ContainerExtensionsTests
     {
+        // The expected value becomes 'Async Scoped' since the container DefaultScopedLifestyle is AsyncScopedLifestyle.
         private const string ExpectedScopedName = "Async Scoped";
         private const string ExpectedSingleTonName = "Singleton";
 
@@ -45,13 +46,18 @@ namespace Energinet.DataHub.Charges.Clients.SimpleInjectorTests
             // Act
             sut.AddDefaultChargeLinkClient(
                 serviceBusClient.Object,
-                new ServiceBusRequestSenderTestConfiguration("anyReplyQueueName", "AnyRequestQueueName"));
+                new ServiceBusRequestSenderTestConfiguration(
+                    "anyReplyQueueName",
+                    "AnyRequestQueueName"));
 
             // Assert
             var actualRegistrations = sut.Collection.Container.GetCurrentRegistrations();
-            actualRegistrations.First(x => x.ImplementationType == typeof(DefaultChargeLinkClient)).Lifestyle.Name.Should().Be(ExpectedScopedName);
-            actualRegistrations.First(x => x.ImplementationType == typeof(DefaultChargeLinkReplyReader)).Lifestyle.Name.Should().Be(ExpectedScopedName);
-            actualRegistrations.First(x => x.ImplementationType == typeof(IServiceBusRequestSenderProvider)).Lifestyle.Name.Should().Be(ExpectedSingleTonName);
+            actualRegistrations.First(p =>
+                p.ImplementationType == typeof(DefaultChargeLinkClient)).Lifestyle.Name.Should().Be(ExpectedScopedName);
+            actualRegistrations.First(p =>
+                p.ImplementationType == typeof(DefaultChargeLinkReplyReader)).Lifestyle.Name.Should().Be(ExpectedScopedName);
+            actualRegistrations.First(p =>
+                p.ImplementationType == typeof(IServiceBusRequestSenderProvider)).Lifestyle.Name.Should().Be(ExpectedSingleTonName);
 
             // Cleanup
             await sut.DisposeAsync().ConfigureAwait(false);
