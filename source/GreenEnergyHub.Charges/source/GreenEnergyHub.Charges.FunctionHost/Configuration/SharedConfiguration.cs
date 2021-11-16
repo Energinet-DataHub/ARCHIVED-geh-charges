@@ -192,6 +192,12 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
 
                 return new ServiceBusClientFactory(serviceBusConnectionString);
             });
+
+            serviceCollection.AddSingleton<IMessageBusFactory>(provider =>
+            {
+                var serviceBusClientFactory = provider.GetRequiredService<IServiceBusClientFactory>();
+                return new AzureServiceBusFactory(serviceBusClientFactory);
+            });
         }
 
         private static void AddApplicationServices(this IServiceCollection serviceCollection)
