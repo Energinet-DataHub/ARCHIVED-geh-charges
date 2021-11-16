@@ -28,14 +28,17 @@ namespace Energinet.DataHub.Charges.Libraries.DefaultChargeLink
         private readonly IServiceBusRequestSender _serviceBusRequestSender;
 
         public DefaultChargeLinkClient(
-            [NotNull] IServiceBusRequestSenderProvider serviceBusRequestSenderProvider)
+            [DisallowNull] IServiceBusRequestSenderProvider serviceBusRequestSenderProvider)
         {
+            if (serviceBusRequestSenderProvider == null)
+                throw new ArgumentNullException(nameof(serviceBusRequestSenderProvider));
+
             _serviceBusRequestSender = serviceBusRequestSenderProvider.GetInstance();
         }
 
         public async Task CreateDefaultChargeLinksRequestAsync(
-            [NotNull] RequestDefaultChargeLinksForMeteringPointDto requestDefaultChargeLinksForMeteringPointDto,
-            [NotNull] string correlationId)
+            [DisallowNull] RequestDefaultChargeLinksForMeteringPointDto requestDefaultChargeLinksForMeteringPointDto,
+            [DisallowNull] string correlationId)
         {
             if (requestDefaultChargeLinksForMeteringPointDto == null)
                 throw new ArgumentNullException(nameof(requestDefaultChargeLinksForMeteringPointDto));

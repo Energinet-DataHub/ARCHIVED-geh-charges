@@ -12,6 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
+using System.Diagnostics.CodeAnalysis;
+
 namespace Energinet.DataHub.Charges.Libraries.Models
 {
     /// <summary>
@@ -25,9 +28,9 @@ namespace Energinet.DataHub.Charges.Libraries.Models
         // This is the queue created in the shared environment to receive the request. Only rename in accordance with infrastructure.
         public string RequestQueueName => "create-link-request";
 
-        public ServiceBusRequestSenderConfiguration(string replyQueueName)
+        public ServiceBusRequestSenderConfiguration([DisallowNull] string replyQueueName)
         {
-            ReplyQueueName = replyQueueName;
+            ReplyQueueName = replyQueueName ?? throw new ArgumentNullException(nameof(replyQueueName));
         }
     }
 }

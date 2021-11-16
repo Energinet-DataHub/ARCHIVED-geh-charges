@@ -12,6 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
+using System.Diagnostics.CodeAnalysis;
+
 namespace Energinet.DataHub.Charges.Libraries.Models
 {
     /// <summary>
@@ -25,10 +28,12 @@ namespace Energinet.DataHub.Charges.Libraries.Models
 
         public string RequestQueueName { get; }
 
-        public ServiceBusRequestSenderTestConfiguration(string replyQueueName, string requestQueueName)
+        public ServiceBusRequestSenderTestConfiguration(
+            [DisallowNull] string replyQueueName,
+            [DisallowNull] string requestQueueName)
         {
-            ReplyQueueName = replyQueueName;
-            RequestQueueName = requestQueueName;
+            ReplyQueueName = replyQueueName ?? throw new ArgumentNullException(nameof(replyQueueName));
+            RequestQueueName = requestQueueName ?? throw new ArgumentNullException(nameof(requestQueueName));
         }
     }
 }

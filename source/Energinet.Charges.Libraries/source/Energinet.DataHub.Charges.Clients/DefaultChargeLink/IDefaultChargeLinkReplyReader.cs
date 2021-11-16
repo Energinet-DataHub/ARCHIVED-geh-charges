@@ -51,6 +51,6 @@ namespace Energinet.DataHub.Charges.Libraries.DefaultChargeLink
         /// of the serializedReplyMessageBody.
         /// <param name="serializedReplyMessageBody">Reply message to deserialize</param>
         /// </summary>
-        Task ReadAsync([NotNull] byte[] serializedReplyMessageBody);
+        Task ReadAsync([DisallowNull] byte[] serializedReplyMessageBody);
     }
 }

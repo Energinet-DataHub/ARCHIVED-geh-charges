@@ -28,7 +28,7 @@ namespace Energinet.DataHub.Charges.Libraries.DefaultChargeLink
         /// Contains data needed by the Charges Domain to create default charges links.</param>
         /// <param name="correlationId">CorrelationId specifies message context.</param>
         Task CreateDefaultChargeLinksRequestAsync(
-            [NotNull] RequestDefaultChargeLinksForMeteringPointDto requestDefaultChargeLinksForMeteringPointDto,
-            [NotNull] string correlationId);
+            [DisallowNull] RequestDefaultChargeLinksForMeteringPointDto requestDefaultChargeLinksForMeteringPointDto,
+            [DisallowNull] string correlationId);
     }
 }
