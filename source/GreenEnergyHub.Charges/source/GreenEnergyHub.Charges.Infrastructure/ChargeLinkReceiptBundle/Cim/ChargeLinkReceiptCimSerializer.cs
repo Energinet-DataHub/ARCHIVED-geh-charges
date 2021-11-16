@@ -27,73 +27,38 @@ using NodaTime;
 
 namespace GreenEnergyHub.Charges.Infrastructure.ChargeLinkReceiptBundle.Cim
 {
-    public class ChargeLinkReceiptCimSerializer : IChargeLinkReceiptCimSerializer
+    public class ChargeLinkReceiptCimSerializer
+        : CimSerializer<AvailableChargeLinkReceiptData>, IChargeLinkReceiptCimSerializer
     {
-        private IHubSenderConfiguration _hubSenderConfiguration;
-        private IClock _clock;
-        private ICimIdProvider _cimIdProvider;
-
         public ChargeLinkReceiptCimSerializer(
             IHubSenderConfiguration hubSenderConfiguration,
             IClock clock,
             ICimIdProvider cimIdProvider)
+            : base(hubSenderConfiguration, clock, cimIdProvider)
         {
-            _hubSenderConfiguration = hubSenderConfiguration;
-            _clock = clock;
-            _cimIdProvider = cimIdProvider;
         }
 
-        public async Task SerializeToStreamAsync(IEnumerable<AvailableChargeLinkReceiptData> receipts, Stream stream)
+        protected override XNamespace GetNamespace(IEnumerable<AvailableChargeLinkReceiptData> records)
         {
-            var document = GetDocument(receipts);
-            await document.SaveAsync(stream, SaveOptions.None, CancellationToken.None);
-
-            stream.Position = 0;
+            return CimChargeLinkReceiptConstants.ConfirmNamespace;
         }
 
-        private XDocument GetDocument(IEnumerable<AvailableChargeLinkReceiptData> receipts)
+        protected override XNamespace GetSchemaLocation(IEnumerable<AvailableChargeLinkReceiptData> records)
         {
-            XNamespace cimNamespace = CimChargeLinkReceiptConstants.ConfirmNamespace;
-            XNamespace xmlSchemaNamespace = CimMarketDocumentConstants.SchemaValidationNamespace;
-            XNamespace xmlSchemaLocation = CimChargeLinkReceiptConstants.ConfirmSchemaLocation;
-
-            return new XDocument(
-                new XElement(
-                    cimNamespace + CimChargeLinkReceiptConstants.ConfirmRootElement,
-                    new XAttribute(
-                        XNamespace.Xmlns + CimMarketDocumentConstants.SchemaNamespaceAbbreviation,
-                        xmlSchemaNamespace),
-                    new XAttribute(
-                        XNamespace.Xmlns + CimMarketDocumentConstants.CimNamespaceAbbreviation,
-                        cimNamespace),
-                    new XAttribute(
-                        xmlSchemaNamespace + CimMarketDocumentConstants.SchemaLocation,
-                        xmlSchemaLocation),
-                    // Note: The list will always have same recipient, business reason code and receipt status,
-                    // so we just take those values from the first element
-                    MarketDocumentSerializationHelper.Serialize(
-                        cimNamespace,
-                        _cimIdProvider,
-                        DocumentType.ChargeLinkReceipt,
-                        receipts.First().BusinessReasonCode,
-                        _hubSenderConfiguration,
-                        receipts.First().RecipientId,
-                        receipts.First().RecipientRole,
-                        _clock),
-                    new XElement(
-                        cimNamespace + CimChargeLinkReceiptConstants.ReceiptStatus,
-                        ReceiptStatusMapper.Map(receipts.First().ReceiptStatus)),
-                    GetActivityRecords(cimNamespace, receipts)));
+            return CimChargeLinkReceiptConstants.ConfirmSchemaLocation;
         }
 
-        private IEnumerable<XElement> GetActivityRecords(
-            XNamespace cimNamespace,
-            IEnumerable<AvailableChargeLinkReceiptData> receipts)
+        protected override string GetRootElementName(IEnumerable<AvailableChargeLinkReceiptData> records)
         {
-            return receipts.Select(receipt => GetActivityRecord(cimNamespace, receipt));
+            return CimChargeLinkReceiptConstants.ConfirmRootElement;
         }
 
-        private XElement GetActivityRecord(
+        protected override DocumentType GetDocumentType(IEnumerable<AvailableChargeLinkReceiptData> records)
+        {
+            return DocumentType.ChargeLinkReceipt;
+        }
+
+        protected override XElement GetActivityRecord(
             XNamespace cimNamespace,
             AvailableChargeLinkReceiptData receipt)
         {
@@ -101,7 +66,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.ChargeLinkReceiptBundle.Cim
                 cimNamespace + CimMarketDocumentConstants.MarketActivityRecord,
                 new XElement(
                     cimNamespace + CimChargeLinkReceiptConstants.MarketActivityRecordId,
-                    _cimIdProvider.GetUniqueId()),
+                    CimIdProvider.GetUniqueId()),
                 new XElement(
                     cimNamespace + CimChargeLinkReceiptConstants.OriginalOperationId,
                     receipt.OriginalOperationId),

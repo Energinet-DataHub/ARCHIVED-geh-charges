@@ -37,6 +37,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.ChargeLinkReceiptBundle.Ci
     {
         private const int NoOfReceiptsInBundle = 10;
         private const string CimTestId = "00000000000000000000000000000000";
+        private const string RecipientId = "TestRecipient1111";
 
         [Theory]
         [InlineAutoDomainData]
@@ -57,7 +58,12 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.ChargeLinkReceiptBundle.Ci
             var receipts = GetReceipts(ReceiptStatus.Confirmed);
 
             // Act
-            await sut.SerializeToStreamAsync(receipts, stream);
+            await sut.SerializeToStreamAsync(
+                receipts,
+                stream,
+                BusinessReasonCode.UpdateMasterDataSettlement,
+                RecipientId,
+                MarketParticipantRole.GridAccessProvider);
 
             // Assert
             var actual = stream.AsString();
@@ -79,7 +85,12 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.ChargeLinkReceiptBundle.Ci
 
             await using var stream = new MemoryStream();
 
-            await sut.SerializeToStreamAsync(receipts, stream);
+            await sut.SerializeToStreamAsync(
+                receipts,
+                stream,
+                BusinessReasonCode.UpdateMasterDataSettlement,
+                RecipientId,
+                MarketParticipantRole.GridAccessProvider);
 
             await using var fileStream = File.Create("C:\\Temp\\TestChargeLinkReceiptBundle" + Guid.NewGuid() + ".xml");
 
@@ -123,7 +134,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.ChargeLinkReceiptBundle.Ci
         private AvailableChargeLinkReceiptData GetReceipt(int no, ReceiptStatus receiptStatus)
         {
             return new AvailableChargeLinkReceiptData(
-                "TestRecipient1111",
+                RecipientId,
                 MarketParticipantRole.GridAccessProvider,
                 BusinessReasonCode.UpdateMasterDataSettlement,
                 receiptStatus,
