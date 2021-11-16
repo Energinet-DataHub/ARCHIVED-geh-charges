@@ -45,8 +45,6 @@ namespace Energinet.DataHub.Charges.Clients.IntegrationTests.Fixtures
         /// <inheritdoc/>
         protected override void OnConfigureEnvironment()
         {
-            // Environment.SetEnvironmentVariable("INTERNAL_SERVICEBUS_RETRY_COUNT", "3");
-            // Environment.SetEnvironmentVariable(EnvironmentSettingNames.AppInsightsInstrumentationKey, IntegrationTestConfiguration.ApplicationInsightsInstrumentationKey);
             Environment.SetEnvironmentVariable(EnvironmentSettingNames.AzureWebJobsStorage, "UseDevelopmentStorage=true");
             Environment.SetEnvironmentVariable(EnvironmentSettingNames.Currency, "DKK");
             Environment.SetEnvironmentVariable(EnvironmentSettingNames.LocalTimezoneName, "Europe/Copenhagen");
