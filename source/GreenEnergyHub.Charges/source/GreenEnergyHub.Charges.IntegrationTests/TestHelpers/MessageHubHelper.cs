@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Threading.Tasks;
 using Energinet.DataHub.MessageHub.IntegrationTesting;
 
@@ -25,7 +26,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.TestHelpers
         public static async Task AssertPeekReceivesReplyAsync(this MessageHubSimulation messageHub, string correlationId)
         {
             // Throws if expected data available message (by correlation ID) is not received
-            await messageHub.WaitForNotificationsInDataAvailableQueueAsync(correlationId);
+            await messageHub.WaitForNotificationsInDataAvailableQueueAsync(TimeSpan.FromSeconds(10), correlationId);
 
             // Invokes the domain and ensures that a reply to the peek request is received
             await messageHub.PeekAsync(); // Throws if corresponding peek reply is not received
