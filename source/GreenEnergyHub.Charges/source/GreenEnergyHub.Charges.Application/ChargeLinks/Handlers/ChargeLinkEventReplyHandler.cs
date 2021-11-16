@@ -21,13 +21,13 @@ using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinkCommandAcceptedEvents;
 
 namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
 {
-    public class ChargeLinkEventReplyHandler : IChargeLinkEventReplyHandler
+    public class CreateDefaultChargeLinksReplierHandler : ICreateDefaultChargeLinksReplierHandler
     {
         private readonly IMessageMetaDataContext _messageMetaDataContext;
         private readonly IDefaultChargeLinkClient _defaultChargeLinkClient;
         private readonly ICorrelationContext _correlationContext;
 
-        public ChargeLinkEventReplyHandler(
+        public CreateDefaultChargeLinksReplierHandler(
             IMessageMetaDataContext messageMetaDataContext,
             IDefaultChargeLinkClient defaultChargeLinkClient,
             ICorrelationContext correlationContext)

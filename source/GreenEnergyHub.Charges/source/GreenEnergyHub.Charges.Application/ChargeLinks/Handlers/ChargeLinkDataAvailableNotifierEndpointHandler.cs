@@ -13,23 +13,29 @@
 // limitations under the License.
 
 using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Domain.ChargeCommandReceivedEvents;
-using GreenEnergyHub.Charges.Domain.ChargeLinkCommandAcceptedEvents;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinkCommandAcceptedEvents;
+using GreenEnergyHub.Charges.Domain.Dtos.DefaultChargeLinksDataAvailableNotifiedEvents;
 
 namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
 {
     public class ChargeLinkDataAvailableNotifierEndpointHandler : IChargeLinkDataAvailableNotifierEndpointHandler
     {
-        private readonly IMessageDispatcher<ChargeCommandReceivedEvent> _messageDispatcher;
+        private readonly IMessageDispatcher<DefaultChargeLinkDataAvailableNotifierEvent> _messageDispatcher;
+        private readonly IDefaultChargeLinkDataAvailableNotifierEventFactory _defaultChargeLinkDataAvailableNotifierEventFactory;
 
-        public ChargeLinkDataAvailableNotifierEndpointHandler(IMessageDispatcher<ChargeCommandReceivedEvent> messageDispatcher)
+        public ChargeLinkDataAvailableNotifierEndpointHandler(
+            IMessageDispatcher<DefaultChargeLinkDataAvailableNotifierEvent> messageDispatcher,
+            IDefaultChargeLinkDataAvailableNotifierEventFactory defaultChargeLinkDataAvailableNotifierEventFactory)
         {
             _messageDispatcher = messageDispatcher;
+            _defaultChargeLinkDataAvailableNotifierEventFactory = defaultChargeLinkDataAvailableNotifierEventFactory;
         }
 
         public async Task HandleAsync(ChargeLinkCommandAcceptedEvent chargeLinkCommandAcceptedEvent)
         {
-            await _messageDispatcher.DispatchAsync(chargeLinkCommandAcceptedEvent);
+            var chargeLinkDataAvailableNotifierEvent =
+                _defaultChargeLinkDataAvailableNotifierEventFactory.CreteFromAcceptedEvent(chargeLinkCommandAcceptedEvent);
+            await _messageDispatcher.DispatchAsync(chargeLinkDataAvailableNotifierEvent);
         }
     }
 }

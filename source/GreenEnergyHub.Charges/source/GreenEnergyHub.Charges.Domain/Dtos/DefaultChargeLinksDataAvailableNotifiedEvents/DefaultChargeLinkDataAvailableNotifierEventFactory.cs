@@ -12,13 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Threading.Tasks;
+using System.Linq;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinkCommandAcceptedEvents;
 
-namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
+namespace GreenEnergyHub.Charges.Domain.Dtos.DefaultChargeLinksDataAvailableNotifiedEvents
 {
-    public interface IChargeLinkDataAvailableNotifierEndpointHandler
+    public class DefaultChargeLinkDataAvailableNotifierEventFactory : IDefaultChargeLinkDataAvailableNotifierEventFactory
     {
-        Task HandleAsync(ChargeLinkCommandAcceptedEvent chargeLinkCommandAcceptedEvent);
+        public DefaultChargeLinkDataAvailableNotifierEvent CreteFromAcceptedEvent(ChargeLinkCommandAcceptedEvent chargeLinkCommandAcceptedEvent)
+        {
+            return new DefaultChargeLinkDataAvailableNotifierEvent(
+                chargeLinkCommandAcceptedEvent.PublishedTime,
+                chargeLinkCommandAcceptedEvent.ChargeLinkCommands.First().ChargeLink.MeteringPointId);
+        }
     }
 }

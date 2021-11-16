@@ -53,5 +53,4 @@ limitations under the License.
         <Generator>MSBuild:Compile</Generator>
       </Protobuf>
     </ItemGroup>
-
 </Project>
