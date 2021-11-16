@@ -28,6 +28,7 @@ namespace GreenEnergyHub.Charges.Domain.AvailableChargeLinkReceiptData
             ReceiptStatus receiptStatus,
             string originalOperationId,
             string meteringPointId,
+            List<AvailableChargeLinkReceiptDataReasonCode> reasonCodes,
             Instant requestTime,
             Guid availableDataReferenceId)
         {
@@ -38,9 +39,9 @@ namespace GreenEnergyHub.Charges.Domain.AvailableChargeLinkReceiptData
             ReceiptStatus = receiptStatus;
             OriginalOperationId = originalOperationId;
             MeteringPointId = meteringPointId;
+            _reasonCodes = reasonCodes;
             RequestTime = requestTime;
             AvailableDataReferenceId = availableDataReferenceId;
-            _reasonCodes = new List<AvailableChargeLinkReceiptDataReasonCode>();
         }
 
         public Guid Id { get; }

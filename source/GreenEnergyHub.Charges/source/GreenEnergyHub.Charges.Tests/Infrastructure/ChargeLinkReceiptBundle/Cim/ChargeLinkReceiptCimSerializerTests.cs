@@ -82,7 +82,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.ChargeLinkReceiptBundle.Ci
         {
             SetupMocks(hubSenderConfiguration, clock, cimIdProvider);
 
-            var receipts = GetReceipts(ReceiptStatus.Confirmed, clock.Object);
+            var receipts = GetReceipts(ReceiptStatus.Rejected, clock.Object);
 
             await using var stream = new MemoryStream();
 
@@ -141,8 +141,24 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.ChargeLinkReceiptBundle.Ci
                 receiptStatus,
                 "OriginalOperationId" + no,
                 "MeteringPoint" + no,
+                GetReasonCodes(no),
                 clock.GetCurrentInstant(),
                 Guid.NewGuid());
+        }
+
+        private List<AvailableChargeLinkReceiptDataReasonCode> GetReasonCodes(int no)
+        {
+            var reasonCodes = new List<AvailableChargeLinkReceiptDataReasonCode>();
+            var noOfReasons = (no % 3) + 1;
+
+            for (var i = 1; i <= noOfReasons; i++)
+            {
+                reasonCodes.Add(new AvailableChargeLinkReceiptDataReasonCode(
+                    ReasonCode.IncorrectChargeInformation,
+                    "Text" + no + "_" + i));
+            }
+
+            return reasonCodes;
         }
     }
 }
