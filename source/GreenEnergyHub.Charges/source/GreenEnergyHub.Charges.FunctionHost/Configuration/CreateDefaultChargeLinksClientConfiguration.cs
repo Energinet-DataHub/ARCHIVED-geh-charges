@@ -16,7 +16,11 @@ using Azure.Messaging.ServiceBus;
 using Energinet.DataHub.Charges.Libraries.DefaultChargeLink;
 using Energinet.DataHub.Charges.Libraries.DefaultChargeLinkMessages;
 using Energinet.DataHub.Charges.Libraries.Providers;
+using GreenEnergyHub.Charges.Domain.Dtos.DefaultChargeLinksDataAvailableNotifiedEvents;
 using GreenEnergyHub.Charges.FunctionHost.Common;
+using GreenEnergyHub.Charges.Infrastructure.Internal.DefaultChargeLinksDataAvailableNotifiedLinkCommandReceived;
+using GreenEnergyHub.Charges.Infrastructure.Messaging.Registration;
+using GreenEnergyHub.Messaging.Protobuf;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace GreenEnergyHub.Charges.FunctionHost.Configuration
@@ -28,6 +32,11 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
             var serviceBusConnectionString =
                 EnvironmentHelper.GetEnv(EnvironmentSettingNames.DataHubSenderConnectionString);
             var serviceBusClient = new ServiceBusClient(serviceBusConnectionString);
+
+            serviceCollection.SendProtobuf<DefaultChargeLinksDataAvailableNotifiedLinkCommandReceived>();
+            serviceCollection.AddMessagingProtobuf().AddMessageDispatcher<DefaultChargeLinkDataAvailableNotifierEvent>(
+                EnvironmentHelper.GetEnv(EnvironmentSettingNames.DomainEventSenderConnectionString),
+                EnvironmentHelper.GetEnv(EnvironmentSettingNames.DefaultChargeLinksDataAvailableNotifiedTopicName));
 
             AddDefaultChargeLinkClient(serviceCollection, serviceBusClient);
             AddDefaultChargeLinkMessagesClient(serviceCollection, serviceBusClient);

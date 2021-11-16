@@ -25,9 +25,11 @@ using MarketParticipant = GreenEnergyHub.Charges.Domain.MarketParticipants.Marke
 
 namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
 {
-    public class LinkCommandAcceptedInboundMapper : ProtobufInboundMapper<GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandAccepted.ChargeLinkCommandAccepted>
+    public class LinkCommandAcceptedInboundMapper
+        : ProtobufInboundMapper<GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandAccepted.ChargeLinkCommandAccepted>
     {
-        protected override IInboundMessage Convert([NotNull]GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandAccepted.ChargeLinkCommandAccepted chargeLinkCommandAcceptedContract)
+        protected override IInboundMessage Convert(
+            [NotNull]GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandAccepted.ChargeLinkCommandAccepted chargeLinkCommandAcceptedContract)
         {
             return new ChargeLinkCommandAcceptedEvent(
                 chargeLinkCommandAcceptedContract.ChargeLinkCommands.Select(
@@ -40,31 +42,32 @@ namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
                 chargeLinkCommandAcceptedContract.PublishedTime.ToInstant());
         }
 
-        private static DocumentDto ConvertDocument(GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandAccepted.Document document)
+        private static DocumentDto ConvertDocument(ChargeLinkCommandAccepted.Document document)
         {
             return new DocumentDto
             {
                 Id = document.Id,
                 RequestDate = document.RequestDate.ToInstant(),
-                Type = (GreenEnergyHub.Charges.Domain.MarketParticipants.DocumentType)document.Type,
+                Type = (Domain.MarketParticipants.DocumentType)document.Type,
                 CreatedDateTime = document.CreatedDateTime.ToInstant(),
                 Sender = MapMarketParticipant(document.Sender),
                 Recipient = MapMarketParticipant(document.Recipient),
-                IndustryClassification = (GreenEnergyHub.Charges.Domain.MarketParticipants.IndustryClassification)document.IndustryClassification,
-                BusinessReasonCode = (GreenEnergyHub.Charges.Domain.MarketParticipants.BusinessReasonCode)document.BusinessReasonCode,
+                IndustryClassification = (Domain.MarketParticipants.IndustryClassification)document.IndustryClassification,
+                BusinessReasonCode = (Domain.MarketParticipants.BusinessReasonCode)document.BusinessReasonCode,
             };
         }
 
-        private static MarketParticipant MapMarketParticipant(GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandAccepted.MarketParticipant marketParticipant)
+        private static MarketParticipant MapMarketParticipant(
+            GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandAccepted.MarketParticipant marketParticipant)
         {
             return new MarketParticipant
             {
                 Id = marketParticipant.Id,
-                BusinessProcessRole = (GreenEnergyHub.Charges.Domain.MarketParticipants.MarketParticipantRole)marketParticipant.BusinessProcessRole,
+                BusinessProcessRole = (Domain.MarketParticipants.MarketParticipantRole)marketParticipant.BusinessProcessRole,
             };
         }
 
-        private static ChargeLinkDto ConvertChargeLink(GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandAccepted.ChargeLink link)
+        private static ChargeLinkDto ConvertChargeLink(ChargeLinkCommandAccepted.ChargeLink link)
         {
             return new ChargeLinkDto
             {
