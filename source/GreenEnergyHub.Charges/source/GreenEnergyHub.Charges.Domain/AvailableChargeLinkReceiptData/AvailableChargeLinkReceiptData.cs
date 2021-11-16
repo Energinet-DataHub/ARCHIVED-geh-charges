@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System;
+using System.Collections.Generic;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using NodaTime;
 
@@ -39,6 +40,7 @@ namespace GreenEnergyHub.Charges.Domain.AvailableChargeLinkReceiptData
             MeteringPointId = meteringPointId;
             RequestTime = requestTime;
             AvailableDataReferenceId = availableDataReferenceId;
+            _reasonCodes = new List<AvailableChargeLinkReceiptDataReasonCode>();
         }
 
         public Guid Id { get; }
@@ -54,6 +56,10 @@ namespace GreenEnergyHub.Charges.Domain.AvailableChargeLinkReceiptData
         public string OriginalOperationId { get; }
 
         public string MeteringPointId { get; }
+
+        private readonly List<AvailableChargeLinkReceiptDataReasonCode> _reasonCodes;
+
+        public IReadOnlyCollection<AvailableChargeLinkReceiptDataReasonCode> Points => _reasonCodes.AsReadOnly();
 
         public Instant RequestTime { get; }
 
