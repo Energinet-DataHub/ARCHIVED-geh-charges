@@ -1,5 +1,11 @@
 # GreenEnergyHub.Charges.Libraries Release notes
 
+## Version 1.0.9
+
+Protobuf contracts common for both Energinet.Charges.Libraries and elsewhere in the Charges domain are now located in one common place to avoid duplication.
+
+All references to Charges.Clients from elsewhere in Charges is removed.
+
 ## Version 1.0.8
 
 Missing release notes added

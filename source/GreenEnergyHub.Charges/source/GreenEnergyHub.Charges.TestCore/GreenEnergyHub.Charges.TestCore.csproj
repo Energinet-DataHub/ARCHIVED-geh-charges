@@ -48,7 +48,6 @@ limitations under the License.
 
     <ItemGroup>
       <ProjectReference Include="..\GreenEnergyHub.Charges.ApplyDBMigrationsApp\GreenEnergyHub.Charges.ApplyDBMigrationsApp.csproj" />
-      <ProjectReference Include="..\GreenEnergyHub.Charges.Core\GreenEnergyHub.Charges.Core.csproj" />
       <ProjectReference Include="..\GreenEnergyHub.Charges.Infrastructure\GreenEnergyHub.Charges.Infrastructure.csproj" />
     </ItemGroup>
 

@@ -17,9 +17,8 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
-using Energinet.DataHub.Charges.Libraries.DefaultChargeLink;
-using Energinet.DataHub.Charges.Libraries.Enums;
-using Energinet.DataHub.Charges.Libraries.Models;
+using GreenEnergyHub.Charges.Application.ChargeLinks.CreateDefaultChargeLinkReplier;
+using GreenEnergyHub.Charges.Contracts;
 using GreenEnergyHub.Charges.Domain.DefaultChargeLinks;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinkCommandReceivedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinkCommands;
@@ -37,7 +36,7 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
         private readonly IMessageDispatcher<ChargeLinkCommandReceivedEvent> _messageDispatcher;
         private readonly IClock _clock;
         private readonly IMeteringPointRepository _meteringPointRepository;
-        private readonly IDefaultChargeLinkClient _defaultChargeLinkClient;
+        private readonly ICreateDefaultChargeLinksReplier _createDefaultChargeLinksReplier;
         private readonly IMessageMetaDataContext _messageMetaDataContext;
         private readonly ILogger _logger;
         private readonly ICorrelationContext _correlationIdContext;
@@ -48,7 +47,7 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
             IMessageDispatcher<ChargeLinkCommandReceivedEvent> messageDispatcher,
             IClock clock,
             IMeteringPointRepository meteringPointRepository,
-            IDefaultChargeLinkClient defaultChargeLinkClient,
+            ICreateDefaultChargeLinksReplier createDefaultChargeLinksReplier,
             IMessageMetaDataContext messageMetaDataContext,
             ILoggerFactory loggerFactory,
             ICorrelationContext correlationIdContext)
@@ -58,7 +57,7 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
             _messageDispatcher = messageDispatcher;
             _clock = clock;
             _meteringPointRepository = meteringPointRepository;
-            _defaultChargeLinkClient = defaultChargeLinkClient;
+            _createDefaultChargeLinksReplier = createDefaultChargeLinksReplier;
             _messageMetaDataContext = messageMetaDataContext;
             _correlationIdContext = correlationIdContext;
             _logger = loggerFactory.CreateLogger(nameof(CreateLinkCommandRequestHandler));
@@ -119,24 +118,21 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
 
         private async Task ReplyWithFailedAsync(string meteringPointId, string replyTo)
         {
-            await _defaultChargeLinkClient
-                .CreateDefaultChargeLinksFailedReplyAsync(
-                    new CreateDefaultChargeLinksFailedDto(
+            await _createDefaultChargeLinksReplier
+                .ReplyWithFailedAsync(
                         meteringPointId,
-                        ErrorCode.MeteringPointUnknown),
-                    _correlationIdContext.Id,
-                    replyTo).ConfigureAwait(false);
+                        ErrorCode.MeteringPointUnknown,
+                        replyTo).ConfigureAwait(false);
         }
 
         private async Task ReplyWithSucceededAsync(string meteringPointId, string replyTo)
         {
-            await _defaultChargeLinkClient
-                .CreateDefaultChargeLinksSucceededReplyAsync(
-                    new CreateDefaultChargeLinksSucceededDto(
-                        meteringPointId,
-                        false),
-                    _correlationIdContext.Id,
-                    replyTo).ConfigureAwait(false);
+            await _createDefaultChargeLinksReplier
+                .ReplyWithSucceededAsync(
+                    meteringPointId,
+                    false,
+                    replyTo)
+                .ConfigureAwait(false);
         }
 
         private async Task CreateAndDispatchChargeLinkCommandReceivedEventIfApplicableForLinkingAsync(
