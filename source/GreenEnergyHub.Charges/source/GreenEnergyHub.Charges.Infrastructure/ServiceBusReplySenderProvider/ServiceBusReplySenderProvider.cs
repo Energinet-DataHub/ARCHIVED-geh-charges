@@ -30,13 +30,13 @@ namespace GreenEnergyHub.Charges.Infrastructure.ServiceBusReplySenderProvider
 
         public IServiceBusReplySender GetInstance(string replyTo)
         {
-            _senders.TryGetValue(replyTo, out var instantiatedServiceBusReplySender);
+            _senders.TryGetValue(replyTo, out var serviceBusReplySender);
 
-            if (instantiatedServiceBusReplySender != null)
-                return instantiatedServiceBusReplySender;
+            if (serviceBusReplySender != null)
+                return serviceBusReplySender;
 
-            var serviceBusReplySender =
-                new ServiceBusReplySender(_serviceBusClient.CreateSender(replyTo));
+            serviceBusReplySender = new ServiceBusReplySender(_serviceBusClient.CreateSender(replyTo));
+
             _senders.Add(replyTo, serviceBusReplySender);
 
             return serviceBusReplySender;

@@ -21,29 +21,34 @@ using Energinet.DataHub.Charges.Libraries.Mappers;
 namespace Energinet.DataHub.Charges.Libraries.DefaultChargeLink
 {
     /// <inheritdoc/>
-    internal sealed class DefaultChargeLinkReplyReader : IDefaultChargeLinkReplyReader
+    public sealed class DefaultChargeLinkReplyReader : IDefaultChargeLinkReplyReader
     {
         private readonly OnSuccess _handleSuccess;
         private readonly OnFailure _handleFailure;
 
         /// <param name="handleSuccess">Delegate to handle successful <see cref="CreateDefaultChargeLinks" /> request</param>
         /// <param name="handleFailure">Delegate to handle failed <see cref="CreateDefaultChargeLinks" /> request</param>
-        public DefaultChargeLinkReplyReader([NotNull] OnSuccess handleSuccess, [NotNull] OnFailure handleFailure)
+        public DefaultChargeLinkReplyReader(
+            [DisallowNull] OnSuccess handleSuccess,
+            [DisallowNull] OnFailure handleFailure)
         {
             _handleSuccess = handleSuccess;
             _handleFailure = handleFailure;
         }
 
         /// <inheritdoc/>
-        public async Task ReadAsync([NotNull] byte[] serializedReplyMessageBody)
+        public async Task ReadAsync([DisallowNull] byte[] serializedReplyMessageBody)
         {
+            if (serializedReplyMessageBody == null)
+                throw new ArgumentNullException(nameof(serializedReplyMessageBody));
+
             var replyParser = CreateDefaultChargeLinksReply.Parser;
             var createDefaultChargeLinksReply = replyParser.ParseFrom(serializedReplyMessageBody);
 
             await MapAsync(createDefaultChargeLinksReply).ConfigureAwait(false);
         }
 
-        private async Task MapAsync([NotNull] CreateDefaultChargeLinksReply createDefaultChargeLinksReply)
+        private async Task MapAsync(CreateDefaultChargeLinksReply createDefaultChargeLinksReply)
         {
             switch (createDefaultChargeLinksReply.ReplyCase)
             {

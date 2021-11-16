@@ -14,7 +14,7 @@
 
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Collective.Models;
+using GreenEnergyHub.Charges.Contracts;
 
 namespace GreenEnergyHub.Charges.Application.ChargeLinks.CreateDefaultChargeLinkReplier
 {
@@ -23,13 +23,11 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.CreateDefaultChargeLink
         Task ReplyWithFailedAsync(
             [NotNull] string meteringPointId,
             ErrorCode errorCode,
-            string replyTo,
-            string correlationId);
+            string replyTo);
 
         Task ReplyWithSucceededAsync(
             [NotNull] string meteringPointId,
             bool didCreateChargeLinks,
-            string replyTo,
-            string correlationId);
+            string replyTo);
     }
 }

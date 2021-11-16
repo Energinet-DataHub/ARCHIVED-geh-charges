@@ -20,7 +20,7 @@ namespace Energinet.DataHub.Charges.Libraries.Mappers
 {
     internal class CreateDefaultChargeLinksSucceededInboundMapper
     {
-        protected internal static CreateDefaultChargeLinksSucceededDto Convert(
+        protected internal static DefaultChargeLinksCreatedSuccessfullyDto Convert(
             [NotNull] CreateDefaultChargeLinksReply createDefaultChargeLinksReply)
         {
             return new(

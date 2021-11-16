@@ -23,32 +23,32 @@ using Google.Protobuf;
 
 namespace Energinet.DataHub.Charges.Libraries.DefaultChargeLink
 {
-    /// <summary>
-    /// This class must be thread safe.
-    /// </summary>
-    internal sealed class DefaultChargeLinkClient : IDefaultChargeLinkClient
+    public sealed class DefaultChargeLinkClient : IDefaultChargeLinkClient
     {
         private readonly IServiceBusRequestSender _serviceBusRequestSender;
 
         public DefaultChargeLinkClient(
-            [NotNull] IServiceBusRequestSenderProvider serviceBusRequestSenderProvider)
+            [DisallowNull] IServiceBusRequestSenderProvider serviceBusRequestSenderProvider)
         {
+            if (serviceBusRequestSenderProvider == null)
+                throw new ArgumentNullException(nameof(serviceBusRequestSenderProvider));
+
             _serviceBusRequestSender = serviceBusRequestSenderProvider.GetInstance();
         }
 
         public async Task CreateDefaultChargeLinksRequestAsync(
-            [NotNull] CreateDefaultChargeLinksDto createDefaultChargeLinksDto,
-            [NotNull] string correlationId)
+            [DisallowNull] RequestDefaultChargeLinksForMeteringPointDto requestDefaultChargeLinksForMeteringPointDto,
+            [DisallowNull] string correlationId)
         {
-            if (createDefaultChargeLinksDto == null)
-                throw new ArgumentNullException(nameof(createDefaultChargeLinksDto));
+            if (requestDefaultChargeLinksForMeteringPointDto == null)
+                throw new ArgumentNullException(nameof(requestDefaultChargeLinksForMeteringPointDto));
 
             if (string.IsNullOrWhiteSpace(correlationId))
                 throw new ArgumentNullException(nameof(correlationId));
 
             var createDefaultChargeLinks = new CreateDefaultChargeLinks
             {
-                MeteringPointId = createDefaultChargeLinksDto.MeteringPointId,
+                MeteringPointId = requestDefaultChargeLinksForMeteringPointDto.MeteringPointId,
             };
 
             await _serviceBusRequestSender.SendRequestAsync(

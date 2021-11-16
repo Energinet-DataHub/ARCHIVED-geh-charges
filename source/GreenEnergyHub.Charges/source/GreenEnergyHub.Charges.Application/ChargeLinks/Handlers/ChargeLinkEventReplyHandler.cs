@@ -16,7 +16,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application.ChargeLinks.CreateDefaultChargeLinkReplier;
-using GreenEnergyHub.Charges.Domain.ChargeLinkCommandAcceptedEvents;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinkCommandAcceptedEvents;
 
 namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
 {
@@ -47,8 +47,7 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
                     .ReplyWithSucceededAsync(
                         meteringPointId,
                         true,
-                        _messageMetaDataContext.ReplyTo,
-                        _correlationContext.Id).ConfigureAwait(false);
+                        _messageMetaDataContext.ReplyTo).ConfigureAwait(false);
         }
 
         private static void CheckAllMeteringPointIdsAreTheSame(ChargeLinkCommandAcceptedEvent chargeLinkCommandAcceptedEvent)

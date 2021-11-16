@@ -17,14 +17,10 @@ The library provides
 
 ## Registration
 
-`IDefaultChargeLinkClient` is thread safe and must be registered as a singleton.
+`IDefaultChargeLinkClient` should be registered as scoped.
+
+`ServiceBusRequestSenderProvider` should be registered as a singleton.
 
 ### Example
 
-            var serviceBusRequestSenderProvider =
-                new ServiceBusRequestSenderProvider(
-                    serviceBusClient,
-                    new ServiceBusRequestSenderConfiguration(requestQueueName));
-
-            serviceCollection.AddSingleton<IDefaultChargeLinkMessagesClient>(_ =>
-                new DefaultChargeLinkMessagesClient(serviceBusRequestSenderProvider));
+Please refer to this [class](https://github.com/Energinet-DataHub/geh-charges/blob/main/source/Energinet.Charges.Libraries/source/Energinet.DataHub.Charges.Clients/DefaultChargeLink/Configuration/DefaultChargeLinkClientConfiguration.cs) for registration

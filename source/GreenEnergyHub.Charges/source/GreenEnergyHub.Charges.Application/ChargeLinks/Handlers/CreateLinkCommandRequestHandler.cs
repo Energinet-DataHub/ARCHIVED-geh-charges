@@ -18,11 +18,11 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application.ChargeLinks.CreateDefaultChargeLinkReplier;
-using GreenEnergyHub.Charges.Collective.Models;
-using GreenEnergyHub.Charges.Domain.ChargeLinkCommandReceivedEvents;
-using GreenEnergyHub.Charges.Domain.ChargeLinkCommands;
-using GreenEnergyHub.Charges.Domain.CreateLinkRequest;
+using GreenEnergyHub.Charges.Contracts;
 using GreenEnergyHub.Charges.Domain.DefaultChargeLinks;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinkCommandReceivedEvents;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinkCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.CreateLinkRequest;
 using GreenEnergyHub.Charges.Domain.MeteringPoints;
 using Microsoft.Extensions.Logging;
 using NodaTime;
@@ -122,8 +122,7 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
                 .ReplyWithFailedAsync(
                         meteringPointId,
                         ErrorCode.MeteringPointUnknown,
-                        replyTo,
-                        _correlationIdContext.Id).ConfigureAwait(false);
+                        replyTo).ConfigureAwait(false);
         }
 
         private async Task ReplyWithSucceededAsync(string meteringPointId, string replyTo)
@@ -132,8 +131,7 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
                 .ReplyWithSucceededAsync(
                     meteringPointId,
                     false,
-                    replyTo,
-                    _correlationIdContext.Id)
+                    replyTo)
                 .ConfigureAwait(false);
         }
 

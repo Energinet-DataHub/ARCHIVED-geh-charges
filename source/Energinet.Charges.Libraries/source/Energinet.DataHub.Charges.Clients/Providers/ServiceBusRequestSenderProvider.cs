@@ -12,21 +12,23 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Diagnostics.CodeAnalysis;
 using Azure.Messaging.ServiceBus;
 using Energinet.DataHub.Charges.Libraries.Models;
 using Energinet.DataHub.Charges.Libraries.ServiceBus;
 
 namespace Energinet.DataHub.Charges.Libraries.Providers
 {
+    // This class must be registered as a singleton.
     public class ServiceBusRequestSenderProvider : IServiceBusRequestSenderProvider
     {
        private readonly ServiceBusClient _serviceBusClient;
        private readonly IServiceBusRequestSenderConfiguration _serviceBusRequestSenderConfiguration;
-       private ServiceBusRequestSender? _sender;
+       private ServiceBusRequestSender _sender;
 
        public ServiceBusRequestSenderProvider(
-            ServiceBusClient serviceBusClient,
-            IServiceBusRequestSenderConfiguration serviceBusRequestSenderConfiguration)
+            [DisallowNull] ServiceBusClient serviceBusClient,
+            [DisallowNull] IServiceBusRequestSenderConfiguration serviceBusRequestSenderConfiguration)
         {
             _serviceBusClient = serviceBusClient;
             _serviceBusRequestSenderConfiguration = serviceBusRequestSenderConfiguration;

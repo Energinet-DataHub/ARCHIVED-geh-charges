@@ -106,16 +106,16 @@ namespace Energinet.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.Defaul
                 await sut.ReadAsync(data).ConfigureAwait(false)).ConfigureAwait(false);
         }
 
-        private async Task HandleFailure(CreateDefaultChargeLinksFailedDto createDefaultChargeLinksFailed)
+        private async Task HandleFailure(DefaultChargeLinksCreationFailedStatusDto defaultChargeLinksCreationFailedStatus)
         {
-            (_unknownMeteringPointIdTestResult, _errorCodeTestResult) = createDefaultChargeLinksFailed;
+            (_unknownMeteringPointIdTestResult, _errorCodeTestResult) = defaultChargeLinksCreationFailedStatus;
 
             await Task.CompletedTask.ConfigureAwait(false);
         }
 
-        private async Task HandleSuccess(CreateDefaultChargeLinksSucceededDto createDefaultChargeLinksSucceeded)
+        private async Task HandleSuccess(DefaultChargeLinksCreatedSuccessfullyDto defaultChargeLinksCreatedSuccessfully)
         {
-            (_knownMeteringPointIdTestResult, _didCreateChargeLinksTestResult) = createDefaultChargeLinksSucceeded;
+            (_knownMeteringPointIdTestResult, _didCreateChargeLinksTestResult) = defaultChargeLinksCreatedSuccessfully;
 
             await Task.CompletedTask.ConfigureAwait(false);
         }

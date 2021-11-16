@@ -57,7 +57,7 @@ limitations under the License.
         <Access>Public</Access>
         <ProtoCompile>True</ProtoCompile>
         <CompileOutputs>True</CompileOutputs>
-        <OutputDir>obj\Debug\net5.0\Integration</OutputDir>
+        <OutputDir>obj\contracts</OutputDir>
         <Generator>MSBuild:Compile</Generator>
       </Protobuf>
     </ItemGroup>

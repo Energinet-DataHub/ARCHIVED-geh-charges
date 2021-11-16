@@ -19,8 +19,8 @@ using AutoFixture.Xunit2;
 using GreenEnergyHub.Charges.Application;
 using GreenEnergyHub.Charges.Application.ChargeLinks.CreateDefaultChargeLinkReplier;
 using GreenEnergyHub.Charges.Application.ChargeLinks.Handlers;
-using GreenEnergyHub.Charges.Domain.ChargeLinkCommandAcceptedEvents;
-using GreenEnergyHub.Charges.Domain.ChargeLinkCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinkCommandAcceptedEvents;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinkCommands;
 using GreenEnergyHub.TestHelpers;
 using Moq;
 using NodaTime;
@@ -56,11 +56,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Handlers
 
             // Assert
             defaultChargeLinkClient.Verify(
-                x => x.ReplyWithSucceededAsync(MeteringPointId, It.IsAny<bool>(), replyTo, correlationId));
-
-            // TODO: Will fail since sut.HandleAsync set it to true
-            // defaultChargeLinkClient.Verify(
-            //     x => x.CreateDefaultChargeLinksSucceededReplyAsync(MeteringPointId, false, replyTo, correlationId));
+                x => x.ReplyWithSucceededAsync(MeteringPointId, true, replyTo));
         }
 
         [Theory]
