@@ -23,7 +23,7 @@ namespace Energinet.DataHub.Charges.Libraries.Providers
     {
        private readonly ServiceBusClient _serviceBusClient;
        private readonly IServiceBusRequestSenderConfiguration _serviceBusRequestSenderConfiguration;
-       private ServiceBusRequestSender? _sender;
+       private ServiceBusRequestSender _sender;
 
        public ServiceBusRequestSenderProvider(
             ServiceBusClient serviceBusClient,

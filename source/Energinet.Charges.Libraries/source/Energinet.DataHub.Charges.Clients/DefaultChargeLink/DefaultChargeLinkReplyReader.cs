@@ -21,7 +21,7 @@ using Energinet.DataHub.Charges.Libraries.Mappers;
 namespace Energinet.DataHub.Charges.Libraries.DefaultChargeLink
 {
     /// <inheritdoc/>
-    internal sealed class DefaultChargeLinkReplyReader : IDefaultChargeLinkReplyReader
+    public sealed class DefaultChargeLinkReplyReader : IDefaultChargeLinkReplyReader
     {
         private readonly OnSuccess _handleSuccess;
         private readonly OnFailure _handleFailure;
