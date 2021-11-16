@@ -27,7 +27,6 @@ using GreenEnergyHub.Charges.TestCore;
 using GreenEnergyHub.TestHelpers;
 using Moq;
 using NodaTime;
-using NodaTime.Extensions;
 using Xunit;
 using Xunit.Categories;
 
@@ -41,8 +40,11 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.ChargeLinkReceiptBundle.Ci
         private const string RecipientId = "TestRecipient1111";
 
         [Theory]
-        [InlineAutoDomainData]
+        [InlineAutoDomainData(ReceiptStatus.Confirmed, "GreenEnergyHub.Charges.Tests.TestFiles.ExpectedOutputChargeLinkReceiptCimSerializerConfirmation.blob")]
+        [InlineAutoDomainData(ReceiptStatus.Rejected, "GreenEnergyHub.Charges.Tests.TestFiles.ExpectedOutputChargeLinkReceiptCimSerializerRejection.blob")]
         public async Task SerializeAsync_WhenCalled_StreamHasSerializedResult(
+            ReceiptStatus receiptStatus,
+            string expectedFilePath,
             [Frozen] Mock<IHubSenderConfiguration> hubSenderConfiguration,
             [Frozen] Mock<IClock> clock,
             [Frozen] Mock<ICimIdProvider> cimIdProvider,
@@ -54,9 +56,9 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.ChargeLinkReceiptBundle.Ci
 
             var expected = EmbeddedStreamHelper.GetEmbeddedStreamAsString(
                 Assembly.GetExecutingAssembly(),
-                "GreenEnergyHub.Charges.Tests.TestFiles.ExpectedOutputChargeLinkReceiptCimSerializerConfirmation.blob");
+                expectedFilePath);
 
-            var receipts = GetReceipts(ReceiptStatus.Confirmed, clock.Object);
+            var receipts = GetReceipts(receiptStatus, clock.Object);
 
             // Act
             await sut.SerializeToStreamAsync(
@@ -72,7 +74,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.ChargeLinkReceiptBundle.Ci
             Assert.Equal(expected, actual);
         }
 
-        [Theory/*(Skip = "Manually run test to save the generated file to disk")*/]
+        [Theory(Skip = "Manually run test to save the generated file to disk")]
         [InlineAutoDomainData]
         public async Task SerializeAsync_WhenCalled_SaveSerializedStream(
             [Frozen] Mock<IHubSenderConfiguration> hubSenderConfiguration,
