@@ -13,7 +13,7 @@
 // limitations under the License.
 
 using System.Threading.Tasks;
-using Energinet.DataHub.MessageHub.Client.Model;
+using Energinet.DataHub.MessageHub.Model.Model;
 
 namespace GreenEnergyHub.Charges.Application.ChargeLinks.MessageHub
 {

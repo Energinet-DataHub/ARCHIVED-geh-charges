@@ -21,7 +21,7 @@ using Xunit;
 using Xunit.Abstractions;
 using Xunit.Categories;
 
-namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Health
+namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
 {
     /// <summary>
     /// Proof-of-concept on integration testing a function.
