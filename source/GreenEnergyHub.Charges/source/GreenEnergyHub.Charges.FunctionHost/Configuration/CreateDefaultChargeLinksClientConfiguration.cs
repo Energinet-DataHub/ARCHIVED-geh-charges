@@ -33,7 +33,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
                 EnvironmentHelper.GetEnv(EnvironmentSettingNames.DataHubSenderConnectionString);
             var serviceBusClient = new ServiceBusClient(serviceBusConnectionString);
 
-            serviceCollection.SendProtobuf<DefaultChargeLinksDataAvailableNotifiedLinkCommandReceived>();
+            serviceCollection.SendProtobuf<DefaultChargeLinksDataAvailableNotifiedLinkCommandReceivedContract>();
             serviceCollection.AddMessagingProtobuf().AddMessageDispatcher<DefaultChargeLinkDataAvailableNotifierEvent>(
                 EnvironmentHelper.GetEnv(EnvironmentSettingNames.DomainEventSenderConnectionString),
                 EnvironmentHelper.GetEnv(EnvironmentSettingNames.DefaultChargeLinksDataAvailableNotifiedTopicName));

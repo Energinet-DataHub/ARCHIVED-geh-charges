@@ -15,8 +15,11 @@
 
 syntax = "proto3";
 
+import "google/protobuf/timestamp.proto";
+
 option csharp_namespace = "GreenEnergyHub.Charges.Infrastructure.Internal.DefaultChargeLinksDataAvailableNotifiedLinkCommandReceived";
 
-message DefaultChargeLinksDataAvailableNotifiedLinkCommandReceived {
-  string metering_point_id = 1;
+message DefaultChargeLinksDataAvailableNotifiedLinkCommandReceivedContract {
+  google.protobuf.Timestamp published_time = 1;
+  string metering_point_id = 2;
 }
