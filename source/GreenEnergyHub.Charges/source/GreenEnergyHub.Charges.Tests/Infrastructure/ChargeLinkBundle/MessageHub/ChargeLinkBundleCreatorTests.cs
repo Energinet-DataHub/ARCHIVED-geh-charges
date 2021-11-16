@@ -19,6 +19,7 @@ using System.Threading.Tasks;
 using AutoFixture.Xunit2;
 using Energinet.DataHub.MessageHub.Client.Model;
 using GreenEnergyHub.Charges.Domain.AvailableChargeLinksData;
+using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.Infrastructure.ChargeLinkBundle.Cim;
 using GreenEnergyHub.Charges.Infrastructure.ChargeLinkBundle.MessageHub;
 using GreenEnergyHub.TestHelpers;
@@ -54,7 +55,10 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.ChargeLinkBundle.MessageHu
             serializer.Verify(
                 s => s.SerializeToStreamAsync(
                     availableChargeLinksData,
-                    stream),
+                    stream,
+                    It.IsAny<BusinessReasonCode>(),
+                    It.IsAny<string>(),
+                    It.IsAny<MarketParticipantRole>()),
                 Times.Once);
         }
     }
