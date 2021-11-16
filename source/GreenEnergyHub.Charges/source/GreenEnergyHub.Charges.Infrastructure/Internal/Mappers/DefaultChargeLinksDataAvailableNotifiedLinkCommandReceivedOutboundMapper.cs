@@ -20,14 +20,14 @@ using GreenEnergyHub.Messaging.Protobuf;
 namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
 {
     public class DefaultChargeLinksDataAvailableNotifiedLinkCommandReceivedOutboundMapper
-        : ProtobufOutboundMapper<DefaultChargeLinkDataAvailableNotifierEvent>
+        : ProtobufOutboundMapper<DefaultChargeLinksDataAvailableNotifierEvent>
     {
-        protected override IMessage Convert(DefaultChargeLinkDataAvailableNotifierEvent defaultChargeLinkDataAvailableNotifierEvent)
+        protected override IMessage Convert(DefaultChargeLinksDataAvailableNotifierEvent defaultChargeLinksDataAvailableNotifierEvent)
         {
             return new
                 DefaultChargeLinksDataAvailableNotifiedLinkCommandReceivedContract
                 {
-                    MeteringPointId = defaultChargeLinkDataAvailableNotifierEvent.MeteringPointId,
+                    MeteringPointId = defaultChargeLinksDataAvailableNotifierEvent.MeteringPointId,
                 };
         }
     }

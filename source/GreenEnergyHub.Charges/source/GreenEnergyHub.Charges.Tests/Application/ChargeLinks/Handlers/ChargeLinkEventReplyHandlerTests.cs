@@ -21,6 +21,7 @@ using GreenEnergyHub.Charges.Application.ChargeLinks.CreateDefaultChargeLinkRepl
 using GreenEnergyHub.Charges.Application.ChargeLinks.Handlers;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinkCommandAcceptedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinkCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.DefaultChargeLinksDataAvailableNotifiedEvents;
 using GreenEnergyHub.TestHelpers;
 using Moq;
 using NodaTime;
@@ -37,19 +38,19 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Handlers
         [Theory]
         [InlineAutoDomainData]
         public async Task HandleAsync_WhenCalledWithReplyToSetInMessageMetaDataContext_ReplyWithDefaultChargeLinkSucceededDto(
-            [Frozen] [NotNull] Mock<IMessageMetaDataContext> messageMetaDataContext,
-            [Frozen] [NotNull] Mock<ICorrelationContext> correlationContext,
-            [Frozen] [NotNull] Mock<ICreateDefaultChargeLinksReplier> defaultChargeLinkClient,
-            [NotNull] string replyTo,
-            [NotNull] string correlationId,
-            [NotNull] CreateDefaultChargeLinksReplierHandler sut)
+            [Frozen] Mock<IMessageMetaDataContext> messageMetaDataContext,
+            [Frozen] Mock<ICorrelationContext> correlationContext,
+            [Frozen] Mock<ICreateDefaultChargeLinksReplier> defaultChargeLinkClient,
+            string replyTo,
+            string correlationId,
+            CreateDefaultChargeLinksReplierHandler sut)
         {
             // Arrange
             messageMetaDataContext.Setup(m => m.IsReplyToSet()).Returns(true);
             messageMetaDataContext.Setup(m => m.ReplyTo).Returns(replyTo);
             correlationContext.Setup(c => c.Id).Returns(correlationId);
 
-            var command = GetChargeLinkCommandAcceptedEvent();
+            var command = new DefaultChargeLinksDataAvailableNotifierEvent(SystemClock.Instance.GetCurrentInstant(), MeteringPointId);
 
             // Act
             await sut.HandleAsync(command).ConfigureAwait(false);
@@ -57,43 +58,6 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Handlers
             // Assert
             defaultChargeLinkClient.Verify(
                 x => x.ReplyWithSucceededAsync(MeteringPointId, true, replyTo));
-        }
-
-        [Theory]
-        [InlineAutoDomainData]
-        public async Task HandleAsync_WhenCalled_ThrowsInvalidOperationExceptionIfMeteringPointIdsDiffer(
-            [Frozen] [NotNull] Mock<IMessageMetaDataContext> messageMetaDataContext,
-            [NotNull] string replyTo,
-            [NotNull] CreateDefaultChargeLinksReplierHandler sut)
-        {
-            // Arrange
-            messageMetaDataContext.Setup(m => m.IsReplyToSet()).Returns(true);
-            messageMetaDataContext.Setup(m => m.ReplyTo).Returns(replyTo);
-
-            const string optionalMeteringPointId = "optionalMeteringPointId";
-            var command = GetChargeLinkCommandAcceptedEvent(optionalMeteringPointId);
-
-            // Act & Assert
-            await Assert.ThrowsAsync<InvalidOperationException>(() => sut.HandleAsync(command));
-        }
-
-        private static ChargeLinkCommandAcceptedEvent GetChargeLinkCommandAcceptedEvent(
-            string optionalMeteringPointId = "first")
-        {
-            var command = new ChargeLinkCommandAcceptedEvent(
-                new[]
-                {
-                    new ChargeLinkCommand
-                    {
-                        ChargeLink = new ChargeLinkDto { MeteringPointId = MeteringPointId },
-                    },
-                    new ChargeLinkCommand
-                    {
-                        ChargeLink = new ChargeLinkDto { MeteringPointId = optionalMeteringPointId },
-                    },
-                },
-                Instant.MinValue);
-            return command;
         }
     }
 }

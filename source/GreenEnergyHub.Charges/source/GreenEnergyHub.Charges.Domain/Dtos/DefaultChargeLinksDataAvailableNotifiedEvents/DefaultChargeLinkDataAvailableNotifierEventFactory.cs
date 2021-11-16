@@ -19,9 +19,9 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.DefaultChargeLinksDataAvailableNoti
 {
     public class DefaultChargeLinkDataAvailableNotifierEventFactory : IDefaultChargeLinkDataAvailableNotifierEventFactory
     {
-        public DefaultChargeLinkDataAvailableNotifierEvent CreteFromAcceptedEvent(ChargeLinkCommandAcceptedEvent chargeLinkCommandAcceptedEvent)
+        public DefaultChargeLinksDataAvailableNotifierEvent CreteFromAcceptedEvent(ChargeLinkCommandAcceptedEvent chargeLinkCommandAcceptedEvent)
         {
-            return new DefaultChargeLinkDataAvailableNotifierEvent(
+            return new DefaultChargeLinksDataAvailableNotifierEvent(
                 chargeLinkCommandAcceptedEvent.PublishedTime,
                 chargeLinkCommandAcceptedEvent.ChargeLinkCommands.First().ChargeLink.MeteringPointId);
         }

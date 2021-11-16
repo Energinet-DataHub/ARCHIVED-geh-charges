@@ -26,7 +26,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
     {
         protected override IInboundMessage Convert(DefaultChargeLinksDataAvailableNotifiedLinkCommandReceivedContract dataAvailableNotifiedLinkCommandReceived)
         {
-            return new DefaultChargeLinkDataAvailableNotifierEvent(dataAvailableNotifiedLinkCommandReceived.PublishedTime.ToInstant(), dataAvailableNotifiedLinkCommandReceived.MeteringPointId);
+            return new DefaultChargeLinksDataAvailableNotifierEvent(dataAvailableNotifiedLinkCommandReceived.PublishedTime.ToInstant(), dataAvailableNotifiedLinkCommandReceived.MeteringPointId);
         }
     }
 }

@@ -20,11 +20,11 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
 {
     public class ChargeLinkDataAvailableNotifierEndpointHandler : IChargeLinkDataAvailableNotifierEndpointHandler
     {
-        private readonly IMessageDispatcher<DefaultChargeLinkDataAvailableNotifierEvent> _messageDispatcher;
+        private readonly IMessageDispatcher<DefaultChargeLinksDataAvailableNotifierEvent> _messageDispatcher;
         private readonly IDefaultChargeLinkDataAvailableNotifierEventFactory _defaultChargeLinkDataAvailableNotifierEventFactory;
 
         public ChargeLinkDataAvailableNotifierEndpointHandler(
-            IMessageDispatcher<DefaultChargeLinkDataAvailableNotifierEvent> messageDispatcher,
+            IMessageDispatcher<DefaultChargeLinksDataAvailableNotifierEvent> messageDispatcher,
             IDefaultChargeLinkDataAvailableNotifierEventFactory defaultChargeLinkDataAvailableNotifierEventFactory)
         {
             _messageDispatcher = messageDispatcher;

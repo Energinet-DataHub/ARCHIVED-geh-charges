@@ -16,9 +16,8 @@ using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application;
 using GreenEnergyHub.Charges.Application.ChargeLinks.Handlers;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinkCommandAcceptedEvents;
+using GreenEnergyHub.Charges.Domain.Dtos.DefaultChargeLinksDataAvailableNotifiedEvents;
 using GreenEnergyHub.Charges.FunctionHost.Common;
-using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandAccepted;
 using GreenEnergyHub.Charges.Infrastructure.Messaging;
 using Microsoft.Azure.Functions.Worker;
 
@@ -31,12 +30,12 @@ namespace GreenEnergyHub.Charges.FunctionHost.ChargeLinks
         /// Function name affects the URL and thus possibly dependent infrastructure.
         /// </summary>
         public const string FunctionName = nameof(CreateDefaultChargeLinksReplierEndpoint);
-        private readonly MessageExtractor<ChargeLinkCommandAccepted> _messageExtractor;
+        private readonly MessageExtractor<DefaultChargeLinksDataAvailableNotifierEvent> _messageExtractor;
         private readonly ICreateDefaultChargeLinksReplierHandler _createDefaultChargeLinksReplierHandler;
         private readonly IMessageMetaDataContext _messageMetaDataContext;
 
         public CreateDefaultChargeLinksReplierEndpoint(
-            MessageExtractor<ChargeLinkCommandAccepted> messageExtractor,
+            MessageExtractor<DefaultChargeLinksDataAvailableNotifierEvent> messageExtractor,
             ICreateDefaultChargeLinksReplierHandler createDefaultChargeLinksReplierHandler,
             IMessageMetaDataContext messageMetaDataContext)
         {
@@ -53,10 +52,11 @@ namespace GreenEnergyHub.Charges.FunctionHost.ChargeLinks
                 Connection = EnvironmentSettingNames.DomainEventListenerConnectionString)]
             [NotNull] byte[] message)
         {
-            var acceptedChargeLinkCommand = (ChargeLinkCommandAcceptedEvent)await _messageExtractor.ExtractAsync(message).ConfigureAwait(false);
+            var defaultChargeLinksDataAvailableNotifierEvent =
+                (DefaultChargeLinksDataAvailableNotifierEvent)await _messageExtractor.ExtractAsync(message).ConfigureAwait(false);
 
             if (_messageMetaDataContext.IsReplyToSet())
-                await _createDefaultChargeLinksReplierHandler.HandleAsync(acceptedChargeLinkCommand).ConfigureAwait(false);
+                await _createDefaultChargeLinksReplierHandler.HandleAsync(defaultChargeLinksDataAvailableNotifierEvent).ConfigureAwait(false);
         }
     }
 }

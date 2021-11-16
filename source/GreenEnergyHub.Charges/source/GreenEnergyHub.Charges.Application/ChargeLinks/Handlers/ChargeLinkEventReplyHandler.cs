@@ -17,6 +17,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application.ChargeLinks.CreateDefaultChargeLinkReplier;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinkCommandAcceptedEvents;
+using GreenEnergyHub.Charges.Domain.Dtos.DefaultChargeLinksDataAvailableNotifiedEvents;
 
 namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
 {
@@ -36,30 +37,13 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
             _correlationContext = correlationContext;
         }
 
-        public async Task HandleAsync(ChargeLinkCommandAcceptedEvent command)
+        public async Task HandleAsync(DefaultChargeLinksDataAvailableNotifierEvent command)
         {
-                CheckAllMeteringPointIdsAreTheSame(command);
-
-                // TODO:  A refactor of ChargeLinkCommands will end with the commands being wrapped by a entity with only one meteringPointId.
-                var meteringPointId = command.ChargeLinkCommands.First().ChargeLink.MeteringPointId;
-
-                await _createDefaultChargeLinksReplier
-                    .ReplyWithSucceededAsync(
-                        meteringPointId,
-                        true,
-                        _messageMetaDataContext.ReplyTo).ConfigureAwait(false);
-        }
-
-        private static void CheckAllMeteringPointIdsAreTheSame(ChargeLinkCommandAcceptedEvent chargeLinkCommandAcceptedEvent)
-        {
-            var allChargeLinkMeteringPointIdsAreTheSame = chargeLinkCommandAcceptedEvent.ChargeLinkCommands
-                .All(c => c.ChargeLink.MeteringPointId == chargeLinkCommandAcceptedEvent.ChargeLinkCommands
-                    .First().ChargeLink.MeteringPointId);
-
-            if (!allChargeLinkMeteringPointIdsAreTheSame)
-            {
-                throw new InvalidOperationException($"not all metering point Ids are the same on {nameof(ChargeLinkCommandAcceptedEvent)}");
-            }
+            await _createDefaultChargeLinksReplier
+                .ReplyWithSucceededAsync(
+                    command.MeteringPointId,
+                    true,
+                    _messageMetaDataContext.ReplyTo).ConfigureAwait(false);
         }
     }
 }
