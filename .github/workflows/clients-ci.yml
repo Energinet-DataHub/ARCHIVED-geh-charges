@@ -80,7 +80,8 @@ jobs:
         run: npm install -g azure-functions-core-tools@${{ env.AZURE_FUNCTIONS_CORE_TOOLS_VERSION }}
 
       - name: Build and test project
-        shell: bash
         run: |
-          dotnet test --configuration Release ${{ env.SOLUTION_FILE_PATH }}
+          az login --service-principal --username "${{ secrets.AZURE_SPN_ID }}" --password "${{ secrets.AZURE_SPN_SECRET }}" --tenant "${{ secrets.AZURE_TENANT_ID }}"
+          az account set --subscription "${{ secrets.AZURE_SUBSCRIPTION_ID }}"
+          dotnet test ${{ inputs.SOLUTION_FILE_PATH }} --configuration Release --verbosity normal
           dotnet build ${{ env.CSPROJ_FILE_PATH }} --configuration Release --output ${{ github.workspace }}/output

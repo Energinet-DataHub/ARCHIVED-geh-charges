@@ -18,14 +18,14 @@ using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
-using Energinet.DataHub.Charges.Libraries.DefaultChargeLink;
-using Energinet.DataHub.Charges.Libraries.Models;
 using GreenEnergyHub.Charges.Application;
+using GreenEnergyHub.Charges.Application.ChargeLinks.CreateDefaultChargeLinkReplier;
 using GreenEnergyHub.Charges.Application.ChargeLinks.Handlers;
-using GreenEnergyHub.Charges.Domain.ChargeLinkCommandReceivedEvents;
-using GreenEnergyHub.Charges.Domain.ChargeLinkCommands;
-using GreenEnergyHub.Charges.Domain.CreateLinkRequest;
+using GreenEnergyHub.Charges.Contracts;
 using GreenEnergyHub.Charges.Domain.DefaultChargeLinks;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinkCommandReceivedEvents;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinkCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.CreateLinkRequest;
 using GreenEnergyHub.Charges.Domain.MeteringPoints;
 using GreenEnergyHub.TestHelpers;
 using Moq;
@@ -116,17 +116,17 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Handlers
 
         [Theory]
         [InlineAutoDomainData]
-        public async Task HandleAsync_WithUnknownMeteringPointId_CallDefaultLinkClientWithFailedDto(
+        public async Task HandleAsync_WithUnknownMeteringPointId_CallDefaultLinkClientWithFailedReply(
             [Frozen] Mock<ICorrelationContext> correlationContextMock,
             [Frozen] [NotNull] Mock<IMeteringPointRepository> meteringPointRepository,
             [Frozen] [NotNull] Mock<IMessageDispatcher<ChargeLinkCommandReceivedEvent>> dispatcher,
             [Frozen] [NotNull] Mock<IMessageMetaDataContext> messageMetaDataContext,
-            [Frozen] [NotNull] Mock<IDefaultChargeLinkClient> defaultChargeLinkClient,
+            [Frozen] [NotNull] Mock<ICreateDefaultChargeLinksReplier> defaultChargeLinkClient,
             [NotNull] string correlationId,
             [NotNull] string replyTo,
             [NotNull] ChargeLinkCommand chargeLinkCommand,
-            [NotNull] CreateDefaultChargeLinksFailedDto createDefaultChargeLinksFailedDto,
             [NotNull] string meteringPointId,
+            [NotNull] ErrorCode errorCode,
             [NotNull] CreateLinkCommandRequestHandler sut)
         {
             // Arrange
@@ -134,28 +134,21 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Handlers
             correlationContextMock.Setup(c => c.Id).Returns(correlationId);
             messageMetaDataContext.Setup(m => m.IsReplyToSet()).Returns(true);
             messageMetaDataContext.Setup(m => m.ReplyTo).Returns(replyTo);
+            errorCode = ErrorCode.MeteringPointUnknown;
             var createLinkCommandEvent = new CreateLinkCommandEvent(meteringPointId);
 
             defaultChargeLinkClient.Setup(d =>
-                d.CreateDefaultChargeLinksFailedReplyAsync(
-                    createDefaultChargeLinksFailedDto,
-                    correlationId,
-                    replyTo));
+                d.ReplyWithFailedAsync(meteringPointId, errorCode, replyTo));
 
             meteringPointRepository.Setup(
-                    f => f.GetOrNullAsync(
-                        It.IsAny<string>()))
-                .ReturnsAsync((MeteringPoint?)null);
+                    f => f.GetOrNullAsync(It.IsAny<string>())).ReturnsAsync((MeteringPoint?)null);
 
             // Act
             await sut.HandleAsync(createLinkCommandEvent).ConfigureAwait(false);
 
             // Assert
             defaultChargeLinkClient.Verify(
-                x => x.CreateDefaultChargeLinksFailedReplyAsync(
-                    It.IsAny<CreateDefaultChargeLinksFailedDto>(),
-                    correlationId,
-                    replyTo));
+                x => x.ReplyWithFailedAsync(meteringPointId, errorCode, replyTo));
 
             dispatcher.Verify(
                 x => x.DispatchAsync(
@@ -166,14 +159,13 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Handlers
 
         [Theory]
         [InlineAutoDomainData]
-        public async Task HandleAsync_WhenCalledWithMeteringPointTypeWhichHasNoDefaultLinks_ReplyWithDefaultChargeLinksSucceededDto(
+        public async Task HandleAsync_WhenCalledWithMeteringPointTypeWhichHasNoDefaultLinks_ReplyWithDefaultChargeLinksSucceeded(
             [Frozen] Mock<ICorrelationContext> correlationContextMock,
             [Frozen] [NotNull] Mock<IDefaultChargeLinkRepository> defaultChargeLinkRepository,
             [Frozen] [NotNull] Mock<IMeteringPointRepository> meteringPointRepository,
             [Frozen] [NotNull] Mock<IMessageDispatcher<ChargeLinkCommandReceivedEvent>> dispatcher,
             [Frozen] [NotNull] Mock<IMessageMetaDataContext> messageMetaDataContext,
-            [Frozen] [NotNull] Mock<IDefaultChargeLinkClient> defaultChargeLinkClient,
-            [NotNull] CreateDefaultChargeLinksSucceededDto createDefaultChargeLinksSucceededDto,
+            [Frozen] [NotNull] Mock<ICreateDefaultChargeLinksReplier> defaultChargeLinkClient,
             [NotNull] string correlationId,
             [NotNull] string replyTo,
             [NotNull] ChargeLinkCommand chargeLinkCommand,
@@ -188,10 +180,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Handlers
             var createLinkCommandEvent = new CreateLinkCommandEvent(meteringPointId);
 
             defaultChargeLinkClient.Setup(d =>
-                d.CreateDefaultChargeLinksSucceededReplyAsync(
-                    createDefaultChargeLinksSucceededDto,
-                    correlationId,
-                    replyTo));
+                d.ReplyWithSucceededAsync(meteringPointId, true, replyTo));
 
             meteringPointRepository.Setup(
                     f => f.GetOrNullAsync(
@@ -214,10 +203,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Handlers
 
             // Assert
             defaultChargeLinkClient.Verify(
-                x => x.CreateDefaultChargeLinksSucceededReplyAsync(
-                    It.IsAny<CreateDefaultChargeLinksSucceededDto>(),
-                    correlationId,
-                    replyTo));
+                x => x.ReplyWithSucceededAsync(meteringPointId, false, replyTo));
 
             dispatcher.Verify(
                 x => x.DispatchAsync(

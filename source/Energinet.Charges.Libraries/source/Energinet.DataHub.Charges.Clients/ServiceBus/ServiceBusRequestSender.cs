@@ -14,24 +14,23 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using Azure.Messaging.ServiceBus;
 
 namespace Energinet.DataHub.Charges.Libraries.ServiceBus
 {
-    public sealed class ServiceBusRequestSender : IServiceBusRequestSender
+    internal sealed class ServiceBusRequestSender : IServiceBusRequestSender
     {
         private readonly ServiceBusSender _serviceBusSender;
         private readonly string _replyToQueueName;
 
-        public ServiceBusRequestSender([NotNull] ServiceBusSender serviceBusSender, [NotNull] string replyToQueueName)
+        public ServiceBusRequestSender(ServiceBusSender serviceBusSender, string replyToQueueName)
         {
             _serviceBusSender = serviceBusSender;
             _replyToQueueName = replyToQueueName;
         }
 
-        public async Task SendRequestAsync([NotNull] byte[] data, [NotNull] string correlationId)
+        public async Task SendRequestAsync(byte[] data, string correlationId)
         {
             await _serviceBusSender.SendMessageAsync(new ServiceBusMessage
             {

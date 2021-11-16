@@ -17,19 +17,22 @@ using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using Energinet.DataHub.Charges.Libraries.Common;
 using Energinet.DataHub.Core.FunctionApp.TestCommon.Azurite;
+using Energinet.DataHub.Core.FunctionApp.TestCommon.Configuration;
 using Energinet.DataHub.Core.FunctionApp.TestCommon.ServiceBus.ListenerMock;
+using Energinet.DataHub.Core.FunctionApp.TestCommon.ServiceBus.ResourceProvider;
+using Energinet.DataHub.Core.TestCommon.Diagnostics;
 using Microsoft.Extensions.Configuration;
-using Squadron;
-using Xunit.Abstractions;
 
 namespace Energinet.DataHub.Charges.Clients.IntegrationTests.Fixtures
 {
     public class ChargesClientsFixture : LibraryFixture
     {
-        public ChargesClientsFixture(IMessageSink messageSink)
+        public ChargesClientsFixture()
         {
             AzuriteManager = new AzuriteManager();
-            ServiceBusResource = new AzureCloudServiceBusResource<ChargesClientsServiceBusOptions>(messageSink);
+            var integrationTestConfiguration = new IntegrationTestConfiguration();
+            ServiceBusResourceProvider = new ServiceBusResourceProvider(
+                integrationTestConfiguration.ServiceBusConnectionString, new TestDiagnosticsLogger());
         }
 
         [NotNull]
@@ -37,7 +40,7 @@ namespace Energinet.DataHub.Charges.Clients.IntegrationTests.Fixtures
 
         private AzuriteManager AzuriteManager { get; }
 
-        private AzureCloudServiceBusResource<ChargesClientsServiceBusOptions> ServiceBusResource { get; }
+        private ServiceBusResourceProvider ServiceBusResourceProvider { get; }
 
         /// <inheritdoc/>
         protected override void OnConfigureEnvironment()
@@ -59,66 +62,33 @@ namespace Energinet.DataHub.Charges.Clients.IntegrationTests.Fixtures
         {
             AzuriteManager.StartAzurite();
 
-            // => Service Bus
-            await ServiceBusResource.InitializeAsync().ConfigureAwait(false);
-
             // Overwrite all the service bus connection strings, since we created all topic/queues in just one of them
-            Environment.SetEnvironmentVariable(EnvironmentSettingNames.IntegrationEventSenderConnectionString, ServiceBusResource.ConnectionString);
-            Environment.SetEnvironmentVariable(EnvironmentSettingNames.IntegrationEventListenerConnectionString, ServiceBusResource.ConnectionString);
+            Environment.SetEnvironmentVariable(EnvironmentSettingNames.IntegrationEventSenderConnectionString, ServiceBusResourceProvider.ConnectionString);
+            Environment.SetEnvironmentVariable(EnvironmentSettingNames.IntegrationEventListenerConnectionString, ServiceBusResourceProvider.ConnectionString);
 
             // Overwrite service bus related settings, so the Charges Clients package uses the names we have control of in the test
-            ServiceBusListenerMock = new ServiceBusListenerMock(ServiceBusResource.ConnectionString, TestLogger);
+            ServiceBusListenerMock = new ServiceBusListenerMock(ServiceBusResourceProvider.ConnectionString, TestLogger);
 
-            var createLinkRequestQueueName = await GetQueueNameFromKeyAsync(
-                ChargesClientsServiceBusOptions.CreateLinkRequestQueueKey).ConfigureAwait(false);
-            Environment.SetEnvironmentVariable(EnvironmentSettingNames.CreateLinkRequestQueueName, createLinkRequestQueueName);
-            await ServiceBusListenerMock.AddQueueListenerAsync(createLinkRequestQueueName).ConfigureAwait(false);
+            var createLinkRequestQueue = await ServiceBusResourceProvider
+                .BuildQueue(ChargesClientsServiceBusResourceNames.CreateLinkRequestQueueKey)
+                .SetEnvironmentVariableToQueueName(EnvironmentSettingNames.CreateLinkRequestQueueName)
+                .CreateAsync().ConfigureAwait(false);
 
-            var createLinkReplyQueueName = await GetQueueNameFromKeyAsync(
-                ChargesClientsServiceBusOptions.CreateLinkReplyQueueKey).ConfigureAwait(false);
-            Environment.SetEnvironmentVariable(EnvironmentSettingNames.CreateLinkReplyQueueName, createLinkReplyQueueName);
-            await ServiceBusListenerMock.AddQueueListenerAsync(createLinkReplyQueueName).ConfigureAwait(false);
+            await ServiceBusListenerMock.AddQueueListenerAsync(createLinkRequestQueue.Name).ConfigureAwait(false);
 
-            var createLinkMessagesRequestQueueName = await GetQueueNameFromKeyAsync(
-                ChargesClientsServiceBusOptions.CreateLinkMessagesRequestQueueKey).ConfigureAwait(false);
-            Environment.SetEnvironmentVariable(EnvironmentSettingNames.CreateLinkMessagesRequestQueueName, createLinkMessagesRequestQueueName);
-            await ServiceBusListenerMock.AddQueueListenerAsync(createLinkMessagesRequestQueueName).ConfigureAwait(false);
+            var createLinkReplyQueue = await ServiceBusResourceProvider
+                .BuildQueue(ChargesClientsServiceBusResourceNames.CreateLinkReplyQueueKey)
+                .SetEnvironmentVariableToQueueName(EnvironmentSettingNames.CreateLinkReplyQueueName)
+                .CreateAsync().ConfigureAwait(false);
 
-            var createLinkMessagesReplyQueueName = await GetQueueNameFromKeyAsync(
-                ChargesClientsServiceBusOptions.CreateLinkMessagesReplyQueueKey).ConfigureAwait(false);
-            Environment.SetEnvironmentVariable(EnvironmentSettingNames.CreateLinkMessagesReplyQueueName, createLinkMessagesReplyQueueName);
-            await ServiceBusListenerMock.AddQueueListenerAsync(createLinkMessagesReplyQueueName).ConfigureAwait(false);
+            await ServiceBusListenerMock.AddQueueListenerAsync(createLinkReplyQueue.Name).ConfigureAwait(false);
         }
 
         /// <inheritdoc/>
         protected override async Task OnDisposeLibraryDependenciesAsync()
         {
             AzuriteManager.Dispose();
-
-            // => Service Bus
-            // ServiceBusListenerMock CAN be null, if something goes wrong in OnInitializeLibraryDependenciesAsync()
-            if (ServiceBusListenerMock != null)
-                await ServiceBusListenerMock.DisposeAsync().ConfigureAwait(false);
-
-            await ServiceBusResource.DisposeAsync().ConfigureAwait(false);
-        }
-
-        private async Task<string> GetTopicNameFromKeyAsync(string topicKey)
-        {
-            var topicClient = ServiceBusResource.GetTopicClient(topicKey);
-            var topicName = topicClient.TopicName;
-            await topicClient.CloseAsync().ConfigureAwait(false);
-
-            return topicName;
-        }
-
-        private async Task<string> GetQueueNameFromKeyAsync(string queueKey)
-        {
-            var queueClient = ServiceBusResource.GetQueueClient(queueKey);
-            var queueName = queueClient.QueueName;
-            await queueClient.CloseAsync().ConfigureAwait(false);
-
-            return queueName;
+            await ServiceBusResourceProvider.DisposeAsync().ConfigureAwait(false);
         }
     }
 }

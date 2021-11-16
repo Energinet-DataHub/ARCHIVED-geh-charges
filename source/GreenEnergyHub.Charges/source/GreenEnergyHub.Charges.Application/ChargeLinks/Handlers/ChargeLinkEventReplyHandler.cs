@@ -15,25 +15,24 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Energinet.DataHub.Charges.Libraries.DefaultChargeLink;
-using Energinet.DataHub.Charges.Libraries.Models;
-using GreenEnergyHub.Charges.Domain.ChargeLinkCommandAcceptedEvents;
+using GreenEnergyHub.Charges.Application.ChargeLinks.CreateDefaultChargeLinkReplier;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinkCommandAcceptedEvents;
 
 namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
 {
     public class ChargeLinkEventReplyHandler : IChargeLinkEventReplyHandler
     {
         private readonly IMessageMetaDataContext _messageMetaDataContext;
-        private readonly IDefaultChargeLinkClient _defaultChargeLinkClient;
+        private readonly ICreateDefaultChargeLinksReplier _createDefaultChargeLinksReplier;
         private readonly ICorrelationContext _correlationContext;
 
         public ChargeLinkEventReplyHandler(
             IMessageMetaDataContext messageMetaDataContext,
-            IDefaultChargeLinkClient defaultChargeLinkClient,
+            ICreateDefaultChargeLinksReplier createDefaultChargeLinksReplier,
             ICorrelationContext correlationContext)
         {
             _messageMetaDataContext = messageMetaDataContext;
-            _defaultChargeLinkClient = defaultChargeLinkClient;
+            _createDefaultChargeLinksReplier = createDefaultChargeLinksReplier;
             _correlationContext = correlationContext;
         }
 
@@ -44,12 +43,10 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
                 // TODO:  A refactor of ChargeLinkCommands will end with the commands being wrapped by a entity with only one meteringPointId.
                 var meteringPointId = command.ChargeLinkCommands.First().ChargeLink.MeteringPointId;
 
-                await _defaultChargeLinkClient
-                    .CreateDefaultChargeLinksSucceededReplyAsync(
-                        new CreateDefaultChargeLinksSucceededDto(
-                            meteringPointId,
-                            true),
-                        _correlationContext.Id,
+                await _createDefaultChargeLinksReplier
+                    .ReplyWithSucceededAsync(
+                        meteringPointId,
+                        true,
                         _messageMetaDataContext.ReplyTo).ConfigureAwait(false);
         }
 
