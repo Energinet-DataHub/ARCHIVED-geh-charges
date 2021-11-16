@@ -69,6 +69,11 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures
         /// <inheritdoc/>
         protected override void OnConfigureHostSettings(FunctionAppHostSettings hostSettings)
         {
+            if (hostSettings == null)
+                return;
+
+            var buildConfiguration = GetBuildConfiguration();
+            hostSettings.FunctionApplicationPath = $"..\\..\\..\\..\\GreenEnergyHub.Charges.FunctionHost\\bin\\{buildConfiguration}\\net5.0";
         }
 
         /// <inheritdoc/>
@@ -231,6 +236,15 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures
 
             // => Database
             await DatabaseManager.DeleteDatabaseAsync();
+        }
+
+        private static string GetBuildConfiguration()
+        {
+#if DEBUG
+            return "Debug";
+#else
+            return "Release";
+#endif
         }
     }
 }
