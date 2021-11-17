@@ -13,19 +13,18 @@
 // limitations under the License.
 
 using System;
-using System.Collections.Generic;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using NodaTime;
 
-namespace GreenEnergyHub.Charges.Domain.AvailableChargeLinkReceiptData
+namespace GreenEnergyHub.Charges.Domain.AvailableData
 {
     /// <summary>
     /// Shared data necessary for notifying the MessageHub and
     /// later support bundles when the market participant peeks
     /// </summary>
-    public abstract class AvailableData
+    public abstract class AvailableDataBase
     {
-        public AvailableData(
+        public AvailableDataBase(
             string recipientId,
             MarketParticipantRole recipientRole,
             BusinessReasonCode businessReasonCode,

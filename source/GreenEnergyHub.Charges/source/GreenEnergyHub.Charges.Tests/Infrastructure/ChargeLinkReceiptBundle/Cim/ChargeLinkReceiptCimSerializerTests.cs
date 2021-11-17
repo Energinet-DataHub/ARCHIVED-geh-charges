@@ -140,12 +140,12 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.ChargeLinkReceiptBundle.Ci
                 RecipientId,
                 MarketParticipantRole.GridAccessProvider,
                 BusinessReasonCode.UpdateMasterDataSettlement,
+                clock.GetCurrentInstant(),
+                Guid.NewGuid(),
                 receiptStatus,
                 "OriginalOperationId" + no,
                 "MeteringPoint" + no,
-                GetReasonCodes(no),
-                clock.GetCurrentInstant(),
-                Guid.NewGuid());
+                GetReasonCodes(no));
         }
 
         private List<AvailableChargeLinkReceiptDataReasonCode> GetReasonCodes(int no)

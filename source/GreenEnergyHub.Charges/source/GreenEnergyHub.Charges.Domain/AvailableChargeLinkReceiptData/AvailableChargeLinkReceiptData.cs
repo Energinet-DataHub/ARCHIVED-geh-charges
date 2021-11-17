@@ -14,6 +14,7 @@
 
 using System;
 using System.Collections.Generic;
+using GreenEnergyHub.Charges.Domain.AvailableData;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using NodaTime;
 
@@ -25,45 +26,25 @@ namespace GreenEnergyHub.Charges.Domain.AvailableChargeLinkReceiptData
     /// of creating a bundle of receipts for a market participant once the
     /// participant peek the MessageHub
     /// </summary>
-    public class AvailableChargeLinkReceiptData
+    public class AvailableChargeLinkReceiptData : AvailableDataBase
     {
         public AvailableChargeLinkReceiptData(
             string recipientId,
             MarketParticipantRole recipientRole,
             BusinessReasonCode businessReasonCode,
+            Instant requestDateTime,
+            Guid availableDataReferenceId,
             ReceiptStatus receiptStatus,
             string originalOperationId,
             string meteringPointId,
-            List<AvailableChargeLinkReceiptDataReasonCode> reasonCodes,
-            Instant requestDateTime,
-            Guid availableDataReferenceId)
+            List<AvailableChargeLinkReceiptDataReasonCode> reasonCodes)
+            : base(recipientId, recipientRole, businessReasonCode, requestDateTime, availableDataReferenceId)
         {
-            Id = Guid.NewGuid();
-            RecipientId = recipientId;
-            RecipientRole = recipientRole;
-            BusinessReasonCode = businessReasonCode;
             ReceiptStatus = receiptStatus;
             OriginalOperationId = originalOperationId;
             MeteringPointId = meteringPointId;
             _reasonCodes = reasonCodes;
-            RequestDateTime = requestDateTime;
-            AvailableDataReferenceId = availableDataReferenceId;
         }
-
-        /// <summary>
-        /// Unique ID of this specific available receipt data, ready for shipping when
-        /// the market participant peeks
-        /// </summary>
-        public Guid Id { get; }
-
-        /// <summary>
-        /// The ID of the recipient this piece of data is meant for
-        /// </summary>
-        public string RecipientId { get; }
-
-        public MarketParticipantRole RecipientRole { get; }
-
-        public BusinessReasonCode BusinessReasonCode { get; }
 
         public ReceiptStatus ReceiptStatus { get; }
 
@@ -74,13 +55,5 @@ namespace GreenEnergyHub.Charges.Domain.AvailableChargeLinkReceiptData
         private readonly List<AvailableChargeLinkReceiptDataReasonCode> _reasonCodes;
 
         public IReadOnlyCollection<AvailableChargeLinkReceiptDataReasonCode> ReasonCodes => _reasonCodes.AsReadOnly();
-
-        public Instant RequestDateTime { get; }
-
-        /// <summary>
-        /// ID of the data used when notifying the MessageHub.
-        /// The ID will later be used to fetch the data on a peek operation for the MessageHub
-        /// </summary>
-        public Guid AvailableDataReferenceId { get; }
     }
 }
