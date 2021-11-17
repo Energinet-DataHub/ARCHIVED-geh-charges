@@ -58,7 +58,7 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.MessageHub
             _clock = clock;
         }
 
-        public async Task NotifyAsync([NotNull] ChargeLinkCommandAcceptedEvent chargeLinkCommandAcceptedEvent)
+        public async Task NotifyAsync(ChargeLinkCommandAcceptedEvent chargeLinkCommandAcceptedEvent)
         {
             if (chargeLinkCommandAcceptedEvent == null) throw new ArgumentNullException(nameof(chargeLinkCommandAcceptedEvent));
 

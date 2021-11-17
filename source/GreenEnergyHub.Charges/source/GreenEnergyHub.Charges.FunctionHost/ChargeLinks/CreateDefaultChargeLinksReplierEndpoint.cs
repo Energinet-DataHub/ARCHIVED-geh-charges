@@ -50,13 +50,12 @@ namespace GreenEnergyHub.Charges.FunctionHost.ChargeLinks
                 "%" + EnvironmentSettingNames.DefaultChargeLinksDataAvailableNotifiedTopicName + "%",
                 "%" + EnvironmentSettingNames.DefaultChargeLinksDataAvailableNotifiedSubscription + "%",
                 Connection = EnvironmentSettingNames.DomainEventListenerConnectionString)]
-            [NotNull] byte[] message)
+            byte[] message)
         {
             var defaultChargeLinksDataAvailableNotifierEvent =
                 (DefaultChargeLinksDataAvailableNotifierEvent)await _messageExtractor.ExtractAsync(message).ConfigureAwait(false);
 
-            if (_messageMetaDataContext.IsReplyToSet())
-                await _createDefaultChargeLinksReplierHandler.HandleAsync(defaultChargeLinksDataAvailableNotifierEvent).ConfigureAwait(false);
+            await _createDefaultChargeLinksReplierHandler.HandleAsync(defaultChargeLinksDataAvailableNotifierEvent).ConfigureAwait(false);
         }
     }
 }

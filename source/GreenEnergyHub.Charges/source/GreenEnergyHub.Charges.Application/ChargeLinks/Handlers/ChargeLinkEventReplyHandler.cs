@@ -12,11 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
-using System.Linq;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application.ChargeLinks.CreateDefaultChargeLinkReplier;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinkCommandAcceptedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.DefaultChargeLinksDataAvailableNotifiedEvents;
 
 namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
@@ -25,16 +22,13 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
     {
         private readonly IMessageMetaDataContext _messageMetaDataContext;
         private readonly ICreateDefaultChargeLinksReplier _createDefaultChargeLinksReplier;
-        private readonly ICorrelationContext _correlationContext;
 
         public CreateDefaultChargeLinksReplierHandler(
             IMessageMetaDataContext messageMetaDataContext,
-            ICreateDefaultChargeLinksReplier createDefaultChargeLinksReplier,
-            ICorrelationContext correlationContext)
+            ICreateDefaultChargeLinksReplier createDefaultChargeLinksReplier)
         {
             _messageMetaDataContext = messageMetaDataContext;
             _createDefaultChargeLinksReplier = createDefaultChargeLinksReplier;
-            _correlationContext = correlationContext;
         }
 
         public async Task HandleAsync(DefaultChargeLinksDataAvailableNotifierEvent command)
