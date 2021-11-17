@@ -23,8 +23,10 @@ namespace GreenEnergyHub.Charges.Domain.AvailableChargeLinksData
     public interface IAvailableChargeLinksDataFactory
     {
         AvailableChargeLinksData CreateAvailableChargeLinksData(
-            ChargeLinkCommand chargeLinkCommand,
+            ChargeLinkDto chargeLinksCommand,
             MarketParticipant recipient,
+            BusinessReasonCode businessReasonCode,
+            string meteringPointId,
             Instant requestTime,
             Guid messageHubId);
     }

@@ -67,27 +67,31 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.MessageHub
             // It is the responsibility of the Charge Domain to find the recipient and
             // not considered part of the Create Metering Point orchestration.
             // We select the first as all bundled messages will have the same recipient
-            var meteringPointId = SingleMeteringPointId(chargeLinkCommandAcceptedEvent);
-            var recipient = _marketParticipantRepository.GetGridAccessProvider(meteringPointId);
+            var recipient =
+                _marketParticipantRepository.GetGridAccessProvider(chargeLinkCommandAcceptedEvent.ChargeLinksCommand.MeteringPointId);
 
             // When available this should be parsed on from API management to be more precise.
             var now = _clock.GetCurrentInstant();
             var availableChargeLinksData = new List<AvailableChargeLinksData>();
 
-            foreach (var chargeLinkCommand in chargeLinkCommandAcceptedEvent.ChargeLinkCommands)
+            foreach (var chargeLinkDto in chargeLinkCommandAcceptedEvent.ChargeLinksCommand.ChargeLinks)
             {
                 var charge = await _chargeRepository.GetChargeAsync(new ChargeIdentifier(
-                    chargeLinkCommand.ChargeLink.SenderProvidedChargeId,
-                    chargeLinkCommand.ChargeLink.ChargeOwner,
-                    chargeLinkCommand.ChargeLink.ChargeType)).ConfigureAwait(false);
+                    chargeLinkDto.SenderProvidedChargeId,
+                    chargeLinkDto.ChargeOwner,
+                    chargeLinkDto.ChargeType)).ConfigureAwait(false);
 
                 if (charge.TaxIndicator)
                 {
-                    var dataAvailableNotificationDto = CreateDataAvailableNotificationDto(chargeLinkCommand, recipient.Id);
+                    var dataAvailableNotificationDto = CreateDataAvailableNotificationDto(
+                        chargeLinkCommandAcceptedEvent.ChargeLinksCommand.Document.BusinessReasonCode,
+                        recipient.Id);
                     dataAvailableNotificationDtos.Add(dataAvailableNotificationDto);
                     availableChargeLinksData.Add(_availableChargeLinksDataFactory.CreateAvailableChargeLinksData(
-                        chargeLinkCommand,
+                        chargeLinkDto,
                         recipient,
+                        chargeLinkCommandAcceptedEvent.ChargeLinksCommand.Document.BusinessReasonCode,
+                        chargeLinkCommandAcceptedEvent.ChargeLinksCommand.MeteringPointId,
                         now,
                         dataAvailableNotificationDto.Uuid));
                 }
@@ -101,29 +105,15 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.MessageHub
             await Task.WhenAll(dataAvailableNotificationSenderTasks).ConfigureAwait(false);
         }
 
-        private static string SingleMeteringPointId(ChargeLinkCommandAcceptedEvent chargeLinkCommandAcceptedEvent)
-        {
-            var isSameMeteringPoint = chargeLinkCommandAcceptedEvent
-                .ChargeLinkCommands
-                .Select(command => command.ChargeLink.MeteringPointId)
-                .Distinct()
-                .Count() == 1;
-
-            if (!isSameMeteringPoint)
-                throw new InvalidOperationException("All commands in accepted event must be for same metering point.");
-
-            return chargeLinkCommandAcceptedEvent.ChargeLinkCommands.First().ChargeLink.MeteringPointId;
-        }
-
         private static DataAvailableNotificationDto CreateDataAvailableNotificationDto(
-            ChargeLinkCommand chargeLinkCommand, string recipientId)
+            BusinessReasonCode businessReasonCode, string recipientId)
         {
             // The ID that the charges domain must handle when peeking
             var chargeDomainReferenceId = Guid.NewGuid();
 
             // Different processes must not be bundled together.
             // The can be differentiated by business reason codes.
-            var messageType = chargeLinkCommand.Document.BusinessReasonCode.ToString();
+            var messageType = businessReasonCode.ToString();
 
             return new DataAvailableNotificationDto(
                 chargeDomainReferenceId,

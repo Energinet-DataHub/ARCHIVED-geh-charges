@@ -29,7 +29,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Factories
         [Theory]
         [InlineAutoMoqData]
         public void CreateEvent_WhenCalled_CreatesEventWithCorrectValues(
-            [NotNull] ChargeLinkCommand command,
+            [NotNull] ChargeLinksCommand command,
             [NotNull] ChargeLinkCreatedEventFactory sut)
         {
             // Arrange

@@ -29,11 +29,11 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Handlers
         [Theory]
         [InlineAutoDomainData]
         public async Task HandleAsync_WhenCalledWithValidChargeLink_ShouldReturnOk(
-            [NotNull] ChargeLinkCommand chargeLinkCommand,
+            [NotNull] ChargeLinksCommand chargeLinksCommand,
             [NotNull] ChargeLinkCommandHandler sut)
         {
             // Act
-            var result = await sut.HandleAsync(chargeLinkCommand).ConfigureAwait(false);
+            var result = await sut.HandleAsync(chargeLinksCommand).ConfigureAwait(false);
 
             // Assert
             result.IsSucceeded.Should().BeTrue();

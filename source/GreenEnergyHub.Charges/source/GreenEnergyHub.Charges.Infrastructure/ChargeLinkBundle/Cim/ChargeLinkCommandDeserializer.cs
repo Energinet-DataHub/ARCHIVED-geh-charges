@@ -22,7 +22,7 @@ using GreenEnergyHub.Messaging.Transport;
 
 namespace GreenEnergyHub.Charges.Infrastructure.ChargeLinkBundle.Cim
 {
-    public class ChargeLinkCommandDeserializer : MessageDeserializer<ChargeLinkCommand>
+    public class ChargeLinkCommandDeserializer : MessageDeserializer<ChargeLinksCommand>
     {
         private readonly ChargeLinkCommandConverter _chargeLinkCommandConverter;
 

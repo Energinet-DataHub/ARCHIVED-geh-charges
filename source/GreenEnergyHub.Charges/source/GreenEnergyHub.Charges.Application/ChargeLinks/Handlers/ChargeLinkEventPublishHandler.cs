@@ -32,11 +32,10 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
             _createdDispatcher = createdDispatcher;
         }
 
-        public async Task HandleAsync(ChargeLinkCommandAcceptedEvent command)
+        public async Task HandleAsync(ChargeLinkCommandAcceptedEvent acceptedEvent)
         {
             var chargeLinkCreatedEvents =
-                command.ChargeLinkCommands.Select(
-                    chargeLinkCommand => _createdEventFactory.CreateEvent(chargeLinkCommand)).ToList();
+                _createdEventFactory.CreateEvents(acceptedEvent.ChargeLinksCommand);
 
             await Task.WhenAll(
                 chargeLinkCreatedEvents

@@ -50,7 +50,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.ChargeLinkBundle.Cim
             using var reader = XmlReader.Create(stream, new XmlReaderSettings { Async = true });
 
             // Act
-            var result = (ChargeLinkCommand)await sut.ConvertAsync(reader).ConfigureAwait(false);
+            var result = (ChargeLinksCommand)await sut.ConvertAsync(reader).ConfigureAwait(false);
 
             // Assert
 
@@ -89,7 +89,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.ChargeLinkBundle.Cim
             using var reader = XmlReader.Create(stream, new XmlReaderSettings { Async = true });
 
             // Act
-            var result = (ChargeLinkCommand)await sut.ConvertAsync(reader).ConfigureAwait(false);
+            var result = (ChargeLinksCommand)await sut.ConvertAsync(reader).ConfigureAwait(false);
 
             // Assert
             Assert.Equal("DocId_Valid_002", result.Document.Id);
@@ -112,7 +112,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.ChargeLinkBundle.Cim
             using var reader = XmlReader.Create(stream, new XmlReaderSettings { Async = true });
 
             // Act
-            var result = (ChargeLinkCommand)await sut.ConvertAsync(reader).ConfigureAwait(false);
+            var result = (ChargeLinksCommand)await sut.ConvertAsync(reader).ConfigureAwait(false);
 
             // Assert
             Assert.Equal("DocId_Valid_003", result.Document.Id);

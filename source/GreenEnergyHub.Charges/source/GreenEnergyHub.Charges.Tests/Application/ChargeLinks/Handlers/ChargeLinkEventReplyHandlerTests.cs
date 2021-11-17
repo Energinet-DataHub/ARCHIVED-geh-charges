@@ -83,11 +83,11 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Handlers
             var command = new ChargeLinkCommandAcceptedEvent(
                 new[]
                 {
-                    new ChargeLinkCommand
+                    new ChargeLinksCommand
                     {
                         ChargeLink = new ChargeLinkDto { MeteringPointId = MeteringPointId },
                     },
-                    new ChargeLinkCommand
+                    new ChargeLinksCommand
                     {
                         ChargeLink = new ChargeLinkDto { MeteringPointId = optionalMeteringPointId },
                     },

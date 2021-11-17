@@ -12,7 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinkCommands;
 
@@ -20,18 +22,19 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinkCreatedEvents
 {
     public class ChargeLinkCreatedEventFactory : IChargeLinkCreatedEventFactory
     {
-        public ChargeLinkCreatedEvent CreateEvent([NotNull] ChargeLinkCommand command)
+        public IReadOnlyCollection<ChargeLinkCreatedEvent> CreateEvents([NotNull] ChargeLinksCommand command)
         {
-            return new ChargeLinkCreatedEvent(
-                command.ChargeLink.OperationId,
-                command.ChargeLink.MeteringPointId,
-                command.ChargeLink.SenderProvidedChargeId,
-                command.ChargeLink.ChargeType,
-                command.ChargeLink.ChargeOwner,
-                new ChargeLinkPeriod(
-                    command.ChargeLink.StartDateTime,
-                    command.ChargeLink.EndDateTime.TimeOrEndDefault(),
-                    command.ChargeLink.Factor));
+            return command.ChargeLinks.Select(
+                chargeLinkDto => new ChargeLinkCreatedEvent(
+                    chargeLinkDto.OperationId,
+                    command.MeteringPointId,
+                    chargeLinkDto.SenderProvidedChargeId,
+                    chargeLinkDto.ChargeType,
+                    chargeLinkDto.ChargeOwner,
+                    new ChargeLinkPeriod(
+                        chargeLinkDto.StartDateTime,
+                        chargeLinkDto.EndDateTime.TimeOrEndDefault(),
+                        chargeLinkDto.Factor))).ToList();
         }
     }
 }

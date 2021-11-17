@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Collections.Generic;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinkCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.Messages.Events;
 using NodaTime;
@@ -21,14 +20,14 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinkCommandAcceptedEvents
 {
     public class ChargeLinkCommandAcceptedEvent : InternalEventBase
     {
-        public IReadOnlyCollection<ChargeLinkCommand> ChargeLinkCommands { get; }
+        public ChargeLinksCommand ChargeLinksCommand { get; }
 
         public ChargeLinkCommandAcceptedEvent(
-            IReadOnlyCollection<ChargeLinkCommand> chargeLinkCommands,
+            ChargeLinksCommand chargeLinksCommand,
             Instant publishedTime)
             : base(publishedTime)
         {
-            ChargeLinkCommands = chargeLinkCommands;
+            ChargeLinksCommand = chargeLinksCommand;
         }
     }
 }

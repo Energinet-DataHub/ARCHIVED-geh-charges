@@ -137,22 +137,20 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
 
         private async Task CreateAndDispatchChargeLinkCommandReceivedEventIfApplicableForLinkingAsync(
             CreateLinkCommandEvent createLinkCommandEvent,
-            List<DefaultChargeLink> defaultChargeLinks,
+            IEnumerable<DefaultChargeLink> defaultChargeLinks,
             MeteringPoint meteringPoint)
         {
-            var chargeLinkCommands = new List<ChargeLinkCommand>();
+            var chargeLinksApplicableForLinking = defaultChargeLinks
+                .Where(d => d.ApplicableForLinking(
+                    meteringPoint.EffectiveDate,
+                    meteringPoint.MeteringPointType)).ToList();
 
-            foreach (var defaultChargeLink in defaultChargeLinks.
-                Where(d => d.ApplicableForLinking(meteringPoint.EffectiveDate, meteringPoint.MeteringPointType)))
-            {
-                chargeLinkCommands.Add(await _chargeLinkCommandFactory.CreateAsync(
-                    createLinkCommandEvent,
-                    defaultChargeLink).ConfigureAwait(false));
-            }
+            var chargeLinksCommand = await _chargeLinkCommandFactory.CreateAsync(
+                createLinkCommandEvent, chargeLinksApplicableForLinking);
 
             var chargeLinkCommandReceivedEvent = new ChargeLinkCommandReceivedEvent(
                 _clock.GetCurrentInstant(),
-                chargeLinkCommands);
+                chargeLinksCommand);
 
             await _messageDispatcher.DispatchAsync(chargeLinkCommandReceivedEvent).ConfigureAwait(false);
         }

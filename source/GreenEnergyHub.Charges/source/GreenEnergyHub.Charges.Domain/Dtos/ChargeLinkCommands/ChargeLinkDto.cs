@@ -26,8 +26,6 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinkCommands
         /// </summary>
         public string OperationId { get; set; }
 
-        public string MeteringPointId { get; set; }
-
         public Instant StartDateTime { get; set; }
 
         public Instant? EndDateTime { get; set; }

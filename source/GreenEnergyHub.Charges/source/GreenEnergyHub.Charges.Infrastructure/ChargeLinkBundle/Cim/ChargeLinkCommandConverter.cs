@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Threading.Tasks;
@@ -36,11 +38,26 @@ namespace GreenEnergyHub.Charges.Infrastructure.ChargeLinkBundle.Cim
             [NotNull] XmlReader reader,
             [NotNull] DocumentDto document)
         {
-            return new ChargeLinkCommand
+            return new ChargeLinksCommand(
+                await ParseMeteringPointIdAsync(reader),
+                document,
+                new List<ChargeLinkDto>
                 {
-                    Document = document,
-                    ChargeLink = await ParseChargeLinkAsync(reader).ConfigureAwait(false),
-                };
+                    await ParseChargeLinkAsync(reader).ConfigureAwait(false),
+                });
+        }
+
+        private static async Task<string> ParseMeteringPointIdAsync(XmlReader reader)
+        {
+            while (await reader.ReadAsync().ConfigureAwait(false))
+            {
+                if (reader.Is(CimChargeLinkCommandConstants.MeteringPointId, CimChargeLinkCommandConstants.Namespace))
+                {
+                    return await reader.ReadElementContentAsStringAsync().ConfigureAwait(false);
+                }
+            }
+
+            throw new Exception("MeteringPointId was not found when parsing CIM bundle message");
         }
 
         private static async Task<ChargeLinkDto> ParseChargeLinkAsync(XmlReader reader)
@@ -53,11 +70,6 @@ namespace GreenEnergyHub.Charges.Infrastructure.ChargeLinkBundle.Cim
                 {
                     var content = await reader.ReadElementContentAsStringAsync().ConfigureAwait(false);
                     link.OperationId = content;
-                }
-                else if (reader.Is(CimChargeLinkCommandConstants.MeteringPointId, CimChargeLinkCommandConstants.Namespace))
-                {
-                    var content = await reader.ReadElementContentAsStringAsync().ConfigureAwait(false);
-                    link.MeteringPointId = content;
                 }
                 else if (reader.Is(CimChargeLinkCommandConstants.StartDateTime, CimChargeLinkCommandConstants.Namespace))
                 {

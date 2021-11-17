@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinkCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.Messages.Events;
@@ -24,14 +23,14 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinkCommandReceivedEvents
 {
     public class ChargeLinkCommandReceivedEvent : InternalEventBase
     {
-        public IReadOnlyCollection<ChargeLinkCommand> ChargeLinkCommands { get; }
+        public ChargeLinksCommand ChargeLinksCommand { get; }
 
         public ChargeLinkCommandReceivedEvent(
             Instant publishedTime,
-            [NotNull] IReadOnlyCollection<ChargeLinkCommand> chargeLinkCommands)
+            [NotNull] ChargeLinksCommand chargeLinksCommand)
             : base(publishedTime)
         {
-            ChargeLinkCommands = chargeLinkCommands;
+            ChargeLinksCommand = chargeLinksCommand;
         }
     }
 }

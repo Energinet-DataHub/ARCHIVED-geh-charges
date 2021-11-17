@@ -30,13 +30,9 @@ namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
                 PublishedTime = chargeLinkCommandReceivedEvent.PublishedTime.ToTimestamp().TruncateToSeconds(),
             };
 
-            foreach (var chargeLinkCommand in chargeLinkCommandReceivedEvent.ChargeLinkCommands)
+            foreach (var chargeLinkDto in chargeLinkCommandReceivedEvent.ChargeLinksCommand.ChargeLinks)
             {
-                chargeLinkCommandReceived.ChargeLinkCommands.Add(new GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandReceived.ChargeLinkCommand
-                {
-                    Document = ConvertDocument(chargeLinkCommand.Document),
-                    ChargeLink = ConvertChargeLink(chargeLinkCommand.ChargeLink),
-                });
+                chargeLinkCommandReceived.ChargeLinkCommand.ChargeLinks.Add(ConvertChargeLink(chargeLinkDto));
             }
 
             return chargeLinkCommandReceived;
@@ -70,7 +66,6 @@ namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
             return new GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandReceived.ChargeLink
             {
                 OperationId = chargeLinkDto.OperationId,
-                MeteringPointId = chargeLinkDto.MeteringPointId,
                 SenderProvidedChargeId = chargeLinkDto.SenderProvidedChargeId,
                 ChargeOwner = chargeLinkDto.ChargeOwner,
                 Factor = chargeLinkDto.Factor,

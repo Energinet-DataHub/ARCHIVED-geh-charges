@@ -13,9 +13,10 @@
 // limitations under the License.
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Domain.ChargeLinks;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.DefaultChargeLinks;
 using GreenEnergyHub.Charges.Domain.Dtos.CreateLinkRequest;
@@ -31,62 +32,51 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinkCommands
         private readonly IChargeRepository _chargeRepository;
         private readonly IMeteringPointRepository _meteringPointRepository;
         private readonly IClock _clock;
+        private readonly IMarketParticipantRepository _marketParticipantRepository;
 
         public ChargeLinkCommandFactory(
             IChargeRepository chargeRepository,
             IMeteringPointRepository meteringPointRepository,
-            IClock clock)
+            IClock clock,
+            IMarketParticipantRepository marketParticipantRepository)
         {
             _chargeRepository = chargeRepository;
             _clock = clock;
+            _marketParticipantRepository = marketParticipantRepository;
             _meteringPointRepository = meteringPointRepository;
         }
 
-        public async Task<ChargeLinkCommand> CreateAsync(
+        public async Task<ChargeLinksCommand> CreateAsync(
             [NotNull] CreateLinkCommandEvent createLinkCommandEvent,
-            [NotNull] DefaultChargeLink defaultChargeLink)
+            [NotNull] IReadOnlyCollection<DefaultChargeLink> defaultChargeLinks)
         {
-            var charge = await _chargeRepository.GetChargeAsync(defaultChargeLink.ChargeId).ConfigureAwait(false);
-            var mp = await _meteringPointRepository.GetMeteringPointAsync(
+            var charges = await _chargeRepository.GetChargesAsync(
+                defaultChargeLinks.Select(x => x.ChargeId).ToList()).ConfigureAwait(false);
+            var meteringPoint = await _meteringPointRepository.GetMeteringPointAsync(
                     createLinkCommandEvent.MeteringPointId)
                 .ConfigureAwait(false);
+            var systemOperator = await _marketParticipantRepository.GetSystemOperatorAsync().ConfigureAwait(false);
 
-            return CreateChargeLinkCommand(
-                createLinkCommandEvent.MeteringPointId,
-                charge,
-                defaultChargeLink.GetStartDateTime(mp.EffectiveDate),
-                defaultChargeLink.EndDateTime,
-                DefaultChargeLink.Factor);
-        }
+            var defChargeAndCharge =
+                defaultChargeLinks.ToDictionary(defaultChargeLink => defaultChargeLink, defaultChargeLink =>
+                    charges.Single(c => defaultChargeLink.ChargeId == c.Id));
 
-        public async Task<ChargeLinkCommand> CreateFromChargeLinkAsync(
-            [NotNull] ChargeLink chargeLink,
-            [NotNull] ChargeLinkPeriodDetails chargeLinkPeriodDetails)
-        {
-            var charge = await _chargeRepository.GetChargeAsync(chargeLink.ChargeId).ConfigureAwait(false);
-            var meteringPoint = await _meteringPointRepository
-                .GetMeteringPointAsync(chargeLink.MeteringPointId)
-                .ConfigureAwait(false);
+            var chargeLinks = defChargeAndCharge.Select(pair => new ChargeLinkDto
+                {
+                    ChargeType = pair.Value.Type,
+                    SenderProvidedChargeId = pair.Value.SenderProvidedChargeId,
+                    EndDateTime = pair.Key.EndDateTime,
+                    ChargeOwner = pair.Value.Owner,
+                    StartDateTime = pair.Key.GetStartDateTime(meteringPoint.EffectiveDate),
+                    OperationId = Guid.NewGuid().ToString(),
+                    Factor = DefaultChargeLink.Factor,
+                })
+                .ToList();
 
-            return CreateChargeLinkCommand(
-                meteringPoint.MeteringPointId,
-                charge,
-                chargeLinkPeriodDetails.StartDateTime,
-                chargeLinkPeriodDetails.EndDateTime,
-                chargeLinkPeriodDetails.Factor);
-        }
-
-        private ChargeLinkCommand CreateChargeLinkCommand(
-            string meteringPointId,
-            Charge charge,
-            Instant startDateTime,
-            Instant endDateTime,
-            int factor)
-        {
             var currentTime = _clock.GetCurrentInstant();
-            var chargeLinkCommand = new ChargeLinkCommand()
-            {
-                Document = new DocumentDto
+            return new ChargeLinksCommand(
+                createLinkCommandEvent.MeteringPointId,
+                new DocumentDto
                 {
                     Id = Guid.NewGuid().ToString(),
                     Type = DocumentType.RequestChangeBillingMasterData,
@@ -96,7 +86,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinkCommands
                     CreatedDateTime = currentTime,
                     Sender = new MarketParticipant
                     {
-                        Id = charge.Owner, // For default charge links the owner is the TSO.
+                        Id = systemOperator.Id, // For default charge links the owner is the TSO.
                         BusinessProcessRole = MarketParticipantRole.SystemOperator,
                     },
                     Recipient = new MarketParticipant
@@ -105,19 +95,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinkCommands
                         BusinessProcessRole = MarketParticipantRole.MeteringPointAdministrator,
                     },
                 },
-                ChargeLink = new ChargeLinkDto
-                {
-                    ChargeType = charge.Type,
-                    SenderProvidedChargeId = charge.SenderProvidedChargeId,
-                    EndDateTime = endDateTime,
-                    ChargeOwner = charge.Owner,
-                    MeteringPointId = meteringPointId,
-                    StartDateTime = startDateTime,
-                    OperationId = Guid.NewGuid().ToString(),
-                    Factor = factor,
-                },
-            };
-            return chargeLinkCommand;
+                chargeLinks);
         }
     }
 }

@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Collections.Generic;
 using GreenEnergyHub.Charges.Domain.Dtos.Messages.Command;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 
@@ -19,10 +20,22 @@ using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 
 namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinkCommands
 {
-    public class ChargeLinkCommand : CommandBase
+    public class ChargeLinksCommand : CommandBase
     {
-        public DocumentDto Document { get; set; }
+        public ChargeLinksCommand(
+            string meteringPointId,
+            DocumentDto document,
+            IReadOnlyCollection<ChargeLinkDto> chargeLinks)
+        {
+            MeteringPointId = meteringPointId;
+            Document = document;
+            ChargeLinks = chargeLinks;
+        }
 
-        public ChargeLinkDto ChargeLink { get; set; }
+        public string MeteringPointId { get; }
+
+        public DocumentDto Document { get; }
+
+        public IReadOnlyCollection<ChargeLinkDto> ChargeLinks { get; }
     }
 }

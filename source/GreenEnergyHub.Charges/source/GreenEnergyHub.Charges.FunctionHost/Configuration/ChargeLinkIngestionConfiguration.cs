@@ -26,8 +26,8 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
         internal static void ConfigureServices(IServiceCollection serviceCollection)
         {
             serviceCollection.AddScoped<ChargeLinkCommandConverter>();
-            serviceCollection.AddScoped<MessageExtractor<ChargeLinkCommand>>();
-            serviceCollection.AddScoped<MessageDeserializer<ChargeLinkCommand>, ChargeLinkCommandDeserializer>();
+            serviceCollection.AddScoped<MessageExtractor<ChargeLinksCommand>>();
+            serviceCollection.AddScoped<MessageDeserializer<ChargeLinksCommand>, ChargeLinkCommandDeserializer>();
 
             serviceCollection.AddScoped<IChargeLinkCommandHandler, ChargeLinkCommandHandler>();
         }

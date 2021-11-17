@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinkCommands;
 using NodaTime;
@@ -28,7 +27,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinkCommandAcceptedEvents
             _clock = clock;
         }
 
-        public ChargeLinkCommandAcceptedEvent Create([NotNull] IReadOnlyCollection<ChargeLinkCommand> chargeLinkCommands)
+        public ChargeLinkCommandAcceptedEvent Create([NotNull]ChargeLinksCommand chargeLinkCommands)
         {
             return new ChargeLinkCommandAcceptedEvent(
                 chargeLinkCommands,

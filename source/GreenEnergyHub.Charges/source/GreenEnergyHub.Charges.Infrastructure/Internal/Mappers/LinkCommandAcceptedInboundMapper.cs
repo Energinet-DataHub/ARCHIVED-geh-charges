@@ -20,7 +20,6 @@ using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinkCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Messaging.Protobuf;
 using GreenEnergyHub.Messaging.Transport;
-using ChargeLinkCommand = GreenEnergyHub.Charges.Domain.Dtos.ChargeLinkCommands.ChargeLinkCommand;
 using MarketParticipant = GreenEnergyHub.Charges.Domain.MarketParticipants.MarketParticipant;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
@@ -30,13 +29,10 @@ namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
         protected override IInboundMessage Convert([NotNull]GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandAccepted.ChargeLinkCommandAccepted chargeLinkCommandAcceptedContract)
         {
             return new ChargeLinkCommandAcceptedEvent(
-                chargeLinkCommandAcceptedContract.ChargeLinkCommands.Select(
-                    chargeLinkCommandContract =>
-                        new ChargeLinkCommand
-                {
-                  Document = ConvertDocument(chargeLinkCommandContract.Document),
-                  ChargeLink = ConvertChargeLink(chargeLinkCommandContract.ChargeLink),
-                }).ToList(),
+                new ChargeLinksCommand(
+                    chargeLinkCommandAcceptedContract.ChargeLinkCommand.MeteringPointId,
+                    ConvertDocument(chargeLinkCommandAcceptedContract.ChargeLinkCommand.Document),
+                    chargeLinkCommandAcceptedContract.ChargeLinkCommand.ChargeLinks.Select(ConvertChargeLink).ToList()),
                 chargeLinkCommandAcceptedContract.PublishedTime.ToInstant());
         }
 
@@ -69,7 +65,6 @@ namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
             return new ChargeLinkDto
             {
                 OperationId = link.OperationId,
-                MeteringPointId = link.MeteringPointId,
                 StartDateTime = link.StartDateTime.ToInstant(),
                 EndDateTime = link.EndDateTime.ToInstant(),
                 SenderProvidedChargeId = link.SenderProvidedChargeId,

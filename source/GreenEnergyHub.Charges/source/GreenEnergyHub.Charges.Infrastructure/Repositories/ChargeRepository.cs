@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Domain.Charges;
@@ -61,6 +62,13 @@ namespace GreenEnergyHub.Charges.Infrastructure.Repositories
                                         x.MarketParticipant.MarketParticipantId == chargeIdentifier.Owner &&
                                         x.ChargeType == (int)chargeIdentifier.ChargeType)
                 .ConfigureAwait(false);
+        }
+
+        public async Task<IReadOnlyCollection<Charge>> GetChargesAsync(IReadOnlyCollection<Guid> ids)
+        {
+            var charges = await GetChargesAsQueryable()
+                .Where(x => ids.Contains(x.Id)).ToListAsync().ConfigureAwait(false);
+            return charges.Select(ChargeMapper.MapChargeToChargeDomainModel).ToList();
         }
 
         public async Task StoreChargeAsync(Charge newCharge, string senderId, Instant writeDateTime)

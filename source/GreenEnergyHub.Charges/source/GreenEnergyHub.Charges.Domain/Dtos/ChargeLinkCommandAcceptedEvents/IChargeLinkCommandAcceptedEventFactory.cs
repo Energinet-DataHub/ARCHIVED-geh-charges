@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinkCommands;
 
@@ -20,6 +19,6 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinkCommandAcceptedEvents
 {
     public interface IChargeLinkCommandAcceptedEventFactory
     {
-        ChargeLinkCommandAcceptedEvent Create([NotNull] IReadOnlyCollection<ChargeLinkCommand> chargeLinkCommands);
+        ChargeLinkCommandAcceptedEvent Create([NotNull] ChargeLinksCommand chargeLinkCommands);
     }
 }

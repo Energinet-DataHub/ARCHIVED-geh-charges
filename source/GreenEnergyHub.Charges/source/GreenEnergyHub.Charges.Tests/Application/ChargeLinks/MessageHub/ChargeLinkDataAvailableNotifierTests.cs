@@ -78,7 +78,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.MessageHub
 
             availableChargeLinksDataFactoryMock.Setup(
                     factory => factory.CreateAvailableChargeLinksData(
-                        It.IsAny<ChargeLinkCommand>(),
+                        It.IsAny<ChargeLinksCommand>(),
                         It.IsAny<MarketParticipant>(),
                         It.IsAny<Instant>(),
                         It.IsAny<Guid>()))
@@ -129,7 +129,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.MessageHub
 
         // This is a workaround because the model contains multiple metering point IDs while
         // business does not.
-        private void FixMeteringPointIds(IReadOnlyCollection<ChargeLinkCommand> chargeLinkCommands)
+        private void FixMeteringPointIds(IReadOnlyCollection<ChargeLinksCommand> chargeLinkCommands)
         {
             var meteringPointId = chargeLinkCommands.First().ChargeLink.MeteringPointId;
             foreach (var command in chargeLinkCommands)

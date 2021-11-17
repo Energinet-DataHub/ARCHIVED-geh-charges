@@ -29,12 +29,12 @@ namespace GreenEnergyHub.Charges.FunctionHost.ChargeLinks
         /// The name of the function.
         /// Function name affects the URL and thus possibly dependent infrastructure.
         /// </summary>
-        private readonly MessageExtractor<ChargeLinkCommand> _messageExtractor;
+        private readonly MessageExtractor<ChargeLinksCommand> _messageExtractor;
         private readonly IChargeLinkCommandHandler _chargeLinkCommandHandler;
 
         public ChargeLinkIngestion(
             IChargeLinkCommandHandler chargeLinkCommandHandler,
-            MessageExtractor<ChargeLinkCommand> messageExtractor)
+            MessageExtractor<ChargeLinksCommand> messageExtractor)
         {
             _messageExtractor = messageExtractor;
             _chargeLinkCommandHandler = chargeLinkCommandHandler;
@@ -45,7 +45,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.ChargeLinks
             [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = null)]
             [NotNull] HttpRequestData req)
         {
-            var command = (ChargeLinkCommand)await _messageExtractor.ExtractAsync(req.Body).ConfigureAwait(false);
+            var command = (ChargeLinksCommand)await _messageExtractor.ExtractAsync(req.Body).ConfigureAwait(false);
 
             var chargeLinksMessageResult = await _chargeLinkCommandHandler.HandleAsync(command).ConfigureAwait(false);
 

@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Domain.DefaultChargeLinks;
@@ -21,8 +22,8 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinkCommands
 {
     public interface IChargeLinkCommandFactory
     {
-        Task<ChargeLinkCommand> CreateAsync(
+        Task<ChargeLinksCommand> CreateAsync(
             [NotNull] CreateLinkCommandEvent createLinkCommandEvent,
-            [NotNull] DefaultChargeLink defaultChargeLink);
+            [NotNull] IReadOnlyCollection<DefaultChargeLink> defaultChargeLinks);
     }
 }
