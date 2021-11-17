@@ -39,6 +39,9 @@ namespace GreenEnergyHub.Charges.Infrastructure.ChargeLinkReceiptBundle.Cim
         {
             return new List<XElement>
             {
+                // Due to the nature of the interface to the MessageHub and the use of MessageType in that
+                // BusinessReasonCode, RecipientId, RecipientRole and ReceiptStatus will always be the same value
+                // on all records in the list. We can simply take it from the first record.
                 new XElement(
                     cimNamespace + CimChargeLinkReceiptConstants.ReceiptStatus,
                     ReceiptStatusMapper.Map(records.First().ReceiptStatus)),
@@ -113,6 +116,9 @@ namespace GreenEnergyHub.Charges.Infrastructure.ChargeLinkReceiptBundle.Cim
 
         private bool IsConfirmation(IEnumerable<AvailableChargeLinkReceiptData> receipts)
         {
+            // Due to the nature of the interface to the MessageHub and the use of MessageType in that
+            // BusinessReasonCode, RecipientId, RecipientRole and ReceiptStatus will always be the same value
+            // on all records in the list. We can simply take it from the first record.
             return receipts.First().ReceiptStatus == ReceiptStatus.Confirmed;
         }
     }
