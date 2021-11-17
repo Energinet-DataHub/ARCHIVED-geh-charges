@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using Azure.Messaging.ServiceBus;
 using Energinet.DataHub.Charges.Libraries.DefaultChargeLink;
 using Energinet.DataHub.Charges.Libraries.Models;
@@ -31,8 +32,8 @@ namespace Energinet.DataHub.Charges.Libraries.Clients.SimpleInjector
         /// <param name="serviceBusRequestSenderConfiguration"></param>
         public static void AddDefaultChargeLinkClient(
             this Container container,
-            ServiceBusClient serviceBusClient,
-            IServiceBusRequestSenderConfiguration serviceBusRequestSenderConfiguration)
+            [DisallowNull] ServiceBusClient serviceBusClient,
+            [DisallowNull] IServiceBusRequestSenderConfiguration serviceBusRequestSenderConfiguration)
         {
             if (container == null)
                 throw new ArgumentNullException(nameof(container));
