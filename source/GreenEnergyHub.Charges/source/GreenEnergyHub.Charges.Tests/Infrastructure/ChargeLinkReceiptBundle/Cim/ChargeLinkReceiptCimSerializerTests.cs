@@ -18,10 +18,9 @@ using System.IO;
 using System.Reflection;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
-using GreenEnergyHub.Charges.Domain.AvailableChargeLinksData;
-using GreenEnergyHub.Charges.Domain.Charges;
+using GreenEnergyHub.Charges.Domain.AvailableChargeLinkReceiptData;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
-using GreenEnergyHub.Charges.Infrastructure.ChargeLinkBundle.Cim;
+using GreenEnergyHub.Charges.Infrastructure.ChargeLinkReceiptBundle.Cim;
 using GreenEnergyHub.Charges.Infrastructure.Cim;
 using GreenEnergyHub.Charges.Infrastructure.Configuration;
 using GreenEnergyHub.Charges.TestCore;
@@ -31,22 +30,25 @@ using NodaTime;
 using Xunit;
 using Xunit.Categories;
 
-namespace GreenEnergyHub.Charges.Tests.Infrastructure.ChargeLinkBundle.Cim
+namespace GreenEnergyHub.Charges.Tests.Infrastructure.ChargeLinkReceiptBundle.Cim
 {
     [UnitTest]
-    public class ChargeLinkCimSerializerTests
+    public class ChargeLinkReceiptCimSerializerTests
     {
-        private const int NoOfLinksInBundle = 10;
+        private const int NoOfReceiptsInBundle = 10;
         private const string CimTestId = "00000000000000000000000000000000";
         private const string RecipientId = "TestRecipient1111";
 
         [Theory]
-        [InlineAutoDomainData]
+        [InlineAutoDomainData(ReceiptStatus.Confirmed, "GreenEnergyHub.Charges.Tests.TestFiles.ExpectedOutputChargeLinkReceiptCimSerializerConfirmation.blob")]
+        [InlineAutoDomainData(ReceiptStatus.Rejected, "GreenEnergyHub.Charges.Tests.TestFiles.ExpectedOutputChargeLinkReceiptCimSerializerRejection.blob")]
         public async Task SerializeAsync_WhenCalled_StreamHasSerializedResult(
+            ReceiptStatus receiptStatus,
+            string expectedFilePath,
             [Frozen] Mock<IHubSenderConfiguration> hubSenderConfiguration,
             [Frozen] Mock<IClock> clock,
             [Frozen] Mock<ICimIdProvider> cimIdProvider,
-            ChargeLinkCimSerializer sut)
+            ChargeLinkReceiptCimSerializer sut)
         {
             // Arrange
             SetupMocks(hubSenderConfiguration, clock, cimIdProvider);
@@ -54,13 +56,13 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.ChargeLinkBundle.Cim
 
             var expected = EmbeddedStreamHelper.GetEmbeddedStreamAsString(
                 Assembly.GetExecutingAssembly(),
-                "GreenEnergyHub.Charges.Tests.TestFiles.ExpectedOutputChargeLinkCimSerializer.blob");
+                expectedFilePath);
 
-            var chargeLinks = GetChargeLinks(clock.Object);
+            var receipts = GetReceipts(receiptStatus, clock.Object);
 
             // Act
             await sut.SerializeToStreamAsync(
-                chargeLinks,
+                receipts,
                 stream,
                 BusinessReasonCode.UpdateMasterDataSettlement,
                 RecipientId,
@@ -78,22 +80,22 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.ChargeLinkBundle.Cim
             [Frozen] Mock<IHubSenderConfiguration> hubSenderConfiguration,
             [Frozen] Mock<IClock> clock,
             [Frozen] Mock<ICimIdProvider> cimIdProvider,
-            ChargeLinkCimSerializer sut)
+            ChargeLinkReceiptCimSerializer sut)
         {
             SetupMocks(hubSenderConfiguration, clock, cimIdProvider);
 
-            var chargeLinks = GetChargeLinks(clock.Object);
+            var receipts = GetReceipts(ReceiptStatus.Rejected, clock.Object);
 
             await using var stream = new MemoryStream();
 
             await sut.SerializeToStreamAsync(
-                chargeLinks,
+                receipts,
                 stream,
                 BusinessReasonCode.UpdateMasterDataSettlement,
                 RecipientId,
                 MarketParticipantRole.GridAccessProvider);
 
-            await using var fileStream = File.Create("C:\\Temp\\TestChargeLinkBundle" + Guid.NewGuid() + ".xml");
+            await using var fileStream = File.Create("C:\\Temp\\TestChargeLinkReceiptBundle" + Guid.NewGuid() + ".xml");
 
             await stream.CopyToAsync(fileStream);
         }
@@ -120,37 +122,51 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.ChargeLinkBundle.Cim
                 .Returns(CimTestId);
         }
 
-        private List<AvailableChargeLinksData> GetChargeLinks(IClock clock)
+        private List<AvailableChargeLinkReceiptData> GetReceipts(ReceiptStatus receiptStatus, IClock clock)
         {
-            var chargeLinks = new List<AvailableChargeLinksData>();
+            var chargeLinks = new List<AvailableChargeLinkReceiptData>();
 
-            for (var i = 1; i <= NoOfLinksInBundle; i++)
+            for (var i = 1; i <= NoOfReceiptsInBundle; i++)
             {
-                chargeLinks.Add(GetChargeLink(i, clock));
+                chargeLinks.Add(GetReceipt(i, receiptStatus, clock));
             }
 
             return chargeLinks;
         }
 
-        private AvailableChargeLinksData GetChargeLink(int no, IClock clock)
+        private AvailableChargeLinkReceiptData GetReceipt(int no, ReceiptStatus receiptStatus, IClock clock)
         {
-            var validTo = no % 2 == 0 ?
-                Instant.FromUtc(9999, 12, 31, 23, 59, 59) :
-                Instant.FromUtc(2021, 4, 30, 22, 0, 0);
-
-            return new AvailableChargeLinksData(
+            return new AvailableChargeLinkReceiptData(
                 RecipientId,
                 MarketParticipantRole.GridAccessProvider,
                 BusinessReasonCode.UpdateMasterDataSettlement,
-                "Charge" + no,
-                "Owner" + no,
-                ChargeType.Tariff,
-                "MeteringPoint" + no,
-                no,
-                Instant.FromUtc(2020, 12, 31, 23, 0, 0),
-                validTo,
                 clock.GetCurrentInstant(),
-                Guid.NewGuid());
+                Guid.NewGuid(),
+                receiptStatus,
+                "OriginalOperationId" + no,
+                "MeteringPoint" + no,
+                GetReasonCodes(no));
+        }
+
+        private List<AvailableChargeLinkReceiptDataReasonCode> GetReasonCodes(int no)
+        {
+            var reasonCodes = new List<AvailableChargeLinkReceiptDataReasonCode>();
+            var noOfReasons = (no % 3) + 1;
+
+            for (var i = 1; i <= noOfReasons; i++)
+            {
+                var text = string.Empty;
+                if (i % 2 == 0)
+                {
+                    text = "Text" + no + "_" + i;
+                }
+
+                reasonCodes.Add(new AvailableChargeLinkReceiptDataReasonCode(
+                    ReasonCode.IncorrectChargeInformation,
+                    text));
+            }
+
+            return reasonCodes;
         }
     }
 }

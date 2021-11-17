@@ -15,10 +15,12 @@
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
 using Energinet.DataHub.MessageHub.Client.Model;
 using GreenEnergyHub.Charges.Domain.AvailableChargeLinksData;
+using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.Infrastructure.ChargeLinkBundle.Cim;
 using GreenEnergyHub.Charges.Infrastructure.ChargeLinkBundle.MessageHub;
 using GreenEnergyHub.TestHelpers;
@@ -54,7 +56,13 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.ChargeLinkBundle.MessageHu
             serializer.Verify(
                 s => s.SerializeToStreamAsync(
                     availableChargeLinksData,
-                    stream),
+                    stream,
+                    // Due to the nature of the interface to the MessageHub and the use of MessageType in that
+                    // BusinessReasonCode, RecipientId, RecipientRole and ReceiptStatus will always be the same value
+                    // on all records in the list. We need to check that its equal to the first row.
+                    availableChargeLinksData.First().BusinessReasonCode,
+                    availableChargeLinksData.First().RecipientId,
+                    availableChargeLinksData.First().RecipientRole),
                 Times.Once);
         }
     }

@@ -24,5 +24,6 @@ namespace GreenEnergyHub.Charges.Domain.MarketParticipants
         RequestUpdateChargeInformation = 2, // Document requesting to update charge master data and/or prices
         NotifyBillingMasterData = 3, // Document containing changes to links between metering points and charges
         NotifyPriceList = 4, // Document containing changes to charge master data or prices
+        ChargeLinkReceipt = 5, // Document containing receipts, either confirmation or rejection, of charge links
     }
 }
