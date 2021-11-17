@@ -27,11 +27,8 @@ using Xunit;
 using Xunit.Abstractions;
 using Xunit.Categories;
 
-namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests.Charges
+namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
 {
-    /// <summary>
-    /// Proof-of-concept on integration testing a function.
-    /// </summary>
     [IntegrationTest]
     public class ChargeIngestionTests
     {
@@ -126,28 +123,15 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests.Charges
                 var testFilePath = "TestFiles/Charges/ValidCreateTariffCommand.xml";
                 var clock = SystemClock.Instance;
                 var chargeJson = EmbeddedResourceHelper.GetEmbeddedFile(testFilePath, clock);
-                correlationId = CreateCorrelationId();
-                var traceParent = CreateTraceParentHttpHeaderValue(correlationId);
+                correlationId = CorrelationIdGenerator.Create();
 
                 var request = new HttpRequestMessage(HttpMethod.Post, "api/ChargeIngestion")
                 {
                     Content = new StringContent(chargeJson, Encoding.UTF8, "application/xml"),
                 };
-
-                // See https://tsuyoshiushio.medium.com/correlation-with-activity-with-application-insights-3-w3c-tracecontext-d9fb143c0ce2
-                request.Headers.Add("traceparent", traceParent);
+                request.ConfigureTraceContext(correlationId);
 
                 return request;
-            }
-
-            private static string CreateTraceParentHttpHeaderValue(string correlationId)
-            {
-                return $"00-{correlationId}-b7ad6b7169203331-01";
-            }
-
-            private static string CreateCorrelationId()
-            {
-                return Guid.NewGuid().ToString().Replace("-", string.Empty);
             }
         }
     }

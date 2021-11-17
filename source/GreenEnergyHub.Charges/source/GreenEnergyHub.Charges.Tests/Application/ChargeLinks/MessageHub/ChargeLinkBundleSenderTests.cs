@@ -15,7 +15,7 @@
 using System.IO;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
-using Energinet.DataHub.MessageHub.Client.Model;
+using Energinet.DataHub.MessageHub.Model.Model;
 using GreenEnergyHub.Charges.Application.ChargeLinks.MessageHub;
 using GreenEnergyHub.Charges.Application.ChargeLinks.MessageHub.Infrastructure;
 using GreenEnergyHub.Charges.TestCore.Attributes;
