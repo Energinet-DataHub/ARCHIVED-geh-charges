@@ -13,12 +13,11 @@
 // limitations under the License.
 
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
-using Energinet.DataHub.MessageHub.Client.Model;
+using Energinet.DataHub.MessageHub.Model.Model;
 using GreenEnergyHub.Charges.Domain.AvailableChargeLinksData;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.Infrastructure.ChargeLinkBundle.Cim;
@@ -36,7 +35,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.ChargeLinkBundle.MessageHu
         [Theory]
         [InlineAutoDomainData]
         public async Task CreateAsync_WhenCalled_UsesRepositoryAndSerializer(
-            [Frozen] Mock<IAvailableChargeLinksDataRepository> respository,
+            [Frozen] Mock<IAvailableChargeLinksDataRepository> repository,
             [Frozen] Mock<IChargeLinkCimSerializer> serializer,
             DataBundleRequestDto dataBundleRequestDto,
             List<AvailableChargeLinksData> availableChargeLinksData,
@@ -44,7 +43,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.ChargeLinkBundle.MessageHu
             ChargeLinkBundleCreator sut)
         {
             // Arrange
-            respository.Setup(
+            repository.Setup(
                     r => r.GetAvailableChargeLinksDataAsync(
                         dataBundleRequestDto.DataAvailableNotificationIds))
                 .Returns(Task.FromResult(availableChargeLinksData));
