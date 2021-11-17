@@ -36,10 +36,10 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures
         public ChargesFunctionAppFixture()
         {
             AzuriteManager = new AzuriteManager();
+            IntegrationTestConfiguration = new IntegrationTestConfiguration();
             DatabaseManager = new ChargesDatabaseManager();
 
-            var integrationTestConfiguration = new IntegrationTestConfiguration();
-            ServiceBusResourceProvider = new ServiceBusResourceProvider(integrationTestConfiguration.ServiceBusConnectionString, new TestDiagnosticsLogger());
+            ServiceBusResourceProvider = new ServiceBusResourceProvider(IntegrationTestConfiguration.ServiceBusConnectionString, TestLogger);
         }
 
         public ChargesDatabaseManager DatabaseManager { get; }
@@ -64,24 +64,25 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures
 
         private AzuriteManager AzuriteManager { get; }
 
+        private IntegrationTestConfiguration IntegrationTestConfiguration { get; }
+
         private ServiceBusResourceProvider ServiceBusResourceProvider { get; }
 
         /// <inheritdoc/>
         protected override void OnConfigureHostSettings(FunctionAppHostSettings hostSettings)
         {
+            if (hostSettings == null)
+                return;
+
+            var buildConfiguration = GetBuildConfiguration();
+            hostSettings.FunctionApplicationPath = $"..\\..\\..\\..\\GreenEnergyHub.Charges.FunctionHost\\bin\\{buildConfiguration}\\net5.0";
         }
 
         /// <inheritdoc/>
         protected override void OnConfigureEnvironment()
         {
-            // NOTICE:
-            // Currently the following settings must be set on the build agent OR be available in local.settings.json of the function app:
-            // * APPINSIGHTS_INSTRUMENTATIONKEY
-            // * DOMAINEVENT_SENDER_CONNECTION_STRING
-            //
-            // All other settings are overwritten somewhere within this class.
+            Environment.SetEnvironmentVariable(EnvironmentSettingNames.AppInsightsInstrumentationKey, IntegrationTestConfiguration.ApplicationInsightsInstrumentationKey);
             Environment.SetEnvironmentVariable(EnvironmentSettingNames.AzureWebJobsStorage, "UseDevelopmentStorage=true");
-
             Environment.SetEnvironmentVariable(EnvironmentSettingNames.Currency, "DKK");
             Environment.SetEnvironmentVariable(EnvironmentSettingNames.LocalTimeZoneName, "Europe/Copenhagen");
             Environment.SetEnvironmentVariable(EnvironmentSettingNames.HubSenderId, "5790001330552");
@@ -231,6 +232,15 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures
 
             // => Database
             await DatabaseManager.DeleteDatabaseAsync();
+        }
+
+        private static string GetBuildConfiguration()
+        {
+#if DEBUG
+            return "Debug";
+#else
+            return "Release";
+#endif
         }
     }
 }
