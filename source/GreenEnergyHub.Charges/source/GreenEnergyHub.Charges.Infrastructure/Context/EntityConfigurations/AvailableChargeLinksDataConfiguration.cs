@@ -83,7 +83,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Context.EntityConfigurations
 
             builder
                 .Property(x => x.RequestDateTime)
-                .HasColumnName("RequestTime");
+                .HasColumnName("RequestDateTime");
 
             builder
                 .Property(x => x.AvailableDataReferenceId)
