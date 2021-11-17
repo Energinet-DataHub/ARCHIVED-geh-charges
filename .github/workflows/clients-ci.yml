@@ -78,6 +78,4 @@ jobs:
           flags: unittests
           fail_ci_if_error: true
           verbose: true
-      
-      #- name: Build
-      #    dotnet build ${{ env.CSPROJ_FILE_PATH }} --configuration Release --output ${{ github.workspace }}/output
+          
