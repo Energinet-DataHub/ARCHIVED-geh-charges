@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using Energinet.DataHub.MessageHub.Client.Model;
 using GreenEnergyHub.Charges.Application.ChargeLinks.MessageHub.Infrastructure;
@@ -40,7 +41,15 @@ namespace GreenEnergyHub.Charges.Infrastructure.ChargeLinkBundle.MessageHub
                 .GetAvailableChargeLinksDataAsync(request.DataAvailableNotificationIds)
                 .ConfigureAwait(false);
 
-            await _chargeLinkCimSerializer.SerializeToStreamAsync(availableData, outputStream).ConfigureAwait(false);
+            await _chargeLinkCimSerializer.SerializeToStreamAsync(
+                availableData,
+                outputStream,
+                // Due to the nature of the interface to the MessageHub and the use of MessageType in that
+                // BusinessReasonCode, RecipientId, RecipientRole and ReceiptStatus will always be the same value
+                // on all records in the list. We can simply take it from the first record.
+                availableData.First().BusinessReasonCode,
+                availableData.First().RecipientId,
+                availableData.First().RecipientRole).ConfigureAwait(false);
         }
     }
 }

@@ -15,15 +15,15 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Domain.AvailableChargeLinksData;
+using GreenEnergyHub.Charges.Domain.AvailableChargeLinkReceiptData;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 
-namespace GreenEnergyHub.Charges.Infrastructure.ChargeLinkBundle.Cim
+namespace GreenEnergyHub.Charges.Infrastructure.ChargeLinkReceiptBundle.Cim
 {
-    public interface IChargeLinkCimSerializer
+    public interface IChargeLinkReceiptCimSerializer
     {
         Task SerializeToStreamAsync(
-            IEnumerable<AvailableChargeLinksData> chargeLinks,
+            IEnumerable<AvailableChargeLinkReceiptData> receipts,
             Stream stream,
             BusinessReasonCode businessReasonCode,
             string recipientId,
