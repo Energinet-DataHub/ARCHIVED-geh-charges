@@ -40,6 +40,7 @@ inputs:
     required: true
 
 runs:
+  using: composite
   steps:
     - name: Build and test project
       id: build_and_test_project
@@ -47,4 +48,4 @@ runs:
       run: |
         az login --service-principal --username "${{ inputs.azure_spn_id }}" --password "${{ inputs.azure_spn_secret }}" --tenant "${{ inputs.azure_tenant_id }}"
         az account set --subscription "${{ inputs.azure_subscription_id }}"
-        dotnet test ${{ inputs.solution_file_path }} --configuration Release --verbosity normal --collect:"XPlat Code Coverage" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=opencover --output ${{ inputs.output_path }}
+        dotnet test "${{ inputs.solution_file_path }}" --configuration Release --verbosity normal --collect:"XPlat Code Coverage" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=opencover --output "${{ inputs.output_path }}"
