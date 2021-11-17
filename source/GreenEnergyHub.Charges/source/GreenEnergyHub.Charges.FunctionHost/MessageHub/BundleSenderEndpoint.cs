@@ -15,12 +15,11 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Energinet.DataHub.MessageHub.Client.Peek;
+using Energinet.DataHub.MessageHub.Model.Peek;
 using GreenEnergyHub.Charges.Application.ChargeLinks.MessageHub;
 using GreenEnergyHub.Charges.Application.Charges.MessageHub;
 using GreenEnergyHub.Charges.FunctionHost.Common;
 using Microsoft.Azure.Functions.Worker;
-using Microsoft.Extensions.Logging;
 
 namespace GreenEnergyHub.Charges.FunctionHost.MessageHub
 {
@@ -34,32 +33,27 @@ namespace GreenEnergyHub.Charges.FunctionHost.MessageHub
         private const string FunctionName = nameof(BundleSenderEndpoint);
         private readonly IChargeBundleSender _chargeBundleSender;
         private readonly IChargeLinkBundleSender _chargeLinkBundleSender;
-        private readonly ILogger _log;
         private readonly IRequestBundleParser _requestBundleParser;
 
         public BundleSenderEndpoint(
             IChargeBundleSender chargeBundleSender,
             IChargeLinkBundleSender chargeLinkBundleSender,
-            ILoggerFactory loggerFactory,
             IRequestBundleParser requestBundleParser)
         {
             _chargeBundleSender = chargeBundleSender;
             _chargeLinkBundleSender = chargeLinkBundleSender;
             _requestBundleParser = requestBundleParser;
-            _log = loggerFactory.CreateLogger(nameof(BundleSenderEndpoint));
         }
 
         [Function(FunctionName)]
         public async Task RunAsync(
             [ServiceBusTrigger(
-                "%" + EnvironmentSettingNames.MessageHubBundleRequestQueue + "%",
+                "%" + EnvironmentSettingNames.MessageHubRequestQueue + "%",
                 Connection = EnvironmentSettingNames.DataHubListenerConnectionString,
                 IsSessionsEnabled = true)]
             byte[] data,
             FunctionContext functionContext)
         {
-            _log.LogInformation("Function {FunctionName} started to process a request with size {Size}", FunctionName, data.Length);
-
             var request = _requestBundleParser.Parse(data);
 
             // TODO MessageType will be moved to protocol buffer contract in later version of MessageHub

@@ -14,8 +14,7 @@
 
 using System.Diagnostics.CodeAnalysis;
 using GreenEnergyHub.Charges.Application.Charges.Acknowledgement;
-using GreenEnergyHub.Charges.Domain.ChargeCommandAcceptedEvents;
-using GreenEnergyHub.Charges.Domain.Charges.Acknowledgements;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandAcceptedEvents;
 
 namespace GreenEnergyHub.Charges.Application.Charges.Factories
 {
@@ -29,8 +28,7 @@ namespace GreenEnergyHub.Charges.Application.Charges.Factories
                 chargeCommandAcceptedEvent.Command.ChargeOperation.ChargeOwner,
                 chargeCommandAcceptedEvent.Command.ChargeOperation.StartDateTime,
                 chargeCommandAcceptedEvent.Command.ChargeOperation.EndDateTime.GetValueOrDefault(),
-                chargeCommandAcceptedEvent.Command.ChargeOperation.Points,
-                chargeCommandAcceptedEvent.CorrelationId);
+                chargeCommandAcceptedEvent.Command.ChargeOperation.Points);
         }
     }
 }

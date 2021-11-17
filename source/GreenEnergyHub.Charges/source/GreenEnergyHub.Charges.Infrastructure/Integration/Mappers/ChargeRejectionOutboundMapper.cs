@@ -24,7 +24,6 @@ namespace GreenEnergyHub.Charges.Infrastructure.Integration.Mappers
         {
             var chargeRejection = new ChargeRejectionContract
             {
-                CorrelationId = rejection.CorrelationId,
                 Receiver = rejection.Receiver,
                 ReceiverMarketParticipantRole = (MarketParticipantRoleContract)rejection.ReceiverMarketParticipantRole,
                 OriginalTransactionReference = rejection.OriginalTransactionReference,

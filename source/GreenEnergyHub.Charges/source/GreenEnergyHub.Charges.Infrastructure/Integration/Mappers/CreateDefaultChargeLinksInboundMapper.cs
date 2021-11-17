@@ -13,8 +13,8 @@
 // limitations under the License.
 
 using System.Diagnostics.CodeAnalysis;
-using GreenEnergyHub.Charges.Commands;
-using GreenEnergyHub.Charges.Domain.CreateLinkCommandEvents;
+using Energinet.Charges.Contracts;
+using GreenEnergyHub.Charges.Domain.Dtos.CreateLinkRequest;
 using GreenEnergyHub.Messaging.Protobuf;
 using GreenEnergyHub.Messaging.Transport;
 

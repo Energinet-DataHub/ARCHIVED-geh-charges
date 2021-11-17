@@ -14,15 +14,13 @@
 
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
-using Energinet.DataHub.MessageHub.Client.Model;
-using FluentAssertions;
+using Energinet.DataHub.MessageHub.Model.Model;
 using GreenEnergyHub.Charges.Domain.AvailableChargeData;
-using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.Infrastructure.ChargeBundle.Cim;
 using GreenEnergyHub.Charges.Infrastructure.ChargeBundle.MessageHub;
-using GreenEnergyHub.Charges.Tests.Builders;
 using GreenEnergyHub.TestHelpers;
 using Moq;
 using Xunit;
@@ -56,7 +54,10 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.ChargeBundle.MessageHub
             serializer.Verify(
                 s => s.SerializeToStreamAsync(
                     availableChargeData,
-                    stream),
+                    stream,
+                    availableChargeData.First().BusinessReasonCode,
+                    availableChargeData.First().RecipientId,
+                    availableChargeData.First().RecipientRole),
                 Times.Once);
         }
     }

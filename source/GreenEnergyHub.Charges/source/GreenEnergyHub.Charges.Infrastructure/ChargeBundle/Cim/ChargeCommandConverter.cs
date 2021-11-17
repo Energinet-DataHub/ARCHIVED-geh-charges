@@ -16,13 +16,10 @@ using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Threading.Tasks;
 using System.Xml;
-using GreenEnergyHub.Charges.Application;
-using GreenEnergyHub.Charges.Domain.ChargeCommands;
 using GreenEnergyHub.Charges.Domain.Charges;
-using GreenEnergyHub.Charges.Domain.MarketParticipants;
-using GreenEnergyHub.Charges.Domain.SharedDtos;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Infrastructure.ChargeLinkBundle.Cim;
-using GreenEnergyHub.Charges.Infrastructure.Correlation;
 using GreenEnergyHub.Charges.Infrastructure.MarketDocument.Cim;
 using GreenEnergyHub.Charges.Infrastructure.Messaging.Serialization;
 using GreenEnergyHub.Iso8601;
@@ -33,16 +30,13 @@ namespace GreenEnergyHub.Charges.Infrastructure.ChargeBundle.Cim
 {
     public class ChargeCommandConverter : DocumentConverter
     {
-        private readonly ICorrelationContext _correlationContext;
         private readonly IIso8601Durations _iso8601Durations;
 
         public ChargeCommandConverter(
-            ICorrelationContext correlationContext,
             IClock clock,
             IIso8601Durations iso8601Durations)
             : base(clock)
         {
-            _correlationContext = correlationContext;
             _iso8601Durations = iso8601Durations;
         }
 
@@ -50,9 +44,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.ChargeBundle.Cim
             [NotNull] XmlReader reader,
             [NotNull] DocumentDto document)
         {
-            var correlationId = _correlationContext.Id;
-
-            return new ChargeCommand(correlationId)
+            return new ChargeCommand
                 {
                     Document = document,
                     ChargeOperation = await ParseChargeOperationAsync(reader).ConfigureAwait(false),

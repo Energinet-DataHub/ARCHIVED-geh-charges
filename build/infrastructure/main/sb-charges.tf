@@ -11,29 +11,26 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-module "sbn_charges" {
-  source              = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//service-bus-namespace?ref=2.0.0"
-  name                = "sbn-${var.project}-${var.organisation}-${var.environment}"
-  resource_group_name = data.azurerm_resource_group.main.name
-  location            = data.azurerm_resource_group.main.location
-  sku                 = "basic"
-  tags                = data.azurerm_resource_group.main.tags
-}
+module "sb_charges" {
+  source                = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//azure/service-bus-namespace?ref=5.1.0"
+  
+  name                  = "charges"
+  project_name          = var.domain_name_short
+  environment_short     = var.environment_short
+  environment_instance  = var.environment_instance
+  resource_group_name   = azurerm_resource_group.this.name
+  location              = azurerm_resource_group.this.location
+  sku                   = "standard"
+  auth_rules            = [
+    {
+      name    = "listen",
+      listen  = true
+    },
+    {
+      name    = "send",
+      send    = true
+    },
+  ]
 
-module "sbnar_charges_listener" {
-  source                    = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//service-bus-namespace-auth-rule?ref=2.0.0"
-  name                      = "sbnar-charges-listener"
-  namespace_name            = module.sbn_charges.name
-  resource_group_name       = data.azurerm_resource_group.main.name
-  listen                    = true
-  dependencies              = [module.sbn_charges]
-}
-
-module "sbnar_charges_sender" {
-  source                    = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//service-bus-namespace-auth-rule?ref=2.0.0"
-  name                      = "sbnar-charges-sender"
-  namespace_name            = module.sbn_charges.name
-  resource_group_name       = data.azurerm_resource_group.main.name
-  send                      = true
-  dependencies              = [module.sbn_charges]
+  tags                  = azurerm_resource_group.this.tags
 }

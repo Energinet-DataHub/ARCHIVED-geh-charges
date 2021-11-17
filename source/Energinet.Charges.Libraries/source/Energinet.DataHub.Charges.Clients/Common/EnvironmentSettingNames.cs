@@ -17,8 +17,9 @@ namespace Energinet.DataHub.Charges.Libraries.Common
     /// <summary>
     /// Contains names of settings used by the package.
     /// </summary>
-    public static class EnvironmentSettingNames
+    internal static class EnvironmentSettingNames
     {
+        public const string AppInsightsInstrumentationKey = "APPINSIGHTS_INSTRUMENTATIONKEY";
         public const string AzureWebJobsStorage = "AzureWebJobsStorage";
         public const string LocalTimezoneName = "LOCAL_TIMEZONENAME";
         public const string Currency = "CURRENCY";
@@ -28,7 +29,5 @@ namespace Energinet.DataHub.Charges.Libraries.Common
 
         public const string CreateLinkRequestQueueName = "CREATE_LINK_REQUEST_QUEUE_NAME";
         public const string CreateLinkReplyQueueName = "CREATE_LINK_REPLY_QUEUE_NAME";
-        public const string CreateLinkMessagesRequestQueueName = "CREATE_LINK_MESSAGES_REQUEST_QUEUE_NAME";
-        public const string CreateLinkMessagesReplyQueueName = "CREATE_LINK_MESSAGES_REPLY_QUEUE_NAME";
     }
 }

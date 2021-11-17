@@ -55,8 +55,8 @@ namespace GreenEnergyHub.Charges.FunctionHost.Common
         public const string CommandReceivedTopicName = "COMMAND_RECEIVED_TOPIC_NAME";
 
         public const string MessageHubDataAvailableQueue = "MESSAGEHUB_DATAAVAILABLE_QUEUE";
-        public const string MessageHubBundleRequestQueue = "MESSAGEHUB_BUNDLEREQUEST_QUEUE";
-        public const string MessageHubBundleReplyQueue = "MESSAGEHUB_BUNDLEREPLY_QUEUE";
+        public const string MessageHubRequestQueue = "MESSAGEHUB_BUNDLEREQUEST_QUEUE";
+        public const string MessageHubReplyQueue = "MESSAGEHUB_BUNDLEREPLY_QUEUE";
         public const string MessageHubStorageConnectionString = "MESSAGEHUB_STORAGE_CONNECTION_STRING";
         public const string MessageHubStorageContainer = "MESSAGEHUB_STORAGE_CONTAINER";
 
@@ -74,12 +74,12 @@ namespace GreenEnergyHub.Charges.FunctionHost.Common
         public const string CommandRejectedSubscriptionName = "COMMAND_REJECTED_SUBSCRIPTION_NAME";
 
         public const string CreateLinkRequestQueueName = "CREATE_LINK_REQUEST_QUEUE_NAME";
-
         public const string CreateLinkMessagesRequestQueueName = "CREATE_LINK_MESSAGES_REQUEST_QUEUE_NAME";
 
         public const string ConsumptionMeteringPointCreatedTopicName = "CONSUMPTION_METERING_POINT_CREATED_TOPIC_NAME";
         public const string ConsumptionMeteringPointCreatdSubscriptionName = "CONSUMPTION_METERING_POINT_CREATED_SUBSCRIPTION_NAME";
 
+        public const string ChargeCreatedTopicName = "CHARGE_CREATED_TOPIC_NAME";
         public const string ChargePricesUpdatedTopicName = "CHARGE_PRICES_UPDATED_TOPIC_NAME";
     }
 }

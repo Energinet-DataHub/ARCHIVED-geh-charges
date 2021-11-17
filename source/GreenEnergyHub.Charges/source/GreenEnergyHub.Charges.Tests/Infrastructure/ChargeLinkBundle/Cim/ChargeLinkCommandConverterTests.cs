@@ -20,11 +20,10 @@ using System.Threading.Tasks;
 using System.Xml;
 using AutoFixture.Xunit2;
 using GreenEnergyHub.Charges.Application;
-using GreenEnergyHub.Charges.Domain.ChargeLinkCommands;
 using GreenEnergyHub.Charges.Domain.Charges;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinkCommands;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.Infrastructure.ChargeLinkBundle.Cim;
-using GreenEnergyHub.Charges.Infrastructure.Correlation;
 using GreenEnergyHub.Charges.TestCore;
 using GreenEnergyHub.Charges.TestCore.Attributes;
 using Moq;
@@ -54,7 +53,6 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.ChargeLinkBundle.Cim
             var result = (ChargeLinkCommand)await sut.ConvertAsync(reader).ConfigureAwait(false);
 
             // Assert
-            Assert.Equal(correlationId, result.CorrelationId);
 
             // Document
             Assert.Equal("DocId_Valid_001", result.Document.Id);
@@ -122,15 +120,6 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.ChargeLinkBundle.Cim
             Assert.Null(result.ChargeLink.EndDateTime);
 
             await Task.CompletedTask.ConfigureAwait(false);
-        }
-
-        private static async Task<byte[]> GetEmbeddedResourceAsBytes(string path)
-        {
-            var input = GetEmbeddedResource(path);
-
-            var byteInput = new byte[input.Length];
-            await input.ReadAsync(byteInput.AsMemory(0, (int)input.Length)).ConfigureAwait(false);
-            return byteInput;
         }
 
         private static Stream GetEmbeddedResource(string path)

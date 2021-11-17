@@ -16,8 +16,8 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application.ChargeLinks.Handlers.Message;
-using GreenEnergyHub.Charges.Domain.ChargeLinkCommandReceivedEvents;
-using GreenEnergyHub.Charges.Domain.ChargeLinkCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinkCommandReceivedEvents;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinkCommands;
 using NodaTime;
 
 namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
@@ -39,13 +39,11 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
         {
             var receivedEvent = new ChargeLinkCommandReceivedEvent(
                 _clock.GetCurrentInstant(),
-                command.CorrelationId!,
                 new List<ChargeLinkCommand> { command });
 
             await _messageDispatcher.DispatchAsync(receivedEvent).ConfigureAwait(false);
 
             var chargeLinksMessageResult = ChargeLinksMessageResult.CreateSuccess();
-            chargeLinksMessageResult.CorrelationId = command.CorrelationId;
 
             return chargeLinksMessageResult;
         }

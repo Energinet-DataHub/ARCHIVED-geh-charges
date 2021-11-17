@@ -15,15 +15,12 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using GreenEnergyHub.Charges.Core.DateTime;
-using GreenEnergyHub.Charges.Domain.ChargeLinkCommandAcceptedEvents;
-using GreenEnergyHub.Charges.Domain.ChargeLinkCommands;
-using GreenEnergyHub.Charges.Domain.Charges;
-using GreenEnergyHub.Charges.Domain.MarketParticipants;
-using GreenEnergyHub.Charges.Domain.SharedDtos;
-using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandAccepted;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinkCommandAcceptedEvents;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinkCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Messaging.Protobuf;
 using GreenEnergyHub.Messaging.Transport;
-using ChargeLinkCommand = GreenEnergyHub.Charges.Domain.ChargeLinkCommands.ChargeLinkCommand;
+using ChargeLinkCommand = GreenEnergyHub.Charges.Domain.Dtos.ChargeLinkCommands.ChargeLinkCommand;
 using MarketParticipant = GreenEnergyHub.Charges.Domain.MarketParticipants.MarketParticipant;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
@@ -33,10 +30,9 @@ namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
         protected override IInboundMessage Convert([NotNull]GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandAccepted.ChargeLinkCommandAccepted chargeLinkCommandAcceptedContract)
         {
             return new ChargeLinkCommandAcceptedEvent(
-                chargeLinkCommandAcceptedContract.CorrelationId,
                 chargeLinkCommandAcceptedContract.ChargeLinkCommands.Select(
                     chargeLinkCommandContract =>
-                        new ChargeLinkCommand(chargeLinkCommandContract.CorrelationId)
+                        new ChargeLinkCommand
                 {
                   Document = ConvertDocument(chargeLinkCommandContract.Document),
                   ChargeLink = ConvertChargeLink(chargeLinkCommandContract.ChargeLink),

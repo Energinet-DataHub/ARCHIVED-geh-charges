@@ -22,10 +22,10 @@ using AutoFixture.AutoMoq;
 using AutoFixture.Xunit2;
 using GreenEnergyHub.Charges.Application;
 using GreenEnergyHub.Charges.Application.ChargeLinks.Handlers;
-using GreenEnergyHub.Charges.Domain.ChargeLinkCommandAcceptedEvents;
-using GreenEnergyHub.Charges.Domain.ChargeLinkCommandReceivedEvents;
-using GreenEnergyHub.Charges.Domain.ChargeLinkCommands;
 using GreenEnergyHub.Charges.Domain.ChargeLinks;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinkCommandAcceptedEvents;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinkCommandReceivedEvents;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinkCommands;
 using GreenEnergyHub.TestHelpers;
 using Moq;
 using Xunit;
@@ -57,8 +57,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Handlers
 
             chargeLinkCommandAcceptedEventFactory.Setup(
                     x => x.Create(
-                        It.IsAny<IReadOnlyCollection<ChargeLinkCommand>>(),
-                        It.IsAny<string>()))
+                        It.IsAny<IReadOnlyCollection<ChargeLinkCommand>>()))
                 .Returns(chargeLinkCommandAcceptedEvent);
 
             // Act

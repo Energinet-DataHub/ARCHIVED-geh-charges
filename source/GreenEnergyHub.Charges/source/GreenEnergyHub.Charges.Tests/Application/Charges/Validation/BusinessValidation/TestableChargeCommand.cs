@@ -12,15 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using GreenEnergyHub.Charges.Domain.ChargeCommands;
 using GreenEnergyHub.Charges.Domain.Charges;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
 
 namespace GreenEnergyHub.Charges.Tests.Application.Charges.Validation.BusinessValidation
 {
     public class TestableChargeCommand : ChargeCommand
     {
         public TestableChargeCommand()
-            : base("some-correlation-id")
         {
             ChargeOperation = new ChargeOperation();
         }

@@ -17,7 +17,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
 using GreenEnergyHub.Charges.Application;
-using GreenEnergyHub.Charges.Domain.ChargeCommandReceivedEvents;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandReceivedEvents;
 using GreenEnergyHub.Charges.Tests.Builders;
 using GreenEnergyHub.TestHelpers;
 using Moq;
@@ -46,8 +46,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
             localEventPublisher.Verify(
                 x => x.DispatchAsync(
                     It.Is<ChargeCommandReceivedEvent>(
-                        localEvent => localEvent.Command == transaction &&
-                                      localEvent.CorrelationId == transaction.CorrelationId),
+                        localEvent => localEvent.Command == transaction),
                     It.IsAny<CancellationToken>()));
         }
     }

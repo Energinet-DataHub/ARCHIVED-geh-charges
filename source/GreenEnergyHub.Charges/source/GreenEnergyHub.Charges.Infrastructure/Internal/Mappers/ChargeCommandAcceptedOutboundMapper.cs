@@ -15,9 +15,9 @@
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using GreenEnergyHub.Charges.Core.DateTime;
-using GreenEnergyHub.Charges.Domain.ChargeCommandAcceptedEvents;
 using GreenEnergyHub.Charges.Domain.Charges;
-using GreenEnergyHub.Charges.Domain.SharedDtos;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandAcceptedEvents;
+using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeCommandAccepted;
 using GreenEnergyHub.Messaging.Protobuf;
 
@@ -34,9 +34,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
                 {
                     Document = ConvertDocument(chargeCommandAcceptedEvent.Command.Document),
                     ChargeOperation = ConvertChargeOperation(chargeCommandAcceptedEvent.Command.ChargeOperation),
-                    CorrelationId = chargeCommandAcceptedEvent.CorrelationId,
                 },
-                CorrelationId = chargeCommandAcceptedEvent.CorrelationId,
             };
 
             ConvertPoints(chargeCommandAcceptedContract, chargeCommandAcceptedEvent.Command.ChargeOperation.Points);

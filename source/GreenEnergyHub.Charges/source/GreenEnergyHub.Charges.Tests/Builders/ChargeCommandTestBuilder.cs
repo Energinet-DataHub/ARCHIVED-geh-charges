@@ -13,10 +13,10 @@
 // limitations under the License.
 
 using System.Collections.Generic;
-using GreenEnergyHub.Charges.Domain.ChargeCommands;
 using GreenEnergyHub.Charges.Domain.Charges;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
-using GreenEnergyHub.Charges.Domain.SharedDtos;
 using NodaTime;
 
 namespace GreenEnergyHub.Charges.Tests.Builders
@@ -80,7 +80,7 @@ namespace GreenEnergyHub.Charges.Tests.Builders
 
         public ChargeCommand Build()
         {
-            return new("some-correlation-id")
+            return new()
             {
                 Document = new DocumentDto
                 {

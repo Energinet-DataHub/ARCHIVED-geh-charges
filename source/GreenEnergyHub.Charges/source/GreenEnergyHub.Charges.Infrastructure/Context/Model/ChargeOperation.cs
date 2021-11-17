@@ -34,8 +34,6 @@ namespace GreenEnergyHub.Charges.Infrastructure.Context.Model
         [ForeignKey("Charge")]
         public Guid ChargeId { get; set; }
 
-        public string CorrelationId { get; set; }
-
         public Instant? WriteDateTime { get; set; }
     }
 }

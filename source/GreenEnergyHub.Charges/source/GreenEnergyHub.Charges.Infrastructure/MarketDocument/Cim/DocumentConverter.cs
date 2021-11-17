@@ -15,8 +15,8 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using System.Xml;
+using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
-using GreenEnergyHub.Charges.Domain.SharedDtos;
 using GreenEnergyHub.Charges.Infrastructure.Messaging.Serialization;
 using GreenEnergyHub.Messaging.Transport;
 using NodaTime;

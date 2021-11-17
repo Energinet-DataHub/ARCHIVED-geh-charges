@@ -103,29 +103,6 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
             actual.Should().BeTrue();
         }
 
-        [Fact]
-        public async Task CheckIfChargeExistsByCorrelationIdAsync_WhenChargeIsCreated_ThenSuccessReturnedAsync()
-        {
-            await using var chargesDatabaseWriteContext = _databaseManager.CreateDbContext();
-
-            // Arrange
-            var charge = GetValidCharge();
-            await SeedDatabaseAsync(chargesDatabaseWriteContext).ConfigureAwait(false);
-            var sut = new ChargeRepository(chargesDatabaseWriteContext);
-
-            // Act
-            await sut.StoreChargeAsync(charge, MarketParticipantOwner, SystemClock.Instance.GetCurrentInstant())
-                .ConfigureAwait(false);
-
-            // Assert
-            await using var chargesDatabaseReadContext = _databaseManager.CreateDbContext();
-            var actual = chargesDatabaseReadContext
-                .Charges
-                .Any(x => x.ChargeOperation.CorrelationId == charge.CorrelationId);
-
-            actual.Should().BeTrue();
-        }
-
         [Theory]
         [InlineAutoMoqData]
         public async Task StoreChargeAsync_WhenChargeIsNull_ThrowsArgumentNullException(
@@ -189,7 +166,6 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
                 "Name",
                 "description",
                 MarketParticipantOwner,
-                "CorrelationId",
                 SystemClock.Instance.GetCurrentInstant(),
                 Instant.FromUtc(9999, 12, 31, 23, 59, 59),
                 ChargeType.Fee,

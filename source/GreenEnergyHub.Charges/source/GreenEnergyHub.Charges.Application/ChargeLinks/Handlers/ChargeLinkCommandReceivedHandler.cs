@@ -14,9 +14,9 @@
 
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Domain.ChargeLinkCommandAcceptedEvents;
-using GreenEnergyHub.Charges.Domain.ChargeLinkCommandReceivedEvents;
 using GreenEnergyHub.Charges.Domain.ChargeLinks;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinkCommandAcceptedEvents;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinkCommandReceivedEvents;
 
 namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
 {
@@ -46,7 +46,7 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
             await _chargeLinkRepository.StoreAsync(chargeLinks).ConfigureAwait(false);
 
             var chargeLinkCommandAcceptedEvent = _chargeLinkCommandAcceptedEventFactory.Create(
-                chargeLinkCommandReceivedEvent.ChargeLinkCommands, chargeLinkCommandReceivedEvent.CorrelationId);
+                chargeLinkCommandReceivedEvent.ChargeLinkCommands);
 
             await _messageDispatcher.DispatchAsync(chargeLinkCommandAcceptedEvent).ConfigureAwait(false);
         }

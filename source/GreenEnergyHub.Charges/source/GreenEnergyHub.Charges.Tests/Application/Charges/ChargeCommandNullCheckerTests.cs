@@ -13,8 +13,7 @@
 // limitations under the License.
 
 using System;
-using GreenEnergyHub.Charges.Application.Charges;
-using GreenEnergyHub.Charges.Domain.ChargeCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
 using GreenEnergyHub.Charges.Tests.Builders;
 using GreenEnergyHub.TestHelpers;
 using Xunit;
@@ -27,23 +26,19 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges
     public class ChargeCommandNullCheckerTests
     {
         [Theory]
-        [InlineAutoDomainData(null, "Valid", "Valid", "Valid")]
-        [InlineAutoDomainData("valid", null, "Valid", "Valid")]
-        [InlineAutoDomainData("valid", "Valid", null, "Valid")]
-        [InlineAutoDomainData("valid", "Valid", "Valid", null)]
-        [InlineAutoDomainData("", "Valid", "Valid", "Valid")]
-        [InlineAutoDomainData("valid", "", "Valid", "Valid")]
-        [InlineAutoDomainData("valid", "Valid", "", "Valid")]
-        [InlineAutoDomainData("valid", "Valid", "Valid", "")]
+        [InlineAutoDomainData(null, "Valid", "Valid")]
+        [InlineAutoDomainData("Valid", null, "Valid")]
+        [InlineAutoDomainData("Valid", "Valid", null)]
+        [InlineAutoDomainData("", "Valid", "Valid")]
+        [InlineAutoDomainData("Valid", "", "Valid")]
+        [InlineAutoDomainData("Valid", "Valid", "")]
         public void ChargeCommandPropertiesAreNotNullOrWhitespace(
-            string correlationId,
             string description,
             string chargeName,
             string documentId)
         {
             // Arrange
             var c = Build();
-            c.SetCorrelationId(correlationId);
             c.ChargeOperation.ChargeDescription = description;
             c.ChargeOperation.ChargeName = chargeName;
             c.Document.Id = documentId;

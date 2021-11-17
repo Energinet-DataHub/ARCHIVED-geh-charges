@@ -14,7 +14,7 @@
 
 using System.Collections.Generic;
 using GreenEnergyHub.Charges.Domain.Charges;
-using GreenEnergyHub.Charges.Domain.Messages;
+using GreenEnergyHub.Charges.Domain.Dtos.Messages;
 using GreenEnergyHub.Messaging.MessageTypes.Common;
 using NodaTime;
 
@@ -28,8 +28,7 @@ namespace GreenEnergyHub.Charges.Application.Charges.Acknowledgement
             string chargeOwner,
             Instant updatePeriodStartDate,
             Instant updatePeriodEndDate,
-            List<Point> points,
-            string correlationId)
+            List<Point> points)
         {
             ChargeId = chargeId;
             ChargeType = chargeType;
@@ -38,7 +37,6 @@ namespace GreenEnergyHub.Charges.Application.Charges.Acknowledgement
             UpdatePeriodEndDate = updatePeriodEndDate;
             Points = points;
             Transaction = Transaction.NewTransaction();
-            CorrelationId = correlationId;
         }
 
         public string ChargeId { get; }
@@ -54,7 +52,5 @@ namespace GreenEnergyHub.Charges.Application.Charges.Acknowledgement
         public List<Point> Points { get; }
 
         public Transaction Transaction { get; set; }
-
-        public string CorrelationId { get; }
     }
 }

@@ -14,7 +14,7 @@
 
 using System.IO;
 using System.Threading.Tasks;
-using Energinet.DataHub.MessageHub.Client.Model;
+using Energinet.DataHub.MessageHub.Model.Model;
 
 namespace GreenEnergyHub.Charges.Application.Charges.MessageHub.Infrastructure
 {

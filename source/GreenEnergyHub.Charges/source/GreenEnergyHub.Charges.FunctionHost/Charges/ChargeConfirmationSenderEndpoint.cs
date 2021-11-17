@@ -15,12 +15,11 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application.Charges.Acknowledgement;
-using GreenEnergyHub.Charges.Domain.ChargeCommandAcceptedEvents;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandAcceptedEvents;
 using GreenEnergyHub.Charges.FunctionHost.Common;
 using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeCommandAccepted;
 using GreenEnergyHub.Charges.Infrastructure.Messaging;
 using Microsoft.Azure.Functions.Worker;
-using Microsoft.Extensions.Logging;
 
 namespace GreenEnergyHub.Charges.FunctionHost.Charges
 {
@@ -29,17 +28,13 @@ namespace GreenEnergyHub.Charges.FunctionHost.Charges
         public const string FunctionName = nameof(ChargeConfirmationSenderEndpoint);
         private readonly IChargeConfirmationSender _chargeConfirmationSender;
         private readonly MessageExtractor<ChargeCommandAcceptedContract> _messageExtractor;
-        private readonly ILogger _log;
 
         public ChargeConfirmationSenderEndpoint(
             IChargeConfirmationSender chargeConfirmationSender,
-            MessageExtractor<ChargeCommandAcceptedContract> messageExtractor,
-            [NotNull] ILoggerFactory loggerFactory)
+            MessageExtractor<ChargeCommandAcceptedContract> messageExtractor)
         {
             _chargeConfirmationSender = chargeConfirmationSender;
             _messageExtractor = messageExtractor;
-
-            _log = loggerFactory.CreateLogger(nameof(ChargeConfirmationSenderEndpoint));
         }
 
         [Function(FunctionName)]
@@ -52,8 +47,6 @@ namespace GreenEnergyHub.Charges.FunctionHost.Charges
         {
             var acceptedEvent = (ChargeCommandAcceptedEvent)await _messageExtractor.ExtractAsync(message).ConfigureAwait(false);
             await _chargeConfirmationSender.HandleAsync(acceptedEvent).ConfigureAwait(false);
-
-            _log.LogDebug("Received event with correlation ID '{CorrelationId}'", acceptedEvent.CorrelationId);
         }
     }
 }

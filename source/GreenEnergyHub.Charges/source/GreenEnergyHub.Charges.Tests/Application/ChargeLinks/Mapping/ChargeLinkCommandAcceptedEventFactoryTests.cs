@@ -16,8 +16,8 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using FluentAssertions;
-using GreenEnergyHub.Charges.Domain.ChargeLinkCommandAcceptedEvents;
-using GreenEnergyHub.Charges.Domain.ChargeLinkCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinkCommandAcceptedEvents;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinkCommands;
 using GreenEnergyHub.Charges.TestCore.Attributes;
 using NodaTime;
 using NodaTime.Testing;
@@ -40,8 +40,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Mapping
 
             // Act
             var chargeLinkCommandAcceptedEvent = factory.Create(
-                new List<ChargeLinkCommand> { firstChargeLinkCommand, secondChargeLinkCommand },
-                firstChargeLinkCommand.CorrelationId);
+                new List<ChargeLinkCommand> { firstChargeLinkCommand, secondChargeLinkCommand });
 
             // Assert
             var firstChargeLinkCommandOnEvent = chargeLinkCommandAcceptedEvent

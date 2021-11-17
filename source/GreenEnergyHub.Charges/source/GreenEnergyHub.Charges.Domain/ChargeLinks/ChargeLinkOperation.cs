@@ -20,29 +20,23 @@ namespace GreenEnergyHub.Charges.Domain.ChargeLinks
     public class ChargeLinkOperation
     {
         private const int MaxIdLength = 100;
-        private const int MaxCorrelationIdLength = 36;
 
-        public ChargeLinkOperation(string senderProvidedId, string correlationId)
+        public ChargeLinkOperation(string senderProvidedId)
         {
             if (senderProvidedId == null) throw new ArgumentNullException(nameof(senderProvidedId));
             if (senderProvidedId.Length > MaxIdLength) throw new ArgumentException($"Must not exceed {MaxIdLength} characters.", nameof(senderProvidedId));
 
-            if (correlationId == null) throw new ArgumentNullException(nameof(correlationId));
-            if (correlationId.Length > MaxCorrelationIdLength) throw new ArgumentException($"Must not exceed {MaxCorrelationIdLength} characters.", nameof(correlationId));
-
             Id = Guid.NewGuid();
             SenderProvidedId = senderProvidedId;
-            CorrelationId = correlationId;
         }
 
         /// <summary>
         ///  Used by persistence to hydrate. So don't risc failing hydration by validating here.
         /// </summary>
-        private ChargeLinkOperation(Guid id, string senderProvidedId, string correlationId, Instant writeDateTime)
+        private ChargeLinkOperation(Guid id, string senderProvidedId, Instant writeDateTime)
         {
             Id = id;
             SenderProvidedId = senderProvidedId;
-            CorrelationId = correlationId;
             WriteDateTime = writeDateTime;
         }
 
@@ -56,8 +50,6 @@ namespace GreenEnergyHub.Charges.Domain.ChargeLinks
         /// Uniqueness cannot be guaranteed.
         /// </summary>
         public string SenderProvidedId { get; }
-
-        public string CorrelationId { get; }
 
         /// <summary>
         /// Time of persistence. Database generated value.

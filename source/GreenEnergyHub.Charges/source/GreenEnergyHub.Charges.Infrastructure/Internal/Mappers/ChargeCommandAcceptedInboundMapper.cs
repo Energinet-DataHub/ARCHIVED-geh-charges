@@ -16,16 +16,15 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using Google.Protobuf.Collections;
 using GreenEnergyHub.Charges.Core.DateTime;
-using GreenEnergyHub.Charges.Domain.ChargeCommandAcceptedEvents;
-using GreenEnergyHub.Charges.Domain.ChargeCommands;
 using GreenEnergyHub.Charges.Domain.Charges;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandAcceptedEvents;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
-using GreenEnergyHub.Charges.Domain.SharedDtos;
 using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeCommandAccepted;
 using GreenEnergyHub.Messaging.MessageTypes.Common;
 using GreenEnergyHub.Messaging.Protobuf;
 using GreenEnergyHub.Messaging.Transport;
-using NodaTime;
 using MarketParticipant = GreenEnergyHub.Charges.Domain.MarketParticipants.MarketParticipant;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
@@ -36,8 +35,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
         {
             return new ChargeCommandAcceptedEvent(
                 chargeCommandAcceptedContract.PublishedTime.ToInstant(),
-                chargeCommandAcceptedContract.CorrelationId,
-                new ChargeCommand(chargeCommandAcceptedContract.Command.CorrelationId)
+                new ChargeCommand
             {
                 Document = ConvertDocument(chargeCommandAcceptedContract.Command.Document),
                 ChargeOperation = ConvertChargeOperation(chargeCommandAcceptedContract.Command.ChargeOperation),

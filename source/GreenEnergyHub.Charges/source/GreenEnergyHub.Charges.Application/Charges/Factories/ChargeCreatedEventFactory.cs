@@ -13,10 +13,10 @@
 // limitations under the License.
 
 using System.Diagnostics.CodeAnalysis;
+using GreenEnergyHub.Charges.Application.Charges.Acknowledgement;
 using GreenEnergyHub.Charges.Core;
 using GreenEnergyHub.Charges.Core.Currency;
-using GreenEnergyHub.Charges.Domain.ChargeCommandAcceptedEvents;
-using GreenEnergyHub.Charges.Domain.Charges.Acknowledgements;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandAcceptedEvents;
 
 namespace GreenEnergyHub.Charges.Application.Charges.Factories
 {
@@ -40,8 +40,7 @@ namespace GreenEnergyHub.Charges.Application.Charges.Factories
                 chargeCommandAcceptedEvent.Command.ChargeOperation.TaxIndicator,
                 new Period(
                     chargeCommandAcceptedEvent.Command.ChargeOperation.StartDateTime,
-                    chargeCommandAcceptedEvent.Command.ChargeOperation.EndDateTime.GetValueOrDefault()),
-                chargeCommandAcceptedEvent.CorrelationId);
+                    chargeCommandAcceptedEvent.Command.ChargeOperation.EndDateTime.GetValueOrDefault()));
         }
     }
 }

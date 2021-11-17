@@ -14,8 +14,8 @@
 
 using System;
 using System.Diagnostics.CodeAnalysis;
-using GreenEnergyHub.Charges.Domain.ChargeCommandAcceptedEvents;
-using GreenEnergyHub.Charges.Domain.ChargeCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandAcceptedEvents;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
 using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeCommandAccepted;
 using GreenEnergyHub.Charges.Infrastructure.Internal.Mappers;
 using GreenEnergyHub.Charges.TestCore.Attributes;
@@ -37,7 +37,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Internal.Mappers
         {
             // Arrange
             ChargeCommandAcceptedEvent chargeCommandAcceptedEvent =
-                new(SystemClock.Instance.GetCurrentInstant(), chargeCommand.CorrelationId, chargeCommand);
+                new(SystemClock.Instance.GetCurrentInstant(), chargeCommand);
 
             UpdateInstantsToValidTimes(chargeCommandAcceptedEvent);
 

@@ -16,12 +16,11 @@ using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application;
 using GreenEnergyHub.Charges.Application.ChargeLinks.Handlers;
-using GreenEnergyHub.Charges.Domain.ChargeLinkCommandAcceptedEvents;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinkCommandAcceptedEvents;
 using GreenEnergyHub.Charges.FunctionHost.Common;
 using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandAccepted;
 using GreenEnergyHub.Charges.Infrastructure.Messaging;
 using Microsoft.Azure.Functions.Worker;
-using Microsoft.Extensions.Logging;
 
 namespace GreenEnergyHub.Charges.FunctionHost.ChargeLinks
 {
@@ -35,19 +34,15 @@ namespace GreenEnergyHub.Charges.FunctionHost.ChargeLinks
         private readonly MessageExtractor<ChargeLinkCommandAccepted> _messageExtractor;
         private readonly IChargeLinkEventReplyHandler _chargeLinkEventReplyHandler;
         private readonly IMessageMetaDataContext _messageMetaDataContext;
-        private readonly ILogger _log;
 
         public ChargeLinkEventReplierEndpoint(
             MessageExtractor<ChargeLinkCommandAccepted> messageExtractor,
             IChargeLinkEventReplyHandler chargeLinkEventReplyHandler,
-            IMessageMetaDataContext messageMetaDataContext,
-            [NotNull] ILoggerFactory loggerFactory)
+            IMessageMetaDataContext messageMetaDataContext)
         {
             _messageExtractor = messageExtractor;
             _chargeLinkEventReplyHandler = chargeLinkEventReplyHandler;
             _messageMetaDataContext = messageMetaDataContext;
-
-            _log = loggerFactory.CreateLogger(nameof(ChargeLinkEventReplierEndpoint));
         }
 
         [Function(FunctionName)]
@@ -58,8 +53,6 @@ namespace GreenEnergyHub.Charges.FunctionHost.ChargeLinks
                 Connection = EnvironmentSettingNames.DomainEventListenerConnectionString)]
             [NotNull] byte[] message)
         {
-            _log.LogInformation("Function {FunctionName} started to process a request with size {Size}", FunctionName, message.Length);
-
             var acceptedChargeLinkCommand = (ChargeLinkCommandAcceptedEvent)await _messageExtractor.ExtractAsync(message).ConfigureAwait(false);
 
             if (_messageMetaDataContext.IsReplyToSet())

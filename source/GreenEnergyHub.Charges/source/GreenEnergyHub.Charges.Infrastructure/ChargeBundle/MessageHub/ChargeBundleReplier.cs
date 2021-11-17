@@ -14,11 +14,10 @@
 
 using System.IO;
 using System.Threading.Tasks;
-using Energinet.DataHub.MessageHub.Client.Extensions;
-using Energinet.DataHub.MessageHub.Client.Model;
 using Energinet.DataHub.MessageHub.Client.Peek;
 using Energinet.DataHub.MessageHub.Client.Storage;
-using GreenEnergyHub.Charges.Application;
+using Energinet.DataHub.MessageHub.Model.Extensions;
+using Energinet.DataHub.MessageHub.Model.Model;
 using GreenEnergyHub.Charges.Application.Charges.MessageHub.Infrastructure;
 
 namespace GreenEnergyHub.Charges.Infrastructure.ChargeBundle.MessageHub
@@ -27,16 +26,13 @@ namespace GreenEnergyHub.Charges.Infrastructure.ChargeBundle.MessageHub
     {
         private readonly IStorageHandler _storageHandler;
         private readonly IDataBundleResponseSender _dataBundleResponseSender;
-        private readonly IMessageMetaDataContext _messageMetaDataContext;
 
         public ChargeBundleReplier(
             IStorageHandler storageHandler,
-            IDataBundleResponseSender dataBundleResponseSender,
-            IMessageMetaDataContext messageMetaDataContext)
+            IDataBundleResponseSender dataBundleResponseSender)
         {
             _storageHandler = storageHandler;
             _dataBundleResponseSender = dataBundleResponseSender;
-            _messageMetaDataContext = messageMetaDataContext;
         }
 
         public async Task ReplyAsync(Stream bundleStream, DataBundleRequestDto request)
@@ -46,7 +42,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.ChargeBundle.MessageHub
             var response = request.CreateResponse(path);
 
             await _dataBundleResponseSender
-                .SendAsync(response, request, _messageMetaDataContext.SessionId)
+                .SendAsync(response)
                 .ConfigureAwait(false);
         }
     }
