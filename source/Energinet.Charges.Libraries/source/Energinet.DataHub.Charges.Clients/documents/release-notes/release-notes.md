@@ -2,7 +2,7 @@
 
 ## Version 1.0.10
 
-Updated the documentation to refer a NuGet package help with registration when using SimpleInjector
+Updated the documentation to refer to `GreenEnergyHub.Charges.Libraries.Clients.SimpleInjector` NuGet package for registration purposes.
 
 ## Version 1.0.9
 

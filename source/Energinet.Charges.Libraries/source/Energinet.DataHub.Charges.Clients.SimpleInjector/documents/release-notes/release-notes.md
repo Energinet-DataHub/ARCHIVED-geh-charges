@@ -2,4 +2,4 @@
 
 ## Version 1.0.0
 
-Initial package release containing a extension for [SimpleInjector](https://simpleinjector.org/) to register the GreenEnergyHub.Charges.Libraries.Clients NuGet package.
+Initial package release containing an extension for [SimpleInjector](https://simpleinjector.org/) to register the `GreenEnergyHub.Charges.Libraries.Clients` NuGet package.

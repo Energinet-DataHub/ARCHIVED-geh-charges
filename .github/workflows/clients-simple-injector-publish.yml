@@ -23,6 +23,7 @@ on:
       - .github/actions/dotnet-publish-nuget/**
   # The purpose of the pull-request trigger is to have the PR gate verify that the NuGet package version number
   # isn't already published - in order to avoid breaking main
+  # And to publish pre-release versions.
   pull_request:
       branches:
         - main

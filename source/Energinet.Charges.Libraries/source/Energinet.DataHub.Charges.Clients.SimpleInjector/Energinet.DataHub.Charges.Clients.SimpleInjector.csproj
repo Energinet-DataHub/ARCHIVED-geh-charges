@@ -52,7 +52,7 @@ limitations under the License.
 
       Learn more about the Green Energy Hub platform at https://github.com/Energinet-DataHub/green-energy-hub.
 
-      Learn more about the charge domain at https://github.com/Energinet-DataHub/geh-charges.
+      Learn more about the Charges domain at https://github.com/Energinet-DataHub/geh-charges.
 
       Learn more about Energinet at https://energinet.dk/.    </Description>
     <PackageTags>green-energy-hub;datahub;library</PackageTags>

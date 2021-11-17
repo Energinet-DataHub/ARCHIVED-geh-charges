@@ -28,7 +28,7 @@ namespace Energinet.DataHub.Charges.Libraries.Clients.SimpleInjector
         /// SimpleInjector extension for registering Energinet.DataHub.Charges.Clients NuGet package.
         /// </summary>
         /// <param name="container"></param>
-        /// <param name="serviceBusClient">ServiceBusClient required to connected to the shared service bus namespace</param>
+        /// <param name="serviceBusClient">ServiceBusClient required to connect to the shared service bus namespace</param>
         /// <param name="serviceBusRequestSenderConfiguration"></param>
         public static void AddDefaultChargeLinkClient(
             this Container container,

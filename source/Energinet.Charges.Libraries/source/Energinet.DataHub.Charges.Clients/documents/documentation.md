@@ -14,11 +14,10 @@ Learn more about Energinet at [energinet.dk](https://energinet.dk/).
 The library provides
 
 - The type [`IDefaultChargeLinkClient`](https://github.com/Energinet-DataHub/geh-charges/blob/main/source/Energinet.Charges.Libraries/source/Energinet.DataHub.Charges.Clients/DefaultChargeLink/IDefaultChargeLinkClient.cs) to request creation of charge links from defaults and handle the reply
-- The type [`IServiceBusRequestSenderProvider`](https://github.com/Energinet-DataHub/geh-charges/blob/main/source/Energinet.Charges.Libraries/source/Energinet.DataHub.Charges.Clients/DefaultChargeLink/IDefaultChargeLinkClient.cs) to request creation of charge links from defaults and handle the reply
 
 ## Registration
 
-We have created a independent NuGet package for easier registration when using [SimpleInjector](https://simpleinjector.org/). It is located under the NuGet namespace `Energinet.DataHub.Charges.Clientes.SimpleInjector`
+We have created a independent NuGet package for easier registration when using [SimpleInjector](https://simpleinjector.org/). It is located under the NuGet namespace `Energinet.DataHub.Charges.Clients.SimpleInjector`
 
 `IDefaultChargeLinkClient` should be registered as scoped.
 
