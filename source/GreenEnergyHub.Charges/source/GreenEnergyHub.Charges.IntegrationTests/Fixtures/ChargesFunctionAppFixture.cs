@@ -39,8 +39,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures
             IntegrationTestConfiguration = new IntegrationTestConfiguration();
             DatabaseManager = new ChargesDatabaseManager();
 
-            var integrationTestConfiguration = new IntegrationTestConfiguration();
-            ServiceBusResourceProvider = new ServiceBusResourceProvider(integrationTestConfiguration.ServiceBusConnectionString, new TestDiagnosticsLogger());
+            ServiceBusResourceProvider = new ServiceBusResourceProvider(IntegrationTestConfiguration.ServiceBusConnectionString, TestLogger);
         }
 
         public ChargesDatabaseManager DatabaseManager { get; }
@@ -82,14 +81,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures
         /// <inheritdoc/>
         protected override void OnConfigureEnvironment()
         {
-            // NOTICE:
-            // Currently the following settings must be set on the build agent OR be available in local.settings.json of the function app:
-            // * DOMAINEVENT_SENDER_CONNECTION_STRING
-            //
-            // All other settings are overwritten somewhere within this class.
             Environment.SetEnvironmentVariable(EnvironmentSettingNames.AppInsightsInstrumentationKey, IntegrationTestConfiguration.ApplicationInsightsInstrumentationKey);
             Environment.SetEnvironmentVariable(EnvironmentSettingNames.AzureWebJobsStorage, "UseDevelopmentStorage=true");
-
             Environment.SetEnvironmentVariable(EnvironmentSettingNames.Currency, "DKK");
             Environment.SetEnvironmentVariable(EnvironmentSettingNames.LocalTimeZoneName, "Europe/Copenhagen");
             Environment.SetEnvironmentVariable(EnvironmentSettingNames.HubSenderId, "5790001330552");
