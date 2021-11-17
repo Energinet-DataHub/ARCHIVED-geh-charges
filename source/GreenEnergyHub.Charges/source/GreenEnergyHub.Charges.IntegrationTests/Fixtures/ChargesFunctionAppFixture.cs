@@ -17,7 +17,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
-using Azure.Storage.Blobs;
 using Energinet.DataHub.Core.FunctionApp.TestCommon;
 using Energinet.DataHub.Core.FunctionApp.TestCommon.Azurite;
 using Energinet.DataHub.Core.FunctionApp.TestCommon.Configuration;
@@ -232,15 +231,13 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures
             Environment.SetEnvironmentVariable(EnvironmentSettingNames.MessageHubStorageConnectionString, ChargesServiceBusResourceNames.MessageHubStorageConnectionString);
             Environment.SetEnvironmentVariable(EnvironmentSettingNames.MessageHubStorageContainer, ChargesServiceBusResourceNames.MessageHubStorageContainerName);
 
-            // Must create storage container as MessageHub client doesn't
-            var storageClient = new BlobServiceClient(ChargesServiceBusResourceNames.MessageHubStorageConnectionString);
-            await storageClient.CreateBlobContainerAsync(ChargesServiceBusResourceNames.MessageHubStorageContainerName);
-
             var messageHubSimulationConfig = new MessageHubSimulationConfig(
                 ServiceBusResourceProvider.ConnectionString,
                 messageHubDataAvailableQueue.Name,
                 messageHubRequestQueue.Name,
-                messageHubReplyQueue.Name);
+                messageHubReplyQueue.Name,
+                ChargesServiceBusResourceNames.MessageHubStorageConnectionString,
+                ChargesServiceBusResourceNames.MessageHubStorageContainerName);
             MessageHubMock = new MessageHubSimulation(messageHubSimulationConfig);
         }
     }
