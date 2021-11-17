@@ -42,6 +42,7 @@ inputs:
 runs:
   steps:
     - name: Build and test project
+      shell: bash
       run: |
         az login --service-principal --username "${{ inputs.azure_spn_id }}" --password "${{ inputs.azure_spn_secret }}" --tenant "${{ inputs.azure_tenant_id }}"
         az account set --subscription "${{ inputs.azure_subscription_id }}"
