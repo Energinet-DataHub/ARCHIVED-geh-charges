@@ -67,7 +67,7 @@ jobs:
         run: npm install -g azure-functions-core-tools@${{ env.AZURE_FUNCTIONS_CORE_TOOLS_VERSION }}
 
       - name: Build and test solution
-        uses: ./.github/actions/build-and-test-solution
+        uses: .github/actions/build-and-test-solution
         with:
           solution_file_path: ${{ env.SOLUTION_FILE_PATH }}
           output_path: ${{ github.workspace }}/output
