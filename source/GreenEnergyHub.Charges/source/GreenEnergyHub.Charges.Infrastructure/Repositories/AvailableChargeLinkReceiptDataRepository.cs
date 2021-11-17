@@ -22,11 +22,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Repositories
 {
-    public class AvailableChargeLinkReceiptRepository : IAvailableChargeLinkReceiptDataRepository
+    public class AvailableChargeLinkReceiptDataRepository : IAvailableChargeLinkReceiptDataRepository
     {
         private readonly IChargesDatabaseContext _context;
 
-        public AvailableChargeLinkReceiptRepository(IChargesDatabaseContext context)
+        public AvailableChargeLinkReceiptDataRepository(IChargesDatabaseContext context)
         {
             _context = context;
         }
