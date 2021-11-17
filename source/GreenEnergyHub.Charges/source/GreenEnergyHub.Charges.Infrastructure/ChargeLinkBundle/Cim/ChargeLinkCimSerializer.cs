@@ -28,76 +28,43 @@ using NodaTime;
 
 namespace GreenEnergyHub.Charges.Infrastructure.ChargeLinkBundle.Cim
 {
-    public class ChargeLinkCimSerializer : IChargeLinkCimSerializer
+    public class ChargeLinkCimSerializer : CimSerializer<AvailableChargeLinksData>, IChargeLinkCimSerializer
     {
-        private IHubSenderConfiguration _hubSenderConfiguration;
-        private IClock _clock;
-        private ICimIdProvider _cimIdProvider;
-
         public ChargeLinkCimSerializer(
             IHubSenderConfiguration hubSenderConfiguration,
             IClock clock,
             ICimIdProvider cimIdProvider)
+            : base(hubSenderConfiguration, clock, cimIdProvider)
         {
-            _hubSenderConfiguration = hubSenderConfiguration;
-            _clock = clock;
-            _cimIdProvider = cimIdProvider;
         }
 
-        public async Task SerializeToStreamAsync(IEnumerable<AvailableChargeLinksData> chargeLinks, Stream stream)
+        protected override XNamespace GetNamespace(IEnumerable<AvailableChargeLinksData> records)
         {
-            var document = GetDocument(chargeLinks);
-            await document.SaveAsync(stream, SaveOptions.None, CancellationToken.None);
-
-            stream.Position = 0;
+            return CimChargeLinkConstants.NotifyNamespace;
         }
 
-        private XDocument GetDocument(IEnumerable<AvailableChargeLinksData> chargeLinks)
+        protected override XNamespace GetSchemaLocation(IEnumerable<AvailableChargeLinksData> records)
         {
-            XNamespace cimNamespace = CimChargeLinkConstants.NotifyNamespace;
-            XNamespace xmlSchemaNamespace = CimMarketDocumentConstants.SchemaValidationNamespace;
-            XNamespace xmlSchemaLocation = CimChargeLinkConstants.NotifySchemaLocation;
-
-            return new XDocument(
-                new XElement(
-                    cimNamespace + CimChargeLinkConstants.NotifyRootElement,
-                    new XAttribute(
-                        XNamespace.Xmlns + CimMarketDocumentConstants.SchemaNamespaceAbbreviation,
-                        xmlSchemaNamespace),
-                    new XAttribute(
-                        XNamespace.Xmlns + CimMarketDocumentConstants.CimNamespaceAbbreviation,
-                        cimNamespace),
-                    new XAttribute(
-                        xmlSchemaNamespace + CimMarketDocumentConstants.SchemaLocation,
-                        xmlSchemaLocation),
-                    // Note: The list will always have same recipient and business reason code,
-                    // so we just take those values from the first element
-                    MarketDocumentSerializationHelper.Serialize(
-                        cimNamespace,
-                        _cimIdProvider,
-                        DocumentType.NotifyBillingMasterData,
-                        chargeLinks.First().BusinessReasonCode,
-                        _hubSenderConfiguration,
-                        chargeLinks.First().RecipientId,
-                        chargeLinks.First().RecipientRole,
-                        _clock),
-                    GetActivityRecords(cimNamespace, chargeLinks)));
+            return CimChargeLinkConstants.NotifySchemaLocation;
         }
 
-        private IEnumerable<XElement> GetActivityRecords(
-            XNamespace cimNamespace,
-            IEnumerable<AvailableChargeLinksData> chargeLinks)
+        protected override string GetRootElementName(IEnumerable<AvailableChargeLinksData> records)
         {
-            return chargeLinks.Select(chargeLink => GetActivityRecord(cimNamespace, chargeLink));
+            return CimChargeLinkConstants.NotifyRootElement;
         }
 
-        private XElement GetActivityRecord(
+        protected override DocumentType GetDocumentType(IEnumerable<AvailableChargeLinksData> records)
+        {
+            return DocumentType.NotifyBillingMasterData;
+        }
+
+        protected override XElement GetActivityRecord(
             XNamespace cimNamespace,
             AvailableChargeLinksData chargeLink)
         {
             return new XElement(
                 cimNamespace + CimMarketDocumentConstants.MarketActivityRecord,
-                new XElement(cimNamespace + CimChargeLinkConstants.MarketActivityRecordId, _cimIdProvider.GetUniqueId()),
+                new XElement(cimNamespace + CimChargeLinkConstants.MarketActivityRecordId, CimIdProvider.GetUniqueId()),
                 new XElement(
                     cimNamespace + CimChargeLinkConstants.MeteringPointId,
                     new XAttribute(
