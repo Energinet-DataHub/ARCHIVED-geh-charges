@@ -12,9 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using GreenEnergyHub.Charges.Domain.AvailableChargeData;
+using GreenEnergyHub.Charges.Domain.AvailableChargeLinkReceiptData;
 
 namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
 {
@@ -40,6 +42,27 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
                 availableChargeData.Points.ToList(),
                 availableChargeData.RequestTime,
                 availableChargeData.AvailableDataReferenceId);
+        }
+
+        public static AvailableChargeLinkReceiptData FixAvailableChargeLinkReceiptData(
+            AvailableChargeLinkReceiptData availableChargeLinkReceiptData)
+        {
+            return new AvailableChargeLinkReceiptData(
+                availableChargeLinkReceiptData.RecipientId.Substring(0, 34),
+                availableChargeLinkReceiptData.RecipientRole,
+                availableChargeLinkReceiptData.BusinessReasonCode,
+                availableChargeLinkReceiptData.ReceiptStatus,
+                availableChargeLinkReceiptData.OriginalOperationId.Substring(0, 34),
+                availableChargeLinkReceiptData.MeteringPointId.Substring(0, 49),
+                availableChargeLinkReceiptData.ReasonCodes.ToList(),
+                availableChargeLinkReceiptData.RequestTime,
+                availableChargeLinkReceiptData.AvailableDataReferenceId);
+        }
+
+        public static List<AvailableChargeLinkReceiptData> FixAvailableChargeLinkReceiptDataList(
+            List<AvailableChargeLinkReceiptData> availableList)
+        {
+            return availableList.Select(receipt => FixAvailableChargeLinkReceiptData(receipt)).ToList();
         }
     }
 }
