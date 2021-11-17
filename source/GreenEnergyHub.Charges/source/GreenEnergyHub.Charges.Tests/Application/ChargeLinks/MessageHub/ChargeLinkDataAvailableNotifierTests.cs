@@ -18,7 +18,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
 using Energinet.DataHub.MessageHub.Client.DataAvailable;
-using Energinet.DataHub.MessageHub.Client.Model;
+using Energinet.DataHub.MessageHub.Model.Model;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Application.ChargeLinks.MessageHub;
 using GreenEnergyHub.Charges.Domain.AvailableChargeLinksData;
@@ -90,6 +90,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.MessageHub
             // Assert
             dataAvailableNotificationSenderMock.Verify(
                 sender => sender.SendAsync(
+                    It.IsAny<string>(),
                     It.Is<DataAvailableNotificationDto>(
                         dto => dto.Origin == DomainOrigin.Charges
                                && dto.SupportsBundling

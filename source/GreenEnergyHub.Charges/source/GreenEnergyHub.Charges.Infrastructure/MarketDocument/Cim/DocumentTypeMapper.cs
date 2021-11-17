@@ -20,6 +20,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.MarketDocument.Cim
     public static class DocumentTypeMapper
     {
         // These values are ebix values which are used temporarily until CIM code lists are available
+        private const string CimChargeLinkReceipt = "D06";
         private const string CimNotifyBillingMasterData = "D07";
         private const string CimNotifyPriceList = "D12";
         private const string CimRequestChangeBillingMasterData = "D05";
@@ -29,6 +30,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.MarketDocument.Cim
         {
             return value switch
             {
+                CimChargeLinkReceipt => DocumentType.ChargeLinkReceipt,
                 CimNotifyBillingMasterData => DocumentType.NotifyBillingMasterData,
                 CimNotifyPriceList => DocumentType.NotifyPriceList,
                 CimRequestUpdateChargeInformation => DocumentType.RequestUpdateChargeInformation,
@@ -41,6 +43,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.MarketDocument.Cim
         {
             return documentType switch
             {
+                DocumentType.ChargeLinkReceipt => CimChargeLinkReceipt,
                 DocumentType.NotifyBillingMasterData => CimNotifyBillingMasterData,
                 DocumentType.NotifyPriceList => CimNotifyPriceList,
                 DocumentType.RequestUpdateChargeInformation => CimRequestUpdateChargeInformation,
