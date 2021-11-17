@@ -83,4 +83,5 @@ jobs:
           az login --service-principal --username "${{ secrets.AZURE_SPN_ID }}" --password "${{ secrets.AZURE_SPN_SECRET }}" --tenant "${{ secrets.AZURE_TENANT_ID }}"
           az account set --subscription "${{ secrets.AZURE_SUBSCRIPTION_ID }}"
           dotnet test ${{ inputs.SOLUTION_FILE_PATH }} --configuration Release --verbosity normal
+          dotnet test ${{ env.SOLUTION_FILE_PATH }} --configuration Release --verbosity normal
           dotnet build ${{ env.CSPROJ_FILE_PATH }} --configuration Release --output ${{ github.workspace }}/output
