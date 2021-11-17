@@ -63,7 +63,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Context.EntityConfigurations
             AvailableChargeLinkReceiptDataReasonCode> reasonCodes)
         {
             reasonCodes.WithOwner().HasForeignKey("AvailableChargeLinkReceiptDataId");
-            reasonCodes.ToTable("AvailableChargeDataPoints", "MessageHub");
+            reasonCodes.ToTable("AvailableChargeLinkReceiptDataReasonCode", "MessageHub");
             reasonCodes.HasKey(r => r.Id);
             reasonCodes.Property(r => r.Id).ValueGeneratedNever();
             reasonCodes
