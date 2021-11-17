@@ -41,7 +41,9 @@ namespace GreenEnergyHub.Charges.Domain.AvailableData
 
         public AvailableDataBase(string recipientId)
         {
+            Id = Guid.NewGuid();
             RecipientId = recipientId;
+            AvailableDataReferenceId = Guid.NewGuid();
         }
 
         /// <summary>

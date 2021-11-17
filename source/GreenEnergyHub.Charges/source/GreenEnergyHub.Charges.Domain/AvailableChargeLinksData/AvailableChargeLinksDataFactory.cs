@@ -33,15 +33,15 @@ namespace GreenEnergyHub.Charges.Domain.AvailableChargeLinksData
                 recipient.Id,
                 recipient.BusinessProcessRole,
                 chargeLinkCommand.Document.BusinessReasonCode,
+                requestTime,
+                messageHubId,
                 chargeLinkCommand.ChargeLink.SenderProvidedChargeId,
                 chargeLinkCommand.ChargeLink.ChargeOwner,
                 chargeLinkCommand.ChargeLink.ChargeType,
                 chargeLinkCommand.ChargeLink.MeteringPointId,
                 chargeLinkCommand.ChargeLink.Factor,
                 chargeLinkCommand.ChargeLink.StartDateTime,
-                chargeLinkCommand.ChargeLink.EndDateTime.GetValueOrDefault(),
-                requestTime,
-                messageHubId);
+                chargeLinkCommand.ChargeLink.EndDateTime.GetValueOrDefault());
         }
     }
 }

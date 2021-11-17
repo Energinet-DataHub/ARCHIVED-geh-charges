@@ -82,7 +82,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Context.EntityConfigurations
                 .HasColumnName("EndDateTime");
 
             builder
-                .Property(x => x.RequestTime)
+                .Property(x => x.RequestDateTime)
                 .HasColumnName("RequestTime");
 
             builder
