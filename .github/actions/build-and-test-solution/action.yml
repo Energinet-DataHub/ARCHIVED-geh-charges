@@ -43,6 +43,6 @@ runs:
   steps:
     - name: Build and test project
         run: |
-          az login --service-principal --username "${{ inputs.AZURE_SPN_ID }}" --password "${{ inputs.AZURE_SPN_SECRET }}" --tenant "${{ inputs.AZURE_TENANT_ID }}"
-          az account set --subscription "${{ inputs.AZURE_SUBSCRIPTION_ID }}"
-          dotnet test ${{ inputs.SOLUTION_FILE_PATH }} --configuration Release --verbosity normal --collect:"XPlat Code Coverage" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=opencover --output ${{ inputs.output_path }}
+          az login --service-principal --username "${{ inputs.azure_spn_id }}" --password "${{ inputs.azure_spn_secret }}" --tenant "${{ inputs.azure_tenant_id }}"
+          az account set --subscription "${{ inputs.azure_subscription_id }}"
+          dotnet test ${{ inputs.solution_file_path }} --configuration Release --verbosity normal --collect:"XPlat Code Coverage" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=opencover --output ${{ inputs.output_path }}
