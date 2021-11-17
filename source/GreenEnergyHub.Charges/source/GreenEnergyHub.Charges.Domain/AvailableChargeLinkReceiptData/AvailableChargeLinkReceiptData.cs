@@ -35,7 +35,7 @@ namespace GreenEnergyHub.Charges.Domain.AvailableChargeLinkReceiptData
             string originalOperationId,
             string meteringPointId,
             List<AvailableChargeLinkReceiptDataReasonCode> reasonCodes,
-            Instant requestTime,
+            Instant requestDateTime,
             Guid availableDataReferenceId)
         {
             Id = Guid.NewGuid();
@@ -46,7 +46,7 @@ namespace GreenEnergyHub.Charges.Domain.AvailableChargeLinkReceiptData
             OriginalOperationId = originalOperationId;
             MeteringPointId = meteringPointId;
             _reasonCodes = reasonCodes;
-            RequestTime = requestTime;
+            RequestDateTime = requestDateTime;
             AvailableDataReferenceId = availableDataReferenceId;
         }
 
@@ -75,7 +75,7 @@ namespace GreenEnergyHub.Charges.Domain.AvailableChargeLinkReceiptData
 
         public IReadOnlyCollection<AvailableChargeLinkReceiptDataReasonCode> ReasonCodes => _reasonCodes.AsReadOnly();
 
-        public Instant RequestTime { get; }
+        public Instant RequestDateTime { get; }
 
         /// <summary>
         /// ID of the data used when notifying the MessageHub.
