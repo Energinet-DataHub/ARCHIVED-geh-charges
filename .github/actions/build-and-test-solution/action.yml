@@ -23,12 +23,11 @@ inputs:
   solution_file_path:
     description: Path to solution file
     required: true
-  output_path: :
+  output_path:
     description: Output path
     required: true
 
 runs:
-  using: composite
   steps:
     - name: Build and test project
         run: |
