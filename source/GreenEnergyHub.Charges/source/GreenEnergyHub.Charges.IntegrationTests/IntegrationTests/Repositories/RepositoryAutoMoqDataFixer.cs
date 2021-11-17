@@ -28,6 +28,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
                 availableChargeData.RecipientId.Substring(0, 34),
                 availableChargeData.RecipientRole,
                 availableChargeData.BusinessReasonCode,
+                availableChargeData.RequestDateTime,
+                availableChargeData.AvailableDataReferenceId,
                 availableChargeData.ChargeId.Substring(0, 34),
                 availableChargeData.ChargeOwner.Substring(0, 34),
                 availableChargeData.ChargeType,
@@ -39,9 +41,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
                 availableChargeData.TaxIndicator,
                 availableChargeData.TransparentInvoicing,
                 availableChargeData.Resolution,
-                availableChargeData.Points.ToList(),
-                availableChargeData.RequestTime,
-                availableChargeData.AvailableDataReferenceId);
+                availableChargeData.Points.ToList());
         }
 
         public static AvailableChargeLinkReceiptData FixAvailableChargeLinkReceiptData(

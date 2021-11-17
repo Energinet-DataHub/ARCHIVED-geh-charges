@@ -14,18 +14,21 @@
 
 using System;
 using System.Collections.Generic;
+using GreenEnergyHub.Charges.Domain.AvailableData;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using NodaTime;
 
 namespace GreenEnergyHub.Charges.Domain.AvailableChargeData
 {
-    public class AvailableChargeData
+    public class AvailableChargeData : AvailableDataBase
     {
         public AvailableChargeData(
             string recipientId,
             MarketParticipantRole recipientRole,
             BusinessReasonCode businessReasonCode,
+            Instant requestTime,
+            Guid availableDataReferenceId,
             string chargeId,
             string chargeOwner,
             ChargeType chargeType,
@@ -37,14 +40,9 @@ namespace GreenEnergyHub.Charges.Domain.AvailableChargeData
             bool taxIndicator,
             bool transparentInvoicing,
             Resolution resolution,
-            List<AvailableChargeDataPoint> points,
-            Instant requestTime,
-            Guid availableDataReferenceId)
+            List<AvailableChargeDataPoint> points)
+            : base(recipientId, recipientRole, businessReasonCode, requestTime, availableDataReferenceId)
         {
-            Id = Guid.NewGuid();
-            RecipientId = recipientId;
-            RecipientRole = recipientRole;
-            BusinessReasonCode = businessReasonCode;
             ChargeId = chargeId;
             ChargeOwner = chargeOwner;
             ChargeType = chargeType;
@@ -57,8 +55,6 @@ namespace GreenEnergyHub.Charges.Domain.AvailableChargeData
             TransparentInvoicing = transparentInvoicing;
             Resolution = resolution;
             _points = points;
-            RequestTime = requestTime;
-            AvailableDataReferenceId = availableDataReferenceId;
         }
 
         /// <summary>
@@ -66,25 +62,14 @@ namespace GreenEnergyHub.Charges.Domain.AvailableChargeData
         /// </summary>
         // ReSharper disable once UnusedMember.Local
         private AvailableChargeData(string recipientId, string chargeId, string chargeOwner, string chargeName, string chargeDescription)
+            : base(recipientId)
         {
-            RecipientId = recipientId;
             ChargeId = chargeId;
             ChargeOwner = chargeOwner;
             ChargeName = chargeName;
             ChargeDescription = chargeDescription;
             _points = new List<AvailableChargeDataPoint>();
         }
-
-        public Guid Id { get; }
-
-        /// <summary>
-        /// Market Participant Id of Recipient.
-        /// </summary>
-        public string RecipientId { get; }
-
-        public MarketParticipantRole RecipientRole { get; }
-
-        public BusinessReasonCode BusinessReasonCode { get; }
 
         public string ChargeId { get; }
 
@@ -111,9 +96,5 @@ namespace GreenEnergyHub.Charges.Domain.AvailableChargeData
         private readonly List<AvailableChargeDataPoint> _points;
 
         public IReadOnlyCollection<AvailableChargeDataPoint> Points => _points.AsReadOnly();
-
-        public Instant RequestTime { get; }
-
-        public Guid AvailableDataReferenceId { get; }
     }
 }

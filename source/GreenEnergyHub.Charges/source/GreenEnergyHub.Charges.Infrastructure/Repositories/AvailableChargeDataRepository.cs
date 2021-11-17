@@ -42,7 +42,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Repositories
             var queryable = _context.AvailableChargeData
                 .Where(x => dataReferenceId.Contains(x.AvailableDataReferenceId));
             return queryable
-                .OrderBy(x => x.RequestTime)
+                .OrderBy(x => x.RequestDateTime)
                 .ToListAsync();
         }
     }
