@@ -16,11 +16,17 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Domain.AvailableChargeLinksData;
+using GreenEnergyHub.Charges.Domain.MarketParticipants;
 
 namespace GreenEnergyHub.Charges.Infrastructure.ChargeLinkBundle.Cim
 {
     public interface IChargeLinkCimSerializer
     {
-        Task SerializeToStreamAsync(IEnumerable<AvailableChargeLinksData> chargeLinks, Stream stream);
+        Task SerializeToStreamAsync(
+            IEnumerable<AvailableChargeLinksData> chargeLinks,
+            Stream stream,
+            BusinessReasonCode businessReasonCode,
+            string recipientId,
+            MarketParticipantRole recipientRole);
     }
 }
