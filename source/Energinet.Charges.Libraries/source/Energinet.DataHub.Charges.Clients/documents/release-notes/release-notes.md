@@ -2,7 +2,7 @@
 
 ## Version 1.0.10
 
-Integration tests reenabled in Energinet GitHub pipeline.
+Integration tests re-enabled in Energinet GitHub pipeline.
 
 ## Version 1.0.9
 
