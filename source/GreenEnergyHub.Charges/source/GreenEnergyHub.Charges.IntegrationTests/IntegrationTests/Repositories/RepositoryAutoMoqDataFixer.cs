@@ -51,12 +51,12 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
                 availableChargeLinkReceiptData.RecipientId.Substring(0, 34),
                 availableChargeLinkReceiptData.RecipientRole,
                 availableChargeLinkReceiptData.BusinessReasonCode,
+                availableChargeLinkReceiptData.RequestDateTime,
+                availableChargeLinkReceiptData.AvailableDataReferenceId,
                 availableChargeLinkReceiptData.ReceiptStatus,
                 availableChargeLinkReceiptData.OriginalOperationId.Substring(0, 34),
                 availableChargeLinkReceiptData.MeteringPointId.Substring(0, 49),
-                availableChargeLinkReceiptData.ReasonCodes.ToList(),
-                availableChargeLinkReceiptData.RequestTime,
-                availableChargeLinkReceiptData.AvailableDataReferenceId);
+                availableChargeLinkReceiptData.ReasonCodes.ToList());
         }
 
         public static List<AvailableChargeLinkReceiptData> FixAvailableChargeLinkReceiptDataList(

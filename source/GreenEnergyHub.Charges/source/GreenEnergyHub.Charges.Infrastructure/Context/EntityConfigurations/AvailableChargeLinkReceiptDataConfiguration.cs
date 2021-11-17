@@ -49,7 +49,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Context.EntityConfigurations
                     fromDbValue => (ReceiptStatus)fromDbValue);
             builder.Property(x => x.OriginalOperationId).HasColumnName("OriginalOperationId");
             builder.Property(x => x.MeteringPointId).HasColumnName("MeteringPointId");
-            builder.Property(x => x.RequestTime).HasColumnName("RequestTime");
+            builder.Property(x => x.RequestDateTime).HasColumnName("RequestTime");
             builder
                 .Property(x => x.AvailableDataReferenceId)
                 .HasColumnName("AvailableDataReferenceId");
