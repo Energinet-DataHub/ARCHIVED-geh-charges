@@ -70,7 +70,7 @@ jobs:
         run: |
           az login --service-principal --username "${{ secrets.AZURE_SPN_ID }}" --password "${{ secrets.AZURE_SPN_SECRET }}" --tenant "${{ secrets.AZURE_TENANT_ID }}"
           az account set --subscription "${{ secrets.AZURE_SUBSCRIPTION_ID }}"
-          dotnet test ${{ env.SOLUTION_FILE_PATH }} --configuration ${{ env.BUILD_CONFIGURATION }} --verbosity normal --collect:"XPlat Code Coverage" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=opencover --output ${{ github.workspace }}/output
+          dotnet test ${{ env.SOLUTION_FILE_PATH }} --configuration Release --verbosity normal --collect:"XPlat Code Coverage" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=opencover --output ${{ github.workspace }}/output
                     
       - name: Upload coverage
         uses: codecov/codecov-action@v1
