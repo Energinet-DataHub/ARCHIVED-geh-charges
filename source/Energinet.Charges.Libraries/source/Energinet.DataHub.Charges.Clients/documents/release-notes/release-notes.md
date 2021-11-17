@@ -1,8 +1,12 @@
 # GreenEnergyHub.Charges.Libraries Release notes
 
-## Version 1.0.10
+## Version 1.0.11
 
 Updated the documentation to refer to `GreenEnergyHub.Charges.Libraries.Clients.SimpleInjector` NuGet package for registration purposes.
+
+## Version 1.0.10
+
+Integration tests re-enabled in Energinet GitHub pipeline.
 
 ## Version 1.0.9
 
