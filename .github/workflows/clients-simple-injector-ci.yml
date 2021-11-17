@@ -58,7 +58,7 @@ jobs:
             ".github/actions/azure-core-tools-install/**"
           ]'
 
-  validate_build_clients:
+  validate_build_clients_simple_injector:
     needs: pre_job
     if: ${{ needs.pre_job.outputs.should_skip != 'true' }}
     name: Validate build Clients
@@ -79,14 +79,8 @@ jobs:
         run: npm install -g azure-functions-core-tools@${{ env.AZURE_FUNCTIONS_CORE_TOOLS_VERSION }}
 
       - name: Build and test project
-        uses: ./.github/actions/dotnet-build-and-test
-        with:
-          CSPROJ_FILE_PATH: ${{ env.CSPROJ_FILE_PATH }}
-          SOLUTION_FILE_PATH: ${{ env.SOLUTION_FILE_PATH }}
-          OUTPUT_PATH: '${{ github.workspace }}/output'
-
-      - name: Publish artifact
-        uses: actions/upload-artifact@v2
-        with:
-          name: drop
-          path: '${{ github.workspace }}/output'
+        run: |
+          az login --service-principal --username "${{ secrets.AZURE_SPN_ID }}" --password "${{ secrets.AZURE_SPN_SECRET }}" --tenant "${{ secrets.AZURE_TENANT_ID }}"
+          az account set --subscription "${{ secrets.AZURE_SUBSCRIPTION_ID }}"
+          dotnet test ${{ inputs.SOLUTION_FILE_PATH }} --configuration Release --verbosity normal
+          dotnet build ${{ env.CSPROJ_FILE_PATH }} --configuration Release --output ${{ github.workspace }}/output
