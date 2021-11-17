@@ -50,7 +50,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.ChargeLinks
             [ServiceBusTrigger(
                 "%" + EnvironmentSettingNames.CreateLinkRequestQueueName + "%",
                 Connection = EnvironmentSettingNames.DataHubListenerConnectionString)]
-            [NotNull] byte[] message)
+            byte[] message)
         {
             var createLinkCommandEvent =
                 (CreateLinkCommandEvent)await _messageExtractor.ExtractAsync(message).ConfigureAwait(false);

@@ -35,7 +35,7 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
             _clock = clock;
         }
 
-        public async Task<ChargeLinksMessageResult> HandleAsync([NotNull]ChargeLinkCommand command)
+        public async Task<ChargeLinksMessageResult> HandleAsync(ChargeLinkCommand command)
         {
             var receivedEvent = new ChargeLinkCommandReceivedEvent(
                 _clock.GetCurrentInstant(),

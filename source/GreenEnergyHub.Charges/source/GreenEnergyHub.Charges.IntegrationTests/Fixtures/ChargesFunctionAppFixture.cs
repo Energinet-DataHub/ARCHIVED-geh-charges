@@ -23,7 +23,6 @@ using Energinet.DataHub.Core.FunctionApp.TestCommon.Configuration;
 using Energinet.DataHub.Core.FunctionApp.TestCommon.FunctionAppHost;
 using Energinet.DataHub.Core.FunctionApp.TestCommon.ServiceBus.ListenerMock;
 using Energinet.DataHub.Core.FunctionApp.TestCommon.ServiceBus.ResourceProvider;
-using Energinet.DataHub.Core.TestCommon.Diagnostics;
 using Energinet.DataHub.MessageHub.IntegrationTesting;
 using GreenEnergyHub.Charges.FunctionHost.Common;
 using GreenEnergyHub.Charges.IntegrationTests.TestCommon;
@@ -56,6 +55,9 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures
 
         [NotNull]
         public MessageHubSimulation? MessageHubMock { get; private set; }
+
+        [NotNull]
+        public QueueResource? CreateLinkRequestQueue { get; private set; }
 
         private AzuriteManager AzuriteManager { get; }
 
@@ -133,7 +135,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures
                 .AddSubscription(ChargesServiceBusResourceNames.CommandRejectedSubscriptionName).SetEnvironmentVariableToSubscriptionName(EnvironmentSettingNames.CommandRejectedSubscriptionName)
                 .CreateAsync();
 
-            var createLinkRequestQueue = await ServiceBusResourceProvider
+            CreateLinkRequestQueue = await ServiceBusResourceProvider
                 .BuildQueue(ChargesServiceBusResourceNames.CreateLinkRequestQueueKey).SetEnvironmentVariableToQueueName(EnvironmentSettingNames.CreateLinkRequestQueueName)
                 .CreateAsync();
 
