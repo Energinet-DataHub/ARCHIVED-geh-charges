@@ -19,6 +19,12 @@ using NodaTime;
 
 namespace GreenEnergyHub.Charges.Domain.AvailableChargeLinkReceiptData
 {
+    /// <summary>
+    /// All data necessary for one activity records in a charge link receipt
+    /// The data will be stored on events and will later be fetched as part
+    /// of creating a bundle of receipts for a market participant once the
+    /// participant peek the MessageHub
+    /// </summary>
     public class AvailableChargeLinkReceiptData
     {
         public AvailableChargeLinkReceiptData(
@@ -44,8 +50,15 @@ namespace GreenEnergyHub.Charges.Domain.AvailableChargeLinkReceiptData
             AvailableDataReferenceId = availableDataReferenceId;
         }
 
+        /// <summary>
+        /// Unique ID of this specific available receipt data, ready for shipping when
+        /// the market participant peeks
+        /// </summary>
         public Guid Id { get; }
 
+        /// <summary>
+        /// The ID of the recipient this piece of data is meant for
+        /// </summary>
         public string RecipientId { get; }
 
         public MarketParticipantRole RecipientRole { get; }
@@ -64,6 +77,10 @@ namespace GreenEnergyHub.Charges.Domain.AvailableChargeLinkReceiptData
 
         public Instant RequestTime { get; }
 
+        /// <summary>
+        /// ID of the data used when notifying the MessageHub.
+        /// The ID will later be used to fetch the data on a peek operation for the MessageHub
+        /// </summary>
         public Guid AvailableDataReferenceId { get; }
     }
 }
