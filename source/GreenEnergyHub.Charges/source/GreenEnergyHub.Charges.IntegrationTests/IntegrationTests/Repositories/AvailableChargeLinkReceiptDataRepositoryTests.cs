@@ -18,7 +18,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
 using FluentAssertions;
-using GreenEnergyHub.Charges.Domain.AvailableChargeData;
+using GreenEnergyHub.Charges.Domain.AvailableChargeLinkReceiptData;
 using GreenEnergyHub.Charges.Infrastructure.Repositories;
 using GreenEnergyHub.Charges.TestCore.Attributes;
 using GreenEnergyHub.Charges.TestCore.Database;
@@ -28,54 +28,66 @@ using Xunit.Categories;
 namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
 {
     [IntegrationTest]
-    public class AvailableChargeDataRepositoryTests : IClassFixture<ChargesDatabaseFixture>
+    public class AvailableChargeLinkReceiptDataRepositoryTests : IClassFixture<ChargesDatabaseFixture>
     {
         private readonly ChargesDatabaseManager _databaseManager;
 
-        public AvailableChargeDataRepositoryTests(ChargesDatabaseFixture fixture)
+        public AvailableChargeLinkReceiptDataRepositoryTests(ChargesDatabaseFixture fixture)
         {
             _databaseManager = fixture.DatabaseManager;
         }
 
         [Theory]
         [InlineAutoMoqData]
-        public async Task StoreAsync_StoresAvailableChargeData([NotNull] AvailableChargeData expected)
+        public async Task StoreAsync_StoresAvailableChargeLinkReceiptData([NotNull] List<AvailableChargeLinkReceiptData> expectedList)
         {
             // Arrange
-            expected = RepositoryAutoMoqDataFixer.FixAvailableChargeData(expected);
+            expectedList = RepositoryAutoMoqDataFixer.FixAvailableChargeLinkReceiptDataList(expectedList);
+
             await using var chargesDatabaseWriteContext = _databaseManager.CreateDbContext();
 
-            var sut = new AvailableChargeDataRepository(chargesDatabaseWriteContext);
+            var sut = new AvailableChargeLinkReceiptDataRepository(chargesDatabaseWriteContext);
 
             // Act
-            await sut.StoreAsync(expected).ConfigureAwait(false);
+            await sut.StoreAsync(expectedList).ConfigureAwait(false);
 
             // Assert
             await using var chargesDatabaseReadContext = _databaseManager.CreateDbContext();
-            var actual =
-                chargesDatabaseReadContext.AvailableChargeData
-                    .Single(x => x.AvailableDataReferenceId == expected.AvailableDataReferenceId);
-            actual.VatClassification.Should().Be(expected.VatClassification);
-            actual.Points.Should().BeEquivalentTo(expected.Points);
+
+            foreach (var expected in expectedList)
+            {
+                var actual =
+                    chargesDatabaseReadContext.AvailableChargeLinkReceiptData
+                        .Single(x => x.AvailableDataReferenceId == expected.AvailableDataReferenceId);
+                actual.RecipientId.Should().Be(expected.RecipientId);
+                actual.RecipientRole.Should().Be(expected.RecipientRole);
+                actual.BusinessReasonCode.Should().Be(expected.BusinessReasonCode);
+                actual.ReceiptStatus.Should().Be(expected.ReceiptStatus);
+                actual.OriginalOperationId.Should().Be(expected.OriginalOperationId);
+                actual.MeteringPointId.Should().Be(expected.MeteringPointId);
+                actual.RequestTime.Should().Be(expected.RequestTime);
+                actual.AvailableDataReferenceId.Should().Be(expected.AvailableDataReferenceId);
+                actual.ReasonCodes.Should().BeEquivalentTo(expected.ReasonCodes);
+            }
         }
 
         [Theory]
         [InlineAutoMoqData]
-        public async Task GetAvailableChargeDataAsync_GivenAnExistingAvailableDataReferenceId_ReturnsAvailableChargeData(
-            [NotNull] AvailableChargeData expected)
+        public async Task GetAvailableChargeLinkReceiptDataAsync_GivenAnExistingAvailableDataReferenceId_ReturnsAvailableChargeLinkReceiptData(
+            [NotNull] AvailableChargeLinkReceiptData expected)
         {
             // Arrange
-            expected = RepositoryAutoMoqDataFixer.FixAvailableChargeData(expected);
+            expected = RepositoryAutoMoqDataFixer.FixAvailableChargeLinkReceiptData(expected);
             await using var chargesDatabaseWriteContext = _databaseManager.CreateDbContext();
-            await chargesDatabaseWriteContext.AvailableChargeData.AddAsync(expected).ConfigureAwait(false);
+            await chargesDatabaseWriteContext.AvailableChargeLinkReceiptData.AddAsync(expected).ConfigureAwait(false);
             await chargesDatabaseWriteContext.SaveChangesAsync().ConfigureAwait(false);
 
             await using var chargesDatabaseReadContext = _databaseManager.CreateDbContext();
-            var sut = new AvailableChargeDataRepository(chargesDatabaseReadContext);
+            var sut = new AvailableChargeLinkReceiptDataRepository(chargesDatabaseReadContext);
 
             // Act
             var actual =
-                await sut.GetAvailableChargeDataAsync(new List<Guid> { expected.AvailableDataReferenceId })
+                await sut.GetAvailableChargeLinkReceiptDataAsync(new List<Guid> { expected.AvailableDataReferenceId })
                 .ConfigureAwait(false);
 
             // Assert
