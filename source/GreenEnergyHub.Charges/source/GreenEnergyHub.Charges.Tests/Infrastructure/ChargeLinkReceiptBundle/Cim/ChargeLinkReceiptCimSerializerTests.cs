@@ -155,9 +155,15 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.ChargeLinkReceiptBundle.Ci
 
             for (var i = 1; i <= noOfReasons; i++)
             {
+                var text = string.Empty;
+                if (i % 2 == 0)
+                {
+                    text = "Text" + no + "_" + i;
+                }
+
                 reasonCodes.Add(new AvailableChargeLinkReceiptDataReasonCode(
                     ReasonCode.IncorrectChargeInformation,
-                    "Text" + no + "_" + i));
+                    text));
             }
 
             return reasonCodes;

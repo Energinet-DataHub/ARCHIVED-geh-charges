@@ -111,7 +111,11 @@ namespace GreenEnergyHub.Charges.Infrastructure.ChargeLinkReceiptBundle.Cim
             return new XElement(
                 cimNamespace + CimChargeLinkReceiptConstants.ReasonElement,
                 new XElement(cimNamespace + CimChargeLinkReceiptConstants.ReasonCode, ReasonCodeMapper.Map(reasonCode.ReasonCode)),
-                new XElement(cimNamespace + CimChargeLinkReceiptConstants.ReasonText, reasonCode.Text));
+                CimHelper.GetElementIfNeeded(
+                    cimNamespace,
+                    string.IsNullOrWhiteSpace(reasonCode.Text),
+                    CimChargeLinkReceiptConstants.ReasonText,
+                    () => reasonCode.Text));
         }
 
         private bool IsConfirmation(IEnumerable<AvailableChargeLinkReceiptData> receipts)
