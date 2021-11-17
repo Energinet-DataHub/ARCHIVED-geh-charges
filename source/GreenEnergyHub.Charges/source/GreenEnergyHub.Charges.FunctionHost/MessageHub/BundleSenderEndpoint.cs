@@ -13,7 +13,6 @@
 // limitations under the License.
 
 using System;
-using System.Linq;
 using System.Threading.Tasks;
 using Energinet.DataHub.MessageHub.Model.Peek;
 using GreenEnergyHub.Charges.Application.ChargeLinks.MessageHub;
@@ -51,21 +50,16 @@ namespace GreenEnergyHub.Charges.FunctionHost.MessageHub
                 "%" + EnvironmentSettingNames.MessageHubRequestQueue + "%",
                 Connection = EnvironmentSettingNames.DataHubListenerConnectionString,
                 IsSessionsEnabled = true)]
-            byte[] data,
-            FunctionContext functionContext)
+            byte[] data)
         {
             var request = _requestBundleParser.Parse(data);
 
-            // TODO MessageType will be moved to protocol buffer contract in later version of MessageHub
-            var messageType = (string)functionContext.Items.SingleOrDefault(x => (string)x.Key == "MessageType").Value;
-            if (messageType is null) throw new Exception("No MessageType ApplicationProperty defined");
-
-            if (messageType.StartsWith(ChargeDataAvailableNotifier.ChargeDataAvailableMessageTypePrefix))
+            if (request.MessageType.StartsWith(ChargeDataAvailableNotifier.ChargeDataAvailableMessageTypePrefix))
                 await _chargeBundleSender.SendAsync(request).ConfigureAwait(false);
-            if (messageType.StartsWith(ChargeLinkDataAvailableNotifier.ChargeLinkDataAvailableMessageTypePrefix))
+            if (request.MessageType.StartsWith(ChargeLinkDataAvailableNotifier.ChargeLinkDataAvailableMessageTypePrefix))
                 await _chargeLinkBundleSender.SendAsync(request).ConfigureAwait(false);
             throw new ArgumentException(
-                $"Unknown message type: {messageType} with DataAvailableNotificationIds: {request.DataAvailableNotificationIds}");
+                $"Unknown message type: {request.MessageType} with DataAvailableNotificationIds: {request.DataAvailableNotificationIds}");
         }
     }
 }
