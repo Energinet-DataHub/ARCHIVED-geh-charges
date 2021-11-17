@@ -20,6 +20,18 @@
 name: 'Build and test solution'
 description: 'Build and test solution'
 inputs:
+  azure_spn_id:
+    description: 'Azure SPN ID'
+    required: true
+  azure_spn_secret:
+    description: 'Azure SPN Secret'
+    required: true
+  azure_tenant_id:
+    description: 'Azure Tenant ID'
+    required: true
+  azure_subscription_id:
+    description: 'Azure Subscription ID'
+    required: true
   solution_file_path:
     description: Path to solution file
     required: true
@@ -31,6 +43,6 @@ runs:
   steps:
     - name: Build and test project
         run: |
-          az login --service-principal --username "${{ secrets.AZURE_SPN_ID }}" --password "${{ secrets.AZURE_SPN_SECRET }}" --tenant "${{ secrets.AZURE_TENANT_ID }}"
-          az account set --subscription "${{ secrets.AZURE_SUBSCRIPTION_ID }}"
+          az login --service-principal --username "${{ inputs.AZURE_SPN_ID }}" --password "${{ inputs.AZURE_SPN_SECRET }}" --tenant "${{ inputs.AZURE_TENANT_ID }}"
+          az account set --subscription "${{ inputs.AZURE_SUBSCRIPTION_ID }}"
           dotnet test ${{ inputs.SOLUTION_FILE_PATH }} --configuration Release --verbosity normal --collect:"XPlat Code Coverage" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=opencover --output ${{ inputs.output_path }}
