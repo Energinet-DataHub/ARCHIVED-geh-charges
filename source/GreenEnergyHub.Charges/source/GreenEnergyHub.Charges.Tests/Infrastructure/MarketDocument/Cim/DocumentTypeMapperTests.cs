@@ -24,6 +24,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.MarketDocument.Cim
     public class DocumentTypeMapperTests
     {
         [Theory]
+        [InlineData("D04", DocumentType.ChargeReceipt)]
         [InlineData("D05", DocumentType.RequestChangeBillingMasterData)]
         [InlineData("D06", DocumentType.ChargeLinkReceipt)]
         [InlineData("D07", DocumentType.NotifyBillingMasterData)]
@@ -39,6 +40,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.MarketDocument.Cim
         }
 
         [Theory]
+        [InlineData(DocumentType.ChargeReceipt, "D04")]
         [InlineData(DocumentType.RequestChangeBillingMasterData, "D05")]
         [InlineData(DocumentType.ChargeLinkReceipt, "D06")]
         [InlineData(DocumentType.NotifyBillingMasterData, "D07")]
