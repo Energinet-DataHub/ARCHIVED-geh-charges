@@ -24,7 +24,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Integration.Mappers
     {
         protected override IInboundMessage Convert([NotNull] CreateDefaultChargeLinks command)
         {
-            return new CreateLinkCommandEvent(command.MeteringPointId);
+            return new CreateLinksCommandEvent(command.MeteringPointId);
         }
     }
 }

@@ -16,8 +16,8 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using FluentAssertions;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinkCommandAcceptedEvents;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinkCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksAcceptedEvents;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands;
 using GreenEnergyHub.Charges.TestCore.Attributes;
 using NodaTime;
 using NodaTime.Testing;
@@ -35,7 +35,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Mapping
             [NotNull] ChargeLinksCommand chargeLinksCommand)
         {
             // Arrange
-            var sut = new ChargeLinkCommandAcceptedEventFactory(new FakeClock(Instant.MinValue));
+            var sut = new ChargeLinksAcceptedEventFactory(new FakeClock(Instant.MinValue));
 
             // Act
             var result = sut.Create(chargeLinksCommand);

@@ -12,23 +12,22 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application.ChargeLinks.Handlers.Message;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinkCommandReceivedEvents;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinkCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksReceivedEvents;
 using NodaTime;
 
 namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
 {
-    public class ChargeLinkCommandHandler : IChargeLinkCommandHandler
+    public class ChargeLinksCommandHandler : IChargeLinksCommandHandler
     {
-        private readonly IMessageDispatcher<ChargeLinkCommandReceivedEvent> _messageDispatcher;
+        private readonly IMessageDispatcher<ChargeLinksReceivedEvent> _messageDispatcher;
         private readonly IClock _clock;
 
-        public ChargeLinkCommandHandler(
-            IMessageDispatcher<ChargeLinkCommandReceivedEvent> messageDispatcher,
+        public ChargeLinksCommandHandler(
+            IMessageDispatcher<ChargeLinksReceivedEvent> messageDispatcher,
             IClock clock)
         {
             _messageDispatcher = messageDispatcher;
@@ -37,7 +36,7 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
 
         public async Task<ChargeLinksMessageResult> HandleAsync([NotNull]ChargeLinksCommand command)
         {
-            var receivedEvent = new ChargeLinkCommandReceivedEvent(
+            var receivedEvent = new ChargeLinksReceivedEvent(
                 _clock.GetCurrentInstant(),
                 command);
 

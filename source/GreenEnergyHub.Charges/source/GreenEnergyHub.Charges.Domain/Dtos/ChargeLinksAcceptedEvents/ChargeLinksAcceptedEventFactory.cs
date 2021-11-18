@@ -13,23 +13,23 @@
 // limitations under the License.
 
 using System.Diagnostics.CodeAnalysis;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinkCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands;
 using NodaTime;
 
-namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinkCommandAcceptedEvents
+namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksAcceptedEvents
 {
-    public class ChargeLinkCommandAcceptedEventFactory : IChargeLinkCommandAcceptedEventFactory
+    public class ChargeLinksAcceptedEventFactory : IChargeLinksAcceptedEventFactory
     {
         private readonly IClock _clock;
 
-        public ChargeLinkCommandAcceptedEventFactory(IClock clock)
+        public ChargeLinksAcceptedEventFactory(IClock clock)
         {
             _clock = clock;
         }
 
-        public ChargeLinkCommandAcceptedEvent Create([NotNull]ChargeLinksCommand chargeLinksCommand)
+        public ChargeLinksAcceptedEvent Create([NotNull]ChargeLinksCommand chargeLinksCommand)
         {
-            return new ChargeLinkCommandAcceptedEvent(
+            return new ChargeLinksAcceptedEvent(
                 chargeLinksCommand,
                 _clock.GetCurrentInstant());
         }

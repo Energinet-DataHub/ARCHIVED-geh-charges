@@ -21,8 +21,7 @@ using Energinet.DataHub.MessageHub.Client.DataAvailable;
 using Energinet.DataHub.MessageHub.Model.Model;
 using GreenEnergyHub.Charges.Domain.AvailableChargeLinksData;
 using GreenEnergyHub.Charges.Domain.Charges;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinkCommandAcceptedEvents;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinkCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksAcceptedEvents;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using NodaTime;
 
@@ -61,9 +60,9 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.MessageHub
             _correlationContext = correlationContext;
         }
 
-        public async Task NotifyAsync([NotNull] ChargeLinkCommandAcceptedEvent chargeLinkCommandAcceptedEvent)
+        public async Task NotifyAsync([NotNull] ChargeLinksAcceptedEvent chargeLinksAcceptedEvent)
         {
-            if (chargeLinkCommandAcceptedEvent == null) throw new ArgumentNullException(nameof(chargeLinkCommandAcceptedEvent));
+            if (chargeLinksAcceptedEvent == null) throw new ArgumentNullException(nameof(chargeLinksAcceptedEvent));
 
             var dataAvailableNotificationDtos = new List<DataAvailableNotificationDto>();
 
@@ -71,13 +70,13 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.MessageHub
             // not considered part of the Create Metering Point orchestration.
             // We select the first as all bundled messages will have the same recipient
             var recipient =
-                _marketParticipantRepository.GetGridAccessProvider(chargeLinkCommandAcceptedEvent.ChargeLinksCommand.MeteringPointId);
+                _marketParticipantRepository.GetGridAccessProvider(chargeLinksAcceptedEvent.ChargeLinksCommand.MeteringPointId);
 
             // When available this should be parsed on from API management to be more precise.
             var now = _clock.GetCurrentInstant();
             var availableChargeLinksData = new List<AvailableChargeLinksData>();
 
-            foreach (var chargeLinkDto in chargeLinkCommandAcceptedEvent.ChargeLinksCommand.ChargeLinks)
+            foreach (var chargeLinkDto in chargeLinksAcceptedEvent.ChargeLinksCommand.ChargeLinks)
             {
                 var charge = await _chargeRepository.GetChargeAsync(new ChargeIdentifier(
                     chargeLinkDto.SenderProvidedChargeId,
@@ -87,14 +86,14 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.MessageHub
                 if (charge.TaxIndicator)
                 {
                     var dataAvailableNotificationDto = CreateDataAvailableNotificationDto(
-                        chargeLinkCommandAcceptedEvent.ChargeLinksCommand.Document.BusinessReasonCode,
+                        chargeLinksAcceptedEvent.ChargeLinksCommand.Document.BusinessReasonCode,
                         recipient.Id);
                     dataAvailableNotificationDtos.Add(dataAvailableNotificationDto);
                     availableChargeLinksData.Add(_availableChargeLinksDataFactory.CreateAvailableChargeLinksData(
                         chargeLinkDto,
                         recipient,
-                        chargeLinkCommandAcceptedEvent.ChargeLinksCommand.Document.BusinessReasonCode,
-                        chargeLinkCommandAcceptedEvent.ChargeLinksCommand.MeteringPointId,
+                        chargeLinksAcceptedEvent.ChargeLinksCommand.Document.BusinessReasonCode,
+                        chargeLinksAcceptedEvent.ChargeLinksCommand.MeteringPointId,
                         now,
                         dataAvailableNotificationDto.Uuid));
                 }

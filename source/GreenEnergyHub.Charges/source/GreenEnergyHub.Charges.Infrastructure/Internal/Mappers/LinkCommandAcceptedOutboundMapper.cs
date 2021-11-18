@@ -14,28 +14,28 @@
 
 using System.Diagnostics.CodeAnalysis;
 using GreenEnergyHub.Charges.Core.DateTime;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinkCommandAcceptedEvents;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinkCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksAcceptedEvents;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Messaging.Protobuf;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
 {
-    public class LinkCommandAcceptedOutboundMapper : ProtobufOutboundMapper<ChargeLinkCommandAcceptedEvent>
+    public class LinkCommandAcceptedOutboundMapper : ProtobufOutboundMapper<ChargeLinksAcceptedEvent>
     {
-        protected override Google.Protobuf.IMessage Convert([NotNull]ChargeLinkCommandAcceptedEvent chargeLinkCommandAcceptedEvent)
+        protected override Google.Protobuf.IMessage Convert([NotNull]ChargeLinksAcceptedEvent chargeLinksAcceptedEvent)
         {
             var chargeLinkCommandAcceptedContract = new GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandAccepted.ChargeLinkCommandAccepted()
             {
-                PublishedTime = chargeLinkCommandAcceptedEvent.PublishedTime.ToTimestamp(),
+                PublishedTime = chargeLinksAcceptedEvent.PublishedTime.ToTimestamp(),
                 ChargeLinksCommand = new GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandAccepted.ChargeLinkCommand
                 {
-                    MeteringPointId = chargeLinkCommandAcceptedEvent.ChargeLinksCommand.MeteringPointId,
-                    Document = ConvertDocument(chargeLinkCommandAcceptedEvent.ChargeLinksCommand.Document),
+                    MeteringPointId = chargeLinksAcceptedEvent.ChargeLinksCommand.MeteringPointId,
+                    Document = ConvertDocument(chargeLinksAcceptedEvent.ChargeLinksCommand.Document),
                 },
             };
 
-            foreach (var chargeLinkDto in chargeLinkCommandAcceptedEvent.ChargeLinksCommand.ChargeLinks)
+            foreach (var chargeLinkDto in chargeLinksAcceptedEvent.ChargeLinksCommand.ChargeLinks)
             {
              chargeLinkCommandAcceptedContract.ChargeLinksCommand.ChargeLinks.Add(ConvertChargeLink(chargeLinkDto));
             }

@@ -12,22 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinkCommands;
-using GreenEnergyHub.Charges.Domain.Dtos.Messages.Events;
-using NodaTime;
+using System.Threading.Tasks;
+using GreenEnergyHub.Charges.Application.ChargeLinks.Handlers.Message;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands;
 
-namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinkCommandAcceptedEvents
+namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
 {
-    public class ChargeLinkCommandAcceptedEvent : InternalEventBase
+    public interface IChargeLinksCommandHandler
     {
-        public ChargeLinksCommand ChargeLinksCommand { get; }
-
-        public ChargeLinkCommandAcceptedEvent(
-            ChargeLinksCommand chargeLinksCommand,
-            Instant publishedTime)
-            : base(publishedTime)
-        {
-            ChargeLinksCommand = chargeLinksCommand;
-        }
+        public Task<ChargeLinksMessageResult> HandleAsync(ChargeLinksCommand command);
     }
 }

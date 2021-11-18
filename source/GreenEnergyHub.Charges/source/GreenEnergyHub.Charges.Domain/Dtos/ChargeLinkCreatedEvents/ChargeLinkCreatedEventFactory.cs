@@ -16,7 +16,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using GreenEnergyHub.Charges.Core.DateTime;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinkCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands;
 
 namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinkCreatedEvents
 {
@@ -25,16 +25,26 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinkCreatedEvents
         public IReadOnlyCollection<ChargeLinkCreatedEvent> CreateEvents([NotNull] ChargeLinksCommand command)
         {
             return command.ChargeLinks.Select(
-                chargeLinkDto => new ChargeLinkCreatedEvent(
-                    chargeLinkDto.OperationId,
-                    command.MeteringPointId,
-                    chargeLinkDto.SenderProvidedChargeId,
-                    chargeLinkDto.ChargeType,
-                    chargeLinkDto.ChargeOwner,
-                    new ChargeLinkPeriod(
-                        chargeLinkDto.StartDateTime,
-                        chargeLinkDto.EndDateTime.TimeOrEndDefault(),
-                        chargeLinkDto.Factor))).ToList();
+                chargeLinkDto => ChargeLinkCreatedEvent(command, chargeLinkDto)).ToList();
+        }
+
+        private static ChargeLinkCreatedEvent ChargeLinkCreatedEvent(ChargeLinksCommand command, ChargeLinkDto chargeLinkDto)
+        {
+            return new ChargeLinkCreatedEvent(
+                chargeLinkDto.OperationId,
+                command.MeteringPointId,
+                chargeLinkDto.SenderProvidedChargeId,
+                chargeLinkDto.ChargeType,
+                chargeLinkDto.ChargeOwner,
+                ChargeLinkPeriod(chargeLinkDto));
+        }
+
+        private static ChargeLinkPeriod ChargeLinkPeriod(ChargeLinkDto chargeLinkDto)
+        {
+            return new ChargeLinkPeriod(
+                chargeLinkDto.StartDateTime,
+                chargeLinkDto.EndDateTime.TimeOrEndDefault(),
+                chargeLinkDto.Factor);
         }
     }
 }

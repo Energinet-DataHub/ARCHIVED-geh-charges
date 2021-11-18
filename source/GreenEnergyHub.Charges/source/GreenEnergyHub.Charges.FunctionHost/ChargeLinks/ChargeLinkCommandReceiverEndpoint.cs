@@ -14,7 +14,7 @@
 
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application.ChargeLinks.Handlers;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinkCommandReceivedEvents;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksReceivedEvents;
 using GreenEnergyHub.Charges.FunctionHost.Common;
 using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandReceived;
 using GreenEnergyHub.Charges.Infrastructure.Messaging;
@@ -26,14 +26,14 @@ namespace GreenEnergyHub.Charges.FunctionHost.ChargeLinks
     {
         public const string FunctionName = nameof(ChargeLinkCommandReceiverEndpoint);
         private readonly MessageExtractor<ChargeLinkCommandReceived> _messageExtractor;
-        private readonly IChargeLinkCommandReceivedHandler _chargeLinkCommandReceivedHandler;
+        private readonly IChargeLinksCommandReceivedHandler _chargeLinksCommandReceivedHandler;
 
         public ChargeLinkCommandReceiverEndpoint(
             MessageExtractor<ChargeLinkCommandReceived> messageExtractor,
-            IChargeLinkCommandReceivedHandler chargeLinkCommandReceivedHandler)
+            IChargeLinksCommandReceivedHandler chargeLinksCommandReceivedHandler)
         {
             _messageExtractor = messageExtractor;
-            _chargeLinkCommandReceivedHandler = chargeLinkCommandReceivedHandler;
+            _chargeLinksCommandReceivedHandler = chargeLinksCommandReceivedHandler;
         }
 
         [Function(FunctionName)]
@@ -46,8 +46,8 @@ namespace GreenEnergyHub.Charges.FunctionHost.ChargeLinks
         {
             var chargeLinkCommandMessage =
                 await _messageExtractor.ExtractAsync(data).ConfigureAwait(false);
-            await _chargeLinkCommandReceivedHandler
-                .HandleAsync((ChargeLinkCommandReceivedEvent)chargeLinkCommandMessage).ConfigureAwait(false);
+            await _chargeLinksCommandReceivedHandler
+                .HandleAsync((ChargeLinksReceivedEvent)chargeLinkCommandMessage).ConfigureAwait(false);
         }
     }
 }

@@ -25,16 +25,16 @@ using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.Domain.MeteringPoints;
 using NodaTime;
 
-namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinkCommands
+namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands
 {
-    public class ChargeLinkCommandFactory : IChargeLinkCommandFactory
+    public class ChargeLinksCommandFactory : IChargeLinksCommandFactory
     {
         private readonly IChargeRepository _chargeRepository;
         private readonly IMeteringPointRepository _meteringPointRepository;
         private readonly IClock _clock;
         private readonly IMarketParticipantRepository _marketParticipantRepository;
 
-        public ChargeLinkCommandFactory(
+        public ChargeLinksCommandFactory(
             IChargeRepository chargeRepository,
             IMeteringPointRepository meteringPointRepository,
             IClock clock,
@@ -47,13 +47,13 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinkCommands
         }
 
         public async Task<ChargeLinksCommand> CreateAsync(
-            [NotNull] CreateLinkCommandEvent createLinkCommandEvent,
+            [NotNull] CreateLinksCommandEvent createLinksCommandEvent,
             [NotNull] IReadOnlyCollection<DefaultChargeLink> defaultChargeLinks)
         {
             var charges = await _chargeRepository.GetChargesAsync(
                 defaultChargeLinks.Select(x => x.ChargeId).ToList()).ConfigureAwait(false);
             var meteringPoint = await _meteringPointRepository.GetMeteringPointAsync(
-                    createLinkCommandEvent.MeteringPointId)
+                    createLinksCommandEvent.MeteringPointId)
                 .ConfigureAwait(false);
             var systemOperator = await _marketParticipantRepository.GetSystemOperatorAsync().ConfigureAwait(false);
 
@@ -75,7 +75,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinkCommands
 
             var currentTime = _clock.GetCurrentInstant();
             return new ChargeLinksCommand(
-                createLinkCommandEvent.MeteringPointId,
+                createLinksCommandEvent.MeteringPointId,
                 new DocumentDto
                 {
                     Id = Guid.NewGuid().ToString(),

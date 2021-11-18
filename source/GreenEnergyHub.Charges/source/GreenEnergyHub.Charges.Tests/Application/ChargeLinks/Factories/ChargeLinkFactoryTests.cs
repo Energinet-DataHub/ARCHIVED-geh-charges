@@ -20,7 +20,7 @@ using AutoFixture.Xunit2;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.ChargeLinks;
 using GreenEnergyHub.Charges.Domain.Charges;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinkCommandReceivedEvents;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksReceivedEvents;
 using GreenEnergyHub.Charges.Domain.MeteringPoints;
 using GreenEnergyHub.TestHelpers;
 using Moq;
@@ -36,7 +36,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Factories
         [Theory]
         [InlineAutoDomainData]
         public async Task CreateAsync_WhenCalled_ShouldCreateChargeLinkCorrectly(
-            [NotNull] ChargeLinkCommandReceivedEvent expectedEvent,
+            [NotNull] ChargeLinksReceivedEvent expectedEvent,
             [NotNull] Charge expectedCharge,
             [NotNull] MeteringPoint expectedMeteringPoint,
             [NotNull] [Frozen] Mock<IChargeRepository> chargeRepository,

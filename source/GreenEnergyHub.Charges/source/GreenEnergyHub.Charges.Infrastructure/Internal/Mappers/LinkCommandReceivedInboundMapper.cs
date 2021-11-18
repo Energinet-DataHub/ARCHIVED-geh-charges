@@ -15,8 +15,8 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using GreenEnergyHub.Charges.Core.DateTime;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinkCommandReceivedEvents;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinkCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksReceivedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Messaging.Protobuf;
 using GreenEnergyHub.Messaging.Transport;
@@ -29,7 +29,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
         protected override IInboundMessage Convert(
             [NotNull]GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandReceived.ChargeLinkCommandReceived chargeLinkCommandReceived)
         {
-            return new ChargeLinkCommandReceivedEvent(
+            return new ChargeLinksReceivedEvent(
                 chargeLinkCommandReceived.PublishedTime.ToInstant(),
                 new ChargeLinksCommand(
                     chargeLinkCommandReceived.ChargeLinksCommand.MeteringPointId,

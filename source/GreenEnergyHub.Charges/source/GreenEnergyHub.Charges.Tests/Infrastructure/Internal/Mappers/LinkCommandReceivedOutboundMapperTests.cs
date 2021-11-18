@@ -15,8 +15,8 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinkCommandReceivedEvents;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinkCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksReceivedEvents;
 using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandReceived;
 using GreenEnergyHub.Charges.Infrastructure.Internal.Mappers;
 using GreenEnergyHub.Charges.TestCore.Attributes;
@@ -37,14 +37,14 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Internal.Mappers
             [NotNull] LinkCommandReceivedOutboundMapper sut)
         {
             // Arrange
-            ChargeLinkCommandReceivedEvent chargeLinkCommandReceivedEvent =
+            ChargeLinksReceivedEvent chargeLinksReceivedEvent =
                 new(SystemClock.Instance.GetCurrentInstant(), chargeLinksCommand);
 
             // Act
-            var result = (ChargeLinkCommandReceived)sut.Convert(chargeLinkCommandReceivedEvent);
+            var result = (ChargeLinkCommandReceived)sut.Convert(chargeLinksReceivedEvent);
 
             // Assert
-            ProtobufAssert.OutgoingContractIsSubset(chargeLinkCommandReceivedEvent, result);
+            ProtobufAssert.OutgoingContractIsSubset(chargeLinksReceivedEvent, result);
         }
 
         [Theory]

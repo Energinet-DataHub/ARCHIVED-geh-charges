@@ -15,7 +15,7 @@
 using Energinet.Charges.Contracts;
 using GreenEnergyHub.Charges.Application.ChargeLinks.Handlers;
 using GreenEnergyHub.Charges.Domain.DefaultChargeLinks;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinkCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands;
 using GreenEnergyHub.Charges.Infrastructure.Messaging.Registration;
 using GreenEnergyHub.Charges.Infrastructure.Repositories;
 using Microsoft.Extensions.DependencyInjection;
@@ -27,7 +27,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
         internal static void ConfigureServices(IServiceCollection serviceCollection)
         {
             serviceCollection.AddScoped<ICreateLinkCommandRequestHandler, CreateLinkCommandRequestHandler>();
-            serviceCollection.AddScoped<IChargeLinkCommandFactory, ChargeLinkCommandFactory>();
+            serviceCollection.AddScoped<IChargeLinksCommandFactory, ChargeLinksCommandFactory>();
 
             serviceCollection.ReceiveProtobufMessage<CreateDefaultChargeLinks>(
                 configuration => configuration.WithParser(() => CreateDefaultChargeLinks.Parser));

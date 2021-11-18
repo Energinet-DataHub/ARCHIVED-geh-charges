@@ -13,12 +13,13 @@
 // limitations under the License.
 
 using System.Diagnostics.CodeAnalysis;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinkCommands;
+using System.Threading.Tasks;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksReceivedEvents;
 
-namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinkCommandAcceptedEvents
+namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
 {
-    public interface IChargeLinkCommandAcceptedEventFactory
+    public interface IChargeLinksCommandReceivedHandler
     {
-        ChargeLinkCommandAcceptedEvent Create([NotNull] ChargeLinksCommand chargeLinksCommand);
+        Task HandleAsync([NotNull] ChargeLinksReceivedEvent chargeLinksReceivedEvent);
     }
 }

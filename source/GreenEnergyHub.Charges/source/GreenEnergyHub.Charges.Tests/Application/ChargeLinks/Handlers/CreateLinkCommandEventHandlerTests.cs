@@ -23,8 +23,8 @@ using GreenEnergyHub.Charges.Application.ChargeLinks.CreateDefaultChargeLinkRepl
 using GreenEnergyHub.Charges.Application.ChargeLinks.Handlers;
 using GreenEnergyHub.Charges.Contracts;
 using GreenEnergyHub.Charges.Domain.DefaultChargeLinks;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinkCommandReceivedEvents;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinkCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksReceivedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.CreateLinkRequest;
 using GreenEnergyHub.Charges.Domain.MeteringPoints;
 using GreenEnergyHub.TestHelpers;
@@ -44,8 +44,8 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Handlers
         public async Task HandleAsync_WhenCalled_UsesFactoryToCreateEventAndDispatchesIt(
             [Frozen] [NotNull] Mock<IDefaultChargeLinkRepository> defaultChargeLinkRepository,
             [Frozen] [NotNull] Mock<IMeteringPointRepository> meteringPointRepository,
-            [Frozen] [NotNull] Mock<IChargeLinkCommandFactory> chargeLinkCommandFactory,
-            [Frozen] [NotNull] Mock<IMessageDispatcher<ChargeLinkCommandReceivedEvent>> dispatcher,
+            [Frozen] [NotNull] Mock<IChargeLinksCommandFactory> chargeLinkCommandFactory,
+            [Frozen] [NotNull] Mock<IMessageDispatcher<ChargeLinksReceivedEvent>> dispatcher,
             [Frozen] [NotNull] Mock<IMessageMetaDataContext> messageMetaDataContext,
             [NotNull] string replyTo,
             [NotNull] ChargeLinksCommand chargeLinksCommand,
@@ -60,7 +60,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Handlers
 
             messageMetaDataContext.Setup(m => m.IsReplyToSet()).Returns(true);
             messageMetaDataContext.Setup(m => m.ReplyTo).Returns(replyTo);
-            var createLinkCommandEvent = new CreateLinkCommandEvent(meteringPointId);
+            var createLinkCommandEvent = new CreateLinksCommandEvent(meteringPointId);
 
             var defaultChargeLink = new DefaultChargeLink(
                 SystemClock.Instance.GetCurrentInstant(),
@@ -97,7 +97,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Handlers
             // Assert
             dispatcher.Verify(
                 x => x.DispatchAsync(
-                    It.IsAny<ChargeLinkCommandReceivedEvent>(),
+                    It.IsAny<ChargeLinksReceivedEvent>(),
                     It.IsAny<CancellationToken>()));
         }
 
@@ -116,7 +116,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Handlers
             }
 
             messageMetaDataContext.Setup(m => m.ReplyTo).Returns((string)null!);
-            var createLinkCommandEvent = new CreateLinkCommandEvent(meteringPointId);
+            var createLinkCommandEvent = new CreateLinksCommandEvent(meteringPointId);
 
             // Act & Assert
             await Assert.ThrowsAsync<ArgumentNullException>(() =>
@@ -128,7 +128,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Handlers
         public async Task HandleAsync_WithUnknownMeteringPointId_CallDefaultLinkClientWithFailedReply(
             [Frozen] Mock<ICorrelationContext> correlationContextMock,
             [Frozen] [NotNull] Mock<IMeteringPointRepository> meteringPointRepository,
-            [Frozen] [NotNull] Mock<IMessageDispatcher<ChargeLinkCommandReceivedEvent>> dispatcher,
+            [Frozen] [NotNull] Mock<IMessageDispatcher<ChargeLinksReceivedEvent>> dispatcher,
             [Frozen] [NotNull] Mock<IMessageMetaDataContext> messageMetaDataContext,
             [Frozen] [NotNull] Mock<ICreateDefaultChargeLinksReplier> defaultChargeLinkClient,
             [NotNull] string correlationId,
@@ -148,7 +148,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Handlers
             messageMetaDataContext.Setup(m => m.IsReplyToSet()).Returns(true);
             messageMetaDataContext.Setup(m => m.ReplyTo).Returns(replyTo);
             errorCode = ErrorCode.MeteringPointUnknown;
-            var createLinkCommandEvent = new CreateLinkCommandEvent(meteringPointId);
+            var createLinkCommandEvent = new CreateLinksCommandEvent(meteringPointId);
 
             defaultChargeLinkClient.Setup(d =>
                 d.ReplyWithFailedAsync(meteringPointId, errorCode, replyTo));
@@ -165,7 +165,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Handlers
 
             dispatcher.Verify(
                 x => x.DispatchAsync(
-                    It.IsAny<ChargeLinkCommandReceivedEvent>(),
+                    It.IsAny<ChargeLinksReceivedEvent>(),
                     It.IsAny<CancellationToken>()),
                 Times.Never());
         }
@@ -176,7 +176,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Handlers
             [Frozen] Mock<ICorrelationContext> correlationContextMock,
             [Frozen] [NotNull] Mock<IDefaultChargeLinkRepository> defaultChargeLinkRepository,
             [Frozen] [NotNull] Mock<IMeteringPointRepository> meteringPointRepository,
-            [Frozen] [NotNull] Mock<IMessageDispatcher<ChargeLinkCommandReceivedEvent>> dispatcher,
+            [Frozen] [NotNull] Mock<IMessageDispatcher<ChargeLinksReceivedEvent>> dispatcher,
             [Frozen] [NotNull] Mock<IMessageMetaDataContext> messageMetaDataContext,
             [Frozen] [NotNull] Mock<ICreateDefaultChargeLinksReplier> defaultChargeLinkClient,
             [NotNull] string correlationId,
@@ -194,7 +194,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Handlers
             correlationContextMock.Setup(c => c.Id).Returns(correlationId);
             messageMetaDataContext.Setup(m => m.IsReplyToSet()).Returns(true);
             messageMetaDataContext.Setup(m => m.ReplyTo).Returns(replyTo);
-            var createLinkCommandEvent = new CreateLinkCommandEvent(meteringPointId);
+            var createLinkCommandEvent = new CreateLinksCommandEvent(meteringPointId);
 
             defaultChargeLinkClient.Setup(d =>
                 d.ReplyWithSucceededAsync(meteringPointId, true, replyTo));
@@ -224,7 +224,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Handlers
 
             dispatcher.Verify(
                 x => x.DispatchAsync(
-                    It.IsAny<ChargeLinkCommandReceivedEvent>(),
+                    It.IsAny<ChargeLinksReceivedEvent>(),
                     It.IsAny<CancellationToken>()),
                 Times.Never());
         }

@@ -24,7 +24,7 @@ using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.ChargeLinks;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.DefaultChargeLinks;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinkCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.CreateLinkRequest;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.Domain.MeteringPoints;
@@ -48,8 +48,8 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Factories
             MarketParticipant systemOperator,
             Guid chargeId,
             MeteringPoint meteringPoint,
-            CreateLinkCommandEvent createLinkCommandEvent,
-            ChargeLinkCommandFactory sut)
+            CreateLinksCommandEvent createLinksCommandEvent,
+            ChargeLinksCommandFactory sut)
         {
             // Arrange
             var defaultChargeLink = new DefaultChargeLink(
@@ -82,7 +82,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Factories
                 .ReturnsAsync(new List<Charge> { charge });
 
             meteringPointRepository.Setup(
-                    f => f.GetMeteringPointAsync(createLinkCommandEvent.MeteringPointId))
+                    f => f.GetMeteringPointAsync(createLinksCommandEvent.MeteringPointId))
                 .ReturnsAsync(meteringPoint);
 
             marketParticipantRepository
@@ -91,7 +91,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Factories
             // Act
             var actual =
                 await sut.CreateAsync(
-                        createLinkCommandEvent,
+                        createLinksCommandEvent,
                         new List<DefaultChargeLink> { defaultChargeLink })
                 .ConfigureAwait(false);
 
@@ -108,7 +108,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Factories
             actual.ChargeLinks.First().ChargeType.Should().Be(charge.Type);
             actual.ChargeLinks.First().EndDateTime.Should().Be(defaultChargeLink.EndDateTime);
             actual.ChargeLinks.First().ChargeOwner.Should().Be(charge.Owner);
-            actual.MeteringPointId.Should().Be(createLinkCommandEvent.MeteringPointId);
+            actual.MeteringPointId.Should().Be(createLinksCommandEvent.MeteringPointId);
             actual.ChargeLinks.First().StartDateTime.Should().Be(defaultChargeLink.GetStartDateTime(meteringPoint.EffectiveDate));
             actual.ChargeLinks.First().Factor.Should().Be(1);
         }

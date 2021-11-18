@@ -16,7 +16,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application.ChargeLinks.Handlers;
 using GreenEnergyHub.Charges.Application.ChargeLinks.Handlers.Message;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinkCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands;
 using GreenEnergyHub.Charges.Infrastructure.Messaging;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
@@ -30,14 +30,14 @@ namespace GreenEnergyHub.Charges.FunctionHost.ChargeLinks
         /// Function name affects the URL and thus possibly dependent infrastructure.
         /// </summary>
         private readonly MessageExtractor<ChargeLinksCommand> _messageExtractor;
-        private readonly IChargeLinkCommandHandler _chargeLinkCommandHandler;
+        private readonly IChargeLinksCommandHandler _chargeLinksCommandHandler;
 
         public ChargeLinkIngestion(
-            IChargeLinkCommandHandler chargeLinkCommandHandler,
+            IChargeLinksCommandHandler chargeLinksCommandHandler,
             MessageExtractor<ChargeLinksCommand> messageExtractor)
         {
             _messageExtractor = messageExtractor;
-            _chargeLinkCommandHandler = chargeLinkCommandHandler;
+            _chargeLinksCommandHandler = chargeLinksCommandHandler;
         }
 
         [Function(IngestionFunctionNames.ChargeLinkIngestion)]
@@ -47,7 +47,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.ChargeLinks
         {
             var command = (ChargeLinksCommand)await _messageExtractor.ExtractAsync(req.Body).ConfigureAwait(false);
 
-            var chargeLinksMessageResult = await _chargeLinkCommandHandler.HandleAsync(command).ConfigureAwait(false);
+            var chargeLinksMessageResult = await _chargeLinksCommandHandler.HandleAsync(command).ConfigureAwait(false);
 
             return await CreateJsonResponseAsync(req, chargeLinksMessageResult).ConfigureAwait(false);
         }

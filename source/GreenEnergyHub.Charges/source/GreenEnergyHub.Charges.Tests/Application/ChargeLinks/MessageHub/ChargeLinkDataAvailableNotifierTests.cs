@@ -23,8 +23,8 @@ using FluentAssertions;
 using GreenEnergyHub.Charges.Application.ChargeLinks.MessageHub;
 using GreenEnergyHub.Charges.Domain.AvailableChargeLinksData;
 using GreenEnergyHub.Charges.Domain.Charges;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinkCommandAcceptedEvents;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinkCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksAcceptedEvents;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.TestCore.Attributes;
 using GreenEnergyHub.Charges.TestCore.Reflection;
@@ -52,7 +52,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.MessageHub
         [Theory]
         [InlineAutoMoqData]
         public async Task NotifyAsync_WhenChargeIsTaxIndicator_SendsDataAvailableNotificationPerCommand(
-            ChargeLinkCommandAcceptedEvent chargeLinkCommandAcceptedEvent,
+            ChargeLinksAcceptedEvent chargeLinksAcceptedEvent,
             Charge charge,
             MarketParticipant gridAccessProvider,
             AvailableChargeLinksData availableChargeLinksData,
@@ -71,7 +71,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.MessageHub
 
             marketParticipantRepositoryMock
                 .Setup(repository => repository.GetGridAccessProvider(
-                    chargeLinkCommandAcceptedEvent.ChargeLinksCommand.MeteringPointId))
+                    chargeLinksAcceptedEvent.ChargeLinksCommand.MeteringPointId))
                 .Returns(gridAccessProvider);
 
             availableChargeLinksDataFactoryMock.Setup(
@@ -79,13 +79,13 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.MessageHub
                         It.IsAny<ChargeLinkDto>(),
                         It.IsAny<MarketParticipant>(),
                         It.IsAny<BusinessReasonCode>(),
-                        chargeLinkCommandAcceptedEvent.ChargeLinksCommand.MeteringPointId,
+                        chargeLinksAcceptedEvent.ChargeLinksCommand.MeteringPointId,
                         It.IsAny<Instant>(),
                         It.IsAny<Guid>()))
                 .Returns(availableChargeLinksData);
 
             // Act
-            await sut.NotifyAsync(chargeLinkCommandAcceptedEvent);
+            await sut.NotifyAsync(chargeLinksAcceptedEvent);
 
             // Assert
             dataAvailableNotificationSenderMock.Verify(
@@ -98,7 +98,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.MessageHub
                                    new GlobalLocationNumberDto(gridAccessProvider.Id))
                                && dto.Uuid != Guid.Empty
                                && dto.RelativeWeight > 0)),
-                Times.Exactly(chargeLinkCommandAcceptedEvent.ChargeLinksCommand.ChargeLinks.Count));
+                Times.Exactly(chargeLinksAcceptedEvent.ChargeLinksCommand.ChargeLinks.Count));
 
             dataAvailableNotificationSenderMock.VerifyNoOtherCalls();
         }
@@ -106,7 +106,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.MessageHub
         [Theory]
         [InlineAutoMoqData]
         public async Task NotifyAsync_WhenChargeIsNotTaxIndicator_DoesNotSendDataAvailableNotification(
-            ChargeLinkCommandAcceptedEvent chargeLinkCommandAcceptedEvent,
+            ChargeLinksAcceptedEvent chargeLinksAcceptedEvent,
             Charge charge,
             [Frozen] Mock<IChargeRepository> chargeRepositoryMock,
             [Frozen] Mock<IDataAvailableNotificationSender> dataAvailableNotificationSenderMock,
@@ -120,7 +120,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.MessageHub
                 .ReturnsAsync(charge);
 
             // Act
-            await sut.NotifyAsync(chargeLinkCommandAcceptedEvent);
+            await sut.NotifyAsync(chargeLinksAcceptedEvent);
 
             // Assert
             dataAvailableNotificationSenderMock.VerifyNoOtherCalls();

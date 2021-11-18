@@ -32,7 +32,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Integration.Mappers
             [NotNull] CreateDefaultChargeLinks createDefaultChargeLinks,
             [NotNull] CreateDefaultChargeLinksInboundMapper sut)
         {
-            var result = (CreateLinkCommandEvent)sut.Convert(createDefaultChargeLinks);
+            var result = (CreateLinksCommandEvent)sut.Convert(createDefaultChargeLinks);
             ProtobufAssert.IncomingContractIsSuperset(result, createDefaultChargeLinks);
         }
     }
