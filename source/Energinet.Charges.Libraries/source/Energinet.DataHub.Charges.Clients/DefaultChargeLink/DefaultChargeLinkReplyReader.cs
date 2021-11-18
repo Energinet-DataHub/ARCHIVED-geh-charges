@@ -16,9 +16,9 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using Energinet.Charges.Contracts;
-using Energinet.DataHub.Charges.Libraries.Mappers;
+using Energinet.DataHub.Charges.Clients.Mappers;
 
-namespace Energinet.DataHub.Charges.Libraries.DefaultChargeLink
+namespace Energinet.DataHub.Charges.Clients.DefaultChargeLink
 {
     /// <inheritdoc/>
     public sealed class DefaultChargeLinkReplyReader : IDefaultChargeLinkReplyReader
