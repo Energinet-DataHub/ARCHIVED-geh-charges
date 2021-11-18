@@ -57,7 +57,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.ChargeBundle.Cim
 
             while (await reader.ReadAsync().ConfigureAwait(false))
             {
-                if (reader.Is(CimChargeCommandConstants.MarketActivityRecordId, CimChargeCommandConstants.Namespace))
+                if (reader.Is(CimChargeCommandConstants.Id, CimChargeCommandConstants.Namespace))
                 {
                     var content = await reader.ReadElementContentAsStringAsync().ConfigureAwait(false);
                     operation.Id = content;

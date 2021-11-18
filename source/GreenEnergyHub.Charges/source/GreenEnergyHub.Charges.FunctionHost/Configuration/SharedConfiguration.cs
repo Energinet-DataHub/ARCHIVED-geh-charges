@@ -26,7 +26,7 @@ using GreenEnergyHub.Charges.Application.ChargeLinks.CreateDefaultChargeLinkRepl
 using GreenEnergyHub.Charges.Domain.AvailableChargeData;
 using GreenEnergyHub.Charges.Domain.AvailableChargeLinksData;
 using GreenEnergyHub.Charges.Domain.Charges;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinkCommandReceivedEvents;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksReceivedEvents;
 using GreenEnergyHub.Charges.Domain.MeteringPoints;
 using GreenEnergyHub.Charges.FunctionHost.Common;
 using GreenEnergyHub.Charges.Infrastructure.Cim;
@@ -120,7 +120,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
             serviceCollection.ConfigureProtobufReception();
 
             serviceCollection.SendProtobuf<ChargeLinkCommandReceived>();
-            serviceCollection.AddMessagingProtobuf().AddMessageDispatcher<ChargeLinkCommandReceivedEvent>(
+            serviceCollection.AddMessagingProtobuf().AddMessageDispatcher<ChargeLinksReceivedEvent>(
                 EnvironmentHelper.GetEnv(EnvironmentSettingNames.DomainEventSenderConnectionString),
                 EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargeLinkReceivedTopicName));
         }
