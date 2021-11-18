@@ -50,6 +50,14 @@ jobs:
       DOTNET_VERSION: '5.0.202'
       ARTIFACT_NAME: functionhost
 
+  webapi_ci:
+    needs: [ci_base, terraform_validate]
+    uses: Energinet-DataHub/.github/.github/workflows/dotnet-create-function-artifact.yml@2.0.0
+    with:
+      CSPROJ_FILE_PATH: 'source/Energinet.DataHub.MeteringPoints.EntryPoints.WebApi/Energinet.DataHub.MeteringPoints.EntryPoints.WebApi.csproj'
+      DOTNET_VERSION: '5.0.202'
+      ARTIFACT_NAME: webapi
+
   database_migration_ci:
     needs: [ci_base, terraform_validate]
     uses: Energinet-DataHub/.github/.github/workflows/dotnet-create-function-artifact.yml@2.0.0
@@ -61,6 +69,7 @@ jobs:
   create_prerelease:
     needs: [
       functionhost_ci,
+      webapi_ci,
       database_migration_ci
     ]
     uses: Energinet-DataHub/.github/.github/workflows/create-prerelease.yml@2.0.0
