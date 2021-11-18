@@ -15,7 +15,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinkCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using NodaTime;
 
@@ -24,22 +24,24 @@ namespace GreenEnergyHub.Charges.Domain.AvailableChargeLinksData
     public class AvailableChargeLinksDataFactory : IAvailableChargeLinksDataFactory
     {
         public AvailableChargeLinksData CreateAvailableChargeLinksData(
-            ChargeLinkCommand chargeLinkCommand,
+            ChargeLinkDto chargeLinkDto,
             MarketParticipant recipient,
+            BusinessReasonCode businessReasonCode,
+            string meteringPointId,
             Instant requestTime,
             Guid messageHubId)
         {
             return new AvailableChargeLinksData(
                 recipient.Id,
                 recipient.BusinessProcessRole,
-                chargeLinkCommand.Document.BusinessReasonCode,
-                chargeLinkCommand.ChargeLink.SenderProvidedChargeId,
-                chargeLinkCommand.ChargeLink.ChargeOwner,
-                chargeLinkCommand.ChargeLink.ChargeType,
-                chargeLinkCommand.ChargeLink.MeteringPointId,
-                chargeLinkCommand.ChargeLink.Factor,
-                chargeLinkCommand.ChargeLink.StartDateTime,
-                chargeLinkCommand.ChargeLink.EndDateTime.GetValueOrDefault(),
+                businessReasonCode,
+                chargeLinkDto.SenderProvidedChargeId,
+                chargeLinkDto.ChargeOwner,
+                chargeLinkDto.ChargeType,
+                meteringPointId,
+                chargeLinkDto.Factor,
+                chargeLinkDto.StartDateTime,
+                chargeLinkDto.EndDateTime.GetValueOrDefault(),
                 requestTime,
                 messageHubId);
         }

@@ -12,28 +12,30 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using GreenEnergyHub.Charges.Domain.Dtos.Messages.Events;
-using GreenEnergyHub.Messaging.MessageTypes.Common;
+using System.Collections.Generic;
+using GreenEnergyHub.Charges.Domain.Dtos.Messages.Command;
+using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 
-namespace GreenEnergyHub.Charges.Domain.Dtos.CreateLinkRequest
+#pragma warning disable 8618
+
+namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands
 {
-    public class CreateLinkCommandEvent : InboundIntegrationEvent
+    public class ChargeLinksCommand : CommandBase
     {
-        /// <summary>
-        /// Event raised by the MeteringPoint domain when the charge domain
-        /// is asked to add links to a metering point
-        /// </summary>
-        /// <param name="meteringPointId">The metering point to add links to</param>
-        public CreateLinkCommandEvent(
-            string meteringPointId)
-            : base(Transaction.NewTransaction())
+        public ChargeLinksCommand(
+            string meteringPointId,
+            DocumentDto document,
+            IReadOnlyCollection<ChargeLinkDto> chargeLinks)
         {
             MeteringPointId = meteringPointId;
+            Document = document;
+            ChargeLinks = chargeLinks;
         }
 
-        /// <summary>
-        /// Metering point ID to add links to
-        /// </summary>
         public string MeteringPointId { get; }
+
+        public DocumentDto Document { get; }
+
+        public IReadOnlyCollection<ChargeLinkDto> ChargeLinks { get; }
     }
 }

@@ -14,7 +14,7 @@
 
 using System;
 using System.Collections.Generic;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinkCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using NodaTime;
 
@@ -23,8 +23,10 @@ namespace GreenEnergyHub.Charges.Domain.AvailableChargeLinksData
     public interface IAvailableChargeLinksDataFactory
     {
         AvailableChargeLinksData CreateAvailableChargeLinksData(
-            ChargeLinkCommand chargeLinkCommand,
+            ChargeLinkDto chargeLinkDto,
             MarketParticipant recipient,
+            BusinessReasonCode businessReasonCode,
+            string meteringPointId,
             Instant requestTime,
             Guid messageHubId);
     }

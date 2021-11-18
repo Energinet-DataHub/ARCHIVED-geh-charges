@@ -15,38 +15,38 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Domain.ChargeLinks;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinkCommandAcceptedEvents;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinkCommandReceivedEvents;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksAcceptedEvents;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksReceivedEvents;
 
 namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
 {
-    public class ChargeLinkCommandReceivedHandler : IChargeLinkCommandReceivedHandler
+    public class ChargeLinksReceivedEventHandler : IChargeLinksReceivedEventHandler
     {
-        private readonly IMessageDispatcher<ChargeLinkCommandAcceptedEvent> _messageDispatcher;
-        private readonly IChargeLinkCommandAcceptedEventFactory _chargeLinkCommandAcceptedEventFactory;
+        private readonly IMessageDispatcher<ChargeLinksAcceptedEvent> _messageDispatcher;
+        private readonly IChargeLinksAcceptedEventFactory _chargeLinksAcceptedEventFactory;
         private readonly IChargeLinkFactory _chargeLinkFactory;
         private readonly IChargeLinkRepository _chargeLinkRepository;
 
-        public ChargeLinkCommandReceivedHandler(
-            IMessageDispatcher<ChargeLinkCommandAcceptedEvent> messageDispatcher,
-            IChargeLinkCommandAcceptedEventFactory chargeLinkCommandAcceptedEventFactory,
+        public ChargeLinksReceivedEventHandler(
+            IMessageDispatcher<ChargeLinksAcceptedEvent> messageDispatcher,
+            IChargeLinksAcceptedEventFactory chargeLinksAcceptedEventFactory,
             IChargeLinkFactory chargeLinkFactory,
             IChargeLinkRepository chargeLinkRepository)
         {
             _messageDispatcher = messageDispatcher;
-            _chargeLinkCommandAcceptedEventFactory = chargeLinkCommandAcceptedEventFactory;
+            _chargeLinksAcceptedEventFactory = chargeLinksAcceptedEventFactory;
             _chargeLinkFactory = chargeLinkFactory;
             _chargeLinkRepository = chargeLinkRepository;
         }
 
-        public async Task HandleAsync([NotNull] ChargeLinkCommandReceivedEvent chargeLinkCommandReceivedEvent)
+        public async Task HandleAsync([NotNull] ChargeLinksReceivedEvent chargeLinksReceivedEvent)
         {
             // Upcoming stories will cover the update scenarios where charge link already exists
-            var chargeLinks = await _chargeLinkFactory.CreateAsync(chargeLinkCommandReceivedEvent).ConfigureAwait(false);
+            var chargeLinks = await _chargeLinkFactory.CreateAsync(chargeLinksReceivedEvent).ConfigureAwait(false);
             await _chargeLinkRepository.StoreAsync(chargeLinks).ConfigureAwait(false);
 
-            var chargeLinkCommandAcceptedEvent = _chargeLinkCommandAcceptedEventFactory.Create(
-                chargeLinkCommandReceivedEvent.ChargeLinkCommands);
+            var chargeLinkCommandAcceptedEvent = _chargeLinksAcceptedEventFactory.Create(
+                chargeLinksReceivedEvent.ChargeLinksCommand);
 
             await _messageDispatcher.DispatchAsync(chargeLinkCommandAcceptedEvent).ConfigureAwait(false);
         }

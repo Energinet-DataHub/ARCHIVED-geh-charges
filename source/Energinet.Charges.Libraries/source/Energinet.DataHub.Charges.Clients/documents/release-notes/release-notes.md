@@ -1,4 +1,10 @@
-# GreenEnergyHub.Charges.Libraries Release notes
+# Energinet.DataHub.Charges.Clients Release notes
+
+## Version 1.0.11
+
+Updated the documentation to refer to `Energinet.DataHub.Charges.Clients.SimpleInjector` NuGet package for registration purposes.
+
+Namespaces adjusted to reflect NuGet package id: `Energinet.DataHub.Charges.Clients`
 
 ## Version 1.0.10
 
