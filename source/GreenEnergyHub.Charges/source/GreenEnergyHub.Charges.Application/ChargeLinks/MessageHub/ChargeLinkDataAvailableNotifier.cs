@@ -34,7 +34,7 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.MessageHub
         /// The upper anticipated weight (kilobytes) contribution to the final bundle from the charge link created event.
         /// </summary>
         public const int MessageWeight = 2;
-        public const string ChargeLinkDataAvailableMessageTypePrefix = "ChargeDataAvailable";
+        public const string ChargeLinkDataAvailableMessageTypePrefix = "ChargeLinkDataAvailable"; // TODO: How to ensure uniqueness by unit test?
 
         private readonly IDataAvailableNotificationSender _dataAvailableNotificationSender;
         private readonly IChargeRepository _chargeRepository;
@@ -62,6 +62,7 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.MessageHub
             _correlationContext = correlationContext;
         }
 
+        // TODO: This method is too complex and has hidden side effects
         public async Task NotifyAsync([NotNull] ChargeLinkCommandAcceptedEvent chargeLinkCommandAcceptedEvent)
         {
             if (chargeLinkCommandAcceptedEvent == null) throw new ArgumentNullException(nameof(chargeLinkCommandAcceptedEvent));
@@ -75,7 +76,7 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.MessageHub
             var recipient = _marketParticipantRepository.GetGridAccessProvider(meteringPointId);
 
             // When available this should be parsed on from API management to be more precise.
-            var now = _clock.GetCurrentInstant();
+            var now = _clock.GetCurrentInstant(); // TODO: This should be seggregated from this class
             var availableChargeLinksData = new List<AvailableChargeLinksData>();
 
             foreach (var chargeLinkCommand in chargeLinkCommandAcceptedEvent.ChargeLinkCommands)
@@ -97,7 +98,7 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.MessageHub
                 }
             }
 
-            await _availableChargeLinksDataRepository.StoreAsync(availableChargeLinksData);
+            await _availableChargeLinksDataRepository.StoreAsync(availableChargeLinksData); // TODO: This is a hidden side effect
 
             var dataAvailableNotificationSenderTasks = dataAvailableNotificationDtos
                 .Select(x => _dataAvailableNotificationSender.SendAsync(_correlationContext.Id, x));

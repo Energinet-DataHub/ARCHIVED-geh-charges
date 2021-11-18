@@ -114,7 +114,7 @@ namespace GreenEnergyHub.Charges.Application.Charges.MessageHub
             var chargeDomainReferenceId = Guid.NewGuid();
 
             // Different processes must not be bundled together.
-            // The can be differentiated by business reason codes.
+            // The can be differentiated by business reason codes. // TODO: This sentence doesn't make sense
             var messageType = ChargeDataAvailableMessageTypePrefix + "_" + chargeCommand.Document.BusinessReasonCode;
 
             return new DataAvailableNotificationDto(
