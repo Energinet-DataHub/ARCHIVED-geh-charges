@@ -17,7 +17,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Energinet.DataHub.MessageHub.Client.DataAvailable;
-using Energinet.DataHub.MessageHub.Client.Model;
+using Energinet.DataHub.MessageHub.Model.Model;
 using GreenEnergyHub.Charges.Domain.AvailableChargeData;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandAcceptedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
@@ -39,19 +39,22 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.MessageHub
         private readonly IAvailableChargeDataFactory _availableChargeDataFactory;
         private readonly IMarketParticipantRepository _marketParticipantRepository;
         private readonly IClock _clock;
+        private readonly ICorrelationContext _correlationContext;
 
         public ChargeDataAvailableNotifier(
             IDataAvailableNotificationSender dataAvailableNotificationSender,
             IAvailableChargeDataRepository availableChargeDataRepository,
             IAvailableChargeDataFactory availableChargeDataFactory,
             IMarketParticipantRepository marketParticipantRepository,
-            IClock clock)
+            IClock clock,
+            ICorrelationContext correlationContext)
         {
             _dataAvailableNotificationSender = dataAvailableNotificationSender;
             _availableChargeDataRepository = availableChargeDataRepository;
             _availableChargeDataFactory = availableChargeDataFactory;
             _marketParticipantRepository = marketParticipantRepository;
             _clock = clock;
+            _correlationContext = correlationContext;
         }
 
         public async Task NotifyAsync(ChargeCommandAcceptedEvent chargeCommandAcceptedEvent)
@@ -68,7 +71,7 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.MessageHub
                 await GenerateDataAvailableNotificationDtosAsync(chargeCommandAcceptedEvent, now);
 
             var dataAvailableNotificationSenderTasks = dataAvailableNotificationDtos
-                .Select(x => _dataAvailableNotificationSender.SendAsync(x));
+                .Select(x => _dataAvailableNotificationSender.SendAsync(_correlationContext.Id, x));
             await Task.WhenAll(dataAvailableNotificationSenderTasks).ConfigureAwait(false);
         }
 

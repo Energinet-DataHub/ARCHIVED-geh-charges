@@ -12,14 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.IO;
-using System.Threading.Tasks;
-using Energinet.DataHub.MessageHub.Model.Model;
+using System;
 
-namespace GreenEnergyHub.Charges.Application.ChargeLinks.MessageHub.Infrastructure
+namespace GreenEnergyHub.Charges.IntegrationTests.TestHelpers
 {
-    public interface IChargeLinkBundleReplier
+    public class CorrelationIdGenerator
     {
-        Task ReplyAsync(Stream bundleStream, DataBundleRequestDto request);
+        public static string Create()
+        {
+            return Guid.NewGuid().ToString().Replace("-", string.Empty);
+        }
     }
 }
