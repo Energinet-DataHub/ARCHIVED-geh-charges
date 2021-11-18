@@ -14,7 +14,7 @@
 
 using System.Threading.Tasks;
 
-namespace Energinet.DataHub.Charges.Libraries.ServiceBus
+namespace Energinet.DataHub.Charges.Clients.ServiceBus
 {
     public interface IServiceBusRequestSender
     {
