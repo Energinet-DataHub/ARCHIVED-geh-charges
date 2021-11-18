@@ -54,7 +54,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             public async Task When_ReceivingCreateDefaultChargeLinksRequest_MessageHubIsNotifiedAboutAvailableData_And_Then_When_MessageHubRequestsTheBundle_Then_MessageHubReceivesBundleReply()
             {
                 // Arrange
-                var request = CreateEvent(out var correlationId);
+                var request = CreateEvent(Fixture.CreateLinkReplyQueue.Name, out var correlationId);
 
                 // Act
                 await Fixture.CreateLinkRequestQueue.SenderClient.SendMessageAsync(request, CancellationToken.None);
@@ -63,7 +63,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 await Fixture.MessageHubMock.AssertPeekReceivesReplyAsync(correlationId);
             }
 
-            private ServiceBusMessage CreateEvent(out string correlationId)
+            private ServiceBusMessage CreateEvent(string queueName, out string correlationId)
             {
                 correlationId = CorrelationIdGenerator.Create();
 
@@ -72,7 +72,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 return new ServiceBusMessage(byteArray)
                 {
                     CorrelationId = correlationId,
-                    ApplicationProperties = { new KeyValuePair<string, object>("ReplyTo", "create-link-messages-reply") },
+                    ApplicationProperties = { new KeyValuePair<string, object>("ReplyTo", queueName) },
                 };
             }
         }

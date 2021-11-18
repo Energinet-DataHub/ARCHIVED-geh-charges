@@ -59,6 +59,9 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures
         [NotNull]
         public QueueResource? CreateLinkRequestQueue { get; private set; }
 
+        [NotNull]
+        public QueueResource? CreateLinkReplyQueue { get; private set; }
+
         private AzuriteManager AzuriteManager { get; }
 
         private IntegrationTestConfiguration IntegrationTestConfiguration { get; }
@@ -139,7 +142,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures
                 .BuildQueue(ChargesServiceBusResourceNames.CreateLinkRequestQueueKey).SetEnvironmentVariableToQueueName(EnvironmentSettingNames.CreateLinkRequestQueueName)
                 .CreateAsync();
 
-            var createLinkReplyQueue = await ServiceBusResourceProvider
+            CreateLinkReplyQueue = await ServiceBusResourceProvider
                 .BuildQueue(ChargesServiceBusResourceNames.CreateLinkReplyQueueKey).SetEnvironmentVariableToQueueName(EnvironmentSettingNames.CreateLinkReplyQueueName)
                 .CreateAsync();
 
@@ -155,6 +158,13 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures
             var chargeCreatedTopic = await ServiceBusResourceProvider
                 .BuildTopic(ChargesServiceBusResourceNames.ChargeCreatedTopicKey).SetEnvironmentVariableToTopicName(EnvironmentSettingNames.ChargeCreatedTopicName)
                 .AddSubscription(ChargesServiceBusResourceNames.ChargeCreatedSubscriptionName)
+                .CreateAsync();
+
+            await ServiceBusResourceProvider
+                .BuildTopic(ChargesServiceBusResourceNames.DefaultChargeLinksDataAvailableNotifiedTopicKey)
+                .SetEnvironmentVariableToTopicName(EnvironmentSettingNames
+                    .DefaultChargeLinksDataAvailableNotifiedTopicName)
+                .AddSubscription(ChargesServiceBusResourceNames.DefaultChargeLinksDataAvailableNotifiedSubscriptionName)
                 .CreateAsync();
 
             var chargeCreatedListener = new ServiceBusListenerMock(ServiceBusResourceProvider.ConnectionString, TestLogger);

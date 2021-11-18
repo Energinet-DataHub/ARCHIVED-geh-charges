@@ -19,7 +19,7 @@ module "sbt_default_charge_link_available_notified" {
   resource_group_name = azurerm_resource_group.main.name
   subscriptions       = [
     {
-      name                = "sbs-default-charge-link-data-available-notified-sub-charges"
+      name                = "sbs-default-charge-link-available-notified-sub"
       max_delivery_count  = 1
     },
   ]

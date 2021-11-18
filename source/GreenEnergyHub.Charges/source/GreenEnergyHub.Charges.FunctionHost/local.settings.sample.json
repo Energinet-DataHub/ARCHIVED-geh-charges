@@ -41,7 +41,7 @@
     "CHARGE_PRICES_UPDATED_TOPIC_NAME": "charge-prices-updated",
     "CHARGEACCEPTED_SUB_DATAAVAILABLENOTIFIER": "sbs-chargeaccepted-sub-dataavailablenotifier",
     "DEFAULT_CHARGE_LINKS_DATA_AVAILABLE_NOTIFIED_TOPIC_NAME": "sbt-default-charge-link-available-notified",
-    "DEFAULT_CHARGE_LINKS_DATA_AVAILABLE_NOTIFIED_SUBSCRIPTION_NAME": "sbs-default-charge-link-data-available-notified-sub-charges",
+    "DEFAULT_CHARGE_LINKS_DATA_AVAILABLE_NOTIFIED_SUBSCRIPTION_NAME": "sbs-default-charge-link-available-notified-sub",
 
     "POST_OFFICE_TOPIC_NAME": "sbt-post-office",
     "MESSAGEHUB_DATAAVAILABLE_QUEUE": "sbq-dataavailable",
