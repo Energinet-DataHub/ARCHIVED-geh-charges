@@ -12,12 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Azure.Messaging.ServiceBus;
 using Energinet.Charges.Contracts;
 using Energinet.DataHub.Core.FunctionApp.TestCommon;
 using Google.Protobuf;
+using GreenEnergyHub.Charges.FunctionHost.Common;
 using GreenEnergyHub.Charges.IntegrationTests.Fixtures;
 using GreenEnergyHub.Charges.IntegrationTests.TestHelpers;
 using Xunit;
@@ -67,7 +69,11 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
 
                 var message = new CreateDefaultChargeLinks { MeteringPointId = "metering point id" };
                 var byteArray = message.ToByteArray();
-                return new ServiceBusMessage(byteArray) { CorrelationId = correlationId };
+                return new ServiceBusMessage(byteArray)
+                {
+                    CorrelationId = correlationId,
+                    ApplicationProperties = { new KeyValuePair<string, object>("ReplyTo", "create-link-messages-reply") },
+                };
             }
         }
     }

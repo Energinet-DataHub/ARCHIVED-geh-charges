@@ -40,6 +40,8 @@
     "CHARGE_CREATED_TOPIC_NAME": "charge-created",
     "CHARGE_PRICES_UPDATED_TOPIC_NAME": "charge-prices-updated",
     "CHARGEACCEPTED_SUB_DATAAVAILABLENOTIFIER": "sbs-chargeaccepted-sub-dataavailablenotifier",
+    "DEFAULT_CHARGE_LINKS_DATA_AVAILABLE_NOTIFIED_TOPIC_NAME": "sbt-default-charge-link-available-notified",
+    "DEFAULT_CHARGE_LINKS_DATA_AVAILABLE_NOTIFIED_SUBSCRIPTION_NAME": "sbs-default-charge-link-data-available-notified-sub-charges",
 
     "POST_OFFICE_TOPIC_NAME": "sbt-post-office",
     "MESSAGEHUB_DATAAVAILABLE_QUEUE": "sbq-dataavailable",
@@ -47,6 +49,6 @@
     "MESSAGEHUB_BUNDLEREPLY_QUEUE": "sbq-charges-reply",
 
     "HUB_SENDER_ID": "5790001330552",
-    "HUB_SENDER_ROLE_INT_ENUM_VALUE": "7",
+    "HUB_SENDER_ROLE_INT_ENUM_VALUE": "7"
   }
 }
