@@ -27,7 +27,7 @@ namespace GreenEnergyHub.Charges.Domain.AvailableChargeData
             string recipientId,
             MarketParticipantRole recipientRole,
             BusinessReasonCode businessReasonCode,
-            Instant requestTime,
+            Instant requestDateTime,
             Guid availableDataReferenceId,
             string chargeId,
             string chargeOwner,
@@ -41,7 +41,7 @@ namespace GreenEnergyHub.Charges.Domain.AvailableChargeData
             bool transparentInvoicing,
             Resolution resolution,
             List<AvailableChargeDataPoint> points)
-            : base(recipientId, recipientRole, businessReasonCode, requestTime, availableDataReferenceId)
+            : base(recipientId, recipientRole, businessReasonCode, requestDateTime, availableDataReferenceId)
         {
             ChargeId = chargeId;
             ChargeOwner = chargeOwner;

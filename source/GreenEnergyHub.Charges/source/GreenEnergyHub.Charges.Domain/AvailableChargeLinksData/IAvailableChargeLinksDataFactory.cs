@@ -25,7 +25,7 @@ namespace GreenEnergyHub.Charges.Domain.AvailableChargeLinksData
         AvailableChargeLinksData CreateAvailableChargeLinksData(
             ChargeLinkCommand chargeLinkCommand,
             MarketParticipant recipient,
-            Instant requestTime,
+            Instant requestDateTime,
             Guid messageHubId);
     }
 }

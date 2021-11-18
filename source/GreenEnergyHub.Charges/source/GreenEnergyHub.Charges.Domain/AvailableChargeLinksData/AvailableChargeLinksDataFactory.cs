@@ -26,14 +26,14 @@ namespace GreenEnergyHub.Charges.Domain.AvailableChargeLinksData
         public AvailableChargeLinksData CreateAvailableChargeLinksData(
             ChargeLinkCommand chargeLinkCommand,
             MarketParticipant recipient,
-            Instant requestTime,
+            Instant requestDateTime,
             Guid messageHubId)
         {
             return new AvailableChargeLinksData(
                 recipient.Id,
                 recipient.BusinessProcessRole,
                 chargeLinkCommand.Document.BusinessReasonCode,
-                requestTime,
+                requestDateTime,
                 messageHubId,
                 chargeLinkCommand.ChargeLink.SenderProvidedChargeId,
                 chargeLinkCommand.ChargeLink.ChargeOwner,

@@ -26,7 +26,7 @@ namespace GreenEnergyHub.Charges.Domain.AvailableChargeData
         public AvailableChargeData Create(
             ChargeCommand chargeCommand,
             MarketParticipant recipient,
-            Instant requestTime,
+            Instant requestDateTime,
             Guid messageHubId)
         {
             var points =
@@ -38,7 +38,7 @@ namespace GreenEnergyHub.Charges.Domain.AvailableChargeData
                 recipient.Id,
                 recipient.BusinessProcessRole,
                 chargeCommand.Document.BusinessReasonCode,
-                requestTime,
+                requestDateTime,
                 messageHubId,
                 chargeCommand.ChargeOperation.ChargeId,
                 chargeCommand.ChargeOperation.ChargeOwner,
