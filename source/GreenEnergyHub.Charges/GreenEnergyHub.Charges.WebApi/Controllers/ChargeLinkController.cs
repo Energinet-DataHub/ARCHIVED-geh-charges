@@ -12,7 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using GreenEnergyHub.Charges.WebApi.Dtos;
+using System.Collections.Generic;
+using System.Text.Json;
+using System.Threading.Tasks;
+using GreenEnergyHub.Charges.WebApi.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GreenEnergyHub.Charges.WebApi.Controllers
@@ -26,17 +29,25 @@ namespace GreenEnergyHub.Charges.WebApi.Controllers
             // TODO: Add log functionality
         }
 
+        /// <summary>
+        /// Returns all charge links data for a given metering point. Currently it returns mocked data.
+        /// </summary>
+        /// <param name="meteringPointId">The 18-digits metering point identifier used by the Danish version of Green Energy Hub</param>
+        /// <returns>Mocked charge links data</returns>
         [HttpGet("GetChargeLinksByMeteringPointId")]
-        public IActionResult GetChargeLinks(string meteringPointId)
+        public async Task<ActionResult> GetChargeLinksAsync(string meteringPointId)
         {
             if (meteringPointId == "404")
             {
                 return NotFound();
             }
 
-            var chargeLinkData = new ChargeLinkDto { ChargeName = "Requested Charge" };
+            // Uses mocked charge links data - later this will be refactored to use actual data from storage.
+            var mockDataText = await System.IO.File.ReadAllTextAsync(@"Files/ChargeLinksMockData.json").ConfigureAwait(false);
 
-            return Ok(chargeLinkData);
+            var mockChargeLinksData = JsonSerializer.Deserialize<IEnumerable<ChargeLink>>(mockDataText);
+
+            return Ok(mockChargeLinksData);
         }
     }
 }

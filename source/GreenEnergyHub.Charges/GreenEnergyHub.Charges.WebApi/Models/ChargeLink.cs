@@ -15,9 +15,9 @@
 using System;
 using GreenEnergyHub.Charges.Domain.Charges;
 
-namespace GreenEnergyHub.Charges.WebApi.Dtos
+namespace GreenEnergyHub.Charges.WebApi.Models
 {
-    public class ChargeLinkDto
+    public class ChargeLink
     {
         public ChargeType ChargeType { get; set; }
 
