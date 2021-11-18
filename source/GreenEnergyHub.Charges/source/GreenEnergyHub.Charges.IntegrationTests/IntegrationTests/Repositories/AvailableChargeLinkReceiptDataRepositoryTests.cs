@@ -59,15 +59,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
                 var actual = chargesDatabaseReadContext
                     .AvailableChargeLinkReceiptData
                     .Single(x => x.AvailableDataReferenceId == expected.AvailableDataReferenceId);
-                actual.RecipientId.Should().Be(expected.RecipientId);
-                actual.RecipientRole.Should().Be(expected.RecipientRole);
-                actual.BusinessReasonCode.Should().Be(expected.BusinessReasonCode);
-                actual.RequestDateTime.Should().Be(expected.RequestDateTime);
-                actual.AvailableDataReferenceId.Should().Be(expected.AvailableDataReferenceId);
-                actual.ReceiptStatus.Should().Be(expected.ReceiptStatus);
-                actual.OriginalOperationId.Should().Be(expected.OriginalOperationId);
-                actual.MeteringPointId.Should().Be(expected.MeteringPointId);
-                actual.ReasonCodes.Should().BeEquivalentTo(expected.ReasonCodes);
+                actual.Should().BeEquivalentTo(expected);
             }
         }
 
@@ -93,15 +85,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
             // Assert
             Assert.NotNull(actual);
             actual.Should().ContainSingle();
-            actual[0].RecipientId.Should().Be(expected.RecipientId);
-            actual[0].RecipientRole.Should().Be(expected.RecipientRole);
-            actual[0].BusinessReasonCode.Should().Be(expected.BusinessReasonCode);
-            actual[0].RequestDateTime.Should().Be(expected.RequestDateTime);
-            actual[0].AvailableDataReferenceId.Should().Be(expected.AvailableDataReferenceId);
-            actual[0].ReceiptStatus.Should().Be(expected.ReceiptStatus);
-            actual[0].OriginalOperationId.Should().Be(expected.OriginalOperationId);
-            actual[0].MeteringPointId.Should().Be(expected.MeteringPointId);
-            actual[0].ReasonCodes.Should().BeEquivalentTo(expected.ReasonCodes);
+            actual[0].Should().BeEquivalentTo(expected);
         }
     }
 }
