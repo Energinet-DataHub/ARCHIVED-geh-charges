@@ -12,14 +12,23 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.IO;
-using System.Threading.Tasks;
-using Energinet.DataHub.MessageHub.Model.Model;
+using System;
 
-namespace GreenEnergyHub.Charges.Application.ChargeLinks.MessageHub.Infrastructure
+namespace GreenEnergyHub.Charges.Domain.AvailableChargeLinkReceiptData
 {
-    public interface IChargeLinkBundleReplier
+    public class AvailableChargeLinkReceiptDataReasonCode
     {
-        Task ReplyAsync(Stream bundleStream, DataBundleRequestDto request);
+        public AvailableChargeLinkReceiptDataReasonCode(ReasonCode reasonCode, string text)
+        {
+            ReasonCode = reasonCode;
+            Text = text;
+            Id = Guid.NewGuid();
+        }
+
+        public Guid Id { get; }
+
+        public ReasonCode ReasonCode { get; }
+
+        public string Text { get; }
     }
 }

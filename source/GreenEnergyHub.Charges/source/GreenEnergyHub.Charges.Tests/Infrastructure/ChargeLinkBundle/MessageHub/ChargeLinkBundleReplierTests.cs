@@ -16,9 +16,9 @@ using System;
 using System.IO;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
-using Energinet.DataHub.MessageHub.Client.Model;
 using Energinet.DataHub.MessageHub.Client.Peek;
 using Energinet.DataHub.MessageHub.Client.Storage;
+using Energinet.DataHub.MessageHub.Model.Model;
 using GreenEnergyHub.Charges.Application;
 using GreenEnergyHub.Charges.Infrastructure.ChargeLinkBundle.MessageHub;
 using GreenEnergyHub.Charges.TestCore.Attributes;
@@ -48,7 +48,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.ChargeLinkBundle.MessageHu
             await sut.ReplyAsync(anyBundleStreamMock.Object, request);
 
             sender.Verify(s =>
-                s.SendAsync(It.IsAny<DataBundleResponseDto>(), It.IsAny<DataBundleRequestDto>(), It.IsAny<string>()));
+                s.SendAsync(It.IsAny<DataBundleResponseDto>()));
         }
 
         [Theory]
@@ -74,10 +74,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.ChargeLinkBundle.MessageHu
 
             // Assert
             sender.Verify(s =>
-                s.SendAsync(
-                    It.IsAny<DataBundleResponseDto>(),
-                    It.IsAny<DataBundleRequestDto>(),
-                    expectedSessionId));
+                s.SendAsync(It.IsAny<DataBundleResponseDto>()));
         }
     }
 }
