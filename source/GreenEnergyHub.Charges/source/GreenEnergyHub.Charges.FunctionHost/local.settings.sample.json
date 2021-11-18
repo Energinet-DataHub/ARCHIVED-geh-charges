@@ -45,15 +45,15 @@
     "MESSAGEHUB_BUNDLEREPLY_QUEUE": "charges-reply",
     "MESSAGEHUB_STORAGE_CONTAINER": "postoffice-reply",
 
+    // Internal, charge, received
+    "COMMAND_RECEIVED_TOPIC_NAME": "command-received",
+    "COMMAND_RECEIVED_SUBSCRIPTION_NAME": "command-received",
+
     // Internal, charge, accepted
     "COMMAND_ACCEPTED_TOPIC_NAME": "command-accepted",
     "CHARGEACCEPTED_SUB_DATAAVAILABLENOTIFIER": "chargeaccepted-sub-dataavailablenotifier",
     "COMMAND_ACCEPTED_SUBSCRIPTION_NAME": "command-accepted",
     "COMMAND_ACCEPTED_RECEIVER_SUBSCRIPTION_NAME": "charge-command-accepted-receiver",
-
-    // Internal, charge, received
-    "COMMAND_RECEIVED_TOPIC_NAME": "command-received",
-    "COMMAND_RECEIVED_SUBSCRIPTION_NAME": "command-received",
 
     // Internal, charge, rejected
     "COMMAND_REJECTED_TOPIC_NAME": "command-rejected",
