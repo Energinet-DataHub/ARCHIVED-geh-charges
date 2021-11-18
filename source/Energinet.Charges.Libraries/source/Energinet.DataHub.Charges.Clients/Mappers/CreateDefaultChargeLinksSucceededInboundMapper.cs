@@ -14,9 +14,9 @@
 
 using System.Diagnostics.CodeAnalysis;
 using Energinet.Charges.Contracts;
-using Energinet.DataHub.Charges.Libraries.Models;
+using Energinet.DataHub.Charges.Clients.Models;
 
-namespace Energinet.DataHub.Charges.Libraries.Mappers
+namespace Energinet.DataHub.Charges.Clients.Mappers
 {
     internal class CreateDefaultChargeLinksSucceededInboundMapper
     {
