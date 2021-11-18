@@ -48,7 +48,7 @@ limitations under the License.
       https://github.com/Energinet-DataHub/geh-charges/tree/main/source/Energinet.Charges.Libraries/source/Energinet.DataHub.Charges.Clients.SimpleInjector/documents/documentation.md
     </PackageDescription>
     <Description>
-      Contains functionality to register the GreenEnergyHub.Charges.Libraries.Clients NuGet package.
+      Contains functionality to register the Energinet.DataHub.Charges.Libraries.Clients NuGet package.
 
       Learn more about the Green Energy Hub platform at https://github.com/Energinet-DataHub/green-energy-hub.
 
