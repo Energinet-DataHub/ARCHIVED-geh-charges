@@ -4,6 +4,8 @@
 
 Updated the documentation to refer to `Energinet.DataHub.Charges.Clients.SimpleInjector` NuGet package for registration purposes.
 
+Namespaces adjusted to reflect NuGet package id: `Energinet.DataHub.Charges.Clients`
+
 ## Version 1.0.10
 
 Integration tests re-enabled in Energinet GitHub pipeline.
