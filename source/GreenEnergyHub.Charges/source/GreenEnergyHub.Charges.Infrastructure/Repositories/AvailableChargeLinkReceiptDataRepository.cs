@@ -37,7 +37,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public Task<List<AvailableChargeLinkReceiptData>> GetAvailableChargeLinkReceiptDataAsync(IEnumerable<Guid> dataReferenceId)
+        public Task<List<AvailableChargeLinkReceiptData>> GetAsync(IEnumerable<Guid> dataReferenceId)
         {
             var queryable = _context.AvailableChargeLinkReceiptData.Where(x => dataReferenceId.Contains(x.AvailableDataReferenceId));
             return queryable

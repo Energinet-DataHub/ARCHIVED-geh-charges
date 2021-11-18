@@ -61,7 +61,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
 
         [Theory]
         [InlineAutoMoqData]
-        public async Task GetAvailableChargeDataAsync_GivenAnExistingAvailableDataReferenceId_ReturnsAvailableChargeData(
+        public async Task GetAsync_GivenAnExistingAvailableDataReferenceId_ReturnsAvailableChargeData(
             [NotNull] AvailableChargeData expected)
         {
             // Arrange
@@ -75,7 +75,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
 
             // Act
             var actual =
-                await sut.GetAvailableChargeDataAsync(new List<Guid> { expected.AvailableDataReferenceId })
+                await sut.GetAsync(new List<Guid> { expected.AvailableDataReferenceId })
                 .ConfigureAwait(false);
 
             // Assert
