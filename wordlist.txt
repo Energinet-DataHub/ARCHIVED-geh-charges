@@ -49,6 +49,7 @@ MessageHub
 MeteringPointId
 Moq
 namespace
+Namespaces
 NPM
 NRules
 NSubstitude
