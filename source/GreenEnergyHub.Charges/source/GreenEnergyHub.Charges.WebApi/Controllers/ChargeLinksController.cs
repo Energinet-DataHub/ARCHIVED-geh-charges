@@ -22,9 +22,9 @@ namespace GreenEnergyHub.Charges.WebApi.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class ChargeLinkController : ControllerBase
+    public class ChargeLinksController : ControllerBase
     {
-        public ChargeLinkController()
+        public ChargeLinksController()
         {
             // TODO: Add log functionality
         }
@@ -36,8 +36,13 @@ namespace GreenEnergyHub.Charges.WebApi.Controllers
         /// Use 404 to get a "404 Not Found" response.</param>
         /// <returns>Mocked charge links data or "404 Not Found"</returns>
         [HttpGet("GetChargeLinksByMeteringPointId")]
-        public async Task<ActionResult> GetChargeLinksByMeteringPointIdAsync(string meteringPointId)
+        public async Task<IActionResult> GetChargeLinksByMeteringPointIdAsync(string meteringPointId)
         {
+            if (meteringPointId == null)
+            {
+                return BadRequest();
+            }
+
             if (meteringPointId == "404")
             {
                 return NotFound();
