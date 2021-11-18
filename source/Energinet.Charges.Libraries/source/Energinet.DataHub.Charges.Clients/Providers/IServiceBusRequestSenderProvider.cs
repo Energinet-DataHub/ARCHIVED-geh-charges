@@ -12,9 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.Charges.Libraries.ServiceBus;
+using Energinet.DataHub.Charges.Clients.ServiceBus;
 
-namespace Energinet.DataHub.Charges.Libraries.Providers
+namespace Energinet.DataHub.Charges.Clients.Providers
 {
     public interface IServiceBusRequestSenderProvider
     {

@@ -16,12 +16,12 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using Energinet.Charges.Contracts;
-using Energinet.DataHub.Charges.Libraries.Models;
-using Energinet.DataHub.Charges.Libraries.Providers;
-using Energinet.DataHub.Charges.Libraries.ServiceBus;
+using Energinet.DataHub.Charges.Clients.Models;
+using Energinet.DataHub.Charges.Clients.Providers;
+using Energinet.DataHub.Charges.Clients.ServiceBus;
 using Google.Protobuf;
 
-namespace Energinet.DataHub.Charges.Libraries.DefaultChargeLink
+namespace Energinet.DataHub.Charges.Clients.DefaultChargeLink
 {
     public sealed class DefaultChargeLinkClient : IDefaultChargeLinkClient
     {

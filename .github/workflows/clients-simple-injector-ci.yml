@@ -11,7 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-name: Clients CI
+name: Clients.SimpleInjector CI
 
 on:
   pull_request:
@@ -32,15 +32,15 @@ jobs:
           github_token: ${{ github.token }}
           paths: '[
             "source/Energinet.Charges.Libraries/**",
-            ".github/workflows/clients-ci.yml",
+            ".github/workflows/clients-simple-injector-ci.yml",
             ".github/actions/dotnet-build-and-test/**",
             ".github/actions/azure-core-tools-install/**"
           ]'
 
-  validate_build_clients:
+  validate_build_clients_simple_injector:
     needs: pre_job
     if: ${{ needs.pre_job.outputs.should_skip != 'true' }}
-    name: Validate build Clients CI
+    name: Validate build Clients SimpleInjector CI
     uses: Energinet-DataHub/.github/.github/workflows/dotnet-solution-ci.yml@2.0.0
     with:
       SOLUTION_FILE_PATH: 'source/Energinet.Charges.Libraries/Energinet.DataHub.Charges.Libraries.sln'

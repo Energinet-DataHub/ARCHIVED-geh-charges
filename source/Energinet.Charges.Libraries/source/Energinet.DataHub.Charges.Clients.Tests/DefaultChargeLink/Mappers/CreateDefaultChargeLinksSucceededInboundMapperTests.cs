@@ -15,7 +15,7 @@
 using System;
 using AutoFixture;
 using Energinet.Charges.Contracts;
-using Energinet.DataHub.Charges.Libraries.Mappers;
+using Energinet.DataHub.Charges.Clients.Mappers;
 using FluentAssertions;
 using Xunit;
 using Xunit.Categories;
