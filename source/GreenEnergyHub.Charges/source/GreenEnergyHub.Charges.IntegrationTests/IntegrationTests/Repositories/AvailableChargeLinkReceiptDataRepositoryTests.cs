@@ -56,9 +56,9 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
 
             foreach (var expected in expectedList)
             {
-                var actual =
-                    chargesDatabaseReadContext.AvailableChargeLinkReceiptData
-                        .Single(x => x.AvailableDataReferenceId == expected.AvailableDataReferenceId);
+                var actual = chargesDatabaseReadContext
+                    .AvailableChargeLinkReceiptData
+                    .Single(x => x.AvailableDataReferenceId == expected.AvailableDataReferenceId);
                 actual.RecipientId.Should().Be(expected.RecipientId);
                 actual.RecipientRole.Should().Be(expected.RecipientRole);
                 actual.BusinessReasonCode.Should().Be(expected.BusinessReasonCode);
