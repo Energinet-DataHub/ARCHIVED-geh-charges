@@ -21,6 +21,7 @@ using Energinet.DataHub.Core.FunctionApp.TestCommon;
 using Energinet.DataHub.Core.FunctionApp.TestCommon.ServiceBus.ListenerMock;
 using FluentAssertions;
 using GreenEnergyHub.Charges.IntegrationTests.Fixtures;
+using GreenEnergyHub.Charges.IntegrationTests.TestFiles.Charges;
 using GreenEnergyHub.Charges.IntegrationTests.TestHelpers;
 using NodaTime;
 using Xunit;
@@ -43,7 +44,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             [Fact]
             public async Task When_ChargeIsReceived_Then_AHttp200ResponseIsReturned()
             {
-                var request = CreateTariffWithPricesRequest(out string _);
+                var request = CreateHttpRequest(ChargeTestFiles.AnyValid, out string _);
 
                 var actualResponse = await Fixture.HostManager.HttpClient.SendAsync(request);
 
@@ -58,7 +59,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             {
                 // Arrange
                 Fixture.PostOfficeListener.ResetMessageHandlersAndReceivedMessages();
-                var request = CreateTariffWithPricesRequest(out string _);
+                var request = CreateHttpRequest(ChargeTestFiles.AnyValid, out string _);
 
                 var body = string.Empty;
                 using var isMessageReceivedEvent = await Fixture.PostOfficeListener
@@ -83,7 +84,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             public async Task When_ChargeIsReceived_Then_ChargeCreatedIntegrationEventIsPublished()
             {
                 // Arrange
-                var request = CreateTariffWithPricesRequest(out string correlationId);
+                var request = CreateHttpRequest(ChargeTestFiles.AnyValid, out string correlationId);
                 Fixture.ChargeCreatedListener.Reset();
                 using var eventualChargeCreatedEvent = await Fixture
                     .ChargeCreatedListener
@@ -102,7 +103,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             public async Task When_ChargeIncludingPriceIsReceived_Then_ChargePricesUpdatedIntegrationEventIsPublished()
             {
                 // Arrange
-                var request = CreateTariffWithPricesRequest(out string correlationId);
+                var request = CreateHttpRequest(ChargeTestFiles.WithPrice, out string correlationId);
                 Fixture.ChargePricesUpdatedListener.Reset();
                 using var eventualChargePriceUpdatedEvent = await Fixture
                     .ChargePricesUpdatedListener
@@ -117,10 +118,23 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 isChargePricesUpdatedReceived.Should().BeTrue();
             }
 
-            private static HttpRequestMessage CreateTariffWithPricesRequest(
+            [Fact]
+            public async Task Given_NewTaxTariffReceived_When_GridAccessProviderPeeks_Then_MessageHubReceivesReply()
+            {
+                // Arrange
+                var request = CreateHttpRequest(ChargeTestFiles.TaxTariff, out var correlationId);
+
+                // Act
+                await Fixture.HostManager.HttpClient.SendAsync(request);
+
+                // Assert
+                await Fixture.MessageHubMock.AssertPeekReceivesReplyAsync(correlationId);
+            }
+
+            private static HttpRequestMessage CreateHttpRequest(
+                string testFilePath,
                 out string correlationId)
             {
-                var testFilePath = "TestFiles/Charges/ValidCreateTariffCommand.xml";
                 var clock = SystemClock.Instance;
                 var chargeJson = EmbeddedResourceHelper.GetEmbeddedFile(testFilePath, clock);
                 correlationId = CorrelationIdGenerator.Create();

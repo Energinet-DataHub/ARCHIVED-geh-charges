@@ -65,7 +65,7 @@ limitations under the License.
       <None Update="TestFiles\Charges\InvalidCreateTariffCommand.xml">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
-      <None Update="TestFiles\Charges\ValidCreateTariffCommand.xml">
+      <None Update="TestFiles\Charges\CreateTaxTariffWithPriceRequest.xml">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
       <None Update="TestFiles\ChargeLinks\CreateFixedPeriodTariffChargeLink.xml">
