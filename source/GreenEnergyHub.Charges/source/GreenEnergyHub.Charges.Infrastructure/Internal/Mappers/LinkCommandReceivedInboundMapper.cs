@@ -15,12 +15,11 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using GreenEnergyHub.Charges.Core.DateTime;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinkCommandReceivedEvents;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinkCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksReceivedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Messaging.Protobuf;
 using GreenEnergyHub.Messaging.Transport;
-using ChargeLinkCommand = GreenEnergyHub.Charges.Domain.Dtos.ChargeLinkCommands.ChargeLinkCommand;
 using MarketParticipant = GreenEnergyHub.Charges.Domain.MarketParticipants.MarketParticipant;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
@@ -30,14 +29,12 @@ namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
         protected override IInboundMessage Convert(
             [NotNull]GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandReceived.ChargeLinkCommandReceived chargeLinkCommandReceived)
         {
-            return new ChargeLinkCommandReceivedEvent(
+            return new ChargeLinksReceivedEvent(
                 chargeLinkCommandReceived.PublishedTime.ToInstant(),
-                chargeLinkCommandReceived.ChargeLinkCommands.Select(linkCommand =>
-                    new ChargeLinkCommand
-                {
-                    Document = ConvertDocument(linkCommand.Document),
-                    ChargeLink = ConvertChargeLink(linkCommand.ChargeLink),
-                }).ToList());
+                new ChargeLinksCommand(
+                    chargeLinkCommandReceived.ChargeLinksCommand.MeteringPointId,
+                    ConvertDocument(chargeLinkCommandReceived.ChargeLinksCommand.Document),
+                    chargeLinkCommandReceived.ChargeLinksCommand.ChargeLinks.Select(ConvertChargeLink).ToList()));
         }
 
         private static DocumentDto ConvertDocument(GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandReceived.Document document)
@@ -68,7 +65,6 @@ namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
             return new ChargeLinkDto
             {
                 OperationId = chargeLink.OperationId,
-                MeteringPointId = chargeLink.MeteringPointId,
                 SenderProvidedChargeId = chargeLink.SenderProvidedChargeId,
                 ChargeOwner = chargeLink.ChargeOwner,
                 Factor = chargeLink.Factor,
