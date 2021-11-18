@@ -14,7 +14,7 @@
 
 using GreenEnergyHub.Charges.Contracts;
 
-namespace Energinet.DataHub.Charges.Libraries.Models
+namespace Energinet.DataHub.Charges.Clients.Models
 {
     /// <summary>
     /// The data needed by the Metering Point domain as a reply

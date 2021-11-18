@@ -49,6 +49,7 @@ MessageHub
 MeteringPointId
 Moq
 namespace
+Namespaces
 NPM
 NRules
 NSubstitude
@@ -74,3 +75,4 @@ TODO
 TSO
 UpdatedPeriodEndDateTime
 UpdatedPeriodStartDateTime
+SimpleInjector
