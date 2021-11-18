@@ -24,6 +24,7 @@ using Energinet.DataHub.Core.FunctionApp.TestCommon.FunctionAppHost;
 using Energinet.DataHub.Core.FunctionApp.TestCommon.ServiceBus.ListenerMock;
 using Energinet.DataHub.Core.FunctionApp.TestCommon.ServiceBus.ResourceProvider;
 using Energinet.DataHub.Core.TestCommon.Diagnostics;
+using Energinet.DataHub.MessageHub.IntegrationTesting;
 using GreenEnergyHub.Charges.FunctionHost.Common;
 using GreenEnergyHub.Charges.IntegrationTests.TestCommon;
 using GreenEnergyHub.Charges.TestCore.Database;
@@ -54,13 +55,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures
         public ServiceBusListenerMock? PostOfficeListener { get; private set; }
 
         [NotNull]
-        public ServiceBusListenerMock? MessageHubDataAvailableListener { get; private set; }
-
-        [NotNull]
-        public ServiceBusListenerMock? MessageHubReplyListener { get; private set; }
-
-        [NotNull]
-        public MessageHubMock? MessageHubMock { get; private set; }
+        public MessageHubSimulation? MessageHubMock { get; private set; }
 
         private AzuriteManager AzuriteManager { get; }
 
@@ -103,13 +98,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures
             Environment.SetEnvironmentVariable(EnvironmentSettingNames.DataHubListenerConnectionString, ServiceBusResourceProvider.ConnectionString);
             Environment.SetEnvironmentVariable(EnvironmentSettingNames.DataHubManagerConnectionString, ServiceBusResourceProvider.ConnectionString);
 
-            var postOfficeTopic = await ServiceBusResourceProvider
-                .BuildTopic(ChargesServiceBusResourceNames.PostOfficeTopicKey).SetEnvironmentVariableToTopicName(EnvironmentSettingNames.PostOfficeTopicName)
-                .AddSubscription(ChargesServiceBusResourceNames.PostOfficeSubscriptionName)
-                .CreateAsync();
-
-            PostOfficeListener = new ServiceBusListenerMock(ServiceBusResourceProvider.ConnectionString, TestLogger);
-            await PostOfficeListener.AddTopicSubscriptionListenerAsync(postOfficeTopic.Name, ChargesServiceBusResourceNames.PostOfficeSubscriptionName);
+            await InitializePostOfficeAsync();
 
             var chargeLinkAcceptedTopic = await ServiceBusResourceProvider
                 .BuildTopic(ChargesServiceBusResourceNames.ChargeLinkAcceptedTopicKey).SetEnvironmentVariableToTopicName(EnvironmentSettingNames.ChargeLinkAcceptedTopicName)
@@ -179,29 +168,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures
             await chargePricesUpdatedListener.AddTopicSubscriptionListenerAsync(chargePricesUpdatedTopic.Name, ChargesServiceBusResourceNames.ChargePricesUpdatedSubscriptionName);
             ChargePricesUpdatedListener = new ServiceBusTestListener(chargePricesUpdatedListener);
 
-            var messageHubDataAvailableQueue = await ServiceBusResourceProvider
-                .BuildQueue(ChargesServiceBusResourceNames.MessageHubDataAvailableQueueKey).SetEnvironmentVariableToQueueName(EnvironmentSettingNames.MessageHubDataAvailableQueue)
-                .CreateAsync();
-
-            MessageHubDataAvailableListener = new ServiceBusListenerMock(ServiceBusResourceProvider.ConnectionString, TestLogger);
-            await MessageHubDataAvailableListener.AddQueueListenerAsync(messageHubDataAvailableQueue.Name);
-
-            var messageHubRequestQueue = await ServiceBusResourceProvider
-                .BuildQueue(ChargesServiceBusResourceNames.MessageHubRequestQueueKey, requireSession: true).SetEnvironmentVariableToQueueName(EnvironmentSettingNames.MessageHubRequestQueue)
-                .CreateAsync();
-
-            var messageHubReplyQueue = await ServiceBusResourceProvider
-                .BuildQueue(ChargesServiceBusResourceNames.MessageHubReplyQueueKey, requireSession: true).SetEnvironmentVariableToQueueName(EnvironmentSettingNames.MessageHubReplyQueue)
-                .CreateAsync();
-
-            MessageHubReplyListener = new ServiceBusListenerMock(ServiceBusResourceProvider.ConnectionString, TestLogger);
-
-            // BUG: This code doesn't work. See bug https://github.com/Energinet-DataHub/geh-charges/issues/788
-            //await MessageHubReplyListener.AddQueueListenerAsync(messageHubReplyQueue.Name);
-            Environment.SetEnvironmentVariable(EnvironmentSettingNames.MessageHubStorageConnectionString, ChargesServiceBusResourceNames.MessageHubStorageConnectionString);
-            Environment.SetEnvironmentVariable(EnvironmentSettingNames.MessageHubStorageContainer, ChargesServiceBusResourceNames.MessageHubStorageContainerName);
-
-            MessageHubMock = new MessageHubMock(ServiceBusResourceProvider.ConnectionString, messageHubRequestQueue.Name, messageHubReplyQueue.Name);
+            await InitializeMessageHubAsync();
 
             // => Database
             await DatabaseManager.CreateDatabaseAsync();
@@ -223,15 +190,56 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures
         protected override async Task OnDisposeFunctionAppDependenciesAsync()
         {
             AzuriteManager.Dispose();
+            await MessageHubMock.DisposeAsync();
 
             // => Service Bus
             await PostOfficeListener.DisposeAsync();
-            await MessageHubDataAvailableListener.DisposeAsync();
-            await MessageHubReplyListener.DisposeAsync();
             await ServiceBusResourceProvider.DisposeAsync();
 
             // => Database
             await DatabaseManager.DeleteDatabaseAsync();
+        }
+
+        private async Task InitializePostOfficeAsync()
+        {
+            var postOfficeTopic = await ServiceBusResourceProvider
+                .BuildTopic(ChargesServiceBusResourceNames.PostOfficeTopicKey)
+                .SetEnvironmentVariableToTopicName(EnvironmentSettingNames.PostOfficeTopicName)
+                .AddSubscription(ChargesServiceBusResourceNames.PostOfficeSubscriptionName)
+                .CreateAsync();
+
+            PostOfficeListener = new ServiceBusListenerMock(ServiceBusResourceProvider.ConnectionString, TestLogger);
+            await PostOfficeListener.AddTopicSubscriptionListenerAsync(postOfficeTopic.Name, ChargesServiceBusResourceNames.PostOfficeSubscriptionName);
+        }
+
+        private async Task InitializeMessageHubAsync()
+        {
+            var messageHubDataAvailableQueue = await ServiceBusResourceProvider
+                .BuildQueue(ChargesServiceBusResourceNames.MessageHubDataAvailableQueueKey)
+                .SetEnvironmentVariableToQueueName(EnvironmentSettingNames.MessageHubDataAvailableQueue)
+                .CreateAsync();
+
+            var messageHubRequestQueue = await ServiceBusResourceProvider
+                .BuildQueue(ChargesServiceBusResourceNames.MessageHubRequestQueueKey, requireSession: true)
+                .SetEnvironmentVariableToQueueName(EnvironmentSettingNames.MessageHubRequestQueue)
+                .CreateAsync();
+
+            var messageHubReplyQueue = await ServiceBusResourceProvider
+                .BuildQueue(ChargesServiceBusResourceNames.MessageHubReplyQueueKey, requireSession: true)
+                .SetEnvironmentVariableToQueueName(EnvironmentSettingNames.MessageHubReplyQueue)
+                .CreateAsync();
+
+            Environment.SetEnvironmentVariable(EnvironmentSettingNames.MessageHubStorageConnectionString, ChargesServiceBusResourceNames.MessageHubStorageConnectionString);
+            Environment.SetEnvironmentVariable(EnvironmentSettingNames.MessageHubStorageContainer, ChargesServiceBusResourceNames.MessageHubStorageContainerName);
+
+            var messageHubSimulationConfig = new MessageHubSimulationConfig(
+                ServiceBusResourceProvider.ConnectionString,
+                messageHubDataAvailableQueue.Name,
+                messageHubRequestQueue.Name,
+                messageHubReplyQueue.Name,
+                ChargesServiceBusResourceNames.MessageHubStorageConnectionString,
+                ChargesServiceBusResourceNames.MessageHubStorageContainerName);
+            MessageHubMock = new MessageHubSimulation(messageHubSimulationConfig);
         }
 
         private static string GetBuildConfiguration()

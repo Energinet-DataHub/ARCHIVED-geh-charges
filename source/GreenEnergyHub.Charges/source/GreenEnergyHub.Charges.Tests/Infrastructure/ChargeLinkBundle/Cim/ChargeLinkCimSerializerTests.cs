@@ -38,6 +38,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.ChargeLinkBundle.Cim
     {
         private const int NoOfLinksInBundle = 10;
         private const string CimTestId = "00000000000000000000000000000000";
+        private const string RecipientId = "TestRecipient1111";
 
         [Theory]
         [InlineAutoDomainData]
@@ -58,7 +59,12 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.ChargeLinkBundle.Cim
             var chargeLinks = GetChargeLinks(clock.Object);
 
             // Act
-            await sut.SerializeToStreamAsync(chargeLinks, stream);
+            await sut.SerializeToStreamAsync(
+                chargeLinks,
+                stream,
+                BusinessReasonCode.UpdateMasterDataSettlement,
+                RecipientId,
+                MarketParticipantRole.GridAccessProvider);
 
             // Assert
             var actual = stream.AsString();
@@ -80,7 +86,12 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.ChargeLinkBundle.Cim
 
             await using var stream = new MemoryStream();
 
-            await sut.SerializeToStreamAsync(chargeLinks, stream);
+            await sut.SerializeToStreamAsync(
+                chargeLinks,
+                stream,
+                BusinessReasonCode.UpdateMasterDataSettlement,
+                RecipientId,
+                MarketParticipantRole.GridAccessProvider);
 
             await using var fileStream = File.Create("C:\\Temp\\TestChargeLinkBundle" + Guid.NewGuid() + ".xml");
 
@@ -128,7 +139,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.ChargeLinkBundle.Cim
                 Instant.FromUtc(2021, 4, 30, 22, 0, 0);
 
             return new AvailableChargeLinksData(
-                "TestRecipient1111",
+                RecipientId,
                 MarketParticipantRole.GridAccessProvider,
                 BusinessReasonCode.UpdateMasterDataSettlement,
                 "Charge" + no,

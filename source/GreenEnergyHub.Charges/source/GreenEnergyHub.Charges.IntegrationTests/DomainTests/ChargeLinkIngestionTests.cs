@@ -25,11 +25,8 @@ using Xunit;
 using Xunit.Abstractions;
 using Xunit.Categories;
 
-namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests.ChargeLinks
+namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
 {
-    /// <summary>
-    /// Proof-of-concept on integration testing a function.
-    /// </summary>
     [IntegrationTest]
     public class ChargeLinkIngestionTests
     {
@@ -48,29 +45,47 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests.ChargeLinks
 
             public Task DisposeAsync()
             {
+                Fixture.MessageHubMock.Clear();
                 return Task.CompletedTask;
             }
 
             [Fact]
             public async Task When_ChargeIsReceived_Then_AHttp200ResponseIsReturned()
             {
-                var request = CreateTariffWithPricesRequest();
+                var request = CreateHttpRequest("CreateFixedPeriodTariffChargeLink.xml", out _);
 
                 var actualResponse = await Fixture.HostManager.HttpClient.SendAsync(request);
 
                 actualResponse.StatusCode.Should().Be(HttpStatusCode.OK);
             }
 
-            private static HttpRequestMessage CreateTariffWithPricesRequest()
+            [Fact]
+            public async Task When_ReceivingChargeLinkMessage_MessageHubIsNotifiedAboutAvailableData_And_Then_When_MessageHubRequestsTheBundle_Then_MessageHubReceivesBundleReply()
             {
-                var testFilePath = "TestFiles/ChargeLinks/CreateFixedPeriodTariffChargeLink.xml";
-                var clock = SystemClock.Instance;
-                var chargeJson = EmbeddedResourceHelper.GetEmbeddedFile(testFilePath, clock);
+                // Arrange
+                var request = CreateHttpRequest("CreateFixedPeriodTariffChargeLink.xml", out var correlationId);
 
-                return new HttpRequestMessage(HttpMethod.Post, "api/ChargeLinkIngestion")
+                // Act
+                await Fixture.HostManager.HttpClient.SendAsync(request);
+
+                // Assert
+                await Fixture.MessageHubMock.AssertPeekReceivesReplyAsync(correlationId);
+            }
+
+            private static HttpRequestMessage CreateHttpRequest(string testFileName, out string correlationId)
+            {
+                var testFilePath = $"TestFiles/ChargeLinks/{testFileName}";
+                var clock = SystemClock.Instance;
+                var chargeLinkJson = EmbeddedResourceHelper.GetEmbeddedFile(testFilePath, clock);
+                correlationId = CorrelationIdGenerator.Create();
+
+                var request = new HttpRequestMessage(HttpMethod.Post, "api/ChargeLinkIngestion")
                 {
-                    Content = new StringContent(chargeJson, Encoding.UTF8, "application/xml"),
+                    Content = new StringContent(chargeLinkJson, Encoding.UTF8, "application/xml"),
                 };
+                request.ConfigureTraceContext(correlationId);
+
+                return request;
             }
         }
     }
