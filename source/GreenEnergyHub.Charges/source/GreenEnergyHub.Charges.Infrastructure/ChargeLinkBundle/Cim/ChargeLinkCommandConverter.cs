@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
@@ -38,31 +37,13 @@ namespace GreenEnergyHub.Charges.Infrastructure.ChargeLinkBundle.Cim
             [NotNull] XmlReader reader,
             [NotNull] DocumentDto document)
         {
-            return new ChargeLinksCommand(
-                await ParseMeteringPointIdAsync(reader),
-                document,
-                new List<ChargeLinkDto>
-                {
-                    await ParseChargeLinkAsync(reader).ConfigureAwait(false),
-                });
+            return await ParseChargeLinksCommandAsync(reader, document);
         }
 
-        private static async Task<string> ParseMeteringPointIdAsync(XmlReader reader)
-        {
-            while (await reader.ReadAsync().ConfigureAwait(false))
-            {
-                if (reader.Is(CimChargeLinkCommandConstants.MeteringPointId, CimChargeLinkCommandConstants.Namespace))
-                {
-                    return await reader.ReadElementContentAsStringAsync().ConfigureAwait(false);
-                }
-            }
-
-            throw new Exception("MeteringPointId was not found when parsing CIM bundle message");
-        }
-
-        private static async Task<ChargeLinkDto> ParseChargeLinkAsync(XmlReader reader)
+        private static async Task<ChargeLinksCommand> ParseChargeLinksCommandAsync(XmlReader reader, DocumentDto documentDto)
         {
             var link = new ChargeLinkDto();
+            string meteringPointId = null!;
 
             while (await reader.ReadAsync().ConfigureAwait(false))
             {
@@ -70,6 +51,11 @@ namespace GreenEnergyHub.Charges.Infrastructure.ChargeLinkBundle.Cim
                 {
                     var content = await reader.ReadElementContentAsStringAsync().ConfigureAwait(false);
                     link.OperationId = content;
+                }
+                else if (reader.Is(CimChargeLinkCommandConstants.MeteringPointId, CimChargeLinkCommandConstants.Namespace))
+                {
+                    var content = await reader.ReadElementContentAsStringAsync().ConfigureAwait(false);
+                    meteringPointId = content;
                 }
                 else if (reader.Is(CimChargeLinkCommandConstants.StartDateTime, CimChargeLinkCommandConstants.Namespace))
                 {
@@ -101,7 +87,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.ChargeLinkBundle.Cim
                 }
             }
 
-            return link;
+            return new ChargeLinksCommand(meteringPointId, documentDto, new List<ChargeLinkDto> { link });
         }
     }
 }

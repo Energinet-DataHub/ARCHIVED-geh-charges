@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
@@ -21,6 +22,7 @@ using GreenEnergyHub.Charges.Application.ChargeLinks.CreateDefaultChargeLinkRepl
 using GreenEnergyHub.Charges.Application.ChargeLinks.Handlers;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinkCommandAcceptedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinkCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.TestHelpers;
 using Moq;
 using NodaTime;
@@ -59,39 +61,14 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Handlers
                 x => x.ReplyWithSucceededAsync(MeteringPointId, true, replyTo));
         }
 
-        [Theory]
-        [InlineAutoDomainData]
-        public async Task HandleAsync_WhenCalled_ThrowsInvalidOperationExceptionIfMeteringPointIdsDiffer(
-            [Frozen] [NotNull] Mock<IMessageMetaDataContext> messageMetaDataContext,
-            [NotNull] string replyTo,
-            [NotNull] ChargeLinkEventReplyHandler sut)
-        {
-            // Arrange
-            messageMetaDataContext.Setup(m => m.IsReplyToSet()).Returns(true);
-            messageMetaDataContext.Setup(m => m.ReplyTo).Returns(replyTo);
-
-            const string optionalMeteringPointId = "optionalMeteringPointId";
-            var command = GetChargeLinkCommandAcceptedEvent(optionalMeteringPointId);
-
-            // Act & Assert
-            await Assert.ThrowsAsync<InvalidOperationException>(() => sut.HandleAsync(command));
-        }
-
         private static ChargeLinkCommandAcceptedEvent GetChargeLinkCommandAcceptedEvent(
             string optionalMeteringPointId = "first")
         {
             var command = new ChargeLinkCommandAcceptedEvent(
-                new[]
-                {
-                    new ChargeLinksCommand
-                    {
-                        ChargeLink = new ChargeLinkDto { MeteringPointId = MeteringPointId },
-                    },
-                    new ChargeLinksCommand
-                    {
-                        ChargeLink = new ChargeLinkDto { MeteringPointId = optionalMeteringPointId },
-                    },
-                },
+                new ChargeLinksCommand(
+                    optionalMeteringPointId,
+                    new DocumentDto(),
+                    new List<ChargeLinkDto>()),
                 Instant.MinValue);
             return command;
         }

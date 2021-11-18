@@ -14,7 +14,7 @@
 
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using GreenEnergyHub.Charges.Core.DateTime;
+using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinkCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinkCreatedEvents;
 using GreenEnergyHub.Charges.TestCore.Attributes;
@@ -35,18 +35,23 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Factories
             // Arrange
 
             // Act
-            var result = sut.CreateEvent(command);
+            var result = sut.CreateEvents(command);
+            var chargeLinkCreatedEvents =
+                command.ChargeLinks
+                    .ToDictionary(chargeLinkDto => chargeLinkDto, chargeLinkDto => result
+                        .Single(x => x.ChargeId == chargeLinkDto.SenderProvidedChargeId));
 
             // Assert
-            Assert.NotNull(result);
-            Assert.Equal(command.ChargeLink.OperationId, result.ChargeLinkId);
-            Assert.Equal(command.ChargeLink.MeteringPointId, result.MeteringPointId);
-            Assert.Equal(command.ChargeLink.SenderProvidedChargeId, result.ChargeId);
-            Assert.Equal(command.ChargeLink.ChargeType, result.ChargeType);
-            Assert.Equal(command.ChargeLink.ChargeOwner, result.ChargeOwner);
-            Assert.Equal(command.ChargeLink.StartDateTime, result.ChargeLinkPeriod.StartDateTime);
-            Assert.Equal(command.ChargeLink.EndDateTime, result.ChargeLinkPeriod.EndDateTime);
-            Assert.Equal(command.ChargeLink.Factor, result.ChargeLinkPeriod.Factor);
+            foreach (var c in chargeLinkCreatedEvents)
+            {
+                c.Key.Factor.Should().Be(c.Value.ChargeLinkPeriod.Factor);
+                c.Key.ChargeOwner.Should().Be(c.Value.ChargeOwner);
+                c.Key.ChargeType.Should().Be(c.Value.ChargeType);
+                c.Key.OperationId.Should().Be(c.Value.ChargeLinkId);
+                c.Key.EndDateTime.Should().Be(c.Value.ChargeLinkPeriod.EndDateTime);
+                c.Key.StartDateTime.Should().Be(c.Value.ChargeLinkPeriod.StartDateTime);
+                c.Key.SenderProvidedChargeId.Should().Be(c.Value.ChargeId);
+            }
         }
     }
 }

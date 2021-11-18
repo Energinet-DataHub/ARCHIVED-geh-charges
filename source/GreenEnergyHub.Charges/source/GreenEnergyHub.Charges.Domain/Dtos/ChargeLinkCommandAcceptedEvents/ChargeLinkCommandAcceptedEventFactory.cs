@@ -27,10 +27,10 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinkCommandAcceptedEvents
             _clock = clock;
         }
 
-        public ChargeLinkCommandAcceptedEvent Create([NotNull]ChargeLinksCommand chargeLinkCommands)
+        public ChargeLinkCommandAcceptedEvent Create([NotNull]ChargeLinksCommand chargeLinksCommand)
         {
             return new ChargeLinkCommandAcceptedEvent(
-                chargeLinkCommands,
+                chargeLinksCommand,
                 _clock.GetCurrentInstant());
         }
     }

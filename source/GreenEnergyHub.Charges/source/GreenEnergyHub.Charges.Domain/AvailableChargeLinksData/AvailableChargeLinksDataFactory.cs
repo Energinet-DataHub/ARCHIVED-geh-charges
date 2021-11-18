@@ -24,7 +24,7 @@ namespace GreenEnergyHub.Charges.Domain.AvailableChargeLinksData
     public class AvailableChargeLinksDataFactory : IAvailableChargeLinksDataFactory
     {
         public AvailableChargeLinksData CreateAvailableChargeLinksData(
-            ChargeLinkDto chargeLinksCommand,
+            ChargeLinkDto chargeLinkDto,
             MarketParticipant recipient,
             BusinessReasonCode businessReasonCode,
             string meteringPointId,
@@ -35,13 +35,13 @@ namespace GreenEnergyHub.Charges.Domain.AvailableChargeLinksData
                 recipient.Id,
                 recipient.BusinessProcessRole,
                 businessReasonCode,
-                chargeLinksCommand.SenderProvidedChargeId,
-                chargeLinksCommand.ChargeOwner,
-                chargeLinksCommand.ChargeType,
+                chargeLinkDto.SenderProvidedChargeId,
+                chargeLinkDto.ChargeOwner,
+                chargeLinkDto.ChargeType,
                 meteringPointId,
-                chargeLinksCommand.Factor,
-                chargeLinksCommand.StartDateTime,
-                chargeLinksCommand.EndDateTime.GetValueOrDefault(),
+                chargeLinkDto.Factor,
+                chargeLinkDto.StartDateTime,
+                chargeLinkDto.EndDateTime.GetValueOrDefault(),
                 requestTime,
                 messageHubId);
         }

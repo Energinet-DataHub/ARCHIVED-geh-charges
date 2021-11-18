@@ -28,15 +28,16 @@ namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
             var chargeLinkCommandAcceptedContract = new GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandAccepted.ChargeLinkCommandAccepted()
             {
                 PublishedTime = chargeLinkCommandAcceptedEvent.PublishedTime.ToTimestamp(),
-                ChargeLinkCommand = new GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandAccepted.ChargeLinkCommand
+                ChargeLinksCommand = new GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandAccepted.ChargeLinkCommand
                 {
+                    MeteringPointId = chargeLinkCommandAcceptedEvent.ChargeLinksCommand.MeteringPointId,
                     Document = ConvertDocument(chargeLinkCommandAcceptedEvent.ChargeLinksCommand.Document),
                 },
             };
 
             foreach (var chargeLinkDto in chargeLinkCommandAcceptedEvent.ChargeLinksCommand.ChargeLinks)
             {
-             chargeLinkCommandAcceptedContract.ChargeLinkCommand.ChargeLinks.Add(ConvertChargeLink(chargeLinkDto));
+             chargeLinkCommandAcceptedContract.ChargeLinksCommand.ChargeLinks.Add(ConvertChargeLink(chargeLinkDto));
             }
 
             return chargeLinkCommandAcceptedContract;

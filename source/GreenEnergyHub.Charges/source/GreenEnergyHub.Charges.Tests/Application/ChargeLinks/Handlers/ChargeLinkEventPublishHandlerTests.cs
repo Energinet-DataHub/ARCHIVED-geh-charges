@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Threading.Tasks;
@@ -25,7 +25,6 @@ using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinkCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinkCreatedEvents;
 using GreenEnergyHub.TestHelpers;
 using Moq;
-using NodaTime;
 using Xunit;
 using Xunit.Categories;
 
@@ -40,22 +39,25 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Handlers
             [Frozen] [NotNull] Mock<IChargeLinkCreatedEventFactory> factory,
             [Frozen] [NotNull] Mock<IMessageDispatcher<ChargeLinkCreatedEvent>> dispatcher,
             [NotNull] ChargeLinkCommandAcceptedEvent command,
-            [NotNull] ChargeLinkCreatedEvent createdEvent,
+            [NotNull] IReadOnlyCollection<ChargeLinkCreatedEvent> createdEvents,
             [NotNull] ChargeLinkEventPublishHandler sut)
         {
             // Arrange
             factory.Setup(
-                    f => f.CreateEvent(
+                    f => f.CreateEvents(
                         It.IsAny<ChargeLinksCommand>()))
-                .Returns(createdEvent);
+                .Returns(createdEvents);
 
             var dispatched = false;
-            dispatcher.Setup(
-                    d => d.DispatchAsync(
-                        createdEvent,
-                        It.IsAny<CancellationToken>()))
-                .Callback<ChargeLinkCreatedEvent, CancellationToken>(
-                    (_, _) => dispatched = true);
+            foreach (var chargeLinkCreatedEvent in createdEvents)
+            {
+                dispatcher.Setup(
+                        d => d.DispatchAsync(
+                            chargeLinkCreatedEvent,
+                            It.IsAny<CancellationToken>()))
+                    .Callback<ChargeLinkCreatedEvent, CancellationToken>(
+                        (_, _) => dispatched = true);
+            }
 
             // Act
             await sut.HandleAsync(command).ConfigureAwait(false);

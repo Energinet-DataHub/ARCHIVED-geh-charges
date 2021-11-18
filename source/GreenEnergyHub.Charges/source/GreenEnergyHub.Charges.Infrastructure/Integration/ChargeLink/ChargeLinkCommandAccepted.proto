@@ -28,13 +28,13 @@ option csharp_namespace = "GreenEnergyHub.Charges.Infrastructure.Internal.Charge
 
 message ChargeLinkCommandAccepted {
    google.protobuf.Timestamp published_time = 1;
-   ChargeLinkCommand charge_link_command = 2;
+   ChargeLinkCommand charge_links_command = 2;
 }
 
 message ChargeLinkCommand {
   Document document = 1;
   repeated ChargeLink charge_links = 2;
-  string metering_point_id = 3; // A unique metering point identifier
+  string metering_point_id = 3;
 }
 
 message Document {

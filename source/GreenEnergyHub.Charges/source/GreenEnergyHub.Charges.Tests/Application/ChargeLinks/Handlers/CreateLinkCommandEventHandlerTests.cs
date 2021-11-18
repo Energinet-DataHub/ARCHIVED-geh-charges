@@ -53,7 +53,11 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Handlers
             [NotNull] CreateLinkCommandRequestHandler sut)
         {
             // Arrange
-            chargeLinksCommand.ChargeLink.EndDateTime = null;
+            foreach (var chargeLinkDto in chargeLinksCommand.ChargeLinks)
+            {
+                chargeLinkDto.EndDateTime = null;
+            }
+
             messageMetaDataContext.Setup(m => m.IsReplyToSet()).Returns(true);
             messageMetaDataContext.Setup(m => m.ReplyTo).Returns(replyTo);
             var createLinkCommandEvent = new CreateLinkCommandEvent(meteringPointId);
@@ -64,10 +68,11 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Handlers
                 Guid.NewGuid(),
                 MeteringPointType.Consumption);
 
+            var defaultChargeLinks = new List<DefaultChargeLink> { defaultChargeLink };
             defaultChargeLinkRepository.Setup(
                     f => f.GetAsync(
                         It.IsAny<MeteringPointType>()))
-                .ReturnsAsync(new List<DefaultChargeLink> { defaultChargeLink });
+                .ReturnsAsync(defaultChargeLinks);
 
             meteringPointRepository.Setup(
                     f => f.GetOrNullAsync(
@@ -83,7 +88,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Handlers
             chargeLinkCommandFactory.Setup(
                     f => f.CreateAsync(
                         createLinkCommandEvent,
-                        defaultChargeLink))
+                        defaultChargeLinks))
                 .ReturnsAsync(chargeLinksCommand);
 
             // Act
@@ -105,7 +110,11 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Handlers
             [NotNull] CreateLinkCommandRequestHandler sut)
         {
             // Arrange
-            chargeLinksCommand.ChargeLink.EndDateTime = null;
+            foreach (var chargeLinkDto in chargeLinksCommand.ChargeLinks)
+            {
+                chargeLinkDto.EndDateTime = null;
+            }
+
             messageMetaDataContext.Setup(m => m.ReplyTo).Returns((string)null!);
             var createLinkCommandEvent = new CreateLinkCommandEvent(meteringPointId);
 
@@ -130,7 +139,11 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Handlers
             [NotNull] CreateLinkCommandRequestHandler sut)
         {
             // Arrange
-            chargeLinksCommand.ChargeLink.EndDateTime = null;
+            foreach (var chargeLinkDto in chargeLinksCommand.ChargeLinks)
+            {
+                chargeLinkDto.EndDateTime = null;
+            }
+
             correlationContextMock.Setup(c => c.Id).Returns(correlationId);
             messageMetaDataContext.Setup(m => m.IsReplyToSet()).Returns(true);
             messageMetaDataContext.Setup(m => m.ReplyTo).Returns(replyTo);
@@ -173,7 +186,11 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Handlers
             [NotNull] CreateLinkCommandRequestHandler sut)
         {
             // Arrange
-            chargeLinksCommand.ChargeLink.EndDateTime = null;
+            foreach (var chargeLinkDto in chargeLinksCommand.ChargeLinks)
+            {
+                chargeLinkDto.EndDateTime = null;
+            }
+
             correlationContextMock.Setup(c => c.Id).Returns(correlationId);
             messageMetaDataContext.Setup(m => m.IsReplyToSet()).Returns(true);
             messageMetaDataContext.Setup(m => m.ReplyTo).Returns(replyTo);

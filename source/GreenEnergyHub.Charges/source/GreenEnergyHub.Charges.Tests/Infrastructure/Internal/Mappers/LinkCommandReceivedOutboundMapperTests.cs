@@ -38,8 +38,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Internal.Mappers
         {
             // Arrange
             ChargeLinkCommandReceivedEvent chargeLinkCommandReceivedEvent =
-                new(SystemClock.Instance.GetCurrentInstant(),
-                    new List<ChargeLinksCommand> { chargeLinksCommand });
+                new(SystemClock.Instance.GetCurrentInstant(), chargeLinksCommand);
 
             // Act
             var result = (ChargeLinkCommandReceived)sut.Convert(chargeLinkCommandReceivedEvent);

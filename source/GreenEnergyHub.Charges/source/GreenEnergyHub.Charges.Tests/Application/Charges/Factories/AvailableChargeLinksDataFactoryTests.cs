@@ -32,28 +32,30 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Factories
         [Theory]
         [InlineAutoDomainData]
         public void CreateFromCommandAsync_Charge_HasNoNullsOrEmptyCollections(
-            [NotNull] ChargeLinksCommand chargeLinksCommand,
+            [NotNull] ChargeLinkDto chargeLinkDto,
             [NotNull] MarketParticipant marketParticipant,
+            [NotNull] BusinessReasonCode businessReasonCode,
+            [NotNull] string meteringPointId,
             [NotNull] Instant now,
             [NotNull] Guid messageHubId,
             [NotNull] AvailableChargeLinksDataFactory sut)
         {
             // Act
             var actual =
-                sut.CreateAvailableChargeLinksData(chargeLinksCommand, marketParticipant, now, messageHubId);
+                sut.CreateAvailableChargeLinksData(chargeLinkDto, marketParticipant, businessReasonCode, meteringPointId, now, messageHubId);
 
             // Assert
             actual.Should().NotContainNullsOrEmptyEnumerables();
             actual.RecipientId.Should().Be(marketParticipant.Id);
             actual.RecipientRole.Should().Be(marketParticipant.BusinessProcessRole);
-            actual.BusinessReasonCode.Should().Be(chargeLinksCommand.Document.BusinessReasonCode);
-            actual.ChargeId.Should().Be(chargeLinksCommand.ChargeLink.SenderProvidedChargeId);
-            actual.ChargeOwner.Should().Be(chargeLinksCommand.ChargeLink.ChargeOwner);
-            actual.ChargeType.Should().Be(chargeLinksCommand.ChargeLink.ChargeType);
-            actual.MeteringPointId.Should().Be(chargeLinksCommand.ChargeLink.MeteringPointId);
-            actual.Factor.Should().Be(chargeLinksCommand.ChargeLink.Factor);
-            actual.StartDateTime.Should().Be(chargeLinksCommand.ChargeLink.StartDateTime);
-            actual.EndDateTime.Should().Be(chargeLinksCommand.ChargeLink.EndDateTime.GetValueOrDefault());
+            actual.BusinessReasonCode.Should().Be(businessReasonCode);
+            actual.ChargeId.Should().Be(chargeLinkDto.SenderProvidedChargeId);
+            actual.ChargeOwner.Should().Be(chargeLinkDto.ChargeOwner);
+            actual.ChargeType.Should().Be(chargeLinkDto.ChargeType);
+            actual.MeteringPointId.Should().Be(meteringPointId);
+            actual.Factor.Should().Be(chargeLinkDto.Factor);
+            actual.StartDateTime.Should().Be(chargeLinkDto.StartDateTime);
+            actual.EndDateTime.Should().Be(chargeLinkDto.EndDateTime.GetValueOrDefault());
             actual.RequestTime.Should().Be(now);
             actual.AvailableDataReferenceId.Should().Be(messageHubId);
         }

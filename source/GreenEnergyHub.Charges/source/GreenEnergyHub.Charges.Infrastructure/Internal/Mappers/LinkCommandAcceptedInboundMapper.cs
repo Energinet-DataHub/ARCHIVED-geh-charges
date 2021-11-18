@@ -30,9 +30,9 @@ namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
         {
             return new ChargeLinkCommandAcceptedEvent(
                 new ChargeLinksCommand(
-                    chargeLinkCommandAcceptedContract.ChargeLinkCommand.MeteringPointId,
-                    ConvertDocument(chargeLinkCommandAcceptedContract.ChargeLinkCommand.Document),
-                    chargeLinkCommandAcceptedContract.ChargeLinkCommand.ChargeLinks.Select(ConvertChargeLink).ToList()),
+                    chargeLinkCommandAcceptedContract.ChargeLinksCommand.MeteringPointId,
+                    ConvertDocument(chargeLinkCommandAcceptedContract.ChargeLinksCommand.Document),
+                    chargeLinkCommandAcceptedContract.ChargeLinksCommand.ChargeLinks.Select(ConvertChargeLink).ToList()),
                 chargeLinkCommandAcceptedContract.PublishedTime.ToInstant());
         }
 

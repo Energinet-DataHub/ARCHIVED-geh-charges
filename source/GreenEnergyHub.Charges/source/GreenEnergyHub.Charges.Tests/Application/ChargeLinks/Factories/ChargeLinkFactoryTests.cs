@@ -64,13 +64,13 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Factories
             actualFirst.MeteringPointId
                 .Should().Be(expectedMeteringPoint.Id);
             actualFirst.PeriodDetails.First().StartDateTime
-                .Should().Be(expectedEvent.ChargeLinkCommands.First().ChargeLink.StartDateTime);
+                .Should().Be(expectedEvent.ChargeLinksCommand.ChargeLinks.First().StartDateTime);
             actualFirst.PeriodDetails.First().EndDateTime
-                .Should().Be((Instant)expectedEvent.ChargeLinkCommands.First().ChargeLink.EndDateTime!);
+                .Should().Be((Instant)expectedEvent.ChargeLinksCommand.ChargeLinks.First().EndDateTime!);
             actualFirst.PeriodDetails.First().Factor
-                .Should().Be(expectedEvent.ChargeLinkCommands.First().ChargeLink.Factor);
+                .Should().Be(expectedEvent.ChargeLinksCommand.ChargeLinks.First().Factor);
             actualFirst.Operations.First().SenderProvidedId
-                .Should().Be(expectedEvent.ChargeLinkCommands.First().ChargeLink.OperationId);
+                .Should().Be(expectedEvent.ChargeLinksCommand.ChargeLinks.First().OperationId);
         }
 
         [Theory]
