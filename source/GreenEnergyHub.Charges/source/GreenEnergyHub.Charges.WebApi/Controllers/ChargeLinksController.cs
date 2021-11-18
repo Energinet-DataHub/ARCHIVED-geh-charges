@@ -24,11 +24,6 @@ namespace GreenEnergyHub.Charges.WebApi.Controllers
     [Route("[controller]")]
     public class ChargeLinksController : ControllerBase
     {
-        public ChargeLinksController()
-        {
-            // TODO: Add log functionality
-        }
-
         /// <summary>
         /// Returns all charge links data for a given metering point. Currently it returns mocked data.
         /// </summary>
