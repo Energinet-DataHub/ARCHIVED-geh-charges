@@ -25,7 +25,7 @@ using GreenEnergyHub.Charges.Contracts;
 using GreenEnergyHub.Charges.Domain.DefaultChargeLinks;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksReceivedEvents;
-using GreenEnergyHub.Charges.Domain.Dtos.CreateLinkRequest;
+using GreenEnergyHub.Charges.Domain.Dtos.CreateLinksRequests;
 using GreenEnergyHub.Charges.Domain.MeteringPoints;
 using GreenEnergyHub.TestHelpers;
 using Moq;
@@ -50,7 +50,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Handlers
             [NotNull] string replyTo,
             [NotNull] ChargeLinksCommand chargeLinksCommand,
             [NotNull] string meteringPointId,
-            [NotNull] CreateLinkCommandRequestHandler sut)
+            [NotNull] CreateLinkRequestHandler sut)
         {
             // Arrange
             foreach (var chargeLinkDto in chargeLinksCommand.ChargeLinks)
@@ -60,7 +60,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Handlers
 
             messageMetaDataContext.Setup(m => m.IsReplyToSet()).Returns(true);
             messageMetaDataContext.Setup(m => m.ReplyTo).Returns(replyTo);
-            var createLinkCommandEvent = new CreateLinksCommandEvent(meteringPointId);
+            var createLinkCommandEvent = new CreateLinksRequest(meteringPointId);
 
             var defaultChargeLink = new DefaultChargeLink(
                 SystemClock.Instance.GetCurrentInstant(),
@@ -107,7 +107,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Handlers
             [Frozen] [NotNull] Mock<IMessageMetaDataContext> messageMetaDataContext,
             [NotNull] ChargeLinksCommand chargeLinksCommand,
             [NotNull] string meteringPointId,
-            [NotNull] CreateLinkCommandRequestHandler sut)
+            [NotNull] CreateLinkRequestHandler sut)
         {
             // Arrange
             foreach (var chargeLinkDto in chargeLinksCommand.ChargeLinks)
@@ -116,7 +116,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Handlers
             }
 
             messageMetaDataContext.Setup(m => m.ReplyTo).Returns((string)null!);
-            var createLinkCommandEvent = new CreateLinksCommandEvent(meteringPointId);
+            var createLinkCommandEvent = new CreateLinksRequest(meteringPointId);
 
             // Act & Assert
             await Assert.ThrowsAsync<ArgumentNullException>(() =>
@@ -136,7 +136,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Handlers
             [NotNull] ChargeLinksCommand chargeLinksCommand,
             [NotNull] string meteringPointId,
             [NotNull] ErrorCode errorCode,
-            [NotNull] CreateLinkCommandRequestHandler sut)
+            [NotNull] CreateLinkRequestHandler sut)
         {
             // Arrange
             foreach (var chargeLinkDto in chargeLinksCommand.ChargeLinks)
@@ -148,7 +148,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Handlers
             messageMetaDataContext.Setup(m => m.IsReplyToSet()).Returns(true);
             messageMetaDataContext.Setup(m => m.ReplyTo).Returns(replyTo);
             errorCode = ErrorCode.MeteringPointUnknown;
-            var createLinkCommandEvent = new CreateLinksCommandEvent(meteringPointId);
+            var createLinkCommandEvent = new CreateLinksRequest(meteringPointId);
 
             defaultChargeLinkClient.Setup(d =>
                 d.ReplyWithFailedAsync(meteringPointId, errorCode, replyTo));
@@ -183,7 +183,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Handlers
             [NotNull] string replyTo,
             [NotNull] ChargeLinksCommand chargeLinksCommand,
             [NotNull] string meteringPointId,
-            [NotNull] CreateLinkCommandRequestHandler sut)
+            [NotNull] CreateLinkRequestHandler sut)
         {
             // Arrange
             foreach (var chargeLinkDto in chargeLinksCommand.ChargeLinks)
@@ -194,7 +194,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Handlers
             correlationContextMock.Setup(c => c.Id).Returns(correlationId);
             messageMetaDataContext.Setup(m => m.IsReplyToSet()).Returns(true);
             messageMetaDataContext.Setup(m => m.ReplyTo).Returns(replyTo);
-            var createLinkCommandEvent = new CreateLinksCommandEvent(meteringPointId);
+            var createLinkCommandEvent = new CreateLinksRequest(meteringPointId);
 
             defaultChargeLinkClient.Setup(d =>
                 d.ReplyWithSucceededAsync(meteringPointId, true, replyTo));

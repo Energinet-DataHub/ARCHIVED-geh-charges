@@ -17,7 +17,7 @@ using System.Threading.Tasks;
 using Energinet.Charges.Contracts;
 using GreenEnergyHub.Charges.Application;
 using GreenEnergyHub.Charges.Application.ChargeLinks.Handlers;
-using GreenEnergyHub.Charges.Domain.Dtos.CreateLinkRequest;
+using GreenEnergyHub.Charges.Domain.Dtos.CreateLinksRequests;
 using GreenEnergyHub.Charges.FunctionHost.Common;
 using GreenEnergyHub.Charges.Infrastructure.Messaging;
 using Microsoft.Azure.Functions.Worker;
@@ -33,16 +33,16 @@ namespace GreenEnergyHub.Charges.FunctionHost.ChargeLinks
         public const string FunctionName = nameof(CreateChargeLinkReceiverEndpoint);
         private readonly ICorrelationContext _correlationContext;
         private readonly MessageExtractor<CreateDefaultChargeLinks> _messageExtractor;
-        private readonly ICreateLinkCommandRequestHandler _createLinkCommandRequestHandler;
+        private readonly ICreateLinkRequestHandler _createLinkRequestHandler;
 
         public CreateChargeLinkReceiverEndpoint(
             ICorrelationContext correlationContext,
             MessageExtractor<CreateDefaultChargeLinks> messageExtractor,
-            ICreateLinkCommandRequestHandler createLinkCommandRequestHandler)
+            ICreateLinkRequestHandler createLinkRequestHandler)
         {
             _correlationContext = correlationContext;
             _messageExtractor = messageExtractor;
-            _createLinkCommandRequestHandler = createLinkCommandRequestHandler;
+            _createLinkRequestHandler = createLinkRequestHandler;
         }
 
         [Function(FunctionName)]
@@ -53,9 +53,9 @@ namespace GreenEnergyHub.Charges.FunctionHost.ChargeLinks
             [NotNull] byte[] message)
         {
             var createLinkCommandEvent =
-                (CreateLinksCommandEvent)await _messageExtractor.ExtractAsync(message).ConfigureAwait(false);
+                (CreateLinksRequest)await _messageExtractor.ExtractAsync(message).ConfigureAwait(false);
 
-            await _createLinkCommandRequestHandler
+            await _createLinkRequestHandler
                 .HandleAsync(createLinkCommandEvent).ConfigureAwait(false);
         }
     }

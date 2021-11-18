@@ -34,6 +34,6 @@ namespace GreenEnergyHub.Charges.Domain.MarketParticipants
 
         Task<List<MarketParticipant>> GetActiveGridAccessProvidersAsync();
 
-        Task<MarketParticipant> GetSystemOperatorAsync();
+        Task<MarketParticipant> GetAsync(MarketParticipantRole marketParticipantRole);
     }
 }

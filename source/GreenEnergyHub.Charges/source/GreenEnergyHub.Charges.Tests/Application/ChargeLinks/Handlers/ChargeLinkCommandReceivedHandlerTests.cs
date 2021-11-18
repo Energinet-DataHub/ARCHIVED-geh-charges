@@ -44,7 +44,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Handlers
             [NotNull] [Frozen] Mock<IChargeLinksAcceptedEventFactory> chargeLinkCommandAcceptedEventFactory,
             [NotNull] ChargeLinksReceivedEvent chargeLinksReceivedEvent,
             [NotNull] ChargeLinksAcceptedEvent chargeLinksAcceptedEvent,
-            [NotNull] ChargeLinksCommandReceivedHandler sut)
+            [NotNull] ChargeLinksReceivedEventHandler sut)
         {
             // Arrange
             var fixture = new Fixture().Customize(new AutoMoqCustomization());

@@ -20,14 +20,14 @@ using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksReceivedEvents;
 
 namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
 {
-    public class ChargeLinksCommandReceivedHandler : IChargeLinksCommandReceivedHandler
+    public class ChargeLinksReceivedEventHandler : IChargeLinksReceivedEventHandler
     {
         private readonly IMessageDispatcher<ChargeLinksAcceptedEvent> _messageDispatcher;
         private readonly IChargeLinksAcceptedEventFactory _chargeLinksAcceptedEventFactory;
         private readonly IChargeLinkFactory _chargeLinkFactory;
         private readonly IChargeLinkRepository _chargeLinkRepository;
 
-        public ChargeLinksCommandReceivedHandler(
+        public ChargeLinksReceivedEventHandler(
             IMessageDispatcher<ChargeLinksAcceptedEvent> messageDispatcher,
             IChargeLinksAcceptedEventFactory chargeLinksAcceptedEventFactory,
             IChargeLinkFactory chargeLinkFactory,

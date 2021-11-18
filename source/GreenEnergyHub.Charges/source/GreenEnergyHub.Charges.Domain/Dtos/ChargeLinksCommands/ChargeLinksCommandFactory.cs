@@ -19,7 +19,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.DefaultChargeLinks;
-using GreenEnergyHub.Charges.Domain.Dtos.CreateLinkRequest;
+using GreenEnergyHub.Charges.Domain.Dtos.CreateLinksRequests;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.Domain.MeteringPoints;
@@ -47,19 +47,28 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands
         }
 
         public async Task<ChargeLinksCommand> CreateAsync(
-            [NotNull] CreateLinksCommandEvent createLinksCommandEvent,
+            [NotNull] CreateLinksRequest createLinksRequest,
             [NotNull] IReadOnlyCollection<DefaultChargeLink> defaultChargeLinks)
         {
-            var charges = await _chargeRepository.GetChargesAsync(
-                defaultChargeLinks.Select(x => x.ChargeId).ToList()).ConfigureAwait(false);
-            var meteringPoint = await _meteringPointRepository.GetMeteringPointAsync(
-                    createLinksCommandEvent.MeteringPointId)
+            var chargeIds = defaultChargeLinks.Select(x => x.ChargeId).ToList();
+
+            var charges = await _chargeRepository
+                .GetAsync(chargeIds)
                 .ConfigureAwait(false);
-            var systemOperator = await _marketParticipantRepository.GetSystemOperatorAsync().ConfigureAwait(false);
+
+            var meteringPoint = await _meteringPointRepository
+                .GetMeteringPointAsync(createLinksRequest.MeteringPointId)
+                .ConfigureAwait(false);
+
+            var systemOperator = await _marketParticipantRepository
+                .GetAsync(MarketParticipantRole.SystemOperator)
+                .ConfigureAwait(false);
 
             var defChargeAndCharge =
-                defaultChargeLinks.ToDictionary(defaultChargeLink => defaultChargeLink, defaultChargeLink =>
-                    charges.Single(c => defaultChargeLink.ChargeId == c.Id));
+                defaultChargeLinks
+                    .ToDictionary(
+                        defaultChargeLink => defaultChargeLink,
+                        defaultChargeLink => charges.Single(c => defaultChargeLink.ChargeId == c.Id));
 
             var chargeLinks = defChargeAndCharge.Select(pair => new ChargeLinkDto
                 {
@@ -73,9 +82,17 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands
                 })
                 .ToList();
 
+            return CreateChargeLinksCommand(createLinksRequest, systemOperator, chargeLinks);
+        }
+
+        private ChargeLinksCommand CreateChargeLinksCommand(
+            CreateLinksRequest createLinksRequest,
+            MarketParticipant systemOperator,
+            List<ChargeLinkDto> chargeLinks)
+        {
             var currentTime = _clock.GetCurrentInstant();
             return new ChargeLinksCommand(
-                createLinksCommandEvent.MeteringPointId,
+                createLinksRequest.MeteringPointId,
                 new DocumentDto
                 {
                     Id = Guid.NewGuid().ToString(),

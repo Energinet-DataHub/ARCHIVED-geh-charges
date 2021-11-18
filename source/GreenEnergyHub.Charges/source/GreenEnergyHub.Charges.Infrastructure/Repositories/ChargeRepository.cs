@@ -35,7 +35,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Repositories
             _chargesDatabaseContext = chargesDatabaseContext;
         }
 
-        public async Task<Charge> GetChargeAsync(ChargeIdentifier chargeIdentifier)
+        public async Task<Charge> GetAsync(ChargeIdentifier chargeIdentifier)
         {
             var charge = await GetChargesAsQueryable()
                 .SingleAsync(x => x.SenderProvidedChargeId == chargeIdentifier.SenderProvidedChargeId &&
@@ -46,7 +46,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Repositories
             return ChargeMapper.MapChargeToChargeDomainModel(charge);
         }
 
-        public async Task<Charge> GetChargeAsync(Guid id)
+        public async Task<Charge> GetAsync(Guid id)
         {
             var charge = await GetChargesAsQueryable()
                 .SingleAsync(x => x.Id == id)
@@ -64,7 +64,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Repositories
                 .ConfigureAwait(false);
         }
 
-        public async Task<IReadOnlyCollection<Charge>> GetChargesAsync(IReadOnlyCollection<Guid> ids)
+        public async Task<IReadOnlyCollection<Charge>> GetAsync(IReadOnlyCollection<Guid> ids)
         {
             var charges = await GetChargesAsQueryable()
                 .Where(x => ids.Contains(x.Id)).ToListAsync().ConfigureAwait(false);

@@ -29,7 +29,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
     {
         internal static void ConfigureServices(IServiceCollection serviceCollection)
         {
-            serviceCollection.AddScoped<IChargeLinksCommandReceivedHandler, ChargeLinksCommandReceivedHandler>();
+            serviceCollection.AddScoped<IChargeLinksReceivedEventHandler, ChargeLinksReceivedEventHandler>();
             serviceCollection.AddScoped<IChargeLinkFactory, ChargeLinkFactory>();
             serviceCollection.AddSingleton<IChargeLinksAcceptedEventFactory, ChargeLinksAcceptedEventFactory>();
 

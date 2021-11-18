@@ -134,7 +134,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
                                                                      x.MarketParticipant.MarketParticipantId == charge.Owner &&
                                                                      x.ChargeType == (int)charge.Type);
             // Act
-            var actual = await sut.GetChargeAsync(createdCharge.Id).ConfigureAwait(false);
+            var actual = await sut.GetAsync(createdCharge.Id).ConfigureAwait(false);
 
             // Assert
             actual.Should().NotBeNull();
@@ -151,10 +151,45 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
             var identifier = new ChargeIdentifier("EA-001", "5790000432752", ChargeType.Tariff);
 
             // Act
-            var actual = await sut.GetChargeAsync(identifier);
+            var actual = await sut.GetAsync(identifier);
 
             // Assert
             actual.Should().NotBeNull();
+        }
+
+        [Fact]
+        public async Task GetChargesAsync_ReturnsCharges()
+        {
+            // Arrange
+            await using var chargesDatabaseContext = _databaseManager.CreateDbContext();
+            var sut = new ChargeRepository(chargesDatabaseContext);
+
+            // Arrange => Matching data from seeded test data
+            var firstCharge = await sut
+                .GetAsync(
+                    new ChargeIdentifier(
+                        "EA-001",
+                        "5790000432752",
+                        ChargeType.Tariff))
+                .ConfigureAwait(false);
+
+            var secondCharge = await sut.
+                GetAsync(
+                    new ChargeIdentifier(
+                        "45013",
+                        "5790000432752",
+                        ChargeType.Tariff))
+                .ConfigureAwait(false);
+
+            // Act
+            var actual = await sut.GetAsync(new List<Guid>
+            {
+                firstCharge.Id,
+                secondCharge.Id,
+            });
+
+            // Assert
+            actual.Should().NotBeEmpty();
         }
 
         private static Charge GetValidCharge()

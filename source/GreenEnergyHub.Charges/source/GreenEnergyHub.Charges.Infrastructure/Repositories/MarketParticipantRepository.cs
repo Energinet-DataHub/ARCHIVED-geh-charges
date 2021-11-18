@@ -74,10 +74,10 @@ namespace GreenEnergyHub.Charges.Infrastructure.Repositories
             return activeGridAccessProviders.Select(_mapper.ToDomainObject).ToList();
         }
 
-        public async Task<MarketParticipant> GetSystemOperatorAsync()
+        public async Task<MarketParticipant> GetAsync(MarketParticipantRole marketParticipantRole)
         {
             var systemOperator = await _chargesDatabaseContext.MarketParticipants.FirstAsync(
-                x => x.Role == (int)MarketParticipantRole.SystemOperator).ConfigureAwait(false);
+                x => x.Role == (int)marketParticipantRole).ConfigureAwait(false);
 
             return _mapper.ToDomainObject(systemOperator);
         }

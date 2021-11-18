@@ -66,7 +66,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.MessageHub
             charge.SetPrivateProperty(c => c.TaxIndicator, true);
 
             chargeRepositoryMock
-                .Setup(repository => repository.GetChargeAsync(It.IsAny<ChargeIdentifier>()))
+                .Setup(repository => repository.GetAsync(It.IsAny<ChargeIdentifier>()))
                 .ReturnsAsync(charge);
 
             marketParticipantRepositoryMock
@@ -116,7 +116,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.MessageHub
             charge.SetPrivateProperty(c => c.TaxIndicator, false);
 
             chargeRepositoryMock.Setup(repository =>
-                    repository.GetChargeAsync(It.IsAny<ChargeIdentifier>()))
+                    repository.GetAsync(It.IsAny<ChargeIdentifier>()))
                 .ReturnsAsync(charge);
 
             // Act

@@ -78,7 +78,7 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.MessageHub
 
             foreach (var chargeLinkDto in chargeLinksAcceptedEvent.ChargeLinksCommand.ChargeLinks)
             {
-                var charge = await _chargeRepository.GetChargeAsync(new ChargeIdentifier(
+                var charge = await _chargeRepository.GetAsync(new ChargeIdentifier(
                     chargeLinkDto.SenderProvidedChargeId,
                     chargeLinkDto.ChargeOwner,
                     chargeLinkDto.ChargeType)).ConfigureAwait(false);
