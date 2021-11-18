@@ -14,7 +14,7 @@
 
 using System.Diagnostics.CodeAnalysis;
 
-namespace Energinet.DataHub.Charges.Libraries.Models
+namespace Energinet.DataHub.Charges.Clients.Models
 {
     public interface IServiceBusRequestSenderConfiguration
     {

@@ -12,9 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Diagnostics.CodeAnalysis;
-
-namespace Energinet.DataHub.Charges.Libraries.Models
+namespace Energinet.DataHub.Charges.Clients.Models
 {
     /// <summary>
     /// The required data needed by the Charges domain to create Default charge links.
