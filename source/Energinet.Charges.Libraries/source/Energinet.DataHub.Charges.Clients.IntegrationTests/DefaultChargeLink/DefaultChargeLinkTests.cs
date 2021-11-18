@@ -54,7 +54,7 @@ namespace Energinet.DataHub.Charges.Clients.IntegrationTests.DefaultChargeLink
                 _serviceBusRequestSenderProvider =
                     new ServiceBusRequestSenderProvider(
                         _serviceBusClient,
-                        new ServiceBusRequestSenderTestConfiguration(replyToQueueName, replyToQueueName));
+                        new ServiceBusRequestSenderTestConfiguration(replyToQueueName, requestQueueName));
             }
 
             public Task InitializeAsync()
