@@ -42,7 +42,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
         public async Task StoreAsync_StoresAvailableChargeLinkReceiptData([NotNull] List<AvailableChargeLinkReceiptData> expectedList)
         {
             // Arrange
-            expectedList = RepositoryAutoMoqDataFixer.FixAvailableChargeLinkReceiptDataList(expectedList);
+            expectedList = RepositoryAutoMoqDataFixer.GetAvailableChargeLinkReceiptDataListBasedOn(expectedList);
 
             await using var chargesDatabaseWriteContext = _databaseManager.CreateDbContext();
 
@@ -69,7 +69,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
             [NotNull] AvailableChargeLinkReceiptData expected)
         {
             // Arrange
-            expected = RepositoryAutoMoqDataFixer.FixAvailableChargeLinkReceiptData(expected);
+            expected = RepositoryAutoMoqDataFixer.GetAvailableChargeLinkReceiptDataBasedOn(expected);
             await using var chargesDatabaseWriteContext = _databaseManager.CreateDbContext();
             await chargesDatabaseWriteContext.AvailableChargeLinkReceiptData.AddAsync(expected).ConfigureAwait(false);
             await chargesDatabaseWriteContext.SaveChangesAsync().ConfigureAwait(false);

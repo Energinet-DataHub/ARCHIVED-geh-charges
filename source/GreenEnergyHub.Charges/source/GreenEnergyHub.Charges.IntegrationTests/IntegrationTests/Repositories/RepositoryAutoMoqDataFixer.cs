@@ -22,7 +22,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
 {
     public static class RepositoryAutoMoqDataFixer
     {
-        public static AvailableChargeData FixAvailableChargeData([NotNull] AvailableChargeData availableChargeData)
+        public static AvailableChargeData GetAvailableChargeDataBasedOn([NotNull] AvailableChargeData availableChargeData)
         {
             return new AvailableChargeData(
                 availableChargeData.RecipientId.Substring(0, 34),
@@ -44,7 +44,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
                 availableChargeData.Points.ToList());
         }
 
-        public static AvailableChargeLinkReceiptData FixAvailableChargeLinkReceiptData(
+        public static AvailableChargeLinkReceiptData GetAvailableChargeLinkReceiptDataBasedOn(
             AvailableChargeLinkReceiptData availableChargeLinkReceiptData)
         {
             return new AvailableChargeLinkReceiptData(
@@ -59,10 +59,10 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
                 availableChargeLinkReceiptData.ReasonCodes.ToList());
         }
 
-        public static List<AvailableChargeLinkReceiptData> FixAvailableChargeLinkReceiptDataList(
+        public static List<AvailableChargeLinkReceiptData> GetAvailableChargeLinkReceiptDataListBasedOn(
             List<AvailableChargeLinkReceiptData> availableList)
         {
-            return availableList.Select(receipt => FixAvailableChargeLinkReceiptData(receipt)).ToList();
+            return availableList.Select(receipt => GetAvailableChargeLinkReceiptDataBasedOn(receipt)).ToList();
         }
     }
 }
