@@ -54,7 +54,7 @@ jobs:
     needs: [ci_base, terraform_validate]
     uses: Energinet-DataHub/.github/.github/workflows/dotnet-create-function-artifact.yml@2.0.0
     with:
-      CSPROJ_FILE_PATH: 'source/Energinet.DataHub.MeteringPoints.EntryPoints.WebApi/Energinet.DataHub.MeteringPoints.EntryPoints.WebApi.csproj'
+      CSPROJ_FILE_PATH: 'source\GreenEnergyHub.Charges\source\GreenEnergyHub.Charges.WebApi/GreenEnergyHub.Charges.WebApi.csproj'
       DOTNET_VERSION: '5.0.202'
       ARTIFACT_NAME: webapi
 
