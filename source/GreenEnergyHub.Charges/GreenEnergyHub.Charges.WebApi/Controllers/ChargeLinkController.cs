@@ -32,10 +32,11 @@ namespace GreenEnergyHub.Charges.WebApi.Controllers
         /// <summary>
         /// Returns all charge links data for a given metering point. Currently it returns mocked data.
         /// </summary>
-        /// <param name="meteringPointId">The 18-digits metering point identifier used by the Danish version of Green Energy Hub</param>
-        /// <returns>Mocked charge links data</returns>
+        /// <param name="meteringPointId">The 18-digits metering point identifier used by the Danish version of Green Energy Hub.
+        /// Use 404 to get a "404 Not Found" response.</param>
+        /// <returns>Mocked charge links data or "404 Not Found"</returns>
         [HttpGet("GetChargeLinksByMeteringPointId")]
-        public async Task<ActionResult> GetChargeLinksAsync(string meteringPointId)
+        public async Task<ActionResult> GetChargeLinksByMeteringPointIdAsync(string meteringPointId)
         {
             if (meteringPointId == "404")
             {
