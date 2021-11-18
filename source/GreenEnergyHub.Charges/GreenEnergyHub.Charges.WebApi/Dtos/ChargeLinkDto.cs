@@ -12,10 +12,31 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
+using GreenEnergyHub.Charges.Domain.Charges;
+
 namespace GreenEnergyHub.Charges.WebApi.Dtos
 {
     public class ChargeLinkDto
     {
+        public ChargeType ChargeType { get; set; }
+
+        public string ChargeId { get; set; }
+
         public string ChargeName { get; set; }
+
+        public string ChargeOwnerGln { get; set; }
+
+        public string ChargeOwnerName { get; set; }
+
+        public bool TaxIndicator { get; set; }
+
+        public bool TransparentInvoicing { get; set; }
+
+        public int Factor { get; set; }
+
+        public DateTime StartDateTime { get; set; }
+
+        public DateTime? EndDateTime { get; set; }
     }
 }
