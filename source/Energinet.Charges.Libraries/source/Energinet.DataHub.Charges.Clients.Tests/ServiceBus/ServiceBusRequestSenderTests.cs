@@ -17,7 +17,7 @@ using System.Threading.Tasks;
 using AutoFixture.Xunit2;
 using Azure.Messaging.ServiceBus;
 using Energinet.Charges.Contracts;
-using Energinet.DataHub.Charges.Libraries.ServiceBus;
+using Energinet.DataHub.Charges.Clients.ServiceBus;
 using Google.Protobuf;
 using GreenEnergyHub.TestHelpers;
 using Moq;
