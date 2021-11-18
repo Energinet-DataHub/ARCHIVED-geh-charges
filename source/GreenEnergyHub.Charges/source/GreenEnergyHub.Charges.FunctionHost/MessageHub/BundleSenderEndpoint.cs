@@ -56,8 +56,10 @@ namespace GreenEnergyHub.Charges.FunctionHost.MessageHub
 
             if (request.MessageType.StartsWith(ChargeDataAvailableNotifier.ChargeDataAvailableMessageTypePrefix))
                 await _chargeBundleSender.SendAsync(request).ConfigureAwait(false);
+
             if (request.MessageType.StartsWith(ChargeLinkDataAvailableNotifier.ChargeLinkDataAvailableMessageTypePrefix))
                 await _chargeLinkBundleSender.SendAsync(request).ConfigureAwait(false);
+
             throw new ArgumentException(
                 $"Unknown message type: {request.MessageType} with DataAvailableNotificationIds: {request.DataAvailableNotificationIds}");
         }
