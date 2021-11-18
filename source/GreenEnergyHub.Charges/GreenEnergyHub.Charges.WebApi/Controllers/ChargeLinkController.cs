@@ -46,7 +46,7 @@ namespace GreenEnergyHub.Charges.WebApi.Controllers
             // Uses mocked charge links data - later this will be refactored to use actual data from storage.
             var mockDataText = await System.IO.File.ReadAllTextAsync(@"Files/ChargeLinksMockData.json").ConfigureAwait(false);
 
-            var mockChargeLinksData = JsonSerializer.Deserialize<IEnumerable<ChargeLink>>(mockDataText);
+            var mockChargeLinksData = JsonSerializer.Deserialize<IEnumerable<ChargeLinkDto>>(mockDataText);
 
             return Ok(mockChargeLinksData);
         }
