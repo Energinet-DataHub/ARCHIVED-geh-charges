@@ -17,7 +17,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Azure.Messaging.ServiceBus;
 
-namespace Energinet.DataHub.Charges.Libraries.ServiceBus
+namespace Energinet.DataHub.Charges.Clients.ServiceBus
 {
     internal sealed class ServiceBusRequestSender : IServiceBusRequestSender
     {

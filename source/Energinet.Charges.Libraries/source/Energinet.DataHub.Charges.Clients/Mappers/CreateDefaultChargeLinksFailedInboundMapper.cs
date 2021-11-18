@@ -15,12 +15,12 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 using Energinet.Charges.Contracts;
-using Energinet.DataHub.Charges.Libraries.Models;
+using Energinet.DataHub.Charges.Clients.Models;
 using GreenEnergyHub.Charges.Contracts;
 using CreateDefaultChargeLinksFailed =
     Energinet.Charges.Contracts.CreateDefaultChargeLinksReply.Types.CreateDefaultChargeLinksFailed;
 
-namespace Energinet.DataHub.Charges.Libraries.Mappers
+namespace Energinet.DataHub.Charges.Clients.Mappers
 {
     internal class CreateDefaultChargeLinksFailedInboundMapper
     {
