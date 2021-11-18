@@ -15,9 +15,9 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using Energinet.Charges.Contracts;
-using Energinet.DataHub.Charges.Libraries.Models;
+using Energinet.DataHub.Charges.Clients.Models;
 
-namespace Energinet.DataHub.Charges.Libraries.DefaultChargeLink
+namespace Energinet.DataHub.Charges.Clients.DefaultChargeLink
 {
     /// <summary>
     /// Delegate that will be invoked by IDefaultChargeLinkReplyReader ReadAsync() when the

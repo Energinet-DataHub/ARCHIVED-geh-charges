@@ -1,6 +1,6 @@
 # Documentation
 
-The NuGet package [`GreenEnergyHub.Charges.Libraries`](https://www.nuget.org/packages/Energinet.DataHub.Charges.Clients/) contains communication API
+The NuGet package [`Energinet.DataHub.Charges.Clients`](https://www.nuget.org/packages/Energinet.DataHub.Charges.Clients/) contains communication API
 for clients interacting with the Energinet DataHub charge domain. Energinet DataHub is built on the Green Energy Hub platform.
 
 Learn more about the Green Energy Hub platform at [github.com/Energinet-DataHub/green-energy-hub](https://github.com/Energinet-DataHub/green-energy-hub).

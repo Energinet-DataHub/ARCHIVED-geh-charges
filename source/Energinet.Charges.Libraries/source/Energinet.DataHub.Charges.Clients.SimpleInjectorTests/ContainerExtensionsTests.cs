@@ -15,10 +15,10 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Azure.Messaging.ServiceBus;
-using Energinet.DataHub.Charges.Libraries.Clients.SimpleInjector;
-using Energinet.DataHub.Charges.Libraries.DefaultChargeLink;
-using Energinet.DataHub.Charges.Libraries.Models;
-using Energinet.DataHub.Charges.Libraries.Providers;
+using Energinet.DataHub.Charges.Clients.DefaultChargeLink;
+using Energinet.DataHub.Charges.Clients.Models;
+using Energinet.DataHub.Charges.Clients.Providers;
+using Energinet.DataHub.Charges.Clients.SimpleInjector;
 using FluentAssertions;
 using Moq;
 using SimpleInjector;

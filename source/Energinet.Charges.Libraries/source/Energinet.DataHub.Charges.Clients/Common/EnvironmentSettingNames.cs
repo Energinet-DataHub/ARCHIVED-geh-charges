@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace Energinet.DataHub.Charges.Libraries.Common
+namespace Energinet.DataHub.Charges.Clients.Common
 {
     /// <summary>
     /// Contains names of settings used by the package.
