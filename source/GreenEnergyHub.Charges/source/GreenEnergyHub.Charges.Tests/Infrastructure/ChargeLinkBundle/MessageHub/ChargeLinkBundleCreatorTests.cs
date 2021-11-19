@@ -44,7 +44,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.ChargeLinkBundle.MessageHu
         {
             // Arrange
             repository.Setup(
-                    r => r.GetAvailableChargeLinksDataAsync(
+                    r => r.GetAsync(
                         dataBundleRequestDto.DataAvailableNotificationIds))
                 .Returns(Task.FromResult(availableChargeLinksData));
 

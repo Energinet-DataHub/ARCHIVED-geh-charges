@@ -26,7 +26,7 @@ namespace GreenEnergyHub.Charges.Domain.AvailableChargeData
         public AvailableChargeData Create(
             ChargeCommand chargeCommand,
             MarketParticipant recipient,
-            Instant requestTime,
+            Instant requestDateTime,
             Guid messageHubId)
         {
             var points =
@@ -38,6 +38,8 @@ namespace GreenEnergyHub.Charges.Domain.AvailableChargeData
                 recipient.Id,
                 recipient.BusinessProcessRole,
                 chargeCommand.Document.BusinessReasonCode,
+                requestDateTime,
+                messageHubId,
                 chargeCommand.ChargeOperation.ChargeId,
                 chargeCommand.ChargeOperation.ChargeOwner,
                 chargeCommand.ChargeOperation.Type,
@@ -49,9 +51,7 @@ namespace GreenEnergyHub.Charges.Domain.AvailableChargeData
                 chargeCommand.ChargeOperation.TaxIndicator,
                 chargeCommand.ChargeOperation.TransparentInvoicing,
                 chargeCommand.ChargeOperation.Resolution,
-                points,
-                requestTime,
-                messageHubId);
+                points);
         }
     }
 }
