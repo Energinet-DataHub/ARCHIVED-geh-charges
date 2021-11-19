@@ -25,7 +25,7 @@ namespace GreenEnergyHub.Charges.WebApi.Models
 
         public string ChargeName { get; set; }
 
-        public string ChargeOwnerGln { get; set; }
+        public string ChargeOwnerId { get; set; }
 
         public string ChargeOwnerName { get; set; }
 
