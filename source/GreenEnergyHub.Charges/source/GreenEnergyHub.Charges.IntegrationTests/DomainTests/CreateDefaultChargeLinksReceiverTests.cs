@@ -12,10 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Threading;
 using System.Threading.Tasks;
 using Azure.Messaging.ServiceBus;
 using Energinet.Charges.Contracts;
@@ -23,8 +20,6 @@ using Energinet.DataHub.Core.FunctionApp.TestCommon;
 using Google.Protobuf;
 using GreenEnergyHub.Charges.IntegrationTests.Fixtures;
 using GreenEnergyHub.Charges.IntegrationTests.TestHelpers;
-using Microsoft.ApplicationInsights;
-using Microsoft.ApplicationInsights.DataContracts;
 using Xunit;
 using Xunit.Abstractions;
 using Xunit.Categories;
