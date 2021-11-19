@@ -46,6 +46,18 @@ namespace GreenEnergyHub.Charges.Domain.AvailableChargeLinkReceiptData
             _reasonCodes = reasonCodes;
         }
 
+        /// <summary>
+        /// Used implicitly by persistence.
+        /// </summary>
+        // ReSharper disable once UnusedMember.Local
+        private AvailableChargeLinkReceiptData(string recipientId, string originalOperationId, string meteringPointId)
+            : base(recipientId)
+        {
+            OriginalOperationId = originalOperationId;
+            MeteringPointId = meteringPointId;
+            _reasonCodes = new List<AvailableChargeLinkReceiptDataReasonCode>();
+        }
+
         public ReceiptStatus ReceiptStatus { get; }
 
         public string OriginalOperationId { get; }

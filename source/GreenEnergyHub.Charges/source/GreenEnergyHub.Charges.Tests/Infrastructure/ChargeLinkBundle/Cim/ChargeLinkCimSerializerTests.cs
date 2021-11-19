@@ -142,15 +142,15 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.ChargeLinkBundle.Cim
                 RecipientId,
                 MarketParticipantRole.GridAccessProvider,
                 BusinessReasonCode.UpdateMasterDataSettlement,
+                clock.GetCurrentInstant(),
+                Guid.NewGuid(),
                 "Charge" + no,
                 "Owner" + no,
                 ChargeType.Tariff,
                 "MeteringPoint" + no,
                 no,
                 Instant.FromUtc(2020, 12, 31, 23, 0, 0),
-                validTo,
-                clock.GetCurrentInstant(),
-                Guid.NewGuid());
+                validTo);
         }
     }
 }

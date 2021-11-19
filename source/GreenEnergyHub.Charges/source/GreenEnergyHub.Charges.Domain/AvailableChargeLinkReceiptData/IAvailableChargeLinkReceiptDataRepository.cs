@@ -14,20 +14,14 @@
 
 using System;
 using System.Collections.Generic;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands;
-using GreenEnergyHub.Charges.Domain.MarketParticipants;
-using NodaTime;
+using System.Threading.Tasks;
 
-namespace GreenEnergyHub.Charges.Domain.AvailableChargeLinksData
+namespace GreenEnergyHub.Charges.Domain.AvailableChargeLinkReceiptData
 {
-    public interface IAvailableChargeLinksDataFactory
+    public interface IAvailableChargeLinkReceiptDataRepository
     {
-        AvailableChargeLinksData CreateAvailableChargeLinksData(
-            ChargeLinkDto chargeLinkDto,
-            MarketParticipant recipient,
-            BusinessReasonCode businessReasonCode,
-            string meteringPointId,
-            Instant requestDateTime,
-            Guid messageHubId);
+        Task StoreAsync(List<AvailableChargeLinkReceiptData> availableChargeLinkReceiptData);
+
+        Task<List<AvailableChargeLinkReceiptData>> GetAsync(IEnumerable<Guid> dataReferenceIds);
     }
 }

@@ -61,6 +61,8 @@ limitations under the License.
       <EmbeddedResource Include="Scripts\Test\202109211449 Metering Point Test Data no rowId.sql" />
       <EmbeddedResource Include="Scripts\Model\202110121245 Create AvailableChargeLinksData table.sql" />
       <EmbeddedResource Include="Scripts\Test\202110281013 Add inactive market partcipant.sql" />
+      <EmbeddedResource Include="Scripts\Model\202111161258 Create AvailableChargeLinkReceiptData table.sql" />
+      <EmbeddedResource Include="Scripts\Model\202111171630 Rename RequestTime to RequestDateTime in Available tables.sql" />
     </ItemGroup>
 
     <ItemGroup>

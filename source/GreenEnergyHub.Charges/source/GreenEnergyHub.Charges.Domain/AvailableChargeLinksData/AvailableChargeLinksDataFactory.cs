@@ -28,22 +28,22 @@ namespace GreenEnergyHub.Charges.Domain.AvailableChargeLinksData
             MarketParticipant recipient,
             BusinessReasonCode businessReasonCode,
             string meteringPointId,
-            Instant requestTime,
+            Instant requestDateTime,
             Guid messageHubId)
         {
             return new AvailableChargeLinksData(
                 recipient.Id,
                 recipient.BusinessProcessRole,
                 businessReasonCode,
+                requestDateTime,
+                messageHubId,
                 chargeLinkDto.SenderProvidedChargeId,
                 chargeLinkDto.ChargeOwner,
                 chargeLinkDto.ChargeType,
                 meteringPointId,
                 chargeLinkDto.Factor,
                 chargeLinkDto.StartDateTime,
-                chargeLinkDto.EndDateTime.GetValueOrDefault(),
-                requestTime,
-                messageHubId);
+                chargeLinkDto.EndDateTime.GetValueOrDefault());
         }
     }
 }

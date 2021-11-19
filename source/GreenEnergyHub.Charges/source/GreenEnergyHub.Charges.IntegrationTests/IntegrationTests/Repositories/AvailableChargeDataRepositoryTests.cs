@@ -42,7 +42,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
         public async Task StoreAsync_StoresAvailableChargeData([NotNull] AvailableChargeData expected)
         {
             // Arrange
-            expected = RepositoryAutoMoqDataFixer.FixAvailableChargeData(expected);
+            expected = RepositoryAutoMoqDataFixer.GetAvailableChargeDataBasedOn(expected);
             await using var chargesDatabaseWriteContext = _databaseManager.CreateDbContext();
 
             var sut = new AvailableChargeDataRepository(chargesDatabaseWriteContext);
@@ -61,11 +61,11 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
 
         [Theory]
         [InlineAutoMoqData]
-        public async Task GetAvailableChargeDataAsync_GivenAnExistingAvailableDataReferenceId_ReturnsAvailableChargeData(
+        public async Task GetAsync_GivenAnExistingAvailableDataReferenceId_ReturnsAvailableChargeData(
             [NotNull] AvailableChargeData expected)
         {
             // Arrange
-            expected = RepositoryAutoMoqDataFixer.FixAvailableChargeData(expected);
+            expected = RepositoryAutoMoqDataFixer.GetAvailableChargeDataBasedOn(expected);
             await using var chargesDatabaseWriteContext = _databaseManager.CreateDbContext();
             await chargesDatabaseWriteContext.AvailableChargeData.AddAsync(expected).ConfigureAwait(false);
             await chargesDatabaseWriteContext.SaveChangesAsync().ConfigureAwait(false);
@@ -75,7 +75,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
 
             // Act
             var actual =
-                await sut.GetAvailableChargeDataAsync(new List<Guid> { expected.AvailableDataReferenceId })
+                await sut.GetAsync(new List<Guid> { expected.AvailableDataReferenceId })
                 .ConfigureAwait(false);
 
             // Assert
