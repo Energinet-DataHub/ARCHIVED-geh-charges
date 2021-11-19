@@ -42,7 +42,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             {
                 // Arrange
                 var meteringPointId = "571313180000000005";
-                var request = CreateEvent(
+                var request = CreateServiceBusMessage(
                     meteringPointId,
                     Fixture.CreateLinkReplyQueue.Name,
                     out var correlationId,
@@ -66,7 +66,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 return Task.CompletedTask;
             }
 
-            private ServiceBusMessage CreateEvent(string meteringPointId, string replyToQueueName, out string correlationId, out string parentId)
+            private ServiceBusMessage CreateServiceBusMessage(string meteringPointId, string replyToQueueName, out string correlationId, out string parentId)
             {
                 correlationId = CorrelationIdGenerator.Create();
                 var message = new CreateDefaultChargeLinks { MeteringPointId = meteringPointId };

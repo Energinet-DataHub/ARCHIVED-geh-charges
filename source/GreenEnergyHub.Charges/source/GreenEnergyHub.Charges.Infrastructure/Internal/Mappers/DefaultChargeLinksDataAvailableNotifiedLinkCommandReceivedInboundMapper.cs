@@ -20,8 +20,7 @@ using GreenEnergyHub.Messaging.Transport;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
 {
-    public class
-        DefaultChargeLinksDataAvailableNotifiedLinkCommandReceivedInboundMapper
+    public class DefaultChargeLinksDataAvailableNotifiedLinkCommandReceivedInboundMapper
         : ProtobufInboundMapper<DefaultChargeLinksDataAvailableNotifiedLinkCommandReceivedContract>
     {
         protected override IInboundMessage Convert(DefaultChargeLinksDataAvailableNotifiedLinkCommandReceivedContract dataAvailableNotifiedLinkCommandReceived)
