@@ -39,6 +39,13 @@ namespace GreenEnergyHub.Charges.Domain.AvailableData
             AvailableDataReferenceId = availableDataReferenceId;
         }
 
+        public AvailableDataBase(string recipientId)
+        {
+            Id = Guid.NewGuid();
+            RecipientId = recipientId;
+            AvailableDataReferenceId = Guid.NewGuid();
+        }
+
         /// <summary>
         /// Unique ID of this specific available data within the charge domain,
         /// ready for shipping when the market participant peeks

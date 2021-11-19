@@ -49,6 +49,8 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Factories
             actual.RecipientId.Should().Be(marketParticipant.Id);
             actual.RecipientRole.Should().Be(marketParticipant.BusinessProcessRole);
             actual.BusinessReasonCode.Should().Be(businessReasonCode);
+            actual.RequestDateTime.Should().Be(now);
+            actual.AvailableDataReferenceId.Should().Be(messageHubId);
             actual.ChargeId.Should().Be(chargeLinkDto.SenderProvidedChargeId);
             actual.ChargeOwner.Should().Be(chargeLinkDto.ChargeOwner);
             actual.ChargeType.Should().Be(chargeLinkDto.ChargeType);
@@ -56,8 +58,6 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Factories
             actual.Factor.Should().Be(chargeLinkDto.Factor);
             actual.StartDateTime.Should().Be(chargeLinkDto.StartDateTime);
             actual.EndDateTime.Should().Be(chargeLinkDto.EndDateTime.GetValueOrDefault());
-            actual.RequestTime.Should().Be(now);
-            actual.AvailableDataReferenceId.Should().Be(messageHubId);
         }
     }
 }
