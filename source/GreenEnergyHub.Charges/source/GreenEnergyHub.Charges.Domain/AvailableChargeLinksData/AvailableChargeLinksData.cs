@@ -13,32 +13,30 @@
 // limitations under the License.
 
 using System;
+using GreenEnergyHub.Charges.Domain.AvailableData;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using NodaTime;
 
 namespace GreenEnergyHub.Charges.Domain.AvailableChargeLinksData
 {
-    public class AvailableChargeLinksData
+    public class AvailableChargeLinksData : AvailableDataBase
     {
         public AvailableChargeLinksData(
             string recipientId,
             MarketParticipantRole recipientRole,
             BusinessReasonCode businessReasonCode,
+            Instant requestDateTime,
+            Guid availableDataReferenceId,
             string chargeId,
             string chargeOwner,
             ChargeType chargeType,
             string meteringPointId,
             int factor,
             Instant startDateTime,
-            Instant endDateTime,
-            Instant requestTime,
-            Guid availableDataReferenceId)
+            Instant endDateTime)
+                : base(recipientId, recipientRole, businessReasonCode, requestDateTime, availableDataReferenceId)
         {
-            Id = Guid.NewGuid();
-            RecipientId = recipientId;
-            RecipientRole = recipientRole;
-            BusinessReasonCode = businessReasonCode;
             ChargeId = chargeId;
             ChargeOwner = chargeOwner;
             ChargeType = chargeType;
@@ -46,20 +44,7 @@ namespace GreenEnergyHub.Charges.Domain.AvailableChargeLinksData
             Factor = factor;
             StartDateTime = startDateTime;
             EndDateTime = endDateTime;
-            RequestTime = requestTime;
-            AvailableDataReferenceId = availableDataReferenceId;
         }
-
-        public Guid Id { get; set; }
-
-        /// <summary>
-        /// Market Participant Id of Recipient.
-        /// </summary>
-        public string RecipientId { get; }
-
-        public MarketParticipantRole RecipientRole { get; }
-
-        public BusinessReasonCode BusinessReasonCode { get; }
 
         public string MeteringPointId { get; }
 
@@ -77,9 +62,5 @@ namespace GreenEnergyHub.Charges.Domain.AvailableChargeLinksData
         public Instant StartDateTime { get; }
 
         public Instant EndDateTime { get; }
-
-        public Instant RequestTime { get; }
-
-        public Guid AvailableDataReferenceId { get; }
     }
 }

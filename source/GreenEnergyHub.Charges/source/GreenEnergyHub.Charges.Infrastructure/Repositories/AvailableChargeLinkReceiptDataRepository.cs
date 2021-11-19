@@ -16,31 +16,32 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Domain.AvailableChargeLinksData;
+using GreenEnergyHub.Charges.Domain.AvailableChargeLinkReceiptData;
 using GreenEnergyHub.Charges.Infrastructure.Context;
 using Microsoft.EntityFrameworkCore;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Repositories
 {
-    public class AvailableChargeLinksDataRepository : IAvailableChargeLinksDataRepository
+    public class AvailableChargeLinkReceiptDataRepository : IAvailableChargeLinkReceiptDataRepository
     {
         private readonly IChargesDatabaseContext _context;
 
-        public AvailableChargeLinksDataRepository(IChargesDatabaseContext context)
+        public AvailableChargeLinkReceiptDataRepository(IChargesDatabaseContext context)
         {
             _context = context;
         }
 
-        public async Task StoreAsync(List<AvailableChargeLinksData> availableChargeLinksData)
+        public async Task StoreAsync(List<AvailableChargeLinkReceiptData> availableChargeLinkReceiptData)
         {
-            await _context.AvailableChargeLinksData.AddRangeAsync(availableChargeLinksData);
+            await _context.AvailableChargeLinkReceiptData.AddRangeAsync(availableChargeLinkReceiptData);
             await _context.SaveChangesAsync();
         }
 
-        public Task<List<AvailableChargeLinksData>> GetAsync(IEnumerable<Guid> dataReferenceIds)
+        public Task<List<AvailableChargeLinkReceiptData>> GetAsync(IEnumerable<Guid> dataReferenceIds)
         {
-            var queryable = _context.AvailableChargeLinksData.Where(x => dataReferenceIds.Contains(x.AvailableDataReferenceId));
-            return queryable
+            return _context
+                .AvailableChargeLinkReceiptData
+                .Where(x => dataReferenceIds.Contains(x.AvailableDataReferenceId))
                 .OrderBy(x => x.RequestDateTime)
                 .ToListAsync();
         }

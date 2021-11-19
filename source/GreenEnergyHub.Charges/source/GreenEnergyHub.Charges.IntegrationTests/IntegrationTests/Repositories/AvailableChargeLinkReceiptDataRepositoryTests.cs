@@ -18,59 +18,64 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
 using FluentAssertions;
-using GreenEnergyHub.Charges.Domain.AvailableChargeLinksData;
+using GreenEnergyHub.Charges.Domain.AvailableChargeLinkReceiptData;
 using GreenEnergyHub.Charges.Infrastructure.Repositories;
-using GreenEnergyHub.Charges.IntegrationTests.Database;
 using GreenEnergyHub.Charges.TestCore.Attributes;
+using GreenEnergyHub.Charges.TestCore.Database;
 using Xunit;
 using Xunit.Categories;
 
 namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
 {
     [IntegrationTest]
-    public class AvailableChargeLinksDataRepositoryTests : IClassFixture<ChargesDatabaseFixture>
+    public class AvailableChargeLinkReceiptDataRepositoryTests : IClassFixture<ChargesDatabaseFixture>
     {
         private readonly ChargesDatabaseManager _databaseManager;
 
-        public AvailableChargeLinksDataRepositoryTests(ChargesDatabaseFixture fixture)
+        public AvailableChargeLinkReceiptDataRepositoryTests(ChargesDatabaseFixture fixture)
         {
             _databaseManager = fixture.DatabaseManager;
         }
 
         [Theory]
         [InlineAutoMoqData]
-        public async Task StoreAsync_StoresAvailableChargeLinksData([NotNull] List<AvailableChargeLinksData> expectedList)
+        public async Task StoreAsync_StoresAvailableChargeLinkReceiptData([NotNull] List<AvailableChargeLinkReceiptData> expectedList)
         {
             // Arrange
+            expectedList = RepositoryAutoMoqDataFixer.GetAvailableChargeLinkReceiptDataListBasedOn(expectedList);
+
             await using var chargesDatabaseWriteContext = _databaseManager.CreateDbContext();
 
-            var sut = new AvailableChargeLinksDataRepository(chargesDatabaseWriteContext);
+            var sut = new AvailableChargeLinkReceiptDataRepository(chargesDatabaseWriteContext);
 
             // Act
             await sut.StoreAsync(expectedList).ConfigureAwait(false);
 
             // Assert
             await using var chargesDatabaseReadContext = _databaseManager.CreateDbContext();
+
             foreach (var expected in expectedList)
             {
-                var actual =
-                    chargesDatabaseReadContext.AvailableChargeLinksData.Single(x => x.AvailableDataReferenceId == expected.AvailableDataReferenceId);
-                actual.ChargeOwner.Should().Be(expected.ChargeOwner);
+                var actual = chargesDatabaseReadContext
+                    .AvailableChargeLinkReceiptData
+                    .Single(x => x.AvailableDataReferenceId == expected.AvailableDataReferenceId);
+                actual.Should().BeEquivalentTo(expected);
             }
         }
 
         [Theory]
         [InlineAutoMoqData]
-        public async Task GetAsync_WithMeteringPointId_ThenSuccessReturnedAsync(
-            [NotNull] AvailableChargeLinksData expected)
+        public async Task GetAsync_GivenAnExistingAvailableDataReferenceId_ReturnsAvailableChargeLinkReceiptData(
+            [NotNull] AvailableChargeLinkReceiptData expected)
         {
             // Arrange
+            expected = RepositoryAutoMoqDataFixer.GetAvailableChargeLinkReceiptDataBasedOn(expected);
             await using var chargesDatabaseWriteContext = _databaseManager.CreateDbContext();
-            await chargesDatabaseWriteContext.AvailableChargeLinksData.AddAsync(expected).ConfigureAwait(false);
+            await chargesDatabaseWriteContext.AvailableChargeLinkReceiptData.AddAsync(expected).ConfigureAwait(false);
             await chargesDatabaseWriteContext.SaveChangesAsync().ConfigureAwait(false);
 
             await using var chargesDatabaseReadContext = _databaseManager.CreateDbContext();
-            var sut = new AvailableChargeLinksDataRepository(chargesDatabaseReadContext);
+            var sut = new AvailableChargeLinkReceiptDataRepository(chargesDatabaseReadContext);
 
             // Act
             var actual =
@@ -79,6 +84,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
 
             // Assert
             Assert.NotNull(actual);
+            actual.Should().ContainSingle();
+            actual[0].Should().BeEquivalentTo(expected);
         }
     }
 }

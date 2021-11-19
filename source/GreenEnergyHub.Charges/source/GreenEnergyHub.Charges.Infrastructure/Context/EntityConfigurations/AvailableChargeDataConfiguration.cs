@@ -64,7 +64,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Context.EntityConfigurations
                 .HasConversion(
                     toDbValue => (int)toDbValue,
                     fromDbValue => (Resolution)fromDbValue);
-            builder.Property(x => x.RequestTime).HasColumnName("RequestTime");
+            builder.Property(x => x.RequestDateTime).HasColumnName("RequestDateTime");
             builder.Property(x => x.AvailableDataReferenceId).HasColumnName("AvailableDataReferenceId");
             builder.Ignore(c => c.Points);
             builder.OwnsMany<AvailableChargeDataPoint>("_points", ConfigurePoints);
