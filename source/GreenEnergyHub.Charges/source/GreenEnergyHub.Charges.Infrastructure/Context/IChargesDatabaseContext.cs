@@ -14,6 +14,7 @@
 
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Domain.AvailableChargeData;
+using GreenEnergyHub.Charges.Domain.AvailableChargeLinkReceiptData;
 using GreenEnergyHub.Charges.Domain.AvailableChargeLinksData;
 using GreenEnergyHub.Charges.Domain.ChargeLinks;
 using GreenEnergyHub.Charges.Domain.MeteringPoints;
@@ -76,6 +77,11 @@ namespace GreenEnergyHub.Charges.Infrastructure.Context
         /// AvailableChargeData available in the database.
         /// </summary>
         DbSet<AvailableChargeData> AvailableChargeData { get; }
+
+        /// <summary>
+        /// AvailableChargeLinkReceiptData available in the database
+        /// </summary>
+        DbSet<AvailableChargeLinkReceiptData> AvailableChargeLinkReceiptData { get; }
 
         /// <summary>
         /// Saves changes to the database.
