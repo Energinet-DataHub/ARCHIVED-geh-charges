@@ -61,10 +61,10 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             }
 
             [Fact]
-            public async Task Given_NewChargeLinkMessage_When_GridAccessProviderPeeks_Then_MessageHubReceivesReply()
+            public async Task Given_NewTaxChargeLinkMessage_When_GridAccessProviderPeeks_Then_MessageHubReceivesReply()
             {
                 // Arrange
-                var request = CreateHttpRequest(ChargeLinkDocument.AnyValid, out var correlationId);
+                var request = CreateHttpRequest(ChargeLinkDocument.AnyTax, out var correlationId);
 
                 // Act
                 await Fixture.HostManager.HttpClient.SendAsync(request);

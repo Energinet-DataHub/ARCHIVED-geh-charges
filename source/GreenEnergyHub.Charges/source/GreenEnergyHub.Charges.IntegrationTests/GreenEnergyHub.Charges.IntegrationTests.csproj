@@ -68,7 +68,7 @@ limitations under the License.
       <None Update="TestFiles\Charges\TaxTariffWithPriceDocument.xml">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
-      <None Update="TestFiles\ChargeLinks\FixedPeriodTariffChargeLinkDocument.xml">
+      <None Update="TestFiles\ChargeLinks\FixedPeriodTaxTariffChargeLinkDocument.xml">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
     </ItemGroup>

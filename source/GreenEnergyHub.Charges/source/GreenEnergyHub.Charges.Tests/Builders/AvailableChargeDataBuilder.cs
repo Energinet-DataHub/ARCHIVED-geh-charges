@@ -48,7 +48,7 @@ namespace GreenEnergyHub.Charges.Tests.Builders
         {
             return new AvailableChargeData(
                 "recipientId",
-                MarketParticipantRole.EnergyAgency,
+                MarketParticipantRole.GridAccessProvider,
                 _businessReasonCode,
                 SystemClock.Instance.GetCurrentInstant(),
                 _availableDataReferenceId,
