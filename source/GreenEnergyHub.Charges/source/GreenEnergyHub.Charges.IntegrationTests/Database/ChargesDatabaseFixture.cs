@@ -15,7 +15,7 @@
 using System.Threading.Tasks;
 using Xunit;
 
-namespace GreenEnergyHub.Charges.TestCore.Database
+namespace GreenEnergyHub.Charges.IntegrationTests.Database
 {
     /// <summary>
     /// A xUnit fixture for sharing a Charges database for integration tests.
