@@ -43,7 +43,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.ChargeBundle.MessageHub
         {
             // Arrange
             respository.Setup(
-                    r => r.GetAvailableChargeDataAsync(
+                    r => r.GetAsync(
                         dataBundleRequestDto.DataAvailableNotificationIds))
                 .Returns(Task.FromResult(availableChargeData));
 

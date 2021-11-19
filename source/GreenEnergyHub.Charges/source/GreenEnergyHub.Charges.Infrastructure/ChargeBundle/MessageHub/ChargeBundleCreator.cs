@@ -39,7 +39,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.ChargeBundle.MessageHub
         public async Task CreateAsync(DataBundleRequestDto request, Stream outputStream)
         {
             var availableData = await _availableChargeDataRepository
-                .GetAvailableChargeDataAsync(request.DataAvailableNotificationIds)
+                .GetAsync(request.DataAvailableNotificationIds)
                 .ConfigureAwait(false);
 
             await _chargeCimSerializer.SerializeToStreamAsync(

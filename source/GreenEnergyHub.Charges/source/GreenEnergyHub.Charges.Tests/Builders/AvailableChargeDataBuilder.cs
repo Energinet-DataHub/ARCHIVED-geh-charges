@@ -50,20 +50,20 @@ namespace GreenEnergyHub.Charges.Tests.Builders
                 "recipientId",
                 MarketParticipantRole.EnergyAgency,
                 _businessReasonCode,
+                SystemClock.Instance.GetCurrentInstant(),
+                _availableDataReferenceId,
                 "chargeId",
                 "chargeOwner",
                 ChargeType.Fee,
-                "Chargename",
-                "chargedescription",
+                "chargeName",
+                "chargeDescription",
                 SystemClock.Instance.GetCurrentInstant(),
                 SystemClock.Instance.GetCurrentInstant(),
                 VatClassification.Vat25,
                 true,
                 true,
                 Resolution.PT15M,
-                new List<AvailableChargeDataPoint>(),
-                SystemClock.Instance.GetCurrentInstant(),
-                _availableDataReferenceId);
+                new List<AvailableChargeDataPoint>());
         }
     }
 }
