@@ -14,7 +14,7 @@
 
 using System.Diagnostics.CodeAnalysis;
 using Energinet.Charges.Contracts;
-using GreenEnergyHub.Charges.Domain.Dtos.CreateLinkRequest;
+using GreenEnergyHub.Charges.Domain.Dtos.CreateLinksRequests;
 using GreenEnergyHub.Messaging.Protobuf;
 using GreenEnergyHub.Messaging.Transport;
 
@@ -24,7 +24,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Integration.Mappers
     {
         protected override IInboundMessage Convert([NotNull] CreateDefaultChargeLinks command)
         {
-            return new CreateLinkCommandEvent(command.MeteringPointId);
+            return new CreateLinksRequest(command.MeteringPointId);
         }
     }
 }

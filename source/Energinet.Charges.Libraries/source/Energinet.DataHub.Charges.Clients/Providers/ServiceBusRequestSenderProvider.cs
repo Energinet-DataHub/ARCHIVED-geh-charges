@@ -14,10 +14,10 @@
 
 using System.Diagnostics.CodeAnalysis;
 using Azure.Messaging.ServiceBus;
-using Energinet.DataHub.Charges.Libraries.Models;
-using Energinet.DataHub.Charges.Libraries.ServiceBus;
+using Energinet.DataHub.Charges.Clients.Models;
+using Energinet.DataHub.Charges.Clients.ServiceBus;
 
-namespace Energinet.DataHub.Charges.Libraries.Providers
+namespace Energinet.DataHub.Charges.Clients.Providers
 {
     // This class must be registered as a singleton.
     public class ServiceBusRequestSenderProvider : IServiceBusRequestSenderProvider

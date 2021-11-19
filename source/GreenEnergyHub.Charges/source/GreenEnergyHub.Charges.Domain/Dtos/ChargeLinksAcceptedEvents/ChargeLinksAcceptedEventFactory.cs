@@ -13,16 +13,25 @@
 // limitations under the License.
 
 using System.Diagnostics.CodeAnalysis;
-using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Domain.DefaultChargeLinks;
-using GreenEnergyHub.Charges.Domain.Dtos.CreateLinkRequest;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands;
+using NodaTime;
 
-namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinkCommands
+namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksAcceptedEvents
 {
-    public interface IChargeLinkCommandFactory
+    public class ChargeLinksAcceptedEventFactory : IChargeLinksAcceptedEventFactory
     {
-        Task<ChargeLinkCommand> CreateAsync(
-            [NotNull] CreateLinkCommandEvent createLinkCommandEvent,
-            [NotNull] DefaultChargeLink defaultChargeLink);
+        private readonly IClock _clock;
+
+        public ChargeLinksAcceptedEventFactory(IClock clock)
+        {
+            _clock = clock;
+        }
+
+        public ChargeLinksAcceptedEvent Create([NotNull]ChargeLinksCommand chargeLinksCommand)
+        {
+            return new ChargeLinksAcceptedEvent(
+                chargeLinksCommand,
+                _clock.GetCurrentInstant());
+        }
     }
 }

@@ -16,7 +16,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application.ChargeLinks.Handlers;
 using GreenEnergyHub.Charges.Application.ChargeLinks.Handlers.Message;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinkCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands;
 using GreenEnergyHub.Charges.Infrastructure.Messaging;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
@@ -29,15 +29,15 @@ namespace GreenEnergyHub.Charges.FunctionHost.ChargeLinks
         /// The name of the function.
         /// Function name affects the URL and thus possibly dependent infrastructure.
         /// </summary>
-        private readonly MessageExtractor<ChargeLinkCommand> _messageExtractor;
-        private readonly IChargeLinkCommandHandler _chargeLinkCommandHandler;
+        private readonly MessageExtractor<ChargeLinksCommand> _messageExtractor;
+        private readonly IChargeLinksCommandHandler _chargeLinksCommandHandler;
 
         public ChargeLinkIngestion(
-            IChargeLinkCommandHandler chargeLinkCommandHandler,
-            MessageExtractor<ChargeLinkCommand> messageExtractor)
+            IChargeLinksCommandHandler chargeLinksCommandHandler,
+            MessageExtractor<ChargeLinksCommand> messageExtractor)
         {
             _messageExtractor = messageExtractor;
-            _chargeLinkCommandHandler = chargeLinkCommandHandler;
+            _chargeLinksCommandHandler = chargeLinksCommandHandler;
         }
 
         [Function(IngestionFunctionNames.ChargeLinkIngestion)]
@@ -45,9 +45,9 @@ namespace GreenEnergyHub.Charges.FunctionHost.ChargeLinks
             [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = null)]
             HttpRequestData req)
         {
-            var command = (ChargeLinkCommand)await _messageExtractor.ExtractAsync(req.Body).ConfigureAwait(false);
+            var command = (ChargeLinksCommand)await _messageExtractor.ExtractAsync(req.Body).ConfigureAwait(false);
 
-            var chargeLinksMessageResult = await _chargeLinkCommandHandler.HandleAsync(command).ConfigureAwait(false);
+            var chargeLinksMessageResult = await _chargeLinksCommandHandler.HandleAsync(command).ConfigureAwait(false);
 
             return await CreateJsonResponseAsync(req, chargeLinksMessageResult).ConfigureAwait(false);
         }
