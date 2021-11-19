@@ -147,7 +147,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures
 
             var consumptionMeteringPointCreatedTopic = await ServiceBusResourceProvider
                 .BuildTopic(ChargesServiceBusResourceNames.ConsumptionMeteringPointCreatedTopicKey).SetEnvironmentVariableToTopicName(EnvironmentSettingNames.ConsumptionMeteringPointCreatedTopicName)
-                .AddSubscription(ChargesServiceBusResourceNames.ConsumptionMeteringPointCreatedSubscriptionName).SetEnvironmentVariableToSubscriptionName(EnvironmentSettingNames.ConsumptionMeteringPointCreatdSubscriptionName)
+                .AddSubscription(ChargesServiceBusResourceNames.ConsumptionMeteringPointCreatedSubscriptionName).SetEnvironmentVariableToSubscriptionName(EnvironmentSettingNames.ConsumptionMeteringPointCreatedSubscriptionName)
                 .CreateAsync();
 
             var chargeCreatedTopic = await ServiceBusResourceProvider

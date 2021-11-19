@@ -59,15 +59,16 @@
     "COMMAND_REJECTED_TOPIC_NAME": "command-rejected",
     "COMMAND_REJECTED_SUBSCRIPTION_NAME": "command-rejected",
 
-    // Internal, charge links, accepted
-    "CHARGE_LINK_ACCEPTED_TOPIC_NAME": "link-command-accepted",
-    "CHARGELINKACCEPTED_SUB_DATAAVAILABLENOTIFIER": "chargelinkaccepted-sub-dataavailablenotifier",
-    "CHARGELINKACCEPTED_SUB_EVENTPUBLISHER": "chargelinkaccepted-sub-eventpublisher",
-    "CHARGELINKACCEPTED_SUB_REPLIER": "chargelinkaccepted-sub-replier",
-
     // Internal, charge links, received
     "CHARGE_LINK_RECEIVED_TOPIC_NAME": "link-command-received",
     "CHARGE_LINK_RECEIVED_SUBSCRIPTION_NAME": "link-command-received-receiver",
+    
+    // Internal, charge links, accepted
+    "CHARGE_LINK_ACCEPTED_TOPIC_NAME": "link-command-accepted",
+    "CHARGELINKACCEPTED_SUB_CONFIRMATIONNOTIFIER": "chargelinkaccepted-sub-confirmationnotifier",
+    "CHARGELINKACCEPTED_SUB_DATAAVAILABLENOTIFIER": "chargelinkaccepted-sub-dataavailablenotifier",
+    "CHARGELINKACCEPTED_SUB_EVENTPUBLISHER": "chargelinkaccepted-sub-eventpublisher",
+    "CHARGELINKACCEPTED_SUB_REPLIER": "chargelinkaccepted-sub-replier",
 
     // Internal, post office
     "POST_OFFICE_TOPIC_NAME": "post-office",
