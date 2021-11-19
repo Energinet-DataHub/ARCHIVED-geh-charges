@@ -22,6 +22,6 @@ namespace GreenEnergyHub.Charges.Domain.AvailableChargeLinkReceiptData
     {
         Task StoreAsync(List<AvailableChargeLinkReceiptData> availableChargeLinkReceiptData);
 
-        Task<List<AvailableChargeLinkReceiptData>> GetAsync(IEnumerable<Guid> dataReferenceId);
+        Task<List<AvailableChargeLinkReceiptData>> GetAsync(IEnumerable<Guid> dataReferenceIds);
     }
 }
