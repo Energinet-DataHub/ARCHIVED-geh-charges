@@ -127,16 +127,16 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Handlers
         [InlineAutoDomainData]
         public async Task HandleAsync_WithUnknownMeteringPointId_CallDefaultLinkClientWithFailedReply(
             [Frozen] Mock<ICorrelationContext> correlationContextMock,
-            [Frozen] [NotNull] Mock<IMeteringPointRepository> meteringPointRepository,
-            [Frozen] [NotNull] Mock<IMessageDispatcher<ChargeLinksReceivedEvent>> dispatcher,
-            [Frozen] [NotNull] Mock<IMessageMetaDataContext> messageMetaDataContext,
-            [Frozen] [NotNull] Mock<ICreateDefaultChargeLinksReplier> defaultChargeLinkClient,
-            [NotNull] string correlationId,
-            [NotNull] string replyTo,
-            [NotNull] ChargeLinksCommand chargeLinksCommand,
-            [NotNull] string meteringPointId,
-            [NotNull] ErrorCode errorCode,
-            [NotNull] CreateLinkRequestHandler sut)
+            [Frozen] Mock<IMeteringPointRepository> meteringPointRepository,
+            [Frozen] Mock<IMessageDispatcher<ChargeLinksReceivedEvent>> dispatcher,
+            [Frozen] Mock<IMessageMetaDataContext> messageMetaDataContext,
+            [Frozen] Mock<ICreateDefaultChargeLinksReplier> defaultChargeLinkClient,
+            string correlationId,
+            string replyTo,
+            ChargeLinksCommand chargeLinksCommand,
+            string meteringPointId,
+            ErrorCode errorCode,
+            CreateLinkRequestHandler sut)
         {
             // Arrange
             foreach (var chargeLinkDto in chargeLinksCommand.ChargeLinks)
@@ -174,16 +174,16 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Handlers
         [InlineAutoDomainData]
         public async Task HandleAsync_WhenCalledWithMeteringPointTypeWhichHasNoDefaultLinks_ReplyWithDefaultChargeLinksSucceeded(
             [Frozen] Mock<ICorrelationContext> correlationContextMock,
-            [Frozen] [NotNull] Mock<IDefaultChargeLinkRepository> defaultChargeLinkRepository,
-            [Frozen] [NotNull] Mock<IMeteringPointRepository> meteringPointRepository,
-            [Frozen] [NotNull] Mock<IMessageDispatcher<ChargeLinksReceivedEvent>> dispatcher,
-            [Frozen] [NotNull] Mock<IMessageMetaDataContext> messageMetaDataContext,
-            [Frozen] [NotNull] Mock<ICreateDefaultChargeLinksReplier> defaultChargeLinkClient,
-            [NotNull] string correlationId,
-            [NotNull] string replyTo,
-            [NotNull] ChargeLinksCommand chargeLinksCommand,
-            [NotNull] string meteringPointId,
-            [NotNull] CreateLinkRequestHandler sut)
+            [Frozen] Mock<IDefaultChargeLinkRepository> defaultChargeLinkRepository,
+            [Frozen] Mock<IMeteringPointRepository> meteringPointRepository,
+            [Frozen] Mock<IMessageDispatcher<ChargeLinksReceivedEvent>> dispatcher,
+            [Frozen] Mock<IMessageMetaDataContext> messageMetaDataContext,
+            [Frozen] Mock<ICreateDefaultChargeLinksReplier> defaultChargeLinkClient,
+            string correlationId,
+            string replyTo,
+            ChargeLinksCommand chargeLinksCommand,
+            string meteringPointId,
+            CreateLinkRequestHandler sut)
         {
             // Arrange
             foreach (var chargeLinkDto in chargeLinksCommand.ChargeLinks)

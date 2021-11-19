@@ -13,7 +13,7 @@
 // limitations under the License.
 
 using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinkCommandAcceptedEvents;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksAcceptedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.DefaultChargeLinksDataAvailableNotifiedEvents;
 
 namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
@@ -31,7 +31,7 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
             _defaultChargeLinkDataAvailableNotifierEventFactory = defaultChargeLinkDataAvailableNotifierEventFactory;
         }
 
-        public async Task HandleAsync(ChargeLinkCommandAcceptedEvent chargeLinkCommandAcceptedEvent)
+        public async Task HandleAsync(ChargeLinksAcceptedEvent chargeLinkCommandAcceptedEvent)
         {
             var chargeLinkDataAvailableNotifierEvent =
                 _defaultChargeLinkDataAvailableNotifierEventFactory.CreteFromAcceptedEvent(chargeLinkCommandAcceptedEvent);

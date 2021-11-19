@@ -59,7 +59,7 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.MessageHub
             _correlationContext = correlationContext;
         }
 
-        public async Task NotifyAsync([NotNull] ChargeLinksAcceptedEvent chargeLinksAcceptedEvent)
+        public async Task NotifyAsync(ChargeLinksAcceptedEvent chargeLinksAcceptedEvent)
         {
             if (chargeLinksAcceptedEvent == null) throw new ArgumentNullException(nameof(chargeLinksAcceptedEvent));
 

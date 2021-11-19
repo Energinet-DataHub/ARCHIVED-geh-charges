@@ -12,18 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Linq;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinkCommandAcceptedEvents;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksAcceptedEvents;
 
 namespace GreenEnergyHub.Charges.Domain.Dtos.DefaultChargeLinksDataAvailableNotifiedEvents
 {
     public class DefaultChargeLinkDataAvailableNotifierEventFactory : IDefaultChargeLinkDataAvailableNotifierEventFactory
     {
-        public DefaultChargeLinksDataAvailableNotifierEvent CreteFromAcceptedEvent(ChargeLinkCommandAcceptedEvent chargeLinkCommandAcceptedEvent)
+        public DefaultChargeLinksDataAvailableNotifierEvent CreteFromAcceptedEvent(ChargeLinksAcceptedEvent chargeLinksAcceptedEvent)
         {
             return new DefaultChargeLinksDataAvailableNotifierEvent(
-                chargeLinkCommandAcceptedEvent.PublishedTime,
-                chargeLinkCommandAcceptedEvent.ChargeLinkCommands.First().ChargeLink.MeteringPointId);
+                chargeLinksAcceptedEvent.PublishedTime,
+                chargeLinksAcceptedEvent.ChargeLinksCommand.MeteringPointId);
         }
     }
 }

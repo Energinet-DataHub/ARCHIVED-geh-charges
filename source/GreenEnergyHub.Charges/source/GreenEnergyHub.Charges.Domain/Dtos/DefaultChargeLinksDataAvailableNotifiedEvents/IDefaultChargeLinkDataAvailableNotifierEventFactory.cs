@@ -12,12 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinkCommandAcceptedEvents;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksAcceptedEvents;
 
 namespace GreenEnergyHub.Charges.Domain.Dtos.DefaultChargeLinksDataAvailableNotifiedEvents
 {
     public interface IDefaultChargeLinkDataAvailableNotifierEventFactory
     {
-        DefaultChargeLinksDataAvailableNotifierEvent CreteFromAcceptedEvent(ChargeLinkCommandAcceptedEvent chargeLinkCommandAcceptedEvent);
+        DefaultChargeLinksDataAvailableNotifierEvent CreteFromAcceptedEvent(ChargeLinksAcceptedEvent chargeLinksAcceptedEvent);
     }
 }
