@@ -12,11 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
 using System.Threading.Tasks;
 using FluentAssertions;
 using GreenEnergyHub.Charges.WebApi.Controllers;
-using GreenEnergyHub.Charges.WebApi.Models;
 using Microsoft.AspNetCore.Mvc;
 using Xunit;
 using Xunit.Categories;
