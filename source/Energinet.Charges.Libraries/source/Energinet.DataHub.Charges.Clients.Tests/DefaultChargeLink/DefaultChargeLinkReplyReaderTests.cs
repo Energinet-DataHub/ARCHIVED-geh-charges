@@ -17,10 +17,10 @@ using System.Threading.Tasks;
 using Energinet.Charges.Contracts;
 using Energinet.DataHub.Charges.Clients.DefaultChargeLink;
 using Energinet.DataHub.Charges.Clients.Models;
-using Energinet.DataHub.Charges.TestCore.Attributes;
 using FluentAssertions;
 using Google.Protobuf;
 using GreenEnergyHub.Charges.Contracts;
+using GreenEnergyHub.Charges.TestCore.Attributes;
 using Xunit;
 using Xunit.Categories;
 using CreateDefaultChargeLinksFailed =
