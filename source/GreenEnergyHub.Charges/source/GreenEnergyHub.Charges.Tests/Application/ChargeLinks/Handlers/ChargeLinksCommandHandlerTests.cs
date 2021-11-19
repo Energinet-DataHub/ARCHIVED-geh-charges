@@ -16,7 +16,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Application.ChargeLinks.Handlers;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinkCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands;
 using GreenEnergyHub.TestHelpers;
 using Xunit;
 using Xunit.Categories;
@@ -24,16 +24,16 @@ using Xunit.Categories;
 namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Handlers
 {
     [UnitTest]
-    public class ChargeLinkCommandHandlerTests
+    public class ChargeLinksCommandHandlerTests
     {
         [Theory]
         [InlineAutoDomainData]
         public async Task HandleAsync_WhenCalledWithValidChargeLink_ShouldReturnOk(
-            [NotNull] ChargeLinkCommand chargeLinkCommand,
-            [NotNull] ChargeLinkCommandHandler sut)
+            [NotNull] ChargeLinksCommand chargeLinksCommand,
+            [NotNull] ChargeLinksCommandHandler sut)
         {
             // Act
-            var result = await sut.HandleAsync(chargeLinkCommand).ConfigureAwait(false);
+            var result = await sut.HandleAsync(chargeLinksCommand).ConfigureAwait(false);
 
             // Assert
             result.IsSucceeded.Should().BeTrue();

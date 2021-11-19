@@ -60,7 +60,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessV
 
             if (chargeExists)
             {
-                var charge = await _chargeRepository.GetChargeAsync(
+                var charge = await _chargeRepository.GetAsync(
                     new ChargeIdentifier(
                         chargeCommand.ChargeOperation.ChargeId,
                         chargeCommand.ChargeOperation.ChargeOwner,

@@ -16,8 +16,8 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using FluentAssertions;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinkCommandAcceptedEvents;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinkCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksAcceptedEvents;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands;
 using GreenEnergyHub.Charges.TestCore.Attributes;
 using NodaTime;
 using NodaTime.Testing;
@@ -32,32 +32,16 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Mapping
         [Theory]
         [InlineAutoMoqData]
         public void Map_MapsFrom_ChargeLinkCommand_ToAcceptedEventWithCorrectValues(
-            [NotNull] ChargeLinkCommand firstChargeLinkCommand,
-            [NotNull] ChargeLinkCommand secondChargeLinkCommand)
+            [NotNull] ChargeLinksCommand chargeLinksCommand)
         {
             // Arrange
-            var factory = new ChargeLinkCommandAcceptedEventFactory(new FakeClock(Instant.MinValue));
+            var sut = new ChargeLinksAcceptedEventFactory(new FakeClock(Instant.MinValue));
 
             // Act
-            var chargeLinkCommandAcceptedEvent = factory.Create(
-                new List<ChargeLinkCommand> { firstChargeLinkCommand, secondChargeLinkCommand });
+            var result = sut.Create(chargeLinksCommand);
 
             // Assert
-            var firstChargeLinkCommandOnEvent = chargeLinkCommandAcceptedEvent
-                .ChargeLinkCommands
-                .First(x =>
-                    x.ChargeLink.SenderProvidedChargeId == firstChargeLinkCommand.ChargeLink.SenderProvidedChargeId);
-
-            var secondChargeLinkCommandOnEvent = chargeLinkCommandAcceptedEvent
-                .ChargeLinkCommands
-                .First(x =>
-                    x.ChargeLink.SenderProvidedChargeId == secondChargeLinkCommand.ChargeLink.SenderProvidedChargeId);
-
-            firstChargeLinkCommandOnEvent.Document.Should().BeEquivalentTo(firstChargeLinkCommand.Document);
-            firstChargeLinkCommandOnEvent.ChargeLink.Should().BeEquivalentTo(firstChargeLinkCommand.ChargeLink);
-
-            secondChargeLinkCommandOnEvent.Document.Should().BeEquivalentTo(secondChargeLinkCommand.Document);
-            secondChargeLinkCommandOnEvent.ChargeLink.Should().BeEquivalentTo(secondChargeLinkCommand.ChargeLink);
+            result.ChargeLinksCommand.ChargeLinks.Should().BeEquivalentTo(chargeLinksCommand.ChargeLinks);
         }
     }
 }

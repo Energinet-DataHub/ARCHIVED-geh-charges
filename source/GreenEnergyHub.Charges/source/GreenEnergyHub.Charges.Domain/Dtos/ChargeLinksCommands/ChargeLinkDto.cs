@@ -17,7 +17,7 @@ using NodaTime;
 
 #pragma warning disable 8618
 
-namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinkCommands
+namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands
 {
     public class ChargeLinkDto
     {
@@ -25,8 +25,6 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinkCommands
         /// Contains a ID for the specific link, provided by the sender. Combined with sender.id it becomes unique.
         /// </summary>
         public string OperationId { get; set; }
-
-        public string MeteringPointId { get; set; }
 
         public Instant StartDateTime { get; set; }
 

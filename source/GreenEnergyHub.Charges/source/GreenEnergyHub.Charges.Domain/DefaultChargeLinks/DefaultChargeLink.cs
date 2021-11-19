@@ -16,8 +16,6 @@ using System;
 using GreenEnergyHub.Charges.Domain.MeteringPoints;
 using NodaTime;
 
-#pragma warning disable 8618
-
 namespace GreenEnergyHub.Charges.Domain.DefaultChargeLinks
 {
     // Logically there is a MeteringPointType attached to the DefaultChargeLink, but atm. It is not used.
