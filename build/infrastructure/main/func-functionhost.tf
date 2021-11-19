@@ -40,6 +40,7 @@ module "func_functionhost" {
     CHARGELINKACCEPTED_SUB_REPLIER                                  = "chargelinkaccepted-sub-replier"
     CHARGELINKACCEPTED_SUB_EVENTPUBLISHER                           = "chargelinkaccepted-sub-eventpublisher"
     CHARGELINKACCEPTED_SUB_DATAAVAILABLENOTIFIER                    = "chargelinkaccepted-sub-dataavailablenotifier"
+    CHARGELINKACCEPTED_SUB_CONFIRMATIONNOTIFIER                     = "chargelinkaccepted-sub-confirmationnotifier"
     CHARGE_LINK_CREATED_TOPIC_NAME                                  = data.azurerm_key_vault_secret.sbt_charge_link_created_name.value
     CHARGE_LINK_RECEIVED_TOPIC_NAME                                 = module.sbt_link_command_received.name
     CHARGE_LINK_RECEIVED_SUBSCRIPTION_NAME                          = "link-command-received-receiver"

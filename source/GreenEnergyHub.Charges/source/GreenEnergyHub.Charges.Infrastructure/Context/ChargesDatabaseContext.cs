@@ -15,6 +15,7 @@
 using System;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Domain.AvailableChargeData;
+using GreenEnergyHub.Charges.Domain.AvailableChargeLinkReceiptData;
 using GreenEnergyHub.Charges.Domain.AvailableChargeLinksData;
 using GreenEnergyHub.Charges.Domain.ChargeLinks;
 using GreenEnergyHub.Charges.Domain.MeteringPoints;
@@ -52,6 +53,8 @@ namespace GreenEnergyHub.Charges.Infrastructure.Context
 
         public DbSet<AvailableChargeData> AvailableChargeData { get; private set; }
 
+        public DbSet<AvailableChargeLinkReceiptData> AvailableChargeLinkReceiptData { get; private set; }
+
         public Task<int> SaveChangesAsync()
            => base.SaveChangesAsync();
 
@@ -72,6 +75,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Context
             modelBuilder.ApplyConfiguration(new MeteringPointEntityConfiguration());
             modelBuilder.ApplyConfiguration(new AvailableChargeLinksDataConfiguration());
             modelBuilder.ApplyConfiguration(new AvailableChargeDataConfiguration());
+            modelBuilder.ApplyConfiguration(new AvailableChargeLinkReceiptDataConfiguration());
 
             base.OnModelCreating(modelBuilder);
         }
