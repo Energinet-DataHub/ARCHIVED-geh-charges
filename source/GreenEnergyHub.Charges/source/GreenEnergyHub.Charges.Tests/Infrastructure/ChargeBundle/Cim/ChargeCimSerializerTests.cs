@@ -166,6 +166,8 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.ChargeBundle.Cim
                 RecipientId,
                 MarketParticipantRole.GridAccessProvider,
                 BusinessReasonCode.UpdateChargeInformation,
+                clock.GetCurrentInstant(),
+                Guid.NewGuid(),
                 "ChargeId" + no,
                 "Owner" + no,
                 GetChargeType(no),
@@ -177,9 +179,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.ChargeBundle.Cim
                 true,
                 false,
                 GetResolution(no),
-                GetPoints(GetNoOfPoints(no, includePrices)),
-                clock.GetCurrentInstant(),
-                Guid.NewGuid());
+                GetPoints(GetNoOfPoints(no, includePrices)));
         }
 
         private AvailableChargeData GetChargeWithoutMasterData(int no, IClock clock, bool includePrices)
@@ -188,6 +188,8 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.ChargeBundle.Cim
                 "Recipient",
                 MarketParticipantRole.GridAccessProvider,
                 BusinessReasonCode.UpdateChargeInformation,
+                clock.GetCurrentInstant(),
+                Guid.NewGuid(),
                 "ChargeId" + no,
                 "Owner" + no,
                 GetChargeType(no),
@@ -199,9 +201,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.ChargeBundle.Cim
                 false,
                 false,
                 GetResolution(no),
-                GetPoints(GetNoOfPoints(no, includePrices)),
-                clock.GetCurrentInstant(),
-                Guid.NewGuid());
+                GetPoints(GetNoOfPoints(no, includePrices)));
         }
 
         private static ChargeType GetChargeType(int no)

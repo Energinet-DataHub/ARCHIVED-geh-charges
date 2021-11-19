@@ -48,6 +48,8 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Factories
             actual.RecipientId.Should().Be(recipient.Id);
             actual.RecipientRole.Should().Be(recipient.BusinessProcessRole);
             actual.BusinessReasonCode.Should().Be(chargeCommand.Document.BusinessReasonCode);
+            actual.RequestDateTime.Should().Be(now);
+            actual.AvailableDataReferenceId.Should().Be(messageHubId);
             actual.ChargeId.Should().Be(chargeCommand.ChargeOperation.ChargeId);
             actual.ChargeOwner.Should().Be(chargeCommand.ChargeOperation.ChargeOwner);
             actual.ChargeType.Should().Be(chargeCommand.ChargeOperation.Type);
@@ -59,8 +61,6 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Factories
             actual.TaxIndicator.Should().Be(chargeCommand.ChargeOperation.TaxIndicator);
             actual.TransparentInvoicing.Should().Be(chargeCommand.ChargeOperation.TransparentInvoicing);
             actual.Resolution.Should().Be(chargeCommand.ChargeOperation.Resolution);
-            actual.RequestTime.Should().Be(now);
-            actual.AvailableDataReferenceId.Should().Be(messageHubId);
             actual.Points.Should().BeEquivalentTo(
                 chargeCommand.ChargeOperation.Points,
                 options => options.ExcludingMissingMembers());
