@@ -31,5 +31,9 @@ module "sbt_link_command_accepted" {
       name                = "chargelinkaccepted-sub-dataavailablenotifier"
       max_delivery_count  = 1
     },
+    {
+      name                = "chargelinkaccepted-sub-confirmationnotifier"
+      max_delivery_count  = 1
+    },	
   ]
 }
