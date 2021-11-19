@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading;
@@ -20,9 +21,10 @@ using Azure.Messaging.ServiceBus;
 using Energinet.Charges.Contracts;
 using Energinet.DataHub.Core.FunctionApp.TestCommon;
 using Google.Protobuf;
-using GreenEnergyHub.Charges.FunctionHost.Common;
 using GreenEnergyHub.Charges.IntegrationTests.Fixtures;
 using GreenEnergyHub.Charges.IntegrationTests.TestHelpers;
+using Microsoft.ApplicationInsights;
+using Microsoft.ApplicationInsights.DataContracts;
 using Xunit;
 using Xunit.Abstractions;
 using Xunit.Categories;
@@ -40,6 +42,20 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             {
             }
 
+            [Fact]
+            public async Task When_ReceivingCreateDefaultChargeLinksRequest_MessageHubIsNotifiedAboutAvailableData_And_Then_When_MessageHubRequestsTheBundle_Then_MessageHubReceivesBundleReply()
+            {
+                // Arrange
+                var meteringPointId = "571313180000000005";
+                var request = CreateEvent(meteringPointId, out var correlationId, out var parentId);
+
+                // Act
+                await MockTelemetryClient.SendWrappedServiceBusMessageToQueueAsync(Fixture.CreateLinkRequestQueue, request, correlationId, parentId);
+
+                // Assert
+                await Fixture.MessageHubMock.AssertPeekReceivesReplyAsync(correlationId);
+            }
+
             public Task InitializeAsync()
             {
                 return Task.CompletedTask;
@@ -51,38 +67,12 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 return Task.CompletedTask;
             }
 
-            [Fact]
-            public async Task When_ReceivingCreateDefaultChargeLinksRequest_MessageHubIsNotifiedAboutAvailableData_And_Then_When_MessageHubRequestsTheBundle_Then_MessageHubReceivesBundleReply()
-            {
-                // Arrange
-                var request = CreateEvent(Fixture.CreateLinkReplyQueue.Name, out var correlationId);
-
-                // Act
-                await Fixture.CreateLinkRequestQueue.SenderClient.SendMessageAsync(request, CancellationToken.None);
-
-                // Assert
-                await Fixture.MessageHubMock.AssertPeekReceivesReplyAsync(correlationId);
-            }
-
-            private ServiceBusMessage CreateEvent(string queueName, out string correlationId)
+            private CreateDefaultChargeLinks CreateEvent(string meteringPointId, out string correlationId, out string parentId)
             {
                 correlationId = CorrelationIdGenerator.Create();
-                Debug.WriteLine(correlationId);
-                var message = new CreateDefaultChargeLinks { MeteringPointId = "571313180000000005" };
-                var byteArray = message.ToByteArray();
-                var serviceBusMessage = new ServiceBusMessage(byteArray)
-                {
-                    CorrelationId = correlationId,
-                    ApplicationProperties =
-                    {
-                        new KeyValuePair<string, object>("ReplyTo", queueName),
-                        new KeyValuePair<string, object>("traceparent", $"00-{correlationId}-b7ad6b7169203331-01"),
-                        new KeyValuePair<string, object>("TraceParent", $"00-{correlationId}-b7ad6b7169203331-01"),
-                        new KeyValuePair<string, object>("ParentId", $"00-{correlationId}-b7ad6b7169203331-01"),
-                        new KeyValuePair<string, object>("RootId", correlationId),
-                    },
-                };
-                return serviceBusMessage;
+                var message = new CreateDefaultChargeLinks { MeteringPointId = meteringPointId };
+                parentId = $"00-{correlationId}-b7ad6b7169203331-01";
+                return message;
             }
         }
     }
