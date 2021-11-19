@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 using Azure.Messaging.ServiceBus;
@@ -66,14 +67,22 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             private ServiceBusMessage CreateEvent(string queueName, out string correlationId)
             {
                 correlationId = CorrelationIdGenerator.Create();
-
-                var message = new CreateDefaultChargeLinks { MeteringPointId = "metering point id" };
+                Debug.WriteLine(correlationId);
+                var message = new CreateDefaultChargeLinks { MeteringPointId = "571313180000000005" };
                 var byteArray = message.ToByteArray();
-                return new ServiceBusMessage(byteArray)
+                var serviceBusMessage = new ServiceBusMessage(byteArray)
                 {
                     CorrelationId = correlationId,
-                    ApplicationProperties = { new KeyValuePair<string, object>("ReplyTo", queueName) },
+                    ApplicationProperties =
+                    {
+                        new KeyValuePair<string, object>("ReplyTo", queueName),
+                        new KeyValuePair<string, object>("traceparent", $"00-{correlationId}-b7ad6b7169203331-01"),
+                        new KeyValuePair<string, object>("TraceParent", $"00-{correlationId}-b7ad6b7169203331-01"),
+                        new KeyValuePair<string, object>("ParentId", $"00-{correlationId}-b7ad6b7169203331-01"),
+                        new KeyValuePair<string, object>("RootId", correlationId),
+                    },
                 };
+                return serviceBusMessage;
             }
         }
     }
