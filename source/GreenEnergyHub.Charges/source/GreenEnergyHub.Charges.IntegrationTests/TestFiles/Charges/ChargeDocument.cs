@@ -17,8 +17,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.TestFiles.Charges
     public static class ChargeDocument
     {
         public const string AnyValid = "TestFiles/Charges/TaxTariffWithPriceDocument.xml";
-        public const string TaxTariff = "TestFiles/Charges/TaxTariffWithPriceDocument.xml";
-        public const string WithPrice = "TestFiles/Charges/TaxTariffWithPriceDocument.xml";
+        public const string AnyWithPrice = "TestFiles/Charges/TaxTariffWithPriceDocument.xml";
+        public const string TaxTariffWithPrice = "TestFiles/Charges/TaxTariffWithPriceDocument.xml";
         public const string AnyInvalid = "TestFiles/Charges/InvalidTariffDocument.xml";
     }
 }
