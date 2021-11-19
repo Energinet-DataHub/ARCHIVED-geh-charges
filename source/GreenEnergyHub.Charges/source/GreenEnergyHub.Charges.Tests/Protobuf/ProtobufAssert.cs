@@ -23,7 +23,7 @@ using NodaTime;
 using Xunit;
 using Xunit.Sdk;
 
-namespace GreenEnergyHub.Charges.TestCore.Protobuf
+namespace GreenEnergyHub.Charges.Tests.Protobuf
 {
     public static class ProtobufAssert
     {

@@ -20,8 +20,8 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.AvailableChargeData;
 using GreenEnergyHub.Charges.Infrastructure.Repositories;
+using GreenEnergyHub.Charges.IntegrationTests.Database;
 using GreenEnergyHub.Charges.TestCore.Attributes;
-using GreenEnergyHub.Charges.TestCore.Database;
 using Xunit;
 using Xunit.Categories;
 

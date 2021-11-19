@@ -22,7 +22,7 @@ using GreenEnergyHub.Charges.Domain.ChargeLinks;
 using GreenEnergyHub.Charges.Domain.MeteringPoints;
 using GreenEnergyHub.Charges.Infrastructure.Context;
 using GreenEnergyHub.Charges.Infrastructure.Repositories;
-using GreenEnergyHub.Charges.TestCore.Database;
+using GreenEnergyHub.Charges.IntegrationTests.Database;
 using Microsoft.EntityFrameworkCore;
 using NodaTime;
 using Xunit;
