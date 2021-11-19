@@ -27,9 +27,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.TestHelpers
 {
     public static class MockTelemetryClient
     {
-        public static async Task SendWrappedServiceBusMessageToQueueAsync(QueueResource queue, IMessage request, string correlationId, string parentId)
+        public static async Task SendWrappedServiceBusMessageToQueueAsync(QueueResource queue, ServiceBusMessage serviceBusMessage, string correlationId, string parentId)
         {
-            var serviceBusMessage = CreateIMessage(request, correlationId, parentId, queue.Name);
             var telemetryClient = Create();
             var operation = telemetryClient.StartOperation<DependencyTelemetry>("MyTest", correlationId, parentId);
             operation.Telemetry.Type = "Function";
@@ -48,20 +47,6 @@ namespace GreenEnergyHub.Charges.IntegrationTests.TestHelpers
             {
                 telemetryClient.StopOperation(operation);
             }
-        }
-
-        private static ServiceBusMessage CreateIMessage(IMessage message, string correlationId, string parentId, string queueName)
-        {
-            var byteArray = message.ToByteArray();
-            var serviceBusMessage = new ServiceBusMessage(byteArray)
-            {
-                CorrelationId = correlationId,
-                ApplicationProperties =
-                {
-                    new KeyValuePair<string, object>("ReplyTo", queueName),
-                },
-            };
-            return serviceBusMessage;
         }
 
         private static TelemetryClient Create()

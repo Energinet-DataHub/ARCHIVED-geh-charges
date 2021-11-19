@@ -47,7 +47,11 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             {
                 // Arrange
                 var meteringPointId = "571313180000000005";
-                var request = CreateEvent(meteringPointId, out var correlationId, out var parentId);
+                var request = CreateEvent(
+                    meteringPointId,
+                    Fixture.CreateLinkReplyQueue.Name,
+                    out var correlationId,
+                    out var parentId);
 
                 // Act
                 await MockTelemetryClient.SendWrappedServiceBusMessageToQueueAsync(Fixture.CreateLinkRequestQueue, request, correlationId, parentId);
@@ -67,12 +71,22 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 return Task.CompletedTask;
             }
 
-            private CreateDefaultChargeLinks CreateEvent(string meteringPointId, out string correlationId, out string parentId)
+            private ServiceBusMessage CreateEvent(string meteringPointId, string replyToQueueName, out string correlationId, out string parentId)
             {
                 correlationId = CorrelationIdGenerator.Create();
                 var message = new CreateDefaultChargeLinks { MeteringPointId = meteringPointId };
                 parentId = $"00-{correlationId}-b7ad6b7169203331-01";
-                return message;
+
+                var byteArray = message.ToByteArray();
+                var serviceBusMessage = new ServiceBusMessage(byteArray)
+                {
+                    CorrelationId = correlationId,
+                    ApplicationProperties =
+                    {
+                        new KeyValuePair<string, object>("ReplyTo", replyToQueueName),
+                    },
+                };
+                return serviceBusMessage;
             }
         }
     }
