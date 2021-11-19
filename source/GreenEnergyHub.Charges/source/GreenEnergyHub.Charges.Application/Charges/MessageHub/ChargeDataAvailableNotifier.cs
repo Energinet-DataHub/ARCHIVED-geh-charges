@@ -39,37 +39,34 @@ namespace GreenEnergyHub.Charges.Application.Charges.MessageHub
         private readonly IAvailableChargeDataRepository _availableChargeDataRepository;
         private readonly IAvailableChargeDataFactory _availableChargeDataFactory;
         private readonly IMarketParticipantRepository _marketParticipantRepository;
-        private readonly IClock _clock;
         private readonly ICorrelationContext _correlationContext;
+        private readonly IMessageMetaDataContext _messageMetaDataContext;
 
         public ChargeDataAvailableNotifier(
             IDataAvailableNotificationSender dataAvailableNotificationSender,
             IAvailableChargeDataRepository availableChargeDataRepository,
             IAvailableChargeDataFactory availableChargeDataFactory,
             IMarketParticipantRepository marketParticipantRepository,
-            IClock clock,
-            ICorrelationContext correlationContext)
+            ICorrelationContext correlationContext,
+            IMessageMetaDataContext messageMetaDataContext)
         {
             _dataAvailableNotificationSender = dataAvailableNotificationSender;
             _availableChargeDataRepository = availableChargeDataRepository;
             _availableChargeDataFactory = availableChargeDataFactory;
             _marketParticipantRepository = marketParticipantRepository;
-            _clock = clock;
             _correlationContext = correlationContext;
+            _messageMetaDataContext = messageMetaDataContext;
         }
 
         public async Task NotifyAsync(ChargeCommandAcceptedEvent chargeCommandAcceptedEvent)
         {
             if (chargeCommandAcceptedEvent == null) throw new ArgumentNullException(nameof(chargeCommandAcceptedEvent));
 
-            // When available this should be parsed on from API management to be more precise.
-            var now = _clock.GetCurrentInstant();
-
             if (chargeCommandAcceptedEvent.Command.ChargeOperation.TaxIndicator is false)
                 return;
 
             var dataAvailableNotificationDtos =
-                await GenerateDataAvailableNotificationDtosAsync(chargeCommandAcceptedEvent, now);
+                await GenerateDataAvailableNotificationDtosAsync(chargeCommandAcceptedEvent, _messageMetaDataContext.RequestDataTime);
 
             var dataAvailableNotificationSenderTasks = dataAvailableNotificationDtos
                 .Select(x => _dataAvailableNotificationSender.SendAsync(_correlationContext.Id, x));

@@ -19,6 +19,7 @@ using GreenEnergyHub.Charges.Infrastructure.Messaging.Registration;
 using GreenEnergyHub.Messaging.Protobuf;
 using GreenEnergyHub.TestHelpers;
 using Microsoft.Extensions.DependencyInjection;
+using NodaTime;
 using Xunit;
 using Xunit.Categories;
 
@@ -34,6 +35,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Messaging.Registration
             // Arrange
             var anyValidConnectionString = "Endpoint=foo/;SharedAccessKeyName=foo;SharedAccessKey=foo";
             var services = new ServiceCollection();
+            services.AddScoped<IClock>(_ => SystemClock.Instance);
 
             // Act
             services.SendProtobuf<TestMessageContract>();
