@@ -13,7 +13,9 @@
 // limitations under the License.
 
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
+using GreenEnergyHub.Charges.Domain.DefaultChargeLinks;
 using NodaTime;
 
 namespace GreenEnergyHub.Charges.Domain.Charges
@@ -25,10 +27,12 @@ namespace GreenEnergyHub.Charges.Domain.Charges
     {
         Task StoreChargeAsync(Charge newCharge, string senderId, Instant writeDateTime);
 
-        Task<Charge> GetChargeAsync(ChargeIdentifier chargeIdentifier);
+        Task<Charge> GetAsync(ChargeIdentifier chargeIdentifier);
 
-        Task<Charge> GetChargeAsync(Guid id);
+        Task<Charge> GetAsync(Guid id);
 
         Task<bool> CheckIfChargeExistsAsync(ChargeIdentifier chargeIdentifier);
+
+        Task<IReadOnlyCollection<Charge>> GetAsync(IReadOnlyCollection<Guid> ids);
     }
 }

@@ -33,5 +33,7 @@ namespace GreenEnergyHub.Charges.Domain.MarketParticipants
         MarketParticipant GetGridAccessProvider(string meteringPointId);
 
         Task<List<MarketParticipant>> GetActiveGridAccessProvidersAsync();
+
+        Task<MarketParticipant> GetAsync(MarketParticipantRole marketParticipantRole);
     }
 }

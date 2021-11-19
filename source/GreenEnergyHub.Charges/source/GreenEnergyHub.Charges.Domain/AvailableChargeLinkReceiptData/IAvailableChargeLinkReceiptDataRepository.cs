@@ -12,17 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using GreenEnergyHub.Charges.Domain.Dtos.Messages.Command;
-using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
-#pragma warning disable 8618
-
-namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinkCommands
+namespace GreenEnergyHub.Charges.Domain.AvailableChargeLinkReceiptData
 {
-    public class ChargeLinkCommand : CommandBase
+    public interface IAvailableChargeLinkReceiptDataRepository
     {
-        public DocumentDto Document { get; set; }
+        Task StoreAsync(List<AvailableChargeLinkReceiptData> availableChargeLinkReceiptData);
 
-        public ChargeLinkDto ChargeLink { get; set; }
+        Task<List<AvailableChargeLinkReceiptData>> GetAsync(IEnumerable<Guid> dataReferenceIds);
     }
 }

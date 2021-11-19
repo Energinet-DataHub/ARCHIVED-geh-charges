@@ -61,7 +61,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
 
         [Theory]
         [InlineAutoMoqData]
-        public async Task GetChargeHistoriesAsync_WithMeteringPointId_ThenSuccessReturnedAsync(
+        public async Task GetAsync_WithMeteringPointId_ThenSuccessReturnedAsync(
             [NotNull] AvailableChargeLinksData expected)
         {
             // Arrange
@@ -74,7 +74,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
 
             // Act
             var actual =
-                await sut.GetAvailableChargeLinksDataAsync(new List<Guid> { expected.AvailableDataReferenceId })
+                await sut.GetAsync(new List<Guid> { expected.AvailableDataReferenceId })
                 .ConfigureAwait(false);
 
             // Assert

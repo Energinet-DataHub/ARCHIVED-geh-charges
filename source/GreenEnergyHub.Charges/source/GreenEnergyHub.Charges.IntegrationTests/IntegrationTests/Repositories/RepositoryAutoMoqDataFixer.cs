@@ -12,20 +12,24 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using GreenEnergyHub.Charges.Domain.AvailableChargeData;
+using GreenEnergyHub.Charges.Domain.AvailableChargeLinkReceiptData;
 
 namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
 {
     public static class RepositoryAutoMoqDataFixer
     {
-        public static AvailableChargeData FixAvailableChargeData([NotNull] AvailableChargeData availableChargeData)
+        public static AvailableChargeData GetAvailableChargeDataBasedOn([NotNull] AvailableChargeData availableChargeData)
         {
             return new AvailableChargeData(
                 availableChargeData.RecipientId.Substring(0, 34),
                 availableChargeData.RecipientRole,
                 availableChargeData.BusinessReasonCode,
+                availableChargeData.RequestDateTime,
+                availableChargeData.AvailableDataReferenceId,
                 availableChargeData.ChargeId.Substring(0, 34),
                 availableChargeData.ChargeOwner.Substring(0, 34),
                 availableChargeData.ChargeType,
@@ -37,9 +41,28 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
                 availableChargeData.TaxIndicator,
                 availableChargeData.TransparentInvoicing,
                 availableChargeData.Resolution,
-                availableChargeData.Points.ToList(),
-                availableChargeData.RequestTime,
-                availableChargeData.AvailableDataReferenceId);
+                availableChargeData.Points.ToList());
+        }
+
+        public static AvailableChargeLinkReceiptData GetAvailableChargeLinkReceiptDataBasedOn(
+            AvailableChargeLinkReceiptData availableChargeLinkReceiptData)
+        {
+            return new AvailableChargeLinkReceiptData(
+                availableChargeLinkReceiptData.RecipientId.Substring(0, 34),
+                availableChargeLinkReceiptData.RecipientRole,
+                availableChargeLinkReceiptData.BusinessReasonCode,
+                availableChargeLinkReceiptData.RequestDateTime,
+                availableChargeLinkReceiptData.AvailableDataReferenceId,
+                availableChargeLinkReceiptData.ReceiptStatus,
+                availableChargeLinkReceiptData.OriginalOperationId.Substring(0, 34),
+                availableChargeLinkReceiptData.MeteringPointId.Substring(0, 49),
+                availableChargeLinkReceiptData.ReasonCodes.ToList());
+        }
+
+        public static List<AvailableChargeLinkReceiptData> GetAvailableChargeLinkReceiptDataListBasedOn(
+            List<AvailableChargeLinkReceiptData> availableList)
+        {
+            return availableList.Select(receipt => GetAvailableChargeLinkReceiptDataBasedOn(receipt)).ToList();
         }
     }
 }

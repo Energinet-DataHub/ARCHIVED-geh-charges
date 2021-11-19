@@ -14,15 +14,12 @@
 
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Domain.DefaultChargeLinks;
-using GreenEnergyHub.Charges.Domain.Dtos.CreateLinkRequest;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksReceivedEvents;
 
-namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinkCommands
+namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
 {
-    public interface IChargeLinkCommandFactory
+    public interface IChargeLinksReceivedEventHandler
     {
-        Task<ChargeLinkCommand> CreateAsync(
-            [NotNull] CreateLinkCommandEvent createLinkCommandEvent,
-            [NotNull] DefaultChargeLink defaultChargeLink);
+        Task HandleAsync([NotNull] ChargeLinksReceivedEvent chargeLinksReceivedEvent);
     }
 }

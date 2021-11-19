@@ -15,12 +15,11 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using GreenEnergyHub.Charges.Core.DateTime;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinkCommandAcceptedEvents;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinkCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksAcceptedEvents;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Messaging.Protobuf;
 using GreenEnergyHub.Messaging.Transport;
-using ChargeLinkCommand = GreenEnergyHub.Charges.Domain.Dtos.ChargeLinkCommands.ChargeLinkCommand;
 using MarketParticipant = GreenEnergyHub.Charges.Domain.MarketParticipants.MarketParticipant;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
@@ -29,14 +28,11 @@ namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
     {
         protected override IInboundMessage Convert([NotNull]GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandAccepted.ChargeLinkCommandAccepted chargeLinkCommandAcceptedContract)
         {
-            return new ChargeLinkCommandAcceptedEvent(
-                chargeLinkCommandAcceptedContract.ChargeLinkCommands.Select(
-                    chargeLinkCommandContract =>
-                        new ChargeLinkCommand
-                {
-                  Document = ConvertDocument(chargeLinkCommandContract.Document),
-                  ChargeLink = ConvertChargeLink(chargeLinkCommandContract.ChargeLink),
-                }).ToList(),
+            return new ChargeLinksAcceptedEvent(
+                new ChargeLinksCommand(
+                    chargeLinkCommandAcceptedContract.ChargeLinksCommand.MeteringPointId,
+                    ConvertDocument(chargeLinkCommandAcceptedContract.ChargeLinksCommand.Document),
+                    chargeLinkCommandAcceptedContract.ChargeLinksCommand.ChargeLinks.Select(ConvertChargeLink).ToList()),
                 chargeLinkCommandAcceptedContract.PublishedTime.ToInstant());
         }
 
@@ -69,7 +65,6 @@ namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
             return new ChargeLinkDto
             {
                 OperationId = link.OperationId,
-                MeteringPointId = link.MeteringPointId,
                 StartDateTime = link.StartDateTime.ToInstant(),
                 EndDateTime = link.EndDateTime.ToInstant(),
                 SenderProvidedChargeId = link.SenderProvidedChargeId,
