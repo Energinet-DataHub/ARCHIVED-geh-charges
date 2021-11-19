@@ -14,7 +14,7 @@
 
 using System;
 using System.Diagnostics.CodeAnalysis;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinkCommandReceivedEvents;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksReceivedEvents;
 using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandReceived;
 using GreenEnergyHub.Charges.Infrastructure.Internal.Mappers;
 using GreenEnergyHub.Charges.TestCore.Attributes;
@@ -33,7 +33,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Internal.Mappers
             [NotNull] ChargeLinkCommandReceived chargeLinkCommandReceivedContract,
             [NotNull] LinkCommandReceivedInboundMapper sut)
         {
-            var result = (ChargeLinkCommandReceivedEvent)sut.Convert(chargeLinkCommandReceivedContract);
+            var result = (ChargeLinksReceivedEvent)sut.Convert(chargeLinkCommandReceivedContract);
             ProtobufAssert.IncomingContractIsSuperset(result, chargeLinkCommandReceivedContract);
         }
 

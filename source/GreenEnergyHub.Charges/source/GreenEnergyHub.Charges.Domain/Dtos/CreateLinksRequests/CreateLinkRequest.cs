@@ -12,14 +12,23 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Application.ChargeLinks.Handlers.Message;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinkCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.Messages.Events;
+using GreenEnergyHub.Messaging.MessageTypes.Common;
 
-namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
+namespace GreenEnergyHub.Charges.Domain.Dtos.CreateLinksRequests
 {
-    public interface IChargeLinkCommandHandler
+    public class CreateLinksRequest : InboundIntegrationEvent //TODO: This is not a Inbound Integration event.
     {
-        public Task<ChargeLinksMessageResult> HandleAsync(ChargeLinkCommand command);
+        public CreateLinksRequest(
+            string meteringPointId)
+            : base(Transaction.NewTransaction())
+        {
+            MeteringPointId = meteringPointId;
+        }
+
+        /// <summary>
+        /// Metering point ID to add links to
+        /// </summary>
+        public string MeteringPointId { get; }
     }
 }
