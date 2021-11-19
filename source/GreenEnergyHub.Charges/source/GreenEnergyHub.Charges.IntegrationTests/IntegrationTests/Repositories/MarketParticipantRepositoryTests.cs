@@ -14,6 +14,7 @@
 
 using System.Threading.Tasks;
 using FluentAssertions;
+using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.Infrastructure.Context.Mapping;
 using GreenEnergyHub.Charges.Infrastructure.Repositories;
 using GreenEnergyHub.Charges.TestCore.Database;
@@ -45,6 +46,22 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
             // Assert
             actual.Should().NotBeEmpty();
             actual.Should().NotContain(x => x.Id == "8900000000005");
+        }
+
+        [Fact]
+        public async Task WhenCalled_WithMarketParticipantRole_MarketParticipantIsReturnedWithMatchingRole()
+        {
+            // Arrange
+            await using var chargesDatabaseContext = _databaseManager.CreateDbContext();
+            var sut = new MarketParticipantRepository(chargesDatabaseContext, new MarketParticipantMapper());
+            const MarketParticipantRole expectedMarketParticipantRole = MarketParticipantRole.SystemOperator;
+
+            // Act
+            var actual = await sut.GetAsync(expectedMarketParticipantRole);
+
+            // Assert
+            actual.Should().NotBeNull();
+            actual.BusinessProcessRole.Should().Be(expectedMarketParticipantRole);
         }
     }
 }

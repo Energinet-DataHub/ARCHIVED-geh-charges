@@ -48,7 +48,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Validation.BusinessVa
 
             Charge? charge = null;
             repository.Setup(
-                    r => r.GetChargeAsync(
+                    r => r.GetAsync(
                         It.IsAny<ChargeIdentifier>()))
                 .Returns(Task.FromResult(charge!));
 
@@ -86,7 +86,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Validation.BusinessVa
                 .Returns(Task.FromResult(chargeExists));
 
             repository.Setup(
-                    r => r.GetChargeAsync(
+                    r => r.GetAsync(
                             new ChargeIdentifier(
                         It.IsAny<string>(),
                         It.IsAny<string>(),
@@ -126,7 +126,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Validation.BusinessVa
                 .Returns(Task.FromResult(chargeExists));
 
             repository.Setup(
-                    r => r.GetChargeAsync(
+                    r => r.GetAsync(
                         It.IsAny<ChargeIdentifier>()))
                 .Returns(Task.FromResult(charge));
 
