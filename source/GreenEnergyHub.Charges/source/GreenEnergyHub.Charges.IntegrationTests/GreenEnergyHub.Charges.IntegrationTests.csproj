@@ -86,6 +86,5 @@ limitations under the License.
 
     <ItemGroup>
       <Folder Include="IntegrationTests" />
-      <Folder Include="Database" />
     </ItemGroup>
 </Project>
