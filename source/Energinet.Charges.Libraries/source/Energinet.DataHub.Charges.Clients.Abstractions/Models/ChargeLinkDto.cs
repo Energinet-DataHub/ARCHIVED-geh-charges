@@ -14,7 +14,7 @@
 
 using System;
 
-namespace GreenEnergyHub.Charges.WebApi.Models
+namespace Energinet.DataHub.Charges.Clients.Abstractions
 {
     public record ChargeLinkDto(
         // TODO: Consider if ChargeType enum should be in Abstractions

@@ -1,4 +1,4 @@
-<!--
+﻿<!--
 Copyright 2020 Energinet DataHub A/S
 
 Licensed under the Apache License, Version 2.0 (the "License2");
@@ -55,7 +55,7 @@ limitations under the License.
 
       Learn more about Energinet at https://energinet.dk/.
     </Description>
-    <PackageTags>green-energy-hub;datahub;library;bff;energinet</PackageTags>
+    <PackageTags>green-energy-hub;datahub;library;abstractions;energinet</PackageTags>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
   </PropertyGroup>
