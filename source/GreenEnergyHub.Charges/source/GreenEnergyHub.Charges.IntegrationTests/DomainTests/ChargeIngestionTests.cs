@@ -44,7 +44,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             [Fact]
             public async Task When_ChargeIsReceived_Then_AHttp200ResponseIsReturned()
             {
-                var request = CreateHttpRequest(ChargeTestFiles.AnyValid, out string _);
+                var request = CreateHttpRequest(ChargeDocument.AnyValid, out string _);
 
                 var actualResponse = await Fixture.HostManager.HttpClient.SendAsync(request);
 
@@ -59,7 +59,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             {
                 // Arrange
                 Fixture.PostOfficeListener.ResetMessageHandlersAndReceivedMessages();
-                var request = CreateHttpRequest(ChargeTestFiles.AnyValid, out string _);
+                var request = CreateHttpRequest(ChargeDocument.AnyValid, out string _);
 
                 var body = string.Empty;
                 using var isMessageReceivedEvent = await Fixture.PostOfficeListener
@@ -84,7 +84,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             public async Task When_ChargeIsReceived_Then_ChargeCreatedIntegrationEventIsPublished()
             {
                 // Arrange
-                var request = CreateHttpRequest(ChargeTestFiles.AnyValid, out string correlationId);
+                var request = CreateHttpRequest(ChargeDocument.AnyValid, out string correlationId);
                 Fixture.ChargeCreatedListener.Reset();
                 using var eventualChargeCreatedEvent = await Fixture
                     .ChargeCreatedListener
@@ -103,7 +103,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             public async Task When_ChargeIncludingPriceIsReceived_Then_ChargePricesUpdatedIntegrationEventIsPublished()
             {
                 // Arrange
-                var request = CreateHttpRequest(ChargeTestFiles.WithPrice, out string correlationId);
+                var request = CreateHttpRequest(ChargeDocument.WithPrice, out string correlationId);
                 Fixture.ChargePricesUpdatedListener.Reset();
                 using var eventualChargePriceUpdatedEvent = await Fixture
                     .ChargePricesUpdatedListener
@@ -122,7 +122,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             public async Task Given_NewTaxTariffReceived_When_GridAccessProviderPeeks_Then_MessageHubReceivesReply()
             {
                 // Arrange
-                var request = CreateHttpRequest(ChargeTestFiles.TaxTariff, out var correlationId);
+                var request = CreateHttpRequest(ChargeDocument.TaxTariff, out var correlationId);
 
                 // Act
                 await Fixture.HostManager.HttpClient.SendAsync(request);

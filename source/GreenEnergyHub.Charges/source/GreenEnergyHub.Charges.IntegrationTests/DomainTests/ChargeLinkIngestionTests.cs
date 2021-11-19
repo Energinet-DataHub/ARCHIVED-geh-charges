@@ -19,6 +19,7 @@ using System.Threading.Tasks;
 using Energinet.DataHub.Core.FunctionApp.TestCommon;
 using FluentAssertions;
 using GreenEnergyHub.Charges.IntegrationTests.Fixtures;
+using GreenEnergyHub.Charges.IntegrationTests.TestFiles.ChargeLinks;
 using GreenEnergyHub.Charges.IntegrationTests.TestHelpers;
 using NodaTime;
 using Xunit;
@@ -52,7 +53,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             [Fact]
             public async Task When_ChargeIsReceived_Then_AHttp200ResponseIsReturned()
             {
-                var request = CreateHttpRequest("CreateFixedPeriodTariffChargeLink.xml", out _);
+                var request = CreateHttpRequest(ChargeLinkDocument.AnyValid, out _);
 
                 var actualResponse = await Fixture.HostManager.HttpClient.SendAsync(request);
 
@@ -60,10 +61,10 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             }
 
             [Fact]
-            public async Task When_ReceivingChargeLinkMessage_MessageHubIsNotifiedAboutAvailableData_And_Then_When_MessageHubRequestsTheBundle_Then_MessageHubReceivesBundleReply()
+            public async Task Given_NewChargeLinkMessage_When_GridAccessProviderPeeks_Then_MessageHubReceivesReply()
             {
                 // Arrange
-                var request = CreateHttpRequest("CreateFixedPeriodTariffChargeLink.xml", out var correlationId);
+                var request = CreateHttpRequest(ChargeLinkDocument.AnyValid, out var correlationId);
 
                 // Act
                 await Fixture.HostManager.HttpClient.SendAsync(request);
@@ -72,9 +73,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 await Fixture.MessageHubMock.AssertPeekReceivesReplyAsync(correlationId);
             }
 
-            private static HttpRequestMessage CreateHttpRequest(string testFileName, out string correlationId)
+            private static HttpRequestMessage CreateHttpRequest(string testFilePath, out string correlationId)
             {
-                var testFilePath = $"TestFiles/ChargeLinks/{testFileName}";
                 var clock = SystemClock.Instance;
                 var chargeLinkJson = EmbeddedResourceHelper.GetEmbeddedFile(testFilePath, clock);
                 correlationId = CorrelationIdGenerator.Create();

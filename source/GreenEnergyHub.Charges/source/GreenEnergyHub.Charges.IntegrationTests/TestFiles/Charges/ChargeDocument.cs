@@ -14,10 +14,11 @@
 
 namespace GreenEnergyHub.Charges.IntegrationTests.TestFiles.Charges
 {
-    public static class ChargeTestFiles
+    public static class ChargeDocument
     {
-        public const string AnyValid = "TestFiles/Charges/CreateTaxTariffWithPriceRequest.xml";
-        public const string TaxTariff = "TestFiles/Charges/CreateTaxTariffWithPriceRequest.xml";
-        public const string WithPrice = "TestFiles/Charges/CreateTaxTariffWithPriceRequest.xml";
+        public const string AnyValid = "TestFiles/Charges/TaxTariffWithPriceDocument.xml";
+        public const string TaxTariff = "TestFiles/Charges/TaxTariffWithPriceDocument.xml";
+        public const string WithPrice = "TestFiles/Charges/TaxTariffWithPriceDocument.xml";
+        public const string AnyInvalid = "TestFiles/Charges/InvalidTariffDocument.xml";
     }
 }
