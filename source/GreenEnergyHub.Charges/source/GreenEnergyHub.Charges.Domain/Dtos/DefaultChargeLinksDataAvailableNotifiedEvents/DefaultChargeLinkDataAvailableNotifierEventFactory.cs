@@ -18,7 +18,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.DefaultChargeLinksDataAvailableNoti
 {
     public class DefaultChargeLinkDataAvailableNotifierEventFactory : IDefaultChargeLinkDataAvailableNotifierEventFactory
     {
-        public DefaultChargeLinksDataAvailableNotifierEvent CreteFromAcceptedEvent(ChargeLinksAcceptedEvent chargeLinksAcceptedEvent)
+        public DefaultChargeLinksDataAvailableNotifierEvent Create(ChargeLinksAcceptedEvent chargeLinksAcceptedEvent)
         {
             return new DefaultChargeLinksDataAvailableNotifierEvent(
                 chargeLinksAcceptedEvent.PublishedTime,

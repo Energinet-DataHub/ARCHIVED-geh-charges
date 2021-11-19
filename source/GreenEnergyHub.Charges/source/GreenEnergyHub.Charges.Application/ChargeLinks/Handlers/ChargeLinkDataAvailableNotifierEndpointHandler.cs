@@ -34,7 +34,7 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
         public async Task HandleAsync(ChargeLinksAcceptedEvent chargeLinkCommandAcceptedEvent)
         {
             var chargeLinkDataAvailableNotifierEvent =
-                _defaultChargeLinkDataAvailableNotifierEventFactory.CreteFromAcceptedEvent(chargeLinkCommandAcceptedEvent);
+                _defaultChargeLinkDataAvailableNotifierEventFactory.Create(chargeLinkCommandAcceptedEvent);
             await _messageDispatcher.DispatchAsync(chargeLinkDataAvailableNotifierEvent);
         }
     }

@@ -18,6 +18,6 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.DefaultChargeLinksDataAvailableNoti
 {
     public interface IDefaultChargeLinkDataAvailableNotifierEventFactory
     {
-        DefaultChargeLinksDataAvailableNotifierEvent CreteFromAcceptedEvent(ChargeLinksAcceptedEvent chargeLinksAcceptedEvent);
+        DefaultChargeLinksDataAvailableNotifierEvent Create(ChargeLinksAcceptedEvent chargeLinksAcceptedEvent);
     }
 }
