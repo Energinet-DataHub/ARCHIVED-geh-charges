@@ -12,26 +12,22 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinkCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.Messages.Events;
 using NodaTime;
 
-#pragma warning disable 8618
-
-namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinkCommandReceivedEvents
+namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksAcceptedEvents
 {
-    public class ChargeLinkCommandReceivedEvent : InternalEventBase
+    public class ChargeLinksAcceptedEvent : InternalEventBase
     {
-        public IReadOnlyCollection<ChargeLinkCommand> ChargeLinkCommands { get; }
+        public ChargeLinksCommand ChargeLinksCommand { get; }
 
-        public ChargeLinkCommandReceivedEvent(
-            Instant publishedTime,
-            [NotNull] IReadOnlyCollection<ChargeLinkCommand> chargeLinkCommands)
+        public ChargeLinksAcceptedEvent(
+            ChargeLinksCommand chargeLinksCommand,
+            Instant publishedTime)
             : base(publishedTime)
         {
-            ChargeLinkCommands = chargeLinkCommands;
+            ChargeLinksCommand = chargeLinksCommand;
         }
     }
 }

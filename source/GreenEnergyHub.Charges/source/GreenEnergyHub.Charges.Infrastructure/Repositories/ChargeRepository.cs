@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Domain.Charges;
@@ -34,7 +35,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Repositories
             _chargesDatabaseContext = chargesDatabaseContext;
         }
 
-        public async Task<Charge> GetChargeAsync(ChargeIdentifier chargeIdentifier)
+        public async Task<Charge> GetAsync(ChargeIdentifier chargeIdentifier)
         {
             var charge = await GetChargesAsQueryable()
                 .SingleAsync(x => x.SenderProvidedChargeId == chargeIdentifier.SenderProvidedChargeId &&
@@ -45,7 +46,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Repositories
             return ChargeMapper.MapChargeToChargeDomainModel(charge);
         }
 
-        public async Task<Charge> GetChargeAsync(Guid id)
+        public async Task<Charge> GetAsync(Guid id)
         {
             var charge = await GetChargesAsQueryable()
                 .SingleAsync(x => x.Id == id)
@@ -61,6 +62,13 @@ namespace GreenEnergyHub.Charges.Infrastructure.Repositories
                                         x.MarketParticipant.MarketParticipantId == chargeIdentifier.Owner &&
                                         x.ChargeType == (int)chargeIdentifier.ChargeType)
                 .ConfigureAwait(false);
+        }
+
+        public async Task<IReadOnlyCollection<Charge>> GetAsync(IReadOnlyCollection<Guid> ids)
+        {
+            var charges = await GetChargesAsQueryable()
+                .Where(x => ids.Contains(x.Id)).ToListAsync().ConfigureAwait(false);
+            return charges.Select(ChargeMapper.MapChargeToChargeDomainModel).ToList();
         }
 
         public async Task StoreChargeAsync(Charge newCharge, string senderId, Instant writeDateTime)
