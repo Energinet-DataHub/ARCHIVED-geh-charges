@@ -51,7 +51,7 @@ limitations under the License.
     <ProjectReference Include="..\..\..\Shared\GreenEnergyHub\source\GreenEnergyHub.TestHelpers\GreenEnergyHub.TestHelpers.csproj" />
     <ProjectReference Include="..\Energinet.DataHub.Charges.Clients.SimpleInjector\Energinet.DataHub.Charges.Clients.SimpleInjector.csproj" />
     <ProjectReference Include="..\Energinet.DataHub.Charges.Clients\Energinet.DataHub.Charges.Clients.csproj" />
-    <ProjectReference Include="..\Energinet.DataHub.Charges.TestCore\Energinet.DataHub.Charges.TestCore.csproj" />
+    <ProjectReference Include="..\..\..\GreenEnergyHub.Charges\source\GreenEnergyHub.Charges.TestCore\GreenEnergyHub.Charges.TestCore.csproj" />
   </ItemGroup>
 
 </Project>
