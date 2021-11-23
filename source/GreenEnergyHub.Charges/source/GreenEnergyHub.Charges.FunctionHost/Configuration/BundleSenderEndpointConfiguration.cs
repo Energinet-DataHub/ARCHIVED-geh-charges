@@ -13,14 +13,11 @@
 // limitations under the License.
 
 using Energinet.DataHub.MessageHub.Model.Peek;
-using GreenEnergyHub.Charges.Application.ChargeLinks.MessageHub;
-using GreenEnergyHub.Charges.Application.ChargeLinks.MessageHub.Infrastructure;
-using GreenEnergyHub.Charges.Application.Charges.MessageHub;
-using GreenEnergyHub.Charges.Application.Charges.MessageHub.Infrastructure;
+using GreenEnergyHub.Charges.Application.MessageHub;
+using GreenEnergyHub.Charges.Infrastructure.ChargeBundle;
 using GreenEnergyHub.Charges.Infrastructure.ChargeBundle.Cim;
-using GreenEnergyHub.Charges.Infrastructure.ChargeBundle.MessageHub;
+using GreenEnergyHub.Charges.Infrastructure.ChargeLinkBundle;
 using GreenEnergyHub.Charges.Infrastructure.ChargeLinkBundle.Cim;
-using GreenEnergyHub.Charges.Infrastructure.ChargeLinkBundle.MessageHub;
 using GreenEnergyHub.Charges.Infrastructure.MessageHub;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -30,19 +27,19 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
     {
         internal static void ConfigureServices(IServiceCollection serviceCollection)
         {
-            serviceCollection.AddScoped<IBundleRequestDispatcher, BundleRequestDispatcher>();
+            // Common for all bundles
+            serviceCollection.AddScoped<IBundleCreatorProvider, BundleCreatorProvider>();
+            serviceCollection.AddScoped<IBundleSender, BundleSender>();
+            serviceCollection.AddScoped<IBundleReplier, BundleReplier>();
+            serviceCollection.AddScoped<IRequestBundleParser, RequestBundleParser>();
 
-            serviceCollection.AddScoped<IChargeBundleSender, ChargeBundleSender>();
-            serviceCollection.AddScoped<IChargeBundleCreator, ChargeBundleCreator>();
-            serviceCollection.AddScoped<IChargeBundleReplier, ChargeBundleReplier>();
+            // Charge bundles
+            serviceCollection.AddScoped<IBundleCreator, ChargeBundleCreator>();
             serviceCollection.AddScoped<IChargeCimSerializer, ChargeCimSerializer>();
 
-            serviceCollection.AddScoped<IChargeLinkBundleSender, ChargeLinkBundleSender>();
-            serviceCollection.AddScoped<IChargeLinkBundleCreator, ChargeLinkBundleCreator>();
-            serviceCollection.AddScoped<IChargeLinkBundleReplier, ChargeLinkBundleReplier>();
+            // Charge link bundles
+            serviceCollection.AddScoped<IBundleCreator, ChargeLinkBundleCreator>();
             serviceCollection.AddScoped<IChargeLinkCimSerializer, ChargeLinkCimSerializer>();
-
-            serviceCollection.AddScoped<IRequestBundleParser, RequestBundleParser>();
         }
     }
 }

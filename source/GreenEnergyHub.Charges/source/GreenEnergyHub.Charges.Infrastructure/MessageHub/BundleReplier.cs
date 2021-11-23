@@ -18,16 +18,15 @@ using Energinet.DataHub.MessageHub.Client.Peek;
 using Energinet.DataHub.MessageHub.Client.Storage;
 using Energinet.DataHub.MessageHub.Model.Extensions;
 using Energinet.DataHub.MessageHub.Model.Model;
-using GreenEnergyHub.Charges.Application.ChargeLinks.MessageHub.Infrastructure;
 
-namespace GreenEnergyHub.Charges.Infrastructure.ChargeLinkBundle.MessageHub
+namespace GreenEnergyHub.Charges.Infrastructure.MessageHub
 {
-    public class ChargeLinkBundleReplier : IChargeLinkBundleReplier
+    public class BundleReplier : IBundleReplier
     {
         private readonly IStorageHandler _storageHandler;
         private readonly IDataBundleResponseSender _dataBundleResponseSender;
 
-        public ChargeLinkBundleReplier(
+        public BundleReplier(
             IStorageHandler storageHandler,
             IDataBundleResponseSender dataBundleResponseSender)
         {

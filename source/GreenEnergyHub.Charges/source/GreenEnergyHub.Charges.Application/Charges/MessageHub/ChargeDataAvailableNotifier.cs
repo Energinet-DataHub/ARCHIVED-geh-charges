@@ -33,7 +33,7 @@ namespace GreenEnergyHub.Charges.Application.Charges.MessageHub
         /// </summary>
         public const decimal ChargeMessageWeight = 5m;
         public const decimal ChargePointMessageWeight = 0.2m;
-        public const string ChargeDataAvailableMessageTypePrefix = "ChargeDataAvailable";
+        public const string MessageTypePrefix = "ChargeDataAvailable";
 
         private readonly IDataAvailableNotificationSender _dataAvailableNotificationSender;
         private readonly IAvailableChargeDataRepository _availableChargeDataRepository;
@@ -112,7 +112,7 @@ namespace GreenEnergyHub.Charges.Application.Charges.MessageHub
 
             // Different processes must not be bundled together.
             // The can be differentiated by business reason codes. // TODO: This sentence doesn't make sense
-            var messageType = ChargeDataAvailableMessageTypePrefix + "_" + chargeCommand.Document.BusinessReasonCode;
+            var messageType = MessageTypePrefix + "_" + chargeCommand.Document.BusinessReasonCode;
 
             return new DataAvailableNotificationDto(
                 chargeDomainReferenceId,

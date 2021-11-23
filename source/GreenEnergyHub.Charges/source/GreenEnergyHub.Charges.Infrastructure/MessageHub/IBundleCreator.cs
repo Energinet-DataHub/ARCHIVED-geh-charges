@@ -12,20 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.IO;
 using System.Threading.Tasks;
 using Energinet.DataHub.MessageHub.Model.Model;
 
 namespace GreenEnergyHub.Charges.Infrastructure.MessageHub
 {
     /// <summary>
-    /// Dispatcher for dispatching bundle requests from the MessageHub
-    /// to the specific sender for the given request.
+    /// Contract for all specific creators.
     /// </summary>
-    public interface IBundleRequestDispatcher
+    public interface IBundleCreator
     {
-        /// <summary>
-        /// Invokes the bundle sender for the given request.
-        /// </summary>
-        Task DispatchToSenderAsync(DataBundleRequestDto request);
+        Task CreateAsync(DataBundleRequestDto request, Stream outputStream);
     }
 }

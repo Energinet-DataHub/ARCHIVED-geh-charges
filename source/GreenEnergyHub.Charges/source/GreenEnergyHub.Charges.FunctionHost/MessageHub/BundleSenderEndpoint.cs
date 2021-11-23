@@ -14,8 +14,8 @@
 
 using System.Threading.Tasks;
 using Energinet.DataHub.MessageHub.Model.Peek;
+using GreenEnergyHub.Charges.Application.MessageHub;
 using GreenEnergyHub.Charges.FunctionHost.Common;
-using GreenEnergyHub.Charges.Infrastructure.MessageHub;
 using Microsoft.Azure.Functions.Worker;
 
 namespace GreenEnergyHub.Charges.FunctionHost.MessageHub
@@ -28,12 +28,12 @@ namespace GreenEnergyHub.Charges.FunctionHost.MessageHub
     {
         private const string FunctionName = nameof(BundleSenderEndpoint);
         private readonly IRequestBundleParser _requestBundleParser;
-        private readonly IBundleRequestDispatcher _bundleRequestDispatcher;
+        private readonly IBundleSender _bundleSender;
 
-        public BundleSenderEndpoint(IRequestBundleParser requestBundleParser, IBundleRequestDispatcher bundleRequestDispatcher)
+        public BundleSenderEndpoint(IRequestBundleParser requestBundleParser, IBundleSender bundleSender)
         {
             _requestBundleParser = requestBundleParser;
-            _bundleRequestDispatcher = bundleRequestDispatcher;
+            _bundleSender = bundleSender;
         }
 
         [Function(FunctionName)]
@@ -45,7 +45,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.MessageHub
             byte[] data)
         {
             var request = _requestBundleParser.Parse(data);
-            await _bundleRequestDispatcher.DispatchToSenderAsync(request);
+            await _bundleSender.SendAsync(request);
         }
     }
 }

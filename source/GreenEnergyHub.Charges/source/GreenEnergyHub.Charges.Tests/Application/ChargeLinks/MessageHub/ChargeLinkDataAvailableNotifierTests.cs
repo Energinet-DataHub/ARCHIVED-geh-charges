@@ -96,7 +96,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.MessageHub
                                    new GlobalLocationNumberDto(gridAccessProvider.Id))
                                && dto.Uuid != Guid.Empty
                                && dto.RelativeWeight > 0
-                               && dto.MessageType.Value.StartsWith(ChargeLinkDataAvailableNotifier.ChargeLinkDataAvailableMessageTypePrefix))),
+                               && dto.MessageType.Value.StartsWith(ChargeLinkDataAvailableNotifier.MessageTypePrefix))),
                 Times.Exactly(chargeLinksAcceptedEvent.ChargeLinksCommand.ChargeLinks.Count));
 
             dataAvailableNotificationSenderMock.VerifyNoOtherCalls();

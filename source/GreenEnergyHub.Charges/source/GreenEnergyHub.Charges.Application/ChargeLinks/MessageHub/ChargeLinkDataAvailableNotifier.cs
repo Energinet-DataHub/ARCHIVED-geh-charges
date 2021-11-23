@@ -37,7 +37,7 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.MessageHub
         /// Is used in communication with Message Hub.
         /// Be cautious to change it!
         /// </summary>
-        public const string ChargeLinkDataAvailableMessageTypePrefix = "ChargeLinkDataAvailable";
+        public const string MessageTypePrefix = "ChargeLinkDataAvailable";
 
         private readonly IDataAvailableNotificationSender _dataAvailableNotificationSender;
         private readonly IChargeRepository _chargeRepository;
@@ -124,7 +124,7 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.MessageHub
 
             // Different processes must not be bundled together.
             // The can be differentiated by business reason codes.
-            var messageType = ChargeLinkDataAvailableMessageTypePrefix + "_" + businessReasonCode;
+            var messageType = MessageTypePrefix + "_" + businessReasonCode;
 
             return new DataAvailableNotificationDto(
                 chargeDomainReferenceId,

@@ -15,9 +15,9 @@
 using System.Threading.Tasks;
 using Energinet.DataHub.MessageHub.Model.Model;
 
-namespace GreenEnergyHub.Charges.Application.Charges.MessageHub
+namespace GreenEnergyHub.Charges.Application.MessageHub
 {
-    public interface IChargeBundleSender
+    public interface IBundleSender
     {
         Task SendAsync(DataBundleRequestDto request);
     }

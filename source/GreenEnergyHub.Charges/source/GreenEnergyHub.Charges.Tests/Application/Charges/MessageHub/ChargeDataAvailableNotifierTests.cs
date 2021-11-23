@@ -89,7 +89,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.MessageHub
                                    .Contains(dto.Recipient)
                                && dto.Uuid != Guid.Empty
                                && dto.RelativeWeight > 0
-                               && dto.MessageType.Value.StartsWith(ChargeDataAvailableNotifier.ChargeDataAvailableMessageTypePrefix))),
+                               && dto.MessageType.Value.StartsWith(ChargeDataAvailableNotifier.MessageTypePrefix))),
                 Times.Exactly(gridAccessProviders.Count));
             dataAvailableNotificationSenderMock.VerifyNoOtherCalls();
         }

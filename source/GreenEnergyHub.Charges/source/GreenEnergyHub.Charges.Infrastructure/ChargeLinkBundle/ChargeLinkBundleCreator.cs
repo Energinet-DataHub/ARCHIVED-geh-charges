@@ -12,17 +12,19 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Energinet.DataHub.MessageHub.Model.Model;
-using GreenEnergyHub.Charges.Application.ChargeLinks.MessageHub.Infrastructure;
+using GreenEnergyHub.Charges.Application.ChargeLinks.MessageHub;
 using GreenEnergyHub.Charges.Domain.AvailableChargeLinksData;
 using GreenEnergyHub.Charges.Infrastructure.ChargeLinkBundle.Cim;
+using GreenEnergyHub.Charges.Infrastructure.MessageHub;
 
-namespace GreenEnergyHub.Charges.Infrastructure.ChargeLinkBundle.MessageHub
+namespace GreenEnergyHub.Charges.Infrastructure.ChargeLinkBundle
 {
-    public class ChargeLinkBundleCreator : IChargeLinkBundleCreator
+    public class ChargeLinkBundleCreator : IBundleCreator
     {
         private readonly IAvailableChargeLinksDataRepository _availableChargeLinksDataRepository;
         private readonly IChargeLinkCimSerializer _chargeLinkCimSerializer;
@@ -37,6 +39,9 @@ namespace GreenEnergyHub.Charges.Infrastructure.ChargeLinkBundle.MessageHub
 
         public async Task CreateAsync(DataBundleRequestDto request, Stream outputStream)
         {
+            if (!request.MessageType.StartsWith(ChargeLinkDataAvailableNotifier.MessageTypePrefix))
+                throw new InvalidOperationException($"{nameof(ChargeLinkBundleCreator)} does not support message type '{request.MessageType}'.");
+
             var availableData = await _availableChargeLinksDataRepository
                 .GetAsync(request.DataAvailableNotificationIds)
                 .ConfigureAwait(false);
