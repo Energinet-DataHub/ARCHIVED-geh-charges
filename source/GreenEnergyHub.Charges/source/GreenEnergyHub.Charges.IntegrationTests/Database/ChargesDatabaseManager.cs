@@ -20,7 +20,7 @@ using GreenEnergyHub.Charges.ApplyDBMigrationsApp.Helpers;
 using GreenEnergyHub.Charges.Infrastructure.Context;
 using Microsoft.EntityFrameworkCore;
 
-namespace GreenEnergyHub.Charges.TestCore.Database
+namespace GreenEnergyHub.Charges.IntegrationTests.Database
 {
     public class ChargesDatabaseManager : SqlServerDatabaseManager<ChargesDatabaseContext>
     {
