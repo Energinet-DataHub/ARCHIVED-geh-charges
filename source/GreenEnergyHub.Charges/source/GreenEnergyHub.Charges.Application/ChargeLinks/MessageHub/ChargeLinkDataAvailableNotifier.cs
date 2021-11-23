@@ -65,7 +65,6 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.MessageHub
             _messageMetaDataContext = messageMetaDataContext;
         }
 
-        // TODO: This method is too complex and has hidden side effects
         public async Task NotifyAsync([NotNull] ChargeLinksAcceptedEvent chargeLinksAcceptedEvent)
         {
             if (chargeLinksAcceptedEvent == null) throw new ArgumentNullException(nameof(chargeLinksAcceptedEvent));
@@ -108,7 +107,7 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.MessageHub
                 }
             }
 
-            await _availableChargeLinksDataRepository.StoreAsync(availableChargeLinksData); // TODO: This is a hidden side effect
+            await _availableChargeLinksDataRepository.StoreAsync(availableChargeLinksData);
 
             var dataAvailableNotificationSenderTasks = dataAvailableNotificationDtos
                 .Select(x => _dataAvailableNotificationSender.SendAsync(_correlationContext.Id, x));
