@@ -12,12 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
 using System.Threading.Tasks;
 using Energinet.DataHub.MessageHub.Model.Peek;
-using GreenEnergyHub.Charges.Application.ChargeLinks.MessageHub;
-using GreenEnergyHub.Charges.Application.Charges.MessageHub;
 using GreenEnergyHub.Charges.FunctionHost.Common;
+using GreenEnergyHub.Charges.Infrastructure.MessageHub;
 using Microsoft.Azure.Functions.Worker;
 
 namespace GreenEnergyHub.Charges.FunctionHost.MessageHub
@@ -25,23 +23,17 @@ namespace GreenEnergyHub.Charges.FunctionHost.MessageHub
     /// <summary>
     /// Trigger on request from MessageHub to create a bundle
     /// and create bundle and send response to MessageHub.
-    /// This is the RSM-034 CIM XML 'NotifyPriceList' and RSM-031 CIM XML 'NotifyBillingMasterData'.
     /// </summary>
     public class BundleSenderEndpoint
     {
         private const string FunctionName = nameof(BundleSenderEndpoint);
-        private readonly IChargeBundleSender _chargeBundleSender;
-        private readonly IChargeLinkBundleSender _chargeLinkBundleSender;
         private readonly IRequestBundleParser _requestBundleParser;
+        private readonly IBundleRequestDispatcher _bundleRequestDispatcher;
 
-        public BundleSenderEndpoint(
-            IChargeBundleSender chargeBundleSender,
-            IChargeLinkBundleSender chargeLinkBundleSender,
-            IRequestBundleParser requestBundleParser)
+        public BundleSenderEndpoint(IRequestBundleParser requestBundleParser, IBundleRequestDispatcher bundleRequestDispatcher)
         {
-            _chargeBundleSender = chargeBundleSender;
-            _chargeLinkBundleSender = chargeLinkBundleSender;
             _requestBundleParser = requestBundleParser;
+            _bundleRequestDispatcher = bundleRequestDispatcher;
         }
 
         [Function(FunctionName)]
@@ -53,15 +45,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.MessageHub
             byte[] data)
         {
             var request = _requestBundleParser.Parse(data);
-
-            if (request.MessageType.StartsWith(ChargeDataAvailableNotifier.ChargeDataAvailableMessageTypePrefix))
-                await _chargeBundleSender.SendAsync(request).ConfigureAwait(false);
-
-            if (request.MessageType.StartsWith(ChargeLinkDataAvailableNotifier.ChargeLinkDataAvailableMessageTypePrefix))
-                await _chargeLinkBundleSender.SendAsync(request).ConfigureAwait(false);
-
-            throw new ArgumentException(
-                $"Unknown message type: {request.MessageType} with DataAvailableNotificationIds: {request.DataAvailableNotificationIds}");
+            await _bundleRequestDispatcher.DispatchToSenderAsync(request);
         }
     }
 }

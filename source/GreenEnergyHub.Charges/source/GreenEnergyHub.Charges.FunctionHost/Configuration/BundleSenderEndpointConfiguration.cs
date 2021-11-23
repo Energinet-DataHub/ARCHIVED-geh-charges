@@ -21,6 +21,7 @@ using GreenEnergyHub.Charges.Infrastructure.ChargeBundle.Cim;
 using GreenEnergyHub.Charges.Infrastructure.ChargeBundle.MessageHub;
 using GreenEnergyHub.Charges.Infrastructure.ChargeLinkBundle.Cim;
 using GreenEnergyHub.Charges.Infrastructure.ChargeLinkBundle.MessageHub;
+using GreenEnergyHub.Charges.Infrastructure.MessageHub;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace GreenEnergyHub.Charges.FunctionHost.Configuration
@@ -29,6 +30,8 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
     {
         internal static void ConfigureServices(IServiceCollection serviceCollection)
         {
+            serviceCollection.AddScoped<IBundleRequestDispatcher, BundleRequestDispatcher>();
+
             serviceCollection.AddScoped<IChargeBundleSender, ChargeBundleSender>();
             serviceCollection.AddScoped<IChargeBundleCreator, ChargeBundleCreator>();
             serviceCollection.AddScoped<IChargeBundleReplier, ChargeBundleReplier>();
