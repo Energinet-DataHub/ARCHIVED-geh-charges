@@ -17,9 +17,9 @@ using System.Threading.Tasks;
 namespace Energinet.DataHub.Charges.Clients.Abstractions
 {
     /// <summary>
-    /// Charge Link Client
+    /// Charge Links Client
     /// </summary>
-    public interface IChargeLinkClient
+    public interface IChargeLinksClient
     {
         /// <summary>
         /// Gets all charge links data for a given metering point. Currently it returns mocked data.
