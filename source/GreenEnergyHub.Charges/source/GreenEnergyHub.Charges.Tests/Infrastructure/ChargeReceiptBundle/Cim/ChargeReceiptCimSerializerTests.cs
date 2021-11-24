@@ -66,7 +66,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.ChargeReceiptBundle.Cim
             await sut.SerializeToStreamAsync(
                 receipts,
                 stream,
-                BusinessReasonCode.UpdateMasterDataSettlement,
+                BusinessReasonCode.UpdateChargeInformation,
                 RecipientId,
                 MarketParticipantRole.GridAccessProvider);
 
@@ -93,7 +93,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.ChargeReceiptBundle.Cim
             await sut.SerializeToStreamAsync(
                 receipts,
                 stream,
-                BusinessReasonCode.UpdateMasterDataSettlement,
+                BusinessReasonCode.UpdateChargeInformation,
                 RecipientId,
                 MarketParticipantRole.GridAccessProvider);
 
