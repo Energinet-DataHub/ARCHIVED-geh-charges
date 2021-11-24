@@ -15,7 +15,7 @@
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandAcceptedEvents;
 
-namespace GreenEnergyHub.Charges.Application.ChargeLinks.MessageHub
+namespace GreenEnergyHub.Charges.Application.Charges.MessageHub
 {
     /// <summary>
     /// Contract for notifying the MessageHub that data about a charge that has been created

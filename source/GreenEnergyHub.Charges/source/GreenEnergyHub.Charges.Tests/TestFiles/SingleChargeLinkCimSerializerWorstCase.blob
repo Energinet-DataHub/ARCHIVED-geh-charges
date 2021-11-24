@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<cim:NotifyBillingMasterData_MarketDocument xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:cim="urn:ediel.org:structure:notifybillingmasterdata:0:1" xsi:schemaLocation="urn:ediel.org:structure:notifybillingmasterdata:0:1 urn-ediel-org-structure-notifybillingmasterdata-0-1.xsd">
+  <cim:mRID>00000000000000000000000000000000</cim:mRID>
+  <cim:type>D07</cim:type>
+  <cim:process.processType>D17</cim:process.processType>
+  <cim:businessSector.type>23</cim:businessSector.type>
+  <cim:sender_MarketParticipant.mRID codingScheme="A10">5790001330552</cim:sender_MarketParticipant.mRID>
+  <cim:sender_MarketParticipant.marketRole.type>DDZ</cim:sender_MarketParticipant.marketRole.type>
+  <cim:receiver_MarketParticipant.mRID codingScheme="A10">this field has a maximum size of 35</cim:receiver_MarketParticipant.mRID>
+  <cim:receiver_MarketParticipant.marketRole.type>DDM</cim:receiver_MarketParticipant.marketRole.type>
+  <cim:createdDateTime>2021-10-12T13:37:43Z</cim:createdDateTime>
+  <cim:MktActivityRecord>
+    <cim:mRID>000000000000000000000000000000000</cim:mRID>
+    <cim:marketEvaluationPoint.mRID codingScheme="A10">this field has a maximum size of 35</cim:marketEvaluationPoint.mRID>
+    <cim:start_DateAndOrTime.dateTime>2020-12-31T23:00:00Z</cim:start_DateAndOrTime.dateTime>
+    <cim:end_DateAndOrTime.dateTime>2021-04-30T22:00:00Z</cim:end_DateAndOrTime.dateTime>
+    <cim:ChargeGroup>
+      <cim:ChargeType>
+        <cim:chargeTypeOwner_MarketParticipant.mRID codingScheme="A10">this field has a maximum size of 35</cim:chargeTypeOwner_MarketParticipant.mRID>
+        <cim:type>D03</cim:type>
+        <cim:mRID>this field has a maximum size of 100 field has a maximum size of 100 field has a maximum size of 100</cim:mRID>
+        <cim:factor>9999</cim:factor>
+      </cim:ChargeType>
+    </cim:ChargeGroup>
+  </cim:MktActivityRecord>
+</cim:NotifyBillingMasterData_MarketDocument>

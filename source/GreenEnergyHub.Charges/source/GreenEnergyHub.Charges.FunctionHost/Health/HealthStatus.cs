@@ -49,9 +49,6 @@ namespace GreenEnergyHub.Charges.FunctionHost.Health
 
         private async Task<Dictionary<string, bool>> GetDeepHealthCheckStatusAsync()
         {
-            /* Consider checking access to database, Service Bus topics and queues, and other health checks */
-
-            // TODO: This connection string does not have permissions to verify queue existence
             var connectionString = EnvironmentHelper.GetEnv(EnvironmentSettingNames.DataHubManagerConnectionString);
 
             return new Dictionary<string, bool>
