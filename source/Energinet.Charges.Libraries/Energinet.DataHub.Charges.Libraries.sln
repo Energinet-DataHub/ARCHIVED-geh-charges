@@ -27,7 +27,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GreenEnergyHub.Charges.Test
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Energinet.DataHub.Charges.Clients.Bff", "source\Energinet.DataHub.Charges.Clients.Bff\Energinet.DataHub.Charges.Clients.Bff.csproj", "{FD03987F-C262-41B3-BB34-C59B253DA842}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Energinet.DataHub.Charges.Clients.Abstractions", "source\Energinet.DataHub.Charges.Clients.Abstractions\Energinet.DataHub.Charges.Clients.Abstractions.csproj", "{0ED5F365-E3B0-49BC-BE8E-059E1054225D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Energinet.DataHub.Charges.Clients.Abstractions", "source\Energinet.DataHub.Charges.Clients.Abstractions\Energinet.DataHub.Charges.Clients.Abstractions.csproj", "{0ED5F365-E3B0-49BC-BE8E-059E1054225D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Energinet.DataHub.Charges.Bff.Tests", "source\Energinet.DataHub.Charges.Bff.Tests\Energinet.DataHub.Charges.Bff.Tests.csproj", "{02241F31-0804-4FB7-B5CC-3EB903893F31}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -147,6 +149,18 @@ Global
 		{0ED5F365-E3B0-49BC-BE8E-059E1054225D}.Release|x64.Build.0 = Release|Any CPU
 		{0ED5F365-E3B0-49BC-BE8E-059E1054225D}.Release|x86.ActiveCfg = Release|Any CPU
 		{0ED5F365-E3B0-49BC-BE8E-059E1054225D}.Release|x86.Build.0 = Release|Any CPU
+		{02241F31-0804-4FB7-B5CC-3EB903893F31}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{02241F31-0804-4FB7-B5CC-3EB903893F31}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{02241F31-0804-4FB7-B5CC-3EB903893F31}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{02241F31-0804-4FB7-B5CC-3EB903893F31}.Debug|x64.Build.0 = Debug|Any CPU
+		{02241F31-0804-4FB7-B5CC-3EB903893F31}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{02241F31-0804-4FB7-B5CC-3EB903893F31}.Debug|x86.Build.0 = Debug|Any CPU
+		{02241F31-0804-4FB7-B5CC-3EB903893F31}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{02241F31-0804-4FB7-B5CC-3EB903893F31}.Release|Any CPU.Build.0 = Release|Any CPU
+		{02241F31-0804-4FB7-B5CC-3EB903893F31}.Release|x64.ActiveCfg = Release|Any CPU
+		{02241F31-0804-4FB7-B5CC-3EB903893F31}.Release|x64.Build.0 = Release|Any CPU
+		{02241F31-0804-4FB7-B5CC-3EB903893F31}.Release|x86.ActiveCfg = Release|Any CPU
+		{02241F31-0804-4FB7-B5CC-3EB903893F31}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -163,6 +177,7 @@ Global
 		{4A55C6A6-1496-4470-B2B8-EA179A6DA7BD} = {68B83582-7A4C-49F3-AA04-36D390BDA5F0}
 		{FD03987F-C262-41B3-BB34-C59B253DA842} = {2BF2F6B8-E02B-4D7F-99BC-D28B3B3643A9}
 		{0ED5F365-E3B0-49BC-BE8E-059E1054225D} = {2BF2F6B8-E02B-4D7F-99BC-D28B3B3643A9}
+		{02241F31-0804-4FB7-B5CC-3EB903893F31} = {68B83582-7A4C-49F3-AA04-36D390BDA5F0}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {AFC1A6A3-7235-4DB1-A2E4-35B72C1FEA28}
