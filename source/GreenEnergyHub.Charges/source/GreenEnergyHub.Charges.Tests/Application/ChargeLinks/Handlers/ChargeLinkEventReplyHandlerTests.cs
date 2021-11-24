@@ -43,7 +43,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Handlers
             [Frozen] Mock<ICreateDefaultChargeLinksReplier> defaultChargeLinkClient,
             string replyTo,
             string correlationId,
-            CreateDefaultChargeLinksReplierHandler sut)
+            CreateDefaultChargeLinksReplyHandler sut)
         {
             // Arrange
             messageMetaDataContext.Setup(m => m.IsReplyToSet()).Returns(true);

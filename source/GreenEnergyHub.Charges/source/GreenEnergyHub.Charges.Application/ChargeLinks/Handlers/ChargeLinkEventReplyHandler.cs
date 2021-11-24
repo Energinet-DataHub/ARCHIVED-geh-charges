@@ -18,12 +18,12 @@ using GreenEnergyHub.Charges.Domain.Dtos.DefaultChargeLinksDataAvailableNotified
 
 namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
 {
-    public class CreateDefaultChargeLinksReplierHandler : ICreateDefaultChargeLinksReplierHandler
+    public class CreateDefaultChargeLinksReplyHandler : ICreateDefaultChargeLinksReplyHandler
     {
         private readonly IMessageMetaDataContext _messageMetaDataContext;
         private readonly ICreateDefaultChargeLinksReplier _createDefaultChargeLinksReplier;
 
-        public CreateDefaultChargeLinksReplierHandler(
+        public CreateDefaultChargeLinksReplyHandler(
             IMessageMetaDataContext messageMetaDataContext,
             ICreateDefaultChargeLinksReplier createDefaultChargeLinksReplier)
         {

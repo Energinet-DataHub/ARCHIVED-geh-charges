@@ -17,7 +17,7 @@ using GreenEnergyHub.Charges.Domain.Dtos.DefaultChargeLinksDataAvailableNotified
 
 namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
 {
-    public interface ICreateDefaultChargeLinksReplierHandler
+    public interface ICreateDefaultChargeLinksReplyHandler
     {
         Task HandleAsync(DefaultChargeLinksDataAvailableNotifierEvent defaultChargeLinksDataAvailableNotifierEvent);
     }
