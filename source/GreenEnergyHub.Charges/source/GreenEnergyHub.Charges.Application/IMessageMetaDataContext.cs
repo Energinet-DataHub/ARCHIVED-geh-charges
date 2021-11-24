@@ -12,10 +12,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using NodaTime;
+
 namespace GreenEnergyHub.Charges.Application
 {
+    /// <summary>
+    /// Meta data for messages sent and received by the components of the domain.
+    /// </summary>
     public interface IMessageMetaDataContext
     {
+        /// <summary>
+        /// The moment when the origin request was received (probably by another domain in the system).
+        /// </summary>
+        Instant RequestDataTime { get; }
+
         /// <summary>
         /// Returns the ReplyTo value from the Message's Metadata, if no value is present a exception is thrown.
         /// </summary>

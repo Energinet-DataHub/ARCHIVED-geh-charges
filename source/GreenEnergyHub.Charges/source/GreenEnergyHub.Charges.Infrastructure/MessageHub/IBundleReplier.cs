@@ -16,10 +16,10 @@ using System.IO;
 using System.Threading.Tasks;
 using Energinet.DataHub.MessageHub.Model.Model;
 
-namespace GreenEnergyHub.Charges.Application.ChargeLinks.MessageHub.Infrastructure
+namespace GreenEnergyHub.Charges.Infrastructure.MessageHub
 {
-    public interface IChargeLinkBundleCreator
+    public interface IBundleReplier
     {
-        Task CreateAsync(DataBundleRequestDto request, Stream outputStream);
+        Task ReplyAsync(Stream bundleStream, DataBundleRequestDto request);
     }
 }
