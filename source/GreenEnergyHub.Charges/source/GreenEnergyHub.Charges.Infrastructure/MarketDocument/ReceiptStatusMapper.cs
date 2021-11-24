@@ -13,10 +13,9 @@
 // limitations under the License.
 
 using System.ComponentModel;
-using GreenEnergyHub.Charges.Domain.AvailableChargeLinkReceiptData;
 using GreenEnergyHub.Charges.Domain.AvailableData;
 
-namespace GreenEnergyHub.Charges.Infrastructure.ChargeLinkReceiptBundle.Cim
+namespace GreenEnergyHub.Charges.Infrastructure.MarketDocument
 {
     public static class ReceiptStatusMapper
     {
