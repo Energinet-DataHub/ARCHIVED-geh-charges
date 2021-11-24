@@ -13,7 +13,6 @@
 // limitations under the License.
 
 using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Application;
 using GreenEnergyHub.Charges.Application.ChargeLinks.Handlers;
 using GreenEnergyHub.Charges.Domain.Dtos.DefaultChargeLinksDataAvailableNotifiedEvents;
 using GreenEnergyHub.Charges.FunctionHost.Common;
@@ -31,16 +30,13 @@ namespace GreenEnergyHub.Charges.FunctionHost.ChargeLinks
         public const string FunctionName = nameof(CreateDefaultChargeLinksReplierEndpoint);
         private readonly MessageExtractor<DefaultChargeLinksDataAvailableNotifierEvent> _messageExtractor;
         private readonly ICreateDefaultChargeLinksReplierHandler _createDefaultChargeLinksReplierHandler;
-        private readonly IMessageMetaDataContext _messageMetaDataContext;
 
         public CreateDefaultChargeLinksReplierEndpoint(
             MessageExtractor<DefaultChargeLinksDataAvailableNotifierEvent> messageExtractor,
-            ICreateDefaultChargeLinksReplierHandler createDefaultChargeLinksReplierHandler,
-            IMessageMetaDataContext messageMetaDataContext)
+            ICreateDefaultChargeLinksReplierHandler createDefaultChargeLinksReplierHandler)
         {
             _messageExtractor = messageExtractor;
             _createDefaultChargeLinksReplierHandler = createDefaultChargeLinksReplierHandler;
-            _messageMetaDataContext = messageMetaDataContext;
         }
 
         [Function(FunctionName)]
