@@ -18,7 +18,7 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.MeteringPoints;
 using GreenEnergyHub.Charges.Infrastructure.Repositories;
-using GreenEnergyHub.Charges.TestCore.Database;
+using GreenEnergyHub.Charges.IntegrationTests.Database;
 using GreenEnergyHub.TestHelpers;
 using NodaTime;
 using Xunit;

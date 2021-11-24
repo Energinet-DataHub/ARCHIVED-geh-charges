@@ -15,8 +15,8 @@
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
+using Energinet.DataHub.Core.Messaging.Transport;
 using GreenEnergyHub.Json;
-using GreenEnergyHub.Messaging.Transport;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Messaging.Serialization
 {

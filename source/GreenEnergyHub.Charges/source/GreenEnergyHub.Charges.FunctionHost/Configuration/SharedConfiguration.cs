@@ -14,6 +14,8 @@
 
 using System;
 using Azure.Messaging.ServiceBus;
+using Energinet.DataHub.Core.Messaging.Protobuf;
+using Energinet.DataHub.Core.Messaging.Transport;
 using Energinet.DataHub.MessageHub.Client;
 using Energinet.DataHub.MessageHub.Client.DataAvailable;
 using Energinet.DataHub.MessageHub.Client.Factories;
@@ -42,8 +44,6 @@ using GreenEnergyHub.Charges.Infrastructure.Repositories;
 using GreenEnergyHub.Charges.Infrastructure.ServiceBusReplySenderProvider;
 using GreenEnergyHub.Iso8601;
 using GreenEnergyHub.Json;
-using GreenEnergyHub.Messaging.Protobuf;
-using GreenEnergyHub.Messaging.Transport;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using NodaTime;

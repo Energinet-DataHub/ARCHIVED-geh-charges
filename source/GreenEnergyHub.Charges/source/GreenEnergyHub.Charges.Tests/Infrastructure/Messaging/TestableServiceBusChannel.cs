@@ -15,9 +15,9 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Threading.Tasks;
+using Energinet.DataHub.Core.Messaging.Transport;
 using GreenEnergyHub.Charges.Application;
 using GreenEnergyHub.Charges.Infrastructure.Messaging;
-using GreenEnergyHub.Messaging.Transport;
 
 namespace GreenEnergyHub.Charges.Tests.Infrastructure.Messaging
 {

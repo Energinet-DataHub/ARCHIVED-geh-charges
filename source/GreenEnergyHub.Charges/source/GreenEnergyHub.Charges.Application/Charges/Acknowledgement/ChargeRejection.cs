@@ -13,9 +13,9 @@
 // limitations under the License.
 
 using System.Collections.Generic;
+using Energinet.DataHub.Core.Messaging.MessageTypes.Common;
 using GreenEnergyHub.Charges.Domain.Dtos.Messages;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
-using GreenEnergyHub.Messaging.MessageTypes.Common;
 
 namespace GreenEnergyHub.Charges.Application.Charges.Acknowledgement
 {
