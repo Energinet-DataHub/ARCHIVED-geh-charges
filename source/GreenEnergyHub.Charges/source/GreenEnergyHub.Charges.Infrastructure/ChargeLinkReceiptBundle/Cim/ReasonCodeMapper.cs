@@ -14,6 +14,7 @@
 
 using System.ComponentModel;
 using GreenEnergyHub.Charges.Domain.AvailableChargeLinkReceiptData;
+using GreenEnergyHub.Charges.Domain.AvailableData;
 
 namespace GreenEnergyHub.Charges.Infrastructure.ChargeLinkReceiptBundle.Cim
 {

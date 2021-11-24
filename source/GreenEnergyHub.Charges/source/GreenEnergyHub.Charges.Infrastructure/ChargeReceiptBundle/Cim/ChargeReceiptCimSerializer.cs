@@ -17,6 +17,7 @@ using System.Linq;
 using System.Xml.Linq;
 using GreenEnergyHub.Charges.Domain.AvailableChargeLinkReceiptData;
 using GreenEnergyHub.Charges.Domain.AvailableChargeReceiptData;
+using GreenEnergyHub.Charges.Domain.AvailableData;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.Infrastructure.ChargeLinkReceiptBundle.Cim;
 using GreenEnergyHub.Charges.Infrastructure.Cim;

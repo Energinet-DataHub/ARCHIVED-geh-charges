@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System;
+using GreenEnergyHub.Charges.Domain.AvailableData;
 
 namespace GreenEnergyHub.Charges.Domain.AvailableChargeLinkReceiptData
 {
