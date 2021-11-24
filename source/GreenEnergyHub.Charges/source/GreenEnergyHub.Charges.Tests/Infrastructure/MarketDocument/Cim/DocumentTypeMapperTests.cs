@@ -24,11 +24,11 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.MarketDocument.Cim
     public class DocumentTypeMapperTests
     {
         [Theory]
-        [InlineData("D04", DocumentType.ChargeReceipt)]
         [InlineData("D05", DocumentType.RequestChangeBillingMasterData)]
         [InlineData("D06", DocumentType.ChargeLinkReceipt)]
         [InlineData("D07", DocumentType.NotifyBillingMasterData)]
         [InlineData("D10", DocumentType.RequestUpdateChargeInformation)]
+        [InlineData("D11", DocumentType.ChargeReceipt)]
         [InlineData("D12", DocumentType.NotifyPriceList)]
         [InlineData("", DocumentType.Unknown)]
         [InlineData("DoesNotExist", DocumentType.Unknown)]
@@ -40,11 +40,11 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.MarketDocument.Cim
         }
 
         [Theory]
-        [InlineData(DocumentType.ChargeReceipt, "D04")]
         [InlineData(DocumentType.RequestChangeBillingMasterData, "D05")]
         [InlineData(DocumentType.ChargeLinkReceipt, "D06")]
         [InlineData(DocumentType.NotifyBillingMasterData, "D07")]
         [InlineData(DocumentType.RequestUpdateChargeInformation, "D10")]
+        [InlineData(DocumentType.ChargeReceipt, "D11")]
         [InlineData(DocumentType.NotifyPriceList, "D12")]
         public void Map_WhenGivenKnownInput_MapsToCorrectString(DocumentType documentType, string expected)
         {
