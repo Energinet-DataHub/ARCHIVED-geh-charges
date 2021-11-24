@@ -58,5 +58,34 @@ namespace Energinet.DataHub.Charges.Clients.SimpleInjectorTests
             // Cleanup
             await sut.DisposeAsync().ConfigureAwait(false);
         }
+
+        [Fact]
+        public async Task Container_WhenCalledWithAddDefaultChargeLinkClientWithInstanceCreator_RegistrationIsCorrect()
+        {
+            // Arrange
+            var sut = new Container();
+            sut.Options.DefaultScopedLifestyle = new AsyncScopedLifestyle();
+            var serviceBusClient = new Mock<ServiceBusClient>();
+            sut.Register(() => serviceBusClient.Object, Lifestyle.Scoped);
+
+            // Act
+            sut.AddDefaultChargeLinkClient(
+                () => sut.GetInstance<ServiceBusClient>(),
+                new ServiceBusRequestSenderTestConfiguration(
+                    "anyReplyQueueName",
+                    "AnyRequestQueueName"));
+
+            // Assert
+            var actualRegistrations = sut.Collection.Container.GetCurrentRegistrations();
+            actualRegistrations.Single(p =>
+                p.ImplementationType == typeof(DefaultChargeLinkClient)).Lifestyle.GetType().Should().Be(typeof(AsyncScopedLifestyle));
+            actualRegistrations.Single(p =>
+                p.ImplementationType == typeof(DefaultChargeLinkReplyReader)).Lifestyle.GetType().Should().Be(typeof(AsyncScopedLifestyle));
+            actualRegistrations.Single(p =>
+                p.ImplementationType == typeof(IServiceBusRequestSenderProvider)).Lifestyle.GetType().Should().Be(typeof(SingletonLifestyle));
+
+            // Cleanup
+            await sut.DisposeAsync().ConfigureAwait(false);
+        }
     }
 }

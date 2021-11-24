@@ -51,5 +51,33 @@ namespace Energinet.DataHub.Charges.Clients.SimpleInjector
 
             container.Register<IDefaultChargeLinkReplyReader, DefaultChargeLinkReplyReader>(Lifestyle.Scoped);
         }
+
+        /// <summary>
+        /// SimpleInjector extension for registering Energinet.DataHub.Charges.Clients NuGet package.
+        /// </summary>
+        /// <param name="container"></param>
+        /// <param name="serviceBusClientCreator">ServiceBusClient creator func required to connect to the shared service bus namespace</param>
+        /// <param name="serviceBusRequestSenderConfiguration"></param>
+        public static void AddDefaultChargeLinkClient(
+            this Container container,
+            [DisallowNull] Func<ServiceBusClient> serviceBusClientCreator,
+            [DisallowNull] IServiceBusRequestSenderConfiguration serviceBusRequestSenderConfiguration)
+        {
+            if (container == null)
+                throw new ArgumentNullException(nameof(container));
+
+            if (serviceBusClientCreator == null)
+                throw new ArgumentNullException(nameof(serviceBusClientCreator));
+
+            if (serviceBusRequestSenderConfiguration == null)
+                throw new ArgumentNullException(nameof(serviceBusRequestSenderConfiguration));
+
+            container.RegisterSingleton<IServiceBusRequestSenderProvider>(() =>
+                new ServiceBusRequestSenderProvider(serviceBusClientCreator.Invoke(), serviceBusRequestSenderConfiguration));
+
+            container.Register<IDefaultChargeLinkClient, DefaultChargeLinkClient>(Lifestyle.Scoped);
+
+            container.Register<IDefaultChargeLinkReplyReader, DefaultChargeLinkReplyReader>(Lifestyle.Scoped);
+        }
     }
 }
