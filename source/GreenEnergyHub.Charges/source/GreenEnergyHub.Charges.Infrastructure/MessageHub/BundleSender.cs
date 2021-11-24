@@ -15,28 +15,29 @@
 using System.IO;
 using System.Threading.Tasks;
 using Energinet.DataHub.MessageHub.Model.Model;
-using GreenEnergyHub.Charges.Application.ChargeLinks.MessageHub.Infrastructure;
+using GreenEnergyHub.Charges.Application.MessageHub;
 
-namespace GreenEnergyHub.Charges.Application.ChargeLinks.MessageHub
+namespace GreenEnergyHub.Charges.Infrastructure.MessageHub
 {
-    public class ChargeLinkBundleSender : IChargeLinkBundleSender
+    public class BundleSender : IBundleSender
     {
-        private readonly IChargeLinkBundleCreator _chargeLinkBundleCreator;
-        private readonly IChargeLinkBundleReplier _chargeLinkBundleReplier;
+        private readonly IBundleCreatorProvider _bundleCreatorProvider;
+        private readonly IBundleReplier _bundleReplier;
 
-        public ChargeLinkBundleSender(
-            IChargeLinkBundleCreator chargeLinkBundleCreator,
-            IChargeLinkBundleReplier chargeLinkBundleReplier)
+        public BundleSender(
+            IBundleReplier bundleReplier, IBundleCreatorProvider bundleCreatorProvider)
         {
-            _chargeLinkBundleCreator = chargeLinkBundleCreator;
-            _chargeLinkBundleReplier = chargeLinkBundleReplier;
+            _bundleReplier = bundleReplier;
+            _bundleCreatorProvider = bundleCreatorProvider;
         }
 
         public async Task SendAsync(DataBundleRequestDto request)
         {
+            var bundleCreator = _bundleCreatorProvider.Get(request);
             await using var bundleStream = new MemoryStream();
-            await _chargeLinkBundleCreator.CreateAsync(request, bundleStream);
-            await _chargeLinkBundleReplier.ReplyAsync(bundleStream, request);
+
+            await bundleCreator.CreateAsync(request, bundleStream);
+            await _bundleReplier.ReplyAsync(bundleStream, request);
         }
     }
 }

@@ -12,13 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Threading.Tasks;
-using Energinet.DataHub.MessageHub.Model.Model;
-
-namespace GreenEnergyHub.Charges.Application.ChargeLinks.MessageHub
+namespace GreenEnergyHub.Charges.IntegrationTests.TestFiles.ChargeLinks
 {
-    public interface IChargeLinkBundleSender
+    public static class ChargeLinkDocument
     {
-        Task SendAsync(DataBundleRequestDto request);
+        public const string AnyValid = "TestFiles/ChargeLinks/FixedPeriodTaxTariffChargeLinkDocument.xml";
+        public const string AnyTax = "TestFiles/ChargeLinks/FixedPeriodTaxTariffChargeLinkDocument.xml";
     }
 }

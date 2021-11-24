@@ -12,25 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
+using Energinet.DataHub.MessageHub.Model.Model;
 
-namespace GreenEnergyHub.Charges.Domain.MarketParticipants
+namespace GreenEnergyHub.Charges.Infrastructure.MessageHub
 {
     /// <summary>
-    /// Repository for managing market participants.
+    /// Contract for all specific creators.
     /// </summary>
-    public interface IMarketParticipantRepository
+    public interface IBundleCreator
     {
-        MarketParticipant? GetMarketParticipantOrNull(string id);
-
-        /// <summary>
-        /// Using MeteringPointId find the Grid Access Provider of that MP
-        /// </summary>
-        MarketParticipant GetGridAccessProvider(string meteringPointId);
-
-        Task<List<MarketParticipant>> GetActiveGridAccessProvidersAsync();
-
-        Task<MarketParticipant> GetAsync(MarketParticipantRole marketParticipantRole);
+        Task CreateAsync(DataBundleRequestDto request, Stream outputStream);
     }
 }
