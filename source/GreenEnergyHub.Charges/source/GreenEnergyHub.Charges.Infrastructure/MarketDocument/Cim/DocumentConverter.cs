@@ -15,10 +15,10 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using System.Xml;
+using Energinet.DataHub.Core.Messaging.Transport;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.Infrastructure.Messaging.Serialization;
-using GreenEnergyHub.Messaging.Transport;
 using NodaTime;
 
 namespace GreenEnergyHub.Charges.Infrastructure.MarketDocument.Cim
