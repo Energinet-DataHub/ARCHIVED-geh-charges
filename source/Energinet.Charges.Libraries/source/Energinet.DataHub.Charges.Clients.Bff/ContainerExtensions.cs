@@ -13,28 +13,25 @@
 // limitations under the License.
 
 using System;
+using System.Linq;
 using System.Net.Http;
-using System.Net.Http.Json;
-using System.Threading.Tasks;
 using Energinet.DataHub.Charges.Clients.Abstractions;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Energinet.DataHub.Charges.Clients.Bff
 {
-    public sealed class ChargeLinksClient : IChargeLinksClient
+    public static class ContainerExtensions
     {
-        private readonly HttpClient _httpClient;
-
-        internal ChargeLinksClient(HttpClient httpClient)
+        public static IServiceCollection AddChargeLinksClient(this IServiceCollection services, Uri baseUrl)
         {
-            _httpClient = httpClient;
-        }
+            services.AddScoped<IChargeLinksClient>(x => new ChargeLinksClientFactory(x.GetRequiredService<IHttpClientFactory>()).CreateClient(baseUrl));
 
-        public async Task<ChargeLinkDto?> GetChargeLinksByMeteringPointIdAsync(string meteringPointId)
-        {
-            var response = await _httpClient.GetAsync(new Uri($"ChargeLinks/GetChargeLinksByMeteringPointIdAsync/?meteringPointId={meteringPointId}", UriKind.Relative))
-                .ConfigureAwait(false);
+            if (services.Any(x => x.ServiceType == typeof(IHttpClientFactory)))
+                return services;
 
-            return await response.Content.ReadFromJsonAsync<ChargeLinkDto>().ConfigureAwait(false);
+            services.AddHttpClient();
+
+            return services;
         }
     }
 }

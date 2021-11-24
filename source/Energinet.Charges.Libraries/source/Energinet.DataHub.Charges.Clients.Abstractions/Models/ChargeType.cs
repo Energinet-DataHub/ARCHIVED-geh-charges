@@ -12,20 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
-
 namespace Energinet.DataHub.Charges.Clients.Abstractions
 {
-    public record ChargeLinkDto(
-        // TODO: Consider if ChargeType enum should be in Abstractions
-        ChargeType ChargeType,
-        string ChargeId,
-        string ChargeName,
-        string ChargeOwnerId,
-        string ChargeOwnerName,
-        bool TaxIndicator,
-        bool TransparentInvoicing,
-        int Factor,
-        DateTime StartDateTimeUtc,
-        DateTime? EndDateTimeUtc);
+    public enum ChargeType
+    {
+        Subscription = 1,
+        Fee = 2,
+        Tariff = 3,
+    }
 }
