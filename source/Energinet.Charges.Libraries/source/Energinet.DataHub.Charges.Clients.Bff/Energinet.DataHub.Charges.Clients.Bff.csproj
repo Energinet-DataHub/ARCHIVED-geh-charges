@@ -70,5 +70,8 @@ limitations under the License.
     <!-- Publish the repository URL in the built .nupkg (in the NuSpec <Repository> element) -->
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
   </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Energinet.DataHub.Charges.Clients.Abstractions\Energinet.DataHub.Charges.Clients.Abstractions.csproj" />
+  </ItemGroup>
 
 </Project>
