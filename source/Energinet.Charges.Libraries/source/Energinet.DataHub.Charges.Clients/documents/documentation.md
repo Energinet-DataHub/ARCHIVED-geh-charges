@@ -23,4 +23,3 @@ We have created a independent NuGet package for easier registration when using [
 `IDefaultChargeLinkClient` should be registered as scoped.
 
 `ServiceBusRequestSenderProvider` should be registered as a singleton.
-
