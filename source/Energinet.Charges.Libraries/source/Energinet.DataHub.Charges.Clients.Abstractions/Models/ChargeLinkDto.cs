@@ -26,6 +26,6 @@ namespace Energinet.DataHub.Charges.Clients.Abstractions
         bool TaxIndicator,
         bool TransparentInvoicing,
         int Factor,
-        DateTime StartDateTime,
-        DateTime? EndDateTime);
+        DateTime StartDateTimeUtc,
+        DateTime? EndDateTimeUtc);
 }
