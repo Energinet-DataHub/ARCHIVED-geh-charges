@@ -40,8 +40,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Context.EntityConfigurations
 
             builder
                 .Property(x => x.BusinessReasonCode)
-                .HasColumnName("BusinessReasonCode")
-                .HasConversion<int>();
+                .HasColumnName("BusinessReasonCode");
 
             builder
                 .Property(x => x.ChargeId)
@@ -53,8 +52,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Context.EntityConfigurations
 
             builder
                 .Property(x => x.ChargeType)
-                .HasColumnName("ChargeType")
-                .HasConversion<int>();
+                .HasColumnName("ChargeType");
 
             builder
                 .Property(x => x.MeteringPointId)
