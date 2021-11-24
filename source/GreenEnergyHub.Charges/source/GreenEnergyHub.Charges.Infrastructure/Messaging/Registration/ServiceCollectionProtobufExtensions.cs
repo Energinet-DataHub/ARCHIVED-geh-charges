@@ -15,9 +15,9 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
+using Energinet.DataHub.Core.Messaging.Protobuf;
 using Google.Protobuf;
 using GreenEnergyHub.Charges.Infrastructure.Messaging.Serialization;
-using GreenEnergyHub.Messaging.Protobuf;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Messaging.Registration
@@ -57,7 +57,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Messaging.Registration
                 services.Add(descriptor);
             }
 
-            services.AddScoped(sp => config.GetParser());
+            services.AddScoped(_ => config.GetParser());
 
             return services;
         }

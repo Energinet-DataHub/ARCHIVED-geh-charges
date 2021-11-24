@@ -36,6 +36,12 @@ runs:
         name: functionhost
         path: ${{ inputs.RELEASE_FOLDER_PATH }}/functions/functionhost
 
+    - name: Publish Web API to release folder
+      uses: actions/download-artifact@v2
+      with:
+        name: webapi
+        path: ${{ inputs.RELEASE_FOLDER_PATH }}/functions/webapi
+
     - name: Publish Database Migration to release folder
       uses: actions/download-artifact@v2
       with:

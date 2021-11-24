@@ -13,11 +13,11 @@
 // limitations under the License.
 
 using System.Diagnostics.CodeAnalysis;
+using Energinet.DataHub.Core.Messaging.Protobuf;
 using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksAcceptedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
-using GreenEnergyHub.Messaging.Protobuf;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
 {
@@ -28,7 +28,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
             var chargeLinkCommandAcceptedContract = new GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandAccepted.ChargeLinkCommandAccepted
             {
                 PublishedTime = chargeLinksAcceptedEvent.PublishedTime.ToTimestamp(),
-                ChargeLinksCommand = new GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandAccepted.ChargeLinkCommand
+                ChargeLinksCommand = new ChargeLinkCommandAccepted.ChargeLinkCommand
                 {
                     MeteringPointId = chargeLinksAcceptedEvent.ChargeLinksCommand.MeteringPointId,
                     Document = ConvertDocument(chargeLinksAcceptedEvent.ChargeLinksCommand.Document),
@@ -43,30 +43,30 @@ namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
             return chargeLinkCommandAcceptedContract;
         }
 
-        private static GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandAccepted.Document ConvertDocument(DocumentDto documentDto)
+        private static ChargeLinkCommandAccepted.Document ConvertDocument(DocumentDto documentDto)
         {
             return new GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandAccepted.Document
             {
                 Id = documentDto.Id,
                 RequestDate = documentDto.RequestDate.ToTimestamp(),
-                Type = (GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandAccepted.DocumentType)documentDto.Type,
+                Type = (ChargeLinkCommandAccepted.DocumentType)documentDto.Type,
                 CreatedDateTime = documentDto.CreatedDateTime.ToTimestamp(),
-                Sender = new GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandAccepted.MarketParticipant
+                Sender = new ChargeLinkCommandAccepted.MarketParticipant
                 {
                     Id = documentDto.Sender.Id,
-                    BusinessProcessRole = (GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandAccepted.MarketParticipantRole)documentDto.Sender.BusinessProcessRole,
+                    BusinessProcessRole = (ChargeLinkCommandAccepted.MarketParticipantRole)documentDto.Sender.BusinessProcessRole,
                 },
-                Recipient = new GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandAccepted.MarketParticipant
+                Recipient = new ChargeLinkCommandAccepted.MarketParticipant
                 {
                     Id = documentDto.Recipient.Id,
-                    BusinessProcessRole = (GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandAccepted.MarketParticipantRole)documentDto.Recipient.BusinessProcessRole,
+                    BusinessProcessRole = (ChargeLinkCommandAccepted.MarketParticipantRole)documentDto.Recipient.BusinessProcessRole,
                 },
-                IndustryClassification = (GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandAccepted.IndustryClassification)documentDto.IndustryClassification,
-                BusinessReasonCode = (GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandAccepted.BusinessReasonCode)documentDto.BusinessReasonCode,
+                IndustryClassification = (ChargeLinkCommandAccepted.IndustryClassification)documentDto.IndustryClassification,
+                BusinessReasonCode = (ChargeLinkCommandAccepted.BusinessReasonCode)documentDto.BusinessReasonCode,
             };
         }
 
-        private static GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandAccepted.ChargeLink ConvertChargeLink(ChargeLinkDto chargeLink)
+        private static ChargeLinkCommandAccepted.ChargeLink ConvertChargeLink(ChargeLinkDto chargeLink)
         {
             return new GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandAccepted.ChargeLink
             {
@@ -74,7 +74,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
                 SenderProvidedChargeId = chargeLink.SenderProvidedChargeId,
                 ChargeOwner = chargeLink.ChargeOwner,
                 Factor = chargeLink.Factor,
-                ChargeType = (GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandAccepted.ChargeType)chargeLink.ChargeType,
+                ChargeType = (ChargeLinkCommandAccepted.ChargeType)chargeLink.ChargeType,
                 StartDateTime = chargeLink.StartDateTime.ToTimestamp(),
                 EndDateTime = chargeLink.EndDateTime.TimeOrEndDefault().ToTimestamp(),
             };
