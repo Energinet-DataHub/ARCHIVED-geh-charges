@@ -45,8 +45,6 @@ namespace GreenEnergyHub.Charges.FunctionHost.Common
         public const string DefaultChargeLinksDataAvailableNotifiedSubscription =
             "DEFAULT_CHARGE_LINKS_DATA_AVAILABLE_NOTIFIED_SUBSCRIPTION_NAME";
 
-        public const string CreateLinkReplyQueueName = "CREATE_LINK_REPLY_QUEUE_NAME";
-
         /// <summary>
         /// Deprecated: This is from an old implementation where we mimicked sending to the post office
         /// by sending to a topic we provisioned ourselves in the charges domain.

@@ -143,7 +143,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures
                 .CreateAsync();
 
             CreateLinkReplyQueue = await ServiceBusResourceProvider
-                .BuildQueue(ChargesServiceBusResourceNames.CreateLinkReplyQueueKey).SetEnvironmentVariableToQueueName(EnvironmentSettingNames.CreateLinkReplyQueueName)
+                .BuildQueue(ChargesServiceBusResourceNames.CreateLinkReplyQueueKey)
                 .CreateAsync();
 
             var consumptionMeteringPointCreatedTopic = await ServiceBusResourceProvider

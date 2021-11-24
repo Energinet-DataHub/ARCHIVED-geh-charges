@@ -55,9 +55,6 @@ module "func_functionhost" {
     DEFAULT_CHARGE_LINKS_DATA_AVAILABLE_NOTIFIED_TOPIC_NAME         = "sbt-default-charge-link-available-notified"
     DEFAULT_CHARGE_LINKS_DATA_AVAILABLE_NOTIFIED_SUBSCRIPTION_NAME  = "sbs-default-charge-link-available-notified-sub"
     CREATE_LINK_REQUEST_QUEUE_NAME                                  = data.azurerm_key_vault_secret.sbq_create_link_request_name.value
-    CREATE_LINK_REPLY_QUEUE_NAME                                    = data.azurerm_key_vault_secret.sbq_create_link_reply_name.value
-    CREATE_LINK_MESSAGES_REQUEST_QUEUE_NAME                         = data.azurerm_key_vault_secret.sbq_create_link_messages_request_name.value
-    CREATE_LINK_MESSAGES_REPLY_QUEUE_NAME                           = data.azurerm_key_vault_secret.sbq_create_link_messages_reply_name.value
     CONSUMPTION_METERING_POINT_CREATED_TOPIC_NAME                   = data.azurerm_key_vault_secret.sbt_consumption_metering_point_created_name.value
     CONSUMPTION_METERING_POINT_CREATED_SUBSCRIPTION_NAME            = data.azurerm_key_vault_secret.sbs_consumption_metering_point_created_sub_charges_name.value
 
