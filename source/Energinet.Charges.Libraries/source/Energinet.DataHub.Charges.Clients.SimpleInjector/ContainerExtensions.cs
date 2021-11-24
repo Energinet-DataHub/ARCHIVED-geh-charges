@@ -48,8 +48,6 @@ namespace Energinet.DataHub.Charges.Clients.SimpleInjector
                 new ServiceBusRequestSenderProvider(serviceBusClient, serviceBusRequestSenderConfiguration));
 
             container.Register<IDefaultChargeLinkClient, DefaultChargeLinkClient>(Lifestyle.Scoped);
-
-            container.Register<IDefaultChargeLinkReplyReader, DefaultChargeLinkReplyReader>(Lifestyle.Scoped);
         }
 
         /// <summary>
@@ -76,8 +74,6 @@ namespace Energinet.DataHub.Charges.Clients.SimpleInjector
                 new ServiceBusRequestSenderProvider(serviceBusClientCreator.Invoke(), serviceBusRequestSenderConfiguration));
 
             container.Register<IDefaultChargeLinkClient, DefaultChargeLinkClient>(Lifestyle.Scoped);
-
-            container.Register<IDefaultChargeLinkReplyReader, DefaultChargeLinkReplyReader>(Lifestyle.Scoped);
         }
     }
 }

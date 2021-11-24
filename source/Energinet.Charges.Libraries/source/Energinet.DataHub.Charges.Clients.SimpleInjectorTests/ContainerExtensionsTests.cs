@@ -51,8 +51,6 @@ namespace Energinet.DataHub.Charges.Clients.SimpleInjectorTests
             actualRegistrations.Single(p =>
                 p.ImplementationType == typeof(DefaultChargeLinkClient)).Lifestyle.GetType().Should().Be(typeof(AsyncScopedLifestyle));
             actualRegistrations.Single(p =>
-                p.ImplementationType == typeof(DefaultChargeLinkReplyReader)).Lifestyle.GetType().Should().Be(typeof(AsyncScopedLifestyle));
-            actualRegistrations.Single(p =>
                 p.ImplementationType == typeof(IServiceBusRequestSenderProvider)).Lifestyle.GetType().Should().Be(typeof(SingletonLifestyle));
 
             // Cleanup
@@ -79,8 +77,6 @@ namespace Energinet.DataHub.Charges.Clients.SimpleInjectorTests
             var actualRegistrations = sut.Collection.Container.GetCurrentRegistrations();
             actualRegistrations.Single(p =>
                 p.ImplementationType == typeof(DefaultChargeLinkClient)).Lifestyle.GetType().Should().Be(typeof(AsyncScopedLifestyle));
-            actualRegistrations.Single(p =>
-                p.ImplementationType == typeof(DefaultChargeLinkReplyReader)).Lifestyle.GetType().Should().Be(typeof(AsyncScopedLifestyle));
             actualRegistrations.Single(p =>
                 p.ImplementationType == typeof(IServiceBusRequestSenderProvider)).Lifestyle.GetType().Should().Be(typeof(SingletonLifestyle));
 
