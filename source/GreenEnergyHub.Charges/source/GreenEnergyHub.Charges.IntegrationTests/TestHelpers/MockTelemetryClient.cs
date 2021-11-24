@@ -25,6 +25,15 @@ namespace GreenEnergyHub.Charges.IntegrationTests.TestHelpers
 {
     public static class MockTelemetryClient
     {
+        /// <summary>
+        /// When send a message using Service Bus, its necessary to wrap
+        /// SendMessage method with Telemetry dependency information, to
+        /// make sure  Application Insights can track the message across
+        /// Service Bus.
+        ///
+        /// If not, a new CorrelationId will be created when receiving the
+        /// Service Bus message in a function host.
+        /// </summary>
         public static async Task SendWrappedServiceBusMessageToQueueAsync(QueueResource queue, ServiceBusMessage serviceBusMessage, string correlationId, string parentId)
         {
             var telemetryClient = Create();
