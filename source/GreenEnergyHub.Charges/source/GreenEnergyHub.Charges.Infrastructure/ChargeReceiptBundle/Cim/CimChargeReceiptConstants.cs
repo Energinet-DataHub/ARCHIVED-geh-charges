@@ -19,7 +19,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.ChargeReceiptBundle.Cim
     /// use when parsing and generating a XML document
     ///
     /// This class is responsible for strings that are used in the document area of the XML
-    /// which is specific to charge link messages
+    /// which is specific to charge messages
     /// </summary>
     internal static class CimChargeReceiptConstants
     {
