@@ -20,23 +20,23 @@ using Energinet.DataHub.MessageHub.Client.Peek;
 using Energinet.DataHub.MessageHub.Client.Storage;
 using Energinet.DataHub.MessageHub.Model.Model;
 using GreenEnergyHub.Charges.Application;
-using GreenEnergyHub.Charges.Infrastructure.ChargeLinkBundle.MessageHub;
+using GreenEnergyHub.Charges.Infrastructure.MessageHub;
 using GreenEnergyHub.Charges.TestCore.Attributes;
 using Moq;
 using Xunit;
 using Xunit.Categories;
 
-namespace GreenEnergyHub.Charges.Tests.Infrastructure.ChargeLinkBundle.MessageHub
+namespace GreenEnergyHub.Charges.Tests.Infrastructure.MessageHub
 {
     [UnitTest]
-    public class ChargeLinkBundleReplierTests
+    public class BundleReplierTests
     {
         [Theory]
         [InlineAutoMoqData]
         public async Task ReplyAsync_SendsAResponseAsync(
             [Frozen] Mock<IStorageHandler> storageHandlerMock,
             [Frozen] Mock<IDataBundleResponseSender> sender,
-            ChargeLinkBundleReplier sut,
+            BundleReplier sut,
             Mock<MemoryStream> anyBundleStreamMock,
             DataBundleRequestDto request,
             Uri anyUri)
@@ -57,7 +57,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.ChargeLinkBundle.MessageHu
             [Frozen] Mock<IStorageHandler> storageHandlerMock,
             [Frozen] Mock<IDataBundleResponseSender> sender,
             [Frozen] Mock<IMessageMetaDataContext> messageMetaDataContext,
-            ChargeLinkBundleReplier sut,
+            BundleReplier sut,
             string expectedSessionId,
             Mock<MemoryStream> anyBundleStreamMock,
             DataBundleRequestDto request,

@@ -13,8 +13,6 @@
 // limitations under the License.
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
 using Energinet.DataHub.MessageHub.Client.DataAvailable;
@@ -97,7 +95,8 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.MessageHub
                                && dto.Recipient.Equals(
                                    new GlobalLocationNumberDto(gridAccessProvider.Id))
                                && dto.Uuid != Guid.Empty
-                               && dto.RelativeWeight > 0)),
+                               && dto.RelativeWeight > 0
+                               && dto.MessageType.Value.StartsWith(ChargeLinkDataAvailableNotifier.MessageTypePrefix))),
                 Times.Exactly(chargeLinksAcceptedEvent.ChargeLinksCommand.ChargeLinks.Count));
 
             dataAvailableNotificationSenderMock.VerifyNoOtherCalls();
@@ -124,6 +123,20 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.MessageHub
 
             // Assert
             dataAvailableNotificationSenderMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public void NotifyAsync_SizeOfMaximumDocument_ShouldNotExceedDefinedWeight()
+        {
+            // Arrange
+            var testFilePath = "TestFiles/SingleChargeLinkCimSerializerWorstCase.blob";
+            var chargeMessageWeightInBytes = (long)ChargeLinkDataAvailableNotifier.MessageWeight * 1000;
+
+            // Act
+            var xmlSizeInBytes = new System.IO.FileInfo(testFilePath).Length;
+
+            // Assert
+            xmlSizeInBytes.Should().BeLessOrEqualTo(chargeMessageWeightInBytes);
         }
     }
 }
