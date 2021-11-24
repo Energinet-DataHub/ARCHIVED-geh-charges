@@ -14,12 +14,12 @@
 
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using Energinet.DataHub.Core.Messaging.Protobuf;
+using Energinet.DataHub.Core.Messaging.Transport;
 using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksAcceptedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
-using GreenEnergyHub.Messaging.Protobuf;
-using GreenEnergyHub.Messaging.Transport;
 using MarketParticipant = GreenEnergyHub.Charges.Domain.MarketParticipants.MarketParticipant;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
@@ -36,18 +36,18 @@ namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
                 chargeLinkCommandAcceptedContract.PublishedTime.ToInstant());
         }
 
-        private static DocumentDto ConvertDocument(GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandAccepted.Document document)
+        private static DocumentDto ConvertDocument(ChargeLinkCommandAccepted.Document document)
         {
             return new DocumentDto
             {
                 Id = document.Id,
                 RequestDate = document.RequestDate.ToInstant(),
-                Type = (GreenEnergyHub.Charges.Domain.MarketParticipants.DocumentType)document.Type,
+                Type = (Domain.MarketParticipants.DocumentType)document.Type,
                 CreatedDateTime = document.CreatedDateTime.ToInstant(),
                 Sender = MapMarketParticipant(document.Sender),
                 Recipient = MapMarketParticipant(document.Recipient),
-                IndustryClassification = (GreenEnergyHub.Charges.Domain.MarketParticipants.IndustryClassification)document.IndustryClassification,
-                BusinessReasonCode = (GreenEnergyHub.Charges.Domain.MarketParticipants.BusinessReasonCode)document.BusinessReasonCode,
+                IndustryClassification = (Domain.MarketParticipants.IndustryClassification)document.IndustryClassification,
+                BusinessReasonCode = (Domain.MarketParticipants.BusinessReasonCode)document.BusinessReasonCode,
             };
         }
 
@@ -56,11 +56,11 @@ namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
             return new MarketParticipant
             {
                 Id = marketParticipant.Id,
-                BusinessProcessRole = (GreenEnergyHub.Charges.Domain.MarketParticipants.MarketParticipantRole)marketParticipant.BusinessProcessRole,
+                BusinessProcessRole = (Domain.MarketParticipants.MarketParticipantRole)marketParticipant.BusinessProcessRole,
             };
         }
 
-        private static ChargeLinkDto ConvertChargeLink(GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandAccepted.ChargeLink link)
+        private static ChargeLinkDto ConvertChargeLink(ChargeLinkCommandAccepted.ChargeLink link)
         {
             return new ChargeLinkDto
             {

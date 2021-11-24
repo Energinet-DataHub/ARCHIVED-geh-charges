@@ -12,11 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using Energinet.DataHub.Core.Messaging.Protobuf;
 using GreenEnergyHub.Charges.Application;
-using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeCommandReceived;
 using GreenEnergyHub.Charges.Infrastructure.Messaging;
 using GreenEnergyHub.Charges.Infrastructure.Messaging.Registration;
-using GreenEnergyHub.Messaging.Protobuf;
 using GreenEnergyHub.TestHelpers;
 using Microsoft.Extensions.DependencyInjection;
 using NodaTime;

@@ -14,11 +14,11 @@
 
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using Energinet.DataHub.Core.Messaging.Protobuf;
+using Energinet.DataHub.Core.Messaging.Transport;
 using Google.Protobuf.Collections;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.Infrastructure.Integration.ChargeRejection;
-using GreenEnergyHub.Messaging.Protobuf;
-using GreenEnergyHub.Messaging.Transport;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Integration.Mappers
 {

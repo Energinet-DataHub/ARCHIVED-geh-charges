@@ -55,7 +55,7 @@ namespace GreenEnergyHub.Charges.Tests.Protobuf
                     // Ignore transaction properties from the GreenEnergyHub.Messaging assembly
                     options.Excluding(ctx =>
                         ctx.Path.Split(".", StringSplitOptions.RemoveEmptyEntries).Contains("Transaction") &&
-                        ctx.Type.Assembly.FullName!.StartsWith("GreenEnergyHub.Messaging", StringComparison.InvariantCulture));
+                        ctx.Type.Assembly.FullName!.StartsWith("Energinet.DataHub.Core.Messaging", StringComparison.InvariantCulture));
 
                     // Use runtime type of "expected"
                     options.RespectingRuntimeTypes();
