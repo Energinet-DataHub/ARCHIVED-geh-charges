@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Energinet.DataHub.Charges.Clients.Abstractions
@@ -28,6 +29,6 @@ namespace Energinet.DataHub.Charges.Clients.Abstractions
         /// Use 404 to get a "404 Not Found" response.
         /// Empty input will result in a "400 Bad Request" response</param>
         /// <returns>Mocked charge links data (Dtos)</returns>
-        public Task<ChargeLinkDto?> GetChargeLinksByMeteringPointIdAsync(string meteringPointId);
+        public Task<IList<ChargeLinkDto>?> GetChargeLinksByMeteringPointIdAsync(string meteringPointId);
     }
 }
