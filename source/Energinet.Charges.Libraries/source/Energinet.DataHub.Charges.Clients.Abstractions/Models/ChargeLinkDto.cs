@@ -17,7 +17,6 @@ using System;
 namespace Energinet.DataHub.Charges.Clients.Abstractions
 {
     public record ChargeLinkDto(
-        // TODO: Consider if ChargeType enum should be in Abstractions
         ChargeType ChargeType,
         string ChargeId,
         string ChargeName,
