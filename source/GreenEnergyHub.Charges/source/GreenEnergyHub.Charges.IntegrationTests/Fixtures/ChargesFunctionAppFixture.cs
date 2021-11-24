@@ -25,8 +25,8 @@ using Energinet.DataHub.Core.FunctionApp.TestCommon.ServiceBus.ListenerMock;
 using Energinet.DataHub.Core.FunctionApp.TestCommon.ServiceBus.ResourceProvider;
 using Energinet.DataHub.MessageHub.IntegrationTesting;
 using GreenEnergyHub.Charges.FunctionHost.Common;
+using GreenEnergyHub.Charges.IntegrationTests.Database;
 using GreenEnergyHub.Charges.IntegrationTests.TestCommon;
-using GreenEnergyHub.Charges.TestCore.Database;
 using Microsoft.Extensions.Configuration;
 
 namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures
