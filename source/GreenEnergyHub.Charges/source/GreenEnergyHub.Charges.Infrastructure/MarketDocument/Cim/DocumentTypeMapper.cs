@@ -22,6 +22,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.MarketDocument.Cim
         // These values are ebix values which are used temporarily until CIM code lists are available
         private const string CimChargeLinkReceipt = "D06";
         private const string CimNotifyBillingMasterData = "D07";
+        private const string CimChargeReceipt = "D11";
         private const string CimNotifyPriceList = "D12";
         private const string CimRequestChangeBillingMasterData = "D05";
         private const string CimRequestUpdateChargeInformation = "D10";
@@ -32,6 +33,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.MarketDocument.Cim
             {
                 CimChargeLinkReceipt => DocumentType.ChargeLinkReceipt,
                 CimNotifyBillingMasterData => DocumentType.NotifyBillingMasterData,
+                CimChargeReceipt => DocumentType.ChargeReceipt,
                 CimNotifyPriceList => DocumentType.NotifyPriceList,
                 CimRequestUpdateChargeInformation => DocumentType.RequestUpdateChargeInformation,
                 CimRequestChangeBillingMasterData => DocumentType.RequestChangeBillingMasterData,
@@ -45,6 +47,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.MarketDocument.Cim
             {
                 DocumentType.ChargeLinkReceipt => CimChargeLinkReceipt,
                 DocumentType.NotifyBillingMasterData => CimNotifyBillingMasterData,
+                DocumentType.ChargeReceipt => CimChargeReceipt,
                 DocumentType.NotifyPriceList => CimNotifyPriceList,
                 DocumentType.RequestUpdateChargeInformation => CimRequestUpdateChargeInformation,
                 DocumentType.RequestChangeBillingMasterData => CimRequestChangeBillingMasterData,
