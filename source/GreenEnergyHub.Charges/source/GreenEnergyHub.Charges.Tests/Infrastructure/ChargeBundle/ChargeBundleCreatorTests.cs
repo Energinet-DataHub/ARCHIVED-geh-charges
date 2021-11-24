@@ -18,35 +18,37 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
 using Energinet.DataHub.MessageHub.Model.Model;
-using GreenEnergyHub.Charges.Domain.AvailableChargeLinksData;
-using GreenEnergyHub.Charges.Domain.MarketParticipants;
-using GreenEnergyHub.Charges.Infrastructure.ChargeLinkBundle.Cim;
-using GreenEnergyHub.Charges.Infrastructure.ChargeLinkBundle.MessageHub;
+using GreenEnergyHub.Charges.Application.Charges.MessageHub;
+using GreenEnergyHub.Charges.Domain.AvailableChargeData;
+using GreenEnergyHub.Charges.Infrastructure.ChargeBundle;
+using GreenEnergyHub.Charges.Infrastructure.ChargeBundle.Cim;
+using GreenEnergyHub.Charges.TestCore.Reflection;
 using GreenEnergyHub.TestHelpers;
 using Moq;
 using Xunit;
 using Xunit.Categories;
 
-namespace GreenEnergyHub.Charges.Tests.Infrastructure.ChargeLinkBundle.MessageHub
+namespace GreenEnergyHub.Charges.Tests.Infrastructure.ChargeBundle
 {
     [UnitTest]
-    public class ChargeLinkBundleCreatorTests
+    public class ChargeBundleCreatorTests
     {
         [Theory]
         [InlineAutoDomainData]
         public async Task CreateAsync_WhenCalled_UsesRepositoryAndSerializer(
-            [Frozen] Mock<IAvailableChargeLinksDataRepository> repository,
-            [Frozen] Mock<IChargeLinkCimSerializer> serializer,
+            [Frozen] Mock<IAvailableChargeDataRepository> repository,
+            [Frozen] Mock<IChargeCimSerializer> serializer,
             DataBundleRequestDto dataBundleRequestDto,
-            List<AvailableChargeLinksData> availableChargeLinksData,
+            List<AvailableChargeData> availableChargeData,
             Stream stream,
-            ChargeLinkBundleCreator sut)
+            ChargeBundleCreator sut)
         {
             // Arrange
+            dataBundleRequestDto.SetPrivateProperty(r => r.MessageType, ChargeDataAvailableNotifier.MessageTypePrefix);
             repository.Setup(
                     r => r.GetAsync(
                         dataBundleRequestDto.DataAvailableNotificationIds))
-                .Returns(Task.FromResult(availableChargeLinksData));
+                .Returns(Task.FromResult(availableChargeData));
 
             // Act
             await sut.CreateAsync(dataBundleRequestDto, stream).ConfigureAwait(false);
@@ -54,14 +56,11 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.ChargeLinkBundle.MessageHu
             // Assert
             serializer.Verify(
                 s => s.SerializeToStreamAsync(
-                    availableChargeLinksData,
+                    availableChargeData,
                     stream,
-                    // Due to the nature of the interface to the MessageHub and the use of MessageType in that
-                    // BusinessReasonCode, RecipientId, RecipientRole and ReceiptStatus will always be the same value
-                    // on all records in the list. We need to check that its equal to the first row.
-                    availableChargeLinksData.First().BusinessReasonCode,
-                    availableChargeLinksData.First().RecipientId,
-                    availableChargeLinksData.First().RecipientRole),
+                    availableChargeData.First().BusinessReasonCode,
+                    availableChargeData.First().RecipientId,
+                    availableChargeData.First().RecipientRole),
                 Times.Once);
         }
     }

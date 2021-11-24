@@ -14,29 +14,26 @@
 
 using System.Threading.Tasks;
 using Energinet.DataHub.MessageHub.Model.Peek;
-using GreenEnergyHub.Charges.Application.ChargeLinks.MessageHub;
+using GreenEnergyHub.Charges.Application.MessageHub;
 using GreenEnergyHub.Charges.FunctionHost.Common;
 using Microsoft.Azure.Functions.Worker;
 
-namespace GreenEnergyHub.Charges.FunctionHost.ChargeLinks.MessageHub
+namespace GreenEnergyHub.Charges.FunctionHost.MessageHub
 {
     /// <summary>
     /// Trigger on request from MessageHub to create a bundle
     /// and create bundle and send response to MessageHub.
-    /// This is the RSM-031 CIM XML 'NotifyBillingMasterData'.
     /// </summary>
-    public class ChargeLinkBundleSenderEndpoint
+    public class BundleSenderEndpoint
     {
-        private const string FunctionName = nameof(ChargeLinkBundleSenderEndpoint);
-        private readonly IChargeLinkBundleSender _chargeLinkBundleSender;
+        private const string FunctionName = nameof(BundleSenderEndpoint);
         private readonly IRequestBundleParser _requestBundleParser;
+        private readonly IBundleSender _bundleSender;
 
-        public ChargeLinkBundleSenderEndpoint(
-            IChargeLinkBundleSender chargeLinkBundleSender,
-            IRequestBundleParser requestBundleParser)
+        public BundleSenderEndpoint(IRequestBundleParser requestBundleParser, IBundleSender bundleSender)
         {
-            _chargeLinkBundleSender = chargeLinkBundleSender;
             _requestBundleParser = requestBundleParser;
+            _bundleSender = bundleSender;
         }
 
         [Function(FunctionName)]
@@ -48,7 +45,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.ChargeLinks.MessageHub
             byte[] data)
         {
             var request = _requestBundleParser.Parse(data);
-            await _chargeLinkBundleSender.SendAsync(request).ConfigureAwait(false);
+            await _bundleSender.SendAsync(request);
         }
     }
 }

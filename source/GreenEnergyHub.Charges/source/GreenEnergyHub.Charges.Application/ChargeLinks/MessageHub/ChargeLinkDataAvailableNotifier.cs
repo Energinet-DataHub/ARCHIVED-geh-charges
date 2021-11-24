@@ -23,7 +23,6 @@ using GreenEnergyHub.Charges.Domain.AvailableChargeLinksData;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksAcceptedEvents;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
-using NodaTime;
 
 namespace GreenEnergyHub.Charges.Application.ChargeLinks.MessageHub
 {
@@ -32,15 +31,21 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.MessageHub
         /// <summary>
         /// The upper anticipated weight (kilobytes) contribution to the final bundle from the charge link created event.
         /// </summary>
-        private const int MessageWeight = 2;
+        public const int MessageWeight = 2;
+
+        /// <summary>
+        /// Is used in communication with Message Hub.
+        /// Be cautious to change it!
+        /// </summary>
+        public const string MessageTypePrefix = "ChargeLinkDataAvailable";
 
         private readonly IDataAvailableNotificationSender _dataAvailableNotificationSender;
         private readonly IChargeRepository _chargeRepository;
         private readonly IAvailableChargeLinksDataRepository _availableChargeLinksDataRepository;
         private readonly IMarketParticipantRepository _marketParticipantRepository;
         private readonly IAvailableChargeLinksDataFactory _availableChargeLinksDataFactory;
-        private readonly IClock _clock;
         private readonly ICorrelationContext _correlationContext;
+        private readonly IMessageMetaDataContext _messageMetaDataContext;
 
         public ChargeLinkDataAvailableNotifier(
             IDataAvailableNotificationSender dataAvailableNotificationSender,
@@ -48,16 +53,16 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.MessageHub
             IAvailableChargeLinksDataRepository availableChargeLinksDataRepository,
             IMarketParticipantRepository marketParticipantRepository,
             IAvailableChargeLinksDataFactory availableChargeLinksDataFactory,
-            IClock clock,
-            ICorrelationContext correlationContext)
+            ICorrelationContext correlationContext,
+            IMessageMetaDataContext messageMetaDataContext)
         {
             _dataAvailableNotificationSender = dataAvailableNotificationSender;
             _chargeRepository = chargeRepository;
             _availableChargeLinksDataRepository = availableChargeLinksDataRepository;
             _marketParticipantRepository = marketParticipantRepository;
             _availableChargeLinksDataFactory = availableChargeLinksDataFactory;
-            _clock = clock;
             _correlationContext = correlationContext;
+            _messageMetaDataContext = messageMetaDataContext;
         }
 
         public async Task NotifyAsync([NotNull] ChargeLinksAcceptedEvent chargeLinksAcceptedEvent)
@@ -73,7 +78,6 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.MessageHub
                 _marketParticipantRepository.GetGridAccessProvider(chargeLinksAcceptedEvent.ChargeLinksCommand.MeteringPointId);
 
             // When available this should be parsed on from API management to be more precise.
-            var now = _clock.GetCurrentInstant();
             var availableChargeLinksData = new List<AvailableChargeLinksData>();
 
             foreach (var chargeLinkDto in chargeLinksAcceptedEvent.ChargeLinksCommand.ChargeLinks)
@@ -88,14 +92,18 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.MessageHub
                     var dataAvailableNotificationDto = CreateDataAvailableNotificationDto(
                         chargeLinksAcceptedEvent.ChargeLinksCommand.Document.BusinessReasonCode,
                         recipient.Id);
+
                     dataAvailableNotificationDtos.Add(dataAvailableNotificationDto);
-                    availableChargeLinksData.Add(_availableChargeLinksDataFactory.CreateAvailableChargeLinksData(
+
+                    var chargeLinksData = _availableChargeLinksDataFactory.CreateAvailableChargeLinksData(
                         chargeLinkDto,
                         recipient,
                         chargeLinksAcceptedEvent.ChargeLinksCommand.Document.BusinessReasonCode,
                         chargeLinksAcceptedEvent.ChargeLinksCommand.MeteringPointId,
-                        now,
-                        dataAvailableNotificationDto.Uuid));
+                        _messageMetaDataContext.RequestDataTime,
+                        dataAvailableNotificationDto.Uuid);
+
+                    availableChargeLinksData.Add(chargeLinksData);
                 }
             }
 
@@ -115,7 +123,7 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.MessageHub
 
             // Different processes must not be bundled together.
             // The can be differentiated by business reason codes.
-            var messageType = businessReasonCode.ToString();
+            var messageType = MessageTypePrefix + "_" + businessReasonCode;
 
             return new DataAvailableNotificationDto(
                 chargeDomainReferenceId,

@@ -12,25 +12,29 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 
-namespace GreenEnergyHub.Charges.Domain.MarketParticipants
+namespace GreenEnergyHub.Charges.WebApi
 {
-    /// <summary>
-    /// Repository for managing market participants.
-    /// </summary>
-    public interface IMarketParticipantRepository
+    public class Program
     {
-        MarketParticipant? GetMarketParticipantOrNull(string id);
+        public static void Main(string[] args)
+        {
+            CreateHostBuilder(args).Build().Run();
+        }
 
-        /// <summary>
-        /// Using MeteringPointId find the Grid Access Provider of that MP
-        /// </summary>
-        MarketParticipant GetGridAccessProvider(string meteringPointId);
-
-        Task<List<MarketParticipant>> GetActiveGridAccessProvidersAsync();
-
-        Task<MarketParticipant> GetAsync(MarketParticipantRole marketParticipantRole);
+        public static IHostBuilder CreateHostBuilder(string[] args) =>
+            Host.CreateDefaultBuilder(args)
+                .ConfigureWebHostDefaults(webBuilder =>
+                {
+                    webBuilder.UseStartup<Startup>();
+                });
     }
 }
