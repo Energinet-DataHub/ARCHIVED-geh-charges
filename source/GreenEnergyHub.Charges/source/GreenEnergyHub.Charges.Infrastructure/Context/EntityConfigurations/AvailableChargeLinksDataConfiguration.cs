@@ -14,8 +14,6 @@
 
 using System;
 using GreenEnergyHub.Charges.Domain.AvailableChargeLinksData;
-using GreenEnergyHub.Charges.Domain.Charges;
-using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -38,17 +36,12 @@ namespace GreenEnergyHub.Charges.Infrastructure.Context.EntityConfigurations
 
             builder
                 .Property(x => x.RecipientRole)
-                .HasColumnName("RecipientRole")
-                .HasConversion(
-                    toDbValue => (int)toDbValue,
-                    fromDbValue => (MarketParticipantRole)fromDbValue);
+                .HasColumnName("RecipientRole");
 
             builder
                 .Property(x => x.BusinessReasonCode)
                 .HasColumnName("BusinessReasonCode")
-                .HasConversion(
-                    toDbValue => (int)toDbValue,
-                    fromDbValue => (BusinessReasonCode)fromDbValue);
+                .HasConversion<int>();
 
             builder
                 .Property(x => x.ChargeId)
@@ -61,9 +54,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Context.EntityConfigurations
             builder
                 .Property(x => x.ChargeType)
                 .HasColumnName("ChargeType")
-                .HasConversion(
-                    toDbValue => (int)toDbValue,
-                    fromDbValue => (ChargeType)fromDbValue);
+                .HasConversion<int>();
 
             builder
                 .Property(x => x.MeteringPointId)
