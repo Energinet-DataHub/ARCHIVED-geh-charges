@@ -16,7 +16,7 @@ module "sbt_default_charge_link_available_notified" {
   source              = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//azure/service-bus-topic?ref=5.1.0"
   name                = "sbt-default-charge-link-available-notified"
   namespace_name      = module.sb_charges.name
-  resource_group_name = azurerm_resource_group.main.name
+  resource_group_name = azurerm_resource_group.this.name
   subscriptions       = [
     {
       name                = "sbs-default-charge-link-available-notified-sub"
