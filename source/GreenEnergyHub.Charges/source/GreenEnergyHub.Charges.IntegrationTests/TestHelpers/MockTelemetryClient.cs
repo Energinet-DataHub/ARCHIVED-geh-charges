@@ -13,10 +13,7 @@
 // limitations under the License.
 
 using System;
-using System.Threading;
 using System.Threading.Tasks;
-using Azure.Messaging.ServiceBus;
-using Energinet.DataHub.Core.FunctionApp.TestCommon.ServiceBus.ResourceProvider;
 using Microsoft.ApplicationInsights;
 using Microsoft.ApplicationInsights.DataContracts;
 using Microsoft.ApplicationInsights.Extensibility;
@@ -34,7 +31,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.TestHelpers
         /// If not, a new CorrelationId will be created when receiving the
         /// Service Bus message in a function host.
         /// </summary>
-        public static async Task SendWrappedServiceBusMessageToQueueAsync(QueueResource queue, ServiceBusMessage serviceBusMessage, string correlationId, string parentId)
+        public static async Task SendWrappedServiceBusMessageToQueueAsync(Func<Task> action, string correlationId, string parentId)
         {
             var telemetryClient = Create();
             var operation = telemetryClient.StartOperation<DependencyTelemetry>("MyTest", correlationId, parentId);
@@ -42,7 +39,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.TestHelpers
             try
             {
                 operation.Telemetry.Success = true;
-                await queue.SenderClient.SendMessageAsync(serviceBusMessage, CancellationToken.None);
+                await action();
             }
             catch (Exception exception)
             {

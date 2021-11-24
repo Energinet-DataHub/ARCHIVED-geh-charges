@@ -49,7 +49,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                     out var parentId);
 
                 // Act
-                await MockTelemetryClient.SendWrappedServiceBusMessageToQueueAsync(Fixture.CreateLinkRequestQueue, request, correlationId, parentId);
+                await MockTelemetryClient.SendWrappedServiceBusMessageToQueueAsync(() => Fixture.CreateLinkRequestQueue.SenderClient.SendMessageAsync(request), correlationId, parentId);
 
                 // Assert
                 await Fixture.MessageHubMock.AssertPeekReceivesReplyAsync(correlationId);
