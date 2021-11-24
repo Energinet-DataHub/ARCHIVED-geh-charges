@@ -31,7 +31,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.TestHelpers
         /// If not, a new CorrelationId will be created when receiving the
         /// Service Bus message in a function host.
         /// </summary>
-        public static async Task SendWrappedServiceBusMessageToQueueAsync(Func<Task> action, string correlationId, string parentId)
+        public static async Task WrappedOperationWithTelemetryDependencyInformationAsync(Func<Task> action, string correlationId, string parentId)
         {
             var telemetryClient = Create();
             var operation = telemetryClient.StartOperation<DependencyTelemetry>("MyTest", correlationId, parentId);
