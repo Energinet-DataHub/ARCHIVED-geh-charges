@@ -13,7 +13,8 @@ Learn more about Energinet at [energinet.dk](https://energinet.dk/).
 
 The library provides
 
-- The type [`IDefaultChargeLinkClient`](https://github.com/Energinet-DataHub/geh-charges/blob/main/source/Energinet.Charges.Libraries/source/Energinet.DataHub.Charges.Clients/DefaultChargeLink/IDefaultChargeLinkClient.cs) to request creation of charge links from defaults and handle the reply
+- The type [`IDefaultChargeLinkClient`](https://github.com/Energinet-DataHub/geh-charges/blob/main/source/Energinet.Charges.Libraries/source/Energinet.DataHub.Charges.Clients/DefaultChargeLink/IDefaultChargeLinkClient.cs) to request creation of charge links from defaults and handle the reply.
+- The type [`DefaultChargeLinkReplyReader`](https://github.com/Energinet-DataHub/geh-charges/blob/main/source/Energinet.Charges.Libraries/source/Energinet.DataHub.Charges.Clients/DefaultChargeLink/DefaultChargeLinkReplyReader.cs) to read the respond from the request queue.
 
 ## Registration
 
@@ -22,3 +23,4 @@ We have created a independent NuGet package for easier registration when using [
 `IDefaultChargeLinkClient` should be registered as scoped.
 
 `ServiceBusRequestSenderProvider` should be registered as a singleton.
+
