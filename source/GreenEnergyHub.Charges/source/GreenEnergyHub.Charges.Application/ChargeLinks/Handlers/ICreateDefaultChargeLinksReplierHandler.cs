@@ -19,6 +19,6 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
 {
     public interface ICreateDefaultChargeLinksReplierHandler
     {
-        Task HandleAsync(DefaultChargeLinksDataAvailableNotifierEvent command);
+        Task HandleAsync(DefaultChargeLinksDataAvailableNotifierEvent defaultChargeLinksDataAvailableNotifierEvent);
     }
 }
