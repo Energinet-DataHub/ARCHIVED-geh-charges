@@ -17,7 +17,7 @@ using Energinet.Charges.Contracts;
 using GreenEnergyHub.Charges.Domain.Dtos.CreateLinksRequests;
 using GreenEnergyHub.Charges.Infrastructure.Integration.Mappers;
 using GreenEnergyHub.Charges.TestCore.Attributes;
-using GreenEnergyHub.Charges.TestCore.Protobuf;
+using GreenEnergyHub.Charges.Tests.Protobuf;
 using Xunit;
 using Xunit.Categories;
 

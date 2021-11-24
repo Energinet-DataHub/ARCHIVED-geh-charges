@@ -16,6 +16,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Threading.Tasks;
 using System.Xml;
+using Energinet.DataHub.Core.Messaging.Transport;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
@@ -23,7 +24,6 @@ using GreenEnergyHub.Charges.Infrastructure.ChargeLinkBundle.Cim;
 using GreenEnergyHub.Charges.Infrastructure.MarketDocument.Cim;
 using GreenEnergyHub.Charges.Infrastructure.Messaging.Serialization;
 using GreenEnergyHub.Iso8601;
-using GreenEnergyHub.Messaging.Transport;
 using NodaTime;
 
 namespace GreenEnergyHub.Charges.Infrastructure.ChargeBundle.Cim

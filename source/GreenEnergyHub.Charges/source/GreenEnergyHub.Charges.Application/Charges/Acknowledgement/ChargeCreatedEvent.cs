@@ -12,10 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using Energinet.DataHub.Core.Messaging.MessageTypes.Common;
 using GreenEnergyHub.Charges.Core;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.Messages;
-using GreenEnergyHub.Messaging.MessageTypes.Common;
 
 namespace GreenEnergyHub.Charges.Application.Charges.Acknowledgement
 {

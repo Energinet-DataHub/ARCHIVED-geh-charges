@@ -14,9 +14,9 @@
 
 using System.Diagnostics.CodeAnalysis;
 using Energinet.Charges.Contracts;
+using Energinet.DataHub.Core.Messaging.Protobuf;
+using Energinet.DataHub.Core.Messaging.Transport;
 using GreenEnergyHub.Charges.Domain.Dtos.CreateLinksRequests;
-using GreenEnergyHub.Messaging.Protobuf;
-using GreenEnergyHub.Messaging.Transport;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Integration.Mappers
 {
