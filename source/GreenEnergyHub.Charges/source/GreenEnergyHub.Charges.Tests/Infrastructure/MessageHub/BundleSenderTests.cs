@@ -16,24 +16,24 @@ using System.IO;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
 using Energinet.DataHub.MessageHub.Model.Model;
-using GreenEnergyHub.Charges.Application.ChargeLinks.MessageHub;
-using GreenEnergyHub.Charges.Application.ChargeLinks.MessageHub.Infrastructure;
+using GreenEnergyHub.Charges.Infrastructure.MessageHub;
 using GreenEnergyHub.Charges.TestCore.Attributes;
 using Moq;
 using Xunit;
 using Xunit.Categories;
 
-namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.MessageHub
+namespace GreenEnergyHub.Charges.Tests.Infrastructure.MessageHub
 {
     [UnitTest]
-    public class ChargeLinkBundleSenderTests
+    public class BundleSenderTests
     {
         [Theory]
         [InlineAutoMoqData]
         public async Task SendAsync_RepliesWithCreatedBundle(
-            [Frozen] Mock<IChargeLinkBundleCreator> creatorMock,
-            [Frozen] Mock<IChargeLinkBundleReplier> replierMock,
-            ChargeLinkBundleSender sut,
+            [Frozen] Mock<IBundleCreator> creatorMock,
+            [Frozen] Mock<IBundleReplier> replierMock,
+            [Frozen] Mock<IBundleCreatorProvider> creatorProviderMock,
+            BundleSender sut,
             DataBundleRequestDto anyRequest)
         {
             // Arrange
@@ -41,6 +41,9 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.MessageHub
             creatorMock
                 .Setup(creator => creator.CreateAsync(anyRequest, It.IsAny<MemoryStream>()))
                 .Callback((DataBundleRequestDto _, Stream s) => actualStream = (MemoryStream)s);
+            creatorProviderMock
+                .Setup(provider => provider.Get(anyRequest))
+                .Returns(creatorMock.Object);
 
             // Act
             await sut.SendAsync(anyRequest);

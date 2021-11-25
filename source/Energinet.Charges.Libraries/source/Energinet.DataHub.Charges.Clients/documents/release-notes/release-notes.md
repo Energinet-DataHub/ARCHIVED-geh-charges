@@ -1,5 +1,9 @@
 # Energinet.DataHub.Charges.Clients Release notes
 
+## Version 1.0.13
+
+Removed `IDefaultChargeLinkReplyReader`
+
 ## Version 1.0.12
 
 Updated a number of NuGet dependencies.

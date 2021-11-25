@@ -13,21 +13,23 @@
 // limitations under the License.
 
 using System.ComponentModel;
-using GreenEnergyHub.Charges.Domain.AvailableChargeLinkReceiptData;
+using GreenEnergyHub.Charges.Domain.AvailableData;
 
-namespace GreenEnergyHub.Charges.Infrastructure.ChargeLinkReceiptBundle.Cim
+namespace GreenEnergyHub.Charges.Infrastructure.MarketDocument
 {
-    public static class ReasonCodeMapper
+    public static class ReceiptStatusMapper
     {
-        private const string CimIncorrectChargeInformation = "D14"; // Temporary ebix value until the real cim codes are known
+        private const string CimConfirmed = "A01"; // Temporary value extracted from example file until real are known
+        private const string CimRejected = "A02"; // Temporary value extracted from example file until real are known
 
-        public static string Map(ReasonCode reasonCode)
+        public static string Map(ReceiptStatus receiptStatus)
         {
-            return reasonCode switch
+            return receiptStatus switch
             {
-                ReasonCode.IncorrectChargeInformation => CimIncorrectChargeInformation,
+                ReceiptStatus.Confirmed => CimConfirmed,
+                ReceiptStatus.Rejected => CimRejected,
                 _ => throw new InvalidEnumArgumentException(
-                    $"Provided ReasonCode value '{reasonCode}' is invalid and cannot be mapped."),
+                    $"Provided ReceiptStatus value '{receiptStatus}' is invalid and cannot be mapped."),
             };
         }
     }

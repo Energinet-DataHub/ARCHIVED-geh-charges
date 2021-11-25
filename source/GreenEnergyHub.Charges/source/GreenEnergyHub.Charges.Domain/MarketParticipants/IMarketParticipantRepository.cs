@@ -22,9 +22,6 @@ namespace GreenEnergyHub.Charges.Domain.MarketParticipants
     /// </summary>
     public interface IMarketParticipantRepository
     {
-        /// <summary>
-        /// Get all energy suppliers.
-        /// </summary>
         MarketParticipant? GetMarketParticipantOrNull(string id);
 
         /// <summary>

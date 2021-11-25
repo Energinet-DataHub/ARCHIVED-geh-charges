@@ -16,9 +16,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
 using GreenEnergyHub.Charges.Domain.AvailableChargeLinkReceiptData;
+using GreenEnergyHub.Charges.Domain.AvailableData;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.Infrastructure.Cim;
 using GreenEnergyHub.Charges.Infrastructure.Configuration;
+using GreenEnergyHub.Charges.Infrastructure.MarketActivityRecord;
+using GreenEnergyHub.Charges.Infrastructure.MarketDocument;
 using GreenEnergyHub.Charges.Infrastructure.MarketDocument.Cim;
 using NodaTime;
 

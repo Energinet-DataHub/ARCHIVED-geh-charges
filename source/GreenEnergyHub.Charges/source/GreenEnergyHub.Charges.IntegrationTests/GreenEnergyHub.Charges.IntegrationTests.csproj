@@ -38,7 +38,7 @@ limitations under the License.
     <ItemGroup>
         <PackageReference Include="AutoFixture" Version="4.17.0" />
         <PackageReference Include="AutoFixture.AutoMoq" Version="4.17.0" />
-        <PackageReference Include="Azure.Messaging.ServiceBus" Version="7.4.0" />
+        <PackageReference Include="Azure.Messaging.ServiceBus" Version="7.5.0" />
         <PackageReference Include="Energinet.DataHub.Core.FunctionApp.TestCommon" Version="1.1.0" />
         <PackageReference Include="Energinet.DataHub.MessageHub.IntegrationTesting" Version="0.3.0-alpha-20211117T091659" />
         <PackageReference Include="EntityFrameworkCore.SqlServer.NodaTime" Version="5.0.1" />
@@ -65,13 +65,13 @@ limitations under the License.
 
     <ItemGroup>
       <None Remove="appsettings.json" />
-      <None Update="TestFiles\Charges\InvalidCreateTariffCommand.xml">
+      <None Update="TestFiles\Charges\InvalidTariffDocument.xml">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
-      <None Update="TestFiles\Charges\ValidCreateTariffCommand.xml">
+      <None Update="TestFiles\Charges\TaxTariffWithPriceDocument.xml">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
-      <None Update="TestFiles\ChargeLinks\CreateFixedPeriodTariffChargeLink.xml">
+      <None Update="TestFiles\ChargeLinks\FixedPeriodTaxTariffChargeLinkDocument.xml">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
     </ItemGroup>
