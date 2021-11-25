@@ -14,9 +14,9 @@
 
 using System.Collections.Generic;
 using System.Xml.Linq;
+using GreenEnergyHub.Charges.Domain.Configuration;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.Infrastructure.Cim;
-using GreenEnergyHub.Charges.Infrastructure.Configuration;
 using NodaTime;
 
 namespace GreenEnergyHub.Charges.Infrastructure.MarketDocument.Cim
