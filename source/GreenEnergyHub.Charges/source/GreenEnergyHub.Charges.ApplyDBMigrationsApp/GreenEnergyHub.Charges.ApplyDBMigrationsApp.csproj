@@ -64,6 +64,7 @@ limitations under the License.
       <EmbeddedResource Include="Scripts\Model\202111161258 Create AvailableChargeLinkReceiptData table.sql" />
       <EmbeddedResource Include="Scripts\Model\202111171630 Rename RequestTime to RequestDateTime in Available tables.sql" />
       <EmbeddedResource Include="Scripts\Model\202111250821 Create AvailableChargeReceiptData tables.sql" />
+      <EmbeddedResource Include="Scripts\Model\202111251041 Change ChargeLinkReceipt Text to NVARCHAR.sql" />
     </ItemGroup>
 
     <ItemGroup>
