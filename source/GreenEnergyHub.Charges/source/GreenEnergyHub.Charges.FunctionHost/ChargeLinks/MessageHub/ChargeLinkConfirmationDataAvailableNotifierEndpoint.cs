@@ -28,13 +28,13 @@ namespace GreenEnergyHub.Charges.FunctionHost.ChargeLinks.MessageHub
     /// by notifying that a charge link has been created.
     /// This is the RSM-031 CIM XML 'NotifyBillingMasterData'.
     /// </summary>
-    public class ChargeLinkConfirmationAvailableNotifierEndpoint
+    public class ChargeLinkConfirmationDataAvailableNotifierEndpoint
     {
-        private const string FunctionName = nameof(ChargeLinkConfirmationAvailableNotifierEndpoint);
+        private const string FunctionName = nameof(ChargeLinkConfirmationDataAvailableNotifierEndpoint);
         private readonly MessageExtractor<ChargeLinkCommandAccepted> _messageExtractor;
         private readonly IChargeLinkConfirmationDataAvailableNotifier _chargeLinkConfirmationDataAvailableNotifier;
 
-        public ChargeLinkConfirmationAvailableNotifierEndpoint(
+        public ChargeLinkConfirmationDataAvailableNotifierEndpoint(
             MessageExtractor<ChargeLinkCommandAccepted> messageExtractor,
             IChargeLinkConfirmationDataAvailableNotifier chargeLinkConfirmationDataAvailableNotifier)
         {
