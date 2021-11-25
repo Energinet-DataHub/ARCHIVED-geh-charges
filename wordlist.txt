@@ -3,6 +3,8 @@ ADR
 ApplicationProperty
 Architechtural
 Azurite
+BackendForFrontend
+Bff
 CancelledEndDateTime
 ChargeCreated
 ChargeDiscontinuationCancelled
