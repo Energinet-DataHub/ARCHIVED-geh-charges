@@ -17,7 +17,6 @@ using System.Collections.Generic;
 using System.Linq;
 using GreenEnergyHub.Charges.Domain.AvailableData;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands;
-using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using NodaTime;
 
 namespace GreenEnergyHub.Charges.Domain.AvailableChargeLinkReceiptData
@@ -26,8 +25,7 @@ namespace GreenEnergyHub.Charges.Domain.AvailableChargeLinkReceiptData
     {
         public IReadOnlyCollection<AvailableChargeLinkReceiptData> CreateConfirmations(
             ChargeLinksCommand command,
-            Instant requestDateTime,
-            Guid messageHubId)
+            Instant requestDateTime)
         {
             return command.ChargeLinks.Select(
                     link => new AvailableChargeLinkReceiptData(
@@ -35,7 +33,7 @@ namespace GreenEnergyHub.Charges.Domain.AvailableChargeLinkReceiptData
                         command.Document.Sender.BusinessProcessRole,
                         command.Document.BusinessReasonCode,
                         requestDateTime,
-                        messageHubId,
+                        Guid.NewGuid(), // ID of each available piece of data must be unique
                         ReceiptStatus.Confirmed,
                         link.OperationId,
                         command.MeteringPointId,

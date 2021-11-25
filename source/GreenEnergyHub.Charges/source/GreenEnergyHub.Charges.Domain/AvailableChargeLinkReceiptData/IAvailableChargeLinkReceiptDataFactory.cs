@@ -24,7 +24,6 @@ namespace GreenEnergyHub.Charges.Domain.AvailableChargeLinkReceiptData
     {
         IReadOnlyCollection<AvailableChargeLinkReceiptData> CreateConfirmations(
             ChargeLinksCommand command,
-            Instant requestDateTime,
-            Guid messageHubId);
+            Instant requestDateTime);
     }
 }
