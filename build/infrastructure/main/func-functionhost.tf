@@ -22,6 +22,7 @@ module "func_functionhost" {
   location                                  = azurerm_resource_group.this.location
   app_service_plan_id                       = module.plan_shared.id
   application_insights_instrumentation_key  = data.azurerm_key_vault_secret.appi_shared_instrumentation_key.value
+  always_on                                 = true
   app_settings                              = {
     # Region: Default Values
     WEBSITE_ENABLE_SYNC_UPDATE_SITE                      = true

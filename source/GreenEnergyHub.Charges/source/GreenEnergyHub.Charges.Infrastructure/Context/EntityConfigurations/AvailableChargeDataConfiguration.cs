@@ -32,38 +32,19 @@ namespace GreenEnergyHub.Charges.Infrastructure.Context.EntityConfigurations
             builder.HasKey(x => x.Id);
             builder.Property(p => p.Id).ValueGeneratedNever();
             builder.Property(x => x.RecipientId).HasColumnName("RecipientId");
-            builder.Property(x => x.RecipientRole).HasColumnName("RecipientRole")
-                .HasConversion(
-                    toDbValue => (int)toDbValue,
-                    fromDbValue => (MarketParticipantRole)fromDbValue);
-            builder
-                .Property(x => x.BusinessReasonCode)
-                .HasColumnName("BusinessReasonCode")
-                .HasConversion(
-                    toDbValue => (int)toDbValue,
-                    fromDbValue => (BusinessReasonCode)fromDbValue);
+            builder.Property(x => x.RecipientRole).HasColumnName("RecipientRole");
+            builder.Property(x => x.BusinessReasonCode).HasColumnName("BusinessReasonCode");
             builder.Property(x => x.ChargeId).HasColumnName("ChargeId");
             builder.Property(x => x.ChargeOwner).HasColumnName("ChargeOwner");
-            builder.Property(x => x.ChargeType).HasColumnName("ChargeType")
-                .HasConversion(
-                    toDbValue => (int)toDbValue,
-                    fromDbValue => (ChargeType)fromDbValue);
+            builder.Property(x => x.ChargeType).HasColumnName("ChargeType");
             builder.Property(x => x.ChargeName).HasColumnName("ChargeName");
             builder.Property(x => x.ChargeDescription).HasColumnName("ChargeDescription");
-            builder
-                .Property(x => x.VatClassification).HasColumnName("VatClassification")
-                .HasConversion(
-                    toDbValue => (int)toDbValue,
-                    fromDbValue => (VatClassification)fromDbValue);
+            builder.Property(x => x.VatClassification).HasColumnName("VatClassification");
             builder.Property(x => x.StartDateTime).HasColumnName("StartDateTime");
             builder.Property(x => x.EndDateTime).HasColumnName("EndDateTime");
             builder.Property(x => x.TaxIndicator).HasColumnName("TaxIndicator");
             builder.Property(x => x.TransparentInvoicing).HasColumnName("TransparentInvoicing");
-            builder
-                .Property(x => x.Resolution).HasColumnName("Resolution")
-                .HasConversion(
-                    toDbValue => (int)toDbValue,
-                    fromDbValue => (Resolution)fromDbValue);
+            builder.Property(x => x.Resolution).HasColumnName("Resolution");
             builder.Property(x => x.RequestDateTime).HasColumnName("RequestDateTime");
             builder.Property(x => x.AvailableDataReferenceId).HasColumnName("AvailableDataReferenceId");
             builder.Ignore(c => c.Points);

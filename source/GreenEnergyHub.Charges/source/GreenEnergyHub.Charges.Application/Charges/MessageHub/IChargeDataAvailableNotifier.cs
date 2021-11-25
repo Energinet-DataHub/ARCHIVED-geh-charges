@@ -12,11 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace GreenEnergyHub.Charges.Domain.AvailableChargeLinkReceiptData
+using System.Threading.Tasks;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandAcceptedEvents;
+
+namespace GreenEnergyHub.Charges.Application.Charges.MessageHub
 {
-    public enum ReasonCode
+    /// <summary>
+    /// Contract for notifying the MessageHub that data about a charge that has been created
+    /// is available.
+    /// This is the RSM-034 CIM XML 'NotifyPriceList'.
+    /// </summary>
+    public interface IChargeDataAvailableNotifier
     {
-        Unknown = 0,
-        IncorrectChargeInformation = 1,
+        Task NotifyAsync(ChargeCommandAcceptedEvent chargeCommandAcceptedEvent);
     }
 }
