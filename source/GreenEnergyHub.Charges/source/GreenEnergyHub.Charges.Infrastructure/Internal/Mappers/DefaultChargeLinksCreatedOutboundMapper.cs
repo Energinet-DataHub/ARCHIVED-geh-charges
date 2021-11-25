@@ -15,17 +15,17 @@
 using Energinet.DataHub.Core.Messaging.Protobuf;
 using Google.Protobuf;
 using GreenEnergyHub.Charges.Domain.Dtos.DefaultChargeLinksDataAvailableNotifiedEvents;
-using GreenEnergyHub.Charges.Infrastructure.Internal.DefaultChargeLinksDataAvailableNotifiedLinkCommandReceived;
+using GreenEnergyHub.Charges.Infrastructure.Internal.DefaultChargeLinksCreated;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
 {
-    public class DefaultChargeLinksDataAvailableNotifiedLinkCommandReceivedOutboundMapper
+    public class DefaultChargeLinksCreatedOutboundMapper
         : ProtobufOutboundMapper<DefaultChargeLinksDataAvailableNotifierEvent>
     {
         protected override IMessage Convert(DefaultChargeLinksDataAvailableNotifierEvent defaultChargeLinksDataAvailableNotifierEvent)
         {
             return new
-                DefaultChargeLinksDataAvailableNotifiedLinkCommandReceivedContract
+                DefaultChargeLinksCreatedContract
                 {
                     MeteringPointId = defaultChargeLinksDataAvailableNotifierEvent.MeteringPointId,
                 };

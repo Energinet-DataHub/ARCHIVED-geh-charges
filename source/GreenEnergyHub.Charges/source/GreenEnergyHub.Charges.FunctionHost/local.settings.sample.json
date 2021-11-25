@@ -64,12 +64,6 @@
     "CHARGELINKACCEPTED_SUB_EVENTPUBLISHER": "chargelinkaccepted-sub-eventpublisher",
     "CHARGELINKACCEPTED_SUB_REPLIER": "chargelinkaccepted-sub-replier",
     "CREATE_LINK_MESSAGES_REQUEST_QUEUE_NAME": "create-link-messages-request",
-    "CONSUMPTION_METERING_POINT_CREATED_TOPIC_NAME": "consumption-metering-point-created",
-    "CONSUMPTION_METERING_POINT_CREATED_SUBSCRIPTION_NAME": "consumption-metering-point-created-sub-charges",
-    "COMMAND_ACCEPTED_RECEIVER_SUBSCRIPTION_NAME": "sbs-charge-command-accepted-receiver",
-    "CHARGE_CREATED_TOPIC_NAME": "charge-created",
-    "CHARGE_PRICES_UPDATED_TOPIC_NAME": "charge-prices-updated",
-    "CHARGEACCEPTED_SUB_DATAAVAILABLENOTIFIER": "chargeaccepted-sub-dataavailablenotifier",
     "DEFAULT_CHARGE_LINKS_DATA_AVAILABLE_NOTIFIED_TOPIC_NAME": "default-charge-link-available",
     "DEFAULT_CHARGE_LINKS_DATA_AVAILABLE_NOTIFIED_SUBSCRIPTION_NAME": "default-charge-link-available-notified",
 
