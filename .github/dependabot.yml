@@ -5,10 +5,6 @@
 version: 2
 updates:
   - package-ecosystem: "nuget"
-    directory: "/source/GreenEnergyHub.Charges"
+    directory: "/source"
     schedule:
-      interval: "weekly"
-  - package-ecosystem: "nuget"
-    directory: "/source/Energinet.Charges.Libraries"
-    schedule:
-      interval: "weekly"
+      interval: "monthly"
