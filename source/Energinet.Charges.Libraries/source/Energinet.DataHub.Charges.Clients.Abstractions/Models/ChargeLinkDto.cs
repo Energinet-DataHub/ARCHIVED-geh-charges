@@ -16,6 +16,7 @@ using System;
 
 namespace Energinet.DataHub.Charges.Clients.Abstractions
 {
+    // TODO: Document members where it makes sense :)
     public record ChargeLinkDto(
         ChargeType ChargeType,
         string ChargeId,

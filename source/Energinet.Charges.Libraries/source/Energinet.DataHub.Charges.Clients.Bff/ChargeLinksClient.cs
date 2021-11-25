@@ -32,17 +32,22 @@ namespace Energinet.DataHub.Charges.Clients.Bff
             _httpClient = httpClient;
         }
 
-        public async Task<IList<ChargeLinkDto>?> GetChargeLinksByMeteringPointIdAsync(string meteringPointId)
+        public async Task<IList<ChargeLinkDto>> GetAsync(string meteringPointId)
         {
+            var list = new List<ChargeLinkDto>();
             var response = await _httpClient.GetAsync(new Uri($"ChargeLinks/GetChargeLinksByMeteringPointIdAsync/?meteringPointId={meteringPointId}", UriKind.Relative))
                 .ConfigureAwait(false);
 
             if (!response.IsSuccessStatusCode)
-                return null;
+                return list;
 
-            var data = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
-            var result = JsonSerializer.Deserialize<List<ChargeLinkDto>>(data, new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase });
-            return result;
+            var content = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+            var result = JsonSerializer.Deserialize<List<ChargeLinkDto>>(content, new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase });
+
+            if (result != null)
+                list.AddRange(result);
+
+            return list;
         }
     }
 }

@@ -29,6 +29,6 @@ namespace Energinet.DataHub.Charges.Clients.Abstractions
         /// Use 404 to get a "404 Not Found" response.
         /// Empty input will result in a "400 Bad Request" response</param>
         /// <returns>Mocked charge links data (Dtos)</returns>
-        public Task<IList<ChargeLinkDto>?> GetChargeLinksByMeteringPointIdAsync(string meteringPointId);
+        public Task<IList<ChargeLinkDto>> GetAsync(string meteringPointId);
     }
 }
