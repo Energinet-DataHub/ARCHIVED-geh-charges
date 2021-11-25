@@ -51,10 +51,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Context.EntityConfigurations
             reasonCodes.Property(r => r.Id).ValueGeneratedNever();
             reasonCodes
                 .Property(r => r.ReasonCode)
-                .HasColumnName("ReasonCode")
-                .HasConversion(
-                    toDbValue => (int)toDbValue,
-                    fromDbValue => (ReasonCode)fromDbValue);
+                .HasColumnName("ReasonCode");
             reasonCodes.Property(r => r.Text).HasColumnName("Text");
         }
     }
