@@ -2,4 +2,4 @@
 
 ## Version 1.0.0
 
-Initial package release containing ...
+Initial package release.
