@@ -41,7 +41,7 @@ namespace Energinet.DataHub.Charges.Clients.Bff
                 return null;
 
             var data = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
-            var result = JsonSerializer.Deserialize<List<ChargeLinkDto>>(data);
+            var result = JsonSerializer.Deserialize<List<ChargeLinkDto>>(data, new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase });
             return result;
         }
     }
