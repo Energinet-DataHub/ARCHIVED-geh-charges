@@ -12,37 +12,32 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
-using System.Linq;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application.ChargeLinks.CreateDefaultChargeLinkReplier;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksAcceptedEvents;
+using GreenEnergyHub.Charges.Domain.Dtos.DefaultChargeLinksDataAvailableNotifiedEvents;
 
 namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
 {
-    public class ChargeLinkEventReplyHandler : IChargeLinkEventReplyHandler
+    public class CreateDefaultChargeLinksReplyHandler : ICreateDefaultChargeLinksReplyHandler
     {
         private readonly IMessageMetaDataContext _messageMetaDataContext;
         private readonly ICreateDefaultChargeLinksReplier _createDefaultChargeLinksReplier;
-        private readonly ICorrelationContext _correlationContext;
 
-        public ChargeLinkEventReplyHandler(
+        public CreateDefaultChargeLinksReplyHandler(
             IMessageMetaDataContext messageMetaDataContext,
-            ICreateDefaultChargeLinksReplier createDefaultChargeLinksReplier,
-            ICorrelationContext correlationContext)
+            ICreateDefaultChargeLinksReplier createDefaultChargeLinksReplier)
         {
             _messageMetaDataContext = messageMetaDataContext;
             _createDefaultChargeLinksReplier = createDefaultChargeLinksReplier;
-            _correlationContext = correlationContext;
         }
 
-        public async Task HandleAsync(ChargeLinksAcceptedEvent chargeLinksAcceptedEvent)
+        public async Task HandleAsync(DefaultChargeLinksCreatedEvent defaultChargeLinksCreatedEvent)
         {
-                await _createDefaultChargeLinksReplier
-                    .ReplyWithSucceededAsync(
-                        chargeLinksAcceptedEvent.ChargeLinksCommand.MeteringPointId,
-                        true,
-                        _messageMetaDataContext.ReplyTo).ConfigureAwait(false);
+            await _createDefaultChargeLinksReplier
+                .ReplyWithSucceededAsync(
+                    defaultChargeLinksCreatedEvent.MeteringPointId,
+                    true,
+                    _messageMetaDataContext.ReplyTo).ConfigureAwait(false);
         }
     }
 }
