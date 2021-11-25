@@ -23,8 +23,6 @@ namespace GreenEnergyHub.Charges.Infrastructure.Context.EntityConfigurations
     {
         public void Configure(EntityTypeBuilder<ChargeLink> builder)
         {
-            if (builder == null) throw new ArgumentNullException(nameof(builder));
-
             builder.ToTable("ChargeLink");
             builder.Ignore(c => c.Operations);
             builder.Ignore(c => c.PeriodDetails);
