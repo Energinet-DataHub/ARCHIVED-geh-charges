@@ -27,6 +27,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi
     [IntegrationTest]
     public class ChargeLinksControllerTests : IClassFixture<WebApplicationFactory<Charges.WebApi.Startup>>
     {
+        private const string BaseUrl = "/ChargeLinks/GetChargeLinksByMeteringPointId?meteringPointId=";
         private readonly WebApplicationFactory<Charges.WebApi.Startup> _factory;
 
         public ChargeLinksControllerTests(WebApplicationFactory<Charges.WebApi.Startup> factory)
@@ -35,30 +36,30 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi
         }
 
         [Theory]
-        [InlineData("/ChargeLinks/GetChargeLinksByMeteringPointId?meteringPointId=1")]
-        public async Task GetChargeLinksByMeteringPointId_WhenIdHasChargeLinks_ReturnsOkAndCorrectContentType(string url)
+        [InlineData("1")]
+        public async Task GetChargeLinksByMeteringPointId_WhenIdHasChargeLinks_ReturnsOkAndCorrectContentType(string meteringPointId)
         {
             // Arrange
             var client = _factory.CreateClient();
 
             // Act
-            var response = await client.GetAsync(url);
-            var contentType = response.Content.Headers.ContentType!.ToString();
+            var response = await client.GetAsync($"{BaseUrl}{meteringPointId}");
 
             // Assert
+            var contentType = response.Content.Headers.ContentType!.ToString();
             response.StatusCode.Should().Be(HttpStatusCode.OK);
             contentType.Should().Be("application/json; charset=utf-8");
         }
 
         [Theory]
-        [InlineData("/ChargeLinks/GetChargeLinksByMeteringPointId?meteringPointId=1")]
-        public async Task GetChargeLinksByMeteringPointId_WhenIdHasChargeLinks_ReturnsChargeLinks(string url)
+        [InlineData("1")]
+        public async Task GetChargeLinksByMeteringPointId_WhenIdHasChargeLinks_ReturnsChargeLinks(string meteringPointId)
         {
             // Arrange
             var client = _factory.CreateClient();
 
             // Act
-            var response = await client.GetAsync(url);
+            var response = await client.GetAsync($"{BaseUrl}{meteringPointId}");
             var jsonString = await response.Content.ReadAsStringAsync();
             var result = JsonSerializer.Deserialize<List<ChargeLinkDto>>(jsonString, new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase });
 
@@ -67,23 +68,23 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi
         }
 
         [Theory]
-        [InlineData("/ChargeLinks/GetChargeLinksByMeteringPointId?meteringPointId=404")]
-        public async Task GetChargeLinksByMeteringPointId_WhenIdDoesNotExist_ReturnsNotFound(string url)
+        [InlineData("404")]
+        public async Task GetChargeLinksByMeteringPointId_WhenIdDoesNotExist_ReturnsNotFound(string meteringPointId)
         {
             var client = _factory.CreateClient();
 
-            var response = await client.GetAsync(url);
+            var response = await client.GetAsync($"{BaseUrl}{meteringPointId}");
 
             response.StatusCode.Should().Be(HttpStatusCode.NotFound);
         }
 
         [Theory]
-        [InlineData("/ChargeLinks/GetChargeLinksByMeteringPointId?meteringPointId=")]
-        public async Task GetChargeLinksByMeteringPointId_WhenNoIdInput_ReturnsBadRequest(string url)
+        [InlineData("")]
+        public async Task GetChargeLinksByMeteringPointId_WhenNoIdInput_ReturnsBadRequest(string meteringPointId)
         {
             var client = _factory.CreateClient();
 
-            var response = await client.GetAsync(url);
+            var response = await client.GetAsync($"{BaseUrl}{meteringPointId}");
 
             response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         }
