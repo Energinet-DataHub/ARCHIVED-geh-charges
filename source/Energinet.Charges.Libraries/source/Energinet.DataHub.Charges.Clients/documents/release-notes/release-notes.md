@@ -2,7 +2,7 @@
 
 ## Version 1.0.14
 
-Updated NuGet dependencies and removed deprecated FxCopAnalyzers 
+Updated NuGet dependencies and removed deprecated FxCopAnalyzers
 
 ## Version 1.0.13
 
