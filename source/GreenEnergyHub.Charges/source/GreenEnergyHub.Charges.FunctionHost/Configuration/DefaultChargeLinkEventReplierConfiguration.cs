@@ -13,17 +13,19 @@
 // limitations under the License.
 
 using GreenEnergyHub.Charges.Application.ChargeLinks.Handlers;
+using GreenEnergyHub.Charges.Domain.Dtos.DefaultChargeLinksDataAvailableNotifiedEvents;
 using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandAccepted;
 using GreenEnergyHub.Charges.Infrastructure.Messaging.Registration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace GreenEnergyHub.Charges.FunctionHost.Configuration
 {
-    internal static class ChargeLinkEventReplierConfiguration
+    internal static class DefaultChargeLinkEventReplierConfiguration
     {
         internal static void ConfigureServices(IServiceCollection serviceCollection)
         {
-            serviceCollection.AddScoped<IChargeLinkEventReplyHandler, ChargeLinkEventReplyHandler>();
+            serviceCollection.AddScoped<ICreateDefaultChargeLinksReplyHandler, CreateDefaultChargeLinksReplyHandler>();
+            serviceCollection.AddScoped<IDefaultChargeLinksCreatedEventFactory, DefaultChargeLinksCreatedEventFactory>();
 
             serviceCollection.ReceiveProtobufMessage<ChargeLinkCommandAccepted>(
                 configuration => configuration.WithParser(() => ChargeLinkCommandAccepted.Parser));
