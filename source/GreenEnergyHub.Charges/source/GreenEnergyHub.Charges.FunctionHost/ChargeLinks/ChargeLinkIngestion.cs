@@ -43,7 +43,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.ChargeLinks
         [Function(IngestionFunctionNames.ChargeLinkIngestion)]
         public async Task<HttpResponseData> RunAsync(
             [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = null)]
-            [NotNull] HttpRequestData req)
+            HttpRequestData req)
         {
             var command = (ChargeLinksCommand)await _messageExtractor.ExtractAsync(req.Body).ConfigureAwait(false);
 
