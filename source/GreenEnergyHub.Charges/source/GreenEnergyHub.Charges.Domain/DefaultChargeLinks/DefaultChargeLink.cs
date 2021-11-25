@@ -81,9 +81,7 @@ namespace GreenEnergyHub.Charges.Domain.DefaultChargeLinks
         public Instant EndDateTime { get; }
 
         /// <summary>
-        /// As of now all default charge links are anticipated to have a factor of 1.
-        /// This might change in the future in which case it probably will have to be
-        /// added to data in storage instead.
+        /// All default charge links are anticipated to have a factor of 1.
         /// </summary>
         public static int Factor => 1;
     }
