@@ -15,7 +15,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
-using GreenEnergyHub.Charges.Domain.AvailableChargeLinkReceiptData;
+using GreenEnergyHub.Charges.Domain.AvailableChargeReceiptData;
 using GreenEnergyHub.Charges.Domain.AvailableData;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.Infrastructure.Cim;
@@ -25,12 +25,12 @@ using GreenEnergyHub.Charges.Infrastructure.MarketDocument;
 using GreenEnergyHub.Charges.Infrastructure.MarketDocument.Cim;
 using NodaTime;
 
-namespace GreenEnergyHub.Charges.Infrastructure.ChargeLinkReceiptBundle.Cim
+namespace GreenEnergyHub.Charges.Infrastructure.ChargeReceiptBundle.Cim
 {
-    public class ChargeLinkReceiptCimSerializer
-        : CimSerializer<AvailableChargeLinkReceiptData>, IChargeLinkReceiptCimSerializer
+    public class ChargeReceiptCimSerializer
+        : CimSerializer<AvailableChargeReceiptData>, IChargeReceiptCimSerializer
     {
-        public ChargeLinkReceiptCimSerializer(
+        public ChargeReceiptCimSerializer(
             IHubSenderConfiguration hubSenderConfiguration,
             IClock clock,
             ICimIdProvider cimIdProvider)
@@ -38,7 +38,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.ChargeLinkReceiptBundle.Cim
         {
         }
 
-        public override IEnumerable<XElement> GetAdditionalDocumentFields(XNamespace cimNamespace, IEnumerable<AvailableChargeLinkReceiptData> records)
+        public override IEnumerable<XElement> GetAdditionalDocumentFields(XNamespace cimNamespace, IEnumerable<AvailableChargeReceiptData> records)
         {
             return new List<XElement>
             {
@@ -46,58 +46,52 @@ namespace GreenEnergyHub.Charges.Infrastructure.ChargeLinkReceiptBundle.Cim
                 // BusinessReasonCode, RecipientId, RecipientRole and ReceiptStatus will always be the same value
                 // on all records in the list. We can simply take it from the first record.
                 new XElement(
-                    cimNamespace + CimChargeLinkReceiptConstants.ReceiptStatus,
+                    cimNamespace + CimChargeReceiptConstants.ReceiptStatus,
                     ReceiptStatusMapper.Map(records.First().ReceiptStatus)),
             };
         }
 
-        protected override XNamespace GetNamespace(IEnumerable<AvailableChargeLinkReceiptData> records)
+        protected override XNamespace GetNamespace(IEnumerable<AvailableChargeReceiptData> records)
         {
             return IsConfirmation(records) ?
-                CimChargeLinkReceiptConstants.ConfirmNamespace : CimChargeLinkReceiptConstants.RejectNamespace;
+                CimChargeReceiptConstants.ConfirmNamespace : CimChargeReceiptConstants.RejectNamespace;
         }
 
-        protected override XNamespace GetSchemaLocation(IEnumerable<AvailableChargeLinkReceiptData> records)
+        protected override XNamespace GetSchemaLocation(IEnumerable<AvailableChargeReceiptData> records)
         {
             return IsConfirmation(records) ?
-                CimChargeLinkReceiptConstants.ConfirmSchemaLocation : CimChargeLinkReceiptConstants.RejectSchemaLocation;
+                CimChargeReceiptConstants.ConfirmSchemaLocation : CimChargeReceiptConstants.RejectSchemaLocation;
         }
 
-        protected override string GetRootElementName(IEnumerable<AvailableChargeLinkReceiptData> records)
+        protected override string GetRootElementName(IEnumerable<AvailableChargeReceiptData> records)
         {
             return IsConfirmation(records) ?
-                CimChargeLinkReceiptConstants.ConfirmRootElement : CimChargeLinkReceiptConstants.RejectRootElement;
+                CimChargeReceiptConstants.ConfirmRootElement : CimChargeReceiptConstants.RejectRootElement;
         }
 
-        protected override DocumentType GetDocumentType(IEnumerable<AvailableChargeLinkReceiptData> records)
+        protected override DocumentType GetDocumentType(IEnumerable<AvailableChargeReceiptData> records)
         {
-            return DocumentType.ChargeLinkReceipt;
+            return DocumentType.ChargeReceipt;
         }
 
         protected override XElement GetActivityRecord(
             XNamespace cimNamespace,
-            AvailableChargeLinkReceiptData receipt)
+            AvailableChargeReceiptData receipt)
         {
             return new XElement(
                 cimNamespace + CimMarketDocumentConstants.MarketActivityRecord,
                 new XElement(
-                    cimNamespace + CimChargeLinkReceiptConstants.MarketActivityRecordId,
+                    cimNamespace + CimChargeReceiptConstants.Id,
                     CimIdProvider.GetUniqueId()),
                 new XElement(
-                    cimNamespace + CimChargeLinkReceiptConstants.OriginalOperationId,
+                    cimNamespace + CimChargeReceiptConstants.OriginalOperationId,
                     receipt.OriginalOperationId),
-                new XElement(
-                    cimNamespace + CimChargeLinkReceiptConstants.MeteringPointId,
-                    new XAttribute(
-                        CimMarketDocumentConstants.CodingScheme,
-                        CodingSchemeMapper.Map(CodingScheme.GS1)),
-                    receipt.MeteringPointId),
                 GetReasonCodes(cimNamespace, receipt));
         }
 
         private IEnumerable<XElement> GetReasonCodes(
             XNamespace cimNamespace,
-            AvailableChargeLinkReceiptData receipt)
+            AvailableChargeReceiptData receipt)
         {
             var result = new List<XElement>();
             if (receipt.ReceiptStatus != ReceiptStatus.Rejected) return result;
@@ -109,19 +103,19 @@ namespace GreenEnergyHub.Charges.Infrastructure.ChargeLinkReceiptBundle.Cim
 
         private XElement GetReasonCode(
             XNamespace cimNamespace,
-            AvailableChargeLinkReceiptDataReasonCode reasonCode)
+            AvailableChargeReceiptDataReasonCode reasonCode)
         {
             return new XElement(
-                cimNamespace + CimChargeLinkReceiptConstants.ReasonElement,
-                new XElement(cimNamespace + CimChargeLinkReceiptConstants.ReasonCode, ReasonCodeMapper.Map(reasonCode.ReasonCode)),
+                cimNamespace + CimChargeReceiptConstants.ReasonElement,
+                new XElement(cimNamespace + CimChargeReceiptConstants.ReasonCode, ReasonCodeMapper.Map(reasonCode.ReasonCode)),
                 CimHelper.GetElementIfNeeded(
                     cimNamespace,
                     string.IsNullOrWhiteSpace(reasonCode.Text),
-                    CimChargeLinkReceiptConstants.ReasonText,
+                    CimChargeReceiptConstants.ReasonText,
                     () => reasonCode.Text));
         }
 
-        private bool IsConfirmation(IEnumerable<AvailableChargeLinkReceiptData> receipts)
+        private bool IsConfirmation(IEnumerable<AvailableChargeReceiptData> receipts)
         {
             // Due to the nature of the interface to the MessageHub and the use of MessageType in that
             // BusinessReasonCode, RecipientId, RecipientRole and ReceiptStatus will always be the same value
