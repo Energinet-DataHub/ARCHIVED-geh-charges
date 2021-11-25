@@ -12,13 +12,19 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksAcceptedEvents;
+using GreenEnergyHub.Charges.Domain.Dtos.Messages.Events;
+using NodaTime;
 
-namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
+namespace GreenEnergyHub.Charges.Domain.Dtos.DefaultChargeLinksDataAvailableNotifiedEvents
 {
-    public interface IChargeLinkEventReplyHandler
+    public class DefaultChargeLinksCreatedEvent : InternalEventBase
     {
-        Task HandleAsync(ChargeLinksAcceptedEvent chargeLinksAcceptedEvent);
+        public DefaultChargeLinksCreatedEvent(Instant publishedTime, string meteringPointId)
+            : base(publishedTime)
+        {
+            MeteringPointId = meteringPointId;
+        }
+
+        public string MeteringPointId { get; }
     }
 }

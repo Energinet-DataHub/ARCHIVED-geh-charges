@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Threading.Tasks;
 using Energinet.DataHub.Core.Messaging.Transport;
@@ -25,9 +24,9 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Messaging
         where TOutboundMessage : IOutboundMessage
     {
         public TestableServiceBusChannel(
-            [NotNull] IServiceBusSender<TOutboundMessage> serviceBusSender,
-            [NotNull] ICorrelationContext correlationContext,
-            [NotNull] IMessageMetaDataContext messageMetaDataContext)
+            IServiceBusSender<TOutboundMessage> serviceBusSender,
+            ICorrelationContext correlationContext,
+            IMessageMetaDataContext messageMetaDataContext)
             : base(serviceBusSender, correlationContext, messageMetaDataContext)
         {
         }

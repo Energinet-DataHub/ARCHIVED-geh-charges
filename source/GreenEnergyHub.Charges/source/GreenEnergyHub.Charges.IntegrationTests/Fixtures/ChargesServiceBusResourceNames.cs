@@ -53,6 +53,9 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures
         public const string ChargePricesUpdatedTopicKey = "charge-prices-updated";
         public const string ChargePricesUpdatedSubscriptionName = "sbs-charge-prices-updated";
 
+        public const string DefaultChargeLinksDataAvailableNotifiedTopicKey = "default-charge-link-available-notified";
+        public const string DefaultChargeLinksDataAvailableNotifiedSubscriptionName = "sbs-default-charge-link-available-notified-sub";
+
         public const string MessageHubDataAvailableQueueKey = "message-hub-data-available";
         public const string MessageHubRequestQueueKey = "message-hub-request";
         public const string MessageHubReplyQueueKey = "message-hub-reply";
