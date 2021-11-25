@@ -17,6 +17,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using GreenEnergyHub.Charges.Domain.AvailableChargeData;
 using GreenEnergyHub.Charges.Domain.AvailableChargeLinkReceiptData;
+using GreenEnergyHub.Charges.Domain.AvailableChargeReceiptData;
 
 namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
 {
@@ -42,6 +43,26 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
                 availableChargeData.TransparentInvoicing,
                 availableChargeData.Resolution,
                 availableChargeData.Points.ToList());
+        }
+
+        public static AvailableChargeReceiptData GetAvailableChargeReceiptDataBasedOn(
+            AvailableChargeReceiptData availableChargeReceiptData)
+        {
+            return new AvailableChargeReceiptData(
+                availableChargeReceiptData.RecipientId.Substring(0, 34),
+                availableChargeReceiptData.RecipientRole,
+                availableChargeReceiptData.BusinessReasonCode,
+                availableChargeReceiptData.RequestDateTime,
+                availableChargeReceiptData.AvailableDataReferenceId,
+                availableChargeReceiptData.ReceiptStatus,
+                availableChargeReceiptData.OriginalOperationId.Substring(0, 34),
+                availableChargeReceiptData.ReasonCodes.ToList());
+        }
+
+        public static List<AvailableChargeReceiptData> GetAvailableChargeReceiptDataListBasedOn(
+            List<AvailableChargeReceiptData> availableList)
+        {
+            return availableList.Select(receipt => GetAvailableChargeReceiptDataBasedOn(receipt)).ToList();
         }
 
         public static AvailableChargeLinkReceiptData GetAvailableChargeLinkReceiptDataBasedOn(
