@@ -43,15 +43,23 @@ jobs:
       TERRAFORM_VERSION: '1.0.10'
 
   functionhost_ci:
-    needs: [ci_base, terraform_validate]
+    needs: [ci_base, terraform_validate, dotnet_solution_ci]
     uses: Energinet-DataHub/.github/.github/workflows/dotnet-create-function-artifact.yml@2.1.0
     with:
       CSPROJ_FILE_PATH: 'source/GreenEnergyHub.Charges/source/GreenEnergyHub.Charges.FunctionHost/GreenEnergyHub.Charges.FunctionHost.csproj'
       DOTNET_VERSION: '5.0.202'
       ARTIFACT_NAME: functionhost
 
+  webapi_ci:
+    needs: [ci_base, terraform_validate, dotnet_solution_ci]
+    uses: Energinet-DataHub/.github/.github/workflows/dotnet-create-function-artifact.yml@2.1.0
+    with:
+      CSPROJ_FILE_PATH: 'source/GreenEnergyHub.Charges/source/GreenEnergyHub.Charges.WebApi/GreenEnergyHub.Charges.WebApi.csproj'
+      DOTNET_VERSION: '5.0.202'
+      ARTIFACT_NAME: webapi
+
   database_migration_ci:
-    needs: [ci_base, terraform_validate]
+    needs: [ci_base, terraform_validate, dotnet_solution_ci]
     uses: Energinet-DataHub/.github/.github/workflows/dotnet-create-function-artifact.yml@2.1.0
     with:
       CSPROJ_FILE_PATH: 'source/GreenEnergyHub.Charges/source/GreenEnergyHub.Charges.ApplyDBMigrationsApp/GreenEnergyHub.Charges.ApplyDBMigrationsApp.csproj'
@@ -61,6 +69,7 @@ jobs:
   create_prerelease:
     needs: [
       functionhost_ci,
+      webapi_ci,
       database_migration_ci
     ]
     uses: Energinet-DataHub/.github/.github/workflows/create-prerelease.yml@2.1.0

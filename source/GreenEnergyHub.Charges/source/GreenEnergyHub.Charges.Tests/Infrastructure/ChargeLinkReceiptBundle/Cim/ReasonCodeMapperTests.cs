@@ -14,7 +14,9 @@
 
 using System.ComponentModel;
 using GreenEnergyHub.Charges.Domain.AvailableChargeLinkReceiptData;
+using GreenEnergyHub.Charges.Domain.AvailableData;
 using GreenEnergyHub.Charges.Infrastructure.ChargeLinkReceiptBundle.Cim;
+using GreenEnergyHub.Charges.Infrastructure.MarketActivityRecord;
 using Xunit;
 using Xunit.Categories;
 

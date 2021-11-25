@@ -17,11 +17,34 @@ using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using Energinet.Charges.Contracts;
 using Energinet.DataHub.Charges.Clients.Mappers;
+using Energinet.DataHub.Charges.Clients.Models;
 
 namespace Energinet.DataHub.Charges.Clients.DefaultChargeLink
 {
-    /// <inheritdoc/>
-    public sealed class DefaultChargeLinkReplyReader : IDefaultChargeLinkReplyReader
+    /// <summary>
+    /// Delegate that will be invoked by IDefaultChargeLinkReplyReader ReadAsync() when the
+    /// serializedReplyMessageBody is a reply containing a CreateDefaultChargeLinksSucceeded.
+    ///
+    /// Consuming domain should implement this delegate to handle further processing following
+    /// successful Default Charge Link creation.
+    /// </summary>
+    public delegate Task OnSuccess(DefaultChargeLinksCreatedSuccessfullyDto defaultChargeLinksCreatedSuccessfully);
+
+    /// <summary>
+    /// Delegate that will be invoked by IDefaultChargeLinkReplyReader ReadAsync() when the
+    /// serializedReplyMessageBody is a reply containing a CreateDefaultChargeLinksFailed.
+    ///
+    /// Consuming domain should implement this delegate to handle further processing following
+    /// failed Default Charge Link creation.
+    /// </summary>
+    public delegate Task OnFailure(DefaultChargeLinksCreationFailedStatusDto defaultChargeLinksCreationSucceeded);
+
+    /// <summary>
+    /// Provides functionality to read and map data received from a reply to a
+    /// <see cref="CreateDefaultChargeLinks" /> request. Caller must provide delegates
+    /// intended to handle handle replies for successful and failed requests.
+    /// </summary>
+    public sealed class DefaultChargeLinkReplyReader
     {
         private readonly OnSuccess _handleSuccess;
         private readonly OnFailure _handleFailure;
@@ -36,7 +59,13 @@ namespace Energinet.DataHub.Charges.Clients.DefaultChargeLink
             _handleFailure = handleFailure;
         }
 
-        /// <inheritdoc/>
+        /// <summary>
+        /// Read and map data to be handled by provided delegates.
+        ///
+        /// ReadAsync method will invoke either OnSuccess or OnFailure delegate depending on the content
+        /// of the serializedReplyMessageBody.
+        /// <param name="serializedReplyMessageBody">Reply message to deserialize</param>
+        /// </summary>
         public async Task ReadAsync([DisallowNull] byte[] serializedReplyMessageBody)
         {
             if (serializedReplyMessageBody == null)
