@@ -12,14 +12,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
-using Energinet.DataHub.MessageHub.Model.Model;
+using GreenEnergyHub.Charges.Domain.AvailableChargeReceiptData;
+using GreenEnergyHub.Charges.Domain.MarketParticipants;
 
-namespace GreenEnergyHub.Charges.Application.ChargeLinks.MessageHub.Infrastructure
+namespace GreenEnergyHub.Charges.Infrastructure.ChargeReceiptBundle.Cim
 {
-    public interface IChargeLinkBundleReplier
+    public interface IChargeReceiptCimSerializer
     {
-        Task ReplyAsync(Stream bundleStream, DataBundleRequestDto request);
+        Task SerializeToStreamAsync(
+            IEnumerable<AvailableChargeReceiptData> receipts,
+            Stream stream,
+            BusinessReasonCode businessReasonCode,
+            string recipientId,
+            MarketParticipantRole recipientRole);
     }
 }

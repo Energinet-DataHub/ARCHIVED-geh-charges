@@ -21,6 +21,7 @@ using Energinet.DataHub.Core.FunctionApp.TestCommon;
 using Energinet.DataHub.Core.FunctionApp.TestCommon.ServiceBus.ListenerMock;
 using FluentAssertions;
 using GreenEnergyHub.Charges.IntegrationTests.Fixtures;
+using GreenEnergyHub.Charges.IntegrationTests.TestFiles.Charges;
 using GreenEnergyHub.Charges.IntegrationTests.TestHelpers;
 using NodaTime;
 using Xunit;
@@ -33,17 +34,31 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
     public class ChargeIngestionTests
     {
         [Collection(nameof(ChargesFunctionAppCollectionFixture))]
-        public class RunAsync : FunctionAppTestBase<ChargesFunctionAppFixture>
+        public class RunAsync : FunctionAppTestBase<ChargesFunctionAppFixture>, IAsyncLifetime
         {
             public RunAsync(ChargesFunctionAppFixture fixture, ITestOutputHelper testOutputHelper)
                 : base(fixture, testOutputHelper)
             {
             }
 
+            public Task InitializeAsync()
+            {
+                return Task.CompletedTask;
+            }
+
+            public Task DisposeAsync()
+            {
+                Fixture.ChargeCreatedListener.Reset();
+                Fixture.ChargePricesUpdatedListener.Reset();
+                Fixture.PostOfficeListener.ResetMessageHandlersAndReceivedMessages();
+                Fixture.MessageHubMock.Clear();
+                return Task.CompletedTask;
+            }
+
             [Fact]
             public async Task When_ChargeIsReceived_Then_AHttp200ResponseIsReturned()
             {
-                var request = CreateTariffWithPricesRequest(out string _);
+                var request = CreateHttpRequest(ChargeDocument.AnyValid, out string _);
 
                 var actualResponse = await Fixture.HostManager.HttpClient.SendAsync(request);
 
@@ -57,8 +72,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             public async Task When_ChargeIsReceived_Then_MessageIsSentToPostOffice()
             {
                 // Arrange
-                Fixture.PostOfficeListener.ResetMessageHandlersAndReceivedMessages();
-                var request = CreateTariffWithPricesRequest(out string _);
+                var request = CreateHttpRequest(ChargeDocument.AnyValid, out string _);
 
                 var body = string.Empty;
                 using var isMessageReceivedEvent = await Fixture.PostOfficeListener
@@ -79,12 +93,12 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 body.Should().NotBeEmpty();
             }
 
+            // TODO: Should this (and all other "when charge" tests) be split in subscription, fee and tariff?
             [Fact]
             public async Task When_ChargeIsReceived_Then_ChargeCreatedIntegrationEventIsPublished()
             {
                 // Arrange
-                var request = CreateTariffWithPricesRequest(out string correlationId);
-                Fixture.ChargeCreatedListener.Reset();
+                var request = CreateHttpRequest(ChargeDocument.AnyValid, out string correlationId);
                 using var eventualChargeCreatedEvent = await Fixture
                     .ChargeCreatedListener
                     .ListenForMessageAsync(correlationId)
@@ -102,8 +116,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             public async Task When_ChargeIncludingPriceIsReceived_Then_ChargePricesUpdatedIntegrationEventIsPublished()
             {
                 // Arrange
-                var request = CreateTariffWithPricesRequest(out string correlationId);
-                Fixture.ChargePricesUpdatedListener.Reset();
+                var request = CreateHttpRequest(ChargeDocument.AnyWithPrice, out string correlationId);
                 using var eventualChargePriceUpdatedEvent = await Fixture
                     .ChargePricesUpdatedListener
                     .ListenForMessageAsync(correlationId)
@@ -117,10 +130,23 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 isChargePricesUpdatedReceived.Should().BeTrue();
             }
 
-            private static HttpRequestMessage CreateTariffWithPricesRequest(
+            [Fact]
+            public async Task Given_NewTaxTariffWithPrices_When_GridAccessProviderPeeks_Then_MessageHubReceivesReply()
+            {
+                // Arrange
+                var request = CreateHttpRequest(ChargeDocument.TaxTariffWithPrice, out var correlationId);
+
+                // Act
+                await Fixture.HostManager.HttpClient.SendAsync(request);
+
+                // Act and assert
+                await Fixture.MessageHubMock.AssertPeekReceivesReplyAsync(correlationId);
+            }
+
+            private static HttpRequestMessage CreateHttpRequest(
+                string testFilePath,
                 out string correlationId)
             {
-                var testFilePath = "TestFiles/Charges/ValidCreateTariffCommand.xml";
                 var clock = SystemClock.Instance;
                 var chargeJson = EmbeddedResourceHelper.GetEmbeddedFile(testFilePath, clock);
                 correlationId = CorrelationIdGenerator.Create();
