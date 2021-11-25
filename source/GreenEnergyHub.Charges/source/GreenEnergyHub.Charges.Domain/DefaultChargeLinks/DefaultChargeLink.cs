@@ -18,7 +18,14 @@ using NodaTime;
 
 namespace GreenEnergyHub.Charges.Domain.DefaultChargeLinks
 {
-    // Logically there is a MeteringPointType attached to the DefaultChargeLink, but atm. It is not used.
+    /// <summary>
+    /// Default charge links represent charge links that must be created when requested externally.
+    ///
+    /// In reality this happens in the business process where a new metering point is connected.
+    ///
+    /// Charge links are created when the metering point type of the metering point matches that of the
+    /// default charge link. The process has some additional period logic controlling the creation.
+    /// </summary>
     public class DefaultChargeLink
     {
         /// <summary>
@@ -74,8 +81,9 @@ namespace GreenEnergyHub.Charges.Domain.DefaultChargeLinks
         public Instant EndDateTime { get; }
 
         /// <summary>
-        /// Only type of default charge is tariff, which only supports factor 1.
-        /// Used when creating the default charge link.
+        /// As of now all default charge links are anticipated to have a factor of 1.
+        /// This might change in the future in which case it probably will have to be
+        /// added to data in storage instead.
         /// </summary>
         public static int Factor => 1;
     }
