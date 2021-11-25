@@ -16,6 +16,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.Text.Json;
 using System.Threading.Tasks;
+using FluentAssertions;
 using GreenEnergyHub.Charges.WebApi.Models;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Xunit;
@@ -42,11 +43,11 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi
 
             // Act
             var response = await client.GetAsync(url);
-            var contentType = response.Content.Headers.ContentType!;
+            var contentType = response.Content.Headers.ContentType!.ToString();
 
             // Assert
-            response.EnsureSuccessStatusCode();
-            Assert.Equal("application/json; charset=utf-8", contentType.ToString());
+            response.StatusCode.Should().Be(HttpStatusCode.OK);
+            contentType.Should().Be("application/json; charset=utf-8");
         }
 
         [Theory]
@@ -73,7 +74,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi
 
             var response = await client.GetAsync(url);
 
-            Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+            response.StatusCode.Should().Be(HttpStatusCode.NotFound);
         }
 
         [Theory]
@@ -84,7 +85,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi
 
             var response = await client.GetAsync(url);
 
-            Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+            response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         }
     }
 }
