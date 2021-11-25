@@ -29,7 +29,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
         internal static void ConfigureServices(IServiceCollection serviceCollection)
         {
             serviceCollection.SendProtobuf<DefaultChargeLinksCreatedContract>();
-            serviceCollection.AddMessagingProtobuf().AddMessageDispatcher<DefaultChargeLinksDataAvailableNotifierEvent>(
+            serviceCollection.AddMessagingProtobuf().AddMessageDispatcher<DefaultChargeLinksCreatedEvent>(
                 EnvironmentHelper.GetEnv(EnvironmentSettingNames.DomainEventSenderConnectionString),
                 EnvironmentHelper.GetEnv(EnvironmentSettingNames.DefaultChargeLinksDataAvailableNotifiedTopicName));
             serviceCollection

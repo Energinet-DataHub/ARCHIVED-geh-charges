@@ -31,11 +31,11 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
             _createDefaultChargeLinksReplier = createDefaultChargeLinksReplier;
         }
 
-        public async Task HandleAsync(DefaultChargeLinksDataAvailableNotifierEvent defaultChargeLinksDataAvailableNotifierEvent)
+        public async Task HandleAsync(DefaultChargeLinksCreatedEvent defaultChargeLinksCreatedEvent)
         {
             await _createDefaultChargeLinksReplier
                 .ReplyWithSucceededAsync(
-                    defaultChargeLinksDataAvailableNotifierEvent.MeteringPointId,
+                    defaultChargeLinksCreatedEvent.MeteringPointId,
                     true,
                     _messageMetaDataContext.ReplyTo).ConfigureAwait(false);
         }

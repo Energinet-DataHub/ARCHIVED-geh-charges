@@ -50,7 +50,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Handlers
             messageMetaDataContext.Setup(m => m.ReplyTo).Returns(replyTo);
             correlationContext.Setup(c => c.Id).Returns(correlationId);
 
-            var command = new DefaultChargeLinksDataAvailableNotifierEvent(SystemClock.Instance.GetCurrentInstant(), MeteringPointId);
+            var command = new DefaultChargeLinksCreatedEvent(SystemClock.Instance.GetCurrentInstant(), MeteringPointId);
 
             // Act
             await sut.HandleAsync(command).ConfigureAwait(false);

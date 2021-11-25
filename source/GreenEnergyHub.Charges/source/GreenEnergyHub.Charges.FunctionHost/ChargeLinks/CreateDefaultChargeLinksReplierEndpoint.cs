@@ -28,11 +28,11 @@ namespace GreenEnergyHub.Charges.FunctionHost.ChargeLinks
         /// Function name affects the URL and thus possibly dependent infrastructure.
         /// </summary>
         public const string FunctionName = nameof(CreateDefaultChargeLinksReplierEndpoint);
-        private readonly MessageExtractor<DefaultChargeLinksDataAvailableNotifierEvent> _messageExtractor;
+        private readonly MessageExtractor<DefaultChargeLinksCreatedEvent> _messageExtractor;
         private readonly ICreateDefaultChargeLinksReplyHandler _createDefaultChargeLinksReplyHandler;
 
         public CreateDefaultChargeLinksReplierEndpoint(
-            MessageExtractor<DefaultChargeLinksDataAvailableNotifierEvent> messageExtractor,
+            MessageExtractor<DefaultChargeLinksCreatedEvent> messageExtractor,
             ICreateDefaultChargeLinksReplyHandler createDefaultChargeLinksReplyHandler)
         {
             _messageExtractor = messageExtractor;
@@ -47,7 +47,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.ChargeLinks
                 Connection = EnvironmentSettingNames.DomainEventListenerConnectionString)]
             byte[] message)
         {
-            var defaultChargeLinksDataAvailableNotifierEvent = (DefaultChargeLinksDataAvailableNotifierEvent)await _messageExtractor.ExtractAsync(message).ConfigureAwait(false);
+            var defaultChargeLinksDataAvailableNotifierEvent = (DefaultChargeLinksCreatedEvent)await _messageExtractor.ExtractAsync(message).ConfigureAwait(false);
 
             await _createDefaultChargeLinksReplyHandler.HandleAsync(defaultChargeLinksDataAvailableNotifierEvent).ConfigureAwait(false);
         }

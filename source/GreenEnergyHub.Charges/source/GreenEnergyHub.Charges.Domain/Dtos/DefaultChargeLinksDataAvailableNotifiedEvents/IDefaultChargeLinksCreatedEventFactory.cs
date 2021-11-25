@@ -16,13 +16,8 @@ using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksAcceptedEvents;
 
 namespace GreenEnergyHub.Charges.Domain.Dtos.DefaultChargeLinksDataAvailableNotifiedEvents
 {
-    public class DefaultChargeLinkDataAvailableNotifierEventFactory : IDefaultChargeLinkDataAvailableNotifierEventFactory
+    public interface IDefaultChargeLinksCreatedEventFactory
     {
-        public DefaultChargeLinksDataAvailableNotifierEvent Create(ChargeLinksAcceptedEvent chargeLinksAcceptedEvent)
-        {
-            return new DefaultChargeLinksDataAvailableNotifierEvent(
-                chargeLinksAcceptedEvent.PublishedTime,
-                chargeLinksAcceptedEvent.ChargeLinksCommand.MeteringPointId);
-        }
+        DefaultChargeLinksCreatedEvent Create(ChargeLinksAcceptedEvent chargeLinksAcceptedEvent);
     }
 }
