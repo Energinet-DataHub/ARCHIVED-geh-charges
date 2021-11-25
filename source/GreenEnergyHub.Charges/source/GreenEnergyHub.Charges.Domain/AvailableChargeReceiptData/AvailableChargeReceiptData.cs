@@ -14,7 +14,6 @@
 
 using System;
 using System.Collections.Generic;
-using GreenEnergyHub.Charges.Domain.AvailableChargeLinkReceiptData;
 using GreenEnergyHub.Charges.Domain.AvailableData;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using NodaTime;
@@ -43,6 +42,17 @@ namespace GreenEnergyHub.Charges.Domain.AvailableChargeReceiptData
             ReceiptStatus = receiptStatus;
             OriginalOperationId = originalOperationId;
             _reasonCodes = reasonCodes;
+        }
+
+        /// <summary>
+        /// Used implicitly by persistence.
+        /// </summary>
+        // ReSharper disable once UnusedMember.Local
+        private AvailableChargeReceiptData(string recipientId, string originalOperationId)
+            : base(recipientId)
+        {
+            OriginalOperationId = originalOperationId;
+            _reasonCodes = new List<AvailableChargeReceiptDataReasonCode>();
         }
 
         public ReceiptStatus ReceiptStatus { get; }

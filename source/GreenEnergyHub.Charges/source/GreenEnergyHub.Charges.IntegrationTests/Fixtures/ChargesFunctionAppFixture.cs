@@ -23,7 +23,6 @@ using Energinet.DataHub.Core.FunctionApp.TestCommon.Configuration;
 using Energinet.DataHub.Core.FunctionApp.TestCommon.FunctionAppHost;
 using Energinet.DataHub.Core.FunctionApp.TestCommon.ServiceBus.ListenerMock;
 using Energinet.DataHub.Core.FunctionApp.TestCommon.ServiceBus.ResourceProvider;
-using Energinet.DataHub.Core.TestCommon.Diagnostics;
 using Energinet.DataHub.MessageHub.IntegrationTesting;
 using GreenEnergyHub.Charges.FunctionHost.Common;
 using GreenEnergyHub.Charges.IntegrationTests.Database;
@@ -56,6 +55,12 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures
 
         [NotNull]
         public MessageHubSimulation? MessageHubMock { get; private set; }
+
+        [NotNull]
+        public QueueResource? CreateLinkRequestQueue { get; private set; }
+
+        [NotNull]
+        public QueueResource? CreateLinkReplyQueue { get; private set; }
 
         private AzuriteManager AzuriteManager { get; }
 
@@ -133,16 +138,12 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures
                 .AddSubscription(ChargesServiceBusResourceNames.CommandRejectedSubscriptionName).SetEnvironmentVariableToSubscriptionName(EnvironmentSettingNames.CommandRejectedSubscriptionName)
                 .CreateAsync();
 
-            var createLinkRequestQueue = await ServiceBusResourceProvider
+            CreateLinkRequestQueue = await ServiceBusResourceProvider
                 .BuildQueue(ChargesServiceBusResourceNames.CreateLinkRequestQueueKey).SetEnvironmentVariableToQueueName(EnvironmentSettingNames.CreateLinkRequestQueueName)
                 .CreateAsync();
 
-            var createLinkReplyQueue = await ServiceBusResourceProvider
-                .BuildQueue(ChargesServiceBusResourceNames.CreateLinkReplyQueueKey).SetEnvironmentVariableToQueueName(EnvironmentSettingNames.CreateLinkReplyQueueName)
-                .CreateAsync();
-
-            await ServiceBusResourceProvider
-                .BuildQueue(ChargesServiceBusResourceNames.CreateLinkMessagesRequestQueueKey).SetEnvironmentVariableToQueueName(EnvironmentSettingNames.CreateLinkMessagesRequestQueueName)
+            CreateLinkReplyQueue = await ServiceBusResourceProvider
+                .BuildQueue(ChargesServiceBusResourceNames.CreateLinkReplyQueueKey)
                 .CreateAsync();
 
             var consumptionMeteringPointCreatedTopic = await ServiceBusResourceProvider
@@ -153,6 +154,13 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures
             var chargeCreatedTopic = await ServiceBusResourceProvider
                 .BuildTopic(ChargesServiceBusResourceNames.ChargeCreatedTopicKey).SetEnvironmentVariableToTopicName(EnvironmentSettingNames.ChargeCreatedTopicName)
                 .AddSubscription(ChargesServiceBusResourceNames.ChargeCreatedSubscriptionName)
+                .CreateAsync();
+
+            await ServiceBusResourceProvider
+                .BuildTopic(ChargesServiceBusResourceNames.DefaultChargeLinksDataAvailableNotifiedTopicKey)
+                .SetEnvironmentVariableToTopicName(EnvironmentSettingNames
+                    .DefaultChargeLinksDataAvailableNotifiedTopicName)
+                .AddSubscription(ChargesServiceBusResourceNames.DefaultChargeLinksDataAvailableNotifiedSubscriptionName)
                 .CreateAsync();
 
             var chargeCreatedListener = new ServiceBusListenerMock(ServiceBusResourceProvider.ConnectionString, TestLogger);

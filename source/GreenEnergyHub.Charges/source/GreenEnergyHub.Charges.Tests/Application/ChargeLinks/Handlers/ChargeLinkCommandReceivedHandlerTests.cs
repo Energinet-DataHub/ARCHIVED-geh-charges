@@ -39,12 +39,12 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Handlers
         [Theory]
         [InlineAutoDomainData]
         public async Task HandleAsync_ShouldDispatch_AcceptedEvent(
-            [NotNull] [Frozen] Mock<IMessageDispatcher<ChargeLinksAcceptedEvent>> messageDispatcher,
-            [NotNull] [Frozen] Mock<IChargeLinkFactory> chargeLinkFactory,
-            [NotNull] [Frozen] Mock<IChargeLinksAcceptedEventFactory> chargeLinkCommandAcceptedEventFactory,
-            [NotNull] ChargeLinksReceivedEvent chargeLinksReceivedEvent,
-            [NotNull] ChargeLinksAcceptedEvent chargeLinksAcceptedEvent,
-            [NotNull] ChargeLinksReceivedEventHandler sut)
+            [Frozen] Mock<IMessageDispatcher<ChargeLinksAcceptedEvent>> messageDispatcher,
+            [Frozen] Mock<IChargeLinkFactory> chargeLinkFactory,
+            [Frozen] Mock<IChargeLinksAcceptedEventFactory> chargeLinkCommandAcceptedEventFactory,
+            ChargeLinksReceivedEvent chargeLinksReceivedEvent,
+            ChargeLinksAcceptedEvent chargeLinksAcceptedEvent,
+            ChargeLinksReceivedEventHandler sut)
         {
             // Arrange
             var fixture = new Fixture().Customize(new AutoMoqCustomization());

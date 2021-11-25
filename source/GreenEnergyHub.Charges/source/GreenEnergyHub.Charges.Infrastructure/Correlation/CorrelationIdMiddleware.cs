@@ -13,7 +13,6 @@
 // limitations under the License.
 
 using System;
-using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application;
 using Microsoft.Azure.Functions.Worker;
@@ -31,7 +30,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Correlation
             _correlationContext = correlationContext;
         }
 
-        public async Task Invoke(FunctionContext context, [NotNull] FunctionExecutionDelegate next)
+        public async Task Invoke(FunctionContext context, FunctionExecutionDelegate next)
         {
             if (context == null) throw new ArgumentNullException(nameof(context));
 
