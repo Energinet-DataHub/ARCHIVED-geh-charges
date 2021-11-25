@@ -12,12 +12,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace GreenEnergyHub.Charges.Domain.AvailableChargeLinkReceiptData
+using System.Collections.Generic;
+using System.IO;
+using System.Threading.Tasks;
+using GreenEnergyHub.Charges.Domain.AvailableChargeReceiptData;
+using GreenEnergyHub.Charges.Domain.MarketParticipants;
+
+namespace GreenEnergyHub.Charges.Infrastructure.ChargeReceiptBundle.Cim
 {
-    public enum ReceiptStatus
+    public interface IChargeReceiptCimSerializer
     {
-        Unknown = 0,
-        Confirmed = 1,
-        Rejected = 2,
+        Task SerializeToStreamAsync(
+            IEnumerable<AvailableChargeReceiptData> receipts,
+            Stream stream,
+            BusinessReasonCode businessReasonCode,
+            string recipientId,
+            MarketParticipantRole recipientRole);
     }
 }

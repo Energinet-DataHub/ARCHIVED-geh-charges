@@ -12,24 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
-using GreenEnergyHub.Charges.Domain.AvailableData;
-
-namespace GreenEnergyHub.Charges.Domain.AvailableChargeLinkReceiptData
+namespace GreenEnergyHub.Charges.Domain.AvailableData
 {
-    public class AvailableChargeLinkReceiptDataReasonCode
+    public enum ReasonCode
     {
-        public AvailableChargeLinkReceiptDataReasonCode(ReasonCode reasonCode, string text)
-        {
-            ReasonCode = reasonCode;
-            Text = text;
-            Id = Guid.NewGuid();
-        }
-
-        public Guid Id { get; }
-
-        public ReasonCode ReasonCode { get; }
-
-        public string Text { get; }
+        Unknown = 0,
+        IncorrectChargeInformation = 1,
     }
 }
