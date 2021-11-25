@@ -24,9 +24,6 @@ namespace GreenEnergyHub.Charges.Infrastructure.Context.EntityConfigurations
     {
         public void Configure(EntityTypeBuilder<AvailableChargeReceiptData> builder)
         {
-            if (builder == null)
-                throw new ArgumentNullException(nameof(builder));
-
             builder.ToTable("AvailableChargeReceiptData", "MessageHub");
             builder.HasKey(x => x.Id);
             builder.Property(p => p.Id).ValueGeneratedNever();

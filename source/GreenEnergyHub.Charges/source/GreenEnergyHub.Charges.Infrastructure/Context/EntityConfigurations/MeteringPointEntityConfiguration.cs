@@ -23,8 +23,6 @@ namespace GreenEnergyHub.Charges.Infrastructure.Context.EntityConfigurations
     {
         public void Configure(EntityTypeBuilder<MeteringPoint> builder)
         {
-            if (builder == null) throw new ArgumentNullException(nameof(builder));
-
             builder.ToTable("MeteringPoint", "Charges");
 
             builder.HasKey(x => x.Id);
