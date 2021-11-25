@@ -54,6 +54,9 @@ namespace GreenEnergyHub.Charges.FunctionHost.Common
         public const string DefaultChargeLinksDataAvailableNotifiedTopicName =
             "DEFAULT_CHARGE_LINKS_DATA_AVAILABLE_NOTIFIED_TOPIC_NAME";
 
+        public const string DefaultChargeLinksDataAvailableNotifiedSubscription =
+            "DEFAULT_CHARGE_LINKS_DATA_AVAILABLE_NOTIFIED_SUBSCRIPTION_NAME";
+
         // Integration, message hub
         public const string MessageHubDataAvailableQueue = "MESSAGEHUB_DATAAVAILABLE_QUEUE";
         public const string MessageHubRequestQueue = "MESSAGEHUB_BUNDLEREQUEST_QUEUE";
