@@ -47,7 +47,8 @@ jobs:
       TERRAFORM_VERSION: '1.0.10'
 
   functionhost_ci:
-    needs: [dotnet_solution_ci]
+    # Depend on these validating jobs in order to avoid potentially creating artifacts that should never be used if this job fails
+    needs: [ci_base, terraform_validate, dotnet_solution_ci]
     uses: Energinet-DataHub/.github/.github/workflows/dotnet-create-function-artifact.yml@2.1.0
     with:
       CSPROJ_FILE_PATH: 'source/GreenEnergyHub.Charges/source/GreenEnergyHub.Charges.FunctionHost/GreenEnergyHub.Charges.FunctionHost.csproj'
@@ -55,7 +56,8 @@ jobs:
       ARTIFACT_NAME: functionhost
 
   webapi_ci:
-    needs: [dotnet_solution_ci]
+    # Depend on these validating jobs in order to avoid potentially creating artifacts that should never be used if this job fails
+    needs: [ci_base, terraform_validate, dotnet_solution_ci]
     uses: Energinet-DataHub/.github/.github/workflows/dotnet-create-function-artifact.yml@2.1.0
     with:
       CSPROJ_FILE_PATH: 'source/GreenEnergyHub.Charges/source/GreenEnergyHub.Charges.WebApi/GreenEnergyHub.Charges.WebApi.csproj'
@@ -63,7 +65,8 @@ jobs:
       ARTIFACT_NAME: webapi
 
   database_migration_ci:
-    needs: [dotnet_solution_ci]
+    # Depend on these validating jobs in order to avoid potentially creating artifacts that should never be used if this job fails
+    needs: [ci_base, terraform_validate, dotnet_solution_ci]
     uses: Energinet-DataHub/.github/.github/workflows/dotnet-create-function-artifact.yml@2.1.0
     with:
       CSPROJ_FILE_PATH: 'source/GreenEnergyHub.Charges/source/GreenEnergyHub.Charges.ApplyDBMigrationsApp/GreenEnergyHub.Charges.ApplyDBMigrationsApp.csproj'
@@ -72,8 +75,6 @@ jobs:
 
   create_prerelease:
     needs: [
-      ci_base,
-      terraform_validate,
       functionhost_ci,
       webapi_ci,
       database_migration_ci
