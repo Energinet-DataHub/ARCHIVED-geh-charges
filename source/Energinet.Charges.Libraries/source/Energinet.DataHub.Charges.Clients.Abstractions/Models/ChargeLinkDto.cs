@@ -16,15 +16,30 @@ using System;
 
 namespace Energinet.DataHub.Charges.Clients.Abstractions
 {
-    // TODO: Document members where it makes sense :)
     public record ChargeLinkDto(
+
+        // The type of charge; tariff, fee or subscription
         ChargeType ChargeType,
+
+        // A charge identifier provided by the market participant. Combined with charge owner it becomes unique
         string ChargeId,
+
+        // Charge name provided by the market participant.
         string ChargeName,
+
+        // A charge owner identification, e.g.the market participant's GLN or EIC number
         string ChargeOwnerId,
+
+        // The market participant's company name
         string ChargeOwnerName,
+
+        // Indicates whether a tariff is considered a tax or not
         bool TaxIndicator,
+
+        // Indicates whether the charge owner wants the charge to be displayed on the customer invoice
         bool TransparentInvoicing,
+
+        // Also knowns as quantity
         int Factor,
         DateTime StartDateTimeUtc,
         DateTime? EndDateTimeUtc);
