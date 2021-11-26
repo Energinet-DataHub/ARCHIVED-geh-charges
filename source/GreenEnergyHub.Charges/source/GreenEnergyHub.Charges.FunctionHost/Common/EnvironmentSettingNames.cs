@@ -41,9 +41,9 @@ namespace GreenEnergyHub.Charges.FunctionHost.Common
         public const string ChargeLinkAcceptedSubEventPublisher = "CHARGELINKACCEPTED_SUB_EVENTPUBLISHER";
         public const string ChargeLinkAcceptedSubDataAvailableNotifier = "CHARGELINKACCEPTED_SUB_DATAAVAILABLENOTIFIER";
         public const string ChargeLinkAcceptedReplier = "CHARGELINKACCEPTED_SUB_REPLIER";
-        public const string CreateLinkReplyQueueName = "CREATE_LINK_REPLY_QUEUE_NAME";
 
-        public const string CreateLinkMessagesReplyQueueName = "CREATE_LINK_MESSAGES_REPLY_QUEUE_NAME";
+        public const string DefaultChargeLinksDataAvailableNotifiedSubscription =
+            "DEFAULT_CHARGE_LINKS_DATA_AVAILABLE_NOTIFIED_SUBSCRIPTION_NAME";
 
         /// <summary>
         /// Deprecated: This is from an old implementation where we mimicked sending to the post office
@@ -52,6 +52,10 @@ namespace GreenEnergyHub.Charges.FunctionHost.Common
         public const string PostOfficeTopicName = "POST_OFFICE_TOPIC_NAME";
 
         public const string ChargeLinkAcceptedTopicName = "CHARGE_LINK_ACCEPTED_TOPIC_NAME";
+
+        public const string DefaultChargeLinksDataAvailableNotifiedTopicName =
+            "DEFAULT_CHARGE_LINKS_DATA_AVAILABLE_NOTIFIED_TOPIC_NAME";
+
         public const string CommandReceivedTopicName = "COMMAND_RECEIVED_TOPIC_NAME";
 
         public const string MessageHubDataAvailableQueue = "MESSAGEHUB_DATAAVAILABLE_QUEUE";
@@ -74,7 +78,6 @@ namespace GreenEnergyHub.Charges.FunctionHost.Common
         public const string CommandRejectedSubscriptionName = "COMMAND_REJECTED_SUBSCRIPTION_NAME";
 
         public const string CreateLinkRequestQueueName = "CREATE_LINK_REQUEST_QUEUE_NAME";
-        public const string CreateLinkMessagesRequestQueueName = "CREATE_LINK_MESSAGES_REQUEST_QUEUE_NAME";
 
         public const string ConsumptionMeteringPointCreatedTopicName = "CONSUMPTION_METERING_POINT_CREATED_TOPIC_NAME";
         public const string ConsumptionMeteringPointCreatdSubscriptionName = "CONSUMPTION_METERING_POINT_CREATED_SUBSCRIPTION_NAME";

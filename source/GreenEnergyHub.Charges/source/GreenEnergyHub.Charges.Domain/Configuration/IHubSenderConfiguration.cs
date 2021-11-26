@@ -12,13 +12,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksAcceptedEvents;
+using GreenEnergyHub.Charges.Domain.MarketParticipants;
 
-namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
+namespace GreenEnergyHub.Charges.Domain.Configuration
 {
-    public interface IChargeLinkEventReplyHandler
+    /// <summary>
+    /// Interface used to determine which ID and code should be used when sending
+    /// message from the hub out onto the world
+    /// </summary>
+    public interface IHubSenderConfiguration
     {
-        Task HandleAsync(ChargeLinksAcceptedEvent chargeLinksAcceptedEvent);
+        /// <summary>
+        /// Retrieves the market participant used to send messages from the hub
+        /// </summary>
+        /// <returns>The market participant to use</returns>
+        MarketParticipant GetSenderMarketParticipant();
     }
 }

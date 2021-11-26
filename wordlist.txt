@@ -39,6 +39,7 @@ energinet
 Energinet
 enum
 FluentValidation
+FxCopAnalyzers
 geh
 github
 GLN

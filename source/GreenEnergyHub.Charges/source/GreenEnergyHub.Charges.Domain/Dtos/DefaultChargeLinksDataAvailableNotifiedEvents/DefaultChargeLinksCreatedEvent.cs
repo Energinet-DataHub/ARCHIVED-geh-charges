@@ -12,20 +12,19 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using GreenEnergyHub.Charges.Domain.MarketParticipants;
+using GreenEnergyHub.Charges.Domain.Dtos.Messages.Events;
+using NodaTime;
 
-namespace GreenEnergyHub.Charges.Infrastructure.Configuration
+namespace GreenEnergyHub.Charges.Domain.Dtos.DefaultChargeLinksDataAvailableNotifiedEvents
 {
-    /// <summary>
-    /// Interface used to determine which ID and code should be used when sending
-    /// message from the hub out onto the world
-    /// </summary>
-    public interface IHubSenderConfiguration
+    public class DefaultChargeLinksCreatedEvent : InternalEventBase
     {
-        /// <summary>
-        /// Retrieves the market participant used to send messages from the hub
-        /// </summary>
-        /// <returns>The market participant to use</returns>
-        MarketParticipant GetSenderMarketParticipant();
+        public DefaultChargeLinksCreatedEvent(Instant publishedTime, string meteringPointId)
+            : base(publishedTime)
+        {
+            MeteringPointId = meteringPointId;
+        }
+
+        public string MeteringPointId { get; }
     }
 }
