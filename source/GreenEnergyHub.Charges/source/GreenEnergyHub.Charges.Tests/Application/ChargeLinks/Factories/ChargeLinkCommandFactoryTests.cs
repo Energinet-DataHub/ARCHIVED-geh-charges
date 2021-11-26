@@ -14,12 +14,15 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoFixture;
+using AutoFixture.AutoMoq;
 using AutoFixture.Xunit2;
 using FluentAssertions;
+using GreenEnergyHub.Charges.Domain.ChargeLinks;
 using GreenEnergyHub.Charges.Domain.Charges;
-using GreenEnergyHub.Charges.Domain.Configuration;
 using GreenEnergyHub.Charges.Domain.DefaultChargeLinks;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.CreateLinksRequests;
@@ -42,8 +45,6 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Factories
             [Frozen] Mock<IChargeRepository> chargeRepository,
             [Frozen] Mock<IMeteringPointRepository> meteringPointRepository,
             [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
-            [Frozen] Mock<IHubSenderConfiguration> hubSenderConfiguration,
-            MarketParticipant recipient,
             MarketParticipant systemOperator,
             Guid chargeId,
             MeteringPoint meteringPoint,
@@ -87,9 +88,6 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Factories
             marketParticipantRepository
                 .Setup(m => m.GetAsync(MarketParticipantRole.SystemOperator)).ReturnsAsync(systemOperator);
 
-            hubSenderConfiguration
-                .Setup(configuration => configuration.GetSenderMarketParticipant()).Returns(recipient);
-
             // Act
             var actual =
                 await sut.CreateAsync(
@@ -105,7 +103,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Factories
             actual.Document.Sender.BusinessProcessRole.Should().Be(MarketParticipantRole.SystemOperator);
             actual.Document.Sender.Id.Should().Be(systemOperator.Id);
             actual.Document.Recipient.BusinessProcessRole.Should().Be(MarketParticipantRole.MeteringPointAdministrator);
-            actual.Document.Recipient.Id.Should().Be(recipient.Id);
+            actual.Document.Recipient.Id.Should().Be("5790001330552");
             actual.ChargeLinks.First().SenderProvidedChargeId.Should().Be(charge.SenderProvidedChargeId);
             actual.ChargeLinks.First().ChargeType.Should().Be(charge.Type);
             actual.ChargeLinks.First().EndDateTime.Should().Be(defaultChargeLink.EndDateTime);

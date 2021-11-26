@@ -18,7 +18,6 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Domain.Charges;
-using GreenEnergyHub.Charges.Domain.Configuration;
 using GreenEnergyHub.Charges.Domain.DefaultChargeLinks;
 using GreenEnergyHub.Charges.Domain.Dtos.CreateLinksRequests;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
@@ -34,19 +33,16 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands
         private readonly IMeteringPointRepository _meteringPointRepository;
         private readonly IClock _clock;
         private readonly IMarketParticipantRepository _marketParticipantRepository;
-        private readonly IHubSenderConfiguration _hubSenderConfiguration;
 
         public ChargeLinksCommandFactory(
             IChargeRepository chargeRepository,
             IMeteringPointRepository meteringPointRepository,
             IClock clock,
-            IMarketParticipantRepository marketParticipantRepository,
-            IHubSenderConfiguration hubSenderConfiguration)
+            IMarketParticipantRepository marketParticipantRepository)
         {
             _chargeRepository = chargeRepository;
             _clock = clock;
             _marketParticipantRepository = marketParticipantRepository;
-            _hubSenderConfiguration = hubSenderConfiguration;
             _meteringPointRepository = meteringPointRepository;
         }
 
@@ -81,7 +77,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands
                     EndDateTime = pair.Key.EndDateTime,
                     ChargeOwner = pair.Value.Owner,
                     StartDateTime = pair.Key.GetStartDateTime(meteringPoint.EffectiveDate),
-                    OperationId = Guid.NewGuid().ToString(), // TODO: Fix and add unit test
+                    OperationId = Guid.NewGuid().ToString(),
                     Factor = DefaultChargeLink.Factor,
                 })
                 .ToList();
@@ -112,7 +108,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands
                     },
                     Recipient = new MarketParticipant
                     {
-                        Id = _hubSenderConfiguration.GetSenderMarketParticipant().Id,
+                        Id = DefaultChargeLink.GlnNumber,
                         BusinessProcessRole = MarketParticipantRole.MeteringPointAdministrator,
                     },
                 },
