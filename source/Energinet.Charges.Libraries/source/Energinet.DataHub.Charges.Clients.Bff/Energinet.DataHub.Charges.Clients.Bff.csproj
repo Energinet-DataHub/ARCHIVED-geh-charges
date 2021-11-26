@@ -47,7 +47,8 @@ limitations under the License.
       https://github.com/Energinet-DataHub/geh-charges/tree/main/source/Energinet.Charges.Libraries/source/Energinet.DataHub.Charges.Clients.Bff/documents/documentation.md
     </PackageDescription>
     <Description>
-      TBA.
+      The NuGet package Energinet.DataHub.Charges.Clients.Bff contains a client intended for BackendForFrontend (BFF) usage.
+      The client interacts with the Energinet DataHub Charges domain.
 
       Learn more about the Green Energy Hub platform at https://github.com/Energinet-DataHub/green-energy-hub.
 

@@ -47,7 +47,8 @@ limitations under the License.
       https://github.com/Energinet-DataHub/geh-charges/tree/main/source/Energinet.Charges.Libraries/source/Energinet.DataHub.Charges.Clients.Abstractions/documents/documentation.md
     </PackageDescription>
     <Description>
-      TBA.
+      The NuGet package Energinet.DataHub.Charges.Clients.Abstractions contains abstractions used by
+      Energinet DataHub Charges domain when communicated with clients, e.g. Energinet.DataHub.Charges.Clients.Bff.
 
       Learn more about the Green Energy Hub platform at https://github.com/Energinet-DataHub/green-energy-hub.
 
