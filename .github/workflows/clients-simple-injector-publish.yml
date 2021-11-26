@@ -18,7 +18,7 @@ on:
     branches:
       - main
     paths:
-      - source/Energinet.Charges.Libraries/source/Energinet.DataHub.Charges.Clients.SimpleInjector/**
+      - source/GreenEnergyHub.Charges/source/Energinet.DataHub.Charges.Clients.SimpleInjector/**
       - .github/workflows/clients-simple-injector-publish.yml
       - .github/actions/dotnet-publish-nuget/**
   # The purpose of the pull-request trigger is to have the PR gate verify that the NuGet package version number
@@ -28,15 +28,15 @@ on:
       branches:
         - main
       paths:
-      - source/Energinet.Charges.Libraries/source/Energinet.DataHub.Charges.Clients.SimpleInjector/**
+      - source/GreenEnergyHub.Charges/source/Energinet.DataHub.Charges.Clients.SimpleInjector/**
       - .github/workflows/clients-simple-injector-publish.yml
       - .github/actions/dotnet-publish-nuget/**
   workflow_dispatch: {}
 
 env:
   DOTNET_VERSION: '5.0'
-  CSPROJ_FILE_PATH: 'source/Energinet.Charges.Libraries/source/Energinet.DataHub.Charges.Clients.SimpleInjector/Energinet.DataHub.Charges.Clients.SimpleInjector.csproj'
-  BINARY_PATH: 'source/Energinet.Charges.Libraries/source/Energinet.DataHub.Charges.Clients.SimpleInjector/bin/Release/*.nupkg'
+  CSPROJ_FILE_PATH: 'source/GreenEnergyHub.Charges/source/Energinet.DataHub.Charges.Clients.SimpleInjector/Energinet.DataHub.Charges.Clients.SimpleInjector.csproj'
+  BINARY_PATH: 'source/GreenEnergyHub.Charges/source/Energinet.DataHub.Charges.Clients.SimpleInjector/bin/Release/*.nupkg'
 
 jobs:
   build_and_publish:
@@ -56,4 +56,4 @@ jobs:
           csproj_file_path: ${{ env.CSPROJ_FILE_PATH }}
           binary_path: ${{ env.BINARY_PATH }}
           nuget_token: ${{ secrets.NUGET_TOKEN }}
-          nuget_recurse_path: source/Energinet.Charges.Libraries
+          nuget_recurse_path: source/GreenEnergyHub.Charges

@@ -18,7 +18,7 @@ on:
     branches:
       - main
     paths:
-      - source/Energinet.Charges.Libraries/source/Energinet.DataHub.Charges.Clients/**
+      - source/GreenEnergyHub.Charges/source/Energinet.DataHub.Charges.Clients/**
       - .github/workflows/clients-publish.yml
       - .github/actions/dotnet-publish-nuget/**
   # The purpose of the pull-request trigger is to have the PR gate verify that the NuGet package version number
@@ -27,15 +27,15 @@ on:
       branches:
         - main
       paths:
-      - source/Energinet.Charges.Libraries/source/Energinet.DataHub.Charges.Clients/**
+      - source/GreenEnergyHub.Charges/source/Energinet.DataHub.Charges.Clients/**
       - .github/workflows/clients-publish.yml
       - .github/actions/dotnet-publish-nuget/**
   workflow_dispatch: {}
 
 env:
   DOTNET_VERSION: '5.0'
-  CSPROJ_FILE_PATH: 'source/Energinet.Charges.Libraries/source/Energinet.DataHub.Charges.Clients/Energinet.DataHub.Charges.Clients.csproj'
-  BINARY_PATH: 'source/Energinet.Charges.Libraries/source/Energinet.DataHub.Charges.Clients/bin/Release/*.nupkg'
+  CSPROJ_FILE_PATH: 'source/GreenEnergyHub.Charges/source/Energinet.DataHub.Charges.Clients/Energinet.DataHub.Charges.Clients.csproj'
+  BINARY_PATH: 'source/GreenEnergyHub.Charges/source/Energinet.DataHub.Charges.Clients//bin/Release/*.nupkg'
 
 jobs:
   build_and_publish:
