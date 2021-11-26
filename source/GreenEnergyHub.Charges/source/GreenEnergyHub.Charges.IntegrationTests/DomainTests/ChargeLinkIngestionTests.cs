@@ -70,7 +70,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 await Fixture.HostManager.HttpClient.SendAsync(request);
 
                 // Assert
-                await Fixture.MessageHubMock.AssertPeekReceivesReplyAsync(correlationId);
+                await Fixture.MessageHubMock.AssertPeekReceivesReplyAsync(correlationId, 2);
             }
 
             private static HttpRequestMessage CreateHttpRequest(string testFilePath, out string correlationId)
