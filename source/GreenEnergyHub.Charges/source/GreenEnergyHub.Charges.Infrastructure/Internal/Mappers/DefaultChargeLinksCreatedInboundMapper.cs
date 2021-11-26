@@ -19,8 +19,7 @@ using GreenEnergyHub.Charges.Domain.Dtos.DefaultChargeLinksDataAvailableNotified
 
 namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
 {
-    public class DefaultChargeLinksCreatedInboundMapper
-        : ProtobufInboundMapper<DefaultChargeLinksCreated.DefaultChargeLinksCreated>
+    public class DefaultChargeLinksCreatedInboundMapper : ProtobufInboundMapper<DefaultChargeLinksCreated.DefaultChargeLinksCreated>
     {
         protected override IInboundMessage Convert(DefaultChargeLinksCreated.DefaultChargeLinksCreated dataAvailableNotifiedLinkCommandReceived)
         {
