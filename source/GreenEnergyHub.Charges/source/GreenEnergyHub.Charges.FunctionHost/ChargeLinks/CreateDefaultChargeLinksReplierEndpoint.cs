@@ -16,6 +16,7 @@ using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application.ChargeLinks.Handlers;
 using GreenEnergyHub.Charges.Domain.Dtos.DefaultChargeLinksDataAvailableNotifiedEvents;
 using GreenEnergyHub.Charges.FunctionHost.Common;
+using GreenEnergyHub.Charges.Infrastructure.Internal.DefaultChargeLinksCreated;
 using GreenEnergyHub.Charges.Infrastructure.Messaging;
 using Microsoft.Azure.Functions.Worker;
 
@@ -28,11 +29,11 @@ namespace GreenEnergyHub.Charges.FunctionHost.ChargeLinks
         /// Function name affects the URL and thus possibly dependent infrastructure.
         /// </summary>
         public const string FunctionName = nameof(CreateDefaultChargeLinksReplierEndpoint);
-        private readonly MessageExtractor<DefaultChargeLinksCreatedEvent> _messageExtractor;
+        private readonly MessageExtractor<DefaultChargeLinksCreated> _messageExtractor;
         private readonly ICreateDefaultChargeLinksReplyHandler _createDefaultChargeLinksReplyHandler;
 
         public CreateDefaultChargeLinksReplierEndpoint(
-            MessageExtractor<DefaultChargeLinksCreatedEvent> messageExtractor,
+            MessageExtractor<DefaultChargeLinksCreated> messageExtractor,
             ICreateDefaultChargeLinksReplyHandler createDefaultChargeLinksReplyHandler)
         {
             _messageExtractor = messageExtractor;
