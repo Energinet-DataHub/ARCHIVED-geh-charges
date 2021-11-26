@@ -1,4 +1,6 @@
-The NuGet package [`Energinet.DataHub.Charges.Clients.Bff`](https://www.nuget.org/packages/Energinet.DataHub.Charges.Clients.Bff/) contains a client intended for BackendForFront (BFF) usage.
+# Documentation
+
+The NuGet package [`Energinet.DataHub.Charges.Clients.Bff`](https://www.nuget.org/packages/Energinet.DataHub.Charges.Clients.Bff/) contains a client intended for BackendForFrontend (BFF) usage.
 The client interacts with the Energinet DataHub Charges domain.
 
 ## Getting Started
