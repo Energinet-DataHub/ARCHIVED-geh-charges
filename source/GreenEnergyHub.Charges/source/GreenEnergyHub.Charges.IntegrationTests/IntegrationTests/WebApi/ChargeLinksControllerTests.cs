@@ -27,7 +27,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi
     [IntegrationTest]
     public class ChargeLinksControllerTests : IClassFixture<WebApplicationFactory<Charges.WebApi.Startup>>
     {
-        private const string BaseUrl = "/ChargeLinks/GetChargeLinksByMeteringPointId?meteringPointId=";
+        private const string BaseUrl = "/ChargeLinks/GetAsync?meteringPointId=";
         private readonly WebApplicationFactory<Charges.WebApi.Startup> _factory;
 
         public ChargeLinksControllerTests(WebApplicationFactory<Charges.WebApi.Startup> factory)
@@ -37,7 +37,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi
 
         [Theory]
         [InlineData("1")]
-        public async Task GetChargeLinksByMeteringPointId_WhenIdHasChargeLinks_ReturnsOkAndCorrectContentType(string meteringPointId)
+        public async Task GetAsync_WhenMeteringPointIdHasChargeLinks_ReturnsOkAndCorrectContentType(string meteringPointId)
         {
             // Arrange
             var client = _factory.CreateClient();
@@ -53,7 +53,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi
 
         [Theory]
         [InlineData("1")]
-        public async Task GetChargeLinksByMeteringPointId_WhenIdHasChargeLinks_ReturnsChargeLinks(string meteringPointId)
+        public async Task GetAsync_WhenMeteringPointIdHasChargeLinks_ReturnsChargeLinks(string meteringPointId)
         {
             // Arrange
             var client = _factory.CreateClient();
@@ -69,7 +69,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi
 
         [Theory]
         [InlineData("404")]
-        public async Task GetChargeLinksByMeteringPointId_WhenIdDoesNotExist_ReturnsNotFound(string meteringPointId)
+        public async Task GetAsync_WhenMeteringPointIdDoesNotExist_ReturnsNotFound(string meteringPointId)
         {
             var client = _factory.CreateClient();
 
@@ -80,7 +80,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi
 
         [Theory]
         [InlineData("")]
-        public async Task GetChargeLinksByMeteringPointId_WhenNoIdInput_ReturnsBadRequest(string meteringPointId)
+        public async Task GetAsync_WhenNoMeteringPointIdInput_ReturnsBadRequest(string meteringPointId)
         {
             var client = _factory.CreateClient();
 
