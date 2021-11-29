@@ -32,9 +32,7 @@ jobs:
           github_token: ${{ github.token }}
           paths: '[
             "source/Energinet.Charges.Libraries/**",
-            ".github/workflows/clients-abstractions-ci.yml",
-            ".github/actions/dotnet-build-and-test/**",
-            ".github/actions/azure-core-tools-install/**"
+            ".github/workflows/clients-abstractions-ci.yml"
           ]'
 
   validate_build_clients_abstractions:
