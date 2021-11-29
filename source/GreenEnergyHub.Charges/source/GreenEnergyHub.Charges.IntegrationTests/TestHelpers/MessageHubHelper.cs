@@ -24,19 +24,10 @@ namespace GreenEnergyHub.Charges.IntegrationTests.TestHelpers
         /// <summary>
         /// Initiates a peek and assert that a reply is received.
         /// </summary>
-        public static async Task AssertPeekReceivesReplyAsync(this MessageHubSimulation messageHub, string correlationId)
-        {
-            // Throws if expected data available message (by correlation ID) is not received
-            await messageHub.WaitForNotificationsInDataAvailableQueueAsync(TimeSpan.FromSeconds(10), correlationId);
-
-            // Invokes the domain and ensures that a reply to the peek request is received
-            await messageHub.PeekAsync(); // Throws if corresponding peek reply is not received
-        }
-
-        /// <summary>
-        /// Initiates a peek and assert that a reply is received.
-        /// </summary>
-        public static async Task AssertPeekReceivesReplyAsync(this MessageHubSimulation messageHub, string correlationId, int noOfMessageTypes)
+        public static async Task AssertPeekReceivesReplyAsync(
+            this MessageHubSimulation messageHub,
+            string correlationId,
+            int noOfMessageTypes = 1)
         {
             var correlationIds = Enumerable.Repeat(correlationId, noOfMessageTypes).ToArray();
 
