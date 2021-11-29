@@ -39,7 +39,7 @@ namespace Energinet.DataHub.Charges.Clients.Abstractions
         // Indicates whether the charge owner wants the charge to be displayed on the customer invoice
         bool TransparentInvoicing,
 
-        // Also knowns as quantity
+        // Also known as quantity
         int Factor,
         DateTime StartDateTimeUtc,
         DateTime? EndDateTimeUtc);
