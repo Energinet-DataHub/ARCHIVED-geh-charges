@@ -20,6 +20,7 @@ using GreenEnergyHub.Charges.Application.ChargeLinks.MessageHub;
 using GreenEnergyHub.Charges.Application.Charges.MessageHub;
 using GreenEnergyHub.Charges.Infrastructure.ChargeBundle;
 using GreenEnergyHub.Charges.Infrastructure.ChargeLinkBundle;
+using GreenEnergyHub.Charges.Infrastructure.ChargeLinkReceiptBundle;
 
 namespace GreenEnergyHub.Charges.Infrastructure.MessageHub
 {
@@ -37,6 +38,10 @@ namespace GreenEnergyHub.Charges.Infrastructure.MessageHub
             // RSM-034 CIM XML 'NotifyPriceList' requests
             if (request.MessageType.StartsWith(ChargeDataAvailableNotifier.MessageTypePrefix))
                 return _bundleCreators[typeof(ChargeBundleCreator)];
+
+            // RSM-030 CIM XML 'ConfirmRequestChangeBillingMasterData' confirmations
+            if (request.MessageType.StartsWith(ChargeLinkConfirmationDataAvailableNotifier.MessageTypePrefix))
+                return _bundleCreators[typeof(ChargeLinkConfirmationBundleCreator)];
 
             // RSM-031 CIM XML 'NotifyBillingMasterData' requests
             if (request.MessageType.StartsWith(ChargeLinkDataAvailableNotifier.MessageTypePrefix))
