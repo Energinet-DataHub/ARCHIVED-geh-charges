@@ -15,7 +15,7 @@
 using System.Collections.Generic;
 using System.Text.Json;
 using System.Threading.Tasks;
-using GreenEnergyHub.Charges.WebApi.Models;
+using Energinet.DataHub.Charges.Clients.Abstractions;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GreenEnergyHub.Charges.WebApi.Controllers
@@ -30,8 +30,8 @@ namespace GreenEnergyHub.Charges.WebApi.Controllers
         /// <param name="meteringPointId">The 18-digits metering point identifier used by the Danish version of Green Energy Hub.
         /// Use 404 to get a "404 Not Found" response.</param>
         /// <returns>Mocked charge links data or "404 Not Found"</returns>
-        [HttpGet("GetChargeLinksByMeteringPointId")]
-        public async Task<IActionResult> GetChargeLinksByMeteringPointIdAsync(string meteringPointId)
+        [HttpGet("GetAsync")]
+        public async Task<IActionResult> GetAsync(string meteringPointId)
         {
             if (meteringPointId == null)
             {

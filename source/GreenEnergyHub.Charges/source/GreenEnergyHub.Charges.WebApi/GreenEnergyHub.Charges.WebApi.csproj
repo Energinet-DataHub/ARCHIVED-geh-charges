@@ -20,6 +20,7 @@ limitations under the License.
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Energinet.DataHub.Charges.Clients.Abstractions" Version="1.0.0-alpha-20211129T083849" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="5.6.3" />
   </ItemGroup>
 
