@@ -13,10 +13,8 @@
 // limitations under the License.
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Net.Http;
-using System.Net.Http.Json;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Energinet.DataHub.Charges.Clients.Abstractions;
@@ -42,7 +40,7 @@ namespace Energinet.DataHub.Charges.Clients.Bff
         public async Task<IList<ChargeLinkDto>> GetAsync(string meteringPointId)
         {
             var list = new List<ChargeLinkDto>();
-            var response = await _httpClient.GetAsync(new Uri($"ChargeLinks/GetChargeLinksByMeteringPointIdAsync/?meteringPointId={meteringPointId}", UriKind.Relative))
+            var response = await _httpClient.GetAsync(new Uri($"{ChargesApiRelativeUris.ChargeLinksByMeteringPointId}{meteringPointId}", UriKind.Relative))
                 .ConfigureAwait(false);
 
             if (!response.IsSuccessStatusCode)
