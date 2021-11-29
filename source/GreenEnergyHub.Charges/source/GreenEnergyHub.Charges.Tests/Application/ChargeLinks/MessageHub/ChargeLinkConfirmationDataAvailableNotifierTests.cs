@@ -38,7 +38,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.MessageHub
     {
         [Theory]
         [InlineAutoMoqData]
-        public async Task NotifyAsync_WhenSystemOperator_DoesNothing(
+        public async Task NotifyAsync_WhenSenderIsSystemOperator_DoesNothing(
             [Frozen] Mock<IAvailableChargeLinkReceiptDataFactory> availableChargeLinkReceiptFactory,
             [Frozen] Mock<IMessageMetaDataContext> messageMetaDataContext,
             [Frozen] Mock<IAvailableChargeLinkReceiptDataRepository> availableChargeLinkReceiptDataRepository,
@@ -83,7 +83,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.MessageHub
         [Theory]
         [InlineAutoMoqData(MarketParticipantRole.GridAccessProvider)]
         [InlineAutoMoqData(MarketParticipantRole.EnergySupplier)]
-        public async Task NotifyAsync_WhenNotSystemOperator_Notifies(
+        public async Task NotifyAsync_WhenSenderIsNotSystemOperator_Notifies(
             MarketParticipantRole role,
             [Frozen] Mock<IAvailableChargeLinkReceiptDataFactory> availableChargeLinkReceiptFactory,
             [Frozen] Mock<IMessageMetaDataContext> messageMetaDataContext,
