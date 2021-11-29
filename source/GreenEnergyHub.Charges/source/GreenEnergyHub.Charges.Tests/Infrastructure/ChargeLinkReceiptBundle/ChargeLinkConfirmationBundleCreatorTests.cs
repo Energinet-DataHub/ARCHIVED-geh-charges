@@ -50,7 +50,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.ChargeLinkReceiptBundle
             repository.Setup(
                     r => r.GetAsync(
                         dataBundleRequestDto.DataAvailableNotificationIds))
-                .Returns(Task.FromResult(availableChargeLinkReceiptData));
+                .ReturnsAsync(availableChargeLinkReceiptData);
 
             // Act
             await sut.CreateAsync(dataBundleRequestDto, stream).ConfigureAwait(false);
