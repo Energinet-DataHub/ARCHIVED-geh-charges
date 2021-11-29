@@ -17,18 +17,13 @@ using System.Threading.Tasks;
 
 namespace Energinet.DataHub.Charges.Clients.Abstractions
 {
-    /// <summary>
-    /// Charge Links Client
-    /// </summary>
     public interface IChargeLinksClient
     {
         /// <summary>
-        /// Gets all charge links data for a given metering point. Currently it returns mocked data.
+        /// Gets all charge links data for a given metering point.
         /// </summary>
-        /// <param name="meteringPointId">The 18-digits metering point identifier used by the Danish version of Green Energy Hub.
-        /// Use 404 to get a "404 Not Found" response.
-        /// Empty input will result in a "400 Bad Request" response</param>
-        /// <returns>Mocked charge links data (Dtos)</returns>
+        /// <param name="meteringPointId">The 18-digits metering point identifier used by the Danish version of Green Energy Hub.</param>
+        /// <returns>Charge Link DTOs</returns>
         public Task<IList<ChargeLinkDto>> GetAsync(string meteringPointId);
     }
 }

@@ -32,6 +32,13 @@ namespace Energinet.DataHub.Charges.Clients.Bff
             _httpClient = httpClient;
         }
 
+        /// <summary>
+        /// Gets all charge links data for a given metering point. Currently it returns mocked data.
+        /// </summary>
+        /// <param name="meteringPointId">The 18-digits metering point identifier used by the Danish version of Green Energy Hub.
+        /// Use 404 to get a "404 Not Found" response.
+        /// Empty input will result in a "400 Bad Request" response</param>
+        /// <returns>Mocked charge links data (Dtos)</returns>
         public async Task<IList<ChargeLinkDto>> GetAsync(string meteringPointId)
         {
             var list = new List<ChargeLinkDto>();
