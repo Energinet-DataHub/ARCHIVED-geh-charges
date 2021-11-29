@@ -21,7 +21,7 @@ namespace Energinet.DataHub.Charges.Clients.Abstractions
         // The type of charge; tariff, fee or subscription
         ChargeType ChargeType,
 
-        // A charge identifier provided by the market participant. Combined with charge owner it becomes unique
+        // A charge identifier provided by the market participant. Combined with charge owner and charge type it becomes unique
         string ChargeId,
 
         // Charge name provided by the market participant.
