@@ -16,50 +16,59 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures
 {
     public static class ChargesServiceBusResourceNames
     {
-        public const string PostOfficeTopicKey = "sbt-post-office";
-        public const string PostOfficeSubscriptionName = "defaultSubscription";
+        // Environment specific settings
+        public const string MessageHubStorageConnectionString = "UseDevelopmentStorage=true";
 
-        public const string ChargeLinkAcceptedTopicKey = "sbt-link-command-accepted";
-        public const string ChargeLinkAcceptedDataAvailableNotifierSubscriptionName = "sbs-chargelinkaccepted-sub-dataavailablenotifier";
-        public const string ChargeLinkAcceptedEventPublisherSubscriptionName = "sbs-chargelinkaccepted-sub-eventpublisher";
-        public const string ChargeLinkAcceptedEventReplierSubscriptionName = "sbs-chargelinkaccepted-sub-replier";
+        // Integration events, charges
+        public const string ChargeCreatedTopicKey = "charge-created";
+        public const string ChargeCreatedSubscriptionName = "charge-created-sub";
+        public const string ChargePricesUpdatedTopicKey = "charge-prices-updated";
+        public const string ChargePricesUpdatedSubscriptionName = "charge-prices-updated-sub";
 
+        // Integration events, charge links
         public const string ChargeLinkCreatedTopicKey = "charge-link-created";
 
-        public const string ChargeLinkReceivedTopicKey = "sbt-link-command-received";
-        public const string ChargeLinkReceivedSubscriptionName = "sbs-link-command-received-receiver";
-
-        public const string CommandAcceptedTopicKey = "sbt-command-accepted";
-        public const string CommandAcceptedSubscriptionName = "sbs-command-accepted";
-        public const string CommandAcceptedReceiverSubscriptionName = "sbs-charge-command-accepted-receiver";
-        public const string ChargeAcceptedSubDataAvailableNotifier = "sbs-chargeaccepted-sub-dataavailablenotifier";
-
-        public const string CommandReceivedTopicKey = "sbt-command-received";
-        public const string CommandReceivedSubscriptionName = "sbs-command-received";
-
-        public const string CommandRejectedTopicKey = "sbt-command-rejected";
-        public const string CommandRejectedSubscriptionName = "sbs-command-rejected";
-
-        public const string CreateLinkRequestQueueKey = "create-link-request";
-        public const string CreateLinkReplyQueueKey = "create-link-reply";
-        public const string CreateLinkMessagesRequestQueueKey = "create-link-messages-request";
-
+        // Integration, metering point domain
         public const string ConsumptionMeteringPointCreatedTopicKey = "consumption-metering-point-created";
         public const string ConsumptionMeteringPointCreatedSubscriptionName = "consumption-metering-point-created-sub-charges";
+        public const string CreateLinkRequestQueueKey = "create-link-request";
+        public const string CreateLinkReplyQueueKey = "create-link-reply";
 
-        public const string ChargeCreatedTopicKey = "charge-created";
-        public const string ChargeCreatedSubscriptionName = "sbs-charge-created-sub";
+        // Integration, message hub
+        public const string MessageHubDataAvailableQueueKey = "dataavailable";
+        public const string MessageHubRequestQueueKey = "charges";
+        public const string MessageHubReplyQueueKey = "charges-reply";
+        public const string MessageHubStorageContainerName = "postoffice-reply";
 
-        public const string ChargePricesUpdatedTopicKey = "charge-prices-updated";
-        public const string ChargePricesUpdatedSubscriptionName = "sbs-charge-prices-updated";
+        // Internal, charge, received
+        public const string CommandReceivedTopicKey = "command-received";
+        public const string CommandReceivedSubscriptionName = "command-received";
 
-        public const string DefaultChargeLinksDataAvailableNotifiedTopicKey = "default-charge-link-available-notified";
-        public const string DefaultChargeLinksDataAvailableNotifiedSubscriptionName = "sbs-default-charge-link-available-notified-sub";
+        // Internal, charge, accepted
+        public const string CommandAcceptedTopicKey = "command-accepted";
+        public const string ChargeAcceptedSubDataAvailableNotifier = "chargeaccepted-sub-dataavailablenotifier";
+        public const string CommandAcceptedSubscriptionName = "command-accepted";
+        public const string CommandAcceptedReceiverSubscriptionName = "charge-command-accepted-receiver";
 
-        public const string MessageHubDataAvailableQueueKey = "message-hub-data-available";
-        public const string MessageHubRequestQueueKey = "message-hub-request";
-        public const string MessageHubReplyQueueKey = "message-hub-reply";
-        public const string MessageHubStorageConnectionString = "UseDevelopmentStorage=true";
-        public const string MessageHubStorageContainerName = "messagehub-bundles";
+        // Internal, charge, rejected
+        public const string CommandRejectedTopicKey = "command-rejected";
+        public const string CommandRejectedSubscriptionName = "command-rejected";
+
+        // Internal, charge links, received
+        public const string ChargeLinkReceivedTopicKey = "link-command-received";
+        public const string ChargeLinkReceivedSubscriptionName = "link-command-received-receiver";
+
+        // Internal, charge links, accepted
+        public const string ChargeLinkAcceptedTopicKey = "link-command-accepted";
+        public const string ChargeLinkAcceptedConfirmationNotifierSubscriptionName = "chargelinkaccepted-sub-confirmationnotifier";
+        public const string ChargeLinkAcceptedDataAvailableNotifierSubscriptionName = "chargelinkaccepted-sub-dataavailablenotifier";
+        public const string ChargeLinkAcceptedEventPublisherSubscriptionName = "chargelinkaccepted-sub-eventpublisher";
+        public const string ChargeLinkAcceptedEventReplierSubscriptionName = "chargelinkaccepted-sub-replier";
+        public const string DefaultChargeLinksDataAvailableNotifiedTopicKey = "default-charge-link-available";
+        public const string DefaultChargeLinksDataAvailableNotifiedSubscriptionName = "default-charge-link-available-notified";
+
+        // Integration, post office
+        public const string PostOfficeTopicKey = "post-office";
+        public const string PostOfficeSubscriptionName = "defaultSubscription";
     }
 }
