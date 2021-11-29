@@ -15,7 +15,7 @@
 using System.Collections.Generic;
 using System.Text.Json;
 using System.Threading.Tasks;
-using GreenEnergyHub.Charges.WebApi.Models;
+using Energinet.DataHub.Charges.Clients.Abstractions;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GreenEnergyHub.Charges.WebApi.Controllers
