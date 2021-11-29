@@ -1,7 +1,7 @@
 # Documentation
 
 The NuGet package [`Energinet.DataHub.Charges.Clients.Abstractions`](https://www.nuget.org/packages/Energinet.DataHub.Charges.Clients.Abstractions/) contains abstractions used by
-Energinet DataHub Charges domain when communicated with clients, e.g. [`Energinet.DataHub.Charges.Clients.Bff`](https://www.nuget.org/packages/Energinet.DataHub.Charges.Clients.Bff/).
+Energinet DataHub Charges domain when communicating with clients, e.g. [`Energinet.DataHub.Charges.Clients.Bff`](https://www.nuget.org/packages/Energinet.DataHub.Charges.Clients.Bff/).
 
 Energinet DataHub is built on the Green Energy Hub platform.
 
