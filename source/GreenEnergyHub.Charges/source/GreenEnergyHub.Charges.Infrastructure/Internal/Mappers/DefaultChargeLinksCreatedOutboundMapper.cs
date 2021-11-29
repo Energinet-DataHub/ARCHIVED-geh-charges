@@ -14,6 +14,7 @@
 
 using Energinet.DataHub.Core.Messaging.Protobuf;
 using Google.Protobuf;
+using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.Domain.Dtos.DefaultChargeLinksDataAvailableNotifiedEvents;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
@@ -27,6 +28,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
                 DefaultChargeLinksCreated.DefaultChargeLinksCreated
                 {
                     MeteringPointId = defaultChargeLinksCreatedEvent.MeteringPointId,
+                    PublishedTime = defaultChargeLinksCreatedEvent.PublishedTime.ToTimestamp().TruncateToSeconds(),
                 };
         }
     }
