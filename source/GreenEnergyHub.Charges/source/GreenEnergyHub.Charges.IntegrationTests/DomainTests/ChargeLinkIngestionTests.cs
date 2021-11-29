@@ -70,6 +70,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 await Fixture.HostManager.HttpClient.SendAsync(request);
 
                 // Assert
+                // We expect two message types in the messagehub, one for the receipt and one for the charge link itself
                 await Fixture.MessageHubMock.AssertPeekReceivesReplyAsync(correlationId, 2);
             }
 
