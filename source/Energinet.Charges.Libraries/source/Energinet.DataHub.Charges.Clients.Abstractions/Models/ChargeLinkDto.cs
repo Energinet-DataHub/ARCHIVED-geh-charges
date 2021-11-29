@@ -27,7 +27,7 @@ namespace Energinet.DataHub.Charges.Clients.Abstractions
         // Charge name provided by the market participant.
         string ChargeName,
 
-        // A charge owner identification, e.g.the market participant's GLN or EIC number
+        // A charge owner identification, e.g. the market participant's GLN or EIC number
         string ChargeOwnerId,
 
         // The market participant's company name
