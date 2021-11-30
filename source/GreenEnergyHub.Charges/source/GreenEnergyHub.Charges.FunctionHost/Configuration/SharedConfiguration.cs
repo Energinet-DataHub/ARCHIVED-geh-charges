@@ -29,6 +29,7 @@ using GreenEnergyHub.Charges.Domain.AvailableChargeData;
 using GreenEnergyHub.Charges.Domain.AvailableChargeLinkReceiptData;
 using GreenEnergyHub.Charges.Domain.AvailableChargeLinksData;
 using GreenEnergyHub.Charges.Domain.AvailableChargeReceiptData;
+using GreenEnergyHub.Charges.Domain.AvailableData;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Configuration;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksReceivedEvents;
@@ -112,13 +113,13 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
             serviceCollection.AddScoped<IChargeRepository, ChargeRepository>();
             serviceCollection.AddScoped<IMeteringPointRepository, MeteringPointRepository>();
             serviceCollection
-                .AddScoped<IAvailableChargeLinksDataRepository, AvailableChargeLinksDataRepository>();
+                .AddScoped<IAvailableDataRepository<AvailableChargeLinksData>, AvailableChargeLinksDataRepository>();
             serviceCollection
-                .AddScoped<IAvailableChargeDataRepository, AvailableChargeDataRepository>();
+                .AddScoped<IAvailableDataRepository<AvailableChargeData>, AvailableChargeDataRepository>();
             serviceCollection
-                .AddScoped<IAvailableChargeLinkReceiptDataRepository, AvailableChargeLinkReceiptDataRepository>();
+                .AddScoped<IAvailableDataRepository<AvailableChargeLinkReceiptData>, AvailableChargeLinkReceiptDataRepository>();
             serviceCollection
-                .AddScoped<IAvailableChargeReceiptDataRepository, AvailableChargeReceiptDataRepository>();
+                .AddScoped<IAvailableDataRepository<AvailableChargeReceiptData>, AvailableChargeReceiptDataRepository>();
         }
 
         private static void ConfigureSharedMessaging(IServiceCollection serviceCollection)
