@@ -19,7 +19,7 @@ using Energinet.DataHub.MessageHub.Model.Model;
 using GreenEnergyHub.Charges.Application.ChargeLinks.MessageHub;
 using GreenEnergyHub.Charges.Application.Charges.MessageHub;
 using GreenEnergyHub.Charges.Domain.AvailableChargeData;
-using GreenEnergyHub.Charges.Infrastructure.ChargeLinkBundle;
+using GreenEnergyHub.Charges.Domain.AvailableChargeLinksData;
 using GreenEnergyHub.Charges.Infrastructure.ChargeLinkReceiptBundle;
 
 namespace GreenEnergyHub.Charges.Infrastructure.MessageHub
@@ -45,7 +45,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.MessageHub
 
             // RSM-031 CIM XML 'NotifyBillingMasterData' requests
             if (request.MessageType.StartsWith(ChargeLinkDataAvailableNotifier.MessageTypePrefix))
-                return _bundleCreators[typeof(ChargeLinkBundleCreator)];
+                return _bundleCreators[typeof(BundleCreator<AvailableChargeLinksData>)];
 
             throw new ArgumentException(
                 $"Unknown message type: {request.MessageType} with DataAvailableNotificationIds: {request.IdempotencyId}");
