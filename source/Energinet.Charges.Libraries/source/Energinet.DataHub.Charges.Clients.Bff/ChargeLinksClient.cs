@@ -40,7 +40,7 @@ namespace Energinet.DataHub.Charges.Clients.Bff
         public async Task<IList<ChargeLinkDto>> GetAsync(string meteringPointId)
         {
             var list = new List<ChargeLinkDto>();
-            var response = await _httpClient.GetAsync(new Uri($"{ChargesApiRelativeUris.ChargeLinksByMeteringPointId}{meteringPointId}", UriKind.Relative))
+            var response = await _httpClient.GetAsync(ChargesRelativeUris.GetChargeLinksByMeteringPointId(meteringPointId))
                 .ConfigureAwait(false);
 
             if (!response.IsSuccessStatusCode)
