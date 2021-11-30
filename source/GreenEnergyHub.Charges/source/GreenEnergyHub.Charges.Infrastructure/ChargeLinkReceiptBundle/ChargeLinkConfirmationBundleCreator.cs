@@ -18,6 +18,7 @@ using System.Threading.Tasks;
 using Energinet.DataHub.MessageHub.Client.Storage;
 using Energinet.DataHub.MessageHub.Model.Model;
 using GreenEnergyHub.Charges.Domain.AvailableChargeLinkReceiptData;
+using GreenEnergyHub.Charges.Domain.AvailableData;
 using GreenEnergyHub.Charges.Infrastructure.ChargeLinkReceiptBundle.Cim;
 using GreenEnergyHub.Charges.Infrastructure.MessageHub;
 
@@ -25,12 +26,12 @@ namespace GreenEnergyHub.Charges.Infrastructure.ChargeLinkReceiptBundle
 {
     public class ChargeLinkConfirmationBundleCreator : IBundleCreator
     {
-        private readonly IAvailableChargeLinkReceiptDataRepository _availableChargeLinkReceiptDataRepository;
+        private readonly IAvailableDataRepository<AvailableChargeLinkReceiptData> _availableChargeLinkReceiptDataRepository;
         private readonly IChargeLinkReceiptCimSerializer _chargeLinkReceiptCimSerializer;
         private readonly IStorageHandler _storageHandler;
 
         public ChargeLinkConfirmationBundleCreator(
-            IAvailableChargeLinkReceiptDataRepository availableChargeLinkReceiptDataRepository,
+            IAvailableDataRepository<AvailableChargeLinkReceiptData> availableChargeLinkReceiptDataRepository,
             IChargeLinkReceiptCimSerializer chargeLinkReceiptCimSerializer,
             IStorageHandler storageHandler)
         {

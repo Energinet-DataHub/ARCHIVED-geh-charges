@@ -16,12 +16,12 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace GreenEnergyHub.Charges.Domain.AvailableChargeLinkReceiptData
+namespace GreenEnergyHub.Charges.Domain.AvailableData
 {
-    public interface IAvailableChargeLinkReceiptDataRepository
+    public interface IAvailableDataRepository<TAvailableData>
     {
-        Task StoreAsync(List<AvailableChargeLinkReceiptData> availableChargeLinkReceiptData);
+        Task StoreAsync(IEnumerable<TAvailableData> availableData);
 
-        Task<List<AvailableChargeLinkReceiptData>> GetAsync(IEnumerable<Guid> dataReferenceIds);
+        Task<IReadOnlyList<TAvailableData>> GetAsync(IEnumerable<Guid> dataReferenceIds);
     }
 }

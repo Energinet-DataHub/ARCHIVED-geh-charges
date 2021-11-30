@@ -22,6 +22,7 @@ using FluentAssertions;
 using GreenEnergyHub.Charges.Application;
 using GreenEnergyHub.Charges.Application.ChargeLinks.MessageHub;
 using GreenEnergyHub.Charges.Domain.AvailableChargeLinkReceiptData;
+using GreenEnergyHub.Charges.Domain.AvailableData;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksAcceptedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
@@ -41,7 +42,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.MessageHub
         public async Task NotifyAsync_WhenSenderIsSystemOperator_DoesNothing(
             [Frozen] Mock<IAvailableChargeLinkReceiptDataFactory> availableChargeLinkReceiptFactory,
             [Frozen] Mock<IMessageMetaDataContext> messageMetaDataContext,
-            [Frozen] Mock<IAvailableChargeLinkReceiptDataRepository> availableChargeLinkReceiptDataRepository,
+            [Frozen] Mock<IAvailableDataRepository<AvailableChargeLinkReceiptData>> availableChargeLinkReceiptDataRepository,
             [Frozen] Mock<IDataAvailableNotificationSender> dataAvailableNotificationSender,
             [Frozen] Mock<ICorrelationContext> correlationContext,
             ChargeLinksAcceptedEvent acceptedEvent,
@@ -87,7 +88,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.MessageHub
             MarketParticipantRole role,
             [Frozen] Mock<IAvailableChargeLinkReceiptDataFactory> availableChargeLinkReceiptFactory,
             [Frozen] Mock<IMessageMetaDataContext> messageMetaDataContext,
-            [Frozen] Mock<IAvailableChargeLinkReceiptDataRepository> availableChargeLinkReceiptDataRepository,
+            [Frozen] Mock<IAvailableDataRepository<AvailableChargeLinkReceiptData>> availableChargeLinkReceiptDataRepository,
             [Frozen] Mock<IDataAvailableNotificationSender> dataAvailableNotificationSender,
             [Frozen] Mock<ICorrelationContext> correlationContext,
             ChargeLinksAcceptedEvent acceptedEvent,

@@ -14,7 +14,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -23,6 +22,7 @@ using Energinet.DataHub.MessageHub.Client.Storage;
 using Energinet.DataHub.MessageHub.Model.Model;
 using GreenEnergyHub.Charges.Application.ChargeLinks.MessageHub;
 using GreenEnergyHub.Charges.Domain.AvailableChargeLinkReceiptData;
+using GreenEnergyHub.Charges.Domain.AvailableData;
 using GreenEnergyHub.Charges.Infrastructure.ChargeLinkReceiptBundle;
 using GreenEnergyHub.Charges.Infrastructure.ChargeLinkReceiptBundle.Cim;
 using GreenEnergyHub.Charges.TestCore.Reflection;
@@ -39,7 +39,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.ChargeLinkReceiptBundle
         [Theory]
         [InlineAutoDomainData]
         public async Task CreateAsync_WhenCalled_UsesRepositoryAndSerializer(
-            [Frozen] Mock<IAvailableChargeLinkReceiptDataRepository> repository,
+            [Frozen] Mock<IAvailableDataRepository<AvailableChargeLinkReceiptData>> repository,
             [Frozen] Mock<IChargeLinkReceiptCimSerializer> serializer,
             [Frozen] Mock<IStorageHandler> storageHandler,
             DataBundleRequestDto dataBundleRequestDto,
