@@ -17,15 +17,15 @@ using System;
 namespace Energinet.DataHub.Charges.Clients
 {
     /// <summary>
-    /// TODO
+    /// This static class contains all relative uris / endpoints for the Charges Web API
     /// </summary>
     public static class ChargesRelativeUris
     {
         /// <summary>
-        /// TODO
+        /// Provides the relative uri for getting charge links for a given metering point id.
         /// </summary>
-        /// <param name="meteringPointId"></param>
-        /// <returns>TBA</returns>
+        /// <param name="meteringPointId">The 18-digits metering point identifier used by the Danish version of Green Energy Hub.</param>
+        /// <returns>Relative URI including parameter</returns>
         public static Uri GetChargeLinksByMeteringPointId(string meteringPointId)
         {
             return new Uri($"ChargeLinks/GetChargeLinksByMeteringPointIdAsync/?meteringPointId={meteringPointId}", UriKind.Relative);
