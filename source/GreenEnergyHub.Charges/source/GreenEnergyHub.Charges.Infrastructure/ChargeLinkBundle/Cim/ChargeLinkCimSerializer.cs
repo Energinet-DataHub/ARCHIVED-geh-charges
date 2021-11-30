@@ -24,7 +24,7 @@ using NodaTime;
 
 namespace GreenEnergyHub.Charges.Infrastructure.ChargeLinkBundle.Cim
 {
-    public class ChargeLinkCimSerializer : CimSerializer<AvailableChargeLinksData>, IChargeLinkCimSerializer
+    public class ChargeLinkCimSerializer : CimSerializer<AvailableChargeLinksData>
     {
         public ChargeLinkCimSerializer(
             IHubSenderConfiguration hubSenderConfiguration,
