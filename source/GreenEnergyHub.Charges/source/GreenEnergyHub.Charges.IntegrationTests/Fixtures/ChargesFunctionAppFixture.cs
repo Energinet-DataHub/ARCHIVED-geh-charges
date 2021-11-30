@@ -62,6 +62,9 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures
         [NotNull]
         public QueueResource? CreateLinkReplyQueue { get; private set; }
 
+        [NotNull]
+        public ServiceBusTestListener? CreateLinkReplyQueueListener { get; private set; }
+
         private AzuriteManager AzuriteManager { get; }
 
         private IntegrationTestConfiguration IntegrationTestConfiguration { get; }
@@ -172,6 +175,10 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures
                 .BuildTopic(ChargesServiceBusResourceNames.ChargePricesUpdatedTopicKey).SetEnvironmentVariableToTopicName(EnvironmentSettingNames.ChargePricesUpdatedTopicName)
                 .AddSubscription(ChargesServiceBusResourceNames.ChargePricesUpdatedSubscriptionName)
                 .CreateAsync();
+
+            var createLinkReplyQueueListener = new ServiceBusListenerMock(ServiceBusResourceProvider.ConnectionString, TestLogger);
+            await createLinkReplyQueueListener.AddQueueListenerAsync(CreateLinkReplyQueue.Name);
+            CreateLinkReplyQueueListener = new ServiceBusTestListener(createLinkReplyQueueListener);
 
             var chargePricesUpdatedListener = new ServiceBusListenerMock(ServiceBusResourceProvider.ConnectionString, TestLogger);
             await chargePricesUpdatedListener.AddTopicSubscriptionListenerAsync(chargePricesUpdatedTopic.Name, ChargesServiceBusResourceNames.ChargePricesUpdatedSubscriptionName);
