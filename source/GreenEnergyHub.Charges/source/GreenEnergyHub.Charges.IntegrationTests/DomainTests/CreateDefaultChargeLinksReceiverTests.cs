@@ -78,8 +78,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                     () => Fixture.CreateLinkRequestQueue.SenderClient.SendMessageAsync(request), correlationId, parentId);
 
                 // Assert
-                var isChargePricesUpdatedReceived = isMessageReceived.MessageAwaiter!.Wait(TimeSpan.FromSeconds(10));
-                isChargePricesUpdatedReceived.Should().BeTrue();
+                var isMessageReceivedByQueue = isMessageReceived.MessageAwaiter!.Wait(TimeSpan.FromSeconds(10));
+                isMessageReceivedByQueue.Should().BeTrue();
             }
 
             public Task InitializeAsync()
