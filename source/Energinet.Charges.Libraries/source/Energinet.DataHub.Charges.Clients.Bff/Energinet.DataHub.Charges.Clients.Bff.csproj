@@ -1,0 +1,88 @@
+﻿<!--
+Copyright 2020 Energinet DataHub A/S
+
+Licensed under the Apache License, Version 2.0 (the "License2");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+    <LangVersion>9</LangVersion>
+    <Nullable>enable</Nullable>
+    <RootNamespace>Energinet.DataHub.Charges.Clients.Bff</RootNamespace>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <IsPackable>true</IsPackable>
+  </PropertyGroup>
+
+  <!-- Configuration for NuGet package -->
+  <PropertyGroup>
+    <PackageId>Energinet.DataHub.Charges.Clients.Bff</PackageId>
+    <PackageVersion>1.0.0$(VersionSuffix)</PackageVersion>
+    <Title>Energinet.DataHub.Charges.Clients.Bff</Title>
+    <Company>Energinet DataHub A/S</Company>
+    <Authors>DataHub</Authors>
+    <RepositoryUrl>https://github.com/Energinet-DataHub/geh-charges</RepositoryUrl>
+    <PackageReleaseNotes>
+      Release Notes
+      https://github.com/Energinet-DataHub/geh-charges/tree/main/source/Energinet.Charges.Libraries/source/Energinet.DataHub.Charges.Clients.Bff/documents/release-notes/release-notes.md
+
+      Documentation
+      https://github.com/Energinet-DataHub/geh-charges/tree/main/source/Energinet.Charges.Libraries/source/Energinet.DataHub.Charges.Clients.Bff/documents/documentation.md
+    </PackageReleaseNotes>
+    <PackageDescription>
+      Release Notes
+      https://github.com/Energinet-DataHub/geh-charges/tree/main/source/Energinet.Charges.Libraries/source/Energinet.DataHub.Charges.Clients.Bff/documents/release-notes/release-notes.md
+
+      Documentation
+      https://github.com/Energinet-DataHub/geh-charges/tree/main/source/Energinet.Charges.Libraries/source/Energinet.DataHub.Charges.Clients.Bff/documents/documentation.md
+    </PackageDescription>
+    <Description>
+      The NuGet package Energinet.DataHub.Charges.Clients.Bff contains a client intended for BackendForFrontend (BFF) usage.
+      The client interacts with the Energinet DataHub Charges domain.
+
+      Learn more about the Green Energy Hub platform at https://github.com/Energinet-DataHub/green-energy-hub.
+
+      Learn more about the Charges domain at https://github.com/Energinet-DataHub/geh-charges.
+
+      Learn more about Energinet at https://energinet.dk/.
+    </Description>
+    <PackageTags>green-energy-hub;datahub;library;bff;energinet</PackageTags>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
+  </PropertyGroup>
+
+  <!-- Enable Source Link (https://github.com/dotnet/sourcelink/blob/master/README.md) -->
+  <PropertyGroup>
+    <!-- Publish the repository URL in the built .nupkg (in the NuSpec <Repository> element) -->
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="5.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Http" Version="3.0.3" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Energinet.DataHub.Charges.Clients.Abstractions\Energinet.DataHub.Charges.Clients.Abstractions.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Update="StyleCop.Analyzers" Version="1.2.0-beta.261">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+</Project>
