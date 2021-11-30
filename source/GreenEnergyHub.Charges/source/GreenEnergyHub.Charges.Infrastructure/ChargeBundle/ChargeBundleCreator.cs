@@ -20,6 +20,7 @@ using Energinet.DataHub.MessageHub.Client.Storage;
 using Energinet.DataHub.MessageHub.Model.Model;
 using GreenEnergyHub.Charges.Application.Charges.MessageHub;
 using GreenEnergyHub.Charges.Domain.AvailableChargeData;
+using GreenEnergyHub.Charges.Domain.AvailableData;
 using GreenEnergyHub.Charges.Infrastructure.ChargeBundle.Cim;
 using GreenEnergyHub.Charges.Infrastructure.MessageHub;
 
@@ -27,13 +28,13 @@ namespace GreenEnergyHub.Charges.Infrastructure.ChargeBundle
 {
     public class ChargeBundleCreator : IBundleCreator
     {
-        private readonly IAvailableChargeDataRepository _availableChargeDataRepository;
+        private readonly IAvailableDataRepository<AvailableChargeData> _availableChargeDataRepository;
 
         private readonly IChargeCimSerializer _chargeCimSerializer;
         private readonly IStorageHandler _storageHandler;
 
         public ChargeBundleCreator(
-            IAvailableChargeDataRepository availableChargeDataRepository,
+            IAvailableDataRepository<AvailableChargeData> availableChargeDataRepository,
             IChargeCimSerializer chargeCimSerializer,
             IStorageHandler storageHandler)
         {

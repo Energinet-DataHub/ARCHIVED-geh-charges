@@ -19,6 +19,7 @@ using System.Threading.Tasks;
 using Energinet.DataHub.MessageHub.Client.DataAvailable;
 using Energinet.DataHub.MessageHub.Model.Model;
 using GreenEnergyHub.Charges.Domain.AvailableChargeData;
+using GreenEnergyHub.Charges.Domain.AvailableData;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandAcceptedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
@@ -36,7 +37,7 @@ namespace GreenEnergyHub.Charges.Application.Charges.MessageHub
         public const string MessageTypePrefix = "ChargeDataAvailable";
 
         private readonly IDataAvailableNotificationSender _dataAvailableNotificationSender;
-        private readonly IAvailableChargeDataRepository _availableChargeDataRepository;
+        private readonly IAvailableDataRepository<AvailableChargeData> _availableChargeDataRepository;
         private readonly IAvailableChargeDataFactory _availableChargeDataFactory;
         private readonly IMarketParticipantRepository _marketParticipantRepository;
         private readonly ICorrelationContext _correlationContext;
@@ -44,7 +45,7 @@ namespace GreenEnergyHub.Charges.Application.Charges.MessageHub
 
         public ChargeDataAvailableNotifier(
             IDataAvailableNotificationSender dataAvailableNotificationSender,
-            IAvailableChargeDataRepository availableChargeDataRepository,
+            IAvailableDataRepository<AvailableChargeData> availableChargeDataRepository,
             IAvailableChargeDataFactory availableChargeDataFactory,
             IMarketParticipantRepository marketParticipantRepository,
             ICorrelationContext correlationContext,
@@ -98,7 +99,7 @@ namespace GreenEnergyHub.Charges.Application.Charges.MessageHub
                     provider,
                     now,
                     dataAvailableNotificationDto.Uuid);
-                await _availableChargeDataRepository.StoreAsync(availableChargeData);
+                await _availableChargeDataRepository.StoreAsync(new List<AvailableChargeData>() { availableChargeData });
             }
 
             return dataAvailableNotificationDtos;

@@ -115,7 +115,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
             serviceCollection
                 .AddScoped<IAvailableDataRepository<AvailableChargeLinksData>, AvailableChargeLinksDataRepository>();
             serviceCollection
-                .AddScoped<IAvailableChargeDataRepository, AvailableChargeDataRepository>();
+                .AddScoped<IAvailableDataRepository<AvailableChargeData>, AvailableChargeDataRepository>();
             serviceCollection
                 .AddScoped<IAvailableDataRepository<AvailableChargeLinkReceiptData>, AvailableChargeLinkReceiptDataRepository>();
             serviceCollection
