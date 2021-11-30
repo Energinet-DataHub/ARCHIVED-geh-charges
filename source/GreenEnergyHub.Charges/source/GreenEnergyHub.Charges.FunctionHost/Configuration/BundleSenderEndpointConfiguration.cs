@@ -15,6 +15,7 @@
 using Energinet.DataHub.MessageHub.Model.Peek;
 using GreenEnergyHub.Charges.Application.MessageHub;
 using GreenEnergyHub.Charges.Domain.AvailableChargeData;
+using GreenEnergyHub.Charges.Domain.AvailableChargeLinkReceiptData;
 using GreenEnergyHub.Charges.Domain.AvailableChargeLinksData;
 using GreenEnergyHub.Charges.Infrastructure.ChargeBundle;
 using GreenEnergyHub.Charges.Infrastructure.ChargeBundle.Cim;
@@ -46,7 +47,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
             serviceCollection.AddScoped<IBundleCreator, ChargeLinkBundleCreator>();
             serviceCollection.AddScoped<ICimSerializer<AvailableChargeLinksData>, ChargeLinkCimSerializer>();
             serviceCollection.AddScoped<IBundleCreator, ChargeLinkConfirmationBundleCreator>();
-            serviceCollection.AddScoped<IChargeLinkReceiptCimSerializer, ChargeLinkReceiptCimSerializer>();
+            serviceCollection.AddScoped<ICimSerializer<AvailableChargeLinkReceiptData>, ChargeLinkReceiptCimSerializer>();
         }
     }
 }
