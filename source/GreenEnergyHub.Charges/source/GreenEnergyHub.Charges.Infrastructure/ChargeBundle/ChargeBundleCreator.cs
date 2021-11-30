@@ -16,6 +16,7 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Energinet.DataHub.MessageHub.Client.Storage;
 using Energinet.DataHub.MessageHub.Model.Model;
 using GreenEnergyHub.Charges.Application.Charges.MessageHub;
 using GreenEnergyHub.Charges.Domain.AvailableChargeData;
@@ -29,13 +30,16 @@ namespace GreenEnergyHub.Charges.Infrastructure.ChargeBundle
         private readonly IAvailableChargeDataRepository _availableChargeDataRepository;
 
         private readonly IChargeCimSerializer _chargeCimSerializer;
+        private readonly IStorageHandler _storageHandler;
 
         public ChargeBundleCreator(
             IAvailableChargeDataRepository availableChargeDataRepository,
-            IChargeCimSerializer chargeCimSerializer)
+            IChargeCimSerializer chargeCimSerializer,
+            IStorageHandler storageHandler)
         {
             _availableChargeDataRepository = availableChargeDataRepository;
             _chargeCimSerializer = chargeCimSerializer;
+            _storageHandler = storageHandler;
         }
 
         public async Task CreateAsync(DataBundleRequestDto request, Stream outputStream)
@@ -43,8 +47,10 @@ namespace GreenEnergyHub.Charges.Infrastructure.ChargeBundle
             if (!request.MessageType.StartsWith(ChargeDataAvailableNotifier.MessageTypePrefix))
                 throw new InvalidOperationException($"{nameof(ChargeBundleCreator)} does not support message type '{request.MessageType}'.");
 
+            var dataAvailableNotificationIds = await _storageHandler.GetDataAvailableNotificationIdsAsync(request).ConfigureAwait(false);
+
             var availableData = await _availableChargeDataRepository
-                .GetAsync(request.DataAvailableNotificationIds)
+                .GetAsync(dataAvailableNotificationIds)
                 .ConfigureAwait(false);
 
             await _chargeCimSerializer.SerializeToStreamAsync(
