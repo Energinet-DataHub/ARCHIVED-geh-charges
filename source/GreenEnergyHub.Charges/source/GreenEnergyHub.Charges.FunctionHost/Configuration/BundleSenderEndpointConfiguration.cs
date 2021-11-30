@@ -14,12 +14,14 @@
 
 using Energinet.DataHub.MessageHub.Model.Peek;
 using GreenEnergyHub.Charges.Application.MessageHub;
+using GreenEnergyHub.Charges.Domain.AvailableChargeData;
 using GreenEnergyHub.Charges.Infrastructure.ChargeBundle;
 using GreenEnergyHub.Charges.Infrastructure.ChargeBundle.Cim;
 using GreenEnergyHub.Charges.Infrastructure.ChargeLinkBundle;
 using GreenEnergyHub.Charges.Infrastructure.ChargeLinkBundle.Cim;
 using GreenEnergyHub.Charges.Infrastructure.ChargeLinkReceiptBundle;
 using GreenEnergyHub.Charges.Infrastructure.ChargeLinkReceiptBundle.Cim;
+using GreenEnergyHub.Charges.Infrastructure.Cim;
 using GreenEnergyHub.Charges.Infrastructure.MessageHub;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -37,7 +39,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
 
             // Charge bundles
             serviceCollection.AddScoped<IBundleCreator, ChargeBundleCreator>();
-            serviceCollection.AddScoped<IChargeCimSerializer, ChargeCimSerializer>();
+            serviceCollection.AddScoped<ICimSerializer<AvailableChargeData>, ChargeCimSerializer>();
 
             // Charge link bundles
             serviceCollection.AddScoped<IBundleCreator, ChargeLinkBundleCreator>();

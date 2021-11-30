@@ -24,7 +24,7 @@ using GreenEnergyHub.Charges.Application.Charges.MessageHub;
 using GreenEnergyHub.Charges.Domain.AvailableChargeData;
 using GreenEnergyHub.Charges.Domain.AvailableData;
 using GreenEnergyHub.Charges.Infrastructure.ChargeBundle;
-using GreenEnergyHub.Charges.Infrastructure.ChargeBundle.Cim;
+using GreenEnergyHub.Charges.Infrastructure.Cim;
 using GreenEnergyHub.Charges.TestCore.Reflection;
 using GreenEnergyHub.TestHelpers;
 using Moq;
@@ -40,7 +40,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.ChargeBundle
         [InlineAutoDomainData]
         public async Task CreateAsync_WhenCalled_UsesRepositoryAndSerializer(
             [Frozen] Mock<IAvailableDataRepository<AvailableChargeData>> repository,
-            [Frozen] Mock<IChargeCimSerializer> serializer,
+            [Frozen] Mock<ICimSerializer<AvailableChargeData>> serializer,
             DataBundleRequestDto dataBundleRequestDto,
             List<AvailableChargeData> availableChargeData,
             List<Guid> dataAvailableIds,
