@@ -40,7 +40,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
             serviceCollection.AddScoped<IRequestBundleParser, RequestBundleParser>();
 
             // Charge bundles
-            serviceCollection.AddScoped<IBundleCreator, ChargeBundleCreator>();
+            serviceCollection.AddScoped<IBundleCreator, BundleCreator<AvailableChargeData>>();
             serviceCollection.AddScoped<ICimSerializer<AvailableChargeData>, ChargeCimSerializer>();
 
             // Charge link bundles
