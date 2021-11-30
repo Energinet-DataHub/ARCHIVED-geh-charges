@@ -22,6 +22,7 @@ using Energinet.DataHub.MessageHub.Client.Storage;
 using Energinet.DataHub.MessageHub.Model.Model;
 using GreenEnergyHub.Charges.Application.ChargeLinks.MessageHub;
 using GreenEnergyHub.Charges.Domain.AvailableChargeLinksData;
+using GreenEnergyHub.Charges.Domain.AvailableData;
 using GreenEnergyHub.Charges.Infrastructure.ChargeLinkBundle;
 using GreenEnergyHub.Charges.Infrastructure.ChargeLinkBundle.Cim;
 using GreenEnergyHub.Charges.TestCore.Reflection;
@@ -38,7 +39,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.ChargeLinkBundle
         [Theory]
         [InlineAutoDomainData]
         public async Task CreateAsync_WhenCalled_UsesRepositoryAndSerializer(
-            [Frozen] Mock<IAvailableChargeLinksDataRepository> repository,
+            [Frozen] Mock<IAvailableDataRepository<AvailableChargeLinksData>> repository,
             [Frozen] Mock<IChargeLinkCimSerializer> serializer,
             DataBundleRequestDto dataBundleRequestDto,
             List<AvailableChargeLinksData> availableChargeLinksData,
@@ -56,7 +57,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.ChargeLinkBundle
 
             repository.Setup(
                     r => r.GetAsync(dataAvailableIds))
-                .Returns(Task.FromResult(availableChargeLinksData));
+                .ReturnsAsync(availableChargeLinksData);
 
             // Act
             await sut.CreateAsync(dataBundleRequestDto, stream).ConfigureAwait(false);
