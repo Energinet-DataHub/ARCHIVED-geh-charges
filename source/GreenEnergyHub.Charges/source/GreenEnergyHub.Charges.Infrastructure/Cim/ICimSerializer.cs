@@ -24,7 +24,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Cim
         where TAvailableData : AvailableDataBase
     {
         Task SerializeToStreamAsync(
-            IEnumerable<TAvailableData> receipts,
+            IEnumerable<TAvailableData> availableData,
             Stream stream,
             BusinessReasonCode businessReasonCode,
             string recipientId,
