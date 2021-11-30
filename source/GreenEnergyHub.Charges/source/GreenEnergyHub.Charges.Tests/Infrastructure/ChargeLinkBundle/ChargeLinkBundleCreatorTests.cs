@@ -12,11 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
+using Energinet.DataHub.MessageHub.Client.Storage;
 using Energinet.DataHub.MessageHub.Model.Model;
 using GreenEnergyHub.Charges.Application.ChargeLinks.MessageHub;
 using GreenEnergyHub.Charges.Domain.AvailableChargeLinksData;
@@ -40,14 +42,20 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.ChargeLinkBundle
             [Frozen] Mock<IChargeLinkCimSerializer> serializer,
             DataBundleRequestDto dataBundleRequestDto,
             List<AvailableChargeLinksData> availableChargeLinksData,
+            [Frozen] Mock<IStorageHandler> storageHandler,
+            List<Guid> dataAvailableIds,
             Stream stream,
             ChargeLinkBundleCreator sut)
         {
             // Arrange
             dataBundleRequestDto.SetPrivateProperty(r => r.MessageType, ChargeLinkDataAvailableNotifier.MessageTypePrefix);
+
+            storageHandler
+                .Setup(r => r.GetDataAvailableNotificationIdsAsync(dataBundleRequestDto))
+                .ReturnsAsync(dataAvailableIds);
+
             repository.Setup(
-                    r => r.GetAsync(
-                        dataBundleRequestDto.DataAvailableNotificationIds))
+                    r => r.GetAsync(dataAvailableIds))
                 .Returns(Task.FromResult(availableChargeLinksData));
 
             // Act

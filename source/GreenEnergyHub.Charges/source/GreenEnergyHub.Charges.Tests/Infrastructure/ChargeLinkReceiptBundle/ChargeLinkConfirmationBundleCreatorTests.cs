@@ -12,11 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
+using Energinet.DataHub.MessageHub.Client.Storage;
 using Energinet.DataHub.MessageHub.Model.Model;
 using GreenEnergyHub.Charges.Application.ChargeLinks.MessageHub;
 using GreenEnergyHub.Charges.Domain.AvailableChargeLinkReceiptData;
@@ -38,8 +41,10 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.ChargeLinkReceiptBundle
         public async Task CreateAsync_WhenCalled_UsesRepositoryAndSerializer(
             [Frozen] Mock<IAvailableChargeLinkReceiptDataRepository> repository,
             [Frozen] Mock<IChargeLinkReceiptCimSerializer> serializer,
+            [Frozen] Mock<IStorageHandler> storageHandler,
             DataBundleRequestDto dataBundleRequestDto,
             List<AvailableChargeLinkReceiptData> availableChargeLinkReceiptData,
+            List<Guid> dataAvailableIds,
             Stream stream,
             ChargeLinkConfirmationBundleCreator sut)
         {
@@ -47,9 +52,13 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.ChargeLinkReceiptBundle
             dataBundleRequestDto.SetPrivateProperty(
                 r => r.MessageType,
                 ChargeLinkConfirmationDataAvailableNotifier.MessageTypePrefix);
+
+            storageHandler
+                .Setup(r => r.GetDataAvailableNotificationIdsAsync(dataBundleRequestDto))
+                .ReturnsAsync(dataAvailableIds);
+
             repository.Setup(
-                    r => r.GetAsync(
-                        dataBundleRequestDto.DataAvailableNotificationIds))
+                    r => r.GetAsync(dataAvailableIds))
                 .ReturnsAsync(availableChargeLinkReceiptData);
 
             // Act
