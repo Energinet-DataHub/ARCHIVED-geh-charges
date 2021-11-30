@@ -22,7 +22,7 @@ limitations under the License.
     <RunAnalyzersDuringBuild>true</RunAnalyzersDuringBuild>
     <LangVersion>9</LangVersion>
     <IsPackable>false</IsPackable>
-    <RootNamespace>Energinet.DataHub.Charges.Clients.SimpleInjectorTests</RootNamespace>
+    <RootNamespace>Energinet.DataHub.Charges.Clients.RegistrationTests</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
