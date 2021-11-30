@@ -15,10 +15,9 @@
 using System;
 using System.Linq;
 using System.Net.Http;
-using Energinet.DataHub.Charges.Clients.Abstractions;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Energinet.DataHub.Charges.Clients.Bff
+namespace Energinet.DataHub.Charges.Clients
 {
     public static class ContainerExtensions
     {
