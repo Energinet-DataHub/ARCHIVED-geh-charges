@@ -48,7 +48,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.MessageHub
                 return _bundleCreators[typeof(ChargeLinkBundleCreator)];
 
             throw new ArgumentException(
-                $"Unknown message type: {request.MessageType} with DataAvailableNotificationIds: {request.DataAvailableNotificationIds}");
+                $"Unknown message type: {request.MessageType} with DataAvailableNotificationIds: {request.IdempotencyId}");
         }
     }
 }

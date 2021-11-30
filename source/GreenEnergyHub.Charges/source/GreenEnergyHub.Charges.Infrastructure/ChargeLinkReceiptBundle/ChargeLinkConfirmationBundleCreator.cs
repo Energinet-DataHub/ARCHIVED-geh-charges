@@ -15,6 +15,7 @@
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Energinet.DataHub.MessageHub.Client.Storage;
 using Energinet.DataHub.MessageHub.Model.Model;
 using GreenEnergyHub.Charges.Domain.AvailableChargeLinkReceiptData;
 using GreenEnergyHub.Charges.Infrastructure.ChargeLinkReceiptBundle.Cim;
@@ -26,19 +27,24 @@ namespace GreenEnergyHub.Charges.Infrastructure.ChargeLinkReceiptBundle
     {
         private readonly IAvailableChargeLinkReceiptDataRepository _availableChargeLinkReceiptDataRepository;
         private readonly IChargeLinkReceiptCimSerializer _chargeLinkReceiptCimSerializer;
+        private readonly IStorageHandler _storageHandler;
 
         public ChargeLinkConfirmationBundleCreator(
             IAvailableChargeLinkReceiptDataRepository availableChargeLinkReceiptDataRepository,
-            IChargeLinkReceiptCimSerializer chargeLinkReceiptCimSerializer)
+            IChargeLinkReceiptCimSerializer chargeLinkReceiptCimSerializer,
+            IStorageHandler storageHandler)
         {
             _availableChargeLinkReceiptDataRepository = availableChargeLinkReceiptDataRepository;
             _chargeLinkReceiptCimSerializer = chargeLinkReceiptCimSerializer;
+            _storageHandler = storageHandler;
         }
 
         public async Task CreateAsync(DataBundleRequestDto request, Stream outputStream)
         {
+            var dataAvailableNotificationIds = await _storageHandler.GetDataAvailableNotificationIdsAsync(request).ConfigureAwait(false);
+
             var availableData = await _availableChargeLinkReceiptDataRepository
-                .GetAsync(request.DataAvailableNotificationIds)
+                .GetAsync(dataAvailableNotificationIds)
                 .ConfigureAwait(false);
 
             await _chargeLinkReceiptCimSerializer.SerializeToStreamAsync(

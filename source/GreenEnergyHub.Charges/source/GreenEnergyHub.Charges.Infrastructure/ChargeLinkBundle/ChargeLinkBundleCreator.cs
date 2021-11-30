@@ -16,6 +16,7 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Energinet.DataHub.MessageHub.Client.Storage;
 using Energinet.DataHub.MessageHub.Model.Model;
 using GreenEnergyHub.Charges.Application.ChargeLinks.MessageHub;
 using GreenEnergyHub.Charges.Domain.AvailableChargeLinksData;
@@ -28,13 +29,16 @@ namespace GreenEnergyHub.Charges.Infrastructure.ChargeLinkBundle
     {
         private readonly IAvailableChargeLinksDataRepository _availableChargeLinksDataRepository;
         private readonly IChargeLinkCimSerializer _chargeLinkCimSerializer;
+        private readonly IStorageHandler _storageHandler;
 
         public ChargeLinkBundleCreator(
             IAvailableChargeLinksDataRepository availableChargeLinksDataRepository,
-            IChargeLinkCimSerializer chargeLinkCimSerializer)
+            IChargeLinkCimSerializer chargeLinkCimSerializer,
+            IStorageHandler storageHandler)
         {
             _availableChargeLinksDataRepository = availableChargeLinksDataRepository;
             _chargeLinkCimSerializer = chargeLinkCimSerializer;
+            _storageHandler = storageHandler;
         }
 
         public async Task CreateAsync(DataBundleRequestDto request, Stream outputStream)
@@ -42,8 +46,10 @@ namespace GreenEnergyHub.Charges.Infrastructure.ChargeLinkBundle
             if (!request.MessageType.StartsWith(ChargeLinkDataAvailableNotifier.MessageTypePrefix))
                 throw new InvalidOperationException($"{nameof(ChargeLinkBundleCreator)} does not support message type '{request.MessageType}'.");
 
+            var dataAvailableNotificationIds = await _storageHandler.GetDataAvailableNotificationIdsAsync(request).ConfigureAwait(false);
+
             var availableData = await _availableChargeLinksDataRepository
-                .GetAsync(request.DataAvailableNotificationIds)
+                .GetAsync(dataAvailableNotificationIds)
                 .ConfigureAwait(false);
 
             await _chargeLinkCimSerializer.SerializeToStreamAsync(
