@@ -119,7 +119,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
             serviceCollection
                 .AddScoped<IAvailableDataRepository<AvailableChargeLinkReceiptData>, AvailableChargeLinkReceiptDataRepository>();
             serviceCollection
-                .AddScoped<IAvailableChargeReceiptDataRepository, AvailableChargeReceiptDataRepository>();
+                .AddScoped<IAvailableDataRepository<AvailableChargeReceiptData>, AvailableChargeReceiptDataRepository>();
         }
 
         private static void ConfigureSharedMessaging(IServiceCollection serviceCollection)
