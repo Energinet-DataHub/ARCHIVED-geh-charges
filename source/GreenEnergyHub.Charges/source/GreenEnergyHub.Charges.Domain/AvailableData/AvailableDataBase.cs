@@ -24,7 +24,7 @@ namespace GreenEnergyHub.Charges.Domain.AvailableData
     /// </summary>
     public abstract class AvailableDataBase
     {
-        public AvailableDataBase(
+        protected AvailableDataBase(
             string recipientId,
             MarketParticipantRole recipientRole,
             BusinessReasonCode businessReasonCode,
@@ -39,7 +39,7 @@ namespace GreenEnergyHub.Charges.Domain.AvailableData
             AvailableDataReferenceId = availableDataReferenceId;
         }
 
-        public AvailableDataBase(string recipientId)
+        protected AvailableDataBase(string recipientId)
         {
             Id = Guid.NewGuid();
             RecipientId = recipientId;

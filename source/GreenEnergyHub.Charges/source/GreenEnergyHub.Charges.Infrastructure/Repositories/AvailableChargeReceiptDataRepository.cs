@@ -17,12 +17,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Domain.AvailableChargeReceiptData;
+using GreenEnergyHub.Charges.Domain.AvailableData;
 using GreenEnergyHub.Charges.Infrastructure.Context;
 using Microsoft.EntityFrameworkCore;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Repositories
 {
-    public class AvailableChargeReceiptDataRepository : IAvailableChargeReceiptDataRepository
+    public class AvailableChargeReceiptDataRepository : IAvailableDataRepository<AvailableChargeReceiptData>
     {
         private readonly IChargesDatabaseContext _context;
 
@@ -31,15 +32,15 @@ namespace GreenEnergyHub.Charges.Infrastructure.Repositories
             _context = context;
         }
 
-        public async Task StoreAsync(List<AvailableChargeReceiptData> availableChargeReceiptData)
+        public async Task StoreAsync(IEnumerable<AvailableChargeReceiptData> availableChargeReceiptData)
         {
             await _context.AvailableChargeReceiptData.AddRangeAsync(availableChargeReceiptData);
             await _context.SaveChangesAsync();
         }
 
-        public Task<List<AvailableChargeReceiptData>> GetAsync(IEnumerable<Guid> dataReferenceIds)
+        public async Task<IReadOnlyList<AvailableChargeReceiptData>> GetAsync(IEnumerable<Guid> dataReferenceIds)
         {
-            return _context
+            return await _context
                 .AvailableChargeReceiptData
                 .Where(x => dataReferenceIds.Contains(x.AvailableDataReferenceId))
                 .OrderBy(x => x.RequestDateTime)
