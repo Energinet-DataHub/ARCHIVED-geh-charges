@@ -17,6 +17,8 @@ using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application;
 using GreenEnergyHub.Charges.Application.ChargeLinks.Handlers;
 using GreenEnergyHub.Charges.Application.ChargeLinks.MessageHub;
+using GreenEnergyHub.Charges.Application.MessageHub;
+using GreenEnergyHub.Charges.Domain.AvailableChargeLinksData;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksAcceptedEvents;
 using GreenEnergyHub.Charges.FunctionHost.Common;
 using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandAccepted;
@@ -34,18 +36,18 @@ namespace GreenEnergyHub.Charges.FunctionHost.ChargeLinks.MessageHub
     {
         private const string FunctionName = nameof(ChargeLinkDataAvailableNotifierEndpoint);
         private readonly MessageExtractor<ChargeLinkCommandAccepted> _messageExtractor;
-        private readonly IChargeLinkDataAvailableNotifier _chargeLinkDataAvailableNotifier;
+        private readonly IAvailableDataNotifier<AvailableChargeLinksData, ChargeLinksAcceptedEvent> _availableDataNotifier;
         private readonly IMessageMetaDataContext _messageMetaDataContext;
         private readonly IChargeLinkDataAvailableNotifierEndpointHandler _chargeLinkDataAvailableNotifierEndpointHandler;
 
         public ChargeLinkDataAvailableNotifierEndpoint(
             MessageExtractor<ChargeLinkCommandAccepted> messageExtractor,
-            IChargeLinkDataAvailableNotifier chargeLinkDataAvailableNotifier,
+            IAvailableDataNotifier<AvailableChargeLinksData, ChargeLinksAcceptedEvent> availableDataNotifier,
             IMessageMetaDataContext messageMetaDataContext,
             IChargeLinkDataAvailableNotifierEndpointHandler chargeLinkDataAvailableNotifierEndpointHandler)
         {
             _messageExtractor = messageExtractor;
-            _chargeLinkDataAvailableNotifier = chargeLinkDataAvailableNotifier;
+            _availableDataNotifier = availableDataNotifier;
             _messageMetaDataContext = messageMetaDataContext;
             _chargeLinkDataAvailableNotifierEndpointHandler = chargeLinkDataAvailableNotifierEndpointHandler;
         }
@@ -60,7 +62,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.ChargeLinks.MessageHub
         {
             var chargeLinkCommandAcceptedEvent = (ChargeLinksAcceptedEvent)await _messageExtractor.ExtractAsync(message).ConfigureAwait(false);
 
-            await _chargeLinkDataAvailableNotifier.NotifyAsync(chargeLinkCommandAcceptedEvent).ConfigureAwait(false);
+            await _availableDataNotifier.NotifyAsync(chargeLinkCommandAcceptedEvent).ConfigureAwait(false);
 
             if (_messageMetaDataContext.IsReplyToSet())
             {
