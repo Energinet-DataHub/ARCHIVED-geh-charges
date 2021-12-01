@@ -26,7 +26,7 @@ using GreenEnergyHub.Charges.Domain.MarketParticipants;
 
 namespace GreenEnergyHub.Charges.Application.ChargeLinks.MessageHub
 {
-    public class ChargeLinkDataAvailableNotifier : IChargeLinkDataAvailableNotifier
+    public class ChargeLinkDataAvailableNotifier /*: IChargeLinkDataAvailableNotifier*/
     {
         /// <summary>
         /// The upper anticipated weight (kilobytes) contribution to the final bundle from the charge link created event.
@@ -39,7 +39,7 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.MessageHub
         /// </summary>
         public const string MessageTypePrefix = "ChargeLinkDataAvailable";
 
-        private readonly IDataAvailableNotificationSender _dataAvailableNotificationSender;
+        /*private readonly IDataAvailableNotificationSender _dataAvailableNotificationSender;
         private readonly IChargeRepository _chargeRepository;
         private readonly IAvailableDataRepository<AvailableChargeLinksData> _availableChargeLinksDataRepository;
         private readonly IMarketParticipantRepository _marketParticipantRepository;
@@ -71,11 +71,7 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.MessageHub
 
             var dataAvailableNotificationDtos = new List<DataAvailableNotificationDto>();
 
-            // It is the responsibility of the Charge Domain to find the recipient and
-            // not considered part of the Create Metering Point orchestration.
-            // We select the first as all bundled messages will have the same recipient
-            var recipient =
-                _marketParticipantRepository.GetGridAccessProvider(chargeLinksAcceptedEvent.ChargeLinksCommand.MeteringPointId);
+
 
             // When available this should be parsed on from API management to be more precise.
             var availableChargeLinksData = new List<AvailableChargeLinksData>();
@@ -132,6 +128,6 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.MessageHub
                 DomainOrigin.Charges,
                 SupportsBundling: true,
                 MessageWeight);
-        }
+        }*/
     }
 }

@@ -36,7 +36,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.MessageHub
     [UnitTest]
     public class ChargeLinkDataAvailableNotifierTests
     {
-        [Theory]
+        /*[Theory]
         [InlineAutoMoqData]
         public async Task NotifyAsync_WhenEventIsNull_ThrowsArgumentNullException(
             ChargeLinkDataAvailableNotifier sut)
@@ -123,7 +123,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.MessageHub
 
             // Assert
             dataAvailableNotificationSenderMock.VerifyNoOtherCalls();
-        }
+        }*/
 
         [Fact]
         public void NotifyAsync_SizeOfMaximumDocument_ShouldNotExceedDefinedWeight()
