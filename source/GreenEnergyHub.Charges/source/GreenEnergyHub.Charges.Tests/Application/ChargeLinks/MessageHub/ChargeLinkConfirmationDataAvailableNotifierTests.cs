@@ -40,8 +40,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.MessageHub
         [Theory]
         [InlineAutoMoqData]
         public async Task NotifyAsync_WhenSenderIsSystemOperator_DoesNothing(
-            [Frozen] Mock<IAvailableChargeLinkReceiptDataFactory> availableChargeLinkReceiptFactory,
-            [Frozen] Mock<IMessageMetaDataContext> messageMetaDataContext,
+            [Frozen] Mock<IAvailableDataFactory<AvailableChargeLinkReceiptData, ChargeLinksAcceptedEvent>> availableChargeLinkReceiptFactory,
             [Frozen] Mock<IAvailableDataRepository<AvailableChargeLinkReceiptData>> availableChargeLinkReceiptDataRepository,
             [Frozen] Mock<IDataAvailableNotificationSender> dataAvailableNotificationSender,
             [Frozen] Mock<ICorrelationContext> correlationContext,
@@ -57,13 +56,8 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.MessageHub
 
             // Assert
             availableChargeLinkReceiptFactory.Verify(
-                a => a.CreateConfirmations(
-                    It.IsAny<ChargeLinksCommand>(),
-                    It.IsAny<Instant>()),
-                Times.Never);
-
-            messageMetaDataContext.Verify(
-                m => m.RequestDataTime,
+                a => a.Create(
+                    acceptedEvent),
                 Times.Never);
 
             availableChargeLinkReceiptDataRepository.Verify(
@@ -86,13 +80,12 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.MessageHub
         [InlineAutoMoqData(MarketParticipantRole.EnergySupplier)]
         public async Task NotifyAsync_WhenSenderIsNotSystemOperator_Notifies(
             MarketParticipantRole role,
-            [Frozen] Mock<IAvailableChargeLinkReceiptDataFactory> availableChargeLinkReceiptFactory,
-            [Frozen] Mock<IMessageMetaDataContext> messageMetaDataContext,
+            [Frozen] Mock<IAvailableDataFactory<AvailableChargeLinkReceiptData, ChargeLinksAcceptedEvent>> availableChargeLinkReceiptFactory,
             [Frozen] Mock<IAvailableDataRepository<AvailableChargeLinkReceiptData>> availableChargeLinkReceiptDataRepository,
             [Frozen] Mock<IDataAvailableNotificationSender> dataAvailableNotificationSender,
             [Frozen] Mock<ICorrelationContext> correlationContext,
             ChargeLinksAcceptedEvent acceptedEvent,
-            IReadOnlyCollection<AvailableChargeLinkReceiptData> confirmations,
+            List<AvailableChargeLinkReceiptData> confirmations,
             ChargeLinkConfirmationDataAvailableNotifier sut)
         {
             // Arrange
@@ -101,14 +94,8 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.MessageHub
             var requestDateTime = SystemClock.Instance.GetCurrentInstant();
             var correlationId = Guid.NewGuid().ToString();
 
-            messageMetaDataContext.Setup(
-                    m => m.RequestDataTime)
-                .Returns(requestDateTime);
-
             availableChargeLinkReceiptFactory.Setup(
-                    a => a.CreateConfirmations(
-                        acceptedEvent.ChargeLinksCommand,
-                        requestDateTime))
+                    a => a.Create(acceptedEvent))
                 .Returns(confirmations);
 
             correlationContext.Setup(c => c.Id)
@@ -118,14 +105,8 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.MessageHub
             await sut.NotifyAsync(acceptedEvent);
 
             // Assert
-            messageMetaDataContext.Verify(
-                    m => m.RequestDataTime,
-                    Times.Once);
-
             availableChargeLinkReceiptFactory.Verify(
-                a => a.CreateConfirmations(
-                    acceptedEvent.ChargeLinksCommand,
-                    requestDateTime),
+                a => a.Create(acceptedEvent),
                 Times.Once);
 
             availableChargeLinkReceiptDataRepository.Verify(
