@@ -32,11 +32,11 @@ namespace GreenEnergyHub.Charges.FunctionHost.ChargeLinks.MessageHub
     {
         private const string FunctionName = nameof(ChargeLinkConfirmationDataAvailableNotifierEndpoint);
         private readonly MessageExtractor<ChargeLinkCommandAccepted> _messageExtractor;
-        private readonly IChargeLinkConfirmationDataAvailableNotifier _chargeLinkConfirmationDataAvailableNotifier;
+        private readonly ChargeLinkConfirmationDataAvailableNotifier _chargeLinkConfirmationDataAvailableNotifier;
 
         public ChargeLinkConfirmationDataAvailableNotifierEndpoint(
             MessageExtractor<ChargeLinkCommandAccepted> messageExtractor,
-            IChargeLinkConfirmationDataAvailableNotifier chargeLinkConfirmationDataAvailableNotifier)
+            ChargeLinkConfirmationDataAvailableNotifier chargeLinkConfirmationDataAvailableNotifier)
         {
             _messageExtractor = messageExtractor;
             _chargeLinkConfirmationDataAvailableNotifier = chargeLinkConfirmationDataAvailableNotifier;

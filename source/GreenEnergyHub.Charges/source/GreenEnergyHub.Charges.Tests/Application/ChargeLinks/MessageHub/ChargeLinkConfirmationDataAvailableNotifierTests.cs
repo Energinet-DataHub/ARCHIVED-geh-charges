@@ -139,19 +139,5 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.MessageHub
                     It.IsAny<DataAvailableNotificationDto>()),
                 Times.Exactly(acceptedEvent.ChargeLinksCommand.ChargeLinks.Count));
         }
-
-        [Fact]
-        public void NotifyAsync_SizeOfMaximumDocument_ShouldNotExceedDefinedWeight()
-        {
-            // Arrange
-            var testFilePath = "TestFiles/SingleChargeLinkConfirmationCimSerializerWorstCase.blob";
-            var confirmationMessageWeightInBytes = (long)ChargeLinkConfirmationDataAvailableNotifier.MessageWeight * 1000;
-
-            // Act
-            var xmlSizeInBytes = new System.IO.FileInfo(testFilePath).Length;
-
-            // Assert
-            xmlSizeInBytes.Should().BeLessOrEqualTo(confirmationMessageWeightInBytes);
-        }
     }
 }

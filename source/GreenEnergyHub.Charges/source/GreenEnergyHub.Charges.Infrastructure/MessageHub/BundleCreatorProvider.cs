@@ -40,7 +40,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.MessageHub
                 return _bundleCreators[typeof(BundleCreator<AvailableChargeData>)];
 
             // RSM-030 CIM XML 'ConfirmRequestChangeBillingMasterData' confirmations
-            if (request.MessageType.StartsWith(ChargeLinkConfirmationDataAvailableNotifier.MessageTypePrefix))
+            if (request.MessageType.StartsWith(ChargeLinkConfirmationNotificationFactory.MessageTypePrefix))
                 return _bundleCreators[typeof(BundleCreator<AvailableChargeLinkReceiptData>)];
 
             // RSM-031 CIM XML 'NotifyBillingMasterData' requests
