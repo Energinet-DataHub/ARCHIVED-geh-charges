@@ -30,7 +30,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.MessageHub
         [InlineAutoMoqData]
         public void Create_WhenGivenAvailableLinks_CreatesNotifications(
             IReadOnlyList<AvailableChargeLinksData> availableData,
-            ChargeLinkNotificationFactory sut)
+            ChargeLinksNotificationFactory sut)
         {
             // Act
             var actualNotificationList = sut.Create(availableData);
@@ -42,12 +42,12 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.MessageHub
                 actualNotificationList[i].Uuid.Should().Be(availableData[i].AvailableDataReferenceId);
                 actualNotificationList[i].Recipient.Value.Should().Be(availableData[i].RecipientId);
                 actualNotificationList[i].MessageType.Value.Should().Be(
-                    ChargeLinkNotificationFactory.MessageTypePrefix + "_" +
+                    ChargeLinksNotificationFactory.MessageTypePrefix + "_" +
                     availableData[i].BusinessReasonCode);
                 actualNotificationList[i].Origin.Should().Be(DomainOrigin.Charges);
                 actualNotificationList[i].SupportsBundling.Should().BeTrue();
                 actualNotificationList[i].RelativeWeight.Should()
-                    .Be(ChargeLinkNotificationFactory.MessageWeight);
+                    .Be(ChargeLinksNotificationFactory.MessageWeight);
             }
         }
 
@@ -56,7 +56,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.MessageHub
         {
             // Arrange
             var testFilePath = "TestFiles/SingleChargeLinkCimSerializerWorstCase.blob";
-            var chargeMessageWeightInBytes = (long)ChargeLinkNotificationFactory.MessageWeight * 1000;
+            var chargeMessageWeightInBytes = (long)ChargeLinksNotificationFactory.MessageWeight * 1000;
 
             // Act
             var xmlSizeInBytes = new System.IO.FileInfo(testFilePath).Length;

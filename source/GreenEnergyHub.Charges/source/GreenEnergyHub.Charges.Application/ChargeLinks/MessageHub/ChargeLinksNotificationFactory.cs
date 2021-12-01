@@ -13,17 +13,38 @@
 // limitations under the License.
 
 using System.Collections.Generic;
+using System.Linq;
 using Energinet.DataHub.MessageHub.Model.Model;
 using GreenEnergyHub.Charges.Application.MessageHub;
 using GreenEnergyHub.Charges.Domain.AvailableChargeLinksData;
+using Microsoft.Extensions.Azure;
 
 namespace GreenEnergyHub.Charges.Application.ChargeLinks.MessageHub
 {
     public class ChargeLinksNotificationFactory : IAvailableDataNotificationFactory<AvailableChargeLinksData>
     {
+        /// <summary>
+        /// The upper anticipated weight (kilobytes) contribution to the final bundle from the charge link created event.
+        /// </summary>
+        public const int MessageWeight = 2;
+
+        /// <summary>
+        /// Is used in communication with Message Hub.
+        /// Be cautious to change it!
+        /// </summary>
+        public const string MessageTypePrefix = "ChargeLinkDataAvailable";
+
         public IReadOnlyList<DataAvailableNotificationDto> Create(IReadOnlyList<AvailableChargeLinksData> availableData)
         {
-            throw new System.NotImplementedException();
+            return availableData.Select(
+                link => new DataAvailableNotificationDto(
+                    link.AvailableDataReferenceId,
+                    new GlobalLocationNumberDto(link.RecipientId),
+                    new MessageTypeDto(MessageTypePrefix + "_" + link.BusinessReasonCode),
+                    DomainOrigin.Charges,
+                    true,
+                    MessageWeight))
+                .ToList();
         }
     }
 }
