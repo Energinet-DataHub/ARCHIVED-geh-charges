@@ -15,8 +15,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Domain.AvailableChargeLinksData;
 using GreenEnergyHub.Charges.Domain.AvailableData;
+using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksAcceptedEvents;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 
@@ -26,17 +28,20 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.MessageHub
         : IAvailableDataFactory<AvailableChargeLinksData, ChargeLinksAcceptedEvent>
     {
         private readonly IMarketParticipantRepository _marketParticipantRepository;
+        private readonly IChargeRepository _chargeRepository;
         private readonly IMessageMetaDataContext _messageMetaDataContext;
 
         public AvailableChargeLinksDataFactory(
             IMarketParticipantRepository marketParticipantRepository,
+            IChargeRepository chargeRepository,
             IMessageMetaDataContext messageMetaDataContext)
         {
             _marketParticipantRepository = marketParticipantRepository;
+            _chargeRepository = chargeRepository;
             _messageMetaDataContext = messageMetaDataContext;
         }
 
-        public IReadOnlyList<AvailableChargeLinksData> Create(
+        public async Task<IReadOnlyList<AvailableChargeLinksData>> CreateAsync(
             ChargeLinksAcceptedEvent acceptedEvent)
         {
             // It is the responsibility of the Charge Domain to find the recipient and
@@ -45,21 +50,34 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.MessageHub
             var recipient =
                 _marketParticipantRepository.GetGridAccessProvider(acceptedEvent.ChargeLinksCommand.MeteringPointId);
 
-            return acceptedEvent.ChargeLinksCommand.ChargeLinks.Select(
-                link => new AvailableChargeLinksData(
-                    recipient.Id,
-                    recipient.BusinessProcessRole,
-                    acceptedEvent.ChargeLinksCommand.Document.BusinessReasonCode,
-                    _messageMetaDataContext.RequestDataTime,
-                    Guid.NewGuid(), // ID of each available piece of data must be unique
+            var result = new List<AvailableChargeLinksData>();
+
+            foreach (var link in acceptedEvent.ChargeLinksCommand.ChargeLinks)
+            {
+                var charge = await _chargeRepository.GetAsync(new ChargeIdentifier(
                     link.SenderProvidedChargeId,
                     link.ChargeOwner,
-                    link.ChargeType,
-                    acceptedEvent.ChargeLinksCommand.MeteringPointId,
-                    link.Factor,
-                    link.StartDateTime,
-                    link.EndDateTime.GetValueOrDefault()))
-                .ToList();
+                    link.ChargeType)).ConfigureAwait(false);
+
+                if (charge.TaxIndicator)
+                {
+                    result.Add(new AvailableChargeLinksData(
+                        recipient.Id,
+                        recipient.BusinessProcessRole,
+                        acceptedEvent.ChargeLinksCommand.Document.BusinessReasonCode,
+                        _messageMetaDataContext.RequestDataTime,
+                        Guid.NewGuid(), // ID of each available piece of data must be unique
+                        link.SenderProvidedChargeId,
+                        link.ChargeOwner,
+                        link.ChargeType,
+                        acceptedEvent.ChargeLinksCommand.MeteringPointId,
+                        link.Factor,
+                        link.StartDateTime,
+                        link.EndDateTime.GetValueOrDefault()));
+                }
+            }
+
+            return result;
         }
     }
 }

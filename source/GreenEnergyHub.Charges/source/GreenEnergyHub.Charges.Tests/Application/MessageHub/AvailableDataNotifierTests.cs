@@ -29,7 +29,7 @@ using Xunit.Categories;
 namespace GreenEnergyHub.Charges.Tests.Application.MessageHub
 {
     [UnitTest]
-    public class CAvailableDataNotifierTests
+    public class AvailableDataNotifierTests
     {
         [Theory]
         [InlineAutoMoqData]
@@ -46,8 +46,8 @@ namespace GreenEnergyHub.Charges.Tests.Application.MessageHub
         {
             // Arrange
             availableDataFactory.Setup(
-                    f => f.Create(input))
-                .Returns(availableData);
+                    f => f.CreateAsync(input))
+                .ReturnsAsync(availableData);
 
             availableDataNotificationFactory.Setup(
                     f => f.Create(availableData))
@@ -62,7 +62,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.MessageHub
 
             // Assert
             availableDataFactory.Verify(
-                f => f.Create(input),
+                f => f.CreateAsync(input),
                 Times.Once);
 
             availableDataRepository.Verify(

@@ -15,6 +15,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Domain.AvailableChargeLinkReceiptData;
 using GreenEnergyHub.Charges.Domain.AvailableData;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksAcceptedEvents;
@@ -32,10 +33,10 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.MessageHub
             _messageMetaDataContext = messageMetaDataContext;
         }
 
-        public IReadOnlyList<AvailableChargeLinkReceiptData> Create(
+        public Task<IReadOnlyList<AvailableChargeLinkReceiptData>> CreateAsync(
             ChargeLinksAcceptedEvent acceptedEvent)
         {
-            return acceptedEvent.ChargeLinksCommand.ChargeLinks.Select(
+            IReadOnlyList<AvailableChargeLinkReceiptData> result = acceptedEvent.ChargeLinksCommand.ChargeLinks.Select(
                     link => new AvailableChargeLinkReceiptData(
                         acceptedEvent.ChargeLinksCommand.Document.Sender.Id, // The sender is now the recipient of the receipt
                         acceptedEvent.ChargeLinksCommand.Document.Sender.BusinessProcessRole,
@@ -47,6 +48,7 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.MessageHub
                         acceptedEvent.ChargeLinksCommand.MeteringPointId,
                         new List<AvailableChargeLinkReceiptDataReasonCode>()))
                 .ToList();
+            return Task.FromResult(result);
         }
     }
 }

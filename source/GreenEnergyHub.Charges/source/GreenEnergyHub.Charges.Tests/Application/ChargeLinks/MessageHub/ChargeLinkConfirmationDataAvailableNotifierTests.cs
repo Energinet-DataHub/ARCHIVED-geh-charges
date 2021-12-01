@@ -55,7 +55,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.MessageHub
 
             // Assert
             availableChargeLinkReceiptFactory.Verify(
-                a => a.Create(
+                a => a.CreateAsync(
                     acceptedEvent),
                 Times.Never);
 
@@ -103,7 +103,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.MessageHub
 
             // Assert
             availableChargeLinkReceiptFactory.Verify(
-                a => a.Create(acceptedEvent),
+                a => a.CreateAsync(acceptedEvent),
                 Times.Once);
         }
     }

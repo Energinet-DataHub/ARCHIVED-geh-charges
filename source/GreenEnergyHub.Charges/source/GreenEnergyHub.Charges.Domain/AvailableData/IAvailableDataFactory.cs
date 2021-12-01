@@ -13,12 +13,13 @@
 // limitations under the License.
 
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace GreenEnergyHub.Charges.Domain.AvailableData
 {
     public interface IAvailableDataFactory<TAvailableData, TInput>
         where TAvailableData : AvailableDataBase
     {
-        IReadOnlyList<TAvailableData> Create(TInput input);
+        Task<IReadOnlyList<TAvailableData>> CreateAsync(TInput input);
     }
 }
