@@ -71,7 +71,7 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.MessageHub
             _defaultChargeLinksCreatedEventFactory = defaultChargeLinksCreatedEventFactory;
         }
 
-        public async Task HandleAsync(ChargeLinksAcceptedEvent chargeLinksAcceptedEvent)
+        public async Task NotifyAndReplyAsync(ChargeLinksAcceptedEvent chargeLinksAcceptedEvent)
         {
             if (chargeLinksAcceptedEvent == null) throw new ArgumentNullException(nameof(chargeLinksAcceptedEvent));
 

@@ -24,6 +24,6 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.MessageHub
     /// </summary>
     public interface IChargeLinkDataAvailableNotifier
     {
-        Task HandleAsync(ChargeLinksAcceptedEvent chargeLinksAcceptedEvent);
+        Task NotifyAndReplyAsync(ChargeLinksAcceptedEvent chargeLinksAcceptedEvent);
     }
 }

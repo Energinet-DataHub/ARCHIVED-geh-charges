@@ -54,7 +54,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.ChargeLinks.MessageHub
         {
             var chargeLinkCommandAcceptedEvent = (ChargeLinksAcceptedEvent)await _messageExtractor.ExtractAsync(message).ConfigureAwait(false);
 
-            await _chargeLinkDataAvailableNotifier.HandleAsync(chargeLinkCommandAcceptedEvent).ConfigureAwait(false);
+            await _chargeLinkDataAvailableNotifier.NotifyAndReplyAsync(chargeLinkCommandAcceptedEvent).ConfigureAwait(false);
         }
     }
 }
