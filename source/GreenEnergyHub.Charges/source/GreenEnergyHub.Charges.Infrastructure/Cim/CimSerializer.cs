@@ -18,6 +18,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Xml.Linq;
+using GreenEnergyHub.Charges.Domain.AvailableData;
 using GreenEnergyHub.Charges.Domain.Configuration;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.Infrastructure.MarketDocument.Cim;
@@ -25,7 +26,8 @@ using NodaTime;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Cim
 {
-    public abstract class CimSerializer<T>
+    public abstract class CimSerializer<T> : ICimSerializer<T>
+        where T : AvailableDataBase
     {
         public CimSerializer(
             IHubSenderConfiguration hubSenderConfiguration,

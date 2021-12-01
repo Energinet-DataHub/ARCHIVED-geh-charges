@@ -14,12 +14,13 @@
 
 using Energinet.DataHub.MessageHub.Model.Peek;
 using GreenEnergyHub.Charges.Application.MessageHub;
-using GreenEnergyHub.Charges.Infrastructure.ChargeBundle;
+using GreenEnergyHub.Charges.Domain.AvailableChargeData;
+using GreenEnergyHub.Charges.Domain.AvailableChargeLinkReceiptData;
+using GreenEnergyHub.Charges.Domain.AvailableChargeLinksData;
 using GreenEnergyHub.Charges.Infrastructure.ChargeBundle.Cim;
-using GreenEnergyHub.Charges.Infrastructure.ChargeLinkBundle;
 using GreenEnergyHub.Charges.Infrastructure.ChargeLinkBundle.Cim;
-using GreenEnergyHub.Charges.Infrastructure.ChargeLinkReceiptBundle;
 using GreenEnergyHub.Charges.Infrastructure.ChargeLinkReceiptBundle.Cim;
+using GreenEnergyHub.Charges.Infrastructure.Cim;
 using GreenEnergyHub.Charges.Infrastructure.MessageHub;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -36,14 +37,14 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
             serviceCollection.AddScoped<IRequestBundleParser, RequestBundleParser>();
 
             // Charge bundles
-            serviceCollection.AddScoped<IBundleCreator, ChargeBundleCreator>();
-            serviceCollection.AddScoped<IChargeCimSerializer, ChargeCimSerializer>();
+            serviceCollection.AddScoped<IBundleCreator, BundleCreator<AvailableChargeData>>();
+            serviceCollection.AddScoped<ICimSerializer<AvailableChargeData>, ChargeCimSerializer>();
 
             // Charge link bundles
-            serviceCollection.AddScoped<IBundleCreator, ChargeLinkBundleCreator>();
-            serviceCollection.AddScoped<IChargeLinkCimSerializer, ChargeLinkCimSerializer>();
-            serviceCollection.AddScoped<IBundleCreator, ChargeLinkConfirmationBundleCreator>();
-            serviceCollection.AddScoped<IChargeLinkReceiptCimSerializer, ChargeLinkReceiptCimSerializer>();
+            serviceCollection.AddScoped<IBundleCreator, BundleCreator<AvailableChargeLinksData>>();
+            serviceCollection.AddScoped<ICimSerializer<AvailableChargeLinksData>, ChargeLinkCimSerializer>();
+            serviceCollection.AddScoped<IBundleCreator, BundleCreator<AvailableChargeLinkReceiptData>>();
+            serviceCollection.AddScoped<ICimSerializer<AvailableChargeLinkReceiptData>, ChargeLinkReceiptCimSerializer>();
         }
     }
 }
