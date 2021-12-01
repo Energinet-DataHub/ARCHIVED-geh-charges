@@ -21,6 +21,7 @@ using Energinet.DataHub.MessageHub.Model.Model;
 using GreenEnergyHub.Charges.Domain.AvailableChargeLinksData;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksAcceptedEvents;
+using GreenEnergyHub.Charges.Domain.Dtos.DefaultChargeLinksDataAvailableNotifiedEvents;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 
 namespace GreenEnergyHub.Charges.Application.ChargeLinks.MessageHub
@@ -45,6 +46,8 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.MessageHub
         private readonly IAvailableChargeLinksDataFactory _availableChargeLinksDataFactory;
         private readonly ICorrelationContext _correlationContext;
         private readonly IMessageMetaDataContext _messageMetaDataContext;
+        private readonly IMessageDispatcher<DefaultChargeLinksCreatedEvent> _messageDispatcher;
+        private readonly IDefaultChargeLinksCreatedEventFactory _defaultChargeLinksCreatedEventFactory;
 
         public ChargeLinkDataAvailableNotifier(
             IDataAvailableNotificationSender dataAvailableNotificationSender,
@@ -53,7 +56,9 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.MessageHub
             IMarketParticipantRepository marketParticipantRepository,
             IAvailableChargeLinksDataFactory availableChargeLinksDataFactory,
             ICorrelationContext correlationContext,
-            IMessageMetaDataContext messageMetaDataContext)
+            IMessageMetaDataContext messageMetaDataContext,
+            IMessageDispatcher<DefaultChargeLinksCreatedEvent> messageDispatcher,
+            IDefaultChargeLinksCreatedEventFactory defaultChargeLinksCreatedEventFactory)
         {
             _dataAvailableNotificationSender = dataAvailableNotificationSender;
             _chargeRepository = chargeRepository;
@@ -62,12 +67,20 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.MessageHub
             _availableChargeLinksDataFactory = availableChargeLinksDataFactory;
             _correlationContext = correlationContext;
             _messageMetaDataContext = messageMetaDataContext;
+            _messageDispatcher = messageDispatcher;
+            _defaultChargeLinksCreatedEventFactory = defaultChargeLinksCreatedEventFactory;
         }
 
-        public async Task NotifyAsync(ChargeLinksAcceptedEvent chargeLinksAcceptedEvent)
+        public async Task HandleAsync(ChargeLinksAcceptedEvent chargeLinksAcceptedEvent)
         {
             if (chargeLinksAcceptedEvent == null) throw new ArgumentNullException(nameof(chargeLinksAcceptedEvent));
 
+            await NotifyAsync(chargeLinksAcceptedEvent);
+            await ReplyAsync(chargeLinksAcceptedEvent);
+        }
+
+        private async Task NotifyAsync(ChargeLinksAcceptedEvent chargeLinksAcceptedEvent)
+        {
             var dataAvailableNotificationDtos = new List<DataAvailableNotificationDto>();
 
             // It is the responsibility of the Charge Domain to find the recipient and
@@ -112,6 +125,16 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.MessageHub
                 .Select(x => _dataAvailableNotificationSender.SendAsync(_correlationContext.Id, x));
 
             await Task.WhenAll(dataAvailableNotificationSenderTasks).ConfigureAwait(false);
+        }
+
+        private async Task ReplyAsync(ChargeLinksAcceptedEvent chargeLinksAcceptedEvent)
+        {
+            if (_messageMetaDataContext.IsReplyToSet())
+            {
+                var chargeLinkDataAvailableNotifierEvent =
+                    _defaultChargeLinksCreatedEventFactory.Create(chargeLinksAcceptedEvent);
+                await _messageDispatcher.DispatchAsync(chargeLinkDataAvailableNotifierEvent);
+            }
         }
 
         private static DataAvailableNotificationDto CreateDataAvailableNotificationDto(

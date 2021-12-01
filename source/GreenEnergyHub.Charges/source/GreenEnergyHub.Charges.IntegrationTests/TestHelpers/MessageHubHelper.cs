@@ -32,7 +32,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.TestHelpers
             var correlationIds = Enumerable.Repeat(correlationId, noOfMessageTypes).ToArray();
 
             // Throws if expected data available message (by correlation ID) is not received
-            await messageHub.WaitForNotificationsInDataAvailableQueueAsync(TimeSpan.FromSeconds(10), correlationIds);
+            await messageHub.WaitForNotificationsInDataAvailableQueueAsync(TimeSpan.FromSeconds(10000), correlationIds);
 
             // Invokes the domain and ensures that a reply to the peek request is received for each message type
             for (var i = 0; i < noOfMessageTypes; i++)
