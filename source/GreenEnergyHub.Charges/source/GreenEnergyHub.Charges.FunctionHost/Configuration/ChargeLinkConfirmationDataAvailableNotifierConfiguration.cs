@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using GreenEnergyHub.Charges.Application.ChargeLinks.MessageHub;
+using GreenEnergyHub.Charges.Application.MessageHub;
 using GreenEnergyHub.Charges.Domain.AvailableChargeLinkReceiptData;
 using GreenEnergyHub.Charges.Domain.AvailableData;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksAcceptedEvents;
@@ -25,7 +26,12 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
         internal static void ConfigureServices(IServiceCollection serviceCollection)
         {
             serviceCollection.AddScoped<ChargeLinkConfirmationDataAvailableNotifier>();
-            serviceCollection.AddScoped<IAvailableDataFactory<AvailableChargeLinkReceiptData, ChargeLinksAcceptedEvent>, AvailableChargeLinkReceiptDataFactory>();
+            serviceCollection
+                .AddScoped<IAvailableDataFactory<AvailableChargeLinkReceiptData, ChargeLinksAcceptedEvent>,
+                    AvailableChargeLinkReceiptDataFactory>();
+            serviceCollection
+                .AddScoped<IAvailableDataNotificationFactory<AvailableChargeLinkReceiptData>,
+                    ChargeLinkConfirmationNotificationFactory>();
         }
     }
 }
