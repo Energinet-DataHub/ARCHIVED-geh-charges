@@ -19,6 +19,7 @@ using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Domain.AvailableChargeLinkReceiptData;
 using GreenEnergyHub.Charges.Domain.AvailableData;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksAcceptedEvents;
+using GreenEnergyHub.Charges.Domain.MarketParticipants;
 
 namespace GreenEnergyHub.Charges.Application.ChargeLinks.MessageHub
 {
@@ -36,6 +37,12 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.MessageHub
         public Task<IReadOnlyList<AvailableChargeLinkReceiptData>> CreateAsync(
             ChargeLinksAcceptedEvent acceptedEvent)
         {
+            if (ShouldSkipAvailableData(acceptedEvent))
+            {
+                IReadOnlyList<AvailableChargeLinkReceiptData> emptyList = new List<AvailableChargeLinkReceiptData>();
+                return Task.FromResult(emptyList);
+            }
+
             IReadOnlyList<AvailableChargeLinkReceiptData> result = acceptedEvent.ChargeLinksCommand.ChargeLinks.Select(
                     link => new AvailableChargeLinkReceiptData(
                         acceptedEvent.ChargeLinksCommand.Document.Sender.Id, // The sender is now the recipient of the receipt
@@ -49,6 +56,13 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.MessageHub
                         new List<AvailableChargeLinkReceiptDataReasonCode>()))
                 .ToList();
             return Task.FromResult(result);
+        }
+
+        private bool ShouldSkipAvailableData(ChargeLinksAcceptedEvent acceptedEvent)
+        {
+            // We do not need to make data available for system operators
+            return acceptedEvent.ChargeLinksCommand.Document.Sender.BusinessProcessRole ==
+                   MarketParticipantRole.SystemOperator;
         }
     }
 }
