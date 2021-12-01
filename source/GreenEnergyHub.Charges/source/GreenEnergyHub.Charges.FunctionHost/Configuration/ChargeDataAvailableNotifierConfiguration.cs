@@ -25,7 +25,8 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
     {
         internal static void ConfigureServices(IServiceCollection serviceCollection)
         {
-            serviceCollection.AddScoped<IChargeDataAvailableNotifier, ChargeDataAvailableNotifier>();
+            serviceCollection.AddScoped<IAvailableDataNotifier<AvailableChargeData, ChargeCommandAcceptedEvent>,
+                AvailableDataNotifier<AvailableChargeData, ChargeCommandAcceptedEvent>>();
             serviceCollection.AddScoped<IAvailableDataFactory<AvailableChargeData, ChargeCommandAcceptedEvent>,
                 AvailableChargeDataFactory>();
             serviceCollection.AddScoped<IAvailableDataNotificationFactory<AvailableChargeData>, ChargeNotificationFactory>();

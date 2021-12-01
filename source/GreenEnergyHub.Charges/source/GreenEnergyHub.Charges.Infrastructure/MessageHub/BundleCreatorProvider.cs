@@ -36,7 +36,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.MessageHub
         public IBundleCreator Get(DataBundleRequestDto request)
         {
             // RSM-034 CIM XML 'NotifyPriceList' requests
-            if (request.MessageType.StartsWith(ChargeDataAvailableNotifier.MessageTypePrefix))
+            if (request.MessageType.StartsWith(ChargeNotificationFactory.MessageTypePrefix))
                 return _bundleCreators[typeof(BundleCreator<AvailableChargeData>)];
 
             // RSM-030 CIM XML 'ConfirmRequestChangeBillingMasterData' confirmations

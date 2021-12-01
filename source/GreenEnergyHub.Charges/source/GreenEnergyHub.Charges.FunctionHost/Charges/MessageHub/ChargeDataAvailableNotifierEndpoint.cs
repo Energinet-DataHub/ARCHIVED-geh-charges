@@ -14,7 +14,8 @@
 
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Application.Charges.MessageHub;
+using GreenEnergyHub.Charges.Application.MessageHub;
+using GreenEnergyHub.Charges.Domain.AvailableChargeData;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandAcceptedEvents;
 using GreenEnergyHub.Charges.FunctionHost.Common;
 using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeCommandAccepted;
@@ -32,14 +33,14 @@ namespace GreenEnergyHub.Charges.FunctionHost.Charges.MessageHub
     {
         private const string FunctionName = nameof(ChargeDataAvailableNotifierEndpoint);
         private readonly MessageExtractor<ChargeCommandAcceptedContract> _messageExtractor;
-        private readonly IChargeDataAvailableNotifier _chargeDataAvailableNotifier;
+        private readonly IAvailableDataNotifier<AvailableChargeData, ChargeCommandAcceptedEvent> _availableDataNotifier;
 
         public ChargeDataAvailableNotifierEndpoint(
             MessageExtractor<ChargeCommandAcceptedContract> messageExtractor,
-            IChargeDataAvailableNotifier chargeDataAvailableNotifier)
+            IAvailableDataNotifier<AvailableChargeData, ChargeCommandAcceptedEvent> availableDataNotifier)
         {
             _messageExtractor = messageExtractor;
-            _chargeDataAvailableNotifier = chargeDataAvailableNotifier;
+            _availableDataNotifier = availableDataNotifier;
         }
 
         [Function(FunctionName)]
@@ -52,7 +53,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Charges.MessageHub
         {
             var chargeCommandAcceptedEvent = (ChargeCommandAcceptedEvent)await _messageExtractor.ExtractAsync(message).ConfigureAwait(false);
 
-            await _chargeDataAvailableNotifier.NotifyAsync(chargeCommandAcceptedEvent).ConfigureAwait(false);
+            await _availableDataNotifier.NotifyAsync(chargeCommandAcceptedEvent).ConfigureAwait(false);
         }
     }
 }
