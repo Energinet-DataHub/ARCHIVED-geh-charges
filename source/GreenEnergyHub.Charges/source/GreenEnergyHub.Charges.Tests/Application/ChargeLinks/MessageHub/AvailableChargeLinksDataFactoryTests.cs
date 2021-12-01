@@ -29,7 +29,7 @@ using NodaTime;
 using Xunit;
 using Xunit.Categories;
 
-namespace GreenEnergyHub.Charges.Tests.Application.MessageHub
+namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.MessageHub
 {
     [UnitTest]
     public class AvailableChargeLinksDataFactoryTests

@@ -25,7 +25,7 @@ using Xunit.Categories;
 namespace GreenEnergyHub.Charges.Tests.Application.Charges.MessageHub
 {
     [UnitTest]
-    public class ChargeLinkConfirmationNotificationFactoryTests
+    public class ChargeNotificationFactoryTests
     {
         [Theory]
         [InlineAutoMoqData]
