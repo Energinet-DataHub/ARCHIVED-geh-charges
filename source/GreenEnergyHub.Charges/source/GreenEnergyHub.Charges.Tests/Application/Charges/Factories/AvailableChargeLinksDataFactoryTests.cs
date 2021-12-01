@@ -12,14 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
-using System.Diagnostics.CodeAnalysis;
+using System.Linq;
+using AutoFixture.Xunit2;
 using FluentAssertions;
-using GreenEnergyHub.Charges.Domain.AvailableChargeLinksData;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands;
+using GreenEnergyHub.Charges.Application;
+using GreenEnergyHub.Charges.Application.ChargeLinks.MessageHub;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksAcceptedEvents;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.TestHelpers;
 using GreenEnergyHub.TestHelpers.FluentAssertionsExtensions;
+using Moq;
 using NodaTime;
 using Xunit;
 using Xunit.Categories;
@@ -32,32 +34,45 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Factories
         [Theory]
         [InlineAutoDomainData]
         public void CreateFromCommandAsync_Charge_HasNoNullsOrEmptyCollections(
-            [NotNull] ChargeLinkDto chargeLinkDto,
-            [NotNull] MarketParticipant marketParticipant,
-            [NotNull] BusinessReasonCode businessReasonCode,
-            [NotNull] string meteringPointId,
-            [NotNull] Instant now,
-            [NotNull] Guid messageHubId,
-            [NotNull] AvailableChargeLinksDataFactory sut)
+            [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
+            [Frozen] Mock<IMessageMetaDataContext> messageMetaDataContext,
+            ChargeLinksAcceptedEvent acceptedEvent,
+            MarketParticipant marketParticipant,
+            Instant now,
+            AvailableChargeLinksDataFactory sut)
         {
+            // Arrange
+            marketParticipantRepository.Setup(
+                    m => m.GetGridAccessProvider(acceptedEvent.ChargeLinksCommand.MeteringPointId))
+                .Returns(marketParticipant);
+
+            messageMetaDataContext.Setup(
+                    m => m.RequestDataTime)
+                .Returns(now);
+
+            var expectedLinks = acceptedEvent.ChargeLinksCommand.ChargeLinks.ToList();
+
             // Act
-            var actual =
-                sut.CreateAvailableChargeLinksData(chargeLinkDto, marketParticipant, businessReasonCode, meteringPointId, now, messageHubId);
+            var actualList =
+                sut.Create(acceptedEvent);
 
             // Assert
-            actual.Should().NotContainNullsOrEmptyEnumerables();
-            actual.RecipientId.Should().Be(marketParticipant.Id);
-            actual.RecipientRole.Should().Be(marketParticipant.BusinessProcessRole);
-            actual.BusinessReasonCode.Should().Be(businessReasonCode);
-            actual.RequestDateTime.Should().Be(now);
-            actual.AvailableDataReferenceId.Should().Be(messageHubId);
-            actual.ChargeId.Should().Be(chargeLinkDto.SenderProvidedChargeId);
-            actual.ChargeOwner.Should().Be(chargeLinkDto.ChargeOwner);
-            actual.ChargeType.Should().Be(chargeLinkDto.ChargeType);
-            actual.MeteringPointId.Should().Be(meteringPointId);
-            actual.Factor.Should().Be(chargeLinkDto.Factor);
-            actual.StartDateTime.Should().Be(chargeLinkDto.StartDateTime);
-            actual.EndDateTime.Should().Be(chargeLinkDto.EndDateTime.GetValueOrDefault());
+            actualList.Should().HaveSameCount(expectedLinks);
+            for (var i = 0; i < actualList.Count; i++)
+            {
+                actualList[i].Should().NotContainNullsOrEmptyEnumerables();
+                actualList[i].RecipientId.Should().Be(marketParticipant.Id);
+                actualList[i].RecipientRole.Should().Be(marketParticipant.BusinessProcessRole);
+                actualList[i].BusinessReasonCode.Should().Be(acceptedEvent.ChargeLinksCommand.Document.BusinessReasonCode);
+                actualList[i].RequestDateTime.Should().Be(now);
+                actualList[i].ChargeId.Should().Be(expectedLinks[i].SenderProvidedChargeId);
+                actualList[i].ChargeOwner.Should().Be(expectedLinks[i].ChargeOwner);
+                actualList[i].ChargeType.Should().Be(expectedLinks[i].ChargeType);
+                actualList[i].MeteringPointId.Should().Be(acceptedEvent.ChargeLinksCommand.MeteringPointId);
+                actualList[i].Factor.Should().Be(expectedLinks[i].Factor);
+                actualList[i].StartDateTime.Should().Be(expectedLinks[i].StartDateTime);
+                actualList[i].EndDateTime.Should().Be(expectedLinks[i].EndDateTime.GetValueOrDefault());
+            }
         }
     }
 }
