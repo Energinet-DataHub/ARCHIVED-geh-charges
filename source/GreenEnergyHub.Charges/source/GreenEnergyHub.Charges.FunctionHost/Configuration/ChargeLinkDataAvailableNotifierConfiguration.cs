@@ -47,6 +47,9 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
             serviceCollection
                 .AddScoped<IAvailableDataFactory<AvailableChargeLinksData, ChargeLinksAcceptedEvent>,
                     AvailableChargeLinksDataFactory>();
+            serviceCollection
+                .AddScoped<IAvailableDataNotificationFactory<AvailableChargeLinksData>,
+                    ChargeLinkNotificationFactory>();
         }
     }
 }
