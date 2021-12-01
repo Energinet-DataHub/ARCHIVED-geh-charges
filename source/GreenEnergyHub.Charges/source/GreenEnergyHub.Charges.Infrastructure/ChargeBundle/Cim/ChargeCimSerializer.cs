@@ -28,7 +28,7 @@ using NodaTime;
 
 namespace GreenEnergyHub.Charges.Infrastructure.ChargeBundle.Cim
 {
-    public class ChargeCimSerializer : CimSerializer<AvailableChargeData>, IChargeCimSerializer
+    public class ChargeCimSerializer : CimSerializer<AvailableChargeData>
     {
         private IIso8601Durations _iso8601Durations;
 

@@ -19,6 +19,7 @@ using System.Threading.Tasks;
 using Energinet.DataHub.MessageHub.Client.DataAvailable;
 using Energinet.DataHub.MessageHub.Model.Model;
 using GreenEnergyHub.Charges.Domain.AvailableChargeLinksData;
+using GreenEnergyHub.Charges.Domain.AvailableData;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksAcceptedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.DefaultChargeLinksDataAvailableNotifiedEvents;
@@ -41,7 +42,7 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.MessageHub
 
         private readonly IDataAvailableNotificationSender _dataAvailableNotificationSender;
         private readonly IChargeRepository _chargeRepository;
-        private readonly IAvailableChargeLinksDataRepository _availableChargeLinksDataRepository;
+        private readonly IAvailableDataRepository<AvailableChargeLinksData> _availableChargeLinksDataRepository;
         private readonly IMarketParticipantRepository _marketParticipantRepository;
         private readonly IAvailableChargeLinksDataFactory _availableChargeLinksDataFactory;
         private readonly ICorrelationContext _correlationContext;
@@ -52,7 +53,7 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.MessageHub
         public ChargeLinkDataAvailableNotifier(
             IDataAvailableNotificationSender dataAvailableNotificationSender,
             IChargeRepository chargeRepository,
-            IAvailableChargeLinksDataRepository availableChargeLinksDataRepository,
+            IAvailableDataRepository<AvailableChargeLinksData> availableChargeLinksDataRepository,
             IMarketParticipantRepository marketParticipantRepository,
             IAvailableChargeLinksDataFactory availableChargeLinksDataFactory,
             ICorrelationContext correlationContext,

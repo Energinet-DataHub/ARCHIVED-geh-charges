@@ -11,15 +11,15 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-name: Publish Clients.SimpleInjector to Nuget.org
+name: Publish Clients.Registration to Nuget.org
 
 on:
   push:
     branches:
       - main
     paths:
-      - source/Energinet.Charges.Libraries/source/Energinet.DataHub.Charges.Clients.SimpleInjector/**
-      - .github/workflows/clients-simple-injector-publish.yml
+      - source/Energinet.Charges.Libraries/source/Energinet.DataHub.Charges.Clients.Registration/**
+      - .github/workflows/clients-registration-publish.yml
       - .github/actions/dotnet-publish-nuget/**
   # The purpose of the pull-request trigger is to have the PR gate verify that the NuGet package version number
   # isn't already published - in order to avoid breaking main
@@ -28,15 +28,15 @@ on:
       branches:
         - main
       paths:
-      - source/Energinet.Charges.Libraries/source/Energinet.DataHub.Charges.Clients.SimpleInjector/**
-      - .github/workflows/clients-simple-injector-publish.yml
+      - source/Energinet.Charges.Libraries/source/Energinet.DataHub.Charges.Clients.Registration/**
+      - .github/workflows/clients-registration-publish.yml
       - .github/actions/dotnet-publish-nuget/**
   workflow_dispatch: {}
 
 env:
   DOTNET_VERSION: '5.0'
-  CSPROJ_FILE_PATH: 'source/Energinet.Charges.Libraries/source/Energinet.DataHub.Charges.Clients.SimpleInjector/Energinet.DataHub.Charges.Clients.SimpleInjector.csproj'
-  BINARY_PATH: 'source/Energinet.Charges.Libraries/source/Energinet.DataHub.Charges.Clients.SimpleInjector/bin/Release/*.nupkg'
+  CSPROJ_FILE_PATH: 'source/Energinet.Charges.Libraries/source/Energinet.DataHub.Charges.Clients.Registration/Energinet.DataHub.Charges.Clients.Registration.csproj'
+  BINARY_PATH: 'source/Energinet.Charges.Libraries/source/Energinet.DataHub.Charges.Clients.Registration/bin/Release/*.nupkg'
 
 jobs:
   build_and_publish:

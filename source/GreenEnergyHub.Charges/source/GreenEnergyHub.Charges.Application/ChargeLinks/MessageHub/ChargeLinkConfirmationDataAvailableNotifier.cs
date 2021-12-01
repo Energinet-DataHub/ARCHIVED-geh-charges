@@ -19,6 +19,7 @@ using System.Threading.Tasks;
 using Energinet.DataHub.MessageHub.Client.DataAvailable;
 using Energinet.DataHub.MessageHub.Model.Model;
 using GreenEnergyHub.Charges.Domain.AvailableChargeLinkReceiptData;
+using GreenEnergyHub.Charges.Domain.AvailableData;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksAcceptedEvents;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 
@@ -39,14 +40,14 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.MessageHub
 
         private readonly IAvailableChargeLinkReceiptDataFactory _availableChargeLinkReceiptDataFactory;
         private readonly IMessageMetaDataContext _messageMetaDataContext;
-        private readonly IAvailableChargeLinkReceiptDataRepository _availableChargeLinkReceiptDataRepository;
+        private readonly IAvailableDataRepository<AvailableChargeLinkReceiptData> _availableChargeLinkReceiptDataRepository;
         private readonly IDataAvailableNotificationSender _dataAvailableNotificationSender;
         private readonly ICorrelationContext _correlationContext;
 
         public ChargeLinkConfirmationDataAvailableNotifier(
             IAvailableChargeLinkReceiptDataFactory availableChargeLinkReceiptDataFactory,
             IMessageMetaDataContext messageMetaDataContext,
-            IAvailableChargeLinkReceiptDataRepository availableChargeLinkReceiptDataRepository,
+            IAvailableDataRepository<AvailableChargeLinkReceiptData> availableChargeLinkReceiptDataRepository,
             IDataAvailableNotificationSender dataAvailableNotificationSender,
             ICorrelationContext correlationContext)
         {

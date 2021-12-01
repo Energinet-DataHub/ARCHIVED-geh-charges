@@ -20,7 +20,7 @@ using Energinet.DataHub.Charges.Clients.Models;
 using Energinet.DataHub.Charges.Clients.Providers;
 using SimpleInjector;
 
-namespace Energinet.DataHub.Charges.Clients.SimpleInjector
+namespace Energinet.DataHub.Charges.Clients.Registration
 {
     public static class ContainerExtensions
     {
