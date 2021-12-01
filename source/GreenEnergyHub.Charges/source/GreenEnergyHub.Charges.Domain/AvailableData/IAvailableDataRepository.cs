@@ -12,21 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Domain.AvailableChargeReceiptData;
-using GreenEnergyHub.Charges.Domain.MarketParticipants;
 
-namespace GreenEnergyHub.Charges.Infrastructure.ChargeReceiptBundle.Cim
+namespace GreenEnergyHub.Charges.Domain.AvailableData
 {
-    public interface IChargeReceiptCimSerializer
+    public interface IAvailableDataRepository<TAvailableData>
+        where TAvailableData : AvailableDataBase
     {
-        Task SerializeToStreamAsync(
-            IEnumerable<AvailableChargeReceiptData> receipts,
-            Stream stream,
-            BusinessReasonCode businessReasonCode,
-            string recipientId,
-            MarketParticipantRole recipientRole);
+        Task StoreAsync(IEnumerable<TAvailableData> availableData);
+
+        Task<IReadOnlyList<TAvailableData>> GetAsync(IEnumerable<Guid> dataReferenceIds);
     }
 }

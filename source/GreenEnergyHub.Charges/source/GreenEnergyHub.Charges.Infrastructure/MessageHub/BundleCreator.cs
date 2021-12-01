@@ -12,47 +12,42 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Energinet.DataHub.MessageHub.Client.Storage;
 using Energinet.DataHub.MessageHub.Model.Model;
-using GreenEnergyHub.Charges.Application.ChargeLinks.MessageHub;
-using GreenEnergyHub.Charges.Domain.AvailableChargeLinksData;
-using GreenEnergyHub.Charges.Infrastructure.ChargeLinkBundle.Cim;
-using GreenEnergyHub.Charges.Infrastructure.MessageHub;
+using GreenEnergyHub.Charges.Domain.AvailableData;
+using GreenEnergyHub.Charges.Infrastructure.Cim;
 
-namespace GreenEnergyHub.Charges.Infrastructure.ChargeLinkBundle
+namespace GreenEnergyHub.Charges.Infrastructure.MessageHub
 {
-    public class ChargeLinkBundleCreator : IBundleCreator
+    public class BundleCreator<TAvailableData> : IBundleCreator
+        where TAvailableData : AvailableDataBase
     {
-        private readonly IAvailableChargeLinksDataRepository _availableChargeLinksDataRepository;
-        private readonly IChargeLinkCimSerializer _chargeLinkCimSerializer;
+        private readonly IAvailableDataRepository<TAvailableData> _availableDataRepository;
+        private readonly ICimSerializer<TAvailableData> _cimSerializer;
         private readonly IStorageHandler _storageHandler;
 
-        public ChargeLinkBundleCreator(
-            IAvailableChargeLinksDataRepository availableChargeLinksDataRepository,
-            IChargeLinkCimSerializer chargeLinkCimSerializer,
+        public BundleCreator(
+            IAvailableDataRepository<TAvailableData> availableDataRepository,
+            ICimSerializer<TAvailableData> cimSerializer,
             IStorageHandler storageHandler)
         {
-            _availableChargeLinksDataRepository = availableChargeLinksDataRepository;
-            _chargeLinkCimSerializer = chargeLinkCimSerializer;
+            _availableDataRepository = availableDataRepository;
+            _cimSerializer = cimSerializer;
             _storageHandler = storageHandler;
         }
 
         public async Task CreateAsync(DataBundleRequestDto request, Stream outputStream)
         {
-            if (!request.MessageType.StartsWith(ChargeLinkDataAvailableNotifier.MessageTypePrefix))
-                throw new InvalidOperationException($"{nameof(ChargeLinkBundleCreator)} does not support message type '{request.MessageType}'.");
-
             var dataAvailableNotificationIds = await _storageHandler.GetDataAvailableNotificationIdsAsync(request).ConfigureAwait(false);
 
-            var availableData = await _availableChargeLinksDataRepository
+            var availableData = await _availableDataRepository
                 .GetAsync(dataAvailableNotificationIds)
                 .ConfigureAwait(false);
 
-            await _chargeLinkCimSerializer.SerializeToStreamAsync(
+            await _cimSerializer.SerializeToStreamAsync(
                 availableData,
                 outputStream,
                 // Due to the nature of the interface to the MessageHub and the use of MessageType in that

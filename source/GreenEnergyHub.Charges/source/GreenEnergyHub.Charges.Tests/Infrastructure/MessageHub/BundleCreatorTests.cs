@@ -14,52 +14,45 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
 using Energinet.DataHub.MessageHub.Client.Storage;
 using Energinet.DataHub.MessageHub.Model.Model;
-using GreenEnergyHub.Charges.Application.ChargeLinks.MessageHub;
-using GreenEnergyHub.Charges.Domain.AvailableChargeLinkReceiptData;
-using GreenEnergyHub.Charges.Infrastructure.ChargeLinkReceiptBundle;
-using GreenEnergyHub.Charges.Infrastructure.ChargeLinkReceiptBundle.Cim;
-using GreenEnergyHub.Charges.TestCore.Reflection;
+using GreenEnergyHub.Charges.Domain.AvailableData;
+using GreenEnergyHub.Charges.Infrastructure.Cim;
+using GreenEnergyHub.Charges.Infrastructure.MessageHub;
 using GreenEnergyHub.TestHelpers;
 using Moq;
 using Xunit;
 using Xunit.Categories;
 
-namespace GreenEnergyHub.Charges.Tests.Infrastructure.ChargeLinkReceiptBundle
+namespace GreenEnergyHub.Charges.Tests.Infrastructure.MessageHub
 {
     [UnitTest]
-    public class ChargeLinkConfirmationBundleCreatorTests
+    public class BundleCreatorTests
     {
         [Theory]
         [InlineAutoDomainData]
         public async Task CreateAsync_WhenCalled_UsesRepositoryAndSerializer(
-            [Frozen] Mock<IAvailableChargeLinkReceiptDataRepository> repository,
-            [Frozen] Mock<IChargeLinkReceiptCimSerializer> serializer,
-            [Frozen] Mock<IStorageHandler> storageHandler,
+            [Frozen] Mock<IAvailableDataRepository<AvailableDataBase>> repository,
+            [Frozen] Mock<ICimSerializer<AvailableDataBase>> serializer,
             DataBundleRequestDto dataBundleRequestDto,
-            List<AvailableChargeLinkReceiptData> availableChargeLinkReceiptData,
+            List<AvailableDataBase> availableData,
             List<Guid> dataAvailableIds,
+            [Frozen] Mock<IStorageHandler> storageHandler,
             Stream stream,
-            ChargeLinkConfirmationBundleCreator sut)
+            BundleCreator<AvailableDataBase> sut)
         {
             // Arrange
-            dataBundleRequestDto.SetPrivateProperty(
-                r => r.MessageType,
-                ChargeLinkConfirmationDataAvailableNotifier.MessageTypePrefix);
-
             storageHandler
                 .Setup(r => r.GetDataAvailableNotificationIdsAsync(dataBundleRequestDto))
                 .ReturnsAsync(dataAvailableIds);
 
             repository.Setup(
                     r => r.GetAsync(dataAvailableIds))
-                .ReturnsAsync(availableChargeLinkReceiptData);
+                .ReturnsAsync(availableData);
 
             // Act
             await sut.CreateAsync(dataBundleRequestDto, stream).ConfigureAwait(false);
@@ -67,11 +60,11 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.ChargeLinkReceiptBundle
             // Assert
             serializer.Verify(
                 s => s.SerializeToStreamAsync(
-                    availableChargeLinkReceiptData,
+                    availableData,
                     stream,
-                    availableChargeLinkReceiptData.First().BusinessReasonCode,
-                    availableChargeLinkReceiptData.First().RecipientId,
-                    availableChargeLinkReceiptData.First().RecipientRole),
+                    availableData.First().BusinessReasonCode,
+                    availableData.First().RecipientId,
+                    availableData.First().RecipientRole),
                 Times.Once);
         }
     }
