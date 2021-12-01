@@ -44,7 +44,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.MessageHub
                 return _bundleCreators[typeof(BundleCreator<AvailableChargeLinkReceiptData>)];
 
             // RSM-031 CIM XML 'NotifyBillingMasterData' requests
-            if (request.MessageType.StartsWith(ChargeLinkDataAvailableNotifier.MessageTypePrefix))
+            if (request.MessageType.StartsWith(ChargeLinkNotificationFactory.MessageTypePrefix))
                 return _bundleCreators[typeof(BundleCreator<AvailableChargeLinksData>)];
 
             throw new ArgumentException(

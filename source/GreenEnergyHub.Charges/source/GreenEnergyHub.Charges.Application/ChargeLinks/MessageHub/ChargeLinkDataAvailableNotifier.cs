@@ -28,17 +28,6 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.MessageHub
 {
     public class ChargeLinkDataAvailableNotifier /*: IChargeLinkDataAvailableNotifier*/
     {
-        /// <summary>
-        /// The upper anticipated weight (kilobytes) contribution to the final bundle from the charge link created event.
-        /// </summary>
-        public const int MessageWeight = 2;
-
-        /// <summary>
-        /// Is used in communication with Message Hub.
-        /// Be cautious to change it!
-        /// </summary>
-        public const string MessageTypePrefix = "ChargeLinkDataAvailable";
-
         /*private readonly IDataAvailableNotificationSender _dataAvailableNotificationSender;
         private readonly IChargeRepository _chargeRepository;
         private readonly IAvailableDataRepository<AvailableChargeLinksData> _availableChargeLinksDataRepository;
