@@ -18,17 +18,15 @@ using System.Threading.Tasks;
 using AutoFixture.Xunit2;
 using Energinet.DataHub.MessageHub.Client.DataAvailable;
 using Energinet.DataHub.MessageHub.Model.Model;
-using FluentAssertions;
 using GreenEnergyHub.Charges.Application;
 using GreenEnergyHub.Charges.Application.ChargeLinks.MessageHub;
+using GreenEnergyHub.Charges.Application.MessageHub;
 using GreenEnergyHub.Charges.Domain.AvailableChargeLinkReceiptData;
 using GreenEnergyHub.Charges.Domain.AvailableData;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksAcceptedEvents;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.TestCore.Attributes;
 using Moq;
-using NodaTime;
 using Xunit;
 using Xunit.Categories;
 
@@ -42,6 +40,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.MessageHub
         public async Task NotifyAsync_WhenSenderIsSystemOperator_DoesNothing(
             [Frozen] Mock<IAvailableDataFactory<AvailableChargeLinkReceiptData, ChargeLinksAcceptedEvent>> availableChargeLinkReceiptFactory,
             [Frozen] Mock<IAvailableDataRepository<AvailableChargeLinkReceiptData>> availableChargeLinkReceiptDataRepository,
+            [Frozen] Mock<IAvailableDataNotificationFactory<AvailableChargeLinkReceiptData>> availableDataNotificationFactory,
             [Frozen] Mock<IDataAvailableNotificationSender> dataAvailableNotificationSender,
             [Frozen] Mock<ICorrelationContext> correlationContext,
             ChargeLinksAcceptedEvent acceptedEvent,
@@ -61,7 +60,13 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.MessageHub
                 Times.Never);
 
             availableChargeLinkReceiptDataRepository.Verify(
-                a => a.StoreAsync(It.IsAny<List<AvailableChargeLinkReceiptData>>()),
+                a => a.StoreAsync(
+                    It.IsAny<IEnumerable<AvailableChargeLinkReceiptData>>()),
+                Times.Never);
+
+            availableDataNotificationFactory.Verify(
+                f => f.Create(
+                    It.IsAny<IReadOnlyList<AvailableChargeLinkReceiptData>>()),
                 Times.Never);
 
             dataAvailableNotificationSender.Verify(
@@ -78,25 +83,17 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.MessageHub
         [Theory]
         [InlineAutoMoqData(MarketParticipantRole.GridAccessProvider)]
         [InlineAutoMoqData(MarketParticipantRole.EnergySupplier)]
-        public async Task NotifyAsync_WhenSenderIsNotSystemOperator_Notifies(
+        public async Task NotifyAsync_WhenSenderIsNotSystemOperator_StartsChain(
             MarketParticipantRole role,
             [Frozen] Mock<IAvailableDataFactory<AvailableChargeLinkReceiptData, ChargeLinksAcceptedEvent>> availableChargeLinkReceiptFactory,
-            [Frozen] Mock<IAvailableDataRepository<AvailableChargeLinkReceiptData>> availableChargeLinkReceiptDataRepository,
-            [Frozen] Mock<IDataAvailableNotificationSender> dataAvailableNotificationSender,
             [Frozen] Mock<ICorrelationContext> correlationContext,
             ChargeLinksAcceptedEvent acceptedEvent,
-            List<AvailableChargeLinkReceiptData> confirmations,
             ChargeLinkConfirmationDataAvailableNotifier sut)
         {
             // Arrange
             acceptedEvent.ChargeLinksCommand.Document.Sender.BusinessProcessRole = role;
 
-            var requestDateTime = SystemClock.Instance.GetCurrentInstant();
             var correlationId = Guid.NewGuid().ToString();
-
-            availableChargeLinkReceiptFactory.Setup(
-                    a => a.Create(acceptedEvent))
-                .Returns(confirmations);
 
             correlationContext.Setup(c => c.Id)
                 .Returns(correlationId);
@@ -108,17 +105,6 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.MessageHub
             availableChargeLinkReceiptFactory.Verify(
                 a => a.Create(acceptedEvent),
                 Times.Once);
-
-            availableChargeLinkReceiptDataRepository.Verify(
-                a => a.StoreAsync(
-                    It.IsAny<List<AvailableChargeLinkReceiptData>>()),
-                Times.Once);
-
-            dataAvailableNotificationSender.Verify(
-                d => d.SendAsync(
-                    correlationId,
-                    It.IsAny<DataAvailableNotificationDto>()),
-                Times.Exactly(acceptedEvent.ChargeLinksCommand.ChargeLinks.Count));
         }
     }
 }
