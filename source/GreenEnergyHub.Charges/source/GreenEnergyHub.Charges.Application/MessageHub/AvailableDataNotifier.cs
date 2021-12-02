@@ -49,21 +49,11 @@ namespace GreenEnergyHub.Charges.Application.MessageHub
 
         public async Task NotifyAsync(TInputType input)
         {
-            if (!ShouldSendMessage(input))
-                return;
-
             var availableData = await CreateAvailableDataAsync(input);
 
             await StoreAvailableDataForLaterBundlingAsync(availableData).ConfigureAwait(false);
 
             await NotifyMessageHubOfAvailableDataAsync(availableData).ConfigureAwait(false);
-        }
-
-        protected virtual bool ShouldSendMessage(TInputType input)
-        {
-            // If you have a need to not send some notifications, then inherit from this class
-            // and override this method with your needed logic. By default we will notify.
-            return true;
         }
 
         private async Task<IReadOnlyList<TAvailableData>> CreateAvailableDataAsync(TInputType input)
