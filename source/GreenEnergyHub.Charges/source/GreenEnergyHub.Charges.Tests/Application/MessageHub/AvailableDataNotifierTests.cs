@@ -50,7 +50,9 @@ namespace GreenEnergyHub.Charges.Tests.Application.MessageHub
                 .ReturnsAsync(availableData);
 
             availableDataNotificationFactory.Setup(
-                    f => f.Create(availableData))
+                    f => f.Create(
+                        availableData,
+                        It.IsAny<IBundleSpecification<AvailableDataBase>>()))
                 .Returns(notifications);
 
             var correlationId = Guid.NewGuid().ToString();
@@ -70,7 +72,9 @@ namespace GreenEnergyHub.Charges.Tests.Application.MessageHub
                 Times.Once);
 
             availableDataNotificationFactory.Verify(
-                f => f.Create(availableData),
+                f => f.Create(
+                    availableData,
+                    It.IsAny<IBundleSpecification<AvailableDataBase>>()),
                 Times.Once);
 
             dataAvailableNotificationSender.Verify(

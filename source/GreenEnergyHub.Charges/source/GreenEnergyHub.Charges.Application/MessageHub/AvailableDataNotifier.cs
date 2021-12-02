@@ -29,19 +29,22 @@ namespace GreenEnergyHub.Charges.Application.MessageHub
         private readonly IAvailableDataNotificationFactory<TAvailableData> _availableDataNotificationFactory;
         private readonly IDataAvailableNotificationSender _dataAvailableNotificationSender;
         private readonly ICorrelationContext _correlationContext;
+        private readonly BundleSpecification<TAvailableData, TInputType> _bundleSpecification;
 
         public AvailableDataNotifier(
             IAvailableDataFactory<TAvailableData, TInputType> availableDataFactory,
             IAvailableDataRepository<TAvailableData> availableDataRepository,
             IAvailableDataNotificationFactory<TAvailableData> availableDataNotificationFactory,
             IDataAvailableNotificationSender dataAvailableNotificationSender,
-            ICorrelationContext correlationContext)
+            ICorrelationContext correlationContext,
+            BundleSpecification<TAvailableData, TInputType> bundleSpecification)
         {
             _availableDataFactory = availableDataFactory;
             _availableDataRepository = availableDataRepository;
             _availableDataNotificationFactory = availableDataNotificationFactory;
             _dataAvailableNotificationSender = dataAvailableNotificationSender;
             _correlationContext = correlationContext;
+            _bundleSpecification = bundleSpecification;
         }
 
         public async Task NotifyAsync(TInputType input)
@@ -86,7 +89,7 @@ namespace GreenEnergyHub.Charges.Application.MessageHub
         private IReadOnlyList<DataAvailableNotificationDto> CreateNotifications(
             IReadOnlyList<TAvailableData> availableData)
         {
-            return _availableDataNotificationFactory.Create(availableData);
+            return _availableDataNotificationFactory.Create(availableData, _bundleSpecification);
         }
     }
 }
