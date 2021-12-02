@@ -42,7 +42,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.MessageHub
             ChargeLinkDataAvailableNotifier sut)
         {
             await sut
-                .Invoking(notifier => notifier.NotifyAsync(null!))
+                .Invoking(notifier => notifier.NotifyAndReplyAsync(null!))
                 .Should()
                 .ThrowExactlyAsync<ArgumentNullException>();
         }
@@ -83,7 +83,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.MessageHub
                 .Returns(availableChargeLinksData);
 
             // Act
-            await sut.NotifyAsync(chargeLinksAcceptedEvent);
+            await sut.NotifyAndReplyAsync(chargeLinksAcceptedEvent);
 
             // Assert
             dataAvailableNotificationSenderMock.Verify(
@@ -119,7 +119,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.MessageHub
                 .ReturnsAsync(charge);
 
             // Act
-            await sut.NotifyAsync(chargeLinksAcceptedEvent);
+            await sut.NotifyAndReplyAsync(chargeLinksAcceptedEvent);
 
             // Assert
             dataAvailableNotificationSenderMock.VerifyNoOtherCalls();
