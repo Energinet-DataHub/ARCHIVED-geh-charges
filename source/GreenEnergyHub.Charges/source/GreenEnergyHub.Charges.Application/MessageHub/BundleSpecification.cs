@@ -31,6 +31,11 @@ namespace GreenEnergyHub.Charges.Application.MessageHub
 
         public string GetMessageType(BusinessReasonCode businessReasonCode)
         {
+            // NOTE: While we need to map the bundle type to make sure refactorings of the enum does not
+            // directly impact the interface between the charge domain and the messagehub, the business
+            // reason code is less dangerous as it just needs to be the same on stuff that can be in the
+            // same bundle. Worst case, a refactoring just means you get your information in two messages
+            // instead of one.
             return BundleTypeMapper.Map(_bundleType) + "_" + businessReasonCode;
         }
     }
