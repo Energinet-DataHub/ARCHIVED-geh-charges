@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using GreenEnergyHub.Charges.Application.ChargeLinks.Handlers;
 using GreenEnergyHub.Charges.Application.ChargeLinks.MessageHub;
 using GreenEnergyHub.Charges.Domain.AvailableChargeLinksData;
 using GreenEnergyHub.Charges.Domain.Dtos.DefaultChargeLinksDataAvailableNotifiedEvents;
@@ -35,9 +34,6 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
             container.AddMessagingProtobuf().AddMessageDispatcher<DefaultChargeLinksCreatedEvent>(
                 EnvironmentHelper.GetEnv(EnvironmentSettingNames.DomainEventSenderConnectionString),
                 EnvironmentHelper.GetEnv(EnvironmentSettingNames.DefaultChargeLinksDataAvailableNotifiedTopicName));
-            container
-                .Register<IChargeLinkDataAvailableNotifierEndpointHandler,
-                    ChargeLinkDataAvailableNotifierEndpointHandler>(Lifestyle.Scoped);
             container.Register<IChargeLinkDataAvailableNotifier, ChargeLinkDataAvailableNotifier>(Lifestyle.Scoped);
             container.Register<IAvailableChargeLinksDataFactory, AvailableChargeLinksDataFactory>(Lifestyle.Scoped);
         }
