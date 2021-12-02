@@ -16,8 +16,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Energinet.DataHub.MessageHub.Model.Model;
-using GreenEnergyHub.Charges.Application.ChargeLinks.MessageHub;
-using GreenEnergyHub.Charges.Application.Charges.MessageHub;
 using GreenEnergyHub.Charges.Application.MessageHub;
 using GreenEnergyHub.Charges.Domain.AvailableChargeData;
 using GreenEnergyHub.Charges.Domain.AvailableChargeLinkReceiptData;
@@ -39,20 +37,17 @@ namespace GreenEnergyHub.Charges.Infrastructure.MessageHub
         {
             var bundleType = BundleTypeMapper.Map(request);
 
-            // RSM-034 CIM XML 'NotifyPriceList' requests
-            if (bundleType == BundleType.ChargeDataAvailable)
-                return _bundleCreators[typeof(BundleCreator<AvailableChargeData>)];
-
-            // RSM-030 CIM XML 'ConfirmRequestChangeBillingMasterData' confirmations
-            if (bundleType == BundleType.ChargeLinkConfirmationDataAvailable)
-                return _bundleCreators[typeof(BundleCreator<AvailableChargeLinkReceiptData>)];
-
-            // RSM-031 CIM XML 'NotifyBillingMasterData' requests
-            if (bundleType == BundleType.ChargeLinkDataAvailable)
-                return _bundleCreators[typeof(BundleCreator<AvailableChargeLinksData>)];
-
-            throw new ArgumentException(
-                $"Unknown message type: {request.MessageType} with DataAvailableNotificationIds: {request.IdempotencyId}");
+            return bundleType switch
+            {
+                // RSM-034 CIM XML 'NotifyPriceList' requests
+                BundleType.ChargeDataAvailable => _bundleCreators[typeof(BundleCreator<AvailableChargeData>)],
+                // RSM-030 CIM XML 'ConfirmRequestChangeBillingMasterData' confirmations
+                BundleType.ChargeLinkConfirmationDataAvailable => _bundleCreators[typeof(BundleCreator<AvailableChargeLinkReceiptData>)],
+                // RSM-031 CIM XML 'NotifyBillingMasterData' requests
+                BundleType.ChargeLinkDataAvailable => _bundleCreators[typeof(BundleCreator<AvailableChargeLinksData>)],
+                _ => throw new ArgumentException(
+                    $"Unknown message type: {request.MessageType} with DataAvailableNotificationIds: {request.IdempotencyId}"),
+            };
         }
     }
 }
