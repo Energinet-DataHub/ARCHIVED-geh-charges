@@ -33,7 +33,10 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
                     AvailableChargeLinkReceiptDataFactory>();
             serviceCollection
                 .AddScoped<IAvailableDataNotificationFactory<AvailableChargeLinkReceiptData>,
-                    ChargeLinkConfirmationNotificationFactory>();
+                    AvailableDataNotificationFactory<AvailableChargeLinkReceiptData>>();
+            serviceCollection
+                .AddScoped<BundleSpecification<AvailableChargeLinkReceiptData, ChargeLinksAcceptedEvent>,
+                    ChargeLinksConfirmationBundleSpecification>();
         }
     }
 }

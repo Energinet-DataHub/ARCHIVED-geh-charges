@@ -29,7 +29,11 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
                 AvailableDataNotifier<AvailableChargeData, ChargeCommandAcceptedEvent>>();
             serviceCollection.AddScoped<IAvailableDataFactory<AvailableChargeData, ChargeCommandAcceptedEvent>,
                 AvailableChargeDataFactory>();
-            serviceCollection.AddScoped<IAvailableDataNotificationFactory<AvailableChargeData>, ChargeNotificationFactory>();
+            serviceCollection.AddScoped<IAvailableDataNotificationFactory<AvailableChargeData>,
+                AvailableDataNotificationFactory<AvailableChargeData>>();
+            serviceCollection
+                .AddScoped<BundleSpecification<AvailableChargeData, ChargeCommandAcceptedEvent>,
+                    ChargeBundleSpecification>();
         }
     }
 }
