@@ -12,13 +12,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using GreenEnergyHub.Charges.Application.ChargeLinks.MessageHub;
+using System;
+using EntityFrameworkCore.SqlServer.NodaTime.Extensions;
+using GreenEnergyHub.Charges.FunctionHost.Common;
 using GreenEnergyHub.Charges.FunctionHost.Configuration;
+using GreenEnergyHub.Charges.Infrastructure.Context;
 using GreenEnergyHub.Charges.Infrastructure.Correlation;
 using GreenEnergyHub.Charges.Infrastructure.Function;
 using GreenEnergyHub.Charges.Infrastructure.MessageMetaData;
+using GreenEnergyHub.Charges.Infrastructure.SimpleInjector;
+using Microsoft.Azure.Functions.Worker;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
+using SimpleInjector;
 
 namespace GreenEnergyHub.Charges.FunctionHost
 {
@@ -33,6 +41,7 @@ namespace GreenEnergyHub.Charges.FunctionHost
                     builder.UseMiddleware<FunctionTelemetryScopeMiddleware>();
                     builder.UseMiddleware<MessageMetaDataMiddleware>();
                     builder.UseMiddleware<FunctionInvocationLoggingMiddleware>();
+                    builder.UseMiddleware<SimpleInjectorScopedRequest>();
                 })
                 .ConfigureServices(ConfigureServices)
                 .Build();
@@ -42,30 +51,56 @@ namespace GreenEnergyHub.Charges.FunctionHost
 
         private static void ConfigureServices(HostBuilderContext hostBuilderContext, IServiceCollection serviceCollection)
         {
-            SharedConfiguration.ConfigureServices(serviceCollection);
+            var container = new Container();
+            var descriptor = new ServiceDescriptor(
+                typeof(IFunctionActivator),
+                typeof(SimpleInjectorActivator),
+                ServiceLifetime.Singleton);
+
+            serviceCollection.Replace(descriptor); // Replace existing activator
+
+            serviceCollection.AddLogging();
+
+            serviceCollection.AddApplicationInsightsTelemetryWorkerService(
+                EnvironmentHelper.GetEnv(EnvironmentSettingNames.AppInsightsInstrumentationKey));
+
+            serviceCollection.AddSimpleInjector(container, options =>
+            {
+                options.AddLogging(); // Allow use non-generic ILogger interface
+            });
+
+            var connectionString = Environment.GetEnvironmentVariable(EnvironmentSettingNames.ChargeDbConnectionString) ??
+                                   throw new ArgumentNullException(
+                                       EnvironmentSettingNames.ChargeDbConnectionString,
+                                       "does not exist in configuration settings");
+
+            serviceCollection.AddDbContext<ChargesDatabaseContext>(
+                options => options.UseSqlServer(connectionString, o => o.UseNodaTime()));
+
+            SharedConfiguration.ConfigureServices(container);
 
             // Charges
-            ChargeIngestionConfiguration.ConfigureServices(serviceCollection);
-            ChargeCommandAcceptedReceiverConfiguration.ConfigureServices(serviceCollection);
-            ChargeCommandReceiverConfiguration.ConfigureServices(serviceCollection);
-            ChargeConfirmationSenderConfiguration.ConfigureServices(serviceCollection);
-            ChargeRejectionSenderConfiguration.ConfigureServices(serviceCollection);
-            ChargeDataAvailableNotifierConfiguration.ConfigureServices(serviceCollection);
+            ChargeIngestionConfiguration.ConfigureServices(container);
+            ChargeCommandAcceptedReceiverConfiguration.ConfigureServices(container);
+            ChargeCommandReceiverConfiguration.ConfigureServices(container);
+            ChargeConfirmationSenderConfiguration.ConfigureServices(container);
+            ChargeRejectionSenderConfiguration.ConfigureServices(container);
+            ChargeDataAvailableNotifierConfiguration.ConfigureServices(container);
 
             // Charge links
-            ChargeLinkIngestionConfiguration.ConfigureServices(serviceCollection);
-            ChargeLinkCommandReceiverConfiguration.ConfigureServices(serviceCollection);
-            ChargeLinkEventPublisherConfiguration.ConfigureServices(serviceCollection);
-            DefaultChargeLinkEventReplierConfiguration.ConfigureServices(serviceCollection);
-            CreateChargeLinkReceiverConfiguration.ConfigureServices(serviceCollection);
-            ChargeLinkDataAvailableNotifierConfiguration.ConfigureServices(serviceCollection);
-            ChargeLinkConfirmationDataAvailableNotifierConfiguration.ConfigureServices(serviceCollection);
+            ChargeLinkIngestionConfiguration.ConfigureServices(container);
+            ChargeLinkCommandReceiverConfiguration.ConfigureServices(container);
+            ChargeLinkEventPublisherConfiguration.ConfigureServices(container);
+            DefaultChargeLinkEventReplierConfiguration.ConfigureServices(container);
+            CreateChargeLinkReceiverConfiguration.ConfigureServices(container);
+            ChargeLinkDataAvailableNotifierConfiguration.ConfigureServices(container);
+            ChargeLinkConfirmationDataAvailableNotifierConfiguration.ConfigureServices(container);
 
             // Metering points
-            ConsumptionMeteringPointPersisterConfiguration.ConfigureServices(serviceCollection);
+            ConsumptionMeteringPointPersisterConfiguration.ConfigureServices(container);
 
             // Message Hub
-            BundleSenderEndpointConfiguration.ConfigureServices(serviceCollection);
+            BundleSenderEndpointConfiguration.ConfigureServices(container);
         }
     }
 }

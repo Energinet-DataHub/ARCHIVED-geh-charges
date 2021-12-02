@@ -20,6 +20,7 @@ using Energinet.DataHub.MessageHub.Client;
 using Energinet.DataHub.MessageHub.Client.DataAvailable;
 using Energinet.DataHub.MessageHub.Client.Factories;
 using Energinet.DataHub.MessageHub.Client.Peek;
+using Energinet.DataHub.MessageHub.Client.SimpleInjector;
 using Energinet.DataHub.MessageHub.Client.Storage;
 using Energinet.DataHub.MessageHub.Model.Dequeue;
 using Energinet.DataHub.MessageHub.Model.Peek;
@@ -48,31 +49,29 @@ using GreenEnergyHub.Charges.Infrastructure.Repositories;
 using GreenEnergyHub.Charges.Infrastructure.ServiceBusReplySenderProvider;
 using GreenEnergyHub.Iso8601;
 using GreenEnergyHub.Json;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 using NodaTime;
+using SimpleInjector;
 using MarketParticipantRole = GreenEnergyHub.Charges.Domain.MarketParticipants.MarketParticipantRole;
+using ProtobufInboundMapperFactory = GreenEnergyHub.Charges.Infrastructure.ProtobufInboundMapperFactory;
 
 namespace GreenEnergyHub.Charges.FunctionHost.Configuration
 {
     internal static class SharedConfiguration
     {
-        internal static void ConfigureServices(IServiceCollection serviceCollection)
+        internal static void ConfigureServices(Container container)
         {
-            serviceCollection.AddScoped(typeof(IClock), _ => SystemClock.Instance);
-            serviceCollection.AddSingleton<IJsonSerializer, JsonSerializer>();
-            serviceCollection.AddLogging();
-            serviceCollection.AddScoped<CorrelationIdMiddleware>();
-            serviceCollection.AddScoped<FunctionTelemetryScopeMiddleware>();
-            serviceCollection.AddScoped<MessageMetaDataMiddleware>();
-            serviceCollection.AddScoped<FunctionInvocationLoggingMiddleware>();
-            serviceCollection.AddApplicationInsightsTelemetryWorkerService(
-                EnvironmentHelper.GetEnv(EnvironmentSettingNames.AppInsightsInstrumentationKey));
+            container.Register<IClock>(() => SystemClock.Instance, Lifestyle.Scoped);
+            //container.AddScoped(typeof(IClock), _ => SystemClock.Instance);
+            container.Register<IJsonSerializer, JsonSerializer>();
+            container.Register<CorrelationIdMiddleware>(Lifestyle.Scoped);
+            container.Register<FunctionTelemetryScopeMiddleware>(Lifestyle.Scoped);
+            container.Register<MessageMetaDataMiddleware>(Lifestyle.Scoped);
+            container.Register<FunctionInvocationLoggingMiddleware>(Lifestyle.Scoped);
 
-            ConfigureSharedDatabase(serviceCollection);
-            ConfigureSharedMessaging(serviceCollection);
-            ConfigureIso8601Services(serviceCollection);
-            ConfigureSharedCim(serviceCollection);
+            ConfigureSharedDatabase(container);
+            ConfigureSharedMessaging(container);
+            ConfigureIso8601Services(container);
+            ConfigureSharedCim(container);
 
             var serviceBusConnectionString = EnvironmentHelper.GetEnv(EnvironmentSettingNames.DataHubSenderConnectionString);
             var dataAvailableQueue = EnvironmentHelper.GetEnv(EnvironmentSettingNames.MessageHubDataAvailableQueue);
@@ -82,9 +81,9 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
 
             var serviceBusClient = new ServiceBusClient(serviceBusConnectionString);
 
-            AddCreateDefaultChargeLinksReplier(serviceCollection, serviceBusClient);
-            AddPostOfficeCommunication(
-                serviceCollection,
+            AddCreateDefaultChargeLinksReplier(container, serviceBusClient);
+
+            container.AddMessageHubCommunication(
                 serviceBusConnectionString,
                 new MessageHubConfig(dataAvailableQueue, domainReplyQueue),
                 storageServiceConnectionString,
@@ -92,51 +91,43 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
         }
 
         private static void AddCreateDefaultChargeLinksReplier(
-            IServiceCollection serviceCollection,
+            Container serviceCollection,
             ServiceBusClient serviceBusClient)
         {
-            serviceCollection.AddSingleton<IServiceBusReplySenderProvider>(_ =>
-                new ServiceBusReplySenderProvider(serviceBusClient));
-            serviceCollection.AddScoped<ICreateDefaultChargeLinksReplier, CreateDefaultChargeLinksReplier>();
+            serviceCollection.Register<IServiceBusReplySenderProvider>(() => new ServiceBusReplySenderProvider(serviceBusClient));
+            serviceCollection.Register<ICreateDefaultChargeLinksReplier, CreateDefaultChargeLinksReplier>(Lifestyle.Scoped);
         }
 
-        private static void ConfigureSharedDatabase(IServiceCollection serviceCollection)
+        private static void ConfigureSharedDatabase(Container container)
         {
-            var connectionString = Environment.GetEnvironmentVariable(EnvironmentSettingNames.ChargeDbConnectionString) ??
-                                   throw new ArgumentNullException(
-                                       EnvironmentSettingNames.ChargeDbConnectionString,
-                                       "does not exist in configuration settings");
-            serviceCollection.AddDbContext<ChargesDatabaseContext>(
-                options => options.UseSqlServer(connectionString, o => o.UseNodaTime()));
-            serviceCollection.AddScoped<IChargesDatabaseContext, ChargesDatabaseContext>();
-
-            serviceCollection.AddScoped<IChargeRepository, ChargeRepository>();
-            serviceCollection.AddScoped<IMeteringPointRepository, MeteringPointRepository>();
-            serviceCollection
-                .AddScoped<IAvailableDataRepository<AvailableChargeLinksData>, AvailableChargeLinksDataRepository>();
-            serviceCollection
-                .AddScoped<IAvailableDataRepository<AvailableChargeData>, AvailableChargeDataRepository>();
-            serviceCollection
-                .AddScoped<IAvailableDataRepository<AvailableChargeLinkReceiptData>, AvailableChargeLinkReceiptDataRepository>();
-            serviceCollection
-                .AddScoped<IAvailableDataRepository<AvailableChargeReceiptData>, AvailableChargeReceiptDataRepository>();
+            container.Register<IChargesDatabaseContext, ChargesDatabaseContext>(Lifestyle.Scoped);
+            container.Register<IChargeRepository, ChargeRepository>(Lifestyle.Scoped);
+            container.Register<IMeteringPointRepository, MeteringPointRepository>(Lifestyle.Scoped);
+            container
+                .Register<IAvailableDataRepository<AvailableChargeLinksData>, AvailableChargeLinksDataRepository>(Lifestyle.Scoped);
+            container
+                .Register<IAvailableDataRepository<AvailableChargeData>, AvailableChargeDataRepository>(Lifestyle.Scoped);
+            container
+                .Register<IAvailableDataRepository<AvailableChargeLinkReceiptData>, AvailableChargeLinkReceiptDataRepository>(Lifestyle.Scoped);
+            container
+                .Register<IAvailableDataRepository<AvailableChargeReceiptData>, AvailableChargeReceiptDataRepository>(Lifestyle.Scoped);
         }
 
-        private static void ConfigureSharedMessaging(IServiceCollection serviceCollection)
+        private static void ConfigureSharedMessaging(Container container)
         {
-            serviceCollection.AddScoped<MessageDispatcher>();
-            serviceCollection.ConfigureProtobufReception();
+            container.Register<MessageDispatcher>(Lifestyle.Scoped);
+            container.Register<ProtobufInboundMapperFactory>(Lifestyle.Scoped);
 
-            serviceCollection.SendProtobuf<ChargeLinkCommandReceived>();
-            serviceCollection.AddMessagingProtobuf().AddMessageDispatcher<ChargeLinksReceivedEvent>(
+            container.SendProtobufMessage<ChargeLinkCommandReceived>();
+            container.AddMessagingProtobuf().AddMessageDispatcher<ChargeLinksReceivedEvent>(
                 EnvironmentHelper.GetEnv(EnvironmentSettingNames.DomainEventSenderConnectionString),
                 EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargeLinkReceivedTopicName));
         }
 
-        private static void ConfigureSharedCim(IServiceCollection serviceCollection)
+        private static void ConfigureSharedCim(Container container)
         {
-            serviceCollection.AddScoped<ICimIdProvider, CimIdProvider>();
-            serviceCollection.AddScoped<IHubSenderConfiguration>(_ =>
+            container.Register<ICimIdProvider, CimIdProvider>();
+            container.Register<IHubSenderConfiguration>(() =>
             {
                 var senderId = EnvironmentHelper.GetEnv(EnvironmentSettingNames.HubSenderId);
                 var roleIntText = EnvironmentHelper.GetEnv(EnvironmentSettingNames.HubSenderRoleIntEnumValue);
@@ -146,91 +137,12 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
             });
         }
 
-        private static void ConfigureIso8601Services(IServiceCollection serviceCollection)
+        private static void ConfigureIso8601Services(Container container)
         {
             var timeZoneId = EnvironmentHelper.GetEnv(EnvironmentSettingNames.LocalTimeZoneName);
             var timeZoneConfiguration = new Iso8601ConversionConfiguration(timeZoneId);
-            serviceCollection.AddSingleton<IIso8601ConversionConfiguration>(timeZoneConfiguration);
-            serviceCollection.AddSingleton<IIso8601Durations, Iso8601Durations>();
-        }
-
-        /// <summary>
-        /// Post office provides a NuGet package to handle the configuration, but it's for SimpleInjector
-        /// and thus not applicable in this function host. See also
-        /// https://github.com/Energinet-DataHub/geh-post-office/blob/main/source/PostOffice.Communicator.SimpleInjector/source/PostOffice.Communicator.SimpleInjector/ContainerExtensions.cs
-        /// </summary>
-        private static void AddPostOfficeCommunication(
-            IServiceCollection serviceCollection,
-            string serviceBusConnectionString,
-            MessageHubConfig messageHubConfig,
-            string storageServiceConnectionString,
-            StorageConfig storageConfig)
-        {
-            if (serviceCollection == null)
-                throw new ArgumentNullException(nameof(serviceCollection));
-
-            if (string.IsNullOrWhiteSpace(serviceBusConnectionString))
-                throw new ArgumentNullException(nameof(serviceBusConnectionString));
-
-            if (messageHubConfig == null)
-                throw new ArgumentNullException(nameof(messageHubConfig));
-
-            if (string.IsNullOrWhiteSpace(storageServiceConnectionString))
-                throw new ArgumentNullException(nameof(storageServiceConnectionString));
-
-            if (storageConfig == null)
-                throw new ArgumentNullException(nameof(storageConfig));
-
-            serviceCollection.AddSingleton(_ => messageHubConfig);
-            serviceCollection.AddSingleton(_ => storageConfig);
-            serviceCollection.AddServiceBus(serviceBusConnectionString);
-            serviceCollection.AddApplicationServices();
-            serviceCollection.AddStorageHandler(storageServiceConnectionString);
-        }
-
-        private static void AddServiceBus(this IServiceCollection serviceCollection, string serviceBusConnectionString)
-        {
-            serviceCollection.AddSingleton<IServiceBusClientFactory>(_ =>
-            {
-                if (string.IsNullOrWhiteSpace(serviceBusConnectionString))
-                {
-                    throw new InvalidOperationException(
-                        "Please specify a valid ServiceBus in the appSettings.json file or your Azure Functions Settings.");
-                }
-
-                return new ServiceBusClientFactory(serviceBusConnectionString);
-            });
-
-            serviceCollection.AddSingleton<IMessageBusFactory>(provider =>
-            {
-                var serviceBusClientFactory = provider.GetRequiredService<IServiceBusClientFactory>();
-                return new AzureServiceBusFactory(serviceBusClientFactory);
-            });
-        }
-
-        private static void AddApplicationServices(this IServiceCollection serviceCollection)
-        {
-            serviceCollection.AddSingleton<IDataAvailableNotificationSender, DataAvailableNotificationSender>();
-            serviceCollection.AddSingleton<IRequestBundleParser, RequestBundleParser>();
-            serviceCollection.AddSingleton<IResponseBundleParser, ResponseBundleParser>();
-            serviceCollection.AddSingleton<IDataBundleResponseSender, DataBundleResponseSender>();
-            serviceCollection.AddSingleton<IDequeueNotificationParser, DequeueNotificationParser>();
-        }
-
-        private static void AddStorageHandler(this IServiceCollection serviceCollection, string storageServiceConnectionString)
-        {
-            serviceCollection.AddSingleton<IStorageServiceClientFactory>(_ =>
-            {
-                if (string.IsNullOrWhiteSpace(storageServiceConnectionString))
-                {
-                    throw new InvalidOperationException(
-                        "Please specify a valid BlobStorageConnectionString in the appSettings.json file or your Azure Functions Settings.");
-                }
-
-                return new StorageServiceClientFactory(storageServiceConnectionString);
-            });
-
-            serviceCollection.AddSingleton<IStorageHandler, StorageHandler>();
+            container.Register<IIso8601ConversionConfiguration>(() => timeZoneConfiguration, Lifestyle.Singleton);
+            container.Register<IIso8601Durations, Iso8601Durations>(Lifestyle.Singleton);
         }
     }
 }

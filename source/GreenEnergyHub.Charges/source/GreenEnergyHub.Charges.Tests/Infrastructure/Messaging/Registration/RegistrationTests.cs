@@ -12,13 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Linq;
 using Energinet.DataHub.Core.Messaging.Protobuf;
+using FluentAssertions;
 using GreenEnergyHub.Charges.Application;
 using GreenEnergyHub.Charges.Infrastructure.Messaging;
 using GreenEnergyHub.Charges.Infrastructure.Messaging.Registration;
 using GreenEnergyHub.TestHelpers;
 using Microsoft.Extensions.DependencyInjection;
 using NodaTime;
+using SimpleInjector;
+using SimpleInjector.Lifestyles;
 using Xunit;
 using Xunit.Categories;
 
@@ -33,35 +37,37 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Messaging.Registration
         {
             // Arrange
             var anyValidConnectionString = "Endpoint=foo/;SharedAccessKeyName=foo;SharedAccessKey=foo";
-            var services = new ServiceCollection();
-            services.AddScoped<IClock>(_ => SystemClock.Instance);
+            var sut = new Container();
+            sut.Options.DefaultScopedLifestyle = new AsyncScopedLifestyle();
+            sut.Register<IClock>(() => SystemClock.Instance, Lifestyle.Scoped);
 
             // Act
-            services.SendProtobuf<TestMessageContract>();
-            services.AddMessagingProtobuf()
+            sut.SendProtobufMessage<TestMessageContract>();
+            sut.AddMessagingProtobuf()
                 .AddMessageDispatcher<TestMessage>(anyValidConnectionString, anyTopicName);
 
             // Assert
-            var provider = services.BuildServiceProvider();
-            var dispatcher = provider.GetService<IMessageDispatcher<TestMessage>>();
-            Assert.NotNull(dispatcher);
+            var actualRegistrations = sut.Collection.Container.GetCurrentRegistrations();
+            actualRegistrations.Any(p =>
+                p.ServiceType == typeof(IMessageDispatcher<TestMessage>)).Should().BeTrue();
         }
 
         [Fact]
         public void AddMessageExtractor_AllowsResolvingAMessageExtractor()
         {
             // Arrange
-            var services = new ServiceCollection();
-
+            var sut = new Container();
+            sut.Options.DefaultScopedLifestyle = new AsyncScopedLifestyle();
+            sut.Register<IClock>(() => SystemClock.Instance, Lifestyle.Scoped);
             // Act
-            services
+            sut
                 .AddMessaging()
                 .AddMessageExtractor<TestMessage>();
 
             // Assert
-            var provider = services.BuildServiceProvider();
-            var dispatcher = provider.GetService<MessageExtractor<TestMessage>>();
-            Assert.NotNull(dispatcher);
+            var actualRegistrations = sut.Collection.Container.GetCurrentRegistrations();
+            actualRegistrations.Any(p =>
+                p.ServiceType == typeof(MessageExtractor<TestMessage>)).Should().BeTrue();
         }
     }
 }

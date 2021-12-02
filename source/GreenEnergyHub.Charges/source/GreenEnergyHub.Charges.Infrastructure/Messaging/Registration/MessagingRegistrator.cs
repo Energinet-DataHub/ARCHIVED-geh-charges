@@ -17,16 +17,17 @@ using Energinet.DataHub.Core.Messaging.Transport;
 using GreenEnergyHub.Charges.Application;
 using GreenEnergyHub.Charges.Infrastructure.Messaging.Serialization;
 using Microsoft.Extensions.DependencyInjection;
+using SimpleInjector;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Messaging.Registration
 {
     public class MessagingRegistrator
     {
-        private readonly IServiceCollection _services;
+        private readonly Container _container;
 
-        internal MessagingRegistrator(IServiceCollection services)
+        internal MessagingRegistrator(Container container)
         {
-            _services = services;
+            _container = container;
         }
 
         /// <summary>
@@ -35,8 +36,8 @@ namespace GreenEnergyHub.Charges.Infrastructure.Messaging.Registration
         public MessagingRegistrator AddMessageExtractor<TInboundMessage>()
             where TInboundMessage : IInboundMessage
         {
-            _services.AddScoped<MessageExtractor<TInboundMessage>>();
-            _services.AddScoped<MessageDeserializer<TInboundMessage>, JsonMessageDeserializer<TInboundMessage>>();
+            _container.Register<MessageExtractor<TInboundMessage>>(Lifestyle.Scoped);
+            _container.Register<MessageDeserializer<TInboundMessage>, JsonMessageDeserializer<TInboundMessage>>(Lifestyle.Scoped);
 
             return this;
         }
@@ -49,12 +50,12 @@ namespace GreenEnergyHub.Charges.Infrastructure.Messaging.Registration
             string serviceBusTopicName)
             where TOutboundMessage : IOutboundMessage
         {
-            _services.AddScoped<IMessageDispatcher<TOutboundMessage>, MessageDispatcher<TOutboundMessage>>();
-            _services.AddScoped<Channel<TOutboundMessage>, ServiceBusChannel<TOutboundMessage>>();
+            _container.Register<IMessageDispatcher<TOutboundMessage>, MessageDispatcher<TOutboundMessage>>(Lifestyle.Scoped);
+            _container.Register<Channel<TOutboundMessage>, ServiceBusChannel<TOutboundMessage>>(Lifestyle.Scoped);
 
             // Must be a singleton as per documentation of ServiceBusClient and ServiceBusSender
-            _services.AddSingleton<IServiceBusSender<TOutboundMessage>>(
-                _ =>
+            _container.Register<IServiceBusSender<TOutboundMessage>>(
+                () =>
                 {
                     var client = new ServiceBusClient(serviceBusConnectionString);
                     var instance = client.CreateSender(serviceBusTopicName);

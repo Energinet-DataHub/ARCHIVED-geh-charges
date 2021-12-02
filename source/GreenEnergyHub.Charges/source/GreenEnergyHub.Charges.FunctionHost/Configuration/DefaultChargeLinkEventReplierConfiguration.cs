@@ -17,17 +17,18 @@ using GreenEnergyHub.Charges.Domain.Dtos.DefaultChargeLinksDataAvailableNotified
 using GreenEnergyHub.Charges.Infrastructure.Internal.DefaultChargeLinksCreated;
 using GreenEnergyHub.Charges.Infrastructure.Messaging.Registration;
 using Microsoft.Extensions.DependencyInjection;
+using SimpleInjector;
 
 namespace GreenEnergyHub.Charges.FunctionHost.Configuration
 {
     internal static class DefaultChargeLinkEventReplierConfiguration
     {
-        internal static void ConfigureServices(IServiceCollection serviceCollection)
+        internal static void ConfigureServices(Container container)
         {
-            serviceCollection.AddScoped<ICreateDefaultChargeLinksReplyHandler, CreateDefaultChargeLinksReplyHandler>();
-            serviceCollection.AddScoped<IDefaultChargeLinksCreatedEventFactory, DefaultChargeLinksCreatedEventFactory>();
+            container.Register<ICreateDefaultChargeLinksReplyHandler, CreateDefaultChargeLinksReplyHandler>(Lifestyle.Scoped);
+            container.Register<IDefaultChargeLinksCreatedEventFactory, DefaultChargeLinksCreatedEventFactory>(Lifestyle.Scoped);
 
-            serviceCollection.ReceiveProtobufMessage<DefaultChargeLinksCreated>(
+            container.ReceiveProtobufMessage<DefaultChargeLinksCreated>(
                 configuration => configuration.WithParser(() => DefaultChargeLinksCreated.Parser));
         }
     }

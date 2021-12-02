@@ -18,18 +18,19 @@ using GreenEnergyHub.Charges.Infrastructure.ChargeLinkBundle.Cim;
 using GreenEnergyHub.Charges.Infrastructure.Messaging;
 using GreenEnergyHub.Charges.Infrastructure.Messaging.Serialization;
 using Microsoft.Extensions.DependencyInjection;
+using SimpleInjector;
 
 namespace GreenEnergyHub.Charges.FunctionHost.Configuration
 {
     internal static class ChargeLinkIngestionConfiguration
     {
-        internal static void ConfigureServices(IServiceCollection serviceCollection)
+        internal static void ConfigureServices(Container container)
         {
-            serviceCollection.AddScoped<ChargeLinkCommandConverter>();
-            serviceCollection.AddScoped<MessageExtractor<ChargeLinksCommand>>();
-            serviceCollection.AddScoped<MessageDeserializer<ChargeLinksCommand>, ChargeLinkCommandDeserializer>();
+            container.Register<ChargeLinkCommandConverter>(Lifestyle.Scoped);
+            container.Register<MessageExtractor<ChargeLinksCommand>>(Lifestyle.Scoped);
+            container.Register<MessageDeserializer<ChargeLinksCommand>, ChargeLinkCommandDeserializer>(Lifestyle.Scoped);
 
-            serviceCollection.AddScoped<IChargeLinksCommandHandler, ChargeLinksCommandHandler>();
+            container.Register<IChargeLinksCommandHandler, ChargeLinksCommandHandler>(Lifestyle.Scoped);
         }
     }
 }

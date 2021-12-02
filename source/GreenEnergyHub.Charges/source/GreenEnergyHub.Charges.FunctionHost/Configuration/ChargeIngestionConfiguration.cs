@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.Core.Messaging.Protobuf;
 using GreenEnergyHub.Charges.Application.Charges.Handlers;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandReceivedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
@@ -22,23 +21,23 @@ using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeCommandReceived;
 using GreenEnergyHub.Charges.Infrastructure.Messaging;
 using GreenEnergyHub.Charges.Infrastructure.Messaging.Registration;
 using GreenEnergyHub.Charges.Infrastructure.Messaging.Serialization;
-using Microsoft.Extensions.DependencyInjection;
+using SimpleInjector;
 
 namespace GreenEnergyHub.Charges.FunctionHost.Configuration
 {
     internal static class ChargeIngestionConfiguration
     {
-        internal static void ConfigureServices(IServiceCollection serviceCollection)
+        internal static void ConfigureServices(Container container)
         {
-            serviceCollection.AddScoped<ChargeCommandConverter>();
-            serviceCollection.AddScoped<MessageExtractor<ChargeCommand>>();
-            serviceCollection.AddScoped<MessageDeserializer<ChargeCommand>, ChargeCommandDeserializer>();
+            container.Register<ChargeCommandConverter>(Lifestyle.Scoped);
+            container.Register<MessageExtractor<ChargeCommand>>(Lifestyle.Scoped);
+            container.Register<MessageDeserializer<ChargeCommand>, ChargeCommandDeserializer>(Lifestyle.Scoped);
 
-            serviceCollection.AddScoped<IChargesMessageHandler, ChargesMessageHandler>();
-            serviceCollection.AddScoped<IChargeCommandHandler, ChargeCommandHandler>();
+            container.Register<IChargesMessageHandler, ChargesMessageHandler>(Lifestyle.Scoped);
+            container.Register<IChargeCommandHandler, ChargeCommandHandler>(Lifestyle.Scoped);
 
-            serviceCollection.SendProtobuf<ChargeCommandReceivedContract>();
-            serviceCollection.AddMessagingProtobuf().AddMessageDispatcher<ChargeCommandReceivedEvent>(
+            container.SendProtobufMessage<ChargeCommandReceivedContract>();
+            container.AddMessagingProtobuf().AddMessageDispatcher<ChargeCommandReceivedEvent>(
                     EnvironmentHelper.GetEnv(EnvironmentSettingNames.DomainEventSenderConnectionString),
                     EnvironmentHelper.GetEnv(EnvironmentSettingNames.CommandReceivedTopicName));
         }

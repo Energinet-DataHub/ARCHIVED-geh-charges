@@ -19,20 +19,21 @@ using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands;
 using GreenEnergyHub.Charges.Infrastructure.Messaging.Registration;
 using GreenEnergyHub.Charges.Infrastructure.Repositories;
 using Microsoft.Extensions.DependencyInjection;
+using SimpleInjector;
 
 namespace GreenEnergyHub.Charges.FunctionHost.Configuration
 {
     internal static class CreateChargeLinkReceiverConfiguration
     {
-        internal static void ConfigureServices(IServiceCollection serviceCollection)
+        internal static void ConfigureServices(Container container)
         {
-            serviceCollection.AddScoped<ICreateLinkRequestHandler, CreateLinkRequestHandler>();
-            serviceCollection.AddScoped<IChargeLinksCommandFactory, ChargeLinksCommandFactory>();
+            container.Register<ICreateLinkRequestHandler, CreateLinkRequestHandler>();
+            container.Register<IChargeLinksCommandFactory, ChargeLinksCommandFactory>();
 
-            serviceCollection.ReceiveProtobufMessage<CreateDefaultChargeLinks>(
+            container.ReceiveProtobufMessage<CreateDefaultChargeLinks>(
                 configuration => configuration.WithParser(() => CreateDefaultChargeLinks.Parser));
 
-            serviceCollection.AddScoped<IDefaultChargeLinkRepository, DefaultChargeLinkRepository>();
+            container.Register<IDefaultChargeLinkRepository, DefaultChargeLinkRepository>();
         }
     }
 }

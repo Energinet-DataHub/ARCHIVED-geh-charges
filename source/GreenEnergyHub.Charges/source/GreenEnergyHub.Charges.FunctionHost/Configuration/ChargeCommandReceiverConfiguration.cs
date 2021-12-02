@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.Core.Messaging.Protobuf;
 using GreenEnergyHub.Charges.Application.Charges.Acknowledgement;
 using GreenEnergyHub.Charges.Application.Charges.Handlers;
 using GreenEnergyHub.Charges.Core.Currency;
@@ -34,71 +33,69 @@ using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeCommandRejected;
 using GreenEnergyHub.Charges.Infrastructure.Messaging.Registration;
 using GreenEnergyHub.Charges.Infrastructure.Repositories;
 using GreenEnergyHub.Iso8601;
-using Microsoft.Extensions.DependencyInjection;
+using SimpleInjector;
 
 namespace GreenEnergyHub.Charges.FunctionHost.Configuration
 {
     internal static class ChargeCommandReceiverConfiguration
     {
-        internal static void ConfigureServices(IServiceCollection serviceCollection)
+        internal static void ConfigureServices(Container container)
         {
-            serviceCollection.AddScoped<IChargeCommandConfirmationService, ChargeCommandConfirmationService>();
-            serviceCollection.AddScoped<IChargeCommandReceivedEventHandler, ChargeCommandReceivedEventHandler>();
-            serviceCollection.AddScoped<IChargeFactory, ChargeFactory>();
-            serviceCollection.AddScoped<IChargeCommandFactory, ChargeCommandFactory>();
-            serviceCollection.AddScoped<IChargeCommandAcceptedEventFactory, ChargeCommandAcceptedEventFactory>();
-            serviceCollection.AddScoped<IChargeCommandRejectedEventFactory, ChargeCommandRejectedEventFactory>();
+            container.Register<IChargeCommandConfirmationService, ChargeCommandConfirmationService>(Lifestyle.Scoped);
+            container.Register<IChargeCommandReceivedEventHandler, ChargeCommandReceivedEventHandler>(Lifestyle.Scoped);
+            container.Register<IChargeFactory, ChargeFactory>(Lifestyle.Scoped);
+            container.Register<IChargeCommandFactory, ChargeCommandFactory>(Lifestyle.Scoped);
+            container.Register<IChargeCommandAcceptedEventFactory, ChargeCommandAcceptedEventFactory>(Lifestyle.Scoped);
+            container.Register<IChargeCommandRejectedEventFactory, ChargeCommandRejectedEventFactory>(Lifestyle.Scoped);
 
-            ConfigureDatabase(serviceCollection);
-            ConfigureValidation(serviceCollection);
-            ConfigureIso8601Timezones(serviceCollection);
-            ConfigureIso4217Currency(serviceCollection);
-            ConfigureMessaging(serviceCollection);
+            ConfigureDatabase(container);
+            ConfigureValidation(container);
+            ConfigureIso8601Timezones(container);
+            ConfigureIso4217Currency(container);
+            ConfigureMessaging(container);
         }
 
-        private static void ConfigureDatabase(IServiceCollection serviceCollection)
+        private static void ConfigureDatabase(Container container)
         {
-            serviceCollection.AddScoped<IMarketParticipantRepository, MarketParticipantRepository>();
-            serviceCollection.AddScoped<IMarketParticipantMapper, MarketParticipantMapper>();
+            container.Register<IMarketParticipantRepository, MarketParticipantRepository>(Lifestyle.Scoped);
+            container.Register<IMarketParticipantMapper, MarketParticipantMapper>(Lifestyle.Scoped);
         }
 
-        private static void ConfigureValidation(IServiceCollection serviceCollection)
+        private static void ConfigureValidation(Container serviceCollection)
         {
-            serviceCollection.AddScoped<IBusinessValidationRulesFactory, BusinessValidationRulesFactory>();
-            serviceCollection.AddScoped<IInputValidationRulesFactory, InputValidationRulesFactory>();
-            serviceCollection.AddScoped<IRulesConfigurationRepository, RulesConfigurationRepository>();
-            serviceCollection.AddScoped<IChargeCommandInputValidator, ChargeCommandInputValidator>();
-            serviceCollection.AddScoped<IChargeCommandBusinessValidator, ChargeCommandBusinessValidator>();
-            serviceCollection.AddScoped<IChargeCommandValidator, ChargeCommandValidator>();
+            serviceCollection.Register<IBusinessValidationRulesFactory, BusinessValidationRulesFactory>(Lifestyle.Scoped);
+            serviceCollection.Register<IInputValidationRulesFactory, InputValidationRulesFactory>(Lifestyle.Scoped);
+            serviceCollection.Register<IRulesConfigurationRepository, RulesConfigurationRepository>(Lifestyle.Scoped);
+            serviceCollection.Register<IChargeCommandInputValidator, ChargeCommandInputValidator>(Lifestyle.Scoped);
+            serviceCollection.Register<IChargeCommandBusinessValidator, ChargeCommandBusinessValidator>(Lifestyle.Scoped);
+            serviceCollection.Register<IChargeCommandValidator, ChargeCommandValidator>(Lifestyle.Scoped);
         }
 
-        private static void ConfigureIso8601Timezones(IServiceCollection serviceCollection)
+        private static void ConfigureIso8601Timezones(Container serviceCollection)
         {
             var timeZoneId = EnvironmentHelper.GetEnv(EnvironmentSettingNames.LocalTimeZoneName);
-            var timeZoneConfiguration = new Iso8601ConversionConfiguration(timeZoneId);
-            serviceCollection.AddSingleton<IIso8601ConversionConfiguration>(timeZoneConfiguration);
-            serviceCollection.AddScoped<IZonedDateTimeService, ZonedDateTimeService>();
+            serviceCollection.Register<IIso8601ConversionConfiguration>(() => new Iso8601ConversionConfiguration(timeZoneId));
+            serviceCollection.Register<IZonedDateTimeService, ZonedDateTimeService>(Lifestyle.Scoped);
         }
 
-        private static void ConfigureIso4217Currency(IServiceCollection serviceCollection)
+        private static void ConfigureIso4217Currency(Container container)
         {
             var currency = EnvironmentHelper.GetEnv(EnvironmentSettingNames.Currency);
-            var iso4217Currency = new CurrencyConfigurationIso4217(currency);
-            serviceCollection.AddSingleton(iso4217Currency);
+            container.Register(() => new CurrencyConfigurationIso4217(currency));
         }
 
-        private static void ConfigureMessaging(IServiceCollection serviceCollection)
+        private static void ConfigureMessaging(Container container)
         {
-            serviceCollection.ReceiveProtobufMessage<ChargeCommandReceivedContract>(
+            container.ReceiveProtobufMessage<ChargeCommandReceivedContract>(
                 configuration => configuration.WithParser(() => ChargeCommandReceivedContract.Parser));
 
-            serviceCollection.SendProtobuf<ChargeCommandAcceptedContract>();
-            serviceCollection.AddMessagingProtobuf().AddMessageDispatcher<ChargeCommandAcceptedEvent>(
+            container.SendProtobufMessage<ChargeCommandAcceptedContract>();
+            container.AddMessagingProtobuf().AddMessageDispatcher<ChargeCommandAcceptedEvent>(
                 EnvironmentHelper.GetEnv(EnvironmentSettingNames.DomainEventSenderConnectionString),
                 EnvironmentHelper.GetEnv(EnvironmentSettingNames.CommandAcceptedTopicName));
 
-            serviceCollection.SendProtobuf<ChargeCommandRejectedContract>();
-            serviceCollection.AddMessagingProtobuf().AddMessageDispatcher<ChargeCommandRejectedEvent>(
+            container.SendProtobufMessage<ChargeCommandRejectedContract>();
+            container.AddMessagingProtobuf().AddMessageDispatcher<ChargeCommandRejectedEvent>(
                 EnvironmentHelper.GetEnv(EnvironmentSettingNames.DomainEventSenderConnectionString),
                 EnvironmentHelper.GetEnv(EnvironmentSettingNames.CommandRejectedTopicName));
         }

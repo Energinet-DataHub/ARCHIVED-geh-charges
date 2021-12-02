@@ -23,28 +23,29 @@ using GreenEnergyHub.Charges.Infrastructure.ChargeLinkReceiptBundle.Cim;
 using GreenEnergyHub.Charges.Infrastructure.Cim;
 using GreenEnergyHub.Charges.Infrastructure.MessageHub;
 using Microsoft.Extensions.DependencyInjection;
+using SimpleInjector;
 
 namespace GreenEnergyHub.Charges.FunctionHost.Configuration
 {
     internal static class BundleSenderEndpointConfiguration
     {
-        internal static void ConfigureServices(IServiceCollection serviceCollection)
+        internal static void ConfigureServices(Container container)
         {
             // Common for all bundles
-            serviceCollection.AddScoped<IBundleCreatorProvider, BundleCreatorProvider>();
-            serviceCollection.AddScoped<IBundleSender, BundleSender>();
-            serviceCollection.AddScoped<IBundleReplier, BundleReplier>();
-            serviceCollection.AddScoped<IRequestBundleParser, RequestBundleParser>();
+            container.Register<IBundleCreatorProvider, BundleCreatorProvider>(Lifestyle.Scoped);
+            container.Register<IBundleSender, BundleSender>(Lifestyle.Scoped);
+            container.Register<IBundleReplier, BundleReplier>(Lifestyle.Scoped);
+            container.Register<IRequestBundleParser, RequestBundleParser>(Lifestyle.Scoped);
 
             // Charge bundles
-            serviceCollection.AddScoped<IBundleCreator, BundleCreator<AvailableChargeData>>();
-            serviceCollection.AddScoped<ICimSerializer<AvailableChargeData>, ChargeCimSerializer>();
+            container.Register<IBundleCreator, BundleCreator<AvailableChargeData>>(Lifestyle.Scoped);
+            container.Register<ICimSerializer<AvailableChargeData>, ChargeCimSerializer>(Lifestyle.Scoped);
 
             // Charge link bundles
-            serviceCollection.AddScoped<IBundleCreator, BundleCreator<AvailableChargeLinksData>>();
-            serviceCollection.AddScoped<ICimSerializer<AvailableChargeLinksData>, ChargeLinkCimSerializer>();
-            serviceCollection.AddScoped<IBundleCreator, BundleCreator<AvailableChargeLinkReceiptData>>();
-            serviceCollection.AddScoped<ICimSerializer<AvailableChargeLinkReceiptData>, ChargeLinkReceiptCimSerializer>();
+            container.Register<IBundleCreator, BundleCreator<AvailableChargeLinksData>>(Lifestyle.Scoped);
+            container.Register<ICimSerializer<AvailableChargeLinksData>, ChargeLinkCimSerializer>(Lifestyle.Scoped);
+            container.Register<IBundleCreator, BundleCreator<AvailableChargeLinkReceiptData>>(Lifestyle.Scoped);
+            container.Register<ICimSerializer<AvailableChargeLinkReceiptData>, ChargeLinkReceiptCimSerializer>(Lifestyle.Scoped);
         }
     }
 }

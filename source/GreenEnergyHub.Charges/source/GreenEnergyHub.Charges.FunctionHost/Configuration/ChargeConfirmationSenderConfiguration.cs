@@ -12,26 +12,25 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.Core.Messaging.Protobuf;
 using GreenEnergyHub.Charges.Application.Charges.Acknowledgement;
 using GreenEnergyHub.Charges.FunctionHost.Common;
 using GreenEnergyHub.Charges.Infrastructure.Integration.ChargeConfirmation;
 using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeCommandAccepted;
 using GreenEnergyHub.Charges.Infrastructure.Messaging.Registration;
-using Microsoft.Extensions.DependencyInjection;
+using SimpleInjector;
 
 namespace GreenEnergyHub.Charges.FunctionHost.Configuration
 {
     internal static class ChargeConfirmationSenderConfiguration
     {
-        internal static void ConfigureServices(IServiceCollection serviceCollection)
+        internal static void ConfigureServices(Container container)
         {
-            serviceCollection.AddScoped<IChargeConfirmationSender, ChargeConfirmationSender>();
+            container.Register<IChargeConfirmationSender, ChargeConfirmationSender>();
 
-            serviceCollection.ReceiveProtobufMessage<ChargeCommandAcceptedContract>(
+            container.ReceiveProtobufMessage<ChargeCommandAcceptedContract>(
                 configuration => configuration.WithParser(() => ChargeCommandAcceptedContract.Parser));
-            serviceCollection.SendProtobuf<ChargeConfirmationContract>();
-            serviceCollection.AddMessagingProtobuf().AddMessageDispatcher<ChargeConfirmation>(
+            container.SendProtobufMessage<ChargeConfirmationContract>();
+            container.AddMessagingProtobuf().AddMessageDispatcher<ChargeConfirmation>(
                 EnvironmentHelper.GetEnv(EnvironmentSettingNames.DomainEventSenderConnectionString),
                 EnvironmentHelper.GetEnv(EnvironmentSettingNames.PostOfficeTopicName));
         }

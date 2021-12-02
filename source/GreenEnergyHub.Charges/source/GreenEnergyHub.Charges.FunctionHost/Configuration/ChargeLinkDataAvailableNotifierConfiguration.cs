@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.Core.Messaging.Protobuf;
 using GreenEnergyHub.Charges.Application.ChargeLinks.Handlers;
 using GreenEnergyHub.Charges.Application.ChargeLinks.MessageHub;
 using GreenEnergyHub.Charges.Domain.AvailableChargeLinksData;
@@ -21,26 +20,26 @@ using GreenEnergyHub.Charges.FunctionHost.Common;
 using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandAccepted;
 using GreenEnergyHub.Charges.Infrastructure.Internal.DefaultChargeLinksCreated;
 using GreenEnergyHub.Charges.Infrastructure.Messaging.Registration;
-using Microsoft.Extensions.DependencyInjection;
+using SimpleInjector;
 
 namespace GreenEnergyHub.Charges.FunctionHost.Configuration
 {
     internal static class ChargeLinkDataAvailableNotifierConfiguration
     {
-        internal static void ConfigureServices(IServiceCollection serviceCollection)
+        internal static void ConfigureServices(Container container)
         {
-            serviceCollection.ReceiveProtobufMessage<ChargeLinkCommandAccepted>(
+            container.ReceiveProtobufMessage<ChargeLinkCommandAccepted>(
                 configuration => configuration.WithParser(() => ChargeLinkCommandAccepted.Parser));
 
-            serviceCollection.SendProtobuf<DefaultChargeLinksCreated>();
-            serviceCollection.AddMessagingProtobuf().AddMessageDispatcher<DefaultChargeLinksCreatedEvent>(
+            container.SendProtobufMessage<DefaultChargeLinksCreated>();
+            container.AddMessagingProtobuf().AddMessageDispatcher<DefaultChargeLinksCreatedEvent>(
                 EnvironmentHelper.GetEnv(EnvironmentSettingNames.DomainEventSenderConnectionString),
                 EnvironmentHelper.GetEnv(EnvironmentSettingNames.DefaultChargeLinksDataAvailableNotifiedTopicName));
-            serviceCollection
-                .AddScoped<IChargeLinkDataAvailableNotifierEndpointHandler,
-                    ChargeLinkDataAvailableNotifierEndpointHandler>();
-            serviceCollection.AddScoped<IChargeLinkDataAvailableNotifier, ChargeLinkDataAvailableNotifier>();
-            serviceCollection.AddScoped<IAvailableChargeLinksDataFactory, AvailableChargeLinksDataFactory>();
+            container
+                .Register<IChargeLinkDataAvailableNotifierEndpointHandler,
+                    ChargeLinkDataAvailableNotifierEndpointHandler>(Lifestyle.Scoped);
+            container.Register<IChargeLinkDataAvailableNotifier, ChargeLinkDataAvailableNotifier>(Lifestyle.Scoped);
+            container.Register<IAvailableChargeLinksDataFactory, AvailableChargeLinksDataFactory>(Lifestyle.Scoped);
         }
     }
 }

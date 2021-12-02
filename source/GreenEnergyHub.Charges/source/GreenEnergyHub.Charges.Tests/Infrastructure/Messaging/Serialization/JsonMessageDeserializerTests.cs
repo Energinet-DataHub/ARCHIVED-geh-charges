@@ -27,6 +27,9 @@ using GreenEnergyHub.Charges.Domain.Dtos.Messages;
 using GreenEnergyHub.Charges.Infrastructure.Messaging.Registration;
 using GreenEnergyHub.Json;
 using Microsoft.Extensions.DependencyInjection;
+using NodaTime;
+using SimpleInjector;
+using SimpleInjector.Lifestyles;
 using Xunit;
 using Xunit.Categories;
 
@@ -75,11 +78,11 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Messaging.Serialization
         /// </summary>
         private static IJsonSerializer GetMessagingDeserializer()
         {
-            var services = new ServiceCollection();
-            services.AddMessaging();
-            return services
-                .BuildServiceProvider()
-                .GetRequiredService<IJsonSerializer>();
+            var container = new Container();
+            container.Options.DefaultScopedLifestyle = new AsyncScopedLifestyle();
+            container.Register<IClock>(() => SystemClock.Instance, Lifestyle.Scoped);
+            container.AddMessaging();
+            return container.GetRequiredService<IJsonSerializer>();
         }
 
         /// <summary>

@@ -15,15 +15,16 @@
 using GreenEnergyHub.Charges.Application.ChargeLinks.MessageHub;
 using GreenEnergyHub.Charges.Domain.AvailableChargeLinkReceiptData;
 using Microsoft.Extensions.DependencyInjection;
+using SimpleInjector;
 
 namespace GreenEnergyHub.Charges.FunctionHost.Configuration
 {
     internal static class ChargeLinkConfirmationDataAvailableNotifierConfiguration
     {
-        internal static void ConfigureServices(IServiceCollection serviceCollection)
+        internal static void ConfigureServices(Container container)
         {
-            serviceCollection.AddScoped<IChargeLinkConfirmationDataAvailableNotifier, ChargeLinkConfirmationDataAvailableNotifier>();
-            serviceCollection.AddScoped<IAvailableChargeLinkReceiptDataFactory, AvailableChargeLinkReceiptDataFactory>();
+            container.Register<IChargeLinkConfirmationDataAvailableNotifier, ChargeLinkConfirmationDataAvailableNotifier>(Lifestyle.Scoped);
+            container.Register<IAvailableChargeLinkReceiptDataFactory, AvailableChargeLinkReceiptDataFactory>(Lifestyle.Scoped);
         }
     }
 }

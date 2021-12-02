@@ -13,13 +13,17 @@
 // limitations under the License.
 
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using Energinet.Charges.Contracts;
 using Energinet.DataHub.Core.Messaging.Protobuf;
+using FluentAssertions;
 using GreenEnergyHub.Charges.Infrastructure.Messaging;
 using GreenEnergyHub.Charges.Infrastructure.Messaging.Registration;
 using GreenEnergyHub.Charges.Infrastructure.Messaging.Serialization;
 using GreenEnergyHub.TestHelpers;
 using Microsoft.Extensions.DependencyInjection;
+using SimpleInjector;
+using SimpleInjector.Lifestyles;
 using Xunit;
 using Xunit.Categories;
 
@@ -30,38 +34,24 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Messaging.Registration
     {
         [Theory]
         [InlineAutoDomainData]
-        public void ConfigureProtobufReception_WhenCalled_NeededTypesCanBeResolved(
-            [NotNull] ServiceCollection serviceCollection)
-        {
-            // Act
-            serviceCollection.ConfigureProtobufReception();
-
-            // Assert
-            var provider = serviceCollection.BuildServiceProvider();
-            var actual = provider.GetRequiredService<ProtobufInboundMapperFactory>();
-            Assert.NotNull(actual);
-        }
-
-        [Theory]
-        [InlineAutoDomainData]
         public void ReceiveProtobufMessage_WhenCalled_NeededTypesCanBeResolved(
-            [NotNull] ServiceCollection serviceCollection)
+            [NotNull] Container sut)
         {
             // Act
-            serviceCollection.ConfigureProtobufReception();
-            serviceCollection.ReceiveProtobufMessage<CreateDefaultChargeLinks>(
+            sut.Options.DefaultScopedLifestyle = new AsyncScopedLifestyle();
+            sut.ReceiveProtobufMessage<CreateDefaultChargeLinks>(
                 configuration => configuration.WithParser(() => CreateDefaultChargeLinks.Parser));
 
             // Assert
-            var provider = serviceCollection.BuildServiceProvider();
-            var extractor = provider.GetRequiredService<MessageExtractor<CreateDefaultChargeLinks>>();
-            var deserializer = provider.GetRequiredService<MessageDeserializer<CreateDefaultChargeLinks>>();
-            var mapper = provider.GetRequiredService<ProtobufInboundMapper<CreateDefaultChargeLinks>>();
-            var parser = provider.GetRequiredService<ProtobufParser<CreateDefaultChargeLinks>>();
-            Assert.NotNull(extractor);
-            Assert.NotNull(deserializer);
-            Assert.NotNull(mapper);
-            Assert.NotNull(parser);
+            var actualRegistrations = sut.Collection.Container.GetCurrentRegistrations();
+            actualRegistrations.Any(p =>
+                p.ServiceType == typeof(MessageExtractor<CreateDefaultChargeLinks>)).Should().BeTrue();
+            actualRegistrations.Any(p =>
+                p.ServiceType == typeof(MessageDeserializer<CreateDefaultChargeLinks>)).Should().BeTrue();
+            actualRegistrations.Any(p =>
+                p.ServiceType == typeof(ProtobufInboundMapper<CreateDefaultChargeLinks>)).Should().BeTrue();
+            actualRegistrations.Any(p =>
+                p.ServiceType == typeof(ProtobufParser<CreateDefaultChargeLinks>)).Should().BeTrue();
         }
     }
 }

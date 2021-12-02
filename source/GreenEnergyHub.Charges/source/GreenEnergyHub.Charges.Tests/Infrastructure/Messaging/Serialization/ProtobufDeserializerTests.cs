@@ -22,8 +22,11 @@ using Google.Protobuf;
 using GreenEnergyHub.Charges.Infrastructure.Messaging.Serialization;
 using GreenEnergyHub.TestHelpers;
 using Moq;
+using SimpleInjector;
+using SimpleInjector.Lifestyles;
 using Xunit;
 using Xunit.Categories;
+using ProtobufInboundMapperFactory = GreenEnergyHub.Charges.Infrastructure.ProtobufInboundMapperFactory;
 
 namespace GreenEnergyHub.Charges.Tests.Infrastructure.Messaging.Serialization
 {
@@ -57,27 +60,22 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Messaging.Serialization
         [Theory]
         [InlineAutoDomainData]
         public async Task FromBytesAsync_WhenCalled_DeserializeMessage(
-            [Frozen] [NotNull] Mock<IServiceProvider> serviceProvider,
             [Frozen] [NotNull] Mock<ProtobufParser<IMessage>> parser,
-            [NotNull] Mock<ProtobufInboundMapper> mapper,
             byte[] data,
             IMessage message,
-            IInboundMessage expected,
-            [NotNull] ProtobufDeserializer<IMessage> sut)
+            IInboundMessage expected)
         {
             // Arrange
             parser.Setup(
                     p => p.Parse(data))
                 .Returns(message);
 
-            serviceProvider.Setup(
-                    s => s.GetService(
-                        It.IsAny<Type>()))
-                .Returns(mapper.Object);
-
-            mapper.Setup(
-                    m => m.Convert(message))
-                .Returns(expected);
+            var container = new Container();
+            container.Options.DefaultScopedLifestyle = new AsyncScopedLifestyle();
+            container.Register<ProtobufParser<IMessage>>(Lifestyle.Scoped);
+            var sut = new ProtobufDeserializer<IMessage>(
+                new ProtobufInboundMapperFactory(container),
+                parser.Object);
 
             // Act
             var actual = await sut.FromBytesAsync(data).ConfigureAwait(false);

@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.Core.Messaging.Protobuf;
 using GreenEnergyHub.Charges.Application.Charges.Acknowledgement;
 using GreenEnergyHub.Charges.Application.Charges.Factories;
 using GreenEnergyHub.Charges.Application.Charges.Handlers;
@@ -21,30 +20,30 @@ using GreenEnergyHub.Charges.FunctionHost.Common;
 using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeCommandAccepted;
 using GreenEnergyHub.Charges.Infrastructure.Messaging;
 using GreenEnergyHub.Charges.Infrastructure.Messaging.Registration;
-using Microsoft.Extensions.DependencyInjection;
+using SimpleInjector;
 
 namespace GreenEnergyHub.Charges.FunctionHost.Configuration
 {
     internal static class ChargeCommandAcceptedReceiverConfiguration
     {
-        internal static void ConfigureServices(IServiceCollection serviceCollection)
+        internal static void ConfigureServices(Container container)
         {
-            serviceCollection.ReceiveProtobufMessage<ChargeCommandAcceptedContract>(
+            container.ReceiveProtobufMessage<ChargeCommandAcceptedContract>(
                 configuration => configuration.WithParser(() => ChargeCommandAcceptedContract.Parser));
 
-            serviceCollection.AddScoped<MessageExtractor<ChargeCommandAcceptedEvent>>();
-            serviceCollection.AddScoped<IChargeCreatedEventFactory, ChargeCreatedEventFactory>();
-            serviceCollection.AddScoped<IChargePricesUpdatedEventFactory, ChargePricesUpdatedEventFactory>();
-            serviceCollection.AddScoped<IChargePublisher, ChargePublisher>();
-            serviceCollection.AddScoped<IChargePricesUpdatedPublisher, ChargePricesUpdatedPublisher>();
-            serviceCollection.AddScoped<IChargeIntegrationEventsPublisher, ChargeIntegrationEventsPublisher>();
+            container.Register<MessageExtractor<ChargeCommandAcceptedEvent>>();
+            container.Register<IChargeCreatedEventFactory, ChargeCreatedEventFactory>();
+            container.Register<IChargePricesUpdatedEventFactory, ChargePricesUpdatedEventFactory>();
+            container.Register<IChargePublisher, ChargePublisher>();
+            container.Register<IChargePricesUpdatedPublisher, ChargePricesUpdatedPublisher>();
+            container.Register<IChargeIntegrationEventsPublisher, ChargeIntegrationEventsPublisher>();
 
-            serviceCollection.SendProtobuf<Infrastructure.Integration.ChargeCreated.ChargeCreated>();
-            serviceCollection.AddMessagingProtobuf().AddMessageDispatcher<ChargeCreatedEvent>(
+            container.SendProtobufMessage<Infrastructure.Integration.ChargeCreated.ChargeCreated>();
+            container.AddMessagingProtobuf().AddMessageDispatcher<ChargeCreatedEvent>(
                 EnvironmentHelper.GetEnv(EnvironmentSettingNames.DataHubSenderConnectionString),
                 EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargeCreatedTopicName));
 
-            serviceCollection.AddMessagingProtobuf().AddMessageDispatcher<ChargePricesUpdatedEvent>(
+            container.AddMessagingProtobuf().AddMessageDispatcher<ChargePricesUpdatedEvent>(
                 EnvironmentHelper.GetEnv(EnvironmentSettingNames.DataHubSenderConnectionString),
                 EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargePricesUpdatedTopicName));
         }

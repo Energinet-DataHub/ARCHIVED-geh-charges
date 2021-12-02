@@ -12,19 +12,25 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using GreenEnergyHub.Charges.Application.Charges.MessageHub;
-using GreenEnergyHub.Charges.Domain.AvailableChargeData;
-using Microsoft.Extensions.DependencyInjection;
+using System;
+using Microsoft.Azure.Functions.Worker;
 using SimpleInjector;
 
-namespace GreenEnergyHub.Charges.FunctionHost.Configuration
+namespace GreenEnergyHub.Charges.Infrastructure.SimpleInjector
 {
-    internal static class ChargeDataAvailableNotifierConfiguration
+    public class SimpleInjectorActivator : IFunctionActivator
     {
-        internal static void ConfigureServices(Container container)
+        private readonly Container _container;
+
+        public SimpleInjectorActivator(Container container)
         {
-            container.Register<IChargeDataAvailableNotifier, ChargeDataAvailableNotifier>(Lifestyle.Scoped);
-            container.Register<IAvailableChargeDataFactory, AvailableChargeDataFactory>(Lifestyle.Scoped);
+            _container = container;
+        }
+
+        public object? CreateInstance(Type instanceType, FunctionContext context)
+        {
+            if (instanceType == null) throw new ArgumentNullException(nameof(instanceType));
+            return _container.GetInstance(instanceType);
         }
     }
 }

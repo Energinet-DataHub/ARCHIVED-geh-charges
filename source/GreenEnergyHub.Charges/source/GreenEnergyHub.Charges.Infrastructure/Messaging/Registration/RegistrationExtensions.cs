@@ -20,28 +20,29 @@ using GreenEnergyHub.Charges.Infrastructure.MessageMetaData;
 using GreenEnergyHub.Charges.Infrastructure.Messaging.Serialization;
 using GreenEnergyHub.Json;
 using Microsoft.Extensions.DependencyInjection;
+using SimpleInjector;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Messaging.Registration
 {
     public static class RegistrationExtensions
     {
-        public static MessagingRegistrator AddMessaging(this IServiceCollection services)
+        public static MessagingRegistrator AddMessaging(this Container container)
         {
-            services.AddScoped<ICorrelationContext, CorrelationContext>();
-            services.AddScoped<IMessageMetaDataContext, MessageMetaDataContext>();
-            services.AddScoped<MessageExtractor>();
-            services.AddSingleton<IJsonSerializer, Core.Json.JsonSerializer>();
-            services.AddScoped<MessageDeserializer, JsonMessageDeserializer<ChargeCommandAcceptedEvent>>();
-            return new MessagingRegistrator(services);
+            container.Register<ICorrelationContext, CorrelationContext>(Lifestyle.Scoped);
+            container.Register<IMessageMetaDataContext, MessageMetaDataContext>(Lifestyle.Scoped);
+            container.Register<MessageExtractor>(Lifestyle.Scoped);
+            container.Register<IJsonSerializer, Core.Json.JsonSerializer>(Lifestyle.Singleton);
+            container.Register<MessageDeserializer, JsonMessageDeserializer<ChargeCommandAcceptedEvent>>(Lifestyle.Scoped);
+            return new MessagingRegistrator(container);
         }
 
-        public static MessagingRegistrator AddMessagingProtobuf(this IServiceCollection services)
+        public static MessagingRegistrator AddMessagingProtobuf(this Container container)
         {
-            services.AddScoped<ICorrelationContext, CorrelationContext>();
-            services.AddScoped<IMessageMetaDataContext, MessageMetaDataContext>();
-            services.AddScoped<MessageExtractor>();
+            container.Register<ICorrelationContext, CorrelationContext>(Lifestyle.Scoped);
+            container.Register<IMessageMetaDataContext, MessageMetaDataContext>(Lifestyle.Scoped);
+            container.Register<MessageExtractor>(Lifestyle.Scoped);
 
-            return new MessagingRegistrator(services);
+            return new MessagingRegistrator(container);
         }
     }
 }

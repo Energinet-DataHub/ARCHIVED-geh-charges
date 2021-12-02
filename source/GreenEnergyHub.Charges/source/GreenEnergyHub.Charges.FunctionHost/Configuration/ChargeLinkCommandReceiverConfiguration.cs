@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.Core.Messaging.Protobuf;
 using GreenEnergyHub.Charges.Application.ChargeLinks.Handlers;
 using GreenEnergyHub.Charges.Domain.ChargeLinks;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksAcceptedEvents;
@@ -21,26 +20,25 @@ using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandAccepted;
 using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandReceived;
 using GreenEnergyHub.Charges.Infrastructure.Messaging.Registration;
 using GreenEnergyHub.Charges.Infrastructure.Repositories;
-using Microsoft.Extensions.DependencyInjection;
+using SimpleInjector;
 
 namespace GreenEnergyHub.Charges.FunctionHost.Configuration
 {
     internal static class ChargeLinkCommandReceiverConfiguration
     {
-        internal static void ConfigureServices(IServiceCollection serviceCollection)
+        internal static void ConfigureServices(Container container)
         {
-            serviceCollection.AddScoped<IChargeLinksReceivedEventHandler, ChargeLinksReceivedEventHandler>();
-            serviceCollection.AddScoped<IChargeLinkFactory, ChargeLinkFactory>();
-            serviceCollection.AddSingleton<IChargeLinksAcceptedEventFactory, ChargeLinksAcceptedEventFactory>();
+            container.Register<IChargeLinksReceivedEventHandler, ChargeLinksReceivedEventHandler>(Lifestyle.Scoped);
+            container.Register<IChargeLinkFactory, ChargeLinkFactory>(Lifestyle.Scoped);
+            container.Register<IChargeLinksAcceptedEventFactory, ChargeLinksAcceptedEventFactory>(Lifestyle.Singleton);
+            container.Register<IChargeLinkRepository, ChargeLinkRepository>(Lifestyle.Scoped);
 
-            serviceCollection.ReceiveProtobufMessage<ChargeLinkCommandReceived>(
+            container.ReceiveProtobufMessage<ChargeLinkCommandReceived>(
                 configuration => configuration.WithParser(() => ChargeLinkCommandReceived.Parser));
-            serviceCollection.SendProtobuf<ChargeLinkCommandAccepted>();
-            serviceCollection.AddMessagingProtobuf().AddMessageDispatcher<ChargeLinksAcceptedEvent>(
+            container.SendProtobufMessage<ChargeLinkCommandAccepted>();
+            container.AddMessagingProtobuf().AddMessageDispatcher<ChargeLinksAcceptedEvent>(
                 EnvironmentHelper.GetEnv(EnvironmentSettingNames.DomainEventSenderConnectionString),
                 EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargeLinkAcceptedTopicName));
-
-            serviceCollection.AddScoped<IChargeLinkRepository, ChargeLinkRepository>();
         }
     }
 }

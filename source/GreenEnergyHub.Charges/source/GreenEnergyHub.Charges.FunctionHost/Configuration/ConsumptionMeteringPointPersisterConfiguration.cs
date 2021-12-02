@@ -16,17 +16,18 @@ using GreenEnergyHub.Charges.Application.MeteringPoints.Handlers;
 using GreenEnergyHub.Charges.Infrastructure.Messaging.Registration;
 using GreenEnergyHub.MeteringPoints.IntegrationEventContracts;
 using Microsoft.Extensions.DependencyInjection;
+using SimpleInjector;
 
 namespace GreenEnergyHub.Charges.FunctionHost.Configuration
 {
     internal static class ConsumptionMeteringPointPersisterConfiguration
     {
-        internal static void ConfigureServices(IServiceCollection serviceCollection)
+        internal static void ConfigureServices(Container container)
         {
-            serviceCollection.ReceiveProtobufMessage<ConsumptionMeteringPointCreated>(
+            container.ReceiveProtobufMessage<ConsumptionMeteringPointCreated>(
                 configuration => configuration.WithParser(() => ConsumptionMeteringPointCreated.Parser));
 
-            serviceCollection.AddScoped<IConsumptionMeteringPointPersister, ConsumptionMeteringPointPersister>();
+            container.Register<IConsumptionMeteringPointPersister, ConsumptionMeteringPointPersister>(Lifestyle.Scoped);
         }
     }
 }
