@@ -17,21 +17,11 @@ using GreenEnergyHub.Charges.Domain.MarketParticipants;
 
 namespace GreenEnergyHub.Charges.Application.MessageHub
 {
-    public abstract class BundleSpecification<TAvailableData, TInputType> : IBundleSpecification<TAvailableData>
+    public interface IBundleSpecification<TAvailableData>
         where TAvailableData : AvailableDataBase
     {
-        private readonly BundleType _bundleType;
+        int GetMessageWeight(TAvailableData data);
 
-        protected BundleSpecification(BundleType bundleType)
-        {
-            _bundleType = bundleType;
-        }
-
-        public abstract int GetMessageWeight(TAvailableData data);
-
-        public string GetMessageType(BusinessReasonCode businessReasonCode)
-        {
-            return BundleTypeMapper.Map(_bundleType) + "_" + businessReasonCode;
-        }
+        string GetMessageType(BusinessReasonCode businessReasonCode);
     }
 }
