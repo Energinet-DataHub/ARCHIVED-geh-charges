@@ -18,9 +18,11 @@ using System.Linq;
 using Energinet.DataHub.MessageHub.Model.Model;
 using GreenEnergyHub.Charges.Application.ChargeLinks.MessageHub;
 using GreenEnergyHub.Charges.Application.Charges.MessageHub;
+using GreenEnergyHub.Charges.Application.MessageHub;
 using GreenEnergyHub.Charges.Domain.AvailableChargeData;
 using GreenEnergyHub.Charges.Domain.AvailableChargeLinkReceiptData;
 using GreenEnergyHub.Charges.Domain.AvailableChargeLinksData;
+using GreenEnergyHub.Charges.Domain.AvailableData;
 
 namespace GreenEnergyHub.Charges.Infrastructure.MessageHub
 {
@@ -35,16 +37,18 @@ namespace GreenEnergyHub.Charges.Infrastructure.MessageHub
 
         public IBundleCreator Get(DataBundleRequestDto request)
         {
+            var bundleType = BundleTypeMapper.Map(request);
+
             // RSM-034 CIM XML 'NotifyPriceList' requests
-            if (request.MessageType.StartsWith(ChargeNotificationFactory.MessageTypePrefix))
+            if (bundleType == BundleType.ChargeDataAvailable)
                 return _bundleCreators[typeof(BundleCreator<AvailableChargeData>)];
 
             // RSM-030 CIM XML 'ConfirmRequestChangeBillingMasterData' confirmations
-            if (request.MessageType.StartsWith(ChargeLinkConfirmationNotificationFactory.MessageTypePrefix))
+            if (bundleType == BundleType.ChargeLinkConfirmationDataAvailable)
                 return _bundleCreators[typeof(BundleCreator<AvailableChargeLinkReceiptData>)];
 
             // RSM-031 CIM XML 'NotifyBillingMasterData' requests
-            if (request.MessageType.StartsWith(ChargeLinksNotificationFactory.MessageTypePrefix))
+            if (bundleType == BundleType.ChargeLinkDataAvailable)
                 return _bundleCreators[typeof(BundleCreator<AvailableChargeLinksData>)];
 
             throw new ArgumentException(
