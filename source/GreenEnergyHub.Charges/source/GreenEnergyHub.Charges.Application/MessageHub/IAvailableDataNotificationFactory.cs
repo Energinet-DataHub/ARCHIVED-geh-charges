@@ -14,11 +14,15 @@
 
 using System.Collections.Generic;
 using Energinet.DataHub.MessageHub.Model.Model;
+using GreenEnergyHub.Charges.Domain.AvailableData;
 
 namespace GreenEnergyHub.Charges.Application.MessageHub
 {
     public interface IAvailableDataNotificationFactory<TAvailableData>
+        where TAvailableData : AvailableDataBase
     {
-        IReadOnlyList<DataAvailableNotificationDto> Create(IReadOnlyList<TAvailableData> availableData);
+        IReadOnlyList<DataAvailableNotificationDto> Create(
+            IReadOnlyList<TAvailableData> availableData,
+            IBundleSpecification<TAvailableData> bundleSpecification);
     }
 }
