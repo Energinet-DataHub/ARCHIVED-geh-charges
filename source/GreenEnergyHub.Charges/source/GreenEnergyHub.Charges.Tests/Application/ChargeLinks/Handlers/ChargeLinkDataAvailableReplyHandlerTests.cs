@@ -13,10 +13,16 @@
 // limitations under the License.
 
 using System;
+using System.Threading;
 using System.Threading.Tasks;
+using AutoFixture.Xunit2;
 using FluentAssertions;
+using GreenEnergyHub.Charges.Application;
 using GreenEnergyHub.Charges.Application.ChargeLinks.Handlers;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksAcceptedEvents;
+using GreenEnergyHub.Charges.Domain.Dtos.DefaultChargeLinksDataAvailableNotifiedEvents;
 using GreenEnergyHub.Charges.TestCore.Attributes;
+using Moq;
 using Xunit;
 using Xunit.Categories;
 
@@ -27,13 +33,61 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Handlers
     {
         [Theory]
         [InlineAutoMoqData]
-        public async Task NotifyAsync_WhenEventIsNull_ThrowsArgumentNullException(
+        public async Task ReplyAsync_WhenEventIsNull_ThrowsArgumentNullException(
             ChargeLinkDataAvailableReplyHandler sut)
         {
             await sut
                 .Invoking(notifier => notifier.ReplyAsync(null!))
                 .Should()
                 .ThrowExactlyAsync<ArgumentNullException>();
+        }
+
+        [Theory]
+        [InlineAutoMoqData]
+        public async Task ReplyAsync_WhenCalledAndReplyIsSetIsTrue_ShouldDispatchMessage(
+            [Frozen] Mock<IMessageDispatcher<DefaultChargeLinksCreatedEvent>> messageDispatcher,
+            [Frozen] Mock<IDefaultChargeLinksCreatedEventFactory> defaultChargeLinksCreatedEventFactory,
+            [Frozen] Mock<IMessageMetaDataContext> messageMetaDataContext,
+            ChargeLinksAcceptedEvent chargeLinksAcceptedEvent,
+            ChargeLinkDataAvailableReplyHandler sut)
+        {
+            // Arrange
+            messageMetaDataContext.Setup(context => context.IsReplyToSet()).Returns(true);
+
+            // Act
+            await sut.ReplyAsync(chargeLinksAcceptedEvent);
+
+            // Assert
+            defaultChargeLinksCreatedEventFactory.Verify(
+                x => x.Create(chargeLinksAcceptedEvent), Times.Once);
+            messageDispatcher.Verify(
+                expression: x =>
+                    x.DispatchAsync(It.IsAny<DefaultChargeLinksCreatedEvent>(), CancellationToken.None),
+                Times.Once);
+        }
+
+        [Theory]
+        [InlineAutoMoqData]
+        public async Task ReplyAsync_WhenCalledAndReplyIsSetIsFalse_ShouldNotDispatchMessage(
+            [Frozen] Mock<IMessageDispatcher<DefaultChargeLinksCreatedEvent>> messageDispatcher,
+            [Frozen] Mock<IDefaultChargeLinksCreatedEventFactory> defaultChargeLinksCreatedEventFactory,
+            [Frozen] Mock<IMessageMetaDataContext> messageMetaDataContext,
+            ChargeLinksAcceptedEvent chargeLinksAcceptedEvent,
+            ChargeLinkDataAvailableReplyHandler sut)
+        {
+            // Arrange
+            messageMetaDataContext.Setup(context => context.IsReplyToSet()).Returns(false);
+
+            // Act
+            await sut.ReplyAsync(chargeLinksAcceptedEvent);
+
+            // Assert
+            defaultChargeLinksCreatedEventFactory.Verify(
+                x => x.Create(chargeLinksAcceptedEvent), Times.Once);
+            messageDispatcher.Verify(
+                expression: x =>
+                    x.DispatchAsync(It.IsAny<DefaultChargeLinksCreatedEvent>(), CancellationToken.None),
+                Times.Once);
         }
     }
 }

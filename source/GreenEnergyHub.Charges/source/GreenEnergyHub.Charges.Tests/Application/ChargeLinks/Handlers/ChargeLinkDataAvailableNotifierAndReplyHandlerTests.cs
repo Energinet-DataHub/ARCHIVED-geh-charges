@@ -14,9 +14,13 @@
 
 using System;
 using System.Threading.Tasks;
+using AutoFixture.Xunit2;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Application.ChargeLinks.Handlers;
+using GreenEnergyHub.Charges.Application.ChargeLinks.MessageHub;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksAcceptedEvents;
 using GreenEnergyHub.Charges.TestCore.Attributes;
+using Moq;
 using Xunit;
 using Xunit.Categories;
 
@@ -27,13 +31,31 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Handlers
     {
         [Theory]
         [InlineAutoMoqData]
-        public async Task NotifyAsync_WhenEventIsNull_ThrowsArgumentNullException(
+        public async Task NotifyAndReplyAsync_WhenEventIsNull_ThrowsArgumentNullException(
             ChargeLinkDataAvailableNotifierAndReplyHandler sut)
         {
             await sut
                 .Invoking(notifier => notifier.NotifyAndReplyAsync(null!))
                 .Should()
                 .ThrowExactlyAsync<ArgumentNullException>();
+        }
+
+        [Theory]
+        [InlineAutoMoqData]
+        public async Task NotifyAndReplyAsync_WhenCalled_ShouldCallServices(
+            [Frozen] Mock<IChargeLinkDataAvailableNotifier> chargeLinkDataAvailableNotifier,
+            [Frozen] Mock<IChargeLinkDataAvailableReplyHandler> chargeLinkDataAvailableReplyHandler,
+            ChargeLinksAcceptedEvent chargeLinksAcceptedEvent,
+            ChargeLinkDataAvailableNotifierAndReplyHandler sut)
+        {
+            // Act
+            await sut.NotifyAndReplyAsync(chargeLinksAcceptedEvent);
+
+            // Assert
+            chargeLinkDataAvailableNotifier.Verify(
+                x => x.NotifyAsync(chargeLinksAcceptedEvent), Times.Once);
+            chargeLinkDataAvailableReplyHandler.Verify(
+                x => x.ReplyAsync(chargeLinksAcceptedEvent), Times.Once);
         }
     }
 }
