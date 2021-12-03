@@ -51,9 +51,8 @@ namespace GreenEnergyHub.Charges.FunctionHost.Charges.MessageHub
                 Connection = EnvironmentSettingNames.DomainEventListenerConnectionString)]
             [NotNull] byte[] message)
         {
-            await Task.Delay(1);
-            /*var acceptedEvent = (ChargeCommandAcceptedEvent)await _messageExtractor.ExtractAsync(message).ConfigureAwait(false);
-            await _availableDataNotifier.NotifyAsync(acceptedEvent).ConfigureAwait(false);*/
+            var acceptedEvent = (ChargeCommandAcceptedEvent)await _messageExtractor.ExtractAsync(message).ConfigureAwait(false);
+            await _availableDataNotifier.NotifyAsync(acceptedEvent).ConfigureAwait(false);
         }
     }
 }
