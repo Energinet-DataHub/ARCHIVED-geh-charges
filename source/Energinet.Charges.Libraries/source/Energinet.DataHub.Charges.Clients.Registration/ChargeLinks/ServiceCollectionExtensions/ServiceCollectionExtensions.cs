@@ -19,8 +19,17 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Energinet.DataHub.Charges.Clients
 {
-    public static class ContainerExtensions
+    /// <summary>
+    /// TODO
+    /// </summary>
+    public static class ServiceCollectionExtensions
     {
+        /// <summary>
+        /// TODO
+        /// </summary>
+        /// <param name="services"></param>
+        /// <param name="baseUrl"></param>
+        /// <returns>...</returns>
         public static IServiceCollection AddChargeLinksClient(this IServiceCollection services, Uri baseUrl)
         {
             services.AddScoped<IChargeLinksClient>(x => new ChargeLinksClientFactory(x.GetRequiredService<IHttpClientFactory>()).CreateClient(baseUrl));

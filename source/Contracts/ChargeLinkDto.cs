@@ -16,6 +16,9 @@ using System;
 
 namespace Energinet.Charges.Contracts
 {
+    /// <summary>
+    /// TODO.
+    /// </summary>
     public record ChargeLinkDto(
 
         // The type of charge; tariff, fee or subscription
