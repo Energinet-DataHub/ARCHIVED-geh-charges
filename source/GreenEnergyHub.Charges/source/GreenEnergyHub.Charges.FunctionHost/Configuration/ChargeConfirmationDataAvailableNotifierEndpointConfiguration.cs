@@ -29,7 +29,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
     {
         internal static void ConfigureServices(IServiceCollection serviceCollection)
         {
-            serviceCollection.ReceiveProtobufMessage<ChargeCommandAcceptedContract>(
+            /*serviceCollection.ReceiveProtobufMessage<ChargeCommandAcceptedContract>(
                 configuration => configuration.WithParser(() => ChargeCommandAcceptedContract.Parser));
 
             serviceCollection
@@ -44,7 +44,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
             serviceCollection
                 .AddScoped<BundleSpecification<AvailableChargeReceiptData, ChargeCommandAcceptedEvent>,
                     ChargeConfirmationBundleSpecification>();
-            serviceCollection.AddScoped<ICimSerializer<AvailableChargeReceiptData>, ChargeReceiptCimSerializer>();
+            serviceCollection.AddScoped<ICimSerializer<AvailableChargeReceiptData>, ChargeReceiptCimSerializer>();*/
         }
     }
 }
