@@ -50,8 +50,8 @@ namespace Energinet.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.Charge
             {
                 BaseAddress = new Uri(BaseUrl),
             };
-
             var sut = ChargeLinksClientFactory.CreateClient(httpClient);
+
             var expectedUri = new Uri($"{BaseUrl}{ChargesRelativeUris.GetChargeLinks(MeteringPointId)}");
 
             // Act
@@ -72,16 +72,18 @@ namespace Energinet.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.Charge
         [Fact]
         public async Task GetAsync_WhenResponseIsNotFound_ReturnsEmptyList()
         {
+            // Arrange
             var mockHttpMessageHandler = GetMockHttpMessageHandler(HttpStatusCode.NotFound, string.Empty);
             var httpClient = new HttpClient(mockHttpMessageHandler.Object)
             {
                 BaseAddress = new Uri(BaseUrl),
             };
-
             var sut = ChargeLinksClientFactory.CreateClient(httpClient);
 
+            // Act
             var result = await sut.GetAsync(MeteringPointId).ConfigureAwait(false);
 
+            // Assert
             result.Should().BeOfType<List<ChargeLinkDto>>();
             result.Should().BeEmpty();
         }
