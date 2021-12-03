@@ -47,8 +47,6 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.MessageHub
         private readonly IAvailableChargeLinksDataFactory _availableChargeLinksDataFactory;
         private readonly ICorrelationContext _correlationContext;
         private readonly IMessageMetaDataContext _messageMetaDataContext;
-        private readonly IMessageDispatcher<DefaultChargeLinksCreatedEvent> _messageDispatcher;
-        private readonly IDefaultChargeLinksCreatedEventFactory _defaultChargeLinksCreatedEventFactory;
 
         public ChargeLinkDataAvailableNotifier(
             IDataAvailableNotificationSender dataAvailableNotificationSender,
@@ -68,20 +66,12 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.MessageHub
             _availableChargeLinksDataFactory = availableChargeLinksDataFactory;
             _correlationContext = correlationContext;
             _messageMetaDataContext = messageMetaDataContext;
-            _messageDispatcher = messageDispatcher;
-            _defaultChargeLinksCreatedEventFactory = defaultChargeLinksCreatedEventFactory;
         }
 
-        public async Task NotifyAndReplyAsync(ChargeLinksAcceptedEvent chargeLinksAcceptedEvent)
+        public async Task NotifyAsync(ChargeLinksAcceptedEvent chargeLinksAcceptedEvent)
         {
             if (chargeLinksAcceptedEvent == null) throw new ArgumentNullException(nameof(chargeLinksAcceptedEvent));
 
-            await NotifyAsync(chargeLinksAcceptedEvent);
-            await ReplyAsync(chargeLinksAcceptedEvent);
-        }
-
-        private async Task NotifyAsync(ChargeLinksAcceptedEvent chargeLinksAcceptedEvent)
-        {
             var dataAvailableNotificationDtos = new List<DataAvailableNotificationDto>();
 
             // It is the responsibility of the Charge Domain to find the recipient and
@@ -126,16 +116,6 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.MessageHub
                 .Select(x => _dataAvailableNotificationSender.SendAsync(_correlationContext.Id, x));
 
             await Task.WhenAll(dataAvailableNotificationSenderTasks).ConfigureAwait(false);
-        }
-
-        private async Task ReplyAsync(ChargeLinksAcceptedEvent chargeLinksAcceptedEvent)
-        {
-            if (_messageMetaDataContext.IsReplyToSet())
-            {
-                var chargeLinkDataAvailableNotifierEvent =
-                    _defaultChargeLinksCreatedEventFactory.Create(chargeLinksAcceptedEvent);
-                await _messageDispatcher.DispatchAsync(chargeLinkDataAvailableNotifierEvent);
-            }
         }
 
         private static DataAvailableNotificationDto CreateDataAvailableNotificationDto(

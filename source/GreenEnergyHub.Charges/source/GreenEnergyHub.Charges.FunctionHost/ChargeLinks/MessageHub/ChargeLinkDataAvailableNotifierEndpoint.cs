@@ -12,11 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Application;
 using GreenEnergyHub.Charges.Application.ChargeLinks.Handlers;
-using GreenEnergyHub.Charges.Application.ChargeLinks.MessageHub;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksAcceptedEvents;
 using GreenEnergyHub.Charges.FunctionHost.Common;
 using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandAccepted;
@@ -34,14 +31,14 @@ namespace GreenEnergyHub.Charges.FunctionHost.ChargeLinks.MessageHub
     {
         private const string FunctionName = nameof(ChargeLinkDataAvailableNotifierEndpoint);
         private readonly MessageExtractor<ChargeLinkCommandAccepted> _messageExtractor;
-        private readonly IChargeLinkDataAvailableNotifier _chargeLinkDataAvailableNotifier;
+        private readonly IChargeLinkDataAvailableNotifierAndReplyHandler _chargeLinkDataAvailableNotifierAndReplyHandler;
 
         public ChargeLinkDataAvailableNotifierEndpoint(
             MessageExtractor<ChargeLinkCommandAccepted> messageExtractor,
-            IChargeLinkDataAvailableNotifier chargeLinkDataAvailableNotifier)
+            IChargeLinkDataAvailableNotifierAndReplyHandler chargeLinkDataAvailableNotifierAndReplyHandler)
         {
             _messageExtractor = messageExtractor;
-            _chargeLinkDataAvailableNotifier = chargeLinkDataAvailableNotifier;
+            _chargeLinkDataAvailableNotifierAndReplyHandler = chargeLinkDataAvailableNotifierAndReplyHandler;
         }
 
         [Function(FunctionName)]
@@ -54,7 +51,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.ChargeLinks.MessageHub
         {
             var chargeLinkCommandAcceptedEvent = (ChargeLinksAcceptedEvent)await _messageExtractor.ExtractAsync(message).ConfigureAwait(false);
 
-            await _chargeLinkDataAvailableNotifier.NotifyAndReplyAsync(chargeLinkCommandAcceptedEvent).ConfigureAwait(false);
+            await _chargeLinkDataAvailableNotifierAndReplyHandler.NotifyAndReplyAsync(chargeLinkCommandAcceptedEvent).ConfigureAwait(false);
         }
     }
 }
