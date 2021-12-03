@@ -2,7 +2,7 @@
 
 ## Version 1.0.15
 
-Added `ChargeLinkClient`
+Added `ChargeLinksClient`
 
 ## Version 1.0.14
 

@@ -29,4 +29,4 @@ We have created a independent NuGet package for easier registration when using [
 
 ### Using Microsoft Dependency Injection
 
-`ChargeLinkClient` must be registered as scoped.
+`ChargeLinkClients` must be registered as scoped.
