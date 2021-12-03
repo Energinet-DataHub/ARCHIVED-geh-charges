@@ -20,6 +20,7 @@ using GreenEnergyHub.Charges.Application.MessageHub;
 using GreenEnergyHub.Charges.Domain.AvailableChargeData;
 using GreenEnergyHub.Charges.Domain.AvailableChargeLinkReceiptData;
 using GreenEnergyHub.Charges.Domain.AvailableChargeLinksData;
+using GreenEnergyHub.Charges.Domain.AvailableChargeReceiptData;
 using GreenEnergyHub.Charges.Domain.AvailableData;
 
 namespace GreenEnergyHub.Charges.Infrastructure.MessageHub
@@ -41,6 +42,8 @@ namespace GreenEnergyHub.Charges.Infrastructure.MessageHub
             {
                 // RSM-034 CIM XML 'NotifyPriceList' requests
                 BundleType.ChargeDataAvailable => _bundleCreators[typeof(BundleCreator<AvailableChargeData>)],
+                // RSM-033 CIM XML 'ConfirmRequestChangeOfPriceList' confirmations
+                BundleType.ChargeConfirmationDataAvailable => _bundleCreators[typeof(BundleCreator<AvailableChargeReceiptData>)],
                 // RSM-030 CIM XML 'ConfirmRequestChangeBillingMasterData' confirmations
                 BundleType.ChargeLinkConfirmationDataAvailable => _bundleCreators[typeof(BundleCreator<AvailableChargeLinkReceiptData>)],
                 // RSM-031 CIM XML 'NotifyBillingMasterData' requests
