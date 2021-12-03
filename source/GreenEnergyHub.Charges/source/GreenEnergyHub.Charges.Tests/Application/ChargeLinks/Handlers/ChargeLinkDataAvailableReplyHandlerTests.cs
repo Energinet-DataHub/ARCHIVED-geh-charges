@@ -23,6 +23,7 @@ using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksAcceptedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.DefaultChargeLinksDataAvailableNotifiedEvents;
 using GreenEnergyHub.Charges.TestCore.Attributes;
 using Moq;
+using NodaTime;
 using Xunit;
 using Xunit.Categories;
 
@@ -53,6 +54,9 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Handlers
         {
             // Arrange
             messageMetaDataContext.Setup(context => context.IsReplyToSet()).Returns(true);
+            defaultChargeLinksCreatedEventFactory
+                .Setup(x => x.Create(chargeLinksAcceptedEvent))
+                .Returns(GetDefaultChargeLinksCreatedEvent);
 
             // Act
             await sut.ReplyAsync(chargeLinksAcceptedEvent);
@@ -83,11 +87,16 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Handlers
 
             // Assert
             defaultChargeLinksCreatedEventFactory.Verify(
-                x => x.Create(chargeLinksAcceptedEvent), Times.Once);
+                x => x.Create(chargeLinksAcceptedEvent), Times.Never);
             messageDispatcher.Verify(
                 expression: x =>
                     x.DispatchAsync(It.IsAny<DefaultChargeLinksCreatedEvent>(), CancellationToken.None),
-                Times.Once);
+                Times.Never);
+        }
+
+        private DefaultChargeLinksCreatedEvent GetDefaultChargeLinksCreatedEvent()
+        {
+            return new DefaultChargeLinksCreatedEvent(SystemClock.Instance.GetCurrentInstant(), "12345678910");
         }
     }
 }
