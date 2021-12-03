@@ -17,13 +17,15 @@ using GreenEnergyHub.Charges.Application.MessageHub;
 using GreenEnergyHub.Charges.Domain.AvailableChargeReceiptData;
 using GreenEnergyHub.Charges.Domain.AvailableData;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandAcceptedEvents;
+using GreenEnergyHub.Charges.Infrastructure.ChargeReceiptBundle.Cim;
+using GreenEnergyHub.Charges.Infrastructure.Cim;
 using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeCommandAccepted;
 using GreenEnergyHub.Charges.Infrastructure.Messaging.Registration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace GreenEnergyHub.Charges.FunctionHost.Configuration
 {
-    internal static class ChargeConfirmationSenderConfiguration
+    internal static class ChargeConfirmationDataAvailableNotifierEndpointConfiguration
     {
         internal static void ConfigureServices(IServiceCollection serviceCollection)
         {
@@ -42,6 +44,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
             serviceCollection
                 .AddScoped<BundleSpecification<AvailableChargeReceiptData, ChargeCommandAcceptedEvent>,
                     ChargeConfirmationBundleSpecification>();
+            serviceCollection.AddScoped<ICimSerializer<AvailableChargeReceiptData>, ChargeReceiptCimSerializer>();
         }
     }
 }
