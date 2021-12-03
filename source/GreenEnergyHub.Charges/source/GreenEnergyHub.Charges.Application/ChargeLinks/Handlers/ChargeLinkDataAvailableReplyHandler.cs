@@ -12,30 +12,39 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksAcceptedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.DefaultChargeLinksDataAvailableNotifiedEvents;
 
 namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
 {
-    public class ChargeLinkDataAvailableNotifierEndpointHandler : IChargeLinkDataAvailableNotifierEndpointHandler
+    public class ChargeLinkDataAvailableReplyHandler : IChargeLinkDataAvailableReplyHandler
     {
         private readonly IMessageDispatcher<DefaultChargeLinksCreatedEvent> _messageDispatcher;
         private readonly IDefaultChargeLinksCreatedEventFactory _defaultChargeLinksCreatedEventFactory;
+        private readonly IMessageMetaDataContext _messageMetaDataContext;
 
-        public ChargeLinkDataAvailableNotifierEndpointHandler(
+        public ChargeLinkDataAvailableReplyHandler(
             IMessageDispatcher<DefaultChargeLinksCreatedEvent> messageDispatcher,
-            IDefaultChargeLinksCreatedEventFactory defaultChargeLinksCreatedEventFactory)
+            IDefaultChargeLinksCreatedEventFactory defaultChargeLinksCreatedEventFactory,
+            IMessageMetaDataContext messageMetaDataContext)
         {
             _messageDispatcher = messageDispatcher;
             _defaultChargeLinksCreatedEventFactory = defaultChargeLinksCreatedEventFactory;
+            _messageMetaDataContext = messageMetaDataContext;
         }
 
-        public async Task HandleAsync(ChargeLinksAcceptedEvent chargeLinkCommandAcceptedEvent)
+        public async Task ReplyAsync(ChargeLinksAcceptedEvent chargeLinksAcceptedEvent)
         {
-            var chargeLinkDataAvailableNotifierEvent =
-                _defaultChargeLinksCreatedEventFactory.Create(chargeLinkCommandAcceptedEvent);
-            await _messageDispatcher.DispatchAsync(chargeLinkDataAvailableNotifierEvent);
+            if (chargeLinksAcceptedEvent == null) throw new ArgumentNullException(nameof(chargeLinksAcceptedEvent));
+
+            if (_messageMetaDataContext.IsReplyToSet())
+            {
+                var chargeLinkDataAvailableNotifierEvent =
+                    _defaultChargeLinksCreatedEventFactory.Create(chargeLinksAcceptedEvent);
+                await _messageDispatcher.DispatchAsync(chargeLinkDataAvailableNotifierEvent);
+            }
         }
     }
 }

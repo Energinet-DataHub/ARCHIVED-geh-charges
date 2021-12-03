@@ -12,13 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Application;
 using GreenEnergyHub.Charges.Application.ChargeLinks.Handlers;
-using GreenEnergyHub.Charges.Application.ChargeLinks.MessageHub;
-using GreenEnergyHub.Charges.Application.MessageHub;
-using GreenEnergyHub.Charges.Domain.AvailableChargeLinksData;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksAcceptedEvents;
 using GreenEnergyHub.Charges.FunctionHost.Common;
 using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandAccepted;
@@ -36,20 +31,14 @@ namespace GreenEnergyHub.Charges.FunctionHost.ChargeLinks.MessageHub
     {
         private const string FunctionName = nameof(ChargeLinkDataAvailableNotifierEndpoint);
         private readonly MessageExtractor<ChargeLinkCommandAccepted> _messageExtractor;
-        private readonly IAvailableDataNotifier<AvailableChargeLinksData, ChargeLinksAcceptedEvent> _availableDataNotifier;
-        private readonly IMessageMetaDataContext _messageMetaDataContext;
-        private readonly IChargeLinkDataAvailableNotifierEndpointHandler _chargeLinkDataAvailableNotifierEndpointHandler;
+        private readonly IChargeLinkDataAvailableNotifierAndReplyHandler _chargeLinkDataAvailableNotifierAndReplyHandler;
 
         public ChargeLinkDataAvailableNotifierEndpoint(
             MessageExtractor<ChargeLinkCommandAccepted> messageExtractor,
-            IAvailableDataNotifier<AvailableChargeLinksData, ChargeLinksAcceptedEvent> availableDataNotifier,
-            IMessageMetaDataContext messageMetaDataContext,
-            IChargeLinkDataAvailableNotifierEndpointHandler chargeLinkDataAvailableNotifierEndpointHandler)
+            IChargeLinkDataAvailableNotifierAndReplyHandler chargeLinkDataAvailableNotifierAndReplyHandler)
         {
             _messageExtractor = messageExtractor;
-            _availableDataNotifier = availableDataNotifier;
-            _messageMetaDataContext = messageMetaDataContext;
-            _chargeLinkDataAvailableNotifierEndpointHandler = chargeLinkDataAvailableNotifierEndpointHandler;
+            _chargeLinkDataAvailableNotifierAndReplyHandler = chargeLinkDataAvailableNotifierAndReplyHandler;
         }
 
         [Function(FunctionName)]
@@ -58,18 +47,11 @@ namespace GreenEnergyHub.Charges.FunctionHost.ChargeLinks.MessageHub
                 "%" + EnvironmentSettingNames.ChargeLinkAcceptedTopicName + "%",
                 "%" + EnvironmentSettingNames.ChargeLinkAcceptedSubDataAvailableNotifier + "%",
                 Connection = EnvironmentSettingNames.DomainEventListenerConnectionString)]
-            [NotNull] byte[] message)
+            byte[] message)
         {
             var chargeLinkCommandAcceptedEvent = (ChargeLinksAcceptedEvent)await _messageExtractor.ExtractAsync(message).ConfigureAwait(false);
 
-            await _availableDataNotifier.NotifyAsync(chargeLinkCommandAcceptedEvent).ConfigureAwait(false);
-
-            if (_messageMetaDataContext.IsReplyToSet())
-            {
-                await _chargeLinkDataAvailableNotifierEndpointHandler
-                    .HandleAsync(chargeLinkCommandAcceptedEvent)
-                    .ConfigureAwait(false);
-            }
+            await _chargeLinkDataAvailableNotifierAndReplyHandler.NotifyAndReplyAsync(chargeLinkCommandAcceptedEvent).ConfigureAwait(false);
         }
     }
 }

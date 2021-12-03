@@ -39,9 +39,9 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
             serviceCollection.AddMessagingProtobuf().AddMessageDispatcher<DefaultChargeLinksCreatedEvent>(
                 EnvironmentHelper.GetEnv(EnvironmentSettingNames.DomainEventSenderConnectionString),
                 EnvironmentHelper.GetEnv(EnvironmentSettingNames.DefaultChargeLinksDataAvailableNotifiedTopicName));
-            serviceCollection
-                .AddScoped<IChargeLinkDataAvailableNotifierEndpointHandler,
-                    ChargeLinkDataAvailableNotifierEndpointHandler>();
+
+            serviceCollection.AddScoped<IChargeLinkDataAvailableNotifierAndReplyHandler, ChargeLinkDataAvailableNotifierAndReplyHandler>();
+            serviceCollection.AddScoped<IChargeLinkDataAvailableReplyHandler, ChargeLinkDataAvailableReplyHandler>();
             serviceCollection.AddScoped<IAvailableDataNotifier<AvailableChargeLinksData, ChargeLinksAcceptedEvent>,
                 AvailableDataNotifier<AvailableChargeLinksData, ChargeLinksAcceptedEvent>>();
             serviceCollection
