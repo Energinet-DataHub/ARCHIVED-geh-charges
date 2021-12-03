@@ -17,7 +17,7 @@ using System.Linq;
 using System.Net.Http;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Energinet.DataHub.Charges.Clients
+namespace Energinet.DataHub.Charges.Clients.Registration
 {
     public static class ServiceCollectionExtensions
     {
