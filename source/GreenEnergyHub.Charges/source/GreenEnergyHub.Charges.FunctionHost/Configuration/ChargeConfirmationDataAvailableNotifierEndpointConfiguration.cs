@@ -41,7 +41,6 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
             serviceCollection
                 .AddScoped<BundleSpecification<AvailableChargeReceiptData, ChargeCommandAcceptedEvent>,
                     ChargeConfirmationBundleSpecification>();
-            serviceCollection.AddScoped<ICimSerializer<AvailableChargeReceiptData>, ChargeReceiptCimSerializer>();
         }
     }
 }
