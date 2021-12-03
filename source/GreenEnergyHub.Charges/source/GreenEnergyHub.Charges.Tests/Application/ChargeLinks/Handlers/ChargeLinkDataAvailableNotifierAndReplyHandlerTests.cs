@@ -17,7 +17,8 @@ using System.Threading.Tasks;
 using AutoFixture.Xunit2;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Application.ChargeLinks.Handlers;
-using GreenEnergyHub.Charges.Application.ChargeLinks.MessageHub;
+using GreenEnergyHub.Charges.Application.MessageHub;
+using GreenEnergyHub.Charges.Domain.AvailableChargeLinksData;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksAcceptedEvents;
 using GreenEnergyHub.Charges.TestCore.Attributes;
 using Moq;
@@ -43,7 +44,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Handlers
         [Theory]
         [InlineAutoMoqData]
         public async Task NotifyAndReplyAsync_WhenCalled_ShouldCallServices(
-            [Frozen] Mock<IChargeLinkDataAvailableNotifier> chargeLinkDataAvailableNotifier,
+            [Frozen] Mock<IAvailableDataNotifier<AvailableChargeLinksData, ChargeLinksAcceptedEvent>> availableDataNotifier,
             [Frozen] Mock<IChargeLinkDataAvailableReplyHandler> chargeLinkDataAvailableReplyHandler,
             ChargeLinksAcceptedEvent chargeLinksAcceptedEvent,
             ChargeLinkDataAvailableNotifierAndReplyHandler sut)
@@ -52,7 +53,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Handlers
             await sut.NotifyAndReplyAsync(chargeLinksAcceptedEvent);
 
             // Assert
-            chargeLinkDataAvailableNotifier.Verify(
+            availableDataNotifier.Verify(
                 x => x.NotifyAsync(chargeLinksAcceptedEvent), Times.Once);
             chargeLinkDataAvailableReplyHandler.Verify(
                 x => x.ReplyAsync(chargeLinksAcceptedEvent), Times.Once);

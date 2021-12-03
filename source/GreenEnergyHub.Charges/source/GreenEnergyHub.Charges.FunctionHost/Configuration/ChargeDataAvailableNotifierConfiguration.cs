@@ -13,7 +13,10 @@
 // limitations under the License.
 
 using GreenEnergyHub.Charges.Application.Charges.MessageHub;
+using GreenEnergyHub.Charges.Application.MessageHub;
 using GreenEnergyHub.Charges.Domain.AvailableChargeData;
+using GreenEnergyHub.Charges.Domain.AvailableData;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandAcceptedEvents;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace GreenEnergyHub.Charges.FunctionHost.Configuration
@@ -22,8 +25,15 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
     {
         internal static void ConfigureServices(IServiceCollection serviceCollection)
         {
-            serviceCollection.AddScoped<IChargeDataAvailableNotifier, ChargeDataAvailableNotifier>();
-            serviceCollection.AddScoped<IAvailableChargeDataFactory, AvailableChargeDataFactory>();
+            serviceCollection.AddScoped<IAvailableDataNotifier<AvailableChargeData, ChargeCommandAcceptedEvent>,
+                AvailableDataNotifier<AvailableChargeData, ChargeCommandAcceptedEvent>>();
+            serviceCollection.AddScoped<IAvailableDataFactory<AvailableChargeData, ChargeCommandAcceptedEvent>,
+                AvailableChargeDataFactory>();
+            serviceCollection.AddScoped<IAvailableDataNotificationFactory<AvailableChargeData>,
+                AvailableDataNotificationFactory<AvailableChargeData>>();
+            serviceCollection
+                .AddScoped<BundleSpecification<AvailableChargeData, ChargeCommandAcceptedEvent>,
+                    ChargeBundleSpecification>();
         }
     }
 }
