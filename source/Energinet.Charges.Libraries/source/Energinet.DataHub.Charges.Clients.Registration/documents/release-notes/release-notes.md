@@ -2,7 +2,7 @@
 
 ## Version 0.1.1
 
-Adds an extension to register a `ChargeLinkClient` to `IServiceCollection`.
+Adds an extension to register a `ChargeLinkClient` to an `IServiceCollection`.
 
 ## Version 0.1.0
 
