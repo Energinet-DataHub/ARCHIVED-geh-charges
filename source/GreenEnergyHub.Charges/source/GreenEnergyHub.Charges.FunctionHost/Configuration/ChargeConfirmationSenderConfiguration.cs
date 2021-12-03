@@ -12,12 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.Core.Messaging.Protobuf;
-using GreenEnergyHub.Charges.Application.Charges.Acknowledgement;
-using GreenEnergyHub.Charges.FunctionHost.Common;
-using GreenEnergyHub.Charges.Infrastructure.Integration.ChargeConfirmation;
-using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeCommandAccepted;
-using GreenEnergyHub.Charges.Infrastructure.Messaging.Registration;
+using GreenEnergyHub.Charges.Application.Charges.MessageHub;
+using GreenEnergyHub.Charges.Application.MessageHub;
+using GreenEnergyHub.Charges.Domain.AvailableChargeReceiptData;
+using GreenEnergyHub.Charges.Domain.AvailableData;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandAcceptedEvents;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace GreenEnergyHub.Charges.FunctionHost.Configuration
@@ -26,14 +25,27 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
     {
         internal static void ConfigureServices(IServiceCollection serviceCollection)
         {
-            serviceCollection.AddScoped<IChargeConfirmationSender, ChargeConfirmationSender>();
+            serviceCollection
+                .AddScoped<IAvailableDataNotifier<AvailableChargeReceiptData, ChargeCommandAcceptedEvent>,
+                    AvailableDataNotifier<AvailableChargeReceiptData, ChargeCommandAcceptedEvent>>();
+            serviceCollection
+                .AddScoped<IAvailableDataFactory<AvailableChargeReceiptData, ChargeCommandAcceptedEvent>,
+                    AvailableChargeConfirmationDataFactory>();
+            serviceCollection
+                .AddScoped<IAvailableDataNotificationFactory<AvailableChargeReceiptData>,
+                    AvailableDataNotificationFactory<AvailableChargeReceiptData>>();
+            serviceCollection
+                .AddScoped<BundleSpecification<AvailableChargeReceiptData, ChargeCommandAcceptedEvent>,
+                    ChargeConfirmationBundleSpecification>();
+
+/*            serviceCollection.AddScoped<IChargeConfirmationSender, ChargeConfirmationSender>();
 
             serviceCollection.ReceiveProtobufMessage<ChargeCommandAcceptedContract>(
                 configuration => configuration.WithParser(() => ChargeCommandAcceptedContract.Parser));
             serviceCollection.SendProtobuf<ChargeConfirmationContract>();
             serviceCollection.AddMessagingProtobuf().AddMessageDispatcher<ChargeConfirmation>(
                 EnvironmentHelper.GetEnv(EnvironmentSettingNames.DomainEventSenderConnectionString),
-                EnvironmentHelper.GetEnv(EnvironmentSettingNames.PostOfficeTopicName));
+                EnvironmentHelper.GetEnv(EnvironmentSettingNames.PostOfficeTopicName));*/
         }
     }
 }
