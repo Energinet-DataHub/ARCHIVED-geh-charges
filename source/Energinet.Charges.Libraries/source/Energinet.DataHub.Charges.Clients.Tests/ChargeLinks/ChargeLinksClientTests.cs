@@ -30,32 +30,20 @@ namespace Energinet.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.Charge
     [UnitTest]
     public class ChargeLinksClientTests
     {
+        private const string BaseUrl = "http://chargelinks-test.com/";
+
         [Fact]
         public async Task GetAsync_WhenMeteringPointHasLinks_ReturnsChargeLinks()
         {
             // Arrange
             var meteringPointId = "57131310000000000";
-            var baseUrl = "http://chargelinks-test.com/";
             var expectedStartDateTime = new DateTime(2019, 12, 31, 23, 00, 00);
-            var expectedUri = new Uri($"{baseUrl}{ChargesRelativeUris.GetChargeLinks(meteringPointId)}");
+            var expectedUri = new Uri($"{BaseUrl}{ChargesRelativeUris.GetChargeLinks(meteringPointId)}");
 
-            var mockHttpMessageHandler = new Mock<HttpMessageHandler>(MockBehavior.Strict);
-            mockHttpMessageHandler
-                .Protected()
-                .Setup<Task<HttpResponseMessage>>(
-                    "SendAsync",
-                    ItExpr.IsAny<HttpRequestMessage>(),
-                    ItExpr.IsAny<CancellationToken>())
-                .ReturnsAsync(new HttpResponseMessage()
-                {
-                    StatusCode = System.Net.HttpStatusCode.OK,
-                    Content = new StringContent("[{\"ChargeType\":3,\"ChargeId\":\"40000\",\"ChargeName\":\"Transmissionsnettarif\",\"ChargeOwnerId\":\"5790000432752\",\"ChargeOwnerName\":\"Energinet(SYO)\",\"TaxIndicator\":false,\"TransparentInvoicing\":false,\"Factor\":1,\"StartDateTimeUtc\":\"2019-12-31T23:00:00Z\",\"EndDateTimeUtc\":null}]", Encoding.UTF8, "application/json"),
-                })
-                .Verifiable();
-
+            var mockHttpMessageHandler = GetMockHttpMessageHandler();
             var httpClient = new HttpClient(mockHttpMessageHandler.Object)
             {
-                BaseAddress = new Uri(baseUrl),
+                BaseAddress = new Uri(BaseUrl),
             };
 
             var sut = ChargeLinksClientFactory.CreateClient(httpClient);
@@ -73,6 +61,24 @@ namespace Energinet.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.Charge
                 Times.Exactly(1),
                 ItExpr.Is<HttpRequestMessage>(req => req.Method == HttpMethod.Get && req.RequestUri == expectedUri),
                 ItExpr.IsAny<CancellationToken>());
+        }
+
+        private static Mock<HttpMessageHandler> GetMockHttpMessageHandler()
+        {
+            var mockHttpMessageHandler = new Mock<HttpMessageHandler>(MockBehavior.Strict);
+            mockHttpMessageHandler
+                .Protected()
+                .Setup<Task<HttpResponseMessage>>(
+                    "SendAsync",
+                    ItExpr.IsAny<HttpRequestMessage>(),
+                    ItExpr.IsAny<CancellationToken>())
+                .ReturnsAsync(new HttpResponseMessage()
+                {
+                    StatusCode = System.Net.HttpStatusCode.OK,
+                    Content = new StringContent("[{\"ChargeType\":3,\"ChargeId\":\"40000\",\"ChargeName\":\"Transmissionsnettarif\",\"ChargeOwnerId\":\"5790000432752\",\"ChargeOwnerName\":\"Energinet(SYO)\",\"TaxIndicator\":false,\"TransparentInvoicing\":false,\"Factor\":1,\"StartDateTimeUtc\":\"2019-12-31T23:00:00Z\",\"EndDateTimeUtc\":null}]", Encoding.UTF8, "application/json"),
+                })
+                .Verifiable();
+            return mockHttpMessageHandler;
         }
     }
 }
