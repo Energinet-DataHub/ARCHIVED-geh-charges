@@ -14,8 +14,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Text.Json;
@@ -24,7 +22,6 @@ using System.Threading.Tasks;
 using Energinet.Charges.Contracts;
 using FluentAssertions;
 using GreenEnergyHub.Charges.TestCore.Attributes;
-using GreenEnergyHub.TestHelpers;
 using Moq;
 using Moq.Protected;
 using Xunit;
