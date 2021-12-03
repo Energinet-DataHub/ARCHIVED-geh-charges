@@ -65,34 +65,6 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 actualResponse.StatusCode.Should().Be(HttpStatusCode.OK);
             }
 
-            /// <summary>
-            /// Test of old Message Hub simulating code. Will be refactored in upcoming stories.
-            /// </summary>
-            [Fact]
-            public async Task When_ChargeIsReceived_Then_MessageIsSentToPostOffice()
-            {
-                // Arrange
-                var request = CreateHttpRequest(ChargeDocument.AnyValid, out string _);
-
-                var body = string.Empty;
-                using var isMessageReceivedEvent = await Fixture.PostOfficeListener
-                    .WhenAny()
-                    .VerifyOnceAsync(receivedMessage =>
-                    {
-                        body = receivedMessage.Body.ToString();
-
-                        return Task.CompletedTask;
-                    });
-
-                // Act
-                await Fixture.HostManager.HttpClient.SendAsync(request);
-
-                // Assert
-                var isMessageReceived = isMessageReceivedEvent.Wait(TimeSpan.FromSeconds(5));
-                isMessageReceived.Should().BeTrue();
-                body.Should().NotBeEmpty();
-            }
-
             // TODO: Should this (and all other "when charge" tests) be split in subscription, fee and tariff?
             [Fact]
             public async Task When_ChargeIsReceived_Then_ChargeCreatedIntegrationEventIsPublished()
