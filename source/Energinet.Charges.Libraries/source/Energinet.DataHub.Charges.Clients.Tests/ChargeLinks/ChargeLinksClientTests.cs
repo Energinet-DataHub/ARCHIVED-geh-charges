@@ -14,12 +14,17 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
+using Energinet.Charges.Contracts;
 using FluentAssertions;
+using GreenEnergyHub.Charges.TestCore.Attributes;
+using GreenEnergyHub.TestHelpers;
 using Moq;
 using Moq.Protected;
 using Xunit;
@@ -31,30 +36,33 @@ namespace Energinet.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.Charge
     public class ChargeLinksClientTests
     {
         private const string BaseUrl = "http://chargelinks-test.com/";
+        private const string MeteringPointId = "57131310000000000";
 
-        [Fact]
-        public async Task GetAsync_WhenMeteringPointHasLinks_ReturnsChargeLinks()
+        [Theory]
+        [InlineAutoMoqData]
+        public async Task GetAsync_WhenMeteringPointHasLinks_ReturnsChargeLinks(ChargeLinkDto chargeLinkDto)
         {
             // Arrange
-            var meteringPointId = "57131310000000000";
-            var expectedStartDateTime = new DateTime(2019, 12, 31, 23, 00, 00);
-            var expectedUri = new Uri($"{BaseUrl}{ChargesRelativeUris.GetChargeLinks(meteringPointId)}");
+            var chargeLinks = new List<ChargeLinkDto>();
+            chargeLinks.Add(chargeLinkDto);
+            var responseContent = JsonSerializer.Serialize<IList<ChargeLinkDto>>(chargeLinks, new JsonSerializerOptions { WriteIndented = true });
 
-            var mockHttpMessageHandler = GetMockHttpMessageHandler();
+            var mockHttpMessageHandler = GetMockHttpMessageHandler(responseContent);
             var httpClient = new HttpClient(mockHttpMessageHandler.Object)
             {
                 BaseAddress = new Uri(BaseUrl),
             };
 
             var sut = ChargeLinksClientFactory.CreateClient(httpClient);
+            var expectedUri = new Uri($"{BaseUrl}{ChargesRelativeUris.GetChargeLinks(MeteringPointId)}");
 
             // Act
-            var result = await sut.GetAsync(meteringPointId).ConfigureAwait(false);
+            var result = await sut.GetAsync(MeteringPointId).ConfigureAwait(false);
 
             // Assert
             result.Should().NotBeNull();
-            result[0].ChargeId.Should().Be("40000");
-            result[0].StartDateTimeUtc.Should().Be(expectedStartDateTime);
+            result[0].ChargeId.Should().Be(chargeLinkDto.ChargeId);
+            result[0].StartDateTimeUtc.Should().Be(chargeLinkDto.StartDateTimeUtc);
 
             mockHttpMessageHandler.Protected().Verify(
                 "SendAsync",
@@ -63,7 +71,7 @@ namespace Energinet.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.Charge
                 ItExpr.IsAny<CancellationToken>());
         }
 
-        private static Mock<HttpMessageHandler> GetMockHttpMessageHandler()
+        private static Mock<HttpMessageHandler> GetMockHttpMessageHandler(string responseContent)
         {
             var mockHttpMessageHandler = new Mock<HttpMessageHandler>(MockBehavior.Strict);
             mockHttpMessageHandler
@@ -75,7 +83,7 @@ namespace Energinet.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.Charge
                 .ReturnsAsync(new HttpResponseMessage()
                 {
                     StatusCode = System.Net.HttpStatusCode.OK,
-                    Content = new StringContent("[{\"ChargeType\":3,\"ChargeId\":\"40000\",\"ChargeName\":\"Transmissionsnettarif\",\"ChargeOwnerId\":\"5790000432752\",\"ChargeOwnerName\":\"Energinet(SYO)\",\"TaxIndicator\":false,\"TransparentInvoicing\":false,\"Factor\":1,\"StartDateTimeUtc\":\"2019-12-31T23:00:00Z\",\"EndDateTimeUtc\":null}]", Encoding.UTF8, "application/json"),
+                    Content = new StringContent(responseContent, Encoding.UTF8, "application/json"),
                 })
                 .Verifiable();
             return mockHttpMessageHandler;
