@@ -74,7 +74,7 @@ namespace GreenEnergyHub.Charges.Application.MessageHub
             var notifications = CreateNotifications(availableData);
 
             var dataAvailableNotificationSenderTasks = notifications
-                .Select(x => _dataAvailableNotificationSender.SendAsync(_correlationContext.Id, x));
+                .Select(notification => _dataAvailableNotificationSender.SendAsync(_correlationContext.Id, notification));
 
             await Task.WhenAll(dataAvailableNotificationSenderTasks).ConfigureAwait(false);
         }

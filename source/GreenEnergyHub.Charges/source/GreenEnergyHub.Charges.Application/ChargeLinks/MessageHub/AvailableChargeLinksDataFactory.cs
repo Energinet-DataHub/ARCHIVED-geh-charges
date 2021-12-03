@@ -58,7 +58,7 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.MessageHub
                     link.ChargeOwner,
                     link.ChargeType)).ConfigureAwait(false);
 
-                if (charge.TaxIndicator)
+                if (ShouldMakeDataAvailableForGridOwnerOfMeteringPoint(charge))
                 {
                     result.Add(new AvailableChargeLinksData(
                         recipient.Id,
@@ -77,6 +77,13 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.MessageHub
             }
 
             return result;
+        }
+
+        private bool ShouldMakeDataAvailableForGridOwnerOfMeteringPoint(Charge charge)
+        {
+            // We only need to notify the grid provider owning the metering point if
+            // the link is about a tax charge; the rest they maintain themselves
+            return charge.TaxIndicator;
         }
     }
 }

@@ -20,9 +20,7 @@ using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.Domain.AvailableChargeData;
 using GreenEnergyHub.Charges.Domain.AvailableData;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandAcceptedEvents;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
-using NodaTime;
 
 namespace GreenEnergyHub.Charges.Application.Charges.MessageHub
 {
@@ -43,7 +41,7 @@ namespace GreenEnergyHub.Charges.Application.Charges.MessageHub
         {
             var result = new List<AvailableChargeData>();
 
-            if (input.Command.ChargeOperation.TaxIndicator)
+            if (ShouldMakeDataAvailableForActiveGridProviders(input))
             {
                 var activeGridAccessProviders = await _marketParticipantRepository.GetActiveGridAccessProvidersAsync();
                 var operation = input.Command.ChargeOperation;
@@ -77,6 +75,13 @@ namespace GreenEnergyHub.Charges.Application.Charges.MessageHub
             }
 
             return result;
+        }
+
+        private bool ShouldMakeDataAvailableForActiveGridProviders(ChargeCommandAcceptedEvent acceptedEvent)
+        {
+            // We only need to notify grid providers if the charge includes tax which are the
+            // only charges they do not maintain themselves
+            return acceptedEvent.Command.ChargeOperation.TaxIndicator;
         }
     }
 }
