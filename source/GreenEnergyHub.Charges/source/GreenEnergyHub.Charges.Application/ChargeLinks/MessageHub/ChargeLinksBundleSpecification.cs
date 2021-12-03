@@ -12,23 +12,29 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Threading.Tasks;
+using GreenEnergyHub.Charges.Application.MessageHub;
+using GreenEnergyHub.Charges.Domain.AvailableChargeLinksData;
+using GreenEnergyHub.Charges.Domain.AvailableData;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksAcceptedEvents;
 
 namespace GreenEnergyHub.Charges.Application.ChargeLinks.MessageHub
 {
-    /// <summary>
-    /// Contract for notifying the MessageHub that data about a charge link that has been created
-    /// is available.
-    /// This is the RSM-031 CIM XML 'NotifyBillingMasterData'.
-    ///
-    /// ChargeLinksAcceptedEvents may originate from regular market participant's charge links requests
-    /// or by the Metering Point domain requesting creation of 'default charge links'. Only the latter
-    /// entails replying back to the Metering Point domain once notifications related to default charge
-    /// links have been created
-    /// </summary>
-    public interface IChargeLinkDataAvailableNotifier
+    public class ChargeLinksBundleSpecification : BundleSpecification<AvailableChargeLinksData, ChargeLinksAcceptedEvent>
     {
-        Task NotifyAsync(ChargeLinksAcceptedEvent chargeLinksAcceptedEvent);
+        /// <summary>
+        /// The upper anticipated weight (kilobytes) contribution to the final bundle
+        /// for a single link
+        /// </summary>
+        public const int MessageWeight = 2;
+
+        public ChargeLinksBundleSpecification()
+            : base(BundleType.ChargeLinkDataAvailable)
+        {
+        }
+
+        public override int GetMessageWeight(AvailableChargeLinksData data)
+        {
+            return MessageWeight;
+        }
     }
 }

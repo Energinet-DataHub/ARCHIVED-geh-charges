@@ -12,18 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
-using System.Collections.Generic;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands;
-using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
-using NodaTime;
-
-namespace GreenEnergyHub.Charges.Domain.AvailableChargeLinkReceiptData
+namespace GreenEnergyHub.Charges.Tests.TestFiles
 {
-    public interface IAvailableChargeLinkReceiptDataFactory
+    public static class BundleSize
     {
-        IReadOnlyCollection<AvailableChargeLinkReceiptData> CreateConfirmations(
-            ChargeLinksCommand command,
-            Instant requestDateTime);
+        public const string WorstCaseChargeLink = "TestFiles/SingleChargeLinkCimSerializerWorstCase.blob";
+        public const string WorstCaseChargeLinkConfirmation = "TestFiles/SingleChargeLinkConfirmationCimSerializerWorstCase.blob";
+        public const string WorstCaseChargeNoPoints = "TestFiles/ValidCreateTariffCommandMaxDocumentSizeNoPoints.xml";
+        public const string WorstCaseChargeWithPoints =
+            "TestFiles/ValidCreateTariffCommandMaxDocumentSizeWithPoints.xml";
     }
 }

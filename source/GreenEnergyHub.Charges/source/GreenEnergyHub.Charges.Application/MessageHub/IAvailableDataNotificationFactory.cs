@@ -12,13 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksAcceptedEvents;
+using System.Collections.Generic;
+using Energinet.DataHub.MessageHub.Model.Model;
+using GreenEnergyHub.Charges.Domain.AvailableData;
 
-namespace GreenEnergyHub.Charges.Application.ChargeLinks.MessageHub
+namespace GreenEnergyHub.Charges.Application.MessageHub
 {
-    public interface IChargeLinkConfirmationDataAvailableNotifier
+    public interface IAvailableDataNotificationFactory<TAvailableData>
+        where TAvailableData : AvailableDataBase
     {
-        Task NotifyAsync(ChargeLinksAcceptedEvent chargeLinksAcceptedEvent);
+        IReadOnlyList<DataAvailableNotificationDto> Create(
+            IReadOnlyList<TAvailableData> availableData,
+            IBundleSpecification<TAvailableData> bundleSpecification);
     }
 }

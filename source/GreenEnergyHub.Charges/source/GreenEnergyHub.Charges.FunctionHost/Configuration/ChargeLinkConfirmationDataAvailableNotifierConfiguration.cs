@@ -13,7 +13,10 @@
 // limitations under the License.
 
 using GreenEnergyHub.Charges.Application.ChargeLinks.MessageHub;
+using GreenEnergyHub.Charges.Application.MessageHub;
 using GreenEnergyHub.Charges.Domain.AvailableChargeLinkReceiptData;
+using GreenEnergyHub.Charges.Domain.AvailableData;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksAcceptedEvents;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace GreenEnergyHub.Charges.FunctionHost.Configuration
@@ -22,8 +25,18 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
     {
         internal static void ConfigureServices(IServiceCollection serviceCollection)
         {
-            serviceCollection.AddScoped<IChargeLinkConfirmationDataAvailableNotifier, ChargeLinkConfirmationDataAvailableNotifier>();
-            serviceCollection.AddScoped<IAvailableChargeLinkReceiptDataFactory, AvailableChargeLinkReceiptDataFactory>();
+            serviceCollection
+                .AddScoped<IAvailableDataNotifier<AvailableChargeLinkReceiptData, ChargeLinksAcceptedEvent>,
+                    AvailableDataNotifier<AvailableChargeLinkReceiptData, ChargeLinksAcceptedEvent>>();
+            serviceCollection
+                .AddScoped<IAvailableDataFactory<AvailableChargeLinkReceiptData, ChargeLinksAcceptedEvent>,
+                    AvailableChargeLinkReceiptDataFactory>();
+            serviceCollection
+                .AddScoped<IAvailableDataNotificationFactory<AvailableChargeLinkReceiptData>,
+                    AvailableDataNotificationFactory<AvailableChargeLinkReceiptData>>();
+            serviceCollection
+                .AddScoped<BundleSpecification<AvailableChargeLinkReceiptData, ChargeLinksAcceptedEvent>,
+                    ChargeLinksConfirmationBundleSpecification>();
         }
     }
 }

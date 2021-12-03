@@ -14,21 +14,22 @@
 
 using System;
 using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Application.ChargeLinks.MessageHub;
+using GreenEnergyHub.Charges.Application.MessageHub;
+using GreenEnergyHub.Charges.Domain.AvailableChargeLinksData;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksAcceptedEvents;
 
 namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
 {
     public class ChargeLinkDataAvailableNotifierAndReplyHandler : IChargeLinkDataAvailableNotifierAndReplyHandler
     {
-        private readonly IChargeLinkDataAvailableNotifier _chargeLinkDataAvailableNotifier;
+        private readonly IAvailableDataNotifier<AvailableChargeLinksData, ChargeLinksAcceptedEvent> _availableDataNotifer;
         private readonly IChargeLinkDataAvailableReplyHandler _chargeLinkDataAvailableReplyHandler;
 
         public ChargeLinkDataAvailableNotifierAndReplyHandler(
-            IChargeLinkDataAvailableNotifier chargeLinkDataAvailableNotifier,
+            IAvailableDataNotifier<AvailableChargeLinksData, ChargeLinksAcceptedEvent> availableDataNotifer,
             IChargeLinkDataAvailableReplyHandler chargeLinkDataAvailableReplyHandler)
         {
-            _chargeLinkDataAvailableNotifier = chargeLinkDataAvailableNotifier;
+            _availableDataNotifer = availableDataNotifer;
             _chargeLinkDataAvailableReplyHandler = chargeLinkDataAvailableReplyHandler;
         }
 
@@ -36,7 +37,7 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
         {
             if (chargeLinksAcceptedEvent == null) throw new ArgumentNullException(nameof(chargeLinksAcceptedEvent));
 
-            await _chargeLinkDataAvailableNotifier.NotifyAsync(chargeLinksAcceptedEvent);
+            await _availableDataNotifer.NotifyAsync(chargeLinksAcceptedEvent);
             await _chargeLinkDataAvailableReplyHandler.ReplyAsync(chargeLinksAcceptedEvent);
         }
     }
