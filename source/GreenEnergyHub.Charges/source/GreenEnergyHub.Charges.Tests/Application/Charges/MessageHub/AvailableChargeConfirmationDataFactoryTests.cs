@@ -39,13 +39,10 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.MessageHub
             AvailableChargeConfirmationDataFactory sut)
         {
             // Arrange
-            messageMetaDataContext.Setup(
-                    m => m.RequestDataTime)
-                .Returns(now);
+            messageMetaDataContext.Setup(m => m.RequestDataTime).Returns(now);
 
             // Act
-            var actualList =
-                await sut.CreateAsync(acceptedEvent);
+            var actualList = await sut.CreateAsync(acceptedEvent);
 
             // Assert
             actualList.Should().ContainSingle();
