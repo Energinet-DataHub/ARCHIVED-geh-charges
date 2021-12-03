@@ -17,32 +17,26 @@ using System;
 namespace Energinet.Charges.Contracts
 {
     /// <summary>
-    /// TODO.
+    /// Represents a Charge Link
     /// </summary>
+    /// <param name="ChargeType">The type of charge; tariff, fee or subscription</param>
+    /// <param name="ChargeId">A charge identifier provided by the market participant. Combined with charge owner and charge type it becomes unique</param>
+    /// <param name="ChargeName">Charge name provided by the market participant.</param>
+    /// <param name="ChargeOwnerId">A charge owner identification, e.g. the market participant's GLN or EIC number</param>
+    /// <param name="ChargeOwnerName">The market participant's company name</param>
+    /// <param name="TaxIndicator">Indicates whether a tariff is considered a tax or not</param>
+    /// <param name="TransparentInvoicing">Indicates whether the charge owner wants the charge to be displayed on the customer invoice</param>
+    /// <param name="Factor">Also known as quantity</param>
+    /// <param name="StartDateTimeUtc">The charge link's start date time in UTC</param>
+    /// <param name="EndDateTimeUtc">The charge link's end date time in UTC</param>
     public record ChargeLinkDto(
-
-        // The type of charge; tariff, fee or subscription
         ChargeType ChargeType,
-
-        // A charge identifier provided by the market participant. Combined with charge owner and charge type it becomes unique
         string ChargeId,
-
-        // Charge name provided by the market participant.
         string ChargeName,
-
-        // A charge owner identification, e.g. the market participant's GLN or EIC number
         string ChargeOwnerId,
-
-        // The market participant's company name
         string ChargeOwnerName,
-
-        // Indicates whether a tariff is considered a tax or not
         bool TaxIndicator,
-
-        // Indicates whether the charge owner wants the charge to be displayed on the customer invoice
         bool TransparentInvoicing,
-
-        // Also known as quantity
         int Factor,
         DateTime StartDateTimeUtc,
         DateTime? EndDateTimeUtc);
