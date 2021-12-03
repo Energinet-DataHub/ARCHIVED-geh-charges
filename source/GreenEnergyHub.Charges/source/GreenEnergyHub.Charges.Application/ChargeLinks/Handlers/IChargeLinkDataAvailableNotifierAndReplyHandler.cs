@@ -15,7 +15,7 @@
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksAcceptedEvents;
 
-namespace GreenEnergyHub.Charges.Application.ChargeLinks.MessageHub
+namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
 {
     /// <summary>
     /// Contract for notifying the MessageHub that data about a charge link that has been created
@@ -27,7 +27,7 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.MessageHub
     /// entails replying back to the Metering Point domain once notifications related to default charge
     /// links have been created
     /// </summary>
-    public interface IChargeLinkDataAvailableNotifier
+    public interface IChargeLinkDataAvailableNotifierAndReplyHandler
     {
         Task NotifyAndReplyAsync(ChargeLinksAcceptedEvent chargeLinksAcceptedEvent);
     }

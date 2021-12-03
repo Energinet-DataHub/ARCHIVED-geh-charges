@@ -15,7 +15,10 @@
 using Energinet.DataHub.Core.Messaging.Protobuf;
 using GreenEnergyHub.Charges.Application.ChargeLinks.Handlers;
 using GreenEnergyHub.Charges.Application.ChargeLinks.MessageHub;
+using GreenEnergyHub.Charges.Application.MessageHub;
 using GreenEnergyHub.Charges.Domain.AvailableChargeLinksData;
+using GreenEnergyHub.Charges.Domain.AvailableData;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksAcceptedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.DefaultChargeLinksDataAvailableNotifiedEvents;
 using GreenEnergyHub.Charges.FunctionHost.Common;
 using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandAccepted;
@@ -36,8 +39,20 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
             serviceCollection.AddMessagingProtobuf().AddMessageDispatcher<DefaultChargeLinksCreatedEvent>(
                 EnvironmentHelper.GetEnv(EnvironmentSettingNames.DomainEventSenderConnectionString),
                 EnvironmentHelper.GetEnv(EnvironmentSettingNames.DefaultChargeLinksDataAvailableNotifiedTopicName));
-            serviceCollection.AddScoped<IChargeLinkDataAvailableNotifier, ChargeLinkDataAvailableNotifier>();
-            serviceCollection.AddScoped<IAvailableChargeLinksDataFactory, AvailableChargeLinksDataFactory>();
+
+            serviceCollection.AddScoped<IChargeLinkDataAvailableNotifierAndReplyHandler, ChargeLinkDataAvailableNotifierAndReplyHandler>();
+            serviceCollection.AddScoped<IChargeLinkDataAvailableReplyHandler, ChargeLinkDataAvailableReplyHandler>();
+            serviceCollection.AddScoped<IAvailableDataNotifier<AvailableChargeLinksData, ChargeLinksAcceptedEvent>,
+                AvailableDataNotifier<AvailableChargeLinksData, ChargeLinksAcceptedEvent>>();
+            serviceCollection
+                .AddScoped<IAvailableDataFactory<AvailableChargeLinksData, ChargeLinksAcceptedEvent>,
+                    AvailableChargeLinksDataFactory>();
+            serviceCollection
+                .AddScoped<IAvailableDataNotificationFactory<AvailableChargeLinksData>,
+                    AvailableDataNotificationFactory<AvailableChargeLinksData>>();
+            serviceCollection
+                .AddScoped<BundleSpecification<AvailableChargeLinksData, ChargeLinksAcceptedEvent>,
+                    ChargeLinksBundleSpecification>();
         }
     }
 }

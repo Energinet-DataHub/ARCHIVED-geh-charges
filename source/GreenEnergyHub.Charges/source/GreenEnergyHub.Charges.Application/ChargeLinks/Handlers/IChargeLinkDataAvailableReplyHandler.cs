@@ -12,22 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
-using System.Collections.Generic;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands;
-using GreenEnergyHub.Charges.Domain.MarketParticipants;
-using NodaTime;
+using System.Threading.Tasks;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksAcceptedEvents;
 
-namespace GreenEnergyHub.Charges.Domain.AvailableChargeLinksData
+namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
 {
-    public interface IAvailableChargeLinksDataFactory
+    public interface IChargeLinkDataAvailableReplyHandler
     {
-        AvailableChargeLinksData CreateAvailableChargeLinksData(
-            ChargeLinkDto chargeLinkDto,
-            MarketParticipant recipient,
-            BusinessReasonCode businessReasonCode,
-            string meteringPointId,
-            Instant requestDateTime,
-            Guid messageHubId);
+        Task ReplyAsync(ChargeLinksAcceptedEvent chargeLinksAcceptedEvent);
     }
 }

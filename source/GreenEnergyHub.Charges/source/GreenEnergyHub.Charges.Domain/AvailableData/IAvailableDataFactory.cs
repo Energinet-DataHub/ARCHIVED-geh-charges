@@ -12,18 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Collections.Generic;
 using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandAcceptedEvents;
 
-namespace GreenEnergyHub.Charges.Application.Charges.MessageHub
+namespace GreenEnergyHub.Charges.Domain.AvailableData
 {
-    /// <summary>
-    /// Contract for notifying the MessageHub that data about a charge that has been created
-    /// is available.
-    /// This is the RSM-034 CIM XML 'NotifyPriceList'.
-    /// </summary>
-    public interface IChargeDataAvailableNotifier
+    public interface IAvailableDataFactory<TAvailableData, TInput>
+        where TAvailableData : AvailableDataBase
     {
-        Task NotifyAsync(ChargeCommandAcceptedEvent chargeCommandAcceptedEvent);
+        Task<IReadOnlyList<TAvailableData>> CreateAsync(TInput input);
     }
 }
