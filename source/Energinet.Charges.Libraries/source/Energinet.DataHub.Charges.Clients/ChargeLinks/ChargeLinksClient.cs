@@ -46,7 +46,6 @@ namespace Energinet.DataHub.Charges.Clients
                 return list;
 
             var content = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
-            //var result = JsonSerializer.Deserialize<List<ChargeLinkDto>>(content, new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase });
             var result = JsonSerializer.Deserialize<List<ChargeLinkDto>>(content);
 
             if (result != null)
