@@ -83,5 +83,33 @@ namespace GreenEnergyHub.Charges.Tests.Application.MessageHub
                     It.IsAny<DataAvailableNotificationDto>()),
                 Times.Exactly(notifications.Count));
         }
+
+        [Theory]
+        [InlineAutoMoqData]
+        public async Task NotifyAsync_WhenNoAvailableData_DoesNotProceed(
+            [Frozen] Mock<IAvailableDataFactory<AvailableDataBase, object>> availableDataFactory,
+            [Frozen] Mock<IAvailableDataRepository<AvailableDataBase>> availableDataRepository,
+            object input,
+            AvailableDataNotifier<AvailableDataBase, object> sut)
+        {
+            // Arrange
+            var emptyList = new List<AvailableDataBase>();
+            availableDataFactory.Setup(
+                    f => f.CreateAsync(input))
+                .ReturnsAsync(emptyList);
+
+            // Act
+            await sut.NotifyAsync(input);
+
+            // Assert
+            availableDataFactory.Verify(
+                f => f.CreateAsync(input),
+                Times.Once);
+
+            availableDataRepository.Verify(
+                r => r.StoreAsync(
+                    It.IsAny<IEnumerable<AvailableDataBase>>()),
+                Times.Never);
+        }
     }
 }

@@ -51,6 +51,9 @@ namespace GreenEnergyHub.Charges.Application.MessageHub
         {
             var availableData = await CreateAvailableDataAsync(input);
 
+            if (availableData.Count == 0)
+                return;
+
             await StoreAvailableDataForLaterBundlingAsync(availableData).ConfigureAwait(false);
 
             await NotifyMessageHubOfAvailableDataAsync(availableData).ConfigureAwait(false);
