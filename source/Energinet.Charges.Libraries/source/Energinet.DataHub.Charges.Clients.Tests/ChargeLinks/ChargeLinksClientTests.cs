@@ -14,6 +14,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Text.Json;
@@ -44,7 +45,7 @@ namespace Energinet.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.Charge
             chargeLinks.Add(chargeLinkDto);
             var responseContent = JsonSerializer.Serialize<IList<ChargeLinkDto>>(chargeLinks);
 
-            var mockHttpMessageHandler = GetMockHttpMessageHandler(responseContent);
+            var mockHttpMessageHandler = GetMockHttpMessageHandler(HttpStatusCode.OK, responseContent);
             var httpClient = new HttpClient(mockHttpMessageHandler.Object)
             {
                 BaseAddress = new Uri(BaseUrl),
@@ -68,7 +69,24 @@ namespace Energinet.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.Charge
                 ItExpr.IsAny<CancellationToken>());
         }
 
-        private static Mock<HttpMessageHandler> GetMockHttpMessageHandler(string responseContent)
+        [Fact]
+        public async Task GetAsync_WhenResponseIsNotFound_ReturnsEmptyList()
+        {
+            var mockHttpMessageHandler = GetMockHttpMessageHandler(HttpStatusCode.NotFound, string.Empty);
+            var httpClient = new HttpClient(mockHttpMessageHandler.Object)
+            {
+                BaseAddress = new Uri(BaseUrl),
+            };
+
+            var sut = ChargeLinksClientFactory.CreateClient(httpClient);
+
+            var result = await sut.GetAsync(MeteringPointId).ConfigureAwait(false);
+
+            result.Should().BeOfType<List<ChargeLinkDto>>();
+            result.Should().BeEmpty();
+        }
+
+        private static Mock<HttpMessageHandler> GetMockHttpMessageHandler(HttpStatusCode statusCode, string responseContent)
         {
             var mockHttpMessageHandler = new Mock<HttpMessageHandler>(MockBehavior.Strict);
             mockHttpMessageHandler
@@ -79,7 +97,7 @@ namespace Energinet.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.Charge
                     ItExpr.IsAny<CancellationToken>())
                 .ReturnsAsync(new HttpResponseMessage()
                 {
-                    StatusCode = System.Net.HttpStatusCode.OK,
+                    StatusCode = statusCode,
                     Content = new StringContent(responseContent, Encoding.UTF8, "application/json"),
                 })
                 .Verifiable();
