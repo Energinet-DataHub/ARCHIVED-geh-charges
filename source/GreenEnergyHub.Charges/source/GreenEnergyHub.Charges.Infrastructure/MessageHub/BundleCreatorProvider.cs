@@ -44,6 +44,8 @@ namespace GreenEnergyHub.Charges.Infrastructure.MessageHub
                 BundleType.ChargeDataAvailable => _bundleCreators[typeof(BundleCreator<AvailableChargeData>)],
                 // RSM-033 CIM XML 'ConfirmRequestChangeOfPriceList' confirmations
                 BundleType.ChargeConfirmationDataAvailable => _bundleCreators[typeof(BundleCreator<AvailableChargeReceiptData>)],
+                // RSM-033 CIM XML 'RejectRequestChangeOfPriceList' rejections
+                BundleType.ChargeRejectionDataAvailable => _bundleCreators[typeof(BundleCreator<AvailableChargeReceiptData>)],
                 // RSM-030 CIM XML 'ConfirmRequestChangeBillingMasterData' confirmations
                 BundleType.ChargeLinkConfirmationDataAvailable => _bundleCreators[typeof(BundleCreator<AvailableChargeLinkReceiptData>)],
                 // RSM-031 CIM XML 'NotifyBillingMasterData' requests
