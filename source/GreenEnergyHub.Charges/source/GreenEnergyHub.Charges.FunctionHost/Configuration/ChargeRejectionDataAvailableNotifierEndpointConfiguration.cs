@@ -12,28 +12,35 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.Core.Messaging.Protobuf;
-using GreenEnergyHub.Charges.Application.Charges.Acknowledgement;
-using GreenEnergyHub.Charges.FunctionHost.Common;
-using GreenEnergyHub.Charges.Infrastructure.Integration.ChargeRejection;
+using GreenEnergyHub.Charges.Application.Charges.MessageHub;
+using GreenEnergyHub.Charges.Application.MessageHub;
+using GreenEnergyHub.Charges.Domain.AvailableChargeReceiptData;
+using GreenEnergyHub.Charges.Domain.AvailableData;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandRejectedEvents;
 using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeCommandRejected;
 using GreenEnergyHub.Charges.Infrastructure.Messaging.Registration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace GreenEnergyHub.Charges.FunctionHost.Configuration
 {
-    internal static class ChargeRejectionSenderConfiguration
+    internal static class ChargeRejectionDataAvailableNotifierEndpointConfiguration
     {
         internal static void ConfigureServices(IServiceCollection serviceCollection)
         {
-            serviceCollection.AddScoped<IChargeRejectionSender, ChargeRejectionSender>();
-
             serviceCollection.ReceiveProtobufMessage<ChargeCommandRejectedContract>(
                 configuration => configuration.WithParser(() => ChargeCommandRejectedContract.Parser));
-            serviceCollection.SendProtobuf<ChargeRejectionContract>();
-            serviceCollection.AddMessagingProtobuf().AddMessageDispatcher<ChargeRejection>(
-                EnvironmentHelper.GetEnv(EnvironmentSettingNames.DomainEventSenderConnectionString),
-                EnvironmentHelper.GetEnv(EnvironmentSettingNames.PostOfficeTopicName));
+            serviceCollection
+                .AddScoped<IAvailableDataNotifier<AvailableChargeReceiptData, ChargeCommandRejectedEvent>,
+                    AvailableDataNotifier<AvailableChargeReceiptData, ChargeCommandRejectedEvent>>();
+            serviceCollection
+                .AddScoped<IAvailableDataFactory<AvailableChargeReceiptData, ChargeCommandRejectedEvent>,
+                    AvailableChargeRejectionDataFactory>();
+            serviceCollection
+                .AddScoped<IAvailableDataNotificationFactory<AvailableChargeReceiptData>,
+                    AvailableDataNotificationFactory<AvailableChargeReceiptData>>();
+            serviceCollection
+                .AddScoped<BundleSpecification<AvailableChargeReceiptData, ChargeCommandRejectedEvent>,
+                    ChargeRejectionBundleSpecification>();
         }
     }
 }
