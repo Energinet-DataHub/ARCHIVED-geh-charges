@@ -22,7 +22,7 @@ namespace GreenEnergyHub.Charges.Tests.TestFiles
         public const string WorstCaseChargeWithPoints =
             "TestFiles/ValidCreateTariffCommandMaxDocumentSizeWithPoints.xml";
 
-        public const string WorstCaseChargeConfirmation =
-            "TestFiles/SingleChargeConfirmationWorstCase.blob";
+        public const string WorstCaseChargeReceipt =
+            "TestFiles/SingleChargeReceiptWorstCase.blob";
     }
 }

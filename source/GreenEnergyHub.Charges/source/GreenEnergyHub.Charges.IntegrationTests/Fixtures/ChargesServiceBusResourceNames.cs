@@ -66,9 +66,5 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures
         public const string ChargeLinkAcceptedEventReplierSubscriptionName = "chargelinkaccepted-sub-replier";
         public const string DefaultChargeLinksDataAvailableNotifiedTopicKey = "default-charge-link-available";
         public const string DefaultChargeLinksDataAvailableNotifiedSubscriptionName = "default-charge-link-available-notified";
-
-        // Integration, post office
-        public const string PostOfficeTopicKey = "post-office";
-        public const string PostOfficeSubscriptionName = "defaultSubscription";
     }
 }
