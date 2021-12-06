@@ -1,5 +1,9 @@
 # Energinet.DataHub.Charges.Clients Release notes
 
+## Version 1.0.15
+
+Added `ChargeLinksClient`
+
 ## Version 1.0.14
 
 Updated NuGet dependencies and removed deprecated FxCopAnalyzers
