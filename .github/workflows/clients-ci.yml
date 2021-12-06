@@ -33,9 +33,7 @@ jobs:
           paths: '[
             "source/Energinet.Charges.Libraries/**",
             "source/GreenEnergyHub.Charges/source/GreenEnergyHub.Charges.TestCore/**",
-            ".github/workflows/clients-ci.yml",
-            ".github/actions/dotnet-build-and-test/**",
-            ".github/actions/azure-core-tools-install/**"
+            ".github/workflows/clients-ci.yml"
           ]'
 
   validate_build_clients:
