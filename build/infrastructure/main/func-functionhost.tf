@@ -65,7 +65,6 @@ module "func_functionhost" {
     INTEGRATIONEVENT_MANAGER_CONNECTION_STRING                      = data.azurerm_key_vault_secret.sb_domain_relay_manage_connection_string.value
 
     # Message Hub
-    POST_OFFICE_TOPIC_NAME                                          = module.sbt_post_office.name
     MESSAGEHUB_STORAGE_CONNECTION_STRING                            = data.azurerm_key_vault_secret.messagehub_storage_connection_string.value
     MESSAGEHUB_STORAGE_CONTAINER                                    = data.azurerm_key_vault_secret.messagehub_storage_container.value
     MESSAGEHUB_DATAAVAILABLE_QUEUE                                  = "dataavailable"
