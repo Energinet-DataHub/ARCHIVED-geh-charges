@@ -158,7 +158,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.ChargeBundle.Cim
                             cimNamespace + CimChargeConstants.PeriodResolution,
                             ResolutionMapper.Map(charge.Resolution)),
                         GetTimeInterval(cimNamespace, charge),
-                        charge.Points.Select(p => GetPoint(cimNamespace, p))));
+                        charge.Points.OrderBy(p => p.Position).Select(p => GetPoint(cimNamespace, p))));
             }
 
             return seriesPeriod;
