@@ -64,7 +64,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi
             // Act
             var response = await client.GetAsync($"{BaseUrl}{meteringPointId}");
             var jsonString = await response.Content.ReadAsStringAsync();
-            var result = JsonSerializer.Deserialize<List<ChargeLinkDto>>(jsonString, new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase });
+            var result = JsonSerializer.Deserialize<List<ChargeLinkDto>>(jsonString, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
 
             // Assert
             result![0].ChargeId.Should().Be(expectedChargeId);
