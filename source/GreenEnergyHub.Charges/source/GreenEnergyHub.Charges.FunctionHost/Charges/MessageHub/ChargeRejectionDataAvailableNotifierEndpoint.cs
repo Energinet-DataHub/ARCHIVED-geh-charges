@@ -14,26 +14,27 @@
 
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Application.Charges.Acknowledgement;
+using GreenEnergyHub.Charges.Application.MessageHub;
+using GreenEnergyHub.Charges.Domain.AvailableChargeReceiptData;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandRejectedEvents;
 using GreenEnergyHub.Charges.FunctionHost.Common;
 using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeCommandRejected;
 using GreenEnergyHub.Charges.Infrastructure.Messaging;
 using Microsoft.Azure.Functions.Worker;
 
-namespace GreenEnergyHub.Charges.FunctionHost.Charges
+namespace GreenEnergyHub.Charges.FunctionHost.Charges.MessageHub
 {
-    public class ChargeRejectionSenderEndpoint
+    public class ChargeRejectionDataAvailableNotifierEndpoint
     {
-        public const string FunctionName = nameof(ChargeRejectionSenderEndpoint);
-        private readonly IChargeRejectionSender _chargeRejectionSender;
+        public const string FunctionName = nameof(ChargeRejectionDataAvailableNotifierEndpoint);
+        private readonly IAvailableDataNotifier<AvailableChargeReceiptData, ChargeCommandRejectedEvent> _availableDataNotifier;
         private readonly MessageExtractor<ChargeCommandRejectedContract> _messageExtractor;
 
-        public ChargeRejectionSenderEndpoint(
-            IChargeRejectionSender chargeRejectionSender,
+        public ChargeRejectionDataAvailableNotifierEndpoint(
+            IAvailableDataNotifier<AvailableChargeReceiptData, ChargeCommandRejectedEvent> availableDataNotifier,
             MessageExtractor<ChargeCommandRejectedContract> messageExtractor)
         {
-            _chargeRejectionSender = chargeRejectionSender;
+            _availableDataNotifier = availableDataNotifier;
             _messageExtractor = messageExtractor;
         }
 
@@ -46,7 +47,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Charges
             [NotNull] byte[] message)
         {
             var rejectedEvent = (ChargeCommandRejectedEvent)await _messageExtractor.ExtractAsync(message).ConfigureAwait(false);
-            await _chargeRejectionSender.HandleAsync(rejectedEvent).ConfigureAwait(false);
+            await _availableDataNotifier.NotifyAsync(rejectedEvent).ConfigureAwait(false);
         }
     }
 }
