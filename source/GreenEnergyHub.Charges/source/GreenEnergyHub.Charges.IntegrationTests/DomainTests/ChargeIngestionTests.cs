@@ -50,7 +50,6 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             {
                 Fixture.ChargeCreatedListener.Reset();
                 Fixture.ChargePricesUpdatedListener.Reset();
-                Fixture.PostOfficeListener.ResetMessageHandlersAndReceivedMessages();
                 Fixture.MessageHubMock.Clear();
                 return Task.CompletedTask;
             }

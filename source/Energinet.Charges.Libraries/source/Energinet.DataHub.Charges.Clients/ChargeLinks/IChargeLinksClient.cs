@@ -12,13 +12,22 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Collections.Generic;
 using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandRejectedEvents;
+using Energinet.Charges.Contracts;
 
-namespace GreenEnergyHub.Charges.Application.Charges.Acknowledgement
+namespace Energinet.DataHub.Charges.Clients
 {
-    public interface IChargeRejectionSender
+    /// <summary>
+    /// Charge Links Client Interface
+    /// </summary>
+    public interface IChargeLinksClient
     {
-        Task HandleAsync(ChargeCommandRejectedEvent rejectedEvent);
+        /// <summary>
+        /// Gets all charge links data for a given metering point.
+        /// </summary>
+        /// <param name="meteringPointId">The 18-digits metering point identifier used by the Danish version of Green Energy Hub.</param>
+        /// <returns>A collection of Charge Link DTOs</returns>
+        public Task<IList<ChargeLinkDto>> GetAsync(string meteringPointId);
     }
 }

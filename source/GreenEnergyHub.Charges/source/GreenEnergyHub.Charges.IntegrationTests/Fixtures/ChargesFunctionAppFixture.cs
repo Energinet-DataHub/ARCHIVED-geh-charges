@@ -51,9 +51,6 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures
         public ServiceBusTestListener? ChargePricesUpdatedListener { get; private set; }
 
         [NotNull]
-        public ServiceBusListenerMock? PostOfficeListener { get; private set; }
-
-        [NotNull]
         public MessageHubSimulation? MessageHubMock { get; private set; }
 
         [NotNull]
@@ -105,8 +102,6 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures
             Environment.SetEnvironmentVariable(EnvironmentSettingNames.DataHubSenderConnectionString, ServiceBusResourceProvider.ConnectionString);
             Environment.SetEnvironmentVariable(EnvironmentSettingNames.DataHubListenerConnectionString, ServiceBusResourceProvider.ConnectionString);
             Environment.SetEnvironmentVariable(EnvironmentSettingNames.DataHubManagerConnectionString, ServiceBusResourceProvider.ConnectionString);
-
-            await InitializePostOfficeAsync();
 
             var chargeLinkAcceptedTopic = await ServiceBusResourceProvider
                 .BuildTopic(ChargesServiceBusResourceNames.ChargeLinkAcceptedTopicKey).SetEnvironmentVariableToTopicName(EnvironmentSettingNames.ChargeLinkAcceptedTopicName)
@@ -209,23 +204,10 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures
             await MessageHubMock.DisposeAsync();
 
             // => Service Bus
-            await PostOfficeListener.DisposeAsync();
             await ServiceBusResourceProvider.DisposeAsync();
 
             // => Database
             await DatabaseManager.DeleteDatabaseAsync();
-        }
-
-        private async Task InitializePostOfficeAsync()
-        {
-            var postOfficeTopic = await ServiceBusResourceProvider
-                .BuildTopic(ChargesServiceBusResourceNames.PostOfficeTopicKey)
-                .SetEnvironmentVariableToTopicName(EnvironmentSettingNames.PostOfficeTopicName)
-                .AddSubscription(ChargesServiceBusResourceNames.PostOfficeSubscriptionName)
-                .CreateAsync();
-
-            PostOfficeListener = new ServiceBusListenerMock(ServiceBusResourceProvider.ConnectionString, TestLogger);
-            await PostOfficeListener.AddTopicSubscriptionListenerAsync(postOfficeTopic.Name, ChargesServiceBusResourceNames.PostOfficeSubscriptionName);
         }
 
         private async Task InitializeMessageHubAsync()
