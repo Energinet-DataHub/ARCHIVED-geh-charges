@@ -87,11 +87,5 @@ namespace GreenEnergyHub.Charges.FunctionHost.Common
         public const string ChargeLinkAcceptedSubDataAvailableNotifier = "CHARGELINKACCEPTED_SUB_DATAAVAILABLENOTIFIER";
         public const string ChargeLinkAcceptedSubEventPublisher = "CHARGELINKACCEPTED_SUB_EVENTPUBLISHER";
         public const string ChargeLinkAcceptedReplier = "CHARGELINKACCEPTED_SUB_REPLIER";
-
-        /// <summary>
-        /// Deprecated: This is from an old implementation where we mimicked sending to the post office
-        /// by sending to a topic we provisioned ourselves in the charges domain.
-        /// </summary>
-        public const string PostOfficeTopicName = "POST_OFFICE_TOPIC_NAME";
     }
 }

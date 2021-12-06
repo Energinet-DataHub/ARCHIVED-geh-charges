@@ -49,7 +49,7 @@ namespace GreenEnergyHub.Charges.FunctionHost
             ChargeCommandAcceptedReceiverConfiguration.ConfigureServices(serviceCollection);
             ChargeCommandReceiverConfiguration.ConfigureServices(serviceCollection);
             ChargeConfirmationDataAvailableNotifierEndpointConfiguration.ConfigureServices(serviceCollection);
-            ChargeRejectionSenderConfiguration.ConfigureServices(serviceCollection);
+            ChargeRejectionDataAvailableNotifierEndpointConfiguration.ConfigureServices(serviceCollection);
             ChargeDataAvailableNotifierConfiguration.ConfigureServices(serviceCollection);
 
             // Charge links

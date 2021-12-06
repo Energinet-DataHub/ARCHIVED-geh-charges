@@ -96,8 +96,8 @@ limitations under the License.
       <None Include="TestFiles\SingleChargeLinkConfirmationCimSerializerWorstCase.blob">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
-      <None Update="TestFiles\SingleChargeConfirmationWorstCase.blob">
+      <None Update="TestFiles\SingleChargeReceiptWorstCase.blob">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </None>      
+      </None>
     </ItemGroup>
 </Project>

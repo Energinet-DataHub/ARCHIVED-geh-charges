@@ -71,8 +71,5 @@
     "CREATE_LINK_MESSAGES_REQUEST_QUEUE_NAME": "create-link-messages-request",
     "DEFAULT_CHARGE_LINKS_DATA_AVAILABLE_NOTIFIED_TOPIC_NAME": "default-charge-link-available",
     "DEFAULT_CHARGE_LINKS_DATA_AVAILABLE_NOTIFIED_SUBSCRIPTION_NAME": "default-charge-link-available-notified",
-
-    // Internal, post office
-    "POST_OFFICE_TOPIC_NAME": "post-office"
   }
 }
