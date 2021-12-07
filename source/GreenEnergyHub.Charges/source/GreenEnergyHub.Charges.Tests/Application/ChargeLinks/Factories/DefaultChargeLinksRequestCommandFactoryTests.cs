@@ -34,7 +34,7 @@ using Xunit.Categories;
 namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Factories
 {
     [UnitTest]
-    public class ChargeLinkCommandFactoryTests
+    public class DefaultChargeLinksRequestCommandFactoryTests
     {
         [Theory]
         [InlineAutoMoqData]
@@ -48,7 +48,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Factories
             Guid chargeId,
             MeteringPoint meteringPoint,
             CreateLinksRequest createLinksRequest,
-            ChargeLinksCommandFactory sut)
+            DefaultChargeLinksRequestCommandFactory sut)
         {
             // Arrange
             var defaultChargeLink = new DefaultChargeLink(
