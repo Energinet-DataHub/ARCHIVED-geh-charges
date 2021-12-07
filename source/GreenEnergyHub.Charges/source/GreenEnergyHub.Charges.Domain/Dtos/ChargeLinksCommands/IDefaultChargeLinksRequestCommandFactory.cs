@@ -20,7 +20,7 @@ using GreenEnergyHub.Charges.Domain.Dtos.CreateLinksRequests;
 
 namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands
 {
-    public interface IChargeLinksCommandFactory
+    public interface IDefaultChargeLinksRequestCommandFactory
     {
         Task<ChargeLinksCommand> CreateAsync(
             [NotNull] CreateLinksRequest createLinksRequest,
