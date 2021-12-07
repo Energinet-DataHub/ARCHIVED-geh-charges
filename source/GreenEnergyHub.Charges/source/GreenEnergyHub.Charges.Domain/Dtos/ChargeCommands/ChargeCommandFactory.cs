@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Diagnostics.CodeAnalysis;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 
@@ -20,27 +19,25 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands
 {
     public class ChargeCommandFactory : IChargeCommandFactory
     {
-        public ChargeCommand CreateFromCharge([NotNull] Charge charge, DocumentDto document)
+        public ChargeCommand CreateFromCharge(Charge charge, DocumentDto document)
         {
             var chargeCommand = new ChargeCommand
             {
                 Document = document,
-                ChargeOperation = new ChargeOperation
-                {
-                    Id = charge.ChargeOperationId,
-                    Type = charge.Type,
-                    ChargeId = charge.SenderProvidedChargeId,
-                    ChargeName = charge.Name,
-                    ChargeDescription = charge.Description,
-                    ChargeOwner = charge.Owner,
-                    Resolution = charge.Resolution,
-                    TaxIndicator = charge.TaxIndicator,
-                    TransparentInvoicing = charge.TransparentInvoicing,
-                    VatClassification = charge.VatClassification,
-                    StartDateTime = charge.StartDateTime,
-                    EndDateTime = charge.EndDateTime,
-                    Points = charge.Points,
-                },
+                ChargeOperation = new ChargeOperation(
+                    charge.ChargeOperationId,
+                    charge.Type,
+                    charge.SenderProvidedChargeId,
+                    charge.Name,
+                    charge.Description,
+                    charge.Owner,
+                    charge.Resolution,
+                    charge.TaxIndicator,
+                    charge.TransparentInvoicing,
+                    charge.VatClassification,
+                    charge.StartDateTime,
+                    charge.EndDateTime,
+                    charge.Points),
             };
 
             return chargeCommand;

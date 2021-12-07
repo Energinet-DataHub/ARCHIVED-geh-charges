@@ -15,8 +15,6 @@
 using System.Collections.Generic;
 using NodaTime;
 
-#pragma warning disable 8618
-
 namespace GreenEnergyHub.Charges.Domain.Charges
 {
     // Non-nullable member is uninitialized is ignored
@@ -28,63 +26,88 @@ namespace GreenEnergyHub.Charges.Domain.Charges
     /// </summary>
     public class ChargeOperation
     {
-        public ChargeOperation()
+        public ChargeOperation(
+            string chargeOperationId,
+            ChargeType chargeType,
+            string senderProvidedChargeId,
+            string chargeName,
+            string description,
+            string chargeOwner,
+            Resolution chargeResolution,
+            bool taxIndicator,
+            bool transparentInvoicing,
+            VatClassification vatClassification,
+            Instant startDateTime,
+            Instant endDateTime,
+            List<Point> points)
         {
-            Points = new List<Point>();
+            Id = chargeOperationId;
+            Type = chargeType;
+            ChargeId = senderProvidedChargeId;
+            ChargeName = chargeName;
+            ChargeDescription = description;
+            ChargeOwner = chargeOwner;
+            Resolution = chargeResolution;
+            TaxIndicator = taxIndicator;
+            TransparentInvoicing = transparentInvoicing;
+            VatClassification = vatClassification;
+            StartDateTime = startDateTime;
+            EndDateTime = endDateTime;
+            Points = points;
         }
 
         /// <summary>
         /// Contains a unique ID for the specific Charge Event, provided by the sender.
         /// </summary>
-        public string Id { get; set; }
+        public string Id { get; init; }
 
         /// <summary>
         /// Unique ID of a charge (Note, unique per market participants).
         /// Example: EA-001
         /// </summary>
-        public string ChargeId { get; set; }
+        public string ChargeId { get; init; }
 
-        public ChargeType Type { get; set; }
+        public ChargeType Type { get; init; }
 
         /// <summary>
         /// The charge name
         /// Example: "Elafgift"
         /// </summary>
-        public string ChargeName { get; set; }
+        public string ChargeName { get; init; }
 
-        public string ChargeDescription { get; set; }
+        public string ChargeDescription { get; init; }
 
         /// <summary>
         /// Valid from, of a charge price list. Also known as Effective Date.
         /// </summary>
-        public Instant StartDateTime { get; set; }
+        public Instant StartDateTime { get; init; }
 
         /// <summary>
         /// Valid to, of a charge price list.
         /// </summary>
-        public Instant? EndDateTime { get; set; }
+        public Instant? EndDateTime { get; init; }
 
-        public VatClassification VatClassification { get; set; }
+        public VatClassification VatClassification { get; init; }
 
         /// <summary>
         /// In Denmark the Energy Supplier invoices the customer, including the charges from the Grid Access Provider and the System Operator.
         /// This boolean can be use to indicate that a charge must be visible on the invoice sent to the customer.
         /// </summary>
-        public bool TransparentInvoicing { get; set; }
+        public bool TransparentInvoicing { get; init; }
 
         /// <summary>
         /// Indicates whether the Charge is tax or not.
         /// </summary>
-        public bool TaxIndicator { get; set; }
+        public bool TaxIndicator { get; init; }
 
         /// <summary>
         ///  Charge Owner, e.g. the GLN or EIC identification number.
         /// </summary>
-        public string ChargeOwner { get; set; }
+        public string ChargeOwner { get; init; }
 
-        public Resolution Resolution { get; set; }
+        public Resolution Resolution { get; init; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2227", Justification = "JSON deserialization")]
-        public List<Point> Points { get; set; }
+        public List<Point> Points { get; init; }
     }
 }

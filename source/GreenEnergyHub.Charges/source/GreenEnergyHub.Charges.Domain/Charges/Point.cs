@@ -21,6 +21,13 @@ namespace GreenEnergyHub.Charges.Domain.Charges
     /// </summary>
     public class Point
     {
+        public Point(int position, decimal price, Instant time)
+        {
+            Position = position;
+            Price = price;
+            Time = time;
+        }
+
         /// <summary>
         /// The position of the price in the price list it was delivered.
         /// </summary>

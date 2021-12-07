@@ -14,7 +14,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Infrastructure.Context.Model;
@@ -48,14 +47,13 @@ namespace GreenEnergyHub.Charges.Infrastructure.Context.Mapping
                 (Resolution)charge.Resolution,
                 Convert.ToBoolean(charge.TransparentInvoicing),
                 Convert.ToBoolean(charge.TaxIndicator),
-                charge.ChargePrices.Select(x => new Point
-                {
-                    Position = 0, Price = x.Price, Time = Instant.FromDateTimeUtc(x.Time.ToUniversalTime()),
-                }).ToList());
+                charge.ChargePrices
+                    .Select(x => new Point(0, x.Price, Instant.FromDateTimeUtc(x.Time.ToUniversalTime())))
+                    .ToList());
         }
 
         public static Charge MapDomainChargeToCharge(
-            [NotNull] Domain.Charges.Charge charge,
+            Domain.Charges.Charge charge,
             MarketParticipant marketParticipant,
             Instant writeDateTime)
         {
@@ -85,7 +83,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Context.Mapping
         }
 
         private static ChargeOperation MapToChargeOperation(
-            [NotNull] Domain.Charges.Charge charge, Instant writeDateTime)
+            Domain.Charges.Charge charge, Instant writeDateTime)
         {
             return new ChargeOperation
             {
@@ -95,7 +93,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Context.Mapping
         }
 
         private static IEnumerable<ChargePrice> MapChargeToChargePrice(
-            [NotNull] Domain.Charges.Charge charge,
+            Domain.Charges.Charge charge,
             ChargeOperation chargeOperation)
         {
             return charge.Points.Select(point => new ChargePrice
@@ -107,7 +105,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Context.Mapping
         }
 
         private static ChargePeriodDetails MapChargeToChargePeriodDetails(
-            [NotNull] Domain.Charges.Charge charge,
+            Domain.Charges.Charge charge,
             ChargeOperation chargeOperation)
         {
             return new ChargePeriodDetails

@@ -13,7 +13,6 @@
 // limitations under the License.
 
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using Energinet.DataHub.Core.Messaging.MessageTypes.Common;
 using Energinet.DataHub.Core.Messaging.Protobuf;
 using Energinet.DataHub.Core.Messaging.Transport;
@@ -31,7 +30,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
 {
     public class ChargeCommandAcceptedInboundMapper : ProtobufInboundMapper<ChargeCommandAcceptedContract>
     {
-        protected override IInboundMessage Convert([NotNull]ChargeCommandAcceptedContract chargeCommandAcceptedContract)
+        protected override IInboundMessage Convert(ChargeCommandAcceptedContract chargeCommandAcceptedContract)
         {
             return new ChargeCommandAcceptedEvent(
                 chargeCommandAcceptedContract.PublishedTime.ToInstant(),
@@ -70,22 +69,20 @@ namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
 
         private static ChargeOperation ConvertChargeOperation(ChargeOperationContract chargeOperation)
         {
-            return new ChargeOperation
-            {
-                Id = chargeOperation.Id,
-                Resolution = (Resolution)chargeOperation.Resolution,
-                Type = (ChargeType)chargeOperation.Type,
-                ChargeDescription = chargeOperation.ChargeDescription,
-                ChargeId = chargeOperation.ChargeId,
-                ChargeName = chargeOperation.ChargeName,
-                ChargeOwner = chargeOperation.ChargeOwner,
-                TaxIndicator = chargeOperation.TaxIndicator,
-                TransparentInvoicing = chargeOperation.TransparentInvoicing,
-                VatClassification = (VatClassification)chargeOperation.VatClassification,
-                StartDateTime = chargeOperation.StartDateTime.ToInstant(),
-                EndDateTime = chargeOperation.EndDateTime.ToInstant(),
-                Points = ConvertPoints(chargeOperation.Points),
-            };
+            return new ChargeOperation(
+                chargeOperation.Id,
+                (ChargeType)chargeOperation.Type,
+                chargeOperation.ChargeId,
+                chargeOperation.ChargeName,
+                chargeOperation.ChargeDescription,
+                chargeOperation.ChargeOwner,
+                (Resolution)chargeOperation.Resolution,
+                chargeOperation.TaxIndicator,
+                chargeOperation.TransparentInvoicing,
+                (VatClassification)chargeOperation.VatClassification,
+                chargeOperation.StartDateTime.ToInstant(),
+                chargeOperation.EndDateTime.ToInstant(),
+                ConvertPoints(chargeOperation.Points));
         }
 
         private static List<Point> ConvertPoints(RepeatedField<PointContract> points)
@@ -94,12 +91,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
 
             foreach (var point in points)
             {
-                list.Add(new Point
-                {
-                    Position = point.Position,
-                    Price = (decimal)point.Price,
-                    Time = point.Time.ToInstant(),
-                });
+                list.Add(new Point(point.Position, (decimal)point.Price, point.Time.ToInstant()));
             }
 
             return list;

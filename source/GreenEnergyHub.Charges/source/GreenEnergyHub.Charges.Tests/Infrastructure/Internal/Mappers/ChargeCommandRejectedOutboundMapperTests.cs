@@ -14,7 +14,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandRejectedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
 using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeCommandRejected;
@@ -33,8 +32,8 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Internal.Mappers
         [Theory]
         [InlineAutoMoqData]
         public void Convert_WhenCalled_ShouldMapToProtobufWithCorrectValues(
-            [NotNull]ChargeCommand chargeCommand,
-            [NotNull] ChargeCommandRejectedOutboundMapper sut)
+            ChargeCommand chargeCommand,
+            ChargeCommandRejectedOutboundMapper sut)
         {
             var chargeCommandRejectedEvent = CreateChargeCommandRejectedEvent(chargeCommand);
             var result = (ChargeCommandRejectedContract)sut.Convert(chargeCommandRejectedEvent);
@@ -43,7 +42,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Internal.Mappers
 
         [Theory]
         [InlineAutoMoqData]
-        public void Convert_WhenCalledWithNull_ShouldThrow([NotNull] ChargeCommandRejectedOutboundMapper sut)
+        public void Convert_WhenCalledWithNull_ShouldThrow(ChargeCommandRejectedOutboundMapper sut)
         {
             Assert.Throws<InvalidOperationException>(() => sut.Convert(null!));
         }
@@ -59,7 +58,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Internal.Mappers
             return chargeCommandRejectedEvent;
         }
 
-        private static void UpdateInstantsToValidTimes([NotNull] ChargeCommandRejectedEvent chargeCommandRejectedEvent)
+        private static void UpdateInstantsToValidTimes(ChargeCommandRejectedEvent chargeCommandRejectedEvent)
         {
             chargeCommandRejectedEvent.Command.Document.RequestDate = Instant.FromUtc(2021, 7, 21, 11, 42, 25);
             chargeCommandRejectedEvent.Command.Document.CreatedDateTime = Instant.FromUtc(2021, 7, 21, 12, 14, 43);

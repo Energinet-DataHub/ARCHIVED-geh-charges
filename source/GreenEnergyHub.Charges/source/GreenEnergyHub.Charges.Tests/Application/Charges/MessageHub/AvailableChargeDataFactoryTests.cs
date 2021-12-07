@@ -19,8 +19,8 @@ using FluentAssertions;
 using GreenEnergyHub.Charges.Application;
 using GreenEnergyHub.Charges.Application.Charges.MessageHub;
 using GreenEnergyHub.Charges.Core.DateTime;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandAcceptedEvents;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
+using GreenEnergyHub.Charges.Tests.Builders;
 using GreenEnergyHub.TestHelpers;
 using GreenEnergyHub.TestHelpers.FluentAssertionsExtensions;
 using Moq;
@@ -40,11 +40,13 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.MessageHub
             [Frozen] Mock<IMessageMetaDataContext> messageMetaDataContext,
             Instant now,
             List<MarketParticipant> marketParticipants,
-            ChargeCommandAcceptedEvent acceptedEvent,
+            ChargeCommandTestBuilder chargeCommandTestBuilder,
+            ChargeCommandAcceptedEventTestBuilder chargeCommandAcceptedEventTestBuilder,
             AvailableChargeDataFactory sut)
         {
             // Arrange
-            acceptedEvent.Command.ChargeOperation.TaxIndicator = true;
+            var chargeCommand = chargeCommandTestBuilder.WithTaxIndicator(true).Build();
+            var acceptedEvent = chargeCommandAcceptedEventTestBuilder.WithChargeCommand(chargeCommand).Build();
 
             marketParticipantRepository.Setup(
                     r => r.GetActiveGridAccessProvidersAsync())
@@ -88,11 +90,13 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.MessageHub
         [Theory]
         [InlineAutoDomainData]
         public async Task CreateAsync_WhenNotTaxCharge_ReturnsEmptyList(
-            ChargeCommandAcceptedEvent acceptedEvent,
+            ChargeCommandTestBuilder chargeCommandTestBuilder,
+            ChargeCommandAcceptedEventTestBuilder chargeCommandAcceptedEventTestBuilder,
             AvailableChargeDataFactory sut)
         {
             // Arrange
-            acceptedEvent.Command.ChargeOperation.TaxIndicator = false;
+            var chargeCommand = chargeCommandTestBuilder.WithTaxIndicator(false).Build();
+            var acceptedEvent = chargeCommandAcceptedEventTestBuilder.WithChargeCommand(chargeCommand).Build();
 
             // Act
             var actualList =
