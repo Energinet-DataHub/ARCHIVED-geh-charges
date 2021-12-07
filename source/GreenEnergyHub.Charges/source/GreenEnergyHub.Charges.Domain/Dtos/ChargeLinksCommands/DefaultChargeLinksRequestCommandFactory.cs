@@ -28,7 +28,7 @@ using NodaTime;
 
 namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands
 {
-    public class ChargeLinksCommandFactory : IChargeLinksCommandFactory
+    public class DefaultChargeLinksRequestCommandFactory : IDefaultChargeLinksRequestCommandFactory
     {
         private readonly IChargeRepository _chargeRepository;
         private readonly IMeteringPointRepository _meteringPointRepository;
@@ -36,7 +36,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands
         private readonly IMarketParticipantRepository _marketParticipantRepository;
         private readonly IHubSenderConfiguration _hubSenderConfiguration;
 
-        public ChargeLinksCommandFactory(
+        public DefaultChargeLinksRequestCommandFactory(
             IChargeRepository chargeRepository,
             IMeteringPointRepository meteringPointRepository,
             IClock clock,
