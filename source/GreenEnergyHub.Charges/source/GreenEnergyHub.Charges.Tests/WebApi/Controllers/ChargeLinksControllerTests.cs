@@ -29,7 +29,7 @@ namespace GreenEnergyHub.Charges.Tests.WebApi.Controllers
         {
             var controller = new ChargeLinksController();
 
-            var result = await controller.GetChargeLinksByMeteringPointIdAsync("570000000000000000").ConfigureAwait(false);
+            var result = await controller.GetAsync("570000000000000000").ConfigureAwait(false);
 
             result.Should().BeOfType<OkObjectResult>();
         }
@@ -39,7 +39,7 @@ namespace GreenEnergyHub.Charges.Tests.WebApi.Controllers
         {
             var controller = new ChargeLinksController();
 
-            var result = await controller.GetChargeLinksByMeteringPointIdAsync("404").ConfigureAwait(false);
+            var result = await controller.GetAsync("404").ConfigureAwait(false);
 
             result.Should().BeOfType<NotFoundResult>();
         }
@@ -49,7 +49,7 @@ namespace GreenEnergyHub.Charges.Tests.WebApi.Controllers
         {
             var controller = new ChargeLinksController();
 
-            var result = await controller.GetChargeLinksByMeteringPointIdAsync(null).ConfigureAwait(false);
+            var result = await controller.GetAsync(null).ConfigureAwait(false);
 
             result.Should().BeOfType<BadRequestResult>();
         }
