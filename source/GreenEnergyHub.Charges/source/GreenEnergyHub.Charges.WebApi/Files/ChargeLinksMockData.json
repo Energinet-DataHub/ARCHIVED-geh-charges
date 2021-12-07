@@ -8,8 +8,8 @@
     "TaxIndicator": false,
     "TransparentInvoicing": false,
     "Factor": 1,
-    "StartDateTime": "2019-12-31T23:00:00Z",
-    "EndDateTime": null
+    "StartDateTimeUtc": "2019-12-31T23:00:00Z",
+    "EndDateTimeUtc": null
   },
   {
     "ChargeType": 3,
@@ -20,8 +20,8 @@
     "TaxIndicator": false,
     "TransparentInvoicing": false,
     "Factor": 1,
-    "StartDateTime": "2018-12-31T23:00:00Z",
-    "EndDateTime": null
+    "StartDateTimeUtc": "2018-12-31T23:00:00Z",
+    "EndDateTimeUtc": null
   },
   {
     "ChargeType": 3,
@@ -32,8 +32,8 @@
     "TaxIndicator": false,
     "TransparentInvoicing": false,
     "Factor": 1,
-    "StartDateTime": "2018-05-31T22:00:00Z",
-    "EndDateTime": null
+    "StartDateTimeUtc": "2018-05-31T22:00:00Z",
+    "EndDateTimeUtc": null
   },
   {
     "ChargeType": 3,
@@ -44,8 +44,8 @@
     "TaxIndicator": true,
     "TransparentInvoicing": true,
     "Factor": 1,
-    "StartDateTime": "2020-12-31T23:00:00Z",
-    "EndDateTime": null
+    "StartDateTimeUtc": "2020-12-31T23:00:00Z",
+    "EndDateTimeUtc": null
   },
   {
     "ChargeType": 1,
@@ -56,8 +56,8 @@
     "TaxIndicator": false,
     "TransparentInvoicing": true,
     "Factor": 1,
-    "StartDateTime": "2020-12-31T23:00:00Z",
-    "EndDateTime": "2022-12-31T23:00:00Z"
+    "StartDateTimeUtc": "2020-12-31T23:00:00Z",
+    "EndDateTimeUtc": "2022-12-31T23:00:00Z"
   },
   {
     "ChargeType": 1,
@@ -68,8 +68,8 @@
     "TaxIndicator": false,
     "TransparentInvoicing": false,
     "Factor": 2,
-    "StartDateTime": "2021-12-31T23:00:00Z",
-    "EndDateTime": null
+    "StartDateTimeUtc": "2021-12-31T23:00:00Z",
+    "EndDateTimeUtc": null
   },
   {
     "ChargeType": 2,
@@ -80,7 +80,7 @@
     "TaxIndicator": false,
     "TransparentInvoicing": true,
     "Factor": 1,
-    "StartDateTime": "2021-03-31T22:00:00Z",
-    "EndDateTime": null
+    "StartDateTimeUtc": "2021-03-31T22:00:00Z",
+    "EndDateTimeUtc": null
   }
 ]
