@@ -15,11 +15,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.DefaultChargeLinks;
 using GreenEnergyHub.Charges.Domain.MeteringPoints;
 using GreenEnergyHub.Charges.Infrastructure.Context;
-using GreenEnergyHub.Charges.Infrastructure.Context.Mapping;
 using Microsoft.EntityFrameworkCore;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Repositories
@@ -35,12 +33,11 @@ namespace GreenEnergyHub.Charges.Infrastructure.Repositories
 
         public async Task<IEnumerable<DefaultChargeLink>> GetAsync(MeteringPointType meteringPointType)
         {
-            var defaultChargeLinks = await _chargesDatabaseContext.DefaultChargeLinks
-                .Where(x => x.MeteringPointType == (int)meteringPointType)
+            return await _chargesDatabaseContext
+                .DefaultChargeLinks
+                .Where(x => x.MeteringPointType == meteringPointType)
                 .ToListAsync()
                 .ConfigureAwait(false);
-
-            return defaultChargeLinks.Select(DefaultChargeLinkMapper.Map).ToList();
         }
     }
 }
