@@ -42,15 +42,16 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Handlers
         [Theory]
         [InlineAutoDomainData]
         public async Task HandleAsync_WhenCalled_UsesFactoryToCreateEventAndDispatchesIt(
-            [Frozen] [NotNull] Mock<IDefaultChargeLinkRepository> defaultChargeLinkRepository,
-            [Frozen] [NotNull] Mock<IMeteringPointRepository> meteringPointRepository,
-            [Frozen] [NotNull] Mock<IDefaultChargeLinksRequestCommandFactory> chargeLinkCommandFactory,
-            [Frozen] [NotNull] Mock<IMessageDispatcher<ChargeLinksReceivedEvent>> dispatcher,
-            [Frozen] [NotNull] Mock<IMessageMetaDataContext> messageMetaDataContext,
-            [NotNull] string replyTo,
-            [NotNull] ChargeLinksCommand chargeLinksCommand,
-            [NotNull] string meteringPointId,
-            [NotNull] CreateLinkRequestHandler sut)
+            [Frozen] Mock<IDefaultChargeLinkRepository> defaultChargeLinkRepository,
+            [Frozen] Mock<IMeteringPointRepository> meteringPointRepository,
+            [Frozen] Mock<IDefaultChargeLinksRequestCommandFactory> chargeLinkCommandFactory,
+            [Frozen] Mock<IMessageDispatcher<ChargeLinksReceivedEvent>> dispatcher,
+            [Frozen] Mock<IMessageMetaDataContext> messageMetaDataContext,
+            Guid defaultChargeLinkId,
+            string replyTo,
+            ChargeLinksCommand chargeLinksCommand,
+            string meteringPointId,
+            CreateLinkRequestHandler sut)
         {
             // Arrange
             foreach (var chargeLinkDto in chargeLinksCommand.ChargeLinks)
@@ -63,6 +64,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Handlers
             var createLinkCommandEvent = new CreateLinksRequest(meteringPointId);
 
             var defaultChargeLink = new DefaultChargeLink(
+                defaultChargeLinkId,
                 SystemClock.Instance.GetCurrentInstant(),
                 InstantPattern.General.Parse("9999-12-31T23:59:59Z").Value,
                 Guid.NewGuid(),

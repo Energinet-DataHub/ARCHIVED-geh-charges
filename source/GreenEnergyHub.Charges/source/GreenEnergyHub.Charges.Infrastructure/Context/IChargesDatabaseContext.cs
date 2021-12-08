@@ -18,6 +18,7 @@ using GreenEnergyHub.Charges.Domain.AvailableChargeLinkReceiptData;
 using GreenEnergyHub.Charges.Domain.AvailableChargeLinksData;
 using GreenEnergyHub.Charges.Domain.AvailableChargeReceiptData;
 using GreenEnergyHub.Charges.Domain.ChargeLinks;
+using GreenEnergyHub.Charges.Domain.DefaultChargeLinks;
 using GreenEnergyHub.Charges.Domain.MeteringPoints;
 using GreenEnergyHub.Charges.Infrastructure.Context.Model;
 using Microsoft.EntityFrameworkCore;

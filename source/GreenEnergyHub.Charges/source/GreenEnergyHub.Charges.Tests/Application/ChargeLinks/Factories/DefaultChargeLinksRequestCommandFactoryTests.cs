@@ -45,6 +45,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Factories
             [Frozen] Mock<IHubSenderConfiguration> hubSenderConfiguration,
             MarketParticipant recipient,
             MarketParticipant systemOperator,
+            Guid defaultChargeLinkId,
             Guid chargeId,
             MeteringPoint meteringPoint,
             CreateLinksRequest createLinksRequest,
@@ -52,6 +53,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Factories
         {
             // Arrange
             var defaultChargeLink = new DefaultChargeLink(
+                defaultChargeLinkId,
                 Instant.MinValue,
                 Instant.MaxValue,
                 chargeId,
