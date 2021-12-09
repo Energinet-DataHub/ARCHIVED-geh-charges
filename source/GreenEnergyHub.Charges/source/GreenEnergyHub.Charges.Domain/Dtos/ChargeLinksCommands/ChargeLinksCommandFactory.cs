@@ -81,7 +81,6 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands
 
             var chargeLinks = defChargeAndCharge.Select(pair => new ChargeLinkDto
                 {
-                    ChargeId = pair.Value.Id,
                     ChargeType = pair.Value.Type,
                     SenderProvidedChargeId = pair.Value.SenderProvidedChargeId,
                     ChargeOwnerId = GetChargeOwnerId(pair.Value, owners),

@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Energinet.DataHub.Core.Messaging.Protobuf;
@@ -67,7 +66,6 @@ namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
         {
             return new ChargeLinkDto
             {
-                ChargeId = Guid.Parse(link.ChargeId),
                 OperationId = link.OperationId,
                 StartDateTime = link.StartDateTime.ToInstant(),
                 EndDateTime = link.EndDateTime.ToInstant(),

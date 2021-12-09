@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
@@ -53,8 +52,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.MessageHub
                 .Returns(marketParticipant);
 
             charge.SetPrivateProperty(c => c.TaxIndicator, true);
-            chargeRepository.Setup(
-                    r => r.GetAsync(It.IsAny<Guid>()))
+            chargeRepository.Setup(r => r.GetAsync(It.IsAny<ChargeIdentifier>()))
                 .ReturnsAsync(charge);
 
             messageMetaDataContext.Setup(
@@ -104,7 +102,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.MessageHub
 
             charge.SetPrivateProperty(c => c.TaxIndicator, false);
             chargeRepository
-                .Setup(r => r.GetAsync(It.IsAny<Guid>()))
+                .Setup(r => r.GetAsync(It.IsAny<ChargeIdentifier>()))
                 .ReturnsAsync(charge);
 
             // Act

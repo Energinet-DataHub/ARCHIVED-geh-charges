@@ -53,7 +53,8 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.MessageHub
 
             foreach (var link in acceptedEvent.ChargeLinksCommand.ChargeLinks)
             {
-                var charge = await _chargeRepository.GetAsync(link.ChargeId).ConfigureAwait(false);
+                var chargeIdentifier = new ChargeIdentifier(link.SenderProvidedChargeId, link.ChargeOwnerId, link.ChargeType);
+                var charge = await _chargeRepository.GetAsync(chargeIdentifier).ConfigureAwait(false);
 
                 if (ShouldMakeDataAvailableForGridOwnerOfMeteringPoint(charge))
                 {

@@ -61,7 +61,6 @@ message ChargeLink {
   int32 factor = 5; // Indicates the number of times the same fee or subscription must be collected. Always 1 for tariffs
   string charge_owner_id = 6; // A charge owner identification, e.g. the Market Participant's GLN or EIC number
   ChargeType charge_type = 7; // The type of charge; tariff, fee or subscription
-  string charge_id = 8; // The UUID aggregate root identifier of the charge
 }
 
 enum DocumentType
