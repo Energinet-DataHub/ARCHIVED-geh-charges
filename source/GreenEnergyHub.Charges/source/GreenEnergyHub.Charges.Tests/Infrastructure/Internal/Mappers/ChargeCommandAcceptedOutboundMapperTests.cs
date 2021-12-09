@@ -13,7 +13,6 @@
 // limitations under the License.
 
 using System;
-using System.Diagnostics.CodeAnalysis;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandAcceptedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
 using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeCommandAccepted;
@@ -32,8 +31,8 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Internal.Mappers
         [Theory]
         [InlineAutoMoqData]
         public void Convert_WhenCalled_ShouldMapToProtobufWithCorrectValues(
-            [NotNull]ChargeCommand chargeCommand,
-            [NotNull]ChargeCommandAcceptedOutboundMapper sut)
+            ChargeCommand chargeCommand,
+            ChargeCommandAcceptedOutboundMapper sut)
         {
             // Arrange
             ChargeCommandAcceptedEvent chargeCommandAcceptedEvent =
@@ -50,17 +49,15 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Internal.Mappers
 
         [Theory]
         [InlineAutoMoqData]
-        public void Convert_WhenCalledWithNull_ShouldThrow([NotNull]ChargeCommandAcceptedOutboundMapper sut)
+        public void Convert_WhenCalledWithNull_ShouldThrow(ChargeCommandAcceptedOutboundMapper sut)
         {
             Assert.Throws<InvalidOperationException>(() => sut.Convert(null!));
         }
 
-        private static void UpdateInstantsToValidTimes([NotNull] ChargeCommandAcceptedEvent chargeCommandAcceptedEvent)
+        private static void UpdateInstantsToValidTimes(ChargeCommandAcceptedEvent chargeCommandAcceptedEvent)
         {
             chargeCommandAcceptedEvent.Command.Document.RequestDate = Instant.FromUtc(2021, 7, 21, 11, 42, 25);
             chargeCommandAcceptedEvent.Command.Document.CreatedDateTime = Instant.FromUtc(2021, 7, 21, 12, 14, 43);
-            chargeCommandAcceptedEvent.Command.ChargeOperation.StartDateTime = Instant.FromUtc(2021, 8, 31, 22, 0);
-            chargeCommandAcceptedEvent.Command.ChargeOperation.EndDateTime = Instant.FromUtc(2021, 9, 30, 22, 0);
 
             foreach (var point in chargeCommandAcceptedEvent.Command.ChargeOperation.Points)
             {
