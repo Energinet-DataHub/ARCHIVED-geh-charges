@@ -27,6 +27,6 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands
     {
         public DocumentDto Document { get; set; }
 
-        public ChargeOperation ChargeOperation { get; set; }
+        public ChargeOperationDto ChargeOperation { get; set; }
     }
 }

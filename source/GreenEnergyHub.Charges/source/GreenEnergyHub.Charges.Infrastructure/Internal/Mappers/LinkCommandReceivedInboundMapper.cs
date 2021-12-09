@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Energinet.DataHub.Core.Messaging.Protobuf;
@@ -20,7 +21,6 @@ using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksReceivedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
-using MarketParticipant = GreenEnergyHub.Charges.Domain.MarketParticipants.MarketParticipant;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
 {
@@ -45,12 +45,12 @@ namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
                 RequestDate = document.RequestDate.ToInstant(),
                 Type = (Domain.MarketParticipants.DocumentType)document.Type,
                 CreatedDateTime = document.CreatedDateTime.ToInstant(),
-                Sender = new MarketParticipant
+                Sender = new MarketParticipantDto
                 {
                     Id = document.Sender.Id,
                     BusinessProcessRole = (Domain.MarketParticipants.MarketParticipantRole)document.Sender.BusinessProcessRole,
                 },
-                Recipient = new MarketParticipant
+                Recipient = new MarketParticipantDto
                 {
                     Id = document.Recipient.Id,
                     BusinessProcessRole = (Domain.MarketParticipants.MarketParticipantRole)document.Recipient.BusinessProcessRole,
@@ -64,9 +64,10 @@ namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
         {
             return new ChargeLinkDto
             {
+                ChargeId = Guid.Parse(chargeLink.ChargeId),
                 OperationId = chargeLink.OperationId,
                 SenderProvidedChargeId = chargeLink.SenderProvidedChargeId,
-                ChargeOwner = chargeLink.ChargeOwner,
+                ChargeOwnerId = chargeLink.ChargeOwnerId,
                 Factor = chargeLink.Factor,
                 ChargeType = (GreenEnergyHub.Charges.Domain.Charges.ChargeType)chargeLink.ChargeType,
                 StartDateTime = chargeLink.StartDateTime.ToInstant(),

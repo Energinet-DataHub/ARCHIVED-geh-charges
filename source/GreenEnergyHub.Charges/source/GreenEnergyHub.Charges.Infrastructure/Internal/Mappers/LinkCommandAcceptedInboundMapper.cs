@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Energinet.DataHub.Core.Messaging.Protobuf;
@@ -20,7 +21,6 @@ using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksAcceptedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
-using MarketParticipant = GreenEnergyHub.Charges.Domain.MarketParticipants.MarketParticipant;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
 {
@@ -53,10 +53,10 @@ namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
             };
         }
 
-        private static MarketParticipant MapMarketParticipant(
-            GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandAccepted.MarketParticipant marketParticipant)
+        private static MarketParticipantDto MapMarketParticipant(
+            ChargeLinkCommandAccepted.MarketParticipant marketParticipant)
         {
-            return new MarketParticipant
+            return new MarketParticipantDto
             {
                 Id = marketParticipant.Id,
                 BusinessProcessRole = (Domain.MarketParticipants.MarketParticipantRole)marketParticipant.BusinessProcessRole,
@@ -67,12 +67,13 @@ namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
         {
             return new ChargeLinkDto
             {
+                ChargeId = Guid.Parse(link.ChargeId),
                 OperationId = link.OperationId,
                 StartDateTime = link.StartDateTime.ToInstant(),
                 EndDateTime = link.EndDateTime.ToInstant(),
                 SenderProvidedChargeId = link.SenderProvidedChargeId,
                 Factor = link.Factor,
-                ChargeOwner = link.ChargeOwner,
+                ChargeOwnerId = link.ChargeOwnerId,
                 ChargeType = (GreenEnergyHub.Charges.Domain.Charges.ChargeType)link.ChargeType,
             };
         }

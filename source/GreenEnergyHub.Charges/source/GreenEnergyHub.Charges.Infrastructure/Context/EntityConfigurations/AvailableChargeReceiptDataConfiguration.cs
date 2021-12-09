@@ -12,9 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
 using GreenEnergyHub.Charges.Domain.AvailableChargeReceiptData;
-using GreenEnergyHub.Charges.Domain.AvailableData;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -24,7 +22,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Context.EntityConfigurations
     {
         public void Configure(EntityTypeBuilder<AvailableChargeReceiptData> builder)
         {
-            builder.ToTable("AvailableChargeReceiptData", "MessageHub");
+            builder.ToTable("AvailableChargeReceiptData", DatabaseSchemaNames.MessageHub);
             builder.HasKey(x => x.Id);
             builder.Property(p => p.Id).ValueGeneratedNever();
             builder.Property(x => x.RecipientId).HasColumnName("RecipientId");
@@ -46,7 +44,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Context.EntityConfigurations
             AvailableChargeReceiptDataReasonCode> reasonCodes)
         {
             reasonCodes.WithOwner().HasForeignKey("AvailableChargeReceiptDataId");
-            reasonCodes.ToTable("AvailableChargeReceiptDataReasonCode", "MessageHub");
+            reasonCodes.ToTable("AvailableChargeReceiptDataReasonCode", DatabaseSchemaNames.MessageHub);
             reasonCodes.HasKey(r => r.Id);
             reasonCodes.Property(r => r.Id).ValueGeneratedNever();
             reasonCodes

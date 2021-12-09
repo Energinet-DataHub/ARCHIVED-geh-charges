@@ -53,21 +53,18 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.MessageHub
 
             foreach (var link in acceptedEvent.ChargeLinksCommand.ChargeLinks)
             {
-                var charge = await _chargeRepository.GetAsync(new ChargeIdentifier(
-                    link.SenderProvidedChargeId,
-                    link.ChargeOwner,
-                    link.ChargeType)).ConfigureAwait(false);
+                var charge = await _chargeRepository.GetAsync(link.ChargeId).ConfigureAwait(false);
 
                 if (ShouldMakeDataAvailableForGridOwnerOfMeteringPoint(charge))
                 {
                     result.Add(new AvailableChargeLinksData(
-                        recipient.Id,
+                        recipient.MarketParticipantId,
                         recipient.BusinessProcessRole,
                         acceptedEvent.ChargeLinksCommand.Document.BusinessReasonCode,
                         _messageMetaDataContext.RequestDataTime,
                         Guid.NewGuid(), // ID of each available piece of data must be unique
                         link.SenderProvidedChargeId,
-                        link.ChargeOwner,
+                        link.ChargeOwnerId,
                         link.ChargeType,
                         acceptedEvent.ChargeLinksCommand.MeteringPointId,
                         link.Factor,

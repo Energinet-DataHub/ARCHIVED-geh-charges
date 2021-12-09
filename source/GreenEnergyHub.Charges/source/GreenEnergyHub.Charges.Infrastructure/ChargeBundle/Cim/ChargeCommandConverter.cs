@@ -51,9 +51,9 @@ namespace GreenEnergyHub.Charges.Infrastructure.ChargeBundle.Cim
                 };
         }
 
-        private async Task<ChargeOperation> ParseChargeOperationAsync(XmlReader reader)
+        private async Task<ChargeOperationDto> ParseChargeOperationAsync(XmlReader reader)
         {
-            var operation = new ChargeOperation();
+            var operation = new ChargeOperationDto();
 
             while (await reader.ReadAsync().ConfigureAwait(false))
             {
@@ -71,13 +71,13 @@ namespace GreenEnergyHub.Charges.Infrastructure.ChargeBundle.Cim
             return operation;
         }
 
-        private async Task ParseChargeGroupIntoOperationAsync(XmlReader reader, ChargeOperation operation)
+        private async Task ParseChargeGroupIntoOperationAsync(XmlReader reader, ChargeOperationDto operationDto)
         {
             while (await reader.ReadAsync().ConfigureAwait(false))
             {
                 if (reader.Is(CimChargeCommandConstants.ChargeTypeElement, CimChargeCommandConstants.Namespace))
                 {
-                    await ParseChargeTypeElementIntoOperationAsync(reader, operation).ConfigureAwait(false);
+                    await ParseChargeTypeElementIntoOperationAsync(reader, operationDto).ConfigureAwait(false);
                 }
                 else if (reader.Is(
                     CimChargeCommandConstants.ChargeGroup,
@@ -89,66 +89,66 @@ namespace GreenEnergyHub.Charges.Infrastructure.ChargeBundle.Cim
             }
         }
 
-        private async Task ParseChargeTypeElementIntoOperationAsync(XmlReader reader, ChargeOperation operation)
+        private async Task ParseChargeTypeElementIntoOperationAsync(XmlReader reader, ChargeOperationDto operationDto)
         {
             while (await reader.ReadAsync().ConfigureAwait(false))
             {
                 if (reader.Is(CimChargeCommandConstants.ChargeOwner, CimChargeCommandConstants.Namespace))
                 {
                     var content = await reader.ReadElementContentAsStringAsync().ConfigureAwait(false);
-                    operation.ChargeOwner = content;
+                    operationDto.ChargeOwner = content;
                 }
                 else if (reader.Is(CimChargeCommandConstants.ChargeType, CimChargeCommandConstants.Namespace))
                 {
                     var content = await reader.ReadElementContentAsStringAsync().ConfigureAwait(false);
-                    operation.Type = ChargeTypeMapper.Map(content);
+                    operationDto.Type = ChargeTypeMapper.Map(content);
                 }
                 else if (reader.Is(CimChargeCommandConstants.ChargeId, CimChargeCommandConstants.Namespace))
                 {
                     var content = await reader.ReadElementContentAsStringAsync().ConfigureAwait(false);
-                    operation.ChargeId = content;
+                    operationDto.ChargeId = content;
                 }
                 else if (reader.Is(CimChargeCommandConstants.ChargeName, CimChargeCommandConstants.Namespace))
                 {
                     var content = await reader.ReadElementContentAsStringAsync().ConfigureAwait(false);
-                    operation.ChargeName = content;
+                    operationDto.ChargeName = content;
                 }
                 else if (reader.Is(CimChargeCommandConstants.ChargeDescription, CimChargeCommandConstants.Namespace))
                 {
                     var content = await reader.ReadElementContentAsStringAsync().ConfigureAwait(false);
-                    operation.ChargeDescription = content;
+                    operationDto.ChargeDescription = content;
                 }
                 else if (reader.Is(CimChargeCommandConstants.Resolution, CimChargeCommandConstants.Namespace))
                 {
                     // Note: Resolution can be set two places in the file. If its filled here, that the one that will be used.
                     // This is done to be able to handle changes to charges without prices
                     var content = await reader.ReadElementContentAsStringAsync().ConfigureAwait(false);
-                    operation.Resolution = ResolutionMapper.Map(content);
+                    operationDto.Resolution = ResolutionMapper.Map(content);
                 }
                 else if (reader.Is(CimChargeCommandConstants.StartDateTime, CimChargeCommandConstants.Namespace))
                 {
-                    operation.StartDateTime = Instant.FromDateTimeUtc(reader.ReadElementContentAsDateTime());
+                    operationDto.StartDateTime = Instant.FromDateTimeUtc(reader.ReadElementContentAsDateTime());
                 }
                 else if (reader.Is(CimChargeCommandConstants.EndDateTime, CimChargeCommandConstants.Namespace))
                 {
-                    operation.EndDateTime = Instant.FromDateTimeUtc(reader.ReadElementContentAsDateTime());
+                    operationDto.EndDateTime = Instant.FromDateTimeUtc(reader.ReadElementContentAsDateTime());
                 }
                 else if (reader.Is(CimChargeCommandConstants.VatClassification, CimChargeCommandConstants.Namespace))
                 {
                     var content = await reader.ReadElementContentAsStringAsync().ConfigureAwait(false);
-                    operation.VatClassification = VatClassificationMapper.Map(content);
+                    operationDto.VatClassification = VatClassificationMapper.Map(content);
                 }
                 else if (reader.Is(CimChargeCommandConstants.TransparentInvoicing, CimChargeCommandConstants.Namespace))
                 {
-                    operation.TransparentInvoicing = reader.ReadElementContentAsBoolean();
+                    operationDto.TransparentInvoicing = reader.ReadElementContentAsBoolean();
                 }
                 else if (reader.Is(CimChargeCommandConstants.TaxIndicator, CimChargeCommandConstants.Namespace))
                 {
-                    operation.TaxIndicator = reader.ReadElementContentAsBoolean();
+                    operationDto.TaxIndicator = reader.ReadElementContentAsBoolean();
                 }
                 else if (reader.Is(CimChargeCommandConstants.SeriesPeriod, CimChargeCommandConstants.Namespace))
                 {
-                    await ParseSeriesPeriodIntoOperationAsync(reader, operation).ConfigureAwait(false);
+                    await ParseSeriesPeriodIntoOperationAsync(reader, operationDto).ConfigureAwait(false);
                 }
                 else if (reader.Is(
                     CimChargeCommandConstants.ChargeTypeElement,
@@ -160,10 +160,10 @@ namespace GreenEnergyHub.Charges.Infrastructure.ChargeBundle.Cim
             }
         }
 
-        private async Task ParseSeriesPeriodIntoOperationAsync(XmlReader reader, ChargeOperation operation)
+        private async Task ParseSeriesPeriodIntoOperationAsync(XmlReader reader, ChargeOperationDto operationDto)
         {
             // We use the effective start date time unless the period is later specified
-            var startDateTime = operation.StartDateTime;
+            var startDateTime = operationDto.StartDateTime;
 
             while (await reader.ReadAsync().ConfigureAwait(false))
             {
@@ -171,10 +171,10 @@ namespace GreenEnergyHub.Charges.Infrastructure.ChargeBundle.Cim
                 {
                     // Note, this is the second place where the resolution might be identified
                     // If it was not set previous, we use this one instead
-                    if (operation.Resolution == Resolution.Unknown)
+                    if (operationDto.Resolution == Resolution.Unknown)
                     {
                         var content = await reader.ReadElementContentAsStringAsync().ConfigureAwait(false);
-                        operation.Resolution = ResolutionMapper.Map(content);
+                        operationDto.Resolution = ResolutionMapper.Map(content);
                     }
                 }
                 else if (reader.Is(CimChargeCommandConstants.TimeInterval, CimChargeCommandConstants.Namespace))
@@ -183,8 +183,8 @@ namespace GreenEnergyHub.Charges.Infrastructure.ChargeBundle.Cim
                 }
                 else if (reader.Is(CimChargeCommandConstants.Point, CimChargeCommandConstants.Namespace))
                 {
-                    var point = await ParsePointAsync(reader, operation, startDateTime).ConfigureAwait(false);
-                    operation.Points.Add(point);
+                    var point = await ParsePointAsync(reader, operationDto, startDateTime).ConfigureAwait(false);
+                    operationDto.Points.Add(point);
                 }
                 else if (reader.Is(
                     CimChargeCommandConstants.SeriesPeriod,
@@ -216,7 +216,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.ChargeBundle.Cim
             return startDateTime;
         }
 
-        private async Task<Point> ParsePointAsync(XmlReader reader, ChargeOperation operation, Instant startDateTime)
+        private async Task<Point> ParsePointAsync(XmlReader reader, ChargeOperationDto operationDto, Instant startDateTime)
         {
             var point = new Point();
 
@@ -239,7 +239,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.ChargeBundle.Cim
                 {
                     point.Time = _iso8601Durations.GetTimeFixedToDuration(
                         startDateTime,
-                        ResolutionMapper.Map(operation.Resolution),
+                        ResolutionMapper.Map(operationDto.Resolution),
                         point.Position - 1);
                     break;
                 }

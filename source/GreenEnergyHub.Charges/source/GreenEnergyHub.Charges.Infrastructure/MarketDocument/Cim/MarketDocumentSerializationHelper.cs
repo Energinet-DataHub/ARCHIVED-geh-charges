@@ -51,7 +51,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.MarketDocument.Cim
                     new XAttribute(
                         CimMarketDocumentConstants.CodingScheme,
                         CodingSchemeMapper.Map(CodingScheme.GS1)),
-                    hubSenderConfiguration.GetSenderMarketParticipant().Id),
+                    hubSenderConfiguration.GetSenderMarketParticipant().MarketParticipantId),
                 new XElement(
                     cimNamespace + CimMarketDocumentConstants.SenderBusinessProcessRole,
                     MarketParticipantRoleMapper.Map(

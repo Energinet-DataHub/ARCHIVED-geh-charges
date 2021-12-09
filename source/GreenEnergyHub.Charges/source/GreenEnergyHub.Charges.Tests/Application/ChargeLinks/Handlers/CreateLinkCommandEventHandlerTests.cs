@@ -44,7 +44,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Handlers
         public async Task HandleAsync_WhenCalled_UsesFactoryToCreateEventAndDispatchesIt(
             [Frozen] [NotNull] Mock<IDefaultChargeLinkRepository> defaultChargeLinkRepository,
             [Frozen] [NotNull] Mock<IMeteringPointRepository> meteringPointRepository,
-            [Frozen] [NotNull] Mock<IDefaultChargeLinksRequestCommandFactory> chargeLinkCommandFactory,
+            [Frozen] [NotNull] Mock<IChargeLinksCommandFactory> chargeLinkCommandFactory,
             [Frozen] [NotNull] Mock<IMessageDispatcher<ChargeLinksReceivedEvent>> dispatcher,
             [Frozen] [NotNull] Mock<IMessageMetaDataContext> messageMetaDataContext,
             [NotNull] string replyTo,

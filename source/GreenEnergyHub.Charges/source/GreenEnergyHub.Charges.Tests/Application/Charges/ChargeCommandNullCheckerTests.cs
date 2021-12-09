@@ -14,11 +14,11 @@
 
 using System;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Tests.Builders;
 using GreenEnergyHub.TestHelpers;
 using Xunit;
 using Xunit.Categories;
-using MarketParticipant = GreenEnergyHub.Charges.Domain.MarketParticipants.MarketParticipant;
 
 namespace GreenEnergyHub.Charges.Tests.Application.Charges
 {
@@ -74,7 +74,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges
         public void ThrowExceptionIfRequiredPropertyIsNull_WhenParticipantIsNull_ThrowsArgumentNullException()
         {
             // Arrange
-            MarketParticipant? marketParticipant = null;
+            MarketParticipantDto? marketParticipant = null;
             var command = Build();
             command.Document.Sender = marketParticipant!;
 

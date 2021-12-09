@@ -25,7 +25,6 @@ using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeCommandAccepted;
-using MarketParticipant = GreenEnergyHub.Charges.Domain.MarketParticipants.MarketParticipant;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
 {
@@ -49,13 +48,13 @@ namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
             {
                 Id = document.Id,
                 Sender =
-                    new MarketParticipant
+                    new MarketParticipantDto
                     {
                         Id = document.Sender.Id,
                         BusinessProcessRole = (MarketParticipantRole)document.Sender.BusinessProcessRole,
                     },
                 Recipient =
-                    new MarketParticipant
+                    new MarketParticipantDto
                     {
                         Id = document.Recipient.Id,
                         BusinessProcessRole = (MarketParticipantRole)document.Recipient.BusinessProcessRole,
@@ -68,9 +67,9 @@ namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
             };
         }
 
-        private static ChargeOperation ConvertChargeOperation(ChargeOperationContract chargeOperation)
+        private static ChargeOperationDto ConvertChargeOperation(ChargeOperationContract chargeOperation)
         {
-            return new ChargeOperation
+            return new ChargeOperationDto
             {
                 Id = chargeOperation.Id,
                 Resolution = (Resolution)chargeOperation.Resolution,

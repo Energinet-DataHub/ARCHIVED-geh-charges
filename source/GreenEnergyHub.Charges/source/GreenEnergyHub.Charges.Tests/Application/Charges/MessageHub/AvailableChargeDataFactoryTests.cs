@@ -64,7 +64,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.MessageHub
             for (var i = 0; i < actualList.Count; i++)
             {
                 actualList[i].Should().NotContainNullsOrEmptyEnumerables();
-                actualList[i].RecipientId.Should().Be(marketParticipants[i].Id);
+                actualList[i].RecipientId.Should().Be(marketParticipants[i].MarketParticipantId);
                 actualList[i].RecipientRole.Should().Be(marketParticipants[i].BusinessProcessRole);
                 actualList[i].BusinessReasonCode.Should().Be(acceptedEvent.Command.Document.BusinessReasonCode);
                 actualList[i].RequestDateTime.Should().Be(now);

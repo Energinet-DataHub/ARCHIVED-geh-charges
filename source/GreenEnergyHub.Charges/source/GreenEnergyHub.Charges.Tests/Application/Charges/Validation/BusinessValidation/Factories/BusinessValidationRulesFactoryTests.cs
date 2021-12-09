@@ -38,8 +38,8 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Validation.BusinessVa
         [InlineAutoMoqData(typeof(CommandSenderMustBeAnExistingMarketParticipantRule))]
         public async Task CreateRulesForChargeCommandAsync_WhenCalledWithNewCharge_ReturnsExpectedMandatoryRules(
             Type expectedRule,
-            [NotNull][Frozen] Mock<IChargeRepository> repository,
-            [NotNull][Frozen] Mock<IRulesConfigurationRepository> rulesConfigurationRepository,
+            [NotNull] [Frozen] Mock<IChargeRepository> repository,
+            [NotNull] [Frozen] Mock<IRulesConfigurationRepository> rulesConfigurationRepository,
             [NotNull] BusinessValidationRulesFactory sut,
             [NotNull] TestableChargeCommand chargeCommand)
         {
@@ -47,10 +47,8 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Validation.BusinessVa
             ConfigureRepositoryMock(rulesConfigurationRepository);
 
             Charge? charge = null;
-            repository.Setup(
-                    r => r.GetAsync(
-                        It.IsAny<ChargeIdentifier>()))
-                .Returns(Task.FromResult(charge!));
+            repository.Setup(r => r.GetOrNullAsync(It.IsAny<ChargeIdentifier>()))
+                .ReturnsAsync(charge);
 
             // Act
             var actual = await sut.CreateRulesForChargeCommandAsync(chargeCommand).ConfigureAwait(false);
@@ -66,8 +64,8 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Validation.BusinessVa
         [InlineAutoMoqData(typeof(CommandSenderMustBeAnExistingMarketParticipantRule))]
         public async Task CreateRulesForChargeCommandAsync_WhenCalledWithExistingChargeNotTariff_ReturnsExpectedRules(
             Type expectedRule,
-            [NotNull][Frozen] Mock<IChargeRepository> repository,
-            [NotNull][Frozen] Mock<IRulesConfigurationRepository> rulesConfigurationRepository,
+            [NotNull] [Frozen] Mock<IChargeRepository> repository,
+            [NotNull] [Frozen] Mock<IRulesConfigurationRepository> rulesConfigurationRepository,
             [NotNull] BusinessValidationRulesFactory sut,
             [NotNull] TestableChargeCommand chargeCommand,
             [NotNull] Charge charge)
@@ -76,22 +74,9 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Validation.BusinessVa
             chargeCommand.ChargeOperation.Type = ChargeType.Fee;
             ConfigureRepositoryMock(rulesConfigurationRepository);
 
-            const bool chargeExists = true;
-            repository.Setup(
-                r => r.CheckIfChargeExistsAsync(
-                        new ChargeIdentifier(
-                    It.IsAny<string>(),
-                    It.IsAny<string>(),
-                    It.IsAny<ChargeType>())))
-                .Returns(Task.FromResult(chargeExists));
-
-            repository.Setup(
-                    r => r.GetAsync(
-                            new ChargeIdentifier(
-                        It.IsAny<string>(),
-                        It.IsAny<string>(),
-                        It.IsAny<ChargeType>())))
-                .Returns(Task.FromResult(charge));
+            repository
+                .Setup(r => r.GetOrNullAsync(It.IsAny<ChargeIdentifier>()))
+                .ReturnsAsync(charge);
 
             // Act
             var actual = await sut.CreateRulesForChargeCommandAsync(chargeCommand).ConfigureAwait(false);
@@ -109,8 +94,8 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Validation.BusinessVa
         [InlineAutoMoqData(typeof(ChangingTariffVatValueNotAllowedRule))]
         public async Task CreateRulesForChargeCommandAsync_WhenCalledWithExistingTariff_ReturnsExpectedRules(
             Type expectedRule,
-            [NotNull][Frozen] Mock<IChargeRepository> repository,
-            [NotNull][Frozen] Mock<IRulesConfigurationRepository> rulesConfigurationRepository,
+            [NotNull] [Frozen] Mock<IChargeRepository> repository,
+            [NotNull] [Frozen] Mock<IRulesConfigurationRepository> rulesConfigurationRepository,
             [NotNull] BusinessValidationRulesFactory sut,
             [NotNull] TestableChargeCommand chargeCommand,
             [NotNull] Charge charge)
@@ -119,11 +104,10 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Validation.BusinessVa
             chargeCommand.ChargeOperation.Type = ChargeType.Tariff;
             ConfigureRepositoryMock(rulesConfigurationRepository);
 
-            const bool chargeExists = true;
             repository.Setup(
-                r => r.CheckIfChargeExistsAsync(
-                    It.IsAny<ChargeIdentifier>()))
-                .Returns(Task.FromResult(chargeExists));
+                    r => r.GetOrNullAsync(
+                        It.IsAny<ChargeIdentifier>()))
+                .ReturnsAsync(charge);
 
             repository.Setup(
                     r => r.GetAsync(
@@ -149,7 +133,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Validation.BusinessVa
 
             // Act / Assert
             await Assert.ThrowsAsync<ArgumentNullException>(
-                () => sut.CreateRulesForChargeCommandAsync(command!))
+                    () => sut.CreateRulesForChargeCommandAsync(command!))
                 .ConfigureAwait(false);
         }
 

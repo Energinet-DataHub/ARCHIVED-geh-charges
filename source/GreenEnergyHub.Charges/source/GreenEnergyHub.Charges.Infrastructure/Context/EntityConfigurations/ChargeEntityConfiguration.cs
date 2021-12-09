@@ -1,0 +1,60 @@
+﻿// Copyright 2020 Energinet DataHub A/S
+//
+// Licensed under the Apache License, Version 2.0 (the "License2");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+using GreenEnergyHub.Charges.Domain.Charges;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+
+namespace GreenEnergyHub.Charges.Infrastructure.Context.EntityConfigurations
+{
+    public class ChargeEntityConfiguration : IEntityTypeConfiguration<Charge>
+    {
+        public void Configure(EntityTypeBuilder<Charge> builder)
+        {
+            builder.ToTable(nameof(Charge));
+
+            builder.HasKey(c => c.Id);
+
+            builder.Property(c => c.Description);
+            builder.Property(c => c.Name);
+            builder.Property(c => c.OwnerId);
+            builder.Property(c => c.SenderProvidedChargeId);
+            builder.Property(c => c.Resolution);
+            builder.Property(c => c.Type);
+            builder.Property(c => c.TaxIndicator);
+            builder.Property(c => c.TransparentInvoicing);
+            builder.Property(c => c.VatClassification);
+            builder.Property(c => c.StartDateTime);
+            builder.Property(c => c.EndDateTime);
+
+            builder.Ignore(c => c.Points);
+            builder.OwnsMany<Point>("_points", ConfigurePoints);
+        }
+
+        private static void ConfigurePoints(OwnedNavigationBuilder<Charge, Point> points)
+        {
+            // This field is defined in the SQL model (as a foreign key)
+            points.WithOwner().HasForeignKey($"{nameof(Charge)}Id");
+
+            points.ToTable($"{nameof(Charge)}{nameof(Point)}");
+
+            // This is a database-only column - doesn't exist in domain model as it is not an aggregate
+            points.Property("Id").ValueGeneratedOnAdd();
+
+            points.Property(p => p.Position);
+            points.Property(p => p.Price);
+            points.Property(p => p.Time);
+        }
+    }
+}

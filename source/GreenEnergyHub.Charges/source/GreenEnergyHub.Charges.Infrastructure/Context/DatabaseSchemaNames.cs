@@ -12,27 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
-
-#pragma warning disable 8618
-
-namespace GreenEnergyHub.Charges.Infrastructure.Context.Model
+namespace GreenEnergyHub.Charges.Infrastructure.Context
 {
-    public class MarketParticipant
+    public static class DatabaseSchemaNames
     {
-        public MarketParticipant()
-        {
-            Id = Guid.NewGuid();
-        }
+        public const string CommandModel = "Charges";
 
-        public Guid Id { get; set; }
-
-        public string MarketParticipantId { get; set; }
-
-        public string Name { get; set; }
-
-        public int Role { get; set; }
-
-        public bool Active { get; set; }
+        public const string MessageHub = "MessageHub";
     }
 }

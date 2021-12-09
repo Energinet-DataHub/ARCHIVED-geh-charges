@@ -117,7 +117,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.ChargeBundle.Cim
                     h => h.GetSenderMarketParticipant())
                 .Returns(new MarketParticipant
                 {
-                    Id = "5790001330552", BusinessProcessRole = MarketParticipantRole.MeteringPointAdministrator,
+                    MarketParticipantId = "5790001330552", BusinessProcessRole = MarketParticipantRole.MeteringPointAdministrator,
                 });
 
             var currentTime = Instant.FromUtc(2021, 10, 22, 15, 30, 41).PlusNanoseconds(4);

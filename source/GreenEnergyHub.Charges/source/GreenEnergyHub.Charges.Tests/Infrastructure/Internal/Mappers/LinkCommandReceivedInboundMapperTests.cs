@@ -33,6 +33,8 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Internal.Mappers
             [NotNull] ChargeLinkCommandReceived chargeLinkCommandReceivedContract,
             [NotNull] LinkCommandReceivedInboundMapper sut)
         {
+            FixGuidStrings(chargeLinkCommandReceivedContract);
+
             var result = (ChargeLinksReceivedEvent)sut.Convert(chargeLinkCommandReceivedContract);
             ProtobufAssert.IncomingContractIsSuperset(result, chargeLinkCommandReceivedContract);
         }
@@ -42,6 +44,18 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Internal.Mappers
         public void Convert_WhenCalledWithNull_ShouldThrow([NotNull]LinkCommandReceivedInboundMapper sut)
         {
             Assert.Throws<InvalidOperationException>(() => sut.Convert(null!));
+        }
+
+        /// <summary>
+        /// We need to represent Guid's as strings in contract. This leads to the need to fix the auto created Guid strings.
+        /// Also see https://docs.microsoft.com/en-us/dotnet/architecture/grpc-for-wcf-developers/protobuf-data-types#systemguid
+        /// </summary>
+        private static void FixGuidStrings(ChargeLinkCommandReceived chargeLinkCommandReceived)
+        {
+            foreach (var chargeLink in chargeLinkCommandReceived.ChargeLinksCommand.ChargeLinks)
+            {
+                chargeLink.ChargeId = Guid.NewGuid().ToString();
+            }
         }
     }
 }

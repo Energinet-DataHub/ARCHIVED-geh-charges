@@ -17,7 +17,6 @@ using System.Threading.Tasks;
 using System.Xml;
 using Energinet.DataHub.Core.Messaging.Transport;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
-using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.Infrastructure.Messaging.Serialization;
 using NodaTime;
 
@@ -130,8 +129,8 @@ namespace GreenEnergyHub.Charges.Infrastructure.MarketDocument.Cim
         {
             var document = new DocumentDto()
             {
-                Sender = new MarketParticipant(),
-                Recipient = new MarketParticipant(),
+                Sender = new MarketParticipantDto(),
+                Recipient = new MarketParticipantDto(),
                 RequestDate = _clock.GetCurrentInstant(),
             };
 

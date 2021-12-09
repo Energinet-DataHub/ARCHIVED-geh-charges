@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
 using GreenEnergyHub.Charges.Domain.AvailableChargeLinksData;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -23,7 +22,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Context.EntityConfigurations
     {
         public void Configure(EntityTypeBuilder<AvailableChargeLinksData> builder)
         {
-            builder.ToTable("AvailableChargeLinksData", "MessageHub");
+            builder.ToTable("AvailableChargeLinksData", DatabaseSchemaNames.MessageHub);
 
             builder.HasKey(x => x.Id);
 
