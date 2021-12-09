@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using GreenEnergyHub.Charges.Domain.Charges;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -51,8 +52,10 @@ namespace GreenEnergyHub.Charges.Infrastructure.Context.EntityConfigurations
 
             points.ToTable($"{nameof(Charge)}{nameof(Point)}");
 
-            // This is a database-only column - doesn't exist in domain model as it is not an aggregate
-            points.Property("Id").ValueGeneratedOnAdd();
+            // This is a database-only column - doesn't exist in domain model as point is not an aggregate
+            points
+                .Property<Guid>("Id")
+                .ValueGeneratedOnAdd();
 
             points.Property(p => p.Position);
             points.Property(p => p.Price);
