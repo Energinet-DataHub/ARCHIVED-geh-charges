@@ -28,25 +28,17 @@ namespace GreenEnergyHub.Charges.Domain.DefaultChargeLinks
     /// </summary>
     public class DefaultChargeLink
     {
-        /// <summary>
-        /// The default start date the charge link is applicable from.
-        /// </summary>
-        private readonly Instant _startDateTime;
-
-        /// <summary>
-        /// The metering point type that must match to be applicable for linking.
-        /// </summary>
-        private readonly MeteringPointType _meteringPointType;
-
         public DefaultChargeLink(
+            Guid id,
             Instant startDateTime,
             Instant endDateTime,
             Guid chargeId,
             MeteringPointType meteringPointType)
         {
-            _startDateTime = startDateTime;
+            Id = id;
+            StartDateTime = startDateTime;
             EndDateTime = endDateTime;
-            _meteringPointType = meteringPointType;
+            MeteringPointType = meteringPointType;
             ChargeId = chargeId;
         }
 
@@ -56,7 +48,7 @@ namespace GreenEnergyHub.Charges.Domain.DefaultChargeLinks
         /// </summary>
         public Instant GetStartDateTime(Instant meteringPointCreatedDateTime)
         {
-            return _startDateTime > meteringPointCreatedDateTime ? _startDateTime : meteringPointCreatedDateTime;
+            return StartDateTime > meteringPointCreatedDateTime ? StartDateTime : meteringPointCreatedDateTime;
         }
 
         /// <summary>
@@ -67,13 +59,25 @@ namespace GreenEnergyHub.Charges.Domain.DefaultChargeLinks
         public bool ApplicableForLinking(Instant meteringPointCreatedDateTime, MeteringPointType meteringPointType)
         {
             return EndDateTime > GetStartDateTime(meteringPointCreatedDateTime)
-                   && _meteringPointType == meteringPointType;
+                   && MeteringPointType == meteringPointType;
         }
+
+        public Guid Id { get; }
 
         /// <summary>
         /// A reference to the charge in the Charge table
         /// </summary>
         public Guid ChargeId { get; }
+
+        /// <summary>
+        /// The metering point type that must match to be applicable for linking.
+        /// </summary>
+        public MeteringPointType MeteringPointType { get; }
+
+        /// <summary>
+        /// The default start date the charge link is applicable from.
+        /// </summary>
+        public Instant StartDateTime { get; }
 
         /// <summary>
         /// If the DefaultChargeLink is only applicable for linking when EndDateTime is later than the StartDateTime

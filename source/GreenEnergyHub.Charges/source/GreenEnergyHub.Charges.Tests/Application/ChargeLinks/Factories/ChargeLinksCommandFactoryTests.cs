@@ -46,6 +46,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Factories
             MarketParticipant recipient,
             MarketParticipant systemOperator,
             MarketParticipant chargeOwner,
+            Guid defaultChargeLinkId,
             Guid chargeId,
             MeteringPoint meteringPoint,
             CreateLinksRequest createLinksRequest,
@@ -53,6 +54,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Factories
         {
             // Arrange
             var defaultChargeLink = new DefaultChargeLink(
+                defaultChargeLinkId,
                 Instant.MinValue,
                 Instant.MaxValue,
                 chargeId,
