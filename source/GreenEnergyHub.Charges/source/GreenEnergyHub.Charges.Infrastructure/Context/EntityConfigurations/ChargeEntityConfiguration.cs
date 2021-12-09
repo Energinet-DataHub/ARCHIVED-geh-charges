@@ -38,8 +38,10 @@ namespace GreenEnergyHub.Charges.Infrastructure.Context.EntityConfigurations
             builder.Property(c => c.StartDateTime);
             builder.Property(c => c.EndDateTime);
 
-            builder.Ignore(c => c.Points);
-            builder.OwnsMany<Point>("_points", ConfigurePoints);
+            builder.OwnsMany(c => c.Points, ConfigurePoints);
+            builder.Metadata
+                .FindNavigation(nameof(Charge.Points))
+                .SetPropertyAccessMode(PropertyAccessMode.Field);
         }
 
         private static void ConfigurePoints(OwnedNavigationBuilder<Charge, Point> points)
