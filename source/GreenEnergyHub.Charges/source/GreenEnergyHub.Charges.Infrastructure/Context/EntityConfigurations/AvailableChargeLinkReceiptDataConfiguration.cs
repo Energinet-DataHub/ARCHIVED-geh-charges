@@ -22,17 +22,19 @@ namespace GreenEnergyHub.Charges.Infrastructure.Context.EntityConfigurations
     {
         public void Configure(EntityTypeBuilder<AvailableChargeLinkReceiptData> builder)
         {
-            builder.ToTable("AvailableChargeLinkReceiptData", DatabaseSchemaNames.MessageHub);
+            builder.ToTable(nameof(AvailableChargeLinkReceiptData), DatabaseSchemaNames.MessageHub);
             builder.HasKey(x => x.Id);
+
             builder.Property(p => p.Id).ValueGeneratedNever();
-            builder.Property(x => x.RecipientId).HasColumnName("RecipientId");
-            builder.Property(x => x.RecipientRole).HasColumnName("RecipientRole");
-            builder.Property(x => x.BusinessReasonCode).HasColumnName("BusinessReasonCode");
-            builder.Property(x => x.ReceiptStatus).HasColumnName("ReceiptStatus");
-            builder.Property(x => x.OriginalOperationId).HasColumnName("OriginalOperationId");
-            builder.Property(x => x.MeteringPointId).HasColumnName("MeteringPointId");
-            builder.Property(x => x.RequestDateTime).HasColumnName("RequestDateTime");
-            builder.Property(x => x.AvailableDataReferenceId).HasColumnName("AvailableDataReferenceId");
+            builder.Property(x => x.RecipientId);
+            builder.Property(x => x.RecipientRole);
+            builder.Property(x => x.BusinessReasonCode);
+            builder.Property(x => x.ReceiptStatus);
+            builder.Property(x => x.OriginalOperationId);
+            builder.Property(x => x.MeteringPointId);
+            builder.Property(x => x.RequestDateTime);
+            builder.Property(x => x.AvailableDataReferenceId);
+
             builder.Ignore(c => c.ReasonCodes);
             builder.OwnsMany<AvailableChargeLinkReceiptDataReasonCode>("_reasonCodes", ConfigureReasonCodes);
         }
@@ -42,11 +44,12 @@ namespace GreenEnergyHub.Charges.Infrastructure.Context.EntityConfigurations
             AvailableChargeLinkReceiptDataReasonCode> reasonCodes)
         {
             reasonCodes.WithOwner().HasForeignKey("AvailableChargeLinkReceiptDataId");
-            reasonCodes.ToTable("AvailableChargeLinkReceiptDataReasonCode", DatabaseSchemaNames.MessageHub);
+            reasonCodes.ToTable(nameof(AvailableChargeLinkReceiptDataReasonCode), DatabaseSchemaNames.MessageHub);
             reasonCodes.HasKey(r => r.Id);
+
             reasonCodes.Property(r => r.Id).ValueGeneratedNever();
-            reasonCodes.Property(r => r.ReasonCode).HasColumnName("ReasonCode");
-            reasonCodes.Property(r => r.Text).HasColumnName("Text");
+            reasonCodes.Property(r => r.ReasonCode);
+            reasonCodes.Property(r => r.Text);
         }
     }
 }
