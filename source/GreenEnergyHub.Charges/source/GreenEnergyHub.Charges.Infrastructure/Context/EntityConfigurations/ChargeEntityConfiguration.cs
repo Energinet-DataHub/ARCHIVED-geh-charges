@@ -21,6 +21,8 @@ namespace GreenEnergyHub.Charges.Infrastructure.Context.EntityConfigurations
 {
     public class ChargeEntityConfiguration : IEntityTypeConfiguration<Charge>
     {
+        private static readonly string _tableName = $"{nameof(Charge)}{nameof(Point)}";
+
         public void Configure(EntityTypeBuilder<Charge> builder)
         {
             builder.ToTable(nameof(Charge));
@@ -50,7 +52,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Context.EntityConfigurations
             // This field is defined in the SQL model (as a foreign key)
             points.WithOwner().HasForeignKey($"{nameof(Charge)}Id");
 
-            points.ToTable($"{nameof(Charge)}{nameof(Point)}");
+            points.ToTable(_tableName);
 
             // This is a database-only column - doesn't exist in domain model as point is not an aggregate
             points
