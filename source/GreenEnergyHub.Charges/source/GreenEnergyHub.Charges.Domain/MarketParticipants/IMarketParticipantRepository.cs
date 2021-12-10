@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -22,7 +23,9 @@ namespace GreenEnergyHub.Charges.Domain.MarketParticipants
     /// </summary>
     public interface IMarketParticipantRepository
     {
-        MarketParticipant? GetMarketParticipantOrNull(string id);
+        Task<MarketParticipant> GetAsync(Guid id);
+
+        Task<MarketParticipant> GetOrNullAsync(string marketParticipantId);
 
         /// <summary>
         /// Using MeteringPointId find the Grid Access Provider of that MP
@@ -32,5 +35,7 @@ namespace GreenEnergyHub.Charges.Domain.MarketParticipants
         Task<List<MarketParticipant>> GetActiveGridAccessProvidersAsync();
 
         Task<MarketParticipant> GetAsync(MarketParticipantRole marketParticipantRole);
+
+        Task<IReadOnlyCollection<MarketParticipant>> GetAsync(IEnumerable<Guid> ids);
     }
 }

@@ -12,28 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
-using System.ComponentModel.DataAnnotations.Schema;
-using NodaTime;
+using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using System.Threading.Tasks;
+using GreenEnergyHub.Charges.Domain.DefaultChargeLinks;
+using GreenEnergyHub.Charges.Domain.Dtos.CreateLinksRequests;
 
-#pragma warning disable 8618
-
-namespace GreenEnergyHub.Charges.Infrastructure.Context.Model
+namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands
 {
-    public class ChargeOperation
+    public interface IChargeLinksCommandFactory
     {
-        public ChargeOperation()
-        {
-            Id = Guid.NewGuid();
-        }
-
-        public Guid Id { get; set; }
-
-        public string ChargeOperationId { get; set; }
-
-        [ForeignKey("Charge")]
-        public Guid ChargeId { get; set; }
-
-        public Instant? WriteDateTime { get; set; }
+        Task<ChargeLinksCommand> CreateAsync(
+            [NotNull] CreateLinksRequest createLinksRequest,
+            [NotNull] IReadOnlyCollection<DefaultChargeLink> defaultChargeLinks);
     }
 }

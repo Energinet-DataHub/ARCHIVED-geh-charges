@@ -34,7 +34,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Factories
             [NotNull] ChargeFactory sut)
         {
             // Act
-            var actual = await sut.CreateFromCommandAsync(chargeCommand).ConfigureAwait(false);
+            var actual = await sut.CreateFromCommandAsync(chargeCommand);
 
             // Assert
             actual.Should().NotContainNullsOrEmptyEnumerables();

@@ -17,7 +17,6 @@ using AutoFixture.Xunit2;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Core;
 using GreenEnergyHub.Charges.Core.DateTime;
-using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessValidation.ValidationRules;
@@ -85,7 +84,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Validation.BusinessVa
             string effectuationDateIsoString,
             ChargeCommand chargeCommand)
         {
-            chargeCommand.ChargeOperation = new ChargeOperation
+            chargeCommand.ChargeOperation = new ChargeOperationDto
             {
                 StartDateTime = InstantPattern.General.Parse(effectuationDateIsoString).Value,
             };

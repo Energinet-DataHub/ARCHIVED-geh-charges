@@ -32,7 +32,7 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
     public class CreateLinkRequestHandler : ICreateLinkRequestHandler
     {
         private readonly IDefaultChargeLinkRepository _defaultChargeLinkRepository;
-        private readonly IDefaultChargeLinksRequestCommandFactory _defaultChargeLinksRequestCommandFactory;
+        private readonly IChargeLinksCommandFactory _chargeLinksCommandFactory;
         private readonly IMessageDispatcher<ChargeLinksReceivedEvent> _messageDispatcher;
         private readonly IClock _clock;
         private readonly IMeteringPointRepository _meteringPointRepository;
@@ -43,7 +43,7 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
 
         public CreateLinkRequestHandler(
             IDefaultChargeLinkRepository defaultChargeLinkRepository,
-            IDefaultChargeLinksRequestCommandFactory defaultChargeLinksRequestCommandFactory,
+            IChargeLinksCommandFactory chargeLinksCommandFactory,
             IMessageDispatcher<ChargeLinksReceivedEvent> messageDispatcher,
             IClock clock,
             IMeteringPointRepository meteringPointRepository,
@@ -53,7 +53,7 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
             ICorrelationContext correlationIdContext)
         {
             _defaultChargeLinkRepository = defaultChargeLinkRepository;
-            _defaultChargeLinksRequestCommandFactory = defaultChargeLinksRequestCommandFactory;
+            _chargeLinksCommandFactory = chargeLinksCommandFactory;
             _messageDispatcher = messageDispatcher;
             _clock = clock;
             _meteringPointRepository = meteringPointRepository;
@@ -145,7 +145,7 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
                     meteringPoint.EffectiveDate,
                     meteringPoint.MeteringPointType)).ToList();
 
-            var chargeLinksCommand = await _defaultChargeLinksRequestCommandFactory.CreateAsync(
+            var chargeLinksCommand = await _chargeLinksCommandFactory.CreateAsync(
                 createLinksRequest, chargeLinksApplicableForLinking);
 
             var chargeLinksReceivedEvent = new ChargeLinksReceivedEvent(

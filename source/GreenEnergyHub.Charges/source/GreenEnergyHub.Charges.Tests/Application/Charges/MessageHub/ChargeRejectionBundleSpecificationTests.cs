@@ -60,7 +60,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.MessageHub
 
             var marketParticipant = new MarketParticipant
             {
-                Id = MaxLengthId,
+                MarketParticipantId = MaxLengthId,
                 BusinessProcessRole = MarketParticipantRole.GridAccessProvider,
             };
 
