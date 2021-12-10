@@ -19,7 +19,6 @@ using System.Threading.Tasks;
 using Energinet.DataHub.Core.TestCommon;
 using FluentAssertions;
 using GreenEnergyHub.Charges.SystemTests.Fixtures;
-using Xunit;
 
 namespace GreenEnergyHub.Charges.SystemTests
 {
@@ -33,7 +32,7 @@ namespace GreenEnergyHub.Charges.SystemTests
         private SystemTestConfiguration Configuration { get; }
 
 #pragma warning disable VSTHRD200 // Use "Async" suffix for async methods
-        [SystemTestFact(Skip = "Hi Peter, pls update this test for your scenario. :o)")]
+        [SystemFact(Skip = "Hi Peter, pls update this test for your scenario. :o)")]
         public async Task When_TriggeringAction_Then_PeekReturnsExpectedContent()
         {
             // Arrange
@@ -66,7 +65,7 @@ namespace GreenEnergyHub.Charges.SystemTests
         // This is just to be able to verify everything works with regards to settings and executing the tests after deployment.
         // If needed, this test can be removed when the actual system test has been implemented.
         // Or it can be used to actually verify the HealthStatus after deplyoment.
-        [SystemTestFact]
+        [SystemFact]
         public async Task When_RequestHealthStatus_Then_ResponseIsOKAndDoesNotContainFalse()
         {
             // Arrange

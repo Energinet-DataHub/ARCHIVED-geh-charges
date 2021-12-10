@@ -17,15 +17,18 @@ using Xunit;
 
 namespace GreenEnergyHub.Charges.SystemTests.Fixtures
 {
-    public sealed class SystemTestFactAttribute : FactAttribute
+    /// <summary>
+    /// Use this to mark system tests (facts).
+    /// </summary>
+    public sealed class SystemFactAttribute : FactAttribute
     {
         private static readonly Lazy<bool> _shouldSkip = new Lazy<bool>(ShouldSkip);
 
-        public SystemTestFactAttribute()
+        public SystemFactAttribute()
         {
             if (_shouldSkip.Value)
             {
-                Skip = "System test fact was configured to be skipped.";
+                Skip = "System fact was configured to be skipped.";
             }
         }
 
