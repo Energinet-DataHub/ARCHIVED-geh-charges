@@ -23,7 +23,7 @@ namespace GreenEnergyHub.Charges.SystemTests.Fixtures
         {
             Configuration = BuildConfiguration();
 
-            ShouldSkip = Configuration.GetValue<bool>("SYSTEMFACT_SKIP");
+            ShouldSkip = Configuration.GetValue<bool>("SYSTEMFACT_SKIP", defaultValue: true);
             BaseAddress = new Uri(Configuration.GetValue<string>("MYDOMAIN_BASEADDRESS"));
         }
 
