@@ -35,7 +35,7 @@ namespace GreenEnergyHub.Charges.SystemTests.Fixtures
         private static bool ShouldSkip()
         {
             var systemTestConfiguration = new SystemTestConfiguration();
-            return systemTestConfiguration.Skip;
+            return systemTestConfiguration.ShouldSkip;
         }
     }
 }
