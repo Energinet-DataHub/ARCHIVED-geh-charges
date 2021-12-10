@@ -191,7 +191,7 @@ namespace GreenEnergyHub.Charges.Tests.Builders
                     _resolution,
                     _taxIndicator,
                     true,
-                    VatClassification.Vat25,
+                    _vatClassification,
                     _startDateTime,
                     _endDateTime,
                     _points),

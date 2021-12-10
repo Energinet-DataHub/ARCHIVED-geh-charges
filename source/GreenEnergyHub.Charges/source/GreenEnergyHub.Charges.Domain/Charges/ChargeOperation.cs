@@ -38,7 +38,7 @@ namespace GreenEnergyHub.Charges.Domain.Charges
             bool transparentInvoicing,
             VatClassification vatClassification,
             Instant startDateTime,
-            Instant endDateTime,
+            Instant? endDateTime,
             List<Point> points)
         {
             Id = chargeOperationId;

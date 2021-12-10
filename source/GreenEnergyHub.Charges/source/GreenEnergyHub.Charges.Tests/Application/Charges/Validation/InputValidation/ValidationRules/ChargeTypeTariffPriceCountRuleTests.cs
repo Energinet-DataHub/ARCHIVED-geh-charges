@@ -57,7 +57,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Validation.InputValid
         [InlineAutoMoqData(2, false)]
         [InlineAutoMoqData(24, false)]
         [InlineAutoMoqData(96, false)]
-        public void IsValid_WhenPT1HAnd1PricePoint_IsTrue(
+        public void IsValid_WhenP1DAnd1PricePoint_IsTrue(
             int priceCount,
             bool expected,
             ChargeCommandTestBuilder builder)
@@ -65,7 +65,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Validation.InputValid
             // Arrange
             var chargeCommand = builder
                 .WithChargeType(ChargeType.Tariff)
-                .WithResolution(Resolution.PT1H)
+                .WithResolution(Resolution.P1D)
                 .WithPointWithXNumberOfPrices(priceCount).Build();
 
             // Act

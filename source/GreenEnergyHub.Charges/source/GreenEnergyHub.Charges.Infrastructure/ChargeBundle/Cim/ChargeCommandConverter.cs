@@ -56,10 +56,10 @@ namespace GreenEnergyHub.Charges.Infrastructure.ChargeBundle.Cim
         private async Task<ChargeOperation> ParseChargeOperationAsync(XmlReader reader)
         {
             ChargeOperation? operation = null;
+            var operationId = string.Empty;
 
             while (await reader.ReadAsync().ConfigureAwait(false))
             {
-                var operationId = string.Empty;
                 if (reader.Is(CimChargeCommandConstants.Id, CimChargeCommandConstants.Namespace))
                 {
                     var content = await reader.ReadElementContentAsStringAsync().ConfigureAwait(false);
@@ -107,7 +107,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.ChargeBundle.Cim
             var description = string.Empty;
             var resolution = Resolution.Unknown;
             Instant startDateTime = default;
-            Instant endDateTime = default;
+            Instant? endDateTime = null;
             var vatClassification = VatClassification.Unknown;
             var transparentInvoicing = false;
             var taxIndicator = false;
@@ -170,7 +170,9 @@ namespace GreenEnergyHub.Charges.Infrastructure.ChargeBundle.Cim
                 }
                 else if (reader.Is(CimChargeCommandConstants.SeriesPeriod, CimChargeCommandConstants.Namespace))
                 {
-                    points.AddRange(await ParseSeriesPeriodIntoOperationAsync(reader, startDateTime, resolution).ConfigureAwait(false));
+                    var seriesPeriodIntoOperationAsync = await ParseSeriesPeriodIntoOperationAsync(reader, startDateTime, resolution).ConfigureAwait(false);
+                    points.AddRange(seriesPeriodIntoOperationAsync.Points);
+                    resolution = seriesPeriodIntoOperationAsync.Resolution;
                 }
                 else if (reader.Is(
                     CimChargeCommandConstants.ChargeTypeElement,
@@ -197,19 +199,21 @@ namespace GreenEnergyHub.Charges.Infrastructure.ChargeBundle.Cim
                 points);
         }
 
-        private async Task<List<Point>> ParseSeriesPeriodIntoOperationAsync(XmlReader reader, Instant startDateTime, Resolution resolution)
+        private async Task<(List<Point> Points, Resolution Resolution)> ParseSeriesPeriodIntoOperationAsync(XmlReader reader, Instant startDateTime, Resolution initialResolution)
         {
             var points = new List<Point>();
+            var resolution = initialResolution;
+
             while (await reader.ReadAsync().ConfigureAwait(false))
             {
                 if (reader.Is(CimChargeCommandConstants.PeriodResolution, CimChargeCommandConstants.Namespace))
                 {
                     // Note, this is the second place where the resolution might be identified
                     // If it was not set previous, we use this one instead
-                    if (resolution == Resolution.Unknown)
+                    if (initialResolution == Resolution.Unknown)
                     {
                         var content = await reader.ReadElementContentAsStringAsync().ConfigureAwait(false);
-                        //operation.Resolution = ResolutionMapper.Map(content); // TODO
+                        resolution = ResolutionMapper.Map(content); // TODO
                     }
                 }
                 else if (reader.Is(CimChargeCommandConstants.TimeInterval, CimChargeCommandConstants.Namespace))
@@ -230,7 +234,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.ChargeBundle.Cim
                 }
             }
 
-            return points;
+            return (points, resolution);
         }
 
         private async Task<Instant> ParseTimeIntervalAsync(XmlReader reader, Instant startDateTime)

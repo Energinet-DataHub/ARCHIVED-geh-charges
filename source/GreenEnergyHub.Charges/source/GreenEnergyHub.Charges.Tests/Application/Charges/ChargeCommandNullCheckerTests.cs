@@ -33,16 +33,16 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges
         [InlineAutoDomainData("Valid", "", "Valid")]
         [InlineAutoDomainData("Valid", "Valid", "")]
         public void ChargeCommandPropertiesAreNotNullOrWhitespace(
-            ChargeCommandTestBuilder chargeCommandTestBuilder,
             string description,
             string chargeName,
             string documentId)
         {
             // Arrange
-            var c = chargeCommandTestBuilder
+            var c = new ChargeCommandTestBuilder()
                 .WithDescription(description)
                 .WithChargeName(chargeName)
-                .WithDocumentId(documentId).Build();
+                .WithDocumentId(documentId)
+                .Build();
 
             // Act & Assert
             Assert.Throws<ArgumentException>(() => ChargeCommandNullChecker.ThrowExceptionIfRequiredPropertyIsNull(c));
