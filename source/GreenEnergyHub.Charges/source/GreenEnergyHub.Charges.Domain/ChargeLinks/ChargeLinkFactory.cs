@@ -52,21 +52,12 @@ namespace GreenEnergyHub.Charges.Domain.ChargeLinks
                     .GetMeteringPointAsync(chargeLinksEvent.ChargeLinksCommand.MeteringPointId)
                     .ConfigureAwait(false);
 
-                var operation = new ChargeLinkOperation(chargeLink.OperationId);
-                var operations = new List<ChargeLinkOperation> { operation };
-
-                var periodDetails = new ChargeLinkPeriodDetails(
-                    chargeLink.StartDateTime,
-                    chargeLink.EndDateTime.TimeOrEndDefault(),
-                    chargeLink.Factor,
-                    operation.Id);
-                var periodDetailsCollection = new List<ChargeLinkPeriodDetails> { periodDetails };
-
                 chargeLinksCreated.Add(new ChargeLink(
                     charge.Id,
                     meteringPoint.Id,
-                    operations,
-                    periodDetailsCollection));
+                    chargeLink.StartDateTime,
+                    chargeLink.EndDateTime.TimeOrEndDefault(),
+                    chargeLink.Factor));
             }
 
             return chargeLinksCreated;

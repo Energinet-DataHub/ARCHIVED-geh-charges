@@ -24,7 +24,6 @@ using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksReceivedEvents;
 using GreenEnergyHub.Charges.Domain.MeteringPoints;
 using GreenEnergyHub.TestHelpers;
 using Moq;
-using NodaTime;
 using Xunit;
 using Xunit.Categories;
 
@@ -58,19 +57,13 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Factories
 
             // Assert
             var actualFirst = actual.First();
+            var firstExpectedLink = expectedEvent.ChargeLinksCommand.ChargeLinks.First();
 
-            actualFirst.ChargeId
-                .Should().Be(expectedCharge.Id);
-            actualFirst.MeteringPointId
-                .Should().Be(expectedMeteringPoint.Id);
-            actualFirst.PeriodDetails.First().StartDateTime
-                .Should().Be(expectedEvent.ChargeLinksCommand.ChargeLinks.First().StartDateTime);
-            actualFirst.PeriodDetails.First().EndDateTime
-                .Should().Be((Instant)expectedEvent.ChargeLinksCommand.ChargeLinks.First().EndDateTime!);
-            actualFirst.PeriodDetails.First().Factor
-                .Should().Be(expectedEvent.ChargeLinksCommand.ChargeLinks.First().Factor);
-            actualFirst.Operations.First().SenderProvidedId
-                .Should().Be(expectedEvent.ChargeLinksCommand.ChargeLinks.First().OperationId);
+            actualFirst.ChargeId.Should().Be(expectedCharge.Id);
+            actualFirst.MeteringPointId.Should().Be(expectedMeteringPoint.Id);
+            actualFirst.Factor.Should().Be(firstExpectedLink.Factor);
+            actualFirst.StartDateTime.Should().Be(firstExpectedLink.StartDateTime);
+            actualFirst.EndDateTime.Should().Be(firstExpectedLink.EndDateTime!.Value);
         }
 
         [Theory]
