@@ -1,6 +1,6 @@
 ﻿{
   // Use this on developer machine to toggle tests while developing them.
-  // Should be set 'true' using an environemtn variable on the build agent, to run these after deployment.
+  // Should be set 'true' using an environment variable on the build agent, to run these after deployment.
   "SYSTEMFACT_SKIP": true,
 
   // Hi Peter, update the property name to match the name of the domain for which we need the baseaddress.
