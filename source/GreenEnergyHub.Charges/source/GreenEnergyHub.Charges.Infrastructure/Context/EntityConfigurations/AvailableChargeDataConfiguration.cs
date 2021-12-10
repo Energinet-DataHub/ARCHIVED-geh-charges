@@ -12,10 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
 using GreenEnergyHub.Charges.Domain.AvailableChargeData;
-using GreenEnergyHub.Charges.Domain.Charges;
-using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -25,7 +22,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Context.EntityConfigurations
     {
         public void Configure(EntityTypeBuilder<AvailableChargeData> builder)
         {
-            builder.ToTable("AvailableChargeData", "MessageHub");
+            builder.ToTable("AvailableChargeData", DatabaseSchemaNames.MessageHub);
             builder.HasKey(x => x.Id);
             builder.Property(p => p.Id).ValueGeneratedNever();
             builder.Property(x => x.RecipientId).HasColumnName("RecipientId");
@@ -51,7 +48,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Context.EntityConfigurations
         private static void ConfigurePoints(OwnedNavigationBuilder<AvailableChargeData, AvailableChargeDataPoint> points)
         {
             points.WithOwner().HasForeignKey("AvailableChargeDataId");
-            points.ToTable("AvailableChargeDataPoints", "MessageHub");
+            points.ToTable("AvailableChargeDataPoints", DatabaseSchemaNames.MessageHub);
             points.HasKey(p => p.Id);
             points.Property(p => p.Id).ValueGeneratedNever();
             points.Property(d => d.Position).HasColumnName("Position");

@@ -21,7 +21,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Validation.BusinessVa
     {
         public TestableChargeCommand()
         {
-            ChargeOperation = new ChargeOperation();
+            ChargeOperation = new ChargeOperationDto();
         }
     }
 }

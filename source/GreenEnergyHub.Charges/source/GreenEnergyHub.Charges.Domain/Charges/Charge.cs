@@ -14,22 +14,22 @@
 
 using System;
 using System.Collections.Generic;
-using GreenEnergyHub.Charges.Core.DateTime;
 using NodaTime;
 
 namespace GreenEnergyHub.Charges.Domain.Charges
 {
     public class Charge
     {
+        private readonly List<Point> _points;
+
         public Charge(
             Guid id,
-            string chargeOperationId,
             string senderProvidedChargeId,
             string name,
             string description,
-            string owner,
+            Guid ownerId,
             Instant startDateTime,
-            Instant? endDateTime,
+            Instant endDateTime,
             ChargeType type,
             VatClassification vatClassification,
             Resolution resolution,
@@ -38,30 +38,36 @@ namespace GreenEnergyHub.Charges.Domain.Charges
             List<Point> points)
         {
             Id = id;
-            ChargeOperationId = chargeOperationId;
             SenderProvidedChargeId = senderProvidedChargeId;
             Name = name;
             Description = description;
-            Owner = owner;
+            OwnerId = ownerId;
             StartDateTime = startDateTime;
-            EndDateTime = endDateTime.TimeOrEndDefault();
+            EndDateTime = endDateTime;
             Type = type;
             VatClassification = vatClassification;
             Resolution = resolution;
             TransparentInvoicing = transparentInvoicing;
             TaxIndicator = taxIndicator;
-            Points = points;
+            _points = points;
+        }
+
+        /// <summary>
+        /// Minimal ctor to support EF Core.
+        /// </summary>
+        // ReSharper disable once UnusedMember.Local - used by EF Core
+        private Charge()
+        {
+            SenderProvidedChargeId = null!;
+            Name = null!;
+            Description = null!;
+            _points = new List<Point>();
         }
 
         /// <summary>
         /// Globally unique identifier of the charge.
         /// </summary>
         public Guid Id { get; }
-
-        /// <summary>
-        /// Contains a unique ID for the specific Charge Event, provided by the sender.
-        /// </summary>
-        public string ChargeOperationId { get; }
 
         /// <summary>
         /// Unique ID of a charge (Note, unique per market participants and charge type).
@@ -73,7 +79,6 @@ namespace GreenEnergyHub.Charges.Domain.Charges
 
         /// <summary>
         /// The charge name
-        /// Example: "Elafgift"
         /// </summary>
         public string Name { get; }
 
@@ -104,12 +109,12 @@ namespace GreenEnergyHub.Charges.Domain.Charges
         public bool TaxIndicator { get; private set; }
 
         /// <summary>
-        ///  Charge Owner, e.g. the GLN or EIC identification number.
+        ///  Aggregate ID reference to the owning market participant.
         /// </summary>
-        public string Owner { get; }
+        public Guid OwnerId { get; }
 
         public Resolution Resolution { get; }
 
-        public List<Point> Points { get; }
+        public IReadOnlyCollection<Point> Points => _points;
     }
 }

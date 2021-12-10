@@ -14,18 +14,23 @@
 
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 
-namespace GreenEnergyHub.Charges.Infrastructure.Context.Mapping
+#pragma warning disable 8618
+namespace GreenEnergyHub.Charges.Domain.Dtos.SharedDtos
 {
     /// <summary>
-    /// Mapper to map from persistence model to domain model.
+    /// A market participant, e.g. a Grid Access Provider, whom may submit a charge message.
     /// </summary>
-    public interface IMarketParticipantMapper
+    public class MarketParticipantDto
     {
         /// <summary>
-        /// Map from persistence object to domain object.
+        /// Contains an ID that identifies the Market Participants. In Denmark this would be the GLN number or EIC code.
         /// </summary>
-        /// <param name="persistenceModel"></param>
-        /// <returns>A mapped market participant</returns>
-        MarketParticipant ToDomainObject(Infrastructure.Context.Model.MarketParticipant persistenceModel);
+        public string Id { get; set; }
+
+        /// <summary>
+        /// Contains the role a market participant uses when initiating and communicating with Green Energy Hub
+        /// about a specific business process, e.g. Grid Access Provider use 'DDM' when creating Charge price lists.
+        /// </summary>
+        public MarketParticipantRole BusinessProcessRole { get; set; }
     }
 }

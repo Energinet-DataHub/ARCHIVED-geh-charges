@@ -28,7 +28,7 @@ using NodaTime;
 
 namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands
 {
-    public class DefaultChargeLinksRequestCommandFactory : IDefaultChargeLinksRequestCommandFactory
+    public class ChargeLinksCommandFactory : IChargeLinksCommandFactory
     {
         private readonly IChargeRepository _chargeRepository;
         private readonly IMeteringPointRepository _meteringPointRepository;
@@ -36,7 +36,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands
         private readonly IMarketParticipantRepository _marketParticipantRepository;
         private readonly IHubSenderConfiguration _hubSenderConfiguration;
 
-        public DefaultChargeLinksRequestCommandFactory(
+        public ChargeLinksCommandFactory(
             IChargeRepository chargeRepository,
             IMeteringPointRepository meteringPointRepository,
             IClock clock,
@@ -60,6 +60,11 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands
                 .GetAsync(chargeIds)
                 .ConfigureAwait(false);
 
+            var ownerIds = charges.Select(c => c.OwnerId);
+            var owners = await _marketParticipantRepository
+                .GetAsync(ownerIds)
+                .ConfigureAwait(false);
+
             var meteringPoint = await _meteringPointRepository
                 .GetMeteringPointAsync(createLinksRequest.MeteringPointId)
                 .ConfigureAwait(false);
@@ -78,15 +83,20 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands
                 {
                     ChargeType = pair.Value.Type,
                     SenderProvidedChargeId = pair.Value.SenderProvidedChargeId,
-                    EndDateTime = pair.Key.EndDateTime,
-                    ChargeOwner = pair.Value.Owner,
+                    ChargeOwnerId = GetChargeOwnerId(pair.Value, owners),
                     StartDateTime = pair.Key.GetStartDateTime(meteringPoint.EffectiveDate),
+                    EndDateTime = pair.Key.EndDateTime,
                     OperationId = Guid.NewGuid().ToString(), // TODO: Fix and add unit test
                     Factor = DefaultChargeLink.Factor,
                 })
                 .ToList();
 
             return CreateChargeLinksCommand(createLinksRequest, systemOperator, chargeLinks);
+        }
+
+        private static string GetChargeOwnerId(Charge charge, IReadOnlyCollection<MarketParticipant> owners)
+        {
+            return owners.Single(o => o.Id == charge.OwnerId).MarketParticipantId;
         }
 
         private ChargeLinksCommand CreateChargeLinksCommand(
@@ -105,14 +115,14 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands
                     BusinessReasonCode = BusinessReasonCode.UpdateMasterDataSettlement,
                     RequestDate = currentTime,
                     CreatedDateTime = currentTime,
-                    Sender = new MarketParticipant
+                    Sender = new MarketParticipantDto
                     {
-                        Id = systemOperator.Id, // For default charge links the owner is the TSO.
+                        Id = systemOperator.MarketParticipantId, // For default charge links the owner is the TSO.
                         BusinessProcessRole = MarketParticipantRole.SystemOperator,
                     },
-                    Recipient = new MarketParticipant
+                    Recipient = new MarketParticipantDto
                     {
-                        Id = _hubSenderConfiguration.GetSenderMarketParticipant().Id,
+                        Id = _hubSenderConfiguration.GetSenderMarketParticipant().MarketParticipantId,
                         BusinessProcessRole = MarketParticipantRole.MeteringPointAdministrator,
                     },
                 },

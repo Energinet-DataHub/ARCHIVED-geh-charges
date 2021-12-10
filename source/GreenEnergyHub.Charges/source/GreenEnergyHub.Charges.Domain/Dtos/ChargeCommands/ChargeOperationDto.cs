@@ -13,11 +13,12 @@
 // limitations under the License.
 
 using System.Collections.Generic;
+using GreenEnergyHub.Charges.Domain.Charges;
 using NodaTime;
 
 #pragma warning disable 8618
 
-namespace GreenEnergyHub.Charges.Domain.Charges
+namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands
 {
     // Non-nullable member is uninitialized is ignored
     // Only properties which is allowed to be null is nullable
@@ -26,9 +27,9 @@ namespace GreenEnergyHub.Charges.Domain.Charges
     /// <summary>
     /// The ChargeEvent class contains the intend of the charge command, e.g. it's an update of a charge plus an ID provided by the sender.
     /// </summary>
-    public class ChargeOperation
+    public class ChargeOperationDto
     {
-        public ChargeOperation()
+        public ChargeOperationDto()
         {
             Points = new List<Point>();
         }
@@ -48,7 +49,6 @@ namespace GreenEnergyHub.Charges.Domain.Charges
 
         /// <summary>
         /// The charge name
-        /// Example: "Elafgift"
         /// </summary>
         public string ChargeName { get; set; }
 

@@ -12,12 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.Infrastructure.Context;
-using GreenEnergyHub.Charges.Infrastructure.Context.Mapping;
 using Microsoft.EntityFrameworkCore;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Repositories
@@ -25,24 +25,25 @@ namespace GreenEnergyHub.Charges.Infrastructure.Repositories
     public class MarketParticipantRepository : IMarketParticipantRepository
     {
         private readonly IChargesDatabaseContext _chargesDatabaseContext;
-        private readonly IMarketParticipantMapper _mapper;
 
         public MarketParticipantRepository(
-            IChargesDatabaseContext chargesDatabaseContext,
-            IMarketParticipantMapper mapper)
+            IChargesDatabaseContext chargesDatabaseContext)
         {
             _chargesDatabaseContext = chargesDatabaseContext;
-            _mapper = mapper;
         }
 
-        public MarketParticipant? GetMarketParticipantOrNull(string id)
+        public Task<MarketParticipant> GetAsync(Guid id)
         {
             return _chargesDatabaseContext
                 .MarketParticipants
-                .Where(mp => mp.MarketParticipantId == id)
-                .AsEnumerable()
-                .Select(_mapper.ToDomainObject)
-                .SingleOrDefault();
+                .SingleAsync(mp => mp.Id == id);
+        }
+
+        public Task<MarketParticipant> GetOrNullAsync(string marketParticipantId)
+        {
+            return _chargesDatabaseContext
+                .MarketParticipants
+                .SingleOrDefaultAsync(mp => mp.MarketParticipantId == marketParticipantId);
         }
 
         /// <summary>
@@ -58,28 +59,32 @@ namespace GreenEnergyHub.Charges.Infrastructure.Repositories
         {
             return new MarketParticipant
             {
-                Id = "8100000000030",
+                MarketParticipantId = "8100000000030",
                 BusinessProcessRole = MarketParticipantRole.GridAccessProvider,
             };
         }
 
         public async Task<List<MarketParticipant>> GetActiveGridAccessProvidersAsync()
         {
-            var activeGridAccessProviders = await _chargesDatabaseContext.MarketParticipants
+            return await _chargesDatabaseContext.MarketParticipants
                 .Where(x =>
-                    x.Role == (int)MarketParticipantRole.GridAccessProvider &&
-                    x.Active == true)
+                    x.BusinessProcessRole == MarketParticipantRole.GridAccessProvider &&
+                    x.IsActive)
                 .ToListAsync();
-
-            return activeGridAccessProviders.Select(_mapper.ToDomainObject).ToList();
         }
 
         public async Task<MarketParticipant> GetAsync(MarketParticipantRole marketParticipantRole)
         {
-            var systemOperator = await _chargesDatabaseContext.MarketParticipants.FirstAsync(
-                x => x.Role == (int)marketParticipantRole).ConfigureAwait(false);
+            return await _chargesDatabaseContext.MarketParticipants.FirstAsync(
+                x => x.BusinessProcessRole == marketParticipantRole).ConfigureAwait(false);
+        }
 
-            return _mapper.ToDomainObject(systemOperator);
+        public async Task<IReadOnlyCollection<MarketParticipant>> GetAsync(IEnumerable<Guid> ids)
+        {
+            return await _chargesDatabaseContext
+                .MarketParticipants
+                .Where(mp => ids.Contains(mp.Id))
+                .ToListAsync();
         }
     }
 }

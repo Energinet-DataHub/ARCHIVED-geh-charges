@@ -12,19 +12,23 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Linq;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
-using MarketParticipant = GreenEnergyHub.Charges.Infrastructure.Context.Model.MarketParticipant;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace GreenEnergyHub.Charges.Infrastructure.Repositories.QueryLogic
+namespace GreenEnergyHub.Charges.Infrastructure.Context.EntityConfigurations
 {
-    public static class MarketParticipantQueryLogic
+    public class MarketParticipantEntityConfiguration : IEntityTypeConfiguration<MarketParticipant>
     {
-        public static IQueryable<MarketParticipant> HasRole(
-            this IQueryable<MarketParticipant> query,
-            MarketParticipantRole role)
+        public void Configure(EntityTypeBuilder<MarketParticipant> builder)
         {
-            return query.Where(mp => mp.Role == (int)role);
+            builder.ToTable(nameof(MarketParticipant));
+
+            builder.HasKey(x => x.Id);
+
+            builder.Property(x => x.MarketParticipantId);
+            builder.Property(x => x.IsActive);
+            builder.Property(x => x.BusinessProcessRole);
         }
     }
 }

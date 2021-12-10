@@ -25,7 +25,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Configuration
         {
             _marketParticipant = new MarketParticipant
             {
-                Id = senderId,
+                MarketParticipantId = senderId,
                 BusinessProcessRole = senderRole,
             };
         }

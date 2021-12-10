@@ -17,6 +17,8 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.ChargeLinks;
+using GreenEnergyHub.Charges.Domain.Charges;
+using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.Domain.MeteringPoints;
 using GreenEnergyHub.Charges.Infrastructure.Context;
 using GreenEnergyHub.Charges.Infrastructure.Repositories;
@@ -26,7 +28,6 @@ using Microsoft.EntityFrameworkCore;
 using NodaTime;
 using Xunit;
 using Xunit.Categories;
-using MarketParticipant = GreenEnergyHub.Charges.Infrastructure.Context.Model.MarketParticipant;
 
 namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
 {
@@ -78,17 +79,29 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
 
         private static (Guid ChargeId, Guid MeteringPointId) SeedDatabase(ChargesDatabaseContext context)
         {
-            var marketParticipant = new MarketParticipant { Name = "Name", Role = 1, MarketParticipantId = "MarketParticipantId" };
+            var marketParticipant = new MarketParticipant
+            {
+                BusinessProcessRole = MarketParticipantRole.EnergySupplier,
+                MarketParticipantId = "MarketParticipantId",
+            };
 
             context.MarketParticipants.Add(marketParticipant);
             context.SaveChanges(); // Sets marketParticipant.RowId
 
-            var charge = new Infrastructure.Context.Model.Charge
-            {
-                Currency = "DKK",
-                SenderProvidedChargeId = "charge id",
-                MarketParticipantId = marketParticipant.Id,
-            };
+            var charge = new Charge(
+                id: Guid.NewGuid(),
+                senderProvidedChargeId: "charge id",
+                name: "charge name",
+                description: "charge description",
+                ownerId: marketParticipant.Id,
+                startDateTime: SystemClock.Instance.GetCurrentInstant(),
+                endDateTime: SystemClock.Instance.GetCurrentInstant(),
+                type: ChargeType.Tariff,
+                vatClassification: VatClassification.Vat25,
+                resolution: Resolution.P1D,
+                transparentInvoicing: false,
+                taxIndicator: false,
+                points: new List<Point>());
             context.Charges.Add(charge);
 
             var meteringPoint = MeteringPoint.Create(
