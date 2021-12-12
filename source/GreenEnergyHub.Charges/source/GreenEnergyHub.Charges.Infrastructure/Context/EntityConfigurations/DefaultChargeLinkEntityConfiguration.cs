@@ -22,25 +22,13 @@ namespace GreenEnergyHub.Charges.Infrastructure.Context.EntityConfigurations
     {
         public void Configure(EntityTypeBuilder<DefaultChargeLink> builder)
         {
-            builder.ToTable("DefaultChargeLink", "Charges");
-
+            builder.ToTable(nameof(DefaultChargeLink));
             builder.HasKey(x => x.Id);
 
-            builder
-                .Property(x => x.ChargeId)
-                .HasColumnName("ChargeId");
-
-            builder
-                .Property(x => x.MeteringPointType)
-                .HasColumnName("MeteringPointType");
-
-            builder
-                .Property(x => x.StartDateTime)
-                .HasColumnName("StartDateTime");
-
-            builder
-                .Property(x => x.EndDateTime)
-                .HasColumnName("EndDateTime");
+            builder.Property(x => x.ChargeId);
+            builder.Property(x => x.MeteringPointType);
+            builder.Property(x => x.StartDateTime);
+            builder.Property(x => x.EndDateTime);
         }
     }
 }
