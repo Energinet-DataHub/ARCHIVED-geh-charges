@@ -21,12 +21,11 @@ namespace GreenEnergyHub.Charges.Infrastructure.Context.EntityConfigurations
 {
     public class ChargeEntityConfiguration : IEntityTypeConfiguration<Charge>
     {
-        private static readonly string _tableName = $"{nameof(Charge)}{nameof(Point)}";
+        private static readonly string _aggregateTableName = nameof(Charge);
 
         public void Configure(EntityTypeBuilder<Charge> builder)
         {
-            builder.ToTable(nameof(Charge));
-
+            builder.ToTable(_aggregateTableName);
             builder.HasKey(c => c.Id);
 
             builder.Property(c => c.Description);
@@ -42,6 +41,8 @@ namespace GreenEnergyHub.Charges.Infrastructure.Context.EntityConfigurations
             builder.Property(c => c.EndDateTime);
 
             builder.OwnsMany(c => c.Points, ConfigurePoints);
+
+            // Enable EF Core to hydrate the points
             builder.Metadata
                 .FindNavigation(nameof(Charge.Points))
                 .SetPropertyAccessMode(PropertyAccessMode.Field);
@@ -50,14 +51,13 @@ namespace GreenEnergyHub.Charges.Infrastructure.Context.EntityConfigurations
         private static void ConfigurePoints(OwnedNavigationBuilder<Charge, Point> points)
         {
             // This field is defined in the SQL model (as a foreign key)
-            points.WithOwner().HasForeignKey($"{nameof(Charge)}Id");
+            points.WithOwner().HasForeignKey($"{_aggregateTableName}Id");
 
-            points.ToTable(_tableName);
+            var tableName = $"{_aggregateTableName}{nameof(Point)}";
+            points.ToTable(tableName);
 
             // This is a database-only column - doesn't exist in domain model as point is not an aggregate
-            points
-                .Property<Guid>("Id")
-                .ValueGeneratedOnAdd();
+            points.Property<Guid>("Id").ValueGeneratedOnAdd();
 
             points.Property(p => p.Position);
             points.Property(p => p.Price);

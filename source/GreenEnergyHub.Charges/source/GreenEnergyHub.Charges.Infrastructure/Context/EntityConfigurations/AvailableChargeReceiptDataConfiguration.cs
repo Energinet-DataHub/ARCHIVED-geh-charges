@@ -20,37 +20,37 @@ namespace GreenEnergyHub.Charges.Infrastructure.Context.EntityConfigurations
 {
     public class AvailableChargeReceiptDataConfiguration : IEntityTypeConfiguration<AvailableChargeReceiptData>
     {
+        private static readonly string _aggregateTableName = nameof(AvailableChargeReceiptData);
+
         public void Configure(EntityTypeBuilder<AvailableChargeReceiptData> builder)
         {
-            builder.ToTable("AvailableChargeReceiptData", DatabaseSchemaNames.MessageHub);
+            builder.ToTable(_aggregateTableName, DatabaseSchemaNames.MessageHub);
             builder.HasKey(x => x.Id);
+
             builder.Property(p => p.Id).ValueGeneratedNever();
-            builder.Property(x => x.RecipientId).HasColumnName("RecipientId");
-            builder.Property(x => x.RecipientRole).HasColumnName("RecipientRole");
-            builder.Property(x => x.BusinessReasonCode).HasColumnName("BusinessReasonCode");
-            builder.Property(x => x.ReceiptStatus).HasColumnName("ReceiptStatus");
-            builder.Property(x => x.OriginalOperationId).HasColumnName("OriginalOperationId");
-            builder.Property(x => x.RequestDateTime).HasColumnName("RequestDateTime");
-            builder
-                .Property(x => x.AvailableDataReferenceId)
-                .HasColumnName("AvailableDataReferenceId");
+            builder.Property(x => x.RecipientId);
+            builder.Property(x => x.RecipientRole);
+            builder.Property(x => x.BusinessReasonCode);
+            builder.Property(x => x.ReceiptStatus);
+            builder.Property(x => x.OriginalOperationId);
+            builder.Property(x => x.RequestDateTime);
+            builder.Property(x => x.AvailableDataReferenceId);
+
             builder.Ignore(c => c.ReasonCodes);
-            builder
-                .OwnsMany<AvailableChargeReceiptDataReasonCode>("_reasonCodes", ConfigureReasonCodes);
+            builder.OwnsMany<AvailableChargeReceiptDataReasonCode>("_reasonCodes", ConfigureReasonCodes);
         }
 
         private static void ConfigureReasonCodes(
             OwnedNavigationBuilder<AvailableChargeReceiptData,
             AvailableChargeReceiptDataReasonCode> reasonCodes)
         {
-            reasonCodes.WithOwner().HasForeignKey("AvailableChargeReceiptDataId");
-            reasonCodes.ToTable("AvailableChargeReceiptDataReasonCode", DatabaseSchemaNames.MessageHub);
+            reasonCodes.WithOwner().HasForeignKey($"{_aggregateTableName}Id");
+            reasonCodes.ToTable(nameof(AvailableChargeReceiptDataReasonCode), DatabaseSchemaNames.MessageHub);
             reasonCodes.HasKey(r => r.Id);
+
             reasonCodes.Property(r => r.Id).ValueGeneratedNever();
-            reasonCodes
-                .Property(r => r.ReasonCode)
-                .HasColumnName("ReasonCode");
-            reasonCodes.Property(r => r.Text).HasColumnName("Text");
+            reasonCodes.Property(r => r.ReasonCode);
+            reasonCodes.Property(r => r.Text);
         }
     }
 }
