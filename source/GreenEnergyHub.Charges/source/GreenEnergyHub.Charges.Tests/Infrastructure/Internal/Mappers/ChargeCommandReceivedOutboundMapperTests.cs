@@ -13,12 +13,11 @@
 // limitations under the License.
 
 using System;
-using System.Diagnostics.CodeAnalysis;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandReceivedEvents;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
 using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeCommandReceived;
 using GreenEnergyHub.Charges.Infrastructure.Internal.Mappers;
 using GreenEnergyHub.Charges.TestCore.Attributes;
+using GreenEnergyHub.Charges.Tests.Builders;
 using GreenEnergyHub.Charges.Tests.Protobuf;
 using NodaTime;
 using Xunit;
@@ -32,10 +31,11 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Internal.Mappers
         [Theory]
         [InlineAutoMoqData]
         public void Convert_WhenCalled_ShouldMapToProtobufWithCorrectValues(
-            [NotNull]ChargeCommand chargeCommand,
-            [NotNull]ChargeCommandReceivedOutboundMapper sut)
+            ChargeCommandTestBuilder builder,
+            ChargeCommandReceivedOutboundMapper sut)
         {
             // Arrange
+            var chargeCommand = builder.Build();
             ChargeCommandReceivedEvent chargeCommandReceivedEvent = new(SystemClock.Instance.GetCurrentInstant(), chargeCommand);
             UpdateInstantsToValidTimes(chargeCommandReceivedEvent);
 
@@ -48,22 +48,15 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Internal.Mappers
 
         [Theory]
         [InlineAutoMoqData]
-        public void Convert_WhenCalledWithNull_ShouldThrow([NotNull] ChargeCommandReceivedOutboundMapper sut)
+        public void Convert_WhenCalledWithNull_ShouldThrow(ChargeCommandReceivedOutboundMapper sut)
         {
             Assert.Throws<InvalidOperationException>(() => sut.Convert(null!));
         }
 
-        private static void UpdateInstantsToValidTimes([NotNull] ChargeCommandReceivedEvent chargeCommandReceivedEvent)
+        private static void UpdateInstantsToValidTimes(ChargeCommandReceivedEvent chargeCommandReceivedEvent)
         {
             chargeCommandReceivedEvent.Command.Document.RequestDate = Instant.FromUtc(2021, 7, 21, 11, 42, 25);
             chargeCommandReceivedEvent.Command.Document.CreatedDateTime = Instant.FromUtc(2021, 7, 21, 12, 14, 43);
-            chargeCommandReceivedEvent.Command.ChargeOperation.StartDateTime = Instant.FromUtc(2021, 8, 31, 22, 0);
-            chargeCommandReceivedEvent.Command.ChargeOperation.EndDateTime = Instant.FromUtc(2021, 9, 30, 22, 0);
-
-            foreach (var point in chargeCommandReceivedEvent.Command.ChargeOperation.Points)
-            {
-                point.Time = SystemClock.Instance.GetCurrentInstant();
-            }
         }
     }
 }

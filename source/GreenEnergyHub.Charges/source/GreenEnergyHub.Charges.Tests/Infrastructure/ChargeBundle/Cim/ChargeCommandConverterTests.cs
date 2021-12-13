@@ -13,7 +13,6 @@
 // limitations under the License.
 
 using System;
-using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -42,9 +41,9 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.ChargeBundle.Cim
         [Theory]
         [InlineAutoMoqData]
         public async Task ConvertAsync_WhenCalledWithValidCimMessage_ReturnsParsedObject(
-            [NotNull][Frozen] Mock<ICorrelationContext> context,
-            [NotNull][Frozen] Mock<IIso8601Durations> iso8601Durations,
-            [NotNull] ChargeCommandConverter sut)
+            [Frozen] Mock<ICorrelationContext> context,
+            [Frozen] Mock<IIso8601Durations> iso8601Durations,
+            ChargeCommandConverter sut)
         {
             // Arrange
             var correlationId = Guid.NewGuid().ToString();
@@ -114,9 +113,9 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.ChargeBundle.Cim
         [Theory]
         [InlineAutoMoqData]
         public async Task ConvertAsync_WhenCalledWithValidCimMessageWithoutPrices_ReturnsParsedObject(
-            [NotNull] [Frozen] Mock<ICorrelationContext> context,
-            [NotNull] [Frozen] Mock<IIso8601Durations> iso8601Durations,
-            [NotNull] ChargeCommandConverter sut)
+            [Frozen] Mock<ICorrelationContext> context,
+            [Frozen] Mock<IIso8601Durations> iso8601Durations,
+            ChargeCommandConverter sut)
         {
             // Arrange
             var correlationId = Guid.NewGuid().ToString();
@@ -160,9 +159,9 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.ChargeBundle.Cim
         [Theory]
         [InlineAutoMoqData]
         public async Task ConvertAsync_WhenCalledWithValidCimMessageWithoutMasterData_ReturnsParsedObject(
-            [NotNull] [Frozen] Mock<ICorrelationContext> context,
-            [NotNull] [Frozen] Mock<IIso8601Durations> iso8601Durations,
-            [NotNull] ChargeCommandConverter sut)
+            [Frozen] Mock<ICorrelationContext> context,
+            [Frozen] Mock<IIso8601Durations> iso8601Durations,
+            ChargeCommandConverter sut)
         {
             // Arrange
             var correlationId = Guid.NewGuid().ToString();

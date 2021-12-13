@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using System.Xml;
 using Energinet.DataHub.Core.Messaging.Transport;
@@ -31,7 +30,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.MarketDocument.Cim
             _clock = clock;
         }
 
-        public async Task<IInboundMessage> ConvertAsync([NotNull] XmlReader reader)
+        public async Task<IInboundMessage> ConvertAsync(XmlReader reader)
         {
             var document = await ParseDocumentAsync(reader).ConfigureAwait(false);
 
