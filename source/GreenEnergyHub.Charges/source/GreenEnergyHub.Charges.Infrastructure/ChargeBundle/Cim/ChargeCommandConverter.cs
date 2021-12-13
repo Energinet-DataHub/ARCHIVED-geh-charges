@@ -213,7 +213,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.ChargeBundle.Cim
                     if (initialResolution == Resolution.Unknown)
                     {
                         var content = await reader.ReadElementContentAsStringAsync().ConfigureAwait(false);
-                        resolution = ResolutionMapper.Map(content); // TODO
+                        resolution = ResolutionMapper.Map(content);
                     }
                 }
                 else if (reader.Is(CimChargeCommandConstants.TimeInterval, CimChargeCommandConstants.Namespace))
