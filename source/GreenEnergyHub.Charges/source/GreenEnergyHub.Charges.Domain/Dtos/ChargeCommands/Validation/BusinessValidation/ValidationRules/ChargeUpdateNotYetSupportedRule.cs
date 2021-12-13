@@ -16,6 +16,9 @@ using GreenEnergyHub.Charges.Domain.Charges;
 
 namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessValidation.ValidationRules
 {
+    /// <summary>
+    /// Temporary rule that stops both update and stops from taking place to charges until that is implemented
+    /// </summary>
     public class ChargeUpdateNotYetSupportedRule : IValidationRule
     {
         private readonly Charge? _charge;
