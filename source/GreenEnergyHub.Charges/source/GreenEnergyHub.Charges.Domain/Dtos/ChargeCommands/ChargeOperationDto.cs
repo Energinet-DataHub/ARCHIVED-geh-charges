@@ -27,9 +27,37 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands
     /// </summary>
     public class ChargeOperationDto
     {
-        public ChargeOperationDto()
+        public ChargeOperationDto(
+                string chargeOperationId,
+                ChargeType chargeType,
+                string senderProvidedChargeId,
+                string chargeName,
+                string description,
+                string chargeOwner,
+                Resolution chargeResolution,
+                bool taxIndicator,
+                bool transparentInvoicing,
+                VatClassification vatClassification,
+                Instant startDateTime,
+                Instant? endDateTime,
+                List<Point> points)
         {
-            Points = new List<Point>();
+            {
+                Points = new List<Point>();
+                Id = chargeOperationId;
+                Type = chargeType;
+                ChargeId = senderProvidedChargeId;
+                ChargeName = chargeName;
+                ChargeDescription = description;
+                ChargeOwner = chargeOwner;
+                Resolution = chargeResolution;
+                TaxIndicator = taxIndicator;
+                TransparentInvoicing = transparentInvoicing;
+                VatClassification = vatClassification;
+                StartDateTime = startDateTime;
+                EndDateTime = endDateTime;
+                Points = points;
+            }
         }
 
         /// <summary>

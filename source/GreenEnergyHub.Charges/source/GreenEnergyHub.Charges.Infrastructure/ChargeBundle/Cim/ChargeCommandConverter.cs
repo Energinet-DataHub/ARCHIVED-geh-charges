@@ -67,7 +67,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.ChargeBundle.Cim
                 }
                 else if (reader.Is(CimChargeCommandConstants.ChargeGroup, CimChargeCommandConstants.Namespace))
                 {
-                    await ParseChargeGroupIntoOperationAsync(reader, operation).ConfigureAwait(false);
+                    operation = await ParseChargeGroupIntoOperationAsync(reader, operationId).ConfigureAwait(false);
                 }
             }
 
@@ -77,9 +77,10 @@ namespace GreenEnergyHub.Charges.Infrastructure.ChargeBundle.Cim
             return operation;
         }
 
-        private async Task<ChargeOperation> ParseChargeGroupIntoOperationAsync(XmlReader reader, string operationId)
+        private async Task<ChargeOperationDto> ParseChargeGroupIntoOperationAsync(XmlReader reader, string operationId)
         {
-            ChargeOperation? operation = null;
+            ChargeOperationDto? operation = null;
+            while (await reader.ReadAsync().ConfigureAwait(false))
             {
                 if (reader.Is(CimChargeCommandConstants.ChargeTypeElement, CimChargeCommandConstants.Namespace))
                 {
@@ -97,7 +98,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.ChargeBundle.Cim
             return operation!;
         }
 
-        private async Task<ChargeOperation> ParseChargeTypeElementIntoOperationAsync(XmlReader reader, string operationId)
+        private async Task<ChargeOperationDto> ParseChargeTypeElementIntoOperationAsync(XmlReader reader, string operationId)
         {
             var chargeOwner = string.Empty;
             var chargeType = ChargeType.Unknown;
@@ -182,7 +183,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.ChargeBundle.Cim
                 }
             }
 
-            return new ChargeOperation(
+            return new ChargeOperationDto(
                 operationId,
                 chargeType,
                 senderProvidedChargeId,

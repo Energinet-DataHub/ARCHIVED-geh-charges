@@ -28,12 +28,11 @@ namespace GreenEnergyHub.Charges.Tests.Builders
         private Instant _endDateTime;
         private VatClassification _vatClassification;
         private bool _taxIndicator;
-        private int _status;
         private string _owner;
         private string _description;
         private string _chargeName;
         private string _documentId;
-        private MarketParticipant _sender;
+        private MarketParticipantDto _sender;
         private ChargeType _chargeType;
         private List<Point> _points;
         private Resolution _resolution;
@@ -48,13 +47,12 @@ namespace GreenEnergyHub.Charges.Tests.Builders
             _endDateTime = SystemClock.Instance.GetCurrentInstant()
                 .Plus(Duration.FromDays(1000));
             _vatClassification = VatClassification.Vat25;
-            _status = 2; // Create
             _taxIndicator = false;
             _owner = "owner";
             _description = "some description";
             _chargeName = "some charge name";
             _documentId = "some document id";
-            _sender = new MarketParticipant { Id = "0", BusinessProcessRole = MarketParticipantRole.EnergySupplier };
+            _sender = new MarketParticipantDto { Id = "0", BusinessProcessRole = MarketParticipantRole.EnergySupplier };
             _chargeType = ChargeType.Fee;
             _points = new List<Point>();
             _resolution = Resolution.PT1H;
@@ -117,7 +115,6 @@ namespace GreenEnergyHub.Charges.Tests.Builders
 
         public ChargeCommandTestBuilder WithStatus(int status)
         {
-            _status = status;
             return this;
         }
 
@@ -127,7 +124,7 @@ namespace GreenEnergyHub.Charges.Tests.Builders
             return this;
         }
 
-        public ChargeCommandTestBuilder WithSender(MarketParticipant sender)
+        public ChargeCommandTestBuilder WithSender(MarketParticipantDto sender)
         {
             _sender = sender;
             return this;
@@ -173,7 +170,7 @@ namespace GreenEnergyHub.Charges.Tests.Builders
                     RequestDate = SystemClock.Instance.GetCurrentInstant(),
                     IndustryClassification = IndustryClassification.Electricity,
                     CreatedDateTime = SystemClock.Instance.GetCurrentInstant(),
-                    Recipient = new MarketParticipant
+                    Recipient = new MarketParticipantDto
                     {
                         Id = "0",
                         BusinessProcessRole = MarketParticipantRole.EnergySupplier,

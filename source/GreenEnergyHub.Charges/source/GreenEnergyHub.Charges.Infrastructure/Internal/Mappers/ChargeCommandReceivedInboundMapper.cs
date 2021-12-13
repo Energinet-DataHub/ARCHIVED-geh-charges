@@ -25,7 +25,6 @@ using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeCommandReceived;
 using NodaTime;
-using MarketParticipant = GreenEnergyHub.Charges.Domain.MarketParticipants.MarketParticipant;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
 {
@@ -68,9 +67,9 @@ namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
             };
         }
 
-        private static ChargeOperation ConvertChargeOperation(ChargeOperationContract chargeOperation)
+        private static ChargeOperationDto ConvertChargeOperation(ChargeOperationContract chargeOperation)
         {
-            return new ChargeOperation(
+            return new ChargeOperationDto(
                 chargeOperation.Id,
                 (ChargeType)chargeOperation.Type,
                 chargeOperation.ChargeId,
@@ -84,22 +83,6 @@ namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
                 chargeOperation.StartDateTime.ToInstant(),
                 chargeOperation.EndDateTime.ToInstant(),
                 ConvertPoints(chargeOperation.Points));
-            return new ChargeOperationDto
-            {
-                Id = chargeOperation.Id,
-                Resolution = (Resolution)chargeOperation.Resolution,
-                Type = (ChargeType)chargeOperation.Type,
-                ChargeDescription = chargeOperation.ChargeDescription,
-                ChargeId = chargeOperation.ChargeId,
-                ChargeName = chargeOperation.ChargeName,
-                ChargeOwner = chargeOperation.ChargeOwner,
-                TaxIndicator = chargeOperation.TaxIndicator,
-                TransparentInvoicing = chargeOperation.TransparentInvoicing,
-                VatClassification = (VatClassification)chargeOperation.VatClassification,
-                StartDateTime = chargeOperation.StartDateTime.ToInstant(),
-                EndDateTime = chargeOperation.EndDateTime?.ToInstant(),
-                Points = ConvertPoints(chargeOperation.Points),
-            };
         }
 
         private static List<Point> ConvertPoints(RepeatedField<PointContract> points)

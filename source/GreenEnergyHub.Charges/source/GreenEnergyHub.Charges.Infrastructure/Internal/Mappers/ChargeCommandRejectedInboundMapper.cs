@@ -13,7 +13,6 @@
 // limitations under the License.
 
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Energinet.DataHub.Core.Messaging.MessageTypes.Common;
 using Energinet.DataHub.Core.Messaging.Protobuf;
@@ -32,7 +31,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
 {
     public class ChargeCommandRejectedInboundMapper : ProtobufInboundMapper<ChargeCommandRejectedContract>
     {
-        protected override IInboundMessage Convert([NotNull]ChargeCommandRejectedContract rejectedContract)
+        protected override IInboundMessage Convert(ChargeCommandRejectedContract rejectedContract)
         {
             return new ChargeCommandRejectedEvent(
                 rejectedContract.PublishedTime.ToInstant(),
@@ -70,25 +69,9 @@ namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
             };
         }
 
-        private static ChargeOperation ConvertChargeOperation(ChargeOperationContract chargeOperation)
+        private static ChargeOperationDto ConvertChargeOperation(ChargeOperationContract chargeOperation)
         {
-            return new ChargeOperationDto
-            {
-                Id = chargeOperation.Id,
-                Resolution = (Resolution)chargeOperation.Resolution,
-                Type = (ChargeType)chargeOperation.Type,
-                ChargeDescription = chargeOperation.ChargeDescription,
-                ChargeId = chargeOperation.ChargeId,
-                ChargeName = chargeOperation.ChargeName,
-                ChargeOwner = chargeOperation.ChargeOwner,
-                TaxIndicator = chargeOperation.TaxIndicator,
-                TransparentInvoicing = chargeOperation.TransparentInvoicing,
-                VatClassification = (VatClassification)chargeOperation.VatClassification,
-                StartDateTime = chargeOperation.StartDateTime.ToInstant(),
-                EndDateTime = chargeOperation.EndDateTime.ToInstant(),
-                Points = ConvertPoints(chargeOperation.Points),
-            };
-            return new ChargeOperation(
+            return new ChargeOperationDto(
                 chargeOperation.Id,
                 (ChargeType)chargeOperation.Type,
                 chargeOperation.ChargeId,

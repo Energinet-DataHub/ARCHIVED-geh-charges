@@ -68,7 +68,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
 
         private static ChargeOperationDto ConvertChargeOperation(ChargeOperationContract chargeOperation)
         {
-            return new ChargeOperation(
+            return new ChargeOperationDto(
                 chargeOperation.Id,
                 (ChargeType)chargeOperation.Type,
                 chargeOperation.ChargeId,
