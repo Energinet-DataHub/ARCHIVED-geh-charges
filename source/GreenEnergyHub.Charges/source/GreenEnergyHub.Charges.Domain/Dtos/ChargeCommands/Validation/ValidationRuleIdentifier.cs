@@ -44,5 +44,6 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation
         FeeMustHaveSinglePrice = 25, // VR507-2
         SubscriptionMustHaveSinglePrice = 26, // VR507-2
         CommandSenderMustBeAnExistingMarketParticipant = 27, // VR152
+        UpdateNotYetSupported = 28, // VR902
     }
 }
