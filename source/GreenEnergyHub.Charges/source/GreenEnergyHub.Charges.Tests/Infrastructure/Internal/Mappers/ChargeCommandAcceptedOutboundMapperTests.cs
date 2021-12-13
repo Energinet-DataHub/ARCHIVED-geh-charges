@@ -58,11 +58,6 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Internal.Mappers
         {
             chargeCommandAcceptedEvent.Command.Document.RequestDate = Instant.FromUtc(2021, 7, 21, 11, 42, 25);
             chargeCommandAcceptedEvent.Command.Document.CreatedDateTime = Instant.FromUtc(2021, 7, 21, 12, 14, 43);
-
-            foreach (var point in chargeCommandAcceptedEvent.Command.ChargeOperation.Points)
-            {
-                point.Time = SystemClock.Instance.GetCurrentInstant();
-            }
         }
     }
 }

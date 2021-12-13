@@ -31,13 +31,13 @@ namespace GreenEnergyHub.Charges.Domain.Charges
         /// <summary>
         /// The position of the price in the price list it was delivered.
         /// </summary>
-        public int Position { get; set; }
+        public int Position { get; }
 
-        public decimal Price { get; set; }
+        public decimal Price { get; }
 
         /// <summary>
         /// A point in time, where the price applies.
         /// </summary>
-        public Instant Time { get; set; }
+        public Instant Time { get; }
     }
 }
