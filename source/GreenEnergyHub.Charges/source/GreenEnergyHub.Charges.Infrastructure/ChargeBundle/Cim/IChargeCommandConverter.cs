@@ -12,22 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
-using GreenEnergyHub.Charges.Domain.Dtos.Messages.Events;
-using NodaTime;
+using System.Threading.Tasks;
+using System.Xml;
+using Energinet.DataHub.Core.Messaging.Transport;
 
-namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandAcceptedEvents
+namespace GreenEnergyHub.Charges.Infrastructure.ChargeBundle.Cim
 {
-    public class ChargeCommandAcceptedEvent : InternalEventBase
+    public interface IChargeCommandConverter
     {
-        public ChargeCommandAcceptedEvent(
-            Instant publishedTime,
-            ChargeCommand command)
-            : base(publishedTime)
-        {
-            Command = command;
-        }
-
-        public ChargeCommand Command { get; }
+        Task<IInboundMessage> ConvertAsync(XmlReader reader);
     }
 }

@@ -19,6 +19,7 @@ using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputValidation.ValidationRules;
 using GreenEnergyHub.Charges.TestCore.Attributes;
+using GreenEnergyHub.Charges.Tests.Builders;
 using GreenEnergyHub.TestHelpers;
 using Xunit;
 using Xunit.Categories;
@@ -35,9 +36,9 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Validation.InputValid
         public void VatClassificationValidationRule_Test(
             VatClassification vatClassification,
             bool expected,
-            [NotNull] ChargeCommand command)
+            ChargeCommandTestBuilder chargeCommandTestBuilder)
         {
-            command.ChargeOperation.VatClassification = vatClassification;
+            var command = chargeCommandTestBuilder.WithVatClassification(vatClassification).Build();
             var sut = new VatClassificationValidationRule(command);
             sut.IsValid.Should().Be(expected);
         }

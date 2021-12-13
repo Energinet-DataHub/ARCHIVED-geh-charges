@@ -13,7 +13,6 @@
 // limitations under the License.
 
 using System;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
@@ -24,6 +23,7 @@ using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessValid
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessValidation.Factories;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessValidation.ValidationRules;
 using GreenEnergyHub.Charges.TestCore.Attributes;
+using GreenEnergyHub.Charges.Tests.Builders;
 using Moq;
 using Xunit;
 using Xunit.Categories;
@@ -39,12 +39,13 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Validation.BusinessVa
         [InlineAutoMoqData(typeof(ChargeUpdateNotYetSupportedRule))]
         public async Task CreateRulesForChargeCommandAsync_WhenCalledWithNewCharge_ReturnsExpectedMandatoryRules(
             Type expectedRule,
-            [NotNull] [Frozen] Mock<IChargeRepository> repository,
-            [NotNull] [Frozen] Mock<IRulesConfigurationRepository> rulesConfigurationRepository,
-            [NotNull] BusinessValidationRulesFactory sut,
-            [NotNull] TestableChargeCommand chargeCommand)
+            [Frozen] Mock<IChargeRepository> repository,
+            [Frozen] Mock<IRulesConfigurationRepository> rulesConfigurationRepository,
+            BusinessValidationRulesFactory sut,
+            ChargeCommandTestBuilder builder)
         {
             // Arrange
+            var chargeCommand = builder.Build();
             ConfigureRepositoryMock(rulesConfigurationRepository);
 
             Charge? charge = null;
@@ -66,14 +67,14 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Validation.BusinessVa
         [InlineAutoMoqData(typeof(ChargeUpdateNotYetSupportedRule))]
         public async Task CreateRulesForChargeCommandAsync_WhenCalledWithExistingChargeNotTariff_ReturnsExpectedRules(
             Type expectedRule,
-            [NotNull] [Frozen] Mock<IChargeRepository> repository,
-            [NotNull] [Frozen] Mock<IRulesConfigurationRepository> rulesConfigurationRepository,
-            [NotNull] BusinessValidationRulesFactory sut,
-            [NotNull] TestableChargeCommand chargeCommand,
-            [NotNull] Charge charge)
+            [Frozen] Mock<IChargeRepository> repository,
+            [Frozen] Mock<IRulesConfigurationRepository> rulesConfigurationRepository,
+            BusinessValidationRulesFactory sut,
+            ChargeCommandTestBuilder builder,
+            Charge charge)
         {
             // Arrange
-            chargeCommand.ChargeOperation.Type = ChargeType.Fee;
+            var chargeCommand = builder.WithChargeType(ChargeType.Fee).Build();
             ConfigureRepositoryMock(rulesConfigurationRepository);
 
             repository
@@ -97,14 +98,14 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Validation.BusinessVa
         [InlineAutoMoqData(typeof(ChargeUpdateNotYetSupportedRule))]
         public async Task CreateRulesForChargeCommandAsync_WhenCalledWithExistingTariff_ReturnsExpectedRules(
             Type expectedRule,
-            [NotNull] [Frozen] Mock<IChargeRepository> repository,
-            [NotNull] [Frozen] Mock<IRulesConfigurationRepository> rulesConfigurationRepository,
-            [NotNull] BusinessValidationRulesFactory sut,
-            [NotNull] TestableChargeCommand chargeCommand,
-            [NotNull] Charge charge)
+            [Frozen] Mock<IChargeRepository> repository,
+            [Frozen] Mock<IRulesConfigurationRepository> rulesConfigurationRepository,
+            BusinessValidationRulesFactory sut,
+            ChargeCommandTestBuilder builder,
+            Charge charge)
         {
             // Arrange
-            chargeCommand.ChargeOperation.Type = ChargeType.Tariff;
+            var chargeCommand = builder.WithChargeType(ChargeType.Tariff).Build();
             ConfigureRepositoryMock(rulesConfigurationRepository);
 
             repository.Setup(
@@ -129,7 +130,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Validation.BusinessVa
         [Theory]
         [InlineAutoMoqData]
         public static async Task CreateRulesForChargeCommandAsync_WhenCalledWithNull_ThrowsArgumentNullException(
-            [NotNull] BusinessValidationRulesFactory sut)
+            BusinessValidationRulesFactory sut)
         {
             // Arrange
             ChargeCommand? command = null;

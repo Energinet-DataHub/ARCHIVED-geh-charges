@@ -75,7 +75,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Factories
                 false,
                 new List<Point>
                 {
-                    new Point { Position = 0, Time = SystemClock.Instance.GetCurrentInstant(), Price = 200m },
+                    new Point(0, 200m, SystemClock.Instance.GetCurrentInstant()),
                 });
 
             chargeRepository

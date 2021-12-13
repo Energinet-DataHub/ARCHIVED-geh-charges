@@ -14,7 +14,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
 using FluentAssertions;
@@ -105,8 +104,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
 
         [Theory]
         [InlineAutoMoqData]
-        public async Task StoreChargeAsync_WhenChargeIsNull_ThrowsArgumentNullException(
-            [NotNull] ChargeRepository sut)
+        public async Task StoreChargeAsync_WhenChargeIsNull_ThrowsArgumentNullException(ChargeRepository sut)
         {
             // Arrange
             Charge? charge = null;
@@ -210,7 +208,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
                 false,
                 new List<Point>
                 {
-                    new Point { Position = 0, Time = SystemClock.Instance.GetCurrentInstant(), Price = 200m },
+                    new(0, 200m, SystemClock.Instance.GetCurrentInstant()),
                 });
 
             return charge;
