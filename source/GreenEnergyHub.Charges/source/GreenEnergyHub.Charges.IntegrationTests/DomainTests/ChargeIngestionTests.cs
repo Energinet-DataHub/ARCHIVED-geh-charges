@@ -33,6 +33,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
     [IntegrationTest]
     public class ChargeIngestionTests
     {
+        private const int SecondsToWaitForIntegrationEvents = 15;
+
         [Collection(nameof(ChargesFunctionAppCollectionFixture))]
         public class RunAsync : FunctionAppTestBase<ChargesFunctionAppFixture>, IAsyncLifetime
         {
@@ -79,7 +81,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 await Fixture.HostManager.HttpClient.SendAsync(request);
 
                 // Assert
-                var isChargeCreatedReceived = eventualChargeCreatedEvent.MessageAwaiter!.Wait(TimeSpan.FromSeconds(10));
+                var isChargeCreatedReceived = eventualChargeCreatedEvent.MessageAwaiter!.Wait(
+                    TimeSpan.FromSeconds(SecondsToWaitForIntegrationEvents));
                 isChargeCreatedReceived.Should().BeTrue();
             }
 
@@ -97,7 +100,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 await Fixture.HostManager.HttpClient.SendAsync(request);
 
                 // Assert
-                var isChargePricesUpdatedReceived = eventualChargePriceUpdatedEvent.MessageAwaiter!.Wait(TimeSpan.FromSeconds(10));
+                var isChargePricesUpdatedReceived = eventualChargePriceUpdatedEvent.MessageAwaiter!.Wait(
+                    TimeSpan.FromSeconds(SecondsToWaitForIntegrationEvents));
                 isChargePricesUpdatedReceived.Should().BeTrue();
             }
 

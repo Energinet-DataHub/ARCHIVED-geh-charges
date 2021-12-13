@@ -12,29 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
-using System.ComponentModel.DataAnnotations.Schema;
-
-#pragma warning disable 8618
-
-namespace GreenEnergyHub.Charges.Infrastructure.Context.Model
+namespace GreenEnergyHub.Charges.Infrastructure.Context
 {
-    public class DefaultChargeLink
+    public static class DatabaseSchemaNames
     {
-        public DefaultChargeLink()
-        {
-            Id = Guid.NewGuid();
-        }
+        public const string CommandModel = "Charges";
 
-        public Guid Id { get; set; }
-
-        [ForeignKey("Charge")]
-        public Guid ChargeId { get; set; }
-
-        public int MeteringPointType { get; set; }
-
-        public DateTime StartDateTime { get; set; }
-
-        public DateTime EndDateTime { get; set; }
+        public const string MessageHub = "MessageHub";
     }
 }

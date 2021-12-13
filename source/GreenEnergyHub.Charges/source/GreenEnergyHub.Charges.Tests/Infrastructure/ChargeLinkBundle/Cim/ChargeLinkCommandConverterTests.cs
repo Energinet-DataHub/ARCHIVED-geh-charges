@@ -73,7 +73,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.ChargeLinkBundle.Cim
             Assert.Equal(InstantPattern.ExtendedIso.Parse("2021-11-05T23:00:00Z").Value, chargeLink.EndDateTime);
             Assert.Equal("ChargeId01", chargeLink.SenderProvidedChargeId);
             Assert.Equal(1, chargeLink.Factor);
-            Assert.Equal("8100000000016", chargeLink.ChargeOwner);
+            Assert.Equal("8100000000016", chargeLink.ChargeOwnerId);
             Assert.Equal(ChargeType.Tariff, chargeLink.ChargeType);
         }
 

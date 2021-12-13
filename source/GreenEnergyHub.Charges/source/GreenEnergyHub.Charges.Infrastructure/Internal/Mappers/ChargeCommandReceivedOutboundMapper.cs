@@ -18,6 +18,7 @@ using Energinet.DataHub.Core.Messaging.Protobuf;
 using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandReceivedEvents;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeCommandReceived;
 
@@ -42,7 +43,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
             return chargeCommandReceivedContract;
         }
 
-        private static ChargeOperationContract ConvertChargeOperation(ChargeOperation charge)
+        private static ChargeOperationContract ConvertChargeOperation(ChargeOperationDto charge)
         {
             return new ChargeOperationContract
             {

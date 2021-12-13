@@ -13,9 +13,7 @@
 // limitations under the License.
 
 using System;
-using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
-using MarketParticipant = GreenEnergyHub.Charges.Domain.MarketParticipants.MarketParticipant;
 
 namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands
 {
@@ -29,11 +27,11 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands
             CheckChargeOperation(chargeCommand.ChargeOperation);
         }
 
-        private static void CheckChargeOperation(ChargeOperation chargeOperation)
+        private static void CheckChargeOperation(ChargeOperationDto chargeOperationDto)
         {
-            if (chargeOperation == null) throw new ArgumentNullException(nameof(chargeOperation));
-            if (string.IsNullOrWhiteSpace(chargeOperation.ChargeName)) throw new ArgumentException(chargeOperation.ChargeName);
-            if (string.IsNullOrWhiteSpace(chargeOperation.ChargeDescription)) throw new ArgumentException(chargeOperation.ChargeDescription);
+            if (chargeOperationDto == null) throw new ArgumentNullException(nameof(chargeOperationDto));
+            if (string.IsNullOrWhiteSpace(chargeOperationDto.ChargeName)) throw new ArgumentException(chargeOperationDto.ChargeName);
+            if (string.IsNullOrWhiteSpace(chargeOperationDto.ChargeDescription)) throw new ArgumentException(chargeOperationDto.ChargeDescription);
         }
 
         private static void CheckDocument(DocumentDto document)
@@ -44,7 +42,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands
             CheckMarketParticipant(document.Sender);
         }
 
-        private static void CheckMarketParticipant(MarketParticipant marketParticipant)
+        private static void CheckMarketParticipant(MarketParticipantDto marketParticipant)
         {
             if (marketParticipant == null) throw new ArgumentNullException(nameof(marketParticipant));
         }

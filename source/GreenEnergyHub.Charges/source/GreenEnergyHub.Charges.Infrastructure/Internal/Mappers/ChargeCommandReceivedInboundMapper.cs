@@ -49,13 +49,13 @@ namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
             {
                 Id = document.Id,
                 Sender =
-                    new MarketParticipant
+                    new MarketParticipantDto
                     {
                         Id = document.Sender.Id,
                         BusinessProcessRole = (MarketParticipantRole)document.Sender.BusinessProcessRole,
                     },
                 Recipient =
-                    new MarketParticipant
+                    new MarketParticipantDto
                     {
                         Id = document.Recipient.Id,
                         BusinessProcessRole = (MarketParticipantRole)document.Recipient.BusinessProcessRole,
@@ -84,6 +84,22 @@ namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
                 chargeOperation.StartDateTime.ToInstant(),
                 chargeOperation.EndDateTime.ToInstant(),
                 ConvertPoints(chargeOperation.Points));
+            return new ChargeOperationDto
+            {
+                Id = chargeOperation.Id,
+                Resolution = (Resolution)chargeOperation.Resolution,
+                Type = (ChargeType)chargeOperation.Type,
+                ChargeDescription = chargeOperation.ChargeDescription,
+                ChargeId = chargeOperation.ChargeId,
+                ChargeName = chargeOperation.ChargeName,
+                ChargeOwner = chargeOperation.ChargeOwner,
+                TaxIndicator = chargeOperation.TaxIndicator,
+                TransparentInvoicing = chargeOperation.TransparentInvoicing,
+                VatClassification = (VatClassification)chargeOperation.VatClassification,
+                StartDateTime = chargeOperation.StartDateTime.ToInstant(),
+                EndDateTime = chargeOperation.EndDateTime?.ToInstant(),
+                Points = ConvertPoints(chargeOperation.Points),
+            };
         }
 
         private static List<Point> ConvertPoints(RepeatedField<PointContract> points)

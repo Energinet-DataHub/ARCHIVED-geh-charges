@@ -13,9 +13,10 @@
 // limitations under the License.
 
 using System.Collections.Generic;
+using GreenEnergyHub.Charges.Domain.Charges;
 using NodaTime;
 
-namespace GreenEnergyHub.Charges.Domain.Charges
+namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands
 {
     // Non-nullable member is uninitialized is ignored
     // Only properties which is allowed to be null is nullable
@@ -24,36 +25,11 @@ namespace GreenEnergyHub.Charges.Domain.Charges
     /// <summary>
     /// The ChargeEvent class contains the intend of the charge command, e.g. it's an update of a charge plus an ID provided by the sender.
     /// </summary>
-    public class ChargeOperation
+    public class ChargeOperationDto
     {
-        public ChargeOperation(
-            string chargeOperationId,
-            ChargeType chargeType,
-            string senderProvidedChargeId,
-            string chargeName,
-            string description,
-            string chargeOwner,
-            Resolution chargeResolution,
-            bool taxIndicator,
-            bool transparentInvoicing,
-            VatClassification vatClassification,
-            Instant startDateTime,
-            Instant? endDateTime,
-            List<Point> points)
+        public ChargeOperationDto()
         {
-            Id = chargeOperationId;
-            Type = chargeType;
-            ChargeId = senderProvidedChargeId;
-            ChargeName = chargeName;
-            ChargeDescription = description;
-            ChargeOwner = chargeOwner;
-            Resolution = chargeResolution;
-            TaxIndicator = taxIndicator;
-            TransparentInvoicing = transparentInvoicing;
-            VatClassification = vatClassification;
-            StartDateTime = startDateTime;
-            EndDateTime = endDateTime;
-            Points = points;
+            Points = new List<Point>();
         }
 
         /// <summary>
@@ -71,7 +47,6 @@ namespace GreenEnergyHub.Charges.Domain.Charges
 
         /// <summary>
         /// The charge name
-        /// Example: "Elafgift"
         /// </summary>
         public string ChargeName { get; init; }
 

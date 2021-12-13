@@ -46,9 +46,9 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.SharedDtos
         /// </summary>
         public Instant CreatedDateTime { get; set; }
 
-        public MarketParticipant Sender { get; set; }
+        public MarketParticipantDto Sender { get; set; }
 
-        public MarketParticipant Recipient { get; set; }
+        public MarketParticipantDto Recipient { get; set; }
 
         public IndustryClassification IndustryClassification { get; set; }
 

@@ -34,7 +34,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands
 
         public int Factor { get; set; }
 
-        public string ChargeOwner { get; set; }
+        public string ChargeOwnerId { get; set; }
 
         public ChargeType ChargeType { get; set; }
     }

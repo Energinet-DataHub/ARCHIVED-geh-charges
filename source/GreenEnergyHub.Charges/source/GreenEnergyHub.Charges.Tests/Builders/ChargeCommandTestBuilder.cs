@@ -181,7 +181,7 @@ namespace GreenEnergyHub.Charges.Tests.Builders
                     Sender = _sender,
                     BusinessReasonCode = BusinessReasonCode.UpdateChargeInformation,
                 },
-                ChargeOperation = new ChargeOperation(
+                ChargeOperation = new ChargeOperationDto(
                     _id,
                     _chargeType,
                     _chargeId,

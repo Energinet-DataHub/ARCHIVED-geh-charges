@@ -78,7 +78,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.ChargeLinkBundle.Cim
                 else if (reader.Is(CimChargeLinkCommandConstants.ChargeOwner, CimChargeLinkCommandConstants.Namespace))
                 {
                     var content = await reader.ReadElementContentAsStringAsync().ConfigureAwait(false);
-                    link.ChargeOwner = content;
+                    link.ChargeOwnerId = content;
                 }
                 else if (reader.Is(CimChargeLinkCommandConstants.ChargeType, CimChargeLinkCommandConstants.Namespace))
                 {

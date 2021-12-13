@@ -54,7 +54,7 @@ namespace GreenEnergyHub.Charges.Application.Charges.MessageHub
                             .ToList();
 
                     result.Add(new AvailableChargeData(
-                        provider.Id,
+                        provider.MarketParticipantId,
                         provider.BusinessProcessRole,
                         input.Command.Document.BusinessReasonCode,
                         _messageMetaDataContext.RequestDataTime,

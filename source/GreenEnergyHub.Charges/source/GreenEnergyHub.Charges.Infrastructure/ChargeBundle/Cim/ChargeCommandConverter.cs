@@ -53,9 +53,9 @@ namespace GreenEnergyHub.Charges.Infrastructure.ChargeBundle.Cim
                 };
         }
 
-        private async Task<ChargeOperation> ParseChargeOperationAsync(XmlReader reader)
+        private async Task<ChargeOperationDto> ParseChargeOperationAsync(XmlReader reader)
         {
-            ChargeOperation? operation = null;
+            ChargeOperationDto? operation = null;
             var operationId = string.Empty;
 
             while (await reader.ReadAsync().ConfigureAwait(false))
@@ -67,7 +67,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.ChargeBundle.Cim
                 }
                 else if (reader.Is(CimChargeCommandConstants.ChargeGroup, CimChargeCommandConstants.Namespace))
                 {
-                    operation = await ParseChargeGroupIntoOperationAsync(reader, operationId).ConfigureAwait(false);
+                    await ParseChargeGroupIntoOperationAsync(reader, operation).ConfigureAwait(false);
                 }
             }
 
@@ -80,7 +80,6 @@ namespace GreenEnergyHub.Charges.Infrastructure.ChargeBundle.Cim
         private async Task<ChargeOperation> ParseChargeGroupIntoOperationAsync(XmlReader reader, string operationId)
         {
             ChargeOperation? operation = null;
-            while (await reader.ReadAsync().ConfigureAwait(false))
             {
                 if (reader.Is(CimChargeCommandConstants.ChargeTypeElement, CimChargeCommandConstants.Namespace))
                 {

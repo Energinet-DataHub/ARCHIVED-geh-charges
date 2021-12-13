@@ -48,10 +48,8 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Validation.BusinessVa
             ConfigureRepositoryMock(rulesConfigurationRepository);
 
             Charge? charge = null;
-            repository.Setup(
-                    r => r.GetAsync(
-                        It.IsAny<ChargeIdentifier>()))
-                .Returns(Task.FromResult(charge!));
+            repository.Setup(r => r.GetOrNullAsync(It.IsAny<ChargeIdentifier>()))
+                .ReturnsAsync(charge);
 
             // Act
             var actual = await sut.CreateRulesForChargeCommandAsync(chargeCommand).ConfigureAwait(false);
@@ -77,22 +75,9 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Validation.BusinessVa
             var chargeCommand = builder.WithChargeType(ChargeType.Fee).Build();
             ConfigureRepositoryMock(rulesConfigurationRepository);
 
-            const bool chargeExists = true;
-            repository.Setup(
-                r => r.CheckIfChargeExistsAsync(
-                        new ChargeIdentifier(
-                    It.IsAny<string>(),
-                    It.IsAny<string>(),
-                    It.IsAny<ChargeType>())))
-                .Returns(Task.FromResult(chargeExists));
-
-            repository.Setup(
-                    r => r.GetAsync(
-                            new ChargeIdentifier(
-                        It.IsAny<string>(),
-                        It.IsAny<string>(),
-                        It.IsAny<ChargeType>())))
-                .Returns(Task.FromResult(charge));
+            repository
+                .Setup(r => r.GetOrNullAsync(It.IsAny<ChargeIdentifier>()))
+                .ReturnsAsync(charge);
 
             // Act
             var actual = await sut.CreateRulesForChargeCommandAsync(chargeCommand).ConfigureAwait(false);
@@ -120,11 +105,10 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Validation.BusinessVa
             var chargeCommand = builder.WithChargeType(ChargeType.Tariff).Build();
             ConfigureRepositoryMock(rulesConfigurationRepository);
 
-            const bool chargeExists = true;
             repository.Setup(
-                r => r.CheckIfChargeExistsAsync(
-                    It.IsAny<ChargeIdentifier>()))
-                .Returns(Task.FromResult(chargeExists));
+                    r => r.GetOrNullAsync(
+                        It.IsAny<ChargeIdentifier>()))
+                .ReturnsAsync(charge);
 
             repository.Setup(
                     r => r.GetAsync(
@@ -150,7 +134,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Validation.BusinessVa
 
             // Act / Assert
             await Assert.ThrowsAsync<ArgumentNullException>(
-                () => sut.CreateRulesForChargeCommandAsync(command!))
+                    () => sut.CreateRulesForChargeCommandAsync(command!))
                 .ConfigureAwait(false);
         }
 

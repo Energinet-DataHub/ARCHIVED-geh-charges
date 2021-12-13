@@ -72,7 +72,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
             {
                 OperationId = chargeLink.OperationId,
                 SenderProvidedChargeId = chargeLink.SenderProvidedChargeId,
-                ChargeOwner = chargeLink.ChargeOwner,
+                ChargeOwnerId = chargeLink.ChargeOwnerId,
                 Factor = chargeLink.Factor,
                 ChargeType = (ChargeLinkCommandAccepted.ChargeType)chargeLink.ChargeType,
                 StartDateTime = chargeLink.StartDateTime.ToTimestamp(),

@@ -52,8 +52,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.MessageHub
                 .Returns(marketParticipant);
 
             charge.SetPrivateProperty(c => c.TaxIndicator, true);
-            chargeRepository.Setup(
-                    r => r.GetAsync(It.IsAny<ChargeIdentifier>()))
+            chargeRepository.Setup(r => r.GetAsync(It.IsAny<ChargeIdentifier>()))
                 .ReturnsAsync(charge);
 
             messageMetaDataContext.Setup(
@@ -71,12 +70,13 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.MessageHub
             for (var i = 0; i < actualList.Count; i++)
             {
                 actualList[i].Should().NotContainNullsOrEmptyEnumerables();
-                actualList[i].RecipientId.Should().Be(marketParticipant.Id);
+                actualList[i].RecipientId.Should().Be(marketParticipant.MarketParticipantId);
                 actualList[i].RecipientRole.Should().Be(marketParticipant.BusinessProcessRole);
-                actualList[i].BusinessReasonCode.Should().Be(acceptedEvent.ChargeLinksCommand.Document.BusinessReasonCode);
+                actualList[i].BusinessReasonCode.Should()
+                    .Be(acceptedEvent.ChargeLinksCommand.Document.BusinessReasonCode);
                 actualList[i].RequestDateTime.Should().Be(now);
                 actualList[i].ChargeId.Should().Be(expectedLinks[i].SenderProvidedChargeId);
-                actualList[i].ChargeOwner.Should().Be(expectedLinks[i].ChargeOwner);
+                actualList[i].ChargeOwner.Should().Be(expectedLinks[i].ChargeOwnerId);
                 actualList[i].ChargeType.Should().Be(expectedLinks[i].ChargeType);
                 actualList[i].MeteringPointId.Should().Be(acceptedEvent.ChargeLinksCommand.MeteringPointId);
                 actualList[i].Factor.Should().Be(expectedLinks[i].Factor);
@@ -101,8 +101,8 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.MessageHub
                 .Returns(marketParticipant);
 
             charge.SetPrivateProperty(c => c.TaxIndicator, false);
-            chargeRepository.Setup(
-                    r => r.GetAsync(It.IsAny<ChargeIdentifier>()))
+            chargeRepository
+                .Setup(r => r.GetAsync(It.IsAny<ChargeIdentifier>()))
                 .ReturnsAsync(charge);
 
             // Act

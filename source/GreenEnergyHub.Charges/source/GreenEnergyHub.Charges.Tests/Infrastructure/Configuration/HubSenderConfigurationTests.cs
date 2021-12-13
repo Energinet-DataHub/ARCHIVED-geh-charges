@@ -36,7 +36,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Configuration
             var actual = sut.GetSenderMarketParticipant();
 
             // Assert
-            Assert.Equal(senderId, actual.Id);
+            Assert.Equal(senderId, actual.MarketParticipantId);
             Assert.Equal(senderRole, actual.BusinessProcessRole);
         }
     }

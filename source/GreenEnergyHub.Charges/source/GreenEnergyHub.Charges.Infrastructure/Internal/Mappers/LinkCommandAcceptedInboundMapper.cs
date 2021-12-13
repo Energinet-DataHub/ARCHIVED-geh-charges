@@ -20,7 +20,6 @@ using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksAcceptedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
-using MarketParticipant = GreenEnergyHub.Charges.Domain.MarketParticipants.MarketParticipant;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
 {
@@ -53,10 +52,10 @@ namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
             };
         }
 
-        private static MarketParticipant MapMarketParticipant(
-            GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandAccepted.MarketParticipant marketParticipant)
+        private static MarketParticipantDto MapMarketParticipant(
+            ChargeLinkCommandAccepted.MarketParticipant marketParticipant)
         {
-            return new MarketParticipant
+            return new MarketParticipantDto
             {
                 Id = marketParticipant.Id,
                 BusinessProcessRole = (Domain.MarketParticipants.MarketParticipantRole)marketParticipant.BusinessProcessRole,
@@ -72,7 +71,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
                 EndDateTime = link.EndDateTime.ToInstant(),
                 SenderProvidedChargeId = link.SenderProvidedChargeId,
                 Factor = link.Factor,
-                ChargeOwner = link.ChargeOwner,
+                ChargeOwnerId = link.ChargeOwnerId,
                 ChargeType = (GreenEnergyHub.Charges.Domain.Charges.ChargeType)link.ChargeType,
             };
         }
