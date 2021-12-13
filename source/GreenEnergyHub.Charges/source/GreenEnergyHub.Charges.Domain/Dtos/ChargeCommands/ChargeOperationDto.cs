@@ -63,54 +63,54 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands
         /// <summary>
         /// Contains a unique ID for the specific Charge Event, provided by the sender.
         /// </summary>
-        public string Id { get; init; }
+        public string Id { get; }
 
         /// <summary>
         /// Unique ID of a charge (Note, unique per market participants).
         /// Example: EA-001
         /// </summary>
-        public string ChargeId { get; init; }
+        public string ChargeId { get; }
 
-        public ChargeType Type { get; init; }
+        public ChargeType Type { get; }
 
         /// <summary>
         /// The charge name
         /// </summary>
-        public string ChargeName { get; init; }
+        public string ChargeName { get; }
 
-        public string ChargeDescription { get; init; }
+        public string ChargeDescription { get; }
 
         /// <summary>
         /// Valid from, of a charge price list. Also known as Effective Date.
         /// </summary>
-        public Instant StartDateTime { get; init; }
+        public Instant StartDateTime { get; }
 
         /// <summary>
         /// Valid to, of a charge price list.
         /// </summary>
-        public Instant? EndDateTime { get; init; }
+        public Instant? EndDateTime { get; }
 
-        public VatClassification VatClassification { get; init; }
+        public VatClassification VatClassification { get; }
 
         /// <summary>
         /// In Denmark the Energy Supplier invoices the customer, including the charges from the Grid Access Provider and the System Operator.
         /// This boolean can be use to indicate that a charge must be visible on the invoice sent to the customer.
         /// </summary>
-        public bool TransparentInvoicing { get; init; }
+        public bool TransparentInvoicing { get; }
 
         /// <summary>
         /// Indicates whether the Charge is tax or not.
         /// </summary>
-        public bool TaxIndicator { get; init; }
+        public bool TaxIndicator { get; }
 
         /// <summary>
         ///  Charge Owner, e.g. the GLN or EIC identification number.
         /// </summary>
-        public string ChargeOwner { get; init; }
+        public string ChargeOwner { get; }
 
-        public Resolution Resolution { get; init; }
+        public Resolution Resolution { get; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2227", Justification = "JSON deserialization")]
-        public List<Point> Points { get; init; }
+        public List<Point> Points { get; }
     }
 }
