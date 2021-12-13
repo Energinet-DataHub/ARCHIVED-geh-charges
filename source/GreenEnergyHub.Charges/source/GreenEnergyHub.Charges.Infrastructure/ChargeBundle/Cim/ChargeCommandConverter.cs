@@ -23,6 +23,7 @@ using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Infrastructure.ChargeLinkBundle.Cim;
+using GreenEnergyHub.Charges.Infrastructure.Exceptions;
 using GreenEnergyHub.Charges.Infrastructure.MarketDocument.Cim;
 using GreenEnergyHub.Charges.Infrastructure.Messaging.Serialization;
 using GreenEnergyHub.Iso8601;
@@ -72,7 +73,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.ChargeBundle.Cim
             }
 
             if (operation == null)
-                throw new Exception();
+                throw new ChargeOperationIsNullException();
 
             return operation;
         }

@@ -18,6 +18,7 @@ using System.Threading.Tasks;
 using System.Xml;
 using Energinet.DataHub.Core.Messaging.Transport;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
+using GreenEnergyHub.Charges.Infrastructure.Exceptions;
 using GreenEnergyHub.Charges.Infrastructure.Messaging.Serialization;
 
 namespace GreenEnergyHub.Charges.Infrastructure.ChargeBundle.Cim
@@ -37,9 +38,15 @@ namespace GreenEnergyHub.Charges.Infrastructure.ChargeBundle.Cim
 
             using var reader = XmlReader.Create(stream, new XmlReaderSettings { Async = true });
 
-            var command = await _chargeCommandConverter.ConvertAsync(reader).ConfigureAwait(false);
-
-            return command;
+            try
+            {
+                return await _chargeCommandConverter.ConvertAsync(reader).ConfigureAwait(false);
+            }
+            catch (ChargeOperationIsNullException e)
+            {
+                // TODO: Titans replaces response object, when this happens this error should no longer be rethrown
+                throw e;
+            }
         }
     }
 }

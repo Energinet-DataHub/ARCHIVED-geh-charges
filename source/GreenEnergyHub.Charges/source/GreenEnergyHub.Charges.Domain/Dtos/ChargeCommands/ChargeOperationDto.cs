@@ -42,22 +42,20 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands
                 Instant? endDateTime,
                 List<Point> points)
         {
-            {
-                Points = new List<Point>();
-                Id = chargeOperationId;
-                Type = chargeType;
-                ChargeId = senderProvidedChargeId;
-                ChargeName = chargeName;
-                ChargeDescription = description;
-                ChargeOwner = chargeOwner;
-                Resolution = chargeResolution;
-                TaxIndicator = taxIndicator;
-                TransparentInvoicing = transparentInvoicing;
-                VatClassification = vatClassification;
-                StartDateTime = startDateTime;
-                EndDateTime = endDateTime;
-                Points = points;
-            }
+            Points = new List<Point>();
+            Id = chargeOperationId;
+            Type = chargeType;
+            ChargeId = senderProvidedChargeId;
+            ChargeName = chargeName;
+            ChargeDescription = description;
+            ChargeOwner = chargeOwner;
+            Resolution = chargeResolution;
+            TaxIndicator = taxIndicator;
+            TransparentInvoicing = transparentInvoicing;
+            VatClassification = vatClassification;
+            StartDateTime = startDateTime;
+            EndDateTime = endDateTime;
+            Points = points;
         }
 
         /// <summary>
