@@ -31,7 +31,7 @@ using NodaTime;
 
 namespace GreenEnergyHub.Charges.Infrastructure.ChargeBundle.Cim
 {
-    public class ChargeCommandConverter : DocumentConverter
+    public class ChargeCommandConverter : DocumentConverter, IChargeCommandConverter
     {
         private readonly IIso8601Durations _iso8601Durations;
 
