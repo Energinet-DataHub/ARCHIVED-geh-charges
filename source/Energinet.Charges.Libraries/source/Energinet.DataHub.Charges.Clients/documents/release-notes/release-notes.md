@@ -1,5 +1,9 @@
 # Energinet.DataHub.Charges.Clients Release notes
 
+## Version 1.0.16
+
+No changes. Build with newer tool chain.
+
 ## Version 1.0.15
 
 Added `ChargeLinksClient`
