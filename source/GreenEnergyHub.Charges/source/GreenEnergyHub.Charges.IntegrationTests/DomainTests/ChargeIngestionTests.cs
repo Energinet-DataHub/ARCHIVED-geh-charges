@@ -106,7 +106,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             }
 
             [Fact]
-            public async Task Given_NewTaxTariffWithPrices_When_GridAccessProviderPeeks_Then_MessageHubReceivesReply()
+            public async Task Given_NewTaxBundleTariffWithPrices_When_GridAccessProviderPeeks_Then_MessageHubReceivesReply()
             {
                 // Arrange
                 var request = CreateHttpRequest(ChargeDocument.TariffBundleWithValidAndInvalid, out var correlationId);
@@ -115,7 +115,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 await Fixture.HostManager.HttpClient.SendAsync(request);
 
                 // Act and assert
-                // We expect two peaks, one for the charge and one for the receipt
+                // We expect three peaks, one for the charge and one for the receipt and one rejection
                 await Fixture.MessageHubMock.AssertPeekReceivesReplyAsync(correlationId, 3);
             }
 
