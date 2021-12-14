@@ -1,5 +1,13 @@
 # Energinet.DataHub.Charges.Clients.Registrations Release notes
 
+## Version 0.1.3
+
+Internal restructuring.
+
+## Version 0.1.2
+
+No changes. Build with newer tool chain.
+
 ## Version 0.1.1
 
 Adds an extension to register a `ChargeLinksClient` to an `IServiceCollection`.

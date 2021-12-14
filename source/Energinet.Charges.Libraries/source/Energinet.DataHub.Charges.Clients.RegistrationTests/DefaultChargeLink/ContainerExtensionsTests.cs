@@ -16,9 +16,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using Azure.Messaging.ServiceBus;
 using Energinet.DataHub.Charges.Clients.DefaultChargeLink;
-using Energinet.DataHub.Charges.Clients.Models;
-using Energinet.DataHub.Charges.Clients.Providers;
-using Energinet.DataHub.Charges.Clients.Registration;
+using Energinet.DataHub.Charges.Clients.DefaultChargeLink.Models;
+using Energinet.DataHub.Charges.Clients.Registration.DefaultChargeLink.SimpleInjector;
+using Energinet.DataHub.Charges.Clients.ServiceBus.Providers;
 using FluentAssertions;
 using Moq;
 using SimpleInjector;
@@ -26,7 +26,7 @@ using SimpleInjector.Lifestyles;
 using Xunit;
 using Xunit.Categories;
 
-namespace Energinet.DataHub.Charges.Clients.RegistrationTests
+namespace Energinet.DataHub.Charges.Clients.RegistrationTests.DefaultChargeLink
 {
     [UnitTest]
     public class ContainerExtensionsTests

@@ -15,7 +15,7 @@
 using System;
 using System.Net.Http;
 
-namespace Energinet.DataHub.Charges.Clients
+namespace Energinet.DataHub.Charges.Clients.ChargeLinks
 {
     public class ChargeLinksClientFactory
     {

@@ -18,7 +18,7 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using Energinet.Charges.Contracts;
 
-namespace Energinet.DataHub.Charges.Clients
+namespace Energinet.DataHub.Charges.Clients.ChargeLinks
 {
     public sealed class ChargeLinksClient : IChargeLinksClient
     {
