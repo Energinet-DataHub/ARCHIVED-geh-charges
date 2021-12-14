@@ -113,7 +113,7 @@ Or, for team shared subscription ID ask the Azure AD for your shared subscriptio
 az account show
 ```
 
-The subscription ID is just as `ID` (hint: it looks like a `GUID`)
+The subscription ID is just showed as `ID` (hint: it looks like a `GUID`)
 
 ### - `sharedresources_keyvault_name`
 
