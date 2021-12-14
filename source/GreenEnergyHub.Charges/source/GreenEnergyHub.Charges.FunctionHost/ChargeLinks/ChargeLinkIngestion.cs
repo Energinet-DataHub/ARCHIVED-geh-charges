@@ -12,12 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Diagnostics.CodeAnalysis;
+using System.Net;
 using System.Threading.Tasks;
+using Energinet.DataHub.Core.SchemaValidation.Errors;
+using Energinet.DataHub.Core.SchemaValidation.Extensions;
 using GreenEnergyHub.Charges.Application.ChargeLinks.Handlers;
 using GreenEnergyHub.Charges.Application.ChargeLinks.Handlers.Message;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands;
 using GreenEnergyHub.Charges.Infrastructure.Messaging;
+using GreenEnergyHub.Charges.Infrastructure.Messaging.Serialization;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
 
@@ -45,18 +48,40 @@ namespace GreenEnergyHub.Charges.FunctionHost.ChargeLinks
             [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = null)]
             HttpRequestData req)
         {
-            var command = (ChargeLinksCommand)await _messageExtractor.ExtractAsync(req.Body).ConfigureAwait(false);
+            var validatedInboundMessage = await ValidateInboundChargesMessageAsync(req).ConfigureAwait(false);
+            if (validatedInboundMessage.HasErrors)
+            {
+                return await CreateErrorResponseAsync(
+                    req,
+                    validatedInboundMessage.SchemaValidationError).ConfigureAwait(false);
+            }
 
-            var chargeLinksMessageResult = await _chargeLinksCommandHandler.HandleAsync(command).ConfigureAwait(false);
+            var chargeLinksMessageResult = await _chargeLinksCommandHandler
+                .HandleAsync(validatedInboundMessage.ValidatedMessage)
+                .ConfigureAwait(false);
 
             return await CreateJsonResponseAsync(req, chargeLinksMessageResult).ConfigureAwait(false);
         }
 
+        private async Task<SchemaValidatedInboundMessage<ChargeLinksCommand>>
+            ValidateInboundChargesMessageAsync(HttpRequestData req)
+        {
+            return (SchemaValidatedInboundMessage<ChargeLinksCommand>)await _messageExtractor
+                .ExtractAsync(req.Body)
+                .ConfigureAwait(false);
+        }
+
+        private static async Task<HttpResponseData> CreateErrorResponseAsync(HttpRequestData req, ErrorResponse errorResponse)
+        {
+            var response = req.CreateResponse(HttpStatusCode.BadRequest);
+            await errorResponse.WriteAsXmlAsync(response.Body).ConfigureAwait(false);
+            return response;
+        }
+
         private async Task<HttpResponseData> CreateJsonResponseAsync(HttpRequestData req, ChargeLinksMessageResult? chargeLinksMessageResult)
         {
-            var response = req.CreateResponse();
+            var response = req.CreateResponse(HttpStatusCode.Accepted);
             await response.WriteAsJsonAsync(chargeLinksMessageResult);
-
             return response;
         }
     }

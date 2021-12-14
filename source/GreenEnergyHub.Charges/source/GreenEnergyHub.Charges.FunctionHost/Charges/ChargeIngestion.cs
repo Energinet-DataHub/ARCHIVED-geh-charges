@@ -13,11 +13,15 @@
 // limitations under the License.
 
 using System.Diagnostics.CodeAnalysis;
+using System.Net;
 using System.Threading.Tasks;
+using Energinet.DataHub.Core.SchemaValidation.Errors;
+using Energinet.DataHub.Core.SchemaValidation.Extensions;
 using GreenEnergyHub.Charges.Application.Charges.Handlers;
 using GreenEnergyHub.Charges.Application.Charges.Handlers.Message;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
 using GreenEnergyHub.Charges.Infrastructure.Messaging;
+using GreenEnergyHub.Charges.Infrastructure.Messaging.Serialization;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
 
@@ -45,7 +49,18 @@ namespace GreenEnergyHub.Charges.FunctionHost.Charges
             [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = null)]
             [NotNull] HttpRequestData req)
         {
-            var message = await GetChargesMessageAsync(req).ConfigureAwait(false);
+            var validatedInboundMessage = await ValidateInboundChargesMessageAsync(req).ConfigureAwait(false);
+            if (validatedInboundMessage.HasErrors)
+            {
+                return await CreateErrorResponseAsync(
+                        req,
+                        validatedInboundMessage.SchemaValidationError).ConfigureAwait(false);
+            }
+
+            var message = new ChargesMessage
+            {
+                Transactions = { validatedInboundMessage.ValidatedMessage },
+            };
 
             foreach (var messageTransaction in message.Transactions)
             {
@@ -55,24 +70,28 @@ namespace GreenEnergyHub.Charges.FunctionHost.Charges
             var messageResult = await _chargesMessageHandler.HandleAsync(message)
                 .ConfigureAwait(false);
 
-            return await CreateJsonResponseAsync(req, messageResult);
+            return await CreateJsonResponseAsync(req, messageResult).ConfigureAwait(false);
         }
 
-        private async Task<ChargesMessage> GetChargesMessageAsync(
-            HttpRequestData req)
+        private async Task<SchemaValidatedInboundMessage<ChargeCommand>>
+            ValidateInboundChargesMessageAsync(HttpRequestData req)
         {
-            var message = new ChargesMessage();
-            var command = (ChargeCommand)await _messageExtractor.ExtractAsync(req.Body).ConfigureAwait(false);
+            return (SchemaValidatedInboundMessage<ChargeCommand>)await _messageExtractor
+                .ExtractAsync(req.Body)
+                .ConfigureAwait(false);
+        }
 
-            message.Transactions.Add(command);
-            return message;
+        private static async Task<HttpResponseData> CreateErrorResponseAsync(HttpRequestData req, ErrorResponse errorResponse)
+        {
+            var response = req.CreateResponse(HttpStatusCode.BadRequest);
+            await errorResponse.WriteAsXmlAsync(response.Body).ConfigureAwait(false);
+            return response;
         }
 
         private static async Task<HttpResponseData> CreateJsonResponseAsync(HttpRequestData req, ChargesMessageResult messageResult)
         {
-            var response = req.CreateResponse();
-            await response.WriteAsJsonAsync(messageResult);
-
+            var response = req.CreateResponse(HttpStatusCode.Accepted);
+            await response.WriteAsJsonAsync(messageResult).ConfigureAwait(false);
             return response;
         }
     }
