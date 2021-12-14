@@ -33,7 +33,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
             serviceCollection.AddScoped<ChargeCommandConverter>();
             serviceCollection.AddScoped<MessageExtractor<ChargeCommand>>();
             serviceCollection.AddScoped<IChargeCommandConverter, ChargeCommandConverter>();
-            serviceCollection.AddScoped<MessageDeserializer<ChargeCommand>, ChargeCommandDeserializer>();
+            serviceCollection.AddScoped<MessageDeserializer<ChargeCommandBundle>, ChargeCommandDeserializer>();
 
             serviceCollection.AddScoped<IChargesMessageHandler, ChargesMessageHandler>();
             serviceCollection.AddScoped<IChargeCommandHandler, ChargeCommandHandler>();

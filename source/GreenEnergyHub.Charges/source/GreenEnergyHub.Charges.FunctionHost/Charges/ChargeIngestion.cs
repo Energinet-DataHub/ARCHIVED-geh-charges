@@ -29,11 +29,11 @@ namespace GreenEnergyHub.Charges.FunctionHost.Charges
         /// Function name affects the URL and thus possibly dependent infrastructure.
         /// </summary>
         private readonly IChargesMessageHandler _chargesMessageHandler;
-        private readonly MessageExtractor<ChargeCommand> _messageExtractor;
+        private readonly MessageExtractor<ChargeCommandBundle> _messageExtractor;
 
         public ChargeIngestion(
             IChargesMessageHandler chargesMessageHandler,
-            MessageExtractor<ChargeCommand> messageExtractor)
+            MessageExtractor<ChargeCommandBundle> messageExtractor)
         {
             _chargesMessageHandler = chargesMessageHandler;
             _messageExtractor = messageExtractor;
@@ -61,9 +61,9 @@ namespace GreenEnergyHub.Charges.FunctionHost.Charges
             HttpRequestData req)
         {
             var message = new ChargesMessage();
-            var command = (ChargeCommand)await _messageExtractor.ExtractAsync(req.Body).ConfigureAwait(false);
+            var commandBundle = (ChargeCommandBundle)await _messageExtractor.ExtractAsync(req.Body).ConfigureAwait(false);
 
-            message.Transactions.Add(command);
+            message.Transactions.AddRange(commandBundle.ChargeCommands);
             return message;
         }
 

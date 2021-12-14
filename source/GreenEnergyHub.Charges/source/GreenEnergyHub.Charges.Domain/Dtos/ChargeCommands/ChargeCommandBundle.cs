@@ -12,20 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Collections.Generic;
 using GreenEnergyHub.Charges.Domain.Dtos.Messages.Command;
-using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
-
-#pragma warning disable 8618
 
 namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands
 {
-    // Non-nullable member is uninitialized is ignored
-    // Only properties which is allowed to be null is nullable
-    // ChargeCommand integrity is null checked by ChargeCommandNullChecker
-    public class ChargeCommand : CommandBase
+    public class ChargeCommandBundle : CommandBase
     {
-        public DocumentDto Document { get; set; }
+        public ChargeCommandBundle(List<ChargeCommand> chargeCommands)
+        {
+            ChargeCommands = chargeCommands;
+        }
 
-        public ChargeOperationDto ChargeOperation { get; set; }
+        public List<ChargeCommand> ChargeCommands { get; }
     }
 }

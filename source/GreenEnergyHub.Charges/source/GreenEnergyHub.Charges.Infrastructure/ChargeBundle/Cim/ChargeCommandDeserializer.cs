@@ -22,7 +22,7 @@ using GreenEnergyHub.Charges.Infrastructure.Messaging.Serialization;
 
 namespace GreenEnergyHub.Charges.Infrastructure.ChargeBundle.Cim
 {
-    public class ChargeCommandDeserializer : MessageDeserializer<ChargeCommand>
+    public class ChargeCommandDeserializer : MessageDeserializer<ChargeCommandBundle>
     {
         private readonly IChargeCommandConverter _chargeCommandConverter;
 
