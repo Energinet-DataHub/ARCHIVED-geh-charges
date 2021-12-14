@@ -31,7 +31,7 @@ namespace GreenEnergyHub.Charges.Tests.Builders
         public ChargesMessage Build()
         {
             var changeOfChargesMessage = new ChargesMessage();
-            changeOfChargesMessage.Transactions.AddRange(_transactions);
+            changeOfChargesMessage.ChargeCommands.AddRange(_transactions);
             return changeOfChargesMessage;
         }
     }

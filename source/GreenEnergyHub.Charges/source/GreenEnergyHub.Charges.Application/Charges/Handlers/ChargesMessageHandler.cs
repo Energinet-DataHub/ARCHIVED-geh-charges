@@ -34,9 +34,9 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
 
         private async Task<ChargesMessageResult> HandleTransactionsAsync(ChargesMessage message)
         {
-            foreach (var transaction in message.Transactions)
+            foreach (var chargeCommand in message.ChargeCommands)
             {
-                await _chargeCommandHandler.HandleAsync(transaction).ConfigureAwait(false);
+                await _chargeCommandHandler.HandleAsync(chargeCommand).ConfigureAwait(false);
             }
 
             return ChargesMessageResult.CreateSuccess();

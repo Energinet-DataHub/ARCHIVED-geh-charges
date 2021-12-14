@@ -46,7 +46,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Charges
         {
             var message = await GetChargesMessageAsync(req).ConfigureAwait(false);
 
-            foreach (var messageTransaction in message.Transactions)
+            foreach (var messageTransaction in message.ChargeCommands)
             {
                 ChargeCommandNullChecker.ThrowExceptionIfRequiredPropertyIsNull(messageTransaction);
             }
@@ -63,7 +63,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Charges
             var message = new ChargesMessage();
             var commandBundle = (ChargeCommandBundle)await _messageExtractor.ExtractAsync(req.Body).ConfigureAwait(false);
 
-            message.Transactions.AddRange(commandBundle.ChargeCommands);
+            message.ChargeCommands.AddRange(commandBundle.ChargeCommands);
             return message;
         }
 

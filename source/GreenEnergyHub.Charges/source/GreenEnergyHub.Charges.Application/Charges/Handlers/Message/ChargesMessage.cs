@@ -19,6 +19,6 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers.Message
 {
     public class ChargesMessage
     {
-        public List<ChargeCommand> Transactions { get; } = new();
+        public List<ChargeCommand> ChargeCommands { get; } = new();
     }
 }
