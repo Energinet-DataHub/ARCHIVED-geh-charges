@@ -64,7 +64,7 @@ runs:
         dotnet pack ${{ inputs.csproj_file_path }} --configuration Release --include-symbols -p:SymbolPackageFormat=snupkg -p:RepositoryCommit=${{ github.sha }} ${{ steps.determine_version_suffix.outputs.property }}
 
     - name: Check each NuGet package version does not exists (not looking at prereleases)
-      uses: ./.github/actions/nuget-assert-release-version
+      uses: Energinet-DataHub/.github/.github/actions/nuget-assert-release-version@2.6.1
       with:
         NUPKG_RECURSE_PATH: ${{ inputs.nuget_recurse_path }}
         
