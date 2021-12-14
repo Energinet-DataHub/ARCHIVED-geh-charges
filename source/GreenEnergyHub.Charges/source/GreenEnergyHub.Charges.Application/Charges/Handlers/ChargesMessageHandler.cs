@@ -12,10 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application.Charges.Handlers.Message;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
 
 namespace GreenEnergyHub.Charges.Application.Charges.Handlers
 {
@@ -28,15 +26,15 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
             _chargeCommandHandler = chargeCommandHandler;
         }
 
-        public async Task<ChargesMessageResult> HandleAsync([NotNull] ChargesMessage message)
+        public async Task<ChargesMessageResult> HandleAsync(ChargesMessage message)
         {
             var result = await HandleTransactionsAsync(message).ConfigureAwait(false);
             return result;
         }
 
-        private async Task<ChargesMessageResult> HandleTransactionsAsync([NotNull] ChargesMessage message)
+        private async Task<ChargesMessageResult> HandleTransactionsAsync(ChargesMessage message)
         {
-            foreach (ChargeCommand transaction in message.Transactions)
+            foreach (var transaction in message.Transactions)
             {
                 await _chargeCommandHandler.HandleAsync(transaction).ConfigureAwait(false);
             }

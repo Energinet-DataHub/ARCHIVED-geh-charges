@@ -51,6 +51,9 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures
         public ServiceBusTestListener? ChargePricesUpdatedListener { get; private set; }
 
         [NotNull]
+        public ServiceBusTestListener? ChargeCommandReceivedListener { get; private set; }
+
+        [NotNull]
         public MessageHubSimulation? MessageHubMock { get; private set; }
 
         [NotNull]
@@ -178,6 +181,15 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures
             var chargePricesUpdatedListener = new ServiceBusListenerMock(ServiceBusResourceProvider.ConnectionString, TestLogger);
             await chargePricesUpdatedListener.AddTopicSubscriptionListenerAsync(chargePricesUpdatedTopic.Name, ChargesServiceBusResourceNames.ChargePricesUpdatedSubscriptionName);
             ChargePricesUpdatedListener = new ServiceBusTestListener(chargePricesUpdatedListener);
+
+            var chargeCommandReceivedTopic = await ServiceBusResourceProvider
+                .BuildTopic(ChargesServiceBusResourceNames.CommandReceivedTopicKey).SetEnvironmentVariableToTopicName(EnvironmentSettingNames.CommandReceivedTopicName)
+                .AddSubscription(ChargesServiceBusResourceNames.CommandReceivedSubscriptionName)
+                .CreateAsync();
+
+            var chargeCommandReceivedListener = new ServiceBusListenerMock(ServiceBusResourceProvider.ConnectionString, TestLogger);
+            await chargeCommandReceivedListener.AddTopicSubscriptionListenerAsync(chargeCommandReceivedTopic.Name, ChargesServiceBusResourceNames.CommandReceivedSubscriptionName);
+            ChargeCommandReceivedListener = new ServiceBusTestListener(chargeCommandReceivedListener);
 
             await InitializeMessageHubAsync();
 

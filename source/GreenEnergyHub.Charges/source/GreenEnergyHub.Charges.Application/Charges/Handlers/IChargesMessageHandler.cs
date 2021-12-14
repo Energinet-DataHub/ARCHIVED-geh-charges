@@ -28,6 +28,6 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
         /// </summary>
         /// <param name="message"></param>
         /// <returns>Returns the result of the synchronous handling of the message.</returns>
-        Task<ChargesMessageResult> HandleAsync([NotNull]ChargesMessage message);
+        Task<ChargesMessageResult> HandleAsync(ChargesMessage message);
     }
 }

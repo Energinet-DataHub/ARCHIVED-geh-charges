@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application.Charges.Handlers;
 using GreenEnergyHub.Charges.Application.Charges.Handlers.Message;
@@ -43,7 +42,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Charges
         [Function(IngestionFunctionNames.ChargeIngestion)]
         public async Task<HttpResponseData> RunAsync(
             [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = null)]
-            [NotNull] HttpRequestData req)
+            HttpRequestData req)
         {
             var message = await GetChargesMessageAsync(req).ConfigureAwait(false);
 

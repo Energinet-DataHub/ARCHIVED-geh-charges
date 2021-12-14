@@ -18,7 +18,6 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using Energinet.DataHub.Core.FunctionApp.TestCommon;
-using Energinet.DataHub.Core.FunctionApp.TestCommon.ServiceBus.ListenerMock;
 using FluentAssertions;
 using GreenEnergyHub.Charges.IntegrationTests.Fixtures;
 using GreenEnergyHub.Charges.IntegrationTests.TestFiles.Charges;
@@ -28,13 +27,11 @@ using Xunit;
 using Xunit.Abstractions;
 using Xunit.Categories;
 
-namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
+namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.AzureFunctions
 {
     [IntegrationTest]
     public class ChargeIngestionTests
     {
-        private const int SecondsToWaitForIntegrationEvents = 15;
-
         [Collection(nameof(ChargesFunctionAppCollectionFixture))]
         public class RunAsync : FunctionAppTestBase<ChargesFunctionAppFixture>, IAsyncLifetime
         {
@@ -57,66 +54,22 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             }
 
             [Fact]
-            public async Task When_ChargeIsReceived_Then_AHttp200ResponseIsReturned()
+            public async Task RunAsync_WhenCalledWithBundleContaining2ValidDocuments_ShouldPublish2Events()
             {
-                var request = CreateHttpRequest(ChargeDocument.AnyValid, out string _);
+                // Arrange
+                var request = CreateHttpRequest(ChargeDocument.ValidWithBundle, out string correlationId);
+                using var eventualChargePriceUpdatedEvent = await Fixture
+                    .ChargeCommandReceivedListener
+                    .ListenForMessageAsync(correlationId)
+                    .ConfigureAwait(false);
 
+                // Act
                 var actualResponse = await Fixture.HostManager.HttpClient.SendAsync(request);
 
+                // Assert
                 actualResponse.StatusCode.Should().Be(HttpStatusCode.OK);
-            }
-
-            // TODO: Should this (and all other "when charge" tests) be split in subscription, fee and tariff?
-            [Fact]
-            public async Task When_ChargeIsReceived_Then_ChargeCreatedIntegrationEventIsPublished()
-            {
-                // Arrange
-                var request = CreateHttpRequest(ChargeDocument.AnyValid, out var correlationId);
-                using var eventualChargeCreatedEvent = await Fixture
-                    .ChargeCreatedListener
-                    .ListenForMessageAsync(correlationId)
-                    .ConfigureAwait(false);
-
-                // Act
-                await Fixture.HostManager.HttpClient.SendAsync(request);
-
-                // Assert
-                var isChargeCreatedReceived = eventualChargeCreatedEvent.MessageAwaiter!.Wait(
-                    TimeSpan.FromSeconds(SecondsToWaitForIntegrationEvents));
-                isChargeCreatedReceived.Should().BeTrue();
-            }
-
-            [Fact]
-            public async Task When_ChargeIncludingPriceIsReceived_Then_ChargePricesUpdatedIntegrationEventIsPublished()
-            {
-                // Arrange
-                var request = CreateHttpRequest(ChargeDocument.AnyWithPrice, out string correlationId);
-                using var eventualChargePriceUpdatedEvent = await Fixture
-                    .ChargePricesUpdatedListener
-                    .ListenForMessageAsync(correlationId)
-                    .ConfigureAwait(false);
-
-                // Act
-                await Fixture.HostManager.HttpClient.SendAsync(request);
-
-                // Assert
-                var isChargePricesUpdatedReceived = eventualChargePriceUpdatedEvent.MessageAwaiter!.Wait(
-                    TimeSpan.FromSeconds(SecondsToWaitForIntegrationEvents));
-                isChargePricesUpdatedReceived.Should().BeTrue();
-            }
-
-            [Fact]
-            public async Task Given_NewTaxTariffWithPrices_When_GridAccessProviderPeeks_Then_MessageHubReceivesReply()
-            {
-                // Arrange
-                var request = CreateHttpRequest(ChargeDocument.TaxTariffWithPrice, out var correlationId);
-
-                // Act
-                await Fixture.HostManager.HttpClient.SendAsync(request);
-
-                // Act and assert
-                // We expect two peaks, one for the charge and one for the receipt
-                await Fixture.MessageHubMock.AssertPeekReceivesReplyAsync(correlationId, 2);
+                var isMessageReceivedByTopic = eventualChargePriceUpdatedEvent.MessageAwaiter!.Wait(TimeSpan.FromSeconds(10));
+                isMessageReceivedByTopic.Should().BeTrue();
             }
 
             private static HttpRequestMessage CreateHttpRequest(

@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application.Charges.Handlers;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandReceivedEvents;
@@ -43,7 +42,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Charges
                 "%" + EnvironmentSettingNames.CommandReceivedTopicName + "%",
                 "%" + EnvironmentSettingNames.CommandReceivedSubscriptionName + "%",
                 Connection = EnvironmentSettingNames.DomainEventListenerConnectionString)]
-            [NotNull] byte[] message)
+            byte[] message)
         {
             var receivedEvent = (ChargeCommandReceivedEvent)await _messageExtractor.ExtractAsync(message).ConfigureAwait(false);
             await _chargeCommandReceivedEventHandler.HandleAsync(receivedEvent).ConfigureAwait(false);
