@@ -1,5 +1,9 @@
 # Energinet.DataHub.Charges.Clients Release notes
 
+## Version 1.0.17
+
+Internal restructuring.
+
 ## Version 1.0.16
 
 No changes. Build with newer tool chain.
@@ -15,10 +19,6 @@ Updated NuGet dependencies and removed deprecated FxCopAnalyzers
 ## Version 1.0.13
 
 Removed `IDefaultChargeLinkReplyReader`
-
-## Version 1.0.13
-
-Internal restructuring.
 
 ## Version 1.0.12
 
