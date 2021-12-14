@@ -21,16 +21,16 @@ on:
       - main
 
 env:
-  EnerginetActionsTag: 2.6.0
+  EnerginetActionsTag: '2.6.0'
 
 jobs:
   # Markdown, links and spell checks
   ci_base:
-    uses: Energinet-DataHub/.github/.github/workflows/ci-base.yml@${{env.EnerginetActionsTag}}
+    uses: Energinet-DataHub/.github/.github/workflows/ci-base.yml@${{ env.EnerginetActionsTag }}
   
   # Build and test solution, and publish coverage report
   dotnet_solution_ci:
-    uses: ${{ 'Energinet-DataHub/.github/.github/workflows/dotnet-solution-ci.yml@'env.EnerginetActionsTag }}
+    uses: Energinet-DataHub/.github/.github/workflows/dotnet-solution-ci.yml@${{env.EnerginetActionsTag}}
     with:
       SOLUTION_FILE_PATH: 'source/GreenEnergyHub.Charges/GreenEnergyHub.Charges.sln'
       DOTNET_VERSION: '5.0'
