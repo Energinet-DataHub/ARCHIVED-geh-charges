@@ -21,7 +21,7 @@ The steps needed are:
 Information about the settings:
 
 - `environment_short` is short for environment name and is used in resource name and must be lowercase. Helps ensuring global uniqueness of resource names
-- `environment_instance` is an instance number differenting your team shared sandbox from the main environment and is used in resource name and must be lowercase. Helps ensuring global uniqueness of resource names
+- `environment_instance` is an instance number differentiating your team shared sandbox from the main environment and is used in resource name and must be lowercase. Helps ensuring global uniqueness of resource names
 - `domain_name_short` is short for domain name and is used in resource name and must be lowercase. Helps ensuring global uniqueness of resource names
 - `resource_group_name` the resource group where the infrastructure is provisioned
 - `subscription_id` is the service principal object id
@@ -61,7 +61,7 @@ This value will be used as part of the naming scheme for your Azure resources.
 ### `environment_short`
 
 The value of this need to be 1-3 characters.
-The preferrede value of `environment_short`is `u`.
+The preferred value of `environment_short`is `u`.
 
 This value will be used as part of the naming scheme for your Azure resources.
 
