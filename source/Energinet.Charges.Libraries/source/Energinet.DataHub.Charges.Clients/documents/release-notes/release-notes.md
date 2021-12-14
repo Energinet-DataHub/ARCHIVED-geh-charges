@@ -1,5 +1,9 @@
 # Energinet.DataHub.Charges.Clients Release notes
 
+## Version 1.0.18
+
+Use `new JsonSerializerOptions(JsonSerializerDefaults.Web)` in `ChargeLinkClient`.
+
 ## Version 1.0.17
 
 Internal restructuring.
