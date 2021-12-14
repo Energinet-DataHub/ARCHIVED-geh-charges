@@ -7,9 +7,9 @@ Also be cautious about length of strings as some resources have a very limited
 max name length.
 */
 
+domain_name_short                       = "SHORT FOR DOMAIN NAME"
 environment_short                       = "SHORT FOR ENVIRONMENT NAME"
 environment_instance                    = "INSTANCE NUMBER FOR ENVIRONMENT"
-domain_name_short                       = "DOMAIN NAME ABBREVIATION"
 resource_group_name                     = "YOUR RESOURCE_GROUP"
 subscription_id                         = "YOUR SUBSCRIPTION_ID"
 sharedresources_keyvault_name           = "KEYVAULT NAME IN SHARED RESOURCES"
