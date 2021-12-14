@@ -18,18 +18,15 @@ on:
     branches:
       - main
 
-env:
-  EnerginetActionsTag: 2.6.0
-
 jobs:
   publish_release:
-    uses: Energinet-DataHub/.github/.github/workflows/publish-release.yml@${{env.EnerginetActionsTag}}
+    uses: Energinet-DataHub/.github/.github/workflows/publish-release.yml@2.6.0
     secrets:
       PAT_TOKEN: ${{ secrets.PAT_TOKEN }}
 
   dispatch_deployment_request:
     needs: publish_release
-    uses: Energinet-DataHub/.github/.github/workflows/dispatch-deployment-request.yml@${{env.EnerginetActionsTag}}
+    uses: Energinet-DataHub/.github/.github/workflows/dispatch-deployment-request.yml@2.6.0
     with:
       CALLER_REPOSITORY_NAME: geh-charges
       CALLER_REPOSITORY_PATH: Energinet-DataHub/geh-charges
