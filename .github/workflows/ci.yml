@@ -26,11 +26,11 @@ env:
 jobs:
   # Markdown, links and spell checks
   ci_base:
-    uses: Energinet-DataHub/.github/.github/workflows/ci-base.yml@${{env.EnerginetActionsTag}}
+    uses: 'Energinet-DataHub/.github/.github/workflows/ci-base.yml@${{ env.EnerginetActionsTag }}'
   
   # Build and test solution, and publish coverage report
   dotnet_solution_ci:
-    uses: Energinet-DataHub/.github/.github/workflows/dotnet-solution-ci.yml@${{env.EnerginetActionsTag}}
+    uses: 'Energinet-DataHub/.github/.github/workflows/dotnet-solution-ci.yml@${{ env.EnerginetActionsTag }}'
     with:
       SOLUTION_FILE_PATH: 'source/GreenEnergyHub.Charges/GreenEnergyHub.Charges.sln'
       DOTNET_VERSION: '5.0'
@@ -86,7 +86,7 @@ jobs:
       webapi_ci,
       database_migration_ci
     ]
-    uses: Energinet-DataHub/.github/.github/workflows/create-prerelease.yml@${{env.EnerginetActionsTag}}
+    uses: 'Energinet-DataHub/.github/.github/workflows/create-prerelease.yml@${{ env.EnerginetActionsTag }}'
     with:
       CALLER_REPOSITORY_PATH: Energinet-DataHub/geh-charges
     secrets:
