@@ -15,7 +15,6 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
-using Energinet.DataHub.Charges.Clients.Common;
 using Energinet.DataHub.Core.FunctionApp.TestCommon.Azurite;
 using Energinet.DataHub.Core.FunctionApp.TestCommon.Configuration;
 using Energinet.DataHub.Core.FunctionApp.TestCommon.ServiceBus.ListenerMock;
@@ -41,14 +40,6 @@ namespace Energinet.DataHub.Charges.Clients.IntegrationTests.Fixtures
         private AzuriteManager AzuriteManager { get; }
 
         private ServiceBusResourceProvider ServiceBusResourceProvider { get; }
-
-        /// <inheritdoc/>
-        protected override void OnConfigureEnvironment()
-        {
-            Environment.SetEnvironmentVariable(EnvironmentSettingNames.AzureWebJobsStorage, "UseDevelopmentStorage=true");
-            Environment.SetEnvironmentVariable(EnvironmentSettingNames.Currency, "DKK");
-            Environment.SetEnvironmentVariable(EnvironmentSettingNames.LocalTimezoneName, "Europe/Copenhagen");
-        }
 
         /// <inheritdoc/>
         protected override async Task OnInitializeLibraryDependenciesAsync(IConfiguration localSettingsSnapshot)

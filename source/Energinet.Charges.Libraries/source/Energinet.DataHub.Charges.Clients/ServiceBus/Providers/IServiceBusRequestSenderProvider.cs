@@ -12,13 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace Energinet.DataHub.Charges.Clients.Models
+namespace Energinet.DataHub.Charges.Clients.ServiceBus.Providers
 {
-    /// <summary>
-    /// The data needed by the Metering Point domain as a reply
-    /// to a successful CreateDefaultChargeLinks request
-    /// </summary>
-    /// <param name="MeteringPointId">A unique id to specify the metering point.</param>
-    /// <param name="DidCreateChargeLinks">True if any charge links was created.</param>
-    public sealed record DefaultChargeLinksCreatedSuccessfullyDto(string MeteringPointId, bool DidCreateChargeLinks);
+    public interface IServiceBusRequestSenderProvider
+    {
+        IServiceBusRequestSender GetInstance();
+    }
 }

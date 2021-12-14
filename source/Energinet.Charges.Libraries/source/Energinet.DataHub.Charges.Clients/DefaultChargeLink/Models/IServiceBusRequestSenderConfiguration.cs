@@ -13,19 +13,15 @@
 // limitations under the License.
 
 using System.Diagnostics.CodeAnalysis;
-using Energinet.Charges.Contracts;
-using Energinet.DataHub.Charges.Clients.Models;
 
-namespace Energinet.DataHub.Charges.Clients.Mappers
+namespace Energinet.DataHub.Charges.Clients.DefaultChargeLink.Models
 {
-    internal class CreateDefaultChargeLinksSucceededInboundMapper
+    public interface IServiceBusRequestSenderConfiguration
     {
-        protected internal static DefaultChargeLinksCreatedSuccessfullyDto Convert(
-            [NotNull] CreateDefaultChargeLinksReply createDefaultChargeLinksReply)
-        {
-            return new(
-                createDefaultChargeLinksReply.MeteringPointId,
-                createDefaultChargeLinksReply.CreateDefaultChargeLinksSucceeded.DidCreateChargeLinks);
-        }
+        [DisallowNull]
+        string ReplyQueueName { get; }
+
+        [DisallowNull]
+        string RequestQueueName { get;  }
     }
 }

@@ -12,12 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.Charges.Clients.ServiceBus;
-
-namespace Energinet.DataHub.Charges.Clients.Providers
+namespace Energinet.DataHub.Charges.Clients.IntegrationTests
 {
-    public interface IServiceBusRequestSenderProvider
+    /// <summary>
+    /// Contains names of settings used by the package.
+    /// </summary>
+    internal static class EnvironmentSettingNames
     {
-        IServiceBusRequestSender GetInstance();
+        public const string IntegrationEventSenderConnectionString = "INTEGRATIONEVENT_SENDER_CONNECTION_STRING";
+        public const string IntegrationEventListenerConnectionString = "INTEGRATIONEVENT_LISTENER_CONNECTION_STRING";
+
+        public const string CreateLinkRequestQueueName = "CREATE_LINK_REQUEST_QUEUE_NAME";
+        public const string CreateLinkReplyQueueName = "CREATE_LINK_REPLY_QUEUE_NAME";
     }
 }

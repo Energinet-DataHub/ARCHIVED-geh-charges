@@ -15,9 +15,10 @@
 using System;
 using System.Linq;
 using System.Net.Http;
+using Energinet.DataHub.Charges.Clients.ChargeLinks;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Energinet.DataHub.Charges.Clients.Registration
+namespace Energinet.DataHub.Charges.Clients.Registration.ChargeLinks.ServiceCollectionExtensions
 {
     public static class ServiceCollectionExtensions
     {
