@@ -17,7 +17,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.Text.Json;
 using System.Threading.Tasks;
-using Energinet.Charges.Contracts;
+using Energinet.Charges.Contracts.ChargeLink;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Xunit;
@@ -64,11 +64,11 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi
             // Act
             var response = await client.GetAsync($"{BaseUrl}{meteringPointId}");
             var jsonString = await response.Content.ReadAsStringAsync();
-            var result = JsonSerializer.Deserialize<List<ChargeLinkDto>>(jsonString, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+            var actual = JsonSerializer.Deserialize<List<ChargeLinkDto>>(jsonString, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
 
             // Assert
-            result![0].ChargeId.Should().Be(expectedChargeId);
-            result![0].StartDateTimeUtc.Should().Be(expectedStart);
+            actual![0].ChargeId.Should().Be(expectedChargeId);
+            actual![0].StartDate.Should().Be(expectedStart);
         }
 
         [Theory]

@@ -16,7 +16,7 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
-using Energinet.Charges.Contracts;
+using Energinet.Charges.Contracts.ChargeLink;
 
 namespace Energinet.DataHub.Charges.Clients.ChargeLinks
 {

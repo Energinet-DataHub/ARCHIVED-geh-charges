@@ -1,5 +1,9 @@
 # Energinet.DataHub.Charges.Clients Release notes
 
+## Version 1.0.18
+
+`IChargeLinkClient` returns charge links with new naming.
+
 ## Version 1.0.17
 
 Internal restructuring.

@@ -34,15 +34,19 @@ limitations under the License.
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Include="..\..\..\Contracts\ChargeLinkDto.cs" Link="ChargeLinkDto.cs" />
-    <Compile Include="..\..\..\Contracts\ChargeType.cs" Link="ChargeType.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Update="StyleCop.Analyzers" Version="1.2.0-beta.261">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="..\..\..\Contracts\ChargeLink\ChargeLinkDto.cs">
+      <Link>Model\ChargeLink\ChargeLinkDto.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\Contracts\Charge\ChargeType.cs">
+      <Link>Model\Charge\ChargeType.cs</Link>
+    </Compile>
   </ItemGroup>
 
 </Project>
