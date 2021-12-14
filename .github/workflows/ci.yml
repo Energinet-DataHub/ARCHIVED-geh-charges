@@ -26,7 +26,7 @@ env:
 jobs:
   # Markdown, links and spell checks
   ci_base:
-    uses: Energinet-DataHub/.github/.github/workflows/ci-base.yml@${{env.EnerginetActionsTag}}0
+    uses: Energinet-DataHub/.github/.github/workflows/ci-base.yml@${{env.EnerginetActionsTag}}
   
   # Build and test solution, and publish coverage report
   dotnet_solution_ci:
