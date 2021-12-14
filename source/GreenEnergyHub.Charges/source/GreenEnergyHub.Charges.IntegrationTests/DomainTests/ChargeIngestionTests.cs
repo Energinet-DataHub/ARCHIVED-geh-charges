@@ -109,14 +109,14 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             public async Task Given_NewTaxTariffWithPrices_When_GridAccessProviderPeeks_Then_MessageHubReceivesReply()
             {
                 // Arrange
-                var request = CreateHttpRequest(ChargeDocument.TaxTariffWithPrice, out var correlationId);
+                var request = CreateHttpRequest(ChargeDocument.TariffBundleWithValidAndInvalid, out var correlationId);
 
                 // Act
                 await Fixture.HostManager.HttpClient.SendAsync(request);
 
                 // Act and assert
                 // We expect two peaks, one for the charge and one for the receipt
-                await Fixture.MessageHubMock.AssertPeekReceivesReplyAsync(correlationId, 2);
+                await Fixture.MessageHubMock.AssertPeekReceivesReplyAsync(correlationId, 3);
             }
 
             private static HttpRequestMessage CreateHttpRequest(

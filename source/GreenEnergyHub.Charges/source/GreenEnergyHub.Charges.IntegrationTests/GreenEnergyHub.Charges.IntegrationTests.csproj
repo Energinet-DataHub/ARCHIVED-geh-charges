@@ -74,6 +74,9 @@ limitations under the License.
       <None Update="TestFiles\ChargeLinks\FixedPeriodTaxTariffChargeLinkDocument.xml">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
+      <None Include="TestFiles\Charges\TariffBundleWithValidAndInvalid.xml">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
     </ItemGroup>
 
     <ItemGroup>
