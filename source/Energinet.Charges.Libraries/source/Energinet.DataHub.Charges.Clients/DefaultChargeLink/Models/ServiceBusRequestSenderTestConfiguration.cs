@@ -15,7 +15,7 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 
-namespace Energinet.DataHub.Charges.Clients.Models
+namespace Energinet.DataHub.Charges.Clients.DefaultChargeLink.Models
 {
     /// <summary>
     /// Test configuration needed to address where the Charges domain

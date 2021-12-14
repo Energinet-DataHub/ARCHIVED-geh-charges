@@ -16,8 +16,8 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using Energinet.Charges.Contracts;
-using Energinet.DataHub.Charges.Clients.Mappers;
-using Energinet.DataHub.Charges.Clients.Models;
+using Energinet.DataHub.Charges.Clients.DefaultChargeLink.Mappers;
+using Energinet.DataHub.Charges.Clients.DefaultChargeLink.Models;
 
 namespace Energinet.DataHub.Charges.Clients.DefaultChargeLink
 {
