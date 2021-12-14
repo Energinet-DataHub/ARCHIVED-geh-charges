@@ -14,7 +14,7 @@
 
 using System;
 
-namespace Energinet.DataHub.Charges.Clients
+namespace Energinet.DataHub.Charges.Clients.ChargeLinks
 {
     /// <summary>
     /// This static class contains all relative uris / endpoints for the Charges Web API

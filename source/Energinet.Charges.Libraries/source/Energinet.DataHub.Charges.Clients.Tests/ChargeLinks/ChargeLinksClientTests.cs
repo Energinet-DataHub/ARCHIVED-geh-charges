@@ -21,6 +21,7 @@ using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using Energinet.Charges.Contracts;
+using Energinet.DataHub.Charges.Clients.ChargeLinks;
 using FluentAssertions;
 using GreenEnergyHub.Charges.TestCore.Attributes;
 using Moq;

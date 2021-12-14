@@ -1,5 +1,9 @@
 # Energinet.DataHub.Charges.Clients.Registrations Release notes
 
+## Version 0.1.3
+
+Internal restructuring.
+
 ## Version 0.1.2
 
 No changes. Build with newer tool chain.
