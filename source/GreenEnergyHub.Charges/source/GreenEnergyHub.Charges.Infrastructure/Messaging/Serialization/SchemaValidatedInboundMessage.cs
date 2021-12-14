@@ -24,7 +24,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Messaging.Serialization
     {
         public SchemaValidatedInboundMessage(TInboundMessage validatedMessage)
         {
-            HasErrors = true;
+            HasErrors = false;
             ValidatedMessage = validatedMessage;
             SchemaValidationError = default;
             Transaction = validatedMessage.Transaction;
@@ -32,7 +32,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Messaging.Serialization
 
         public SchemaValidatedInboundMessage(ErrorResponse schemaValidationError)
         {
-            HasErrors = false;
+            HasErrors = true;
             ValidatedMessage = default;
             SchemaValidationError = schemaValidationError;
             Transaction = Transaction.NewTransaction();
