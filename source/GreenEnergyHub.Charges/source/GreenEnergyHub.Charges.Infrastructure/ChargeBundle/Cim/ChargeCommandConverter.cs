@@ -48,9 +48,10 @@ namespace GreenEnergyHub.Charges.Infrastructure.ChargeBundle.Cim
             XmlReader reader,
             DocumentDto document)
         {
-            var chargeOperationAsync = await ParseChargeOperationsAsync(reader).ConfigureAwait(false);
-            var chargeCommands = chargeOperationAsync
-                .Select(chargeOperationDto => new ChargeCommand { Document = document, ChargeOperation = chargeOperationDto }).ToList();
+            var chargeOperationsAsync = await ParseChargeOperationsAsync(reader).ConfigureAwait(false);
+            var chargeCommands = chargeOperationsAsync
+                .Select(chargeOperationDto => new ChargeCommand { Document = document, ChargeOperation = chargeOperationDto })
+                .ToList();
 
             return new ChargeCommandBundle(chargeCommands);
         }

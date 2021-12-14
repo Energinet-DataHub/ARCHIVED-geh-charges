@@ -270,8 +270,8 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.ChargeBundle.Cim
             actualSecondChargeCommand.ChargeOperation.Resolution.Should().Be(Resolution.P1D);
             actualSecondChargeCommand.ChargeOperation.StartDateTime.Should().Be(expectedTime);
             actualSecondChargeCommand.ChargeOperation.EndDateTime.Should().BeNull();
-            actualSecondChargeCommand.ChargeOperation.VatClassification.Should().Be(VatClassification.NoVat);
-            actualSecondChargeCommand.ChargeOperation.TransparentInvoicing.Should().BeFalse();
+            actualSecondChargeCommand.ChargeOperation.VatClassification.Should().Be(VatClassification.Vat25);
+            actualSecondChargeCommand.ChargeOperation.TransparentInvoicing.Should().BeTrue();
             actualSecondChargeCommand.ChargeOperation.TaxIndicator.Should().BeFalse();
 
             // Prices
