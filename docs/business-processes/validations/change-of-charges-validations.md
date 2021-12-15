@@ -28,6 +28,8 @@ The following validation rules are currently implemented in the charge domain wh
 |VR.531|The occurrence of a charge is mandatory|E0H|All|
 |VR.532|The owner of a charge is mandatory|E0H|All|
 |**VR.630**|The VAT entitlement for a charge cannot be updated|D14|Tariff|
+|VR.902*|Update and stops are not implemented yet|D13|All|
 |**VR.???**|The Tax indicator for a charge cannot be updated|???|Tariff|
 
 * VR-152 is not fully implemented. Right now we only validate that it is filled with something
+* VR-902 is temporary and will be changed once update and stop functionality has been implemented.
