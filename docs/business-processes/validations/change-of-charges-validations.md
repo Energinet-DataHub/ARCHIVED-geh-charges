@@ -6,7 +6,7 @@ The following validation rules are currently implemented in the charge domain wh
 |:-|:-|:-|:-|
 |**VR.009**|The energy business process of a metering point is mandatory|D02|All|
 |VR.150|The sender of a message is mandatory|D02|All|
-|**VR.152**|The sender of a message must currently be an existing and active market party (company)|D02|All|
+|VR.152*|The sender of a message must currently be an existing and active market party (company)|D02|All|
 |VR.153|The recipient of a message is mandatory|D02|All|
 |VR.209|The data information must be received within the correct time period|E17|All|
 |VR.223|The identification of a transaction is mandatory|E0H|All|
@@ -29,3 +29,5 @@ The following validation rules are currently implemented in the charge domain wh
 |VR.532|The owner of a charge is mandatory|E0H|All|
 |**VR.630**|The VAT entitlement for a charge cannot be updated|D14|Tariff|
 |**VR.???**|The Tax indicator for a charge cannot be updated|???|Tariff|
+
+* VR-152 is not fully implemented. Right now we only validate that it is filled with something
