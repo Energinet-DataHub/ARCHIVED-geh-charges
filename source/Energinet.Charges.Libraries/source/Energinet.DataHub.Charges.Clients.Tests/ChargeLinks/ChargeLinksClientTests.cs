@@ -44,7 +44,7 @@ namespace Energinet.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.Charge
             // Arrange
             var chargeLinks = new List<ChargeLinkDto>();
             chargeLinks.Add(chargeLinkDto);
-            var responseContent = JsonSerializer.Serialize<IList<ChargeLinkDto>>(chargeLinks);
+            var responseContent = JsonSerializer.Serialize<IList<ChargeLinkDto>>(chargeLinks, new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase });
 
             var mockHttpMessageHandler = GetMockHttpMessageHandler(HttpStatusCode.OK, responseContent);
             var httpClient = new HttpClient(mockHttpMessageHandler.Object)
