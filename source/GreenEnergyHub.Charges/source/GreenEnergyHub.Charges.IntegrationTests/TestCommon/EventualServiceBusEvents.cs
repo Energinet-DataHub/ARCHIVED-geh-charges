@@ -28,6 +28,10 @@ namespace GreenEnergyHub.Charges.IntegrationTests.TestCommon
 
         public CountdownEvent? CountdownEvent { get; set; }
 
+        public BinaryData? Body { get; set; }
+
+        public string? CorrelationId { get; set; }
+
         public void Dispose()
         {
             Dispose(true);

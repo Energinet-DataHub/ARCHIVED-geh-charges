@@ -47,7 +47,12 @@ namespace GreenEnergyHub.Charges.IntegrationTests.TestCommon
             var result = new EventualServiceBusEvents();
             result.CountdownEvent = await _serviceBusListenerMock
                 .WhenCorrelationId(correlationId)
-                .VerifyCountAsync(expectedCount)
+                .VerifyCountAsync(expectedCount, receivedMessage =>
+                {
+                    result.Body = receivedMessage.Body;
+                    result.CorrelationId = receivedMessage.CorrelationId;
+                    return Task.CompletedTask;
+                })
                 .ConfigureAwait(false);
 
             return result;
