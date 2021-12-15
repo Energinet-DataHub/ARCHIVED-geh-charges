@@ -70,10 +70,11 @@ resending
 rsm
 RSM
 runtime
+SimpleInjector
 StartDateTime
 Terraform
 TODO
 TSO
 UpdatedPeriodEndDateTime
 UpdatedPeriodStartDateTime
-SimpleInjector
+VR
