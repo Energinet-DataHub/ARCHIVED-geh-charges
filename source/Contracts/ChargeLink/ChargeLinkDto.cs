@@ -28,7 +28,7 @@ namespace Energinet.Charges.Contracts.ChargeLink
     /// <param name="ChargeOwnerName">The market participant's company name</param>
     /// <param name="TaxIndicator">Indicates whether a tariff is considered a tax or not</param>
     /// <param name="TransparentInvoicing">Indicates whether the charge owner wants the charge to be displayed on the customer invoice</param>
-    /// <param name="ChargeOccurrence">Also known as quantity</param>
+    /// <param name="Quantity">The charge link's quantity</param>
     /// <param name="StartDate">The charge link's start date time in UTC</param>
     /// <param name="EndDate">The charge link's end date time in UTC</param>
     public record ChargeLinkDto(
@@ -39,7 +39,7 @@ namespace Energinet.Charges.Contracts.ChargeLink
         string ChargeOwnerName,
         bool TaxIndicator,
         bool TransparentInvoicing,
-        int ChargeOccurrence,
+        int Quantity,
         DateTime StartDate,
         DateTime? EndDate);
 }

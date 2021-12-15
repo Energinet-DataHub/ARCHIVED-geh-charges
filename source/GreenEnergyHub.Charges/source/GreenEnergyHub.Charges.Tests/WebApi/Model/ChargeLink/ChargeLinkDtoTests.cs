@@ -30,7 +30,7 @@ namespace GreenEnergyHub.Charges.Tests.WebApi.Model.ChargeLink
         {
             nameof(ChargeLinkDto.ChargeId).Should().Be("ChargeId");
             nameof(ChargeLinkDto.ChargeName).Should().Be("ChargeName");
-            nameof(ChargeLinkDto.ChargeOccurrence).Should().Be("ChargeOccurrence");
+            nameof(ChargeLinkDto.Quantity).Should().Be("Quantity");
             nameof(ChargeLinkDto.ChargeOwner).Should().Be("ChargeOwner"); // ID of the charge owner
             nameof(ChargeLinkDto.ChargeOwnerName).Should().Be("ChargeOwnerName");
             nameof(ChargeLinkDto.ChargeType).Should().Be("ChargeType");
