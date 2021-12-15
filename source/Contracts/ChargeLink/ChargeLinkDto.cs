@@ -40,6 +40,6 @@ namespace Energinet.Charges.Contracts.ChargeLink
         bool TaxIndicator,
         bool TransparentInvoicing,
         int Quantity,
-        DateTime StartDate,
-        DateTime? EndDate);
+        DateTimeOffset StartDate,
+        DateTimeOffset? EndDate);
 }

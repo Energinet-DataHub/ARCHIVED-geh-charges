@@ -7,7 +7,7 @@
     "ChargeOwnerName": "Energinet (SYO)",
     "TaxIndicator": false,
     "TransparentInvoicing": false,
-    "ChargeOccurrence": 1,
+    "Quantity": 1,
     "StartDate": "2019-12-31T23:00:00Z",
     "EndDate": null
   },
@@ -19,7 +19,7 @@
     "ChargeOwnerName": "Energinet (SYO)",
     "TaxIndicator": false,
     "TransparentInvoicing": false,
-    "ChargeOccurrence": 1,
+    "Quantity": 1,
     "StartDate": "2018-12-31T23:00:00Z",
     "EndDate": null
   },
@@ -31,7 +31,7 @@
     "ChargeOwnerName": "Energinet (SYO)",
     "TaxIndicator": false,
     "TransparentInvoicing": false,
-    "ChargeOccurrence": 1,
+    "Quantity": 1,
     "StartDate": "2018-05-31T22:00:00Z",
     "EndDate": null
   },
@@ -43,7 +43,7 @@
     "ChargeOwnerName": "Energinet (SYO)",
     "TaxIndicator": true,
     "TransparentInvoicing": true,
-    "ChargeOccurrence": 1,
+    "Quantity": 1,
     "StartDate": "2020-12-31T23:00:00Z",
     "EndDate": null
   },
@@ -55,7 +55,7 @@
     "ChargeOwnerName": "Energinet (SYO)",
     "TaxIndicator": false,
     "TransparentInvoicing": true,
-    "ChargeOccurrence": 1,
+    "Quantity": 1,
     "StartDate": "2020-12-31T23:00:00Z",
     "EndDate": "2022-12-31T23:00:00Z"
   },
@@ -67,7 +67,7 @@
     "ChargeOwnerName": "Netvirksomhed XYZ",
     "TaxIndicator": false,
     "TransparentInvoicing": false,
-    "ChargeOccurrence": 2,
+    "Quantity": 2,
     "StartDate": "2021-12-31T23:00:00Z",
     "EndDate": null
   },
@@ -79,7 +79,7 @@
     "ChargeOwnerName": "Netvirksomhed XYZ",
     "TaxIndicator": false,
     "TransparentInvoicing": true,
-    "ChargeOccurrence": 1,
+    "Quantity": 1,
     "StartDate": "2021-03-31T22:00:00Z",
     "EndDate": null
   }
