@@ -31,5 +31,5 @@ The following validation rules are currently implemented in the charge domain wh
 |VR.902*|Update and stops are not implemented yet|D13|All|
 |VR.903|The Tax indicator for a charge cannot be updated|D14|Tariff|
 
-* VR-152 is not fully implemented. Right now we only validate that it is filled with something
-* VR-902 is temporary and will be changed once update and stop functionality has been implemented.
+* VR.152 is not fully implemented. Right now we only validate that it is filled with something
+* VR.902 is temporary and will be changed once update and stop functionality has been implemented.
