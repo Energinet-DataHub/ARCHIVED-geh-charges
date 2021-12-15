@@ -15,7 +15,7 @@
 using System.ComponentModel;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.Charges;
-using GreenEnergyHub.Charges.Infrastructure.ChargeBundle.Cim;
+using GreenEnergyHub.Charges.MessageHub.Infrastructure.Bundles.ChargeBundle.Cim;
 using Xunit;
 using Xunit.Categories;
 

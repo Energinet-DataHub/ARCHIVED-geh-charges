@@ -13,10 +13,8 @@
 // limitations under the License.
 
 using System.ComponentModel;
-using GreenEnergyHub.Charges.Domain.AvailableChargeLinkReceiptData;
-using GreenEnergyHub.Charges.Domain.AvailableData;
-using GreenEnergyHub.Charges.Infrastructure.ChargeLinkReceiptBundle.Cim;
-using GreenEnergyHub.Charges.Infrastructure.MarketDocument;
+using GreenEnergyHub.Charges.MessageHub.Infrastructure.MarketDocument;
+using GreenEnergyHub.Charges.MessageHub.Models.AvailableData;
 using Xunit;
 using Xunit.Categories;
 

@@ -15,9 +15,9 @@
 using System.Collections.Generic;
 using Energinet.DataHub.MessageHub.Model.Model;
 using FluentAssertions;
-using GreenEnergyHub.Charges.Application.MessageHub;
-using GreenEnergyHub.Charges.Domain.AvailableData;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
+using GreenEnergyHub.Charges.MessageHub.Application.MessageHub;
+using GreenEnergyHub.Charges.MessageHub.Models.AvailableData;
 using Moq;
 using Xunit.Categories;
 

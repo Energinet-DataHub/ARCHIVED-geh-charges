@@ -13,8 +13,8 @@
 // limitations under the License.
 
 using FluentAssertions;
-using GreenEnergyHub.Charges.Application.Charges.MessageHub;
-using GreenEnergyHub.Charges.Domain.AvailableChargeReceiptData;
+using GreenEnergyHub.Charges.MessageHub.Application.Charges;
+using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData;
 using GreenEnergyHub.Charges.TestCore.Attributes;
 using GreenEnergyHub.Charges.Tests.TestFiles;
 using Xunit;

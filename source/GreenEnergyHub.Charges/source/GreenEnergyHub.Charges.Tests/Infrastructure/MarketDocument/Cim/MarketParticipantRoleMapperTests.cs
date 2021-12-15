@@ -14,7 +14,7 @@
 
 using System.ComponentModel;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
-using GreenEnergyHub.Charges.Infrastructure.MarketDocument.Cim;
+using GreenEnergyHub.Charges.MessageHub.Infrastructure.MarketDocument.Cim;
 using Xunit;
 using Xunit.Categories;
 

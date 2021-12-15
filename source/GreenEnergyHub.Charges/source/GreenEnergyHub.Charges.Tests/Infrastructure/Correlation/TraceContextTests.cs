@@ -13,7 +13,7 @@
 // limitations under the License.
 
 using FluentAssertions;
-using GreenEnergyHub.Charges.Infrastructure.Correlation;
+using GreenEnergyHub.Charges.Infrastructure.Core.Correlation;
 using Xunit;
 using Xunit.Categories;
 

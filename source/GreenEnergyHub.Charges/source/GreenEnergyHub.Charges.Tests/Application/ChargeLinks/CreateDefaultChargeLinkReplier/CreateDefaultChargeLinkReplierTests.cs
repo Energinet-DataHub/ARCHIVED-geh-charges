@@ -18,6 +18,8 @@ using System.Threading.Tasks;
 using AutoFixture.Xunit2;
 using GreenEnergyHub.Charges.Application;
 using GreenEnergyHub.Charges.Contracts;
+using GreenEnergyHub.Charges.Infrastructure.Core.Correlation;
+using GreenEnergyHub.Charges.Infrastructure.Core.MessageMetaData;
 using GreenEnergyHub.Charges.Infrastructure.CreateDefaultChargeLinkReplier;
 using GreenEnergyHub.Charges.Infrastructure.ServiceBusReplySenderProvider;
 using GreenEnergyHub.Charges.TestCore.Attributes;
