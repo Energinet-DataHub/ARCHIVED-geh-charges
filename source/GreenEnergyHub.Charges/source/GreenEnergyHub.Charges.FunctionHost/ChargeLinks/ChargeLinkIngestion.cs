@@ -48,7 +48,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.ChargeLinks
             [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = null)]
             HttpRequestData req)
         {
-            var validatedInboundMessage = await ValidateInboundChargesMessageAsync(req).ConfigureAwait(false);
+            var validatedInboundMessage = await ValidateInboundChargeLinksMessageAsync(req).ConfigureAwait(false);
             if (validatedInboundMessage.HasErrors)
             {
                 return await CreateErrorResponseAsync(
@@ -64,7 +64,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.ChargeLinks
         }
 
         private async Task<SchemaValidatedInboundMessage<ChargeLinksCommand>>
-            ValidateInboundChargesMessageAsync(HttpRequestData req)
+            ValidateInboundChargeLinksMessageAsync(HttpRequestData req)
         {
             return (SchemaValidatedInboundMessage<ChargeLinksCommand>)await _messageExtractor
                 .ExtractAsync(req.Body)
