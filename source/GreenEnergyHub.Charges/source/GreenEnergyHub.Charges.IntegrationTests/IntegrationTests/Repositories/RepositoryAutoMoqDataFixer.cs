@@ -13,17 +13,31 @@
 // limitations under the License.
 
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using GreenEnergyHub.Charges.Domain.AvailableChargeData;
 using GreenEnergyHub.Charges.Domain.AvailableChargeLinkReceiptData;
+using GreenEnergyHub.Charges.Domain.AvailableChargeLinksData;
 using GreenEnergyHub.Charges.Domain.AvailableChargeReceiptData;
+using GreenEnergyHub.Charges.Domain.AvailableData;
 
 namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
 {
     public static class RepositoryAutoMoqDataFixer
     {
-        public static AvailableChargeData GetAvailableChargeDataBasedOn([NotNull] AvailableChargeData availableChargeData)
+        public static List<AvailableDataBase> GetAvailableDataListBasedOn(
+            List<AvailableDataBase> availableList)
+        {
+            return availableList
+                .Select(receipt => (AvailableDataBase)GetAvailableDataBasedOn((dynamic)receipt))
+                .ToList();
+        }
+
+        public static AvailableDataBase GetAvailableDataBasedOn(AvailableDataBase availableData)
+        {
+            return GetAvailableDataBasedOn((dynamic)availableData);
+        }
+
+        private static AvailableChargeData GetAvailableDataBasedOn(AvailableChargeData availableChargeData)
         {
             return new AvailableChargeData(
                 availableChargeData.RecipientId.Substring(0, 34),
@@ -45,7 +59,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
                 availableChargeData.Points.ToList());
         }
 
-        public static AvailableChargeReceiptData GetAvailableChargeReceiptDataBasedOn(
+        private static AvailableChargeReceiptData GetAvailableDataBasedOn(
             AvailableChargeReceiptData availableChargeReceiptData)
         {
             return new AvailableChargeReceiptData(
@@ -59,13 +73,24 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
                 availableChargeReceiptData.ReasonCodes.ToList());
         }
 
-        public static List<AvailableChargeReceiptData> GetAvailableChargeReceiptDataListBasedOn(
-            List<AvailableChargeReceiptData> availableList)
+        private static AvailableChargeLinksData GetAvailableDataBasedOn(AvailableChargeLinksData availableChargeData)
         {
-            return availableList.Select(receipt => GetAvailableChargeReceiptDataBasedOn(receipt)).ToList();
+            return new AvailableChargeLinksData(
+                availableChargeData.RecipientId.Substring(0, 34),
+                availableChargeData.RecipientRole,
+                availableChargeData.BusinessReasonCode,
+                availableChargeData.RequestDateTime,
+                availableChargeData.AvailableDataReferenceId,
+                availableChargeData.ChargeId.Substring(0, 34),
+                availableChargeData.ChargeOwner.Substring(0, 34),
+                availableChargeData.ChargeType,
+                availableChargeData.MeteringPointId.Substring(0, 49),
+                availableChargeData.Factor,
+                availableChargeData.StartDateTime,
+                availableChargeData.EndDateTime);
         }
 
-        public static AvailableChargeLinkReceiptData GetAvailableChargeLinkReceiptDataBasedOn(
+        private static AvailableChargeLinkReceiptData GetAvailableDataBasedOn(
             AvailableChargeLinkReceiptData availableChargeLinkReceiptData)
         {
             return new AvailableChargeLinkReceiptData(
@@ -78,12 +103,6 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
                 availableChargeLinkReceiptData.OriginalOperationId.Substring(0, 34),
                 availableChargeLinkReceiptData.MeteringPointId.Substring(0, 49),
                 availableChargeLinkReceiptData.ReasonCodes.ToList());
-        }
-
-        public static List<AvailableChargeLinkReceiptData> GetAvailableChargeLinkReceiptDataListBasedOn(
-            List<AvailableChargeLinkReceiptData> availableList)
-        {
-            return availableList.Select(receipt => GetAvailableChargeLinkReceiptDataBasedOn(receipt)).ToList();
         }
     }
 }

@@ -16,32 +16,33 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Domain.AvailableChargeLinksData;
 using GreenEnergyHub.Charges.Domain.AvailableData;
 using GreenEnergyHub.Charges.Infrastructure.Context;
 using Microsoft.EntityFrameworkCore;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Repositories
 {
-    public class AvailableChargeLinksDataRepository : IAvailableDataRepository<AvailableChargeLinksData>
+    public class AvailableDataRepository<TAvailableData> : IAvailableDataRepository<TAvailableData>
+        where TAvailableData : AvailableDataBase
     {
         private readonly IChargesDatabaseContext _context;
 
-        public AvailableChargeLinksDataRepository(IChargesDatabaseContext context)
+        public AvailableDataRepository(IChargesDatabaseContext chargesDatabaseContext)
         {
-            _context = context;
+            _context = chargesDatabaseContext;
         }
 
-        public async Task StoreAsync(IEnumerable<AvailableChargeLinksData> availableChargeLinksData)
+        public async Task StoreAsync(IEnumerable<TAvailableData> availableData)
         {
-            await _context.AvailableChargeLinksData.AddRangeAsync(availableChargeLinksData);
+            await _context.SetAsync<TAvailableData>().AddRangeAsync(availableData);
             await _context.SaveChangesAsync();
         }
 
-        public async Task<IReadOnlyList<AvailableChargeLinksData>> GetAsync(IEnumerable<Guid> dataReferenceIds)
+        public async Task<IReadOnlyList<TAvailableData>> GetAsync(IEnumerable<Guid> dataReferenceIds)
         {
-            var queryable = _context.AvailableChargeLinksData.Where(x => dataReferenceIds.Contains(x.AvailableDataReferenceId));
-            return await queryable
+            return await _context
+                .SetAsync<TAvailableData>()
+                .Where(x => dataReferenceIds.Contains(x.AvailableDataReferenceId))
                 .OrderBy(x => x.RequestDateTime)
                 .ToListAsync();
         }

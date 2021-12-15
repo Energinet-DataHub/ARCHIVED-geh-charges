@@ -12,74 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
-using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
-using System.Linq;
-using System.Threading.Tasks;
-using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.AvailableChargeData;
-using GreenEnergyHub.Charges.Infrastructure.Repositories;
 using GreenEnergyHub.Charges.IntegrationTests.Database;
-using GreenEnergyHub.Charges.TestCore.Attributes;
-using Xunit;
 using Xunit.Categories;
 
 namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
 {
     [IntegrationTest]
-    public class AvailableChargeDataRepositoryTests : IClassFixture<ChargesDatabaseFixture>
+    public class AvailableChargeDataRepositoryTests : AvailableDataRepositoryTests<AvailableChargeData>
     {
-        private readonly ChargesDatabaseManager _databaseManager;
-
         public AvailableChargeDataRepositoryTests(ChargesDatabaseFixture fixture)
+            : base(fixture)
         {
-            _databaseManager = fixture.DatabaseManager;
-        }
-
-        [Theory]
-        [InlineAutoMoqData]
-        public async Task StoreAsync_StoresAvailableChargeData([NotNull] AvailableChargeData expected)
-        {
-            // Arrange
-            expected = RepositoryAutoMoqDataFixer.GetAvailableChargeDataBasedOn(expected);
-            await using var chargesDatabaseWriteContext = _databaseManager.CreateDbContext();
-
-            var sut = new AvailableChargeDataRepository(chargesDatabaseWriteContext);
-
-            // Act
-            await sut.StoreAsync(new List<AvailableChargeData>() { expected }).ConfigureAwait(false);
-
-            // Assert
-            await using var chargesDatabaseReadContext = _databaseManager.CreateDbContext();
-            var actual =
-                chargesDatabaseReadContext.AvailableChargeData
-                    .Single(x => x.AvailableDataReferenceId == expected.AvailableDataReferenceId);
-            actual.VatClassification.Should().Be(expected.VatClassification);
-            actual.Points.Should().BeEquivalentTo(expected.Points);
-        }
-
-        [Theory]
-        [InlineAutoMoqData]
-        public async Task GetAsync_GivenAnExistingAvailableDataReferenceId_ReturnsAvailableChargeData(
-            [NotNull] AvailableChargeData expected)
-        {
-            // Arrange
-            expected = RepositoryAutoMoqDataFixer.GetAvailableChargeDataBasedOn(expected);
-            await using var chargesDatabaseWriteContext = _databaseManager.CreateDbContext();
-            await chargesDatabaseWriteContext.AvailableChargeData.AddAsync(expected).ConfigureAwait(false);
-            await chargesDatabaseWriteContext.SaveChangesAsync().ConfigureAwait(false);
-
-            await using var chargesDatabaseReadContext = _databaseManager.CreateDbContext();
-            var sut = new AvailableChargeDataRepository(chargesDatabaseReadContext);
-
-            // Act
-            var actual =
-                await sut.GetAsync(new List<Guid> { expected.AvailableDataReferenceId })
-                .ConfigureAwait(false);
-
-            // Assert
-            Assert.NotNull(actual);
         }
     }
 }

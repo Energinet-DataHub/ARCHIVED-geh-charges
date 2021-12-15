@@ -19,6 +19,7 @@ using GreenEnergyHub.Charges.Domain.AvailableChargeData;
 using GreenEnergyHub.Charges.Domain.AvailableChargeLinkReceiptData;
 using GreenEnergyHub.Charges.Domain.AvailableChargeLinksData;
 using GreenEnergyHub.Charges.Domain.AvailableChargeReceiptData;
+using GreenEnergyHub.Charges.Domain.AvailableData;
 using GreenEnergyHub.Charges.Domain.ChargeLinks;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.DefaultChargeLinks;
@@ -36,6 +37,12 @@ namespace GreenEnergyHub.Charges.Infrastructure.Context
         public ChargesDatabaseContext(DbContextOptions<ChargesDatabaseContext> options)
             : base(options)
         {
+        }
+
+        public DbSet<TAvailableData> SetAsync<TAvailableData>()
+            where TAvailableData : AvailableDataBase
+        {
+            return Set<TAvailableData>();
         }
 
         public DbSet<Charge> Charges { get; private set; }
