@@ -15,13 +15,13 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Net;
 using System.Threading.Tasks;
+using Energinet.DataHub.Core.Messaging.Transport.SchemaValidation;
 using Energinet.DataHub.Core.SchemaValidation.Errors;
 using Energinet.DataHub.Core.SchemaValidation.Extensions;
 using GreenEnergyHub.Charges.Application.Charges.Handlers;
 using GreenEnergyHub.Charges.Application.Charges.Handlers.Message;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
 using GreenEnergyHub.Charges.Infrastructure.Messaging;
-using GreenEnergyHub.Charges.Infrastructure.Messaging.Serialization;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
 
@@ -34,11 +34,11 @@ namespace GreenEnergyHub.Charges.FunctionHost.Charges
         /// Function name affects the URL and thus possibly dependent infrastructure.
         /// </summary>
         private readonly IChargesMessageHandler _chargesMessageHandler;
-        private readonly MessageExtractor<ChargeCommand> _messageExtractor;
+        private readonly InboundMessageExtractor<ChargeCommand> _messageExtractor;
 
         public ChargeIngestion(
             IChargesMessageHandler chargesMessageHandler,
-            MessageExtractor<ChargeCommand> messageExtractor)
+            InboundMessageExtractor<ChargeCommand> messageExtractor)
         {
             _chargesMessageHandler = chargesMessageHandler;
             _messageExtractor = messageExtractor;

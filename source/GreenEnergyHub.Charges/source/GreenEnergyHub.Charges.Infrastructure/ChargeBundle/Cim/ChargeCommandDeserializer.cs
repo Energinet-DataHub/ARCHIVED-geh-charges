@@ -13,11 +13,11 @@
 // limitations under the License.
 
 using System.Threading.Tasks;
+using Energinet.DataHub.Core.Messaging.Transport.SchemaValidation;
 using Energinet.DataHub.Core.Schemas;
 using Energinet.DataHub.Core.SchemaValidation;
 using Energinet.DataHub.Core.SchemaValidation.Extensions;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
-using GreenEnergyHub.Charges.Infrastructure.Messaging.Serialization;
 
 namespace GreenEnergyHub.Charges.Infrastructure.ChargeBundle.Cim
 {

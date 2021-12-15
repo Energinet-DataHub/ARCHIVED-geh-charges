@@ -13,15 +13,16 @@
 // limitations under the License.
 
 using Energinet.DataHub.Core.Messaging.Protobuf;
+using Energinet.DataHub.Core.Messaging.Transport.SchemaValidation;
 using GreenEnergyHub.Charges.Application.Charges.Handlers;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandReceivedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands;
 using GreenEnergyHub.Charges.FunctionHost.Common;
 using GreenEnergyHub.Charges.Infrastructure.ChargeBundle.Cim;
 using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeCommandReceived;
 using GreenEnergyHub.Charges.Infrastructure.Messaging;
 using GreenEnergyHub.Charges.Infrastructure.Messaging.Registration;
-using GreenEnergyHub.Charges.Infrastructure.Messaging.Serialization;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace GreenEnergyHub.Charges.FunctionHost.Configuration
@@ -31,9 +32,9 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
         internal static void ConfigureServices(IServiceCollection serviceCollection)
         {
             serviceCollection.AddScoped<ChargeCommandConverter>();
-            serviceCollection.AddScoped<MessageExtractor<ChargeCommand>>();
+            serviceCollection.AddScoped<InboundMessageExtractor<ChargeCommand>>();
             serviceCollection.AddScoped<IChargeCommandConverter, ChargeCommandConverter>();
-            serviceCollection.AddScoped<MessageDeserializer<ChargeCommand>, ChargeCommandDeserializer>();
+            serviceCollection.AddScoped<SchemaValidatingMessageDeserializer<ChargeCommand>, ChargeCommandDeserializer>();
 
             serviceCollection.AddScoped<IChargesMessageHandler, ChargesMessageHandler>();
             serviceCollection.AddScoped<IChargeCommandHandler, ChargeCommandHandler>();
