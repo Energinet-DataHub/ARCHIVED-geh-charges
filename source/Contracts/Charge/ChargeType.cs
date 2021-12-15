@@ -12,12 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace Energinet.Charges.Contracts
+// ReSharper disable once CheckNamespace - Type is shared so namespace is not determined by project structure/namespace
+namespace Energinet.Charges.Contracts.Charge
 {
     public enum ChargeType
     {
-        Subscription = 1,
-        Fee = 2,
-        Tariff = 3,
+        D01 = 1, // Subscription
+        D02 = 2, // Fee
+        D03 = 3, // Tariff
     }
 }

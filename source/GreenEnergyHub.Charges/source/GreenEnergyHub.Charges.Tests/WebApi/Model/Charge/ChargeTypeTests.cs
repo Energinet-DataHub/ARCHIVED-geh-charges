@@ -12,22 +12,25 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Energinet.Charges.Contracts.ChargeLink;
+using Energinet.Charges.Contracts.Charge;
+using FluentAssertions;
+using Xunit;
+using Xunit.Categories;
 
-namespace Energinet.DataHub.Charges.Clients.ChargeLinks
+namespace GreenEnergyHub.Charges.Tests.WebApi.Model.Charge
 {
-    /// <summary>
-    /// Charge Links Client Interface
-    /// </summary>
-    public interface IChargeLinksClient
+    [UnitTest]
+    public class ChargeTypeTests
     {
         /// <summary>
-        /// Gets all charge links data for a given metering point.
+        /// See https://github.com/Energinet-DataHub/geh-charges/issues/933 regarding naming decisions.
         /// </summary>
-        /// <param name="meteringPointId">The 18-digits metering point identifier used by the Danish version of Green Energy Hub.</param>
-        /// <returns>A collection of Charge Link DTOs</returns>
-        public Task<IList<ChargeLinkDto>> GetAsync(string meteringPointId);
+        [Fact]
+        public void Types_HaveCorrectNames()
+        {
+            nameof(ChargeType.D01).Should().Be("D01"); // Subscription
+            nameof(ChargeType.D02).Should().Be("D02"); // Fee
+            nameof(ChargeType.D03).Should().Be("D03"); // Tariff
+        }
     }
 }

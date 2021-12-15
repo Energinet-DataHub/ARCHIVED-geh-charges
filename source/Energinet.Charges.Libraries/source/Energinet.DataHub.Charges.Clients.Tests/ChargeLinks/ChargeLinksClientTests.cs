@@ -20,7 +20,7 @@ using System.Text;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
-using Energinet.Charges.Contracts;
+using Energinet.Charges.Contracts.ChargeLink;
 using Energinet.DataHub.Charges.Clients.ChargeLinks;
 using FluentAssertions;
 using GreenEnergyHub.Charges.TestCore.Attributes;
@@ -61,7 +61,7 @@ namespace Energinet.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.Charge
             // Assert
             result.Should().NotBeNull();
             result[0].ChargeId.Should().Be(chargeLinkDto.ChargeId);
-            result[0].StartDateTimeUtc.Should().Be(chargeLinkDto.StartDateTimeUtc);
+            result[0].StartDate.Should().Be(chargeLinkDto.StartDate);
 
             mockHttpMessageHandler.Protected().Verify(
                 "SendAsync",
