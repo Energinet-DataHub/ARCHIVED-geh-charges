@@ -23,7 +23,7 @@ using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksData;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableData;
 
-namespace GreenEnergyHub.Charges.MessageHub.Infrastructure.MessageHub
+namespace GreenEnergyHub.Charges.MessageHub.Infrastructure.Bundling
 {
     public class BundleCreatorProvider : IBundleCreatorProvider
     {

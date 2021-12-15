@@ -16,7 +16,7 @@ using System.IO;
 using System.Threading.Tasks;
 using Energinet.DataHub.MessageHub.Model.Model;
 
-namespace GreenEnergyHub.Charges.MessageHub.Infrastructure.MessageHub
+namespace GreenEnergyHub.Charges.MessageHub.Infrastructure.Bundling
 {
     public interface IBundleReplier
     {

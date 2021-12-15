@@ -20,13 +20,12 @@ using Energinet.DataHub.Core.Messaging.Transport;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
-using GreenEnergyHub.Charges.MessageHub.Infrastructure.Bundles.ChargeLinkBundle.Cim;
-using GreenEnergyHub.Charges.MessageHub.Infrastructure.Exceptions;
-using GreenEnergyHub.Charges.MessageHub.Infrastructure.MarketDocument.Cim;
+using GreenEnergyHub.Charges.Infrastructure.CimDeserialization.MarketDocument;
+using GreenEnergyHub.Charges.Infrastructure.Core.Cim.Charges;
 using GreenEnergyHub.Iso8601;
 using NodaTime;
 
-namespace GreenEnergyHub.Charges.MessageHub.Infrastructure.Bundles.ChargeBundle.Cim
+namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.ChargeBundle
 {
     public class ChargeCommandConverter : DocumentConverter, IChargeCommandConverter
     {

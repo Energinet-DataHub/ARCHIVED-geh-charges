@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace GreenEnergyHub.Charges.MessageHub.Infrastructure.Bundles.ChargeLinkReceiptBundle.Cim
+namespace GreenEnergyHub.Charges.MessageHub.Infrastructure.Cim.Bundles.ChargeLinkReceipt
 {
     /// <summary>
     /// Strings used in CIM/XML for elements, namespaces or attributes that we need to

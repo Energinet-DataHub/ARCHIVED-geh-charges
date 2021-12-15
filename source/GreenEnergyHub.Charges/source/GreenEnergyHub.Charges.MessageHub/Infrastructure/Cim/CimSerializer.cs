@@ -21,7 +21,6 @@ using System.Xml.Linq;
 using GreenEnergyHub.Charges.Domain.Configuration;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.Infrastructure.Core.Cim.MarketDocument;
-using GreenEnergyHub.Charges.MessageHub.Infrastructure.MarketDocument.Cim;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableData;
 using NodaTime;
 

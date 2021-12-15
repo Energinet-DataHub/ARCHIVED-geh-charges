@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableData
+namespace GreenEnergyHub.Charges.Infrastructure.Core
 {
     public enum ReasonCode
     {

@@ -19,7 +19,7 @@ using Energinet.DataHub.MessageHub.Client.Storage;
 using Energinet.DataHub.MessageHub.Model.Extensions;
 using Energinet.DataHub.MessageHub.Model.Model;
 
-namespace GreenEnergyHub.Charges.MessageHub.Infrastructure.MessageHub
+namespace GreenEnergyHub.Charges.MessageHub.Infrastructure.Bundling
 {
     public class BundleReplier : IBundleReplier
     {

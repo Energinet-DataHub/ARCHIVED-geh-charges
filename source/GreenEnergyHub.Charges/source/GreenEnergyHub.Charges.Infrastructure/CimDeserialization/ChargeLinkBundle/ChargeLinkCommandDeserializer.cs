@@ -20,7 +20,7 @@ using Energinet.DataHub.Core.Messaging.Transport;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Serialization;
 
-namespace GreenEnergyHub.Charges.MessageHub.Infrastructure.Bundles.ChargeLinkBundle.Cim
+namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.ChargeLinkBundle
 {
     public class ChargeLinkCommandDeserializer : MessageDeserializer<ChargeLinksCommand>
     {

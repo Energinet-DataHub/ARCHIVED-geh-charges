@@ -14,7 +14,7 @@
 
 using System.ComponentModel;
 
-namespace GreenEnergyHub.Charges.MessageHub.Infrastructure.MarketDocument.Cim
+namespace GreenEnergyHub.Charges.Infrastructure.Core.Cim.MarketDocument
 {
     public static class CodingSchemeMapper
     {

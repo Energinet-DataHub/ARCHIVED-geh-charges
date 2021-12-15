@@ -19,15 +19,13 @@ using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Configuration;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
+using GreenEnergyHub.Charges.Infrastructure.Core.Cim.Charges;
 using GreenEnergyHub.Charges.Infrastructure.Core.Cim.MarketDocument;
-using GreenEnergyHub.Charges.MessageHub.Infrastructure.Bundles.ChargeLinkBundle.Cim;
-using GreenEnergyHub.Charges.MessageHub.Infrastructure.Cim;
-using GreenEnergyHub.Charges.MessageHub.Infrastructure.MarketDocument.Cim;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeData;
 using GreenEnergyHub.Iso8601;
 using NodaTime;
 
-namespace GreenEnergyHub.Charges.MessageHub.Infrastructure.Bundles.ChargeBundle.Cim
+namespace GreenEnergyHub.Charges.MessageHub.Infrastructure.Cim.Bundles.Charges
 {
     public class ChargeCimSerializer : CimSerializer<AvailableChargeData>
     {

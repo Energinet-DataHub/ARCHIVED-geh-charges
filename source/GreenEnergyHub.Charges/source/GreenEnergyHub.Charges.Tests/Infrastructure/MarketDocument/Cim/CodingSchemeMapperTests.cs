@@ -13,7 +13,7 @@
 // limitations under the License.
 
 using System.ComponentModel;
-using GreenEnergyHub.Charges.MessageHub.Infrastructure.MarketDocument.Cim;
+using GreenEnergyHub.Charges.Infrastructure.Core.Cim.MarketDocument;
 using Xunit;
 using Xunit.Categories;
 

@@ -13,9 +13,8 @@
 // limitations under the License.
 
 using System.ComponentModel;
-using GreenEnergyHub.Charges.MessageHub.Models.AvailableData;
 
-namespace GreenEnergyHub.Charges.MessageHub.Infrastructure.MarketDocument
+namespace GreenEnergyHub.Charges.Infrastructure.Core.Cim.MarketDocument
 {
     public static class ReceiptStatusMapper
     {

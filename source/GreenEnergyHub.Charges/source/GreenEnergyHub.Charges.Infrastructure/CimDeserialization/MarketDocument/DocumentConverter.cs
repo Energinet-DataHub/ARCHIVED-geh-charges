@@ -19,7 +19,7 @@ using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Infrastructure.Core.Cim.MarketDocument;
 using NodaTime;
 
-namespace GreenEnergyHub.Charges.MessageHub.Infrastructure.MarketDocument.Cim
+namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.MarketDocument
 {
     public abstract class DocumentConverter
     {

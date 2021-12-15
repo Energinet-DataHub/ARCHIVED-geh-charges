@@ -13,9 +13,8 @@
 // limitations under the License.
 
 using System.ComponentModel;
-using GreenEnergyHub.Charges.MessageHub.Models.AvailableData;
 
-namespace GreenEnergyHub.Charges.MessageHub.Infrastructure.MarketActivityRecord
+namespace GreenEnergyHub.Charges.Infrastructure.Core.Cim.MarketActivityRecord
 {
     public static class ReasonCodeMapper
     {

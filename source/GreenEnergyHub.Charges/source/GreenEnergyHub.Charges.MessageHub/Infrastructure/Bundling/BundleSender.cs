@@ -17,7 +17,7 @@ using System.Threading.Tasks;
 using Energinet.DataHub.MessageHub.Model.Model;
 using GreenEnergyHub.Charges.MessageHub.Application.MessageHub;
 
-namespace GreenEnergyHub.Charges.MessageHub.Infrastructure.MessageHub
+namespace GreenEnergyHub.Charges.MessageHub.Infrastructure.Bundling
 {
     public class BundleSender : IBundleSender
     {

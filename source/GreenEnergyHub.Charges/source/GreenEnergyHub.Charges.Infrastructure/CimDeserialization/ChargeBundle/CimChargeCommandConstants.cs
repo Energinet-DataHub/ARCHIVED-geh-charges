@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace GreenEnergyHub.Charges.MessageHub.Infrastructure.Bundles.ChargeBundle.Cim
+namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.ChargeBundle
 {
     internal static class CimChargeCommandConstants
     {

@@ -14,7 +14,7 @@
 
 using System;
 
-namespace GreenEnergyHub.Charges.MessageHub.Infrastructure.Exceptions
+namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.ChargeBundle
 {
     public class ChargeOperationIsNullException : Exception
     {

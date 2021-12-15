@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace GreenEnergyHub.Charges.MessageHub.Infrastructure.MarketDocument.Cim
+namespace GreenEnergyHub.Charges.Infrastructure.Core.Cim.MarketDocument
 {
     public enum CodingScheme
     {

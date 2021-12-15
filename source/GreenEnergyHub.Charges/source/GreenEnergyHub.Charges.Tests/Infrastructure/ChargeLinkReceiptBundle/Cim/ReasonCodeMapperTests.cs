@@ -13,7 +13,8 @@
 // limitations under the License.
 
 using System.ComponentModel;
-using GreenEnergyHub.Charges.MessageHub.Infrastructure.MarketActivityRecord;
+using GreenEnergyHub.Charges.Infrastructure.Core;
+using GreenEnergyHub.Charges.Infrastructure.Core.Cim.MarketActivityRecord;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableData;
 using Xunit;
 using Xunit.Categories;

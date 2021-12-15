@@ -17,16 +17,12 @@ using System.Linq;
 using System.Xml.Linq;
 using GreenEnergyHub.Charges.Domain.Configuration;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
+using GreenEnergyHub.Charges.Infrastructure.Core.Cim.MarketActivityRecord;
 using GreenEnergyHub.Charges.Infrastructure.Core.Cim.MarketDocument;
-using GreenEnergyHub.Charges.MessageHub.Infrastructure.Cim;
-using GreenEnergyHub.Charges.MessageHub.Infrastructure.MarketActivityRecord;
-using GreenEnergyHub.Charges.MessageHub.Infrastructure.MarketDocument;
-using GreenEnergyHub.Charges.MessageHub.Infrastructure.MarketDocument.Cim;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinkReceiptData;
-using GreenEnergyHub.Charges.MessageHub.Models.AvailableData;
 using NodaTime;
 
-namespace GreenEnergyHub.Charges.MessageHub.Infrastructure.Bundles.ChargeLinkReceiptBundle.Cim
+namespace GreenEnergyHub.Charges.MessageHub.Infrastructure.Cim.Bundles.ChargeLinkReceipt
 {
     public class ChargeLinkReceiptCimSerializer
         : CimSerializer<AvailableChargeLinkReceiptData>

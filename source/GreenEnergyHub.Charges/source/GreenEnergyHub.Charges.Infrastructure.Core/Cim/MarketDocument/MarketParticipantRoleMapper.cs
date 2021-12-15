@@ -15,7 +15,7 @@
 using System.ComponentModel;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 
-namespace GreenEnergyHub.Charges.MessageHub.Infrastructure.MarketDocument.Cim
+namespace GreenEnergyHub.Charges.Infrastructure.Core.Cim.MarketDocument
 {
     public static class MarketParticipantRoleMapper
     {

@@ -20,7 +20,7 @@ using Energinet.DataHub.MessageHub.Model.Model;
 using GreenEnergyHub.Charges.MessageHub.Infrastructure.Cim;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableData;
 
-namespace GreenEnergyHub.Charges.MessageHub.Infrastructure.MessageHub
+namespace GreenEnergyHub.Charges.MessageHub.Infrastructure.Bundling
 {
     public class BundleCreator<TAvailableData> : IBundleCreator
         where TAvailableData : AvailableDataBase

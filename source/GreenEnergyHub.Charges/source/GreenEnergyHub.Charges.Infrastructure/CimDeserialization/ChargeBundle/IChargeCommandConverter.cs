@@ -16,7 +16,7 @@ using System.Threading.Tasks;
 using System.Xml;
 using Energinet.DataHub.Core.Messaging.Transport;
 
-namespace GreenEnergyHub.Charges.MessageHub.Infrastructure.Bundles.ChargeBundle.Cim
+namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.ChargeBundle
 {
     public interface IChargeCommandConverter
     {

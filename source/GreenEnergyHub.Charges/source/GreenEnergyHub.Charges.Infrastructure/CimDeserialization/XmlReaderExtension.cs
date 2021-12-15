@@ -15,7 +15,7 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Xml;
 
-namespace GreenEnergyHub.Charges.MessageHub.Infrastructure
+namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization
 {
     public static class XmlReaderExtension
     {
