@@ -46,9 +46,9 @@ namespace GreenEnergyHub.Charges.FunctionHost.Charges
         {
             var message = await GetChargesMessageAsync(req).ConfigureAwait(false);
 
-            foreach (var messageTransaction in message.ChargeCommands)
+            foreach (var chargeCommand in message.ChargeCommands)
             {
-                ChargeCommandNullChecker.ThrowExceptionIfRequiredPropertyIsNull(messageTransaction);
+                ChargeCommandNullChecker.ThrowExceptionIfRequiredPropertyIsNull(chargeCommand);
             }
 
             var messageResult = await _chargesMessageHandler.HandleAsync(message)
