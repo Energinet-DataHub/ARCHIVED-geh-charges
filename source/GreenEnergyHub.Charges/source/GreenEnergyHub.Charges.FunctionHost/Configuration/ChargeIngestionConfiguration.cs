@@ -31,9 +31,9 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
         internal static void ConfigureServices(IServiceCollection serviceCollection)
         {
             serviceCollection.AddScoped<ChargeCommandConverter>();
-            serviceCollection.AddScoped<MessageExtractor<ChargeCommand>>();
+            serviceCollection.AddScoped<MessageExtractor<ChargeCommandBundle>>();
             serviceCollection.AddScoped<IChargeCommandConverter, ChargeCommandConverter>();
-            serviceCollection.AddScoped<MessageDeserializer<ChargeCommand>, ChargeCommandDeserializer>();
+            serviceCollection.AddScoped<MessageDeserializer<ChargeCommandBundle>, ChargeCommandDeserializer>();
 
             serviceCollection.AddScoped<IChargesMessageHandler, ChargesMessageHandler>();
             serviceCollection.AddScoped<IChargeCommandHandler, ChargeCommandHandler>();

@@ -16,6 +16,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Xml;
 using Energinet.DataHub.Core.Messaging.Transport;
@@ -47,16 +48,17 @@ namespace GreenEnergyHub.Charges.Infrastructure.ChargeBundle.Cim
             XmlReader reader,
             DocumentDto document)
         {
-            return new ChargeCommand
-                {
-                    Document = document,
-                    ChargeOperation = await ParseChargeOperationAsync(reader).ConfigureAwait(false),
-                };
+            var chargeOperationsAsync = await ParseChargeOperationsAsync(reader).ConfigureAwait(false);
+            var chargeCommands = chargeOperationsAsync
+                .Select(chargeOperationDto => new ChargeCommand { Document = document, ChargeOperation = chargeOperationDto })
+                .ToList();
+
+            return new ChargeCommandBundle(chargeCommands);
         }
 
-        private async Task<ChargeOperationDto> ParseChargeOperationAsync(XmlReader reader)
+        private async Task<List<ChargeOperationDto>> ParseChargeOperationsAsync(XmlReader reader)
         {
-            ChargeOperationDto? operation = null;
+            var operations = new List<ChargeOperationDto>();
             var operationId = string.Empty;
 
             while (await reader.ReadAsync().ConfigureAwait(false))
@@ -68,14 +70,14 @@ namespace GreenEnergyHub.Charges.Infrastructure.ChargeBundle.Cim
                 }
                 else if (reader.Is(CimChargeCommandConstants.ChargeGroup, CimChargeCommandConstants.Namespace))
                 {
-                    operation = await ParseChargeGroupIntoOperationAsync(reader, operationId).ConfigureAwait(false);
+                    operations.Add(await ParseChargeGroupIntoOperationAsync(reader, operationId).ConfigureAwait(false));
                 }
             }
 
-            if (operation == null)
-                throw new ChargeOperationIsNullException();
+            if (!operations.Any())
+                throw new NoChargeOperationFoundException();
 
-            return operation;
+            return operations;
         }
 
         private async Task<ChargeOperationDto> ParseChargeGroupIntoOperationAsync(XmlReader reader, string operationId)
