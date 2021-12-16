@@ -28,11 +28,11 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
 
         public async Task<ChargesMessageResult> HandleAsync(ChargesMessage message)
         {
-            var result = await HandleTransactionsAsync(message).ConfigureAwait(false);
+            var result = await HandleChargeCommandsAsync(message).ConfigureAwait(false);
             return result;
         }
 
-        private async Task<ChargesMessageResult> HandleTransactionsAsync(ChargesMessage message)
+        private async Task<ChargesMessageResult> HandleChargeCommandsAsync(ChargesMessage message)
         {
             foreach (var chargeCommand in message.ChargeCommands)
             {
