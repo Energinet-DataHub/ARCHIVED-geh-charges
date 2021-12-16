@@ -19,10 +19,12 @@ using AutoFixture.Xunit2;
 using Energinet.DataHub.MessageHub.Client.Peek;
 using Energinet.DataHub.MessageHub.Client.Storage;
 using Energinet.DataHub.MessageHub.Model.Model;
+using FluentAssertions;
 using GreenEnergyHub.Charges.Application;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessageMetaData;
 using GreenEnergyHub.Charges.MessageHub.Infrastructure.Bundling;
 using GreenEnergyHub.Charges.TestCore.Attributes;
+using Microsoft.Azure.Amqp.Framing;
 using Moq;
 using Xunit;
 using Xunit.Categories;
@@ -76,6 +78,35 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.MessageHub
             // Assert
             sender.Verify(s =>
                 s.SendAsync(It.IsAny<DataBundleResponseDto>()));
+        }
+
+        [Theory]
+        [InlineAutoMoqData(typeof(UnknownDataAvailableNotificationIdsException), DataBundleResponseErrorReason.DatasetNotFound)]
+        [InlineAutoMoqData(typeof(Exception), DataBundleResponseErrorReason.InternalError)]
+        public async Task ReplyErrorAsync_WhenExceptionIsUnknownIds_SendsDatasetNotFoundReplyAsync(
+            Type exceptionType,
+            DataBundleResponseErrorReason expectedReason,
+            [Frozen] Mock<IDataBundleResponseSender> sender,
+            DataBundleRequestDto request,
+            BundleReplier sut)
+        {
+            // Arrange
+            var e = (Exception)Activator.CreateInstance(exceptionType)!;
+
+            DataBundleResponseDto? actualDto = null;
+            sender.Setup(
+                    s => s.SendAsync(It.IsAny<DataBundleResponseDto>()))
+                .Callback((DataBundleResponseDto dto) => actualDto = dto);
+
+            // Act
+            await sut.ReplyErrorAsync(e, request);
+
+            // Assert
+            sender.Verify(s =>
+                s.SendAsync(It.IsAny<DataBundleResponseDto>()));
+            actualDto!.Should().NotBeNull();
+            actualDto!.ResponseError.Should().NotBeNull();
+            actualDto!.ResponseError!.Reason.Should().Be(expectedReason);
         }
     }
 }
