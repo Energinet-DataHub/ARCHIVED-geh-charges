@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using GreenEnergyHub.Charges.Domain.AvailableChargeReceiptData;
 using GreenEnergyHub.Charges.IntegrationTests.Database;
+using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData;
 using Xunit.Categories;
 
 namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
@@ -21,7 +21,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
     [IntegrationTest]
     public class AvailableChargeReceiptDataRepositoryTests : AvailableDataRepositoryTests<AvailableChargeReceiptData>
     {
-        public AvailableChargeReceiptDataRepositoryTests(ChargesDatabaseFixture fixture)
+        public AvailableChargeReceiptDataRepositoryTests(MessageHubDatabaseFixture fixture)
             : base(fixture)
         {
         }

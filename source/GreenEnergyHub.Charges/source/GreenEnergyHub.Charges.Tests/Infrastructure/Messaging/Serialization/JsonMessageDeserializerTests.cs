@@ -24,7 +24,7 @@ using AutoFixture.Kernel;
 using Energinet.DataHub.Core.Messaging.Transport;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.Dtos.Messages;
-using GreenEnergyHub.Charges.Infrastructure.Messaging.Registration;
+using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Registration;
 using GreenEnergyHub.Json;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;

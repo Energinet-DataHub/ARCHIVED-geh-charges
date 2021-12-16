@@ -15,11 +15,6 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Domain.AvailableChargeData;
-using GreenEnergyHub.Charges.Domain.AvailableChargeLinkReceiptData;
-using GreenEnergyHub.Charges.Domain.AvailableChargeLinksData;
-using GreenEnergyHub.Charges.Domain.AvailableChargeReceiptData;
-using GreenEnergyHub.Charges.Domain.AvailableData;
 using GreenEnergyHub.Charges.Domain.ChargeLinks;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.DefaultChargeLinks;
@@ -39,12 +34,6 @@ namespace GreenEnergyHub.Charges.Infrastructure.Context
         {
         }
 
-        public DbSet<TAvailableData> SetAsync<TAvailableData>()
-            where TAvailableData : AvailableDataBase
-        {
-            return Set<TAvailableData>();
-        }
-
         public DbSet<Charge> Charges { get; private set; }
 
         public DbSet<MarketParticipant> MarketParticipants { get; private set; }
@@ -54,14 +43,6 @@ namespace GreenEnergyHub.Charges.Infrastructure.Context
         public DbSet<DefaultChargeLink> DefaultChargeLinks { get; private set; }
 
         public DbSet<ChargeLink> ChargeLinks { get; private set; }
-
-        public DbSet<AvailableChargeData> AvailableChargeData { get; private set; }
-
-        public DbSet<AvailableChargeReceiptData> AvailableChargeReceiptData { get; private set; }
-
-        public DbSet<AvailableChargeLinksData> AvailableChargeLinksData { get; private set; }
-
-        public DbSet<AvailableChargeLinkReceiptData> AvailableChargeLinkReceiptData { get; private set; }
 
         public Task<int> SaveChangesAsync()
            => base.SaveChangesAsync();
@@ -77,12 +58,6 @@ namespace GreenEnergyHub.Charges.Infrastructure.Context
             modelBuilder.ApplyConfiguration(new DefaultChargeLinkEntityConfiguration());
             modelBuilder.ApplyConfiguration(new MarketParticipantEntityConfiguration());
             modelBuilder.ApplyConfiguration(new MeteringPointEntityConfiguration());
-
-            // Message Hub
-            modelBuilder.ApplyConfiguration(new AvailableChargeDataConfiguration());
-            modelBuilder.ApplyConfiguration(new AvailableChargeReceiptDataConfiguration());
-            modelBuilder.ApplyConfiguration(new AvailableChargeLinksDataConfiguration());
-            modelBuilder.ApplyConfiguration(new AvailableChargeLinkReceiptDataConfiguration());
 
             base.OnModelCreating(modelBuilder);
         }

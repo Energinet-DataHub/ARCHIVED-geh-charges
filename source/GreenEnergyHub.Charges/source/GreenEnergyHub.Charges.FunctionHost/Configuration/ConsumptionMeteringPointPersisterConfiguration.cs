@@ -13,7 +13,7 @@
 // limitations under the License.
 
 using GreenEnergyHub.Charges.Application.MeteringPoints.Handlers;
-using GreenEnergyHub.Charges.Infrastructure.Messaging.Registration;
+using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Registration;
 using GreenEnergyHub.MeteringPoints.IntegrationEventContracts;
 using Microsoft.Extensions.DependencyInjection;
 

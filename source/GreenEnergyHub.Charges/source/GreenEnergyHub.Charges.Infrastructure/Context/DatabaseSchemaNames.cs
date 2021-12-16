@@ -17,7 +17,5 @@ namespace GreenEnergyHub.Charges.Infrastructure.Context
     public static class DatabaseSchemaNames
     {
         public const string CommandModel = "Charges";
-
-        public const string MessageHub = "MessageHub";
     }
 }
