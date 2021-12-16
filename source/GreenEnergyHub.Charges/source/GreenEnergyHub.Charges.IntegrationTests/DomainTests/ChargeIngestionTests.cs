@@ -18,7 +18,6 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using Energinet.DataHub.Core.FunctionApp.TestCommon;
-using Energinet.DataHub.Core.FunctionApp.TestCommon.ServiceBus.ListenerMock;
 using FluentAssertions;
 using GreenEnergyHub.Charges.IntegrationTests.Fixtures;
 using GreenEnergyHub.Charges.IntegrationTests.TestFiles.Charges;
@@ -119,17 +118,15 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 await Fixture.MessageHubMock.AssertPeekReceivesReplyAsync(correlationId, 3);
             }
 
-            private static HttpRequestMessage CreateHttpRequest(
-                string testFilePath,
-                out string correlationId)
+            private static HttpRequestMessage CreateHttpRequest(string testFilePath, out string correlationId)
             {
                 var clock = SystemClock.Instance;
-                var chargeJson = EmbeddedResourceHelper.GetEmbeddedFile(testFilePath, clock);
+                var chargeXml = EmbeddedResourceHelper.GetEmbeddedFile(testFilePath, clock);
                 correlationId = CorrelationIdGenerator.Create();
 
                 var request = new HttpRequestMessage(HttpMethod.Post, "api/ChargeIngestion")
                 {
-                    Content = new StringContent(chargeJson, Encoding.UTF8, "application/xml"),
+                    Content = new StringContent(chargeXml, Encoding.UTF8, "application/xml"),
                 };
                 request.ConfigureTraceContext(correlationId);
 

@@ -30,7 +30,7 @@ limitations under the License.
             <cim:ChargeType>
                 <cim:chargeTypeOwner_MarketParticipant.mRID codingScheme="A10">8100000000030</cim:chargeTypeOwner_MarketParticipant.mRID>
                 <cim:type>D03</cim:type>
-                <cim:mRID>ShortName1</cim:mRID>
+                <cim:mRID>{{$randomCharactersShort}}{{$increment5digits}}</cim:mRID>
                 <cim:name>Charge Tariff day Name 1</cim:name>
                 <cim:description>The charge description 1</cim:description>
                 <cim:priceTimeFrame_Period.resolution>P1D</cim:priceTimeFrame_Period.resolution>
@@ -58,7 +58,7 @@ limitations under the License.
             <cim:ChargeType>
                 <cim:chargeTypeOwner_MarketParticipant.mRID codingScheme="A10">8100000000030</cim:chargeTypeOwner_MarketParticipant.mRID>
                 <cim:type>D03</cim:type>
-                <cim:mRID>ShortName2</cim:mRID>
+                <cim:mRID>{{$randomCharactersShort}}{{$increment5digits}}</cim:mRID>
                 <cim:name>Charge Tariff day Name 2</cim:name>
                 <cim:description>The charge description 2</cim:description>
                 <cim:priceTimeFrame_Period.resolution>P1D</cim:priceTimeFrame_Period.resolution>
@@ -86,7 +86,7 @@ limitations under the License.
             <cim:ChargeType>
                 <cim:chargeTypeOwner_MarketParticipant.mRID codingScheme="A10">8100000000030</cim:chargeTypeOwner_MarketParticipant.mRID>
                 <cim:type>D03</cim:type>
-                <cim:mRID>TooLongName3</cim:mRID>
+                <cim:mRID>TooLongName{{$randomCharactersShort}}{{$increment5digits}}</cim:mRID>
                 <cim:name>Charge Tariff day Name 3</cim:name>
                 <cim:description>The charge description 3</cim:description>
                 <cim:priceTimeFrame_Period.resolution>P1D</cim:priceTimeFrame_Period.resolution>
