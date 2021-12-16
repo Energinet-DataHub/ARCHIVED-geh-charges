@@ -16,7 +16,7 @@ using System;
 using System.Linq;
 using System.Xml.Linq;
 using FluentAssertions;
-using GreenEnergyHub.Charges.Infrastructure.Cim;
+using GreenEnergyHub.Charges.MessageHub.Infrastructure.Cim;
 using GreenEnergyHub.Charges.TestCore.Attributes;
 using Xunit;
 using Xunit.Categories;

@@ -20,6 +20,7 @@ using Google.Protobuf;
 using GreenEnergyHub.Charges.Application;
 using GreenEnergyHub.Charges.Application.ChargeLinks.CreateDefaultChargeLinkReplier;
 using GreenEnergyHub.Charges.Contracts;
+using GreenEnergyHub.Charges.Infrastructure.Core.Correlation;
 using GreenEnergyHub.Charges.Infrastructure.ServiceBusReplySenderProvider;
 
 namespace GreenEnergyHub.Charges.Infrastructure.CreateDefaultChargeLinkReplier

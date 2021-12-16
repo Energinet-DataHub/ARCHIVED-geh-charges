@@ -13,9 +13,8 @@
 // limitations under the License.
 
 using Energinet.DataHub.Core.Messaging.Protobuf;
-using GreenEnergyHub.Charges.Application;
-using GreenEnergyHub.Charges.Infrastructure.Messaging;
-using GreenEnergyHub.Charges.Infrastructure.Messaging.Registration;
+using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions;
+using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Registration;
 using GreenEnergyHub.TestHelpers;
 using Microsoft.Extensions.DependencyInjection;
 using NodaTime;

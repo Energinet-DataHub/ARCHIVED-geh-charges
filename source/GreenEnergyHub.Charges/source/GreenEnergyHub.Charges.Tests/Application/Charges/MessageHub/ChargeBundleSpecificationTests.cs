@@ -14,8 +14,8 @@
 
 using System;
 using FluentAssertions;
-using GreenEnergyHub.Charges.Application.Charges.MessageHub;
-using GreenEnergyHub.Charges.Domain.AvailableChargeData;
+using GreenEnergyHub.Charges.MessageHub.Application.Charges;
+using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeData;
 using GreenEnergyHub.Charges.TestCore.Attributes;
 using GreenEnergyHub.Charges.Tests.TestFiles;
 using Xunit;

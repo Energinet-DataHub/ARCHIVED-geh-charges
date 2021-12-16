@@ -17,6 +17,7 @@ using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application.ChargeLinks.Handlers.Message;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksReceivedEvents;
+using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions;
 using NodaTime;
 
 namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers

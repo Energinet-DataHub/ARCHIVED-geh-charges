@@ -19,7 +19,7 @@ using AutoFixture.Xunit2;
 using Energinet.DataHub.Core.Messaging.Protobuf;
 using Energinet.DataHub.Core.Messaging.Transport;
 using Google.Protobuf;
-using GreenEnergyHub.Charges.Infrastructure.Messaging.Serialization;
+using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Serialization;
 using GreenEnergyHub.TestHelpers;
 using Moq;
 using Xunit;
