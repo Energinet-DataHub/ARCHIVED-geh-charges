@@ -16,7 +16,7 @@ using System;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Exceptions
 {
-    public class ChargeOperationIsNullException : Exception
+    public class NoChargeOperationFoundException : Exception
     {
     }
 }

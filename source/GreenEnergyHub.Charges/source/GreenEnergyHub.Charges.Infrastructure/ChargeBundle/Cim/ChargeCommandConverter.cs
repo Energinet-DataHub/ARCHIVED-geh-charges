@@ -75,7 +75,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.ChargeBundle.Cim
             }
 
             if (!operations.Any())
-                throw new ChargeOperationIsNullException();
+                throw new NoChargeOperationFoundException();
 
             return operations;
         }
