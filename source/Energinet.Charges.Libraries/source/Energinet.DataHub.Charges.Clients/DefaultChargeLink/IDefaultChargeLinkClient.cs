@@ -14,7 +14,7 @@
 
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
-using Energinet.DataHub.Charges.Clients.Models;
+using Energinet.DataHub.Charges.Clients.DefaultChargeLink.Models;
 
 namespace Energinet.DataHub.Charges.Clients.DefaultChargeLink
 {

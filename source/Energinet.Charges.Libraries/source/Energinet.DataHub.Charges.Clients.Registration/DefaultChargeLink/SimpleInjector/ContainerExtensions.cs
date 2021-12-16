@@ -16,11 +16,11 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using Azure.Messaging.ServiceBus;
 using Energinet.DataHub.Charges.Clients.DefaultChargeLink;
-using Energinet.DataHub.Charges.Clients.Models;
-using Energinet.DataHub.Charges.Clients.Providers;
+using Energinet.DataHub.Charges.Clients.DefaultChargeLink.Models;
+using Energinet.DataHub.Charges.Clients.ServiceBus.Providers;
 using SimpleInjector;
 
-namespace Energinet.DataHub.Charges.Clients.Registration
+namespace Energinet.DataHub.Charges.Clients.Registration.DefaultChargeLink.SimpleInjector
 {
     public static class ContainerExtensions
     {

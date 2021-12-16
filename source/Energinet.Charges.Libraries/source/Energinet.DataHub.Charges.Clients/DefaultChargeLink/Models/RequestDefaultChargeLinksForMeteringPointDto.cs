@@ -12,15 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using GreenEnergyHub.Charges.Contracts;
-
-namespace Energinet.DataHub.Charges.Clients.Models
+namespace Energinet.DataHub.Charges.Clients.DefaultChargeLink.Models
 {
     /// <summary>
-    /// The data needed by the Metering Point domain as a reply
-    /// to a failed CreateDefaultChargeLinks request
+    /// The required data needed by the Charges domain to create Default charge links.
     /// </summary>
     /// <param name="MeteringPointId">A unique id to specify the metering point.</param>
-    /// <param name="ErrorCode">Tells why the CreateDefaultChargeLinks request has failed.</param>
-    public sealed record DefaultChargeLinksCreationFailedStatusDto(string MeteringPointId, ErrorCode ErrorCode);
+    public sealed record RequestDefaultChargeLinksForMeteringPointDto(string MeteringPointId);
 }

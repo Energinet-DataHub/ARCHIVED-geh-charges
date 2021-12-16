@@ -40,6 +40,19 @@ namespace GreenEnergyHub.Charges.IntegrationTests.TestCommon
             return result;
         }
 
+        public async Task<EventualServiceBusEvents> ListenForEventsAsync(
+            string correlationId,
+            int expectedCount)
+        {
+            var result = new EventualServiceBusEvents();
+            result.CountdownEvent = await _serviceBusListenerMock
+                .WhenCorrelationId(correlationId)
+                .VerifyCountAsync(expectedCount)
+                .ConfigureAwait(false);
+
+            return result;
+        }
+
         /// <summary>
         /// Reset handlers and received messages.
         /// </summary>

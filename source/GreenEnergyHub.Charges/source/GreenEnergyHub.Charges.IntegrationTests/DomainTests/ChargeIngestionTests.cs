@@ -87,20 +87,20 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             }
 
             [Fact]
-            public async Task When_ChargeIncludingPriceIsReceived_Then_ChargePricesUpdatedIntegrationEventIsPublished()
+            public async Task When_ChargeBundleWithChargesIncludingPriceIsReceived_Then_ChargePricesUpdatedIntegrationEventsArePublished()
             {
                 // Arrange
-                var request = CreateHttpRequest(ChargeDocument.AnyWithPrice, out string correlationId);
+                var request = CreateHttpRequest(ChargeDocument.TariffBundleWithValidAndInvalid, out string correlationId);
                 using var eventualChargePriceUpdatedEvent = await Fixture
                     .ChargePricesUpdatedListener
-                    .ListenForMessageAsync(correlationId)
+                    .ListenForEventsAsync(correlationId, expectedCount: 2)
                     .ConfigureAwait(false);
 
                 // Act
                 await Fixture.HostManager.HttpClient.SendAsync(request);
 
                 // Assert
-                var isChargePricesUpdatedReceived = eventualChargePriceUpdatedEvent.MessageAwaiter!.Wait(
+                var isChargePricesUpdatedReceived = eventualChargePriceUpdatedEvent.CountdownEvent!.Wait(
                     TimeSpan.FromSeconds(SecondsToWaitForIntegrationEvents));
                 isChargePricesUpdatedReceived.Should().BeTrue();
             }
