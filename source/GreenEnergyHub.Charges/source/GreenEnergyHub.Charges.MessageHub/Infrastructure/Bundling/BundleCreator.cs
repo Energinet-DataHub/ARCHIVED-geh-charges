@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -46,6 +47,13 @@ namespace GreenEnergyHub.Charges.MessageHub.Infrastructure.Bundling
             var availableData = await _availableDataRepository
                 .GetAsync(dataAvailableNotificationIds)
                 .ConfigureAwait(false);
+
+            if (availableData.Count == 0)
+            {
+                var ids = string.Join(",", dataAvailableNotificationIds);
+                throw new UnknownDataAvailableNotificationIdsException(
+                    $"Peek request with id '{request.RequestId}' resulted in available ids '{ids}' but no data was found in the database");
+            }
 
             await _cimSerializer.SerializeToStreamAsync(
                 availableData,
