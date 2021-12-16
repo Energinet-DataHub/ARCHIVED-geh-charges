@@ -20,6 +20,7 @@ using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeData;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinkReceiptData;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksData;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData;
+using GreenEnergyHub.Charges.MessageHub.Models.AvailableData;
 using Microsoft.EntityFrameworkCore;
 
 namespace GreenEnergyHub.Charges.MessageHub.Infrastructure.Context
@@ -31,6 +32,12 @@ namespace GreenEnergyHub.Charges.MessageHub.Infrastructure.Context
         public MessageHubDatabaseContext(DbContextOptions<MessageHubDatabaseContext> options)
             : base(options)
         {
+        }
+
+        public DbSet<TAvailableData> SetAsync<TAvailableData>()
+            where TAvailableData : AvailableDataBase
+        {
+            return Set<TAvailableData>();
         }
 
         public DbSet<AvailableChargeData> AvailableChargeData { get; private set; }
