@@ -25,7 +25,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace GreenEnergyHub.Charges.FunctionHost.Configuration
 {
-    internal static class ChargeCommandAcceptedReceiverConfiguration
+    internal static class ChargeIntegrationEventsPublisherEndpointConfiguration
     {
         internal static void ConfigureServices(IServiceCollection serviceCollection)
         {
