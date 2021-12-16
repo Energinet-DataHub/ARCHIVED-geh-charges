@@ -38,7 +38,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.TestHelpers
 
             // cim:timeInterval does not allow seconds.
             var inThirtyoneDays = currentInstant.Plus(Duration.FromDays(31))
-                .ToString("yyyy-MM-ddTHH:mmZ", CultureInfo.InvariantCulture);
+                .ToString("yyyy-MM-dd\\THH:mm\\Z", CultureInfo.InvariantCulture);
 
             return file
                 .Replace("{{$randomCharacters}}", Guid.NewGuid().ToString("n")[..10])
