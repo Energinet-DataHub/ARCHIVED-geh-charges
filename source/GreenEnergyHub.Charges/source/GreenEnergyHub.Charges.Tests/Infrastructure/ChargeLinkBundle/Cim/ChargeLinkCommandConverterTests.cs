@@ -168,8 +168,8 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.ChargeLinkBundle.Cim
             var chargeLink2 =
                 result.ChargeLinksCommands.Single(x => x.ChargeLinks.First().OperationId == "rId_Valid_002").ChargeLinks
                     .First();
-            chargeLink2.StartDateTime.Should().Be(InstantPattern.ExtendedIso.Parse("2021-09-27T22:00:00Z").Value);
-            chargeLink2.EndDateTime.Should().Be(InstantPattern.ExtendedIso.Parse("2021-11-05T23:00:00Z").Value);
+            chargeLink2.StartDateTime.Should().Be(InstantPattern.ExtendedIso.Parse("2021-11-27T22:00:00Z").Value);
+            chargeLink2.EndDateTime.Should().Be(InstantPattern.ExtendedIso.Parse("2021-12-05T23:00:00Z").Value);
             chargeLink2.SenderProvidedChargeId.Should().Be("ChargeId01");
             chargeLink2.Factor.Should().Be(1);
             chargeLink2.ChargeOwnerId.Should().Be("8100000000016");
