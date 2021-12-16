@@ -14,6 +14,7 @@
 
 using System;
 using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using System.IO;
 using System.Reflection;
 using NodaTime;
@@ -34,7 +35,10 @@ namespace GreenEnergyHub.Charges.IntegrationTests.TestHelpers
         {
             var currentInstant = clock.GetCurrentInstant();
             var now = currentInstant.ToString();
-            var inThirtyoneDays = currentInstant.Plus(Duration.FromDays(31)).ToString();
+
+            // cim:timeInterval does not allow seconds.
+            var inThirtyoneDays = currentInstant.Plus(Duration.FromDays(31))
+                .ToString("yyyy-MM-ddTHH:mmZ", CultureInfo.InvariantCulture);
 
             return file
                 .Replace("{{$randomCharacters}}", Guid.NewGuid().ToString("n")[..10])
