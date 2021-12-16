@@ -42,5 +42,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.ChargeLinkBun
         internal const string ChargeOwner = "chargeGroup.chargeType.chargeTypeOwner_MarketParticipant.mRID";
 
         internal const string ChargeType = "chargeGroup.chargeType.type";
+
+        internal const string MktActivityRecord = "MktActivityRecord";
     }
 }
