@@ -26,7 +26,6 @@ limitations under the License.
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\..\messaging\source\GreenEnergyHub.Messaging.Protobuf.Integration.ServiceCollection\GreenEnergyHub.Messaging.Protobuf.Integration.ServiceCollection.csproj" />
       <ProjectReference Include="..\..\..\Shared\GreenEnergyHub\source\GreenEnergyHub.TestHelpers\GreenEnergyHub.TestHelpers.csproj" />
       <ProjectReference Include="..\GreenEnergyHub.Charges.Application\GreenEnergyHub.Charges.Application.csproj" />
       <ProjectReference Include="..\GreenEnergyHub.Charges.ApplyDBMigrationsApp\GreenEnergyHub.Charges.ApplyDBMigrationsApp.csproj" />
@@ -34,6 +33,7 @@ limitations under the License.
       <ProjectReference Include="..\GreenEnergyHub.Charges.FunctionHost\GreenEnergyHub.Charges.FunctionHost.csproj" />
       <ProjectReference Include="..\GreenEnergyHub.Charges.Infrastructure\GreenEnergyHub.Charges.Infrastructure.csproj" />
       <ProjectReference Include="..\GreenEnergyHub.Charges.TestCore\GreenEnergyHub.Charges.TestCore.csproj" />
+      <ProjectReference Include="..\GreenEnergyHub.Charges.WebApi\GreenEnergyHub.Charges.WebApi.csproj" />
     </ItemGroup>
 
     <ItemGroup>
@@ -44,11 +44,11 @@ limitations under the License.
         <PackageReference Include="System.ComponentModel.TypeConverter" Version="4.3.0" />
         <PackageReference Include="xunit" Version="2.4.1" />
         <PackageReference Include="FluentAssertions" Version="6.2.0" />
-        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.11.0" />
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.0.0" />
         <PackageReference Include="xunit.runner.visualstudio" Version="2.4.3" />
         <PackageReference Include="coverlet.collector" Version="3.1.0" />
-        <PackageReference Include="Google.Protobuf" Version="3.18.1" />
-        <PackageReference Include="Grpc.Tools" Version="2.41.0" PrivateAssets="All" />
+        <PackageReference Include="Google.Protobuf" Version="3.19.1" />
+        <PackageReference Include="Grpc.Tools" Version="2.42.0" PrivateAssets="All" />
         <PackageReference Update="StyleCop.Analyzers" Version="1.2.0-beta.354">
           <PrivateAssets>all</PrivateAssets>
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -59,11 +59,17 @@ limitations under the License.
       <EmbeddedResource Include="TestFiles\Valid_CIM_ChargeLink.xml" />
       <EmbeddedResource Include="TestFiles\Valid_CIM_ChargeLink_WithUnusedCimContent.xml" />
       <EmbeddedResource Include="TestFiles\Valid_CIM_ChargeLink_WithoutEndDate.xml" />
-      <EmbeddedResource Include="TestFiles\ExpectedOutputChargeLinkCimSerializer.xml" />
-      <EmbeddedResource Include="TestFiles\License.txt" />
+      <EmbeddedResource Include="TestFiles\ExpectedOutputChargeLinkCimSerializer.blob" />
       <EmbeddedResource Include="TestFiles\Syntax_Valid_CIM_Charge.xml" />
       <EmbeddedResource Include="TestFiles\Valid_CIM_Charge_Prices_Without_Master_Data.xml" />
       <EmbeddedResource Include="TestFiles\Valid_CIM_Charge_Without_Prices.xml" />
+      <EmbeddedResource Include="TestFiles\ExpectedOutputChargeCimSerializerMasterDataAndPrices.blob" />
+      <EmbeddedResource Include="TestFiles\ExpectedOutputChargeCimSerializerMasterDataWithoutPrices.blob" />
+      <EmbeddedResource Include="TestFiles\ExpectedOutputChargeCimSerializerPricesWithoutMasterData.blob" />
+      <EmbeddedResource Include="TestFiles\ExpectedOutputChargeLinkReceiptCimSerializerConfirmation.blob" />
+      <EmbeddedResource Include="TestFiles\ExpectedOutputChargeLinkReceiptCimSerializerRejection.blob" />
+      <EmbeddedResource Include="TestFiles\ExpectedOutputChargeReceiptCimSerializerConfirmation.blob" />
+      <EmbeddedResource Include="TestFiles\ExpectedOutputChargeReceiptCimSerializerRejection.blob" />
     </ItemGroup>
 
     <ItemGroup>
@@ -75,5 +81,23 @@ limitations under the License.
         <OutputDir>obj\Debug\net5.0\</OutputDir>
         <Generator>MSBuild:Compile</Generator>
       </Protobuf>
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Update="TestFiles\ValidCreateTariffCommandMaxDocumentSizeNoPoints.xml">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+      <None Update="TestFiles\ValidCreateTariffCommandMaxDocumentSizeWithPoints.xml">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+      <None Include="TestFiles\SingleChargeLinkCimSerializerWorstCase.blob">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+      <None Include="TestFiles\SingleChargeLinkConfirmationCimSerializerWorstCase.blob">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+      <None Update="TestFiles\SingleChargeReceiptWorstCase.blob">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
     </ItemGroup>
 </Project>

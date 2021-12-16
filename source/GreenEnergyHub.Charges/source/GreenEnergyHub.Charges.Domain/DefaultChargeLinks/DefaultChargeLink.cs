@@ -16,32 +16,29 @@ using System;
 using GreenEnergyHub.Charges.Domain.MeteringPoints;
 using NodaTime;
 
-#pragma warning disable 8618
-
 namespace GreenEnergyHub.Charges.Domain.DefaultChargeLinks
 {
-    // Logically there is a MeteringPointType attached to the DefaultChargeLink, but atm. It is not used.
+    /// <summary>
+    /// Default charge links represent charge links that must be created when requested externally.
+    ///
+    /// In reality this happens in the business process where a new metering point is connected.
+    ///
+    /// Charge links are created when the metering point type of the metering point matches that of the
+    /// default charge link. The process has some additional period logic controlling the creation.
+    /// </summary>
     public class DefaultChargeLink
     {
-        /// <summary>
-        /// The default start date the charge link is applicable from.
-        /// </summary>
-        private readonly Instant _startDateTime;
-
-        /// <summary>
-        /// The metering point type that must match to be applicable for linking.
-        /// </summary>
-        private readonly MeteringPointType _meteringPointType;
-
         public DefaultChargeLink(
+            Guid id,
             Instant startDateTime,
             Instant endDateTime,
             Guid chargeId,
             MeteringPointType meteringPointType)
         {
-            _startDateTime = startDateTime;
+            Id = id;
+            StartDateTime = startDateTime;
             EndDateTime = endDateTime;
-            _meteringPointType = meteringPointType;
+            MeteringPointType = meteringPointType;
             ChargeId = chargeId;
         }
 
@@ -51,7 +48,7 @@ namespace GreenEnergyHub.Charges.Domain.DefaultChargeLinks
         /// </summary>
         public Instant GetStartDateTime(Instant meteringPointCreatedDateTime)
         {
-            return _startDateTime > meteringPointCreatedDateTime ? _startDateTime : meteringPointCreatedDateTime;
+            return StartDateTime > meteringPointCreatedDateTime ? StartDateTime : meteringPointCreatedDateTime;
         }
 
         /// <summary>
@@ -62,8 +59,10 @@ namespace GreenEnergyHub.Charges.Domain.DefaultChargeLinks
         public bool ApplicableForLinking(Instant meteringPointCreatedDateTime, MeteringPointType meteringPointType)
         {
             return EndDateTime > GetStartDateTime(meteringPointCreatedDateTime)
-                   && _meteringPointType == meteringPointType;
+                   && MeteringPointType == meteringPointType;
         }
+
+        public Guid Id { get; }
 
         /// <summary>
         /// A reference to the charge in the Charge table
@@ -71,20 +70,22 @@ namespace GreenEnergyHub.Charges.Domain.DefaultChargeLinks
         public Guid ChargeId { get; }
 
         /// <summary>
+        /// The metering point type that must match to be applicable for linking.
+        /// </summary>
+        public MeteringPointType MeteringPointType { get; }
+
+        /// <summary>
+        /// The default start date the charge link is applicable from.
+        /// </summary>
+        public Instant StartDateTime { get; }
+
+        /// <summary>
         /// If the DefaultChargeLink is only applicable for linking when EndDateTime is later than the StartDateTime
         /// </summary>
         public Instant EndDateTime { get; }
 
         /// <summary>
-        /// A Global Location Number (GLN) is a unique number used to identify a Market Participant.
-        /// Ref: https://www.gs1.org/standards/id-keys/gln
-        /// Note: This is the GLN number of the danish Green Energy Hub.
-        /// </summary>
-        public static string GlnNumber => "5790001330552";
-
-        /// <summary>
-        /// Only type of default charge is tariff, which only supports factor 1.
-        /// Used when creating the default charge link.
+        /// All default charge links are anticipated to have a factor of 1.
         /// </summary>
         public static int Factor => 1;
     }

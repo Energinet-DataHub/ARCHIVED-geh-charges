@@ -142,24 +142,12 @@ Represents a charge link period.
 
 <a name=".CreateDefaultChargeLinks"></a>
 
-### [CreateDefaultChargeLinks](.././source/Energinet.Charges.Libraries/source/Energinet.DataHub.Charges.Clients/DefaultChargeLink/Contracts/CreateDefaultChargeLinks.proto)
+### [CreateDefaultChargeLinks](.././source/Contracts/CreateDefaultChargeLinks.proto)
 
-This request is used by the Metering Point domain as part of the 'Create metering point' process to request the Charges domain to link default charges a the newly created metering point.
+This request is used by the Metering Point domain as part of the 'Create metering point' process to request the Charges domain to link default charges for the newly created metering point and to create messages containing the default charge links and make them available to the relevant Market Participants.
 
 <a name=".CreateDefaultChargeLinksReply"></a>
 
-### [CreateDefaultChargeLinksReply](.././source/Energinet.Charges.Libraries/source/Energinet.DataHub.Charges.Clients/DefaultChargeLink/Contracts/CreateDefaultChargeLinksReply.proto)
+### [CreateDefaultChargeLinksReply](.././source/Contracts/CreateDefaultChargeLinksReply.proto)
 
 The Charges domain will use this reply to inform the Metering Point domain when the `CreateDefaultChargeLinks` request has been processed.
-
-<a name=".CreateDefaultChargeLinkMessages"></a>
-
-### [CreateDefaultChargeLinkMessages](.././source/Energinet.Charges.Libraries/source/Energinet.DataHub.Charges.Clients/DefaultChargeLinkMessages/Contracts/CreateDefaultChargeLinkMessages.proto)
-
-This request is used by the Metering Point domain as part of the 'Create metering point' process to request the Charges domain to create messages containing the default charge links for a specific metering point and make them available to the relevant Market Participants.
-
-<a name=".CreateDefaultChargeLinkMessagesReply"></a>
-
-### [CreateDefaultChargeLinkMessagesReply](.././source/Energinet.Charges.Libraries/source/Energinet.DataHub.Charges.Clients/DefaultChargeLinkMessages/Contracts/CreateDefaultChargeLinkMessagesReply.proto)
-
-The Charges domain will use this reply to inform the Metering Point domain when the `CreateDefaultChargeLinkMessages` request has been processed.

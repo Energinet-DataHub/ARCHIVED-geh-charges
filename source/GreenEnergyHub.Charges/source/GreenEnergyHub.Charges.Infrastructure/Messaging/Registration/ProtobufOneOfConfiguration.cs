@@ -13,9 +13,9 @@
 // limitations under the License.
 
 using System;
+using Energinet.DataHub.Core.Messaging.Protobuf;
 using Google.Protobuf;
 using GreenEnergyHub.Charges.Infrastructure.Messaging.Serialization;
-using GreenEnergyHub.Messaging.Protobuf;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Messaging.Registration
 {

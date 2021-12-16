@@ -13,10 +13,10 @@
 // limitations under the License.
 
 using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Domain.ChargeCommandAcceptedEvents;
-using GreenEnergyHub.Charges.Domain.ChargeCommandRejectedEvents;
-using GreenEnergyHub.Charges.Domain.ChargeCommands;
-using GreenEnergyHub.Charges.Domain.ChargeCommands.Validation;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandAcceptedEvents;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandRejectedEvents;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation;
 
 namespace GreenEnergyHub.Charges.Application.Charges.Acknowledgement
 {

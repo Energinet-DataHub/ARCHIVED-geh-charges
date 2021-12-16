@@ -13,7 +13,6 @@
 // limitations under the License.
 
 using System;
-using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -21,16 +20,13 @@ using System.Xml;
 using AutoFixture.Xunit2;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Application;
-using GreenEnergyHub.Charges.Domain.ChargeCommands;
 using GreenEnergyHub.Charges.Domain.Charges;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.Infrastructure.ChargeBundle.Cim;
-using GreenEnergyHub.Charges.Infrastructure.Correlation;
 using GreenEnergyHub.Charges.TestCore;
 using GreenEnergyHub.Charges.TestCore.Attributes;
 using GreenEnergyHub.Iso8601;
-using Microsoft.Azure.Amqp.Framing;
-using Microsoft.Extensions.Azure;
 using Moq;
 using NodaTime;
 using NodaTime.Text;
@@ -45,9 +41,9 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.ChargeBundle.Cim
         [Theory]
         [InlineAutoMoqData]
         public async Task ConvertAsync_WhenCalledWithValidCimMessage_ReturnsParsedObject(
-            [NotNull][Frozen] Mock<ICorrelationContext> context,
-            [NotNull][Frozen] Mock<IIso8601Durations> iso8601Durations,
-            [NotNull] ChargeCommandConverter sut)
+            [Frozen] Mock<ICorrelationContext> context,
+            [Frozen] Mock<IIso8601Durations> iso8601Durations,
+            ChargeCommandConverter sut)
         {
             // Arrange
             var correlationId = Guid.NewGuid().ToString();
@@ -63,7 +59,6 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.ChargeBundle.Cim
             var actual = (ChargeCommand)await sut.ConvertAsync(reader).ConfigureAwait(false);
 
             // Assert
-            actual.CorrelationId.Should().Be(correlationId);
 
             // Document
             actual.Document.Id.Should().Be("25369874");
@@ -101,14 +96,14 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.ChargeBundle.Cim
 
             // Verify Iso8601Durations was used correctly
             iso8601Durations.Verify(
-                i => i.AddDuration(
+                i => i.GetTimeFixedToDuration(
                     expectedTime,
                     "PT1H",
                     0),
                 Times.Once);
 
             iso8601Durations.Verify(
-                i => i.AddDuration(
+                i => i.GetTimeFixedToDuration(
                     expectedTime,
                     "PT1H",
                     1),
@@ -118,9 +113,9 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.ChargeBundle.Cim
         [Theory]
         [InlineAutoMoqData]
         public async Task ConvertAsync_WhenCalledWithValidCimMessageWithoutPrices_ReturnsParsedObject(
-            [NotNull] [Frozen] Mock<ICorrelationContext> context,
-            [NotNull] [Frozen] Mock<IIso8601Durations> iso8601Durations,
-            [NotNull] ChargeCommandConverter sut)
+            [Frozen] Mock<ICorrelationContext> context,
+            [Frozen] Mock<IIso8601Durations> iso8601Durations,
+            ChargeCommandConverter sut)
         {
             // Arrange
             var correlationId = Guid.NewGuid().ToString();
@@ -136,7 +131,6 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.ChargeBundle.Cim
             var actual = (ChargeCommand)await sut.ConvertAsync(reader).ConfigureAwait(false);
 
             // Assert
-            actual.CorrelationId.Should().Be(correlationId);
 
             // Charge operation
             actual.ChargeOperation.Id.Should().Be("36251479");
@@ -155,7 +149,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.ChargeBundle.Cim
             // Prices, should not be any
             actual.ChargeOperation.Points.Should().BeEmpty();
             iso8601Durations.Verify(
-                i => i.AddDuration(
+                i => i.GetTimeFixedToDuration(
                     It.IsAny<Instant>(),
                     It.IsAny<string>(),
                     It.IsAny<int>()),
@@ -165,9 +159,9 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.ChargeBundle.Cim
         [Theory]
         [InlineAutoMoqData]
         public async Task ConvertAsync_WhenCalledWithValidCimMessageWithoutMasterData_ReturnsParsedObject(
-            [NotNull] [Frozen] Mock<ICorrelationContext> context,
-            [NotNull] [Frozen] Mock<IIso8601Durations> iso8601Durations,
-            [NotNull] ChargeCommandConverter sut)
+            [Frozen] Mock<ICorrelationContext> context,
+            [Frozen] Mock<IIso8601Durations> iso8601Durations,
+            ChargeCommandConverter sut)
         {
             // Arrange
             var correlationId = Guid.NewGuid().ToString();
@@ -183,7 +177,6 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.ChargeBundle.Cim
             var actual = (ChargeCommand)await sut.ConvertAsync(reader).ConfigureAwait(false);
 
             // Assert
-            actual.CorrelationId.Should().Be(correlationId);
 
             // Charge operation, should only be partially filled
             actual.ChargeOperation.Id.Should().Be("36251480");
@@ -210,14 +203,14 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.ChargeBundle.Cim
 
             // Verify Iso8601Durations was used correctly
             iso8601Durations.Verify(
-                i => i.AddDuration(
+                i => i.GetTimeFixedToDuration(
                     expectedTime,
                     "P1M",
                     0),
                 Times.Once);
 
             iso8601Durations.Verify(
-                i => i.AddDuration(
+                i => i.GetTimeFixedToDuration(
                     expectedTime,
                     "P1M",
                     1),
@@ -234,7 +227,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.ChargeBundle.Cim
             context.Setup(c => c.Id).Returns(correlationId);
 
             iso8601Durations.Setup(
-                    i => i.AddDuration(
+                    i => i.GetTimeFixedToDuration(
                         It.IsAny<Instant>(),
                         It.IsAny<string>(),
                         It.IsAny<int>()))
@@ -242,15 +235,6 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.ChargeBundle.Cim
 
             var stream = GetEmbeddedResource(embeddedFile);
             return XmlReader.Create(stream, new XmlReaderSettings { Async = true });
-        }
-
-        private static async Task<byte[]> GetEmbeddedResourceAsBytes(string path)
-        {
-            var input = GetEmbeddedResource(path);
-
-            var byteInput = new byte[input.Length];
-            await input.ReadAsync(byteInput.AsMemory(0, (int)input.Length)).ConfigureAwait(false);
-            return byteInput;
         }
 
         private static Stream GetEmbeddedResource(string path)

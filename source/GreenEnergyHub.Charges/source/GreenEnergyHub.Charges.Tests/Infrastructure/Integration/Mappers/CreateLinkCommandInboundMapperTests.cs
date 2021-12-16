@@ -13,11 +13,11 @@
 // limitations under the License.
 
 using System.Diagnostics.CodeAnalysis;
-using GreenEnergyHub.Charges.Commands;
-using GreenEnergyHub.Charges.Domain.CreateLinkCommandEvents;
+using Energinet.Charges.Contracts;
+using GreenEnergyHub.Charges.Domain.Dtos.CreateLinksRequests;
 using GreenEnergyHub.Charges.Infrastructure.Integration.Mappers;
 using GreenEnergyHub.Charges.TestCore.Attributes;
-using GreenEnergyHub.Charges.TestCore.Protobuf;
+using GreenEnergyHub.Charges.Tests.Protobuf;
 using Xunit;
 using Xunit.Categories;
 
@@ -32,7 +32,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Integration.Mappers
             [NotNull] CreateDefaultChargeLinks createDefaultChargeLinks,
             [NotNull] CreateDefaultChargeLinksInboundMapper sut)
         {
-            var result = (CreateLinkCommandEvent)sut.Convert(createDefaultChargeLinks);
+            var result = (CreateLinksRequest)sut.Convert(createDefaultChargeLinks);
             ProtobufAssert.IncomingContractIsSuperset(result, createDefaultChargeLinks);
         }
     }

@@ -13,15 +13,13 @@
 // limitations under the License.
 
 using System.Diagnostics.CodeAnalysis;
-using System.IO;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application.ChargeLinks.Handlers;
-using GreenEnergyHub.Charges.Domain.ChargeLinkCommands;
+using GreenEnergyHub.Charges.Application.ChargeLinks.Handlers.Message;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands;
 using GreenEnergyHub.Charges.Infrastructure.Messaging;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
-using Microsoft.Extensions.Logging;
 
 namespace GreenEnergyHub.Charges.FunctionHost.ChargeLinks
 {
@@ -31,48 +29,35 @@ namespace GreenEnergyHub.Charges.FunctionHost.ChargeLinks
         /// The name of the function.
         /// Function name affects the URL and thus possibly dependent infrastructure.
         /// </summary>
-        private readonly MessageExtractor<ChargeLinkCommand> _messageExtractor;
-        private readonly IChargeLinkCommandHandler _chargeLinkCommandHandler;
-        private readonly ILogger _log;
+        private readonly MessageExtractor<ChargeLinksCommand> _messageExtractor;
+        private readonly IChargeLinksCommandHandler _chargeLinksCommandHandler;
 
         public ChargeLinkIngestion(
-            IChargeLinkCommandHandler chargeLinkCommandHandler,
-            MessageExtractor<ChargeLinkCommand> messageExtractor,
-            [NotNull] ILoggerFactory loggerFactory)
+            IChargeLinksCommandHandler chargeLinksCommandHandler,
+            MessageExtractor<ChargeLinksCommand> messageExtractor)
         {
             _messageExtractor = messageExtractor;
-
-            _chargeLinkCommandHandler = chargeLinkCommandHandler;
-            _log = loggerFactory.CreateLogger(nameof(ChargeLinkIngestion));
+            _chargeLinksCommandHandler = chargeLinksCommandHandler;
         }
 
         [Function(IngestionFunctionNames.ChargeLinkIngestion)]
-        public async Task<IActionResult> RunAsync(
+        public async Task<HttpResponseData> RunAsync(
             [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = null)]
-            [NotNull] HttpRequestData req)
+            HttpRequestData req)
         {
-            _log.LogInformation("Function {FunctionName} started to process a request", IngestionFunctionNames.ChargeLinkIngestion);
+            var command = (ChargeLinksCommand)await _messageExtractor.ExtractAsync(req.Body).ConfigureAwait(false);
 
-            var command = await GetChargeLinkCommandAsync(req.Body).ConfigureAwait(false);
+            var chargeLinksMessageResult = await _chargeLinksCommandHandler.HandleAsync(command).ConfigureAwait(false);
 
-            var chargeLinksMessageResult = await _chargeLinkCommandHandler.HandleAsync(command).ConfigureAwait(false);
-
-            return new OkObjectResult(chargeLinksMessageResult);
+            return await CreateJsonResponseAsync(req, chargeLinksMessageResult).ConfigureAwait(false);
         }
 
-        private async Task<ChargeLinkCommand> GetChargeLinkCommandAsync(Stream stream)
+        private async Task<HttpResponseData> CreateJsonResponseAsync(HttpRequestData req, ChargeLinksMessageResult? chargeLinksMessageResult)
         {
-            var message = await ConvertStreamToBytesAsync(stream).ConfigureAwait(false);
-            var command = (ChargeLinkCommand)await _messageExtractor.ExtractAsync(message).ConfigureAwait(false);
+            var response = req.CreateResponse();
+            await response.WriteAsJsonAsync(chargeLinksMessageResult);
 
-            return command;
-        }
-
-        private static async Task<byte[]> ConvertStreamToBytesAsync(Stream stream)
-        {
-            await using var ms = new MemoryStream();
-            await stream.CopyToAsync(ms).ConfigureAwait(false);
-            return ms.ToArray();
+            return response;
         }
     }
 }

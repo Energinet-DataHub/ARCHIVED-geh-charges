@@ -15,12 +15,11 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application.Charges.Handlers;
-using GreenEnergyHub.Charges.Domain.ChargeCommandReceivedEvents;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandReceivedEvents;
 using GreenEnergyHub.Charges.FunctionHost.Common;
 using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeCommandReceived;
 using GreenEnergyHub.Charges.Infrastructure.Messaging;
 using Microsoft.Azure.Functions.Worker;
-using Microsoft.Extensions.Logging;
 
 namespace GreenEnergyHub.Charges.FunctionHost.Charges
 {
@@ -29,31 +28,25 @@ namespace GreenEnergyHub.Charges.FunctionHost.Charges
         public const string FunctionName = nameof(ChargeCommandReceiverEndpoint);
         private readonly IChargeCommandReceivedEventHandler _chargeCommandReceivedEventHandler;
         private readonly MessageExtractor<ChargeCommandReceivedContract> _messageExtractor;
-        private readonly ILogger _log;
 
         public ChargeCommandReceiverEndpoint(
             IChargeCommandReceivedEventHandler chargeCommandReceivedEventHandler,
-            MessageExtractor<ChargeCommandReceivedContract> messageExtractor,
-            [NotNull] ILoggerFactory loggerFactory)
+            MessageExtractor<ChargeCommandReceivedContract> messageExtractor)
         {
             _chargeCommandReceivedEventHandler = chargeCommandReceivedEventHandler;
             _messageExtractor = messageExtractor;
-
-            _log = loggerFactory.CreateLogger(nameof(ChargeCommandReceiverEndpoint));
         }
 
         [Function(FunctionName)]
         public async Task RunAsync(
             [ServiceBusTrigger(
-                "%COMMAND_RECEIVED_TOPIC_NAME%",
-                "%COMMAND_RECEIVED_SUBSCRIPTION_NAME%",
+                "%" + EnvironmentSettingNames.CommandReceivedTopicName + "%",
+                "%" + EnvironmentSettingNames.CommandReceivedSubscriptionName + "%",
                 Connection = EnvironmentSettingNames.DomainEventListenerConnectionString)]
             [NotNull] byte[] message)
         {
             var receivedEvent = (ChargeCommandReceivedEvent)await _messageExtractor.ExtractAsync(message).ConfigureAwait(false);
             await _chargeCommandReceivedEventHandler.HandleAsync(receivedEvent).ConfigureAwait(false);
-
-            _log.LogDebug("Received command with charge ID '{ID}'", receivedEvent.Command.ChargeOperation.ChargeId);
         }
     }
 }

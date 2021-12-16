@@ -15,10 +15,11 @@
 using System;
 using System.Threading.Tasks;
 using Energinet.Charges.Contracts;
-using Energinet.DataHub.Charges.Libraries.DefaultChargeLink;
-using Energinet.DataHub.Charges.Libraries.Models;
+using Energinet.DataHub.Charges.Clients.DefaultChargeLink;
+using Energinet.DataHub.Charges.Clients.DefaultChargeLink.Models;
 using FluentAssertions;
 using Google.Protobuf;
+using GreenEnergyHub.Charges.Contracts;
 using GreenEnergyHub.Charges.TestCore.Attributes;
 using Xunit;
 using Xunit.Categories;
@@ -26,14 +27,13 @@ using CreateDefaultChargeLinksFailed =
     Energinet.Charges.Contracts.CreateDefaultChargeLinksReply.Types.CreateDefaultChargeLinksFailed;
 using CreateDefaultChargeLinksSucceeded =
     Energinet.Charges.Contracts.CreateDefaultChargeLinksReply.Types.CreateDefaultChargeLinksSucceeded;
-using ErrorCode = Energinet.DataHub.Charges.Libraries.Enums.ErrorCode;
 
 namespace Energinet.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.DefaultChargeLink
 {
     [UnitTest]
     public class DefaultChargeLinkReplyReaderTests
     {
-        private ErrorCode _errorCodeTestResult;
+        private ErrorCode _errorCodeTestResult = ErrorCode.MeteringPointUnknown;
         private string? _knownMeteringPointIdTestResult;
         private string? _unknownMeteringPointIdTestResult;
         private bool _didCreateChargeLinksTestResult;
@@ -41,7 +41,8 @@ namespace Energinet.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.Defaul
         [Theory]
         [InlineAutoMoqData("knownMeteringPointId1234", true)]
         [InlineAutoMoqData("knownMeteringPointId5678", false)]
-        public async Task DefaultChargeLinksCreationSucceeded(string meteringPointId, bool didCreateChargeLinks)
+        public async Task ReadAsync_WhenDefaultChargeLinksCreationSucceeded_MapsDataAsSucceededDto(
+            string meteringPointId, bool didCreateChargeLinks)
         {
             // Arrange
             var createDefaultChargeLinksSucceeded = new CreateDefaultChargeLinksReply
@@ -55,13 +56,13 @@ namespace Energinet.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.Defaul
 
             var data = createDefaultChargeLinksSucceeded.ToByteArray();
 
-            var target = new DefaultChargeLinkReplyReader(HandleSuccess, HandleFailure);
+            var sut = new DefaultChargeLinkReplyReader(HandleSuccess, HandleFailure);
 
             // Act
-            await target.ReadAsync(data).ConfigureAwait(false);
+            await sut.ReadAsync(data).ConfigureAwait(false);
 
             // Assert
-            target.Should().NotBeNull();
+            sut.Should().NotBeNull();
             _knownMeteringPointIdTestResult.Should().Be(meteringPointId);
             _didCreateChargeLinksTestResult.Should().Be(didCreateChargeLinks);
         }
@@ -82,13 +83,13 @@ namespace Energinet.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.Defaul
 
             var data = createDefaultChargeLinksReply.ToByteArray();
 
-            var target = new DefaultChargeLinkReplyReader(HandleSuccess, HandleFailure);
+            var sut = new DefaultChargeLinkReplyReader(HandleSuccess, HandleFailure);
 
             // Act
-            await target.ReadAsync(data).ConfigureAwait(false);
+            await sut.ReadAsync(data).ConfigureAwait(false);
 
             // Assert
-            target.Should().NotBeNull();
+            sut.Should().NotBeNull();
             _unknownMeteringPointIdTestResult.Should().Be(meteringPointId);
             _errorCodeTestResult.Should().Be(ErrorCode.MeteringPointUnknown);
         }
@@ -98,23 +99,23 @@ namespace Energinet.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.Defaul
         {
             // Arrange
             var data = new CreateDefaultChargeLinksReply().ToByteArray();
-            var target = new DefaultChargeLinkReplyReader(HandleSuccess, HandleFailure);
+            var sut = new DefaultChargeLinkReplyReader(HandleSuccess, HandleFailure);
 
             // Act
             await Assert.ThrowsAsync<ArgumentException>(async () =>
-                await target.ReadAsync(data).ConfigureAwait(false)).ConfigureAwait(false);
+                await sut.ReadAsync(data).ConfigureAwait(false)).ConfigureAwait(false);
         }
 
-        private async Task HandleFailure(CreateDefaultChargeLinksFailedDto createDefaultChargeLinksFailed)
+        private async Task HandleFailure(DefaultChargeLinksCreationFailedStatusDto defaultChargeLinksCreationFailedStatus)
         {
-            (_unknownMeteringPointIdTestResult, _errorCodeTestResult) = createDefaultChargeLinksFailed;
+            (_unknownMeteringPointIdTestResult, _errorCodeTestResult) = defaultChargeLinksCreationFailedStatus;
 
             await Task.CompletedTask.ConfigureAwait(false);
         }
 
-        private async Task HandleSuccess(CreateDefaultChargeLinksSucceededDto createDefaultChargeLinksSucceeded)
+        private async Task HandleSuccess(DefaultChargeLinksCreatedSuccessfullyDto defaultChargeLinksCreatedSuccessfully)
         {
-            (_knownMeteringPointIdTestResult, _didCreateChargeLinksTestResult) = createDefaultChargeLinksSucceeded;
+            (_knownMeteringPointIdTestResult, _didCreateChargeLinksTestResult) = defaultChargeLinksCreatedSuccessfully;
 
             await Task.CompletedTask.ConfigureAwait(false);
         }

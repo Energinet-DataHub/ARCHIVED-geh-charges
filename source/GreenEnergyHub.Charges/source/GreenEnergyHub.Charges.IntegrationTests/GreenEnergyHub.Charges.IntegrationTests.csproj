@@ -28,18 +28,22 @@ limitations under the License.
     <ItemGroup>
       <ProjectReference Include="..\..\..\Shared\GreenEnergyHub\source\GreenEnergyHub.TestHelpers\GreenEnergyHub.TestHelpers.csproj" />
       <ProjectReference Include="..\GreenEnergyHub.Charges.Application\GreenEnergyHub.Charges.Application.csproj" />
+      <ProjectReference Include="..\GreenEnergyHub.Charges.ApplyDBMigrationsApp\GreenEnergyHub.Charges.ApplyDBMigrationsApp.csproj" />
       <ProjectReference Include="..\GreenEnergyHub.Charges.Domain\GreenEnergyHub.Charges.Domain.csproj" />
       <ProjectReference Include="..\GreenEnergyHub.Charges.FunctionHost\GreenEnergyHub.Charges.FunctionHost.csproj" />
       <ProjectReference Include="..\GreenEnergyHub.Charges.TestCore\GreenEnergyHub.Charges.TestCore.csproj" />
+      <ProjectReference Include="..\GreenEnergyHub.Charges.WebApi\GreenEnergyHub.Charges.WebApi.csproj" />
     </ItemGroup>
 
     <ItemGroup>
         <PackageReference Include="AutoFixture" Version="4.17.0" />
         <PackageReference Include="AutoFixture.AutoMoq" Version="4.17.0" />
-        <PackageReference Include="Azure.Messaging.ServiceBus" Version="7.4.0" />
-        <PackageReference Include="Energinet.DataHub.Core.FunctionApp.TestCommon" Version="0.0.1" />
+        <PackageReference Include="Azure.Messaging.ServiceBus" Version="7.5.0" />
+        <PackageReference Include="Energinet.DataHub.Core.FunctionApp.TestCommon" Version="1.2.0" />
+        <PackageReference Include="Energinet.DataHub.MessageHub.IntegrationTesting" Version="1.1.0" />
         <PackageReference Include="EntityFrameworkCore.SqlServer.NodaTime" Version="5.0.1" />
         <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.2.2" />
+        <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="5.0.12" />
         <PackageReference Include="Microsoft.Azure.Management.ServiceBus" Version="3.0.0" />
         <PackageReference Include="Microsoft.Azure.WebJobs.Extensions" Version="4.0.1" />
         <PackageReference Include="Microsoft.Azure.WebJobs.Host.TestCommon" Version="3.0.30" />
@@ -47,12 +51,10 @@ limitations under the License.
         <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="5.0.0" />
         <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="5.0.0" />
         <PackageReference Include="Microsoft.Extensions.Hosting" Version="5.0.0" />
-        <PackageReference Include="Squadron.AzureCloudServiceBus" Version="0.13.0" />
-        <PackageReference Include="Squadron.Core" Version="0.13.0" />
         <PackageReference Include="System.ComponentModel.TypeConverter" Version="4.3.0" />
         <PackageReference Include="xunit" Version="2.4.1" />
         <PackageReference Include="FluentAssertions" Version="6.2.0" />
-        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.11.0" />
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.0.0" />
         <PackageReference Include="xunit.runner.visualstudio" Version="2.4.3" />
         <PackageReference Include="coverlet.collector" Version="3.1.0" />
         <PackageReference Update="StyleCop.Analyzers" Version="1.2.0-beta.354">
@@ -62,10 +64,14 @@ limitations under the License.
     </ItemGroup>
 
     <ItemGroup>
-      <None Include="TestFiles\InvalidCreateTariffCommand.xml" CopyToOutputDirectory="Always" />
-      <None Include="TestFiles\ValidCreateTariffCommand.xml" CopyToOutputDirectory="Always" />
       <None Remove="appsettings.json" />
-      <None Update="TestFiles\CreateFixedPeriodTariffChargeLink.xml">
+      <None Update="TestFiles\Charges\InvalidTariffDocument.xml">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+      <None Update="TestFiles\Charges\TaxTariffWithPriceDocument.xml">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+      <None Update="TestFiles\ChargeLinks\FixedPeriodTaxTariffChargeLinkDocument.xml">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
     </ItemGroup>

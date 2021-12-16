@@ -13,11 +13,11 @@
 // limitations under the License.
 
 using System.Diagnostics.CodeAnalysis;
-using GreenEnergyHub.Charges.Commands;
+using Energinet.Charges.Contracts;
+using Energinet.DataHub.Core.Messaging.Protobuf;
 using GreenEnergyHub.Charges.Infrastructure.Messaging;
 using GreenEnergyHub.Charges.Infrastructure.Messaging.Registration;
 using GreenEnergyHub.Charges.Infrastructure.Messaging.Serialization;
-using GreenEnergyHub.Messaging.Protobuf;
 using GreenEnergyHub.TestHelpers;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;

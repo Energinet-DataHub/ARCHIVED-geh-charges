@@ -1,20 +1,5 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Copyright 2020 Energinet DataHub A/S
-#
-# Licensed under the Apache License, Version 2.0 (the "License2");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-# Copyright 2020 Energinet DataHub A/S
-# Visual Studio Version 16
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30114.105
 MinimumVisualStudioVersion = 10.0.40219.1
@@ -22,19 +7,23 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Energinet.DataHub.Charges.L
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Source", "Source", "{2BF2F6B8-E02B-4D7F-99BC-D28B3B3643A9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Energinet.DataHub.Charges.Clients", "source\Energinet.DataHub.Charges.Clients\Energinet.DataHub.Charges.Clients.csproj", "{E9F64300-834B-4657-850F-BEF4CED5D180}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Energinet.DataHub.Charges.Clients", "source\Energinet.DataHub.Charges.Clients\Energinet.DataHub.Charges.Clients.csproj", "{0444C070-2B3E-4C5D-870D-FED55C22C94E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GreenEnergyHub.TestHelpers", "..\Shared\GreenEnergyHub\source\GreenEnergyHub.TestHelpers\GreenEnergyHub.TestHelpers.csproj", "{0B87960E-869C-4828-8888-E29815E3E6BF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GreenEnergyHub.TestHelpers", "..\Shared\GreenEnergyHub\source\GreenEnergyHub.TestHelpers\GreenEnergyHub.TestHelpers.csproj", "{0B87960E-869C-4828-8888-E29815E3E6BF}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "GreenEnergyHub", "GreenEnergyHub", "{7FFCDBEA-F969-40C6-8461-A898784445FC}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{68B83582-7A4C-49F3-AA04-36D390BDA5F0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Energinet.DataHub.Charges.Clients.Tests", "source\Energinet.DataHub.Charges.Clients.Tests\Energinet.DataHub.Charges.Clients.Tests.csproj", "{B2D07074-0796-4553-AF4D-768AAC624528}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Energinet.DataHub.Charges.Clients.Tests", "source\Energinet.DataHub.Charges.Clients.Tests\Energinet.DataHub.Charges.Clients.Tests.csproj", "{B2D07074-0796-4553-AF4D-768AAC624528}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GreenEnergyHub.Charges.TestCore", "..\GreenEnergyHub.Charges\source\GreenEnergyHub.Charges.TestCore\GreenEnergyHub.Charges.TestCore.csproj", "{FB658C7F-FDF7-422D-B906-B884E5C1E8D9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Energinet.DataHub.Charges.Clients.IntegrationTests", "source\Energinet.DataHub.Charges.Clients.IntegrationTests\Energinet.DataHub.Charges.Clients.IntegrationTests.csproj", "{5BFF36A2-AD09-4213-9A7F-B1CAD8298822}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Energinet.DataHub.Charges.Clients.IntegrationTests", "source\Energinet.DataHub.Charges.Clients.IntegrationTests\Energinet.DataHub.Charges.Clients.IntegrationTests.csproj", "{5BFF36A2-AD09-4213-9A7F-B1CAD8298822}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GreenEnergyHub.Charges.TestCore", "..\GreenEnergyHub.Charges\source\GreenEnergyHub.Charges.TestCore\GreenEnergyHub.Charges.TestCore.csproj", "{4A55C6A6-1496-4470-B2B8-EA179A6DA7BD}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Energinet.DataHub.Charges.Clients.Registration", "source\Energinet.DataHub.Charges.Clients.Registration\Energinet.DataHub.Charges.Clients.Registration.csproj", "{0444C070-2B3E-4C5D-870D-FED55C22C94F}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Energinet.DataHub.Charges.Clients.RegistrationTests", "source\Energinet.DataHub.Charges.Clients.RegistrationTests\Energinet.DataHub.Charges.Clients.RegistrationTests.csproj", "{371690D2-6DBE-4F4D-A2FF-0E1519AF3A9C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -46,18 +35,18 @@ Global
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{E9F64300-834B-4657-850F-BEF4CED5D180}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E9F64300-834B-4657-850F-BEF4CED5D180}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{E9F64300-834B-4657-850F-BEF4CED5D180}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{E9F64300-834B-4657-850F-BEF4CED5D180}.Debug|x64.Build.0 = Debug|Any CPU
-		{E9F64300-834B-4657-850F-BEF4CED5D180}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{E9F64300-834B-4657-850F-BEF4CED5D180}.Debug|x86.Build.0 = Debug|Any CPU
-		{E9F64300-834B-4657-850F-BEF4CED5D180}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E9F64300-834B-4657-850F-BEF4CED5D180}.Release|Any CPU.Build.0 = Release|Any CPU
-		{E9F64300-834B-4657-850F-BEF4CED5D180}.Release|x64.ActiveCfg = Release|Any CPU
-		{E9F64300-834B-4657-850F-BEF4CED5D180}.Release|x64.Build.0 = Release|Any CPU
-		{E9F64300-834B-4657-850F-BEF4CED5D180}.Release|x86.ActiveCfg = Release|Any CPU
-		{E9F64300-834B-4657-850F-BEF4CED5D180}.Release|x86.Build.0 = Release|Any CPU
+		{0444C070-2B3E-4C5D-870D-FED55C22C94E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0444C070-2B3E-4C5D-870D-FED55C22C94E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0444C070-2B3E-4C5D-870D-FED55C22C94E}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{0444C070-2B3E-4C5D-870D-FED55C22C94E}.Debug|x64.Build.0 = Debug|Any CPU
+		{0444C070-2B3E-4C5D-870D-FED55C22C94E}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{0444C070-2B3E-4C5D-870D-FED55C22C94E}.Debug|x86.Build.0 = Debug|Any CPU
+		{0444C070-2B3E-4C5D-870D-FED55C22C94E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0444C070-2B3E-4C5D-870D-FED55C22C94E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0444C070-2B3E-4C5D-870D-FED55C22C94E}.Release|x64.ActiveCfg = Release|Any CPU
+		{0444C070-2B3E-4C5D-870D-FED55C22C94E}.Release|x64.Build.0 = Release|Any CPU
+		{0444C070-2B3E-4C5D-870D-FED55C22C94E}.Release|x86.ActiveCfg = Release|Any CPU
+		{0444C070-2B3E-4C5D-870D-FED55C22C94E}.Release|x86.Build.0 = Release|Any CPU
 		{0B87960E-869C-4828-8888-E29815E3E6BF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{0B87960E-869C-4828-8888-E29815E3E6BF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0B87960E-869C-4828-8888-E29815E3E6BF}.Debug|x64.ActiveCfg = Debug|Any CPU
@@ -82,18 +71,6 @@ Global
 		{B2D07074-0796-4553-AF4D-768AAC624528}.Release|x64.Build.0 = Release|Any CPU
 		{B2D07074-0796-4553-AF4D-768AAC624528}.Release|x86.ActiveCfg = Release|Any CPU
 		{B2D07074-0796-4553-AF4D-768AAC624528}.Release|x86.Build.0 = Release|Any CPU
-		{FB658C7F-FDF7-422D-B906-B884E5C1E8D9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{FB658C7F-FDF7-422D-B906-B884E5C1E8D9}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{FB658C7F-FDF7-422D-B906-B884E5C1E8D9}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{FB658C7F-FDF7-422D-B906-B884E5C1E8D9}.Debug|x64.Build.0 = Debug|Any CPU
-		{FB658C7F-FDF7-422D-B906-B884E5C1E8D9}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{FB658C7F-FDF7-422D-B906-B884E5C1E8D9}.Debug|x86.Build.0 = Debug|Any CPU
-		{FB658C7F-FDF7-422D-B906-B884E5C1E8D9}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{FB658C7F-FDF7-422D-B906-B884E5C1E8D9}.Release|Any CPU.Build.0 = Release|Any CPU
-		{FB658C7F-FDF7-422D-B906-B884E5C1E8D9}.Release|x64.ActiveCfg = Release|Any CPU
-		{FB658C7F-FDF7-422D-B906-B884E5C1E8D9}.Release|x64.Build.0 = Release|Any CPU
-		{FB658C7F-FDF7-422D-B906-B884E5C1E8D9}.Release|x86.ActiveCfg = Release|Any CPU
-		{FB658C7F-FDF7-422D-B906-B884E5C1E8D9}.Release|x86.Build.0 = Release|Any CPU
 		{5BFF36A2-AD09-4213-9A7F-B1CAD8298822}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{5BFF36A2-AD09-4213-9A7F-B1CAD8298822}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5BFF36A2-AD09-4213-9A7F-B1CAD8298822}.Debug|x64.ActiveCfg = Debug|Any CPU
@@ -106,18 +83,56 @@ Global
 		{5BFF36A2-AD09-4213-9A7F-B1CAD8298822}.Release|x64.Build.0 = Release|Any CPU
 		{5BFF36A2-AD09-4213-9A7F-B1CAD8298822}.Release|x86.ActiveCfg = Release|Any CPU
 		{5BFF36A2-AD09-4213-9A7F-B1CAD8298822}.Release|x86.Build.0 = Release|Any CPU
+		{4A55C6A6-1496-4470-B2B8-EA179A6DA7BD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4A55C6A6-1496-4470-B2B8-EA179A6DA7BD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4A55C6A6-1496-4470-B2B8-EA179A6DA7BD}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{4A55C6A6-1496-4470-B2B8-EA179A6DA7BD}.Debug|x64.Build.0 = Debug|Any CPU
+		{4A55C6A6-1496-4470-B2B8-EA179A6DA7BD}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{4A55C6A6-1496-4470-B2B8-EA179A6DA7BD}.Debug|x86.Build.0 = Debug|Any CPU
+		{4A55C6A6-1496-4470-B2B8-EA179A6DA7BD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4A55C6A6-1496-4470-B2B8-EA179A6DA7BD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4A55C6A6-1496-4470-B2B8-EA179A6DA7BD}.Release|x64.ActiveCfg = Release|Any CPU
+		{4A55C6A6-1496-4470-B2B8-EA179A6DA7BD}.Release|x64.Build.0 = Release|Any CPU
+		{4A55C6A6-1496-4470-B2B8-EA179A6DA7BD}.Release|x86.ActiveCfg = Release|Any CPU
+		{4A55C6A6-1496-4470-B2B8-EA179A6DA7BD}.Release|x86.Build.0 = Release|Any CPU
+		{0444C070-2B3E-4C5D-870D-FED55C22C94F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0444C070-2B3E-4C5D-870D-FED55C22C94F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0444C070-2B3E-4C5D-870D-FED55C22C94F}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{0444C070-2B3E-4C5D-870D-FED55C22C94F}.Debug|x64.Build.0 = Debug|Any CPU
+		{0444C070-2B3E-4C5D-870D-FED55C22C94F}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{0444C070-2B3E-4C5D-870D-FED55C22C94F}.Debug|x86.Build.0 = Debug|Any CPU
+		{0444C070-2B3E-4C5D-870D-FED55C22C94F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0444C070-2B3E-4C5D-870D-FED55C22C94F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0444C070-2B3E-4C5D-870D-FED55C22C94F}.Release|x64.ActiveCfg = Release|Any CPU
+		{0444C070-2B3E-4C5D-870D-FED55C22C94F}.Release|x64.Build.0 = Release|Any CPU
+		{0444C070-2B3E-4C5D-870D-FED55C22C94F}.Release|x86.ActiveCfg = Release|Any CPU
+		{0444C070-2B3E-4C5D-870D-FED55C22C94F}.Release|x86.Build.0 = Release|Any CPU
+		{371690D2-6DBE-4F4D-A2FF-0E1519AF3A9C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{371690D2-6DBE-4F4D-A2FF-0E1519AF3A9C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{371690D2-6DBE-4F4D-A2FF-0E1519AF3A9C}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{371690D2-6DBE-4F4D-A2FF-0E1519AF3A9C}.Debug|x64.Build.0 = Debug|Any CPU
+		{371690D2-6DBE-4F4D-A2FF-0E1519AF3A9C}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{371690D2-6DBE-4F4D-A2FF-0E1519AF3A9C}.Debug|x86.Build.0 = Debug|Any CPU
+		{371690D2-6DBE-4F4D-A2FF-0E1519AF3A9C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{371690D2-6DBE-4F4D-A2FF-0E1519AF3A9C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{371690D2-6DBE-4F4D-A2FF-0E1519AF3A9C}.Release|x64.ActiveCfg = Release|Any CPU
+		{371690D2-6DBE-4F4D-A2FF-0E1519AF3A9C}.Release|x64.Build.0 = Release|Any CPU
+		{371690D2-6DBE-4F4D-A2FF-0E1519AF3A9C}.Release|x86.ActiveCfg = Release|Any CPU
+		{371690D2-6DBE-4F4D-A2FF-0E1519AF3A9C}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{2BF2F6B8-E02B-4D7F-99BC-D28B3B3643A9} = {D79C7D37-ADE1-42D3-9FED-1E5D784E6E7D}
-		{E9F64300-834B-4657-850F-BEF4CED5D180} = {2BF2F6B8-E02B-4D7F-99BC-D28B3B3643A9}
+		{0444C070-2B3E-4C5D-870D-FED55C22C94E} = {2BF2F6B8-E02B-4D7F-99BC-D28B3B3643A9}
 		{0B87960E-869C-4828-8888-E29815E3E6BF} = {7FFCDBEA-F969-40C6-8461-A898784445FC}
 		{68B83582-7A4C-49F3-AA04-36D390BDA5F0} = {D79C7D37-ADE1-42D3-9FED-1E5D784E6E7D}
 		{B2D07074-0796-4553-AF4D-768AAC624528} = {68B83582-7A4C-49F3-AA04-36D390BDA5F0}
-		{FB658C7F-FDF7-422D-B906-B884E5C1E8D9} = {68B83582-7A4C-49F3-AA04-36D390BDA5F0}
 		{5BFF36A2-AD09-4213-9A7F-B1CAD8298822} = {68B83582-7A4C-49F3-AA04-36D390BDA5F0}
+		{4A55C6A6-1496-4470-B2B8-EA179A6DA7BD} = {68B83582-7A4C-49F3-AA04-36D390BDA5F0}
+		{0444C070-2B3E-4C5D-870D-FED55C22C94F} = {2BF2F6B8-E02B-4D7F-99BC-D28B3B3643A9}
+		{371690D2-6DBE-4F4D-A2FF-0E1519AF3A9C} = {68B83582-7A4C-49F3-AA04-36D390BDA5F0}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {AFC1A6A3-7235-4DB1-A2E4-35B72C1FEA28}

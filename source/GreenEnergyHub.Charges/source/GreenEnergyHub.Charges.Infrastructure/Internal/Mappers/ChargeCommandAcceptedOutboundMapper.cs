@@ -14,13 +14,13 @@
 
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using Google.Protobuf.WellKnownTypes;
+using Energinet.DataHub.Core.Messaging.Protobuf;
 using GreenEnergyHub.Charges.Core.DateTime;
-using GreenEnergyHub.Charges.Domain.ChargeCommandAcceptedEvents;
 using GreenEnergyHub.Charges.Domain.Charges;
-using GreenEnergyHub.Charges.Domain.MarketParticipants;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandAcceptedEvents;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeCommandAccepted;
-using GreenEnergyHub.Messaging.Protobuf;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
 {
@@ -35,9 +35,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
                 {
                     Document = ConvertDocument(chargeCommandAcceptedEvent.Command.Document),
                     ChargeOperation = ConvertChargeOperation(chargeCommandAcceptedEvent.Command.ChargeOperation),
-                    CorrelationId = chargeCommandAcceptedEvent.CorrelationId,
                 },
-                CorrelationId = chargeCommandAcceptedEvent.CorrelationId,
             };
 
             ConvertPoints(chargeCommandAcceptedContract, chargeCommandAcceptedEvent.Command.ChargeOperation.Points);
@@ -45,7 +43,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
             return chargeCommandAcceptedContract;
         }
 
-        private static DocumentContract ConvertDocument(Document document)
+        private static DocumentContract ConvertDocument(DocumentDto document)
         {
             return new DocumentContract
             {
@@ -68,7 +66,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
             };
         }
 
-        private static ChargeOperationContract ConvertChargeOperation(ChargeOperation charge)
+        private static ChargeOperationContract ConvertChargeOperation(ChargeOperationDto charge)
         {
             return new ChargeOperationContract
             {

@@ -14,13 +14,13 @@
 
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using Google.Protobuf.WellKnownTypes;
+using Energinet.DataHub.Core.Messaging.Protobuf;
 using GreenEnergyHub.Charges.Core.DateTime;
-using GreenEnergyHub.Charges.Domain.ChargeCommandRejectedEvents;
 using GreenEnergyHub.Charges.Domain.Charges;
-using GreenEnergyHub.Charges.Domain.MarketParticipants;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandRejectedEvents;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeCommandRejected;
-using GreenEnergyHub.Messaging.Protobuf;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
 {
@@ -35,9 +35,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
                 {
                     Document = ConvertDocument(rejectionEvent.Command.Document),
                     ChargeOperation = ConvertChargeOperation(rejectionEvent.Command.ChargeOperation),
-                    CorrelationId = rejectionEvent.Command.CorrelationId,
                 },
-                CorrelationId = rejectionEvent.CorrelationId,
             };
 
             ConvertPoints(chargeCommandRejectedContract, rejectionEvent.Command.ChargeOperation.Points);
@@ -54,7 +52,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
             }
         }
 
-        private static ChargeOperationContract ConvertChargeOperation(ChargeOperation charge)
+        private static ChargeOperationContract ConvertChargeOperation(ChargeOperationDto charge)
         {
             return new ChargeOperationContract
             {
@@ -73,26 +71,26 @@ namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
             };
         }
 
-        private static DocumentContract ConvertDocument(Document document)
+        private static DocumentContract ConvertDocument(DocumentDto documentDto)
         {
             return new DocumentContract
             {
-                Id = document.Id,
-                RequestDate = document.RequestDate.ToTimestamp().TruncateToSeconds(),
-                Type = (DocumentTypeContract)document.Type,
-                CreatedDateTime = document.CreatedDateTime.ToTimestamp().TruncateToSeconds(),
+                Id = documentDto.Id,
+                RequestDate = documentDto.RequestDate.ToTimestamp().TruncateToSeconds(),
+                Type = (DocumentTypeContract)documentDto.Type,
+                CreatedDateTime = documentDto.CreatedDateTime.ToTimestamp().TruncateToSeconds(),
                 Sender = new MarketParticipantContract
                 {
-                    Id = document.Sender.Id,
-                    BusinessProcessRole = (MarketParticipantRoleContract)document.Sender.BusinessProcessRole,
+                    Id = documentDto.Sender.Id,
+                    BusinessProcessRole = (MarketParticipantRoleContract)documentDto.Sender.BusinessProcessRole,
                 },
                 Recipient = new MarketParticipantContract
                 {
-                    Id = document.Recipient.Id,
-                    BusinessProcessRole = (MarketParticipantRoleContract)document.Recipient.BusinessProcessRole,
+                    Id = documentDto.Recipient.Id,
+                    BusinessProcessRole = (MarketParticipantRoleContract)documentDto.Recipient.BusinessProcessRole,
                 },
-                IndustryClassification = (IndustryClassificationContract)document.IndustryClassification,
-                BusinessReasonCode = (BusinessReasonCodeContract)document.BusinessReasonCode,
+                IndustryClassification = (IndustryClassificationContract)documentDto.IndustryClassification,
+                BusinessReasonCode = (BusinessReasonCodeContract)documentDto.BusinessReasonCode,
             };
         }
 

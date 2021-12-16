@@ -14,33 +14,44 @@
 
 using System;
 using Azure.Messaging.ServiceBus;
-using Energinet.DataHub.Charges.Libraries.DefaultChargeLink;
-using Energinet.DataHub.Charges.Libraries.Factories;
-using Energinet.DataHub.Charges.Libraries.ServiceBus;
+using Energinet.DataHub.Core.Messaging.Protobuf;
+using Energinet.DataHub.Core.Messaging.Transport;
 using Energinet.DataHub.MessageHub.Client;
 using Energinet.DataHub.MessageHub.Client.DataAvailable;
-using Energinet.DataHub.MessageHub.Client.Dequeue;
 using Energinet.DataHub.MessageHub.Client.Factories;
 using Energinet.DataHub.MessageHub.Client.Peek;
 using Energinet.DataHub.MessageHub.Client.Storage;
+using Energinet.DataHub.MessageHub.Model.Dequeue;
+using Energinet.DataHub.MessageHub.Model.Peek;
 using EntityFrameworkCore.SqlServer.NodaTime.Extensions;
+using GreenEnergyHub.Charges.Application.ChargeLinks.CreateDefaultChargeLinkReplier;
+using GreenEnergyHub.Charges.Domain.AvailableChargeData;
+using GreenEnergyHub.Charges.Domain.AvailableChargeLinkReceiptData;
 using GreenEnergyHub.Charges.Domain.AvailableChargeLinksData;
-using GreenEnergyHub.Charges.Domain.ChargeLinkCommandReceivedEvents;
+using GreenEnergyHub.Charges.Domain.AvailableChargeReceiptData;
+using GreenEnergyHub.Charges.Domain.AvailableData;
 using GreenEnergyHub.Charges.Domain.Charges;
+using GreenEnergyHub.Charges.Domain.Configuration;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksReceivedEvents;
 using GreenEnergyHub.Charges.Domain.MeteringPoints;
 using GreenEnergyHub.Charges.FunctionHost.Common;
+using GreenEnergyHub.Charges.Infrastructure.Cim;
+using GreenEnergyHub.Charges.Infrastructure.Configuration;
 using GreenEnergyHub.Charges.Infrastructure.Context;
 using GreenEnergyHub.Charges.Infrastructure.Correlation;
+using GreenEnergyHub.Charges.Infrastructure.CreateDefaultChargeLinkReplier;
+using GreenEnergyHub.Charges.Infrastructure.Function;
 using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandReceived;
 using GreenEnergyHub.Charges.Infrastructure.MessageMetaData;
 using GreenEnergyHub.Charges.Infrastructure.Messaging.Registration;
 using GreenEnergyHub.Charges.Infrastructure.Repositories;
+using GreenEnergyHub.Charges.Infrastructure.ServiceBusReplySenderProvider;
+using GreenEnergyHub.Iso8601;
 using GreenEnergyHub.Json;
-using GreenEnergyHub.Messaging.Protobuf;
-using GreenEnergyHub.Messaging.Transport;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using NodaTime;
+using MarketParticipantRole = GreenEnergyHub.Charges.Domain.MarketParticipants.MarketParticipantRole;
 
 namespace GreenEnergyHub.Charges.FunctionHost.Configuration
 {
@@ -52,40 +63,41 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
             serviceCollection.AddSingleton<IJsonSerializer, JsonSerializer>();
             serviceCollection.AddLogging();
             serviceCollection.AddScoped<CorrelationIdMiddleware>();
+            serviceCollection.AddScoped<FunctionTelemetryScopeMiddleware>();
             serviceCollection.AddScoped<MessageMetaDataMiddleware>();
+            serviceCollection.AddScoped<FunctionInvocationLoggingMiddleware>();
             serviceCollection.AddApplicationInsightsTelemetryWorkerService(
-                EnvironmentHelper.GetEnv("APPINSIGHTS_INSTRUMENTATIONKEY"));
+                EnvironmentHelper.GetEnv(EnvironmentSettingNames.AppInsightsInstrumentationKey));
 
             ConfigureSharedDatabase(serviceCollection);
             ConfigureSharedMessaging(serviceCollection);
+            ConfigureIso8601Services(serviceCollection);
+            ConfigureSharedCim(serviceCollection);
 
-            var serviceBusConnectionString = EnvironmentHelper.GetEnv("INTEGRATIONEVENT_SENDER_CONNECTION_STRING");
-            var dataAvailableQueue = EnvironmentHelper.GetEnv("MESSAGEHUB_DATAAVAILABLE_QUEUE");
-            var domainReplyQueue = EnvironmentHelper.GetEnv("MESSAGEHUB_BUNDLEREPLY_QUEUE");
-            var storageServiceConnectionString = EnvironmentHelper.GetEnv("MESSAGEHUB_STORAGE_CONNECTION_STRING");
-            var azureBlobStorageContainerName = EnvironmentHelper.GetEnv("MESSAGEHUB_STORAGE_CONTAINER");
+            var serviceBusConnectionString = EnvironmentHelper.GetEnv(EnvironmentSettingNames.DataHubSenderConnectionString);
+            var dataAvailableQueue = EnvironmentHelper.GetEnv(EnvironmentSettingNames.MessageHubDataAvailableQueue);
+            var domainReplyQueue = EnvironmentHelper.GetEnv(EnvironmentSettingNames.MessageHubReplyQueue);
+            var storageServiceConnectionString = EnvironmentHelper.GetEnv(EnvironmentSettingNames.MessageHubStorageConnectionString);
+            var azureBlobStorageContainerName = EnvironmentHelper.GetEnv(EnvironmentSettingNames.MessageHubStorageContainer);
+
+            var serviceBusClient = new ServiceBusClient(serviceBusConnectionString);
+
+            AddCreateDefaultChargeLinksReplier(serviceCollection, serviceBusClient);
             AddPostOfficeCommunication(
                 serviceCollection,
                 serviceBusConnectionString,
                 new MessageHubConfig(dataAvailableQueue, domainReplyQueue),
                 storageServiceConnectionString,
                 new StorageConfig(azureBlobStorageContainerName));
-            AddDefaultChargeLinkClient(serviceCollection, serviceBusConnectionString);
         }
 
-        private static void AddDefaultChargeLinkClient(
+        private static void AddCreateDefaultChargeLinksReplier(
             IServiceCollection serviceCollection,
-            string serviceBusConnectionString)
+            ServiceBusClient serviceBusClient)
         {
-            var replyToQueueName = EnvironmentHelper.GetEnv(EnvironmentSettingNames.CreateLinkReplyQueueName);
-            var serviceBusClient = new ServiceBusClient(serviceBusConnectionString);
-
-            serviceCollection.AddScoped<IServiceBusRequestSenderFactory>(_ =>
-                new ServiceBusRequestSenderFactory());
-            serviceCollection.AddScoped<IServiceBusRequestSender>(_ =>
-                new ServiceBusRequestSender(serviceBusClient, replyToQueueName));
-            serviceCollection.AddSingleton<IDefaultChargeLinkClient>(_ =>
-                new DefaultChargeLinkClient(serviceBusClient, new ServiceBusRequestSenderFactory(), replyToQueueName));
+            serviceCollection.AddSingleton<IServiceBusReplySenderProvider>(_ =>
+                new ServiceBusReplySenderProvider(serviceBusClient));
+            serviceCollection.AddScoped<ICreateDefaultChargeLinksReplier, CreateDefaultChargeLinksReplier>();
         }
 
         private static void ConfigureSharedDatabase(IServiceCollection serviceCollection)
@@ -101,7 +113,13 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
             serviceCollection.AddScoped<IChargeRepository, ChargeRepository>();
             serviceCollection.AddScoped<IMeteringPointRepository, MeteringPointRepository>();
             serviceCollection
-                .AddScoped<IAvailableChargeLinksDataRepository, AvailableChargeLinksDataRepository>();
+                .AddScoped<IAvailableDataRepository<AvailableChargeLinksData>, AvailableChargeLinksDataRepository>();
+            serviceCollection
+                .AddScoped<IAvailableDataRepository<AvailableChargeData>, AvailableChargeDataRepository>();
+            serviceCollection
+                .AddScoped<IAvailableDataRepository<AvailableChargeLinkReceiptData>, AvailableChargeLinkReceiptDataRepository>();
+            serviceCollection
+                .AddScoped<IAvailableDataRepository<AvailableChargeReceiptData>, AvailableChargeReceiptDataRepository>();
         }
 
         private static void ConfigureSharedMessaging(IServiceCollection serviceCollection)
@@ -110,9 +128,30 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
             serviceCollection.ConfigureProtobufReception();
 
             serviceCollection.SendProtobuf<ChargeLinkCommandReceived>();
-            serviceCollection.AddMessagingProtobuf().AddMessageDispatcher<ChargeLinkCommandReceivedEvent>(
+            serviceCollection.AddMessagingProtobuf().AddMessageDispatcher<ChargeLinksReceivedEvent>(
                 EnvironmentHelper.GetEnv(EnvironmentSettingNames.DomainEventSenderConnectionString),
-                EnvironmentHelper.GetEnv("CHARGE_LINK_RECEIVED_TOPIC_NAME"));
+                EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargeLinkReceivedTopicName));
+        }
+
+        private static void ConfigureSharedCim(IServiceCollection serviceCollection)
+        {
+            serviceCollection.AddScoped<ICimIdProvider, CimIdProvider>();
+            serviceCollection.AddScoped<IHubSenderConfiguration>(_ =>
+            {
+                var senderId = EnvironmentHelper.GetEnv(EnvironmentSettingNames.HubSenderId);
+                var roleIntText = EnvironmentHelper.GetEnv(EnvironmentSettingNames.HubSenderRoleIntEnumValue);
+                return new HubSenderConfiguration(
+                    senderId,
+                    (MarketParticipantRole)int.Parse(roleIntText));
+            });
+        }
+
+        private static void ConfigureIso8601Services(IServiceCollection serviceCollection)
+        {
+            var timeZoneId = EnvironmentHelper.GetEnv(EnvironmentSettingNames.LocalTimeZoneName);
+            var timeZoneConfiguration = new Iso8601ConversionConfiguration(timeZoneId);
+            serviceCollection.AddSingleton<IIso8601ConversionConfiguration>(timeZoneConfiguration);
+            serviceCollection.AddSingleton<IIso8601Durations, Iso8601Durations>();
         }
 
         /// <summary>
@@ -160,6 +199,12 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
                 }
 
                 return new ServiceBusClientFactory(serviceBusConnectionString);
+            });
+
+            serviceCollection.AddSingleton<IMessageBusFactory>(provider =>
+            {
+                var serviceBusClientFactory = provider.GetRequiredService<IServiceBusClientFactory>();
+                return new AzureServiceBusFactory(serviceBusClientFactory);
             });
         }
 

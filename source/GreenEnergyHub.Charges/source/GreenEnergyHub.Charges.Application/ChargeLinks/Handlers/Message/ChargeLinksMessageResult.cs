@@ -18,8 +18,6 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers.Message
     {
         public bool IsSucceeded { get; set; }
 
-        public string? CorrelationId { get; set; }
-
         public static ChargeLinksMessageResult CreateSuccess()
         {
             return new ChargeLinksMessageResult { IsSucceeded = true };

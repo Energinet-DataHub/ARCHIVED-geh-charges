@@ -14,9 +14,8 @@
 
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application.ChargeLinks.Handlers;
-using GreenEnergyHub.Charges.Domain.ChargeLinkCommandReceivedEvents;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksReceivedEvents;
 using GreenEnergyHub.Charges.FunctionHost.Common;
-using GreenEnergyHub.Charges.Infrastructure.Correlation;
 using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandReceived;
 using GreenEnergyHub.Charges.Infrastructure.Messaging;
 using Microsoft.Azure.Functions.Worker;
@@ -27,28 +26,28 @@ namespace GreenEnergyHub.Charges.FunctionHost.ChargeLinks
     {
         public const string FunctionName = nameof(ChargeLinkCommandReceiverEndpoint);
         private readonly MessageExtractor<ChargeLinkCommandReceived> _messageExtractor;
-        private readonly IChargeLinkCommandReceivedHandler _chargeLinkCommandReceivedHandler;
+        private readonly IChargeLinksReceivedEventHandler _chargeLinksReceivedEventHandler;
 
         public ChargeLinkCommandReceiverEndpoint(
             MessageExtractor<ChargeLinkCommandReceived> messageExtractor,
-            IChargeLinkCommandReceivedHandler chargeLinkCommandReceivedHandler)
+            IChargeLinksReceivedEventHandler chargeLinksReceivedEventHandler)
         {
             _messageExtractor = messageExtractor;
-            _chargeLinkCommandReceivedHandler = chargeLinkCommandReceivedHandler;
+            _chargeLinksReceivedEventHandler = chargeLinksReceivedEventHandler;
         }
 
         [Function(FunctionName)]
         public async Task RunAsync(
             [ServiceBusTrigger(
-                "%CHARGE_LINK_RECEIVED_TOPIC_NAME%",
-                "%CHARGE_LINK_RECEIVED_SUBSCRIPTION_NAME%",
+                "%" + EnvironmentSettingNames.ChargeLinkReceivedTopicName + "%",
+                "%" + EnvironmentSettingNames.ChargeLinkReceivedSubscriptionName + "%",
                 Connection = EnvironmentSettingNames.DomainEventListenerConnectionString)]
             byte[] data)
         {
-            var chargeLinkCommandMessage =
+            var chargeLinkReceivedEvent =
                 await _messageExtractor.ExtractAsync(data).ConfigureAwait(false);
-            await _chargeLinkCommandReceivedHandler
-                .HandleAsync((ChargeLinkCommandReceivedEvent)chargeLinkCommandMessage).ConfigureAwait(false);
+            await _chargeLinksReceivedEventHandler
+                .HandleAsync((ChargeLinksReceivedEvent)chargeLinkReceivedEvent).ConfigureAwait(false);
         }
     }
 }

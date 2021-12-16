@@ -13,13 +13,12 @@
 // limitations under the License.
 
 using System;
-using GreenEnergyHub.Charges.Application.Charges;
-using GreenEnergyHub.Charges.Domain.ChargeCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Tests.Builders;
 using GreenEnergyHub.TestHelpers;
 using Xunit;
 using Xunit.Categories;
-using MarketParticipant = GreenEnergyHub.Charges.Domain.MarketParticipants.MarketParticipant;
 
 namespace GreenEnergyHub.Charges.Tests.Application.Charges
 {
@@ -27,36 +26,34 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges
     public class ChargeCommandNullCheckerTests
     {
         [Theory]
-        [InlineAutoDomainData(null, "Valid", "Valid", "Valid")]
-        [InlineAutoDomainData("valid", null, "Valid", "Valid")]
-        [InlineAutoDomainData("valid", "Valid", null, "Valid")]
-        [InlineAutoDomainData("valid", "Valid", "Valid", null)]
-        [InlineAutoDomainData("", "Valid", "Valid", "Valid")]
-        [InlineAutoDomainData("valid", "", "Valid", "Valid")]
-        [InlineAutoDomainData("valid", "Valid", "", "Valid")]
-        [InlineAutoDomainData("valid", "Valid", "Valid", "")]
+        [InlineAutoDomainData(null, "Valid", "Valid")]
+        [InlineAutoDomainData("Valid", null, "Valid")]
+        [InlineAutoDomainData("Valid", "Valid", null)]
+        [InlineAutoDomainData("", "Valid", "Valid")]
+        [InlineAutoDomainData("Valid", "", "Valid")]
+        [InlineAutoDomainData("Valid", "Valid", "")]
         public void ChargeCommandPropertiesAreNotNullOrWhitespace(
-            string correlationId,
             string description,
             string chargeName,
             string documentId)
         {
             // Arrange
-            var c = Build();
-            c.SetCorrelationId(correlationId);
-            c.ChargeOperation.ChargeDescription = description;
-            c.ChargeOperation.ChargeName = chargeName;
-            c.Document.Id = documentId;
+            var c = new ChargeCommandTestBuilder()
+                .WithDescription(description)
+                .WithChargeName(chargeName)
+                .WithDocumentId(documentId)
+                .Build();
 
             // Act & Assert
             Assert.Throws<ArgumentException>(() => ChargeCommandNullChecker.ThrowExceptionIfRequiredPropertyIsNull(c));
         }
 
-        [Fact]
-        public void ThrowExceptionIfRequiredPropertyIsNull_WhenValid_DoesNotThrow()
+        [Theory]
+        [InlineAutoDomainData]
+        public void ThrowExceptionIfRequiredPropertyIsNull_WhenValid_DoesNotThrow(ChargeCommandTestBuilder chargeCommandTestBuilder)
         {
             // Arrange
-            var command = Build();
+            var command = chargeCommandTestBuilder.Build();
 
             // Act
             var ex = Record.Exception(() => ChargeCommandNullChecker.ThrowExceptionIfRequiredPropertyIsNull(command));
@@ -75,23 +72,24 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges
             Assert.Throws<ArgumentNullException>(() => ChargeCommandNullChecker.ThrowExceptionIfRequiredPropertyIsNull(command!));
         }
 
-        [Fact]
-        public void ThrowExceptionIfRequiredPropertyIsNull_WhenParticipantIsNull_ThrowsArgumentNullException()
+        [Theory]
+        [InlineAutoDomainData]
+        public void ThrowExceptionIfRequiredPropertyIsNull_WhenParticipantIsNull_ThrowsArgumentNullException(ChargeCommandTestBuilder builder)
         {
             // Arrange
-            MarketParticipant? marketParticipant = null;
-            var command = Build();
-            command.Document.Sender = marketParticipant!;
+            MarketParticipantDto? marketParticipant = null;
+            var command = builder.WithSender(marketParticipant!).Build();
 
             // Act & Assert
-            Assert.Throws<ArgumentNullException>(() => ChargeCommandNullChecker.ThrowExceptionIfRequiredPropertyIsNull(command!));
+            Assert.Throws<ArgumentNullException>(() => ChargeCommandNullChecker.ThrowExceptionIfRequiredPropertyIsNull(command));
         }
 
-        [Fact]
-        public void ChargeCommandDocumentIsNullThrowsException()
+        [Theory]
+        [InlineAutoDomainData]
+        public void ChargeCommandDocumentIsNullThrowsException(ChargeCommandTestBuilder builder)
         {
             // Arrange
-            var c = Build();
+            var c = builder.Build();
             c.Document = null!;
 
             // Act & Assert
@@ -108,12 +106,6 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges
 
             // Act & Assert
             Assert.Throws<ArgumentNullException>(() => ChargeCommandNullChecker.ThrowExceptionIfRequiredPropertyIsNull(c));
-        }
-
-        private static ChargeCommand Build()
-        {
-            var builder = new ChargeCommandTestBuilder();
-            return builder.Build();
         }
     }
 }

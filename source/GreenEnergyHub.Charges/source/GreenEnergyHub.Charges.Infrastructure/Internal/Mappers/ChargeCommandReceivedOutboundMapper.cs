@@ -12,16 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using Google.Protobuf.WellKnownTypes;
+using Energinet.DataHub.Core.Messaging.Protobuf;
 using GreenEnergyHub.Charges.Core.DateTime;
-using GreenEnergyHub.Charges.Domain.ChargeCommandReceivedEvents;
 using GreenEnergyHub.Charges.Domain.Charges;
-using GreenEnergyHub.Charges.Domain.MarketParticipants;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandReceivedEvents;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeCommandReceived;
-using GreenEnergyHub.Messaging.Protobuf;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
 {
@@ -36,9 +35,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
                 {
                     Document = ConvertDocument(chargeCommandReceivedEvent.Command.Document),
                     ChargeOperation = ConvertChargeOperation(chargeCommandReceivedEvent.Command.ChargeOperation),
-                    CorrelationId = chargeCommandReceivedEvent.Command.CorrelationId,
                 },
-                CorrelationId = chargeCommandReceivedEvent.CorrelationId,
             };
 
             ConvertPoints(chargeCommandReceivedContract, chargeCommandReceivedEvent.Command.ChargeOperation.Points);
@@ -46,7 +43,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
             return chargeCommandReceivedContract;
         }
 
-        private static ChargeOperationContract ConvertChargeOperation(ChargeOperation charge)
+        private static ChargeOperationContract ConvertChargeOperation(ChargeOperationDto charge)
         {
             return new ChargeOperationContract
             {
@@ -65,7 +62,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
             };
         }
 
-        private static DocumentContract ConvertDocument(Document document)
+        private static DocumentContract ConvertDocument(DocumentDto document)
         {
             return new DocumentContract
             {

@@ -14,7 +14,7 @@
 
 using System;
 using GreenEnergyHub.Charges.Core.Enumeration;
-using GreenEnergyHub.Charges.Domain.MeteringPointCreatedEvents;
+using GreenEnergyHub.Charges.Domain.Dtos.MeteringPointCreatedEvents;
 using NodaTime.Text;
 
 namespace GreenEnergyHub.Charges.Domain.MeteringPoints

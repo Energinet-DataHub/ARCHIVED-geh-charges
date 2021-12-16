@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.ComponentModel;
 using GreenEnergyHub.Charges.Domain.Charges;
 
 namespace GreenEnergyHub.Charges.Infrastructure.ChargeBundle.Cim
@@ -28,6 +29,17 @@ namespace GreenEnergyHub.Charges.Infrastructure.ChargeBundle.Cim
                 CimNoVat => VatClassification.NoVat,
                 CimVat25 => VatClassification.Vat25,
                 _ => VatClassification.Unknown,
+            };
+        }
+
+        public static string Map(VatClassification vatClassification)
+        {
+            return vatClassification switch
+            {
+                VatClassification.NoVat => CimNoVat,
+                VatClassification.Vat25 => CimVat25,
+                _ => throw new InvalidEnumArgumentException(
+                    $"Provided VatClassification value '{vatClassification}' is invalid and cannot be mapped."),
             };
         }
     }

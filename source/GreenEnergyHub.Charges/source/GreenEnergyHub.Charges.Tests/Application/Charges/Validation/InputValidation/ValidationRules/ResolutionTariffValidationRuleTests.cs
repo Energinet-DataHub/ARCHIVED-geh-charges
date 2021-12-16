@@ -14,11 +14,12 @@
 
 using System.Diagnostics.CodeAnalysis;
 using FluentAssertions;
-using GreenEnergyHub.Charges.Domain.ChargeCommands;
-using GreenEnergyHub.Charges.Domain.ChargeCommands.Validation;
-using GreenEnergyHub.Charges.Domain.ChargeCommands.Validation.InputValidation.ValidationRules;
 using GreenEnergyHub.Charges.Domain.Charges;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputValidation.ValidationRules;
 using GreenEnergyHub.Charges.TestCore.Attributes;
+using GreenEnergyHub.Charges.Tests.Builders;
 using GreenEnergyHub.TestHelpers;
 using Xunit;
 using Xunit.Categories;
@@ -38,11 +39,10 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Validation.InputValid
         public void ResolutionTariffValidationRule_WithTariffType_EqualsExpectedResult(
             Resolution resolution,
             bool expected,
-            [NotNull] ChargeCommand command)
+            ChargeCommandTestBuilder builder)
         {
             // Arrange
-            command.ChargeOperation.Type = ChargeType.Tariff;
-            command.ChargeOperation.Resolution = resolution;
+            var command = builder.WithChargeType(ChargeType.Tariff).WithResolution(resolution).Build();
 
             // Act
             var sut = new ResolutionTariffValidationRule(command);
@@ -60,11 +60,10 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Validation.InputValid
         public void ResolutionTariffValidationRule_WithSubscriptionType_EqualsExpectedResult(
             Resolution resolution,
             bool expected,
-            [NotNull] ChargeCommand command)
+            ChargeCommandTestBuilder builder)
         {
             // Arrange
-            command.ChargeOperation.Type = ChargeType.Subscription;
-            command.ChargeOperation.Resolution = resolution;
+            var command = builder.WithChargeType(ChargeType.Subscription).WithResolution(resolution).Build();
 
             // Act
             var sut = new ResolutionTariffValidationRule(command);
@@ -82,11 +81,10 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Validation.InputValid
         public void ResolutionTariffValidationRule_WithFeeType_EqualsExpectedResult(
             Resolution resolution,
             bool expected,
-            [NotNull] ChargeCommand command)
+            ChargeCommandTestBuilder builder)
         {
             // Arrange
-            command.ChargeOperation.Type = ChargeType.Fee;
-            command.ChargeOperation.Resolution = resolution;
+            var command = builder.WithChargeType(ChargeType.Fee).WithResolution(resolution).Build();
 
             // Act
             var sut = new ResolutionTariffValidationRule(command);
@@ -97,7 +95,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Validation.InputValid
 
         [Theory]
         [InlineAutoDomainData]
-        public void ValidationRuleIdentifier_ShouldBe_EqualTo([NotNull] ChargeCommand command)
+        public void ValidationRuleIdentifier_ShouldBe_EqualTo(ChargeCommand command)
         {
             var sut = new ResolutionTariffValidationRule(command);
             sut.ValidationRuleIdentifier.Should().Be(ValidationRuleIdentifier.ResolutionTariffValidation);

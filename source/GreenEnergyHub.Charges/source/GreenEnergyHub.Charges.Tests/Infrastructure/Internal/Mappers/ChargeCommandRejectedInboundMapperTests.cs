@@ -14,12 +14,11 @@
 
 using System;
 using System.Diagnostics.CodeAnalysis;
-using GreenEnergyHub.Charges.Domain.ChargeCommandRejectedEvents;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandRejectedEvents;
 using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeCommandRejected;
 using GreenEnergyHub.Charges.Infrastructure.Internal.Mappers;
-using GreenEnergyHub.Charges.TestCore;
 using GreenEnergyHub.Charges.TestCore.Attributes;
-using GreenEnergyHub.Charges.TestCore.Protobuf;
+using GreenEnergyHub.Charges.Tests.Protobuf;
 using Xunit;
 using Xunit.Categories;
 

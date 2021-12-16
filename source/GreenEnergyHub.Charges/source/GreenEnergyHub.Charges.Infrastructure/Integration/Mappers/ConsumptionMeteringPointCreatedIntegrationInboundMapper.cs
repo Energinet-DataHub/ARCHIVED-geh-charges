@@ -14,11 +14,11 @@
 
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
+using Energinet.DataHub.Core.Messaging.Protobuf;
+using Energinet.DataHub.Core.Messaging.Transport;
 using GreenEnergyHub.Charges.Core.DateTime;
-using GreenEnergyHub.Charges.Domain.MeteringPointCreatedEvents;
+using GreenEnergyHub.Charges.Domain.Dtos.MeteringPointCreatedEvents;
 using GreenEnergyHub.Charges.Domain.MeteringPoints;
-using GreenEnergyHub.Messaging.Protobuf;
-using GreenEnergyHub.Messaging.Transport;
 using GreenEnergyHub.MeteringPoints.IntegrationEventContracts;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Integration.Mappers

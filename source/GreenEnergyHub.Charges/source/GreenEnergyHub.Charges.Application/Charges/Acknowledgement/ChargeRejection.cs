@@ -13,23 +13,21 @@
 // limitations under the License.
 
 using System.Collections.Generic;
+using Energinet.DataHub.Core.Messaging.MessageTypes.Common;
+using GreenEnergyHub.Charges.Domain.Dtos.Messages;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
-using GreenEnergyHub.Charges.Domain.Messages;
-using GreenEnergyHub.Messaging.MessageTypes.Common;
 
 namespace GreenEnergyHub.Charges.Application.Charges.Acknowledgement
 {
     public class ChargeRejection : IMessage
     {
         public ChargeRejection(
-            string correlationId,
             string receiver,
             MarketParticipantRole receiverMarketParticipantRole,
             string originalTransactionReference,
             BusinessReasonCode businessReasonCode,
             IEnumerable<string> rejectReasons)
         {
-            CorrelationId = correlationId;
             Receiver = receiver;
             ReceiverMarketParticipantRole = receiverMarketParticipantRole;
             OriginalTransactionReference = originalTransactionReference;
@@ -37,8 +35,6 @@ namespace GreenEnergyHub.Charges.Application.Charges.Acknowledgement
             RejectReasons = rejectReasons;
             Transaction = Transaction.NewTransaction();
         }
-
-        public string CorrelationId { get; }
 
         public string Receiver { get; }
 

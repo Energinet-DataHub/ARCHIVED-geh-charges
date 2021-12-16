@@ -16,7 +16,7 @@ using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeCommandReceived;
 using GreenEnergyHub.Charges.TestCore;
-using GreenEnergyHub.Charges.TestCore.Protobuf;
+using GreenEnergyHub.Charges.Tests.Protobuf;
 using Xunit;
 using Xunit.Categories;
 

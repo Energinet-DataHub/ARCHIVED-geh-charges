@@ -12,13 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using FluentAssertions;
-using GreenEnergyHub.Charges.Domain.ChargeCommands;
-using GreenEnergyHub.Charges.Domain.ChargeCommands.Validation;
-using GreenEnergyHub.Charges.Domain.ChargeCommands.Validation.InputValidation.ValidationRules;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputValidation.ValidationRules;
 using GreenEnergyHub.Charges.TestCore.Attributes;
+using GreenEnergyHub.Charges.Tests.Builders;
 using GreenEnergyHub.TestHelpers;
 using Xunit;
 using Xunit.Categories;
@@ -37,16 +37,16 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Validation.InputValid
         public void ChargeNameLengthValidationRule_WhenCalledWithChargeNameLength_EqualsExpectedResult(
             int chargeNameLength,
             bool expected,
-            [NotNull] ChargeCommand command)
+            ChargeCommandTestBuilder builder)
         {
-            command.ChargeOperation.ChargeName = GenerateStringWithLength(chargeNameLength);
+            var command = builder.WithChargeName(GenerateStringWithLength(chargeNameLength)).Build();
             var sut = new ChargeNameHasMaximumLengthRule(command);
             sut.IsValid.Should().Be(expected);
         }
 
         [Theory]
         [InlineAutoDomainData]
-        public void ValidationRuleIdentifier_ShouldBe_EqualTo([NotNull] ChargeCommand command)
+        public void ValidationRuleIdentifier_ShouldBe_EqualTo(ChargeCommand command)
         {
             var sut = new ChargeNameHasMaximumLengthRule(command);
             sut.ValidationRuleIdentifier.Should().Be(ValidationRuleIdentifier.ChargeNameHasMaximumLength);
@@ -54,7 +54,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Validation.InputValid
 
         private static string GenerateStringWithLength(int stringLength)
         {
-            var repeatedChars = Enumerable.Repeat(0, stringLength).Select(n => "a");
+            var repeatedChars = Enumerable.Repeat(0, stringLength).Select(_ => "a");
             return string.Join(string.Empty, repeatedChars);
         }
     }

@@ -13,10 +13,10 @@
 // limitations under the License.
 
 using System.Diagnostics.CodeAnalysis;
-using GreenEnergyHub.Charges.Commands;
-using GreenEnergyHub.Charges.Domain.CreateLinkCommandEvents;
-using GreenEnergyHub.Messaging.Protobuf;
-using GreenEnergyHub.Messaging.Transport;
+using Energinet.Charges.Contracts;
+using Energinet.DataHub.Core.Messaging.Protobuf;
+using Energinet.DataHub.Core.Messaging.Transport;
+using GreenEnergyHub.Charges.Domain.Dtos.CreateLinksRequests;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Integration.Mappers
 {
@@ -24,7 +24,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Integration.Mappers
     {
         protected override IInboundMessage Convert([NotNull] CreateDefaultChargeLinks command)
         {
-            return new CreateLinkCommandEvent(command.MeteringPointId);
+            return new CreateLinksRequest(command.MeteringPointId);
         }
     }
 }

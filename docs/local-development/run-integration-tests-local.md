@@ -40,4 +40,4 @@ npm install -g azure-functions-core-tools@3.0.3568
 ### Set up local settings
 
 You will need to make a local copy of all `local.settings.json.sample` and `integrationtest.local.settings.json.sample`
-files and fill in your own settings, like Azure tenant and subscription id's etc.
+files and fill in your own settings.

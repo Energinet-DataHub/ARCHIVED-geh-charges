@@ -13,10 +13,15 @@
 // limitations under the License.
 
 using System.Threading.Tasks;
+using GreenEnergyHub.Charges.Domain.AvailableChargeData;
+using GreenEnergyHub.Charges.Domain.AvailableChargeLinkReceiptData;
 using GreenEnergyHub.Charges.Domain.AvailableChargeLinksData;
+using GreenEnergyHub.Charges.Domain.AvailableChargeReceiptData;
 using GreenEnergyHub.Charges.Domain.ChargeLinks;
+using GreenEnergyHub.Charges.Domain.Charges;
+using GreenEnergyHub.Charges.Domain.DefaultChargeLinks;
+using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.Domain.MeteringPoints;
-using GreenEnergyHub.Charges.Infrastructure.Context.Model;
 using Microsoft.EntityFrameworkCore;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Context
@@ -26,21 +31,6 @@ namespace GreenEnergyHub.Charges.Infrastructure.Context
     /// </summary>
     public interface IChargesDatabaseContext
     {
-        /// <summary>
-        /// ChargePrices available in the database.
-        /// </summary>
-        DbSet<ChargePrice> ChargePrices { get; }
-
-        /// <summary>
-        /// ChargeOperations available in the database.
-        /// </summary>
-        DbSet<ChargeOperation> ChargeOperations { get; }
-
-        /// <summary>
-        /// ChargePeriodDetails available in the database.
-        /// </summary>
-        DbSet<ChargePeriodDetails> ChargePeriodDetails { get; }
-
         /// <summary>
         /// Charges available in the database.
         /// </summary>
@@ -67,9 +57,24 @@ namespace GreenEnergyHub.Charges.Infrastructure.Context
         DbSet<DefaultChargeLink> DefaultChargeLinks { get; }
 
         /// <summary>
+        /// AvailableChargeData available in the database.
+        /// </summary>
+        DbSet<AvailableChargeData> AvailableChargeData { get; }
+
+        /// <summary>
+        /// AvailableChargeReceiptData available in the database
+        /// </summary>
+        DbSet<AvailableChargeReceiptData> AvailableChargeReceiptData { get; }
+
+        /// <summary>
         /// AvailableChargeLinksData available in the database.
         /// </summary>
         DbSet<AvailableChargeLinksData> AvailableChargeLinksData { get; }
+
+        /// <summary>
+        /// AvailableChargeLinkReceiptData available in the database
+        /// </summary>
+        DbSet<AvailableChargeLinkReceiptData> AvailableChargeLinkReceiptData { get; }
 
         /// <summary>
         /// Saves changes to the database.

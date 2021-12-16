@@ -12,16 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
-using System.Diagnostics.CodeAnalysis;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
-using Energinet.DataHub.Charges.Libraries.DefaultChargeLink;
-using Energinet.DataHub.Charges.Libraries.Models;
 using GreenEnergyHub.Charges.Application;
+using GreenEnergyHub.Charges.Application.ChargeLinks.CreateDefaultChargeLinkReplier;
 using GreenEnergyHub.Charges.Application.ChargeLinks.Handlers;
-using GreenEnergyHub.Charges.Domain.ChargeLinkCommandAcceptedEvents;
-using GreenEnergyHub.Charges.Domain.ChargeLinkCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksAcceptedEvents;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.DefaultChargeLinksDataAvailableNotifiedEvents;
+using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.TestHelpers;
 using Moq;
 using NodaTime;
@@ -33,72 +33,41 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Handlers
     [UnitTest]
     public class ChargeLinkEventReplyHandlerTests
     {
+        private const string MeteringPointId = "first";
+
         [Theory]
         [InlineAutoDomainData]
         public async Task HandleAsync_WhenCalledWithReplyToSetInMessageMetaDataContext_ReplyWithDefaultChargeLinkSucceededDto(
-            [Frozen] [NotNull] Mock<IMessageMetaDataContext> messageMetaDataContext,
-            [Frozen] [NotNull] Mock<ICorrelationContext> correlationContext,
-            [Frozen] [NotNull] Mock<IDefaultChargeLinkClient> defaultChargeLinkClient,
-            [NotNull] string replyTo,
-            [NotNull] string correlationId,
-            [NotNull] ChargeLinkEventReplyHandler sut)
+            [Frozen] Mock<IMessageMetaDataContext> messageMetaDataContext,
+            [Frozen] Mock<ICorrelationContext> correlationContext,
+            [Frozen] Mock<ICreateDefaultChargeLinksReplier> defaultChargeLinkClient,
+            string replyTo,
+            string correlationId,
+            CreateDefaultChargeLinksReplyHandler sut)
         {
             // Arrange
             messageMetaDataContext.Setup(m => m.IsReplyToSet()).Returns(true);
             messageMetaDataContext.Setup(m => m.ReplyTo).Returns(replyTo);
             correlationContext.Setup(c => c.Id).Returns(correlationId);
 
-            var command = GetChargeLinkCommandAcceptedEvent(correlationId);
+            var command = new DefaultChargeLinksCreatedEvent(SystemClock.Instance.GetCurrentInstant(), MeteringPointId);
 
             // Act
             await sut.HandleAsync(command).ConfigureAwait(false);
 
             // Assert
             defaultChargeLinkClient.Verify(
-                x => x.CreateDefaultChargeLinksSucceededReplyAsync(
-                    It.IsAny<CreateDefaultChargeLinksSucceededDto>(),
-                    correlationId,
-                    replyTo));
+                x => x.ReplyWithSucceededAsync(MeteringPointId, true, replyTo));
         }
 
-        [Theory]
-        [InlineAutoDomainData]
-        public async Task HandleAsync_WhenCalled_ThrowsInvalidOperationExceptionIfMeteringPointIdsDiffer(
-            [Frozen] [NotNull] Mock<IMessageMetaDataContext> messageMetaDataContext,
-            [NotNull] string replyTo,
-            [NotNull] string correlationId,
-            [NotNull] ChargeLinkEventReplyHandler sut)
-        {
-            // Arrange
-            messageMetaDataContext.Setup(m => m.IsReplyToSet()).Returns(true);
-            messageMetaDataContext.Setup(m => m.ReplyTo).Returns(replyTo);
-
-            const string optionalMeteringPointId = "optionalMeteringPointId";
-            var command = GetChargeLinkCommandAcceptedEvent(correlationId, optionalMeteringPointId);
-
-            // Act & Assert
-            await Assert.ThrowsAsync<InvalidOperationException>(() => sut.HandleAsync(command));
-        }
-
-        private static ChargeLinkCommandAcceptedEvent GetChargeLinkCommandAcceptedEvent(
-            string correlationId,
+        private static ChargeLinksAcceptedEvent GetChargeLinkCommandAcceptedEvent(
             string optionalMeteringPointId = "first")
         {
-            const string meteringPointId = "first";
-
-            var command = new ChargeLinkCommandAcceptedEvent(
-                correlationId,
-                new[]
-                {
-                    new ChargeLinkCommand(correlationId)
-                    {
-                        ChargeLink = new ChargeLinkDto { MeteringPointId = meteringPointId },
-                    },
-                    new ChargeLinkCommand(correlationId)
-                    {
-                        ChargeLink = new ChargeLinkDto { MeteringPointId = optionalMeteringPointId },
-                    },
-                },
+            var command = new ChargeLinksAcceptedEvent(
+                new ChargeLinksCommand(
+                    optionalMeteringPointId,
+                    new DocumentDto(),
+                    new List<ChargeLinkDto>()),
                 Instant.MinValue);
             return command;
         }

@@ -14,9 +14,9 @@
 
 using System.Diagnostics.CodeAnalysis;
 using FluentAssertions;
-using GreenEnergyHub.Charges.Domain.ChargeCommands;
-using GreenEnergyHub.Charges.Domain.ChargeCommands.Validation;
-using GreenEnergyHub.Charges.Domain.ChargeCommands.Validation.InputValidation.ValidationRules;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputValidation.ValidationRules;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.TestCore.Attributes;
 using GreenEnergyHub.TestHelpers;

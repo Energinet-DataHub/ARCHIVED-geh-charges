@@ -13,7 +13,7 @@
 // limitations under the License.
 
 using System;
-using GreenEnergyHub.Charges.Domain.MeteringPointCreatedEvents;
+using GreenEnergyHub.Charges.Domain.Dtos.MeteringPointCreatedEvents;
 using GreenEnergyHub.Charges.Domain.MeteringPoints;
 using Xunit;
 using Xunit.Categories;

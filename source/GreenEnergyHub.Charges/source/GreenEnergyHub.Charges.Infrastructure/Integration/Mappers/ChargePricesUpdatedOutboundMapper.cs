@@ -13,12 +13,12 @@
 // limitations under the License.
 
 using System.Diagnostics.CodeAnalysis;
+using Energinet.DataHub.Core.Messaging.Protobuf;
 using Google.Protobuf;
 using GreenEnergyHub.Charges.Application.Charges.Acknowledgement;
 using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.Core.Enumeration;
 using GreenEnergyHub.Charges.Infrastructure.Integration.ChargeConfirmation;
-using GreenEnergyHub.Messaging.Protobuf;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Integration.Mappers
 {

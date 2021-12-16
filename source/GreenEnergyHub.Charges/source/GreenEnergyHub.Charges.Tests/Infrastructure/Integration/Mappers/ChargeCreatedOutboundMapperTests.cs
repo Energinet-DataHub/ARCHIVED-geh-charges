@@ -14,10 +14,10 @@
 
 using System;
 using System.Diagnostics.CodeAnalysis;
-using GreenEnergyHub.Charges.Domain.Charges.Acknowledgements;
+using GreenEnergyHub.Charges.Application.Charges.Acknowledgement;
 using GreenEnergyHub.Charges.Infrastructure.Integration.Mappers;
 using GreenEnergyHub.Charges.TestCore.Attributes;
-using GreenEnergyHub.Charges.TestCore.Protobuf;
+using GreenEnergyHub.Charges.Tests.Protobuf;
 using Xunit;
 using Xunit.Categories;
 

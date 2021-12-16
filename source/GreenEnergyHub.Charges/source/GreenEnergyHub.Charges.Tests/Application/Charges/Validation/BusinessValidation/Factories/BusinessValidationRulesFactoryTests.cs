@@ -13,17 +13,17 @@
 // limitations under the License.
 
 using System;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
 using GreenEnergyHub.Charges.Core;
-using GreenEnergyHub.Charges.Domain.ChargeCommands;
-using GreenEnergyHub.Charges.Domain.ChargeCommands.Validation.BusinessValidation;
-using GreenEnergyHub.Charges.Domain.ChargeCommands.Validation.BusinessValidation.Factories;
-using GreenEnergyHub.Charges.Domain.ChargeCommands.Validation.BusinessValidation.ValidationRules;
 using GreenEnergyHub.Charges.Domain.Charges;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessValidation;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessValidation.Factories;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessValidation.ValidationRules;
 using GreenEnergyHub.Charges.TestCore.Attributes;
+using GreenEnergyHub.Charges.Tests.Builders;
 using Moq;
 using Xunit;
 using Xunit.Categories;
@@ -36,69 +36,57 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Validation.BusinessVa
         [Theory]
         [InlineAutoMoqData(typeof(StartDateValidationRule))]
         [InlineAutoMoqData(typeof(CommandSenderMustBeAnExistingMarketParticipantRule))]
+        [InlineAutoMoqData(typeof(ChargeUpdateNotYetSupportedRule))]
         public async Task CreateRulesForChargeCommandAsync_WhenCalledWithNewCharge_ReturnsExpectedMandatoryRules(
             Type expectedRule,
-            [NotNull][Frozen] Mock<IChargeRepository> repository,
-            [NotNull][Frozen] Mock<IRulesConfigurationRepository> rulesConfigurationRepository,
-            [NotNull] BusinessValidationRulesFactory sut,
-            [NotNull] TestableChargeCommand chargeCommand)
+            [Frozen] Mock<IChargeRepository> repository,
+            [Frozen] Mock<IRulesConfigurationRepository> rulesConfigurationRepository,
+            BusinessValidationRulesFactory sut,
+            ChargeCommandTestBuilder builder)
         {
             // Arrange
+            var chargeCommand = builder.Build();
             ConfigureRepositoryMock(rulesConfigurationRepository);
 
             Charge? charge = null;
-            repository.Setup(
-                    r => r.GetChargeAsync(
-                        It.IsAny<ChargeIdentifier>()))
-                .Returns(Task.FromResult(charge!));
+            repository.Setup(r => r.GetOrNullAsync(It.IsAny<ChargeIdentifier>()))
+                .ReturnsAsync(charge);
 
             // Act
             var actual = await sut.CreateRulesForChargeCommandAsync(chargeCommand).ConfigureAwait(false);
             var actualRules = actual.GetRules().Select(r => r.GetType());
 
             // Assert
-            Assert.Equal(2, actual.GetRules().Count); // This assert is added to ensure that when the rule set is expanded, the test gets attention as well.
+            Assert.Equal(3, actual.GetRules().Count); // This assert is added to ensure that when the rule set is expanded, the test gets attention as well.
             Assert.Contains(expectedRule, actualRules);
         }
 
         [Theory]
         [InlineAutoMoqData(typeof(StartDateValidationRule))]
         [InlineAutoMoqData(typeof(CommandSenderMustBeAnExistingMarketParticipantRule))]
+        [InlineAutoMoqData(typeof(ChargeUpdateNotYetSupportedRule))]
         public async Task CreateRulesForChargeCommandAsync_WhenCalledWithExistingChargeNotTariff_ReturnsExpectedRules(
             Type expectedRule,
-            [NotNull][Frozen] Mock<IChargeRepository> repository,
-            [NotNull][Frozen] Mock<IRulesConfigurationRepository> rulesConfigurationRepository,
-            [NotNull] BusinessValidationRulesFactory sut,
-            [NotNull] TestableChargeCommand chargeCommand,
-            [NotNull] Charge charge)
+            [Frozen] Mock<IChargeRepository> repository,
+            [Frozen] Mock<IRulesConfigurationRepository> rulesConfigurationRepository,
+            BusinessValidationRulesFactory sut,
+            ChargeCommandTestBuilder builder,
+            Charge charge)
         {
             // Arrange
-            chargeCommand.ChargeOperation.Type = ChargeType.Fee;
+            var chargeCommand = builder.WithChargeType(ChargeType.Fee).Build();
             ConfigureRepositoryMock(rulesConfigurationRepository);
 
-            const bool chargeExists = true;
-            repository.Setup(
-                r => r.CheckIfChargeExistsAsync(
-                        new ChargeIdentifier(
-                    It.IsAny<string>(),
-                    It.IsAny<string>(),
-                    It.IsAny<ChargeType>())))
-                .Returns(Task.FromResult(chargeExists));
-
-            repository.Setup(
-                    r => r.GetChargeAsync(
-                            new ChargeIdentifier(
-                        It.IsAny<string>(),
-                        It.IsAny<string>(),
-                        It.IsAny<ChargeType>())))
-                .Returns(Task.FromResult(charge));
+            repository
+                .Setup(r => r.GetOrNullAsync(It.IsAny<ChargeIdentifier>()))
+                .ReturnsAsync(charge);
 
             // Act
             var actual = await sut.CreateRulesForChargeCommandAsync(chargeCommand).ConfigureAwait(false);
             var actualRules = actual.GetRules().Select(r => r.GetType());
 
             // Assert
-            Assert.Equal(2, actual.GetRules().Count); // This assert is added to ensure that when the rule set is expanded, the test gets attention as well.
+            Assert.Equal(3, actual.GetRules().Count); // This assert is added to ensure that when the rule set is expanded, the test gets attention as well.
             Assert.Contains(expectedRule, actualRules);
         }
 
@@ -107,26 +95,26 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Validation.BusinessVa
         [InlineAutoMoqData(typeof(CommandSenderMustBeAnExistingMarketParticipantRule))]
         [InlineAutoMoqData(typeof(ChangingTariffTaxValueNotAllowedRule))]
         [InlineAutoMoqData(typeof(ChangingTariffVatValueNotAllowedRule))]
+        [InlineAutoMoqData(typeof(ChargeUpdateNotYetSupportedRule))]
         public async Task CreateRulesForChargeCommandAsync_WhenCalledWithExistingTariff_ReturnsExpectedRules(
             Type expectedRule,
-            [NotNull][Frozen] Mock<IChargeRepository> repository,
-            [NotNull][Frozen] Mock<IRulesConfigurationRepository> rulesConfigurationRepository,
-            [NotNull] BusinessValidationRulesFactory sut,
-            [NotNull] TestableChargeCommand chargeCommand,
-            [NotNull] Charge charge)
+            [Frozen] Mock<IChargeRepository> repository,
+            [Frozen] Mock<IRulesConfigurationRepository> rulesConfigurationRepository,
+            BusinessValidationRulesFactory sut,
+            ChargeCommandTestBuilder builder,
+            Charge charge)
         {
             // Arrange
-            chargeCommand.ChargeOperation.Type = ChargeType.Tariff;
+            var chargeCommand = builder.WithChargeType(ChargeType.Tariff).Build();
             ConfigureRepositoryMock(rulesConfigurationRepository);
 
-            const bool chargeExists = true;
             repository.Setup(
-                r => r.CheckIfChargeExistsAsync(
-                    It.IsAny<ChargeIdentifier>()))
-                .Returns(Task.FromResult(chargeExists));
+                    r => r.GetOrNullAsync(
+                        It.IsAny<ChargeIdentifier>()))
+                .ReturnsAsync(charge);
 
             repository.Setup(
-                    r => r.GetChargeAsync(
+                    r => r.GetAsync(
                         It.IsAny<ChargeIdentifier>()))
                 .Returns(Task.FromResult(charge));
 
@@ -135,21 +123,21 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Validation.BusinessVa
             var actualRules = actual.GetRules().Select(r => r.GetType());
 
             // Assert
-            Assert.Equal(4, actual.GetRules().Count); // This assert is added to ensure that when the rule set is expanded, the test gets attention as well.
+            Assert.Equal(5, actual.GetRules().Count); // This assert is added to ensure that when the rule set is expanded, the test gets attention as well.
             Assert.Contains(expectedRule, actualRules);
         }
 
         [Theory]
         [InlineAutoMoqData]
         public static async Task CreateRulesForChargeCommandAsync_WhenCalledWithNull_ThrowsArgumentNullException(
-            [NotNull] BusinessValidationRulesFactory sut)
+            BusinessValidationRulesFactory sut)
         {
             // Arrange
             ChargeCommand? command = null;
 
             // Act / Assert
             await Assert.ThrowsAsync<ArgumentNullException>(
-                () => sut.CreateRulesForChargeCommandAsync(command!))
+                    () => sut.CreateRulesForChargeCommandAsync(command!))
                 .ConfigureAwait(false);
         }
 

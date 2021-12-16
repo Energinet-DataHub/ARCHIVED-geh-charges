@@ -12,49 +12,38 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Threading.Tasks;
 using System.Xml;
-using GreenEnergyHub.Charges.Application;
-using GreenEnergyHub.Charges.Domain.ChargeLinkCommands;
-using GreenEnergyHub.Charges.Domain.MarketParticipants;
-using GreenEnergyHub.Charges.Infrastructure.Correlation;
+using Energinet.DataHub.Core.Messaging.Transport;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Infrastructure.MarketDocument.Cim;
 using GreenEnergyHub.Charges.Infrastructure.Messaging.Serialization;
-using GreenEnergyHub.Messaging.Transport;
 using NodaTime;
 
 namespace GreenEnergyHub.Charges.Infrastructure.ChargeLinkBundle.Cim
 {
     public class ChargeLinkCommandConverter : DocumentConverter
     {
-        private readonly ICorrelationContext _correlationContext;
-
-        public ChargeLinkCommandConverter(
-            ICorrelationContext correlationContext,
-            IClock clock)
+        public ChargeLinkCommandConverter(IClock clock)
             : base(clock)
         {
-            _correlationContext = correlationContext;
         }
 
         protected override async Task<IInboundMessage> ConvertSpecializedContentAsync(
             [NotNull] XmlReader reader,
-            [NotNull] Document document)
+            [NotNull] DocumentDto document)
         {
-            var correlationId = _correlationContext.Id;
-
-            return new ChargeLinkCommand(correlationId)
-                {
-                    Document = document,
-                    ChargeLink = await ParseChargeLinkAsync(reader).ConfigureAwait(false),
-                };
+            return await ParseChargeLinksCommandAsync(reader, document);
         }
 
-        private static async Task<ChargeLinkDto> ParseChargeLinkAsync(XmlReader reader)
+        private static async Task<ChargeLinksCommand> ParseChargeLinksCommandAsync(XmlReader reader, DocumentDto documentDto)
         {
             var link = new ChargeLinkDto();
+            string meteringPointId = null!;
 
             while (await reader.ReadAsync().ConfigureAwait(false))
             {
@@ -66,7 +55,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.ChargeLinkBundle.Cim
                 else if (reader.Is(CimChargeLinkCommandConstants.MeteringPointId, CimChargeLinkCommandConstants.Namespace))
                 {
                     var content = await reader.ReadElementContentAsStringAsync().ConfigureAwait(false);
-                    link.MeteringPointId = content;
+                    meteringPointId = content;
                 }
                 else if (reader.Is(CimChargeLinkCommandConstants.StartDateTime, CimChargeLinkCommandConstants.Namespace))
                 {
@@ -89,7 +78,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.ChargeLinkBundle.Cim
                 else if (reader.Is(CimChargeLinkCommandConstants.ChargeOwner, CimChargeLinkCommandConstants.Namespace))
                 {
                     var content = await reader.ReadElementContentAsStringAsync().ConfigureAwait(false);
-                    link.ChargeOwner = content;
+                    link.ChargeOwnerId = content;
                 }
                 else if (reader.Is(CimChargeLinkCommandConstants.ChargeType, CimChargeLinkCommandConstants.Namespace))
                 {
@@ -98,7 +87,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.ChargeLinkBundle.Cim
                 }
             }
 
-            return link;
+            return new ChargeLinksCommand(meteringPointId, documentDto, new List<ChargeLinkDto> { link });
         }
     }
 }

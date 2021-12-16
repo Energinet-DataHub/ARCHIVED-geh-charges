@@ -16,13 +16,13 @@ using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Xml;
-using GreenEnergyHub.Charges.Domain.ChargeLinkCommands;
+using Energinet.DataHub.Core.Messaging.Transport;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands;
 using GreenEnergyHub.Charges.Infrastructure.Messaging.Serialization;
-using GreenEnergyHub.Messaging.Transport;
 
 namespace GreenEnergyHub.Charges.Infrastructure.ChargeLinkBundle.Cim
 {
-    public class ChargeLinkCommandDeserializer : MessageDeserializer<ChargeLinkCommand>
+    public class ChargeLinkCommandDeserializer : MessageDeserializer<ChargeLinksCommand>
     {
         private readonly ChargeLinkCommandConverter _chargeLinkCommandConverter;
 

@@ -12,14 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using FluentAssertions;
-using GreenEnergyHub.Charges.Domain.ChargeCommands;
-using GreenEnergyHub.Charges.Domain.ChargeCommands.Validation;
-using GreenEnergyHub.Charges.Domain.ChargeCommands.Validation.InputValidation.ValidationRules;
 using GreenEnergyHub.Charges.Domain.Charges;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputValidation.ValidationRules;
 using GreenEnergyHub.Charges.TestCore.Attributes;
+using GreenEnergyHub.Charges.Tests.Builders;
 using GreenEnergyHub.TestHelpers;
 using Xunit;
 using Xunit.Categories;
@@ -36,12 +35,13 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Validation.InputValid
         public void IsValid_WhenCalledWith1PricePoint_ShouldParseValidation(
             int priceCount,
             bool expected,
-            [NotNull]ChargeCommand chargeCommand,
-            Point point)
+            ChargeCommandTestBuilder builder)
         {
             // Arrange
-            chargeCommand.ChargeOperation.Type = ChargeType.Subscription;
-            chargeCommand.ChargeOperation.Points = new List<Point>(GeneratePricePointList(point, priceCount));
+            var chargeCommand = builder
+                .WithChargeType(ChargeType.Subscription)
+                .WithPointWithXNumberOfPrices(priceCount)
+                .Build();
 
             // Act
             var sut = new SubscriptionMustHaveSinglePriceRule(chargeCommand);
@@ -55,30 +55,19 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Validation.InputValid
         [InlineAutoMoqData(ChargeType.Unknown)]
         public void IsValid_NeitherFeeOrSubscription_ShouldParseValidation(
             ChargeType chargeType,
-            [NotNull] ChargeCommand chargeCommand)
+            ChargeCommandTestBuilder builder)
         {
-            chargeCommand.ChargeOperation.Type = chargeType;
+            var chargeCommand = builder.WithChargeType(chargeType).Build();
             var sut = new SubscriptionMustHaveSinglePriceRule(chargeCommand);
             sut.IsValid.Should().BeTrue();
         }
 
         [Theory]
         [InlineAutoDomainData]
-        public void ValidationRuleIdentifier_ShouldBe_EqualTo([NotNull] ChargeCommand command)
+        public void ValidationRuleIdentifier_ShouldBe_EqualTo(ChargeCommand command)
         {
             var sut = new SubscriptionMustHaveSinglePriceRule(command);
             sut.ValidationRuleIdentifier.Should().Be(ValidationRuleIdentifier.SubscriptionMustHaveSinglePrice);
-        }
-
-        private static List<Point> GeneratePricePointList(Point point, int itemsInList)
-        {
-            var pointList = new List<Point>();
-            for (var i = 0; i < itemsInList; i++)
-            {
-                pointList.Add(point);
-            }
-
-            return pointList;
         }
     }
 }

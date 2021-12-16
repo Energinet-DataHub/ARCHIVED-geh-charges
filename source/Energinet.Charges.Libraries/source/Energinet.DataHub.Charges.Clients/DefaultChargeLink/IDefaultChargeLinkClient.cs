@@ -14,9 +14,9 @@
 
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
-using Energinet.DataHub.Charges.Libraries.Models;
+using Energinet.DataHub.Charges.Clients.DefaultChargeLink.Models;
 
-namespace Energinet.DataHub.Charges.Libraries.DefaultChargeLink
+namespace Energinet.DataHub.Charges.Clients.DefaultChargeLink
 {
     public interface IDefaultChargeLinkClient
     {
@@ -24,33 +24,11 @@ namespace Energinet.DataHub.Charges.Libraries.DefaultChargeLink
         /// Request the Charges domain to create default charge links
         /// based on the supplied meteringPointIds entity's MeteringPointType.
         /// </summary>
-        /// <param name="createDefaultChargeLinksDto">
+        /// <param name="requestDefaultChargeLinksForMeteringPointDto">
         /// Contains data needed by the Charges Domain to create default charges links.</param>
         /// <param name="correlationId">CorrelationId specifies message context.</param>
         Task CreateDefaultChargeLinksRequestAsync(
-            [NotNull] CreateDefaultChargeLinksDto createDefaultChargeLinksDto,
-            [NotNull] string correlationId);
-
-        /// <summary>
-        /// The reply the Charges domain uses when creating default charge links were successful.
-        /// </summary>
-        /// <param name="createDefaultChargeLinksSucceededDto"></param>
-        /// <param name="correlationId">CorrelationId specifies message context.</param>
-        /// <param name="replyQueueName">The queue used to send the reply to.</param>
-        Task CreateDefaultChargeLinksSucceededReplyAsync(
-            [NotNull] CreateDefaultChargeLinksSucceededDto createDefaultChargeLinksSucceededDto,
-            [NotNull] string correlationId,
-            [NotNull] string replyQueueName);
-
-        /// <summary>
-        /// The reply the Charges domain uses when creating default charge links failed.
-        /// </summary>
-        /// <param name="createDefaultChargeLinksFailedDto"></param>
-        /// <param name="correlationId">CorrelationId specifies message context.</param>
-        /// <param name="replyQueueName">The queue used to send the reply to.</param>
-        Task CreateDefaultChargeLinksFailedReplyAsync(
-            [NotNull] CreateDefaultChargeLinksFailedDto createDefaultChargeLinksFailedDto,
-            [NotNull] string correlationId,
-            [NotNull] string replyQueueName);
+            [DisallowNull] RequestDefaultChargeLinksForMeteringPointDto requestDefaultChargeLinksForMeteringPointDto,
+            [DisallowNull] string correlationId);
     }
 }

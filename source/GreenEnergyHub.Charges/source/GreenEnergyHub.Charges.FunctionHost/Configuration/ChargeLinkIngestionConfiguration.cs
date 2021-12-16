@@ -13,7 +13,7 @@
 // limitations under the License.
 
 using GreenEnergyHub.Charges.Application.ChargeLinks.Handlers;
-using GreenEnergyHub.Charges.Domain.ChargeLinkCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands;
 using GreenEnergyHub.Charges.Infrastructure.ChargeLinkBundle.Cim;
 using GreenEnergyHub.Charges.Infrastructure.Messaging;
 using GreenEnergyHub.Charges.Infrastructure.Messaging.Serialization;
@@ -26,10 +26,10 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
         internal static void ConfigureServices(IServiceCollection serviceCollection)
         {
             serviceCollection.AddScoped<ChargeLinkCommandConverter>();
-            serviceCollection.AddScoped<MessageExtractor<ChargeLinkCommand>>();
-            serviceCollection.AddScoped<MessageDeserializer<ChargeLinkCommand>, ChargeLinkCommandDeserializer>();
+            serviceCollection.AddScoped<MessageExtractor<ChargeLinksCommand>>();
+            serviceCollection.AddScoped<MessageDeserializer<ChargeLinksCommand>, ChargeLinkCommandDeserializer>();
 
-            serviceCollection.AddScoped<IChargeLinkCommandHandler, ChargeLinkCommandHandler>();
+            serviceCollection.AddScoped<IChargeLinksCommandHandler, ChargeLinksCommandHandler>();
         }
     }
 }

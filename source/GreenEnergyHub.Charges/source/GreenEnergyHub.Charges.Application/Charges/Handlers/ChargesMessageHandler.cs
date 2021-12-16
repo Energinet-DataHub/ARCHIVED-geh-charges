@@ -15,7 +15,7 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application.Charges.Handlers.Message;
-using GreenEnergyHub.Charges.Domain.ChargeCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
 
 namespace GreenEnergyHub.Charges.Application.Charges.Handlers
 {

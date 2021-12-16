@@ -18,30 +18,43 @@ limitations under the License.
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
     <LangVersion>9</LangVersion>
-    <Nullable>enable</Nullable>
     <ProjectGuid>{0444C070-2B3E-4C5D-870D-FED55C22C94E}</ProjectGuid>
-    <RootNamespace>Energinet.DataHub.Charges.Libraries</RootNamespace>
+    <RootNamespace>Energinet.DataHub.Charges.Clients</RootNamespace>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <IsPackable>true</IsPackable>
     <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
   </PropertyGroup>
 
+  <!-- Configuration for NuGet package -->
   <PropertyGroup>
     <PackageId>Energinet.DataHub.Charges.Clients</PackageId>
-    <PackageVersion>1.0.3$(VersionSuffix)</PackageVersion>
+    <PackageVersion>1.0.19$(VersionSuffix)</PackageVersion>
     <Title>Energinet.DataHub.Charges.Clients</Title>
     <Company>Energinet DataHub A/S</Company>
     <Authors>DataHub</Authors>
     <RepositoryUrl>https://github.com/Energinet-DataHub/geh-charges</RepositoryUrl>
     <PackageReleaseNotes>
-      [Release Notes](https://github.com/Energinet-DataHub/geh-charges/source/Energinet.Charges.Libraries/source/Energinet.DataHub.Charges.Clients/documents/release-notes/release-notes.md)
-      [Documentation](https://github.com/Energinet-DataHub/geh-charges/source/Energinet.Charges.Libraries/source/Energinet.DataHub.Charges.Clients/documents/documentation.md)
+Release Notes
+https://github.com/Energinet-DataHub/geh-charges/tree/main/source/Energinet.Charges.Libraries/source/Energinet.DataHub.Charges.Clients/documents/release-notes/release-notes.md
+
+Documentation
+https://github.com/Energinet-DataHub/geh-charges/tree/main/source/Energinet.Charges.Libraries/source/Energinet.DataHub.Charges.Clients/documents/documentation.md
     </PackageReleaseNotes>
     <PackageDescription>
-      [Release Notes](https://github.com/Energinet-DataHub/geh-charges/source/Energinet.Charges.Libraries/source/Energinet.DataHub.Charges.Clients/documents/release-notes/release-notes.md)
-      [Documentation](https://github.com/Energinet-DataHub/geh-charges/source/Energinet.Charges.Libraries/source/Energinet.DataHub.Charges.Clients/documents/documentation.md)
+Release Notes
+https://github.com/Energinet-DataHub/geh-charges/tree/main/source/Energinet.Charges.Libraries/source/Energinet.DataHub.Charges.Clients/documents/release-notes/release-notes.md
+
+Documentation
+https://github.com/Energinet-DataHub/geh-charges/tree/main/source/Energinet.Charges.Libraries/source/Energinet.DataHub.Charges.Clients/documents/documentation.md
     </PackageDescription>
-    <Description>Library containing communication API for Charges Clients</Description>
+    <Description>
+      The NuGet package Energinet.DataHub.Charges.Clients contains communication API for clients interacting with the Energinet DataHub charge domain. Energinet DataHub is built on the Green Energy Hub platform.
+
+      Learn more about the Green Energy Hub platform at https://github.com/Energinet-DataHub/green-energy-hub.
+
+      Learn more about the charge domain at https://github.com/Energinet-DataHub/geh-charges.
+
+      Learn more about Energinet at https://energinet.dk/.    </Description>
     <PackageTags>green-energy-hub;datahub;library</PackageTags>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
@@ -59,14 +72,19 @@ limitations under the License.
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Azure.Messaging.ServiceBus" Version="7.4.0" />
-    <PackageReference Include="Google.Protobuf" Version="3.18.0" />
-    <PackageReference Include="Grpc.Tools" Version="2.41.0-pre2">
+    <PackageReference Include="Azure.Messaging.ServiceBus" Version="7.5.0" />
+    <PackageReference Include="Google.Protobuf" Version="3.19.1" />
+    <PackageReference Include="Grpc.Tools" Version="2.42.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
-    <PackageReference Include="Microsoft.VisualStudio.Threading.Analyzers" Version="16.10.56">
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="5.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Http" Version="3.0.3" />
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.VisualStudio.Threading.Analyzers" Version="17.0.64">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
@@ -74,11 +92,12 @@ limitations under the License.
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="NodaTime" Version="3.0.7" />
+    <PackageReference Include="NodaTime" Version="3.0.9" />
   </ItemGroup>
 
+  <!-- Automatic generation of C# classes for protobuf contracts on build -->
   <ItemGroup>
-    <Protobuf Include="*\Contracts\*.proto">
+    <Protobuf Include="../../../Contracts/*.proto">
       <GrpcServices>None</GrpcServices>
       <Access>Internal</Access>
       <ProtoCompile>True</ProtoCompile>
@@ -86,13 +105,22 @@ limitations under the License.
       <OutputDir>obj\contracts\</OutputDir>
       <Generator>MSBuild:Compile</Generator>
     </Protobuf>
+    <Protobuf Update="..\..\..\Contracts\CreateDefaultChargeLinks.proto">
+      <Link>DefaultChargeLink\Contracts\CreateDefaultChargeLinks.proto</Link>
+    </Protobuf>
+    <Protobuf Update="..\..\..\Contracts\CreateDefaultChargeLinksReply.proto">
+      <Link>DefaultChargeLink\Contracts\CreateDefaultChargeLinksReply.proto</Link>
+    </Protobuf>
   </ItemGroup>
-
+  
   <ItemGroup>
 
     <!-- Make assembly visible to test assembly -->
     <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
       <_Parameter1>$(AssemblyName).Tests</_Parameter1>
+    </AssemblyAttribute>
+    <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
+      <_Parameter1>$(AssemblyName).IntegrationTests</_Parameter1>
     </AssemblyAttribute>
 
     <!-- Make assembly usable for Moq, so Moq is able to instanciate objects of 'internal' classes -->
@@ -106,6 +134,18 @@ limitations under the License.
     <None Update="local.settings.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="..\..\..\Contracts\ChargeLink\ChargeLinkDto.cs">
+      <Link>ChargeLinks\Model\ChargeLinkDto.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\Contracts\Charge\ChargeType.cs">
+      <Link>ChargeLinks\Model\ChargeType.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\Contracts\ErrorCode.cs">
+      <Link>DefaultChargeLink\ErrorCode.cs</Link>
+    </Compile>
   </ItemGroup>
   
 </Project>

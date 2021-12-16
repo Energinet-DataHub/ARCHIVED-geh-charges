@@ -12,11 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using Energinet.DataHub.Core.Messaging.MessageTypes.Common;
 using GreenEnergyHub.Charges.Core;
-using GreenEnergyHub.Charges.Domain.Messages;
-using GreenEnergyHub.Messaging.MessageTypes.Common;
+using GreenEnergyHub.Charges.Domain.Charges;
+using GreenEnergyHub.Charges.Domain.Dtos.Messages;
 
-namespace GreenEnergyHub.Charges.Domain.Charges.Acknowledgements
+namespace GreenEnergyHub.Charges.Application.Charges.Acknowledgement
 {
     public class ChargeCreatedEvent : IMessage
     {
@@ -27,8 +28,7 @@ namespace GreenEnergyHub.Charges.Domain.Charges.Acknowledgements
             string currency,
             Resolution resolution,
             bool taxIndicator,
-            Period chargePeriod,
-            string correlationId)
+            Period chargePeriod)
         {
             ChargeId = chargeId;
             ChargeType = chargeType;
@@ -38,7 +38,6 @@ namespace GreenEnergyHub.Charges.Domain.Charges.Acknowledgements
             TaxIndicator = taxIndicator;
             ChargePeriod = chargePeriod;
             Transaction = Transaction.NewTransaction();
-            CorrelationId = correlationId;
         }
 
         public string ChargeId { get; }
@@ -56,7 +55,5 @@ namespace GreenEnergyHub.Charges.Domain.Charges.Acknowledgements
         public Period ChargePeriod { get; }
 
         public Transaction Transaction { get; set; }
-
-        public string CorrelationId { get; }
     }
 }

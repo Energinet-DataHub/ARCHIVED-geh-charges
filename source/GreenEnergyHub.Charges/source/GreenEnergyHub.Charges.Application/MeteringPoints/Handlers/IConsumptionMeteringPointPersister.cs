@@ -13,7 +13,7 @@
 // limitations under the License.
 
 using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Domain.MeteringPointCreatedEvents;
+using GreenEnergyHub.Charges.Domain.Dtos.MeteringPointCreatedEvents;
 
 namespace GreenEnergyHub.Charges.Application.MeteringPoints.Handlers
 {

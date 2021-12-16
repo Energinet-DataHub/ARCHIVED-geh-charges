@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
 using GreenEnergyHub.Charges.Domain.MeteringPoints;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -23,35 +22,16 @@ namespace GreenEnergyHub.Charges.Infrastructure.Context.EntityConfigurations
     {
         public void Configure(EntityTypeBuilder<MeteringPoint> builder)
         {
-            if (builder == null) throw new ArgumentNullException(nameof(builder));
-
-            builder.ToTable("MeteringPoint", "Charges");
+            builder.ToTable(nameof(MeteringPoint));
 
             builder.HasKey(x => x.Id);
 
-            builder
-                .Property(x => x.ConnectionState)
-                .HasColumnName("ConnectionState");
-
-            builder
-                .Property(x => x.EffectiveDate)
-                .HasColumnName("EffectiveDate");
-
-            builder
-                .Property(x => x.SettlementMethod)
-                .HasColumnName("SettlementMethod");
-
-            builder
-                .Property(x => x.GridAreaId)
-                .HasColumnName("GridAreaId");
-
-            builder
-                .Property(x => x.MeteringPointId)
-                .HasColumnName("MeteringPointId");
-
-            builder
-                .Property(x => x.MeteringPointType)
-                .HasColumnName("MeteringPointType");
+            builder.Property(x => x.ConnectionState);
+            builder.Property(x => x.EffectiveDate);
+            builder.Property(x => x.SettlementMethod);
+            builder.Property(x => x.GridAreaId);
+            builder.Property(x => x.MeteringPointId);
+            builder.Property(x => x.MeteringPointType);
         }
     }
 }

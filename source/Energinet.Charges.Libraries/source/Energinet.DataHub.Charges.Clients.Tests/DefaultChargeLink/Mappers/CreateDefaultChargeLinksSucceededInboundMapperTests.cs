@@ -15,7 +15,7 @@
 using System;
 using AutoFixture;
 using Energinet.Charges.Contracts;
-using Energinet.DataHub.Charges.Libraries.Protobuf;
+using Energinet.DataHub.Charges.Clients.DefaultChargeLink.Mappers;
 using FluentAssertions;
 using Xunit;
 using Xunit.Categories;
@@ -35,7 +35,7 @@ namespace Energinet.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.Defaul
         }
 
         [Fact]
-        public void Convert_WhenCalled_ShouldMapToDtoWithCorrectValues()
+        public void Convert_WhenCalled_MapsToDtoWithCorrectValues()
         {
             // Arrange
             var createDefaultChargeLinksReply = _fixture.Create<CreateDefaultChargeLinksReply>();
@@ -51,7 +51,7 @@ namespace Energinet.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.Defaul
         }
 
         [Fact]
-        public void Convert_WhenCalledWithNull_ShouldThrow()
+        public void Convert_WhenCalledWithNull_ThrowsException()
         {
             Assert.Throws<NullReferenceException>(() => CreateDefaultChargeLinksSucceededInboundMapper.Convert(null!));
         }

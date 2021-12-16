@@ -12,15 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Application.ChargeLinks.MessageHub;
-using GreenEnergyHub.Charges.Domain.ChargeLinkCommandAcceptedEvents;
+using GreenEnergyHub.Charges.Application.ChargeLinks.Handlers;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksAcceptedEvents;
 using GreenEnergyHub.Charges.FunctionHost.Common;
 using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandAccepted;
 using GreenEnergyHub.Charges.Infrastructure.Messaging;
 using Microsoft.Azure.Functions.Worker;
-using Microsoft.Extensions.Logging;
 
 namespace GreenEnergyHub.Charges.FunctionHost.ChargeLinks.MessageHub
 {
@@ -33,33 +31,27 @@ namespace GreenEnergyHub.Charges.FunctionHost.ChargeLinks.MessageHub
     {
         private const string FunctionName = nameof(ChargeLinkDataAvailableNotifierEndpoint);
         private readonly MessageExtractor<ChargeLinkCommandAccepted> _messageExtractor;
-        private readonly IChargeLinkDataAvailableNotifier _chargeLinkDataAvailableNotifier;
-        private readonly ILogger _log;
+        private readonly IChargeLinkDataAvailableNotifierAndReplyHandler _chargeLinkDataAvailableNotifierAndReplyHandler;
 
         public ChargeLinkDataAvailableNotifierEndpoint(
             MessageExtractor<ChargeLinkCommandAccepted> messageExtractor,
-            IChargeLinkDataAvailableNotifier chargeLinkDataAvailableNotifier,
-            [NotNull] ILoggerFactory loggerFactory)
+            IChargeLinkDataAvailableNotifierAndReplyHandler chargeLinkDataAvailableNotifierAndReplyHandler)
         {
             _messageExtractor = messageExtractor;
-            _chargeLinkDataAvailableNotifier = chargeLinkDataAvailableNotifier;
-
-            _log = loggerFactory.CreateLogger(nameof(ChargeLinkDataAvailableNotifierEndpoint));
+            _chargeLinkDataAvailableNotifierAndReplyHandler = chargeLinkDataAvailableNotifierAndReplyHandler;
         }
 
         [Function(FunctionName)]
         public async Task RunAsync(
             [ServiceBusTrigger(
                 "%" + EnvironmentSettingNames.ChargeLinkAcceptedTopicName + "%",
-                "%CHARGELINKACCEPTED_SUB_DATAAVAILABLENOTIFIER%",
+                "%" + EnvironmentSettingNames.ChargeLinkAcceptedSubDataAvailableNotifier + "%",
                 Connection = EnvironmentSettingNames.DomainEventListenerConnectionString)]
-            [NotNull] byte[] message)
+            byte[] message)
         {
-            _log.LogInformation("Function {FunctionName} started to process a request with size {Size}", FunctionName, message.Length);
+            var chargeLinkCommandAcceptedEvent = (ChargeLinksAcceptedEvent)await _messageExtractor.ExtractAsync(message).ConfigureAwait(false);
 
-            var chargeLinkCommandAcceptedEvent = (ChargeLinkCommandAcceptedEvent)await _messageExtractor.ExtractAsync(message).ConfigureAwait(false);
-
-            await _chargeLinkDataAvailableNotifier.NotifyAsync(chargeLinkCommandAcceptedEvent).ConfigureAwait(false);
+            await _chargeLinkDataAvailableNotifierAndReplyHandler.NotifyAndReplyAsync(chargeLinkCommandAcceptedEvent).ConfigureAwait(false);
         }
     }
 }

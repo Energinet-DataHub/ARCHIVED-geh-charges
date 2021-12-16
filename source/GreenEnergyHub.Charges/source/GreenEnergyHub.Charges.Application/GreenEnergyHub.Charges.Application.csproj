@@ -25,22 +25,26 @@ limitations under the License.
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\messaging\source\GreenEnergyHub.Messaging\GreenEnergyHub.Messaging.csproj" />
-    <ProjectReference Include="..\..\..\queues\source\GreenEnergyHub.Queues.ValidationReportDispatcher\GreenEnergyHub.Queues.ValidationReportDispatcher.csproj" />
     <ProjectReference Include="..\..\..\Shared\GreenEnergyHub\source\GreenEnergyHub.Json\GreenEnergyHub.Json.csproj" />
     <ProjectReference Include="..\GreenEnergyHub.Charges.Core\GreenEnergyHub.Charges.Core.csproj" />
     <ProjectReference Include="..\GreenEnergyHub.Charges.Domain\GreenEnergyHub.Charges.Domain.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Azure.Messaging.ServiceBus" Version="7.4.0" />
-    <PackageReference Include="Energinet.DataHub.Charges.Clients" Version="1.0.2" />
-    <PackageReference Include="Energinet.DataHub.MessageHub.Client" Version="1.2.0" />
+    <PackageReference Include="Azure.Messaging.ServiceBus" Version="7.5.0" />
+    <PackageReference Include="Energinet.DataHub.Core.Messaging" Version="1.0.0" />
+    <PackageReference Include="Energinet.DataHub.MessageHub.Client" Version="1.8.1" />
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="5.0.0" />
     <PackageReference Update="StyleCop.Analyzers" Version="1.2.0-beta.354">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="..\..\..\Contracts\ErrorCode.cs">
+      <Link>ChargeLinks\CreateDefaultChargeLinkReplier\ErrorCode.cs</Link>
+    </Compile>
   </ItemGroup>
 
 </Project>

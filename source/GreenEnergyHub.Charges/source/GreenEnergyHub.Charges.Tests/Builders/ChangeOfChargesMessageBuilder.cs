@@ -14,7 +14,7 @@
 
 using System.Collections.Generic;
 using GreenEnergyHub.Charges.Application.Charges.Handlers.Message;
-using GreenEnergyHub.Charges.Domain.ChargeCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
 
 namespace GreenEnergyHub.Charges.Tests.Builders
 {

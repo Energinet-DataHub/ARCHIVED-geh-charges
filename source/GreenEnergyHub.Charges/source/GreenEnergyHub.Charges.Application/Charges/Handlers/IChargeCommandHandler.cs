@@ -14,7 +14,7 @@
 
 using System.Threading.Tasks;
 using System.Transactions;
-using GreenEnergyHub.Charges.Domain.ChargeCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
 
 namespace GreenEnergyHub.Charges.Application.Charges.Handlers
 {

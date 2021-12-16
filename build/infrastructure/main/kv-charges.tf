@@ -12,22 +12,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 module "kv_charges" {
-  source                          = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//key-vault?ref=2.0.0"
-  name                            = "kv${var.project}${var.organisation}${var.environment}"
-  resource_group_name             = data.azurerm_resource_group.main.name
-  location                        = data.azurerm_resource_group.main.location
-  tags                            = data.azurerm_resource_group.main.tags
+  source                          = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//azure/key-vault?ref=5.1.0"
+
+  name                            = "charges"
+  project_name                    = var.domain_name_short
+  environment_short               = var.environment_short
+  environment_instance            = var.environment_instance
+  resource_group_name             = azurerm_resource_group.this.name
+  location                        = azurerm_resource_group.this.location
   enabled_for_template_deployment = true
   sku_name                        = "standard"
   
-  access_policy = [
-    {
-      tenant_id               = var.tenant_id
-      object_id               = var.spn_object_id
-      secret_permissions      = ["set", "get", "list", "delete"]
-      certificate_permissions = []
-      key_permissions         = []
-      storage_permissions     = []
-    }
-  ]
+  tags                            = azurerm_resource_group.this.tags
 }

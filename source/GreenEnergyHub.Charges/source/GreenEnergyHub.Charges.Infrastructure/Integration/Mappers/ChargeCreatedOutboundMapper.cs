@@ -13,25 +13,26 @@
 // limitations under the License.
 
 using System.Diagnostics.CodeAnalysis;
+using Energinet.DataHub.Core.Messaging.Protobuf;
 using Google.Protobuf;
+using GreenEnergyHub.Charges.Application.Charges.Acknowledgement;
 using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.Core.Enumeration;
 using GreenEnergyHub.Charges.Infrastructure.Integration.ChargeCreated;
-using GreenEnergyHub.Messaging.Protobuf;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Integration.Mappers
 {
-    public class ChargeCreatedOutboundMapper : ProtobufOutboundMapper<Domain.Charges.Acknowledgements.ChargeCreatedEvent>
+    public class ChargeCreatedOutboundMapper : ProtobufOutboundMapper<ChargeCreatedEvent>
     {
-        protected override IMessage Convert([NotNull] Domain.Charges.Acknowledgements.ChargeCreatedEvent chargeCreatedEvent)
+        protected override IMessage Convert([NotNull] ChargeCreatedEvent chargeCreatedEvent)
         {
-            return new ChargeCreated.ChargeCreated
+            return new Infrastructure.Integration.ChargeCreated.ChargeCreated
             {
                 ChargeId = chargeCreatedEvent.ChargeId,
-                ChargeType = chargeCreatedEvent.ChargeType.Cast<ChargeCreated.ChargeCreated.Types.ChargeType>(),
+                ChargeType = chargeCreatedEvent.ChargeType.Cast<Infrastructure.Integration.ChargeCreated.ChargeCreated.Types.ChargeType>(),
                 ChargeOwner = chargeCreatedEvent.ChargeOwner,
                 Currency = chargeCreatedEvent.Currency,
-                Resolution = chargeCreatedEvent.Resolution.Cast<ChargeCreated.ChargeCreated.Types.Resolution>(),
+                Resolution = chargeCreatedEvent.Resolution.Cast<Infrastructure.Integration.ChargeCreated.ChargeCreated.Types.Resolution>(),
                 TaxIndicator = chargeCreatedEvent.TaxIndicator,
                 ChargePeriod = new ChargePeriod
                 {

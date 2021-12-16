@@ -14,7 +14,7 @@
 
 using System.Diagnostics.CodeAnalysis;
 using GreenEnergyHub.Charges.TestCore.Attributes;
-using GreenEnergyHub.Charges.TestCore.Protobuf;
+using GreenEnergyHub.Charges.Tests.Protobuf;
 using GreenEnergyHub.Charges.Tests.TestCore.Protobuf.ProtobufAssertHelpers;
 using Xunit;
 using Xunit.Categories;

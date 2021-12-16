@@ -15,10 +15,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using GreenEnergyHub.Charges.Domain.ChargeCommands.Validation;
-using GreenEnergyHub.Charges.Domain.ChargeCommands.Validation.InputValidation;
-using GreenEnergyHub.Charges.Domain.ChargeCommands.Validation.InputValidation.ValidationRules;
-using GreenEnergyHub.Charges.Tests.Application.Charges.Validation.BusinessValidation;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputValidation;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputValidation.ValidationRules;
+using GreenEnergyHub.Charges.Tests.Builders;
 using Xunit;
 using Xunit.Categories;
 
@@ -32,7 +32,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Validation.InputValid
         {
             // Arrange
             var sut = new InputValidationRulesFactory();
-            var chargeCommand = new TestableChargeCommand();
+            var chargeCommand = new ChargeCommandTestBuilder().Build();
             var expectedRules = new List<IValidationRule>
             {
                 new BusinessReasonCodeMustBeUpdateChargeInformationRule(chargeCommand),

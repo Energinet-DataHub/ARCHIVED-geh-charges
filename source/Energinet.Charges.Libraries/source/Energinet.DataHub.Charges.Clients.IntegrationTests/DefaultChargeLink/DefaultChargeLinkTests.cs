@@ -16,11 +16,10 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using Azure.Messaging.ServiceBus;
+using Energinet.DataHub.Charges.Clients.DefaultChargeLink;
+using Energinet.DataHub.Charges.Clients.DefaultChargeLink.Models;
 using Energinet.DataHub.Charges.Clients.IntegrationTests.Fixtures;
-using Energinet.DataHub.Charges.Libraries.Common;
-using Energinet.DataHub.Charges.Libraries.DefaultChargeLink;
-using Energinet.DataHub.Charges.Libraries.Factories;
-using Energinet.DataHub.Charges.Libraries.Models;
+using Energinet.DataHub.Charges.Clients.ServiceBus.Providers;
 using FluentAssertions;
 using GreenEnergyHub.TestHelpers;
 using Xunit;
@@ -34,18 +33,16 @@ namespace Energinet.DataHub.Charges.Clients.IntegrationTests.DefaultChargeLink
         [SuppressMessage("ReSharper", "CA1034", Justification = "Integration test")]
         public class CreateDefaultChargeLinksRequestAsync : LibraryTestBase<ChargesClientsFixture>, IAsyncLifetime
         {
-            private readonly string _replyToQueueName;
-            private readonly string _requestQueueName;
             private readonly ServiceBusClient _serviceBusClient;
             private readonly ServiceBusTestListener _serviceBusTestListener;
-            private readonly ServiceBusRequestSenderFactory _serviceBusRequestSenderFactory;
+            private readonly IServiceBusRequestSenderProvider _serviceBusRequestSenderProvider;
 
             public CreateDefaultChargeLinksRequestAsync(ChargesClientsFixture fixture, ITestOutputHelper testOutputHelper)
                 : base(fixture, testOutputHelper)
             {
-                _replyToQueueName = EnvironmentVariableReader.GetEnvironmentVariable(
+                string replyToQueueName = EnvironmentVariableReader.GetEnvironmentVariable(
                     EnvironmentSettingNames.CreateLinkReplyQueueName, string.Empty);
-                _requestQueueName = EnvironmentVariableReader.GetEnvironmentVariable(
+                var requestQueueName = EnvironmentVariableReader.GetEnvironmentVariable(
                     EnvironmentSettingNames.CreateLinkRequestQueueName, string.Empty);
 
                 string serviceBusConnectionString = EnvironmentVariableReader.GetEnvironmentVariable(
@@ -53,7 +50,10 @@ namespace Energinet.DataHub.Charges.Clients.IntegrationTests.DefaultChargeLink
                 _serviceBusClient = new ServiceBusClient(serviceBusConnectionString);
 
                 _serviceBusTestListener = new ServiceBusTestListener(Fixture);
-                _serviceBusRequestSenderFactory = new ServiceBusRequestSenderFactory();
+                _serviceBusRequestSenderProvider =
+                    new ServiceBusRequestSenderProvider(
+                        _serviceBusClient,
+                        new ServiceBusRequestSenderTestConfiguration(replyToQueueName, requestQueueName));
             }
 
             public Task InitializeAsync()
@@ -70,15 +70,14 @@ namespace Energinet.DataHub.Charges.Clients.IntegrationTests.DefaultChargeLink
             [Theory]
             [AutoDomainData]
             public async Task When_CreateDefaultChargeLinksRequestAsync_Then_RequestIsSendToCharges(
-                CreateDefaultChargeLinksDto createDefaultChargeLinksDto, string correlationId)
+                RequestDefaultChargeLinksForMeteringPointDto requestDefaultChargeLinksForMeteringPointDto, string correlationId)
             {
                 // Arrange
                 using var result = await _serviceBusTestListener.ListenForMessageAsync().ConfigureAwait(false);
-                await using var sut = new DefaultChargeLinkClient(
-                    _serviceBusClient, _serviceBusRequestSenderFactory, _replyToQueueName, _requestQueueName);
+                var sut = new DefaultChargeLinkClient(_serviceBusRequestSenderProvider);
 
                 // Act
-                await sut.CreateDefaultChargeLinksRequestAsync(createDefaultChargeLinksDto, correlationId).ConfigureAwait(false);
+                await sut.CreateDefaultChargeLinksRequestAsync(requestDefaultChargeLinksForMeteringPointDto, correlationId).ConfigureAwait(false);
 
                 // Assert
                 // => Service Bus (timeout should not be more than 5 secs).
@@ -87,52 +86,6 @@ namespace Energinet.DataHub.Charges.Clients.IntegrationTests.DefaultChargeLink
                 isMessageReceived.Should().BeTrue();
                 result.CorrelationId.Should().Be(correlationId);
                 result.Body.Should().NotBeNull();
-            }
-
-            [Theory]
-            [AutoDomainData]
-            public async Task When_CreateDefaultChargeLinksSucceededReplyAsync_Then_ReplyIsSendFromCharges(
-                CreateDefaultChargeLinksSucceededDto createDefaultChargeLinksSucceededDto, string correlationId)
-            {
-                // Arrange
-                using var result = await _serviceBusTestListener.ListenForMessageAsync().ConfigureAwait(false);
-                await using var sut = new DefaultChargeLinkClient(
-                    _serviceBusClient, _serviceBusRequestSenderFactory, _replyToQueueName, _requestQueueName);
-
-                // Act
-                await sut.CreateDefaultChargeLinksSucceededReplyAsync(
-                    createDefaultChargeLinksSucceededDto, correlationId, _replyToQueueName).ConfigureAwait(false);
-
-                // Assert
-                // => Service Bus (timeout should not be more than 5 secs).
-                var isMessageReceived = result.IsMessageReceivedEvent!.Wait(TimeSpan.FromSeconds(5));
-
-                isMessageReceived.Should().BeTrue();
-                result.CorrelationId.Should().Be(correlationId);
-                result.Body.Should().NotBeNull();
-            }
-
-            [Theory]
-            [AutoDomainData]
-            public async Task When_CreateDefaultChargeLinksFailedReplyAsync_Then_ReplyIsSendFromCharges(
-                CreateDefaultChargeLinksFailedDto createDefaultChargeLinksFailedDto, string correlationId)
-            {
-                // Arrange
-                using var result = await _serviceBusTestListener.ListenForMessageAsync().ConfigureAwait(false);
-                await using var sut = new DefaultChargeLinkClient(
-                    _serviceBusClient, _serviceBusRequestSenderFactory, _replyToQueueName, _requestQueueName);
-
-                // Act
-                await sut.CreateDefaultChargeLinksFailedReplyAsync(
-                    createDefaultChargeLinksFailedDto, correlationId, _replyToQueueName).ConfigureAwait(false);
-
-                // Assert
-                // => Service Bus (timeout should not be more than 5 secs).
-                var isMessageReceived = result.IsMessageReceivedEvent!.Wait(TimeSpan.FromSeconds(5));
-
-                isMessageReceived.Should().BeTrue();
-                result.Body.Should().NotBeNull();
-                result.CorrelationId.Should().Be(correlationId);
             }
         }
     }

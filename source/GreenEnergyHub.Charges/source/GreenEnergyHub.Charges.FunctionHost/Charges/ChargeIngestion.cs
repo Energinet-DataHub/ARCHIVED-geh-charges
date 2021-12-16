@@ -14,15 +14,12 @@
 
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Application;
 using GreenEnergyHub.Charges.Application.Charges.Handlers;
 using GreenEnergyHub.Charges.Application.Charges.Handlers.Message;
-using GreenEnergyHub.Charges.Domain.ChargeCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
 using GreenEnergyHub.Charges.Infrastructure.Messaging;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
-using Microsoft.Extensions.Logging;
 
 namespace GreenEnergyHub.Charges.FunctionHost.Charges
 {
@@ -33,30 +30,21 @@ namespace GreenEnergyHub.Charges.FunctionHost.Charges
         /// Function name affects the URL and thus possibly dependent infrastructure.
         /// </summary>
         private readonly IChargesMessageHandler _chargesMessageHandler;
-        private readonly ICorrelationContext _correlationContext;
         private readonly MessageExtractor<ChargeCommand> _messageExtractor;
-        private readonly ILogger _log;
 
         public ChargeIngestion(
             IChargesMessageHandler chargesMessageHandler,
-            ICorrelationContext correlationContext,
-            MessageExtractor<ChargeCommand> messageExtractor,
-            [NotNull] ILoggerFactory loggerFactory)
+            MessageExtractor<ChargeCommand> messageExtractor)
         {
             _chargesMessageHandler = chargesMessageHandler;
-            _correlationContext = correlationContext;
             _messageExtractor = messageExtractor;
-
-            _log = loggerFactory.CreateLogger(nameof(ChargeIngestion));
         }
 
         [Function(IngestionFunctionNames.ChargeIngestion)]
-        public async Task<IActionResult> RunAsync(
+        public async Task<HttpResponseData> RunAsync(
             [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = null)]
             [NotNull] HttpRequestData req)
         {
-            _log.LogInformation("Function {FunctionName} started to process a request", IngestionFunctionNames.ChargeIngestion);
-
             var message = await GetChargesMessageAsync(req).ConfigureAwait(false);
 
             foreach (var messageTransaction in message.Transactions)
@@ -66,9 +54,8 @@ namespace GreenEnergyHub.Charges.FunctionHost.Charges
 
             var messageResult = await _chargesMessageHandler.HandleAsync(message)
                 .ConfigureAwait(false);
-            messageResult.CorrelationId = _correlationContext.Id;
 
-            return new OkObjectResult(messageResult);
+            return await CreateJsonResponseAsync(req, messageResult);
         }
 
         private async Task<ChargesMessage> GetChargesMessageAsync(
@@ -77,9 +64,16 @@ namespace GreenEnergyHub.Charges.FunctionHost.Charges
             var message = new ChargesMessage();
             var command = (ChargeCommand)await _messageExtractor.ExtractAsync(req.Body).ConfigureAwait(false);
 
-            command.SetCorrelationId(_correlationContext.Id);
             message.Transactions.Add(command);
             return message;
+        }
+
+        private static async Task<HttpResponseData> CreateJsonResponseAsync(HttpRequestData req, ChargesMessageResult messageResult)
+        {
+            var response = req.CreateResponse();
+            await response.WriteAsJsonAsync(messageResult);
+
+            return response;
         }
     }
 }

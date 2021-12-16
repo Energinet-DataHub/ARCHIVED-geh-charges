@@ -13,14 +13,13 @@
 // limitations under the License.
 
 using System;
-using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using FluentAssertions;
-using GreenEnergyHub.Charges.Domain.ChargeCommands;
-using GreenEnergyHub.Charges.Domain.ChargeCommands.Validation;
-using GreenEnergyHub.Charges.Domain.ChargeCommands.Validation.InputValidation.ValidationRules;
 using GreenEnergyHub.Charges.Domain.Charges;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputValidation.ValidationRules;
 using GreenEnergyHub.Charges.TestCore.Attributes;
+using GreenEnergyHub.Charges.Tests.Builders;
 using GreenEnergyHub.TestHelpers;
 using Xunit;
 using Xunit.Categories;
@@ -40,13 +39,10 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Validation.InputValid
         public void IsValid_WhenPT1HAnd24PricePoints_IsTrue(
             int priceCount,
             bool expected,
-            [NotNull]ChargeCommand chargeCommand,
-            Point point)
+            ChargeCommandTestBuilder builder)
         {
             // Arrange
-            chargeCommand.ChargeOperation.Type = ChargeType.Tariff;
-            chargeCommand.ChargeOperation.Resolution = Resolution.PT1H;
-            chargeCommand.ChargeOperation.Points = new List<Point>(GeneratePricePointList(point, priceCount));
+            var chargeCommand = builder.WithChargeType(ChargeType.Tariff).WithPointWithXNumberOfPrices(priceCount).Build();
 
             // Act
             var sut = new ChargeTypeTariffPriceCountRule(chargeCommand);
@@ -61,16 +57,16 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Validation.InputValid
         [InlineAutoMoqData(2, false)]
         [InlineAutoMoqData(24, false)]
         [InlineAutoMoqData(96, false)]
-        public void IsValid_WhenPT1HAnd1PricePoint_IsTrue(
+        public void IsValid_WhenP1DAnd1PricePoint_IsTrue(
             int priceCount,
             bool expected,
-            [NotNull]ChargeCommand chargeCommand,
-            Point point)
+            ChargeCommandTestBuilder builder)
         {
             // Arrange
-            chargeCommand.ChargeOperation.Type = ChargeType.Tariff;
-            chargeCommand.ChargeOperation.Resolution = Resolution.P1D;
-            chargeCommand.ChargeOperation.Points = new List<Point>(GeneratePricePointList(point, priceCount));
+            var chargeCommand = builder
+                .WithChargeType(ChargeType.Tariff)
+                .WithResolution(Resolution.P1D)
+                .WithPointWithXNumberOfPrices(priceCount).Build();
 
             // Act
             var sut = new ChargeTypeTariffPriceCountRule(chargeCommand);
@@ -90,13 +86,13 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Validation.InputValid
         public void IsValid_WhenPT1HAnd96PricePoints_IsTrue(
             int priceCount,
             bool expected,
-            [NotNull]ChargeCommand chargeCommand,
-            Point point)
+            ChargeCommandTestBuilder builder)
         {
             // Arrange
-            chargeCommand.ChargeOperation.Type = ChargeType.Tariff;
-            chargeCommand.ChargeOperation.Resolution = Resolution.PT15M;
-            chargeCommand.ChargeOperation.Points = new List<Point>(GeneratePricePointList(point, priceCount));
+            var chargeCommand = builder
+                .WithChargeType(ChargeType.Tariff)
+                .WithResolution(Resolution.PT15M)
+                .WithPointWithXNumberOfPrices(priceCount).Build();
 
             // Act
             var sut = new ChargeTypeTariffPriceCountRule(chargeCommand);
@@ -111,9 +107,9 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Validation.InputValid
         [InlineAutoMoqData(ChargeType.Unknown)]
         public void IsValid_WhenNotTariff_IsValid(
             ChargeType chargeType,
-            [NotNull] ChargeCommand chargeCommand)
+            ChargeCommandTestBuilder builder)
         {
-            chargeCommand.ChargeOperation.Type = chargeType;
+            var chargeCommand = builder.WithChargeType(chargeType).Build();
             var sut = new ChargeTypeTariffPriceCountRule(chargeCommand);
             sut.IsValid.Should().BeTrue();
         }
@@ -123,11 +119,10 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Validation.InputValid
         [InlineAutoMoqData(Resolution.P1M)]
         public void IsValid_WhenTariffAndUnknownResolutionType_Throws(
             Resolution resolution,
-            [NotNull] ChargeCommand chargeCommand)
+            ChargeCommandTestBuilder builder)
         {
             // Arrange
-            chargeCommand.ChargeOperation.Type = ChargeType.Tariff;
-            chargeCommand.ChargeOperation.Resolution = resolution;
+            var chargeCommand = builder.WithChargeType(ChargeType.Tariff).WithResolution(resolution).Build();
             var chargeTypeTariffPriceCountRule = new ChargeTypeTariffPriceCountRule(chargeCommand);
 
             // Act
@@ -139,21 +134,10 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Validation.InputValid
 
         [Theory]
         [InlineAutoDomainData]
-        public void ValidationRuleIdentifier_ShouldBe_EqualTo([NotNull] ChargeCommand command)
+        public void ValidationRuleIdentifier_ShouldBe_EqualTo(ChargeCommand command)
         {
             var sut = new ChargeTypeTariffPriceCountRule(command);
             sut.ValidationRuleIdentifier.Should().Be(ValidationRuleIdentifier.ChargeTypeTariffPriceCount);
-        }
-
-        private static List<Point> GeneratePricePointList(Point item, int length)
-        {
-            var pointList = new List<Point>();
-            for (var i = 0; i < length; i++)
-            {
-                pointList.Add(item);
-            }
-
-            return pointList;
         }
     }
 }

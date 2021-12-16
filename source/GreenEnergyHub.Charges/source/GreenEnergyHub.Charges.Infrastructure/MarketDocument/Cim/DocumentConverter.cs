@@ -12,12 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using System.Xml;
-using GreenEnergyHub.Charges.Domain.MarketParticipants;
+using Energinet.DataHub.Core.Messaging.Transport;
+using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Infrastructure.Messaging.Serialization;
-using GreenEnergyHub.Messaging.Transport;
 using NodaTime;
 
 namespace GreenEnergyHub.Charges.Infrastructure.MarketDocument.Cim
@@ -31,7 +30,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.MarketDocument.Cim
             _clock = clock;
         }
 
-        public async Task<IInboundMessage> ConvertAsync([NotNull] XmlReader reader)
+        public async Task<IInboundMessage> ConvertAsync(XmlReader reader)
         {
             var document = await ParseDocumentAsync(reader).ConfigureAwait(false);
 
@@ -40,7 +39,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.MarketDocument.Cim
             return message;
         }
 
-        protected abstract Task<IInboundMessage> ConvertSpecializedContentAsync(XmlReader reader, Document document);
+        protected abstract Task<IInboundMessage> ConvertSpecializedContentAsync(XmlReader reader, DocumentDto document);
 
         private static bool RootElementNotFound(XmlReader reader, string rootElement, string rootNamespace)
         {
@@ -54,7 +53,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.MarketDocument.Cim
             return rootElement.Length == 0 && rootNamespace.Length == 0;
         }
 
-        private static async Task ParseFieldsAsync(XmlReader reader, Document document)
+        private static async Task ParseFieldsAsync(XmlReader reader, DocumentDto document)
         {
             string rootElement = string.Empty;
             string ns = string.Empty;
@@ -125,12 +124,12 @@ namespace GreenEnergyHub.Charges.Infrastructure.MarketDocument.Cim
             }
         }
 
-        private async Task<Document> ParseDocumentAsync(XmlReader reader)
+        private async Task<DocumentDto> ParseDocumentAsync(XmlReader reader)
         {
-            var document = new Document()
+            var document = new DocumentDto()
             {
-                Sender = new MarketParticipant(),
-                Recipient = new MarketParticipant(),
+                Sender = new MarketParticipantDto(),
+                Recipient = new MarketParticipantDto(),
                 RequestDate = _clock.GetCurrentInstant(),
             };
 

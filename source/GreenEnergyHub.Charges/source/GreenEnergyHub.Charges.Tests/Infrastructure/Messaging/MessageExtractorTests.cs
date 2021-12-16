@@ -18,11 +18,10 @@ using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
+using Energinet.DataHub.Core.Messaging.Transport;
 using GreenEnergyHub.Charges.Infrastructure.Messaging;
 using GreenEnergyHub.Charges.Infrastructure.Messaging.Serialization;
-using GreenEnergyHub.Charges.TestCore;
 using GreenEnergyHub.Charges.TestCore.Attributes;
-using GreenEnergyHub.Messaging.Transport;
 using Moq;
 using Xunit;
 using Xunit.Categories;
@@ -44,7 +43,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Messaging
         [Theory]
         [InlineAutoMoqData]
         public async Task ExtractAsync_WhenGivenNullArray_ThrowsArgumentNullException(
-            [NotNull] MessageExtractor<IInboundMessage> sut)
+            MessageExtractor<IInboundMessage> sut)
         {
             byte[]? data = null;
 
@@ -56,9 +55,9 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Messaging
         [Theory]
         [InlineAutoMoqData]
         public async Task ExtractAsync_WhenGivenByteArray_CallsDeserializerAndReturnsResult(
-            [Frozen] [NotNull] Mock<JsonMessageDeserializer<IInboundMessage>> deserializer,
-            [NotNull] byte[] data,
-            [NotNull] IInboundMessage message)
+            [Frozen] Mock<JsonMessageDeserializer<IInboundMessage>> deserializer,
+            byte[] data,
+            IInboundMessage message)
         {
             // Arrange
             byte[]? deserializeBytes = null;
@@ -83,7 +82,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Messaging
         [Theory]
         [InlineAutoMoqData]
         public async Task ExtractAsync_WhenGivenNullStream_ThrowsArgumentNullException(
-            [NotNull] MessageExtractor<IInboundMessage> sut)
+            MessageExtractor<IInboundMessage> sut)
         {
             Stream? stream = null;
 
@@ -95,8 +94,8 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Messaging
         [Theory]
         [InlineAutoMoqData]
         public async Task ExtractAsync_WhenGivenStream_CallsDeserializerAndReturnsResult(
-            [Frozen] [NotNull] Mock<JsonMessageDeserializer<IInboundMessage>> deserializer,
-            [NotNull] IInboundMessage message)
+            [Frozen] Mock<JsonMessageDeserializer<IInboundMessage>> deserializer,
+            IInboundMessage message)
         {
             // Arrange
             await using var stream = new MemoryStream();

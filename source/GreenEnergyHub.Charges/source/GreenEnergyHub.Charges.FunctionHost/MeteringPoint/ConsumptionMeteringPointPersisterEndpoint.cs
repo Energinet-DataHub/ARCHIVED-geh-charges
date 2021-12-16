@@ -15,12 +15,11 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application.MeteringPoints.Handlers;
-using GreenEnergyHub.Charges.Domain.MeteringPointCreatedEvents;
+using GreenEnergyHub.Charges.Domain.Dtos.MeteringPointCreatedEvents;
 using GreenEnergyHub.Charges.FunctionHost.Common;
 using GreenEnergyHub.Charges.Infrastructure.Messaging;
 using GreenEnergyHub.MeteringPoints.IntegrationEventContracts;
 using Microsoft.Azure.Functions.Worker;
-using Microsoft.Extensions.Logging;
 
 namespace GreenEnergyHub.Charges.FunctionHost.MeteringPoint
 {
@@ -33,23 +32,20 @@ namespace GreenEnergyHub.Charges.FunctionHost.MeteringPoint
         public const string FunctionName = nameof(ConsumptionMeteringPointPersisterEndpoint);
         private readonly MessageExtractor<ConsumptionMeteringPointCreated> _messageExtractor;
         private readonly IConsumptionMeteringPointPersister _consumptionMeteringPointCreatedEventHandler;
-        private readonly ILogger _log;
 
         public ConsumptionMeteringPointPersisterEndpoint(
             MessageExtractor<ConsumptionMeteringPointCreated> messageExtractor,
-            IConsumptionMeteringPointPersister consumptionMeteringPointCreatedEventHandler,
-            [NotNull] ILoggerFactory loggerFactory)
+            IConsumptionMeteringPointPersister consumptionMeteringPointCreatedEventHandler)
         {
             _messageExtractor = messageExtractor;
             _consumptionMeteringPointCreatedEventHandler = consumptionMeteringPointCreatedEventHandler;
-            _log = loggerFactory.CreateLogger(nameof(ConsumptionMeteringPointPersisterEndpoint));
         }
 
         [Function(FunctionName)]
         public async Task RunAsync(
             [ServiceBusTrigger(
-                "%CONSUMPTION_METERING_POINT_CREATED_TOPIC_NAME%",
-                "%CONSUMPTION_METERING_POINT_CREATED_SUBSCRIPTION_NAME%",
+                "%" + EnvironmentSettingNames.ConsumptionMeteringPointCreatedTopicName + "%",
+                "%" + EnvironmentSettingNames.ConsumptionMeteringPointCreatedSubscriptionName + "%",
                 Connection = EnvironmentSettingNames.DataHubListenerConnectionString)]
             [NotNull] byte[] message)
         {
@@ -59,9 +55,6 @@ namespace GreenEnergyHub.Charges.FunctionHost.MeteringPoint
             await _consumptionMeteringPointCreatedEventHandler
                 .PersistAsync(consumptionMeteringPointCreatedEvent)
                 .ConfigureAwait(false);
-
-            _log.LogInformation(
-                $"Consumption Metering Point Created integration event with Metering Point ID '{consumptionMeteringPointCreatedEvent.MeteringPointId}' has been processed.");
         }
     }
 }

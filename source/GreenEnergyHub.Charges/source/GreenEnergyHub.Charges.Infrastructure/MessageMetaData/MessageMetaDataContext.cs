@@ -14,6 +14,7 @@
 
 using System;
 using GreenEnergyHub.Charges.Application;
+using NodaTime;
 
 namespace GreenEnergyHub.Charges.Infrastructure.MessageMetaData
 {
@@ -21,6 +22,14 @@ namespace GreenEnergyHub.Charges.Infrastructure.MessageMetaData
     {
         private string? _replyTo;
         private string? _sessionId;
+
+        public MessageMetaDataContext(IClock clock)
+        {
+            // TODO: This must be replaced by the actual request data time carried in some meta data of the message
+            RequestDataTime = clock.GetCurrentInstant();
+        }
+
+        public Instant RequestDataTime { get; }
 
         public string ReplyTo
         {

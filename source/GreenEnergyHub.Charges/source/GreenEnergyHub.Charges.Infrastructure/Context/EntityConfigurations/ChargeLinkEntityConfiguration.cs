@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
 using GreenEnergyHub.Charges.Domain.ChargeLinks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -23,53 +22,15 @@ namespace GreenEnergyHub.Charges.Infrastructure.Context.EntityConfigurations
     {
         public void Configure(EntityTypeBuilder<ChargeLink> builder)
         {
-            if (builder == null) throw new ArgumentNullException(nameof(builder));
-
-            builder.ToTable("ChargeLink");
-            builder.Ignore(c => c.Operations);
-            builder.Ignore(c => c.PeriodDetails);
+            builder.ToTable(nameof(ChargeLink));
 
             builder.HasKey(c => c.Id);
 
-            builder.Property(c => c.ChargeId).HasColumnName("ChargeId");
-            builder.Property(c => c.MeteringPointId).HasColumnName("MeteringPointId");
-
-            builder.OwnsMany<ChargeLinkOperation>("_operations", ConfigureOperations);
-            builder.OwnsMany<ChargeLinkPeriodDetails>("_periodDetails", ConfigurePeriodDetails);
-        }
-
-        private static void ConfigurePeriodDetails(OwnedNavigationBuilder<ChargeLink, ChargeLinkPeriodDetails> details)
-        {
-            details.WithOwner().HasForeignKey("ChargeLinkId");
-
-            details.ToTable("ChargeLinkPeriodDetails");
-
-            details.HasKey(p => p.Id);
-
-            details.Property(p => p.Id).ValueGeneratedNever();
-            details.Property(d => d.Factor).HasColumnName("Factor");
-            details.Property(d => d.CreatedByOperationId).HasColumnName("CreatedByOperationId");
-            details.Property(d => d.RetiredByOperationId).HasColumnName("RetiredByOperationId");
-            details.Property(d => d.StartDateTime).HasColumnName("StartDateTime");
-            details.Property(d => d.EndDateTime).HasColumnName("EndDateTime");
-        }
-
-        private static void ConfigureOperations(OwnedNavigationBuilder<ChargeLink, ChargeLinkOperation> operations)
-        {
-            operations.WithOwner().HasForeignKey("ChargeLinkId");
-
-            operations.ToTable("ChargeLinkOperation");
-
-            operations.HasKey(o => o.Id);
-
-            operations.Property(o => o.Id).ValueGeneratedNever();
-            operations.Property(o => o.SenderProvidedId).HasColumnName("SenderProvidedId");
-
-            operations.Property(o => o.WriteDateTime)
-                .ValueGeneratedOnAdd()
-                .HasColumnName("WriteDateTime");
-
-            operations.Property(o => o.CorrelationId).HasColumnName("CorrelationId");
+            builder.Property(c => c.ChargeId);
+            builder.Property(c => c.MeteringPointId);
+            builder.Property(c => c.Factor);
+            builder.Property(c => c.StartDateTime);
+            builder.Property(c => c.EndDateTime);
         }
     }
 }

@@ -12,12 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Diagnostics.CodeAnalysis;
 using FluentAssertions;
-using GreenEnergyHub.Charges.Domain.ChargeCommands;
-using GreenEnergyHub.Charges.Domain.ChargeCommands.Validation;
-using GreenEnergyHub.Charges.Domain.ChargeCommands.Validation.InputValidation.ValidationRules;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputValidation.ValidationRules;
 using GreenEnergyHub.Charges.TestCore.Attributes;
+using GreenEnergyHub.Charges.Tests.Builders;
 using GreenEnergyHub.TestHelpers;
 using NodaTime.Text;
 using Xunit;
@@ -34,16 +34,16 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Validation.InputValid
         public void StartDateTimeRequiredValidationRule_NegativeTest(
             string startDateTime,
             bool expected,
-            [NotNull] ChargeCommand command)
+            ChargeCommandTestBuilder builder)
         {
-            command.ChargeOperation.StartDateTime = InstantPattern.General.Parse(startDateTime).Value;
-            var sut = new StartDateTimeRequiredValidationRule(command);
+            var chargeCommand = builder.WithStartDateTime(InstantPattern.General.Parse(startDateTime).Value).Build();
+            var sut = new StartDateTimeRequiredValidationRule(chargeCommand);
             Assert.Equal(expected, sut.IsValid);
         }
 
         [Theory]
         [InlineAutoDomainData]
-        public void ValidationRuleIdentifier_ShouldBe_EqualTo([NotNull] ChargeCommand command)
+        public void ValidationRuleIdentifier_ShouldBe_EqualTo(ChargeCommand command)
         {
             var sut = new StartDateTimeRequiredValidationRule(command);
             sut.ValidationRuleIdentifier.Should().Be(ValidationRuleIdentifier.StartDateTimeRequiredValidation);

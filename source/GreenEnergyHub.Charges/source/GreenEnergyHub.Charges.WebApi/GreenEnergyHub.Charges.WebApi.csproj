@@ -1,16 +1,53 @@
+<!--
+Copyright 2020 Energinet DataHub A/S
+
+Licensed under the Apache License, Version 2.0 (the "License2");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
-    <PropertyGroup>
-        <TargetFramework>net6.0</TargetFramework>
-    </PropertyGroup>
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
 
-    <ItemGroup>
-        <PackageReference Include="Swashbuckle.AspNetCore" Version="5.6.3" />
-    </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="5.6.3" />
+  </ItemGroup>
 
-    <ItemGroup>
-      <ProjectReference Include="..\GreenEnergyHub.Charges.Domain\GreenEnergyHub.Charges.Domain.csproj" />
-      <ProjectReference Include="..\GreenEnergyHub.Charges.QueryApi\GreenEnergyHub.Charges.QueryApi.csproj" />
-    </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\GreenEnergyHub.Charges.Domain\GreenEnergyHub.Charges.Domain.csproj" />
+    <ProjectReference Include="..\GreenEnergyHub.Charges.QueryApi\GreenEnergyHub.Charges.QueryApi.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="Files\ChargeLinksMockData.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Update="StyleCop.Analyzers" Version="1.2.0-beta.261">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="..\..\..\Contracts\ChargeLink\ChargeLinkDto.cs">
+      <Link>Model\ChargeLink\ChargeLinkDto.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\Contracts\Charge\ChargeType.cs">
+      <Link>Model\Charge\ChargeType.cs</Link>
+    </Compile>
+  </ItemGroup>
 
 </Project>

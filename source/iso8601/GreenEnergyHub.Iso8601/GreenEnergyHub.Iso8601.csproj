@@ -20,7 +20,7 @@ limitations under the License.
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="NodaTime" Version="3.0.7" />
+    <PackageReference Include="NodaTime" Version="3.0.9" />
     <PackageReference Update="StyleCop.Analyzers" Version="1.2.0-beta.354">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>

@@ -15,7 +15,7 @@
 using AutoFixture;
 using AutoFixture.AutoMoq;
 using AutoFixture.Xunit2;
-using GreenEnergyHub.Charges.TestCore.Protobuf;
+using GreenEnergyHub.Charges.TestCore.Attributes.Customizations;
 using MicroElements.AutoFixture.NodaTime;
 
 namespace GreenEnergyHub.Charges.TestCore.Attributes

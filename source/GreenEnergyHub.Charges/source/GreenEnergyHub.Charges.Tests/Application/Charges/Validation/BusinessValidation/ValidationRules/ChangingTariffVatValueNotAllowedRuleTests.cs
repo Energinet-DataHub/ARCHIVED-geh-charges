@@ -12,12 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Diagnostics.CodeAnalysis;
 using FluentAssertions;
-using GreenEnergyHub.Charges.Domain.ChargeCommands;
-using GreenEnergyHub.Charges.Domain.ChargeCommands.Validation;
-using GreenEnergyHub.Charges.Domain.ChargeCommands.Validation.BusinessValidation.ValidationRules;
 using GreenEnergyHub.Charges.Domain.Charges;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessValidation.ValidationRules;
+using GreenEnergyHub.Charges.Tests.Builders;
 using GreenEnergyHub.TestHelpers;
 using Xunit;
 using Xunit.Categories;
@@ -29,25 +29,25 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Validation.BusinessVa
     {
         [Theory]
         [InlineAutoDomainData]
-        public void IsValid_WhenVatPayerInCommandDoesNotMatchCharge_IsFalse([NotNull]ChargeCommand command, [NotNull] Charge charge)
+        public void IsValid_WhenVatPayerInCommandDoesNotMatchCharge_IsFalse(ChargeCommandTestBuilder builder, Charge charge)
         {
-            command.ChargeOperation.VatClassification = (VatClassification)5;
+            var command = builder.WithVatClassification((VatClassification)5).Build();
             var sut = new ChangingTariffVatValueNotAllowedRule(command, charge);
             Assert.False(sut.IsValid);
         }
 
         [Theory]
         [InlineAutoDomainData]
-        public void IsValid_WhenVatPayerInCommandMatches_IsTrue([NotNull]ChargeCommand command, [NotNull] Charge charge)
+        public void IsValid_WhenVatPayerInCommandMatches_IsTrue(ChargeCommandTestBuilder builder, Charge charge)
         {
-            command.ChargeOperation.VatClassification = charge.VatClassification;
+            var command = builder.WithVatClassification(charge.VatClassification).Build();
             var sut = new ChangingTariffVatValueNotAllowedRule(command, charge);
             Assert.True(sut.IsValid);
         }
 
         [Theory]
         [InlineAutoDomainData]
-        public void ValidationRuleIdentifier_ShouldBe_EqualTo([NotNull]ChargeCommand command, [NotNull] Charge charge)
+        public void ValidationRuleIdentifier_ShouldBe_EqualTo(ChargeCommand command, Charge charge)
         {
             var sut = new ChangingTariffVatValueNotAllowedRule(command, charge);
             sut.ValidationRuleIdentifier.Should().Be(ValidationRuleIdentifier.ChangingTariffVatValueNotAllowed);

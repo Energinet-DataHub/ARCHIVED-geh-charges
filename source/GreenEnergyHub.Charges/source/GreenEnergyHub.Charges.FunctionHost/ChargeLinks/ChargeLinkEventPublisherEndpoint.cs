@@ -15,13 +15,11 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application.ChargeLinks.Handlers;
-using GreenEnergyHub.Charges.Domain.ChargeLinkCommandAcceptedEvents;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksAcceptedEvents;
 using GreenEnergyHub.Charges.FunctionHost.Common;
-using GreenEnergyHub.Charges.Infrastructure.Correlation;
 using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandAccepted;
 using GreenEnergyHub.Charges.Infrastructure.Messaging;
 using Microsoft.Azure.Functions.Worker;
-using Microsoft.Extensions.Logging;
 
 namespace GreenEnergyHub.Charges.FunctionHost.ChargeLinks
 {
@@ -34,30 +32,24 @@ namespace GreenEnergyHub.Charges.FunctionHost.ChargeLinks
         public const string FunctionName = nameof(ChargeLinkEventPublisherEndpoint);
         private readonly MessageExtractor<ChargeLinkCommandAccepted> _messageExtractor;
         private readonly IChargeLinkEventPublishHandler _chargeLinkEventPublishHandler;
-        private readonly ILogger _log;
 
         public ChargeLinkEventPublisherEndpoint(
             MessageExtractor<ChargeLinkCommandAccepted> messageExtractor,
-            IChargeLinkEventPublishHandler chargeLinkEventPublishHandler,
-            [NotNull] ILoggerFactory loggerFactory)
+            IChargeLinkEventPublishHandler chargeLinkEventPublishHandler)
         {
             _messageExtractor = messageExtractor;
             _chargeLinkEventPublishHandler = chargeLinkEventPublishHandler;
-
-            _log = loggerFactory.CreateLogger(nameof(ChargeLinkEventPublisherEndpoint));
         }
 
         [Function(FunctionName)]
         public async Task RunAsync(
             [ServiceBusTrigger(
                 "%" + EnvironmentSettingNames.ChargeLinkAcceptedTopicName + "%",
-                "%CHARGELINKACCEPTED_SUB_EVENTPUBLISHER%",
+                "%" + EnvironmentSettingNames.ChargeLinkAcceptedSubEventPublisher + "%",
                 Connection = EnvironmentSettingNames.DomainEventListenerConnectionString)]
             [NotNull] byte[] message)
         {
-            _log.LogInformation("Function {FunctionName} started to process a request with size {Size}", FunctionName, message.Length);
-
-            var acceptedChargeLinkCommand = (ChargeLinkCommandAcceptedEvent)await _messageExtractor.ExtractAsync(message).ConfigureAwait(false);
+            var acceptedChargeLinkCommand = (ChargeLinksAcceptedEvent)await _messageExtractor.ExtractAsync(message).ConfigureAwait(false);
 
             await _chargeLinkEventPublishHandler.HandleAsync(acceptedChargeLinkCommand).ConfigureAwait(false);
         }

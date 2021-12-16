@@ -12,8 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using GreenEnergyHub.Charges.Application.ChargeLinks.MessageHub;
 using GreenEnergyHub.Charges.FunctionHost.Configuration;
 using GreenEnergyHub.Charges.Infrastructure.Correlation;
+using GreenEnergyHub.Charges.Infrastructure.Function;
 using GreenEnergyHub.Charges.Infrastructure.MessageMetaData;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -28,7 +30,9 @@ namespace GreenEnergyHub.Charges.FunctionHost
                 .ConfigureFunctionsWorkerDefaults(builder =>
                 {
                     builder.UseMiddleware<CorrelationIdMiddleware>();
+                    builder.UseMiddleware<FunctionTelemetryScopeMiddleware>();
                     builder.UseMiddleware<MessageMetaDataMiddleware>();
+                    builder.UseMiddleware<FunctionInvocationLoggingMiddleware>();
                 })
                 .ConfigureServices(ConfigureServices)
                 .Build();
@@ -44,20 +48,24 @@ namespace GreenEnergyHub.Charges.FunctionHost
             ChargeIngestionConfiguration.ConfigureServices(serviceCollection);
             ChargeCommandAcceptedReceiverConfiguration.ConfigureServices(serviceCollection);
             ChargeCommandReceiverConfiguration.ConfigureServices(serviceCollection);
-            ChargeConfirmationSenderConfiguration.ConfigureServices(serviceCollection);
-            ChargeRejectionSenderConfiguration.ConfigureServices(serviceCollection);
+            ChargeConfirmationDataAvailableNotifierEndpointConfiguration.ConfigureServices(serviceCollection);
+            ChargeRejectionDataAvailableNotifierEndpointConfiguration.ConfigureServices(serviceCollection);
+            ChargeDataAvailableNotifierConfiguration.ConfigureServices(serviceCollection);
 
             // Charge links
             ChargeLinkIngestionConfiguration.ConfigureServices(serviceCollection);
             ChargeLinkCommandReceiverConfiguration.ConfigureServices(serviceCollection);
             ChargeLinkEventPublisherConfiguration.ConfigureServices(serviceCollection);
-            ChargeLinkEventReplierConfiguration.ConfigureServices(serviceCollection);
+            DefaultChargeLinkEventReplierConfiguration.ConfigureServices(serviceCollection);
             CreateChargeLinkReceiverConfiguration.ConfigureServices(serviceCollection);
             ChargeLinkDataAvailableNotifierConfiguration.ConfigureServices(serviceCollection);
-            ChargeLinkBundleSenderConfiguration.ConfigureServices(serviceCollection);
+            ChargeLinkConfirmationDataAvailableNotifierConfiguration.ConfigureServices(serviceCollection);
 
             // Metering points
             ConsumptionMeteringPointPersisterConfiguration.ConfigureServices(serviceCollection);
+
+            // Message Hub
+            BundleSenderEndpointConfiguration.ConfigureServices(serviceCollection);
         }
     }
 }

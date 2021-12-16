@@ -13,36 +13,43 @@
 // limitations under the License.
 
 using System;
-using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Core.DateTime;
-using GreenEnergyHub.Charges.Domain.ChargeCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
+using GreenEnergyHub.Charges.Domain.MarketParticipants;
 
 namespace GreenEnergyHub.Charges.Domain.Charges
 {
     public class ChargeFactory : IChargeFactory
     {
-        public Task<Charge> CreateFromCommandAsync([NotNull]ChargeCommand command)
+        private readonly IMarketParticipantRepository _marketParticipantRepository;
+
+        public ChargeFactory(IMarketParticipantRepository marketParticipantRepository)
         {
-            var c = new Charge(
+            _marketParticipantRepository = marketParticipantRepository;
+        }
+
+        public async Task<Charge> CreateFromCommandAsync(ChargeCommand command)
+        {
+            var owner = await _marketParticipantRepository.GetOrNullAsync(command.ChargeOperation.ChargeOwner);
+
+            if (owner == null)
+                throw new Exception($"Market participant '{command.ChargeOperation.ChargeOwner}' does not exist.");
+
+            return new Charge(
                 Guid.NewGuid(),
-                command.Document,
-                command.ChargeOperation.Id,
                 command.ChargeOperation.ChargeId,
                 command.ChargeOperation.ChargeName,
                 command.ChargeOperation.ChargeDescription,
-                command.ChargeOperation.ChargeOwner,
-                command.CorrelationId,
+                owner.Id,
                 command.ChargeOperation.StartDateTime,
-                command.ChargeOperation.EndDateTime,
+                command.ChargeOperation.EndDateTime.TimeOrEndDefault(),
                 command.ChargeOperation.Type,
                 command.ChargeOperation.VatClassification,
                 command.ChargeOperation.Resolution,
                 command.ChargeOperation.TransparentInvoicing,
                 command.ChargeOperation.TaxIndicator,
                 command.ChargeOperation.Points);
-
-            return Task.FromResult(c);
         }
     }
 }

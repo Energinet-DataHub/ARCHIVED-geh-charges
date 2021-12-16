@@ -16,16 +16,16 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application.Charges.Acknowledgement;
-using GreenEnergyHub.Charges.Domain.ChargeCommandAcceptedEvents;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandAcceptedEvents;
 
 namespace GreenEnergyHub.Charges.Application.Charges.Handlers
 {
-    public class ChargeCommandAcceptedEventHandler : IChargeCommandAcceptedEventHandler
+    public class ChargeIntegrationEventsPublisher : IChargeIntegrationEventsPublisher
     {
         private readonly IChargePublisher _chargePublisher;
         private readonly IChargePricesUpdatedPublisher _chargePricesUpdatedPublisher;
 
-        public ChargeCommandAcceptedEventHandler(
+        public ChargeIntegrationEventsPublisher(
             IChargePublisher chargePublisher,
             IChargePricesUpdatedPublisher chargePricesUpdatedPublisher)
         {
@@ -33,7 +33,7 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
             _chargePricesUpdatedPublisher = chargePricesUpdatedPublisher;
         }
 
-        public async Task HandleAsync(ChargeCommandAcceptedEvent chargeCommandAcceptedEvent)
+        public async Task PublishAsync(ChargeCommandAcceptedEvent chargeCommandAcceptedEvent)
         {
             if (chargeCommandAcceptedEvent == null) throw new ArgumentNullException(nameof(chargeCommandAcceptedEvent));
 

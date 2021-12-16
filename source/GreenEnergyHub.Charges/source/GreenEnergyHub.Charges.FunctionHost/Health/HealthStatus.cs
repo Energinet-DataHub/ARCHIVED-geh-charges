@@ -18,22 +18,15 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Azure.Messaging.ServiceBus.Administration;
+using GreenEnergyHub.Charges.FunctionHost.Common;
 using GreenEnergyHub.Charges.FunctionHost.Configuration;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
-using Microsoft.Extensions.Logging;
 
 namespace GreenEnergyHub.Charges.FunctionHost.Health
 {
     public class HealthStatus
     {
-        private readonly ILogger _log;
-
-        public HealthStatus([NotNull] ILoggerFactory loggerFactory)
-        {
-            _log = loggerFactory.CreateLogger(nameof(HealthStatus));
-        }
-
         /// <summary>
         /// HTTP GET endpoint that can be used to monitor the health of the function app.
         /// </summary>
@@ -43,8 +36,6 @@ namespace GreenEnergyHub.Charges.FunctionHost.Health
             [NotNull] HttpRequestData req,
             [NotNull] FunctionContext context)
         {
-            _log.LogDebug("Workaround for unused method arguments", req, context);
-
             var healthStatus = await GetDeepHealthCheckStatusAsync();
 
             var isHealthy = healthStatus.All(x => x.Value);
@@ -58,16 +49,13 @@ namespace GreenEnergyHub.Charges.FunctionHost.Health
 
         private async Task<Dictionary<string, bool>> GetDeepHealthCheckStatusAsync()
         {
-            /* Consider checking access to database, Service Bus topics and queues, and other health checks */
-
-            // TODO: This connection string does not have permissions to verify queue existence
-            var connectionString = EnvironmentHelper.GetEnv("INTEGRATIONEVENT_MANAGER_CONNECTION_STRING");
+            var connectionString = EnvironmentHelper.GetEnv(EnvironmentSettingNames.DataHubManagerConnectionString);
 
             return new Dictionary<string, bool>
             {
-                { "MessageHubDataAvailableQueueExists", await QueueExistsAsync(connectionString, "MESSAGEHUB_DATAAVAILABLE_QUEUE") },
-                { "MessageHubRequestQueueExists", await QueueExistsAsync(connectionString, "MESSAGEHUB_BUNDLEREQUEST_QUEUE") },
-                { "MessageHubResponseQueueExists", await QueueExistsAsync(connectionString, "MESSAGEHUB_BUNDLEREPLY_QUEUE") },
+                { "MessageHubDataAvailableQueueExists", await QueueExistsAsync(connectionString, EnvironmentSettingNames.MessageHubDataAvailableQueue) },
+                { "MessageHubRequestQueueExists", await QueueExistsAsync(connectionString, EnvironmentSettingNames.MessageHubRequestQueue) },
+                { "MessageHubResponseQueueExists", await QueueExistsAsync(connectionString, EnvironmentSettingNames.MessageHubReplyQueue) },
             };
         }
 

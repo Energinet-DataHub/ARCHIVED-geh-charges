@@ -18,7 +18,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.ChargeBundle.Cim
     {
         internal const string Namespace = "urn:ediel.org:structure:requestchangeofpricelist:0:1";
 
-        internal const string MarketActivityRecordId = "mRID";
+        internal const string Id = "mRID";
 
         internal const string ChargeGroup = "ChargeGroup";
 

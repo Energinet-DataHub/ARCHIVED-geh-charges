@@ -12,13 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using Energinet.DataHub.Core.Messaging.Protobuf;
 using GreenEnergyHub.Charges.Application.ChargeLinks.Handlers;
-using GreenEnergyHub.Charges.Domain.ChargeLinkCreatedEvents;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinkCreatedEvents;
 using GreenEnergyHub.Charges.FunctionHost.Common;
 using GreenEnergyHub.Charges.Infrastructure.Integration.ChargeLinkCreated;
 using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandAccepted;
 using GreenEnergyHub.Charges.Infrastructure.Messaging.Registration;
-using GreenEnergyHub.Messaging.Protobuf;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace GreenEnergyHub.Charges.FunctionHost.Configuration
@@ -36,7 +36,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
             serviceCollection.SendProtobuf<ChargeLinkCreatedContract>();
             serviceCollection.AddMessagingProtobuf().AddMessageDispatcher<ChargeLinkCreatedEvent>(
                 EnvironmentHelper.GetEnv(EnvironmentSettingNames.DataHubSenderConnectionString),
-                EnvironmentHelper.GetEnv("CHARGE_LINK_CREATED_TOPIC_NAME"));
+                EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargeLinkCreatedTopicName));
         }
     }
 }

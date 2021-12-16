@@ -12,13 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using Energinet.DataHub.Core.Messaging.Transport;
 using GreenEnergyHub.Charges.Application;
-using GreenEnergyHub.Charges.Domain.ChargeCommandAcceptedEvents;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandAcceptedEvents;
 using GreenEnergyHub.Charges.Infrastructure.Correlation;
 using GreenEnergyHub.Charges.Infrastructure.MessageMetaData;
 using GreenEnergyHub.Charges.Infrastructure.Messaging.Serialization;
 using GreenEnergyHub.Json;
-using GreenEnergyHub.Messaging.Transport;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Messaging.Registration

@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using GreenEnergyHub.Charges.Domain.Configuration;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Configuration
@@ -24,7 +25,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Configuration
         {
             _marketParticipant = new MarketParticipant
             {
-                Id = senderId,
+                MarketParticipantId = senderId,
                 BusinessProcessRole = senderRole,
             };
         }

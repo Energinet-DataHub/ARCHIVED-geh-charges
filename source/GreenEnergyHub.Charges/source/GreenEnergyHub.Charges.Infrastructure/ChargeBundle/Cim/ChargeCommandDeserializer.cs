@@ -16,17 +16,17 @@ using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Xml;
-using GreenEnergyHub.Charges.Domain.ChargeCommands;
+using Energinet.DataHub.Core.Messaging.Transport;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
 using GreenEnergyHub.Charges.Infrastructure.Messaging.Serialization;
-using GreenEnergyHub.Messaging.Transport;
 
 namespace GreenEnergyHub.Charges.Infrastructure.ChargeBundle.Cim
 {
     public class ChargeCommandDeserializer : MessageDeserializer<ChargeCommand>
     {
-        private readonly ChargeCommandConverter _chargeCommandConverter;
+        private readonly IChargeCommandConverter _chargeCommandConverter;
 
-        public ChargeCommandDeserializer(ChargeCommandConverter chargeCommandConverter)
+        public ChargeCommandDeserializer(IChargeCommandConverter chargeCommandConverter)
         {
             _chargeCommandConverter = chargeCommandConverter;
         }
@@ -37,9 +37,8 @@ namespace GreenEnergyHub.Charges.Infrastructure.ChargeBundle.Cim
 
             using var reader = XmlReader.Create(stream, new XmlReaderSettings { Async = true });
 
-            var command = await _chargeCommandConverter.ConvertAsync(reader).ConfigureAwait(false);
-
-            return command;
+            // TODO: Titans replaces response object, when this happens this error should no longer be rethrown
+            return await _chargeCommandConverter.ConvertAsync(reader).ConfigureAwait(false);
         }
     }
 }

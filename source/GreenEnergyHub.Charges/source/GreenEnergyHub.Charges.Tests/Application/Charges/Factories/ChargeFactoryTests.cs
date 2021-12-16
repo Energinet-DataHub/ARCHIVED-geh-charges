@@ -15,8 +15,8 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using FluentAssertions;
-using GreenEnergyHub.Charges.Domain.ChargeCommands;
 using GreenEnergyHub.Charges.Domain.Charges;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
 using GreenEnergyHub.TestHelpers;
 using GreenEnergyHub.TestHelpers.FluentAssertionsExtensions;
 using Xunit;
@@ -34,7 +34,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Factories
             [NotNull] ChargeFactory sut)
         {
             // Act
-            var actual = await sut.CreateFromCommandAsync(chargeCommand).ConfigureAwait(false);
+            var actual = await sut.CreateFromCommandAsync(chargeCommand);
 
             // Assert
             actual.Should().NotContainNullsOrEmptyEnumerables();

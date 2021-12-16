@@ -13,16 +13,23 @@
 // limitations under the License.
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
+using GreenEnergyHub.Charges.Domain.AvailableChargeData;
+using GreenEnergyHub.Charges.Domain.AvailableChargeLinkReceiptData;
 using GreenEnergyHub.Charges.Domain.AvailableChargeLinksData;
+using GreenEnergyHub.Charges.Domain.AvailableChargeReceiptData;
 using GreenEnergyHub.Charges.Domain.ChargeLinks;
+using GreenEnergyHub.Charges.Domain.Charges;
+using GreenEnergyHub.Charges.Domain.DefaultChargeLinks;
+using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.Domain.MeteringPoints;
 using GreenEnergyHub.Charges.Infrastructure.Context.EntityConfigurations;
-using GreenEnergyHub.Charges.Infrastructure.Context.Model;
 using Microsoft.EntityFrameworkCore;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Context
 {
+    [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Local", Justification = "Private setters are needed by EF Core")]
     public class ChargesDatabaseContext : DbContext, IChargesDatabaseContext
     {
         #nullable disable
@@ -30,12 +37,6 @@ namespace GreenEnergyHub.Charges.Infrastructure.Context
             : base(options)
         {
         }
-
-        public DbSet<ChargePrice> ChargePrices { get; private set; }
-
-        public DbSet<ChargeOperation> ChargeOperations { get; private set; }
-
-        public DbSet<ChargePeriodDetails> ChargePeriodDetails { get; private set; }
 
         public DbSet<Charge> Charges { get; private set; }
 
@@ -47,27 +48,34 @@ namespace GreenEnergyHub.Charges.Infrastructure.Context
 
         public DbSet<ChargeLink> ChargeLinks { get; private set; }
 
+        public DbSet<AvailableChargeData> AvailableChargeData { get; private set; }
+
+        public DbSet<AvailableChargeReceiptData> AvailableChargeReceiptData { get; private set; }
+
         public DbSet<AvailableChargeLinksData> AvailableChargeLinksData { get; private set; }
+
+        public DbSet<AvailableChargeLinkReceiptData> AvailableChargeLinkReceiptData { get; private set; }
 
         public Task<int> SaveChangesAsync()
            => base.SaveChangesAsync();
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.HasDefaultSchema("Charges");
+            modelBuilder.HasDefaultSchema(DatabaseSchemaNames.CommandModel);
 
             if (modelBuilder == null) throw new ArgumentNullException(nameof(modelBuilder));
 
-            modelBuilder.Entity<ChargePrice>().ToTable("ChargePrice");
-            modelBuilder.Entity<ChargeOperation>().ToTable("ChargeOperation");
-            modelBuilder.Entity<ChargePeriodDetails>().ToTable("ChargePeriodDetails");
-            modelBuilder.Entity<Charge>().ToTable("Charge");
-            modelBuilder.Entity<MarketParticipant>().ToTable("MarketParticipant");
-            modelBuilder.Entity<DefaultChargeLink>().ToTable("DefaultChargeLink");
-
+            modelBuilder.ApplyConfiguration(new ChargeEntityConfiguration());
             modelBuilder.ApplyConfiguration(new ChargeLinkEntityConfiguration());
+            modelBuilder.ApplyConfiguration(new DefaultChargeLinkEntityConfiguration());
+            modelBuilder.ApplyConfiguration(new MarketParticipantEntityConfiguration());
             modelBuilder.ApplyConfiguration(new MeteringPointEntityConfiguration());
+
+            // Message Hub
+            modelBuilder.ApplyConfiguration(new AvailableChargeDataConfiguration());
+            modelBuilder.ApplyConfiguration(new AvailableChargeReceiptDataConfiguration());
             modelBuilder.ApplyConfiguration(new AvailableChargeLinksDataConfiguration());
+            modelBuilder.ApplyConfiguration(new AvailableChargeLinkReceiptDataConfiguration());
 
             base.OnModelCreating(modelBuilder);
         }

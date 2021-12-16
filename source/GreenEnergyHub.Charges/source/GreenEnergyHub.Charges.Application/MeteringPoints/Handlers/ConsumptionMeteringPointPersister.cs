@@ -15,7 +15,7 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Domain.MeteringPointCreatedEvents;
+using GreenEnergyHub.Charges.Domain.Dtos.MeteringPointCreatedEvents;
 using GreenEnergyHub.Charges.Domain.MeteringPoints;
 using Microsoft.Extensions.Logging;
 

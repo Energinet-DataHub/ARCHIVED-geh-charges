@@ -14,9 +14,11 @@
 
 using GreenEnergyHub.Charges.FunctionHost.Charges;
 using Xunit;
+using Xunit.Categories;
 
 namespace GreenEnergyHub.Charges.Tests.FunctionHost
 {
+    [IntegrationTest]
     public class FunctionsShouldBeIncludedInCoverageTests
     {
         /// <summary>

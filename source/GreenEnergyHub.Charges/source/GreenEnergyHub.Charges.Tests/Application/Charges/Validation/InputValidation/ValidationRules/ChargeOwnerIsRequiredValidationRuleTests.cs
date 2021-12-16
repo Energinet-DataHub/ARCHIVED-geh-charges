@@ -12,12 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Diagnostics.CodeAnalysis;
 using FluentAssertions;
-using GreenEnergyHub.Charges.Domain.ChargeCommands;
-using GreenEnergyHub.Charges.Domain.ChargeCommands.Validation;
-using GreenEnergyHub.Charges.Domain.ChargeCommands.Validation.InputValidation.ValidationRules;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputValidation.ValidationRules;
 using GreenEnergyHub.Charges.TestCore.Attributes;
+using GreenEnergyHub.Charges.Tests.Builders;
 using GreenEnergyHub.TestHelpers;
 using Xunit;
 using Xunit.Categories;
@@ -35,16 +35,16 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Validation.InputValid
         public void ChargeOwnerIsRequiredValidationRule_Test(
             string chargeOwner,
             bool expected,
-            [NotNull] ChargeCommand command)
+            ChargeCommandTestBuilder builder)
         {
-            command.ChargeOperation.ChargeOwner = chargeOwner;
+            var command = builder.WithOwner(chargeOwner).Build();
             var sut = new ChargeOwnerIsRequiredValidationRule(command);
             Assert.Equal(expected, sut.IsValid);
         }
 
         [Theory]
         [InlineAutoDomainData]
-        public void ValidationRuleIdentifier_ShouldBe_EqualTo([NotNull] ChargeCommand command)
+        public void ValidationRuleIdentifier_ShouldBe_EqualTo(ChargeCommand command)
         {
             var sut = new ChargeOwnerIsRequiredValidationRule(command);
             sut.ValidationRuleIdentifier.Should().Be(ValidationRuleIdentifier.ChargeOwnerIsRequiredValidation);

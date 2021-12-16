@@ -14,15 +14,11 @@
 
 using System;
 using System.Diagnostics.CodeAnalysis;
-using GreenEnergyHub.Charges.Domain.ChargeLinkCommandAcceptedEvents;
-using GreenEnergyHub.Charges.Domain.ChargeLinkCommands;
-using GreenEnergyHub.Charges.Domain.ChargeLinks;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksAcceptedEvents;
 using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandAccepted;
 using GreenEnergyHub.Charges.Infrastructure.Internal.Mappers;
-using GreenEnergyHub.Charges.TestCore;
 using GreenEnergyHub.Charges.TestCore.Attributes;
-using GreenEnergyHub.Charges.TestCore.Protobuf;
-using NodaTime;
+using GreenEnergyHub.Charges.Tests.Protobuf;
 using Xunit;
 using Xunit.Categories;
 
@@ -34,13 +30,12 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Internal.Mappers
         [Theory]
         [InlineAutoMoqData]
         public void Convert_WhenCalled_ShouldMapToProtobufWithCorrectValues(
-            [NotNull] ChargeLinkCommandAcceptedEvent chargeLinkCommandAcceptedEvent,
+            [NotNull] ChargeLinksAcceptedEvent chargeLinksAcceptedEvent,
             [NotNull] LinkCommandAcceptedOutboundMapper sut)
         {
-            var result =
-                (GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandAccepted.ChargeLinkCommandAccepted)sut
-                    .Convert(chargeLinkCommandAcceptedEvent);
-            ProtobufAssert.OutgoingContractIsSubset(chargeLinkCommandAcceptedEvent, result);
+            var result = (ChargeLinkCommandAccepted)sut
+                    .Convert(chargeLinksAcceptedEvent);
+            ProtobufAssert.OutgoingContractIsSubset(chargeLinksAcceptedEvent, result);
         }
 
         [Theory]

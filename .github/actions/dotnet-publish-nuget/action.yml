@@ -32,6 +32,9 @@ inputs:
   nuget_token:
     description: 'NuGet.org API key'
     required: true
+  nuget_recurse_path:
+    description: Path of tree where to find
+    required: true
 
 runs:
   using: composite
@@ -60,6 +63,11 @@ runs:
       run: |
         dotnet pack ${{ inputs.csproj_file_path }} --configuration Release --include-symbols -p:SymbolPackageFormat=snupkg -p:RepositoryCommit=${{ github.sha }} ${{ steps.determine_version_suffix.outputs.property }}
 
+    - name: Check each NuGet package version does not exists (not looking at prereleases)
+      uses: Energinet-DataHub/.github/.github/actions/nuget-assert-release-version@2.6.1
+      with:
+        NUPKG_RECURSE_PATH: ${{ inputs.nuget_recurse_path }}
+        
     - name: Push to NuGet.org
       shell: bash
       run: |

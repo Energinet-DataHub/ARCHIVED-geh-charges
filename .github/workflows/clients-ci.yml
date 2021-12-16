@@ -19,27 +19,6 @@ on:
       - main
   workflow_dispatch: {}
 
-env:
-  CSPROJ_FILE_PATH: source/Energinet.Charges.Libraries/source/Energinet.DataHub.Charges.Clients/Energinet.DataHub.Charges.Clients.csproj
-  SOLUTION_FILE_PATH: source/Energinet.Charges.Libraries/Energinet.DataHub.Charges.Libraries.sln
-  DOTNET_VERSION: '5.0.202'
-  AZURITE_VERSION: '3.14.0'
-  AZURE_FUNCTIONS_CORE_TOOLS_VERSION: '3.0.3568'
-  # Variables necessary to manage Azure resources for tests (similar to local use of 'integrationtest.local.settings.json')
-  SUBSCRIPTION_ID: ${{ secrets.INTEGRATIONTEST_SUBSCRIPTION_ID }}
-  RESOURCE_GROUP_NAME: ${{ secrets.INTEGRATIONTEST_RESOURCE_GROUP_NAME }}
-  DEFAULT_LOCATION: 'westeurope'
-  TENANT_ID: ${{ secrets.INTEGRATIONTEST_TENANT_ID }}
-  CLIENT_ID: ${{ secrets.INTEGRATIONTEST_CLIENT_ID }}
-  CLIENT_SECRET: ${{ secrets.INTEGRATIONTEST_CLIENT_SECRET }}  
-  # Variables necessary to start function for tests (similar to local use of 'local.settings.json')
-  APPINSIGHTS_INSTRUMENTATIONKEY: ${{ secrets.INTEGRATIONTEST_APPINSIGHTS_INSTRUMENTATIONKEY }}
-  INTEGRATIONEVENT_SENDER_CONNECTION_STRING: ${{ secrets.INTEGRATIONTEST_SERVICEBUS_CONNECTIONSTRING }}
-  INTEGRATIONEVENT_LISTENER_CONNECTION_STRING: ${{ secrets.INTEGRATIONTEST_SERVICEBUS_CONNECTIONSTRING }}
-  # Variables that overrides settings in 'functionhost.settings.json'
-  FunctionAppHostPath: 'C:\npm\prefix\node_modules\azure-functions-core-tools\bin\func.dll'
-  FunctionApplicationPath: '..\\..\\..\\..\\Energinet.DataHub.Charges.Clients\\bin\\Release\\net5.0'
-
 jobs:
   pre_job:
     runs-on: windows-latest
@@ -53,40 +32,23 @@ jobs:
           github_token: ${{ github.token }}
           paths: '[
             "source/Energinet.Charges.Libraries/**",
-            ".github/workflows/clients-ci.yml",
-            ".github/actions/dotnet-build-and-test/**",
-            ".github/actions/azure-core-tools-install/**"
+            "source/GreenEnergyHub.Charges/source/GreenEnergyHub.Charges.TestCore/**",
+            ".github/workflows/clients-ci.yml"
           ]'
 
   validate_build_clients:
     needs: pre_job
     if: ${{ needs.pre_job.outputs.should_skip != 'true' }}
-    name: Validate build Clients
-    runs-on: windows-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@master
-
-      - name: Setup .NET ${{ env.DOTNET_VERSION }} environment
-        uses: actions/setup-dotnet@v1
-        with:
-          dotnet-version: ${{ env.DOTNET_VERSION }}
-
-      - name: Install Azurite v${{ env.AZURITE_VERSION }}
-        run: npm install -g azurite@${{ env.AZURITE_VERSION }}
-
-      - name: Install Azure Functions Core Tools v${{ env.AZURE_FUNCTIONS_CORE_TOOLS_VERSION }}
-        run: npm install -g azure-functions-core-tools@${{ env.AZURE_FUNCTIONS_CORE_TOOLS_VERSION }}
-
-      - name: Build and test project
-        uses: ./.github/actions/dotnet-build-and-test
-        with:
-          CSPROJ_FILE_PATH: ${{ env.CSPROJ_FILE_PATH }}
-          SOLUTION_FILE_PATH: ${{ env.SOLUTION_FILE_PATH }}
-          OUTPUT_PATH: '${{ github.workspace }}/output'
-
-      - name: Publish artifact
-        uses: actions/upload-artifact@v2
-        with:
-          name: drop
-          path: '${{ github.workspace }}/output'
+    name: Validate build Clients CI
+    uses: Energinet-DataHub/.github/.github/workflows/dotnet-solution-ci.yml@2.6.1
+    with:
+      SOLUTION_FILE_PATH: 'source/Energinet.Charges.Libraries/Energinet.DataHub.Charges.Libraries.sln'
+      DOTNET_VERSION: '5.0.202'
+      USE_AZURITE: true
+      USE_AZURE_FUNCTIONS_CORE_TOOLS: true
+    secrets:
+      AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+      AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+      AZURE_SPN_ID: ${{ secrets.AZURE_SPN_ID }}
+      AZURE_SPN_SECRET: ${{ secrets.AZURE_SPN_SECRET }}
+      AZURE_KEYVAULT_URL: ${{ secrets.AZURE_KEYVAULT_URL }}

@@ -1,6 +1,8 @@
 # Charges
 
+<!--
 [![codecov](https://codecov.io/gh/Energinet-DataHub/geh-charges/branch/main/graph/badge.svg?token=MGC9QR9S3Q)](https://codecov.io/gh/Energinet-DataHub/geh-charges)
+-->
 
 ## Intro
 
@@ -34,11 +36,14 @@ The architecture diagrams below illustrate both current state of the Charges dom
 
 The diagrams depict the architecture of `Charge and Charge Prices` and `Charge Links`, respectively.
 
+Please note, all the azure functions displayed in the architecture diagrams are hosted in the same function host.
+Also, some components have singular names while others have plural names. This is intended. The components using plural may need to process a bundle of e.g. charge links to determine whether an operation, e.g. validation, was successful.
+
 ### Charge and charge prices architecture
 
 ![Charge And Charge Prices](ARCHITECTURE-ChargeAndChargePrices.png)
 
-Note: As the integration between the Charges and Post Office domains is yet to be established, the `ChargeConfirmation` and `ChargeRejection` events are temporarily placed in the Charges domain's Service Bus.
+Please note, as the integration between the Charges and MessageHub domains is yet to be established, the `ChargeConfirmation` and `ChargeRejection` events are temporarily placed in the Charges domain's Service Bus.
 
 ### Charge links architecture
 

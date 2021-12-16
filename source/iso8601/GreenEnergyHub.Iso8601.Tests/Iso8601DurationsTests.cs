@@ -16,15 +16,15 @@ using System;
 using AutoFixture.Xunit2;
 using FluentAssertions;
 using GreenEnergyHub.TestHelpers;
-using GreenEnergyHub.TestHelpers.Traits;
 using Moq;
 using NodaTime;
 using NodaTime.Text;
 using Xunit;
+using Xunit.Categories;
 
 namespace GreenEnergyHub.Iso8601.Tests
 {
-    [Trait(TraitNames.Category, TraitValues.UnitTest)]
+    [UnitTest]
     public class Iso8601DurationsTests
     {
         [Theory]
@@ -177,6 +177,149 @@ namespace GreenEnergyHub.Iso8601.Tests
 
             // Assert
             Assert.Equal(expectedTime, actual);
+        }
+
+        [Theory]
+        [InlineAutoDomainData("2020-12-31T23:00:00Z", 0, "Europe/Copenhagen", "2020-12-31T23:00:00Z")]
+        [InlineAutoDomainData("2020-12-31T23:00:00Z", 1, "Europe/Copenhagen", "2021-01-31T23:00:00Z")]
+        [InlineAutoDomainData("2020-12-31T23:00:00Z", 2, "Europe/Copenhagen", "2021-02-28T23:00:00Z")]
+        [InlineAutoDomainData("2021-01-05T05:00:00Z", 0, "Europe/Copenhagen", "2021-01-05T05:00:00Z")]
+        [InlineAutoDomainData("2021-01-05T05:00:00Z", 1, "Europe/Copenhagen", "2021-01-31T23:00:00Z")]
+        [InlineAutoDomainData("2021-01-05T05:00:00Z", 2, "Europe/Copenhagen", "2021-02-28T23:00:00Z")]
+        [InlineAutoDomainData("2021-01-05T05:00:00Z", 3, "Europe/Copenhagen", "2021-03-31T22:00:00Z")]
+        [InlineAutoDomainData("2021-10-25T05:00:00Z", 1, "Europe/Copenhagen", "2021-10-31T23:00:00Z")]
+        [InlineAutoDomainData("2021-10-25T05:03:01Z", 0, "Europe/Copenhagen", "2021-10-25T05:03:01Z")]
+        [InlineAutoDomainData("2021-10-25T05:03:01Z", 1, "Europe/Copenhagen", "2021-10-31T23:00:00Z")]
+        [InlineAutoDomainData("2024-02-02T05:03:01Z", 1, "Europe/Copenhagen", "2024-02-29T23:00:00Z")]
+        public void GetTimeFixedToDuration_WhenDurationIsMonth_GivesCorrectTime(
+            string startTimeString,
+            int numberOfDurations,
+            string timeZoneId,
+            string expectedTimeString,
+            [Frozen] Mock<IIso8601ConversionConfiguration> configuration,
+            Iso8601Durations sut)
+        {
+            // Arrange
+            configuration.Setup(x => x.GetTZDatabaseName()).Returns(timeZoneId);
+            var startTime = InstantPattern.General.Parse(startTimeString).Value;
+            var expectedTime = InstantPattern.General.Parse(expectedTimeString).Value;
+
+            // Act
+            var actual = sut.GetTimeFixedToDuration(startTime, "P1M", numberOfDurations);
+
+            // Assert
+            actual.Should().Be(expectedTime);
+        }
+
+        [Theory]
+        [InlineAutoDomainData("2020-12-31T23:00:00Z", 0, "Europe/Copenhagen", "2020-12-31T23:00:00Z")]
+        [InlineAutoDomainData("2020-12-31T23:00:00Z", 1, "Europe/Copenhagen", "2021-01-01T23:00:00Z")]
+        [InlineAutoDomainData("2020-12-31T23:00:00Z", 2, "Europe/Copenhagen", "2021-01-02T23:00:00Z")]
+        [InlineAutoDomainData("2021-01-05T05:00:00Z", 0, "Europe/Copenhagen", "2021-01-05T05:00:00Z")]
+        [InlineAutoDomainData("2021-01-05T05:00:00Z", 1, "Europe/Copenhagen", "2021-01-05T23:00:00Z")]
+        [InlineAutoDomainData("2021-01-05T05:00:00Z", 2, "Europe/Copenhagen", "2021-01-06T23:00:00Z")]
+        [InlineAutoDomainData("2021-03-20T05:00:00Z", 10, "Europe/Copenhagen", "2021-03-29T22:00:00Z")]
+        [InlineAutoDomainData("2021-10-25T05:00:00Z", 10, "Europe/Copenhagen", "2021-11-03T23:00:00Z")]
+        [InlineAutoDomainData("2021-10-25T05:03:01Z", 0, "Europe/Copenhagen", "2021-10-25T05:03:01Z")]
+        [InlineAutoDomainData("2021-10-25T05:03:01Z", 1, "Europe/Copenhagen", "2021-10-25T22:00:00Z")]
+        public void GetTimeFixedToDuration_WhenDurationIsDay_GivesCorrectTime(
+            string startTimeString,
+            int numberOfDurations,
+            string timeZoneId,
+            string expectedTimeString,
+            [Frozen] Mock<IIso8601ConversionConfiguration> configuration,
+            Iso8601Durations sut)
+        {
+            // Arrange
+            configuration.Setup(x => x.GetTZDatabaseName()).Returns(timeZoneId);
+            var startTime = InstantPattern.General.Parse(startTimeString).Value;
+            var expectedTime = InstantPattern.General.Parse(expectedTimeString).Value;
+
+            // Act
+            var actual = sut.GetTimeFixedToDuration(startTime, "P1D", numberOfDurations);
+
+            // Assert
+            actual.Should().Be(expectedTime);
+        }
+
+        [Theory]
+        [InlineAutoDomainData("2020-12-31T23:00:00Z", 0, "Europe/Copenhagen", "2020-12-31T23:00:00Z")]
+        [InlineAutoDomainData("2020-12-31T23:00:00Z", 1, "Europe/Copenhagen", "2021-01-01T00:00:00Z")]
+        [InlineAutoDomainData("2020-12-31T23:00:00Z", 2, "Europe/Copenhagen", "2021-01-01T01:00:00Z")]
+        [InlineAutoDomainData("2021-01-05T05:05:00Z", 0, "Europe/Copenhagen", "2021-01-05T05:05:00Z")]
+        [InlineAutoDomainData("2021-01-05T05:05:00Z", 1, "Europe/Copenhagen", "2021-01-05T06:00:00Z")]
+        [InlineAutoDomainData("2021-01-05T05:05:00Z", 2, "Europe/Copenhagen", "2021-01-05T07:00:00Z")]
+        [InlineAutoDomainData("2021-10-25T05:03:01Z", 0, "Europe/Copenhagen", "2021-10-25T05:03:01Z")]
+        [InlineAutoDomainData("2021-10-25T05:03:01Z", 1, "Europe/Copenhagen", "2021-10-25T06:00:00Z")]
+        [InlineAutoDomainData("2021-10-30T23:53:01Z", 1, "Europe/Copenhagen", "2021-10-31T00:00:00Z")]
+        [InlineAutoDomainData("2021-03-27T23:53:01Z", 1, "Europe/Copenhagen", "2021-03-28T00:00:00Z")]
+        public void GetTimeFixedToDuration_WhenDurationIsHour_GivesCorrectTime(
+            string startTimeString,
+            int numberOfDurations,
+            string timeZoneId,
+            string expectedTimeString,
+            [Frozen] Mock<IIso8601ConversionConfiguration> configuration,
+            Iso8601Durations sut)
+        {
+            // Arrange
+            configuration.Setup(x => x.GetTZDatabaseName()).Returns(timeZoneId);
+            var startTime = InstantPattern.General.Parse(startTimeString).Value;
+            var expectedTime = InstantPattern.General.Parse(expectedTimeString).Value;
+
+            // Act
+            var actual = sut.GetTimeFixedToDuration(startTime, "PT1H", numberOfDurations);
+
+            // Assert
+            actual.Should().Be(expectedTime);
+        }
+
+        [Theory]
+        [InlineAutoDomainData("2020-12-31T23:00:00Z", 0, "Europe/Copenhagen", "2020-12-31T23:00:00Z")]
+        [InlineAutoDomainData("2020-12-31T23:00:00Z", 1, "Europe/Copenhagen", "2020-12-31T23:15:00Z")]
+        [InlineAutoDomainData("2020-12-31T23:00:00Z", 2, "Europe/Copenhagen", "2020-12-31T23:30:00Z")]
+        [InlineAutoDomainData("2021-01-05T05:05:00Z", 0, "Europe/Copenhagen", "2021-01-05T05:05:00Z")]
+        [InlineAutoDomainData("2021-01-05T05:05:00Z", 1, "Europe/Copenhagen", "2021-01-05T05:15:00Z")]
+        [InlineAutoDomainData("2021-01-05T05:05:00Z", 2, "Europe/Copenhagen", "2021-01-05T05:30:00Z")]
+        [InlineAutoDomainData("2021-01-05T05:15:00Z", 2, "Europe/Copenhagen", "2021-01-05T05:45:00Z")]
+        [InlineAutoDomainData("2021-01-05T05:17:00Z", 2, "Europe/Copenhagen", "2021-01-05T05:45:00Z")]
+        [InlineAutoDomainData("2021-01-05T05:30:00Z", 2, "Europe/Copenhagen", "2021-01-05T06:00:00Z")]
+        [InlineAutoDomainData("2021-01-05T05:44:00Z", 2, "Europe/Copenhagen", "2021-01-05T06:00:00Z")]
+        [InlineAutoDomainData("2021-01-05T05:45:00Z", 2, "Europe/Copenhagen", "2021-01-05T06:15:00Z")]
+        [InlineAutoDomainData("2021-01-05T05:53:00Z", 2, "Europe/Copenhagen", "2021-01-05T06:15:00Z")]
+        [InlineAutoDomainData("2021-10-25T05:03:01Z", 0, "Europe/Copenhagen", "2021-10-25T05:03:01Z")]
+        [InlineAutoDomainData("2021-10-25T05:03:01Z", 1, "Europe/Copenhagen", "2021-10-25T05:15:00Z")]
+        [InlineAutoDomainData("2021-01-05T05:44:00Z", int.MaxValue, "Europe/Copenhagen", "6104-01-29T07:23:00Z")]
+        public void GetTimeFixedToDuration_WhenDurationQuarterOfHour_GivesCorrectTime(
+            string startTimeString,
+            int numberOfDurations,
+            string timeZoneId,
+            string expectedTimeString,
+            [Frozen] Mock<IIso8601ConversionConfiguration> configuration,
+            Iso8601Durations sut)
+        {
+            // Arrange
+            configuration.Setup(x => x.GetTZDatabaseName()).Returns(timeZoneId);
+            var startTime = InstantPattern.General.Parse(startTimeString).Value;
+            var expectedTime = InstantPattern.General.Parse(expectedTimeString).Value;
+
+            // Act
+            var actual = sut.GetTimeFixedToDuration(startTime, "PT15M", numberOfDurations);
+
+            // Assert
+            actual.Should().Be(expectedTime);
+        }
+
+        [Theory]
+        [InlineAutoDomainData("P1Y")]
+        public void GetTimeFixedToDuration_WhenUnsupportedDuration_ThrowArgumentException(
+            string duration,
+            Iso8601Durations iso8601Durations)
+        {
+            // Arrange
+            var startTime = SystemClock.Instance.GetCurrentInstant();
+
+            // Act and assert
+            Assert.Throws<ArgumentException>(() => iso8601Durations.GetTimeFixedToDuration(startTime, duration, 1));
         }
     }
 }

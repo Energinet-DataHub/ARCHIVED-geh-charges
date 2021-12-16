@@ -16,8 +16,8 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Core.DateTime;
-using GreenEnergyHub.Charges.Domain.ChargeLinkCommandReceivedEvents;
 using GreenEnergyHub.Charges.Domain.Charges;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksReceivedEvents;
 using GreenEnergyHub.Charges.Domain.MeteringPoints;
 
 namespace GreenEnergyHub.Charges.Domain.ChargeLinks
@@ -33,44 +33,27 @@ namespace GreenEnergyHub.Charges.Domain.ChargeLinks
             _meteringPointRepository = meteringPointRepository;
         }
 
-        public async Task<IReadOnlyCollection<ChargeLink>> CreateAsync(ChargeLinkCommandReceivedEvent chargeLinkEvent)
+        public async Task<IReadOnlyCollection<ChargeLink>> CreateAsync(ChargeLinksReceivedEvent chargeLinksEvent)
         {
-            if (chargeLinkEvent == null) throw new ArgumentNullException(nameof(chargeLinkEvent));
+            if (chargeLinksEvent == null) throw new ArgumentNullException(nameof(chargeLinksEvent));
 
             var chargeLinksCreated = new List<ChargeLink>();
 
-            foreach (var chargeLinkCommand in chargeLinkEvent.ChargeLinkCommands)
+            foreach (var chargeLink in chargeLinksEvent.ChargeLinksCommand.ChargeLinks)
             {
-                var chargeLink = chargeLinkCommand.ChargeLink;
-
-                var charge = await _chargeRepository
-                    .GetChargeAsync(new ChargeIdentifier(
-                        chargeLink.SenderProvidedChargeId,
-                        chargeLink.ChargeOwner,
-                        chargeLink.ChargeType))
-                    .ConfigureAwait(false);
+                var chargeIdentifier = new ChargeIdentifier(chargeLink.SenderProvidedChargeId, chargeLink.ChargeOwnerId, chargeLink.ChargeType);
+                var charge = await _chargeRepository.GetAsync(chargeIdentifier).ConfigureAwait(false);
 
                 var meteringPoint = await _meteringPointRepository
-                    .GetMeteringPointAsync(chargeLink.MeteringPointId)
+                    .GetMeteringPointAsync(chargeLinksEvent.ChargeLinksCommand.MeteringPointId)
                     .ConfigureAwait(false);
-
-                var operation = new ChargeLinkOperation(
-                    chargeLink.OperationId,
-                    chargeLinkEvent.CorrelationId);
-                var operations = new List<ChargeLinkOperation> { operation };
-
-                var periodDetails = new ChargeLinkPeriodDetails(
-                    chargeLink.StartDateTime,
-                    chargeLink.EndDateTime.TimeOrEndDefault(),
-                    chargeLink.Factor,
-                    operation.Id);
-                var periodDetailsCollection = new List<ChargeLinkPeriodDetails> { periodDetails };
 
                 chargeLinksCreated.Add(new ChargeLink(
                     charge.Id,
                     meteringPoint.Id,
-                    operations,
-                    periodDetailsCollection));
+                    chargeLink.StartDateTime,
+                    chargeLink.EndDateTime.TimeOrEndDefault(),
+                    chargeLink.Factor));
             }
 
             return chargeLinksCreated;

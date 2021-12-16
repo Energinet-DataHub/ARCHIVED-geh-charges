@@ -4,46 +4,72 @@
     "AzureWebJobsDashboard": "UseDevelopmentStorage=true",
     "AzureWebJobsStorage": "UseDevelopmentStorage=true",
     "FUNCTIONS_WORKER_RUNTIME": "dotnet-isolated",
-    
+
+    // This is the list of settings you should change depending on environment
     "APPINSIGHTS_INSTRUMENTATIONKEY": "<App insights instrumentation key>",
-    "LOCAL_TIMEZONENAME": "<Your time zone ID, e.g.Europe/Copenhagen, see https://en.wikipedia.org/wiki/List_of_tz_database_time_zones for others>",
-    "CURRENCY": "<Your system currency e.g. DKK, see https://en.wikipedia.org/wiki/ISO_4217>",
     "CHARGE_DB_CONNECTION_STRING": "<charge db connection string>",
-    "INTEGRATIONEVENT_SENDER_CONNECTION_STRING": "<sb sender connection string for integration events (without EntityPath)>",
+    "DOMAINEVENT_LISTENER_CONNECTION_STRING": "<connection string for listening for domain events on the service bus (without entity path)>",
+    "DOMAINEVENT_SENDER_CONNECTION_STRING": "<connection string for sending domain events to the service bus (without entity path)>",
     "INTEGRATIONEVENT_LISTENER_CONNECTION_STRING": "<sb listener connection string for integration events (without EntityPath)>",
     "INTEGRATIONEVENT_MANAGER_CONNECTION_STRING": "<sb manager connection string for integration events (without EntityPath)>",
-    "DOMAINEVENT_SENDER_CONNECTION_STRING": "<connection string for sending domain events to the service bus (without entity path)>",
-    "DOMAINEVENT_LISTENER_CONNECTION_STRING": "<connection string for listening for domain events on the service bus (without entity path)>",
+    "INTEGRATIONEVENT_SENDER_CONNECTION_STRING": "<sb sender connection string for integration events (without EntityPath)>",
     "MESSAGEHUB_STORAGE_CONNECTION_STRING": "<connection string for writing to the Message Hub storage account for bundles>",
-    "MESSAGEHUB_STORAGE_CONTAINER": "<name of the container in the Message Hub storage account for bundles>",
 
-    "CHARGE_LINK_ACCEPTED_TOPIC_NAME": "sbt-link-command-accepted",
-    "CHARGELINKACCEPTED_SUB_DATAAVAILABLENOTIFIER": "sbs-chargelinkaccepted-sub-dataavailablenotifier",
-    "CHARGELINKACCEPTED_SUB_EVENTPUBLISHER": "sbs-chargelinkaccepted-sub-eventpublisher",
-    "CHARGELINKACCEPTED_SUB_REPLIER": "sbs-chargelinkaccepted-sub-replier",
-    "CHARGE_LINK_CREATED_TOPIC_NAME": "charge-link-created",
-    "CHARGE_LINK_RECEIVED_TOPIC_NAME": "sbt-link-command-received",
-    "CHARGE_LINK_RECEIVED_SUBSCRIPTION_NAME": "sbs-link-command-received-receiver",
-    "COMMAND_ACCEPTED_TOPIC_NAME": "sbt-command-accepted",
-    "COMMAND_ACCEPTED_SUBSCRIPTION_NAME": "sbs-command-accepted",
-    "COMMAND_RECEIVED_TOPIC_NAME": "sbt-command-received",
-    "COMMAND_RECEIVED_SUBSCRIPTION_NAME": "sbs-command-received",
-    "COMMAND_REJECTED_TOPIC_NAME": "sbt-command-rejected",
-    "COMMAND_REJECTED_SUBSCRIPTION_NAME": "sbs-command-rejected",
-    "CREATE_LINK_REQUEST_QUEUE_NAME": "create-link-request",
-    "CREATE_LINK_REPLY_QUEUE_NAME": "create-link-reply",
-    "CONSUMPTION_METERING_POINT_CREATED_TOPIC_NAME": "consumption-metering-point-created",
-    "CONSUMPTION_METERING_POINT_CREATED_SUBSCRIPTION_NAME": "consumption-metering-point-created-sub-charges",
-    "COMMAND_ACCEPTED_RECEIVER_SUBSCRIPTION_NAME": "sbs-charge-command-accepted-receiver",
+    // This is settings about who we identify ourselves as being 
+    "HUB_SENDER_ID": "5790001330552",
+    "HUB_SENDER_ROLE_INT_ENUM_VALUE": "7", // See MarketParticipantRole for possible values, 7 is MeteringPointAdministrator
+
+    // From this point on, it is settings that change with the code and not the environment
+    // Localization
+    "CURRENCY": "DKK", // Your system currency e.g. DKK, see https://en.wikipedia.org/wiki/ISO_4217
+    "LOCAL_TIMEZONENAME": "Europe/Copenhagen", // Your time zone ID, e.g.Europe/Copenhagen, see https://en.wikipedia.org/wiki/List_of_tz_database_time_zones for others
+
+    // Integration events, charges
     "CHARGE_CREATED_TOPIC_NAME": "charge-created",
     "CHARGE_PRICES_UPDATED_TOPIC_NAME": "charge-prices-updated",
 
-    "POST_OFFICE_TOPIC_NAME": "sbt-post-office",
-    "MESSAGEHUB_DATAAVAILABLE_QUEUE": "sbq-dataavailable",
-    "MESSAGEHUB_BUNDLEREQUEST_QUEUE": "sbq-charges",
-    "MESSAGEHUB_BUNDLEREPLY_QUEUE": "sbq-charges-reply",
-  
-    "HUB_SENDER_ID": "5790001330552",
-    "HUB_SENDER_ROLE_INT_ENUM_VALUE": "7",
+    // Integration events, charge links
+    "CHARGE_LINK_CREATED_TOPIC_NAME": "charge-link-created",
+
+    // Integration, metering point domain
+    "CONSUMPTION_METERING_POINT_CREATED_TOPIC_NAME": "consumption-metering-point-created",
+    "CONSUMPTION_METERING_POINT_CREATED_SUBSCRIPTION_NAME": "consumption-metering-point-created-sub-charges",
+    "CREATE_LINK_MESSAGES_REPLY_QUEUE_NAME": "create-link-messages-reply",
+    "CREATE_LINK_REQUEST_QUEUE_NAME": "create-link-request",
+    "CREATE_LINK_REPLY_QUEUE_NAME": "create-link-reply",
+
+    // Integration, message hub
+    "MESSAGEHUB_DATAAVAILABLE_QUEUE": "dataavailable",
+    "MESSAGEHUB_BUNDLEREQUEST_QUEUE": "charges",
+    "MESSAGEHUB_BUNDLEREPLY_QUEUE": "charges-reply",
+    "MESSAGEHUB_STORAGE_CONTAINER": "postoffice-reply",
+
+    // Internal, charge, received
+    "COMMAND_RECEIVED_TOPIC_NAME": "command-received",
+    "COMMAND_RECEIVED_SUBSCRIPTION_NAME": "command-received",
+
+    // Internal, charge, accepted
+    "COMMAND_ACCEPTED_TOPIC_NAME": "command-accepted",
+    "CHARGEACCEPTED_SUB_DATAAVAILABLENOTIFIER": "chargeaccepted-sub-dataavailablenotifier",
+    "COMMAND_ACCEPTED_SUBSCRIPTION_NAME": "command-accepted",
+    "COMMAND_ACCEPTED_RECEIVER_SUBSCRIPTION_NAME": "charge-command-accepted-receiver",
+
+    // Internal, charge, rejected
+    "COMMAND_REJECTED_TOPIC_NAME": "command-rejected",
+    "COMMAND_REJECTED_SUBSCRIPTION_NAME": "command-rejected",
+
+    // Internal, charge links, received
+    "CHARGE_LINK_RECEIVED_TOPIC_NAME": "link-command-received",
+    "CHARGE_LINK_RECEIVED_SUBSCRIPTION_NAME": "link-command-received-receiver",
+    
+    // Internal, charge links, accepted
+    "CHARGE_LINK_ACCEPTED_TOPIC_NAME": "link-command-accepted",
+    "CHARGELINKACCEPTED_SUB_CONFIRMATIONNOTIFIER": "chargelinkaccepted-sub-confirmationnotifier",
+    "CHARGELINKACCEPTED_SUB_DATAAVAILABLENOTIFIER": "chargelinkaccepted-sub-dataavailablenotifier",
+    "CHARGELINKACCEPTED_SUB_EVENTPUBLISHER": "chargelinkaccepted-sub-eventpublisher",
+    "CHARGELINKACCEPTED_SUB_REPLIER": "chargelinkaccepted-sub-replier",
+    "CREATE_LINK_MESSAGES_REQUEST_QUEUE_NAME": "create-link-messages-request",
+    "DEFAULT_CHARGE_LINKS_DATA_AVAILABLE_NOTIFIED_TOPIC_NAME": "default-charge-link-available",
+    "DEFAULT_CHARGE_LINKS_DATA_AVAILABLE_NOTIFIED_SUBSCRIPTION_NAME": "default-charge-link-available-notified",
   }
 }

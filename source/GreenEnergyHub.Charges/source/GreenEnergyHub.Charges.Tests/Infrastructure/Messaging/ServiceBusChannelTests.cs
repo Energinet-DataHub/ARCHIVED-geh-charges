@@ -27,6 +27,7 @@ using GreenEnergyHub.Charges.Infrastructure.MessageMetaData;
 using GreenEnergyHub.Charges.Infrastructure.Messaging;
 using GreenEnergyHub.TestHelpers;
 using Moq;
+using NodaTime;
 using Xunit;
 using Xunit.Categories;
 
@@ -108,7 +109,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Messaging
         {
             // Arrange
             var correlationContext = new CorrelationContext();
-            var messageMetaDataContext = new MessageMetaDataContext();
+            var messageMetaDataContext = new MessageMetaDataContext(SystemClock.Instance);
             correlationContext.SetId(Guid.NewGuid().ToString().Replace("-", string.Empty));
 
             var connectionString = "<your service bus connection string>";

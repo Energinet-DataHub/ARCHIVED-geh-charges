@@ -12,32 +12,30 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
+using System.Linq;
+using Energinet.DataHub.Core.Messaging.MessageTypes.Common;
+using Energinet.DataHub.Core.Messaging.Protobuf;
+using Energinet.DataHub.Core.Messaging.Transport;
 using Google.Protobuf.Collections;
 using GreenEnergyHub.Charges.Core.DateTime;
-using GreenEnergyHub.Charges.Domain.ChargeCommandRejectedEvents;
-using GreenEnergyHub.Charges.Domain.ChargeCommands;
 using GreenEnergyHub.Charges.Domain.Charges;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandRejectedEvents;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeCommandRejected;
-using GreenEnergyHub.Messaging.MessageTypes.Common;
-using GreenEnergyHub.Messaging.Protobuf;
-using GreenEnergyHub.Messaging.Transport;
 using NodaTime;
-using MarketParticipant = GreenEnergyHub.Charges.Domain.MarketParticipants.MarketParticipant;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
 {
     public class ChargeCommandRejectedInboundMapper : ProtobufInboundMapper<ChargeCommandRejectedContract>
     {
-        protected override IInboundMessage Convert([NotNull]ChargeCommandRejectedContract rejectedContract)
+        protected override IInboundMessage Convert(ChargeCommandRejectedContract rejectedContract)
         {
             return new ChargeCommandRejectedEvent(
                 rejectedContract.PublishedTime.ToInstant(),
-                rejectedContract.CorrelationId,
-                new ChargeCommand(rejectedContract.Command.CorrelationId)
+                new ChargeCommand
                 {
                     Document = ConvertDocument(rejectedContract.Command.Document),
                     ChargeOperation = ConvertChargeOperation(rejectedContract.Command.ChargeOperation),
@@ -46,19 +44,19 @@ namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
                 rejectedContract.RejectReasons);
         }
 
-        private static Document ConvertDocument(DocumentContract document)
+        private static DocumentDto ConvertDocument(DocumentContract document)
         {
-            return new Document
+            return new DocumentDto
             {
                 Id = document.Id,
                 Sender =
-                    new MarketParticipant
+                    new MarketParticipantDto
                     {
                         Id = document.Sender.Id,
                         BusinessProcessRole = (MarketParticipantRole)document.Sender.BusinessProcessRole,
                     },
                 Recipient =
-                    new MarketParticipant
+                    new MarketParticipantDto
                     {
                         Id = document.Recipient.Id,
                         BusinessProcessRole = (MarketParticipantRole)document.Recipient.BusinessProcessRole,
@@ -71,41 +69,29 @@ namespace GreenEnergyHub.Charges.Infrastructure.Internal.Mappers
             };
         }
 
-        private static ChargeOperation ConvertChargeOperation(ChargeOperationContract chargeOperation)
+        private static ChargeOperationDto ConvertChargeOperation(ChargeOperationContract chargeOperation)
         {
-            return new ChargeOperation
-            {
-                Id = chargeOperation.Id,
-                Resolution = (Resolution)chargeOperation.Resolution,
-                Type = (ChargeType)chargeOperation.Type,
-                ChargeDescription = chargeOperation.ChargeDescription,
-                ChargeId = chargeOperation.ChargeId,
-                ChargeName = chargeOperation.ChargeName,
-                ChargeOwner = chargeOperation.ChargeOwner,
-                TaxIndicator = chargeOperation.TaxIndicator,
-                TransparentInvoicing = chargeOperation.TransparentInvoicing,
-                VatClassification = (VatClassification)chargeOperation.VatClassification,
-                StartDateTime = chargeOperation.StartDateTime.ToInstant(),
-                EndDateTime = chargeOperation.EndDateTime.ToInstant(),
-                Points = ConvertPoints(chargeOperation.Points),
-            };
+            return new ChargeOperationDto(
+                chargeOperation.Id,
+                (ChargeType)chargeOperation.Type,
+                chargeOperation.ChargeId,
+                chargeOperation.ChargeName,
+                chargeOperation.ChargeDescription,
+                chargeOperation.ChargeOwner,
+                (Resolution)chargeOperation.Resolution,
+                chargeOperation.TaxIndicator,
+                chargeOperation.TransparentInvoicing,
+                (VatClassification)chargeOperation.VatClassification,
+                chargeOperation.StartDateTime.ToInstant(),
+                chargeOperation.EndDateTime.ToInstant(),
+                ConvertPoints(chargeOperation.Points));
         }
 
         private static List<Point> ConvertPoints(RepeatedField<PointContract> points)
         {
-            var list = new List<Point>();
-
-            foreach (var point in points)
-            {
-                list.Add(new Point
-                {
-                    Position = point.Position,
-                    Price = (decimal)point.Price,
-                    Time = point.Time.ToInstant(),
-                });
-            }
-
-            return list;
+            return points
+                .Select(point => new Point(point.Position, (decimal)point.Price, point.Time.ToInstant()))
+                .ToList();
         }
     }
 }

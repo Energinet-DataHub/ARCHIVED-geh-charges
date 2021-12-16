@@ -14,12 +14,12 @@
 
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Domain.ChargeLinkCommandReceivedEvents;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksReceivedEvents;
 
 namespace GreenEnergyHub.Charges.Domain.ChargeLinks
 {
     public interface IChargeLinkFactory
     {
-        Task<IReadOnlyCollection<ChargeLink>> CreateAsync(ChargeLinkCommandReceivedEvent chargeLinkEvent);
+        Task<IReadOnlyCollection<ChargeLink>> CreateAsync(ChargeLinksReceivedEvent chargeLinksEvent);
     }
 }

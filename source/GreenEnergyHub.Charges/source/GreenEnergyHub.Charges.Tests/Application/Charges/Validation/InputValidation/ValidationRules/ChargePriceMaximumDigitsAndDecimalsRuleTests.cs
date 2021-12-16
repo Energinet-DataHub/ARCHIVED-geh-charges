@@ -12,14 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using FluentAssertions;
-using GreenEnergyHub.Charges.Domain.ChargeCommands;
-using GreenEnergyHub.Charges.Domain.ChargeCommands.Validation;
-using GreenEnergyHub.Charges.Domain.ChargeCommands.Validation.InputValidation.ValidationRules;
-using GreenEnergyHub.Charges.Domain.Charges;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputValidation.ValidationRules;
 using GreenEnergyHub.Charges.TestCore.Attributes;
+using GreenEnergyHub.Charges.Tests.Builders;
 using GreenEnergyHub.TestHelpers;
 using Xunit;
 using Xunit.Categories;
@@ -38,12 +36,10 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Validation.InputValid
         public void IsValid_WhenLessThan8DigitsAnd6Decimals_IsValid(
             decimal price,
             bool expected,
-            [NotNull] ChargeCommand command,
-            [NotNull] Point point)
+            ChargeCommandTestBuilder builder)
         {
             // Arrange
-            point.Price = price;
-            command.ChargeOperation.Points = new List<Point> { point };
+            var command = builder.WithPoint(price).Build();
 
             // Act
             var sut = new ChargePriceMaximumDigitsAndDecimalsRule(command);
@@ -54,7 +50,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Validation.InputValid
 
         [Theory]
         [InlineAutoDomainData]
-        public void ValidationRuleIdentifier_ShouldBe_EqualTo([NotNull] ChargeCommand command)
+        public void ValidationRuleIdentifier_ShouldBe_EqualTo(ChargeCommand command)
         {
             var sut = new ChargePriceMaximumDigitsAndDecimalsRule(command);
             sut.ValidationRuleIdentifier.Should().Be(ValidationRuleIdentifier.ChargePriceMaximumDigitsAndDecimals);

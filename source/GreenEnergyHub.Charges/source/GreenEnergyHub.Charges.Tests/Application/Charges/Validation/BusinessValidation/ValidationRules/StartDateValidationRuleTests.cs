@@ -12,16 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Diagnostics.CodeAnalysis;
 using AutoFixture.Xunit2;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Core;
 using GreenEnergyHub.Charges.Core.DateTime;
-using GreenEnergyHub.Charges.Domain.ChargeCommands;
-using GreenEnergyHub.Charges.Domain.ChargeCommands.Validation;
-using GreenEnergyHub.Charges.Domain.ChargeCommands.Validation.BusinessValidation.ValidationRules;
-using GreenEnergyHub.Charges.Domain.Charges;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessValidation.ValidationRules;
 using GreenEnergyHub.Charges.TestCore.Attributes;
+using GreenEnergyHub.Charges.Tests.Builders;
 using GreenEnergyHub.Iso8601;
 using GreenEnergyHub.TestHelpers;
 using Moq;
@@ -52,10 +51,12 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Validation.BusinessVa
             int startOfOccurrence,
             int endOfOccurrence,
             bool expected,
-            [NotNull] [Frozen] ChargeCommand chargeCommand)
+            [Frozen] ChargeCommandTestBuilder builder)
         {
             // Arrange
-            ArrangeChargeCommand(effectuationDateIsoString, chargeCommand);
+            var chargeCommand = builder
+                .WithStartDateTime(InstantPattern.General.Parse(effectuationDateIsoString).Value)
+                .Build();
             var configuration = CreateRuleConfiguration(startOfOccurrence, endOfOccurrence);
             var zonedDateTimeService = CreateLocalDateTimeService(timeZoneId);
             var clock = new FakeClock(InstantPattern.General.Parse(nowIsoString).Value);
@@ -69,7 +70,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Validation.BusinessVa
 
         [Theory]
         [InlineAutoDomainData]
-        public void ValidationRuleIdentifier_ShouldBe_EqualTo([NotNull] ChargeCommand command, IClock clock)
+        public void ValidationRuleIdentifier_ShouldBe_EqualTo(ChargeCommand command, IClock clock)
         {
             // Arrange
             var configuration = CreateRuleConfiguration(1, 3);
@@ -79,16 +80,6 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Validation.BusinessVa
 
             // Assert
             sut.ValidationRuleIdentifier.Should().Be(ValidationRuleIdentifier.StartDateValidation);
-        }
-
-        private static void ArrangeChargeCommand(
-            string effectuationDateIsoString,
-            ChargeCommand chargeCommand)
-        {
-            chargeCommand.ChargeOperation = new ChargeOperation
-            {
-                StartDateTime = InstantPattern.General.Parse(effectuationDateIsoString).Value,
-            };
         }
 
         private static ZonedDateTimeService CreateLocalDateTimeService(string timeZoneId)

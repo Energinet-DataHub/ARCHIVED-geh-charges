@@ -13,7 +13,7 @@
 // limitations under the License.
 
 using Azure.Messaging.ServiceBus;
-using GreenEnergyHub.Messaging.Transport;
+using Energinet.DataHub.Core.Messaging.Transport;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Messaging
 {

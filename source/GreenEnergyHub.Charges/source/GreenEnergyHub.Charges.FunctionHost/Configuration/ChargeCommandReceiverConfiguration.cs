@@ -12,28 +12,26 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using Energinet.DataHub.Core.Messaging.Protobuf;
 using GreenEnergyHub.Charges.Application.Charges.Acknowledgement;
 using GreenEnergyHub.Charges.Application.Charges.Handlers;
 using GreenEnergyHub.Charges.Core.Currency;
 using GreenEnergyHub.Charges.Core.DateTime;
-using GreenEnergyHub.Charges.Domain.ChargeCommandAcceptedEvents;
-using GreenEnergyHub.Charges.Domain.ChargeCommandRejectedEvents;
-using GreenEnergyHub.Charges.Domain.ChargeCommands;
-using GreenEnergyHub.Charges.Domain.ChargeCommands.Validation;
-using GreenEnergyHub.Charges.Domain.ChargeCommands.Validation.BusinessValidation;
-using GreenEnergyHub.Charges.Domain.ChargeCommands.Validation.BusinessValidation.Factories;
-using GreenEnergyHub.Charges.Domain.ChargeCommands.Validation.InputValidation;
 using GreenEnergyHub.Charges.Domain.Charges;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandAcceptedEvents;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandRejectedEvents;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessValidation;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessValidation.Factories;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputValidation;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.FunctionHost.Common;
-using GreenEnergyHub.Charges.Infrastructure.Context.Mapping;
 using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeCommandAccepted;
 using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeCommandReceived;
 using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeCommandRejected;
 using GreenEnergyHub.Charges.Infrastructure.Messaging.Registration;
 using GreenEnergyHub.Charges.Infrastructure.Repositories;
 using GreenEnergyHub.Iso8601;
-using GreenEnergyHub.Messaging.Protobuf;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace GreenEnergyHub.Charges.FunctionHost.Configuration
@@ -45,7 +43,6 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
             serviceCollection.AddScoped<IChargeCommandConfirmationService, ChargeCommandConfirmationService>();
             serviceCollection.AddScoped<IChargeCommandReceivedEventHandler, ChargeCommandReceivedEventHandler>();
             serviceCollection.AddScoped<IChargeFactory, ChargeFactory>();
-            serviceCollection.AddScoped<IChargeCommandFactory, ChargeCommandFactory>();
             serviceCollection.AddScoped<IChargeCommandAcceptedEventFactory, ChargeCommandAcceptedEventFactory>();
             serviceCollection.AddScoped<IChargeCommandRejectedEventFactory, ChargeCommandRejectedEventFactory>();
 
@@ -59,7 +56,6 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
         private static void ConfigureDatabase(IServiceCollection serviceCollection)
         {
             serviceCollection.AddScoped<IMarketParticipantRepository, MarketParticipantRepository>();
-            serviceCollection.AddScoped<IMarketParticipantMapper, MarketParticipantMapper>();
         }
 
         private static void ConfigureValidation(IServiceCollection serviceCollection)
@@ -74,7 +70,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
 
         private static void ConfigureIso8601Timezones(IServiceCollection serviceCollection)
         {
-            var timeZoneId = EnvironmentHelper.GetEnv("LOCAL_TIMEZONENAME");
+            var timeZoneId = EnvironmentHelper.GetEnv(EnvironmentSettingNames.LocalTimeZoneName);
             var timeZoneConfiguration = new Iso8601ConversionConfiguration(timeZoneId);
             serviceCollection.AddSingleton<IIso8601ConversionConfiguration>(timeZoneConfiguration);
             serviceCollection.AddScoped<IZonedDateTimeService, ZonedDateTimeService>();
@@ -82,7 +78,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
 
         private static void ConfigureIso4217Currency(IServiceCollection serviceCollection)
         {
-            var currency = EnvironmentHelper.GetEnv("CURRENCY");
+            var currency = EnvironmentHelper.GetEnv(EnvironmentSettingNames.Currency);
             var iso4217Currency = new CurrencyConfigurationIso4217(currency);
             serviceCollection.AddSingleton(iso4217Currency);
         }
@@ -95,12 +91,12 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
             serviceCollection.SendProtobuf<ChargeCommandAcceptedContract>();
             serviceCollection.AddMessagingProtobuf().AddMessageDispatcher<ChargeCommandAcceptedEvent>(
                 EnvironmentHelper.GetEnv(EnvironmentSettingNames.DomainEventSenderConnectionString),
-                EnvironmentHelper.GetEnv("COMMAND_ACCEPTED_TOPIC_NAME"));
+                EnvironmentHelper.GetEnv(EnvironmentSettingNames.CommandAcceptedTopicName));
 
             serviceCollection.SendProtobuf<ChargeCommandRejectedContract>();
             serviceCollection.AddMessagingProtobuf().AddMessageDispatcher<ChargeCommandRejectedEvent>(
                 EnvironmentHelper.GetEnv(EnvironmentSettingNames.DomainEventSenderConnectionString),
-                EnvironmentHelper.GetEnv("COMMAND_REJECTED_TOPIC_NAME"));
+                EnvironmentHelper.GetEnv(EnvironmentSettingNames.CommandRejectedTopicName));
         }
     }
 }

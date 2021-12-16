@@ -24,16 +24,17 @@ limitations under the License.
     <LangVersion>9</LangVersion>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="Energinet.DataHub.Core.Messaging.Protobuf.Integration.ServiceCollection" Version="1.0.0" />
     <PackageReference Include="EntityFrameworkCore.SqlServer.NodaTime" Version="5.0.1" />
-    <PackageReference Include="Microsoft.ApplicationInsights.WorkerService" Version="2.18.0" />
+    <PackageReference Include="Microsoft.ApplicationInsights.WorkerService" Version="2.19.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Abstractions" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.5" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Formatters.Json" Version="2.2.0" />
     <PackageReference Include="Microsoft.Azure.Functions.Extensions" Version="1.1.0" />
     <PackageReference Include="Microsoft.Azure.Functions.Worker.Extensions.Http" Version="3.0.13" />
     <PackageReference Include="Microsoft.Azure.Functions.Worker.Extensions.ServiceBus" Version="4.2.1" />
-    <PackageReference Include="Microsoft.Azure.Functions.Worker.Sdk" Version="1.0.4" />
-    <PackageReference Include="Microsoft.Azure.Functions.Worker" Version="1.5.2" />
+    <PackageReference Include="Microsoft.Azure.Functions.Worker.Sdk" Version="1.3.0" />
+    <PackageReference Include="Microsoft.Azure.Functions.Worker" Version="1.6.0" />
     <PackageReference Update="StyleCop.Analyzers" Version="1.2.0-beta.354">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -49,7 +50,6 @@ limitations under the License.
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\messaging\source\GreenEnergyHub.Messaging.Protobuf.Integration.ServiceCollection\GreenEnergyHub.Messaging.Protobuf.Integration.ServiceCollection.csproj" />
     <ProjectReference Include="..\GreenEnergyHub.Charges.Infrastructure\GreenEnergyHub.Charges.Infrastructure.csproj" />
   </ItemGroup>
 </Project>
