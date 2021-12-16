@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.IO;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
@@ -53,6 +54,27 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.MessageHub
 
             // Assert => replier was invoked with the expected stream
             replierMock.Verify(replier => replier.ReplyAsync(actualStream, anyRequest));
+        }
+
+        [Theory]
+        [InlineAutoMoqData]
+        public async Task SendAsync_WhenExceptionIsThrown_RepliesWithError(
+            [Frozen] Mock<IBundleCreatorProvider> creatorProviderMock,
+            [Frozen] Mock<IBundleReplier> replierMock,
+            DataBundleRequestDto anyRequest,
+            BundleSender sut)
+        {
+            // Arrange
+            creatorProviderMock.Setup(
+                    c => c.Get(anyRequest))
+                .Throws<Exception>();
+
+            // Act
+            await sut.SendAsync(anyRequest);
+
+            // Assert
+            replierMock.Verify(replier => replier.ReplyAsync(It.IsAny<Stream>(), It.IsAny<DataBundleRequestDto>()), Times.Never);
+            replierMock.Verify(replier => replier.ReplyErrorAsync(It.IsAny<Exception>(), anyRequest));
         }
     }
 }

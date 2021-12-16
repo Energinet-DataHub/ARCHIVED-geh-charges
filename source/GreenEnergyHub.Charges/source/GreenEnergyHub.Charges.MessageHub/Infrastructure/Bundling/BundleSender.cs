@@ -12,10 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.IO;
 using System.Threading.Tasks;
 using Energinet.DataHub.MessageHub.Model.Model;
 using GreenEnergyHub.Charges.MessageHub.Application.MessageHub;
+using Microsoft.Extensions.Logging;
 
 namespace GreenEnergyHub.Charges.MessageHub.Infrastructure.Bundling
 {
@@ -23,21 +25,33 @@ namespace GreenEnergyHub.Charges.MessageHub.Infrastructure.Bundling
     {
         private readonly IBundleCreatorProvider _bundleCreatorProvider;
         private readonly IBundleReplier _bundleReplier;
+        private readonly ILogger _logger;
 
         public BundleSender(
-            IBundleReplier bundleReplier, IBundleCreatorProvider bundleCreatorProvider)
+            IBundleReplier bundleReplier,
+            IBundleCreatorProvider bundleCreatorProvider,
+            ILoggerFactory loggerFactory)
         {
             _bundleReplier = bundleReplier;
             _bundleCreatorProvider = bundleCreatorProvider;
+            _logger = loggerFactory.CreateLogger(nameof(BundleSender));
         }
 
         public async Task SendAsync(DataBundleRequestDto request)
         {
-            var bundleCreator = _bundleCreatorProvider.Get(request);
-            await using var bundleStream = new MemoryStream();
+            try
+            {
+                var bundleCreator = _bundleCreatorProvider.Get(request);
+                await using var bundleStream = new MemoryStream();
 
-            await bundleCreator.CreateAsync(request, bundleStream);
-            await _bundleReplier.ReplyAsync(bundleStream, request);
+                await bundleCreator.CreateAsync(request, bundleStream);
+                await _bundleReplier.ReplyAsync(bundleStream, request);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, "Exception caught during bundle operation");
+                await _bundleReplier.ReplyErrorAsync(e, request);
+            }
         }
     }
 }
