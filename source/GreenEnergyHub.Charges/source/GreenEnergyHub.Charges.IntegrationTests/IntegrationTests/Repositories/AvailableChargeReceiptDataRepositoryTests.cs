@@ -18,9 +18,9 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
 using FluentAssertions;
-using GreenEnergyHub.Charges.Domain.AvailableChargeReceiptData;
 using GreenEnergyHub.Charges.Infrastructure.Repositories;
 using GreenEnergyHub.Charges.IntegrationTests.Database;
+using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData;
 using GreenEnergyHub.Charges.TestCore.Attributes;
 using Xunit;
 using Xunit.Categories;
@@ -28,11 +28,11 @@ using Xunit.Categories;
 namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
 {
     [IntegrationTest]
-    public class AvailableChargeReceiptDataRepositoryTests : IClassFixture<ChargesDatabaseFixture>
+    public class AvailableChargeReceiptDataRepositoryTests : IClassFixture<MessageHubDatabaseFixture>
     {
-        private readonly ChargesDatabaseManager _databaseManager;
+        private readonly MessageHubDatabaseManager _databaseManager;
 
-        public AvailableChargeReceiptDataRepositoryTests(ChargesDatabaseFixture fixture)
+        public AvailableChargeReceiptDataRepositoryTests(MessageHubDatabaseFixture fixture)
         {
             _databaseManager = fixture.DatabaseManager;
         }
