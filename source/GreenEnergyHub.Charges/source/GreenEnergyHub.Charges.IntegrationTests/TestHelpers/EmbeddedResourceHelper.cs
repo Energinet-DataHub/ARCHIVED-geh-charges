@@ -16,6 +16,7 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Reflection;
+using System.Text.RegularExpressions;
 using NodaTime;
 
 namespace GreenEnergyHub.Charges.IntegrationTests.TestHelpers
@@ -36,8 +37,16 @@ namespace GreenEnergyHub.Charges.IntegrationTests.TestHelpers
             var now = currentInstant.ToString();
             var inThirtyoneDays = currentInstant.Plus(Duration.FromDays(31)).ToString();
 
-            return file
+            var replacementIndex = 0;
+            var mergedFile = Regex.Replace(file, "[{][{][$]increment5digits[}][}]", _ =>
+            {
+                replacementIndex++;
+                return replacementIndex.ToString("D5");
+            });
+
+            return mergedFile
                 .Replace("{{$randomCharacters}}", Guid.NewGuid().ToString("n")[..10])
+                .Replace("{{$randomCharactersShort}}", Guid.NewGuid().ToString("n")[..5])
                 .Replace("{{$isoTimestamp}}", now)
                 .Replace("{{$isoTimestampPlusOneMonth}}", inThirtyoneDays);
         }

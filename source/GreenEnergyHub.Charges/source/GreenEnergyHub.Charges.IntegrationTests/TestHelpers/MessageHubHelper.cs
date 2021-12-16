@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Energinet.DataHub.MessageHub.IntegrationTesting;
@@ -22,7 +21,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.TestHelpers
     public static class MessageHubHelper
     {
         /// <summary>
-        /// Initiates a peek and assert that a reply is received.
+        /// Listen for dataAvailable events, initiates a peek and assert that a reply is received.
         /// </summary>
         public static async Task AssertPeekReceivesReplyAsync(
             this MessageHubSimulation messageHub,

@@ -18,7 +18,6 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using Energinet.DataHub.Core.FunctionApp.TestCommon;
-using Energinet.DataHub.Core.FunctionApp.TestCommon.ServiceBus.ListenerMock;
 using FluentAssertions;
 using GreenEnergyHub.Charges.IntegrationTests.Fixtures;
 using GreenEnergyHub.Charges.IntegrationTests.TestFiles.Charges;
@@ -71,7 +70,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             public async Task When_ChargeIsReceived_Then_ChargeCreatedIntegrationEventIsPublished()
             {
                 // Arrange
-                var request = CreateHttpRequest(ChargeDocument.AnyValid, out string correlationId);
+                var request = CreateHttpRequest(ChargeDocument.AnyValid, out var correlationId);
                 using var eventualChargeCreatedEvent = await Fixture
                     .ChargeCreatedListener
                     .ListenForMessageAsync(correlationId)
@@ -87,49 +86,47 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             }
 
             [Fact]
-            public async Task When_ChargeIncludingPriceIsReceived_Then_ChargePricesUpdatedIntegrationEventIsPublished()
+            public async Task When_ChargeBundleWithChargesIncludingPriceIsReceived_Then_ChargePricesUpdatedIntegrationEventsArePublished()
             {
                 // Arrange
-                var request = CreateHttpRequest(ChargeDocument.AnyWithPrice, out string correlationId);
+                var request = CreateHttpRequest(ChargeDocument.TariffBundleWithValidAndInvalid, out string correlationId);
                 using var eventualChargePriceUpdatedEvent = await Fixture
                     .ChargePricesUpdatedListener
-                    .ListenForMessageAsync(correlationId)
+                    .ListenForEventsAsync(correlationId, expectedCount: 2)
                     .ConfigureAwait(false);
 
                 // Act
                 await Fixture.HostManager.HttpClient.SendAsync(request);
 
                 // Assert
-                var isChargePricesUpdatedReceived = eventualChargePriceUpdatedEvent.MessageAwaiter!.Wait(
+                var isChargePricesUpdatedReceived = eventualChargePriceUpdatedEvent.CountdownEvent!.Wait(
                     TimeSpan.FromSeconds(SecondsToWaitForIntegrationEvents));
                 isChargePricesUpdatedReceived.Should().BeTrue();
             }
 
             [Fact]
-            public async Task Given_NewTaxTariffWithPrices_When_GridAccessProviderPeeks_Then_MessageHubReceivesReply()
+            public async Task Given_NewTaxBundleTariffWithPrices_When_GridAccessProviderPeeks_Then_MessageHubReceivesReply()
             {
                 // Arrange
-                var request = CreateHttpRequest(ChargeDocument.TaxTariffWithPrice, out var correlationId);
+                var request = CreateHttpRequest(ChargeDocument.TariffBundleWithValidAndInvalid, out var correlationId);
 
                 // Act
                 await Fixture.HostManager.HttpClient.SendAsync(request);
 
                 // Act and assert
-                // We expect two peaks, one for the charge and one for the receipt
-                await Fixture.MessageHubMock.AssertPeekReceivesReplyAsync(correlationId, 2);
+                // We expect three peaks, one for the charge and one for the receipt and one rejection
+                await Fixture.MessageHubMock.AssertPeekReceivesReplyAsync(correlationId, 3);
             }
 
-            private static HttpRequestMessage CreateHttpRequest(
-                string testFilePath,
-                out string correlationId)
+            private static HttpRequestMessage CreateHttpRequest(string testFilePath, out string correlationId)
             {
                 var clock = SystemClock.Instance;
-                var chargeJson = EmbeddedResourceHelper.GetEmbeddedFile(testFilePath, clock);
+                var chargeXml = EmbeddedResourceHelper.GetEmbeddedFile(testFilePath, clock);
                 correlationId = CorrelationIdGenerator.Create();
 
                 var request = new HttpRequestMessage(HttpMethod.Post, "api/ChargeIngestion")
                 {
-                    Content = new StringContent(chargeJson, Encoding.UTF8, "application/xml"),
+                    Content = new StringContent(chargeXml, Encoding.UTF8, "application/xml"),
                 };
                 request.ConfigureTraceContext(correlationId);
 

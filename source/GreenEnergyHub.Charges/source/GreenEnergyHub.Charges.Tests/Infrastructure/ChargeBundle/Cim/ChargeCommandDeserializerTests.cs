@@ -40,10 +40,10 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.ChargeBundle.Cim
             var stream = GetEmbeddedResource("GreenEnergyHub.Charges.Tests.TestFiles.Syntax_Valid_CIM_Charge.xml");
             var byteArray = await GetBytesFromStreamAsync(stream);
             chargeCommandConverter.Setup(x => x.ConvertAsync(It.IsAny<XmlReader>()))
-                .ThrowsAsync(new ChargeOperationIsNullException());
+                .ThrowsAsync(new NoChargeOperationFoundException());
 
             // Assert
-            await Assert.ThrowsAsync<ChargeOperationIsNullException>(async () => await sut.FromBytesAsync(byteArray));
+            await Assert.ThrowsAsync<NoChargeOperationFoundException>(async () => await sut.FromBytesAsync(byteArray));
         }
 
         private static Stream GetEmbeddedResource(string path)

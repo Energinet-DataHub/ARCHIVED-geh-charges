@@ -12,11 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
+using System.Collections.Generic;
+using GreenEnergyHub.Charges.Domain.Dtos.Messages.Command;
 
-namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.ChargeBundle
+namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands
 {
-    public class ChargeOperationIsNullException : Exception
+    public class ChargeCommandBundle : CommandBase
     {
+        public ChargeCommandBundle(List<ChargeCommand> chargeCommands)
+        {
+            ChargeCommands = chargeCommands;
+        }
+
+        public List<ChargeCommand> ChargeCommands { get; }
     }
 }
