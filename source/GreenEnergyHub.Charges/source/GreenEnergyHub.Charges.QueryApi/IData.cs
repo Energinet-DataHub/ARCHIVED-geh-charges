@@ -3,7 +3,7 @@
 // </copyright>
 
 using System.Linq;
-using GreenEnergyHub.Charges.QueryApi.ScaffoldedModels;
+using GreenEnergyHub.Charges.QueryApi.Model.Scaffolded;
 
 namespace GreenEnergyHub.Charges.QueryApi
 {

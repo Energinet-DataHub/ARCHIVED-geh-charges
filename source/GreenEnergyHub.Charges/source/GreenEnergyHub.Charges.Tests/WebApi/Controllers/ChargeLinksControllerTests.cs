@@ -12,10 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
+using AutoFixture.Xunit2;
 using FluentAssertions;
+using GreenEnergyHub.Charges.QueryApi;
+using GreenEnergyHub.Charges.QueryApi.Model.Scaffolded;
+using GreenEnergyHub.Charges.TestCore.Attributes;
 using GreenEnergyHub.Charges.WebApi.Controllers;
 using Microsoft.AspNetCore.Mvc;
+using Moq;
 using Xunit;
 using Xunit.Categories;
 
@@ -24,32 +31,41 @@ namespace GreenEnergyHub.Charges.Tests.WebApi.Controllers
     [UnitTest]
     public class ChargeLinksControllerTests
     {
-        [Fact]
-        public async Task GetChargeLinksByMeteringPointIdAsync_WithMeteringPointId_ReturnsOk()
+        [Theory]
+        [InlineAutoMoqData]
+        public async Task GetChargeLinksByMeteringPointIdAsync_WithMeteringPointId_ReturnsOk(
+            [Frozen] Mock<IData> data,
+            ChargeLinksController sut)
         {
-            var controller = new ChargeLinksController();
+            data.Setup(d => d.Charges).Returns(new List<Charge>().AsQueryable());
 
-            var result = await controller.GetAsync("570000000000000000").ConfigureAwait(false);
+            var result = await sut.GetAsync("570000000000000000").ConfigureAwait(false);
 
             result.Should().BeOfType<OkObjectResult>();
         }
 
-        [Fact]
-        public async Task GetChargeLinksByMeteringPointIdAsync_WhenRequesting404_ReturnsNotFound()
+        [Theory]
+        [InlineAutoMoqData]
+        public async Task GetChargeLinksByMeteringPointIdAsync_WhenRequesting404_ReturnsNotFound(
+            [Frozen] Mock<IData> data,
+            ChargeLinksController sut)
         {
-            var controller = new ChargeLinksController();
+            data.Setup(d => d.Charges).Returns(new List<Charge>().AsQueryable());
 
-            var result = await controller.GetAsync("404").ConfigureAwait(false);
+            var result = await sut.GetAsync("404").ConfigureAwait(false);
 
             result.Should().BeOfType<NotFoundResult>();
         }
 
-        [Fact]
-        public async Task GetChargeLinksByMeteringPointIdAsync_WhenNoInputGiven_ReturnsBadRequest()
+        [Theory]
+        [InlineAutoMoqData]
+        public async Task GetChargeLinksByMeteringPointIdAsync_WhenNoInputGiven_ReturnsBadRequest(
+            [Frozen] Mock<IData> data,
+            ChargeLinksController sut)
         {
-            var controller = new ChargeLinksController();
+            data.Setup(d => d.Charges).Returns(new List<Charge>().AsQueryable());
 
-            var result = await controller.GetAsync(null).ConfigureAwait(false);
+            var result = await sut.GetAsync(null).ConfigureAwait(false);
 
             result.Should().BeOfType<BadRequestResult>();
         }

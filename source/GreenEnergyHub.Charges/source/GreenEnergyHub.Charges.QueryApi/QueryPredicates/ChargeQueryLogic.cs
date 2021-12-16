@@ -3,8 +3,9 @@
 // </copyright>
 
 using System.Linq;
+using GreenEnergyHub.Charges.QueryApi.Model.Scaffolded;
 
-namespace GreenEnergyHub.Charges.QueryApi.ScaffoldedModels
+namespace GreenEnergyHub.Charges.QueryApi.QueryPredicates
 {
     public static class ChargeQueryLogic
     {

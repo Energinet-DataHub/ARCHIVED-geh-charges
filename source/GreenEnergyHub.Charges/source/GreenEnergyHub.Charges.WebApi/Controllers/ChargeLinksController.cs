@@ -12,11 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Collections.Generic;
-using System.Text.Json;
+using System.Linq;
 using System.Threading.Tasks;
+using Energinet.Charges.Contracts.Charge;
 using Energinet.Charges.Contracts.ChargeLink;
+using GreenEnergyHub.Charges.QueryApi;
+using GreenEnergyHub.Charges.QueryApi.QueryPredicates;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace GreenEnergyHub.Charges.WebApi.Controllers
 {
@@ -24,6 +27,13 @@ namespace GreenEnergyHub.Charges.WebApi.Controllers
     [Route("[controller]")]
     public class ChargeLinksController : ControllerBase
     {
+        private readonly IData _data;
+
+        public ChargeLinksController(IData data)
+        {
+            _data = data;
+        }
+
         /// <summary>
         /// Returns all charge links data for a given metering point. Currently it returns mocked data.
         /// </summary>
@@ -34,21 +44,29 @@ namespace GreenEnergyHub.Charges.WebApi.Controllers
         public async Task<IActionResult> GetAsync(string meteringPointId)
         {
             if (meteringPointId == null)
-            {
                 return BadRequest();
-            }
 
-            if (meteringPointId == "404")
-            {
+            // TODO BJARKE: Make ChargeLinkDto instantiation reusable
+            var chargeLink = await _data
+                .ChargeLinks
+                .ForMeteringPoint(meteringPointId)
+                .Select(c => new ChargeLinkDto(
+                    (ChargeType)c.Charge.GetChargeType(), // TODO BJARKE: Map correctly
+                    c.Charge.SenderProvidedChargeId,
+                    c.Charge.Name,
+                    c.Charge.Owner.MarketParticipantId,
+                    "Netvirksomhed XYZ", // Hardcoded as we don't currently have the data
+                    c.Charge.TaxIndicator,
+                    c.Charge.TransparentInvoicing,
+                    c.Factor,
+                    c.StartDateTime,
+                    c.EndDateTime))
+                .SingleOrDefaultAsync();
+
+            if (chargeLink == null)
                 return NotFound();
-            }
 
-            // Uses mocked charge links data - later this will be refactored to use actual data from storage.
-            var mockDataText = await System.IO.File.ReadAllTextAsync(@"Files/ChargeLinksMockData.json").ConfigureAwait(false);
-
-            var mockChargeLinksData = JsonSerializer.Deserialize<IEnumerable<ChargeLinkDto>>(mockDataText);
-
-            return Ok(mockChargeLinksData);
+            return Ok(chargeLink);
         }
     }
 }

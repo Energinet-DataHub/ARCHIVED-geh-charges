@@ -4,16 +4,16 @@
 
 using GreenEnergyHub.Charges.Domain.Charges;
 
-namespace GreenEnergyHub.Charges.QueryApi.ScaffoldedModels
+namespace GreenEnergyHub.Charges.QueryApi.Model.Scaffolded
 {
     /// <summary>
     /// Documented!
     /// </summary>
     public partial class Charge
     {
-        public string GetPublicChargeType()
+        public ChargeType GetChargeType()
         {
-            return ((ChargeType)ChargeType).ToString();
+            return (ChargeType)Type;
         }
     }
 }
