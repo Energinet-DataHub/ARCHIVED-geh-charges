@@ -19,7 +19,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation
         Unknown = 0,
         StartDateValidation = 1, // VR209
         ChangingTariffVatValueNotAllowed = 2, // VR630
-        ChangingTariffTaxValueNotAllowed = 3, // VRXYZ
+        ChangingTariffTaxValueNotAllowed = 3, // VR903
         ProcessTypeIsKnownValidation = 4, // VR009
         SenderIsMandatoryTypeValidation = 5, // VR150
         RecipientIsMandatoryTypeValidation = 6, // VR153
