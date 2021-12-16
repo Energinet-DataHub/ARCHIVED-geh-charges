@@ -14,6 +14,7 @@
 
 using System;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using System.Xml;
@@ -56,9 +57,10 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.ChargeBundle.Cim
                 "GreenEnergyHub.Charges.Tests.TestFiles.Syntax_Valid_CIM_Charge.xml");
 
             // Act
-            var actual = (ChargeCommand)await sut.ConvertAsync(reader).ConfigureAwait(false);
+            var actualBundle = (ChargeCommandBundle)await sut.ConvertAsync(reader).ConfigureAwait(false);
 
             // Assert
+            var actual = actualBundle.ChargeCommands.First();
 
             // Document
             actual.Document.Id.Should().Be("25369874");
@@ -128,9 +130,10 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.ChargeBundle.Cim
                 "GreenEnergyHub.Charges.Tests.TestFiles.Valid_CIM_Charge_Without_Prices.xml");
 
             // Act
-            var actual = (ChargeCommand)await sut.ConvertAsync(reader).ConfigureAwait(false);
+            var actualBundle = (ChargeCommandBundle)await sut.ConvertAsync(reader).ConfigureAwait(false);
 
             // Assert
+            var actual = actualBundle.ChargeCommands.First();
 
             // Charge operation
             actual.ChargeOperation.Id.Should().Be("36251479");
@@ -174,9 +177,10 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.ChargeBundle.Cim
                 "GreenEnergyHub.Charges.Tests.TestFiles.Valid_CIM_Charge_Prices_Without_Master_Data.xml");
 
             // Act
-            var actual = (ChargeCommand)await sut.ConvertAsync(reader).ConfigureAwait(false);
+            var actualBundle = (ChargeCommandBundle)await sut.ConvertAsync(reader).ConfigureAwait(false);
 
             // Assert
+            var actual = actualBundle.ChargeCommands.First();
 
             // Charge operation, should only be partially filled
             actual.ChargeOperation.Id.Should().Be("36251480");
@@ -215,6 +219,64 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.ChargeBundle.Cim
                     "P1M",
                     1),
                 Times.Once);
+        }
+
+        [Theory]
+        [InlineAutoMoqData]
+        public async Task ConvertAsync_WhenCalledWithValidBundle_ReturnsMultipleParsedObject(
+            [Frozen] Mock<ICorrelationContext> context,
+            [Frozen] Mock<IIso8601Durations> iso8601Durations,
+            ChargeCommandConverter sut)
+        {
+            // Arrange
+            var correlationId = Guid.NewGuid().ToString();
+            var expectedTime = InstantPattern.ExtendedIso.Parse("2022-10-31T23:00:00Z").Value;
+            using var reader = GetReaderAndArrangeTest(
+                context,
+                iso8601Durations,
+                correlationId,
+                expectedTime,
+                "GreenEnergyHub.Charges.Tests.TestFiles.CreateTariffsBundle.xml");
+
+            // Act
+            var actual = (ChargeCommandBundle)await sut.ConvertAsync(reader).ConfigureAwait(false);
+
+            // Assert
+
+            // Charge operation
+            var actualFirstChargeCommand = actual.ChargeCommands.Single(x => x.ChargeOperation.Id == "36251480");
+            actualFirstChargeCommand.ChargeOperation.ChargeOwner.Should().Be("8100000000030");
+            actualFirstChargeCommand.ChargeOperation.Type.Should().Be(ChargeType.Tariff);
+            actualFirstChargeCommand.ChargeOperation.ChargeId.Should().Be("ChId1234567890");
+            actualFirstChargeCommand.ChargeOperation.ChargeName.Should().Be("Charge Tariff day Name 1");
+            actualFirstChargeCommand.ChargeOperation.ChargeDescription.Should().Be("The charge description 1");
+            actualFirstChargeCommand.ChargeOperation.Resolution.Should().Be(Resolution.P1D);
+            actualFirstChargeCommand.ChargeOperation.StartDateTime.Should().Be(expectedTime);
+            actualFirstChargeCommand.ChargeOperation.EndDateTime.Should().BeNull();
+            actualFirstChargeCommand.ChargeOperation.VatClassification.Should().Be(VatClassification.NoVat);
+            actualFirstChargeCommand.ChargeOperation.TransparentInvoicing.Should().BeFalse();
+            actualFirstChargeCommand.ChargeOperation.TaxIndicator.Should().BeTrue();
+
+            // Prices
+            actualFirstChargeCommand.ChargeOperation.Points.Should().HaveCount(1);
+            actualFirstChargeCommand.ChargeOperation.Points.First().Price.Should().Be(150.001m);
+
+            var actualSecondChargeCommand = actual.ChargeCommands.Single(x => x.ChargeOperation.Id == "36251481");
+            actualSecondChargeCommand.ChargeOperation.ChargeOwner.Should().Be("8100000000030");
+            actualSecondChargeCommand.ChargeOperation.Type.Should().Be(ChargeType.Tariff);
+            actualSecondChargeCommand.ChargeOperation.ChargeId.Should().Be("ChId1234567891");
+            actualSecondChargeCommand.ChargeOperation.ChargeName.Should().Be("Charge Tariff day Name 2");
+            actualSecondChargeCommand.ChargeOperation.ChargeDescription.Should().Be("The charge description 2");
+            actualSecondChargeCommand.ChargeOperation.Resolution.Should().Be(Resolution.P1D);
+            actualSecondChargeCommand.ChargeOperation.StartDateTime.Should().Be(expectedTime);
+            actualSecondChargeCommand.ChargeOperation.EndDateTime.Should().BeNull();
+            actualSecondChargeCommand.ChargeOperation.VatClassification.Should().Be(VatClassification.Vat25);
+            actualSecondChargeCommand.ChargeOperation.TransparentInvoicing.Should().BeTrue();
+            actualSecondChargeCommand.ChargeOperation.TaxIndicator.Should().BeFalse();
+
+            // Prices
+            actualSecondChargeCommand.ChargeOperation.Points.Should().HaveCount(1);
+            actualSecondChargeCommand.ChargeOperation.Points.First().Price.Should().Be(200.001m);
         }
 
         private XmlReader GetReaderAndArrangeTest(

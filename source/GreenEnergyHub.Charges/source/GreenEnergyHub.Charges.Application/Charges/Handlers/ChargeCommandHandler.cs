@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandReceivedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
@@ -31,7 +30,7 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
             _messageDispatcher = messageDispatcher;
         }
 
-        public async Task HandleAsync([NotNull] ChargeCommand command)
+        public async Task HandleAsync(ChargeCommand command)
         {
             var receivedEvent = new ChargeCommandReceivedEvent(_clock.GetCurrentInstant(), command);
             await _messageDispatcher.DispatchAsync(receivedEvent).ConfigureAwait(false);
