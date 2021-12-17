@@ -12,15 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Diagnostics.CodeAnalysis;
-using System.Threading;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Application.ChargeLinks.Handlers;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksReceivedEvents;
-using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions;
 using GreenEnergyHub.TestHelpers;
 using Moq;
 using Xunit;
@@ -29,23 +25,23 @@ using Xunit.Categories;
 namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Handlers
 {
     [UnitTest]
-    public class ChargeLinksCommandHandlerTests
+    public class ChargeLinksCommandBundleHandlerTests
     {
         [Theory]
         [InlineAutoDomainData]
         public async Task HandleAsync_WhenCalledWithValidChargeLink_ShouldReturnOk(
-            [Frozen] Mock<IMessageDispatcher<ChargeLinksReceivedEvent>> messageDispatcher,
-            ChargeLinksCommand chargeLinksCommand,
-            ChargeLinksCommandHandler sut)
+            [Frozen] Mock<IChargeLinksCommandHandler> chargeLinksCommandHandler,
+            ChargeLinksCommandBundle chargeLinksCommandBundle,
+            ChargeLinksCommandBundleHandler sut)
         {
             // Act
-            await sut.HandleAsync(chargeLinksCommand).ConfigureAwait(false);
+            await sut.HandleAsync(chargeLinksCommandBundle).ConfigureAwait(false);
 
             // Assert
-            messageDispatcher.Verify(
-                x =>
-                    x.DispatchAsync(It.IsAny<ChargeLinksReceivedEvent>(), It.IsAny<CancellationToken>()),
-                Times.Once);
+            chargeLinksCommandBundle.ChargeLinksCommands.Should().NotBeEmpty();
+            chargeLinksCommandHandler.Verify(
+                x => x.HandleAsync(It.IsAny<ChargeLinksCommand>()),
+                Times.Exactly(chargeLinksCommandBundle.ChargeLinksCommands.Count));
         }
     }
 }

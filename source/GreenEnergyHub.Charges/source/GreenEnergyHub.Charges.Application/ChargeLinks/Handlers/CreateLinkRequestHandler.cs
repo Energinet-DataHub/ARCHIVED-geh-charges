@@ -66,7 +66,7 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
             _logger = loggerFactory.CreateLogger(nameof(CreateLinkRequestHandler));
         }
 
-        public async Task HandleAsync([NotNull] CreateLinksRequest createLinksRequest)
+        public async Task HandleAsync(CreateLinksRequest createLinksRequest)
         {
             if (!_messageMetaDataContext.IsReplyToSet())
             {

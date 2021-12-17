@@ -18,8 +18,23 @@ using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands;
 
 namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
 {
-    public interface IChargeLinksCommandHandler
+    public class ChargeLinksCommandBundleHandler : IChargeLinksCommandBundleHandler
     {
-        public Task HandleAsync(ChargeLinksCommand command);
+        private readonly IChargeLinksCommandHandler _chargeLinksCommandHandler;
+
+        public ChargeLinksCommandBundleHandler(IChargeLinksCommandHandler chargeLinksCommandHandler)
+        {
+            _chargeLinksCommandHandler = chargeLinksCommandHandler;
+        }
+
+        public async Task<ChargeLinksMessageResult> HandleAsync(ChargeLinksCommandBundle chargeLinksCommandBundle)
+        {
+            foreach (var chargeLinksCommand in chargeLinksCommandBundle.ChargeLinksCommands)
+            {
+                await _chargeLinksCommandHandler.HandleAsync(chargeLinksCommand);
+            }
+
+            return ChargeLinksMessageResult.CreateSuccess();
+        }
     }
 }
