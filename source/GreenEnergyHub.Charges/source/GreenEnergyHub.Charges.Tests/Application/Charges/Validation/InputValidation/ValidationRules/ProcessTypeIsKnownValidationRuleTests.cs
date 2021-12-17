@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Diagnostics.CodeAnalysis;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation;
@@ -35,7 +34,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Validation.InputValid
         public void ProcessTypeIsKnownValidationRule_Test(
             BusinessReasonCode businessReasonCode,
             bool expected,
-            [NotNull] ChargeCommand command)
+            ChargeCommand command)
         {
             command.Document.BusinessReasonCode = businessReasonCode;
             var sut = new ProcessTypeIsKnownValidationRule(command);
@@ -44,10 +43,19 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Validation.InputValid
 
         [Theory]
         [InlineAutoDomainData]
-        public void ValidationRuleIdentifier_ShouldBe_EqualTo([NotNull] ChargeCommand command)
+        public void ValidationRuleIdentifier_ShouldBe_EqualTo(ChargeCommand command)
         {
             var sut = new ProcessTypeIsKnownValidationRule(command);
-            sut.ValidationRuleIdentifier.Should().Be(ValidationRuleIdentifier.ProcessTypeIsKnownValidation);
+            sut.ValidationError.ValidationRuleIdentifier.Should().Be(ValidationRuleIdentifier.ProcessTypeIsKnownValidation);
+        }
+
+        [Theory]
+        [InlineAutoDomainData]
+        public void ValidationRuleIdentifier_ShouldContain_RequiredErrorMessageParameterTypes(ChargeCommand command)
+        {
+            var sut = new ProcessTypeIsKnownValidationRule(command);
+            sut.ValidationError.ValidationErrorMessageParameters.Should()
+                .Contain(ValidationErrorMessageParameterType.MeteringPointId);
         }
     }
 }

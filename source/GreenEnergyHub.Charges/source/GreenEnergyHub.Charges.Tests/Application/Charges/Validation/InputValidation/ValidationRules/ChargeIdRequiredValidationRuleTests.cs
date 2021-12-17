@@ -47,7 +47,16 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Validation.InputValid
         public void ValidationRuleIdentifier_ShouldBe_EqualTo(ChargeCommand command)
         {
             var sut = new ChargeIdRequiredValidationRule(command);
-            sut.ValidationRuleIdentifier.Should().Be(ValidationRuleIdentifier.ChargeIdRequiredValidation);
+            sut.ValidationError.ValidationRuleIdentifier.Should()
+                .Be(ValidationRuleIdentifier.ChargeIdRequiredValidation);
+        }
+
+        [Theory]
+        [InlineAutoDomainData]
+        public void ValidationRuleIdentifier_ShouldContain_RequiredErrorMessageParameterTypes(ChargeCommand command)
+        {
+            var sut = new ChargeIdRequiredValidationRule(command);
+            sut.ValidationError.ValidationErrorMessageParameters.Should().BeEmpty();
         }
     }
 }

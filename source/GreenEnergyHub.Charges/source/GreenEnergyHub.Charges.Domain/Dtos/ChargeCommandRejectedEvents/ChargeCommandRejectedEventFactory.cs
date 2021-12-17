@@ -13,7 +13,6 @@
 // limitations under the License.
 
 using System;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation;
@@ -31,23 +30,20 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandRejectedEvents
         }
 
         public ChargeCommandRejectedEvent CreateEvent(
-            [NotNull] ChargeCommand command,
-            [NotNull] ChargeCommandValidationResult chargeCommandValidationResult)
+            ChargeCommand command,
+            ChargeCommandValidationResult chargeCommandValidationResult)
         {
             return new ChargeCommandRejectedEvent(
                 _clock.GetCurrentInstant(),
                 command,
-                chargeCommandValidationResult.InvalidRules.Select(x => x.ValidationRuleIdentifier.ToString()).ToArray());
+                chargeCommandValidationResult.InvalidRules.Select(x => // TODO ...
+                    x.ValidationError.ValidationRuleIdentifier.ToString())
+                    .ToArray());
         }
 
-        public ChargeCommandRejectedEvent CreateEvent(
-            [NotNull] ChargeCommand command,
-            [NotNull] Exception exception)
+        public ChargeCommandRejectedEvent CreateEvent(ChargeCommand command, Exception exception)
         {
-            return new ChargeCommandRejectedEvent(
-                _clock.GetCurrentInstant(),
-                command,
-                new[] { exception.Message });
+            return new ChargeCommandRejectedEvent(_clock.GetCurrentInstant(), command, new[] { exception.Message });
         }
     }
 }

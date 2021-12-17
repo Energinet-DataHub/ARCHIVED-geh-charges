@@ -50,7 +50,24 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Validation.BusinessVa
         public void ValidationRuleIdentifier_ShouldBe_EqualTo(ChargeCommand command, Charge charge)
         {
             var sut = new ChangingTariffVatValueNotAllowedRule(command, charge);
-            sut.ValidationRuleIdentifier.Should().Be(ValidationRuleIdentifier.ChangingTariffVatValueNotAllowed);
+            sut.ValidationError.ValidationRuleIdentifier.Should()
+                .Be(ValidationRuleIdentifier.ChangingTariffVatValueNotAllowed);
+        }
+
+        [Theory]
+        [InlineAutoDomainData]
+        public void ValidationRuleIdentifier_ShouldContain_RequiredErrorMessageParameterTypesEqualTo(
+            ChargeCommand command, Charge charge)
+        {
+            // Arrange
+            // Act
+            var sut = new ChangingTariffVatValueNotAllowedRule(command, charge);
+
+            // Assert
+            sut.ValidationError.ValidationErrorMessageParameters.Should()
+                .Contain(ValidationErrorMessageParameterType.VatClass);
+            sut.ValidationError.ValidationErrorMessageParameters.Should()
+                .Contain(ValidationErrorMessageParameterType.PartyChargeTypeId);
         }
     }
 }

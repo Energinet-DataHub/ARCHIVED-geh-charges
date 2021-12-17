@@ -49,7 +49,23 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Validation.InputValid
         public void ValidationRuleIdentifier_ShouldBe_EqualTo(ChargeCommand command)
         {
             var sut = new ChargeNameHasMaximumLengthRule(command);
-            sut.ValidationRuleIdentifier.Should().Be(ValidationRuleIdentifier.ChargeNameHasMaximumLength);
+            sut.ValidationError.ValidationRuleIdentifier.Should()
+                .Be(ValidationRuleIdentifier.ChargeNameHasMaximumLength);
+        }
+
+        [Theory]
+        [InlineAutoDomainData]
+        public void ValidationRuleIdentifier_ShouldContain_RequiredErrorMessageParameterTypes(ChargeCommand command)
+        {
+            // Arrange
+            // Act
+            var sut = new ChargeNameHasMaximumLengthRule(command);
+
+            // Assert
+            sut.ValidationError.ValidationErrorMessageParameters.Should()
+                .Contain(ValidationErrorMessageParameterType.Description);
+            sut.ValidationError.ValidationErrorMessageParameters.Should()
+                .Contain(ValidationErrorMessageParameterType.PartyChargeTypeId);
         }
 
         private static string GenerateStringWithLength(int stringLength)

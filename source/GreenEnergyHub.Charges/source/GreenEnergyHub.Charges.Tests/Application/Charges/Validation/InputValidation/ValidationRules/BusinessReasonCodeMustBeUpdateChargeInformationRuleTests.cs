@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Diagnostics.CodeAnalysis;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation;
@@ -26,7 +25,7 @@ using Xunit.Categories;
 namespace GreenEnergyHub.Charges.Tests.Application.Charges.Validation.InputValidation.ValidationRules
 {
     [UnitTest]
-    public class BusinessReasonCodeMustBeUpdateChargeInformationTests
+    public class BusinessReasonCodeMustBeUpdateChargeInformationRuleTests
     {
         [Theory]
         [InlineAutoMoqData(BusinessReasonCode.Unknown, false)]
@@ -35,7 +34,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Validation.InputValid
         public void BusinessReasonCodeMustBeUpdateChargeInformation_Test(
             BusinessReasonCode businessReasonCode,
             bool expected,
-            [NotNull] ChargeCommand command)
+            ChargeCommand command)
         {
             command.Document.BusinessReasonCode = businessReasonCode;
             var sut = new BusinessReasonCodeMustBeUpdateChargeInformationRule(command);
@@ -44,10 +43,26 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Validation.InputValid
 
         [Theory]
         [InlineAutoDomainData]
-        public void ValidationRuleIdentifier_ShouldBe_EqualTo([NotNull] ChargeCommand command)
+        public void ValidationRuleIdentifier_ShouldBe_EqualTo(ChargeCommand command)
         {
             var sut = new BusinessReasonCodeMustBeUpdateChargeInformationRule(command);
-            sut.ValidationRuleIdentifier.Should().Be(ValidationRuleIdentifier.BusinessReasonCodeMustBeUpdateChargeInformation);
+            sut.ValidationError.ValidationRuleIdentifier.Should()
+                .Be(ValidationRuleIdentifier.BusinessReasonCodeMustBeUpdateChargeInformation);
+        }
+
+        [Theory]
+        [InlineAutoDomainData]
+        public void ValidationRuleIdentifier_ShouldContain_RequiredErrorMessageParameterTypes(ChargeCommand command)
+        {
+            // Arrange
+            // Act
+            var sut = new BusinessReasonCodeMustBeUpdateChargeInformationRule(command);
+
+            // Assert
+            sut.ValidationError.ValidationErrorMessageParameters.Should()
+                .Contain(ValidationErrorMessageParameterType.EnergyBusinessProcess);
+            sut.ValidationError.ValidationErrorMessageParameters.Should()
+                .Contain(ValidationErrorMessageParameterType.DocumentType);
         }
     }
 }

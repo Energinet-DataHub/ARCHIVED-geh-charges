@@ -29,7 +29,6 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputVali
         public bool IsValid =>
             _chargeCommand.Document.BusinessReasonCode == BusinessReasonCode.UpdateChargeInformation;
 
-        public ValidationRuleIdentifier ValidationRuleIdentifier =>
-            ValidationRuleIdentifier.ProcessTypeIsKnownValidation;
+        public ValidationError ValidationError { get; } = new(ValidationRuleIdentifier.ProcessTypeIsKnownValidation);
     }
 }

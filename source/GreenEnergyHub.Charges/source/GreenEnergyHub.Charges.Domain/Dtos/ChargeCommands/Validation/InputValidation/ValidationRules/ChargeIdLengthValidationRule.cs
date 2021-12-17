@@ -28,6 +28,6 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputVali
         // ChargeId can be null when the rule is executed.
         public bool IsValid => _chargeCommand.ChargeOperation.ChargeId?.Length <= ValidLength;
 
-        public ValidationRuleIdentifier ValidationRuleIdentifier => ValidationRuleIdentifier.ChargeIdLengthValidation;
+        public ValidationError ValidationError { get; } = new(ValidationRuleIdentifier.ChargeIdLengthValidation);
     }
 }

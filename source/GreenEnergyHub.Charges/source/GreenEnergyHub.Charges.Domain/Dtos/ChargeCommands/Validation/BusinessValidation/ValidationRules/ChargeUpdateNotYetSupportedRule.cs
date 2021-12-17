@@ -28,8 +28,8 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessV
             _charge = charge;
         }
 
-        public ValidationRuleIdentifier ValidationRuleIdentifier => ValidationRuleIdentifier.UpdateNotYetSupported;
-
         public bool IsValid => _charge == null;
+
+        public ValidationError ValidationError { get; } = new(ValidationRuleIdentifier.UpdateNotYetSupported);
     }
 }

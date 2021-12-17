@@ -48,7 +48,24 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Validation.BusinessVa
         public void ValidationRuleIdentifier_ShouldBe_EqualTo([NotNull] MarketParticipant sender)
         {
             var sut = new CommandSenderMustBeAnExistingMarketParticipantRule(sender);
-            sut.ValidationRuleIdentifier.Should().Be(ValidationRuleIdentifier.CommandSenderMustBeAnExistingMarketParticipant);
+            sut.ValidationError.ValidationRuleIdentifier.Should()
+                .Be(ValidationRuleIdentifier.CommandSenderMustBeAnExistingMarketParticipant);
+        }
+
+        [Theory]
+        [InlineAutoDomainData]
+        public void ValidationRuleIdentifier_ShouldContain_RequiredErrorMessageParameterTypes(
+            [NotNull] MarketParticipant sender)
+        {
+            // Arrange
+            // Act
+            var sut = new CommandSenderMustBeAnExistingMarketParticipantRule(sender);
+
+            // Assert
+            sut.ValidationError.ValidationErrorMessageParameters.Should()
+                .Contain(ValidationErrorMessageParameterType.SenderId);
+            sut.ValidationError.ValidationErrorMessageParameters.Should()
+                .Contain(ValidationErrorMessageParameterType.MessageId);
         }
     }
 }

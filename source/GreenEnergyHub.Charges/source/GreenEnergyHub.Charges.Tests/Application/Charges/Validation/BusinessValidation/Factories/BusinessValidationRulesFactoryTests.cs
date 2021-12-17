@@ -147,8 +147,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Validation.BusinessVa
         /// </summary>
         private static RulesConfiguration CreateConfiguration()
         {
-            return new RulesConfiguration(
-                new StartDateValidationRuleConfiguration(new Interval<int>(31, 1095)));
+            return new RulesConfiguration(new StartDateValidationRuleConfiguration(new Interval<int>(31, 1095)));
         }
 
         private static void ConfigureRepositoryMock(

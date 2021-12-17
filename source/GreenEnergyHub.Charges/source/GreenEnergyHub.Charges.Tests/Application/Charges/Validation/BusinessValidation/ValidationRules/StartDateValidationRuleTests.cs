@@ -79,7 +79,23 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Validation.BusinessVa
             var sut = new StartDateValidationRule(command, configuration, zonedDateTimeService, clock);
 
             // Assert
-            sut.ValidationRuleIdentifier.Should().Be(ValidationRuleIdentifier.StartDateValidation);
+            sut.ValidationError.ValidationRuleIdentifier.Should().Be(ValidationRuleIdentifier.StartDateValidation);
+        }
+
+        [Theory]
+        [InlineAutoDomainData]
+        public void ValidationRuleIdentifier_ShouldContain_RequiredErrorMessageParameterTypes(
+            ChargeCommand command, IClock clock)
+        {
+            // Arrange
+            var configuration = CreateRuleConfiguration(1, 3);
+            var zonedDateTimeService = CreateLocalDateTimeService("Europe/Copenhagen");
+
+            var sut = new StartDateValidationRule(command, configuration, zonedDateTimeService, clock);
+
+            // Assert
+            sut.ValidationError.ValidationErrorMessageParameters.Should()
+                .Contain(ValidationErrorMessageParameterType.Occurrence);
         }
 
         private static ZonedDateTimeService CreateLocalDateTimeService(string timeZoneId)
@@ -92,8 +108,9 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Validation.BusinessVa
             int startOfOccurrence,
             int endOfOccurrence)
         {
-            var configuration =
-                new StartDateValidationRuleConfiguration(new Interval<int>(startOfOccurrence, endOfOccurrence));
+            var configuration = new StartDateValidationRuleConfiguration(
+                new Interval<int>(startOfOccurrence, endOfOccurrence));
+
             return configuration;
         }
     }

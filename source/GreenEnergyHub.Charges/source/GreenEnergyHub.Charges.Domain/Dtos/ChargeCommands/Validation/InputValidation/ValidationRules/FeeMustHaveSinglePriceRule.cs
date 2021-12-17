@@ -39,6 +39,6 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputVali
             }
         }
 
-        public ValidationRuleIdentifier ValidationRuleIdentifier => ValidationRuleIdentifier.FeeMustHaveSinglePrice;
+        public ValidationError ValidationError { get; } = new(ValidationRuleIdentifier.FeeMustHaveSinglePrice);
     }
 }

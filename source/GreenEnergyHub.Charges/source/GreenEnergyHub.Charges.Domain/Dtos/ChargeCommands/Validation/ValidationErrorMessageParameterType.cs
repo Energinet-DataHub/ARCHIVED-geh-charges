@@ -14,16 +14,25 @@
 
 namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation
 {
-    public class ValidationRule : IValidationRule
+    public enum ValidationErrorMessageParameterType
     {
-        public ValidationRule(bool isValid, ValidationRuleIdentifier ruleIdentifier)
-        {
-            IsValid = isValid;
-            ValidationError = new ValidationError(ruleIdentifier);
-        }
-
-        public bool IsValid { get; }
-
-        public ValidationError ValidationError { get; }
+        ChargeType = 1,
+        ChargeTypeOwner = 2,
+        Description = 3,
+        DocumentType = 4,
+        EnergyBusinessProcess = 5,
+        EnergyPrice = 6,
+        FunctionCode = 7,
+        LongDescriptionMaxLength100 = 8,
+        MaxOfPosition = 9,
+        MessageId = 10,
+        MeteringPointId = 11,
+        Occurrence = 12,
+        PartyChargeTypeId = 13,
+        Position = 14,
+        ResolutionDuration = 15,
+        SenderId = 16,
+        TaxIndicator = 17,
+        VatClass = 18,
     }
 }

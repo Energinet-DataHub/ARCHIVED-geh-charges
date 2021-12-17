@@ -27,7 +27,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputVali
 
         public bool IsValid => MarketParticipantMrIdValidator.IsValid(_chargeCommand.Document.Recipient.Id);
 
-        public ValidationRuleIdentifier ValidationRuleIdentifier =>
-            ValidationRuleIdentifier.RecipientIsMandatoryTypeValidation;
+        public ValidationError ValidationError { get; } = new(
+            ValidationRuleIdentifier.RecipientIsMandatoryTypeValidation);
     }
 }

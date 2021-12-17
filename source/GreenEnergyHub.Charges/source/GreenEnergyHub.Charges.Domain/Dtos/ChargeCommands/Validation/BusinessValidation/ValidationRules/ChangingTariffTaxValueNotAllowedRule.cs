@@ -27,8 +27,8 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessV
             _charge = charge;
         }
 
-        public ValidationRuleIdentifier ValidationRuleIdentifier => ValidationRuleIdentifier.ChangingTariffTaxValueNotAllowed;
-
         public bool IsValid => _command.ChargeOperation.TaxIndicator == _charge.TaxIndicator;
+
+        public ValidationError ValidationError { get; } = new(ValidationRuleIdentifier.ChangingTariffTaxValueNotAllowed);
     }
 }

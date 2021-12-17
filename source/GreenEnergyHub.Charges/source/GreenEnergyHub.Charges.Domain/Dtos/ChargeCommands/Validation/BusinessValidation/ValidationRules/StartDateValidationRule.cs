@@ -39,8 +39,6 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessV
 
         public bool IsValid => _validityStartDate >= _periodStart && _validityStartDate < _periodEnd;
 
-        public ValidationRuleIdentifier ValidationRuleIdentifier => ValidationRuleIdentifier.StartDateValidation;
-
         private static Instant CalculatePeriodPoint(
             int numberOfDays,
             IZonedDateTimeService zonedDateTimeService,
@@ -51,5 +49,9 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessV
                 .GetZonedDateTime(localDate.AtMidnight(), ResolutionStrategy.Leniently)
                 .ToInstant();
         }
+
+        public ValidationError ValidationError { get; } = new(
+            ValidationRuleIdentifier.StartDateValidation,
+            ValidationErrorMessageParameterType.Occurrence);
     }
 }

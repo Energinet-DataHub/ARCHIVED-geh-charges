@@ -69,7 +69,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputVali
             return GetNumberOfDecimals(d, i + 1);
         }
 
-        public ValidationRuleIdentifier ValidationRuleIdentifier =>
-            ValidationRuleIdentifier.ChargePriceMaximumDigitsAndDecimals;
+        public ValidationError ValidationError { get; } = new(
+            ValidationRuleIdentifier.ChargePriceMaximumDigitsAndDecimals);
     }
 }

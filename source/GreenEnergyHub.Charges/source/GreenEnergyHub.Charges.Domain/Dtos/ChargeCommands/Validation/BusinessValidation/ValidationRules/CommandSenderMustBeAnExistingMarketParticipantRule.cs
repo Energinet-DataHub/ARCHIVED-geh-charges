@@ -27,7 +27,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessV
 
         public bool IsValid => _sender != null;
 
-        public ValidationRuleIdentifier ValidationRuleIdentifier =>
-            ValidationRuleIdentifier.CommandSenderMustBeAnExistingMarketParticipant;
+        public ValidationError ValidationError { get; } = new(
+            ValidationRuleIdentifier.CommandSenderMustBeAnExistingMarketParticipant);
     }
 }
