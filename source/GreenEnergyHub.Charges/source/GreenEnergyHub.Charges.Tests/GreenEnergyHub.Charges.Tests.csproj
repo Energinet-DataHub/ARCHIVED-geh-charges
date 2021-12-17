@@ -101,8 +101,4 @@ limitations under the License.
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
     </ItemGroup>
-
-    <ItemGroup>
-      <Folder Include="MessageHub\Models" />
-    </ItemGroup>
 </Project>
