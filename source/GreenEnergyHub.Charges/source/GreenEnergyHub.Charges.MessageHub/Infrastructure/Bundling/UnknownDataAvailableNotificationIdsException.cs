@@ -13,16 +13,26 @@
 // limitations under the License.
 
 using System;
-using System.IO;
-using System.Threading.Tasks;
-using Energinet.DataHub.MessageHub.Model.Model;
+using System.Runtime.Serialization;
 
 namespace GreenEnergyHub.Charges.MessageHub.Infrastructure.Bundling
 {
-    public interface IBundleReplier
+    [Serializable]
+    public class UnknownDataAvailableNotificationIdsException : Exception
     {
-        Task ReplyAsync(Stream bundleStream, DataBundleRequestDto request);
+        public UnknownDataAvailableNotificationIdsException() { }
 
-        Task ReplyErrorAsync(Exception e, DataBundleRequestDto request);
+        public UnknownDataAvailableNotificationIdsException(string message)
+            : base(message) { }
+
+        public UnknownDataAvailableNotificationIdsException(string message, Exception inner)
+            : base(message, inner) { }
+
+        protected UnknownDataAvailableNotificationIdsException(
+            SerializationInfo info,
+            StreamingContext context)
+            : base(info, context)
+        {
+        }
     }
 }

@@ -67,5 +67,29 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.MessageHub
                     availableData.First().RecipientRole),
                 Times.Once);
         }
+
+        [Theory]
+        [InlineAutoDomainData]
+        public async Task CreateAsync_WhenCalledWithRequestYieldingNoAvailableData_ThrowsUnknownDataAvailableNotificationIdsException(
+            [Frozen] Mock<IAvailableDataRepository<AvailableDataBase>> repository,
+            DataBundleRequestDto dataBundleRequestDto,
+            List<Guid> dataAvailableIds,
+            [Frozen] Mock<IStorageHandler> storageHandler,
+            Stream stream,
+            BundleCreator<AvailableDataBase> sut)
+        {
+            // Arrange
+            storageHandler
+                .Setup(r => r.GetDataAvailableNotificationIdsAsync(dataBundleRequestDto))
+                .ReturnsAsync(dataAvailableIds);
+
+            repository.Setup(
+                    r => r.GetAsync(dataAvailableIds))
+                .ReturnsAsync(new List<AvailableDataBase>());
+
+            // Act
+            await Assert.ThrowsAsync<UnknownDataAvailableNotificationIdsException>(
+                () => sut.CreateAsync(dataBundleRequestDto, stream));
+        }
     }
 }
