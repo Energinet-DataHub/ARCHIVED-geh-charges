@@ -38,7 +38,7 @@ namespace GreenEnergyHub.Charges.WebApi
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "GreenEnergyHub.Charges.WebApi", Version = "v1" });
             });
-            services.AddQueryApi();
+            services.AddQueryApi(Configuration);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

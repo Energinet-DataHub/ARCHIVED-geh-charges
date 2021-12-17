@@ -34,15 +34,6 @@ limitations under the License.
     </ItemGroup>
 
     <ItemGroup>
-      <Compile Include="..\..\..\Contracts\ChargeLink\ChargeLinkDto.cs">
-        <Link>Dtos\ChargeLink\ChargeLinkDto.cs</Link>
-      </Compile>
-      <Compile Include="..\..\..\Contracts\Charge\ChargeType.cs">
-        <Link>Dtos\Charge\ChargeType.cs</Link>
-      </Compile>
-    </ItemGroup>
-
-    <ItemGroup>
       <ProjectReference Include="..\GreenEnergyHub.Charges.Domain\GreenEnergyHub.Charges.Domain.csproj" />
     </ItemGroup>
 </Project>

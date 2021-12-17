@@ -12,24 +12,26 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using EntityFrameworkCore.SqlServer.NodaTime.Extensions;
 using GreenEnergyHub.Charges.QueryApi;
 using GreenEnergyHub.Charges.QueryApi.Model;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace GreenEnergyHub.Charges.WebApi
 {
     public static class QueryApiConfiguration
     {
-        public static IServiceCollection AddQueryApi(this IServiceCollection serviceCollection)
+        public static IServiceCollection AddQueryApi(
+            this IServiceCollection serviceCollection,
+            IConfiguration configuration)
         {
-            // TODO BJARKE
-            // var connectionString = Environment.GetEnvironmentVariable(EnvironmentSettingNames.ChargeDbConnectionString) ??
-            //                        throw new ArgumentNullException(
-            //                            EnvironmentSettingNames.ChargeDbConnectionString,
-            //                            "does not exist in configuration settings");
-            var connectionString = @"Server=(localdb)\mssqllocaldb;Database=ChargesDatabase;Trusted_Connection=True;";
+            var connectionString = configuration.GetConnectionString(EnvironmentSettingNames.ChargeDbConnectionString);
+            if (connectionString == null)
+                throw new ArgumentNullException(EnvironmentSettingNames.ChargeDbConnectionString, "does not exist in configuration settings");
+
             serviceCollection.AddDbContext<QueryDbContext>(
                 options => options.UseSqlServer(connectionString, o => o.UseNodaTime()));
 

@@ -16,6 +16,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.QueryApi;
 using GreenEnergyHub.Charges.QueryApi.QueryPredicates;
+using GreenEnergyHub.Charges.WebApi.ModelPredicates;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -47,7 +48,8 @@ namespace GreenEnergyHub.Charges.WebApi.Controllers
             var chargeLink = await _data
                 .ChargeLinks
                 .ForMeteringPoint(meteringPointId)
-                .OrderByDescending(c => c.StartDateTime)
+                .OrderByDescending(c => c.Charge.SenderProvidedChargeId)
+                .ThenByDescending(c => c.StartDateTime)
                 .AsChargeLinkDto()
                 .SingleOrDefaultAsync();
 

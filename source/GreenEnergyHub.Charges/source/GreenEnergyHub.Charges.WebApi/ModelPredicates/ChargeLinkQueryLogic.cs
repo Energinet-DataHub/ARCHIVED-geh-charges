@@ -17,7 +17,7 @@ using Energinet.Charges.Contracts.Charge;
 using Energinet.Charges.Contracts.ChargeLink;
 using GreenEnergyHub.Charges.QueryApi.Model;
 
-namespace GreenEnergyHub.Charges.QueryApi.QueryPredicates
+namespace GreenEnergyHub.Charges.WebApi.ModelPredicates
 {
     public static class ChargeLinkQueryLogic
     {

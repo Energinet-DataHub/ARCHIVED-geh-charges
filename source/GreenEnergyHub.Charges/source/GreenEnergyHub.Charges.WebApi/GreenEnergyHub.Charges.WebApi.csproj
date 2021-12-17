@@ -37,11 +37,20 @@ limitations under the License.
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="local.settings.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <CopyToPublishDirectory>Never</CopyToPublishDirectory>
-    </None>
-    <None Include="local.settings.sample.json" />
+    <Compile Include="..\..\..\Contracts\ChargeLink\ChargeLinkDto.cs">
+      <Link>Dtos\ChargeLink\ChargeLinkDto.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\Contracts\Charge\ChargeType.cs">
+      <Link>Dtos\Charge\ChargeType.cs</Link>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="appsettings.json">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
   </ItemGroup>
 
 </Project>
