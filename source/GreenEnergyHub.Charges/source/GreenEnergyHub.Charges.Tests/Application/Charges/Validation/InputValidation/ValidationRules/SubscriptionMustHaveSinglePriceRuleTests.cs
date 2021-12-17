@@ -35,7 +35,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Validation.InputValid
         public void IsValid_WhenCalledWith1PricePoint_ShouldParseValidation(
             int priceCount,
             bool expected,
-            ChargeCommandTestBuilder builder)
+            ChargeCommandBuilder builder)
         {
             // Arrange
             var chargeCommand = builder
@@ -55,7 +55,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Validation.InputValid
         [InlineAutoMoqData(ChargeType.Unknown)]
         public void IsValid_NeitherFeeOrSubscription_ShouldParseValidation(
             ChargeType chargeType,
-            ChargeCommandTestBuilder builder)
+            ChargeCommandBuilder builder)
         {
             var chargeCommand = builder.WithChargeType(chargeType).Build();
             var sut = new SubscriptionMustHaveSinglePriceRule(chargeCommand);

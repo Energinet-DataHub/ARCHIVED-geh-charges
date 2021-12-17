@@ -37,7 +37,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Validation.InputValid
         public void ChargeTypeIsKnownValidationRuleTest(
             ChargeType chargeType,
             bool expected,
-            ChargeCommandTestBuilder builder)
+            ChargeCommandBuilder builder)
         {
             var command = builder.WithChargeType(chargeType).Build();
             var sut = new ChargeTypeIsKnownValidationRule(command);

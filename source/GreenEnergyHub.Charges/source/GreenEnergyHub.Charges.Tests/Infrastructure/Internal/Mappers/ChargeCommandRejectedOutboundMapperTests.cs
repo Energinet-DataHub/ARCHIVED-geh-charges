@@ -32,7 +32,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Internal.Mappers
         [Theory]
         [InlineAutoMoqData]
         public void Convert_WhenCalled_ShouldMapToProtobufWithCorrectValues(
-            ChargeCommandTestBuilder builder,
+            ChargeCommandBuilder builder,
             ChargeCommandRejectedOutboundMapper sut)
         {
             var chargeCommandRejectedEvent = CreateChargeCommandRejectedEvent(builder);
@@ -47,7 +47,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Internal.Mappers
             Assert.Throws<InvalidOperationException>(() => sut.Convert(null!));
         }
 
-        private static ChargeCommandRejectedEvent CreateChargeCommandRejectedEvent(ChargeCommandTestBuilder builder)
+        private static ChargeCommandRejectedEvent CreateChargeCommandRejectedEvent(ChargeCommandBuilder builder)
         {
             var chargeCommand = builder.Build();
             var reasons = new List<string> { "reason 1", "reason 2" };

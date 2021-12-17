@@ -35,7 +35,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Validation.InputValid
         public void MaximumPriceRule_WhenCalledPriceIsTooHigh_IsFalse(
             decimal price,
             bool expected,
-            ChargeCommandTestBuilder builder)
+            ChargeCommandBuilder builder)
         {
             // Arrange
             var chargeCommand = builder.WithPoint(price).Build();

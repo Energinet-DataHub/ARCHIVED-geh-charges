@@ -37,7 +37,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Validation.InputValid
         public void ChargeDescriptionHasMaximumLengthRule_WhenDescriptionTooLong_IsFalse(
             int chargeDescriptionLength,
             bool expected,
-            ChargeCommandTestBuilder builder)
+            ChargeCommandBuilder builder)
         {
             var command = builder.WithDescription(GenerateStringWithLength(chargeDescriptionLength)).Build();
             var sut = new ChargeDescriptionHasMaximumLengthRule(command);

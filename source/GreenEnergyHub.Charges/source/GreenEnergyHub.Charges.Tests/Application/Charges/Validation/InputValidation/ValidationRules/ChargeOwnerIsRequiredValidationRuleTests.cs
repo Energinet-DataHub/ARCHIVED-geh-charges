@@ -35,7 +35,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Validation.InputValid
         public void ChargeOwnerIsRequiredValidationRule_Test(
             string chargeOwner,
             bool expected,
-            ChargeCommandTestBuilder builder)
+            ChargeCommandBuilder builder)
         {
             var command = builder.WithOwner(chargeOwner).Build();
             var sut = new ChargeOwnerIsRequiredValidationRule(command);
