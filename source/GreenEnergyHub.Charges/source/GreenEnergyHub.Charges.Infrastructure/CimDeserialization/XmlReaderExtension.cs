@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Threading.Tasks;
 using System.Xml;
 
 namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization
@@ -31,6 +32,23 @@ namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization
         public static bool IsElement(this XmlReader reader)
         {
             return reader.NodeType == XmlNodeType.Element;
+        }
+
+        public static async Task ReadUntilEoFOrNextElementNameAsync(
+            this XmlReader reader,
+            string localName,
+            string ns,
+            XmlNodeType xmlNodeType = XmlNodeType.Element)
+        {
+            while (await reader.ReadAsync().ConfigureAwait(false))
+            {
+                if (reader.Is(
+                        localName,
+                        ns))
+                {
+                    break;
+                }
+            }
         }
     }
 }

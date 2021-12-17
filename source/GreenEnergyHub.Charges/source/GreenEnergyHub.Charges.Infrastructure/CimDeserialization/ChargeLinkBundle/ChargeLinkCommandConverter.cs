@@ -52,16 +52,10 @@ namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.ChargeLinkBun
                 var chargeLinkCommandAsync = await ParseChargeLinkCommandAsync(reader, document).ConfigureAwait(false);
                 chargeLinks.Add(chargeLinkCommandAsync);
 
-                // Read until end-of-file or until next charge link
-                while (await reader.ReadAsync().ConfigureAwait(false))
-                {
-                    if (reader.Is(
-                                 CimChargeLinkCommandConstants.MktActivityRecord,
-                                 CimChargeLinkCommandConstants.Namespace))
-                    {
-                        break;
-                    }
-                }
+                await reader
+                    .ReadUntilEoFOrNextElementNameAsync(
+                        CimChargeLinkCommandConstants.MktActivityRecord,
+                        CimChargeLinkCommandConstants.Namespace);
             }
 
             if (!chargeLinks.Any())
