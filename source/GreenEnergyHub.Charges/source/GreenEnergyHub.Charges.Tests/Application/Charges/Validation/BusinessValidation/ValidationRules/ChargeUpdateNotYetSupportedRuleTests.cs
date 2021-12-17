@@ -15,6 +15,7 @@
 using System.Diagnostics.CodeAnalysis;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.Charges;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessValidation.ValidationRules;
 using GreenEnergyHub.TestHelpers;
 using Xunit;
@@ -39,6 +40,23 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Validation.BusinessVa
         {
             var sut = new ChargeUpdateNotYetSupportedRule(charge);
             sut.IsValid.Should().BeFalse();
+        }
+
+        [Theory]
+        [InlineAutoDomainData]
+        public void ValidationRuleIdentifier_ShouldContain_RequiredErrorMessageParameterTypes(Charge charge)
+        {
+            // Arrange
+            // Act
+            var sut = new ChargeUpdateNotYetSupportedRule(charge);
+
+            // Assert
+            sut.ValidationError.ValidationErrorMessageParameters.Should()
+                .Contain(ValidationErrorMessageParameterType.PartyChargeTypeId);
+            sut.ValidationError.ValidationErrorMessageParameters.Should()
+                .Contain(ValidationErrorMessageParameterType.ChargeTypeOwner);
+            sut.ValidationError.ValidationErrorMessageParameters.Should()
+                .Contain(ValidationErrorMessageParameterType.ChargeType);
         }
     }
 }
