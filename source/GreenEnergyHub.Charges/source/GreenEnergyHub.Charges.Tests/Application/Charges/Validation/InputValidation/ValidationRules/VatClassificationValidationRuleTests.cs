@@ -36,9 +36,9 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Validation.InputValid
         public void VatClassificationValidationRule_Test(
             VatClassification vatClassification,
             bool expected,
-            ChargeCommandTestBuilder chargeCommandTestBuilder)
+            ChargeCommandBuilder chargeCommandBuilder)
         {
-            var command = chargeCommandTestBuilder.WithVatClassification(vatClassification).Build();
+            var command = chargeCommandBuilder.WithVatClassification(vatClassification).Build();
             var sut = new VatClassificationValidationRule(command);
             sut.IsValid.Should().Be(expected);
         }

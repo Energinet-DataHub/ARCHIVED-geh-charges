@@ -32,7 +32,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Validation.InputValid
         {
             // Arrange
             var sut = new InputValidationRulesFactory();
-            var chargeCommand = new ChargeCommandTestBuilder().Build();
+            var chargeCommand = new ChargeCommandBuilder().Build();
             var expectedRules = new List<IValidationRule>
             {
                 new BusinessReasonCodeMustBeUpdateChargeInformationRule(chargeCommand),

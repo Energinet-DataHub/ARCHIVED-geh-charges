@@ -30,7 +30,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Validation.BusinessVa
         [Theory]
         [InlineAutoDomainData]
         public void IsValid_WhenTaxIndicatorInCommandDoesNotMatchCharge_IsFalse(
-            ChargeCommandTestBuilder builder,
+            ChargeCommandBuilder builder,
             Charge charge)
         {
             var command = builder.WithTaxIndicator(!charge.TaxIndicator).Build();
@@ -41,7 +41,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Validation.BusinessVa
         [Theory]
         [InlineAutoDomainData]
         public void IsValid_WhenTaxIndicatorInCommandMatches_IsTrue(
-            ChargeCommandTestBuilder builder,
+            ChargeCommandBuilder builder,
             Charge charge)
         {
             var command = builder.WithTaxIndicator(charge.TaxIndicator).Build();

@@ -35,7 +35,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Validation.InputValid
         public void ChargeIdRequiredValidationRule_Test(
             string chargeId,
             bool expected,
-            ChargeCommandTestBuilder builder)
+            ChargeCommandBuilder builder)
         {
             var command = builder.WithChargeId(chargeId).Build();
             var sut = new ChargeIdRequiredValidationRule(command);

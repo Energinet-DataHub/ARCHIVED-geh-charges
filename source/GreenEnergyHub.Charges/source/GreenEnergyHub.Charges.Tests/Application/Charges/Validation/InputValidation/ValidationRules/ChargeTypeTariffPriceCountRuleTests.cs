@@ -39,7 +39,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Validation.InputValid
         public void IsValid_WhenPT1HAnd24PricePoints_IsTrue(
             int priceCount,
             bool expected,
-            ChargeCommandTestBuilder builder)
+            ChargeCommandBuilder builder)
         {
             // Arrange
             var chargeCommand = builder.WithChargeType(ChargeType.Tariff).WithPointWithXNumberOfPrices(priceCount).Build();
@@ -60,7 +60,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Validation.InputValid
         public void IsValid_WhenP1DAnd1PricePoint_IsTrue(
             int priceCount,
             bool expected,
-            ChargeCommandTestBuilder builder)
+            ChargeCommandBuilder builder)
         {
             // Arrange
             var chargeCommand = builder
@@ -86,7 +86,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Validation.InputValid
         public void IsValid_WhenPT1HAnd96PricePoints_IsTrue(
             int priceCount,
             bool expected,
-            ChargeCommandTestBuilder builder)
+            ChargeCommandBuilder builder)
         {
             // Arrange
             var chargeCommand = builder
@@ -107,7 +107,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Validation.InputValid
         [InlineAutoMoqData(ChargeType.Unknown)]
         public void IsValid_WhenNotTariff_IsValid(
             ChargeType chargeType,
-            ChargeCommandTestBuilder builder)
+            ChargeCommandBuilder builder)
         {
             var chargeCommand = builder.WithChargeType(chargeType).Build();
             var sut = new ChargeTypeTariffPriceCountRule(chargeCommand);
@@ -119,7 +119,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Validation.InputValid
         [InlineAutoMoqData(Resolution.P1M)]
         public void IsValid_WhenTariffAndUnknownResolutionType_Throws(
             Resolution resolution,
-            ChargeCommandTestBuilder builder)
+            ChargeCommandBuilder builder)
         {
             // Arrange
             var chargeCommand = builder.WithChargeType(ChargeType.Tariff).WithResolution(resolution).Build();
