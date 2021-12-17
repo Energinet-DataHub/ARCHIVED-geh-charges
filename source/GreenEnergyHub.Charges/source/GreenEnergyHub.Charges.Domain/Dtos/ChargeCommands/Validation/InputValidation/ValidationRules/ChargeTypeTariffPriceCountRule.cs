@@ -51,6 +51,10 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputVali
             return true;
         }
 
-        public ValidationError ValidationError { get; } = new(ValidationRuleIdentifier.ChargeTypeTariffPriceCount);
+        public ValidationError ValidationError { get; } = new(
+            ValidationRuleIdentifier.ChargeTypeTariffPriceCount,
+            ValidationErrorMessageParameterType.MaxOfPosition,
+            ValidationErrorMessageParameterType.PartyChargeTypeId,
+            ValidationErrorMessageParameterType.ResolutionDuration);
     }
 }

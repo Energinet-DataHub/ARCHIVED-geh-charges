@@ -40,6 +40,9 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputVali
         }
 
         public ValidationError ValidationError { get; } = new(
-            ValidationRuleIdentifier.ResolutionSubscriptionValidation);
+            ValidationRuleIdentifier.ResolutionSubscriptionValidation,
+            ValidationErrorMessageParameterType.ResolutionDuration,
+            ValidationErrorMessageParameterType.PartyChargeTypeId,
+            ValidationErrorMessageParameterType.ChargeType);
     }
 }

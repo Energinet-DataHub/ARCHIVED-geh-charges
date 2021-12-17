@@ -28,6 +28,8 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputVali
         public bool IsValid => _chargeCommand.Document.Type == DocumentType.RequestUpdateChargeInformation;
 
         public ValidationError ValidationError { get; } = new(
-            ValidationRuleIdentifier.DocumentTypeMustBeRequestUpdateChargeInformation);
+            ValidationRuleIdentifier.DocumentTypeMustBeRequestUpdateChargeInformation,
+            ValidationErrorMessageParameterType.DocumentType,
+            ValidationErrorMessageParameterType.EnergyBusinessProcess);
     }
 }

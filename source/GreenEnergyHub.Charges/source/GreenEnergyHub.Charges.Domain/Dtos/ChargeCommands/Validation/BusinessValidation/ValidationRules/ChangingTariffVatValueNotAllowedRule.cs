@@ -29,10 +29,9 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessV
 
         public bool IsValid => _command.ChargeOperation.VatClassification == _charge.VatClassification;
 
-        public ValidationError ValidationError { get; } = new(ValidationRuleIdentifier.ChangingTariffVatValueNotAllowed);
-        // public ValidationError ValidationError { get; } = new(
-        //     ValidationRuleIdentifier.ChangingTariffVatValueNotAllowed,
-        //     ValidationErrorMessageParameterType.VatClass,
-        //     ValidationErrorMessageParameterType.PartyChargeTypeId);
+        public ValidationError ValidationError { get; } = new(
+            ValidationRuleIdentifier.ChangingTariffVatValueNotAllowed,
+            ValidationErrorMessageParameterType.VatClass,
+            ValidationErrorMessageParameterType.PartyChargeTypeId);
     }
 }

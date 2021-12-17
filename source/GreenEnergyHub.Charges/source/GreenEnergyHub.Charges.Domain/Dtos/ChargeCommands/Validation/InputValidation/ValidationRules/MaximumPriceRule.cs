@@ -28,6 +28,9 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputVali
 
         public bool IsValid => _chargeCommand.ChargeOperation.Points.All(point => point.Price < PriceUpperBound);
 
-        public ValidationError ValidationError { get; } = new(ValidationRuleIdentifier.MaximumPrice);
+        public ValidationError ValidationError { get; } = new(
+            ValidationRuleIdentifier.MaximumPrice,
+            ValidationErrorMessageParameterType.EnergyPrice,
+            ValidationErrorMessageParameterType.Position);
     }
 }

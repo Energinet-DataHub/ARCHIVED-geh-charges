@@ -35,5 +35,6 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation
         /// Parameters for errormessage
         /// </summary>
         public List<ValidationErrorMessageParameterType> ValidationErrorMessageParameters { get; }
+        // TODO: Change content of List to dictionary or class containing ValidationErrorMessageParameterType and belonging value
     }
 }
