@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 #nullable disable
 
-namespace GreenEnergyHub.Charges.QueryApi.Model.Scaffolded
+namespace GreenEnergyHub.Charges.QueryApi.Model
 {
     public partial class Charge
     {

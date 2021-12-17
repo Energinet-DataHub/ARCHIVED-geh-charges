@@ -1,4 +1,0 @@
-﻿[*.cs]
-generated_code = true
-dotnet_diagnostic.SA1633.severity = none
-dotnet_diagnostic.SA1516.severity = none

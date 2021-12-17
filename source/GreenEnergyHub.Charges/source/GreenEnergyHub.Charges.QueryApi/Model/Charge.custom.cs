@@ -12,16 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Linq;
-using GreenEnergyHub.Charges.QueryApi.Model;
+using GreenEnergyHub.Charges.Domain.Charges;
 
-namespace GreenEnergyHub.Charges.QueryApi.QueryPredicates
+namespace GreenEnergyHub.Charges.QueryApi.Model
 {
-    public static class ChargeQueryLogic
+    public partial class Charge
     {
-        public static IQueryable<ChargeLink> ForMeteringPoint(this IQueryable<ChargeLink> queryable, string meteringPointId)
+        public ChargeType GetChargeType()
         {
-            return queryable.Where(c => c.MeteringPoint.MeteringPointId == meteringPointId);
+            return (ChargeType)Type;
         }
     }
 }

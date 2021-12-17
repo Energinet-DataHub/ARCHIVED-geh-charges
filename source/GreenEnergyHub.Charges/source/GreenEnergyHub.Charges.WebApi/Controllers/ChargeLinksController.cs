@@ -17,6 +17,7 @@ using System.Threading.Tasks;
 using Energinet.Charges.Contracts.Charge;
 using Energinet.Charges.Contracts.ChargeLink;
 using GreenEnergyHub.Charges.QueryApi;
+using GreenEnergyHub.Charges.QueryApi.Model;
 using GreenEnergyHub.Charges.QueryApi.QueryPredicates;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -50,23 +51,28 @@ namespace GreenEnergyHub.Charges.WebApi.Controllers
             var chargeLink = await _data
                 .ChargeLinks
                 .ForMeteringPoint(meteringPointId)
-                .Select(c => new ChargeLinkDto(
-                    (ChargeType)c.Charge.GetChargeType(), // TODO BJARKE: Map correctly
-                    c.Charge.SenderProvidedChargeId,
-                    c.Charge.Name,
-                    c.Charge.Owner.MarketParticipantId,
-                    "Netvirksomhed XYZ", // Hardcoded as we don't currently have the data
-                    c.Charge.TaxIndicator,
-                    c.Charge.TransparentInvoicing,
-                    c.Factor,
-                    c.StartDateTime,
-                    c.EndDateTime))
+                .Select(c => CreateChargeLinkDto(c))
                 .SingleOrDefaultAsync();
 
             if (chargeLink == null)
                 return NotFound();
 
             return Ok(chargeLink);
+        }
+
+        private static ChargeLinkDto CreateChargeLinkDto(ChargeLink c)
+        {
+            return new ChargeLinkDto(
+                (ChargeType)c.Charge.GetChargeType(), // TODO BJARKE: Map correctly
+                c.Charge.SenderProvidedChargeId,
+                c.Charge.Name,
+                c.Charge.Owner.MarketParticipantId,
+                "Netvirksomhed XYZ", // Hardcoded as we currently don't have the data
+                c.Charge.TaxIndicator,
+                c.Charge.TransparentInvoicing,
+                c.Factor,
+                c.StartDateTime,
+                c.EndDateTime);
         }
     }
 }
