@@ -14,7 +14,7 @@
 
 using EntityFrameworkCore.SqlServer.NodaTime.Extensions;
 using GreenEnergyHub.Charges.QueryApi;
-using GreenEnergyHub.Charges.QueryApi.Model.Scaffolded;
+using GreenEnergyHub.Charges.QueryApi.Model;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 

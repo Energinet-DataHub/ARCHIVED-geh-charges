@@ -34,15 +34,12 @@ limitations under the License.
     </ItemGroup>
 
     <ItemGroup>
-      <Compile Remove="BFF\**" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <EmbeddedResource Remove="BFF\**" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <None Remove="BFF\**" />
+      <Compile Include="..\..\..\Contracts\ChargeLink\ChargeLinkDto.cs">
+        <Link>Dtos\ChargeLink\ChargeLinkDto.cs</Link>
+      </Compile>
+      <Compile Include="..\..\..\Contracts\Charge\ChargeType.cs">
+        <Link>Dtos\Charge\ChargeType.cs</Link>
+      </Compile>
     </ItemGroup>
 
     <ItemGroup>

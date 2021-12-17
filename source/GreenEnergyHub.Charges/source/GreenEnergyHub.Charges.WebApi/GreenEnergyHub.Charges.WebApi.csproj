@@ -37,15 +37,6 @@ limitations under the License.
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Include="..\..\..\Contracts\ChargeLink\ChargeLinkDto.cs">
-      <Link>Model\ChargeLink\ChargeLinkDto.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\Contracts\Charge\ChargeType.cs">
-      <Link>Model\Charge\ChargeType.cs</Link>
-    </Compile>
-  </ItemGroup>
-
-  <ItemGroup>
     <None Include="local.settings.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <CopyToPublishDirectory>Never</CopyToPublishDirectory>

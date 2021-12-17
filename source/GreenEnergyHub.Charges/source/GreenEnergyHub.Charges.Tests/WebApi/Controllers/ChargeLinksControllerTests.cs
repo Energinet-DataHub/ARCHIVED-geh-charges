@@ -18,7 +18,7 @@ using System.Threading.Tasks;
 using AutoFixture.Xunit2;
 using FluentAssertions;
 using GreenEnergyHub.Charges.QueryApi;
-using GreenEnergyHub.Charges.QueryApi.Model.Scaffolded;
+using GreenEnergyHub.Charges.QueryApi.Model;
 using GreenEnergyHub.Charges.TestCore.Attributes;
 using GreenEnergyHub.Charges.WebApi.Controllers;
 using Microsoft.AspNetCore.Mvc;

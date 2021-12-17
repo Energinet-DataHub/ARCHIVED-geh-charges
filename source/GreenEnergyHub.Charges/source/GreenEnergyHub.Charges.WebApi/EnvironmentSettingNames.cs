@@ -25,13 +25,5 @@ namespace GreenEnergyHub.Charges.WebApi
         // Environment specific settings
         public const string AppInsightsInstrumentationKey = "APPINSIGHTS_INSTRUMENTATIONKEY";
         public const string ChargeDbConnectionString = "CHARGE_DB_CONNECTION_STRING";
-
-        // Identification of Hub
-        public const string HubSenderId = "HUB_SENDER_ID";
-        public const string HubSenderRoleIntEnumValue = "HUB_SENDER_ROLE_INT_ENUM_VALUE";
-
-        // Localization
-        public const string Currency = "CURRENCY";
-        public const string LocalTimeZoneName = "LOCAL_TIMEZONENAME";
     }
 }
