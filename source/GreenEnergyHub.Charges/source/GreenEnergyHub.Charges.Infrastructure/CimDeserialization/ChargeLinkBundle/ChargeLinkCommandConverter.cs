@@ -39,14 +39,14 @@ namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.ChargeLinkBun
             DocumentDto document)
         {
             var chargeOperationsAsync = await ParseChargeLinkCommandsAsync(reader).ConfigureAwait(false);
-            var chargeCommands = chargeOperationsAsync
-                .Select(chargeOperationDto => new ChargeLinksCommand("sdf", document, new List<ChargeLinkDto> { chargeOperationDto }))
+            var chargeCommands = chargeOperationsAsync.ChargeLinkDtos
+                .Select(chargeOperationDto => new ChargeLinksCommand(chargeOperationsAsync.MeteringPointId, document, new List<ChargeLinkDto> { chargeOperationDto }))
                 .ToList();
 
             return new ChargeLinksCommandBundle(chargeCommands);
         }
 
-        private async Task<List<ChargeLinkDto>> ParseChargeLinkCommandsAsync(XmlReader reader)
+        private async Task<(List<ChargeLinkDto> ChargeLinkDtos, string MeteringPointId)> ParseChargeLinkCommandsAsync(XmlReader reader)
         {
             var chargeLinks = new List<ChargeLinkDto>();
             var meteringPointId = string.Empty;
@@ -68,31 +68,9 @@ namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.ChargeLinkBun
             if (!chargeLinks.Any())
                 throw new NoChargeLinksCommandsFoundException();
 
-            return chargeLinks;
+            return (chargeLinks, meteringPointId);
         }
 
-        // private async Task<(ChargeLinkDto ChargeLinkDto, string MeteringPointId)> ParseChargeGroupIntoOperationAsync(XmlReader reader)
-        // {
-        //     ChargeLinkDto? chargeLinkDto = null;
-        //     var meteringPointId = string.Empty;
-        //
-        //     while (await reader.ReadAsync().ConfigureAwait(false))
-        //     {
-        //         if (reader.Is(CimChargeLinkCommandConstants.Id, CimChargeLinkCommandConstants.Namespace))
-        //         {
-        //             (chargeLinkDto, meteringPointId) = await ParseChargeLinkCommandAsync(reader).ConfigureAwait(false);
-        //         }
-        //         else if (reader.Is(
-        //                      CimChargeLinkCommandConstants.ChargeType,
-        //                      CimChargeLinkCommandConstants.Namespace,
-        //                      XmlNodeType.EndElement))
-        //         {
-        //             break;
-        //         }
-        //     }
-        //
-        //     return (chargeLinkDto!, meteringPointId);
-        // }
         private static async Task<(ChargeLinkDto ChargeLinkDto, string MeteringPointId)> ParseChargeLinkCommandAsync(XmlReader reader)
         {
             var link = new ChargeLinkDto();

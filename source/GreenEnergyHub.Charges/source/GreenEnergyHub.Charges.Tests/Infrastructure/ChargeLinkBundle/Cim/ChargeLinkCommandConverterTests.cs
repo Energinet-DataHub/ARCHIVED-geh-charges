@@ -51,30 +51,31 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.ChargeLinkBundle.Cim
             using var reader = XmlReader.Create(stream, new XmlReaderSettings { Async = true });
 
             // Act
-            var result = (ChargeLinksCommand)await sut.ConvertAsync(reader).ConfigureAwait(false);
+            var resultBundle = (ChargeLinksCommandBundle)await sut.ConvertAsync(reader).ConfigureAwait(false);
 
             // Assert
+            var result = resultBundle.ChargeLinksCommands.First();
             var chargeLink = result.ChargeLinks.First();
-            Assert.Equal("578032999778756222", result.MeteringPointId);
+            result.MeteringPointId.Should().Be("578032999778756222");
 
             // Document
-            Assert.Equal("DocId_Valid_001", result.Document.Id);
-            Assert.Equal(DocumentType.RequestChangeBillingMasterData, result.Document.Type);
-            Assert.Equal(BusinessReasonCode.UpdateMasterDataSettlement, result.Document.BusinessReasonCode);
-            Assert.Equal("8100000000016", result.Document.Sender.Id);
-            Assert.Equal(MarketParticipantRole.GridAccessProvider, result.Document.Sender.BusinessProcessRole);
-            Assert.Equal("5790001330552", result.Document.Recipient.Id);
-            Assert.Equal(MarketParticipantRole.MeteringPointAdministrator, result.Document.Recipient.BusinessProcessRole);
-            Assert.Equal(InstantPattern.ExtendedIso.Parse("2021-07-05T13:20:02.387Z").Value, result.Document.CreatedDateTime);
+            result.Document.Id.Should().Be("DocId_Valid_001");
+            result.Document.Type.Should().Be(DocumentType.RequestChangeBillingMasterData);
+            result.Document.BusinessReasonCode.Should().Be(BusinessReasonCode.UpdateMasterDataSettlement);
+            result.Document.Sender.Id.Should().Be("8100000000016");
+            result.Document.Sender.BusinessProcessRole.Should().Be(MarketParticipantRole.GridAccessProvider);
+            result.Document.Recipient.Id.Should().Be("5790001330552");
+            result.Document.Recipient.BusinessProcessRole.Should().Be(MarketParticipantRole.MeteringPointAdministrator);
+            result.Document.CreatedDateTime.Should().Be(InstantPattern.ExtendedIso.Parse("2021-07-05T13:20:02.387Z").Value);
 
             // ChargeLink
-            Assert.Equal("rId_Valid_001", chargeLink.OperationId);
-            Assert.Equal(InstantPattern.ExtendedIso.Parse("2021-09-27T22:00:00Z").Value, chargeLink.StartDateTime);
-            Assert.Equal(InstantPattern.ExtendedIso.Parse("2021-11-05T23:00:00Z").Value, chargeLink.EndDateTime);
-            Assert.Equal("ChargeId01", chargeLink.SenderProvidedChargeId);
-            Assert.Equal(1, chargeLink.Factor);
-            Assert.Equal("8100000000016", chargeLink.ChargeOwnerId);
-            Assert.Equal(ChargeType.Tariff, chargeLink.ChargeType);
+            chargeLink.OperationId.Should().Be("rId_Valid_001");
+            chargeLink.StartDateTime.Should().Be(InstantPattern.ExtendedIso.Parse("2021-09-27T22:00:00Z").Value);
+            chargeLink.EndDateTime.Should().Be(InstantPattern.ExtendedIso.Parse("2021-11-05T23:00:00Z").Value);
+            chargeLink.SenderProvidedChargeId.Should().Be("ChargeId01");
+            chargeLink.Factor.Should().Be(1);
+            chargeLink.ChargeOwnerId.Should().Be("8100000000016");
+            chargeLink.ChargeType.Should().Be(ChargeType.Tariff);
         }
 
         [Theory]
@@ -91,11 +92,12 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.ChargeLinkBundle.Cim
             using var reader = XmlReader.Create(stream, new XmlReaderSettings { Async = true });
 
             // Act
-            var result = (ChargeLinksCommand)await sut.ConvertAsync(reader).ConfigureAwait(false);
+            var resultBundle = (ChargeLinksCommandBundle)await sut.ConvertAsync(reader).ConfigureAwait(false);
 
             // Assert
-            Assert.Equal("DocId_Valid_002", result.Document.Id);
-            Assert.Equal("rId_Valid_002", result.ChargeLinks.First().OperationId);
+            var result = resultBundle.ChargeLinksCommands.First();
+            result.Document.Id.Should().Be("DocId_Valid_002");
+            result.ChargeLinks.First().OperationId.Should().Be("rId_Valid_002");
 
             await Task.CompletedTask.ConfigureAwait(false);
         }
@@ -114,12 +116,13 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.ChargeLinkBundle.Cim
             using var reader = XmlReader.Create(stream, new XmlReaderSettings { Async = true });
 
             // Act
-            var result = (ChargeLinksCommand)await sut.ConvertAsync(reader).ConfigureAwait(false);
+            var resultBundle = (ChargeLinksCommandBundle)await sut.ConvertAsync(reader).ConfigureAwait(false);
 
             // Assert
-            Assert.Equal("DocId_Valid_003", result.Document.Id);
-            Assert.Equal("rId_Valid_003", result.ChargeLinks.First().OperationId);
-            Assert.Null(result.ChargeLinks.First().EndDateTime);
+            var result = resultBundle.ChargeLinksCommands.First();
+            result.Document.Id.Should().Be("DocId_Valid_003");
+            result.ChargeLinks.First().OperationId.Should().Be("rId_Valid_003");
+            result.ChargeLinks.First().EndDateTime.Should().BeNull();
 
             await Task.CompletedTask.ConfigureAwait(false);
         }
