@@ -38,40 +38,28 @@ namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.ChargeLinkBun
             XmlReader reader,
             DocumentDto document)
         {
-            var chargeOperationsAsync = await ParseChargeLinkCommandsAsync(reader).ConfigureAwait(false);
-            var chargeCommands = chargeOperationsAsync.ChargeLinkDtos
-                .Select(chargeOperationDto => new ChargeLinksCommand(chargeOperationsAsync.MeteringPointId, document, new List<ChargeLinkDto> { chargeOperationDto }))
-                .ToList();
+            var chargeLinksCommands = await ParseChargeLinkCommandsAsync(reader, document).ConfigureAwait(false);
 
-            return new ChargeLinksCommandBundle(chargeCommands);
+            return new ChargeLinksCommandBundle(chargeLinksCommands);
         }
 
-        private async Task<(List<ChargeLinkDto> ChargeLinkDtos, string MeteringPointId)> ParseChargeLinkCommandsAsync(XmlReader reader)
+        private async Task<List<ChargeLinksCommand>> ParseChargeLinkCommandsAsync(XmlReader reader, DocumentDto document)
         {
-            var chargeLinks = new List<ChargeLinkDto>();
-            var meteringPointId = string.Empty;
+            var chargeLinks = new List<ChargeLinksCommand>();
 
             while (await reader.ReadAsync().ConfigureAwait(false))
             {
-                var chargeLinkCommandAsync = await ParseChargeLinkCommandAsync(reader).ConfigureAwait(false);
-                if (chargeLinkCommandAsync.MeteringPointId == null)
-                    continue;
-
-                chargeLinks.Add(chargeLinkCommandAsync.ChargeLinkDto);
-
-                if (meteringPointId != string.Empty && meteringPointId != chargeLinkCommandAsync.MeteringPointId)
-                    throw new ChargeLinksCommandsMeteringPointAreNotTheSameException();
-
-                meteringPointId = chargeLinkCommandAsync.MeteringPointId;
+                var chargeLinkCommandAsync = await ParseChargeLinkCommandAsync(reader, document).ConfigureAwait(false);
+                chargeLinks.Add(chargeLinkCommandAsync);
             }
 
             if (!chargeLinks.Any())
                 throw new NoChargeLinksCommandsFoundException();
 
-            return (chargeLinks, meteringPointId);
+            return chargeLinks;
         }
 
-        private static async Task<(ChargeLinkDto ChargeLinkDto, string MeteringPointId)> ParseChargeLinkCommandAsync(XmlReader reader)
+        private static async Task<ChargeLinksCommand> ParseChargeLinkCommandAsync(XmlReader reader, DocumentDto document)
         {
             var link = new ChargeLinkDto();
             string meteringPointId = null!;
@@ -125,7 +113,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.ChargeLinkBun
                 }
             }
 
-            return (link, meteringPointId);
+            return new ChargeLinksCommand(meteringPointId, document, new List<ChargeLinkDto> { link });
         }
     }
 }
