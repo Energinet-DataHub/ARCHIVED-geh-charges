@@ -34,39 +34,48 @@ namespace GreenEnergyHub.Charges.Tests.WebApi.Controllers
         [Theory]
         [InlineAutoMoqData]
         public async Task GetChargeLinksByMeteringPointIdAsync_WithMeteringPointId_ReturnsOk(
-            [Frozen] Mock<IData> data,
-            ChargeLinksController sut)
+            [Frozen] Mock<IData> data)
         {
+            // Arrange
             data.Setup(d => d.Charges).Returns(new List<Charge>().AsQueryable());
+            var sut = new ChargeLinksController(data.Object);
 
+            // Act
             var result = await sut.GetAsync("570000000000000000").ConfigureAwait(false);
 
+            // Assert
             result.Should().BeOfType<OkObjectResult>();
         }
 
         [Theory]
         [InlineAutoMoqData]
         public async Task GetChargeLinksByMeteringPointIdAsync_WhenRequesting404_ReturnsNotFound(
-            [Frozen] Mock<IData> data,
-            ChargeLinksController sut)
+            [Frozen] Mock<IData> data)
         {
+            // Arrange
             data.Setup(d => d.Charges).Returns(new List<Charge>().AsQueryable());
+            var sut = new ChargeLinksController(data.Object);
 
+            // Act
             var result = await sut.GetAsync("404").ConfigureAwait(false);
 
+            // Assert
             result.Should().BeOfType<NotFoundResult>();
         }
 
         [Theory]
         [InlineAutoMoqData]
         public async Task GetChargeLinksByMeteringPointIdAsync_WhenNoInputGiven_ReturnsBadRequest(
-            [Frozen] Mock<IData> data,
-            ChargeLinksController sut)
+            [Frozen] Mock<IData> data)
         {
+            // Arrange
             data.Setup(d => d.Charges).Returns(new List<Charge>().AsQueryable());
+            var sut = new ChargeLinksController(data.Object);
 
+            // Act
             var result = await sut.GetAsync(null).ConfigureAwait(false);
 
+            // Assert
             result.Should().BeOfType<BadRequestResult>();
         }
     }

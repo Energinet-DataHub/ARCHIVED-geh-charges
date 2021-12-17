@@ -37,7 +37,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi
         }
 
         [Theory]
-        [InlineData("571313100000000000")]
+        [InlineData("571313180000000005")]
         public async Task GetAsync_WhenMeteringPointIdHasChargeLinks_ReturnsOkAndCorrectContentType(string meteringPointId)
         {
             // Arrange
@@ -53,7 +53,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi
         }
 
         [Theory]
-        [InlineData("571313100000000000")]
+        [InlineData("571313180000000005")]
         public async Task GetAsync_WhenMeteringPointIdHasChargeLinks_ReturnsChargeLinks(string meteringPointId)
         {
             // Arrange

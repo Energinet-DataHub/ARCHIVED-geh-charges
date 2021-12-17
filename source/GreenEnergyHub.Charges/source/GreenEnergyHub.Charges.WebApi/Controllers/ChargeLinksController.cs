@@ -45,18 +45,21 @@ namespace GreenEnergyHub.Charges.WebApi.Controllers
             if (meteringPointId == null)
                 return BadRequest();
 
-            var chargeLink = await _data
+            var meteringPointExists = await _data
+                .MeteringPoints
+                .AnyAsync(m => m.MeteringPointId == meteringPointId);
+            if (!meteringPointExists)
+                return NotFound();
+
+            var chargeLinks = await _data
                 .ChargeLinks
                 .ForMeteringPoint(meteringPointId)
                 .OrderByDescending(c => c.Charge.SenderProvidedChargeId)
                 .ThenByDescending(c => c.StartDateTime)
                 .AsChargeLinkDto()
-                .SingleOrDefaultAsync();
+                .ToListAsync();
 
-            if (chargeLink == null)
-                return NotFound();
-
-            return Ok(chargeLink);
+            return Ok(chargeLinks);
         }
     }
 }
