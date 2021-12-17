@@ -34,7 +34,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
         public void ChargeIdLengthValidationRule_Test(
             string chargeId,
             bool expected,
-            ChargeCommandTestBuilder builder)
+            ChargeCommandBuilder builder)
         {
             var command = builder.WithChargeId(chargeId).Build();
             var sut = new ChargeIdLengthValidationRule(command);

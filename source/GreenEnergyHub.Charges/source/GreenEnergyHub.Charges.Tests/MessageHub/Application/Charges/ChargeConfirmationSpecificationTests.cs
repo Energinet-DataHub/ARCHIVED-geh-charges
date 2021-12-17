@@ -43,7 +43,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Application.Charges
             var confirmationMessageWeightInBytes = (long)ChargeConfirmationBundleSpecification.MessageWeight * 1000;
 
             // Act
-            var xmlSizeInBytes = new System.IO.FileInfo(BundleSize.WorstCaseChargeReceipt).Length;
+            var xmlSizeInBytes = new System.IO.FileInfo(FilesForCalculatingBundleSize.WorstCaseChargeReceipt).Length;
 
             // Assert
             xmlSizeInBytes.Should().BeLessOrEqualTo(confirmationMessageWeightInBytes);

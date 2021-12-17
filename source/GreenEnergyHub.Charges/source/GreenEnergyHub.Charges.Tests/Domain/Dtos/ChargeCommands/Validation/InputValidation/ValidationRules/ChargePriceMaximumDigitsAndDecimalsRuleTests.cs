@@ -36,7 +36,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
         public void IsValid_WhenLessThan8DigitsAnd6Decimals_IsValid(
             decimal price,
             bool expected,
-            ChargeCommandTestBuilder builder)
+            ChargeCommandBuilder builder)
         {
             // Arrange
             var command = builder.WithPoint(price).Build();

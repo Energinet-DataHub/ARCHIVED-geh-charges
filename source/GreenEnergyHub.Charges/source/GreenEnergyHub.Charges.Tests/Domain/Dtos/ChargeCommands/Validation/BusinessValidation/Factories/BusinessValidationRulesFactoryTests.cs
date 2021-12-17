@@ -42,7 +42,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
             [Frozen] Mock<IChargeRepository> repository,
             [Frozen] Mock<IRulesConfigurationRepository> rulesConfigurationRepository,
             BusinessValidationRulesFactory sut,
-            ChargeCommandTestBuilder builder)
+            ChargeCommandBuilder builder)
         {
             // Arrange
             var chargeCommand = builder.Build();
@@ -70,7 +70,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
             [Frozen] Mock<IChargeRepository> repository,
             [Frozen] Mock<IRulesConfigurationRepository> rulesConfigurationRepository,
             BusinessValidationRulesFactory sut,
-            ChargeCommandTestBuilder builder,
+            ChargeCommandBuilder builder,
             Charge charge)
         {
             // Arrange
@@ -101,7 +101,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
             [Frozen] Mock<IChargeRepository> repository,
             [Frozen] Mock<IRulesConfigurationRepository> rulesConfigurationRepository,
             BusinessValidationRulesFactory sut,
-            ChargeCommandTestBuilder builder,
+            ChargeCommandBuilder builder,
             Charge charge)
         {
             // Arrange

@@ -31,7 +31,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Internal.Mappers
         [Theory]
         [InlineAutoMoqData]
         public void Convert_WhenCalled_ShouldMapToProtobufWithCorrectValues(
-            ChargeCommandTestBuilder builder,
+            ChargeCommandBuilder builder,
             ChargeCommandReceivedOutboundMapper sut)
         {
             // Arrange

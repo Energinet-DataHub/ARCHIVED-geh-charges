@@ -101,11 +101,4 @@ limitations under the License.
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
     </ItemGroup>
-
-    <ItemGroup>
-      <Folder Include="Infrastructure.Core" />
-      <Folder Include="MessageHub\Application" />
-      <Folder Include="MessageHub\Infrastructure" />
-      <Folder Include="MessageHub\Models" />
-    </ItemGroup>
 </Project>

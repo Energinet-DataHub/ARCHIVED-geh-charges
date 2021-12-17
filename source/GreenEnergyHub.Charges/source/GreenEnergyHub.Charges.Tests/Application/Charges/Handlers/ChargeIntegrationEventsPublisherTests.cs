@@ -49,13 +49,13 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
         public async Task HandleAsync_WhenCalledWithoutPrices_ShouldOnlyCallChargeCreatedSender(
             [Frozen] Mock<IChargePublisher> chargeSender,
             [Frozen] Mock<IChargePricesUpdatedPublisher> chargePricesUpdatedSender,
-            ChargeCommandTestBuilder chargeCommandTestBuilder,
-            ChargeCommandAcceptedEventTestBuilder chargeCommandAcceptedEventTestBuilder,
+            ChargeCommandBuilder chargeCommandBuilder,
+            ChargeCommandAcceptedEventBuilder chargeCommandAcceptedEventBuilder,
             ChargeIntegrationEventsPublisher sut)
         {
             // Arrange
-            var chargeCommand = chargeCommandTestBuilder.Build();
-            var acceptedEvent = chargeCommandAcceptedEventTestBuilder.WithChargeCommand(chargeCommand).Build();
+            var chargeCommand = chargeCommandBuilder.Build();
+            var acceptedEvent = chargeCommandAcceptedEventBuilder.WithChargeCommand(chargeCommand).Build();
 
             // Act
             await sut.PublishAsync(acceptedEvent).ConfigureAwait(false);

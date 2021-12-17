@@ -35,7 +35,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
         public void ChargeOwnerIsRequiredValidationRule_Test(
             string chargeOwner,
             bool expected,
-            ChargeCommandTestBuilder builder)
+            ChargeCommandBuilder builder)
         {
             var command = builder.WithOwner(chargeOwner).Build();
             var sut = new ChargeOwnerIsRequiredValidationRule(command);

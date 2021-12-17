@@ -29,7 +29,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
     {
         [Theory]
         [InlineAutoDomainData]
-        public void IsValid_WhenVatPayerInCommandDoesNotMatchCharge_IsFalse(ChargeCommandTestBuilder builder, Charge charge)
+        public void IsValid_WhenVatPayerInCommandDoesNotMatchCharge_IsFalse(ChargeCommandBuilder builder, Charge charge)
         {
             var command = builder.WithVatClassification((VatClassification)5).Build();
             var sut = new ChangingTariffVatValueNotAllowedRule(command, charge);
@@ -38,7 +38,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
 
         [Theory]
         [InlineAutoDomainData]
-        public void IsValid_WhenVatPayerInCommandMatches_IsTrue(ChargeCommandTestBuilder builder, Charge charge)
+        public void IsValid_WhenVatPayerInCommandMatches_IsTrue(ChargeCommandBuilder builder, Charge charge)
         {
             var command = builder.WithVatClassification(charge.VatClassification).Build();
             var sut = new ChangingTariffVatValueNotAllowedRule(command, charge);

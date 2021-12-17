@@ -34,7 +34,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
         public void StartDateTimeRequiredValidationRule_NegativeTest(
             string startDateTime,
             bool expected,
-            ChargeCommandTestBuilder builder)
+            ChargeCommandBuilder builder)
         {
             var chargeCommand = builder.WithStartDateTime(InstantPattern.General.Parse(startDateTime).Value).Build();
             var sut = new StartDateTimeRequiredValidationRule(chargeCommand);

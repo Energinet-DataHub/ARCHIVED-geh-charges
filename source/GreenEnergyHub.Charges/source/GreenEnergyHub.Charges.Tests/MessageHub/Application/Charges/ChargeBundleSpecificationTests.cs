@@ -51,7 +51,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Application.Charges
             var chargeMessageWeightInBytes = (long)ChargeBundleSpecification.ChargeMessageWeight * 1000;
 
             // Act
-            var xmlSizeInBytes = new System.IO.FileInfo(BundleSize.WorstCaseChargeNoPoints).Length;
+            var xmlSizeInBytes = new System.IO.FileInfo(FilesForCalculatingBundleSize.WorstCaseChargeNoPoints).Length;
 
             // Assert
             xmlSizeInBytes.Should().BeLessOrEqualTo(chargeMessageWeightInBytes);
@@ -69,7 +69,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Application.Charges
                 * convertMessageWeightToKb;
 
             // Act
-            var xmlSizeInBytes = new System.IO.FileInfo(BundleSize.WorstCaseChargeWithPoints).Length;
+            var xmlSizeInBytes = new System.IO.FileInfo(FilesForCalculatingBundleSize.WorstCaseChargeWithPoints).Length;
 
             // Assert
             xmlSizeInBytes.Should().BeLessOrEqualTo(chargeMessageWeightInBytes);

@@ -51,7 +51,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
             int startOfOccurrence,
             int endOfOccurrence,
             bool expected,
-            [Frozen] ChargeCommandTestBuilder builder)
+            [Frozen] ChargeCommandBuilder builder)
         {
             // Arrange
             var chargeCommand = builder

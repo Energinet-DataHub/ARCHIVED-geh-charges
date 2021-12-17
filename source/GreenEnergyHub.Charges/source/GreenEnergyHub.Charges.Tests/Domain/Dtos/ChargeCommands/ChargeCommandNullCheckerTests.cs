@@ -38,7 +38,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands
             string documentId)
         {
             // Arrange
-            var c = new ChargeCommandTestBuilder()
+            var c = new ChargeCommandBuilder()
                 .WithDescription(description)
                 .WithChargeName(chargeName)
                 .WithDocumentId(documentId)
@@ -50,10 +50,10 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands
 
         [Theory]
         [InlineAutoDomainData]
-        public void ThrowExceptionIfRequiredPropertyIsNull_WhenValid_DoesNotThrow(ChargeCommandTestBuilder chargeCommandTestBuilder)
+        public void ThrowExceptionIfRequiredPropertyIsNull_WhenValid_DoesNotThrow(ChargeCommandBuilder chargeCommandBuilder)
         {
             // Arrange
-            var command = chargeCommandTestBuilder.Build();
+            var command = chargeCommandBuilder.Build();
 
             // Act
             var ex = Record.Exception(() => ChargeCommandNullChecker.ThrowExceptionIfRequiredPropertyIsNull(command));
@@ -74,7 +74,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands
 
         [Theory]
         [InlineAutoDomainData]
-        public void ThrowExceptionIfRequiredPropertyIsNull_WhenParticipantIsNull_ThrowsArgumentNullException(ChargeCommandTestBuilder builder)
+        public void ThrowExceptionIfRequiredPropertyIsNull_WhenParticipantIsNull_ThrowsArgumentNullException(ChargeCommandBuilder builder)
         {
             // Arrange
             MarketParticipantDto? marketParticipant = null;
@@ -86,7 +86,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands
 
         [Theory]
         [InlineAutoDomainData]
-        public void ChargeCommandDocumentIsNullThrowsException(ChargeCommandTestBuilder builder)
+        public void ChargeCommandDocumentIsNullThrowsException(ChargeCommandBuilder builder)
         {
             // Arrange
             var c = builder.Build();
@@ -100,7 +100,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands
         public void ChargeCommandChargeOperationIsNullThrowsException()
         {
             // Arrange
-            var testBuilder = new ChargeCommandTestBuilder();
+            var testBuilder = new ChargeCommandBuilder();
             var c = testBuilder.Build();
             c.ChargeOperation = null!;
 
