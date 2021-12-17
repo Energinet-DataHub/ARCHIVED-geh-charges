@@ -54,7 +54,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.ChargeLinkBundle.Cim
             var resultBundle = (ChargeLinksCommandBundle)await sut.ConvertAsync(reader).ConfigureAwait(false);
 
             // Assert
-            var result = resultBundle.ChargeLinksCommands.First();
+            var result = resultBundle.ChargeLinksCommands.Single();
             var chargeLink = result.ChargeLinks.First();
             result.MeteringPointId.Should().Be("578032999778756222");
 
@@ -95,7 +95,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.ChargeLinkBundle.Cim
             var resultBundle = (ChargeLinksCommandBundle)await sut.ConvertAsync(reader).ConfigureAwait(false);
 
             // Assert
-            var result = resultBundle.ChargeLinksCommands.First();
+            var result = resultBundle.ChargeLinksCommands.Single();
             result.Document.Id.Should().Be("DocId_Valid_002");
             result.ChargeLinks.First().OperationId.Should().Be("rId_Valid_002");
 
