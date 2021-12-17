@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Linq;
 using Energinet.Charges.Contracts.Charge;
 using Energinet.Charges.Contracts.ChargeLink;
@@ -25,7 +26,7 @@ namespace GreenEnergyHub.Charges.WebApi.ModelPredicates
         {
             return queryable
                 .Select(c => new ChargeLinkDto(
-                    (ChargeType)c.Charge.GetChargeType(), // TODO BJARKE: Map correctly
+                    Map(c.Charge.GetChargeType()),
                     c.Charge.SenderProvidedChargeId,
                     c.Charge.Name,
                     c.Charge.Owner.MarketParticipantId,
@@ -36,5 +37,16 @@ namespace GreenEnergyHub.Charges.WebApi.ModelPredicates
                     c.StartDateTime,
                     c.EndDateTime));
         }
+
+        private static ChargeType Map(Domain.Charges.ChargeType chargeType) => chargeType switch
+        {
+            Domain.Charges.ChargeType.Fee => ChargeType.D02,
+            Domain.Charges.ChargeType.Subscription => ChargeType.D01,
+            Domain.Charges.ChargeType.Tariff => ChargeType.D03,
+            Domain.Charges.ChargeType.Unknown =>
+                throw new NotSupportedException($"Charge type '{Domain.Charges.ChargeType.Unknown}' is not supported"),
+            _ =>
+                throw new ArgumentOutOfRangeException(nameof(chargeType)),
+        };
     }
 }
