@@ -37,7 +37,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Validation.InputValid
         public void ChargeNameLengthValidationRule_WhenCalledWithChargeNameLength_EqualsExpectedResult(
             int chargeNameLength,
             bool expected,
-            ChargeCommandTestBuilder builder)
+            ChargeCommandBuilder builder)
         {
             var command = builder.WithChargeName(GenerateStringWithLength(chargeNameLength)).Build();
             var sut = new ChargeNameHasMaximumLengthRule(command);

@@ -41,13 +41,13 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.MessageHub
             [Frozen] Mock<IMessageMetaDataContext> messageMetaDataContext,
             Instant now,
             List<MarketParticipant> marketParticipants,
-            ChargeCommandTestBuilder chargeCommandTestBuilder,
-            ChargeCommandAcceptedEventTestBuilder chargeCommandAcceptedEventTestBuilder,
+            ChargeCommandBuilder chargeCommandBuilder,
+            ChargeCommandAcceptedEventBuilder chargeCommandAcceptedEventBuilder,
             AvailableChargeDataFactory sut)
         {
             // Arrange
-            var chargeCommand = chargeCommandTestBuilder.WithPoint(1).WithTaxIndicator(true).Build();
-            var acceptedEvent = chargeCommandAcceptedEventTestBuilder.WithChargeCommand(chargeCommand).Build();
+            var chargeCommand = chargeCommandBuilder.WithPoint(1).WithTaxIndicator(true).Build();
+            var acceptedEvent = chargeCommandAcceptedEventBuilder.WithChargeCommand(chargeCommand).Build();
 
             marketParticipantRepository.Setup(
                     r => r.GetActiveGridAccessProvidersAsync())
@@ -91,13 +91,13 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.MessageHub
         [Theory]
         [InlineAutoDomainData]
         public async Task CreateAsync_WhenNotTaxCharge_ReturnsEmptyList(
-            ChargeCommandTestBuilder chargeCommandTestBuilder,
-            ChargeCommandAcceptedEventTestBuilder chargeCommandAcceptedEventTestBuilder,
+            ChargeCommandBuilder chargeCommandBuilder,
+            ChargeCommandAcceptedEventBuilder chargeCommandAcceptedEventBuilder,
             AvailableChargeDataFactory sut)
         {
             // Arrange
-            var chargeCommand = chargeCommandTestBuilder.WithTaxIndicator(false).Build();
-            var acceptedEvent = chargeCommandAcceptedEventTestBuilder.WithChargeCommand(chargeCommand).Build();
+            var chargeCommand = chargeCommandBuilder.WithTaxIndicator(false).Build();
+            var acceptedEvent = chargeCommandAcceptedEventBuilder.WithChargeCommand(chargeCommand).Build();
 
             // Act
             var actualList =

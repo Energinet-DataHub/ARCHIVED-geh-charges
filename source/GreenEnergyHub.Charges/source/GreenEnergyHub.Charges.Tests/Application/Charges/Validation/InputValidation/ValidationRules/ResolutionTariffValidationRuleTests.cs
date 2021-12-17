@@ -39,7 +39,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Validation.InputValid
         public void ResolutionTariffValidationRule_WithTariffType_EqualsExpectedResult(
             Resolution resolution,
             bool expected,
-            ChargeCommandTestBuilder builder)
+            ChargeCommandBuilder builder)
         {
             // Arrange
             var command = builder.WithChargeType(ChargeType.Tariff).WithResolution(resolution).Build();
@@ -60,7 +60,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Validation.InputValid
         public void ResolutionTariffValidationRule_WithSubscriptionType_EqualsExpectedResult(
             Resolution resolution,
             bool expected,
-            ChargeCommandTestBuilder builder)
+            ChargeCommandBuilder builder)
         {
             // Arrange
             var command = builder.WithChargeType(ChargeType.Subscription).WithResolution(resolution).Build();
@@ -81,7 +81,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Validation.InputValid
         public void ResolutionTariffValidationRule_WithFeeType_EqualsExpectedResult(
             Resolution resolution,
             bool expected,
-            ChargeCommandTestBuilder builder)
+            ChargeCommandBuilder builder)
         {
             // Arrange
             var command = builder.WithChargeType(ChargeType.Fee).WithResolution(resolution).Build();
