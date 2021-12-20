@@ -43,9 +43,9 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
 
             if (_messageMetaDataContext.IsReplyToSet())
             {
-                var chargeLinkDataAvailableNotifierEvent =
+                var defaultChargeLinksCreatedEvent =
                     _defaultChargeLinksCreatedEventFactory.Create(chargeLinksAcceptedEvent);
-                await _messageDispatcher.DispatchAsync(chargeLinkDataAvailableNotifierEvent);
+                await _messageDispatcher.DispatchAsync(defaultChargeLinksCreatedEvent);
             }
         }
     }
