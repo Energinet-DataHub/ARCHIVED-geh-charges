@@ -21,7 +21,7 @@ using GreenEnergyHub.Charges.Infrastructure.Context;
 using Microsoft.EntityFrameworkCore;
 using Charge = GreenEnergyHub.Charges.Domain.Charges.Charge;
 
-namespace GreenEnergyHub.Charges.Infrastructure.Repositories
+namespace GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories
 {
     public class ChargeRepository : IChargeRepository
     {
