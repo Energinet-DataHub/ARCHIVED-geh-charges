@@ -81,7 +81,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Validation.InputValid
             // Assert
             sut.ValidationError.ValidationErrorMessageParameters
                 .Single(x => x.ParameterType == ValidationErrorMessageParameterType.LongDescriptionMaxLength100)
-                .MessageParameter.Should().Be("todo");
+                .MessageParameter.Should().Be(command.ChargeOperation.ChargeDescription);
             sut.ValidationError.ValidationErrorMessageParameters
                 .Single(x => x.ParameterType == ValidationErrorMessageParameterType.PartyChargeTypeId)
                 .MessageParameter.Should().Be(command.ChargeOperation.ChargeId);

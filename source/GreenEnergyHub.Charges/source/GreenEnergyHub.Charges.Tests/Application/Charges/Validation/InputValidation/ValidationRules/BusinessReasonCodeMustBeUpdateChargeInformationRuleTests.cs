@@ -79,7 +79,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Validation.InputValid
             // Assert
             sut.ValidationError.ValidationErrorMessageParameters
                 .Single(x => x.ParameterType == ValidationErrorMessageParameterType.EnergyBusinessProcess)
-                .MessageParameter.Should().Be("todo");
+                .MessageParameter.Should().Be(command.Document.BusinessReasonCode.ToString());
             sut.ValidationError.ValidationErrorMessageParameters
                 .Single(x => x.ParameterType == ValidationErrorMessageParameterType.DocumentType)
                 .MessageParameter.Should().Be(command.Document.Type.ToString());

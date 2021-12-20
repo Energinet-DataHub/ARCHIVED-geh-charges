@@ -68,7 +68,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Validation.InputValid
             var sut = new SenderIsMandatoryTypeValidationRule(command);
             sut.ValidationError.ValidationErrorMessageParameters
                 .Single(x => x.ParameterType == ValidationErrorMessageParameterType.MessageId)
-                .MessageParameter.Should().Be("todo");
+                .MessageParameter.Should().Be(command.Document.Id);
         }
     }
 }

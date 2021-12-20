@@ -12,10 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.Charges;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessValidation.ValidationRules;
 using GreenEnergyHub.TestHelpers;
@@ -27,29 +29,30 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Validation.BusinessVa
     [UnitTest]
     public class ChargeUpdateNotYetSupportedRuleTests
     {
-        [Fact]
-        public void IsValid_WhenChargeIsNull_IsTrue()
+        [Theory]
+        [InlineAutoDomainData]
+        public void IsValid_WhenChargeIsNull_IsTrue(ChargeCommand chargeCommand)
         {
-            var sut = new ChargeUpdateNotYetSupportedRule(null);
+            var sut = new ChargeUpdateNotYetSupportedRule(chargeCommand, null);
             sut.IsValid.Should().BeTrue();
         }
 
         [Theory]
         [InlineAutoDomainData]
-        public void IsValid_WhenChargeIsNotNull_IsFalse(
-            [NotNull] Charge charge)
+        public void IsValid_WhenChargeIsNotNull_IsFalse(ChargeCommand chargeCommand, Charge charge)
         {
-            var sut = new ChargeUpdateNotYetSupportedRule(charge);
+            var sut = new ChargeUpdateNotYetSupportedRule(chargeCommand, charge);
             sut.IsValid.Should().BeFalse();
         }
 
         [Theory]
         [InlineAutoDomainData]
-        public void ValidationRuleIdentifier_ShouldContain_RequiredErrorMessageParameterTypes(Charge charge)
+        public void ValidationRuleIdentifier_ShouldContain_RequiredErrorMessageParameterTypes(
+            ChargeCommand chargeCommand, Charge charge)
         {
             // Arrange
             // Act
-            var sut = new ChargeUpdateNotYetSupportedRule(charge);
+            var sut = new ChargeUpdateNotYetSupportedRule(chargeCommand, charge);
 
             // Assert
             sut.ValidationError.ValidationErrorMessageParameters
@@ -65,22 +68,22 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Validation.BusinessVa
 
         [Theory]
         [InlineAutoDomainData]
-        public void ValidationRuleIdentifier_ShouldBe_RequiredErrorMessageParameters(Charge charge)
+        public void ValidationRuleIdentifier_ShouldBe_RequiredErrorMessageParameters(ChargeCommand chargeCommand, Charge charge)
         {
             // Arrange
             // Act
-            var sut = new ChargeUpdateNotYetSupportedRule(charge);
+            var sut = new ChargeUpdateNotYetSupportedRule(chargeCommand, charge);
 
             // Assert
             sut.ValidationError.ValidationErrorMessageParameters
                 .Single(x => x.ParameterType == ValidationErrorMessageParameterType.PartyChargeTypeId)
-                .MessageParameter.Should().Be(charge.SenderProvidedChargeId); // todo correct?
+                .MessageParameter.Should().Be(chargeCommand.ChargeOperation.ChargeId);
             sut.ValidationError.ValidationErrorMessageParameters
                 .Single(x => x.ParameterType == ValidationErrorMessageParameterType.ChargeTypeOwner)
-                .MessageParameter.Should().Be(charge.OwnerId.ToString()); // todo correct?
+                .MessageParameter.Should().Be(chargeCommand.ChargeOperation.ChargeOwner);
             sut.ValidationError.ValidationErrorMessageParameters
                 .Single(x => x.ParameterType == ValidationErrorMessageParameterType.ChargeType)
-                .MessageParameter.Should().Be(charge.Type.ToString()); // correct?
+                .MessageParameter.Should().Be(charge.Type.ToString());
         }
     }
 }

@@ -68,8 +68,8 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Validation.InputValid
         {
             var sut = new ChargeOperationIdRequiredRule(command);
             sut.ValidationError.ValidationErrorMessageParameters
-                .Single(x => x.ParameterType == ValidationErrorMessageParameterType.MeteringPointId)
-                .MessageParameter.Should().Be("todo");
+                .Single(x => x.ParameterType == ValidationErrorMessageParameterType.MessageId)
+                .MessageParameter.Should().Be(command.Document.Id); // Todo: MeteringPointId provided in Excel sheet for VR.223 does not make sense
         }
     }
 }
