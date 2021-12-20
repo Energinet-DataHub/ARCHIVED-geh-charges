@@ -43,7 +43,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.ChargeLinkBun
             return new ChargeLinksCommandBundle(chargeLinksCommands);
         }
 
-        private async Task<List<ChargeLinksCommand>> ParseChargeLinkCommandsAsync(XmlReader reader, DocumentDto document)
+        private static async Task<List<ChargeLinksCommand>> ParseChargeLinkCommandsAsync(XmlReader reader, DocumentDto document)
         {
             var chargeLinks = new List<ChargeLinksCommand>();
 
