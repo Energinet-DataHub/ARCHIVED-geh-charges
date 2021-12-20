@@ -2,7 +2,7 @@
 
 ## Version 1.0.20
 
-Use class for `ChargeLinkDto` insted of record.
+Use class for `ChargeLinkDto` instead of record.
 
 ## Version 1.0.19
 
