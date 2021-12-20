@@ -37,15 +37,9 @@ using GreenEnergyHub.Charges.Infrastructure.Core.Function;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessageMetaData;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Registration;
 using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandReceived;
-<<<<<<< HEAD
 using GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories;
 using GreenEnergyHub.Charges.Infrastructure.ReplySender;
 using GreenEnergyHub.Charges.Infrastructure.ReplySender.CreateDefaultChargeLinkReplier;
-=======
-using GreenEnergyHub.Charges.Infrastructure.ReplySender;
-using GreenEnergyHub.Charges.Infrastructure.ReplySender.CreateDefaultChargeLinkReplier;
-using GreenEnergyHub.Charges.Infrastructure.Repositories;
->>>>>>> 6ef401a87ad7ebdea9352106433d5c122629edbf
 using GreenEnergyHub.Charges.MessageHub.Infrastructure.Cim;
 using GreenEnergyHub.Charges.MessageHub.Infrastructure.Context;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeData;
