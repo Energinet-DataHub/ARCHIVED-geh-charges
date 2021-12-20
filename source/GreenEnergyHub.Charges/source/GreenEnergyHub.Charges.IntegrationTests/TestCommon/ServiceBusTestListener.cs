@@ -64,7 +64,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.TestCommon
         /// <remarks>Use this between tests.</remarks>
         public void Reset()
         {
-            // _serviceBusListenerMock.ResetMessageHandlersAndReceivedMessages();
+            _serviceBusListenerMock.ResetMessageHandlersAndReceivedMessages();
         }
     }
 }
