@@ -18,8 +18,8 @@ using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands;
 
 namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
 {
-    public interface IChargeLinksCommandHandler
+    public interface IChargeLinksCommandBundleHandler
     {
-        public Task HandleAsync(ChargeLinksCommand command);
+        Task<ChargeLinksMessageResult> HandleAsync(ChargeLinksCommandBundle chargeLinksCommandBundle);
     }
 }

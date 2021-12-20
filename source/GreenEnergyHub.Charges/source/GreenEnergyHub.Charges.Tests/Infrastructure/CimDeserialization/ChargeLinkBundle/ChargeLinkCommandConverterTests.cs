@@ -13,13 +13,13 @@
 // limitations under the License.
 
 using System;
-using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using System.Xml;
 using AutoFixture.Xunit2;
+using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
@@ -40,8 +40,8 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.CimDeserialization.ChargeL
         [Theory]
         [InlineAutoMoqData]
         public async Task ConvertAsync_WhenCalledWithValidCimMessage_ReturnsParsedObject(
-            [NotNull][Frozen] Mock<ICorrelationContext> context,
-            [NotNull] ChargeLinkCommandConverter sut)
+            [Frozen] Mock<ICorrelationContext> context,
+            ChargeLinkCommandConverter sut)
         {
             // Arrange
             var correlationId = Guid.NewGuid().ToString();
@@ -51,37 +51,38 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.CimDeserialization.ChargeL
             using var reader = XmlReader.Create(stream, new XmlReaderSettings { Async = true });
 
             // Act
-            var result = (ChargeLinksCommand)await sut.ConvertAsync(reader).ConfigureAwait(false);
+            var resultBundle = (ChargeLinksCommandBundle)await sut.ConvertAsync(reader).ConfigureAwait(false);
 
             // Assert
+            var result = resultBundle.ChargeLinksCommands.Single();
             var chargeLink = result.ChargeLinks.First();
-            Assert.Equal("578032999778756222", result.MeteringPointId);
+            result.MeteringPointId.Should().Be("578032999778756222");
 
             // Document
-            Assert.Equal("DocId_Valid_001", result.Document.Id);
-            Assert.Equal(DocumentType.RequestChangeBillingMasterData, result.Document.Type);
-            Assert.Equal(BusinessReasonCode.UpdateMasterDataSettlement, result.Document.BusinessReasonCode);
-            Assert.Equal("8100000000016", result.Document.Sender.Id);
-            Assert.Equal(MarketParticipantRole.GridAccessProvider, result.Document.Sender.BusinessProcessRole);
-            Assert.Equal("5790001330552", result.Document.Recipient.Id);
-            Assert.Equal(MarketParticipantRole.MeteringPointAdministrator, result.Document.Recipient.BusinessProcessRole);
-            Assert.Equal(InstantPattern.ExtendedIso.Parse("2021-07-05T13:20:02.387Z").Value, result.Document.CreatedDateTime);
+            result.Document.Id.Should().Be("DocId_Valid_001");
+            result.Document.Type.Should().Be(DocumentType.RequestChangeBillingMasterData);
+            result.Document.BusinessReasonCode.Should().Be(BusinessReasonCode.UpdateMasterDataSettlement);
+            result.Document.Sender.Id.Should().Be("8100000000016");
+            result.Document.Sender.BusinessProcessRole.Should().Be(MarketParticipantRole.GridAccessProvider);
+            result.Document.Recipient.Id.Should().Be("5790001330552");
+            result.Document.Recipient.BusinessProcessRole.Should().Be(MarketParticipantRole.MeteringPointAdministrator);
+            result.Document.CreatedDateTime.Should().Be(InstantPattern.ExtendedIso.Parse("2021-07-05T13:20:02.387Z").Value);
 
             // ChargeLink
-            Assert.Equal("rId_Valid_001", chargeLink.OperationId);
-            Assert.Equal(InstantPattern.ExtendedIso.Parse("2021-09-27T22:00:00Z").Value, chargeLink.StartDateTime);
-            Assert.Equal(InstantPattern.ExtendedIso.Parse("2021-11-05T23:00:00Z").Value, chargeLink.EndDateTime);
-            Assert.Equal("ChargeId01", chargeLink.SenderProvidedChargeId);
-            Assert.Equal(1, chargeLink.Factor);
-            Assert.Equal("8100000000016", chargeLink.ChargeOwnerId);
-            Assert.Equal(ChargeType.Tariff, chargeLink.ChargeType);
+            chargeLink.OperationId.Should().Be("rId_Valid_001");
+            chargeLink.StartDateTime.Should().Be(InstantPattern.ExtendedIso.Parse("2021-09-27T22:00:00Z").Value);
+            chargeLink.EndDateTime.Should().Be(InstantPattern.ExtendedIso.Parse("2021-11-05T23:00:00Z").Value);
+            chargeLink.SenderProvidedChargeId.Should().Be("ChargeId01");
+            chargeLink.Factor.Should().Be(1);
+            chargeLink.ChargeOwnerId.Should().Be("8100000000016");
+            chargeLink.ChargeType.Should().Be(ChargeType.Tariff);
         }
 
         [Theory]
         [InlineAutoMoqData]
         public async Task ConvertAsync_WhenCalledWithValidCimMessageContainingUnusedCimContent_ReturnsParsedObject(
-            [NotNull][Frozen] Mock<ICorrelationContext> context,
-            [NotNull] ChargeLinkCommandConverter sut)
+            [Frozen] Mock<ICorrelationContext> context,
+            ChargeLinkCommandConverter sut)
         {
             // Arrange
             var correlationId = Guid.NewGuid().ToString();
@@ -91,11 +92,12 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.CimDeserialization.ChargeL
             using var reader = XmlReader.Create(stream, new XmlReaderSettings { Async = true });
 
             // Act
-            var result = (ChargeLinksCommand)await sut.ConvertAsync(reader).ConfigureAwait(false);
+            var resultBundle = (ChargeLinksCommandBundle)await sut.ConvertAsync(reader).ConfigureAwait(false);
 
             // Assert
-            Assert.Equal("DocId_Valid_002", result.Document.Id);
-            Assert.Equal("rId_Valid_002", result.ChargeLinks.First().OperationId);
+            var result = resultBundle.ChargeLinksCommands.Single();
+            result.Document.Id.Should().Be("DocId_Valid_002");
+            result.ChargeLinks.First().OperationId.Should().Be("rId_Valid_002");
 
             await Task.CompletedTask.ConfigureAwait(false);
         }
@@ -103,8 +105,8 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.CimDeserialization.ChargeL
         [Theory]
         [InlineAutoMoqData]
         public async Task ConvertAsync_WhenCalledWithValidCimMessageWithoutEndDate_ReturnsParsedObject(
-            [NotNull][Frozen] Mock<ICorrelationContext> context,
-            [NotNull] ChargeLinkCommandConverter sut)
+            [Frozen] Mock<ICorrelationContext> context,
+            ChargeLinkCommandConverter sut)
         {
             // Arrange
             var correlationId = Guid.NewGuid().ToString();
@@ -114,14 +116,67 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.CimDeserialization.ChargeL
             using var reader = XmlReader.Create(stream, new XmlReaderSettings { Async = true });
 
             // Act
-            var result = (ChargeLinksCommand)await sut.ConvertAsync(reader).ConfigureAwait(false);
+            var resultBundle = (ChargeLinksCommandBundle)await sut.ConvertAsync(reader).ConfigureAwait(false);
 
             // Assert
-            Assert.Equal("DocId_Valid_003", result.Document.Id);
-            Assert.Equal("rId_Valid_003", result.ChargeLinks.First().OperationId);
-            Assert.Null(result.ChargeLinks.First().EndDateTime);
+            var result = resultBundle.ChargeLinksCommands.Single();
+            result.Document.Id.Should().Be("DocId_Valid_003");
+            result.ChargeLinks.First().OperationId.Should().Be("rId_Valid_003");
+            result.ChargeLinks.First().EndDateTime.Should().BeNull();
 
             await Task.CompletedTask.ConfigureAwait(false);
+        }
+
+        [Theory]
+        [InlineAutoMoqData]
+        public async Task ConvertAsync_WhenCalledWithValidBundleChargeLinks_ReturnsParsedObjects(
+            [Frozen] Mock<ICorrelationContext> context,
+            ChargeLinkCommandConverter sut)
+        {
+            // Arrange
+            var correlationId = Guid.NewGuid().ToString();
+            context.Setup(c => c.Id).Returns(correlationId);
+
+            var stream = GetEmbeddedResource("GreenEnergyHub.Charges.Tests.TestFiles.Valid_CIM_ChargeLink_Bundle.xml");
+            using var reader = XmlReader.Create(stream, new XmlReaderSettings { Async = true });
+
+            // Act
+            var result = (ChargeLinksCommandBundle)await sut.ConvertAsync(reader).ConfigureAwait(false);
+
+            // Assert
+            // Document
+            var document =
+                result.ChargeLinksCommands.First().Document;
+            document.Id.Should().Be("DocId_Valid_001");
+            document.Type.Should().Be(DocumentType.RequestChangeBillingMasterData);
+            document.BusinessReasonCode.Should().Be(BusinessReasonCode.UpdateMasterDataSettlement);
+            document.Sender.Id.Should().Be("8100000000016");
+            document.Sender.BusinessProcessRole.Should().Be(MarketParticipantRole.GridAccessProvider);
+            document.Recipient.Id.Should().Be("5790001330552");
+            document.Recipient.BusinessProcessRole.Should().Be(MarketParticipantRole.MeteringPointAdministrator);
+            document.CreatedDateTime.Should().Be(InstantPattern.ExtendedIso.Parse("2021-07-05T13:20:02.387Z").Value);
+
+            // ChargeLink 1
+            var chargeLink1 =
+                result.ChargeLinksCommands.Single(x => x.ChargeLinks.First().OperationId == "rId_Valid_001").ChargeLinks
+                    .First();
+            chargeLink1.StartDateTime.Should().Be(InstantPattern.ExtendedIso.Parse("2021-09-27T22:00:00Z").Value);
+            chargeLink1.EndDateTime.Should().Be(InstantPattern.ExtendedIso.Parse("2021-11-05T23:00:00Z").Value);
+            chargeLink1.SenderProvidedChargeId.Should().Be("ChargeId01");
+            chargeLink1.Factor.Should().Be(1);
+            chargeLink1.ChargeOwnerId.Should().Be("8100000000016");
+            chargeLink1.ChargeType.Should().Be(ChargeType.Tariff);
+
+            // ChargeLink 2
+            var chargeLink2 =
+                result.ChargeLinksCommands.Single(x => x.ChargeLinks.First().OperationId == "rId_Valid_002").ChargeLinks
+                    .First();
+            chargeLink2.StartDateTime.Should().Be(InstantPattern.ExtendedIso.Parse("2021-11-27T22:00:00Z").Value);
+            chargeLink2.EndDateTime.Should().Be(InstantPattern.ExtendedIso.Parse("2021-12-05T23:00:00Z").Value);
+            chargeLink2.SenderProvidedChargeId.Should().Be("ChargeId01");
+            chargeLink2.Factor.Should().Be(1);
+            chargeLink2.ChargeOwnerId.Should().Be("8100000000016");
+            chargeLink2.ChargeType.Should().Be(ChargeType.Tariff);
         }
 
         private static Stream GetEmbeddedResource(string path)

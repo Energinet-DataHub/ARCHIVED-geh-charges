@@ -57,6 +57,7 @@ limitations under the License.
 
     <ItemGroup>
       <EmbeddedResource Include="TestFiles\Valid_CIM_ChargeLink.xml" />
+      <EmbeddedResource Include="TestFiles\Valid_CIM_ChargeLink_Bundle.xml" />
       <EmbeddedResource Include="TestFiles\Valid_CIM_ChargeLink_WithUnusedCimContent.xml" />
       <EmbeddedResource Include="TestFiles\Valid_CIM_ChargeLink_WithoutEndDate.xml" />
       <EmbeddedResource Include="TestFiles\ExpectedOutputChargeLinkCimSerializer.blob" />
