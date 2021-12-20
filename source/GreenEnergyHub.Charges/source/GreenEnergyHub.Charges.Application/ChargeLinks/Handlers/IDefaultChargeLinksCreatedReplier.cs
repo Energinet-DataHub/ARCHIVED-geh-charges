@@ -17,18 +17,8 @@ using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksAcceptedEvents;
 
 namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
 {
-    /// <summary>
-    /// Contract for notifying the MessageHub that data about a charge link that has been created
-    /// is available.
-    /// This is the RSM-031 CIM XML 'NotifyBillingMasterData'.
-    ///
-    /// ChargeLinksAcceptedEvents may originate from regular market participant's charge links requests
-    /// or by the Metering Point domain requesting creation of 'default charge links'. Only the latter
-    /// entails replying back to the Metering Point domain once notifications related to default charge
-    /// links have been created
-    /// </summary>
-    public interface IChargeLinkDataAvailableNotifierAndReplyHandler
+    public interface IDefaultChargeLinksCreatedReplier
     {
-        Task NotifyAndReplyAsync(ChargeLinksAcceptedEvent chargeLinksAcceptedEvent);
+        Task ReplyAsync(ChargeLinksAcceptedEvent chargeLinksAcceptedEvent);
     }
 }

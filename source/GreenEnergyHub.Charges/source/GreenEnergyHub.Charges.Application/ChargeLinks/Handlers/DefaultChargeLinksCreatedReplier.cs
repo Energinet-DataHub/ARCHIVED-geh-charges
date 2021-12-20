@@ -21,13 +21,13 @@ using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions;
 
 namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
 {
-    public class ChargeLinkDataAvailableReplyHandler : IChargeLinkDataAvailableReplyHandler
+    public class DefaultChargeLinksCreatedReplier : IDefaultChargeLinksCreatedReplier
     {
         private readonly IMessageDispatcher<DefaultChargeLinksCreatedEvent> _messageDispatcher;
         private readonly IDefaultChargeLinksCreatedEventFactory _defaultChargeLinksCreatedEventFactory;
         private readonly IMessageMetaDataContext _messageMetaDataContext;
 
-        public ChargeLinkDataAvailableReplyHandler(
+        public DefaultChargeLinksCreatedReplier(
             IMessageDispatcher<DefaultChargeLinksCreatedEvent> messageDispatcher,
             IDefaultChargeLinksCreatedEventFactory defaultChargeLinksCreatedEventFactory,
             IMessageMetaDataContext messageMetaDataContext)

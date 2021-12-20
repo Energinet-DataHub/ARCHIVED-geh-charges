@@ -37,7 +37,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Handlers
         [Theory]
         [InlineAutoMoqData]
         public async Task ReplyAsync_WhenEventIsNull_ThrowsArgumentNullException(
-            ChargeLinkDataAvailableReplyHandler sut)
+            DefaultChargeLinksCreatedReplier sut)
         {
             await sut
                 .Invoking(notifier => notifier.ReplyAsync(null!))
@@ -52,7 +52,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Handlers
             [Frozen] Mock<IDefaultChargeLinksCreatedEventFactory> defaultChargeLinksCreatedEventFactory,
             [Frozen] Mock<IMessageMetaDataContext> messageMetaDataContext,
             ChargeLinksAcceptedEvent chargeLinksAcceptedEvent,
-            ChargeLinkDataAvailableReplyHandler sut)
+            DefaultChargeLinksCreatedReplier sut)
         {
             // Arrange
             messageMetaDataContext.Setup(context => context.IsReplyToSet()).Returns(true);
@@ -79,7 +79,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Handlers
             [Frozen] Mock<IDefaultChargeLinksCreatedEventFactory> defaultChargeLinksCreatedEventFactory,
             [Frozen] Mock<IMessageMetaDataContext> messageMetaDataContext,
             ChargeLinksAcceptedEvent chargeLinksAcceptedEvent,
-            ChargeLinkDataAvailableReplyHandler sut)
+            DefaultChargeLinksCreatedReplier sut)
         {
             // Arrange
             messageMetaDataContext.Setup(context => context.IsReplyToSet()).Returns(false);
