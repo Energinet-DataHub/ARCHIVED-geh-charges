@@ -51,7 +51,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands
         }
 
         public async Task<ChargeLinksCommand> CreateAsync(
-            [NotNull] CreateLinksRequest createLinksRequest,
+            [NotNull] CreateDefaultChargeLinksRequest createDefaultChargeLinksRequest,
             [NotNull] IReadOnlyCollection<DefaultChargeLink> defaultChargeLinks)
         {
             var chargeIds = defaultChargeLinks.Select(x => x.ChargeId).ToList();
@@ -66,7 +66,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands
                 .ConfigureAwait(false);
 
             var meteringPoint = await _meteringPointRepository
-                .GetMeteringPointAsync(createLinksRequest.MeteringPointId)
+                .GetMeteringPointAsync(createDefaultChargeLinksRequest.MeteringPointId)
                 .ConfigureAwait(false);
 
             var systemOperator = await _marketParticipantRepository
@@ -91,7 +91,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands
                 })
                 .ToList();
 
-            return CreateChargeLinksCommand(createLinksRequest, systemOperator, chargeLinks);
+            return CreateChargeLinksCommand(createDefaultChargeLinksRequest, systemOperator, chargeLinks);
         }
 
         private static string GetChargeOwnerId(Charge charge, IReadOnlyCollection<MarketParticipant> owners)
@@ -100,13 +100,13 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands
         }
 
         private ChargeLinksCommand CreateChargeLinksCommand(
-            CreateLinksRequest createLinksRequest,
+            CreateDefaultChargeLinksRequest createDefaultChargeLinksRequest,
             MarketParticipant systemOperator,
             List<ChargeLinkDto> chargeLinks)
         {
             var currentTime = _clock.GetCurrentInstant();
             return new ChargeLinksCommand(
-                createLinksRequest.MeteringPointId,
+                createDefaultChargeLinksRequest.MeteringPointId,
                 new DocumentDto
                 {
                     Id = Guid.NewGuid().ToString(),

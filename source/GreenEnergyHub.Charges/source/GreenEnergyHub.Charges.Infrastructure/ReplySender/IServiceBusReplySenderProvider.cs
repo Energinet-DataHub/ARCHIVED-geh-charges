@@ -12,13 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Domain.Dtos.CreateLinksRequests;
-
-namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
+namespace GreenEnergyHub.Charges.Infrastructure.ReplySender
 {
-    public interface ICreateLinkRequestHandler
+    public interface IServiceBusReplySenderProvider
     {
-        Task HandleAsync(CreateDefaultChargeLinksRequest createDefaultChargeLinksRequest);
+        /// <summary>
+        /// Returns existing sender, or creates a new based on recipient queue name.
+        /// </summary>
+        /// <param name="replyTo"></param>
+        IServiceBusReplySender GetInstance(string replyTo);
     }
 }

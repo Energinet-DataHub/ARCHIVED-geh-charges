@@ -49,7 +49,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeLinksCommands
             Guid defaultChargeLinkId,
             Guid chargeId,
             MeteringPoint meteringPoint,
-            CreateLinksRequest createLinksRequest,
+            CreateDefaultChargeLinksRequest createDefaultChargeLinksRequest,
             ChargeLinksCommandFactory sut)
         {
             // Arrange
@@ -83,7 +83,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeLinksCommands
                 .ReturnsAsync(new List<Charge> { charge });
 
             meteringPointRepository
-                .Setup(f => f.GetMeteringPointAsync(createLinksRequest.MeteringPointId))
+                .Setup(f => f.GetMeteringPointAsync(createDefaultChargeLinksRequest.MeteringPointId))
                 .ReturnsAsync(meteringPoint);
 
             marketParticipantRepository
@@ -100,7 +100,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeLinksCommands
 
             // Act
             var actual = await sut
-                .CreateAsync(createLinksRequest, new List<DefaultChargeLink> { defaultChargeLink })
+                .CreateAsync(createDefaultChargeLinksRequest, new List<DefaultChargeLink> { defaultChargeLink })
                 .ConfigureAwait(false);
 
             // Assert
@@ -116,7 +116,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeLinksCommands
             actual.ChargeLinks.First().ChargeType.Should().Be(charge.Type);
             actual.ChargeLinks.First().EndDateTime.Should().Be(defaultChargeLink.EndDateTime);
             actual.ChargeLinks.First().ChargeOwnerId.Should().Be(chargeOwner.MarketParticipantId);
-            actual.MeteringPointId.Should().Be(createLinksRequest.MeteringPointId);
+            actual.MeteringPointId.Should().Be(createDefaultChargeLinksRequest.MeteringPointId);
             actual.ChargeLinks.First().StartDateTime.Should().Be(defaultChargeLink.GetStartDateTime(meteringPoint.EffectiveDate));
             actual.ChargeLinks.First().Factor.Should().Be(1);
         }
