@@ -12,14 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Application.ChargeLinks.Handlers.Message;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands;
+using System;
 
-namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
+namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.ChargeBundle
 {
-    public interface IChargeLinksCommandHandler
+    public class NoChargeLinksCommandsFoundException : Exception
     {
-        public Task HandleAsync(ChargeLinksCommand command);
     }
 }
