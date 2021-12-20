@@ -23,7 +23,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands
     public interface IChargeLinksCommandFactory
     {
         Task<ChargeLinksCommand> CreateAsync(
-            [NotNull] CreateLinksRequest createLinksRequest,
+            [NotNull] CreateDefaultChargeLinksRequest createDefaultChargeLinksRequest,
             [NotNull] IReadOnlyCollection<DefaultChargeLink> defaultChargeLinks);
     }
 }

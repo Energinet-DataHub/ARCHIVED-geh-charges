@@ -19,6 +19,6 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
 {
     public interface ICreateLinkRequestHandler
     {
-        Task HandleAsync(CreateLinksRequest createLinksRequest);
+        Task HandleAsync(CreateDefaultChargeLinksRequest createDefaultChargeLinksRequest);
     }
 }
