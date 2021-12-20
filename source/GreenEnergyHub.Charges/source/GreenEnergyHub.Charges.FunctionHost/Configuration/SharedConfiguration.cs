@@ -38,7 +38,7 @@ using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Registratio
 using GreenEnergyHub.Charges.Infrastructure.CreateDefaultChargeLinkReplier;
 using GreenEnergyHub.Charges.Infrastructure.Function;
 using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandReceived;
-using GreenEnergyHub.Charges.Infrastructure.Repositories;
+using GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories;
 using GreenEnergyHub.Charges.Infrastructure.ServiceBusReplySenderProvider;
 using GreenEnergyHub.Charges.MessageHub.Infrastructure.Cim;
 using GreenEnergyHub.Charges.MessageHub.Infrastructure.Context;
