@@ -12,11 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
-using FluentAssertions;
 using GreenEnergyHub.Charges.Application.ChargeLinks.Handlers;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksReceivedEvents;
