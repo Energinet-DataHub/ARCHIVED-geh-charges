@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.IO;
 using System.Threading.Tasks;
 using Energinet.DataHub.MessageHub.Client.Peek;
@@ -43,6 +44,22 @@ namespace GreenEnergyHub.Charges.MessageHub.Infrastructure.Bundling
             await _dataBundleResponseSender
                 .SendAsync(response)
                 .ConfigureAwait(false);
+        }
+
+        public async Task ReplyErrorAsync(Exception e, DataBundleRequestDto request)
+        {
+            var response = request.CreateErrorResponse(
+                new DataBundleResponseErrorDto { Reason = GetReason(e) });
+
+            await _dataBundleResponseSender
+                .SendAsync(response)
+                .ConfigureAwait(false);
+        }
+
+        private DataBundleResponseErrorReason GetReason(Exception e)
+        {
+            return e.GetType() == typeof(UnknownDataAvailableNotificationIdsException) ?
+                DataBundleResponseErrorReason.DatasetNotFound : DataBundleResponseErrorReason.InternalError;
         }
     }
 }

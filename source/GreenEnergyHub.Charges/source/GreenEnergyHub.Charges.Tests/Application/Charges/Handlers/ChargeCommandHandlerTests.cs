@@ -38,7 +38,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
             [NotNull] ChargeCommandHandler sut)
         {
             // Arrange
-            var transaction = new ChargeCommandTestBuilder().Build();
+            var transaction = new ChargeCommandBuilder().Build();
 
             // Act
             await sut.HandleAsync(transaction).ConfigureAwait(false);

@@ -12,72 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
-using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
-using System.Linq;
-using System.Threading.Tasks;
-using FluentAssertions;
-using GreenEnergyHub.Charges.IntegrationTests.Database;
+using GreenEnergyHub.Charges.IntegrationTests.Fixtures.Database;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksData;
-using GreenEnergyHub.Charges.TestCore.Attributes;
-using Xunit;
 using Xunit.Categories;
 
 namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
 {
     [IntegrationTest]
-    public class AvailableChargeLinksDataRepositoryTests : IClassFixture<MessageHubDatabaseFixture>
+    public class AvailableChargeLinksDataRepositoryTests : AvailableDataRepositoryTests<AvailableChargeLinksData>
     {
-        private readonly MessageHubDatabaseManager _databaseManager;
-
         public AvailableChargeLinksDataRepositoryTests(MessageHubDatabaseFixture fixture)
+            : base(fixture)
         {
-            _databaseManager = fixture.DatabaseManager;
-        }
-
-        [Theory]
-        [InlineAutoMoqData]
-        public async Task StoreAsync_StoresAvailableChargeLinksData([NotNull] List<AvailableChargeLinksData> expectedList)
-        {
-            // Arrange
-            await using var chargesDatabaseWriteContext = _databaseManager.CreateDbContext();
-
-            var sut = new AvailableChargeLinksDataRepository(chargesDatabaseWriteContext);
-
-            // Act
-            await sut.StoreAsync(expectedList).ConfigureAwait(false);
-
-            // Assert
-            await using var chargesDatabaseReadContext = _databaseManager.CreateDbContext();
-            foreach (var expected in expectedList)
-            {
-                var actual =
-                    chargesDatabaseReadContext.AvailableChargeLinksData.Single(x => x.AvailableDataReferenceId == expected.AvailableDataReferenceId);
-                actual.ChargeOwner.Should().Be(expected.ChargeOwner);
-            }
-        }
-
-        [Theory]
-        [InlineAutoMoqData]
-        public async Task GetAsync_WithMeteringPointId_ThenSuccessReturnedAsync(
-            [NotNull] AvailableChargeLinksData expected)
-        {
-            // Arrange
-            await using var chargesDatabaseWriteContext = _databaseManager.CreateDbContext();
-            await chargesDatabaseWriteContext.AvailableChargeLinksData.AddAsync(expected).ConfigureAwait(false);
-            await chargesDatabaseWriteContext.SaveChangesAsync().ConfigureAwait(false);
-
-            await using var chargesDatabaseReadContext = _databaseManager.CreateDbContext();
-            var sut = new AvailableChargeLinksDataRepository(chargesDatabaseReadContext);
-
-            // Act
-            var actual =
-                await sut.GetAsync(new List<Guid> { expected.AvailableDataReferenceId })
-                .ConfigureAwait(false);
-
-            // Assert
-            Assert.NotNull(actual);
         }
     }
 }
