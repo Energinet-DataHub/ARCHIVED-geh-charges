@@ -119,7 +119,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.CimDeserialization.ChargeL
             var resultBundle = (ChargeLinksCommandBundle)await sut.ConvertAsync(reader).ConfigureAwait(false);
 
             // Assert
-            var result = resultBundle.ChargeLinksCommands.First();
+            var result = resultBundle.ChargeLinksCommands.Single();
             result.Document.Id.Should().Be("DocId_Valid_003");
             result.ChargeLinks.First().OperationId.Should().Be("rId_Valid_003");
             result.ChargeLinks.First().EndDateTime.Should().BeNull();
