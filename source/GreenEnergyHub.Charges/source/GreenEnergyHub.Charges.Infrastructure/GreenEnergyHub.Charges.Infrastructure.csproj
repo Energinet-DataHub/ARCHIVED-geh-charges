@@ -57,5 +57,27 @@ limitations under the License.
         <OutputDir>obj\contracts</OutputDir>
         <Generator>MSBuild:Compile</Generator>
       </Protobuf>
+      <Protobuf Update="..\..\..\Contracts\CreateDefaultChargeLinks.proto">
+        <Link>Contracts\Contracts\CreateDefaultChargeLinks.proto</Link>
+      </Protobuf>
+      <Protobuf Update="..\..\..\Contracts\CreateDefaultChargeLinksReply.proto">
+        <Link>Contracts\Contracts\CreateDefaultChargeLinksReply.proto</Link>
+      </Protobuf>
+      <Protobuf Update="..\..\..\Contracts\CreateDefaultChargeLinks.proto">
+        <Link>Contracts\Public\Contracts\CreateDefaultChargeLinks.proto</Link>
+      </Protobuf>
+      <Protobuf Update="..\..\..\Contracts\CreateDefaultChargeLinksReply.proto">
+        <Link>Contracts\Public\Contracts\CreateDefaultChargeLinksReply.proto</Link>
+      </Protobuf>
+      <Protobuf Update="..\..\..\Contracts\CreateDefaultChargeLinks.proto">
+        <Link>Contracts\Public\CreateDefaultChargeLinks\Contracts\CreateDefaultChargeLinks.proto</Link>
+      </Protobuf>
+      <Protobuf Update="..\..\..\Contracts\CreateDefaultChargeLinksReply.proto">
+        <Link>Contracts\Public\CreateDefaultChargeLinks\Contracts\CreateDefaultChargeLinksReply.proto</Link>
+      </Protobuf>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Contracts\External" />
     </ItemGroup>
 </Project>
