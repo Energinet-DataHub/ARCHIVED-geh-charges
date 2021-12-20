@@ -27,6 +27,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputVali
 
         public ValidationError ValidationError { get; } = new(
             ValidationRuleIdentifier.ChargeOperationIdRequired,
-            ValidationErrorMessageParameterType.MeteringPointId);
+            new ValidationErrorMessageParameter(
+                "test", ValidationErrorMessageParameterType.MeteringPointId));
     }
 }

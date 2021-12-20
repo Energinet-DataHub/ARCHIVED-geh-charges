@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Linq;
 using AutoFixture.Xunit2;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Core;
@@ -94,8 +95,25 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Validation.BusinessVa
             var sut = new StartDateValidationRule(command, configuration, zonedDateTimeService, clock);
 
             // Assert
-            sut.ValidationError.ValidationErrorMessageParameters.Should()
-                .Contain(ValidationErrorMessageParameterType.Occurrence);
+            sut.ValidationError.ValidationErrorMessageParameters
+                .Select(x => x.ParameterType)
+                .Should().Contain(ValidationErrorMessageParameterType.Occurrence);
+        }
+
+        [Theory]
+        [InlineAutoDomainData]
+        public void ValidationRuleIdentifier_ShouldBe_RequiredErrorMessageParameters(ChargeCommand command, IClock clock)
+        {
+            // Arrange
+            var configuration = CreateRuleConfiguration(1, 3);
+            var zonedDateTimeService = CreateLocalDateTimeService("Europe/Copenhagen");
+
+            var sut = new StartDateValidationRule(command, configuration, zonedDateTimeService, clock);
+
+            // Assert
+            sut.ValidationError.ValidationErrorMessageParameters
+                .Single(x => x.ParameterType == ValidationErrorMessageParameterType.Occurrence)
+                .MessageParameter.Should().Be(command.ChargeOperation.StartDateTime.ToDateTimeUtc().ToString("g")); // Todo formatting?
         }
 
         private static ZonedDateTimeService CreateLocalDateTimeService(string timeZoneId)

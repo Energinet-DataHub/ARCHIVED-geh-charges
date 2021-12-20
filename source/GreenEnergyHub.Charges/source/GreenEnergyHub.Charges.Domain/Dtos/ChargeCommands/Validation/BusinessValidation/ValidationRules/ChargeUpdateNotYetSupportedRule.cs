@@ -32,8 +32,11 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessV
 
         public ValidationError ValidationError { get; } = new(
             ValidationRuleIdentifier.UpdateNotYetSupported,
-            ValidationErrorMessageParameterType.PartyChargeTypeId,
-            ValidationErrorMessageParameterType.ChargeTypeOwner,
-            ValidationErrorMessageParameterType.ChargeType);
+            new ValidationErrorMessageParameter(
+                "test", ValidationErrorMessageParameterType.PartyChargeTypeId),
+            new ValidationErrorMessageParameter(
+                "test", ValidationErrorMessageParameterType.ChargeTypeOwner),
+            new ValidationErrorMessageParameter(
+                "test", ValidationErrorMessageParameterType.ChargeType));
     }
 }

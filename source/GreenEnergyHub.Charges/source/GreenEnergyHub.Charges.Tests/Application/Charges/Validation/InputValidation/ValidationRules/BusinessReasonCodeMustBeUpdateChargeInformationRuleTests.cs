@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Linq;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation;
@@ -59,10 +60,29 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Validation.InputValid
             var sut = new BusinessReasonCodeMustBeUpdateChargeInformationRule(command);
 
             // Assert
-            sut.ValidationError.ValidationErrorMessageParameters.Should()
-                .Contain(ValidationErrorMessageParameterType.EnergyBusinessProcess);
-            sut.ValidationError.ValidationErrorMessageParameters.Should()
-                .Contain(ValidationErrorMessageParameterType.DocumentType);
+            sut.ValidationError.ValidationErrorMessageParameters
+                .Select(x => x.ParameterType)
+                .Should().Contain(ValidationErrorMessageParameterType.EnergyBusinessProcess);
+            sut.ValidationError.ValidationErrorMessageParameters
+                .Select(x => x.ParameterType)
+                .Should().Contain(ValidationErrorMessageParameterType.DocumentType);
+        }
+
+        [Theory]
+        [InlineAutoDomainData]
+        public void ValidationRuleIdentifier_ShouldBe_RequiredErrorMessageParameters(ChargeCommand command)
+        {
+            // Arrange
+            // Act
+            var sut = new BusinessReasonCodeMustBeUpdateChargeInformationRule(command);
+
+            // Assert
+            sut.ValidationError.ValidationErrorMessageParameters
+                .Single(x => x.ParameterType == ValidationErrorMessageParameterType.EnergyBusinessProcess)
+                .MessageParameter.Should().Be("todo");
+            sut.ValidationError.ValidationErrorMessageParameters
+                .Single(x => x.ParameterType == ValidationErrorMessageParameterType.DocumentType)
+                .MessageParameter.Should().Be(command.Document.Type.ToString());
         }
     }
 }

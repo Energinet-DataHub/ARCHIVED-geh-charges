@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Linq;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation;
@@ -56,8 +57,19 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Validation.InputValid
         public void ValidationRuleIdentifier_ShouldContain_RequiredErrorMessageParameterTypes(ChargeCommand command)
         {
             var sut = new ChargeOperationIdRequiredRule(command);
-            sut.ValidationError.ValidationErrorMessageParameters.Should()
-                .Contain(ValidationErrorMessageParameterType.MeteringPointId);
+            sut.ValidationError.ValidationErrorMessageParameters
+                .Select(x => x.ParameterType)
+                .Should().Contain(ValidationErrorMessageParameterType.MeteringPointId);
+        }
+
+        [Theory]
+        [InlineAutoDomainData]
+        public void ValidationRuleIdentifier_ShouldBe_RequiredErrorMessageParameters(ChargeCommand command)
+        {
+            var sut = new ChargeOperationIdRequiredRule(command);
+            sut.ValidationError.ValidationErrorMessageParameters
+                .Single(x => x.ParameterType == ValidationErrorMessageParameterType.MeteringPointId)
+                .MessageParameter.Should().Be("todo");
         }
     }
 }

@@ -62,10 +62,29 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Validation.InputValid
             var sut = new ChargeDescriptionHasMaximumLengthRule(command);
 
             // Assert
-            sut.ValidationError.ValidationErrorMessageParameters.Should()
-                .Contain(ValidationErrorMessageParameterType.LongDescriptionMaxLength100);
-            sut.ValidationError.ValidationErrorMessageParameters.Should()
-                .Contain(ValidationErrorMessageParameterType.PartyChargeTypeId);
+            sut.ValidationError.ValidationErrorMessageParameters
+                .Select(x => x.ParameterType)
+                .Should().Contain(ValidationErrorMessageParameterType.LongDescriptionMaxLength100);
+            sut.ValidationError.ValidationErrorMessageParameters
+                .Select(x => x.ParameterType)
+                .Should().Contain(ValidationErrorMessageParameterType.PartyChargeTypeId);
+        }
+
+        [Theory]
+        [InlineAutoDomainData]
+        public void ValidationRuleIdentifier_ShouldBe_RequiredErrorMessageParameters(ChargeCommand command)
+        {
+            // Arrange
+            // Act
+            var sut = new ChargeDescriptionHasMaximumLengthRule(command);
+
+            // Assert
+            sut.ValidationError.ValidationErrorMessageParameters
+                .Single(x => x.ParameterType == ValidationErrorMessageParameterType.LongDescriptionMaxLength100)
+                .MessageParameter.Should().Be("todo");
+            sut.ValidationError.ValidationErrorMessageParameters
+                .Single(x => x.ParameterType == ValidationErrorMessageParameterType.PartyChargeTypeId)
+                .MessageParameter.Should().Be(command.ChargeOperation.ChargeId);
         }
 
         private static string GenerateStringWithLength(int stringLength)

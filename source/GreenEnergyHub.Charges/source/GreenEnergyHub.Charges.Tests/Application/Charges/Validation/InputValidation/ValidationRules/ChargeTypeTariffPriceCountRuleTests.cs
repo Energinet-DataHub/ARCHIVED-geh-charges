@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System;
+using System.Linq;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
@@ -150,12 +151,35 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Validation.InputValid
             var sut = new ChargeTypeTariffPriceCountRule(command);
 
             // Assert
-            sut.ValidationError.ValidationErrorMessageParameters.Should()
-                .Contain(ValidationErrorMessageParameterType.MaxOfPosition);
-            sut.ValidationError.ValidationErrorMessageParameters.Should()
-                .Contain(ValidationErrorMessageParameterType.PartyChargeTypeId);
-            sut.ValidationError.ValidationErrorMessageParameters.Should()
-                .Contain(ValidationErrorMessageParameterType.ResolutionDuration);
+            sut.ValidationError.ValidationErrorMessageParameters
+                .Select(x => x.ParameterType)
+                .Should().Contain(ValidationErrorMessageParameterType.MaxOfPosition);
+            sut.ValidationError.ValidationErrorMessageParameters
+                .Select(x => x.ParameterType)
+                .Should().Contain(ValidationErrorMessageParameterType.PartyChargeTypeId);
+            sut.ValidationError.ValidationErrorMessageParameters
+                .Select(x => x.ParameterType)
+                .Should().Contain(ValidationErrorMessageParameterType.ResolutionDuration);
+        }
+
+        [Theory]
+        [InlineAutoDomainData]
+        public void ValidationRuleIdentifier_ShouldBe_RequiredErrorMessageParameters(ChargeCommand command)
+        {
+            // Arrange
+            // Act
+            var sut = new ChargeTypeTariffPriceCountRule(command);
+
+            // Assert
+            sut.ValidationError.ValidationErrorMessageParameters
+                .Single(x => x.ParameterType == ValidationErrorMessageParameterType.MaxOfPosition)
+                .MessageParameter.Should().Be(command.ChargeOperation.Points.Count.ToString());
+            sut.ValidationError.ValidationErrorMessageParameters
+                .Single(x => x.ParameterType == ValidationErrorMessageParameterType.PartyChargeTypeId)
+                .MessageParameter.Should().Be(command.ChargeOperation.ChargeId);
+            sut.ValidationError.ValidationErrorMessageParameters
+                .Single(x => x.ParameterType == ValidationErrorMessageParameterType.ResolutionDuration)
+                .MessageParameter.Should().Be(command.ChargeOperation.Resolution.ToString());
         }
     }
 }

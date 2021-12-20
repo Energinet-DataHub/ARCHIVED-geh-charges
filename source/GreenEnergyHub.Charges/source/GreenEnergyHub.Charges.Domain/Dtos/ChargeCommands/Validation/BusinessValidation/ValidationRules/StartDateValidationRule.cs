@@ -52,6 +52,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessV
 
         public ValidationError ValidationError { get; } = new(
             ValidationRuleIdentifier.StartDateValidation,
-            ValidationErrorMessageParameterType.Occurrence);
+            new ValidationErrorMessageParameter(
+                "test", ValidationErrorMessageParameterType.Occurrence));
     }
 }

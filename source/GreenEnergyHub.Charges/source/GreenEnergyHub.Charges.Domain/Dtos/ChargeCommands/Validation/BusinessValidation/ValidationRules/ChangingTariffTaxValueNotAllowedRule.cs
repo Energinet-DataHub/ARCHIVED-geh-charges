@@ -31,7 +31,9 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessV
 
         public ValidationError ValidationError { get; } = new(
             ValidationRuleIdentifier.ChangingTariffTaxValueNotAllowed,
-            ValidationErrorMessageParameterType.TaxIndicator,
-            ValidationErrorMessageParameterType.PartyChargeTypeId);
+            new ValidationErrorMessageParameter(
+                "test", ValidationErrorMessageParameterType.TaxIndicator),
+            new ValidationErrorMessageParameter(
+                "test", ValidationErrorMessageParameterType.PartyChargeTypeId));
     }
 }

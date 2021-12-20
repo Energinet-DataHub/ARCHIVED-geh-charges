@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessValidation.ValidationRules;
@@ -45,7 +45,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Validation.BusinessVa
 
         [Theory]
         [InlineAutoDomainData]
-        public void ValidationRuleIdentifier_ShouldBe_EqualTo([NotNull] MarketParticipant sender)
+        public void ValidationRuleIdentifier_ShouldBe_EqualTo(MarketParticipant sender)
         {
             var sut = new CommandSenderMustBeAnExistingMarketParticipantRule(sender);
             sut.ValidationError.ValidationRuleIdentifier.Should()
@@ -54,18 +54,36 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Validation.BusinessVa
 
         [Theory]
         [InlineAutoDomainData]
-        public void ValidationRuleIdentifier_ShouldContain_RequiredErrorMessageParameterTypes(
-            [NotNull] MarketParticipant sender)
+        public void ValidationRuleIdentifier_ShouldContain_RequiredErrorMessageParameterTypes(MarketParticipant sender)
         {
             // Arrange
             // Act
             var sut = new CommandSenderMustBeAnExistingMarketParticipantRule(sender);
 
             // Assert
-            sut.ValidationError.ValidationErrorMessageParameters.Should()
-                .Contain(ValidationErrorMessageParameterType.SenderId);
-            sut.ValidationError.ValidationErrorMessageParameters.Should()
-                .Contain(ValidationErrorMessageParameterType.MessageId);
+            sut.ValidationError.ValidationErrorMessageParameters
+                .Select(x => x.ParameterType)
+                .Should().Contain(ValidationErrorMessageParameterType.SenderId);
+            sut.ValidationError.ValidationErrorMessageParameters
+                .Select(x => x.ParameterType)
+                .Should().Contain(ValidationErrorMessageParameterType.MessageId);
+        }
+
+        [Theory]
+        [InlineAutoDomainData]
+        public void ValidationRuleIdentifier_ShouldBe_RequiredErrorMessageParameters(MarketParticipant sender)
+        {
+            // Arrange
+            // Act
+            var sut = new CommandSenderMustBeAnExistingMarketParticipantRule(sender);
+
+            // Assert
+            sut.ValidationError.ValidationErrorMessageParameters
+                .Single(x => x.ParameterType == ValidationErrorMessageParameterType.SenderId)
+                .MessageParameter.Should().Be(sender.Id.ToString()); // Todo correct senderId?
+            sut.ValidationError.ValidationErrorMessageParameters
+                .Single(x => x.ParameterType == ValidationErrorMessageParameterType.MessageId)
+                .MessageParameter.Should().Be("todo");
         }
     }
 }

@@ -53,7 +53,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Validation.InputValid
 
         [Theory]
         [InlineAutoDomainData]
-        public void ValidationRuleIdentifier_ShouldContain_RequiredErrorMessageParameterTypes(ChargeCommand command)
+        public void ValidationRuleIdentifier_ShouldNotContain_ErrorMessageParameters(ChargeCommand command)
         {
             var sut = new ChargeIdRequiredValidationRule(command);
             sut.ValidationError.ValidationErrorMessageParameters.Should().BeEmpty();

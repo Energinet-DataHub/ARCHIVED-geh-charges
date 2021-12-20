@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation;
@@ -51,12 +52,35 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Validation.BusinessVa
             var sut = new ChargeUpdateNotYetSupportedRule(charge);
 
             // Assert
-            sut.ValidationError.ValidationErrorMessageParameters.Should()
-                .Contain(ValidationErrorMessageParameterType.PartyChargeTypeId);
-            sut.ValidationError.ValidationErrorMessageParameters.Should()
-                .Contain(ValidationErrorMessageParameterType.ChargeTypeOwner);
-            sut.ValidationError.ValidationErrorMessageParameters.Should()
-                .Contain(ValidationErrorMessageParameterType.ChargeType);
+            sut.ValidationError.ValidationErrorMessageParameters
+                .Select(x => x.ParameterType)
+                .Should().Contain(ValidationErrorMessageParameterType.PartyChargeTypeId);
+            sut.ValidationError.ValidationErrorMessageParameters
+                .Select(x => x.ParameterType)
+                .Should().Contain(ValidationErrorMessageParameterType.ChargeTypeOwner);
+            sut.ValidationError.ValidationErrorMessageParameters
+                .Select(x => x.ParameterType)
+                .Should().Contain(ValidationErrorMessageParameterType.ChargeType);
+        }
+
+        [Theory]
+        [InlineAutoDomainData]
+        public void ValidationRuleIdentifier_ShouldBe_RequiredErrorMessageParameters(Charge charge)
+        {
+            // Arrange
+            // Act
+            var sut = new ChargeUpdateNotYetSupportedRule(charge);
+
+            // Assert
+            sut.ValidationError.ValidationErrorMessageParameters
+                .Single(x => x.ParameterType == ValidationErrorMessageParameterType.PartyChargeTypeId)
+                .MessageParameter.Should().Be(charge.SenderProvidedChargeId); // todo correct?
+            sut.ValidationError.ValidationErrorMessageParameters
+                .Single(x => x.ParameterType == ValidationErrorMessageParameterType.ChargeTypeOwner)
+                .MessageParameter.Should().Be(charge.OwnerId.ToString()); // todo correct?
+            sut.ValidationError.ValidationErrorMessageParameters
+                .Single(x => x.ParameterType == ValidationErrorMessageParameterType.ChargeType)
+                .MessageParameter.Should().Be(charge.Type.ToString()); // correct?
         }
     }
 }

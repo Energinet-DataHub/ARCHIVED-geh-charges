@@ -30,7 +30,9 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputVali
 
         public ValidationError ValidationError { get; } = new(
             ValidationRuleIdentifier.MaximumPrice,
-            ValidationErrorMessageParameterType.EnergyPrice,
-            ValidationErrorMessageParameterType.Position);
+            new ValidationErrorMessageParameter(
+                "test", ValidationErrorMessageParameterType.EnergyPrice),
+            new ValidationErrorMessageParameter(
+                "test", ValidationErrorMessageParameterType.Position));
     }
 }
