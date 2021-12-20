@@ -12,13 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Threading.Tasks;
+using System.Diagnostics.CodeAnalysis;
+using Energinet.DataHub.Core.Messaging.Protobuf;
+using Energinet.DataHub.Core.Messaging.Transport;
 using GreenEnergyHub.Charges.Domain.Dtos.CreateLinksRequests;
 
-namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
+namespace GreenEnergyHub.Charges.Infrastructure.Contracts.Public.CreateDefaultChargeLinks
 {
-    public interface ICreateLinkRequestHandler
+    public class CreateDefaultChargeLinksInboundMapper : ProtobufInboundMapper<Energinet.Charges.Contracts.CreateDefaultChargeLinks>
     {
-        Task HandleAsync(CreateDefaultChargeLinksRequest createDefaultChargeLinksRequest);
+        protected override IInboundMessage Convert([NotNull] Energinet.Charges.Contracts.CreateDefaultChargeLinks command)
+        {
+            return new CreateDefaultChargeLinksRequest(command.MeteringPointId);
+        }
     }
 }
