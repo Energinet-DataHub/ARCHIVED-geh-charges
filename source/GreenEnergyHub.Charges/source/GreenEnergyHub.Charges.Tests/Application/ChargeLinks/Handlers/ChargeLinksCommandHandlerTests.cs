@@ -31,7 +31,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Handlers
     {
         [Theory]
         [InlineAutoDomainData]
-        public async Task HandleAsync_WhenCalledWithValidChargeLink_ShouldReturnOk(
+        public async Task HandleAsync_WhenValidChargeLinkCommand_DispatchesOnce(
             [Frozen] Mock<IMessageDispatcher<ChargeLinksReceivedEvent>> messageDispatcher,
             ChargeLinksCommand chargeLinksCommand,
             ChargeLinksCommandHandler sut)
