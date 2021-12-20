@@ -17,7 +17,6 @@ using GreenEnergyHub.Charges.Application.ChargeLinks.Handlers;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksAcceptedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.DefaultChargeLinksDataAvailableNotifiedEvents;
 using GreenEnergyHub.Charges.FunctionHost.Common;
-using GreenEnergyHub.Charges.FunctionHost.ToDo;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Registration;
 using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandAccepted;
 using GreenEnergyHub.Charges.Infrastructure.Internal.DefaultChargeLinksCreated;
@@ -41,8 +40,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
                 EnvironmentHelper.GetEnv(EnvironmentSettingNames.DomainEventSenderConnectionString),
                 EnvironmentHelper.GetEnv(EnvironmentSettingNames.DefaultChargeLinksDataAvailableNotifiedTopicName));
 
-            serviceCollection.AddScoped<IChargeLinkDataAvailableNotifierAndReplyHandler, ChargeLinkDataAvailableNotifierAndReplyHandler>();
-            serviceCollection.AddScoped<IChargeLinkDataAvailableReplyHandler, ChargeLinkDataAvailableReplyHandler>();
+            serviceCollection.AddScoped<IDefaultChargeLinksCreatedReplier, DefaultChargeLinksCreatedReplier>();
             serviceCollection.AddScoped<IAvailableDataNotifier<AvailableChargeLinksData, ChargeLinksAcceptedEvent>,
                 AvailableDataNotifier<AvailableChargeLinksData, ChargeLinksAcceptedEvent>>();
             serviceCollection
