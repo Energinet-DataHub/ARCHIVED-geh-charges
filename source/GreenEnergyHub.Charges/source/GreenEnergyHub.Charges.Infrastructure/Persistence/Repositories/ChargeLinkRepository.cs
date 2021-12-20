@@ -17,7 +17,7 @@ using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Domain.ChargeLinks;
 using GreenEnergyHub.Charges.Infrastructure.Context;
 
-namespace GreenEnergyHub.Charges.Infrastructure.Repositories
+namespace GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories
 {
     public class ChargeLinkRepository : IChargeLinkRepository
     {

@@ -17,7 +17,7 @@ using GreenEnergyHub.Charges.Core;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessValidation;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessValidation.ValidationRules;
 
-namespace GreenEnergyHub.Charges.Infrastructure.Repositories
+namespace GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories
 {
     public class RulesConfigurationRepository : IRulesConfigurationRepository
     {

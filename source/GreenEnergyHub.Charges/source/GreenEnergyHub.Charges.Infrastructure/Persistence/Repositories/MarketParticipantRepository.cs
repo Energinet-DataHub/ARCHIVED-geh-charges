@@ -20,7 +20,7 @@ using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.Infrastructure.Context;
 using Microsoft.EntityFrameworkCore;
 
-namespace GreenEnergyHub.Charges.Infrastructure.Repositories
+namespace GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories
 {
     public class MarketParticipantRepository : IMarketParticipantRepository
     {
