@@ -67,7 +67,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 var request = CreateHttpRequest(ChargeLinkDocument.AnyTax, out var correlationId);
 
                 // Act
-                await Fixture.HostManager.HttpClient.SendAsync(request);
+                var response = await Fixture.HostManager.HttpClient.SendAsync(request);
 
                 // Assert
                 // We expect two message types in the messagehub, one for the receipt and one for the charge link itself
