@@ -46,6 +46,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
 
             public Task DisposeAsync()
             {
+                Fixture.CreateLinkReplyQueueListener.Reset();
                 Fixture.MessageHubMock.Clear();
                 return Task.CompletedTask;
             }
