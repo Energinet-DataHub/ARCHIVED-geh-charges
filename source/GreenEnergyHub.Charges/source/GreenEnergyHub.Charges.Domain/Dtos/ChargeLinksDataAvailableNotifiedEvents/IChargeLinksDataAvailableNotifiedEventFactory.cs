@@ -13,16 +13,12 @@
 // limitations under the License.
 
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksAcceptedEvents;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksDataAvailableNotifiedEvents;
 
 namespace GreenEnergyHub.Charges.Domain.Dtos.DefaultChargeLinksDataAvailableNotifiedEvents
 {
-    public class DefaultChargeLinksCreatedEventFactory : IDefaultChargeLinksCreatedEventFactory
+    public interface IChargeLinksDataAvailableNotifiedEventFactory
     {
-        public DefaultChargeLinksCreatedEvent Create(ChargeLinksAcceptedEvent chargeLinksAcceptedEvent)
-        {
-            return new DefaultChargeLinksCreatedEvent(
-                chargeLinksAcceptedEvent.PublishedTime,
-                chargeLinksAcceptedEvent.ChargeLinksCommand.MeteringPointId);
-        }
+        ChargeLinksDataAvailableNotifiedEvent Create(ChargeLinksAcceptedEvent chargeLinksAcceptedEvent);
     }
 }

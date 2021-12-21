@@ -22,7 +22,7 @@ using GreenEnergyHub.Charges.Domain.MeteringPoints;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Contracts.External.ConsumptionMeteringPointCreated
 {
-    public class ConsumptionMeteringPointCreatedIntegrationInboundMapper : ProtobufInboundMapper<MeteringPoints.IntegrationEventContracts.ConsumptionMeteringPointCreated>
+    public class ConsumptionMeteringPointCreatedInboundMapper : ProtobufInboundMapper<MeteringPoints.IntegrationEventContracts.ConsumptionMeteringPointCreated>
     {
         public static SettlementMethod MapSettlementMethod(MeteringPoints.IntegrationEventContracts.ConsumptionMeteringPointCreated.Types.SettlementMethod settlementMethod)
         {
