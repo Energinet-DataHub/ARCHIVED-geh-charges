@@ -51,6 +51,7 @@ limitations under the License.
       <EmbeddedResource Include="Scripts\Model\202112081220 Remove unsued ChargePoint columns.sql" />
       <EmbeddedResource Include="Scripts\Model\202112081225 Add Charge columns from obsolete details.sql" />
       <EmbeddedResource Include="Scripts\Model\202112091200 Update Charge column names.sql" />
+      <EmbeddedResource Include="Scripts\Model\202112211240 Remove redundant Charge FK in ChargePoint.sql" />
       <EmbeddedResource Include="Scripts\Model\202112100940 Move data from ChargeLink.PeriodDetails to ChargeLink.sql" />
       <EmbeddedResource Include="Scripts\Test\202105201033 New MarketParticipants.sql" />
       <EmbeddedResource Include="Scripts\Model\202105191329 New charge model.sql" />
