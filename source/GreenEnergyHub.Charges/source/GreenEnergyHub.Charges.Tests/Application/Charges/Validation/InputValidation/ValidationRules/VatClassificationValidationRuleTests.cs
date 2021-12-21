@@ -83,7 +83,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Validation.InputValid
                 .MessageParameter.Should().Be(command.ChargeOperation.VatClassification.ToString());
             sut.ValidationError.ValidationErrorMessageParameters
                 .Single(x => x.ParameterType == ValidationErrorMessageParameterType.PartyChargeTypeId)
-                .MessageParameter.Should().Be(command.ChargeOperation.Type.ToString());
+                .MessageParameter.Should().Be(command.ChargeOperation.ChargeId);
         }
     }
 }

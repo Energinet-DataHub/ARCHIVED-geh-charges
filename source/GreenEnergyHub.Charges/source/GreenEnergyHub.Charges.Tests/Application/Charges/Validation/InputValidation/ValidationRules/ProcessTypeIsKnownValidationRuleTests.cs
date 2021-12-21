@@ -57,7 +57,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Validation.InputValid
             var sut = new ProcessTypeIsKnownValidationRule(command);
             sut.ValidationError.ValidationErrorMessageParameters
                 .Select(x => x.ParameterType)
-                .Should().Contain(ValidationErrorMessageParameterType.MeteringPointId);
+                .Should().Contain(ValidationErrorMessageParameterType.MessageId);
         }
 
         [Theory]
@@ -67,7 +67,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Validation.InputValid
             var sut = new ProcessTypeIsKnownValidationRule(command);
             sut.ValidationError.ValidationErrorMessageParameters
                 .Single(x => x.ParameterType == ValidationErrorMessageParameterType.MessageId)
-                .MessageParameter.Should().Be(command.Document.Id); // Todo: MeteringPointId provided in Excel sheet for VR.009 does not make sense
+                .MessageParameter.Should().Be(command.Document.Id); // MeteringPointId provided in Excel sheet for VR.009 does not make sense
         }
     }
 }

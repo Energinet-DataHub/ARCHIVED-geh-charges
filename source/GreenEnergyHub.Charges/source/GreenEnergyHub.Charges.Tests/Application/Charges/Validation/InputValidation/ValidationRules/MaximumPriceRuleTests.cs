@@ -75,19 +75,25 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Validation.InputValid
 
         [Theory]
         [InlineAutoDomainData]
-        public void ValidationRuleIdentifier_ShouldBe_RequiredErrorMessageParameters(ChargeCommand command)
+        public void ValidationRuleIdentifier_ShouldBe_RequiredErrorMessageParameters(ChargeCommandTestBuilder builder)
         {
             // Arrange
+            const decimal allowedPrice = 999999;
+            const decimal invalidPrice = 1000000;
+            var command = builder.WithPoint(allowedPrice).WithPoint(invalidPrice).Build();
+
+            var expectedPosition = command.ChargeOperation.Points.First(x => x.Price == invalidPrice);
+
             // Act
             var sut = new MaximumPriceRule(command);
 
             // Assert
             sut.ValidationError.ValidationErrorMessageParameters
                 .Single(x => x.ParameterType == ValidationErrorMessageParameterType.EnergyPrice)
-                .MessageParameter.Should().Be("todo");
+                .MessageParameter.Should().Be(expectedPosition.Price.ToString("0.##"));
             sut.ValidationError.ValidationErrorMessageParameters
                 .Single(x => x.ParameterType == ValidationErrorMessageParameterType.Position)
-                .MessageParameter.Should().Be("todo");
+                .MessageParameter.Should().Be(expectedPosition.Position.ToString());
         }
     }
 }

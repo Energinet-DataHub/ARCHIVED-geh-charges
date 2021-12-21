@@ -21,22 +21,28 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessV
     /// </summary>
     public class ChargeUpdateNotYetSupportedRule : IValidationRule
     {
+        private readonly ChargeCommand _chargeCommand;
         private readonly Charge? _charge;
 
-        public ChargeUpdateNotYetSupportedRule(Charge? charge)
+        public ChargeUpdateNotYetSupportedRule(ChargeCommand chargeCommand, Charge? charge)
         {
+            _chargeCommand = chargeCommand;
             _charge = charge;
         }
 
         public bool IsValid => _charge == null;
 
-        public ValidationError ValidationError { get; } = new(
-            ValidationRuleIdentifier.UpdateNotYetSupported,
-            new ValidationErrorMessageParameter(
-                "test", ValidationErrorMessageParameterType.PartyChargeTypeId),
-            new ValidationErrorMessageParameter(
-                "test", ValidationErrorMessageParameterType.ChargeTypeOwner),
-            new ValidationErrorMessageParameter(
-                "test", ValidationErrorMessageParameterType.ChargeType));
+        public ValidationError ValidationError =>
+            new(
+                ValidationRuleIdentifier.UpdateNotYetSupported,
+                new ValidationErrorMessageParameter(
+                    _chargeCommand.ChargeOperation.ChargeId,
+                    ValidationErrorMessageParameterType.PartyChargeTypeId),
+                new ValidationErrorMessageParameter(
+                    _chargeCommand.ChargeOperation.ChargeOwner,
+                    ValidationErrorMessageParameterType.ChargeTypeOwner),
+                new ValidationErrorMessageParameter(
+                    _chargeCommand.ChargeOperation.Type.ToString(),
+                    ValidationErrorMessageParameterType.ChargeType));
     }
 }

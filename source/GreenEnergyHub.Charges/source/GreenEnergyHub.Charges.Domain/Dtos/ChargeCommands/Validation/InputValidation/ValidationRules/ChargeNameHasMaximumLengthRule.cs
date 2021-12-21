@@ -26,11 +26,14 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputVali
 
         public bool IsValid => _chargeCommand.ChargeOperation.ChargeName.Length <= MaximumChargeNameLength;
 
-        public ValidationError ValidationError { get; } = new(
-            ValidationRuleIdentifier.ChargeNameHasMaximumLength,
-            new ValidationErrorMessageParameter(
-                "test", ValidationErrorMessageParameterType.Description),
-            new ValidationErrorMessageParameter(
-                "test", ValidationErrorMessageParameterType.PartyChargeTypeId));
+        public ValidationError ValidationError =>
+            new(
+                ValidationRuleIdentifier.ChargeNameHasMaximumLength,
+                new ValidationErrorMessageParameter(
+                    _chargeCommand.ChargeOperation.ChargeName,
+                    ValidationErrorMessageParameterType.Description),
+                new ValidationErrorMessageParameter(
+                    _chargeCommand.ChargeOperation.ChargeId,
+                    ValidationErrorMessageParameterType.PartyChargeTypeId));
     }
 }

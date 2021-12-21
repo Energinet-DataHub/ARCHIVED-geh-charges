@@ -47,7 +47,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputVali
                     _chargeCommand.ChargeOperation.Resolution.ToString(),
                     ValidationErrorMessageParameterType.ResolutionDuration),
                 new ValidationErrorMessageParameter(
-                    _chargeCommand.ChargeOperation.Type.ToString(), // TODO: which one?
+                    _chargeCommand.ChargeOperation.ChargeId,
                     ValidationErrorMessageParameterType.PartyChargeTypeId),
                 new ValidationErrorMessageParameter(
                     _chargeCommand.ChargeOperation.Type.ToString(),

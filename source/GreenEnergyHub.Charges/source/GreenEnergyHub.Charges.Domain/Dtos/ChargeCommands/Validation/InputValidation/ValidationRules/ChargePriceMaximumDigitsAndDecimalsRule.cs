@@ -13,6 +13,8 @@
 // limitations under the License.
 
 using System;
+using System.Globalization;
+using System.Linq;
 using GreenEnergyHub.Charges.Domain.Charges;
 
 namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputValidation.ValidationRules
@@ -28,25 +30,16 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputVali
             _chargeCommand = chargeCommand;
         }
 
-        public bool IsValid
+        public bool IsValid => _chargeCommand.ChargeOperation.Points.All(PointIsValid);
+
+        private bool PointIsValid(Point point)
         {
-            get
+            if (GetNumberOfDigits(point.Price) > MaximumDigitsInPrice)
             {
-                foreach (Point point in _chargeCommand.ChargeOperation.Points)
-                {
-                    if (GetNumberOfDigits(point.Price) > MaximumDigitsInPrice)
-                    {
-                        return false;
-                    }
-
-                    if (GetNumberOfDecimals(point.Price) > MaximumDecimalsInPrice)
-                    {
-                        return false;
-                    }
-                }
-
-                return true;
+                return false;
             }
+
+            return GetNumberOfDecimals(point.Price) <= MaximumDecimalsInPrice;
         }
 
         // https://stackoverflow.com/a/21546928
@@ -69,11 +62,24 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputVali
             return GetNumberOfDecimals(d, i + 1);
         }
 
-        public ValidationError ValidationError { get; } = new(
-            ValidationRuleIdentifier.ChargePriceMaximumDigitsAndDecimals,
-            new ValidationErrorMessageParameter(
-                "test", ValidationErrorMessageParameterType.EnergyPrice),
-            new ValidationErrorMessageParameter(
-                "test", ValidationErrorMessageParameterType.PartyChargeTypeId));
+        public ValidationError ValidationError
+        {
+            get
+            {
+                var firstInvalid = _chargeCommand.ChargeOperation.Points
+                    .FirstOrDefault(point => PointIsValid(point) == false);
+
+                var price = firstInvalid != null ? firstInvalid.Price.ToString("0.##") : string.Empty;
+
+                return new ValidationError(
+                    ValidationRuleIdentifier.ChargePriceMaximumDigitsAndDecimals,
+                    new ValidationErrorMessageParameter(
+                        price,
+                        ValidationErrorMessageParameterType.EnergyPrice),
+                    new ValidationErrorMessageParameter(
+                        _chargeCommand.ChargeOperation.ChargeId,
+                        ValidationErrorMessageParameterType.PartyChargeTypeId));
+            }
+        }
     }
 }

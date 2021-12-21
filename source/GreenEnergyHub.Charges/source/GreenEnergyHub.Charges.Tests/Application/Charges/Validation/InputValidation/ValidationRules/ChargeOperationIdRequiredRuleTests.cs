@@ -59,7 +59,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Validation.InputValid
             var sut = new ChargeOperationIdRequiredRule(command);
             sut.ValidationError.ValidationErrorMessageParameters
                 .Select(x => x.ParameterType)
-                .Should().Contain(ValidationErrorMessageParameterType.MeteringPointId);
+                .Should().Contain(ValidationErrorMessageParameterType.MessageId);
         }
 
         [Theory]

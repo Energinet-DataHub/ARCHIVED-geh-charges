@@ -39,13 +39,17 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputVali
             }
         }
 
-        public ValidationError ValidationError { get; } = new(
-            ValidationRuleIdentifier.SubscriptionMustHaveSinglePrice,
-            new ValidationErrorMessageParameter(
-                "test", ValidationErrorMessageParameterType.MaxOfPosition),
-            new ValidationErrorMessageParameter(
-                "test", ValidationErrorMessageParameterType.PartyChargeTypeId),
-            new ValidationErrorMessageParameter(
-                "test", ValidationErrorMessageParameterType.ResolutionDuration));
+        public ValidationError ValidationError =>
+            new(
+                ValidationRuleIdentifier.SubscriptionMustHaveSinglePrice,
+                new ValidationErrorMessageParameter(
+                    _chargeCommand.ChargeOperation.Points.Count.ToString(),
+                    ValidationErrorMessageParameterType.MaxOfPosition),
+                new ValidationErrorMessageParameter(
+                    _chargeCommand.ChargeOperation.ChargeId,
+                    ValidationErrorMessageParameterType.PartyChargeTypeId),
+                new ValidationErrorMessageParameter(
+                    _chargeCommand.ChargeOperation.Resolution.ToString(),
+                    ValidationErrorMessageParameterType.ResolutionDuration));
     }
 }

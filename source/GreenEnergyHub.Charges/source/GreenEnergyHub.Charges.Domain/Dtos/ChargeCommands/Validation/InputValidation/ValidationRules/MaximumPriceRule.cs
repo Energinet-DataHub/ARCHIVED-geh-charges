@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Linq;
 
 namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputValidation.ValidationRules
@@ -28,11 +29,22 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputVali
 
         public bool IsValid => _chargeCommand.ChargeOperation.Points.All(point => point.Price < PriceUpperBound);
 
-        public ValidationError ValidationError { get; } = new(
-            ValidationRuleIdentifier.MaximumPrice,
-            new ValidationErrorMessageParameter(
-                "test", ValidationErrorMessageParameterType.EnergyPrice),
-            new ValidationErrorMessageParameter(
-                "test", ValidationErrorMessageParameterType.Position));
+        public ValidationError ValidationError
+        {
+            get
+            {
+                var firstInvalid = _chargeCommand.ChargeOperation.Points
+                    .FirstOrDefault(point => point.Price >= PriceUpperBound);
+
+                return new ValidationError(
+                    ValidationRuleIdentifier.MaximumPrice,
+                    new ValidationErrorMessageParameter(
+                        firstInvalid != null ? firstInvalid.Price.ToString("0.##") : string.Empty,
+                        ValidationErrorMessageParameterType.EnergyPrice),
+                    new ValidationErrorMessageParameter(
+                        firstInvalid != null ? firstInvalid.Position.ToString() : string.Empty,
+                        ValidationErrorMessageParameterType.Position));
+            }
+        }
     }
 }

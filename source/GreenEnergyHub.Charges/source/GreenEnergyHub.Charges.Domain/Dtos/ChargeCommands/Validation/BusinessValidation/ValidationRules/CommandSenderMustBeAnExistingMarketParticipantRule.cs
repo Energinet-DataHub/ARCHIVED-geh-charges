@@ -18,20 +18,25 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessV
 {
     public class CommandSenderMustBeAnExistingMarketParticipantRule : IValidationRule
     {
+        private readonly ChargeCommand _chargeCommand;
         private readonly MarketParticipant? _sender;
 
-        public CommandSenderMustBeAnExistingMarketParticipantRule(MarketParticipant? sender)
+        public CommandSenderMustBeAnExistingMarketParticipantRule(ChargeCommand chargeCommand, MarketParticipant? sender)
         {
+            _chargeCommand = chargeCommand;
             _sender = sender;
         }
 
         public bool IsValid => _sender != null;
 
-        public ValidationError ValidationError { get; } = new(
-            ValidationRuleIdentifier.CommandSenderMustBeAnExistingMarketParticipant,
-            new ValidationErrorMessageParameter(
-                "test", ValidationErrorMessageParameterType.SenderId),
-            new ValidationErrorMessageParameter(
-                "test", ValidationErrorMessageParameterType.MessageId));
+        public ValidationError ValidationError =>
+            new(
+                ValidationRuleIdentifier.CommandSenderMustBeAnExistingMarketParticipant,
+                new ValidationErrorMessageParameter(
+                    _chargeCommand.Document.Sender.Id,
+                    ValidationErrorMessageParameterType.SenderId),
+                new ValidationErrorMessageParameter(
+                    _chargeCommand.Document.Id,
+                    ValidationErrorMessageParameterType.MessageId));
     }
 }

@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Diagnostics.CodeAnalysis;
 using GreenEnergyHub.Charges.Core.DateTime;
 using NodaTime;
 
@@ -25,10 +24,10 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessV
         private readonly Instant _periodEnd;
 
         public StartDateValidationRule(
-            [NotNull] ChargeCommand command,
-            [NotNull] StartDateValidationRuleConfiguration configuration,
-            [NotNull] IZonedDateTimeService zonedDateTimeService,
-            [NotNull] IClock clock)
+            ChargeCommand command,
+            StartDateValidationRuleConfiguration configuration,
+            IZonedDateTimeService zonedDateTimeService,
+            IClock clock)
         {
             _validityStartDate = command.ChargeOperation.StartDateTime;
 
@@ -50,9 +49,10 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessV
                 .ToInstant();
         }
 
-        public ValidationError ValidationError { get; } = new(
-            ValidationRuleIdentifier.StartDateValidation,
-            new ValidationErrorMessageParameter(
-                "test", ValidationErrorMessageParameterType.Occurrence));
+        public ValidationError ValidationError =>
+            new(
+                ValidationRuleIdentifier.StartDateValidation,
+                new ValidationErrorMessageParameter(
+                    _validityStartDate.ToString(), ValidationErrorMessageParameterType.Occurrence));
     }
 }

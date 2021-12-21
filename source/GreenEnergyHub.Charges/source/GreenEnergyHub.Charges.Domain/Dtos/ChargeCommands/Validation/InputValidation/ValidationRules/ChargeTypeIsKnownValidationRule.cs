@@ -29,11 +29,14 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputVali
                                _chargeCommand.ChargeOperation.Type == ChargeType.Subscription ||
                                _chargeCommand.ChargeOperation.Type == ChargeType.Tariff;
 
-        public ValidationError ValidationError { get; } = new(
-            ValidationRuleIdentifier.ChargeTypeIsKnownValidation,
-            new ValidationErrorMessageParameter(
-                "test", ValidationErrorMessageParameterType.ChargeType),
-            new ValidationErrorMessageParameter(
-                "test", ValidationErrorMessageParameterType.PartyChargeTypeId));
+        public ValidationError ValidationError =>
+            new(
+                ValidationRuleIdentifier.ChargeTypeIsKnownValidation,
+                new ValidationErrorMessageParameter(
+                    _chargeCommand.ChargeOperation.Type.ToString(),
+                    ValidationErrorMessageParameterType.ChargeType),
+                new ValidationErrorMessageParameter(
+                    _chargeCommand.ChargeOperation.ChargeId,
+                    ValidationErrorMessageParameterType.PartyChargeTypeId));
     }
 }
