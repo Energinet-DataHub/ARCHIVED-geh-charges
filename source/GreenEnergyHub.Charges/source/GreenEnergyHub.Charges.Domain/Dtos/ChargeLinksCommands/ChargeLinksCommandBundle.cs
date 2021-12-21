@@ -12,14 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Application.ChargeLinks.Handlers.Message;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands;
+using System.Collections.Generic;
+using GreenEnergyHub.Charges.Domain.Dtos.Messages.Command;
 
-namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
+namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands
 {
-    public interface IChargeLinksCommandHandler
+    public class ChargeLinksCommandBundle : CommandBase
     {
-        public Task HandleAsync(ChargeLinksCommand command);
+        public ChargeLinksCommandBundle(List<ChargeLinksCommand> chargeLinksCommands)
+        {
+            ChargeLinksCommands = chargeLinksCommands;
+        }
+
+        public List<ChargeLinksCommand> ChargeLinksCommands { get; }
     }
 }

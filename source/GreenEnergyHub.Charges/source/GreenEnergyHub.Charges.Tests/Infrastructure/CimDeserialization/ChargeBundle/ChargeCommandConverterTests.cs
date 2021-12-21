@@ -60,7 +60,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.CimDeserialization.ChargeB
             var actualBundle = (ChargeCommandBundle)await sut.ConvertAsync(reader).ConfigureAwait(false);
 
             // Assert
-            var actual = actualBundle.ChargeCommands.First();
+            var actual = actualBundle.ChargeCommands.Single();
 
             // Document
             actual.Document.Id.Should().Be("25369874");
@@ -133,7 +133,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.CimDeserialization.ChargeB
             var actualBundle = (ChargeCommandBundle)await sut.ConvertAsync(reader).ConfigureAwait(false);
 
             // Assert
-            var actual = actualBundle.ChargeCommands.First();
+            var actual = actualBundle.ChargeCommands.Single();
 
             // Charge operation
             actual.ChargeOperation.Id.Should().Be("36251479");
@@ -180,7 +180,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.CimDeserialization.ChargeB
             var actualBundle = (ChargeCommandBundle)await sut.ConvertAsync(reader).ConfigureAwait(false);
 
             // Assert
-            var actual = actualBundle.ChargeCommands.First();
+            var actual = actualBundle.ChargeCommands.Single();
 
             // Charge operation, should only be partially filled
             actual.ChargeOperation.Id.Should().Be("36251480");

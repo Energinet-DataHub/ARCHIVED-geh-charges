@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System;
+using System.ComponentModel.DataAnnotations;
 using Energinet.Charges.Contracts.Charge;
 
 // ReSharper disable once CheckNamespace - Type is shared so namespace is not determined by project structure/namespace
@@ -21,25 +22,65 @@ namespace Energinet.Charges.Contracts.ChargeLink
     /// <summary>
     /// Represents a Charge Link
     /// </summary>
-    /// <param name="ChargeType">The type of charge; tariff, fee or subscription</param>
-    /// <param name="ChargeId">A charge identifier provided by the market participant. Combined with charge owner and charge type it becomes unique</param>
-    /// <param name="ChargeName">Charge name provided by the market participant.</param>
-    /// <param name="ChargeOwner">A charge owner identification, e.g. the market participant's GLN or EIC number</param>
-    /// <param name="ChargeOwnerName">The market participant's company name</param>
-    /// <param name="TaxIndicator">Indicates whether a tariff is considered a tax or not</param>
-    /// <param name="TransparentInvoicing">Indicates whether the charge owner wants the charge to be displayed on the customer invoice</param>
-    /// <param name="Quantity">The charge link's quantity</param>
-    /// <param name="StartDate">The charge link's start date time in UTC</param>
-    /// <param name="EndDate">The charge link's end date time in UTC</param>
-    public record ChargeLinkDto(
-        ChargeType ChargeType,
-        string ChargeId,
-        string ChargeName,
-        string ChargeOwner,
-        string ChargeOwnerName,
-        bool TaxIndicator,
-        bool TransparentInvoicing,
-        int Quantity,
-        DateTimeOffset StartDate,
-        DateTimeOffset? EndDate);
+    public class ChargeLinkDto
+    {
+        /// <summary>
+        /// The type of charge; tariff, fee or subscription
+        /// </summary>
+        [Required]
+        public ChargeType ChargeType { get; set; }
+
+        /// <summary>
+        /// A charge identifier provided by the market participant. Combined with charge owner and charge type it becomes unique
+        /// </summary>
+        [Required]
+        public string ChargeId { get; set; }
+
+        /// <summary>
+        /// Charge name provided by the market participant.
+        /// </summary>
+        [Required]
+        public string ChargeName { get; set; }
+
+        /// <summary>
+        /// A charge owner identification, e.g. the market participant's GLN or EIC number
+        /// </summary>
+        [Required]
+        public string ChargeOwner { get; set; }
+
+        /// <summary>
+        /// The market participant's company name
+        /// </summary>
+        [Required]
+        public string ChargeOwnerName { get; set; }
+
+        /// <summary>
+        /// Indicates whether a tariff is considered a tax or not
+        /// </summary>
+        [Required]
+        public bool TaxIndicator { get; set; }
+
+        /// <summary>
+        /// Indicates whether the charge owner wants the charge to be displayed on the customer invoice
+        /// </summary>
+        [Required]
+        public bool TransparentInvoicing { get; set; }
+
+        /// <summary>
+        /// The charge link's quantity
+        /// </summary>
+        [Required]
+        public int Quantity { get; set; }
+
+        /// <summary>
+        /// The charge link's start date time in UTC
+        /// </summary>
+        [Required]
+        public DateTimeOffset StartDate { get; set; }
+
+        /// <summary>
+        /// The charge link's end date time in UTC
+        /// </summary>
+        public DateTimeOffset? EndDate { get; set; }
+    }
 }
