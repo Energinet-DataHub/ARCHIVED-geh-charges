@@ -20,6 +20,6 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation
     {
         IReadOnlyCollection<IValidationRule> GetRules();
 
-        ChargeCommandValidationResult Validate();
+        ValidationResult Validate();
     }
 }

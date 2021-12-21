@@ -40,7 +40,7 @@ namespace GreenEnergyHub.Charges.Application.Charges.Acknowledgement
             _acceptedMessageDispatcher = acceptedMessageDispatcher;
         }
 
-        public async Task RejectAsync(ChargeCommand command, ChargeCommandValidationResult validationResult)
+        public async Task RejectAsync(ChargeCommand command, ValidationResult validationResult)
         {
             var rejectedEvent = _chargeCommandRejectedEventFactory.CreateEvent(command, validationResult);
             await _rejectedMessageDispatcher.DispatchAsync(rejectedEvent).ConfigureAwait(false);

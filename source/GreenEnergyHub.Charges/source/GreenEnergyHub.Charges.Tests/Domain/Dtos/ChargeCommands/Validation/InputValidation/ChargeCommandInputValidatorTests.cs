@@ -38,7 +38,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
             var result = sut.Validate(chargeCommand);
 
             // Assert
-            Assert.IsType<ChargeCommandValidationResult>(result);
+            Assert.IsType<ValidationResult>(result);
         }
     }
 }

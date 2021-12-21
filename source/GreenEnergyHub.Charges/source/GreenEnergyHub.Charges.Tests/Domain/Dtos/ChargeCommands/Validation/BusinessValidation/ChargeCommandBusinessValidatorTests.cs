@@ -35,7 +35,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
             [Frozen] [NotNull] Mock<IBusinessValidationRulesFactory> factory,
             [NotNull] Mock<IValidationRuleSet> rules,
             [NotNull] ChargeCommand command,
-            [NotNull] ChargeCommandValidationResult validationResult,
+            [NotNull] ValidationResult validationResult,
             [NotNull] ChargeCommandBusinessValidator sut)
         {
             // Arrange

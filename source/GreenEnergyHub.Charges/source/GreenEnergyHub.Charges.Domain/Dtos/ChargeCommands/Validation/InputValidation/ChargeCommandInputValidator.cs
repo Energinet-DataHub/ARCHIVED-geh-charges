@@ -25,7 +25,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputVali
             _inputValidationRulesFactory = inputValidationRulesFactory;
         }
 
-        public ChargeCommandValidationResult Validate([NotNull] ChargeCommand chargeCommand)
+        public ValidationResult Validate([NotNull] ChargeCommand chargeCommand)
         {
             IValidationRuleSet ruleSet = _inputValidationRulesFactory.CreateRulesForChargeCommand(chargeCommand);
             return ruleSet.Validate();

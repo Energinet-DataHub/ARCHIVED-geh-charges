@@ -45,7 +45,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommandRejectedEvents
                     c => c.GetCurrentInstant())
                 .Returns(currentTime);
 
-            var validationResult = ChargeCommandValidationResult.CreateFailure(failedRules);
+            var validationResult = ValidationResult.CreateFailure(failedRules);
 
             // Act
             var result = sut.CreateEvent(command, validationResult);

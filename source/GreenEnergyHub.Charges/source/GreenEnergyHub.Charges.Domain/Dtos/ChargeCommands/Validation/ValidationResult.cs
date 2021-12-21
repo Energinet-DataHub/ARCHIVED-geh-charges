@@ -18,16 +18,16 @@ using System.Linq;
 
 namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation
 {
-    public class ChargeCommandValidationResult
+    public class ValidationResult
     {
         private IEnumerable<IValidationRule> _invalidRules = new List<IValidationRule>();
 
-        private ChargeCommandValidationResult()
+        private ValidationResult()
             : this(Array.Empty<IValidationRule>())
         {
         }
 
-        private ChargeCommandValidationResult(IList<IValidationRule> invalidRules)
+        private ValidationResult(IList<IValidationRule> invalidRules)
         {
             InvalidRules = invalidRules;
         }
@@ -48,14 +48,14 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation
 
         public bool IsFailed => InvalidRules.Select(r => !r.IsValid).Any();
 
-        public static ChargeCommandValidationResult CreateSuccess()
+        public static ValidationResult CreateSuccess()
         {
-            return new ChargeCommandValidationResult();
+            return new ValidationResult();
         }
 
-        public static ChargeCommandValidationResult CreateFailure(IList<IValidationRule> invalidRules)
+        public static ValidationResult CreateFailure(IList<IValidationRule> invalidRules)
         {
-            return new ChargeCommandValidationResult(invalidRules.ToArray());
+            return new ValidationResult(invalidRules.ToArray());
         }
     }
 }

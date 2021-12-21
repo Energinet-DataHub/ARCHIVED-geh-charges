@@ -82,7 +82,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation
 
         private static void ConfigureValidatorToReturnValidResult(Mock<IChargeCommandInputValidator> inputValidator, ChargeCommand anyCommand)
         {
-            var validResult = ChargeCommandValidationResult.CreateSuccess();
+            var validResult = ValidationResult.CreateSuccess();
             inputValidator.Setup(v => v.Validate(anyCommand)).Returns(validResult);
         }
 
@@ -94,7 +94,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation
 
         private static void ConfigureValidatorToReturnValidResult(Mock<IChargeCommandBusinessValidator> businessValidator, ChargeCommand anyCommand)
         {
-            var validResult = ChargeCommandValidationResult.CreateSuccess();
+            var validResult = ValidationResult.CreateSuccess();
             businessValidator
                 .Setup(v => v.ValidateAsync(anyCommand))
                 .Returns(Task.FromResult(validResult));
@@ -108,10 +108,10 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation
                 .Returns(Task.FromResult(invalidResult));
         }
 
-        private static ChargeCommandValidationResult CreateInvalidValidationResult()
+        private static ValidationResult CreateInvalidValidationResult()
         {
             var invalidRules = new List<IValidationRule> { new ValidationRule(false, ValidationRuleIdentifier.StartDateValidation) };
-            return ChargeCommandValidationResult.CreateFailure(invalidRules);
+            return ValidationResult.CreateFailure(invalidRules);
         }
     }
 }

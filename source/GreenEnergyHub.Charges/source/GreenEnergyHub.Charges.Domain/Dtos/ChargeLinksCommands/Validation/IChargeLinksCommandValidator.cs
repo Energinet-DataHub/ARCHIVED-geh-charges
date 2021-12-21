@@ -12,12 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands;
+using System.Threading.Tasks;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation;
 
-namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksAcceptedEvents
+namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands.Validation
 {
-    public interface IChargeLinksAcceptedEventFactory
+    public interface IChargeLinksCommandValidator
     {
-        ChargeLinksAcceptedEvent Create(ChargeLinksCommand chargeLinksCommand);
+        Task<ValidationResult> ValidateAsync(ChargeLinksCommand command);
     }
 }

@@ -18,6 +18,6 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessV
 {
     public interface IChargeCommandBusinessValidator
     {
-        Task<ChargeCommandValidationResult> ValidateAsync(ChargeCommand command);
+        Task<ValidationResult> ValidateAsync(ChargeCommand command);
     }
 }

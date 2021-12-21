@@ -39,7 +39,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Acknowledgement
             [Frozen] [NotNull] Mock<IChargeCommandRejectedEventFactory> rejectedEventFactory,
             [Frozen] [NotNull] Mock<IMessageDispatcher<ChargeCommandRejectedEvent>> rejectedEventDispatcher,
             [NotNull] ChargeCommand command,
-            [NotNull] ChargeCommandValidationResult validationResult,
+            [NotNull] ValidationResult validationResult,
             [NotNull] ChargeCommandRejectedEvent rejectedEvent,
             [NotNull] ChargeCommandConfirmationService sut)
         {
@@ -47,7 +47,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Acknowledgement
             rejectedEventFactory.Setup(
                 f => f.CreateEvent(
                     It.IsAny<ChargeCommand>(),
-                    It.IsAny<ChargeCommandValidationResult>()))
+                    It.IsAny<ValidationResult>()))
                 .Returns(rejectedEvent);
 
             ChargeCommandRejectedEvent? eventForSerialization = null;

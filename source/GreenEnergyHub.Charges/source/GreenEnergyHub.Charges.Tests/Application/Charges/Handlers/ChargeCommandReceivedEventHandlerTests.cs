@@ -46,7 +46,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
             [NotNull] ChargeCommandReceivedEventHandler sut)
         {
             // Arrange
-            var validationResult = ChargeCommandValidationResult.CreateSuccess();
+            var validationResult = ValidationResult.CreateSuccess();
             validator.Setup(
                     v => v.ValidateAsync(
                         It.IsAny<ChargeCommand>()))
@@ -100,7 +100,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
                     s => s.RejectAsync(
                         It.IsAny<ChargeCommand>(),
                         validationResult))
-                .Callback<ChargeCommand, ChargeCommandValidationResult>(
+                .Callback<ChargeCommand, ValidationResult>(
                     (_, _) => rejected = true);
 
             // Act
@@ -124,14 +124,14 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
                 .ConfigureAwait(false);
         }
 
-        private static ChargeCommandValidationResult GetFailedValidationResult()
+        private static ValidationResult GetFailedValidationResult()
         {
             var failedRule = new Mock<IValidationRule>();
             failedRule.Setup(
                     r => r.IsValid)
                 .Returns(false);
 
-            return ChargeCommandValidationResult.CreateFailure(
+            return ValidationResult.CreateFailure(
                 new List<IValidationRule> { failedRule.Object });
         }
     }

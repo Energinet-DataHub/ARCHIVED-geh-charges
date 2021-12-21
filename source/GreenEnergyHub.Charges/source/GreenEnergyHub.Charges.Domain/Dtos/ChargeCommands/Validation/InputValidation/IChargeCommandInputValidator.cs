@@ -26,6 +26,6 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputVali
         /// </summary>
         /// <param name="chargeCommand">The message to validate.</param>
         /// <returns>The validation result.</returns>
-        ChargeCommandValidationResult Validate([NotNull] ChargeCommand chargeCommand);
+        ValidationResult Validate([NotNull] ChargeCommand chargeCommand);
     }
 }

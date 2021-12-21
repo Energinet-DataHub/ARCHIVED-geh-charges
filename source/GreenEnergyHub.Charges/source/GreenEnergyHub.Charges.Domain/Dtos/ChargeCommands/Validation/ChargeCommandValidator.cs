@@ -31,7 +31,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation
             _chargeCommandBusinessValidator = chargeCommandBusinessValidator;
         }
 
-        public async Task<ChargeCommandValidationResult> ValidateAsync(ChargeCommand command)
+        public async Task<ValidationResult> ValidateAsync(ChargeCommand command)
         {
             var inputValidationResult = _chargeCommandInputValidator.Validate(command);
             if (inputValidationResult.IsFailed) return inputValidationResult;

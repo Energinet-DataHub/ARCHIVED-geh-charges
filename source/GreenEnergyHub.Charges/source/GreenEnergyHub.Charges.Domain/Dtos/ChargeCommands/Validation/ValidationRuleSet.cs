@@ -33,16 +33,16 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation
 
         public IReadOnlyCollection<IValidationRule> GetRules() => _rules.AsReadOnly();
 
-        public ChargeCommandValidationResult Validate()
+        public ValidationResult Validate()
         {
             var invalidRules = _rules.Where(r => !r.IsValid).ToList();
 
             if (invalidRules.Any())
             {
-                return ChargeCommandValidationResult.CreateFailure(invalidRules);
+                return ValidationResult.CreateFailure(invalidRules);
             }
 
-            return ChargeCommandValidationResult.CreateSuccess();
+            return ValidationResult.CreateSuccess();
         }
     }
 }
