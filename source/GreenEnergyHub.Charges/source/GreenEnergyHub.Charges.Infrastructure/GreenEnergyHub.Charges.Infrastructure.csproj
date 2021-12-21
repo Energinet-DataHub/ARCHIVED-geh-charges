@@ -75,9 +75,24 @@ limitations under the License.
       <Protobuf Update="..\..\..\Contracts\CreateDefaultChargeLinksReply.proto">
         <Link>Contracts\Public\CreateDefaultChargeLinks\Contracts\CreateDefaultChargeLinksReply.proto</Link>
       </Protobuf>
+      <Protobuf Update="..\..\..\Contracts\CreateDefaultChargeLinksReply.proto">
+        <Link>Contracts\Public\CreateDefaultChargeLinksReply\CreateDefaultChargeLinksReply.proto</Link>
+      </Protobuf>
+      <Protobuf Update="..\..\..\Contracts\CreateDefaultChargeLinks.proto">
+        <Link>Contracts\Public\CreateDefaultChargeLinks\CreateDefaultChargeLinks.proto</Link>
+      </Protobuf>
     </ItemGroup>
 
     <ItemGroup>
       <Folder Include="Contracts\External" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Content Include="..\..\..\Contracts\CreateDefaultChargeLinks.proto">
+        <Link>Contracts\Public\CreateDefaultChargeLinks\CreateDefaultChargeLinks.proto</Link>
+      </Content>
+      <Content Include="..\..\..\Contracts\CreateDefaultChargeLinksReply.proto">
+        <Link>Contracts\Public\CreateDefaultChargeLinksReply\CreateDefaultChargeLinksReply.proto</Link>
+      </Content>
     </ItemGroup>
 </Project>

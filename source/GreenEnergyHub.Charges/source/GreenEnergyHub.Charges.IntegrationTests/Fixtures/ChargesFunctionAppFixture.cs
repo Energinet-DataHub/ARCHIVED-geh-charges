@@ -203,6 +203,11 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures
             AzuriteManager.Dispose();
             await MessageHubMock.DisposeAsync();
 
+            // Listeners
+            await ChargeCreatedListener.DisposeAsync();
+            await ChargePricesUpdatedListener.DisposeAsync();
+            await CreateLinkReplyQueueListener.DisposeAsync();
+
             // => Service Bus
             await ServiceBusResourceProvider.DisposeAsync();
 
