@@ -31,8 +31,6 @@ limitations under the License.
 
     <ItemGroup>
       <PackageReference Include="Energinet.DataHub.Core.Messaging.Protobuf" Version="1.0.0" />
-      <PackageReference Include="Microsoft.ApplicationInsights" Version="2.19.0" />
-      <PackageReference Include="Microsoft.Azure.Functions.Worker.Core" Version="1.4.0" />
       <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="5.0.12" />
       <PackageReference Include="Google.Protobuf" Version="3.19.1" />
       <PackageReference Include="Grpc.Tools" Version="2.42.0" PrivateAssets="All" />
@@ -59,5 +57,27 @@ limitations under the License.
         <OutputDir>obj\contracts</OutputDir>
         <Generator>MSBuild:Compile</Generator>
       </Protobuf>
+      <Protobuf Update="..\..\..\Contracts\CreateDefaultChargeLinks.proto">
+        <Link>Contracts\Contracts\CreateDefaultChargeLinks.proto</Link>
+      </Protobuf>
+      <Protobuf Update="..\..\..\Contracts\CreateDefaultChargeLinksReply.proto">
+        <Link>Contracts\Contracts\CreateDefaultChargeLinksReply.proto</Link>
+      </Protobuf>
+      <Protobuf Update="..\..\..\Contracts\CreateDefaultChargeLinks.proto">
+        <Link>Contracts\Public\Contracts\CreateDefaultChargeLinks.proto</Link>
+      </Protobuf>
+      <Protobuf Update="..\..\..\Contracts\CreateDefaultChargeLinksReply.proto">
+        <Link>Contracts\Public\Contracts\CreateDefaultChargeLinksReply.proto</Link>
+      </Protobuf>
+      <Protobuf Update="..\..\..\Contracts\CreateDefaultChargeLinks.proto">
+        <Link>Contracts\Public\CreateDefaultChargeLinks\Contracts\CreateDefaultChargeLinks.proto</Link>
+      </Protobuf>
+      <Protobuf Update="..\..\..\Contracts\CreateDefaultChargeLinksReply.proto">
+        <Link>Contracts\Public\CreateDefaultChargeLinks\Contracts\CreateDefaultChargeLinksReply.proto</Link>
+      </Protobuf>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Contracts\External" />
     </ItemGroup>
 </Project>

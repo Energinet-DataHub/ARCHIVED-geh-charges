@@ -14,16 +14,16 @@
 
 using Energinet.DataHub.Core.Messaging.Protobuf;
 using GreenEnergyHub.Charges.Application.ChargeLinks.Handlers;
-using GreenEnergyHub.Charges.Application.ChargeLinks.MessageHub;
-using GreenEnergyHub.Charges.Application.MessageHub;
-using GreenEnergyHub.Charges.Domain.AvailableChargeLinksData;
-using GreenEnergyHub.Charges.Domain.AvailableData;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksAcceptedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.DefaultChargeLinksDataAvailableNotifiedEvents;
 using GreenEnergyHub.Charges.FunctionHost.Common;
+using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Registration;
 using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandAccepted;
 using GreenEnergyHub.Charges.Infrastructure.Internal.DefaultChargeLinksCreated;
-using GreenEnergyHub.Charges.Infrastructure.Messaging.Registration;
+using GreenEnergyHub.Charges.MessageHub.Application.ChargeLinks;
+using GreenEnergyHub.Charges.MessageHub.Application.MessageHub;
+using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksData;
+using GreenEnergyHub.Charges.MessageHub.Models.AvailableData;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace GreenEnergyHub.Charges.FunctionHost.Configuration
@@ -40,8 +40,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
                 EnvironmentHelper.GetEnv(EnvironmentSettingNames.DomainEventSenderConnectionString),
                 EnvironmentHelper.GetEnv(EnvironmentSettingNames.DefaultChargeLinksDataAvailableNotifiedTopicName));
 
-            serviceCollection.AddScoped<IChargeLinkDataAvailableNotifierAndReplyHandler, ChargeLinkDataAvailableNotifierAndReplyHandler>();
-            serviceCollection.AddScoped<IChargeLinkDataAvailableReplyHandler, ChargeLinkDataAvailableReplyHandler>();
+            serviceCollection.AddScoped<IDefaultChargeLinksCreatedReplier, DefaultChargeLinksCreatedReplier>();
             serviceCollection.AddScoped<IAvailableDataNotifier<AvailableChargeLinksData, ChargeLinksAcceptedEvent>,
                 AvailableDataNotifier<AvailableChargeLinksData, ChargeLinksAcceptedEvent>>();
             serviceCollection

@@ -28,12 +28,12 @@ limitations under the License.
     <ProjectReference Include="..\..\..\Shared\GreenEnergyHub\source\GreenEnergyHub.Json\GreenEnergyHub.Json.csproj" />
     <ProjectReference Include="..\GreenEnergyHub.Charges.Core\GreenEnergyHub.Charges.Core.csproj" />
     <ProjectReference Include="..\GreenEnergyHub.Charges.Domain\GreenEnergyHub.Charges.Domain.csproj" />
+    <ProjectReference Include="..\GreenEnergyHub.Charges.Infrastructure.Core\GreenEnergyHub.Charges.Infrastructure.Core.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Azure.Messaging.ServiceBus" Version="7.5.0" />
     <PackageReference Include="Energinet.DataHub.Core.Messaging" Version="1.0.0" />
-    <PackageReference Include="Energinet.DataHub.MessageHub.Client" Version="1.8.1" />
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="5.0.0" />
     <PackageReference Update="StyleCop.Analyzers" Version="1.2.0-beta.354">
       <PrivateAssets>all</PrivateAssets>

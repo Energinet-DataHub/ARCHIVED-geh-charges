@@ -25,27 +25,28 @@ using Energinet.DataHub.MessageHub.Model.Dequeue;
 using Energinet.DataHub.MessageHub.Model.Peek;
 using EntityFrameworkCore.SqlServer.NodaTime.Extensions;
 using GreenEnergyHub.Charges.Application.ChargeLinks.CreateDefaultChargeLinkReplier;
-using GreenEnergyHub.Charges.Domain.AvailableChargeData;
-using GreenEnergyHub.Charges.Domain.AvailableChargeLinkReceiptData;
-using GreenEnergyHub.Charges.Domain.AvailableChargeLinksData;
-using GreenEnergyHub.Charges.Domain.AvailableChargeReceiptData;
-using GreenEnergyHub.Charges.Domain.AvailableData;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Configuration;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksReceivedEvents;
 using GreenEnergyHub.Charges.Domain.MeteringPoints;
 using GreenEnergyHub.Charges.FunctionHost.Common;
-using GreenEnergyHub.Charges.Infrastructure.Cim;
 using GreenEnergyHub.Charges.Infrastructure.Configuration;
 using GreenEnergyHub.Charges.Infrastructure.Context;
-using GreenEnergyHub.Charges.Infrastructure.Correlation;
-using GreenEnergyHub.Charges.Infrastructure.CreateDefaultChargeLinkReplier;
-using GreenEnergyHub.Charges.Infrastructure.Function;
+using GreenEnergyHub.Charges.Infrastructure.Core.Correlation;
+using GreenEnergyHub.Charges.Infrastructure.Core.Function;
+using GreenEnergyHub.Charges.Infrastructure.Core.MessageMetaData;
+using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Registration;
 using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandReceived;
-using GreenEnergyHub.Charges.Infrastructure.MessageMetaData;
-using GreenEnergyHub.Charges.Infrastructure.Messaging.Registration;
-using GreenEnergyHub.Charges.Infrastructure.Repositories;
-using GreenEnergyHub.Charges.Infrastructure.ServiceBusReplySenderProvider;
+using GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories;
+using GreenEnergyHub.Charges.Infrastructure.ReplySender;
+using GreenEnergyHub.Charges.Infrastructure.ReplySender.CreateDefaultChargeLinkReplier;
+using GreenEnergyHub.Charges.MessageHub.Infrastructure.Cim;
+using GreenEnergyHub.Charges.MessageHub.Infrastructure.Context;
+using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeData;
+using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinkReceiptData;
+using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksData;
+using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData;
+using GreenEnergyHub.Charges.MessageHub.Models.AvailableData;
 using GreenEnergyHub.Iso8601;
 using GreenEnergyHub.Json;
 using Microsoft.EntityFrameworkCore;
@@ -110,16 +111,20 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
                 options => options.UseSqlServer(connectionString, o => o.UseNodaTime()));
             serviceCollection.AddScoped<IChargesDatabaseContext, ChargesDatabaseContext>();
 
+            serviceCollection.AddDbContext<MessageHubDatabaseContext>(
+                options => options.UseSqlServer(connectionString, o => o.UseNodaTime()));
+            serviceCollection.AddScoped<IMessageHubDatabaseContext, MessageHubDatabaseContext>();
+
             serviceCollection.AddScoped<IChargeRepository, ChargeRepository>();
             serviceCollection.AddScoped<IMeteringPointRepository, MeteringPointRepository>();
             serviceCollection
-                .AddScoped<IAvailableDataRepository<AvailableChargeLinksData>, AvailableChargeLinksDataRepository>();
+                .AddScoped<IAvailableDataRepository<AvailableChargeLinksData>, AvailableDataRepository<AvailableChargeLinksData>>();
             serviceCollection
-                .AddScoped<IAvailableDataRepository<AvailableChargeData>, AvailableChargeDataRepository>();
+                .AddScoped<IAvailableDataRepository<AvailableChargeData>, AvailableDataRepository<AvailableChargeData>>();
             serviceCollection
-                .AddScoped<IAvailableDataRepository<AvailableChargeLinkReceiptData>, AvailableChargeLinkReceiptDataRepository>();
+                .AddScoped<IAvailableDataRepository<AvailableChargeLinkReceiptData>, AvailableDataRepository<AvailableChargeLinkReceiptData>>();
             serviceCollection
-                .AddScoped<IAvailableDataRepository<AvailableChargeReceiptData>, AvailableChargeReceiptDataRepository>();
+                .AddScoped<IAvailableDataRepository<AvailableChargeReceiptData>, AvailableDataRepository<AvailableChargeReceiptData>>();
         }
 
         private static void ConfigureSharedMessaging(IServiceCollection serviceCollection)

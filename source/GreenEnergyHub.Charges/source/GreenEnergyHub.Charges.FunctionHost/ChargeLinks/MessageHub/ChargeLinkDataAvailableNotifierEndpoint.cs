@@ -16,29 +16,40 @@ using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application.ChargeLinks.Handlers;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksAcceptedEvents;
 using GreenEnergyHub.Charges.FunctionHost.Common;
+using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions;
 using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandAccepted;
-using GreenEnergyHub.Charges.Infrastructure.Messaging;
+using GreenEnergyHub.Charges.MessageHub.Application.MessageHub;
+using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksData;
 using Microsoft.Azure.Functions.Worker;
 
 namespace GreenEnergyHub.Charges.FunctionHost.ChargeLinks.MessageHub
 {
     /// <summary>
-    /// The function will initiate the communication with the post office
-    /// by notifying that a charge link has been created.
+    /// Function for notifying the MessageHub that data about a charge link that has been created
+    /// is available.
     /// This is the RSM-031 CIM XML 'NotifyBillingMasterData'.
+    ///
+    /// ChargeLinksAcceptedEvents may originate from regular market participant's charge links requests
+    /// or by the Metering Point domain requesting creation of 'default charge links'. Only the latter
+    /// entails replying back to the Metering Point domain once notifications related to default charge
+    /// links have been created
     /// </summary>
     public class ChargeLinkDataAvailableNotifierEndpoint
     {
         private const string FunctionName = nameof(ChargeLinkDataAvailableNotifierEndpoint);
+
         private readonly MessageExtractor<ChargeLinkCommandAccepted> _messageExtractor;
-        private readonly IChargeLinkDataAvailableNotifierAndReplyHandler _chargeLinkDataAvailableNotifierAndReplyHandler;
+        private readonly IAvailableDataNotifier<AvailableChargeLinksData, ChargeLinksAcceptedEvent> _availableDataNotifier;
+        private readonly IDefaultChargeLinksCreatedReplier _defaultChargeLinksCreatedReplier;
 
         public ChargeLinkDataAvailableNotifierEndpoint(
             MessageExtractor<ChargeLinkCommandAccepted> messageExtractor,
-            IChargeLinkDataAvailableNotifierAndReplyHandler chargeLinkDataAvailableNotifierAndReplyHandler)
+            IAvailableDataNotifier<AvailableChargeLinksData, ChargeLinksAcceptedEvent> availableDataNotifier,
+            IDefaultChargeLinksCreatedReplier defaultChargeLinksCreatedReplier)
         {
             _messageExtractor = messageExtractor;
-            _chargeLinkDataAvailableNotifierAndReplyHandler = chargeLinkDataAvailableNotifierAndReplyHandler;
+            _availableDataNotifier = availableDataNotifier;
+            _defaultChargeLinksCreatedReplier = defaultChargeLinksCreatedReplier;
         }
 
         [Function(FunctionName)]
@@ -49,9 +60,10 @@ namespace GreenEnergyHub.Charges.FunctionHost.ChargeLinks.MessageHub
                 Connection = EnvironmentSettingNames.DomainEventListenerConnectionString)]
             byte[] message)
         {
-            var chargeLinkCommandAcceptedEvent = (ChargeLinksAcceptedEvent)await _messageExtractor.ExtractAsync(message).ConfigureAwait(false);
+            var chargeLinksAcceptedEvent = (ChargeLinksAcceptedEvent)await _messageExtractor.ExtractAsync(message).ConfigureAwait(false);
 
-            await _chargeLinkDataAvailableNotifierAndReplyHandler.NotifyAndReplyAsync(chargeLinkCommandAcceptedEvent).ConfigureAwait(false);
+            await _availableDataNotifier.NotifyAsync(chargeLinksAcceptedEvent);
+            await _defaultChargeLinksCreatedReplier.ReplyAsync(chargeLinksAcceptedEvent);
         }
     }
 }

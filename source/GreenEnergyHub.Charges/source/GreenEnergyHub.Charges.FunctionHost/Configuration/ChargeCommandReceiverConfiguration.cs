@@ -26,11 +26,11 @@ using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessValid
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputValidation;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.FunctionHost.Common;
+using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Registration;
 using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeCommandAccepted;
 using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeCommandReceived;
 using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeCommandRejected;
-using GreenEnergyHub.Charges.Infrastructure.Messaging.Registration;
-using GreenEnergyHub.Charges.Infrastructure.Repositories;
+using GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories;
 using GreenEnergyHub.Iso8601;
 using Microsoft.Extensions.DependencyInjection;
 

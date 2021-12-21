@@ -15,8 +15,8 @@
 using System.Threading.Tasks;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
-using GreenEnergyHub.Charges.Infrastructure.Repositories;
-using GreenEnergyHub.Charges.IntegrationTests.Database;
+using GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories;
+using GreenEnergyHub.Charges.IntegrationTests.Fixtures.Database;
 using Xunit;
 using Xunit.Categories;
 
