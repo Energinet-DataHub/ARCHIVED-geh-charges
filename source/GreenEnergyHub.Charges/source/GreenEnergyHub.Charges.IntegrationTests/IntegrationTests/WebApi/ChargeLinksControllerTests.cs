@@ -58,7 +58,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi
         {
             // Arrange
             var client = _factory.CreateClient();
-            var expectedChargeId = "40000";
+            var expectedChargeId = "TestTariff";
             var expectedStart = new DateTimeOffset(2019, 12, 31, 23, 00, 00, TimeSpan.FromHours(0));
 
             // Act

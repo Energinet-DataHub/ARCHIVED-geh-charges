@@ -17,6 +17,7 @@ limitations under the License.
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
+    <UserSecretsId>393f2d1b-e8a5-4883-86ff-cbf59f4c75da</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
