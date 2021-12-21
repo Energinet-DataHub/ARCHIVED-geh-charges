@@ -83,6 +83,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Common
 
         // Internal, charge links, accepted
         public const string ChargeLinkAcceptedTopicName = "CHARGE_LINK_ACCEPTED_TOPIC_NAME";
+        public const string ChargeLinkRejectedTopicName = "CHARGE_LINK_REJECTED_TOPIC_NAME";
         public const string ChargeLinkAcceptedSubConfirmationNotifier = "CHARGELINKACCEPTED_SUB_CONFIRMATIONNOTIFIER";
         public const string ChargeLinkAcceptedSubDataAvailableNotifier = "CHARGELINKACCEPTED_SUB_DATAAVAILABLENOTIFIER";
         public const string ChargeLinkAcceptedSubEventPublisher = "CHARGELINKACCEPTED_SUB_EVENTPUBLISHER";
