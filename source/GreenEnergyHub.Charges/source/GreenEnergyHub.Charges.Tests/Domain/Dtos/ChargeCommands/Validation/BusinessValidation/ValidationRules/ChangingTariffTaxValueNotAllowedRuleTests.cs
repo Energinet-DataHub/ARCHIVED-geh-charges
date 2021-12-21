@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Linq;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
@@ -54,7 +55,44 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
         public void ValidationRuleIdentifier_ShouldBe_EqualTo(ChargeCommand command, Charge charge)
         {
             var sut = new ChangingTariffTaxValueNotAllowedRule(command, charge);
-            sut.ValidationRuleIdentifier.Should().Be(ValidationRuleIdentifier.ChangingTariffTaxValueNotAllowed);
+            sut.ValidationError.ValidationRuleIdentifier.Should()
+                .Be(ValidationRuleIdentifier.ChangingTariffTaxValueNotAllowed);
+        }
+
+        [Theory]
+        [InlineAutoDomainData]
+        public void ValidationErrorMessageParameters_ShouldContain_RequiredErrorMessageParameterTypes(
+            ChargeCommand command, Charge charge)
+        {
+            // Arrange
+            // Act
+            var sut = new ChangingTariffTaxValueNotAllowedRule(command, charge);
+
+            // Assert
+            sut.ValidationError.ValidationErrorMessageParameters
+                .Select(x => x.ParameterType)
+                .Should().Contain(ValidationErrorMessageParameterType.ChargeTaxIndicator);
+            sut.ValidationError.ValidationErrorMessageParameters
+                .Select(x => x.ParameterType)
+                .Should().Contain(ValidationErrorMessageParameterType.DocumentSenderProvidedChargeId);
+        }
+
+        [Theory]
+        [InlineAutoDomainData]
+        public void MessageParameter_ShouldBe_RequiredErrorMessageParameters(
+            ChargeCommand command, Charge charge)
+        {
+            // Arrange
+            // Act
+            var sut = new ChangingTariffTaxValueNotAllowedRule(command, charge);
+
+            // Assert
+            sut.ValidationError.ValidationErrorMessageParameters
+                .Single(x => x.ParameterType == ValidationErrorMessageParameterType.ChargeTaxIndicator)
+                .MessageParameter.Should().Be(command.ChargeOperation.TaxIndicator.ToString());
+            sut.ValidationError.ValidationErrorMessageParameters
+                .Single(x => x.ParameterType == ValidationErrorMessageParameterType.DocumentSenderProvidedChargeId)
+                .MessageParameter.Should().Be(command.ChargeOperation.ChargeId);
         }
     }
 }

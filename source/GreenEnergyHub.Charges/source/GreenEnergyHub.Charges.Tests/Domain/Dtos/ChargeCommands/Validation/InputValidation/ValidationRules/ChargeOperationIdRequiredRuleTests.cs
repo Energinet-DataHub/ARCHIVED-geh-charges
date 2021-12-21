@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Linq;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation;
@@ -47,7 +48,28 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
         public void ValidationRuleIdentifier_ShouldBe_EqualTo(ChargeCommand command)
         {
             var sut = new ChargeOperationIdRequiredRule(command);
-            sut.ValidationRuleIdentifier.Should().Be(ValidationRuleIdentifier.ChargeOperationIdRequired);
+            sut.ValidationError.ValidationRuleIdentifier.Should()
+                .Be(ValidationRuleIdentifier.ChargeOperationIdRequired);
+        }
+
+        [Theory]
+        [InlineAutoDomainData]
+        public void ValidationErrorMessageParameters_ShouldContain_RequiredErrorMessageParameterTypes(ChargeCommand command)
+        {
+            var sut = new ChargeOperationIdRequiredRule(command);
+            sut.ValidationError.ValidationErrorMessageParameters
+                .Select(x => x.ParameterType)
+                .Should().Contain(ValidationErrorMessageParameterType.DocumentId);
+        }
+
+        [Theory]
+        [InlineAutoDomainData]
+        public void MessageParameter_ShouldBe_RequiredErrorMessageParameters(ChargeCommand command)
+        {
+            var sut = new ChargeOperationIdRequiredRule(command);
+            sut.ValidationError.ValidationErrorMessageParameters
+                .Single(x => x.ParameterType == ValidationErrorMessageParameterType.DocumentId)
+                .MessageParameter.Should().Be(command.Document.Id); // Todo: MeteringPointId provided in Excel sheet for VR.223 does not make sense
         }
     }
 }

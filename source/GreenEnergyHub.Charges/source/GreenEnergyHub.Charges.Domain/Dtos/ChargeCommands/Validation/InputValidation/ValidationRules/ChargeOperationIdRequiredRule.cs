@@ -25,7 +25,11 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputVali
 
         public bool IsValid => !string.IsNullOrWhiteSpace(_chargeCommand.ChargeOperation.Id);
 
-        public ValidationRuleIdentifier ValidationRuleIdentifier =>
-            ValidationRuleIdentifier.ChargeOperationIdRequired;
+        public ValidationError ValidationError =>
+            new(
+                ValidationRuleIdentifier.ChargeOperationIdRequired,
+                new ValidationErrorMessageParameter(
+                    _chargeCommand.Document.Id,
+                    ValidationErrorMessageParameterType.DocumentId)); // Todo: MeteringPointId provided in Excel sheet for VR.223 does not make sense
     }
 }

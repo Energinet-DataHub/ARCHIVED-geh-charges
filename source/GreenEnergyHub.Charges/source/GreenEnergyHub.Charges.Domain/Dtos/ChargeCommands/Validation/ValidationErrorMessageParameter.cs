@@ -14,19 +14,21 @@
 
 namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation
 {
-    /// <summary>
-    /// Interface for validationrules in the Charges domain
-    /// </summary>
-    public interface IValidationRule
+    public class ValidationErrorMessageParameter
     {
-        /// <summary>
-        /// Validity of the ChargeCommand given the current rule
-        /// </summary>
-        public bool IsValid { get; }
+        public ValidationErrorMessageParameter(
+            string messageParameter,
+            ValidationErrorMessageParameterType parameterType)
+        {
+            MessageParameter = messageParameter;
+            ParameterType = parameterType;
+        }
+
+        public string MessageParameter { get; }
 
         /// <summary>
-        /// Identifier of the current rule
+        /// ParameterType for errorMessage
         /// </summary>
-        public ValidationError? ValidationError { get; }
+        public ValidationErrorMessageParameterType ParameterType { get; }
     }
 }

@@ -12,21 +12,29 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Collections.Generic;
+using System.Linq;
+
 namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation
 {
-    /// <summary>
-    /// Interface for validationrules in the Charges domain
-    /// </summary>
-    public interface IValidationRule
+    public class ValidationError
     {
-        /// <summary>
-        /// Validity of the ChargeCommand given the current rule
-        /// </summary>
-        public bool IsValid { get; }
+        public ValidationError(
+            ValidationRuleIdentifier validationRuleIdentifier,
+            params ValidationErrorMessageParameter[] validationErrorMessageParameters)
+        {
+            ValidationRuleIdentifier = validationRuleIdentifier;
+            ValidationErrorMessageParameters = validationErrorMessageParameters.ToList();
+        }
 
         /// <summary>
         /// Identifier of the current rule
         /// </summary>
-        public ValidationError? ValidationError { get; }
+        public ValidationRuleIdentifier ValidationRuleIdentifier { get; }
+
+        /// <summary>
+        /// Parameters for errorMessage
+        /// </summary>
+        public List<ValidationErrorMessageParameter> ValidationErrorMessageParameters { get; }
     }
 }

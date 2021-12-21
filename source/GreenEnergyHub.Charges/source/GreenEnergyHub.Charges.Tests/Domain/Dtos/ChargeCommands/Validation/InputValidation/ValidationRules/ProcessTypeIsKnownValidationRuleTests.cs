@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation;
@@ -35,7 +35,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
         public void ProcessTypeIsKnownValidationRule_Test(
             BusinessReasonCode businessReasonCode,
             bool expected,
-            [NotNull] ChargeCommand command)
+            ChargeCommand command)
         {
             command.Document.BusinessReasonCode = businessReasonCode;
             var sut = new ProcessTypeIsKnownValidationRule(command);
@@ -44,10 +44,31 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
 
         [Theory]
         [InlineAutoDomainData]
-        public void ValidationRuleIdentifier_ShouldBe_EqualTo([NotNull] ChargeCommand command)
+        public void ValidationRuleIdentifier_ShouldBe_EqualTo(ChargeCommand command)
         {
             var sut = new ProcessTypeIsKnownValidationRule(command);
-            sut.ValidationRuleIdentifier.Should().Be(ValidationRuleIdentifier.ProcessTypeIsKnownValidation);
+            sut.ValidationError.ValidationRuleIdentifier
+                .Should().Be(ValidationRuleIdentifier.ProcessTypeIsKnownValidation);
+        }
+
+        [Theory]
+        [InlineAutoDomainData]
+        public void ValidationErrorMessageParameters_ShouldContain_RequiredErrorMessageParameterTypes(ChargeCommand command)
+        {
+            var sut = new ProcessTypeIsKnownValidationRule(command);
+            sut.ValidationError.ValidationErrorMessageParameters
+                .Select(x => x.ParameterType)
+                .Should().Contain(ValidationErrorMessageParameterType.DocumentId);
+        }
+
+        [Theory]
+        [InlineAutoDomainData]
+        public void MessageParameter_ShouldBe_RequiredErrorMessageParameters(ChargeCommand command)
+        {
+            var sut = new ProcessTypeIsKnownValidationRule(command);
+            sut.ValidationError.ValidationErrorMessageParameters
+                .Single(x => x.ParameterType == ValidationErrorMessageParameterType.DocumentId)
+                .MessageParameter.Should().Be(command.Document.Id); // MeteringPointId provided in Excel sheet for VR.009 does not make sense
         }
     }
 }

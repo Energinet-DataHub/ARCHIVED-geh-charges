@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Diagnostics.CodeAnalysis;
 using Google.Protobuf.WellKnownTypes;
 using NodaTime;
 
@@ -32,7 +31,7 @@ namespace GreenEnergyHub.Charges.Core.DateTime
             return instant ?? GetEndDefault();
         }
 
-        public static Timestamp ToTimestamp([NotNull] this Instant instant)
+        public static Timestamp ToTimestamp(this Instant instant)
         {
             return Timestamp.FromDateTimeOffset(instant.ToDateTimeOffset());
         }
