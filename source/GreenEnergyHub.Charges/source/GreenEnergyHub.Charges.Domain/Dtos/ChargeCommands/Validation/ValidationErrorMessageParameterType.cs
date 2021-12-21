@@ -16,23 +16,21 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation
 {
     public enum ValidationErrorMessageParameterType
     {
-        ChargeType = 1,
-        ChargeTypeOwner = 2,
-        Description = 3,
-        DocumentType = 4,
-        EnergyBusinessProcess = 5,
-        EnergyPrice = 6,
-        FunctionCode = 7,
-        LongDescriptionMaxLength100 = 8,
-        MaxOfPosition = 9,
-        MessageId = 10,
-        MeteringPointId = 11,
-        Occurrence = 12,
-        PartyChargeTypeId = 13,
-        Position = 14,
-        ResolutionDuration = 15,
-        SenderId = 16,
-        TaxIndicator = 17,
-        VatClass = 18,
+        ChargeType = 1,                         // CIMValidationErrorMessageParameterType.ChargeType
+        ChargeOwner = 2,                        // CIMValidationErrorMessageParameterType.ChargeTypeOwner
+        ChargeName = 3,                         // CIMValidationErrorMessageParameterType.Description
+        ChargeDescription = 4,                  // CIMValidationErrorMessageParameterType.LongDescriptionMaxLength100
+        ChargeStartDateTime = 5,                // CIMValidationErrorMessageParameterType.Occurrence
+        ChargeResolution = 6,                   // CIMValidationErrorMessageParameterType.ResolutionDuration
+        ChargeTaxIndicator = 7,                 // CIMValidationErrorMessageParameterType.TaxIndicator
+        ChargeVatClass = 8,                     // CIMValidationErrorMessageParameterType.VatClass
+        ChargePointsCount = 9,                  // CIMValidationErrorMessageParameterType.MaxOfPosition
+        ChargePointPosition = 10,               // CIMValidationErrorMessageParameterType.Position
+        ChargePointPrice = 11,                  // CIMValidationErrorMessageParameterType.EnergyPrice
+        DocumentType = 12,                      // CIMValidationErrorMessageParameterType.DocumentType
+        DocumentBusinessReasonCode = 13,        // CIMValidationErrorMessageParameterType.EnergyBusinessProcess
+        DocumentId = 14,                        // CIMValidationErrorMessageParameterType.MessageId
+        DocumentSenderProvidedChargeId = 15,    // CIMValidationErrorMessageParameterType.PartyChargeTypeId
+        DocumentSenderId = 16,                  // CIMValidationErrorMessageParameterType.SenderId
     }
 }

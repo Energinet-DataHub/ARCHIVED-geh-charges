@@ -32,6 +32,6 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputVali
                 ValidationRuleIdentifier.ProcessTypeIsKnownValidation,
                 new ValidationErrorMessageParameter(
                     _chargeCommand.Document.Id,
-                    ValidationErrorMessageParameterType.MessageId));
+                    ValidationErrorMessageParameterType.DocumentId));
     }
 }

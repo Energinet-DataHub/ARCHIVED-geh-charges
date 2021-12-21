@@ -59,7 +59,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
             var sut = new ChargeOwnerIsRequiredValidationRule(command);
             sut.ValidationError.ValidationErrorMessageParameters
                 .Select(x => x.ParameterType)
-                .Should().Contain(ValidationErrorMessageParameterType.PartyChargeTypeId);
+                .Should().Contain(ValidationErrorMessageParameterType.DocumentSenderProvidedChargeId);
         }
 
         [Theory]
@@ -68,7 +68,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
         {
             var sut = new ChargeOwnerIsRequiredValidationRule(command);
             sut.ValidationError.ValidationErrorMessageParameters
-                .Single(x => x.ParameterType == ValidationErrorMessageParameterType.PartyChargeTypeId)
+                .Single(x => x.ParameterType == ValidationErrorMessageParameterType.DocumentSenderProvidedChargeId)
                 .MessageParameter.Should().Be(command.ChargeOperation.ChargeId);
         }
     }

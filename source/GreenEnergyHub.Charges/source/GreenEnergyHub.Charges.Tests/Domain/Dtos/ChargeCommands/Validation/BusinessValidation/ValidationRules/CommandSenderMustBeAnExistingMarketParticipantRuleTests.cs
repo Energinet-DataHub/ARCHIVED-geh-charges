@@ -66,10 +66,10 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
             // Assert
             sut.ValidationError.ValidationErrorMessageParameters
                 .Select(x => x.ParameterType)
-                .Should().Contain(ValidationErrorMessageParameterType.SenderId);
+                .Should().Contain(ValidationErrorMessageParameterType.DocumentSenderId);
             sut.ValidationError.ValidationErrorMessageParameters
                 .Select(x => x.ParameterType)
-                .Should().Contain(ValidationErrorMessageParameterType.MessageId);
+                .Should().Contain(ValidationErrorMessageParameterType.DocumentId);
         }
 
         [Theory]
@@ -83,10 +83,10 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
 
             // Assert
             sut.ValidationError.ValidationErrorMessageParameters
-                .Single(x => x.ParameterType == ValidationErrorMessageParameterType.SenderId)
+                .Single(x => x.ParameterType == ValidationErrorMessageParameterType.DocumentSenderId)
                 .MessageParameter.Should().Be(command.Document.Sender.Id);
             sut.ValidationError.ValidationErrorMessageParameters
-                .Single(x => x.ParameterType == ValidationErrorMessageParameterType.MessageId)
+                .Single(x => x.ParameterType == ValidationErrorMessageParameterType.DocumentId)
                 .MessageParameter.Should().Be(command.Document.Id);
         }
     }

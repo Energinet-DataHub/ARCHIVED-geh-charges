@@ -67,10 +67,10 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
             // Assert
             sut.ValidationError.ValidationErrorMessageParameters
                 .Select(x => x.ParameterType)
-                .Should().Contain(ValidationErrorMessageParameterType.EnergyPrice);
+                .Should().Contain(ValidationErrorMessageParameterType.ChargePointPrice);
             sut.ValidationError.ValidationErrorMessageParameters
                 .Select(x => x.ParameterType)
-                .Should().Contain(ValidationErrorMessageParameterType.Position);
+                .Should().Contain(ValidationErrorMessageParameterType.ChargePointPosition);
         }
 
         [Theory]
@@ -89,10 +89,10 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
 
             // Assert
             sut.ValidationError.ValidationErrorMessageParameters
-                .Single(x => x.ParameterType == ValidationErrorMessageParameterType.EnergyPrice)
+                .Single(x => x.ParameterType == ValidationErrorMessageParameterType.ChargePointPrice)
                 .MessageParameter.Should().Be(expectedPosition.Price.ToString("0.##"));
             sut.ValidationError.ValidationErrorMessageParameters
-                .Single(x => x.ParameterType == ValidationErrorMessageParameterType.Position)
+                .Single(x => x.ParameterType == ValidationErrorMessageParameterType.ChargePointPosition)
                 .MessageParameter.Should().Be(expectedPosition.Position.ToString());
         }
     }

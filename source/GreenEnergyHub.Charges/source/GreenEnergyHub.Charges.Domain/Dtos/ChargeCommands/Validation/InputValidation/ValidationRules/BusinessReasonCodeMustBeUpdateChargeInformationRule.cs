@@ -33,7 +33,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputVali
                 ValidationRuleIdentifier.BusinessReasonCodeMustBeUpdateChargeInformation,
                 new ValidationErrorMessageParameter(
                     _chargeCommand.Document.BusinessReasonCode.ToString(),
-                    ValidationErrorMessageParameterType.EnergyBusinessProcess),
+                    ValidationErrorMessageParameterType.DocumentBusinessReasonCode),
                 new ValidationErrorMessageParameter(
                     _chargeCommand.Document.Type.ToString(),
                     ValidationErrorMessageParameterType.DocumentType));

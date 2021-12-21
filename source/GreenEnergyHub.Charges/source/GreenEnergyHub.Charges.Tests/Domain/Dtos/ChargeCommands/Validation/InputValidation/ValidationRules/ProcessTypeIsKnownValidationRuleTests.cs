@@ -47,7 +47,8 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
         public void ValidationRuleIdentifier_ShouldBe_EqualTo(ChargeCommand command)
         {
             var sut = new ProcessTypeIsKnownValidationRule(command);
-            sut.ValidationError.ValidationRuleIdentifier.Should().Be(ValidationRuleIdentifier.ProcessTypeIsKnownValidation);
+            sut.ValidationError.ValidationRuleIdentifier
+                .Should().Be(ValidationRuleIdentifier.ProcessTypeIsKnownValidation);
         }
 
         [Theory]
@@ -57,7 +58,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
             var sut = new ProcessTypeIsKnownValidationRule(command);
             sut.ValidationError.ValidationErrorMessageParameters
                 .Select(x => x.ParameterType)
-                .Should().Contain(ValidationErrorMessageParameterType.MessageId);
+                .Should().Contain(ValidationErrorMessageParameterType.DocumentId);
         }
 
         [Theory]
@@ -66,7 +67,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
         {
             var sut = new ProcessTypeIsKnownValidationRule(command);
             sut.ValidationError.ValidationErrorMessageParameters
-                .Single(x => x.ParameterType == ValidationErrorMessageParameterType.MessageId)
+                .Single(x => x.ParameterType == ValidationErrorMessageParameterType.DocumentId)
                 .MessageParameter.Should().Be(command.Document.Id); // MeteringPointId provided in Excel sheet for VR.009 does not make sense
         }
     }

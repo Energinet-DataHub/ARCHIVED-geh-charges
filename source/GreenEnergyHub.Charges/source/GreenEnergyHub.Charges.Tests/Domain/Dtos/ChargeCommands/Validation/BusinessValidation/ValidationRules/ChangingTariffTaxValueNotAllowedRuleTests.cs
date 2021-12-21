@@ -71,10 +71,10 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
             // Assert
             sut.ValidationError.ValidationErrorMessageParameters
                 .Select(x => x.ParameterType)
-                .Should().Contain(ValidationErrorMessageParameterType.TaxIndicator);
+                .Should().Contain(ValidationErrorMessageParameterType.ChargeTaxIndicator);
             sut.ValidationError.ValidationErrorMessageParameters
                 .Select(x => x.ParameterType)
-                .Should().Contain(ValidationErrorMessageParameterType.PartyChargeTypeId);
+                .Should().Contain(ValidationErrorMessageParameterType.DocumentSenderProvidedChargeId);
         }
 
         [Theory]
@@ -88,10 +88,10 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
 
             // Assert
             sut.ValidationError.ValidationErrorMessageParameters
-                .Single(x => x.ParameterType == ValidationErrorMessageParameterType.TaxIndicator)
+                .Single(x => x.ParameterType == ValidationErrorMessageParameterType.ChargeTaxIndicator)
                 .MessageParameter.Should().Be(command.ChargeOperation.TaxIndicator.ToString());
             sut.ValidationError.ValidationErrorMessageParameters
-                .Single(x => x.ParameterType == ValidationErrorMessageParameterType.PartyChargeTypeId)
+                .Single(x => x.ParameterType == ValidationErrorMessageParameterType.DocumentSenderProvidedChargeId)
                 .MessageParameter.Should().Be(command.ChargeOperation.ChargeId);
         }
     }

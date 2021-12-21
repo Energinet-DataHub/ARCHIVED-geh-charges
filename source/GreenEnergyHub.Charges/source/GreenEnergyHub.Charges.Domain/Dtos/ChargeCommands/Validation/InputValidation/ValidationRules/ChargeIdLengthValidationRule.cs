@@ -33,6 +33,6 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputVali
                 ValidationRuleIdentifier.ChargeIdLengthValidation,
                 new ValidationErrorMessageParameter(
                     _chargeCommand.ChargeOperation.ChargeId,
-                    ValidationErrorMessageParameterType.PartyChargeTypeId));
+                    ValidationErrorMessageParameterType.DocumentSenderProvidedChargeId));
     }
 }

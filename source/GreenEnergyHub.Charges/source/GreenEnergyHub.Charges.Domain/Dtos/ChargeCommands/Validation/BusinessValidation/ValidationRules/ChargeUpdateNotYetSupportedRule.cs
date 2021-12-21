@@ -37,10 +37,10 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessV
                 ValidationRuleIdentifier.UpdateNotYetSupported,
                 new ValidationErrorMessageParameter(
                     _chargeCommand.ChargeOperation.ChargeId,
-                    ValidationErrorMessageParameterType.PartyChargeTypeId),
+                    ValidationErrorMessageParameterType.DocumentSenderProvidedChargeId),
                 new ValidationErrorMessageParameter(
                     _chargeCommand.ChargeOperation.ChargeOwner,
-                    ValidationErrorMessageParameterType.ChargeTypeOwner),
+                    ValidationErrorMessageParameterType.ChargeOwner),
                 new ValidationErrorMessageParameter(
                     _chargeCommand.ChargeOperation.Type.ToString(),
                     ValidationErrorMessageParameterType.ChargeType));

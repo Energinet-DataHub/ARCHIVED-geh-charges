@@ -35,6 +35,6 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputVali
                     ValidationErrorMessageParameterType.DocumentType),
                 new ValidationErrorMessageParameter(
                     _chargeCommand.Document.BusinessReasonCode.ToString(),
-                    ValidationErrorMessageParameterType.EnergyBusinessProcess));
+                    ValidationErrorMessageParameterType.DocumentBusinessReasonCode));
     }
 }

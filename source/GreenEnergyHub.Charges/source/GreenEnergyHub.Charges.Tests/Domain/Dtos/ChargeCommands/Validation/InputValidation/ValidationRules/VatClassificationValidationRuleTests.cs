@@ -63,10 +63,10 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
             // Assert
             sut.ValidationError.ValidationErrorMessageParameters
                 .Select(x => x.ParameterType)
-                .Should().Contain(ValidationErrorMessageParameterType.VatClass);
+                .Should().Contain(ValidationErrorMessageParameterType.ChargeVatClass);
             sut.ValidationError.ValidationErrorMessageParameters
                 .Select(x => x.ParameterType)
-                .Should().Contain(ValidationErrorMessageParameterType.PartyChargeTypeId);
+                .Should().Contain(ValidationErrorMessageParameterType.DocumentSenderProvidedChargeId);
         }
 
         [Theory]
@@ -79,10 +79,10 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
 
             // Assert
             sut.ValidationError.ValidationErrorMessageParameters
-                .Single(x => x.ParameterType == ValidationErrorMessageParameterType.VatClass)
+                .Single(x => x.ParameterType == ValidationErrorMessageParameterType.ChargeVatClass)
                 .MessageParameter.Should().Be(command.ChargeOperation.VatClassification.ToString());
             sut.ValidationError.ValidationErrorMessageParameters
-                .Single(x => x.ParameterType == ValidationErrorMessageParameterType.PartyChargeTypeId)
+                .Single(x => x.ParameterType == ValidationErrorMessageParameterType.DocumentSenderProvidedChargeId)
                 .MessageParameter.Should().Be(command.ChargeOperation.ChargeId);
         }
     }

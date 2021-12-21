@@ -44,12 +44,12 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputVali
                 ValidationRuleIdentifier.FeeMustHaveSinglePrice,
                 new ValidationErrorMessageParameter(
                     _chargeCommand.ChargeOperation.Points.Count.ToString(),
-                    ValidationErrorMessageParameterType.MaxOfPosition),
+                    ValidationErrorMessageParameterType.ChargePointsCount),
                 new ValidationErrorMessageParameter(
                     _chargeCommand.ChargeOperation.ChargeId,
-                    ValidationErrorMessageParameterType.PartyChargeTypeId),
+                    ValidationErrorMessageParameterType.DocumentSenderProvidedChargeId),
                 new ValidationErrorMessageParameter(
                     _chargeCommand.ChargeOperation.Resolution.ToString(),
-                    ValidationErrorMessageParameterType.ResolutionDuration));
+                    ValidationErrorMessageParameterType.ChargeResolution));
     }
 }

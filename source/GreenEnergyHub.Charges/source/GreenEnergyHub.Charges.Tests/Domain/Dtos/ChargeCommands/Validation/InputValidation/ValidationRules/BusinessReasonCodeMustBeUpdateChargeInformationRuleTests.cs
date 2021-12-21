@@ -62,7 +62,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Validation.InputValid
             // Assert
             sut.ValidationError.ValidationErrorMessageParameters
                 .Select(x => x.ParameterType)
-                .Should().Contain(ValidationErrorMessageParameterType.EnergyBusinessProcess);
+                .Should().Contain(ValidationErrorMessageParameterType.DocumentBusinessReasonCode);
             sut.ValidationError.ValidationErrorMessageParameters
                 .Select(x => x.ParameterType)
                 .Should().Contain(ValidationErrorMessageParameterType.DocumentType);
@@ -78,7 +78,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Validation.InputValid
 
             // Assert
             sut.ValidationError.ValidationErrorMessageParameters
-                .Single(x => x.ParameterType == ValidationErrorMessageParameterType.EnergyBusinessProcess)
+                .Single(x => x.ParameterType == ValidationErrorMessageParameterType.DocumentBusinessReasonCode)
                 .MessageParameter.Should().Be(command.Document.BusinessReasonCode.ToString());
             sut.ValidationError.ValidationErrorMessageParameters
                 .Single(x => x.ParameterType == ValidationErrorMessageParameterType.DocumentType)

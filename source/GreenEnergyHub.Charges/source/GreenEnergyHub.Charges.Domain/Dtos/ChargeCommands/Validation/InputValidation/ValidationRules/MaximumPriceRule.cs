@@ -40,10 +40,10 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputVali
                     ValidationRuleIdentifier.MaximumPrice,
                     new ValidationErrorMessageParameter(
                         firstInvalid != null ? firstInvalid.Price.ToString("0.##") : string.Empty,
-                        ValidationErrorMessageParameterType.EnergyPrice),
+                        ValidationErrorMessageParameterType.ChargePointPrice),
                     new ValidationErrorMessageParameter(
                         firstInvalid != null ? firstInvalid.Position.ToString() : string.Empty,
-                        ValidationErrorMessageParameterType.Position));
+                        ValidationErrorMessageParameterType.ChargePointPosition));
             }
         }
     }

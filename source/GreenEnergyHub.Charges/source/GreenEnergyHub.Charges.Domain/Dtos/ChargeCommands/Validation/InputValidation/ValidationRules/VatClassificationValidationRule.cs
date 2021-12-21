@@ -33,9 +33,9 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputVali
                 ValidationRuleIdentifier.VatClassificationValidation,
                 new ValidationErrorMessageParameter(
                     _chargeCommand.ChargeOperation.VatClassification.ToString(),
-                    ValidationErrorMessageParameterType.VatClass),
+                    ValidationErrorMessageParameterType.ChargeVatClass),
                 new ValidationErrorMessageParameter(
                     _chargeCommand.ChargeOperation.ChargeId,
-                    ValidationErrorMessageParameterType.PartyChargeTypeId));
+                    ValidationErrorMessageParameterType.DocumentSenderProvidedChargeId));
     }
 }

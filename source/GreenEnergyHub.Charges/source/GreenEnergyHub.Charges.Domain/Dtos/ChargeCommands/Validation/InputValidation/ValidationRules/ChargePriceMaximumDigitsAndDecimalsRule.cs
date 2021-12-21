@@ -75,10 +75,10 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputVali
                     ValidationRuleIdentifier.ChargePriceMaximumDigitsAndDecimals,
                     new ValidationErrorMessageParameter(
                         price,
-                        ValidationErrorMessageParameterType.EnergyPrice),
+                        ValidationErrorMessageParameterType.ChargePointPrice),
                     new ValidationErrorMessageParameter(
                         _chargeCommand.ChargeOperation.ChargeId,
-                        ValidationErrorMessageParameterType.PartyChargeTypeId));
+                        ValidationErrorMessageParameterType.DocumentSenderProvidedChargeId));
             }
         }
     }

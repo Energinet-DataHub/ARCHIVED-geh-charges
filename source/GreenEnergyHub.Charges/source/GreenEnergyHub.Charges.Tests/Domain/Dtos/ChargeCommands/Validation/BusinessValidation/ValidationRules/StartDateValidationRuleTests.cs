@@ -97,7 +97,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
             // Assert
             sut.ValidationError.ValidationErrorMessageParameters
                 .Select(x => x.ParameterType)
-                .Should().Contain(ValidationErrorMessageParameterType.Occurrence);
+                .Should().Contain(ValidationErrorMessageParameterType.ChargeStartDateTime);
         }
 
         [Theory]
@@ -112,7 +112,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
 
             // Assert
             sut.ValidationError.ValidationErrorMessageParameters
-                .Single(x => x.ParameterType == ValidationErrorMessageParameterType.Occurrence)
+                .Single(x => x.ParameterType == ValidationErrorMessageParameterType.ChargeStartDateTime)
                 .MessageParameter.Should().Be(command.ChargeOperation.StartDateTime.ToString());
         }
 
