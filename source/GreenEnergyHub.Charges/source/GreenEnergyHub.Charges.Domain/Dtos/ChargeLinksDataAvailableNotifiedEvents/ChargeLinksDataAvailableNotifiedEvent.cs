@@ -15,11 +15,11 @@
 using GreenEnergyHub.Charges.Domain.Dtos.Messages.Events;
 using NodaTime;
 
-namespace GreenEnergyHub.Charges.Domain.Dtos.DefaultChargeLinksDataAvailableNotifiedEvents
+namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksDataAvailableNotifiedEvents
 {
-    public class DefaultChargeLinksCreatedEvent : InternalEventBase
+    public class ChargeLinksDataAvailableNotifiedEvent : InternalEventBase
     {
-        public DefaultChargeLinksCreatedEvent(Instant publishedTime, string meteringPointId)
+        public ChargeLinksDataAvailableNotifiedEvent(Instant publishedTime, string meteringPointId)
             : base(publishedTime)
         {
             MeteringPointId = meteringPointId;
