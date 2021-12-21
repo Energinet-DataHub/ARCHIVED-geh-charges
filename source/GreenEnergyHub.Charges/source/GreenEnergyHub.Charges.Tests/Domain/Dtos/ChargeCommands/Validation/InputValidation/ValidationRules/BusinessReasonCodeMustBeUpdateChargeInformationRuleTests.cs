@@ -23,7 +23,7 @@ using GreenEnergyHub.TestHelpers;
 using Xunit;
 using Xunit.Categories;
 
-namespace GreenEnergyHub.Charges.Tests.Application.Charges.Validation.InputValidation.ValidationRules
+namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.InputValidation.ValidationRules
 {
     [UnitTest]
     public class BusinessReasonCodeMustBeUpdateChargeInformationRuleTests
