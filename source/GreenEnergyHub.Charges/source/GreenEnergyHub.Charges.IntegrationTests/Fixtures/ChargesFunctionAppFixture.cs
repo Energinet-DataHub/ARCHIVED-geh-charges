@@ -168,7 +168,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures
 
             var chargePricesUpdatedTopic = await ServiceBusResourceProvider
                 .BuildTopic(ChargesServiceBusResourceNames.ChargePricesUpdatedTopicKey).SetEnvironmentVariableToTopicName(EnvironmentSettingNames.ChargePricesUpdatedTopicName)
-                .AddSubscription(ChargesServiceBusResourceNames.ChargePricesUpdatedSubscriptionName)
+                .AddSubscription(ChargesServiceBusResourceNames.ChargePricesUpdatedSubscriptionName).SetEnvironmentVariableToSubscriptionName(EnvironmentSettingNames.DefaultChargeLinksDataAvailableNotifiedSubscription)
                 .CreateAsync();
 
             var createLinkReplyQueueListener = new ServiceBusListenerMock(ServiceBusResourceProvider.ConnectionString, TestLogger);
