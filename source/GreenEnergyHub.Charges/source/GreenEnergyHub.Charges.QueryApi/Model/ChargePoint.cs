@@ -30,5 +30,7 @@ namespace GreenEnergyHub.Charges.QueryApi.Model
         public decimal Price { get; set; }
 
         public int Position { get; set; }
+
+        public virtual Charge Charge { get; set; }
     }
 }

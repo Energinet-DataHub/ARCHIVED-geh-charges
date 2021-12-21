@@ -24,6 +24,7 @@ namespace GreenEnergyHub.Charges.QueryApi.Model
         public Charge()
         {
             ChargeLinks = new HashSet<ChargeLink>();
+            ChargePoints = new HashSet<ChargePoint>();
             DefaultChargeLinks = new HashSet<DefaultChargeLink>();
         }
 
@@ -54,6 +55,8 @@ namespace GreenEnergyHub.Charges.QueryApi.Model
         public virtual MarketParticipant Owner { get; set; }
 
         public virtual ICollection<ChargeLink> ChargeLinks { get; set; }
+
+        public virtual ICollection<ChargePoint> ChargePoints { get; set; }
 
         public virtual ICollection<DefaultChargeLink> DefaultChargeLinks { get; set; }
     }
