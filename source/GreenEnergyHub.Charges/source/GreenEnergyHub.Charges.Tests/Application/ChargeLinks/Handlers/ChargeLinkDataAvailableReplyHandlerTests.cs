@@ -20,6 +20,7 @@ using FluentAssertions;
 using GreenEnergyHub.Charges.Application;
 using GreenEnergyHub.Charges.Application.ChargeLinks.Handlers;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksAcceptedEvents;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksDataAvailableNotifiedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.DefaultChargeLinksDataAvailableNotifiedEvents;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessageMetaData;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions;
@@ -37,10 +38,10 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Handlers
         [Theory]
         [InlineAutoMoqData]
         public async Task ReplyAsync_WhenEventIsNull_ThrowsArgumentNullException(
-            ChargeLinkDataAvailableReplyHandler sut)
+            ChargeLinksDataAvailableNotifiedPublisher sut)
         {
             await sut
-                .Invoking(notifier => notifier.ReplyAsync(null!))
+                .Invoking(notifier => notifier.PublishAsync(null!))
                 .Should()
                 .ThrowExactlyAsync<ArgumentNullException>();
         }
@@ -48,11 +49,11 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Handlers
         [Theory]
         [InlineAutoMoqData]
         public async Task ReplyAsync_WhenCalledAndReplyIsSetIsTrue_ShouldDispatchMessage(
-            [Frozen] Mock<IMessageDispatcher<DefaultChargeLinksCreatedEvent>> messageDispatcher,
-            [Frozen] Mock<IDefaultChargeLinksCreatedEventFactory> defaultChargeLinksCreatedEventFactory,
+            [Frozen] Mock<IMessageDispatcher<ChargeLinksDataAvailableNotifiedEvent>> messageDispatcher,
+            [Frozen] Mock<IChargeLinksDataAvailableNotifiedEventFactory> defaultChargeLinksCreatedEventFactory,
             [Frozen] Mock<IMessageMetaDataContext> messageMetaDataContext,
             ChargeLinksAcceptedEvent chargeLinksAcceptedEvent,
-            ChargeLinkDataAvailableReplyHandler sut)
+            ChargeLinksDataAvailableNotifiedPublisher sut)
         {
             // Arrange
             messageMetaDataContext.Setup(context => context.IsReplyToSet()).Returns(true);
@@ -61,44 +62,44 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Handlers
                 .Returns(GetDefaultChargeLinksCreatedEvent);
 
             // Act
-            await sut.ReplyAsync(chargeLinksAcceptedEvent);
+            await sut.PublishAsync(chargeLinksAcceptedEvent);
 
             // Assert
             defaultChargeLinksCreatedEventFactory.Verify(
                 x => x.Create(chargeLinksAcceptedEvent), Times.Once);
             messageDispatcher.Verify(
                 expression: x =>
-                    x.DispatchAsync(It.IsAny<DefaultChargeLinksCreatedEvent>(), CancellationToken.None),
+                    x.DispatchAsync(It.IsAny<ChargeLinksDataAvailableNotifiedEvent>(), CancellationToken.None),
                 Times.Once);
         }
 
         [Theory]
         [InlineAutoMoqData]
         public async Task ReplyAsync_WhenCalledAndReplyIsSetIsFalse_ShouldNotDispatchMessage(
-            [Frozen] Mock<IMessageDispatcher<DefaultChargeLinksCreatedEvent>> messageDispatcher,
-            [Frozen] Mock<IDefaultChargeLinksCreatedEventFactory> defaultChargeLinksCreatedEventFactory,
+            [Frozen] Mock<IMessageDispatcher<ChargeLinksDataAvailableNotifiedEvent>> messageDispatcher,
+            [Frozen] Mock<IChargeLinksDataAvailableNotifiedEventFactory> defaultChargeLinksCreatedEventFactory,
             [Frozen] Mock<IMessageMetaDataContext> messageMetaDataContext,
             ChargeLinksAcceptedEvent chargeLinksAcceptedEvent,
-            ChargeLinkDataAvailableReplyHandler sut)
+            ChargeLinksDataAvailableNotifiedPublisher sut)
         {
             // Arrange
             messageMetaDataContext.Setup(context => context.IsReplyToSet()).Returns(false);
 
             // Act
-            await sut.ReplyAsync(chargeLinksAcceptedEvent);
+            await sut.PublishAsync(chargeLinksAcceptedEvent);
 
             // Assert
             defaultChargeLinksCreatedEventFactory.Verify(
                 x => x.Create(chargeLinksAcceptedEvent), Times.Never);
             messageDispatcher.Verify(
                 expression: x =>
-                    x.DispatchAsync(It.IsAny<DefaultChargeLinksCreatedEvent>(), CancellationToken.None),
+                    x.DispatchAsync(It.IsAny<ChargeLinksDataAvailableNotifiedEvent>(), CancellationToken.None),
                 Times.Never);
         }
 
-        private DefaultChargeLinksCreatedEvent GetDefaultChargeLinksCreatedEvent()
+        private ChargeLinksDataAvailableNotifiedEvent GetDefaultChargeLinksCreatedEvent()
         {
-            return new DefaultChargeLinksCreatedEvent(SystemClock.Instance.GetCurrentInstant(), "12345678910");
+            return new ChargeLinksDataAvailableNotifiedEvent(SystemClock.Instance.GetCurrentInstant(), "12345678910");
         }
     }
 }

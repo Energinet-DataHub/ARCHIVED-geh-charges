@@ -25,7 +25,7 @@ using GreenEnergyHub.Charges.Contracts;
 using GreenEnergyHub.Charges.Domain.DefaultChargeLinks;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksReceivedEvents;
-using GreenEnergyHub.Charges.Domain.Dtos.CreateLinksRequests;
+using GreenEnergyHub.Charges.Domain.Dtos.CreateDefaultChargeLinksRequests;
 using GreenEnergyHub.Charges.Domain.MeteringPoints;
 using GreenEnergyHub.Charges.Infrastructure.Core.Correlation;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessageMetaData;
@@ -64,7 +64,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Handlers
 
             messageMetaDataContext.Setup(m => m.IsReplyToSet()).Returns(true);
             messageMetaDataContext.Setup(m => m.ReplyTo).Returns(replyTo);
-            var createLinkCommandEvent = new CreateLinksRequest(meteringPointId);
+            var createLinkCommandEvent = new CreateDefaultChargeLinksRequest(meteringPointId);
 
             var defaultChargeLink = new DefaultChargeLink(
                 defaultChargeLinkId,
@@ -121,7 +121,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Handlers
             }
 
             messageMetaDataContext.Setup(m => m.ReplyTo).Returns((string)null!);
-            var createLinkCommandEvent = new CreateLinksRequest(meteringPointId);
+            var createLinkCommandEvent = new CreateDefaultChargeLinksRequest(meteringPointId);
 
             // Act & Assert
             await Assert.ThrowsAsync<ArgumentNullException>(() =>
@@ -153,7 +153,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Handlers
             messageMetaDataContext.Setup(m => m.IsReplyToSet()).Returns(true);
             messageMetaDataContext.Setup(m => m.ReplyTo).Returns(replyTo);
             errorCode = ErrorCode.MeteringPointUnknown;
-            var createLinkCommandEvent = new CreateLinksRequest(meteringPointId);
+            var createLinkCommandEvent = new CreateDefaultChargeLinksRequest(meteringPointId);
 
             defaultChargeLinkClient.Setup(d =>
                 d.ReplyWithFailedAsync(meteringPointId, errorCode, replyTo));
@@ -199,7 +199,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Handlers
             correlationContextMock.Setup(c => c.Id).Returns(correlationId);
             messageMetaDataContext.Setup(m => m.IsReplyToSet()).Returns(true);
             messageMetaDataContext.Setup(m => m.ReplyTo).Returns(replyTo);
-            var createLinkCommandEvent = new CreateLinksRequest(meteringPointId);
+            var createLinkCommandEvent = new CreateDefaultChargeLinksRequest(meteringPointId);
 
             defaultChargeLinkClient.Setup(d =>
                 d.ReplyWithSucceededAsync(meteringPointId, true, replyTo));

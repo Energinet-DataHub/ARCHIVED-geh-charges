@@ -17,7 +17,7 @@ using System.Threading.Tasks;
 using Energinet.Charges.Contracts;
 using GreenEnergyHub.Charges.Application;
 using GreenEnergyHub.Charges.Application.ChargeLinks.Handlers;
-using GreenEnergyHub.Charges.Domain.Dtos.CreateLinksRequests;
+using GreenEnergyHub.Charges.Domain.Dtos.CreateDefaultChargeLinksRequests;
 using GreenEnergyHub.Charges.FunctionHost.Common;
 using GreenEnergyHub.Charges.Infrastructure.Core.Correlation;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions;
@@ -54,7 +54,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.ChargeLinks
             byte[] message)
         {
             var createLinkCommandEvent =
-                (CreateLinksRequest)await _messageExtractor.ExtractAsync(message).ConfigureAwait(false);
+                (CreateDefaultChargeLinksRequest)await _messageExtractor.ExtractAsync(message).ConfigureAwait(false);
 
             await _createLinkRequestHandler
                 .HandleAsync(createLinkCommandEvent).ConfigureAwait(false);

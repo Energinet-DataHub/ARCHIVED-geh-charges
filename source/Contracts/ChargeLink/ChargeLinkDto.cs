@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System;
+using System.ComponentModel.DataAnnotations;
 using Energinet.Charges.Contracts.Charge;
 
 // ReSharper disable once CheckNamespace - Type is shared so namespace is not determined by project structure/namespace

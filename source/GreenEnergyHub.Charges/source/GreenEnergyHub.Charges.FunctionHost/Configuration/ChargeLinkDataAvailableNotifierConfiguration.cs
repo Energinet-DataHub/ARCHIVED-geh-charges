@@ -15,9 +15,9 @@
 using Energinet.DataHub.Core.Messaging.Protobuf;
 using GreenEnergyHub.Charges.Application.ChargeLinks.Handlers;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksAcceptedEvents;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksDataAvailableNotifiedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.DefaultChargeLinksDataAvailableNotifiedEvents;
 using GreenEnergyHub.Charges.FunctionHost.Common;
-using GreenEnergyHub.Charges.FunctionHost.ToDo;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Registration;
 using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandAccepted;
 using GreenEnergyHub.Charges.Infrastructure.Internal.DefaultChargeLinksCreated;
@@ -37,12 +37,11 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
                 configuration => configuration.WithParser(() => ChargeLinkCommandAccepted.Parser));
 
             serviceCollection.SendProtobuf<DefaultChargeLinksCreated>();
-            serviceCollection.AddMessagingProtobuf().AddMessageDispatcher<DefaultChargeLinksCreatedEvent>(
+            serviceCollection.AddMessagingProtobuf().AddMessageDispatcher<ChargeLinksDataAvailableNotifiedEvent>(
                 EnvironmentHelper.GetEnv(EnvironmentSettingNames.DomainEventSenderConnectionString),
                 EnvironmentHelper.GetEnv(EnvironmentSettingNames.DefaultChargeLinksDataAvailableNotifiedTopicName));
 
-            serviceCollection.AddScoped<IChargeLinkDataAvailableNotifierAndReplyHandler, ChargeLinkDataAvailableNotifierAndReplyHandler>();
-            serviceCollection.AddScoped<IChargeLinkDataAvailableReplyHandler, ChargeLinkDataAvailableReplyHandler>();
+            serviceCollection.AddScoped<IChargeLinksDataAvailableNotifiedPublisher, ChargeLinksDataAvailableNotifiedPublisher>();
             serviceCollection.AddScoped<IAvailableDataNotifier<AvailableChargeLinksData, ChargeLinksAcceptedEvent>,
                 AvailableDataNotifier<AvailableChargeLinksData, ChargeLinksAcceptedEvent>>();
             serviceCollection

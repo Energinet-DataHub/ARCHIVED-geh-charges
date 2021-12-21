@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Diagnostics.CodeAnalysis;
+using System.Threading.Tasks;
 using System.Xml;
 
 namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization
@@ -20,18 +20,35 @@ namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization
     public static class XmlReaderExtension
     {
         public static bool Is(
-            [NotNull]this XmlReader reader,
-            [NotNull]string localName,
-            [NotNull]string ns,
+            this XmlReader reader,
+            string localName,
+            string ns,
             XmlNodeType xmlNodeType = XmlNodeType.Element)
         {
             return reader.LocalName.Equals(localName) && reader.NamespaceURI.Equals(ns) &&
                    reader.NodeType == xmlNodeType;
         }
 
-        public static bool IsElement([NotNull] this XmlReader reader)
+        public static bool IsElement(this XmlReader reader)
         {
             return reader.NodeType == XmlNodeType.Element;
+        }
+
+        public static async Task ReadUntilEoFOrNextElementNameAsync(
+            this XmlReader reader,
+            string localName,
+            string ns,
+            XmlNodeType xmlNodeType = XmlNodeType.Element)
+        {
+            while (await reader.ReadAsync().ConfigureAwait(false))
+            {
+                if (reader.Is(
+                        localName,
+                        ns))
+                {
+                    break;
+                }
+            }
         }
     }
 }
