@@ -12,18 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation;
 
-namespace GreenEnergyHub.Charges.Domain.ChargeLinks
+namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands.Validation.BusinessValidation.Factories
 {
-    public interface IChargeLinkRepository
+    public interface IBusinessValidationRulesFactory
     {
-        Task StoreAsync(IReadOnlyCollection<ChargeLink> chargeLinks);
-
-        Task<ChargeLink> GetChargeLinksAsync(Guid meteringPointId, Guid chargeId);
-
-        Task<IReadOnlyCollection<ChargeLink>> GetAsync(Guid chargeId, Guid meteringPointId);
+        Task<IValidationRuleSet> CreateRulesForChargeLinksCommandAsync(ChargeLinksCommand chargeLinksCommand);
     }
 }

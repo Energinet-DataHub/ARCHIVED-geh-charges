@@ -12,10 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Domain.ChargeLinks;
 using GreenEnergyHub.Charges.Infrastructure.Context;
+using Microsoft.EntityFrameworkCore;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories
 {
@@ -26,6 +29,22 @@ namespace GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories
         public ChargeLinkRepository(IChargesDatabaseContext context)
         {
             _context = context;
+        }
+
+        public async Task<ChargeLink> GetChargeLinksAsync(Guid meteringPointId, Guid chargeId)
+        {
+            var chargeLink = await _context.ChargeLinks.SingleAsync(chargeLink =>
+                chargeLink.MeteringPointId == meteringPointId && chargeLink.ChargeId == chargeId);
+
+            return chargeLink;
+        }
+
+        public async Task<IReadOnlyCollection<ChargeLink>> GetAsync(Guid chargeId, Guid meteringPointId)
+        {
+            return await _context.ChargeLinks.Where(chargeLink =>
+                    chargeLink.ChargeId == chargeId && chargeLink.MeteringPointId == meteringPointId)
+                    .ToListAsync()
+                    .ConfigureAwait(false);
         }
 
         public async Task StoreAsync(IReadOnlyCollection<ChargeLink> chargeLink)

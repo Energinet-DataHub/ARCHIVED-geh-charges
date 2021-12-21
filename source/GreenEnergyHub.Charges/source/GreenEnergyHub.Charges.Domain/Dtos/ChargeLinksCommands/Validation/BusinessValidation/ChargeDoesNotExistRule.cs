@@ -12,18 +12,22 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+using GreenEnergyHub.Charges.Domain.Charges;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation;
 
-namespace GreenEnergyHub.Charges.Domain.ChargeLinks
+namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands.Validation.BusinessValidation
 {
-    public interface IChargeLinkRepository
+    public class ChargeDoesNotExistRule : IValidationRule
     {
-        Task StoreAsync(IReadOnlyCollection<ChargeLink> chargeLinks);
+        private readonly Charge? _charge;
 
-        Task<ChargeLink> GetChargeLinksAsync(Guid meteringPointId, Guid chargeId);
+        public ChargeDoesNotExistRule(Charge? charge)
+        {
+            _charge = charge;
+        }
 
-        Task<IReadOnlyCollection<ChargeLink>> GetAsync(Guid chargeId, Guid meteringPointId);
+        public ValidationRuleIdentifier ValidationRuleIdentifier => ValidationRuleIdentifier.UpdateNotYetSupported;
+
+        public bool IsValid => _charge is not null;
     }
 }
