@@ -60,7 +60,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommandRejectedEvents
             Assert.Equal(failedRules.Count, result.RejectReasons.Count());
             foreach (var failedRule in failedRules)
             {
-                Assert.Contains(failedRule.ValidationError.ValidationRuleIdentifier.ToString(), result.RejectReasons);
+                Assert.Contains(failedRule.ValidationError!.ValidationRuleIdentifier.ToString(), result.RejectReasons);
             }
         }
 

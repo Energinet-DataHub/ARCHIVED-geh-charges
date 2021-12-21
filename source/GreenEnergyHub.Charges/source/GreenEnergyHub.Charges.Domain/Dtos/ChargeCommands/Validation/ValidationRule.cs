@@ -19,11 +19,14 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation
         public ValidationRule(bool isValid, ValidationRuleIdentifier ruleIdentifier)
         {
             IsValid = isValid;
-            ValidationError = new ValidationError(ruleIdentifier);
+            if (IsValid == false)
+            {
+                ValidationError = new ValidationError(ruleIdentifier);
+            }
         }
 
         public bool IsValid { get; }
 
-        public ValidationError ValidationError { get; }
+        public ValidationError? ValidationError { get; }
     }
 }
