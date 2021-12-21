@@ -13,22 +13,24 @@
 // limitations under the License.
 
 using Energinet.DataHub.Core.Messaging.MessageTypes.Common;
-using GreenEnergyHub.Charges.Domain.Dtos.Messages.Events;
+using Energinet.DataHub.Core.Messaging.Transport;
 
-namespace GreenEnergyHub.Charges.Domain.Dtos.CreateLinksRequests
+namespace GreenEnergyHub.Charges.Domain.Dtos.CreateDefaultChargeLinksRequests
 {
-    public class CreateDefaultChargeLinksRequest : InboundIntegrationEvent //TODO: This is not a Inbound Integration event.
+    public class CreateDefaultChargeLinksRequest : IInboundMessage
     {
         public CreateDefaultChargeLinksRequest(
             string meteringPointId)
-            : base(Transaction.NewTransaction())
         {
             MeteringPointId = meteringPointId;
+            Transaction = Transaction.NewTransaction();
         }
 
         /// <summary>
         /// Metering point ID to add links to
         /// </summary>
         public string MeteringPointId { get; }
+
+        public Transaction Transaction { get; set; }
     }
 }

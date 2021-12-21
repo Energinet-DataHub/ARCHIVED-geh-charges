@@ -20,6 +20,7 @@ using GreenEnergyHub.Charges.Application.ChargeLinks.CreateDefaultChargeLinkRepl
 using GreenEnergyHub.Charges.Application.ChargeLinks.Handlers;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksAcceptedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksDataAvailableNotifiedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.DefaultChargeLinksDataAvailableNotifiedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Infrastructure.Core.Correlation;
@@ -52,7 +53,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Handlers
             messageMetaDataContext.Setup(m => m.ReplyTo).Returns(replyTo);
             correlationContext.Setup(c => c.Id).Returns(correlationId);
 
-            var command = new DefaultChargeLinksCreatedEvent(SystemClock.Instance.GetCurrentInstant(), MeteringPointId);
+            var command = new ChargeLinksDataAvailableNotifiedEvent(SystemClock.Instance.GetCurrentInstant(), MeteringPointId);
 
             // Act
             await sut.HandleAsync(command).ConfigureAwait(false);

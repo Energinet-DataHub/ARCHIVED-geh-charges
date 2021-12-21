@@ -13,7 +13,7 @@
 // limitations under the License.
 
 using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Domain.Dtos.CreateLinksRequests;
+using GreenEnergyHub.Charges.Domain.Dtos.CreateDefaultChargeLinksRequests;
 
 namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
 {

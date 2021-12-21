@@ -35,7 +35,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Contracts.External.Consump
         [InlineAutoMoqData]
         public void ConsumptionMeteringPointCreatedIntegrationInboundMapper_WhenCalled_ShouldMapToProtobufWithCorrectValues(
             [NotNull] MeteringPoints.IntegrationEventContracts.ConsumptionMeteringPointCreated meteringPointCreatedEvent,
-            [NotNull] ConsumptionMeteringPointCreatedIntegrationInboundMapper sut)
+            [NotNull] ConsumptionMeteringPointCreatedInboundMapper sut)
         {
             meteringPointCreatedEvent.EffectiveDate = Timestamp.FromDateTime(new DateTime(2021, 10, 31, 23, 00, 00, 00, DateTimeKind.Utc));
 
@@ -53,7 +53,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Contracts.External.Consump
 
         [Theory]
         [InlineAutoMoqData]
-        public void Convert_WhenCalledWithNull_ShouldThrow([NotNull]ConsumptionMeteringPointCreatedIntegrationInboundMapper sut)
+        public void Convert_WhenCalledWithNull_ShouldThrow([NotNull]ConsumptionMeteringPointCreatedInboundMapper sut)
         {
             Assert.Throws<InvalidOperationException>(() => sut.Convert(null!));
         }
@@ -65,7 +65,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Contracts.External.Consump
         public void MapSettlementMethod_WhenCalled_ShouldMapCorrectly(MeteringPoints.IntegrationEventContracts.ConsumptionMeteringPointCreated.Types.SettlementMethod protoSettlementMethod, SettlementMethod expectedSettlementMethod)
         {
             var actual =
-                ConsumptionMeteringPointCreatedIntegrationInboundMapper.MapSettlementMethod(protoSettlementMethod);
+                ConsumptionMeteringPointCreatedInboundMapper.MapSettlementMethod(protoSettlementMethod);
 
             actual.Should().Be(expectedSettlementMethod);
         }
@@ -74,7 +74,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Contracts.External.Consump
         public void MapSettlementMethod_WhenCalledWithInvalidEnum_Throws()
         {
             Assert.Throws<InvalidEnumArgumentException>(
-                () => ConsumptionMeteringPointCreatedIntegrationInboundMapper.MapSettlementMethod((MeteringPoints.IntegrationEventContracts.ConsumptionMeteringPointCreated.Types.SettlementMethod)9999));
+                () => ConsumptionMeteringPointCreatedInboundMapper.MapSettlementMethod((MeteringPoints.IntegrationEventContracts.ConsumptionMeteringPointCreated.Types.SettlementMethod)9999));
         }
 
         [Theory]
@@ -83,7 +83,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Contracts.External.Consump
             MeteringPoints.IntegrationEventContracts.ConsumptionMeteringPointCreated.Types.ConnectionState protoConnectionState,
             ConnectionState expectedConnectionState)
         {
-            var actual = ConsumptionMeteringPointCreatedIntegrationInboundMapper.MapConnectionState(protoConnectionState);
+            var actual = ConsumptionMeteringPointCreatedInboundMapper.MapConnectionState(protoConnectionState);
 
             actual.Should().Be(expectedConnectionState);
         }
@@ -92,7 +92,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Contracts.External.Consump
         public void MapConnectionState_WhenCalledWithInvalidEnum_Throws()
         {
             Assert.Throws<InvalidEnumArgumentException>(
-                () => ConsumptionMeteringPointCreatedIntegrationInboundMapper.MapConnectionState((MeteringPoints.IntegrationEventContracts.ConsumptionMeteringPointCreated.Types.ConnectionState)9999));
+                () => ConsumptionMeteringPointCreatedInboundMapper.MapConnectionState((MeteringPoints.IntegrationEventContracts.ConsumptionMeteringPointCreated.Types.ConnectionState)9999));
         }
     }
 }

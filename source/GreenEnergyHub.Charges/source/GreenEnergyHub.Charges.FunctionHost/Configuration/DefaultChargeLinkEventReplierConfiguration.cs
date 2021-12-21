@@ -25,7 +25,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
         internal static void ConfigureServices(IServiceCollection serviceCollection)
         {
             serviceCollection.AddScoped<ICreateDefaultChargeLinksReplyHandler, CreateDefaultChargeLinksReplyHandler>();
-            serviceCollection.AddScoped<IDefaultChargeLinksCreatedEventFactory, DefaultChargeLinksCreatedEventFactory>();
+            serviceCollection.AddScoped<IChargeLinksDataAvailableNotifiedEventFactory, ChargeLinksDataAvailableNotifiedEventFactory>();
 
             serviceCollection.ReceiveProtobufMessage<DefaultChargeLinksCreated>(
                 configuration => configuration.WithParser(() => DefaultChargeLinksCreated.Parser));
