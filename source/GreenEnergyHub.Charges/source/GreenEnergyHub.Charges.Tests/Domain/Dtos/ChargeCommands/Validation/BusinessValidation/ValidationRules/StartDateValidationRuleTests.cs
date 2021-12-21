@@ -85,7 +85,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
 
         [Theory]
         [InlineAutoDomainData]
-        public void ValidationRuleIdentifier_ShouldContain_RequiredErrorMessageParameterTypes(
+        public void ValidationErrorMessageParameters_ShouldContain_RequiredErrorMessageParameterTypes(
             ChargeCommand command, IClock clock)
         {
             // Arrange
@@ -102,7 +102,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
 
         [Theory]
         [InlineAutoDomainData]
-        public void ValidationRuleIdentifier_ShouldBe_RequiredErrorMessageParameters(ChargeCommand command, IClock clock)
+        public void MessageParameter_ShouldBe_RequiredErrorMessageParameters(ChargeCommand command, IClock clock)
         {
             // Arrange
             var configuration = CreateRuleConfiguration(1, 3);

@@ -56,7 +56,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
 
         [Theory]
         [InlineAutoDomainData]
-        public void ValidationRuleIdentifier_ShouldContain_RequiredErrorMessageParameterTypes(
+        public void ValidationErrorMessageParameters_ShouldContain_RequiredErrorMessageParameterTypes(
             ChargeCommand command, MarketParticipant sender)
         {
             // Arrange
@@ -74,7 +74,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
 
         [Theory]
         [InlineAutoDomainData]
-        public void ValidationRuleIdentifier_ShouldBe_RequiredErrorMessageParameters(
+        public void MessageParameter_ShouldBe_RequiredErrorMessageParameters(
             ChargeCommand command, MarketParticipant sender)
         {
             // Arrange
