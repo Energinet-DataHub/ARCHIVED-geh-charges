@@ -1,5 +1,9 @@
 # Energinet.DataHub.Charges.Clients Release notes
 
+## Version 1.0.20
+
+Use class for `ChargeLinkDto` instead of record.
+
 ## Version 1.0.19
 
 `IChargeLinkClient` returns charge links with new naming.

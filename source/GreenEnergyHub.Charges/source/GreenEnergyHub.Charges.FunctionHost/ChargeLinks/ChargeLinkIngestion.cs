@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application.ChargeLinks.Handlers;
 using GreenEnergyHub.Charges.Application.ChargeLinks.Handlers.Message;
@@ -25,19 +24,20 @@ namespace GreenEnergyHub.Charges.FunctionHost.ChargeLinks
 {
     public class ChargeLinkIngestion
     {
+        private readonly IChargeLinksCommandBundleHandler _chargeLinksCommandBundleHandler;
+
         /// <summary>
         /// The name of the function.
         /// Function name affects the URL and thus possibly dependent infrastructure.
         /// </summary>
         private readonly MessageExtractor<ChargeLinksCommand> _messageExtractor;
-        private readonly IChargeLinksCommandHandler _chargeLinksCommandHandler;
 
         public ChargeLinkIngestion(
-            IChargeLinksCommandHandler chargeLinksCommandHandler,
+            IChargeLinksCommandBundleHandler chargeLinksCommandBundleHandler,
             MessageExtractor<ChargeLinksCommand> messageExtractor)
         {
+            _chargeLinksCommandBundleHandler = chargeLinksCommandBundleHandler;
             _messageExtractor = messageExtractor;
-            _chargeLinksCommandHandler = chargeLinksCommandHandler;
         }
 
         [Function(IngestionFunctionNames.ChargeLinkIngestion)]
@@ -45,9 +45,9 @@ namespace GreenEnergyHub.Charges.FunctionHost.ChargeLinks
             [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = null)]
             HttpRequestData req)
         {
-            var command = (ChargeLinksCommand)await _messageExtractor.ExtractAsync(req.Body).ConfigureAwait(false);
+            var command = (ChargeLinksCommandBundle)await _messageExtractor.ExtractAsync(req.Body).ConfigureAwait(false);
 
-            var chargeLinksMessageResult = await _chargeLinksCommandHandler.HandleAsync(command).ConfigureAwait(false);
+            var chargeLinksMessageResult = await _chargeLinksCommandBundleHandler.HandleAsync(command).ConfigureAwait(false);
 
             return await CreateJsonResponseAsync(req, chargeLinksMessageResult).ConfigureAwait(false);
         }
