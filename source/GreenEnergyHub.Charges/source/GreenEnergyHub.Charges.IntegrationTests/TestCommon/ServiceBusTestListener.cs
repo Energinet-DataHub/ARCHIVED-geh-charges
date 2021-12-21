@@ -12,12 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Threading.Tasks;
 using Energinet.DataHub.Core.FunctionApp.TestCommon.ServiceBus.ListenerMock;
 
 namespace GreenEnergyHub.Charges.IntegrationTests.TestCommon
 {
-    public class ServiceBusTestListener
+    public class ServiceBusTestListener : IAsyncDisposable
     {
         private readonly ServiceBusListenerMock _serviceBusListenerMock;
 
@@ -65,6 +66,11 @@ namespace GreenEnergyHub.Charges.IntegrationTests.TestCommon
         public void Reset()
         {
             _serviceBusListenerMock.ResetMessageHandlersAndReceivedMessages();
+        }
+
+        public async ValueTask DisposeAsync()
+        {
+            await _serviceBusListenerMock.DisposeAsync();
         }
     }
 }
