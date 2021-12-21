@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Diagnostics.CodeAnalysis;
 using GreenEnergyHub.Charges.Domain.Charges;
 
 namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputValidation.ValidationRules
@@ -21,7 +20,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputVali
     {
         private readonly ChargeCommand _chargeCommand;
 
-        public ResolutionTariffValidationRule([NotNull] ChargeCommand chargeCommand)
+        public ResolutionTariffValidationRule(ChargeCommand chargeCommand)
         {
             _chargeCommand = chargeCommand;
         }
@@ -42,6 +41,16 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputVali
             }
         }
 
-        public ValidationRuleIdentifier ValidationRuleIdentifier => ValidationRuleIdentifier.ResolutionTariffValidation;
+        public ValidationError ValidationError => new(
+                ValidationRuleIdentifier.ResolutionTariffValidation,
+                new ValidationErrorMessageParameter(
+                    _chargeCommand.ChargeOperation.Resolution.ToString(),
+                    ValidationErrorMessageParameterType.ChargeResolution),
+                new ValidationErrorMessageParameter(
+                    _chargeCommand.ChargeOperation.ChargeId,
+                    ValidationErrorMessageParameterType.DocumentSenderProvidedChargeId),
+                new ValidationErrorMessageParameter(
+                    _chargeCommand.ChargeOperation.Type.ToString(),
+                    ValidationErrorMessageParameterType.ChargeType));
     }
 }

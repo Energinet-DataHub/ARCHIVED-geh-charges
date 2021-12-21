@@ -13,7 +13,6 @@
 // limitations under the License.
 
 using System;
-using System.Diagnostics.CodeAnalysis;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation;
 
@@ -22,11 +21,9 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandRejectedEvents
     public interface IChargeCommandRejectedEventFactory
     {
         ChargeCommandRejectedEvent CreateEvent(
-            [NotNull] ChargeCommand command,
-            [NotNull] ChargeCommandValidationResult chargeCommandValidationResult);
+            ChargeCommand command,
+            ChargeCommandValidationResult chargeCommandValidationResult);
 
-        ChargeCommandRejectedEvent CreateEvent(
-            [NotNull] ChargeCommand command,
-            [NotNull] Exception exception);
+        ChargeCommandRejectedEvent CreateEvent(ChargeCommand command, Exception exception);
     }
 }

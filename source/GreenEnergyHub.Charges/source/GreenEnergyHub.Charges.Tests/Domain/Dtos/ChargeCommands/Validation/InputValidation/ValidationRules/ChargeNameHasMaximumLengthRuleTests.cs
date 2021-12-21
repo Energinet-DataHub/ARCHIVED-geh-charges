@@ -49,7 +49,42 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
         public void ValidationRuleIdentifier_ShouldBe_EqualTo(ChargeCommand command)
         {
             var sut = new ChargeNameHasMaximumLengthRule(command);
-            sut.ValidationRuleIdentifier.Should().Be(ValidationRuleIdentifier.ChargeNameHasMaximumLength);
+            sut.ValidationError.ValidationRuleIdentifier.Should()
+                .Be(ValidationRuleIdentifier.ChargeNameHasMaximumLength);
+        }
+
+        [Theory]
+        [InlineAutoDomainData]
+        public void ValidationErrorMessageParameters_ShouldContain_RequiredErrorMessageParameterTypes(ChargeCommand command)
+        {
+            // Arrange
+            // Act
+            var sut = new ChargeNameHasMaximumLengthRule(command);
+
+            // Assert
+            sut.ValidationError.ValidationErrorMessageParameters
+                .Select(x => x.ParameterType)
+                .Should().Contain(ValidationErrorMessageParameterType.ChargeName);
+            sut.ValidationError.ValidationErrorMessageParameters
+                .Select(x => x.ParameterType)
+                .Should().Contain(ValidationErrorMessageParameterType.DocumentSenderProvidedChargeId);
+        }
+
+        [Theory]
+        [InlineAutoDomainData]
+        public void MessageParameter_ShouldBe_RequiredErrorMessageParameters(ChargeCommand command)
+        {
+            // Arrange
+            // Act
+            var sut = new ChargeNameHasMaximumLengthRule(command);
+
+            // Assert
+            sut.ValidationError.ValidationErrorMessageParameters
+                .Single(x => x.ParameterType == ValidationErrorMessageParameterType.ChargeName)
+                .MessageParameter.Should().Be(command.ChargeOperation.ChargeName);
+            sut.ValidationError.ValidationErrorMessageParameters
+                .Single(x => x.ParameterType == ValidationErrorMessageParameterType.DocumentSenderProvidedChargeId)
+                .MessageParameter.Should().Be(command.ChargeOperation.ChargeId);
         }
 
         private static string GenerateStringWithLength(int stringLength)

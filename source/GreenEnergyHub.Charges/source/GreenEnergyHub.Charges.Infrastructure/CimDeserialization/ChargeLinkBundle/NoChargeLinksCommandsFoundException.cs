@@ -14,7 +14,7 @@
 
 using System;
 
-namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.ChargeBundle
+namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.ChargeLinkBundle
 {
     public class NoChargeLinksCommandsFoundException : Exception
     {
