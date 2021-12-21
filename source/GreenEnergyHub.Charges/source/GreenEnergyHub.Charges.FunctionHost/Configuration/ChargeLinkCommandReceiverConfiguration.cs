@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using Energinet.DataHub.Core.Messaging.Protobuf;
+using GreenEnergyHub.Charges.Application.ChargeLinks.Acknowledgement;
 using GreenEnergyHub.Charges.Application.ChargeLinks.Handlers;
 using GreenEnergyHub.Charges.Domain.ChargeLinks;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksAcceptedEvents;
@@ -45,6 +46,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
             serviceCollection.AddScoped<IChargeLinkRepository, ChargeLinkRepository>();
             serviceCollection.AddScoped<IBusinessValidationRulesFactory, BusinessValidationRulesFactory>();
             serviceCollection.AddScoped<IChargeLinksCommandValidator, ChargeLinksCommandValidator>();
+            serviceCollection.AddScoped<IChargeLinksConfirmationService, ChargeLinksConfirmationService>();
         }
     }
 }

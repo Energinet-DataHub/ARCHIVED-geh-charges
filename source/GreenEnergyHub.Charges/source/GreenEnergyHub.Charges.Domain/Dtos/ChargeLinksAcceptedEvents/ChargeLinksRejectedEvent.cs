@@ -13,25 +13,22 @@
 // limitations under the License.
 
 using System.Collections.Generic;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.Messages.Events;
 using NodaTime;
 
-namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandRejectedEvents
+namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksAcceptedEvents
 {
-    public class ChargeCommandRejectedEvent : InternalEventBase
+    public class ChargeLinksRejectedEvent : InternalEventBase
     {
-        public ChargeCommandRejectedEvent(
-            Instant publishedTime,
-            ChargeCommand command,
-            IEnumerable<string> reasons)
+        public ChargeLinksRejectedEvent(Instant publishedTime, ChargeLinksCommand chargeLinksCommand, IEnumerable<string> reasons)
             : base(publishedTime)
         {
-            Command = command;
+            ChargeLinksCommand = chargeLinksCommand;
             RejectReasons = reasons;
         }
 
-        public ChargeCommand Command { get; }
+        public ChargeLinksCommand ChargeLinksCommand { get; }
 
         public IEnumerable<string> RejectReasons { get; }
     }
