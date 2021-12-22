@@ -160,6 +160,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures
                 .SetEnvironmentVariableToTopicName(EnvironmentSettingNames
                     .DefaultChargeLinksDataAvailableNotifiedTopicName)
                 .AddSubscription(ChargesServiceBusResourceNames.DefaultChargeLinksDataAvailableNotifiedSubscriptionName)
+                    .SetEnvironmentVariableToSubscriptionName(EnvironmentSettingNames.DefaultChargeLinksDataAvailableNotifiedSubscription)
                 .CreateAsync();
 
             var chargeCreatedListener = new ServiceBusListenerMock(ServiceBusResourceProvider.ConnectionString, TestLogger);
