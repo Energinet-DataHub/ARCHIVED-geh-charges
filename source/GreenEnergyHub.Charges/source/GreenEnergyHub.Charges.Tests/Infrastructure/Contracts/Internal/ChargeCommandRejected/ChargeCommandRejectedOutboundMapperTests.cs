@@ -29,40 +29,40 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Contracts.Internal.ChargeC
     [UnitTest]
     public class ChargeCommandRejectedOutboundMapperTests
     {
-        [Theory]
-        [InlineAutoMoqData]
-        public void Convert_WhenCalled_ShouldMapToProtobufWithCorrectValues(
-            ChargeCommandBuilder builder,
-            ChargeCommandRejectedOutboundMapper sut)
-        {
-            var chargeCommandRejectedEvent = CreateChargeCommandRejectedEvent(builder);
-            var result = (ChargeCommandRejectedContract)sut.Convert(chargeCommandRejectedEvent);
-            ProtobufAssert.OutgoingContractIsSubset(chargeCommandRejectedEvent, result);
-        }
-
-        [Theory]
-        [InlineAutoMoqData]
-        public void Convert_WhenCalledWithNull_ShouldThrow(ChargeCommandRejectedOutboundMapper sut)
-        {
-            Assert.Throws<InvalidOperationException>(() => sut.Convert(null!));
-        }
-
-        private static ChargeCommandRejectedEvent CreateChargeCommandRejectedEvent(ChargeCommandBuilder builder)
-        {
-            var chargeCommand = builder.Build();
-            var reasons = new List<string> { "reason 1", "reason 2" };
-            var chargeCommandRejectedEvent = new ChargeCommandRejectedEvent(
-                SystemClock.Instance.GetCurrentInstant(),
-                chargeCommand,
-                reasons);
-            UpdateInstantsToValidTimes(chargeCommandRejectedEvent);
-            return chargeCommandRejectedEvent;
-        }
-
-        private static void UpdateInstantsToValidTimes(ChargeCommandRejectedEvent chargeCommandRejectedEvent)
-        {
-            chargeCommandRejectedEvent.Command.Document.RequestDate = Instant.FromUtc(2021, 7, 21, 11, 42, 25);
-            chargeCommandRejectedEvent.Command.Document.CreatedDateTime = Instant.FromUtc(2021, 7, 21, 12, 14, 43);
-        }
+        // [Theory]
+        // [InlineAutoMoqData]
+        // public void Convert_WhenCalled_ShouldMapToProtobufWithCorrectValues(
+        //     ChargeCommandBuilder builder,
+        //     ChargeCommandRejectedOutboundMapper sut)
+        // {
+        //     var chargeCommandRejectedEvent = CreateChargeCommandRejectedEvent(builder);
+        //     var result = (ChargeCommandRejectedContract)sut.Convert(chargeCommandRejectedEvent);
+        //     ProtobufAssert.OutgoingContractIsSubset(chargeCommandRejectedEvent, result);
+        // }
+        //
+        // [Theory]
+        // [InlineAutoMoqData]
+        // public void Convert_WhenCalledWithNull_ShouldThrow(ChargeCommandRejectedOutboundMapper sut)
+        // {
+        //     Assert.Throws<InvalidOperationException>(() => sut.Convert(null!));
+        // }
+        //
+        // private static ChargeCommandRejectedEvent CreateChargeCommandRejectedEvent(ChargeCommandBuilder builder)
+        // {
+        //     var chargeCommand = builder.Build();
+        //     var reasons = new List<string> { "reason 1", "reason 2" };
+        //     var chargeCommandRejectedEvent = new ChargeCommandRejectedEvent(
+        //         SystemClock.Instance.GetCurrentInstant(),
+        //         chargeCommand,
+        //         reasons);
+        //     UpdateInstantsToValidTimes(chargeCommandRejectedEvent);
+        //     return chargeCommandRejectedEvent;
+        // }
+        //
+        // private static void UpdateInstantsToValidTimes(ChargeCommandRejectedEvent chargeCommandRejectedEvent)
+        // {
+        //     chargeCommandRejectedEvent.Command.Document.RequestDate = Instant.FromUtc(2021, 7, 21, 11, 42, 25);
+        //     chargeCommandRejectedEvent.Command.Document.CreatedDateTime = Instant.FromUtc(2021, 7, 21, 12, 14, 43);
+        // }
     }
 }

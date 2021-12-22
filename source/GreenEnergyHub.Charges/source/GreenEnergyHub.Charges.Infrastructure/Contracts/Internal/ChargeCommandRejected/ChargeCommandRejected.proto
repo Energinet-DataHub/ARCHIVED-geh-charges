@@ -14,7 +14,7 @@
  */
 
 /*
- * Charge link Domain related messages.
+ * Charge Domain related messages.
  */
 syntax = "proto3";
 
@@ -25,7 +25,17 @@ option csharp_namespace = "GreenEnergyHub.Charges.Infrastructure.Internal.Charge
 message ChargeCommandRejectedContract {
   google.protobuf.Timestamp published_time = 1;
   ChargeCommandContract command = 2;
-  repeated string reject_reasons = 4;
+  repeated ValidationErrorContract validation_errors = 4;
+}
+
+message ValidationErrorContract {
+  ValidationRuleIdentifierContract validation_rule_identifier = 1;
+  repeated ValidationErrorMessageParameterContract validation_error_message_parameters = 2;
+}
+
+message ValidationErrorMessageParameterContract {
+  string message_parameter = 1;
+  ValidationErrorMessageParameterTypeContract validation_error_message_parameter_type = 2;
 }
 
 message ChargeCommandContract {
@@ -70,6 +80,60 @@ message PointContract
     int32 position = 1; // The position of the price in the price list it was delivered.
     double price = 2;
     google.protobuf.Timestamp time = 3; // A point in time, where the price applies.
+}
+
+enum ValidationRuleIdentifierContract
+{
+    VRI_Unknown = 0;
+    VRI_Start_Date_Validation = 1;
+    VRI_Changing_Tariff_Vat_Value_Not_Allowed = 2;
+    VRI_Changing_Tariff_Tax_Value_Not_Allowed = 3;
+    VRI_Process_Type_Is_Known_Validation = 4;
+    VRI_Sender_Is_Mandatory_Type_Validation = 5;
+    VRI_Recipient_Is_Mandatory_Type_Validation = 6;
+    VRI_CHARGE_OPERATION_ID_REQUIRED = 7;
+    VRI_OPERATION_TYPE_VALIDATION = 8;
+    VRI_CHARGE_ID_LENGTH_VALIDATION = 9;
+    VRI_CHARGE_ID_REQUIRED_VALIDATION = 10;
+    VRI_DOCUMENT_TYPE_MUST_BE_REQUEST_UPDATE_CHARGE_INFORMATION = 11;
+    VRI_BUSINESS_REASON_CODE_MUST_BE_UPDATE_CHARGE_INFORMATION = 12;
+    VRI_CHARGE_TYPE_IS_KNOWN_VALIDATION = 13;
+    VRI_VAT_CLASSIFICATION_VALIDATION = 14;
+    VRI_RESOLUTION_TARIFF_VALIDATION = 15;
+    VRI_RESOLUTION_FEE_VALIDATION = 16;
+    VRI_RESOLUTION_SUBSCRIPTION_VALIDATION = 17;
+    VRI_START_DATE_TIME_REQUIRED_VALIDATION = 18;
+    VRI_CHARGE_OWNER_IS_REQUIRED_VALIDATION = 19;
+    VRI_CHARGE_NAME_HAS_MAXIMUM_LENGTH = 20;
+    VRI_CHARGE_DESCRIPTION_HAS_MAXIMUM_LENGTH = 21;
+    VRI_CHARGE_TYPE_TARIFF_PRICE_COUNT = 22;
+    VRI_MAXIMUM_PRICE = 23;
+    VRI_CHARGE_PRICE_MAXIMUM_DIGITS_AND_DECIMALS = 24;
+    VRI_FEE_MUST_HAVE_SINGLE_PRICE = 25;
+    VRI_SUBSCRIPTION_MUST_HAVE_SINGLE_PRICE = 26;
+    VRI_COMMAND_SENDER_MUST_BE_AN_EXISTING_MARKET_PARTICIPANT = 27;
+    VRI_UPDATE_NOT_YET_SUPPORTED = 28;    
+}
+
+enum ValidationErrorMessageParameterTypeContract
+{
+    VEMPT_UNKNOWN = 0;
+    VEMPT_CHARGE_TYPE = 1;
+    VEMPT_CHARGE_OWNER = 2;
+    VEMPT_CHARGE_NAME = 3;
+    VEMPT_CHARGE_DESCRIPTION = 4;
+    VEMPT_CHARGE_START_DATE_TIME = 5;
+    VEMPT_CHARGE_RESOLUTION = 6;
+    VEMPT_CHARGE_TAX_INDICATOR = 7;
+    VEMPT_CHARGE_VAT_CLASS = 8;
+    VEMPT_CHARGE_POINTS_COUNT = 9;
+    VEMPT_CHARGE_POINT_POSITION = 10;
+    VEMPT_CHARGE_POINT_PRICE = 11;
+    VEMPT_DOCUMENT_TYPE = 12;
+    VEMPT_DOCUMENT_BUSINESS_REASON_CODE = 13;
+    VEMPT_DOCUMENT_ID = 14;
+    VEMPT_DOCUMENT_SENDER_PROVIDED_CHARGE_ID = 15;
+    VEMPT_DOCUMENT_SENDER_ID = 16;
 }
 
 enum ResolutionContract

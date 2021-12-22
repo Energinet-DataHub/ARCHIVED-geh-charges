@@ -14,6 +14,7 @@
 
 using System.Collections.Generic;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation;
 using GreenEnergyHub.Charges.Domain.Dtos.Messages.Events;
 using NodaTime;
 
@@ -24,15 +25,15 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandRejectedEvents
         public ChargeCommandRejectedEvent(
             Instant publishedTime,
             ChargeCommand command,
-            IEnumerable<string> reason)
+            IEnumerable<ValidationError> validationErrors)
             : base(publishedTime)
         {
             Command = command;
-            RejectReasons = reason;
+            ValidationErrors = validationErrors;
         }
 
         public ChargeCommand Command { get; }
 
-        public IEnumerable<string> RejectReasons { get; set; } // Todo Expand with messageparameters and message
+        public IEnumerable<ValidationError> ValidationErrors { get; }
     }
 }

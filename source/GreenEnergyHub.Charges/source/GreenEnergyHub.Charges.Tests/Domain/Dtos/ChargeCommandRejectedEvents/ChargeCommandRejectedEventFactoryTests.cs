@@ -57,10 +57,12 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommandRejectedEvents
             Assert.NotNull(result);
             Assert.NotEmpty(failedRules);
             Assert.Equal(currentTime, result.PublishedTime);
-            Assert.Equal(failedRules.Count, result.RejectReasons.Count());
+            Assert.Equal(failedRules.Count, result.ValidationErrors.Count());
             foreach (var failedRule in failedRules)
             {
-                Assert.Contains(failedRule.ValidationError!.ValidationRuleIdentifier.ToString(), result.RejectReasons);
+                Assert.Contains(
+                    failedRule.ValidationError!.ValidationRuleIdentifier.ToString(),
+                    result.ValidationErrors.Select(x => x.ValidationRuleIdentifier).ToString()!);
             }
         }
 
@@ -84,8 +86,10 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommandRejectedEvents
             // Assert
             Assert.NotNull(result);
             Assert.Equal(currentTime, result.PublishedTime);
-            Assert.Single(result.RejectReasons);
-            Assert.Equal(exception.Message, result.RejectReasons.First());
+            Assert.Single(result.ValidationErrors);
+            Assert.Equal(
+                exception.Message,
+                result.ValidationErrors.First().ValidationErrorMessageParameters.First()!.MessageParameter);
         }
     }
 }

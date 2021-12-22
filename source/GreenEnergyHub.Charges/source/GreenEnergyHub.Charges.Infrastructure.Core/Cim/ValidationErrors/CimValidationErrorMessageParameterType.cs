@@ -14,7 +14,7 @@
 
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation;
 
-namespace GreenEnergyHub.Charges.Infrastructure.Cim
+namespace GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors
 {
     public enum CimValidationErrorMessageParameterType
     {

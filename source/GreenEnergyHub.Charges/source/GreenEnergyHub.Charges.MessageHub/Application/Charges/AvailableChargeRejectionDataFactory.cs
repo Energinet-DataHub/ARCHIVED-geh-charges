@@ -17,8 +17,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandRejectedEvents;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation;
 using GreenEnergyHub.Charges.Infrastructure.Core;
 using GreenEnergyHub.Charges.Infrastructure.Core.Cim.MarketDocument;
+using GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessageMetaData;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableData;
@@ -55,11 +57,39 @@ namespace GreenEnergyHub.Charges.MessageHub.Application.Charges
 
         private List<AvailableChargeReceiptDataReasonCode> GetReasons(ChargeCommandRejectedEvent input)
         {
-            return input.RejectReasons.Select(
-                reason => new AvailableChargeReceiptDataReasonCode(
+            return input.ValidationErrors.Select(
+                validationError => new AvailableChargeReceiptDataReasonCode(
                     ReasonCode.IncorrectChargeInformation,
-                    reason))
+                    GetMergedErrorMessage(validationError)))
                 .ToList();
+        }
+
+        private static string GetMergedErrorMessage(ValidationError validationError)
+        {
+            var errorMessage = CimValidationErrorMessageProvider.GetCimValidationErrorMessage(
+                validationError.ValidationRuleIdentifier);
+
+            var mergedErrorMessage = MergeErrorMessage(
+                errorMessage, validationError.ValidationErrorMessageParameters);
+
+            return mergedErrorMessage;
+        }
+
+        private static string MergeErrorMessage(
+            string errorMessage,
+            List<ValidationErrorMessageParameter> validationErrorMessageParameters)
+        {
+            var index = 1;
+            foreach (var validationErrorMessageParameter in validationErrorMessageParameters)
+            {
+                errorMessage = errorMessage.Replace(
+                    $"{{{{$mergeField{index}}}}}",
+                    validationErrorMessageParameter.MessageParameter);
+
+                index++;
+            }
+
+            return errorMessage;
         }
     }
 }

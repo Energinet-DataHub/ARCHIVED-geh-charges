@@ -25,6 +25,16 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation
             }
         }
 
+        // Not in use by production code - maybe it shouldn't exist?
+        public ValidationRule(bool isValid, ValidationError validationError)
+        {
+            IsValid = isValid;
+            if (IsValid == false)
+            {
+                ValidationError = validationError;
+            }
+        }
+
         public bool IsValid { get; }
 
         public ValidationError? ValidationError { get; }

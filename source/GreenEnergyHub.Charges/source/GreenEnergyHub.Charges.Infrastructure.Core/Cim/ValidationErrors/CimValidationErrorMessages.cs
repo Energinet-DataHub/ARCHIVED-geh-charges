@@ -14,10 +14,15 @@
 
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation;
 
-namespace GreenEnergyHub.Charges.Infrastructure.Cim
+namespace GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors
 {
     public static class CimValidationErrorMessages
     {
+        /// <summary>
+        /// Errormessage for <see cref="ValidationRuleIdentifier.Unknown"/>
+        /// </summary>
+        public const string UnknownError = "Unknown error";
+
         /// <summary>
         /// Errormessage for <see cref="ValidationRuleIdentifier.StartDateValidation"/>
         /// </summary>

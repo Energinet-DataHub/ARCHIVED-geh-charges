@@ -14,7 +14,6 @@
 
 using System;
 using GreenEnergyHub.Charges.Infrastructure.Core;
-using GreenEnergyHub.Charges.MessageHub.Models.AvailableData;
 
 namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
 {
