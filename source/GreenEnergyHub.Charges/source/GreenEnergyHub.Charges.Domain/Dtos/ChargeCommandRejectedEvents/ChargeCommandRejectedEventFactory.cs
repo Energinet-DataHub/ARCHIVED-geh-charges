@@ -38,21 +38,5 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandRejectedEvents
                 command,
                 chargeCommandValidationResult.InvalidRules.Select(x => x.ValidationError!));
         }
-
-        // Not in use by production code - maybe it shouldn't exist?
-        public ChargeCommandRejectedEvent CreateEvent(ChargeCommand command, Exception exception)
-        {
-            return new ChargeCommandRejectedEvent(
-                _clock.GetCurrentInstant(),
-                command,
-                new ValidationError[]
-                {
-                    new(
-                        ValidationRuleIdentifier.Unknown,
-                        new ValidationErrorMessageParameter(
-                            exception.Message,
-                            ValidationErrorMessageParameterType.ChargeDescription)),
-                });
-        }
     }
 }
