@@ -17,7 +17,7 @@ using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands;
 using NodaTime;
 
-namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksAcceptedEvents
+namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksRejectionEvents
 {
     public class ChargeLinksRejectedEventFactory : IChargeLinksRejectedEventFactory
     {

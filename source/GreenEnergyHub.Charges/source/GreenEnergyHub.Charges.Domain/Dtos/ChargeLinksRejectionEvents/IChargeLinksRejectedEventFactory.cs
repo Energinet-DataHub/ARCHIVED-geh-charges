@@ -12,24 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Collections.Generic;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands;
-using GreenEnergyHub.Charges.Domain.Dtos.Messages.Events;
-using NodaTime;
 
-namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksAcceptedEvents
+namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksRejectionEvents
 {
-    public class ChargeLinksRejectedEvent : InternalEventBase
+    public interface IChargeLinksRejectedEventFactory
     {
-        public ChargeLinksRejectedEvent(Instant publishedTime, ChargeLinksCommand chargeLinksCommand, IEnumerable<string> reasons)
-            : base(publishedTime)
-        {
-            ChargeLinksCommand = chargeLinksCommand;
-            RejectReasons = reasons;
-        }
-
-        public ChargeLinksCommand ChargeLinksCommand { get; }
-
-        public IEnumerable<string> RejectReasons { get; }
+        ChargeLinksRejectedEvent Create(ChargeLinksCommand chargeLinksCommand, ValidationResult validationResult);
     }
 }
