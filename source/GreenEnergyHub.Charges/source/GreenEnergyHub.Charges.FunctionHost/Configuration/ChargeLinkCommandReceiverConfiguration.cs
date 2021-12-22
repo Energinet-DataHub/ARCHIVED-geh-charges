@@ -50,6 +50,8 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
             serviceCollection.AddScoped<IBusinessValidationRulesFactory, BusinessValidationRulesFactory>();
             serviceCollection.AddScoped<IChargeLinksCommandValidator, ChargeLinksCommandValidator>();
             serviceCollection.AddScoped<IChargeLinksConfirmationService, ChargeLinksConfirmationService>();
+            serviceCollection.AddScoped<IChargeLinksRejectedEventFactory, ChargeLinksRejectedEventFactory>();
+            serviceCollection.AddScoped<IChargeLinksCommandBusinessValidator, ChargeLinksCommandBusinessValidator>();
         }
     }
 }

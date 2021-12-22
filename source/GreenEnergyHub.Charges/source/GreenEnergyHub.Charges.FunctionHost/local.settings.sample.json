@@ -15,7 +15,7 @@
     "INTEGRATIONEVENT_SENDER_CONNECTION_STRING": "<sb sender connection string for integration events (without EntityPath)>",
     "MESSAGEHUB_STORAGE_CONNECTION_STRING": "<connection string for writing to the Message Hub storage account for bundles>",
 
-    // This is settings about who we identify ourselves as being 
+    // This is settings about who we identify ourselves as being
     "HUB_SENDER_ID": "5790001330552",
     "HUB_SENDER_ROLE_INT_ENUM_VALUE": "7", // See MarketParticipantRole for possible values, 7 is MeteringPointAdministrator
 
@@ -61,9 +61,10 @@
     // Internal, charge links, received
     "CHARGE_LINK_RECEIVED_TOPIC_NAME": "link-command-received",
     "CHARGE_LINK_RECEIVED_SUBSCRIPTION_NAME": "link-command-received-receiver",
-    
+
     // Internal, charge links, accepted
     "CHARGE_LINK_ACCEPTED_TOPIC_NAME": "link-command-accepted",
+    "CHARGE_LINK_REJECTED_TOPIC_NAME": "link-command-rejected",
     "CHARGELINKACCEPTED_SUB_CONFIRMATIONNOTIFIER": "chargelinkaccepted-sub-confirmationnotifier",
     "CHARGELINKACCEPTED_SUB_DATAAVAILABLENOTIFIER": "chargelinkaccepted-sub-dataavailablenotifier",
     "CHARGELINKACCEPTED_SUB_EVENTPUBLISHER": "chargelinkaccepted-sub-eventpublisher",
