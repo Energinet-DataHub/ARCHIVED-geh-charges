@@ -49,12 +49,19 @@ namespace GreenEnergyHub.Charges.Infrastructure.Contracts.Internal.ChargeCommand
             RepeatedField<ValidationErrorContract> validationErrors)
         {
             return validationErrors.Select(x => new ValidationError(
-                    (ValidationRuleIdentifier)x.ValidationRuleIdentifier,
-                    x.ValidationErrorMessageParameters.Select(y =>
-                        new ValidationErrorMessageParameter(
-                            y.MessageParameter,
-                            (ValidationErrorMessageParameterType)y.ParameterType))
-                        .ToArray()));
+                (ValidationRuleIdentifier)x.ValidationRuleIdentifier,
+                ConvertValidationErrorMessageParameters(x.ValidationErrorMessageParameters)));
+        }
+
+        private static ValidationErrorMessageParameter[] ConvertValidationErrorMessageParameters(
+            RepeatedField<ValidationErrorMessageParameterContract> messageParameters)
+        {
+            return messageParameters
+                .Select(p =>
+                    new ValidationErrorMessageParameter(
+                        p.MessageParameter,
+                        (ValidationErrorMessageParameterType)p.ParameterType))
+                .ToArray();
         }
 
         private static DocumentDto ConvertDocument(DocumentContract document)
