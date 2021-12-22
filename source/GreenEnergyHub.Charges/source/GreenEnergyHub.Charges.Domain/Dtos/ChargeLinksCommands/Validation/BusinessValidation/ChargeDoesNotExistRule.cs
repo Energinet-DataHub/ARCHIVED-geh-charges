@@ -26,8 +26,8 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands.Validation.Busi
             _charge = charge;
         }
 
-        public ValidationRuleIdentifier ValidationRuleIdentifier => ValidationRuleIdentifier.UpdateNotYetSupported;
-
         public bool IsValid => _charge is not null;
+
+        public ValidationError? ValidationError { get; }
     }
 }
