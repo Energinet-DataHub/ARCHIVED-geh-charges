@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -68,14 +69,10 @@ namespace GreenEnergyHub.Charges.Tests.WebApi.Controllers
         public async Task GetChargeLinksByMeteringPointIdAsync_WhenNoInputGiven_ReturnsBadRequest(
             [Frozen] Mock<IData> data)
         {
-            // Arrange
-            data.Setup(d => d.Charges).Returns(new List<Charge>().AsQueryable());
             var sut = new ChargeLinksController(data.Object);
 
-            // Act
             var result = await sut.GetAsync(null).ConfigureAwait(false);
 
-            // Assert
             result.Should().BeOfType<BadRequestResult>();
         }
     }
