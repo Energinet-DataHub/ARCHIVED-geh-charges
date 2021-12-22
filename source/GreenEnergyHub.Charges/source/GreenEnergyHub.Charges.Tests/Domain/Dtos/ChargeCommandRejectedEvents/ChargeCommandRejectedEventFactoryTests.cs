@@ -60,8 +60,8 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommandRejectedEvents
             foreach (var failedRule in failedRules)
             {
                 Assert.Contains(
-                    failedRule.ValidationError!.ValidationRuleIdentifier.ToString(),
-                    result.ValidationErrors.Select(x => x.ValidationRuleIdentifier).ToString()!);
+                    failedRule.ValidationError!.ValidationRuleIdentifier,
+                    result.ValidationErrors.Select(x => x.ValidationRuleIdentifier));
             }
         }
     }

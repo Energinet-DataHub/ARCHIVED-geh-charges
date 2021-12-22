@@ -35,7 +35,7 @@ message ValidationErrorContract {
 
 message ValidationErrorMessageParameterContract {
   string message_parameter = 1;
-  ValidationErrorMessageParameterTypeContract validation_error_message_parameter_type = 2;
+  ValidationErrorMessageParameterTypeContract parameter_type = 2;
 }
 
 message ChargeCommandContract {
