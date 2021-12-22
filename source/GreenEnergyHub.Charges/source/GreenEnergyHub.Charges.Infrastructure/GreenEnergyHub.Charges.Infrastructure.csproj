@@ -75,6 +75,8 @@ limitations under the License.
       <Protobuf Update="..\..\..\Contracts\CreateDefaultChargeLinksReply.proto">
         <Link>Contracts\Public\CreateDefaultChargeLinks\Contracts\CreateDefaultChargeLinksReply.proto</Link>
       </Protobuf>
+      <None Remove="Contracts\Internal\ChargeLinksCommandRejected\ChargeLinksCommandRejected.proto" />
+      <Protobuf Include="Contracts\Internal\ChargeLinksCommandRejected\ChargeLinksCommandRejected.proto" />
     </ItemGroup>
 
     <ItemGroup>

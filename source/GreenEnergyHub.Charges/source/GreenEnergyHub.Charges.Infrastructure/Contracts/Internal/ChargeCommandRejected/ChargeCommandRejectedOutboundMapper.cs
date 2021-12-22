@@ -13,7 +13,6 @@
 // limitations under the License.
 
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using Energinet.DataHub.Core.Messaging.Protobuf;
 using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.Domain.Charges;
@@ -26,7 +25,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Contracts.Internal.ChargeCommand
 {
     public class ChargeCommandRejectedOutboundMapper : ProtobufOutboundMapper<ChargeCommandRejectedEvent>
     {
-        protected override Google.Protobuf.IMessage Convert([NotNull]ChargeCommandRejectedEvent rejectionEvent)
+        protected override Google.Protobuf.IMessage Convert(ChargeCommandRejectedEvent rejectionEvent)
         {
             var chargeCommandRejectedContract = new ChargeCommandRejectedContract
             {

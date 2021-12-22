@@ -1,0 +1,98 @@
+﻿/* Copyright 2020 Energinet DataHub A/S
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License2");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+/*
+ * Represents a ChargeLinkCommandRejected.
+ */
+syntax = "proto3";
+
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinksCommandRejected";
+
+message ChargeLinksCommandRejected {
+  google.protobuf.Timestamp published_time = 1;
+  ChargeLinksCommand command = 2;
+  repeated string reject_reasons = 3;
+}
+
+message ChargeLinksCommand {
+  string metering_point_id = 1;
+  Document document = 2;
+  repeated ChargeLink charge_links = 3;
+}
+
+message ChargeLink {
+  string operation_id = 1; // Contains a ID for the specific link, provided by the sender. Combined with sender.id it becomes unique.
+  google.protobuf.Timestamp start_date_time = 2; // In UTC. The charge link period's valid from date and time
+  google.protobuf.Timestamp end_date_time = 3; // In UTC. The charge link period's valid to date and time. The default value will be the equivalent to 9999-12-31T23:59:59Z without milliseconds
+  string sender_provided_charge_id = 4; // A charge identifier provided by the sender. Combined with Charge Owner and Charge Type it becomes unique
+  int32 factor = 5; // Indicates the number of times the same fee or subscription must be collected. Always 1 for tariffs
+  string charge_owner_id = 6; // A charge owner identification, e.g. the Market Participant's GLN or EIC number
+  ChargeType charge_type = 7; // The type of charge; tariff, fee or subscription
+}
+
+message Document {
+  string id = 1; // An identifier for the charge link event. Provided by the Market Participant. Uniqueness cannot be guaranteed
+  google.protobuf.Timestamp request_date = 2; // The datetime of when the request was received by GEH
+  DocumentType type = 3; // The document type indicates the intended business context of this business message.
+  google.protobuf.Timestamp created_date_time = 4; // A datetime created by external actors and mostly used for support
+  MarketParticipant sender = 5; // A market participant, e.g. a Grid Access Provider, whom may submit a charge link message.
+  MarketParticipant recipient = 6; // A market participant, e.g. Metering Point Administrator, whom may receive a charge link message.
+  IndustryClassification industry_classification = 7; // IndustryClassification indicates the industry context. E.g. if a Charge price list is related to electricity.
+  BusinessReasonCode business_reason_code = 8; // BusinessReasonCode indicates the intended business context.
+}
+
+message MarketParticipant {
+  string id = 1; // Contains an ID that identifies the Market Participants. In Denmark this would be the GLN number or EIC code.
+  MarketParticipantRole BusinessProcessRole = 2;  // Contains the role a market participant uses when initiating and communicating with Green Energy Hub
+}
+
+enum MarketParticipantRole
+{
+  MPR_UNKNOWN = 0;
+  MPR_ENERGY_SUPPLIER = 1;
+  MPR_GRID_ACCESS_PROVIDER = 2;
+  MPR_SYSTEM_OPERATOR = 3;
+  MPR_METERED_DATA_RESPONSIBLE = 4;
+  MPR_ENERGY_AGENCY = 5;
+  MPR_METERED_DATA_ADMINISTRATOR = 6;
+  MPR_METERING_POINT_ADMINISTRATOR = 7;
+}
+
+enum DocumentType
+{
+  DT_UNKNOWN = 0;
+  DT_REQUEST_CHANGE_BILLING_MASTER_DATA = 1;
+  DT_REQUEST_UPDATE_CHARGE_INFORMATION = 2;
+}
+
+enum IndustryClassification {
+  IC_UNKNOWN = 0;
+  IC_ELECTRICITY = 1;
+}
+
+enum BusinessReasonCode {
+  BRC_UNKNOWN = 0;
+  BRC_UPDATE_MASTER_DATA_SETTLEMENT = 1;
+  BRC_UPDATE_CHARGE_INFORMATION = 2;
+}
+
+enum ChargeType {
+  CT_UNKNOWN = 0;
+  CT_SUBSCRIPTION = 1;
+  CT_FEE = 2;
+  CT_TARIFF = 3;
+}
