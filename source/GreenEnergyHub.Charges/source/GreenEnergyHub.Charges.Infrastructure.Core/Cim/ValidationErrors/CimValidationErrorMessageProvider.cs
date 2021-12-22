@@ -22,63 +22,64 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors
         {
             return validationRuleIdentifier switch
             {
-                ValidationRuleIdentifier.Unknown => CimValidationErrorMessages.UnknownError,
-                ValidationRuleIdentifier.StartDateValidation =>
-                    CimValidationErrorMessages.StartDateValidationErrorMessage,
-                ValidationRuleIdentifier.ChangingTariffVatValueNotAllowed =>
-                    CimValidationErrorMessages.ChangingTariffVatValueNotAllowedErrorMessage,
+                // Please keep sorted by ValidationRuleIdentifier
+                ValidationRuleIdentifier.BusinessReasonCodeMustBeUpdateChargeInformation =>
+                    CimValidationErrorMessages.BusinessReasonCodeMustBeUpdateChargeInformationErrorMessage,
                 ValidationRuleIdentifier.ChangingTariffTaxValueNotAllowed =>
                     CimValidationErrorMessages.ChangingTariffTaxValueNotAllowedErrorMessage,
-                ValidationRuleIdentifier.ProcessTypeIsKnownValidation =>
-                    CimValidationErrorMessages.ProcessTypeIsKnownValidationErrorMessage,
-                ValidationRuleIdentifier.SenderIsMandatoryTypeValidation =>
-                    CimValidationErrorMessages.SenderIsMandatoryTypeValidationErrorMessage,
-                ValidationRuleIdentifier.RecipientIsMandatoryTypeValidation =>
-                    CimValidationErrorMessages.RecipientIsMandatoryTypeValidationErrorMessage,
-                ValidationRuleIdentifier.ChargeOperationIdRequired =>
-                    CimValidationErrorMessages.ChargeOperationIdRequiredErrorMessage,
-                ValidationRuleIdentifier.OperationTypeValidation =>
-                    CimValidationErrorMessages.OperationTypeValidationErrorMessage,
+                ValidationRuleIdentifier.ChangingTariffVatValueNotAllowed =>
+                    CimValidationErrorMessages.ChangingTariffVatValueNotAllowedErrorMessage,
+                ValidationRuleIdentifier.ChargeDescriptionHasMaximumLength =>
+                    CimValidationErrorMessages.ChargeDescriptionHasMaximumLengthErrorMessage,
+                ValidationRuleIdentifier.ChargeNameHasMaximumLength =>
+                    CimValidationErrorMessages.ChargeNameHasMaximumLengthErrorMessage,
+                ValidationRuleIdentifier.ChargeTypeTariffPriceCount =>
+                    CimValidationErrorMessages.ChargeTypeTariffPriceCountErrorMessage,
                 ValidationRuleIdentifier.ChargeIdLengthValidation =>
                     CimValidationErrorMessages.ChargeIdLengthValidationErrorMessage,
                 ValidationRuleIdentifier.ChargeIdRequiredValidation =>
                     CimValidationErrorMessages.ChargeIdRequiredValidationErrorMessage,
-                ValidationRuleIdentifier.DocumentTypeMustBeRequestUpdateChargeInformation =>
-                    CimValidationErrorMessages.DocumentTypeMustBeRequestUpdateChargeInformationErrorMessage,
-                ValidationRuleIdentifier.BusinessReasonCodeMustBeUpdateChargeInformation =>
-                    CimValidationErrorMessages.BusinessReasonCodeMustBeUpdateChargeInformationErrorMessage,
+                ValidationRuleIdentifier.ChargeOperationIdRequired =>
+                    CimValidationErrorMessages.ChargeOperationIdRequiredErrorMessage,
+                ValidationRuleIdentifier.ChargeOwnerIsRequiredValidation =>
+                    CimValidationErrorMessages.ChargeOwnerIsRequiredValidationErrorMessage,
+                ValidationRuleIdentifier.ChargePriceMaximumDigitsAndDecimals =>
+                    CimValidationErrorMessages.ChargePriceMaximumDigitsAndDecimalsErrorMessage,
                 ValidationRuleIdentifier.ChargeTypeIsKnownValidation =>
                     CimValidationErrorMessages.ChargeTypeIsKnownValidationErrorMessage,
-                ValidationRuleIdentifier.VatClassificationValidation =>
-                    CimValidationErrorMessages.VatClassificationValidationErrorMessage,
-                ValidationRuleIdentifier.ResolutionTariffValidation =>
-                    CimValidationErrorMessages.ResolutionTariffValidationErrorMessage,
+                ValidationRuleIdentifier.CommandSenderMustBeAnExistingMarketParticipant =>
+                    CimValidationErrorMessages.CommandSenderMustBeAnExistingMarketParticipantErrorMessage,
+                ValidationRuleIdentifier.DocumentTypeMustBeRequestUpdateChargeInformation =>
+                    CimValidationErrorMessages.DocumentTypeMustBeRequestUpdateChargeInformationErrorMessage,
+                ValidationRuleIdentifier.FeeMustHaveSinglePrice =>
+                    CimValidationErrorMessages.FeeMustHaveSinglePriceErrorMessage,
+                ValidationRuleIdentifier.MaximumPrice =>
+                    CimValidationErrorMessages.MaximumPriceErrorMessage,
+                ValidationRuleIdentifier.OperationTypeValidation =>
+                    CimValidationErrorMessages.OperationTypeValidationErrorMessage,
+                ValidationRuleIdentifier.ProcessTypeIsKnownValidation =>
+                    CimValidationErrorMessages.ProcessTypeIsKnownValidationErrorMessage,
+                ValidationRuleIdentifier.RecipientIsMandatoryTypeValidation =>
+                    CimValidationErrorMessages.RecipientIsMandatoryTypeValidationErrorMessage,
                 ValidationRuleIdentifier.ResolutionFeeValidation =>
                     CimValidationErrorMessages.ResolutionFeeValidationErrorMessage,
                 ValidationRuleIdentifier.ResolutionSubscriptionValidation =>
                     CimValidationErrorMessages.ResolutionSubscriptionValidationErrorMessage,
+                ValidationRuleIdentifier.ResolutionTariffValidation =>
+                    CimValidationErrorMessages.ResolutionTariffValidationErrorMessage,
+                ValidationRuleIdentifier.SenderIsMandatoryTypeValidation =>
+                    CimValidationErrorMessages.SenderIsMandatoryTypeValidationErrorMessage,
                 ValidationRuleIdentifier.StartDateTimeRequiredValidation =>
                     CimValidationErrorMessages.StartDateTimeRequiredValidationErrorMessage,
-                ValidationRuleIdentifier.ChargeOwnerIsRequiredValidation =>
-                    CimValidationErrorMessages.ChargeOwnerIsRequiredValidationErrorMessage,
-                ValidationRuleIdentifier.ChargeNameHasMaximumLength =>
-                    CimValidationErrorMessages.ChargeNameHasMaximumLengthErrorMessage,
-                ValidationRuleIdentifier.ChargeDescriptionHasMaximumLength =>
-                    CimValidationErrorMessages.ChargeDescriptionHasMaximumLengthErrorMessage,
-                ValidationRuleIdentifier.ChargeTypeTariffPriceCount =>
-                    CimValidationErrorMessages.ChargeTypeTariffPriceCountErrorMessage,
-                ValidationRuleIdentifier.MaximumPrice =>
-                    CimValidationErrorMessages.MaximumPriceErrorMessage,
-                ValidationRuleIdentifier.ChargePriceMaximumDigitsAndDecimals =>
-                    CimValidationErrorMessages.ChargePriceMaximumDigitsAndDecimalsErrorMessage,
-                ValidationRuleIdentifier.FeeMustHaveSinglePrice =>
-                    CimValidationErrorMessages.FeeMustHaveSinglePriceErrorMessage,
+                ValidationRuleIdentifier.StartDateValidation =>
+                    CimValidationErrorMessages.StartDateValidationErrorMessage,
                 ValidationRuleIdentifier.SubscriptionMustHaveSinglePrice =>
                     CimValidationErrorMessages.SubscriptionMustHaveSinglePriceErrorMessage,
-                ValidationRuleIdentifier.CommandSenderMustBeAnExistingMarketParticipant =>
-                    CimValidationErrorMessages.CommandSenderMustBeAnExistingMarketParticipantErrorMessage,
+                ValidationRuleIdentifier.Unknown => CimValidationErrorMessages.UnknownError,
                 ValidationRuleIdentifier.UpdateNotYetSupported =>
                     CimValidationErrorMessages.UpdateNotYetSupportedErrorMessage,
+                ValidationRuleIdentifier.VatClassificationValidation =>
+                    CimValidationErrorMessages.VatClassificationValidationErrorMessage,
                 _ => CimValidationErrorMessages.UnknownError,
             };
         }
