@@ -29,20 +29,20 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandRejectedEvents
             _clock = clock;
         }
 
-        public ChargeCommandRejectedEvent CreateEvent(ChargeCommand command, ValidationResult validationResult)
+        public ChargeCommandRejectedEvent CreateEvent(
+            ChargeCommand command,
+            ValidationResult validationResult)
         {
             return new ChargeCommandRejectedEvent(
                 _clock.GetCurrentInstant(),
                 command,
-                validationResult.InvalidRules.Select(x => x.ValidationRuleIdentifier.ToString()).ToArray());
+                validationResult.InvalidRules.Select(x => // TODO use ValidationErrorMessages
+                    x.ValidationError!.ValidationRuleIdentifier.ToString()).ToArray());
         }
 
         public ChargeCommandRejectedEvent CreateEvent(ChargeCommand command, Exception exception)
         {
-            return new ChargeCommandRejectedEvent(
-                _clock.GetCurrentInstant(),
-                command,
-                new[] { exception.Message });
+            return new ChargeCommandRejectedEvent(_clock.GetCurrentInstant(), command, new[] { exception.Message });
         }
     }
 }

@@ -40,16 +40,16 @@ namespace GreenEnergyHub.Charges.FunctionHost.ChargeLinks.MessageHub
 
         private readonly MessageExtractor<ChargeLinkCommandAccepted> _messageExtractor;
         private readonly IAvailableDataNotifier<AvailableChargeLinksData, ChargeLinksAcceptedEvent> _availableDataNotifier;
-        private readonly IDefaultChargeLinksCreatedReplier _defaultChargeLinksCreatedReplier;
+        private readonly IChargeLinksDataAvailableNotifiedPublisher _chargeLinksDataAvailableNotifiedPublisher;
 
         public ChargeLinkDataAvailableNotifierEndpoint(
             MessageExtractor<ChargeLinkCommandAccepted> messageExtractor,
             IAvailableDataNotifier<AvailableChargeLinksData, ChargeLinksAcceptedEvent> availableDataNotifier,
-            IDefaultChargeLinksCreatedReplier defaultChargeLinksCreatedReplier)
+            IChargeLinksDataAvailableNotifiedPublisher chargeLinksDataAvailableNotifiedPublisher)
         {
             _messageExtractor = messageExtractor;
             _availableDataNotifier = availableDataNotifier;
-            _defaultChargeLinksCreatedReplier = defaultChargeLinksCreatedReplier;
+            _chargeLinksDataAvailableNotifiedPublisher = chargeLinksDataAvailableNotifiedPublisher;
         }
 
         [Function(FunctionName)]
@@ -63,7 +63,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.ChargeLinks.MessageHub
             var chargeLinksAcceptedEvent = (ChargeLinksAcceptedEvent)await _messageExtractor.ExtractAsync(message).ConfigureAwait(false);
 
             await _availableDataNotifier.NotifyAsync(chargeLinksAcceptedEvent);
-            await _defaultChargeLinksCreatedReplier.ReplyAsync(chargeLinksAcceptedEvent);
+            await _chargeLinksDataAvailableNotifiedPublisher.PublishAsync(chargeLinksAcceptedEvent);
         }
     }
 }

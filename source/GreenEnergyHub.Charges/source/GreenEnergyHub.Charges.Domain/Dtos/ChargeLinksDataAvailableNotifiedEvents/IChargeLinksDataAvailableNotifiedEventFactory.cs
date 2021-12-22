@@ -13,11 +13,12 @@
 // limitations under the License.
 
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksAcceptedEvents;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksDataAvailableNotifiedEvents;
 
 namespace GreenEnergyHub.Charges.Domain.Dtos.DefaultChargeLinksDataAvailableNotifiedEvents
 {
-    public interface IDefaultChargeLinksCreatedEventFactory
+    public interface IChargeLinksDataAvailableNotifiedEventFactory
     {
-        DefaultChargeLinksCreatedEvent Create(ChargeLinksAcceptedEvent chargeLinksAcceptedEvent);
+        ChargeLinksDataAvailableNotifiedEvent Create(ChargeLinksAcceptedEvent chargeLinksAcceptedEvent);
     }
 }

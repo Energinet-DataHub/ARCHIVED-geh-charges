@@ -1,5 +1,9 @@
 # Energinet.DataHub.Charges.Clients Release notes
 
+## Version 1.0.21
+
+Revert to using record for `ChargeLinkDto`.
+
 ## Version 1.0.20
 
 Use class for `ChargeLinkDto` instead of record.

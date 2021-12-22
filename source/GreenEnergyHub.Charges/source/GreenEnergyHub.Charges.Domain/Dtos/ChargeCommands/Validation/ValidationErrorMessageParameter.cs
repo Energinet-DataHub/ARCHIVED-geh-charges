@@ -12,11 +12,23 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
-
-namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.ChargeBundle
+namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation
 {
-    public class NoChargeLinksCommandsFoundException : Exception
+    public class ValidationErrorMessageParameter
     {
+        public ValidationErrorMessageParameter(
+            string messageParameter,
+            ValidationErrorMessageParameterType parameterType)
+        {
+            MessageParameter = messageParameter;
+            ParameterType = parameterType;
+        }
+
+        public string MessageParameter { get; }
+
+        /// <summary>
+        /// ParameterType for errorMessage
+        /// </summary>
+        public ValidationErrorMessageParameterType ParameterType { get; }
     }
 }

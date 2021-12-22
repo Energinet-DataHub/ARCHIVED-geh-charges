@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Diagnostics.CodeAnalysis;
 using GreenEnergyHub.Charges.Domain.Charges;
 
 namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputValidation.ValidationRules
@@ -21,15 +20,22 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputVali
     {
         private readonly ChargeCommand _chargeCommand;
 
-        public VatClassificationValidationRule([NotNull] ChargeCommand chargeCommand)
+        public VatClassificationValidationRule(ChargeCommand chargeCommand)
         {
             _chargeCommand = chargeCommand;
         }
 
-        public bool IsValid => _chargeCommand.ChargeOperation.VatClassification is VatClassification.NoVat
-            or VatClassification.Vat25;
+        public bool IsValid => _chargeCommand.ChargeOperation.VatClassification
+            is VatClassification.NoVat or VatClassification.Vat25;
 
-        public ValidationRuleIdentifier ValidationRuleIdentifier =>
-            ValidationRuleIdentifier.VatClassificationValidation;
+        public ValidationError ValidationError =>
+            new(
+                ValidationRuleIdentifier.VatClassificationValidation,
+                new ValidationErrorMessageParameter(
+                    _chargeCommand.ChargeOperation.VatClassification.ToString(),
+                    ValidationErrorMessageParameterType.ChargeVatClass),
+                new ValidationErrorMessageParameter(
+                    _chargeCommand.ChargeOperation.ChargeId,
+                    ValidationErrorMessageParameterType.DocumentSenderProvidedChargeId));
     }
 }

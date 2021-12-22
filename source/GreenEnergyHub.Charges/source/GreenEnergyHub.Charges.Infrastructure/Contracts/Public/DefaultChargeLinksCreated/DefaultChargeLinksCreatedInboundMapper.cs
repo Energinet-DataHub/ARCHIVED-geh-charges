@@ -15,6 +15,7 @@
 using Energinet.DataHub.Core.Messaging.Protobuf;
 using Energinet.DataHub.Core.Messaging.Transport;
 using GreenEnergyHub.Charges.Core.DateTime;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksDataAvailableNotifiedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.DefaultChargeLinksDataAvailableNotifiedEvents;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Contracts.Public.DefaultChargeLinksCreated
@@ -23,7 +24,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Contracts.Public.DefaultChargeLi
     {
         protected override IInboundMessage Convert(Infrastructure.Internal.DefaultChargeLinksCreated.DefaultChargeLinksCreated dataAvailableNotifiedLinkCommandReceived)
         {
-            return new DefaultChargeLinksCreatedEvent(dataAvailableNotifiedLinkCommandReceived.PublishedTime.ToInstant(), dataAvailableNotifiedLinkCommandReceived.MeteringPointId);
+            return new ChargeLinksDataAvailableNotifiedEvent(dataAvailableNotifiedLinkCommandReceived.PublishedTime.ToInstant(), dataAvailableNotifiedLinkCommandReceived.MeteringPointId);
         }
     }
 }

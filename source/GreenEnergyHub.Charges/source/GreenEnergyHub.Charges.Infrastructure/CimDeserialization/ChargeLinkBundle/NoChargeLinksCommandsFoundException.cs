@@ -12,19 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using GreenEnergyHub.Charges.Domain.Dtos.Messages.Events;
-using NodaTime;
+using System;
 
-namespace GreenEnergyHub.Charges.Domain.Dtos.DefaultChargeLinksDataAvailableNotifiedEvents
+namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.ChargeLinkBundle
 {
-    public class DefaultChargeLinksCreatedEvent : InternalEventBase
+    public class NoChargeLinksCommandsFoundException : Exception
     {
-        public DefaultChargeLinksCreatedEvent(Instant publishedTime, string meteringPointId)
-            : base(publishedTime)
-        {
-            MeteringPointId = meteringPointId;
-        }
-
-        public string MeteringPointId { get; }
     }
 }

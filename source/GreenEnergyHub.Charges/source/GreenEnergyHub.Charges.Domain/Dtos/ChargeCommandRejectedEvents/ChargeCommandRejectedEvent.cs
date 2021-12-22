@@ -33,6 +33,6 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandRejectedEvents
 
         public ChargeCommand Command { get; }
 
-        public IEnumerable<string> RejectReasons { get; }
+        public IEnumerable<string> RejectReasons { get; set; } // Todo Expand with messageparameters and message        }
     }
 }
