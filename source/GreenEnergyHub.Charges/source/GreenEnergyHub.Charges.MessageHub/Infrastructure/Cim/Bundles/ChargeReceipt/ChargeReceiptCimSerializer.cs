@@ -93,14 +93,14 @@ namespace GreenEnergyHub.Charges.MessageHub.Infrastructure.Cim.Bundles.ChargeRec
             var result = new List<XElement>();
             if (receipt.ReceiptStatus != ReceiptStatus.Rejected) return result;
 
-            result.AddRange(receipt.ReasonCodes.Select(reasonCode => GetReasonCode(cimNamespace, reasonCode)));
+            result.AddRange(receipt.ValidationErrors.Select(reasonCode => GetReasonCode(cimNamespace, reasonCode)));
 
             return result;
         }
 
         private XElement GetReasonCode(
             XNamespace cimNamespace,
-            AvailableChargeReceiptDataReasonCode reasonCode)
+            AvailableChargeReceiptValidationError reasonCode)
         {
             return new XElement(
                 cimNamespace + CimChargeReceiptConstants.ReasonElement,

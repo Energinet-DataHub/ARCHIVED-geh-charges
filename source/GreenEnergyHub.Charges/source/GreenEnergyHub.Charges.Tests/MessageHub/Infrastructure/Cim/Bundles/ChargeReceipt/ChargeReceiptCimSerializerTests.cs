@@ -149,9 +149,9 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Infrastructure.Cim.Bundles.Cha
                 GetReasonCodes(no));
         }
 
-        private List<AvailableChargeReceiptDataReasonCode> GetReasonCodes(int no)
+        private List<AvailableChargeReceiptValidationError> GetReasonCodes(int no)
         {
-            var reasonCodes = new List<AvailableChargeReceiptDataReasonCode>();
+            var reasonCodes = new List<AvailableChargeReceiptValidationError>();
             var noOfReasons = (no % 3) + 1;
 
             for (var i = 1; i <= noOfReasons; i++)
@@ -162,7 +162,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Infrastructure.Cim.Bundles.Cha
                     text = "Text" + no + "_" + i;
                 }
 
-                reasonCodes.Add(new AvailableChargeReceiptDataReasonCode(
+                reasonCodes.Add(new AvailableChargeReceiptValidationError(
                     ReasonCode.IncorrectChargeInformation,
                     text));
             }

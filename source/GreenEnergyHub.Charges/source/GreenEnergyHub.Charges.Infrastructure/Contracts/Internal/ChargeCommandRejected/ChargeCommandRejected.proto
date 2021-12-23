@@ -34,7 +34,7 @@ message ValidationErrorContract {
 }
 
 message ValidationErrorMessageParameterContract {
-  string message_parameter = 1;
+  string parameter_value = 1;
   ValidationErrorMessageParameterTypeContract parameter_type = 2;
 }
 

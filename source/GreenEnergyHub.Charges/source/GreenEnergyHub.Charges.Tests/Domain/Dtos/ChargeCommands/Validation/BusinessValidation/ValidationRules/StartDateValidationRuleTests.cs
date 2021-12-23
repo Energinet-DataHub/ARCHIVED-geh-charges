@@ -113,7 +113,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
             // Assert
             sut.ValidationError.ValidationErrorMessageParameters
                 .Single(x => x.ParameterType == ValidationErrorMessageParameterType.ChargeStartDateTime)
-                .MessageParameter.Should().Be(command.ChargeOperation.StartDateTime.ToString());
+                .ParameterValue.Should().Be(command.ChargeOperation.StartDateTime.ToString());
         }
 
         private static ZonedDateTimeService CreateLocalDateTimeService(string timeZoneId)

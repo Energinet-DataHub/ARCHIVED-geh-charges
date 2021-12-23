@@ -77,13 +77,13 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
             // Assert
             sut.ValidationError.ValidationErrorMessageParameters
                 .Single(x => x.ParameterType == ValidationErrorMessageParameterType.DocumentSenderProvidedChargeId)
-                .MessageParameter.Should().Be(chargeCommand.ChargeOperation.ChargeId);
+                .ParameterValue.Should().Be(chargeCommand.ChargeOperation.ChargeId);
             sut.ValidationError.ValidationErrorMessageParameters
                 .Single(x => x.ParameterType == ValidationErrorMessageParameterType.ChargeOwner)
-                .MessageParameter.Should().Be(chargeCommand.ChargeOperation.ChargeOwner);
+                .ParameterValue.Should().Be(chargeCommand.ChargeOperation.ChargeOwner);
             sut.ValidationError.ValidationErrorMessageParameters
                 .Single(x => x.ParameterType == ValidationErrorMessageParameterType.ChargeType)
-                .MessageParameter.Should().Be(chargeCommand.ChargeOperation.Type.ToString());
+                .ParameterValue.Should().Be(chargeCommand.ChargeOperation.Type.ToString());
         }
     }
 }

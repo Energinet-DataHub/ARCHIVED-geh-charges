@@ -69,7 +69,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
             var sut = new ChargeOperationIdRequiredRule(command);
             sut.ValidationError.ValidationErrorMessageParameters
                 .Single(x => x.ParameterType == ValidationErrorMessageParameterType.DocumentId)
-                .MessageParameter.Should().Be(command.Document.Id); // Todo: MeteringPointId provided in Excel sheet for VR.223 does not make sense
+                .ParameterValue.Should().Be(command.Document.Id); // Todo: MeteringPointId provided in Excel sheet for VR.223 does not make sense
         }
     }
 }

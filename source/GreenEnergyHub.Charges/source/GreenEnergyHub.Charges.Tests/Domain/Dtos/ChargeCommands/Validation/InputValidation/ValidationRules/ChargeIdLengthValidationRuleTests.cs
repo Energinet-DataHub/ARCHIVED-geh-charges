@@ -67,7 +67,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
             var sut = new ChargeIdLengthValidationRule(command);
             sut.ValidationError.ValidationErrorMessageParameters
                 .Single(x => x.ParameterType == ValidationErrorMessageParameterType.DocumentSenderProvidedChargeId)
-                .MessageParameter.Should().Be(command.ChargeOperation.ChargeId);
+                .ParameterValue.Should().Be(command.ChargeOperation.ChargeId);
         }
     }
 }

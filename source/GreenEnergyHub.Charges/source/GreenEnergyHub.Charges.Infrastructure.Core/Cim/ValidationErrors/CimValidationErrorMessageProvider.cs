@@ -18,6 +18,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors
 {
     public static class CimValidationErrorMessageProvider
     {
+        // TODO BJARKE: Add unit test?
         public static string GetCimValidationErrorMessage(ValidationRuleIdentifier validationRuleIdentifier)
         {
             return validationRuleIdentifier switch

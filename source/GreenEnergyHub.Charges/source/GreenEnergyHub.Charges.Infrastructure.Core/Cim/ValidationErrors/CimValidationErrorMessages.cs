@@ -16,6 +16,11 @@ using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors
 {
+    // TODO BJARKE: $mergeFieldN isn't informative and it's hard to see by the text if they are used correctly
+    // TODO BJARKE: How to test that a ValidationError is
+    //   (1) created with the correct parameters (both ordering and number)?
+    //   (2) that the CIM string here matches the validation error?
+    // Do we need to test them all as integration tests?
     public static class CimValidationErrorMessages
     {
         /// <summary>

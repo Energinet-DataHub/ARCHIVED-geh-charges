@@ -37,12 +37,12 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
             Guid availableDataReferenceId,
             ReceiptStatus receiptStatus,
             string originalOperationId,
-            List<AvailableChargeReceiptDataReasonCode> reasonCodes)
+            List<AvailableChargeReceiptValidationError> validationErrors)
             : base(recipientId, recipientRole, businessReasonCode, requestDateTime, availableDataReferenceId)
         {
             ReceiptStatus = receiptStatus;
             OriginalOperationId = originalOperationId;
-            _reasonCodes = reasonCodes;
+            _validationErrors = validationErrors;
         }
 
         /// <summary>
@@ -53,15 +53,15 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
             : base(recipientId)
         {
             OriginalOperationId = originalOperationId;
-            _reasonCodes = new List<AvailableChargeReceiptDataReasonCode>();
+            _validationErrors = new List<AvailableChargeReceiptValidationError>();
         }
 
         public ReceiptStatus ReceiptStatus { get; }
 
         public string OriginalOperationId { get; }
 
-        private readonly List<AvailableChargeReceiptDataReasonCode> _reasonCodes;
+        private readonly List<AvailableChargeReceiptValidationError> _validationErrors;
 
-        public IReadOnlyCollection<AvailableChargeReceiptDataReasonCode> ReasonCodes => _reasonCodes.AsReadOnly();
+        public IReadOnlyCollection<AvailableChargeReceiptValidationError> ValidationErrors => _validationErrors.AsReadOnly();
     }
 }

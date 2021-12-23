@@ -17,14 +17,14 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation
     public class ValidationErrorMessageParameter
     {
         public ValidationErrorMessageParameter(
-            string messageParameter,
+            string parameterValue,
             ValidationErrorMessageParameterType parameterType)
         {
-            MessageParameter = messageParameter;
+            ParameterValue = parameterValue;
             ParameterType = parameterType;
         }
 
-        public string MessageParameter { get; }
+        public string ParameterValue { get; }
 
         /// <summary>
         /// ParameterType for errorMessage

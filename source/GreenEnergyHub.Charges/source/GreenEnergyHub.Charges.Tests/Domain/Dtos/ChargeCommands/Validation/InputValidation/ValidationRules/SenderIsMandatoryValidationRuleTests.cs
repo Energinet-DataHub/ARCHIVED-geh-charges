@@ -68,7 +68,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
             var sut = new SenderIsMandatoryTypeValidationRule(command);
             sut.ValidationError.ValidationErrorMessageParameters
                 .Single(x => x.ParameterType == ValidationErrorMessageParameterType.DocumentId)
-                .MessageParameter.Should().Be(command.Document.Id);
+                .ParameterValue.Should().Be(command.Document.Id);
         }
     }
 }

@@ -77,7 +77,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Contracts.Internal.ChargeCommand
             var repeatedField = new RepeatedField<ValidationErrorMessageParameterContract>();
             repeatedField.AddRange(validationErrorMessageParameters.Select(x => new ValidationErrorMessageParameterContract
                 {
-                    MessageParameter = x.MessageParameter,
+                    ParameterValue = x.ParameterValue,
                     ParameterType = (ValidationErrorMessageParameterTypeContract)x.ParameterType,
                 }));
 

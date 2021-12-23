@@ -15,7 +15,7 @@
 using System.Threading.Tasks;
 using Energinet.DataHub.MessageHub.Model.Peek;
 using GreenEnergyHub.Charges.FunctionHost.Common;
-using GreenEnergyHub.Charges.MessageHub.Application.MessageHub;
+using GreenEnergyHub.Charges.MessageHub.MessageHub;
 using Microsoft.Azure.Functions.Worker;
 
 namespace GreenEnergyHub.Charges.FunctionHost.MessageHub

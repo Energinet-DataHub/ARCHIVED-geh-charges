@@ -82,10 +82,10 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
             // Assert
             sut.ValidationError.ValidationErrorMessageParameters
                 .Single(x => x.ParameterType == ValidationErrorMessageParameterType.ChargeType)
-                .MessageParameter.Should().Be(command.ChargeOperation.Type.ToString());
+                .ParameterValue.Should().Be(command.ChargeOperation.Type.ToString());
             sut.ValidationError.ValidationErrorMessageParameters
                 .Single(x => x.ParameterType == ValidationErrorMessageParameterType.DocumentSenderProvidedChargeId)
-                .MessageParameter.Should().Be(command.ChargeOperation.ChargeId);
+                .ParameterValue.Should().Be(command.ChargeOperation.ChargeId);
         }
     }
 }

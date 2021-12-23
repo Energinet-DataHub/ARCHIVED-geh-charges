@@ -59,7 +59,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Contracts.Internal.ChargeCommand
             return messageParameters
                 .Select(p =>
                     new ValidationErrorMessageParameter(
-                        p.MessageParameter,
+                        p.ParameterValue,
                         (ValidationErrorMessageParameterType)p.ParameterType))
                 .ToArray();
         }
