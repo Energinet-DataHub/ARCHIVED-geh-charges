@@ -12,10 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using GreenEnergyHub.Charges.Domain.Configuration;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
+using GreenEnergyHub.Charges.MessageHub.Models.Configuration;
 
-namespace GreenEnergyHub.Charges.Infrastructure.Configuration
+namespace GreenEnergyHub.Charges.MessageHub.Infrastructure.Configuration
 {
     public class HubSenderConfiguration : IHubSenderConfiguration
     {

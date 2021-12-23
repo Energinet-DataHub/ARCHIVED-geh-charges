@@ -14,7 +14,7 @@
 
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 
-namespace GreenEnergyHub.Charges.Domain.Configuration
+namespace GreenEnergyHub.Charges.MessageHub.Models.Configuration
 {
     /// <summary>
     /// Interface used to determine which ID and code should be used when sending

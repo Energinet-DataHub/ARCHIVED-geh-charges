@@ -13,7 +13,7 @@
 // limitations under the License.
 
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
-using GreenEnergyHub.Charges.Infrastructure.Configuration;
+using GreenEnergyHub.Charges.MessageHub.Infrastructure.Configuration;
 using GreenEnergyHub.TestHelpers;
 using Xunit;
 using Xunit.Categories;
