@@ -17,6 +17,7 @@ using System.Threading.Tasks;
 using AutoFixture.Xunit2;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandRejectedEvents;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation;
 using GreenEnergyHub.Charges.Infrastructure.Core;
 using GreenEnergyHub.Charges.Infrastructure.Core.Cim.MarketDocument;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessageMetaData;
@@ -36,12 +37,22 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptD
         [InlineAutoMoqData]
         public async Task CreateAsync_WhenCalledWithRejectedEvent_ReturnsAvailableData(
             [Frozen] Mock<IMessageMetaDataContext> messageMetaDataContext,
+            [Frozen] Mock<IValidationErrorTextFactory> validationErrorTextFactory,
             ChargeCommandRejectedEvent rejectedEvent,
             Instant now,
             AvailableChargeRejectionDataFactory sut)
         {
             // Arrange
             messageMetaDataContext.Setup(m => m.RequestDataTime).Returns(now);
+
+            // Use validation rule identifier as error text
+            validationErrorTextFactory
+                .Setup(f => f.Create(It.IsAny<ValidationError>()))
+                .Returns<ValidationError>(error => error.ValidationRuleIdentifier.ToString());
+            var expectedValidationErrors = rejectedEvent
+                .ValidationErrors
+                .Select(e => e.ValidationRuleIdentifier.ToString())
+                .ToList();
 
             // Act
             var actualList = await sut.CreateAsync(rejectedEvent);
@@ -59,13 +70,12 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptD
             actual.OriginalOperationId.Should().Be(rejectedEvent.Command.ChargeOperation.Id);
             actual.ValidationErrors.Should().HaveSameCount(rejectedEvent.ValidationErrors);
 
-            var actualReasons = actualList[0].ValidationErrors.ToList();
-            var expectedReasons = rejectedEvent.ValidationErrors.ToList();
+            var actualValidationErrors = actualList[0].ValidationErrors.ToList();
 
-            for (var i = 0; i < actualReasons.Count; i++)
+            for (var i = 0; i < actualValidationErrors.Count; i++)
             {
-                actualReasons[i].ReasonCode.Should().Be(ReasonCode.IncorrectChargeInformation);
-                // actualReasons[i].Text.Should().Be(expectedReasons[i]); //TODO BJARKE
+                actualValidationErrors[i].ReasonCode.Should().Be(ReasonCode.IncorrectChargeInformation);
+                actualValidationErrors[i].Text.Should().Be(expectedValidationErrors[i]);
             }
         }
     }
