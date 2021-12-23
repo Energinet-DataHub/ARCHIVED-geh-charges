@@ -15,7 +15,6 @@
 using System.Threading.Tasks;
 using Xunit;
 
-// TODO BJARKE: Use abstract base types for all classes in this folder to stay DRY
 namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures.Database
 {
     /// <summary>
