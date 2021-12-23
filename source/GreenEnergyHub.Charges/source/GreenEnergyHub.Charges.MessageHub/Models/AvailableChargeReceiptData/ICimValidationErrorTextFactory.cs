@@ -22,9 +22,10 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
     public interface ICimValidationErrorTextFactory
     {
         /// <summary>
-        /// Creates an error text by replacing occurrences of the place holder text "{{$mergeFieldN}}"
+        /// Creates an error text by replacing occurrences of the place holder texts
         /// with the values of the <see cref="ValidationError.ValidationErrorMessageParameters"/>.
-        /// N in the place holder must be a number corresponding to the index of the parameter.
+        /// Place holders must have the form "{{name}}", where name equals an
+        /// <see cref="ValidationErrorMessageParameterType"/>.
         /// </summary>
         string Create(ValidationError validationError);
     }

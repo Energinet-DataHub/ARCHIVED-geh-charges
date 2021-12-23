@@ -47,14 +47,11 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
             string errorMessage,
             List<ValidationErrorMessageParameter> validationErrorMessageParameters)
         {
-            var index = 1;
             foreach (var validationErrorMessageParameter in validationErrorMessageParameters)
             {
                 errorMessage = errorMessage.Replace(
-                    $"{{{{$mergeField{index}}}}}",
+                    "{{" + validationErrorMessageParameter.ParameterType + "}}",
                     validationErrorMessageParameter.ParameterValue);
-
-                index++;
             }
 
             return errorMessage;

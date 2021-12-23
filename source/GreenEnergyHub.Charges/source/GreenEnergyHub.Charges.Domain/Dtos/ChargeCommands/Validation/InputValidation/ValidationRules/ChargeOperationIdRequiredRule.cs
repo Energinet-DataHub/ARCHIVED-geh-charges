@@ -30,6 +30,6 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputVali
                 ValidationRuleIdentifier.ChargeOperationIdRequired,
                 new ValidationErrorMessageParameter(
                     _chargeCommand.Document.Id,
-                    ValidationErrorMessageParameterType.DocumentId)); // Todo: MeteringPointId provided in Excel sheet for VR.223 does not make sense
+                    ValidationErrorMessageParameterType.DocumentId)); // TODO BJARKE: MeteringPointId provided in Excel sheet for VR.223 does not make sense
     }
 }

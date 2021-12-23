@@ -33,17 +33,18 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptD
             ValidationRuleIdentifier anyValidationRuleIdentifier,
             string firstParameterValue,
             string secondParameterValue,
-            ValidationErrorMessageParameterType anyValidationErrorMessageParameterType,
+            ValidationErrorMessageParameterType firstParameterType,
+            ValidationErrorMessageParameterType secondParameterType,
             [Frozen] Mock<ICimValidationErrorMessageProvider> cimValidationErrorMessageProvider,
             CimValidationErrorTextFactory sut)
         {
             // Arrange
-            var cimErrorMessageWithTwoMergeFields = "First = {{$mergeField1}}, second = {{$mergeField2}}";
+            var cimErrorMessageWithTwoMergeFields = "First = {{" + firstParameterType + "}}, second = {{" + secondParameterType + "}}";
             var expected = $"First = {firstParameterValue}, second = {secondParameterValue}";
             var error = new ValidationError(
                 anyValidationRuleIdentifier,
-                new ValidationErrorMessageParameter(firstParameterValue, anyValidationErrorMessageParameterType),
-                new ValidationErrorMessageParameter(secondParameterValue, anyValidationErrorMessageParameterType));
+                new ValidationErrorMessageParameter(firstParameterValue, firstParameterType),
+                new ValidationErrorMessageParameter(secondParameterValue, secondParameterType));
             cimValidationErrorMessageProvider
                 .Setup(f => f.GetCimValidationErrorMessage(anyValidationRuleIdentifier))
                 .Returns(cimErrorMessageWithTwoMergeFields);
