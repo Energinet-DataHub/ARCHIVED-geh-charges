@@ -28,13 +28,13 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
             ChargeCommandRejectedEvent>
     {
         private readonly IMessageMetaDataContext _messageMetaDataContext;
-        private readonly IValidationErrorTextFactory _validationErrorTextFactory;
+        private readonly ICimValidationErrorTextFactory _cimValidationErrorTextFactory;
 
         public AvailableChargeRejectionDataFactory(
-            IMessageMetaDataContext messageMetaDataContext, IValidationErrorTextFactory validationErrorTextFactory)
+            IMessageMetaDataContext messageMetaDataContext, ICimValidationErrorTextFactory cimValidationErrorTextFactory)
         {
             _messageMetaDataContext = messageMetaDataContext;
-            _validationErrorTextFactory = validationErrorTextFactory;
+            _cimValidationErrorTextFactory = cimValidationErrorTextFactory;
         }
 
         public Task<IReadOnlyList<AvailableChargeReceiptData>> CreateAsync(ChargeCommandRejectedEvent input)
@@ -62,7 +62,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
                 .Select(
                     validationError => new AvailableChargeReceiptValidationError(
                         ReasonCode.IncorrectChargeInformation,
-                        _validationErrorTextFactory.Create(validationError)))
+                        _cimValidationErrorTextFactory.Create(validationError)))
                 .ToList();
         }
     }

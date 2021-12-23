@@ -18,16 +18,23 @@ using GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors;
 
 namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
 {
-    public class ValidationErrorTextFactory : IValidationErrorTextFactory
+    public class CimValidationErrorTextFactory : ICimValidationErrorTextFactory
     {
+        private readonly ICimValidationErrorMessageProvider _cimValidationErrorMessageProvider;
+
+        public CimValidationErrorTextFactory(ICimValidationErrorMessageProvider cimValidationErrorMessageProvider)
+        {
+            _cimValidationErrorMessageProvider = cimValidationErrorMessageProvider;
+        }
+
         public string Create(ValidationError validationError)
         {
             return GetMergedErrorMessage(validationError);
         }
 
-        private static string GetMergedErrorMessage(ValidationError validationError)
+        private string GetMergedErrorMessage(ValidationError validationError)
         {
-            var errorMessage = CimValidationErrorMessageProvider
+            var errorMessage = _cimValidationErrorMessageProvider
                 .GetCimValidationErrorMessage(validationError.ValidationRuleIdentifier);
 
             var mergedErrorMessage =
@@ -36,7 +43,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
             return mergedErrorMessage;
         }
 
-        private static string MergeErrorMessage(
+        private string MergeErrorMessage(
             string errorMessage,
             List<ValidationErrorMessageParameter> validationErrorMessageParameters)
         {

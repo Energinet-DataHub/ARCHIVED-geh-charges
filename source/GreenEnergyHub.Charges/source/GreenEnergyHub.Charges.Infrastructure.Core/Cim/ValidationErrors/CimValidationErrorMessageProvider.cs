@@ -16,10 +16,10 @@ using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors
 {
-    public static class CimValidationErrorMessageProvider
+    public class CimValidationErrorMessageProvider : ICimValidationErrorMessageProvider
     {
-        // TODO BJARKE: Add unit test?
-        public static string GetCimValidationErrorMessage(ValidationRuleIdentifier validationRuleIdentifier)
+        // TODO BJARKE: Add unit test? Suggestions about if and how are most welcome.
+        public string GetCimValidationErrorMessage(ValidationRuleIdentifier validationRuleIdentifier)
         {
             return validationRuleIdentifier switch
             {

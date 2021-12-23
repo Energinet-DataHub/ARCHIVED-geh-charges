@@ -37,7 +37,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptD
         [InlineAutoMoqData]
         public async Task CreateAsync_WhenCalledWithRejectedEvent_ReturnsAvailableData(
             [Frozen] Mock<IMessageMetaDataContext> messageMetaDataContext,
-            [Frozen] Mock<IValidationErrorTextFactory> validationErrorTextFactory,
+            [Frozen] Mock<ICimValidationErrorTextFactory> validationErrorTextFactory,
             ChargeCommandRejectedEvent rejectedEvent,
             Instant now,
             AvailableChargeRejectionDataFactory sut)

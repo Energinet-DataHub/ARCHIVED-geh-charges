@@ -12,10 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using AutoFixture.Xunit2;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation;
+using GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData;
 using GreenEnergyHub.Charges.TestCore.Attributes;
+using Moq;
 using Xunit;
 using Xunit.Categories;
 
@@ -24,25 +27,32 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptD
     [UnitTest]
     public class ValidationErrorTextFactoryTests
     {
-        // TODO BJARKE
-        // [Theory]
-        // [InlineData(ValidationRuleIdentifier.MaximumPrice, "Price {{$mergeField1}} not allowed: The specified charge price for position {{$mergeField2}} is not plausible (too large)")]
-        // public void Create_ReturnsExpectedText(ValidationRuleIdentifier ruleIdentifier, params ValidationErrorMessageParameter[] messageParameters)
-        // {
-        //     var error = new ValidationError(ruleIdentifier, messageParameters);
-        //     var sut = new ValidationErrorTextFactory();
-        //     var actual = sut.Create(error);
-        //     actual.Should().Be("xxx");
-        // }
-        // [Theory]
-        // [InlineAutoMoqData]
-        // public void Create_WhenTwoMergeFields_ReturnsExpectedText(ValidationErrorTextFactory sut)
-        // {
-        //     var ruleIdentifierWithTwoMergeFields = ValidationRuleIdentifier.MaximumPrice;
-        //
-        //     var error = new ValidationError(ruleIdentifierWithTwoMergeFields, );
-        //     var actual = sut.Create(error);
-        //     actual.Should().Be("xxx");
-        // }
+        [Theory]
+        [InlineAutoMoqData]
+        public void Create_WhenTwoMergeFields_ReturnsExpectedText(
+            ValidationRuleIdentifier anyValidationRuleIdentifier,
+            string firstParameterValue,
+            string secondParameterValue,
+            ValidationErrorMessageParameterType anyValidationErrorMessageParameterType,
+            [Frozen] Mock<ICimValidationErrorMessageProvider> cimValidationErrorMessageProvider,
+            CimValidationErrorTextFactory sut)
+        {
+            // Arrange
+            var cimErrorMessageWithTwoMergeFields = "First = {{$mergeField1}}, second = {{$mergeField2}}";
+            var expected = $"First = {firstParameterValue}, second = {secondParameterValue}";
+            var error = new ValidationError(
+                anyValidationRuleIdentifier,
+                new ValidationErrorMessageParameter(firstParameterValue, anyValidationErrorMessageParameterType),
+                new ValidationErrorMessageParameter(secondParameterValue, anyValidationErrorMessageParameterType));
+            cimValidationErrorMessageProvider
+                .Setup(f => f.GetCimValidationErrorMessage(anyValidationRuleIdentifier))
+                .Returns(cimErrorMessageWithTwoMergeFields);
+
+            // Act
+            var actual = sut.Create(error);
+
+            // Assert
+            actual.Should().Be(expected);
+        }
     }
 }

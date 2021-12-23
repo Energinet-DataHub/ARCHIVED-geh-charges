@@ -16,8 +16,16 @@ using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation;
 
 namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
 {
-    public interface IValidationErrorTextFactory
+    /// <summary>
+    /// Factory for creating CIM error texts of charge rejections.
+    /// </summary>
+    public interface ICimValidationErrorTextFactory
     {
+        /// <summary>
+        /// Creates an error text by replacing occurrences of the place holder text "{{$mergeFieldN}}"
+        /// with the values of the <see cref="ValidationError.ValidationErrorMessageParameters"/>.
+        /// N in the place holder must be a number corresponding to the index of the parameter.
+        /// </summary>
         string Create(ValidationError validationError);
     }
 }
