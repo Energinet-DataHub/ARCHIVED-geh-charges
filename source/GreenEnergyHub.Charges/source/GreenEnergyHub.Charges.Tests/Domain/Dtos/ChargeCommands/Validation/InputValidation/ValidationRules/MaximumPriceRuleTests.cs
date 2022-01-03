@@ -28,44 +28,56 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
     [UnitTest]
     public class MaximumPriceRuleTests
     {
+        private const decimal ValidPrice = 999999;
+        private const decimal ValidPriceWithDecimals = 999999.999999M;
+        private const decimal InvalidPrice = 1000000;
+        private const decimal InvalidPriceWithDecimals = 1000000.000001M;
+
         [Theory]
-        [InlineAutoMoqData(999999, true)]
-        [InlineAutoMoqData(999999.999999, true)]
-        [InlineAutoMoqData(1000000, false)]
-        [InlineAutoMoqData(1000000.000001, false)]
+        [InlineAutoMoqData(ValidPrice, true)]
+        [InlineAutoMoqData(ValidPriceWithDecimals, true)]
+        [InlineAutoMoqData(InvalidPrice, false)]
+        [InlineAutoMoqData(InvalidPriceWithDecimals, false)]
         public void MaximumPriceRule_WhenCalledPriceIsTooHigh_IsFalse(
             decimal price,
             bool expected,
             ChargeCommandBuilder builder)
         {
-            // Arrange
-            var chargeCommand = builder.WithPoint(price).Build();
-
-            // Act
+            var chargeCommand = CreateCommand(builder, price);
             var sut = new MaximumPriceRule(chargeCommand);
-
-            // Assert
             sut.IsValid.Should().Be(expected);
         }
 
         [Theory]
         [InlineAutoDomainData]
-        public void ValidationRuleIdentifier_ShouldBe_EqualTo(ChargeCommand command)
+        public void ValidationError_WhenIsValid_IsNull(ChargeCommand command)
         {
             var sut = new MaximumPriceRule(command);
-            sut.ValidationError.ValidationRuleIdentifier.Should().Be(ValidationRuleIdentifier.MaximumPrice);
+            sut.ValidationError.Should().BeNull();
         }
 
         [Theory]
         [InlineAutoDomainData]
-        public void ValidationErrorMessageParameters_ShouldContain_RequiredErrorMessageParameterTypes(ChargeCommand command)
+        public void ValidationRuleIdentifier_ShouldBe_EqualTo(ChargeCommandBuilder chargeCommandBuilder)
+        {
+            var command = CreateCommand(chargeCommandBuilder, InvalidPrice);
+            var sut = new MaximumPriceRule(command);
+            sut.ValidationError!.ValidationRuleIdentifier.Should().Be(ValidationRuleIdentifier.MaximumPrice);
+        }
+
+        [Theory]
+        [InlineAutoDomainData]
+        public void ValidationErrorMessageParameters_ShouldContain_RequiredErrorMessageParameterTypes(
+            ChargeCommandBuilder chargeCommandBuilder)
         {
             // Arrange
+            var command = CreateCommand(chargeCommandBuilder, InvalidPrice);
+
             // Act
             var sut = new MaximumPriceRule(command);
 
             // Assert
-            sut.ValidationError.ValidationErrorMessageParameters
+            sut.ValidationError!.ValidationErrorMessageParameters
                 .Select(x => x.ParameterType)
                 .Should().Contain(ValidationErrorMessageParameterType.ChargePointPrice);
             sut.ValidationError.ValidationErrorMessageParameters
@@ -75,25 +87,27 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
 
         [Theory]
         [InlineAutoDomainData]
-        public void MessageParameter_ShouldBe_RequiredErrorMessageParameters(ChargeCommandBuilder builder)
+        public void MessageParameter_ShouldBe_RequiredErrorMessageParameters(ChargeCommandBuilder chargeCommandBuilder)
         {
             // Arrange
-            const decimal allowedPrice = 999999;
-            const decimal invalidPrice = 1000000;
-            var command = builder.WithPoint(allowedPrice).WithPoint(invalidPrice).Build();
-
-            var expectedPosition = command.ChargeOperation.Points.First(x => x.Price == invalidPrice);
+            var command = chargeCommandBuilder.WithPoint(ValidPrice).WithPoint(InvalidPrice).Build();
+            var expectedPosition = command.ChargeOperation.Points.First(x => x.Price == InvalidPrice);
 
             // Act
             var sut = new MaximumPriceRule(command);
 
             // Assert
-            sut.ValidationError.ValidationErrorMessageParameters
+            sut.ValidationError!.ValidationErrorMessageParameters
                 .Single(x => x.ParameterType == ValidationErrorMessageParameterType.ChargePointPrice)
                 .ParameterValue.Should().Be(expectedPosition.Price.ToString("0.##"));
             sut.ValidationError.ValidationErrorMessageParameters
                 .Single(x => x.ParameterType == ValidationErrorMessageParameterType.ChargePointPosition)
                 .ParameterValue.Should().Be(expectedPosition.Position.ToString());
+        }
+
+        private static ChargeCommand CreateCommand(ChargeCommandBuilder builder, decimal price)
+        {
+            return builder.WithPoint(price).Build();
         }
     }
 }
