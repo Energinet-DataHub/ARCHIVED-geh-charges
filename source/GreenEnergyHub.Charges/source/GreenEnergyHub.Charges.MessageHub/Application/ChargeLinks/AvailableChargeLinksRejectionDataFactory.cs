@@ -37,19 +37,17 @@ namespace GreenEnergyHub.Charges.MessageHub.Application.ChargeLinks
 
         public Task<IReadOnlyList<AvailableChargeLinkReceiptData>> CreateAsync(ChargeLinksRejectedEvent input)
         {
-            IReadOnlyList<AvailableChargeLinkReceiptData> result = new List<AvailableChargeLinkReceiptData>()
-            {
-                new AvailableChargeLinkReceiptData(
+            IReadOnlyList<AvailableChargeLinkReceiptData> result =
+                input.ChargeLinksCommand.ChargeLinks.Select(chargeLinkDto => new AvailableChargeLinkReceiptData(
                     input.ChargeLinksCommand.Document.Sender.Id, // The original sender is the recipient of the receipt
                     input.ChargeLinksCommand.Document.Recipient.BusinessProcessRole,
                     input.ChargeLinksCommand.Document.BusinessReasonCode,
                     _messageMetaDataContext.RequestDataTime,
                     Guid.NewGuid(), // ID of each available piece of data must be unique
                     ReceiptStatus.Rejected,
-                    input.ChargeLinksCommand.ChargeLinks.First().OperationId,
+                    chargeLinkDto.OperationId,
                     input.ChargeLinksCommand.MeteringPointId,
-                    GetReasons(input)),
-            };
+                    GetReasons(input))).ToList();
 
             return Task.FromResult(result);
         }
