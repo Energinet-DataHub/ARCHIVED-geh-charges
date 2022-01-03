@@ -12,11 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation;
+
+namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation
 {
-    public class ValidationRule : IValidationRule
+    public class TestValidationRule : IValidationRule
     {
-        public ValidationRule(bool isValid, ValidationRuleIdentifier ruleIdentifier)
+        public TestValidationRule(bool isValid, ValidationRuleIdentifier ruleIdentifier)
         {
             IsValid = isValid;
             if (IsValid == false)
