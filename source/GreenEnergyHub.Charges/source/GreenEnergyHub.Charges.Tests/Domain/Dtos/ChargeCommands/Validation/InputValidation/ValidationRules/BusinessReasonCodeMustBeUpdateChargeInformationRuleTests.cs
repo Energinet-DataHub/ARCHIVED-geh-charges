@@ -45,9 +45,8 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
 
         [Theory]
         [InlineAutoDomainData]
-        public void ValidationError_WhenIsValid_IsNull(ChargeCommandBuilder chargeCommandBuilder)
+        public void ValidationError_WhenIsValid_IsNull(ChargeCommand command)
         {
-            var command = CreateCommand(chargeCommandBuilder);
             var sut = new BusinessReasonCodeMustBeUpdateChargeInformationRule(command);
             sut.ValidationError.Should().BeNull();
         }
@@ -102,12 +101,9 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
                 .ParameterValue.Should().Be(command.Document.Type.ToString());
         }
 
-        private static ChargeCommand CreateCommand(
-            ChargeCommandBuilder builder,
-            BusinessReasonCode businessReasonCode = BusinessReasonCode.UpdateChargeInformation)
+        private static ChargeCommand CreateCommand(ChargeCommandBuilder builder, BusinessReasonCode businessReasonCode)
         {
-            builder.WithDocumentBusinessReasonCode(businessReasonCode);
-            return builder.Build();
+            return builder.WithDocumentBusinessReasonCode(businessReasonCode).Build();
         }
     }
 }
