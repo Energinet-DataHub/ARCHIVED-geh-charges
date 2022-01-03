@@ -44,19 +44,34 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
 
         [Theory]
         [InlineAutoDomainData]
-        public void ValidationRuleIdentifier_ShouldBe_EqualTo(ChargeCommand command)
+        public void ValidationError_WhenIsValid_IsNull(ChargeCommand validCommand)
         {
-            var sut = new ChargeIdRequiredValidationRule(command);
-            sut.ValidationError.ValidationRuleIdentifier.Should()
+            var sut = new ChargeIdRequiredValidationRule(validCommand);
+            sut.ValidationError.Should().BeNull();
+        }
+
+        [Theory]
+        [InlineAutoDomainData]
+        public void ValidationRuleIdentifier_ShouldBe_EqualTo(ChargeCommandBuilder builder)
+        {
+            var invalidCommand = CreateInvalidCommand(builder);
+            var sut = new ChargeIdRequiredValidationRule(invalidCommand);
+            sut.ValidationError!.ValidationRuleIdentifier.Should()
                 .Be(ValidationRuleIdentifier.ChargeIdRequiredValidation);
         }
 
         [Theory]
         [InlineAutoDomainData]
-        public void ValidationRuleIdentifier_ShouldNotContain_ErrorMessageParameters(ChargeCommand command)
+        public void ValidationRuleIdentifier_ShouldNotContain_ErrorMessageParameters(ChargeCommandBuilder builder)
         {
-            var sut = new ChargeIdRequiredValidationRule(command);
-            sut.ValidationError.ValidationErrorMessageParameters.Should().BeEmpty();
+            var invalidCommand = CreateInvalidCommand(builder);
+            var sut = new ChargeIdRequiredValidationRule(invalidCommand);
+            sut.ValidationError!.ValidationErrorMessageParameters.Should().BeEmpty();
+        }
+
+        private static ChargeCommand CreateInvalidCommand(ChargeCommandBuilder builder)
+        {
+            return builder.WithChargeId(string.Empty).Build();
         }
     }
 }
