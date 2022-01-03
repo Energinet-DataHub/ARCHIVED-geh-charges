@@ -32,6 +32,7 @@ namespace GreenEnergyHub.Charges.Tests.Builders
         private string _description;
         private string _chargeName;
         private string _documentId;
+        private BusinessReasonCode _documentBusinessReasonCode;
         private MarketParticipantDto _sender;
         private ChargeType _chargeType;
         private List<Point> _points;
@@ -52,6 +53,7 @@ namespace GreenEnergyHub.Charges.Tests.Builders
             _description = "some description";
             _chargeName = "some charge name";
             _documentId = "some document id";
+            _documentBusinessReasonCode = BusinessReasonCode.UpdateChargeInformation;
             _sender = new MarketParticipantDto { Id = "0", BusinessProcessRole = MarketParticipantRole.EnergySupplier };
             _chargeType = ChargeType.Fee;
             _points = new List<Point>();
@@ -67,6 +69,12 @@ namespace GreenEnergyHub.Charges.Tests.Builders
         public ChargeCommandBuilder WithDocumentId(string documentId)
         {
             _documentId = documentId;
+            return this;
+        }
+
+        public ChargeCommandBuilder WithDocumentBusinessReasonCode(BusinessReasonCode businessReasonCode)
+        {
+            _documentBusinessReasonCode = businessReasonCode;
             return this;
         }
 
@@ -176,7 +184,7 @@ namespace GreenEnergyHub.Charges.Tests.Builders
                         BusinessProcessRole = MarketParticipantRole.EnergySupplier,
                     },
                     Sender = _sender,
-                    BusinessReasonCode = BusinessReasonCode.UpdateChargeInformation,
+                    BusinessReasonCode = _documentBusinessReasonCode,
                 },
                 ChargeOperation = new ChargeOperationDto(
                     _id,
