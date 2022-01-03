@@ -34,11 +34,11 @@ namespace GreenEnergyHub.Charges.FunctionHost.ChargeLinks
         /// The name of the function.
         /// Function name affects the URL and thus possibly dependent infrastructure.
         /// </summary>
-        private readonly ValidatingMessageExtractor<ChargeLinksCommand> _messageExtractor;
+        private readonly ValidatingMessageExtractor<ChargeLinksCommandBundle> _messageExtractor;
 
         public ChargeLinkIngestion(
             IChargeLinksCommandBundleHandler chargeLinksCommandBundleHandler,
-            ValidatingMessageExtractor<ChargeLinksCommand> messageExtractor)
+            ValidatingMessageExtractor<ChargeLinksCommandBundle> messageExtractor)
         {
             _chargeLinksCommandBundleHandler = chargeLinksCommandBundleHandler;
             _messageExtractor = messageExtractor;
