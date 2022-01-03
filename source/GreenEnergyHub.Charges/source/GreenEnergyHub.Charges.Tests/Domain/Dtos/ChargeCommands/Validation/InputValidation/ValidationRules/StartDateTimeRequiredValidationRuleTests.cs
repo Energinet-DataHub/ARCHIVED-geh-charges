@@ -35,40 +35,57 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
         public void StartDateTimeRequiredValidationRule_NegativeTest(
             string startDateTime,
             bool expected,
-            ChargeCommandBuilder builder)
+            ChargeCommandBuilder chargeCommandBuilder)
         {
-            var chargeCommand = builder.WithStartDateTime(InstantPattern.General.Parse(startDateTime).Value).Build();
+            var chargeCommand = CreateCommand(chargeCommandBuilder, startDateTime);
             var sut = new StartDateTimeRequiredValidationRule(chargeCommand);
-            Assert.Equal(expected, sut.IsValid);
+            sut.IsValid.Should().Be(expected);
         }
 
         [Theory]
         [InlineAutoDomainData]
-        public void ValidationRuleIdentifier_ShouldBe_EqualTo(ChargeCommand command)
+        public void ValidationError_WhenIsValid_IsNull(ChargeCommand command)
         {
             var sut = new StartDateTimeRequiredValidationRule(command);
-            sut.ValidationError.ValidationRuleIdentifier.Should()
+            sut.ValidationError.Should().BeNull();
+        }
+
+        [Theory]
+        [InlineAutoDomainData]
+        public void ValidationRuleIdentifier_ShouldBe_EqualTo(ChargeCommandBuilder chargeCommandBuilder)
+        {
+            var command = CreateCommand(chargeCommandBuilder, "1970-01-01T00:00:00Z");
+            var sut = new StartDateTimeRequiredValidationRule(command);
+            sut.ValidationError!.ValidationRuleIdentifier.Should()
                 .Be(ValidationRuleIdentifier.StartDateTimeRequiredValidation);
         }
 
         [Theory]
         [InlineAutoDomainData]
-        public void ValidationErrorMessageParameters_ShouldContain_RequiredErrorMessageParameterTypes(ChargeCommand command)
+        public void ValidationErrorMessageParameters_ShouldContain_RequiredErrorMessageParameterTypes(
+            ChargeCommandBuilder chargeCommandBuilder)
         {
+            var command = CreateCommand(chargeCommandBuilder, "1970-01-01T00:00:00Z");
             var sut = new StartDateTimeRequiredValidationRule(command);
-            sut.ValidationError.ValidationErrorMessageParameters
+            sut.ValidationError!.ValidationErrorMessageParameters
                 .Select(x => x.ParameterType)
                 .Should().Contain(ValidationErrorMessageParameterType.DocumentSenderProvidedChargeId);
         }
 
         [Theory]
         [InlineAutoDomainData]
-        public void MessageParameter_ShouldBe_RequiredErrorMessageParameters(ChargeCommand command)
+        public void MessageParameter_ShouldBe_RequiredErrorMessageParameters(ChargeCommandBuilder chargeCommandBuilder)
         {
+            var command = CreateCommand(chargeCommandBuilder, "1970-01-01T00:00:00Z");
             var sut = new StartDateTimeRequiredValidationRule(command);
-            sut.ValidationError.ValidationErrorMessageParameters
+            sut.ValidationError!.ValidationErrorMessageParameters
                 .Single(x => x.ParameterType == ValidationErrorMessageParameterType.DocumentSenderProvidedChargeId)
                 .ParameterValue.Should().Be(command.ChargeOperation.ChargeId);
+        }
+
+        private static ChargeCommand CreateCommand(ChargeCommandBuilder builder, string startDateTime)
+        {
+            return builder.WithStartDateTime(InstantPattern.General.Parse(startDateTime).Value).Build();
         }
     }
 }
