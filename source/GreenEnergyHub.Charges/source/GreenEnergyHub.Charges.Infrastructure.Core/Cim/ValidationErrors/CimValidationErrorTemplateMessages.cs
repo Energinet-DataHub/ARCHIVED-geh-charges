@@ -67,12 +67,6 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors
             "Identification is missing: transaction can not be processed for metering point {{DocumentId}}";
 
         /// <summary>
-        /// Errormessage for <see cref="ValidationRuleIdentifier.OperationTypeValidation"/>
-        /// </summary>
-        public const string OperationTypeValidationErrorMessage =
-            "Function code {{$mergeField1}} for charge {{$mergeField2}} has wrong value (outside domain)";
-
-        /// <summary>
         /// Errormessage for <see cref="ValidationRuleIdentifier.ChargeIdLengthValidation"/>
         /// </summary>
         public const string ChargeIdLengthValidationErrorMessage =

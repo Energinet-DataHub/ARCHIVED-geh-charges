@@ -54,7 +54,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Contracts.Internal.ChargeC
             var reasons = new List<ValidationError>
             {
                 new(ValidationRuleIdentifier.MaximumPrice),
-                new(ValidationRuleIdentifier.OperationTypeValidation),
+                new(ValidationRuleIdentifier.ResolutionFeeValidation),
             };
             var chargeCommandRejectedEvent = new ChargeCommandRejectedEvent(
                 SystemClock.Instance.GetCurrentInstant(),

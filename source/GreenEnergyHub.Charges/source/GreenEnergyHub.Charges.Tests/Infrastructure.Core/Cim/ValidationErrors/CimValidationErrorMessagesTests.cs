@@ -39,8 +39,6 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Core.Cim.ValidationErrors
         [InlineAutoMoqData(CimValidationErrorTemplateMessages.SenderIsMandatoryTypeValidationErrorMessage, typeof(SenderIsMandatoryTypeValidationRule))]
         [InlineAutoMoqData(CimValidationErrorTemplateMessages.RecipientIsMandatoryTypeValidationErrorMessage, typeof(RecipientIsMandatoryTypeValidationRule))]
         [InlineAutoMoqData(CimValidationErrorTemplateMessages.ChargeOperationIdRequiredErrorMessage, typeof(ChargeOperationIdRequiredRule))]
-        // TODO BJARKE: There is no corresponding validation rule for OperationTypeValidationErrorMessage
-        //[InlineAutoMoqData(CimValidationErrorTemplateMessages.OperationTypeValidationErrorMessage, typeof(xValidationRule))]
         [InlineAutoMoqData(CimValidationErrorTemplateMessages.ChargeIdLengthValidationErrorMessage, typeof(ChargeIdLengthValidationRule))]
         [InlineAutoMoqData(CimValidationErrorTemplateMessages.ChargeIdRequiredValidationErrorMessage, typeof(ChargeIdRequiredValidationRule))]
         [InlineAutoMoqData(CimValidationErrorTemplateMessages.DocumentTypeMustBeRequestUpdateChargeInformationErrorMessage, typeof(DocumentTypeMustBeRequestUpdateChargeInformationRule))]

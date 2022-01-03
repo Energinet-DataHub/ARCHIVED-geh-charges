@@ -24,7 +24,6 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation
         SenderIsMandatoryTypeValidation = 5, // VR150
         RecipientIsMandatoryTypeValidation = 6, // VR153
         ChargeOperationIdRequired = 7, // VR223
-        OperationTypeValidation = 8, // VR445
         ChargeIdLengthValidation = 9, // VR441
         ChargeIdRequiredValidation = 10, // VR440
         DocumentTypeMustBeRequestUpdateChargeInformation = 11, // VR404

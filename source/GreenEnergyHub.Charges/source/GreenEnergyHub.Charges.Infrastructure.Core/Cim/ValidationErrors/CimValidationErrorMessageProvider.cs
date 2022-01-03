@@ -55,8 +55,6 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors
                     CimValidationErrorTemplateMessages.FeeMustHaveSinglePriceErrorMessage,
                 ValidationRuleIdentifier.MaximumPrice =>
                     CimValidationErrorTemplateMessages.MaximumPriceErrorMessage,
-                ValidationRuleIdentifier.OperationTypeValidation =>
-                    CimValidationErrorTemplateMessages.OperationTypeValidationErrorMessage,
                 ValidationRuleIdentifier.ProcessTypeIsKnownValidation =>
                     CimValidationErrorTemplateMessages.ProcessTypeIsKnownValidationErrorMessage,
                 ValidationRuleIdentifier.RecipientIsMandatoryTypeValidation =>
