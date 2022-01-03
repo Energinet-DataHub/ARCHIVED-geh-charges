@@ -53,8 +53,8 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
         [InlineAutoDomainData]
         public void ValidationError_WhenIsValid_IsNull(ChargeCommandBuilder builder)
         {
-            var invalidCommand = CreateInvalidCommand(builder);
-            var sut = new ChargePriceMaximumDigitsAndDecimalsRule(invalidCommand);
+            var validCommand = builder.WithPoint(123m).Build();
+            var sut = new ChargePriceMaximumDigitsAndDecimalsRule(validCommand);
             sut.ValidationError.Should().BeNull();
         }
 

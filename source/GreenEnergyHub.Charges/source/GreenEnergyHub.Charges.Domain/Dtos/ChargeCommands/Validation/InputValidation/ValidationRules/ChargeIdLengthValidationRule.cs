@@ -25,7 +25,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputVali
             _chargeCommand = chargeCommand;
         }
 
-        public bool IsValid => _chargeCommand.ChargeOperation.ChargeId.Length <= ValidLength;
+        public bool IsValid => _chargeCommand.ChargeOperation.ChargeId?.Length <= ValidLength;
 
         public ValidationError? ValidationError
         {

@@ -44,9 +44,10 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
 
         [Theory]
         [InlineAutoDomainData]
-        public void ValidationError_WhenIsValid_IsNull(ChargeCommand command)
+        public void ValidationError_WhenIsValid_IsNull(ChargeCommandBuilder builder)
         {
-            var sut = new DocumentTypeMustBeRequestUpdateChargeInformationRule(command);
+            var validCommand = builder.WithDocumentType(DocumentType.RequestUpdateChargeInformation).Build();
+            var sut = new DocumentTypeMustBeRequestUpdateChargeInformationRule(validCommand);
             sut.ValidationError.Should().BeNull();
         }
 

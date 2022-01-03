@@ -71,14 +71,22 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
 
         [Theory]
         [InlineAutoDomainData]
-        public void ValidationError_WhenIsValid_IsNull(ChargeCommandBuilder builder, IClock clock)
+        public void ValidationError_WhenIsValid_IsNull(
+            ChargeCommandBuilder builder,
+            Mock<IClock> clock)
         {
-            // Arrange
-            var invalidCommand = CreateInvalidCommand(builder);
+            // Arrange (for a valid rule)
+            var nowIsoString = "2020-05-10T13:00:00Z";
+            var effectuationDateIsoString = "2020-05-10T22:00:00Z";
+            var command = builder
+                .WithStartDateTime(InstantPattern.General.Parse(effectuationDateIsoString).Value)
+                .Build();
             var configuration = CreateRuleConfiguration(1, 3);
             var zonedDateTimeService = CreateLocalDateTimeService("Europe/Copenhagen");
+            clock.Setup(c => c.GetCurrentInstant()).Returns(InstantPattern.General.Parse(nowIsoString).Value);
 
-            var sut = new StartDateValidationRule(invalidCommand, configuration, zonedDateTimeService, clock);
+            // Act
+            var sut = new StartDateValidationRule(command, configuration, zonedDateTimeService, clock.Object);
 
             // Assert
             sut.ValidationError.Should().BeNull();
