@@ -51,7 +51,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             }
 
             [Fact]
-            public async Task When_ChargeIsReceived_Then_AHttp200ResponseIsReturned()
+            public async Task When_ChargeLinkIsReceived_Then_AHttp200ResponseIsReturned()
             {
                 var request = CreateHttpRequest(ChargeLinkDocument.AnyValid, out _);
 
