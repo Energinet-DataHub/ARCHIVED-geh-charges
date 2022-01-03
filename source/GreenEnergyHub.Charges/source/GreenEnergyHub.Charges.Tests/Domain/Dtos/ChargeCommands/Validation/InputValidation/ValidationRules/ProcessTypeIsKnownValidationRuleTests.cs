@@ -19,6 +19,7 @@ using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputValidation.ValidationRules;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.TestCore.Attributes;
+using GreenEnergyHub.Charges.Tests.Builders;
 using GreenEnergyHub.TestHelpers;
 using Xunit;
 using Xunit.Categories;
@@ -39,36 +40,53 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
         {
             command.Document.BusinessReasonCode = businessReasonCode;
             var sut = new ProcessTypeIsKnownValidationRule(command);
-            Assert.Equal(expected, sut.IsValid);
+            sut.IsValid.Should().Be(expected);
         }
 
         [Theory]
         [InlineAutoDomainData]
-        public void ValidationRuleIdentifier_ShouldBe_EqualTo(ChargeCommand command)
+        public void ValidationError_WhenIsValid_IsNull(ChargeCommand command)
         {
             var sut = new ProcessTypeIsKnownValidationRule(command);
-            sut.ValidationError.ValidationRuleIdentifier
+            sut.ValidationError.Should().BeNull();
+        }
+
+        [Theory]
+        [InlineAutoDomainData]
+        public void ValidationRuleIdentifier_ShouldBe_EqualTo(ChargeCommandBuilder chargeCommandBuilder)
+        {
+            var command = CreateCommand(chargeCommandBuilder, BusinessReasonCode.Unknown);
+            var sut = new ProcessTypeIsKnownValidationRule(command);
+            sut.ValidationError!.ValidationRuleIdentifier
                 .Should().Be(ValidationRuleIdentifier.ProcessTypeIsKnownValidation);
         }
 
         [Theory]
         [InlineAutoDomainData]
-        public void ValidationErrorMessageParameters_ShouldContain_RequiredErrorMessageParameterTypes(ChargeCommand command)
+        public void ValidationErrorMessageParameters_ShouldContain_RequiredErrorMessageParameterTypes(
+            ChargeCommandBuilder chargeCommandBuilder)
         {
+            var command = CreateCommand(chargeCommandBuilder, BusinessReasonCode.Unknown);
             var sut = new ProcessTypeIsKnownValidationRule(command);
-            sut.ValidationError.ValidationErrorMessageParameters
+            sut.ValidationError!.ValidationErrorMessageParameters
                 .Select(x => x.ParameterType)
                 .Should().Contain(ValidationErrorMessageParameterType.DocumentId);
         }
 
         [Theory]
         [InlineAutoDomainData]
-        public void MessageParameter_ShouldBe_RequiredErrorMessageParameters(ChargeCommand command)
+        public void MessageParameter_ShouldBe_RequiredErrorMessageParameters(ChargeCommandBuilder chargeCommandBuilder)
         {
+            var command = CreateCommand(chargeCommandBuilder, BusinessReasonCode.Unknown);
             var sut = new ProcessTypeIsKnownValidationRule(command);
-            sut.ValidationError.ValidationErrorMessageParameters
+            sut.ValidationError!.ValidationErrorMessageParameters
                 .Single(x => x.ParameterType == ValidationErrorMessageParameterType.DocumentId)
                 .ParameterValue.Should().Be(command.Document.Id); // MeteringPointId provided in Excel sheet for VR.009 does not make sense
+        }
+
+        private static ChargeCommand CreateCommand(ChargeCommandBuilder builder, BusinessReasonCode businessReasonCode)
+        {
+            return builder.WithDocumentBusinessReasonCode(businessReasonCode).Build();
         }
     }
 }

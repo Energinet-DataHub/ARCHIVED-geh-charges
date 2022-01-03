@@ -25,6 +25,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputVali
             _chargeCommand = chargeCommand;
         }
 
+        // TODO: This doesn't seem right. This rule is the exact same as BusinessReasonCodeMustBeUpdateChargeInformationRule
         public bool IsValid => _chargeCommand.Document.BusinessReasonCode == BusinessReasonCode.UpdateChargeInformation;
 
         public ValidationError? ValidationError
