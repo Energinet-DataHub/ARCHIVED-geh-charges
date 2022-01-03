@@ -154,7 +154,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
                 .ParameterValue.Should().Be(command.ChargeOperation.ChargeId);
             sut.ValidationError.ValidationErrorMessageParameters
                 .Single(x => x.ParameterType == ValidationErrorMessageParameterType.ChargeType)
-                .ParameterValue.Should().Be(command.Document.Type.ToString());
+                .ParameterValue.Should().Be(command.ChargeOperation.Type.ToString());
         }
 
         private static ChargeCommand CreateCommand(ChargeCommandBuilder builder, ChargeType chargeType, Resolution resolution)
