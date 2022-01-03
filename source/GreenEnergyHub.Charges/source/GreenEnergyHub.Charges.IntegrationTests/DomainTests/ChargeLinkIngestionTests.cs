@@ -61,6 +61,19 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             }
 
             [Fact]
+            public async Task When_InvalidChargeLinkIsReceived_Then_AHttp400ResponseIsReturned()
+            {
+                // Arrange
+                var request = CreateHttpRequest(ChargeLinkDocument.InvalidSchema, out _);
+
+                // Act
+                var actualResponse = await Fixture.HostManager.HttpClient.SendAsync(request);
+
+                // Assert
+                actualResponse.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            }
+
+            [Fact]
             public async Task Given_NewTaxChargeLinkMessage_When_GridAccessProviderPeeks_Then_MessageHubReceivesReply()
             {
                 // Arrange

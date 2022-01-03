@@ -18,5 +18,6 @@ namespace GreenEnergyHub.Charges.IntegrationTests.TestFiles.ChargeLinks
     {
         public const string AnyValid = "TestFiles/ChargeLinks/FixedPeriodTaxTariffChargeLinkDocument.xml";
         public const string AnyTax = "TestFiles/ChargeLinks/FixedPeriodTaxTariffChargeLinkDocument.xml";
+        public const string InvalidSchema = "TestFiles/ChargeLinks/InvalidSchemaChargeLinkDocument.xml";
     }
 }
