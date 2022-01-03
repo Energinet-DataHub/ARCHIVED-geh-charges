@@ -14,7 +14,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 -->
-<cim:RequestChangeOfPriceList_MarketDocument xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:cim="urn:ediel.org:requestchangeofpricelistt:0:1" xsi:schemaLocation="urn:ediel.org:requestchangeofpricelistt:0:1 urn-ediel-org-structure-requestchangeofpricelist-0-1.xsd">
+<cim:RequestChangeOfPriceList_MarketDocument xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:cim="urn:ediel.org:structure:requestchangeofpricelist:0:1" xsi:schemaLocation="urn:ediel.org:structure:requestchangeofpricelist:0:1 urn-ediel-org-structure-requestchangeofpricelist-0-1.xsd">
     <cim:mRID>MD{{$isoTimestamp}}</cim:mRID>
     <cim:type>D10</cim:type>
     <cim:process.processType>D18</cim:process.processType>
@@ -41,8 +41,8 @@ limitations under the License.
                 <cim:Series_Period>
                     <cim:resolution>P1D</cim:resolution>
                     <cim:timeInterval>
-                        <cim:start>{{$isoTimestampPlusOneMonth}}</cim:start>
-                        <cim:end>{{$isoTimestampPlusOneMonth}}</cim:end>
+                        <cim:start>{{$ymdhmTimestampPlusOneMonth}}</cim:start>
+                        <cim:end>{{$ymdhmTimestampPlusOneMonth}}</cim:end>
                     </cim:timeInterval>
                     <cim:Point>
                         <cim:position>1</cim:position>

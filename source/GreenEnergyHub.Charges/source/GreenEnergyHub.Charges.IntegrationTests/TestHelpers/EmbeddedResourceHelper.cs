@@ -35,15 +35,17 @@ namespace GreenEnergyHub.Charges.IntegrationTests.TestHelpers
         {
             var currentInstant = clock.GetCurrentInstant();
             var now = currentInstant.ToString();
+            var inThirtyoneDays = currentInstant.Plus(Duration.FromDays(31));
 
             // cim:timeInterval does not allow seconds.
-            var inThirtyoneDays = currentInstant.Plus(Duration.FromDays(31))
+            var ymdhmTimeInterval = inThirtyoneDays
                 .ToString("yyyy-MM-dd\\THH:mm\\Z", CultureInfo.InvariantCulture);
 
             return file
                 .Replace("{{$randomCharacters}}", Guid.NewGuid().ToString("n")[..10])
                 .Replace("{{$isoTimestamp}}", now)
-                .Replace("{{$isoTimestampPlusOneMonth}}", inThirtyoneDays);
+                .Replace("{{$isoTimestampPlusOneMonth}}", inThirtyoneDays.ToString())
+                .Replace("{{$ymdhmTimestampPlusOneMonth}}", ymdhmTimeInterval);
         }
     }
 }

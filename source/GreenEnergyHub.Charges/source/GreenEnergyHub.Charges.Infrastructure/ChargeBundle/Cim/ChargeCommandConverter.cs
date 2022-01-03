@@ -14,7 +14,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Threading.Tasks;
 using System.Xml;
@@ -23,7 +22,6 @@ using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Infrastructure.ChargeLinkBundle.Cim;
-using GreenEnergyHub.Charges.Infrastructure.Exceptions;
 using GreenEnergyHub.Charges.Infrastructure.MarketDocument.Cim;
 using GreenEnergyHub.Charges.Infrastructure.Messaging.Serialization;
 using GreenEnergyHub.Iso8601;
@@ -48,10 +46,10 @@ namespace GreenEnergyHub.Charges.Infrastructure.ChargeBundle.Cim
             DocumentDto document)
         {
             return new ChargeCommand
-                {
-                    Document = document,
-                    ChargeOperation = await ParseChargeOperationAsync(reader).ConfigureAwait(false),
-                };
+            {
+                Document = document,
+                ChargeOperation = await ParseChargeOperationAsync(reader).ConfigureAwait(false),
+            };
         }
 
         private async Task<ChargeOperationDto> ParseChargeOperationAsync(XmlReader reader)
@@ -72,10 +70,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.ChargeBundle.Cim
                 }
             }
 
-            if (operation == null)
-                throw new ChargeOperationIsNullException();
-
-            return operation;
+            return operation!;
         }
 
         private async Task<ChargeOperationDto> ParseChargeGroupIntoOperationAsync(XmlReader reader, string operationId)
@@ -244,7 +239,11 @@ namespace GreenEnergyHub.Charges.Infrastructure.ChargeBundle.Cim
             {
                 if (reader.Is(CimChargeCommandConstants.TimeIntervalStart, CimChargeCommandConstants.Namespace))
                 {
-                    return Instant.FromDateTimeUtc(reader.ReadElementContentAsDateTime());
+                    var cimTimeInterval = await reader
+                        .ReadElementContentAsStringAsync()
+                        .ConfigureAwait(false);
+
+                    return Instant.FromDateTimeOffset(DateTimeOffset.Parse(cimTimeInterval));
                 }
                 else if (reader.Is(
                     CimChargeCommandConstants.TimeInterval,
