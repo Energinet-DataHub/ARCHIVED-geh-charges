@@ -25,11 +25,18 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputVali
 
         public bool IsValid => !string.IsNullOrWhiteSpace(_chargeCommand.ChargeOperation.Id);
 
-        public ValidationError ValidationError =>
-            new(
-                ValidationRuleIdentifier.ChargeOperationIdRequired,
-                new ValidationErrorMessageParameter(
-                    _chargeCommand.Document.Id,
-                    ValidationErrorMessageParameterType.DocumentId)); // TODO BJARKE: MeteringPointId provided in Excel sheet for VR.223 does not make sense
+        public ValidationError? ValidationError
+        {
+            get
+            {
+                if (IsValid) return null;
+
+                return new(
+                    ValidationRuleIdentifier.ChargeOperationIdRequired,
+                    new ValidationErrorMessageParameter(
+                        _chargeCommand.Document.Id,
+                        ValidationErrorMessageParameterType.DocumentId));
+            }
+        }
     }
 }

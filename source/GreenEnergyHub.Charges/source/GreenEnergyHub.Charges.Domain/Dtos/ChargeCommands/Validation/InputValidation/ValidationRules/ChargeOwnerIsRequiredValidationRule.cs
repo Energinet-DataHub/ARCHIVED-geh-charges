@@ -25,11 +25,18 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputVali
 
         public bool IsValid => !string.IsNullOrWhiteSpace(_chargeCommand.ChargeOperation.ChargeOwner);
 
-        public ValidationError ValidationError =>
-            new(
-                ValidationRuleIdentifier.ChargeOwnerIsRequiredValidation,
-                new ValidationErrorMessageParameter(
-                    _chargeCommand.ChargeOperation.ChargeId,
-                    ValidationErrorMessageParameterType.DocumentSenderProvidedChargeId));
+        public ValidationError? ValidationError
+        {
+            get
+            {
+                if (IsValid) return null;
+
+                return new(
+                    ValidationRuleIdentifier.ChargeOwnerIsRequiredValidation,
+                    new ValidationErrorMessageParameter(
+                        _chargeCommand.ChargeOperation.ChargeId,
+                        ValidationErrorMessageParameterType.DocumentSenderProvidedChargeId));
+            }
+        }
     }
 }

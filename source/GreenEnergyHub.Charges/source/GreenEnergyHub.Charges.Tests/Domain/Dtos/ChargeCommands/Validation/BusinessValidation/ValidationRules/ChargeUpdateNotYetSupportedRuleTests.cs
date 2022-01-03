@@ -12,8 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.Charges;
@@ -41,8 +39,16 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
         [InlineAutoDomainData]
         public void IsValid_WhenChargeIsNotNull_IsFalse(ChargeCommand chargeCommand, Charge charge)
         {
-            var sut = new ChargeUpdateNotYetSupportedRule(chargeCommand, charge);
+            var sut = CreateInvalidRule(chargeCommand, charge);
             sut.IsValid.Should().BeFalse();
+        }
+
+        [Theory]
+        [InlineAutoDomainData]
+        public void ValidationError_WhenIsValid_IsNull(ChargeCommand chargeCommand, Charge charge)
+        {
+            var sut = CreateInvalidRule(chargeCommand, charge);
+            sut.ValidationError.Should().BeNull();
         }
 
         [Theory]
@@ -52,10 +58,10 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
         {
             // Arrange
             // Act
-            var sut = new ChargeUpdateNotYetSupportedRule(chargeCommand, charge);
+            var sut = CreateInvalidRule(chargeCommand, charge);
 
             // Assert
-            sut.ValidationError.ValidationErrorMessageParameters
+            sut.ValidationError!.ValidationErrorMessageParameters
                 .Select(x => x.ParameterType)
                 .Should().Contain(ValidationErrorMessageParameterType.DocumentSenderProvidedChargeId);
             sut.ValidationError.ValidationErrorMessageParameters
@@ -72,10 +78,10 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
         {
             // Arrange
             // Act
-            var sut = new ChargeUpdateNotYetSupportedRule(chargeCommand, charge);
+            var sut = CreateInvalidRule(chargeCommand, charge);
 
             // Assert
-            sut.ValidationError.ValidationErrorMessageParameters
+            sut.ValidationError!.ValidationErrorMessageParameters
                 .Single(x => x.ParameterType == ValidationErrorMessageParameterType.DocumentSenderProvidedChargeId)
                 .ParameterValue.Should().Be(chargeCommand.ChargeOperation.ChargeId);
             sut.ValidationError.ValidationErrorMessageParameters
@@ -84,6 +90,11 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
             sut.ValidationError.ValidationErrorMessageParameters
                 .Single(x => x.ParameterType == ValidationErrorMessageParameterType.ChargeType)
                 .ParameterValue.Should().Be(chargeCommand.ChargeOperation.Type.ToString());
+        }
+
+        private static ChargeUpdateNotYetSupportedRule CreateInvalidRule(ChargeCommand chargeCommand, Charge charge)
+        {
+            return new ChargeUpdateNotYetSupportedRule(chargeCommand, charge);
         }
     }
 }

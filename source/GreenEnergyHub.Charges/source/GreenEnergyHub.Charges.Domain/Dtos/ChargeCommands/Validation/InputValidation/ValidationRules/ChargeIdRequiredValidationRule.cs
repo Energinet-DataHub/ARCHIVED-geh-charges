@@ -25,6 +25,14 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputVali
 
         public bool IsValid => !string.IsNullOrWhiteSpace(_chargeCommand.ChargeOperation.ChargeId);
 
-        public ValidationError ValidationError { get; } = new(ValidationRuleIdentifier.ChargeIdRequiredValidation);
+        public ValidationError? ValidationError
+        {
+            get
+            {
+                if (IsValid) return null;
+
+                return new(ValidationRuleIdentifier.ChargeIdRequiredValidation);
+            }
+        }
     }
 }

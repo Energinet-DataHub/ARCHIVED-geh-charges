@@ -62,10 +62,12 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputVali
             return GetNumberOfDecimals(d, i + 1);
         }
 
-        public ValidationError ValidationError
+        public ValidationError? ValidationError
         {
             get
             {
+                if (IsValid) return null;
+
                 var firstInvalid = _chargeCommand.ChargeOperation.Points
                     .FirstOrDefault(point => PointIsValid(point) == false);
 

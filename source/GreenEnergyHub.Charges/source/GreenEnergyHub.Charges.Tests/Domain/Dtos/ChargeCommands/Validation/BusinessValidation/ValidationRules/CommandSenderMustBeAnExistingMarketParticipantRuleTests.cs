@@ -38,33 +38,39 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
 
         [Theory]
         [AutoMoqData]
+        public void ValidationError_WhenIsValid_IsNull(ChargeCommand command, MarketParticipant sender)
+        {
+            var sut = new CommandSenderMustBeAnExistingMarketParticipantRule(command, sender);
+            sut.ValidationError.Should().BeNull();
+        }
+
+        [Theory]
+        [AutoMoqData]
         public void IsValid_WhenSenderIsNull_IsFalse(ChargeCommand command)
         {
-            MarketParticipant? sender = null;
-            var sut = new CommandSenderMustBeAnExistingMarketParticipantRule(command, sender);
+            var sut = CreateInvalidRule(command);
             sut.IsValid.Should().BeFalse();
         }
 
         [Theory]
         [InlineAutoDomainData]
-        public void ValidationRuleIdentifier_ShouldBe_EqualTo(ChargeCommand command, MarketParticipant sender)
+        public void ValidationRuleIdentifier_ShouldBe_EqualTo(ChargeCommand command)
         {
-            var sut = new CommandSenderMustBeAnExistingMarketParticipantRule(command, sender);
-            sut.ValidationError.ValidationRuleIdentifier.Should()
+            var sut = CreateInvalidRule(command);
+            sut.ValidationError!.ValidationRuleIdentifier.Should()
                 .Be(ValidationRuleIdentifier.CommandSenderMustBeAnExistingMarketParticipant);
         }
 
         [Theory]
         [InlineAutoDomainData]
         public void ValidationErrorMessageParameters_ShouldContain_RequiredErrorMessageParameterTypes(
-            ChargeCommand command, MarketParticipant sender)
+            ChargeCommand command)
         {
-            // Arrange
             // Act
-            var sut = new CommandSenderMustBeAnExistingMarketParticipantRule(command, sender);
+            var sut = CreateInvalidRule(command);
 
             // Assert
-            sut.ValidationError.ValidationErrorMessageParameters
+            sut.ValidationError!.ValidationErrorMessageParameters
                 .Select(x => x.ParameterType)
                 .Should().Contain(ValidationErrorMessageParameterType.DocumentSenderId);
             sut.ValidationError.ValidationErrorMessageParameters
@@ -75,19 +81,23 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
         [Theory]
         [InlineAutoDomainData]
         public void MessageParameter_ShouldBe_RequiredErrorMessageParameters(
-            ChargeCommand command, MarketParticipant sender)
+            ChargeCommand command)
         {
-            // Arrange
             // Act
-            var sut = new CommandSenderMustBeAnExistingMarketParticipantRule(command, sender);
+            var sut = CreateInvalidRule(command);
 
             // Assert
-            sut.ValidationError.ValidationErrorMessageParameters
+            sut.ValidationError!.ValidationErrorMessageParameters
                 .Single(x => x.ParameterType == ValidationErrorMessageParameterType.DocumentSenderId)
                 .ParameterValue.Should().Be(command.Document.Sender.Id);
             sut.ValidationError.ValidationErrorMessageParameters
                 .Single(x => x.ParameterType == ValidationErrorMessageParameterType.DocumentId)
                 .ParameterValue.Should().Be(command.Document.Id);
+        }
+
+        private static CommandSenderMustBeAnExistingMarketParticipantRule CreateInvalidRule(ChargeCommand command)
+        {
+            return new(command, null);
         }
     }
 }

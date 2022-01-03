@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
 using System.Linq;
 
 namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputValidation.ValidationRules
@@ -29,10 +28,12 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputVali
 
         public bool IsValid => _chargeCommand.ChargeOperation.Points.All(point => point.Price < PriceUpperBound);
 
-        public ValidationError ValidationError
+        public ValidationError? ValidationError
         {
             get
             {
+                if (IsValid) return null;
+
                 var firstInvalid = _chargeCommand.ChargeOperation.Points
                     .FirstOrDefault(point => point.Price >= PriceUpperBound);
 

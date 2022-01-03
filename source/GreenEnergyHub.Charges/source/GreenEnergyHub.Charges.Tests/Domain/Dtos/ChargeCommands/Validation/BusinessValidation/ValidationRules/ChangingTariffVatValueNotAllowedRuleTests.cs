@@ -48,24 +48,36 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
 
         [Theory]
         [InlineAutoDomainData]
-        public void ValidationRuleIdentifier_ShouldBe_EqualTo(ChargeCommand command, Charge charge)
+        public void ValidationError_WhenIsValid_IsNull(ChargeCommandBuilder builder, Charge charge)
         {
+            var command = builder.WithVatClassification(charge.VatClassification).Build();
             var sut = new ChangingTariffVatValueNotAllowedRule(command, charge);
-            sut.ValidationError.ValidationRuleIdentifier.Should()
+            Assert.Null(sut.ValidationError);
+        }
+
+        [Theory]
+        [InlineAutoDomainData]
+        public void ValidationRuleIdentifier_ShouldBe_EqualTo(ChargeCommandBuilder builder, Charge charge)
+        {
+            var invalidCommand = CreateInvalidCommand(builder, charge);
+            var sut = new ChangingTariffVatValueNotAllowedRule(invalidCommand, charge);
+            sut.ValidationError!.ValidationRuleIdentifier.Should()
                 .Be(ValidationRuleIdentifier.ChangingTariffVatValueNotAllowed);
         }
 
         [Theory]
         [InlineAutoDomainData]
         public void ValidationErrorMessageParameters_ShouldContain_RequiredErrorMessageParameterTypes(
-            ChargeCommand command, Charge charge)
+            ChargeCommandBuilder builder, Charge charge)
         {
             // Arrange
+            var invalidCommand = CreateInvalidCommand(builder, charge);
+
             // Act
-            var sut = new ChangingTariffVatValueNotAllowedRule(command, charge);
+            var sut = new ChangingTariffVatValueNotAllowedRule(invalidCommand, charge);
 
             // Assert
-            sut.ValidationError.ValidationErrorMessageParameters
+            sut.ValidationError!.ValidationErrorMessageParameters
                 .Select(x => x.ParameterType)
                 .Should().Contain(ValidationErrorMessageParameterType.ChargeVatClass);
             sut.ValidationError.ValidationErrorMessageParameters
@@ -76,19 +88,31 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
         [Theory]
         [InlineAutoDomainData]
         public void MessageParameter_ShouldBe_RequiredErrorMessageParameters(
-            ChargeCommand command, Charge charge)
+            ChargeCommandBuilder builder, Charge charge)
         {
             // Arrange
+            var invalidCommand = CreateInvalidCommand(builder, charge);
+
             // Act
-            var sut = new ChangingTariffVatValueNotAllowedRule(command, charge);
+            var sut = new ChangingTariffVatValueNotAllowedRule(invalidCommand, charge);
 
             // Assert
-            sut.ValidationError.ValidationErrorMessageParameters
+            sut.ValidationError!.ValidationErrorMessageParameters
                 .Single(x => x.ParameterType == ValidationErrorMessageParameterType.ChargeVatClass)
-                .ParameterValue.Should().Be(command.ChargeOperation.VatClassification.ToString());
+                .ParameterValue.Should().Be(invalidCommand.ChargeOperation.VatClassification.ToString());
             sut.ValidationError.ValidationErrorMessageParameters
                 .Single(x => x.ParameterType == ValidationErrorMessageParameterType.DocumentSenderProvidedChargeId)
-                .ParameterValue.Should().Be(command.ChargeOperation.ChargeId);
+                .ParameterValue.Should().Be(invalidCommand.ChargeOperation.ChargeId);
+        }
+
+        private static ChargeCommand CreateInvalidCommand(ChargeCommandBuilder builder, Charge charge)
+        {
+            // Get a new classification different from that of the charge
+            var newClassification = charge.VatClassification == VatClassification.Vat25
+                ? VatClassification.NoVat
+                : VatClassification.Vat25;
+
+            return builder.WithVatClassification(newClassification).Build();
         }
     }
 }

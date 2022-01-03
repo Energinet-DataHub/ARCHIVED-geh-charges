@@ -49,10 +49,17 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessV
                 .ToInstant();
         }
 
-        public ValidationError ValidationError =>
-            new(
-                ValidationRuleIdentifier.StartDateValidation,
-                new ValidationErrorMessageParameter(
-                    _validityStartDate.ToString(), ValidationErrorMessageParameterType.ChargeStartDateTime));
+        public ValidationError? ValidationError
+        {
+            get
+            {
+                if (IsValid) return null;
+
+                return new(
+                    ValidationRuleIdentifier.StartDateValidation,
+                    new ValidationErrorMessageParameter(
+                        _validityStartDate.ToString(), ValidationErrorMessageParameterType.ChargeStartDateTime));
+            }
+        }
     }
 }

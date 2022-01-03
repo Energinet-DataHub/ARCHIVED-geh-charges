@@ -32,17 +32,24 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessV
 
         public bool IsValid => _charge == null;
 
-        public ValidationError ValidationError =>
-            new(
-                ValidationRuleIdentifier.UpdateNotYetSupported,
-                new ValidationErrorMessageParameter(
-                    _chargeCommand.ChargeOperation.ChargeId,
-                    ValidationErrorMessageParameterType.DocumentSenderProvidedChargeId),
-                new ValidationErrorMessageParameter(
-                    _chargeCommand.ChargeOperation.ChargeOwner,
-                    ValidationErrorMessageParameterType.ChargeOwner),
-                new ValidationErrorMessageParameter(
-                    _chargeCommand.ChargeOperation.Type.ToString(),
-                    ValidationErrorMessageParameterType.ChargeType));
+        public ValidationError? ValidationError
+        {
+            get
+            {
+                if (IsValid) return null;
+
+                return new(
+                    ValidationRuleIdentifier.UpdateNotYetSupported,
+                    new ValidationErrorMessageParameter(
+                        _chargeCommand.ChargeOperation.ChargeId,
+                        ValidationErrorMessageParameterType.DocumentSenderProvidedChargeId),
+                    new ValidationErrorMessageParameter(
+                        _chargeCommand.ChargeOperation.ChargeOwner,
+                        ValidationErrorMessageParameterType.ChargeOwner),
+                    new ValidationErrorMessageParameter(
+                        _chargeCommand.ChargeOperation.Type.ToString(),
+                        ValidationErrorMessageParameterType.ChargeType));
+            }
+        }
     }
 }
