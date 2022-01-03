@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -70,10 +71,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.ChargeBundle
                 }
             }
 
-            if (!operations.Any())
-                throw new NoChargeOperationFoundException();
-
-            return operations;
+            return operations!;
         }
 
         private async Task<ChargeOperationDto> ParseChargeGroupIntoOperationAsync(XmlReader reader, string operationId)
@@ -242,7 +240,11 @@ namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.ChargeBundle
             {
                 if (reader.Is(CimChargeCommandConstants.TimeIntervalStart, CimChargeCommandConstants.Namespace))
                 {
-                    return Instant.FromDateTimeUtc(reader.ReadElementContentAsDateTime());
+                    var cimTimeInterval = await reader
+                        .ReadElementContentAsStringAsync()
+                        .ConfigureAwait(false);
+
+                    return Instant.FromDateTimeOffset(DateTimeOffset.Parse(cimTimeInterval));
                 }
                 else if (reader.Is(
                     CimChargeCommandConstants.TimeInterval,

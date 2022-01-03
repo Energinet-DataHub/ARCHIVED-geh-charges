@@ -12,7 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Net;
 using System.Threading.Tasks;
+using Energinet.DataHub.Core.Messaging.Transport.SchemaValidation;
+using Energinet.DataHub.Core.SchemaValidation.Errors;
+using Energinet.DataHub.Core.SchemaValidation.Extensions;
 using GreenEnergyHub.Charges.Application.Charges.Handlers;
 using GreenEnergyHub.Charges.Application.Charges.Handlers.Message;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
@@ -29,11 +33,11 @@ namespace GreenEnergyHub.Charges.FunctionHost.Charges
         /// Function name affects the URL and thus possibly dependent infrastructure.
         /// </summary>
         private readonly IChargesMessageHandler _chargesMessageHandler;
-        private readonly MessageExtractor<ChargeCommandBundle> _messageExtractor;
+        private readonly ValidatingMessageExtractor<ChargeCommandBundle> _messageExtractor;
 
         public ChargeIngestion(
             IChargesMessageHandler chargesMessageHandler,
-            MessageExtractor<ChargeCommandBundle> messageExtractor)
+            ValidatingMessageExtractor<ChargeCommandBundle> messageExtractor)
         {
             _chargesMessageHandler = chargesMessageHandler;
             _messageExtractor = messageExtractor;
@@ -44,7 +48,13 @@ namespace GreenEnergyHub.Charges.FunctionHost.Charges
             [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = null)]
             HttpRequestData req)
         {
-            var message = await GetChargesMessageAsync(req).ConfigureAwait(false);
+            var inboundMessage = await ValidateMessageAsync(req).ConfigureAwait(false);
+            if (inboundMessage.HasErrors)
+            {
+                return await CreateErrorResponseAsync(req, inboundMessage.SchemaValidationError).ConfigureAwait(false);
+            }
+
+            var message = GetChargesMessage(inboundMessage.ValidatedMessage);
 
             foreach (var chargeCommand in message.ChargeCommands)
             {
@@ -57,21 +67,35 @@ namespace GreenEnergyHub.Charges.FunctionHost.Charges
             return await CreateJsonResponseAsync(req, messageResult);
         }
 
-        private async Task<ChargesMessage> GetChargesMessageAsync(
-            HttpRequestData req)
+        private async Task<SchemaValidatedInboundMessage<ChargeCommandBundle>> ValidateMessageAsync(HttpRequestData req)
+        {
+            return (SchemaValidatedInboundMessage<ChargeCommandBundle>)await _messageExtractor
+                .ExtractAsync(req.Body)
+                .ConfigureAwait(false);
+        }
+
+        private ChargesMessage GetChargesMessage(ChargeCommandBundle chargeCommandBundle)
         {
             var message = new ChargesMessage();
-            var commandBundle = (ChargeCommandBundle)await _messageExtractor.ExtractAsync(req.Body).ConfigureAwait(false);
-
-            message.ChargeCommands.AddRange(commandBundle.ChargeCommands);
+            message.ChargeCommands.AddRange(chargeCommandBundle.ChargeCommands);
             return message;
         }
 
-        private static async Task<HttpResponseData> CreateJsonResponseAsync(HttpRequestData req, ChargesMessageResult messageResult)
+        private static async Task<HttpResponseData> CreateErrorResponseAsync(
+            HttpRequestData req,
+            ErrorResponse errorResponse)
         {
-            var response = req.CreateResponse();
-            await response.WriteAsJsonAsync(messageResult);
+            var response = req.CreateResponse(HttpStatusCode.BadRequest);
+            await errorResponse.WriteAsXmlAsync(response.Body).ConfigureAwait(false);
+            return response;
+        }
 
+        private static async Task<HttpResponseData> CreateJsonResponseAsync(
+            HttpRequestData req,
+            ChargesMessageResult messageResult)
+        {
+            var response = req.CreateResponse(HttpStatusCode.Accepted);
+            await response.WriteAsJsonAsync(messageResult);
             return response;
         }
     }

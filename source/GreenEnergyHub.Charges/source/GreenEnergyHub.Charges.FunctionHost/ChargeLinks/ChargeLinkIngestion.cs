@@ -12,7 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Net;
 using System.Threading.Tasks;
+using Energinet.DataHub.Core.Messaging.Transport.SchemaValidation;
+using Energinet.DataHub.Core.SchemaValidation.Errors;
+using Energinet.DataHub.Core.SchemaValidation.Extensions;
 using GreenEnergyHub.Charges.Application.ChargeLinks.Handlers;
 using GreenEnergyHub.Charges.Application.ChargeLinks.Handlers.Message;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands;
@@ -30,11 +34,11 @@ namespace GreenEnergyHub.Charges.FunctionHost.ChargeLinks
         /// The name of the function.
         /// Function name affects the URL and thus possibly dependent infrastructure.
         /// </summary>
-        private readonly MessageExtractor<ChargeLinksCommand> _messageExtractor;
+        private readonly ValidatingMessageExtractor<ChargeLinksCommand> _messageExtractor;
 
         public ChargeLinkIngestion(
             IChargeLinksCommandBundleHandler chargeLinksCommandBundleHandler,
-            MessageExtractor<ChargeLinksCommand> messageExtractor)
+            ValidatingMessageExtractor<ChargeLinksCommand> messageExtractor)
         {
             _chargeLinksCommandBundleHandler = chargeLinksCommandBundleHandler;
             _messageExtractor = messageExtractor;
@@ -45,14 +49,38 @@ namespace GreenEnergyHub.Charges.FunctionHost.ChargeLinks
             [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = null)]
             HttpRequestData req)
         {
-            var command = (ChargeLinksCommandBundle)await _messageExtractor.ExtractAsync(req.Body).ConfigureAwait(false);
+            var inboundMessage = await ValidateMessageAsync(req).ConfigureAwait(false);
+            if (inboundMessage.HasErrors)
+            {
+                return await CreateErrorResponseAsync(req, inboundMessage.SchemaValidationError).ConfigureAwait(false);
+            }
 
-            var chargeLinksMessageResult = await _chargeLinksCommandBundleHandler.HandleAsync(command).ConfigureAwait(false);
+            var chargeLinksMessageResult = await _chargeLinksCommandBundleHandler
+                .HandleAsync(inboundMessage.ValidatedMessage)
+                .ConfigureAwait(false);
 
             return await CreateJsonResponseAsync(req, chargeLinksMessageResult).ConfigureAwait(false);
         }
 
-        private async Task<HttpResponseData> CreateJsonResponseAsync(HttpRequestData req, ChargeLinksMessageResult? chargeLinksMessageResult)
+        private async Task<SchemaValidatedInboundMessage<ChargeLinksCommandBundle>> ValidateMessageAsync(HttpRequestData req)
+        {
+            return (SchemaValidatedInboundMessage<ChargeLinksCommandBundle>)await _messageExtractor
+                .ExtractAsync(req.Body)
+                .ConfigureAwait(false);
+        }
+
+        private static async Task<HttpResponseData> CreateErrorResponseAsync(
+            HttpRequestData req,
+            ErrorResponse errorResponse)
+        {
+            var response = req.CreateResponse(HttpStatusCode.BadRequest);
+            await errorResponse.WriteAsXmlAsync(response.Body).ConfigureAwait(false);
+            return response;
+        }
+
+        private async Task<HttpResponseData> CreateJsonResponseAsync(
+            HttpRequestData req,
+            ChargeLinksMessageResult? chargeLinksMessageResult)
         {
             var response = req.CreateResponse();
             await response.WriteAsJsonAsync(chargeLinksMessageResult);

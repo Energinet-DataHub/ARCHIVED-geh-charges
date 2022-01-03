@@ -14,6 +14,7 @@
 
 using System;
 using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using System.IO;
 using System.Reflection;
 using System.Text.RegularExpressions;
@@ -35,7 +36,11 @@ namespace GreenEnergyHub.Charges.IntegrationTests.TestHelpers
         {
             var currentInstant = clock.GetCurrentInstant();
             var now = currentInstant.ToString();
-            var inThirtyoneDays = currentInstant.Plus(Duration.FromDays(31)).ToString();
+            var inThirtyoneDays = currentInstant.Plus(Duration.FromDays(31));
+
+            // cim:timeInterval does not allow seconds.
+            var ymdhmTimeInterval = inThirtyoneDays
+                .ToString("yyyy-MM-dd\\THH:mm\\Z", CultureInfo.InvariantCulture);
 
             var replacementIndex = 0;
             var mergedFile = Regex.Replace(file, "[{][{][$]increment5digits[}][}]", _ =>
@@ -48,7 +53,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.TestHelpers
                 .Replace("{{$randomCharacters}}", Guid.NewGuid().ToString("n")[..10])
                 .Replace("{{$randomCharactersShort}}", Guid.NewGuid().ToString("n")[..5])
                 .Replace("{{$isoTimestamp}}", now)
-                .Replace("{{$isoTimestampPlusOneMonth}}", inThirtyoneDays);
+                .Replace("{{$isoTimestampPlusOneMonth}}", inThirtyoneDays.ToString())
+                .Replace("{{$YMDHM_TimestampPlusOneMonth}}", ymdhmTimeInterval);
         }
     }
 }

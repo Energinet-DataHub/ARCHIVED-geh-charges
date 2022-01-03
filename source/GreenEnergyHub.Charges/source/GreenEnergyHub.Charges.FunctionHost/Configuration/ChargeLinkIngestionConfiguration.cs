@@ -12,11 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using Energinet.DataHub.Core.Messaging.Transport.SchemaValidation;
 using GreenEnergyHub.Charges.Application.ChargeLinks.Handlers;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands;
 using GreenEnergyHub.Charges.Infrastructure.CimDeserialization.ChargeLinkBundle;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions;
-using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Serialization;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace GreenEnergyHub.Charges.FunctionHost.Configuration
@@ -26,8 +26,8 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
         internal static void ConfigureServices(IServiceCollection serviceCollection)
         {
             serviceCollection.AddScoped<ChargeLinkCommandConverter>();
-            serviceCollection.AddScoped<MessageExtractor<ChargeLinksCommand>>();
-            serviceCollection.AddScoped<MessageDeserializer<ChargeLinksCommand>, ChargeLinkCommandDeserializer>();
+            serviceCollection.AddScoped<ValidatingMessageExtractor<ChargeLinksCommand>>();
+            serviceCollection.AddScoped<SchemaValidatingMessageDeserializer<ChargeLinksCommand>, ChargeLinkCommandDeserializer>();
 
             serviceCollection.AddScoped<IChargeLinksCommandBundleHandler, ChargeLinksCommandBundleHandler>();
             serviceCollection.AddScoped<IChargeLinksCommandHandler, ChargeLinksCommandHandler>();
