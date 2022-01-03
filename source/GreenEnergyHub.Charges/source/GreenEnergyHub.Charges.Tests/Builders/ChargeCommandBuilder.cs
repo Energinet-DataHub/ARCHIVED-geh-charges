@@ -38,11 +38,11 @@ namespace GreenEnergyHub.Charges.Tests.Builders
         private ChargeType _chargeType;
         private List<Point> _points;
         private Resolution _resolution;
-        private string _id;
+        private string _operationId;
 
         public ChargeCommandBuilder()
         {
-            _id = "id";
+            _operationId = "id";
             _chargeId = "some charge id";
             _startDateTime = SystemClock.Instance.GetCurrentInstant()
                 .Plus(Duration.FromDays(500));
@@ -98,9 +98,9 @@ namespace GreenEnergyHub.Charges.Tests.Builders
             return this;
         }
 
-        public ChargeCommandBuilder WithId(string id)
+        public ChargeCommandBuilder WithOperationId(string id)
         {
-            _id = id;
+            _operationId = id;
             return this;
         }
 
@@ -195,7 +195,7 @@ namespace GreenEnergyHub.Charges.Tests.Builders
                     BusinessReasonCode = _documentBusinessReasonCode,
                 },
                 ChargeOperation = new ChargeOperationDto(
-                    _id,
+                    _operationId,
                     _chargeType,
                     _chargeId,
                     _chargeName,
