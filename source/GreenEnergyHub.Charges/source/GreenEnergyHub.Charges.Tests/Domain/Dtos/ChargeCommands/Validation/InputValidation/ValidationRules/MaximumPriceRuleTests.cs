@@ -28,16 +28,14 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
     [UnitTest]
     public class MaximumPriceRuleTests
     {
-        private const decimal ValidPrice = 999999;
-        private const decimal ValidPriceWithDecimals = 999999.999999M;
-        private const decimal InvalidPrice = 1000000;
-        private const decimal InvalidPriceWithDecimals = 1000000.000001M;
+        private const decimal LargestValidPrice = 999999;
+        private const decimal SmallestInvalidPrice = 1000000;
 
         [Theory]
-        [InlineAutoMoqData(ValidPrice, true)]
-        [InlineAutoMoqData(ValidPriceWithDecimals, true)]
-        [InlineAutoMoqData(InvalidPrice, false)]
-        [InlineAutoMoqData(InvalidPriceWithDecimals, false)]
+        [InlineAutoMoqData(999999, true)]
+        [InlineAutoMoqData(999999.999999, true)]
+        [InlineAutoMoqData(1000000, false)]
+        [InlineAutoMoqData(1000000.000001, false)]
         public void MaximumPriceRule_WhenCalledPriceIsTooHigh_IsFalse(
             decimal price,
             bool expected,
@@ -60,7 +58,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
         [InlineAutoDomainData]
         public void ValidationRuleIdentifier_ShouldBe_EqualTo(ChargeCommandBuilder chargeCommandBuilder)
         {
-            var command = CreateCommand(chargeCommandBuilder, InvalidPrice);
+            var command = CreateCommand(chargeCommandBuilder, SmallestInvalidPrice);
             var sut = new MaximumPriceRule(command);
             sut.ValidationError!.ValidationRuleIdentifier.Should().Be(ValidationRuleIdentifier.MaximumPrice);
         }
@@ -71,7 +69,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
             ChargeCommandBuilder chargeCommandBuilder)
         {
             // Arrange
-            var command = CreateCommand(chargeCommandBuilder, InvalidPrice);
+            var command = CreateCommand(chargeCommandBuilder, SmallestInvalidPrice);
 
             // Act
             var sut = new MaximumPriceRule(command);
@@ -90,8 +88,8 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
         public void MessageParameter_ShouldBe_RequiredErrorMessageParameters(ChargeCommandBuilder chargeCommandBuilder)
         {
             // Arrange
-            var command = chargeCommandBuilder.WithPoint(ValidPrice).WithPoint(InvalidPrice).Build();
-            var expectedPosition = command.ChargeOperation.Points.First(x => x.Price == InvalidPrice);
+            var command = chargeCommandBuilder.WithPoint(LargestValidPrice).WithPoint(SmallestInvalidPrice).Build();
+            var expectedPosition = command.ChargeOperation.Points.First(x => x.Price == SmallestInvalidPrice);
 
             // Act
             var sut = new MaximumPriceRule(command);
