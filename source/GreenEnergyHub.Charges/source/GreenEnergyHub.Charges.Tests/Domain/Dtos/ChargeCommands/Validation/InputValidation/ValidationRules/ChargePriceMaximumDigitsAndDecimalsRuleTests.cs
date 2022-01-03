@@ -51,23 +51,35 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
 
         [Theory]
         [InlineAutoDomainData]
-        public void ValidationRuleIdentifier_ShouldBe_EqualTo(ChargeCommand command)
+        public void ValidationError_WhenIsValid_IsNull(ChargeCommandBuilder builder)
         {
-            var sut = new ChargePriceMaximumDigitsAndDecimalsRule(command);
-            sut.ValidationError.ValidationRuleIdentifier.Should()
+            var invalidCommand = CreateInvalidCommand(builder);
+            var sut = new ChargePriceMaximumDigitsAndDecimalsRule(invalidCommand);
+            sut.ValidationError.Should().BeNull();
+        }
+
+        [Theory]
+        [InlineAutoDomainData]
+        public void ValidationRuleIdentifier_ShouldBe_EqualTo(ChargeCommandBuilder builder)
+        {
+            var invalidCommand = CreateInvalidCommand(builder);
+            var sut = new ChargePriceMaximumDigitsAndDecimalsRule(invalidCommand);
+            sut.ValidationError!.ValidationRuleIdentifier.Should()
                 .Be(ValidationRuleIdentifier.ChargePriceMaximumDigitsAndDecimals);
         }
 
         [Theory]
         [InlineAutoDomainData]
-        public void ValidationErrorMessageParameters_ShouldContain_RequiredErrorMessageParameterTypes(ChargeCommand command)
+        public void ValidationErrorMessageParameters_ShouldContain_RequiredErrorMessageParameterTypes(ChargeCommandBuilder builder)
         {
             // Arrange
+            var invalidCommand = CreateInvalidCommand(builder);
+
             // Act
-            var sut = new ChargePriceMaximumDigitsAndDecimalsRule(command);
+            var sut = new ChargePriceMaximumDigitsAndDecimalsRule(invalidCommand);
 
             // Assert
-            sut.ValidationError.ValidationErrorMessageParameters
+            sut.ValidationError!.ValidationErrorMessageParameters
                 .Select(x => x.ParameterType)
                 .Should().Contain(ValidationErrorMessageParameterType.ChargePointPrice);
             sut.ValidationError.ValidationErrorMessageParameters
@@ -89,12 +101,17 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
             var sut = new ChargePriceMaximumDigitsAndDecimalsRule(command);
 
             // Assert
-            sut.ValidationError.ValidationErrorMessageParameters
+            sut.ValidationError!.ValidationErrorMessageParameters
                 .Single(x => x.ParameterType == ValidationErrorMessageParameterType.ChargePointPrice)
                 .ParameterValue.Should().Be(expectedPosition.Price.ToString("0.##"));
             sut.ValidationError.ValidationErrorMessageParameters
                 .Single(x => x.ParameterType == ValidationErrorMessageParameterType.DocumentSenderProvidedChargeId)
                 .ParameterValue.Should().Be(command.ChargeOperation.ChargeId);
+        }
+
+        private static ChargeCommand CreateInvalidCommand(ChargeCommandBuilder builder)
+        {
+            return builder.WithPoint(123456789m).Build();
         }
     }
 }
