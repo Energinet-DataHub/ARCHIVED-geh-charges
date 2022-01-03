@@ -100,16 +100,16 @@ namespace GreenEnergyHub.Charges.MessageHub.Infrastructure.Cim.Bundles.ChargeRec
 
         private XElement GetReasonCode(
             XNamespace cimNamespace,
-            AvailableChargeReceiptValidationError reasonCode)
+            AvailableChargeReceiptValidationError validationError)
         {
             return new XElement(
                 cimNamespace + CimChargeReceiptConstants.ReasonElement,
-                new XElement(cimNamespace + CimChargeReceiptConstants.ReasonCode, ReasonCodeMapper.Map(reasonCode.ReasonCode)),
+                new XElement(cimNamespace + CimChargeReceiptConstants.ReasonCode, ReasonCodeMapper.Map(validationError.ReasonCode)),
                 CimHelper.GetElementIfNeeded(
                     cimNamespace,
-                    string.IsNullOrWhiteSpace(reasonCode.Text),
+                    string.IsNullOrWhiteSpace(validationError.Text),
                     CimChargeReceiptConstants.ReasonText,
-                    () => reasonCode.Text));
+                    () => validationError.Text));
         }
 
         private bool IsConfirmation(IEnumerable<AvailableChargeReceiptData> receipts)
