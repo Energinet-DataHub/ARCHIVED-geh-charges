@@ -45,9 +45,9 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
 
         [Theory]
         [InlineAutoDomainData]
-        public void ValidationError_WhenIsValid_IsNull(ChargeCommand chargeCommand, Charge charge)
+        public void ValidationError_WhenIsValid_IsNull(ChargeCommand chargeCommand)
         {
-            var sut = CreateInvalidRule(chargeCommand, charge);
+            var sut = new ChargeUpdateNotYetSupportedRule(chargeCommand, null);
             sut.ValidationError.Should().BeNull();
         }
 

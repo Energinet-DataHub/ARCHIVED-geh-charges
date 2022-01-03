@@ -197,7 +197,10 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
 
         private static ChargeCommand CreateInvalidCommand(ChargeCommandBuilder builder)
         {
-            return builder.WithResolution(Resolution.P1M).Build();
+            return builder
+                .WithChargeType(ChargeType.Tariff)
+                .WithResolution(Resolution.P1D)
+                .Build();
         }
     }
 }
