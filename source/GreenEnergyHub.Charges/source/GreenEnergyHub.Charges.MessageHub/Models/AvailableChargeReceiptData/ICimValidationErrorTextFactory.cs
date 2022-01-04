@@ -12,21 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation;
+using GreenEnergyHub.Charges.Infrastructure.Core.Cim;
 
 namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
 {
-    /*/// <summary>
+    /// <summary>
     /// Factory for creating CIM error texts of charge rejections.
     /// </summary>
     public interface ICimValidationErrorTextFactory
     {
-        /// <summary>
-        /// Creates an error text by replacing occurrences of the place holder texts
-        /// with the values of the <see cref="ValidationError.ValidationErrorMessageParameters"/>.
-        /// Place holders must have the form "{{name}}", where name equals an
-        /// <see cref="ValidationErrorMessageParameterType"/>.
-        /// </summary>
-        string Create(ValidationError validationError);
-    }*/
+        string Create(ReasonCode reasonCode);
+    }
 }

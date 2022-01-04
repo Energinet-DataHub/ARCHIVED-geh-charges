@@ -12,49 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Collections.Generic;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation;
-using GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors;
+using GreenEnergyHub.Charges.Infrastructure.Core.Cim;
 
 namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
 {
-    /*public class CimValidationErrorTextFactory : ICimValidationErrorTextFactory
+    public class CimValidationErrorTextFactory : ICimValidationErrorTextFactory
     {
-        private readonly ICimValidationErrorMessageProvider _cimValidationErrorMessageProvider;
-
-        public CimValidationErrorTextFactory(ICimValidationErrorMessageProvider cimValidationErrorMessageProvider)
-        {
-            _cimValidationErrorMessageProvider = cimValidationErrorMessageProvider;
-        }
-
-        public string Create(ValidationError validationError)
-        {
-            return GetMergedErrorMessage(validationError);
-        }
-
-        private string GetMergedErrorMessage(ValidationError validationError)
-        {
-            var errorMessage = _cimValidationErrorMessageProvider
-                .GetCimValidationErrorMessage(validationError.ValidationRuleIdentifier);
-
-            var mergedErrorMessage =
-                MergeErrorMessage(errorMessage, validationError.ValidationErrorMessageParameters);
-
-            return mergedErrorMessage;
-        }
-
-        private string MergeErrorMessage(
-            string errorMessage,
-            List<ValidationErrorMessageParameter> validationErrorMessageParameters)
-        {
-            foreach (var validationErrorMessageParameter in validationErrorMessageParameters)
-            {
-                errorMessage = errorMessage.Replace(
-                    "{{" + validationErrorMessageParameter.ParameterType + "}}",
-                    validationErrorMessageParameter.ParameterValue);
-            }
-
-            return errorMessage;
-        }
-    }*/
+        public string Create(ReasonCode reasonCode) => reasonCode.GetReasonText();
+    }
 }
