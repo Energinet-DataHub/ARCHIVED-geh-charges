@@ -27,6 +27,6 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation
         /// <summary>
         /// Identifier of the current rule
         /// </summary>
-        public ValidationError? ValidationError { get; }
+        public ValidationRuleIdentifier ValidationRuleIdentifier { get; }
     }
 }

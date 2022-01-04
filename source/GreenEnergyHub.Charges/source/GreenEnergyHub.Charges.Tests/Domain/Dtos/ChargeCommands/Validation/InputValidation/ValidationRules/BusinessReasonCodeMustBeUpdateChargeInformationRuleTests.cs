@@ -45,61 +45,11 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
 
         [Theory]
         [InlineAutoDomainData]
-        public void ValidationError_WhenIsValid_IsNull(ChargeCommandBuilder builder)
-        {
-            var validCommand = builder.WithDocumentBusinessReasonCode(BusinessReasonCode.UpdateChargeInformation).Build();
-            var sut = new BusinessReasonCodeMustBeUpdateChargeInformationRule(validCommand);
-            sut.ValidationError.Should().BeNull();
-        }
-
-        [Theory]
-        [InlineAutoDomainData]
         public void ValidationRuleIdentifier_ShouldBe_EqualTo(ChargeCommandBuilder chargeCommandBuilder)
         {
             var command = CreateCommand(chargeCommandBuilder, BusinessReasonCode.Unknown);
             var sut = new BusinessReasonCodeMustBeUpdateChargeInformationRule(command);
-            sut.ValidationError!.ValidationRuleIdentifier.Should()
-                .Be(ValidationRuleIdentifier.BusinessReasonCodeMustBeUpdateChargeInformation);
-        }
-
-        [Theory]
-        [InlineAutoDomainData]
-        public void ValidationErrorMessageParameters_ShouldContain_RequiredErrorMessageParameterTypes(
-            ChargeCommandBuilder chargeCommandBuilder)
-        {
-            // Arrange
-            var command = CreateCommand(chargeCommandBuilder, BusinessReasonCode.Unknown);
-
-            // Act
-            var sut = new BusinessReasonCodeMustBeUpdateChargeInformationRule(command);
-
-            // Assert
-            sut.ValidationError!.ValidationErrorMessageParameters
-                .Select(x => x.ParameterType)
-                .Should().Contain(ValidationErrorMessageParameterType.DocumentBusinessReasonCode);
-            sut.ValidationError.ValidationErrorMessageParameters
-                .Select(x => x.ParameterType)
-                .Should().Contain(ValidationErrorMessageParameterType.DocumentType);
-        }
-
-        [Theory]
-        [InlineAutoDomainData]
-        public void MessageParameter_ShouldBe_RequiredErrorMessageParameters(
-            ChargeCommandBuilder chargeCommandBuilder)
-        {
-            // Arrange
-            var command = CreateCommand(chargeCommandBuilder, BusinessReasonCode.Unknown);
-
-            // Act
-            var sut = new BusinessReasonCodeMustBeUpdateChargeInformationRule(command);
-
-            // Assert
-            sut.ValidationError!.ValidationErrorMessageParameters
-                .Single(x => x.ParameterType == ValidationErrorMessageParameterType.DocumentBusinessReasonCode)
-                .ParameterValue.Should().Be(command.Document.BusinessReasonCode.ToString());
-            sut.ValidationError.ValidationErrorMessageParameters
-                .Single(x => x.ParameterType == ValidationErrorMessageParameterType.DocumentType)
-                .ParameterValue.Should().Be(command.Document.Type.ToString());
+            sut.ValidationRuleIdentifier.Should().Be(ValidationRuleIdentifier.BusinessReasonCodeMustBeUpdateChargeInformation);
         }
 
         private static ChargeCommand CreateCommand(ChargeCommandBuilder builder, BusinessReasonCode businessReasonCode)

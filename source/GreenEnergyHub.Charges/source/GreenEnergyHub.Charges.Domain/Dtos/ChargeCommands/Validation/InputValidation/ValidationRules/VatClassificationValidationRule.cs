@@ -25,24 +25,10 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputVali
             _chargeCommand = chargeCommand;
         }
 
+        public ValidationRuleIdentifier ValidationRuleIdentifier =>
+            ValidationRuleIdentifier.VatClassificationValidation;
+
         public bool IsValid => _chargeCommand.ChargeOperation.VatClassification
             is VatClassification.NoVat or VatClassification.Vat25;
-
-        public ValidationError? ValidationError
-        {
-            get
-            {
-                if (IsValid) return null;
-
-                return new(
-                    ValidationRuleIdentifier.VatClassificationValidation,
-                    new ValidationErrorMessageParameter(
-                        _chargeCommand.ChargeOperation.VatClassification.ToString(),
-                        ValidationErrorMessageParameterType.ChargeVatClass),
-                    new ValidationErrorMessageParameter(
-                        _chargeCommand.ChargeOperation.ChargeId,
-                        ValidationErrorMessageParameterType.DocumentSenderProvidedChargeId));
-            }
-        }
     }
 }

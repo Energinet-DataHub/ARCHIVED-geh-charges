@@ -23,20 +23,8 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputVali
             _chargeCommand = chargeCommand;
         }
 
+        public ValidationRuleIdentifier ValidationRuleIdentifier => ValidationRuleIdentifier.ChargeOperationIdRequired;
+
         public bool IsValid => !string.IsNullOrWhiteSpace(_chargeCommand.ChargeOperation.Id);
-
-        public ValidationError? ValidationError
-        {
-            get
-            {
-                if (IsValid) return null;
-
-                return new(
-                    ValidationRuleIdentifier.ChargeOperationIdRequired,
-                    new ValidationErrorMessageParameter(
-                        _chargeCommand.Document.Id,
-                        ValidationErrorMessageParameterType.DocumentId));
-            }
-        }
     }
 }

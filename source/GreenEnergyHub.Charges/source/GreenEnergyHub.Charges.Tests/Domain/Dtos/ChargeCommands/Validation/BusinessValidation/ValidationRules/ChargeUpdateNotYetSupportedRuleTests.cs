@@ -12,11 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Linq;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessValidation.ValidationRules;
 using GreenEnergyHub.TestHelpers;
 using Xunit;
@@ -41,55 +39,6 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
         {
             var sut = CreateInvalidRule(chargeCommand, charge);
             sut.IsValid.Should().BeFalse();
-        }
-
-        [Theory]
-        [InlineAutoDomainData]
-        public void ValidationError_WhenIsValid_IsNull(ChargeCommand chargeCommand)
-        {
-            var sut = new ChargeUpdateNotYetSupportedRule(chargeCommand, null);
-            sut.ValidationError.Should().BeNull();
-        }
-
-        [Theory]
-        [InlineAutoDomainData]
-        public void ValidationErrorMessageParameters_ShouldContain_RequiredErrorMessageParameterTypes(
-            ChargeCommand chargeCommand, Charge charge)
-        {
-            // Arrange
-            // Act
-            var sut = CreateInvalidRule(chargeCommand, charge);
-
-            // Assert
-            sut.ValidationError!.ValidationErrorMessageParameters
-                .Select(x => x.ParameterType)
-                .Should().Contain(ValidationErrorMessageParameterType.DocumentSenderProvidedChargeId);
-            sut.ValidationError.ValidationErrorMessageParameters
-                .Select(x => x.ParameterType)
-                .Should().Contain(ValidationErrorMessageParameterType.ChargeOwner);
-            sut.ValidationError.ValidationErrorMessageParameters
-                .Select(x => x.ParameterType)
-                .Should().Contain(ValidationErrorMessageParameterType.ChargeType);
-        }
-
-        [Theory]
-        [InlineAutoDomainData]
-        public void MessageParameter_ShouldBe_RequiredErrorMessageParameters(ChargeCommand chargeCommand, Charge charge)
-        {
-            // Arrange
-            // Act
-            var sut = CreateInvalidRule(chargeCommand, charge);
-
-            // Assert
-            sut.ValidationError!.ValidationErrorMessageParameters
-                .Single(x => x.ParameterType == ValidationErrorMessageParameterType.DocumentSenderProvidedChargeId)
-                .ParameterValue.Should().Be(chargeCommand.ChargeOperation.ChargeId);
-            sut.ValidationError.ValidationErrorMessageParameters
-                .Single(x => x.ParameterType == ValidationErrorMessageParameterType.ChargeOwner)
-                .ParameterValue.Should().Be(chargeCommand.ChargeOperation.ChargeOwner);
-            sut.ValidationError.ValidationErrorMessageParameters
-                .Single(x => x.ParameterType == ValidationErrorMessageParameterType.ChargeType)
-                .ParameterValue.Should().Be(chargeCommand.ChargeOperation.Type.ToString());
         }
 
         private static ChargeUpdateNotYetSupportedRule CreateInvalidRule(ChargeCommand chargeCommand, Charge charge)

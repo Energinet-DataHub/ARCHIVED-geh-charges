@@ -45,42 +45,12 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
 
         [Theory]
         [InlineAutoDomainData]
-        public void ValidationError_WhenIsValid_IsNull(ChargeCommand command)
-        {
-            var sut = new ChargeOperationIdRequiredRule(command);
-            sut.ValidationError.Should().BeNull();
-        }
-
-        [Theory]
-        [InlineAutoDomainData]
         public void ValidationRuleIdentifier_ShouldBe_EqualTo(ChargeCommandBuilder builder)
         {
             var invalidCommand = CreateInvalidCommand(builder);
             var sut = new ChargeOperationIdRequiredRule(invalidCommand);
-            sut.ValidationError!.ValidationRuleIdentifier.Should()
+            sut.ValidationRuleIdentifier.Should()
                 .Be(ValidationRuleIdentifier.ChargeOperationIdRequired);
-        }
-
-        [Theory]
-        [InlineAutoDomainData]
-        public void ValidationErrorMessageParameters_ShouldContain_RequiredErrorMessageParameterTypes(ChargeCommandBuilder builder)
-        {
-            var invalidCommand = CreateInvalidCommand(builder);
-            var sut = new ChargeOperationIdRequiredRule(invalidCommand);
-            sut.ValidationError!.ValidationErrorMessageParameters
-                .Select(x => x.ParameterType)
-                .Should().Contain(ValidationErrorMessageParameterType.DocumentId);
-        }
-
-        [Theory]
-        [InlineAutoDomainData]
-        public void MessageParameter_ShouldBe_RequiredErrorMessageParameters(ChargeCommandBuilder builder)
-        {
-            var invalidCommand = CreateInvalidCommand(builder);
-            var sut = new ChargeOperationIdRequiredRule(invalidCommand);
-            sut.ValidationError!.ValidationErrorMessageParameters
-                .Single(x => x.ParameterType == ValidationErrorMessageParameterType.DocumentId)
-                .ParameterValue.Should().Be(invalidCommand.Document.Id); // Todo: MeteringPointId provided in Excel sheet for VR.223 does not make sense
         }
 
         private static ChargeCommand CreateInvalidCommand(ChargeCommandBuilder builder)

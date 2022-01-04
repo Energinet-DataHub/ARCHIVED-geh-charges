@@ -38,14 +38,6 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
 
         [Theory]
         [AutoMoqData]
-        public void ValidationError_WhenIsValid_IsNull(ChargeCommand command, MarketParticipant sender)
-        {
-            var sut = new CommandSenderMustBeAnExistingMarketParticipantRule(command, sender);
-            sut.ValidationError.Should().BeNull();
-        }
-
-        [Theory]
-        [AutoMoqData]
         public void IsValid_WhenSenderIsNull_IsFalse(ChargeCommand command)
         {
             var sut = CreateInvalidRule(command);
@@ -57,42 +49,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
         public void ValidationRuleIdentifier_ShouldBe_EqualTo(ChargeCommand command)
         {
             var sut = CreateInvalidRule(command);
-            sut.ValidationError!.ValidationRuleIdentifier.Should()
-                .Be(ValidationRuleIdentifier.CommandSenderMustBeAnExistingMarketParticipant);
-        }
-
-        [Theory]
-        [InlineAutoDomainData]
-        public void ValidationErrorMessageParameters_ShouldContain_RequiredErrorMessageParameterTypes(
-            ChargeCommand command)
-        {
-            // Act
-            var sut = CreateInvalidRule(command);
-
-            // Assert
-            sut.ValidationError!.ValidationErrorMessageParameters
-                .Select(x => x.ParameterType)
-                .Should().Contain(ValidationErrorMessageParameterType.DocumentSenderId);
-            sut.ValidationError.ValidationErrorMessageParameters
-                .Select(x => x.ParameterType)
-                .Should().Contain(ValidationErrorMessageParameterType.DocumentId);
-        }
-
-        [Theory]
-        [InlineAutoDomainData]
-        public void MessageParameter_ShouldBe_RequiredErrorMessageParameters(
-            ChargeCommand command)
-        {
-            // Act
-            var sut = CreateInvalidRule(command);
-
-            // Assert
-            sut.ValidationError!.ValidationErrorMessageParameters
-                .Single(x => x.ParameterType == ValidationErrorMessageParameterType.DocumentSenderId)
-                .ParameterValue.Should().Be(command.Document.Sender.Id);
-            sut.ValidationError.ValidationErrorMessageParameters
-                .Single(x => x.ParameterType == ValidationErrorMessageParameterType.DocumentId)
-                .ParameterValue.Should().Be(command.Document.Id);
+            sut.ValidationRuleIdentifier.Should().Be(ValidationRuleIdentifier.CommandSenderMustBeAnExistingMarketParticipant);
         }
 
         private static CommandSenderMustBeAnExistingMarketParticipantRule CreateInvalidRule(ChargeCommand command)
