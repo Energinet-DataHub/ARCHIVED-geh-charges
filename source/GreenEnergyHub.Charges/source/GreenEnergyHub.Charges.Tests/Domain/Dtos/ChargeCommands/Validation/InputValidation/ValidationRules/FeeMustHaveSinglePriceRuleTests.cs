@@ -62,64 +62,11 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
 
         [Theory]
         [InlineAutoDomainData]
-        public void ValidationError_WhenIsValid_IsNull(ChargeCommand command)
-        {
-            var sut = new FeeMustHaveSinglePriceRule(command);
-            sut.ValidationError.Should().BeNull();
-        }
-
-        [Theory]
-        [InlineAutoDomainData]
         public void ValidationRuleIdentifier_ShouldBe_EqualTo(ChargeCommandBuilder chargeCommandBuilder)
         {
             var chargeCommand = CreateCommand(chargeCommandBuilder, ChargeType.Fee, 0);
             var sut = new FeeMustHaveSinglePriceRule(chargeCommand);
-            sut.ValidationError!.ValidationRuleIdentifier.Should().Be(ValidationRuleIdentifier.FeeMustHaveSinglePrice);
-        }
-
-        [Theory]
-        [InlineAutoDomainData]
-        public void ValidationErrorMessageParameters_ShouldContain_RequiredErrorMessageParameterTypes(
-            ChargeCommandBuilder chargeCommandBuilder)
-        {
-            // Arrange
-            var chargeCommand = CreateCommand(chargeCommandBuilder, ChargeType.Fee, 0);
-            // Act
-            var sut = new FeeMustHaveSinglePriceRule(chargeCommand);
-
-            // Assert
-            sut.ValidationError!.ValidationErrorMessageParameters
-                .Select(x => x.ParameterType)
-                .Should().Contain(ValidationErrorMessageParameterType.ChargePointsCount);
-            sut.ValidationError.ValidationErrorMessageParameters
-                .Select(x => x.ParameterType)
-                .Should().Contain(ValidationErrorMessageParameterType.DocumentSenderProvidedChargeId);
-            sut.ValidationError.ValidationErrorMessageParameters
-                .Select(x => x.ParameterType)
-                .Should().Contain(ValidationErrorMessageParameterType.ChargeResolution);
-        }
-
-        [Theory]
-        [InlineAutoDomainData]
-        public void MessageParameter_ShouldBe_RequiredErrorMessageParameters(
-            ChargeCommandBuilder chargeCommandBuilder)
-        {
-            // Arrange
-            var chargeCommand = CreateCommand(chargeCommandBuilder, ChargeType.Fee, 0);
-
-            // Act
-            var sut = new FeeMustHaveSinglePriceRule(chargeCommand);
-
-            // Assert
-            sut.ValidationError!.ValidationErrorMessageParameters
-                .Single(x => x.ParameterType == ValidationErrorMessageParameterType.ChargePointsCount)
-                .ParameterValue.Should().Be(chargeCommand.ChargeOperation.Points.Count.ToString());
-            sut.ValidationError.ValidationErrorMessageParameters
-                .Single(x => x.ParameterType == ValidationErrorMessageParameterType.DocumentSenderProvidedChargeId)
-                .ParameterValue.Should().Be(chargeCommand.ChargeOperation.ChargeId);
-            sut.ValidationError.ValidationErrorMessageParameters
-                .Single(x => x.ParameterType == ValidationErrorMessageParameterType.ChargeResolution)
-                .ParameterValue.Should().Be(chargeCommand.ChargeOperation.Resolution.ToString());
+            sut.ValidationRuleIdentifier.Should().Be(ValidationRuleIdentifier.FeeMustHaveSinglePrice);
         }
 
         private static ChargeCommand CreateCommand(ChargeCommandBuilder builder, ChargeType chargeType, int priceCount)

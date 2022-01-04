@@ -48,61 +48,11 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
 
         [Theory]
         [InlineAutoDomainData]
-        public void ValidationError_WhenIsValid_IsNull(ChargeCommandBuilder builder, Charge charge)
-        {
-            var command = builder.WithVatClassification(charge.VatClassification).Build();
-            var sut = new ChangingTariffVatValueNotAllowedRule(command, charge);
-            Assert.Null(sut.ValidationError);
-        }
-
-        [Theory]
-        [InlineAutoDomainData]
         public void ValidationRuleIdentifier_ShouldBe_EqualTo(ChargeCommandBuilder builder, Charge charge)
         {
             var invalidCommand = CreateInvalidCommand(builder, charge);
             var sut = new ChangingTariffVatValueNotAllowedRule(invalidCommand, charge);
-            sut.ValidationError!.ValidationRuleIdentifier.Should()
-                .Be(ValidationRuleIdentifier.ChangingTariffVatValueNotAllowed);
-        }
-
-        [Theory]
-        [InlineAutoDomainData]
-        public void ValidationErrorMessageParameters_ShouldContain_RequiredErrorMessageParameterTypes(
-            ChargeCommandBuilder builder, Charge charge)
-        {
-            // Arrange
-            var invalidCommand = CreateInvalidCommand(builder, charge);
-
-            // Act
-            var sut = new ChangingTariffVatValueNotAllowedRule(invalidCommand, charge);
-
-            // Assert
-            sut.ValidationError!.ValidationErrorMessageParameters
-                .Select(x => x.ParameterType)
-                .Should().Contain(ValidationErrorMessageParameterType.ChargeVatClass);
-            sut.ValidationError.ValidationErrorMessageParameters
-                .Select(x => x.ParameterType)
-                .Should().Contain(ValidationErrorMessageParameterType.DocumentSenderProvidedChargeId);
-        }
-
-        [Theory]
-        [InlineAutoDomainData]
-        public void MessageParameter_ShouldBe_RequiredErrorMessageParameters(
-            ChargeCommandBuilder builder, Charge charge)
-        {
-            // Arrange
-            var invalidCommand = CreateInvalidCommand(builder, charge);
-
-            // Act
-            var sut = new ChangingTariffVatValueNotAllowedRule(invalidCommand, charge);
-
-            // Assert
-            sut.ValidationError!.ValidationErrorMessageParameters
-                .Single(x => x.ParameterType == ValidationErrorMessageParameterType.ChargeVatClass)
-                .ParameterValue.Should().Be(invalidCommand.ChargeOperation.VatClassification.ToString());
-            sut.ValidationError.ValidationErrorMessageParameters
-                .Single(x => x.ParameterType == ValidationErrorMessageParameterType.DocumentSenderProvidedChargeId)
-                .ParameterValue.Should().Be(invalidCommand.ChargeOperation.ChargeId);
+            sut.ValidationRuleIdentifier.Should().Be(ValidationRuleIdentifier.ChangingTariffVatValueNotAllowed);
         }
 
         private static ChargeCommand CreateInvalidCommand(ChargeCommandBuilder builder, Charge charge)

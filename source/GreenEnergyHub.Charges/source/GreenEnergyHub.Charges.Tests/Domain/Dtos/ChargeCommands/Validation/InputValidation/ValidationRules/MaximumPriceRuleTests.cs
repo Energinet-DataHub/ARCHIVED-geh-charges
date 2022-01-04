@@ -48,59 +48,11 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
 
         [Theory]
         [InlineAutoDomainData]
-        public void ValidationError_WhenIsValid_IsNull(ChargeCommand command)
-        {
-            var sut = new MaximumPriceRule(command);
-            sut.ValidationError.Should().BeNull();
-        }
-
-        [Theory]
-        [InlineAutoDomainData]
         public void ValidationRuleIdentifier_ShouldBe_EqualTo(ChargeCommandBuilder chargeCommandBuilder)
         {
             var command = CreateCommand(chargeCommandBuilder, SmallestInvalidPrice);
             var sut = new MaximumPriceRule(command);
-            sut.ValidationError!.ValidationRuleIdentifier.Should().Be(ValidationRuleIdentifier.MaximumPrice);
-        }
-
-        [Theory]
-        [InlineAutoDomainData]
-        public void ValidationErrorMessageParameters_ShouldContain_RequiredErrorMessageParameterTypes(
-            ChargeCommandBuilder chargeCommandBuilder)
-        {
-            // Arrange
-            var command = CreateCommand(chargeCommandBuilder, SmallestInvalidPrice);
-
-            // Act
-            var sut = new MaximumPriceRule(command);
-
-            // Assert
-            sut.ValidationError!.ValidationErrorMessageParameters
-                .Select(x => x.ParameterType)
-                .Should().Contain(ValidationErrorMessageParameterType.ChargePointPrice);
-            sut.ValidationError.ValidationErrorMessageParameters
-                .Select(x => x.ParameterType)
-                .Should().Contain(ValidationErrorMessageParameterType.ChargePointPosition);
-        }
-
-        [Theory]
-        [InlineAutoDomainData]
-        public void MessageParameter_ShouldBe_RequiredErrorMessageParameters(ChargeCommandBuilder chargeCommandBuilder)
-        {
-            // Arrange
-            var command = chargeCommandBuilder.WithPoint(LargestValidPrice).WithPoint(SmallestInvalidPrice).Build();
-            var expectedPosition = command.ChargeOperation.Points.First(x => x.Price == SmallestInvalidPrice);
-
-            // Act
-            var sut = new MaximumPriceRule(command);
-
-            // Assert
-            sut.ValidationError!.ValidationErrorMessageParameters
-                .Single(x => x.ParameterType == ValidationErrorMessageParameterType.ChargePointPrice)
-                .ParameterValue.Should().Be(expectedPosition.Price.ToString("0.##"));
-            sut.ValidationError.ValidationErrorMessageParameters
-                .Single(x => x.ParameterType == ValidationErrorMessageParameterType.ChargePointPosition)
-                .ParameterValue.Should().Be(expectedPosition.Position.ToString());
+            sut.ValidationRuleIdentifier.Should().Be(ValidationRuleIdentifier.MaximumPrice);
         }
 
         private static ChargeCommand CreateCommand(ChargeCommandBuilder builder, decimal price)

@@ -16,7 +16,7 @@ using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors
 {
-    public enum CimValidationErrorMessageParameterType
+    /*public enum CimValidationErrorMessageParameterType
     {
         /// <summary>
         /// Corresponds to <see cref="ValidationErrorMessageParameterType.ChargeType"/>
@@ -97,5 +97,5 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors
         /// Corresponds to <see cref="ValidationErrorMessageParameterType.DocumentSenderId"/>
         /// </summary>
         SenderId = 16,
-    }
+    }*/
 }

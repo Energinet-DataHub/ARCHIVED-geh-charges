@@ -13,10 +13,8 @@
 // limitations under the License.
 
 using AutoFixture.Xunit2;
-using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation;
 using GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors;
-using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData;
 using GreenEnergyHub.Charges.TestCore.Attributes;
 using Moq;
 using Xunit;
@@ -24,7 +22,7 @@ using Xunit.Categories;
 
 namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptData
 {
-    [UnitTest]
+    /*[UnitTest]
     public class ValidationErrorTextFactoryTests
     {
         [Theory]
@@ -55,5 +53,5 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptD
             // Assert
             actual.Should().Be(expected);
         }
-    }
+    }*/
 }

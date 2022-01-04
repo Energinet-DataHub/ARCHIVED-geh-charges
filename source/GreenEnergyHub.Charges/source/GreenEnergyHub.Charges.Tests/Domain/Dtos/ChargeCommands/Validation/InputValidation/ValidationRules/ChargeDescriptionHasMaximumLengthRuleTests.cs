@@ -46,58 +46,11 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
 
         [Theory]
         [InlineAutoDomainData]
-        public void ValidationError_WhenIsValid_IsNull(ChargeCommand command)
-        {
-            var sut = new ChargeDescriptionHasMaximumLengthRule(command);
-            sut.ValidationError.Should().BeNull();
-        }
-
-        [Theory]
-        [InlineAutoDomainData]
         public void ValidationRuleIdentifier_ShouldBe_EqualTo(ChargeCommandBuilder builder)
         {
             var invalidCommand = CreateInvalidCommand(builder);
             var sut = new ChargeDescriptionHasMaximumLengthRule(invalidCommand);
-            sut.ValidationError!.ValidationRuleIdentifier.Should()
-                .Be(ValidationRuleIdentifier.ChargeDescriptionHasMaximumLength);
-        }
-
-        [Theory]
-        [InlineAutoDomainData]
-        public void ValidationErrorMessageParameters_ShouldContain_RequiredErrorMessageParameterTypes(ChargeCommandBuilder builder)
-        {
-            // Arrange
-            var invalidCommand = CreateInvalidCommand(builder);
-
-            // Act
-            var sut = new ChargeDescriptionHasMaximumLengthRule(invalidCommand);
-
-            // Assert
-            sut.ValidationError!.ValidationErrorMessageParameters
-                .Select(x => x.ParameterType)
-                .Should().Contain(ValidationErrorMessageParameterType.ChargeDescription);
-            sut.ValidationError.ValidationErrorMessageParameters
-                .Select(x => x.ParameterType)
-                .Should().Contain(ValidationErrorMessageParameterType.DocumentSenderProvidedChargeId);
-        }
-
-        [Theory]
-        [InlineAutoDomainData]
-        public void MessageParameter_ShouldBe_RequiredErrorMessageParameters(ChargeCommandBuilder builder)
-        {
-            // Arrange
-            var invalidCommand = CreateInvalidCommand(builder);
-
-            // Act
-            var sut = new ChargeDescriptionHasMaximumLengthRule(invalidCommand);
-
-            // Assert
-            sut.ValidationError!.ValidationErrorMessageParameters
-                .Single(x => x.ParameterType == ValidationErrorMessageParameterType.ChargeDescription)
-                .ParameterValue.Should().Be(invalidCommand.ChargeOperation.ChargeDescription);
-            sut.ValidationError.ValidationErrorMessageParameters
-                .Single(x => x.ParameterType == ValidationErrorMessageParameterType.DocumentSenderProvidedChargeId)
-                .ParameterValue.Should().Be(invalidCommand.ChargeOperation.ChargeId);
+            sut.ValidationRuleIdentifier.Should().Be(ValidationRuleIdentifier.ChargeDescriptionHasMaximumLength);
         }
 
         private static string GenerateStringWithLength(int stringLength)

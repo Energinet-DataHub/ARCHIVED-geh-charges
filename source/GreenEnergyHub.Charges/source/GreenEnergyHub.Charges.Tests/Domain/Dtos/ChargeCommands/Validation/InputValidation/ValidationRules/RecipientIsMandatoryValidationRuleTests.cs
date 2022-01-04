@@ -40,42 +40,11 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
 
         [Theory]
         [InlineAutoDomainData]
-        public void ValidationError_WhenIsValid_IsNull(ChargeCommand command)
-        {
-            var sut = new RecipientIsMandatoryTypeValidationRule(command);
-            sut.ValidationError.Should().BeNull();
-        }
-
-        [Theory]
-        [InlineAutoDomainData]
         public void ValidationRuleIdentifier_ShouldBe_EqualTo(ChargeCommand command)
         {
             command.Document.Recipient.Id = null!;
             var sut = new RecipientIsMandatoryTypeValidationRule(command);
-            sut.ValidationError!.ValidationRuleIdentifier.Should()
-                .Be(ValidationRuleIdentifier.RecipientIsMandatoryTypeValidation);
-        }
-
-        [Theory]
-        [InlineAutoDomainData]
-        public void ValidationErrorMessageParameters_ShouldContain_RequiredErrorMessageParameterTypes(ChargeCommand command)
-        {
-            command.Document.Recipient.Id = null!;
-            var sut = new RecipientIsMandatoryTypeValidationRule(command);
-            sut.ValidationError!.ValidationErrorMessageParameters
-                .Select(x => x.ParameterType)
-                .Should().Contain(ValidationErrorMessageParameterType.DocumentId);
-        }
-
-        [Theory]
-        [InlineAutoDomainData]
-        public void MessageParameter_ShouldBe_RequiredErrorMessageParameters(ChargeCommand command)
-        {
-            command.Document.Recipient.Id = null!;
-            var sut = new RecipientIsMandatoryTypeValidationRule(command);
-            sut.ValidationError!.ValidationErrorMessageParameters
-                .Single(x => x.ParameterType == ValidationErrorMessageParameterType.DocumentId)
-                .ParameterValue.Should().Be(command.Document.Id);
+            sut.ValidationRuleIdentifier.Should().Be(ValidationRuleIdentifier.RecipientIsMandatoryTypeValidation);
         }
     }
 }
