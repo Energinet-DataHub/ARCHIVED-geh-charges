@@ -22,6 +22,8 @@ namespace GreenEnergyHub.Charges.WebApi.ModelPredicates
 {
     public static class ChargeLinkQueryLogic
     {
+        private static readonly DateTime _endDateTime = new DateTime(9999, 12, 31, 23, 59, 59, DateTimeKind.Utc);
+
         public static IQueryable<ChargeLinkDto> AsChargeLinkDto(this IQueryable<ChargeLink> queryable)
         {
             return queryable
@@ -35,7 +37,7 @@ namespace GreenEnergyHub.Charges.WebApi.ModelPredicates
                     c.Charge.TransparentInvoicing,
                     c.Factor,
                     c.StartDateTime,
-                    c.EndDateTime));
+                    c.EndDateTime == _endDateTime ? null : c.EndDateTime));
         }
 
         private static ChargeType Map(Domain.Charges.ChargeType chargeType) => chargeType switch

@@ -58,8 +58,9 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi
         {
             // Arrange
             var client = _factory.CreateClient();
-            var expectedChargeId = "TestTariff";
-            var expectedStart = new DateTimeOffset(2019, 12, 31, 23, 00, 00, TimeSpan.FromHours(0));
+            var expectedChargeLinks = 5;
+            //var expectedChargeId = "TestTariff";
+            //var expectedStart = new DateTimeOffset(2019, 12, 31, 23, 00, 00, TimeSpan.FromHours(0));
 
             // Act
             var response = await client.GetAsync($"{BaseUrl}{meteringPointId}");
@@ -67,8 +68,9 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi
             var actual = JsonSerializer.Deserialize<List<ChargeLinkDto>>(jsonString, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
 
             // Assert
-            actual![0].ChargeId.Should().Be(expectedChargeId);
-            actual![0].StartDate.Should().Be(expectedStart);
+            actual!.Count.Should().Be(expectedChargeLinks);
+            //actual![0].ChargeId.Should().Be(expectedChargeId);
+            //actual![0].StartDate.Should().Be(expectedStart);
         }
 
         [Theory]
