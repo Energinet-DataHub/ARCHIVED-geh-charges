@@ -12,13 +12,23 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation;
-
-namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands.Validation
+namespace GreenEnergyHub.Charges.Domain.Dtos.Validation
 {
-    public interface IChargeLinksCommandBusinessValidator
+    public class ValidationErrorMessageParameter
     {
-        Task<ValidationResult> ValidateAsync(ChargeLinksCommand command);
+        public ValidationErrorMessageParameter(
+            string messageParameter,
+            ValidationErrorMessageParameterType parameterType)
+        {
+            MessageParameter = messageParameter;
+            ParameterType = parameterType;
+        }
+
+        public string MessageParameter { get; }
+
+        /// <summary>
+        /// ParameterType for errorMessage
+        /// </summary>
+        public ValidationErrorMessageParameterType ParameterType { get; }
     }
 }

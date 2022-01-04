@@ -12,22 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation;
-using GreenEnergyHub.Charges.Domain.MeteringPoints;
+using System.Collections.Generic;
 
-namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands.Validation.BusinessValidation
+namespace GreenEnergyHub.Charges.Domain.Dtos.Validation
 {
-    public class MeteringPointDoesNotExistRule : IValidationRule
+    public interface IValidationRuleSet
     {
-        private readonly MeteringPoint? _meteringPoint;
+        IReadOnlyCollection<IValidationRule> GetRules();
 
-        public MeteringPointDoesNotExistRule(MeteringPoint? meteringPoint)
-        {
-            _meteringPoint = meteringPoint;
-        }
-
-        public bool IsValid => _meteringPoint is not null;
-
-        public ValidationError? ValidationError { get; }
+        ValidationResult Validate();
     }
 }

@@ -243,6 +243,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures
                 messageHubReplyQueue.Name,
                 ChargesServiceBusResourceNames.MessageHubStorageConnectionString,
                 ChargesServiceBusResourceNames.MessageHubStorageContainerName);
+
             MessageHubMock = new MessageHubSimulation(messageHubSimulationConfig);
         }
 

@@ -16,7 +16,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation
+namespace GreenEnergyHub.Charges.Domain.Dtos.Validation
 {
     public class ValidationResult
     {

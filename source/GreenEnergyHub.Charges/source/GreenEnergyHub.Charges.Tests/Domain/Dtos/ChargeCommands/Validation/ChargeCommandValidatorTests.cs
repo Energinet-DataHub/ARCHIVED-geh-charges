@@ -20,6 +20,7 @@ using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessValidation;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputValidation;
+using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using GreenEnergyHub.TestHelpers;
 using Moq;
 using Xunit;

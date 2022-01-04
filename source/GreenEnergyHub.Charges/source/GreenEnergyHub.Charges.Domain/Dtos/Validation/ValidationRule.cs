@@ -12,10 +12,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputValidation
+namespace GreenEnergyHub.Charges.Domain.Dtos.Validation
 {
-    public interface IInputValidationRulesFactory
+    public class ValidationRule : IValidationRule
     {
-        IValidationRuleSet CreateRulesForChargeCommand(ChargeCommand chargeCommand);
+        public ValidationRule(bool isValid, ValidationRuleIdentifier ruleIdentifier)
+        {
+            IsValid = isValid;
+            if (IsValid == false)
+            {
+                ValidationError = new ValidationError(ruleIdentifier);
+            }
+        }
+
+        public bool IsValid { get; }
+
+        public ValidationError? ValidationError { get; }
     }
 }

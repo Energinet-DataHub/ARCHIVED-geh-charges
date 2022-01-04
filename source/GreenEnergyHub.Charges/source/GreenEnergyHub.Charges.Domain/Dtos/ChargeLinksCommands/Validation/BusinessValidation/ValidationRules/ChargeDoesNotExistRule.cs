@@ -12,21 +12,22 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation
-{
-    /// <summary>
-    /// Interface for validationrules in the Charges domain
-    /// </summary>
-    public interface IValidationRule
-    {
-        /// <summary>
-        /// Validity of the ChargeCommand given the current rule
-        /// </summary>
-        public bool IsValid { get; }
+using GreenEnergyHub.Charges.Domain.Charges;
+using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 
-        /// <summary>
-        /// Identifier of the current rule
-        /// </summary>
+namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands.Validation.BusinessValidation.ValidationRules
+{
+    public class ChargeDoesNotExistRule : IValidationRule
+    {
+        private readonly Charge? _charge;
+
+        public ChargeDoesNotExistRule(Charge? charge)
+        {
+            _charge = charge;
+        }
+
+        public bool IsValid => _charge is not null;
+
         public ValidationError? ValidationError { get; }
     }
 }

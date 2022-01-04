@@ -17,6 +17,8 @@ using AutoFixture.Xunit2;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputValidation;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputValidation.Factories;
+using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using Xunit;
 using Xunit.Categories;
 

@@ -12,23 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation
+using GreenEnergyHub.Charges.Domain.Dtos.Validation;
+
+namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputValidation.Factories
 {
-    public class ValidationErrorMessageParameter
+    public interface IInputValidationRulesFactory
     {
-        public ValidationErrorMessageParameter(
-            string messageParameter,
-            ValidationErrorMessageParameterType parameterType)
-        {
-            MessageParameter = messageParameter;
-            ParameterType = parameterType;
-        }
-
-        public string MessageParameter { get; }
-
-        /// <summary>
-        /// ParameterType for errorMessage
-        /// </summary>
-        public ValidationErrorMessageParameterType ParameterType { get; }
+        IValidationRuleSet CreateRulesForChargeCommand(ChargeCommand chargeCommand);
     }
 }
