@@ -60,6 +60,7 @@ limitations under the License.
       <EmbeddedResource Include="Scripts\Seed\202108130629 Default charges.sql" />
       <EmbeddedResource Include="Scripts\Seed\202108131029 Default charge links.sql" />
       <EmbeddedResource Include="Scripts\Model\202108251511 Use DateTime2.sql" />
+      <EmbeddedResource Include="Scripts\Test\202201041056 Metering Point Test Data.sql" />
       <EmbeddedResource Include="Scripts\Test\202111300728 Metering Point Test Data with type 3.sql" />
       <EmbeddedResource Include="Scripts\Test\202109080933 Metering Point Test Data.sql" />
       <EmbeddedResource Include="Scripts\Test\202109080933 Update Metering Point Test Data.sql" />
