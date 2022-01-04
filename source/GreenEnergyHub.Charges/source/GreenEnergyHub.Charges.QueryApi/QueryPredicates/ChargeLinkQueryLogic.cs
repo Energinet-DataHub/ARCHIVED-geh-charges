@@ -17,7 +17,7 @@ using GreenEnergyHub.Charges.QueryApi.Model;
 
 namespace GreenEnergyHub.Charges.QueryApi.QueryPredicates
 {
-    public static class ChargeQueryLogic
+    public static class ChargeLinkQueryLogic
     {
         public static IQueryable<ChargeLink> ForMeteringPoint(this IQueryable<ChargeLink> queryable, string meteringPointId)
         {
