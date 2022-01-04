@@ -32,7 +32,7 @@ namespace GreenEnergyHub.Charges.QueryApi.Model
 
         public int BusinessProcessRole { get; set; }
 
-        public bool? IsActive { get; set; }
+        public bool IsActive { get; set; }
 
         public virtual ICollection<Charge> Charges { get; set; }
     }

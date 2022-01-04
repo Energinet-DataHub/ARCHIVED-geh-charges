@@ -158,10 +158,6 @@ namespace GreenEnergyHub.Charges.QueryApi.Model
 
                 entity.Property(e => e.Id).ValueGeneratedNever();
 
-                entity.Property(e => e.IsActive)
-                    .IsRequired()
-                    .HasDefaultValueSql("((1))");
-
                 entity.Property(e => e.MarketParticipantId)
                     .IsRequired()
                     .HasMaxLength(35);
