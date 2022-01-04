@@ -54,13 +54,13 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi
 
         [Theory]
         [InlineData("571313180000000005")]
-        public async Task GetAsync_WhenMeteringPointIdHasChargeLinks_ReturnsChargeLinks(string meteringPointId)
+        public async Task GetAsync_WhenMeteringPointIdHasChargeLinks_ReturnsOrderedChargeLinks(string meteringPointId)
         {
             // Arrange
             var client = _factory.CreateClient();
             var expectedChargeLinks = 5;
-            //var expectedChargeId = "TestTariff";
-            //var expectedStart = new DateTimeOffset(2019, 12, 31, 23, 00, 00, TimeSpan.FromHours(0));
+            var expectedChargeId = "TestTariff2"; // To verify ordering works as expected
+            var expectedStart = new DateTimeOffset(2021, 12, 31, 23, 00, 00, TimeSpan.FromHours(0));
 
             // Act
             var response = await client.GetAsync($"{BaseUrl}{meteringPointId}");
@@ -69,8 +69,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi
 
             // Assert
             actual!.Count.Should().Be(expectedChargeLinks);
-            //actual![0].ChargeId.Should().Be(expectedChargeId);
-            //actual![0].StartDate.Should().Be(expectedStart);
+            actual![3].ChargeId.Should().Be(expectedChargeId);
+            actual![3].StartDate.Should().Be(expectedStart);
         }
 
         [Theory]
