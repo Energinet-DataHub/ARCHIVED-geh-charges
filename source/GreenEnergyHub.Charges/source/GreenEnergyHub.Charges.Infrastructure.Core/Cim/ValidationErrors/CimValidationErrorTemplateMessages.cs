@@ -37,12 +37,6 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors
             "Tax indicator {{ChargeTaxIndicator}} not allowed: charge {{DocumentSenderProvidedChargeId}} cannot be updated with another Tax indicator";
 
         /// <summary>
-        /// Errormessage for <see cref="ValidationRuleIdentifier.ProcessTypeIsKnownValidation"/>
-        /// </summary>
-        public const string ProcessTypeIsKnownValidationErrorMessage =
-            "Energy business process is missing for metering point {{DocumentId}}";
-
-        /// <summary>
         /// Errormessage for <see cref="ValidationRuleIdentifier.SenderIsMandatoryTypeValidation"/>
         /// </summary>
         public const string SenderIsMandatoryTypeValidationErrorMessage =
@@ -57,9 +51,8 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors
         /// <summary>
         /// Errormessage for <see cref="ValidationRuleIdentifier.ChargeOperationIdRequired"/>
         /// </summary>
-        // TODO BJARKE: MeteringPointId provided in Excel sheet for VR.223 does not make sense
         public const string ChargeOperationIdRequiredErrorMessage =
-            "Identification is missing: transaction can not be processed for metering point {{DocumentId}}";
+            "Identification is missing: transaction can not be processed for document {{DocumentId}}";
 
         /// <summary>
         /// Errormessage for <see cref="ValidationRuleIdentifier.ChargeIdLengthValidation"/>

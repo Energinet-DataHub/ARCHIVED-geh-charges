@@ -41,7 +41,6 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptD
         [InlineAutoMoqData(ValidationRuleIdentifier.ChargeTypeIsKnownValidation, ReasonCode.E86)]
         [InlineAutoMoqData(ValidationRuleIdentifier.ChargeTypeTariffPriceCount, ReasonCode.E87)]
         [InlineAutoMoqData(ValidationRuleIdentifier.FeeMustHaveSinglePrice, ReasonCode.E87)]
-        [InlineAutoMoqData(ValidationRuleIdentifier.ProcessTypeIsKnownValidation, ReasonCode.D02)]
         [InlineAutoMoqData(ValidationRuleIdentifier.RecipientIsMandatoryTypeValidation, ReasonCode.D02)]
         [InlineAutoMoqData(ValidationRuleIdentifier.SenderIsMandatoryTypeValidation, ReasonCode.D02)]
         [InlineAutoMoqData(ValidationRuleIdentifier.StartDateTimeRequiredValidation, ReasonCode.E0H)]

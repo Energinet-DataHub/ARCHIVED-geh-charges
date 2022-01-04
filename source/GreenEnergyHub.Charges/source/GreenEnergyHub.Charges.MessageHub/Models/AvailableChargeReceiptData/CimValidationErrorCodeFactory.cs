@@ -27,7 +27,6 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
                 ValidationRuleIdentifier.StartDateValidation => ReasonCode.E17,
                 ValidationRuleIdentifier.ChangingTariffVatValueNotAllowed => ReasonCode.D14,
                 ValidationRuleIdentifier.ChangingTariffTaxValueNotAllowed => ReasonCode.D14,
-                ValidationRuleIdentifier.ProcessTypeIsKnownValidation => ReasonCode.D02,
                 ValidationRuleIdentifier.SenderIsMandatoryTypeValidation => ReasonCode.D02,
                 ValidationRuleIdentifier.RecipientIsMandatoryTypeValidation => ReasonCode.D02,
                 ValidationRuleIdentifier.ChargeOperationIdRequired => ReasonCode.E0H,
