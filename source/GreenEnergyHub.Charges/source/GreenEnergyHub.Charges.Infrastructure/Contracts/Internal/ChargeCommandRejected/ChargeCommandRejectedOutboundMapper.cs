@@ -46,10 +46,10 @@ namespace GreenEnergyHub.Charges.Infrastructure.Contracts.Internal.ChargeCommand
 
         private static void AddValidationRuleIdentifiers(ChargeCommandRejectedContract chargeCommandRejectedContract, ChargeCommandRejectedEvent rejectionEvent)
         {
-            foreach (var validationRuleIdentifier in rejectionEvent.ValidationRuleIdentifiers)
+            foreach (var failedValidationRuleIdentifier in rejectionEvent.FailedValidationRuleIdentifiers)
             {
-                chargeCommandRejectedContract.ValidationRuleIdentifiers
-                    .Add((ValidationRuleIdentifierContract)validationRuleIdentifier);
+                chargeCommandRejectedContract.FailedValidationRuleIdentifiers
+                    .Add((ValidationRuleIdentifierContract)failedValidationRuleIdentifier);
             }
         }
 

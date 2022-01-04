@@ -51,10 +51,10 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommandRejectedEvents
             // Assert
             Assert.NotNull(result);
             Assert.Equal(currentTime, result.PublishedTime);
-            Assert.Equal(failedRules.Count, result.ValidationRuleIdentifiers.Count());
+            Assert.Equal(failedRules.Count, result.FailedValidationRuleIdentifiers.Count());
             foreach (var failedRule in failedRules)
             {
-                Assert.Contains(failedRule.ValidationRuleIdentifier, result.ValidationRuleIdentifiers);
+                Assert.Contains(failedRule.ValidationRuleIdentifier, result.FailedValidationRuleIdentifiers);
             }
         }
     }

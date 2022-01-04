@@ -61,7 +61,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
         private List<AvailableChargeReceiptValidationError> GetReasons(ChargeCommandRejectedEvent input)
         {
             return input
-                .ValidationRuleIdentifiers
+                .FailedValidationRuleIdentifiers
                 .Select(
                     ruleIdentifier => new AvailableChargeReceiptValidationError(
                         _cimValidationErrorCodeFactory.Create(ruleIdentifier),

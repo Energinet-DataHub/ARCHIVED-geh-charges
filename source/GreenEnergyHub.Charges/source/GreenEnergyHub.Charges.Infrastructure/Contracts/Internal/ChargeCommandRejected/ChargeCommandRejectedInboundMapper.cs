@@ -42,13 +42,13 @@ namespace GreenEnergyHub.Charges.Infrastructure.Contracts.Internal.ChargeCommand
                     ChargeOperation = ConvertChargeOperation(rejectedContract.Command.ChargeOperation),
                     Transaction = Transaction.NewTransaction(),
                 },
-                ConvertValidationRuleIdentifiers(rejectedContract.ValidationRuleIdentifiers));
+                ConvertValidationRuleIdentifiers(rejectedContract.FailedValidationRuleIdentifiers));
         }
 
         private IEnumerable<ValidationRuleIdentifier> ConvertValidationRuleIdentifiers(
-            RepeatedField<ValidationRuleIdentifierContract> validationRuleIdentifierContracts)
+            RepeatedField<ValidationRuleIdentifierContract> failedValidationRuleIdentifierContracts)
         {
-            return validationRuleIdentifierContracts.Select(x => (ValidationRuleIdentifier)x);
+            return failedValidationRuleIdentifierContracts.Select(x => (ValidationRuleIdentifier)x);
         }
 
         private static DocumentDto ConvertDocument(DocumentContract document)
