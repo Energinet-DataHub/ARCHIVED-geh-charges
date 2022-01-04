@@ -54,7 +54,8 @@ namespace GreenEnergyHub.Charges.WebApi.Controllers
             var chargeLinks = await _data
                 .ChargeLinks
                 .ForMeteringPoint(meteringPointId)
-                .OrderByDescending(c => c.Charge.SenderProvidedChargeId)
+                .OrderBy(c => c.Charge.Type)
+                .ThenBy(c => c.Charge.SenderProvidedChargeId)
                 .ThenByDescending(c => c.StartDateTime)
                 .AsChargeLinkDto()
                 .ToListAsync();
