@@ -64,14 +64,14 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             public async Task Given_NewTaxChargeLinkMessage_When_GridAccessProviderPeeks_Then_MessageHubReceivesReply()
             {
                 // Arrange
-                var request = CreateHttpRequest(ChargeLinkDocument.AnyTax, out var correlationId);
+                var request = CreateHttpRequest(ChargeLinkDocument.TaxWithCreateAndUpdateDueToOverLappingPeriod, out var correlationId);
 
                 // Act
                 await Fixture.HostManager.HttpClient.SendAsync(request);
 
                 // Assert
-                // We expect two message types in the messagehub, one for the receipt and one for the charge link itself
-                await Fixture.MessageHubMock.AssertPeekReceivesReplyAsync(correlationId, 2);
+                // We expect 3 message types in the messagehub, one for the receipt, one for the charge link itself and one rejected
+                await Fixture.MessageHubMock.AssertPeekReceivesReplyAsync(correlationId, 3);
             }
 
             private static HttpRequestMessage CreateHttpRequest(string testFilePath, out string correlationId)

@@ -30,8 +30,8 @@ limitations under the License.
     <cim:MktActivityRecord>
         <cim:mRID>clId{{$isoTimestamp}}</cim:mRID>
         <cim:marketEvaluationPoint.mRID codingScheme="A10">571313180000000005</cim:marketEvaluationPoint.mRID>
-        <cim:start_DateAndOrTime.dateTime>2020-09-27T22:00:00Z</cim:start_DateAndOrTime.dateTime>
-        <cim:end_DateAndOrTime.dateTime>2020-10-05T23:00:00Z</cim:end_DateAndOrTime.dateTime>
+        <cim:start_DateAndOrTime.dateTime>2021-10-27T22:00:00Z</cim:start_DateAndOrTime.dateTime>
+        <cim:end_DateAndOrTime.dateTime>2021-11-05T23:00:00Z</cim:end_DateAndOrTime.dateTime>
         <cim:chargeGroup.chargeType.chargeTypeOwner_MarketParticipant.mRID codingScheme="A10">5790000432752</cim:chargeGroup.chargeType.chargeTypeOwner_MarketParticipant.mRID>
         <cim:chargeGroup.chargeType.type>D03</cim:chargeGroup.chargeType.type>
         <cim:chargeGroup.chargeType.mRID>EA-001</cim:chargeGroup.chargeType.mRID>
@@ -40,8 +40,8 @@ limitations under the License.
     <cim:MktActivityRecord>
         <cim:mRID>clId{{$isoTimestamp}}</cim:mRID>
         <cim:marketEvaluationPoint.mRID codingScheme="A10">571313180000000005</cim:marketEvaluationPoint.mRID>
-        <cim:start_DateAndOrTime.dateTime>2020-10-27T22:00:00Z</cim:start_DateAndOrTime.dateTime>
-        <cim:end_DateAndOrTime.dateTime>2020-11-05T23:00:00Z</cim:end_DateAndOrTime.dateTime>
+        <cim:start_DateAndOrTime.dateTime>2021-10-25T22:00:00Z</cim:start_DateAndOrTime.dateTime>
+        <cim:end_DateAndOrTime.dateTime>2021-11-03T23:00:00Z</cim:end_DateAndOrTime.dateTime>
         <cim:chargeGroup.chargeType.chargeTypeOwner_MarketParticipant.mRID codingScheme="A10">5790000432752</cim:chargeGroup.chargeType.chargeTypeOwner_MarketParticipant.mRID>
         <cim:chargeGroup.chargeType.type>D03</cim:chargeGroup.chargeType.type>
         <cim:chargeGroup.chargeType.mRID>EA-001</cim:chargeGroup.chargeType.mRID>
