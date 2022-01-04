@@ -27,16 +27,16 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
             ChargeCommandRejectedEvent>
     {
         private readonly IMessageMetaDataContext _messageMetaDataContext;
-        private readonly ICimValidationErrorTextFactory _cimValidationErrorTextFactory;
+        //private readonly ICimValidationErrorTextFactory _cimValidationErrorTextFactory;
         private readonly ICimValidationErrorCodeFactory _cimValidationErrorCodeFactory;
 
         public AvailableChargeRejectionDataFactory(
             IMessageMetaDataContext messageMetaDataContext,
-            ICimValidationErrorTextFactory cimValidationErrorTextFactory,
+            //ICimValidationErrorTextFactory cimValidationErrorTextFactory,
             ICimValidationErrorCodeFactory cimValidationErrorCodeFactory)
         {
             _messageMetaDataContext = messageMetaDataContext;
-            _cimValidationErrorTextFactory = cimValidationErrorTextFactory;
+            //_cimValidationErrorTextFactory = cimValidationErrorTextFactory;
             _cimValidationErrorCodeFactory = cimValidationErrorCodeFactory;
         }
 
@@ -61,11 +61,11 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
         private List<AvailableChargeReceiptValidationError> GetReasons(ChargeCommandRejectedEvent input)
         {
             return input
-                .ValidationErrors
+                .ValidationRuleIdentifiers
                 .Select(
-                    validationError => new AvailableChargeReceiptValidationError(
-                        _cimValidationErrorCodeFactory.Create(validationError.ValidationRuleIdentifier),
-                        _cimValidationErrorTextFactory.Create(validationError)))
+                    ruleIdentifier => new AvailableChargeReceiptValidationError(
+                        _cimValidationErrorCodeFactory.Create(ruleIdentifier),
+                        "TODO")) // _cimValidationErrorTextFactory.Create(validationError))) // TODO BJARKE
                 .ToList();
         }
     }
