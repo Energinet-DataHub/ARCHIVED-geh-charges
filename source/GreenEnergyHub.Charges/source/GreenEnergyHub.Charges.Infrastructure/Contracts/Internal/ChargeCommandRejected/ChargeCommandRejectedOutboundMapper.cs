@@ -14,14 +14,11 @@
 
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using Energinet.DataHub.Core.Messaging.Protobuf;
-using Google.Protobuf.Collections;
 using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandRejectedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeCommandRejected;
 
@@ -42,46 +39,18 @@ namespace GreenEnergyHub.Charges.Infrastructure.Contracts.Internal.ChargeCommand
             };
 
             ConvertPoints(chargeCommandRejectedContract, rejectionEvent.Command.ChargeOperation.Points);
-            AddRejectedValidationErrors(chargeCommandRejectedContract, rejectionEvent);
+            AddRejectedReasons(chargeCommandRejectedContract, rejectionEvent);
 
             return chargeCommandRejectedContract;
         }
 
-        private static void AddRejectedValidationErrors(
-            ChargeCommandRejectedContract chargeCommandRejectedContract, ChargeCommandRejectedEvent rejectionEvent)
+        private static void AddRejectedReasons(ChargeCommandRejectedContract chargeCommandRejectedContract, ChargeCommandRejectedEvent rejectionEvent)
         {
-            foreach (var validationError in rejectionEvent.ValidationErrors)
+            foreach (var validationRuleIdentifier in rejectionEvent.ValidationRuleIdentifiers)
             {
-                chargeCommandRejectedContract.ValidationErrors.Add(ConvertValidationError(validationError));
+                chargeCommandRejectedContract.ValidationRuleIdentifier
+                    .Add((ValidationRuleIdentifierContract)validationRuleIdentifier);
             }
-        }
-
-        private static ValidationErrorContract ConvertValidationError(ValidationError validationError)
-        {
-            var error = new ValidationErrorContract
-            {
-                ValidationRuleIdentifier =
-                    (ValidationRuleIdentifierContract)validationError.ValidationRuleIdentifier,
-            };
-
-            error
-                .ValidationErrorMessageParameters
-                .AddRange(ConvertValidationErrorMessageParameters(validationError.ValidationErrorMessageParameters));
-
-            return error;
-        }
-
-        private static RepeatedField<ValidationErrorMessageParameterContract> ConvertValidationErrorMessageParameters(
-            IEnumerable<ValidationErrorMessageParameter> validationErrorMessageParameters)
-        {
-            var repeatedField = new RepeatedField<ValidationErrorMessageParameterContract>();
-            repeatedField.AddRange(validationErrorMessageParameters.Select(x => new ValidationErrorMessageParameterContract
-                {
-                    ParameterValue = x.ParameterValue,
-                    ParameterType = (ValidationErrorMessageParameterTypeContract)x.ParameterType,
-                }));
-
-            return repeatedField;
         }
 
         private static ChargeOperationContract ConvertChargeOperation(ChargeOperationDto charge)

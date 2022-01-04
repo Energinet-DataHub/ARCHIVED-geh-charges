@@ -27,7 +27,6 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation
         /// <summary>
         /// Identifier of the current rule
         /// </summary>
-        // TODO BJARKE: All implementations must be adjusted to return null if IsValid
-        public ValidationError? ValidationError { get; }
+        public ValidationRuleIdentifier ValidationRuleIdentifier { get; }
     }
 }

@@ -18,7 +18,7 @@ using GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors;
 
 namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
 {
-    public class CimValidationErrorTextFactory : ICimValidationErrorTextFactory
+    /*public class CimValidationErrorTextFactory : ICimValidationErrorTextFactory
     {
         private readonly ICimValidationErrorMessageProvider _cimValidationErrorMessageProvider;
 
@@ -56,5 +56,5 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
 
             return errorMessage;
         }
-    }
+    }*/
 }

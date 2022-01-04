@@ -16,7 +16,7 @@ using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation;
 
 namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
 {
-    /// <summary>
+    /*/// <summary>
     /// Factory for creating CIM error texts of charge rejections.
     /// </summary>
     public interface ICimValidationErrorTextFactory
@@ -28,5 +28,5 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
         /// <see cref="ValidationErrorMessageParameterType"/>.
         /// </summary>
         string Create(ValidationError validationError);
-    }
+    }*/
 }

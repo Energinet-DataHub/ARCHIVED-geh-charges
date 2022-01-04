@@ -25,22 +25,10 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputVali
             _chargeCommand = chargeCommand;
         }
 
+        public ValidationRuleIdentifier ValidationRuleIdentifier =>
+            ValidationRuleIdentifier.ProcessTypeIsKnownValidation;
+
         // TODO: This doesn't seem right. This rule is the exact same as BusinessReasonCodeMustBeUpdateChargeInformationRule
         public bool IsValid => _chargeCommand.Document.BusinessReasonCode == BusinessReasonCode.UpdateChargeInformation;
-
-        public ValidationError? ValidationError
-        {
-            get
-            {
-                if (IsValid) return null;
-
-                return
-                    new(
-                        ValidationRuleIdentifier.ProcessTypeIsKnownValidation,
-                        new ValidationErrorMessageParameter(
-                            _chargeCommand.Document.Id,
-                            ValidationErrorMessageParameterType.DocumentId));
-            }
-        }
     }
 }

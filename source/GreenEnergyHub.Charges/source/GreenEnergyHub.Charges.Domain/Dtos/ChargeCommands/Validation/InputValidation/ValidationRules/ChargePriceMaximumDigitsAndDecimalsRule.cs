@@ -13,7 +13,6 @@
 // limitations under the License.
 
 using System;
-using System.Globalization;
 using System.Linq;
 using GreenEnergyHub.Charges.Domain.Charges;
 
@@ -29,6 +28,9 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputVali
         {
             _chargeCommand = chargeCommand;
         }
+
+        public ValidationRuleIdentifier ValidationRuleIdentifier =>
+            ValidationRuleIdentifier.ChargePriceMaximumDigitsAndDecimals;
 
         public bool IsValid => _chargeCommand.ChargeOperation.Points.All(PointIsValid);
 
@@ -60,28 +62,6 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputVali
             }
 
             return GetNumberOfDecimals(d, i + 1);
-        }
-
-        public ValidationError? ValidationError
-        {
-            get
-            {
-                if (IsValid) return null;
-
-                var firstInvalid = _chargeCommand.ChargeOperation.Points
-                    .FirstOrDefault(point => PointIsValid(point) == false);
-
-                var price = firstInvalid != null ? firstInvalid.Price.ToString("0.##") : string.Empty;
-
-                return new ValidationError(
-                    ValidationRuleIdentifier.ChargePriceMaximumDigitsAndDecimals,
-                    new ValidationErrorMessageParameter(
-                        price,
-                        ValidationErrorMessageParameterType.ChargePointPrice),
-                    new ValidationErrorMessageParameter(
-                        _chargeCommand.ChargeOperation.ChargeId,
-                        ValidationErrorMessageParameterType.DocumentSenderProvidedChargeId));
-            }
         }
     }
 }

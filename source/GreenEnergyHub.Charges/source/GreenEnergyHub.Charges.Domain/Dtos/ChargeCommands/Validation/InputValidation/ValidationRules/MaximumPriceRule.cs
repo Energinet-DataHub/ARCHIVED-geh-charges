@@ -26,26 +26,8 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputVali
             _chargeCommand = chargeCommand;
         }
 
+        public ValidationRuleIdentifier ValidationRuleIdentifier => ValidationRuleIdentifier.MaximumPrice;
+
         public bool IsValid => _chargeCommand.ChargeOperation.Points.All(point => point.Price < PriceUpperBound);
-
-        public ValidationError? ValidationError
-        {
-            get
-            {
-                if (IsValid) return null;
-
-                var firstInvalid = _chargeCommand.ChargeOperation.Points
-                    .FirstOrDefault(point => point.Price >= PriceUpperBound);
-
-                return new ValidationError(
-                    ValidationRuleIdentifier.MaximumPrice,
-                    new ValidationErrorMessageParameter(
-                        firstInvalid != null ? firstInvalid.Price.ToString("0.##") : string.Empty,
-                        ValidationErrorMessageParameterType.ChargePointPrice),
-                    new ValidationErrorMessageParameter(
-                        firstInvalid != null ? firstInvalid.Position.ToString() : string.Empty,
-                        ValidationErrorMessageParameterType.ChargePointPosition));
-            }
-        }
     }
 }
