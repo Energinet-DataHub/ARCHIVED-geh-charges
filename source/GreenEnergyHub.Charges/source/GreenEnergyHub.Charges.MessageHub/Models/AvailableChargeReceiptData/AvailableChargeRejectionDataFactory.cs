@@ -27,16 +27,16 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
             ChargeCommandRejectedEvent>
     {
         private readonly IMessageMetaDataContext _messageMetaDataContext;
-        //private readonly ICimValidationErrorTextFactory _cimValidationErrorTextFactory;
+        private readonly ICimValidationErrorTextFactory _cimValidationErrorTextFactory;
         private readonly ICimValidationErrorCodeFactory _cimValidationErrorCodeFactory;
 
         public AvailableChargeRejectionDataFactory(
             IMessageMetaDataContext messageMetaDataContext,
-            //ICimValidationErrorTextFactory cimValidationErrorTextFactory,
+            ICimValidationErrorTextFactory cimValidationErrorTextFactory,
             ICimValidationErrorCodeFactory cimValidationErrorCodeFactory)
         {
             _messageMetaDataContext = messageMetaDataContext;
-            //_cimValidationErrorTextFactory = cimValidationErrorTextFactory;
+            _cimValidationErrorTextFactory = cimValidationErrorTextFactory;
             _cimValidationErrorCodeFactory = cimValidationErrorCodeFactory;
         }
 
@@ -63,9 +63,13 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
             return input
                 .FailedValidationRuleIdentifiers
                 .Select(
-                    ruleIdentifier => new AvailableChargeReceiptValidationError(
-                        _cimValidationErrorCodeFactory.Create(ruleIdentifier),
-                        "TODO")) // _cimValidationErrorTextFactory.Create(validationError))) // TODO BJARKE
+                    ruleIdentifier =>
+                    {
+                        var reasonCode = _cimValidationErrorCodeFactory.Create(ruleIdentifier);
+                        var reasonText = _cimValidationErrorTextFactory.Create(reasonCode);
+
+                        return new AvailableChargeReceiptValidationError(reasonCode, reasonText);
+                    })
                 .ToList();
         }
     }
