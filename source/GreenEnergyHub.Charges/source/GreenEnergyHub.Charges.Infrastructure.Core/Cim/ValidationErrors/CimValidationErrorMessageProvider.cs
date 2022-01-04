@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors
@@ -73,12 +74,11 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors
                     CimValidationErrorTemplateMessages.StartDateValidationErrorMessage,
                 ValidationRuleIdentifier.SubscriptionMustHaveSinglePrice =>
                     CimValidationErrorTemplateMessages.SubscriptionMustHaveSinglePriceErrorMessage,
-                ValidationRuleIdentifier.Unknown => CimValidationErrorTemplateMessages.UnknownError,
                 ValidationRuleIdentifier.UpdateNotYetSupported =>
                     CimValidationErrorTemplateMessages.UpdateNotYetSupportedErrorMessage,
                 ValidationRuleIdentifier.VatClassificationValidation =>
                     CimValidationErrorTemplateMessages.VatClassificationValidationErrorMessage,
-                _ => CimValidationErrorTemplateMessages.UnknownError,
+                _ => throw new NotImplementedException(),
             };
         }
     }

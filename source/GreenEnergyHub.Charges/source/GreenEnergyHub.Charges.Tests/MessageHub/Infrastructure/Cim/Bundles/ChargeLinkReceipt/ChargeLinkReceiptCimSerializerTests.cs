@@ -20,7 +20,7 @@ using System.Threading.Tasks;
 using AutoFixture.Xunit2;
 using GreenEnergyHub.Charges.Domain.Configuration;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
-using GreenEnergyHub.Charges.Infrastructure.Core;
+using GreenEnergyHub.Charges.Infrastructure.Core.Cim;
 using GreenEnergyHub.Charges.Infrastructure.Core.Cim.MarketDocument;
 using GreenEnergyHub.Charges.MessageHub.Infrastructure.Cim;
 using GreenEnergyHub.Charges.MessageHub.Infrastructure.Cim.Bundles.ChargeLinkReceipt;
@@ -164,7 +164,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Infrastructure.Cim.Bundles.Cha
                 }
 
                 reasonCodes.Add(new AvailableChargeLinkReceiptDataReasonCode(
-                    ReasonCode.IncorrectChargeInformation,
+                    ReasonCode.D14, // Matches that of the test file
                     text));
             }
 

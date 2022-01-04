@@ -19,11 +19,6 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors
     public static class CimValidationErrorTemplateMessages
     {
         /// <summary>
-        /// Errormessage for <see cref="ValidationRuleIdentifier.Unknown"/>
-        /// </summary>
-        public const string UnknownError = "Unknown error";
-
-        /// <summary>
         /// Errormessage for <see cref="ValidationRuleIdentifier.StartDateValidation"/>
         /// </summary>
         public const string StartDateValidationErrorMessage =

@@ -13,7 +13,7 @@
 // limitations under the License.
 
 using System;
-using GreenEnergyHub.Charges.Infrastructure.Core;
+using GreenEnergyHub.Charges.Infrastructure.Core.Cim;
 
 namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
 {

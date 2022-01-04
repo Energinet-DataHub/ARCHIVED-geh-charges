@@ -12,11 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace GreenEnergyHub.Charges.Infrastructure.Core
+using System;
+
+namespace GreenEnergyHub.Charges.Infrastructure.Core.Cim
 {
-    public enum ReasonCode
+    [AttributeUsage(AttributeTargets.Field)]
+    public sealed class ErrorTextAttribute : Attribute
     {
-        Unknown = 0,
-        IncorrectChargeInformation = 1,
+        public string ErrorText { get; }
+
+        public ErrorTextAttribute(string errorText)
+        {
+            ErrorText = errorText;
+        }
     }
 }

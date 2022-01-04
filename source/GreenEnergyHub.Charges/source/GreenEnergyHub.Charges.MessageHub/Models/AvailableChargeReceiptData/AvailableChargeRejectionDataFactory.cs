@@ -17,7 +17,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandRejectedEvents;
-using GreenEnergyHub.Charges.Infrastructure.Core;
 using GreenEnergyHub.Charges.Infrastructure.Core.Cim.MarketDocument;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessageMetaData;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableData;
@@ -29,12 +28,16 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
     {
         private readonly IMessageMetaDataContext _messageMetaDataContext;
         private readonly ICimValidationErrorTextFactory _cimValidationErrorTextFactory;
+        private readonly ICimValidationErrorCodeFactory _cimValidationErrorCodeFactory;
 
         public AvailableChargeRejectionDataFactory(
-            IMessageMetaDataContext messageMetaDataContext, ICimValidationErrorTextFactory cimValidationErrorTextFactory)
+            IMessageMetaDataContext messageMetaDataContext,
+            ICimValidationErrorTextFactory cimValidationErrorTextFactory,
+            ICimValidationErrorCodeFactory cimValidationErrorCodeFactory)
         {
             _messageMetaDataContext = messageMetaDataContext;
             _cimValidationErrorTextFactory = cimValidationErrorTextFactory;
+            _cimValidationErrorCodeFactory = cimValidationErrorCodeFactory;
         }
 
         public Task<IReadOnlyList<AvailableChargeReceiptData>> CreateAsync(ChargeCommandRejectedEvent input)
@@ -61,7 +64,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
                 .ValidationErrors
                 .Select(
                     validationError => new AvailableChargeReceiptValidationError(
-                        ReasonCode.IncorrectChargeInformation,
+                        _cimValidationErrorCodeFactory.Create(validationError.ValidationRuleIdentifier),
                         _cimValidationErrorTextFactory.Create(validationError)))
                 .ToList();
         }

@@ -12,24 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation;
 using GreenEnergyHub.Charges.Infrastructure.Core.Cim;
 
-namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinkReceiptData
+namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
 {
-    public class AvailableChargeLinkReceiptDataReasonCode
+    public interface ICimValidationErrorCodeFactory
     {
-        public AvailableChargeLinkReceiptDataReasonCode(ReasonCode reasonCode, string text)
-        {
-            ReasonCode = reasonCode;
-            Text = text;
-            Id = Guid.NewGuid();
-        }
-
-        public Guid Id { get; }
-
-        public ReasonCode ReasonCode { get; }
-
-        public string Text { get; }
+        ReasonCode Create(ValidationRuleIdentifier validationRuleIdentifier);
     }
 }

@@ -21,7 +21,7 @@ using AutoFixture.Xunit2;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.Configuration;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
-using GreenEnergyHub.Charges.Infrastructure.Core;
+using GreenEnergyHub.Charges.Infrastructure.Core.Cim;
 using GreenEnergyHub.Charges.Infrastructure.Core.Cim.MarketDocument;
 using GreenEnergyHub.Charges.MessageHub.BundleSpecification.Charges;
 using GreenEnergyHub.Charges.MessageHub.Infrastructure.Cim;
@@ -93,7 +93,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.BundleSpecification.Charges
             var confirmationMessageWeightInBytes = (long)ChargeRejectionBundleSpecification.RejectionWeight * 1000;
 
             // Act
-            var xmlSizeInBytes = new System.IO.FileInfo(FilesForCalculatingBundleSize.WorstCaseChargeReceipt).Length;
+            var xmlSizeInBytes = new FileInfo(FilesForCalculatingBundleSize.WorstCaseChargeReceipt).Length;
 
             // Assert
             xmlSizeInBytes.Should().BeLessOrEqualTo(confirmationMessageWeightInBytes);
@@ -136,7 +136,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.BundleSpecification.Charges
             }
 
             return new AvailableChargeReceiptValidationError(
-                ReasonCode.IncorrectChargeInformation,
+                ReasonCode.D01,
                 builder.ToString());
         }
     }
