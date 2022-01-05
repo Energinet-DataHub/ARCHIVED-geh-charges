@@ -29,6 +29,8 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeLinksCommands.Validatio
     [UnitTest]
     public class ChargeLinksUpdateNotYetSupportedRuleTests
     {
+        private readonly DateTimeZone _copenhagen = DateTimeZoneProviders.Tzdb["Europe/Copenhagen"];
+
         [Theory]
         [InlineAutoMoqData]
         public void IsValid_WhenCalledWithValidChargeLinks_ReturnsTrue(string meteringPointId, DocumentDto document)
@@ -46,11 +48,13 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeLinksCommands.Validatio
         }
 
         [Theory]
-        [InlineAutoMoqData]
-        public void IsValid_WhenCalledWithOverlappingChargeLinks_ReturnsFalse(string meteringPointId, DocumentDto document)
+        [InlineAutoMoqData(1, 12)]
+        [InlineAutoMoqData(12, 20)]
+        [InlineAutoMoqData(20, null!)]
+        public void IsValid_WhenCalledWithOverlappingChargeLinks_ReturnsFalse(int startDateDayOfMonth, int? endDateDayOfMonth, string meteringPointId, DocumentDto document)
         {
             // Arrange
-            var newChargeLinks = GetChargeLinksWithOverlappingPeriods();
+            var newChargeLinks = GetChargeLinksWithPeriod(2022, 1, startDateDayOfMonth, endDateDayOfMonth);
             var chargeLinkCommand = new ChargeLinksCommand(meteringPointId, document, newChargeLinks);
 
             var existingChargeLinks = GetExistingChargeLinks();
@@ -63,8 +67,12 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeLinksCommands.Validatio
 
         private IReadOnlyCollection<ChargeLink> GetExistingChargeLinks()
         {
-            var day1 = SystemClock.Instance.GetCurrentInstant().Minus(Duration.FromDays(20));
-            var day2 = SystemClock.Instance.GetCurrentInstant().Minus(Duration.FromDays(11));
+            var day1LocalDateTime = new LocalDateTime(2022, 1, 11, 0, 0);
+            var day1 = _copenhagen.AtStrictly(day1LocalDateTime).ToInstant();
+
+            var day2LocalDateTime = new LocalDateTime(2022, 1, 21, 0, 0);
+            var day2 = _copenhagen.AtStrictly(day2LocalDateTime).ToInstant();
+
             var link = new ChargeLinkBuilder().WithStartDate(day1).WithEndDate(day2).Build();
 
             return new List<ChargeLink> { link, };
@@ -72,26 +80,34 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeLinksCommands.Validatio
 
         private List<ChargeLinkDto> GetChargeLinksWithoutOverlappingPeriods()
         {
-            var day1 = SystemClock.Instance.GetCurrentInstant().Minus(Duration.FromDays(10));
-            var day2 = SystemClock.Instance.GetCurrentInstant().Minus(Duration.FromDays(0));
+            var day1LocalDateTime = new LocalDateTime(2022, 1, 3, 0, 0);
+            var day1 = _copenhagen.AtStrictly(day1LocalDateTime).ToInstant();
+
+            var day2LocalDateTime = new LocalDateTime(2022, 1, 11, 0, 0);
+            var day2 = _copenhagen.AtStrictly(day2LocalDateTime).ToInstant();
+
             var link1 = new ChargeLinkDtoBuilder().WithStartDate(day1).WithEndDate(day2).Build();
 
-            var day3 = SystemClock.Instance.GetCurrentInstant().Plus(Duration.FromDays(1));
+            var day3LocalDateTime = new LocalDateTime(2022, 1, 21, 0, 0);
+            var day3 = _copenhagen.AtStrictly(day3LocalDateTime).ToInstant();
             var link2 = new ChargeLinkDtoBuilder().WithStartDate(day3).Build();
 
             return new List<ChargeLinkDto> { link1, link2, };
         }
 
-        private List<ChargeLinkDto> GetChargeLinksWithOverlappingPeriods()
+        private List<ChargeLinkDto> GetChargeLinksWithPeriod(int year, int month, int startDateDayOfMonth, int? endDateDayOfMonth)
         {
-            var day1 = SystemClock.Instance.GetCurrentInstant().Minus(Duration.FromDays(30));
-            var day2 = SystemClock.Instance.GetCurrentInstant().Minus(Duration.FromDays(0));
-            var link1 = new ChargeLinkDtoBuilder().WithStartDate(day1).WithEndDate(day2).Build();
+            var day1LocalDateTime = new LocalDateTime(year, month, startDateDayOfMonth, 0, 0);
+            var day1 = _copenhagen.AtStrictly(day1LocalDateTime).ToInstant();
 
-            var day3 = SystemClock.Instance.GetCurrentInstant().Plus(Duration.FromDays(1));
-            var link2 = new ChargeLinkDtoBuilder().WithStartDate(day3).Build();
+            var day2LocalDateTime = new LocalDateTime(year, month, endDateDayOfMonth.GetValueOrDefault(1), 0, 0);
+            var day2 = _copenhagen.AtStrictly(day2LocalDateTime).ToInstant();
 
-            return new List<ChargeLinkDto> { link1, link2, };
+            var link1 = endDateDayOfMonth is not null
+                ? new ChargeLinkDtoBuilder().WithStartDate(day1).WithEndDate(day2).Build()
+                : new ChargeLinkDtoBuilder().WithStartDate(day1).Build();
+
+            return new List<ChargeLinkDto> { link1, };
         }
     }
 }

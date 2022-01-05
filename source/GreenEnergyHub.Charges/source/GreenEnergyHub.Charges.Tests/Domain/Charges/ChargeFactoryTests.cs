@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.Charges;
@@ -31,7 +30,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Charges
         [InlineAutoDomainData]
         public async Task CreateFromCommandAsync_Charge_HasNoNullsOrEmptyCollections(
             ChargeCommand chargeCommand,
-            [NotNull] ChargeFactory sut)
+            ChargeFactory sut)
         {
             // Act
             var actual = await sut.CreateFromCommandAsync(chargeCommand);

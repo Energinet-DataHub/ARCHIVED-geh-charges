@@ -37,11 +37,11 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands.Validation.Busi
 
         public ValidationError? ValidationError { get; }
 
-        private bool ChargeLinkDateRangeIsNotOverlapping(ChargeLinkDto chargeLinkDto)
+        private bool ChargeLinkDateRangeIsNotOverlapping(ChargeLinkDto newLink)
         {
-            foreach (var link in _existingChargeLinks)
+            foreach (var existingLink in _existingChargeLinks)
             {
-                if (link.StartDateTime < chargeLinkDto.EndDateTime && link.EndDateTime >= chargeLinkDto.StartDateTime)
+                if (existingLink.StartDateTime < newLink.EndDateTime && existingLink.EndDateTime >= newLink.StartDateTime)
                 {
                     return false;
                 }

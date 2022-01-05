@@ -13,7 +13,6 @@
 // limitations under the License.
 
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
@@ -34,8 +33,8 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation
         [Theory]
         [InlineAutoDomainData]
         public async Task ValidateAsync_WhenInputValidationFails_ReturnsInvalid(
-            [NotNull] [Frozen] Mock<IChargeCommandInputValidator> inputValidator,
-            [NotNull] ChargeCommandValidator sut,
+            [Frozen] Mock<IChargeCommandInputValidator> inputValidator,
+            ChargeCommandValidator sut,
             ChargeCommand anyCommand)
         {
             ConfigureValidatorToReturnInvalidResult(inputValidator, anyCommand);
@@ -46,9 +45,9 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation
         [Theory]
         [InlineAutoDomainData]
         public async Task ValidateAsync_WhenInputValidationSucceedsAndBusinessValidationFails_ReturnsInvalid(
-            [NotNull] [Frozen] Mock<IChargeCommandInputValidator> inputValidator,
-            [NotNull] [Frozen] Mock<IChargeCommandBusinessValidator> businessValidator,
-            [NotNull] ChargeCommandValidator sut,
+            [Frozen] Mock<IChargeCommandInputValidator> inputValidator,
+            [Frozen] Mock<IChargeCommandBusinessValidator> businessValidator,
+            ChargeCommandValidator sut,
             ChargeCommand anyCommand)
         {
             // Arrange
@@ -65,9 +64,9 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation
         [Theory]
         [InlineAutoDomainData]
         public async Task ValidateAsync_WhenInputValidationSucceedsAndBusinessValidationSucceeds_ReturnsValid(
-            [NotNull] [Frozen] Mock<IChargeCommandInputValidator> inputValidator,
-            [NotNull] [Frozen] Mock<IChargeCommandBusinessValidator> businessValidator,
-            [NotNull] ChargeCommandValidator sut,
+            [Frozen] Mock<IChargeCommandInputValidator> inputValidator,
+            [Frozen] Mock<IChargeCommandBusinessValidator> businessValidator,
+            ChargeCommandValidator sut,
             ChargeCommand anyCommand)
         {
             // Arrange
