@@ -4,11 +4,12 @@
   "SYSTEMFACT_SKIP": true,
 
   // This key vault must contain B2C information that allows us to retrieve an access token from tests.
-  "AZURE_SYSTEMFACT_KEYVAULT_URL": "<System tests key vault url>",
+  "AZURE_SYSTEMTESTS_KEYVAULT_URL": "<System tests key vault url>",
 
-  // The following settings are used to determine the environment and hence the secrets names needed for the tests.
+  // The following settings are used to determine the secrets names needed for the tests.
   "ENVIRONMENT_SHORT": "<short name of environment; e.g. 'u'>",
   "ENVIRONMENT_INSTANCE": "<instance number of environment; e.g. '001'>",
+  "TEAM_NAME": "<team name or abbreviation>",
 
   // Hi Peter, update the property name to match the name of the domain for which we need the baseaddress.
   "MYDOMAIN_BASEADDRESS": "<Base address of the domain in Azure environment>"

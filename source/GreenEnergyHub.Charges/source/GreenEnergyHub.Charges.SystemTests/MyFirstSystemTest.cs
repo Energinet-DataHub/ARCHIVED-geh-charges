@@ -19,6 +19,7 @@ using System.Threading.Tasks;
 using Energinet.DataHub.Core.TestCommon;
 using FluentAssertions;
 using GreenEnergyHub.Charges.SystemTests.Fixtures;
+using Microsoft.Identity.Client;
 
 namespace GreenEnergyHub.Charges.SystemTests
 {
@@ -60,6 +61,28 @@ namespace GreenEnergyHub.Charges.SystemTests
             // Assert
             var content = await expectedResponse!.Content.ReadAsStringAsync();
             content.Should().Contain("myExpectedContent");
+        }
+
+        // Working on extracting an access token on behalf of the "team client"
+        [SystemFact]
+        public async Task When_Xxx_Then_Yyy()
+        {
+            // Arrange
+            var b2cSettings = Configuration.B2CSettings;
+
+            var confidentialClientApp = ConfidentialClientApplicationBuilder
+                .Create(b2cSettings.TeamClientId)
+                .WithClientSecret(b2cSettings.TeamClientSecret)
+                .WithAuthority(new Uri($"https://login.microsoftonline.com/{b2cSettings.B2cTenantId}"))
+                .Build();
+
+            var scopes = new[] { $"{b2cSettings.BackendAppId}/.default" };
+
+            // Act
+            var actualAccessToken = await confidentialClientApp.AcquireTokenForClient(scopes).ExecuteAsync();
+
+            // Assert
+            actualAccessToken.AccessToken.Should().NotBeNullOrWhiteSpace();
         }
 
         // This is just to be able to verify everything works with regards to settings and executing the tests after deployment.

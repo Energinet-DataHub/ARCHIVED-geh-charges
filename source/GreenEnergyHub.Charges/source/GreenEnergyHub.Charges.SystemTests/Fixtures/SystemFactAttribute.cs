@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System;
+using Microsoft.Extensions.Configuration;
 using Xunit;
 
 namespace GreenEnergyHub.Charges.SystemTests.Fixtures
@@ -34,8 +35,20 @@ namespace GreenEnergyHub.Charges.SystemTests.Fixtures
 
         private static bool ShouldSkip()
         {
-            var systemTestConfiguration = new SystemTestConfiguration();
-            return systemTestConfiguration.ShouldSkip;
+            var configuration = BuildConfiguration();
+            return configuration.GetValue<bool>("SYSTEMFACT_SKIP", defaultValue: true);
+        }
+
+        /// <summary>
+        /// Load settings from file if available, but also allow
+        /// those settings to be overriden using environment variables.
+        /// </summary>
+        private static IConfigurationRoot BuildConfiguration()
+        {
+            return new ConfigurationBuilder()
+                .AddJsonFile("systemtest.local.settings.json", optional: true)
+                .AddEnvironmentVariables()
+                .Build();
         }
     }
 }
