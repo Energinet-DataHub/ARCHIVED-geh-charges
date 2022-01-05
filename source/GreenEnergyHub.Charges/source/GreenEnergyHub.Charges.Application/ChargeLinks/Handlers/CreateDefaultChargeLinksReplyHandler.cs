@@ -15,7 +15,6 @@
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application.ChargeLinks.CreateDefaultChargeLinkReplier;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksDataAvailableNotifiedEvents;
-using GreenEnergyHub.Charges.Domain.Dtos.DefaultChargeLinksDataAvailableNotifiedEvents;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessageMetaData;
 
 namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
@@ -35,11 +34,14 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
 
         public async Task HandleAsync(ChargeLinksDataAvailableNotifiedEvent chargeLinksDataAvailableNotifiedEvent)
         {
-            await _createDefaultChargeLinksReplier
-                .ReplyWithSucceededAsync(
-                    chargeLinksDataAvailableNotifiedEvent.MeteringPointId,
-                    true,
-                    _messageMetaDataContext.ReplyTo).ConfigureAwait(false);
+            if (_messageMetaDataContext.IsReplyToSet())
+            {
+                await _createDefaultChargeLinksReplier
+                    .ReplyWithSucceededAsync(
+                        chargeLinksDataAvailableNotifiedEvent.MeteringPointId,
+                        true,
+                        _messageMetaDataContext.ReplyTo).ConfigureAwait(false);
+            }
         }
     }
 }
