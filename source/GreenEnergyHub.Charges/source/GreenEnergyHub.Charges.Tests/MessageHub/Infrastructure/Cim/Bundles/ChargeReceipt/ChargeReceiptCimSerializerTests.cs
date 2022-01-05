@@ -164,7 +164,8 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Infrastructure.Cim.Bundles.Cha
 
                 reasonCodes.Add(new AvailableChargeReceiptValidationError(
                     ReasonCode.D14, // Matches that of the test file
-                    text));
+                    text,
+                    "todo")); // TODO: Henrik
             }
 
             return reasonCodes;

@@ -137,7 +137,8 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.BundleSpecification.Charges
 
             return new AvailableChargeReceiptValidationError(
                 ReasonCode.D01,
-                builder.ToString());
+                builder.ToString(),
+                "todo"); //TODO Henrik
         }
     }
 }

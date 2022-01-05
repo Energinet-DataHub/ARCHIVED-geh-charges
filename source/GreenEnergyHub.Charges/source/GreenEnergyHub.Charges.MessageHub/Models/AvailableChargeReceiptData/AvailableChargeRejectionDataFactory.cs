@@ -27,17 +27,20 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
             ChargeCommandRejectedEvent>
     {
         private readonly IMessageMetaDataContext _messageMetaDataContext;
-        private readonly ICimValidationErrorTextFactory _cimValidationErrorTextFactory;
         private readonly ICimValidationErrorCodeFactory _cimValidationErrorCodeFactory;
+        private readonly ICimValidationErrorTextFactory _cimValidationErrorTextFactory;
+        private readonly ICimValidationErrorDescriptionFactory _cimValidationErrorDescriptionFactory;
 
         public AvailableChargeRejectionDataFactory(
             IMessageMetaDataContext messageMetaDataContext,
+            ICimValidationErrorCodeFactory cimValidationErrorCodeFactory,
             ICimValidationErrorTextFactory cimValidationErrorTextFactory,
-            ICimValidationErrorCodeFactory cimValidationErrorCodeFactory)
+            ICimValidationErrorDescriptionFactory cimValidationErrorDescriptionFactory)
         {
             _messageMetaDataContext = messageMetaDataContext;
             _cimValidationErrorTextFactory = cimValidationErrorTextFactory;
             _cimValidationErrorCodeFactory = cimValidationErrorCodeFactory;
+            _cimValidationErrorDescriptionFactory = cimValidationErrorDescriptionFactory;
         }
 
         public Task<IReadOnlyList<AvailableChargeReceiptData>> CreateAsync(ChargeCommandRejectedEvent input)
@@ -67,8 +70,9 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
                     {
                         var reasonCode = _cimValidationErrorCodeFactory.Create(ruleIdentifier);
                         var reasonText = _cimValidationErrorTextFactory.Create(reasonCode);
+                        var description = _cimValidationErrorDescriptionFactory.Create(ruleIdentifier, input.Command);
 
-                        return new AvailableChargeReceiptValidationError(reasonCode, reasonText);
+                        return new AvailableChargeReceiptValidationError(reasonCode, reasonText, description);
                     })
                 .ToList();
         }

@@ -14,6 +14,7 @@
 
 using System;
 using FluentAssertions;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation;
 using GreenEnergyHub.Charges.Infrastructure.Core.Cim;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData;
 using GreenEnergyHub.Charges.TestCore.Attributes;
@@ -23,33 +24,22 @@ using Xunit.Categories;
 namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptData
 {
     [UnitTest]
-    public class CimValidationErrorTextFactoryTests
+    public class CimValidationErrorDescriptionFactoryTests
     {
-        [Theory]
-        [InlineAutoMoqData]
-        public void Create_MapsAllReasonCodes(CimValidationErrorTextFactory sut)
-        {
-            foreach (var reasonCode in Enum.GetValues<ReasonCode>())
-            {
-                // Assert - ensures that a not-empty reason error text can be obtained for all known reason codes
-                sut.Create(reasonCode).Should().NotBeEmpty();
-            }
-        }
-
-        // TODO BJARKE
+        //Todo: Henrik
         /*
         [Theory]
         [InlineAutoMoqData]
-        public void Create_WhenTwoMergeFields_ReturnsExpectedText(
+        public void Create_WhenTwoMergeFields_ReturnsExpectedDescription(
             ValidationRuleIdentifier anyValidationRuleIdentifier,
             string firstParameterValue,
             string secondParameterValue,
-            ValidationErrorMessageParameterType firstParameterType,
-            ValidationErrorMessageParameterType secondParameterType,
-            [Frozen] Mock<ICimValidationErrorMessageProvider> cimValidationErrorMessageProvider,
-            CimValidationErrorTextFactory sut)
+            // ValidationErrorMessageParameterType firstParameterType,
+            // ValidationErrorMessageParameterType secondParameterType,
+            // [Frozen] Mock<ICimValidationErrorMessageProvider> cimValidationErrorMessageProvider,
+            CimValidationErrorDescriptionFactory sut)
         {
-            // Arrange
+            * // Arrange
             var cimErrorMessageWithTwoMergeFields = "First = {{" + firstParameterType + "}}, second = {{" + secondParameterType + "}}";
             var expected = $"First = {firstParameterValue}, second = {secondParameterValue}";
             var error = new ValidationError(
