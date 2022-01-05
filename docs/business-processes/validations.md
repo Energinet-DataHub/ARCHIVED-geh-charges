@@ -3,7 +3,7 @@
 The following validation rules are currently implemented in the charge domain.
 
 |**Rule number**|**Description**|**Rejection code**|**Charges**|**Charge Links**|
-|:-|:-|:-|:-|
+|:-|:-|:-|:-|:-|
 |VR.009|The energy business process of a metering point is mandatory|D02|All|N/A|
 |VR.150|The sender of a message is mandatory|D02|All|N/A|
 |VR.152*|The sender of a message must currently be an existing and active market party (company)|D02|All|N/A|
@@ -36,3 +36,5 @@ The following validation rules are currently implemented in the charge domain.
 * VR.152 is not fully implemented. Right now we only validate that it is filled with something
 * VR.679 is not fully implemented. For now it verifies that the charge exist, not checking that the linked period is within the charge's validity period
 * VR.902 is temporary and will be changed once update and stop functionality has been implemented.
+
+* N/A Means the validation rule is not applicable to that subdomain
