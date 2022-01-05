@@ -8,7 +8,7 @@ The following validation rules are currently implemented in the charge domain.
 |VR.150|The sender of a message is mandatory|D02|All|N/A|
 |VR.152*|The sender of a message must currently be an existing and active market party (company)|D02|All|N/A|
 |VR.153|The recipient of a message is mandatory|D02|All|N/A|
-|VR.200|Metering point do not exist||N/A|X|
+|VR.200|Metering point do not exist|E10|N/A|X|
 |VR.209|The data information must be received within the correct time period|E17|All|N/A|
 |VR.223|The identification of a transaction is mandatory|E0H|All|N/A|
 |VR.404|The document type of a message must be D10 (Request update charge information)|D02|All|N/A|
@@ -29,7 +29,7 @@ The following validation rules are currently implemented in the charge domain.
 |VR.531|The occurrence of a charge is mandatory|E0H|All|N/A|
 |VR.532|The owner of a charge is mandatory|E0H|All|N/A|
 |VR.630|The VAT entitlement for a charge cannot be updated|D14|Tariff|N/A|
-|VR.679|Charge do not exist||N/A|X|
+|VR.679|Charge do not exist|E0I|N/A|X|
 |VR.902*|Update and stops are not implemented yet|D13|All|X|
 |VR.903|The Tax indicator for a charge cannot be updated|D14|Tariff|N/A|
 
