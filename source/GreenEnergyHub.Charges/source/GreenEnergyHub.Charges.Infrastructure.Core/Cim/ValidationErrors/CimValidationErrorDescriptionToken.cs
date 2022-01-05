@@ -14,38 +14,23 @@
 
 namespace GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors
 {
-    public enum CimValidationErrorDescriptionParameterType
+    public enum CimValidationErrorDescriptionToken
     {
-        ChargeType = 1,
-
-        ChargeTypeOwner = 2,
-
-        Description = 3,
-
-        LongDescriptionMaxLength100 = 4,
-
-        Occurrence = 5,
-
-        ResolutionDuration = 6,
-
-        TaxIndicator = 7,
-
-        VatClass = 8,
-
-        MaxOfPosition = 9,
-
-        Position = 10,
-
-        EnergyPrice = 11,
-
-        DocumentType = 12,
-
-        EnergyBusinessProcess = 13,
-
-        MessageId = 14,
-
-        PartyChargeTypeId = 15,
-
-        SenderId = 16,
+        ChargeDescription = 1,
+        ChargeName = 2,
+        ChargeOwner = 3,
+        ChargePointPosition = 4,
+        ChargePointPrice = 5,
+        ChargePointsCount = 6,
+        ChargeResolution = 7,
+        ChargeStartDateTime = 8,
+        ChargeTaxIndicator = 9,
+        ChargeType = 10,
+        ChargeVatClass = 11,
+        DocumentBusinessReasonCode = 12,
+        DocumentId = 13,
+        DocumentSenderId = 14,
+        DocumentSenderProvidedChargeId = 15,
+        DocumentType = 16,
     }
 }

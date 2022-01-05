@@ -14,8 +14,9 @@
 
 using System;
 using FluentAssertions;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation;
-using GreenEnergyHub.Charges.Infrastructure.Core.Cim;
+using GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData;
 using GreenEnergyHub.Charges.TestCore.Attributes;
 using Xunit;
@@ -26,36 +27,45 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptD
     [UnitTest]
     public class CimValidationErrorDescriptionFactoryTests
     {
-        //Todo: Henrik
-        /*
         [Theory]
         [InlineAutoMoqData]
-        public void Create_WhenTwoMergeFields_ReturnsExpectedDescription(
-            ValidationRuleIdentifier anyValidationRuleIdentifier,
-            string firstParameterValue,
-            string secondParameterValue,
-            // ValidationErrorMessageParameterType firstParameterType,
-            // ValidationErrorMessageParameterType secondParameterType,
-            // [Frozen] Mock<ICimValidationErrorMessageProvider> cimValidationErrorMessageProvider,
-            CimValidationErrorDescriptionFactory sut)
+        public void Create_WhenThreeMergeFields_ReturnsExpectedDescription(
+            ChargeCommand chargeCommand,
+            CimValidationErrorDescriptionProvider cimValidationErrorDescriptionProvider)
         {
-            * // Arrange
-            var cimErrorMessageWithTwoMergeFields = "First = {{" + firstParameterType + "}}, second = {{" + secondParameterType + "}}";
-            var expected = $"First = {firstParameterValue}, second = {secondParameterValue}";
-            var error = new ValidationError(
-                anyValidationRuleIdentifier,
-                new ValidationErrorMessageParameter(firstParameterValue, firstParameterType),
-                new ValidationErrorMessageParameter(secondParameterValue, secondParameterType));
-            cimValidationErrorMessageProvider
-                .Setup(f => f.GetCimValidationErrorMessage(anyValidationRuleIdentifier))
-                .Returns(cimErrorMessageWithTwoMergeFields);
+            // Arrange
+            var sut = new CimValidationErrorDescriptionFactory(cimValidationErrorDescriptionProvider);
+
+            var expected = CimValidationErrorDescriptionTemplateMessages.ResolutionTariffValidationErrorDescription
+                .Replace("{{ChargeResolution}}", chargeCommand.ChargeOperation.Resolution.ToString())
+                .Replace("{{DocumentSenderProvidedChargeId}}", chargeCommand.ChargeOperation.ChargeId)
+                .Replace("{{ChargeType}}", chargeCommand.ChargeOperation.Type.ToString());
 
             // Act
-            var actual = sut.Create(error);
+            var actual = sut.Create(ValidationRuleIdentifier.ResolutionTariffValidation, chargeCommand);
 
             // Assert
             actual.Should().Be(expected);
         }
-        */
+
+        [Theory]
+        [InlineAutoMoqData]
+        public void Create_MergesAllMergeFields(
+            ChargeCommand chargeCommand,
+            CimValidationErrorDescriptionProvider cimValidationErrorDescriptionProvider)
+        {
+            // Arrange
+            var validationRuleIdentifiers = (ValidationRuleIdentifier[])Enum.GetValues(typeof(ValidationRuleIdentifier));
+            var sut = new CimValidationErrorDescriptionFactory(cimValidationErrorDescriptionProvider);
+
+            // Act
+            // Assert
+            foreach (var validationRuleIdentifier in validationRuleIdentifiers)
+            {
+                var actual = sut.Create(validationRuleIdentifier, chargeCommand);
+                actual.Should().NotBeNullOrWhiteSpace();
+                actual.Should().NotContain("{");
+            }
+        }
     }
 }

@@ -18,7 +18,7 @@ using AutoFixture.Xunit2;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandRejectedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation;
-using GreenEnergyHub.Charges.Infrastructure.Core;
+using GreenEnergyHub.Charges.Infrastructure.Core.Cim;
 using GreenEnergyHub.Charges.Infrastructure.Core.Cim.MarketDocument;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessageMetaData;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData;
@@ -37,7 +37,8 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptD
         [InlineAutoMoqData]
         public async Task CreateAsync_WhenCalledWithRejectedEvent_ReturnsAvailableData(
             [Frozen] Mock<IMessageMetaDataContext> messageMetaDataContext,
-            // [Frozen] Mock<ICimValidationErrorTextFactory> validationErrorTextFactory,
+            [Frozen] Mock<ICimValidationErrorCodeFactory> validationErrorCodeFactory,
+            [Frozen] Mock<ICimValidationErrorTextFactory> validationErrorTextFactory,
             ChargeCommandRejectedEvent rejectedEvent,
             Instant now,
             AvailableChargeRejectionDataFactory sut)
@@ -45,15 +46,9 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptD
             // Arrange
             messageMetaDataContext.Setup(m => m.RequestDataTime).Returns(now);
 
-            // Use validation rule identifier as error text
-            // TODO Henrik
-            /*validationErrorTextFactory
-                .Setup(f => f.Create(It.IsAny<ValidationError>()))
-                .Returns<ValidationError>(error => error.ValidationRuleIdentifier.ToString());
-            var expectedValidationErrors = rejectedEvent
-                .ValidationErrors
-                .Select(e => e.ValidationRuleIdentifier.ToString())
-                .ToList();*/
+            // fake error code, text and description
+            validationErrorCodeFactory.Setup(f => f.Create(It.IsAny<ValidationRuleIdentifier>())).Returns<ReasonCode>(error => error);
+            validationErrorTextFactory.Setup(f => f.Create(It.IsAny<ReasonCode>())).Returns<ValidationRuleIdentifier>(error => error.ToString());
 
             // Act
             var actualList = await sut.CreateAsync(rejectedEvent);
@@ -62,23 +57,22 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptD
             actualList.Should().ContainSingle();
             var actual = actualList.Single();
             actual.RecipientId.Should().Be(rejectedEvent.Command.Document.Sender.Id);
-            actual.RecipientRole.Should()
-                .Be(rejectedEvent.Command.Document.Sender.BusinessProcessRole);
-            actual.BusinessReasonCode.Should()
-                .Be(rejectedEvent.Command.Document.BusinessReasonCode);
+            actual.RecipientRole.Should().Be(rejectedEvent.Command.Document.Sender.BusinessProcessRole);
+            actual.BusinessReasonCode.Should().Be(rejectedEvent.Command.Document.BusinessReasonCode);
             actual.RequestDateTime.Should().Be(now);
             actual.ReceiptStatus.Should().Be(ReceiptStatus.Rejected);
             actual.OriginalOperationId.Should().Be(rejectedEvent.Command.ChargeOperation.Id);
 
-            // actual.ValidationErrors.Should().HaveSameCount(rejectedEvent.ValidationErrors);
-            var actualValidationErrors = actualList[0].ValidationErrors.ToList();
+            actual.ValidationErrors.Should().HaveSameCount(rejectedEvent.FailedValidationRuleIdentifiers);
 
-            for (var i = 0; i < actualValidationErrors.Count; i++)
+            /*for (var i = 0; i < actualValidationErrors.Count; i++)
             {
                 // TODO Henrik
                 // actualValidationErrors[i].ReasonCode.Should().Be(ReasonCode.IncorrectChargeInformation);
                 // actualValidationErrors[i].Text.Should().Be(expectedValidationErrors[i]);
-            }
+                actualValidationErrors[i].Description.Should().NotBeNullOrWhiteSpace();
+                actualValidationErrors[i].Description.Should().NotContain("{{");
+            }*/
         }
     }
 }

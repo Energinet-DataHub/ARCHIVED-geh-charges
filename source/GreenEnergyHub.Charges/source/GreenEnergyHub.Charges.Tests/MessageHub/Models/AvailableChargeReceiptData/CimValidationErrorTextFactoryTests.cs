@@ -35,37 +35,5 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptD
                 sut.Create(reasonCode).Should().NotBeEmpty();
             }
         }
-
-        // TODO Henrik
-        /*
-        [Theory]
-        [InlineAutoMoqData]
-        public void Create_WhenTwoMergeFields_ReturnsExpectedText(
-            ValidationRuleIdentifier anyValidationRuleIdentifier,
-            string firstParameterValue,
-            string secondParameterValue,
-            ValidationErrorMessageParameterType firstParameterType,
-            ValidationErrorMessageParameterType secondParameterType,
-            [Frozen] Mock<ICimValidationErrorMessageProvider> cimValidationErrorMessageProvider,
-            CimValidationErrorTextFactory sut)
-        {
-            // Arrange
-            var cimErrorMessageWithTwoMergeFields = "First = {{" + firstParameterType + "}}, second = {{" + secondParameterType + "}}";
-            var expected = $"First = {firstParameterValue}, second = {secondParameterValue}";
-            var error = new ValidationError(
-                anyValidationRuleIdentifier,
-                new ValidationErrorMessageParameter(firstParameterValue, firstParameterType),
-                new ValidationErrorMessageParameter(secondParameterValue, secondParameterType));
-            cimValidationErrorMessageProvider
-                .Setup(f => f.GetCimValidationErrorMessage(anyValidationRuleIdentifier))
-                .Returns(cimErrorMessageWithTwoMergeFields);
-
-            // Act
-            var actual = sut.Create(error);
-
-            // Assert
-            actual.Should().Be(expected);
-        }
-        */
     }
 }
