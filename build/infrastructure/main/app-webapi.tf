@@ -25,6 +25,16 @@ resource "azurerm_app_service" "webapi" {
     }
   }
 
+  app_settings = {
+    "APPINSIGHTS_INSTRUMENTATIONKEY" = "${data.azurerm_key_vault_secret.appi_instrumentation_key.value}"
+  }
+
+  connection_string {
+    name  = "CHARGE_DB_CONNECTION_STRING"
+    type  = "SQLServer"
+    value = local.CHARGE_DB_CONNECTION_STRING
+  }
+
   tags              = azurerm_resource_group.this.tags
 
   lifecycle {
