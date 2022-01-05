@@ -17,7 +17,6 @@ using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksAcceptedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksDataAvailableNotifiedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.DefaultChargeLinksDataAvailableNotifiedEvents;
-using GreenEnergyHub.Charges.Infrastructure.Core.MessageMetaData;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions;
 
 namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
@@ -26,30 +25,22 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
     {
         private readonly IMessageDispatcher<ChargeLinksDataAvailableNotifiedEvent> _messageDispatcher;
         private readonly IChargeLinksDataAvailableNotifiedEventFactory _chargeLinksDataAvailableNotifiedEventFactory;
-        private readonly IMessageMetaDataContext _messageMetaDataContext;
 
         public ChargeLinksDataAvailableNotifiedPublisher(
             IMessageDispatcher<ChargeLinksDataAvailableNotifiedEvent> messageDispatcher,
-            IChargeLinksDataAvailableNotifiedEventFactory chargeLinksDataAvailableNotifiedEventFactory,
-            IMessageMetaDataContext messageMetaDataContext)
+            IChargeLinksDataAvailableNotifiedEventFactory chargeLinksDataAvailableNotifiedEventFactory)
         {
             _messageDispatcher = messageDispatcher;
             _chargeLinksDataAvailableNotifiedEventFactory = chargeLinksDataAvailableNotifiedEventFactory;
-            _messageMetaDataContext = messageMetaDataContext;
         }
 
         public async Task PublishAsync(ChargeLinksAcceptedEvent chargeLinksAcceptedEvent)
         {
             if (chargeLinksAcceptedEvent == null) throw new ArgumentNullException(nameof(chargeLinksAcceptedEvent));
 
-            // TODO: Move if-clause to replier
-            if (_messageMetaDataContext.IsReplyToSet())
-            {
-                // TODO: Event and factory should be named "ChargeLinksDataAvailableNotified"
-                var defaultChargeLinksCreatedEvent =
-                    _chargeLinksDataAvailableNotifiedEventFactory.Create(chargeLinksAcceptedEvent);
-                await _messageDispatcher.DispatchAsync(defaultChargeLinksCreatedEvent);
-            }
+            var chargeLinksDataAvailableNotifiedEvent =
+                _chargeLinksDataAvailableNotifiedEventFactory.Create(chargeLinksAcceptedEvent);
+            await _messageDispatcher.DispatchAsync(chargeLinksDataAvailableNotifiedEvent);
         }
     }
 }
