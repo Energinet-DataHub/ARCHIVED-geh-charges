@@ -36,7 +36,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptD
             }
         }
 
-        // TODO BJARKE
+        // TODO Henrik
         /*
         [Theory]
         [InlineAutoMoqData]

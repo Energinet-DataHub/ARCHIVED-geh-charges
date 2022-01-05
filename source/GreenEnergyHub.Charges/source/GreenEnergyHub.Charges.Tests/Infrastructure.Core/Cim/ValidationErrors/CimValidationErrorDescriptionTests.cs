@@ -28,9 +28,9 @@ using Xunit.Categories;
 namespace GreenEnergyHub.Charges.Tests.Infrastructure.Core.Cim.ValidationErrors
 {
     [UnitTest]
-    public class CimValidationErrorMessagesTests
+    public class CimValidationErrorDescriptionTests
     {
-        // TODO BJARKE
+        // TODO Henrik
         // [Theory]
         // [InlineAutoMoqData(CimValidationErrorTemplateMessages.StartDateValidationErrorMessage, typeof(StartDateValidationRule))]
         // [InlineAutoMoqData(CimValidationErrorTemplateMessages.ChangingTariffVatValueNotAllowedErrorMessage, typeof(ChangingTariffVatValueNotAllowedRule))]

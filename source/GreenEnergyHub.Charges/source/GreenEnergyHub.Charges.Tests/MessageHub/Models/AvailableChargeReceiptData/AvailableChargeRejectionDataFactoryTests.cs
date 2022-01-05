@@ -46,7 +46,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptD
             messageMetaDataContext.Setup(m => m.RequestDataTime).Returns(now);
 
             // Use validation rule identifier as error text
-            // TODO BJARKE
+            // TODO Henrik
             /*validationErrorTextFactory
                 .Setup(f => f.Create(It.IsAny<ValidationError>()))
                 .Returns<ValidationError>(error => error.ValidationRuleIdentifier.ToString());
@@ -75,7 +75,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptD
 
             for (var i = 0; i < actualValidationErrors.Count; i++)
             {
-                // TODO BJARKE
+                // TODO Henrik
                 // actualValidationErrors[i].ReasonCode.Should().Be(ReasonCode.IncorrectChargeInformation);
                 // actualValidationErrors[i].Text.Should().Be(expectedValidationErrors[i]);
             }

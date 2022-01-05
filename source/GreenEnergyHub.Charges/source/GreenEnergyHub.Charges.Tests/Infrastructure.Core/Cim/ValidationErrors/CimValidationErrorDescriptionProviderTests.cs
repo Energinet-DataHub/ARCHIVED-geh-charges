@@ -20,16 +20,16 @@ using Xunit;
 
 namespace GreenEnergyHub.Charges.Tests.Infrastructure.Core.Cim.ValidationErrors
 {
-    public class CimValidationErrorMessageProviderTests
+    public class CimValidationErrorDescriptionProviderTests
     {
         [Theory]
         [InlineAutoMoqData]
-        public void GetCimValidationErrorMessage_MapsAllKnownValidationRuleIdentifiers(CimValidationErrorMessageProvider sut)
+        public void GetCimValidationErrorMessage_MapsAllKnownValidationRuleIdentifiers(CimValidationErrorDescriptionProvider sut)
         {
             foreach (var value in Enum.GetValues<ValidationRuleIdentifier>())
             {
                 // Assert that create does not throw (ensures that we are mapping all enum values)
-                sut.GetCimValidationErrorMessage(value);
+                sut.GetCimValidationErrorDescription(value);
             }
         }
     }

@@ -16,8 +16,8 @@ using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors
 {
-    public interface ICimValidationErrorMessageProvider
+    public interface ICimValidationErrorDescriptionProvider
     {
-        string GetCimValidationErrorMessage(ValidationRuleIdentifier validationRuleIdentifier);
+        string GetCimValidationErrorDescription(ValidationRuleIdentifier validationRuleIdentifier);
     }
 }
