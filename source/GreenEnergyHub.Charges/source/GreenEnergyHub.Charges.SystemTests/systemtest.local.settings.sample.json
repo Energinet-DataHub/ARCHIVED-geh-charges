@@ -3,6 +3,10 @@
   // Should be set 'true' using an environment variable on the build agent, to run these after deployment.
   "SYSTEMFACT_SKIP": true,
 
-  // Hi Peter, update the property name to match the name of the domain for which we need the baseaddress.
-  "MYDOMAIN_BASEADDRESS": "<Base address of the domain in Azure environment>"
+  // This key vault must contain B2C information that allows us to retrieve an access token from tests.
+  "AZURE_SYSTEMFACT_KEYVAULT_URL": "<System tests key vault url>",
+
+  // The following settings are used to determine the environment and hence the secrets names needed for the tests.
+  "ENVIRONMENT_SHORT": "<short name of environment; e.g. 'u'>",
+  "ENVIRONMENT_INSTANCE": "<instance number of environment; e.g. '001'>"
 }
