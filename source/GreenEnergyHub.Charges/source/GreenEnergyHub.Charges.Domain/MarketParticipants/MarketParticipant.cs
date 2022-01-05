@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
+
 #pragma warning disable 8618
 namespace GreenEnergyHub.Charges.Domain.MarketParticipants
 {
@@ -24,15 +26,19 @@ namespace GreenEnergyHub.Charges.Domain.MarketParticipants
     /// </summary>
     public class MarketParticipant
     {
+        public Guid Id { get; }
+
         /// <summary>
         /// Contains an ID that identifies the Market Participants. In Denmark this would be the GLN number or EIC code.
         /// </summary>
-        public string Id { get; set; }
+        public string MarketParticipantId { get; set; }
 
         /// <summary>
         /// Contains the role a market participant uses when initiating and communicating with Green Energy Hub
         /// about a specific business process, e.g. Grid Access Provider use 'DDM' when creating Charge price lists.
         /// </summary>
         public MarketParticipantRole BusinessProcessRole { get; set; }
+
+        public bool IsActive { get; }
     }
 }

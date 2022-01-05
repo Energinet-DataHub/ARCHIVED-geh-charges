@@ -28,7 +28,7 @@ limitations under the License.
   <!-- Configuration for NuGet package -->
   <PropertyGroup>
     <PackageId>Energinet.DataHub.Charges.Clients</PackageId>
-    <PackageVersion>1.0.15$(VersionSuffix)</PackageVersion>
+    <PackageVersion>1.0.21$(VersionSuffix)</PackageVersion>
     <Title>Energinet.DataHub.Charges.Clients</Title>
     <Company>Energinet DataHub A/S</Company>
     <Authors>DataHub</Authors>
@@ -105,6 +105,12 @@ https://github.com/Energinet-DataHub/geh-charges/tree/main/source/Energinet.Char
       <OutputDir>obj\contracts\</OutputDir>
       <Generator>MSBuild:Compile</Generator>
     </Protobuf>
+    <Protobuf Update="..\..\..\Contracts\CreateDefaultChargeLinks.proto">
+      <Link>DefaultChargeLink\Contracts\CreateDefaultChargeLinks.proto</Link>
+    </Protobuf>
+    <Protobuf Update="..\..\..\Contracts\CreateDefaultChargeLinksReply.proto">
+      <Link>DefaultChargeLink\Contracts\CreateDefaultChargeLinksReply.proto</Link>
+    </Protobuf>
   </ItemGroup>
   
   <ItemGroup>
@@ -131,10 +137,14 @@ https://github.com/Energinet-DataHub/geh-charges/tree/main/source/Energinet.Char
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Include="..\..\..\Contracts\ChargeLinkDto.cs" Link="ChargeLinkDto.cs" />
-    <Compile Include="..\..\..\Contracts\ChargeType.cs" Link="ChargeType.cs" />
+    <Compile Include="..\..\..\Contracts\ChargeLink\ChargeLinkDto.cs">
+      <Link>ChargeLinks\Model\ChargeLinkDto.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\Contracts\Charge\ChargeType.cs">
+      <Link>ChargeLinks\Model\ChargeType.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\Contracts\ErrorCode.cs">
-      <Link>Common\ErrorCode.cs</Link>
+      <Link>DefaultChargeLink\ErrorCode.cs</Link>
     </Compile>
   </ItemGroup>
   

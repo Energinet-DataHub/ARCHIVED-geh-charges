@@ -13,7 +13,7 @@
 // limitations under the License.
 
 using System;
-using System.Collections.Generic;
+using NodaTime;
 
 namespace GreenEnergyHub.Charges.Domain.ChargeLinks
 {
@@ -25,26 +25,16 @@ namespace GreenEnergyHub.Charges.Domain.ChargeLinks
         public ChargeLink(
             Guid chargeId,
             Guid meteringPointId,
-            List<ChargeLinkOperation> operations,
-            List<ChargeLinkPeriodDetails> periodDetails)
+            Instant startDateTime,
+            Instant endDateTime,
+            int factor)
         {
             Id = Guid.NewGuid();
             ChargeId = chargeId;
             MeteringPointId = meteringPointId;
-            _operations = operations;
-            _periodDetails = periodDetails;
-        }
-
-        /// <summary>
-        /// Used implicitly by persistence.
-        /// </summary>
-        // ReSharper disable once UnusedMember.Local
-        private ChargeLink(Guid chargeId, Guid meteringPointId)
-        {
-            ChargeId = chargeId;
-            MeteringPointId = meteringPointId;
-            _operations = new List<ChargeLinkOperation>();
-            _periodDetails = new List<ChargeLinkPeriodDetails>();
+            StartDateTime = startDateTime;
+            EndDateTime = endDateTime;
+            Factor = factor;
         }
 
         /// <summary>
@@ -63,12 +53,10 @@ namespace GreenEnergyHub.Charges.Domain.ChargeLinks
         /// </summary>
         public Guid MeteringPointId { get; }
 
-        private readonly List<ChargeLinkOperation> _operations;
+        public Instant StartDateTime { get; }
 
-        public IReadOnlyCollection<ChargeLinkOperation> Operations => _operations.AsReadOnly();
+        public Instant EndDateTime { get; }
 
-        private readonly List<ChargeLinkPeriodDetails> _periodDetails;
-
-        public IReadOnlyCollection<ChargeLinkPeriodDetails> PeriodDetails => _periodDetails.AsReadOnly();
+        public int Factor { get; }
     }
 }

@@ -14,9 +14,9 @@
 
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Energinet.Charges.Contracts;
+using Energinet.Charges.Contracts.ChargeLink;
 
-namespace Energinet.DataHub.Charges.Clients
+namespace Energinet.DataHub.Charges.Clients.ChargeLinks
 {
     /// <summary>
     /// Charge Links Client Interface

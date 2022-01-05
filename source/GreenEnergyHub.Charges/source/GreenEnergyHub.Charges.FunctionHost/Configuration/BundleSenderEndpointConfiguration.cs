@@ -13,17 +13,17 @@
 // limitations under the License.
 
 using Energinet.DataHub.MessageHub.Model.Peek;
-using GreenEnergyHub.Charges.Application.MessageHub;
-using GreenEnergyHub.Charges.Domain.AvailableChargeData;
-using GreenEnergyHub.Charges.Domain.AvailableChargeLinkReceiptData;
-using GreenEnergyHub.Charges.Domain.AvailableChargeLinksData;
-using GreenEnergyHub.Charges.Domain.AvailableChargeReceiptData;
-using GreenEnergyHub.Charges.Infrastructure.ChargeBundle.Cim;
-using GreenEnergyHub.Charges.Infrastructure.ChargeLinkBundle.Cim;
-using GreenEnergyHub.Charges.Infrastructure.ChargeLinkReceiptBundle.Cim;
-using GreenEnergyHub.Charges.Infrastructure.ChargeReceiptBundle.Cim;
-using GreenEnergyHub.Charges.Infrastructure.Cim;
-using GreenEnergyHub.Charges.Infrastructure.MessageHub;
+using GreenEnergyHub.Charges.MessageHub.Application.MessageHub;
+using GreenEnergyHub.Charges.MessageHub.Infrastructure.Bundling;
+using GreenEnergyHub.Charges.MessageHub.Infrastructure.Cim;
+using GreenEnergyHub.Charges.MessageHub.Infrastructure.Cim.Bundles.ChargeLinkReceipt;
+using GreenEnergyHub.Charges.MessageHub.Infrastructure.Cim.Bundles.ChargeLinks;
+using GreenEnergyHub.Charges.MessageHub.Infrastructure.Cim.Bundles.ChargeReceipt;
+using GreenEnergyHub.Charges.MessageHub.Infrastructure.Cim.Bundles.Charges;
+using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeData;
+using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinkReceiptData;
+using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksData;
+using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace GreenEnergyHub.Charges.FunctionHost.Configuration

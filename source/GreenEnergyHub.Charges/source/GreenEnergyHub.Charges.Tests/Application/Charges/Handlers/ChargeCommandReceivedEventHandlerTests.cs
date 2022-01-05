@@ -23,7 +23,6 @@ using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandReceivedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation;
-using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.TestCore.Attributes;
 using Moq;
 using NodaTime;
@@ -41,9 +40,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
             [Frozen] [NotNull] Mock<IChargeCommandValidator> validator,
             [Frozen] [NotNull] Mock<IChargeRepository> repository,
             [Frozen] [NotNull] Mock<IChargeCommandConfirmationService> confirmationService,
-            [Frozen] [NotNull] Mock<ChargeCommand> chargeCommand,
             [Frozen] [NotNull] Mock<Charge> charge,
-            [Frozen] [NotNull] Mock<IChargeCommandFactory> chargeCommandFactory,
             [Frozen] [NotNull] Mock<IChargeFactory> chargeFactory,
             [NotNull] ChargeCommandReceivedEvent receivedEvent,
             [NotNull] ChargeCommandReceivedEventHandler sut)
@@ -59,28 +56,20 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
             var stored = false;
             repository.Setup(
                     r => r.StoreChargeAsync(
-                        It.IsAny<Charge>(),
-                        It.IsAny<string>(),
-                        It.IsAny<Instant>()))
-                .Callback<Charge, string, Instant>(
-                    (c, s, date) => stored = true);
+                        It.IsAny<Charge>()))
+                .Callback<Charge>(
+                    _ => stored = true);
 
             var confirmed = false;
             confirmationService.Setup(
                     s => s.AcceptAsync(
                         It.IsAny<ChargeCommand>()))
                 .Callback<ChargeCommand>(
-                    (_) => confirmed = true);
-
-            chargeCommandFactory.Setup(
-                    s => s.CreateFromCharge(
-                        It.IsAny<Charge>(),
-                        It.IsAny<DocumentDto>()))
-                .Returns(chargeCommand.Object);
+                    _ => confirmed = true);
 
             chargeFactory.Setup(s => s.CreateFromCommandAsync(
                     It.IsAny<ChargeCommand>()))
-                .Returns(Task.FromResult(charge.Object));
+                .ReturnsAsync(charge.Object);
 
             // Act
             await sut.HandleAsync(receivedEvent).ConfigureAwait(false);

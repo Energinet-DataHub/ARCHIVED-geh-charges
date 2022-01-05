@@ -20,19 +20,17 @@ using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandAcceptedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandRejectedEvents;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessValidation;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessValidation.Factories;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputValidation;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.FunctionHost.Common;
-using GreenEnergyHub.Charges.Infrastructure.Context.Mapping;
+using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Registration;
 using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeCommandAccepted;
 using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeCommandReceived;
 using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeCommandRejected;
-using GreenEnergyHub.Charges.Infrastructure.Messaging.Registration;
-using GreenEnergyHub.Charges.Infrastructure.Repositories;
+using GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories;
 using GreenEnergyHub.Iso8601;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -45,7 +43,6 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
             serviceCollection.AddScoped<IChargeCommandConfirmationService, ChargeCommandConfirmationService>();
             serviceCollection.AddScoped<IChargeCommandReceivedEventHandler, ChargeCommandReceivedEventHandler>();
             serviceCollection.AddScoped<IChargeFactory, ChargeFactory>();
-            serviceCollection.AddScoped<IChargeCommandFactory, ChargeCommandFactory>();
             serviceCollection.AddScoped<IChargeCommandAcceptedEventFactory, ChargeCommandAcceptedEventFactory>();
             serviceCollection.AddScoped<IChargeCommandRejectedEventFactory, ChargeCommandRejectedEventFactory>();
 
@@ -59,7 +56,6 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
         private static void ConfigureDatabase(IServiceCollection serviceCollection)
         {
             serviceCollection.AddScoped<IMarketParticipantRepository, MarketParticipantRepository>();
-            serviceCollection.AddScoped<IMarketParticipantMapper, MarketParticipantMapper>();
         }
 
         private static void ConfigureValidation(IServiceCollection serviceCollection)

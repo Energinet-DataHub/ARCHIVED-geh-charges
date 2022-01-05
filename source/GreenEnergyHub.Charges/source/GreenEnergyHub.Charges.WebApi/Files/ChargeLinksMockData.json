@@ -3,84 +3,84 @@
     "ChargeType": 3,
     "ChargeId": "40000",
     "ChargeName": "Transmissions nettarif",
-    "ChargeOwnerId": "5790000432752",
+    "ChargeOwner": "5790000432752",
     "ChargeOwnerName": "Energinet (SYO)",
     "TaxIndicator": false,
     "TransparentInvoicing": false,
-    "Factor": 1,
-    "StartDateTimeUtc": "2019-12-31T23:00:00Z",
-    "EndDateTimeUtc": null
+    "Quantity": 1,
+    "StartDate": "2019-12-31T23:00:00Z",
+    "EndDate": null
   },
   {
     "ChargeType": 3,
     "ChargeId": "41000",
     "ChargeName": "Systemtarif",
-    "ChargeOwnerId": "5790000432752",
+    "ChargeOwner": "5790000432752",
     "ChargeOwnerName": "Energinet (SYO)",
     "TaxIndicator": false,
     "TransparentInvoicing": false,
-    "Factor": 1,
-    "StartDateTimeUtc": "2018-12-31T23:00:00Z",
-    "EndDateTimeUtc": null
+    "Quantity": 1,
+    "StartDate": "2018-12-31T23:00:00Z",
+    "EndDate": null
   },
   {
     "ChargeType": 3,
     "ChargeId": "45013",
     "ChargeName": "Balancetarif for forbrug",
-    "ChargeOwnerId": "5790000432752",
+    "ChargeOwner": "5790000432752",
     "ChargeOwnerName": "Energinet (SYO)",
     "TaxIndicator": false,
     "TransparentInvoicing": false,
-    "Factor": 1,
-    "StartDateTimeUtc": "2018-05-31T22:00:00Z",
-    "EndDateTimeUtc": null
+    "Quantity": 1,
+    "StartDate": "2018-05-31T22:00:00Z",
+    "EndDate": null
   },
   {
     "ChargeType": 3,
     "ChargeId": "EA-001",
     "ChargeName": "Elafgift",
-    "ChargeOwnerId": "5790000432752",
+    "ChargeOwner": "5790000432752",
     "ChargeOwnerName": "Energinet (SYO)",
     "TaxIndicator": true,
     "TransparentInvoicing": true,
-    "Factor": 1,
-    "StartDateTimeUtc": "2020-12-31T23:00:00Z",
-    "EndDateTimeUtc": null
+    "Quantity": 1,
+    "StartDate": "2020-12-31T23:00:00Z",
+    "EndDate": null
   },
   {
     "ChargeType": 1,
     "ChargeId": "ABO-001",
     "ChargeName": "Abonnement 001",
-    "ChargeOwnerId": "5790000432752",
+    "ChargeOwner": "5790000432752",
     "ChargeOwnerName": "Energinet (SYO)",
     "TaxIndicator": false,
     "TransparentInvoicing": true,
-    "Factor": 1,
-    "StartDateTimeUtc": "2020-12-31T23:00:00Z",
-    "EndDateTimeUtc": "2022-12-31T23:00:00Z"
+    "Quantity": 1,
+    "StartDate": "2020-12-31T23:00:00Z",
+    "EndDate": "2022-12-31T23:00:00Z"
   },
   {
     "ChargeType": 1,
     "ChargeId": "ABO-002",
     "ChargeName": "Abonnement 002",
-    "ChargeOwnerId": "8100000000030",
+    "ChargeOwner": "8100000000030",
     "ChargeOwnerName": "Netvirksomhed XYZ",
     "TaxIndicator": false,
     "TransparentInvoicing": false,
-    "Factor": 2,
-    "StartDateTimeUtc": "2021-12-31T23:00:00Z",
-    "EndDateTimeUtc": null
+    "Quantity": 2,
+    "StartDate": "2021-12-31T23:00:00Z",
+    "EndDate": null
   },
   {
     "ChargeType": 2,
     "ChargeId": "GEB-001",
     "ChargeName": "Gebyr 001",
-    "ChargeOwnerId": "8100000000030",
+    "ChargeOwner": "8100000000030",
     "ChargeOwnerName": "Netvirksomhed XYZ",
     "TaxIndicator": false,
     "TransparentInvoicing": true,
-    "Factor": 1,
-    "StartDateTimeUtc": "2021-03-31T22:00:00Z",
-    "EndDateTimeUtc": null
+    "Quantity": 1,
+    "StartDate": "2021-03-31T22:00:00Z",
+    "EndDate": null
   }
 ]

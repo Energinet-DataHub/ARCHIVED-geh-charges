@@ -16,9 +16,9 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
-using Energinet.Charges.Contracts;
+using Energinet.Charges.Contracts.ChargeLink;
 
-namespace Energinet.DataHub.Charges.Clients
+namespace Energinet.DataHub.Charges.Clients.ChargeLinks
 {
     public sealed class ChargeLinksClient : IChargeLinksClient
     {
@@ -46,7 +46,7 @@ namespace Energinet.DataHub.Charges.Clients
                 return list;
 
             var content = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
-            var result = JsonSerializer.Deserialize<List<ChargeLinkDto>>(content);
+            var result = JsonSerializer.Deserialize<List<ChargeLinkDto>>(content, new JsonSerializerOptions(JsonSerializerDefaults.Web));
 
             if (result != null)
                 list.AddRange(result);

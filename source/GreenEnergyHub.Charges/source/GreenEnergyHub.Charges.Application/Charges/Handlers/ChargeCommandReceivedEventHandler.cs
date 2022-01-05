@@ -17,7 +17,6 @@ using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application.Charges.Acknowledgement;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandReceivedEvents;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation;
 
 namespace GreenEnergyHub.Charges.Application.Charges.Handlers
@@ -28,20 +27,17 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
         private readonly IChargeCommandValidator _chargeCommandValidator;
         private readonly IChargeRepository _chargeRepository;
         private readonly IChargeFactory _chargeFactory;
-        private readonly IChargeCommandFactory _chargeCommandFactory;
 
         public ChargeCommandReceivedEventHandler(
             IChargeCommandConfirmationService chargeCommandConfirmationService,
             IChargeCommandValidator chargeCommandValidator,
             IChargeRepository chargeRepository,
-            IChargeFactory chargeFactory,
-            IChargeCommandFactory chargeCommandFactory)
+            IChargeFactory chargeFactory)
         {
             _chargeCommandConfirmationService = chargeCommandConfirmationService;
             _chargeCommandValidator = chargeCommandValidator;
             _chargeRepository = chargeRepository;
             _chargeFactory = chargeFactory;
-            _chargeCommandFactory = chargeCommandFactory;
         }
 
         public async Task HandleAsync(ChargeCommandReceivedEvent commandReceivedEvent)
@@ -55,15 +51,10 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
                 return;
             }
 
-            var charge = await _chargeFactory.CreateFromCommandAsync(commandReceivedEvent.Command).ConfigureAwait(false);
-            await _chargeRepository.StoreChargeAsync(
-                    charge,
-                    commandReceivedEvent.Command.Document.Sender.Id,
-                    commandReceivedEvent.Command.Document.RequestDate)
-                .ConfigureAwait(false);
+            var charge = await _chargeFactory.CreateFromCommandAsync(commandReceivedEvent.Command);
+            await _chargeRepository.StoreChargeAsync(charge).ConfigureAwait(false);
 
-            var chargeCommand = _chargeCommandFactory.CreateFromCharge(charge, commandReceivedEvent.Command.Document);
-            await _chargeCommandConfirmationService.AcceptAsync(chargeCommand).ConfigureAwait(false);
+            await _chargeCommandConfirmationService.AcceptAsync(commandReceivedEvent.Command).ConfigureAwait(false);
         }
     }
 }

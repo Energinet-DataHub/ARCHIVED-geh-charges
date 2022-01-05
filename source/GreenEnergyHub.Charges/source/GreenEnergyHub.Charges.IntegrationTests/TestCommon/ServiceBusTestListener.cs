@@ -12,12 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Threading.Tasks;
 using Energinet.DataHub.Core.FunctionApp.TestCommon.ServiceBus.ListenerMock;
 
 namespace GreenEnergyHub.Charges.IntegrationTests.TestCommon
 {
-    public class ServiceBusTestListener
+    public class ServiceBusTestListener : IAsyncDisposable
     {
         private readonly ServiceBusListenerMock _serviceBusListenerMock;
 
@@ -40,6 +41,24 @@ namespace GreenEnergyHub.Charges.IntegrationTests.TestCommon
             return result;
         }
 
+        public async Task<EventualServiceBusEvents> ListenForEventsAsync(
+            string correlationId,
+            int expectedCount)
+        {
+            var result = new EventualServiceBusEvents();
+            result.CountdownEvent = await _serviceBusListenerMock
+                .WhenCorrelationId(correlationId)
+                .VerifyCountAsync(expectedCount, receivedMessage =>
+                {
+                    result.Body = receivedMessage.Body;
+                    result.CorrelationId = receivedMessage.CorrelationId;
+                    return Task.CompletedTask;
+                })
+                .ConfigureAwait(false);
+
+            return result;
+        }
+
         /// <summary>
         /// Reset handlers and received messages.
         /// </summary>
@@ -47,6 +66,11 @@ namespace GreenEnergyHub.Charges.IntegrationTests.TestCommon
         public void Reset()
         {
             _serviceBusListenerMock.ResetMessageHandlersAndReceivedMessages();
+        }
+
+        public async ValueTask DisposeAsync()
+        {
+            await _serviceBusListenerMock.DisposeAsync();
         }
     }
 }

@@ -43,8 +43,6 @@ Also, some components have singular names while others have plural names. This i
 
 ![Charge And Charge Prices](ARCHITECTURE-ChargeAndChargePrices.png)
 
-Please note, as the integration between the Charges and MessageHub domains is yet to be established, the `ChargeConfirmation` and `ChargeRejection` events are temporarily placed in the Charges domain's Service Bus.
-
 ### Charge links architecture
 
 ![Charge Links](ARCHITECTURE-ChargeLinks.png)

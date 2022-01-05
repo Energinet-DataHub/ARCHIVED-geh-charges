@@ -16,6 +16,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinkCreatedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksAcceptedEvents;
+using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions;
 
 namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
 {
@@ -34,8 +35,7 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
 
         public async Task HandleAsync(ChargeLinksAcceptedEvent acceptedEvent)
         {
-            var chargeLinkCreatedEvents =
-                _createdEventFactory.CreateEvents(acceptedEvent.ChargeLinksCommand);
+            var chargeLinkCreatedEvents = _createdEventFactory.CreateEvents(acceptedEvent.ChargeLinksCommand);
 
             await Task.WhenAll(
                 chargeLinkCreatedEvents
