@@ -23,9 +23,10 @@ namespace GreenEnergyHub.Charges.Tests.Builders
 {
    public class ChargeCommandBuilder
     {
+        private readonly Instant _endDateTime;
+        private readonly List<Point> _points;
         private string _chargeId;
         private Instant _startDateTime;
-        private Instant _endDateTime;
         private VatClassification _vatClassification;
         private bool _taxIndicator;
         private string _owner;
@@ -34,7 +35,6 @@ namespace GreenEnergyHub.Charges.Tests.Builders
         private string _documentId;
         private MarketParticipantDto _sender;
         private ChargeType _chargeType;
-        private List<Point> _points;
         private Resolution _resolution;
         private string _id;
 
