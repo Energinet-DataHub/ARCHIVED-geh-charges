@@ -15,7 +15,7 @@
 namespace GreenEnergyHub.Charges.WebApi
 {
     /// <summary>
-    /// Contains names of settings used by the function.
+    /// Contains names of settings used by the web api.
     /// </summary>
     public static class EnvironmentSettingNames
     {
