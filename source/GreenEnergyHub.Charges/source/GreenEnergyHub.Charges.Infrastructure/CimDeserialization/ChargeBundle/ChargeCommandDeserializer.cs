@@ -37,7 +37,6 @@ namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.ChargeBundle
 
             using var reader = XmlReader.Create(stream, new XmlReaderSettings { Async = true });
 
-            // TODO: Titans replaces response object, when this happens this error should no longer be rethrown
             return await _chargeCommandConverter.ConvertAsync(reader).ConfigureAwait(false);
         }
     }
