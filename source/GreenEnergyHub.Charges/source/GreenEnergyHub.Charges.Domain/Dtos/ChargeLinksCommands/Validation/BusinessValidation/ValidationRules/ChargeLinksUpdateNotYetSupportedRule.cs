@@ -41,7 +41,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands.Validation.Busi
         {
             foreach (var existingLink in _existingChargeLinks)
             {
-                if (existingLink.StartDateTime < newLink.EndDateTime && existingLink.EndDateTime >= newLink.StartDateTime)
+                if (existingLink.StartDateTime < newLink.EndDateTime && existingLink.EndDateTime > newLink.StartDateTime)
                 {
                     return false;
                 }
