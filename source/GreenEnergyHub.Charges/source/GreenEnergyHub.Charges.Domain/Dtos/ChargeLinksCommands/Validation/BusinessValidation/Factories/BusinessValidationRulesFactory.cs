@@ -57,7 +57,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands.Validation.Busi
                     continue;
 
                 var existingChargeLinks = await _chargeLinkRepository.GetAsync(charge.Id, meteringPoint.Id);
-                GetMandatoryRulesForSingleLinks(rules, chargeLinksCommand, charge, existingChargeLinks);
+                GetMandatoryRulesForSingleLinks(rules, chargeLinksCommand, existingChargeLinks);
             }
 
             return ValidationRuleSet.FromRules(rules);
@@ -74,10 +74,8 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands.Validation.Busi
         private void GetMandatoryRulesForSingleLinks(
             List<IValidationRule> rules,
             ChargeLinksCommand chargeLinksCommand,
-            Charge? charge,
             IReadOnlyCollection<ChargeLink> existingChargeLinks)
         {
-            rules.Add(new ChargeDoesNotExistRule(charge));
             rules.Add(new ChargeLinksUpdateNotYetSupportedRule(chargeLinksCommand, existingChargeLinks));
         }
 
