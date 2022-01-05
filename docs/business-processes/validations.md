@@ -1,6 +1,6 @@
-# Change of charges validations
+# Charges validations
 
-The following validation rules are currently implemented in the charge domain when changing charges.
+The following validation rules are currently implemented in the charge domain.
 
 |**Rule number**|**Description**|**Rejection code**|**Charges**|**Charge Links**|
 |:-|:-|:-|:-|
