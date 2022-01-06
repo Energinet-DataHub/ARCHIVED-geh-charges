@@ -13,7 +13,6 @@
 // limitations under the License.
 
 using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 
