@@ -22,7 +22,7 @@ using Microsoft.Azure.Functions.Worker.Http;
 
 namespace GreenEnergyHub.Charges.FunctionHost.ChargeLinks
 {
-    public class ChargeLinkIngestion
+    public class ChargeLinksIngestion
     {
         private readonly IChargeLinksCommandBundleHandler _chargeLinksCommandBundleHandler;
 
@@ -32,7 +32,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.ChargeLinks
         /// </summary>
         private readonly MessageExtractor<ChargeLinksCommand> _messageExtractor;
 
-        public ChargeLinkIngestion(
+        public ChargeLinksIngestion(
             IChargeLinksCommandBundleHandler chargeLinksCommandBundleHandler,
             MessageExtractor<ChargeLinksCommand> messageExtractor)
         {
@@ -40,7 +40,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.ChargeLinks
             _messageExtractor = messageExtractor;
         }
 
-        [Function(IngestionFunctionNames.ChargeLinkIngestion)]
+        [Function(IngestionFunctionNames.ChargeLinksIngestion)]
         public async Task<HttpResponseData> RunAsync(
             [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = null)]
             HttpRequestData req)

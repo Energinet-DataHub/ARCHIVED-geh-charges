@@ -23,17 +23,17 @@ using Microsoft.Azure.Functions.Worker;
 
 namespace GreenEnergyHub.Charges.FunctionHost.ChargeLinks
 {
-    public class ChargeLinkEventPublisherEndpoint
+    public class ChargeLinksEventPublisherEndpoint
     {
         /// <summary>
         /// The name of the function.
         /// Function name affects the URL and thus possibly dependent infrastructure.
         /// </summary>
-        public const string FunctionName = nameof(ChargeLinkEventPublisherEndpoint);
+        public const string FunctionName = nameof(ChargeLinksEventPublisherEndpoint);
         private readonly MessageExtractor<ChargeLinkCommandAccepted> _messageExtractor;
         private readonly IChargeLinkEventPublishHandler _chargeLinkEventPublishHandler;
 
-        public ChargeLinkEventPublisherEndpoint(
+        public ChargeLinksEventPublisherEndpoint(
             MessageExtractor<ChargeLinkCommandAccepted> messageExtractor,
             IChargeLinkEventPublishHandler chargeLinkEventPublishHandler)
         {
