@@ -49,7 +49,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
                 EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargeLinkRejectedTopicName));
 
             serviceCollection.AddScoped<IChargeLinkRepository, ChargeLinkRepository>();
-            serviceCollection.AddScoped<IBusinessValidationRulesFactory, BusinessValidationRulesFactory>();
+            serviceCollection.AddScoped<IChargeLinksCommandBusinessValidationRulesFactory, ChargeLinksCommandBusinessValidationRulesFactory>();
             serviceCollection.AddScoped<IChargeLinksCommandValidator, ChargeLinksCommandValidator>();
             serviceCollection.AddScoped<IChargeLinksReceiptService, ChargeLinksReceiptService>();
             serviceCollection.AddScoped<IChargeLinksRejectedEventFactory, ChargeLinksRejectedEventFactory>();

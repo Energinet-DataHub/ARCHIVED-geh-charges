@@ -23,13 +23,13 @@ using GreenEnergyHub.Charges.Domain.MeteringPoints;
 
 namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands.Validation.BusinessValidation.Factories
 {
-    public class BusinessValidationRulesFactory : IBusinessValidationRulesFactory
+    public class ChargeLinksCommandBusinessValidationRulesFactory : IChargeLinksCommandBusinessValidationRulesFactory
     {
         private readonly IChargeRepository _chargeRepository;
         private readonly IMeteringPointRepository _meteringPointRepository;
         private readonly IChargeLinkRepository _chargeLinkRepository;
 
-        public BusinessValidationRulesFactory(
+        public ChargeLinksCommandBusinessValidationRulesFactory(
             IChargeRepository chargeRepository,
             IMeteringPointRepository meteringPointRepository,
             IChargeLinkRepository chargeLinkRepository)
@@ -39,7 +39,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands.Validation.Busi
             _chargeLinkRepository = chargeLinkRepository;
         }
 
-        public async Task<IValidationRuleSet> CreateRulesForChargeLinksCommandAsync(ChargeLinksCommand chargeLinksCommand)
+        public async Task<IValidationRuleSet> CreateRulesAsync(ChargeLinksCommand chargeLinksCommand)
         {
             if (chargeLinksCommand == null) throw new ArgumentNullException(nameof(chargeLinksCommand));
             var meteringPoint = await _meteringPointRepository.GetOrNullAsync(chargeLinksCommand.MeteringPointId);

@@ -17,8 +17,8 @@ using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 
 namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessValidation.Factories
 {
-    public interface IBusinessValidationRulesFactory
+    public interface IChargeCommandBusinessValidationRulesFactory
     {
-        Task<IValidationRuleSet> CreateRulesForChargeCommandAsync(ChargeCommand chargeCommand);
+        Task<IValidationRuleSet> CreateRulesAsync(ChargeCommand chargeCommand);
     }
 }

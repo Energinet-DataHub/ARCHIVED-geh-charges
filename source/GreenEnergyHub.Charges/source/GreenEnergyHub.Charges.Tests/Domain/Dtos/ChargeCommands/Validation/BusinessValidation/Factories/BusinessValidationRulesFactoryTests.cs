@@ -41,7 +41,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
             Type expectedRule,
             [Frozen] Mock<IChargeRepository> repository,
             [Frozen] Mock<IRulesConfigurationRepository> rulesConfigurationRepository,
-            BusinessValidationRulesFactory sut,
+            ChargeCommandBusinessValidationRulesFactory sut,
             ChargeCommandBuilder builder)
         {
             // Arrange
@@ -53,7 +53,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
                 .ReturnsAsync(charge);
 
             // Act
-            var actual = await sut.CreateRulesForChargeCommandAsync(chargeCommand).ConfigureAwait(false);
+            var actual = await sut.CreateRulesAsync(chargeCommand).ConfigureAwait(false);
             var actualRules = actual.GetRules().Select(r => r.GetType());
 
             // Assert
@@ -69,7 +69,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
             Type expectedRule,
             [Frozen] Mock<IChargeRepository> repository,
             [Frozen] Mock<IRulesConfigurationRepository> rulesConfigurationRepository,
-            BusinessValidationRulesFactory sut,
+            ChargeCommandBusinessValidationRulesFactory sut,
             ChargeCommandBuilder builder,
             Charge charge)
         {
@@ -82,7 +82,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
                 .ReturnsAsync(charge);
 
             // Act
-            var actual = await sut.CreateRulesForChargeCommandAsync(chargeCommand).ConfigureAwait(false);
+            var actual = await sut.CreateRulesAsync(chargeCommand).ConfigureAwait(false);
             var actualRules = actual.GetRules().Select(r => r.GetType());
 
             // Assert
@@ -100,7 +100,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
             Type expectedRule,
             [Frozen] Mock<IChargeRepository> repository,
             [Frozen] Mock<IRulesConfigurationRepository> rulesConfigurationRepository,
-            BusinessValidationRulesFactory sut,
+            ChargeCommandBusinessValidationRulesFactory sut,
             ChargeCommandBuilder builder,
             Charge charge)
         {
@@ -119,7 +119,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
                 .Returns(Task.FromResult(charge));
 
             // Act
-            var actual = await sut.CreateRulesForChargeCommandAsync(chargeCommand).ConfigureAwait(false);
+            var actual = await sut.CreateRulesAsync(chargeCommand).ConfigureAwait(false);
             var actualRules = actual.GetRules().Select(r => r.GetType());
 
             // Assert
@@ -130,14 +130,14 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
         [Theory]
         [InlineAutoMoqData]
         public static async Task CreateRulesForChargeCommandAsync_WhenCalledWithNull_ThrowsArgumentNullException(
-            BusinessValidationRulesFactory sut)
+            ChargeCommandBusinessValidationRulesFactory sut)
         {
             // Arrange
             ChargeCommand? command = null;
 
             // Act / Assert
             await Assert.ThrowsAsync<ArgumentNullException>(
-                    () => sut.CreateRulesForChargeCommandAsync(command!))
+                    () => sut.CreateRulesAsync(command!))
                 .ConfigureAwait(false);
         }
 

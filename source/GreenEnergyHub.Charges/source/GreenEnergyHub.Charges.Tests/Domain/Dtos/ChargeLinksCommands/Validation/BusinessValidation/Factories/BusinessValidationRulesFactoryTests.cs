@@ -38,7 +38,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeLinksCommands.Validatio
         public async Task CreateRulesForChargeCommandAsync_WhenMeteringPointDoesNotExist_ReturnsExpectedMandatoryRules(
             Type expectedRule,
             [Frozen] Mock<IMeteringPointRepository> repository,
-            BusinessValidationRulesFactory sut,
+            ChargeLinksCommandBusinessValidationRulesFactory sut,
             ChargeLinksCommandBuilder builder)
         {
             // Arrange
@@ -49,7 +49,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeLinksCommands.Validatio
                 .ReturnsAsync(meteringPoint);
 
             // Act
-            var actual = await sut.CreateRulesForChargeLinksCommandAsync(chargeCommand).ConfigureAwait(false);
+            var actual = await sut.CreateRulesAsync(chargeCommand).ConfigureAwait(false);
             var actualRules = actual.GetRules().Select(r => r.GetType());
 
             // Assert
@@ -64,7 +64,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeLinksCommands.Validatio
             [Frozen] Mock<IMeteringPointRepository> meteringPointRepository,
             [Frozen] Mock<IChargeRepository> chargeRepository,
             MeteringPoint meteringPoint,
-            BusinessValidationRulesFactory sut,
+            ChargeLinksCommandBusinessValidationRulesFactory sut,
             ChargeLinksCommandBuilder linksCommandBuilder,
             ChargeLinkDtoBuilder linksBuilder)
         {
@@ -81,7 +81,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeLinksCommands.Validatio
                 .ReturnsAsync(charge);
 
             // Act
-            var actual = await sut.CreateRulesForChargeLinksCommandAsync(chargeCommand).ConfigureAwait(false);
+            var actual = await sut.CreateRulesAsync(chargeCommand).ConfigureAwait(false);
             var actualRules = actual.GetRules().Select(r => r.GetType());
 
             // Assert
@@ -97,7 +97,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeLinksCommands.Validatio
             [Frozen] Mock<IChargeRepository> chargeRepository,
             MeteringPoint meteringPoint,
             Charge charge,
-            BusinessValidationRulesFactory sut,
+            ChargeLinksCommandBusinessValidationRulesFactory sut,
             ChargeLinksCommandBuilder linksCommandBuilder,
             ChargeLinkDtoBuilder linksBuilder)
         {
@@ -113,7 +113,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeLinksCommands.Validatio
                 .ReturnsAsync(charge);
 
             // Act
-            var actual = await sut.CreateRulesForChargeLinksCommandAsync(chargeCommand).ConfigureAwait(false);
+            var actual = await sut.CreateRulesAsync(chargeCommand).ConfigureAwait(false);
             var actualRules = actual.GetRules().Select(r => r.GetType());
 
             // Assert
@@ -124,14 +124,14 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeLinksCommands.Validatio
         [Theory]
         [InlineAutoMoqData]
         public static async Task CreateRulesForChargeCommandAsync_WhenCalledWithNull_ThrowsArgumentNullException(
-            BusinessValidationRulesFactory sut)
+            ChargeLinksCommandBusinessValidationRulesFactory sut)
         {
             // Arrange
             ChargeLinksCommand? command = null;
 
             // Act / Assert
             await Assert.ThrowsAsync<ArgumentNullException>(
-                    () => sut.CreateRulesForChargeLinksCommandAsync(command!))
+                    () => sut.CreateRulesAsync(command!))
                 .ConfigureAwait(false);
         }
     }

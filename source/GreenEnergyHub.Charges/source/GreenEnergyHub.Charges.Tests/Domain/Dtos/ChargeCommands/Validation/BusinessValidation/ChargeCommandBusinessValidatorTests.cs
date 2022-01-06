@@ -33,7 +33,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
         [Theory]
         [InlineAutoMoqData]
         public async Task ValidateAsync_WhenCalled_UsesFactoryToFetchRulesAndUseRulesToGetResult(
-            [Frozen] [NotNull] Mock<IBusinessValidationRulesFactory> factory,
+            [Frozen] [NotNull] Mock<IChargeCommandBusinessValidationRulesFactory> factory,
             [NotNull] Mock<IValidationRuleSet> rules,
             [NotNull] ChargeCommand command,
             [NotNull] ValidationResult validationResult,
@@ -41,7 +41,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
         {
             // Arrange
             factory.Setup(
-                    f => f.CreateRulesForChargeCommandAsync(command))
+                    f => f.CreateRulesAsync(command))
                 .Returns(
                     Task.FromResult(rules.Object));
 

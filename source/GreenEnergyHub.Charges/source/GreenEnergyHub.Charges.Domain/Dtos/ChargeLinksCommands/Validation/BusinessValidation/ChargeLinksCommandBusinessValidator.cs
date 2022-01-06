@@ -20,16 +20,16 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands.Validation.Busi
 {
     public class ChargeLinksCommandBusinessValidator : IChargeLinksCommandBusinessValidator
     {
-        private readonly IBusinessValidationRulesFactory _businessValidationRulesFactory;
+        private readonly IChargeLinksCommandBusinessValidationRulesFactory _chargeLinksCommandBusinessValidationRulesFactory;
 
-        public ChargeLinksCommandBusinessValidator(IBusinessValidationRulesFactory businessValidationRulesFactory)
+        public ChargeLinksCommandBusinessValidator(IChargeLinksCommandBusinessValidationRulesFactory chargeLinksCommandBusinessValidationRulesFactory)
         {
-            _businessValidationRulesFactory = businessValidationRulesFactory;
+            _chargeLinksCommandBusinessValidationRulesFactory = chargeLinksCommandBusinessValidationRulesFactory;
         }
 
         public async Task<ValidationResult> ValidateAsync(ChargeLinksCommand command)
         {
-            var ruleSet = await _businessValidationRulesFactory.CreateRulesForChargeLinksCommandAsync(command).ConfigureAwait(false);
+            var ruleSet = await _chargeLinksCommandBusinessValidationRulesFactory.CreateRulesAsync(command).ConfigureAwait(false);
             return ruleSet.Validate();
         }
     }

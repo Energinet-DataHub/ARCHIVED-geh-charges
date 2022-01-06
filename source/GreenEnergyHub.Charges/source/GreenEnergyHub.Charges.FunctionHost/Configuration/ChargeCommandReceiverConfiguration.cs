@@ -61,7 +61,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
 
         private static void ConfigureValidation(IServiceCollection serviceCollection)
         {
-            serviceCollection.AddScoped<IBusinessValidationRulesFactory, BusinessValidationRulesFactory>();
+            serviceCollection.AddScoped<IChargeCommandBusinessValidationRulesFactory, ChargeCommandBusinessValidationRulesFactory>();
             serviceCollection.AddScoped<IInputValidationRulesFactory, InputValidationRulesFactory>();
             serviceCollection.AddScoped<IRulesConfigurationRepository, RulesConfigurationRepository>();
             serviceCollection.AddScoped<IChargeCommandInputValidator, ChargeCommandInputValidator>();

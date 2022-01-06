@@ -24,7 +24,7 @@ using NodaTime;
 
 namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessValidation.Factories
 {
-    public class BusinessValidationRulesFactory : IBusinessValidationRulesFactory
+    public class ChargeCommandBusinessValidationRulesFactory : IChargeCommandBusinessValidationRulesFactory
     {
         private readonly IRulesConfigurationRepository _rulesConfigurationRepository;
         private readonly IChargeRepository _chargeRepository;
@@ -32,7 +32,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessV
         private readonly IZonedDateTimeService _zonedDateTimeService;
         private readonly IClock _clock;
 
-        public BusinessValidationRulesFactory(
+        public ChargeCommandBusinessValidationRulesFactory(
             IRulesConfigurationRepository rulesConfigurationRepository,
             IChargeRepository chargeRepository,
             IMarketParticipantRepository marketParticipantRepository,
@@ -46,7 +46,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessV
             _clock = clock;
         }
 
-        public async Task<IValidationRuleSet> CreateRulesForChargeCommandAsync(ChargeCommand chargeCommand)
+        public async Task<IValidationRuleSet> CreateRulesAsync(ChargeCommand chargeCommand)
         {
             if (chargeCommand == null) throw new ArgumentNullException(nameof(chargeCommand));
 
