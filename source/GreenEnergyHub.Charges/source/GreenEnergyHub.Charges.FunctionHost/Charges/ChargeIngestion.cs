@@ -13,9 +13,11 @@
 // limitations under the License.
 
 using System.Threading.Tasks;
+using Energinet.DataHub.Core.Messaging.Transport.SchemaValidation;
 using GreenEnergyHub.Charges.Application.Charges.Handlers;
 using GreenEnergyHub.Charges.Application.Charges.Handlers.Message;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
+using GreenEnergyHub.Charges.Infrastructure.Core.Function;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
@@ -29,13 +31,16 @@ namespace GreenEnergyHub.Charges.FunctionHost.Charges
         /// Function name affects the URL and thus possibly dependent infrastructure.
         /// </summary>
         private readonly IChargesMessageHandler _chargesMessageHandler;
-        private readonly MessageExtractor<ChargeCommandBundle> _messageExtractor;
+        private readonly IHttpResponseBuilder _httpResponseBuilder;
+        private readonly ValidatingMessageExtractor<ChargeCommandBundle> _messageExtractor;
 
         public ChargeIngestion(
             IChargesMessageHandler chargesMessageHandler,
-            MessageExtractor<ChargeCommandBundle> messageExtractor)
+            IHttpResponseBuilder httpResponseBuilder,
+            ValidatingMessageExtractor<ChargeCommandBundle> messageExtractor)
         {
             _chargesMessageHandler = chargesMessageHandler;
+            _httpResponseBuilder = httpResponseBuilder;
             _messageExtractor = messageExtractor;
         }
 
@@ -44,7 +49,15 @@ namespace GreenEnergyHub.Charges.FunctionHost.Charges
             [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = null)]
             HttpRequestData req)
         {
-            var message = await GetChargesMessageAsync(req).ConfigureAwait(false);
+            var inboundMessage = await ValidateMessageAsync(req).ConfigureAwait(false);
+            if (inboundMessage.HasErrors)
+            {
+                return await _httpResponseBuilder
+                    .CreateBadRequestResponseAsync(req, inboundMessage.SchemaValidationError)
+                    .ConfigureAwait(false);
+            }
+
+            var message = GetChargesMessage(inboundMessage.ValidatedMessage);
 
             foreach (var chargeCommand in message.ChargeCommands)
             {
@@ -54,25 +67,23 @@ namespace GreenEnergyHub.Charges.FunctionHost.Charges
             var messageResult = await _chargesMessageHandler.HandleAsync(message)
                 .ConfigureAwait(false);
 
-            return await CreateJsonResponseAsync(req, messageResult);
+            return await _httpResponseBuilder
+                .CreateAcceptedResponseAsync(req, messageResult)
+                .ConfigureAwait(false);
         }
 
-        private async Task<ChargesMessage> GetChargesMessageAsync(
-            HttpRequestData req)
+        private async Task<SchemaValidatedInboundMessage<ChargeCommandBundle>> ValidateMessageAsync(HttpRequestData req)
+        {
+            return (SchemaValidatedInboundMessage<ChargeCommandBundle>)await _messageExtractor
+                .ExtractAsync(req.Body)
+                .ConfigureAwait(false);
+        }
+
+        private ChargesMessage GetChargesMessage(ChargeCommandBundle chargeCommandBundle)
         {
             var message = new ChargesMessage();
-            var commandBundle = (ChargeCommandBundle)await _messageExtractor.ExtractAsync(req.Body).ConfigureAwait(false);
-
-            message.ChargeCommands.AddRange(commandBundle.ChargeCommands);
+            message.ChargeCommands.AddRange(chargeCommandBundle.ChargeCommands);
             return message;
-        }
-
-        private static async Task<HttpResponseData> CreateJsonResponseAsync(HttpRequestData req, ChargesMessageResult messageResult)
-        {
-            var response = req.CreateResponse();
-            await response.WriteAsJsonAsync(messageResult);
-
-            return response;
         }
     }
 }
