@@ -122,10 +122,10 @@ namespace GreenEnergyHub.Charges.SystemTests
             };
 
             // Act
-            using var actionResponse = await httpClient.SendAsync(request);
+            using var actualResponse = await httpClient.SendAsync(request);
 
             // Assert
-            actionResponse.StatusCode.Should().Be(HttpStatusCode.OK);
+            actualResponse.StatusCode.Should().Be(HttpStatusCode.OK);
         }
 
         // This is just to be able to verify everything works with regards to settings and executing the tests after deployment.
@@ -141,12 +141,12 @@ namespace GreenEnergyHub.Charges.SystemTests
             };
 
             // Act
-            using var actionResponse = await httpClient.GetAsync("api/HealthStatus");
+            using var actualResponse = await httpClient.GetAsync("api/HealthStatus");
 
             // Assert
-            actionResponse.StatusCode.Should().Be(HttpStatusCode.OK);
+            actualResponse.StatusCode.Should().Be(HttpStatusCode.OK);
 
-            var content = await actionResponse.Content.ReadAsStringAsync();
+            var content = await actualResponse.Content.ReadAsStringAsync();
             content.Should().NotContain("false");
         }
 #pragma warning restore VSTHRD200 // Use "Async" suffix for async methods
