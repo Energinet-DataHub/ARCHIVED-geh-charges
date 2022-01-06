@@ -17,6 +17,7 @@ using System.Threading.Tasks;
 using AutoFixture.Xunit2;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandRejectedEvents;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation;
 using GreenEnergyHub.Charges.Infrastructure.Core.Cim;
 using GreenEnergyHub.Charges.Infrastructure.Core.Cim.MarketDocument;
@@ -39,6 +40,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptD
             [Frozen] Mock<IMessageMetaDataContext> messageMetaDataContext,
             [Frozen] Mock<ICimValidationErrorCodeFactory> validationErrorCodeFactory,
             [Frozen] Mock<ICimValidationErrorTextFactory> validationErrorTextFactory,
+            [Frozen] Mock<ICimValidationErrorDescriptionFactory> validationErrorDescriptionFactory,
             ChargeCommandRejectedEvent rejectedEvent,
             Instant now,
             AvailableChargeRejectionDataFactory sut)
@@ -47,8 +49,16 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptD
             messageMetaDataContext.Setup(m => m.RequestDataTime).Returns(now);
 
             // fake error code, text and description
-            validationErrorCodeFactory.Setup(f => f.Create(It.IsAny<ValidationRuleIdentifier>())).Returns<ReasonCode>(error => error);
-            validationErrorTextFactory.Setup(f => f.Create(It.IsAny<ReasonCode>())).Returns<ValidationRuleIdentifier>(error => error.ToString());
+            validationErrorCodeFactory.Setup(f => f
+                .Create(It.IsAny<ValidationRuleIdentifier>()))
+                .Returns<ReasonCode>(code => code);
+            validationErrorTextFactory.Setup(f => f
+                .Create(It.IsAny<ReasonCode>()))
+                .Returns<ValidationRuleIdentifier>(identifier => identifier.ToString());
+            validationErrorDescriptionFactory.Setup(f => f
+                .Create(It.IsAny<ValidationRuleIdentifier>(), rejectedEvent.Command))
+                .Returns<ValidationRuleIdentifier, ChargeCommand>((identifier, _) => identifier.ToString());
+            var expectedValidationErrors = rejectedEvent.FailedValidationRuleIdentifiers.Select(x => x.ToString()).ToList();
 
             // Act
             var actualList = await sut.CreateAsync(rejectedEvent);
@@ -63,16 +73,15 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptD
             actual.ReceiptStatus.Should().Be(ReceiptStatus.Rejected);
             actual.OriginalOperationId.Should().Be(rejectedEvent.Command.ChargeOperation.Id);
 
+            var actualValidationErrors = actual.ValidationErrors.ToList();
             actual.ValidationErrors.Should().HaveSameCount(rejectedEvent.FailedValidationRuleIdentifiers);
 
-            /*for (var i = 0; i < actualValidationErrors.Count; i++)
+            for (var i = 0; i < actualValidationErrors.Count; i++)
             {
-                // TODO Henrik
-                // actualValidationErrors[i].ReasonCode.Should().Be(ReasonCode.IncorrectChargeInformation);
-                // actualValidationErrors[i].Text.Should().Be(expectedValidationErrors[i]);
-                actualValidationErrors[i].Description.Should().NotBeNullOrWhiteSpace();
-                actualValidationErrors[i].Description.Should().NotContain("{{");
-            }*/
+                actualValidationErrors[i].ReasonCode.ToString().Should().NotBeNullOrWhiteSpace();
+                actualValidationErrors[i].Text.Should().Be(expectedValidationErrors[i]);
+                actualValidationErrors[i].Description.Should().Be(expectedValidationErrors[i]);
+            }
         }
     }
 }
