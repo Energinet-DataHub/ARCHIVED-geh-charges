@@ -32,6 +32,8 @@ namespace GreenEnergyHub.Charges.SystemTests
 
         private SystemTestConfiguration Configuration { get; }
 
+        private string TeamVolt => "volt";
+
 #pragma warning disable VSTHRD200 // Use "Async" suffix for async methods
         [SystemFact(Skip = "Hi Peter, pls update this test for your scenario. :o)")]
         public async Task When_TriggeringAction_Then_PeekReturnsExpectedContent()
@@ -63,12 +65,12 @@ namespace GreenEnergyHub.Charges.SystemTests
             content.Should().Contain("myExpectedContent");
         }
 
-        // Working on extracting an access token on behalf of the "team client"
+        // This shows how we can extract an access token on behalf of the "team client"
         [SystemFact]
-        public async Task When_Xxx_Then_Yyy()
+        public async Task When_AquireTokenForTeamVoltClient_Then_AccessTokenIsReturned()
         {
             // Arrange
-            var b2cSettings = Configuration.B2CSettings;
+            var b2cSettings = Configuration.RetrieveB2CSettings(TeamVolt);
 
             var confidentialClientApp = ConfidentialClientApplicationBuilder
                 .Create(b2cSettings.TeamClientId)

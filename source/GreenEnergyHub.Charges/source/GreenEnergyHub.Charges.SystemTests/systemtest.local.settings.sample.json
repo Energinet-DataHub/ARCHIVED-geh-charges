@@ -9,7 +9,6 @@
   // The following settings are used to determine the secrets names needed for the tests.
   "ENVIRONMENT_SHORT": "<short name of environment; e.g. 'u'>",
   "ENVIRONMENT_INSTANCE": "<instance number of environment; e.g. '001'>",
-  "TEAM_NAME": "<team name or abbreviation>",
 
   // Hi Peter, update the property name to match the name of the domain for which we need the baseaddress.
   "MYDOMAIN_BASEADDRESS": "<Base address of the domain in Azure environment>"

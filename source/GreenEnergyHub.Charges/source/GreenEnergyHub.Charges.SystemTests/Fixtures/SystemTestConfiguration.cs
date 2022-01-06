@@ -26,18 +26,50 @@ namespace GreenEnergyHub.Charges.SystemTests.Fixtures
 
             BaseAddress = new Uri(configuration.GetValue<string>("MYDOMAIN_BASEADDRESS"));
 
-            var keyVaultUrl = configuration.GetValue<string>("AZURE_SYSTEMTESTS_KEYVAULT_URL");
-            var keyVaultConfiguration = BuildKeyVaultConfigurationRoot(keyVaultUrl);
+            Environment =
+                configuration.GetValue<string>("ENVIRONMENT_SHORT") +
+                configuration.GetValue<string>("ENVIRONMENT_INSTANCE");
 
-            ApiManagementBaseAddress = new Uri("https://apim-shared-sharedres-u-001.azure-api.net");
-            B2CSettings = RetrieveB2CSettings(configuration, keyVaultConfiguration);
+            var keyVaultUrl = configuration.GetValue<string>("AZURE_SYSTEMTESTS_KEYVAULT_URL");
+            KeyVaultConfiguration = BuildKeyVaultConfigurationRoot(keyVaultUrl);
+
+            ApiManagementBaseAddress = KeyVaultConfiguration.GetValue<Uri>(BuildApiManagementEnvironmentSecretName(Environment, "host-url"));
         }
 
+        /// <summary>
+        /// Environment short name with instance indication.
+        /// </summary>
+        public string Environment { get; }
+
+        /// <summary>
+        /// An example of a base address setting (e.g. for a domain service).
+        /// </summary>
         public Uri BaseAddress { get; }
 
-        public B2CSettings B2CSettings { get; }
-
+        /// <summary>
+        /// The base address for the API Management in the configured environment.
+        /// </summary>
         public Uri ApiManagementBaseAddress { get; }
+
+        private IConfigurationRoot KeyVaultConfiguration { get; }
+
+        /// <summary>
+        /// Retrieve B2C settings necessary for aquiring an access token for a given "team client" in the configured environment.
+        /// </summary>
+        /// <param name="team">Team name or shorthand.</param>
+        /// <returns>B2C settings for "team client"</returns>
+        public B2CSettings RetrieveB2CSettings(string team)
+        {
+            if (string.IsNullOrWhiteSpace(team))
+                throw new ArgumentException($"'{nameof(team)}' cannot be null or whitespace.", nameof(team));
+
+            var b2cTenantId = KeyVaultConfiguration.GetValue<string>(BuildB2CEnvironmentSecretName(Environment, "tenant-id"));
+            var backendAppId = KeyVaultConfiguration.GetValue<string>(BuildB2CEnvironmentSecretName(Environment, "backend-app-id"));
+            var teamClientId = KeyVaultConfiguration.GetValue<string>(BuildB2CTeamSecretName(Environment, team, "client-id"));
+            var teamClientSecret = KeyVaultConfiguration.GetValue<string>(BuildB2CTeamSecretName(Environment, team, "client-secret"));
+
+            return new B2CSettings(b2cTenantId, backendAppId, teamClientId, teamClientSecret);
+        }
 
         /// <summary>
         /// Load settings from file if available, but also allow
@@ -61,27 +93,19 @@ namespace GreenEnergyHub.Charges.SystemTests.Fixtures
                 .Build();
         }
 
-        private static B2CSettings RetrieveB2CSettings(IConfigurationRoot configuration, IConfigurationRoot keyVaultConfiguration)
+        private static string BuildApiManagementEnvironmentSecretName(string environment, string secret)
         {
-            var environment =
-                configuration.GetValue<string>("ENVIRONMENT_SHORT") +
-                configuration.GetValue<string>("ENVIRONMENT_INSTANCE");
-
-            // TODO: We might need to support specifying this from each test, if developers want to test using different "clients" and permissions (roles)
-            // TODO: Why do we have a client per team; would it not be more usefull for different scenarious if we just had clients with different permissions that we could share between all teams?
-            var team = configuration.GetValue<string>("TEAM_NAME");
-
-            var b2cTenantId = "4a7411ea-ac71-4b63-9647-b8bd4c5a20e0";
-            var backendAppId = "c7e5dc5c-2ee0-420c-b5d2-586e7527302c";
-            var teamClientId = keyVaultConfiguration.GetValue<string>(BuildTeamSecretName(environment, team, "client-id"));
-            var teamClientSecret = keyVaultConfiguration.GetValue<string>(BuildTeamSecretName(environment, team, "client-secret"));
-
-            return new B2CSettings(b2cTenantId, backendAppId, teamClientId, teamClientSecret);
+            return $"APIM-{environment}-{secret}";
         }
 
-        private static string BuildTeamSecretName(string environment, string team, string secret)
+        private static string BuildB2CTeamSecretName(string environment, string team, string secret)
         {
             return $"B2C-{environment}-{team}-{secret}";
+        }
+
+        private static string BuildB2CEnvironmentSecretName(string environment, string secret)
+        {
+            return $"B2C-{environment}-{secret}";
         }
     }
 }
