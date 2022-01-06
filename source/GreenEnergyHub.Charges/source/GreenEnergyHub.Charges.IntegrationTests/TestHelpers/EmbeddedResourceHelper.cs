@@ -24,6 +24,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.TestHelpers
 {
     public static class EmbeddedResourceHelper
     {
+        private const string TimeAndPriceSeriesDateTimeFormat = "yyyy-MM-dd\\THH:mm\\Z";
+
         public static string GetEmbeddedFile(string filePath, [NotNull] IClock clock)
         {
             var basePath = Assembly.GetExecutingAssembly().Location;
@@ -40,7 +42,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.TestHelpers
 
             // cim:timeInterval does not allow seconds.
             var ymdhmTimeInterval = inThirtyoneDays
-                .ToString("yyyy-MM-dd\\THH:mm\\Z", CultureInfo.InvariantCulture);
+                .ToString(TimeAndPriceSeriesDateTimeFormat, CultureInfo.InvariantCulture);
 
             var replacementIndex = 0;
             var mergedFile = Regex.Replace(file, "[{][{][$]increment5digits[}][}]", _ =>
