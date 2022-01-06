@@ -26,7 +26,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.ChargeLinks
     public class ChargeLinkIngestion
     {
         private readonly IChargeLinksCommandBundleHandler _chargeLinksCommandBundleHandler;
-        private readonly IHttpFunctionResponseBuilder _httpFunctionResponseBuilder;
+        private readonly IHttpResponseBuilder _httpResponseBuilder;
 
         /// <summary>
         /// The name of the function.
@@ -36,11 +36,11 @@ namespace GreenEnergyHub.Charges.FunctionHost.ChargeLinks
 
         public ChargeLinkIngestion(
             IChargeLinksCommandBundleHandler chargeLinksCommandBundleHandler,
-            IHttpFunctionResponseBuilder httpFunctionResponseBuilder,
+            IHttpResponseBuilder httpResponseBuilder,
             ValidatingMessageExtractor<ChargeLinksCommandBundle> messageExtractor)
         {
             _chargeLinksCommandBundleHandler = chargeLinksCommandBundleHandler;
-            _httpFunctionResponseBuilder = httpFunctionResponseBuilder;
+            _httpResponseBuilder = httpResponseBuilder;
             _messageExtractor = messageExtractor;
         }
 
@@ -52,8 +52,8 @@ namespace GreenEnergyHub.Charges.FunctionHost.ChargeLinks
             var inboundMessage = await ValidateMessageAsync(req).ConfigureAwait(false);
             if (inboundMessage.HasErrors)
             {
-                return await _httpFunctionResponseBuilder
-                    .CreateErrorResponseAsync(req, inboundMessage.SchemaValidationError)
+                return await _httpResponseBuilder
+                    .CreateBadRequestResponseAsync(req, inboundMessage.SchemaValidationError)
                     .ConfigureAwait(false);
             }
 
@@ -61,7 +61,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.ChargeLinks
                 .HandleAsync(inboundMessage.ValidatedMessage)
                 .ConfigureAwait(false);
 
-            return await _httpFunctionResponseBuilder
+            return await _httpResponseBuilder
                 .CreateAcceptedResponseAsync(req, chargeLinksMessageResult)
                 .ConfigureAwait(false);
         }

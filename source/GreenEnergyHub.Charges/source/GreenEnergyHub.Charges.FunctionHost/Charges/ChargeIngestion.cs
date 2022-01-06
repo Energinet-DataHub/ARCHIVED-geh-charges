@@ -31,16 +31,16 @@ namespace GreenEnergyHub.Charges.FunctionHost.Charges
         /// Function name affects the URL and thus possibly dependent infrastructure.
         /// </summary>
         private readonly IChargesMessageHandler _chargesMessageHandler;
-        private readonly IHttpFunctionResponseBuilder _httpFunctionResponseBuilder;
+        private readonly IHttpResponseBuilder _httpResponseBuilder;
         private readonly ValidatingMessageExtractor<ChargeCommandBundle> _messageExtractor;
 
         public ChargeIngestion(
             IChargesMessageHandler chargesMessageHandler,
-            IHttpFunctionResponseBuilder httpFunctionResponseBuilder,
+            IHttpResponseBuilder httpResponseBuilder,
             ValidatingMessageExtractor<ChargeCommandBundle> messageExtractor)
         {
             _chargesMessageHandler = chargesMessageHandler;
-            _httpFunctionResponseBuilder = httpFunctionResponseBuilder;
+            _httpResponseBuilder = httpResponseBuilder;
             _messageExtractor = messageExtractor;
         }
 
@@ -52,8 +52,8 @@ namespace GreenEnergyHub.Charges.FunctionHost.Charges
             var inboundMessage = await ValidateMessageAsync(req).ConfigureAwait(false);
             if (inboundMessage.HasErrors)
             {
-                return await _httpFunctionResponseBuilder
-                    .CreateErrorResponseAsync(req, inboundMessage.SchemaValidationError)
+                return await _httpResponseBuilder
+                    .CreateBadRequestResponseAsync(req, inboundMessage.SchemaValidationError)
                     .ConfigureAwait(false);
             }
 
@@ -67,7 +67,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Charges
             var messageResult = await _chargesMessageHandler.HandleAsync(message)
                 .ConfigureAwait(false);
 
-            return await _httpFunctionResponseBuilder
+            return await _httpResponseBuilder
                 .CreateAcceptedResponseAsync(req, messageResult)
                 .ConfigureAwait(false);
         }

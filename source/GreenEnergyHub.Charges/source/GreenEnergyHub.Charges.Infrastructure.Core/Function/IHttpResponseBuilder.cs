@@ -12,28 +12,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Net;
 using System.Threading.Tasks;
 using Energinet.DataHub.Core.SchemaValidation.Errors;
-using Energinet.DataHub.Core.SchemaValidation.Extensions;
 using Microsoft.Azure.Functions.Worker.Http;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Core.Function
 {
-    public sealed class HttpFunctionResponseBuilder : IHttpFunctionResponseBuilder
+    public interface IHttpResponseBuilder
     {
-        public async Task<HttpResponseData> CreateAcceptedResponseAsync<T>(HttpRequestData request, T response)
-        {
-            var httpResponse = request.CreateResponse();
-            await httpResponse.WriteAsJsonAsync(response).ConfigureAwait(false);
-            return httpResponse;
-        }
+        Task<HttpResponseData> CreateAcceptedResponseAsync<T>(
+            HttpRequestData request,
+            T response);
 
-        public async Task<HttpResponseData> CreateErrorResponseAsync(HttpRequestData request, ErrorResponse response)
-        {
-            var httpResponse = request.CreateResponse(HttpStatusCode.BadRequest);
-            await response.WriteAsXmlAsync(httpResponse.Body).ConfigureAwait(false);
-            return httpResponse;
-        }
+        Task<HttpResponseData> CreateBadRequestResponseAsync(
+            HttpRequestData request,
+            ErrorResponse response);
     }
 }
