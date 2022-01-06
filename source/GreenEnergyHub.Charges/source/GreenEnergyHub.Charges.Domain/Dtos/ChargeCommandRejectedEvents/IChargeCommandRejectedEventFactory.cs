@@ -12,9 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 
 namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandRejectedEvents
@@ -22,7 +20,5 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandRejectedEvents
     public interface IChargeCommandRejectedEventFactory
     {
         ChargeCommandRejectedEvent CreateEvent(ChargeCommand command, ValidationResult validationResult);
-
-        ChargeCommandRejectedEvent CreateEvent(ChargeCommand command, Exception exception);
     }
 }

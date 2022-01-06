@@ -15,7 +15,6 @@
 using System;
 using System.Linq;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using NodaTime;
 
@@ -39,11 +38,6 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandRejectedEvents
                 command,
                 validationResult.InvalidRules.Select(x => // TODO use ValidationErrorMessages
                     x.ValidationError!.ValidationRuleIdentifier.ToString()).ToArray());
-        }
-
-        public ChargeCommandRejectedEvent CreateEvent(ChargeCommand command, Exception exception)
-        {
-            return new ChargeCommandRejectedEvent(_clock.GetCurrentInstant(), command, new[] { exception.Message });
         }
     }
 }

@@ -63,29 +63,5 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommandRejectedEvents
                 Assert.Contains(failedRule.ValidationError!.ValidationRuleIdentifier.ToString(), result.RejectReasons);
             }
         }
-
-        [Theory]
-        [InlineAutoMoqData]
-        public void CreateEvent_WhenCalledException_CreatesEventWithOneReason(
-            [Frozen] Mock<IClock> clock,
-            ChargeCommand command,
-            Exception exception,
-            ChargeCommandRejectedEventFactory sut)
-        {
-            // Arrange
-            var currentTime = Instant.FromUtc(2021, 7, 7, 7, 50, 49);
-            clock.Setup(
-                    c => c.GetCurrentInstant())
-                .Returns(currentTime);
-
-            // Act
-            var result = sut.CreateEvent(command, exception);
-
-            // Assert
-            Assert.NotNull(result);
-            Assert.Equal(currentTime, result.PublishedTime);
-            Assert.Single(result.RejectReasons);
-            Assert.Equal(exception.Message, result.RejectReasons.First());
-        }
     }
 }
