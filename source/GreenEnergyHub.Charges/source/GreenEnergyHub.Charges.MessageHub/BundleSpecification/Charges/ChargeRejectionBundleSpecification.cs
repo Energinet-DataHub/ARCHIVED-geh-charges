@@ -41,10 +41,13 @@ namespace GreenEnergyHub.Charges.MessageHub.BundleSpecification.Charges
 
         public override int GetMessageWeight(AvailableChargeReceiptData data)
         {
-            // Todo: Henrik
-            // Note: Unlike the other fields in the CIM documents, the text field of the rejection is uncapped in size
+            // Note: Unlike the other fields in the CIM documents, the text
+            // and description fields of the rejection is uncapped in size
             return (int)Math.Round(
-                (data.ValidationErrors.Count * RejectionReasonWeight) + RejectionWeight + data.ValidationErrors.Sum(reason => reason.Text.Length),
+                (data.ValidationErrors.Count * RejectionReasonWeight)
+                    + RejectionWeight
+                    + data.ValidationErrors.Sum(reason => reason.Text.Length)
+                    + data.ValidationErrors.Sum(reason => reason.Description.Length),
                 MidpointRounding.AwayFromZero);
         }
     }

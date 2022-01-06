@@ -63,13 +63,9 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.BundleSpecification.Charges
                 BusinessProcessRole = MarketParticipantRole.GridAccessProvider,
             };
 
-            hubSenderConfiguration.Setup(
-                    c => c.GetSenderMarketParticipant())
-                .Returns(marketParticipant);
+            hubSenderConfiguration.Setup(c => c.GetSenderMarketParticipant()).Returns(marketParticipant);
 
-            cimIDProvider.Setup(
-                    c => c.GetUniqueId())
-                .Returns(MaxLengthId);
+            cimIDProvider.Setup(c => c.GetUniqueId()).Returns(MaxLengthId);
 
             var stream = new MemoryStream();
             await serializer.SerializeToStreamAsync(
@@ -126,19 +122,23 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.BundleSpecification.Charges
 
         private AvailableChargeReceiptValidationError GetReason()
         {
-            // We create a string of random length for the text
+            var text = CreateStringOfRandomLength();
+            var description = CreateStringOfRandomLength();
+
+            return new AvailableChargeReceiptValidationError(ReasonCode.D01, text, description);
+        }
+
+        private static string CreateStringOfRandomLength()
+        {
             var builder = new StringBuilder();
             var randomizer = new Random();
             var length = randomizer.Next(0, MaxTextLengthInTest);
             for (var i = 0; i < length; i++)
             {
-                builder.Append("0");
+                builder.Append('0');
             }
 
-            return new AvailableChargeReceiptValidationError(
-                ReasonCode.D01,
-                builder.ToString(),
-                "todo"); //TODO Henrik
+            return builder.ToString();
         }
     }
 }

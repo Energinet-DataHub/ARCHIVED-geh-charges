@@ -157,15 +157,17 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Infrastructure.Cim.Bundles.Cha
             for (var i = 1; i <= noOfReasons; i++)
             {
                 var text = string.Empty;
+                var description = string.Empty;
                 if (i % 2 == 0)
                 {
                     text = "Text" + no + "_" + i;
+                    description = "Description" + no + "_" + i;
                 }
 
                 reasonCodes.Add(new AvailableChargeReceiptValidationError(
                     ReasonCode.D14, // Matches that of the test file
                     text,
-                    "todo")); // TODO: Henrik
+                    description));
             }
 
             return reasonCodes;
