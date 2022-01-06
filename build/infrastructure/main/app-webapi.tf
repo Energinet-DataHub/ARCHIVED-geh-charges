@@ -25,6 +25,12 @@ resource "azurerm_app_service" "webapi" {
     }
   }
 
+  connection_string {
+    name  = "CHARGE_DB_CONNECTION_STRING"
+    type  = "SQLServer"
+    value = local.CHARGE_DB_CONNECTION_STRING
+  }
+
   tags              = azurerm_resource_group.this.tags
 
   lifecycle {
