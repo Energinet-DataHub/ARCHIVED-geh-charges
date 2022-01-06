@@ -46,8 +46,7 @@ namespace GreenEnergyHub.Charges.MessageHub.BundleSpecification.Charges
             return (int)Math.Round(
                 (data.ValidationErrors.Count * RejectionReasonWeight)
                     + RejectionWeight
-                    + data.ValidationErrors.Sum(reason => reason.Text.Length)
-                    + data.ValidationErrors.Sum(reason => reason.Description.Length),
+                    + data.ValidationErrors.Sum(reason => reason.Text.Length),
                 MidpointRounding.AwayFromZero);
         }
     }

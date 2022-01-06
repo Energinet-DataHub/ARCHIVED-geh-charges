@@ -40,7 +40,6 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptD
             [Frozen] Mock<IMessageMetaDataContext> messageMetaDataContext,
             [Frozen] Mock<ICimValidationErrorCodeFactory> validationErrorCodeFactory,
             [Frozen] Mock<ICimValidationErrorTextFactory> validationErrorTextFactory,
-            [Frozen] Mock<ICimValidationErrorDescriptionFactory> validationErrorDescriptionFactory,
             ChargeCommandRejectedEvent rejectedEvent,
             Instant now,
             AvailableChargeRejectionDataFactory sut)
@@ -48,17 +47,15 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptD
             // Arrange
             messageMetaDataContext.Setup(m => m.RequestDataTime).Returns(now);
 
-            // fake error code, text and description
+            // fake error code and text
             validationErrorCodeFactory.Setup(f => f
                 .Create(It.IsAny<ValidationRuleIdentifier>()))
                 .Returns<ReasonCode>(code => code);
             validationErrorTextFactory.Setup(f => f
-                .Create(It.IsAny<ReasonCode>()))
-                .Returns<ValidationRuleIdentifier>(identifier => identifier.ToString());
-            validationErrorDescriptionFactory.Setup(f => f
                 .Create(It.IsAny<ValidationRuleIdentifier>(), rejectedEvent.Command))
                 .Returns<ValidationRuleIdentifier, ChargeCommand>((identifier, _) => identifier.ToString());
-            var expectedValidationErrors = rejectedEvent.FailedValidationRuleIdentifiers.Select(x => x.ToString()).ToList();
+            var expectedValidationErrors =
+                rejectedEvent.FailedValidationRuleIdentifiers.Select(x => x.ToString()).ToList();
 
             // Act
             var actualList = await sut.CreateAsync(rejectedEvent);
@@ -80,7 +77,6 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptD
             {
                 actualValidationErrors[i].ReasonCode.ToString().Should().NotBeNullOrWhiteSpace();
                 actualValidationErrors[i].Text.Should().Be(expectedValidationErrors[i]);
-                actualValidationErrors[i].Description.Should().Be(expectedValidationErrors[i]);
             }
         }
     }

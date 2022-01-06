@@ -25,18 +25,18 @@ using Xunit.Categories;
 namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptData
 {
     [UnitTest]
-    public class CimValidationErrorDescriptionFactoryTests
+    public class CimValidationErrorTextFactoryTests
     {
         [Theory]
         [InlineAutoMoqData]
         public void Create_WhenThreeMergeFields_ReturnsExpectedDescription(
             ChargeCommand chargeCommand,
-            CimValidationErrorDescriptionProvider cimValidationErrorDescriptionProvider)
+            CimValidationErrorTextProvider cimValidationErrorTextProvider)
         {
             // Arrange
-            var sut = new CimValidationErrorDescriptionFactory(cimValidationErrorDescriptionProvider);
+            var sut = new CimValidationErrorTextFactory(cimValidationErrorTextProvider);
 
-            var expected = CimValidationErrorDescriptionTemplateMessages.ResolutionTariffValidationErrorDescription
+            var expected = CimValidationErrorTextTemplateMessages.ResolutionTariffValidationErrorText
                 .Replace("{{ChargeResolution}}", chargeCommand.ChargeOperation.Resolution.ToString())
                 .Replace("{{DocumentSenderProvidedChargeId}}", chargeCommand.ChargeOperation.ChargeId)
                 .Replace("{{ChargeType}}", chargeCommand.ChargeOperation.Type.ToString());
@@ -52,11 +52,11 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptD
         [InlineAutoMoqData]
         public void Create_MergesAllMergeFields(
             ChargeCommand chargeCommand,
-            CimValidationErrorDescriptionProvider cimValidationErrorDescriptionProvider)
+            CimValidationErrorTextProvider cimValidationErrorTextProvider)
         {
             // Arrange
             var validationRuleIdentifiers = (ValidationRuleIdentifier[])Enum.GetValues(typeof(ValidationRuleIdentifier));
-            var sut = new CimValidationErrorDescriptionFactory(cimValidationErrorDescriptionProvider);
+            var sut = new CimValidationErrorTextFactory(cimValidationErrorTextProvider);
 
             // Act
             // Assert

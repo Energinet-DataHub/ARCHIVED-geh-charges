@@ -12,12 +12,25 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation;
-
 namespace GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors
 {
-    public interface ICimValidationErrorDescriptionProvider
+    public enum CimValidationErrorTextToken
     {
-        string GetCimValidationErrorDescription(ValidationRuleIdentifier validationRuleIdentifier);
+        ChargeDescription = 1,
+        ChargeName = 2,
+        ChargeOwner = 3,
+        ChargePointPosition = 4,
+        ChargePointPrice = 5,
+        ChargePointsCount = 6,
+        ChargeResolution = 7,
+        ChargeStartDateTime = 8,
+        ChargeTaxIndicator = 9,
+        ChargeType = 10,
+        ChargeVatClass = 11,
+        DocumentBusinessReasonCode = 12,
+        DocumentId = 13,
+        DocumentSenderId = 14,
+        DocumentSenderProvidedChargeId = 15,
+        DocumentType = 16,
     }
 }

@@ -50,7 +50,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.BundleSpecification.Charges
         public async Task GetMessageWeight_WhenCalled_ReturnedWeightIsHigherThanSerializedStream(
             int noOfReasons,
             [Frozen] Mock<IHubSenderConfiguration> hubSenderConfiguration,
-            [Frozen] Mock<ICimIdProvider> cimIDProvider,
+            [Frozen] Mock<ICimIdProvider> cimIdProvider,
             ChargeReceiptCimSerializer serializer,
             ChargeRejectionBundleSpecification sut)
         {
@@ -65,11 +65,11 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.BundleSpecification.Charges
 
             hubSenderConfiguration.Setup(c => c.GetSenderMarketParticipant()).Returns(marketParticipant);
 
-            cimIDProvider.Setup(c => c.GetUniqueId()).Returns(MaxLengthId);
+            cimIdProvider.Setup(c => c.GetUniqueId()).Returns(MaxLengthId);
 
             var stream = new MemoryStream();
             await serializer.SerializeToStreamAsync(
-                new List<AvailableChargeReceiptData>() { availableData },
+                new List<AvailableChargeReceiptData> { availableData },
                 stream,
                 BusinessReasonCode.UpdateChargeInformation,
                 MaxLengthId,
@@ -83,7 +83,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.BundleSpecification.Charges
         }
 
         [Fact]
-        public void SizeOfMaximumDocumentWithuotReasons_ShouldNotExceedDefinedWeight()
+        public void SizeOfMaximumDocumentWithoutReasons_ShouldNotExceedDefinedWeight()
         {
             // Arrange
             var confirmationMessageWeightInBytes = (long)ChargeRejectionBundleSpecification.RejectionWeight * 1000;
@@ -123,9 +123,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.BundleSpecification.Charges
         private AvailableChargeReceiptValidationError GetReason()
         {
             var text = CreateStringOfRandomLength();
-            var description = CreateStringOfRandomLength();
-
-            return new AvailableChargeReceiptValidationError(ReasonCode.D01, text, description);
+            return new AvailableChargeReceiptValidationError(ReasonCode.D01, text);
         }
 
         private static string CreateStringOfRandomLength()

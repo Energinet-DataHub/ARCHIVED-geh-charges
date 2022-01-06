@@ -13,26 +13,23 @@
 // limitations under the License.
 
 using System;
-using FluentAssertions;
-using GreenEnergyHub.Charges.Infrastructure.Core.Cim;
-using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation;
+using GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors;
 using GreenEnergyHub.Charges.TestCore.Attributes;
 using Xunit;
-using Xunit.Categories;
 
-namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptData
+namespace GreenEnergyHub.Charges.Tests.Infrastructure.Core.Cim.ValidationErrors
 {
-    [UnitTest]
-    public class CimValidationErrorTextFactoryTests
+    public class CimValidationErrorTextProviderTests
     {
         [Theory]
         [InlineAutoMoqData]
-        public void Create_MapsAllReasonCodes(CimValidationErrorTextFactory sut)
+        public void GetCimValidationErrorMessage_MapsAllKnownValidationRuleIdentifiers(CimValidationErrorTextProvider sut)
         {
-            foreach (var reasonCode in Enum.GetValues<ReasonCode>())
+            foreach (var value in Enum.GetValues<ValidationRuleIdentifier>())
             {
-                // Assert - ensures that a not-empty reason error text can be obtained for all known reason codes
-                sut.Create(reasonCode).Should().NotBeEmpty();
+                // Assert that create does not throw (ensures that we are mapping all enum values)
+                sut.GetCimValidationErrorText(value);
             }
         }
     }

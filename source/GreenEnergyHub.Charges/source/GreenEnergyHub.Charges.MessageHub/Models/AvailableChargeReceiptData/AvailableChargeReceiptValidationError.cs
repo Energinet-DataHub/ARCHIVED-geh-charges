@@ -19,12 +19,11 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
 {
     public class AvailableChargeReceiptValidationError
     {
-        public AvailableChargeReceiptValidationError(ReasonCode reasonCode, string text, string description)
+        public AvailableChargeReceiptValidationError(ReasonCode reasonCode, string text)
         {
             Id = Guid.NewGuid();
             ReasonCode = reasonCode;
             Text = text;
-            Description = description;
         }
 
         public Guid Id { get; }
@@ -32,7 +31,5 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
         public ReasonCode ReasonCode { get; }
 
         public string Text { get; }
-
-        public string Description { get; }
     }
 }

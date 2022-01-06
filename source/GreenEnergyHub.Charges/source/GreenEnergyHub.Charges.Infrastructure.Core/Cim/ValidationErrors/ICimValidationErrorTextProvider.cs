@@ -12,20 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation;
 
-namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
+namespace GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors
 {
-    /// <summary>
-    /// Factory for creating CIM error description of charge rejections.
-    /// </summary>
-    public interface ICimValidationErrorDescriptionFactory
+    public interface ICimValidationErrorTextProvider
     {
-        /// <summary>
-        /// Creates an error description by replacing occurrences of the
-        /// placeholder texts with values from the <see cref="ChargeCommand"/>.
-        /// </summary>
-        string Create(ValidationRuleIdentifier validationRuleIdentifier, ChargeCommand chargeCommand);
+        string GetCimValidationErrorText(ValidationRuleIdentifier validationRuleIdentifier);
     }
 }

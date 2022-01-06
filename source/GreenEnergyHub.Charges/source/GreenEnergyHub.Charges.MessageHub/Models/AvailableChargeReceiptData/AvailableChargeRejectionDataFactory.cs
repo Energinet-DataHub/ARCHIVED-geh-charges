@@ -29,18 +29,15 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
         private readonly IMessageMetaDataContext _messageMetaDataContext;
         private readonly ICimValidationErrorCodeFactory _cimValidationErrorCodeFactory;
         private readonly ICimValidationErrorTextFactory _cimValidationErrorTextFactory;
-        private readonly ICimValidationErrorDescriptionFactory _cimValidationErrorDescriptionFactory;
 
         public AvailableChargeRejectionDataFactory(
             IMessageMetaDataContext messageMetaDataContext,
             ICimValidationErrorCodeFactory cimValidationErrorCodeFactory,
-            ICimValidationErrorTextFactory cimValidationErrorTextFactory,
-            ICimValidationErrorDescriptionFactory cimValidationErrorDescriptionFactory)
+            ICimValidationErrorTextFactory cimValidationErrorTextFactory)
         {
             _messageMetaDataContext = messageMetaDataContext;
-            _cimValidationErrorTextFactory = cimValidationErrorTextFactory;
             _cimValidationErrorCodeFactory = cimValidationErrorCodeFactory;
-            _cimValidationErrorDescriptionFactory = cimValidationErrorDescriptionFactory;
+            _cimValidationErrorTextFactory = cimValidationErrorTextFactory;
         }
 
         public Task<IReadOnlyList<AvailableChargeReceiptData>> CreateAsync(ChargeCommandRejectedEvent input)
@@ -69,10 +66,9 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
                     ruleIdentifier =>
                     {
                         var reasonCode = _cimValidationErrorCodeFactory.Create(ruleIdentifier);
-                        var reasonText = _cimValidationErrorTextFactory.Create(reasonCode);
-                        var description = _cimValidationErrorDescriptionFactory.Create(ruleIdentifier, input.Command);
+                        var reasonText = _cimValidationErrorTextFactory.Create(ruleIdentifier, input.Command);
 
-                        return new AvailableChargeReceiptValidationError(reasonCode, reasonText, description);
+                        return new AvailableChargeReceiptValidationError(reasonCode, reasonText);
                     })
                 .ToList();
         }

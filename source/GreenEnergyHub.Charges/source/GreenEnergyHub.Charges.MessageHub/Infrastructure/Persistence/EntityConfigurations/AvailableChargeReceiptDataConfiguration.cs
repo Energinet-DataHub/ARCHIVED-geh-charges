@@ -51,7 +51,6 @@ namespace GreenEnergyHub.Charges.MessageHub.Infrastructure.Persistence.EntityCon
             validationErrors.Property(r => r.Id).ValueGeneratedNever();
             validationErrors.Property(r => r.ReasonCode);
             validationErrors.Property(r => r.Text);
-            validationErrors.Property(r => r.Description);
         }
     }
 }
