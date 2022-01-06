@@ -117,7 +117,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands
                     CreatedDateTime = currentTime,
                     Sender = new MarketParticipantDto
                     {
-                        Id = systemOperator.MarketParticipantId, // For default charge links the owner is the TSO.
+                        Id = systemOperator.MarketParticipantId, // When creating default charge links, the TSO starts a new operation, which is why a new OperationId is provided.
                         BusinessProcessRole = MarketParticipantRole.SystemOperator,
                     },
                     Recipient = new MarketParticipantDto
