@@ -51,6 +51,8 @@ limitations under the License.
       <EmbeddedResource Include="Scripts\Model\202112081220 Remove unsued ChargePoint columns.sql" />
       <EmbeddedResource Include="Scripts\Model\202112081225 Add Charge columns from obsolete details.sql" />
       <EmbeddedResource Include="Scripts\Model\202112091200 Update Charge column names.sql" />
+      <EmbeddedResource Include="Scripts\Model\202201041230 Remove default constraint on IsActive in MarketParticipant.sql" />
+      <EmbeddedResource Include="Scripts\Model\202112211240 Remove redundant Charge FK in ChargePoint.sql" />
       <EmbeddedResource Include="Scripts\Model\202112100940 Move data from ChargeLink.PeriodDetails to ChargeLink.sql" />
       <EmbeddedResource Include="Scripts\Model\202112231000 Rename to AvailableChargeReceiptValidationError.sql" />
       <EmbeddedResource Include="Scripts\Model\202201051029 Add Description to AvailableChargeReceiptValidationError.sql" />
@@ -77,6 +79,7 @@ limitations under the License.
       <EmbeddedResource Include="Scripts\Model\202111171630 Rename RequestTime to RequestDateTime in Available tables.sql" />
       <EmbeddedResource Include="Scripts\Model\202111250821 Create AvailableChargeReceiptData tables.sql" />
       <EmbeddedResource Include="Scripts\Model\202111251041 Change ChargeLinkReceipt Text to NVARCHAR.sql" />
+      <EmbeddedResource Include="Scripts\Test\202112171600 Add charge link test data.sql" />
     </ItemGroup>
 
     <ItemGroup>
