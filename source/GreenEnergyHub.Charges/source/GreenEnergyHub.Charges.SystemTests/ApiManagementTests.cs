@@ -110,9 +110,9 @@ namespace GreenEnergyHub.Charges.SystemTests
         }
 
         /// <summary>
-        /// Create a http client.
+        /// Create a http client. Will add an access token if <paramref name="confidentialClientApp"/> is specified.
         /// </summary>
-        /// <param name="confidentialClientApp">If not null: a access token is aquired using the client, and set in the authorization header of the http client.</param>
+        /// <param name="confidentialClientApp">If not null: an access token is aquired using the client, and set in the authorization header of the http client.</param>
         private async Task<HttpClient> CreateHttpClientAsync(IConfidentialClientApplication? confidentialClientApp = null)
         {
             var httpClient = new HttpClient
