@@ -28,7 +28,7 @@ namespace GreenEnergyHub.Charges.WebApi
             this IServiceCollection serviceCollection,
             IConfiguration configuration)
         {
-            var connectionString = configuration.GetConnectionString(EnvironmentSettingNames.ChargeDbConnectionString);
+            var connectionString = Environment.GetEnvironmentVariable(EnvironmentSettingNames.ChargeDbConnectionString);
             if (connectionString == null)
                 throw new ArgumentNullException(EnvironmentSettingNames.ChargeDbConnectionString, "does not exist in configuration settings");
 
