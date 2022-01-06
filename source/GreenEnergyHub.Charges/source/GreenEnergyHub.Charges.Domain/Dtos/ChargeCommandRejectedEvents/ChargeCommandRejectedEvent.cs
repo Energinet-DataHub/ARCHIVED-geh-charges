@@ -24,15 +24,15 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandRejectedEvents
         public ChargeCommandRejectedEvent(
             Instant publishedTime,
             ChargeCommand command,
-            IEnumerable<string> reasons)
+            IEnumerable<string> rejectReasons)
             : base(publishedTime)
         {
             Command = command;
-            RejectReasons = reasons;
+            RejectReasons = rejectReasons;
         }
 
         public ChargeCommand Command { get; }
 
-        public IEnumerable<string> RejectReasons { get; set; } // Todo Expand with messageparameters and message
+        public IEnumerable<string> RejectReasons { get; set; } // Todo Expand with message parameters and message
     }
 }
