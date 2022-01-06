@@ -71,9 +71,9 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
                 CimValidationErrorDescriptionToken.ChargeOwner =>
                     chargeCommand.ChargeOperation.ChargeOwner,
                 CimValidationErrorDescriptionToken.ChargePointPosition =>
-                    "Can't be done here without replicating the rule!", // TODO: Henrik
+                    "To be implemented in upcoming pull request", // TODO: Henrik
                 CimValidationErrorDescriptionToken.ChargePointPrice =>
-                    "Can't be done here without replicating the rule!", // TODO: Henrik
+                    "To be implemented in upcoming pull request", // TODO: Henrik
                 CimValidationErrorDescriptionToken.ChargePointsCount =>
                     chargeCommand.ChargeOperation.Points.Count.ToString(),
                 CimValidationErrorDescriptionToken.ChargeResolution =>
