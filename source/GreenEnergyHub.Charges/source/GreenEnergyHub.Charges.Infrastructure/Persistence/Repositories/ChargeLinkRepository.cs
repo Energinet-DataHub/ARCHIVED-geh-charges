@@ -31,14 +31,6 @@ namespace GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories
             _context = context;
         }
 
-        public async Task<ChargeLink> GetChargeLinksAsync(Guid meteringPointId, Guid chargeId)
-        {
-            var chargeLink = await _context.ChargeLinks.SingleAsync(chargeLink =>
-                chargeLink.MeteringPointId == meteringPointId && chargeLink.ChargeId == chargeId);
-
-            return chargeLink;
-        }
-
         public async Task<IReadOnlyCollection<ChargeLink>> GetAsync(Guid chargeId, Guid meteringPointId)
         {
             return await _context.ChargeLinks.Where(chargeLink =>

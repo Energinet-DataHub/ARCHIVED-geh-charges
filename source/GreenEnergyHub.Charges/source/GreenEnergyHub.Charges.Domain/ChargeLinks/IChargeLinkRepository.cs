@@ -22,8 +22,6 @@ namespace GreenEnergyHub.Charges.Domain.ChargeLinks
     {
         Task StoreAsync(IReadOnlyCollection<ChargeLink> chargeLinks);
 
-        Task<ChargeLink> GetChargeLinksAsync(Guid meteringPointId, Guid chargeId);
-
         Task<IReadOnlyCollection<ChargeLink>> GetAsync(Guid chargeId, Guid meteringPointId);
     }
 }
