@@ -17,11 +17,11 @@ using GreenEnergyHub.Charges.Domain.MeteringPoints;
 
 namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands.Validation.BusinessValidation.ValidationRules
 {
-    public class MeteringPointDoesNotExistRule : IValidationRule
+    public class MeteringPointMustExistRule : IValidationRule
     {
         private readonly MeteringPoint? _meteringPoint;
 
-        public MeteringPointDoesNotExistRule(MeteringPoint? meteringPoint)
+        public MeteringPointMustExistRule(MeteringPoint? meteringPoint)
         {
             _meteringPoint = meteringPoint;
         }

@@ -34,7 +34,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeLinksCommands.Validatio
     public class BusinessValidationRulesFactoryTests
     {
         [Theory]
-        [InlineAutoMoqData(typeof(MeteringPointDoesNotExistRule))]
+        [InlineAutoMoqData(typeof(MeteringPointMustExistRule))]
         public async Task CreateRulesForChargeCommandAsync_WhenMeteringPointDoesNotExist_ReturnsExpectedMandatoryRules(
             Type expectedRule,
             [Frozen] Mock<IMeteringPointRepository> repository,

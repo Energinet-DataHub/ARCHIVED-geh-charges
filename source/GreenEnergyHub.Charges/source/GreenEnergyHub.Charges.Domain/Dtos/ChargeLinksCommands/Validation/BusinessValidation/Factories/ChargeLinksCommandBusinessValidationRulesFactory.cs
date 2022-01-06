@@ -67,7 +67,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands.Validation.Busi
         {
             return new List<IValidationRule>
             {
-                new MeteringPointDoesNotExistRule(meteringPoint),
+                new MeteringPointMustExistRule(meteringPoint),
             };
         }
 

@@ -28,14 +28,14 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeLinksCommands.Validatio
         [InlineAutoMoqData]
         public void IsValid_WhenCalledWithMeteringPoint_ReturnsTrue(MeteringPoint meteringPoint)
         {
-            var sut = new MeteringPointDoesNotExistRule(meteringPoint);
+            var sut = new MeteringPointMustExistRule(meteringPoint);
             sut.IsValid.Should().BeTrue();
         }
 
         [Fact]
         public void IsValid_WhenCalledWithNullMeteringPoint_ReturnsFalse()
         {
-            var sut = new MeteringPointDoesNotExistRule(null);
+            var sut = new MeteringPointMustExistRule(null);
             sut.IsValid.Should().BeFalse();
         }
     }
