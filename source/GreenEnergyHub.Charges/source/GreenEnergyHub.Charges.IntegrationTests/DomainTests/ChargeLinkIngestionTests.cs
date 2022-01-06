@@ -80,7 +80,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 var chargeLinkJson = EmbeddedResourceHelper.GetEmbeddedFile(testFilePath, clock);
                 correlationId = CorrelationIdGenerator.Create();
 
-                var request = new HttpRequestMessage(HttpMethod.Post, "api/ChargeLinkIngestion")
+                var request = new HttpRequestMessage(HttpMethod.Post, "api/ChargeLinksIngestion")
                 {
                     Content = new StringContent(chargeLinkJson, Encoding.UTF8, "application/xml"),
                 };
