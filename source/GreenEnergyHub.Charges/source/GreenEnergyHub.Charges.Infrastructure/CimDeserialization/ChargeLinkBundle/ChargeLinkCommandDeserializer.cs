@@ -12,34 +12,34 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.IO;
-using System.Threading;
 using System.Threading.Tasks;
-using System.Xml;
-using Energinet.DataHub.Core.Messaging.Transport;
+using Energinet.DataHub.Core.Messaging.Transport.SchemaValidation;
+using Energinet.DataHub.Core.Schemas;
+using Energinet.DataHub.Core.SchemaValidation;
+using Energinet.DataHub.Core.SchemaValidation.Extensions;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands;
-using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Serialization;
 
 namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.ChargeLinkBundle
 {
-    public class ChargeLinkCommandDeserializer : MessageDeserializer<ChargeLinksCommand>
+    public sealed class ChargeLinkCommandDeserializer : SchemaValidatingMessageDeserializer<ChargeLinksCommandBundle>
     {
         private readonly ChargeLinkCommandConverter _chargeLinkCommandConverter;
 
         public ChargeLinkCommandDeserializer(ChargeLinkCommandConverter chargeLinkCommandConverter)
+            : base(Schemas.CimXml.StructureRequestChangeBillingMasterData)
         {
             _chargeLinkCommandConverter = chargeLinkCommandConverter;
         }
 
-        public override async Task<IInboundMessage> FromBytesAsync(byte[] data, CancellationToken cancellationToken = default)
+        protected override async Task<ChargeLinksCommandBundle> ConvertAsync(SchemaValidatingReader reader)
         {
-            await using var stream = new MemoryStream(data);
+            var xmlReader = await reader.AsXmlReaderAsync().ConfigureAwait(false);
 
-            using var reader = XmlReader.Create(stream, new XmlReaderSettings { Async = true });
+            var command = await _chargeLinkCommandConverter
+                .ConvertAsync(xmlReader)
+                .ConfigureAwait(false);
 
-            var command = await _chargeLinkCommandConverter.ConvertAsync(reader).ConfigureAwait(false);
-
-            return command;
+            return (ChargeLinksCommandBundle)command;
         }
     }
 }

@@ -12,12 +12,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace GreenEnergyHub.Charges.IntegrationTests.TestFiles.ChargeLinks
+using System.Threading.Tasks;
+using Energinet.DataHub.Core.SchemaValidation.Errors;
+using Microsoft.Azure.Functions.Worker.Http;
+
+namespace GreenEnergyHub.Charges.Infrastructure.Core.Function
 {
-    public static class ChargeLinkDocument
+    public interface IHttpResponseBuilder
     {
-        public const string AnyValid = "TestFiles/ChargeLinks/FixedPeriodTaxTariffChargeLinkDocument.xml";
-        public const string AnyTax = "TestFiles/ChargeLinks/FixedPeriodTaxTariffChargeLinkDocument.xml";
-        public const string InvalidSchema = "TestFiles/ChargeLinks/InvalidSchemaChargeLinkDocument.xml";
+        Task<HttpResponseData> CreateAcceptedResponseAsync<T>(
+            HttpRequestData request,
+            T response);
+
+        Task<HttpResponseData> CreateBadRequestResponseAsync(
+            HttpRequestData request,
+            ErrorResponse response);
     }
 }
