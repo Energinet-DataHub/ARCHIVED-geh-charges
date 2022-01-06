@@ -45,7 +45,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeLinksCommands.Validatio
             var chargeCommand = builder.Build();
 
             MeteringPoint? meteringPoint = null;
-            repository.Setup(r => r.GetOrNullAsync(It.IsAny<string>()))
+            repository.Setup(r => r.GetOrNullAsync(chargeCommand.MeteringPointId))
                 .ReturnsAsync(meteringPoint);
 
             // Act
@@ -73,7 +73,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeLinksCommands.Validatio
             var links = new List<ChargeLinkDto> { link };
             var chargeCommand = linksCommandBuilder.WithChargeLinks(links).Build();
 
-            meteringPointRepository.Setup(r => r.GetOrNullAsync(It.IsAny<string>()))
+            meteringPointRepository.Setup(r => r.GetOrNullAsync(chargeCommand.MeteringPointId))
                 .ReturnsAsync(meteringPoint);
 
             Charge? charge = null;
@@ -106,7 +106,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeLinksCommands.Validatio
             var links = new List<ChargeLinkDto> { link };
             var chargeCommand = linksCommandBuilder.WithChargeLinks(links).Build();
 
-            meteringPointRepository.Setup(r => r.GetOrNullAsync(It.IsAny<string>()))
+            meteringPointRepository.Setup(r => r.GetOrNullAsync(chargeCommand.MeteringPointId))
                 .ReturnsAsync(meteringPoint);
 
             chargeRepository.Setup(r => r.GetOrNullAsync(It.IsAny<ChargeIdentifier>()))
