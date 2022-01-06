@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -23,37 +24,35 @@ using GreenEnergyHub.Charges.IntegrationTests.TestHelpers;
 using GreenEnergyHub.Charges.SystemTests.Fixtures;
 using Microsoft.Identity.Client;
 using NodaTime;
+using Xunit;
 
 namespace GreenEnergyHub.Charges.SystemTests
 {
-    public class ApiManagementTests
+    public class ApiManagementTests : IClassFixture<ApiManagementConfiguration>
     {
-        public ApiManagementTests()
+        public ApiManagementTests(ApiManagementConfiguration configuration)
         {
-            Configuration = new ApiManagementConfiguration();
+            Configuration = configuration;
+
+            TeamVoltB2cSettings = configuration.RetrieveB2CSettings("volt");
+            TeamVoltClientApp = CreateConfidentialClientApp(TeamVoltB2cSettings);
         }
 
         private ApiManagementConfiguration Configuration { get; }
 
-        private string TeamVolt => "volt";
+        private B2CSettings TeamVoltB2cSettings { get; }
 
-        // This shows how we can extract an access token on behalf of the "team client"
+        private IConfidentialClientApplication TeamVoltClientApp { get; }
+
+        // This shows how we can extract an access token for accessing the 'backend app' on behalf of the 'team client app'
         [SystemFact]
-        public async Task When_AquireTokenForTeamVoltClient_Then_AccessTokenIsReturned()
+        public async Task When_AquireTokenForTeamVoltClientApp_Then_AccessTokenIsReturned()
         {
             // Arrange
-            var b2cSettings = Configuration.RetrieveB2CSettings(TeamVolt);
-
-            var confidentialClientApp = ConfidentialClientApplicationBuilder
-                .Create(b2cSettings.TeamClientId)
-                .WithClientSecret(b2cSettings.TeamClientSecret)
-                .WithAuthority(new Uri($"https://login.microsoftonline.com/{b2cSettings.B2cTenantId}"))
-                .Build();
-
-            var scopes = new[] { $"{b2cSettings.BackendAppId}/.default" };
+            var backendApiScope = new[] { $"{TeamVoltB2cSettings.BackendAppId}/.default" };
 
             // Act
-            var actualAuthenticationResult = await confidentialClientApp.AcquireTokenForClient(scopes).ExecuteAsync();
+            var actualAuthenticationResult = await TeamVoltClientApp.AcquireTokenForClient(backendApiScope).ExecuteAsync();
 
             // Assert
             actualAuthenticationResult.AccessToken.Should().NotBeNullOrWhiteSpace();
@@ -64,15 +63,8 @@ namespace GreenEnergyHub.Charges.SystemTests
         public async Task When_RequestApiManagementWithAccessToken_Then_ResponseIsOk()
         {
             // Arrange
-            var b2cSettings = Configuration.RetrieveB2CSettings(TeamVolt);
-            var confidentialClientApp = ConfidentialClientApplicationBuilder
-                .Create(b2cSettings.TeamClientId)
-                .WithClientSecret(b2cSettings.TeamClientSecret)
-                .WithAuthority(new Uri($"https://login.microsoftonline.com/{b2cSettings.B2cTenantId}"))
-                .Build();
-
-            var scopes = new[] { $"{b2cSettings.BackendAppId}/.default" };
-            var authenticationResult = await confidentialClientApp.AcquireTokenForClient(scopes).ExecuteAsync();
+            var backendApiScope = new[] { $"{TeamVoltB2cSettings.BackendAppId}/.default" };
+            var authenticationResult = await TeamVoltClientApp.AcquireTokenForClient(backendApiScope).ExecuteAsync();
 
             using var httpClient = new HttpClient
             {
@@ -94,6 +86,17 @@ namespace GreenEnergyHub.Charges.SystemTests
 
             // Assert
             actualResponse.StatusCode.Should().Be(HttpStatusCode.OK);
+        }
+
+        private static IConfidentialClientApplication CreateConfidentialClientApp(B2CSettings b2cSettings)
+        {
+            var confidentialClientApp = ConfidentialClientApplicationBuilder
+                .Create(b2cSettings.TeamClientId)
+                .WithClientSecret(b2cSettings.TeamClientSecret)
+                .WithAuthority(new Uri($"https://login.microsoftonline.com/{b2cSettings.B2cTenantId}"))
+                .Build();
+
+            return confidentialClientApp;
         }
     }
 }
