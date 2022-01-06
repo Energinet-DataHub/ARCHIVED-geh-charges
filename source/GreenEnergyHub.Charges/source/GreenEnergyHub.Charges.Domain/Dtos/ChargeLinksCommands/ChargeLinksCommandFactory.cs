@@ -86,7 +86,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands
                     ChargeOwnerId = GetChargeOwnerId(pair.Value, owners),
                     StartDateTime = pair.Key.GetStartDateTime(meteringPoint.EffectiveDate),
                     EndDateTime = pair.Key.EndDateTime,
-                    OperationId = Guid.NewGuid().ToString(), // TODO: Fix and add unit test
+                    OperationId = Guid.NewGuid().ToString(), // When creating default charge links, the TSO starts a new operation, which is why a new OperationId is provided.
                     Factor = DefaultChargeLink.Factor,
                 })
                 .ToList();
@@ -117,7 +117,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands
                     CreatedDateTime = currentTime,
                     Sender = new MarketParticipantDto
                     {
-                        Id = systemOperator.MarketParticipantId, // When creating default charge links, the TSO starts a new operation, which is why a new OperationId is provided.
+                        Id = systemOperator.MarketParticipantId, // For default charge links the owner is the TSO.
                         BusinessProcessRole = MarketParticipantRole.SystemOperator,
                     },
                     Recipient = new MarketParticipantDto
