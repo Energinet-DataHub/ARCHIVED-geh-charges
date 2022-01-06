@@ -13,15 +13,16 @@
 // limitations under the License.
 
 using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 
-namespace GreenEnergyHub.Charges.Application.ChargeLinks.Acknowledgement
+namespace GreenEnergyHub.Charges.Application.Charges.Acknowledgement
 {
-    public interface IChargeLinksConfirmationService
+    public interface IChargeCommandReceiptService
     {
-        Task RejectAsync(ChargeLinksCommand command, ValidationResult validationResult);
+        Task RejectAsync(ChargeCommand command, ValidationResult validationResult);
 
-        Task AcceptAsync(ChargeLinksCommand command);
+        Task AcceptAsync(ChargeCommand command);
     }
 }

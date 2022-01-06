@@ -21,14 +21,14 @@ using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions;
 
 namespace GreenEnergyHub.Charges.Application.Charges.Acknowledgement
 {
-    public class ChargeCommandConfirmationService : IChargeCommandConfirmationService
+    public class ChargeCommandReceiptService : IChargeCommandReceiptService
     {
         private readonly IChargeCommandRejectedEventFactory _chargeCommandRejectedEventFactory;
         private readonly IChargeCommandAcceptedEventFactory _chargeCommandAcceptedEventFactory;
         private readonly IMessageDispatcher<ChargeCommandRejectedEvent> _rejectedMessageDispatcher;
         private readonly IMessageDispatcher<ChargeCommandAcceptedEvent> _acceptedMessageDispatcher;
 
-        public ChargeCommandConfirmationService(
+        public ChargeCommandReceiptService(
             IChargeCommandRejectedEventFactory chargeCommandRejectedEventFactory,
             IChargeCommandAcceptedEventFactory chargeCommandAcceptedEventFactory,
             IMessageDispatcher<ChargeCommandRejectedEvent> rejectedMessageDispatcher,

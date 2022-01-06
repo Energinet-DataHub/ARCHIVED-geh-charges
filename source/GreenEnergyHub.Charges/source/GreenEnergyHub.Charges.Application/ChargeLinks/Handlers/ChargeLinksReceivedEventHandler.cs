@@ -13,7 +13,7 @@
 // limitations under the License.
 
 using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Application.ChargeLinks.Acknowledgement;
+using GreenEnergyHub.Charges.Application.ChargeLinks.Services;
 using GreenEnergyHub.Charges.Domain.ChargeLinks;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands.Validation;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksReceivedEvents;
@@ -22,18 +22,18 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
 {
     public class ChargeLinksReceivedEventHandler : IChargeLinksReceivedEventHandler
     {
-        private readonly IChargeLinksConfirmationService _chargeLinksConfirmationService;
+        private readonly IChargeLinksReceiptService _chargeLinksReceiptService;
         private readonly IChargeLinkFactory _chargeLinkFactory;
         private readonly IChargeLinkRepository _chargeLinkRepository;
         private readonly IChargeLinksCommandValidator _chargeLinksCommandValidator;
 
         public ChargeLinksReceivedEventHandler(
-            IChargeLinksConfirmationService chargeLinksConfirmationService,
+            IChargeLinksReceiptService chargeLinksReceiptService,
             IChargeLinkFactory chargeLinkFactory,
             IChargeLinkRepository chargeLinkRepository,
             IChargeLinksCommandValidator chargeLinksCommandValidator)
         {
-            _chargeLinksConfirmationService = chargeLinksConfirmationService;
+            _chargeLinksReceiptService = chargeLinksReceiptService;
             _chargeLinkFactory = chargeLinkFactory;
             _chargeLinkRepository = chargeLinkRepository;
             _chargeLinksCommandValidator = chargeLinksCommandValidator;
@@ -45,13 +45,13 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
             var validationResult = await _chargeLinksCommandValidator.ValidateAsync(chargeLinksReceivedEvent.ChargeLinksCommand).ConfigureAwait(false);
             if (validationResult.IsFailed)
             {
-                await _chargeLinksConfirmationService.RejectAsync(chargeLinksReceivedEvent.ChargeLinksCommand, validationResult);
+                await _chargeLinksReceiptService.RejectAsync(chargeLinksReceivedEvent.ChargeLinksCommand, validationResult);
                 return;
             }
 
             var chargeLinks = await _chargeLinkFactory.CreateAsync(chargeLinksReceivedEvent).ConfigureAwait(false);
             await _chargeLinkRepository.StoreAsync(chargeLinks).ConfigureAwait(false);
-            await _chargeLinksConfirmationService.AcceptAsync(chargeLinksReceivedEvent.ChargeLinksCommand);
+            await _chargeLinksReceiptService.AcceptAsync(chargeLinksReceivedEvent.ChargeLinksCommand);
         }
     }
 }

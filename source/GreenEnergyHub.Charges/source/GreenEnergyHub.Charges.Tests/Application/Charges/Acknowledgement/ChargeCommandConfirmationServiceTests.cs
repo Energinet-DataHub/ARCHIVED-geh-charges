@@ -42,7 +42,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Acknowledgement
             [NotNull] ChargeCommand command,
             [NotNull] ValidationResult validationResult,
             [NotNull] ChargeCommandRejectedEvent rejectedEvent,
-            [NotNull] ChargeCommandConfirmationService sut)
+            [NotNull] ChargeCommandReceiptService sut)
         {
             // Arrange
             rejectedEventFactory.Setup(
@@ -73,7 +73,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Acknowledgement
             [Frozen] [NotNull] Mock<IMessageDispatcher<ChargeCommandAcceptedEvent>> acceptedEventDispatcher,
             [NotNull] ChargeCommand command,
             [NotNull] ChargeCommandAcceptedEvent acceptedEvent,
-            [NotNull] ChargeCommandConfirmationService sut)
+            [NotNull] ChargeCommandReceiptService sut)
         {
             // Arrange
             acceptedEventFactory.Setup(

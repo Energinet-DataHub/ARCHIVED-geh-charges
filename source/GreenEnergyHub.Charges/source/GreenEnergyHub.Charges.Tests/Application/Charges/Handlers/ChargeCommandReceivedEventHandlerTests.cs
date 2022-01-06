@@ -38,7 +38,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
         public async Task HandleAsync_WhenValidationSucceed_StoreAndConfirmCommand(
             [Frozen] Mock<IChargeCommandValidator> validator,
             [Frozen] Mock<IChargeRepository> repository,
-            [Frozen] Mock<IChargeCommandConfirmationService> confirmationService,
+            [Frozen] Mock<IChargeCommandReceiptService> confirmationService,
             [Frozen] Mock<Charge> charge,
             [Frozen] Mock<IChargeFactory> chargeFactory,
             ChargeCommandReceivedEvent receivedEvent,
@@ -82,7 +82,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
         [InlineAutoMoqData]
         public async Task HandleAsync_WhenValidationFails_RejectsEvent(
             [Frozen] Mock<IChargeCommandValidator> validator,
-            [Frozen] Mock<IChargeCommandConfirmationService> confirmationService,
+            [Frozen] Mock<IChargeCommandReceiptService> confirmationService,
             ChargeCommandReceivedEvent receivedEvent,
             ChargeCommandReceivedEventHandler sut)
         {

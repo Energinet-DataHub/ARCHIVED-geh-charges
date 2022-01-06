@@ -13,23 +13,22 @@
 // limitations under the License.
 
 using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksAcceptedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksRejectionEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions;
 
-namespace GreenEnergyHub.Charges.Application.ChargeLinks.Acknowledgement
+namespace GreenEnergyHub.Charges.Application.ChargeLinks.Services
 {
-    public class ChargeLinksConfirmationService : IChargeLinksConfirmationService
+    public class ChargeLinksReceiptService : IChargeLinksReceiptService
     {
         private readonly IMessageDispatcher<ChargeLinksAcceptedEvent> _acceptedMessageDispatcher;
         private readonly IMessageDispatcher<ChargeLinksRejectedEvent> _rejectedMessageDispatcher;
         private readonly IChargeLinksAcceptedEventFactory _chargeLinksAcceptedEventFactory;
         private readonly IChargeLinksRejectedEventFactory _chargeLinksRejectedEventFactory;
 
-        public ChargeLinksConfirmationService(
+        public ChargeLinksReceiptService(
             IMessageDispatcher<ChargeLinksAcceptedEvent> acceptedMessageDispatcher,
             IMessageDispatcher<ChargeLinksRejectedEvent> rejectedMessageDispatcher,
             IChargeLinksAcceptedEventFactory chargeLinksAcceptedEventFactory,
