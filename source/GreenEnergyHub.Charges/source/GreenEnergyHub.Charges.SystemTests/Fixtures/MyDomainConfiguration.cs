@@ -14,32 +14,25 @@
 
 using System;
 using Microsoft.Extensions.Configuration;
-using Xunit;
 
 namespace GreenEnergyHub.Charges.SystemTests.Fixtures
 {
     /// <summary>
-    /// Use this to mark system tests (facts).
+    /// Responsible for retrieving settings necessary for performing system tests of 'MyDomain'.
     ///
-    /// On developer machines we use the 'systemtest.local.settings.json' to set the 'SYSTEMFACT_SKIP' value.
-    /// On hosted agents we must set it using an environment variable.
+    /// On developer machines we use the 'systemtest.local.settings.json' to set values.
+    /// On hosted agents we must set these using environment variables.
     /// </summary>
-    public sealed class SystemFactAttribute : FactAttribute
+    public class MyDomainConfiguration : SystemTestConfiguration
     {
-        private static readonly Lazy<bool> _shouldSkip = new Lazy<bool>(ShouldSkip);
-
-        public SystemFactAttribute()
+        public MyDomainConfiguration()
         {
-            if (_shouldSkip.Value)
-            {
-                Skip = "System fact was configured to be skipped.";
-            }
+            BaseAddress = new Uri(Root.GetValue<string>("MYDOMAIN_BASEADDRESS"));
         }
 
-        private static bool ShouldSkip()
-        {
-            var configuration = new SystemTestConfiguration();
-            return configuration.Root.GetValue<bool>("SYSTEMFACT_SKIP", defaultValue: true);
-        }
+        /// <summary>
+        /// An example of a base address setting for a domain.
+        /// </summary>
+        public Uri BaseAddress { get; }
     }
 }
