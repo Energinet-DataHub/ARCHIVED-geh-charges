@@ -121,6 +121,10 @@ namespace GreenEnergyHub.Charges.SystemTests
                 Content = new StringContent(xml, Encoding.UTF8, "application/xml"),
             };
 
+            // TODO: Remove workaround when possible. Current configuration of API Management does not allow use to set "charset" in content header, which the class StringContent does.
+            request.Content.Headers.Clear();
+            request.Content.Headers.Add("Content-Type", "application/xml");
+
             // Act
             using var actualResponse = await httpClient.SendAsync(request);
 
