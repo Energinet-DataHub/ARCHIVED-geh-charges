@@ -71,9 +71,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Infrastructure.Cim.Bundles.ChargeRec
             return DocumentType.ChargeReceipt;
         }
 
-        protected override XElement GetActivityRecord(
-            XNamespace cimNamespace,
-            AvailableChargeReceiptData receipt)
+        protected override XElement GetActivityRecord(XNamespace cimNamespace, AvailableChargeReceiptData receipt)
         {
             return new XElement(
                 cimNamespace + CimMarketDocumentConstants.MarketActivityRecord,
@@ -83,24 +81,22 @@ namespace GreenEnergyHub.Charges.MessageHub.Infrastructure.Cim.Bundles.ChargeRec
                 new XElement(
                     cimNamespace + CimChargeReceiptConstants.OriginalOperationId,
                     receipt.OriginalOperationId),
-                GetReasonCodes(cimNamespace, receipt));
+                GetReasonCodes(cimNamespace, receipt),
+                GetReasonDescriptions(cimNamespace, receipt));
         }
 
-        private IEnumerable<XElement> GetReasonCodes(
-            XNamespace cimNamespace,
-            AvailableChargeReceiptData receipt)
+        private IEnumerable<XElement> GetReasonCodes(XNamespace cimNamespace, AvailableChargeReceiptData receipt)
         {
             var result = new List<XElement>();
             if (receipt.ReceiptStatus != ReceiptStatus.Rejected) return result;
 
-            result.AddRange(receipt.ValidationErrors.Select(reasonCode => GetReasonCode(cimNamespace, reasonCode)));
+            result.AddRange(receipt.ValidationErrors
+                .Select(validationError => GetReasonCode(cimNamespace, validationError)));
 
             return result;
         }
 
-        private XElement GetReasonCode(
-            XNamespace cimNamespace,
-            AvailableChargeReceiptValidationError validationError)
+        private XElement GetReasonCode(XNamespace cimNamespace, AvailableChargeReceiptValidationError validationError)
         {
             return new XElement(
                 cimNamespace + CimChargeReceiptConstants.ReasonElement,
@@ -110,6 +106,25 @@ namespace GreenEnergyHub.Charges.MessageHub.Infrastructure.Cim.Bundles.ChargeRec
                     string.IsNullOrWhiteSpace(validationError.Text),
                     CimChargeReceiptConstants.ReasonText,
                     () => validationError.Text));
+        }
+
+        private IEnumerable<XElement> GetReasonDescriptions(XNamespace cimNamespace, AvailableChargeReceiptData receipt)
+        {
+            var result = new List<XElement>();
+            if (receipt.ReceiptStatus != ReceiptStatus.Rejected) return result;
+
+            result.AddRange(receipt.ValidationErrors
+                .Where(validationError => !string.IsNullOrWhiteSpace(validationError.Description))
+                .Select(validationError => GetReasonDescription(cimNamespace, validationError)));
+
+            return result;
+        }
+
+        private XElement GetReasonDescription(
+            XNamespace cimNamespace,
+            AvailableChargeReceiptValidationError validationError)
+        {
+            return new XElement(cimNamespace + CimChargeReceiptConstants.ReasonDescription, validationError.Description);
         }
 
         private bool IsConfirmation(IEnumerable<AvailableChargeReceiptData> receipts)

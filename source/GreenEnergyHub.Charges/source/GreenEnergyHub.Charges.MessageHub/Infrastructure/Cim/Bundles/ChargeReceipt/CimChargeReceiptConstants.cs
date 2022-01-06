@@ -48,5 +48,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Infrastructure.Cim.Bundles.ChargeRec
         internal const string ReasonCode = "code"; // Note: There are two reason codes in the CIM document
 
         internal const string ReasonText = "text";
+
+        internal const string ReasonDescription = "description";
     }
 }
