@@ -20,7 +20,7 @@ using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands.Validation.BusinessValidation.ValidationRules
 {
     /// <summary>
-    /// Temporary rule that stops both update and stops from taking place to charges until that is implemented
+    /// Temporary rule that stops both update and stops from taking place to charge links until that is implemented
     /// </summary>
     public class ChargeLinksUpdateNotYetSupportedRule : IValidationRule
     {
