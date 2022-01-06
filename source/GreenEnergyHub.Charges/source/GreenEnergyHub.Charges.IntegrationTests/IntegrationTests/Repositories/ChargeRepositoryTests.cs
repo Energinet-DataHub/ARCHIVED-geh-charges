@@ -72,9 +72,6 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
                     x.Type == charge.Type)
                 .ConfigureAwait(false);
 
-            var list = chargesDatabaseReadContext.Charges.ToList();
-
-            list.Should().NotBeEmpty();
             actual.Should().NotBeNull();
             actual.Points.Should().NotBeNullOrEmpty();
         }
