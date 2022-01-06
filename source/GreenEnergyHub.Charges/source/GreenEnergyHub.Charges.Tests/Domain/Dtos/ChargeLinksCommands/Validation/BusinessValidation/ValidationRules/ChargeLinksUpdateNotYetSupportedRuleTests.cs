@@ -104,11 +104,11 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeLinksCommands.Validatio
             var day2LocalDateTime = new LocalDateTime(year, month, endDateDayOfMonth.GetValueOrDefault(1), 0, 0);
             var day2Utc = _copenhagen.AtStrictly(day2LocalDateTime).ToInstant();
 
-            var link1 = endDateDayOfMonth is not null
+            var link = endDateDayOfMonth is not null
                 ? new ChargeLinkDtoBuilder().WithStartDate(day1Utc).WithEndDate(day2Utc).Build()
                 : new ChargeLinkDtoBuilder().WithStartDate(day1Utc).Build();
 
-            return new List<ChargeLinkDto> { link1 };
+            return new List<ChargeLinkDto> { link };
         }
     }
 }
