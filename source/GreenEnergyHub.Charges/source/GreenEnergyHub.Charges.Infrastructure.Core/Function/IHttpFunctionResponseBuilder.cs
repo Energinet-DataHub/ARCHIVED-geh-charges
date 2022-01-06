@@ -18,7 +18,7 @@ using Microsoft.Azure.Functions.Worker.Http;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Core.Function
 {
-    public interface IHttpFunctionResponseBuilder
+    public interface IHttpResponseBuilder
     {
         Task<HttpResponseData> CreateAcceptedResponseAsync<T>(
             HttpRequestData request,
