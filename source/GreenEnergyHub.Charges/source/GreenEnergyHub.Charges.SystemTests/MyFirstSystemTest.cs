@@ -15,11 +15,15 @@
 using System;
 using System.Net;
 using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Text;
 using System.Threading.Tasks;
 using Energinet.DataHub.Core.TestCommon;
 using FluentAssertions;
+using GreenEnergyHub.Charges.IntegrationTests.TestHelpers;
 using GreenEnergyHub.Charges.SystemTests.Fixtures;
 using Microsoft.Identity.Client;
+using NodaTime;
 
 namespace GreenEnergyHub.Charges.SystemTests
 {
@@ -81,10 +85,47 @@ namespace GreenEnergyHub.Charges.SystemTests
             var scopes = new[] { $"{b2cSettings.BackendAppId}/.default" };
 
             // Act
-            var actualAccessToken = await confidentialClientApp.AcquireTokenForClient(scopes).ExecuteAsync();
+            var actualAuthenticationResult = await confidentialClientApp.AcquireTokenForClient(scopes).ExecuteAsync();
 
             // Assert
-            actualAccessToken.AccessToken.Should().NotBeNullOrWhiteSpace();
+            actualAuthenticationResult.AccessToken.Should().NotBeNullOrWhiteSpace();
+        }
+
+        // This shows how we can call API Management using a valid access token
+        [SystemFact]
+        public async Task When_RequestApiManagementWithAccessToken_Then_ResponseIsOk()
+        {
+            // Arrange
+            var b2cSettings = Configuration.RetrieveB2CSettings(TeamVolt);
+            var confidentialClientApp = ConfidentialClientApplicationBuilder
+                .Create(b2cSettings.TeamClientId)
+                .WithClientSecret(b2cSettings.TeamClientSecret)
+                .WithAuthority(new Uri($"https://login.microsoftonline.com/{b2cSettings.B2cTenantId}"))
+                .Build();
+
+            var scopes = new[] { $"{b2cSettings.BackendAppId}/.default" };
+            var authenticationResult = await confidentialClientApp.AcquireTokenForClient(scopes).ExecuteAsync();
+
+            using var httpClient = new HttpClient
+            {
+                BaseAddress = Configuration.ApiManagementBaseAddress,
+            };
+
+            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", authenticationResult.AccessToken);
+
+            var clock = SystemClock.Instance;
+            var xml = EmbeddedResourceHelper.GetEmbeddedFile("TestFiles/RequestChangeBillingMasterData.xml", clock);
+
+            var request = new HttpRequestMessage(HttpMethod.Post, "v1.0/cim/requestbillingmasterdata")
+            {
+                Content = new StringContent(xml, Encoding.UTF8, "application/xml"),
+            };
+
+            // Act
+            using var actionResponse = await httpClient.SendAsync(request);
+
+            // Assert
+            actionResponse.StatusCode.Should().Be(HttpStatusCode.OK);
         }
 
         // This is just to be able to verify everything works with regards to settings and executing the tests after deployment.
