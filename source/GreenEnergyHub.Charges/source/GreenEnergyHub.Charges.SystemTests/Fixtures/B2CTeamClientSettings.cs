@@ -17,13 +17,9 @@ namespace GreenEnergyHub.Charges.SystemTests.Fixtures
     /// <summary>
     /// Settings necessary for aquiring an access token from the B2C tenant using the client credentials flow.
     /// </summary>
-    /// <param name="B2cTenantId"></param>
-    /// <param name="BackendAppId"></param>
     /// <param name="TeamClientId"></param>
     /// <param name="TeamClientSecret"></param>
-    public record B2CSettings(
-        string B2cTenantId,
-        string BackendAppId,
+    public record B2CTeamClientSettings(
         string TeamClientId,
         string TeamClientSecret);
 }

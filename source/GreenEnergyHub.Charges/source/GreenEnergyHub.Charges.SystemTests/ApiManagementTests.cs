@@ -32,14 +32,10 @@ namespace GreenEnergyHub.Charges.SystemTests
         public ApiManagementTests(ApiManagementConfiguration configuration)
         {
             Configuration = configuration;
-
-            TeamVoltB2cSettings = configuration.RetrieveB2CSettings("volt");
-            TeamVoltClientApp = CreateConfidentialClientApp(TeamVoltB2cSettings);
+            TeamVoltClientApp = CreateConfidentialClientApp("volt");
         }
 
         private ApiManagementConfiguration Configuration { get; }
-
-        private B2CSettings TeamVoltB2cSettings { get; }
 
         private IConfidentialClientApplication TeamVoltClientApp { get; }
 
@@ -48,10 +44,9 @@ namespace GreenEnergyHub.Charges.SystemTests
         public async Task When_AquireTokenForTeamVoltClientApp_Then_AccessTokenIsReturned()
         {
             // Arrange
-            var backendApiScope = new[] { $"{TeamVoltB2cSettings.BackendAppId}/.default" };
 
             // Act
-            var actualAuthenticationResult = await TeamVoltClientApp.AcquireTokenForClient(backendApiScope).ExecuteAsync();
+            var actualAuthenticationResult = await TeamVoltClientApp.AcquireTokenForClient(Configuration.BackendAppScope).ExecuteAsync();
 
             // Assert
             actualAuthenticationResult.AccessToken.Should().NotBeNullOrWhiteSpace();
@@ -62,15 +57,7 @@ namespace GreenEnergyHub.Charges.SystemTests
         public async Task When_RequestApiManagementWithAccessToken_Then_ResponseIsOk()
         {
             // Arrange
-            var backendApiScope = new[] { $"{TeamVoltB2cSettings.BackendAppId}/.default" };
-            var authenticationResult = await TeamVoltClientApp.AcquireTokenForClient(backendApiScope).ExecuteAsync();
-
-            using var httpClient = new HttpClient
-            {
-                BaseAddress = Configuration.ApiManagementBaseAddress,
-            };
-
-            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", authenticationResult.AccessToken);
+            using var httpClient = await CreateHttpClientAsync(TeamVoltClientApp);
 
             var clock = SystemClock.Instance;
             var xml = EmbeddedResourceHelper.GetEmbeddedFile("TestFiles/RequestChangeBillingMasterData.xml", clock);
@@ -87,15 +74,59 @@ namespace GreenEnergyHub.Charges.SystemTests
             actualResponse.StatusCode.Should().Be(HttpStatusCode.OK);
         }
 
-        private static IConfidentialClientApplication CreateConfidentialClientApp(B2CSettings b2cSettings)
+        // This shows our request will fail if we call API Management without a valid access token
+        [SystemFact]
+        public async Task When_RequestApiManagementWithoutAccessToken_Then_ResponseIsUnauthorized()
         {
+            // Arrange
+            using var httpClient = await CreateHttpClientAsync();
+
+            var clock = SystemClock.Instance;
+            var xml = EmbeddedResourceHelper.GetEmbeddedFile("TestFiles/RequestChangeBillingMasterData.xml", clock);
+
+            var request = new HttpRequestMessage(HttpMethod.Post, "v1.0/cim/requestbillingmasterdata")
+            {
+                Content = new StringContent(xml, Encoding.UTF8, "application/xml"),
+            };
+
+            // Act
+            using var actualResponse = await httpClient.SendAsync(request);
+
+            // Assert
+            actualResponse.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
+        }
+
+        private IConfidentialClientApplication CreateConfidentialClientApp(string team)
+        {
+            var teamClientSettings = Configuration.RetrieveB2CTeamClientSettings(team);
+
             var confidentialClientApp = ConfidentialClientApplicationBuilder
-                .Create(b2cSettings.TeamClientId)
-                .WithClientSecret(b2cSettings.TeamClientSecret)
-                .WithAuthority(new Uri($"https://login.microsoftonline.com/{b2cSettings.B2cTenantId}"))
+                .Create(teamClientSettings.TeamClientId)
+                .WithClientSecret(teamClientSettings.TeamClientSecret)
+                .WithAuthority(new Uri($"https://login.microsoftonline.com/{Configuration.B2cTenantId}"))
                 .Build();
 
             return confidentialClientApp;
+        }
+
+        /// <summary>
+        /// Create a http client.
+        /// </summary>
+        /// <param name="confidentialClientApp">If not null: a access token is aquired using the client, and set in the authorization header of the http client.</param>
+        private async Task<HttpClient> CreateHttpClientAsync(IConfidentialClientApplication? confidentialClientApp = null)
+        {
+            var httpClient = new HttpClient
+            {
+                BaseAddress = Configuration.ApiManagementBaseAddress,
+            };
+
+            if (confidentialClientApp != null)
+            {
+                var authenticationResult = await confidentialClientApp.AcquireTokenForClient(Configuration.BackendAppScope).ExecuteAsync();
+                httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", authenticationResult.AccessToken);
+            }
+
+            return httpClient;
         }
     }
 }

@@ -38,6 +38,10 @@ namespace GreenEnergyHub.Charges.SystemTests.Fixtures
             var keyVaultUrl = Root.GetValue<string>("AZURE_SYSTEMTESTS_KEYVAULT_URL");
             KeyVaultConfiguration = BuildKeyVaultConfigurationRoot(keyVaultUrl);
 
+            B2cTenantId = KeyVaultConfiguration.GetValue<string>(BuildB2CEnvironmentSecretName(Environment, "tenant-id"));
+            var backendAppId = KeyVaultConfiguration.GetValue<string>(BuildB2CEnvironmentSecretName(Environment, "backend-app-id"));
+            BackendAppScope = new[] { $"{backendAppId}/.default" };
+
             ApiManagementBaseAddress = KeyVaultConfiguration.GetValue<Uri>(BuildApiManagementEnvironmentSecretName(Environment, "host-url"));
         }
 
@@ -45,6 +49,16 @@ namespace GreenEnergyHub.Charges.SystemTests.Fixtures
         /// Environment short name with instance indication.
         /// </summary>
         public string Environment { get; }
+
+        /// <summary>
+        /// The B2C tenant id in the configured environment.
+        /// </summary>
+        public string B2cTenantId { get; }
+
+        /// <summary>
+        /// The scope for which we must request an access token, to be authorized by the API Management.
+        /// </summary>
+        public string[] BackendAppScope { get; }
 
         /// <summary>
         /// The base address for the API Management in the configured environment.
@@ -57,21 +71,19 @@ namespace GreenEnergyHub.Charges.SystemTests.Fixtures
         private IConfigurationRoot KeyVaultConfiguration { get; }
 
         /// <summary>
-        /// Retrieve B2C settings necessary for aquiring an access token for a given "team client" in the configured environment.
+        /// Retrieve B2C team client settings necessary for aquiring an access token for a given 'team client app' in the configured environment.
         /// </summary>
         /// <param name="team">Team name or shorthand.</param>
-        /// <returns>B2C settings for "team client"</returns>
-        public B2CSettings RetrieveB2CSettings(string team)
+        /// <returns>Settings for 'team client app'</returns>
+        public B2CTeamClientSettings RetrieveB2CTeamClientSettings(string team)
         {
             if (string.IsNullOrWhiteSpace(team))
                 throw new ArgumentException($"'{nameof(team)}' cannot be null or whitespace.", nameof(team));
 
-            var b2cTenantId = KeyVaultConfiguration.GetValue<string>(BuildB2CEnvironmentSecretName(Environment, "tenant-id"));
-            var backendAppId = KeyVaultConfiguration.GetValue<string>(BuildB2CEnvironmentSecretName(Environment, "backend-app-id"));
             var teamClientId = KeyVaultConfiguration.GetValue<string>(BuildB2CTeamSecretName(Environment, team, "client-id"));
             var teamClientSecret = KeyVaultConfiguration.GetValue<string>(BuildB2CTeamSecretName(Environment, team, "client-secret"));
 
-            return new B2CSettings(b2cTenantId, backendAppId, teamClientId, teamClientSecret);
+            return new B2CTeamClientSettings(teamClientId, teamClientSecret);
         }
 
         /// <summary>
