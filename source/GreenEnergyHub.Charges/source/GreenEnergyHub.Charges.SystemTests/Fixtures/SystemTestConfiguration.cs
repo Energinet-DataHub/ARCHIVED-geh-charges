@@ -18,6 +18,15 @@ using Microsoft.Extensions.Configuration;
 
 namespace GreenEnergyHub.Charges.SystemTests.Fixtures
 {
+    /// <summary>
+    /// Responsible for extracting secrets necessary for performing system tests in Azure environments.
+    ///
+    /// On developer machines we use the 'systemtest.local.settings.json' to set values.
+    /// On hosted agents we must set these using environment variables.
+    ///
+    /// Developers, and the service principal under which the tests are executed, has access to the Key Vault
+    /// and can extract secrets.
+    /// </summary>
     public class SystemTestConfiguration
     {
         public SystemTestConfiguration()
@@ -51,6 +60,9 @@ namespace GreenEnergyHub.Charges.SystemTests.Fixtures
         /// </summary>
         public Uri ApiManagementBaseAddress { get; }
 
+        /// <summary>
+        /// Can be used to extract secrets from the Key Vault.
+        /// </summary>
         private IConfigurationRoot KeyVaultConfiguration { get; }
 
         /// <summary>
