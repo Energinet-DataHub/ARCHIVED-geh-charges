@@ -86,7 +86,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands
                     ChargeOwnerId = GetChargeOwnerId(pair.Value, owners),
                     StartDateTime = pair.Key.GetStartDateTime(meteringPoint.EffectiveDate),
                     EndDateTime = pair.Key.EndDateTime,
-                    OperationId = Guid.NewGuid().ToString(), // TODO: Fix and add unit test
+                    OperationId = Guid.NewGuid().ToString(),
                     Factor = DefaultChargeLink.Factor,
                 })
                 .ToList();
