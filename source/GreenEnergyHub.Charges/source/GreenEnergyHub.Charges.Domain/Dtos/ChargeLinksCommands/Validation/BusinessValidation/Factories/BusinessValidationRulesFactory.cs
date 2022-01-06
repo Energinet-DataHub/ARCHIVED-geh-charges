@@ -52,7 +52,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands.Validation.Busi
             {
                 var charge = await GetChargeOrNullAsync(chargeLinkDto);
 
-                rules.Add(new ChargeDoesNotExistRule(charge));
+                rules.Add(new ChargeMustExistRule(charge));
                 if (charge == null)
                     continue;
 

@@ -58,7 +58,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeLinksCommands.Validatio
         }
 
         [Theory]
-        [InlineAutoMoqData(typeof(ChargeDoesNotExistRule))]
+        [InlineAutoMoqData(typeof(ChargeMustExistRule))]
         public async Task CreateRulesForChargeCommandAsync_WhenChargeDoesNotExistForLinks_ReturnsExpectedMandatoryRules(
             Type expectedRule,
             [Frozen] Mock<IMeteringPointRepository> meteringPointRepository,
