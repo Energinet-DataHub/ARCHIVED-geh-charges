@@ -15,9 +15,8 @@
 using System.Threading.Tasks;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
-using GreenEnergyHub.Charges.Infrastructure.Context.Mapping;
-using GreenEnergyHub.Charges.Infrastructure.Repositories;
-using GreenEnergyHub.Charges.IntegrationTests.Database;
+using GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories;
+using GreenEnergyHub.Charges.IntegrationTests.Fixtures.Database;
 using Xunit;
 using Xunit.Categories;
 
@@ -38,14 +37,14 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
         {
             // Arrange
             await using var chargesDatabaseContext = _databaseManager.CreateDbContext();
-            var sut = new MarketParticipantRepository(chargesDatabaseContext, new MarketParticipantMapper());
+            var sut = new MarketParticipantRepository(chargesDatabaseContext);
 
             // Act
             var actual = await sut.GetActiveGridAccessProvidersAsync();
 
             // Assert
             actual.Should().NotBeEmpty();
-            actual.Should().NotContain(x => x.Id == "8900000000005");
+            actual.Should().NotContain(x => x.MarketParticipantId == "8900000000005");
         }
 
         [Fact]
@@ -53,7 +52,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
         {
             // Arrange
             await using var chargesDatabaseContext = _databaseManager.CreateDbContext();
-            var sut = new MarketParticipantRepository(chargesDatabaseContext, new MarketParticipantMapper());
+            var sut = new MarketParticipantRepository(chargesDatabaseContext);
             const MarketParticipantRole expectedMarketParticipantRole = MarketParticipantRole.SystemOperator;
 
             // Act

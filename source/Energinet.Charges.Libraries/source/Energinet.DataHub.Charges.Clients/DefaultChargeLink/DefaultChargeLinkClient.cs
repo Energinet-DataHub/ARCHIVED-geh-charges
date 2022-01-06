@@ -16,9 +16,9 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using Energinet.Charges.Contracts;
-using Energinet.DataHub.Charges.Clients.Models;
-using Energinet.DataHub.Charges.Clients.Providers;
+using Energinet.DataHub.Charges.Clients.DefaultChargeLink.Models;
 using Energinet.DataHub.Charges.Clients.ServiceBus;
+using Energinet.DataHub.Charges.Clients.ServiceBus.Providers;
 using Google.Protobuf;
 
 namespace Energinet.DataHub.Charges.Clients.DefaultChargeLink

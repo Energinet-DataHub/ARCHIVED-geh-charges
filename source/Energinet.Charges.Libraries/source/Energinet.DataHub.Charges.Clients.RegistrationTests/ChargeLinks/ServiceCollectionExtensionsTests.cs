@@ -13,7 +13,9 @@
 // limitations under the License.
 
 using System;
+using Energinet.DataHub.Charges.Clients.ChargeLinks;
 using Energinet.DataHub.Charges.Clients.Registration;
+using Energinet.DataHub.Charges.Clients.Registration.ChargeLinks.ServiceCollectionExtensions;
 using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;

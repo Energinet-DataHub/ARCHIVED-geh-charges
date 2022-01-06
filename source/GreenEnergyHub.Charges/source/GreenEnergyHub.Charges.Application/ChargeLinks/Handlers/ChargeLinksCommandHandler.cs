@@ -12,11 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Application.ChargeLinks.Handlers.Message;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksReceivedEvents;
+using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions;
 using NodaTime;
 
 namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
@@ -34,17 +33,13 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
             _clock = clock;
         }
 
-        public async Task<ChargeLinksMessageResult> HandleAsync([NotNull]ChargeLinksCommand command)
+        public async Task HandleAsync(ChargeLinksCommand command)
         {
             var receivedEvent = new ChargeLinksReceivedEvent(
                 _clock.GetCurrentInstant(),
                 command);
 
             await _messageDispatcher.DispatchAsync(receivedEvent).ConfigureAwait(false);
-
-            var chargeLinksMessageResult = ChargeLinksMessageResult.CreateSuccess();
-
-            return chargeLinksMessageResult;
         }
     }
 }

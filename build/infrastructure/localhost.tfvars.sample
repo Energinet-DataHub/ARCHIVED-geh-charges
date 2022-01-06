@@ -1,18 +1,17 @@
 /*
-Make sure to select values that ensures globally unique names of ressources.
+Make sure to select values that ensures globally unique names of resources.
 This is required for e.g. SQL Server and more. Failure to do so does not always result
 in intuitive errors. As an example a time out on creating SQL Server has been observed.
 
-Also be cautious about length of strings as some ressources has a very limited
+Also be cautious about length of strings as some resources have a very limited
 max name length.
 */
 
-environment                         = "Short for environment name. Helps ensuring global uniqueness of resource names"
-organisation                        = "YOUR_ORGANIZATION"
-resource_group_name                 = "YOUR_RESOURCE_GROUP"
-project                             = "YOUR_PROJECT_NAME"
-tenant_id                           = "YOUR_TENANT_ID"
-spn_object_id                       = "YOUR_SPN_OBJECT_ID"
-sharedresources_keyvault_name       = "UNUSED IN DEVELOPMENT ENVIRONMENTS"
-sharedresources_resource_group_name = "UNUSED IN DEVELOPMENT ENVIRONMENTS"
-notification_email                  = "YOUR EMAIL ADDRESS FOR NOTIFICATIONS"
+domain_name_short                       = "SHORT FOR DOMAIN NAME"
+environment_short                       = "SHORT FOR ENVIRONMENT NAME"
+environment_instance                    = "INSTANCE NUMBER FOR ENVIRONMENT"
+resource_group_name                     = "YOUR RESOURCE_GROUP"
+subscription_id                         = "YOUR SUBSCRIPTION_ID"
+sharedresources_keyvault_name           = "KEYVAULT NAME IN SHARED RESOURCES"
+sharedresources_resource_group_name     = "SHARED RESOURCES RESOURCE GROUP NAME"
+notification_email                      = "YOUR EMAIL ADDRESS FOR NOTIFICATIONS"

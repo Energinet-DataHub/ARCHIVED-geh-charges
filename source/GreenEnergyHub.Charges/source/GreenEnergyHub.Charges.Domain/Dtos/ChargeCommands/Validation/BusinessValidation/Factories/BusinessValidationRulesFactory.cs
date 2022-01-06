@@ -52,25 +52,17 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessV
             var configuration = await _rulesConfigurationRepository.GetConfigurationAsync().ConfigureAwait(false);
 
             var senderId = chargeCommand.Document.Sender.Id;
-            var sender = _marketParticipantRepository.GetMarketParticipantOrNull(senderId);
+            var sender = await _marketParticipantRepository.GetOrNullAsync(senderId);
 
-            var rules = GetMandatoryRules(chargeCommand, configuration, sender);
+            var charge = await GetChargeOrNullAsync(chargeCommand).ConfigureAwait(false);
 
-            var chargeExists = await CheckIfChargeExistAsync(chargeCommand).ConfigureAwait(false);
+            var rules = GetMandatoryRules(chargeCommand, charge, configuration, sender);
 
-            if (chargeExists)
-            {
-                var charge = await _chargeRepository.GetAsync(
-                    new ChargeIdentifier(
-                        chargeCommand.ChargeOperation.ChargeId,
-                        chargeCommand.ChargeOperation.ChargeOwner,
-                        chargeCommand.ChargeOperation.Type)).ConfigureAwait(false);
+            if (charge == null)
+                return ValidationRuleSet.FromRules(rules);
 
-                if (chargeCommand.ChargeOperation.Type == ChargeType.Tariff)
-                {
-                    AddTariffOnlyRules(rules, chargeCommand, charge);
-                }
-            }
+            if (chargeCommand.ChargeOperation.Type == ChargeType.Tariff)
+                AddTariffOnlyRules(rules, chargeCommand, charge);
 
             return ValidationRuleSet.FromRules(rules);
         }
@@ -86,6 +78,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessV
 
         private List<IValidationRule> GetMandatoryRules(
             ChargeCommand chargeCommand,
+            Charge? charge,
             RulesConfiguration configuration,
             MarketParticipant? sender)
         {
@@ -96,25 +89,25 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessV
                     configuration.StartDateValidationRuleConfiguration,
                     _zonedDateTimeService,
                     _clock),
-                new CommandSenderMustBeAnExistingMarketParticipantRule(sender),
+                new CommandSenderMustBeAnExistingMarketParticipantRule(chargeCommand, sender),
+                new ChargeUpdateNotYetSupportedRule(chargeCommand, charge),
             };
 
             return rules;
         }
 
-        private async Task<bool> CheckIfChargeExistAsync(ChargeCommand command)
+        private async Task<Charge?> GetChargeOrNullAsync(ChargeCommand command)
         {
             var chargeId = command.ChargeOperation.ChargeId;
             var chargeOperationChargeOwner = command.ChargeOperation.ChargeOwner;
             var chargeType = command.ChargeOperation.Type;
 
-            var result = await _chargeRepository.CheckIfChargeExistsAsync(
-                new ChargeIdentifier(
+            return await _chargeRepository
+                .GetOrNullAsync(new ChargeIdentifier(
                     chargeId,
                     chargeOperationChargeOwner,
-                    chargeType)).ConfigureAwait(false);
-
-            return result;
+                    chargeType))
+                .ConfigureAwait(false);
         }
     }
 }

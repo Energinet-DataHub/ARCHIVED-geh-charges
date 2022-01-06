@@ -35,7 +35,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinkCreatedEvents
                 command.MeteringPointId,
                 chargeLinkDto.SenderProvidedChargeId,
                 chargeLinkDto.ChargeType,
-                chargeLinkDto.ChargeOwner,
+                chargeLinkDto.ChargeOwnerId,
                 ChargeLinkPeriod(chargeLinkDto));
         }
 

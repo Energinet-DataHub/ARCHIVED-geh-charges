@@ -13,7 +13,6 @@
 // limitations under the License.
 
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.Messages.Events;
 using NodaTime;
@@ -24,7 +23,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandRejectedEvents
     {
         public ChargeCommandRejectedEvent(
             Instant publishedTime,
-            [NotNull] ChargeCommand command,
+            ChargeCommand command,
             IEnumerable<string> reason)
             : base(publishedTime)
         {
@@ -34,6 +33,6 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandRejectedEvents
 
         public ChargeCommand Command { get; }
 
-        public IEnumerable<string> RejectReasons { get; set; }
+        public IEnumerable<string> RejectReasons { get; set; } // Todo Expand with messageparameters and message
     }
 }

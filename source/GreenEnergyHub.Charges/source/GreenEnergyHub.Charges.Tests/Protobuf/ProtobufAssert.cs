@@ -46,6 +46,12 @@ namespace GreenEnergyHub.Charges.Tests.Protobuf
                             .Should().Be(((Timestamp)s.Subject).Seconds))
                         .WhenTypeIs<Instant>();
 
+                    // Overrides the compare of Guid and protobuf string
+                    // Also see https://docs.microsoft.com/en-us/dotnet/architecture/grpc-for-wcf-developers/protobuf-data-types#systemguid
+                    options.Using<object>(s => ((Guid)s.Expectation).ToString()
+                            .Should().Be((string)s.Subject))
+                        .WhenTypeIs<Guid>();
+
                     // Enforce member comparision of protobuf objects that override object.Equals
                     options.ComparingByMembers<IMessage>();
 

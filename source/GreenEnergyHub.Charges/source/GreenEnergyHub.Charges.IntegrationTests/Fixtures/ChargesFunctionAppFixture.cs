@@ -25,7 +25,7 @@ using Energinet.DataHub.Core.FunctionApp.TestCommon.ServiceBus.ListenerMock;
 using Energinet.DataHub.Core.FunctionApp.TestCommon.ServiceBus.ResourceProvider;
 using Energinet.DataHub.MessageHub.IntegrationTesting;
 using GreenEnergyHub.Charges.FunctionHost.Common;
-using GreenEnergyHub.Charges.IntegrationTests.Database;
+using GreenEnergyHub.Charges.IntegrationTests.Fixtures.Database;
 using GreenEnergyHub.Charges.IntegrationTests.TestCommon;
 using Microsoft.Extensions.Configuration;
 
@@ -160,6 +160,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures
                 .SetEnvironmentVariableToTopicName(EnvironmentSettingNames
                     .DefaultChargeLinksDataAvailableNotifiedTopicName)
                 .AddSubscription(ChargesServiceBusResourceNames.DefaultChargeLinksDataAvailableNotifiedSubscriptionName)
+                    .SetEnvironmentVariableToSubscriptionName(EnvironmentSettingNames.DefaultChargeLinksDataAvailableNotifiedSubscription)
                 .CreateAsync();
 
             var chargeCreatedListener = new ServiceBusListenerMock(ServiceBusResourceProvider.ConnectionString, TestLogger);
@@ -202,6 +203,11 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures
         {
             AzuriteManager.Dispose();
             await MessageHubMock.DisposeAsync();
+
+            // Listeners
+            await ChargeCreatedListener.DisposeAsync();
+            await ChargePricesUpdatedListener.DisposeAsync();
+            await CreateLinkReplyQueueListener.DisposeAsync();
 
             // => Service Bus
             await ServiceBusResourceProvider.DisposeAsync();

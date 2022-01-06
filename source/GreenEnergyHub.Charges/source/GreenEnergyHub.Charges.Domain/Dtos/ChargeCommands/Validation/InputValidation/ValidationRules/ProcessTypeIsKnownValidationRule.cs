@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Diagnostics.CodeAnalysis;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 
 namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputValidation.ValidationRules
@@ -21,15 +20,18 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputVali
     {
         private readonly ChargeCommand _chargeCommand;
 
-        public ProcessTypeIsKnownValidationRule([NotNull] ChargeCommand chargeCommand)
+        public ProcessTypeIsKnownValidationRule(ChargeCommand chargeCommand)
         {
             _chargeCommand = chargeCommand;
         }
 
-        public bool IsValid =>
-            _chargeCommand.Document.BusinessReasonCode == BusinessReasonCode.UpdateChargeInformation;
+        public bool IsValid => _chargeCommand.Document.BusinessReasonCode == BusinessReasonCode.UpdateChargeInformation;
 
-        public ValidationRuleIdentifier ValidationRuleIdentifier =>
-            ValidationRuleIdentifier.ProcessTypeIsKnownValidation;
+        public ValidationError ValidationError =>
+            new(
+                ValidationRuleIdentifier.ProcessTypeIsKnownValidation,
+                new ValidationErrorMessageParameter(
+                    _chargeCommand.Document.Id,
+                    ValidationErrorMessageParameterType.DocumentId));
     }
 }

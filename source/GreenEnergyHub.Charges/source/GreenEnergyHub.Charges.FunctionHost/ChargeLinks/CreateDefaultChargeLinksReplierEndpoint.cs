@@ -14,10 +14,11 @@
 
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application.ChargeLinks.Handlers;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksDataAvailableNotifiedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.DefaultChargeLinksDataAvailableNotifiedEvents;
 using GreenEnergyHub.Charges.FunctionHost.Common;
+using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions;
 using GreenEnergyHub.Charges.Infrastructure.Internal.DefaultChargeLinksCreated;
-using GreenEnergyHub.Charges.Infrastructure.Messaging;
 using Microsoft.Azure.Functions.Worker;
 
 namespace GreenEnergyHub.Charges.FunctionHost.ChargeLinks
@@ -48,7 +49,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.ChargeLinks
                 Connection = EnvironmentSettingNames.DomainEventListenerConnectionString)]
             byte[] message)
         {
-            var defaultChargeLinksDataAvailableNotifierEvent = (DefaultChargeLinksCreatedEvent)await _messageExtractor.ExtractAsync(message).ConfigureAwait(false);
+            var defaultChargeLinksDataAvailableNotifierEvent = (ChargeLinksDataAvailableNotifiedEvent)await _messageExtractor.ExtractAsync(message).ConfigureAwait(false);
 
             await _createDefaultChargeLinksReplyHandler.HandleAsync(defaultChargeLinksDataAvailableNotifierEvent).ConfigureAwait(false);
         }

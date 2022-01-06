@@ -13,12 +13,13 @@
 // limitations under the License.
 
 using System.Threading.Tasks;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksDataAvailableNotifiedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.DefaultChargeLinksDataAvailableNotifiedEvents;
 
 namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
 {
     public interface ICreateDefaultChargeLinksReplyHandler
     {
-        Task HandleAsync(DefaultChargeLinksCreatedEvent defaultChargeLinksCreatedEvent);
+        Task HandleAsync(ChargeLinksDataAvailableNotifiedEvent chargeLinksDataAvailableNotifiedEvent);
     }
 }

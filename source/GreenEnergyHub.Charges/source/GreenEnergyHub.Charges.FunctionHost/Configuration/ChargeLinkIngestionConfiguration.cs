@@ -14,9 +14,9 @@
 
 using GreenEnergyHub.Charges.Application.ChargeLinks.Handlers;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands;
-using GreenEnergyHub.Charges.Infrastructure.ChargeLinkBundle.Cim;
-using GreenEnergyHub.Charges.Infrastructure.Messaging;
-using GreenEnergyHub.Charges.Infrastructure.Messaging.Serialization;
+using GreenEnergyHub.Charges.Infrastructure.CimDeserialization.ChargeLinkBundle;
+using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions;
+using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Serialization;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace GreenEnergyHub.Charges.FunctionHost.Configuration
@@ -29,6 +29,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
             serviceCollection.AddScoped<MessageExtractor<ChargeLinksCommand>>();
             serviceCollection.AddScoped<MessageDeserializer<ChargeLinksCommand>, ChargeLinkCommandDeserializer>();
 
+            serviceCollection.AddScoped<IChargeLinksCommandBundleHandler, ChargeLinksCommandBundleHandler>();
             serviceCollection.AddScoped<IChargeLinksCommandHandler, ChargeLinksCommandHandler>();
         }
     }

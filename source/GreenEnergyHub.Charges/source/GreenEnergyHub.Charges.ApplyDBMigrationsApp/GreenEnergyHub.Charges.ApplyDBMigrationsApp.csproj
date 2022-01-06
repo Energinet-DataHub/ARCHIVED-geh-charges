@@ -43,6 +43,17 @@ limitations under the License.
       <EmbeddedResource Include="Scripts\Model\202110210813 Create AvailableChargeData table.sql" />
       <EmbeddedResource Include="Scripts\Model\202110280953 Add market participants active field.sql" />
       <EmbeddedResource Include="Scripts\Model\202111051118 Remove correlation ID columns.sql" />
+      <EmbeddedResource Include="Scripts\Model\202112081120 Rename ChargePrice to ChargePoint.sql" />
+      <EmbeddedResource Include="Scripts\Model\202112081221 Add ChargePoint.Position.sql" />
+      <EmbeddedResource Include="Scripts\Model\202112081300 Remove Charge.Currency.sql" />
+      <EmbeddedResource Include="Scripts\Model\202112081210 Update MarketParticipant columns.sql" />
+      <EmbeddedResource Include="Scripts\Model\202112081230 Drop unused Charge tables.sql" />
+      <EmbeddedResource Include="Scripts\Model\202112081220 Remove unsued ChargePoint columns.sql" />
+      <EmbeddedResource Include="Scripts\Model\202112081225 Add Charge columns from obsolete details.sql" />
+      <EmbeddedResource Include="Scripts\Model\202112091200 Update Charge column names.sql" />
+      <EmbeddedResource Include="Scripts\Model\202201041230 Remove default constraint on IsActive in MarketParticipant.sql" />
+      <EmbeddedResource Include="Scripts\Model\202112211240 Remove redundant Charge FK in ChargePoint.sql" />
+      <EmbeddedResource Include="Scripts\Model\202112100940 Move data from ChargeLink.PeriodDetails to ChargeLink.sql" />
       <EmbeddedResource Include="Scripts\Test\202105201033 New MarketParticipants.sql" />
       <EmbeddedResource Include="Scripts\Model\202105191329 New charge model.sql" />
       <EmbeddedResource Include="Scripts\Model\202107011226 New Metering Point.sql" />
@@ -66,6 +77,7 @@ limitations under the License.
       <EmbeddedResource Include="Scripts\Model\202111171630 Rename RequestTime to RequestDateTime in Available tables.sql" />
       <EmbeddedResource Include="Scripts\Model\202111250821 Create AvailableChargeReceiptData tables.sql" />
       <EmbeddedResource Include="Scripts\Model\202111251041 Change ChargeLinkReceipt Text to NVARCHAR.sql" />
+      <EmbeddedResource Include="Scripts\Test\202112171600 Add charge link test data.sql" />
     </ItemGroup>
 
     <ItemGroup>

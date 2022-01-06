@@ -16,7 +16,7 @@ using System;
 using System.Threading.Tasks;
 using Energinet.Charges.Contracts;
 using Energinet.DataHub.Charges.Clients.DefaultChargeLink;
-using Energinet.DataHub.Charges.Clients.Models;
+using Energinet.DataHub.Charges.Clients.DefaultChargeLink.Models;
 using FluentAssertions;
 using Google.Protobuf;
 using GreenEnergyHub.Charges.Contracts;
