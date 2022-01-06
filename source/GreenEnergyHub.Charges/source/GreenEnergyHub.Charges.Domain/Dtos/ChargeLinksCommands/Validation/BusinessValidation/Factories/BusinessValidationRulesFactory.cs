@@ -50,7 +50,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands.Validation.Busi
 
             foreach (var chargeLinkDto in chargeLinksCommand.ChargeLinks)
             {
-                var charge = await GetChargeOrNullAsync(chargeLinkDto); // TODO can we get all Charges in one go outside this loop?
+                var charge = await GetChargeOrNullAsync(chargeLinkDto);
 
                 rules.Add(new ChargeDoesNotExistRule(charge));
                 if (charge == null)
