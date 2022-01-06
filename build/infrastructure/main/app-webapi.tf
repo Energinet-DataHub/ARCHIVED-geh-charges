@@ -16,9 +16,6 @@ resource "azurerm_app_service" "webapi" {
   resource_group_name = azurerm_resource_group.this.name
   location            = azurerm_resource_group.this.location
   app_service_plan_id = module.plan_webapi.id
-  app_settings        = {
-    CHARGE_DB_CONNECTION_STRING = local.CHARGE_DB_CONNECTION_STRING
-  }
 
   site_config {
     linux_fx_version = "DOTNETCORE|5.0"
@@ -26,6 +23,12 @@ resource "azurerm_app_service" "webapi" {
     cors {
       allowed_origins = ["*"]
     }
+  }
+
+  connection_string {
+    name  = "CHARGE_DB_CONNECTION_STRING"
+    type  = "SQLServer"
+    value = local.CHARGE_DB_CONNECTION_STRING
   }
 
   tags              = azurerm_resource_group.this.tags
