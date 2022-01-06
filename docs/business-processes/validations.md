@@ -2,7 +2,7 @@
 
 The following validation rules are currently implemented in the charge domain.
 
-|**Rule number**|**Description**|**Rejection code**|**Charges**|**Charge Links**|
+|**Rule number**|**Description**|**Rejection code**|**Charge Type**|**Charge Links**|
 |:-|:-|:-|:-|:-|
 |VR.009|The energy business process of a metering point is mandatory|D02|All|N/A|
 |VR.150|The sender of a message is mandatory|D02|All|N/A|
