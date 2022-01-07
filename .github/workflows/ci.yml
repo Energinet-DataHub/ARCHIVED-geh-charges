@@ -60,7 +60,7 @@ jobs:
   webapi_ci:
     # Depend on these validating jobs in order to avoid potentially creating artifacts that should never be used if this job fails
     needs: [ci_base, terraform_validate, dotnet_solution_ci]
-    uses: Energinet-DataHub/.github/.github/workflows/dotnet-create-function-artifact.yml@2.6.1
+    uses: Energinet-DataHub/.github/.github/workflows/dotnet-create-webapi-artifact.yml@2.7.0
     with:
       CSPROJ_FILE_PATH: 'source/GreenEnergyHub.Charges/source/GreenEnergyHub.Charges.WebApi/GreenEnergyHub.Charges.WebApi.csproj'
       DOTNET_VERSION: '5.0.202'
