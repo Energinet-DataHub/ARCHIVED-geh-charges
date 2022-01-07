@@ -27,6 +27,9 @@ using Xunit;
 
 namespace GreenEnergyHub.Charges.SystemTests
 {
+    /// <summary>
+    /// Contains system tests where we operate at the level of the API Management.
+    /// </summary>
     public class ApiManagementTests : IClassFixture<ApiManagementConfiguration>
     {
         public ApiManagementTests(ApiManagementConfiguration configuration)

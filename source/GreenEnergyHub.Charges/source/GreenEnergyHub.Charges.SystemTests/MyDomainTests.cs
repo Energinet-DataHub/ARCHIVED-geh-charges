@@ -22,6 +22,11 @@ using GreenEnergyHub.Charges.SystemTests.Fixtures;
 
 namespace GreenEnergyHub.Charges.SystemTests
 {
+    /// <summary>
+    /// Contains tests where we operate at the level of a domain, so basically what in some context has been named "domain tests".
+    /// However, with the technique displayed here we perform these tests in a live environment.
+    /// Maybe we should only use this for testing domain health checks.
+    /// </summary>
     public class MyDomainTests
     {
         public MyDomainTests()
