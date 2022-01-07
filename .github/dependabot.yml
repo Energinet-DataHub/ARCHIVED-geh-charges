@@ -8,13 +8,7 @@ updates:
     directory: "/source/GreenEnergyHub.Charges"
     schedule:
       interval: "monthly"
-      time: "11:00"
-      # Use ETC (UTC +01:00)
-      timezone: "Europe/Copenhagen"
   - package-ecosystem: "nuget"
     directory: "/source/Energinet.Charges.Libraries"
     schedule:
       interval: "monthly"
-      time: "11:00"
-      # Use ETC (UTC +01:00)
-      timezone: "Europe/Copenhagen"
