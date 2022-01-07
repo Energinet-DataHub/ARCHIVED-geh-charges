@@ -22,10 +22,6 @@ namespace GreenEnergyHub.Charges.QueryApi.Model
 {
     public partial class QueryDbContext : DbContext
     {
-        public QueryDbContext()
-        {
-        }
-
         public QueryDbContext(DbContextOptions<QueryDbContext> options)
             : base(options)
         {
@@ -42,15 +38,6 @@ namespace GreenEnergyHub.Charges.QueryApi.Model
         public virtual DbSet<MarketParticipant> MarketParticipants { get; set; }
 
         public virtual DbSet<MeteringPoint> MeteringPoints { get; set; }
-
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-//            if (!optionsBuilder.IsConfigured)
-//            {
-//#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-//                optionsBuilder.UseSqlServer("Server=(localdb)\\mssqllocaldb;Database=ChargesDatabase;Trusted_Connection=True;");
-//            }
-        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -82,8 +69,8 @@ namespace GreenEnergyHub.Charges.QueryApi.Model
                 entity.HasOne(d => d.Owner)
                     .WithMany(p => p.Charges)
                     .HasForeignKey(d => d.OwnerId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Charge__MarketPa__534D60F1");
+                    .OnDelete(DeleteBehavior.ClientSetNull);
+                    /*.HasConstraintName("FK__Charge__MarketPa__534D60F1");*/
             });
 
             modelBuilder.Entity<ChargeLink>(entity =>
@@ -100,14 +87,14 @@ namespace GreenEnergyHub.Charges.QueryApi.Model
                 entity.HasOne(d => d.Charge)
                     .WithMany(p => p.ChargeLinks)
                     .HasForeignKey(d => d.ChargeId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__ChargeLin__Charg__656C112C");
+                    .OnDelete(DeleteBehavior.ClientSetNull);
+                /*.HasConstraintName("FK__ChargeLin__Charg__656C112C");*/
 
                 entity.HasOne(d => d.MeteringPoint)
                     .WithMany(p => p.ChargeLinks)
                     .HasForeignKey(d => d.MeteringPointId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__ChargeLin__Meter__66603565");
+                    .OnDelete(DeleteBehavior.ClientSetNull);
+                    /*.HasConstraintName("FK__ChargeLin__Meter__66603565");*/
             });
 
             modelBuilder.Entity<ChargePoint>(entity =>
@@ -145,8 +132,8 @@ namespace GreenEnergyHub.Charges.QueryApi.Model
                 entity.HasOne(d => d.Charge)
                     .WithMany(p => p.DefaultChargeLinks)
                     .HasForeignKey(d => d.ChargeId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__DefaultCh__Charg__60A75C0F");
+                    .OnDelete(DeleteBehavior.ClientSetNull);
+                    /*.HasConstraintName("FK__DefaultCh__Charg__60A75C0F");*/
             });
 
             modelBuilder.Entity<MarketParticipant>(entity =>
