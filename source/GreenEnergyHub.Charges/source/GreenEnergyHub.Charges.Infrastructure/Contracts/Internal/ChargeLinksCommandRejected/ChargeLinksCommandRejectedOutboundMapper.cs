@@ -36,7 +36,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Contracts.Internal.ChargeLinksCo
 
             foreach (var chargeLinkDto in chargeLinksRejectedEvent.ChargeLinksCommand.ChargeLinks)
             {
-             linksCommandRejected.Command.ChargeLinks.Add(ConvertChargeLink(chargeLinkDto));
+                linksCommandRejected.Command.ChargeLinks.Add(ConvertChargeLink(chargeLinkDto));
             }
 
             AddRejectedReasons(linksCommandRejected, chargeLinksRejectedEvent);

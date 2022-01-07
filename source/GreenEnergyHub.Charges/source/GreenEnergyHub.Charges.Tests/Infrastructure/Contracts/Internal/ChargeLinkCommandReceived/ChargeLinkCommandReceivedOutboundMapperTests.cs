@@ -13,7 +13,6 @@
 // limitations under the License.
 
 using System;
-using System.Diagnostics.CodeAnalysis;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksReceivedEvents;
 using GreenEnergyHub.Charges.Infrastructure.Contracts.Internal.LinkCommandReceived;
@@ -31,8 +30,8 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Contracts.Internal.ChargeL
         [Theory]
         [InlineAutoMoqData]
         public void Convert_WhenCalled_ShouldMapToProtobufWithCorrectValues(
-            [NotNull] ChargeLinksCommand chargeLinksCommand,
-            [NotNull] ChargeLinkCommandReceivedOutboundMapper sut)
+            ChargeLinksCommand chargeLinksCommand,
+            ChargeLinkCommandReceivedOutboundMapper sut)
         {
             // Arrange
             ChargeLinksReceivedEvent chargeLinksReceivedEvent =
@@ -47,7 +46,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Contracts.Internal.ChargeL
 
         [Theory]
         [InlineAutoMoqData]
-        public void Convert_WhenCalledWithNull_ShouldThrow([NotNull]ChargeLinkCommandReceivedOutboundMapper sut)
+        public void Convert_WhenCalledWithNull_ShouldThrow(ChargeLinkCommandReceivedOutboundMapper sut)
         {
             Assert.Throws<InvalidOperationException>(() => sut.Convert(null!));
         }
