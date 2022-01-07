@@ -29,19 +29,19 @@ limitations under the License.
         <marketEvaluationPoint.mRID codingScheme="A01">578032999778756222</marketEvaluationPoint.mRID>
         <start_DateAndOrTime.dateTime>2021-09-27T22:00:00Z</start_DateAndOrTime.dateTime>
         <end_DateAndOrTime.dateTime>2021-11-05T23:00:00Z</end_DateAndOrTime.dateTime>
-        <chargeGroup.chargeType.mRID>ChargeId01</chargeGroup.chargeType.mRID>
-        <chargeGroup.chargeType.factor>1</chargeGroup.chargeType.factor>
         <chargeGroup.chargeType.chargeTypeOwner_MarketParticipant.mRID codingScheme="A01">8100000000016</chargeGroup.chargeType.chargeTypeOwner_MarketParticipant.mRID>
         <chargeGroup.chargeType.type>D03</chargeGroup.chargeType.type>
+        <chargeGroup.chargeType.mRID>ChargeId01</chargeGroup.chargeType.mRID>
+        <chargeGroup.chargeType.factor>1</chargeGroup.chargeType.factor>
     </MktActivityRecord>
     <MktActivityRecord>
         <mRID>rId_Valid_002</mRID>
         <marketEvaluationPoint.mRID codingScheme="A01">578032999778756222</marketEvaluationPoint.mRID>
         <start_DateAndOrTime.dateTime>2021-11-27T22:00:00Z</start_DateAndOrTime.dateTime>
         <end_DateAndOrTime.dateTime>2021-12-05T23:00:00Z</end_DateAndOrTime.dateTime>
-        <chargeGroup.chargeType.mRID>ChargeId01</chargeGroup.chargeType.mRID>
-        <chargeGroup.chargeType.factor>1</chargeGroup.chargeType.factor>
         <chargeGroup.chargeType.chargeTypeOwner_MarketParticipant.mRID codingScheme="A01">8100000000016</chargeGroup.chargeType.chargeTypeOwner_MarketParticipant.mRID>
         <chargeGroup.chargeType.type>D03</chargeGroup.chargeType.type>
+        <chargeGroup.chargeType.mRID>ChargeId01</chargeGroup.chargeType.mRID>
+        <chargeGroup.chargeType.factor>1</chargeGroup.chargeType.factor>
     </MktActivityRecord>
 </RequestChangeBillingMasterData_MarketDocument>
