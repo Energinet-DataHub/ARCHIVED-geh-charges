@@ -70,7 +70,6 @@ namespace GreenEnergyHub.Charges.QueryApi.Model
                     .WithMany(p => p.Charges)
                     .HasForeignKey(d => d.OwnerId)
                     .OnDelete(DeleteBehavior.ClientSetNull);
-                    /*.HasConstraintName("FK__Charge__MarketPa__534D60F1");*/
             });
 
             modelBuilder.Entity<ChargeLink>(entity =>
@@ -88,13 +87,11 @@ namespace GreenEnergyHub.Charges.QueryApi.Model
                     .WithMany(p => p.ChargeLinks)
                     .HasForeignKey(d => d.ChargeId)
                     .OnDelete(DeleteBehavior.ClientSetNull);
-                /*.HasConstraintName("FK__ChargeLin__Charg__656C112C");*/
 
                 entity.HasOne(d => d.MeteringPoint)
                     .WithMany(p => p.ChargeLinks)
                     .HasForeignKey(d => d.MeteringPointId)
                     .OnDelete(DeleteBehavior.ClientSetNull);
-                    /*.HasConstraintName("FK__ChargeLin__Meter__66603565");*/
             });
 
             modelBuilder.Entity<ChargePoint>(entity =>
@@ -133,7 +130,6 @@ namespace GreenEnergyHub.Charges.QueryApi.Model
                     .WithMany(p => p.DefaultChargeLinks)
                     .HasForeignKey(d => d.ChargeId)
                     .OnDelete(DeleteBehavior.ClientSetNull);
-                    /*.HasConstraintName("FK__DefaultCh__Charg__60A75C0F");*/
             });
 
             modelBuilder.Entity<MarketParticipant>(entity =>
