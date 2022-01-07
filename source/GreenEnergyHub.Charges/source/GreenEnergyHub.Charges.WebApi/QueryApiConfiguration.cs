@@ -28,15 +28,14 @@ namespace GreenEnergyHub.Charges.WebApi
             this IServiceCollection serviceCollection,
             IConfiguration configuration)
         {
-            var connectionString = configuration.GetConnectionString(EnvironmentSettingNames.ChargeDbConnectionString);
-            if (connectionString == null)
-                throw new ArgumentNullException(EnvironmentSettingNames.ChargeDbConnectionString, "does not exist in configuration settings");
-
-            serviceCollection.AddDbContext<QueryDbContext>(
-                options => options.UseSqlServer(connectionString, o => o.UseNodaTime()));
-
-            serviceCollection.AddScoped<IData, Data>();
-
+            // var connectionString = configuration.GetConnectionString(EnvironmentSettingNames.ChargeDbConnectionString);
+            // if (connectionString == null)
+            //     throw new ArgumentNullException(EnvironmentSettingNames.ChargeDbConnectionString, "does not exist in configuration settings");
+            //
+            // serviceCollection.AddDbContext<QueryDbContext>(
+            //     options => options.UseSqlServer(connectionString, o => o.UseNodaTime()));
+            //
+            // serviceCollection.AddScoped<IData, Data>();
             return serviceCollection;
         }
     }

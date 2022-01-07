@@ -26,11 +26,8 @@ namespace GreenEnergyHub.Charges.WebApi.Controllers
     [Route("[controller]")]
     public class ChargeLinksController : ControllerBase
     {
-        private readonly IData _data;
-
-        public ChargeLinksController(IData data)
+        public ChargeLinksController()
         {
-            _data = data;
         }
 
         /// <summary>
@@ -45,22 +42,21 @@ namespace GreenEnergyHub.Charges.WebApi.Controllers
             if (meteringPointId == null)
                 return BadRequest();
 
-            var meteringPointExists = await _data
-                .MeteringPoints
-                .AnyAsync(m => m.MeteringPointId == meteringPointId);
-            if (!meteringPointExists)
-                return NotFound();
-
-            var chargeLinks = await _data
-                .ChargeLinks
-                .ForMeteringPoint(meteringPointId)
-                .OrderBy(c => c.Charge.Type)
-                .ThenBy(c => c.Charge.SenderProvidedChargeId)
-                .ThenByDescending(c => c.StartDateTime)
-                .AsChargeLinkDto()
-                .ToListAsync();
-
-            return Ok(chargeLinks);
+            // var meteringPointExists = await _data
+            //     .MeteringPoints
+            //     .AnyAsync(m => m.MeteringPointId == meteringPointId);
+            // if (!meteringPointExists)
+            //     return NotFound();
+            //
+            // var chargeLinks = await _data
+            //     .ChargeLinks
+            //     .ForMeteringPoint(meteringPointId)
+            //     .OrderBy(c => c.Charge.Type)
+            //     .ThenBy(c => c.Charge.SenderProvidedChargeId)
+            //     .ThenByDescending(c => c.StartDateTime)
+            //     .AsChargeLinkDto()
+            //     .ToListAsync();
+            return Ok();
         }
     }
 }
