@@ -17,7 +17,7 @@ using Energinet.DataHub.Core.Messaging.Protobuf;
 using Energinet.DataHub.Core.Messaging.Transport;
 using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksRejectedEvents;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksRejectionEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Contracts.Internal.ChargeLinksCommandRejected
@@ -28,12 +28,12 @@ namespace GreenEnergyHub.Charges.Infrastructure.Contracts.Internal.ChargeLinksCo
         protected override IInboundMessage Convert(
             GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinksCommandRejected.ChargeLinksCommandRejected chargeLinksCommandRejected)
         {
-            return new ChargeLinksCommandRejectedEvent(
+            return new ChargeLinksRejectedEvent(
                 chargeLinksCommandRejected.PublishedTime.ToInstant(),
                 new ChargeLinksCommand(
-                    chargeLinksCommandRejected.Command.MeteringPointId,
-                    ConvertDocument(chargeLinksCommandRejected.Command.Document),
-                    chargeLinksCommandRejected.Command.ChargeLinks.Select(ConvertChargeLink)
+                    chargeLinksCommandRejected.ChargeLinksCommand.MeteringPointId,
+                    ConvertDocument(chargeLinksCommandRejected.ChargeLinksCommand.Document),
+                    chargeLinksCommandRejected.ChargeLinksCommand.ChargeLinks.Select(ConvertChargeLink)
                         .ToList()),
                 chargeLinksCommandRejected.RejectReasons);
         }

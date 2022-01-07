@@ -14,9 +14,9 @@
 
 using System;
 using System.Collections.Generic;
-using GreenEnergyHub.Charges.Domain.ChargeLinks;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
+using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using NodaTime;
 
 namespace GreenEnergyHub.Charges.Tests.Builders
@@ -24,7 +24,18 @@ namespace GreenEnergyHub.Charges.Tests.Builders
     public class ChargeLinksCommandBuilder
     {
         private readonly string _meteringPointId = Guid.NewGuid().ToString();
-        private readonly DocumentDto _document = new DocumentDto();
+        private readonly DocumentDto _document = new DocumentDto
+        {
+            Id = Guid.NewGuid().ToString(),
+            CreatedDateTime = SystemClock.Instance.GetCurrentInstant(),
+            BusinessReasonCode = BusinessReasonCode.UpdateChargeInformation,
+            IndustryClassification = IndustryClassification.Electricity,
+            RequestDate = SystemClock.Instance.GetCurrentInstant(),
+            Recipient = new MarketParticipantDto { Id = Guid.NewGuid().ToString(), BusinessProcessRole = MarketParticipantRole.EnergyAgency },
+            Sender = new MarketParticipantDto { Id = Guid.NewGuid().ToString(), BusinessProcessRole = MarketParticipantRole.EnergyAgency },
+            Type = DocumentType.ChargeLinkReceipt,
+        };
+
         private List<ChargeLinkDto> _links = new List<ChargeLinkDto>();
 
         public ChargeLinksCommandBuilder WithChargeLinks(List<ChargeLinkDto> links)

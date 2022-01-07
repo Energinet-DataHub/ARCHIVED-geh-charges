@@ -13,32 +13,31 @@
 // limitations under the License.
 
 using System;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandRejectedEvents;
-using GreenEnergyHub.Charges.Infrastructure.Contracts.Internal.ChargeCommandRejected;
-using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeCommandRejected;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksRejectionEvents;
+using GreenEnergyHub.Charges.Infrastructure.Contracts.Internal.ChargeLinksCommandRejected;
 using GreenEnergyHub.Charges.TestCore.Attributes;
 using GreenEnergyHub.Charges.Tests.Protobuf;
 using Xunit;
 using Xunit.Categories;
 
-namespace GreenEnergyHub.Charges.Tests.Infrastructure.Contracts.Internal.ChargeCommandRejected
+namespace GreenEnergyHub.Charges.Tests.Infrastructure.Contracts.Internal.ChargeLinksCommandRejected
 {
     [UnitTest]
-    public class ChargeCommandRejectedInboundMapperTests
+    public class ChargeLinksCommandRejectedInboundMapperTests
     {
         [Theory]
         [InlineAutoMoqData]
         public void Convert_WhenCalled_ShouldMapToDomainObjectWithCorrectValues(
-            ChargeCommandRejectedContract rejectedContract,
-            ChargeCommandRejectedInboundMapper sut)
+            Charges.Infrastructure.Internal.ChargeLinksCommandRejected.ChargeLinksCommandRejected rejectedContract,
+            ChargeLinksCommandRejectedInboundMapper sut)
         {
-            var result = (ChargeCommandRejectedEvent)sut.Convert(rejectedContract);
+            var result = (ChargeLinksRejectedEvent)sut.Convert(rejectedContract);
             ProtobufAssert.IncomingContractIsSuperset(result, rejectedContract);
         }
 
         [Theory]
         [InlineAutoMoqData]
-        public void Convert_WhenCalledWithNull_ShouldThrow(ChargeCommandRejectedInboundMapper sut)
+        public void Convert_WhenCalledWithNull_ShouldThrow(ChargeLinksCommandRejectedInboundMapper sut)
         {
             Assert.Throws<InvalidOperationException>(() => sut.Convert(null!));
         }

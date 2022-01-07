@@ -24,7 +24,7 @@ option csharp_namespace = "GreenEnergyHub.Charges.Infrastructure.Internal.Charge
 
 message ChargeLinksCommandRejected {
   google.protobuf.Timestamp published_time = 1;
-  ChargeLinksCommand command = 2;
+  ChargeLinksCommand charge_links_command = 2;
   repeated string reject_reasons = 3;
 }
 

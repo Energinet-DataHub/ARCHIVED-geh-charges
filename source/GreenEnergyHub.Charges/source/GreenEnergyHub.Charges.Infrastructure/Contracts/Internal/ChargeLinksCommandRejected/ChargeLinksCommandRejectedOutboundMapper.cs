@@ -27,7 +27,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Contracts.Internal.ChargeLinksCo
             var linksCommandRejected = new GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinksCommandRejected.ChargeLinksCommandRejected
             {
                 PublishedTime = chargeLinksRejectedEvent.PublishedTime.ToTimestamp(),
-                Command = new Infrastructure.Internal.ChargeLinksCommandRejected.ChargeLinksCommand
+                ChargeLinksCommand = new Infrastructure.Internal.ChargeLinksCommandRejected.ChargeLinksCommand
                 {
                     MeteringPointId = chargeLinksRejectedEvent.ChargeLinksCommand.MeteringPointId,
                     Document = ConvertDocument(chargeLinksRejectedEvent.ChargeLinksCommand.Document),
@@ -36,7 +36,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Contracts.Internal.ChargeLinksCo
 
             foreach (var chargeLinkDto in chargeLinksRejectedEvent.ChargeLinksCommand.ChargeLinks)
             {
-                linksCommandRejected.Command.ChargeLinks.Add(ConvertChargeLink(chargeLinkDto));
+                linksCommandRejected.ChargeLinksCommand.ChargeLinks.Add(ConvertChargeLink(chargeLinkDto));
             }
 
             AddRejectedReasons(linksCommandRejected, chargeLinksRejectedEvent);
