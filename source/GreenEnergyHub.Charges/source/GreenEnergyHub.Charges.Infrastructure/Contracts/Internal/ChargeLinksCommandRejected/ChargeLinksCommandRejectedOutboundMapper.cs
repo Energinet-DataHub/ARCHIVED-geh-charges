@@ -14,7 +14,6 @@
 
 using Energinet.DataHub.Core.Messaging.Protobuf;
 using GreenEnergyHub.Charges.Core.DateTime;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksAcceptedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksRejectionEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
@@ -25,7 +24,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Contracts.Internal.ChargeLinksCo
     {
         protected override Google.Protobuf.IMessage Convert(ChargeLinksRejectedEvent chargeLinksRejectedEvent)
         {
-            var chargeLinkCommandAccepted = new GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinksCommandRejected.ChargeLinksCommandRejected
+            var linksCommandRejected = new GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinksCommandRejected.ChargeLinksCommandRejected
             {
                 PublishedTime = chargeLinksRejectedEvent.PublishedTime.ToTimestamp(),
                 Command = new Infrastructure.Internal.ChargeLinksCommandRejected.ChargeLinksCommand
@@ -37,12 +36,12 @@ namespace GreenEnergyHub.Charges.Infrastructure.Contracts.Internal.ChargeLinksCo
 
             foreach (var chargeLinkDto in chargeLinksRejectedEvent.ChargeLinksCommand.ChargeLinks)
             {
-             chargeLinkCommandAccepted.Command.ChargeLinks.Add(ConvertChargeLink(chargeLinkDto));
+             linksCommandRejected.Command.ChargeLinks.Add(ConvertChargeLink(chargeLinkDto));
             }
 
-            AddRejectedReasons(chargeLinkCommandAccepted, chargeLinksRejectedEvent);
+            AddRejectedReasons(linksCommandRejected, chargeLinksRejectedEvent);
 
-            return chargeLinkCommandAccepted;
+            return linksCommandRejected;
         }
 
         private static void AddRejectedReasons(Infrastructure.Internal.ChargeLinksCommandRejected.ChargeLinksCommandRejected chargeCommandRejectedContract, ChargeLinksRejectedEvent rejectionEvent)
