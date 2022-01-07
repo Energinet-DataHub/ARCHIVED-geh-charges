@@ -17,7 +17,7 @@ using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 
 namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands.Validation.BusinessValidation
 {
-    public class ChargeLinksCommandBusinessValidator : IChargeLinksCommandBusinessValidator
+    public class ChargeLinksCommandBusinessValidator : IBusinessValidator<ChargeLinksCommand>
     {
         private readonly IBusinessValidationRulesFactory<ChargeLinksCommand> _businessValidationRulesFactory;
 
