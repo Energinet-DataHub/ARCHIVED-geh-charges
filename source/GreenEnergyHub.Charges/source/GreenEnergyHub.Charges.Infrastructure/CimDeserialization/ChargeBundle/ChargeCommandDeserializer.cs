@@ -12,32 +12,34 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.IO;
-using System.Threading;
 using System.Threading.Tasks;
-using System.Xml;
-using Energinet.DataHub.Core.Messaging.Transport;
+using Energinet.DataHub.Core.Messaging.Transport.SchemaValidation;
+using Energinet.DataHub.Core.Schemas;
+using Energinet.DataHub.Core.SchemaValidation;
+using Energinet.DataHub.Core.SchemaValidation.Extensions;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
-using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Serialization;
 
 namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.ChargeBundle
 {
-    public class ChargeCommandDeserializer : MessageDeserializer<ChargeCommandBundle>
+    public sealed class ChargeCommandDeserializer : SchemaValidatingMessageDeserializer<ChargeCommandBundle>
     {
         private readonly IChargeCommandConverter _chargeCommandConverter;
 
         public ChargeCommandDeserializer(IChargeCommandConverter chargeCommandConverter)
+            : base(Schemas.CimXml.StructureRequestChangeOfPriceList)
         {
             _chargeCommandConverter = chargeCommandConverter;
         }
 
-        public override async Task<IInboundMessage> FromBytesAsync(byte[] data, CancellationToken cancellationToken = default)
+        protected override async Task<ChargeCommandBundle> ConvertAsync(SchemaValidatingReader reader)
         {
-            await using var stream = new MemoryStream(data);
+            var xmlReader = await reader.AsXmlReaderAsync().ConfigureAwait(false);
 
-            using var reader = XmlReader.Create(stream, new XmlReaderSettings { Async = true });
+            var command = await _chargeCommandConverter
+                .ConvertAsync(xmlReader)
+                .ConfigureAwait(false);
 
-            return await _chargeCommandConverter.ConvertAsync(reader).ConfigureAwait(false);
+            return (ChargeCommandBundle)command;
         }
     }
 }

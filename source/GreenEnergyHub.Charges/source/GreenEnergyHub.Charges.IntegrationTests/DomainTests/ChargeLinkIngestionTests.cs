@@ -51,13 +51,26 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             }
 
             [Fact]
-            public async Task When_ChargeIsReceived_Then_AHttp200ResponseIsReturned()
+            public async Task When_ChargeLinkIsReceived_Then_AHttp200ResponseIsReturned()
             {
                 var request = CreateHttpRequest(ChargeLinkDocument.AnyValid, out _);
 
                 var actualResponse = await Fixture.HostManager.HttpClient.SendAsync(request);
 
                 actualResponse.StatusCode.Should().Be(HttpStatusCode.OK);
+            }
+
+            [Fact]
+            public async Task When_InvalidChargeLinkIsReceived_Then_AHttp400ResponseIsReturned()
+            {
+                // Arrange
+                var request = CreateHttpRequest(ChargeLinkDocument.InvalidSchema, out _);
+
+                // Act
+                var actualResponse = await Fixture.HostManager.HttpClient.SendAsync(request);
+
+                // Assert
+                actualResponse.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             }
 
             [Fact]

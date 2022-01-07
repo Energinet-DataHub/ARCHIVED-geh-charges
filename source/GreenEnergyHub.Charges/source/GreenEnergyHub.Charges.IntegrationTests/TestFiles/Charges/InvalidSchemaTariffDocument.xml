@@ -16,7 +16,7 @@ limitations under the License.
 -->
 <cim:RequestChangeOfPriceList_MarketDocument xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:cim="urn:ediel.org:structure:requestchangeofpricelist:0:1" xsi:schemaLocation="urn:ediel.org:structure:requestchangeofpricelist:0:1 urn-ediel-org-structure-requestchangeofpricelist-0-1.xsd">
     <cim:mRID>MD{{$isoTimestamp}}</cim:mRID>
-    <cim:type>D10</cim:type>
+    <cim:type>InvalidType</cim:type>
     <cim:process.processType>D18</cim:process.processType>
     <cim:businessSector.type>23</cim:businessSector.type>
     <cim:sender_MarketParticipant.mRID codingScheme="A10">8100000000030</cim:sender_MarketParticipant.mRID>
