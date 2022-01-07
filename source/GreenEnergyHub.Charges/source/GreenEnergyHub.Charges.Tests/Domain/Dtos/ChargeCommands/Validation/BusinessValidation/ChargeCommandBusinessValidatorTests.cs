@@ -15,8 +15,6 @@
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessValidation;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessValidation.Factories;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using GreenEnergyHub.Charges.TestCore.Attributes;
 using Moq;
@@ -35,7 +33,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
             Mock<IValidationRuleSet> rules,
             ChargeCommand command,
             ValidationResult validationResult,
-            ChargeCommandBusinessValidator sut)
+            BusinessValidator<ChargeCommand> sut)
         {
             // Arrange
             factory.Setup(
