@@ -46,7 +46,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation
         [InlineAutoDomainData]
         public async Task ValidateAsync_WhenInputValidationSucceedsAndBusinessValidationFails_ReturnsInvalid(
             [Frozen] Mock<IChargeCommandInputValidator> inputValidator,
-            [Frozen] Mock<IChargeCommandBusinessValidator> businessValidator,
+            [Frozen] Mock<IBusinessValidator<ChargeCommand>> businessValidator,
             ChargeCommandValidator sut,
             ChargeCommand anyCommand)
         {
@@ -65,7 +65,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation
         [InlineAutoDomainData]
         public async Task ValidateAsync_WhenInputValidationSucceedsAndBusinessValidationSucceeds_ReturnsValid(
             [Frozen] Mock<IChargeCommandInputValidator> inputValidator,
-            [Frozen] Mock<IChargeCommandBusinessValidator> businessValidator,
+            [Frozen] Mock<IBusinessValidator<ChargeCommand>> businessValidator,
             ChargeCommandValidator sut,
             ChargeCommand anyCommand)
         {
@@ -92,7 +92,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation
             inputValidator.Setup(v => v.Validate(anyCommand)).Returns(invalidResult);
         }
 
-        private static void ConfigureValidatorToReturnValidResult(Mock<IChargeCommandBusinessValidator> businessValidator, ChargeCommand anyCommand)
+        private static void ConfigureValidatorToReturnValidResult(Mock<IBusinessValidator<ChargeCommand>> businessValidator, ChargeCommand anyCommand)
         {
             var validResult = ValidationResult.CreateSuccess();
             businessValidator
@@ -100,7 +100,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation
                 .Returns(Task.FromResult(validResult));
         }
 
-        private static void ConfigureValidatorToReturnInvalidResult(Mock<IChargeCommandBusinessValidator> businessValidator, ChargeCommand anyCommand)
+        private static void ConfigureValidatorToReturnInvalidResult(Mock<IBusinessValidator<ChargeCommand>> businessValidator, ChargeCommand anyCommand)
         {
             var invalidResult = CreateInvalidValidationResult();
             businessValidator

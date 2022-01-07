@@ -12,11 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessValidation;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessValidation.Factories;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
@@ -33,11 +31,11 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
         [Theory]
         [InlineAutoMoqData]
         public async Task ValidateAsync_WhenCalled_UsesFactoryToFetchRulesAndUseRulesToGetResult(
-            [Frozen] [NotNull] Mock<IChargeCommandBusinessValidationRulesFactory> factory,
-            [NotNull] Mock<IValidationRuleSet> rules,
-            [NotNull] ChargeCommand command,
-            [NotNull] ValidationResult validationResult,
-            [NotNull] ChargeCommandBusinessValidator sut)
+            [Frozen] Mock<IBusinessValidationRulesFactory<ChargeCommand>> factory,
+            Mock<IValidationRuleSet> rules,
+            ChargeCommand command,
+            ValidationResult validationResult,
+            ChargeCommandBusinessValidator sut)
         {
             // Arrange
             factory.Setup(

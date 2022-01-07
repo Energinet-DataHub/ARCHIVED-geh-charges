@@ -13,23 +13,22 @@
 // limitations under the License.
 
 using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands.Validation.BusinessValidation.Factories;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 
 namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands.Validation.BusinessValidation
 {
     public class ChargeLinksCommandBusinessValidator : IChargeLinksCommandBusinessValidator
     {
-        private readonly IChargeLinksCommandBusinessValidationRulesFactory _chargeLinksCommandBusinessValidationRulesFactory;
+        private readonly IBusinessValidationRulesFactory<ChargeLinksCommand> _businessValidationRulesFactory;
 
-        public ChargeLinksCommandBusinessValidator(IChargeLinksCommandBusinessValidationRulesFactory chargeLinksCommandBusinessValidationRulesFactory)
+        public ChargeLinksCommandBusinessValidator(IBusinessValidationRulesFactory<ChargeLinksCommand> businessValidationRulesFactory)
         {
-            _chargeLinksCommandBusinessValidationRulesFactory = chargeLinksCommandBusinessValidationRulesFactory;
+            _businessValidationRulesFactory = businessValidationRulesFactory;
         }
 
         public async Task<ValidationResult> ValidateAsync(ChargeLinksCommand command)
         {
-            var ruleSet = await _chargeLinksCommandBusinessValidationRulesFactory.CreateRulesAsync(command).ConfigureAwait(false);
+            var ruleSet = await _businessValidationRulesFactory.CreateRulesAsync(command).ConfigureAwait(false);
             return ruleSet.Validate();
         }
     }

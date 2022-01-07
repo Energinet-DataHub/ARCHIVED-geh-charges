@@ -13,12 +13,13 @@
 // limitations under the License.
 
 using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Domain.Dtos.Validation;
+using GreenEnergyHub.Charges.Domain.Dtos.Messages.Command;
 
-namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessValidation
+namespace GreenEnergyHub.Charges.Domain.Dtos.Validation
 {
-    public interface IChargeCommandBusinessValidator
+    public interface IBusinessValidator<TCommand>
+        where TCommand : CommandBase
     {
-        Task<ValidationResult> ValidateAsync(ChargeCommand command);
+        Task<ValidationResult> ValidateAsync(TCommand command);
     }
 }

@@ -21,10 +21,8 @@ using AutoFixture.Xunit2;
 using GreenEnergyHub.Charges.Application.ChargeLinks.Handlers;
 using GreenEnergyHub.Charges.Application.ChargeLinks.Services;
 using GreenEnergyHub.Charges.Domain.ChargeLinks;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksAcceptedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands.Validation;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksReceivedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using GreenEnergyHub.TestHelpers;
@@ -43,7 +41,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Handlers
             [Frozen] Mock<IChargeLinksReceiptService> chargeLinksReceiptService,
             [Frozen] Mock<IChargeLinkFactory> chargeLinkFactory,
             [Frozen] Mock<IChargeLinksAcceptedEventFactory> chargeLinkCommandAcceptedEventFactory,
-            [Frozen] Mock<IChargeLinksCommandValidator> chargeLinksCommandValidator,
+            [Frozen] Mock<IBusinessValidator<ChargeLinksCommand>> businessValidator,
             ChargeLinksReceivedEvent chargeLinksReceivedEvent,
             ChargeLinksAcceptedEvent chargeLinksAcceptedEvent,
             ChargeLinksReceivedEventHandler sut)
@@ -53,7 +51,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Handlers
             fixture.Customizations.Add(new StringGenerator(() => Guid.NewGuid().ToString()[..16]));
             var chargeLink = fixture.Create<ChargeLink>();
 
-            chargeLinksCommandValidator.Setup(x => x.ValidateAsync(It.IsAny<ChargeLinksCommand>()))
+            businessValidator.Setup(x => x.ValidateAsync(It.IsAny<ChargeLinksCommand>()))
                 .ReturnsAsync(ValidationResult.CreateSuccess());
 
             chargeLinkFactory

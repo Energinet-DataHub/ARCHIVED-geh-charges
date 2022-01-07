@@ -13,7 +13,6 @@
 // limitations under the License.
 
 using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessValidation;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputValidation;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 
@@ -21,15 +20,15 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation
 {
     public class ChargeCommandValidator : IChargeCommandValidator
     {
-        private readonly IChargeCommandBusinessValidator _chargeCommandBusinessValidator;
+        private readonly IBusinessValidator<ChargeCommand> _businessValidator;
         private readonly IChargeCommandInputValidator _chargeCommandInputValidator;
 
         public ChargeCommandValidator(
             IChargeCommandInputValidator chargeCommandInputValidator,
-            IChargeCommandBusinessValidator chargeCommandBusinessValidator)
+            IBusinessValidator<ChargeCommand> businessValidator)
         {
             _chargeCommandInputValidator = chargeCommandInputValidator;
-            _chargeCommandBusinessValidator = chargeCommandBusinessValidator;
+            _businessValidator = businessValidator;
         }
 
         public async Task<ValidationResult> ValidateAsync(ChargeCommand command)
@@ -38,7 +37,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation
             if (inputValidationResult.IsFailed) return inputValidationResult;
 
             var businessValidationResult =
-                await _chargeCommandBusinessValidator.ValidateAsync(command).ConfigureAwait(false);
+                await _businessValidator.ValidateAsync(command).ConfigureAwait(false);
             return businessValidationResult;
         }
     }

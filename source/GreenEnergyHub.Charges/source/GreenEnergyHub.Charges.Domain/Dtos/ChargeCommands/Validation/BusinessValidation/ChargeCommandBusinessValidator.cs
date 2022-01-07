@@ -18,18 +18,18 @@ using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 
 namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessValidation
 {
-    public class ChargeCommandBusinessValidator : IChargeCommandBusinessValidator
+    public class ChargeCommandBusinessValidator : IBusinessValidator<ChargeCommand>
     {
-        private readonly IChargeCommandBusinessValidationRulesFactory _chargeCommandBusinessValidationRulesFactory;
+        private readonly IBusinessValidationRulesFactory<ChargeCommand> _businessValidationRulesFactory;
 
-        public ChargeCommandBusinessValidator(IChargeCommandBusinessValidationRulesFactory chargeCommandBusinessValidationRulesFactory)
+        public ChargeCommandBusinessValidator(IBusinessValidationRulesFactory<ChargeCommand> businessValidationRulesFactory)
         {
-            _chargeCommandBusinessValidationRulesFactory = chargeCommandBusinessValidationRulesFactory;
+            _businessValidationRulesFactory = businessValidationRulesFactory;
         }
 
         public async Task<ValidationResult> ValidateAsync(ChargeCommand command)
         {
-            var ruleSet = await _chargeCommandBusinessValidationRulesFactory.CreateRulesAsync(command).ConfigureAwait(false);
+            var ruleSet = await _businessValidationRulesFactory.CreateRulesAsync(command).ConfigureAwait(false);
             return ruleSet.Validate();
         }
     }
