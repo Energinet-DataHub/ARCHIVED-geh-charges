@@ -65,6 +65,19 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 actualResponse.StatusCode.Should().Be(HttpStatusCode.OK);
             }
 
+            [Fact]
+            public async Task When_InvalidChargeIsReceived_Then_AHttp400ResponseIsReturned()
+            {
+                // Arrange
+                var request = CreateHttpRequest(ChargeDocument.TariffInvalidSchema, out _);
+
+                // Act
+                var actualResponse = await Fixture.HostManager.HttpClient.SendAsync(request);
+
+                // Assert
+                actualResponse.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            }
+
             // TODO: Should this (and all other "when charge" tests) be split in subscription, fee and tariff?
             [Fact]
             public async Task When_ChargeIsReceived_Then_ChargeCreatedIntegrationEventIsPublished()

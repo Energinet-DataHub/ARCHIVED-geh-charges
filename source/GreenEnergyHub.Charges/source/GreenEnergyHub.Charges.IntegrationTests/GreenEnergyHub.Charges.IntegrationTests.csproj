@@ -65,10 +65,13 @@ limitations under the License.
 
     <ItemGroup>
       <None Remove="appsettings.json" />
-      <None Update="TestFiles\ChargeLinks\TaxTariffWithCreateAndUpdateDueToOverLappingPeriodChargeLinkDocument.xml">
+      <None Update="TestFiles\ChargeLinks\InvalidSchemaChargeLinkDocument.xml">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </None>
       <None Update="TestFiles\Charges\InvalidTariffDocument.xml">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+      <None Update="TestFiles\Charges\InvalidSchemaTariffDocument.xml">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </None>
       <None Update="TestFiles\Charges\TaxTariffWithPriceDocument.xml">
