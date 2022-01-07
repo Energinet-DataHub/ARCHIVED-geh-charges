@@ -21,10 +21,10 @@ using Moq;
 using Xunit;
 using Xunit.Categories;
 
-namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.BusinessValidation
+namespace GreenEnergyHub.Charges.Tests.Domain.Validation
 {
     [UnitTest]
-    public class ChargeCommandBusinessValidatorTests
+    public class BusinessValidatorTests
     {
         [Theory]
         [InlineAutoMoqData]
