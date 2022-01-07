@@ -164,7 +164,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures
 
             await ServiceBusResourceProvider
                 .BuildTopic(ChargesServiceBusResourceNames.ChargeLinksRejectedTopicKey)
-                .SetEnvironmentVariableToTopicName(EnvironmentSettingNames.ChargeLinkRejectedTopicName)
+                .SetEnvironmentVariableToTopicName(EnvironmentSettingNames.ChargeLinksRejectedTopicName)
                 .AddSubscription(ChargesServiceBusResourceNames.ChargeLinksRejectedSubscriptionName)
                 .SetEnvironmentVariableToSubscriptionName(EnvironmentSettingNames.ChargeLinksRejectedSubscriptionName)
                 .CreateAsync();

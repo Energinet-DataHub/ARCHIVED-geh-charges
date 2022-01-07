@@ -12,15 +12,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-module "sbt_link_command_rejected" {
+module "sbt_links_command_rejected" {
   source              = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//azure/service-bus-topic?ref=5.1.0"
 
-  name                = "link_command_rejected"
+  name                = "links_command_rejected"
   namespace_name      = module.sb_charges.name
   resource_group_name = azurerm_resource_group.this.name
   subscriptions       = [
     {
-      name                = "link_command_rejected"
+      name                = "links_command_rejected"
       max_delivery_count  = 1
     },
   ]

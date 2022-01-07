@@ -48,7 +48,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
                 EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargeLinkAcceptedTopicName));
             serviceCollection.AddMessagingProtobuf().AddMessageDispatcher<ChargeLinksRejectedEvent>(
                 EnvironmentHelper.GetEnv(EnvironmentSettingNames.DomainEventSenderConnectionString),
-                EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargeLinkRejectedTopicName));
+                EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargeLinksRejectedTopicName));
 
             serviceCollection.AddScoped<IChargeLinkRepository, ChargeLinkRepository>();
             serviceCollection.AddScoped<IBusinessValidationRulesFactory<ChargeLinksCommand>, ChargeLinksCommandBusinessValidationRulesFactory>();
