@@ -23,11 +23,11 @@ on:
 jobs:
   # Markdown, links and spell checks
   ci_base:
-    uses: Energinet-DataHub/.github/.github/workflows/ci-base.yml@2.6.1
+    uses: Energinet-DataHub/.github/.github/workflows/ci-base.yml@2.7.0
   
   # Build and test solution, and publish coverage report
   dotnet_solution_ci:
-    uses: Energinet-DataHub/.github/.github/workflows/dotnet-solution-ci.yml@2.6.1
+    uses: Energinet-DataHub/.github/.github/workflows/dotnet-solution-ci.yml@2.7.0
     with:
       SOLUTION_FILE_PATH: 'source/GreenEnergyHub.Charges/GreenEnergyHub.Charges.sln'
       DOTNET_VERSION: '5.0'
@@ -41,7 +41,7 @@ jobs:
       AZURE_KEYVAULT_URL: ${{ secrets.AZURE_KEYVAULT_URL }}
 
   terraform_validate:
-    uses: Energinet-DataHub/.github/.github/workflows/terraform-validate.yml@2.6.1
+    uses: Energinet-DataHub/.github/.github/workflows/terraform-validate.yml@2.7.0
     with:
       TERRAFORM_WORKING_DIR_PATH: './build/infrastructure/main'
       TERRAFORM_VERSION: '1.0.10'
@@ -50,7 +50,7 @@ jobs:
   functionhost_ci:
     # Depend on these validating jobs in order to avoid potentially creating artifacts that should never be used if this job fails
     needs: [ci_base, terraform_validate, dotnet_solution_ci]
-    uses: Energinet-DataHub/.github/.github/workflows/dotnet-create-function-artifact.yml@2.6.1
+    uses: Energinet-DataHub/.github/.github/workflows/dotnet-create-function-artifact.yml@2.7.0
     with:
       CSPROJ_FILE_PATH: 'source/GreenEnergyHub.Charges/source/GreenEnergyHub.Charges.FunctionHost/GreenEnergyHub.Charges.FunctionHost.csproj'
       DOTNET_VERSION: '5.0.202'
@@ -60,7 +60,7 @@ jobs:
   webapi_ci:
     # Depend on these validating jobs in order to avoid potentially creating artifacts that should never be used if this job fails
     needs: [ci_base, terraform_validate, dotnet_solution_ci]
-    uses: Energinet-DataHub/.github/.github/workflows/dotnet-create-function-artifact.yml@2.6.1
+    uses: Energinet-DataHub/.github/.github/workflows/dotnet-create-webapi-artifact.yml@2.7.0
     with:
       CSPROJ_FILE_PATH: 'source/GreenEnergyHub.Charges/source/GreenEnergyHub.Charges.WebApi/GreenEnergyHub.Charges.WebApi.csproj'
       DOTNET_VERSION: '5.0.202'
@@ -70,7 +70,7 @@ jobs:
   database_migration_ci:
     # Depend on these validating jobs in order to avoid potentially creating artifacts that should never be used if this job fails
     needs: [ci_base, terraform_validate, dotnet_solution_ci]
-    uses: Energinet-DataHub/.github/.github/workflows/dotnet-create-function-artifact.yml@2.6.1
+    uses: Energinet-DataHub/.github/.github/workflows/dotnet-create-function-artifact.yml@2.7.0
     with:
       CSPROJ_FILE_PATH: 'source/GreenEnergyHub.Charges/source/GreenEnergyHub.Charges.ApplyDBMigrationsApp/GreenEnergyHub.Charges.ApplyDBMigrationsApp.csproj'
       DOTNET_VERSION: '5.0.202'
@@ -83,7 +83,7 @@ jobs:
       webapi_ci,
       database_migration_ci
     ]
-    uses: Energinet-DataHub/.github/.github/workflows/create-prerelease.yml@2.6.1
+    uses: Energinet-DataHub/.github/.github/workflows/create-prerelease.yml@2.7.0
     with:
       CALLER_REPOSITORY_PATH: Energinet-DataHub/geh-charges
     secrets:
