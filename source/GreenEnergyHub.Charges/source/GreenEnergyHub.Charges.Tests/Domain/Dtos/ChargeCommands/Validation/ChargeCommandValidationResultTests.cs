@@ -61,12 +61,12 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation
 
         private static List<IValidationRule> CreateValidRules()
         {
-            return new List<IValidationRule> { new ValidationRule(true, ValidationRuleIdentifier.StartDateValidation) };
+            return new List<IValidationRule> { new TestValidationRule(true, ValidationRuleIdentifier.StartDateValidation) };
         }
 
         private static List<IValidationRule> CreateInvalidRules()
         {
-            return new List<IValidationRule> { new ValidationRule(false, ValidationRuleIdentifier.StartDateValidation) };
+            return new List<IValidationRule> { new TestValidationRule(false, ValidationRuleIdentifier.StartDateValidation) };
         }
     }
 }

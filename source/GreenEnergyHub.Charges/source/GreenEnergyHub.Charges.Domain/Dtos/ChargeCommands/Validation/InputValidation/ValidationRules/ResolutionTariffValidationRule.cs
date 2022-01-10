@@ -25,6 +25,8 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputVali
             _chargeCommand = chargeCommand;
         }
 
+        public ValidationRuleIdentifier ValidationRuleIdentifier => ValidationRuleIdentifier.ResolutionTariffValidation;
+
         public bool IsValid
         {
             get
@@ -40,17 +42,5 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputVali
                 return true;
             }
         }
-
-        public ValidationError ValidationError => new(
-                ValidationRuleIdentifier.ResolutionTariffValidation,
-                new ValidationErrorMessageParameter(
-                    _chargeCommand.ChargeOperation.Resolution.ToString(),
-                    ValidationErrorMessageParameterType.ChargeResolution),
-                new ValidationErrorMessageParameter(
-                    _chargeCommand.ChargeOperation.ChargeId,
-                    ValidationErrorMessageParameterType.DocumentSenderProvidedChargeId),
-                new ValidationErrorMessageParameter(
-                    _chargeCommand.ChargeOperation.Type.ToString(),
-                    ValidationErrorMessageParameterType.ChargeType));
     }
 }

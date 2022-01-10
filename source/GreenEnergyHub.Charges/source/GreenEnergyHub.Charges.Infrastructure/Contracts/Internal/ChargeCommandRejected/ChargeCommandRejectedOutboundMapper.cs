@@ -39,16 +39,17 @@ namespace GreenEnergyHub.Charges.Infrastructure.Contracts.Internal.ChargeCommand
             };
 
             ConvertPoints(chargeCommandRejectedContract, rejectionEvent.Command.ChargeOperation.Points);
-            AddRejectedReasons(chargeCommandRejectedContract, rejectionEvent);
+            AddValidationRuleIdentifiers(chargeCommandRejectedContract, rejectionEvent);
 
             return chargeCommandRejectedContract;
         }
 
-        private static void AddRejectedReasons(ChargeCommandRejectedContract chargeCommandRejectedContract, ChargeCommandRejectedEvent rejectionEvent)
+        private static void AddValidationRuleIdentifiers(ChargeCommandRejectedContract chargeCommandRejectedContract, ChargeCommandRejectedEvent rejectionEvent)
         {
-            foreach (string reason in rejectionEvent.RejectReasons)
+            foreach (var failedValidationRuleIdentifier in rejectionEvent.FailedValidationRuleIdentifiers)
             {
-                chargeCommandRejectedContract.RejectReasons.Add(reason);
+                chargeCommandRejectedContract.FailedValidationRuleIdentifiers
+                    .Add((ValidationRuleIdentifierContract)failedValidationRuleIdentifier);
             }
         }
 

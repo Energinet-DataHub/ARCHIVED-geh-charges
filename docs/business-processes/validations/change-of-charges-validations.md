@@ -1,10 +1,9 @@
-# Change of charges validations
+# Charges validations
 
-The following validation rules are currently implemented in the charge domain when changing charges.
+The following validation rules are currently implemented in the charges domain.
 
 |**Rule number**|**Description**|**Rejection code**|**Charge Types**|
 |:-|:-|:-|:-|
-|VR.009|The energy business process of a metering point is mandatory|D02|All|
 |VR.150|The sender of a message is mandatory|D02|All|
 |VR.152*|The sender of a message must currently be an existing and active market party (company)|D02|All|
 |VR.153|The recipient of a message is mandatory|D02|All|

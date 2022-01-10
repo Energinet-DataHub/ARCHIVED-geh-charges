@@ -12,22 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.ComponentModel;
-
 namespace GreenEnergyHub.Charges.Infrastructure.Core.Cim.MarketActivityRecord
 {
     public static class ReasonCodeMapper
     {
-        private const string CimIncorrectChargeInformation = "D14"; // Temporary ebix value until the real cim codes are known
-
         public static string Map(ReasonCode reasonCode)
         {
-            return reasonCode switch
-            {
-                ReasonCode.IncorrectChargeInformation => CimIncorrectChargeInformation,
-                _ => throw new InvalidEnumArgumentException(
-                    $"Provided ReasonCode value '{reasonCode}' is invalid and cannot be mapped."),
-            };
+            return reasonCode.ToString();
         }
     }
 }
