@@ -13,6 +13,8 @@
 // limitations under the License.
 
 using System;
+using System.Linq;
+using System.Reflection;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors
@@ -21,63 +23,16 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors
     {
         public string GetCimValidationErrorText(ValidationRuleIdentifier validationRuleIdentifier)
         {
-            return validationRuleIdentifier switch
+            var fields = typeof(CimValidationErrorTextTemplateMessages).GetFields();
+            foreach (var field in fields)
             {
-                // Please keep sorted by ValidationRuleIdentifier
-                ValidationRuleIdentifier.BusinessReasonCodeMustBeUpdateChargeInformation =>
-                    CimValidationErrorTextTemplateMessages.BusinessReasonCodeMustBeUpdateChargeInformationErrorText,
-                ValidationRuleIdentifier.ChangingTariffTaxValueNotAllowed =>
-                    CimValidationErrorTextTemplateMessages.ChangingTariffTaxValueNotAllowedErrorText,
-                ValidationRuleIdentifier.ChangingTariffVatValueNotAllowed =>
-                    CimValidationErrorTextTemplateMessages.ChangingTariffVatValueNotAllowedErrorText,
-                ValidationRuleIdentifier.ChargeDescriptionHasMaximumLength =>
-                    CimValidationErrorTextTemplateMessages.ChargeDescriptionHasMaximumLengthErrorText,
-                ValidationRuleIdentifier.ChargeNameHasMaximumLength =>
-                    CimValidationErrorTextTemplateMessages.ChargeNameHasMaximumLengthErrorText,
-                ValidationRuleIdentifier.ChargeTypeTariffPriceCount =>
-                    CimValidationErrorTextTemplateMessages.ChargeTypeTariffPriceCountErrorText,
-                ValidationRuleIdentifier.ChargeIdLengthValidation =>
-                    CimValidationErrorTextTemplateMessages.ChargeIdLengthValidationErrorText,
-                ValidationRuleIdentifier.ChargeIdRequiredValidation =>
-                    CimValidationErrorTextTemplateMessages.ChargeIdRequiredValidationErrorText,
-                ValidationRuleIdentifier.ChargeOperationIdRequired =>
-                    CimValidationErrorTextTemplateMessages.ChargeOperationIdRequiredErrorText,
-                ValidationRuleIdentifier.ChargeOwnerIsRequiredValidation =>
-                    CimValidationErrorTextTemplateMessages.ChargeOwnerIsRequiredValidationErrorText,
-                ValidationRuleIdentifier.ChargePriceMaximumDigitsAndDecimals =>
-                    CimValidationErrorTextTemplateMessages.ChargePriceMaximumDigitsAndDecimalsErrorText,
-                ValidationRuleIdentifier.ChargeTypeIsKnownValidation =>
-                    CimValidationErrorTextTemplateMessages.ChargeTypeIsKnownValidationErrorText,
-                ValidationRuleIdentifier.CommandSenderMustBeAnExistingMarketParticipant =>
-                    CimValidationErrorTextTemplateMessages.CommandSenderMustBeAnExistingMarketParticipantErrorText,
-                ValidationRuleIdentifier.DocumentTypeMustBeRequestUpdateChargeInformation =>
-                    CimValidationErrorTextTemplateMessages.DocumentTypeMustBeRequestUpdateChargeInformationErrorText,
-                ValidationRuleIdentifier.FeeMustHaveSinglePrice =>
-                    CimValidationErrorTextTemplateMessages.FeeMustHaveSinglePriceErrorText,
-                ValidationRuleIdentifier.MaximumPrice =>
-                    CimValidationErrorTextTemplateMessages.MaximumPriceErrorText,
-                ValidationRuleIdentifier.RecipientIsMandatoryTypeValidation =>
-                    CimValidationErrorTextTemplateMessages.RecipientIsMandatoryTypeValidationErrorText,
-                ValidationRuleIdentifier.ResolutionFeeValidation =>
-                    CimValidationErrorTextTemplateMessages.ResolutionFeeValidationErrorText,
-                ValidationRuleIdentifier.ResolutionSubscriptionValidation =>
-                    CimValidationErrorTextTemplateMessages.ResolutionSubscriptionValidationErrorText,
-                ValidationRuleIdentifier.ResolutionTariffValidation =>
-                    CimValidationErrorTextTemplateMessages.ResolutionTariffValidationErrorText,
-                ValidationRuleIdentifier.SenderIsMandatoryTypeValidation =>
-                    CimValidationErrorTextTemplateMessages.SenderIsMandatoryTypeValidationErrorText,
-                ValidationRuleIdentifier.StartDateTimeRequiredValidation =>
-                    CimValidationErrorTextTemplateMessages.StartDateTimeRequiredValidationErrorText,
-                ValidationRuleIdentifier.StartDateValidation =>
-                    CimValidationErrorTextTemplateMessages.StartDateValidationErrorText,
-                ValidationRuleIdentifier.SubscriptionMustHaveSinglePrice =>
-                    CimValidationErrorTextTemplateMessages.SubscriptionMustHaveSinglePriceErrorText,
-                ValidationRuleIdentifier.UpdateNotYetSupported =>
-                    CimValidationErrorTextTemplateMessages.UpdateNotYetSupportedErrorText,
-                ValidationRuleIdentifier.VatClassificationValidation =>
-                    CimValidationErrorTextTemplateMessages.VatClassificationValidationErrorText,
-                _ => throw new NotImplementedException(),
-            };
+                var attribute = (ErrormessageForAttribute)field.GetCustomAttributes()
+                    .Single(x => x.GetType() == typeof(ErrormessageForAttribute));
+                var isFound = attribute.ValidationRuleIdentifier == validationRuleIdentifier;
+                if (isFound) return field.GetValue(null) !.ToString() !;
+            }
+
+            throw new ArgumentOutOfRangeException(validationRuleIdentifier.ToString());
         }
     }
 }
