@@ -67,18 +67,6 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
                     ruleIdentifier => _availableChargeReceiptValidationErrorFactory
                         .Create(ruleIdentifier, input.Command))
                 .ToList();
-
-            /*return input
-                .FailedValidationRuleIdentifiers
-                .Select(
-                    ruleIdentifier =>
-                    {
-                        var reasonCode = _cimValidationErrorCodeFactory.Create(ruleIdentifier);
-                        var reasonText = _cimValidationErrorTextFactory.Create(ruleIdentifier, input.Command);
-
-                        return new AvailableChargeReceiptValidationError(reasonCode, reasonText);
-                    })
-                .ToList();*/
         }
     }
 }
