@@ -65,7 +65,13 @@ limitations under the License.
 
     <ItemGroup>
       <None Remove="appsettings.json" />
+      <None Update="TestFiles\ChargeLinks\InvalidSchemaChargeLinkDocument.xml">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
       <None Update="TestFiles\Charges\InvalidTariffDocument.xml">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+      <None Update="TestFiles\Charges\InvalidSchemaTariffDocument.xml">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
       <None Update="TestFiles\Charges\TaxTariffWithPriceDocument.xml">
