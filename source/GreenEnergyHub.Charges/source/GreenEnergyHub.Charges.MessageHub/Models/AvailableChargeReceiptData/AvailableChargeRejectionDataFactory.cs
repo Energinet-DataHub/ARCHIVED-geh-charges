@@ -17,27 +17,28 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandRejectedEvents;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation;
 using GreenEnergyHub.Charges.Infrastructure.Core.Cim.MarketDocument;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessageMetaData;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableData;
 
 namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
 {
-    public class AvailableChargeRejectionDataFactory : IAvailableDataFactory<AvailableChargeReceiptData,
-            ChargeCommandRejectedEvent>
+    public class AvailableChargeRejectionDataFactory :
+        IAvailableDataFactory<AvailableChargeReceiptData, ChargeCommandRejectedEvent>
     {
         private readonly IMessageMetaDataContext _messageMetaDataContext;
-        private readonly ICimValidationErrorCodeFactory _cimValidationErrorCodeFactory;
-        private readonly ICimValidationErrorTextFactory _cimValidationErrorTextFactory;
+        private AvailableChargeReceiptValidationErrorFactory _availableChargeReceiptValidationErrorFactory;
 
         public AvailableChargeRejectionDataFactory(
             IMessageMetaDataContext messageMetaDataContext,
             ICimValidationErrorCodeFactory cimValidationErrorCodeFactory,
-            ICimValidationErrorTextFactory cimValidationErrorTextFactory)
+            ICimValidationErrorTextFactory cimValidationErrorTextFactory,
+            AvailableChargeReceiptValidationErrorFactory availableChargeReceiptValidationErrorFactory)
         {
             _messageMetaDataContext = messageMetaDataContext;
-            _cimValidationErrorCodeFactory = cimValidationErrorCodeFactory;
-            _cimValidationErrorTextFactory = cimValidationErrorTextFactory;
+            _availableChargeReceiptValidationErrorFactory = availableChargeReceiptValidationErrorFactory;
         }
 
         public Task<IReadOnlyList<AvailableChargeReceiptData>> CreateAsync(ChargeCommandRejectedEvent input)
@@ -63,6 +64,13 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
             return input
                 .FailedValidationRuleIdentifiers
                 .Select(
+                    ruleIdentifier => _availableChargeReceiptValidationErrorFactory
+                        .Create(ruleIdentifier, input.Command))
+                .ToList();
+
+            /*return input
+                .FailedValidationRuleIdentifiers
+                .Select(
                     ruleIdentifier =>
                     {
                         var reasonCode = _cimValidationErrorCodeFactory.Create(ruleIdentifier);
@@ -70,7 +78,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
 
                         return new AvailableChargeReceiptValidationError(reasonCode, reasonText);
                     })
-                .ToList();
+                .ToList();*/
         }
     }
 }
