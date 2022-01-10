@@ -21,10 +21,12 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputVali
     {
         private readonly ChargeCommand _chargeCommand;
 
-        public ResolutionFeeValidationRule([NotNull] ChargeCommand chargeCommand)
+        public ResolutionFeeValidationRule(ChargeCommand chargeCommand)
         {
             _chargeCommand = chargeCommand;
         }
+
+        public ValidationRuleIdentifier ValidationRuleIdentifier => ValidationRuleIdentifier.ResolutionFeeValidation;
 
         public bool IsValid
         {
@@ -38,18 +40,5 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputVali
                 return true;
             }
         }
-
-        public ValidationError ValidationError =>
-            new(
-                ValidationRuleIdentifier.ResolutionFeeValidation,
-                new ValidationErrorMessageParameter(
-                    _chargeCommand.ChargeOperation.Resolution.ToString(),
-                    ValidationErrorMessageParameterType.ChargeResolution),
-                new ValidationErrorMessageParameter(
-                    _chargeCommand.ChargeOperation.ChargeId,
-                    ValidationErrorMessageParameterType.DocumentSenderProvidedChargeId),
-                new ValidationErrorMessageParameter(
-                    _chargeCommand.ChargeOperation.Type.ToString(),
-                    ValidationErrorMessageParameterType.ChargeType));
     }
 }

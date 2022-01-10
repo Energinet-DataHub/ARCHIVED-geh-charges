@@ -22,6 +22,7 @@ using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandRejectedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeCommandRejected;
@@ -41,7 +42,13 @@ namespace GreenEnergyHub.Charges.Infrastructure.Contracts.Internal.ChargeCommand
                     ChargeOperation = ConvertChargeOperation(rejectedContract.Command.ChargeOperation),
                     Transaction = Transaction.NewTransaction(),
                 },
-                rejectedContract.RejectReasons);
+                ConvertValidationRuleIdentifiers(rejectedContract.FailedValidationRuleIdentifiers));
+        }
+
+        private IEnumerable<ValidationRuleIdentifier> ConvertValidationRuleIdentifiers(
+            RepeatedField<ValidationRuleIdentifierContract> failedValidationRuleIdentifierContracts)
+        {
+            return failedValidationRuleIdentifierContracts.Select(x => (ValidationRuleIdentifier)x);
         }
 
         private static DocumentDto ConvertDocument(DocumentContract document)

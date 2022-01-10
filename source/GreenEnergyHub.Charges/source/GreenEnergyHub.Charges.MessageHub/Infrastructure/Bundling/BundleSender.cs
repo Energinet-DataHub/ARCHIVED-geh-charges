@@ -16,7 +16,7 @@ using System;
 using System.IO;
 using System.Threading.Tasks;
 using Energinet.DataHub.MessageHub.Model.Model;
-using GreenEnergyHub.Charges.MessageHub.Application.MessageHub;
+using GreenEnergyHub.Charges.MessageHub.MessageHub;
 using Microsoft.Extensions.Logging;
 
 namespace GreenEnergyHub.Charges.MessageHub.Infrastructure.Bundling

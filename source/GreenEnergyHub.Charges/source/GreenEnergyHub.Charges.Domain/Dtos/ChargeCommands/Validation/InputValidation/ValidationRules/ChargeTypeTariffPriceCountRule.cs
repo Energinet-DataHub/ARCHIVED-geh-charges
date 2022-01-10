@@ -29,6 +29,8 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputVali
             _chargeCommand = chargeCommand;
         }
 
+        public ValidationRuleIdentifier ValidationRuleIdentifier => ValidationRuleIdentifier.ChargeTypeTariffPriceCount;
+
         public bool IsValid => Validate();
 
         private bool Validate()
@@ -50,18 +52,5 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputVali
 
             return true;
         }
-
-        public ValidationError ValidationError =>
-            new(
-                ValidationRuleIdentifier.ChargeTypeTariffPriceCount,
-                new ValidationErrorMessageParameter(
-                    _chargeCommand.ChargeOperation.Points.Count.ToString(),
-                    ValidationErrorMessageParameterType.ChargePointsCount),
-                new ValidationErrorMessageParameter(
-                    _chargeCommand.ChargeOperation.ChargeId,
-                    ValidationErrorMessageParameterType.DocumentSenderProvidedChargeId),
-                new ValidationErrorMessageParameter(
-                    _chargeCommand.ChargeOperation.Resolution.ToString(),
-                    ValidationErrorMessageParameterType.ChargeResolution));
     }
 }
