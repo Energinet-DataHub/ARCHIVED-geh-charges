@@ -13,17 +13,19 @@
 // limitations under the License.
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
-namespace GreenEnergyHub.Charges.Infrastructure.Core.Cim
+namespace GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors
 {
     [AttributeUsage(AttributeTargets.Field)]
-    public sealed class ErrorTextAttribute : Attribute
+    public class TokensAttribute : Attribute
     {
-        public string ErrorText { get; }
+        public List<CimValidationErrorTextToken> CimValidationErrorTextTokens { get; }
 
-        public ErrorTextAttribute(string errorText)
+        public TokensAttribute(params CimValidationErrorTextToken[] cimValidationErrorTextTokens)
         {
-            ErrorText = errorText;
+            CimValidationErrorTextTokens = cimValidationErrorTextTokens.ToList();
         }
     }
 }
