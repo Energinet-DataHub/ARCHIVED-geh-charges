@@ -12,12 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using GreenEnergyHub.Charges.Domain.Dtos.Validation;
+using GreenEnergyHub.Charges.Domain.Dtos.Messages.Command;
 
-namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputValidation.Factories
+namespace GreenEnergyHub.Charges.Domain.Dtos.Validation
 {
-    public interface IInputValidationRulesFactory
+    public interface IInputValidationRulesFactory<TCommand>
+        where TCommand : CommandBase
     {
-        IValidationRuleSet CreateRulesForChargeCommand(ChargeCommand chargeCommand);
+    IValidationRuleSet CreateRulesForChargeCommand(TCommand command);
     }
 }

@@ -13,28 +13,28 @@
 // limitations under the License.
 
 using AutoFixture.Xunit2;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputValidation.Factories;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands.Validation.InputValidation.Factories;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using Xunit;
 using Xunit.Categories;
 
-namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.InputValidation
+namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeLinksCommands.Validation.InputValidation.Factories
 {
     [UnitTest]
-    public class ChargeCommandInputValidatorTests
+    public class ChargeLinksCommandInputValidatorTests
     {
         [Theory]
         [InlineAutoData]
         public void Validate_WhenValidatingChargeCommand_ReturnsChargeCommandValidationResult(
-            ChargeCommandInputValidationRulesFactory chargeCommandInputValidationRulesFactory,
-            ChargeCommand chargeCommand)
+            ChargeLinksCommandInputValidationRulesFactory chargeLinksCommandInputValidationRulesFactory,
+            ChargeLinksCommand chargeLinksCommand)
         {
             // Arrange
-            var sut = new InputValidator<ChargeCommand>(chargeCommandInputValidationRulesFactory);
+            var sut = new InputValidator<ChargeLinksCommand>(chargeLinksCommandInputValidationRulesFactory);
 
             // Act
-            var result = sut.Validate(chargeCommand);
+            var result = sut.Validate(chargeLinksCommand);
 
             // Assert
             Assert.IsType<ValidationResult>(result);

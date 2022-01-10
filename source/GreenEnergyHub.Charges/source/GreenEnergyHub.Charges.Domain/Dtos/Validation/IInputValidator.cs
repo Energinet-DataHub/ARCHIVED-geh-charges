@@ -12,13 +12,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Domain.Dtos.Validation;
+using GreenEnergyHub.Charges.Domain.Dtos.Messages.Command;
 
-namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation
+namespace GreenEnergyHub.Charges.Domain.Dtos.Validation
 {
-    public interface IChargeCommandValidator
+    /// <summary>
+    /// Contract defining the input validator for change of charges messages.
+    /// </summary>
+    public interface IInputValidator<TCommand>
+        where TCommand : CommandBase
     {
-        Task<ValidationResult> ValidateAsync(ChargeCommand command);
+        /// <summary>
+        /// Input validation />.
+        /// </summary>
+        /// <param name="command">The message to validate.</param>
+        /// <returns>The validation result.</returns>
+        ValidationResult Validate(TCommand command);
     }
 }

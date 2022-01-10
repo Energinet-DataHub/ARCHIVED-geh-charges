@@ -15,8 +15,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputValidation;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputValidation.Factories;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputValidation.ValidationRules;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
@@ -27,13 +25,13 @@ using Xunit.Categories;
 namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.InputValidation
 {
     [UnitTest]
-    public class InputValidationRulesFactoryTests
+    public class ChargeCommandInputValidationRulesFactoryTests
     {
         [Fact]
         public void CreateRulesForChargeCommand_ShouldContainRulesTest()
         {
             // Arrange
-            var sut = new InputValidationRulesFactory();
+            var sut = new ChargeCommandInputValidationRulesFactory();
             var chargeCommand = new ChargeCommandBuilder().Build();
             var expectedRules = new List<IValidationRule>
             {
@@ -75,7 +73,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
         public void CreateRulesForChargeCommand_ShouldThrowArgumentNullException_WhenCalledWithNull()
         {
             // Arrange
-            var sut = new InputValidationRulesFactory();
+            var sut = new ChargeCommandInputValidationRulesFactory();
 
             // Act & Assert
             Assert.Throws<ArgumentNullException>(() => sut.CreateRulesForChargeCommand(null!));

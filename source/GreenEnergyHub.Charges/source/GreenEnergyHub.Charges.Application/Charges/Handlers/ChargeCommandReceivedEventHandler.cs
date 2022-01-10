@@ -17,25 +17,27 @@ using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application.Charges.Acknowledgement;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandReceivedEvents;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation;
+using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 
 namespace GreenEnergyHub.Charges.Application.Charges.Handlers
 {
     public class ChargeCommandReceivedEventHandler : IChargeCommandReceivedEventHandler
     {
         private readonly IChargeCommandReceiptService _chargeCommandReceiptService;
-        private readonly IChargeCommandValidator _chargeCommandValidator;
+        private readonly IValidator<ChargeCommand> _validator;
         private readonly IChargeRepository _chargeRepository;
         private readonly IChargeFactory _chargeFactory;
 
         public ChargeCommandReceivedEventHandler(
             IChargeCommandReceiptService chargeCommandReceiptService,
-            IChargeCommandValidator chargeCommandValidator,
+            IValidator<ChargeCommand> validator,
             IChargeRepository chargeRepository,
             IChargeFactory chargeFactory)
         {
             _chargeCommandReceiptService = chargeCommandReceiptService;
-            _chargeCommandValidator = chargeCommandValidator;
+            _validator = validator;
             _chargeRepository = chargeRepository;
             _chargeFactory = chargeFactory;
         }
@@ -44,7 +46,7 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
         {
             if (commandReceivedEvent == null) throw new ArgumentNullException(nameof(commandReceivedEvent));
 
-            var validationResult = await _chargeCommandValidator.ValidateAsync(commandReceivedEvent.Command).ConfigureAwait(false);
+            var validationResult = await _validator.ValidateAsync(commandReceivedEvent.Command).ConfigureAwait(false);
             if (validationResult.IsFailed)
             {
                 await _chargeCommandReceiptService.RejectAsync(commandReceivedEvent.Command, validationResult).ConfigureAwait(false);

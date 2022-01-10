@@ -12,24 +12,23 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Diagnostics.CodeAnalysis;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputValidation.Factories;
-using GreenEnergyHub.Charges.Domain.Dtos.Validation;
+using GreenEnergyHub.Charges.Domain.Dtos.Messages.Command;
 
-namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputValidation
+namespace GreenEnergyHub.Charges.Domain.Dtos.Validation
 {
-    public class ChargeCommandInputValidator : IChargeCommandInputValidator
+    public class InputValidator<TCommand> : IInputValidator<TCommand>
+        where TCommand : CommandBase
     {
-        private readonly IInputValidationRulesFactory _inputValidationRulesFactory;
+        private readonly IInputValidationRulesFactory<TCommand> _inputValidationRulesFactory;
 
-        public ChargeCommandInputValidator(IInputValidationRulesFactory inputValidationRulesFactory)
+        public InputValidator(IInputValidationRulesFactory<TCommand> inputValidationRulesFactory)
         {
             _inputValidationRulesFactory = inputValidationRulesFactory;
         }
 
-        public ValidationResult Validate([NotNull] ChargeCommand chargeCommand)
+        public ValidationResult Validate(TCommand command)
         {
-            IValidationRuleSet ruleSet = _inputValidationRulesFactory.CreateRulesForChargeCommand(chargeCommand);
+            IValidationRuleSet ruleSet = _inputValidationRulesFactory.CreateRulesForChargeCommand(command);
             return ruleSet.Validate();
         }
     }

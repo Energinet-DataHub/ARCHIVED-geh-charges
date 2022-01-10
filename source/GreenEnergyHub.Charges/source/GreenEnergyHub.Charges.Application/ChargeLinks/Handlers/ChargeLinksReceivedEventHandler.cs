@@ -26,23 +26,23 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
         private readonly IChargeLinksReceiptService _chargeLinksReceiptService;
         private readonly IChargeLinkFactory _chargeLinkFactory;
         private readonly IChargeLinkRepository _chargeLinkRepository;
-        private readonly IBusinessValidator<ChargeLinksCommand> _businessValidator;
+        private readonly IValidator<ChargeLinksCommand> _validator;
 
         public ChargeLinksReceivedEventHandler(
             IChargeLinksReceiptService chargeLinksReceiptService,
             IChargeLinkFactory chargeLinkFactory,
             IChargeLinkRepository chargeLinkRepository,
-            IBusinessValidator<ChargeLinksCommand> businessValidator)
+            IValidator<ChargeLinksCommand> validator)
         {
             _chargeLinksReceiptService = chargeLinksReceiptService;
             _chargeLinkFactory = chargeLinkFactory;
             _chargeLinkRepository = chargeLinkRepository;
-            _businessValidator = businessValidator;
+            _validator = validator;
         }
 
         public async Task HandleAsync(ChargeLinksReceivedEvent chargeLinksReceivedEvent)
         {
-            var validationResult = await _businessValidator.ValidateAsync(chargeLinksReceivedEvent.ChargeLinksCommand).ConfigureAwait(false);
+            var validationResult = await _validator.ValidateAsync(chargeLinksReceivedEvent.ChargeLinksCommand).ConfigureAwait(false);
             if (validationResult.IsFailed)
             {
                 await _chargeLinksReceiptService.RejectAsync(chargeLinksReceivedEvent.ChargeLinksCommand, validationResult);

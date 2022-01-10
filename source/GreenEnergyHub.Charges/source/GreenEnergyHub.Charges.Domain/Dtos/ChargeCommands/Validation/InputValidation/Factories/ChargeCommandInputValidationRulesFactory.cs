@@ -19,7 +19,7 @@ using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 
 namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputValidation.Factories
 {
-    public class InputValidationRulesFactory : IInputValidationRulesFactory
+    public class ChargeCommandInputValidationRulesFactory : IInputValidationRulesFactory<ChargeCommand>
     {
         public IValidationRuleSet CreateRulesForChargeCommand(ChargeCommand chargeCommand)
         {

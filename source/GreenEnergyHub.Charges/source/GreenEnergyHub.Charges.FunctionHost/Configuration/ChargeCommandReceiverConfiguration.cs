@@ -64,11 +64,11 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
         private static void ConfigureValidation(IServiceCollection serviceCollection)
         {
             serviceCollection.AddScoped<IBusinessValidationRulesFactory<ChargeCommand>, ChargeCommandBusinessValidationRulesFactory>();
-            serviceCollection.AddScoped<IInputValidationRulesFactory, InputValidationRulesFactory>();
+            serviceCollection.AddScoped<IInputValidationRulesFactory<ChargeCommand>, ChargeCommandInputValidationRulesFactory>();
             serviceCollection.AddScoped<IRulesConfigurationRepository, RulesConfigurationRepository>();
-            serviceCollection.AddScoped<IChargeCommandInputValidator, ChargeCommandInputValidator>();
+            serviceCollection.AddScoped<IInputValidator<ChargeCommand>, InputValidator<ChargeCommand>>();
             serviceCollection.AddScoped<IBusinessValidator<ChargeCommand>, BusinessValidator<ChargeCommand>>();
-            serviceCollection.AddScoped<IChargeCommandValidator, ChargeCommandValidator>();
+            serviceCollection.AddScoped<IValidator<ChargeCommand>, Validator<ChargeCommand>>();
         }
 
         private static void ConfigureIso8601Timezones(IServiceCollection serviceCollection)

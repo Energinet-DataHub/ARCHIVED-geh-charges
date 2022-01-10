@@ -41,7 +41,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Handlers
             [Frozen] Mock<IChargeLinksReceiptService> chargeLinksReceiptService,
             [Frozen] Mock<IChargeLinkFactory> chargeLinkFactory,
             [Frozen] Mock<IChargeLinksAcceptedEventFactory> chargeLinkCommandAcceptedEventFactory,
-            [Frozen] Mock<IBusinessValidator<ChargeLinksCommand>> businessValidator,
+            [Frozen] Mock<IValidator<ChargeLinksCommand>> validator,
             ChargeLinksReceivedEvent chargeLinksReceivedEvent,
             ChargeLinksAcceptedEvent chargeLinksAcceptedEvent,
             ChargeLinksReceivedEventHandler sut)
@@ -51,7 +51,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Handlers
             fixture.Customizations.Add(new StringGenerator(() => Guid.NewGuid().ToString()[..16]));
             var chargeLink = fixture.Create<ChargeLink>();
 
-            businessValidator.Setup(x => x.ValidateAsync(It.IsAny<ChargeLinksCommand>()))
+            validator.Setup(x => x.ValidateAsync(It.IsAny<ChargeLinksCommand>()))
                 .ReturnsAsync(ValidationResult.CreateSuccess());
 
             chargeLinkFactory

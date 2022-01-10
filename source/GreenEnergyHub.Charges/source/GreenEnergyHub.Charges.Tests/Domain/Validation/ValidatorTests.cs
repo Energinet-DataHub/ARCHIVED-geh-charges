@@ -17,23 +17,22 @@ using System.Threading.Tasks;
 using AutoFixture.Xunit2;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputValidation;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using GreenEnergyHub.TestHelpers;
 using Moq;
 using Xunit;
 using Xunit.Categories;
 
-namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation
+namespace GreenEnergyHub.Charges.Tests.Domain.Validation
 {
     [UnitTest]
-    public class ChargeCommandValidatorTests
+    public class ValidatorTests
     {
         [Theory]
         [InlineAutoDomainData]
         public async Task ValidateAsync_WhenInputValidationFails_ReturnsInvalid(
-            [Frozen] Mock<IChargeCommandInputValidator> inputValidator,
-            ChargeCommandValidator sut,
+            [Frozen] Mock<IInputValidator<ChargeCommand>> inputValidator,
+            Validator<ChargeCommand> sut,
             ChargeCommand anyCommand)
         {
             ConfigureValidatorToReturnInvalidResult(inputValidator, anyCommand);
@@ -44,9 +43,9 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation
         [Theory]
         [InlineAutoDomainData]
         public async Task ValidateAsync_WhenInputValidationSucceedsAndBusinessValidationFails_ReturnsInvalid(
-            [Frozen] Mock<IChargeCommandInputValidator> inputValidator,
+            [Frozen] Mock<IInputValidator<ChargeCommand>> inputValidator,
             [Frozen] Mock<IBusinessValidator<ChargeCommand>> businessValidator,
-            ChargeCommandValidator sut,
+            Validator<ChargeCommand> sut,
             ChargeCommand anyCommand)
         {
             // Arrange
@@ -63,9 +62,9 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation
         [Theory]
         [InlineAutoDomainData]
         public async Task ValidateAsync_WhenInputValidationSucceedsAndBusinessValidationSucceeds_ReturnsValid(
-            [Frozen] Mock<IChargeCommandInputValidator> inputValidator,
+            [Frozen] Mock<IInputValidator<ChargeCommand>> inputValidator,
             [Frozen] Mock<IBusinessValidator<ChargeCommand>> businessValidator,
-            ChargeCommandValidator sut,
+            Validator<ChargeCommand> sut,
             ChargeCommand anyCommand)
         {
             // Arrange
@@ -79,13 +78,13 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation
             Assert.False(actual.IsFailed);
         }
 
-        private static void ConfigureValidatorToReturnValidResult(Mock<IChargeCommandInputValidator> inputValidator, ChargeCommand anyCommand)
+        private static void ConfigureValidatorToReturnValidResult(Mock<IInputValidator<ChargeCommand>> inputValidator, ChargeCommand anyCommand)
         {
             var validResult = ValidationResult.CreateSuccess();
             inputValidator.Setup(v => v.Validate(anyCommand)).Returns(validResult);
         }
 
-        private static void ConfigureValidatorToReturnInvalidResult(Mock<IChargeCommandInputValidator> inputValidator, ChargeCommand anyCommand)
+        private static void ConfigureValidatorToReturnInvalidResult(Mock<IInputValidator<ChargeCommand>> inputValidator, ChargeCommand anyCommand)
         {
             var invalidResult = CreateInvalidValidationResult();
             inputValidator.Setup(v => v.Validate(anyCommand)).Returns(invalidResult);
