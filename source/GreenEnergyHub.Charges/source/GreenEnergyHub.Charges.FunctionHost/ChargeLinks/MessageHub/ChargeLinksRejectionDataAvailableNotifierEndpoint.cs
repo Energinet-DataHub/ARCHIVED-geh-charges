@@ -18,7 +18,7 @@ using GreenEnergyHub.Charges.FunctionHost.Common;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions;
 using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinksCommandRejected;
 using GreenEnergyHub.Charges.MessageHub.MessageHub;
-using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData;
+using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksReceiptData;
 using Microsoft.Azure.Functions.Worker;
 
 namespace GreenEnergyHub.Charges.FunctionHost.ChargeLinks.MessageHub
@@ -26,11 +26,11 @@ namespace GreenEnergyHub.Charges.FunctionHost.ChargeLinks.MessageHub
     public class ChargeLinksRejectionDataAvailableNotifierEndpoint
     {
         private const string FunctionName = nameof(ChargeLinksRejectionDataAvailableNotifierEndpoint);
-        private readonly IAvailableDataNotifier<AvailableChargeReceiptData, ChargeLinksRejectedEvent> _availableDataNotifier;
+        private readonly IAvailableDataNotifier<AvailableChargeLinksReceiptData, ChargeLinksRejectedEvent> _availableDataNotifier;
         private readonly MessageExtractor<ChargeLinksCommandRejected> _messageExtractor;
 
         public ChargeLinksRejectionDataAvailableNotifierEndpoint(
-            IAvailableDataNotifier<AvailableChargeReceiptData, ChargeLinksRejectedEvent> availableDataNotifier,
+            IAvailableDataNotifier<AvailableChargeLinksReceiptData, ChargeLinksRejectedEvent> availableDataNotifier,
             MessageExtractor<ChargeLinksCommandRejected> messageExtractor)
         {
             _availableDataNotifier = availableDataNotifier;
