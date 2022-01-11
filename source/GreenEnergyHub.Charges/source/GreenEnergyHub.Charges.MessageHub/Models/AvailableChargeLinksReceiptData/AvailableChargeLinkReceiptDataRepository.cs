@@ -20,7 +20,7 @@ using GreenEnergyHub.Charges.MessageHub.Infrastructure.Persistence;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableData;
 using Microsoft.EntityFrameworkCore;
 
-namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinkReceiptData
+namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksReceiptData
 {
     public class AvailableChargeLinkReceiptDataRepository : IAvailableDataRepository<AvailableChargeLinksReceiptData>
     {

@@ -55,6 +55,7 @@ limitations under the License.
       <EmbeddedResource Include="Scripts\Model\202112211240 Remove redundant Charge FK in ChargePoint.sql" />
       <EmbeddedResource Include="Scripts\Model\202112100940 Move data from ChargeLink.PeriodDetails to ChargeLink.sql" />
       <EmbeddedResource Include="Scripts\Model\202112231000 Rename to AvailableChargeReceiptValidationError.sql" />
+      <EmbeddedResource Include="Scripts\Model\202201111000 Rename to AvailableChargeLinksReceiptValidationError.sql" />
       <EmbeddedResource Include="Scripts\Test\202105201033 New MarketParticipants.sql" />
       <EmbeddedResource Include="Scripts\Model\202105191329 New charge model.sql" />
       <EmbeddedResource Include="Scripts\Model\202107011226 New Metering Point.sql" />

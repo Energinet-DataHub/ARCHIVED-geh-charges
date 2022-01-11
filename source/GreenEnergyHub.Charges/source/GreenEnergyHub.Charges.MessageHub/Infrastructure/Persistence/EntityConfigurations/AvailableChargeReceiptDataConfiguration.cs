@@ -46,7 +46,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Infrastructure.Persistence.EntityCon
                 AvailableReceiptValidationError> validationErrors)
         {
             validationErrors.WithOwner().HasForeignKey($"{_aggregateTableName}Id");
-            validationErrors.ToTable(nameof(AvailableReceiptValidationError), DatabaseSchemaNames.MessageHub);
+            validationErrors.ToTable("AvailableChargeReceiptValidationError", DatabaseSchemaNames.MessageHub);
             validationErrors.HasKey(r => r.Id);
 
             validationErrors.Property(r => r.Id).ValueGeneratedNever();

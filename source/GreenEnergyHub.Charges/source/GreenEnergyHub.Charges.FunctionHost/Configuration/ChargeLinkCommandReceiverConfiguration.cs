@@ -26,7 +26,7 @@ using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Registratio
 using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandReceived;
 using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinksCommandAccepted;
 using GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories;
-using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinkReceiptData;
+using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksReceiptData;
 using Microsoft.Extensions.DependencyInjection;
 using ChargeLinksCommand = GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands.ChargeLinksCommand;
 

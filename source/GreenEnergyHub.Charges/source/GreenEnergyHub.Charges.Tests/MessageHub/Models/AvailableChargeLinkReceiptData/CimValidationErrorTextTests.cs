@@ -14,15 +14,15 @@
 
 using System;
 using FluentAssertions;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors;
-using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData;
+using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksReceiptData;
 using GreenEnergyHub.Charges.TestCore.Attributes;
 using Xunit;
 using Xunit.Categories;
 
-namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptData
+namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeLinkReceiptData
 {
     [UnitTest]
     public class CimValidationErrorTextFactoryTests
@@ -30,19 +30,17 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptD
         [Theory]
         [InlineAutoMoqData]
         public void Create_WhenThreeMergeFields_ReturnsExpectedDescription(
-            ChargeCommand chargeCommand,
+            ChargeLinksCommand chargeLinksCommand,
             CimValidationErrorTextProvider cimValidationErrorTextProvider)
         {
             // Arrange
-            var sut = new ChargeCimValidationErrorTextFactory(cimValidationErrorTextProvider);
-
-            var expected = CimValidationErrorTextTemplateMessages.ResolutionTariffValidationErrorText
-                .Replace("{{ChargeResolution}}", chargeCommand.ChargeOperation.Resolution.ToString())
-                .Replace("{{DocumentSenderProvidedChargeId}}", chargeCommand.ChargeOperation.ChargeId)
-                .Replace("{{ChargeType}}", chargeCommand.ChargeOperation.Type.ToString());
+            var sut = new ChargeLinksCimValidationErrorTextFactory(cimValidationErrorTextProvider);
+            var expected = CimValidationErrorTextTemplateMessages.MeteringPointDoesNotExistValidationErrorText
+                .Replace("{{MeteringPointId}}", chargeLinksCommand.MeteringPointId)
+                .Replace("{{MeteringPointEffectiveDate}}", "TODO");
 
             // Act
-            var actual = sut.Create(ValidationRuleIdentifier.ResolutionTariffValidation, chargeCommand);
+            var actual = sut.Create(ValidationRuleIdentifier.MeteringPointDoesNotExistValidation, chargeLinksCommand);
 
             // Assert
             actual.Should().Be(expected);
@@ -51,18 +49,18 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptD
         [Theory]
         [InlineAutoMoqData]
         public void Create_MergesAllMergeFields(
-            ChargeCommand chargeCommand,
+            ChargeLinksCommand chargeLinksCommand,
             CimValidationErrorTextProvider cimValidationErrorTextProvider)
         {
             // Arrange
             var validationRuleIdentifiers = (ValidationRuleIdentifier[])Enum.GetValues(typeof(ValidationRuleIdentifier));
-            var sut = new ChargeCimValidationErrorTextFactory(cimValidationErrorTextProvider);
+            var sut = new ChargeLinksCimValidationErrorTextFactory(cimValidationErrorTextProvider);
 
             // Act
             // Assert
             foreach (var validationRuleIdentifier in validationRuleIdentifiers)
             {
-                var actual = sut.Create(validationRuleIdentifier, chargeCommand);
+                var actual = sut.Create(validationRuleIdentifier, chargeLinksCommand);
                 actual.Should().NotBeNullOrWhiteSpace();
                 actual.Should().NotContain("{");
             }

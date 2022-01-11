@@ -19,14 +19,15 @@ using System.Text.RegularExpressions;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors;
+using GreenEnergyHub.Charges.MessageHub.Models.AvailableData;
 
 namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
 {
-    public class CimValidationErrorTextFactory : ICimValidationErrorTextFactory<ChargeCommand>
+    public class ChargeCimValidationErrorTextFactory : ICimValidationErrorTextFactory<ChargeCommand>
     {
         private readonly ICimValidationErrorTextProvider _cimValidationErrorTextProvider;
 
-        public CimValidationErrorTextFactory(ICimValidationErrorTextProvider cimValidationErrorTextProvider)
+        public ChargeCimValidationErrorTextFactory(ICimValidationErrorTextProvider cimValidationErrorTextProvider)
         {
             _cimValidationErrorTextProvider = cimValidationErrorTextProvider;
         }

@@ -19,7 +19,7 @@ using GreenEnergyHub.Charges.Infrastructure.Core.Cim.MarketDocument;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableData;
 using NodaTime;
 
-namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinkReceiptData
+namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksReceiptData
 {
     /// <summary>
     /// All data necessary for one activity records in a charge link receipt

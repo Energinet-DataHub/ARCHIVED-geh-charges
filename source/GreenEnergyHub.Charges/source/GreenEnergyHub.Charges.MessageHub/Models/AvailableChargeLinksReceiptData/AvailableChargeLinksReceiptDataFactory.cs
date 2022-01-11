@@ -22,7 +22,7 @@ using GreenEnergyHub.Charges.Infrastructure.Core.Cim.MarketDocument;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessageMetaData;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableData;
 
-namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinkReceiptData
+namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksReceiptData
 {
     public class AvailableChargeLinksReceiptDataFactory
         : IAvailableDataFactory<AvailableChargeLinksReceiptData, ChargeLinksAcceptedEvent>

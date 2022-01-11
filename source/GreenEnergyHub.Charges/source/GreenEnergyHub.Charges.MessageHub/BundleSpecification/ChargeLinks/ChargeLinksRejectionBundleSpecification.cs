@@ -15,7 +15,7 @@
 using System;
 using System.Linq;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksRejectionEvents;
-using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinkReceiptData;
+using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksReceiptData;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableData;
 
 namespace GreenEnergyHub.Charges.MessageHub.BundleSpecification.ChargeLinks

@@ -23,6 +23,7 @@ using GreenEnergyHub.Charges.Infrastructure.Core.Cim;
 using GreenEnergyHub.Charges.Infrastructure.Core.Cim.MarketDocument;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessageMetaData;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData;
+using GreenEnergyHub.Charges.MessageHub.Models.AvailableData;
 using GreenEnergyHub.Charges.TestCore.Attributes;
 using Moq;
 using NodaTime;
@@ -38,8 +39,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptD
         [InlineAutoMoqData]
         public async Task CreateAsync_WhenCalledWithRejectedEvent_ReturnsAvailableData(
             [Frozen] Mock<IMessageMetaDataContext> messageMetaDataContext,
-            [Frozen] Mock<ICimValidationErrorCodeFactory> validationErrorCodeFactory,
-            [Frozen] Mock<ICimValidationErrorTextFactory<ChargeCommand>> validationErrorTextFactory,
+            [Frozen] Mock<IAvailableChargeReceiptValidationErrorFactory> availableChargeReceiptValidationErrorFactory,
             ChargeCommandRejectedEvent rejectedEvent,
             Instant now,
             AvailableChargeRejectionDataFactory sut)
@@ -48,12 +48,10 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptD
             messageMetaDataContext.Setup(m => m.RequestDataTime).Returns(now);
 
             // fake error code and text
-            validationErrorCodeFactory.Setup(f => f
-                .Create(It.IsAny<ValidationRuleIdentifier>()))
-                .Returns<ReasonCode>(code => code);
-            validationErrorTextFactory.Setup(f => f
+            availableChargeReceiptValidationErrorFactory.Setup(f => f
                 .Create(It.IsAny<ValidationRuleIdentifier>(), rejectedEvent.Command))
-                .Returns<ValidationRuleIdentifier, ChargeCommand>((identifier, _) => identifier.ToString());
+                .Returns<ValidationRuleIdentifier, ChargeCommand>((identifier, _)
+                    => new AvailableReceiptValidationError(ReasonCode.D01, identifier.ToString()));
             var expectedValidationErrors =
                 rejectedEvent.FailedValidationRuleIdentifiers.Select(x => x.ToString()).ToList();
 
