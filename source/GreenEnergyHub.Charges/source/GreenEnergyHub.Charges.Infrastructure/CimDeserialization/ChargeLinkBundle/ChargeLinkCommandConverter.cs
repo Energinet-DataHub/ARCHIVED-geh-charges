@@ -56,9 +56,6 @@ namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.ChargeLinkBun
                         CimChargeLinkCommandConstants.MktActivityRecord);
             }
 
-            if (!chargeLinks.Any())
-                throw new NoChargeLinksCommandsFoundException();
-
             return chargeLinks;
         }
 
