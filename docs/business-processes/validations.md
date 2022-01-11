@@ -32,8 +32,8 @@ The following validation rules are currently implemented in the charge domain.
 |VR.679|Charge do not exist|E0I|N/A|X|
 |VR.902*|Update and stops are not implemented yet|D13|All|X|
 |VR.903|The Tax indicator for a charge cannot be updated|D14|Tariff|N/A|
+
 * VR.152 is not fully implemented. Right now we only validate that it is filled with something
 * VR.679 is not fully implemented. For now it verifies that the charge exist, not checking that the linked period is within the charge's validity period
 * VR.902 is temporary and will be changed once update and stop functionality has been implemented.
-
 * N/A Means the validation rule is not applicable to that subdomain
