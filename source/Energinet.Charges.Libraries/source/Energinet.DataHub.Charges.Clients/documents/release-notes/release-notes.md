@@ -2,7 +2,7 @@
 
 ## Version 1.0.22
 
-`ChargeLinkClient` uses `JsonStringEnumConverter` to handle enums passed as strings
+`ChargeLinkClient` uses `JsonStringEnumConverter` to handle `enum` passed as string
 
 ## Version 1.0.21
 
