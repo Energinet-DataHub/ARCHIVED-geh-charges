@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Linq;
 using AutoFixture.Xunit2;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Core;
@@ -71,49 +70,17 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
 
         [Theory]
         [InlineAutoDomainData]
-        public void ValidationRuleIdentifier_ShouldBe_EqualTo(ChargeCommand command, IClock clock)
+        public void ValidationRuleIdentifier_ShouldBe_EqualTo(ChargeCommandBuilder builder, IClock clock)
         {
             // Arrange
+            var invalidCommand = CreateInvalidCommand(builder);
             var configuration = CreateRuleConfiguration(1, 3);
             var zonedDateTimeService = CreateLocalDateTimeService("Europe/Copenhagen");
 
-            var sut = new StartDateValidationRule(command, configuration, zonedDateTimeService, clock);
+            var sut = new StartDateValidationRule(invalidCommand, configuration, zonedDateTimeService, clock);
 
             // Assert
-            sut.ValidationError.ValidationRuleIdentifier.Should().Be(ValidationRuleIdentifier.StartDateValidation);
-        }
-
-        [Theory]
-        [InlineAutoDomainData]
-        public void ValidationErrorMessageParameters_ShouldContain_RequiredErrorMessageParameterTypes(
-            ChargeCommand command, IClock clock)
-        {
-            // Arrange
-            var configuration = CreateRuleConfiguration(1, 3);
-            var zonedDateTimeService = CreateLocalDateTimeService("Europe/Copenhagen");
-
-            var sut = new StartDateValidationRule(command, configuration, zonedDateTimeService, clock);
-
-            // Assert
-            sut.ValidationError.ValidationErrorMessageParameters
-                .Select(x => x.ParameterType)
-                .Should().Contain(ValidationErrorMessageParameterType.ChargeStartDateTime);
-        }
-
-        [Theory]
-        [InlineAutoDomainData]
-        public void MessageParameter_ShouldBe_RequiredErrorMessageParameters(ChargeCommand command, IClock clock)
-        {
-            // Arrange
-            var configuration = CreateRuleConfiguration(1, 3);
-            var zonedDateTimeService = CreateLocalDateTimeService("Europe/Copenhagen");
-
-            var sut = new StartDateValidationRule(command, configuration, zonedDateTimeService, clock);
-
-            // Assert
-            sut.ValidationError.ValidationErrorMessageParameters
-                .Single(x => x.ParameterType == ValidationErrorMessageParameterType.ChargeStartDateTime)
-                .MessageParameter.Should().Be(command.ChargeOperation.StartDateTime.ToString());
+            sut.ValidationRuleIdentifier.Should().Be(ValidationRuleIdentifier.StartDateValidation);
         }
 
         private static ZonedDateTimeService CreateLocalDateTimeService(string timeZoneId)
@@ -130,6 +97,11 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
                 new Interval<int>(startOfOccurrence, endOfOccurrence));
 
             return configuration;
+        }
+
+        private static ChargeCommand CreateInvalidCommand(ChargeCommandBuilder builder)
+        {
+            return builder.WithStartDateTime(Instant.MaxValue).Build();
         }
     }
 }

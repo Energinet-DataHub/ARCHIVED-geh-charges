@@ -110,7 +110,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation
 
         private static ChargeCommandValidationResult CreateInvalidValidationResult()
         {
-            var invalidRules = new List<IValidationRule> { new ValidationRule(false, ValidationRuleIdentifier.StartDateValidation) };
+            var invalidRules = new List<IValidationRule> { new TestValidationRule(false, ValidationRuleIdentifier.StartDateValidation) };
             return ChargeCommandValidationResult.CreateFailure(invalidRules);
         }
     }

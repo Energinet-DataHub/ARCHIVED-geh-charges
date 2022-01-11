@@ -34,8 +34,8 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
             ChargeCommandBuilder builder,
             Charge charge)
         {
-            var command = builder.WithTaxIndicator(!charge.TaxIndicator).Build();
-            var sut = new ChangingTariffTaxValueNotAllowedRule(command, charge);
+            var invalidCommand = CreateInvalidCommand(builder, charge);
+            var sut = new ChangingTariffTaxValueNotAllowedRule(invalidCommand, charge);
             Assert.False(sut.IsValid);
         }
 
@@ -52,47 +52,16 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
 
         [Theory]
         [InlineAutoDomainData]
-        public void ValidationRuleIdentifier_ShouldBe_EqualTo(ChargeCommand command, Charge charge)
+        public void ValidationRuleIdentifier_ShouldBe_EqualTo(ChargeCommandBuilder builder, Charge charge)
         {
-            var sut = new ChangingTariffTaxValueNotAllowedRule(command, charge);
-            sut.ValidationError.ValidationRuleIdentifier.Should()
-                .Be(ValidationRuleIdentifier.ChangingTariffTaxValueNotAllowed);
+            var invalidCommand = CreateInvalidCommand(builder, charge);
+            var sut = new ChangingTariffTaxValueNotAllowedRule(invalidCommand, charge);
+            sut.ValidationRuleIdentifier.Should().Be(ValidationRuleIdentifier.ChangingTariffTaxValueNotAllowed);
         }
 
-        [Theory]
-        [InlineAutoDomainData]
-        public void ValidationErrorMessageParameters_ShouldContain_RequiredErrorMessageParameterTypes(
-            ChargeCommand command, Charge charge)
+        private static ChargeCommand CreateInvalidCommand(ChargeCommandBuilder builder, Charge charge)
         {
-            // Arrange
-            // Act
-            var sut = new ChangingTariffTaxValueNotAllowedRule(command, charge);
-
-            // Assert
-            sut.ValidationError.ValidationErrorMessageParameters
-                .Select(x => x.ParameterType)
-                .Should().Contain(ValidationErrorMessageParameterType.ChargeTaxIndicator);
-            sut.ValidationError.ValidationErrorMessageParameters
-                .Select(x => x.ParameterType)
-                .Should().Contain(ValidationErrorMessageParameterType.DocumentSenderProvidedChargeId);
-        }
-
-        [Theory]
-        [InlineAutoDomainData]
-        public void MessageParameter_ShouldBe_RequiredErrorMessageParameters(
-            ChargeCommand command, Charge charge)
-        {
-            // Arrange
-            // Act
-            var sut = new ChangingTariffTaxValueNotAllowedRule(command, charge);
-
-            // Assert
-            sut.ValidationError.ValidationErrorMessageParameters
-                .Single(x => x.ParameterType == ValidationErrorMessageParameterType.ChargeTaxIndicator)
-                .MessageParameter.Should().Be(command.ChargeOperation.TaxIndicator.ToString());
-            sut.ValidationError.ValidationErrorMessageParameters
-                .Single(x => x.ParameterType == ValidationErrorMessageParameterType.DocumentSenderProvidedChargeId)
-                .MessageParameter.Should().Be(command.ChargeOperation.ChargeId);
+            return builder.WithTaxIndicator(!charge.TaxIndicator).Build();
         }
     }
 }

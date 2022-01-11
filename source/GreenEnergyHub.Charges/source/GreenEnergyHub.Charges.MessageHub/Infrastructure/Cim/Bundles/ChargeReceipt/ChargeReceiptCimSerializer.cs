@@ -71,9 +71,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Infrastructure.Cim.Bundles.ChargeRec
             return DocumentType.ChargeReceipt;
         }
 
-        protected override XElement GetActivityRecord(
-            XNamespace cimNamespace,
-            AvailableChargeReceiptData receipt)
+        protected override XElement GetActivityRecord(XNamespace cimNamespace, AvailableChargeReceiptData receipt)
         {
             return new XElement(
                 cimNamespace + CimMarketDocumentConstants.MarketActivityRecord,
@@ -86,30 +84,27 @@ namespace GreenEnergyHub.Charges.MessageHub.Infrastructure.Cim.Bundles.ChargeRec
                 GetReasonCodes(cimNamespace, receipt));
         }
 
-        private IEnumerable<XElement> GetReasonCodes(
-            XNamespace cimNamespace,
-            AvailableChargeReceiptData receipt)
+        private IEnumerable<XElement> GetReasonCodes(XNamespace cimNamespace, AvailableChargeReceiptData receipt)
         {
             var result = new List<XElement>();
             if (receipt.ReceiptStatus != ReceiptStatus.Rejected) return result;
 
-            result.AddRange(receipt.ReasonCodes.Select(reasonCode => GetReasonCode(cimNamespace, reasonCode)));
+            result.AddRange(receipt.ValidationErrors
+                .Select(validationError => GetReasonCode(cimNamespace, validationError)));
 
             return result;
         }
 
-        private XElement GetReasonCode(
-            XNamespace cimNamespace,
-            AvailableChargeReceiptDataReasonCode reasonCode)
+        private XElement GetReasonCode(XNamespace cimNamespace, AvailableChargeReceiptValidationError validationError)
         {
             return new XElement(
                 cimNamespace + CimChargeReceiptConstants.ReasonElement,
-                new XElement(cimNamespace + CimChargeReceiptConstants.ReasonCode, ReasonCodeMapper.Map(reasonCode.ReasonCode)),
+                new XElement(cimNamespace + CimChargeReceiptConstants.ReasonCode, ReasonCodeMapper.Map(validationError.ReasonCode)),
                 CimHelper.GetElementIfNeeded(
                     cimNamespace,
-                    string.IsNullOrWhiteSpace(reasonCode.Text),
+                    string.IsNullOrWhiteSpace(validationError.Text),
                     CimChargeReceiptConstants.ReasonText,
-                    () => reasonCode.Text));
+                    () => validationError.Text));
         }
 
         private bool IsConfirmation(IEnumerable<AvailableChargeReceiptData> receipts)

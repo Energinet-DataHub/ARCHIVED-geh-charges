@@ -70,7 +70,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
                 availableChargeReceiptData.AvailableDataReferenceId,
                 availableChargeReceiptData.ReceiptStatus,
                 availableChargeReceiptData.OriginalOperationId.Substring(0, 34),
-                availableChargeReceiptData.ReasonCodes.ToList());
+                availableChargeReceiptData.ValidationErrors.ToList());
         }
 
         private static AvailableChargeLinksData GetAvailableDataBasedOn(AvailableChargeLinksData availableChargeData)

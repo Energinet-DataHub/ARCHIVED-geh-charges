@@ -13,7 +13,6 @@
 // limitations under the License.
 
 using System;
-using System.Diagnostics.CodeAnalysis;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandRejectedEvents;
 using GreenEnergyHub.Charges.Infrastructure.Contracts.Internal.ChargeCommandRejected;
 using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeCommandRejected;
@@ -30,8 +29,8 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Contracts.Internal.ChargeC
         [Theory]
         [InlineAutoMoqData]
         public void Convert_WhenCalled_ShouldMapToDomainObjectWithCorrectValues(
-            [NotNull] ChargeCommandRejectedContract rejectedContract,
-            [NotNull] ChargeCommandRejectedInboundMapper sut)
+            ChargeCommandRejectedContract rejectedContract,
+            ChargeCommandRejectedInboundMapper sut)
         {
             var result = (ChargeCommandRejectedEvent)sut.Convert(rejectedContract);
             ProtobufAssert.IncomingContractIsSuperset(result, rejectedContract);
@@ -39,7 +38,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Contracts.Internal.ChargeC
 
         [Theory]
         [InlineAutoMoqData]
-        public void Convert_WhenCalledWithNull_ShouldThrow([NotNull]ChargeCommandRejectedInboundMapper sut)
+        public void Convert_WhenCalledWithNull_ShouldThrow(ChargeCommandRejectedInboundMapper sut)
         {
             Assert.Throws<InvalidOperationException>(() => sut.Convert(null!));
         }
