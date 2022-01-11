@@ -35,6 +35,7 @@ using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeCommandReceived;
 using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeCommandRejected;
 using GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData;
+using GreenEnergyHub.Charges.MessageHub.Models.AvailableData;
 using GreenEnergyHub.Iso8601;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -49,6 +50,9 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
             serviceCollection.AddScoped<IChargeFactory, ChargeFactory>();
             serviceCollection.AddScoped<IChargeCommandAcceptedEventFactory, ChargeCommandAcceptedEventFactory>();
             serviceCollection.AddScoped<IChargeCommandRejectedEventFactory, ChargeCommandRejectedEventFactory>();
+            serviceCollection.AddScoped<ICimValidationErrorTextFactory<ChargeCommand>, ChargeCimValidationErrorTextFactory>();
+            serviceCollection.AddScoped<ICimValidationErrorCodeFactory, CimValidationErrorCodeFactory>();
+
             serviceCollection
                 .AddScoped<IAvailableChargeReceiptValidationErrorFactory,
                     AvailableChargeReceiptValidationErrorFactory>();
