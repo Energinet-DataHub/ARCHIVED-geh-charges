@@ -46,7 +46,7 @@ namespace Energinet.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.Charge
             var chargeLinks = new List<ChargeLinkDto>();
             chargeLinks.Add(chargeLinkDto);
 
-            var options = new JsonSerializerOptions
+            var options = new JsonSerializerOptions(JsonSerializerDefaults.Web)
             {
                 Converters = { new JsonStringEnumConverter() },
             };
