@@ -16,8 +16,8 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
+using GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation;
 using GreenEnergyHub.TestHelpers;
 using Moq;
 using Xunit;
@@ -108,7 +108,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Validation
 
         private static ValidationResult CreateInvalidValidationResult()
         {
-            var invalidRules = new List<IValidationRule> { new ValidationRule(false, ValidationRuleIdentifier.StartDateValidation) };
+            var invalidRules = new List<IValidationRule> { new TestValidationRule(false, ValidationRuleIdentifier.StartDateValidation) };
             return ValidationResult.CreateFailure(invalidRules);
         }
     }

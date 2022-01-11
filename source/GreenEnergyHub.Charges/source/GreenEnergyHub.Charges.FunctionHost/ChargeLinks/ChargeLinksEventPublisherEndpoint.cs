@@ -12,13 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application.ChargeLinks.Handlers;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksAcceptedEvents;
 using GreenEnergyHub.Charges.FunctionHost.Common;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions;
-using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandAccepted;
+using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinksCommandAccepted;
 using Microsoft.Azure.Functions.Worker;
 
 namespace GreenEnergyHub.Charges.FunctionHost.ChargeLinks
@@ -30,11 +29,11 @@ namespace GreenEnergyHub.Charges.FunctionHost.ChargeLinks
         /// Function name affects the URL and thus possibly dependent infrastructure.
         /// </summary>
         public const string FunctionName = nameof(ChargeLinksEventPublisherEndpoint);
-        private readonly MessageExtractor<ChargeLinkCommandAccepted> _messageExtractor;
+        private readonly MessageExtractor<ChargeLinksCommandAccepted> _messageExtractor;
         private readonly IChargeLinkEventPublishHandler _chargeLinkEventPublishHandler;
 
         public ChargeLinksEventPublisherEndpoint(
-            MessageExtractor<ChargeLinkCommandAccepted> messageExtractor,
+            MessageExtractor<ChargeLinksCommandAccepted> messageExtractor,
             IChargeLinkEventPublishHandler chargeLinkEventPublishHandler)
         {
             _messageExtractor = messageExtractor;
@@ -47,7 +46,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.ChargeLinks
                 "%" + EnvironmentSettingNames.ChargeLinkAcceptedTopicName + "%",
                 "%" + EnvironmentSettingNames.ChargeLinkAcceptedSubEventPublisher + "%",
                 Connection = EnvironmentSettingNames.DomainEventListenerConnectionString)]
-            [NotNull] byte[] message)
+            byte[] message)
         {
             var acceptedChargeLinkCommand = (ChargeLinksAcceptedEvent)await _messageExtractor.ExtractAsync(message).ConfigureAwait(false);
 

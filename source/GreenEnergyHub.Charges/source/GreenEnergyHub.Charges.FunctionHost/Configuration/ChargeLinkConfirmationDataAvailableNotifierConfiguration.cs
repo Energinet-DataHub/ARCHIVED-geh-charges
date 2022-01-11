@@ -13,8 +13,9 @@
 // limitations under the License.
 
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksAcceptedEvents;
-using GreenEnergyHub.Charges.MessageHub.Application.ChargeLinks;
-using GreenEnergyHub.Charges.MessageHub.Application.MessageHub;
+using GreenEnergyHub.Charges.MessageHub.BundleSpecification;
+using GreenEnergyHub.Charges.MessageHub.BundleSpecification.ChargeLinks;
+using GreenEnergyHub.Charges.MessageHub.MessageHub;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinkReceiptData;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableData;
 using Microsoft.Extensions.DependencyInjection;
@@ -26,16 +27,16 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
         internal static void ConfigureServices(IServiceCollection serviceCollection)
         {
             serviceCollection
-                .AddScoped<IAvailableDataNotifier<AvailableChargeLinkReceiptData, ChargeLinksAcceptedEvent>,
-                    AvailableDataNotifier<AvailableChargeLinkReceiptData, ChargeLinksAcceptedEvent>>();
+                .AddScoped<IAvailableDataNotifier<AvailableChargeLinksReceiptData, ChargeLinksAcceptedEvent>,
+                    AvailableDataNotifier<AvailableChargeLinksReceiptData, ChargeLinksAcceptedEvent>>();
             serviceCollection
-                .AddScoped<IAvailableDataFactory<AvailableChargeLinkReceiptData, ChargeLinksAcceptedEvent>,
-                    AvailableChargeLinkReceiptDataFactory>();
+                .AddScoped<IAvailableDataFactory<AvailableChargeLinksReceiptData, ChargeLinksAcceptedEvent>,
+                    AvailableChargeLinksReceiptDataFactory>();
             serviceCollection
-                .AddScoped<IAvailableDataNotificationFactory<AvailableChargeLinkReceiptData>,
-                    AvailableDataNotificationFactory<AvailableChargeLinkReceiptData>>();
+                .AddScoped<IAvailableDataNotificationFactory<AvailableChargeLinksReceiptData>,
+                    AvailableDataNotificationFactory<AvailableChargeLinksReceiptData>>();
             serviceCollection
-                .AddScoped<BundleSpecification<AvailableChargeLinkReceiptData, ChargeLinksAcceptedEvent>,
+                .AddScoped<BundleSpecification<AvailableChargeLinksReceiptData, ChargeLinksAcceptedEvent>,
                     ChargeLinksConfirmationBundleSpecification>();
         }
     }

@@ -22,22 +22,17 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessV
         private readonly ChargeCommand _chargeCommand;
         private readonly MarketParticipant? _sender;
 
-        public CommandSenderMustBeAnExistingMarketParticipantRule(ChargeCommand chargeCommand, MarketParticipant? sender)
+        public CommandSenderMustBeAnExistingMarketParticipantRule(
+            ChargeCommand chargeCommand,
+            MarketParticipant? sender)
         {
             _chargeCommand = chargeCommand;
             _sender = sender;
         }
 
-        public bool IsValid => _sender != null;
+        public ValidationRuleIdentifier ValidationRuleIdentifier =>
+            ValidationRuleIdentifier.CommandSenderMustBeAnExistingMarketParticipant;
 
-        public ValidationError ValidationError =>
-            new(
-                ValidationRuleIdentifier.CommandSenderMustBeAnExistingMarketParticipant,
-                new ValidationErrorMessageParameter(
-                    _chargeCommand.Document.Sender.Id,
-                    ValidationErrorMessageParameterType.DocumentSenderId),
-                new ValidationErrorMessageParameter(
-                    _chargeCommand.Document.Id,
-                    ValidationErrorMessageParameterType.DocumentId));
+        public bool IsValid => _sender != null;
     }
 }

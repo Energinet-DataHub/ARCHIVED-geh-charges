@@ -15,21 +15,25 @@
 using System.Collections.Generic;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.Messages.Events;
+using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using NodaTime;
 
 namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksRejectionEvents
 {
     public class ChargeLinksRejectedEvent : InternalEventBase
     {
-        public ChargeLinksRejectedEvent(Instant publishedTime, ChargeLinksCommand chargeLinksCommand, IEnumerable<string> reasons)
+        public ChargeLinksRejectedEvent(
+            Instant publishedTime,
+            ChargeLinksCommand chargeLinksCommand,
+            IEnumerable<ValidationRuleIdentifier> failedValidationRuleIdentifiers)
             : base(publishedTime)
         {
             ChargeLinksCommand = chargeLinksCommand;
-            RejectReasons = reasons;
+            FailedValidationRuleIdentifiers = failedValidationRuleIdentifiers;
         }
 
         public ChargeLinksCommand ChargeLinksCommand { get; }
 
-        public IEnumerable<string> RejectReasons { get; }
+        public IEnumerable<ValidationRuleIdentifier> FailedValidationRuleIdentifiers { get; }
     }
 }

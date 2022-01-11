@@ -26,8 +26,9 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands.Validation.Busi
             _meteringPoint = meteringPoint;
         }
 
-        public bool IsValid => _meteringPoint is not null;
+        public ValidationRuleIdentifier ValidationRuleIdentifier =>
+            ValidationRuleIdentifier.MeteringPointDoesNotExistValidation;
 
-        public ValidationError? ValidationError { get; }
+        public bool IsValid => _meteringPoint is not null;
     }
 }

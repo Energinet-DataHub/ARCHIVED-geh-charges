@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
@@ -33,43 +32,20 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
         [InlineAutoMoqData(null!, false)]
         [InlineAutoMoqData("", false)]
         [InlineAutoMoqData("content", true)]
-        public void RecipientIsMandatoryValidationRule_Test(
-            string id,
-            bool expected,
-            [NotNull] ChargeCommand command)
+        public void RecipientIsMandatoryValidationRule_Test(string id, bool expected, ChargeCommand command)
         {
             command.Document.Recipient.Id = id;
             var sut = new RecipientIsMandatoryTypeValidationRule(command);
-            Assert.Equal(expected, sut.IsValid);
+            sut.IsValid.Should().Be(expected);
         }
 
         [Theory]
         [InlineAutoDomainData]
         public void ValidationRuleIdentifier_ShouldBe_EqualTo(ChargeCommand command)
         {
+            command.Document.Recipient.Id = null!;
             var sut = new RecipientIsMandatoryTypeValidationRule(command);
-            sut.ValidationError.ValidationRuleIdentifier.Should()
-                .Be(ValidationRuleIdentifier.RecipientIsMandatoryTypeValidation);
-        }
-
-        [Theory]
-        [InlineAutoDomainData]
-        public void ValidationErrorMessageParameters_ShouldContain_RequiredErrorMessageParameterTypes(ChargeCommand command)
-        {
-            var sut = new RecipientIsMandatoryTypeValidationRule(command);
-            sut.ValidationError.ValidationErrorMessageParameters
-                .Select(x => x.ParameterType)
-                .Should().Contain(ValidationErrorMessageParameterType.DocumentId);
-        }
-
-        [Theory]
-        [InlineAutoDomainData]
-        public void MessageParameter_ShouldBe_RequiredErrorMessageParameters(ChargeCommand command)
-        {
-            var sut = new RecipientIsMandatoryTypeValidationRule(command);
-            sut.ValidationError.ValidationErrorMessageParameters
-                .Single(x => x.ParameterType == ValidationErrorMessageParameterType.DocumentId)
-                .MessageParameter.Should().Be(command.Document.Id);
+            sut.ValidationRuleIdentifier.Should().Be(ValidationRuleIdentifier.RecipientIsMandatoryTypeValidation);
         }
     }
 }

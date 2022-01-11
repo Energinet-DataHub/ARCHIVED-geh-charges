@@ -43,7 +43,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
             ChargeCommandBuilder builder)
         {
             // Arrange
-            var command = builder.WithChargeType(ChargeType.Tariff).WithResolution(resolution).Build();
+            var command = CreateCommand(builder, ChargeType.Tariff, resolution);
 
             // Act
             var sut = new ResolutionTariffValidationRule(command);
@@ -64,7 +64,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
             ChargeCommandBuilder builder)
         {
             // Arrange
-            var command = builder.WithChargeType(ChargeType.Subscription).WithResolution(resolution).Build();
+            var command = CreateCommand(builder, ChargeType.Subscription, resolution);
 
             // Act
             var sut = new ResolutionTariffValidationRule(command);
@@ -85,7 +85,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
             ChargeCommandBuilder builder)
         {
             // Arrange
-            var command = builder.WithChargeType(ChargeType.Fee).WithResolution(resolution).Build();
+            var command = CreateCommand(builder, ChargeType.Fee, resolution);
 
             // Act
             var sut = new ResolutionTariffValidationRule(command);
@@ -96,51 +96,16 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
 
         [Theory]
         [InlineAutoDomainData]
-        public void ValidationRuleIdentifier_ShouldBe_EqualTo(ChargeCommand command)
+        public void ValidationRuleIdentifier_ShouldBe_EqualTo(ChargeCommandBuilder chargeCommandBuilder)
         {
+            var command = CreateCommand(chargeCommandBuilder, ChargeType.Tariff, Resolution.Unknown);
             var sut = new ResolutionTariffValidationRule(command);
-            sut.ValidationError.ValidationRuleIdentifier.Should()
-                .Be(ValidationRuleIdentifier.ResolutionTariffValidation);
+            sut.ValidationRuleIdentifier.Should().Be(ValidationRuleIdentifier.ResolutionTariffValidation);
         }
 
-        [Theory]
-        [InlineAutoDomainData]
-        public void ValidationErrorMessageParameters_ShouldContain_RequiredErrorMessageParameterTypes(ChargeCommand command)
+        private static ChargeCommand CreateCommand(ChargeCommandBuilder builder, ChargeType chargeType, Resolution resolution)
         {
-            // Arrange
-            // Act
-            var sut = new ResolutionTariffValidationRule(command);
-
-            // Assert
-            sut.ValidationError.ValidationErrorMessageParameters
-                .Select(x => x.ParameterType)
-                .Should().Contain(ValidationErrorMessageParameterType.ChargeResolution);
-            sut.ValidationError.ValidationErrorMessageParameters
-                .Select(x => x.ParameterType)
-                .Should().Contain(ValidationErrorMessageParameterType.DocumentSenderProvidedChargeId);
-            sut.ValidationError.ValidationErrorMessageParameters
-                .Select(x => x.ParameterType)
-                .Should().Contain(ValidationErrorMessageParameterType.ChargeType);
-        }
-
-        [Theory]
-        [InlineAutoDomainData]
-        public void MessageParameter_ShouldBe_RequiredErrorMessageParameters(ChargeCommand command)
-        {
-            // Arrange
-            // Act
-            var sut = new ResolutionTariffValidationRule(command);
-
-            // Assert
-            sut.ValidationError.ValidationErrorMessageParameters
-                .Single(x => x.ParameterType == ValidationErrorMessageParameterType.ChargeResolution)
-                .MessageParameter.Should().Be(command.ChargeOperation.Resolution.ToString());
-            sut.ValidationError.ValidationErrorMessageParameters
-                .Single(x => x.ParameterType == ValidationErrorMessageParameterType.DocumentSenderProvidedChargeId)
-                .MessageParameter.Should().Be(command.ChargeOperation.ChargeId);
-            sut.ValidationError.ValidationErrorMessageParameters
-                .Single(x => x.ParameterType == ValidationErrorMessageParameterType.ChargeType)
-                .MessageParameter.Should().Be(command.Document.Type.ToString());
+            return builder.WithChargeType(chargeType).WithResolution(resolution).Build();
         }
     }
 }

@@ -36,13 +36,13 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
         [InlineAutoMoqData(Resolution.P1M, true)]
         [InlineAutoMoqData(Resolution.PT1H, true)]
         [InlineAutoMoqData(Resolution.PT15M, true)]
-        public void ResolutionTariffValidationRule_WithTariffType_EqualsExpectedResult(
+        public void ResolutionSubscriptionValidationRule_WithTariffType_EqualsExpectedResult(
             Resolution resolution,
             bool expected,
-            ChargeCommandBuilder builder)
+            ChargeCommandBuilder chargeCommandBuilder)
         {
             // Arrange
-            var command = builder.WithChargeType(ChargeType.Tariff).WithResolution(resolution).Build();
+            var command = CreateCommand(chargeCommandBuilder, ChargeType.Tariff, resolution);
 
             // Act
             var sut = new ResolutionSubscriptionValidationRule(command);
@@ -57,13 +57,13 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
         [InlineAutoMoqData(Resolution.P1M, true)]
         [InlineAutoMoqData(Resolution.PT1H, false)]
         [InlineAutoMoqData(Resolution.PT15M, false)]
-        public void ResolutionTariffValidationRule_WithSubscriptionType_EqualsExpectedResult(
+        public void ResolutionSubscriptionValidationRule_WithSubscriptionType_EqualsExpectedResult(
             Resolution resolution,
             bool expected,
-            ChargeCommandBuilder builder)
+            ChargeCommandBuilder chargeCommandBuilder)
         {
             // Arrange
-            var command = builder.WithChargeType(ChargeType.Subscription).WithResolution(resolution).Build();
+            var command = CreateCommand(chargeCommandBuilder, ChargeType.Subscription, resolution);
 
             // Act
             var sut = new ResolutionSubscriptionValidationRule(command);
@@ -78,13 +78,13 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
         [InlineAutoMoqData(Resolution.P1M, true)]
         [InlineAutoMoqData(Resolution.PT1H, true)]
         [InlineAutoMoqData(Resolution.PT15M, true)]
-        public void ResolutionTariffValidationRule_WithFeeType_EqualsExpectedResult(
+        public void ResolutionSubscriptionValidationRule_WithFeeType_EqualsExpectedResult(
             Resolution resolution,
             bool expected,
-            ChargeCommandBuilder builder)
+            ChargeCommandBuilder chargeCommandBuilder)
         {
             // Assert
-            var command = builder.WithChargeType(ChargeType.Fee).WithResolution(resolution).Build();
+            var command = CreateCommand(chargeCommandBuilder, ChargeType.Fee, resolution);
 
             // Act
             var sut = new ResolutionSubscriptionValidationRule(command);
@@ -95,51 +95,16 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
 
         [Theory]
         [InlineAutoDomainData]
-        public void ValidationRuleIdentifier_ShouldBe_EqualTo(ChargeCommand command)
+        public void ValidationRuleIdentifier_ShouldBe_EqualTo(ChargeCommandBuilder chargeCommandBuilder)
         {
+            var command = CreateCommand(chargeCommandBuilder, ChargeType.Subscription, Resolution.Unknown);
             var sut = new ResolutionSubscriptionValidationRule(command);
-            sut.ValidationError.ValidationRuleIdentifier.Should()
-                .Be(ValidationRuleIdentifier.ResolutionSubscriptionValidation);
+            sut.ValidationRuleIdentifier.Should().Be(ValidationRuleIdentifier.ResolutionSubscriptionValidation);
         }
 
-        [Theory]
-        [InlineAutoDomainData]
-        public void ValidationErrorMessageParameters_ShouldContain_RequiredErrorMessageParameterTypes(ChargeCommand command)
+        private static ChargeCommand CreateCommand(ChargeCommandBuilder builder, ChargeType chargeType, Resolution resolution)
         {
-            // Arrange
-            // Act
-            var sut = new ResolutionSubscriptionValidationRule(command);
-
-            // Assert
-            sut.ValidationError.ValidationErrorMessageParameters
-                .Select(x => x.ParameterType)
-                .Should().Contain(ValidationErrorMessageParameterType.ChargeResolution);
-            sut.ValidationError.ValidationErrorMessageParameters
-                .Select(x => x.ParameterType)
-                .Should().Contain(ValidationErrorMessageParameterType.DocumentSenderProvidedChargeId);
-            sut.ValidationError.ValidationErrorMessageParameters
-                .Select(x => x.ParameterType)
-                .Should().Contain(ValidationErrorMessageParameterType.ChargeType);
-        }
-
-        [Theory]
-        [InlineAutoDomainData]
-        public void MessageParameter_ShouldBe_RequiredErrorMessageParameters(ChargeCommand command)
-        {
-            // Arrange
-            // Act
-            var sut = new ResolutionSubscriptionValidationRule(command);
-
-            // Assert
-            sut.ValidationError.ValidationErrorMessageParameters
-                .Single(x => x.ParameterType == ValidationErrorMessageParameterType.ChargeResolution)
-                .MessageParameter.Should().Be(command.ChargeOperation.Resolution.ToString());
-            sut.ValidationError.ValidationErrorMessageParameters
-                .Single(x => x.ParameterType == ValidationErrorMessageParameterType.DocumentSenderProvidedChargeId)
-                .MessageParameter.Should().Be(command.ChargeOperation.ChargeId);
-            sut.ValidationError.ValidationErrorMessageParameters
-                .Single(x => x.ParameterType == ValidationErrorMessageParameterType.ChargeType)
-                .MessageParameter.Should().Be(command.ChargeOperation.Type.ToString());
+            return builder.WithChargeType(chargeType).WithResolution(resolution).Build();
         }
     }
 }

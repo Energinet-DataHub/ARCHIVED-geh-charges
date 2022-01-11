@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Diagnostics.CodeAnalysis;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 
 namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputValidation.ValidationRules
@@ -21,18 +20,14 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputVali
     {
         private readonly ChargeCommand _chargeCommand;
 
-        public RecipientIsMandatoryTypeValidationRule([NotNull] ChargeCommand chargeCommand)
+        public RecipientIsMandatoryTypeValidationRule(ChargeCommand chargeCommand)
         {
             _chargeCommand = chargeCommand;
         }
 
-        public bool IsValid => MarketParticipantMrIdValidator.IsValid(_chargeCommand.Document.Recipient.Id);
+        public ValidationRuleIdentifier ValidationRuleIdentifier =>
+            ValidationRuleIdentifier.RecipientIsMandatoryTypeValidation;
 
-        public ValidationError ValidationError =>
-            new(
-                ValidationRuleIdentifier.RecipientIsMandatoryTypeValidation,
-                new ValidationErrorMessageParameter(
-                    _chargeCommand.Document.Id,
-                    ValidationErrorMessageParameterType.DocumentId));
+        public bool IsValid => MarketParticipantMrIdValidator.IsValid(_chargeCommand.Document.Recipient.Id);
     }
 }

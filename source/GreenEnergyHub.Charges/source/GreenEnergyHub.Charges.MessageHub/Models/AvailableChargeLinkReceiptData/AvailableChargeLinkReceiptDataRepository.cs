@@ -16,13 +16,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using GreenEnergyHub.Charges.MessageHub.Infrastructure.Context;
+using GreenEnergyHub.Charges.MessageHub.Infrastructure.Persistence;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableData;
 using Microsoft.EntityFrameworkCore;
 
 namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinkReceiptData
 {
-    public class AvailableChargeLinkReceiptDataRepository : IAvailableDataRepository<AvailableChargeLinkReceiptData>
+    public class AvailableChargeLinkReceiptDataRepository : IAvailableDataRepository<AvailableChargeLinksReceiptData>
     {
         private readonly IMessageHubDatabaseContext _context;
 
@@ -31,13 +31,13 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinkReceiptDat
             _context = context;
         }
 
-        public async Task StoreAsync(IEnumerable<AvailableChargeLinkReceiptData> availableChargeLinkReceiptData)
+        public async Task StoreAsync(IEnumerable<AvailableChargeLinksReceiptData> availableChargeLinkReceiptData)
         {
             await _context.AvailableChargeLinkReceiptData.AddRangeAsync(availableChargeLinkReceiptData);
             await _context.SaveChangesAsync();
         }
 
-        public async Task<IReadOnlyList<AvailableChargeLinkReceiptData>> GetAsync(IEnumerable<Guid> dataReferenceIds)
+        public async Task<IReadOnlyList<AvailableChargeLinksReceiptData>> GetAsync(IEnumerable<Guid> dataReferenceIds)
         {
             return await _context
                 .AvailableChargeLinkReceiptData

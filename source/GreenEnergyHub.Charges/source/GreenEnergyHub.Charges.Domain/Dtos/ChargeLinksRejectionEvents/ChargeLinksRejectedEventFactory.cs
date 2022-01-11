@@ -29,13 +29,12 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksRejectionEvents
             _clock = clock;
         }
 
-        public ChargeLinksRejectedEvent Create(ChargeLinksCommand chargeLinksCommand, ValidationResult validationResult)
+        public ChargeLinksRejectedEvent Create(ChargeLinksCommand command, ValidationResult validationResult)
         {
             return new ChargeLinksRejectedEvent(
                 _clock.GetCurrentInstant(),
-                chargeLinksCommand,
-                validationResult.InvalidRules.Select(x => // TODO use ValidationErrorMessages
-                    x.ValidationError!.ValidationRuleIdentifier.ToString()).ToArray());
+                command,
+                validationResult.InvalidRules.Select(x => x.ValidationRuleIdentifier));
         }
     }
 }

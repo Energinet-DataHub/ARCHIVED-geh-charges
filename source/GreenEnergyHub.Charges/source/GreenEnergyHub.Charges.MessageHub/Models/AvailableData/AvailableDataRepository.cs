@@ -16,7 +16,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using GreenEnergyHub.Charges.MessageHub.Infrastructure.Context;
+using GreenEnergyHub.Charges.MessageHub.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 
 namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableData

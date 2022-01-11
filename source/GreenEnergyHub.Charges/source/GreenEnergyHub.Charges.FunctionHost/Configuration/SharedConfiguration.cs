@@ -41,7 +41,7 @@ using GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories;
 using GreenEnergyHub.Charges.Infrastructure.ReplySender;
 using GreenEnergyHub.Charges.Infrastructure.ReplySender.CreateDefaultChargeLinkReplier;
 using GreenEnergyHub.Charges.MessageHub.Infrastructure.Cim;
-using GreenEnergyHub.Charges.MessageHub.Infrastructure.Context;
+using GreenEnergyHub.Charges.MessageHub.Infrastructure.Persistence;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeData;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinkReceiptData;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksData;
@@ -122,7 +122,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
             serviceCollection
                 .AddScoped<IAvailableDataRepository<AvailableChargeData>, AvailableDataRepository<AvailableChargeData>>();
             serviceCollection
-                .AddScoped<IAvailableDataRepository<AvailableChargeLinkReceiptData>, AvailableDataRepository<AvailableChargeLinkReceiptData>>();
+                .AddScoped<IAvailableDataRepository<AvailableChargeLinksReceiptData>, AvailableDataRepository<AvailableChargeLinksReceiptData>>();
             serviceCollection
                 .AddScoped<IAvailableDataRepository<AvailableChargeReceiptData>, AvailableDataRepository<AvailableChargeReceiptData>>();
         }

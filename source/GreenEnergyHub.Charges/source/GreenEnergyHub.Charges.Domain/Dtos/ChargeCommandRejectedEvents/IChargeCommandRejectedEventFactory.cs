@@ -19,6 +19,8 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandRejectedEvents
 {
     public interface IChargeCommandRejectedEventFactory
     {
-        ChargeCommandRejectedEvent CreateEvent(ChargeCommand command, ValidationResult validationResult);
+        ChargeCommandRejectedEvent CreateEvent(
+            ChargeCommand command,
+            ValidationResult validationResult);
     }
 }

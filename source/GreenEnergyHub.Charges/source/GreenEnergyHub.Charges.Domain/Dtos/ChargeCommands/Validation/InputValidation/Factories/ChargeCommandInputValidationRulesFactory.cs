@@ -47,7 +47,6 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputVali
                 new DocumentTypeMustBeRequestUpdateChargeInformationRule(chargeCommand),
                 new FeeMustHaveSinglePriceRule(chargeCommand),
                 new MaximumPriceRule(chargeCommand),
-                new ProcessTypeIsKnownValidationRule(chargeCommand),
                 new RecipientIsMandatoryTypeValidationRule(chargeCommand),
                 new ResolutionFeeValidationRule(chargeCommand),
                 new ResolutionSubscriptionValidationRule(chargeCommand),

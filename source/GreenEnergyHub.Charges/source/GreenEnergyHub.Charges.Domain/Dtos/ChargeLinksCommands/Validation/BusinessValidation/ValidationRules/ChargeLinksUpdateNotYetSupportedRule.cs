@@ -33,9 +33,10 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands.Validation.Busi
             _existingChargeLinks = existingChargeLinks;
         }
 
-        public bool IsValid => _chargeLinksCommand.ChargeLinks.All(ChargeLinkDateRangeIsNotOverlapping);
+        public ValidationRuleIdentifier ValidationRuleIdentifier =>
+            ValidationRuleIdentifier.UpdateNotYetSupported;
 
-        public ValidationError? ValidationError { get; }
+        public bool IsValid => _chargeLinksCommand.ChargeLinks.All(ChargeLinkDateRangeIsNotOverlapping);
 
         private bool ChargeLinkDateRangeIsNotOverlapping(ChargeLinkDto newLink)
         {

@@ -33,14 +33,16 @@ namespace GreenEnergyHub.Charges.Tests.Builders
         private string _description;
         private string _chargeName;
         private string _documentId;
+        private BusinessReasonCode _documentBusinessReasonCode;
+        private DocumentType _documentType;
         private MarketParticipantDto _sender;
         private ChargeType _chargeType;
         private Resolution _resolution;
-        private string _id;
+        private string _operationId;
 
         public ChargeCommandBuilder()
         {
-            _id = "id";
+            _operationId = "id";
             _chargeId = "some charge id";
             _startDateTime = SystemClock.Instance.GetCurrentInstant()
                 .Plus(Duration.FromDays(500));
@@ -52,6 +54,8 @@ namespace GreenEnergyHub.Charges.Tests.Builders
             _description = "some description";
             _chargeName = "some charge name";
             _documentId = "some document id";
+            _documentBusinessReasonCode = BusinessReasonCode.UpdateChargeInformation;
+            _documentType = DocumentType.RequestUpdateChargeInformation;
             _sender = new MarketParticipantDto { Id = "0", BusinessProcessRole = MarketParticipantRole.EnergySupplier };
             _chargeType = ChargeType.Fee;
             _points = new List<Point>();
@@ -70,6 +74,18 @@ namespace GreenEnergyHub.Charges.Tests.Builders
             return this;
         }
 
+        public ChargeCommandBuilder WithDocumentBusinessReasonCode(BusinessReasonCode businessReasonCode)
+        {
+            _documentBusinessReasonCode = businessReasonCode;
+            return this;
+        }
+
+        public ChargeCommandBuilder WithDocumentType(DocumentType documentType)
+        {
+            _documentType = documentType;
+            return this;
+        }
+
         public ChargeCommandBuilder WithChargeName(string name)
         {
             _chargeName = name;
@@ -82,9 +98,9 @@ namespace GreenEnergyHub.Charges.Tests.Builders
             return this;
         }
 
-        public ChargeCommandBuilder WithId(string id)
+        public ChargeCommandBuilder WithOperationId(string id)
         {
-            _id = id;
+            _operationId = id;
             return this;
         }
 
@@ -166,7 +182,7 @@ namespace GreenEnergyHub.Charges.Tests.Builders
                 Document = new DocumentDto
                 {
                     Id = _documentId,
-                    Type = DocumentType.RequestUpdateChargeInformation,
+                    Type = _documentType,
                     RequestDate = SystemClock.Instance.GetCurrentInstant(),
                     IndustryClassification = IndustryClassification.Electricity,
                     CreatedDateTime = SystemClock.Instance.GetCurrentInstant(),
@@ -176,10 +192,10 @@ namespace GreenEnergyHub.Charges.Tests.Builders
                         BusinessProcessRole = MarketParticipantRole.EnergySupplier,
                     },
                     Sender = _sender,
-                    BusinessReasonCode = BusinessReasonCode.UpdateChargeInformation,
+                    BusinessReasonCode = _documentBusinessReasonCode,
                 },
                 ChargeOperation = new ChargeOperationDto(
-                    _id,
+                    _operationId,
                     _chargeType,
                     _chargeId,
                     _chargeName,

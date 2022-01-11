@@ -31,19 +31,8 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessV
             _charge = charge;
         }
 
-        public bool IsValid => _charge == null;
+        public ValidationRuleIdentifier ValidationRuleIdentifier => ValidationRuleIdentifier.UpdateNotYetSupported;
 
-        public ValidationError ValidationError =>
-            new(
-                ValidationRuleIdentifier.UpdateNotYetSupported,
-                new ValidationErrorMessageParameter(
-                    _chargeCommand.ChargeOperation.ChargeId,
-                    ValidationErrorMessageParameterType.DocumentSenderProvidedChargeId),
-                new ValidationErrorMessageParameter(
-                    _chargeCommand.ChargeOperation.ChargeOwner,
-                    ValidationErrorMessageParameterType.ChargeOwner),
-                new ValidationErrorMessageParameter(
-                    _chargeCommand.ChargeOperation.Type.ToString(),
-                    ValidationErrorMessageParameterType.ChargeType));
+        public bool IsValid => _charge == null;
     }
 }

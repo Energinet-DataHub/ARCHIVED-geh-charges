@@ -17,8 +17,8 @@ using GreenEnergyHub.Charges.Application.ChargeLinks.Handlers;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksAcceptedEvents;
 using GreenEnergyHub.Charges.FunctionHost.Common;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions;
-using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandAccepted;
-using GreenEnergyHub.Charges.MessageHub.Application.MessageHub;
+using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinksCommandAccepted;
+using GreenEnergyHub.Charges.MessageHub.MessageHub;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksData;
 using Microsoft.Azure.Functions.Worker;
 
@@ -38,12 +38,12 @@ namespace GreenEnergyHub.Charges.FunctionHost.ChargeLinks.MessageHub
     {
         private const string FunctionName = nameof(ChargeLinkDataAvailableNotifierEndpoint);
 
-        private readonly MessageExtractor<ChargeLinkCommandAccepted> _messageExtractor;
+        private readonly MessageExtractor<ChargeLinksCommandAccepted> _messageExtractor;
         private readonly IAvailableDataNotifier<AvailableChargeLinksData, ChargeLinksAcceptedEvent> _availableDataNotifier;
         private readonly IChargeLinksDataAvailableNotifiedPublisher _chargeLinksDataAvailableNotifiedPublisher;
 
         public ChargeLinkDataAvailableNotifierEndpoint(
-            MessageExtractor<ChargeLinkCommandAccepted> messageExtractor,
+            MessageExtractor<ChargeLinksCommandAccepted> messageExtractor,
             IAvailableDataNotifier<AvailableChargeLinksData, ChargeLinksAcceptedEvent> availableDataNotifier,
             IChargeLinksDataAvailableNotifiedPublisher chargeLinksDataAvailableNotifiedPublisher)
         {

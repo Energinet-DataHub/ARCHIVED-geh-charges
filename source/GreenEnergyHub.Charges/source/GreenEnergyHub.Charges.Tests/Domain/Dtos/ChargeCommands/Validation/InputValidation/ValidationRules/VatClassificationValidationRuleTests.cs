@@ -46,45 +46,16 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
 
         [Theory]
         [InlineAutoDomainData]
-        public void ValidationRuleIdentifier_ShouldBe_EqualTo(ChargeCommand command)
+        public void ValidationRuleIdentifier_ShouldBe_EqualTo(ChargeCommandBuilder builder)
         {
-            var sut = new VatClassificationValidationRule(command);
-            sut.ValidationError.ValidationRuleIdentifier.Should()
-                .Be(ValidationRuleIdentifier.VatClassificationValidation);
+            var invalidCommand = CreateInvalidCommand(builder);
+            var sut = new VatClassificationValidationRule(invalidCommand);
+            sut.ValidationRuleIdentifier.Should().Be(ValidationRuleIdentifier.VatClassificationValidation);
         }
 
-        [Theory]
-        [InlineAutoDomainData]
-        public void ValidationErrorMessageParameters_ShouldContain_RequiredErrorMessageParameterTypes(ChargeCommand command)
+        private static ChargeCommand CreateInvalidCommand(ChargeCommandBuilder builder)
         {
-            // Arrange
-            // Act
-            var sut = new VatClassificationValidationRule(command);
-
-            // Assert
-            sut.ValidationError.ValidationErrorMessageParameters
-                .Select(x => x.ParameterType)
-                .Should().Contain(ValidationErrorMessageParameterType.ChargeVatClass);
-            sut.ValidationError.ValidationErrorMessageParameters
-                .Select(x => x.ParameterType)
-                .Should().Contain(ValidationErrorMessageParameterType.DocumentSenderProvidedChargeId);
-        }
-
-        [Theory]
-        [InlineAutoDomainData]
-        public void MessageParameter_ShouldBe_RequiredErrorMessageParameters(ChargeCommand command)
-        {
-            // Arrange
-            // Act
-            var sut = new VatClassificationValidationRule(command);
-
-            // Assert
-            sut.ValidationError.ValidationErrorMessageParameters
-                .Single(x => x.ParameterType == ValidationErrorMessageParameterType.ChargeVatClass)
-                .MessageParameter.Should().Be(command.ChargeOperation.VatClassification.ToString());
-            sut.ValidationError.ValidationErrorMessageParameters
-                .Single(x => x.ParameterType == ValidationErrorMessageParameterType.DocumentSenderProvidedChargeId)
-                .MessageParameter.Should().Be(command.ChargeOperation.ChargeId);
+            return builder.WithVatClassification(VatClassification.Unknown).Build();
         }
     }
 }

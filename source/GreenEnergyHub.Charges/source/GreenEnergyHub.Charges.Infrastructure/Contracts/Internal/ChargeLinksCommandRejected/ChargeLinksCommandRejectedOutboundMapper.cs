@@ -17,6 +17,7 @@ using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksRejectionEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
+using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinksCommandRejected;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Contracts.Internal.ChargeLinksCommandRejected
 {
@@ -39,51 +40,52 @@ namespace GreenEnergyHub.Charges.Infrastructure.Contracts.Internal.ChargeLinksCo
                 linksCommandRejected.ChargeLinksCommand.ChargeLinks.Add(ConvertChargeLink(chargeLinkDto));
             }
 
-            AddRejectedReasons(linksCommandRejected, chargeLinksRejectedEvent);
+            AddValidationRuleIdentifiers(linksCommandRejected, chargeLinksRejectedEvent);
 
             return linksCommandRejected;
         }
 
-        private static void AddRejectedReasons(Infrastructure.Internal.ChargeLinksCommandRejected.ChargeLinksCommandRejected chargeCommandRejectedContract, ChargeLinksRejectedEvent rejectionEvent)
+        private static void AddValidationRuleIdentifiers(GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinksCommandRejected.ChargeLinksCommandRejected chargeLinksCommandRejected, ChargeLinksRejectedEvent rejectionEvent)
         {
-            foreach (var reason in rejectionEvent.RejectReasons)
+            foreach (var failedValidationRuleIdentifier in rejectionEvent.FailedValidationRuleIdentifiers)
             {
-                chargeCommandRejectedContract.RejectReasons.Add(reason);
+                chargeLinksCommandRejected.FailedValidationRuleIdentifiers
+                    .Add((ValidationRuleIdentifierContract)failedValidationRuleIdentifier);
             }
         }
 
-        private static Infrastructure.Internal.ChargeLinksCommandRejected.Document ConvertDocument(DocumentDto documentDto)
+        private static Document ConvertDocument(DocumentDto documentDto)
         {
-            return new GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinksCommandRejected.Document
+            return new Document
             {
                 Id = documentDto.Id,
                 RequestDate = documentDto.RequestDate.ToTimestamp(),
-                Type = (Infrastructure.Internal.ChargeLinksCommandRejected.DocumentType)documentDto.Type,
+                Type = (DocumentType)documentDto.Type,
                 CreatedDateTime = documentDto.CreatedDateTime.ToTimestamp(),
-                Sender = new Infrastructure.Internal.ChargeLinksCommandRejected.MarketParticipant
+                Sender = new MarketParticipant
                 {
                     Id = documentDto.Sender.Id,
-                    BusinessProcessRole = (Infrastructure.Internal.ChargeLinksCommandRejected.MarketParticipantRole)documentDto.Sender.BusinessProcessRole,
+                    BusinessProcessRole = (MarketParticipantRole)documentDto.Sender.BusinessProcessRole,
                 },
-                Recipient = new Infrastructure.Internal.ChargeLinksCommandRejected.MarketParticipant
+                Recipient = new MarketParticipant
                 {
                     Id = documentDto.Recipient.Id,
-                    BusinessProcessRole = (Infrastructure.Internal.ChargeLinksCommandRejected.MarketParticipantRole)documentDto.Recipient.BusinessProcessRole,
+                    BusinessProcessRole = (MarketParticipantRole)documentDto.Recipient.BusinessProcessRole,
                 },
-                IndustryClassification = (Infrastructure.Internal.ChargeLinksCommandRejected.IndustryClassification)documentDto.IndustryClassification,
-                BusinessReasonCode = (Infrastructure.Internal.ChargeLinksCommandRejected.BusinessReasonCode)documentDto.BusinessReasonCode,
+                IndustryClassification = (IndustryClassification)documentDto.IndustryClassification,
+                BusinessReasonCode = (BusinessReasonCode)documentDto.BusinessReasonCode,
             };
         }
 
-        private static Infrastructure.Internal.ChargeLinksCommandRejected.ChargeLink ConvertChargeLink(ChargeLinkDto chargeLink)
+        private static ChargeLink ConvertChargeLink(ChargeLinkDto chargeLink)
         {
-            return new GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinksCommandRejected.ChargeLink
+            return new ChargeLink
             {
                 OperationId = chargeLink.OperationId,
                 SenderProvidedChargeId = chargeLink.SenderProvidedChargeId,
                 ChargeOwnerId = chargeLink.ChargeOwnerId,
                 Factor = chargeLink.Factor,
-                ChargeType = (Infrastructure.Internal.ChargeLinksCommandRejected.ChargeType)chargeLink.ChargeType,
+                ChargeType = (ChargeType)chargeLink.ChargeType,
                 StartDateTime = chargeLink.StartDateTime.ToTimestamp(),
                 EndDateTime = chargeLink.EndDateTime.TimeOrEndDefault().ToTimestamp(),
             };

@@ -136,51 +136,24 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
 
         [Theory]
         [InlineAutoDomainData]
-        public void ValidationRuleIdentifier_ShouldBe_EqualTo(ChargeCommand command)
+        public void ValidationRuleIdentifier_ShouldBe_EqualTo(ChargeCommandBuilder builder)
         {
-            var sut = new ChargeTypeTariffPriceCountRule(command);
-            sut.ValidationError.ValidationRuleIdentifier.Should()
-                .Be(ValidationRuleIdentifier.ChargeTypeTariffPriceCount);
+            var sut = CreateInvalidRule(builder);
+            sut.ValidationRuleIdentifier.Should().Be(ValidationRuleIdentifier.ChargeTypeTariffPriceCount);
         }
 
-        [Theory]
-        [InlineAutoDomainData]
-        public void ValidationErrorMessageParameters_ShouldContain_RequiredErrorMessageParameterTypes(ChargeCommand command)
+        private static ChargeTypeTariffPriceCountRule CreateInvalidRule(ChargeCommandBuilder builder)
         {
-            // Arrange
-            // Act
-            var sut = new ChargeTypeTariffPriceCountRule(command);
-
-            // Assert
-            sut.ValidationError.ValidationErrorMessageParameters
-                .Select(x => x.ParameterType)
-                .Should().Contain(ValidationErrorMessageParameterType.ChargePointsCount);
-            sut.ValidationError.ValidationErrorMessageParameters
-                .Select(x => x.ParameterType)
-                .Should().Contain(ValidationErrorMessageParameterType.DocumentSenderProvidedChargeId);
-            sut.ValidationError.ValidationErrorMessageParameters
-                .Select(x => x.ParameterType)
-                .Should().Contain(ValidationErrorMessageParameterType.ChargeResolution);
+            var invalidCommand = CreateInvalidCommand(builder);
+            return new ChargeTypeTariffPriceCountRule(invalidCommand);
         }
 
-        [Theory]
-        [InlineAutoDomainData]
-        public void MessageParameter_ShouldBe_RequiredErrorMessageParameters(ChargeCommand command)
+        private static ChargeCommand CreateInvalidCommand(ChargeCommandBuilder builder)
         {
-            // Arrange
-            // Act
-            var sut = new ChargeTypeTariffPriceCountRule(command);
-
-            // Assert
-            sut.ValidationError.ValidationErrorMessageParameters
-                .Single(x => x.ParameterType == ValidationErrorMessageParameterType.ChargePointsCount)
-                .MessageParameter.Should().Be(command.ChargeOperation.Points.Count.ToString());
-            sut.ValidationError.ValidationErrorMessageParameters
-                .Single(x => x.ParameterType == ValidationErrorMessageParameterType.DocumentSenderProvidedChargeId)
-                .MessageParameter.Should().Be(command.ChargeOperation.ChargeId);
-            sut.ValidationError.ValidationErrorMessageParameters
-                .Single(x => x.ParameterType == ValidationErrorMessageParameterType.ChargeResolution)
-                .MessageParameter.Should().Be(command.ChargeOperation.Resolution.ToString());
+            return builder
+                .WithChargeType(ChargeType.Tariff)
+                .WithResolution(Resolution.P1D)
+                .Build();
         }
     }
 }

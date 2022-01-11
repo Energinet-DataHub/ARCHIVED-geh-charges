@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
 using System.Linq;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
@@ -36,8 +35,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandRejectedEvents
             return new ChargeCommandRejectedEvent(
                 _clock.GetCurrentInstant(),
                 command,
-                validationResult.InvalidRules.Select(x => // TODO use ValidationErrorMessages
-                    x.ValidationError!.ValidationRuleIdentifier.ToString()).ToArray());
+                validationResult.InvalidRules.Select(x => x.ValidationRuleIdentifier));
         }
     }
 }

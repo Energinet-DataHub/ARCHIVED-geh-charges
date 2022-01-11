@@ -15,8 +15,9 @@
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksRejectionEvents;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Registration;
 using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinksCommandRejected;
-using GreenEnergyHub.Charges.MessageHub.Application.ChargeLinks;
-using GreenEnergyHub.Charges.MessageHub.Application.MessageHub;
+using GreenEnergyHub.Charges.MessageHub.BundleSpecification;
+using GreenEnergyHub.Charges.MessageHub.BundleSpecification.ChargeLinks;
+using GreenEnergyHub.Charges.MessageHub.MessageHub;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinkReceiptData;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableData;
 using Microsoft.Extensions.DependencyInjection;
@@ -30,16 +31,16 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
             serviceCollection.ReceiveProtobufMessage<ChargeLinksCommandRejected>(
                 configuration => configuration.WithParser(() => ChargeLinksCommandRejected.Parser));
             serviceCollection
-                .AddScoped<IAvailableDataNotifier<AvailableChargeLinkReceiptData, ChargeLinksRejectedEvent>,
-                    AvailableDataNotifier<AvailableChargeLinkReceiptData, ChargeLinksRejectedEvent>>();
+                .AddScoped<IAvailableDataNotifier<AvailableChargeLinksReceiptData, ChargeLinksRejectedEvent>,
+                    AvailableDataNotifier<AvailableChargeLinksReceiptData, ChargeLinksRejectedEvent>>();
             serviceCollection
-                .AddScoped<IAvailableDataFactory<AvailableChargeLinkReceiptData, ChargeLinksRejectedEvent>,
+                .AddScoped<IAvailableDataFactory<AvailableChargeLinksReceiptData, ChargeLinksRejectedEvent>,
                     AvailableChargeLinksRejectionDataFactory>();
             serviceCollection
-                .AddScoped<IAvailableDataNotificationFactory<AvailableChargeLinkReceiptData>,
-                    AvailableDataNotificationFactory<AvailableChargeLinkReceiptData>>();
+                .AddScoped<IAvailableDataNotificationFactory<AvailableChargeLinksReceiptData>,
+                    AvailableDataNotificationFactory<AvailableChargeLinksReceiptData>>();
             serviceCollection
-                .AddScoped<BundleSpecification<AvailableChargeLinkReceiptData, ChargeLinksRejectedEvent>,
+                .AddScoped<BundleSpecification<AvailableChargeLinksReceiptData, ChargeLinksRejectedEvent>,
                     ChargeLinksRejectionBundleSpecification>();
         }
     }

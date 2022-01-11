@@ -2,7 +2,7 @@
 
 The following validation rules are currently implemented in the charge domain.
 
-|**Rule number**|**Description**|**Rejection code**|**Charge Type**|**Charge Links**|
+|**Rule number**|**Description**|**Rejection code**|**Charge Types**|**Charge Links**|
 |:-|:-|:-|:-|:-|
 |VR.009|The energy business process of a metering point is mandatory|D02|All|N/A|
 |VR.150|The sender of a message is mandatory|D02|All|N/A|
@@ -32,7 +32,6 @@ The following validation rules are currently implemented in the charge domain.
 |VR.679|Charge do not exist|E0I|N/A|X|
 |VR.902*|Update and stops are not implemented yet|D13|All|X|
 |VR.903|The Tax indicator for a charge cannot be updated|D14|Tariff|N/A|
-
 * VR.152 is not fully implemented. Right now we only validate that it is filled with something
 * VR.679 is not fully implemented. For now it verifies that the charge exist, not checking that the linked period is within the charge's validity period
 * VR.902 is temporary and will be changed once update and stop functionality has been implemented.

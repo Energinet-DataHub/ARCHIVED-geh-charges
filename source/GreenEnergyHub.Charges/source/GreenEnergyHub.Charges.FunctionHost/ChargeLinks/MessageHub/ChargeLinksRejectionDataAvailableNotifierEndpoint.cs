@@ -17,7 +17,7 @@ using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksRejectionEvents;
 using GreenEnergyHub.Charges.FunctionHost.Common;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions;
 using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinksCommandRejected;
-using GreenEnergyHub.Charges.MessageHub.Application.MessageHub;
+using GreenEnergyHub.Charges.MessageHub.MessageHub;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData;
 using Microsoft.Azure.Functions.Worker;
 

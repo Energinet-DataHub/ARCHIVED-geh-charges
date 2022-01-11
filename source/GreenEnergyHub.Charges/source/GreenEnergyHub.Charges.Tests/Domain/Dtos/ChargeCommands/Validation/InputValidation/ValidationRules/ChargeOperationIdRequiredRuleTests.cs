@@ -39,38 +39,24 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
             bool expected,
             ChargeCommandBuilder builder)
         {
-            var command = builder.WithId(chargeOperationId).Build();
+            var command = builder.WithOperationId(chargeOperationId).Build();
             var sut = new ChargeOperationIdRequiredRule(command);
             Assert.Equal(expected, sut.IsValid);
         }
 
         [Theory]
         [InlineAutoDomainData]
-        public void ValidationRuleIdentifier_ShouldBe_EqualTo(ChargeCommand command)
+        public void ValidationRuleIdentifier_ShouldBe_EqualTo(ChargeCommandBuilder builder)
         {
-            var sut = new ChargeOperationIdRequiredRule(command);
-            sut.ValidationError.ValidationRuleIdentifier.Should()
+            var invalidCommand = CreateInvalidCommand(builder);
+            var sut = new ChargeOperationIdRequiredRule(invalidCommand);
+            sut.ValidationRuleIdentifier.Should()
                 .Be(ValidationRuleIdentifier.ChargeOperationIdRequired);
         }
 
-        [Theory]
-        [InlineAutoDomainData]
-        public void ValidationErrorMessageParameters_ShouldContain_RequiredErrorMessageParameterTypes(ChargeCommand command)
+        private static ChargeCommand CreateInvalidCommand(ChargeCommandBuilder builder)
         {
-            var sut = new ChargeOperationIdRequiredRule(command);
-            sut.ValidationError.ValidationErrorMessageParameters
-                .Select(x => x.ParameterType)
-                .Should().Contain(ValidationErrorMessageParameterType.DocumentId);
-        }
-
-        [Theory]
-        [InlineAutoDomainData]
-        public void MessageParameter_ShouldBe_RequiredErrorMessageParameters(ChargeCommand command)
-        {
-            var sut = new ChargeOperationIdRequiredRule(command);
-            sut.ValidationError.ValidationErrorMessageParameters
-                .Single(x => x.ParameterType == ValidationErrorMessageParameterType.DocumentId)
-                .MessageParameter.Should().Be(command.Document.Id); // Todo: MeteringPointId provided in Excel sheet for VR.223 does not make sense
+            return builder.WithOperationId(string.Empty).Build();
         }
     }
 }

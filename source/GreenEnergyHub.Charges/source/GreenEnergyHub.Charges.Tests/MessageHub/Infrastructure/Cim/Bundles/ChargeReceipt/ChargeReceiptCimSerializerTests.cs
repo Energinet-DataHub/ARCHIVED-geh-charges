@@ -20,11 +20,12 @@ using System.Threading.Tasks;
 using AutoFixture.Xunit2;
 using GreenEnergyHub.Charges.Domain.Configuration;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
-using GreenEnergyHub.Charges.Infrastructure.Core;
+using GreenEnergyHub.Charges.Infrastructure.Core.Cim;
 using GreenEnergyHub.Charges.Infrastructure.Core.Cim.MarketDocument;
 using GreenEnergyHub.Charges.MessageHub.Infrastructure.Cim;
 using GreenEnergyHub.Charges.MessageHub.Infrastructure.Cim.Bundles.ChargeReceipt;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData;
+using GreenEnergyHub.Charges.MessageHub.Models.AvailableData;
 using GreenEnergyHub.Charges.TestCore;
 using GreenEnergyHub.TestHelpers;
 using Moq;
@@ -149,21 +150,17 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Infrastructure.Cim.Bundles.Cha
                 GetReasonCodes(no));
         }
 
-        private List<AvailableChargeReceiptDataReasonCode> GetReasonCodes(int no)
+        private List<AvailableReceiptValidationError> GetReasonCodes(int no)
         {
-            var reasonCodes = new List<AvailableChargeReceiptDataReasonCode>();
+            var reasonCodes = new List<AvailableReceiptValidationError>();
             var noOfReasons = (no % 3) + 1;
 
             for (var i = 1; i <= noOfReasons; i++)
             {
-                var text = string.Empty;
-                if (i % 2 == 0)
-                {
-                    text = "Text" + no + "_" + i;
-                }
+                var text = i % 2 == 0 ? $"Text{no}_{i}" : string.Empty;
 
-                reasonCodes.Add(new AvailableChargeReceiptDataReasonCode(
-                    ReasonCode.IncorrectChargeInformation,
+                reasonCodes.Add(new AvailableReceiptValidationError(
+                    ReasonCode.D14, // Matches that of the test file
                     text));
             }
 
