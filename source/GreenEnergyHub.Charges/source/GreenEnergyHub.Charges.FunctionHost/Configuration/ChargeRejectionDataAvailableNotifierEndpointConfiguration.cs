@@ -35,6 +35,9 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
                 .AddScoped<IAvailableDataNotifier<AvailableChargeReceiptData, ChargeCommandRejectedEvent>,
                     AvailableDataNotifier<AvailableChargeReceiptData, ChargeCommandRejectedEvent>>();
             serviceCollection
+                .AddScoped<AvailableChargeReceiptValidationErrorFactory,
+                    AvailableChargeReceiptValidationErrorFactory>();
+            serviceCollection
                 .AddScoped<ICimValidationErrorTextProvider, CimValidationErrorTextProvider>();
             serviceCollection
                 .AddScoped<ICimValidationErrorCodeFactory, CimValidationErrorCodeFactory>();
