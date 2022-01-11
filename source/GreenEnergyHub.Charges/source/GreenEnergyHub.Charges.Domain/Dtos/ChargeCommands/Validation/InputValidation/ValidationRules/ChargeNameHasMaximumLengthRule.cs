@@ -24,16 +24,8 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputVali
             _chargeCommand = chargeCommand;
         }
 
-        public bool IsValid => _chargeCommand.ChargeOperation.ChargeName.Length <= MaximumChargeNameLength;
+        public ValidationRuleIdentifier ValidationRuleIdentifier => ValidationRuleIdentifier.ChargeNameHasMaximumLength;
 
-        public ValidationError ValidationError =>
-            new(
-                ValidationRuleIdentifier.ChargeNameHasMaximumLength,
-                new ValidationErrorMessageParameter(
-                    _chargeCommand.ChargeOperation.ChargeName,
-                    ValidationErrorMessageParameterType.ChargeName),
-                new ValidationErrorMessageParameter(
-                    _chargeCommand.ChargeOperation.ChargeId,
-                    ValidationErrorMessageParameterType.DocumentSenderProvidedChargeId));
+        public bool IsValid => _chargeCommand.ChargeOperation.ChargeName.Length <= MaximumChargeNameLength;
     }
 }

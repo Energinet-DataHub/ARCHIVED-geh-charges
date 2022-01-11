@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using AutoFixture.Xunit2;
@@ -35,41 +34,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommandRejectedEvents
         public void CreateEvent_WhenCalledWithValidationResult_CreatesEventWithCorrectFailures(
             [Frozen] Mock<IClock> clock,
             ChargeCommand command,
-            Mock<ValidationError> validationError,
-            Mock<IValidationRule> validationRule,
-            Mock<IValidationRuleSet> validationRuleSetMock,
-            ChargeCommandRejectedEventFactory sut)
-        {
-            // Arrange
-            var currentTime = Instant.FromUtc(2021, 7, 7, 7, 50, 49);
-            clock.Setup(c => c.GetCurrentInstant()).Returns(currentTime);
-            validationRule.Setup(x => x.IsValid).Returns(false);
-            validationRule.Setup(y => y.ValidationError).Returns(validationError.Object);
-            validationRuleSetMock.Setup(x => x.GetRules()).Returns(new List<IValidationRule> { validationRule.Object });
-
-            var failedRules = validationRuleSetMock.Object.GetRules().ToList();
-            var validationResult = ChargeCommandValidationResult.CreateFailure(failedRules);
-
-            // Act
-            var result = sut.CreateEvent(command, validationResult);
-
-            // Assert
-            Assert.NotNull(result);
-            Assert.NotEmpty(failedRules);
-            Assert.Equal(currentTime, result.PublishedTime);
-            Assert.Equal(failedRules.Count, result.RejectReasons.Count());
-            foreach (var failedRule in failedRules)
-            {
-                Assert.Contains(failedRule.ValidationError!.ValidationRuleIdentifier.ToString(), result.RejectReasons);
-            }
-        }
-
-        [Theory]
-        [InlineAutoMoqData]
-        public void CreateEvent_WhenCalledException_CreatesEventWithOneReason(
-            [Frozen] Mock<IClock> clock,
-            ChargeCommand command,
-            Exception exception,
+            IList<IValidationRule> failedRules,
             ChargeCommandRejectedEventFactory sut)
         {
             // Arrange
@@ -78,14 +43,19 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommandRejectedEvents
                     c => c.GetCurrentInstant())
                 .Returns(currentTime);
 
+            var validationResult = ChargeCommandValidationResult.CreateFailure(failedRules);
+
             // Act
-            var result = sut.CreateEvent(command, exception);
+            var result = sut.CreateEvent(command, validationResult);
 
             // Assert
             Assert.NotNull(result);
             Assert.Equal(currentTime, result.PublishedTime);
-            Assert.Single(result.RejectReasons);
-            Assert.Equal(exception.Message, result.RejectReasons.First());
+            Assert.Equal(failedRules.Count, result.FailedValidationRuleIdentifiers.Count());
+            foreach (var failedRule in failedRules)
+            {
+                Assert.Contains(failedRule.ValidationRuleIdentifier, result.FailedValidationRuleIdentifiers);
+            }
         }
     }
 }
