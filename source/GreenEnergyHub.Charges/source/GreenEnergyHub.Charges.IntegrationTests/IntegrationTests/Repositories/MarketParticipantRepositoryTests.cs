@@ -60,7 +60,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
 
             // Assert
             actual.Should().NotBeNull();
-            actual.BusinessProcessRole.Should().Be(expectedMarketParticipantRole);
+            actual.Roles.Should().Contain(expectedMarketParticipantRole);
         }
     }
 }
