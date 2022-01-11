@@ -15,7 +15,7 @@
 using System;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksReceivedEvents;
-using GreenEnergyHub.Charges.Infrastructure.Contracts.Internal.LinkCommandReceived;
+using GreenEnergyHub.Charges.Infrastructure.Contracts.Internal.ChargeLinkCommandReceived;
 using GreenEnergyHub.Charges.TestCore.Attributes;
 using GreenEnergyHub.Charges.Tests.Protobuf;
 using NodaTime;

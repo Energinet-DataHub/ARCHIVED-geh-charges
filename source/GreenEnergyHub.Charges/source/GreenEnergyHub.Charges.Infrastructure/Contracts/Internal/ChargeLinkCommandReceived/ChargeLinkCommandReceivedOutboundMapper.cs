@@ -19,7 +19,7 @@ using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksReceivedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 
-namespace GreenEnergyHub.Charges.Infrastructure.Contracts.Internal.LinkCommandReceived
+namespace GreenEnergyHub.Charges.Infrastructure.Contracts.Internal.ChargeLinkCommandReceived
 {
     public class ChargeLinkCommandReceivedOutboundMapper : ProtobufOutboundMapper<ChargeLinksReceivedEvent>
     {

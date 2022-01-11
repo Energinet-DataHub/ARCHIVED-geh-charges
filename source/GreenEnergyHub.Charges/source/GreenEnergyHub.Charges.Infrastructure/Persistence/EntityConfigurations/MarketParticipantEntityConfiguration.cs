@@ -16,7 +16,7 @@ using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace GreenEnergyHub.Charges.Infrastructure.Context.EntityConfigurations
+namespace GreenEnergyHub.Charges.Infrastructure.Persistence.EntityConfigurations
 {
     public class MarketParticipantEntityConfiguration : IEntityTypeConfiguration<MarketParticipant>
     {
