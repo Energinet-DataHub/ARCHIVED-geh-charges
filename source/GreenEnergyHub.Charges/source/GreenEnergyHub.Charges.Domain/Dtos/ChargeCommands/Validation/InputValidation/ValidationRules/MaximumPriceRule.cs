@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System.Linq;
+using GreenEnergyHub.Charges.Domain.Charges;
 
 namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputValidation.ValidationRules
 {
@@ -28,6 +29,13 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputVali
 
         public ValidationRuleIdentifier ValidationRuleIdentifier => ValidationRuleIdentifier.MaximumPrice;
 
-        public bool IsValid => _chargeCommand.ChargeOperation.Points.All(point => point.Price < PriceUpperBound);
+        public bool IsValid => _chargeCommand.ChargeOperation.Points.All(Validate);
+
+        public int? PointPosition => _chargeCommand.ChargeOperation.Points.FirstOrDefault(Validate)?.Position;
+
+        private bool Validate(Point point)
+        {
+            return point.Price < PriceUpperBound;
+        }
     }
 }

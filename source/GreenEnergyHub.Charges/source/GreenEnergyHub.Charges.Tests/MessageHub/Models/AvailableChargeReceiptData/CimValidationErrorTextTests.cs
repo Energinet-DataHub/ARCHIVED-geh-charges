@@ -42,7 +42,34 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptD
                 .Replace("{{ChargeType}}", chargeCommand.ChargeOperation.Type.ToString());
 
             // Act
-            var actual = sut.Create(ValidationRuleIdentifier.ResolutionTariffValidation, chargeCommand);
+            var actual = sut.Create(
+                new ValidationError(ValidationRuleIdentifier.ResolutionTariffValidation, null),
+                chargeCommand);
+
+            // Assert
+            actual.Should().Be(expected);
+        }
+
+        [Theory]
+        [InlineAutoMoqData]
+        public void Create_WithPointPosition_ReturnsExpectedDescription(
+            ChargeCommand chargeCommand,
+            CimValidationErrorTextProvider cimValidationErrorTextProvider)
+        {
+            // Arrange
+            var sut = new CimValidationErrorTextFactory(cimValidationErrorTextProvider);
+
+            var expectedPoint = chargeCommand.ChargeOperation.Points[1];
+            var expected = CimValidationErrorTextTemplateMessages.MaximumPriceErrorText
+                .Replace("{{ChargePointPrice}}", expectedPoint.Price.ToString("N"))
+                .Replace("{{ChargePointPosition}}", expectedPoint.Position.ToString());
+
+            // Act
+            var actual = sut.Create(
+                new ValidationError(
+                    ValidationRuleIdentifier.MaximumPrice,
+                    chargeCommand.ChargeOperation.Points[1].Position),
+                chargeCommand);
 
             // Assert
             actual.Should().Be(expected);
@@ -62,10 +89,23 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptD
             // Assert
             foreach (var validationRuleIdentifier in validationRuleIdentifiers)
             {
-                var actual = sut.Create(validationRuleIdentifier, chargeCommand);
+                var pointPosition = SetPointPosition(chargeCommand, validationRuleIdentifier);
+                var actual = sut.Create(new ValidationError(validationRuleIdentifier, pointPosition), chargeCommand);
                 actual.Should().NotBeNullOrWhiteSpace();
                 actual.Should().NotContain("{");
             }
+        }
+
+        private static int? SetPointPosition(ChargeCommand chargeCommand, ValidationRuleIdentifier validationRuleIdentifier)
+        {
+            return validationRuleIdentifier switch
+            {
+                ValidationRuleIdentifier.ChargePriceMaximumDigitsAndDecimals =>
+                    chargeCommand.ChargeOperation.Points[0].Position,
+                ValidationRuleIdentifier.MaximumPrice =>
+                    chargeCommand.ChargeOperation.Points[1].Position,
+                _ => null,
+            };
         }
     }
 }

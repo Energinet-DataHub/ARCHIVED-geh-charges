@@ -30,5 +30,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputVali
 
         public bool IsValid => _chargeCommand.Document.BusinessReasonCode ==
                                BusinessReasonCode.UpdateChargeInformation;
+
+        public int? PointPosition => null;
     }
 }

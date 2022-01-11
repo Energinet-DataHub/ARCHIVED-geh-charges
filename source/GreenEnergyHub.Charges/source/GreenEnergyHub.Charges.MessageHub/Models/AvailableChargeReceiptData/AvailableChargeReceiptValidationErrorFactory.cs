@@ -30,12 +30,10 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
             _cimValidationErrorTextFactory = cimValidationErrorTextFactory;
         }
 
-        public AvailableChargeReceiptValidationError Create(
-            ValidationRuleIdentifier ruleIdentifier,
-            ChargeCommand command)
+        public AvailableChargeReceiptValidationError Create(ValidationError validationError, ChargeCommand command)
         {
-            var reasonCode = _cimValidationErrorCodeFactory.Create(ruleIdentifier);
-            var reasonText = _cimValidationErrorTextFactory.Create(ruleIdentifier, command);
+            var reasonCode = _cimValidationErrorCodeFactory.Create(validationError.ValidationRuleIdentifier);
+            var reasonText = _cimValidationErrorTextFactory.Create(validationError, command);
 
             return new AvailableChargeReceiptValidationError(reasonCode, reasonText);
         }

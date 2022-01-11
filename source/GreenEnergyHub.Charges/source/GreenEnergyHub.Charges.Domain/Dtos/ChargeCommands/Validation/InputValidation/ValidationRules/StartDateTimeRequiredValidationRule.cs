@@ -28,5 +28,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputVali
 
         // Instant is a struct, so to ensure caller supplied it, we check if it has the default value.
         public bool IsValid => _chargeCommand.ChargeOperation.StartDateTime != default;
+
+        public int? PointPosition => null;
     }
 }

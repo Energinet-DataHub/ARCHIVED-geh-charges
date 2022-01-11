@@ -12,22 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation;
-
-namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation
+namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation
 {
-    public class TestValidationRule : IValidationRule
+    public class ValidationError
     {
-        public TestValidationRule(bool isValid, ValidationRuleIdentifier ruleIdentifier)
+        public ValidationError(ValidationRuleIdentifier validationRuleIdentifier, int? pointPosition)
         {
-            IsValid = isValid;
-            ValidationRuleIdentifier = ruleIdentifier;
+            ValidationRuleIdentifier = validationRuleIdentifier;
+            PointPosition = pointPosition;
         }
-
-        public bool IsValid { get; }
 
         public ValidationRuleIdentifier ValidationRuleIdentifier { get; }
 
-        public int? PointPosition => null;
+        public int? PointPosition { get; }
     }
 }

@@ -26,5 +26,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputVali
         public ValidationRuleIdentifier ValidationRuleIdentifier => ValidationRuleIdentifier.ChargeOperationIdRequired;
 
         public bool IsValid => !string.IsNullOrWhiteSpace(_chargeCommand.ChargeOperation.Id);
+
+        public int? PointPosition => null;
     }
 }

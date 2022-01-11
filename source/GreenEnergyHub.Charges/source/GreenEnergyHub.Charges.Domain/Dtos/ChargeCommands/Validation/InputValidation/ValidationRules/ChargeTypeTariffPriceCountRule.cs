@@ -33,6 +33,8 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputVali
 
         public bool IsValid => Validate();
 
+        public int? PointPosition => null;
+
         private bool Validate()
         {
             if (_chargeCommand.ChargeOperation.Type == ChargeType.Tariff)

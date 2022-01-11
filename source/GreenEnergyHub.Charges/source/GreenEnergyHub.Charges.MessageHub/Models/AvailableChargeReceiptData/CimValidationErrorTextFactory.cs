@@ -31,20 +31,23 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
             _cimValidationErrorTextProvider = cimValidationErrorTextProvider;
         }
 
-        public string Create(ValidationRuleIdentifier validationRuleIdentifier, ChargeCommand chargeCommand)
+        public string Create(ValidationError validationError, ChargeCommand chargeCommand)
         {
-            return GetMergedErrorMessage(validationRuleIdentifier, chargeCommand);
+            return GetMergedErrorMessage(validationError, chargeCommand);
         }
 
-        private string GetMergedErrorMessage(ValidationRuleIdentifier validationRuleIdentifier, ChargeCommand chargeCommand)
+        private string GetMergedErrorMessage(ValidationError validationError, ChargeCommand chargeCommand)
         {
             var errorTextTemplate = _cimValidationErrorTextProvider
-                .GetCimValidationErrorText(validationRuleIdentifier);
+                .GetCimValidationErrorText(validationError.ValidationRuleIdentifier);
 
-            return MergeErrorText(errorTextTemplate, chargeCommand);
+            return MergeErrorText(errorTextTemplate, chargeCommand, validationError.PointPosition);
         }
 
-        private static string MergeErrorText(string errorTextTemplate, ChargeCommand chargeCommand)
+        private static string MergeErrorText(
+            string errorTextTemplate,
+            ChargeCommand chargeCommand,
+            int? chargePointPosition)
         {
             var tokens = GetTokens(errorTextTemplate);
 
@@ -52,14 +55,17 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
 
             foreach (var token in tokens)
             {
-                var data = GetDataForToken(token, chargeCommand);
+                var data = GetDataForToken(token, chargeCommand, chargePointPosition);
                 mergedErrorText = mergedErrorText.Replace("{{" + token + "}}", data);
             }
 
             return mergedErrorText;
         }
 
-        private static string GetDataForToken(CimValidationErrorTextToken token, ChargeCommand chargeCommand)
+        private static string GetDataForToken(
+            CimValidationErrorTextToken token,
+            ChargeCommand chargeCommand,
+            int? chargePointPosition)
         {
             // Please keep sorted by CimValidationErrorTextToken
             return token switch
@@ -71,9 +77,10 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
                 CimValidationErrorTextToken.ChargeOwner =>
                     chargeCommand.ChargeOperation.ChargeOwner,
                 CimValidationErrorTextToken.ChargePointPosition =>
-                    "To be implemented in upcoming pull request", // TODO: Henrik
+                    chargePointPosition == null ? string.Empty : chargePointPosition.Value.ToString(),
                 CimValidationErrorTextToken.ChargePointPrice =>
-                    "To be implemented in upcoming pull request", // TODO: Henrik
+                    chargeCommand.ChargeOperation.Points
+                        .Single(p => p.Position == chargePointPosition).Price.ToString("N"),
                 CimValidationErrorTextToken.ChargePointsCount =>
                     chargeCommand.ChargeOperation.Points.Count.ToString(),
                 CimValidationErrorTextToken.ChargeResolution =>

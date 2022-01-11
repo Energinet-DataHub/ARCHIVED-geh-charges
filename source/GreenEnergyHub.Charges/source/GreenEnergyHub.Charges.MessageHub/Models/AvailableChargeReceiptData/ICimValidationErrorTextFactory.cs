@@ -26,6 +26,6 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
         /// Creates an error text by replacing occurrences of the
         /// placeholder texts with values from the <see cref="ChargeCommand"/>.
         /// </summary>
-        string Create(ValidationRuleIdentifier validationRuleIdentifier, ChargeCommand chargeCommand);
+        string Create(ValidationError validationError, ChargeCommand chargeCommand);
     }
 }

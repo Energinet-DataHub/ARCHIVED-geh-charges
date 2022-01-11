@@ -31,5 +31,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputVali
         public bool IsValid => _chargeCommand.ChargeOperation.Type == ChargeType.Fee ||
                                _chargeCommand.ChargeOperation.Type == ChargeType.Subscription ||
                                _chargeCommand.ChargeOperation.Type == ChargeType.Tariff;
+
+        public int? PointPosition => null;
     }
 }

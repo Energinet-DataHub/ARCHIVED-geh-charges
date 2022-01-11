@@ -51,15 +51,15 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Contracts.Internal.ChargeC
         private static ChargeCommandRejectedEvent CreateChargeCommandRejectedEvent(ChargeCommandBuilder builder)
         {
             var chargeCommand = builder.Build();
-            var reasons = new List<ValidationRuleIdentifier>
+            var validationRuleIdentifiers = new List<ValidationError>
             {
-                ValidationRuleIdentifier.MaximumPrice,
-                ValidationRuleIdentifier.ResolutionFeeValidation,
+                new(ValidationRuleIdentifier.MaximumPrice, pointPosition: 2),
+                new(ValidationRuleIdentifier.ResolutionFeeValidation, null),
             };
             var chargeCommandRejectedEvent = new ChargeCommandRejectedEvent(
                 SystemClock.Instance.GetCurrentInstant(),
                 chargeCommand,
-                reasons);
+                validationRuleIdentifiers);
             UpdateInstantsToValidTimes(chargeCommandRejectedEvent);
             return chargeCommandRejectedEvent;
         }
