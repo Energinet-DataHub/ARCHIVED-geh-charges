@@ -15,6 +15,7 @@
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Energinet.Charges.Contracts.ChargeLink;
 
@@ -45,8 +46,13 @@ namespace Energinet.DataHub.Charges.Clients.ChargeLinks
             if (!response.IsSuccessStatusCode)
                 return list;
 
+            var options = new JsonSerializerOptions
+            {
+                Converters = { new JsonStringEnumConverter() },
+            };
+
             var content = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
-            var result = JsonSerializer.Deserialize<List<ChargeLinkDto>>(content, new JsonSerializerOptions(JsonSerializerDefaults.Web));
+            var result = JsonSerializer.Deserialize<List<ChargeLinkDto>>(content, options);
 
             if (result != null)
                 list.AddRange(result);
