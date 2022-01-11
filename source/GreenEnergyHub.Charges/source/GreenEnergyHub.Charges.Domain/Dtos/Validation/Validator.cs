@@ -31,13 +31,13 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.Validation
             _businessValidator = businessValidator;
         }
 
-        public async Task<ValidationResult> ValidateAsync(TCommand chargeLinksCommand)
+        public async Task<ValidationResult> ValidateAsync(TCommand command)
         {
-            var inputValidationResult = _inputValidator.Validate(chargeLinksCommand);
+            var inputValidationResult = _inputValidator.Validate(command);
             if (inputValidationResult.IsFailed) return inputValidationResult;
 
             var businessValidationResult =
-                await _businessValidator.ValidateAsync(chargeLinksCommand).ConfigureAwait(false);
+                await _businessValidator.ValidateAsync(command).ConfigureAwait(false);
             return businessValidationResult;
         }
     }
