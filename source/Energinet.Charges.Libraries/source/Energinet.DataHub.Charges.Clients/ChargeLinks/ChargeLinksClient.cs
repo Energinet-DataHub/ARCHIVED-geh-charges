@@ -46,7 +46,7 @@ namespace Energinet.DataHub.Charges.Clients.ChargeLinks
             if (!response.IsSuccessStatusCode)
                 return list;
 
-            var options = new JsonSerializerOptions
+            var options = new JsonSerializerOptions(JsonSerializerDefaults.Web)
             {
                 Converters = { new JsonStringEnumConverter() },
             };
