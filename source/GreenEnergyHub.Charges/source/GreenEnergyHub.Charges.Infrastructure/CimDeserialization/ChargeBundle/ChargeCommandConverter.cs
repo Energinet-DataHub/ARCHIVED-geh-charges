@@ -71,7 +71,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.ChargeBundle
                 }
             }
 
-            return operations!;
+            return operations;
         }
 
         private async Task<ChargeOperationDto> ParseChargeGroupIntoOperationAsync(SchemaValidatingReader reader, string operationId)
@@ -140,7 +140,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.ChargeBundle
                 {
                     // Note: Resolution can be set two places in the file. If its filled here, that the one that will be used.
                     // This is done to be able to handle changes to charges without prices
-                    var content = await reader.ReadValueAsStringAsync().ConfigureAwait(false);
+                    var content = await reader.ReadValueAsDurationAsync().ConfigureAwait(false);
                     resolution = ResolutionMapper.Map(content);
                 }
                 else if (reader.Is(CimChargeCommandConstants.StartDateTime))
@@ -207,7 +207,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.ChargeBundle
                     // If it was not set previous, we use this one instead
                     if (initialResolution == Resolution.Unknown)
                     {
-                        var content = await reader.ReadValueAsStringAsync().ConfigureAwait(false);
+                        var content = await reader.ReadValueAsDurationAsync().ConfigureAwait(false);
                         resolution = ResolutionMapper.Map(content);
                     }
                 }
