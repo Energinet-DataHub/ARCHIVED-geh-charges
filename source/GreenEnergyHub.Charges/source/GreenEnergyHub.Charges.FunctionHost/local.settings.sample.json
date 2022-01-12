@@ -14,6 +14,7 @@
     "INTEGRATIONEVENT_MANAGER_CONNECTION_STRING": "<sb manager connection string for integration events (without EntityPath)>",
     "INTEGRATIONEVENT_SENDER_CONNECTION_STRING": "<sb sender connection string for integration events (without EntityPath)>",
     "MESSAGEHUB_STORAGE_CONNECTION_STRING": "<connection string for writing to the Message Hub storage account for bundles>",
+    "REQUEST_RESPONSE_LOGGING_CONNECTION_STRING": "<connection string for logging request and response to storage>",
 
     // This is settings about who we identify ourselves as being 
     "HUB_SENDER_ID": "5790001330552",
@@ -43,6 +44,9 @@
     "MESSAGEHUB_BUNDLEREQUEST_QUEUE": "charges",
     "MESSAGEHUB_BUNDLEREPLY_QUEUE": "charges-reply",
     "MESSAGEHUB_STORAGE_CONTAINER": "postoffice-reply",
+
+    // Integration, request response logging
+    "REQUEST_RESPONSE_LOGGING_CONTAINER_NAME": "marketoplogs",
 
     // Internal, charge, received
     "COMMAND_RECEIVED_TOPIC_NAME": "command-received",

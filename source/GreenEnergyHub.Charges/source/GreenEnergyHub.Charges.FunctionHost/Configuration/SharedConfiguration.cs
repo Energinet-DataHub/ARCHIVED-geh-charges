@@ -14,6 +14,7 @@
 
 using System;
 using Azure.Messaging.ServiceBus;
+using Energinet.DataHub.Core.Logging.RequestResponseMiddleware;
 using Energinet.DataHub.Core.Messaging.Protobuf;
 using Energinet.DataHub.Core.Messaging.Transport;
 using Energinet.DataHub.MessageHub.Client;
@@ -82,6 +83,14 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
             var azureBlobStorageContainerName = EnvironmentHelper.GetEnv(EnvironmentSettingNames.MessageHubStorageContainer);
 
             var serviceBusClient = new ServiceBusClient(serviceBusConnectionString);
+
+            serviceCollection.AddScoped<IRequestResponseLogging>(_ =>
+            {
+                var requestResponseLogStorage = EnvironmentHelper.GetEnv(EnvironmentSettingNames.RequestResponseLoggingConnectionString);
+                var requestResponseLogContainerName = EnvironmentHelper.GetEnv(EnvironmentSettingNames.RequestResponseLoggingContainerName);
+
+                return new RequestResponseLoggingBlobStorage(requestResponseLogStorage, requestResponseLogContainerName);
+            });
 
             AddCreateDefaultChargeLinksReplier(serviceCollection, serviceBusClient);
             AddPostOfficeCommunication(
