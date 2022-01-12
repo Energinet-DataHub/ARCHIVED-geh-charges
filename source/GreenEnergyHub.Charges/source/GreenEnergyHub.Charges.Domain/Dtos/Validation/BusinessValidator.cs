@@ -29,7 +29,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.Validation
 
         public async Task<ValidationResult> ValidateAsync(TCommand command)
         {
-            var businessValidationResult = await _businessValidationRulesFactory.CreateRulesAsync(command);
+            var businessValidationResult = await _businessValidationRulesFactory.CreateRulesAsync(command).ConfigureAwait(false);;
             return businessValidationResult.Validate();
         }
     }
