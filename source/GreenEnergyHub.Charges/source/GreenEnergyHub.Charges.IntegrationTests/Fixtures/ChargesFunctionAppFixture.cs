@@ -17,6 +17,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
+using Azure.Storage.Blobs;
 using Energinet.DataHub.Core.FunctionApp.TestCommon;
 using Energinet.DataHub.Core.FunctionApp.TestCommon.Azurite;
 using Energinet.DataHub.Core.FunctionApp.TestCommon.Configuration;
@@ -252,6 +253,9 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures
         {
             Environment.SetEnvironmentVariable(EnvironmentSettingNames.RequestResponseLoggingConnectionString, ChargesServiceBusResourceNames.RequestResponseLoggingConnectionString);
             Environment.SetEnvironmentVariable(EnvironmentSettingNames.RequestResponseLoggingContainerName, ChargesServiceBusResourceNames.RequestResponseLoggingContainerName);
+
+            var storage = new BlobContainerClient(ChargesServiceBusResourceNames.RequestResponseLoggingConnectionString, ChargesServiceBusResourceNames.RequestResponseLoggingContainerName);
+            storage.CreateIfNotExists();
         }
 
         private static string GetBuildConfiguration()
