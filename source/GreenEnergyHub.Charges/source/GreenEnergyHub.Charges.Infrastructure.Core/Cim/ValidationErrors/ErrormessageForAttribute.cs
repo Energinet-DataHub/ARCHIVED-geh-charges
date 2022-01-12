@@ -13,15 +13,15 @@
 // limitations under the License.
 
 using System;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation;
+using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors
 {
-    public class ErrormessageForAttribute : Attribute
+    public class ErrorMessageForAttribute : Attribute
     {
         public ValidationRuleIdentifier ValidationRuleIdentifier { get; }
 
-        public ErrormessageForAttribute(ValidationRuleIdentifier validationRuleIdentifier)
+        public ErrorMessageForAttribute(ValidationRuleIdentifier validationRuleIdentifier)
         {
             ValidationRuleIdentifier = validationRuleIdentifier;
         }

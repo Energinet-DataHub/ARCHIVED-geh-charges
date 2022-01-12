@@ -20,7 +20,7 @@ using GreenEnergyHub.Charges.Domain.ChargeLinks;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.Domain.MeteringPoints;
-using GreenEnergyHub.Charges.Infrastructure.Context;
+using GreenEnergyHub.Charges.Infrastructure.Persistence;
 using GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories;
 using GreenEnergyHub.Charges.IntegrationTests.Fixtures.Database;
 using GreenEnergyHub.Charges.TestCore.Attributes;
@@ -53,7 +53,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
 
             var ids = SeedDatabase(chargesDatabaseWriteContext);
             var expected = CreateExpectedChargeLink(chargeLink, ids);
-            var sut = new ChargeLinkRepository(chargesDatabaseWriteContext);
+            var sut = new ChargeLinksRepository(chargesDatabaseWriteContext);
 
             // Act
             await sut.StoreAsync(new List<ChargeLink> { expected }).ConfigureAwait(false);

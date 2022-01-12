@@ -13,7 +13,7 @@
 // limitations under the License.
 
 using System;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation;
+using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using GreenEnergyHub.Charges.Infrastructure.Core.Cim;
 
 namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
@@ -50,7 +50,9 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
                 ValidationRuleIdentifier.SubscriptionMustHaveSinglePrice => ReasonCode.E87,
                 ValidationRuleIdentifier.CommandSenderMustBeAnExistingMarketParticipant => ReasonCode.D02,
                 ValidationRuleIdentifier.UpdateNotYetSupported => ReasonCode.D13,
-                _ => throw new NotImplementedException()
+                ValidationRuleIdentifier.MeteringPointDoesNotExist => ReasonCode.E10,
+                ValidationRuleIdentifier.ChargeDoesNotExist => ReasonCode.E0I,
+                _ => throw new NotImplementedException(),
             };
         }
     }

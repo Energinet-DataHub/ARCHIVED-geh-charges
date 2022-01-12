@@ -12,8 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Diagnostics.CodeAnalysis;
-
 // ReSharper disable once CheckNamespace
 namespace GreenEnergyHub.Charges.Infrastructure.Integration.ChargeConfirmation
 {
@@ -36,7 +34,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Integration.ChargeConfirmation
             Nanos = nanos;
         }
 
-        public static implicit operator decimal([NotNull] DecimalValue grpcDecimal)
+        public static implicit operator decimal(DecimalValue grpcDecimal)
         {
             return grpcDecimal.Units + (grpcDecimal.Nanos / NanoFactor);
         }
