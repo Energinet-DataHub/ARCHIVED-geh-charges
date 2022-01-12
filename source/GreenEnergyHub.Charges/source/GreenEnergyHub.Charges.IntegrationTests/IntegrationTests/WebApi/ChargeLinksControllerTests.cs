@@ -16,9 +16,12 @@ using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Energinet.Charges.Contracts.ChargeLink;
 using FluentAssertions;
+using GreenEnergyHub.Charges.IntegrationTests.Fixtures;
+using GreenEnergyHub.Charges.IntegrationTests.Fixtures.Database;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Xunit;
 using Xunit.Categories;
@@ -26,25 +29,26 @@ using Xunit.Categories;
 namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi
 {
     [IntegrationTest]
-    public class ChargeLinksControllerTests : IClassFixture<WebApplicationFactory<Charges.WebApi.Startup>>
+    public class ChargeLinksControllerTests : WebApiHost, IClassFixture<ChargesDatabaseFixture>
     {
         private const string BaseUrl = "/ChargeLinks/GetAsync?meteringPointId=";
-        private readonly WebApplicationFactory<Charges.WebApi.Startup> _factory;
+        private readonly WebApiFactory _factory;
 
-        public ChargeLinksControllerTests(WebApplicationFactory<Charges.WebApi.Startup> factory)
+        public ChargeLinksControllerTests(WebApiFactory factory, ChargesDatabaseFixture chargesDatabaseFixture)
+            : base(chargesDatabaseFixture)
         {
             _factory = factory;
         }
 
-        [Theory]
-        [InlineData("571313180000000005")]
-        public async Task GetAsync_WhenMeteringPointIdHasChargeLinks_ReturnsOkAndCorrectContentType(string meteringPointId)
+        [Fact]
+        public async Task GetAsync_WhenMeteringPointIdHasChargeLinks_ReturnsOkAndCorrectContentType()
         {
             // Arrange
             var client = _factory.CreateClient();
 
             // Act
-            var response = await client.GetAsync($"{BaseUrl}{meteringPointId}");
+            var knownMeteringPointId = 571313180000000005;
+            var response = await client.GetAsync($"{BaseUrl}{knownMeteringPointId}");
 
             // Assert
             var contentType = response.Content.Headers.ContentType!.ToString();
@@ -65,7 +69,13 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi
             // Act
             var response = await client.GetAsync($"{BaseUrl}{meteringPointId}");
             var jsonString = await response.Content.ReadAsStringAsync();
-            var actual = JsonSerializer.Deserialize<List<ChargeLinkDto>>(jsonString, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+            var actual = JsonSerializer.Deserialize<List<ChargeLinkDto>>(
+                jsonString,
+                new JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true,
+                    Converters = { new JsonStringEnumConverter() },
+                });
 
             // Assert
             actual!.Count.Should().Be(expectedChargeLinks);
