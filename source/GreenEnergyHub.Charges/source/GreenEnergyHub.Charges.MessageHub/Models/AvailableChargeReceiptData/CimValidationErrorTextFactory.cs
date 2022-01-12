@@ -41,13 +41,13 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
             var errorTextTemplate = _cimValidationErrorTextProvider
                 .GetCimValidationErrorText(validationError.ValidationRuleIdentifier);
 
-            return MergeErrorText(errorTextTemplate, chargeCommand, validationError.PointPosition);
+            return MergeErrorText(errorTextTemplate, chargeCommand, validationError.ListElementWithValidationError);
         }
 
         private static string MergeErrorText(
             string errorTextTemplate,
             ChargeCommand chargeCommand,
-            int? chargePointPosition)
+            string? listElementWithValidationError)
         {
             var tokens = GetTokens(errorTextTemplate);
 
@@ -55,7 +55,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
 
             foreach (var token in tokens)
             {
-                var data = GetDataForToken(token, chargeCommand, chargePointPosition);
+                var data = GetDataForToken(token, chargeCommand, listElementWithValidationError);
                 mergedErrorText = mergedErrorText.Replace("{{" + token + "}}", data);
             }
 
@@ -65,7 +65,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
         private static string GetDataForToken(
             CimValidationErrorTextToken token,
             ChargeCommand chargeCommand,
-            int? chargePointPosition)
+            string? listElementWithValidationError)
         {
             // Please keep sorted by CimValidationErrorTextToken
             return token switch
@@ -77,10 +77,11 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
                 CimValidationErrorTextToken.ChargeOwner =>
                     chargeCommand.ChargeOperation.ChargeOwner,
                 CimValidationErrorTextToken.ChargePointPosition =>
-                    chargePointPosition == null ? string.Empty : chargePointPosition.Value.ToString(),
+                    listElementWithValidationError ?? string.Empty,
                 CimValidationErrorTextToken.ChargePointPrice =>
-                    chargeCommand.ChargeOperation.Points
-                        .Single(p => p.Position == chargePointPosition).Price.ToString("N"),
+                    listElementWithValidationError == null ? string.Empty :
+                        chargeCommand.ChargeOperation.Points
+                        .Single(p => p.Position == int.Parse(listElementWithValidationError)).Price.ToString("N"),
                 CimValidationErrorTextToken.ChargePointsCount =>
                     chargeCommand.ChargeOperation.Points.Count.ToString(),
                 CimValidationErrorTextToken.ChargeResolution =>

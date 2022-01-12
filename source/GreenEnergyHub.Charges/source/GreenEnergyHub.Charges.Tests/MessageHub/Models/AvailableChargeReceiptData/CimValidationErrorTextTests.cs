@@ -68,7 +68,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptD
             var actual = sut.Create(
                 new ValidationError(
                     ValidationRuleIdentifier.MaximumPrice,
-                    chargeCommand.ChargeOperation.Points[1].Position),
+                    chargeCommand.ChargeOperation.Points[1].Position.ToString()),
                 chargeCommand);
 
             // Assert
@@ -89,21 +89,22 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptD
             // Assert
             foreach (var validationRuleIdentifier in validationRuleIdentifiers)
             {
-                var pointPosition = SetPointPosition(chargeCommand, validationRuleIdentifier);
-                var actual = sut.Create(new ValidationError(validationRuleIdentifier, pointPosition), chargeCommand);
+                var listElement = SetListElementWithValidationError(chargeCommand, validationRuleIdentifier);
+                var actual = sut.Create(new ValidationError(validationRuleIdentifier, listElement), chargeCommand);
                 actual.Should().NotBeNullOrWhiteSpace();
                 actual.Should().NotContain("{");
             }
         }
 
-        private static int? SetPointPosition(ChargeCommand chargeCommand, ValidationRuleIdentifier validationRuleIdentifier)
+        private static string? SetListElementWithValidationError(
+            ChargeCommand chargeCommand, ValidationRuleIdentifier validationRuleIdentifier)
         {
             return validationRuleIdentifier switch
             {
                 ValidationRuleIdentifier.ChargePriceMaximumDigitsAndDecimals =>
-                    chargeCommand.ChargeOperation.Points[0].Position,
+                    chargeCommand.ChargeOperation.Points[0].Position.ToString(),
                 ValidationRuleIdentifier.MaximumPrice =>
-                    chargeCommand.ChargeOperation.Points[1].Position,
+                    chargeCommand.ChargeOperation.Points[1].Position.ToString(),
                 _ => null,
             };
         }

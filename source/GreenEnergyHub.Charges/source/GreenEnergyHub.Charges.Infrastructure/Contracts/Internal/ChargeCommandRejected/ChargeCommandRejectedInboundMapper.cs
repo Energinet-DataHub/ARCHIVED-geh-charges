@@ -48,9 +48,10 @@ namespace GreenEnergyHub.Charges.Infrastructure.Contracts.Internal.ChargeCommand
         private static IEnumerable<ValidationError> ConvertValidationErrorContracts(
             IEnumerable<ValidationErrorContract> validationErrorContracts)
         {
-            return validationErrorContracts.Select(x => new ValidationError(
-                (ValidationRuleIdentifier)x.ValidationRuleIdentifier,
-                x.PointPosition));
+            return validationErrorContracts.Select(x =>
+                new ValidationError(
+                    (ValidationRuleIdentifier)x.ValidationRuleIdentifier,
+                    x.ListElementWithValidationError));
         }
 
         private static DocumentDto ConvertDocument(DocumentContract document)

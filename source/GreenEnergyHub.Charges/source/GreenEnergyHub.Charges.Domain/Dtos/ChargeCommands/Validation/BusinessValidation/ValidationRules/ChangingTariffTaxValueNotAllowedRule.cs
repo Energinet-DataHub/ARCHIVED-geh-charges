@@ -31,6 +31,6 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessV
 
         public bool IsValid => _command.ChargeOperation.TaxIndicator == _charge.TaxIndicator;
 
-        public int? PointPosition => null;
+        public string? ListElement => null;
     }
 }

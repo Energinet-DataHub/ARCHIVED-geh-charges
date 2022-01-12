@@ -28,6 +28,6 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputVali
 
         public bool IsValid => MarketParticipantMrIdValidator.IsValid(_chargeCommand.Document.Sender.Id);
 
-        public int? PointPosition => null;
+        public string? ListElement => null;
     }
 }

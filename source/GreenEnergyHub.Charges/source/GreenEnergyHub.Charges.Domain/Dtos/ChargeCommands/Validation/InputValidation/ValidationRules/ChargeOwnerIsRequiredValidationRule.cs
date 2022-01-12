@@ -28,6 +28,6 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputVali
 
         public bool IsValid => !string.IsNullOrWhiteSpace(_chargeCommand.ChargeOperation.ChargeOwner);
 
-        public int? PointPosition => null;
+        public string? ListElement => null;
     }
 }

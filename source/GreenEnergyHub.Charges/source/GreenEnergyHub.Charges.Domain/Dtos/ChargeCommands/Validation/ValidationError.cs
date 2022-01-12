@@ -16,14 +16,14 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation
 {
     public class ValidationError
     {
-        public ValidationError(ValidationRuleIdentifier validationRuleIdentifier, int? pointPosition)
+        public ValidationError(ValidationRuleIdentifier validationRuleIdentifier, string? listElementWithValidationError)
         {
             ValidationRuleIdentifier = validationRuleIdentifier;
-            PointPosition = pointPosition;
+            ListElementWithValidationError = listElementWithValidationError;
         }
 
         public ValidationRuleIdentifier ValidationRuleIdentifier { get; }
 
-        public int? PointPosition { get; }
+        public string? ListElementWithValidationError { get; }
     }
 }

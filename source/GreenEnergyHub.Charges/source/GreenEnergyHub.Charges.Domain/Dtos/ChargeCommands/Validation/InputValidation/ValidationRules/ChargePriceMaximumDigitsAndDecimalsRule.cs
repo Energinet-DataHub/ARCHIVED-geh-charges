@@ -34,8 +34,8 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputVali
 
         public bool IsValid => _chargeCommand.ChargeOperation.Points.All(PointIsValid);
 
-        public int? PointPosition => _chargeCommand.ChargeOperation.Points
-            .FirstOrDefault(point => !PointIsValid(point))?.Position;
+        public string? ListElement => _chargeCommand.ChargeOperation.Points
+            .FirstOrDefault(point => !PointIsValid(point))?.Position.ToString();
 
         private bool PointIsValid(Point point)
         {

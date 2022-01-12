@@ -53,7 +53,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Contracts.Internal.ChargeC
             var chargeCommand = builder.Build();
             var validationRuleIdentifiers = new List<ValidationError>
             {
-                new(ValidationRuleIdentifier.MaximumPrice, pointPosition: 2),
+                new(ValidationRuleIdentifier.MaximumPrice, listElementWithValidationError: "2"),
                 new(ValidationRuleIdentifier.ResolutionFeeValidation, null),
             };
             var chargeCommandRejectedEvent = new ChargeCommandRejectedEvent(

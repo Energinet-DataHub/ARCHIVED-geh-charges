@@ -34,6 +34,6 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessV
 
         public bool IsValid => _sender != null;
 
-        public int? PointPosition => null;
+        public string? ListElement => null;
     }
 }

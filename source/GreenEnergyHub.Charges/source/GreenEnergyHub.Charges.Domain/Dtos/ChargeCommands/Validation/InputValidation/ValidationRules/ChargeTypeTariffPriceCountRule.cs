@@ -33,7 +33,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputVali
 
         public bool IsValid => Validate();
 
-        public int? PointPosition => null;
+        public string? ListElement => null;
 
         private bool Validate()
         {

@@ -30,8 +30,8 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation
         public ValidationRuleIdentifier ValidationRuleIdentifier { get; }
 
         /// <summary>
-        /// Position of point with erroneous data
+        /// Element in list that violated the rule identified by <see cref="ValidationRuleIdentifier"/>
         /// </summary>
-        public int? PointPosition { get; }
+        public string? ListElement { get; }
     }
 }
