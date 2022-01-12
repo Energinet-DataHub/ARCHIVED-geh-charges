@@ -48,9 +48,11 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands.Validation.Busi
             if (meteringPoint == null)
                 return ValidationRuleSet.FromRules(rules);
 
-            foreach (var chargeLinkDto in chargeLinksCommand.ChargeLinks)
+            foreach (var link in chargeLinksCommand.ChargeLinks)
             {
-                var charge = await GetChargeOrNullAsync(chargeLinkDto);
+                var charge = await _chargeRepository
+                    .GetOrNullAsync(new ChargeIdentifier(link.SenderProvidedChargeId, link.ChargeOwnerId, link.ChargeType))
+                    .ConfigureAwait(false);
 
                 rules.Add(new ChargeMustExistRule(charge));
                 if (charge == null)
@@ -77,20 +79,6 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands.Validation.Busi
             IReadOnlyCollection<ChargeLink> existingChargeLinks)
         {
             rules.Add(new ChargeLinksUpdateNotYetSupportedRule(chargeLinksCommand, existingChargeLinks));
-        }
-
-        private async Task<Charge?> GetChargeOrNullAsync(ChargeLinkDto chargeLinkDto)
-        {
-            var chargeId = chargeLinkDto.SenderProvidedChargeId;
-            var chargeOperationChargeOwner = chargeLinkDto.ChargeOwnerId;
-            var chargeType = chargeLinkDto.ChargeType;
-
-            return await _chargeRepository
-                .GetOrNullAsync(new ChargeIdentifier(
-                    chargeId,
-                    chargeOperationChargeOwner,
-                    chargeType))
-                .ConfigureAwait(false);
         }
     }
 }
