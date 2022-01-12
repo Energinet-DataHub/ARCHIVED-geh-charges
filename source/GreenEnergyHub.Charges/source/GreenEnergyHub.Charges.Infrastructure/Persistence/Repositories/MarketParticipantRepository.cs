@@ -90,7 +90,6 @@ namespace GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories
                 .ToListAsync();
         }
 
-        // TODO BJARKE: Add unit test
         public async Task<HubSenderMarketParticipant> GetHubSenderAsync()
         {
             var hubSender = await _chargesDatabaseContext

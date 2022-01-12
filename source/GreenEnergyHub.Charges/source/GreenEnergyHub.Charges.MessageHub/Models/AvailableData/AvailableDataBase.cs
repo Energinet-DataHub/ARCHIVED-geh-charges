@@ -46,10 +46,8 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableData
         // ReSharper disable once UnusedMember.Local - needed by persistence
         protected AvailableDataBase()
         {
-            Id = Guid.NewGuid(); // TODO BJARKE: Remove?
             SenderId = null!;
             RecipientId = null!;
-            AvailableDataReferenceId = Guid.NewGuid(); // TODO BJARKE: Remove?
         }
 
         /// <summary>

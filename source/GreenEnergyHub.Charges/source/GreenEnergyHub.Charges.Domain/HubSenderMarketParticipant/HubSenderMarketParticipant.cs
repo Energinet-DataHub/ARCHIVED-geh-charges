@@ -24,16 +24,10 @@ namespace GreenEnergyHub.Charges.Domain.HubSenderMarketParticipant
         public HubSenderMarketParticipant(Guid id, string marketParticipantId, bool isActive, IEnumerable<MarketParticipantRole> roles)
             : base(id, marketParticipantId, isActive, roles)
         {
-            // TODO BJARKE: Unit test
-            var role = roles.Single();
-            if (role != MarketParticipantRole.MeteringPointAdministrator)
+            if (!roles.Contains(SenderRole))
                 throw new ArgumentException($"The hub sender market participant must have the role {SenderRole}.");
         }
 
-        /// <summary>
-        /// The role that the hub sender market participant uses when sending outbound documents.
-        /// </summary>
-        // TODO BJARKE: Replace all Roles.Single() for hub sender in code (after rebase on main)
         public MarketParticipantRole SenderRole => MarketParticipantRole.MeteringPointAdministrator;
     }
 }

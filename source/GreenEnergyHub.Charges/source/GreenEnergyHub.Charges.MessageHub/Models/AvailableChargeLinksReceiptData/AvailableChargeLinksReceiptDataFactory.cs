@@ -52,7 +52,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksReceiptDa
                         sender.MarketParticipantId,
                         sender.SenderRole,
                         recipient.Id,
-                        recipient.BusinessProcessRole, // TODO BJARKE: Rename
+                        recipient.BusinessProcessRole,
                         acceptedEvent.ChargeLinksCommand.Document.BusinessReasonCode,
                         _messageMetaDataContext.RequestDataTime,
                         Guid.NewGuid(), // ID of each available piece of data must be unique
