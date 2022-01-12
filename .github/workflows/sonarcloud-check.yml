@@ -11,7 +11,7 @@ on:
     types: [opened, synchronize, reopened]
     paths:
       - source/**
-      - .github/workflows/sonarcloud.yml
+      - .github/workflows/sonarcloud-check.yml
 
 env:
   SOLUTION_PATH: 'source\GreenEnergyHub.Charges\GreenEnergyHub.Charges.sln'
