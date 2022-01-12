@@ -23,6 +23,6 @@ namespace GreenEnergyHub.Charges.FunctionHost
     {
         public const string ChargeIngestion = "ChargeIngestion";
 
-        public const string ChargeLinkIngestion = "ChargeLinkIngestion";
+        public const string ChargeLinksIngestion = "ChargeLinksIngestion";
     }
 }

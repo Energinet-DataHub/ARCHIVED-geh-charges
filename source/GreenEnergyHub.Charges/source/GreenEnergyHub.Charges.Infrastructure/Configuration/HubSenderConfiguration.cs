@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
+using System.Linq;
 using GreenEnergyHub.Charges.Domain.Configuration;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 
@@ -23,11 +25,11 @@ namespace GreenEnergyHub.Charges.Infrastructure.Configuration
 
         public HubSenderConfiguration(string senderId, MarketParticipantRole senderRole)
         {
-            _marketParticipant = new MarketParticipant
-            {
-                MarketParticipantId = senderId,
-                BusinessProcessRole = senderRole,
-            };
+            _marketParticipant = new MarketParticipant(
+                Guid.NewGuid(),
+                senderId,
+                true,
+                new[] { senderRole }.ToList());
         }
 
         public MarketParticipant GetSenderMarketParticipant()

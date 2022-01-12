@@ -62,6 +62,10 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures
         public const string ChargeLinkReceivedTopicKey = "link-command-received";
         public const string ChargeLinkReceivedSubscriptionName = "link-command-received-receiver";
 
+        // Internal, charge links, rejected
+        public const string ChargeLinksRejectedTopicKey = "link-command-rejected";
+        public const string ChargeLinksRejectedSubscriptionName = "charge-links-command-rejected";
+
         // Internal, charge links, accepted
         public const string ChargeLinkAcceptedTopicKey = "link-command-accepted";
         public const string ChargeLinkAcceptedConfirmationNotifierSubscriptionName = "chargelinkaccepted-sub-confirmationnotifier";

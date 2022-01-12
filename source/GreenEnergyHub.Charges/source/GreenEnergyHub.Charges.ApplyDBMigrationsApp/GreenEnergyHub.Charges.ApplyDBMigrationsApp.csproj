@@ -55,6 +55,8 @@ limitations under the License.
       <EmbeddedResource Include="Scripts\Model\202112211240 Remove redundant Charge FK in ChargePoint.sql" />
       <EmbeddedResource Include="Scripts\Model\202112100940 Move data from ChargeLink.PeriodDetails to ChargeLink.sql" />
       <EmbeddedResource Include="Scripts\Model\202112231000 Rename to AvailableChargeReceiptValidationError.sql" />
+      <EmbeddedResource Include="Scripts\Model\202201111000 Rename to AvailableChargeLinksReceiptValidationError.sql" />
+      <EmbeddedResource Include="Scripts\Model\202201111600 Support multiple MarketParticipant roles.sql" />
       <EmbeddedResource Include="Scripts\Test\202105201033 New MarketParticipants.sql" />
       <EmbeddedResource Include="Scripts\Model\202105191329 New charge model.sql" />
       <EmbeddedResource Include="Scripts\Model\202107011226 New Metering Point.sql" />
@@ -63,6 +65,7 @@ limitations under the License.
       <EmbeddedResource Include="Scripts\Seed\202108130629 Default charges.sql" />
       <EmbeddedResource Include="Scripts\Seed\202108131029 Default charge links.sql" />
       <EmbeddedResource Include="Scripts\Model\202108251511 Use DateTime2.sql" />
+      <EmbeddedResource Include="Scripts\Test\202201041056 Add Metering Point Test Data to avoid using the same mp due to new validation rules.sql" />
       <EmbeddedResource Include="Scripts\Test\202111300728 Metering Point Test Data with type 3.sql" />
       <EmbeddedResource Include="Scripts\Test\202109080933 Metering Point Test Data.sql" />
       <EmbeddedResource Include="Scripts\Test\202109080933 Update Metering Point Test Data.sql" />

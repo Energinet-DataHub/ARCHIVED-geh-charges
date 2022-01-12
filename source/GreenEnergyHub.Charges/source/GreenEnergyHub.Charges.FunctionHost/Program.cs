@@ -61,6 +61,7 @@ namespace GreenEnergyHub.Charges.FunctionHost
             CreateChargeLinkReceiverConfiguration.ConfigureServices(serviceCollection);
             ChargeLinkDataAvailableNotifierConfiguration.ConfigureServices(serviceCollection);
             ChargeLinkConfirmationDataAvailableNotifierConfiguration.ConfigureServices(serviceCollection);
+            ChargeLinksRejectionDataAvailableNotifierEndpointConfiguration.ConfigureServices(serviceCollection);
 
             // Metering points
             ConsumptionMeteringPointPersisterConfiguration.ConfigureServices(serviceCollection);

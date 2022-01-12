@@ -25,6 +25,7 @@ using GreenEnergyHub.Charges.Infrastructure.Core.Cim.MarketDocument;
 using GreenEnergyHub.Charges.MessageHub.Infrastructure.Cim;
 using GreenEnergyHub.Charges.MessageHub.Infrastructure.Cim.Bundles.ChargeReceipt;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData;
+using GreenEnergyHub.Charges.MessageHub.Models.AvailableData;
 using GreenEnergyHub.Charges.TestCore;
 using GreenEnergyHub.TestHelpers;
 using Moq;
@@ -107,21 +108,14 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Infrastructure.Cim.Bundles.Cha
             Mock<IClock> clock,
             Mock<ICimIdProvider> cimIdProvider)
         {
-            hubSenderConfiguration.Setup(
-                    h => h.GetSenderMarketParticipant())
-                .Returns(new MarketParticipant
-                {
-                    MarketParticipantId = "5790001330552", BusinessProcessRole = MarketParticipantRole.MeteringPointAdministrator,
-                });
+            hubSenderConfiguration
+                .Setup(h => h.GetSenderMarketParticipant())
+                .Returns(new MarketParticipant(Guid.NewGuid(), "5790001330552", true, new[] { MarketParticipantRole.MeteringPointAdministrator }));
 
             var currentTime = Instant.FromUtc(2021, 10, 12, 13, 37, 43).PlusNanoseconds(4);
-            clock.Setup(
-                    c => c.GetCurrentInstant())
-                .Returns(currentTime);
+            clock.Setup(c => c.GetCurrentInstant()).Returns(currentTime);
 
-            cimIdProvider.Setup(
-                    c => c.GetUniqueId())
-                .Returns(CimTestId);
+            cimIdProvider.Setup(c => c.GetUniqueId()).Returns(CimTestId);
         }
 
         private List<AvailableChargeReceiptData> GetReceipts(ReceiptStatus receiptStatus, IClock clock)
@@ -149,16 +143,16 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Infrastructure.Cim.Bundles.Cha
                 GetReasonCodes(no));
         }
 
-        private List<AvailableChargeReceiptValidationError> GetReasonCodes(int no)
+        private List<AvailableReceiptValidationError> GetReasonCodes(int no)
         {
-            var reasonCodes = new List<AvailableChargeReceiptValidationError>();
+            var reasonCodes = new List<AvailableReceiptValidationError>();
             var noOfReasons = (no % 3) + 1;
 
             for (var i = 1; i <= noOfReasons; i++)
             {
                 var text = i % 2 == 0 ? $"Text{no}_{i}" : string.Empty;
 
-                reasonCodes.Add(new AvailableChargeReceiptValidationError(
+                reasonCodes.Add(new AvailableReceiptValidationError(
                     ReasonCode.D14, // Matches that of the test file
                     text));
             }
