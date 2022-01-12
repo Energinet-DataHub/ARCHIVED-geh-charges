@@ -19,7 +19,6 @@ using System.Text;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
 using FluentAssertions;
-using GreenEnergyHub.Charges.Domain.Configuration;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.Infrastructure.Core.Cim;
 using GreenEnergyHub.Charges.Infrastructure.Core.Cim.MarketDocument;
@@ -49,7 +48,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.BundleSpecification.Charges
         [InlineAutoMoqData(1000)]
         public async Task GetMessageWeight_WhenCalled_ReturnedWeightIsHigherThanSerializedStream(
             int noOfReasons,
-            [Frozen] Mock<IHubSenderConfiguration> hubSenderConfiguration,
+            [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
             [Frozen] Mock<ICimIdProvider> cimIdProvider,
             ChargeReceiptCimSerializer serializer,
             ChargeRejectionBundleSpecification sut)
@@ -63,7 +62,9 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.BundleSpecification.Charges
                 true,
                 new[] { MarketParticipantRole.GridAccessProvider });
 
-            hubSenderConfiguration.Setup(c => c.GetSenderMarketParticipant()).Returns(marketParticipant);
+            marketParticipantRepository
+                .Setup(c => c.GetAsync(MarketParticipantRole.MeteringPointAdministrator)).
+                ReturnsAsync(marketParticipant);
 
             cimIdProvider.Setup(c => c.GetUniqueId()).Returns(MaxLengthId);
 
@@ -72,6 +73,8 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.BundleSpecification.Charges
                 new List<AvailableChargeReceiptData> { availableData },
                 stream,
                 BusinessReasonCode.UpdateChargeInformation,
+                "senderId",
+                MarketParticipantRole.MeteringPointAdministrator,
                 MaxLengthId,
                 MarketParticipantRole.GridAccessProvider);
 
@@ -98,6 +101,8 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.BundleSpecification.Charges
         private AvailableChargeReceiptData GetRejection(int noOfReasons)
         {
             return new AvailableChargeReceiptData(
+                "senderId",
+                MarketParticipantRole.MeteringPointAdministrator,
                 MaxLengthId,
                 MarketParticipantRole.GridAccessProvider,
                 BusinessReasonCode.UpdateChargeInformation,

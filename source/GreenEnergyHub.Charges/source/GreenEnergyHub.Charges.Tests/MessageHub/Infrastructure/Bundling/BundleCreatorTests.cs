@@ -63,6 +63,8 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Infrastructure.Bundling
                     availableData,
                     stream,
                     availableData.First().BusinessReasonCode,
+                    availableData.First().SenderId,
+                    availableData.First().SenderRole,
                     availableData.First().RecipientId,
                     availableData.First().RecipientRole),
                 Times.Once);

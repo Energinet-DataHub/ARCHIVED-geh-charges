@@ -28,6 +28,8 @@ namespace GreenEnergyHub.Charges.MessageHub.Infrastructure.Persistence.EntityCon
             builder.HasKey(x => x.Id);
 
             builder.Property(p => p.Id).ValueGeneratedNever();
+            builder.Property(x => x.SenderId);
+            builder.Property(x => x.SenderRole);
             builder.Property(x => x.RecipientId);
             builder.Property(x => x.RecipientRole);
             builder.Property(x => x.BusinessReasonCode);

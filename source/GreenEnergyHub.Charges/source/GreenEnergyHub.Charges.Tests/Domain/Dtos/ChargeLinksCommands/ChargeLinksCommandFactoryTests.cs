@@ -19,7 +19,6 @@ using System.Threading.Tasks;
 using AutoFixture.Xunit2;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.Charges;
-using GreenEnergyHub.Charges.Domain.Configuration;
 using GreenEnergyHub.Charges.Domain.DefaultChargeLinks;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.CreateDefaultChargeLinksRequests;
@@ -42,7 +41,6 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeLinksCommands
             [Frozen] Mock<IChargeRepository> chargeRepository,
             [Frozen] Mock<IMeteringPointRepository> meteringPointRepository,
             [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
-            [Frozen] Mock<IHubSenderConfiguration> hubSenderConfiguration,
             MarketParticipant recipient,
             MarketParticipant systemOperator,
             MarketParticipant chargeOwner,
@@ -94,9 +92,9 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeLinksCommands
                 .Setup(m => m.GetAsync(new List<Guid> { charge.OwnerId }))
                 .ReturnsAsync(new List<MarketParticipant> { chargeOwner });
 
-            hubSenderConfiguration
-                .Setup(configuration => configuration.GetSenderMarketParticipant())
-                .Returns(recipient);
+            marketParticipantRepository
+                .Setup(m => m.GetAsync(MarketParticipantRole.MeteringPointAdministrator))
+                .ReturnsAsync(recipient);
 
             // Act
             var actual = await sut

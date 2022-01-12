@@ -13,9 +13,7 @@
 // limitations under the License.
 
 using System.Collections.Generic;
-using System.Linq;
 using System.Xml.Linq;
-using GreenEnergyHub.Charges.Domain.Configuration;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.Infrastructure.Core.Cim.MarketDocument;
 using NodaTime;
@@ -29,7 +27,8 @@ namespace GreenEnergyHub.Charges.MessageHub.Infrastructure.Cim
             ICimIdProvider cimIdProvider,
             DocumentType documentType,
             BusinessReasonCode businessReasonCode,
-            IHubSenderConfiguration hubSenderConfiguration,
+            string senderId,
+            MarketParticipantRole senderRole,
             string recipientId,
             MarketParticipantRole recipientRole,
             IClock clock)
@@ -52,11 +51,11 @@ namespace GreenEnergyHub.Charges.MessageHub.Infrastructure.Cim
                     new XAttribute(
                         CimMarketDocumentConstants.CodingScheme,
                         CodingSchemeMapper.Map(CodingScheme.GS1)),
-                    hubSenderConfiguration.GetSenderMarketParticipant().MarketParticipantId),
+                    senderId),
                 new XElement(
                     cimNamespace + CimMarketDocumentConstants.SenderBusinessProcessRole,
                     MarketParticipantRoleMapper.Map(
-                        hubSenderConfiguration.GetSenderMarketParticipant().Roles.Single())),
+                        senderRole)),
                 new XElement(
                     cimNamespace + CimMarketDocumentConstants.RecipientId,
                     new XAttribute(

@@ -15,10 +15,6 @@
     "INTEGRATIONEVENT_SENDER_CONNECTION_STRING": "<sb sender connection string for integration events (without EntityPath)>",
     "MESSAGEHUB_STORAGE_CONNECTION_STRING": "<connection string for writing to the Message Hub storage account for bundles>",
 
-    // This is settings about who we identify ourselves as being 
-    "HUB_SENDER_ID": "5790001330552",
-    "HUB_SENDER_ROLE_INT_ENUM_VALUE": "7", // See MarketParticipantRole for possible values, 7 is MeteringPointAdministrator
-
     // From this point on, it is settings that change with the code and not the environment
     // Localization
     "CURRENCY": "DKK", // Your system currency e.g. DKK, see https://en.wikipedia.org/wiki/ISO_4217

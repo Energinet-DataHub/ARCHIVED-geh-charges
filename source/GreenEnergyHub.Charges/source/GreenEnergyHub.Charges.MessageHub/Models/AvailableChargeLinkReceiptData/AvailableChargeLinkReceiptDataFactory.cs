@@ -25,29 +25,34 @@ using GreenEnergyHub.Charges.MessageHub.Models.AvailableData;
 namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinkReceiptData
 {
     public class AvailableChargeLinkReceiptDataFactory
-        : IAvailableDataFactory<AvailableChargeLinkReceiptData, ChargeLinksAcceptedEvent>
+        : AvailableDataFactoryBase<AvailableChargeLinkReceiptData, ChargeLinksAcceptedEvent>
     {
         private readonly IMessageMetaDataContext _messageMetaDataContext;
 
         public AvailableChargeLinkReceiptDataFactory(
-            IMessageMetaDataContext messageMetaDataContext)
+            IMessageMetaDataContext messageMetaDataContext,
+            IMarketParticipantRepository marketParticipantRepository)
+            : base(marketParticipantRepository)
         {
             _messageMetaDataContext = messageMetaDataContext;
         }
 
-        public Task<IReadOnlyList<AvailableChargeLinkReceiptData>> CreateAsync(
+        public override async Task<IReadOnlyList<AvailableChargeLinkReceiptData>> CreateAsync(
             ChargeLinksAcceptedEvent acceptedEvent)
         {
             if (ShouldSkipAvailableData(acceptedEvent))
-            {
-                IReadOnlyList<AvailableChargeLinkReceiptData> emptyList = new List<AvailableChargeLinkReceiptData>();
-                return Task.FromResult(emptyList);
-            }
+                return new List<AvailableChargeLinkReceiptData>();
 
-            IReadOnlyList<AvailableChargeLinkReceiptData> result = acceptedEvent.ChargeLinksCommand.ChargeLinks.Select(
-                    link => new AvailableChargeLinkReceiptData(
-                        acceptedEvent.ChargeLinksCommand.Document.Sender.Id, // The sender is now the recipient of the receipt
-                        acceptedEvent.ChargeLinksCommand.Document.Sender.BusinessProcessRole,
+            // The sender is now the recipient of the receipt
+            var recipient = acceptedEvent.ChargeLinksCommand.Document.Sender;
+            var sender = await GetSenderAsync().ConfigureAwait(false);
+
+            return acceptedEvent.ChargeLinksCommand.ChargeLinks.Select(link =>
+                    new AvailableChargeLinkReceiptData(
+                        sender.MarketParticipantId,
+                        sender.SenderRole,
+                        recipient.Id,
+                        recipient.BusinessProcessRole, // TODO BJARKE: Rename
                         acceptedEvent.ChargeLinksCommand.Document.BusinessReasonCode,
                         _messageMetaDataContext.RequestDataTime,
                         Guid.NewGuid(), // ID of each available piece of data must be unique
@@ -56,7 +61,6 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinkReceiptDat
                         acceptedEvent.ChargeLinksCommand.MeteringPointId,
                         new List<AvailableChargeLinkReceiptDataReasonCode>()))
                 .ToList();
-            return Task.FromResult(result);
         }
 
         private bool ShouldSkipAvailableData(ChargeLinksAcceptedEvent acceptedEvent)

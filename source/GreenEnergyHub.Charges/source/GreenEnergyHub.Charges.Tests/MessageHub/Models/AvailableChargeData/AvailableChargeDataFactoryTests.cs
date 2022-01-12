@@ -39,6 +39,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeData
             [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
             [Frozen] Mock<IMessageMetaDataContext> messageMetaDataContext,
             Instant now,
+            HubSenderMarketParticipantBuilder hubSenderBuilder,
             List<MarketParticipant> gridAccessProvider,
             ChargeCommandBuilder chargeCommandBuilder,
             ChargeCommandAcceptedEventBuilder chargeCommandAcceptedEventBuilder,
@@ -48,17 +49,18 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeData
             var chargeCommand = chargeCommandBuilder.WithPoint(1).WithTaxIndicator(true).Build();
             var acceptedEvent = chargeCommandAcceptedEventBuilder.WithChargeCommand(chargeCommand).Build();
 
-            marketParticipantRepository.Setup(
-                    r => r.GetActiveGridAccessProvidersAsync())
+            marketParticipantRepository
+                .Setup(r => r.GetActiveGridAccessProvidersAsync())
                 .ReturnsAsync(gridAccessProvider);
 
-            messageMetaDataContext.Setup(
-                    m => m.RequestDataTime)
-                .Returns(now);
+            marketParticipantRepository
+                .Setup(r => r.GetHubSenderAsync())
+                .ReturnsAsync(hubSenderBuilder.Build());
+
+            messageMetaDataContext.Setup(m => m.RequestDataTime).Returns(now);
 
             // Act
-            var actualList =
-                await sut.CreateAsync(acceptedEvent);
+            var actualList = await sut.CreateAsync(acceptedEvent);
 
             // Assert
             var operation = acceptedEvent.Command.ChargeOperation;

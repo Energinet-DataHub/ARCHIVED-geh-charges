@@ -16,6 +16,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using GreenEnergyHub.Charges.Domain.HubSenderMarketParticipant;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.Infrastructure.Context;
 using Microsoft.EntityFrameworkCore;
@@ -88,6 +89,26 @@ namespace GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories
                 .MarketParticipants
                 .Where(mp => ids.Contains(mp.Id))
                 .ToListAsync();
+        }
+
+        // TODO BJARKE: Add unit test
+        public async Task<HubSenderMarketParticipant> GetHubSenderAsync()
+        {
+            var hubSender = await _chargesDatabaseContext
+                .MarketParticipants
+                .WithRole(MarketParticipantRole.MeteringPointAdministrator)
+                .SingleAsync();
+
+            return CreateHubSenderMarketParticipant(hubSender);
+        }
+
+        private static HubSenderMarketParticipant CreateHubSenderMarketParticipant(MarketParticipant hubSender)
+        {
+            return new HubSenderMarketParticipant(
+                hubSender.Id,
+                hubSender.MarketParticipantId,
+                hubSender.IsActive,
+                hubSender.Roles);
         }
     }
 }

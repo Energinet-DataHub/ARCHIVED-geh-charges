@@ -70,10 +70,6 @@ module "func_functionhost" {
     MESSAGEHUB_DATAAVAILABLE_QUEUE                                  = "dataavailable"
     MESSAGEHUB_BUNDLEREQUEST_QUEUE                                  = "charges"
     MESSAGEHUB_BUNDLEREPLY_QUEUE                                    = "charges-reply"
-	
-  	# Hub identification
-    HUB_SENDER_ID                                                   = "5790001330552"
-    HUB_SENDER_ROLE_INT_ENUM_VALUE                                  = "7"
   }
   
   tags                                      = azurerm_resource_group.this.tags

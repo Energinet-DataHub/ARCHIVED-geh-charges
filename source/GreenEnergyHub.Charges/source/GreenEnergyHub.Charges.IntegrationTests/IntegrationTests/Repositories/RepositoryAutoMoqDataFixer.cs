@@ -40,6 +40,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
         private static AvailableChargeData GetAvailableDataBasedOn(AvailableChargeData availableChargeData)
         {
             return new AvailableChargeData(
+                availableChargeData.SenderId.Substring(0, 34),
+                availableChargeData.SenderRole,
                 availableChargeData.RecipientId.Substring(0, 34),
                 availableChargeData.RecipientRole,
                 availableChargeData.BusinessReasonCode,
@@ -63,6 +65,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
             AvailableChargeReceiptData availableChargeReceiptData)
         {
             return new AvailableChargeReceiptData(
+                availableChargeReceiptData.SenderId.Substring(0, 34),
+                availableChargeReceiptData.SenderRole,
                 availableChargeReceiptData.RecipientId.Substring(0, 34),
                 availableChargeReceiptData.RecipientRole,
                 availableChargeReceiptData.BusinessReasonCode,
@@ -76,6 +80,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
         private static AvailableChargeLinksData GetAvailableDataBasedOn(AvailableChargeLinksData availableChargeData)
         {
             return new AvailableChargeLinksData(
+                availableChargeData.SenderId.Substring(0, 34),
+                availableChargeData.SenderRole,
                 availableChargeData.RecipientId.Substring(0, 34),
                 availableChargeData.RecipientRole,
                 availableChargeData.BusinessReasonCode,
@@ -94,6 +100,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
             AvailableChargeLinkReceiptData availableChargeLinkReceiptData)
         {
             return new AvailableChargeLinkReceiptData(
+                availableChargeLinkReceiptData.SenderId.Substring(0, 34),
+                availableChargeLinkReceiptData.SenderRole,
                 availableChargeLinkReceiptData.RecipientId.Substring(0, 34),
                 availableChargeLinkReceiptData.RecipientRole,
                 availableChargeLinkReceiptData.BusinessReasonCode,

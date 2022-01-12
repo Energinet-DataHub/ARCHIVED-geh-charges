@@ -30,6 +30,8 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinkReceiptDat
     public class AvailableChargeLinkReceiptData : AvailableDataBase
     {
         public AvailableChargeLinkReceiptData(
+            string senderId,
+            MarketParticipantRole senderRole,
             string recipientId,
             MarketParticipantRole recipientRole,
             BusinessReasonCode businessReasonCode,
@@ -39,7 +41,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinkReceiptDat
             string originalOperationId,
             string meteringPointId,
             List<AvailableChargeLinkReceiptDataReasonCode> reasonCodes)
-            : base(recipientId, recipientRole, businessReasonCode, requestDateTime, availableDataReferenceId)
+            : base(senderId, senderRole, recipientId, recipientRole, businessReasonCode, requestDateTime, availableDataReferenceId)
         {
             ReceiptStatus = receiptStatus;
             OriginalOperationId = originalOperationId;
@@ -47,15 +49,11 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinkReceiptDat
             _reasonCodes = reasonCodes;
         }
 
-        /// <summary>
-        /// Used implicitly by persistence.
-        /// </summary>
-        // ReSharper disable once UnusedMember.Local
-        private AvailableChargeLinkReceiptData(string recipientId, string originalOperationId, string meteringPointId)
-            : base(recipientId)
+        // ReSharper disable once UnusedMember.Local - Used implicitly by persistence
+        private AvailableChargeLinkReceiptData()
         {
-            OriginalOperationId = originalOperationId;
-            MeteringPointId = meteringPointId;
+            OriginalOperationId = null!;
+            MeteringPointId = null!;
             _reasonCodes = new List<AvailableChargeLinkReceiptDataReasonCode>();
         }
 

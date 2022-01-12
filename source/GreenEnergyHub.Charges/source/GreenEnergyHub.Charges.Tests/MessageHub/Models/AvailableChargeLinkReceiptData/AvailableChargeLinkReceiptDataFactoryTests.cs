@@ -21,13 +21,14 @@ using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.Infrastructure.Core.Cim.MarketDocument;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessageMetaData;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinkReceiptData;
+using GreenEnergyHub.Charges.Tests.Builders;
 using GreenEnergyHub.TestHelpers;
 using Moq;
 using NodaTime;
 using Xunit;
 using Xunit.Categories;
 
-namespace GreenEnergyHub.Charges.Tests.MessageHub.Application.ChargeLinks
+namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeLinkReceiptData
 {
     [UnitTest]
     public class AvailableChargeLinkReceiptDataFactoryTests
@@ -37,6 +38,8 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Application.ChargeLinks
         [InlineAutoDomainData(MarketParticipantRole.GridAccessProvider)]
         public async Task CreateAsync_WhenSenderNotSystemOperator_ReturnsAvailableData(
             MarketParticipantRole marketParticipantRole,
+            HubSenderMarketParticipantBuilder hubSenderBuilder,
+            [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
             [Frozen] Mock<IMessageMetaDataContext> messageMetaDataContext,
             ChargeLinksAcceptedEvent acceptedEvent,
             Instant now,
@@ -44,16 +47,12 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Application.ChargeLinks
         {
             // Arrange
             acceptedEvent.ChargeLinksCommand.Document.Sender.BusinessProcessRole = marketParticipantRole;
-
-            messageMetaDataContext.Setup(
-                    m => m.RequestDataTime)
-                .Returns(now);
-
+            messageMetaDataContext.Setup(m => m.RequestDataTime).Returns(now);
             var expectedLinks = acceptedEvent.ChargeLinksCommand.ChargeLinks.ToList();
+            marketParticipantRepository.Setup(r => r.GetHubSenderAsync()).ReturnsAsync(hubSenderBuilder.Build());
 
             // Act
-            var actualList =
-                await sut.CreateAsync(acceptedEvent);
+            var actualList = await sut.CreateAsync(acceptedEvent);
 
             // Assert
             actualList.Should().HaveSameCount(expectedLinks);
@@ -82,8 +81,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Application.ChargeLinks
             acceptedEvent.ChargeLinksCommand.Document.Sender.BusinessProcessRole = MarketParticipantRole.SystemOperator;
 
             // Act
-            var actualList =
-                await sut.CreateAsync(acceptedEvent);
+            var actualList = await sut.CreateAsync(acceptedEvent);
 
             // Assert
             actualList.Should().BeEmpty();
