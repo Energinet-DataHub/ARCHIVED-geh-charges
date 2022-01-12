@@ -118,9 +118,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Infrastructure.Cim.Bundles.Cha
                 .Returns(new MarketParticipant(Guid.NewGuid(), "5790001330552", true, new[] { MarketParticipantRole.MeteringPointAdministrator }));
 
             var currentTime = Instant.FromUtc(2021, 10, 22, 15, 30, 41).PlusNanoseconds(4);
-            clock
-                .Setup(c => c.GetCurrentInstant())
-                .Returns(currentTime);
+            clock.Setup(c => c.GetCurrentInstant()).Returns(currentTime);
 
             iso8601Durations
                 .Setup(i => i.GetTimeFixedToDuration(
