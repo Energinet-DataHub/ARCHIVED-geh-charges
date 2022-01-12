@@ -42,6 +42,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands.Validation.Busi
         {
             foreach (var existingLink in _existingChargeLinks)
             {
+                // See https://stackoverflow.com/questions/325933/determine-whether-two-date-ranges-overlap
                 if (existingLink.StartDateTime < newLink.EndDateTime && existingLink.EndDateTime > newLink.StartDateTime)
                 {
                     return false;
