@@ -57,26 +57,29 @@ namespace GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories
         /// <returns>The grid access provider responsible for the metering point</returns>
         public MarketParticipant GetGridAccessProvider(string meteringPointId)
         {
-            return new MarketParticipant
-            {
-                MarketParticipantId = "8100000000030",
-                BusinessProcessRole = MarketParticipantRole.GridAccessProvider,
-            };
+            return new MarketParticipant(
+                Guid.NewGuid(),
+                "8100000000030",
+                true,
+                new[] { MarketParticipantRole.GridAccessProvider }.ToList());
         }
 
         public async Task<List<MarketParticipant>> GetActiveGridAccessProvidersAsync()
         {
-            return await _chargesDatabaseContext.MarketParticipants
-                .Where(x =>
-                    x.BusinessProcessRole == MarketParticipantRole.GridAccessProvider &&
-                    x.IsActive)
+            return await _chargesDatabaseContext
+                .MarketParticipants
+                .WithRole(MarketParticipantRole.GridAccessProvider)
+                .Where(m => m.IsActive)
                 .ToListAsync();
         }
 
         public async Task<MarketParticipant> GetAsync(MarketParticipantRole marketParticipantRole)
         {
-            return await _chargesDatabaseContext.MarketParticipants.FirstAsync(
-                x => x.BusinessProcessRole == marketParticipantRole).ConfigureAwait(false);
+            return await _chargesDatabaseContext
+                .MarketParticipants
+                .WithRole(marketParticipantRole)
+                .SingleAsync()
+                .ConfigureAwait(false);
         }
 
         public async Task<IReadOnlyCollection<MarketParticipant>> GetAsync(IEnumerable<Guid> ids)
