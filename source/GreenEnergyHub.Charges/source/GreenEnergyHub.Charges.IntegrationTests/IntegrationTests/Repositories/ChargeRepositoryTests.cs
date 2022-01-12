@@ -221,11 +221,11 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
             if (marketParticipant != null)
                 return;
 
-            marketParticipant = new MarketParticipant
-            {
-                BusinessProcessRole = MarketParticipantRole.EnergySupplier,
-                MarketParticipantId = MarketParticipantOwnerId,
-            };
+            marketParticipant = new MarketParticipant(
+                Guid.NewGuid(),
+                MarketParticipantOwnerId,
+                true,
+                new[] { MarketParticipantRole.EnergySupplier });
             context.MarketParticipants.Add(marketParticipant);
             await context.SaveChangesAsync().ConfigureAwait(false);
 

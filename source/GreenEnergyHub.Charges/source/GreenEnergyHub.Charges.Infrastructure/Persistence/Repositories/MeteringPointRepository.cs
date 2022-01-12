@@ -60,7 +60,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories
         {
             var meteringPoint = await _chargesDatabaseContext
                 .MeteringPoints
-                .FirstOrDefaultAsync(x => x.MeteringPointId == meteringPointId)
+                .SingleOrDefaultAsync(x => x.MeteringPointId == meteringPointId)
                 .ConfigureAwait(false);
 
             return meteringPoint;
