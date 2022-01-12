@@ -17,8 +17,9 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
-using System.Xml;
 using AutoFixture.Xunit2;
+using Energinet.DataHub.Core.Schemas;
+using Energinet.DataHub.Core.SchemaValidation;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
@@ -49,7 +50,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.CimDeserialization.ChargeB
             // Arrange
             var correlationId = Guid.NewGuid().ToString();
             var expectedTime = InstantPattern.ExtendedIso.Parse("2021-01-01T23:00:00Z").Value;
-            using var reader = GetReaderAndArrangeTest(
+            var reader = GetReaderAndArrangeTest(
                 context,
                 iso8601Durations,
                 correlationId,
@@ -122,7 +123,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.CimDeserialization.ChargeB
             // Arrange
             var correlationId = Guid.NewGuid().ToString();
             var expectedTime = InstantPattern.ExtendedIso.Parse("2021-04-17T22:00:00Z").Value;
-            using var reader = GetReaderAndArrangeTest(
+            var reader = GetReaderAndArrangeTest(
                 context,
                 iso8601Durations,
                 correlationId,
@@ -169,7 +170,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.CimDeserialization.ChargeB
             // Arrange
             var correlationId = Guid.NewGuid().ToString();
             var expectedTime = InstantPattern.ExtendedIso.Parse("2020-12-31T23:00:00Z").Value;
-            using var reader = GetReaderAndArrangeTest(
+            var reader = GetReaderAndArrangeTest(
                 context,
                 iso8601Durations,
                 correlationId,
@@ -231,7 +232,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.CimDeserialization.ChargeB
             // Arrange
             var correlationId = Guid.NewGuid().ToString();
             var expectedTime = InstantPattern.ExtendedIso.Parse("2022-10-31T23:00:00Z").Value;
-            using var reader = GetReaderAndArrangeTest(
+            var reader = GetReaderAndArrangeTest(
                 context,
                 iso8601Durations,
                 correlationId,
@@ -279,7 +280,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.CimDeserialization.ChargeB
             actualSecondChargeCommand.ChargeOperation.Points.First().Price.Should().Be(200.001m);
         }
 
-        private XmlReader GetReaderAndArrangeTest(
+        private SchemaValidatingReader GetReaderAndArrangeTest(
             Mock<ICorrelationContext> context,
             Mock<IIso8601Durations> iso8601Durations,
             string correlationId,
@@ -296,7 +297,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.CimDeserialization.ChargeB
                 .Returns(expectedTime);
 
             var stream = GetEmbeddedResource(embeddedFile);
-            return XmlReader.Create(stream, new XmlReaderSettings { Async = true });
+            return new SchemaValidatingReader(stream, Schemas.CimXml.StructureRequestChangeOfPriceList);
         }
 
         private static Stream GetEmbeddedResource(string path)
