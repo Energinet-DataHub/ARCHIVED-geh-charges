@@ -13,10 +13,9 @@
 // limitations under the License.
 
 using System;
-using System.Diagnostics.CodeAnalysis;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksReceivedEvents;
-using GreenEnergyHub.Charges.Infrastructure.Contracts.Internal.LinkCommandReceived;
+using GreenEnergyHub.Charges.Infrastructure.Contracts.Internal.ChargeLinksCommandReceived;
 using GreenEnergyHub.Charges.TestCore.Attributes;
 using GreenEnergyHub.Charges.Tests.Protobuf;
 using NodaTime;
@@ -31,15 +30,15 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Contracts.Internal.ChargeL
         [Theory]
         [InlineAutoMoqData]
         public void Convert_WhenCalled_ShouldMapToProtobufWithCorrectValues(
-            [NotNull] ChargeLinksCommand chargeLinksCommand,
-            [NotNull] ChargeLinkCommandReceivedOutboundMapper sut)
+            ChargeLinksCommand chargeLinksCommand,
+            ChargeLinksCommandReceivedOutboundMapper sut)
         {
             // Arrange
             ChargeLinksReceivedEvent chargeLinksReceivedEvent =
                 new(SystemClock.Instance.GetCurrentInstant(), chargeLinksCommand);
 
             // Act
-            var result = (Charges.Infrastructure.Internal.ChargeLinkCommandReceived.ChargeLinkCommandReceived)sut.Convert(chargeLinksReceivedEvent);
+            var result = (Charges.Infrastructure.Internal.ChargeLinksCommandReceived.ChargeLinksCommandReceived)sut.Convert(chargeLinksReceivedEvent);
 
             // Assert
             ProtobufAssert.OutgoingContractIsSubset(chargeLinksReceivedEvent, result);
@@ -47,7 +46,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Contracts.Internal.ChargeL
 
         [Theory]
         [InlineAutoMoqData]
-        public void Convert_WhenCalledWithNull_ShouldThrow([NotNull]ChargeLinkCommandReceivedOutboundMapper sut)
+        public void Convert_WhenCalledWithNull_ShouldThrow(ChargeLinksCommandReceivedOutboundMapper sut)
         {
             Assert.Throws<InvalidOperationException>(() => sut.Convert(null!));
         }

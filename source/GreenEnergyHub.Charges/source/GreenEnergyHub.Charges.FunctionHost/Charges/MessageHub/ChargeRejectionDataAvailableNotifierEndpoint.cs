@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandRejectedEvents;
 using GreenEnergyHub.Charges.FunctionHost.Common;
@@ -44,7 +43,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Charges.MessageHub
                 "%" + EnvironmentSettingNames.CommandRejectedTopicName + "%",
                 "%" + EnvironmentSettingNames.CommandRejectedSubscriptionName + "%",
                 Connection = EnvironmentSettingNames.DomainEventListenerConnectionString)]
-            [NotNull] byte[] message)
+            byte[] message)
         {
             var rejectedEvent = (ChargeCommandRejectedEvent)await _messageExtractor.ExtractAsync(message).ConfigureAwait(false);
             await _availableDataNotifier.NotifyAsync(rejectedEvent).ConfigureAwait(false);

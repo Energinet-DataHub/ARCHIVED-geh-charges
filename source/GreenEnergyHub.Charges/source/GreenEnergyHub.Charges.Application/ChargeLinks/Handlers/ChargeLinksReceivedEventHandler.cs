@@ -13,42 +13,45 @@
 // limitations under the License.
 
 using System.Threading.Tasks;
+using GreenEnergyHub.Charges.Application.ChargeLinks.Services;
 using GreenEnergyHub.Charges.Domain.ChargeLinks;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksAcceptedEvents;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksReceivedEvents;
-using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions;
+using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 
 namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
 {
     public class ChargeLinksReceivedEventHandler : IChargeLinksReceivedEventHandler
     {
-        private readonly IMessageDispatcher<ChargeLinksAcceptedEvent> _messageDispatcher;
-        private readonly IChargeLinksAcceptedEventFactory _chargeLinksAcceptedEventFactory;
+        private readonly IChargeLinksReceiptService _chargeLinksReceiptService;
         private readonly IChargeLinkFactory _chargeLinkFactory;
-        private readonly IChargeLinkRepository _chargeLinkRepository;
+        private readonly IChargeLinksRepository _chargeLinksRepository;
+        private readonly IValidator<ChargeLinksCommand> _validator;
 
         public ChargeLinksReceivedEventHandler(
-            IMessageDispatcher<ChargeLinksAcceptedEvent> messageDispatcher,
-            IChargeLinksAcceptedEventFactory chargeLinksAcceptedEventFactory,
+            IChargeLinksReceiptService chargeLinksReceiptService,
             IChargeLinkFactory chargeLinkFactory,
-            IChargeLinkRepository chargeLinkRepository)
+            IChargeLinksRepository chargeLinksRepository,
+            IValidator<ChargeLinksCommand> validator)
         {
-            _messageDispatcher = messageDispatcher;
-            _chargeLinksAcceptedEventFactory = chargeLinksAcceptedEventFactory;
+            _chargeLinksReceiptService = chargeLinksReceiptService;
             _chargeLinkFactory = chargeLinkFactory;
-            _chargeLinkRepository = chargeLinkRepository;
+            _chargeLinksRepository = chargeLinksRepository;
+            _validator = validator;
         }
 
         public async Task HandleAsync(ChargeLinksReceivedEvent chargeLinksReceivedEvent)
         {
-            // Upcoming stories will cover the update scenarios where charge link already exists
+            var validationResult = await _validator.ValidateAsync(chargeLinksReceivedEvent.ChargeLinksCommand).ConfigureAwait(false);
+            if (validationResult.IsFailed)
+            {
+                await _chargeLinksReceiptService.RejectAsync(chargeLinksReceivedEvent.ChargeLinksCommand, validationResult);
+                return;
+            }
+
             var chargeLinks = await _chargeLinkFactory.CreateAsync(chargeLinksReceivedEvent).ConfigureAwait(false);
-            await _chargeLinkRepository.StoreAsync(chargeLinks).ConfigureAwait(false);
-
-            var chargeLinkCommandAcceptedEvent = _chargeLinksAcceptedEventFactory.Create(
-                chargeLinksReceivedEvent.ChargeLinksCommand);
-
-            await _messageDispatcher.DispatchAsync(chargeLinkCommandAcceptedEvent).ConfigureAwait(false);
+            await _chargeLinksRepository.StoreAsync(chargeLinks).ConfigureAwait(false);
+            await _chargeLinksReceiptService.AcceptAsync(chargeLinksReceivedEvent.ChargeLinksCommand);
         }
     }
 }

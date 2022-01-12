@@ -14,7 +14,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
 using FluentAssertions;
@@ -37,7 +36,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
 
         [Theory]
         [InlineAutoMoqData]
-        public async Task StoreAsync_StoresAvailableData([NotNull] List<TAvailableData> unfixedExpectedList)
+        public async Task StoreAsync_StoresAvailableData(List<TAvailableData> unfixedExpectedList)
         {
             // Arrange
             var expectedList = RepositoryAutoMoqDataFixer
@@ -66,8 +65,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
 
         [Theory]
         [InlineAutoMoqData]
-        public async Task GetAsync_GivenAnExistingAvailableDataReferenceId_ReturnsAvailableData(
-            [NotNull] TAvailableData expected)
+        public async Task GetAsync_GivenAnExistingAvailableDataReferenceId_ReturnsAvailableData(TAvailableData expected)
         {
             // Arrange
             expected = (TAvailableData)RepositoryAutoMoqDataFixer.GetAvailableDataBasedOn(expected);
