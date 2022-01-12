@@ -17,8 +17,9 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
-using System.Xml;
 using AutoFixture.Xunit2;
+using Energinet.DataHub.Core.Schemas;
+using Energinet.DataHub.Core.SchemaValidation;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands;
@@ -48,7 +49,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.CimDeserialization.ChargeL
             context.Setup(c => c.Id).Returns(correlationId);
 
             var stream = GetEmbeddedResource("GreenEnergyHub.Charges.Tests.TestFiles.Valid_CIM_ChargeLink.xml");
-            using var reader = XmlReader.Create(stream, new XmlReaderSettings { Async = true });
+            var reader = new SchemaValidatingReader(stream, Schemas.CimXml.StructureRequestChangeBillingMasterData);
 
             // Act
             var resultBundle = (ChargeLinksCommandBundle)await sut.ConvertAsync(reader).ConfigureAwait(false);
@@ -89,7 +90,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.CimDeserialization.ChargeL
             context.Setup(c => c.Id).Returns(correlationId);
 
             var stream = GetEmbeddedResource("GreenEnergyHub.Charges.Tests.TestFiles.Valid_CIM_ChargeLink_WithUnusedCimContent.xml");
-            using var reader = XmlReader.Create(stream, new XmlReaderSettings { Async = true });
+            var reader = new SchemaValidatingReader(stream, Schemas.CimXml.StructureRequestChangeBillingMasterData);
 
             // Act
             var resultBundle = (ChargeLinksCommandBundle)await sut.ConvertAsync(reader).ConfigureAwait(false);
@@ -113,7 +114,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.CimDeserialization.ChargeL
             context.Setup(c => c.Id).Returns(correlationId);
 
             var stream = GetEmbeddedResource("GreenEnergyHub.Charges.Tests.TestFiles.Valid_CIM_ChargeLink_WithoutEndDate.xml");
-            using var reader = XmlReader.Create(stream, new XmlReaderSettings { Async = true });
+            var reader = new SchemaValidatingReader(stream, Schemas.CimXml.StructureRequestChangeBillingMasterData);
 
             // Act
             var resultBundle = (ChargeLinksCommandBundle)await sut.ConvertAsync(reader).ConfigureAwait(false);
@@ -138,7 +139,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.CimDeserialization.ChargeL
             context.Setup(c => c.Id).Returns(correlationId);
 
             var stream = GetEmbeddedResource("GreenEnergyHub.Charges.Tests.TestFiles.Valid_CIM_ChargeLink_Bundle.xml");
-            using var reader = XmlReader.Create(stream, new XmlReaderSettings { Async = true });
+            var reader = new SchemaValidatingReader(stream, Schemas.CimXml.StructureRequestChangeBillingMasterData);
 
             // Act
             var result = (ChargeLinksCommandBundle)await sut.ConvertAsync(reader).ConfigureAwait(false);
