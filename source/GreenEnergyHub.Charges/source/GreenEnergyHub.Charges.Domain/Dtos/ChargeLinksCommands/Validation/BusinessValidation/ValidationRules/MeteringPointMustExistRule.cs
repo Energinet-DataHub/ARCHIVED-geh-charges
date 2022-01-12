@@ -19,16 +19,16 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands.Validation.Busi
 {
     public class MeteringPointMustExistRule : IValidationRule
     {
-        private readonly MeteringPoint? _meteringPoint;
+        private readonly MeteringPoint? _existingMeteringPoint;
 
-        public MeteringPointMustExistRule(MeteringPoint? meteringPoint)
+        public MeteringPointMustExistRule(MeteringPoint? existingMeteringPoint)
         {
-            _meteringPoint = meteringPoint;
+            _existingMeteringPoint = existingMeteringPoint;
         }
 
         public ValidationRuleIdentifier ValidationRuleIdentifier =>
             ValidationRuleIdentifier.MeteringPointDoesNotExist;
 
-        public bool IsValid => _meteringPoint is not null;
+        public bool IsValid => _existingMeteringPoint is not null;
     }
 }
