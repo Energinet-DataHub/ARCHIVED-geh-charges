@@ -16,7 +16,6 @@ resource "azurerm_app_service" "webapi" {
   resource_group_name                       = azurerm_resource_group.this.name
   location                                  = azurerm_resource_group.this.location
   app_service_plan_id                       = module.plan_webapi.id
-  application_insights_instrumentation_key  = data.azurerm_key_vault_secret.appi_shared_instrumentation_key.value
 
   site_config {
     linux_fx_version = "DOTNETCORE|5.0"
@@ -24,6 +23,10 @@ resource "azurerm_app_service" "webapi" {
     cors {
       allowed_origins = ["*"]
     }
+  }
+
+  app_settings = {
+    "APPINSIGHTS_INSTRUMENTATIONKEY" = "${data.azurerm_key_vault_secret.appi_shared_instrumentation_key.value}"
   }
 
   connection_string {
