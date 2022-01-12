@@ -38,6 +38,7 @@ module "func_functionhost" {
     CHARGE_CREATED_TOPIC_NAME                                       = data.azurerm_key_vault_secret.sbt_charge_created_name.value
     CHARGE_PRICES_UPDATED_TOPIC_NAME                                = data.azurerm_key_vault_secret.sbt_charge_prices_updated_name.value
     CHARGE_LINK_ACCEPTED_TOPIC_NAME                                 = module.sbt_link_command_accepted.name
+    CHARGE_LINKS_REJECTED_TOPIC_NAME                                 = module.sbt_links_command_rejected.name
     CHARGELINKACCEPTED_SUB_REPLIER                                  = "chargelinkaccepted-sub-replier"
     CHARGELINKACCEPTED_SUB_EVENTPUBLISHER                           = "chargelinkaccepted-sub-eventpublisher"
     CHARGELINKACCEPTED_SUB_DATAAVAILABLENOTIFIER                    = "chargelinkaccepted-sub-dataavailablenotifier"

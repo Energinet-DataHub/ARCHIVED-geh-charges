@@ -25,9 +25,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksReceivedEvents
     {
         public ChargeLinksCommand ChargeLinksCommand { get; }
 
-        public ChargeLinksReceivedEvent(
-            Instant publishedTime,
-            [NotNull] ChargeLinksCommand chargeLinksCommand)
+        public ChargeLinksReceivedEvent(Instant publishedTime, ChargeLinksCommand chargeLinksCommand)
             : base(publishedTime)
         {
             ChargeLinksCommand = chargeLinksCommand;

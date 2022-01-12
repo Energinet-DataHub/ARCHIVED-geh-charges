@@ -22,6 +22,7 @@ using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandAcceptedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandRejectedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation;
+using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions;
 using GreenEnergyHub.Charges.TestCore.Attributes;
 using Moq;
@@ -39,15 +40,15 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Acknowledgement
             [Frozen] [NotNull] Mock<IChargeCommandRejectedEventFactory> rejectedEventFactory,
             [Frozen] [NotNull] Mock<IMessageDispatcher<ChargeCommandRejectedEvent>> rejectedEventDispatcher,
             [NotNull] ChargeCommand command,
-            [NotNull] ChargeCommandValidationResult validationResult,
+            [NotNull] ValidationResult validationResult,
             [NotNull] ChargeCommandRejectedEvent rejectedEvent,
-            [NotNull] ChargeCommandConfirmationService sut)
+            [NotNull] ChargeCommandReceiptService sut)
         {
             // Arrange
             rejectedEventFactory.Setup(
                 f => f.CreateEvent(
                     It.IsAny<ChargeCommand>(),
-                    It.IsAny<ChargeCommandValidationResult>()))
+                    It.IsAny<ValidationResult>()))
                 .Returns(rejectedEvent);
 
             ChargeCommandRejectedEvent? eventForSerialization = null;
@@ -72,7 +73,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Acknowledgement
             [Frozen] [NotNull] Mock<IMessageDispatcher<ChargeCommandAcceptedEvent>> acceptedEventDispatcher,
             [NotNull] ChargeCommand command,
             [NotNull] ChargeCommandAcceptedEvent acceptedEvent,
-            [NotNull] ChargeCommandConfirmationService sut)
+            [NotNull] ChargeCommandReceiptService sut)
         {
             // Arrange
             acceptedEventFactory.Setup(

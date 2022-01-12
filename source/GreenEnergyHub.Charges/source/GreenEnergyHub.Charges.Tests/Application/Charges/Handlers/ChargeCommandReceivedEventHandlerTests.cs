@@ -14,7 +14,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
 using GreenEnergyHub.Charges.Application.Charges.Acknowledgement;
@@ -22,10 +21,9 @@ using GreenEnergyHub.Charges.Application.Charges.Handlers;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandReceivedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation;
+using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using GreenEnergyHub.Charges.TestCore.Attributes;
 using Moq;
-using NodaTime;
 using Xunit;
 using Xunit.Categories;
 
@@ -37,16 +35,16 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
         [Theory]
         [InlineAutoMoqData]
         public async Task HandleAsync_WhenValidationSucceed_StoreAndConfirmCommand(
-            [Frozen] [NotNull] Mock<IChargeCommandValidator> validator,
-            [Frozen] [NotNull] Mock<IChargeRepository> repository,
-            [Frozen] [NotNull] Mock<IChargeCommandConfirmationService> confirmationService,
-            [Frozen] [NotNull] Mock<Charge> charge,
-            [Frozen] [NotNull] Mock<IChargeFactory> chargeFactory,
-            [NotNull] ChargeCommandReceivedEvent receivedEvent,
-            [NotNull] ChargeCommandReceivedEventHandler sut)
+            [Frozen] Mock<IValidator<ChargeCommand>> validator,
+            [Frozen] Mock<IChargeRepository> repository,
+            [Frozen] Mock<IChargeCommandReceiptService> confirmationService,
+            [Frozen] Mock<Charge> charge,
+            [Frozen] Mock<IChargeFactory> chargeFactory,
+            ChargeCommandReceivedEvent receivedEvent,
+            ChargeCommandReceivedEventHandler sut)
         {
             // Arrange
-            var validationResult = ChargeCommandValidationResult.CreateSuccess();
+            var validationResult = ValidationResult.CreateSuccess();
             validator.Setup(
                     v => v.ValidateAsync(
                         It.IsAny<ChargeCommand>()))
@@ -82,10 +80,10 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
         [Theory]
         [InlineAutoMoqData]
         public async Task HandleAsync_WhenValidationFails_RejectsEvent(
-            [Frozen] [NotNull] Mock<IChargeCommandValidator> validator,
-            [Frozen] [NotNull] Mock<IChargeCommandConfirmationService> confirmationService,
-            [NotNull] ChargeCommandReceivedEvent receivedEvent,
-            [NotNull] ChargeCommandReceivedEventHandler sut)
+            [Frozen] Mock<IValidator<ChargeCommand>> validator,
+            [Frozen] Mock<IChargeCommandReceiptService> confirmationService,
+            ChargeCommandReceivedEvent receivedEvent,
+            ChargeCommandReceivedEventHandler sut)
         {
             // Arrange
             var validationResult = GetFailedValidationResult();
@@ -100,7 +98,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
                     s => s.RejectAsync(
                         It.IsAny<ChargeCommand>(),
                         validationResult))
-                .Callback<ChargeCommand, ChargeCommandValidationResult>(
+                .Callback<ChargeCommand, ValidationResult>(
                     (_, _) => rejected = true);
 
             // Act
@@ -113,7 +111,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
         [Theory]
         [InlineAutoMoqData]
         public async Task HandleAsync_IfEventIsNull_ThrowsArgumentNullException(
-            [NotNull] ChargeCommandReceivedEventHandler sut)
+            ChargeCommandReceivedEventHandler sut)
         {
             // Arrange
             ChargeCommandReceivedEvent? receivedEvent = null;
@@ -124,14 +122,14 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
                 .ConfigureAwait(false);
         }
 
-        private static ChargeCommandValidationResult GetFailedValidationResult()
+        private static ValidationResult GetFailedValidationResult()
         {
             var failedRule = new Mock<IValidationRule>();
             failedRule.Setup(
                     r => r.IsValid)
                 .Returns(false);
 
-            return ChargeCommandValidationResult.CreateFailure(
+            return ValidationResult.CreateFailure(
                 new List<IValidationRule> { failedRule.Object });
         }
     }

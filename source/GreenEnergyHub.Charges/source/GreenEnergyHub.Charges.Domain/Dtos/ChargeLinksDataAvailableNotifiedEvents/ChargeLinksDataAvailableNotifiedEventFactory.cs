@@ -13,9 +13,8 @@
 // limitations under the License.
 
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksAcceptedEvents;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksDataAvailableNotifiedEvents;
 
-namespace GreenEnergyHub.Charges.Domain.Dtos.DefaultChargeLinksDataAvailableNotifiedEvents
+namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksDataAvailableNotifiedEvents
 {
     public class ChargeLinksDataAvailableNotifiedEventFactory : IChargeLinksDataAvailableNotifiedEventFactory
     {

@@ -43,7 +43,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             public async Task When_ReceivingCreateDefaultChargeLinksRequest_MessageHubIsNotifiedAboutAvailableData_And_Then_When_MessageHubRequestsTheBundle_Then_MessageHubReceivesBundleReply()
             {
                 // Arrange
-                var meteringPointId = "571313180000000005";
+                var meteringPointId = "901313180000000005";
                 var request = CreateServiceBusMessage(
                     meteringPointId,
                     Fixture.CreateLinkReplyQueue.Name,

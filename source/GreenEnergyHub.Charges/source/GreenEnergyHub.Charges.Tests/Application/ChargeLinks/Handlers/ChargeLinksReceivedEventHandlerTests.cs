@@ -14,19 +14,17 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
-using System.Threading;
 using System.Threading.Tasks;
 using AutoFixture;
 using AutoFixture.AutoMoq;
 using AutoFixture.Xunit2;
-using GreenEnergyHub.Charges.Application;
 using GreenEnergyHub.Charges.Application.ChargeLinks.Handlers;
+using GreenEnergyHub.Charges.Application.ChargeLinks.Services;
 using GreenEnergyHub.Charges.Domain.ChargeLinks;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksAcceptedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksReceivedEvents;
-using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions;
+using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using GreenEnergyHub.TestHelpers;
 using Moq;
 using Xunit;
@@ -40,9 +38,10 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Handlers
         [Theory]
         [InlineAutoDomainData]
         public async Task HandleAsync_ShouldDispatch_AcceptedEvent(
-            [Frozen] Mock<IMessageDispatcher<ChargeLinksAcceptedEvent>> messageDispatcher,
+            [Frozen] Mock<IChargeLinksReceiptService> chargeLinksReceiptService,
             [Frozen] Mock<IChargeLinkFactory> chargeLinkFactory,
             [Frozen] Mock<IChargeLinksAcceptedEventFactory> chargeLinkCommandAcceptedEventFactory,
+            [Frozen] Mock<IValidator<ChargeLinksCommand>> validator,
             ChargeLinksReceivedEvent chargeLinksReceivedEvent,
             ChargeLinksAcceptedEvent chargeLinksAcceptedEvent,
             ChargeLinksReceivedEventHandler sut)
@@ -51,6 +50,9 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Handlers
             var fixture = new Fixture().Customize(new AutoMoqCustomization());
             fixture.Customizations.Add(new StringGenerator(() => Guid.NewGuid().ToString()[..16]));
             var chargeLink = fixture.Create<ChargeLink>();
+
+            validator.Setup(x => x.ValidateAsync(It.IsAny<ChargeLinksCommand>()))
+                .ReturnsAsync(ValidationResult.CreateSuccess());
 
             chargeLinkFactory
                 .Setup(x => x.CreateAsync(It.IsAny<ChargeLinksReceivedEvent>()))
@@ -65,8 +67,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Handlers
             await sut.HandleAsync(chargeLinksReceivedEvent).ConfigureAwait(false);
 
             // Assert
-            messageDispatcher.Verify(
-                x => x.DispatchAsync(chargeLinksAcceptedEvent, It.IsAny<CancellationToken>()));
+            chargeLinksReceiptService.Verify(x => x.AcceptAsync(It.IsAny<ChargeLinksCommand>()));
         }
     }
 }
