@@ -17,8 +17,8 @@ using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.MessageHub.Infrastructure.Persistence.EntityConfigurations;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeData;
-using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinkReceiptData;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksData;
+using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksReceiptData;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableData;
 using Microsoft.EntityFrameworkCore;
@@ -46,7 +46,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Infrastructure.Persistence
 
         public DbSet<AvailableChargeLinksData> AvailableChargeLinksData { get; private set; }
 
-        public DbSet<AvailableChargeLinkReceiptData> AvailableChargeLinkReceiptData { get; private set; }
+        public DbSet<AvailableChargeLinksReceiptData> AvailableChargeLinkReceiptData { get; private set; }
 
         public Task<int> SaveChangesAsync()
            => base.SaveChangesAsync();

@@ -20,6 +20,7 @@ using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.Infrastructure.Core.Cim.MarketActivityRecord;
 using GreenEnergyHub.Charges.Infrastructure.Core.Cim.MarketDocument;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData;
+using GreenEnergyHub.Charges.MessageHub.Models.AvailableData;
 using NodaTime;
 
 namespace GreenEnergyHub.Charges.MessageHub.Infrastructure.Cim.Bundles.ChargeReceipt
@@ -95,7 +96,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Infrastructure.Cim.Bundles.ChargeRec
             return result;
         }
 
-        private XElement GetReasonCode(XNamespace cimNamespace, AvailableChargeReceiptValidationError validationError)
+        private XElement GetReasonCode(XNamespace cimNamespace, AvailableReceiptValidationError validationError)
         {
             return new XElement(
                 cimNamespace + CimChargeReceiptConstants.ReasonElement,

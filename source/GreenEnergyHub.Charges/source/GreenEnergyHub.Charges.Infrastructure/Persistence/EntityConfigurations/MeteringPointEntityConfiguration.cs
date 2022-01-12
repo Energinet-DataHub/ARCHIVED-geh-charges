@@ -16,7 +16,7 @@ using GreenEnergyHub.Charges.Domain.MeteringPoints;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace GreenEnergyHub.Charges.Infrastructure.Context.EntityConfigurations
+namespace GreenEnergyHub.Charges.Infrastructure.Persistence.EntityConfigurations
 {
     public class MeteringPointEntityConfiguration : IEntityTypeConfiguration<MeteringPoint>
     {

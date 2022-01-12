@@ -17,7 +17,7 @@ using System.Threading.Tasks;
 using Energinet.DataHub.Core.FunctionApp.TestCommon.Database;
 using EntityFrameworkCore.SqlServer.NodaTime.Extensions;
 using GreenEnergyHub.Charges.ApplyDBMigrationsApp.Helpers;
-using GreenEnergyHub.Charges.Infrastructure.Context;
+using GreenEnergyHub.Charges.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 
 namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures.Database

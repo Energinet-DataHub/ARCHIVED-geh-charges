@@ -18,7 +18,7 @@ using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinkCreatedEvents;
 using GreenEnergyHub.Charges.FunctionHost.Common;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Registration;
 using GreenEnergyHub.Charges.Infrastructure.Integration.ChargeLinkCreated;
-using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandAccepted;
+using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinksCommandAccepted;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace GreenEnergyHub.Charges.FunctionHost.Configuration
@@ -30,8 +30,8 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
             serviceCollection.AddScoped<IChargeLinkCreatedEventFactory, ChargeLinkCreatedEventFactory>();
             serviceCollection.AddScoped<IChargeLinkEventPublishHandler, ChargeLinkEventPublishHandler>();
 
-            serviceCollection.ReceiveProtobufMessage<ChargeLinkCommandAccepted>(
-                configuration => configuration.WithParser(() => ChargeLinkCommandAccepted.Parser));
+            serviceCollection.ReceiveProtobufMessage<ChargeLinksCommandAccepted>(
+                configuration => configuration.WithParser(() => ChargeLinksCommandAccepted.Parser));
 
             serviceCollection.SendProtobuf<ChargeLinkCreatedContract>();
             serviceCollection.AddMessagingProtobuf().AddMessageDispatcher<ChargeLinkCreatedEvent>(
