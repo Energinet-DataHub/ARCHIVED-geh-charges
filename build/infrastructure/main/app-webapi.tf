@@ -12,10 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 resource "azurerm_app_service" "webapi" {
-  name                = "app-webapi-${lower(var.domain_name_short)}-${lower(var.environment_short)}-${lower(var.environment_instance)}"
-  resource_group_name = azurerm_resource_group.this.name
-  location            = azurerm_resource_group.this.location
-  app_service_plan_id = module.plan_webapi.id
+  name                                      = "app-webapi-${lower(var.domain_name_short)}-${lower(var.environment_short)}-${lower(var.environment_instance)}"
+  resource_group_name                       = azurerm_resource_group.this.name
+  location                                  = azurerm_resource_group.this.location
+  app_service_plan_id                       = module.plan_webapi.id
+  application_insights_instrumentation_key  = data.azurerm_key_vault_secret.appi_shared_instrumentation_key.value
 
   site_config {
     linux_fx_version = "DOTNETCORE|5.0"

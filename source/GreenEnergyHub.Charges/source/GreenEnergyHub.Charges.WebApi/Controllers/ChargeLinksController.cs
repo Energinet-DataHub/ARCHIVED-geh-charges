@@ -19,6 +19,7 @@ using GreenEnergyHub.Charges.QueryApi.QueryPredicates;
 using GreenEnergyHub.Charges.WebApi.ModelPredicates;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace GreenEnergyHub.Charges.WebApi.Controllers
 {
@@ -27,10 +28,12 @@ namespace GreenEnergyHub.Charges.WebApi.Controllers
     public class ChargeLinksController : ControllerBase
     {
         private readonly IData _data;
+        private readonly ILogger _logger;
 
-        public ChargeLinksController(IData data)
+        public ChargeLinksController(IData data, ILoggerFactory loggerFactory)
         {
             _data = data;
+            _logger = loggerFactory.CreateLogger(nameof(ChargeLinksController));
         }
 
         /// <summary>
@@ -42,6 +45,8 @@ namespace GreenEnergyHub.Charges.WebApi.Controllers
         [HttpGet("GetAsync")]
         public async Task<IActionResult> GetAsync(string meteringPointId)
         {
+            _logger.LogInformation($"Started processing request for charge links for metering point id: {meteringPointId}");
+
             if (meteringPointId == null)
                 return BadRequest();
 
