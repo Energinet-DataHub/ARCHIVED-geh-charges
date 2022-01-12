@@ -79,11 +79,11 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
 
         private static (Guid ChargeId, Guid MeteringPointId) SeedDatabase(ChargesDatabaseContext context)
         {
-            var marketParticipant = new MarketParticipant
-            {
-                BusinessProcessRole = MarketParticipantRole.EnergySupplier,
-                MarketParticipantId = "MarketParticipantId",
-            };
+            var marketParticipant = new MarketParticipant(
+                Guid.NewGuid(),
+                "MarketParticipantId",
+                true,
+                new[] { MarketParticipantRole.EnergySupplier });
 
             context.MarketParticipants.Add(marketParticipant);
             context.SaveChanges(); // Sets marketParticipant.RowId

@@ -13,31 +13,43 @@
 // limitations under the License.
 
 using System;
+using System.Collections.Generic;
 
-#pragma warning disable 8618
 namespace GreenEnergyHub.Charges.Domain.MarketParticipants
 {
-    // Non-nullable member is uninitialized is ignored
-    // Only properties which is allowed to be null is nullable
-    // MarketParticipant integrity is null checked by ChargeCommandNullChecker
-
     /// <summary>
     /// A market participant, e.g. a Grid Access Provider, whom may submit a charge message.
     /// </summary>
     public class MarketParticipant
     {
+        private readonly List<MarketParticipantRole> _roles;
+
+        public MarketParticipant(Guid id, string marketParticipantId, bool isActive, IEnumerable<MarketParticipantRole> roles)
+        {
+            Id = id;
+            MarketParticipantId = marketParticipantId;
+            IsActive = isActive;
+            _roles = new(roles);
+        }
+
+        // ReSharper disable once UnusedMember.Local - Required by persistence framework
+        private MarketParticipant()
+        {
+            MarketParticipantId = null!;
+            _roles = new();
+        }
+
         public Guid Id { get; }
 
         /// <summary>
-        /// Contains an ID that identifies the Market Participants. In Denmark this would be the GLN number or EIC code.
+        /// The ID that identifies the market participant. In Denmark this would be the GLN number or EIC code.
         /// </summary>
-        public string MarketParticipantId { get; set; }
+        public string MarketParticipantId { get; }
 
         /// <summary>
-        /// Contains the role a market participant uses when initiating and communicating with Green Energy Hub
-        /// about a specific business process, e.g. Grid Access Provider use 'DDM' when creating Charge price lists.
+        /// The roles of the market participant.
         /// </summary>
-        public MarketParticipantRole BusinessProcessRole { get; set; }
+        public IReadOnlyCollection<MarketParticipantRole> Roles => _roles;
 
         public bool IsActive { get; }
     }

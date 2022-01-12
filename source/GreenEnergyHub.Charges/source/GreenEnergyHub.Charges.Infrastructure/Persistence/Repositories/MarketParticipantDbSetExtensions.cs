@@ -12,29 +12,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
 using System.Linq;
-using GreenEnergyHub.Charges.Domain.Configuration;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
+using Microsoft.EntityFrameworkCore;
 
-namespace GreenEnergyHub.Charges.Infrastructure.Configuration
+namespace GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories
 {
-    public class HubSenderConfiguration : IHubSenderConfiguration
+    public static class MarketParticipantDbSetExtensions
     {
-        private readonly MarketParticipant _marketParticipant;
-
-        public HubSenderConfiguration(string senderId, MarketParticipantRole senderRole)
+        public static IQueryable<MarketParticipant> WithRole(
+            this DbSet<MarketParticipant> set,
+            MarketParticipantRole role)
         {
-            _marketParticipant = new MarketParticipant(
-                Guid.NewGuid(),
-                senderId,
-                true,
-                new[] { senderRole }.ToList());
-        }
-
-        public MarketParticipant GetSenderMarketParticipant()
-        {
-            return _marketParticipant;
+            var roleParam = ((int)role).ToString();
+            return set.FromSqlInterpolated(
+                $"SELECT * FROM Charges.MarketParticipant WHERE (',' + Roles + ',') LIKE '%,' + {roleParam} + ',%'");
         }
     }
 }
