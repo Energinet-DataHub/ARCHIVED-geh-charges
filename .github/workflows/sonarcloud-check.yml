@@ -5,7 +5,7 @@ on:
       - main
     paths:
       - source/**
-      - .github/workflows/sonarcloud.yml
+      - .github/workflows/sonarcloud-check.yml
 
   pull_request:
     types: [opened, synchronize, reopened]
