@@ -58,14 +58,12 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi
         {
             // Act
             var response = await _client.GetAsync($"{BaseUrl}{KnownMeteringPointId}");
+
+            // Assert
             var jsonString = await response.Content.ReadAsStringAsync();
             var actual = JsonSerializer.Deserialize<List<ChargeLinkDto>>(
                 jsonString,
-                new JsonSerializerOptions
-                {
-                    PropertyNameCaseInsensitive = true,
-                    Converters = { new JsonStringEnumConverter() },
-                });
+                GetJsonSerializerOptions());
 
             actual.Should().BeInAscendingOrder(c => c.ChargeType)
                 .And.ThenBeInAscendingOrder(c => c.ChargeId)
@@ -85,6 +83,14 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi
             var missingMeteringPointId = string.Empty;
             var response = await _client.GetAsync($"{BaseUrl}{missingMeteringPointId}");
             response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        }
+
+        private static JsonSerializerOptions GetJsonSerializerOptions()
+        {
+            return new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true, Converters = { new JsonStringEnumConverter() },
+            };
         }
     }
 }
