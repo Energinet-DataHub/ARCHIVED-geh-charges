@@ -13,7 +13,7 @@
 // limitations under the License.
 
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation;
+using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 
 namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandRejectedEvents
 {
@@ -21,6 +21,6 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandRejectedEvents
     {
         ChargeCommandRejectedEvent CreateEvent(
             ChargeCommand command,
-            ChargeCommandValidationResult chargeCommandValidationResult);
+            ValidationResult validationResult);
     }
 }

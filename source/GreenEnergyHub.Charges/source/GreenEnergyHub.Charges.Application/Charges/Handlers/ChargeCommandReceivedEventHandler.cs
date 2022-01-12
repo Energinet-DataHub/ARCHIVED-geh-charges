@@ -17,25 +17,27 @@ using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application.Charges.Acknowledgement;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandReceivedEvents;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation;
+using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 
 namespace GreenEnergyHub.Charges.Application.Charges.Handlers
 {
     public class ChargeCommandReceivedEventHandler : IChargeCommandReceivedEventHandler
     {
-        private readonly IChargeCommandConfirmationService _chargeCommandConfirmationService;
-        private readonly IChargeCommandValidator _chargeCommandValidator;
+        private readonly IChargeCommandReceiptService _chargeCommandReceiptService;
+        private readonly IValidator<ChargeCommand> _validator;
         private readonly IChargeRepository _chargeRepository;
         private readonly IChargeFactory _chargeFactory;
 
         public ChargeCommandReceivedEventHandler(
-            IChargeCommandConfirmationService chargeCommandConfirmationService,
-            IChargeCommandValidator chargeCommandValidator,
+            IChargeCommandReceiptService chargeCommandReceiptService,
+            IValidator<ChargeCommand> validator,
             IChargeRepository chargeRepository,
             IChargeFactory chargeFactory)
         {
-            _chargeCommandConfirmationService = chargeCommandConfirmationService;
-            _chargeCommandValidator = chargeCommandValidator;
+            _chargeCommandReceiptService = chargeCommandReceiptService;
+            _validator = validator;
             _chargeRepository = chargeRepository;
             _chargeFactory = chargeFactory;
         }
@@ -44,17 +46,17 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
         {
             if (commandReceivedEvent == null) throw new ArgumentNullException(nameof(commandReceivedEvent));
 
-            var validationResult = await _chargeCommandValidator.ValidateAsync(commandReceivedEvent.Command).ConfigureAwait(false);
+            var validationResult = await _validator.ValidateAsync(commandReceivedEvent.Command).ConfigureAwait(false);
             if (validationResult.IsFailed)
             {
-                await _chargeCommandConfirmationService.RejectAsync(commandReceivedEvent.Command, validationResult).ConfigureAwait(false);
+                await _chargeCommandReceiptService.RejectAsync(commandReceivedEvent.Command, validationResult).ConfigureAwait(false);
                 return;
             }
 
             var charge = await _chargeFactory.CreateFromCommandAsync(commandReceivedEvent.Command);
             await _chargeRepository.StoreChargeAsync(charge).ConfigureAwait(false);
 
-            await _chargeCommandConfirmationService.AcceptAsync(commandReceivedEvent.Command).ConfigureAwait(false);
+            await _chargeCommandReceiptService.AcceptAsync(commandReceivedEvent.Command).ConfigureAwait(false);
         }
     }
 }

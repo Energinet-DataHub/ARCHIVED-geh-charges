@@ -55,7 +55,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeData
 
                     result.Add(new AvailableChargeData(
                         provider.MarketParticipantId,
-                        provider.BusinessProcessRole,
+                        MarketParticipantRole.GridAccessProvider,
                         input.Command.Document.BusinessReasonCode,
                         _messageMetaDataContext.RequestDataTime,
                         Guid.NewGuid(), // ID of each available piece of data must be unique

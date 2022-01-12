@@ -13,38 +13,35 @@
 // limitations under the License.
 
 using System.Threading.Tasks;
-using System.Xml;
+using Energinet.DataHub.Core.SchemaValidation;
 
 namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization
 {
     public static class XmlReaderExtension
     {
         public static bool Is(
-            this XmlReader reader,
+            this SchemaValidatingReader reader,
             string localName,
-            string ns,
-            XmlNodeType xmlNodeType = XmlNodeType.Element)
+            NodeType nodeType = NodeType.StartElement)
         {
-            return reader.LocalName.Equals(localName) && reader.NamespaceURI.Equals(ns) &&
-                   reader.NodeType == xmlNodeType;
+            return reader.CurrentNodeName.Equals(localName) &&
+                   reader.CurrentNodeType == nodeType;
         }
 
-        public static bool IsElement(this XmlReader reader)
+        public static bool IsElement(this SchemaValidatingReader reader)
         {
-            return reader.NodeType == XmlNodeType.Element;
+            return reader.CurrentNodeType == NodeType.StartElement;
         }
 
         public static async Task ReadUntilEoFOrNextElementNameAsync(
-            this XmlReader reader,
+            this SchemaValidatingReader reader,
             string localName,
-            string ns,
-            XmlNodeType xmlNodeType = XmlNodeType.Element)
+            NodeType xmlNodeType = NodeType.StartElement)
         {
-            while (await reader.ReadAsync().ConfigureAwait(false))
+            while (await reader.AdvanceAsync().ConfigureAwait(false))
             {
                 if (reader.Is(
-                        localName,
-                        ns))
+                        localName))
                 {
                     break;
                 }
