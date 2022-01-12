@@ -13,6 +13,8 @@
 // limitations under the License.
 
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandRejectedEvents;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
+using GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Registration;
 using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeCommandRejected;
 using GreenEnergyHub.Charges.MessageHub.BundleSpecification;
@@ -33,6 +35,15 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
             serviceCollection
                 .AddScoped<IAvailableDataNotifier<AvailableChargeReceiptData, ChargeCommandRejectedEvent>,
                     AvailableDataNotifier<AvailableChargeReceiptData, ChargeCommandRejectedEvent>>();
+            serviceCollection
+                .AddScoped<AvailableChargeReceiptValidationErrorFactory,
+                    AvailableChargeReceiptValidationErrorFactory>();
+            serviceCollection
+                .AddScoped<ICimValidationErrorTextProvider, CimValidationErrorTextProvider>();
+            serviceCollection
+                .AddScoped<ICimValidationErrorCodeFactory, CimValidationErrorCodeFactory>();
+            serviceCollection
+                .AddScoped<ICimValidationErrorTextFactory<ChargeCommand>, ChargeCimValidationErrorTextFactory>();
             serviceCollection
                 .AddScoped<IAvailableDataFactory<AvailableChargeReceiptData, ChargeCommandRejectedEvent>,
                     AvailableChargeRejectionDataFactory>();
