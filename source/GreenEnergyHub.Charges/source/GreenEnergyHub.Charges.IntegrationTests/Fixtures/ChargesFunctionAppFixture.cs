@@ -182,6 +182,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures
 
             await InitializeMessageHubAsync();
 
+            SetUpRequestResponseLogging();
+
             // => Database
             await DatabaseManager.CreateDatabaseAsync();
 
@@ -244,6 +246,12 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures
                 ChargesServiceBusResourceNames.MessageHubStorageConnectionString,
                 ChargesServiceBusResourceNames.MessageHubStorageContainerName);
             MessageHubMock = new MessageHubSimulation(messageHubSimulationConfig);
+        }
+
+        private void SetUpRequestResponseLogging()
+        {
+            Environment.SetEnvironmentVariable(EnvironmentSettingNames.RequestResponseLoggingConnectionString, ChargesServiceBusResourceNames.RequestResponseLoggingConnectionString);
+            Environment.SetEnvironmentVariable(EnvironmentSettingNames.RequestResponseLoggingContainerName, ChargesServiceBusResourceNames.RequestResponseLoggingContainerName);
         }
 
         private static string GetBuildConfiguration()

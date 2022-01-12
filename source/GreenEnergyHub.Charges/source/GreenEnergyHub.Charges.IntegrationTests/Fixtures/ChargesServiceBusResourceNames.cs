@@ -18,6 +18,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures
     {
         // Environment specific settings
         public const string MessageHubStorageConnectionString = "UseDevelopmentStorage=true";
+        public const string RequestResponseLoggingConnectionString = "UseDevelopmentStorage=true";
 
         // Integration events, charges
         public const string ChargeCreatedTopicKey = "charge-created";
@@ -39,6 +40,9 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures
         public const string MessageHubRequestQueueKey = "charges";
         public const string MessageHubReplyQueueKey = "charges-reply";
         public const string MessageHubStorageContainerName = "postoffice-reply";
+
+        // Integration, request response logging
+        public const string RequestResponseLoggingContainerName = "marketoplogs";
 
         // Internal, charge, received
         public const string CommandReceivedTopicKey = "command-received";
