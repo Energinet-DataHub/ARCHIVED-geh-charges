@@ -57,9 +57,11 @@
     // Internal, charge links, received
     "CHARGE_LINK_RECEIVED_TOPIC_NAME": "link-command-received",
     "CHARGE_LINK_RECEIVED_SUBSCRIPTION_NAME": "link-command-received-receiver",
-    
+
     // Internal, charge links, accepted
     "CHARGE_LINK_ACCEPTED_TOPIC_NAME": "link-command-accepted",
+    "CHARGE_LINK_REJECTED_TOPIC_NAME": "link-command-rejected",
+    "CHARGE_LINKS_REJECTED_SUBSCRIPTION_NAME": "charge-links-command-rejected",
     "CHARGELINKACCEPTED_SUB_CONFIRMATIONNOTIFIER": "chargelinkaccepted-sub-confirmationnotifier",
     "CHARGELINKACCEPTED_SUB_DATAAVAILABLENOTIFIER": "chargelinkaccepted-sub-dataavailablenotifier",
     "CHARGELINKACCEPTED_SUB_EVENTPUBLISHER": "chargelinkaccepted-sub-eventpublisher",

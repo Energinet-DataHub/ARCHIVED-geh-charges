@@ -28,11 +28,11 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
         AvailableDataFactoryBase<AvailableChargeReceiptData, ChargeCommandRejectedEvent>
     {
         private readonly IMessageMetaDataContext _messageMetaDataContext;
-        private readonly AvailableChargeReceiptValidationErrorFactory _availableChargeReceiptValidationErrorFactory;
+        private readonly IAvailableChargeReceiptValidationErrorFactory _availableChargeReceiptValidationErrorFactory;
 
         public AvailableChargeRejectionDataFactory(
             IMessageMetaDataContext messageMetaDataContext,
-            AvailableChargeReceiptValidationErrorFactory availableChargeReceiptValidationErrorFactory,
+            IAvailableChargeReceiptValidationErrorFactory availableChargeReceiptValidationErrorFactory,
             IMarketParticipantRepository marketParticipantRepository)
             : base(marketParticipantRepository)
         {
@@ -61,7 +61,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
             };
         }
 
-        private List<AvailableChargeReceiptValidationError> GetReasons(ChargeCommandRejectedEvent input)
+        private List<AvailableReceiptValidationError> GetReasons(ChargeCommandRejectedEvent input)
         {
             return input
                 .FailedValidationRuleIdentifiers

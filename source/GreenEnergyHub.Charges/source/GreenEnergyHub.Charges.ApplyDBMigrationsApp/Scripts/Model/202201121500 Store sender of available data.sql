@@ -6,11 +6,11 @@ ALTER TABLE [MessageHub].[AvailableChargeData]
     ADD [SenderRole] INT NOT NULL DEFAULT(7);
 GO
 
-ALTER TABLE [MessageHub].[AvailableChargeLinkReceiptData]
+ALTER TABLE [MessageHub].[AvailableChargeLinksReceiptData]
     ADD [SenderId] NVARCHAR(35) NOT NULL DEFAULT('5790001330552');
 GO
 
-ALTER TABLE [MessageHub].[AvailableChargeLinkReceiptData]
+ALTER TABLE [MessageHub].[AvailableChargeLinksReceiptData]
     ADD [SenderRole] INT NOT NULL DEFAULT(7);
 GO
 

@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System.Collections.Generic;
+using System.Linq;
 using System.Xml.Linq;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.Infrastructure.Core.Cim.MarketDocument;
@@ -54,8 +55,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Infrastructure.Cim
                     senderId),
                 new XElement(
                     cimNamespace + CimMarketDocumentConstants.SenderBusinessProcessRole,
-                    MarketParticipantRoleMapper.Map(
-                        senderRole)),
+                    MarketParticipantRoleMapper.Map(senderRole)),
                 new XElement(
                     cimNamespace + CimMarketDocumentConstants.RecipientId,
                     new XAttribute(

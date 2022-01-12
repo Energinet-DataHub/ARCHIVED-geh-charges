@@ -15,8 +15,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeData;
-using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinkReceiptData;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksData;
+using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksReceiptData;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableData;
 
@@ -96,21 +96,21 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
                 availableChargeData.EndDateTime);
         }
 
-        private static AvailableChargeLinkReceiptData GetAvailableDataBasedOn(
-            AvailableChargeLinkReceiptData availableChargeLinkReceiptData)
+        private static AvailableChargeLinksReceiptData GetAvailableDataBasedOn(
+            AvailableChargeLinksReceiptData availableChargeLinksReceiptData)
         {
-            return new AvailableChargeLinkReceiptData(
-                availableChargeLinkReceiptData.SenderId.Substring(0, 34),
-                availableChargeLinkReceiptData.SenderRole,
-                availableChargeLinkReceiptData.RecipientId.Substring(0, 34),
-                availableChargeLinkReceiptData.RecipientRole,
-                availableChargeLinkReceiptData.BusinessReasonCode,
-                availableChargeLinkReceiptData.RequestDateTime,
-                availableChargeLinkReceiptData.AvailableDataReferenceId,
-                availableChargeLinkReceiptData.ReceiptStatus,
-                availableChargeLinkReceiptData.OriginalOperationId.Substring(0, 34),
-                availableChargeLinkReceiptData.MeteringPointId.Substring(0, 49),
-                availableChargeLinkReceiptData.ReasonCodes.ToList());
+            return new AvailableChargeLinksReceiptData(
+                availableChargeLinksReceiptData.SenderId.Substring(0, 34),
+                availableChargeLinksReceiptData.SenderRole,
+                availableChargeLinksReceiptData.RecipientId.Substring(0, 34),
+                availableChargeLinksReceiptData.RecipientRole,
+                availableChargeLinksReceiptData.BusinessReasonCode,
+                availableChargeLinksReceiptData.RequestDateTime,
+                availableChargeLinksReceiptData.AvailableDataReferenceId,
+                availableChargeLinksReceiptData.ReceiptStatus,
+                availableChargeLinksReceiptData.OriginalOperationId.Substring(0, 34),
+                availableChargeLinksReceiptData.MeteringPointId.Substring(0, 49),
+                availableChargeLinksReceiptData.ValidationErrors.ToList());
         }
     }
 }

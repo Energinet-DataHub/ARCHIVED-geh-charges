@@ -26,6 +26,7 @@ using GreenEnergyHub.Charges.MessageHub.BundleSpecification.Charges;
 using GreenEnergyHub.Charges.MessageHub.Infrastructure.Cim;
 using GreenEnergyHub.Charges.MessageHub.Infrastructure.Cim.Bundles.ChargeReceipt;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData;
+using GreenEnergyHub.Charges.MessageHub.Models.AvailableData;
 using GreenEnergyHub.Charges.TestCore.Attributes;
 using GreenEnergyHub.Charges.Tests.TestFiles;
 using Moq;
@@ -113,9 +114,9 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.BundleSpecification.Charges
                 GetReasons(noOfReasons));
         }
 
-        private List<AvailableChargeReceiptValidationError> GetReasons(int noOfReasons)
+        private List<AvailableReceiptValidationError> GetReasons(int noOfReasons)
         {
-            var reasons = new List<AvailableChargeReceiptValidationError>();
+            var reasons = new List<AvailableReceiptValidationError>();
 
             for (var i = 0; i < noOfReasons; i++)
             {
@@ -125,10 +126,10 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.BundleSpecification.Charges
             return reasons;
         }
 
-        private AvailableChargeReceiptValidationError GetReason()
+        private AvailableReceiptValidationError GetReason()
         {
             var text = CreateStringOfRandomLength();
-            return new AvailableChargeReceiptValidationError(ReasonCode.D01, text);
+            return new AvailableReceiptValidationError(ReasonCode.D01, text);
         }
 
         private static string CreateStringOfRandomLength()
