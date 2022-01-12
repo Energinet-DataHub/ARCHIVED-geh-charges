@@ -14,24 +14,24 @@
  */
 
 /*
- * Charge link Domain related messages.
+ * Charge links Domain related messages.
  */
 syntax = "proto3";
 
 import "google/protobuf/timestamp.proto";
 
-option csharp_namespace = "GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandReceived";
+option csharp_namespace = "GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinksCommandReceived";
 
 /*
- * Represents a ChargeLinkCommandReceived event
+ * Represents a ChargeLinksCommandReceived event
  */
 
-message ChargeLinkCommandReceived {
+message ChargeLinksCommandReceived {
    google.protobuf.Timestamp published_time = 1;
-   ChargeLinkCommand charge_links_command = 2;
+   ChargeLinksCommand charge_links_command = 2;
 }
 
-message ChargeLinkCommand {
+message ChargeLinksCommand {
   Document document = 1;
   repeated ChargeLink charge_links = 2;
   string metering_point_id = 3; // A unique metering point identifier

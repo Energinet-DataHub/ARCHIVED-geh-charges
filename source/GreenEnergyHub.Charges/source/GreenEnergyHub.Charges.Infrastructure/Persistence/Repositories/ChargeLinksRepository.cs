@@ -21,11 +21,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories
 {
-    public class ChargeLinkRepository : IChargeLinkRepository
+    public class ChargeLinksRepository : IChargeLinksRepository
     {
         private readonly IChargesDatabaseContext _context;
 
-        public ChargeLinkRepository(IChargesDatabaseContext context)
+        public ChargeLinksRepository(IChargesDatabaseContext context)
         {
             _context = context;
         }

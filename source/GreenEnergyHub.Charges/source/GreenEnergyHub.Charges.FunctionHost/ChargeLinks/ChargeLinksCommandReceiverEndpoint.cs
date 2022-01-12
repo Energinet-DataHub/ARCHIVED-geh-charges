@@ -17,7 +17,7 @@ using GreenEnergyHub.Charges.Application.ChargeLinks.Handlers;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksReceivedEvents;
 using GreenEnergyHub.Charges.FunctionHost.Common;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions;
-using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandReceived;
+using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinksCommandReceived;
 using Microsoft.Azure.Functions.Worker;
 
 namespace GreenEnergyHub.Charges.FunctionHost.ChargeLinks
@@ -25,11 +25,11 @@ namespace GreenEnergyHub.Charges.FunctionHost.ChargeLinks
     public class ChargeLinksCommandReceiverEndpoint
     {
         public const string FunctionName = nameof(ChargeLinksCommandReceiverEndpoint);
-        private readonly MessageExtractor<ChargeLinkCommandReceived> _messageExtractor;
+        private readonly MessageExtractor<ChargeLinksCommandReceived> _messageExtractor;
         private readonly IChargeLinksReceivedEventHandler _chargeLinksReceivedEventHandler;
 
         public ChargeLinksCommandReceiverEndpoint(
-            MessageExtractor<ChargeLinkCommandReceived> messageExtractor,
+            MessageExtractor<ChargeLinksCommandReceived> messageExtractor,
             IChargeLinksReceivedEventHandler chargeLinksReceivedEventHandler)
         {
             _messageExtractor = messageExtractor;

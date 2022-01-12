@@ -18,7 +18,7 @@ using System.Threading.Tasks;
 
 namespace GreenEnergyHub.Charges.Domain.ChargeLinks
 {
-    public interface IChargeLinkRepository
+    public interface IChargeLinksRepository
     {
         Task StoreAsync(IReadOnlyCollection<ChargeLink> chargeLinks);
 

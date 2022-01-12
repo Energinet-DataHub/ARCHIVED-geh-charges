@@ -25,18 +25,18 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
     {
         private readonly IChargeLinksReceiptService _chargeLinksReceiptService;
         private readonly IChargeLinkFactory _chargeLinkFactory;
-        private readonly IChargeLinkRepository _chargeLinkRepository;
+        private readonly IChargeLinksRepository _chargeLinksRepository;
         private readonly IValidator<ChargeLinksCommand> _validator;
 
         public ChargeLinksReceivedEventHandler(
             IChargeLinksReceiptService chargeLinksReceiptService,
             IChargeLinkFactory chargeLinkFactory,
-            IChargeLinkRepository chargeLinkRepository,
+            IChargeLinksRepository chargeLinksRepository,
             IValidator<ChargeLinksCommand> validator)
         {
             _chargeLinksReceiptService = chargeLinksReceiptService;
             _chargeLinkFactory = chargeLinkFactory;
-            _chargeLinkRepository = chargeLinkRepository;
+            _chargeLinksRepository = chargeLinksRepository;
             _validator = validator;
         }
 
@@ -50,7 +50,7 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
             }
 
             var chargeLinks = await _chargeLinkFactory.CreateAsync(chargeLinksReceivedEvent).ConfigureAwait(false);
-            await _chargeLinkRepository.StoreAsync(chargeLinks).ConfigureAwait(false);
+            await _chargeLinksRepository.StoreAsync(chargeLinks).ConfigureAwait(false);
             await _chargeLinksReceiptService.AcceptAsync(chargeLinksReceivedEvent.ChargeLinksCommand);
         }
     }

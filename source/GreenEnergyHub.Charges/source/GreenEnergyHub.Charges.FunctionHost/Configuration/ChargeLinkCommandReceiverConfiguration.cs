@@ -23,8 +23,8 @@ using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksRejectionEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using GreenEnergyHub.Charges.FunctionHost.Common;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Registration;
-using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandReceived;
 using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinksCommandAccepted;
+using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinksCommandReceived;
 using GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksReceiptData;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableData;
@@ -41,8 +41,8 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
             serviceCollection.AddScoped<IChargeLinkFactory, ChargeLinkFactory>();
             serviceCollection.AddSingleton<IChargeLinksAcceptedEventFactory, ChargeLinksAcceptedEventFactory>();
 
-            serviceCollection.ReceiveProtobufMessage<ChargeLinkCommandReceived>(
-                configuration => configuration.WithParser(() => ChargeLinkCommandReceived.Parser));
+            serviceCollection.ReceiveProtobufMessage<ChargeLinksCommandReceived>(
+                configuration => configuration.WithParser(() => ChargeLinksCommandReceived.Parser));
             serviceCollection.SendProtobuf<ChargeLinksCommandAccepted>();
             serviceCollection.AddMessagingProtobuf().AddMessageDispatcher<ChargeLinksAcceptedEvent>(
                 EnvironmentHelper.GetEnv(EnvironmentSettingNames.DomainEventSenderConnectionString),
@@ -51,7 +51,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
                 EnvironmentHelper.GetEnv(EnvironmentSettingNames.DomainEventSenderConnectionString),
                 EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargeLinksRejectedTopicName));
 
-            serviceCollection.AddScoped<IChargeLinkRepository, ChargeLinkRepository>();
+            serviceCollection.AddScoped<IChargeLinksRepository, ChargeLinksRepository>();
             serviceCollection.AddScoped<IBusinessValidationRulesFactory<ChargeLinksCommand>, ChargeLinksCommandBusinessValidationRulesFactory>();
             serviceCollection.AddScoped<IBusinessValidator<ChargeLinksCommand>, BusinessValidator<ChargeLinksCommand>>();
             serviceCollection.AddScoped<IChargeLinksReceiptService, ChargeLinksReceiptService>();

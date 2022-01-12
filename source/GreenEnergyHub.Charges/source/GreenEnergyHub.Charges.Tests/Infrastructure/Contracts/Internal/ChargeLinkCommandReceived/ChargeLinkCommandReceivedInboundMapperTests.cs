@@ -14,7 +14,7 @@
 
 using System;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksReceivedEvents;
-using GreenEnergyHub.Charges.Infrastructure.Contracts.Internal.ChargeLinkCommandReceived;
+using GreenEnergyHub.Charges.Infrastructure.Contracts.Internal.ChargeLinksCommandReceived;
 using GreenEnergyHub.Charges.TestCore.Attributes;
 using GreenEnergyHub.Charges.Tests.Protobuf;
 using Xunit;
@@ -28,7 +28,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Contracts.Internal.ChargeL
         [Theory]
         [InlineAutoMoqData]
         public void Convert_WhenCalled_ShouldMapToProtobufWithCorrectValues(
-            Charges.Infrastructure.Internal.ChargeLinkCommandReceived.ChargeLinkCommandReceived chargeLinkCommandReceivedContract,
+            Charges.Infrastructure.Internal.ChargeLinksCommandReceived.ChargeLinksCommandReceived chargeLinkCommandReceivedContract,
             ChargeLinkCommandReceivedInboundMapper sut)
         {
             var result = (ChargeLinksReceivedEvent)sut.Convert(chargeLinkCommandReceivedContract);

@@ -53,7 +53,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
 
             var ids = SeedDatabase(chargesDatabaseWriteContext);
             var expected = CreateExpectedChargeLink(chargeLink, ids);
-            var sut = new ChargeLinkRepository(chargesDatabaseWriteContext);
+            var sut = new ChargeLinksRepository(chargesDatabaseWriteContext);
 
             // Act
             await sut.StoreAsync(new List<ChargeLink> { expected }).ConfigureAwait(false);

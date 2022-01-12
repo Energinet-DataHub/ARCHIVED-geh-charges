@@ -20,12 +20,12 @@ using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksReceivedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 
-namespace GreenEnergyHub.Charges.Infrastructure.Contracts.Internal.ChargeLinkCommandReceived
+namespace GreenEnergyHub.Charges.Infrastructure.Contracts.Internal.ChargeLinksCommandReceived
 {
-    public class ChargeLinkCommandReceivedInboundMapper : ProtobufInboundMapper<GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandReceived.ChargeLinkCommandReceived>
+    public class ChargeLinkCommandReceivedInboundMapper : ProtobufInboundMapper<GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinksCommandReceived.ChargeLinksCommandReceived>
     {
         protected override IInboundMessage Convert(
-            GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandReceived.ChargeLinkCommandReceived chargeLinkCommandReceived)
+            GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinksCommandReceived.ChargeLinksCommandReceived chargeLinkCommandReceived)
         {
             return new ChargeLinksReceivedEvent(
                 chargeLinkCommandReceived.PublishedTime.ToInstant(),
@@ -35,7 +35,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Contracts.Internal.ChargeLinkCom
                     chargeLinkCommandReceived.ChargeLinksCommand.ChargeLinks.Select(ConvertChargeLink).ToList()));
         }
 
-        private static DocumentDto ConvertDocument(Infrastructure.Internal.ChargeLinkCommandReceived.Document document)
+        private static DocumentDto ConvertDocument(Infrastructure.Internal.ChargeLinksCommandReceived.Document document)
         {
             return new DocumentDto
             {
@@ -58,7 +58,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Contracts.Internal.ChargeLinkCom
             };
         }
 
-        private static ChargeLinkDto ConvertChargeLink(Infrastructure.Internal.ChargeLinkCommandReceived.ChargeLink chargeLink)
+        private static ChargeLinkDto ConvertChargeLink(Infrastructure.Internal.ChargeLinksCommandReceived.ChargeLink chargeLink)
         {
             return new ChargeLinkDto
             {

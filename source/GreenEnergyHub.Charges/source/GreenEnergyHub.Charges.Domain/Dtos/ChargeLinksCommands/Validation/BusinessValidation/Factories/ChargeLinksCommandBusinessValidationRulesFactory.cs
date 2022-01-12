@@ -27,16 +27,16 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands.Validation.Busi
     {
         private readonly IChargeRepository _chargeRepository;
         private readonly IMeteringPointRepository _meteringPointRepository;
-        private readonly IChargeLinkRepository _chargeLinkRepository;
+        private readonly IChargeLinksRepository _chargeLinksRepository;
 
         public ChargeLinksCommandBusinessValidationRulesFactory(
             IChargeRepository chargeRepository,
             IMeteringPointRepository meteringPointRepository,
-            IChargeLinkRepository chargeLinkRepository)
+            IChargeLinksRepository chargeLinksRepository)
         {
             _chargeRepository = chargeRepository;
             _meteringPointRepository = meteringPointRepository;
-            _chargeLinkRepository = chargeLinkRepository;
+            _chargeLinksRepository = chargeLinksRepository;
         }
 
         public async Task<IValidationRuleSet> CreateRulesAsync(ChargeLinksCommand chargeLinksCommand)
@@ -58,7 +58,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands.Validation.Busi
                 if (charge == null)
                     continue;
 
-                var existingChargeLinks = await _chargeLinkRepository.GetAsync(charge.Id, meteringPoint.Id);
+                var existingChargeLinks = await _chargeLinksRepository.GetAsync(charge.Id, meteringPoint.Id);
                 GetMandatoryRulesForSingleLinks(rules, chargeLinksCommand, existingChargeLinks);
             }
 
