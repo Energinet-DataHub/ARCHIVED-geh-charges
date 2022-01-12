@@ -20,14 +20,14 @@ using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksAcceptedEvents;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.Infrastructure.Core.Cim.MarketDocument;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessageMetaData;
-using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinkReceiptData;
+using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksReceiptData;
 using GreenEnergyHub.TestHelpers;
 using Moq;
 using NodaTime;
 using Xunit;
 using Xunit.Categories;
 
-namespace GreenEnergyHub.Charges.Tests.MessageHub.Application.ChargeLinks
+namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeLinkReceiptData
 {
     [UnitTest]
     public class AvailableChargeLinkReceiptDataFactoryTests
@@ -40,7 +40,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Application.ChargeLinks
             [Frozen] Mock<IMessageMetaDataContext> messageMetaDataContext,
             ChargeLinksAcceptedEvent acceptedEvent,
             Instant now,
-            AvailableChargeLinkReceiptDataFactory sut)
+            AvailableChargeLinksReceiptDataFactory sut)
         {
             // Arrange
             acceptedEvent.ChargeLinksCommand.Document.Sender.BusinessProcessRole = marketParticipantRole;
@@ -68,7 +68,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Application.ChargeLinks
                 actualList[i].ReceiptStatus.Should().Be(ReceiptStatus.Confirmed);
                 actualList[i].OriginalOperationId.Should().Be(expectedLinks[i].OperationId);
                 actualList[i].MeteringPointId.Should().Be(acceptedEvent.ChargeLinksCommand.MeteringPointId);
-                actualList[i].ReasonCodes.Should().BeEmpty();
+                actualList[i].ValidationErrors.Should().BeEmpty();
             }
         }
 
@@ -76,7 +76,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Application.ChargeLinks
         [InlineAutoDomainData]
         public async Task CreateAsync_WhenSenderIsSystemOperator_ReturnsEmptyList(
             ChargeLinksAcceptedEvent acceptedEvent,
-            AvailableChargeLinkReceiptDataFactory sut)
+            AvailableChargeLinksReceiptDataFactory sut)
         {
             // Arrange
             acceptedEvent.ChargeLinksCommand.Document.Sender.BusinessProcessRole = MarketParticipantRole.SystemOperator;

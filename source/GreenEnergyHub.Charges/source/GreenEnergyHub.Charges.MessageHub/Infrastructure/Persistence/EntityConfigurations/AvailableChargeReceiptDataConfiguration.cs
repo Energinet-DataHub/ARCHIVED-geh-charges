@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData;
+using GreenEnergyHub.Charges.MessageHub.Models.AvailableData;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -37,15 +38,15 @@ namespace GreenEnergyHub.Charges.MessageHub.Infrastructure.Persistence.EntityCon
             builder.Property(x => x.AvailableDataReferenceId);
 
             builder.Ignore(c => c.ValidationErrors);
-            builder.OwnsMany<AvailableChargeReceiptValidationError>("_validationErrors", ConfigureValidationErrors);
+            builder.OwnsMany<AvailableReceiptValidationError>("_validationErrors", ConfigureValidationErrors);
         }
 
         private static void ConfigureValidationErrors(
             OwnedNavigationBuilder<AvailableChargeReceiptData,
-            AvailableChargeReceiptValidationError> validationErrors)
+                AvailableReceiptValidationError> validationErrors)
         {
             validationErrors.WithOwner().HasForeignKey($"{_aggregateTableName}Id");
-            validationErrors.ToTable(nameof(AvailableChargeReceiptValidationError), DatabaseSchemaNames.MessageHub);
+            validationErrors.ToTable("AvailableChargeReceiptValidationError", DatabaseSchemaNames.MessageHub);
             validationErrors.HasKey(r => r.Id);
 
             validationErrors.Property(r => r.Id).ValueGeneratedNever();

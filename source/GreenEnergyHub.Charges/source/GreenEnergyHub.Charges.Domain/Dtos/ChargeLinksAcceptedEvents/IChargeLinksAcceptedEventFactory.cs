@@ -12,13 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Diagnostics.CodeAnalysis;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands;
 
 namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksAcceptedEvents
 {
     public interface IChargeLinksAcceptedEventFactory
     {
-        ChargeLinksAcceptedEvent Create([NotNull] ChargeLinksCommand chargeLinksCommand);
+        ChargeLinksAcceptedEvent Create(ChargeLinksCommand chargeLinksCommand);
     }
 }

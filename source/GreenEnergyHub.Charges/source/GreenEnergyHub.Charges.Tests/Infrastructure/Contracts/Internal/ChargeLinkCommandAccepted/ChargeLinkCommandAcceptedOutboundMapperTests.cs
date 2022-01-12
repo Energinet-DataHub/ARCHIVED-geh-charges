@@ -13,9 +13,8 @@
 // limitations under the License.
 
 using System;
-using System.Diagnostics.CodeAnalysis;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksAcceptedEvents;
-using GreenEnergyHub.Charges.Infrastructure.Contracts.Internal.LinkCommandAccepted;
+using GreenEnergyHub.Charges.Infrastructure.Contracts.Internal.ChargeLinkCommandAccepted;
 using GreenEnergyHub.Charges.TestCore.Attributes;
 using GreenEnergyHub.Charges.Tests.Protobuf;
 using Xunit;
@@ -29,17 +28,17 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Contracts.Internal.ChargeL
         [Theory]
         [InlineAutoMoqData]
         public void Convert_WhenCalled_ShouldMapToProtobufWithCorrectValues(
-            [NotNull] ChargeLinksAcceptedEvent chargeLinksAcceptedEvent,
-            [NotNull] ChargeLinkCommandAcceptedOutboundMapper sut)
+            ChargeLinksAcceptedEvent chargeLinksAcceptedEvent,
+            ChargeLinksCommandAcceptedOutboundMapper sut)
         {
-            var result = (Charges.Infrastructure.Internal.ChargeLinkCommandAccepted.ChargeLinkCommandAccepted)sut
+            var result = (Charges.Infrastructure.Internal.ChargeLinksCommandAccepted.ChargeLinksCommandAccepted)sut
                     .Convert(chargeLinksAcceptedEvent);
             ProtobufAssert.OutgoingContractIsSubset(chargeLinksAcceptedEvent, result);
         }
 
         [Theory]
         [InlineAutoMoqData]
-        public void Convert_WhenCalledWithNull_ShouldThrow([NotNull]ChargeLinkCommandAcceptedOutboundMapper sut)
+        public void Convert_WhenCalledWithNull_ShouldThrow(ChargeLinksCommandAcceptedOutboundMapper sut)
         {
             Assert.Throws<InvalidOperationException>(() => sut.Convert(null!));
         }
