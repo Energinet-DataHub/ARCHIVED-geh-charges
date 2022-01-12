@@ -19,16 +19,16 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands.Validation.Busi
 {
     public class ChargeMustExistRule : IValidationRule
     {
-        private readonly Charge? _charge;
+        private readonly Charge? _existingCharge;
 
-        public ChargeMustExistRule(Charge? charge)
+        public ChargeMustExistRule(Charge? existingCharge)
         {
-            _charge = charge;
+            _existingCharge = existingCharge;
         }
 
         public ValidationRuleIdentifier ValidationRuleIdentifier =>
             ValidationRuleIdentifier.ChargeDoesNotExistValidation;
 
-        public bool IsValid => _charge is not null;
+        public bool IsValid => _existingCharge is not null;
     }
 }
