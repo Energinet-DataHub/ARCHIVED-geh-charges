@@ -14,6 +14,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -32,6 +33,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi
     public class ChargeLinksControllerTests : WebApiHost, IClassFixture<ChargesDatabaseFixture>
     {
         private const string BaseUrl = "/ChargeLinks/GetAsync?meteringPointId=";
+        private const string KnownMeteringPointId = "571313180000000005";
         private readonly WebApiFactory _factory;
 
         public ChargeLinksControllerTests(WebApiFactory factory, ChargesDatabaseFixture chargesDatabaseFixture)
@@ -47,8 +49,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi
             var client = _factory.CreateClient();
 
             // Act
-            const long knownMeteringPointId = 571313180000000005;
-            var response = await client.GetAsync($"{BaseUrl}{knownMeteringPointId}");
+            var response = await client.GetAsync($"{BaseUrl}{KnownMeteringPointId}");
 
             // Assert
             var contentType = response.Content.Headers.ContentType!.ToString();
@@ -56,18 +57,14 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi
             contentType.Should().Be("application/json; charset=utf-8");
         }
 
-        [Theory]
-        [InlineData("571313180000000005")]
-        public async Task GetAsync_WhenMeteringPointIdHasChargeLinks_ReturnsOrderedChargeLinks(string meteringPointId)
+        [Fact]
+        public async Task GetAsync_WhenMeteringPointIdHasChargeLinks_ReturnsOrderedChargeLinks()
         {
             // Arrange
             var client = _factory.CreateClient();
-            var expectedChargeLinks = 5;
-            var expectedChargeId = "TestTariff2"; // To verify ordering works as expected
-            var expectedStart = new DateTimeOffset(2021, 12, 31, 23, 00, 00, TimeSpan.FromHours(0));
 
             // Act
-            var response = await client.GetAsync($"{BaseUrl}{meteringPointId}");
+            var response = await client.GetAsync($"{BaseUrl}{KnownMeteringPointId}");
             var jsonString = await response.Content.ReadAsStringAsync();
             var actual = JsonSerializer.Deserialize<List<ChargeLinkDto>>(
                 jsonString,
@@ -77,30 +74,28 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi
                     Converters = { new JsonStringEnumConverter() },
                 });
 
-            // Assert
-            actual!.Count.Should().Be(expectedChargeLinks);
-            actual![3].ChargeId.Should().Be(expectedChargeId);
-            actual![3].StartDate.Should().Be(expectedStart);
+            actual.Should().BeInAscendingOrder(c => c.ChargeType)
+                .And.ThenBeInAscendingOrder(c => c.ChargeId)
+                .And.ThenBeInDescendingOrder(c => c.StartDate);
         }
 
-        [Theory]
-        [InlineData("404")]
-        public async Task GetAsync_WhenMeteringPointIdDoesNotExist_ReturnsNotFound(string meteringPointId)
+        [Fact]
+        public async Task GetAsync_WhenMeteringPointIdDoesNotExist_ReturnsNotFound()
         {
             var client = _factory.CreateClient();
 
-            var response = await client.GetAsync($"{BaseUrl}{meteringPointId}");
+            var response = await client.GetAsync($"{BaseUrl}{Guid.NewGuid()}");
 
             response.StatusCode.Should().Be(HttpStatusCode.NotFound);
         }
 
-        [Theory]
-        [InlineData("")]
-        public async Task GetAsync_WhenNoMeteringPointIdInput_ReturnsBadRequest(string meteringPointId)
+        [Fact]
+        public async Task GetAsync_WhenNoMeteringPointIdInput_ReturnsBadRequest()
         {
             var client = _factory.CreateClient();
+            var missingMeteringPointId = string.Empty;
 
-            var response = await client.GetAsync($"{BaseUrl}{meteringPointId}");
+            var response = await client.GetAsync($"{BaseUrl}{missingMeteringPointId}");
 
             response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         }
