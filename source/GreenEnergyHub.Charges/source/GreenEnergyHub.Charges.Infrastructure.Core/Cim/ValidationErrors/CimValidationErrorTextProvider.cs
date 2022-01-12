@@ -29,7 +29,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors
                 var attribute = (ErrormessageForAttribute)field.GetCustomAttributes()
                     .Single(x => x.GetType() == typeof(ErrormessageForAttribute));
                 var isFound = attribute.ValidationRuleIdentifier == validationRuleIdentifier;
-                if (isFound) return field.GetValue(null) !.ToString() !;
+                if (isFound) return field.GetValue(null)!.ToString()!;
             }
 
             throw new ArgumentOutOfRangeException(validationRuleIdentifier.ToString());

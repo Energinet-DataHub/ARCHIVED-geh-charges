@@ -96,7 +96,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
                     chargeCommand.ChargeOperation.ChargeId,
                 CimValidationErrorTextToken.DocumentType =>
                     chargeCommand.Document.Type.ToString(),
-                _ => string.Empty
+                _ => string.Empty,
             };
         }
 
