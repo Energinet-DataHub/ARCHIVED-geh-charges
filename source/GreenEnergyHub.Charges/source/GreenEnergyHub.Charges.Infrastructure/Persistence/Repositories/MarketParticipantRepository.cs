@@ -78,7 +78,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories
             return await _chargesDatabaseContext
                 .MarketParticipants
                 .WithRole(marketParticipantRole)
-                .FirstAsync()
+                .SingleAsync()
                 .ConfigureAwait(false);
         }
 
