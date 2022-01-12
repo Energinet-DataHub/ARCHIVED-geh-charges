@@ -60,7 +60,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksData
                 {
                     result.Add(new AvailableChargeLinksData(
                         recipient.MarketParticipantId,
-                        recipient.BusinessProcessRole,
+                        MarketParticipantRole.GridAccessProvider,
                         acceptedEvent.ChargeLinksCommand.Document.BusinessReasonCode,
                         _messageMetaDataContext.RequestDataTime,
                         Guid.NewGuid(), // ID of each available piece of data must be unique

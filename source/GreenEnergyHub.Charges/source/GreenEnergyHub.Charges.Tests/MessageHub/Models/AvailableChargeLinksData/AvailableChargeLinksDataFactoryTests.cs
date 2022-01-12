@@ -29,7 +29,7 @@ using NodaTime;
 using Xunit;
 using Xunit.Categories;
 
-namespace GreenEnergyHub.Charges.Tests.MessageHub.Application.ChargeLinks
+namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeLinksData
 {
     [UnitTest]
     public class AvailableChargeLinksDataFactoryTests
@@ -42,14 +42,14 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Application.ChargeLinks
             [Frozen] Mock<IMessageMetaDataContext> messageMetaDataContext,
             ChargeLinksAcceptedEvent acceptedEvent,
             Charge charge,
-            MarketParticipant marketParticipant,
+            MarketParticipant gridAccessProvider,
             Instant now,
             AvailableChargeLinksDataFactory sut)
         {
             // Arrange
             marketParticipantRepository.Setup(
                     m => m.GetGridAccessProvider(acceptedEvent.ChargeLinksCommand.MeteringPointId))
-                .Returns(marketParticipant);
+                .Returns(gridAccessProvider);
 
             charge.SetPrivateProperty(c => c.TaxIndicator, true);
             chargeRepository.Setup(r => r.GetAsync(It.IsAny<ChargeIdentifier>()))
@@ -70,8 +70,8 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Application.ChargeLinks
             for (var i = 0; i < actualList.Count; i++)
             {
                 actualList[i].Should().NotContainNullsOrEmptyEnumerables();
-                actualList[i].RecipientId.Should().Be(marketParticipant.MarketParticipantId);
-                actualList[i].RecipientRole.Should().Be(marketParticipant.BusinessProcessRole);
+                actualList[i].RecipientId.Should().Be(gridAccessProvider.MarketParticipantId);
+                actualList[i].RecipientRole.Should().Be(MarketParticipantRole.GridAccessProvider);
                 actualList[i].BusinessReasonCode.Should()
                     .Be(acceptedEvent.ChargeLinksCommand.Document.BusinessReasonCode);
                 actualList[i].RequestDateTime.Should().Be(now);

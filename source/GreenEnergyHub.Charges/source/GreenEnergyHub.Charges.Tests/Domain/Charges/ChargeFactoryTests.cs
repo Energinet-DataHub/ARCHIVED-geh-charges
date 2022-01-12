@@ -13,11 +13,14 @@
 // limitations under the License.
 
 using System.Threading.Tasks;
+using AutoFixture.Xunit2;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
+using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.TestHelpers;
 using GreenEnergyHub.TestHelpers.FluentAssertionsExtensions;
+using Moq;
 using Xunit;
 using Xunit.Categories;
 
@@ -29,13 +32,17 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Charges
         [Theory]
         [InlineAutoDomainData]
         public async Task CreateFromCommandAsync_Charge_HasNoNullsOrEmptyCollections(
+            MarketParticipant owner,
             ChargeCommand chargeCommand,
+            [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
             ChargeFactory sut)
         {
-            // Act
+            marketParticipantRepository
+                .Setup(repo => repo.GetOrNullAsync(chargeCommand.ChargeOperation.ChargeOwner))
+                .ReturnsAsync(owner);
+
             var actual = await sut.CreateFromCommandAsync(chargeCommand);
 
-            // Assert
             actual.Should().NotContainNullsOrEmptyEnumerables();
         }
     }

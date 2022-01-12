@@ -58,11 +58,11 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.BundleSpecification.ChargeLink
             // Arrange
             var availableData = GetRejection(noOfReasons);
 
-            var marketParticipant = new MarketParticipant
-            {
-                MarketParticipantId = MaxLengthId,
-                BusinessProcessRole = MarketParticipantRole.GridAccessProvider,
-            };
+            var marketParticipant = new MarketParticipant(
+                Guid.NewGuid(),
+                MaxLengthId,
+                true,
+                new[] { MarketParticipantRole.GridAccessProvider });
 
             hubSenderConfiguration.Setup(
                     c => c.GetSenderMarketParticipant())
