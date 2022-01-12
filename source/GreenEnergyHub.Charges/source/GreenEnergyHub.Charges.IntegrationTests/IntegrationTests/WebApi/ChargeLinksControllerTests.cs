@@ -47,7 +47,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi
             var client = _factory.CreateClient();
 
             // Act
-            var knownMeteringPointId = 571313180000000005;
+            const long knownMeteringPointId = 571313180000000005;
             var response = await client.GetAsync($"{BaseUrl}{knownMeteringPointId}");
 
             // Assert

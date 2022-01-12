@@ -13,10 +13,8 @@
 // limitations under the License.
 
 using System;
-using GreenEnergyHub.Charges.IntegrationTests.Fixtures.Database;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
-using Xunit;
 
 namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures
 {
