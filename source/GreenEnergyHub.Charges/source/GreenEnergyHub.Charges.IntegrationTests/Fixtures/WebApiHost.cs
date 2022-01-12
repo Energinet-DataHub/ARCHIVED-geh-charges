@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System;
+using GreenEnergyHub.Charges.FunctionHost.Common;
 using GreenEnergyHub.Charges.IntegrationTests.Fixtures.Database;
 using Xunit;
 
@@ -26,7 +27,9 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures
             if (databaseFixture == null) throw new ArgumentNullException(nameof(databaseFixture));
             databaseFixture.DatabaseManager.CreateDbContext();
 
-            Environment.SetEnvironmentVariable("CONNECTIONSTRINGS:CHARGE_DB_CONNECTION_STRING", databaseFixture.DatabaseManager.ConnectionString);
+            Environment.SetEnvironmentVariable(
+                $"CONNECTIONSTRINGS:{EnvironmentSettingNames.ChargeDbConnectionString}",
+                databaseFixture.DatabaseManager.ConnectionString);
         }
     }
 }
