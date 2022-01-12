@@ -107,8 +107,8 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Infrastructure.Cim.Bundles.Cha
             Mock<IClock> clock,
             Mock<ICimIdProvider> cimIdProvider)
         {
-            hubSenderConfiguration.Setup(
-                    h => h.GetSenderMarketParticipant())
+            hubSenderConfiguration
+                .Setup(h => h.GetSenderMarketParticipant())
                 .Returns(new MarketParticipant(Guid.NewGuid(), "5790001330552", true, new[] { MarketParticipantRole.MeteringPointAdministrator }));
 
             var currentTime = Instant.FromUtc(2021, 10, 12, 13, 37, 43).PlusNanoseconds(4);
