@@ -51,8 +51,8 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptD
         [InlineAutoMoqData(ValidationRuleIdentifier.BusinessReasonCodeMustBeUpdateChargeInformation, ReasonCode.D02)]
         [InlineAutoMoqData(ValidationRuleIdentifier.CommandSenderMustBeAnExistingMarketParticipant, ReasonCode.D02)]
         [InlineAutoMoqData(ValidationRuleIdentifier.DocumentTypeMustBeRequestUpdateChargeInformation, ReasonCode.D02)]
-        [InlineAutoMoqData(ValidationRuleIdentifier.MeteringPointDoesNotExistValidation, ReasonCode.E10)]
-        [InlineAutoMoqData(ValidationRuleIdentifier.ChargeDoesNotExistValidation, ReasonCode.E0I)]
+        [InlineAutoMoqData(ValidationRuleIdentifier.MeteringPointDoesNotExist, ReasonCode.E10)]
+        [InlineAutoMoqData(ValidationRuleIdentifier.ChargeDoesNotExist, ReasonCode.E0I)]
         public void Create_ReturnsExpectedCode(ValidationRuleIdentifier identifier, ReasonCode expected, CimValidationErrorCodeFactory sut)
         {
             var actual = sut.Create(identifier);

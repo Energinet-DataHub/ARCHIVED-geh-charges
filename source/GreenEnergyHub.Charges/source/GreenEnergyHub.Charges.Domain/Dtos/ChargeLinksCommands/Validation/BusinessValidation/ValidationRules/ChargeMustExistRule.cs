@@ -27,7 +27,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands.Validation.Busi
         }
 
         public ValidationRuleIdentifier ValidationRuleIdentifier =>
-            ValidationRuleIdentifier.ChargeDoesNotExistValidation;
+            ValidationRuleIdentifier.ChargeDoesNotExist;
 
         public bool IsValid => _existingCharge is not null;
     }

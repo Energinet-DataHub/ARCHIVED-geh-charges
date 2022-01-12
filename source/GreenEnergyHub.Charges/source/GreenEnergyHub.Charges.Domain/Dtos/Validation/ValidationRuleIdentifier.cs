@@ -42,7 +42,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.Validation
         SubscriptionMustHaveSinglePrice = 26, // VR507-2 / E87
         CommandSenderMustBeAnExistingMarketParticipant = 27, // VR152 / D02
         UpdateNotYetSupported = 28, // VR902 / D13
-        MeteringPointDoesNotExistValidation = 29, // VR200 / E10
-        ChargeDoesNotExistValidation = 30, // VR679 / E0I
+        MeteringPointDoesNotExist = 29, // VR200 / E10
+        ChargeDoesNotExist = 30, // VR679 / E0I
     }
 }

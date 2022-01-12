@@ -40,7 +40,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeLinkRece
                 .Replace("{{MeteringPointEffectiveDate}}", "TODO");
 
             // Act
-            var actual = sut.Create(ValidationRuleIdentifier.MeteringPointDoesNotExistValidation, chargeLinksCommand);
+            var actual = sut.Create(ValidationRuleIdentifier.MeteringPointDoesNotExist, chargeLinksCommand);
 
             // Assert
             actual.Should().Be(expected);
