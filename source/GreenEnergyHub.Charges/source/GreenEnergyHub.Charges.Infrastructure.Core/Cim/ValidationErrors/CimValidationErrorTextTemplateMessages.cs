@@ -129,11 +129,11 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors
         public const string UpdateNotYetSupportedErrorText =
             "Charge ID {{DocumentSenderProvidedChargeId}} for owner {{ChargeOwner}} of type {{ChargeType}} cannot yet be updated or stopped. The functionality is not implemented yet.";
 
-        [ErrorMessageFor(ValidationRuleIdentifier.MeteringPointDoesNotExistValidation)]
+        [ErrorMessageFor(ValidationRuleIdentifier.MeteringPointDoesNotExist)]
         public const string MeteringPointDoesNotExistValidationErrorText =
             "GSRN-code {{MeteringPointId}} unknown: The specified metering point has not been registered in the system on effectuation date {{MeteringPointEffectiveDate}}";
 
-        [ErrorMessageFor(ValidationRuleIdentifier.ChargeDoesNotExistValidation)]
+        [ErrorMessageFor(ValidationRuleIdentifier.ChargeDoesNotExist)]
         public const string ChargeDoesNotExistValidationErrorText =
             "Charge {{DocumentSenderProvidedChargeId}} not allowed: The charge is not an existing charge on date {{ChargeStartDateTime}}.";
     }
