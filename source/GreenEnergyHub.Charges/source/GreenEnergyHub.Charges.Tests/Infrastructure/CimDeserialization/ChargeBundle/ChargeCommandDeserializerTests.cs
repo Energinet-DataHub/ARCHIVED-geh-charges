@@ -16,8 +16,8 @@ using System.IO;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Xml;
 using AutoFixture.Xunit2;
+using Energinet.DataHub.Core.SchemaValidation;
 using GreenEnergyHub.Charges.Infrastructure.CimDeserialization.ChargeBundle;
 using GreenEnergyHub.Charges.TestCore;
 using GreenEnergyHub.Charges.TestCore.Attributes;
@@ -39,7 +39,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.CimDeserialization.ChargeB
             // Arrange
             var stream = GetEmbeddedResource("GreenEnergyHub.Charges.Tests.TestFiles.Syntax_Valid_CIM_Charge.xml");
             var byteArray = await GetBytesFromStreamAsync(stream);
-            chargeCommandConverter.Setup(x => x.ConvertAsync(It.IsAny<XmlReader>()))
+            chargeCommandConverter.Setup(x => x.ConvertAsync(It.IsAny<SchemaValidatingReader>()))
                 .ThrowsAsync(new NoChargeOperationFoundException());
 
             // Assert
