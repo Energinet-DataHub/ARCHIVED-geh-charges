@@ -50,7 +50,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
                 ValidationRuleIdentifier.SubscriptionMustHaveSinglePrice => ReasonCode.E87,
                 ValidationRuleIdentifier.CommandSenderMustBeAnExistingMarketParticipant => ReasonCode.D02,
                 ValidationRuleIdentifier.UpdateNotYetSupported => ReasonCode.D13,
-                _ => throw new NotImplementedException()
+                _ => throw new NotImplementedException(),
             };
         }
     }
