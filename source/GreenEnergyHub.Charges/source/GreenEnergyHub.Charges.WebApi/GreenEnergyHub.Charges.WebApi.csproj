@@ -22,7 +22,7 @@ limitations under the License.
 
   <ItemGroup>
     <PackageReference Include="EntityFrameworkCore.SqlServer.NodaTime" Version="5.0.1" />
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="5.6.3" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
   </ItemGroup>
 
   <ItemGroup>
