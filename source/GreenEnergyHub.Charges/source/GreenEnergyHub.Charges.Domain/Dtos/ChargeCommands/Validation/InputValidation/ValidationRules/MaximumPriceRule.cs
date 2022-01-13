@@ -18,7 +18,7 @@ using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 
 namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputValidation.ValidationRules
 {
-    public class MaximumPriceRule : IValidationRule
+    public class MaximumPriceRule : IValidationRuleWithExtendedData
     {
         private const int PriceUpperBound = 1000000;
         private readonly ChargeCommand _chargeCommand;
@@ -32,12 +32,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputVali
 
         public bool IsValid => _chargeCommand.ChargeOperation.Points.All(Validate);
 
-        public string TriggeredBy =>
-            TriggeredByIsApplicableForValidationRule && _chargeCommand.ChargeOperation.Points.Any()
-            ? _chargeCommand.ChargeOperation.Points.First(Validate).Position.ToString()
-            : string.Empty;
-
-        protected virtual bool TriggeredByIsApplicableForValidationRule => true;
+        public string TriggeredBy => _chargeCommand.ChargeOperation.Points.First(Validate).Position.ToString();
 
         private bool Validate(Point point)
         {

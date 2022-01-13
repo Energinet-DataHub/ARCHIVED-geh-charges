@@ -15,18 +15,15 @@
 namespace GreenEnergyHub.Charges.Domain.Dtos.Validation
 {
     /// <summary>
-    /// Interface for validationrules in the Charges domain
+    /// Interface for validationrules with extended data for rejection messages
     /// </summary>
-    public interface IValidationRule
+    public interface IValidationRuleWithExtendedData : IValidationRule
     {
         /// <summary>
-        /// Validity of the ChargeCommand given the current rule
+        /// Violation of some validation rules are triggered by an element in a list.
+        /// In these cases this property will tell which element triggered the rule
+        /// identified by <see cref="ValidationRuleIdentifier"/> to be violated.
         /// </summary>
-        public bool IsValid { get; }
-
-        /// <summary>
-        /// Identifier of the current rule
-        /// </summary>
-        public ValidationRuleIdentifier ValidationRuleIdentifier { get; }
+        public string TriggeredBy { get; }
     }
 }

@@ -17,7 +17,7 @@ using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 
 namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands.Validation.BusinessValidation.ValidationRules
 {
-    public class ChargeMustExistRule : IValidationRule
+    public class ChargeMustExistRule : IValidationRuleWithExtendedData
     {
         private readonly Charge? _existingCharge;
         private readonly ChargeLinkDto _chargeLinkDto;
@@ -32,10 +32,6 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands.Validation.Busi
 
         public bool IsValid => _existingCharge is not null;
 
-        public string TriggeredBy => TriggeredByIsApplicableForValidationRule
-            ? _chargeLinkDto.SenderProvidedChargeId
-            : string.Empty;
-
-        private bool TriggeredByIsApplicableForValidationRule => true;
+        public string TriggeredBy => _chargeLinkDto.SenderProvidedChargeId;
     }
 }

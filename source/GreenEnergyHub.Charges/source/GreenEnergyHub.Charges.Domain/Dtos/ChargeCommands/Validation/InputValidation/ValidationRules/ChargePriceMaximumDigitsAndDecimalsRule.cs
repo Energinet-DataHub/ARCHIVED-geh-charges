@@ -19,7 +19,7 @@ using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 
 namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputValidation.ValidationRules
 {
-    public class ChargePriceMaximumDigitsAndDecimalsRule : IValidationRule
+    public class ChargePriceMaximumDigitsAndDecimalsRule : IValidationRuleWithExtendedData
     {
         private const int MaximumDigitsInPrice = 8;
         private const int MaximumDecimalsInPrice = 6;
@@ -35,12 +35,8 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputVali
 
         public bool IsValid => _chargeCommand.ChargeOperation.Points.All(PointIsValid);
 
-        public string TriggeredBy => TriggeredByIsApplicableForValidationRule && _chargeCommand.ChargeOperation.Points.Any()
-            ? _chargeCommand.ChargeOperation.Points
-                .First(point => !PointIsValid(point)).Position.ToString()
-            : string.Empty;
-
-        protected virtual bool TriggeredByIsApplicableForValidationRule => true;
+        public string TriggeredBy =>
+            _chargeCommand.ChargeOperation.Points.First(point => !PointIsValid(point)).Position.ToString();
 
         private bool PointIsValid(Point point)
         {
