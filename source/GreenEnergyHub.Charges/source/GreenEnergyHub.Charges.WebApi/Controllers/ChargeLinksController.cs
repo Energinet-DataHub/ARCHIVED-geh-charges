@@ -45,8 +45,6 @@ namespace GreenEnergyHub.Charges.WebApi.Controllers
         [HttpGet("GetAsync")]
         public async Task<IActionResult> GetAsync(string meteringPointId)
         {
-            _logger.LogInformation($"Started processing request for charge links for metering point id: {meteringPointId}");
-
             if (meteringPointId == null)
                 return BadRequest();
 
