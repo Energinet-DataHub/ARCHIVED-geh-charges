@@ -64,7 +64,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeLinksDat
             var expectedLinks = acceptedEvent.ChargeLinksCommand.ChargeLinks.ToList();
 
             // Act
-            var actualList = await sut.CreateAsync(acceptedEvent);
+            var actual = await sut.CreateAsync(acceptedEvent);
 
             // Assert
             actualList.Should().HaveSameCount(expectedLinks);
