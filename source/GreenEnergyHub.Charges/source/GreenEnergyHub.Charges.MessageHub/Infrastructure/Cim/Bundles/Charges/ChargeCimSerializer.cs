@@ -17,7 +17,6 @@ using System.Linq;
 using System.Xml.Linq;
 using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.Domain.Charges;
-using GreenEnergyHub.Charges.Domain.Configuration;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.Infrastructure.Core.Cim.Charges;
 using GreenEnergyHub.Charges.Infrastructure.Core.Cim.MarketDocument;
@@ -29,14 +28,13 @@ namespace GreenEnergyHub.Charges.MessageHub.Infrastructure.Cim.Bundles.Charges
 {
     public class ChargeCimSerializer : CimSerializer<AvailableChargeData>
     {
-        private IIso8601Durations _iso8601Durations;
+        private readonly IIso8601Durations _iso8601Durations;
 
         public ChargeCimSerializer(
-            IHubSenderConfiguration hubSenderConfiguration,
             IClock clock,
             IIso8601Durations iso8601Durations,
             ICimIdProvider cimIdProvider)
-            : base(hubSenderConfiguration, clock, cimIdProvider)
+            : base(clock, cimIdProvider)
         {
             _iso8601Durations = iso8601Durations;
         }

@@ -19,7 +19,7 @@ using System.Reflection;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
 using GreenEnergyHub.Charges.Domain.Charges;
-using GreenEnergyHub.Charges.Domain.Configuration;
+using GreenEnergyHub.Charges.Domain.HubSenderMarketParticipant;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.MessageHub.Infrastructure.Cim;
 using GreenEnergyHub.Charges.MessageHub.Infrastructure.Cim.Bundles.ChargeLinks;
@@ -43,13 +43,13 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Infrastructure.Cim.Bundles.Cha
         [Theory]
         [InlineAutoDomainData]
         public async Task SerializeAsync_WhenCalled_StreamHasSerializedResult(
-            [Frozen] Mock<IHubSenderConfiguration> hubSenderConfiguration,
+            [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
             [Frozen] Mock<IClock> clock,
             [Frozen] Mock<ICimIdProvider> cimIdProvider,
             ChargeLinkCimSerializer sut)
         {
             // Arrange
-            SetupMocks(hubSenderConfiguration, clock, cimIdProvider);
+            SetupMocks(marketParticipantRepository, clock, cimIdProvider);
             await using var stream = new MemoryStream();
 
             var expected = EmbeddedStreamHelper.GetEmbeddedStreamAsString(
@@ -63,6 +63,8 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Infrastructure.Cim.Bundles.Cha
                 chargeLinks,
                 stream,
                 BusinessReasonCode.UpdateMasterDataSettlement,
+                "5790001330552",
+                MarketParticipantRole.MeteringPointAdministrator,
                 RecipientId,
                 MarketParticipantRole.GridAccessProvider);
 
@@ -75,12 +77,12 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Infrastructure.Cim.Bundles.Cha
         [Theory(Skip = "Manually run test to save the generated file to disk")]
         [InlineAutoDomainData]
         public async Task SerializeAsync_WhenCalled_SaveSerializedStream(
-            [Frozen] Mock<IHubSenderConfiguration> hubSenderConfiguration,
+            [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
             [Frozen] Mock<IClock> clock,
             [Frozen] Mock<ICimIdProvider> cimIdProvider,
             ChargeLinkCimSerializer sut)
         {
-            SetupMocks(hubSenderConfiguration, clock, cimIdProvider);
+            SetupMocks(marketParticipantRepository, clock, cimIdProvider);
 
             var chargeLinks = GetChargeLinks(clock.Object);
 
@@ -90,6 +92,8 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Infrastructure.Cim.Bundles.Cha
                 chargeLinks,
                 stream,
                 BusinessReasonCode.UpdateMasterDataSettlement,
+                "5790001330552",
+                MarketParticipantRole.MeteringPointAdministrator,
                 RecipientId,
                 MarketParticipantRole.GridAccessProvider);
 
@@ -99,13 +103,13 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Infrastructure.Cim.Bundles.Cha
         }
 
         private void SetupMocks(
-            Mock<IHubSenderConfiguration> hubSenderConfiguration,
+            [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
             Mock<IClock> clock,
             Mock<ICimIdProvider> cimIdProvider)
         {
-            hubSenderConfiguration
-                .Setup(h => h.GetSenderMarketParticipant())
-                .Returns(new MarketParticipant(Guid.NewGuid(), "5790001330552", true, new[] { MarketParticipantRole.MeteringPointAdministrator }));
+            marketParticipantRepository
+                .Setup(r => r.GetHubSenderAsync())
+                .ReturnsAsync(new HubSenderMarketParticipant(Guid.NewGuid(), "5790001330552", true, new[] { MarketParticipantRole.MeteringPointAdministrator }));
 
             var currentTime = Instant.FromUtc(2021, 10, 12, 13, 37, 43).PlusNanoseconds(4);
             clock.Setup(c => c.GetCurrentInstant()).Returns(currentTime);
@@ -132,6 +136,8 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Infrastructure.Cim.Bundles.Cha
                 Instant.FromUtc(2021, 4, 30, 22, 0, 0);
 
             return new AvailableChargeLinksData(
+                "5790001330552",
+                MarketParticipantRole.MeteringPointAdministrator,
                 RecipientId,
                 MarketParticipantRole.GridAccessProvider,
                 BusinessReasonCode.UpdateMasterDataSettlement,

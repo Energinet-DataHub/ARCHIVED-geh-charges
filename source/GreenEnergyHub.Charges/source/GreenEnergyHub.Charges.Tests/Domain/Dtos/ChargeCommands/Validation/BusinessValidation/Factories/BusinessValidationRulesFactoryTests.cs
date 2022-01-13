@@ -154,8 +154,8 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
             ChargeCommand? command = null;
 
             // Act / Assert
-            await Assert.ThrowsAsync<ArgumentNullException>(
-                    () => sut.CreateRulesAsync(command!))
+            await Assert
+                .ThrowsAsync<ArgumentNullException>(() => sut.CreateRulesAsync(command!))
                 .ConfigureAwait(false);
         }
 

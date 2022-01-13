@@ -18,7 +18,6 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Domain.Charges;
-using GreenEnergyHub.Charges.Domain.Configuration;
 using GreenEnergyHub.Charges.Domain.DefaultChargeLinks;
 using GreenEnergyHub.Charges.Domain.Dtos.CreateDefaultChargeLinksRequests;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
@@ -34,19 +33,16 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands
         private readonly IMeteringPointRepository _meteringPointRepository;
         private readonly IClock _clock;
         private readonly IMarketParticipantRepository _marketParticipantRepository;
-        private readonly IHubSenderConfiguration _hubSenderConfiguration;
 
         public ChargeLinksCommandFactory(
             IChargeRepository chargeRepository,
             IMeteringPointRepository meteringPointRepository,
             IClock clock,
-            IMarketParticipantRepository marketParticipantRepository,
-            IHubSenderConfiguration hubSenderConfiguration)
+            IMarketParticipantRepository marketParticipantRepository)
         {
             _chargeRepository = chargeRepository;
             _clock = clock;
             _marketParticipantRepository = marketParticipantRepository;
-            _hubSenderConfiguration = hubSenderConfiguration;
             _meteringPointRepository = meteringPointRepository;
         }
 
@@ -91,7 +87,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands
                 })
                 .ToList();
 
-            return CreateChargeLinksCommand(createDefaultChargeLinksRequest, systemOperator, chargeLinks);
+            return await CreateChargeLinksCommandAsync(createDefaultChargeLinksRequest, systemOperator, chargeLinks);
         }
 
         private static string GetChargeOwnerId(Charge charge, IReadOnlyCollection<MarketParticipant> owners)
@@ -99,12 +95,14 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands
             return owners.Single(o => o.Id == charge.OwnerId).MarketParticipantId;
         }
 
-        private ChargeLinksCommand CreateChargeLinksCommand(
+        private async Task<ChargeLinksCommand> CreateChargeLinksCommandAsync(
             CreateDefaultChargeLinksRequest createDefaultChargeLinksRequest,
             MarketParticipant systemOperator,
             List<ChargeLinkDto> chargeLinks)
         {
             var currentTime = _clock.GetCurrentInstant();
+            var meteringPointAdministrator = await _marketParticipantRepository.GetAsync(MarketParticipantRole.MeteringPointAdministrator);
+
             return new ChargeLinksCommand(
                 createDefaultChargeLinksRequest.MeteringPointId,
                 new DocumentDto
@@ -122,7 +120,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands
                     },
                     Recipient = new MarketParticipantDto
                     {
-                        Id = _hubSenderConfiguration.GetSenderMarketParticipant().MarketParticipantId,
+                        Id = meteringPointAdministrator.MarketParticipantId,
                         BusinessProcessRole = MarketParticipantRole.MeteringPointAdministrator,
                     },
                 },
