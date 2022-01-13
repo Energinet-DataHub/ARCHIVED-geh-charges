@@ -17,7 +17,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableData;
@@ -49,7 +48,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
         private static string MergeErrorText(
             string errorTextTemplate,
             ChargeCommand chargeCommand,
-            string? listElementWithValidationError)
+            string? triggeredBy)
         {
             var tokens = GetTokens(errorTextTemplate);
 
@@ -57,7 +56,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
 
             foreach (var token in tokens)
             {
-                var data = GetDataForToken(token, chargeCommand, listElementWithValidationError);
+                var data = GetDataForToken(token, chargeCommand, triggeredBy);
                 mergedErrorText = mergedErrorText.Replace("{{" + token + "}}", data);
             }
 
@@ -67,7 +66,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
         private static string GetDataForToken(
             CimValidationErrorTextToken token,
             ChargeCommand chargeCommand,
-            string? listElementWithValidationError)
+            string? triggeredBy)
         {
             // Please keep sorted by CimValidationErrorTextToken
             return token switch
@@ -79,11 +78,11 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
                 CimValidationErrorTextToken.ChargeOwner =>
                     chargeCommand.ChargeOperation.ChargeOwner,
                 CimValidationErrorTextToken.ChargePointPosition =>
-                    listElementWithValidationError ?? string.Empty,
+                    triggeredBy ?? string.Empty,
                 CimValidationErrorTextToken.ChargePointPrice =>
-                    listElementWithValidationError == null ? string.Empty :
+                    triggeredBy == null ? string.Empty :
                         chargeCommand.ChargeOperation.Points
-                        .Single(p => p.Position == int.Parse(listElementWithValidationError)).Price.ToString("N"),
+                        .Single(p => p.Position == int.Parse(triggeredBy)).Price.ToString("N"),
                 CimValidationErrorTextToken.ChargePointsCount =>
                     chargeCommand.ChargeOperation.Points.Count.ToString(),
                 CimValidationErrorTextToken.ChargeResolution =>

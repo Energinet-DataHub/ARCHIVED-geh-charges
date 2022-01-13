@@ -90,14 +90,14 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptD
             // Assert
             foreach (var validationRuleIdentifier in validationRuleIdentifiers)
             {
-                var listElement = SetListElementWithValidationError(chargeCommand, validationRuleIdentifier);
-                var actual = sut.Create(new ValidationError(validationRuleIdentifier, listElement), chargeCommand);
+                var triggeredBy = SetTriggeredByWithValidationError(chargeCommand, validationRuleIdentifier);
+                var actual = sut.Create(new ValidationError(validationRuleIdentifier, triggeredBy), chargeCommand);
                 actual.Should().NotBeNullOrWhiteSpace();
                 actual.Should().NotContain("{");
             }
         }
 
-        private static string? SetListElementWithValidationError(
+        private static string? SetTriggeredByWithValidationError(
             ChargeCommand chargeCommand, ValidationRuleIdentifier validationRuleIdentifier)
         {
             return validationRuleIdentifier switch
