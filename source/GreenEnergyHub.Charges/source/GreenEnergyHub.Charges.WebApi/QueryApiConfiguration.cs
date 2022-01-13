@@ -33,7 +33,7 @@ namespace GreenEnergyHub.Charges.WebApi
                 throw new ArgumentNullException(EnvironmentSettingNames.ChargeDbConnectionString, "does not exist in configuration settings");
 
             serviceCollection.AddDbContext<QueryDbContext>(
-                options => options.UseSqlServer(connectionString, o => o.UseNodaTime()));
+                options => options.UseSqlServer(connectionString));
 
             serviceCollection.AddScoped<IData, Data>();
 
