@@ -40,6 +40,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.BundleSpecification.ChargeLink
     [UnitTest]
     public class ChargeLinksRejectionBundleSpecificationTests
     {
+        private const string DataHubSenderId = "5790001330552";
         private const string MaxLengthId = "00000000000000000000000000000000000";
         private const int MaxTextLengthInTest = 10000;
 
@@ -72,7 +73,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.BundleSpecification.ChargeLink
                 new List<AvailableChargeLinksReceiptData>() { availableData },
                 stream,
                 BusinessReasonCode.UpdateChargeInformation,
-                "5790001330552",
+                DataHubSenderId,
                 MarketParticipantRole.MeteringPointAdministrator,
                 MaxLengthId,
                 MarketParticipantRole.GridAccessProvider);
@@ -100,7 +101,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.BundleSpecification.ChargeLink
         private AvailableChargeLinksReceiptData GetRejection(int noOfReasons)
         {
             return new AvailableChargeLinksReceiptData(
-                "5790001330552",
+                DataHubSenderId,
                 MarketParticipantRole.MeteringPointAdministrator,
                 MaxLengthId,
                 MarketParticipantRole.EnergySupplier,
