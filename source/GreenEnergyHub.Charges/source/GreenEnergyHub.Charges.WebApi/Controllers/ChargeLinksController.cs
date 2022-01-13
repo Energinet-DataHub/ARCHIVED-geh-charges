@@ -28,12 +28,10 @@ namespace GreenEnergyHub.Charges.WebApi.Controllers
     public class ChargeLinksController : ControllerBase
     {
         private readonly IData _data;
-        private readonly ILogger _logger;
 
-        public ChargeLinksController(IData data, ILoggerFactory loggerFactory)
+        public ChargeLinksController(IData data)
         {
             _data = data;
-            _logger = loggerFactory.CreateLogger(nameof(ChargeLinksController));
         }
 
         /// <summary>
