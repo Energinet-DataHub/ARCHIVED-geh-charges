@@ -75,10 +75,6 @@ module "func_functionhost" {
     # Shared resources logging
     REQUEST_RESPONSE_LOGGING_CONNECTION_STRING                      = data.azurerm_key_vault_secret.st_market_operator_logs_primary_connection_string.value
     REQUEST_RESPONSE_LOGGING_CONTAINER_NAME                         = data.azurerm_key_vault_secret.st_market_operator_logs_container_name.value
-	
-  	# Hub identification
-    HUB_SENDER_ID                                                   = "5790001330552"
-    HUB_SENDER_ROLE_INT_ENUM_VALUE                                  = "7"
   }
   
   tags                                      = azurerm_resource_group.this.tags

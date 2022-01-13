@@ -12,20 +12,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
+using GreenEnergyHub.Charges.Domain.HubSenderMarketParticipant;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 
-namespace GreenEnergyHub.Charges.Domain.Configuration
+namespace GreenEnergyHub.Charges.Tests.Builders
 {
-    /// <summary>
-    /// Interface used to determine which ID and code should be used when sending
-    /// message from the hub out onto the world
-    /// </summary>
-    public interface IHubSenderConfiguration
+    public sealed class HubSenderMarketParticipantBuilder
     {
-        /// <summary>
-        /// Retrieves the market participant used to send messages from the hub
-        /// </summary>
-        /// <returns>The market participant to use</returns>
-        MarketParticipant GetSenderMarketParticipant();
+        public HubSenderMarketParticipant Build()
+        {
+            return new HubSenderMarketParticipant(
+                Guid.NewGuid(),
+                "hub-sender-id",
+                true,
+                new[] { MarketParticipantRole.MeteringPointAdministrator });
+        }
     }
 }

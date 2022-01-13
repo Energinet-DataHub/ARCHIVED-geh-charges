@@ -62,5 +62,19 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
             actual.Should().NotBeNull();
             actual.Roles.Should().Contain(expectedMarketParticipantRole);
         }
+
+        [Fact]
+        public async Task GetHubSenderAsync_ReturnsHubSenderMarketParticipant()
+        {
+            // Arrange
+            await using var chargesDatabaseContext = _databaseManager.CreateDbContext();
+            var sut = new MarketParticipantRepository(chargesDatabaseContext);
+
+            // Act
+            var actual = await sut.GetHubSenderAsync();
+
+            // Assert
+            actual.Should().NotBeNull();
+        }
     }
 }

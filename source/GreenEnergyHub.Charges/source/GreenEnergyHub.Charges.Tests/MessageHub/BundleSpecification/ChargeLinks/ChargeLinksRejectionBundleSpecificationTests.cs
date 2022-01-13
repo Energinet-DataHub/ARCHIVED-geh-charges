@@ -19,7 +19,6 @@ using System.Text;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
 using FluentAssertions;
-using GreenEnergyHub.Charges.Domain.Configuration;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.Infrastructure.Core.Cim;
 using GreenEnergyHub.Charges.Infrastructure.Core.Cim.MarketDocument;
@@ -29,6 +28,7 @@ using GreenEnergyHub.Charges.MessageHub.Infrastructure.Cim.Bundles.ChargeLinkRec
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksReceiptData;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableData;
 using GreenEnergyHub.Charges.TestCore.Attributes;
+using GreenEnergyHub.Charges.Tests.Builders;
 using GreenEnergyHub.Charges.Tests.TestFiles;
 using Moq;
 using NodaTime;
@@ -40,6 +40,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.BundleSpecification.ChargeLink
     [UnitTest]
     public class ChargeLinksRejectionBundleSpecificationTests
     {
+        private const string DataHubSenderId = "5790001330552";
         private const string MaxLengthId = "00000000000000000000000000000000000";
         private const int MaxTextLengthInTest = 10000;
 
@@ -50,7 +51,8 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.BundleSpecification.ChargeLink
         [InlineAutoMoqData(1000)]
         public async Task GetMessageWeight_WhenCalled_ReturnedWeightIsHigherThanSerializedStream(
             int noOfReasons,
-            [Frozen] Mock<IHubSenderConfiguration> hubSenderConfiguration,
+            HubSenderMarketParticipantBuilder hubSenderBuilder,
+            [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
             [Frozen] Mock<ICimIdProvider> cimIDProvider,
             ChargeLinksReceiptCimSerializer serializer,
             ChargeLinksRejectionBundleSpecification sut)
@@ -58,15 +60,9 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.BundleSpecification.ChargeLink
             // Arrange
             var availableData = GetRejection(noOfReasons);
 
-            var marketParticipant = new MarketParticipant(
-                Guid.NewGuid(),
-                MaxLengthId,
-                true,
-                new[] { MarketParticipantRole.GridAccessProvider });
-
-            hubSenderConfiguration.Setup(
-                    c => c.GetSenderMarketParticipant())
-                .Returns(marketParticipant);
+            marketParticipantRepository
+                .Setup(r => r.GetHubSenderAsync())
+                .ReturnsAsync(hubSenderBuilder.Build());
 
             cimIDProvider.Setup(
                     c => c.GetUniqueId())
@@ -77,6 +73,8 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.BundleSpecification.ChargeLink
                 new List<AvailableChargeLinksReceiptData>() { availableData },
                 stream,
                 BusinessReasonCode.UpdateChargeInformation,
+                DataHubSenderId,
+                MarketParticipantRole.MeteringPointAdministrator,
                 MaxLengthId,
                 MarketParticipantRole.GridAccessProvider);
 
@@ -94,7 +92,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.BundleSpecification.ChargeLink
             var confirmationMessageWeightInBytes = (long)ChargeLinksRejectionBundleSpecification.RejectionWeight * 1000;
 
             // Act
-            var xmlSizeInBytes = new System.IO.FileInfo(FilesForCalculatingBundleSize.WorstCaseChargeReceipt).Length;
+            var xmlSizeInBytes = new FileInfo(FilesForCalculatingBundleSize.WorstCaseChargeReceipt).Length;
 
             // Assert
             xmlSizeInBytes.Should().BeLessOrEqualTo(confirmationMessageWeightInBytes);
@@ -103,6 +101,8 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.BundleSpecification.ChargeLink
         private AvailableChargeLinksReceiptData GetRejection(int noOfReasons)
         {
             return new AvailableChargeLinksReceiptData(
+                DataHubSenderId,
+                MarketParticipantRole.MeteringPointAdministrator,
                 MaxLengthId,
                 MarketParticipantRole.EnergySupplier,
                 BusinessReasonCode.UpdateChargeInformation,
