@@ -42,12 +42,6 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputVali
 
         protected virtual bool TriggeredByIsApplicableForValidationRule => true;
 
-        /*protected virtual string TriggeredByBackingField =>
-            TriggeredByIsApplicableForValidationRule && _chargeCommand.ChargeOperation.Points.Any()
-            ? _chargeCommand.ChargeOperation.Points
-                .First(point => !PointIsValid(point)).Position.ToString()
-            : string.Empty;*/
-
         private bool PointIsValid(Point point)
         {
             if (GetNumberOfDigits(point.Price) > MaximumDigitsInPrice)

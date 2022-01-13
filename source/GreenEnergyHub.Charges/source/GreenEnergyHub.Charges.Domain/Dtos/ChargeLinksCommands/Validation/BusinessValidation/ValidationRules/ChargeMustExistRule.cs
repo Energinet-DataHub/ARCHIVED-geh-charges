@@ -37,10 +37,5 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands.Validation.Busi
             : string.Empty;
 
         private bool TriggeredByIsApplicableForValidationRule => true;
-
-        /*private string TriggeredByBackingField =>
-            TriggeredByIsApplicableForValidationRule ?
-                _chargeLinkDto.SenderProvidedChargeId :
-                string.Empty;*/
     }
 }

@@ -36,11 +36,9 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.Validation
         /// </summary>
         public string TriggeredBy =>
             TriggeredByIsApplicableForValidationRule
-                ? TriggeredByBackingField
+                ? TriggeredBy
                 : $"Not applicable for validation rule {ValidationRuleIdentifier}";
 
         protected bool TriggeredByIsApplicableForValidationRule => false;
-
-        protected string TriggeredByBackingField => string.Empty;
     }
 }
