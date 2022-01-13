@@ -18,7 +18,7 @@ using System.IO;
 using System.Reflection;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
-using GreenEnergyHub.Charges.Domain.Configuration;
+using GreenEnergyHub.Charges.Domain.HubSenderMarketParticipant;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.Infrastructure.Core.Cim;
 using GreenEnergyHub.Charges.Infrastructure.Core.Cim.MarketDocument;
@@ -48,13 +48,13 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Infrastructure.Cim.Bundles.Cha
         public async Task SerializeAsync_WhenCalled_StreamHasSerializedResult(
             ReceiptStatus receiptStatus,
             string expectedFilePath,
-            [Frozen] Mock<IHubSenderConfiguration> hubSenderConfiguration,
+            [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
             [Frozen] Mock<IClock> clock,
             [Frozen] Mock<ICimIdProvider> cimIdProvider,
             ChargeReceiptCimSerializer sut)
         {
             // Arrange
-            SetupMocks(hubSenderConfiguration, clock, cimIdProvider);
+            SetupMocks(marketParticipantRepository, clock, cimIdProvider);
             await using var stream = new MemoryStream();
 
             var expected = EmbeddedStreamHelper.GetEmbeddedStreamAsString(
@@ -68,6 +68,8 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Infrastructure.Cim.Bundles.Cha
                 receipts,
                 stream,
                 BusinessReasonCode.UpdateChargeInformation,
+                "5790001330552",
+                MarketParticipantRole.MeteringPointAdministrator,
                 RecipientId,
                 MarketParticipantRole.GridAccessProvider);
 
@@ -80,12 +82,12 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Infrastructure.Cim.Bundles.Cha
         [Theory(Skip = "Manually run test to save the generated file to disk")]
         [InlineAutoDomainData]
         public async Task SerializeAsync_WhenCalled_SaveSerializedStream(
-            [Frozen] Mock<IHubSenderConfiguration> hubSenderConfiguration,
+            [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
             [Frozen] Mock<IClock> clock,
             [Frozen] Mock<ICimIdProvider> cimIdProvider,
             ChargeReceiptCimSerializer sut)
         {
-            SetupMocks(hubSenderConfiguration, clock, cimIdProvider);
+            SetupMocks(marketParticipantRepository, clock, cimIdProvider);
 
             var receipts = GetReceipts(ReceiptStatus.Rejected, clock.Object);
 
@@ -95,6 +97,8 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Infrastructure.Cim.Bundles.Cha
                 receipts,
                 stream,
                 BusinessReasonCode.UpdateChargeInformation,
+                "senderId",
+                MarketParticipantRole.MeteringPointAdministrator,
                 RecipientId,
                 MarketParticipantRole.GridAccessProvider);
 
@@ -104,13 +108,17 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Infrastructure.Cim.Bundles.Cha
         }
 
         private void SetupMocks(
-            Mock<IHubSenderConfiguration> hubSenderConfiguration,
+            Mock<IMarketParticipantRepository> marketParticipantRepository,
             Mock<IClock> clock,
             Mock<ICimIdProvider> cimIdProvider)
         {
-            hubSenderConfiguration
-                .Setup(h => h.GetSenderMarketParticipant())
-                .Returns(new MarketParticipant(Guid.NewGuid(), "5790001330552", true, new[] { MarketParticipantRole.MeteringPointAdministrator }));
+            marketParticipantRepository
+                .Setup(r => r.GetHubSenderAsync())
+                .ReturnsAsync(new HubSenderMarketParticipant(
+                    Guid.NewGuid(),
+                    "5790001330552",
+                    true,
+                    new[] { MarketParticipantRole.MeteringPointAdministrator }));
 
             var currentTime = Instant.FromUtc(2021, 10, 12, 13, 37, 43).PlusNanoseconds(4);
             clock.Setup(c => c.GetCurrentInstant()).Returns(currentTime);
@@ -133,6 +141,8 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Infrastructure.Cim.Bundles.Cha
         private AvailableChargeReceiptData GetReceipt(int no, ReceiptStatus receiptStatus, IClock clock)
         {
             return new AvailableChargeReceiptData(
+                "senderId",
+                MarketParticipantRole.MeteringPointAdministrator,
                 RecipientId,
                 MarketParticipantRole.GridAccessProvider,
                 BusinessReasonCode.UpdateChargeInformation,

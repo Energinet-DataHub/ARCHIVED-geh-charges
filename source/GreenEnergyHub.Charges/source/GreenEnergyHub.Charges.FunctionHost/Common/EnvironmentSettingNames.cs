@@ -32,10 +32,6 @@ namespace GreenEnergyHub.Charges.FunctionHost.Common
         public const string DataHubSenderConnectionString = "INTEGRATIONEVENT_SENDER_CONNECTION_STRING";
         public const string MessageHubStorageConnectionString = "MESSAGEHUB_STORAGE_CONNECTION_STRING";
 
-        // Identification of Hub
-        public const string HubSenderId = "HUB_SENDER_ID";
-        public const string HubSenderRoleIntEnumValue = "HUB_SENDER_ROLE_INT_ENUM_VALUE";
-
         // Localization
         public const string Currency = "CURRENCY";
         public const string LocalTimeZoneName = "LOCAL_TIMEZONENAME";

@@ -26,11 +26,9 @@ using Energinet.DataHub.MessageHub.Model.Peek;
 using EntityFrameworkCore.SqlServer.NodaTime.Extensions;
 using GreenEnergyHub.Charges.Application.ChargeLinks.CreateDefaultChargeLinkReplier;
 using GreenEnergyHub.Charges.Domain.Charges;
-using GreenEnergyHub.Charges.Domain.Configuration;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksReceivedEvents;
 using GreenEnergyHub.Charges.Domain.MeteringPoints;
 using GreenEnergyHub.Charges.FunctionHost.Common;
-using GreenEnergyHub.Charges.Infrastructure.Configuration;
 using GreenEnergyHub.Charges.Infrastructure.Core.Correlation;
 using GreenEnergyHub.Charges.Infrastructure.Core.Function;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessageMetaData;
@@ -52,7 +50,6 @@ using GreenEnergyHub.Json;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using NodaTime;
-using MarketParticipantRole = GreenEnergyHub.Charges.Domain.MarketParticipants.MarketParticipantRole;
 
 namespace GreenEnergyHub.Charges.FunctionHost.Configuration
 {
@@ -141,14 +138,6 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
         private static void ConfigureSharedCim(IServiceCollection serviceCollection)
         {
             serviceCollection.AddScoped<ICimIdProvider, CimIdProvider>();
-            serviceCollection.AddScoped<IHubSenderConfiguration>(_ =>
-            {
-                var senderId = EnvironmentHelper.GetEnv(EnvironmentSettingNames.HubSenderId);
-                var roleIntText = EnvironmentHelper.GetEnv(EnvironmentSettingNames.HubSenderRoleIntEnumValue);
-                return new HubSenderConfiguration(
-                    senderId,
-                    (MarketParticipantRole)int.Parse(roleIntText));
-            });
         }
 
         private static void ConfigureIso8601Services(IServiceCollection serviceCollection)

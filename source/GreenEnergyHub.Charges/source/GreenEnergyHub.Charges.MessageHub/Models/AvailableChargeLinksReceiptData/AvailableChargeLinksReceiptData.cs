@@ -30,6 +30,8 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksReceiptDa
     public class AvailableChargeLinksReceiptData : AvailableDataBase
     {
         public AvailableChargeLinksReceiptData(
+            string senderId,
+            MarketParticipantRole senderRole,
             string recipientId,
             MarketParticipantRole recipientRole,
             BusinessReasonCode businessReasonCode,
@@ -39,7 +41,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksReceiptDa
             string originalOperationId,
             string meteringPointId,
             List<AvailableReceiptValidationError> validationErrors)
-            : base(recipientId, recipientRole, businessReasonCode, requestDateTime, availableDataReferenceId)
+            : base(senderId, senderRole, recipientId, recipientRole, businessReasonCode, requestDateTime, availableDataReferenceId)
         {
             ReceiptStatus = receiptStatus;
             OriginalOperationId = originalOperationId;
@@ -47,15 +49,11 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksReceiptDa
             _validationErrors = validationErrors;
         }
 
-        /// <summary>
-        /// Used implicitly by persistence.
-        /// </summary>
-        // ReSharper disable once UnusedMember.Local
-        private AvailableChargeLinksReceiptData(string recipientId, string originalOperationId, string meteringPointId)
-            : base(recipientId)
+        // ReSharper disable once UnusedMember.Local - Used implicitly by persistence
+        private AvailableChargeLinksReceiptData()
         {
-            OriginalOperationId = originalOperationId;
-            MeteringPointId = meteringPointId;
+            OriginalOperationId = null!;
+            MeteringPointId = null!;
             _validationErrors = new List<AvailableReceiptValidationError>();
         }
 

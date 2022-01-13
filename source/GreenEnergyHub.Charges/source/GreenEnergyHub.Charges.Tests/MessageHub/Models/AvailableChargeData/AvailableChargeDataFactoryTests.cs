@@ -39,6 +39,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeData
             [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
             [Frozen] Mock<IMessageMetaDataContext> messageMetaDataContext,
             Instant now,
+            HubSenderMarketParticipantBuilder hubSenderBuilder,
             List<MarketParticipant> gridAccessProvider,
             ChargeCommandBuilder chargeCommandBuilder,
             ChargeCommandAcceptedEventBuilder chargeCommandAcceptedEventBuilder,
@@ -48,40 +49,41 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeData
             var chargeCommand = chargeCommandBuilder.WithPoint(1).WithTaxIndicator(true).Build();
             var acceptedEvent = chargeCommandAcceptedEventBuilder.WithChargeCommand(chargeCommand).Build();
 
-            marketParticipantRepository.Setup(
-                    r => r.GetActiveGridAccessProvidersAsync())
+            marketParticipantRepository
+                .Setup(r => r.GetActiveGridAccessProvidersAsync())
                 .ReturnsAsync(gridAccessProvider);
 
-            messageMetaDataContext.Setup(
-                    m => m.RequestDataTime)
-                .Returns(now);
+            marketParticipantRepository
+                .Setup(r => r.GetHubSenderAsync())
+                .ReturnsAsync(hubSenderBuilder.Build());
+
+            messageMetaDataContext.Setup(m => m.RequestDataTime).Returns(now);
 
             // Act
-            var actualList =
-                await sut.CreateAsync(acceptedEvent);
+            var actual = await sut.CreateAsync(acceptedEvent);
 
             // Assert
             var operation = acceptedEvent.Command.ChargeOperation;
-            actualList.Should().HaveSameCount(gridAccessProvider);
-            for (var i = 0; i < actualList.Count; i++)
+            actual.Should().HaveSameCount(gridAccessProvider);
+            for (var i = 0; i < actual.Count; i++)
             {
-                actualList[i].Should().NotContainNullsOrEmptyEnumerables();
-                actualList[i].RecipientId.Should().Be(gridAccessProvider[i].MarketParticipantId);
-                actualList[i].RecipientRole.Should().Be(MarketParticipantRole.GridAccessProvider);
-                actualList[i].BusinessReasonCode.Should().Be(acceptedEvent.Command.Document.BusinessReasonCode);
-                actualList[i].RequestDateTime.Should().Be(now);
-                actualList[i].ChargeId.Should().Be(operation.ChargeId);
-                actualList[i].ChargeOwner.Should().Be(operation.ChargeOwner);
-                actualList[i].ChargeType.Should().Be(operation.Type);
-                actualList[i].ChargeName.Should().Be(operation.ChargeName);
-                actualList[i].ChargeDescription.Should().Be(operation.ChargeDescription);
-                actualList[i].StartDateTime.Should().Be(operation.StartDateTime);
-                actualList[i].EndDateTime.Should().Be(operation.EndDateTime.TimeOrEndDefault());
-                actualList[i].VatClassification.Should().Be(operation.VatClassification);
-                actualList[i].TaxIndicator.Should().Be(operation.TaxIndicator);
-                actualList[i].TransparentInvoicing.Should().Be(operation.TransparentInvoicing);
-                actualList[i].Resolution.Should().Be(operation.Resolution);
-                actualList[i].Points.Should().BeEquivalentTo(
+                actual[i].Should().NotContainNullsOrEmptyEnumerables();
+                actual[i].RecipientId.Should().Be(gridAccessProvider[i].MarketParticipantId);
+                actual[i].RecipientRole.Should().Be(MarketParticipantRole.GridAccessProvider);
+                actual[i].BusinessReasonCode.Should().Be(acceptedEvent.Command.Document.BusinessReasonCode);
+                actual[i].RequestDateTime.Should().Be(now);
+                actual[i].ChargeId.Should().Be(operation.ChargeId);
+                actual[i].ChargeOwner.Should().Be(operation.ChargeOwner);
+                actual[i].ChargeType.Should().Be(operation.Type);
+                actual[i].ChargeName.Should().Be(operation.ChargeName);
+                actual[i].ChargeDescription.Should().Be(operation.ChargeDescription);
+                actual[i].StartDateTime.Should().Be(operation.StartDateTime);
+                actual[i].EndDateTime.Should().Be(operation.EndDateTime.TimeOrEndDefault());
+                actual[i].VatClassification.Should().Be(operation.VatClassification);
+                actual[i].TaxIndicator.Should().Be(operation.TaxIndicator);
+                actual[i].TransparentInvoicing.Should().Be(operation.TransparentInvoicing);
+                actual[i].Resolution.Should().Be(operation.Resolution);
+                actual[i].Points.Should().BeEquivalentTo(
                     operation.Points,
                     options => options.ExcludingMissingMembers());
             }
@@ -99,11 +101,10 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeData
             var acceptedEvent = chargeCommandAcceptedEventBuilder.WithChargeCommand(chargeCommand).Build();
 
             // Act
-            var actualList =
-                await sut.CreateAsync(acceptedEvent);
+            var actual = await sut.CreateAsync(acceptedEvent);
 
             // Assert
-            actualList.Should().BeEmpty();
+            actual.Should().BeEmpty();
         }
     }
 }
