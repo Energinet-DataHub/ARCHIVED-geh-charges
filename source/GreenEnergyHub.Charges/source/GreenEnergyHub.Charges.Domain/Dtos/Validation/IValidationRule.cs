@@ -32,6 +32,6 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.Validation
         /// <summary>
         /// Element in list that violated the rule identified by <see cref="ValidationRuleIdentifier"/>
         /// </summary>
-        public string? ListElement { get; } = null;
+        public string? ListElement { get; }
     }
 }
