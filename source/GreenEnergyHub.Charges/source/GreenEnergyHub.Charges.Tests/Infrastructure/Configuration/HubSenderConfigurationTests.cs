@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Linq;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.Infrastructure.Configuration;
 using GreenEnergyHub.TestHelpers;
@@ -37,7 +38,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Configuration
 
             // Assert
             Assert.Equal(senderId, actual.MarketParticipantId);
-            Assert.Equal(senderRole, actual.BusinessProcessRole);
+            Assert.Equal(senderRole, actual.Roles.Single());
         }
     }
 }

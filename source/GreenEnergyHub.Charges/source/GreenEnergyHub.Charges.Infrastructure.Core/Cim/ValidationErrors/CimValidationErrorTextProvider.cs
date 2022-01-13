@@ -15,7 +15,7 @@
 using System;
 using System.Linq;
 using System.Reflection;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation;
+using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors
 {
@@ -26,8 +26,8 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors
             var fields = typeof(CimValidationErrorTextTemplateMessages).GetFields();
             foreach (var field in fields)
             {
-                var attribute = (ErrormessageForAttribute)field.GetCustomAttributes()
-                    .Single(x => x.GetType() == typeof(ErrormessageForAttribute));
+                var attribute = (ErrorMessageForAttribute)field.GetCustomAttributes()
+                    .Single(x => x.GetType() == typeof(ErrorMessageForAttribute));
                 var isFound = attribute.ValidationRuleIdentifier == validationRuleIdentifier;
                 if (isFound) return field.GetValue(null) !.ToString() !;
             }

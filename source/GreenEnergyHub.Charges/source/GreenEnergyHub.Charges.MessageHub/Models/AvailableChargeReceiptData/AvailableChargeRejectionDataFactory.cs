@@ -17,8 +17,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandRejectedEvents;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation;
 using GreenEnergyHub.Charges.Infrastructure.Core.Cim.MarketDocument;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessageMetaData;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableData;
@@ -29,13 +27,11 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
         IAvailableDataFactory<AvailableChargeReceiptData, ChargeCommandRejectedEvent>
     {
         private readonly IMessageMetaDataContext _messageMetaDataContext;
-        private AvailableChargeReceiptValidationErrorFactory _availableChargeReceiptValidationErrorFactory;
+        private readonly IAvailableChargeReceiptValidationErrorFactory _availableChargeReceiptValidationErrorFactory;
 
         public AvailableChargeRejectionDataFactory(
             IMessageMetaDataContext messageMetaDataContext,
-            ICimValidationErrorCodeFactory cimValidationErrorCodeFactory,
-            ICimValidationErrorTextFactory cimValidationErrorTextFactory,
-            AvailableChargeReceiptValidationErrorFactory availableChargeReceiptValidationErrorFactory)
+            IAvailableChargeReceiptValidationErrorFactory availableChargeReceiptValidationErrorFactory)
         {
             _messageMetaDataContext = messageMetaDataContext;
             _availableChargeReceiptValidationErrorFactory = availableChargeReceiptValidationErrorFactory;
@@ -59,7 +55,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
             return Task.FromResult(result);
         }
 
-        private List<AvailableChargeReceiptValidationError> GetReasons(ChargeCommandRejectedEvent input)
+        private List<AvailableReceiptValidationError> GetReasons(ChargeCommandRejectedEvent input)
         {
             return input
                 .FailedValidationRuleIdentifiers

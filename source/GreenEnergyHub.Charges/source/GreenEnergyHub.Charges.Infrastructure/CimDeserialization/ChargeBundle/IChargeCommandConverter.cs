@@ -13,13 +13,13 @@
 // limitations under the License.
 
 using System.Threading.Tasks;
-using System.Xml;
 using Energinet.DataHub.Core.Messaging.Transport;
+using Energinet.DataHub.Core.SchemaValidation;
 
 namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.ChargeBundle
 {
     public interface IChargeCommandConverter
     {
-        Task<IInboundMessage> ConvertAsync(XmlReader reader);
+        Task<IInboundMessage> ConvertAsync(SchemaValidatingReader reader);
     }
 }

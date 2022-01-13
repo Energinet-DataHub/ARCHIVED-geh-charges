@@ -13,12 +13,12 @@
 // limitations under the License.
 
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksAcceptedEvents;
-using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinkReceiptData;
+using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksReceiptData;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableData;
 
 namespace GreenEnergyHub.Charges.MessageHub.BundleSpecification.ChargeLinks
 {
-    public class ChargeLinksConfirmationBundleSpecification : BundleSpecification<AvailableChargeLinkReceiptData, ChargeLinksAcceptedEvent>
+    public class ChargeLinksConfirmationBundleSpecification : BundleSpecification<AvailableChargeLinksReceiptData, ChargeLinksAcceptedEvent>
     {
         /// <summary>
         /// The upper anticipated weight (kilobytes) contribution to the final bundle
@@ -31,7 +31,7 @@ namespace GreenEnergyHub.Charges.MessageHub.BundleSpecification.ChargeLinks
         {
         }
 
-        public override int GetMessageWeight(AvailableChargeLinkReceiptData data)
+        public override int GetMessageWeight(AvailableChargeLinksReceiptData data)
         {
             return MessageWeight;
         }
