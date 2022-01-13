@@ -16,6 +16,7 @@ using System;
 using System.Linq;
 using Energinet.Charges.Contracts.Charge;
 using Energinet.Charges.Contracts.ChargeLink;
+using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.QueryApi.Model;
 
 namespace GreenEnergyHub.Charges.WebApi.ModelPredicates
@@ -30,12 +31,13 @@ namespace GreenEnergyHub.Charges.WebApi.ModelPredicates
                     c.Charge.SenderProvidedChargeId,
                     c.Charge.Name,
                     c.Charge.Owner.MarketParticipantId,
-                    "Netvirksomhed XYZ", // Hardcoded as we currently don't have the data
+                    "<Aktørnavn XYZ>", // Hardcoded as we currently don't have the data
                     c.Charge.TaxIndicator,
                     c.Charge.TransparentInvoicing,
                     c.Factor,
                     c.StartDateTime,
-                    c.EndDateTime));
+                    // Nullify any "EndDefault" end dates that are not supposed to be communicated externally.
+                    c.EndDateTime == InstantExtensions.GetEndDefault().ToDateTimeOffset() ? null : c.EndDateTime));
         }
 
         private static ChargeType Map(Domain.Charges.ChargeType chargeType) => chargeType switch
