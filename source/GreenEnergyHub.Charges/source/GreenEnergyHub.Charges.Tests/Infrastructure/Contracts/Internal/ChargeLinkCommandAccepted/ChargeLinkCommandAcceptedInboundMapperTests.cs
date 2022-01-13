@@ -13,9 +13,8 @@
 // limitations under the License.
 
 using System;
-using System.Diagnostics.CodeAnalysis;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksAcceptedEvents;
-using GreenEnergyHub.Charges.Infrastructure.Contracts.Internal.LinkCommandAccepted;
+using GreenEnergyHub.Charges.Infrastructure.Contracts.Internal.ChargeLinkCommandAccepted;
 using GreenEnergyHub.Charges.TestCore.Attributes;
 using GreenEnergyHub.Charges.Tests.Protobuf;
 using Xunit;
@@ -29,8 +28,8 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Contracts.Internal.ChargeL
         [Theory]
         [InlineAutoMoqData]
         public void Convert_WhenCalled_ShouldMapToDomainObjectWithCorrectValues(
-            [NotNull] Charges.Infrastructure.Internal.ChargeLinkCommandAccepted.ChargeLinkCommandAccepted chargeLinkCommandAccepted,
-            [NotNull] ChargeLinkCommandAcceptedInboundMapper sut)
+            Charges.Infrastructure.Internal.ChargeLinksCommandAccepted.ChargeLinksCommandAccepted chargeLinkCommandAccepted,
+            ChargeLinksCommandAcceptedInboundMapper sut)
         {
             var result = (ChargeLinksAcceptedEvent)sut.Convert(chargeLinkCommandAccepted);
             ProtobufAssert.IncomingContractIsSuperset(result, chargeLinkCommandAccepted);
@@ -38,7 +37,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Contracts.Internal.ChargeL
 
         [Theory]
         [InlineAutoMoqData]
-        public void Convert_WhenCalledWithNull_ShouldThrow([NotNull]ChargeLinkCommandAcceptedInboundMapper sut)
+        public void Convert_WhenCalledWithNull_ShouldThrow(ChargeLinksCommandAcceptedInboundMapper sut)
         {
             Assert.Throws<InvalidOperationException>(() => sut.Convert(null!));
         }

@@ -20,7 +20,7 @@ using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.Domain.MeteringPoints;
 using Microsoft.EntityFrameworkCore;
 
-namespace GreenEnergyHub.Charges.Infrastructure.Context
+namespace GreenEnergyHub.Charges.Infrastructure.Persistence
 {
     /// <summary>
     /// Contract defining the capabilities of the Charges database context.

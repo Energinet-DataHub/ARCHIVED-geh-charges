@@ -16,10 +16,9 @@ using Energinet.DataHub.Core.Messaging.Protobuf;
 using GreenEnergyHub.Charges.Application.ChargeLinks.Handlers;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksAcceptedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksDataAvailableNotifiedEvents;
-using GreenEnergyHub.Charges.Domain.Dtos.DefaultChargeLinksDataAvailableNotifiedEvents;
 using GreenEnergyHub.Charges.FunctionHost.Common;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Registration;
-using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandAccepted;
+using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinksCommandAccepted;
 using GreenEnergyHub.Charges.Infrastructure.Internal.DefaultChargeLinksCreated;
 using GreenEnergyHub.Charges.MessageHub.BundleSpecification;
 using GreenEnergyHub.Charges.MessageHub.BundleSpecification.ChargeLinks;
@@ -34,8 +33,8 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
     {
         internal static void ConfigureServices(IServiceCollection serviceCollection)
         {
-            serviceCollection.ReceiveProtobufMessage<ChargeLinkCommandAccepted>(
-                configuration => configuration.WithParser(() => ChargeLinkCommandAccepted.Parser));
+            serviceCollection.ReceiveProtobufMessage<ChargeLinksCommandAccepted>(
+                configuration => configuration.WithParser(() => ChargeLinksCommandAccepted.Parser));
 
             serviceCollection.SendProtobuf<DefaultChargeLinksCreated>();
             serviceCollection.AddMessagingProtobuf().AddMessageDispatcher<ChargeLinksDataAvailableNotifiedEvent>(

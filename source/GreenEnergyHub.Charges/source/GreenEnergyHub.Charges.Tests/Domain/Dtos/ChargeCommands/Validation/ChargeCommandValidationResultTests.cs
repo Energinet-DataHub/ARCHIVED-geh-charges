@@ -15,7 +15,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation;
+using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using Xunit;
 using Xunit.Categories;
 
@@ -27,7 +27,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation
         [Fact]
         public void CreateSuccess_ReturnsValidResult()
         {
-            var validationResult = ChargeCommandValidationResult.CreateSuccess();
+            var validationResult = ValidationResult.CreateSuccess();
             Assert.False(validationResult.IsFailed);
         }
 
@@ -35,7 +35,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation
         public void CreateFailure_WhenCreatedWithInvalidRules_ReturnsInvalidResult()
         {
             var invalidRules = CreateInvalidRules();
-            var validationResult = ChargeCommandValidationResult.CreateFailure(invalidRules);
+            var validationResult = ValidationResult.CreateFailure(invalidRules);
             Assert.True(validationResult.IsFailed);
         }
 
@@ -44,7 +44,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation
         {
             var validRules = CreateValidRules();
             Assert.Throws<ArgumentException>(
-                () => ChargeCommandValidationResult.CreateFailure(validRules));
+                () => ValidationResult.CreateFailure(validRules));
         }
 
         [Fact]
@@ -56,7 +56,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation
             var allRules = validRules.Concat(invalidRules).ToList();
 
             // Act and assert
-            Assert.Throws<ArgumentException>(() => ChargeCommandValidationResult.CreateFailure(allRules));
+            Assert.Throws<ArgumentException>(() => ValidationResult.CreateFailure(allRules));
         }
 
         private static List<IValidationRule> CreateValidRules()

@@ -16,7 +16,6 @@ using System.Threading.Tasks;
 using Energinet.DataHub.Core.Messaging.Transport.SchemaValidation;
 using Energinet.DataHub.Core.Schemas;
 using Energinet.DataHub.Core.SchemaValidation;
-using Energinet.DataHub.Core.SchemaValidation.Extensions;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands;
 
 namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.ChargeLinkBundle
@@ -33,10 +32,8 @@ namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.ChargeLinkBun
 
         protected override async Task<ChargeLinksCommandBundle> ConvertAsync(SchemaValidatingReader reader)
         {
-            var xmlReader = await reader.AsXmlReaderAsync().ConfigureAwait(false);
-
             var command = await _chargeLinkCommandConverter
-                .ConvertAsync(xmlReader)
+                .ConvertAsync(reader)
                 .ConfigureAwait(false);
 
             return (ChargeLinksCommandBundle)command;

@@ -28,7 +28,7 @@ using NodaTime;
 using Xunit;
 using Xunit.Categories;
 
-namespace GreenEnergyHub.Charges.Tests.MessageHub.Application.Charges
+namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeData
 {
     [UnitTest]
     public class AvailableChargeDataFactoryTests
@@ -39,7 +39,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Application.Charges
             [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
             [Frozen] Mock<IMessageMetaDataContext> messageMetaDataContext,
             Instant now,
-            List<MarketParticipant> marketParticipants,
+            List<MarketParticipant> gridAccessProvider,
             ChargeCommandBuilder chargeCommandBuilder,
             ChargeCommandAcceptedEventBuilder chargeCommandAcceptedEventBuilder,
             AvailableChargeDataFactory sut)
@@ -50,7 +50,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Application.Charges
 
             marketParticipantRepository.Setup(
                     r => r.GetActiveGridAccessProvidersAsync())
-                .ReturnsAsync(marketParticipants);
+                .ReturnsAsync(gridAccessProvider);
 
             messageMetaDataContext.Setup(
                     m => m.RequestDataTime)
@@ -62,12 +62,12 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Application.Charges
 
             // Assert
             var operation = acceptedEvent.Command.ChargeOperation;
-            actualList.Should().HaveSameCount(marketParticipants);
+            actualList.Should().HaveSameCount(gridAccessProvider);
             for (var i = 0; i < actualList.Count; i++)
             {
                 actualList[i].Should().NotContainNullsOrEmptyEnumerables();
-                actualList[i].RecipientId.Should().Be(marketParticipants[i].MarketParticipantId);
-                actualList[i].RecipientRole.Should().Be(marketParticipants[i].BusinessProcessRole);
+                actualList[i].RecipientId.Should().Be(gridAccessProvider[i].MarketParticipantId);
+                actualList[i].RecipientRole.Should().Be(MarketParticipantRole.GridAccessProvider);
                 actualList[i].BusinessReasonCode.Should().Be(acceptedEvent.Command.Document.BusinessReasonCode);
                 actualList[i].RequestDateTime.Should().Be(now);
                 actualList[i].ChargeId.Should().Be(operation.ChargeId);

@@ -16,8 +16,6 @@ using System.Collections.Generic;
 using GreenEnergyHub.Charges.Domain.Dtos.Messages.Command;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 
-#pragma warning disable 8618
-
 namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands
 {
     public class ChargeLinksCommand : CommandBase

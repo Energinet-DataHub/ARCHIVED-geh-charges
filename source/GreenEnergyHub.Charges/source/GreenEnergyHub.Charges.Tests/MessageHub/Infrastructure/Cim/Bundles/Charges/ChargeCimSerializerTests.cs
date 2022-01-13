@@ -113,28 +113,21 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Infrastructure.Cim.Bundles.Cha
             Mock<IIso8601Durations> iso8601Durations,
             Mock<ICimIdProvider> cimIdProvider)
         {
-            hubSenderConfiguration.Setup(
-                    h => h.GetSenderMarketParticipant())
-                .Returns(new MarketParticipant
-                {
-                    MarketParticipantId = "5790001330552", BusinessProcessRole = MarketParticipantRole.MeteringPointAdministrator,
-                });
+            hubSenderConfiguration
+                .Setup(h => h.GetSenderMarketParticipant())
+                .Returns(new MarketParticipant(Guid.NewGuid(), "5790001330552", true, new[] { MarketParticipantRole.MeteringPointAdministrator }));
 
             var currentTime = Instant.FromUtc(2021, 10, 22, 15, 30, 41).PlusNanoseconds(4);
-            clock.Setup(
-                    c => c.GetCurrentInstant())
-                .Returns(currentTime);
+            clock.Setup(c => c.GetCurrentInstant()).Returns(currentTime);
 
-            iso8601Durations.Setup(
-                    i => i.GetTimeFixedToDuration(
+            iso8601Durations
+                .Setup(i => i.GetTimeFixedToDuration(
                         It.IsAny<Instant>(),
                         It.IsAny<string>(),
                         It.IsAny<int>()))
                 .Returns(Instant.FromUtc(2100, 3, 31, 22, 0, 0));
 
-            cimIdProvider.Setup(
-                    c => c.GetUniqueId())
-                .Returns(CimTestId);
+            cimIdProvider.Setup(c => c.GetUniqueId()).Returns(CimTestId);
         }
 
         private List<AvailableChargeData> GetCharges(IClock clock, bool includeMasterData, bool includePrices)
