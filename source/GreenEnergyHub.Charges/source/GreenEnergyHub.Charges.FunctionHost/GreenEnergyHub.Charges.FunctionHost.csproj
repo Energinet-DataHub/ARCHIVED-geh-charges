@@ -27,7 +27,7 @@ limitations under the License.
     <PackageReference Include="Energinet.DataHub.Core.Logging" Version="1.0.4" />
     <PackageReference Include="Energinet.DataHub.Core.Messaging.Protobuf.Integration.ServiceCollection" Version="1.1.2" />
     <PackageReference Include="EntityFrameworkCore.SqlServer.NodaTime" Version="5.0.1" />
-    <PackageReference Include="Microsoft.ApplicationInsights.WorkerService" Version="2.19.0" />
+    <PackageReference Include="Microsoft.ApplicationInsights.WorkerService" Version="2.20.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Abstractions" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.5" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Formatters.Json" Version="2.2.0" />
