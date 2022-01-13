@@ -72,21 +72,6 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi
         }
 
         [Fact]
-        public async Task GetAsync_WhenMeteringPointIdHasChargeLinks_ReturnsChargeLinksWithoutEndDefaultEndDates()
-        {
-            // Act
-            var response = await _client.GetAsync($"{BaseUrl}{KnownMeteringPointId}");
-
-            // Assert
-            var jsonString = await response.Content.ReadAsStringAsync();
-            var actual = JsonSerializer.Deserialize<List<ChargeLinkDto>>(
-                jsonString,
-                GetJsonSerializerOptions());
-
-            actual.Should().NotContain(c => c.EndDate == InstantExtensions.GetEndDefault().ToDateTimeOffset());
-        }
-
-        [Fact]
         public async Task GetAsync_WhenMeteringPointIdDoesNotExist_ReturnsNotFound()
         {
             var response = await _client.GetAsync($"{BaseUrl}{Guid.NewGuid()}");
