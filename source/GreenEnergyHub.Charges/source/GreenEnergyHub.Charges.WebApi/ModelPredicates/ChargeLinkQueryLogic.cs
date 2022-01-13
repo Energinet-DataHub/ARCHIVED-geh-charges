@@ -36,8 +36,7 @@ namespace GreenEnergyHub.Charges.WebApi.ModelPredicates
                     c.Charge.TransparentInvoicing,
                     c.Factor,
                     c.StartDateTime,
-                    // Nullify any "EndDefault" end dates that are not supposed to be communicated externally.
-                    c.EndDateTime == InstantExtensions.GetEndDefault().ToDateTimeOffset() ? null : c.EndDateTime));
+                    c.EndDateTime == InstantExtensions.GetEndDefault().ToDateTimeOffset() ? null : c.EndDateTime)); // Nullify "EndDefault" end dates
         }
 
         private static ChargeType Map(Domain.Charges.ChargeType chargeType) => chargeType switch

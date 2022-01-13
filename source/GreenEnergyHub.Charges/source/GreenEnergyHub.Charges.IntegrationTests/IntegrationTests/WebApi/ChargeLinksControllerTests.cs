@@ -21,6 +21,7 @@ using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Energinet.Charges.Contracts.ChargeLink;
 using FluentAssertions;
+using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.IntegrationTests.Fixtures;
 using GreenEnergyHub.Charges.IntegrationTests.Fixtures.Database;
 using Xunit;
@@ -68,6 +69,21 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi
             actual.Should().BeInAscendingOrder(c => c.ChargeType)
                 .And.ThenBeInAscendingOrder(c => c.ChargeId)
                 .And.ThenBeInDescendingOrder(c => c.StartDate);
+        }
+
+        [Fact]
+        public async Task GetAsync_WhenMeteringPointIdHasChargeLinks_ReturnsChargeLinksWithoutEndDefaultEndDates()
+        {
+            // Act
+            var response = await _client.GetAsync($"{BaseUrl}{KnownMeteringPointId}");
+
+            // Assert
+            var jsonString = await response.Content.ReadAsStringAsync();
+            var actual = JsonSerializer.Deserialize<List<ChargeLinkDto>>(
+                jsonString,
+                GetJsonSerializerOptions());
+
+            actual.Should().NotContain(c => c.EndDate == InstantExtensions.GetEndDefault().ToDateTimeOffset());
         }
 
         [Fact]
