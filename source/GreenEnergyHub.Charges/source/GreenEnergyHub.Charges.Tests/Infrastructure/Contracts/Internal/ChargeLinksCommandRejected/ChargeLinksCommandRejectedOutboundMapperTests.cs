@@ -53,7 +53,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Contracts.Internal.ChargeL
             var chargeLinksCommand = builder.Build();
             var validationErrors = new List<ValidationError>
             {
-                new(ValidationRuleIdentifier.ChargeDoesNotExist, listElementWithValidationError: "1"),
+                new(ValidationRuleIdentifier.ChargeDoesNotExist, triggeredBy: "1"),
                 new(ValidationRuleIdentifier.MeteringPointDoesNotExist, null),
             };
 

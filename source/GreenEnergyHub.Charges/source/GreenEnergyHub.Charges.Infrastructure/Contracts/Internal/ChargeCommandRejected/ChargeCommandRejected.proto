@@ -75,7 +75,7 @@ message PointContract
 
 message ValidationErrorContract {
   ValidationRuleIdentifierContract validation_rule_identifier = 1;
-  google.protobuf.StringValue list_element_with_validation_error = 2;
+  google.protobuf.StringValue triggered_by = 2;
 }
 
 enum ValidationRuleIdentifierContract

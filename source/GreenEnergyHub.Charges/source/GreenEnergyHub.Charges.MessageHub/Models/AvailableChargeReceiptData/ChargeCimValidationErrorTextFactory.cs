@@ -43,7 +43,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
             var errorTextTemplate = _cimValidationErrorTextProvider
                 .GetCimValidationErrorText(validationError.ValidationRuleIdentifier);
 
-            return MergeErrorText(errorTextTemplate, chargeCommand, validationError.ListElementWithValidationError);
+            return MergeErrorText(errorTextTemplate, chargeCommand, validationError.TriggeredBy);
         }
 
         private static string MergeErrorText(

@@ -52,7 +52,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Contracts.Internal.ChargeCommand
                 rejectionEvent.ValidationErrors.Select(ve => new ValidationErrorContract
                 {
                     ValidationRuleIdentifier = (ValidationRuleIdentifierContract)ve.ValidationRuleIdentifier,
-                    ListElementWithValidationError = ve.ListElementWithValidationError,
+                    TriggeredBy = ve.TriggeredBy,
                 }));
         }
 
