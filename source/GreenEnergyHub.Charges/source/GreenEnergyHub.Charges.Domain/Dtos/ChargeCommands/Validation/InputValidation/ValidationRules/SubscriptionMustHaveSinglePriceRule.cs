@@ -43,6 +43,6 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputVali
             }
         }
 
-        public string? ListElement => null;
+        public string? TriggeredBy => null;
     }
 }

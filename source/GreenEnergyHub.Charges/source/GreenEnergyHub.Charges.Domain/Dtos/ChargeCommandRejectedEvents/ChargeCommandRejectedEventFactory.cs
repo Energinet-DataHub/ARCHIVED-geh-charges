@@ -37,7 +37,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandRejectedEvents
                 _clock.GetCurrentInstant(),
                 command,
                 validationResult.InvalidRules.Select(x =>
-                    new ValidationError(x.ValidationRuleIdentifier, x.ListElement)));
+                    new ValidationError(x.ValidationRuleIdentifier, x.TriggeredBy)));
         }
     }
 }

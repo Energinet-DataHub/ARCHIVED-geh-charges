@@ -31,6 +31,6 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputVali
 
         public bool IsValid => _chargeCommand.Document.Type == DocumentType.RequestUpdateChargeInformation;
 
-        public string? ListElement => null;
+        public string? TriggeredBy => null;
     }
 }

@@ -33,6 +33,6 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessV
 
         public bool IsValid => _command.ChargeOperation.VatClassification == _charge.VatClassification;
 
-        public string? ListElement => null;
+        public string? TriggeredBy => null;
     }
 }

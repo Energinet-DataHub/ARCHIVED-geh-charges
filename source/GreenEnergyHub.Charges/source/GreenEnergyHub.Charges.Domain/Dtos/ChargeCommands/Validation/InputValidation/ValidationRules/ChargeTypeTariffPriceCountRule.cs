@@ -34,7 +34,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputVali
 
         public bool IsValid => Validate();
 
-        public string? ListElement => null;
+        public string? TriggeredBy => null;
 
         private bool Validate()
         {

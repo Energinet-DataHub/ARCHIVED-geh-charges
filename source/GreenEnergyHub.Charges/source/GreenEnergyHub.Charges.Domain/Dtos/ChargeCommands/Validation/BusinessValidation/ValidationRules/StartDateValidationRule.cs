@@ -52,6 +52,6 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessV
                 .ToInstant();
         }
 
-        public string? ListElement => null;
+        public string? TriggeredBy => null;
     }
 }

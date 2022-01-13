@@ -28,6 +28,6 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation
 
         public ValidationRuleIdentifier ValidationRuleIdentifier { get; }
 
-        public string? ListElement => null;
+        public string? TriggeredBy => null;
     }
 }

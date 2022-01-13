@@ -31,6 +31,6 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands.Validation.Busi
 
         public bool IsValid => _existingCharge is not null;
 
-        public string? ListElement => null;
+        public string? TriggeredBy => null;
     }
 }
