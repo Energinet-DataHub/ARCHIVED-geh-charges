@@ -33,9 +33,7 @@ Invoke-Expression "dotnet build ..\GreenEnergyHub.Charges.ApplyDBMigrationsApp\G
 Invoke-Expression "dotnet run --project ..\\GreenEnergyHub.Charges.ApplyDBMigrationsApp -- ""Server=(localdb)\mssqllocaldb;Database=ChargesDatabase;Trusted_Connection=True;"" includeSeedData includeTestData"
 
 # Update scaffolded model
-Invoke-Expression "dotnet ef dbcontext scaffold ""$connectionString"" Microsoft.EntityFrameworkCore.SqlServer --output-dir $outputDir --context $context --schema $schema --force"
+Invoke-Expression "dotnet ef dbcontext scaffold ""$connectionString"" Microsoft.EntityFrameworkCore.SqlServer --output-dir $outputDir --context $context --schema $schema --force --no-onconfiguring"
 
 # Apply .editorconfig styles and fix .editorconfig analyzer violations - e.g. add license header and add empty line between props
 Invoke-Expression "dotnet format -s -a --include .\Model\"
-
-Write-Warning "Remove or comment out the if-clause in the method 'OnConfiguring' of the generated file '$outputDir\$context.cs'."

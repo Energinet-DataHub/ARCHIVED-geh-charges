@@ -23,11 +23,19 @@ namespace GreenEnergyHub.Charges.TestCore.Attributes
     public class AutoMoqDataAttribute : AutoDataAttribute
     {
         public AutoMoqDataAttribute()
-            : base(() => new Fixture().Customize(
-                new CompositeCustomization(
-                    new AutoMoqCustomization(),
-                    new ProtobufCustomization(),
-                    new NodaTimeCustomization())))
+            : base(() =>
+            {
+                var fixture = new Fixture();
+                fixture.Customize(
+                    new CompositeCustomization(
+                        new AutoMoqCustomization(),
+                        new ProtobufCustomization(),
+                        new NodaTimeCustomization()));
+
+                fixture.Behaviors.Add(new OmitOnRecursionBehavior(1));
+
+                return fixture;
+            })
         {
         }
     }
