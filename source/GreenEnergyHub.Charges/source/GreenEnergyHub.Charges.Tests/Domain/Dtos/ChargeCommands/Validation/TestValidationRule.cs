@@ -27,7 +27,5 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation
         public bool IsValid { get; }
 
         public ValidationRuleIdentifier ValidationRuleIdentifier { get; }
-
-        public string? TriggeredBy => null;
     }
 }

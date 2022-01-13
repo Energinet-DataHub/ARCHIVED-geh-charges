@@ -31,7 +31,5 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputVali
 
         public bool IsValid => _chargeCommand.ChargeOperation.VatClassification
             is VatClassification.NoVat or VatClassification.Vat25;
-
-        public string? TriggeredBy => null;
     }
 }

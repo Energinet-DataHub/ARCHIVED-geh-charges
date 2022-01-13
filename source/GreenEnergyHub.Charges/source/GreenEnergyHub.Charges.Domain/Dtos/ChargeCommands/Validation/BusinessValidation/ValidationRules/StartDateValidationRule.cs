@@ -51,7 +51,5 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessV
                 .GetZonedDateTime(localDate.AtMidnight(), ResolutionStrategy.Leniently)
                 .ToInstant();
         }
-
-        public string? TriggeredBy => null;
     }
 }

@@ -34,7 +34,5 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessV
         public ValidationRuleIdentifier ValidationRuleIdentifier => ValidationRuleIdentifier.UpdateNotYetSupported;
 
         public bool IsValid => _charge == null;
-
-        public string? TriggeredBy => null;
     }
 }

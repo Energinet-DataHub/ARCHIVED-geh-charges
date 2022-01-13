@@ -31,7 +31,5 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputVali
 
         public bool IsValid =>
             _chargeCommand.ChargeOperation.ChargeDescription.Length <= MaximumChargeDescriptionLength;
-
-        public string? TriggeredBy => null;
     }
 }

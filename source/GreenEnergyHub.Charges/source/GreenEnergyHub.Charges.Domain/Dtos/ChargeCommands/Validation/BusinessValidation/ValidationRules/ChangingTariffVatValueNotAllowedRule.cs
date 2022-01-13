@@ -32,7 +32,5 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessV
             ValidationRuleIdentifier.ChangingTariffVatValueNotAllowed;
 
         public bool IsValid => _command.ChargeOperation.VatClassification == _charge.VatClassification;
-
-        public string? TriggeredBy => null;
     }
 }

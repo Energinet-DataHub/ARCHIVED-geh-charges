@@ -34,6 +34,13 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.Validation
         /// In these cases this property will tell which element triggered the rule
         /// identified by <see cref="ValidationRuleIdentifier"/> to be violated.
         /// </summary>
-        public string? TriggeredBy { get; }
+        public string TriggeredBy =>
+            TriggeredByIsApplicableForValidationRule
+                ? TriggeredByBackingField
+                : $"Not applicable for validation rule {ValidationRuleIdentifier}";
+
+        protected bool TriggeredByIsApplicableForValidationRule => false;
+
+        protected string TriggeredByBackingField => string.Empty;
     }
 }

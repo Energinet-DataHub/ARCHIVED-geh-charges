@@ -32,8 +32,17 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputVali
 
         public bool IsValid => _chargeCommand.ChargeOperation.Points.All(Validate);
 
-        public string? TriggeredBy =>
-            _chargeCommand.ChargeOperation.Points.FirstOrDefault(Validate)?.Position.ToString();
+        public string TriggeredBy =>
+            TriggeredByIsApplicableForValidationRule && _chargeCommand.ChargeOperation.Points.Any()
+            ? _chargeCommand.ChargeOperation.Points.First(Validate).Position.ToString()
+            : string.Empty;
+
+        protected virtual bool TriggeredByIsApplicableForValidationRule => true;
+
+        /*protected virtual string TriggeredByBackingField =>
+            TriggeredByIsApplicableForValidationRule && _chargeCommand.ChargeOperation.Points.Any()
+            ? _chargeCommand.ChargeOperation.Points.First(Validate).Position.ToString()
+            : string.Empty;*/
 
         private bool Validate(Point point)
         {
