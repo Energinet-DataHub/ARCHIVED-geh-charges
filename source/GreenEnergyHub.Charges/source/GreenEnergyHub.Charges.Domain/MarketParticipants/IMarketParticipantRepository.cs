@@ -37,5 +37,7 @@ namespace GreenEnergyHub.Charges.Domain.MarketParticipants
         Task<MarketParticipant> GetAsync(MarketParticipantRole marketParticipantRole);
 
         Task<IReadOnlyCollection<MarketParticipant>> GetAsync(IEnumerable<Guid> ids);
+
+        Task<HubSenderMarketParticipant.HubSenderMarketParticipant> GetHubSenderAsync();
     }
 }

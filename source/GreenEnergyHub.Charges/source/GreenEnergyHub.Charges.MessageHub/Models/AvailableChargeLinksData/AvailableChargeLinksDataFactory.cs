@@ -24,7 +24,7 @@ using GreenEnergyHub.Charges.MessageHub.Models.AvailableData;
 namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksData
 {
     public class AvailableChargeLinksDataFactory
-        : IAvailableDataFactory<AvailableChargeLinksData, ChargeLinksAcceptedEvent>
+        : AvailableDataFactoryBase<AvailableChargeLinksData, ChargeLinksAcceptedEvent>
     {
         private readonly IMarketParticipantRepository _marketParticipantRepository;
         private readonly IChargeRepository _chargeRepository;
@@ -34,13 +34,14 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksData
             IMarketParticipantRepository marketParticipantRepository,
             IChargeRepository chargeRepository,
             IMessageMetaDataContext messageMetaDataContext)
+            : base(marketParticipantRepository)
         {
             _marketParticipantRepository = marketParticipantRepository;
             _chargeRepository = chargeRepository;
             _messageMetaDataContext = messageMetaDataContext;
         }
 
-        public async Task<IReadOnlyList<AvailableChargeLinksData>> CreateAsync(
+        public override async Task<IReadOnlyList<AvailableChargeLinksData>> CreateAsync(
             ChargeLinksAcceptedEvent acceptedEvent)
         {
             // It is the responsibility of the Charge Domain to find the recipient and
@@ -55,10 +56,13 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksData
             {
                 var chargeIdentifier = new ChargeIdentifier(link.SenderProvidedChargeId, link.ChargeOwnerId, link.ChargeType);
                 var charge = await _chargeRepository.GetAsync(chargeIdentifier).ConfigureAwait(false);
+                var sender = await GetSenderAsync().ConfigureAwait(false);
 
                 if (ShouldMakeDataAvailableForGridOwnerOfMeteringPoint(charge))
                 {
                     result.Add(new AvailableChargeLinksData(
+                        sender.MarketParticipantId,
+                        sender.SenderRole,
                         recipient.MarketParticipantId,
                         MarketParticipantRole.GridAccessProvider,
                         acceptedEvent.ChargeLinksCommand.Document.BusinessReasonCode,

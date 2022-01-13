@@ -25,6 +25,8 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableData
     public abstract class AvailableDataBase
     {
         protected AvailableDataBase(
+            string senderId,
+            MarketParticipantRole senderRole,
             string recipientId,
             MarketParticipantRole recipientRole,
             BusinessReasonCode businessReasonCode,
@@ -32,6 +34,8 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableData
             Guid availableDataReferenceId)
         {
             Id = Guid.NewGuid();
+            SenderId = senderId;
+            SenderRole = senderRole;
             RecipientId = recipientId;
             RecipientRole = recipientRole;
             BusinessReasonCode = businessReasonCode;
@@ -39,11 +43,11 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableData
             AvailableDataReferenceId = availableDataReferenceId;
         }
 
-        protected AvailableDataBase(string recipientId)
+        // ReSharper disable once UnusedMember.Local - needed by persistence
+        protected AvailableDataBase()
         {
-            Id = Guid.NewGuid();
-            RecipientId = recipientId;
-            AvailableDataReferenceId = Guid.NewGuid();
+            SenderId = null!;
+            RecipientId = null!;
         }
 
         /// <summary>
@@ -51,6 +55,13 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableData
         /// ready for shipping when the market participant peeks
         /// </summary>
         public Guid Id { get; }
+
+        /// <summary>
+        /// The ID of the sender of this piece of data.
+        /// </summary>
+        public string SenderId { get; }
+
+        public MarketParticipantRole SenderRole { get; }
 
         /// <summary>
         /// The ID of the recipient this piece of data is meant for

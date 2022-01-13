@@ -13,28 +13,21 @@
 // limitations under the License.
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
-using GreenEnergyHub.Charges.Domain.Configuration;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 
-namespace GreenEnergyHub.Charges.Infrastructure.Configuration
+namespace GreenEnergyHub.Charges.Domain.HubSenderMarketParticipant
 {
-    public class HubSenderConfiguration : IHubSenderConfiguration
+    public class HubSenderMarketParticipant : MarketParticipant
     {
-        private readonly MarketParticipant _marketParticipant;
-
-        public HubSenderConfiguration(string senderId, MarketParticipantRole senderRole)
+        public HubSenderMarketParticipant(Guid id, string marketParticipantId, bool isActive, IEnumerable<MarketParticipantRole> roles)
+            : base(id, marketParticipantId, isActive, roles)
         {
-            _marketParticipant = new MarketParticipant(
-                Guid.NewGuid(),
-                senderId,
-                true,
-                new[] { senderRole }.ToList());
+            if (!roles.Contains(SenderRole))
+                throw new ArgumentException($"The hub sender market participant must have the role {SenderRole}.");
         }
 
-        public MarketParticipant GetSenderMarketParticipant()
-        {
-            return _marketParticipant;
-        }
+        public MarketParticipantRole SenderRole => MarketParticipantRole.MeteringPointAdministrator;
     }
 }

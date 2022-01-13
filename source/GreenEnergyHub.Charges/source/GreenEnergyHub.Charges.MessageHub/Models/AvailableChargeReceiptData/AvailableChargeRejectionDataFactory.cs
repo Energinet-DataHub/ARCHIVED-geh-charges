@@ -17,6 +17,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandRejectedEvents;
+using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.Infrastructure.Core.Cim.MarketDocument;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessageMetaData;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableData;
@@ -24,26 +25,33 @@ using GreenEnergyHub.Charges.MessageHub.Models.AvailableData;
 namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
 {
     public class AvailableChargeRejectionDataFactory :
-        IAvailableDataFactory<AvailableChargeReceiptData, ChargeCommandRejectedEvent>
+        AvailableDataFactoryBase<AvailableChargeReceiptData, ChargeCommandRejectedEvent>
     {
         private readonly IMessageMetaDataContext _messageMetaDataContext;
         private readonly IAvailableChargeReceiptValidationErrorFactory _availableChargeReceiptValidationErrorFactory;
 
         public AvailableChargeRejectionDataFactory(
             IMessageMetaDataContext messageMetaDataContext,
-            IAvailableChargeReceiptValidationErrorFactory availableChargeReceiptValidationErrorFactory)
+            IAvailableChargeReceiptValidationErrorFactory availableChargeReceiptValidationErrorFactory,
+            IMarketParticipantRepository marketParticipantRepository)
+            : base(marketParticipantRepository)
         {
             _messageMetaDataContext = messageMetaDataContext;
             _availableChargeReceiptValidationErrorFactory = availableChargeReceiptValidationErrorFactory;
         }
 
-        public Task<IReadOnlyList<AvailableChargeReceiptData>> CreateAsync(ChargeCommandRejectedEvent input)
+        public override async Task<IReadOnlyList<AvailableChargeReceiptData>> CreateAsync(ChargeCommandRejectedEvent input)
         {
-            IReadOnlyList<AvailableChargeReceiptData> result = new List<AvailableChargeReceiptData>()
+            var recipient = input.Command.Document.Sender; // The original sender is the recipient of the receipt
+            var sender = await GetSenderAsync().ConfigureAwait(false);
+
+            return new List<AvailableChargeReceiptData>()
             {
                 new AvailableChargeReceiptData(
-                    input.Command.Document.Sender.Id, // The original sender is the recipient of the receipt
-                    input.Command.Document.Sender.BusinessProcessRole,
+                    sender.MarketParticipantId,
+                    sender.SenderRole,
+                    recipient.Id,
+                    recipient.BusinessProcessRole,
                     input.Command.Document.BusinessReasonCode,
                     _messageMetaDataContext.RequestDataTime,
                     Guid.NewGuid(), // ID of each available piece of data must be unique
@@ -51,8 +59,6 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
                     input.Command.ChargeOperation.Id,
                     GetReasons(input)),
             };
-
-            return Task.FromResult(result);
         }
 
         private List<AvailableReceiptValidationError> GetReasons(ChargeCommandRejectedEvent input)

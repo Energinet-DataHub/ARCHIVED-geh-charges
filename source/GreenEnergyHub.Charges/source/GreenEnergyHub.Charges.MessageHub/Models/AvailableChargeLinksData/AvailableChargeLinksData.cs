@@ -23,6 +23,8 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksData
     public class AvailableChargeLinksData : AvailableDataBase
     {
         public AvailableChargeLinksData(
+            string senderId,
+            MarketParticipantRole senderRole,
             string recipientId,
             MarketParticipantRole recipientRole,
             BusinessReasonCode businessReasonCode,
@@ -35,7 +37,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksData
             int factor,
             Instant startDateTime,
             Instant endDateTime)
-                : base(recipientId, recipientRole, businessReasonCode, requestDateTime, availableDataReferenceId)
+                : base(senderId, senderRole, recipientId, recipientRole, businessReasonCode, requestDateTime, availableDataReferenceId)
         {
             ChargeId = chargeId;
             ChargeOwner = chargeOwner;

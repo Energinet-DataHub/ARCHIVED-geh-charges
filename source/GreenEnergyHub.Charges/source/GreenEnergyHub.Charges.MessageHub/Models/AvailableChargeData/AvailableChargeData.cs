@@ -24,6 +24,8 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeData
     public class AvailableChargeData : AvailableDataBase
     {
         public AvailableChargeData(
+            string senderId,
+            MarketParticipantRole senderRole,
             string recipientId,
             MarketParticipantRole recipientRole,
             BusinessReasonCode businessReasonCode,
@@ -41,7 +43,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeData
             bool transparentInvoicing,
             Resolution resolution,
             List<AvailableChargeDataPoint> points)
-            : base(recipientId, recipientRole, businessReasonCode, requestDateTime, availableDataReferenceId)
+            : base(senderId, senderRole, recipientId, recipientRole, businessReasonCode, requestDateTime, availableDataReferenceId)
         {
             ChargeId = chargeId;
             ChargeOwner = chargeOwner;
@@ -57,17 +59,13 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeData
             _points = points;
         }
 
-        /// <summary>
-        /// Used implicitly by persistence.
-        /// </summary>
-        // ReSharper disable once UnusedMember.Local
-        private AvailableChargeData(string recipientId, string chargeId, string chargeOwner, string chargeName, string chargeDescription)
-            : base(recipientId)
+        // ReSharper disable once UnusedMember.Local - Used implicitly by persistence
+        private AvailableChargeData()
         {
-            ChargeId = chargeId;
-            ChargeOwner = chargeOwner;
-            ChargeName = chargeName;
-            ChargeDescription = chargeDescription;
+            ChargeId = null!;
+            ChargeOwner = null!;
+            ChargeName = null!;
+            ChargeDescription = null!;
             _points = new List<AvailableChargeDataPoint>();
         }
 

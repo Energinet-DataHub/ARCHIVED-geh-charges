@@ -39,8 +39,8 @@ namespace GreenEnergyHub.Charges.FunctionHost.ChargeLinks
         [Function(FunctionName)]
         public async Task RunAsync(
             [ServiceBusTrigger(
-                "%" + EnvironmentSettingNames.ChargeLinkReceivedTopicName + "%",
-                "%" + EnvironmentSettingNames.ChargeLinkReceivedSubscriptionName + "%",
+                "%" + EnvironmentSettingNames.ChargeLinksReceivedTopicName + "%",
+                "%" + EnvironmentSettingNames.ChargeLinksReceivedSubscriptionName + "%",
                 Connection = EnvironmentSettingNames.DomainEventListenerConnectionString)]
             byte[] data)
         {

@@ -24,7 +24,7 @@ using GreenEnergyHub.Charges.MessageHub.Models.AvailableData;
 
 namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeData
 {
-    public class AvailableChargeDataFactory : IAvailableDataFactory<AvailableChargeData, ChargeCommandAcceptedEvent>
+    public class AvailableChargeDataFactory : AvailableDataFactoryBase<AvailableChargeData, ChargeCommandAcceptedEvent>
     {
         private readonly IMarketParticipantRepository _marketParticipantRepository;
         private readonly IMessageMetaDataContext _messageMetaDataContext;
@@ -32,12 +32,13 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeData
         public AvailableChargeDataFactory(
             IMarketParticipantRepository marketParticipantRepository,
             IMessageMetaDataContext messageMetaDataContext)
+            : base(marketParticipantRepository)
         {
             _marketParticipantRepository = marketParticipantRepository;
             _messageMetaDataContext = messageMetaDataContext;
         }
 
-        public async Task<IReadOnlyList<AvailableChargeData>> CreateAsync(ChargeCommandAcceptedEvent input)
+        public override async Task<IReadOnlyList<AvailableChargeData>> CreateAsync(ChargeCommandAcceptedEvent input)
         {
             var result = new List<AvailableChargeData>();
 
@@ -52,8 +53,11 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeData
                         operation.Points
                             .Select(x => new AvailableChargeDataPoint(x.Position, x.Price))
                             .ToList();
+                    var sender = await GetSenderAsync().ConfigureAwait(false);
 
                     result.Add(new AvailableChargeData(
+                        sender.MarketParticipantId,
+                        sender.SenderRole,
                         provider.MarketParticipantId,
                         MarketParticipantRole.GridAccessProvider,
                         input.Command.Document.BusinessReasonCode,

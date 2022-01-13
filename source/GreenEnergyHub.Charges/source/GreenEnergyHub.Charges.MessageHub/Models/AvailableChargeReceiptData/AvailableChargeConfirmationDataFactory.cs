@@ -16,29 +16,38 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandAcceptedEvents;
+using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.Infrastructure.Core.Cim.MarketDocument;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessageMetaData;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableData;
 
 namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
 {
-    public class AvailableChargeConfirmationDataFactory : IAvailableDataFactory<AvailableChargeReceiptData, ChargeCommandAcceptedEvent>
+    public class AvailableChargeConfirmationDataFactory
+        : AvailableDataFactoryBase<AvailableChargeReceiptData, ChargeCommandAcceptedEvent>
     {
         private readonly IMessageMetaDataContext _messageMetaDataContext;
 
         public AvailableChargeConfirmationDataFactory(
-            IMessageMetaDataContext messageMetaDataContext)
+            IMessageMetaDataContext messageMetaDataContext,
+            IMarketParticipantRepository marketParticipantRepository)
+            : base(marketParticipantRepository)
         {
             _messageMetaDataContext = messageMetaDataContext;
         }
 
-        public Task<IReadOnlyList<AvailableChargeReceiptData>> CreateAsync(ChargeCommandAcceptedEvent input)
+        public override async Task<IReadOnlyList<AvailableChargeReceiptData>> CreateAsync(ChargeCommandAcceptedEvent input)
         {
-            IReadOnlyList<AvailableChargeReceiptData> result = new List<AvailableChargeReceiptData>()
+            var recipient = input.Command.Document.Sender; // The original sender is the recipient of the receipt
+            var sender = await GetSenderAsync().ConfigureAwait(false);
+
+            return new List<AvailableChargeReceiptData>()
             {
                 new AvailableChargeReceiptData(
-                    input.Command.Document.Sender.Id, // The original sender is the recipient of the receipt
-                    input.Command.Document.Sender.BusinessProcessRole,
+                    sender.MarketParticipantId,
+                    sender.SenderRole,
+                    recipient.Id,
+                    recipient.BusinessProcessRole,
                     input.Command.Document.BusinessReasonCode,
                     _messageMetaDataContext.RequestDataTime,
                     Guid.NewGuid(), // ID of each available piece of data must be unique
@@ -46,8 +55,6 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
                     input.Command.ChargeOperation.Id,
                     new List<AvailableReceiptValidationError>()),
             };
-
-            return Task.FromResult(result);
         }
     }
 }

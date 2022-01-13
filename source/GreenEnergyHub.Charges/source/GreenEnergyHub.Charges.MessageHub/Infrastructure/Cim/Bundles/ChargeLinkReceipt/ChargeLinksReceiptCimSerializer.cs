@@ -15,7 +15,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
-using GreenEnergyHub.Charges.Domain.Configuration;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.Infrastructure.Core.Cim.MarketActivityRecord;
 using GreenEnergyHub.Charges.Infrastructure.Core.Cim.MarketDocument;
@@ -29,10 +28,9 @@ namespace GreenEnergyHub.Charges.MessageHub.Infrastructure.Cim.Bundles.ChargeLin
         : CimSerializer<AvailableChargeLinksReceiptData>
     {
         public ChargeLinksReceiptCimSerializer(
-            IHubSenderConfiguration hubSenderConfiguration,
             IClock clock,
             ICimIdProvider cimIdProvider)
-            : base(hubSenderConfiguration, clock, cimIdProvider)
+            : base(clock, cimIdProvider)
         {
         }
 
