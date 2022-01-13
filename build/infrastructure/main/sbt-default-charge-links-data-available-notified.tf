@@ -12,28 +12,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-module "sbt_link_command_accepted" {
+module "sbt_default_charge_links_available_notified" {
   source              = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//azure/service-bus-topic?ref=5.1.0"
 
-  name                = "link-command-accepted"
+  name                = "default-charge-links-available"
   namespace_name      = module.sb_charges.name
   resource_group_name = azurerm_resource_group.this.name
   subscriptions       = [
     {
-      name                = "chargelinkaccepted-sub-replier"
+      name                = "default-charge-links-available-notified"
       max_delivery_count  = 1
     },
-    {
-      name                = "chargelinkaccepted-sub-eventpublisher"
-      max_delivery_count  = 1
-    },
-    {
-      name                = "chargelinkaccepted-sub-dataavailablenotifier"
-      max_delivery_count  = 1
-    },
-    {
-      name                = "chargelinkaccepted-sub-confirmationnotifier"
-      max_delivery_count  = 1
-    },	
   ]
 }
