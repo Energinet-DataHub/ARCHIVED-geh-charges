@@ -27,10 +27,10 @@ namespace GreenEnergyHub.Charges.Tests.Domain.HubSenderMarketParticipants
         [InlineAutoMoqData]
         public void Ctor_WhenNoRoles_ThrowsArgumentException(
             Guid anyGuid,
-            string anyMarketParticipantId)
+            string anyMarketParticipantId,
+            List<MarketParticipantRole> emptyRoles)
         {
-            // ReSharper disable once CollectionNeverUpdated.Local
-            var emptyRoles = new List<MarketParticipantRole>();
+            emptyRoles.Clear();
             Assert.Throws<ArgumentException>(
                 () => new HubSenderMarketParticipant(anyGuid, anyMarketParticipantId, true, emptyRoles));
         }
