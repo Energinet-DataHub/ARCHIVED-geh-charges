@@ -45,6 +45,7 @@ namespace GreenEnergyHub.Charges.Tests.WebApi
             // Act
             var actual = chargeLinks.AsChargeLinkDto();
 
+            // Assert
             actual.Should().NotContain(c => c.EndDate == InstantExtensions.GetEndDefault().ToDateTimeUtc());
         }
     }
