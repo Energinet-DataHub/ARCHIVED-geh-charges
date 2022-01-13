@@ -17,6 +17,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
+using Azure.Storage.Blobs;
 using Energinet.DataHub.Core.FunctionApp.TestCommon;
 using Energinet.DataHub.Core.FunctionApp.TestCommon.Azurite;
 using Energinet.DataHub.Core.FunctionApp.TestCommon.Configuration;
@@ -207,6 +208,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures
 
             await InitializeMessageHubAsync();
 
+            await SetUpRequestResponseLoggingAsync();
+
             // => Database
             await DatabaseManager.CreateDatabaseAsync();
 
@@ -270,6 +273,15 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures
                 ChargesServiceBusResourceNames.MessageHubStorageContainerName);
 
             MessageHubMock = new MessageHubSimulation(messageHubSimulationConfig);
+        }
+
+        private async Task SetUpRequestResponseLoggingAsync()
+        {
+            Environment.SetEnvironmentVariable(EnvironmentSettingNames.RequestResponseLoggingConnectionString, ChargesServiceBusResourceNames.RequestResponseLoggingConnectionString);
+            Environment.SetEnvironmentVariable(EnvironmentSettingNames.RequestResponseLoggingContainerName, ChargesServiceBusResourceNames.RequestResponseLoggingContainerName);
+
+            var storage = new BlobContainerClient(ChargesServiceBusResourceNames.RequestResponseLoggingConnectionString, ChargesServiceBusResourceNames.RequestResponseLoggingContainerName);
+            await storage.CreateIfNotExistsAsync();
         }
 
         private static string GetBuildConfiguration()
