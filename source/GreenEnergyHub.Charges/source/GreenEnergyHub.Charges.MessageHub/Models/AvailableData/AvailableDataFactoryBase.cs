@@ -13,23 +13,25 @@
 // limitations under the License.
 
 using System.Collections.Generic;
-using System.IO;
 using System.Threading.Tasks;
+using GreenEnergyHub.Charges.Domain.HubSenderMarketParticipant;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
-using GreenEnergyHub.Charges.MessageHub.Models.AvailableData;
 
-namespace GreenEnergyHub.Charges.MessageHub.Infrastructure.Cim
+namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableData
 {
-    public interface ICimSerializer<TAvailableData>
+    public abstract class AvailableDataFactoryBase<TAvailableData, TInput> : IAvailableDataFactory<TAvailableData, TInput>
         where TAvailableData : AvailableDataBase
     {
-        Task SerializeToStreamAsync(
-            IEnumerable<TAvailableData> availableData,
-            Stream stream,
-            BusinessReasonCode businessReasonCode,
-            string senderId,
-            MarketParticipantRole senderRole,
-            string recipientId,
-            MarketParticipantRole recipientRole);
+        private readonly IMarketParticipantRepository _marketParticipantRepository;
+
+        protected AvailableDataFactoryBase(IMarketParticipantRepository marketParticipantRepository)
+        {
+            _marketParticipantRepository = marketParticipantRepository;
+        }
+
+        public abstract Task<IReadOnlyList<TAvailableData>> CreateAsync(TInput input);
+
+        protected async Task<HubSenderMarketParticipant> GetSenderAsync() =>
+            await _marketParticipantRepository.GetHubSenderAsync().ConfigureAwait(false);
     }
 }
