@@ -19,7 +19,6 @@ using GreenEnergyHub.Charges.QueryApi.QueryPredicates;
 using GreenEnergyHub.Charges.WebApi.ModelPredicates;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 
 namespace GreenEnergyHub.Charges.WebApi.Controllers
 {
