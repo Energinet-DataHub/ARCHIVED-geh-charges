@@ -48,7 +48,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.MessageMetaData
             if (session != null)
             {
                 var sessionData = _jsonSerializer.Deserialize<Dictionary<string, object>>(session.ToString());
-                return sessionData["SessionId"].ToString() !;
+                return sessionData["SessionId"].ToString()!;
             }
 
             return null;
