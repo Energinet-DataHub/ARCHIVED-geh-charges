@@ -22,7 +22,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.Validation
         /// <summary>
         /// Violation of some validation rules are triggered by an element in a list.
         /// In these cases this property will tell which element triggered the rule
-        /// identified by <see cref="ValidationRuleIdentifier"/> to be violated.
+        /// identified by <see cref="ValidationRuleIdentifier"/>.
         /// </summary>
         public string TriggeredBy { get; }
     }
