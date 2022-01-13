@@ -37,15 +37,15 @@ module "func_functionhost" {
     DOMAINEVENT_LISTENER_CONNECTION_STRING                          = module.sb_charges.primary_connection_strings["listen"]
     CHARGE_CREATED_TOPIC_NAME                                       = data.azurerm_key_vault_secret.sbt_charge_created_name.value
     CHARGE_PRICES_UPDATED_TOPIC_NAME                                = data.azurerm_key_vault_secret.sbt_charge_prices_updated_name.value
-    CHARGE_LINKS_ACCEPTED_TOPIC_NAME                                 = module.sbt_links_command_accepted.name
-    CHARGE_LINKS_REJECTED_TOPIC_NAME                                 = module.sbt_links_command_rejected.name
-    CHARGELINKSACCEPTED_SUB_REPLIER                                  = "chargelinksaccepted-sub-replier"
-    CHARGELINKSACCEPTED_SUB_EVENTPUBLISHER                           = "chargelinksaccepted-sub-eventpublisher"
-    CHARGELINKSACCEPTED_SUB_DATAAVAILABLENOTIFIER                    = "chargelinksaccepted-sub-dataavailablenotifier"
-    CHARGELINKSACCEPTED_SUB_CONFIRMATIONNOTIFIER                     = "chargelinksaccepted-sub-confirmationnotifier"
-    CHARGE_LINKS_CREATED_TOPIC_NAME                                  = data.azurerm_key_vault_secret.sbt_charge_link_created_name.value
-    CHARGE_LINKS_RECEIVED_TOPIC_NAME                                 = module.sbt_links_command_received.name
-    CHARGE_LINKS_RECEIVED_SUBSCRIPTION_NAME                          = "links-command-received-receiver"
+    CHARGE_LINKS_ACCEPTED_TOPIC_NAME                                = module.sbt_links_command_accepted.name
+    CHARGE_LINKS_REJECTED_TOPIC_NAME                                = module.sbt_links_command_rejected.name
+    CHARGE_LINKS_ACCEPTED_SUB_REPLIER                               = "charge-links-accepted-sub-replier"
+    CHARGE_LINKS_ACCEPTED_SUB_EVENTPUBLISHER                        = "charge-links-accepted-sub-eventpublisher"
+    CHARGE_LINKS_ACCEPTED_SUB_DATAAVAILABLENOTIFIER                 = "charge-links-accepted-sub-dataavailablenotifier"
+    CHARGE_LINKS_ACCEPTED_SUB_CONFIRMATIONNOTIFIER                  = "charge-links-accepted-sub-confirmationnotifier"
+    CHARGE_LINKS_CREATED_TOPIC_NAME                                 = data.azurerm_key_vault_secret.sbt_charge_link_created_name.value
+    CHARGE_LINKS_RECEIVED_TOPIC_NAME                                = module.sbt_links_command_received.name
+    CHARGE_LINKS_RECEIVED_SUBSCRIPTION_NAME                         = "links-command-received-receiver"
     COMMAND_ACCEPTED_TOPIC_NAME                                     = module.sbt_command_accepted.name
     COMMAND_ACCEPTED_RECEIVER_SUBSCRIPTION_NAME                     = "charge-command-accepted-receiver"
     CHARGEACCEPTED_SUB_DATAAVAILABLENOTIFIER                        = "chargeaccepted-sub-dataavailablenotifier"
@@ -56,7 +56,7 @@ module "func_functionhost" {
     COMMAND_REJECTED_SUBSCRIPTION_NAME                              = "command-rejected"
     DEFAULT_CHARGE_LINKS_DATA_AVAILABLE_NOTIFIED_TOPIC_NAME         = module.sbt_default_charge_links_available_notified.name
     DEFAULT_CHARGE_LINKS_DATA_AVAILABLE_NOTIFIED_SUBSCRIPTION_NAME  = "default-charge-links-available-notified"
-    CREATE_LINKS_REQUEST_QUEUE_NAME                                  = data.azurerm_key_vault_secret.sbq_create_link_request_name.value
+    CREATE_LINKS_REQUEST_QUEUE_NAME                                 = data.azurerm_key_vault_secret.sbq_create_link_request_name.value
     CONSUMPTION_METERING_POINT_CREATED_TOPIC_NAME                   = data.azurerm_key_vault_secret.sbt_consumption_metering_point_created_name.value
     CONSUMPTION_METERING_POINT_CREATED_SUBSCRIPTION_NAME            = data.azurerm_key_vault_secret.sbs_consumption_metering_point_created_sub_charges_name.value
 

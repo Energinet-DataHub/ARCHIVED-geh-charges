@@ -59,17 +59,17 @@
     "COMMAND_REJECTED_SUBSCRIPTION_NAME": "command-rejected",
 
     // Internal, charge links, received
-    "CHARGE_LINKS_RECEIVED_TOPIC_NAME": "link-command-received",
+    "CHARGE_LINKS_RECEIVED_TOPIC_NAME": "links-command-received",
     "CHARGE_LINKS_RECEIVED_SUBSCRIPTION_NAME": "links-command-received-receiver",
 
     // Internal, charge links, accepted
     "CHARGE_LINKS_ACCEPTED_TOPIC_NAME": "links-command-accepted",
     "CHARGE_LINKS_REJECTED_TOPIC_NAME": "links-command-rejected",
     "CHARGE_LINKS_REJECTED_SUBSCRIPTION_NAME": "charge-links-command-rejected",
-    "CHARGELINKSACCEPTED_SUB_CONFIRMATIONNOTIFIER": "chargelinksaccepted-sub-confirmationnotifier",
-    "CHARGELINKSACCEPTED_SUB_DATAAVAILABLENOTIFIER": "chargelinksaccepted-sub-dataavailablenotifier",
-    "CHARGELINKSACCEPTED_SUB_EVENTPUBLISHER": "chargelinksaccepted-sub-eventpublisher",
-    "CHARGELINKSACCEPTED_SUB_REPLIER": "chargelinksaccepted-sub-replier",
+    "CHARGE_LINKS_ACCEPTED_SUB_CONFIRMATIONNOTIFIER": "charge_links_accepted-sub-confirmationnotifier",
+    "CHARGE_LINKS_ACCEPTED_SUB_DATAAVAILABLENOTIFIER": "charge_links_accepted-sub-dataavailablenotifier",
+    "CHARGE_LINKS_ACCEPTED_SUB_EVENTPUBLISHER": "charge_links_accepted-sub-eventpublisher",
+    "CHARGE_LINKS_ACCEPTED_SUB_REPLIER": "charge_links_accepted-sub-replier",
     "CREATE_LINKS_MESSAGES_REQUEST_QUEUE_NAME": "create-links-messages-request",
     "DEFAULT_CHARGE_LINKS_DATA_AVAILABLE_NOTIFIED_TOPIC_NAME": "default-charge-links-available",
     "DEFAULT_CHARGE_LINKS_DATA_AVAILABLE_NOTIFIED_SUBSCRIPTION_NAME": "default-charge-links-available-notified",
