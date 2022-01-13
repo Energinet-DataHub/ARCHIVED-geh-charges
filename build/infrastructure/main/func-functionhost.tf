@@ -56,7 +56,7 @@ module "func_functionhost" {
     COMMAND_REJECTED_SUBSCRIPTION_NAME                              = "command-rejected"
     DEFAULT_CHARGE_LINKS_DATA_AVAILABLE_NOTIFIED_TOPIC_NAME         = module.sbt_default_charge_links_available_notified.name
     DEFAULT_CHARGE_LINKS_DATA_AVAILABLE_NOTIFIED_SUBSCRIPTION_NAME  = "default-charge-links-available-notified"
-    CREATE_LINKS_REQUEST_QUEUE_NAME                                  = data.azurerm_key_vault_secret.sbq_create_links_request_name.value
+    CREATE_LINKS_REQUEST_QUEUE_NAME                                  = data.azurerm_key_vault_secret.sbq_create_link_request_name.value
     CONSUMPTION_METERING_POINT_CREATED_TOPIC_NAME                   = data.azurerm_key_vault_secret.sbt_consumption_metering_point_created_name.value
     CONSUMPTION_METERING_POINT_CREATED_SUBSCRIPTION_NAME            = data.azurerm_key_vault_secret.sbs_consumption_metering_point_created_sub_charges_name.value
 

@@ -45,12 +45,12 @@ namespace GreenEnergyHub.Charges.FunctionHost.Common
         public const string ChargePricesUpdatedTopicName = "CHARGE_PRICES_UPDATED_TOPIC_NAME";
 
         // Integration events, charge links
-        public const string ChargeLinkCreatedTopicName = "CHARGE_LINK_CREATED_TOPIC_NAME";
+        public const string ChargeLinksCreatedTopicName = "CHARGE_LINKS_CREATED_TOPIC_NAME";
 
         // Integration, metering point domain
         public const string ConsumptionMeteringPointCreatedTopicName = "CONSUMPTION_METERING_POINT_CREATED_TOPIC_NAME";
         public const string ConsumptionMeteringPointCreatedSubscriptionName = "CONSUMPTION_METERING_POINT_CREATED_SUBSCRIPTION_NAME";
-        public const string CreateLinkRequestQueueName = "CREATE_LINK_REQUEST_QUEUE_NAME";
+        public const string CreateLinksRequestQueueName = "CREATE_LINKS_REQUEST_QUEUE_NAME";
         public const string DefaultChargeLinksDataAvailableNotifiedTopicName =
             "DEFAULT_CHARGE_LINKS_DATA_AVAILABLE_NOTIFIED_TOPIC_NAME";
 
@@ -78,15 +78,15 @@ namespace GreenEnergyHub.Charges.FunctionHost.Common
         public const string CommandRejectedSubscriptionName = "COMMAND_REJECTED_SUBSCRIPTION_NAME";
 
         // Internal, charge links, received
-        public const string ChargeLinkReceivedTopicName = "CHARGE_LINK_RECEIVED_TOPIC_NAME";
-        public const string ChargeLinkReceivedSubscriptionName = "CHARGE_LINK_RECEIVED_SUBSCRIPTION_NAME";
+        public const string ChargeLinksReceivedTopicName = "CHARGE_LINKS_RECEIVED_TOPIC_NAME";
+        public const string ChargeLinksReceivedSubscriptionName = "CHARGE_LINKS_RECEIVED_SUBSCRIPTION_NAME";
 
         // Internal, charge links, accepted
-        public const string ChargeLinkAcceptedTopicName = "CHARGE_LINK_ACCEPTED_TOPIC_NAME";
-        public const string ChargeLinkAcceptedSubConfirmationNotifier = "CHARGELINKACCEPTED_SUB_CONFIRMATIONNOTIFIER";
-        public const string ChargeLinkAcceptedSubDataAvailableNotifier = "CHARGELINKACCEPTED_SUB_DATAAVAILABLENOTIFIER";
-        public const string ChargeLinkAcceptedSubEventPublisher = "CHARGELINKACCEPTED_SUB_EVENTPUBLISHER";
-        public const string ChargeLinkAcceptedReplier = "CHARGELINKACCEPTED_SUB_REPLIER";
+        public const string ChargeLinksAcceptedTopicName = "CHARGE_LINKS_ACCEPTED_TOPIC_NAME";
+        public const string ChargeLinksAcceptedSubConfirmationNotifier = "CHARGELINKSACCEPTED_SUB_CONFIRMATIONNOTIFIER";
+        public const string ChargeLinksAcceptedSubDataAvailableNotifier = "CHARGELINKSACCEPTED_SUB_DATAAVAILABLENOTIFIER";
+        public const string ChargeLinksAcceptedSubEventPublisher = "CHARGELINKACCEPTED_SUB_EVENTPUBLISHER";
+        public const string ChargeLinksAcceptedReplier = "CHARGELINKACCEPTED_SUB_REPLIER";
 
         // Internal, charge links, rejected
         public const string ChargeLinksRejectedTopicName = "CHARGE_LINKS_REJECTED_TOPIC_NAME";
