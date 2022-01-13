@@ -71,7 +71,7 @@
     "CHARGELINKSACCEPTED_SUB_EVENTPUBLISHER": "chargelinksaccepted-sub-eventpublisher",
     "CHARGELINKSACCEPTED_SUB_REPLIER": "chargelinksaccepted-sub-replier",
     "CREATE_LINKS_MESSAGES_REQUEST_QUEUE_NAME": "create-links-messages-request",
-    "DEFAULT_CHARGE_LINKS_DATA_AVAILABLE_NOTIFIED_TOPIC_NAME": "default-charge-link-available",
-    "DEFAULT_CHARGE_LINKS_DATA_AVAILABLE_NOTIFIED_SUBSCRIPTION_NAME": "default-charge-link-available-notified",
+    "DEFAULT_CHARGE_LINKS_DATA_AVAILABLE_NOTIFIED_TOPIC_NAME": "default-charge-links-available",
+    "DEFAULT_CHARGE_LINKS_DATA_AVAILABLE_NOTIFIED_SUBSCRIPTION_NAME": "default-charge-links-available-notified",
   }
 }
