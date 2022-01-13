@@ -84,13 +84,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
 
             var serviceBusClient = new ServiceBusClient(serviceBusConnectionString);
 
-            serviceCollection.AddScoped<IRequestResponseLogging>(_ =>
-            {
-                var requestResponseLogStorage = EnvironmentHelper.GetEnv(EnvironmentSettingNames.RequestResponseLoggingConnectionString);
-                var requestResponseLogContainerName = EnvironmentHelper.GetEnv(EnvironmentSettingNames.RequestResponseLoggingContainerName);
-
-                return new RequestResponseLoggingBlobStorage(requestResponseLogStorage, requestResponseLogContainerName);
-            });
+            AddRequestResponseLogging(serviceCollection);
 
             AddCreateDefaultChargeLinksReplier(serviceCollection, serviceBusClient);
             AddPostOfficeCommunication(
@@ -200,6 +194,17 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
             serviceCollection.AddServiceBus(serviceBusConnectionString);
             serviceCollection.AddApplicationServices();
             serviceCollection.AddStorageHandler(storageServiceConnectionString);
+        }
+
+        private static void AddRequestResponseLogging(IServiceCollection serviceCollection)
+        {
+            serviceCollection.AddScoped<IRequestResponseLogging>(_ =>
+            {
+                var requestResponseLogStorage = EnvironmentHelper.GetEnv(EnvironmentSettingNames.RequestResponseLoggingConnectionString);
+                var requestResponseLogContainerName = EnvironmentHelper.GetEnv(EnvironmentSettingNames.RequestResponseLoggingContainerName);
+
+                return new RequestResponseLoggingBlobStorage(requestResponseLogStorage, requestResponseLogContainerName);
+            });
         }
 
         private static void AddServiceBus(this IServiceCollection serviceCollection, string serviceBusConnectionString)

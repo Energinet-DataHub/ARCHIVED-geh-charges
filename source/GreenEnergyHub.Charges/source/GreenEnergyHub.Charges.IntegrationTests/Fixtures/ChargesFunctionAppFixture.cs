@@ -210,7 +210,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures
 
             await InitializeMessageHubAsync();
 
-            SetUpRequestResponseLogging();
+            await SetUpRequestResponseLoggingAsync();
 
             // => Database
             await DatabaseManager.CreateDatabaseAsync();
@@ -277,13 +277,13 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures
             MessageHubMock = new MessageHubSimulation(messageHubSimulationConfig);
         }
 
-        private void SetUpRequestResponseLogging()
+        private async Task SetUpRequestResponseLoggingAsync()
         {
             Environment.SetEnvironmentVariable(EnvironmentSettingNames.RequestResponseLoggingConnectionString, ChargesServiceBusResourceNames.RequestResponseLoggingConnectionString);
             Environment.SetEnvironmentVariable(EnvironmentSettingNames.RequestResponseLoggingContainerName, ChargesServiceBusResourceNames.RequestResponseLoggingContainerName);
 
             var storage = new BlobContainerClient(ChargesServiceBusResourceNames.RequestResponseLoggingConnectionString, ChargesServiceBusResourceNames.RequestResponseLoggingContainerName);
-            storage.CreateIfNotExists();
+            await storage.CreateIfNotExistsAsync();
         }
 
         private static string GetBuildConfiguration()
