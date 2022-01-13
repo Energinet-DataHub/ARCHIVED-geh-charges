@@ -16,30 +16,28 @@ using GreenEnergyHub.Charges.FunctionHost.Configuration;
 using GreenEnergyHub.Charges.Infrastructure.Core.Correlation;
 using GreenEnergyHub.Charges.Infrastructure.Core.Function;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessageMetaData;
+using Grpc.Core;
+using Microsoft.Azure.Functions.Worker;
+using Microsoft.DotNet.PlatformAbstractions;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
 namespace GreenEnergyHub.Charges.FunctionHost
 {
-    public static class Program
+#pragma warning disable SA1402
+    public class FunctionsApp
+#pragma warning restore SA1402
     {
-        public static void Main()
+        public void ConfigureFunctionsWorker(IFunctionsWorkerApplicationBuilder builder)
         {
-            var host = new HostBuilder()
-                .ConfigureFunctionsWorkerDefaults(builder =>
-                {
-                    builder.UseMiddleware<CorrelationIdMiddleware>();
-                    builder.UseMiddleware<FunctionTelemetryScopeMiddleware>();
-                    builder.UseMiddleware<MessageMetaDataMiddleware>();
-                    builder.UseMiddleware<FunctionInvocationLoggingMiddleware>();
-                })
-                .ConfigureServices(ConfigureServices)
-                .Build();
-
-            host.Run();
+            builder.UseMiddleware<CorrelationIdMiddleware>();
+            builder.UseMiddleware<FunctionTelemetryScopeMiddleware>();
+            builder.UseMiddleware<MessageMetaDataMiddleware>();
+            builder.UseMiddleware<FunctionInvocationLoggingMiddleware>();
         }
 
-        private static void ConfigureServices(HostBuilderContext hostBuilderContext, IServiceCollection serviceCollection)
+        public void ConfigureServices(HostBuilderContext hostBuilderContext, IServiceCollection serviceCollection)
         {
             SharedConfiguration.ConfigureServices(serviceCollection);
 
@@ -65,6 +63,21 @@ namespace GreenEnergyHub.Charges.FunctionHost
 
             // Message Hub
             BundleSenderEndpointConfiguration.ConfigureServices(serviceCollection);
+        }
+
+        public IHost Build()
+            => new HostBuilder()
+                .ConfigureFunctionsWorkerDefaults(ConfigureFunctionsWorker)
+                .ConfigureServices(ConfigureServices)
+                .Build();
+    }
+
+    public static class Program
+    {
+        public static void Main()
+        {
+            using var host = new FunctionsApp().Build();
+            host.Run();
         }
     }
 }
