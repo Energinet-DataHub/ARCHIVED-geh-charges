@@ -18,11 +18,12 @@ using AutoFixture.Xunit2;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandRejectedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation;
+using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using GreenEnergyHub.Charges.Infrastructure.Core.Cim;
 using GreenEnergyHub.Charges.Infrastructure.Core.Cim.MarketDocument;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessageMetaData;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData;
+using GreenEnergyHub.Charges.MessageHub.Models.AvailableData;
 using GreenEnergyHub.Charges.TestCore.Attributes;
 using Moq;
 using NodaTime;
@@ -38,8 +39,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptD
         [InlineAutoMoqData]
         public async Task CreateAsync_WhenCalledWithRejectedEvent_ReturnsAvailableData(
             [Frozen] Mock<IMessageMetaDataContext> messageMetaDataContext,
-            [Frozen] Mock<ICimValidationErrorCodeFactory> validationErrorCodeFactory,
-            [Frozen] Mock<ICimValidationErrorTextFactory> validationErrorTextFactory,
+            [Frozen] Mock<IAvailableChargeReceiptValidationErrorFactory> availableChargeReceiptValidationErrorFactory,
             ChargeCommandRejectedEvent rejectedEvent,
             Instant now,
             AvailableChargeRejectionDataFactory sut)
@@ -48,13 +48,11 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptD
             messageMetaDataContext.Setup(m => m.RequestDataTime).Returns(now);
 
             // fake error code and text
-            validationErrorCodeFactory.Setup(f => f
-                .Create(It.IsAny<ValidationRuleIdentifier>()))
-                .Returns<ReasonCode>(code => code);
-            validationErrorTextFactory.Setup(f => f
+            availableChargeReceiptValidationErrorFactory.Setup(f => f
                 .Create(It.IsAny<ValidationError>(), rejectedEvent.Command))
                 .Returns<ValidationError, ChargeCommand>(
-                    (identifier, _) => identifier.ValidationRuleIdentifier.ToString());
+                    (identifier, _)
+                    => new AvailableReceiptValidationError(ReasonCode.D01, identifier.ValidationRuleIdentifier.ToString()));
             var expectedValidationErrors =
                 rejectedEvent.ValidationErrors.Select(x => x.ValidationRuleIdentifier.ToString()).ToList();
 

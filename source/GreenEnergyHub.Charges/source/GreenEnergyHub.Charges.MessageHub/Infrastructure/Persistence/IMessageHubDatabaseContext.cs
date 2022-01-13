@@ -14,8 +14,8 @@
 
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeData;
-using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinkReceiptData;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksData;
+using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksReceiptData;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableData;
 using Microsoft.EntityFrameworkCore;
@@ -48,7 +48,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Infrastructure.Persistence
         /// <summary>
         /// AvailableChargeLinkReceiptData available in the database
         /// </summary>
-        DbSet<AvailableChargeLinkReceiptData> AvailableChargeLinkReceiptData { get; }
+        DbSet<AvailableChargeLinksReceiptData> AvailableChargeLinkReceiptData { get; }
 
         /// <summary>
         /// Saves changes to the database.

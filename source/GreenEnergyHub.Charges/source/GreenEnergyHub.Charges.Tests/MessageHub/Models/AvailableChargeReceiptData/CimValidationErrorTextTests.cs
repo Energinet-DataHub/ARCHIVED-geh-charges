@@ -15,7 +15,7 @@
 using System;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation;
+using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData;
 using GreenEnergyHub.Charges.TestCore.Attributes;
@@ -34,7 +34,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptD
             CimValidationErrorTextProvider cimValidationErrorTextProvider)
         {
             // Arrange
-            var sut = new CimValidationErrorTextFactory(cimValidationErrorTextProvider);
+            var sut = new ChargeCimValidationErrorTextFactory(cimValidationErrorTextProvider);
 
             var expected = CimValidationErrorTextTemplateMessages.ResolutionTariffValidationErrorText
                 .Replace("{{ChargeResolution}}", chargeCommand.ChargeOperation.Resolution.ToString())
@@ -83,7 +83,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptD
         {
             // Arrange
             var validationRuleIdentifiers = (ValidationRuleIdentifier[])Enum.GetValues(typeof(ValidationRuleIdentifier));
-            var sut = new CimValidationErrorTextFactory(cimValidationErrorTextProvider);
+            var sut = new ChargeCimValidationErrorTextFactory(cimValidationErrorTextProvider);
 
             // Act
             // Assert

@@ -27,11 +27,11 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
         IAvailableDataFactory<AvailableChargeReceiptData, ChargeCommandRejectedEvent>
     {
         private readonly IMessageMetaDataContext _messageMetaDataContext;
-        private readonly AvailableChargeReceiptValidationErrorFactory _availableChargeReceiptValidationErrorFactory;
+        private readonly IAvailableChargeReceiptValidationErrorFactory _availableChargeReceiptValidationErrorFactory;
 
         public AvailableChargeRejectionDataFactory(
             IMessageMetaDataContext messageMetaDataContext,
-            AvailableChargeReceiptValidationErrorFactory availableChargeReceiptValidationErrorFactory)
+            IAvailableChargeReceiptValidationErrorFactory availableChargeReceiptValidationErrorFactory)
         {
             _messageMetaDataContext = messageMetaDataContext;
             _availableChargeReceiptValidationErrorFactory = availableChargeReceiptValidationErrorFactory;
@@ -55,7 +55,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
             return Task.FromResult(result);
         }
 
-        private List<AvailableChargeReceiptValidationError> GetReasons(ChargeCommandRejectedEvent input)
+        private List<AvailableReceiptValidationError> GetReasons(ChargeCommandRejectedEvent input)
         {
             return input
                 .ValidationErrors

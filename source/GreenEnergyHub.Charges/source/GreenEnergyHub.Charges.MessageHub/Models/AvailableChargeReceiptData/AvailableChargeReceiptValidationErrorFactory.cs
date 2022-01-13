@@ -13,29 +13,30 @@
 // limitations under the License.
 
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation;
+using GreenEnergyHub.Charges.Domain.Dtos.Validation;
+using GreenEnergyHub.Charges.MessageHub.Models.AvailableData;
 
 namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
 {
-    public class AvailableChargeReceiptValidationErrorFactory
+    public class AvailableChargeReceiptValidationErrorFactory : IAvailableChargeReceiptValidationErrorFactory
     {
         private readonly ICimValidationErrorCodeFactory _cimValidationErrorCodeFactory;
-        private readonly ICimValidationErrorTextFactory _cimValidationErrorTextFactory;
+        private readonly ICimValidationErrorTextFactory<ChargeCommand> _cimValidationErrorTextFactory;
 
         public AvailableChargeReceiptValidationErrorFactory(
             ICimValidationErrorCodeFactory cimValidationErrorCodeFactory,
-            ICimValidationErrorTextFactory cimValidationErrorTextFactory)
+            ICimValidationErrorTextFactory<ChargeCommand> cimValidationErrorTextFactory)
         {
             _cimValidationErrorCodeFactory = cimValidationErrorCodeFactory;
             _cimValidationErrorTextFactory = cimValidationErrorTextFactory;
         }
 
-        public AvailableChargeReceiptValidationError Create(ValidationError validationError, ChargeCommand command)
+        public AvailableReceiptValidationError Create(ValidationError validationError, ChargeCommand command)
         {
             var reasonCode = _cimValidationErrorCodeFactory.Create(validationError.ValidationRuleIdentifier);
             var reasonText = _cimValidationErrorTextFactory.Create(validationError, command);
 
-            return new AvailableChargeReceiptValidationError(reasonCode, reasonText);
+            return new AvailableReceiptValidationError(reasonCode, reasonText);
         }
     }
 }
