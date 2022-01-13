@@ -20,16 +20,23 @@ using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableData;
+using Microsoft.Extensions.Logging;
 
 namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
 {
     public class ChargeCimValidationErrorTextFactory : ICimValidationErrorTextFactory<ChargeCommand>
     {
         private readonly ICimValidationErrorTextProvider _cimValidationErrorTextProvider;
+        private readonly ILogger _logger;
 
-        public ChargeCimValidationErrorTextFactory(ICimValidationErrorTextProvider cimValidationErrorTextProvider)
+        public string PositionNotFoundErrorMessage => "(Price not found by position: ";
+
+        public ChargeCimValidationErrorTextFactory(
+            ICimValidationErrorTextProvider cimValidationErrorTextProvider,
+            ILoggerFactory loggerFactory)
         {
             _cimValidationErrorTextProvider = cimValidationErrorTextProvider;
+            _logger = loggerFactory.CreateLogger(nameof(ChargeCimValidationErrorTextFactory));
         }
 
         public string Create(ValidationError validationError, ChargeCommand chargeCommand)
@@ -45,7 +52,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
             return MergeErrorText(errorTextTemplate, chargeCommand, validationError.TriggeredBy);
         }
 
-        private static string MergeErrorText(
+        private string MergeErrorText(
             string errorTextTemplate,
             ChargeCommand chargeCommand,
             string? triggeredBy)
@@ -63,7 +70,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
             return mergedErrorText;
         }
 
-        private static string GetDataForToken(
+        private string GetDataForToken(
             CimValidationErrorTextToken token,
             ChargeCommand chargeCommand,
             string? triggeredBy)
@@ -80,9 +87,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
                 CimValidationErrorTextToken.ChargePointPosition =>
                     triggeredBy ?? string.Empty,
                 CimValidationErrorTextToken.ChargePointPrice =>
-                    triggeredBy == null ? string.Empty :
-                        chargeCommand.ChargeOperation.Points
-                        .Single(p => p.Position == int.Parse(triggeredBy)).Price.ToString("N"),
+                    GetPriceFromPointByPosition(chargeCommand, triggeredBy),
                 CimValidationErrorTextToken.ChargePointsCount =>
                     chargeCommand.ChargeOperation.Points.Count.ToString(),
                 CimValidationErrorTextToken.ChargeResolution =>
@@ -107,6 +112,21 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
                     chargeCommand.Document.Type.ToString(),
                 _ => string.Empty,
             };
+        }
+
+        private string GetPriceFromPointByPosition(ChargeCommand chargeCommand, string? triggeredBy)
+        {
+            try
+            {
+                return chargeCommand.ChargeOperation.Points
+                        .Single(p => p.Position == int.Parse(triggeredBy!)).Price.ToString("N");
+            }
+            catch (Exception e)
+            {
+                var errorMessage = $"{PositionNotFoundErrorMessage}{triggeredBy})";
+                _logger.LogError(e, errorMessage);
+                return errorMessage;
+            }
         }
 
         private static IEnumerable<CimValidationErrorTextToken> GetTokens(string errorTextTemplate)

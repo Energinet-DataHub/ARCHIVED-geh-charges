@@ -15,11 +15,12 @@
 using System;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData;
 using GreenEnergyHub.Charges.TestCore.Attributes;
+using Microsoft.Extensions.Logging;
+using Moq;
 using Xunit;
 using Xunit.Categories;
 
@@ -32,10 +33,11 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptD
         [InlineAutoMoqData]
         public void Create_WhenThreeMergeFields_ReturnsExpectedDescription(
             ChargeCommand chargeCommand,
-            CimValidationErrorTextProvider cimValidationErrorTextProvider)
+            CimValidationErrorTextProvider cimValidationErrorTextProvider,
+            ILoggerFactory loggerFactory)
         {
             // Arrange
-            var sut = new ChargeCimValidationErrorTextFactory(cimValidationErrorTextProvider);
+            var sut = new ChargeCimValidationErrorTextFactory(cimValidationErrorTextProvider, loggerFactory);
 
             var expected = CimValidationErrorTextTemplateMessages.ResolutionTariffValidationErrorText
                 .Replace("{{ChargeResolution}}", chargeCommand.ChargeOperation.Resolution.ToString())
@@ -55,10 +57,11 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptD
         [InlineAutoMoqData]
         public void Create_WithPointPosition_ReturnsExpectedDescription(
             ChargeCommand chargeCommand,
-            CimValidationErrorTextProvider cimValidationErrorTextProvider)
+            CimValidationErrorTextProvider cimValidationErrorTextProvider,
+            ILoggerFactory loggerFactory)
         {
             // Arrange
-            var sut = new ChargeCimValidationErrorTextFactory(cimValidationErrorTextProvider);
+            var sut = new ChargeCimValidationErrorTextFactory(cimValidationErrorTextProvider, loggerFactory);
 
             var expectedPoint = chargeCommand.ChargeOperation.Points[1];
             var expected = CimValidationErrorTextTemplateMessages.MaximumPriceErrorText
@@ -77,14 +80,38 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptD
         }
 
         [Theory]
+        [InlineAutoMoqData(ValidationRuleIdentifier.MaximumPrice, null!)]
+        [InlineAutoMoqData(ValidationRuleIdentifier.MaximumPrice, -1)]
+        [InlineAutoMoqData(ValidationRuleIdentifier.ChargePriceMaximumDigitsAndDecimals, null!)]
+        [InlineAutoMoqData(ValidationRuleIdentifier.ChargePriceMaximumDigitsAndDecimals, -1)]
+        public void Create_WithInvalidPointPosition_ReturnsErrorMessage(
+            ValidationRuleIdentifier validationRuleIdentifier,
+            string? triggeredBy,
+            ChargeCommand chargeCommand,
+            CimValidationErrorTextProvider cimValidationErrorTextProvider,
+            ILoggerFactory loggerFactory)
+        {
+            // Arrange
+            var sut = new ChargeCimValidationErrorTextFactory(cimValidationErrorTextProvider, loggerFactory);
+            var expectedErrorMessage = $"{sut.PositionNotFoundErrorMessage}{triggeredBy})";
+
+            // Act
+            var actual = sut.Create(new ValidationError(validationRuleIdentifier, triggeredBy), chargeCommand);
+
+            // Assert
+            actual.Should().Contain(expectedErrorMessage);
+        }
+
+        [Theory]
         [InlineAutoMoqData]
         public void Create_MergesAllMergeFields(
             ChargeCommand chargeCommand,
-            CimValidationErrorTextProvider cimValidationErrorTextProvider)
+            CimValidationErrorTextProvider cimValidationErrorTextProvider,
+            ILoggerFactory loggerFactory)
         {
             // Arrange
             var validationRuleIdentifiers = (ValidationRuleIdentifier[])Enum.GetValues(typeof(ValidationRuleIdentifier));
-            var sut = new ChargeCimValidationErrorTextFactory(cimValidationErrorTextProvider);
+            var sut = new ChargeCimValidationErrorTextFactory(cimValidationErrorTextProvider, loggerFactory);
 
             // Act
             // Assert
