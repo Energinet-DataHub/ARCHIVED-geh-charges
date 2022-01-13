@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System.Collections.Generic;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.Messages.Events;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
@@ -25,15 +26,15 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksRejectionEvents
         public ChargeLinksRejectedEvent(
             Instant publishedTime,
             ChargeLinksCommand chargeLinksCommand,
-            IEnumerable<ValidationRuleIdentifier> failedValidationRuleIdentifiers)
+            IEnumerable<ValidationError> validationErrors)
             : base(publishedTime)
         {
             ChargeLinksCommand = chargeLinksCommand;
-            FailedValidationRuleIdentifiers = failedValidationRuleIdentifiers;
+            ValidationErrors = validationErrors;
         }
 
         public ChargeLinksCommand ChargeLinksCommand { get; }
 
-        public IEnumerable<ValidationRuleIdentifier> FailedValidationRuleIdentifiers { get; }
+        public IEnumerable<ValidationError> ValidationErrors { get; }
     }
 }

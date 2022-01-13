@@ -18,6 +18,7 @@ using Energinet.DataHub.Core.Messaging.Protobuf;
 using Energinet.DataHub.Core.Messaging.Transport;
 using Google.Protobuf.Collections;
 using GreenEnergyHub.Charges.Core.DateTime;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksRejectionEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
@@ -40,13 +41,16 @@ namespace GreenEnergyHub.Charges.Infrastructure.Contracts.Internal.ChargeLinksCo
                     ConvertDocument(chargeLinksCommandRejected.ChargeLinksCommand.Document),
                     chargeLinksCommandRejected.ChargeLinksCommand.ChargeLinks.Select(ConvertChargeLink)
                         .ToList()),
-                ConvertValidationRuleIdentifiers(chargeLinksCommandRejected.FailedValidationRuleIdentifiers));
+                ConvertValidationError(chargeLinksCommandRejected.ValidationErrors));
         }
 
-        private IEnumerable<ValidationRuleIdentifier> ConvertValidationRuleIdentifiers(
-            RepeatedField<ValidationRuleIdentifierContract> failedValidationRuleIdentifierContracts)
+        private IEnumerable<ValidationError> ConvertValidationError(
+            IEnumerable<ValidationErrorContract> validationErrorContracts)
         {
-            return failedValidationRuleIdentifierContracts.Select(x => (ValidationRuleIdentifier)x);
+            return validationErrorContracts.Select(x =>
+                new ValidationError(
+                    (ValidationRuleIdentifier)x.ValidationRuleIdentifier,
+                    x.ListElementWithValidationError));
         }
 
         private static DocumentDto ConvertDocument(Document document)

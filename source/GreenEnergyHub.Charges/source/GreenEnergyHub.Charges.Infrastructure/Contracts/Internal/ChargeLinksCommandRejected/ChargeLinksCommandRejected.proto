@@ -19,13 +19,14 @@
 syntax = "proto3";
 
 import "google/protobuf/timestamp.proto";
+import "google/protobuf/wrappers.proto";
 
 option csharp_namespace = "GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinksCommandRejected";
 
 message ChargeLinksCommandRejected {
   google.protobuf.Timestamp published_time = 1;
   ChargeLinksCommand charge_links_command = 2;
-  repeated ValidationRuleIdentifierContract failed_validation_rule_identifiers = 3;
+  repeated ValidationErrorContract validation_errors = 3;
 }
 
 message ChargeLinksCommand {
@@ -58,6 +59,11 @@ message Document {
 message MarketParticipant {
   string id = 1; // Contains an ID that identifies the Market Participants. In Denmark this would be the GLN number or EIC code.
   MarketParticipantRole BusinessProcessRole = 2;  // Contains the role a market participant uses when initiating and communicating with Green Energy Hub
+}
+
+message ValidationErrorContract {
+  ValidationRuleIdentifierContract validation_rule_identifier = 1;
+  google.protobuf.StringValue list_element_with_validation_error = 2;
 }
 
 enum MarketParticipantRole

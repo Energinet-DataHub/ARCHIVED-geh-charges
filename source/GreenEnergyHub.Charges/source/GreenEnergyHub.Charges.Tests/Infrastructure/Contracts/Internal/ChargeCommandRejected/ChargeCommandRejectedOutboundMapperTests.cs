@@ -15,6 +15,7 @@
 using System;
 using System.Collections.Generic;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandRejectedEvents;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using GreenEnergyHub.Charges.Infrastructure.Contracts.Internal.ChargeCommandRejected;
 using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeCommandRejected;
@@ -51,7 +52,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Contracts.Internal.ChargeC
         private static ChargeCommandRejectedEvent CreateChargeCommandRejectedEvent(ChargeCommandBuilder builder)
         {
             var chargeCommand = builder.Build();
-            var validationRuleIdentifiers = new List<ValidationError>
+            var validationErrors = new List<ValidationError>
             {
                 new(ValidationRuleIdentifier.MaximumPrice, listElementWithValidationError: "2"),
                 new(ValidationRuleIdentifier.ResolutionFeeValidation, null),
@@ -59,7 +60,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Contracts.Internal.ChargeC
             var chargeCommandRejectedEvent = new ChargeCommandRejectedEvent(
                 SystemClock.Instance.GetCurrentInstant(),
                 chargeCommand,
-                validationRuleIdentifiers);
+                validationErrors);
             UpdateInstantsToValidTimes(chargeCommandRejectedEvent);
             return chargeCommandRejectedEvent;
         }

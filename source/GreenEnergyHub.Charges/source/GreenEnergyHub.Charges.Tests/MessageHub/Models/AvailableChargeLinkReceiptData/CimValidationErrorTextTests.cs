@@ -13,7 +13,9 @@
 // limitations under the License.
 
 using System;
+using System.Linq;
 using FluentAssertions;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors;
@@ -40,7 +42,11 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeLinkRece
                 .Replace("{{MeteringPointEffectiveDate}}", "TODO");
 
             // Act
-            var actual = sut.Create(ValidationRuleIdentifier.MeteringPointDoesNotExist, chargeLinksCommand);
+            var actual = sut.Create(
+                new ValidationError(
+                    ValidationRuleIdentifier.MeteringPointDoesNotExist,
+                    chargeLinksCommand.ChargeLinks.First().SenderProvidedChargeId),
+                chargeLinksCommand);
 
             // Assert
             actual.Should().Be(expected);
@@ -60,10 +66,22 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeLinkRece
             // Assert
             foreach (var validationRuleIdentifier in validationRuleIdentifiers)
             {
-                var actual = sut.Create(validationRuleIdentifier, chargeLinksCommand);
+                var listElement = SetListElementWithValidationError(chargeLinksCommand, validationRuleIdentifier);
+                var actual = sut.Create(new ValidationError(validationRuleIdentifier, listElement), chargeLinksCommand);
                 actual.Should().NotBeNullOrWhiteSpace();
                 actual.Should().NotContain("{");
             }
+        }
+
+        private static string? SetListElementWithValidationError(
+            ChargeLinksCommand chargeLinksCommand, ValidationRuleIdentifier validationRuleIdentifier)
+        {
+            return validationRuleIdentifier switch
+            {
+                ValidationRuleIdentifier.ChargeDoesNotExist =>
+                chargeLinksCommand.ChargeLinks.First().SenderProvidedChargeId,
+                _ => null,
+            };
         }
     }
 }

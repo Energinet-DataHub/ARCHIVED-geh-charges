@@ -30,5 +30,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands.Validation.Busi
             ValidationRuleIdentifier.MeteringPointDoesNotExist;
 
         public bool IsValid => _existingMeteringPoint is not null;
+
+        public string? ListElement => null;
     }
 }

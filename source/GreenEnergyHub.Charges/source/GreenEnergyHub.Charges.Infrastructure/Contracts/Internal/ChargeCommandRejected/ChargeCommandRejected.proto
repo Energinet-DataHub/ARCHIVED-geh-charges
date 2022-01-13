@@ -26,7 +26,7 @@ option csharp_namespace = "GreenEnergyHub.Charges.Infrastructure.Internal.Charge
 message ChargeCommandRejectedContract {
   google.protobuf.Timestamp published_time = 1;
   ChargeCommandContract command = 2;
-  repeated ValidationErrorContract validation_errors = 4;
+  repeated ValidationErrorContract validation_errors = 3;
 }
 
 message ChargeCommandContract {

@@ -16,6 +16,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors;
@@ -32,9 +33,9 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksReceiptDa
             _cimValidationErrorTextProvider = cimValidationErrorTextProvider;
         }
 
-        public string Create(ValidationRuleIdentifier validationRuleIdentifier, ChargeLinksCommand chargeLinksCommand)
+        public string Create(ValidationError validationError, ChargeLinksCommand command)
         {
-            return GetMergedErrorMessage(validationRuleIdentifier, chargeLinksCommand);
+            return GetMergedErrorMessage(validationError.ValidationRuleIdentifier, command);
         }
 
         private string GetMergedErrorMessage(ValidationRuleIdentifier validationRuleIdentifier, ChargeLinksCommand chargeLinksCommand)

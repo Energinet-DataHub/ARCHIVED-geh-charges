@@ -38,6 +38,8 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands.Validation.Busi
 
         public bool IsValid => _chargeLinksCommand.ChargeLinks.All(ChargeLinkDateRangeIsNotOverlapping);
 
+        public string? ListElement => null;
+
         private bool ChargeLinkDateRangeIsNotOverlapping(ChargeLinkDto newLink)
         {
             foreach (var existingLink in _existingChargeLinks)

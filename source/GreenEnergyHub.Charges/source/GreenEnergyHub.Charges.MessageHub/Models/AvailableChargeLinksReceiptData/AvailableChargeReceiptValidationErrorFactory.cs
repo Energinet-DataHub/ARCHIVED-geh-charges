@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData;
@@ -32,12 +33,10 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksReceiptDa
             _cimValidationErrorTextFactory = cimValidationErrorTextFactory;
         }
 
-        public AvailableReceiptValidationError Create(
-            ValidationRuleIdentifier ruleIdentifier,
-            ChargeLinksCommand command)
+        public AvailableReceiptValidationError Create(ValidationError validationError, ChargeLinksCommand command)
         {
-            var reasonCode = _cimValidationErrorCodeFactory.Create(ruleIdentifier);
-            var reasonText = _cimValidationErrorTextFactory.Create(ruleIdentifier, command);
+            var reasonCode = _cimValidationErrorCodeFactory.Create(validationError.ValidationRuleIdentifier);
+            var reasonText = _cimValidationErrorTextFactory.Create(validationError, command);
 
             return new AvailableReceiptValidationError(reasonCode, reasonText);
         }

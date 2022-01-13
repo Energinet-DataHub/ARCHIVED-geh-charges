@@ -56,10 +56,10 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksReceiptDa
         private List<AvailableReceiptValidationError> GetReasons(ChargeLinksRejectedEvent input)
         {
             return input
-                .FailedValidationRuleIdentifiers
+                .ValidationErrors
                 .Select(
-                    ruleIdentifier => _availableChargeLinksReceiptValidationErrorFactory
-                        .Create(ruleIdentifier, input.ChargeLinksCommand))
+                    validationError => _availableChargeLinksReceiptValidationErrorFactory
+                        .Create(validationError, input.ChargeLinksCommand))
                 .ToList();
         }
     }

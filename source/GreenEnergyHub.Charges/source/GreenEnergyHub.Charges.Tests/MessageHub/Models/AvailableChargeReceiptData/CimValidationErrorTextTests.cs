@@ -15,6 +15,7 @@
 using System;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData;
@@ -57,7 +58,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptD
             CimValidationErrorTextProvider cimValidationErrorTextProvider)
         {
             // Arrange
-            var sut = new CimValidationErrorTextFactory(cimValidationErrorTextProvider);
+            var sut = new ChargeCimValidationErrorTextFactory(cimValidationErrorTextProvider);
 
             var expectedPoint = chargeCommand.ChargeOperation.Points[1];
             var expected = CimValidationErrorTextTemplateMessages.MaximumPriceErrorText
