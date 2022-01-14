@@ -49,7 +49,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.ChargeLinks
         [Function(FunctionName)]
         public async Task RunAsync(
             [ServiceBusTrigger(
-                "%" + EnvironmentSettingNames.CreateLinkRequestQueueName + "%",
+                "%" + EnvironmentSettingNames.CreateLinksRequestQueueName + "%",
                 Connection = EnvironmentSettingNames.DataHubListenerConnectionString)]
             byte[] message)
         {
