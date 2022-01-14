@@ -17,9 +17,7 @@
 - [Charge link requests and replies](#.ChargeLinkRequestsAndReplies)
     - [CreateDefaultChargeLinks](#.CreateDefaultChargeLinks)
     - [CreateDefaultChargeLinksReply](#.CreateDefaultChargeLinksReply)
-    - [CreateDefaultChargeLinkMessages](#.CreateDefaultChargeLinkMessages)
-    - [CreateDefaultChargeLinkMessagesReply](#.CreateDefaultChargeLinkMessagesReply)
-
+    
 <a name="IntegrationEventContract.proto"></a>
 
 ## IntegrationEventContract.proto
