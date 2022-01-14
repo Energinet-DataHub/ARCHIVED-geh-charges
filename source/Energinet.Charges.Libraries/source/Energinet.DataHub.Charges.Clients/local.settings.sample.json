@@ -12,8 +12,6 @@
     "INTEGRATIONEVENT_LISTENER_CONNECTION_STRING": "<sb listener connection string for integration events (without EntityPath)>",
         
     "CREATE_LINK_REQUEST_QUEUE_NAME": "create-link-request",
-    "CREATE_LINK_REPLY_QUEUE_NAME": "create-link-reply",
-    "CREATE_LINK_MESSAGES_REQUEST_QUEUE_NAME": "create-link-messages-request",
-    "CREATE_LINK_MESSAGES_REPLY_QUEUE_NAME": "create-link-messages-reply"
+    "CREATE_LINK_REPLY_QUEUE_NAME": "create-link-reply"
   }
 }
