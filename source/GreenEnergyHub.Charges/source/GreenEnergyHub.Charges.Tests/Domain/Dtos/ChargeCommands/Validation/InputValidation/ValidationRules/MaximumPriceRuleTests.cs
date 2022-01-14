@@ -75,19 +75,17 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
             var triggeredBy = expectedPoint.Position.ToString();
 
             // Act & arrange
-            var sutOne = new MaximumPriceRule(invalidCommand);
-            var sutTwo = new ChargeCimValidationErrorTextFactory(cimValidationErrorTextProvider, loggerFactory);
-            var errorMessage = sutTwo.Create(new ValidationError(validationRuleIdentifier, triggeredBy), invalidCommand);
+            var sutRule = new MaximumPriceRule(invalidCommand);
+            var sutFactory = new ChargeCimValidationErrorTextFactory(cimValidationErrorTextProvider, loggerFactory);
+            var actual = sutFactory.Create(new ValidationError(validationRuleIdentifier, triggeredBy), invalidCommand);
 
             // Assert
-            sutOne.IsValid.Should().BeFalse();
-            sutOne.TriggeredBy.Should().Be(triggeredBy);
-            sutOne.ValidationRuleIdentifier.Should().Be(validationRuleIdentifier);
+            sutRule.IsValid.Should().BeFalse();
 
             var expected = CimValidationErrorTextTemplateMessages.MaximumPriceErrorText
                 .Replace("{{ChargePointPrice}}", expectedPoint.Price.ToString("N"))
                 .Replace("{{ChargePointPosition}}", triggeredBy);
-            errorMessage.Should().Be(expected);
+            actual.Should().Be(expected);
         }
 
         private static ChargeCommand CreateCommand(ChargeCommandBuilder builder, decimal price)
