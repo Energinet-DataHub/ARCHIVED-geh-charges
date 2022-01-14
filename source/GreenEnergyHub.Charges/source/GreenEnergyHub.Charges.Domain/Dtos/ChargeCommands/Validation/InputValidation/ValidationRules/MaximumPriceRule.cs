@@ -32,6 +32,10 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputVali
 
         public bool IsValid => _chargeCommand.ChargeOperation.Points.All(Validate);
 
+        /// <summary>
+        /// This validation rule validates each Price in a list of Point(s). This property
+        /// will tell which Point triggered the rule. The Point is identified by Position.
+        /// </summary>
         public string TriggeredBy =>
             _chargeCommand.ChargeOperation.Points.First(point => !Validate(point)).Position.ToString();
 
