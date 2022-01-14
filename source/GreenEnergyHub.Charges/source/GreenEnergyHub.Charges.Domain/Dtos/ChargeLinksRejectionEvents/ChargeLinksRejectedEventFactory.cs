@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
 using System.Linq;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
@@ -34,14 +33,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksRejectionEvents
             return new ChargeLinksRejectedEvent(
                 _clock.GetCurrentInstant(),
                 command,
-                validationResult.InvalidRules.Select(CreateValidationError()));
-        }
-
-        private static Func<IValidationRule, ValidationError> CreateValidationError()
-        {
-            return rule => rule is IValidationRuleWithExtendedData validationRuleWithExtendedData
-                ? new ValidationError(rule.ValidationRuleIdentifier, validationRuleWithExtendedData.TriggeredBy)
-                : new ValidationError(rule.ValidationRuleIdentifier, null);
+                validationResult.InvalidRules.Select(ValidationErrorFactory.Create()));
         }
     }
 }
