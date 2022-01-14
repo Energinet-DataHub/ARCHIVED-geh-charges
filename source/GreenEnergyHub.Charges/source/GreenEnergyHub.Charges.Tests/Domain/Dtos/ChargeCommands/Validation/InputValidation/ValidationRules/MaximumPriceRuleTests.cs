@@ -12,15 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Linq;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputValidation.ValidationRules;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
+using GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors;
+using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData;
 using GreenEnergyHub.Charges.TestCore.Attributes;
 using GreenEnergyHub.Charges.Tests.Builders;
 using GreenEnergyHub.TestHelpers;
+using Microsoft.Extensions.Logging;
 using Xunit;
 using Xunit.Categories;
 
@@ -56,9 +57,42 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
             sut.ValidationRuleIdentifier.Should().Be(ValidationRuleIdentifier.MaximumPrice);
         }
 
+        [Theory]
+        [InlineAutoDomainData(ValidationRuleIdentifier.MaximumPrice)]
+        public void TriggeredBy_ShouldCauseCompleteErrorMessages_ToMarketParticipant(
+            ValidationRuleIdentifier validationRuleIdentifier,
+            ChargeCommandBuilder chargeCommandBuilder,
+            ILoggerFactory loggerFactory,
+            CimValidationErrorTextProvider cimValidationErrorTextProvider)
+        {
+            // Arrange
+            var invalidCommand = chargeCommandBuilder
+                .WithPoint(1, LargestValidPrice)
+                .WithPoint(2, SmallestInvalidPrice)
+                .Build();
+
+            var expectedPoint = invalidCommand.ChargeOperation.Points[1];
+            var triggeredBy = expectedPoint.Position.ToString();
+
+            // Act & arrange
+            var sutOne = new MaximumPriceRule(invalidCommand);
+            var sutTwo = new ChargeCimValidationErrorTextFactory(cimValidationErrorTextProvider, loggerFactory);
+            var errorMessage = sutTwo.Create(new ValidationError(validationRuleIdentifier, triggeredBy), invalidCommand);
+
+            // Assert
+            sutOne.IsValid.Should().BeFalse();
+            sutOne.TriggeredBy.Should().Be(triggeredBy);
+            sutOne.ValidationRuleIdentifier.Should().Be(validationRuleIdentifier);
+
+            var expected = CimValidationErrorTextTemplateMessages.MaximumPriceErrorText
+                .Replace("{{ChargePointPrice}}", expectedPoint.Price.ToString("N"))
+                .Replace("{{ChargePointPosition}}", triggeredBy);
+            errorMessage.Should().Be(expected);
+        }
+
         private static ChargeCommand CreateCommand(ChargeCommandBuilder builder, decimal price)
         {
-            return builder.WithPoint(price).Build();
+            return builder.WithPoint(1, price).Build();
         }
     }
 }

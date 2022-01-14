@@ -152,15 +152,15 @@ namespace GreenEnergyHub.Charges.Tests.Builders
             return this;
         }
 
-        public ChargeCommandBuilder WithPoint(decimal price)
+        public ChargeCommandBuilder WithPoint(int position, decimal price)
         {
-            _points.Add(new Point(0, price, SystemClock.Instance.GetCurrentInstant()));
+            _points.Add(new Point(position, price, SystemClock.Instance.GetCurrentInstant()));
             return this;
         }
 
         public ChargeCommandBuilder WithPointWithXNumberOfPrices(int numberOfPrices)
         {
-            for (var i = 0; i < numberOfPrices; i++)
+            for (var i = 1; i <= numberOfPrices; i++)
             {
                 var point = new Point(i, i * 10, SystemClock.Instance.GetCurrentInstant());
                 _points.Add(point);
