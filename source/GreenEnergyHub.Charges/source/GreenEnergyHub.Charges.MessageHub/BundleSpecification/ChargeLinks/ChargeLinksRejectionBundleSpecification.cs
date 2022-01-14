@@ -34,8 +34,8 @@ namespace GreenEnergyHub.Charges.MessageHub.BundleSpecification.ChargeLinks
         /// </summary>
         public const decimal RejectionReasonWeight = 0.1m;
 
-        public ChargeLinksRejectionBundleSpecification(BundleType bundleType)
-            : base(bundleType)
+        public ChargeLinksRejectionBundleSpecification()
+            : base(BundleType.ChargeLinkRejectionDataAvailable)
         {
         }
 
