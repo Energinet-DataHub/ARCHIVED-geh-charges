@@ -26,7 +26,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.MeteringPoints
         [Fact]
         public void Create_WhenCalledWithNull_ThrowsException()
         {
-            ConsumptionMeteringPointCreatedEvent? input = null;
+            MeteringPointCreatedEvent? input = null;
             Assert.Throws<ArgumentNullException>(() => MeteringPointFactory.Create(input!));
         }
     }

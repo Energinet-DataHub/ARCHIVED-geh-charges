@@ -29,8 +29,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures
         public const string ChargeLinkCreatedTopicKey = "charge-link-created";
 
         // Integration, metering point domain
-        public const string ConsumptionMeteringPointCreatedTopicKey = "consumption-metering-point-created";
-        public const string ConsumptionMeteringPointCreatedSubscriptionName = "consumption-metering-point-created-sub-charges";
+        public const string MeteringPointCreatedTopicKey = "metering-point-created";
+        public const string MeteringPointCreatedSubscriptionName = "metering-point-created-sub-charges";
         public const string CreateLinkRequestQueueKey = "create-link-request";
         public const string CreateLinkReplyQueueKey = "create-link-reply";
 

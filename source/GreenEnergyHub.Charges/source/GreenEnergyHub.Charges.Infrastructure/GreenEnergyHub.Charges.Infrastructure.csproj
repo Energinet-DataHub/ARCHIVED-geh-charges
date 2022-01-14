@@ -85,10 +85,6 @@ limitations under the License.
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Contracts\External" />
-    </ItemGroup>
-
-    <ItemGroup>
       <Content Include="..\..\..\Contracts\CreateDefaultChargeLinks.proto">
         <Link>Contracts\Public\CreateDefaultChargeLinks\CreateDefaultChargeLinks.proto</Link>
       </Content>

@@ -62,7 +62,7 @@ namespace GreenEnergyHub.Charges.FunctionHost
             ChargeLinksRejectionDataAvailableNotifierEndpointConfiguration.ConfigureServices(serviceCollection);
 
             // Metering points
-            ConsumptionMeteringPointPersisterConfiguration.ConfigureServices(serviceCollection);
+            MeteringPointPersisterConfiguration.ConfigureServices(serviceCollection);
 
             // Message Hub
             BundleSenderEndpointConfiguration.ConfigureServices(serviceCollection);

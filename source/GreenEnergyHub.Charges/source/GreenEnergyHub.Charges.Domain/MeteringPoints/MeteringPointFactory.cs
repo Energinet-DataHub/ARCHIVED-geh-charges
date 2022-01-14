@@ -22,18 +22,18 @@ namespace GreenEnergyHub.Charges.Domain.MeteringPoints
     public static class MeteringPointFactory
     {
         public static MeteringPoint Create(
-            ConsumptionMeteringPointCreatedEvent consumptionMeteringPointCreatedEvent)
+            MeteringPointCreatedEvent meteringPointCreatedEvent)
         {
-            if (consumptionMeteringPointCreatedEvent == null)
-                throw new ArgumentNullException(nameof(consumptionMeteringPointCreatedEvent));
+            if (meteringPointCreatedEvent == null)
+                throw new ArgumentNullException(nameof(meteringPointCreatedEvent));
 
             return MeteringPoint.Create(
-                consumptionMeteringPointCreatedEvent.MeteringPointId,
-                MeteringPointType.Consumption,
-                consumptionMeteringPointCreatedEvent.GridAreaId,
-                consumptionMeteringPointCreatedEvent.EffectiveDate,
-                consumptionMeteringPointCreatedEvent.ConnectionState,
-                consumptionMeteringPointCreatedEvent.SettlementMethod);
+                meteringPointCreatedEvent.MeteringPointId,
+                meteringPointCreatedEvent.MeteringPointType,
+                meteringPointCreatedEvent.GridAreaId,
+                meteringPointCreatedEvent.EffectiveDate,
+                meteringPointCreatedEvent.ConnectionState,
+                meteringPointCreatedEvent.SettlementMethod);
         }
     }
 }
