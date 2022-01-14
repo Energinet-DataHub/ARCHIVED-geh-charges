@@ -1,6 +1,7 @@
 # Energinet.DataHub.Charges.Clients.Registrations Release notes
 
 ## Version 0.1.4
+
 Updated Nuget packages
 
 ## Version 0.1.3
