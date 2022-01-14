@@ -1,5 +1,9 @@
 # Energinet.DataHub.Charges.Clients Release notes
 
+## Version 1.0.23
+
+Updated Nuget packages
+
 ## Version 1.0.22
 
 `ChargeLinkClient` uses `JsonStringEnumConverter` to handle `enum` passed as string
