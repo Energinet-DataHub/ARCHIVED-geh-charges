@@ -37,7 +37,7 @@ namespace GreenEnergyHub.Charges.SystemTests
         private MyDomainConfiguration Configuration { get; }
 
 #pragma warning disable VSTHRD200 // Use "Async" suffix for async methods
-        [SystemFact(Skip = "Hi Peter, pls update this test for your scenario. :o)")]
+        [SystemFact(Skip = "This test will be refactored as part of story #951 in the Charges repo")]
         public async Task When_TriggeringAction_Then_PeekReturnsExpectedContent()
         {
             // Arrange
