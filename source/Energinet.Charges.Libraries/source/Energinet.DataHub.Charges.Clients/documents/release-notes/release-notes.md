@@ -2,7 +2,7 @@
 
 ## Version 1.0.23
 
-Removed unused local settings for ressources which were used when requesting creation of messages for charge links.
+Updated Nuget packages
 
 ## Version 1.0.22
 
