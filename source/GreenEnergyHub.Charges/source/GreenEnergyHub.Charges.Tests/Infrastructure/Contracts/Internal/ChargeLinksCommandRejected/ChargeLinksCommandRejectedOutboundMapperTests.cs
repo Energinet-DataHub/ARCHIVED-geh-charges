@@ -14,7 +14,6 @@
 
 using System;
 using System.Collections.Generic;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksRejectionEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using GreenEnergyHub.Charges.Infrastructure.Contracts.Internal.ChargeLinksCommandRejected;
