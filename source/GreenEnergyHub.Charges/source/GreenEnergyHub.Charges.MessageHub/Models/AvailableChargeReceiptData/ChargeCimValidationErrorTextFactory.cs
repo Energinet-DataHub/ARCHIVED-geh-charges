@@ -132,7 +132,8 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
             try
             {
                 return chargeCommand.ChargeOperation.Points
-                        .Single(p => p.Position == int.Parse(triggeredBy!)).Price.ToString("N");
+                        .Single(p => p.Position == int.Parse(triggeredBy!))
+                        .Price.ToString("N");
             }
             catch (Exception e)
             {
