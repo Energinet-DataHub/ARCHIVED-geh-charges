@@ -160,9 +160,9 @@ namespace GreenEnergyHub.Charges.Tests.Builders
 
         public ChargeCommandBuilder WithPointWithXNumberOfPrices(int numberOfPrices)
         {
-            for (var i = 1; i <= numberOfPrices; i++)
+            for (var i = 0; i < numberOfPrices; i++)
             {
-                var point = new Point(i, i * 10, SystemClock.Instance.GetCurrentInstant());
+                var point = new Point(i + 1, i * 10, SystemClock.Instance.GetCurrentInstant());
                 _points.Add(point);
             }
 
