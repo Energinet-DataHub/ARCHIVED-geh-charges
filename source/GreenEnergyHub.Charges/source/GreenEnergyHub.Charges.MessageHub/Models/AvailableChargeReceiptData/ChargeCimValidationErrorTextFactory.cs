@@ -118,7 +118,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
             if (!string.IsNullOrWhiteSpace(triggeredBy) && parsed && position > 0)
                 return triggeredBy;
 
-            var errorMessage = $"Invalid position: {triggeredBy} for charge " +
+            var errorMessage = $"Invalid position ({triggeredBy}) for charge with " +
                                $"id: {chargeCommand.ChargeOperation.ChargeId}," +
                                $"type: {chargeCommand.ChargeOperation.Type}," +
                                $"owner: {chargeCommand.ChargeOperation.ChargeOwner}";
