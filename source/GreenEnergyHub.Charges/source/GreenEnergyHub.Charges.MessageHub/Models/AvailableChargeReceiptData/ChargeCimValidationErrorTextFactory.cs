@@ -29,8 +29,6 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
         private readonly ICimValidationErrorTextProvider _cimValidationErrorTextProvider;
         private readonly ILogger _logger;
 
-        public string PositionNotFoundErrorMessage => "(Price not found by position: ";
-
         public ChargeCimValidationErrorTextFactory(
             ICimValidationErrorTextProvider cimValidationErrorTextProvider,
             ILoggerFactory loggerFactory)
@@ -85,7 +83,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
                 CimValidationErrorTextToken.ChargeOwner =>
                     chargeCommand.ChargeOperation.ChargeOwner,
                 CimValidationErrorTextToken.ChargePointPosition =>
-                    triggeredBy ?? string.Empty,
+                    GetPosition(chargeCommand, triggeredBy),
                 CimValidationErrorTextToken.ChargePointPrice =>
                     GetPriceFromPointByPosition(chargeCommand, triggeredBy),
                 CimValidationErrorTextToken.ChargePointsCount =>
@@ -114,6 +112,21 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
             };
         }
 
+        private string GetPosition(ChargeCommand chargeCommand, string? triggeredBy)
+        {
+            var parsed = int.TryParse(triggeredBy, out var position);
+            if (!string.IsNullOrWhiteSpace(triggeredBy) && parsed && position > 0)
+                return triggeredBy;
+
+            var errorMessage = $"Invalid position: {triggeredBy} for charge " +
+                               $"id: {chargeCommand.ChargeOperation.ChargeId}," +
+                               $"type: {chargeCommand.ChargeOperation.Type}," +
+                               $"owner: {chargeCommand.ChargeOperation.ChargeOwner}";
+            _logger.LogError(errorMessage);
+
+            return CimValidationErrorTextTemplateMessages.Unknown;
+        }
+
         private string GetPriceFromPointByPosition(ChargeCommand chargeCommand, string? triggeredBy)
         {
             try
@@ -123,9 +136,10 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
             }
             catch (Exception e)
             {
-                var errorMessage = $"{PositionNotFoundErrorMessage}{triggeredBy})";
+                var errorMessage = $"Price not found by position: {triggeredBy}";
                 _logger.LogError(e, errorMessage);
-                return errorMessage;
+
+                return CimValidationErrorTextTemplateMessages.Unknown;
             }
         }
 

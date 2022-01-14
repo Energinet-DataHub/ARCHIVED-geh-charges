@@ -20,7 +20,6 @@ using GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData;
 using GreenEnergyHub.Charges.TestCore.Attributes;
 using Microsoft.Extensions.Logging;
-using Moq;
 using Xunit;
 using Xunit.Categories;
 
@@ -31,7 +30,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptD
     {
         [Theory]
         [InlineAutoMoqData]
-        public void Create_WhenThreeMergeFields_ReturnsExpectedDescription(
+        public void Create_WithMultipleMergeFields_ReturnsExpectedDescription(
             ChargeCommand chargeCommand,
             CimValidationErrorTextProvider cimValidationErrorTextProvider,
             ILoggerFactory loggerFactory)
@@ -93,13 +92,41 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptD
         {
             // Arrange
             var sut = new ChargeCimValidationErrorTextFactory(cimValidationErrorTextProvider, loggerFactory);
-            var expectedErrorMessage = $"{sut.PositionNotFoundErrorMessage}{triggeredBy})";
 
             // Act
             var actual = sut.Create(new ValidationError(validationRuleIdentifier, triggeredBy), chargeCommand);
 
             // Assert
-            actual.Should().Contain(expectedErrorMessage);
+            actual.ToLower().Should().Contain($"price {CimValidationErrorTextTemplateMessages.Unknown}");
+            if (validationRuleIdentifier == ValidationRuleIdentifier.MaximumPrice)
+                actual.ToLower().Should().Contain($"position {CimValidationErrorTextTemplateMessages.Unknown}");
+        }
+
+        [Theory]
+        [InlineAutoMoqData(ValidationRuleIdentifier.StartDateValidation, null!)]
+        [InlineAutoMoqData(ValidationRuleIdentifier.StartDateValidation, -1)]
+        [InlineAutoMoqData(ValidationRuleIdentifier.StartDateValidation, 0)]
+        public void Create_PointPositionAreIgnored_WhenNotApplicable(
+            ValidationRuleIdentifier validationRuleIdentifier,
+            string? seedTriggeredBy,
+            ChargeCommand chargeCommand,
+            CimValidationErrorTextProvider cimValidationErrorTextProvider,
+            ILoggerFactory loggerFactory)
+        {
+            // Arrange
+            var triggeredBy = seedTriggeredBy == "0" ?
+                chargeCommand.ChargeOperation.Points[1].Position.ToString() :
+                seedTriggeredBy;
+
+            var sut = new ChargeCimValidationErrorTextFactory(cimValidationErrorTextProvider, loggerFactory);
+            var expected = CimValidationErrorTextTemplateMessages.StartDateValidationErrorText
+                .Replace("{{ChargeStartDateTime}}", chargeCommand.ChargeOperation.StartDateTime.ToString());
+
+            // Act
+            var actual = sut.Create(new ValidationError(validationRuleIdentifier, triggeredBy), chargeCommand);
+
+            // Assert
+            actual.Should().Contain(expected);
         }
 
         [Theory]
