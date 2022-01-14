@@ -28,7 +28,7 @@ limitations under the License.
   <!-- Configuration for NuGet package -->
   <PropertyGroup>
     <PackageId>Energinet.DataHub.Charges.Clients</PackageId>
-    <PackageVersion>1.0.23$(VersionSuffix)</PackageVersion>
+    <PackageVersion>1.0.24$(VersionSuffix)</PackageVersion>
     <Title>Energinet.DataHub.Charges.Clients</Title>
     <Company>Energinet DataHub A/S</Company>
     <Authors>DataHub</Authors>
@@ -72,14 +72,14 @@ https://github.com/Energinet-DataHub/geh-charges/tree/main/source/Energinet.Char
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Azure.Messaging.ServiceBus" Version="7.5.1" />
-    <PackageReference Include="Google.Protobuf" Version="3.19.3" />
-    <PackageReference Include="Grpc.Tools" Version="2.43.0">
+    <PackageReference Include="Azure.Messaging.ServiceBus" Version="7.5.0" />
+    <PackageReference Include="Google.Protobuf" Version="3.19.1" />
+    <PackageReference Include="Grpc.Tools" Version="2.42.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="5.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Http" Version="5.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Http" Version="3.0.3" />
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
