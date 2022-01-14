@@ -89,7 +89,7 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
             var defaultChargeLinks =
                 (await GetDefaultChargeLinksAsync(meteringPoint).ConfigureAwait(false)).ToList();
 
-            if (!defaultChargeLinks.Any() || !MeteringPointApplicableForDefaultChargeLinks(meteringPoint))
+            if (!defaultChargeLinks.Any())
             {
                 await ReplyWithSucceededAsync(
                     meteringPoint.MeteringPointId,
@@ -101,21 +101,6 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
                 createDefaultChargeLinksRequest,
                 defaultChargeLinks,
                 meteringPoint);
-        }
-
-        private bool MeteringPointApplicableForDefaultChargeLinks(MeteringPoint meteringPoint)
-        {
-            var applicable = false;
-
-            switch (meteringPoint.MeteringPointType)
-            {
-                case MeteringPointType.Consumption:
-                case MeteringPointType.Production:
-                    applicable = true;
-                    break;
-            }
-
-            return applicable;
         }
 
         private async Task<MeteringPoint?> GetMeteringPointAsync(string meteringPointId)
