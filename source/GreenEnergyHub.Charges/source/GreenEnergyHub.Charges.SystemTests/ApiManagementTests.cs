@@ -46,12 +46,8 @@ namespace GreenEnergyHub.Charges.SystemTests
         [SystemFact]
         public async Task When_AquireTokenForTeamVoltClientApp_Then_AccessTokenIsReturned()
         {
-            // Arrange
-
-            // Act
             var actualAuthenticationResult = await TeamVoltClientApp.AcquireTokenForClient(Configuration.BackendAppScope).ExecuteAsync();
 
-            // Assert
             actualAuthenticationResult.AccessToken.Should().NotBeNullOrWhiteSpace();
         }
 
