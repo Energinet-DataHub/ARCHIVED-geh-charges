@@ -17,18 +17,21 @@ using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 
 namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands.Validation.BusinessValidation.ValidationRules
 {
-    public class ChargeMustExistRule : IValidationRule
+    public class ChargeMustExistRule : IValidationRuleWithExtendedData
     {
         private readonly Charge? _existingCharge;
+        private readonly ChargeLinkDto _chargeLinkDto;
 
-        public ChargeMustExistRule(Charge? existingCharge)
+        public ChargeMustExistRule(Charge? existingCharge, ChargeLinkDto chargeLinkDto)
         {
             _existingCharge = existingCharge;
+            _chargeLinkDto = chargeLinkDto;
         }
 
-        public ValidationRuleIdentifier ValidationRuleIdentifier =>
-            ValidationRuleIdentifier.ChargeDoesNotExist;
+        public ValidationRuleIdentifier ValidationRuleIdentifier => ValidationRuleIdentifier.ChargeDoesNotExist;
 
         public bool IsValid => _existingCharge is not null;
+
+        public string TriggeredBy => _chargeLinkDto.SenderProvidedChargeId;
     }
 }

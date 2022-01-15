@@ -54,11 +54,11 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptD
 
             // fake error code and text
             availableChargeReceiptValidationErrorFactory
-                .Setup(f => f.Create(It.IsAny<ValidationRuleIdentifier>(), rejectedEvent.Command))
-                .Returns<ValidationRuleIdentifier, ChargeCommand>((identifier, _)
-                    => new AvailableReceiptValidationError(ReasonCode.D01, identifier.ToString()));
+                .Setup(f => f.Create(It.IsAny<ValidationError>(), rejectedEvent.Command))
+                .Returns<ValidationError, ChargeCommand>((identifier, _) =>
+                     new AvailableReceiptValidationError(ReasonCode.D01, identifier.ValidationRuleIdentifier.ToString()));
             var expectedValidationErrors =
-                rejectedEvent.FailedValidationRuleIdentifiers.Select(x => x.ToString()).ToList();
+                rejectedEvent.ValidationErrors.Select(x => x.ValidationRuleIdentifier.ToString()).ToList();
 
             // Act
             var actualList = await sut.CreateAsync(rejectedEvent);
@@ -74,7 +74,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptD
             actual.OriginalOperationId.Should().Be(rejectedEvent.Command.ChargeOperation.Id);
 
             var actualValidationErrors = actual.ValidationErrors.ToList();
-            actual.ValidationErrors.Should().HaveSameCount(rejectedEvent.FailedValidationRuleIdentifiers);
+            actual.ValidationErrors.Should().HaveSameCount(rejectedEvent.ValidationErrors);
 
             for (var i = 0; i < actualValidationErrors.Count; i++)
             {

@@ -50,6 +50,8 @@ namespace GreenEnergyHub.Charges.MessageHub.Infrastructure.Bundling
                 BundleType.ChargeLinkConfirmationDataAvailable => _bundleCreators[typeof(BundleCreator<AvailableChargeLinksReceiptData>)],
                 // RSM-031 CIM XML 'NotifyBillingMasterData' requests
                 BundleType.ChargeLinkDataAvailable => _bundleCreators[typeof(BundleCreator<AvailableChargeLinksData>)],
+                // RSM-033 CIM XML 'RejectRequestChangeBillingMasterData' rejections
+                BundleType.ChargeLinkRejectionDataAvailable => _bundleCreators[typeof(BundleCreator<AvailableChargeLinksReceiptData>)],
                 _ => throw new ArgumentException(
                     $"Unknown message type: {request.MessageType} with DataAvailableNotificationIds: {request.IdempotencyId}"),
             };

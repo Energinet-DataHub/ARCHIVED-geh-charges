@@ -12,14 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands;
-using GreenEnergyHub.Charges.Domain.Dtos.Validation;
-using GreenEnergyHub.Charges.MessageHub.Models.AvailableData;
-
-namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksReceiptData
+namespace GreenEnergyHub.Charges.Domain.Dtos.Validation
 {
-    public interface IAvailableChargeLinksReceiptValidationErrorFactory
+    /// <summary>
+    /// Interface for validationrules with extended data for rejection messages
+    /// </summary>
+    public interface IValidationRuleWithExtendedData : IValidationRule
     {
-        AvailableReceiptValidationError Create(ValidationError ruleIdentifier, ChargeLinksCommand command);
+        /// <summary>
+        /// Violation of some validation rules are triggered by an element in a list.
+        /// In these cases this property will tell which element triggered the rule
+        /// identified by <see cref="ValidationRuleIdentifier"/>.
+        /// </summary>
+        public string TriggeredBy { get; }
     }
 }
