@@ -50,15 +50,16 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Contracts.Internal.ChargeL
         private static ChargeLinksRejectedEvent CreateChargeLinksCommandRejectedEvent(ChargeLinksCommandBuilder builder)
         {
             var chargeLinksCommand = builder.Build();
-            var reasons = new List<ValidationRuleIdentifier>
+            var validationErrors = new List<ValidationError>
             {
-                ValidationRuleIdentifier.MaximumPrice,
-                ValidationRuleIdentifier.ResolutionFeeValidation,
+                new(ValidationRuleIdentifier.ChargeDoesNotExist, triggeredBy: "1"),
+                new(ValidationRuleIdentifier.MeteringPointDoesNotExist, null),
             };
+
             var chargeLinksCommandRejectedEvent = new ChargeLinksRejectedEvent(
                 SystemClock.Instance.GetCurrentInstant(),
                 chargeLinksCommand,
-                reasons);
+                validationErrors);
             UpdateInstantsToValidTimes(chargeLinksCommandRejectedEvent);
             return chargeLinksCommandRejectedEvent;
         }

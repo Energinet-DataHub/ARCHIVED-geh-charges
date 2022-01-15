@@ -19,13 +19,14 @@
 syntax = "proto3";
 
 import "google/protobuf/timestamp.proto";
+import "google/protobuf/wrappers.proto";
 
 option csharp_namespace = "GreenEnergyHub.Charges.Infrastructure.Internal.ChargeCommandRejected";
 
 message ChargeCommandRejectedContract {
   google.protobuf.Timestamp published_time = 1;
   ChargeCommandContract command = 2;
-  repeated ValidationRuleIdentifierContract failed_validation_rule_identifiers = 4;
+  repeated ValidationErrorContract validation_errors = 3;
 }
 
 message ChargeCommandContract {
@@ -70,6 +71,11 @@ message PointContract
   int32 position = 1; // The position of the price in the price list it was delivered.
   double price = 2;
   google.protobuf.Timestamp time = 3; // A point in time, where the price applies.
+}
+
+message ValidationErrorContract {
+  ValidationRuleIdentifierContract validation_rule_identifier = 1;
+  google.protobuf.StringValue triggered_by = 2;
 }
 
 enum ValidationRuleIdentifierContract
