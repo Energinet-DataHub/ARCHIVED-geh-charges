@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System.Collections.Generic;
+using System.Linq;
 using Energinet.DataHub.Core.Messaging.Protobuf;
 using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.Domain.Charges;
@@ -38,18 +39,21 @@ namespace GreenEnergyHub.Charges.Infrastructure.Contracts.Internal.ChargeCommand
             };
 
             ConvertPoints(chargeCommandRejectedContract, rejectionEvent.Command.ChargeOperation.Points);
-            AddValidationRuleIdentifiers(chargeCommandRejectedContract, rejectionEvent);
+            ConvertValidationErrors(chargeCommandRejectedContract, rejectionEvent);
 
             return chargeCommandRejectedContract;
         }
 
-        private static void AddValidationRuleIdentifiers(ChargeCommandRejectedContract chargeCommandRejectedContract, ChargeCommandRejectedEvent rejectionEvent)
+        private static void ConvertValidationErrors(
+            ChargeCommandRejectedContract chargeCommandRejectedContract,
+            ChargeCommandRejectedEvent rejectionEvent)
         {
-            foreach (var failedValidationRuleIdentifier in rejectionEvent.FailedValidationRuleIdentifiers)
-            {
-                chargeCommandRejectedContract.FailedValidationRuleIdentifiers
-                    .Add((ValidationRuleIdentifierContract)failedValidationRuleIdentifier);
-            }
+            chargeCommandRejectedContract.ValidationErrors.AddRange(
+                rejectionEvent.ValidationErrors.Select(ve => new ValidationErrorContract
+                {
+                    ValidationRuleIdentifier = (ValidationRuleIdentifierContract)ve.ValidationRuleIdentifier,
+                    TriggeredBy = ve.TriggeredBy,
+                }));
         }
 
         private static ChargeOperationContract ConvertChargeOperation(ChargeOperationDto charge)
