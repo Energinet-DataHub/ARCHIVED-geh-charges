@@ -136,5 +136,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors
         [ErrorMessageFor(ValidationRuleIdentifier.ChargeDoesNotExist)]
         public const string ChargeDoesNotExistValidationErrorText =
             "Charge {{DocumentSenderProvidedChargeId}} not allowed: The charge is not an existing charge on date {{ChargeStartDateTime}}.";
+
+        public const string Unknown = "unknown";
     }
 }
