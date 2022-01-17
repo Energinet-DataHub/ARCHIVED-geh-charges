@@ -64,7 +64,7 @@
     // Internal, charge links, accepted
     "CHARGE_LINKS_ACCEPTED_TOPIC_NAME": "links-command-accepted",
     "CHARGE_LINKS_REJECTED_TOPIC_NAME": "links-command-rejected",
-    "CHARGE_LINKS_REJECTED_SUBSCRIPTION_NAME": "charge-links-command-rejected",
+    "CHARGE_LINKS_REJECTED_SUBSCRIPTION_NAME": "links-command-rejected",
     "CHARGE_LINKS_ACCEPTED_SUB_CONFIRMATION_NOTIFIER": "charge-links-accepted-sub-confirmation-notifier",
     "CHARGE_LINKS_ACCEPTED_SUB_DATA_AVAILABLE_NOTIFIER": "charge-links-accepted-sub-data-available-notifier",
     "CHARGE_LINKS_ACCEPTED_SUB_EVENT_PUBLISHER": "charge-links-accepted-sub-event-publisher",
