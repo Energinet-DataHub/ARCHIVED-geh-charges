@@ -24,11 +24,8 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Core.Cim.MarketDocument
     public class MarketParticipantRoleMapperTests
     {
         [Theory]
-        [InlineData("STS", MarketParticipantRole.EnergyAgency)]
         [InlineData("DDQ", MarketParticipantRole.EnergySupplier)]
         [InlineData("DDM", MarketParticipantRole.GridAccessProvider)]
-        [InlineData("DGL", MarketParticipantRole.MeteredDataAdministrator)]
-        [InlineData("MDR", MarketParticipantRole.MeteredDataResponsible)]
         [InlineData("DDZ", MarketParticipantRole.MeteringPointAdministrator)]
         [InlineData("EZ", MarketParticipantRole.SystemOperator)]
         [InlineData("", MarketParticipantRole.Unknown)]
@@ -41,11 +38,8 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Core.Cim.MarketDocument
         }
 
         [Theory]
-        [InlineData(MarketParticipantRole.EnergyAgency, "STS")]
         [InlineData(MarketParticipantRole.EnergySupplier, "DDQ")]
         [InlineData(MarketParticipantRole.GridAccessProvider, "DDM")]
-        [InlineData(MarketParticipantRole.MeteredDataAdministrator, "DGL")]
-        [InlineData(MarketParticipantRole.MeteredDataResponsible, "MDR")]
         [InlineData(MarketParticipantRole.MeteringPointAdministrator, "DDZ")]
         [InlineData(MarketParticipantRole.SystemOperator, "EZ")]
         public void Map_WhenGivenKnownInput_MapsToCorrectString(MarketParticipantRole marketParticipantRole, string expected)

@@ -19,13 +19,32 @@ namespace GreenEnergyHub.Charges.Domain.MarketParticipants
     /// </summary>
     public enum MarketParticipantRole
     {
+        /// <summary>
+        /// Should only be used for unvalidated input.
+        /// It should never be used or stored for other things than validation and rejections.
+        /// </summary>
         Unknown = 0,
+
+        /// <summary>
+        /// Also known as DDQ.
+        /// </summary>
         EnergySupplier = 1,
+
+        /// <summary>
+        /// Also known as DDM.
+        /// </summary>
         GridAccessProvider = 2,
+
+        /// <summary>
+        /// Also known as EZ.
+        /// In Denmark it's Energinet.
+        /// </summary>
         SystemOperator = 3,
-        MeteredDataResponsible = 4,
-        EnergyAgency = 5,
-        MeteredDataAdministrator = 6,
+
+        /// <summary>
+        /// Also known as DDZ.
+        /// In Denmark it's DataHub.
+        /// </summary>
         MeteringPointAdministrator = 7,
     }
 }

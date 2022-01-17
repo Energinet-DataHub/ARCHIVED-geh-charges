@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using GreenEnergyHub.Charges.FunctionHost.Configuration;
+using GreenEnergyHub.Charges.FunctionHost.System;
 using GreenEnergyHub.Charges.Infrastructure.Core.Correlation;
 using GreenEnergyHub.Charges.Infrastructure.Core.Function;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessageMetaData;
@@ -66,6 +67,9 @@ namespace GreenEnergyHub.Charges.FunctionHost
 
             // Message Hub
             BundleSenderEndpointConfiguration.ConfigureServices(serviceCollection);
+
+            // Actor Register
+            ActorRegisterEndpointConfiguration.ConfigureServices(serviceCollection);
         }
     }
 }
