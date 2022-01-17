@@ -53,6 +53,9 @@ namespace GreenEnergyHub.Charges.FunctionHost.Health
 
             return new Dictionary<string, bool>
             {
+                // Create default charge links
+                { "CreateLinksRequestQueueExists", await QueueExistsAsync(connectionString, EnvironmentSettingNames.CreateLinksRequestQueueName},
+                // MessageHub
                 { "MessageHubDataAvailableQueueExists", await QueueExistsAsync(connectionString, EnvironmentSettingNames.MessageHubDataAvailableQueue) },
                 { "MessageHubRequestQueueExists", await QueueExistsAsync(connectionString, EnvironmentSettingNames.MessageHubRequestQueue) },
                 { "MessageHubResponseQueueExists", await QueueExistsAsync(connectionString, EnvironmentSettingNames.MessageHubReplyQueue) },
