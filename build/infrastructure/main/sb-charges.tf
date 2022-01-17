@@ -30,6 +30,10 @@ module "sb_charges" {
       name    = "send",
       send    = true
     },
+    {
+      name    = "manage",
+      send    = true
+    },
   ]
 
   tags                  = azurerm_resource_group.this.tags
