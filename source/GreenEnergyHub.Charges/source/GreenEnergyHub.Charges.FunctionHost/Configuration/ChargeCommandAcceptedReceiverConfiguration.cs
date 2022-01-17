@@ -29,9 +29,6 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
     {
         internal static void ConfigureServices(IServiceCollection serviceCollection)
         {
-            serviceCollection.ReceiveProtobufMessage<ChargeCommandAcceptedContract>(
-                configuration => configuration.WithParser(() => ChargeCommandAcceptedContract.Parser));
-
             serviceCollection.AddScoped<MessageExtractor<ChargeCommandAcceptedEvent>>();
             serviceCollection.AddScoped<IChargeCreatedEventFactory, ChargeCreatedEventFactory>();
             serviceCollection.AddScoped<IChargePricesUpdatedEventFactory, ChargePricesUpdatedEventFactory>();
@@ -39,14 +36,26 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
             serviceCollection.AddScoped<IChargePricesUpdatedPublisher, ChargePricesUpdatedPublisher>();
             serviceCollection.AddScoped<IChargeIntegrationEventsPublisher, ChargeIntegrationEventsPublisher>();
 
-            serviceCollection.SendProtobuf<Infrastructure.Integration.ChargeCreated.ChargeCreated>();
-            serviceCollection.AddMessagingProtobuf().AddMessageDispatcher<ChargeCreatedEvent>(
-                EnvironmentHelper.GetEnv(EnvironmentSettingNames.DataHubSenderConnectionString),
-                EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargeCreatedTopicName));
+            serviceCollection.AddMessaging()
+                .AddMessageExtractor<ChargeCommandAcceptedEvent>()
+                .AddMessageDispatcher<ChargeCreatedEvent>(
+                    EnvironmentHelper.GetEnv(EnvironmentSettingNames.DataHubSenderConnectionString),
+                    EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargeCreatedTopicName))
+                .AddMessageDispatcher<ChargePricesUpdatedEvent>(
+                    EnvironmentHelper.GetEnv(EnvironmentSettingNames.DataHubSenderConnectionString),
+                    EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargePricesUpdatedTopicName));
 
-            serviceCollection.AddMessagingProtobuf().AddMessageDispatcher<ChargePricesUpdatedEvent>(
-                EnvironmentHelper.GetEnv(EnvironmentSettingNames.DataHubSenderConnectionString),
-                EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargePricesUpdatedTopicName));
+            // serviceCollection.ReceiveProtobufMessage<ChargeCommandAcceptedContract>(
+            //     configuration => configuration.WithParser(() => ChargeCommandAcceptedContract.Parser));
+            //
+            // serviceCollection.SendProtobuf<Infrastructure.Integration.ChargeCreated.ChargeCreated>();
+            // serviceCollection.AddMessagingProtobuf().AddMessageDispatcher<ChargeCreatedEvent>(
+            //     EnvironmentHelper.GetEnv(EnvironmentSettingNames.DataHubSenderConnectionString),
+            //     EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargeCreatedTopicName));
+            //
+            // serviceCollection.AddMessagingProtobuf().AddMessageDispatcher<ChargePricesUpdatedEvent>(
+            //     EnvironmentHelper.GetEnv(EnvironmentSettingNames.DataHubSenderConnectionString),
+            //     EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargePricesUpdatedTopicName));
         }
     }
 }

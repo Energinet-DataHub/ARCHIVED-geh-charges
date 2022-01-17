@@ -23,10 +23,10 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
     {
         internal static void ConfigureServices(IServiceCollection serviceCollection)
         {
+            serviceCollection.AddScoped<IConsumptionMeteringPointPersister, ConsumptionMeteringPointPersister>();
+
             serviceCollection.ReceiveProtobufMessage<ConsumptionMeteringPointCreated>(
                 configuration => configuration.WithParser(() => ConsumptionMeteringPointCreated.Parser));
-
-            serviceCollection.AddScoped<IConsumptionMeteringPointPersister, ConsumptionMeteringPointPersister>();
         }
     }
 }

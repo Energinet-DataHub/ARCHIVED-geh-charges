@@ -40,10 +40,16 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
             serviceCollection.AddScoped<IChargesMessageHandler, ChargesMessageHandler>();
             serviceCollection.AddScoped<IChargeCommandHandler, ChargeCommandHandler>();
 
-            serviceCollection.SendProtobuf<ChargeCommandReceivedContract>();
-            serviceCollection.AddMessagingProtobuf().AddMessageDispatcher<ChargeCommandReceivedEvent>(
+            serviceCollection.AddMessaging()
+                .AddMessageExtractor<ChargeCommandReceivedEvent>()
+                .AddMessageDispatcher<ChargeCommandReceivedEvent>(
                     EnvironmentHelper.GetEnv(EnvironmentSettingNames.DomainEventSenderConnectionString),
                     EnvironmentHelper.GetEnv(EnvironmentSettingNames.CommandReceivedTopicName));
+
+            // serviceCollection.SendProtobuf<ChargeCommandReceivedContract>();
+            // serviceCollection.AddMessagingProtobuf().AddMessageDispatcher<ChargeCommandReceivedEvent>(
+            //         EnvironmentHelper.GetEnv(EnvironmentSettingNames.DomainEventSenderConnectionString),
+            //         EnvironmentHelper.GetEnv(EnvironmentSettingNames.CommandReceivedTopicName));
         }
     }
 }

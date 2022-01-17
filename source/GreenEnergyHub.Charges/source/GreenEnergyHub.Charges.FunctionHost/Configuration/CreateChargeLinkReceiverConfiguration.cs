@@ -28,11 +28,10 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
         {
             serviceCollection.AddScoped<ICreateLinkRequestHandler, CreateLinkRequestHandler>();
             serviceCollection.AddScoped<IChargeLinksCommandFactory, ChargeLinksCommandFactory>();
+            serviceCollection.AddScoped<IDefaultChargeLinkRepository, DefaultChargeLinkRepository>();
 
             serviceCollection.ReceiveProtobufMessage<CreateDefaultChargeLinks>(
                 configuration => configuration.WithParser(() => CreateDefaultChargeLinks.Parser));
-
-            serviceCollection.AddScoped<IDefaultChargeLinkRepository, DefaultChargeLinkRepository>();
         }
     }
 }

@@ -19,6 +19,7 @@ using GreenEnergyHub.Charges.Core.Currency;
 using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandAcceptedEvents;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandReceivedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandRejectedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation;
@@ -96,18 +97,29 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
 
         private static void ConfigureMessaging(IServiceCollection serviceCollection)
         {
-            serviceCollection.ReceiveProtobufMessage<ChargeCommandReceivedContract>(
-                configuration => configuration.WithParser(() => ChargeCommandReceivedContract.Parser));
-
-            serviceCollection.SendProtobuf<ChargeCommandAcceptedContract>();
-            serviceCollection.AddMessagingProtobuf().AddMessageDispatcher<ChargeCommandAcceptedEvent>(
+            serviceCollection
+                .AddMessaging()
+                .AddMessageExtractor<ChargeCommandReceivedEvent>()
+                .AddMessageDispatcher<ChargeCommandAcceptedEvent>(
                 EnvironmentHelper.GetEnv(EnvironmentSettingNames.DomainEventSenderConnectionString),
-                EnvironmentHelper.GetEnv(EnvironmentSettingNames.CommandAcceptedTopicName));
+                EnvironmentHelper.GetEnv(EnvironmentSettingNames.CommandAcceptedTopicName))
+                .AddMessageDispatcher<ChargeCommandRejectedEvent>(
+                    EnvironmentHelper.GetEnv(EnvironmentSettingNames.DomainEventSenderConnectionString),
+                    EnvironmentHelper.GetEnv(EnvironmentSettingNames.CommandRejectedTopicName));
 
-            serviceCollection.SendProtobuf<ChargeCommandRejectedContract>();
-            serviceCollection.AddMessagingProtobuf().AddMessageDispatcher<ChargeCommandRejectedEvent>(
-                EnvironmentHelper.GetEnv(EnvironmentSettingNames.DomainEventSenderConnectionString),
-                EnvironmentHelper.GetEnv(EnvironmentSettingNames.CommandRejectedTopicName));
+            // serviceCollection.ReceiveProtobufMessage<ChargeCommandReceivedContract>(
+            //     configuration => configuration.WithParser(() => ChargeCommandReceivedContract.Parser));
+            //
+            //
+            // serviceCollection.SendProtobuf<ChargeCommandAcceptedContract>();
+            // serviceCollection.AddMessagingProtobuf().AddMessageDispatcher<ChargeCommandAcceptedEvent>(
+            //     EnvironmentHelper.GetEnv(EnvironmentSettingNames.DomainEventSenderConnectionString),
+            //     EnvironmentHelper.GetEnv(EnvironmentSettingNames.CommandAcceptedTopicName));
+            //
+            // serviceCollection.SendProtobuf<ChargeCommandRejectedContract>();
+            // serviceCollection.AddMessagingProtobuf().AddMessageDispatcher<ChargeCommandRejectedEvent>(
+            //     EnvironmentHelper.GetEnv(EnvironmentSettingNames.DomainEventSenderConnectionString),
+            //     EnvironmentHelper.GetEnv(EnvironmentSettingNames.CommandRejectedTopicName));
         }
     }
 }

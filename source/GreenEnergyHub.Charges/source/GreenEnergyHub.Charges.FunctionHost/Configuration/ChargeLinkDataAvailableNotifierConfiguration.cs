@@ -33,14 +33,6 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
     {
         internal static void ConfigureServices(IServiceCollection serviceCollection)
         {
-            serviceCollection.ReceiveProtobufMessage<ChargeLinksCommandAccepted>(
-                configuration => configuration.WithParser(() => ChargeLinksCommandAccepted.Parser));
-
-            serviceCollection.SendProtobuf<DefaultChargeLinksCreated>();
-            serviceCollection.AddMessagingProtobuf().AddMessageDispatcher<ChargeLinksDataAvailableNotifiedEvent>(
-                EnvironmentHelper.GetEnv(EnvironmentSettingNames.DomainEventSenderConnectionString),
-                EnvironmentHelper.GetEnv(EnvironmentSettingNames.DefaultChargeLinksDataAvailableNotifiedTopicName));
-
             serviceCollection.AddScoped<IChargeLinksDataAvailableNotifiedPublisher, ChargeLinksDataAvailableNotifiedPublisher>();
             serviceCollection.AddScoped<IAvailableDataNotifier<AvailableChargeLinksData, ChargeLinksAcceptedEvent>,
                 AvailableDataNotifier<AvailableChargeLinksData, ChargeLinksAcceptedEvent>>();
@@ -53,6 +45,20 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
             serviceCollection
                 .AddScoped<BundleSpecification<AvailableChargeLinksData, ChargeLinksAcceptedEvent>,
                     ChargeLinksBundleSpecification>();
+
+            // serviceCollection.ReceiveProtobufMessage<ChargeLinksCommandAccepted>(
+            //     configuration => configuration.WithParser(() => ChargeLinksCommandAccepted.Parser));
+            //
+            // serviceCollection.SendProtobuf<DefaultChargeLinksCreated>();
+            // serviceCollection.AddMessagingProtobuf().AddMessageDispatcher<ChargeLinksDataAvailableNotifiedEvent>(
+            //     EnvironmentHelper.GetEnv(EnvironmentSettingNames.DomainEventSenderConnectionString),
+            //     EnvironmentHelper.GetEnv(EnvironmentSettingNames.DefaultChargeLinksDataAvailableNotifiedTopicName));
+            serviceCollection
+                .AddMessaging()
+                .AddMessageExtractor<ChargeLinksAcceptedEvent>()
+                .AddMessageDispatcher<ChargeLinksDataAvailableNotifiedEvent>(
+                    EnvironmentHelper.GetEnv(EnvironmentSettingNames.DomainEventSenderConnectionString),
+                    EnvironmentHelper.GetEnv(EnvironmentSettingNames.DefaultChargeLinksDataAvailableNotifiedTopicName));
         }
     }
 }

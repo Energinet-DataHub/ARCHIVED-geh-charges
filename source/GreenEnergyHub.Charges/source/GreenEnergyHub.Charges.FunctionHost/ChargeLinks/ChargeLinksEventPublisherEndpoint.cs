@@ -29,11 +29,11 @@ namespace GreenEnergyHub.Charges.FunctionHost.ChargeLinks
         /// Function name affects the URL and thus possibly dependent infrastructure.
         /// </summary>
         public const string FunctionName = nameof(ChargeLinksEventPublisherEndpoint);
-        private readonly MessageExtractor<ChargeLinksCommandAccepted> _messageExtractor;
+        private readonly MessageExtractor<ChargeLinksAcceptedEvent> _messageExtractor;
         private readonly IChargeLinkEventPublishHandler _chargeLinkEventPublishHandler;
 
         public ChargeLinksEventPublisherEndpoint(
-            MessageExtractor<ChargeLinksCommandAccepted> messageExtractor,
+            MessageExtractor<ChargeLinksAcceptedEvent> messageExtractor,
             IChargeLinkEventPublishHandler chargeLinkEventPublishHandler)
         {
             _messageExtractor = messageExtractor;

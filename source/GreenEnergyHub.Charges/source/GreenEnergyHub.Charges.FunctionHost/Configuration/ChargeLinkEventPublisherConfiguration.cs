@@ -15,6 +15,7 @@
 using Energinet.DataHub.Core.Messaging.Protobuf;
 using GreenEnergyHub.Charges.Application.ChargeLinks.Handlers;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinkCreatedEvents;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksAcceptedEvents;
 using GreenEnergyHub.Charges.FunctionHost.Common;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Registration;
 using GreenEnergyHub.Charges.Infrastructure.Integration.ChargeLinkCreated;
@@ -30,13 +31,20 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
             serviceCollection.AddScoped<IChargeLinkCreatedEventFactory, ChargeLinkCreatedEventFactory>();
             serviceCollection.AddScoped<IChargeLinkEventPublishHandler, ChargeLinkEventPublishHandler>();
 
-            serviceCollection.ReceiveProtobufMessage<ChargeLinksCommandAccepted>(
-                configuration => configuration.WithParser(() => ChargeLinksCommandAccepted.Parser));
+            serviceCollection
+                .AddMessaging()
+                .AddMessageExtractor<ChargeLinksAcceptedEvent>()
+                .AddMessageDispatcher<ChargeLinkCreatedEvent>(
+                    EnvironmentHelper.GetEnv(EnvironmentSettingNames.DataHubSenderConnectionString),
+                    EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargeLinksCreatedTopicName));
 
-            serviceCollection.SendProtobuf<ChargeLinkCreatedContract>();
-            serviceCollection.AddMessagingProtobuf().AddMessageDispatcher<ChargeLinkCreatedEvent>(
-                EnvironmentHelper.GetEnv(EnvironmentSettingNames.DataHubSenderConnectionString),
-                EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargeLinksCreatedTopicName));
+            // serviceCollection.ReceiveProtobufMessage<ChargeLinksCommandAccepted>(
+            //     configuration => configuration.WithParser(() => ChargeLinksCommandAccepted.Parser));
+            //
+            // serviceCollection.SendProtobuf<ChargeLinkCreatedContract>();
+            // serviceCollection.AddMessagingProtobuf().AddMessageDispatcher<ChargeLinkCreatedEvent>(
+            //     EnvironmentHelper.GetEnv(EnvironmentSettingNames.DataHubSenderConnectionString),
+            //     EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargeLinksCreatedTopicName));
         }
     }
 }

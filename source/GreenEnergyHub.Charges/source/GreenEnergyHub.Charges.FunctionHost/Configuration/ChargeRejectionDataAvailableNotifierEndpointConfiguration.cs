@@ -30,8 +30,6 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
     {
         internal static void ConfigureServices(IServiceCollection serviceCollection)
         {
-            serviceCollection.ReceiveProtobufMessage<ChargeCommandRejectedContract>(
-                configuration => configuration.WithParser(() => ChargeCommandRejectedContract.Parser));
             serviceCollection
                 .AddScoped<IAvailableDataNotifier<AvailableChargeReceiptData, ChargeCommandRejectedEvent>,
                     AvailableDataNotifier<AvailableChargeReceiptData, ChargeCommandRejectedEvent>>();
@@ -53,6 +51,13 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
             serviceCollection
                 .AddScoped<BundleSpecification<AvailableChargeReceiptData, ChargeCommandRejectedEvent>,
                     ChargeRejectionBundleSpecification>();
+
+            serviceCollection
+                .AddMessaging()
+                .AddMessageExtractor<ChargeCommandRejectedEvent>();
+
+            // serviceCollection.ReceiveProtobufMessage<ChargeCommandRejectedContract>(
+            //     configuration => configuration.WithParser(() => ChargeCommandRejectedContract.Parser));
         }
     }
 }

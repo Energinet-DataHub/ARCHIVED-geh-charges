@@ -26,11 +26,11 @@ namespace GreenEnergyHub.Charges.FunctionHost.Charges
     {
         public const string FunctionName = nameof(ChargeCommandReceiverEndpoint);
         private readonly IChargeCommandReceivedEventHandler _chargeCommandReceivedEventHandler;
-        private readonly MessageExtractor<ChargeCommandReceivedContract> _messageExtractor;
+        private readonly MessageExtractor<ChargeCommandReceivedEvent> _messageExtractor;
 
         public ChargeCommandReceiverEndpoint(
             IChargeCommandReceivedEventHandler chargeCommandReceivedEventHandler,
-            MessageExtractor<ChargeCommandReceivedContract> messageExtractor)
+            MessageExtractor<ChargeCommandReceivedEvent> messageExtractor)
         {
             _chargeCommandReceivedEventHandler = chargeCommandReceivedEventHandler;
             _messageExtractor = messageExtractor;
