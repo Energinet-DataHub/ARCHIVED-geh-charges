@@ -50,22 +50,26 @@ namespace GreenEnergyHub.Charges.Infrastructure.ActorRegister
                 .MarketParticipants
                 .ToDictionaryAsync(m => m.Id);
 
-            var actors = await _actorRegister
+            var actors = (await _actorRegister
                 .Actors
+                .ToListAsync())
                 .Where(a => _rolesUsedInChargesDomain.Any(r => a.Roles.Contains(r)))
-                .ToListAsync();
+                .ToList();
 
             foreach (var actor in actors)
             {
+                // Add or update market participant. Deletes are not supported.
                 if (!marketParticipants.ContainsKey(actor.Id))
                 {
                     var newMarketParticipant = CreateMarketParticipant(actor);
                     _chargesDatabaseContext.MarketParticipants.Add(newMarketParticipant);
                 }
-
-                var marketParticipant = marketParticipants.Single(m => m.Key == actor.Id).Value;
-                var businessProcessRole = GetBusinessProcessRole(actor.Roles);
-                MarketParticipantUpdater.Update(marketParticipant, actor, businessProcessRole);
+                else
+                {
+                    var marketParticipant = marketParticipants.Single(m => m.Key == actor.Id).Value;
+                    var businessProcessRole = GetBusinessProcessRole(actor.Roles);
+                    MarketParticipantUpdater.Update(marketParticipant, actor, businessProcessRole);
+                }
             }
 
             await _chargesDatabaseContext.SaveChangesAsync();

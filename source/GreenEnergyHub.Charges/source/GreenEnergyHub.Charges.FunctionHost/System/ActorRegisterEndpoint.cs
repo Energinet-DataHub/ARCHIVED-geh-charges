@@ -13,7 +13,6 @@
 // limitations under the License.
 
 using System;
-using System.IO;
 using System.Net;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Infrastructure.ActorRegister;
@@ -39,7 +38,6 @@ namespace GreenEnergyHub.Charges.FunctionHost.System
             [HttpTrigger(AuthorizationLevel.Anonymous, "put", Route = null)]
             HttpRequestData req)
         {
-            await using var writer = new StreamWriter(req.Body);
             var response = req.CreateResponse();
             string statusMessage;
 
@@ -51,10 +49,10 @@ namespace GreenEnergyHub.Charges.FunctionHost.System
             catch (Exception e)
             {
                 response.StatusCode = HttpStatusCode.InternalServerError;
-                statusMessage = e.Message;
+                statusMessage = e.ToString();
             }
 
-            await writer.WriteAsync(statusMessage);
+            await response.WriteStringAsync(statusMessage);
             return response;
         }
     }

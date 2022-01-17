@@ -23,20 +23,21 @@ namespace GreenEnergyHub.Charges.Infrastructure.ActorRegister.Persistence.Actors
     {
         public void Configure(EntityTypeBuilder<Actor> builder)
         {
-            builder.ToTable("Actor");
+            builder.ToView("Actor");
 
             builder.HasKey(x => x.Id);
 
-            builder.Property(x => x.IdentificationNumber);
-            builder.Property(x => x.IdentificationType);
+            builder.Property(a => a.IdentificationNumber);
+            builder.Property(a => a.IdentificationType);
+            builder.Property(a => a.Active);
 
             builder
-                .Property(x => x.Roles)
+                .Property(a => a.Roles)
                 .HasField("_roles")
-                .HasColumnType("varchar(512)")
+                .HasColumnType("nvarchar")
                 .HasConversion(
                     v => string.Join(",", v.Select(r => ((int)r).ToString())),
-                    v => v.Split(',', StringSplitOptions.None).Select(Enum.Parse<Role>).ToList());
+                    v => v.Split(',', StringSplitOptions.None).Select(r => Enum.Parse<Role>(r, true)).ToList());
         }
     }
 }
