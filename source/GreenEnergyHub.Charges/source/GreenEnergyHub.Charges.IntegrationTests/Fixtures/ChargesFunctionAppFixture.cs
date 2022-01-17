@@ -63,6 +63,9 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures
         [NotNull]
         public ServiceBusTestListener? CreateLinkReplyQueueListener { get; private set; }
 
+        [NotNull]
+        public ServiceBusTestListener? MeteringPointCreatedListener { get; private set; }
+
         private AzuriteManager AzuriteManager { get; }
 
         private IntegrationTestConfiguration IntegrationTestConfiguration { get; }
@@ -205,6 +208,10 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures
             var chargePricesUpdatedListener = new ServiceBusListenerMock(ServiceBusResourceProvider.ConnectionString, TestLogger);
             await chargePricesUpdatedListener.AddTopicSubscriptionListenerAsync(chargePricesUpdatedTopic.Name, ChargesServiceBusResourceNames.ChargePricesUpdatedSubscriptionName);
             ChargePricesUpdatedListener = new ServiceBusTestListener(chargePricesUpdatedListener);
+
+            var meteringPointCreatedListener = new ServiceBusListenerMock(ServiceBusResourceProvider.ConnectionString, TestLogger);
+            await meteringPointCreatedListener.AddTopicSubscriptionListenerAsync(meteringPointCreatedTopic.Name, ChargesServiceBusResourceNames.MeteringPointCreatedSubscriptionName);
+            MeteringPointCreatedListener = new ServiceBusTestListener(meteringPointCreatedListener);
 
             await InitializeMessageHubAsync();
 
