@@ -17,49 +17,57 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksRejectionEvents;
+using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.Infrastructure.Core.Cim.MarketDocument;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessageMetaData;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableData;
 
 namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksReceiptData
 {
-    public class AvailableChargeLinksRejectionDataFactory : IAvailableDataFactory<AvailableChargeLinksReceiptData, ChargeLinksRejectedEvent>
+    public class AvailableChargeLinksRejectionDataFactory
+        : AvailableDataFactoryBase<AvailableChargeLinksReceiptData, ChargeLinksRejectedEvent>
     {
         private readonly IMessageMetaDataContext _messageMetaDataContext;
-        private readonly IAvailableChargeLinksReceiptValidationErrorFactory _availableChargeLinksReceiptValidationErrorFactory;
+
+        private readonly IAvailableChargeLinksReceiptValidationErrorFactory
+            _availableChargeLinksReceiptValidationErrorFactory;
 
         public AvailableChargeLinksRejectionDataFactory(
             IMessageMetaDataContext messageMetaDataContext,
-            IAvailableChargeLinksReceiptValidationErrorFactory availableChargeLinksReceiptValidationErrorFactory)
+            IAvailableChargeLinksReceiptValidationErrorFactory availableChargeLinksReceiptValidationErrorFactory,
+            IMarketParticipantRepository marketParticipantRepository)
+            : base(marketParticipantRepository)
         {
             _messageMetaDataContext = messageMetaDataContext;
             _availableChargeLinksReceiptValidationErrorFactory = availableChargeLinksReceiptValidationErrorFactory;
         }
 
-        public Task<IReadOnlyList<AvailableChargeLinksReceiptData>> CreateAsync(ChargeLinksRejectedEvent input)
+        public override async Task<IReadOnlyList<AvailableChargeLinksReceiptData>> CreateAsync(
+            ChargeLinksRejectedEvent input)
         {
-            IReadOnlyList<AvailableChargeLinksReceiptData> result =
-                input.ChargeLinksCommand.ChargeLinks.Select(chargeLinkDto => new AvailableChargeLinksReceiptData(
-                    input.ChargeLinksCommand.Document.Sender.Id, // The original sender is the recipient of the receipt
-                    input.ChargeLinksCommand.Document.Recipient.BusinessProcessRole,
-                    input.ChargeLinksCommand.Document.BusinessReasonCode,
-                    _messageMetaDataContext.RequestDataTime,
-                    Guid.NewGuid(), // ID of each available piece of data must be unique
-                    ReceiptStatus.Rejected,
-                    chargeLinkDto.OperationId,
-                    input.ChargeLinksCommand.MeteringPointId,
-                    GetReasons(input))).ToList();
+            var sender = await GetSenderAsync().ConfigureAwait(false);
 
-            return Task.FromResult(result);
+            return input.ChargeLinksCommand.ChargeLinks.Select(chargeLinkDto => new AvailableChargeLinksReceiptData(
+                sender.MarketParticipantId,
+                sender.SenderRole,
+                input.ChargeLinksCommand.Document.Sender.Id, // The original sender is the recipient of the receipt
+                input.ChargeLinksCommand.Document.Recipient.BusinessProcessRole,
+                input.ChargeLinksCommand.Document.BusinessReasonCode,
+                _messageMetaDataContext.RequestDataTime,
+                Guid.NewGuid(), // ID of each available piece of data must be unique
+                ReceiptStatus.Rejected,
+                chargeLinkDto.OperationId,
+                input.ChargeLinksCommand.MeteringPointId,
+                GetReasons(input))).ToList();
         }
 
         private List<AvailableReceiptValidationError> GetReasons(ChargeLinksRejectedEvent input)
         {
             return input
-                .FailedValidationRuleIdentifiers
+                .ValidationErrors
                 .Select(
-                    ruleIdentifier => _availableChargeLinksReceiptValidationErrorFactory
-                        .Create(ruleIdentifier, input.ChargeLinksCommand))
+                    validationError => _availableChargeLinksReceiptValidationErrorFactory
+                        .Create(validationError, input.ChargeLinksCommand))
                 .ToList();
         }
     }

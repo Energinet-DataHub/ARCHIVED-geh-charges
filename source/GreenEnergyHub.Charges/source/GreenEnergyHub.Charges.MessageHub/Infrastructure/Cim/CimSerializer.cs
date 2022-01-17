@@ -18,7 +18,6 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Xml.Linq;
-using GreenEnergyHub.Charges.Domain.Configuration;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.Infrastructure.Core.Cim.MarketDocument;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableData;
@@ -30,16 +29,12 @@ namespace GreenEnergyHub.Charges.MessageHub.Infrastructure.Cim
         where T : AvailableDataBase
     {
         public CimSerializer(
-            IHubSenderConfiguration hubSenderConfiguration,
             IClock clock,
             ICimIdProvider cimIdProvider)
         {
-            HubSenderConfiguration = hubSenderConfiguration;
             Clock = clock;
             CimIdProvider = cimIdProvider;
         }
-
-        public IHubSenderConfiguration HubSenderConfiguration { get; }
 
         public IClock Clock { get; }
 
@@ -49,10 +44,12 @@ namespace GreenEnergyHub.Charges.MessageHub.Infrastructure.Cim
             IEnumerable<T> records,
             Stream stream,
             BusinessReasonCode businessReasonCode,
+            string senderId,
+            MarketParticipantRole senderRole,
             string recipientId,
             MarketParticipantRole recipientRole)
         {
-            var document = GetDocument(records, businessReasonCode, recipientId, recipientRole);
+            var document = GetDocument(records, businessReasonCode, senderId, senderRole, recipientId, recipientRole);
             await document.SaveAsync(stream, SaveOptions.None, CancellationToken.None);
 
             stream.Position = 0;
@@ -78,6 +75,8 @@ namespace GreenEnergyHub.Charges.MessageHub.Infrastructure.Cim
         private XDocument GetDocument(
             IEnumerable<T> records,
             BusinessReasonCode businessReasonCode,
+            string senderId,
+            MarketParticipantRole senderRole,
             string recipientId,
             MarketParticipantRole recipientRole)
         {
@@ -104,7 +103,8 @@ namespace GreenEnergyHub.Charges.MessageHub.Infrastructure.Cim
                         CimIdProvider,
                         GetDocumentType(records),
                         businessReasonCode,
-                        HubSenderConfiguration,
+                        senderId,
+                        senderRole,
                         recipientId,
                         recipientRole,
                         Clock),

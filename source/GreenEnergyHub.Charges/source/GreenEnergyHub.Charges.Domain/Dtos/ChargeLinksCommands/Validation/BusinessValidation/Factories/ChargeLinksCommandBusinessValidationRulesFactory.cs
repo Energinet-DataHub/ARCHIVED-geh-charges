@@ -54,7 +54,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands.Validation.Busi
                     .GetOrNullAsync(new ChargeIdentifier(link.SenderProvidedChargeId, link.ChargeOwnerId, link.ChargeType))
                     .ConfigureAwait(false);
 
-                rules.Add(new ChargeMustExistRule(charge));
+                rules.Add(new ChargeMustExistRule(charge, link));
                 if (charge == null)
                     continue;
 

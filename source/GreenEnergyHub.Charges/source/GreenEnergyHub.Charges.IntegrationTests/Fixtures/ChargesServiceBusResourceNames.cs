@@ -18,6 +18,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures
     {
         // Environment specific settings
         public const string MessageHubStorageConnectionString = "UseDevelopmentStorage=true";
+        public const string RequestResponseLoggingConnectionString = "UseDevelopmentStorage=true";
 
         // Integration events, charges
         public const string ChargeCreatedTopicKey = "charge-created";
@@ -26,19 +27,22 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures
         public const string ChargePricesUpdatedSubscriptionName = "charge-prices-updated-sub";
 
         // Integration events, charge links
-        public const string ChargeLinkCreatedTopicKey = "charge-link-created";
+        public const string ChargeLinksCreatedTopicKey = "charge-links-created";
 
         // Integration, metering point domain
         public const string MeteringPointCreatedTopicKey = "metering-point-created";
         public const string MeteringPointCreatedSubscriptionName = "metering-point-created-sub-charges";
-        public const string CreateLinkRequestQueueKey = "create-link-request";
-        public const string CreateLinkReplyQueueKey = "create-link-reply";
+        public const string CreateLinksRequestQueueKey = "create-links-request";
+        public const string CreateLinksReplyQueueKey = "create-links-reply";
 
         // Integration, message hub
         public const string MessageHubDataAvailableQueueKey = "dataavailable";
         public const string MessageHubRequestQueueKey = "charges";
         public const string MessageHubReplyQueueKey = "charges-reply";
         public const string MessageHubStorageContainerName = "postoffice-reply";
+
+        // Integration, request response logging
+        public const string RequestResponseLoggingContainerName = "marketoplogs";
 
         // Internal, charge, received
         public const string CommandReceivedTopicKey = "command-received";
@@ -55,20 +59,20 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures
         public const string CommandRejectedSubscriptionName = "command-rejected";
 
         // Internal, charge links, received
-        public const string ChargeLinkReceivedTopicKey = "link-command-received";
-        public const string ChargeLinkReceivedSubscriptionName = "link-command-received-receiver";
+        public const string ChargeLinksReceivedTopicKey = "links-command-received";
+        public const string ChargeLinksReceivedSubscriptionName = "links-command-received-receiver";
 
         // Internal, charge links, rejected
-        public const string ChargeLinksRejectedTopicKey = "link-command-rejected";
+        public const string ChargeLinksRejectedTopicKey = "links-command-rejected";
         public const string ChargeLinksRejectedSubscriptionName = "charge-links-command-rejected";
 
         // Internal, charge links, accepted
-        public const string ChargeLinkAcceptedTopicKey = "link-command-accepted";
-        public const string ChargeLinkAcceptedConfirmationNotifierSubscriptionName = "chargelinkaccepted-sub-confirmationnotifier";
-        public const string ChargeLinkAcceptedDataAvailableNotifierSubscriptionName = "chargelinkaccepted-sub-dataavailablenotifier";
-        public const string ChargeLinkAcceptedEventPublisherSubscriptionName = "chargelinkaccepted-sub-eventpublisher";
-        public const string ChargeLinkAcceptedEventReplierSubscriptionName = "chargelinkaccepted-sub-replier";
-        public const string DefaultChargeLinksDataAvailableNotifiedTopicKey = "default-charge-link-available";
-        public const string DefaultChargeLinksDataAvailableNotifiedSubscriptionName = "default-charge-link-available-notified";
+        public const string ChargeLinksAcceptedTopicKey = "links-command-accepted";
+        public const string ChargeLinksAcceptedConfirmationNotifierSubscriptionName = "charge-links-accepted-sub-confirmation-notifier";
+        public const string ChargeLinksAcceptedDataAvailableNotifierSubscriptionName = "charge-links-accepted-sub-data-available-notifier";
+        public const string ChargeLinksAcceptedEventPublisherSubscriptionName = "charge-links-accepted-sub-event-publisher";
+        public const string ChargeLinksAcceptedEventReplierSubscriptionName = "charge-links-accepted-sub-replier";
+        public const string DefaultChargeLinksDataAvailableNotifiedTopicKey = "default-charge-links-available";
+        public const string DefaultChargeLinksDataAvailableNotifiedSubscriptionName = "default-charge-links-available-notified";
     }
 }

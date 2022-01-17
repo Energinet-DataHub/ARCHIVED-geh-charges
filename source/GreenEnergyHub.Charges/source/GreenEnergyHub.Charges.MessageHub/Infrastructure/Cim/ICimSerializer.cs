@@ -27,6 +27,8 @@ namespace GreenEnergyHub.Charges.MessageHub.Infrastructure.Cim
             IEnumerable<TAvailableData> availableData,
             Stream stream,
             BusinessReasonCode businessReasonCode,
+            string senderId,
+            MarketParticipantRole senderRole,
             string recipientId,
             MarketParticipantRole recipientRole);
     }

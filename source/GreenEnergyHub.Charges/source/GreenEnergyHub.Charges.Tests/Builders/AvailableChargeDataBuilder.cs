@@ -47,6 +47,8 @@ namespace GreenEnergyHub.Charges.Tests.Builders
         public AvailableChargeData Build()
         {
             return new AvailableChargeData(
+                "senderId",
+                MarketParticipantRole.MeteringPointAdministrator,
                 "recipientId",
                 MarketParticipantRole.GridAccessProvider,
                 _businessReasonCode,

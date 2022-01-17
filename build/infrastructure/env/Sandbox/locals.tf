@@ -28,8 +28,6 @@ locals {
     METERING_POINT_CREATED_SUBSCRIPTION_NAME            = "metering-point-created-sub-charges"
     CREATE_LINK_REQUEST_QUEUE_NAME                      = "create-link-request"
     CREATE_LINK_REPLY_QUEUE_NAME                        = "create-link-reply"
-    CREATE_LINK_MESSAGES_REQUEST_QUEUE_NAME             = "create-link-messages-request"
-    CREATE_LINK_MESSAGES_REPLY_QUEUE_NAME               = "create-link-messages-reply"
 
     # Message Hub
     MESSAGEHUB_DATAAVAILABLE_QUEUE                      = "dataavailable"

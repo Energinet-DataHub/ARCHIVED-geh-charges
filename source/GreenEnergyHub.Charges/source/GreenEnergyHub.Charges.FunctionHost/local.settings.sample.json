@@ -14,10 +14,7 @@
     "INTEGRATIONEVENT_MANAGER_CONNECTION_STRING": "<sb manager connection string for integration events (without EntityPath)>",
     "INTEGRATIONEVENT_SENDER_CONNECTION_STRING": "<sb sender connection string for integration events (without EntityPath)>",
     "MESSAGEHUB_STORAGE_CONNECTION_STRING": "<connection string for writing to the Message Hub storage account for bundles>",
-
-    // This is settings about who we identify ourselves as being
-    "HUB_SENDER_ID": "5790001330552",
-    "HUB_SENDER_ROLE_INT_ENUM_VALUE": "7", // See MarketParticipantRole for possible values, 7 is MeteringPointAdministrator
+    "REQUEST_RESPONSE_LOGGING_CONNECTION_STRING": "<connection string for logging request and response to storage>",
 
     // From this point on, it is settings that change with the code and not the environment
     // Localization
@@ -29,20 +26,22 @@
     "CHARGE_PRICES_UPDATED_TOPIC_NAME": "charge-prices-updated",
 
     // Integration events, charge links
-    "CHARGE_LINK_CREATED_TOPIC_NAME": "charge-link-created",
+    "CHARGE_LINKS_CREATED_TOPIC_NAME": "charge-links-created",
 
     // Integration, metering point domain
     "METERING_POINT_CREATED_TOPIC_NAME": "metering-point-created",
     "METERING_POINT_CREATED_SUBSCRIPTION_NAME": "metering-point-created-sub-charges",
-    "CREATE_LINK_MESSAGES_REPLY_QUEUE_NAME": "create-link-messages-reply",
-    "CREATE_LINK_REQUEST_QUEUE_NAME": "create-link-request",
-    "CREATE_LINK_REPLY_QUEUE_NAME": "create-link-reply",
+    "CREATE_LINKS_REQUEST_QUEUE_NAME": "create-links-request",
+    "CREATE_LINKS_REPLY_QUEUE_NAME": "create-links-reply",
 
     // Integration, message hub
     "MESSAGEHUB_DATAAVAILABLE_QUEUE": "dataavailable",
     "MESSAGEHUB_BUNDLEREQUEST_QUEUE": "charges",
     "MESSAGEHUB_BUNDLEREPLY_QUEUE": "charges-reply",
     "MESSAGEHUB_STORAGE_CONTAINER": "postoffice-reply",
+
+    // Integration, request response logging
+    "REQUEST_RESPONSE_LOGGING_CONTAINER_NAME": "marketoplogs",
 
     // Internal, charge, received
     "COMMAND_RECEIVED_TOPIC_NAME": "command-received",
@@ -59,19 +58,19 @@
     "COMMAND_REJECTED_SUBSCRIPTION_NAME": "command-rejected",
 
     // Internal, charge links, received
-    "CHARGE_LINK_RECEIVED_TOPIC_NAME": "link-command-received",
-    "CHARGE_LINK_RECEIVED_SUBSCRIPTION_NAME": "link-command-received-receiver",
+    "CHARGE_LINKS_RECEIVED_TOPIC_NAME": "links-command-received",
+    "CHARGE_LINKS_RECEIVED_SUBSCRIPTION_NAME": "links-command-received-receiver",
 
     // Internal, charge links, accepted
-    "CHARGE_LINK_ACCEPTED_TOPIC_NAME": "link-command-accepted",
-    "CHARGE_LINK_REJECTED_TOPIC_NAME": "link-command-rejected",
+    "CHARGE_LINKS_ACCEPTED_TOPIC_NAME": "links-command-accepted",
+    "CHARGE_LINKS_REJECTED_TOPIC_NAME": "links-command-rejected",
     "CHARGE_LINKS_REJECTED_SUBSCRIPTION_NAME": "charge-links-command-rejected",
-    "CHARGELINKACCEPTED_SUB_CONFIRMATIONNOTIFIER": "chargelinkaccepted-sub-confirmationnotifier",
-    "CHARGELINKACCEPTED_SUB_DATAAVAILABLENOTIFIER": "chargelinkaccepted-sub-dataavailablenotifier",
-    "CHARGELINKACCEPTED_SUB_EVENTPUBLISHER": "chargelinkaccepted-sub-eventpublisher",
-    "CHARGELINKACCEPTED_SUB_REPLIER": "chargelinkaccepted-sub-replier",
-    "CREATE_LINK_MESSAGES_REQUEST_QUEUE_NAME": "create-link-messages-request",
-    "DEFAULT_CHARGE_LINKS_DATA_AVAILABLE_NOTIFIED_TOPIC_NAME": "default-charge-link-available",
-    "DEFAULT_CHARGE_LINKS_DATA_AVAILABLE_NOTIFIED_SUBSCRIPTION_NAME": "default-charge-link-available-notified",
+    "CHARGE_LINKS_ACCEPTED_SUB_CONFIRMATION_NOTIFIER": "charge-links-accepted-sub-confirmation-notifier",
+    "CHARGE_LINKS_ACCEPTED_SUB_DATA_AVAILABLE_NOTIFIER": "charge-links-accepted-sub-data-available-notifier",
+    "CHARGE_LINKS_ACCEPTED_SUB_EVENT_PUBLISHER": "charge-links-accepted-sub-event-publisher",
+    "CHARGE_LINKS_ACCEPTED_SUB_REPLIER": "charge-links-accepted-sub-replier",
+    "CREATE_LINKS_MESSAGES_REQUEST_QUEUE_NAME": "create-links-messages-request",
+    "DEFAULT_CHARGE_LINKS_DATA_AVAILABLE_NOTIFIED_TOPIC_NAME": "default-charge-links-available",
+    "DEFAULT_CHARGE_LINKS_DATA_AVAILABLE_NOTIFIED_SUBSCRIPTION_NAME": "default-charge-links-available-notified"
   }
 }
