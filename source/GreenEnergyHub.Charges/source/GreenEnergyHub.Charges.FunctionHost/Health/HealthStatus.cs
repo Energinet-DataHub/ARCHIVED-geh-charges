@@ -49,16 +49,19 @@ namespace GreenEnergyHub.Charges.FunctionHost.Health
 
         private async Task<Dictionary<string, bool>> GetDeepHealthCheckStatusAsync()
         {
-            var connectionString = EnvironmentHelper.GetEnv(EnvironmentSettingNames.DataHubManagerConnectionString);
+            var integrationEventsConnectionString = EnvironmentHelper.GetEnv(EnvironmentSettingNames.DataHubManagerConnectionString);
+            var domainEventsConnectionString = EnvironmentHelper.GetEnv(EnvironmentSettingNames.Domain)
 
             return new Dictionary<string, bool>
             {
                 // Create default charge links
-                { "CreateLinksRequestQueueExists", await QueueExistsAsync(connectionString, EnvironmentSettingNames.CreateLinksRequestQueueName},
+                { "CreateLinksRequestQueueExists", await QueueExistsAsync(integrationEventsConnectionString, EnvironmentSettingNames.CreateLinksRequestQueueName) },
+                { "DefaultChargeLinksDataAvailableNotifiedTopicExists", await TopicExistsAsync(integrationEventsConnectionString, EnvironmentSettingNames.DefaultChargeLinksDataAvailableNotifiedTopicName) },
+                { "DefaultChargeLinksDataAvailableNotifiedTopicExists", await TopicExistsAsync(integrationEventsConnectionString, EnvironmentSettingNames.DefaultChargeLinksDataAvailableNotifiedTopicName) },
                 // MessageHub
-                { "MessageHubDataAvailableQueueExists", await QueueExistsAsync(connectionString, EnvironmentSettingNames.MessageHubDataAvailableQueue) },
-                { "MessageHubRequestQueueExists", await QueueExistsAsync(connectionString, EnvironmentSettingNames.MessageHubRequestQueue) },
-                { "MessageHubResponseQueueExists", await QueueExistsAsync(connectionString, EnvironmentSettingNames.MessageHubReplyQueue) },
+                { "MessageHubDataAvailableQueueExists", await QueueExistsAsync(integrationEventsConnectionString, EnvironmentSettingNames.MessageHubDataAvailableQueue) },
+                { "MessageHubRequestQueueExists", await QueueExistsAsync(integrationEventsConnectionString, EnvironmentSettingNames.MessageHubRequestQueue) },
+                { "MessageHubResponseQueueExists", await QueueExistsAsync(integrationEventsConnectionString, EnvironmentSettingNames.MessageHubReplyQueue) },
             };
         }
 
@@ -67,6 +70,21 @@ namespace GreenEnergyHub.Charges.FunctionHost.Health
             var client = new ServiceBusAdministrationClient(connectionString);
             var queueName = EnvironmentHelper.GetEnv(queueNameEnvVariable);
             return await client.QueueExistsAsync(queueName);
+        }
+
+        private async Task<bool> TopicExistsAsync(string connectionString, string topicNameEnvVariable)
+        {
+            var client = new ServiceBusAdministrationClient(connectionString);
+            var topicName = EnvironmentHelper.GetEnv(topicNameEnvVariable);
+            return await client.TopicExistsAsync(topicName);
+        }
+
+        private async Task<bool> SubscriptionExistsAsync(string connectionString, string subscriptionNameEnvVariable, string topicNameEnvVariable)
+        {
+            var client = new ServiceBusAdministrationClient(connectionString);
+            var subscriptionName = EnvironmentHelper.GetEnv(subscriptionNameEnvVariable);
+            var topicName = EnvironmentHelper.GetEnv(topicNameEnvVariable);
+            return await client.SubscriptionExistsAsync(topicName, subscriptionName);
         }
     }
 }
