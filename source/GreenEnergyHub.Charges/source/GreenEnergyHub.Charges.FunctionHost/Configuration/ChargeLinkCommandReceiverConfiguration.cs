@@ -19,6 +19,7 @@ using GreenEnergyHub.Charges.Domain.ChargeLinks;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksAcceptedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands.Validation.BusinessValidation.Factories;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands.Validation.InputValidation.Factories;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksReceivedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksRejectionEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using GreenEnergyHub.Charges.FunctionHost.Common;
@@ -53,15 +54,14 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
             serviceCollection.AddScoped<IAvailableChargeLinksReceiptValidationErrorFactory, AvailableChargeLinksReceiptValidationErrorFactory>();
             serviceCollection.AddScoped<ICimValidationErrorTextFactory<ChargeLinksCommand>, ChargeLinksCimValidationErrorTextFactory>();
 
-            serviceCollection.ReceiveProtobufMessage<ChargeLinksCommandReceived>(
-                configuration => configuration.WithParser(() => ChargeLinksCommandReceived.Parser));
-            serviceCollection.SendProtobuf<ChargeLinksCommandAccepted>();
-            serviceCollection.AddMessagingProtobuf().AddMessageDispatcher<ChargeLinksAcceptedEvent>(
+            serviceCollection.AddMessaging()
+                .AddMessageExtractor<ChargeLinksReceivedEvent>()
+                .AddMessageDispatcher<ChargeLinksAcceptedEvent>(
                 EnvironmentHelper.GetEnv(EnvironmentSettingNames.DomainEventSenderConnectionString),
-                EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargeLinksAcceptedTopicName));
-            serviceCollection.AddMessagingProtobuf().AddMessageDispatcher<ChargeLinksRejectedEvent>(
-                EnvironmentHelper.GetEnv(EnvironmentSettingNames.DomainEventSenderConnectionString),
-                EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargeLinksRejectedTopicName));
+                EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargeLinksAcceptedTopicName))
+                .AddMessageDispatcher<ChargeLinksRejectedEvent>(
+                    EnvironmentHelper.GetEnv(EnvironmentSettingNames.DomainEventSenderConnectionString),
+                    EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargeLinksRejectedTopicName));
         }
     }
 }

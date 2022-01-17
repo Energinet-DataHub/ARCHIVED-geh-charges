@@ -16,7 +16,7 @@ using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application.ChargeLinks.Handlers;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksReceivedEvents;
 using GreenEnergyHub.Charges.FunctionHost.Common;
-using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions;
+using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Serialization;
 using Microsoft.Azure.Functions.Worker;
 
 namespace GreenEnergyHub.Charges.FunctionHost.ChargeLinks
@@ -24,16 +24,15 @@ namespace GreenEnergyHub.Charges.FunctionHost.ChargeLinks
     public class ChargeLinksCommandReceiverEndpoint
     {
         public const string FunctionName = nameof(ChargeLinksCommandReceiverEndpoint);
-        //private readonly MessageExtractor<ChargeLinksCommandReceived> _messageExtractor;
-        private readonly MessageExtractor<ChargeLinksReceivedEvent> _messageExtractor;
+        private readonly JsonMessageDeserializer<ChargeLinksReceivedEvent> _messageDeserializer;
         private readonly IChargeLinksReceivedEventHandler _chargeLinksReceivedEventHandler;
 
         public ChargeLinksCommandReceiverEndpoint(
-            MessageExtractor<ChargeLinksReceivedEvent> messageExtractor,
-            IChargeLinksReceivedEventHandler chargeLinksReceivedEventHandler)
+            IChargeLinksReceivedEventHandler chargeLinksReceivedEventHandler,
+            JsonMessageDeserializer<ChargeLinksReceivedEvent> messageDeserializer)
         {
-            _messageExtractor = messageExtractor;
             _chargeLinksReceivedEventHandler = chargeLinksReceivedEventHandler;
+            _messageDeserializer = messageDeserializer;
         }
 
         [Function(FunctionName)]
@@ -45,7 +44,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.ChargeLinks
             byte[] data)
         {
             var chargeLinkReceivedEvent =
-                await _messageExtractor.ExtractAsync(data).ConfigureAwait(false);
+                (ChargeLinksReceivedEvent)await _messageDeserializer.FromBytesAsync(data).ConfigureAwait(false);
             await _chargeLinksReceivedEventHandler
                 .HandleAsync((ChargeLinksReceivedEvent)chargeLinkReceivedEvent).ConfigureAwait(false);
         }

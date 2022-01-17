@@ -15,9 +15,12 @@
 using Energinet.DataHub.Core.Messaging.Transport.SchemaValidation;
 using GreenEnergyHub.Charges.Application.ChargeLinks.Handlers;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksReceivedEvents;
+using GreenEnergyHub.Charges.FunctionHost.Common;
 using GreenEnergyHub.Charges.Infrastructure.CimDeserialization.ChargeLinkBundle;
 using GreenEnergyHub.Charges.Infrastructure.Core.Function;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions;
+using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Registration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace GreenEnergyHub.Charges.FunctionHost.Configuration
@@ -32,6 +35,9 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
             serviceCollection.AddScoped<SchemaValidatingMessageDeserializer<ChargeLinksCommandBundle>, ChargeLinkCommandDeserializer>();
 
             serviceCollection.AddScoped<IChargeLinksCommandBundleHandler, ChargeLinksCommandBundleHandler>();
+            serviceCollection.AddMessaging().AddMessageDispatcher<ChargeLinksReceivedEvent>(
+                EnvironmentHelper.GetEnv(EnvironmentSettingNames.DomainEventSenderConnectionString),
+                EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargeLinksReceivedTopicName));
             serviceCollection.AddScoped<IChargeLinksCommandHandler, ChargeLinksCommandHandler>();
         }
     }

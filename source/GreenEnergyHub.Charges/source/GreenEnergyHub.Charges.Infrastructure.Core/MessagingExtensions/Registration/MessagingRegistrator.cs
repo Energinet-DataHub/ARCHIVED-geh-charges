@@ -35,7 +35,8 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Registr
             where TInboundMessage : IInboundMessage
         {
             _services.AddScoped<MessageExtractor<TInboundMessage>>();
-            _services.AddScoped<MessageDeserializer<TInboundMessage>, JsonMessageDeserializer<TInboundMessage>>();
+            //_services.AddScoped<MessageDeserializer<TInboundMessage>, JsonMessageDeserializer<TInboundMessage>>();
+            _services.AddScoped<JsonMessageDeserializer<TInboundMessage>>();
 
             return this;
         }
