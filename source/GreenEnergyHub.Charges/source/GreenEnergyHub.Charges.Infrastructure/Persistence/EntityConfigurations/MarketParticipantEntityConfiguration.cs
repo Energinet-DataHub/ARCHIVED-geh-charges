@@ -27,6 +27,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Persistence.EntityConfigurations
             builder.ToTable(nameof(MarketParticipant));
 
             builder.HasKey(x => x.Id);
+            builder.Property(x => x.Id).ValueGeneratedNever();
 
             builder.Property(x => x.MarketParticipantId);
             builder.Property(x => x.IsActive);

@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -46,9 +45,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.ActorRegister
 
         public async Task SynchronizeAsync()
         {
-            var marketParticipants = await _chargesDatabaseContext
-                .MarketParticipants
-                .ToDictionaryAsync(m => m.Id);
+            var marketParticipants = await _chargesDatabaseContext.MarketParticipants.ToListAsync();
 
             var actors = (await _actorRegister
                 .Actors
@@ -58,15 +55,30 @@ namespace GreenEnergyHub.Charges.Infrastructure.ActorRegister
 
             foreach (var actor in actors)
             {
+                var marketParticipant = marketParticipants.SingleOrDefault(m => m.Id == actor.Id);
+
                 // Add or update market participant. Deletes are not supported.
-                if (!marketParticipants.ContainsKey(actor.Id))
+                if (marketParticipant == null)
                 {
+                    // Remove if (anticipated) test data conflicts with data from actor register.
+                    // We consider the ID to be the UUID identifier of the actor and not the identification number.
+                    // This is supported by the fact that the ID is also used for authentication.
+                    var testData = marketParticipants
+                        .SingleOrDefault(mp => mp.MarketParticipantId == actor.IdentificationNumber);
+                    if (testData != null)
+                    {
+                        _chargesDatabaseContext.MarketParticipants.Remove(testData);
+
+                        // It's necessary to save changes in order to be able to add market participant
+                        // with same identification number without violating the unique constraint of the database
+                        await _chargesDatabaseContext.SaveChangesAsync();
+                    }
+
                     var newMarketParticipant = CreateMarketParticipant(actor);
                     _chargesDatabaseContext.MarketParticipants.Add(newMarketParticipant);
                 }
                 else
                 {
-                    var marketParticipant = marketParticipants.Single(m => m.Key == actor.Id).Value;
                     var businessProcessRole = GetBusinessProcessRole(actor.Roles);
                     MarketParticipantUpdater.Update(marketParticipant, actor, businessProcessRole);
                 }
@@ -79,7 +91,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.ActorRegister
         {
             var businessProcessRole = GetBusinessProcessRole(actor.Roles);
             var businessProcessRoles = new List<MarketParticipantRole> { businessProcessRole };
-            return new MarketParticipant(Guid.NewGuid(), actor.IdentificationNumber, actor.Active, businessProcessRoles);
+            return new MarketParticipant(actor.Id, actor.IdentificationNumber, actor.Active, businessProcessRoles);
         }
 
         /// <summary>
