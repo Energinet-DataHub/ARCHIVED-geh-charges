@@ -54,9 +54,31 @@ namespace GreenEnergyHub.Charges.FunctionHost.Health
 
             return new Dictionary<string, bool>
             {
-                // Create default charge links
+                // Integration events, charges
+                { "ChargeCreatedTopicExists", await TopicExistsAsync(integrationConnectionString, EnvironmentSettingNames.ChargeCreatedTopicName) },
+                { "ChargePricesUpdatedTopicExists", await TopicExistsAsync(integrationConnectionString, EnvironmentSettingNames.ChargePricesUpdatedTopicName) },
+
+                // Integration events, charge links
+                { "ChargeLinksCreatedTopicExists", await TopicExistsAsync(integrationConnectionString, EnvironmentSettingNames.ChargeLinksCreatedTopicName) },
+
+                // Integration events, metering point domain
+                { "ConsumptionMeteringPointCreatedTopicExists", await TopicExistsAsync(integrationConnectionString, EnvironmentSettingNames.ConsumptionMeteringPointCreatedTopicName) },
+                {
+                    "ConsumptionMeteringPointCreatedSubscriptionExists",
+                    await SubscriptionExistsAsync(
+                        integrationConnectionString,
+                        EnvironmentSettingNames.ConsumptionMeteringPointCreatedSubscriptionName,
+                        EnvironmentSettingNames.ConsumptionMeteringPointCreatedTopicName)
+                },
                 { "CreateLinksRequestQueueExists", await QueueExistsAsync(integrationConnectionString, EnvironmentSettingNames.CreateLinksRequestQueueName) },
                 { "DefaultChargeLinksDataAvailableNotifiedTopicExists", await TopicExistsAsync(domainConnectionString, EnvironmentSettingNames.DefaultChargeLinksDataAvailableNotifiedTopicName) },
+
+                // Integration events, MessageHub
+                { "MessageHubDataAvailableQueueExists", await QueueExistsAsync(integrationConnectionString, EnvironmentSettingNames.MessageHubDataAvailableQueue) },
+                { "MessageHubRequestQueueExists", await QueueExistsAsync(integrationConnectionString, EnvironmentSettingNames.MessageHubRequestQueue) },
+                { "MessageHubResponseQueueExists", await QueueExistsAsync(integrationConnectionString, EnvironmentSettingNames.MessageHubReplyQueue) },
+
+                // Internal event, create default charge links
                 {
                     "DefaultChargeLinksDataAvailableNotifiedSubscriptionExists",
                     await SubscriptionExistsAsync(
@@ -64,10 +86,6 @@ namespace GreenEnergyHub.Charges.FunctionHost.Health
                     EnvironmentSettingNames.DefaultChargeLinksDataAvailableNotifiedSubscription,
                     EnvironmentSettingNames.DefaultChargeLinksDataAvailableNotifiedTopicName)
                 },
-                // MessageHub
-                { "MessageHubDataAvailableQueueExists", await QueueExistsAsync(integrationConnectionString, EnvironmentSettingNames.MessageHubDataAvailableQueue) },
-                { "MessageHubRequestQueueExists", await QueueExistsAsync(integrationConnectionString, EnvironmentSettingNames.MessageHubRequestQueue) },
-                { "MessageHubResponseQueueExists", await QueueExistsAsync(integrationConnectionString, EnvironmentSettingNames.MessageHubReplyQueue) },
             };
         }
 
