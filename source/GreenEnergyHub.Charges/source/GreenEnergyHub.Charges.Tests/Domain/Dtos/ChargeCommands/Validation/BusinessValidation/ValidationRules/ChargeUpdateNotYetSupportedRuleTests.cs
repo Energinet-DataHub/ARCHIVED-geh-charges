@@ -26,25 +26,24 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
     [UnitTest]
     public class ChargeUpdateNotYetSupportedRuleTests
     {
-        [Theory]
-        [InlineAutoDomainData]
-        public void IsValid_WhenChargeIsNull_IsTrue(ChargeCommand chargeCommand)
+        [Fact]
+        public void IsValid_WhenChargeIsNull_IsTrue()
         {
-            var sut = new ChargeUpdateNotYetSupportedRule(chargeCommand, null);
+            var sut = new ChargeUpdateNotYetSupportedRule(null);
             sut.IsValid.Should().BeTrue();
         }
 
         [Theory]
         [InlineAutoDomainData]
-        public void IsValid_WhenChargeIsNotNull_IsFalse(ChargeCommand chargeCommand, Charge charge)
+        public void IsValid_WhenChargeIsNotNull_IsFalse(Charge charge)
         {
-            var sut = CreateInvalidRule(chargeCommand, charge);
+            var sut = CreateInvalidRule(charge);
             sut.IsValid.Should().BeFalse();
         }
 
-        private static ChargeUpdateNotYetSupportedRule CreateInvalidRule(ChargeCommand chargeCommand, Charge charge)
+        private static ChargeUpdateNotYetSupportedRule CreateInvalidRule(Charge charge)
         {
-            return new ChargeUpdateNotYetSupportedRule(chargeCommand, charge);
+            return new ChargeUpdateNotYetSupportedRule(charge);
         }
     }
 }

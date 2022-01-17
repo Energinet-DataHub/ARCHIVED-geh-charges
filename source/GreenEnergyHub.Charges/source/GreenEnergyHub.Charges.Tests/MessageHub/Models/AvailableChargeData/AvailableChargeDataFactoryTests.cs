@@ -46,7 +46,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeData
             AvailableChargeDataFactory sut)
         {
             // Arrange
-            var chargeCommand = chargeCommandBuilder.WithPoint(1).WithTaxIndicator(true).Build();
+            var chargeCommand = chargeCommandBuilder.WithPoint(1, 1).WithTaxIndicator(true).Build();
             var acceptedEvent = chargeCommandAcceptedEventBuilder.WithChargeCommand(chargeCommand).Build();
 
             marketParticipantRepository

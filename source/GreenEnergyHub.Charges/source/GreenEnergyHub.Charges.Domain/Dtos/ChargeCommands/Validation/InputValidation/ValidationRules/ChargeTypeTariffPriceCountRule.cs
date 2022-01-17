@@ -38,17 +38,13 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputVali
         {
             if (_chargeCommand.ChargeOperation.Type == ChargeType.Tariff)
             {
-                switch (_chargeCommand.ChargeOperation.Resolution)
+                return _chargeCommand.ChargeOperation.Resolution switch
                 {
-                    case Resolution.PT15M:
-                        return _chargeCommand.ChargeOperation.Points.Count == PricePointsRequiredInPt15M;
-                    case Resolution.PT1H:
-                        return _chargeCommand.ChargeOperation.Points.Count == PricePointsRequiredInPt1H;
-                    case Resolution.P1D:
-                        return _chargeCommand.ChargeOperation.Points.Count == PricePointsRequiredInP1D;
-                    default:
-                        throw new ArgumentException(nameof(_chargeCommand.ChargeOperation.Resolution));
-                }
+                    Resolution.PT15M => _chargeCommand.ChargeOperation.Points.Count == PricePointsRequiredInPt15M,
+                    Resolution.PT1H => _chargeCommand.ChargeOperation.Points.Count == PricePointsRequiredInPt1H,
+                    Resolution.P1D => _chargeCommand.ChargeOperation.Points.Count == PricePointsRequiredInP1D,
+                    _ => throw new ArgumentException(nameof(_chargeCommand.ChargeOperation.Resolution)),
+                };
             }
 
             return true;

@@ -1,0 +1,15 @@
+﻿{
+  // Use this on developer machine to toggle tests while developing them.
+  // Should be set 'true' using an environment variable on the build agent, to run these after deployment.
+  "SYSTEMFACT_SKIP": true,
+
+  // This key vault must contain B2C information that allows us to retrieve an access token from API Management tests.
+  "AZURE_SYSTEMTESTS_KEYVAULT_URL": "<System tests key vault url>",
+
+  // The following settings are used to determine the secrets names needed for the API Management tests.
+  "ENVIRONMENT_SHORT": "<short name of environment; e.g. 'u'>",
+  "ENVIRONMENT_INSTANCE": "<instance number of environment; e.g. '001'>",
+
+  // Hi Peter, update the property name to match the name of the domain for which we need the baseaddress.
+  "MYDOMAIN_BASEADDRESS": "<Base address of the domain in Azure environment>"
+}

@@ -20,19 +20,19 @@ module "sbt_links_command_accepted" {
   resource_group_name = azurerm_resource_group.this.name
   subscriptions       = [
     {
-      name                = "chargelinksaccepted-sub-replier"
+      name                = "charge-links-accepted-sub-replier"
       max_delivery_count  = 1
     },
     {
-      name                = "chargelinksaccepted-sub-eventpublisher"
+      name                = "charge-links-accepted-sub-event-publisher"
       max_delivery_count  = 1
     },
     {
-      name                = "chargelinksaccepted-sub-dataavailablenotifier"
+      name                = "charge-links-accepted-sub-data-available-notifier"
       max_delivery_count  = 1
     },
     {
-      name                = "chargelinksaccepted-sub-confirmationnotifier"
+      name                = "charge-links-accepted-sub-confirmation-notifier"
       max_delivery_count  = 1
     },	
   ]

@@ -60,6 +60,10 @@ namespace GreenEnergyHub.Charges.FunctionHost.Common
         public const string MessageHubReplyQueue = "MESSAGEHUB_BUNDLEREPLY_QUEUE";
         public const string MessageHubStorageContainer = "MESSAGEHUB_STORAGE_CONTAINER";
 
+        // Integration, request response logging
+        public const string RequestResponseLoggingConnectionString = "REQUEST_RESPONSE_LOGGING_CONNECTION_STRING";
+        public const string RequestResponseLoggingContainerName = "REQUEST_RESPONSE_LOGGING_CONTAINER_NAME";
+
         // Internal, charge, received
         public const string CommandReceivedTopicName = "COMMAND_RECEIVED_TOPIC_NAME";
         public const string CommandReceivedSubscriptionName = "COMMAND_RECEIVED_SUBSCRIPTION_NAME";
@@ -80,9 +84,9 @@ namespace GreenEnergyHub.Charges.FunctionHost.Common
 
         // Internal, charge links, accepted
         public const string ChargeLinksAcceptedTopicName = "CHARGE_LINKS_ACCEPTED_TOPIC_NAME";
-        public const string ChargeLinksAcceptedSubConfirmationNotifier = "CHARGE_LINKS_ACCEPTED_SUB_CONFIRMATIONNOTIFIER";
-        public const string ChargeLinksAcceptedSubDataAvailableNotifier = "CHARGE_LINKS_ACCEPTED_SUB_DATAAVAILABLENOTIFIER";
-        public const string ChargeLinksAcceptedSubEventPublisher = "CHARGE_LINKS_ACCEPTED_SUB_EVENTPUBLISHER";
+        public const string ChargeLinksAcceptedSubConfirmationNotifier = "CHARGE_LINKS_ACCEPTED_SUB_CONFIRMATION_NOTIFIER";
+        public const string ChargeLinksAcceptedSubDataAvailableNotifier = "CHARGE_LINKS_ACCEPTED_SUB_DATA_AVAILABLE_NOTIFIER";
+        public const string ChargeLinksAcceptedSubEventPublisher = "CHARGE_LINKS_ACCEPTED_SUB_EVENT_PUBLISHER";
         public const string ChargeLinksAcceptedReplier = "CHARGE_LINKS_ACCEPTED_SUB_REPLIER";
 
         // Internal, charge links, rejected

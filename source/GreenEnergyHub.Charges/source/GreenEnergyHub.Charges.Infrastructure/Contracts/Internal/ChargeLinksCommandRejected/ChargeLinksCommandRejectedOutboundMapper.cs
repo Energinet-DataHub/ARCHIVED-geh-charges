@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Linq;
 using Energinet.DataHub.Core.Messaging.Protobuf;
 using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands;
@@ -40,18 +41,21 @@ namespace GreenEnergyHub.Charges.Infrastructure.Contracts.Internal.ChargeLinksCo
                 linksCommandRejected.ChargeLinksCommand.ChargeLinks.Add(ConvertChargeLink(chargeLinkDto));
             }
 
-            AddValidationRuleIdentifiers(linksCommandRejected, chargeLinksRejectedEvent);
+            ConvertValidationErrors(linksCommandRejected, chargeLinksRejectedEvent);
 
             return linksCommandRejected;
         }
 
-        private static void AddValidationRuleIdentifiers(GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinksCommandRejected.ChargeLinksCommandRejected chargeLinksCommandRejected, ChargeLinksRejectedEvent rejectionEvent)
+        private static void ConvertValidationErrors(
+            GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinksCommandRejected.ChargeLinksCommandRejected chargeLinksCommandRejected,
+            ChargeLinksRejectedEvent rejectionEvent)
         {
-            foreach (var failedValidationRuleIdentifier in rejectionEvent.FailedValidationRuleIdentifiers)
-            {
-                chargeLinksCommandRejected.FailedValidationRuleIdentifiers
-                    .Add((ValidationRuleIdentifierContract)failedValidationRuleIdentifier);
-            }
+            chargeLinksCommandRejected.ValidationErrors.AddRange(
+                rejectionEvent.ValidationErrors.Select(ve => new ValidationErrorContract
+                {
+                    ValidationRuleIdentifier = (ValidationRuleIdentifierContract)ve.ValidationRuleIdentifier,
+                    TriggeredBy = ve.TriggeredBy,
+                }));
         }
 
         private static Document ConvertDocument(DocumentDto documentDto)

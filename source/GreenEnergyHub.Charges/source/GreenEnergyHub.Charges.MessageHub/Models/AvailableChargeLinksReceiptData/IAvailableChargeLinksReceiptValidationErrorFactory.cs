@@ -20,6 +20,6 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksReceiptDa
 {
     public interface IAvailableChargeLinksReceiptValidationErrorFactory
     {
-        AvailableReceiptValidationError Create(ValidationRuleIdentifier ruleIdentifier, ChargeLinksCommand command);
+        AvailableReceiptValidationError Create(ValidationError ruleIdentifier, ChargeLinksCommand command);
     }
 }

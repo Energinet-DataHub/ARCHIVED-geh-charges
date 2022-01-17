@@ -1,6 +1,6 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.0.31521.260
+VisualStudioVersion = 17.0.32014.148
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GreenEnergyHub.Charges.Domain", "source\GreenEnergyHub.Charges.Domain\GreenEnergyHub.Charges.Domain.csproj", "{A8D6B689-482A-4964-9B3C-1BF9DA9496E3}"
 EndProject
@@ -20,6 +20,14 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GreenEnergyHub.Json", "..\S
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GreenEnergyHub.TestHelpers", "..\Shared\GreenEnergyHub\source\GreenEnergyHub.TestHelpers\GreenEnergyHub.TestHelpers.csproj", "{374A128A-2E02-4978-A629-2B820B8A48E5}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GreenEnergyHub.Charges.QueryApi", "source\GreenEnergyHub.Charges.QueryApi\GreenEnergyHub.Charges.QueryApi.csproj", "{A709D6A2-C764-44A6-9006-F17FBDD373DE}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Command", "Command", "{36B51694-3E21-4365-9064-8FE1C66802FA}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GreenEnergyHub.Charges.MessageHub", "source\GreenEnergyHub.Charges.MessageHub\GreenEnergyHub.Charges.MessageHub.csproj", "{A65CCB3D-383F-41E8-A2C0-2C92EF43F75D}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GreenEnergyHub.Charges.Infrastructure.Core", "source\GreenEnergyHub.Charges.Infrastructure.Core\GreenEnergyHub.Charges.Infrastructure.Core.csproj", "{0E460B69-92CA-4FBC-85B8-27A1B24237AB}"
+EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GreenEnergyHub.Charges.ApplyDBMigrationsApp", "source\GreenEnergyHub.Charges.ApplyDBMigrationsApp\GreenEnergyHub.Charges.ApplyDBMigrationsApp.csproj", "{111D6B3F-0005-4740-B486-CFA7FD887F3D}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GreenEnergyHub.Iso8601", "..\iso8601\GreenEnergyHub.Iso8601\GreenEnergyHub.Iso8601.csproj", "{3952688E-AEDD-4197-8760-5987185680B0}"
@@ -34,13 +42,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GreenEnergyHub.Charges.Func
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GreenEnergyHub.Charges.WebApi", "source\GreenEnergyHub.Charges.WebApi\GreenEnergyHub.Charges.WebApi.csproj", "{6AB73278-5569-481E-88E3-9845BEEDB086}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GreenEnergyHub.Charges.QueryApi", "source\GreenEnergyHub.Charges.QueryApi\GreenEnergyHub.Charges.QueryApi.csproj", "{A709D6A2-C764-44A6-9006-F17FBDD373DE}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Command", "Command", "{36B51694-3E21-4365-9064-8FE1C66802FA}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GreenEnergyHub.Charges.MessageHub", "source\GreenEnergyHub.Charges.MessageHub\GreenEnergyHub.Charges.MessageHub.csproj", "{A65CCB3D-383F-41E8-A2C0-2C92EF43F75D}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GreenEnergyHub.Charges.Infrastructure.Core", "source\GreenEnergyHub.Charges.Infrastructure.Core\GreenEnergyHub.Charges.Infrastructure.Core.csproj", "{0E460B69-92CA-4FBC-85B8-27A1B24237AB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GreenEnergyHub.Charges.SystemTests", "source\GreenEnergyHub.Charges.SystemTests\GreenEnergyHub.Charges.SystemTests.csproj", "{5D640331-8137-4975-8090-0078731F5C5F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -72,6 +74,18 @@ Global
 		{374A128A-2E02-4978-A629-2B820B8A48E5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{374A128A-2E02-4978-A629-2B820B8A48E5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{374A128A-2E02-4978-A629-2B820B8A48E5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A709D6A2-C764-44A6-9006-F17FBDD373DE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A709D6A2-C764-44A6-9006-F17FBDD373DE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A709D6A2-C764-44A6-9006-F17FBDD373DE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A709D6A2-C764-44A6-9006-F17FBDD373DE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A65CCB3D-383F-41E8-A2C0-2C92EF43F75D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A65CCB3D-383F-41E8-A2C0-2C92EF43F75D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A65CCB3D-383F-41E8-A2C0-2C92EF43F75D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A65CCB3D-383F-41E8-A2C0-2C92EF43F75D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0E460B69-92CA-4FBC-85B8-27A1B24237AB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0E460B69-92CA-4FBC-85B8-27A1B24237AB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0E460B69-92CA-4FBC-85B8-27A1B24237AB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0E460B69-92CA-4FBC-85B8-27A1B24237AB}.Release|Any CPU.Build.0 = Release|Any CPU
 		{111D6B3F-0005-4740-B486-CFA7FD887F3D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{111D6B3F-0005-4740-B486-CFA7FD887F3D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{111D6B3F-0005-4740-B486-CFA7FD887F3D}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -96,30 +110,14 @@ Global
 		{539A7F51-A284-4268-AA14-98BB6122F5EB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{539A7F51-A284-4268-AA14-98BB6122F5EB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{539A7F51-A284-4268-AA14-98BB6122F5EB}.Release|Any CPU.Build.0 = Release|Any CPU
-		{46E01A80-BCAE-498E-8250-6DE0C18ABC36}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{46E01A80-BCAE-498E-8250-6DE0C18ABC36}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{46E01A80-BCAE-498E-8250-6DE0C18ABC36}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{46E01A80-BCAE-498E-8250-6DE0C18ABC36}.Release|Any CPU.Build.0 = Release|Any CPU
-		{26DFABDA-7D73-42A5-A502-A666479454D5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{26DFABDA-7D73-42A5-A502-A666479454D5}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{26DFABDA-7D73-42A5-A502-A666479454D5}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{26DFABDA-7D73-42A5-A502-A666479454D5}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A709D6A2-C764-44A6-9006-F17FBDD373DE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A709D6A2-C764-44A6-9006-F17FBDD373DE}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A709D6A2-C764-44A6-9006-F17FBDD373DE}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A709D6A2-C764-44A6-9006-F17FBDD373DE}.Release|Any CPU.Build.0 = Release|Any CPU
 		{6AB73278-5569-481E-88E3-9845BEEDB086}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{6AB73278-5569-481E-88E3-9845BEEDB086}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6AB73278-5569-481E-88E3-9845BEEDB086}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6AB73278-5569-481E-88E3-9845BEEDB086}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A65CCB3D-383F-41E8-A2C0-2C92EF43F75D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A65CCB3D-383F-41E8-A2C0-2C92EF43F75D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A65CCB3D-383F-41E8-A2C0-2C92EF43F75D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A65CCB3D-383F-41E8-A2C0-2C92EF43F75D}.Release|Any CPU.Build.0 = Release|Any CPU
-		{0E460B69-92CA-4FBC-85B8-27A1B24237AB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{0E460B69-92CA-4FBC-85B8-27A1B24237AB}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{0E460B69-92CA-4FBC-85B8-27A1B24237AB}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{0E460B69-92CA-4FBC-85B8-27A1B24237AB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5D640331-8137-4975-8090-0078731F5C5F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5D640331-8137-4975-8090-0078731F5C5F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5D640331-8137-4975-8090-0078731F5C5F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5D640331-8137-4975-8090-0078731F5C5F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -137,8 +135,7 @@ Global
 		{9E2BAFBA-DD6E-44B8-803E-A9F6B3DB47B6} = {05DE980B-A2A7-4235-AE53-3167E94699DD}
 		{539A7F51-A284-4268-AA14-98BB6122F5EB} = {832447E5-7A46-4381-817C-5D73A20510C2}
 		{6AB73278-5569-481E-88E3-9845BEEDB086} = {832447E5-7A46-4381-817C-5D73A20510C2}
-		{0E460B69-92CA-4FBC-85B8-27A1B24237AB} = {9FE16521-EC21-4551-9E51-0C6702D21098}
-		{7EB158E1-FC7E-4591-B2CC-12F5ECAC21FA} = {9FE16521-EC21-4551-9E51-0C6702D21098}
+		{5D640331-8137-4975-8090-0078731F5C5F} = {05DE980B-A2A7-4235-AE53-3167E94699DD}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {AFC8647C-38F2-4CB1-9225-7985A66DFE71}

@@ -82,16 +82,6 @@ data "azurerm_key_vault_secret" "sql_actor_register_database_name" {
   key_vault_id = data.azurerm_key_vault.kv_shared_resources.id
 }
 
-data "azurerm_key_vault_secret" "sbq_create_link_messages_request_name" {
-  name         = "sbq-create-link-messages-request-name"
-  key_vault_id = data.azurerm_key_vault.kv_shared_resources.id
-}
-
-data "azurerm_key_vault_secret" "sbq_create_link_messages_reply_name" {
-  name         = "sbq-create-link-messages-reply-name"
-  key_vault_id = data.azurerm_key_vault.kv_shared_resources.id
-}
-
 data "azurerm_key_vault_secret" "sbq_create_link_request_name" {
   name         = "sbq-create-link-request-name"
   key_vault_id = data.azurerm_key_vault.kv_shared_resources.id
@@ -124,5 +114,15 @@ data "azurerm_key_vault_secret" "sbt_consumption_metering_point_created_name" {
 
 data "azurerm_key_vault_secret" "sbs_consumption_metering_point_created_sub_charges_name" {
   name         = "sbs-consumption-metering-point-created-sub-charges-name"
+  key_vault_id = data.azurerm_key_vault.kv_shared_resources.id
+}
+
+data "azurerm_key_vault_secret" "st_market_operator_logs_primary_connection_string" {
+  name         = "st-marketoplogs-primary-connection-string"
+  key_vault_id = data.azurerm_key_vault.kv_shared_resources.id
+}
+
+data "azurerm_key_vault_secret" "st_market_operator_logs_container_name" {
+  name         = "st-marketoplogs-container-name"
   key_vault_id = data.azurerm_key_vault.kv_shared_resources.id
 }

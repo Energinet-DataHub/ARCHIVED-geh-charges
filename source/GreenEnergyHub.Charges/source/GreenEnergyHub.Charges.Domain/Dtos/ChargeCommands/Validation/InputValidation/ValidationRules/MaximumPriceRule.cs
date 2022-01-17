@@ -13,11 +13,12 @@
 // limitations under the License.
 
 using System.Linq;
+using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 
 namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputValidation.ValidationRules
 {
-    public class MaximumPriceRule : IValidationRule
+    public class MaximumPriceRule : IValidationRuleWithExtendedData
     {
         private const int PriceUpperBound = 1000000;
         private readonly ChargeCommand _chargeCommand;
@@ -29,6 +30,18 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputVali
 
         public ValidationRuleIdentifier ValidationRuleIdentifier => ValidationRuleIdentifier.MaximumPrice;
 
-        public bool IsValid => _chargeCommand.ChargeOperation.Points.All(point => point.Price < PriceUpperBound);
+        public bool IsValid => _chargeCommand.ChargeOperation.Points.All(Validate);
+
+        /// <summary>
+        /// This validation rule validates each Price in a list of Point(s). This property
+        /// will tell which Point triggered the rule. The Point is identified by Position.
+        /// </summary>
+        public string TriggeredBy =>
+            _chargeCommand.ChargeOperation.Points.First(point => !Validate(point)).Position.ToString();
+
+        private bool Validate(Point point)
+        {
+            return point.Price < PriceUpperBound;
+        }
     }
 }
