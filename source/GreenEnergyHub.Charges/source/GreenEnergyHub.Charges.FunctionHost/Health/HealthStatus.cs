@@ -49,19 +49,25 @@ namespace GreenEnergyHub.Charges.FunctionHost.Health
 
         private async Task<Dictionary<string, bool>> GetDeepHealthCheckStatusAsync()
         {
-            var integrationEventsConnectionString = EnvironmentHelper.GetEnv(EnvironmentSettingNames.DataHubManagerConnectionString);
-            var domainEventsConnectionString = EnvironmentHelper.GetEnv(EnvironmentSettingNames.Domain)
+            var integrationConnectionString = EnvironmentHelper.GetEnv(EnvironmentSettingNames.DataHubManagerConnectionString);
+            var domainConnectionString = EnvironmentHelper.GetEnv(EnvironmentSettingNames.DomainEventManagerConnectionString);
 
             return new Dictionary<string, bool>
             {
                 // Create default charge links
-                { "CreateLinksRequestQueueExists", await QueueExistsAsync(integrationEventsConnectionString, EnvironmentSettingNames.CreateLinksRequestQueueName) },
-                { "DefaultChargeLinksDataAvailableNotifiedTopicExists", await TopicExistsAsync(integrationEventsConnectionString, EnvironmentSettingNames.DefaultChargeLinksDataAvailableNotifiedTopicName) },
-                { "DefaultChargeLinksDataAvailableNotifiedTopicExists", await TopicExistsAsync(integrationEventsConnectionString, EnvironmentSettingNames.DefaultChargeLinksDataAvailableNotifiedTopicName) },
+                { "CreateLinksRequestQueueExists", await QueueExistsAsync(integrationConnectionString, EnvironmentSettingNames.CreateLinksRequestQueueName) },
+                { "DefaultChargeLinksDataAvailableNotifiedTopicExists", await TopicExistsAsync(domainConnectionString, EnvironmentSettingNames.DefaultChargeLinksDataAvailableNotifiedTopicName) },
+                {
+                    "DefaultChargeLinksDataAvailableNotifiedSubscriptionExists",
+                    await SubscriptionExistsAsync(
+                    domainConnectionString,
+                    EnvironmentSettingNames.DefaultChargeLinksDataAvailableNotifiedSubscription,
+                    EnvironmentSettingNames.DefaultChargeLinksDataAvailableNotifiedTopicName)
+                },
                 // MessageHub
-                { "MessageHubDataAvailableQueueExists", await QueueExistsAsync(integrationEventsConnectionString, EnvironmentSettingNames.MessageHubDataAvailableQueue) },
-                { "MessageHubRequestQueueExists", await QueueExistsAsync(integrationEventsConnectionString, EnvironmentSettingNames.MessageHubRequestQueue) },
-                { "MessageHubResponseQueueExists", await QueueExistsAsync(integrationEventsConnectionString, EnvironmentSettingNames.MessageHubReplyQueue) },
+                { "MessageHubDataAvailableQueueExists", await QueueExistsAsync(integrationConnectionString, EnvironmentSettingNames.MessageHubDataAvailableQueue) },
+                { "MessageHubRequestQueueExists", await QueueExistsAsync(integrationConnectionString, EnvironmentSettingNames.MessageHubRequestQueue) },
+                { "MessageHubResponseQueueExists", await QueueExistsAsync(integrationConnectionString, EnvironmentSettingNames.MessageHubReplyQueue) },
             };
         }
 
