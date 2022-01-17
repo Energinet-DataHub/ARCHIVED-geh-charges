@@ -7,8 +7,6 @@
 
     // This is the list of settings you should change depending on environment
     "APPINSIGHTS_INSTRUMENTATIONKEY": "<App insights instrumentation key>",
-    "LOCAL_TIMEZONENAME": "Europe/Copenhagen",
-    "CURRENCY": "DKK",
     "CHARGE_DB_CONNECTION_STRING": "<charge db connection string>",
     "DOMAINEVENT_LISTENER_CONNECTION_STRING": "<connection string for listening for domain events on the service bus (without entity path)>",
     "DOMAINEVENT_SENDER_CONNECTION_STRING": "<connection string for sending domain events to the service bus (without entity path)>",

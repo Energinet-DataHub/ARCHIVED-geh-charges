@@ -26,12 +26,13 @@ namespace GreenEnergyHub.Charges.Infrastructure.ActorRegister
 {
     public class MarketParticipantSynchronizer : IMarketParticipantSynchronizer
     {
+        private readonly IActorRegister _actorRegister;
+        private readonly IChargesDatabaseContext _chargesDatabaseContext;
+
         /// <summary>
         /// The roles used in the charges domain.
         /// </summary>
-        private readonly List<Role> _rolesUsedInChargesDomain = new() { Role.Ddm, Role.Ddq, Role.Ez, Role.Ddz };
-        private readonly IActorRegister _actorRegister;
-        private readonly IChargesDatabaseContext _chargesDatabaseContext;
+        private readonly List<Role> _rolesUsedInChargesDomain;
 
         public MarketParticipantSynchronizer(
             IActorRegister actorRegister,
@@ -39,13 +40,15 @@ namespace GreenEnergyHub.Charges.Infrastructure.ActorRegister
         {
             _actorRegister = actorRegister;
             _chargesDatabaseContext = chargesDatabaseContext;
+
+            _rolesUsedInChargesDomain = MarketParticipant.ValidRoles.Select(MarketParticipantRoleMapper.Map).ToList();
         }
 
         public async Task SynchronizeAsync()
         {
             var marketParticipants = await _chargesDatabaseContext
                 .MarketParticipants
-                .ToDictionaryAsync(m => m.MarketParticipantId);
+                .ToDictionaryAsync(m => m.Id);
 
             var actors = await _actorRegister
                 .Actors
@@ -54,8 +57,15 @@ namespace GreenEnergyHub.Charges.Infrastructure.ActorRegister
 
             foreach (var actor in actors)
             {
-                if (!marketParticipants.ContainsKey(actor.IdentificationNumber))
-                    _chargesDatabaseContext.MarketParticipants.Add(CreateMarketParticipant(actor));
+                if (!marketParticipants.ContainsKey(actor.Id))
+                {
+                    var newMarketParticipant = CreateMarketParticipant(actor);
+                    _chargesDatabaseContext.MarketParticipants.Add(newMarketParticipant);
+                }
+
+                var marketParticipant = marketParticipants.Single(m => m.Key == actor.Id).Value;
+                var businessProcessRole = GetBusinessProcessRole(actor.Roles);
+                MarketParticipantUpdater.Update(marketParticipant, actor, businessProcessRole);
             }
 
             await _chargesDatabaseContext.SaveChangesAsync();
@@ -64,23 +74,15 @@ namespace GreenEnergyHub.Charges.Infrastructure.ActorRegister
         private MarketParticipant CreateMarketParticipant(Actor actor)
         {
             var businessProcessRole = GetBusinessProcessRole(actor.Roles);
-            var businessProcessRoles = new List<MarketParticipantRole> { MapRole(businessProcessRole) };
+            var businessProcessRoles = new List<MarketParticipantRole> { businessProcessRole };
             return new MarketParticipant(Guid.NewGuid(), actor.IdentificationNumber, actor.Active, businessProcessRoles);
         }
-
-        private MarketParticipantRole MapRole(Role role) => role switch
-        {
-            Role.Ddm => MarketParticipantRole.GridAccessProvider,
-            Role.Ddq => MarketParticipantRole.EnergySupplier,
-            Role.Ddz => MarketParticipantRole.MeteringPointAdministrator,
-            Role.Ez => MarketParticipantRole.SystemOperator,
-            _ => throw new ArgumentException(),
-        };
 
         /// <summary>
         /// Select the single role from the actor roles that the actor must use
         /// with the business processes in the charges domain.
         /// </summary>
-        private Role GetBusinessProcessRole(IEnumerable<Role> roles) => roles.Single(r => _rolesUsedInChargesDomain.Contains(r));
+        private MarketParticipantRole GetBusinessProcessRole(IEnumerable<Role> roles) =>
+            MarketParticipantRoleMapper.Map(roles.Single(r => _rolesUsedInChargesDomain.Contains(r)));
     }
 }

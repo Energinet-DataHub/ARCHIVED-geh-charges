@@ -14,6 +14,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace GreenEnergyHub.Charges.Domain.MarketParticipants
 {
@@ -22,7 +23,15 @@ namespace GreenEnergyHub.Charges.Domain.MarketParticipants
     /// </summary>
     public class MarketParticipant
     {
-        private readonly List<MarketParticipantRole> _roles;
+        public static readonly IReadOnlyCollection<MarketParticipantRole> ValidRoles = new List<MarketParticipantRole>
+        {
+            MarketParticipantRole.EnergySupplier,
+            MarketParticipantRole.SystemOperator,
+            MarketParticipantRole.GridAccessProvider,
+            MarketParticipantRole.MeteringPointAdministrator,
+        }.AsReadOnly();
+
+        private List<MarketParticipantRole> _roles;
 
         public MarketParticipant(Guid id, string marketParticipantId, bool isActive, IEnumerable<MarketParticipantRole> roles)
         {
@@ -44,13 +53,47 @@ namespace GreenEnergyHub.Charges.Domain.MarketParticipants
         /// <summary>
         /// The ID that identifies the market participant. In Denmark this would be the GLN number or EIC code.
         /// </summary>
-        public string MarketParticipantId { get; }
+        public string MarketParticipantId { get; private set; }
 
         /// <summary>
         /// The roles of the market participant.
         /// </summary>
         public IReadOnlyCollection<MarketParticipantRole> Roles => _roles;
 
-        public bool IsActive { get; }
+        public bool IsActive { get; private set; }
+
+        public void Activate()
+        {
+            if (IsActive) throw new InvalidOperationException($"Market participant {Id} is already active.");
+            IsActive = true;
+        }
+
+        public void Deactivate()
+        {
+            if (!IsActive) throw new InvalidOperationException($"Market participant {Id} is already inactive.");
+            IsActive = false;
+        }
+
+        public void UpdateMarketParticipantId(string marketParticipantId)
+        {
+            if (marketParticipantId == null)
+                throw new ArgumentNullException(nameof(marketParticipantId), "Market participant id cannot be null.");
+            if (string.IsNullOrWhiteSpace(marketParticipantId))
+                throw new ArgumentException("Market participant id cannot be empty or pure whitespaces.");
+
+            MarketParticipantId = marketParticipantId;
+        }
+
+        public void UpdateRoles(IList<MarketParticipantRole> roles)
+        {
+            if (roles.Count != 1)
+                throw new ArgumentException("Market participant must have exactly one role.");
+
+            var role = roles.Single();
+            if (!ValidRoles.Contains(role))
+                throw new ArgumentException($"Role {role} is not valid.");
+
+            _roles = new(roles);
+        }
     }
 }

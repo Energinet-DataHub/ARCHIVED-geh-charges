@@ -42,6 +42,25 @@ namespace GreenEnergyHub.Charges.Domain.MarketParticipants
         SystemOperator = 3,
 
         /// <summary>
+        /// Not used in the charges domain.
+        /// Also known as MDR.
+        /// </summary>
+        MeteredDataResponsible = 4,
+
+        /// <summary>
+        /// Not used in the charges domain.
+        /// Also known as STS.
+        /// </summary>
+        EnergyAgency = 5,
+
+        /// <summary>
+        /// Not used in the charges domain.
+        /// Also known as DGL.
+        /// In Denmark it's DataHub.
+        /// </summary>
+        MeteredDataAdministrator = 6,
+
+        /// <summary>
         /// Also known as DDZ.
         /// In Denmark it's DataHub.
         /// </summary>
