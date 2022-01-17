@@ -17,8 +17,6 @@
 - [Charge link requests and replies](#.ChargeLinkRequestsAndReplies)
     - [CreateDefaultChargeLinks](#.CreateDefaultChargeLinks)
     - [CreateDefaultChargeLinksReply](#.CreateDefaultChargeLinksReply)
-    - [CreateDefaultChargeLinkMessages](#.CreateDefaultChargeLinkMessages)
-    - [CreateDefaultChargeLinkMessagesReply](#.CreateDefaultChargeLinkMessagesReply)
 
 <a name="IntegrationEventContract.proto"></a>
 
@@ -34,7 +32,7 @@ Note: The integration events adhere to the architecture decision record ([ADR-00
 
 <a name=".ChargeCreated"></a>
 
-### [ChargeCreated](.././source/GreenEnergyHub.Charges/source/GreenEnergyHub.Charges.Infrastructure/Integration/Charge/ChargeCreated.proto)
+### [ChargeCreated](.././source/GreenEnergyHub.Charges/source/GreenEnergyHub.Charges.Infrastructure/Contracts/Public/ChargeCreated/ChargeCreated.proto)
 
 Represents the creation of a new charge.
 
@@ -92,7 +90,7 @@ Represents the cancellation of the charge discontinuation.
 
 <a name=".ChargePricesUpdated"></a>
 
-### [ChargePricesUpdated](.././source/GreenEnergyHub.Charges/source/GreenEnergyHub.Charges.Infrastructure/Integration/Charge/ChargePricesUpdated.proto)
+### [ChargePricesUpdated](.././source/GreenEnergyHub.Charges/source/GreenEnergyHub.Charges.Infrastructure/Contracts/Public/ChargePricesUpdated/ChargePricesUpdated.proto)
 
 Represents the creation and update of one or more charge prices.
 
@@ -102,7 +100,7 @@ Represents the creation and update of one or more charge prices.
 
 <a name=".ChargeLinkCreated"></a>
 
-### [ChargeLinkCreated](.././source/GreenEnergyHub.Charges/source/GreenEnergyHub.Charges.Infrastructure/Integration/ChargeLink/ChargeLinkCreated.proto)
+### [ChargeLinkCreated](.././source/GreenEnergyHub.Charges/source/GreenEnergyHub.Charges.Infrastructure/Contracts/Public/ChargeLinkCreated/ChargeLinkCreated.proto)
 
 Represents the creation of a new charge link
 

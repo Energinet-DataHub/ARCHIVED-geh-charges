@@ -31,7 +31,6 @@
     // Integration, metering point domain
     "CONSUMPTION_METERING_POINT_CREATED_TOPIC_NAME": "consumption-metering-point-created",
     "CONSUMPTION_METERING_POINT_CREATED_SUBSCRIPTION_NAME": "consumption-metering-point-created-sub-charges",
-    "CREATE_LINKS_MESSAGES_REPLY_QUEUE_NAME": "create-links-messages-reply",
     "CREATE_LINKS_REQUEST_QUEUE_NAME": "create-links-request",
     "CREATE_LINKS_REPLY_QUEUE_NAME": "create-links-reply",
 
