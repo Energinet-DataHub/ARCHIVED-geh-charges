@@ -19,8 +19,11 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.Cim.MarketDocument
 {
     public static class MarketParticipantRoleMapper
     {
+        private const string CimEnergyAgency = "STS";
         private const string CimEnergySupplier = "DDQ";
         private const string CimGridAccessProvider = "DDM";
+        private const string CimMeteredDataAdministrator = "DGL";
+        private const string CimMeteredDataResponsible = "MDR";
         private const string CimMeteringPointAdministrator = "DDZ";
         private const string CimSystemOperator = "EZ";
 
@@ -28,9 +31,12 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.Cim.MarketDocument
         {
             return value switch
             {
+                CimEnergyAgency => MarketParticipantRole.EnergyAgency,
                 CimEnergySupplier => MarketParticipantRole.EnergySupplier,
                 CimGridAccessProvider => MarketParticipantRole.GridAccessProvider,
                 CimSystemOperator => MarketParticipantRole.SystemOperator,
+                CimMeteredDataResponsible => MarketParticipantRole.MeteredDataResponsible,
+                CimMeteredDataAdministrator => MarketParticipantRole.MeteredDataAdministrator,
                 CimMeteringPointAdministrator => MarketParticipantRole.MeteringPointAdministrator,
                 _ => MarketParticipantRole.Unknown,
             };
@@ -40,8 +46,11 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.Cim.MarketDocument
         {
             return marketParticipantRole switch
             {
+                MarketParticipantRole.EnergyAgency => CimEnergyAgency,
                 MarketParticipantRole.EnergySupplier => CimEnergySupplier,
                 MarketParticipantRole.GridAccessProvider => CimGridAccessProvider,
+                MarketParticipantRole.MeteredDataAdministrator => CimMeteredDataAdministrator,
+                MarketParticipantRole.MeteredDataResponsible => CimMeteredDataResponsible,
                 MarketParticipantRole.MeteringPointAdministrator => CimMeteringPointAdministrator,
                 MarketParticipantRole.SystemOperator => CimSystemOperator,
                 _ => throw new InvalidEnumArgumentException(

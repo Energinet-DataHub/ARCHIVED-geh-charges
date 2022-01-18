@@ -43,7 +43,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.HubSenderMarketParticipants
         {
             var roles = new List<MarketParticipantRole>
             {
-                MarketParticipantRole.EnergySupplier,
+                MarketParticipantRole.EnergyAgency,
                 MarketParticipantRole.SystemOperator,
             };
 

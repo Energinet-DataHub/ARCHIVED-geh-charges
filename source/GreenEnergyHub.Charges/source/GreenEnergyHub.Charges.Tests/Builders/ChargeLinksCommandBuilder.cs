@@ -31,8 +31,8 @@ namespace GreenEnergyHub.Charges.Tests.Builders
             BusinessReasonCode = BusinessReasonCode.UpdateChargeInformation,
             IndustryClassification = IndustryClassification.Electricity,
             RequestDate = SystemClock.Instance.GetCurrentInstant(),
-            Recipient = new MarketParticipantDto { Id = Guid.NewGuid().ToString(), BusinessProcessRole = MarketParticipantRole.GridAccessProvider },
-            Sender = new MarketParticipantDto { Id = Guid.NewGuid().ToString(), BusinessProcessRole = MarketParticipantRole.MeteringPointAdministrator },
+            Recipient = new MarketParticipantDto { Id = Guid.NewGuid().ToString(), BusinessProcessRole = MarketParticipantRole.EnergyAgency },
+            Sender = new MarketParticipantDto { Id = Guid.NewGuid().ToString(), BusinessProcessRole = MarketParticipantRole.EnergyAgency },
             Type = DocumentType.ChargeLinkReceipt,
         };
 
