@@ -16,11 +16,11 @@ using System;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using GreenEnergyHub.Charges.Infrastructure.Core.Cim;
-using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData;
+using GreenEnergyHub.Charges.MessageHub.Models.Shared;
 using GreenEnergyHub.Charges.TestCore.Attributes;
 using Xunit;
 
-namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptData
+namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.Shared
 {
     public class CimValidationErrorCodeFactoryTests
     {

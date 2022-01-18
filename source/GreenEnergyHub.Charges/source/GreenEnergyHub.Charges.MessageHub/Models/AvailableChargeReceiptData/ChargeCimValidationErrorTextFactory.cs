@@ -144,6 +144,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
             }
         }
 
+        //TODO: Henrik: Reuse
         private static IEnumerable<CimValidationErrorTextToken> GetTokens(string errorTextTemplate)
         {
             // regex to match content between {{ and }} inspired by https://stackoverflow.com/a/16538131
