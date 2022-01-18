@@ -39,7 +39,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeData
             [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
             [Frozen] Mock<IMessageMetaDataContext> messageMetaDataContext,
             Instant now,
-            HubSenderMarketParticipantBuilder hubSenderBuilder,
+            MarketParticipant hubSender,
             List<MarketParticipant> gridAccessProvider,
             ChargeCommandBuilder chargeCommandBuilder,
             ChargeCommandAcceptedEventBuilder chargeCommandAcceptedEventBuilder,
@@ -55,7 +55,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeData
 
             marketParticipantRepository
                 .Setup(r => r.GetHubSenderAsync())
-                .ReturnsAsync(hubSenderBuilder.Build());
+                .ReturnsAsync(hubSender);
 
             messageMetaDataContext.Setup(m => m.RequestDataTime).Returns(now);
 
@@ -69,7 +69,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeData
             {
                 actual[i].Should().NotContainNullsOrEmptyEnumerables();
                 actual[i].RecipientId.Should().Be(gridAccessProvider[i].MarketParticipantId);
-                actual[i].RecipientRole.Should().Be(MarketParticipantRole.GridAccessProvider);
+                actual[i].RecipientRole.Should().Be(gridAccessProvider[i].BusinessProcessRole);
                 actual[i].BusinessReasonCode.Should().Be(acceptedEvent.Command.Document.BusinessReasonCode);
                 actual[i].RequestDateTime.Should().Be(now);
                 actual[i].ChargeId.Should().Be(operation.ChargeId);

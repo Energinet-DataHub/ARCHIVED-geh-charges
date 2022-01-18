@@ -16,7 +16,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Domain.HubSenderMarketParticipant;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using Microsoft.EntityFrameworkCore;
 
@@ -61,14 +60,14 @@ namespace GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories
                 Guid.NewGuid(),
                 "8100000000030",
                 true,
-                new[] { MarketParticipantRole.GridAccessProvider }.ToList());
+                MarketParticipantRole.GridAccessProvider);
         }
 
         public async Task<List<MarketParticipant>> GetActiveGridAccessProvidersAsync()
         {
             return await _chargesDatabaseContext
                 .MarketParticipants
-                .WithRole(MarketParticipantRole.GridAccessProvider)
+                .Where(mp => mp.BusinessProcessRole == MarketParticipantRole.GridAccessProvider)
                 .Where(m => m.IsActive)
                 .ToListAsync();
         }
@@ -77,7 +76,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories
         {
             return await _chargesDatabaseContext
                 .MarketParticipants
-                .WithRole(marketParticipantRole)
+                .Where(mp => mp.BusinessProcessRole == marketParticipantRole)
                 .SingleAsync()
                 .ConfigureAwait(false);
         }
@@ -90,23 +89,12 @@ namespace GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories
                 .ToListAsync();
         }
 
-        public async Task<HubSenderMarketParticipant> GetHubSenderAsync()
+        public async Task<MarketParticipant> GetHubSenderAsync()
         {
-            var hubSender = await _chargesDatabaseContext
+            return await _chargesDatabaseContext
                 .MarketParticipants
-                .WithRole(MarketParticipantRole.MeteringPointAdministrator)
+                .Where(mp => mp.BusinessProcessRole == MarketParticipantRole.MeteringPointAdministrator)
                 .SingleAsync();
-
-            return CreateHubSenderMarketParticipant(hubSender);
-        }
-
-        private static HubSenderMarketParticipant CreateHubSenderMarketParticipant(MarketParticipant hubSender)
-        {
-            return new HubSenderMarketParticipant(
-                hubSender.Id,
-                hubSender.MarketParticipantId,
-                hubSender.IsActive,
-                hubSender.Roles);
         }
     }
 }

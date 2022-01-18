@@ -22,7 +22,6 @@ using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessageMetaData;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksData;
 using GreenEnergyHub.Charges.TestCore.Reflection;
-using GreenEnergyHub.Charges.Tests.Builders;
 using GreenEnergyHub.TestHelpers;
 using GreenEnergyHub.TestHelpers.FluentAssertionsExtensions;
 using Moq;
@@ -38,7 +37,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeLinksDat
         [Theory]
         [InlineAutoDomainData]
         public async Task CreateAsync_WhenTaxCharges_ReturnsAvailableData(
-            HubSenderMarketParticipantBuilder hubSenderBuilder,
+            MarketParticipant hubSender,
             [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
             [Frozen] Mock<IChargeRepository> chargeRepository,
             [Frozen] Mock<IMessageMetaDataContext> messageMetaDataContext,
@@ -49,7 +48,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeLinksDat
             AvailableChargeLinksDataFactory sut)
         {
             // Arrange
-            marketParticipantRepository.Setup(r => r.GetHubSenderAsync()).ReturnsAsync(hubSenderBuilder.Build());
+            marketParticipantRepository.Setup(r => r.GetHubSenderAsync()).ReturnsAsync(hubSender);
             marketParticipantRepository
                 .Setup(m => m.GetGridAccessProvider(acceptedEvent.ChargeLinksCommand.MeteringPointId))
                 .Returns(gridAccessProvider);
@@ -72,7 +71,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeLinksDat
             {
                 actual[i].Should().NotContainNullsOrEmptyEnumerables();
                 actual[i].RecipientId.Should().Be(gridAccessProvider.MarketParticipantId);
-                actual[i].RecipientRole.Should().Be(MarketParticipantRole.GridAccessProvider);
+                actual[i].RecipientRole.Should().Be(gridAccessProvider.BusinessProcessRole);
                 actual[i].BusinessReasonCode.Should()
                     .Be(acceptedEvent.ChargeLinksCommand.Document.BusinessReasonCode);
                 actual[i].RequestDateTime.Should().Be(now);
@@ -89,7 +88,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeLinksDat
         [Theory]
         [InlineAutoDomainData]
         public async Task CreateAsync_WhenNotTaxCharges_ReturnsEmptyList(
-            HubSenderMarketParticipantBuilder hubSenderBuilder,
+            MarketParticipant hubSender,
             [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
             [Frozen] Mock<IChargeRepository> chargeRepository,
             ChargeLinksAcceptedEvent acceptedEvent,
@@ -98,7 +97,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeLinksDat
             AvailableChargeLinksDataFactory sut)
         {
             // Arrange
-            marketParticipantRepository.Setup(r => r.GetHubSenderAsync()).ReturnsAsync(hubSenderBuilder.Build());
+            marketParticipantRepository.Setup(r => r.GetHubSenderAsync()).ReturnsAsync(hubSender);
             marketParticipantRepository
                 .Setup(m => m.GetGridAccessProvider(acceptedEvent.ChargeLinksCommand.MeteringPointId))
                 .Returns(marketParticipant);

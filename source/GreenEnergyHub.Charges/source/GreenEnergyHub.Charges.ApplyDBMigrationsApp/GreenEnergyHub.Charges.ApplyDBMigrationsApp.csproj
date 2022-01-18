@@ -58,6 +58,7 @@ limitations under the License.
       <EmbeddedResource Include="Scripts\Model\202201111600 Support multiple MarketParticipant roles.sql" />
       <EmbeddedResource Include="Scripts\Model\202201121500 Store sender of available data.sql" />
       <EmbeddedResource Include="Scripts\Model\202201171730 Ensure unique market participant ID.sql" />
+      <EmbeddedResource Include="Scripts\Model\202201181330 Use single market participant business process role.sql" />
       <EmbeddedResource Include="Scripts\Seed\202201121230 Move hub sender to actor register.sql" />
       <EmbeddedResource Include="Scripts\Model\202201111000 Rename to AvailableChargeLinksReceiptValidationError.sql" />
       <EmbeddedResource Include="Scripts\Test\202105201033 New MarketParticipants.sql" />

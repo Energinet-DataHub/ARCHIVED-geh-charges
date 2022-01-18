@@ -40,7 +40,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.ActorRegister
             _actorRegister = actorRegister;
             _chargesDatabaseContext = chargesDatabaseContext;
 
-            _rolesUsedInChargesDomain = MarketParticipant.ValidRoles.Select(MarketParticipantRoleMapper.Map).ToList();
+            _rolesUsedInChargesDomain = MarketParticipant._validRoles.Select(MarketParticipantRoleMapper.Map).ToList();
         }
 
         public async Task SynchronizeAsync()
@@ -90,8 +90,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.ActorRegister
         private MarketParticipant CreateMarketParticipant(Actor actor)
         {
             var businessProcessRole = GetBusinessProcessRole(actor.Roles);
-            var businessProcessRoles = new List<MarketParticipantRole> { businessProcessRole };
-            return new MarketParticipant(actor.Id, actor.IdentificationNumber, actor.Active, businessProcessRoles);
+            return new MarketParticipant(actor.Id, actor.IdentificationNumber, actor.Active, businessProcessRole);
         }
 
         /// <summary>

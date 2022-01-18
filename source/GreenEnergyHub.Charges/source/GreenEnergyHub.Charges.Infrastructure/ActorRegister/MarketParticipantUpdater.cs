@@ -12,8 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Collections.Generic;
-using System.Linq;
+using System;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.Infrastructure.ActorRegister.Persistence.Actors;
 
@@ -26,32 +25,27 @@ namespace GreenEnergyHub.Charges.Infrastructure.ActorRegister
             Actor actor,
             MarketParticipantRole businessProcessRole)
         {
-            UpdateIsActive(marketParticipant, actor);
-            UpdateMarketParticipantId(marketParticipant, actor);
-            UpdateRoles(marketParticipant, businessProcessRole);
-        }
-
-        private static void UpdateRoles(MarketParticipant marketParticipant, MarketParticipantRole businessProcessRole)
-        {
-            if (marketParticipant.Roles.Single() != businessProcessRole)
-                marketParticipant.UpdateRoles(new List<MarketParticipantRole> { businessProcessRole });
-        }
-
-        private static void UpdateMarketParticipantId(MarketParticipant marketParticipant, Actor actor)
-        {
             if (marketParticipant.MarketParticipantId != actor.IdentificationNumber)
-                marketParticipant.UpdateMarketParticipantId(actor.IdentificationNumber);
+            {
+                throw new InvalidOperationException(
+                    $"Actor with identification number '{actor.IdentificationNumber}'"
+                    + ", seems to have an updated identification number, which is not a valid business operation.");
+            }
+
+            UpdateIsActive(marketParticipant, actor);
+            UpdateRole(marketParticipant, businessProcessRole);
+        }
+
+        private static void UpdateRole(MarketParticipant marketParticipant, MarketParticipantRole businessProcessRole)
+        {
+            if (marketParticipant.BusinessProcessRole == businessProcessRole) return;
+            marketParticipant.BusinessProcessRole = businessProcessRole;
         }
 
         private static void UpdateIsActive(MarketParticipant marketParticipant, Actor actor)
         {
-            if (marketParticipant.IsActive != actor.Active)
-            {
-                if (actor.Active)
-                    marketParticipant.Deactivate();
-                else
-                    marketParticipant.Activate();
-            }
+            if (marketParticipant.IsActive == actor.Active) return;
+            marketParticipant.IsActive = actor.Active;
         }
     }
 }

@@ -24,13 +24,22 @@ namespace GreenEnergyHub.Charges.Infrastructure.ActorRegister.Persistence.Actors
     {
         private List<Role> _roles;
 
+        public Actor(Guid id, string identificationNumber, IdentificationType identificationType, List<Role> roles, bool active)
+        {
+            Id = id;
+            _roles = roles;
+            IdentificationNumber = identificationNumber;
+            IdentificationType = identificationType;
+            Active = active;
+        }
+
         /// <summary>
         /// Solely used by persistence infrastructure.
         /// </summary>
         private Actor()
         {
             IdentificationNumber = null!;
-            _roles = new List<Role>();
+            _roles = null!;
         }
 
         public Guid Id { get; }

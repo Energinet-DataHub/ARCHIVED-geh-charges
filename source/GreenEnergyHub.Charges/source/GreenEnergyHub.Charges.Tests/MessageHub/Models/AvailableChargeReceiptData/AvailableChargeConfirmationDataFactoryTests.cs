@@ -21,7 +21,6 @@ using GreenEnergyHub.Charges.Infrastructure.Core.Cim.MarketDocument;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessageMetaData;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData;
 using GreenEnergyHub.Charges.TestCore.Attributes;
-using GreenEnergyHub.Charges.Tests.Builders;
 using Moq;
 using NodaTime;
 using Xunit;
@@ -35,7 +34,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptD
         [Theory]
         [InlineAutoMoqData]
         public async Task CreateAsync_WhenCalledWithAcceptedEvent_ReturnsAvailableData(
-            HubSenderMarketParticipantBuilder hubSenderBuilder,
+            MarketParticipant hubSender,
             [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
             [Frozen] Mock<IMessageMetaDataContext> messageMetaDataContext,
             ChargeCommandAcceptedEvent acceptedEvent,
@@ -44,7 +43,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptD
         {
             // Arrange
             messageMetaDataContext.Setup(m => m.RequestDataTime).Returns(now);
-            marketParticipantRepository.Setup(r => r.GetHubSenderAsync()).ReturnsAsync(hubSenderBuilder.Build());
+            marketParticipantRepository.Setup(r => r.GetHubSenderAsync()).ReturnsAsync(hubSender);
 
             // Act
             var actualList = await sut.CreateAsync(acceptedEvent);
