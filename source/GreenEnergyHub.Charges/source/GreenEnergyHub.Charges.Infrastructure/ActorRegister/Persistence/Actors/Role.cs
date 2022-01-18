@@ -30,7 +30,8 @@ namespace GreenEnergyHub.Charges.Infrastructure.ActorRegister.Persistence.Actors
         Ddm,
 
         /// <summary>
-        /// Balance power supplier.
+        /// Energy supplier.
+        /// (also known as balance power supplier)
         /// </summary>
         Ddq,
 

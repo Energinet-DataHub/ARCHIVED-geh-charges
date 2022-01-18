@@ -36,16 +36,16 @@ namespace GreenEnergyHub.Charges.Infrastructure.ActorRegister
             UpdateRole(marketParticipant, businessProcessRole);
         }
 
-        private static void UpdateRole(MarketParticipant marketParticipant, MarketParticipantRole businessProcessRole)
-        {
-            if (marketParticipant.BusinessProcessRole == businessProcessRole) return;
-            marketParticipant.UpdateBusinessProcessRole(businessProcessRole);
-        }
-
         private static void UpdateIsActive(MarketParticipant marketParticipant, Actor actor)
         {
             if (marketParticipant.IsActive == actor.Active) return;
             marketParticipant.IsActive = actor.Active;
+        }
+
+        private static void UpdateRole(MarketParticipant marketParticipant, MarketParticipantRole businessProcessRole)
+        {
+            if (marketParticipant.BusinessProcessRole == businessProcessRole) return;
+            marketParticipant.UpdateBusinessProcessRole(businessProcessRole);
         }
     }
 }
