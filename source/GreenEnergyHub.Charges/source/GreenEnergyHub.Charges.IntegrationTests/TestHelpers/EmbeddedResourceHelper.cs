@@ -25,6 +25,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.TestHelpers
     public static class EmbeddedResourceHelper
     {
         private const string TimeAndPriceSeriesDateTimeFormat = "yyyy-MM-dd\\THH:mm\\Z";
+        private const string CreatedDateTimeFormat = "yyyy-MM-dd\\THH:mm:ss\\Z";
 
         public static string GetEmbeddedFile(string filePath, [NotNull] IClock clock)
         {
@@ -44,6 +45,9 @@ namespace GreenEnergyHub.Charges.IntegrationTests.TestHelpers
             var ymdhmTimeInterval = inThirtyoneDays
                 .ToString(TimeAndPriceSeriesDateTimeFormat, CultureInfo.InvariantCulture);
 
+            // cim:createdDateTime and effective date must have seconds
+            var ymdhmsTimeInterval = currentInstant.ToString(CreatedDateTimeFormat, CultureInfo.InvariantCulture);
+
             var replacementIndex = 0;
             var mergedFile = Regex.Replace(file, "[{][{][$]increment5digits[}][}]", _ =>
             {
@@ -56,7 +60,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.TestHelpers
                 .Replace("{{$randomCharactersShort}}", Guid.NewGuid().ToString("n")[..5])
                 .Replace("{{$isoTimestamp}}", now)
                 .Replace("{{$isoTimestampPlusOneMonth}}", inThirtyoneDays.ToString())
-                .Replace("{{$YMDHM_TimestampPlusOneMonth}}", ymdhmTimeInterval);
+                .Replace("{{$YMDHM_TimestampPlusOneMonth}}", ymdhmTimeInterval)
+                .Replace("ISO8601Timestamp", ymdhmsTimeInterval);
         }
     }
 }
