@@ -32,6 +32,8 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Core.Cim.MarketDocument
         [InlineData("DDZ", MarketParticipantRole.MeteringPointAdministrator)]
         [InlineData("EZ", MarketParticipantRole.SystemOperator)]
         [InlineData("", MarketParticipantRole.Unknown)]
+        [InlineData("DoesNotExist", MarketParticipantRole.Unknown)]
+        [InlineData(null, MarketParticipantRole.Unknown)]
         public void Map_WhenGivenInput_MapsToCorrectEnum(string unit, MarketParticipantRole expected)
         {
             var actual = MarketParticipantRoleMapper.Map(unit);
