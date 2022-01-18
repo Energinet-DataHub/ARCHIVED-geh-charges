@@ -64,7 +64,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures
         public ServiceBusTestListener? CreateLinkReplyQueueListener { get; private set; }
 
         [NotNull]
-        public ServiceBusTestListener? MeteringPointCreatedListener { get; private set; }
+        public TopicResource? MeteringPointCreatedTopic { get; private set; }
 
         private AzuriteManager AzuriteManager { get; }
 
@@ -171,7 +171,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures
                 .SetEnvironmentVariableToSubscriptionName(EnvironmentSettingNames.ChargeLinksRejectedSubscriptionName)
                 .CreateAsync();
 
-            var meteringPointCreatedTopic = await ServiceBusResourceProvider
+            MeteringPointCreatedTopic = await ServiceBusResourceProvider
                 .BuildTopic(ChargesServiceBusResourceNames.MeteringPointCreatedTopicKey)
                 .SetEnvironmentVariableToTopicName(EnvironmentSettingNames.MeteringPointCreatedTopicName)
                 .AddSubscription(ChargesServiceBusResourceNames.MeteringPointCreatedSubscriptionName)
@@ -208,10 +208,6 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures
             var chargePricesUpdatedListener = new ServiceBusListenerMock(ServiceBusResourceProvider.ConnectionString, TestLogger);
             await chargePricesUpdatedListener.AddTopicSubscriptionListenerAsync(chargePricesUpdatedTopic.Name, ChargesServiceBusResourceNames.ChargePricesUpdatedSubscriptionName);
             ChargePricesUpdatedListener = new ServiceBusTestListener(chargePricesUpdatedListener);
-
-            var meteringPointCreatedListener = new ServiceBusListenerMock(ServiceBusResourceProvider.ConnectionString, TestLogger);
-            await meteringPointCreatedListener.AddTopicSubscriptionListenerAsync(meteringPointCreatedTopic.Name, ChargesServiceBusResourceNames.MeteringPointCreatedSubscriptionName);
-            MeteringPointCreatedListener = new ServiceBusTestListener(meteringPointCreatedListener);
 
             await InitializeMessageHubAsync();
 
