@@ -27,16 +27,17 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.ActorRegister
         [Theory]
         [InlineAutoMoqData]
         public void Update_SetsActive(
-            MarketParticipantRole anyRole,
             MarketParticipantBuilder marketParticipantBuilder,
             Actor actor)
         {
+            var anyValidRole = MarketParticipantRole.SystemOperator;
             var marketParticipant = marketParticipantBuilder
                 .WithIsActive(!actor.Active)
+                .WithRole(MarketParticipantRole.EnergySupplier)
                 .WithMarketParticipantId(actor.IdentificationNumber)
                 .Build();
 
-            MarketParticipantUpdater.Update(marketParticipant, actor, anyRole);
+            MarketParticipantUpdater.Update(marketParticipant, actor, anyValidRole);
 
             marketParticipant.IsActive.Should().Be(actor.Active);
         }

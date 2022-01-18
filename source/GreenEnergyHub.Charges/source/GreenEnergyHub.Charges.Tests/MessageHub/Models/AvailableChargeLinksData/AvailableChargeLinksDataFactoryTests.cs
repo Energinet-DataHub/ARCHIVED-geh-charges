@@ -22,6 +22,7 @@ using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessageMetaData;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksData;
 using GreenEnergyHub.Charges.TestCore.Reflection;
+using GreenEnergyHub.Charges.Tests.Builders.Testables;
 using GreenEnergyHub.TestHelpers;
 using GreenEnergyHub.TestHelpers.FluentAssertionsExtensions;
 using Moq;
@@ -37,13 +38,13 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeLinksDat
         [Theory]
         [InlineAutoDomainData]
         public async Task CreateAsync_WhenTaxCharges_ReturnsAvailableData(
-            MarketParticipant hubSender,
+            TestMeteringPointAdministrator hubSender,
             [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
             [Frozen] Mock<IChargeRepository> chargeRepository,
             [Frozen] Mock<IMessageMetaDataContext> messageMetaDataContext,
             ChargeLinksAcceptedEvent acceptedEvent,
             Charge charge,
-            MarketParticipant gridAccessProvider,
+            TestGridAccessProvider gridAccessProvider,
             Instant now,
             AvailableChargeLinksDataFactory sut)
         {
@@ -88,12 +89,12 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeLinksDat
         [Theory]
         [InlineAutoDomainData]
         public async Task CreateAsync_WhenNotTaxCharges_ReturnsEmptyList(
-            MarketParticipant hubSender,
+            TestMeteringPointAdministrator hubSender,
             [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
             [Frozen] Mock<IChargeRepository> chargeRepository,
             ChargeLinksAcceptedEvent acceptedEvent,
             Charge charge,
-            MarketParticipant marketParticipant,
+            TestMarketParticipant marketParticipant,
             AvailableChargeLinksDataFactory sut)
         {
             // Arrange

@@ -28,6 +28,7 @@ using GreenEnergyHub.Charges.MessageHub.Infrastructure.Cim.Bundles.ChargeLinkRec
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksReceiptData;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableData;
 using GreenEnergyHub.Charges.TestCore.Attributes;
+using GreenEnergyHub.Charges.Tests.Builders.Testables;
 using GreenEnergyHub.Charges.Tests.TestFiles;
 using Moq;
 using NodaTime;
@@ -50,7 +51,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.BundleSpecification.ChargeLink
         [InlineAutoMoqData(1000)]
         public async Task GetMessageWeight_WhenCalled_ReturnedWeightIsHigherThanSerializedStream(
             int noOfReasons,
-            MarketParticipant hubSender,
+            TestMeteringPointAdministrator hubSender,
             [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
             [Frozen] Mock<ICimIdProvider> cimIDProvider,
             ChargeLinksReceiptCimSerializer serializer,

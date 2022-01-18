@@ -21,10 +21,13 @@ namespace GreenEnergyHub.Charges.Tests.Builders
     {
         private bool _isActive;
         private string _marketParticipantId;
+        private MarketParticipantRole _role;
 
         public MarketParticipantBuilder()
         {
             _marketParticipantId = Guid.NewGuid().ToString().Substring(0, 35);
+            _role = MarketParticipantRole.GridAccessProvider;
+            _isActive = true;
         }
 
         public MarketParticipantBuilder WithIsActive(bool isActive)
@@ -39,9 +42,15 @@ namespace GreenEnergyHub.Charges.Tests.Builders
             return this;
         }
 
+        public MarketParticipantBuilder WithRole(MarketParticipantRole role)
+        {
+            _role = role;
+            return this;
+        }
+
         public MarketParticipant Build()
         {
-            return new(Guid.NewGuid(), _marketParticipantId, _isActive, MarketParticipantRole.GridAccessProvider);
+            return new(Guid.NewGuid(), _marketParticipantId, _isActive, _role);
         }
     }
 }
