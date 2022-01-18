@@ -16,6 +16,7 @@ using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksRejectionEvents;
 using GreenEnergyHub.Charges.FunctionHost.Common;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions;
+using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Serialization;
 using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinksCommandRejected;
 using GreenEnergyHub.Charges.MessageHub.MessageHub;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksReceiptData;
@@ -27,14 +28,14 @@ namespace GreenEnergyHub.Charges.FunctionHost.ChargeLinks.MessageHub
     {
         private const string FunctionName = nameof(ChargeLinksRejectionDataAvailableNotifierEndpoint);
         private readonly IAvailableDataNotifier<AvailableChargeLinksReceiptData, ChargeLinksRejectedEvent> _availableDataNotifier;
-        private readonly MessageExtractor<ChargeLinksCommandRejected> _messageExtractor;
+        private readonly JsonMessageDeserializer<ChargeLinksRejectedEvent> _jsonMessageDeserializer;
 
         public ChargeLinksRejectionDataAvailableNotifierEndpoint(
             IAvailableDataNotifier<AvailableChargeLinksReceiptData, ChargeLinksRejectedEvent> availableDataNotifier,
-            MessageExtractor<ChargeLinksCommandRejected> messageExtractor)
+            JsonMessageDeserializer<ChargeLinksRejectedEvent> jsonMessageDeserializer)
         {
             _availableDataNotifier = availableDataNotifier;
-            _messageExtractor = messageExtractor;
+            _jsonMessageDeserializer = jsonMessageDeserializer;
         }
 
         [Function(FunctionName)]
@@ -45,7 +46,8 @@ namespace GreenEnergyHub.Charges.FunctionHost.ChargeLinks.MessageHub
                 Connection = EnvironmentSettingNames.DomainEventListenerConnectionString)]
             byte[] message)
         {
-            var rejectedEvent = (ChargeLinksRejectedEvent)await _messageExtractor.ExtractAsync(message).ConfigureAwait(false);
+            var rejectedEvent =
+                (ChargeLinksRejectedEvent)await _jsonMessageDeserializer.FromBytesAsync(message).ConfigureAwait(false);
             await _availableDataNotifier.NotifyAsync(rejectedEvent).ConfigureAwait(false);
         }
     }

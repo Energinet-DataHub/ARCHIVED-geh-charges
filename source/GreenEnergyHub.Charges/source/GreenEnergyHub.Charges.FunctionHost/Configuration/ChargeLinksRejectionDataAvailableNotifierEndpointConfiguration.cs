@@ -41,7 +41,9 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
                 .AddScoped<BundleSpecification<AvailableChargeLinksReceiptData, ChargeLinksRejectedEvent>,
                     ChargeLinksRejectionBundleSpecification>();
 
-            serviceCollection.AddMessaging().AddMessageExtractor<ChargeLinksRejectedEvent>();
+            serviceCollection
+                .AddMessaging()
+                .AddInternalMessageExtractor<ChargeLinksRejectedEvent>();
             // serviceCollection.ReceiveProtobufMessage<ChargeLinksCommandRejected>(
             //     configuration => configuration.WithParser(() => ChargeLinksCommandRejected.Parser));
         }

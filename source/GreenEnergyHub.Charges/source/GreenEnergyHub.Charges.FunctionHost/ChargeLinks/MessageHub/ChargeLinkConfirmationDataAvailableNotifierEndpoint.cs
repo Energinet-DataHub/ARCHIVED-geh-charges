@@ -16,6 +16,7 @@ using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksAcceptedEvents;
 using GreenEnergyHub.Charges.FunctionHost.Common;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions;
+using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Serialization;
 using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinksCommandAccepted;
 using GreenEnergyHub.Charges.MessageHub.MessageHub;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksReceiptData;
@@ -31,14 +32,14 @@ namespace GreenEnergyHub.Charges.FunctionHost.ChargeLinks.MessageHub
     public class ChargeLinkConfirmationDataAvailableNotifierEndpoint
     {
         private const string FunctionName = nameof(ChargeLinkConfirmationDataAvailableNotifierEndpoint);
-        private readonly MessageExtractor<ChargeLinksCommandAccepted> _messageExtractor;
+        private readonly JsonMessageDeserializer<ChargeLinksAcceptedEvent> _jsonMessageDeserializer;
         private readonly IAvailableDataNotifier<AvailableChargeLinksReceiptData, ChargeLinksAcceptedEvent> _availableDataNotifier;
 
         public ChargeLinkConfirmationDataAvailableNotifierEndpoint(
-            MessageExtractor<ChargeLinksCommandAccepted> messageExtractor,
+            JsonMessageDeserializer<ChargeLinksAcceptedEvent> jsonMessageDeserializer,
             IAvailableDataNotifier<AvailableChargeLinksReceiptData, ChargeLinksAcceptedEvent> availableDataNotifier)
         {
-            _messageExtractor = messageExtractor;
+            _jsonMessageDeserializer = jsonMessageDeserializer;
             _availableDataNotifier = availableDataNotifier;
         }
 
@@ -50,7 +51,8 @@ namespace GreenEnergyHub.Charges.FunctionHost.ChargeLinks.MessageHub
                 Connection = EnvironmentSettingNames.DomainEventListenerConnectionString)]
             byte[] message)
         {
-            var chargeLinkCommandAcceptedEvent = (ChargeLinksAcceptedEvent)await _messageExtractor.ExtractAsync(message).ConfigureAwait(false);
+            var chargeLinkCommandAcceptedEvent =
+                (ChargeLinksAcceptedEvent)await _jsonMessageDeserializer.FromBytesAsync(message).ConfigureAwait(false);
 
             await _availableDataNotifier.NotifyAsync(chargeLinkCommandAcceptedEvent).ConfigureAwait(false);
         }

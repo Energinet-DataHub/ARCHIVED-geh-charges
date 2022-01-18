@@ -32,6 +32,7 @@ using GreenEnergyHub.Charges.FunctionHost.Common;
 using GreenEnergyHub.Charges.Infrastructure.Core.Correlation;
 using GreenEnergyHub.Charges.Infrastructure.Core.Function;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessageMetaData;
+using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Factories;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Registration;
 using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinksCommandReceived;
 using GreenEnergyHub.Charges.Infrastructure.Persistence;
@@ -127,6 +128,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
         private static void ConfigureSharedMessaging(IServiceCollection serviceCollection)
         {
             serviceCollection.AddScoped<MessageDispatcher>();
+            serviceCollection.AddScoped<IServiceBusMessageFactory, ServiceBusMessageFactory>();
             serviceCollection.ConfigureProtobufReception();
 
             serviceCollection.SendProtobuf<ChargeLinksCommandReceived>();

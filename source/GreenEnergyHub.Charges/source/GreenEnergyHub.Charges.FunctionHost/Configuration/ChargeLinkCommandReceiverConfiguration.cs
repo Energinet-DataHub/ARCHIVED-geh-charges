@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.Core.Messaging.Protobuf;
 using GreenEnergyHub.Charges.Application.ChargeLinks.Handlers;
 using GreenEnergyHub.Charges.Application.ChargeLinks.Services;
 using GreenEnergyHub.Charges.Domain.ChargeLinks;
@@ -24,8 +23,6 @@ using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksRejectionEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using GreenEnergyHub.Charges.FunctionHost.Common;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Registration;
-using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinksCommandAccepted;
-using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinksCommandReceived;
 using GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksReceiptData;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableData;
@@ -55,11 +52,11 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
             serviceCollection.AddScoped<ICimValidationErrorTextFactory<ChargeLinksCommand>, ChargeLinksCimValidationErrorTextFactory>();
 
             serviceCollection.AddMessaging()
-                .AddMessageExtractor<ChargeLinksReceivedEvent>()
-                .AddMessageDispatcher<ChargeLinksAcceptedEvent>(
+                .AddInternalMessageExtractor<ChargeLinksReceivedEvent>()
+                .AddInternalMessageDispatcher<ChargeLinksAcceptedEvent>(
                 EnvironmentHelper.GetEnv(EnvironmentSettingNames.DomainEventSenderConnectionString),
                 EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargeLinksAcceptedTopicName))
-                .AddMessageDispatcher<ChargeLinksRejectedEvent>(
+                .AddInternalMessageDispatcher<ChargeLinksRejectedEvent>(
                     EnvironmentHelper.GetEnv(EnvironmentSettingNames.DomainEventSenderConnectionString),
                     EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargeLinksRejectedTopicName));
         }

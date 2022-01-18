@@ -33,12 +33,13 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
             serviceCollection.AddScoped<IHttpResponseBuilder, HttpResponseBuilder>();
             serviceCollection.AddScoped<ValidatingMessageExtractor<ChargeLinksCommandBundle>>();
             serviceCollection.AddScoped<SchemaValidatingMessageDeserializer<ChargeLinksCommandBundle>, ChargeLinkCommandDeserializer>();
-
             serviceCollection.AddScoped<IChargeLinksCommandBundleHandler, ChargeLinksCommandBundleHandler>();
-            serviceCollection.AddMessaging().AddMessageDispatcher<ChargeLinksReceivedEvent>(
+            serviceCollection.AddScoped<IChargeLinksCommandHandler, ChargeLinksCommandHandler>();
+            serviceCollection
+                .AddMessaging()
+                .AddInternalMessageDispatcher<ChargeLinksReceivedEvent>(
                 EnvironmentHelper.GetEnv(EnvironmentSettingNames.DomainEventSenderConnectionString),
                 EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargeLinksReceivedTopicName));
-            serviceCollection.AddScoped<IChargeLinksCommandHandler, ChargeLinksCommandHandler>();
         }
     }
 }
