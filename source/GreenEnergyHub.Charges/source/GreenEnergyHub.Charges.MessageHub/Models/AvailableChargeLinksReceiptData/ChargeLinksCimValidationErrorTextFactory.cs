@@ -13,13 +13,12 @@
 // limitations under the License.
 
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text.RegularExpressions;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableData;
+using GreenEnergyHub.Charges.MessageHub.Models.Shared;
 using Microsoft.Extensions.Logging;
 
 namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksReceiptData
@@ -55,7 +54,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksReceiptDa
             ChargeLinksCommand chargeLinksCommand,
             string? triggeredBy)
         {
-            var tokens = GetTokens(errorTextTemplate);
+            var tokens = CimValidationErrorTextTokenMatcher.GetTokens(errorTextTemplate);
 
             var mergedErrorText = errorTextTemplate;
 
@@ -120,15 +119,6 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksReceiptDa
             _logger.LogError(e, errorMessage);
 
             return CimValidationErrorTextTemplateMessages.Unknown;
-        }
-
-        //TODO: Henrik: Reuse
-        private static IEnumerable<CimValidationErrorTextToken> GetTokens(string errorTextTemplate)
-        {
-            // regex to match content between {{ and }} inspired by https://stackoverflow.com/a/16538131
-            var matchList = Regex.Matches(errorTextTemplate, @"(?<=\{{)[^}]*(?=\}})");
-            return matchList.Select(match =>
-                (CimValidationErrorTextToken)Enum.Parse(typeof(CimValidationErrorTextToken), match.Value)).ToList();
         }
     }
 }
