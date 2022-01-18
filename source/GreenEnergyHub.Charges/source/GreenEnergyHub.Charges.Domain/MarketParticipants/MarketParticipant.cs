@@ -14,6 +14,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace GreenEnergyHub.Charges.Domain.MarketParticipants
 {
@@ -39,7 +40,7 @@ namespace GreenEnergyHub.Charges.Domain.MarketParticipants
             Id = id;
             MarketParticipantId = marketParticipantId;
             IsActive = isActive;
-            BusinessProcessRole = businessProcessRole;
+            UpdateBusinessProcessRole(businessProcessRole);
         }
 
         // ReSharper disable once UnusedMember.Local - Required by persistence framework
@@ -60,7 +61,15 @@ namespace GreenEnergyHub.Charges.Domain.MarketParticipants
         /// <summary>
         /// The roles of the market participant.
         /// </summary>
-        public MarketParticipantRole BusinessProcessRole { get; set; }
+        public MarketParticipantRole BusinessProcessRole { get; private set; }
+
+        public void UpdateBusinessProcessRole(MarketParticipantRole role)
+        {
+            if (!_validRoles.Contains(role))
+                throw new ArgumentException($"Business process role '{role}' is not valid in the charges domain.");
+
+            BusinessProcessRole = role;
+        }
 
         /// <summary>
         /// Market participants will not be deleted. They will be made in-active.

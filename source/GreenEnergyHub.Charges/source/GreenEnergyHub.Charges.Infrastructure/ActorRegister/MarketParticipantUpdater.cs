@@ -39,7 +39,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.ActorRegister
         private static void UpdateRole(MarketParticipant marketParticipant, MarketParticipantRole businessProcessRole)
         {
             if (marketParticipant.BusinessProcessRole == businessProcessRole) return;
-            marketParticipant.BusinessProcessRole = businessProcessRole;
+            marketParticipant.UpdateBusinessProcessRole(businessProcessRole);
         }
 
         private static void UpdateIsActive(MarketParticipant marketParticipant, Actor actor)

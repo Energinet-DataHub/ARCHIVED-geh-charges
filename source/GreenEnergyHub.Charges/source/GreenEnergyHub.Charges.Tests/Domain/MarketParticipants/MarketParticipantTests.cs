@@ -12,7 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using Xunit;
@@ -21,25 +23,36 @@ namespace GreenEnergyHub.Charges.Tests.Domain.MarketParticipants
 {
     public class MarketParticipantTests
     {
-        [Fact]
-        public void ValidRoles_ContainsTheRolesUsedInTheChargesDomain()
+        [Theory]
+        [MemberData(nameof(InvalidBusinessProcessRoles))]
+        public void Ctor_WhenInvalidBusinessProcessRole_ThrowsArgumentException(MarketParticipantRole invalidRole)
         {
-            // Arrange
-            var expectedRoles = new List<MarketParticipantRole>
-            {
-                MarketParticipantRole.EnergySupplier,
-                MarketParticipantRole.SystemOperator,
-                MarketParticipantRole.GridAccessProvider,
-                MarketParticipantRole.MeteringPointAdministrator,
-            };
-
-            // Act
-            var actual = MarketParticipant._validRoles;
-
-            // Assert
-            actual.Should().HaveCount(expectedRoles.Count);
-            foreach (var role in expectedRoles)
-                actual.Should().Contain(role);
+            Assert.Throws<ArgumentException>(() =>
+                new MarketParticipant(Guid.NewGuid(), string.Empty, false, invalidRole));
         }
+
+        [Theory]
+        [MemberData(nameof(ValidBusinessProcessRoles))]
+        public void Ctor_SetsRole(MarketParticipantRole role)
+        {
+            var actual = new MarketParticipant(Guid.NewGuid(), string.Empty, false, role);
+            actual.BusinessProcessRole.Should().Be(role);
+        }
+
+        public static IEnumerable<object[]> ValidBusinessProcessRoles =>
+            DomainBusinessProcessRoles.Select(r => new object[] { r });
+
+        public static IEnumerable<object[]> InvalidBusinessProcessRoles => Enum
+            .GetValues<MarketParticipantRole>()
+            .Except(DomainBusinessProcessRoles)
+            .Select(r => new object[] { r });
+
+        private static List<MarketParticipantRole> DomainBusinessProcessRoles => new List<MarketParticipantRole>
+        {
+            MarketParticipantRole.EnergySupplier,
+            MarketParticipantRole.SystemOperator,
+            MarketParticipantRole.GridAccessProvider,
+            MarketParticipantRole.MeteringPointAdministrator,
+        };
     }
 }
