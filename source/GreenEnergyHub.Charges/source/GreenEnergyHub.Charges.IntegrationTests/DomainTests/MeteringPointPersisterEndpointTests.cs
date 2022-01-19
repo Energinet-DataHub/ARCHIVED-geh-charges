@@ -25,6 +25,7 @@ using Google.Protobuf;
 using GreenEnergyHub.Charges.FunctionHost.MeteringPoint;
 using GreenEnergyHub.Charges.Infrastructure.Contracts.External.MeteringPointCreated;
 using GreenEnergyHub.Charges.IntegrationTests.Fixtures;
+using GreenEnergyHub.Charges.IntegrationTests.TestCommon;
 using GreenEnergyHub.Charges.IntegrationTests.TestHelpers;
 using Xunit;
 using Xunit.Abstractions;
@@ -96,7 +97,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                     () => Fixture.MeteringPointCreatedTopic.SenderClient.SendMessageAsync(message), correlationId, parentId);
 
                 // Assert
-                await AssertFunctionExecuted(Fixture.HostManager, nameof(MeteringPointPersisterEndpoint)).ConfigureAwait(false);
+                await FunctionExecuted.AssertAsync(Fixture.HostManager, nameof(MeteringPointPersisterEndpoint)).ConfigureAwait(false);
                 await using var context = Fixture.DatabaseManager.CreateDbContext();
                 var meteringPoint = context.MeteringPoints.SingleOrDefault(x => x.MeteringPointId == meteringPointId);
                 meteringPoint.Should().NotBeNull();
@@ -117,19 +118,6 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 const string chars = "0123456789";
                 return new string(Enumerable.Repeat(chars, length)
                     .Select(s => s[MyRandom.Next(s.Length)]).ToArray());
-            }
-
-            private static async Task AssertFunctionExecuted(FunctionAppHostManager hostManager, string functionName)
-            {
-                var waitTimespan = TimeSpan.FromSeconds(10);
-
-                var functionExecuted = await Awaiter
-                    .TryWaitUntilConditionAsync(
-                        () => hostManager.CheckIfFunctionWasExecuted(
-                            $"Functions.{functionName}"),
-                        waitTimespan)
-                    .ConfigureAwait(false);
-                functionExecuted.Should().BeTrue($"{functionName} was expected to run.");
             }
 
             private ServiceBusMessage CreateServiceBusMessage(
