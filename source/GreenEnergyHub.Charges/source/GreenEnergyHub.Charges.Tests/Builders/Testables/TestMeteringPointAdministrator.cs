@@ -13,21 +13,15 @@
 // limitations under the License.
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 
-namespace GreenEnergyHub.Charges.Domain.HubSenderMarketParticipant
+namespace GreenEnergyHub.Charges.Tests.Builders.Testables
 {
-    public class HubSenderMarketParticipant : MarketParticipant
+    public class TestMeteringPointAdministrator : MarketParticipant
     {
-        public HubSenderMarketParticipant(Guid id, string marketParticipantId, bool isActive, IEnumerable<MarketParticipantRole> roles)
-            : base(id, marketParticipantId, isActive, roles)
+        public TestMeteringPointAdministrator(Guid id, string marketParticipantId)
+            : base(id, marketParticipantId, true, MarketParticipantRole.MeteringPointAdministrator)
         {
-            if (!roles.Contains(SenderRole))
-                throw new ArgumentException($"The hub sender market participant must have the role {SenderRole}.");
         }
-
-        public MarketParticipantRole SenderRole => MarketParticipantRole.MeteringPointAdministrator;
     }
 }
