@@ -25,14 +25,14 @@ namespace GreenEnergyHub.Charges.FunctionHost.Charges
     {
         public const string FunctionName = nameof(ChargeCommandReceiverEndpoint);
         private readonly IChargeCommandReceivedEventHandler _chargeCommandReceivedEventHandler;
-        private readonly JsonMessageDeserializer<ChargeCommandReceivedEvent> _jsonMessageDeserializer;
+        private readonly JsonMessageDeserializer<ChargeCommandReceivedEvent> _deserializer;
 
         public ChargeCommandReceiverEndpoint(
             IChargeCommandReceivedEventHandler chargeCommandReceivedEventHandler,
-            JsonMessageDeserializer<ChargeCommandReceivedEvent> jsonMessageDeserializer)
+            JsonMessageDeserializer<ChargeCommandReceivedEvent> deserializer)
         {
             _chargeCommandReceivedEventHandler = chargeCommandReceivedEventHandler;
-            _jsonMessageDeserializer = jsonMessageDeserializer;
+            _deserializer = deserializer;
         }
 
         [Function(FunctionName)]
@@ -43,8 +43,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Charges
                 Connection = EnvironmentSettingNames.DomainEventListenerConnectionString)]
             byte[] message)
         {
-            var receivedEvent =
-                (ChargeCommandReceivedEvent)await _jsonMessageDeserializer.FromBytesAsync(message).ConfigureAwait(false);
+            var receivedEvent = (ChargeCommandReceivedEvent)await _deserializer.FromBytesAsync(message).ConfigureAwait(false);
             await _chargeCommandReceivedEventHandler.HandleAsync(receivedEvent).ConfigureAwait(false);
         }
     }

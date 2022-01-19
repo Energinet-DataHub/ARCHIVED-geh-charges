@@ -39,16 +39,16 @@ namespace GreenEnergyHub.Charges.FunctionHost.ChargeLinks.MessageHub
     {
         private const string FunctionName = nameof(ChargeLinkDataAvailableNotifierEndpoint);
 
-        private readonly JsonMessageDeserializer<ChargeLinksAcceptedEvent> _jsonMessageDeserializer;
+        private readonly JsonMessageDeserializer<ChargeLinksAcceptedEvent> _deserializer;
         private readonly IAvailableDataNotifier<AvailableChargeLinksData, ChargeLinksAcceptedEvent> _availableDataNotifier;
         private readonly IChargeLinksDataAvailableNotifiedPublisher _chargeLinksDataAvailableNotifiedPublisher;
 
         public ChargeLinkDataAvailableNotifierEndpoint(
-            JsonMessageDeserializer<ChargeLinksAcceptedEvent> jsonMessageDeserializer,
+            JsonMessageDeserializer<ChargeLinksAcceptedEvent> deserializer,
             IAvailableDataNotifier<AvailableChargeLinksData, ChargeLinksAcceptedEvent> availableDataNotifier,
             IChargeLinksDataAvailableNotifiedPublisher chargeLinksDataAvailableNotifiedPublisher)
         {
-            _jsonMessageDeserializer = jsonMessageDeserializer;
+            _deserializer = deserializer;
             _availableDataNotifier = availableDataNotifier;
             _chargeLinksDataAvailableNotifiedPublisher = chargeLinksDataAvailableNotifiedPublisher;
         }
@@ -61,9 +61,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.ChargeLinks.MessageHub
                 Connection = EnvironmentSettingNames.DomainEventListenerConnectionString)]
             byte[] message)
         {
-            var chargeLinksAcceptedEvent =
-                (ChargeLinksAcceptedEvent)await _jsonMessageDeserializer.FromBytesAsync(message).ConfigureAwait(false);
-
+            var chargeLinksAcceptedEvent = (ChargeLinksAcceptedEvent)await _deserializer.FromBytesAsync(message).ConfigureAwait(false);
             await _availableDataNotifier.NotifyAsync(chargeLinksAcceptedEvent);
             await _chargeLinksDataAvailableNotifiedPublisher.PublishAsync(chargeLinksAcceptedEvent);
         }
