@@ -61,7 +61,7 @@ namespace GreenEnergyHub.Charges.SystemTests
             var clock = SystemClock.Instance;
             var xml = EmbeddedResourceHelper.GetEmbeddedFile("TestFiles/RequestChangeBillingMasterData.xml", clock);
 
-            var request = new HttpRequestMessage(HttpMethod.Post, "v1.0/cim/requestbillingmasterdata")
+            var request = new HttpRequestMessage(HttpMethod.Post, "v1.0/cim/requestchangebillingmasterdata")
             {
                 Content = new StringContent(xml, Encoding.UTF8, "application/xml"),
             };
@@ -83,7 +83,7 @@ namespace GreenEnergyHub.Charges.SystemTests
             var clock = SystemClock.Instance;
             var xml = EmbeddedResourceHelper.GetEmbeddedFile("TestFiles/RequestChangeBillingMasterData.xml", clock);
 
-            var request = new HttpRequestMessage(HttpMethod.Post, "v1.0/cim/requestbillingmasterdata")
+            var request = new HttpRequestMessage(HttpMethod.Post, "v1.0/cim/requestchangebillingmasterdata")
             {
                 Content = new StringContent(xml, Encoding.UTF8, "application/xml"),
             };

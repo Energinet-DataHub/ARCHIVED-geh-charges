@@ -12,7 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using Energinet.DataHub.Core.Logging.RequestResponseMiddleware;
 using GreenEnergyHub.Charges.FunctionHost.Configuration;
+using GreenEnergyHub.Charges.FunctionHost.System;
 using GreenEnergyHub.Charges.Infrastructure.Core.Correlation;
 using GreenEnergyHub.Charges.Infrastructure.Core.Function;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessageMetaData;
@@ -32,6 +34,7 @@ namespace GreenEnergyHub.Charges.FunctionHost
                     builder.UseMiddleware<FunctionTelemetryScopeMiddleware>();
                     builder.UseMiddleware<MessageMetaDataMiddleware>();
                     builder.UseMiddleware<FunctionInvocationLoggingMiddleware>();
+                    builder.UseMiddleware<RequestResponseLoggingMiddleware>();
                 })
                 .ConfigureServices(ConfigureServices)
                 .Build();
@@ -45,11 +48,11 @@ namespace GreenEnergyHub.Charges.FunctionHost
 
             // Charges
             ChargeIngestionConfiguration.ConfigureServices(serviceCollection);
-            ChargeIntegrationEventsPublisherEndpointConfiguration.ConfigureServices(serviceCollection);
             ChargeCommandReceiverConfiguration.ConfigureServices(serviceCollection);
             ChargeConfirmationDataAvailableNotifierEndpointConfiguration.ConfigureServices(serviceCollection);
             ChargeRejectionDataAvailableNotifierEndpointConfiguration.ConfigureServices(serviceCollection);
             ChargeDataAvailableNotifierConfiguration.ConfigureServices(serviceCollection);
+            ChargeIntegrationEventsPublisherEndpointConfiguration.ConfigureServices(serviceCollection);
 
             // Charge links
             ChargeLinkIngestionConfiguration.ConfigureServices(serviceCollection);
@@ -66,6 +69,9 @@ namespace GreenEnergyHub.Charges.FunctionHost
 
             // Message Hub
             BundleSenderEndpointConfiguration.ConfigureServices(serviceCollection);
+
+            // Actor Register
+            ActorRegisterEndpointConfiguration.ConfigureServices(serviceCollection);
         }
     }
 }
