@@ -14,6 +14,7 @@
 
 using System;
 using Azure.Messaging.ServiceBus;
+using Energinet.DataHub.Core.Logging.RequestResponseMiddleware.Storage;
 using Energinet.DataHub.Core.Messaging.Protobuf;
 using Energinet.DataHub.Core.Messaging.Transport;
 using Energinet.DataHub.MessageHub.Client;
@@ -51,6 +52,7 @@ using GreenEnergyHub.Iso8601;
 using GreenEnergyHub.Json;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using NodaTime;
 
 namespace GreenEnergyHub.Charges.FunctionHost.Configuration
@@ -81,6 +83,8 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
             var azureBlobStorageContainerName = EnvironmentHelper.GetEnv(EnvironmentSettingNames.MessageHubStorageContainer);
 
             var serviceBusClient = new ServiceBusClient(serviceBusConnectionString);
+
+            AddRequestResponseLogging(serviceCollection);
 
             AddCreateDefaultChargeLinksReplier(serviceCollection, serviceBusClient);
             AddPostOfficeCommunication(
@@ -185,6 +189,18 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
             serviceCollection.AddServiceBus(serviceBusConnectionString);
             serviceCollection.AddApplicationServices();
             serviceCollection.AddStorageHandler(storageServiceConnectionString);
+        }
+
+        private static void AddRequestResponseLogging(IServiceCollection serviceCollection)
+        {
+            serviceCollection.AddScoped<IRequestResponseLogging>(provider =>
+            {
+                var requestResponseLogStorage = EnvironmentHelper.GetEnv(EnvironmentSettingNames.RequestResponseLoggingConnectionString);
+                var requestResponseLogContainerName = EnvironmentHelper.GetEnv(EnvironmentSettingNames.RequestResponseLoggingContainerName);
+
+                var storageLogging = provider.GetService<ILogger<RequestResponseLoggingBlobStorage>>();
+                return new RequestResponseLoggingBlobStorage(requestResponseLogStorage, requestResponseLogContainerName, storageLogging!);
+            });
         }
 
         private static void AddServiceBus(this IServiceCollection serviceCollection, string serviceBusConnectionString)
