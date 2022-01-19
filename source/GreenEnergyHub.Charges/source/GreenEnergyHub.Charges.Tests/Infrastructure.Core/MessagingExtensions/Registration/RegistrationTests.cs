@@ -14,6 +14,7 @@
 
 using Energinet.DataHub.Core.Messaging.Protobuf;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions;
+using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Factories;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Registration;
 using GreenEnergyHub.Charges.Tests.Infrastructure.Messaging;
 using GreenEnergyHub.TestHelpers;
@@ -37,6 +38,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Core.MessagingExtensions.R
             services.AddScoped<IClock>(_ => SystemClock.Instance);
 
             // Act
+            services.AddScoped<IServiceBusMessageFactory, ServiceBusMessageFactory>();
             services.SendProtobuf<TestMessageContract>();
             services.AddMessagingProtobuf()
                 .AddExternalMessageDispatcher<TestMessage>(anyValidConnectionString, anyTopicName);
