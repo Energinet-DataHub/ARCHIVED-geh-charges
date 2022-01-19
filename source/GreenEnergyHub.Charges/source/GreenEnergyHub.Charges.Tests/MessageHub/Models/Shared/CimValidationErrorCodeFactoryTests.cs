@@ -16,11 +16,11 @@ using System;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using GreenEnergyHub.Charges.Infrastructure.Core.Cim;
-using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData;
+using GreenEnergyHub.Charges.MessageHub.Models.Shared;
 using GreenEnergyHub.Charges.TestCore.Attributes;
 using Xunit;
 
-namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptData
+namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.Shared
 {
     public class CimValidationErrorCodeFactoryTests
     {
@@ -53,7 +53,10 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptD
         [InlineAutoMoqData(ValidationRuleIdentifier.DocumentTypeMustBeRequestUpdateChargeInformation, ReasonCode.D02)]
         [InlineAutoMoqData(ValidationRuleIdentifier.MeteringPointDoesNotExist, ReasonCode.E10)]
         [InlineAutoMoqData(ValidationRuleIdentifier.ChargeDoesNotExist, ReasonCode.E0I)]
-        public void Create_ReturnsExpectedCode(ValidationRuleIdentifier identifier, ReasonCode expected, CimValidationErrorCodeFactory sut)
+        public void Create_ReturnsExpectedCode(
+            ValidationRuleIdentifier identifier,
+            ReasonCode expected,
+            CimValidationErrorCodeFactory sut)
         {
             var actual = sut.Create(identifier);
             actual.Should().Be(expected);
