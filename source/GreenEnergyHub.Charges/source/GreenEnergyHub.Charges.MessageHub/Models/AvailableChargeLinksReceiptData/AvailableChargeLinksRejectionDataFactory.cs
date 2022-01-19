@@ -47,18 +47,24 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksReceiptDa
         {
             var sender = await GetSenderAsync().ConfigureAwait(false);
 
-            return input.ChargeLinksCommand.ChargeLinks.Select(chargeLinkDto => new AvailableChargeLinksReceiptData(
-                sender.MarketParticipantId,
-                sender.SenderRole,
-                input.ChargeLinksCommand.Document.Sender.Id, // The original sender is the recipient of the receipt
-                input.ChargeLinksCommand.Document.Recipient.BusinessProcessRole,
-                input.ChargeLinksCommand.Document.BusinessReasonCode,
-                _messageMetaDataContext.RequestDataTime,
-                Guid.NewGuid(), // ID of each available piece of data must be unique
-                ReceiptStatus.Rejected,
-                chargeLinkDto.OperationId,
-                input.ChargeLinksCommand.MeteringPointId,
-                GetReasons(input))).ToList();
+            return input.ChargeLinksCommand.ChargeLinks.Select(chargeLinkDto =>
+            {
+                // The original sender is the recipient of the receipt
+                var recipient = input.ChargeLinksCommand.Document.Sender;
+
+                return new AvailableChargeLinksReceiptData(
+                    sender.MarketParticipantId,
+                    sender.BusinessProcessRole,
+                    recipient.Id,
+                    recipient.BusinessProcessRole,
+                    input.ChargeLinksCommand.Document.BusinessReasonCode,
+                    _messageMetaDataContext.RequestDataTime,
+                    Guid.NewGuid(), // ID of each available piece of data must be unique
+                    ReceiptStatus.Rejected,
+                    chargeLinkDto.OperationId,
+                    input.ChargeLinksCommand.MeteringPointId,
+                    GetReasons(input));
+            }).ToList();
         }
 
         private List<AvailableReceiptValidationError> GetReasons(ChargeLinksRejectedEvent input)

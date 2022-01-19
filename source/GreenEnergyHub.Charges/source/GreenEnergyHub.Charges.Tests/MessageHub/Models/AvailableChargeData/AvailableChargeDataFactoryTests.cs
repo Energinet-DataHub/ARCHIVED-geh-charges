@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
 using FluentAssertions;
@@ -21,6 +22,7 @@ using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessageMetaData;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeData;
 using GreenEnergyHub.Charges.Tests.Builders;
+using GreenEnergyHub.Charges.Tests.Builders.Testables;
 using GreenEnergyHub.TestHelpers;
 using GreenEnergyHub.TestHelpers.FluentAssertionsExtensions;
 using Moq;
@@ -39,8 +41,8 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeData
             [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
             [Frozen] Mock<IMessageMetaDataContext> messageMetaDataContext,
             Instant now,
-            HubSenderMarketParticipantBuilder hubSenderBuilder,
-            List<MarketParticipant> gridAccessProvider,
+            TestMeteringPointAdministrator hubSender,
+            List<TestGridAccessProvider> gridAccessProvider,
             ChargeCommandBuilder chargeCommandBuilder,
             ChargeCommandAcceptedEventBuilder chargeCommandAcceptedEventBuilder,
             AvailableChargeDataFactory sut)
@@ -51,11 +53,11 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeData
 
             marketParticipantRepository
                 .Setup(r => r.GetActiveGridAccessProvidersAsync())
-                .ReturnsAsync(gridAccessProvider);
+                .ReturnsAsync(gridAccessProvider.Cast<MarketParticipant>().ToList);
 
             marketParticipantRepository
                 .Setup(r => r.GetHubSenderAsync())
-                .ReturnsAsync(hubSenderBuilder.Build());
+                .ReturnsAsync(hubSender);
 
             messageMetaDataContext.Setup(m => m.RequestDataTime).Returns(now);
 
@@ -69,7 +71,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeData
             {
                 actual[i].Should().NotContainNullsOrEmptyEnumerables();
                 actual[i].RecipientId.Should().Be(gridAccessProvider[i].MarketParticipantId);
-                actual[i].RecipientRole.Should().Be(MarketParticipantRole.GridAccessProvider);
+                actual[i].RecipientRole.Should().Be(gridAccessProvider[i].BusinessProcessRole);
                 actual[i].BusinessReasonCode.Should().Be(acceptedEvent.Command.Document.BusinessReasonCode);
                 actual[i].RequestDateTime.Should().Be(now);
                 actual[i].ChargeId.Should().Be(operation.ChargeId);

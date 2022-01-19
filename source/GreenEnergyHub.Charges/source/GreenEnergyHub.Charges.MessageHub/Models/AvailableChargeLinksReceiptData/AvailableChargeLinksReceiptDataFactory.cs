@@ -50,7 +50,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksReceiptDa
             return acceptedEvent.ChargeLinksCommand.ChargeLinks.Select(link =>
                     new AvailableChargeLinksReceiptData(
                         sender.MarketParticipantId,
-                        sender.SenderRole,
+                        sender.BusinessProcessRole,
                         recipient.Id,
                         recipient.BusinessProcessRole,
                         acceptedEvent.ChargeLinksCommand.Document.BusinessReasonCode,

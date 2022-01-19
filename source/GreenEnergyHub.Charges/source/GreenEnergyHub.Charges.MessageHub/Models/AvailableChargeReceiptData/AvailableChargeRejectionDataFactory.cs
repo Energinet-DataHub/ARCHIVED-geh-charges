@@ -49,7 +49,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
             {
                 new AvailableChargeReceiptData(
                     sender.MarketParticipantId,
-                    sender.SenderRole,
+                    sender.BusinessProcessRole,
                     recipient.Id,
                     recipient.BusinessProcessRole,
                     input.Command.Document.BusinessReasonCode,
