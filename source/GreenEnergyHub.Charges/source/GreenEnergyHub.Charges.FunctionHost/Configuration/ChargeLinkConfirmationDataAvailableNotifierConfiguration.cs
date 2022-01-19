@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksAcceptedEvents;
+using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Registration;
 using GreenEnergyHub.Charges.MessageHub.BundleSpecification;
 using GreenEnergyHub.Charges.MessageHub.BundleSpecification.ChargeLinks;
 using GreenEnergyHub.Charges.MessageHub.MessageHub;
@@ -38,6 +39,9 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
             serviceCollection
                 .AddScoped<BundleSpecification<AvailableChargeLinksReceiptData, ChargeLinksAcceptedEvent>,
                     ChargeLinksConfirmationBundleSpecification>();
+            serviceCollection
+                .AddMessaging()
+                .AddInternalMessageExtractor<ChargeLinksAcceptedEvent>();
         }
     }
 }

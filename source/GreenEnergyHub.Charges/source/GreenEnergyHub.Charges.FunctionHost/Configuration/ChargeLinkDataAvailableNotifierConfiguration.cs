@@ -12,14 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.Core.Messaging.Protobuf;
 using GreenEnergyHub.Charges.Application.ChargeLinks.Handlers;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksAcceptedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksDataAvailableNotifiedEvents;
 using GreenEnergyHub.Charges.FunctionHost.Common;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Registration;
-using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinksCommandAccepted;
-using GreenEnergyHub.Charges.Infrastructure.Internal.DefaultChargeLinksCreated;
 using GreenEnergyHub.Charges.MessageHub.BundleSpecification;
 using GreenEnergyHub.Charges.MessageHub.BundleSpecification.ChargeLinks;
 using GreenEnergyHub.Charges.MessageHub.MessageHub;
@@ -33,14 +30,6 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
     {
         internal static void ConfigureServices(IServiceCollection serviceCollection)
         {
-            serviceCollection.ReceiveProtobufMessage<ChargeLinksCommandAccepted>(
-                configuration => configuration.WithParser(() => ChargeLinksCommandAccepted.Parser));
-
-            serviceCollection.SendProtobuf<DefaultChargeLinksCreated>();
-            serviceCollection.AddMessagingProtobuf().AddMessageDispatcher<ChargeLinksDataAvailableNotifiedEvent>(
-                EnvironmentHelper.GetEnv(EnvironmentSettingNames.DomainEventSenderConnectionString),
-                EnvironmentHelper.GetEnv(EnvironmentSettingNames.DefaultChargeLinksDataAvailableNotifiedTopicName));
-
             serviceCollection.AddScoped<IChargeLinksDataAvailableNotifiedPublisher, ChargeLinksDataAvailableNotifiedPublisher>();
             serviceCollection.AddScoped<IAvailableDataNotifier<AvailableChargeLinksData, ChargeLinksAcceptedEvent>,
                 AvailableDataNotifier<AvailableChargeLinksData, ChargeLinksAcceptedEvent>>();
@@ -53,6 +42,13 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
             serviceCollection
                 .AddScoped<BundleSpecification<AvailableChargeLinksData, ChargeLinksAcceptedEvent>,
                     ChargeLinksBundleSpecification>();
+
+            serviceCollection
+                .AddMessaging()
+                .AddInternalMessageExtractor<ChargeLinksAcceptedEvent>()
+                .AddExternalMessageDispatcher<ChargeLinksDataAvailableNotifiedEvent>(
+                    EnvironmentHelper.GetEnv(EnvironmentSettingNames.DomainEventSenderConnectionString),
+                    EnvironmentHelper.GetEnv(EnvironmentSettingNames.DefaultChargeLinksDataAvailableNotifiedTopicName));
         }
     }
 }

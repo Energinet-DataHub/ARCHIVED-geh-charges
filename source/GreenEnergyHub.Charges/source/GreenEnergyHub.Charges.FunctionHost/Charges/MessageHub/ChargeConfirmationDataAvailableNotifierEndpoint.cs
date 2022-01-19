@@ -16,8 +16,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandAcceptedEvents;
 using GreenEnergyHub.Charges.FunctionHost.Common;
-using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions;
-using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeCommandAccepted;
+using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Serialization;
 using GreenEnergyHub.Charges.MessageHub.MessageHub;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData;
 using Microsoft.Azure.Functions.Worker;
@@ -33,14 +32,14 @@ namespace GreenEnergyHub.Charges.FunctionHost.Charges.MessageHub
     {
         public const string FunctionName = nameof(ChargeConfirmationDataAvailableNotifierEndpoint);
         private readonly IAvailableDataNotifier<AvailableChargeReceiptData, ChargeCommandAcceptedEvent> _availableDataNotifier;
-        private readonly MessageExtractor<ChargeCommandAcceptedContract> _messageExtractor;
+        private readonly JsonMessageDeserializer<ChargeCommandAcceptedEvent> _deserializer;
 
         public ChargeConfirmationDataAvailableNotifierEndpoint(
             IAvailableDataNotifier<AvailableChargeReceiptData, ChargeCommandAcceptedEvent> availableDataNotifier,
-            MessageExtractor<ChargeCommandAcceptedContract> messageExtractor)
+            JsonMessageDeserializer<ChargeCommandAcceptedEvent> deserializer)
         {
             _availableDataNotifier = availableDataNotifier;
-            _messageExtractor = messageExtractor;
+            _deserializer = deserializer;
         }
 
         [Function(FunctionName)]
@@ -51,7 +50,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Charges.MessageHub
                 Connection = EnvironmentSettingNames.DomainEventListenerConnectionString)]
             [NotNull] byte[] message)
         {
-            var acceptedEvent = (ChargeCommandAcceptedEvent)await _messageExtractor.ExtractAsync(message).ConfigureAwait(false);
+            var acceptedEvent = (ChargeCommandAcceptedEvent)await _deserializer.FromBytesAsync(message).ConfigureAwait(false);
             await _availableDataNotifier.NotifyAsync(acceptedEvent).ConfigureAwait(false);
         }
     }
