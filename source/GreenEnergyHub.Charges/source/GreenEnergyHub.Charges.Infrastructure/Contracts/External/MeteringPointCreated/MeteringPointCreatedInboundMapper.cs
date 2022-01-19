@@ -19,33 +19,34 @@ using Energinet.DataHub.Core.Messaging.Transport;
 using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.Domain.Dtos.MeteringPointCreatedEvents;
 using GreenEnergyHub.Charges.Domain.MeteringPoints;
+using mpTypes = Energinet.DataHub.MeteringPoints.IntegrationEventContracts.MeteringPointCreated.Types;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Contracts.External.MeteringPointCreated
 {
     public class MeteringPointCreatedInboundMapper : ProtobufInboundMapper<Energinet.DataHub.MeteringPoints.IntegrationEventContracts.MeteringPointCreated>
     {
-        public static SettlementMethod? MapSettlementMethod(Energinet.DataHub.MeteringPoints.IntegrationEventContracts.MeteringPointCreated.Types.SettlementMethod settlementMethod)
+        public static SettlementMethod? MapSettlementMethod(mpTypes.SettlementMethod settlementMethod)
         {
             switch (settlementMethod)
             {
-                case Energinet.DataHub.MeteringPoints.IntegrationEventContracts.MeteringPointCreated.Types.SettlementMethod.SmFlex:
+                case mpTypes.SettlementMethod.SmFlex:
                     return SettlementMethod.Flex;
-                case Energinet.DataHub.MeteringPoints.IntegrationEventContracts.MeteringPointCreated.Types.SettlementMethod.SmProfiled:
+                case mpTypes.SettlementMethod.SmProfiled:
                     return SettlementMethod.Profiled;
-                case Energinet.DataHub.MeteringPoints.IntegrationEventContracts.MeteringPointCreated.Types.SettlementMethod.SmNonprofiled:
+                case mpTypes.SettlementMethod.SmNonprofiled:
                     return SettlementMethod.NonProfiled;
-                case Energinet.DataHub.MeteringPoints.IntegrationEventContracts.MeteringPointCreated.Types.SettlementMethod.SmNull:
+                case mpTypes.SettlementMethod.SmNull:
                     return null;
                 default:
                     throw new InvalidEnumArgumentException($"Provided SettlementMethod value '{settlementMethod}' is invalid and cannot be mapped.");
             }
         }
 
-        public static ConnectionState MapConnectionState(Energinet.DataHub.MeteringPoints.IntegrationEventContracts.MeteringPointCreated.Types.ConnectionState connectionState)
+        public static ConnectionState MapConnectionState(mpTypes.ConnectionState connectionState)
         {
             switch (connectionState)
             {
-                case Energinet.DataHub.MeteringPoints.IntegrationEventContracts.MeteringPointCreated.Types.ConnectionState.CsNew:
+                case mpTypes.ConnectionState.CsNew:
                     return ConnectionState.New;
                 default:
                     throw new InvalidEnumArgumentException($"Provided ConnectionState value '{connectionState}' is invalid and cannot be mapped.");
@@ -53,52 +54,52 @@ namespace GreenEnergyHub.Charges.Infrastructure.Contracts.External.MeteringPoint
         }
 
         public static MeteringPointType MapMeteringPointType(
-            Energinet.DataHub.MeteringPoints.IntegrationEventContracts.MeteringPointCreated.Types.MeteringPointType
+            mpTypes.MeteringPointType
                 meteringPointType)
         {
             switch (meteringPointType)
             {
-                case Energinet.DataHub.MeteringPoints.IntegrationEventContracts.MeteringPointCreated.Types.MeteringPointType.MptAnalysis:
+                case mpTypes.MeteringPointType.MptAnalysis:
                     return MeteringPointType.Analysis;
-                case Energinet.DataHub.MeteringPoints.IntegrationEventContracts.MeteringPointCreated.Types.MeteringPointType.MptConsumption:
+                case mpTypes.MeteringPointType.MptConsumption:
                     return MeteringPointType.Consumption;
-                case Energinet.DataHub.MeteringPoints.IntegrationEventContracts.MeteringPointCreated.Types.MeteringPointType.MptExchange:
+                case mpTypes.MeteringPointType.MptExchange:
                     return MeteringPointType.Exchange;
-                case Energinet.DataHub.MeteringPoints.IntegrationEventContracts.MeteringPointCreated.Types.MeteringPointType.MptProduction:
+                case mpTypes.MeteringPointType.MptProduction:
                     return MeteringPointType.Unknown;
-                case Energinet.DataHub.MeteringPoints.IntegrationEventContracts.MeteringPointCreated.Types.MeteringPointType.MptVeproduction:
+                case mpTypes.MeteringPointType.MptVeproduction:
                     return MeteringPointType.VeProduction;
-                case Energinet.DataHub.MeteringPoints.IntegrationEventContracts.MeteringPointCreated.Types.MeteringPointType.MptElectricalHeating:
+                case mpTypes.MeteringPointType.MptElectricalHeating:
                     return MeteringPointType.ElectricalHeating;
-                case Energinet.DataHub.MeteringPoints.IntegrationEventContracts.MeteringPointCreated.Types.MeteringPointType.MptInternalUse:
+                case mpTypes.MeteringPointType.MptInternalUse:
                     return MeteringPointType.InternalUse;
-                case Energinet.DataHub.MeteringPoints.IntegrationEventContracts.MeteringPointCreated.Types.MeteringPointType.MptNetConsumption:
+                case mpTypes.MeteringPointType.MptNetConsumption:
                     return MeteringPointType.NetConsumption;
-                case Energinet.DataHub.MeteringPoints.IntegrationEventContracts.MeteringPointCreated.Types.MeteringPointType.MptNetProduction:
+                case mpTypes.MeteringPointType.MptNetProduction:
                     return MeteringPointType.NetProduction;
-                case Energinet.DataHub.MeteringPoints.IntegrationEventContracts.MeteringPointCreated.Types.MeteringPointType.MptOtherConsumption:
+                case mpTypes.MeteringPointType.MptOtherConsumption:
                     return MeteringPointType.OtherConsumption;
-                case Energinet.DataHub.MeteringPoints.IntegrationEventContracts.MeteringPointCreated.Types.MeteringPointType.MptOtherProduction:
+                case mpTypes.MeteringPointType.MptOtherProduction:
                     return MeteringPointType.OtherProduction;
-                case Energinet.DataHub.MeteringPoints.IntegrationEventContracts.MeteringPointCreated.Types.MeteringPointType.MptOwnProduction:
+                case mpTypes.MeteringPointType.MptOwnProduction:
                     return MeteringPointType.OwnProduction;
-                case Energinet.DataHub.MeteringPoints.IntegrationEventContracts.MeteringPointCreated.Types.MeteringPointType.MptTotalConsumption:
+                case mpTypes.MeteringPointType.MptTotalConsumption:
                     return MeteringPointType.TotalConsumption;
-                case Energinet.DataHub.MeteringPoints.IntegrationEventContracts.MeteringPointCreated.Types.MeteringPointType.MptWholesaleServices:
+                case mpTypes.MeteringPointType.MptWholesaleServices:
                     return MeteringPointType.WholesaleService;
-                case Energinet.DataHub.MeteringPoints.IntegrationEventContracts.MeteringPointCreated.Types.MeteringPointType.MptConsumptionFromGrid:
+                case mpTypes.MeteringPointType.MptConsumptionFromGrid:
                     return MeteringPointType.ConsumptionFromGrid;
-                case Energinet.DataHub.MeteringPoints.IntegrationEventContracts.MeteringPointCreated.Types.MeteringPointType.MptExchangeReactiveEnergy:
+                case mpTypes.MeteringPointType.MptExchangeReactiveEnergy:
                     return MeteringPointType.ExchangeReactiveEnergy;
-                case Energinet.DataHub.MeteringPoints.IntegrationEventContracts.MeteringPointCreated.Types.MeteringPointType.MptGridLossCorrection:
+                case mpTypes.MeteringPointType.MptGridLossCorrection:
                     return MeteringPointType.GridLossCorrection;
-                case Energinet.DataHub.MeteringPoints.IntegrationEventContracts.MeteringPointCreated.Types.MeteringPointType.MptNetFromGrid:
+                case mpTypes.MeteringPointType.MptNetFromGrid:
                     return MeteringPointType.NetFromGrid;
-                case Energinet.DataHub.MeteringPoints.IntegrationEventContracts.MeteringPointCreated.Types.MeteringPointType.MptNetToGrid:
+                case mpTypes.MeteringPointType.MptNetToGrid:
                     return MeteringPointType.NetToGrid;
-                case Energinet.DataHub.MeteringPoints.IntegrationEventContracts.MeteringPointCreated.Types.MeteringPointType.MptSupplyToGrid:
+                case mpTypes.MeteringPointType.MptSupplyToGrid:
                     return MeteringPointType.SupplyToGrid;
-                case Energinet.DataHub.MeteringPoints.IntegrationEventContracts.MeteringPointCreated.Types.MeteringPointType.MptSurplusProductionGroup:
+                case mpTypes.MeteringPointType.MptSurplusProductionGroup:
                     return MeteringPointType.SurplusProductionGroup;
                 default:
                     throw new InvalidEnumArgumentException($"Provided MeteringPointType value '{meteringPointType}' is invalid and cannot be mapped.");
