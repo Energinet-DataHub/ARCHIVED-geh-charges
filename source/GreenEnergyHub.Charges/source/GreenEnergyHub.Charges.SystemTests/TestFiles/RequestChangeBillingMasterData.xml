@@ -23,13 +23,13 @@ limitations under the License.
   <cim:sender_MarketParticipant.mRID codingScheme="A10">8100000000030</cim:sender_MarketParticipant.mRID>
   <cim:sender_MarketParticipant.marketRole.type>DDM</cim:sender_MarketParticipant.marketRole.type>
   <cim:receiver_MarketParticipant.mRID codingScheme="NCS">5790001330552</cim:receiver_MarketParticipant.mRID>
-  <cim:receiver_MarketParticipant.marketRole.type>EZ</cim:receiver_MarketParticipant.marketRole.type>
-  <cim:createdDateTime>{{$isoTimestamp}}</cim:createdDateTime>
+  <cim:receiver_MarketParticipant.marketRole.type>DDZ</cim:receiver_MarketParticipant.marketRole.type>
+  <cim:createdDateTime>ISO8601Timestamp</cim:createdDateTime>
   <cim:MktActivityRecord>
     <cim:mRID>clId{{$isoTimestamp}}</cim:mRID>
     <!--cim:businessProcessReference_MktActivityRecord.mRID>String</cim:businessProcessReference_MktActivityRecord.mRID-->
     <cim:marketEvaluationPoint.mRID codingScheme="NRO">571313180000000005</cim:marketEvaluationPoint.mRID>
-    <cim:start_DateAndOrTime.dateTime>2022-12-31T23:00:00Z</cim:start_DateAndOrTime.dateTime>
+    <cim:start_DateAndOrTime.dateTime>2020-12-31T23:00:00Z</cim:start_DateAndOrTime.dateTime>
     <cim:chargeGroup.chargeType.chargeTypeOwner_MarketParticipant.mRID codingScheme="NFI">5790000432752</cim:chargeGroup.chargeType.chargeTypeOwner_MarketParticipant.mRID>
     <cim:chargeGroup.chargeType.type>D01</cim:chargeGroup.chargeType.type>
     <cim:chargeGroup.chargeType.mRID>ChargeId01</cim:chargeGroup.chargeType.mRID>

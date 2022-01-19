@@ -16,7 +16,7 @@ using System;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using GreenEnergyHub.Charges.Infrastructure.Core.Cim;
 
-namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
+namespace GreenEnergyHub.Charges.MessageHub.Models.Shared
 {
     public class CimValidationErrorCodeFactory : ICimValidationErrorCodeFactory
     {
