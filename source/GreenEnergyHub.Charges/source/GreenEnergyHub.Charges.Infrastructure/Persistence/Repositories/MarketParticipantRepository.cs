@@ -31,13 +31,6 @@ namespace GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories
             _chargesDatabaseContext = chargesDatabaseContext;
         }
 
-        public Task<MarketParticipant> GetAsync(Guid id)
-        {
-            return _chargesDatabaseContext
-                .MarketParticipants
-                .SingleAsync(mp => mp.Id == id);
-        }
-
         public Task<MarketParticipant> GetOrNullAsync(string marketParticipantId)
         {
             return _chargesDatabaseContext
