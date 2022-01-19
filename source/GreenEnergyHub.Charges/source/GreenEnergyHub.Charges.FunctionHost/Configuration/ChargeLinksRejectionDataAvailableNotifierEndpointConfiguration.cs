@@ -14,7 +14,6 @@
 
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksRejectionEvents;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Registration;
-using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinksCommandRejected;
 using GreenEnergyHub.Charges.MessageHub.BundleSpecification;
 using GreenEnergyHub.Charges.MessageHub.BundleSpecification.ChargeLinks;
 using GreenEnergyHub.Charges.MessageHub.MessageHub;
@@ -44,8 +43,6 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
             serviceCollection
                 .AddMessaging()
                 .AddInternalMessageExtractor<ChargeLinksRejectedEvent>();
-            // serviceCollection.ReceiveProtobufMessage<ChargeLinksCommandRejected>(
-            //     configuration => configuration.WithParser(() => ChargeLinksCommandRejected.Parser));
         }
     }
 }
