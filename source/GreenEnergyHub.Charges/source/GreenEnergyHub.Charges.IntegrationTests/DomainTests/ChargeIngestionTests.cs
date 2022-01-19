@@ -32,7 +32,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
     [IntegrationTest]
     public class ChargeIngestionTests
     {
-        private const int SecondsToWaitForIntegrationEvents = 30;
+        private const int SecondsToWaitForIntegrationEvents = 15;
 
         [Collection(nameof(ChargesFunctionAppCollectionFixture))]
         public class RunAsync : FunctionAppTestBase<ChargesFunctionAppFixture>, IAsyncLifetime
