@@ -61,7 +61,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.BundleSpecification.Charges
                 Guid.NewGuid(),
                 MaxLengthId,
                 true,
-                new[] { MarketParticipantRole.GridAccessProvider });
+                MarketParticipantRole.GridAccessProvider);
 
             marketParticipantRepository
                 .Setup(c => c.GetAsync(MarketParticipantRole.MeteringPointAdministrator)).
