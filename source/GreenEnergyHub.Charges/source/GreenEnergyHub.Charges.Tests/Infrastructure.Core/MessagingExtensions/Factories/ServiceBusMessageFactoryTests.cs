@@ -54,7 +54,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Core.MessagingExtensions.F
             var actual = sut.CreateInternalMessage(data);
 
             // Assert
-            actual.ApplicationProperties.First(x => x.Key == "ReplyTo").Should().Be($"[{replyTo}]");
+            actual.ApplicationProperties.First(x => x.Key == "ReplyTo").Value.Should().Be(replyTo);
         }
     }
 }
