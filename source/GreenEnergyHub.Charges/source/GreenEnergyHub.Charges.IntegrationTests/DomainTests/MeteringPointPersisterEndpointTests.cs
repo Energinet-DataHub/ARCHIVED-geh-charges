@@ -24,7 +24,9 @@ using Energinet.DataHub.Core.TestCommon;
 using Energinet.DataHub.MeteringPoints.IntegrationEventContracts;
 using FluentAssertions;
 using Google.Protobuf;
+using GreenEnergyHub.Charges.Domain.MeteringPoints;
 using GreenEnergyHub.Charges.FunctionHost.MeteringPoint;
+using GreenEnergyHub.Charges.Infrastructure.Contracts.External.MeteringPointCreated;
 using GreenEnergyHub.Charges.IntegrationTests.Fixtures;
 using GreenEnergyHub.Charges.IntegrationTests.TestHelpers;
 using Microsoft.EntityFrameworkCore;
@@ -60,51 +62,51 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             }
 
             [Theory]
-            [InlineData(MeteringPointType.MptProduction, MeteringMethod.MmPhysical, SettlementMethod.SmUnknown)]
-            [InlineData(MeteringPointType.MptProduction, MeteringMethod.MmVirtual, SettlementMethod.SmUnknown)]
-            [InlineData(MeteringPointType.MptAnalysis, MeteringMethod.MmPhysical, SettlementMethod.SmUnknown)]
-            [InlineData(MeteringPointType.MptAnalysis, MeteringMethod.MmVirtual, SettlementMethod.SmUnknown)]
-            [InlineData(MeteringPointType.MptConsumption, MeteringMethod.MmPhysical, SettlementMethod.SmFlex)]
-            [InlineData(MeteringPointType.MptConsumption, MeteringMethod.MmPhysical, SettlementMethod.SmProfiled)]
-            [InlineData(MeteringPointType.MptConsumption, MeteringMethod.MmPhysical, SettlementMethod.SmNonprofiled)]
-            [InlineData(MeteringPointType.MptConsumption, MeteringMethod.MmVirtual, SettlementMethod.SmFlex)]
-            [InlineData(MeteringPointType.MptConsumption, MeteringMethod.MmVirtual, SettlementMethod.SmProfiled)]
-            [InlineData(MeteringPointType.MptConsumption, MeteringMethod.MmVirtual, SettlementMethod.SmNonprofiled)]
-            [InlineData(MeteringPointType.MptConsumptionFromGrid, MeteringMethod.MmPhysical, SettlementMethod.SmUnknown)]
-            [InlineData(MeteringPointType.MptConsumptionFromGrid, MeteringMethod.MmVirtual, SettlementMethod.SmUnknown)]
-            [InlineData(MeteringPointType.MptElectricalHeating, MeteringMethod.MmVirtual, SettlementMethod.SmUnknown)]
-            [InlineData(MeteringPointType.MptExchange, MeteringMethod.MmPhysical, SettlementMethod.SmUnknown)]
-            [InlineData(MeteringPointType.MptExchange, MeteringMethod.MmVirtual, SettlementMethod.SmUnknown)]
-            [InlineData(MeteringPointType.MptExchangeReactiveEnergy, MeteringMethod.MmPhysical, SettlementMethod.SmUnknown)]
-            [InlineData(MeteringPointType.MptExchangeReactiveEnergy, MeteringMethod.MmVirtual, SettlementMethod.SmUnknown)]
-            [InlineData(MeteringPointType.MptInternalUse, MeteringMethod.MmPhysical, SettlementMethod.SmUnknown)]
-            [InlineData(MeteringPointType.MptInternalUse, MeteringMethod.MmVirtual, SettlementMethod.SmUnknown)]
-            [InlineData(MeteringPointType.MptNetConsumption, MeteringMethod.MmPhysical, SettlementMethod.SmUnknown)]
-            [InlineData(MeteringPointType.MptNetConsumption, MeteringMethod.MmVirtual, SettlementMethod.SmUnknown)]
-            [InlineData(MeteringPointType.MptNetFromGrid, MeteringMethod.MmPhysical, SettlementMethod.SmUnknown)]
-            [InlineData(MeteringPointType.MptNetFromGrid, MeteringMethod.MmVirtual, SettlementMethod.SmUnknown)]
-            [InlineData(MeteringPointType.MptNetProduction, MeteringMethod.MmPhysical, SettlementMethod.SmUnknown)]
-            [InlineData(MeteringPointType.MptNetProduction, MeteringMethod.MmVirtual, SettlementMethod.SmUnknown)]
-            [InlineData(MeteringPointType.MptNetToGrid, MeteringMethod.MmPhysical, SettlementMethod.SmUnknown)]
-            [InlineData(MeteringPointType.MptNetToGrid, MeteringMethod.MmVirtual, SettlementMethod.SmUnknown)]
-            [InlineData(MeteringPointType.MptOtherConsumption, MeteringMethod.MmPhysical, SettlementMethod.SmUnknown)]
-            [InlineData(MeteringPointType.MptOtherConsumption, MeteringMethod.MmVirtual, SettlementMethod.SmUnknown)]
-            [InlineData(MeteringPointType.MptOtherProduction, MeteringMethod.MmPhysical, SettlementMethod.SmUnknown)]
-            [InlineData(MeteringPointType.MptOtherProduction, MeteringMethod.MmVirtual, SettlementMethod.SmUnknown)]
-            [InlineData(MeteringPointType.MptSupplyToGrid, MeteringMethod.MmPhysical, SettlementMethod.SmUnknown)]
-            [InlineData(MeteringPointType.MptSupplyToGrid, MeteringMethod.MmVirtual, SettlementMethod.SmUnknown)]
-            [InlineData(MeteringPointType.MptSurplusProductionGroup, MeteringMethod.MmPhysical, SettlementMethod.SmUnknown)]
-            [InlineData(MeteringPointType.MptSurplusProductionGroup, MeteringMethod.MmVirtual, SettlementMethod.SmUnknown)]
-            [InlineData(MeteringPointType.MptVeproduction, MeteringMethod.MmPhysical, SettlementMethod.SmUnknown)]
-            [InlineData(MeteringPointType.MptVeproduction, MeteringMethod.MmVirtual, SettlementMethod.SmUnknown)]
-            [InlineData(MeteringPointType.MptTotalConsumption, MeteringMethod.MmPhysical, SettlementMethod.SmUnknown)]
-            [InlineData(MeteringPointType.MptTotalConsumption, MeteringMethod.MmVirtual, SettlementMethod.SmUnknown)]
-            [InlineData(MeteringPointType.MptWholesaleServices, MeteringMethod.MmPhysical, SettlementMethod.SmUnknown)]
-            [InlineData(MeteringPointType.MptWholesaleServices, MeteringMethod.MmVirtual, SettlementMethod.SmUnknown)]
+            [InlineData(MeteringPointCreated.Types.MeteringPointType.MptProduction, MeteringMethod.MmPhysical, MeteringPointCreated.Types.SettlementMethod.SmUnknown)]
+            [InlineData(MeteringPointCreated.Types.MeteringPointType.MptProduction, MeteringMethod.MmVirtual, MeteringPointCreated.Types.SettlementMethod.SmUnknown)]
+            [InlineData(MeteringPointCreated.Types.MeteringPointType.MptAnalysis, MeteringMethod.MmPhysical, MeteringPointCreated.Types.SettlementMethod.SmUnknown)]
+            [InlineData(MeteringPointCreated.Types.MeteringPointType.MptAnalysis, MeteringMethod.MmVirtual, MeteringPointCreated.Types.SettlementMethod.SmUnknown)]
+            [InlineData(MeteringPointCreated.Types.MeteringPointType.MptConsumption, MeteringMethod.MmPhysical, MeteringPointCreated.Types.SettlementMethod.SmFlex)]
+            [InlineData(MeteringPointCreated.Types.MeteringPointType.MptConsumption, MeteringMethod.MmPhysical, MeteringPointCreated.Types.SettlementMethod.SmProfiled)]
+            [InlineData(MeteringPointCreated.Types.MeteringPointType.MptConsumption, MeteringMethod.MmPhysical, MeteringPointCreated.Types.SettlementMethod.SmNonprofiled)]
+            [InlineData(MeteringPointCreated.Types.MeteringPointType.MptConsumption, MeteringMethod.MmVirtual, MeteringPointCreated.Types.SettlementMethod.SmFlex)]
+            [InlineData(MeteringPointCreated.Types.MeteringPointType.MptConsumption, MeteringMethod.MmVirtual, MeteringPointCreated.Types.SettlementMethod.SmProfiled)]
+            [InlineData(MeteringPointCreated.Types.MeteringPointType.MptConsumption, MeteringMethod.MmVirtual, MeteringPointCreated.Types.SettlementMethod.SmNonprofiled)]
+            [InlineData(MeteringPointCreated.Types.MeteringPointType.MptConsumptionFromGrid, MeteringMethod.MmPhysical, MeteringPointCreated.Types.SettlementMethod.SmUnknown)]
+            [InlineData(MeteringPointCreated.Types.MeteringPointType.MptConsumptionFromGrid, MeteringMethod.MmVirtual, MeteringPointCreated.Types.SettlementMethod.SmUnknown)]
+            [InlineData(MeteringPointCreated.Types.MeteringPointType.MptElectricalHeating, MeteringMethod.MmVirtual, MeteringPointCreated.Types.SettlementMethod.SmUnknown)]
+            [InlineData(MeteringPointCreated.Types.MeteringPointType.MptExchange, MeteringMethod.MmPhysical, MeteringPointCreated.Types.SettlementMethod.SmUnknown)]
+            [InlineData(MeteringPointCreated.Types.MeteringPointType.MptExchange, MeteringMethod.MmVirtual, MeteringPointCreated.Types.SettlementMethod.SmUnknown)]
+            [InlineData(MeteringPointCreated.Types.MeteringPointType.MptExchangeReactiveEnergy, MeteringMethod.MmPhysical, MeteringPointCreated.Types.SettlementMethod.SmUnknown)]
+            [InlineData(MeteringPointCreated.Types.MeteringPointType.MptExchangeReactiveEnergy, MeteringMethod.MmVirtual, MeteringPointCreated.Types.SettlementMethod.SmUnknown)]
+            [InlineData(MeteringPointCreated.Types.MeteringPointType.MptInternalUse, MeteringMethod.MmPhysical, MeteringPointCreated.Types.SettlementMethod.SmUnknown)]
+            [InlineData(MeteringPointCreated.Types.MeteringPointType.MptInternalUse, MeteringMethod.MmVirtual, MeteringPointCreated.Types.SettlementMethod.SmUnknown)]
+            [InlineData(MeteringPointCreated.Types.MeteringPointType.MptNetConsumption, MeteringMethod.MmPhysical, MeteringPointCreated.Types.SettlementMethod.SmUnknown)]
+            [InlineData(MeteringPointCreated.Types.MeteringPointType.MptNetConsumption, MeteringMethod.MmVirtual, MeteringPointCreated.Types.SettlementMethod.SmUnknown)]
+            [InlineData(MeteringPointCreated.Types.MeteringPointType.MptNetFromGrid, MeteringMethod.MmPhysical, MeteringPointCreated.Types.SettlementMethod.SmUnknown)]
+            [InlineData(MeteringPointCreated.Types.MeteringPointType.MptNetFromGrid, MeteringMethod.MmVirtual, MeteringPointCreated.Types.SettlementMethod.SmUnknown)]
+            [InlineData(MeteringPointCreated.Types.MeteringPointType.MptNetProduction, MeteringMethod.MmPhysical, MeteringPointCreated.Types.SettlementMethod.SmUnknown)]
+            [InlineData(MeteringPointCreated.Types.MeteringPointType.MptNetProduction, MeteringMethod.MmVirtual, MeteringPointCreated.Types.SettlementMethod.SmUnknown)]
+            [InlineData(MeteringPointCreated.Types.MeteringPointType.MptNetToGrid, MeteringMethod.MmPhysical, MeteringPointCreated.Types.SettlementMethod.SmUnknown)]
+            [InlineData(MeteringPointCreated.Types.MeteringPointType.MptNetToGrid, MeteringMethod.MmVirtual, MeteringPointCreated.Types.SettlementMethod.SmUnknown)]
+            [InlineData(MeteringPointCreated.Types.MeteringPointType.MptOtherConsumption, MeteringMethod.MmPhysical, MeteringPointCreated.Types.SettlementMethod.SmUnknown)]
+            [InlineData(MeteringPointCreated.Types.MeteringPointType.MptOtherConsumption, MeteringMethod.MmVirtual, MeteringPointCreated.Types.SettlementMethod.SmUnknown)]
+            [InlineData(MeteringPointCreated.Types.MeteringPointType.MptOtherProduction, MeteringMethod.MmPhysical, MeteringPointCreated.Types.SettlementMethod.SmUnknown)]
+            [InlineData(MeteringPointCreated.Types.MeteringPointType.MptOtherProduction, MeteringMethod.MmVirtual, MeteringPointCreated.Types.SettlementMethod.SmUnknown)]
+            [InlineData(MeteringPointCreated.Types.MeteringPointType.MptSupplyToGrid, MeteringMethod.MmPhysical, MeteringPointCreated.Types.SettlementMethod.SmUnknown)]
+            [InlineData(MeteringPointCreated.Types.MeteringPointType.MptSupplyToGrid, MeteringMethod.MmVirtual, MeteringPointCreated.Types.SettlementMethod.SmUnknown)]
+            [InlineData(MeteringPointCreated.Types.MeteringPointType.MptSurplusProductionGroup, MeteringMethod.MmPhysical, MeteringPointCreated.Types.SettlementMethod.SmUnknown)]
+            [InlineData(MeteringPointCreated.Types.MeteringPointType.MptSurplusProductionGroup, MeteringMethod.MmVirtual, MeteringPointCreated.Types.SettlementMethod.SmUnknown)]
+            [InlineData(MeteringPointCreated.Types.MeteringPointType.MptVeproduction, MeteringMethod.MmPhysical, MeteringPointCreated.Types.SettlementMethod.SmUnknown)]
+            [InlineData(MeteringPointCreated.Types.MeteringPointType.MptVeproduction, MeteringMethod.MmVirtual, MeteringPointCreated.Types.SettlementMethod.SmUnknown)]
+            [InlineData(MeteringPointCreated.Types.MeteringPointType.MptTotalConsumption, MeteringMethod.MmPhysical, MeteringPointCreated.Types.SettlementMethod.SmUnknown)]
+            [InlineData(MeteringPointCreated.Types.MeteringPointType.MptTotalConsumption, MeteringMethod.MmVirtual, MeteringPointCreated.Types.SettlementMethod.SmUnknown)]
+            [InlineData(MeteringPointCreated.Types.MeteringPointType.MptWholesaleServices, MeteringMethod.MmPhysical, MeteringPointCreated.Types.SettlementMethod.SmUnknown)]
+            [InlineData(MeteringPointCreated.Types.MeteringPointType.MptWholesaleServices, MeteringMethod.MmVirtual, MeteringPointCreated.Types.SettlementMethod.SmUnknown)]
             public async Task When_ReceivingMeteringPointCreatedMessage_MeteringPointIsSavedToDatabase(
-                MeteringPointType meteringPointType,
+                MeteringPointCreated.Types.MeteringPointType meteringPointType,
                 MeteringMethod meteringMethod,
-                SettlementMethod settlementMethod)
+                MeteringPointCreated.Types.SettlementMethod settlementMethod)
             {
                 // Arrange
                 var meteringPointId = RandomString(20);
@@ -123,18 +125,11 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 // Assert
                 await AssertFunctionExecuted(Fixture.HostManager, nameof(MeteringPointPersisterEndpoint)).ConfigureAwait(false);
                 await using var context = Fixture.DatabaseManager.CreateDbContext();
-                context.MeteringPoints.SingleOrDefaultAsync(x => x.MeteringPointId == meteringPointId).GetAwaiter().Should().NotBeNull();
-            }
+                var meteringPoint = context.MeteringPoints.SingleOrDefault(x => x.MeteringPointId == meteringPointId);
+                meteringPoint.Should().NotBeNull();
 
-            public static IEnumerable<object[]> GetMeteringPointScenarios()
-            {
-                yield return new object[]
-                {
-                    MeteringPointType.MptProduction,
-                    MeteringMethod.MmPhysical,
-                    SettlementMethod.SmUnknown,
-                    RandomString(20),
-                };
+                // We need to clear host log after each test is done to ensure that we can assert on function executed on each test run because we only check on function name.
+                Fixture.HostManager.ClearHostLog();
             }
 
             private static Random random = new Random();
@@ -161,9 +156,9 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
 
             private ServiceBusMessage CreateServiceBusMessage(
                 string meteringPointId,
-                MeteringPointType meteringPointType,
+                MeteringPointCreated.Types.MeteringPointType meteringPointType,
                 MeteringMethod meteringMethod,
-                SettlementMethod settlementMethod,
+                MeteringPointCreated.Types.SettlementMethod settlementMethod,
                 out string correlationId,
                 out string parentId)
             {
