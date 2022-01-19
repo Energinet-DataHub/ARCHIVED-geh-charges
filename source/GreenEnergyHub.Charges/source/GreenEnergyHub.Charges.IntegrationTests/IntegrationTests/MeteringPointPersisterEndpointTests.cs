@@ -17,8 +17,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Azure.Messaging.ServiceBus;
 using Energinet.DataHub.Core.FunctionApp.TestCommon;
-using Energinet.DataHub.Core.FunctionApp.TestCommon.FunctionAppHost;
-using Energinet.DataHub.Core.TestCommon;
 using Energinet.DataHub.MeteringPoints.IntegrationEventContracts;
 using FluentAssertions;
 using Google.Protobuf;
@@ -33,7 +31,7 @@ using Xunit.Categories;
 using static Energinet.DataHub.MeteringPoints.IntegrationEventContracts.MeteringPointCreated.Types;
 using ConnectionState = GreenEnergyHub.Charges.Domain.MeteringPoints.ConnectionState;
 
-namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
+namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests
 {
     [IntegrationTest]
     public class MeteringPointPersisterEndpointTests
@@ -101,11 +99,6 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 await using var context = Fixture.DatabaseManager.CreateDbContext();
                 var meteringPoint = context.MeteringPoints.SingleOrDefault(x => x.MeteringPointId == meteringPointId);
                 meteringPoint.Should().NotBeNull();
-                meteringPoint!.MeteringPointType.Should()
-                    .Be(MeteringPointCreatedInboundMapper.MapMeteringPointType(meteringPointType));
-                meteringPoint!.ConnectionState.Should().Be(ConnectionState.New);
-                meteringPoint!.SettlementMethod.Should()
-                    .Be(MeteringPointCreatedInboundMapper.MapSettlementMethod(settlementMethod));
 
                 // We need to clear host log after each test is done to ensure that we can assert on function executed on each test run because we only check on function name.
                 Fixture.HostManager.ClearHostLog();
