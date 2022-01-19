@@ -131,7 +131,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors
 
         [ErrorMessageFor(ValidationRuleIdentifier.MeteringPointDoesNotExist)]
         public const string MeteringPointDoesNotExistValidationErrorText =
-            "GSRN-code {{MeteringPointId}} unknown: The specified metering point has not been registered in the system on effective date {{ChargeLinkStartDate}}";
+            "GSRN-code {{MeteringPointId}} is unknown: The specified metering point has not been registered in the system on the charge link start date";
 
         [ErrorMessageFor(ValidationRuleIdentifier.ChargeDoesNotExist)]
         public const string ChargeDoesNotExistValidationErrorText =
