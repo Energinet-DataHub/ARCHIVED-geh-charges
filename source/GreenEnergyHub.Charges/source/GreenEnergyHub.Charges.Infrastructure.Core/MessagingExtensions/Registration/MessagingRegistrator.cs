@@ -14,7 +14,7 @@
 
 using Azure.Messaging.ServiceBus;
 using Energinet.DataHub.Core.Messaging.Transport;
-using GreenEnergyHub.Charges.Infrastructure.Core.InternalMessageing;
+using GreenEnergyHub.Charges.Infrastructure.Core.InternalMessaging;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Serialization;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -31,8 +31,9 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Registr
 
         /// <summary>
         /// Register services required to resolve a <see cref="MessageExtractor{TInboundMessage}"/>.
+        /// Which is intended to extract a message outside of the Charges domain.
         /// </summary>
-        public MessagingRegistrator AddMessageExtractor<TInboundMessage>()
+        public MessagingRegistrator AddExternalMessageExtractor<TInboundMessage>()
             where TInboundMessage : IInboundMessage
         {
             _services.AddScoped<MessageExtractor<TInboundMessage>>();
@@ -43,6 +44,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Registr
 
         /// <summary>
         /// Register services required to resolve a <see cref="MessageExtractor{TInboundMessage}"/>.
+        /// Which is intended to extract a message from inside of the Charges domain.
         /// </summary>
         public MessagingRegistrator AddInternalMessageExtractor<TInboundMessage>()
             where TInboundMessage : IInboundMessage
@@ -54,8 +56,9 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Registr
 
         /// <summary>
         /// Register services required to resolve a <see cref="IMessageDispatcher{TInboundMessage}"/>.
+        /// Which is used when sending messages out of the Charges domain.
         /// </summary>
-        public MessagingRegistrator AddMessageDispatcher<TOutboundMessage>(
+        public MessagingRegistrator AddExternalMessageDispatcher<TOutboundMessage>(
             string serviceBusConnectionString,
             string serviceBusTopicName)
             where TOutboundMessage : IOutboundMessage
@@ -77,6 +80,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Registr
 
         /// <summary>
         /// Register services required to resolve a <see cref="IMessageDispatcher{TInboundMessage}"/>.
+        /// Which is used when sending messages within of the Charges domain.
         /// </summary>
         public MessagingRegistrator AddInternalMessageDispatcher<TOutboundMessage>(
             string serviceBusConnectionString,

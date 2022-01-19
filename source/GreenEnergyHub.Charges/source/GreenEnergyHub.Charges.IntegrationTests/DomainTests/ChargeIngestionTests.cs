@@ -91,7 +91,6 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
 
                 // Act
                 await Fixture.HostManager.HttpClient.SendAsync(request);
-                //await AssertFunctionExecuted(Fixture.HostManager, nameof(ChargeIntegrationEventsPublisherEndpoint)).ConfigureAwait(false);
 
                 // Assert
                 var isChargeCreatedReceived = eventualChargeCreatedEvent.MessageAwaiter!.Wait(

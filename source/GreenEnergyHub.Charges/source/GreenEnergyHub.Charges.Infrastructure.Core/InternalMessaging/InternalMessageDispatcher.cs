@@ -20,7 +20,7 @@ using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Factories;
 using GreenEnergyHub.Json;
 
-namespace GreenEnergyHub.Charges.Infrastructure.Core.InternalMessageing
+namespace GreenEnergyHub.Charges.Infrastructure.Core.InternalMessaging
 {
     public class InternalMessageDispatcher<TOutboundMessage> : IMessageDispatcher<TOutboundMessage>
     where TOutboundMessage : IOutboundMessage

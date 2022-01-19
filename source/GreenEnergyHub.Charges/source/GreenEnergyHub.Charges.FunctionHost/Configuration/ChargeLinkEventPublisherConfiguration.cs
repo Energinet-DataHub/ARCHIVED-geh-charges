@@ -31,7 +31,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
             serviceCollection
                 .AddMessaging()
                 .AddInternalMessageExtractor<ChargeLinksAcceptedEvent>()
-                .AddMessageDispatcher<ChargeLinkCreatedEvent>(
+                .AddExternalMessageDispatcher<ChargeLinkCreatedEvent>(
                     EnvironmentHelper.GetEnv(EnvironmentSettingNames.DataHubSenderConnectionString),
                     EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargeLinksCreatedTopicName));
         }

@@ -39,7 +39,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Core.MessagingExtensions.R
             // Act
             services.SendProtobuf<TestMessageContract>();
             services.AddMessagingProtobuf()
-                .AddMessageDispatcher<TestMessage>(anyValidConnectionString, anyTopicName);
+                .AddExternalMessageDispatcher<TestMessage>(anyValidConnectionString, anyTopicName);
 
             // Assert
             var provider = services.BuildServiceProvider();
@@ -56,7 +56,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Core.MessagingExtensions.R
             // Act
             services
                 .AddMessaging()
-                .AddMessageExtractor<TestMessage>();
+                .AddExternalMessageExtractor<TestMessage>();
 
             // Assert
             var provider = services.BuildServiceProvider();
