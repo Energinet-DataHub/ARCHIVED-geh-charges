@@ -188,12 +188,12 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
 
         private static void AddRequestResponseLogging(IServiceCollection serviceCollection)
         {
-            serviceCollection.AddScoped<IRequestResponseLogging>(e =>
+            serviceCollection.AddScoped<IRequestResponseLogging>(provider =>
             {
                 var requestResponseLogStorage = EnvironmentHelper.GetEnv(EnvironmentSettingNames.RequestResponseLoggingConnectionString);
                 var requestResponseLogContainerName = EnvironmentHelper.GetEnv(EnvironmentSettingNames.RequestResponseLoggingContainerName);
 
-                var storageLogging = e.GetService<ILogger<RequestResponseLoggingBlobStorage>>();
+                var storageLogging = provider.GetService<ILogger<RequestResponseLoggingBlobStorage>>();
                 return new RequestResponseLoggingBlobStorage(requestResponseLogStorage, requestResponseLogContainerName, storageLogging!);
             });
         }
