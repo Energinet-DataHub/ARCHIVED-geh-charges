@@ -32,7 +32,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
     [IntegrationTest]
     public class ChargeIngestionTests
     {
-        private const int SecondsToWaitForIntegrationEvents = 15;
+        private const int SecondsToWaitForIntegrationEvents = 30;
 
         [Collection(nameof(ChargesFunctionAppCollectionFixture))]
         public class RunAsync : FunctionAppTestBase<ChargesFunctionAppFixture>, IAsyncLifetime
@@ -91,6 +91,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
 
                 // Act
                 await Fixture.HostManager.HttpClient.SendAsync(request);
+                //await AssertFunctionExecuted(Fixture.HostManager, nameof(ChargeIntegrationEventsPublisherEndpoint)).ConfigureAwait(false);
 
                 // Assert
                 var isChargeCreatedReceived = eventualChargeCreatedEvent.MessageAwaiter!.Wait(

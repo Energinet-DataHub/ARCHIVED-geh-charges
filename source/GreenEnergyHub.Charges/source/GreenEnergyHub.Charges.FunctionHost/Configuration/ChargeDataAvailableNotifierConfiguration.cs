@@ -36,10 +36,6 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
             serviceCollection
                 .AddScoped<BundleSpecification<AvailableChargeData, ChargeCommandAcceptedEvent>,
                     ChargeBundleSpecification>();
-
-            serviceCollection
-                .AddMessaging()
-                .AddInternalMessageExtractor<ChargeCommandAcceptedEvent>();
         }
     }
 }

@@ -26,6 +26,8 @@ using Energinet.DataHub.MessageHub.Model.Peek;
 using EntityFrameworkCore.SqlServer.NodaTime.Extensions;
 using GreenEnergyHub.Charges.Application.ChargeLinks.CreateDefaultChargeLinkReplier;
 using GreenEnergyHub.Charges.Domain.Charges;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandAcceptedEvents;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksAcceptedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksReceivedEvents;
 using GreenEnergyHub.Charges.Domain.MeteringPoints;
 using GreenEnergyHub.Charges.FunctionHost.Common;
@@ -132,7 +134,9 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
             serviceCollection.ConfigureProtobufReception();
 
             serviceCollection.SendProtobuf<ChargeLinksCommandReceived>();
-            serviceCollection.AddMessaging().AddMessageDispatcher<ChargeLinksReceivedEvent>(
+            serviceCollection.AddMessaging()
+                .AddInternalMessageExtractor<ChargeCommandAcceptedEvent>()
+                .AddMessageDispatcher<ChargeLinksReceivedEvent>(
                 EnvironmentHelper.GetEnv(EnvironmentSettingNames.DomainEventSenderConnectionString),
                 EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargeLinksReceivedTopicName));
         }
