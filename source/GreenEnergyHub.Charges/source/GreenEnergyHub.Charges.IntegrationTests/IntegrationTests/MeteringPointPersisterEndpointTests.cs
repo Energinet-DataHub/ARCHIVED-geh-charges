@@ -21,7 +21,6 @@ using Energinet.DataHub.MeteringPoints.IntegrationEventContracts;
 using FluentAssertions;
 using Google.Protobuf;
 using GreenEnergyHub.Charges.FunctionHost.MeteringPoint;
-using GreenEnergyHub.Charges.Infrastructure.Contracts.External.MeteringPointCreated;
 using GreenEnergyHub.Charges.IntegrationTests.Fixtures;
 using GreenEnergyHub.Charges.IntegrationTests.TestCommon;
 using GreenEnergyHub.Charges.IntegrationTests.TestHelpers;
@@ -29,7 +28,6 @@ using Xunit;
 using Xunit.Abstractions;
 using Xunit.Categories;
 using static Energinet.DataHub.MeteringPoints.IntegrationEventContracts.MeteringPointCreated.Types;
-using ConnectionState = GreenEnergyHub.Charges.Domain.MeteringPoints.ConnectionState;
 
 namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests
 {
