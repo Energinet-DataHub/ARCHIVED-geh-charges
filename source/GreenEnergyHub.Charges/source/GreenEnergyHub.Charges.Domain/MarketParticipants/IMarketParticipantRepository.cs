@@ -23,7 +23,9 @@ namespace GreenEnergyHub.Charges.Domain.MarketParticipants
     /// </summary>
     public interface IMarketParticipantRepository
     {
-        Task<MarketParticipant> GetAsync(Guid id);
+        Task<MarketParticipant> GetAsync(MarketParticipantRole marketParticipantRole);
+
+        Task<IReadOnlyCollection<MarketParticipant>> GetAsync(IEnumerable<Guid> ids);
 
         Task<MarketParticipant> GetOrNullAsync(string marketParticipantId);
 
@@ -34,10 +36,6 @@ namespace GreenEnergyHub.Charges.Domain.MarketParticipants
 
         Task<List<MarketParticipant>> GetActiveGridAccessProvidersAsync();
 
-        Task<MarketParticipant> GetAsync(MarketParticipantRole marketParticipantRole);
-
-        Task<IReadOnlyCollection<MarketParticipant>> GetAsync(IEnumerable<Guid> ids);
-
-        Task<HubSenderMarketParticipant.HubSenderMarketParticipant> GetHubSenderAsync();
+        Task<MarketParticipant> GetHubSenderAsync();
     }
 }

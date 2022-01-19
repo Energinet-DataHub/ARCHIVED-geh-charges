@@ -25,6 +25,7 @@ using GreenEnergyHub.Charges.Domain.Dtos.CreateDefaultChargeLinksRequests;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.Domain.MeteringPoints;
 using GreenEnergyHub.Charges.TestCore.Attributes;
+using GreenEnergyHub.Charges.Tests.Builders.Testables;
 using Moq;
 using NodaTime;
 using Xunit;
@@ -41,9 +42,9 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeLinksCommands
             [Frozen] Mock<IChargeRepository> chargeRepository,
             [Frozen] Mock<IMeteringPointRepository> meteringPointRepository,
             [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
-            MarketParticipant recipient,
-            MarketParticipant systemOperator,
-            MarketParticipant chargeOwner,
+            TestMeteringPointAdministrator recipient,
+            TestSystemOperator systemOperator,
+            TestMarketParticipant chargeOwner,
             Guid defaultChargeLinkId,
             Guid chargeId,
             MeteringPoint meteringPoint,

@@ -13,20 +13,15 @@
 // limitations under the License.
 
 using System.Linq;
-using GreenEnergyHub.Charges.Domain.MarketParticipants;
-using Microsoft.EntityFrameworkCore;
+using GreenEnergyHub.Charges.Infrastructure.ActorRegister.Persistence.Actors;
+using GreenEnergyHub.Charges.Infrastructure.ActorRegister.Persistence.GridAreas;
 
-namespace GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories
+namespace GreenEnergyHub.Charges.Infrastructure.ActorRegister.Persistence
 {
-    public static class MarketParticipantDbSetExtensions
+    public interface IActorRegister
     {
-        public static IQueryable<MarketParticipant> WithRole(
-            this DbSet<MarketParticipant> set,
-            MarketParticipantRole role)
-        {
-            var roleParam = ((int)role).ToString();
-            return set.FromSqlInterpolated(
-                $"SELECT * FROM Charges.MarketParticipant WHERE (',' + Roles + ',') LIKE '%,' + {roleParam} + ',%'");
-        }
+        IQueryable<Actor> Actors { get; }
+
+        IQueryable<GridArea> GridAreas { get; }
     }
 }
