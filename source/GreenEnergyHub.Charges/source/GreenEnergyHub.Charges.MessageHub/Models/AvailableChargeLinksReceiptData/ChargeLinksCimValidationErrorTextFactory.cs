@@ -95,7 +95,8 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksReceiptDa
             }
             catch (Exception e)
             {
-                return LogErrorAndReturnErrorMessage(triggeredBy, nameof(ChargeLinkDto.StartDateTime), e);
+                LogError(triggeredBy, nameof(ChargeLinkDto.StartDateTime), e);
+                return CimValidationErrorTextTemplateMessages.Unknown;
             }
         }
 
@@ -109,16 +110,15 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksReceiptDa
             }
             catch (Exception e)
             {
-                return LogErrorAndReturnErrorMessage(triggeredBy, nameof(ChargeLinkDto.SenderProvidedChargeId), e);
+                LogError(triggeredBy, nameof(ChargeLinkDto.SenderProvidedChargeId), e);
+                return CimValidationErrorTextTemplateMessages.Unknown;
             }
         }
 
-        private string LogErrorAndReturnErrorMessage(string? triggeredBy, string elementNotFound, Exception e)
+        private void LogError(string? triggeredBy, string elementNotFound, Exception e)
         {
             var errorMessage = $"{elementNotFound} not found by operationId: {triggeredBy}";
             _logger.LogError(e, errorMessage);
-
-            return CimValidationErrorTextTemplateMessages.Unknown;
         }
     }
 }
