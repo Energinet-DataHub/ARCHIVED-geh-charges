@@ -25,10 +25,6 @@ limitations under the License.
     </PropertyGroup>
 
     <ItemGroup>
-      <Folder Include="Models" />
-    </ItemGroup>
-
-    <ItemGroup>
       <PackageReference Include="Energinet.DataHub.MessageHub.Client" Version="1.8.3" />
       <PackageReference Include="Energinet.DataHub.MessageHub.IntegrationTesting" Version="1.1.2" />
       <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.13" />
