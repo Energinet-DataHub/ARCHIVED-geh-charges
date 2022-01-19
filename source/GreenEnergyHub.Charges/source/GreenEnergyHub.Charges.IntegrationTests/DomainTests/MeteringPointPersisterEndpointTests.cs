@@ -40,8 +40,6 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
         [Collection(nameof(ChargesFunctionAppCollectionFixture))]
         public class RunAsync : FunctionAppTestBase<ChargesFunctionAppFixture>, IAsyncLifetime
         {
-            private TimeSpan DefaultTimeout { get; } = TimeSpan.FromSeconds(10);
-
             public RunAsync(ChargesFunctionAppFixture fixture, ITestOutputHelper testOutputHelper)
                 : base(fixture, testOutputHelper)
             {
@@ -59,30 +57,30 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             }
 
             [Theory]
-            [InlineData(MeteringPointCreated.Types.MeteringPointType.MptProduction, MeteringPointCreated.Types.SettlementMethod.SmUnknown)]
-            [InlineData(MeteringPointCreated.Types.MeteringPointType.MptAnalysis, MeteringPointCreated.Types.SettlementMethod.SmUnknown)]
-            [InlineData(MeteringPointCreated.Types.MeteringPointType.MptConsumption, MeteringPointCreated.Types.SettlementMethod.SmFlex)]
-            [InlineData(MeteringPointCreated.Types.MeteringPointType.MptConsumption, MeteringPointCreated.Types.SettlementMethod.SmProfiled)]
-            [InlineData(MeteringPointCreated.Types.MeteringPointType.MptConsumption, MeteringPointCreated.Types.SettlementMethod.SmNonprofiled)]
-            [InlineData(MeteringPointCreated.Types.MeteringPointType.MptConsumptionFromGrid, MeteringPointCreated.Types.SettlementMethod.SmUnknown)]
-            [InlineData(MeteringPointCreated.Types.MeteringPointType.MptElectricalHeating, MeteringPointCreated.Types.SettlementMethod.SmUnknown)]
-            [InlineData(MeteringPointCreated.Types.MeteringPointType.MptExchange, MeteringPointCreated.Types.SettlementMethod.SmUnknown)]
-            [InlineData(MeteringPointCreated.Types.MeteringPointType.MptExchangeReactiveEnergy, MeteringPointCreated.Types.SettlementMethod.SmUnknown)]
-            [InlineData(MeteringPointCreated.Types.MeteringPointType.MptInternalUse, MeteringPointCreated.Types.SettlementMethod.SmUnknown)]
-            [InlineData(MeteringPointCreated.Types.MeteringPointType.MptNetConsumption, MeteringPointCreated.Types.SettlementMethod.SmUnknown)]
-            [InlineData(MeteringPointCreated.Types.MeteringPointType.MptNetFromGrid, MeteringPointCreated.Types.SettlementMethod.SmUnknown)]
-            [InlineData(MeteringPointCreated.Types.MeteringPointType.MptNetProduction, MeteringPointCreated.Types.SettlementMethod.SmUnknown)]
-            [InlineData(MeteringPointCreated.Types.MeteringPointType.MptNetToGrid, MeteringPointCreated.Types.SettlementMethod.SmUnknown)]
-            [InlineData(MeteringPointCreated.Types.MeteringPointType.MptOtherConsumption, MeteringPointCreated.Types.SettlementMethod.SmUnknown)]
-            [InlineData(MeteringPointCreated.Types.MeteringPointType.MptOtherProduction, MeteringPointCreated.Types.SettlementMethod.SmUnknown)]
-            [InlineData(MeteringPointCreated.Types.MeteringPointType.MptSupplyToGrid, MeteringPointCreated.Types.SettlementMethod.SmUnknown)]
-            [InlineData(MeteringPointCreated.Types.MeteringPointType.MptSurplusProductionGroup, MeteringPointCreated.Types.SettlementMethod.SmUnknown)]
-            [InlineData(MeteringPointCreated.Types.MeteringPointType.MptVeproduction, MeteringPointCreated.Types.SettlementMethod.SmUnknown)]
-            [InlineData(MeteringPointCreated.Types.MeteringPointType.MptTotalConsumption, MeteringPointCreated.Types.SettlementMethod.SmUnknown)]
-            [InlineData(MeteringPointCreated.Types.MeteringPointType.MptWholesaleServices, MeteringPointCreated.Types.SettlementMethod.SmUnknown)]
+            [InlineData(MeteringPointType.MptProduction, SettlementMethod.SmUnknown)]
+            [InlineData(MeteringPointType.MptAnalysis, SettlementMethod.SmUnknown)]
+            [InlineData(MeteringPointType.MptConsumption, SettlementMethod.SmFlex)]
+            [InlineData(MeteringPointType.MptConsumption, SettlementMethod.SmProfiled)]
+            [InlineData(MeteringPointType.MptConsumption, SettlementMethod.SmNonprofiled)]
+            [InlineData(MeteringPointType.MptConsumptionFromGrid, SettlementMethod.SmUnknown)]
+            [InlineData(MeteringPointType.MptElectricalHeating, SettlementMethod.SmUnknown)]
+            [InlineData(MeteringPointType.MptExchange, SettlementMethod.SmUnknown)]
+            [InlineData(MeteringPointType.MptExchangeReactiveEnergy, SettlementMethod.SmUnknown)]
+            [InlineData(MeteringPointType.MptInternalUse, SettlementMethod.SmUnknown)]
+            [InlineData(MeteringPointType.MptNetConsumption, SettlementMethod.SmUnknown)]
+            [InlineData(MeteringPointType.MptNetFromGrid, SettlementMethod.SmUnknown)]
+            [InlineData(MeteringPointType.MptNetProduction, SettlementMethod.SmUnknown)]
+            [InlineData(MeteringPointType.MptNetToGrid, SettlementMethod.SmUnknown)]
+            [InlineData(MeteringPointType.MptOtherConsumption, SettlementMethod.SmUnknown)]
+            [InlineData(MeteringPointType.MptOtherProduction, SettlementMethod.SmUnknown)]
+            [InlineData(MeteringPointType.MptSupplyToGrid, SettlementMethod.SmUnknown)]
+            [InlineData(MeteringPointType.MptSurplusProductionGroup, SettlementMethod.SmUnknown)]
+            [InlineData(MeteringPointType.MptVeproduction, SettlementMethod.SmUnknown)]
+            [InlineData(MeteringPointType.MptTotalConsumption, SettlementMethod.SmUnknown)]
+            [InlineData(MeteringPointType.MptWholesaleServices, SettlementMethod.SmUnknown)]
             public async Task When_ReceivingMeteringPointCreatedMessage_MeteringPointIsSavedToDatabase(
-                MeteringPointCreated.Types.MeteringPointType meteringPointType,
-                MeteringPointCreated.Types.SettlementMethod settlementMethod)
+                MeteringPointType meteringPointType,
+                SettlementMethod settlementMethod)
             {
                 // Arrange
                 var meteringPointId = RandomString(20);
@@ -136,8 +134,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
 
             private ServiceBusMessage CreateServiceBusMessage(
                 string meteringPointId,
-                MeteringPointCreated.Types.MeteringPointType meteringPointType,
-                MeteringPointCreated.Types.SettlementMethod settlementMethod,
+                MeteringPointType meteringPointType,
+                SettlementMethod settlementMethod,
                 out string correlationId,
                 out string parentId)
             {
@@ -159,7 +157,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 var byteArray = message.ToByteArray();
                 var serviceBusMessage = new ServiceBusMessage(byteArray)
                 {
-                    CorrelationId = (string)correlationId,
+                    CorrelationId = correlationId,
                 };
                 serviceBusMessage.ApplicationProperties.Add("OperationTimestamp", date.ToUniversalTime());
                 serviceBusMessage.ApplicationProperties.Add("OperationCorrelationId", "1bf1b76337f14b78badc248a3289d021");
