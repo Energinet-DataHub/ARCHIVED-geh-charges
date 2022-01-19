@@ -25,6 +25,7 @@ using GreenEnergyHub.Charges.TestCore.Attributes;
 using GreenEnergyHub.TestHelpers.FluentAssertionsExtensions;
 using Xunit;
 using Xunit.Categories;
+using mpTypes = Energinet.DataHub.MeteringPoints.IntegrationEventContracts.MeteringPointCreated.Types;
 
 namespace GreenEnergyHub.Charges.Tests.Infrastructure.Contracts.External.MeteringPointCreated
 {
@@ -38,12 +39,9 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Contracts.External.Meterin
             [NotNull] MeteringPointCreatedInboundMapper sut)
         {
             meteringPointCreatedEvent.EffectiveDate = Timestamp.FromDateTime(new DateTime(2021, 10, 31, 23, 00, 00, 00, DateTimeKind.Utc));
-            meteringPointCreatedEvent.MeteringPointType = Energinet.DataHub.MeteringPoints.IntegrationEventContracts
-                .MeteringPointCreated.Types.MeteringPointType.MptConsumption;
-            meteringPointCreatedEvent.SettlementMethod = Energinet.DataHub.MeteringPoints.IntegrationEventContracts
-                .MeteringPointCreated.Types.SettlementMethod.SmFlex;
-            meteringPointCreatedEvent.ConnectionState = Energinet.DataHub.MeteringPoints.IntegrationEventContracts
-                .MeteringPointCreated.Types.ConnectionState.CsNew;
+            meteringPointCreatedEvent.MeteringPointType = mpTypes.MeteringPointType.MptConsumption;
+            meteringPointCreatedEvent.SettlementMethod = mpTypes.SettlementMethod.SmFlex;
+            meteringPointCreatedEvent.ConnectionState = mpTypes.ConnectionState.CsNew;
 
             // Act
             var converted = (MeteringPointCreatedEvent)sut.Convert(meteringPointCreatedEvent);
@@ -66,10 +64,11 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Contracts.External.Meterin
         }
 
         [Theory]
-        [InlineData(Energinet.DataHub.MeteringPoints.IntegrationEventContracts.MeteringPointCreated.Types.SettlementMethod.SmFlex, SettlementMethod.Flex)]
-        [InlineData(Energinet.DataHub.MeteringPoints.IntegrationEventContracts.MeteringPointCreated.Types.SettlementMethod.SmNonprofiled, SettlementMethod.NonProfiled)]
-        [InlineData(Energinet.DataHub.MeteringPoints.IntegrationEventContracts.MeteringPointCreated.Types.SettlementMethod.SmProfiled, SettlementMethod.Profiled)]
-        public void MapSettlementMethod_WhenCalled_ShouldMapCorrectly(Energinet.DataHub.MeteringPoints.IntegrationEventContracts.MeteringPointCreated.Types.SettlementMethod protoSettlementMethod, SettlementMethod expectedSettlementMethod)
+        [InlineData(mpTypes.SettlementMethod.SmFlex, SettlementMethod.Flex)]
+        [InlineData(mpTypes.SettlementMethod.SmNonprofiled, SettlementMethod.NonProfiled)]
+        [InlineData(mpTypes.SettlementMethod.SmProfiled, SettlementMethod.Profiled)]
+        [InlineData(mpTypes.SettlementMethod.SmNull, null)]
+        public void MapSettlementMethod_WhenCalled_ShouldMapCorrectly(mpTypes.SettlementMethod protoSettlementMethod, SettlementMethod? expectedSettlementMethod)
         {
             var actual =
                 MeteringPointCreatedInboundMapper.MapSettlementMethod(protoSettlementMethod);
@@ -81,13 +80,13 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Contracts.External.Meterin
         public void MapSettlementMethod_WhenCalledWithInvalidEnum_Throws()
         {
             Assert.Throws<InvalidEnumArgumentException>(
-                () => MeteringPointCreatedInboundMapper.MapSettlementMethod((Energinet.DataHub.MeteringPoints.IntegrationEventContracts.MeteringPointCreated.Types.SettlementMethod)9999));
+                () => MeteringPointCreatedInboundMapper.MapSettlementMethod((mpTypes.SettlementMethod)9999));
         }
 
         [Theory]
-        [InlineData(Energinet.DataHub.MeteringPoints.IntegrationEventContracts.MeteringPointCreated.Types.ConnectionState.CsNew, ConnectionState.New)]
+        [InlineData(mpTypes.ConnectionState.CsNew, ConnectionState.New)]
         public void MapConnectionState_WhenCalled_ShouldMapCorrectly(
-            Energinet.DataHub.MeteringPoints.IntegrationEventContracts.MeteringPointCreated.Types.ConnectionState protoConnectionState,
+            mpTypes.ConnectionState protoConnectionState,
             ConnectionState expectedConnectionState)
         {
             var actual = MeteringPointCreatedInboundMapper.MapConnectionState(protoConnectionState);
@@ -99,7 +98,38 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Contracts.External.Meterin
         public void MapConnectionState_WhenCalledWithInvalidEnum_Throws()
         {
             Assert.Throws<InvalidEnumArgumentException>(
-                () => MeteringPointCreatedInboundMapper.MapConnectionState((Energinet.DataHub.MeteringPoints.IntegrationEventContracts.MeteringPointCreated.Types.ConnectionState)9999));
+                () => MeteringPointCreatedInboundMapper.MapConnectionState((mpTypes.ConnectionState)9999));
+        }
+
+        [Theory]
+        [InlineData(mpTypes.MeteringPointType.MptAnalysis, MeteringPointType.Analysis)]
+        [InlineData(mpTypes.MeteringPointType.MptConsumption, MeteringPointType.Consumption)]
+        [InlineData(mpTypes.MeteringPointType.MptConsumptionFromGrid, MeteringPointType.ConsumptionFromGrid)]
+        [InlineData(mpTypes.MeteringPointType.MptElectricalHeating, MeteringPointType.ElectricalHeating)]
+        [InlineData(mpTypes.MeteringPointType.MptExchange, MeteringPointType.Exchange)]
+        [InlineData(mpTypes.MeteringPointType.MptExchangeReactiveEnergy, MeteringPointType.ExchangeReactiveEnergy)]
+        [InlineData(mpTypes.MeteringPointType.MptInternalUse, MeteringPointType.InternalUse)]
+        [InlineData(mpTypes.MeteringPointType.MptNetConsumption, MeteringPointType.NetConsumption)]
+        [InlineData(mpTypes.MeteringPointType.MptNetFromGrid, MeteringPointType.NetFromGrid)]
+        [InlineData(mpTypes.MeteringPointType.MptNetProduction, MeteringPointType.NetProduction)]
+        [InlineData(mpTypes.MeteringPointType.MptNetToGrid, MeteringPointType.NetToGrid)]
+        [InlineData(mpTypes.MeteringPointType.MptOtherConsumption, MeteringPointType.OtherConsumption)]
+        [InlineData(mpTypes.MeteringPointType.MptOtherProduction, MeteringPointType.OtherProduction)]
+        [InlineData(mpTypes.MeteringPointType.MptOwnProduction, MeteringPointType.OwnProduction)]
+        [InlineData(mpTypes.MeteringPointType.MptProduction, MeteringPointType.Production)]
+        [InlineData(mpTypes.MeteringPointType.MptSupplyToGrid, MeteringPointType.SupplyToGrid)]
+        [InlineData(mpTypes.MeteringPointType.MptSurplusProductionGroup, MeteringPointType.SurplusProductionGroup)]
+        [InlineData(mpTypes.MeteringPointType.MptTotalConsumption, MeteringPointType.TotalConsumption)]
+        [InlineData(mpTypes.MeteringPointType.MptVeproduction, MeteringPointType.VeProduction)]
+        [InlineData(mpTypes.MeteringPointType.MptWholesaleServices, MeteringPointType.WholesaleService)]
+        public void MapMeteringPointType_WhenCalled_ShouldMapCorrectly(
+            mpTypes.MeteringPointType protoMeteringType,
+            MeteringPointType expectedMeteringPointType)
+        {
+            var actual =
+                MeteringPointCreatedInboundMapper.MapMeteringPointType(protoMeteringType);
+
+            actual.Should().Be(expectedMeteringPointType);
         }
     }
 }

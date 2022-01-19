@@ -50,7 +50,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Contracts.External.MeteringPoint
             mpTypes.MeteringPointType.MptAnalysis => MeteringPointType.Analysis,
             mpTypes.MeteringPointType.MptConsumption => MeteringPointType.Consumption,
             mpTypes.MeteringPointType.MptExchange => MeteringPointType.Exchange,
-            mpTypes.MeteringPointType.MptProduction => MeteringPointType.Unknown,
+            mpTypes.MeteringPointType.MptProduction => MeteringPointType.Production,
             mpTypes.MeteringPointType.MptVeproduction => MeteringPointType.VeProduction,
             mpTypes.MeteringPointType.MptElectricalHeating => MeteringPointType.ElectricalHeating,
             mpTypes.MeteringPointType.MptInternalUse => MeteringPointType.InternalUse,
