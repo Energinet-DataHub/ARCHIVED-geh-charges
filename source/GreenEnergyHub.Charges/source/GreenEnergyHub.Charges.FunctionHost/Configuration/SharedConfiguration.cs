@@ -27,7 +27,6 @@ using EntityFrameworkCore.SqlServer.NodaTime.Extensions;
 using GreenEnergyHub.Charges.Application.ChargeLinks.CreateDefaultChargeLinkReplier;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandAcceptedEvents;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksAcceptedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksReceivedEvents;
 using GreenEnergyHub.Charges.Domain.MeteringPoints;
 using GreenEnergyHub.Charges.FunctionHost.Common;
@@ -36,7 +35,7 @@ using GreenEnergyHub.Charges.Infrastructure.Core.Function;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessageMetaData;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Factories;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Registration;
-using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinksCommandReceived;
+using GreenEnergyHub.Charges.Infrastructure.Integration.ChargeCreated;
 using GreenEnergyHub.Charges.Infrastructure.Persistence;
 using GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories;
 using GreenEnergyHub.Charges.Infrastructure.ReplySender;
@@ -133,7 +132,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
             serviceCollection.AddScoped<IServiceBusMessageFactory, ServiceBusMessageFactory>();
             serviceCollection.ConfigureProtobufReception();
 
-            serviceCollection.SendProtobuf<ChargeLinksCommandReceived>();
+            serviceCollection.SendProtobuf<ChargeCreated>();
             serviceCollection.AddMessaging()
                 .AddInternalMessageExtractor<ChargeCommandAcceptedEvent>()
                 .AddExternalMessageDispatcher<ChargeLinksReceivedEvent>(
