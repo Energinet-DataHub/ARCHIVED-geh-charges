@@ -17,6 +17,7 @@ using GreenEnergyHub.Charges.Application.ChargeLinks.Handlers;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksDataAvailableNotifiedEvents;
 using GreenEnergyHub.Charges.FunctionHost.Common;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions;
+using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Serialization;
 using GreenEnergyHub.Charges.Infrastructure.Internal.DefaultChargeLinksCreated;
 using Microsoft.Azure.Functions.Worker;
 
@@ -29,14 +30,14 @@ namespace GreenEnergyHub.Charges.FunctionHost.ChargeLinks
         /// Function name affects the URL and thus possibly dependent infrastructure.
         /// </summary>
         public const string FunctionName = nameof(CreateDefaultChargeLinksReplierEndpoint);
-        private readonly MessageExtractor<DefaultChargeLinksCreated> _messageExtractor;
+        private readonly JsonMessageDeserializer<ChargeLinksDataAvailableNotifiedEvent> _deserializer;
         private readonly ICreateDefaultChargeLinksReplyHandler _createDefaultChargeLinksReplyHandler;
 
         public CreateDefaultChargeLinksReplierEndpoint(
-            MessageExtractor<DefaultChargeLinksCreated> messageExtractor,
+            JsonMessageDeserializer<ChargeLinksDataAvailableNotifiedEvent> deserializer,
             ICreateDefaultChargeLinksReplyHandler createDefaultChargeLinksReplyHandler)
         {
-            _messageExtractor = messageExtractor;
+            _deserializer = deserializer;
             _createDefaultChargeLinksReplyHandler = createDefaultChargeLinksReplyHandler;
         }
 
@@ -48,9 +49,8 @@ namespace GreenEnergyHub.Charges.FunctionHost.ChargeLinks
                 Connection = EnvironmentSettingNames.DomainEventListenerConnectionString)]
             byte[] message)
         {
-            var defaultChargeLinksDataAvailableNotifierEvent = (ChargeLinksDataAvailableNotifiedEvent)await _messageExtractor.ExtractAsync(message).ConfigureAwait(false);
-
-            await _createDefaultChargeLinksReplyHandler.HandleAsync(defaultChargeLinksDataAvailableNotifierEvent).ConfigureAwait(false);
+            var notifierEvent = (ChargeLinksDataAvailableNotifiedEvent)await _deserializer.FromBytesAsync(message).ConfigureAwait(false);
+            await _createDefaultChargeLinksReplyHandler.HandleAsync(notifierEvent).ConfigureAwait(false);
         }
     }
 }

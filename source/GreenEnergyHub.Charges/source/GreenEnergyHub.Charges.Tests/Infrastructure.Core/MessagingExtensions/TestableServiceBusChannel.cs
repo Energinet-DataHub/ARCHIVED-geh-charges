@@ -15,9 +15,8 @@
 using System.Threading;
 using System.Threading.Tasks;
 using Energinet.DataHub.Core.Messaging.Transport;
-using GreenEnergyHub.Charges.Infrastructure.Core.Correlation;
-using GreenEnergyHub.Charges.Infrastructure.Core.MessageMetaData;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions;
+using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Factories;
 
 namespace GreenEnergyHub.Charges.Tests.Infrastructure.Core.MessagingExtensions
 {
@@ -26,9 +25,8 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Core.MessagingExtensions
     {
         public TestableServiceBusChannel(
             IServiceBusSender<TOutboundMessage> serviceBusSender,
-            ICorrelationContext correlationContext,
-            IMessageMetaDataContext messageMetaDataContext)
-            : base(serviceBusSender, correlationContext, messageMetaDataContext)
+            IServiceBusMessageFactory serviceBusMessageFactory)
+            : base(serviceBusSender, serviceBusMessageFactory)
         {
         }
 

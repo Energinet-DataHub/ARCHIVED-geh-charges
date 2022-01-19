@@ -16,8 +16,7 @@ using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application.ChargeLinks.Handlers;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksReceivedEvents;
 using GreenEnergyHub.Charges.FunctionHost.Common;
-using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions;
-using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinksCommandReceived;
+using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Serialization;
 using Microsoft.Azure.Functions.Worker;
 
 namespace GreenEnergyHub.Charges.FunctionHost.ChargeLinks
@@ -25,15 +24,15 @@ namespace GreenEnergyHub.Charges.FunctionHost.ChargeLinks
     public class ChargeLinksCommandReceiverEndpoint
     {
         public const string FunctionName = nameof(ChargeLinksCommandReceiverEndpoint);
-        private readonly MessageExtractor<ChargeLinksCommandReceived> _messageExtractor;
+        private readonly JsonMessageDeserializer<ChargeLinksReceivedEvent> _deserializer;
         private readonly IChargeLinksReceivedEventHandler _chargeLinksReceivedEventHandler;
 
         public ChargeLinksCommandReceiverEndpoint(
-            MessageExtractor<ChargeLinksCommandReceived> messageExtractor,
-            IChargeLinksReceivedEventHandler chargeLinksReceivedEventHandler)
+            IChargeLinksReceivedEventHandler chargeLinksReceivedEventHandler,
+            JsonMessageDeserializer<ChargeLinksReceivedEvent> deserializer)
         {
-            _messageExtractor = messageExtractor;
             _chargeLinksReceivedEventHandler = chargeLinksReceivedEventHandler;
+            _deserializer = deserializer;
         }
 
         [Function(FunctionName)]
@@ -44,10 +43,8 @@ namespace GreenEnergyHub.Charges.FunctionHost.ChargeLinks
                 Connection = EnvironmentSettingNames.DomainEventListenerConnectionString)]
             byte[] data)
         {
-            var chargeLinkReceivedEvent =
-                await _messageExtractor.ExtractAsync(data).ConfigureAwait(false);
-            await _chargeLinksReceivedEventHandler
-                .HandleAsync((ChargeLinksReceivedEvent)chargeLinkReceivedEvent).ConfigureAwait(false);
+            var chargeLinkReceivedEvent = (ChargeLinksReceivedEvent)await _deserializer.FromBytesAsync(data).ConfigureAwait(false);
+            await _chargeLinksReceivedEventHandler.HandleAsync((ChargeLinksReceivedEvent)chargeLinkReceivedEvent).ConfigureAwait(false);
         }
     }
 }
