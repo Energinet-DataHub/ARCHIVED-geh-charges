@@ -14,7 +14,6 @@
 
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Domain.HubSenderMarketParticipant;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 
 namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableData
@@ -31,7 +30,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableData
 
         public abstract Task<IReadOnlyList<TAvailableData>> CreateAsync(TInput input);
 
-        protected async Task<HubSenderMarketParticipant> GetSenderAsync() =>
+        protected async Task<MarketParticipant> GetSenderAsync() =>
             await _marketParticipantRepository.GetHubSenderAsync().ConfigureAwait(false);
     }
 }

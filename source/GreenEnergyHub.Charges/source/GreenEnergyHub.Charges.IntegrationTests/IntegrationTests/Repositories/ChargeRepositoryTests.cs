@@ -225,7 +225,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
                 Guid.NewGuid(),
                 MarketParticipantOwnerId,
                 true,
-                new[] { MarketParticipantRole.EnergySupplier });
+                MarketParticipantRole.EnergySupplier);
             context.MarketParticipants.Add(marketParticipant);
             await context.SaveChangesAsync().ConfigureAwait(false);
 

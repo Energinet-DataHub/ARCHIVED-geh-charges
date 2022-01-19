@@ -12,21 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
-using GreenEnergyHub.Charges.Domain.HubSenderMarketParticipant;
-using GreenEnergyHub.Charges.Domain.MarketParticipants;
-
-namespace GreenEnergyHub.Charges.Tests.Builders
+namespace GreenEnergyHub.Charges.Infrastructure.ActorRegister.Persistence
 {
-    public sealed class HubSenderMarketParticipantBuilder
+    /// <summary>
+    /// Identification type of the actor identification number.
+    /// </summary>
+    public enum IdentificationType
     {
-        public HubSenderMarketParticipant Build()
-        {
-            return new HubSenderMarketParticipant(
-                Guid.NewGuid(),
-                "hub-sender-id",
-                true,
-                new[] { MarketParticipantRole.MeteringPointAdministrator });
-        }
+        Gln = 1,
+        Eic = 2,
     }
 }
