@@ -21,8 +21,6 @@ cim
 CIM
 codecov
 composable
-CreateDefaultChargeLinkMessages
-CreateDefaultChargeLinkMessagesReply
 CreateDefaultChargeLinks
 CreateDefaultChargeLinksReply
 DataHub

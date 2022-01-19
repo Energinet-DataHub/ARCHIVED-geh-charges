@@ -12,14 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Linq;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessValidation.ValidationRules;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
-using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.TestCore.Attributes;
+using GreenEnergyHub.Charges.Tests.Builders.Testables;
 using GreenEnergyHub.TestHelpers;
 using Xunit;
 using Xunit.Categories;
@@ -31,7 +29,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
     {
         [Theory]
         [AutoMoqData]
-        public void IsValid_WhenSenderHasValue_IsTrue(MarketParticipant sender, ChargeCommand command)
+        public void IsValid_WhenSenderHasValue_IsTrue(TestMarketParticipant sender, ChargeCommand command)
         {
             var sut = new CommandSenderMustBeAnExistingMarketParticipantRule(command, sender);
             sut.IsValid.Should().BeTrue();

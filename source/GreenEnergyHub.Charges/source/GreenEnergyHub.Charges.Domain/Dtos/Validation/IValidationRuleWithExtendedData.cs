@@ -12,13 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using GreenEnergyHub.Charges.Domain.Dtos.Validation;
-using GreenEnergyHub.Charges.Infrastructure.Core.Cim;
-
-namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
+namespace GreenEnergyHub.Charges.Domain.Dtos.Validation
 {
-    public interface ICimValidationErrorCodeFactory
+    /// <summary>
+    /// Interface for validationrules with extended data for rejection messages
+    /// </summary>
+    public interface IValidationRuleWithExtendedData : IValidationRule
     {
-        ReasonCode Create(ValidationRuleIdentifier validationRuleIdentifier);
+        /// <summary>
+        /// Violation of some validation rules are triggered by an element in a list.
+        /// In these cases this property will tell which element triggered the rule
+        /// identified by <see cref="ValidationRuleIdentifier"/>.
+        /// </summary>
+        public string TriggeredBy { get; }
     }
 }

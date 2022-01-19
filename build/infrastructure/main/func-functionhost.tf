@@ -39,10 +39,11 @@ module "func_functionhost" {
     CHARGE_PRICES_UPDATED_TOPIC_NAME                                = data.azurerm_key_vault_secret.sbt_charge_prices_updated_name.value
     CHARGE_LINKS_ACCEPTED_TOPIC_NAME                                = module.sbt_links_command_accepted.name
     CHARGE_LINKS_REJECTED_TOPIC_NAME                                = module.sbt_links_command_rejected.name
+    CHARGE_LINKS_REJECTED_SUBSCRIPTION_NAME                         = "links-command-rejected"
     CHARGE_LINKS_ACCEPTED_SUB_REPLIER                               = "charge-links-accepted-sub-replier"
-    CHARGE_LINKS_ACCEPTED_SUB_EVENTPUBLISHER                        = "charge-links-accepted-sub-eventpublisher"
-    CHARGE_LINKS_ACCEPTED_SUB_DATAAVAILABLENOTIFIER                 = "charge-links-accepted-sub-dataavailablenotifier"
-    CHARGE_LINKS_ACCEPTED_SUB_CONFIRMATIONNOTIFIER                  = "charge-links-accepted-sub-confirmationnotifier"
+    CHARGE_LINKS_ACCEPTED_SUB_EVENTPUBLISHER                        = "charge-links-accepted-sub-event-publisher"
+    CHARGE_LINKS_ACCEPTED_SUB_DATAAVAILABLENOTIFIER                 = "charge-links-accepted-sub-data-available-notifier"
+    CHARGE_LINKS_ACCEPTED_SUB_CONFIRMATIONNOTIFIER                  = "charge-links-accepted-sub-confirmation-notifier"
     CHARGE_LINKS_CREATED_TOPIC_NAME                                 = data.azurerm_key_vault_secret.sbt_charge_link_created_name.value
     CHARGE_LINKS_RECEIVED_TOPIC_NAME                                = module.sbt_links_command_received.name
     CHARGE_LINKS_RECEIVED_SUBSCRIPTION_NAME                         = "links-command-received-receiver"
@@ -64,6 +65,7 @@ module "func_functionhost" {
     INTEGRATIONEVENT_SENDER_CONNECTION_STRING                       = data.azurerm_key_vault_secret.sb_domain_relay_send_connection_string.value
     INTEGRATIONEVENT_LISTENER_CONNECTION_STRING                     = data.azurerm_key_vault_secret.sb_domain_relay_listen_connection_string.value
     INTEGRATIONEVENT_MANAGER_CONNECTION_STRING                      = data.azurerm_key_vault_secret.sb_domain_relay_manage_connection_string.value
+    ACTOR_REGISTER_CONNECTION_STRING                                = data.azurerm_key_vault_secret.sql_actor_register_database_name.value
 
     # Message Hub
     MESSAGEHUB_STORAGE_CONNECTION_STRING                            = data.azurerm_key_vault_secret.messagehub_storage_connection_string.value

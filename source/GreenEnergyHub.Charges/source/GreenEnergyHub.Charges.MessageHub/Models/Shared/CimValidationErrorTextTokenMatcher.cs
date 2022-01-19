@@ -15,19 +15,19 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using GreenEnergyHub.Charges.Domain.MarketParticipants;
+using System.Text.RegularExpressions;
+using GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors;
 
-namespace GreenEnergyHub.Charges.Domain.HubSenderMarketParticipant
+namespace GreenEnergyHub.Charges.MessageHub.Models.Shared
 {
-    public class HubSenderMarketParticipant : MarketParticipant
+    public static class CimValidationErrorTextTokenMatcher
     {
-        public HubSenderMarketParticipant(Guid id, string marketParticipantId, bool isActive, IEnumerable<MarketParticipantRole> roles)
-            : base(id, marketParticipantId, isActive, roles)
+        public static IEnumerable<CimValidationErrorTextToken> GetTokens(string errorTextTemplate)
         {
-            if (!roles.Contains(SenderRole))
-                throw new ArgumentException($"The hub sender market participant must have the role {SenderRole}.");
+            // regex to match content between {{ and }} inspired by https://stackoverflow.com/a/16538131
+            var matchList = Regex.Matches(errorTextTemplate, @"(?<=\{{)[^}]*(?=\}})");
+            return matchList.Select(match =>
+                (CimValidationErrorTextToken)Enum.Parse(typeof(CimValidationErrorTextToken), match.Value)).ToList();
         }
-
-        public MarketParticipantRole SenderRole => MarketParticipantRole.MeteringPointAdministrator;
     }
 }

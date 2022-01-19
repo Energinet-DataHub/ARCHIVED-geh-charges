@@ -28,6 +28,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Common
         public const string DomainEventListenerConnectionString = "DOMAINEVENT_LISTENER_CONNECTION_STRING";
         public const string DomainEventSenderConnectionString = "DOMAINEVENT_SENDER_CONNECTION_STRING";
         public const string DataHubListenerConnectionString = "INTEGRATIONEVENT_LISTENER_CONNECTION_STRING";
+        public const string ActorRegisterDbConnectionString = "ACTOR_REGISTER_CONNECTION_STRING";
         public const string DataHubManagerConnectionString = "INTEGRATIONEVENT_MANAGER_CONNECTION_STRING";
         public const string DataHubSenderConnectionString = "INTEGRATIONEVENT_SENDER_CONNECTION_STRING";
         public const string MessageHubStorageConnectionString = "MESSAGEHUB_STORAGE_CONNECTION_STRING";
@@ -83,9 +84,9 @@ namespace GreenEnergyHub.Charges.FunctionHost.Common
 
         // Internal, charge links, accepted
         public const string ChargeLinksAcceptedTopicName = "CHARGE_LINKS_ACCEPTED_TOPIC_NAME";
-        public const string ChargeLinksAcceptedSubConfirmationNotifier = "CHARGE_LINKS_ACCEPTED_SUB_CONFIRMATIONNOTIFIER";
-        public const string ChargeLinksAcceptedSubDataAvailableNotifier = "CHARGE_LINKS_ACCEPTED_SUB_DATAAVAILABLENOTIFIER";
-        public const string ChargeLinksAcceptedSubEventPublisher = "CHARGE_LINKS_ACCEPTED_SUB_EVENTPUBLISHER";
+        public const string ChargeLinksAcceptedSubConfirmationNotifier = "CHARGE_LINKS_ACCEPTED_SUB_CONFIRMATION_NOTIFIER";
+        public const string ChargeLinksAcceptedSubDataAvailableNotifier = "CHARGE_LINKS_ACCEPTED_SUB_DATA_AVAILABLE_NOTIFIER";
+        public const string ChargeLinksAcceptedSubEventPublisher = "CHARGE_LINKS_ACCEPTED_SUB_EVENT_PUBLISHER";
         public const string ChargeLinksAcceptedReplier = "CHARGE_LINKS_ACCEPTED_SUB_REPLIER";
 
         // Internal, charge links, rejected

@@ -77,13 +77,8 @@ data "azurerm_key_vault_secret" "sb_domain_relay_manage_connection_string" {
   key_vault_id = data.azurerm_key_vault.kv_shared_resources.id
 }
 
-data "azurerm_key_vault_secret" "sbq_create_link_messages_request_name" {
-  name         = "sbq-create-link-messages-request-name"
-  key_vault_id = data.azurerm_key_vault.kv_shared_resources.id
-}
-
-data "azurerm_key_vault_secret" "sbq_create_link_messages_reply_name" {
-  name         = "sbq-create-link-messages-reply-name"
+data "azurerm_key_vault_secret" "sql_actor_register_database_name" {
+  name         = "sql-actor-register-database-name"
   key_vault_id = data.azurerm_key_vault.kv_shared_resources.id
 }
 

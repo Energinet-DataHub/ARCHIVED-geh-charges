@@ -83,7 +83,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
                 Guid.NewGuid(),
                 "MarketParticipantId",
                 true,
-                new[] { MarketParticipantRole.EnergySupplier });
+                MarketParticipantRole.EnergySupplier);
 
             context.MarketParticipants.Add(marketParticipant);
             context.SaveChanges(); // Sets marketParticipant.RowId

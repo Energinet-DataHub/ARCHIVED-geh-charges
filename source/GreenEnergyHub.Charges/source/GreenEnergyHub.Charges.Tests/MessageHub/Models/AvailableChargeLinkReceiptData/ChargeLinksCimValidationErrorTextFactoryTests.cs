@@ -13,34 +13,42 @@
 // limitations under the License.
 
 using System;
+using System.Linq;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksReceiptData;
 using GreenEnergyHub.Charges.TestCore.Attributes;
+using Microsoft.Extensions.Logging;
 using Xunit;
 using Xunit.Categories;
 
 namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeLinkReceiptData
 {
     [UnitTest]
-    public class CimValidationErrorTextFactoryTests
+    public class ChargeLinksCimValidationErrorTextFactoryTests
     {
         [Theory]
         [InlineAutoMoqData]
         public void Create_WhenThreeMergeFields_ReturnsExpectedDescription(
             ChargeLinksCommand chargeLinksCommand,
-            CimValidationErrorTextProvider cimValidationErrorTextProvider)
+            CimValidationErrorTextProvider cimValidationErrorTextProvider,
+            ILoggerFactory loggerFactory)
         {
             // Arrange
-            var sut = new ChargeLinksCimValidationErrorTextFactory(cimValidationErrorTextProvider);
+            var sut = new ChargeLinksCimValidationErrorTextFactory(cimValidationErrorTextProvider, loggerFactory);
+            var chargeLinkDto = chargeLinksCommand.ChargeLinks.First();
             var expected = CimValidationErrorTextTemplateMessages.MeteringPointDoesNotExistValidationErrorText
                 .Replace("{{MeteringPointId}}", chargeLinksCommand.MeteringPointId)
-                .Replace("{{MeteringPointEffectiveDate}}", "TODO");
+                .Replace("{{ChargeLinkStartDate}}", chargeLinkDto.StartDateTime.ToString());
 
             // Act
-            var actual = sut.Create(ValidationRuleIdentifier.MeteringPointDoesNotExist, chargeLinksCommand);
+            var actual = sut.Create(
+                new ValidationError(
+                    ValidationRuleIdentifier.MeteringPointDoesNotExist,
+                    chargeLinkDto.SenderProvidedChargeId),
+                chargeLinksCommand);
 
             // Assert
             actual.Should().Be(expected);
@@ -50,19 +58,34 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeLinkRece
         [InlineAutoMoqData]
         public void Create_MergesAllMergeFields(
             ChargeLinksCommand chargeLinksCommand,
-            CimValidationErrorTextProvider cimValidationErrorTextProvider)
+            CimValidationErrorTextProvider cimValidationErrorTextProvider,
+            ILoggerFactory loggerFactory)
         {
             // Arrange
             var validationRuleIdentifiers = (ValidationRuleIdentifier[])Enum.GetValues(typeof(ValidationRuleIdentifier));
-            var sut = new ChargeLinksCimValidationErrorTextFactory(cimValidationErrorTextProvider);
+            var sut = new ChargeLinksCimValidationErrorTextFactory(cimValidationErrorTextProvider, loggerFactory);
 
             // Act
             // Assert
             foreach (var validationRuleIdentifier in validationRuleIdentifiers)
             {
-                var actual = sut.Create(validationRuleIdentifier, chargeLinksCommand);
+                var triggeredBy = SetTriggeredByWithValidationError(chargeLinksCommand, validationRuleIdentifier);
+                var actual = sut.Create(new ValidationError(validationRuleIdentifier, triggeredBy), chargeLinksCommand);
                 actual.Should().NotBeNullOrWhiteSpace();
                 actual.Should().NotContain("{");
+            }
+        }
+
+        private static string? SetTriggeredByWithValidationError(
+            ChargeLinksCommand chargeLinksCommand, ValidationRuleIdentifier validationRuleIdentifier)
+        {
+            switch (validationRuleIdentifier)
+            {
+                case ValidationRuleIdentifier.MeteringPointDoesNotExist:
+                case ValidationRuleIdentifier.ChargeDoesNotExist:
+                    return chargeLinksCommand.ChargeLinks.First().SenderProvidedChargeId;
+                default:
+                    return null;
             }
         }
     }

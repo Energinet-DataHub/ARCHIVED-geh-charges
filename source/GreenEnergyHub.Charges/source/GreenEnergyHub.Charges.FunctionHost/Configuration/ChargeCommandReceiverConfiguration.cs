@@ -31,6 +31,7 @@ using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Registratio
 using GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableData;
+using GreenEnergyHub.Charges.MessageHub.Models.Shared;
 using GreenEnergyHub.Iso8601;
 using Microsoft.Extensions.DependencyInjection;
 

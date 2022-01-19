@@ -12,21 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
-using GreenEnergyHub.Charges.Domain.HubSenderMarketParticipant;
-using GreenEnergyHub.Charges.Domain.MarketParticipants;
+using GreenEnergyHub.Charges.Domain.Dtos.Validation;
+using GreenEnergyHub.Charges.Infrastructure.Core.Cim;
 
-namespace GreenEnergyHub.Charges.Tests.Builders
+namespace GreenEnergyHub.Charges.MessageHub.Models.Shared
 {
-    public sealed class HubSenderMarketParticipantBuilder
+    public interface ICimValidationErrorCodeFactory
     {
-        public HubSenderMarketParticipant Build()
-        {
-            return new HubSenderMarketParticipant(
-                Guid.NewGuid(),
-                "hub-sender-id",
-                true,
-                new[] { MarketParticipantRole.MeteringPointAdministrator });
-        }
+        ReasonCode Create(ValidationRuleIdentifier validationRuleIdentifier);
     }
 }

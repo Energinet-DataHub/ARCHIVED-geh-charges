@@ -22,12 +22,10 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessV
     /// </summary>
     public class ChargeUpdateNotYetSupportedRule : IValidationRule
     {
-        private readonly ChargeCommand _chargeCommand;
         private readonly Charge? _charge;
 
-        public ChargeUpdateNotYetSupportedRule(ChargeCommand chargeCommand, Charge? charge)
+        public ChargeUpdateNotYetSupportedRule(Charge? charge)
         {
-            _chargeCommand = chargeCommand;
             _charge = charge;
         }
 

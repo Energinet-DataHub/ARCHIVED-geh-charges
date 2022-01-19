@@ -15,6 +15,7 @@
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableData;
+using GreenEnergyHub.Charges.MessageHub.Models.Shared;
 
 namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
 {
@@ -31,12 +32,10 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
             _cimValidationErrorTextFactory = cimValidationErrorTextFactory;
         }
 
-        public AvailableReceiptValidationError Create(
-            ValidationRuleIdentifier ruleIdentifier,
-            ChargeCommand command)
+        public AvailableReceiptValidationError Create(ValidationError validationError, ChargeCommand command)
         {
-            var reasonCode = _cimValidationErrorCodeFactory.Create(ruleIdentifier);
-            var reasonText = _cimValidationErrorTextFactory.Create(ruleIdentifier, command);
+            var reasonCode = _cimValidationErrorCodeFactory.Create(validationError.ValidationRuleIdentifier);
+            var reasonText = _cimValidationErrorTextFactory.Create(validationError, command);
 
             return new AvailableReceiptValidationError(reasonCode, reasonText);
         }

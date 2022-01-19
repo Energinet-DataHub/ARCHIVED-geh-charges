@@ -49,7 +49,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
             {
                 new AvailableChargeReceiptData(
                     sender.MarketParticipantId,
-                    sender.SenderRole,
+                    sender.BusinessProcessRole,
                     recipient.Id,
                     recipient.BusinessProcessRole,
                     input.Command.Document.BusinessReasonCode,
@@ -64,10 +64,10 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
         private List<AvailableReceiptValidationError> GetReasons(ChargeCommandRejectedEvent input)
         {
             return input
-                .FailedValidationRuleIdentifiers
+                .ValidationErrors
                 .Select(
-                    ruleIdentifier => _availableChargeReceiptValidationErrorFactory
-                        .Create(ruleIdentifier, input.Command))
+                    validationError => _availableChargeReceiptValidationErrorFactory
+                        .Create(validationError, input.Command))
                 .ToList();
         }
     }
