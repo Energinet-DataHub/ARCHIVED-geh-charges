@@ -16,8 +16,7 @@ using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application.ChargeLinks.Handlers;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksAcceptedEvents;
 using GreenEnergyHub.Charges.FunctionHost.Common;
-using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions;
-using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinksCommandAccepted;
+using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Serialization;
 using Microsoft.Azure.Functions.Worker;
 
 namespace GreenEnergyHub.Charges.FunctionHost.ChargeLinks
@@ -29,14 +28,14 @@ namespace GreenEnergyHub.Charges.FunctionHost.ChargeLinks
         /// Function name affects the URL and thus possibly dependent infrastructure.
         /// </summary>
         public const string FunctionName = nameof(ChargeLinksEventPublisherEndpoint);
-        private readonly MessageExtractor<ChargeLinksCommandAccepted> _messageExtractor;
+        private readonly JsonMessageDeserializer<ChargeLinksAcceptedEvent> _deserializer;
         private readonly IChargeLinkEventPublishHandler _chargeLinkEventPublishHandler;
 
         public ChargeLinksEventPublisherEndpoint(
-            MessageExtractor<ChargeLinksCommandAccepted> messageExtractor,
+            JsonMessageDeserializer<ChargeLinksAcceptedEvent> deserializer,
             IChargeLinkEventPublishHandler chargeLinkEventPublishHandler)
         {
-            _messageExtractor = messageExtractor;
+            _deserializer = deserializer;
             _chargeLinkEventPublishHandler = chargeLinkEventPublishHandler;
         }
 
@@ -48,8 +47,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.ChargeLinks
                 Connection = EnvironmentSettingNames.DomainEventListenerConnectionString)]
             byte[] message)
         {
-            var acceptedChargeLinkCommand = (ChargeLinksAcceptedEvent)await _messageExtractor.ExtractAsync(message).ConfigureAwait(false);
-
+            var acceptedChargeLinkCommand = (ChargeLinksAcceptedEvent)await _deserializer.FromBytesAsync(message).ConfigureAwait(false);
             await _chargeLinkEventPublishHandler.HandleAsync(acceptedChargeLinkCommand).ConfigureAwait(false);
         }
     }

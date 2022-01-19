@@ -17,8 +17,7 @@ using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application.Charges.Handlers;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandAcceptedEvents;
 using GreenEnergyHub.Charges.FunctionHost.Common;
-using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions;
-using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeCommandAccepted;
+using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Serialization;
 using Microsoft.Azure.Functions.Worker;
 
 namespace GreenEnergyHub.Charges.FunctionHost.Charges
@@ -26,14 +25,14 @@ namespace GreenEnergyHub.Charges.FunctionHost.Charges
     public class ChargeIntegrationEventsPublisherEndpoint
     {
         public const string FunctionName = nameof(ChargeIntegrationEventsPublisherEndpoint);
-        private readonly MessageExtractor<ChargeCommandAcceptedContract> _messageExtractor;
+        private readonly JsonMessageDeserializer<ChargeCommandAcceptedEvent> _deserializer;
         private readonly IChargeIntegrationEventsPublisher _chargeIntegrationEventsPublisher;
 
         public ChargeIntegrationEventsPublisherEndpoint(
-            MessageExtractor<ChargeCommandAcceptedContract> messageExtractor,
+            JsonMessageDeserializer<ChargeCommandAcceptedEvent> deserializer,
             IChargeIntegrationEventsPublisher chargeIntegrationEventsPublisher)
         {
-            _messageExtractor = messageExtractor;
+            _deserializer = deserializer;
             _chargeIntegrationEventsPublisher = chargeIntegrationEventsPublisher;
         }
 
@@ -45,10 +44,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Charges
                 Connection = EnvironmentSettingNames.DomainEventListenerConnectionString)]
             [NotNull] byte[] message)
         {
-            var chargeCommandAcceptedEvent = (ChargeCommandAcceptedEvent)await _messageExtractor
-                .ExtractAsync(message)
-                .ConfigureAwait(false);
-
+            var chargeCommandAcceptedEvent = (ChargeCommandAcceptedEvent)await _deserializer.FromBytesAsync(message).ConfigureAwait(false);
             await _chargeIntegrationEventsPublisher.PublishAsync(chargeCommandAcceptedEvent).ConfigureAwait(false);
         }
     }

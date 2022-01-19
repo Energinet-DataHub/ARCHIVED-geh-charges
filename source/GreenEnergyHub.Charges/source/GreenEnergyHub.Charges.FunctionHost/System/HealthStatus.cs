@@ -22,8 +22,9 @@ using GreenEnergyHub.Charges.FunctionHost.Common;
 using GreenEnergyHub.Charges.FunctionHost.Configuration;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
+using Microsoft.Data.SqlClient;
 
-namespace GreenEnergyHub.Charges.FunctionHost.Health
+namespace GreenEnergyHub.Charges.FunctionHost.System
 {
     public class HealthStatus
     {
@@ -50,13 +51,33 @@ namespace GreenEnergyHub.Charges.FunctionHost.Health
         private async Task<Dictionary<string, bool>> GetDeepHealthCheckStatusAsync()
         {
             var connectionString = EnvironmentHelper.GetEnv(EnvironmentSettingNames.DataHubManagerConnectionString);
+            var chargesDbConnectionString = EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargeDbConnectionString);
+            var actorRegisterDbConnectionString =
+                EnvironmentHelper.GetEnv(EnvironmentSettingNames.ActorRegisterDbConnectionString);
 
             return new Dictionary<string, bool>
             {
+                { "ChargesDatabaseIsAvailable", await IsDatabaseAvailableAsync(chargesDbConnectionString) },
+                { "ActorRegisterDatabaseIsAvailable", await IsDatabaseAvailableAsync(actorRegisterDbConnectionString) },
                 { "MessageHubDataAvailableQueueExists", await QueueExistsAsync(connectionString, EnvironmentSettingNames.MessageHubDataAvailableQueue) },
                 { "MessageHubRequestQueueExists", await QueueExistsAsync(connectionString, EnvironmentSettingNames.MessageHubRequestQueue) },
                 { "MessageHubResponseQueueExists", await QueueExistsAsync(connectionString, EnvironmentSettingNames.MessageHubReplyQueue) },
             };
+        }
+
+        private async Task<bool> IsDatabaseAvailableAsync(string connectionString)
+        {
+            var connection = new SqlConnection(connectionString);
+            try
+            {
+                await connection.OpenAsync();
+                await connection.CloseAsync();
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
         }
 
         private async Task<bool> QueueExistsAsync(string connectionString, string queueNameEnvVariable)
