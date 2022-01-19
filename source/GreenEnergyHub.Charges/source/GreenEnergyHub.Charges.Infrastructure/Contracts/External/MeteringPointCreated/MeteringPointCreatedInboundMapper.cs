@@ -14,6 +14,7 @@
 
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
+using System.Runtime.InteropServices.ComTypes;
 using Energinet.DataHub.Core.Messaging.Protobuf;
 using Energinet.DataHub.Core.Messaging.Transport;
 using GreenEnergyHub.Charges.Core.DateTime;
@@ -23,88 +24,53 @@ using mpTypes = Energinet.DataHub.MeteringPoints.IntegrationEventContracts.Meter
 
 namespace GreenEnergyHub.Charges.Infrastructure.Contracts.External.MeteringPointCreated
 {
-    public class MeteringPointCreatedInboundMapper : ProtobufInboundMapper<Energinet.DataHub.MeteringPoints.IntegrationEventContracts.MeteringPointCreated>
+    public class MeteringPointCreatedInboundMapper : ProtobufInboundMapper<
+        Energinet.DataHub.MeteringPoints.IntegrationEventContracts.MeteringPointCreated>
     {
-        public static SettlementMethod? MapSettlementMethod(mpTypes.SettlementMethod settlementMethod)
-        {
-            switch (settlementMethod)
+        public static SettlementMethod? MapSettlementMethod(mpTypes.SettlementMethod settlementMethod) =>
+            settlementMethod switch
             {
-                case mpTypes.SettlementMethod.SmFlex:
-                    return SettlementMethod.Flex;
-                case mpTypes.SettlementMethod.SmProfiled:
-                    return SettlementMethod.Profiled;
-                case mpTypes.SettlementMethod.SmNonprofiled:
-                    return SettlementMethod.NonProfiled;
-                case mpTypes.SettlementMethod.SmNull:
-                    return null;
-                default:
-                    throw new InvalidEnumArgumentException($"Provided SettlementMethod value '{settlementMethod}' is invalid and cannot be mapped.");
-            }
-        }
+                mpTypes.SettlementMethod.SmFlex => SettlementMethod.Flex,
+                mpTypes.SettlementMethod.SmProfiled => SettlementMethod.Profiled,
+                mpTypes.SettlementMethod.SmNonprofiled => SettlementMethod.NonProfiled,
+                mpTypes.SettlementMethod.SmNull => null,
+                _ => throw new InvalidEnumArgumentException(
+                    $"Provided SettlementMethod value '{settlementMethod}' is invalid and cannot be mapped."),
+            };
 
-        public static ConnectionState MapConnectionState(mpTypes.ConnectionState connectionState)
+        public static ConnectionState MapConnectionState(mpTypes.ConnectionState connectionState) => connectionState switch
         {
-            switch (connectionState)
-            {
-                case mpTypes.ConnectionState.CsNew:
-                    return ConnectionState.New;
-                default:
-                    throw new InvalidEnumArgumentException($"Provided ConnectionState value '{connectionState}' is invalid and cannot be mapped.");
-            }
-        }
+            mpTypes.ConnectionState.CsNew => ConnectionState.New,
+            _ => throw new InvalidEnumArgumentException(
+                $"Provided ConnectionState value '{connectionState}' is invalid and cannot be mapped."),
+        };
 
-        public static MeteringPointType MapMeteringPointType(
-            mpTypes.MeteringPointType
-                meteringPointType)
+        public static MeteringPointType MapMeteringPointType(mpTypes.MeteringPointType meteringPointType) => meteringPointType switch
         {
-            switch (meteringPointType)
-            {
-                case mpTypes.MeteringPointType.MptAnalysis:
-                    return MeteringPointType.Analysis;
-                case mpTypes.MeteringPointType.MptConsumption:
-                    return MeteringPointType.Consumption;
-                case mpTypes.MeteringPointType.MptExchange:
-                    return MeteringPointType.Exchange;
-                case mpTypes.MeteringPointType.MptProduction:
-                    return MeteringPointType.Unknown;
-                case mpTypes.MeteringPointType.MptVeproduction:
-                    return MeteringPointType.VeProduction;
-                case mpTypes.MeteringPointType.MptElectricalHeating:
-                    return MeteringPointType.ElectricalHeating;
-                case mpTypes.MeteringPointType.MptInternalUse:
-                    return MeteringPointType.InternalUse;
-                case mpTypes.MeteringPointType.MptNetConsumption:
-                    return MeteringPointType.NetConsumption;
-                case mpTypes.MeteringPointType.MptNetProduction:
-                    return MeteringPointType.NetProduction;
-                case mpTypes.MeteringPointType.MptOtherConsumption:
-                    return MeteringPointType.OtherConsumption;
-                case mpTypes.MeteringPointType.MptOtherProduction:
-                    return MeteringPointType.OtherProduction;
-                case mpTypes.MeteringPointType.MptOwnProduction:
-                    return MeteringPointType.OwnProduction;
-                case mpTypes.MeteringPointType.MptTotalConsumption:
-                    return MeteringPointType.TotalConsumption;
-                case mpTypes.MeteringPointType.MptWholesaleServices:
-                    return MeteringPointType.WholesaleService;
-                case mpTypes.MeteringPointType.MptConsumptionFromGrid:
-                    return MeteringPointType.ConsumptionFromGrid;
-                case mpTypes.MeteringPointType.MptExchangeReactiveEnergy:
-                    return MeteringPointType.ExchangeReactiveEnergy;
-                case mpTypes.MeteringPointType.MptGridLossCorrection:
-                    return MeteringPointType.GridLossCorrection;
-                case mpTypes.MeteringPointType.MptNetFromGrid:
-                    return MeteringPointType.NetFromGrid;
-                case mpTypes.MeteringPointType.MptNetToGrid:
-                    return MeteringPointType.NetToGrid;
-                case mpTypes.MeteringPointType.MptSupplyToGrid:
-                    return MeteringPointType.SupplyToGrid;
-                case mpTypes.MeteringPointType.MptSurplusProductionGroup:
-                    return MeteringPointType.SurplusProductionGroup;
-                default:
-                    throw new InvalidEnumArgumentException($"Provided MeteringPointType value '{meteringPointType}' is invalid and cannot be mapped.");
-            }
-        }
+            mpTypes.MeteringPointType.MptAnalysis => MeteringPointType.Analysis,
+            mpTypes.MeteringPointType.MptConsumption => MeteringPointType.Consumption,
+            mpTypes.MeteringPointType.MptExchange => MeteringPointType.Exchange,
+            mpTypes.MeteringPointType.MptProduction => MeteringPointType.Unknown,
+            mpTypes.MeteringPointType.MptVeproduction => MeteringPointType.VeProduction,
+            mpTypes.MeteringPointType.MptElectricalHeating => MeteringPointType.ElectricalHeating,
+            mpTypes.MeteringPointType.MptInternalUse => MeteringPointType.InternalUse,
+            mpTypes.MeteringPointType.MptNetConsumption => MeteringPointType.NetConsumption,
+            mpTypes.MeteringPointType.MptNetProduction => MeteringPointType.NetProduction,
+            mpTypes.MeteringPointType.MptOtherConsumption => MeteringPointType.OtherConsumption,
+            mpTypes.MeteringPointType.MptOtherProduction => MeteringPointType.OtherProduction,
+            mpTypes.MeteringPointType.MptOwnProduction => MeteringPointType.OwnProduction,
+            mpTypes.MeteringPointType.MptTotalConsumption => MeteringPointType.TotalConsumption,
+            mpTypes.MeteringPointType.MptWholesaleServices => MeteringPointType.WholesaleService,
+            mpTypes.MeteringPointType.MptConsumptionFromGrid => MeteringPointType.ConsumptionFromGrid,
+            mpTypes.MeteringPointType.MptExchangeReactiveEnergy => MeteringPointType.ExchangeReactiveEnergy,
+            mpTypes.MeteringPointType.MptGridLossCorrection => MeteringPointType.GridLossCorrection,
+            mpTypes.MeteringPointType.MptNetFromGrid => MeteringPointType.NetFromGrid,
+            mpTypes.MeteringPointType.MptNetToGrid => MeteringPointType.NetToGrid,
+            mpTypes.MeteringPointType.MptSupplyToGrid => MeteringPointType.SupplyToGrid,
+            mpTypes.MeteringPointType.MptSurplusProductionGroup => MeteringPointType.SurplusProductionGroup,
+            _ => throw new InvalidEnumArgumentException(
+                    $"Provided MeteringPointType value '{meteringPointType}' is invalid and cannot be mapped."),
+        };
 
         protected override IInboundMessage Convert([NotNull] Energinet.DataHub.MeteringPoints.IntegrationEventContracts.MeteringPointCreated meteringPointCreated)
         {
