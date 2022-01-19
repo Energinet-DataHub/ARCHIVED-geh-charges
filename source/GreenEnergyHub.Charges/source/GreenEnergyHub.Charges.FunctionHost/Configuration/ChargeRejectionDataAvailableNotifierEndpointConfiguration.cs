@@ -54,10 +54,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
 
             serviceCollection
                 .AddMessaging()
-                .AddMessageExtractor<ChargeCommandRejectedEvent>();
-
-            // serviceCollection.ReceiveProtobufMessage<ChargeCommandRejectedContract>(
-            //     configuration => configuration.WithParser(() => ChargeCommandRejectedContract.Parser));
+                .AddInternalMessageExtractor<ChargeCommandRejectedEvent>();
         }
     }
 }

@@ -17,6 +17,7 @@ using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandAcceptedEvents;
 using GreenEnergyHub.Charges.FunctionHost.Common;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions;
+using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Serialization;
 using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeCommandAccepted;
 using GreenEnergyHub.Charges.MessageHub.MessageHub;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeData;
@@ -32,14 +33,14 @@ namespace GreenEnergyHub.Charges.FunctionHost.Charges.MessageHub
     public class ChargeDataAvailableNotifierEndpoint
     {
         private const string FunctionName = nameof(ChargeDataAvailableNotifierEndpoint);
-        private readonly MessageExtractor<ChargeCommandAcceptedContract> _messageExtractor;
+        private readonly JsonMessageDeserializer<ChargeCommandAcceptedEvent> _jsonMessageDeserializer;
         private readonly IAvailableDataNotifier<AvailableChargeData, ChargeCommandAcceptedEvent> _availableDataNotifier;
 
         public ChargeDataAvailableNotifierEndpoint(
-            MessageExtractor<ChargeCommandAcceptedContract> messageExtractor,
+            JsonMessageDeserializer<ChargeCommandAcceptedEvent> jsonMessageDeserializer,
             IAvailableDataNotifier<AvailableChargeData, ChargeCommandAcceptedEvent> availableDataNotifier)
         {
-            _messageExtractor = messageExtractor;
+            _jsonMessageDeserializer = jsonMessageDeserializer;
             _availableDataNotifier = availableDataNotifier;
         }
 
@@ -51,7 +52,8 @@ namespace GreenEnergyHub.Charges.FunctionHost.Charges.MessageHub
                 Connection = EnvironmentSettingNames.DomainEventListenerConnectionString)]
             [NotNull] byte[] message)
         {
-            var chargeCommandAcceptedEvent = (ChargeCommandAcceptedEvent)await _messageExtractor.ExtractAsync(message).ConfigureAwait(false);
+            var chargeCommandAcceptedEvent =
+                (ChargeCommandAcceptedEvent)await _jsonMessageDeserializer.FromBytesAsync(message).ConfigureAwait(false);
 
             await _availableDataNotifier.NotifyAsync(chargeCommandAcceptedEvent).ConfigureAwait(false);
         }

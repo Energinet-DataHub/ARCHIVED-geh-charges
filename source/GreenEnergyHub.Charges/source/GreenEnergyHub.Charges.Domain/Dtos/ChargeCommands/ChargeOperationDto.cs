@@ -28,11 +28,11 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands
     public class ChargeOperationDto
     {
         public ChargeOperationDto(
-                string chargeOperationId,
+                string id,
                 ChargeType chargeType,
-                string senderProvidedChargeId,
+                string chargeId,
                 string chargeName,
-                string description,
+                string chargeDescription,
                 string chargeOwner,
                 Resolution chargeResolution,
                 bool taxIndicator,
@@ -43,11 +43,11 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands
                 List<Point> points)
         {
             Points = new List<Point>();
-            Id = chargeOperationId;
+            Id = id;
             Type = chargeType;
-            ChargeId = senderProvidedChargeId;
+            ChargeId = chargeId;
             ChargeName = chargeName;
-            ChargeDescription = description;
+            ChargeDescription = chargeDescription;
             ChargeOwner = chargeOwner;
             Resolution = chargeResolution;
             TaxIndicator = taxIndicator;

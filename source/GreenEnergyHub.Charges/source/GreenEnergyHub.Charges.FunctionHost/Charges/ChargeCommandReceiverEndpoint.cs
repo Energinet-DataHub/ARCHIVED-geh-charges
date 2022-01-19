@@ -17,6 +17,7 @@ using GreenEnergyHub.Charges.Application.Charges.Handlers;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandReceivedEvents;
 using GreenEnergyHub.Charges.FunctionHost.Common;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions;
+using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Serialization;
 using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeCommandReceived;
 using Microsoft.Azure.Functions.Worker;
 
@@ -26,14 +27,14 @@ namespace GreenEnergyHub.Charges.FunctionHost.Charges
     {
         public const string FunctionName = nameof(ChargeCommandReceiverEndpoint);
         private readonly IChargeCommandReceivedEventHandler _chargeCommandReceivedEventHandler;
-        private readonly MessageExtractor<ChargeCommandReceivedEvent> _messageExtractor;
+        private readonly JsonMessageDeserializer<ChargeCommandReceivedEvent> _jsonMessageDeserializer;
 
         public ChargeCommandReceiverEndpoint(
             IChargeCommandReceivedEventHandler chargeCommandReceivedEventHandler,
-            MessageExtractor<ChargeCommandReceivedEvent> messageExtractor)
+            JsonMessageDeserializer<ChargeCommandReceivedEvent> jsonMessageDeserializer)
         {
             _chargeCommandReceivedEventHandler = chargeCommandReceivedEventHandler;
-            _messageExtractor = messageExtractor;
+            _jsonMessageDeserializer = jsonMessageDeserializer;
         }
 
         [Function(FunctionName)]
@@ -44,7 +45,8 @@ namespace GreenEnergyHub.Charges.FunctionHost.Charges
                 Connection = EnvironmentSettingNames.DomainEventListenerConnectionString)]
             byte[] message)
         {
-            var receivedEvent = (ChargeCommandReceivedEvent)await _messageExtractor.ExtractAsync(message).ConfigureAwait(false);
+            var receivedEvent =
+                (ChargeCommandReceivedEvent)await _jsonMessageDeserializer.FromBytesAsync(message).ConfigureAwait(false);
             await _chargeCommandReceivedEventHandler.HandleAsync(receivedEvent).ConfigureAwait(false);
         }
     }

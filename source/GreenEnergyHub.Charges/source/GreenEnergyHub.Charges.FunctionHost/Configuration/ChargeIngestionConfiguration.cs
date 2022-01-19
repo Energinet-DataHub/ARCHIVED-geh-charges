@@ -41,8 +41,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
             serviceCollection.AddScoped<IChargeCommandHandler, ChargeCommandHandler>();
 
             serviceCollection.AddMessaging()
-                .AddMessageExtractor<ChargeCommandReceivedEvent>()
-                .AddMessageDispatcher<ChargeCommandReceivedEvent>(
+                .AddInternalMessageDispatcher<ChargeCommandReceivedEvent>(
                     EnvironmentHelper.GetEnv(EnvironmentSettingNames.DomainEventSenderConnectionString),
                     EnvironmentHelper.GetEnv(EnvironmentSettingNames.CommandReceivedTopicName));
 
