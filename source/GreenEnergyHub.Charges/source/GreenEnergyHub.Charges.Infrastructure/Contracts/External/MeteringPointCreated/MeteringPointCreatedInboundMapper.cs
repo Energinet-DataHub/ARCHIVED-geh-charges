@@ -34,7 +34,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Contracts.External.MeteringPoint
                     return SettlementMethod.Profiled;
                 case Energinet.DataHub.MeteringPoints.IntegrationEventContracts.MeteringPointCreated.Types.SettlementMethod.SmNonprofiled:
                     return SettlementMethod.NonProfiled;
-                case Energinet.DataHub.MeteringPoints.IntegrationEventContracts.MeteringPointCreated.Types.SettlementMethod.SmUnknown:
+                case Energinet.DataHub.MeteringPoints.IntegrationEventContracts.MeteringPointCreated.Types.SettlementMethod.SmNull:
                     return null;
                 default:
                     throw new InvalidEnumArgumentException($"Provided SettlementMethod value '{settlementMethod}' is invalid and cannot be mapped.");

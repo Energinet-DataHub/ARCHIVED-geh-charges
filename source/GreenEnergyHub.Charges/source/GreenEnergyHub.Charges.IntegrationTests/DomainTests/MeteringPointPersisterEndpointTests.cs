@@ -57,27 +57,27 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             }
 
             [Theory]
-            [InlineData(MeteringPointType.MptProduction, SettlementMethod.SmUnknown)]
-            [InlineData(MeteringPointType.MptAnalysis, SettlementMethod.SmUnknown)]
+            [InlineData(MeteringPointType.MptProduction, SettlementMethod.SmNull)]
+            [InlineData(MeteringPointType.MptAnalysis, SettlementMethod.SmNull)]
             [InlineData(MeteringPointType.MptConsumption, SettlementMethod.SmFlex)]
             [InlineData(MeteringPointType.MptConsumption, SettlementMethod.SmProfiled)]
             [InlineData(MeteringPointType.MptConsumption, SettlementMethod.SmNonprofiled)]
-            [InlineData(MeteringPointType.MptConsumptionFromGrid, SettlementMethod.SmUnknown)]
-            [InlineData(MeteringPointType.MptElectricalHeating, SettlementMethod.SmUnknown)]
-            [InlineData(MeteringPointType.MptExchange, SettlementMethod.SmUnknown)]
-            [InlineData(MeteringPointType.MptExchangeReactiveEnergy, SettlementMethod.SmUnknown)]
-            [InlineData(MeteringPointType.MptInternalUse, SettlementMethod.SmUnknown)]
-            [InlineData(MeteringPointType.MptNetConsumption, SettlementMethod.SmUnknown)]
-            [InlineData(MeteringPointType.MptNetFromGrid, SettlementMethod.SmUnknown)]
-            [InlineData(MeteringPointType.MptNetProduction, SettlementMethod.SmUnknown)]
-            [InlineData(MeteringPointType.MptNetToGrid, SettlementMethod.SmUnknown)]
-            [InlineData(MeteringPointType.MptOtherConsumption, SettlementMethod.SmUnknown)]
-            [InlineData(MeteringPointType.MptOtherProduction, SettlementMethod.SmUnknown)]
-            [InlineData(MeteringPointType.MptSupplyToGrid, SettlementMethod.SmUnknown)]
-            [InlineData(MeteringPointType.MptSurplusProductionGroup, SettlementMethod.SmUnknown)]
-            [InlineData(MeteringPointType.MptVeproduction, SettlementMethod.SmUnknown)]
-            [InlineData(MeteringPointType.MptTotalConsumption, SettlementMethod.SmUnknown)]
-            [InlineData(MeteringPointType.MptWholesaleServices, SettlementMethod.SmUnknown)]
+            [InlineData(MeteringPointType.MptConsumptionFromGrid, SettlementMethod.SmNull)]
+            [InlineData(MeteringPointType.MptElectricalHeating, SettlementMethod.SmNull)]
+            [InlineData(MeteringPointType.MptExchange, SettlementMethod.SmNull)]
+            [InlineData(MeteringPointType.MptExchangeReactiveEnergy, SettlementMethod.SmNull)]
+            [InlineData(MeteringPointType.MptInternalUse, SettlementMethod.SmNull)]
+            [InlineData(MeteringPointType.MptNetConsumption, SettlementMethod.SmNull)]
+            [InlineData(MeteringPointType.MptNetFromGrid, SettlementMethod.SmNull)]
+            [InlineData(MeteringPointType.MptNetProduction, SettlementMethod.SmNull)]
+            [InlineData(MeteringPointType.MptNetToGrid, SettlementMethod.SmNull)]
+            [InlineData(MeteringPointType.MptOtherConsumption, SettlementMethod.SmNull)]
+            [InlineData(MeteringPointType.MptOtherProduction, SettlementMethod.SmNull)]
+            [InlineData(MeteringPointType.MptSupplyToGrid, SettlementMethod.SmNull)]
+            [InlineData(MeteringPointType.MptSurplusProductionGroup, SettlementMethod.SmNull)]
+            [InlineData(MeteringPointType.MptVeproduction, SettlementMethod.SmNull)]
+            [InlineData(MeteringPointType.MptTotalConsumption, SettlementMethod.SmNull)]
+            [InlineData(MeteringPointType.MptWholesaleServices, SettlementMethod.SmNull)]
             public async Task When_ReceivingMeteringPointCreatedMessage_MeteringPointIsSavedToDatabase(
                 MeteringPointType meteringPointType,
                 SettlementMethod settlementMethod)
@@ -110,13 +110,13 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 Fixture.HostManager.ClearHostLog();
             }
 
-            private static Random random = new Random();
+            private static readonly Random MyRandom = new Random();
 
             public static string RandomString(int length)
             {
                 const string chars = "0123456789";
                 return new string(Enumerable.Repeat(chars, length)
-                    .Select(s => s[random.Next(s.Length)]).ToArray());
+                    .Select(s => s[MyRandom.Next(s.Length)]).ToArray());
             }
 
             private static async Task AssertFunctionExecuted(FunctionAppHostManager hostManager, string functionName)
