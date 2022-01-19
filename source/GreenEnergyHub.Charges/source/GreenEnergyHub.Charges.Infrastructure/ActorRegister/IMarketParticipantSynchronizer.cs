@@ -13,11 +13,26 @@
 // limitations under the License.
 
 using System.Threading.Tasks;
+using GreenEnergyHub.Charges.Domain.MarketParticipants;
 
 namespace GreenEnergyHub.Charges.Infrastructure.ActorRegister
 {
+    /// <summary>
+    /// Service to synchronize market participants from the shared actor register to the charges domain.
+    /// </summary>
     public interface IMarketParticipantSynchronizer
     {
+        /// <summary>
+        /// Synchronize market participants from the shared actor register to the charges domain.
+        /// Market participants can and must only use one specific role each in the charges domain.
+        /// Thus only this single role is synchronized and the market participant model only exposes
+        /// a single role in <see cref="MarketParticipant.BusinessProcessRole"/>.
+        ///
+        /// NOTE:
+        /// - Business side effects of deactivation are not currently supported.
+        /// - Deletion of actors should not occur according to the business. So no market participants
+        ///   are ever deleted by this method.
+        /// </summary>
         Task SynchronizeAsync();
     }
 }
