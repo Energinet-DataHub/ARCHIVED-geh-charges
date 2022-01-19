@@ -16,8 +16,7 @@ using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application.ChargeLinks.Handlers;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksAcceptedEvents;
 using GreenEnergyHub.Charges.FunctionHost.Common;
-using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions;
-using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinksCommandAccepted;
+using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Serialization;
 using GreenEnergyHub.Charges.MessageHub.MessageHub;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksData;
 using Microsoft.Azure.Functions.Worker;
@@ -38,16 +37,16 @@ namespace GreenEnergyHub.Charges.FunctionHost.ChargeLinks.MessageHub
     {
         private const string FunctionName = nameof(ChargeLinkDataAvailableNotifierEndpoint);
 
-        private readonly MessageExtractor<ChargeLinksCommandAccepted> _messageExtractor;
+        private readonly JsonMessageDeserializer<ChargeLinksAcceptedEvent> _deserializer;
         private readonly IAvailableDataNotifier<AvailableChargeLinksData, ChargeLinksAcceptedEvent> _availableDataNotifier;
         private readonly IChargeLinksDataAvailableNotifiedPublisher _chargeLinksDataAvailableNotifiedPublisher;
 
         public ChargeLinkDataAvailableNotifierEndpoint(
-            MessageExtractor<ChargeLinksCommandAccepted> messageExtractor,
+            JsonMessageDeserializer<ChargeLinksAcceptedEvent> deserializer,
             IAvailableDataNotifier<AvailableChargeLinksData, ChargeLinksAcceptedEvent> availableDataNotifier,
             IChargeLinksDataAvailableNotifiedPublisher chargeLinksDataAvailableNotifiedPublisher)
         {
-            _messageExtractor = messageExtractor;
+            _deserializer = deserializer;
             _availableDataNotifier = availableDataNotifier;
             _chargeLinksDataAvailableNotifiedPublisher = chargeLinksDataAvailableNotifiedPublisher;
         }
@@ -60,8 +59,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.ChargeLinks.MessageHub
                 Connection = EnvironmentSettingNames.DomainEventListenerConnectionString)]
             byte[] message)
         {
-            var chargeLinksAcceptedEvent = (ChargeLinksAcceptedEvent)await _messageExtractor.ExtractAsync(message).ConfigureAwait(false);
-
+            var chargeLinksAcceptedEvent = (ChargeLinksAcceptedEvent)await _deserializer.FromBytesAsync(message).ConfigureAwait(false);
             await _availableDataNotifier.NotifyAsync(chargeLinksAcceptedEvent);
             await _chargeLinksDataAvailableNotifiedPublisher.PublishAsync(chargeLinksAcceptedEvent);
         }

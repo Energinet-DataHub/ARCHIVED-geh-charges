@@ -32,16 +32,13 @@ namespace GreenEnergyHub.Charges.FunctionHost.ChargeLinks
         /// Function name affects the URL and thus possibly dependent infrastructure.
         /// </summary>
         public const string FunctionName = nameof(CreateChargeLinkReceiverEndpoint);
-        private readonly ICorrelationContext _correlationContext;
         private readonly MessageExtractor<CreateDefaultChargeLinks> _messageExtractor;
         private readonly ICreateLinkRequestHandler _createLinkRequestHandler;
 
         public CreateChargeLinkReceiverEndpoint(
-            ICorrelationContext correlationContext,
             MessageExtractor<CreateDefaultChargeLinks> messageExtractor,
             ICreateLinkRequestHandler createLinkRequestHandler)
         {
-            _correlationContext = correlationContext;
             _messageExtractor = messageExtractor;
             _createLinkRequestHandler = createLinkRequestHandler;
         }
@@ -55,9 +52,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.ChargeLinks
         {
             var createLinkCommandEvent =
                 (CreateDefaultChargeLinksRequest)await _messageExtractor.ExtractAsync(message).ConfigureAwait(false);
-
-            await _createLinkRequestHandler
-                .HandleAsync(createLinkCommandEvent).ConfigureAwait(false);
+            await _createLinkRequestHandler.HandleAsync(createLinkCommandEvent).ConfigureAwait(false);
         }
     }
 }

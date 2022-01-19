@@ -12,20 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands;
-using GreenEnergyHub.Charges.Domain.Dtos.Messages.Events;
-using NodaTime;
+using Azure.Messaging.ServiceBus;
 
-namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksReceivedEvents
+namespace GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Factories
 {
-    public class ChargeLinksReceivedEvent : InternalEventBase
+    public interface IServiceBusMessageFactory
     {
-        public ChargeLinksCommand ChargeLinksCommand { get; }
+        ServiceBusMessage CreateInternalMessage(string data);
 
-        public ChargeLinksReceivedEvent(Instant publishedTime, ChargeLinksCommand chargeLinksCommand)
-            : base(publishedTime)
-        {
-            ChargeLinksCommand = chargeLinksCommand;
-        }
+        ServiceBusMessage CreateExternalMessage(byte[] data);
     }
 }
