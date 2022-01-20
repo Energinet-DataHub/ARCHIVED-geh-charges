@@ -75,6 +75,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
             ConfigureSharedMessaging(serviceCollection);
             ConfigureIso8601Services(serviceCollection);
             ConfigureSharedCim(serviceCollection);
+            ConfigureJwtToken(serviceCollection);
 
             var serviceBusConnectionString = EnvironmentHelper.GetEnv(EnvironmentSettingNames.DataHubSenderConnectionString);
             var dataAvailableQueue = EnvironmentHelper.GetEnv(EnvironmentSettingNames.MessageHubDataAvailableQueue);
@@ -93,6 +94,17 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
                 new MessageHubConfig(dataAvailableQueue, domainReplyQueue),
                 storageServiceConnectionString,
                 new StorageConfig(azureBlobStorageContainerName));
+        }
+
+        private static void ConfigureJwtToken(IServiceCollection serviceCollection)
+        {
+            var tenantId = Environment.GetEnvironmentVariable("B2C_TENANT_ID") ?? throw new InvalidOperationException(
+                "B2C tenant id not found.");
+            var audience = Environment.GetEnvironmentVariable("BACKEND_SERVICE_APP_ID") ?? throw new InvalidOperationException(
+                "Backend service app id not found.");
+
+            serviceCollection.AddJwtTokenSecurity($"https://login.microsoftonline.com/{tenantId}/v2.0/.well-known/openid-configuration", audience);
+            //serviceCollection.AddActorContext<ActorProvider>(); TODO: LRN Implement ActorProvider
         }
 
         private static void AddCreateDefaultChargeLinksReplier(
