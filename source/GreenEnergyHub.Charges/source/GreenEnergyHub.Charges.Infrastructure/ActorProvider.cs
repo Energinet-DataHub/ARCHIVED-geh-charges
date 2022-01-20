@@ -15,14 +15,24 @@
 using System;
 using System.Threading.Tasks;
 using Energinet.DataHub.Core.FunctionApp.Common.Abstractions.Actor;
+using GreenEnergyHub.Charges.Domain.MarketParticipants;
 
 namespace GreenEnergyHub.Charges.Infrastructure
 {
     public class ActorProvider : IActorProvider
     {
-        public Task<Actor> GetActorAsync(Guid actorId)
+        private readonly IMarketParticipantRepository _marketParticipantRepository;
+
+        public ActorProvider(IMarketParticipantRepository marketParticipantRepository)
         {
-            return new Task<Actor>(() => new Actor(Guid.NewGuid(), "idtype", "ident", "roles"));
+            _marketParticipantRepository = marketParticipantRepository;
+        }
+
+        public async Task<Actor> GetActorAsync(Guid actorId)
+        {
+            var mp = await _marketParticipantRepository.GetOrNullAsync(actorId).ConfigureAwait(false);
+
+            return new Actor(mp.Id, "???", "???", mp.BusinessProcessRole.ToString());
         }
     }
 }
