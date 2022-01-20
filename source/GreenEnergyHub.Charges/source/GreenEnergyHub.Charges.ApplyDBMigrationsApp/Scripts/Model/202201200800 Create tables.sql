@@ -94,13 +94,13 @@ CREATE TABLE [Charges].[DefaultChargeLink](
 CREATE TABLE [Charges].[MarketParticipant](
     [Id] [uniqueidentifier] NOT NULL,
     [MarketParticipantId] [nvarchar](35) NOT NULL,
-    [BusinessProcessRole] [int] NULL,
+    [BusinessProcessRole] [int] NOT NULL,
     [IsActive] [bit] NOT NULL,
     CONSTRAINT [PK_MarketParticipant] PRIMARY KEY NONCLUSTERED
 (
 [Id] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY],
-    UNIQUE NONCLUSTERED
+    CONSTRAINT [UC_MarketParticipantId] UNIQUE NONCLUSTERED
 (
 [MarketParticipantId] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
@@ -304,31 +304,32 @@ CREATE NONCLUSTERED INDEX [i1] ON [MessageHub].[AvailableChargeReceiptValidation
 	[AvailableChargeReceiptDataId] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 GO
-ALTER TABLE [Charges].[ChargePoint] ADD  DEFAULT ((1)) FOR [Position]
-    GO
-ALTER TABLE [Charges].[Charge]  WITH CHECK ADD FOREIGN KEY([OwnerId])
+ALTER TABLE [Charges].[Charge]  WITH CHECK ADD CONSTRAINT [FK_Charge_MarketParticipant] FOREIGN KEY([OwnerId])
     REFERENCES [Charges].[MarketParticipant] ([Id])
     GO
-ALTER TABLE [Charges].[ChargeLink]  WITH CHECK ADD FOREIGN KEY([ChargeId])
+ALTER TABLE [Charges].[ChargeLink]  WITH CHECK ADD CONSTRAINT [FK_ChargeLink_Charge] FOREIGN KEY([ChargeId])
     REFERENCES [Charges].[Charge] ([Id])
     GO
-ALTER TABLE [Charges].[ChargeLink]  WITH CHECK ADD FOREIGN KEY([MeteringPointId])
+ALTER TABLE [Charges].[ChargeLink]  WITH CHECK ADD CONSTRAINT [FK_ChargeLink_MeteringPoint] FOREIGN KEY([MeteringPointId])
     REFERENCES [Charges].[MeteringPoint] ([Id])
     GO
-ALTER TABLE [Charges].[ChargePoint]  WITH CHECK ADD  CONSTRAINT [FK_Charge] FOREIGN KEY([ChargeId])
+ALTER TABLE [Charges].[ChargePoint]  WITH CHECK ADD  CONSTRAINT [FK_ChargePoint_Charge] FOREIGN KEY([ChargeId])
     REFERENCES [Charges].[Charge] ([Id])
     GO
-ALTER TABLE [Charges].[ChargePoint] CHECK CONSTRAINT [FK_Charge]
+ALTER TABLE [Charges].[ChargePoint] CHECK CONSTRAINT [FK_ChargePoint_Charge]
     GO
-ALTER TABLE [Charges].[DefaultChargeLink]  WITH CHECK ADD FOREIGN KEY([ChargeId])
+ALTER TABLE [Charges].[DefaultChargeLink]  WITH CHECK ADD CONSTRAINT [FK_DefaultChargeLink_Charge] FOREIGN KEY([ChargeId])
     REFERENCES [Charges].[Charge] ([Id])
     GO
-ALTER TABLE [MessageHub].[AvailableChargeDataPoints]  WITH CHECK ADD FOREIGN KEY([AvailableChargeDataId])
+ALTER TABLE [MessageHub].[AvailableChargeDataPoints]
+    WITH CHECK ADD CONSTRAINT [FK_AvailableChargeDataPoints_AvailableChargeData] FOREIGN KEY([AvailableChargeDataId])
     REFERENCES [MessageHub].[AvailableChargeData] ([Id])
     GO
-ALTER TABLE [MessageHub].[AvailableChargeLinksReceiptValidationError]  WITH CHECK ADD FOREIGN KEY([AvailableChargeLinkReceiptDataId])
+ALTER TABLE [MessageHub].[AvailableChargeLinksReceiptValidationError]
+    WITH CHECK ADD CONSTRAINT [FK_AvailableChargeLinksReceiptValidationError_AvailableChargeLinksReceiptData] FOREIGN KEY([AvailableChargeLinkReceiptDataId])
     REFERENCES [MessageHub].[AvailableChargeLinksReceiptData] ([Id])
     GO
-ALTER TABLE [MessageHub].[AvailableChargeReceiptValidationError]  WITH CHECK ADD FOREIGN KEY([AvailableChargeReceiptDataId])
+ALTER TABLE [MessageHub].[AvailableChargeReceiptValidationError]
+    WITH CHECK ADD CONSTRAINT [FK_AvailableChargeReceiptValidationError_AvailableChargeReceiptData] FOREIGN KEY([AvailableChargeReceiptDataId])
     REFERENCES [MessageHub].[AvailableChargeReceiptData] ([Id])
     GO
