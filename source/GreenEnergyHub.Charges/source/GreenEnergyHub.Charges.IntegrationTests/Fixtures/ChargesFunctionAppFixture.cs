@@ -215,6 +215,10 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures
 
             // Overwrites the setting so the function app uses the database we have control of in the test
             Environment.SetEnvironmentVariable(EnvironmentSettingNames.ChargeDbConnectionString, DatabaseManager.ConnectionString);
+
+            // Only actor register thing being tested is connectivity - so for now we just cheat and provide another connection string
+            var actorRegisterConnectionString = DatabaseManager.ConnectionString;
+            Environment.SetEnvironmentVariable(EnvironmentSettingNames.ActorRegisterDbConnectionString, actorRegisterConnectionString);
         }
 
         /// <inheritdoc/>

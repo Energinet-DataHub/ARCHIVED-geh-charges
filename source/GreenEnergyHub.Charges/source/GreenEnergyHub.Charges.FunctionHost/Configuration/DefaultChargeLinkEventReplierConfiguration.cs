@@ -15,7 +15,6 @@
 using GreenEnergyHub.Charges.Application.ChargeLinks.Handlers;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksDataAvailableNotifiedEvents;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Registration;
-using GreenEnergyHub.Charges.Infrastructure.Internal.DefaultChargeLinksCreated;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace GreenEnergyHub.Charges.FunctionHost.Configuration
@@ -26,9 +25,9 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
         {
             serviceCollection.AddScoped<ICreateDefaultChargeLinksReplyHandler, CreateDefaultChargeLinksReplyHandler>();
             serviceCollection.AddScoped<IChargeLinksDataAvailableNotifiedEventFactory, ChargeLinksDataAvailableNotifiedEventFactory>();
-
-            serviceCollection.ReceiveProtobufMessage<DefaultChargeLinksCreated>(
-                configuration => configuration.WithParser(() => DefaultChargeLinksCreated.Parser));
+            serviceCollection
+                .AddMessaging()
+                .AddInternalMessageExtractor<ChargeLinksDataAvailableNotifiedEvent>();
         }
     }
 }

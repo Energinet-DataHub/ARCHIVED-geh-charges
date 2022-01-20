@@ -14,6 +14,7 @@
 
 using System;
 using Azure.Messaging.ServiceBus;
+using Energinet.DataHub.Core.Logging.RequestResponseMiddleware.Storage;
 using Energinet.DataHub.Core.Messaging.Protobuf;
 using Energinet.DataHub.Core.Messaging.Transport;
 using Energinet.DataHub.MessageHub.Client;
@@ -26,14 +27,16 @@ using Energinet.DataHub.MessageHub.Model.Peek;
 using EntityFrameworkCore.SqlServer.NodaTime.Extensions;
 using GreenEnergyHub.Charges.Application.ChargeLinks.CreateDefaultChargeLinkReplier;
 using GreenEnergyHub.Charges.Domain.Charges;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandAcceptedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksReceivedEvents;
 using GreenEnergyHub.Charges.Domain.MeteringPoints;
 using GreenEnergyHub.Charges.FunctionHost.Common;
 using GreenEnergyHub.Charges.Infrastructure.Core.Correlation;
 using GreenEnergyHub.Charges.Infrastructure.Core.Function;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessageMetaData;
+using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Factories;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Registration;
-using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinksCommandReceived;
+using GreenEnergyHub.Charges.Infrastructure.Integration.ChargeCreated;
 using GreenEnergyHub.Charges.Infrastructure.Persistence;
 using GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories;
 using GreenEnergyHub.Charges.Infrastructure.ReplySender;
@@ -49,6 +52,7 @@ using GreenEnergyHub.Iso8601;
 using GreenEnergyHub.Json;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using NodaTime;
 
 namespace GreenEnergyHub.Charges.FunctionHost.Configuration
@@ -79,6 +83,8 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
             var azureBlobStorageContainerName = EnvironmentHelper.GetEnv(EnvironmentSettingNames.MessageHubStorageContainer);
 
             var serviceBusClient = new ServiceBusClient(serviceBusConnectionString);
+
+            AddRequestResponseLogging(serviceCollection);
 
             AddCreateDefaultChargeLinksReplier(serviceCollection, serviceBusClient);
             AddPostOfficeCommunication(
@@ -127,10 +133,13 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
         private static void ConfigureSharedMessaging(IServiceCollection serviceCollection)
         {
             serviceCollection.AddScoped<MessageDispatcher>();
+            serviceCollection.AddScoped<IServiceBusMessageFactory, ServiceBusMessageFactory>();
             serviceCollection.ConfigureProtobufReception();
 
-            serviceCollection.SendProtobuf<ChargeLinksCommandReceived>();
-            serviceCollection.AddMessagingProtobuf().AddMessageDispatcher<ChargeLinksReceivedEvent>(
+            serviceCollection.SendProtobuf<ChargeCreated>();
+            serviceCollection.AddMessaging()
+                .AddInternalMessageExtractor<ChargeCommandAcceptedEvent>()
+                .AddExternalMessageDispatcher<ChargeLinksReceivedEvent>(
                 EnvironmentHelper.GetEnv(EnvironmentSettingNames.DomainEventSenderConnectionString),
                 EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargeLinksReceivedTopicName));
         }
@@ -180,6 +189,18 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
             serviceCollection.AddServiceBus(serviceBusConnectionString);
             serviceCollection.AddApplicationServices();
             serviceCollection.AddStorageHandler(storageServiceConnectionString);
+        }
+
+        private static void AddRequestResponseLogging(IServiceCollection serviceCollection)
+        {
+            serviceCollection.AddScoped<IRequestResponseLogging>(provider =>
+            {
+                var requestResponseLogStorage = EnvironmentHelper.GetEnv(EnvironmentSettingNames.RequestResponseLoggingConnectionString);
+                var requestResponseLogContainerName = EnvironmentHelper.GetEnv(EnvironmentSettingNames.RequestResponseLoggingContainerName);
+
+                var storageLogging = provider.GetService<ILogger<RequestResponseLoggingBlobStorage>>();
+                return new RequestResponseLoggingBlobStorage(requestResponseLogStorage, requestResponseLogContainerName, storageLogging!);
+            });
         }
 
         private static void AddServiceBus(this IServiceCollection serviceCollection, string serviceBusConnectionString)

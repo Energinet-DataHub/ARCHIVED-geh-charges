@@ -21,7 +21,6 @@ using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.Infrastructure.Core.Cim.MarketDocument;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessageMetaData;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksReceiptData;
-using GreenEnergyHub.Charges.Tests.Builders;
 using GreenEnergyHub.TestHelpers;
 using Moq;
 using NodaTime;
@@ -38,7 +37,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeLinkRece
         [InlineAutoDomainData(MarketParticipantRole.GridAccessProvider)]
         public async Task CreateAsync_WhenSenderNotSystemOperator_ReturnsAvailableData(
             MarketParticipantRole marketParticipantRole,
-            HubSenderMarketParticipantBuilder hubSenderBuilder,
+            MarketParticipant hubSender,
             [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
             [Frozen] Mock<IMessageMetaDataContext> messageMetaDataContext,
             ChargeLinksAcceptedEvent acceptedEvent,
@@ -49,7 +48,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeLinkRece
             acceptedEvent.ChargeLinksCommand.Document.Sender.BusinessProcessRole = marketParticipantRole;
             messageMetaDataContext.Setup(m => m.RequestDataTime).Returns(now);
             var expectedLinks = acceptedEvent.ChargeLinksCommand.ChargeLinks.ToList();
-            marketParticipantRepository.Setup(r => r.GetHubSenderAsync()).ReturnsAsync(hubSenderBuilder.Build());
+            marketParticipantRepository.Setup(r => r.GetHubSenderAsync()).ReturnsAsync(hubSender);
 
             // Act
             var actualList = await sut.CreateAsync(acceptedEvent);

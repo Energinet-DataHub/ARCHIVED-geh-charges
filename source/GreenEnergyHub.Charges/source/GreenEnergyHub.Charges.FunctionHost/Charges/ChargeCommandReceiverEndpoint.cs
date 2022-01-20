@@ -16,8 +16,7 @@ using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application.Charges.Handlers;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandReceivedEvents;
 using GreenEnergyHub.Charges.FunctionHost.Common;
-using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions;
-using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeCommandReceived;
+using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Serialization;
 using Microsoft.Azure.Functions.Worker;
 
 namespace GreenEnergyHub.Charges.FunctionHost.Charges
@@ -26,14 +25,14 @@ namespace GreenEnergyHub.Charges.FunctionHost.Charges
     {
         public const string FunctionName = nameof(ChargeCommandReceiverEndpoint);
         private readonly IChargeCommandReceivedEventHandler _chargeCommandReceivedEventHandler;
-        private readonly MessageExtractor<ChargeCommandReceivedContract> _messageExtractor;
+        private readonly JsonMessageDeserializer<ChargeCommandReceivedEvent> _deserializer;
 
         public ChargeCommandReceiverEndpoint(
             IChargeCommandReceivedEventHandler chargeCommandReceivedEventHandler,
-            MessageExtractor<ChargeCommandReceivedContract> messageExtractor)
+            JsonMessageDeserializer<ChargeCommandReceivedEvent> deserializer)
         {
             _chargeCommandReceivedEventHandler = chargeCommandReceivedEventHandler;
-            _messageExtractor = messageExtractor;
+            _deserializer = deserializer;
         }
 
         [Function(FunctionName)]
@@ -44,7 +43,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Charges
                 Connection = EnvironmentSettingNames.DomainEventListenerConnectionString)]
             byte[] message)
         {
-            var receivedEvent = (ChargeCommandReceivedEvent)await _messageExtractor.ExtractAsync(message).ConfigureAwait(false);
+            var receivedEvent = (ChargeCommandReceivedEvent)await _deserializer.FromBytesAsync(message).ConfigureAwait(false);
             await _chargeCommandReceivedEventHandler.HandleAsync(receivedEvent).ConfigureAwait(false);
         }
     }
