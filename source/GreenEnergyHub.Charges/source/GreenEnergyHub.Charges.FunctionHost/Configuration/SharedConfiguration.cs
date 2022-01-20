@@ -32,6 +32,7 @@ using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandAcceptedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksReceivedEvents;
 using GreenEnergyHub.Charges.Domain.MeteringPoints;
 using GreenEnergyHub.Charges.FunctionHost.Common;
+using GreenEnergyHub.Charges.Infrastructure;
 using GreenEnergyHub.Charges.Infrastructure.Core.Correlation;
 using GreenEnergyHub.Charges.Infrastructure.Core.Function;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessageMetaData;
@@ -105,7 +106,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
                 "Backend service app id not found.");
 
             serviceCollection.AddJwtTokenSecurity($"https://login.microsoftonline.com/{tenantId}/v2.0/.well-known/openid-configuration", audience);
-            //serviceCollection.AddActorContext<ActorProvider>(); TODO: LRN Implement ActorProvider
+            serviceCollection.AddActorContext<ActorProvider>();
         }
 
         private static void AddCreateDefaultChargeLinksReplier(
