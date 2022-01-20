@@ -74,7 +74,7 @@ namespace GreenEnergyHub.Charges.QueryApi.Model
                     .WithMany(p => p.Charges)
                     .HasForeignKey(d => d.OwnerId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Charge__MarketPa__534D60F1");
+                    .HasConstraintName("FK_Charge_MarketParticipant");
             });
 
             modelBuilder.Entity<ChargeLink>(entity =>
@@ -92,13 +92,13 @@ namespace GreenEnergyHub.Charges.QueryApi.Model
                     .WithMany(p => p.ChargeLinks)
                     .HasForeignKey(d => d.ChargeId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__ChargeLin__Charg__656C112C");
+                    .HasConstraintName("FK_ChargeLink_Charge");
 
                 entity.HasOne(d => d.MeteringPoint)
                     .WithMany(p => p.ChargeLinks)
                     .HasForeignKey(d => d.MeteringPointId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__ChargeLin__Meter__66603565");
+                    .HasConstraintName("FK_ChargeLink_MeteringPoint");
             });
 
             modelBuilder.Entity<ChargePoint>(entity =>
@@ -111,15 +111,13 @@ namespace GreenEnergyHub.Charges.QueryApi.Model
 
                 entity.Property(e => e.Id).ValueGeneratedNever();
 
-                entity.Property(e => e.Position).HasDefaultValueSql("((1))");
-
                 entity.Property(e => e.Price).HasColumnType("decimal(14, 6)");
 
                 entity.HasOne(d => d.Charge)
                     .WithMany(p => p.ChargePoints)
                     .HasForeignKey(d => d.ChargeId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Charge");
+                    .HasConstraintName("FK_ChargePoint_Charge");
             });
 
             modelBuilder.Entity<DefaultChargeLink>(entity =>
@@ -137,7 +135,7 @@ namespace GreenEnergyHub.Charges.QueryApi.Model
                     .WithMany(p => p.DefaultChargeLinks)
                     .HasForeignKey(d => d.ChargeId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__DefaultCh__Charg__60A75C0F");
+                    .HasConstraintName("FK_DefaultChargeLink_Charge");
             });
 
             modelBuilder.Entity<MarketParticipant>(entity =>
@@ -146,6 +144,9 @@ namespace GreenEnergyHub.Charges.QueryApi.Model
                     .IsClustered(false);
 
                 entity.ToTable("MarketParticipant", "Charges");
+
+                entity.HasIndex(e => e.MarketParticipantId, "UC_MarketParticipantId")
+                    .IsUnique();
 
                 entity.Property(e => e.Id).ValueGeneratedNever();
 

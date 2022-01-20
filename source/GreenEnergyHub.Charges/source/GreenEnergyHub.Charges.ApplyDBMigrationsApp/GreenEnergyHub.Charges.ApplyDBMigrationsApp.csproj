@@ -30,67 +30,13 @@ limitations under the License.
     </ItemGroup>
 
     <ItemGroup>
-      <EmbeddedResource Include="Scripts\Model\202108250923 MP grid area id and nullable settlement method.sql" />
-      <EmbeddedResource Include="Scripts\Model\202108300923 Rename MP grid area id.sql" />
-      <EmbeddedResource Include="Scripts\Model\202108310833 Add ChargeLink Model.sql" />
-      <EmbeddedResource Include="Scripts\Model\202109071000 Refactor ChargeLink Model.sql" />
-      <EmbeddedResource Include="Scripts\Model\202109011409 Rename to DefaultChargeLink.sql" />
-      <EmbeddedResource Include="Scripts\Model\202109301025 ChargePeriodDetails enddatetime set values and alter not null.sql" />
-      <EmbeddedResource Include="Scripts\Model\202109301024 DefaultChargeLink enddatetime alter not null.sql" />
-      <EmbeddedResource Include="Scripts\Model\202109171524 Refactor DefaultChargeLink.sql" />
-      <EmbeddedResource Include="Scripts\Model\202109201555 Refactor ChargePeriodDetails.sql" />
-      <EmbeddedResource Include="Scripts\Model\202110191245 Remove duplicated MPs and set unique constraint on MP ID.sql" />
-      <EmbeddedResource Include="Scripts\Model\202110210813 Create AvailableChargeData table.sql" />
-      <EmbeddedResource Include="Scripts\Model\202110280953 Add market participants active field.sql" />
-      <EmbeddedResource Include="Scripts\Model\202111051118 Remove correlation ID columns.sql" />
-      <EmbeddedResource Include="Scripts\Model\202112081120 Rename ChargePrice to ChargePoint.sql" />
-      <EmbeddedResource Include="Scripts\Model\202112081221 Add ChargePoint.Position.sql" />
-      <EmbeddedResource Include="Scripts\Model\202112081300 Remove Charge.Currency.sql" />
-      <EmbeddedResource Include="Scripts\Model\202112081210 Update MarketParticipant columns.sql" />
-      <EmbeddedResource Include="Scripts\Model\202112081230 Drop unused Charge tables.sql" />
-      <EmbeddedResource Include="Scripts\Model\202112081220 Remove unsued ChargePoint columns.sql" />
-      <EmbeddedResource Include="Scripts\Model\202112081225 Add Charge columns from obsolete details.sql" />
-      <EmbeddedResource Include="Scripts\Model\202112091200 Update Charge column names.sql" />
-      <EmbeddedResource Include="Scripts\Model\202201041230 Remove default constraint on IsActive in MarketParticipant.sql" />
-      <EmbeddedResource Include="Scripts\Model\202112211240 Remove redundant Charge FK in ChargePoint.sql" />
-      <EmbeddedResource Include="Scripts\Model\202112100940 Move data from ChargeLink.PeriodDetails to ChargeLink.sql" />
-      <EmbeddedResource Include="Scripts\Model\202112231000 Rename to AvailableChargeReceiptValidationError.sql" />
-      <EmbeddedResource Include="Scripts\Model\202201111600 Support multiple MarketParticipant roles.sql" />
-      <EmbeddedResource Include="Scripts\Model\202201121500 Store sender of available data.sql" />
-      <EmbeddedResource Include="Scripts\Model\202201171730 Ensure unique market participant ID.sql" />
-      <EmbeddedResource Include="Scripts\Model\202201181330 Use single market participant business process role.sql" />
-      <EmbeddedResource Include="Scripts\Seed\202201121230 Move hub sender to actor register.sql" />
-      <EmbeddedResource Include="Scripts\Model\202201111000 Rename to AvailableChargeLinksReceiptValidationError.sql" />
-      <EmbeddedResource Include="Scripts\Test\202105201033 New MarketParticipants.sql" />
-      <EmbeddedResource Include="Scripts\Model\202105191329 New charge model.sql" />
-      <EmbeddedResource Include="Scripts\Model\202107011226 New Metering Point.sql" />
-      <EmbeddedResource Include="Scripts\Model\202108130551 Default Charge Links.sql" />
-      <EmbeddedResource Include="Scripts\Seed\202108130611 System operator market participant.sql" />
-      <EmbeddedResource Include="Scripts\Seed\202108130629 Default charges.sql" />
-      <EmbeddedResource Include="Scripts\Seed\202108131029 Default charge links.sql" />
-      <EmbeddedResource Include="Scripts\Model\202108251511 Use DateTime2.sql" />
-      <EmbeddedResource Include="Scripts\Test\202201041056 Add Metering Point Test Data to avoid using the same mp due to new validation rules.sql" />
-      <EmbeddedResource Include="Scripts\Test\202111300728 Metering Point Test Data with type 3.sql" />
-      <EmbeddedResource Include="Scripts\Test\202109080933 Metering Point Test Data.sql" />
-      <EmbeddedResource Include="Scripts\Test\202109080933 Update Metering Point Test Data.sql" />
-      <EmbeddedResource Include="Scripts\Model\202109211442 Recreate all models with no row ids.sql" />
-      <EmbeddedResource Include="Scripts\Seed\202109211444 System operator market participant no rowid.sql" />
-      <EmbeddedResource Include="Scripts\Seed\202109211445 default charges no rowId.sql" />
-      <EmbeddedResource Include="Scripts\Seed\202109211447 default charge links no rowId.sql" />
-      <EmbeddedResource Include="Scripts\Test\202109211448 New MarketParticipants no rowId.sql" />
-      <EmbeddedResource Include="Scripts\Test\202109211449 Metering Point Test Data no rowId.sql" />
-      <EmbeddedResource Include="Scripts\Model\202110121245 Create AvailableChargeLinksData table.sql" />
-      <EmbeddedResource Include="Scripts\Test\202110281013 Add inactive market partcipant.sql" />
-      <EmbeddedResource Include="Scripts\Model\202111161258 Create AvailableChargeLinkReceiptData table.sql" />
-      <EmbeddedResource Include="Scripts\Model\202111171630 Rename RequestTime to RequestDateTime in Available tables.sql" />
-      <EmbeddedResource Include="Scripts\Model\202111250821 Create AvailableChargeReceiptData tables.sql" />
-      <EmbeddedResource Include="Scripts\Model\202111251041 Change ChargeLinkReceipt Text to NVARCHAR.sql" />
-      <EmbeddedResource Include="Scripts\Test\202112171600 Add charge link test data.sql" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Folder Include="Scripts\PostDeploy\" />
-      <Folder Include="Scripts\PreDeploy\" />
+      <EmbeddedResource Include="Scripts\Model\202201200800 Create tables.sql" />
+      <EmbeddedResource Include="Scripts\Seed\202201200810 Add default charges owner.sql" />
+      <EmbeddedResource Include="Scripts\Test\202201200831 Add metering points.sql" />
+      <EmbeddedResource Include="Scripts\Seed\202201200811 Add default charges.sql" />
+      <EmbeddedResource Include="Scripts\Seed\202201200812 Add default charge links.sql" />
+      <EmbeddedResource Include="Scripts\Test\202201200830 Add market participants.sql" />
+      <EmbeddedResource Include="Scripts\Test\202201200832 Add charges and links.sql" />
     </ItemGroup>
 
 </Project>

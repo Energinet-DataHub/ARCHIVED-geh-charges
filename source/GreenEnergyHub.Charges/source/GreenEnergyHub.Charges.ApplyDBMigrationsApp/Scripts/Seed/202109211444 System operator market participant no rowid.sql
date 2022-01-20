@@ -1,2 +1,0 @@
-INSERT INTO [Charges].[MarketParticipant] (Id, MarketParticipantId, Name, Role) VALUES (NEWID(), '5790000432752', 'System Operator', 3); /* System Operator is used as a name for this participant, it is not by mistake */
-GO
