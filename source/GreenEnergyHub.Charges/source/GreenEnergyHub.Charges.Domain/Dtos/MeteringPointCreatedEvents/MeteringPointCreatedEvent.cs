@@ -19,14 +19,15 @@ using NodaTime;
 
 namespace GreenEnergyHub.Charges.Domain.Dtos.MeteringPointCreatedEvents
 {
-    public class ConsumptionMeteringPointCreatedEvent : InboundIntegrationEvent
+    public class MeteringPointCreatedEvent : InboundIntegrationEvent
     {
-        public ConsumptionMeteringPointCreatedEvent(
+        public MeteringPointCreatedEvent(
             string meteringPointId,
             string gridAreaId,
-            SettlementMethod settlementMethod,
+            SettlementMethod? settlementMethod,
             ConnectionState connectionState,
-            Instant effectiveDate)
+            Instant effectiveDate,
+            MeteringPointType meteringPointType)
             : base(Transaction.NewTransaction())
         {
             MeteringPointId = meteringPointId;
@@ -34,16 +35,19 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.MeteringPointCreatedEvents
             SettlementMethod = settlementMethod;
             ConnectionState = connectionState;
             EffectiveDate = effectiveDate;
+            MeteringPointType = meteringPointType;
         }
 
         public string MeteringPointId { get; }
 
         public string GridAreaId { get; }
 
-        public SettlementMethod SettlementMethod { get; }
+        public SettlementMethod? SettlementMethod { get; }
 
         public ConnectionState ConnectionState { get; }
 
         public Instant EffectiveDate { get; }
+
+        public MeteringPointType MeteringPointType { get; set; }
     }
 }

@@ -23,9 +23,9 @@ on the existing Service Bus Namespace.
 =================================================================================
 */
 
-module "sbt_consumption_metering_point_created" {
+module "sbt_metering_point_created" {
   source              = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//service-bus-topic?ref=2.0.0"
-  name                = local.CONSUMPTION_METERING_POINT_CREATED_TOPIC_NAME
+  name                = local.METERING_POINT_CREATED_TOPIC_NAME
   namespace_name      = module.sbn_external_integration_events.name
   resource_group_name = azurerm_resource_group.main.name
   dependencies        = [module.sbn_external_integration_events.dependent_on]
