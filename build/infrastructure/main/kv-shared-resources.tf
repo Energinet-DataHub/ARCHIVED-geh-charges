@@ -107,13 +107,13 @@ data "azurerm_key_vault_secret" "sbt_charge_prices_updated_name" {
   key_vault_id = data.azurerm_key_vault.kv_shared_resources.id
 }
 
-data "azurerm_key_vault_secret" "sbt_consumption_metering_point_created_name" {
-  name         = "sbt-consumption-metering-point-created-name"
+data "azurerm_key_vault_secret" "sbt_metering_point_created_name" {
+  name         = "sbt-metering-point-created-name"
   key_vault_id = data.azurerm_key_vault.kv_shared_resources.id
 }
 
-data "azurerm_key_vault_secret" "sbs_consumption_metering_point_created_sub_charges_name" {
-  name         = "sbs-consumption-metering-point-created-sub-charges-name"
+data "azurerm_key_vault_secret" "sbs_metering_point_created_sub_charges_name" {
+  name         = "sbs-metering-point-created-sub-charges-name"
   key_vault_id = data.azurerm_key_vault.kv_shared_resources.id
 }
 

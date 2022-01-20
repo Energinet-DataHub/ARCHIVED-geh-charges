@@ -31,7 +31,7 @@ using Xunit.Categories;
 namespace GreenEnergyHub.Charges.Tests.Application.MeteringPoints.Handlers
 {
     [UnitTest]
-    public class ConsumptionMeteringPointPersisterTests
+    public class MeteringPointPersisterTests
     {
         [Theory]
         [InlineAutoDomainData]
@@ -46,7 +46,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.MeteringPoints.Handlers
 
             meteringPointRepository.Setup(x => x.GetOrNullAsync(It.IsAny<string>())).ReturnsAsync(() => null);
 
-            var sut = new ConsumptionMeteringPointPersister(meteringPointRepository.Object, loggerFactory.Object);
+            var sut = new MeteringPointPersister(meteringPointRepository.Object, loggerFactory.Object);
 
             // Act
             await sut.PersistAsync(meteringPointCreatedEvent).ConfigureAwait(false);
@@ -55,7 +55,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.MeteringPoints.Handlers
             meteringPointRepository
                 .Verify(v => v.StoreMeteringPointAsync(It.IsAny<MeteringPoint>()), Times.Exactly(1));
             logger.VerifyLoggerWasCalled(
-                $"Consumption Metering Point ID '{meteringPointCreatedEvent.MeteringPointId}' has been persisted",
+                $"Metering Point ID '{meteringPointCreatedEvent.MeteringPointId}' has been persisted",
                 LogLevel.Information);
         }
 
@@ -71,11 +71,11 @@ namespace GreenEnergyHub.Charges.Tests.Application.MeteringPoints.Handlers
 
             loggerFactory.Setup(x => x.CreateLogger(It.IsAny<string>())).Returns(logger.Object);
 
-            var existingMeteringPoint = GetConsumptionMeteringPoint(meteringPointCreatedEvent);
+            var existingMeteringPoint = GetMeteringPoint(meteringPointCreatedEvent);
 
             meteringPointRepository.Setup(x => x.GetOrNullAsync(It.IsAny<string>())).ReturnsAsync(existingMeteringPoint);
 
-            var sut = new ConsumptionMeteringPointPersister(meteringPointRepository.Object, loggerFactory.Object);
+            var sut = new MeteringPointPersister(meteringPointRepository.Object, loggerFactory.Object);
 
             // Act
             await sut.PersistAsync(meteringPointCreatedEvent).ConfigureAwait(false);
@@ -97,7 +97,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.MeteringPoints.Handlers
         {
             // Arrange
             var meteringPointCreatedEvent = GetMeteringPointCreatedEvent();
-            var meteringPoint = GetConsumptionMeteringPoint(meteringPointCreatedEvent);
+            var meteringPoint = GetMeteringPoint(meteringPointCreatedEvent);
 
             loggerFactory.Setup(x => x.CreateLogger(It.IsAny<string>())).Returns(logger.Object);
 
@@ -111,7 +111,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.MeteringPoints.Handlers
 
             meteringPointRepository.Setup(x => x.GetOrNullAsync(It.IsAny<string>())).ReturnsAsync(existingMeteringPoint);
 
-            var sut = new ConsumptionMeteringPointPersister(meteringPointRepository.Object, loggerFactory.Object);
+            var sut = new MeteringPointPersister(meteringPointRepository.Object, loggerFactory.Object);
 
             // Act
             await sut.PersistAsync(meteringPointCreatedEvent).ConfigureAwait(false);
@@ -131,10 +131,10 @@ namespace GreenEnergyHub.Charges.Tests.Application.MeteringPoints.Handlers
         [Theory]
         [InlineAutoMoqData]
         public async Task PersistAsync_WhenEventIsNull_ThrowsArgumentNullException(
-            [NotNull] ConsumptionMeteringPointPersister sut)
+            [NotNull] MeteringPointPersister sut)
         {
             // Arrange
-            ConsumptionMeteringPointCreatedEvent? meteringPointCreatedEvent = null;
+            MeteringPointCreatedEvent? meteringPointCreatedEvent = null;
 
             // Act / Assert
             await Assert.ThrowsAsync<ArgumentNullException>(
@@ -142,21 +142,22 @@ namespace GreenEnergyHub.Charges.Tests.Application.MeteringPoints.Handlers
                 .ConfigureAwait(false);
         }
 
-        private static ConsumptionMeteringPointCreatedEvent GetMeteringPointCreatedEvent()
+        private static MeteringPointCreatedEvent GetMeteringPointCreatedEvent()
         {
-            return new ConsumptionMeteringPointCreatedEvent(
+            return new MeteringPointCreatedEvent(
                 "123",
                 "2",
                 SettlementMethod.Flex,
                 ConnectionState.New,
-                SystemClock.Instance.GetCurrentInstant());
+                SystemClock.Instance.GetCurrentInstant(),
+                MeteringPointType.Consumption);
         }
 
-        private static MeteringPoint GetConsumptionMeteringPoint(ConsumptionMeteringPointCreatedEvent meteringPointCreatedEvent)
+        private static MeteringPoint GetMeteringPoint(MeteringPointCreatedEvent meteringPointCreatedEvent)
         {
             var meteringPoint = MeteringPoint.Create(
                 meteringPointCreatedEvent.MeteringPointId,
-                MeteringPointType.Consumption,
+                meteringPointCreatedEvent.MeteringPointType,
                 meteringPointCreatedEvent.GridAreaId,
                 meteringPointCreatedEvent.EffectiveDate,
                 meteringPointCreatedEvent.ConnectionState,
