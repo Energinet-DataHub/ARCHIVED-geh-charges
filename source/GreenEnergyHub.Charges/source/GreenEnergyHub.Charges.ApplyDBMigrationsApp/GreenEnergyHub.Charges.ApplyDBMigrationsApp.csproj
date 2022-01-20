@@ -30,7 +30,7 @@ limitations under the License.
     </ItemGroup>
 
     <ItemGroup>
-      <EmbeddedResource Include="Scripts\Model\202201200800 Create tables.sql" />
+      <EmbeddedResource Include="Scripts\Model\202201200801 Create tables.sql" />
       <EmbeddedResource Include="Scripts\Seed\202201200810 Add default charges owner.sql" />
       <EmbeddedResource Include="Scripts\Test\202201200831 Add metering points.sql" />
       <EmbeddedResource Include="Scripts\Seed\202201200811 Add default charges.sql" />
