@@ -91,7 +91,8 @@ jobs:
     needs: [
       functionhost_ci,
       webapi_ci,
-      database_migration_ci
+      database_migration_ci,
+      systemtest_ci
     ]
     uses: Energinet-DataHub/.github/.github/workflows/create-prerelease.yml@2.7.0
     with:
