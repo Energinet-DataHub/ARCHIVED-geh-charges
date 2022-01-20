@@ -21,32 +21,32 @@ using Microsoft.Extensions.Logging;
 
 namespace GreenEnergyHub.Charges.Application.MeteringPoints.Handlers
 {
-    public class ConsumptionMeteringPointPersister : IConsumptionMeteringPointPersister
+    public class MeteringPointPersister : IMeteringPointPersister
     {
         private readonly IMeteringPointRepository _meteringPointRepository;
         private readonly ILogger _logger;
 
-        public ConsumptionMeteringPointPersister(
+        public MeteringPointPersister(
             IMeteringPointRepository meteringPointRepository,
             [NotNull] ILoggerFactory loggerFactory)
         {
             _meteringPointRepository = meteringPointRepository;
-            _logger = loggerFactory.CreateLogger(nameof(ConsumptionMeteringPointPersister));
+            _logger = loggerFactory.CreateLogger(nameof(MeteringPointPersister));
         }
 
-        public async Task PersistAsync(ConsumptionMeteringPointCreatedEvent consumptionMeteringPointCreatedEvent)
+        public async Task PersistAsync(MeteringPointCreatedEvent meteringPointCreatedEvent)
         {
-            if (consumptionMeteringPointCreatedEvent == null)
-                throw new ArgumentNullException(nameof(consumptionMeteringPointCreatedEvent));
+            if (meteringPointCreatedEvent == null)
+                throw new ArgumentNullException(nameof(meteringPointCreatedEvent));
 
-            var meteringPoint = MeteringPointFactory.Create(consumptionMeteringPointCreatedEvent);
+            var meteringPoint = MeteringPointFactory.Create(meteringPointCreatedEvent);
 
             var existingMeteringPoint = await _meteringPointRepository.GetOrNullAsync(meteringPoint.MeteringPointId);
 
             if (existingMeteringPoint == null)
             {
                 await _meteringPointRepository.StoreMeteringPointAsync(meteringPoint).ConfigureAwait(false);
-                _logger.LogInformation($"Consumption Metering Point ID '{meteringPoint.MeteringPointId}' has been persisted");
+                _logger.LogInformation($"Metering Point ID '{meteringPoint.MeteringPointId}' has been persisted");
             }
             else
             {
