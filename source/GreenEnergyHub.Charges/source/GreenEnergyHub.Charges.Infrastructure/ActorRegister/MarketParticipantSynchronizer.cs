@@ -54,37 +54,26 @@ namespace GreenEnergyHub.Charges.Infrastructure.ActorRegister
                 .ToList();
 
             foreach (var actor in actors)
-            {
-                var marketParticipant = marketParticipants.SingleOrDefault(m => m.Id == actor.Id);
-
-                // Add or update market participant. Deletes are not supported.
-                if (marketParticipant == null)
-                {
-                    // Remove if (anticipated) test data conflicts with data from actor register.
-                    // We consider the ID to be the UUID identifier of the actor and not the identification number.
-                    // This is supported by the fact that the ID is also used for authentication.
-                    var testData = marketParticipants
-                        .SingleOrDefault(mp => mp.MarketParticipantId == actor.IdentificationNumber);
-                    if (testData != null)
-                    {
-                        _chargesDatabaseContext.MarketParticipants.Remove(testData);
-
-                        // It's necessary to save changes in order to be able to add market participant
-                        // with same identification number without violating the unique constraint of the database
-                        await _chargesDatabaseContext.SaveChangesAsync();
-                    }
-
-                    var newMarketParticipant = CreateMarketParticipant(actor);
-                    _chargesDatabaseContext.MarketParticipants.Add(newMarketParticipant);
-                }
-                else
-                {
-                    var businessProcessRole = GetBusinessProcessRole(actor.Roles);
-                    MarketParticipantUpdater.Update(marketParticipant, actor, businessProcessRole);
-                }
-            }
+                AddOrUpdateMarketParticipant(marketParticipants, actor);
 
             await _chargesDatabaseContext.SaveChangesAsync();
+        }
+
+        private void AddOrUpdateMarketParticipant(List<MarketParticipant> marketParticipants, Actor actor)
+        {
+            var marketParticipant = marketParticipants.SingleOrDefault(m => m.Id == actor.Id);
+
+            // Add or update market participant. Deletes are not supported (stated by the business).
+            if (marketParticipant == null)
+            {
+                var newMarketParticipant = CreateMarketParticipant(actor);
+                _chargesDatabaseContext.MarketParticipants.Add(newMarketParticipant);
+            }
+            else
+            {
+                var businessProcessRole = GetBusinessProcessRole(actor.Roles);
+                MarketParticipantUpdater.Update(marketParticipant, actor, businessProcessRole);
+            }
         }
 
         private MarketParticipant CreateMarketParticipant(Actor actor)

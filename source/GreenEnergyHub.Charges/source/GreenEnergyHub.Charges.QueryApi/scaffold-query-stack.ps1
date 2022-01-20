@@ -26,7 +26,7 @@
 $connectionString = "Server=(localdb)\mssqllocaldb;Database=ChargesDatabase;Trusted_Connection=True;"
 $context = "QueryDbContext"
 $outputDir = "Model"
-$schema = "charges"
+$schema = "Charges"
 
 # Update database model
 Invoke-Expression "dotnet build ..\GreenEnergyHub.Charges.ApplyDBMigrationsApp\GreenEnergyHub.Charges.ApplyDBMigrationsApp.csproj"

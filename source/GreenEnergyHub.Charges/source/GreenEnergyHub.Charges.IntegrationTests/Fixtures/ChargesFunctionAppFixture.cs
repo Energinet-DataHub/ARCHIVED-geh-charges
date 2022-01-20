@@ -63,6 +63,9 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures
         [NotNull]
         public ServiceBusTestListener? CreateLinkReplyQueueListener { get; private set; }
 
+        [NotNull]
+        public TopicResource? MeteringPointCreatedTopic { get; private set; }
+
         private AzuriteManager AzuriteManager { get; }
 
         private IntegrationTestConfiguration IntegrationTestConfiguration { get; }
@@ -168,11 +171,11 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures
                 .SetEnvironmentVariableToSubscriptionName(EnvironmentSettingNames.ChargeLinksRejectedSubscriptionName)
                 .CreateAsync();
 
-            var consumptionMeteringPointCreatedTopic = await ServiceBusResourceProvider
-                .BuildTopic(ChargesServiceBusResourceNames.ConsumptionMeteringPointCreatedTopicKey)
-                .SetEnvironmentVariableToTopicName(EnvironmentSettingNames.ConsumptionMeteringPointCreatedTopicName)
-                .AddSubscription(ChargesServiceBusResourceNames.ConsumptionMeteringPointCreatedSubscriptionName)
-                .SetEnvironmentVariableToSubscriptionName(EnvironmentSettingNames.ConsumptionMeteringPointCreatedSubscriptionName)
+            MeteringPointCreatedTopic = await ServiceBusResourceProvider
+                .BuildTopic(ChargesServiceBusResourceNames.MeteringPointCreatedTopicKey)
+                .SetEnvironmentVariableToTopicName(EnvironmentSettingNames.MeteringPointCreatedTopicName)
+                .AddSubscription(ChargesServiceBusResourceNames.MeteringPointCreatedSubscriptionName)
+                .SetEnvironmentVariableToSubscriptionName(EnvironmentSettingNames.MeteringPointCreatedSubscriptionName)
                 .CreateAsync();
 
             var chargeCreatedTopic = await ServiceBusResourceProvider
@@ -216,8 +219,9 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures
             // Overwrites the setting so the function app uses the database we have control of in the test
             Environment.SetEnvironmentVariable(EnvironmentSettingNames.ChargeDbConnectionString, DatabaseManager.ConnectionString);
 
-            // Actor register is not currently being integration tested, but the environment variable is still required
-            Environment.SetEnvironmentVariable(EnvironmentSettingNames.ActorRegisterDbConnectionString, "UNUSED IN DOMAIN TESTS");
+            // Only actor register thing being tested is connectivity - so for now we just cheat and provide another connection string
+            var actorRegisterConnectionString = DatabaseManager.ConnectionString;
+            Environment.SetEnvironmentVariable(EnvironmentSettingNames.ActorRegisterDbConnectionString, actorRegisterConnectionString);
         }
 
         /// <inheritdoc/>

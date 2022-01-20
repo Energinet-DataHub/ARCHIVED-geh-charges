@@ -14,7 +14,7 @@
 
 /*
 =================================================================================
-Infrastructure for a representation of the queues of externally published integration events.
+Infrastructure for a representation of the topics of externally published integration events.
 This is used to be able to fully explore and integration test the charges domain
 without relying on the external dependencies to other domains.
 
@@ -23,11 +23,10 @@ on the existing Service Bus Namespace.
 =================================================================================
 */
 
-module "sbs_metering_point_created" {
-  source              = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//service-bus-subscription?ref=2.0.0"
-  name                = local.METERING_POINT_CREATED_SUBSCRIPTION_NAME
-  resource_group_name = azurerm_resource_group.main.name
+module "sbt_metering_point_created" {
+  source              = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//service-bus-topic?ref=2.0.0"
+  name                = local.METERING_POINT_CREATED_TOPIC_NAME
   namespace_name      = module.sbn_external_integration_events.name
-  topic_name          = module.sbt_metering_point_created.name
-  max_delivery_count  = 1
+  resource_group_name = azurerm_resource_group.main.name
+  dependencies        = [module.sbn_external_integration_events.dependent_on]
 }
