@@ -178,13 +178,13 @@ CREATE TABLE [MessageHub].[AvailableChargeDataPoints](
 
 CREATE TABLE [MessageHub].[AvailableChargeLinksData](
     [Id] [uniqueidentifier] NOT NULL,
-    [RecipientId] [varchar](70) NOT NULL,
+    [RecipientId] [nvarchar](35) NOT NULL,
     [RecipientRole] [int] NOT NULL,
     [BusinessReasonCode] [int] NOT NULL,
-    [ChargeId] [varchar](70) NOT NULL,
-    [ChargeOwner] [varchar](70) NOT NULL,
+    [ChargeId] [nvarchar](35) NOT NULL,
+    [ChargeOwner] [nvarchar](35) NOT NULL,
     [ChargeType] [int] NOT NULL,
-    [MeteringPointId] [varchar](70) NOT NULL,
+    [MeteringPointId] [nvarchar](50) NOT NULL,
     [Factor] [int] NOT NULL,
     [StartDateTime] [datetime2](7) NOT NULL,
     [EndDateTime] [datetime2](7) NOT NULL,
