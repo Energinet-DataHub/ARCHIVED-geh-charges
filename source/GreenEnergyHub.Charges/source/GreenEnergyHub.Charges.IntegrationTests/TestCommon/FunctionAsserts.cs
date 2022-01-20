@@ -20,9 +20,9 @@ using FluentAssertions;
 
 namespace GreenEnergyHub.Charges.IntegrationTests.TestCommon
 {
-    public static class FunctionExecuted
+    public static class FunctionAsserts
     {
-        public static async Task AssertAsync(FunctionAppHostManager hostManager, string functionName)
+        public static async Task AssertHasExecutedAsync(FunctionAppHostManager hostManager, string functionName)
         {
             var waitTimespan = TimeSpan.FromSeconds(30);
 

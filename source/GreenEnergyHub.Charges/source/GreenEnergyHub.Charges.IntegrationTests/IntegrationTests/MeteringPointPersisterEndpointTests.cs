@@ -93,7 +93,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests
                     () => Fixture.MeteringPointCreatedTopic.SenderClient.SendMessageAsync(message), correlationId, parentId);
 
                 // Assert
-                await FunctionExecuted.AssertAsync(Fixture.HostManager, nameof(MeteringPointPersisterEndpoint)).ConfigureAwait(false);
+                await FunctionAsserts.AssertHasExecutedAsync(Fixture.HostManager, nameof(MeteringPointPersisterEndpoint)).ConfigureAwait(false);
                 await using var context = Fixture.DatabaseManager.CreateDbContext();
                 var meteringPoint = context.MeteringPoints.SingleOrDefault(x => x.MeteringPointId == meteringPointId);
                 meteringPoint.Should().NotBeNull();
