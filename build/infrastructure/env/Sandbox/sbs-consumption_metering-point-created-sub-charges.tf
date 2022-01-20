@@ -23,11 +23,11 @@ on the existing Service Bus Namespace.
 =================================================================================
 */
 
-module "sbs_consumption_metering_point_created" {
+module "sbs_metering_point_created" {
   source              = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//service-bus-subscription?ref=2.0.0"
-  name                = local.CONSUMPTION_METERING_POINT_CREATED_SUBSCRIPTION_NAME
+  name                = local.METERING_POINT_CREATED_SUBSCRIPTION_NAME
   resource_group_name = azurerm_resource_group.main.name
   namespace_name      = module.sbn_external_integration_events.name
-  topic_name          = module.sbt_consumption_metering_point_created.name
+  topic_name          = module.sbt_metering_point_created.name
   max_delivery_count  = 1
 }
