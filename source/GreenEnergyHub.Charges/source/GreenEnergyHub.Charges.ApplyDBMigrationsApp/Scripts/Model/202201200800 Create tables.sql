@@ -261,7 +261,7 @@ CREATE TABLE [MessageHub].[AvailableChargeReceiptValidationError](
     GO
     SET ANSI_PADDING ON
     GO
-/****** Object:  Index [IX_SenderProvidedChargeId_ChargeType_MarketParticipantId]    Script Date: 20-01-2022 07:51:33 ******/
+
 CREATE NONCLUSTERED INDEX [IX_SenderProvidedChargeId_ChargeType_MarketParticipantId] ON [Charges].[Charge]
 (
 	[SenderProvidedChargeId] ASC,
@@ -269,14 +269,14 @@ CREATE NONCLUSTERED INDEX [IX_SenderProvidedChargeId_ChargeType_MarketParticipan
 	[OwnerId] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 GO
-/****** Object:  Index [IX_MeteringPointId_ChargeId]    Script Date: 20-01-2022 07:51:33 ******/
+
 CREATE NONCLUSTERED INDEX [IX_MeteringPointId_ChargeId] ON [Charges].[ChargeLink]
 (
 	[MeteringPointId] DESC,
 	[ChargeId] DESC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 GO
-/****** Object:  Index [IX_MeteringPointType_StartDateTime_EndDateTime]    Script Date: 20-01-2022 07:51:33 ******/
+
 CREATE NONCLUSTERED INDEX [IX_MeteringPointType_StartDateTime_EndDateTime] ON [Charges].[DefaultChargeLink]
 (
 	[MeteringPointType] ASC,
@@ -286,19 +286,19 @@ CREATE NONCLUSTERED INDEX [IX_MeteringPointType_StartDateTime_EndDateTime] ON [C
 GO
 SET ANSI_PADDING ON
 GO
-/****** Object:  Index [IX_MeteringPointId]    Script Date: 20-01-2022 07:51:33 ******/
+
 CREATE NONCLUSTERED INDEX [IX_MeteringPointId] ON [Charges].[MeteringPoint]
 (
 	[MeteringPointId] DESC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 GO
-/****** Object:  Index [i1]    Script Date: 20-01-2022 07:51:33 ******/
+
 CREATE NONCLUSTERED INDEX [i1] ON [MessageHub].[AvailableChargeLinksReceiptValidationError]
 (
 	[AvailableChargeLinkReceiptDataId] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 GO
-/****** Object:  Index [i1]    Script Date: 20-01-2022 07:51:33 ******/
+
 CREATE NONCLUSTERED INDEX [i1] ON [MessageHub].[AvailableChargeReceiptValidationError]
 (
 	[AvailableChargeReceiptDataId] ASC
