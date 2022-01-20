@@ -22,6 +22,7 @@ using FluentAssertions;
 using GreenEnergyHub.Charges.IntegrationTests.Fixtures;
 using GreenEnergyHub.Charges.IntegrationTests.TestFiles.Charges;
 using GreenEnergyHub.Charges.IntegrationTests.TestHelpers;
+using Microsoft.Identity.Client;
 using NodaTime;
 using Xunit;
 using Xunit.Abstractions;
@@ -58,7 +59,10 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             [Fact]
             public async Task When_ChargeIsReceived_Then_AHttp200ResponseIsReturned()
             {
-                var request = CreateHttpRequest(ChargeDocument.AnyValid, out string _);
+                var request = CreateHttpRequest(ChargeDocument.AnyValid, out _);
+                var confidentialClientApp = CreateConfidentialClientApp();
+                var result = await confidentialClientApp.AcquireTokenForClient(Fixture.AuthorizationConfiguration.BackendAppScope).ExecuteAsync().ConfigureAwait(false);
+                request.Headers.Add("Authorization", $"Bearer {result.AccessToken}");
 
                 var actualResponse = await Fixture.HostManager.HttpClient.SendAsync(request);
 
@@ -144,6 +148,19 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 request.ConfigureTraceContext(correlationId);
 
                 return request;
+            }
+
+            private IConfidentialClientApplication CreateConfidentialClientApp()
+            {
+                var (teamClientId, teamClientSecret) = Fixture.AuthorizationConfiguration.ClientCredentialsSettings;
+
+                var confidentialClientApp = ConfidentialClientApplicationBuilder
+                    .Create(teamClientId)
+                    .WithClientSecret(teamClientSecret)
+                    .WithAuthority(new Uri($"https://login.microsoftonline.com/{Fixture.AuthorizationConfiguration.B2cTenantId}"))
+                    .Build();
+
+                return confidentialClientApp;
             }
         }
     }
