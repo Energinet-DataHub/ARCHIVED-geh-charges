@@ -63,6 +63,9 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures
         [NotNull]
         public ServiceBusTestListener? CreateLinkReplyQueueListener { get; private set; }
 
+        [NotNull]
+        public TopicResource? MeteringPointCreatedTopic { get; private set; }
+
         private AzuriteManager AzuriteManager { get; }
 
         private IntegrationTestConfiguration IntegrationTestConfiguration { get; }
@@ -168,11 +171,11 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures
                 .SetEnvironmentVariableToSubscriptionName(EnvironmentSettingNames.ChargeLinksRejectedSubscriptionName)
                 .CreateAsync();
 
-            var consumptionMeteringPointCreatedTopic = await ServiceBusResourceProvider
-                .BuildTopic(ChargesServiceBusResourceNames.ConsumptionMeteringPointCreatedTopicKey)
-                .SetEnvironmentVariableToTopicName(EnvironmentSettingNames.ConsumptionMeteringPointCreatedTopicName)
-                .AddSubscription(ChargesServiceBusResourceNames.ConsumptionMeteringPointCreatedSubscriptionName)
-                .SetEnvironmentVariableToSubscriptionName(EnvironmentSettingNames.ConsumptionMeteringPointCreatedSubscriptionName)
+            MeteringPointCreatedTopic = await ServiceBusResourceProvider
+                .BuildTopic(ChargesServiceBusResourceNames.MeteringPointCreatedTopicKey)
+                .SetEnvironmentVariableToTopicName(EnvironmentSettingNames.MeteringPointCreatedTopicName)
+                .AddSubscription(ChargesServiceBusResourceNames.MeteringPointCreatedSubscriptionName)
+                .SetEnvironmentVariableToSubscriptionName(EnvironmentSettingNames.MeteringPointCreatedSubscriptionName)
                 .CreateAsync();
 
             var chargeCreatedTopic = await ServiceBusResourceProvider

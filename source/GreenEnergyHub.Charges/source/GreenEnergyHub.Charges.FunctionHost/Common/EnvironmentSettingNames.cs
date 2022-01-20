@@ -45,8 +45,8 @@ namespace GreenEnergyHub.Charges.FunctionHost.Common
         public const string ChargeLinksCreatedTopicName = "CHARGE_LINKS_CREATED_TOPIC_NAME";
 
         // Integration, metering point domain
-        public const string ConsumptionMeteringPointCreatedTopicName = "CONSUMPTION_METERING_POINT_CREATED_TOPIC_NAME";
-        public const string ConsumptionMeteringPointCreatedSubscriptionName = "CONSUMPTION_METERING_POINT_CREATED_SUBSCRIPTION_NAME";
+        public const string MeteringPointCreatedTopicName = "METERING_POINT_CREATED_TOPIC_NAME";
+        public const string MeteringPointCreatedSubscriptionName = "METERING_POINT_CREATED_SUBSCRIPTION_NAME";
         public const string CreateLinksRequestQueueName = "CREATE_LINKS_REQUEST_QUEUE_NAME";
         public const string DefaultChargeLinksDataAvailableNotifiedTopicName =
             "DEFAULT_CHARGE_LINKS_DATA_AVAILABLE_NOTIFIED_TOPIC_NAME";
