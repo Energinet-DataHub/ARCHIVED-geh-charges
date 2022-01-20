@@ -59,33 +59,25 @@ limitations under the License.
       <EmbeddedResource Include="Scripts\Model\202201121500 Store sender of available data.sql" />
       <EmbeddedResource Include="Scripts\Model\202201171730 Ensure unique market participant ID.sql" />
       <EmbeddedResource Include="Scripts\Model\202201181330 Use single market participant business process role.sql" />
-      <EmbeddedResource Include="Scripts\Seed\202201121230 Move hub sender to actor register.sql" />
       <EmbeddedResource Include="Scripts\Model\202201111000 Rename to AvailableChargeLinksReceiptValidationError.sql" />
-      <EmbeddedResource Include="Scripts\Test\202105201033 New MarketParticipants.sql" />
       <EmbeddedResource Include="Scripts\Model\202105191329 New charge model.sql" />
       <EmbeddedResource Include="Scripts\Model\202107011226 New Metering Point.sql" />
       <EmbeddedResource Include="Scripts\Model\202108130551 Default Charge Links.sql" />
-      <EmbeddedResource Include="Scripts\Seed\202108130611 System operator market participant.sql" />
-      <EmbeddedResource Include="Scripts\Seed\202108130629 Default charges.sql" />
-      <EmbeddedResource Include="Scripts\Seed\202108131029 Default charge links.sql" />
       <EmbeddedResource Include="Scripts\Model\202108251511 Use DateTime2.sql" />
-      <EmbeddedResource Include="Scripts\Test\202201041056 Add Metering Point Test Data to avoid using the same mp due to new validation rules.sql" />
-      <EmbeddedResource Include="Scripts\Test\202111300728 Metering Point Test Data with type 3.sql" />
-      <EmbeddedResource Include="Scripts\Test\202109080933 Metering Point Test Data.sql" />
-      <EmbeddedResource Include="Scripts\Test\202109080933 Update Metering Point Test Data.sql" />
+      <EmbeddedResource Include="Scripts\Model\202201200730 Make charge enddatetime not null.sql" />
+      <EmbeddedResource Include="Scripts\Seed\202201200621 Add default charges owner.sql" />
+      <EmbeddedResource Include="Scripts\Test\202201200630 Add metering points.sql" />
       <EmbeddedResource Include="Scripts\Model\202109211442 Recreate all models with no row ids.sql" />
-      <EmbeddedResource Include="Scripts\Seed\202109211444 System operator market participant no rowid.sql" />
-      <EmbeddedResource Include="Scripts\Seed\202109211445 default charges no rowId.sql" />
-      <EmbeddedResource Include="Scripts\Seed\202109211447 default charge links no rowId.sql" />
-      <EmbeddedResource Include="Scripts\Test\202109211448 New MarketParticipants no rowId.sql" />
-      <EmbeddedResource Include="Scripts\Test\202109211449 Metering Point Test Data no rowId.sql" />
+      <EmbeddedResource Include="Scripts\Seed\202201200629 Add default charges.sql" />
+      <EmbeddedResource Include="Scripts\Seed\202201200630 Add default charge links.sql" />
+      <EmbeddedResource Include="Scripts\Test\202201200625 Add market participants.sql" />
       <EmbeddedResource Include="Scripts\Model\202110121245 Create AvailableChargeLinksData table.sql" />
-      <EmbeddedResource Include="Scripts\Test\202110281013 Add inactive market partcipant.sql" />
       <EmbeddedResource Include="Scripts\Model\202111161258 Create AvailableChargeLinkReceiptData table.sql" />
       <EmbeddedResource Include="Scripts\Model\202111171630 Rename RequestTime to RequestDateTime in Available tables.sql" />
       <EmbeddedResource Include="Scripts\Model\202111250821 Create AvailableChargeReceiptData tables.sql" />
       <EmbeddedResource Include="Scripts\Model\202111251041 Change ChargeLinkReceipt Text to NVARCHAR.sql" />
-      <EmbeddedResource Include="Scripts\Test\202112171600 Add charge link test data.sql" />
+      <EmbeddedResource Include="Scripts\Test\202201200635 Add charges and links.sql" />
+      <EmbeddedResource Include="Scripts\Seed\202201200620 Reset database.sql" />
     </ItemGroup>
 
     <ItemGroup>

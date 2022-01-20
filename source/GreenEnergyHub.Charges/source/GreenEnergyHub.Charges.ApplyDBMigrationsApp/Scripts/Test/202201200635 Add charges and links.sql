@@ -11,10 +11,10 @@ SELECT @chargeId2 = NEWID()
 SELECT @chargeId3 = NEWID()
 SELECT @chargeId4 = NEWID()
 
-INSERT INTO charges.charge VALUES (@chargeId, 'TestTariff', 3, @chargeOwnerId, 0, 2, 0, 'Description...', 'Grid Access Provider test tariff', 1, '1999-12-31 23:00:00', NULL)
-INSERT INTO charges.charge VALUES (@chargeId2, 'TestTariff2', 3, @chargeOwnerId, 0, 2, 1, 'Description...', 'Grid Access Provider test tariff2', 2, '1999-12-31 23:00:00', NULL)
-INSERT INTO charges.charge VALUES (@chargeId3, 'TestFee', 2, @chargeOwnerId, 0, 3, 0, 'Description...', 'Grid Access Provider test fee', 2, '1999-12-31 23:00:00', NULL)
-INSERT INTO charges.charge VALUES (@chargeId4, 'TestSubscription', 1, @chargeOwnerId, 0, 4, 0, 'Description...', 'Grid Access Provider test subscription', 2, '1999-12-31 23:00:00', NULL)
+INSERT INTO charges.charge VALUES (@chargeId, 'TestTariff', 3, @chargeOwnerId, 0, 2, 0, 'Description...', 'Grid Access Provider test tariff', 1, '1999-12-31 23:00:00', '9999-12-31 23:59:59')
+INSERT INTO charges.charge VALUES (@chargeId2, 'TestTariff2', 3, @chargeOwnerId, 0, 2, 1, 'Description...', 'Grid Access Provider test tariff2', 2, '1999-12-31 23:00:00', '9999-12-31 23:59:59')
+INSERT INTO charges.charge VALUES (@chargeId3, 'TestFee', 2, @chargeOwnerId, 0, 3, 0, 'Description...', 'Grid Access Provider test fee', 2, '1999-12-31 23:00:00', '9999-12-31 23:59:59')
+INSERT INTO charges.charge VALUES (@chargeId4, 'TestSubscription', 1, @chargeOwnerId, 0, 4, 0, 'Description...', 'Grid Access Provider test subscription', 2, '1999-12-31 23:00:00', '9999-12-31 23:59:59')
 
 SELECT @meteringPointId = Id FROM charges.meteringpoint WHERE meteringpointid = '571313180000000005'
 
