@@ -80,9 +80,4 @@ limitations under the License.
       <EmbeddedResource Include="Scripts\Seed\202201200620 Reset database.sql" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="Scripts\PostDeploy\" />
-      <Folder Include="Scripts\PreDeploy\" />
-    </ItemGroup>
-
 </Project>
