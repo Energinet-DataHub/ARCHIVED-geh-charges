@@ -48,8 +48,8 @@ runs:
         name: databasemigration
         path: ${{ inputs.RELEASE_FOLDER_PATH }}/migration/databasemigration
 
-    - name: Publish SystemTests to release folder
-      uses: actions/download-artifact@v2
-      with:
-        name: systemtests
-        path: ${{ inputs.RELEASE_FOLDER_PATH }}/systemtests
+    #- name: Publish SystemTests to release folder
+    #  uses: actions/download-artifact@v2
+    #  with:
+    #    name: systemtests
+    #    path: ${{ inputs.RELEASE_FOLDER_PATH }}/systemtests
