@@ -13,21 +13,18 @@
 // limitations under the License.
 
 using System;
-using GreenEnergyHub.Charges.Domain.Dtos.MeteringPointCreatedEvents;
-using GreenEnergyHub.Charges.Domain.MeteringPoints;
-using Xunit;
-using Xunit.Categories;
 
-namespace GreenEnergyHub.Charges.Tests.Domain.MeteringPoints
+namespace GreenEnergyHub.Charges.IntegrationTests.TestHelpers
 {
-    [UnitTest]
-    public class MeteringPointFactoryTests
+    public static class DateTimeProtobufExtension
     {
-        [Fact]
-        public void Create_WhenCalledWithNull_ThrowsException()
+        public static Google.Protobuf.WellKnownTypes.Timestamp ToProtoBufTimestamp(this DateTime dateTime)
         {
-            MeteringPointCreatedEvent? input = null;
-            Assert.Throws<ArgumentNullException>(() => MeteringPointFactory.Create(input!));
+            return Google.Protobuf.WellKnownTypes.
+                        Timestamp.FromDateTime(
+                            DateTime.SpecifyKind(
+                                dateTime,
+                                DateTimeKind.Utc));
         }
     }
 }
