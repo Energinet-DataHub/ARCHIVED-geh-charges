@@ -17,6 +17,7 @@ using System.Net;
 using System.Threading.Tasks;
 using Energinet.DataHub.Core.FunctionApp.TestCommon;
 using FluentAssertions;
+using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.IntegrationTests.Fixtures;
 using GreenEnergyHub.Charges.IntegrationTests.TestFiles.Charges;
 using GreenEnergyHub.Charges.IntegrationTests.TestHelpers;
@@ -39,6 +40,14 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             public RunAsync(ChargesFunctionAppFixture fixture, ITestOutputHelper testOutputHelper)
                 : base(fixture, testOutputHelper)
             {
+                var dbc = fixture.DatabaseManager.CreateDbContext();
+                dbc.MarketParticipants.Add(new MarketParticipant(
+                    new Guid("ed6c94f3-24a8-43b3-913d-bf7513390a32"),
+                    "81502664",
+                    true,
+                    MarketParticipantRole.GridAccessProvider));
+                dbc.SaveChanges();
+
                 _httpRequestGenerator = new HttpRequestGenerator(fixture, "api/ChargeIngestion");
             }
 
