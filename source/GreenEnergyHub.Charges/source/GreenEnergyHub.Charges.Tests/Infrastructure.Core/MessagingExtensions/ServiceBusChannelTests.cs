@@ -20,6 +20,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
 using Azure.Messaging.ServiceBus;
+using Energinet.DataHub.Core.FunctionApp.Common;
+using Energinet.DataHub.Core.FunctionApp.Common.Abstractions.Actor;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Infrastructure.Core.Correlation;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessageMetaData;
@@ -45,6 +47,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Core.MessagingExtensions
             [NotNull] [Frozen] Mock<ICorrelationContext> correlationContext,
             [NotNull] [Frozen] Mock<IMessageMetaDataContext> messageMetaDataContext,
             [NotNull] [Frozen] Mock<MockableServiceBusSender> serviceBusSender,
+            [NotNull] [Frozen] Mock<IActorContext> actorContext,
             [NotNull] byte[] content)
         {
             // Arrange
@@ -56,7 +59,11 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Core.MessagingExtensions
                 .Callback<ServiceBusMessage, CancellationToken>((message, _) => receivedMessage = message);
             var genericSender = new ServiceBusSender<TestOutboundMessage>(serviceBusSender.Object);
 
-            var serviceBusMessageFactory = new ServiceBusMessageFactory(correlationContext.Object, messageMetaDataContext.Object);
+            var serviceBusMessageFactory = new ServiceBusMessageFactory(
+            correlationContext.Object,
+            messageMetaDataContext.Object,
+            actorContext.Object);
+
             correlationContext.Setup(c => c.Id).Returns(string.Empty);
 
             var sut = new TestableServiceBusChannel<TestOutboundMessage>(
@@ -77,6 +84,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Core.MessagingExtensions
             [NotNull] [Frozen] Mock<ICorrelationContext> correlationContext,
             [NotNull] [Frozen] Mock<IMessageMetaDataContext> messageMetaDataContext,
             [NotNull] [Frozen] Mock<MockableServiceBusSender> serviceBusSender,
+            [NotNull] [Frozen] Mock<IActorContext> actorContext,
             [NotNull] byte[] content,
             [NotNull] string correlationId)
         {
@@ -91,7 +99,10 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Core.MessagingExtensions
             correlationContext.Setup(c => c.Id).Returns(correlationId);
             var genericSender = new ServiceBusSender<TestOutboundMessage>(serviceBusSender.Object);
 
-            var serviceBusMessageFactory = new ServiceBusMessageFactory(correlationContext.Object, messageMetaDataContext.Object);
+            var serviceBusMessageFactory = new ServiceBusMessageFactory(
+                correlationContext.Object,
+                messageMetaDataContext.Object,
+                actorContext.Object);
 
             var sut = new TestableServiceBusChannel<TestOutboundMessage>(
                 genericSender, serviceBusMessageFactory);
@@ -111,8 +122,15 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Core.MessagingExtensions
             // Arrange
             var correlationContext = new CorrelationContext();
             var messageMetaDataContext = new MessageMetaDataContext(SystemClock.Instance);
+            var actorContext = new ActorContext();
+
             correlationContext.SetId(Guid.NewGuid().ToString().Replace("-", string.Empty));
-            var serviceBusMessageFactory = new ServiceBusMessageFactory(correlationContext, messageMetaDataContext);
+
+            var serviceBusMessageFactory = new ServiceBusMessageFactory(
+                correlationContext,
+                messageMetaDataContext,
+                actorContext);
+
             var connectionString = "<your service bus connection string>";
             await using ServiceBusClient client = new(connectionString);
 
@@ -136,6 +154,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Core.MessagingExtensions
             [NotNull] [Frozen] Mock<ICorrelationContext> correlationContext,
             [NotNull] [Frozen] Mock<IMessageMetaDataContext> messageMetaDataContext,
             [NotNull] [Frozen] Mock<MockableServiceBusSender> serviceBusSender,
+            [NotNull] [Frozen] Mock<IActorContext> actorContext,
             [NotNull] string correlationId,
             [NotNull] byte[] content)
         {
@@ -150,7 +169,10 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Core.MessagingExtensions
 
             correlationContext.Setup(c => c.Id).Returns(correlationId);
             messageMetaDataContext.Setup(c => c.ReplyTo).Returns(string.Empty);
-            var serviceBusMessageFactory = new ServiceBusMessageFactory(correlationContext.Object, messageMetaDataContext.Object);
+            var serviceBusMessageFactory = new ServiceBusMessageFactory(
+                correlationContext.Object,
+                messageMetaDataContext.Object,
+                actorContext.Object);
 
             var sut = new TestableServiceBusChannel<TestOutboundMessage>(
                 genericSender,
