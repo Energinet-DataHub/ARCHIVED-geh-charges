@@ -44,11 +44,11 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Core.MessagingExtensions
         [Theory]
         [InlineAutoDomainData]
         public async Task WriteAsync_WhenNoCorrelationId_SendsMessageWithoutCorrelationId(
-            [NotNull] [Frozen] Mock<ICorrelationContext> correlationContext,
-            [NotNull] [Frozen] Mock<IMessageMetaDataContext> messageMetaDataContext,
-            [NotNull] [Frozen] Mock<MockableServiceBusSender> serviceBusSender,
-            [NotNull] [Frozen] Mock<IActorContext> actorContext,
-            [NotNull] byte[] content)
+            [Frozen] Mock<ICorrelationContext> correlationContext,
+            [Frozen] Mock<IMessageMetaDataContext> messageMetaDataContext,
+            [Frozen] Mock<MockableServiceBusSender> serviceBusSender,
+            [Frozen] Mock<IActorContext> actorContext,
+            byte[] content)
         {
             // Arrange
             ServiceBusMessage? receivedMessage = null;
@@ -81,12 +81,12 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Core.MessagingExtensions
         [Theory]
         [InlineAutoDomainData]
         public async Task WriteAsync_WhenCorrelationId_SendsMessageWithCorrelationId(
-            [NotNull] [Frozen] Mock<ICorrelationContext> correlationContext,
-            [NotNull] [Frozen] Mock<IMessageMetaDataContext> messageMetaDataContext,
-            [NotNull] [Frozen] Mock<MockableServiceBusSender> serviceBusSender,
-            [NotNull] [Frozen] Mock<IActorContext> actorContext,
-            [NotNull] byte[] content,
-            [NotNull] string correlationId)
+            [Frozen] Mock<ICorrelationContext> correlationContext,
+            [Frozen] Mock<IMessageMetaDataContext> messageMetaDataContext,
+            [Frozen] Mock<MockableServiceBusSender> serviceBusSender,
+            [Frozen] Mock<IActorContext> actorContext,
+            byte[] content,
+            string correlationId)
         {
             // Arrange
             ServiceBusMessage? receivedMessage = null;
@@ -151,12 +151,12 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Core.MessagingExtensions
         [Theory]
         [InlineAutoDomainData]
         public async Task WriteAsync_WhenNoReplyTo_SendsMessageWithoutReplyTo(
-            [NotNull] [Frozen] Mock<ICorrelationContext> correlationContext,
-            [NotNull] [Frozen] Mock<IMessageMetaDataContext> messageMetaDataContext,
-            [NotNull] [Frozen] Mock<MockableServiceBusSender> serviceBusSender,
-            [NotNull] [Frozen] Mock<IActorContext> actorContext,
-            [NotNull] string correlationId,
-            [NotNull] byte[] content)
+            [Frozen] Mock<ICorrelationContext> correlationContext,
+            [Frozen] Mock<IMessageMetaDataContext> messageMetaDataContext,
+            [Frozen] Mock<MockableServiceBusSender> serviceBusSender,
+            [Frozen] Mock<IActorContext> actorContext,
+            string correlationId,
+            byte[] content)
         {
             // Arrange
             ServiceBusMessage? receivedMessage = null;
