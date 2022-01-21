@@ -33,7 +33,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.TestHelpers
             _endpointUrl = endpointUrl;
         }
 
-        public async Task<(HttpRequestMessage Request, string CorrelationId)> CreateHttpRequestAsync(string testFilePath)
+        public async Task<(HttpRequestMessage Request, string CorrelationId)> CreateHttpPostRequestAsync(string testFilePath)
         {
             var clock = SystemClock.Instance;
             var chargeXml = EmbeddedResourceHelper.GetEmbeddedFile(testFilePath, clock);
@@ -45,13 +45,31 @@ namespace GreenEnergyHub.Charges.IntegrationTests.TestHelpers
             };
             request.ConfigureTraceContext(correlationId);
 
-            var confidentialClientApp = CreateConfidentialClientApp();
-            var result = await confidentialClientApp.AcquireTokenForClient(
-                _chargesFunctionAppFixture.AuthorizationConfiguration.BackendAppScope)
-                .ExecuteAsync().ConfigureAwait(false);
-            request.Headers.Add("Authorization", $"Bearer {result.AccessToken}");
+            var authenticationResult = await GetAuthenticationTokenAsync();
+            request.Headers.Add("Authorization", $"Bearer {authenticationResult.AccessToken}");
 
             return (request, correlationId);
+        }
+
+        public async Task<(HttpRequestMessage Request, string CorrelationId)> CreateHttpGetRequestAsync()
+        {
+            var correlationId = CorrelationIdGenerator.Create();
+            var request = new HttpRequestMessage(HttpMethod.Get, _endpointUrl);
+            request.ConfigureTraceContext(correlationId);
+
+            var authenticationResult = await GetAuthenticationTokenAsync();
+            request.Headers.Add("Authorization", $"Bearer {authenticationResult.AccessToken}");
+
+            return (request, correlationId);
+        }
+
+        private async Task<AuthenticationResult> GetAuthenticationTokenAsync()
+        {
+            var confidentialClientApp = CreateConfidentialClientApp();
+            var result = await confidentialClientApp.AcquireTokenForClient(
+                    _chargesFunctionAppFixture.AuthorizationConfiguration.BackendAppScope)
+                .ExecuteAsync().ConfigureAwait(false);
+            return result;
         }
 
         private IConfidentialClientApplication CreateConfidentialClientApp()
