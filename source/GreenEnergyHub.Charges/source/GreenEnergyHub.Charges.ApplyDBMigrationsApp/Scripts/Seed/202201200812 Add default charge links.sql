@@ -1,5 +1,3 @@
-/* This seed is added in the same PR as the as table with settings and is therefore not dangerous in regards to existing data or migration */
-
 /* Charge 40000, consumption */
 INSERT INTO [Charges].[DefaultChargeLink] (Id, MeteringPointType, ChargeId, StartDateTime, EndDateTime) VALUES (
   NEWID(),
@@ -7,8 +5,8 @@ INSERT INTO [Charges].[DefaultChargeLink] (Id, MeteringPointType, ChargeId, Star
   (SELECT Id FROM [Charges].[Charge]
     WHERE
       SenderProvidedChargeId = '40000'
-      AND MarketParticipantId IN (SELECT Id FROM [Charges].[MarketParticipant] WHERE MarketParticipantId = '5790000432752')
-      AND ChargeType = 3), /* ChargeRowId */
+      AND OwnerId IN (SELECT Id FROM [Charges].[MarketParticipant] WHERE MarketParticipantId = '5790000432752')
+      AND Type = 3), /* ChargeRowId */
   '2014-12-31 23:00', /* StartDateTime */
   '9999-12-31 23:59:59') /* EndDateTime */
   
@@ -19,8 +17,8 @@ INSERT INTO [Charges].[DefaultChargeLink] (Id, MeteringPointType, ChargeId, Star
   (SELECT Id FROM [Charges].[Charge]
     WHERE
       SenderProvidedChargeId = '40010'
-      AND MarketParticipantId IN (SELECT Id FROM [Charges].[MarketParticipant] WHERE MarketParticipantId = '5790000432752')
-      AND ChargeType = 3), /* ChargeRowId */
+      AND OwnerId IN (SELECT Id FROM [Charges].[MarketParticipant] WHERE MarketParticipantId = '5790000432752')
+      AND Type = 3), /* ChargeRowId */
   '2014-12-31 23:00', /* StartDateTime */
   '9999-12-31 23:59:59') /* EndDateTime */
 
@@ -31,8 +29,8 @@ INSERT INTO [Charges].[DefaultChargeLink] (Id, MeteringPointType, ChargeId, Star
   (SELECT Id FROM [Charges].[Charge]
     WHERE
       SenderProvidedChargeId = '41000'
-      AND MarketParticipantId IN (SELECT Id FROM [Charges].[MarketParticipant] WHERE MarketParticipantId = '5790000432752')
-      AND ChargeType = 3), /* ChargeRowId */
+      AND OwnerId IN (SELECT Id FROM [Charges].[MarketParticipant] WHERE MarketParticipantId = '5790000432752')
+      AND Type = 3), /* ChargeRowId */
   '2014-12-31 23:00', /* StartDateTime */
   '9999-12-31 23:59:59') /* EndDateTime */
   
@@ -43,8 +41,8 @@ INSERT INTO [Charges].[DefaultChargeLink] (Id, MeteringPointType, ChargeId, Star
   (SELECT Id FROM [Charges].[Charge]
     WHERE
       SenderProvidedChargeId = '45012'
-      AND MarketParticipantId IN (SELECT Id FROM [Charges].[MarketParticipant] WHERE MarketParticipantId = '5790000432752')
-      AND ChargeType = 3), /* ChargeRowId */
+      AND OwnerId IN (SELECT Id FROM [Charges].[MarketParticipant] WHERE MarketParticipantId = '5790000432752')
+      AND Type = 3), /* ChargeRowId */
   '2014-12-31 23:00', /* StartDateTime */
   '9999-12-31 23:59:59') /* EndDateTime */
   
@@ -55,8 +53,8 @@ INSERT INTO [Charges].[DefaultChargeLink] (Id, MeteringPointType, ChargeId, Star
   (SELECT Id FROM [Charges].[Charge]
     WHERE
       SenderProvidedChargeId = '45013'
-      AND MarketParticipantId IN (SELECT Id FROM [Charges].[MarketParticipant] WHERE MarketParticipantId = '5790000432752')
-      AND ChargeType = 3), /* ChargeRowId */
+      AND OwnerId IN (SELECT Id FROM [Charges].[MarketParticipant] WHERE MarketParticipantId = '5790000432752')
+      AND Type = 3), /* ChargeRowId */
   '2014-12-31 23:00', /* StartDateTime */
   '9999-12-31 23:59:59') /* EndDateTime */
   
@@ -67,8 +65,8 @@ INSERT INTO [Charges].[DefaultChargeLink] (Id, MeteringPointType, ChargeId, Star
   (SELECT Id FROM [Charges].[Charge]
     WHERE
       SenderProvidedChargeId = 'EA-001'
-      AND MarketParticipantId IN (SELECT Id FROM [Charges].[MarketParticipant] WHERE MarketParticipantId = '5790000432752')
-      AND ChargeType = 3), /* ChargeRowId */
+      AND OwnerId IN (SELECT Id FROM [Charges].[MarketParticipant] WHERE MarketParticipantId = '5790000432752')
+      AND Type = 3), /* ChargeRowId */
   '2014-12-31 23:00', /* StartDateTime */
   '9999-12-31 23:59:59') /* EndDateTime */
   
@@ -79,8 +77,8 @@ INSERT INTO [Charges].[DefaultChargeLink] (Id, MeteringPointType, ChargeId, Star
   (SELECT Id FROM [Charges].[Charge]
     WHERE
       SenderProvidedChargeId = 'EA-001'
-      AND MarketParticipantId IN (SELECT Id FROM [Charges].[MarketParticipant] WHERE MarketParticipantId = '5790000432752')
-      AND ChargeType = 3), /* ChargeRowId */
+      AND OwnerId IN (SELECT Id FROM [Charges].[MarketParticipant] WHERE MarketParticipantId = '5790000432752')
+      AND Type = 3), /* ChargeRowId */
   '2014-12-31 23:00', /* StartDateTime */
   '9999-12-31 23:59:59') /* EndDateTime */
   
@@ -91,8 +89,7 @@ INSERT INTO [Charges].[DefaultChargeLink] (Id, MeteringPointType, ChargeId, Star
   (SELECT Id FROM [Charges].[Charge]
     WHERE
       SenderProvidedChargeId = 'EA-003'
-      AND MarketParticipantId IN (SELECT Id FROM [Charges].[MarketParticipant] WHERE MarketParticipantId = '5790000432752')
-      AND ChargeType = 3), /* ChargeRowId */
+      AND OwnerId IN (SELECT Id FROM [Charges].[MarketParticipant] WHERE MarketParticipantId = '5790000432752')
+      AND Type = 3), /* ChargeRowId */
   '2014-12-31 23:00', /* StartDateTime */
   '9999-12-31 23:59:59') /* EndDateTime */
-GO
