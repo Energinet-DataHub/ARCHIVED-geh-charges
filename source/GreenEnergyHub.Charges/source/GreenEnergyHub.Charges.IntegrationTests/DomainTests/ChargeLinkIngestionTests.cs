@@ -31,13 +31,14 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
         [Collection(nameof(ChargesFunctionAppCollectionFixture))]
         public class RunAsync : FunctionAppTestBase<ChargesFunctionAppFixture>, IAsyncLifetime
         {
+            private const string EndpointUrl = "api/ChargeLinksIngestion";
             private readonly HttpRequestGenerator _httpRequestGenerator;
 
             public RunAsync(ChargesFunctionAppFixture fixture, ITestOutputHelper testOutputHelper)
                 : base(fixture, testOutputHelper)
             {
                 TestDataGenerator.GenerateDataForIntegrationTests(Fixture);
-                _httpRequestGenerator = new HttpRequestGenerator(fixture, "api/ChargeLinksIngestion");
+                _httpRequestGenerator = new HttpRequestGenerator(fixture);
             }
 
             public Task InitializeAsync()
@@ -54,7 +55,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             [Fact]
             public async Task When_ChargeLinkIsReceived_Then_AHttp200ResponseIsReturned()
             {
-                var result = await _httpRequestGenerator.CreateHttpPostRequestAsync(ChargeLinkDocument.AnyValid);
+                var result = await _httpRequestGenerator.CreateHttpPostRequestAsync(
+                    EndpointUrl, ChargeLinkDocument.AnyValid);
 
                 var actualResponse = await Fixture.HostManager.HttpClient.SendAsync(result.Request);
 
@@ -65,7 +67,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             public async Task When_InvalidChargeLinkIsReceived_Then_AHttp400ResponseIsReturned()
             {
                 // Arrange
-                var result = await _httpRequestGenerator.CreateHttpPostRequestAsync(ChargeLinkDocument.InvalidSchema);
+                var result = await _httpRequestGenerator.CreateHttpPostRequestAsync(
+                    EndpointUrl, ChargeLinkDocument.InvalidSchema);
 
                 // Act
                 var actualResponse = await Fixture.HostManager.HttpClient.SendAsync(result.Request);
@@ -79,7 +82,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             {
                 // Arrange
                 var (request, correlationId) = await _httpRequestGenerator.CreateHttpPostRequestAsync(
-                    ChargeLinkDocument.TaxWithCreateAndUpdateDueToOverLappingPeriod);
+                    EndpointUrl, ChargeLinkDocument.TaxWithCreateAndUpdateDueToOverLappingPeriod);
 
                 // Act
                 await Fixture.HostManager.HttpClient.SendAsync(request);

@@ -25,21 +25,20 @@ namespace GreenEnergyHub.Charges.IntegrationTests.TestHelpers
     public class HttpRequestGenerator
     {
         private readonly ChargesFunctionAppFixture _chargesFunctionAppFixture;
-        private readonly string _endpointUrl;
 
-        public HttpRequestGenerator(ChargesFunctionAppFixture chargesFunctionAppFixture, string endpointUrl)
+        public HttpRequestGenerator(ChargesFunctionAppFixture chargesFunctionAppFixture)
         {
             _chargesFunctionAppFixture = chargesFunctionAppFixture;
-            _endpointUrl = endpointUrl;
         }
 
-        public async Task<(HttpRequestMessage Request, string CorrelationId)> CreateHttpPostRequestAsync(string testFilePath)
+        public async Task<(HttpRequestMessage Request, string CorrelationId)> CreateHttpPostRequestAsync(
+            string endpointUrl, string testFilePath)
         {
             var clock = SystemClock.Instance;
             var chargeXml = EmbeddedResourceHelper.GetEmbeddedFile(testFilePath, clock);
             var correlationId = CorrelationIdGenerator.Create();
 
-            var request = new HttpRequestMessage(HttpMethod.Post, _endpointUrl)
+            var request = new HttpRequestMessage(HttpMethod.Post, endpointUrl)
             {
                 Content = new StringContent(chargeXml, Encoding.UTF8, "application/xml"),
             };
@@ -51,10 +50,11 @@ namespace GreenEnergyHub.Charges.IntegrationTests.TestHelpers
             return (request, correlationId);
         }
 
-        public async Task<(HttpRequestMessage Request, string CorrelationId)> CreateHttpGetRequestAsync()
+        public async Task<(HttpRequestMessage Request, string CorrelationId)> CreateHttpGetRequestAsync(
+            string endpointUrl)
         {
             var correlationId = CorrelationIdGenerator.Create();
-            var request = new HttpRequestMessage(HttpMethod.Get, _endpointUrl);
+            var request = new HttpRequestMessage(HttpMethod.Get, endpointUrl);
             request.ConfigureTraceContext(correlationId);
 
             var authenticationResult = await GetAuthenticationTokenAsync();

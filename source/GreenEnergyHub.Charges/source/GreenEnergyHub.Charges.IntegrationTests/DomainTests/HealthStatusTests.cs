@@ -39,14 +39,14 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 : base(fixture, testOutputHelper)
             {
                 TestDataGenerator.GenerateDataForIntegrationTests(Fixture);
-                _httpRequestGenerator = new HttpRequestGenerator(fixture, "api/HealthStatus");
+                _httpRequestGenerator = new HttpRequestGenerator(fixture);
             }
 
             [Fact]
             public async Task When_RequestingHealthStatus_Then_ReturnStatusOK()
             {
                 // Arrange
-                var result = await _httpRequestGenerator.CreateHttpGetRequestAsync();
+                var result = await _httpRequestGenerator.CreateHttpGetRequestAsync("api/HealthStatus");
 
                 // Act
                 var actualResponse = await Fixture.HostManager.HttpClient.SendAsync(result.Request);
@@ -59,7 +59,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             public async Task When_RequestingUnknownEndpoint_Then_ReturnStatusNotFound()
             {
                 // Arrange
-                var result = await _httpRequestGenerator.CreateHttpGetRequestAsync();
+                var result = await _httpRequestGenerator.CreateHttpGetRequestAsync("api/unknown");
 
                 // Act
                 var actualResponse = await Fixture.HostManager.HttpClient.SendAsync(result.Request);
