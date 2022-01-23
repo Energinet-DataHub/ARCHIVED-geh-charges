@@ -40,8 +40,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             public RunAsync(ChargesFunctionAppFixture fixture, ITestOutputHelper testOutputHelper)
                 : base(fixture, testOutputHelper)
             {
-                TestDataGenerator.GenerateDataForIntegrationTests(Fixture);
-                _httpRequestGenerator = new HttpRequestGenerator(fixture);
+                TestDataGenerator.GenerateDataForIntegrationTests(fixture);
+                _httpRequestGenerator = new HttpRequestGenerator(fixture.AuthorizationConfiguration);
             }
 
             public Task InitializeAsync()

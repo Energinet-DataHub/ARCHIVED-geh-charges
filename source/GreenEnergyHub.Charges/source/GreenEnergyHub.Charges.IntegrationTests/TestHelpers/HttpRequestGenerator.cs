@@ -12,23 +12,25 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.IntegrationTests.Fixtures;
-using Microsoft.Identity.Client;
 using NodaTime;
 
 namespace GreenEnergyHub.Charges.IntegrationTests.TestHelpers
 {
     public class HttpRequestGenerator
     {
-        private readonly ChargesFunctionAppFixture _chargesFunctionAppFixture;
+        private readonly AuthenticationClient _authenticationClient;
 
-        public HttpRequestGenerator(ChargesFunctionAppFixture chargesFunctionAppFixture)
+        public HttpRequestGenerator(AuthorizationConfiguration authorizationConfiguration)
         {
-            _chargesFunctionAppFixture = chargesFunctionAppFixture;
+            _authenticationClient = new AuthenticationClient(
+                authorizationConfiguration.BackendAppScope,
+                authorizationConfiguration.ClientCredentialsSettings,
+                authorizationConfiguration.B2cTenantId);
         }
 
         public async Task<(HttpRequestMessage Request, string CorrelationId)> CreateHttpPostRequestAsync(
@@ -44,7 +46,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.TestHelpers
             };
             request.ConfigureTraceContext(correlationId);
 
-            var authenticationResult = await GetAuthenticationTokenAsync();
+            var authenticationResult = await _authenticationClient.GetAuthenticationTokenAsync();
             request.Headers.Add("Authorization", $"Bearer {authenticationResult.AccessToken}");
 
             return (request, correlationId);
@@ -57,33 +59,10 @@ namespace GreenEnergyHub.Charges.IntegrationTests.TestHelpers
             var request = new HttpRequestMessage(HttpMethod.Get, endpointUrl);
             request.ConfigureTraceContext(correlationId);
 
-            var authenticationResult = await GetAuthenticationTokenAsync();
+            var authenticationResult = await _authenticationClient.GetAuthenticationTokenAsync();
             request.Headers.Add("Authorization", $"Bearer {authenticationResult.AccessToken}");
 
             return (request, correlationId);
-        }
-
-        private async Task<AuthenticationResult> GetAuthenticationTokenAsync()
-        {
-            var confidentialClientApp = CreateConfidentialClientApp();
-            var result = await confidentialClientApp.AcquireTokenForClient(
-                    _chargesFunctionAppFixture.AuthorizationConfiguration.BackendAppScope)
-                .ExecuteAsync().ConfigureAwait(false);
-            return result;
-        }
-
-        private IConfidentialClientApplication CreateConfidentialClientApp()
-        {
-            var (teamClientId, teamClientSecret) =
-                _chargesFunctionAppFixture.AuthorizationConfiguration.ClientCredentialsSettings;
-
-            var confidentialClientApp = ConfidentialClientApplicationBuilder
-                .Create(teamClientId)
-                .WithClientSecret(teamClientSecret)
-                .WithAuthority(new Uri($"https://login.microsoftonline.com/{_chargesFunctionAppFixture.AuthorizationConfiguration.B2cTenantId}"))
-                .Build();
-
-            return confidentialClientApp;
         }
     }
 }
