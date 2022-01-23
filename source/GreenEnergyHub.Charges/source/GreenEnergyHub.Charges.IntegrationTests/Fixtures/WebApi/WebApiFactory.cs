@@ -13,12 +13,13 @@
 // limitations under the License.
 
 using System;
+using GreenEnergyHub.Charges.WebApi;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 
-namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures
+namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures.WebApi
 {
-    public class WebApiFactory : WebApplicationFactory<WebApi.Startup>
+    public class WebApiFactory : WebApplicationFactory<Startup>
     {
         protected override void ConfigureWebHost(IWebHostBuilder builder)
         {

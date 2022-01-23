@@ -12,12 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures
+using Xunit;
+
+namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures.WebApi
 {
     /// <summary>
-    /// Settings necessary for acquiring an access token from the B2C tenant using the client credentials flow.
+    /// A xUnit collection fixture for ensuring tests don't run in parallel.
+    ///
+    /// xUnit documentation of collection fixtures:
+    ///  * https://xunit.net/docs/shared-context#collection-fixture
     /// </summary>
-    /// <param name="ClientId"></param>
-    /// <param name="ClientSecret"></param>
-    public record ClientCredentialsSettings(string ClientId, string ClientSecret);
+    [CollectionDefinition(nameof(ChargesWebApiCollectionFixture))]
+    public class ChargesWebApiCollectionFixture : ICollectionFixture<ChargesWebApiFixture>
+    {
+    }
 }

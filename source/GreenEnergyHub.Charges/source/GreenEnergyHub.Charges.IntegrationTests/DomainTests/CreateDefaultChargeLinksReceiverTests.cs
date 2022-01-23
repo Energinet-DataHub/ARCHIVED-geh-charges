@@ -20,7 +20,7 @@ using Energinet.Charges.Contracts;
 using Energinet.DataHub.Core.FunctionApp.TestCommon;
 using FluentAssertions;
 using Google.Protobuf;
-using GreenEnergyHub.Charges.IntegrationTests.Fixtures;
+using GreenEnergyHub.Charges.IntegrationTests.Fixtures.FunctionApp;
 using GreenEnergyHub.Charges.IntegrationTests.TestHelpers;
 using Xunit;
 using Xunit.Abstractions;

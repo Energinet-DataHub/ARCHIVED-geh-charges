@@ -15,7 +15,7 @@
 using System;
 using System.Linq;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
-using GreenEnergyHub.Charges.IntegrationTests.Fixtures;
+using GreenEnergyHub.Charges.IntegrationTests.Fixtures.FunctionApp;
 
 namespace GreenEnergyHub.Charges.IntegrationTests.TestHelpers
 {

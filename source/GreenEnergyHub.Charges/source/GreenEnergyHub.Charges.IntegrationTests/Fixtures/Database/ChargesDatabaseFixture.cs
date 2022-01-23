@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System.Threading.Tasks;
+using GreenEnergyHub.Charges.IntegrationTests.Authorization;
 using Xunit;
 
 namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures.Database

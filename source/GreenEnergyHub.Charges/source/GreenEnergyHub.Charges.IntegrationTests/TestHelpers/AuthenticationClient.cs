@@ -15,6 +15,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using GreenEnergyHub.Charges.IntegrationTests.Authorization;
 using GreenEnergyHub.Charges.IntegrationTests.Fixtures;
 using Microsoft.Identity.Client;
 
