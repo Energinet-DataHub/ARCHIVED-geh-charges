@@ -30,9 +30,12 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures.Database
         public ChargesDatabaseFixture()
         {
             DatabaseManager = new ChargesDatabaseManager();
+            AuthorizationConfiguration = new AuthorizationConfiguration();
         }
 
         public ChargesDatabaseManager DatabaseManager { get; }
+
+        public AuthorizationConfiguration AuthorizationConfiguration { get; }
 
         public Task InitializeAsync()
         {
