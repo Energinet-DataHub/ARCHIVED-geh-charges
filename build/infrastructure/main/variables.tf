@@ -19,6 +19,11 @@ variable resource_group_name {
   type = string
 }
 
+variable vnet_resource_group_name {
+  type        = string
+  description = "Resource Group that the VNet is created in."
+}
+
 variable environment_short {
   type          = string
   description   = "Enviroment that the infrastructure code is deployed into."
