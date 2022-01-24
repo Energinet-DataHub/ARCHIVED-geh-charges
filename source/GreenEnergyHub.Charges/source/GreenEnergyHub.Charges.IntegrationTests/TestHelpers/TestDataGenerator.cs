@@ -21,16 +21,18 @@ namespace GreenEnergyHub.Charges.IntegrationTests.TestHelpers
 {
     public static class TestDataGenerator
     {
+        public const string TestActorId = "ed6c94f3-24a8-43b3-913d-bf7513390a32";
+
         public static void GenerateDataForIntegrationTests(ChargesFunctionAppFixture fixture)
         {
             var dbContext = fixture.DatabaseManager.CreateDbContext();
 
-            var guid = new Guid("ed6c94f3-24a8-43b3-913d-bf7513390a32");
-            var marketParticipant = dbContext.MarketParticipants.FirstOrDefault(x => x.Id == guid);
+            var testActorId = new Guid(TestActorId);
+            var marketParticipant = dbContext.MarketParticipants.FirstOrDefault(x => x.Id == testActorId);
             if (marketParticipant != null) return;
 
             dbContext.MarketParticipants.Add(new MarketParticipant(
-                guid,
+                testActorId,
                 "MarketParticipantForIntegrationTest",
                 true,
                 MarketParticipantRole.GridAccessProvider));
