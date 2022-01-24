@@ -25,7 +25,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.TestHelpers
         /// <summary>
         /// When send a message using Service Bus, its necessary to wrap
         /// SendMessage method with Telemetry dependency information, to
-        /// make sure  Application Insights can track the message across
+        /// make sure Application Insights can track the message across
         /// Service Bus.
         ///
         /// If not, a new CorrelationId will be created when receiving the
@@ -33,7 +33,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.TestHelpers
         ///
         /// This code is based on our FunctionTelemetryScopeMiddleware.
         /// </summary>
-        public static async Task WrappedOperationWithTelemetryDependencyInformationAsync(Func<Task> action, string correlationId, string parentId)
+        public static async Task WrappedOperationWithTelemetryDependencyInformationAsync(
+            Func<Task> action, string correlationId, string parentId)
         {
             var telemetryClient = Create();
             var operation = telemetryClient.StartOperation<DependencyTelemetry>("MyTest", correlationId, parentId);

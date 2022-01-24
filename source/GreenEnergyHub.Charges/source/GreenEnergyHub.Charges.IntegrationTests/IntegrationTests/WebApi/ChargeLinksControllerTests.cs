@@ -21,24 +21,50 @@ using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Energinet.Charges.Contracts.ChargeLink;
 using FluentAssertions;
-using GreenEnergyHub.Charges.IntegrationTests.Fixtures;
-using GreenEnergyHub.Charges.IntegrationTests.Fixtures.Database;
+using GreenEnergyHub.Charges.IntegrationTests.Fixtures.WebApi;
+using GreenEnergyHub.Charges.IntegrationTests.TestHelpers;
 using Xunit;
+using Xunit.Abstractions;
 using Xunit.Categories;
 
 namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi
 {
     [IntegrationTest]
-    public class ChargeLinksControllerTests : WebApiHost, IClassFixture<ChargesDatabaseFixture>
+    [Collection(nameof(ChargesWebApiCollectionFixture))]
+    public class ChargeLinksControllerTests :
+        WebApiTestBase<ChargesWebApiFixture>,
+        IClassFixture<ChargesWebApiFixture>,
+        IClassFixture<WebApiFactory>,
+        IAsyncLifetime
     {
         private const string BaseUrl = "/ChargeLinks/GetAsync?meteringPointId=";
         private const string KnownMeteringPointId = "571313180000000005";
         private readonly HttpClient _client;
+        private readonly AuthenticationClient _authenticationClient;
 
-        public ChargeLinksControllerTests(WebApiFactory factory, ChargesDatabaseFixture chargesDatabaseFixture)
-            : base(chargesDatabaseFixture)
+        public ChargeLinksControllerTests(
+            ChargesWebApiFixture chargesWebApiFixture,
+            WebApiFactory factory,
+            ITestOutputHelper testOutputHelper)
+            : base(chargesWebApiFixture, testOutputHelper)
         {
             _client = factory.CreateClient();
+            _authenticationClient = new AuthenticationClient(
+                chargesWebApiFixture.AuthorizationConfiguration.BackendAppScope,
+                chargesWebApiFixture.AuthorizationConfiguration.ClientCredentialsSettings,
+                chargesWebApiFixture.AuthorizationConfiguration.B2cTenantId);
+        }
+
+        public async Task InitializeAsync()
+        {
+            var authenticationResult = await _authenticationClient.GetAuthenticationTokenAsync();
+            _client.DefaultRequestHeaders.Add("Authorization", $"Bearer {authenticationResult.AccessToken}");
+        }
+
+        public Task DisposeAsync()
+        {
+            _client.Dispose();
+            return Task.CompletedTask;
         }
 
         [Fact]

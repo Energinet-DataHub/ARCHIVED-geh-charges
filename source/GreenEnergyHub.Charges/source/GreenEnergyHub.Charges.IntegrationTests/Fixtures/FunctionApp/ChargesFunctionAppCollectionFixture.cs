@@ -12,23 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Hosting;
+using Xunit;
 
-namespace GreenEnergyHub.Charges.WebApi
+namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures.FunctionApp
 {
-    public class Program
+    /// <summary>
+    /// A xUnit collection fixture for ensuring tests don't run in parallel.
+    ///
+    /// xUnit documentation of collection fixtures:
+    ///  * https://xunit.net/docs/shared-context#collection-fixture
+    /// </summary>
+    [CollectionDefinition(nameof(ChargesFunctionAppCollectionFixture))]
+    public class ChargesFunctionAppCollectionFixture : ICollectionFixture<ChargesFunctionAppFixture>
     {
-        public static void Main(string[] args)
-        {
-            CreateHostBuilder(args).Build().Run();
-        }
-
-        public static IHostBuilder CreateHostBuilder(string[] args) =>
-            Host.CreateDefaultBuilder(args)
-                .ConfigureWebHostDefaults(webBuilder =>
-                {
-                    webBuilder.UseStartup<Startup>();
-                });
     }
 }

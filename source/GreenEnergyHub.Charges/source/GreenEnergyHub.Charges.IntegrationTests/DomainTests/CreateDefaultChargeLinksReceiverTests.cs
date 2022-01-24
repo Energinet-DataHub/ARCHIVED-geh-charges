@@ -20,7 +20,7 @@ using Energinet.Charges.Contracts;
 using Energinet.DataHub.Core.FunctionApp.TestCommon;
 using FluentAssertions;
 using Google.Protobuf;
-using GreenEnergyHub.Charges.IntegrationTests.Fixtures;
+using GreenEnergyHub.Charges.IntegrationTests.Fixtures.FunctionApp;
 using GreenEnergyHub.Charges.IntegrationTests.TestHelpers;
 using Xunit;
 using Xunit.Abstractions;
@@ -43,7 +43,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             public async Task When_ReceivingCreateDefaultChargeLinksRequest_MessageHubIsNotifiedAboutAvailableData_And_Then_When_MessageHubRequestsTheBundle_Then_MessageHubReceivesBundleReply()
             {
                 // Arrange
-                var meteringPointId = "901313180000000005";
+                var meteringPointId = "571313180000000029";
                 var request = CreateServiceBusMessage(
                     meteringPointId,
                     Fixture.CreateLinkReplyQueue.Name,
@@ -62,7 +62,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             public async Task When_ReceivingCreateDefaultChargeLinksRequest_MeteringPointDomainIsNotifiedThatDefaultChargeLinksAreCreated()
             {
                 // Arrange
-                var meteringPointId = "701313180000000005";
+                var meteringPointId = "571313180000000012";
                 var request = CreateServiceBusMessage(
                     meteringPointId,
                     Fixture.CreateLinkReplyQueue.Name,

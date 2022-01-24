@@ -16,7 +16,7 @@ using System.Net;
 using System.Threading.Tasks;
 using Energinet.DataHub.Core.FunctionApp.TestCommon;
 using FluentAssertions;
-using GreenEnergyHub.Charges.IntegrationTests.Fixtures;
+using GreenEnergyHub.Charges.IntegrationTests.Fixtures.FunctionApp;
 using GreenEnergyHub.Charges.IntegrationTests.TestFiles.ChargeLinks;
 using GreenEnergyHub.Charges.IntegrationTests.TestHelpers;
 using Xunit;
@@ -31,12 +31,14 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
         [Collection(nameof(ChargesFunctionAppCollectionFixture))]
         public class RunAsync : FunctionAppTestBase<ChargesFunctionAppFixture>, IAsyncLifetime
         {
+            private const string EndpointUrl = "api/ChargeLinksIngestion";
             private readonly HttpRequestGenerator _httpRequestGenerator;
 
             public RunAsync(ChargesFunctionAppFixture fixture, ITestOutputHelper testOutputHelper)
                 : base(fixture, testOutputHelper)
             {
-                _httpRequestGenerator = new HttpRequestGenerator(fixture, "api/ChargeLinksIngestion");
+                TestDataGenerator.GenerateDataForIntegrationTests(fixture);
+                _httpRequestGenerator = new HttpRequestGenerator(fixture.AuthorizationConfiguration);
             }
 
             public Task InitializeAsync()
@@ -53,7 +55,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             [Fact]
             public async Task When_ChargeLinkIsReceived_Then_AHttp200ResponseIsReturned()
             {
-                var result = await _httpRequestGenerator.CreateHttpRequestAsync(ChargeLinkDocument.AnyValid);
+                var result = await _httpRequestGenerator.CreateHttpPostRequestAsync(
+                    EndpointUrl, ChargeLinkDocument.AnyValid);
 
                 var actualResponse = await Fixture.HostManager.HttpClient.SendAsync(result.Request);
 
@@ -64,7 +67,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             public async Task When_InvalidChargeLinkIsReceived_Then_AHttp400ResponseIsReturned()
             {
                 // Arrange
-                var result = await _httpRequestGenerator.CreateHttpRequestAsync(ChargeLinkDocument.InvalidSchema);
+                var result = await _httpRequestGenerator.CreateHttpPostRequestAsync(
+                    EndpointUrl, ChargeLinkDocument.InvalidSchema);
 
                 // Act
                 var actualResponse = await Fixture.HostManager.HttpClient.SendAsync(result.Request);
@@ -77,8 +81,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             public async Task Given_NewTaxChargeLinkMessage_When_GridAccessProviderPeeks_Then_MessageHubReceivesReply()
             {
                 // Arrange
-                var (request, correlationId) = await _httpRequestGenerator.CreateHttpRequestAsync(
-                    ChargeLinkDocument.TaxWithCreateAndUpdateDueToOverLappingPeriod);
+                var (request, correlationId) = await _httpRequestGenerator.CreateHttpPostRequestAsync(
+                    EndpointUrl, ChargeLinkDocument.TaxWithCreateAndUpdateDueToOverLappingPeriod);
 
                 // Act
                 await Fixture.HostManager.HttpClient.SendAsync(request);
