@@ -32,8 +32,8 @@
     // Integration, metering point domain
     "METERING_POINT_CREATED_TOPIC_NAME": "metering-point-created",
     "METERING_POINT_CREATED_SUBSCRIPTION_NAME": "metering-point-created-sub-charges",
-    "CREATE_LINKS_REQUEST_QUEUE_NAME": "create-links-request",
-    "CREATE_LINKS_REPLY_QUEUE_NAME": "create-links-reply",
+    "CREATE_LINKS_REQUEST_QUEUE_NAME": "create-link-request",
+    "CREATE_LINKS_REPLY_QUEUE_NAME": "create-link-reply",
 
     // Integration, message hub
     "MESSAGEHUB_DATAAVAILABLE_QUEUE": "dataavailable",
@@ -65,7 +65,7 @@
     // Internal, charge links, accepted
     "CHARGE_LINKS_ACCEPTED_TOPIC_NAME": "links-command-accepted",
     "CHARGE_LINKS_REJECTED_TOPIC_NAME": "links-command-rejected",
-    "CHARGE_LINKS_REJECTED_SUBSCRIPTION_NAME": "charge-links-command-rejected",
+    "CHARGE_LINKS_REJECTED_SUBSCRIPTION_NAME": "links-command-rejected",
     "CHARGE_LINKS_ACCEPTED_SUB_CONFIRMATION_NOTIFIER": "charge-links-accepted-sub-confirmation-notifier",
     "CHARGE_LINKS_ACCEPTED_SUB_DATA_AVAILABLE_NOTIFIER": "charge-links-accepted-sub-data-available-notifier",
     "CHARGE_LINKS_ACCEPTED_SUB_EVENT_PUBLISHER": "charge-links-accepted-sub-event-publisher",
