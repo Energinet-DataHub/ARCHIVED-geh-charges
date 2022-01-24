@@ -38,9 +38,9 @@ namespace GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories
                 .SingleOrDefaultAsync(mp => mp.MarketParticipantId == marketParticipantId);
         }
 
-        public async Task<List<MarketParticipant>> GetGridAccessProvidersAsync()
+        public Task<List<MarketParticipant>> GetGridAccessProvidersAsync()
         {
-            return await _chargesDatabaseContext
+            return _chargesDatabaseContext
                 .MarketParticipants
                 .Where(mp => mp.BusinessProcessRole == MarketParticipantRole.GridAccessProvider)
                 .Where(m => m.IsActive)
@@ -52,7 +52,8 @@ namespace GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories
             return await _chargesDatabaseContext
                 .MarketParticipants
                 .Where(mp => ids.Contains(mp.Id))
-                .ToListAsync();
+                .ToListAsync()
+                .ConfigureAwait(false);
         }
 
         /// <summary>
@@ -73,24 +74,23 @@ namespace GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories
                 MarketParticipantRole.GridAccessProvider));
         }
 
-        public async Task<MarketParticipant> GetMeteringPointAdministratorAsync()
+        public Task<MarketParticipant> GetMeteringPointAdministratorAsync()
         {
-            return await GetAsync(MarketParticipantRole.MeteringPointAdministrator).ConfigureAwait(false);
+            return GetAsync(MarketParticipantRole.MeteringPointAdministrator);
         }
 
-        public async Task<MarketParticipant> GetSystemOperatorAsync()
+        public Task<MarketParticipant> GetSystemOperatorAsync()
         {
-            return await GetAsync(MarketParticipantRole.SystemOperator).ConfigureAwait(false);
+            return GetAsync(MarketParticipantRole.SystemOperator);
         }
 
-        private async Task<MarketParticipant> GetAsync(MarketParticipantRole marketParticipantRole)
+        private Task<MarketParticipant> GetAsync(MarketParticipantRole marketParticipantRole)
         {
-            return await _chargesDatabaseContext
+            return _chargesDatabaseContext
                 .MarketParticipants
                 .Where(mp => mp.BusinessProcessRole == marketParticipantRole)
                 .Where(mp => mp.IsActive)
-                .SingleAsync()
-                .ConfigureAwait(false);
+                .SingleAsync();
         }
     }
 }
