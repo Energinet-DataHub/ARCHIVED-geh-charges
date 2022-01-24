@@ -17,6 +17,7 @@ using Energinet.DataHub.Core.FunctionApp.Common.Abstractions.Actor;
 using Energinet.DataHub.Core.FunctionApp.Common.Abstractions.Identity;
 using Energinet.DataHub.Core.FunctionApp.Common.Identity;
 using Energinet.DataHub.Core.FunctionApp.Common.Middleware;
+using GreenEnergyHub.Charges.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace GreenEnergyHub.Charges.FunctionHost.Configuration
@@ -46,7 +47,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
         {
             container.AddScoped<ActorMiddleware>();
             container.AddScoped<IActorContext, ActorContext>();
-            container.AddScoped(typeof(IActorProvider), typeof(TActorProvider));
+            container.AddScoped<IActorProvider, ActorProvider>();
         }
     }
 }

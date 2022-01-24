@@ -38,6 +38,7 @@ namespace GreenEnergyHub.Charges.FunctionHost
                     builder.UseMiddleware<RequestResponseLoggingMiddleware>();
                     builder.UseMiddleware<JwtTokenMiddleware>();
                     builder.UseMiddleware<ActorMiddleware>();
+                    builder.UseMiddleware<ServiceBusActorContextMiddleware>();
                 })
                 .ConfigureServices(ConfigureServices)
                 .Build();

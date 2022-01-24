@@ -47,12 +47,19 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Factori
                     ApplicationProperties =
                     {
                         new KeyValuePair<string, object>("ReplyTo", _messageMetaDataContext.ReplyTo),
-                        new KeyValuePair<string, object>(Constants.ServiceBusIdentityKey, _actorContext.CurrentActor.AsString()),
+                        new KeyValuePair<string, object>(Constants.ServiceBusIdentityKey, _actorContext.CurrentActor!.AsString()),
                     },
                 };
             }
 
-            return new ServiceBusMessage(data) { CorrelationId = _correlationContext.Id, };
+            return new ServiceBusMessage(data)
+            {
+                CorrelationId = _correlationContext.Id,
+                ApplicationProperties =
+                    {
+                        new KeyValuePair<string, object>(Constants.ServiceBusIdentityKey, _actorContext.CurrentActor!.AsString()),
+                    },
+            };
         }
 
         public ServiceBusMessage CreateExternalMessage(byte[] data)

@@ -14,6 +14,7 @@
 
 using System;
 using Azure.Messaging.ServiceBus;
+using Energinet.DataHub.Core.FunctionApp.Common.Abstractions.Actor;
 using Energinet.DataHub.Core.FunctionApp.Common.Middleware;
 using Energinet.DataHub.Core.Logging.RequestResponseMiddleware.Storage;
 using Energinet.DataHub.Core.Messaging.Protobuf;
@@ -63,6 +64,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
     {
         internal static void ConfigureServices(IServiceCollection serviceCollection)
         {
+            //serviceCollection.AddScoped<ILogger, ILogger<ServiceBusActorContextMiddleware>>();
             serviceCollection.AddScoped(typeof(IClock), _ => SystemClock.Instance);
             serviceCollection.AddSingleton<IJsonSerializer, JsonSerializer>();
             serviceCollection.AddLogging();
@@ -70,6 +72,24 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
             serviceCollection.AddScoped<FunctionTelemetryScopeMiddleware>();
             serviceCollection.AddScoped<MessageMetaDataMiddleware>();
             serviceCollection.AddScoped<FunctionInvocationLoggingMiddleware>();
+            ConfigureJwtToken(serviceCollection);
+            serviceCollection.AddScoped<ServiceBusActorContextMiddleware>(s =>
+            {
+                var logger = s.GetService<ILogger<ServiceBusActorContextMiddleware>>();
+                var actorContext = s.GetService<IActorContext>();
+
+                if (logger == null)
+                {
+                    throw new Exception("logger");
+                }
+
+                if (actorContext == null)
+                    throw new Exception("actorcontext");
+
+                return new ServiceBusActorContextMiddleware(
+                    logger,
+                    actorContext);
+            });
             serviceCollection.AddApplicationInsightsTelemetryWorkerService(
                 EnvironmentHelper.GetEnv(EnvironmentSettingNames.AppInsightsInstrumentationKey));
 
@@ -77,7 +97,6 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
             ConfigureSharedMessaging(serviceCollection);
             ConfigureIso8601Services(serviceCollection);
             ConfigureSharedCim(serviceCollection);
-            ConfigureJwtToken(serviceCollection);
 
             var serviceBusConnectionString = EnvironmentHelper.GetEnv(EnvironmentSettingNames.DataHubSenderConnectionString);
             var dataAvailableQueue = EnvironmentHelper.GetEnv(EnvironmentSettingNames.MessageHubDataAvailableQueue);
@@ -148,7 +167,6 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
         {
             serviceCollection.AddScoped<MessageDispatcher>();
             serviceCollection.AddScoped<IServiceBusMessageFactory, ServiceBusMessageFactory>();
-            serviceCollection.AddScoped<ServiceBusActorContextMiddleware>();
             serviceCollection.ConfigureProtobufReception();
 
             serviceCollection.SendProtobuf<ChargeCreated>();
