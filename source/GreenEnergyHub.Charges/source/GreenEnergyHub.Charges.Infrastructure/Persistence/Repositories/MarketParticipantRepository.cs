@@ -38,40 +38,13 @@ namespace GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories
                 .SingleOrDefaultAsync(mp => mp.MarketParticipantId == marketParticipantId);
         }
 
-        /// <summary>
-        /// This implementation is temp until grid areas and market participants are implemented in their own
-        /// domains and integration event are used  to update a query model in the charges domain.
-        ///
-        /// Later we need to use the metering point ID to find the grid area and then find the responsible market
-        /// participant of the grid area.
-        /// </summary>
-        /// <param name="meteringPointId">ID of the metering point to find the grid access provider for</param>
-        /// <returns>The grid access provider responsible for the metering point</returns>
-        public MarketParticipant GetGridAccessProvider(string meteringPointId)
-        {
-            return new MarketParticipant(
-                Guid.NewGuid(),
-                "8100000000030",
-                true,
-                MarketParticipantRole.GridAccessProvider);
-        }
-
-        public async Task<List<MarketParticipant>> GetActiveGridAccessProvidersAsync()
+        public async Task<List<MarketParticipant>> GetGridAccessProvidersAsync()
         {
             return await _chargesDatabaseContext
                 .MarketParticipants
                 .Where(mp => mp.BusinessProcessRole == MarketParticipantRole.GridAccessProvider)
                 .Where(m => m.IsActive)
                 .ToListAsync();
-        }
-
-        public async Task<MarketParticipant> GetAsync(MarketParticipantRole marketParticipantRole)
-        {
-            return await _chargesDatabaseContext
-                .MarketParticipants
-                .Where(mp => mp.BusinessProcessRole == marketParticipantRole)
-                .SingleAsync()
-                .ConfigureAwait(false);
         }
 
         public async Task<IReadOnlyCollection<MarketParticipant>> GetAsync(IEnumerable<Guid> ids)
@@ -82,12 +55,42 @@ namespace GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories
                 .ToListAsync();
         }
 
-        public async Task<MarketParticipant> GetHubSenderAsync()
+        /// <summary>
+        /// This implementation is temp until grid areas and market participants are implemented in their own
+        /// domains and integration event are used  to update a query model in the charges domain.
+        ///
+        /// Later we need to use the metering point ID to find the grid area and then find the responsible market
+        /// participant of the grid area.
+        /// </summary>
+        /// <param name="meteringPointId">ID of the metering point to find the grid access provider for</param>
+        /// <returns>The grid access provider responsible for the metering point</returns>
+        public Task<MarketParticipant> GetGridAccessProviderAsync(string meteringPointId)
+        {
+            return Task.FromResult(new MarketParticipant(
+                Guid.NewGuid(),
+                "8100000000030",
+                true,
+                MarketParticipantRole.GridAccessProvider));
+        }
+
+        public async Task<MarketParticipant> GetMeteringPointAdministratorAsync()
+        {
+            return await GetAsync(MarketParticipantRole.MeteringPointAdministrator).ConfigureAwait(false);
+        }
+
+        public async Task<MarketParticipant> GetSystemOperatorAsync()
+        {
+            return await GetAsync(MarketParticipantRole.SystemOperator).ConfigureAwait(false);
+        }
+
+        private async Task<MarketParticipant> GetAsync(MarketParticipantRole marketParticipantRole)
         {
             return await _chargesDatabaseContext
                 .MarketParticipants
-                .Where(mp => mp.BusinessProcessRole == MarketParticipantRole.MeteringPointAdministrator)
-                .SingleAsync();
+                .Where(mp => mp.BusinessProcessRole == marketParticipantRole)
+                .Where(mp => mp.IsActive)
+                .SingleAsync()
+                .ConfigureAwait(false);
         }
     }
 }
