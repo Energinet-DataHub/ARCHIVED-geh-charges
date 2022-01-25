@@ -47,7 +47,6 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Factori
                     ApplicationProperties =
                     {
                         new KeyValuePair<string, object>("ReplyTo", _messageMetaDataContext.ReplyTo),
-                        new KeyValuePair<string, object>(Constants.ServiceBusIdentityKey, _actorContext.CurrentActor!.AsString()),
                     },
                 };
             }
@@ -57,6 +56,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Factori
                 CorrelationId = _correlationContext.Id,
                 ApplicationProperties =
                     {
+                        // Actor is always set, for internal messages which originates from Charges Http ingestion point.
                         new KeyValuePair<string, object>(Constants.ServiceBusIdentityKey, _actorContext.CurrentActor!.AsString()),
                     },
             };
