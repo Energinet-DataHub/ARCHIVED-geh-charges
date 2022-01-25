@@ -82,9 +82,9 @@ namespace GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories
                 .ToListAsync();
         }
 
-        public async Task<MarketParticipant> GetHubSenderAsync()
+        public Task<MarketParticipant> GetHubSenderAsync()
         {
-            return await _chargesDatabaseContext
+            return _chargesDatabaseContext
                 .MarketParticipants
                 .Where(mp => mp.BusinessProcessRole == MarketParticipantRole.MeteringPointAdministrator)
                 .SingleAsync();

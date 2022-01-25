@@ -29,9 +29,9 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions
         {
         }
 
-        public new async Task<IInboundMessage> ExtractAsync(byte[] data, CancellationToken cancellationToken = default)
+        public new Task<IInboundMessage> ExtractAsync(byte[] data, CancellationToken cancellationToken = default)
         {
-            return await base.ExtractAsync(data, cancellationToken).ConfigureAwait(false);
+            return base.ExtractAsync(data, cancellationToken);
         }
 
         public async Task<IInboundMessage> ExtractAsync(Stream data, CancellationToken cancellationToken = default)
