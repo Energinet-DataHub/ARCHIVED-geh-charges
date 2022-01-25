@@ -17,6 +17,7 @@ using Energinet.DataHub.Core.FunctionApp.Common.Abstractions.Actor;
 using Energinet.DataHub.Core.FunctionApp.Common.Abstractions.Identity;
 using Energinet.DataHub.Core.FunctionApp.Common.Identity;
 using Energinet.DataHub.Core.FunctionApp.Common.Middleware;
+using GreenEnergyHub.Charges.FunctionHost.Common;
 using GreenEnergyHub.Charges.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -28,10 +29,12 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
         /// Adds registrations of JwtTokenMiddleware and corresponding dependencies.
         /// </summary>
         /// <param name="serviceCollection">ServiceCollection container</param>
-        /// <param name="metadataAddress">OpenID Configuration URL used for acquiring metadata</param>
-        /// <param name="audience">Audience used for validation of JWT token</param>
-        public static void AddJwtTokenSecurity(this IServiceCollection serviceCollection, string metadataAddress, string audience)
+        public static void AddJwtTokenSecurity(this IServiceCollection serviceCollection)
         {
+            var tenantId = EnvironmentHelper.GetEnv(EnvironmentSettingNames.B2CTenantId);
+            var audience = EnvironmentHelper.GetEnv(EnvironmentSettingNames.BackendServiceAppid);
+            var metadataAddress = $"https://login.microsoftonline.com/{tenantId}/v2.0/.well-known/openid-configuration";
+
             serviceCollection.AddScoped<JwtTokenMiddleware>();
             serviceCollection.AddScoped<IClaimsPrincipalAccessor, ClaimsPrincipalAccessor>();
             serviceCollection.AddScoped<ClaimsPrincipalContext>();
@@ -42,8 +45,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
         /// Adds registration of ActorMiddleware, ActorContext and ActorProvider.
         /// </summary>
         /// <param name="container">ServiceCollection container</param>
-        public static void AddActorContext<TActorProvider>(this IServiceCollection container)
-            where TActorProvider : IActorProvider
+        public static void AddActorContext(this IServiceCollection container)
         {
             container.AddScoped<ActorMiddleware>();
             container.AddScoped<IActorContext, ActorContext>();

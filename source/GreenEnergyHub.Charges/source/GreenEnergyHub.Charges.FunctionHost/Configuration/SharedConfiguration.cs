@@ -64,7 +64,6 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
     {
         internal static void ConfigureServices(IServiceCollection serviceCollection)
         {
-            //serviceCollection.AddScoped<ILogger, ILogger<ServiceBusActorContextMiddleware>>();
             serviceCollection.AddScoped(typeof(IClock), _ => SystemClock.Instance);
             serviceCollection.AddSingleton<IJsonSerializer, JsonSerializer>();
             serviceCollection.AddLogging();
@@ -72,24 +71,11 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
             serviceCollection.AddScoped<FunctionTelemetryScopeMiddleware>();
             serviceCollection.AddScoped<MessageMetaDataMiddleware>();
             serviceCollection.AddScoped<FunctionInvocationLoggingMiddleware>();
-            ConfigureJwtToken(serviceCollection);
-            serviceCollection.AddScoped<ServiceBusActorContextMiddleware>(s =>
-            {
-                var logger = s.GetService<ILogger<ServiceBusActorContextMiddleware>>();
-                var actorContext = s.GetService<IActorContext>();
-
-                if (logger == null)
-                {
-                    throw new Exception("logger");
-                }
-
-                if (actorContext == null)
-                    throw new Exception("actorcontext");
-
-                return new ServiceBusActorContextMiddleware(
-                    logger,
-                    actorContext);
-            });
+            serviceCollection.AddJwtTokenSecurity();
+            serviceCollection.AddActorContext();
+            serviceCollection.AddScoped(s => new ServiceBusActorContextMiddleware(
+                s.GetService<ILogger<ServiceBusActorContextMiddleware>>()!,
+                s.GetService<IActorContext>()!));
             serviceCollection.AddApplicationInsightsTelemetryWorkerService(
                 EnvironmentHelper.GetEnv(EnvironmentSettingNames.AppInsightsInstrumentationKey));
 
@@ -115,17 +101,6 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
                 new MessageHubConfig(dataAvailableQueue, domainReplyQueue),
                 storageServiceConnectionString,
                 new StorageConfig(azureBlobStorageContainerName));
-        }
-
-        private static void ConfigureJwtToken(IServiceCollection serviceCollection)
-        {
-            var tenantId = Environment.GetEnvironmentVariable("B2C_TENANT_ID") ?? throw new InvalidOperationException(
-                "B2C tenant id not found.");
-            var audience = Environment.GetEnvironmentVariable("BACKEND_SERVICE_APP_ID") ?? throw new InvalidOperationException(
-                "Backend service app id not found.");
-
-            serviceCollection.AddJwtTokenSecurity($"https://login.microsoftonline.com/{tenantId}/v2.0/.well-known/openid-configuration", audience);
-            serviceCollection.AddActorContext<ActorProvider>();
         }
 
         private static void AddCreateDefaultChargeLinksReplier(
