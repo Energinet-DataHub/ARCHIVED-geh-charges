@@ -79,7 +79,7 @@ jobs:
 
   # # Create system tests artifact for testing after deployment
   # systemtest_ci:
-  #   # Depend on these validating jobs in order to avoid potentially creating artifacts that should never be used if this job fails
+  #   # Depend on these validating jobs in order to avoid potentially creating artifacts that should never be used if this job fails.
   #   needs: [ci_base, terraform_validate, dotnet_solution_ci]
   #   uses: Energinet-DataHub/.github/.github/workflows/dotnet-create-function-artifact.yml@2.7.0
   #   with:
