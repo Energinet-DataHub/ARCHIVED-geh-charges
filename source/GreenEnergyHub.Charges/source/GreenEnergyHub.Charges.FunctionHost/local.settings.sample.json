@@ -32,8 +32,8 @@
     // Integration, metering point domain
     "METERING_POINT_CREATED_TOPIC_NAME": "metering-point-created",
     "METERING_POINT_CREATED_SUBSCRIPTION_NAME": "metering-point-created-sub-charges",
-    "CREATE_LINKS_REQUEST_QUEUE_NAME": "create-link-request",
-    "CREATE_LINKS_REPLY_QUEUE_NAME": "create-link-reply",
+    "CREATE_LINKS_REQUEST_QUEUE_NAME": "create-links-request",
+    "CREATE_LINKS_REPLY_QUEUE_NAME": "create-links-reply",
 
     // Integration, message hub
     "MESSAGEHUB_DATAAVAILABLE_QUEUE": "dataavailable",
