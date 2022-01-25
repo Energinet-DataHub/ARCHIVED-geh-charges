@@ -39,7 +39,6 @@ jobs:
       AZURE_SPN_ID: ${{ secrets.AZURE_SPN_ID }}
       AZURE_SPN_SECRET: ${{ secrets.AZURE_SPN_SECRET }}
       AZURE_KEYVAULT_URL: ${{ secrets.AZURE_KEYVAULT_URL }}
-      AZURE_SECRETS_KEYVAULT_URL: ${{ secrets.AZURE_SECRETS_KEYVAULT_URL }}
 
   terraform_validate:
     uses: Energinet-DataHub/.github/.github/workflows/terraform-validate.yml@2.7.0
@@ -79,7 +78,7 @@ jobs:
 
   # # Create system tests artifact for testing after deployment
   # systemtest_ci:
-  #   # Depend on these validating jobs in order to avoid potentially creating artifacts that should never be used if this job fails.
+  #   # Depend on these validating jobs in order to avoid potentially creating artifacts that should never be used if this job fails
   #   needs: [ci_base, terraform_validate, dotnet_solution_ci]
   #   uses: Energinet-DataHub/.github/.github/workflows/dotnet-create-function-artifact.yml@2.7.0
   #   with:
