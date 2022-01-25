@@ -21,6 +21,8 @@ namespace GreenEnergyHub.Charges.Infrastructure
 {
     public class ActorProvider : IActorProvider
     {
+        // At the moment the only type used is GLN, but other types must be handled in the future.
+        private const string CurrentSupportedIdentificationType = "GLN";
         private readonly IMarketParticipantRepository _marketParticipantRepository;
 
         public ActorProvider(IMarketParticipantRepository marketParticipantRepository)
@@ -32,7 +34,11 @@ namespace GreenEnergyHub.Charges.Infrastructure
         {
             var mp = await _marketParticipantRepository.GetOrNullAsync(actorId).ConfigureAwait(false);
 
-            return new Actor(mp.Id, "???", "???", mp.BusinessProcessRole.ToString());
+            return new Actor(
+                mp.Id,
+                CurrentSupportedIdentificationType,
+                mp.MarketParticipantId,
+                mp.BusinessProcessRole.ToString());
         }
     }
 }
