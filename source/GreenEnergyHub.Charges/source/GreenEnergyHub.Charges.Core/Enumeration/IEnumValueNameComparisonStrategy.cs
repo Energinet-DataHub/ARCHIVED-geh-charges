@@ -12,10 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
+
 namespace GreenEnergyHub.Charges.Core.Enumeration
 {
     public interface IEnumValueNameComparisonStrategy
     {
-        bool IsEquivalent(System.Enum valueOne, System.Enum valueTwo);
+        bool IsEquivalent(Enum protobufValue, Enum comparisonValue);
     }
 }
