@@ -112,7 +112,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Infrastructure.Cim.Bundles.Cha
             Mock<ICimIdProvider> cimIdProvider)
         {
             marketParticipantRepository
-                .Setup(r => r.GetHubSenderAsync())
+                .Setup(r => r.GetMeteringPointAdministratorAsync())
                 .ReturnsAsync(new MarketParticipant(
                     Guid.NewGuid(),
                     "5790001330552",

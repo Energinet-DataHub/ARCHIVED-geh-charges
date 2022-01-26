@@ -31,6 +31,6 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableData
         public abstract Task<IReadOnlyList<TAvailableData>> CreateAsync(TInput input);
 
         protected async Task<MarketParticipant> GetSenderAsync() =>
-            await _marketParticipantRepository.GetHubSenderAsync().ConfigureAwait(false);
+            await _marketParticipantRepository.GetMeteringPointAdministratorAsync().ConfigureAwait(false);
     }
 }

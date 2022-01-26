@@ -38,6 +38,24 @@ namespace GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories
                 .SingleOrDefaultAsync(mp => mp.MarketParticipantId == marketParticipantId);
         }
 
+        public Task<List<MarketParticipant>> GetGridAccessProvidersAsync()
+        {
+            return _chargesDatabaseContext
+                .MarketParticipants
+                .Where(mp => mp.BusinessProcessRole == MarketParticipantRole.GridAccessProvider)
+                .Where(m => m.IsActive)
+                .ToListAsync();
+        }
+
+        public async Task<IReadOnlyCollection<MarketParticipant>> GetAsync(IEnumerable<Guid> ids)
+        {
+            return await _chargesDatabaseContext
+                .MarketParticipants
+                .Where(mp => ids.Contains(mp.Id))
+                .ToListAsync()
+                .ConfigureAwait(false);
+        }
+
         /// <summary>
         /// This implementation is temp until grid areas and market participants are implemented in their own
         /// domains and integration event are used  to update a query model in the charges domain.
@@ -47,46 +65,31 @@ namespace GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories
         /// </summary>
         /// <param name="meteringPointId">ID of the metering point to find the grid access provider for</param>
         /// <returns>The grid access provider responsible for the metering point</returns>
-        public MarketParticipant GetGridAccessProvider(string meteringPointId)
+        public Task<MarketParticipant> GetGridAccessProviderAsync(string meteringPointId)
         {
-            return new MarketParticipant(
+            return Task.FromResult(new MarketParticipant(
                 Guid.NewGuid(),
                 "8100000000030",
                 true,
-                MarketParticipantRole.GridAccessProvider);
+                MarketParticipantRole.GridAccessProvider));
         }
 
-        public async Task<List<MarketParticipant>> GetActiveGridAccessProvidersAsync()
+        public Task<MarketParticipant> GetMeteringPointAdministratorAsync()
         {
-            return await _chargesDatabaseContext
-                .MarketParticipants
-                .Where(mp => mp.BusinessProcessRole == MarketParticipantRole.GridAccessProvider)
-                .Where(m => m.IsActive)
-                .ToListAsync();
+            return GetAsync(MarketParticipantRole.MeteringPointAdministrator);
         }
 
-        public async Task<MarketParticipant> GetAsync(MarketParticipantRole marketParticipantRole)
+        public Task<MarketParticipant> GetSystemOperatorAsync()
         {
-            return await _chargesDatabaseContext
-                .MarketParticipants
-                .Where(mp => mp.BusinessProcessRole == marketParticipantRole)
-                .SingleAsync()
-                .ConfigureAwait(false);
+            return GetAsync(MarketParticipantRole.SystemOperator);
         }
 
-        public async Task<IReadOnlyCollection<MarketParticipant>> GetAsync(IEnumerable<Guid> ids)
-        {
-            return await _chargesDatabaseContext
-                .MarketParticipants
-                .Where(mp => ids.Contains(mp.Id))
-                .ToListAsync();
-        }
-
-        public Task<MarketParticipant> GetHubSenderAsync()
+        private Task<MarketParticipant> GetAsync(MarketParticipantRole marketParticipantRole)
         {
             return _chargesDatabaseContext
                 .MarketParticipants
-                .Where(mp => mp.BusinessProcessRole == MarketParticipantRole.MeteringPointAdministrator)
+                .Where(mp => mp.BusinessProcessRole == marketParticipantRole)
+                .Where(mp => mp.IsActive)
                 .SingleAsync();
         }
     }
