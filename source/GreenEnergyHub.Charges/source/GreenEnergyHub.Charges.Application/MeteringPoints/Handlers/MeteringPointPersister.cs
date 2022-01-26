@@ -53,6 +53,7 @@ namespace GreenEnergyHub.Charges.Application.MeteringPoints.Handlers
                 _logger.LogInformation(
                     $"Metering Point ID '{meteringPoint.MeteringPointId}' already exists in storage");
 
+                // TODO BJARKE: How does this method ensure that they are identical? Shouldn't it throw? At least the name is very misleading
                 // Compare and log differences between the integration event data and the persisted metering point's data
                 EnsureMeteringPointsAreIdentical(meteringPoint, existingMeteringPoint);
             }
@@ -72,7 +73,7 @@ namespace GreenEnergyHub.Charges.Application.MeteringPoints.Handlers
                 _logger.LogError($"Received 'settlement method' event data '{meteringPoint.SettlementMethod}' was not equal to the already persisted value '{existingMeteringPoint.SettlementMethod}' for Metering Point ID '{meteringPoint.MeteringPointId}'");
 
             if (!meteringPoint.HasSameGridAreaId(existingMeteringPoint))
-                _logger.LogError($"Received 'grid area id' event data '{meteringPoint.GridAreaId}' was not equal to the already persisted value '{existingMeteringPoint.GridAreaId}' for Metering Point ID '{meteringPoint.MeteringPointId}'");
+                _logger.LogError($"Received 'grid area link id' event data '{meteringPoint.GridAreaLinkId}' was not equal to the already persisted value '{existingMeteringPoint.GridAreaLinkId}' for Metering Point ID '{meteringPoint.MeteringPointId}'");
         }
     }
 }

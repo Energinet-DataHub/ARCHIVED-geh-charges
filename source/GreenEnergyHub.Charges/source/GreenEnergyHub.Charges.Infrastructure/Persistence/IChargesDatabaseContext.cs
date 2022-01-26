@@ -33,6 +33,8 @@ namespace GreenEnergyHub.Charges.Infrastructure.Persistence
 
         DbSet<GridArea> GridAreas { get; }
 
+        DbSet<GridAreaLink> GridAreaLinks { get; }
+
         DbSet<ChargeLink> ChargeLinks { get; }
 
         DbSet<DefaultChargeLink> DefaultChargeLinks { get; }

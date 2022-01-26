@@ -12,16 +12,22 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
-
-namespace GreenEnergyHub.Charges.Infrastructure.Persistence
+namespace GreenEnergyHub.Charges.IntegrationTests
 {
-    public class GridArea
+    /// <summary>
+    /// Provide a unified compile time safe way to access values corresponding to the seeded data
+    /// in the test database.
+    /// </summary>
+    public static class SeededData
     {
-        public Guid Id { get; set; }
+        public static class MeteringPoint
+        {
+            public const string Known571313180000000005 = "571313180000000005";
+        }
 
-        public bool IsActive { get; set; }
-
-        public Guid? GridAccessProviderId { get; set; }
+        public static class MarketParticipant
+        {
+            public const string Inactive8900000000005 = "8900000000005";
+        }
     }
 }

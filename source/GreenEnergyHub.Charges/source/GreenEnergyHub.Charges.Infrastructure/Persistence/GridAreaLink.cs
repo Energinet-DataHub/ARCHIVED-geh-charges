@@ -16,12 +16,10 @@ using System;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Persistence
 {
-    public class GridArea
+    public class GridAreaLink
     {
         public Guid Id { get; set; }
 
-        public bool IsActive { get; set; }
-
-        public Guid? GridAccessProviderId { get; set; }
+        public Guid GridAreaId { get; set; }
     }
 }

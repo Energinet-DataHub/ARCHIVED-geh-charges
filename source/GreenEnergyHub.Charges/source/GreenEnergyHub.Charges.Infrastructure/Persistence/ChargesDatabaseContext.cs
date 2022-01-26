@@ -42,6 +42,8 @@ namespace GreenEnergyHub.Charges.Infrastructure.Persistence
 
         public DbSet<GridArea> GridAreas { get; private set; }
 
+        public DbSet<GridAreaLink> GridAreaLinks { get; private set; }
+
         public DbSet<DefaultChargeLink> DefaultChargeLinks { get; private set; }
 
         public DbSet<ChargeLink> ChargeLinks { get; private set; }
@@ -61,6 +63,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Persistence
             modelBuilder.ApplyConfiguration(new MarketParticipantEntityConfiguration());
             modelBuilder.ApplyConfiguration(new MeteringPointEntityConfiguration());
             modelBuilder.ApplyConfiguration(new GridAreaEntityConfiguration());
+            modelBuilder.ApplyConfiguration(new GridAreaLinkEntityConfiguration());
 
             base.OnModelCreating(modelBuilder);
         }

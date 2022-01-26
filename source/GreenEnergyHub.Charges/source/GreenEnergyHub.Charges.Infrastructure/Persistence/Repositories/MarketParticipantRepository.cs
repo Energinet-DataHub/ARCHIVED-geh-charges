@@ -61,13 +61,17 @@ namespace GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories
             if (meteringPointId == null) throw new ArgumentNullException(nameof(meteringPointId));
             if (string.IsNullOrEmpty(meteringPointId.Trim())) throw new ArgumentException();
 
-            return (from point in _chargesDatabaseContext.MeteringPoints
-                    from area in _chargesDatabaseContext.GridAreas
-                    from owner in _chargesDatabaseContext.MarketParticipants
-                    where area.GridAccessProviderId == owner.Id
-                    where point.MeteringPointId == meteringPointId
-                    where point.GridAreaId == area.Id
-                    select owner)
+            // TODO BJARKE: What if actor of grid area is null?
+            // TODO BJARKE: What if grid area is in-active?
+            return (from meteringPoint in _chargesDatabaseContext.MeteringPoints
+                    from gridAreaLink in _chargesDatabaseContext.GridAreaLinks
+                    from gridArea in _chargesDatabaseContext.GridAreas
+                    from marketParticipant in _chargesDatabaseContext.MarketParticipants
+                    where gridArea.GridAccessProviderId == marketParticipant.Id
+                    where meteringPoint.MeteringPointId == meteringPointId
+                    where meteringPoint.GridAreaLinkId == gridAreaLink.Id
+                    where gridAreaLink.GridAreaId == gridArea.Id
+                    select marketParticipant)
                 .SingleAsync();
         }
 

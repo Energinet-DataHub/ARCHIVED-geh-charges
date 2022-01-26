@@ -51,7 +51,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
             await using var chargesDatabaseReadContext = _databaseManager.CreateDbContext();
             var actual = chargesDatabaseReadContext.MeteringPoints.Single(x => x.MeteringPointId == expected.MeteringPointId);
             actual.ConnectionState.Should().Be(expected.ConnectionState);
-            actual.GridAreaId.Should().Be(expected.GridAreaId);
+            actual.GridAreaLinkId.Should().Be(expected.GridAreaLinkId);
             actual.MeteringPointId.Should().Be(expected.MeteringPointId);
             actual.EffectiveDate.Should().Be(expected.EffectiveDate);
             actual.SettlementMethod.Should().Be(expected.SettlementMethod);
@@ -123,7 +123,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
             return MeteringPoint.Create(
                 Guid.NewGuid().ToString("N"),
                 MeteringPointType.Consumption,
-                Guid.NewGuid(),
+                Guid.NewGuid(), // TODO BJARKE: Must be an existing grid area link id
                 SystemClock.Instance.GetCurrentInstant(),
                 ConnectionState.Connected,
                 SettlementMethod.Flex);

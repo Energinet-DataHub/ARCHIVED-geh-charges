@@ -29,7 +29,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Persistence.EntityConfigurations
             builder.Property(x => x.ConnectionState);
             builder.Property(x => x.EffectiveDate);
             builder.Property(x => x.SettlementMethod);
-            builder.Property(x => x.GridAreaId);
+            builder.Property(x => x.GridAreaLinkId);
             builder.Property(x => x.MeteringPointId);
             builder.Property(x => x.MeteringPointType);
         }
