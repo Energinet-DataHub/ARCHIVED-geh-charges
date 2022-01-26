@@ -40,7 +40,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories
 
         public async Task StoreAsync(IReadOnlyCollection<ChargeLink> chargeLink)
         {
-            await _context.ChargeLinks.AddRangeAsync(chargeLink);
+            await _context.ChargeLinks.AddRangeAsync(chargeLink).ConfigureAwait(false);
             await _context.SaveChangesAsync().ConfigureAwait(false);
         }
     }

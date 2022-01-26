@@ -56,22 +56,21 @@ namespace GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories
                 MarketParticipantRole.GridAccessProvider);
         }
 
-        public async Task<List<MarketParticipant>> GetActiveGridAccessProvidersAsync()
+        public Task<List<MarketParticipant>> GetActiveGridAccessProvidersAsync()
         {
-            return await _chargesDatabaseContext
+            return _chargesDatabaseContext
                 .MarketParticipants
                 .Where(mp => mp.BusinessProcessRole == MarketParticipantRole.GridAccessProvider)
                 .Where(m => m.IsActive)
                 .ToListAsync();
         }
 
-        public async Task<MarketParticipant> GetAsync(MarketParticipantRole marketParticipantRole)
+        public Task<MarketParticipant> GetAsync(MarketParticipantRole marketParticipantRole)
         {
-            return await _chargesDatabaseContext
+            return _chargesDatabaseContext
                 .MarketParticipants
                 .Where(mp => mp.BusinessProcessRole == marketParticipantRole)
-                .SingleAsync()
-                .ConfigureAwait(false);
+                .SingleAsync();
         }
 
         public async Task<IReadOnlyCollection<MarketParticipant>> GetAsync(IEnumerable<Guid> ids)
@@ -79,12 +78,13 @@ namespace GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories
             return await _chargesDatabaseContext
                 .MarketParticipants
                 .Where(mp => ids.Contains(mp.Id))
-                .ToListAsync();
+                .ToListAsync()
+                .ConfigureAwait(false);
         }
 
-        public async Task<MarketParticipant> GetHubSenderAsync()
+        public Task<MarketParticipant> GetHubSenderAsync()
         {
-            return await _chargesDatabaseContext
+            return _chargesDatabaseContext
                 .MarketParticipants
                 .Where(mp => mp.BusinessProcessRole == MarketParticipantRole.MeteringPointAdministrator)
                 .SingleAsync();

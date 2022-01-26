@@ -31,16 +31,15 @@ namespace GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories
             _chargesDatabaseContext = chargesDatabaseContext;
         }
 
-        public async Task<Charge> GetAsync(ChargeIdentifier chargeIdentifier)
+        public Task<Charge> GetAsync(ChargeIdentifier chargeIdentifier)
         {
-            return await GetChargeQueryable(chargeIdentifier).SingleAsync();
+            return GetChargeQueryable(chargeIdentifier).SingleAsync();
         }
 
-        public async Task<Charge> GetAsync(Guid id)
+        public Task<Charge> GetAsync(Guid id)
         {
-            return await GetChargesAsQueryable()
-                .SingleAsync(x => x.Id == id)
-                .ConfigureAwait(false);
+            return GetChargesAsQueryable()
+                .SingleAsync(x => x.Id == id);
         }
 
         public async Task<IReadOnlyCollection<Charge>> GetAsync(IReadOnlyCollection<Guid> ids)
@@ -53,7 +52,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories
 
         public async Task<Charge?> GetOrNullAsync(ChargeIdentifier chargeIdentifier)
         {
-            return await GetChargeQueryable(chargeIdentifier).SingleOrDefaultAsync();
+            return await GetChargeQueryable(chargeIdentifier).SingleOrDefaultAsync().ConfigureAwait(false);
         }
 
         public async Task StoreChargeAsync(Charge charge)
