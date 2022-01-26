@@ -61,9 +61,9 @@ namespace GreenEnergyHub.Charges.MessageHub.MessageHub
             await NotifyMessageHubOfAvailableDataAsync(availableData).ConfigureAwait(false);
         }
 
-        private async Task<IReadOnlyList<TAvailableData>> CreateAvailableDataAsync(TInputType input)
+        private Task<IReadOnlyList<TAvailableData>> CreateAvailableDataAsync(TInputType input)
         {
-            return await _availableDataFactory.CreateAsync(input);
+            return _availableDataFactory.CreateAsync(input);
         }
 
         private async Task StoreAvailableDataForLaterBundlingAsync(IReadOnlyList<TAvailableData> availableData)

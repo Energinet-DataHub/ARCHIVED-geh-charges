@@ -32,10 +32,9 @@ namespace GreenEnergyHub.Json
             _options.Converters.Add(NodaConverters.InstantConverter);
         }
 
-        public async ValueTask<object> DeserializeAsync(Stream utf8Json, Type returnType)
+        public ValueTask<object> DeserializeAsync(Stream utf8Json, Type returnType)
         {
-            return await System.Text.Json.JsonSerializer.DeserializeAsync(utf8Json, returnType, _options)
-                .ConfigureAwait(false);
+            return System.Text.Json.JsonSerializer.DeserializeAsync(utf8Json, returnType, _options);
         }
 
         public TValue Deserialize<TValue>(string json)
