@@ -61,7 +61,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.BundleSpecification.ChargeLink
             var availableData = GetRejection(noOfReasons);
 
             marketParticipantRepository
-                .Setup(r => r.GetHubSenderAsync())
+                .Setup(r => r.GetMeteringPointAdministratorAsync())
                 .ReturnsAsync(hubSender);
 
             cimIDProvider.Setup(

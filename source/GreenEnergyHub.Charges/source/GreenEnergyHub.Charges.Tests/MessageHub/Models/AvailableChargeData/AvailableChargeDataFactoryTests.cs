@@ -41,7 +41,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeData
             [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
             [Frozen] Mock<IMessageMetaDataContext> messageMetaDataContext,
             Instant now,
-            TestMeteringPointAdministrator hubSender,
+            TestMeteringPointAdministrator meteringPointAdministrator,
             List<TestGridAccessProvider> gridAccessProvider,
             ChargeCommandBuilder chargeCommandBuilder,
             ChargeCommandAcceptedEventBuilder chargeCommandAcceptedEventBuilder,
@@ -52,12 +52,12 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeData
             var acceptedEvent = chargeCommandAcceptedEventBuilder.WithChargeCommand(chargeCommand).Build();
 
             marketParticipantRepository
-                .Setup(r => r.GetActiveGridAccessProvidersAsync())
+                .Setup(r => r.GetGridAccessProvidersAsync())
                 .ReturnsAsync(gridAccessProvider.Cast<MarketParticipant>().ToList);
 
             marketParticipantRepository
-                .Setup(r => r.GetHubSenderAsync())
-                .ReturnsAsync(hubSender);
+                .Setup(r => r.GetMeteringPointAdministratorAsync())
+                .ReturnsAsync(meteringPointAdministrator);
 
             messageMetaDataContext.Setup(m => m.RequestDataTime).Returns(now);
 
