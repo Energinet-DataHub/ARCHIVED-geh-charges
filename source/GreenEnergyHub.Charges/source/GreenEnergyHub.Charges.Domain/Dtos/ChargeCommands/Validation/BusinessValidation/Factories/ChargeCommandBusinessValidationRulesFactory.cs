@@ -97,18 +97,17 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessV
             return rules;
         }
 
-        private async Task<Charge?> GetChargeOrNullAsync(ChargeCommand command)
+        private Task<Charge?> GetChargeOrNullAsync(ChargeCommand command)
         {
             var chargeId = command.ChargeOperation.ChargeId;
             var chargeOperationChargeOwner = command.ChargeOperation.ChargeOwner;
             var chargeType = command.ChargeOperation.Type;
 
-            return await _chargeRepository
+            return _chargeRepository
                 .GetOrNullAsync(new ChargeIdentifier(
                     chargeId,
                     chargeOperationChargeOwner,
-                    chargeType))
-                .ConfigureAwait(false);
+                    chargeType));
         }
     }
 }
