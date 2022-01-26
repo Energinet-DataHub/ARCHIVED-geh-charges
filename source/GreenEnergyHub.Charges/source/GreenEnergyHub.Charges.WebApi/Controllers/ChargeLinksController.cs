@@ -47,7 +47,9 @@ namespace GreenEnergyHub.Charges.WebApi.Controllers
 
             var meteringPointExists = await _data
                 .MeteringPoints
-                .AnyAsync(m => m.MeteringPointId == meteringPointId);
+                .AnyAsync(m => m.MeteringPointId == meteringPointId)
+                .ConfigureAwait(false);
+
             if (!meteringPointExists)
                 return NotFound();
 
@@ -58,7 +60,8 @@ namespace GreenEnergyHub.Charges.WebApi.Controllers
                 .ThenBy(c => c.Charge.SenderProvidedChargeId)
                 .ThenByDescending(c => c.StartDateTime)
                 .AsChargeLinkDto()
-                .ToListAsync();
+                .ToListAsync()
+                .ConfigureAwait(false);
 
             return Ok(chargeLinks);
         }

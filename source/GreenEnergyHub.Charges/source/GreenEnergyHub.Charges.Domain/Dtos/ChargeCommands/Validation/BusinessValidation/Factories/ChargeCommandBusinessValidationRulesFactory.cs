@@ -53,7 +53,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessV
             var configuration = await _rulesConfigurationRepository.GetConfigurationAsync().ConfigureAwait(false);
 
             var senderId = chargeCommand.Document.Sender.Id;
-            var sender = await _marketParticipantRepository.GetOrNullAsync(senderId);
+            var sender = await _marketParticipantRepository.GetOrNullAsync(senderId).ConfigureAwait(false);
 
             var charge = await GetChargeOrNullAsync(chargeCommand).ConfigureAwait(false);
 

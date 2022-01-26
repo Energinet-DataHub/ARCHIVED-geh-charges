@@ -45,13 +45,17 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
             var validationResult = await _validator.ValidateAsync(chargeLinksReceivedEvent.ChargeLinksCommand).ConfigureAwait(false);
             if (validationResult.IsFailed)
             {
-                await _chargeLinksReceiptService.RejectAsync(chargeLinksReceivedEvent.ChargeLinksCommand, validationResult);
+                await _chargeLinksReceiptService
+                    .RejectAsync(chargeLinksReceivedEvent.ChargeLinksCommand, validationResult)
+                    .ConfigureAwait(false);
                 return;
             }
 
             var chargeLinks = await _chargeLinkFactory.CreateAsync(chargeLinksReceivedEvent).ConfigureAwait(false);
             await _chargeLinksRepository.StoreAsync(chargeLinks).ConfigureAwait(false);
-            await _chargeLinksReceiptService.AcceptAsync(chargeLinksReceivedEvent.ChargeLinksCommand);
+            await _chargeLinksReceiptService
+                .AcceptAsync(chargeLinksReceivedEvent.ChargeLinksCommand)
+                .ConfigureAwait(false);
         }
     }
 }

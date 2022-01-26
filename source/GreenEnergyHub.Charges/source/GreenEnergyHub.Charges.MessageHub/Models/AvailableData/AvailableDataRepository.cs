@@ -33,8 +33,8 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableData
 
         public async Task StoreAsync(IEnumerable<TAvailableData> availableData)
         {
-            await _context.SetAsync<TAvailableData>().AddRangeAsync(availableData);
-            await _context.SaveChangesAsync();
+            await _context.SetAsync<TAvailableData>().AddRangeAsync(availableData).ConfigureAwait(false);
+            await _context.SaveChangesAsync().ConfigureAwait(false);
         }
 
         public async Task<IReadOnlyList<TAvailableData>> GetAsync(IEnumerable<Guid> dataReferenceIds)
@@ -43,7 +43,8 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableData
                 .SetAsync<TAvailableData>()
                 .Where(x => dataReferenceIds.Contains(x.AvailableDataReferenceId))
                 .OrderBy(x => x.RequestDateTime)
-                .ToListAsync();
+                .ToListAsync()
+                .ConfigureAwait(false);
         }
     }
 }
