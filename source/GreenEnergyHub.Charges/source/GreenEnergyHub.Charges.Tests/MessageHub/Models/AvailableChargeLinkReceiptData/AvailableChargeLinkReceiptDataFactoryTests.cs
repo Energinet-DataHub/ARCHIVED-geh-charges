@@ -37,7 +37,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeLinkRece
         [InlineAutoDomainData(MarketParticipantRole.GridAccessProvider)]
         public async Task CreateAsync_WhenSenderNotSystemOperator_ReturnsAvailableData(
             MarketParticipantRole marketParticipantRole,
-            MarketParticipant hubSender,
+            MarketParticipant meteringPointAdministrator,
             [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
             [Frozen] Mock<IMessageMetaDataContext> messageMetaDataContext,
             ChargeLinksAcceptedEvent acceptedEvent,
@@ -48,7 +48,9 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeLinkRece
             acceptedEvent.ChargeLinksCommand.Document.Sender.BusinessProcessRole = marketParticipantRole;
             messageMetaDataContext.Setup(m => m.RequestDataTime).Returns(now);
             var expectedLinks = acceptedEvent.ChargeLinksCommand.ChargeLinks.ToList();
-            marketParticipantRepository.Setup(r => r.GetHubSenderAsync()).ReturnsAsync(hubSender);
+            marketParticipantRepository
+                .Setup(r => r.GetMeteringPointAdministratorAsync())
+                .ReturnsAsync(meteringPointAdministrator);
 
             // Act
             var actualList = await sut.CreateAsync(acceptedEvent);

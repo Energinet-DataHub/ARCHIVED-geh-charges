@@ -14,7 +14,6 @@
 
 using System.Threading.Tasks;
 using FluentAssertions;
-using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories;
 using GreenEnergyHub.Charges.IntegrationTests.Fixtures.Database;
 using Xunit;
@@ -33,48 +32,76 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
         }
 
         [Fact]
-        public async Task GetActiveGridAccessProvidersAsync()
+        public async Task GetGridAccessProvidersAsync_WhenNotIsActive_ReturnsListWithoutInactiveGridAccessProvider()
         {
             // Arrange
             await using var chargesDatabaseContext = _databaseManager.CreateDbContext();
             var sut = new MarketParticipantRepository(chargesDatabaseContext);
 
             // Act
-            var actual = await sut.GetActiveGridAccessProvidersAsync();
+            var actual = await sut.GetGridAccessProvidersAsync();
 
             // Assert
-            actual.Should().NotBeEmpty();
             actual.Should().NotContain(x => x.MarketParticipantId == "8900000000005");
         }
 
         [Fact]
-        public async Task WhenCalled_WithMarketParticipantRole_MarketParticipantIsReturnedWithMatchingRole()
+        public async Task GetGridAccessProvidersAsync_WhenIsActive_ReturnsListWithActiveGridAccessProvider()
         {
             // Arrange
             await using var chargesDatabaseContext = _databaseManager.CreateDbContext();
             var sut = new MarketParticipantRepository(chargesDatabaseContext);
-            const MarketParticipantRole expectedMarketParticipantRole = MarketParticipantRole.SystemOperator;
 
             // Act
-            var actual = await sut.GetAsync(expectedMarketParticipantRole);
+            var actual = await sut.GetGridAccessProvidersAsync();
 
             // Assert
-            actual.Should().NotBeNull();
-            actual.BusinessProcessRole.Should().Be(expectedMarketParticipantRole);
+            actual.Should().NotBeEmpty();
         }
 
         [Fact]
-        public async Task GetHubSenderAsync_ReturnsHubSenderMarketParticipant()
+        public async Task GetGridAccessProviderAsync_ReturnsActiveGridAccessProvider()
         {
             // Arrange
             await using var chargesDatabaseContext = _databaseManager.CreateDbContext();
             var sut = new MarketParticipantRepository(chargesDatabaseContext);
 
             // Act
-            var actual = await sut.GetHubSenderAsync();
+            var actual = await sut.GetGridAccessProviderAsync("some-metering-point-id");
 
             // Assert
             actual.Should().NotBeNull();
+            actual.IsActive.Should().BeTrue();
+        }
+
+        [Fact]
+        public async Task GetMeteringPointAdministratorAsync_ReturnsActiveMeteringPointAdministrator()
+        {
+            // Arrange
+            await using var chargesDatabaseContext = _databaseManager.CreateDbContext();
+            var sut = new MarketParticipantRepository(chargesDatabaseContext);
+
+            // Act
+            var actual = await sut.GetMeteringPointAdministratorAsync();
+
+            // Assert
+            actual.Should().NotBeNull();
+            actual.IsActive.Should().BeTrue();
+        }
+
+        [Fact]
+        public async Task GetSystemOperatorAsync_ReturnsActiveSystemOperator()
+        {
+            // Arrange
+            await using var chargesDatabaseContext = _databaseManager.CreateDbContext();
+            var sut = new MarketParticipantRepository(chargesDatabaseContext);
+
+            // Act
+            var actual = await sut.GetSystemOperatorAsync();
+
+            // Assert
+            actual.Should().NotBeNull();
+            actual.IsActive.Should().BeTrue();
         }
     }
 }
