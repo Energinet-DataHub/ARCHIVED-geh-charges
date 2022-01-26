@@ -12,8 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Threading.Tasks;
 using FluentAssertions;
+using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories;
 using GreenEnergyHub.Charges.IntegrationTests.Fixtures.Database;
 using Xunit;
@@ -32,7 +34,37 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
         }
 
         [Fact]
-        public async Task GetGridAccessProvidersAsync_WhenNotIsActive_ReturnsListWithoutInactiveGridAccessProvider()
+        public async Task GetGridAccessProviderAsync_WhenNotFound_ThrowsInvalidOperationException()
+        {
+            // Arrange
+            var nonExistingMeteringPointId = Guid.NewGuid().ToString();
+            await using var chargesDatabaseContext = _databaseManager.CreateDbContext();
+            var sut = new MarketParticipantRepository(chargesDatabaseContext);
+
+            // Act and assert
+            await Assert.ThrowsAsync<InvalidOperationException>(
+                async () => await sut.GetGridAccessProviderAsync(nonExistingMeteringPointId));
+        }
+
+        [Fact]
+        public async Task GetGridAccessProviderAsync_ReturnsGridAccessProvider()
+        {
+            // Arrange
+            await using var chargesDatabaseContext = _databaseManager.CreateDbContext();
+            var sut = new MarketParticipantRepository(chargesDatabaseContext);
+
+            // Act
+            var expected = "571313180000000005";
+            var actual = await sut.GetGridAccessProviderAsync(expected);
+
+            // Assert
+            actual.MarketParticipantId.Should().Be(expected);
+            actual.BusinessProcessRole.Should().Be(MarketParticipantRole.GridAccessProvider);
+            actual.IsActive.Should().BeTrue();
+        }
+
+        [Fact]
+        public async Task GetActiveGridAccessProvidersAsync()
         {
             // Arrange
             await using var chargesDatabaseContext = _databaseManager.CreateDbContext();

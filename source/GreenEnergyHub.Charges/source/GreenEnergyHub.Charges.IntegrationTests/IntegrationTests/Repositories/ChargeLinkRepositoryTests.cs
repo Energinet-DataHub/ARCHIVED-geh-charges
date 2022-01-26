@@ -107,7 +107,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
             var meteringPoint = MeteringPoint.Create(
                 Guid.NewGuid().ToString("N"),
                 MeteringPointType.ElectricalHeating,
-                "some-area-id",
+                Guid.NewGuid(),
                 SystemClock.Instance.GetCurrentInstant(),
                 ConnectionState.Connected,
                 SettlementMethod.Flex);

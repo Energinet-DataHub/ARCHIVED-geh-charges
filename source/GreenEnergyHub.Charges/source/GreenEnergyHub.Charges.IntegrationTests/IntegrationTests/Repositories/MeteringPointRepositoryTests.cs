@@ -123,7 +123,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
             return MeteringPoint.Create(
                 Guid.NewGuid().ToString("N"),
                 MeteringPointType.Consumption,
-                "grid area id",
+                Guid.NewGuid(),
                 SystemClock.Instance.GetCurrentInstant(),
                 ConnectionState.Connected,
                 SettlementMethod.Flex);

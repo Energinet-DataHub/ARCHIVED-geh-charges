@@ -24,7 +24,6 @@ using GreenEnergyHub.TestHelpers;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NodaTime;
-using NodaTime.Extensions;
 using Xunit;
 using Xunit.Categories;
 
@@ -104,7 +103,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.MeteringPoints.Handlers
             var existingMeteringPoint = MeteringPoint.Create(
                 meteringPointCreatedEvent.MeteringPointId,
                 MeteringPointType.Production,
-                "DiffGridArea",
+                Guid.NewGuid(),
                 meteringPointCreatedEvent.EffectiveDate,
                 meteringPointCreatedEvent.ConnectionState,
                 SettlementMethod.NonProfiled);
@@ -146,7 +145,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.MeteringPoints.Handlers
         {
             return new MeteringPointCreatedEvent(
                 "123",
-                "2",
+                Guid.NewGuid(),
                 SettlementMethod.Flex,
                 ConnectionState.New,
                 SystemClock.Instance.GetCurrentInstant(),

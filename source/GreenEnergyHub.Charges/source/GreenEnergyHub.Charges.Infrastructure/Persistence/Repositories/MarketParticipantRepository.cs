@@ -56,22 +56,19 @@ namespace GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories
                 .ConfigureAwait(false);
         }
 
-        /// <summary>
-        /// This implementation is temp until grid areas and market participants are implemented in their own
-        /// domains and integration event are used  to update a query model in the charges domain.
-        ///
-        /// Later we need to use the metering point ID to find the grid area and then find the responsible market
-        /// participant of the grid area.
-        /// </summary>
-        /// <param name="meteringPointId">ID of the metering point to find the grid access provider for</param>
-        /// <returns>The grid access provider responsible for the metering point</returns>
         public Task<MarketParticipant> GetGridAccessProviderAsync(string meteringPointId)
         {
-            return Task.FromResult(new MarketParticipant(
-                Guid.NewGuid(),
-                "8100000000030",
-                true,
-                MarketParticipantRole.GridAccessProvider));
+            if (meteringPointId == null) throw new ArgumentNullException(nameof(meteringPointId));
+            if (string.IsNullOrEmpty(meteringPointId.Trim())) throw new ArgumentException();
+
+            return (from point in _chargesDatabaseContext.MeteringPoints
+                    from area in _chargesDatabaseContext.GridAreas
+                    from owner in _chargesDatabaseContext.MarketParticipants
+                    where area.GridAccessProviderId == owner.Id
+                    where point.MeteringPointId == meteringPointId
+                    where point.GridAreaId == area.Id
+                    select owner)
+                .SingleAsync();
         }
 
         public Task<MarketParticipant> GetMeteringPointAdministratorAsync()

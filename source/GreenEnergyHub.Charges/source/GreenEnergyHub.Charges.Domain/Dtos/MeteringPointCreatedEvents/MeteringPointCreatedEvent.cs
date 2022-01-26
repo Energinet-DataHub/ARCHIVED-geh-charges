@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using Energinet.DataHub.Core.Messaging.MessageTypes.Common;
 using GreenEnergyHub.Charges.Domain.Dtos.Messages.Events;
 using GreenEnergyHub.Charges.Domain.MeteringPoints;
@@ -23,7 +24,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.MeteringPointCreatedEvents
     {
         public MeteringPointCreatedEvent(
             string meteringPointId,
-            string gridAreaId,
+            Guid gridAreaId,
             SettlementMethod? settlementMethod,
             ConnectionState connectionState,
             Instant effectiveDate,
@@ -40,7 +41,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.MeteringPointCreatedEvents
 
         public string MeteringPointId { get; }
 
-        public string GridAreaId { get; }
+        public Guid GridAreaId { get; }
 
         public SettlementMethod? SettlementMethod { get; }
 
@@ -48,6 +49,6 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.MeteringPointCreatedEvents
 
         public Instant EffectiveDate { get; }
 
-        public MeteringPointType MeteringPointType { get; set; }
+        public MeteringPointType MeteringPointType { get; }
     }
 }

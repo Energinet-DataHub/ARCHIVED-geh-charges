@@ -18,38 +18,23 @@ using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.DefaultChargeLinks;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.Domain.MeteringPoints;
+using GreenEnergyHub.Charges.Infrastructure.ActorRegister.Persistence.GridAreas;
 using Microsoft.EntityFrameworkCore;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Persistence
 {
-    /// <summary>
-    /// Contract defining the capabilities of the Charges database context.
-    /// </summary>
     public interface IChargesDatabaseContext
     {
-        /// <summary>
-        /// Charges available in the database.
-        /// </summary>
         DbSet<Charge> Charges { get; }
 
-        /// <summary>
-        /// MarketParticipants available in the database.
-        /// </summary>
         DbSet<MarketParticipant> MarketParticipants { get; }
 
-        /// <summary>
-        /// Metering Point available in the database.
-        /// </summary>
         DbSet<MeteringPoint> MeteringPoints { get; }
 
-        /// <summary>
-        /// Charge links available in the database.
-        /// </summary>
+        DbSet<GridArea> GridAreas { get; }
+
         DbSet<ChargeLink> ChargeLinks { get; }
 
-        /// <summary>
-        /// DefaultChargeLink available in the database.
-        /// </summary>
         DbSet<DefaultChargeLink> DefaultChargeLinks { get; }
 
         /// <summary>
