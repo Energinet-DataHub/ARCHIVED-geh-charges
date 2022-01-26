@@ -33,11 +33,12 @@ namespace GreenEnergyHub.Charges.ApplyDBMigrationsApp.Helpers
         {
             var sqlScripts = base.GetScripts(connectionManager).ToList();
 
-            foreach (var script in sqlScripts)
+            var scriptNames = sqlScripts.Select(s => s.Name);
+            foreach (var name in scriptNames)
             {
-                if (!NamingConvention.Regex.IsMatch(script.Name))
+                if (!NamingConvention.Regex.IsMatch(name))
                 {
-                    throw new FormatException($"The script '{script.Name}' doesn't adhere to the naming convention.");
+                    throw new FormatException($"The script '{name}' doesn't adhere to the naming convention.");
                 }
             }
 

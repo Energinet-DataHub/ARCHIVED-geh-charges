@@ -106,7 +106,7 @@ namespace GreenEnergyHub.Charges.Tests.Core.Json
             Assert.Equal(ChargeCommandAcceptedEventMRid, actual.Command.Document.Id);
         }
 
-        private class Foo
+        private sealed class Foo
         {
             public Foo(int noSetter)
             {
