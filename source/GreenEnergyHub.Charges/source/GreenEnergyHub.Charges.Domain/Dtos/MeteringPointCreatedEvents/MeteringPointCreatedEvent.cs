@@ -24,7 +24,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.MeteringPointCreatedEvents
     {
         public MeteringPointCreatedEvent(
             string meteringPointId,
-            Guid gridAreaId,
+            Guid gridAreaLinkId,
             SettlementMethod? settlementMethod,
             ConnectionState connectionState,
             Instant effectiveDate,
@@ -32,7 +32,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.MeteringPointCreatedEvents
             : base(Transaction.NewTransaction())
         {
             MeteringPointId = meteringPointId;
-            GridAreaId = gridAreaId;
+            GridAreaLinkId = gridAreaLinkId;
             SettlementMethod = settlementMethod;
             ConnectionState = connectionState;
             EffectiveDate = effectiveDate;
@@ -41,7 +41,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.MeteringPointCreatedEvents
 
         public string MeteringPointId { get; }
 
-        public Guid GridAreaId { get; }
+        public Guid GridAreaLinkId { get; }
 
         public SettlementMethod? SettlementMethod { get; }
 

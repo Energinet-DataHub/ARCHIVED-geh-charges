@@ -54,11 +54,10 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
             var sut = new MarketParticipantRepository(chargesDatabaseContext);
 
             // Act
-            var expected = SeededData.MeteringPoint.Known571313180000000005;
-            var actual = await sut.GetGridAccessProviderAsync(expected);
+            var actual = await sut.GetGridAccessProviderAsync(SeededData.MeteringPoints.Mp571313180000000005.Id);
 
             // Assert
-            actual.MarketParticipantId.Should().Be(expected);
+            actual.MarketParticipantId.Should().Be(SeededData.MeteringPoints.Mp571313180000000005.GridAccessProvider);
             actual.BusinessProcessRole.Should().Be(MarketParticipantRole.GridAccessProvider);
             actual.IsActive.Should().BeTrue();
         }
@@ -99,7 +98,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
             var sut = new MarketParticipantRepository(chargesDatabaseContext);
 
             // Act
-            var actual = await sut.GetGridAccessProviderAsync(SeededData.MeteringPoint.Known571313180000000005);
+            var actual = await sut.GetGridAccessProviderAsync(SeededData.MeteringPoints.Mp571313180000000005.Id);
 
             // Assert
             actual.Should().NotBeNull();

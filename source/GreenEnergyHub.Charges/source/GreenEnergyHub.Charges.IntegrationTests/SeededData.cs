@@ -20,13 +20,20 @@ namespace GreenEnergyHub.Charges.IntegrationTests
     /// </summary>
     public static class SeededData
     {
-        public static class MeteringPoint
+        public static class MeteringPoints
         {
-            public const string Known571313180000000005 = "571313180000000005";
+            public static class Mp571313180000000005
+            {
+                public const string Id = "571313180000000005";
+
+                public const string GridAccessProvider =
+                    MarketParticipant.GridAccessProviderOfMeteringPoint571313180000000005;
+            }
         }
 
         public static class MarketParticipant
         {
+            public const string GridAccessProviderOfMeteringPoint571313180000000005 = "8100000000016";
             public const string Inactive8900000000005 = "8900000000005";
         }
     }

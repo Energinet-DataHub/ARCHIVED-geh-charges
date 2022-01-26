@@ -40,7 +40,7 @@ namespace GreenEnergyHub.Charges.Domain.MeteringPoints
         public static MeteringPoint Create(
             string meteringPointId,
             MeteringPointType meteringPointType,
-            Guid gridAreaId,
+            Guid gridAreaLinkId,
             Instant effectiveDate,
             ConnectionState connectionState,
             SettlementMethod? settlementMethod)
@@ -50,7 +50,7 @@ namespace GreenEnergyHub.Charges.Domain.MeteringPoints
                 id,
                 meteringPointId,
                 meteringPointType,
-                gridAreaId,
+                gridAreaLinkId,
                 effectiveDate,
                 connectionState,
                 settlementMethod);
@@ -80,7 +80,7 @@ namespace GreenEnergyHub.Charges.Domain.MeteringPoints
             return SettlementMethod == otherMeteringPoint.SettlementMethod;
         }
 
-        public bool HasSameGridAreaId(MeteringPoint otherMeteringPoint)
+        public bool HasSameGridAreaLinkId(MeteringPoint otherMeteringPoint)
         {
             return GridAreaLinkId == otherMeteringPoint.GridAreaLinkId;
         }

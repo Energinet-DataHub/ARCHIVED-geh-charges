@@ -80,7 +80,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Contracts.External.MeteringPoint
 
             return new MeteringPointCreatedEvent(
                 meteringPointCreated.GsrnNumber,
-                Guid.Parse(meteringPointCreated.GridAreaCode), // TODO BJARKE: Use grid area id or grid area link id? (the current code is wrong)
+                Guid.Parse(meteringPointCreated.GridAreaCode), // The GridAreaCode name is wrong - it's a grid area link id
                 settlementMethod,
                 connectionState,
                 meteringPointCreated.EffectiveDate.ToInstant(),

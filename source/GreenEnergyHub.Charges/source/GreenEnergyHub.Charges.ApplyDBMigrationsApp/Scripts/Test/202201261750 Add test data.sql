@@ -25,19 +25,19 @@ INSERT INTO [Charges].[MarketParticipant] VALUES (NEWID(),'5790001330552', 7, 1)
 -- Add grid areas
 ------------------------------------------------------------------------------------------------------------------------
 
-INSERT INTO [Charges].[GridArea] VALUES (NEWID(), 1, @provider8100000000016);
-INSERT INTO [Charges].[GridArea] VALUES (NEWID(), 1, @provider8100000000023);
-INSERT INTO [Charges].[GridArea] VALUES (NEWID(), 1, @provider8100000000030);
-INSERT INTO [Charges].[GridArea] VALUES (NEWID(), 1, @provider8900000000005);
-
-------------------------------------------------------------------------------------------------------------------------
--- Add grid area links
-------------------------------------------------------------------------------------------------------------------------
-
 DECLARE @areaIdOfProvider8100000000016 UNIQUEIDENTIFIER = NEWID()
 DECLARE @areaIdOfProvider8100000000023 UNIQUEIDENTIFIER = NEWID()
 DECLARE @areaIdOfProvider8100000000030 UNIQUEIDENTIFIER = NEWID()
 DECLARE @areaIdOfProvider8900000000005 UNIQUEIDENTIFIER = NEWID()
+
+INSERT INTO [Charges].[GridArea] VALUES (@areaIdOfProvider8100000000016, 1, @provider8100000000016);
+INSERT INTO [Charges].[GridArea] VALUES (@areaIdOfProvider8100000000023, 1, @provider8100000000023);
+INSERT INTO [Charges].[GridArea] VALUES (@areaIdOfProvider8100000000030, 1, @provider8100000000030);
+INSERT INTO [Charges].[GridArea] VALUES (@areaIdOfProvider8900000000005, 1, @provider8900000000005);
+
+------------------------------------------------------------------------------------------------------------------------
+-- Add grid area links
+------------------------------------------------------------------------------------------------------------------------
 
 DECLARE @areaLinkIdOfProvider8100000000016 UNIQUEIDENTIFIER = NEWID()
 DECLARE @areaLinkIdOfProvider8100000000023 UNIQUEIDENTIFIER = NEWID()
