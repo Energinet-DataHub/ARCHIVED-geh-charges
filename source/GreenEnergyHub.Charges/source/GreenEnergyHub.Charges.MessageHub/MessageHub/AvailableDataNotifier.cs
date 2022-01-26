@@ -51,7 +51,7 @@ namespace GreenEnergyHub.Charges.MessageHub.MessageHub
 
         public async Task NotifyAsync(TInputType input)
         {
-            var availableData = await CreateAvailableDataAsync(input);
+            var availableData = await CreateAvailableDataAsync(input).ConfigureAwait(false);
 
             if (availableData.Count == 0)
                 return;
