@@ -23,7 +23,7 @@ module "mssqldb_charges" {
   project_name          = var.domain_name_short
   environment_short     = var.environment_short
   environment_instance  = var.environment_instance
-  server_id             = data.azurerm_sql_server.mssqlsrv.id
+  server_id             = data.azurerm_mssql_server.mssqlsrv.id
   
   tags                  = azurerm_resource_group.this.tags
 }
