@@ -44,7 +44,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeData
 
             if (ShouldMakeDataAvailableForActiveGridProviders(input))
             {
-                var activeGridAccessProviders = await _marketParticipantRepository.GetActiveGridAccessProvidersAsync();
+                var activeGridAccessProviders = await _marketParticipantRepository.GetGridAccessProvidersAsync();
                 var operation = input.Command.ChargeOperation;
 
                 foreach (var recipient in activeGridAccessProviders)

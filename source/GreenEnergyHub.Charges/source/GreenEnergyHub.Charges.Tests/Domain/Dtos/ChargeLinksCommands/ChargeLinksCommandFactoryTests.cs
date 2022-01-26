@@ -86,7 +86,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeLinksCommands
                 .ReturnsAsync(meteringPoint);
 
             marketParticipantRepository
-                .Setup(m => m.GetAsync(MarketParticipantRole.SystemOperator))
+                .Setup(m => m.GetSystemOperatorAsync())
                 .ReturnsAsync(systemOperator);
 
             marketParticipantRepository
@@ -94,7 +94,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeLinksCommands
                 .ReturnsAsync(new List<MarketParticipant> { chargeOwner });
 
             marketParticipantRepository
-                .Setup(m => m.GetAsync(MarketParticipantRole.MeteringPointAdministrator))
+                .Setup(m => m.GetMeteringPointAdministratorAsync())
                 .ReturnsAsync(recipient);
 
             // Act
