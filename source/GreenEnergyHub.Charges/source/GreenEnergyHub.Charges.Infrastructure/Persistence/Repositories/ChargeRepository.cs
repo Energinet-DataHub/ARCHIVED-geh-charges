@@ -51,7 +51,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories
 
         public async Task<Charge?> GetOrNullAsync(ChargeIdentifier chargeIdentifier)
         {
-            return await GetChargeQueryable(chargeIdentifier).SingleOrDefaultAsync();
+            return await GetChargeQueryable(chargeIdentifier).SingleOrDefaultAsync().ConfigureAwait(false);
         }
 
         public async Task StoreChargeAsync(Charge charge)
