@@ -34,7 +34,7 @@ namespace GreenEnergyHub.Charges.Domain.Charges
             var owner = await _marketParticipantRepository.GetOrNullAsync(command.ChargeOperation.ChargeOwner);
 
             if (owner == null)
-                throw new Exception($"Market participant '{command.ChargeOperation.ChargeOwner}' does not exist.");
+                throw new InvalidOperationException($"Market participant '{command.ChargeOperation.ChargeOwner}' does not exist.");
 
             return new Charge(
                 Guid.NewGuid(),

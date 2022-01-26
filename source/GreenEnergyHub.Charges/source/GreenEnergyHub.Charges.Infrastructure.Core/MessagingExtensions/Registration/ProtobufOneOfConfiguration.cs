@@ -78,7 +78,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Registr
         /// <summary>
         /// ProtobufParser implemented from configuration
         /// </summary>
-        private class ConfigParser<TProtobufContract> : ProtobufParser<TProtobufContract>
+        private sealed class ConfigParser<TProtobufContract> : ProtobufParser<TProtobufContract>
         {
             private readonly MessageParser _parser;
             private readonly Func<TOneOf, Enum>? _getMessageType;
