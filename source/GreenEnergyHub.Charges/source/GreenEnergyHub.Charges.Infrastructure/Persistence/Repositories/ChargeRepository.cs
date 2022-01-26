@@ -38,8 +38,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories
 
         public Task<Charge> GetAsync(Guid id)
         {
-            return GetChargesAsQueryable()
-                .SingleAsync(x => x.Id == id);
+            return GetChargesAsQueryable().SingleAsync(x => x.Id == id);
         }
 
         public async Task<IReadOnlyCollection<Charge>> GetAsync(IReadOnlyCollection<Guid> ids)
