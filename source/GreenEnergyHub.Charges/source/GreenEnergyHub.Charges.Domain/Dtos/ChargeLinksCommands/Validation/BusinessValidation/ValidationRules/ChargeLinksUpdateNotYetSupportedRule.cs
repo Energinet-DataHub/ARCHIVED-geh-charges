@@ -53,8 +53,8 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands.Validation.Busi
             return true;
         }
 
-        public string TriggeredBy =>
-            _chargeLinksCommand.ChargeLinks
-                .First(ChargeLinkDateRangeIsNotOverlapping).SenderProvidedChargeId;
+        public string TriggeredBy => IsValid ?
+            _chargeLinksCommand.ChargeLinks.First().SenderProvidedChargeId :
+            _chargeLinksCommand.ChargeLinks.First(ChargeLinkDateRangeIsNotOverlapping).SenderProvidedChargeId;
     }
 }
