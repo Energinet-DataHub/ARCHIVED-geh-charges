@@ -21,10 +21,10 @@ namespace GreenEnergyHub.Charges.Infrastructure.ActorRegister.Persistence.GridAr
     {
         public void Configure(EntityTypeBuilder<GridArea> builder)
         {
-            builder.ToView("NetArea");
+            builder.ToView("GridArea");
 
             builder.HasKey(a => a.Id);
-            builder.Property(x => x.Id).ValueGeneratedNever();
+            builder.Property(a => a.Id).ValueGeneratedNever();
 
             builder.Property(a => a.Id);
             builder.Property(a => a.RecordId);

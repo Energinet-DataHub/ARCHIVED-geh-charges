@@ -12,8 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Threading.Tasks;
 using FluentAssertions;
+using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories;
 using GreenEnergyHub.Charges.IntegrationTests.Fixtures.Database;
 using Xunit;
@@ -32,7 +34,36 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
         }
 
         [Fact]
-        public async Task GetGridAccessProvidersAsync_WhenNotIsActive_ReturnsListWithoutInactiveGridAccessProvider()
+        public async Task GetGridAccessProviderAsync_WhenNotFound_ThrowsInvalidOperationException()
+        {
+            // Arrange
+            var nonExistingMeteringPointId = Guid.NewGuid().ToString();
+            await using var chargesDatabaseContext = _databaseManager.CreateDbContext();
+            var sut = new MarketParticipantRepository(chargesDatabaseContext);
+
+            // Act and assert
+            await Assert.ThrowsAsync<InvalidOperationException>(
+                async () => await sut.GetGridAccessProviderAsync(nonExistingMeteringPointId));
+        }
+
+        [Fact]
+        public async Task GetGridAccessProviderAsync_ReturnsGridAccessProvider()
+        {
+            // Arrange
+            await using var chargesDatabaseContext = _databaseManager.CreateDbContext();
+            var sut = new MarketParticipantRepository(chargesDatabaseContext);
+
+            // Act
+            var actual = await sut.GetGridAccessProviderAsync(SeededData.MeteringPoints.Mp571313180000000005.Id);
+
+            // Assert
+            actual.MarketParticipantId.Should().Be(SeededData.MeteringPoints.Mp571313180000000005.GridAccessProvider);
+            actual.BusinessProcessRole.Should().Be(MarketParticipantRole.GridAccessProvider);
+            actual.IsActive.Should().BeTrue();
+        }
+
+        [Fact]
+        public async Task GetActiveGridAccessProvidersAsync()
         {
             // Arrange
             await using var chargesDatabaseContext = _databaseManager.CreateDbContext();
@@ -42,7 +73,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
             var actual = await sut.GetGridAccessProvidersAsync();
 
             // Assert
-            actual.Should().NotContain(x => x.MarketParticipantId == "8900000000005");
+            actual.Should().NotContain(x => x.MarketParticipantId == SeededData.MarketParticipant.Inactive8900000000005);
         }
 
         [Fact]
@@ -67,7 +98,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
             var sut = new MarketParticipantRepository(chargesDatabaseContext);
 
             // Act
-            var actual = await sut.GetGridAccessProviderAsync("some-metering-point-id");
+            var actual = await sut.GetGridAccessProviderAsync(SeededData.MeteringPoints.Mp571313180000000005.Id);
 
             // Assert
             actual.Should().NotBeNull();

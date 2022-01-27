@@ -42,26 +42,6 @@ data "azurerm_key_vault_secret" "mssql_actor_register_database_name" {
   key_vault_id = data.azurerm_key_vault.kv_shared_resources.id
 }
 
-data "azurerm_key_vault_secret" "sql_data_admin_name" {
-  name         = "sql-data-admin-user-name"
-  key_vault_id = data.azurerm_key_vault.kv_shared_resources.id
-}
-
-data "azurerm_key_vault_secret" "sql_data_admin_password" {
-  name         = "sql-data-admin-user-password"
-  key_vault_id = data.azurerm_key_vault.kv_shared_resources.id
-}
-
-data "azurerm_key_vault_secret" "sql_data_url" {
-  name         = "sql-data-url"
-  key_vault_id = data.azurerm_key_vault.kv_shared_resources.id
-}
-
-data "azurerm_key_vault_secret" "sql_data_name" {
-  name         = "sql-data-name"
-  key_vault_id = data.azurerm_key_vault.kv_shared_resources.id
-}
-
 data "azurerm_key_vault_secret" "messagehub_storage_connection_string" {
   name         = "st-marketres-primary-connection-string"
   key_vault_id = data.azurerm_key_vault.kv_shared_resources.id
@@ -99,11 +79,6 @@ data "azurerm_key_vault_secret" "sb_domain_relay_listen_connection_string" {
 
 data "azurerm_key_vault_secret" "sb_domain_relay_manage_connection_string" {
   name         = "sb-domain-relay-manage-connection-string"
-  key_vault_id = data.azurerm_key_vault.kv_shared_resources.id
-}
-
-data "azurerm_key_vault_secret" "sql_actor_register_database_name" {
-  name         = "sql-actor-register-database-name"
   key_vault_id = data.azurerm_key_vault.kv_shared_resources.id
 }
 

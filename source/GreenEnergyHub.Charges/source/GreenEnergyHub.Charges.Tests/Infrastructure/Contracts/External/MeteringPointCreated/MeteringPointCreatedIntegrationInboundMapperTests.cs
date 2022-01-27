@@ -38,6 +38,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Contracts.External.Meterin
             [NotNull] Energinet.DataHub.MeteringPoints.IntegrationEventContracts.MeteringPointCreated meteringPointCreatedEvent,
             [NotNull] MeteringPointCreatedInboundMapper sut)
         {
+            meteringPointCreatedEvent.GridAreaCode = Guid.NewGuid().ToString();
             meteringPointCreatedEvent.EffectiveDate = Timestamp.FromDateTime(new DateTime(2021, 10, 31, 23, 00, 00, 00, DateTimeKind.Utc));
             meteringPointCreatedEvent.MeteringPointType = mpTypes.MeteringPointType.MptConsumption;
             meteringPointCreatedEvent.SettlementMethod = mpTypes.SettlementMethod.SmFlex;
@@ -50,7 +51,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Contracts.External.Meterin
             converted.Should().NotContainNullsOrEmptyEnumerables();
             converted.MeteringPointId.Should().Be(meteringPointCreatedEvent.GsrnNumber);
             converted.EffectiveDate.Should().Be(meteringPointCreatedEvent.EffectiveDate.ToInstant());
-            converted.GridAreaId.Should().Be(meteringPointCreatedEvent.GridAreaCode);
+            converted.GridAreaLinkId.Should().Be(meteringPointCreatedEvent.GridAreaCode);
             converted.SettlementMethod.Should().Be(SettlementMethod.Flex);
             converted.ConnectionState.Should().Be(ConnectionState.New);
             converted.MeteringPointType.Should().Be(MeteringPointType.Consumption);

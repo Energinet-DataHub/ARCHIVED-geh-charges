@@ -19,24 +19,19 @@ using System.Collections.Generic;
 
 namespace GreenEnergyHub.Charges.QueryApi.Model
 {
-    public partial class MarketParticipant
+    public partial class GridAreaLink
     {
-        public MarketParticipant()
+        public GridAreaLink()
         {
-            Charges = new HashSet<Charge>();
-            GridAreas = new HashSet<GridArea>();
+            MeteringPoints = new HashSet<MeteringPoint>();
         }
 
         public Guid Id { get; set; }
 
-        public string MarketParticipantId { get; set; }
+        public Guid GridAreaId { get; set; }
 
-        public int BusinessProcessRole { get; set; }
+        public virtual GridArea GridArea { get; set; }
 
-        public bool IsActive { get; set; }
-
-        public virtual ICollection<Charge> Charges { get; set; }
-
-        public virtual ICollection<GridArea> GridAreas { get; set; }
+        public virtual ICollection<MeteringPoint> MeteringPoints { get; set; }
     }
 }

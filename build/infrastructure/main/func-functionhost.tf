@@ -32,7 +32,7 @@ module "func_functionhost" {
 
     LOCAL_TIMEZONENAME                                              = "Europe/Copenhagen"
     CURRENCY                                                        = "DKK"
-    CHARGE_DB_CONNECTION_STRING                                     = local.CHARGE_DB_CONNECTION_STRING
+    CHARGE_DB_CONNECTION_STRING                                     = local.MS_CHARGE_DB_CONNECTION_STRING
     DOMAINEVENT_SENDER_CONNECTION_STRING                            = module.sb_charges.primary_connection_strings["send"]
     DOMAINEVENT_LISTENER_CONNECTION_STRING                          = module.sb_charges.primary_connection_strings["listen"]
     CHARGE_CREATED_TOPIC_NAME                                       = data.azurerm_key_vault_secret.sbt_charge_created_name.value
@@ -65,7 +65,7 @@ module "func_functionhost" {
     INTEGRATIONEVENT_SENDER_CONNECTION_STRING                       = data.azurerm_key_vault_secret.sb_domain_relay_send_connection_string.value
     INTEGRATIONEVENT_LISTENER_CONNECTION_STRING                     = data.azurerm_key_vault_secret.sb_domain_relay_listen_connection_string.value
     INTEGRATIONEVENT_MANAGER_CONNECTION_STRING                      = data.azurerm_key_vault_secret.sb_domain_relay_manage_connection_string.value
-    ACTOR_REGISTER_CONNECTION_STRING                                = local.ACTOR_REGISTER_CONNECTION_STRING
+    ACTOR_REGISTER_CONNECTION_STRING                                = local.MS_ACTOR_REGISTER_CONNECTION_STRING
 
     # Message Hub
     MESSAGEHUB_STORAGE_CONNECTION_STRING                            = data.azurerm_key_vault_secret.messagehub_storage_connection_string.value
