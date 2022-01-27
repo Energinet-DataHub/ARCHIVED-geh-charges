@@ -77,6 +77,10 @@ module "func_functionhost" {
     # Shared resources logging
     REQUEST_RESPONSE_LOGGING_CONNECTION_STRING                      = data.azurerm_key_vault_secret.st_market_operator_logs_primary_connection_string.value
     REQUEST_RESPONSE_LOGGING_CONTAINER_NAME                         = data.azurerm_key_vault_secret.st_market_operator_logs_container_name.value
+
+    # JWT token
+    B2C_TENANT_ID                                                   = data.azurerm_key_vault_secret.b2c_tenant_id.value
+    BACKEND_SERVICE_APP_ID                                          = data.azurerm_key_vault_secret.backend_service_app_id.value
   }
   
   tags                                      = azurerm_resource_group.this.tags

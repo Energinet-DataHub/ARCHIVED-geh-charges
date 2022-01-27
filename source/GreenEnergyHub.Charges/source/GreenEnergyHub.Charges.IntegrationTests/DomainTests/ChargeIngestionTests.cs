@@ -14,15 +14,12 @@
 
 using System;
 using System.Net;
-using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 using Energinet.DataHub.Core.FunctionApp.TestCommon;
 using FluentAssertions;
-using GreenEnergyHub.Charges.IntegrationTests.Fixtures;
+using GreenEnergyHub.Charges.IntegrationTests.Fixtures.FunctionApp;
 using GreenEnergyHub.Charges.IntegrationTests.TestFiles.Charges;
 using GreenEnergyHub.Charges.IntegrationTests.TestHelpers;
-using NodaTime;
 using Xunit;
 using Xunit.Abstractions;
 using Xunit.Categories;
@@ -32,14 +29,19 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
     [IntegrationTest]
     public class ChargeIngestionTests
     {
+        private const string EndpointUrl = "api/ChargeIngestion";
         private const int SecondsToWaitForIntegrationEvents = 15;
 
         [Collection(nameof(ChargesFunctionAppCollectionFixture))]
         public class RunAsync : FunctionAppTestBase<ChargesFunctionAppFixture>, IAsyncLifetime
         {
+            private readonly HttpRequestGenerator _httpRequestGenerator;
+
             public RunAsync(ChargesFunctionAppFixture fixture, ITestOutputHelper testOutputHelper)
                 : base(fixture, testOutputHelper)
             {
+                TestDataGenerator.GenerateDataForIntegrationTests(fixture);
+                _httpRequestGenerator = new HttpRequestGenerator(fixture.AuthorizationConfiguration);
             }
 
             public Task InitializeAsync()
@@ -58,9 +60,10 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             [Fact]
             public async Task When_ChargeIsReceived_Then_AHttp200ResponseIsReturned()
             {
-                var request = CreateHttpRequest(ChargeDocument.AnyValid, out string _);
+                var request = await _httpRequestGenerator.CreateHttpPostRequestAsync(
+                    EndpointUrl, ChargeDocument.AnyValid);
 
-                var actualResponse = await Fixture.HostManager.HttpClient.SendAsync(request);
+                var actualResponse = await Fixture.HostManager.HttpClient.SendAsync(request.Request);
 
                 actualResponse.StatusCode.Should().Be(HttpStatusCode.OK);
             }
@@ -68,13 +71,9 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             [Fact]
             public async Task When_InvalidChargeIsReceived_Then_AHttp400ResponseIsReturned()
             {
-                // Arrange
-                var request = CreateHttpRequest(ChargeDocument.TariffInvalidSchema, out _);
-
-                // Act
-                var actualResponse = await Fixture.HostManager.HttpClient.SendAsync(request);
-
-                // Assert
+                var request = await _httpRequestGenerator.CreateHttpPostRequestAsync(
+                    EndpointUrl, ChargeDocument.TariffInvalidSchema);
+                var actualResponse = await Fixture.HostManager.HttpClient.SendAsync(request.Request);
                 actualResponse.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             }
 
@@ -83,7 +82,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             public async Task When_ChargeIsReceived_Then_ChargeCreatedIntegrationEventIsPublished()
             {
                 // Arrange
-                var request = CreateHttpRequest(ChargeDocument.AnyValid, out var correlationId);
+                var (request, correlationId) = await _httpRequestGenerator.CreateHttpPostRequestAsync(
+                    EndpointUrl, ChargeDocument.AnyValid);
                 using var eventualChargeCreatedEvent = await Fixture
                     .ChargeCreatedListener
                     .ListenForMessageAsync(correlationId)
@@ -102,7 +102,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             public async Task When_ChargeBundleWithChargesIncludingPriceIsReceived_Then_ChargePricesUpdatedIntegrationEventsArePublished()
             {
                 // Arrange
-                var request = CreateHttpRequest(ChargeDocument.TariffBundleWithValidAndInvalid, out string correlationId);
+                var (request, correlationId) = await _httpRequestGenerator.CreateHttpPostRequestAsync(
+                    EndpointUrl, ChargeDocument.TariffBundleWithValidAndInvalid);
                 using var eventualChargePriceUpdatedEvent = await Fixture
                     .ChargePricesUpdatedListener
                     .ListenForEventsAsync(correlationId, expectedCount: 2)
@@ -121,7 +122,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             public async Task Given_NewTaxBundleTariffWithPrices_When_GridAccessProviderPeeks_Then_MessageHubReceivesReply()
             {
                 // Arrange
-                var request = CreateHttpRequest(ChargeDocument.TariffBundleWithValidAndInvalid, out var correlationId);
+                var (request, correlationId) = await _httpRequestGenerator.CreateHttpPostRequestAsync(
+                    EndpointUrl, ChargeDocument.TariffBundleWithValidAndInvalid);
 
                 // Act
                 await Fixture.HostManager.HttpClient.SendAsync(request);
@@ -129,21 +131,6 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 // Act and assert
                 // We expect three peaks, one for the charge and one for the receipt and one rejection
                 await Fixture.MessageHubMock.AssertPeekReceivesReplyAsync(correlationId, 3);
-            }
-
-            private static HttpRequestMessage CreateHttpRequest(string testFilePath, out string correlationId)
-            {
-                var clock = SystemClock.Instance;
-                var chargeXml = EmbeddedResourceHelper.GetEmbeddedFile(testFilePath, clock);
-                correlationId = CorrelationIdGenerator.Create();
-
-                var request = new HttpRequestMessage(HttpMethod.Post, "api/ChargeIngestion")
-                {
-                    Content = new StringContent(chargeXml, Encoding.UTF8, "application/xml"),
-                };
-                request.ConfigureTraceContext(correlationId);
-
-                return request;
             }
         }
     }
