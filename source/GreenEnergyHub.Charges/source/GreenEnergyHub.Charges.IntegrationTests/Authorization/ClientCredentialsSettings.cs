@@ -12,23 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Hosting;
-
-namespace GreenEnergyHub.Charges.WebApi
+namespace GreenEnergyHub.Charges.IntegrationTests.Authorization
 {
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            CreateHostBuilder(args).Build().Run();
-        }
-
-        public static IHostBuilder CreateHostBuilder(string[] args) =>
-            Host.CreateDefaultBuilder(args)
-                .ConfigureWebHostDefaults(webBuilder =>
-                {
-                    webBuilder.UseStartup<Startup>();
-                });
-    }
+    /// <summary>
+    /// Settings necessary for acquiring an access token from the B2C tenant using the client credentials flow.
+    /// </summary>
+    /// <param name="ClientId"></param>
+    /// <param name="ClientSecret"></param>
+    public record ClientCredentialsSettings(string ClientId, string ClientSecret);
 }

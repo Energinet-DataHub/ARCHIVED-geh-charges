@@ -126,3 +126,13 @@ data "azurerm_key_vault_secret" "st_market_operator_logs_container_name" {
   name         = "st-marketoplogs-container-name"
   key_vault_id = data.azurerm_key_vault.kv_shared_resources.id
 }
+
+data "azurerm_key_vault_secret" "backend_service_app_id" {
+  name         = "backend-service-app-id"
+  key_vault_id = data.azurerm_key_vault.kv_shared_resources.id
+}
+
+data "azurerm_key_vault_secret" "b2c_tenant_id" {
+  name         = "b2c-tenant-id"
+  key_vault_id = data.azurerm_key_vault.kv_shared_resources.id
+}

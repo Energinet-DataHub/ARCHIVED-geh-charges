@@ -14,7 +14,7 @@
 
 using Xunit;
 
-namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures
+namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures.FunctionApp
 {
     /// <summary>
     /// A xUnit collection fixture for ensuring tests don't run in parallel.

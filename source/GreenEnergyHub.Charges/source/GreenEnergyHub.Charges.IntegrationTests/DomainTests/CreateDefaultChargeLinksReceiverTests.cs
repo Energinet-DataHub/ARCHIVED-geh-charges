@@ -14,17 +14,21 @@
 
 using System;
 using System.Collections.Generic;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Azure.Messaging.ServiceBus;
 using Energinet.Charges.Contracts;
+using Energinet.DataHub.Core.FunctionApp.Common.Abstractions.ServiceBus;
 using Energinet.DataHub.Core.FunctionApp.TestCommon;
 using FluentAssertions;
 using Google.Protobuf;
-using GreenEnergyHub.Charges.IntegrationTests.Fixtures;
+using GreenEnergyHub.Charges.Domain.MarketParticipants;
+using GreenEnergyHub.Charges.IntegrationTests.Fixtures.FunctionApp;
 using GreenEnergyHub.Charges.IntegrationTests.TestHelpers;
 using Xunit;
 using Xunit.Abstractions;
 using Xunit.Categories;
+using Actor = Energinet.DataHub.Core.FunctionApp.Common.Abstractions.Actor.Actor;
 
 namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
 {
@@ -93,11 +97,16 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 return Task.CompletedTask;
             }
 
-            private ServiceBusMessage CreateServiceBusMessage(string meteringPointId, string replyToQueueName, out string correlationId, out string parentId)
+            private ServiceBusMessage CreateServiceBusMessage(
+                string meteringPointId, string replyToQueueName, out string correlationId, out string parentId)
             {
                 correlationId = CorrelationIdGenerator.Create();
                 var message = new CreateDefaultChargeLinks { MeteringPointId = meteringPointId };
                 parentId = $"00-{correlationId}-b7ad6b7169203331-01";
+
+                var actorId = new Guid(TestDataGenerator.TestActorId);
+                var actor = JsonSerializer.Serialize(
+                        new Actor(actorId, "???", "???", MarketParticipantRole.GridAccessProvider.ToString()));
 
                 var byteArray = message.ToByteArray();
                 var serviceBusMessage = new ServiceBusMessage(byteArray)
@@ -106,6 +115,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                     ApplicationProperties =
                     {
                         new KeyValuePair<string, object>("ReplyTo", replyToQueueName),
+                        new KeyValuePair<string, object>(Constants.ServiceBusIdentityKey, actor),
                     },
                 };
                 return serviceBusMessage;
