@@ -17,6 +17,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.MeteringPoints;
+using GreenEnergyHub.Charges.Infrastructure.Persistence;
 using GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories;
 using GreenEnergyHub.Charges.IntegrationTests.Fixtures.Database;
 using GreenEnergyHub.TestHelpers;
@@ -41,7 +42,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
         {
             // Arrange
             await using var chargesDatabaseWriteContext = _databaseManager.CreateDbContext();
-            var expected = GetMeteringPoint();
+            var expected = GetMeteringPoint(chargesDatabaseWriteContext);
             var sut = new MeteringPointRepository(chargesDatabaseWriteContext);
 
             // Act
@@ -67,7 +68,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
         {
             // Arrange
             await using var chargesDatabaseWriteContext = _databaseManager.CreateDbContext();
-            var expected = GetMeteringPoint();
+            var expected = GetMeteringPoint(chargesDatabaseWriteContext);
             await chargesDatabaseWriteContext.MeteringPoints.AddAsync(expected).ConfigureAwait(false);
             await chargesDatabaseWriteContext.SaveChangesAsync().ConfigureAwait(false);
 
@@ -86,7 +87,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
         {
             // Arrange
             await using var chargesDatabaseWriteContext = _databaseManager.CreateDbContext();
-            var expected = GetMeteringPoint();
+            var expected = GetMeteringPoint(chargesDatabaseWriteContext);
             await chargesDatabaseWriteContext.MeteringPoints.AddAsync(expected).ConfigureAwait(false);
             await chargesDatabaseWriteContext.SaveChangesAsync().ConfigureAwait(false);
 
@@ -114,12 +115,13 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
             Assert.Null(actual);
         }
 
-        private static MeteringPoint GetMeteringPoint()
+        private static MeteringPoint GetMeteringPoint(IChargesDatabaseContext context)
         {
+            var gridAreaLinkId = context.GridAreaLinks.First().Id;
             return MeteringPoint.Create(
                 Guid.NewGuid().ToString("N"),
                 MeteringPointType.Consumption,
-                "grid area id",
+                gridAreaLinkId,
                 SystemClock.Instance.GetCurrentInstant(),
                 ConnectionState.Connected,
                 SettlementMethod.Flex);

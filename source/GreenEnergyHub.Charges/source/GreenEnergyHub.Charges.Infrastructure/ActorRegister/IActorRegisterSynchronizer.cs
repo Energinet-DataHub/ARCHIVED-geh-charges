@@ -12,19 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Linq;
-using GreenEnergyHub.Charges.Infrastructure.ActorRegister.Persistence.Actors;
-using GreenEnergyHub.Charges.Infrastructure.ActorRegister.Persistence.GridAreaLinks;
-using GreenEnergyHub.Charges.Infrastructure.ActorRegister.Persistence.GridAreas;
+using System.Threading.Tasks;
 
-namespace GreenEnergyHub.Charges.Infrastructure.ActorRegister.Persistence
+namespace GreenEnergyHub.Charges.Infrastructure.ActorRegister
 {
-    public interface IActorRegister
+    public interface IActorRegisterSynchronizer
     {
-        IQueryable<Actor> Actors { get; }
-
-        IQueryable<GridArea> GridAreas { get; }
-
-        IQueryable<GridAreaLink> GridAreaLinks { get; }
+        Task SynchronizeAsync();
     }
 }

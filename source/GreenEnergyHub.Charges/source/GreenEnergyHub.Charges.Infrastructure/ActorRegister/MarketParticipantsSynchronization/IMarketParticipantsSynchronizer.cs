@@ -15,12 +15,12 @@
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 
-namespace GreenEnergyHub.Charges.Infrastructure.ActorRegister
+namespace GreenEnergyHub.Charges.Infrastructure.ActorRegister.MarketParticipantsSynchronization
 {
     /// <summary>
     /// Service to synchronize market participants from the shared actor register to the charges domain.
     /// </summary>
-    public interface IMarketParticipantSynchronizer
+    public interface IMarketParticipantsSynchronizer
     {
         /// <summary>
         /// Synchronize market participants from the shared actor register to the charges domain.
