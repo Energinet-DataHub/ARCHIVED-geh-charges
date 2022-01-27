@@ -4,6 +4,8 @@
 
 DROP TABLE IF EXISTS Charges.ChargeLink
 DROP TABLE IF EXISTS Charges.MeteringPoint
+DROP TABLE IF EXISTS Charges.GridAreaLink
+DROP TABLE IF EXISTS Charges.GridArea
 DROP TABLE IF EXISTS Charges.DefaultChargeLink
 DROP TABLE IF EXISTS Charges.ChargePoint
 DROP TABLE IF EXISTS Charges.Charge

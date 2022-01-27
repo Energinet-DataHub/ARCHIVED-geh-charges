@@ -21,10 +21,9 @@ namespace GreenEnergyHub.Charges.Infrastructure.ActorRegister.Persistence.GridAr
     /// </summary>
     public class GridAreaLink
     {
-        public GridAreaLink(Guid gridAreaId, Guid id)
+        // Solely used by persistence framework
+        private GridAreaLink()
         {
-            GridAreaId = gridAreaId;
-            Id = id;
         }
 
         /// <summary>

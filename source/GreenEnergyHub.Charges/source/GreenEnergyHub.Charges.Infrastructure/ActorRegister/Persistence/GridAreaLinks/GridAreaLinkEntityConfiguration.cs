@@ -23,13 +23,12 @@ namespace GreenEnergyHub.Charges.Infrastructure.ActorRegister.Persistence.GridAr
         {
             builder.ToView("GridAreaLink");
 
-            builder.HasKey(a => a.Id);
+            builder.HasKey(l => l.Id);
             builder
-                .Property(a => a.Id)
+                .Property(l => l.Id)
                 .ValueGeneratedNever()
                 .HasColumnName("GridLinkId");
-
-            builder.Property(a => a.GridAreaId);
+            builder.Property(l => l.GridAreaId);
         }
     }
 }

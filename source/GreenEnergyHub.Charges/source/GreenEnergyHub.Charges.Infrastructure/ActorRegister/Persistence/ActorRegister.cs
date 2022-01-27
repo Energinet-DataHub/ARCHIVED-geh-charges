@@ -51,6 +51,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.ActorRegister.Persistence
 
             modelBuilder.ApplyConfiguration(new ActorEntityConfiguration());
             modelBuilder.ApplyConfiguration(new GridAreaEntityConfiguration());
+            modelBuilder.ApplyConfiguration(new GridAreaLinkEntityConfiguration());
 
             base.OnModelCreating(modelBuilder);
         }
