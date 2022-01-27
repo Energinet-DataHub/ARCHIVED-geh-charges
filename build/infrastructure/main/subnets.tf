@@ -12,15 +12,40 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-module "vnet_integrations" {
+module "external_endpoints_subnet" {
   source                                        = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//azure/subnet?ref=6.0.0"
-  name                                          = "vnet-integrations"
+  name                                          = "external-endpoints-subnet"
   project_name                                  = var.project_name
   environment_short                             = var.environment_short
   environment_instance                          = var.environment_instance
-  resource_group_name                           = var.vnet_resource_group_name
-  virtual_network_name                          = local.VIRTUAL_NETWORK_NAME
-  address_prefixes                              = ["10.0.20.0/22"]
+  resource_group_name                           = data.azurerm_key_vault_secret.vnet_shared_resouce_group_name
+  virtual_network_name                          = data.azurerm_key_vault_secret.vnet_shared_name
+  address_prefixes                              = ["10.42.0.32/28"]
+  enforce_private_link_endpoint_network_policies  = true
+}
+
+module "private_endpoints_subnet" {
+  source                                        = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//azure/subnet?ref=6.0.0"
+  name                                          = "private-endpoints-subnet"
+  project_name                                  = var.project_name
+  environment_short                             = var.environment_short
+  environment_instance                          = var.environment_instance
+  resource_group_name                           = data.azurerm_key_vault_secret.vnet_shared_resouce_group_name
+  virtual_network_name                          = data.azurerm_key_vault_secret.vnet_shared_name
+  address_prefixes                              = ["10.42.0.48/28"]
+  enforce_private_link_endpoint_network_policies  = true
+  enforce_private_link_service_network_policies = true
+}
+
+module "vnet_integrations_webapi" {
+  source                                        = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//azure/subnet?ref=6.0.0"
+  name                                          = "vnet-integrations-webapi"
+  project_name                                  = var.project_name
+  environment_short                             = var.environment_short
+  environment_instance                          = var.environment_instance
+  resource_group_name                           = data.azurerm_key_vault_secret.vnet_shared_resouce_group_name
+  virtual_network_name                          = data.azurerm_key_vault_secret.vnet_shared_name
+  address_prefixes                              = ["10.42.0.64/28"]
   enforce_private_link_service_network_policies = true
 
   # Delegate the subnet to "Microsoft.Web/serverFarms"
@@ -31,27 +56,21 @@ module "vnet_integrations" {
   }]
 }
 
-module "private_endpoints_subnet" {
+module "vnet_integrations_functionhost" {
   source                                        = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//azure/subnet?ref=6.0.0"
-  name                                          = "private-endpoints-subnet"
+  name                                          = "vnet-integrations-functionhost"
   project_name                                  = var.project_name
   environment_short                             = var.environment_short
   environment_instance                          = var.environment_instance
-  resource_group_name                           = var.vnet_resource_group_name
-  virtual_network_name                          = local.VIRTUAL_NETWORK_NAME
-  address_prefixes                              = ["10.0.21.0/22"]
-  enforce_private_link_endpoint_network_policies  = true
+  resource_group_name                           = data.azurerm_key_vault_secret.vnet_shared_resouce_group_name
+  virtual_network_name                          = data.azurerm_key_vault_secret.vnet_shared_name
+  address_prefixes                              = ["10.42.0.80/28"]
   enforce_private_link_service_network_policies = true
-}
 
-module "external_endpoints_subnet" {
-  source                                        = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//azure/subnet?ref=6.0.0"
-  name                                          = "external-endpoints-subnet"
-  project_name                                  = var.project_name
-  environment_short                             = var.environment_short
-  environment_instance                          = var.environment_instance
-  resource_group_name                           = var.vnet_resource_group_name
-  virtual_network_name                          = local.VIRTUAL_NETWORK_NAME
-  address_prefixes                              = ["10.0.22.0/22"]
-  enforce_private_link_endpoint_network_policies  = true
+  # Delegate the subnet to "Microsoft.Web/serverFarms"
+  delegations =  [{
+   name = "delegation"
+   service_delegation_name    = "Microsoft.Web/serverFarms"
+   service_delegation_actions = ["Microsoft.Network/virtualNetworks/subnets/action"]
+  }]
 }
