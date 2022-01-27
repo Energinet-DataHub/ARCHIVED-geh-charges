@@ -351,6 +351,9 @@ GO
 ALTER TABLE [Charges].[GridArea]  WITH CHECK ADD  CONSTRAINT [FK_GridArea_MarketParticipant] FOREIGN KEY([GridAccessProviderId])
     REFERENCES [Charges].[MarketParticipant] ([Id])
     GO
+ALTER TABLE [Charges].[GridAreaLink]  WITH CHECK ADD  CONSTRAINT [FK_GridAreaLink_GridArea] FOREIGN KEY([GridAreaId])
+    REFERENCES [Charges].[GridArea] ([Id])
+    GO
 ALTER TABLE Charges.MeteringPoint WITH CHECK ADD CONSTRAINT [FK_MeteringPoint_GridAreaLink] FOREIGN KEY (GridAreaLinkId)
     REFERENCES Charges.GridAreaLink(Id);
     GO
