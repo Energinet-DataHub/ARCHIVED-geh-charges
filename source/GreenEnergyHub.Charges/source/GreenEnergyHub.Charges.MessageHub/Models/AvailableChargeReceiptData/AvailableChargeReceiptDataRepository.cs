@@ -33,8 +33,8 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
 
         public async Task StoreAsync(IEnumerable<AvailableChargeReceiptData> availableChargeReceiptData)
         {
-            await _context.AvailableChargeReceiptData.AddRangeAsync(availableChargeReceiptData);
-            await _context.SaveChangesAsync();
+            await _context.AvailableChargeReceiptData.AddRangeAsync(availableChargeReceiptData).ConfigureAwait(false);
+            await _context.SaveChangesAsync().ConfigureAwait(false);
         }
 
         public async Task<IReadOnlyList<AvailableChargeReceiptData>> GetAsync(IEnumerable<Guid> dataReferenceIds)
@@ -43,7 +43,8 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
                 .AvailableChargeReceiptData
                 .Where(x => dataReferenceIds.Contains(x.AvailableDataReferenceId))
                 .OrderBy(x => x.RequestDateTime)
-                .ToListAsync();
+                .ToListAsync()
+                .ConfigureAwait(false);
         }
     }
 }

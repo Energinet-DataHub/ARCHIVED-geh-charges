@@ -72,7 +72,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
                     x.Type == charge.Type)
                 .ConfigureAwait(false);
 
-            actual.Should().NotBeNull();
+            actual.Should().BeEquivalentTo(charge);
             actual.Points.Should().NotBeNullOrEmpty();
         }
 

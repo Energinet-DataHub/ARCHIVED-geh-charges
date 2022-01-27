@@ -17,6 +17,31 @@ data "azurerm_key_vault" "kv_shared_resources" {
   resource_group_name = var.shared_resources_resource_group_name
 }
 
+data "azurerm_key_vault_secret" "mssql_data_name" {
+  name         = "mssql-data-name"
+  key_vault_id = data.azurerm_key_vault.kv_shared_resources.id
+}
+
+data "azurerm_key_vault_secret" "mssql_data_admin_name" {
+  name         = "mssql-data-admin-user-name"
+  key_vault_id = data.azurerm_key_vault.kv_shared_resources.id
+}
+
+data "azurerm_key_vault_secret" "mssql_data_admin_password" {
+  name         = "mssql-data-admin-user-password"
+  key_vault_id = data.azurerm_key_vault.kv_shared_resources.id
+}
+
+data "azurerm_key_vault_secret" "mssql_data_url" {
+  name         = "mssql-data-url"
+  key_vault_id = data.azurerm_key_vault.kv_shared_resources.id
+}
+
+data "azurerm_key_vault_secret" "mssql_actor_register_database_name" {
+  name         = "mssql-actor-register-database-name"
+  key_vault_id = data.azurerm_key_vault.kv_shared_resources.id
+}
+
 data "azurerm_key_vault_secret" "sql_data_admin_name" {
   name         = "sql-data-admin-user-name"
   key_vault_id = data.azurerm_key_vault.kv_shared_resources.id

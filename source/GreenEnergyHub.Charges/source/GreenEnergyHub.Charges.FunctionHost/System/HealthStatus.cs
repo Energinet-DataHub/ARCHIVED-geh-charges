@@ -37,13 +37,13 @@ namespace GreenEnergyHub.Charges.FunctionHost.System
             [NotNull] HttpRequestData req,
             [NotNull] FunctionContext context)
         {
-            var healthStatus = await GetDeepHealthCheckStatusAsync();
+            var healthStatus = await GetDeepHealthCheckStatusAsync().ConfigureAwait(false);
 
             var isHealthy = healthStatus.All(x => x.Value);
             var httpStatus = isHealthy ? HttpStatusCode.OK : HttpStatusCode.ServiceUnavailable;
 
             var response = req.CreateResponse();
-            await response.WriteAsJsonAsync(healthStatus);
+            await response.WriteAsJsonAsync(healthStatus).ConfigureAwait(false);
             response.StatusCode = httpStatus;
             return response;
         }
@@ -57,11 +57,29 @@ namespace GreenEnergyHub.Charges.FunctionHost.System
 
             return new Dictionary<string, bool>
             {
-                { "ChargesDatabaseIsAvailable", await IsDatabaseAvailableAsync(chargesDbConnectionString) },
-                { "ActorRegisterDatabaseIsAvailable", await IsDatabaseAvailableAsync(actorRegisterDbConnectionString) },
-                { "MessageHubDataAvailableQueueExists", await QueueExistsAsync(connectionString, EnvironmentSettingNames.MessageHubDataAvailableQueue) },
-                { "MessageHubRequestQueueExists", await QueueExistsAsync(connectionString, EnvironmentSettingNames.MessageHubRequestQueue) },
-                { "MessageHubResponseQueueExists", await QueueExistsAsync(connectionString, EnvironmentSettingNames.MessageHubReplyQueue) },
+                {
+                    "ChargesDatabaseIsAvailable",
+                    await IsDatabaseAvailableAsync(chargesDbConnectionString).ConfigureAwait(false)
+                },
+                {
+                    "ActorRegisterDatabaseIsAvailable",
+                    await IsDatabaseAvailableAsync(actorRegisterDbConnectionString).ConfigureAwait(false)
+                },
+                {
+                    "MessageHubDataAvailableQueueExists",
+                    await QueueExistsAsync(connectionString, EnvironmentSettingNames.MessageHubDataAvailableQueue)
+                        .ConfigureAwait(false)
+                },
+                {
+                    "MessageHubRequestQueueExists",
+                    await QueueExistsAsync(connectionString, EnvironmentSettingNames.MessageHubRequestQueue)
+                        .ConfigureAwait(false)
+                },
+                {
+                    "MessageHubResponseQueueExists",
+                    await QueueExistsAsync(connectionString, EnvironmentSettingNames.MessageHubReplyQueue)
+                        .ConfigureAwait(false)
+                },
             };
         }
 
@@ -70,8 +88,8 @@ namespace GreenEnergyHub.Charges.FunctionHost.System
             var connection = new SqlConnection(connectionString);
             try
             {
-                await connection.OpenAsync();
-                await connection.CloseAsync();
+                await connection.OpenAsync().ConfigureAwait(false);
+                await connection.CloseAsync().ConfigureAwait(false);
                 return true;
             }
             catch
@@ -84,7 +102,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.System
         {
             var client = new ServiceBusAdministrationClient(connectionString);
             var queueName = EnvironmentHelper.GetEnv(queueNameEnvVariable);
-            return await client.QueueExistsAsync(queueName);
+            return await client.QueueExistsAsync(queueName).ConfigureAwait(false);
         }
     }
 }

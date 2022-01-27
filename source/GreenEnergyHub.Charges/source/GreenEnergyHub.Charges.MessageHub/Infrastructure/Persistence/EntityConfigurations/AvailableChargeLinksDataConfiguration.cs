@@ -25,6 +25,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Infrastructure.Persistence.EntityCon
             builder.ToTable(nameof(AvailableChargeLinksData), DatabaseSchemaNames.MessageHub);
 
             builder.HasKey(x => x.Id);
+            builder.Property(x => x.Id).ValueGeneratedNever();
 
             builder.Property(x => x.SenderId);
             builder.Property(x => x.SenderRole);
