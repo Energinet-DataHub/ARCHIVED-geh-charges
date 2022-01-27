@@ -25,7 +25,10 @@ namespace GreenEnergyHub.Charges.Infrastructure.ActorRegister
         private readonly IGridAreasSynchronizer _gridAreasSynchronizer;
         private readonly IGridAreaLinksSynchronizer _gridAreaLinksSynchronizer;
 
-        public ActorRegisterSynchronizer(IMarketParticipantsSynchronizer marketParticipantsSynchronizer, IGridAreasSynchronizer gridAreasSynchronizer, IGridAreaLinksSynchronizer gridAreaLinksSynchronizer)
+        public ActorRegisterSynchronizer(
+            IMarketParticipantsSynchronizer marketParticipantsSynchronizer,
+            IGridAreasSynchronizer gridAreasSynchronizer,
+            IGridAreaLinksSynchronizer gridAreaLinksSynchronizer)
         {
             _marketParticipantsSynchronizer = marketParticipantsSynchronizer;
             _gridAreasSynchronizer = gridAreasSynchronizer;
