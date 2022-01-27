@@ -14,6 +14,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.ChargeLinks;
@@ -104,10 +105,12 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
                 points: new List<Point>());
             context.Charges.Add(charge);
 
+            var gridAreaLinkId = context.GridAreaLinks.First().Id;
+
             var meteringPoint = MeteringPoint.Create(
                 Guid.NewGuid().ToString("N"),
                 MeteringPointType.ElectricalHeating,
-                "some-area-id",
+                gridAreaLinkId,
                 SystemClock.Instance.GetCurrentInstant(),
                 ConnectionState.Connected,
                 SettlementMethod.Flex);

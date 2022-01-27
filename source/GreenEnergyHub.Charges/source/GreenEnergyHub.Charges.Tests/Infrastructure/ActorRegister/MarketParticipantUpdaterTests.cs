@@ -15,6 +15,7 @@
 using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.Infrastructure.ActorRegister;
+using GreenEnergyHub.Charges.Infrastructure.ActorRegister.MarketParticipantsSynchronization;
 using GreenEnergyHub.Charges.Infrastructure.ActorRegister.Persistence.Actors;
 using GreenEnergyHub.Charges.TestCore.Attributes;
 using GreenEnergyHub.Charges.Tests.Builders;

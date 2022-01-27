@@ -11,12 +11,6 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-output charges_connection_string {
-  description = "Connection string of the charges database created in the shared server"
-  value       = local.CHARGE_DB_CONNECTION_STRING
-  sensitive   = true
-}
-
 output ms_charges_connection_string {
   description = "Connection string of the charges database created in the shared server"
   value       = local.MS_CHARGE_DB_CONNECTION_STRING

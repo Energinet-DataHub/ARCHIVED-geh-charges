@@ -13,30 +13,19 @@
 // limitations under the License.
 
 using System;
-using System.Collections.Generic;
 
-#nullable disable
-
-namespace GreenEnergyHub.Charges.QueryApi.Model
+namespace GreenEnergyHub.Charges.Infrastructure.Persistence
 {
-    public partial class MarketParticipant
+    public class GridArea
     {
-        public MarketParticipant()
+        public GridArea(Guid id, Guid? gridAccessProviderId)
         {
-            Charges = new HashSet<Charge>();
-            GridAreas = new HashSet<GridArea>();
+            Id = id;
+            GridAccessProviderId = gridAccessProviderId;
         }
 
-        public Guid Id { get; set; }
+        public Guid Id { get; }
 
-        public string MarketParticipantId { get; set; }
-
-        public int BusinessProcessRole { get; set; }
-
-        public bool IsActive { get; set; }
-
-        public virtual ICollection<Charge> Charges { get; set; }
-
-        public virtual ICollection<GridArea> GridAreas { get; set; }
+        public Guid? GridAccessProviderId { get; set; }
     }
 }
