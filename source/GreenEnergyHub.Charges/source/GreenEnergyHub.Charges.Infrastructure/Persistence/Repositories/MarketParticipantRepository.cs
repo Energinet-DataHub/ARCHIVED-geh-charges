@@ -35,14 +35,14 @@ namespace GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories
         {
             return await _chargesDatabaseContext
                 .MarketParticipants
-                .SingleOrDefaultAsync(mp => mp.Id == id);
+                .SingleOrDefaultAsync(mp => mp.Id == id).ConfigureAwait(false);
         }
 
         public async Task<MarketParticipant?> GetOrNullAsync(string marketParticipantId)
         {
             return await _chargesDatabaseContext
                 .MarketParticipants
-                .SingleOrDefaultAsync(mp => mp.MarketParticipantId == marketParticipantId);
+                .SingleOrDefaultAsync(mp => mp.MarketParticipantId == marketParticipantId).ConfigureAwait(false);
         }
 
         /// <summary>
