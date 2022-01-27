@@ -27,9 +27,9 @@ namespace GreenEnergyHub.Charges.Domain.MarketParticipants
 
         Task<IReadOnlyCollection<MarketParticipant>> GetAsync(IEnumerable<Guid> ids);
 
-        Task<MarketParticipant> GetOrNullAsync(Guid id);
+        Task<MarketParticipant?> GetOrNullAsync(Guid id);
 
-        Task<MarketParticipant> GetOrNullAsync(string marketParticipantId);
+        Task<MarketParticipant?> GetOrNullAsync(string marketParticipantId);
 
         /// <summary>
         /// Using MeteringPointId find the Grid Access Provider of that MP
