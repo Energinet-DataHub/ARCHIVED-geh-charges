@@ -41,7 +41,9 @@ namespace GreenEnergyHub.Charges.Application.MeteringPoints.Handlers
 
             var meteringPoint = MeteringPointFactory.Create(meteringPointCreatedEvent);
 
-            var existingMeteringPoint = await _meteringPointRepository.GetOrNullAsync(meteringPoint.MeteringPointId);
+            var existingMeteringPoint = await _meteringPointRepository
+                .GetOrNullAsync(meteringPoint.MeteringPointId)
+                .ConfigureAwait(false);
 
             if (existingMeteringPoint == null)
             {
