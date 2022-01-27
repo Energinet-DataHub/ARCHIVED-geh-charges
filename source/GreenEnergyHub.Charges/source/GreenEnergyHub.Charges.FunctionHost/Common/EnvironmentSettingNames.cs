@@ -95,6 +95,6 @@ namespace GreenEnergyHub.Charges.FunctionHost.Common
 
         // JWT Token auth
         public const string B2CTenantId = "B2C_TENANT_ID";
-        public const string BackendServiceAppid = "BACKEND_SERVICE_APP_ID";
+        public const string BackendServiceAppId = "BACKEND_SERVICE_APP_ID";
     }
 }

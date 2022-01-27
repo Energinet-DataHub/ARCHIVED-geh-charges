@@ -32,7 +32,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
         public static void AddJwtTokenSecurity(this IServiceCollection serviceCollection)
         {
             var tenantId = EnvironmentHelper.GetEnv(EnvironmentSettingNames.B2CTenantId);
-            var audience = EnvironmentHelper.GetEnv(EnvironmentSettingNames.BackendServiceAppid);
+            var audience = EnvironmentHelper.GetEnv(EnvironmentSettingNames.BackendServiceAppId);
             var metadataAddress = $"https://login.microsoftonline.com/{tenantId}/v2.0/.well-known/openid-configuration";
 
             serviceCollection.AddScoped<JwtTokenMiddleware>();

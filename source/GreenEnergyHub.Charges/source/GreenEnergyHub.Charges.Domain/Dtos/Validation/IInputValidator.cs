@@ -19,7 +19,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.Validation
     /// <summary>
     /// Contract defining the input validator for change of charges messages.
     /// </summary>
-    public interface IInputValidator<TCommand>
+    public interface IInputValidator<in TCommand>
         where TCommand : CommandBase
     {
         /// <summary>
