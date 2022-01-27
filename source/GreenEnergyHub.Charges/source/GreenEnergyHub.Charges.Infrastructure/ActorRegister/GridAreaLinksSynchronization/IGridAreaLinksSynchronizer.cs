@@ -12,20 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using System.Threading.Tasks;
 
-namespace GreenEnergyHub.Charges.Infrastructure.Persistence.EntityConfigurations
+namespace GreenEnergyHub.Charges.Infrastructure.ActorRegister.GridAreaLinksSynchronization
 {
-    public class GridAreaLinkEntityConfiguration : IEntityTypeConfiguration<GridAreaLink>
+    public interface IGridAreaLinksSynchronizer
     {
-        public void Configure(EntityTypeBuilder<GridAreaLink> builder)
-        {
-            builder.ToTable(nameof(GridAreaLink));
-
-            builder.HasKey(l => l.Id);
-            builder.Property(l => l.Id).ValueGeneratedNever();
-            builder.Property(l => l.GridAreaId);
-        }
+        Task SynchronizeAsync();
     }
 }

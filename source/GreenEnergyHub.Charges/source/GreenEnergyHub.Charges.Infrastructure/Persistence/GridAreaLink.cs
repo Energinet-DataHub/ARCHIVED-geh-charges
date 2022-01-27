@@ -18,7 +18,13 @@ namespace GreenEnergyHub.Charges.Infrastructure.Persistence
 {
     public class GridAreaLink
     {
-        public Guid Id { get; set; }
+        public GridAreaLink(Guid id, Guid gridAreaId)
+        {
+            Id = id;
+            GridAreaId = gridAreaId;
+        }
+
+        public Guid Id { get; }
 
         public Guid GridAreaId { get; set; }
     }

@@ -15,24 +15,21 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace GreenEnergyHub.Charges.Infrastructure.ActorRegister.Persistence.GridAreas
+namespace GreenEnergyHub.Charges.Infrastructure.ActorRegister.Persistence.GridAreaLinks
 {
-    public class GridAreaEntityConfiguration : IEntityTypeConfiguration<GridArea>
+    public class GridAreaLinkEntityConfiguration : IEntityTypeConfiguration<GridAreaLink>
     {
-        public void Configure(EntityTypeBuilder<GridArea> builder)
+        public void Configure(EntityTypeBuilder<GridAreaLink> builder)
         {
-            builder.ToView("GridArea");
+            builder.ToView("GridAreaLink");
 
             builder.HasKey(a => a.Id);
-            builder.Property(a => a.Id).ValueGeneratedNever();
+            builder
+                .Property(a => a.Id)
+                .ValueGeneratedNever()
+                .HasColumnName("GridLinkId");
 
-            builder.Property(a => a.Id);
-            builder.Property(a => a.RecordId);
-            builder.Property(a => a.ActorId);
-            builder.Property(a => a.Code);
-            builder.Property(a => a.Active);
-            builder.Property(a => a.Name);
-            builder.Property(a => a.PriceAreaCode);
+            builder.Property(a => a.GridAreaId);
         }
     }
 }

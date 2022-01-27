@@ -26,6 +26,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.ActorRegister.Persistence.Actors
             builder.ToView("Actor");
 
             builder.HasKey(x => x.Id);
+            builder.Property(x => x.Id).ValueGeneratedNever();
 
             builder.Property(a => a.IdentificationNumber);
             builder.Property(a => a.IdentificationType);

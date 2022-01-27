@@ -115,7 +115,6 @@ CREATE TABLE [Charges].[MarketParticipant](
 
 CREATE TABLE [Charges].[GridArea](
     [Id] [uniqueidentifier] NOT NULL,
-    [IsActive] [bit] NOT NULL,
     [GridAccessProviderId] [uniqueidentifier] NULL,
      CONSTRAINT [PK_GridArea] PRIMARY KEY NONCLUSTERED
     (

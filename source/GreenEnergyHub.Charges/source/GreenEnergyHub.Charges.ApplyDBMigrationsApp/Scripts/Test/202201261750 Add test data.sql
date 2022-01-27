@@ -30,10 +30,10 @@ DECLARE @areaIdOfProvider8100000000023 UNIQUEIDENTIFIER = NEWID()
 DECLARE @areaIdOfProvider8100000000030 UNIQUEIDENTIFIER = NEWID()
 DECLARE @areaIdOfProvider8900000000005 UNIQUEIDENTIFIER = NEWID()
 
-INSERT INTO [Charges].[GridArea] VALUES (@areaIdOfProvider8100000000016, 1, @provider8100000000016);
-INSERT INTO [Charges].[GridArea] VALUES (@areaIdOfProvider8100000000023, 1, @provider8100000000023);
-INSERT INTO [Charges].[GridArea] VALUES (@areaIdOfProvider8100000000030, 1, @provider8100000000030);
-INSERT INTO [Charges].[GridArea] VALUES (@areaIdOfProvider8900000000005, 1, @provider8900000000005);
+INSERT INTO [Charges].[GridArea] VALUES (@areaIdOfProvider8100000000016, @provider8100000000016);
+INSERT INTO [Charges].[GridArea] VALUES (@areaIdOfProvider8100000000023, @provider8100000000023);
+INSERT INTO [Charges].[GridArea] VALUES (@areaIdOfProvider8100000000030, @provider8100000000030);
+INSERT INTO [Charges].[GridArea] VALUES (@areaIdOfProvider8900000000005, @provider8900000000005);
 
 ------------------------------------------------------------------------------------------------------------------------
 -- Add grid area links

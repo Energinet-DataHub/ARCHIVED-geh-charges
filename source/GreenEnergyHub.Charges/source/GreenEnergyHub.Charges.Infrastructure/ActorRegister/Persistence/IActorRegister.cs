@@ -14,6 +14,7 @@
 
 using System.Linq;
 using GreenEnergyHub.Charges.Infrastructure.ActorRegister.Persistence.Actors;
+using GreenEnergyHub.Charges.Infrastructure.ActorRegister.Persistence.GridAreaLinks;
 using GreenEnergyHub.Charges.Infrastructure.ActorRegister.Persistence.GridAreas;
 
 namespace GreenEnergyHub.Charges.Infrastructure.ActorRegister.Persistence
@@ -23,5 +24,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.ActorRegister.Persistence
         IQueryable<Actor> Actors { get; }
 
         IQueryable<GridArea> GridAreas { get; }
+
+        IQueryable<GridAreaLink> GridAreaLinks { get; }
     }
 }

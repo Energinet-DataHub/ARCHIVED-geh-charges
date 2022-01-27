@@ -21,9 +21,9 @@ using GreenEnergyHub.Charges.Infrastructure.ActorRegister.Persistence.Actors;
 using GreenEnergyHub.Charges.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 
-namespace GreenEnergyHub.Charges.Infrastructure.ActorRegister
+namespace GreenEnergyHub.Charges.Infrastructure.ActorRegister.MarketParticipantsSynchronization
 {
-    public class MarketParticipantSynchronizer : IMarketParticipantSynchronizer
+    public class MarketParticipantsSynchronizer : IMarketParticipantsSynchronizer
     {
         private readonly IActorRegister _actorRegister;
         private readonly IChargesDatabaseContext _chargesDatabaseContext;
@@ -33,7 +33,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.ActorRegister
         /// </summary>
         private readonly List<Role> _rolesUsedInChargesDomain;
 
-        public MarketParticipantSynchronizer(
+        public MarketParticipantsSynchronizer(
             IActorRegister actorRegister,
             IChargesDatabaseContext chargesDatabaseContext)
         {

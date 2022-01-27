@@ -16,7 +16,7 @@ using System;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.Infrastructure.ActorRegister.Persistence.Actors;
 
-namespace GreenEnergyHub.Charges.Infrastructure.ActorRegister
+namespace GreenEnergyHub.Charges.Infrastructure.ActorRegister.MarketParticipantsSynchronization
 {
     public static class MarketParticipantUpdater
     {

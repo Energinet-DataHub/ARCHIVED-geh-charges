@@ -12,20 +12,29 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using System;
 
-namespace GreenEnergyHub.Charges.Infrastructure.Persistence.EntityConfigurations
+namespace GreenEnergyHub.Charges.Infrastructure.ActorRegister.Persistence.GridAreaLinks
 {
-    public class GridAreaLinkEntityConfiguration : IEntityTypeConfiguration<GridAreaLink>
+    /// <summary>
+    /// Immutable grid area.
+    /// </summary>
+    public class GridAreaLink
     {
-        public void Configure(EntityTypeBuilder<GridAreaLink> builder)
+        public GridAreaLink(Guid gridAreaId, Guid id)
         {
-            builder.ToTable(nameof(GridAreaLink));
-
-            builder.HasKey(l => l.Id);
-            builder.Property(l => l.Id).ValueGeneratedNever();
-            builder.Property(l => l.GridAreaId);
+            GridAreaId = gridAreaId;
+            Id = id;
         }
+
+        /// <summary>
+        /// Primary key.
+        /// </summary>
+        public Guid Id { get; }
+
+        /// <summary>
+        /// The target grid area of this link.
+        /// </summary>
+        public Guid GridAreaId { get; set; }
     }
 }

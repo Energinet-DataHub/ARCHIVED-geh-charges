@@ -23,17 +23,17 @@ namespace GreenEnergyHub.Charges.FunctionHost.System
 {
     public class ActorRegisterEndpoint
     {
-        private readonly IMarketParticipantSynchronizer _marketParticipantSynchronizer;
+        private readonly IActorRegisterSynchronizer _actorRegisterSynchronizer;
 
-        public ActorRegisterEndpoint(IMarketParticipantSynchronizer marketParticipantSynchronizer)
+        public ActorRegisterEndpoint(IActorRegisterSynchronizer actorRegisterSynchronizer)
         {
-            _marketParticipantSynchronizer = marketParticipantSynchronizer;
+            _actorRegisterSynchronizer = actorRegisterSynchronizer;
         }
 
         /// <summary>
         /// Endpoint to trigger synchronization of actor registry into charges domain.
         /// </summary>
-        [Function("UpdateActors")]
+        [Function("SynchronizeFromActorRegister")]
         public async Task<HttpResponseData> RunAsync(
             [HttpTrigger(AuthorizationLevel.Anonymous, "put", Route = null)]
             HttpRequestData req)
@@ -43,8 +43,8 @@ namespace GreenEnergyHub.Charges.FunctionHost.System
 
             try
             {
-                await _marketParticipantSynchronizer.SynchronizeAsync();
-                statusMessage = "Synchronization of market participants from actor register succeeded.";
+                await _actorRegisterSynchronizer.SynchronizeAsync();
+                statusMessage = "Synchronization from actor register succeeded.";
             }
             catch (Exception e)
             {
