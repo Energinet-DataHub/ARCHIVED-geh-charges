@@ -169,6 +169,12 @@ namespace GreenEnergyHub.Charges.QueryApi.Model
                 entity.HasIndex(e => e.Id, "IX_GridAreaLinkId");
 
                 entity.Property(e => e.Id).ValueGeneratedNever();
+
+                entity.HasOne(d => d.GridArea)
+                    .WithMany(p => p.GridAreaLinks)
+                    .HasForeignKey(d => d.GridAreaId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_GridAreaLink_GridArea");
             });
 
             modelBuilder.Entity<MarketParticipant>(entity =>

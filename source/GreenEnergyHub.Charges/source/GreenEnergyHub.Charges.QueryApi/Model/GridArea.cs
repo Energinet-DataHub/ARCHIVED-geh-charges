@@ -21,10 +21,17 @@ namespace GreenEnergyHub.Charges.QueryApi.Model
 {
     public partial class GridArea
     {
+        public GridArea()
+        {
+            GridAreaLinks = new HashSet<GridAreaLink>();
+        }
+
         public Guid Id { get; set; }
 
         public Guid? GridAccessProviderId { get; set; }
 
         public virtual MarketParticipant GridAccessProvider { get; set; }
+
+        public virtual ICollection<GridAreaLink> GridAreaLinks { get; set; }
     }
 }

@@ -30,6 +30,8 @@ namespace GreenEnergyHub.Charges.QueryApi.Model
 
         public Guid GridAreaId { get; set; }
 
+        public virtual GridArea GridArea { get; set; }
+
         public virtual ICollection<MeteringPoint> MeteringPoints { get; set; }
     }
 }
