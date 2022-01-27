@@ -20,7 +20,7 @@ module "app_webapi" {
   environment_instance                      = var.environment_instance
   resource_group_name                       = azurerm_resource_group.this.name
   location                                  = azurerm_resource_group.this.location
-  vnet_integration_subnet_id                = module.vnet_integrations.id
+  vnet_integration_subnet_id                = module.vnet_integrations_webapi.id
   app_service_plan_id                       = module.plan_webapi.id
   application_insights_instrumentation_key  = data.azurerm_key_vault_secret.appi_shared_instrumentation_key.value
   connection_strings = {
