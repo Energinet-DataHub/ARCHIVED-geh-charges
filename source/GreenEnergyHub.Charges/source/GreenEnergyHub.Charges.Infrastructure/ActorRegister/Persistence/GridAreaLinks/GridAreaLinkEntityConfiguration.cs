@@ -12,31 +12,23 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
-using System.Collections.Generic;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-#nullable disable
-
-namespace GreenEnergyHub.Charges.QueryApi.Model
+namespace GreenEnergyHub.Charges.Infrastructure.ActorRegister.Persistence.GridAreaLinks
 {
-    public partial class MarketParticipant
+    public class GridAreaLinkEntityConfiguration : IEntityTypeConfiguration<GridAreaLink>
     {
-        public MarketParticipant()
+        public void Configure(EntityTypeBuilder<GridAreaLink> builder)
         {
-            Charges = new HashSet<Charge>();
-            GridAreas = new HashSet<GridArea>();
+            builder.ToView("GridAreaLink");
+
+            builder.HasKey(l => l.Id);
+            builder
+                .Property(l => l.Id)
+                .ValueGeneratedNever()
+                .HasColumnName("GridLinkId");
+            builder.Property(l => l.GridAreaId);
         }
-
-        public Guid Id { get; set; }
-
-        public string MarketParticipantId { get; set; }
-
-        public int BusinessProcessRole { get; set; }
-
-        public bool IsActive { get; set; }
-
-        public virtual ICollection<Charge> Charges { get; set; }
-
-        public virtual ICollection<GridArea> GridAreas { get; set; }
     }
 }

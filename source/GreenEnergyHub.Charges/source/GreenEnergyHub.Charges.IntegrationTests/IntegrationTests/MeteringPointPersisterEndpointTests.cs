@@ -21,6 +21,7 @@ using Energinet.DataHub.MeteringPoints.IntegrationEventContracts;
 using FluentAssertions;
 using Google.Protobuf;
 using GreenEnergyHub.Charges.FunctionHost.MeteringPoint;
+using GreenEnergyHub.Charges.Infrastructure.Persistence;
 using GreenEnergyHub.Charges.IntegrationTests.Fixtures;
 using GreenEnergyHub.Charges.IntegrationTests.TestCommon;
 using GreenEnergyHub.Charges.IntegrationTests.TestHelpers;
@@ -82,6 +83,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests
                 // Arrange
                 var meteringPointId = RandomString(20);
                 var message = CreateServiceBusMessage(
+                    Fixture.DatabaseManager.CreateDbContext(),
                     meteringPointId,
                     meteringPointType,
                     settlementMethod,
@@ -112,20 +114,22 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests
             }
 
             private ServiceBusMessage CreateServiceBusMessage(
+                IChargesDatabaseContext chargesDatabaseContext,
                 string meteringPointId,
                 MeteringPointType meteringPointType,
                 SettlementMethod settlementMethod,
                 out string correlationId,
                 out string parentId)
             {
+                var gridAreaLinkId = chargesDatabaseContext.GridAreaLinks.First().Id;
                 var date = new DateTime(2021, 1, 2, 3, 4, 5, DateTimeKind.Utc);
                 correlationId = CorrelationIdGenerator.Create();
                 var message = new MeteringPointCreated
                 {
                     MeteringPointId = meteringPointId,
-                    ConnectionState = MeteringPointCreated.Types.ConnectionState.CsNew,
+                    ConnectionState = ConnectionState.CsNew,
                     EffectiveDate = new DateTime(2020, 01, 01, 0, 0, 0).ToProtoBufTimestamp(),
-                    GridAreaCode = "001",
+                    GridAreaCode = gridAreaLinkId.ToString(),
                     GsrnNumber = meteringPointId,
                     MeteringPointType = meteringPointType,
                     MeteringMethod = MeteringMethod.MmPhysical,

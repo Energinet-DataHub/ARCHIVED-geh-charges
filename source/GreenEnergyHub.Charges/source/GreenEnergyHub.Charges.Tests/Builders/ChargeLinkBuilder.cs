@@ -14,7 +14,6 @@
 
 using System;
 using GreenEnergyHub.Charges.Domain.ChargeLinks;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands;
 using NodaTime;
 
 namespace GreenEnergyHub.Charges.Tests.Builders

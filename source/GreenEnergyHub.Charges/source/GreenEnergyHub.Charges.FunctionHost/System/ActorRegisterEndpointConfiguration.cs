@@ -15,6 +15,9 @@
 using GreenEnergyHub.Charges.FunctionHost.Common;
 using GreenEnergyHub.Charges.FunctionHost.Configuration;
 using GreenEnergyHub.Charges.Infrastructure.ActorRegister;
+using GreenEnergyHub.Charges.Infrastructure.ActorRegister.GridAreaLinksSynchronization;
+using GreenEnergyHub.Charges.Infrastructure.ActorRegister.GridAreasSynchronization;
+using GreenEnergyHub.Charges.Infrastructure.ActorRegister.MarketParticipantsSynchronization;
 using GreenEnergyHub.Charges.Infrastructure.ActorRegister.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -25,7 +28,10 @@ namespace GreenEnergyHub.Charges.FunctionHost.System
     {
         internal static void ConfigureServices(IServiceCollection serviceCollection)
         {
-            serviceCollection.AddScoped<IMarketParticipantSynchronizer, MarketParticipantSynchronizer>();
+            serviceCollection.AddScoped<IActorRegisterSynchronizer, ActorRegisterSynchronizer>();
+            serviceCollection.AddScoped<IMarketParticipantsSynchronizer, MarketParticipantsSynchronizer>();
+            serviceCollection.AddScoped<IGridAreasSynchronizer, GridAreasSynchronizer>();
+            serviceCollection.AddScoped<IGridAreaLinksSynchronizer, GridAreaLinksSynchronizer>();
 
             var connectionString = EnvironmentHelper.GetEnv(EnvironmentSettingNames.ActorRegisterDbConnectionString);
             serviceCollection.AddDbContext<ActorRegister>(
