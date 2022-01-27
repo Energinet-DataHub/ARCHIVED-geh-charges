@@ -25,6 +25,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Persistence.EntityConfigurations
             builder.ToTable(nameof(MeteringPoint));
 
             builder.HasKey(x => x.Id);
+            builder.Property(x => x.Id).ValueGeneratedNever();
 
             builder.Property(x => x.ConnectionState);
             builder.Property(x => x.EffectiveDate);

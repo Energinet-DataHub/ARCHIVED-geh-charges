@@ -50,7 +50,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Infrastructure.Cim
             MarketParticipantRole recipientRole)
         {
             var document = GetDocument(records, businessReasonCode, senderId, senderRole, recipientId, recipientRole);
-            await document.SaveAsync(stream, SaveOptions.None, CancellationToken.None);
+            await document.SaveAsync(stream, SaveOptions.None, CancellationToken.None).ConfigureAwait(false);
 
             stream.Position = 0;
         }

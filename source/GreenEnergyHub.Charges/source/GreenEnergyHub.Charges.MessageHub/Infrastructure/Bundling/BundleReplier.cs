@@ -37,7 +37,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Infrastructure.Bundling
 
         public async Task ReplyAsync(Stream bundleStream, DataBundleRequestDto request)
         {
-            var path = await _storageHandler.AddStreamToStorageAsync(bundleStream, request);
+            var path = await _storageHandler.AddStreamToStorageAsync(bundleStream, request).ConfigureAwait(false);
 
             var response = request.CreateResponse(path);
 

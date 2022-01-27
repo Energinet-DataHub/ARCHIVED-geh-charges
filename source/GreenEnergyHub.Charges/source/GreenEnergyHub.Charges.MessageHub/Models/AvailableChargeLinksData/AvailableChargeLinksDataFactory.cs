@@ -48,7 +48,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksData
             // not considered part of the Create Metering Point orchestration.
             // We select the first as all bundled messages will have the same recipient
             var recipient = await _marketParticipantRepository
-                .GetGridAccessProviderAsync(acceptedEvent.ChargeLinksCommand.MeteringPointId);
+                .GetGridAccessProviderAsync(acceptedEvent.ChargeLinksCommand.MeteringPointId).ConfigureAwait(false);
 
             var result = new List<AvailableChargeLinksData>();
 

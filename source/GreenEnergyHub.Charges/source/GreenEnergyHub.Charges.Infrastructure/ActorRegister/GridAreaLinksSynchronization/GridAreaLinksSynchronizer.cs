@@ -38,7 +38,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.ActorRegister.GridAreaLinksSynch
             var links = await _chargesDatabaseContext.GridAreaLinks.ToListAsync().ConfigureAwait(false);
 
             foreach (var linkInRegister in linksInRegister)
-                await AddOrUpdateGridAreaLinkAsync(links, linkInRegister);
+                await AddOrUpdateGridAreaLinkAsync(links, linkInRegister).ConfigureAwait(false);
 
             await _chargesDatabaseContext.SaveChangesAsync().ConfigureAwait(false);
         }
@@ -48,7 +48,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.ActorRegister.GridAreaLinksSynch
             var link = links.SingleOrDefault(a => a.Id == linkInRegister.Id);
 
             if (link == null)
-                await AddGridAreaLinkAsync(linkInRegister);
+                await AddGridAreaLinkAsync(linkInRegister).ConfigureAwait(false);
             else
                 UpdateGridAreaLink(linkInRegister, link);
         }

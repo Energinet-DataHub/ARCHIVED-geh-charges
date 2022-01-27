@@ -38,7 +38,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.ActorRegister.GridAreasSynchroni
             var areas = await _chargesDatabaseContext.GridAreas.ToListAsync().ConfigureAwait(false);
 
             foreach (var areaInRegister in areasInRegister)
-                await AddOrUpdateGridAreaAsync(areas, areaInRegister);
+                await AddOrUpdateGridAreaAsync(areas, areaInRegister).ConfigureAwait(false);
 
             await _chargesDatabaseContext.SaveChangesAsync().ConfigureAwait(false);
         }
@@ -48,7 +48,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.ActorRegister.GridAreasSynchroni
             var area = areas.SingleOrDefault(a => a.Id == areaInRegister.Id);
 
             if (area == null)
-                await AddGridAreaAsync(areaInRegister);
+                await AddGridAreaAsync(areaInRegister).ConfigureAwait(false);
             else
                 UpdateGridArea(areaInRegister, area);
         }

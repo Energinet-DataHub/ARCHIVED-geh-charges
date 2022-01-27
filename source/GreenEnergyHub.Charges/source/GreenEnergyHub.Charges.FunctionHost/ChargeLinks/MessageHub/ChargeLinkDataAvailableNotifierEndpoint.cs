@@ -59,9 +59,13 @@ namespace GreenEnergyHub.Charges.FunctionHost.ChargeLinks.MessageHub
                 Connection = EnvironmentSettingNames.DomainEventListenerConnectionString)]
             byte[] message)
         {
-            var chargeLinksAcceptedEvent = (ChargeLinksAcceptedEvent)await _deserializer.FromBytesAsync(message).ConfigureAwait(false);
-            await _availableDataNotifier.NotifyAsync(chargeLinksAcceptedEvent);
-            await _chargeLinksDataAvailableNotifiedPublisher.PublishAsync(chargeLinksAcceptedEvent);
+            var chargeLinksAcceptedEvent = (ChargeLinksAcceptedEvent)await _deserializer
+                .FromBytesAsync(message)
+                .ConfigureAwait(false);
+            await _availableDataNotifier.NotifyAsync(chargeLinksAcceptedEvent).ConfigureAwait(false);
+            await _chargeLinksDataAvailableNotifiedPublisher
+                .PublishAsync(chargeLinksAcceptedEvent)
+                .ConfigureAwait(false);
         }
     }
 }

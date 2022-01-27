@@ -51,11 +51,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
             // Assert
             await using var chargesDatabaseReadContext = _databaseManager.CreateDbContext();
             var actual = chargesDatabaseReadContext.MeteringPoints.Single(x => x.MeteringPointId == expected.MeteringPointId);
-            actual.ConnectionState.Should().Be(expected.ConnectionState);
-            actual.GridAreaLinkId.Should().Be(expected.GridAreaLinkId);
-            actual.MeteringPointId.Should().Be(expected.MeteringPointId);
-            actual.EffectiveDate.Should().Be(expected.EffectiveDate);
-            actual.SettlementMethod.Should().Be(expected.SettlementMethod);
+            actual.Should().BeEquivalentTo(expected);
         }
 
         [Theory]

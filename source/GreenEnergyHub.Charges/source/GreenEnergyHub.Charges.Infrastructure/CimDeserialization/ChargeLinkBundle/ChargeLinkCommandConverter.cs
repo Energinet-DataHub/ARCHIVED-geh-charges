@@ -52,8 +52,8 @@ namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.ChargeLinkBun
                 chargeLinks.Add(chargeLinkCommandAsync);
 
                 await reader
-                    .ReadUntilEoFOrNextElementNameAsync(
-                        CimChargeLinkCommandConstants.MktActivityRecord);
+                    .ReadUntilEoFOrNextElementNameAsync(CimChargeLinkCommandConstants.MktActivityRecord)
+                    .ConfigureAwait(false);
             }
 
             return chargeLinks;

@@ -43,7 +43,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.System
 
             try
             {
-                await _actorRegisterSynchronizer.SynchronizeAsync();
+                await _actorRegisterSynchronizer.SynchronizeAsync().ConfigureAwait(false);
                 statusMessage = "Synchronization from actor register succeeded.";
             }
             catch (Exception e)
@@ -52,7 +52,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.System
                 statusMessage = e.ToString();
             }
 
-            await response.WriteStringAsync(statusMessage);
+            await response.WriteStringAsync(statusMessage).ConfigureAwait(false);
             return response;
         }
     }

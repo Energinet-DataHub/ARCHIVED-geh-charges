@@ -45,18 +45,19 @@ namespace GreenEnergyHub.Charges.Infrastructure.ActorRegister.MarketParticipants
 
         public async Task SynchronizeAsync()
         {
-            var marketParticipants = await _chargesDatabaseContext.MarketParticipants.ToListAsync();
+            var marketParticipants = await _chargesDatabaseContext.MarketParticipants.ToListAsync().ConfigureAwait(false);
 
             var actors = (await _actorRegister
                 .Actors
-                .ToListAsync())
+                .ToListAsync()
+                .ConfigureAwait(false))
                 .Where(a => _rolesUsedInChargesDomain.Any(r => a.Roles.Contains(r)))
                 .ToList();
 
             foreach (var actor in actors)
                 AddOrUpdateMarketParticipant(marketParticipants, actor);
 
-            await _chargesDatabaseContext.SaveChangesAsync();
+            await _chargesDatabaseContext.SaveChangesAsync().ConfigureAwait(false);
         }
 
         private void AddOrUpdateMarketParticipant(List<MarketParticipant> marketParticipants, Actor actor)
