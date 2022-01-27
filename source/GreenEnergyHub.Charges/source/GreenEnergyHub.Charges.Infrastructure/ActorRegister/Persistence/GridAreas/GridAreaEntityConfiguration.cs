@@ -24,6 +24,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.ActorRegister.Persistence.GridAr
             builder.ToView("NetArea");
 
             builder.HasKey(a => a.Id);
+            builder.Property(x => x.Id).ValueGeneratedNever();
 
             builder.Property(a => a.Id);
             builder.Property(a => a.RecordId);
