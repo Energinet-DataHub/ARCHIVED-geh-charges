@@ -32,7 +32,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi
     public class ChargeLinksControllerTests : WebApiHost, IClassFixture<ChargesDatabaseFixture>
     {
         private const string BaseUrl = "/ChargeLinks/GetAsync?meteringPointId=";
-        private const string KnownMeteringPointId = "571313180000000005";
+        private const string KnownMeteringPointId = SeededData.MeteringPoints.Mp571313180000000005.Id;
         private readonly HttpClient _client;
 
         public ChargeLinksControllerTests(WebApiFactory factory, ChargesDatabaseFixture chargesDatabaseFixture)

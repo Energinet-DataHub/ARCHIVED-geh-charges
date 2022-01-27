@@ -13,30 +13,27 @@
 // limitations under the License.
 
 using System;
-using System.Collections.Generic;
 
-#nullable disable
-
-namespace GreenEnergyHub.Charges.QueryApi.Model
+namespace GreenEnergyHub.Charges.Infrastructure.ActorRegister.Persistence.GridAreaLinks
 {
-    public partial class MarketParticipant
+    /// <summary>
+    /// Immutable grid area.
+    /// </summary>
+    public class GridAreaLink
     {
-        public MarketParticipant()
+        // Solely used by persistence framework
+        private GridAreaLink()
         {
-            Charges = new HashSet<Charge>();
-            GridAreas = new HashSet<GridArea>();
         }
 
-        public Guid Id { get; set; }
+        /// <summary>
+        /// Primary key.
+        /// </summary>
+        public Guid Id { get; }
 
-        public string MarketParticipantId { get; set; }
-
-        public int BusinessProcessRole { get; set; }
-
-        public bool IsActive { get; set; }
-
-        public virtual ICollection<Charge> Charges { get; set; }
-
-        public virtual ICollection<GridArea> GridAreas { get; set; }
+        /// <summary>
+        /// The target grid area of this link.
+        /// </summary>
+        public Guid GridAreaId { get; set; }
     }
 }

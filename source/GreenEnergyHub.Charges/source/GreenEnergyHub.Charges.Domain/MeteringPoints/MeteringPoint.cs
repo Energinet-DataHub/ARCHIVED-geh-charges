@@ -23,7 +23,7 @@ namespace GreenEnergyHub.Charges.Domain.MeteringPoints
             Guid id,
             string meteringPointId,
             MeteringPointType meteringPointType,
-            string gridAreaId,
+            Guid gridAreaLinkId,
             Instant effectiveDate,
             ConnectionState connectionState,
             SettlementMethod? settlementMethod)
@@ -31,7 +31,7 @@ namespace GreenEnergyHub.Charges.Domain.MeteringPoints
             Id = id;
             MeteringPointId = meteringPointId;
             MeteringPointType = meteringPointType;
-            GridAreaId = gridAreaId;
+            GridAreaLinkId = gridAreaLinkId;
             EffectiveDate = effectiveDate;
             ConnectionState = connectionState;
             SettlementMethod = settlementMethod;
@@ -40,7 +40,7 @@ namespace GreenEnergyHub.Charges.Domain.MeteringPoints
         public static MeteringPoint Create(
             string meteringPointId,
             MeteringPointType meteringPointType,
-            string gridAreaId,
+            Guid gridAreaLinkId,
             Instant effectiveDate,
             ConnectionState connectionState,
             SettlementMethod? settlementMethod)
@@ -50,19 +50,19 @@ namespace GreenEnergyHub.Charges.Domain.MeteringPoints
                 id,
                 meteringPointId,
                 meteringPointType,
-                gridAreaId,
+                gridAreaLinkId,
                 effectiveDate,
                 connectionState,
                 settlementMethod);
         }
 
-        public Guid Id { get; set; }
+        public Guid Id { get; }
 
         public string MeteringPointId { get; }
 
         public MeteringPointType MeteringPointType { get; }
 
-        public string GridAreaId { get; }
+        public Guid GridAreaLinkId { get; }
 
         public Instant EffectiveDate { get; }
 
@@ -80,9 +80,9 @@ namespace GreenEnergyHub.Charges.Domain.MeteringPoints
             return SettlementMethod == otherMeteringPoint.SettlementMethod;
         }
 
-        public bool HasSameGridAreaId(MeteringPoint otherMeteringPoint)
+        public bool HasSameGridAreaLinkId(MeteringPoint otherMeteringPoint)
         {
-            return GridAreaId == otherMeteringPoint.GridAreaId;
+            return GridAreaLinkId == otherMeteringPoint.GridAreaLinkId;
         }
     }
 }

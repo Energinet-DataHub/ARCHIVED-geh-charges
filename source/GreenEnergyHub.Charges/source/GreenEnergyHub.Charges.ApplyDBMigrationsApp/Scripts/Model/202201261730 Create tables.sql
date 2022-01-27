@@ -1,10 +1,11 @@
--- Transitioning to using the shared actor register we reset all seeded test data in all environments
--- in order to avoid building on or publishing data that does not exist or is meaningless to other domains.
--- This must be deleted from seed data because it needs to apply to environments where test data scripts
--- are no longer executed.
+------------------------------------------------------------------------------------------------------------------------
+-- Reset database
+------------------------------------------------------------------------------------------------------------------------
 
 DROP TABLE IF EXISTS Charges.ChargeLink
 DROP TABLE IF EXISTS Charges.MeteringPoint
+DROP TABLE IF EXISTS Charges.GridAreaLink
+DROP TABLE IF EXISTS Charges.GridArea
 DROP TABLE IF EXISTS Charges.DefaultChargeLink
 DROP TABLE IF EXISTS Charges.ChargePoint
 DROP TABLE IF EXISTS Charges.Charge
@@ -16,8 +17,11 @@ DROP TABLE IF EXISTS MessageHub.AvailableChargeLinksReceiptValidationError
 DROP TABLE IF EXISTS MessageHub.AvailableChargeLinksReceiptData
 DROP TABLE IF EXISTS MessageHub.AvailableChargeReceiptValidationError
 DROP TABLE IF EXISTS MessageHub.AvailableChargeReceiptData
-DROP TABLE IF EXISTS dbo.SchemaVersions
 GO
+
+------------------------------------------------------------------------------------------------------------------------
+-- Schemas
+------------------------------------------------------------------------------------------------------------------------
 
 IF NOT EXISTS ( SELECT  *
     FROM    sys.schemas
@@ -30,6 +34,10 @@ IF NOT EXISTS ( SELECT  *
     WHERE   name = N'MessageHub' )
     EXEC('CREATE SCHEMA [MessageHub]');
 GO
+
+------------------------------------------------------------------------------------------------------------------------
+-- Tables
+------------------------------------------------------------------------------------------------------------------------
 
 CREATE TABLE [Charges].[Charge](
     [Id] [uniqueidentifier] NOT NULL,
@@ -107,11 +115,31 @@ CREATE TABLE [Charges].[MarketParticipant](
     ) ON [PRIMARY]
     GO
 
+CREATE TABLE [Charges].[GridArea](
+    [Id] [uniqueidentifier] NOT NULL,
+    [GridAccessProviderId] [uniqueidentifier] NULL,
+     CONSTRAINT [PK_GridArea] PRIMARY KEY NONCLUSTERED
+    (
+[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+    ) ON [PRIMARY]
+    GO
+
+CREATE TABLE [Charges].[GridAreaLink](
+    [Id] [uniqueidentifier] NOT NULL,
+    [GridAreaId] [uniqueidentifier] NOT NULL,
+     CONSTRAINT [PK_GridAreaLink] PRIMARY KEY NONCLUSTERED
+    (
+[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+    ) ON [PRIMARY]
+    GO
+
 CREATE TABLE [Charges].[MeteringPoint](
     [Id] [uniqueidentifier] NOT NULL,
     [MeteringPointId] [nvarchar](50) NOT NULL,
     [MeteringPointType] [int] NOT NULL,
-    [GridAreaId] [nvarchar](50) NOT NULL,
+    [GridAreaLinkId] [uniqueidentifier] NOT NULL,
     [EffectiveDate] [datetime2](7) NOT NULL,
     [ConnectionState] [int] NOT NULL,
     [SettlementMethod] [int] NULL,
@@ -122,17 +150,6 @@ CREATE TABLE [Charges].[MeteringPoint](
     CONSTRAINT [UC_MeteringPointId] UNIQUE NONCLUSTERED
 (
 [MeteringPointId] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
-    ) ON [PRIMARY]
-    GO
-
-CREATE TABLE [dbo].[SchemaVersions](
-    [Id] [int] IDENTITY(1,1) NOT NULL,
-    [ScriptName] [nvarchar](255) NOT NULL,
-    [Applied] [datetime] NOT NULL,
-    CONSTRAINT [PK_SchemaVersions_Id] PRIMARY KEY CLUSTERED
-(
-[Id] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
     ) ON [PRIMARY]
     GO
@@ -262,6 +279,10 @@ CREATE TABLE [MessageHub].[AvailableChargeReceiptValidationError](
     SET ANSI_PADDING ON
     GO
 
+------------------------------------------------------------------------------------------------------------------------
+-- Indexes
+------------------------------------------------------------------------------------------------------------------------
+
 CREATE NONCLUSTERED INDEX [IX_SenderProvidedChargeId_ChargeType_MarketParticipantId] ON [Charges].[Charge]
 (
 	[SenderProvidedChargeId] ASC,
@@ -287,6 +308,24 @@ GO
 SET ANSI_PADDING ON
 GO
 
+CREATE NONCLUSTERED INDEX [IX_GridAreaId] ON [Charges].[GridArea]
+(
+	[Id] DESC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+GO
+
+CREATE NONCLUSTERED INDEX [IX_GridAreaLinkId] ON [Charges].[GridAreaLink]
+(
+	[Id] DESC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+GO
+
+CREATE NONCLUSTERED INDEX [IX_GridAreaLinkId] ON [Charges].[MeteringPoint]
+(
+	[GridAreaLinkId] DESC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+GO
+
 CREATE NONCLUSTERED INDEX [IX_MeteringPointId] ON [Charges].[MeteringPoint]
 (
 	[MeteringPointId] DESC
@@ -304,6 +343,20 @@ CREATE NONCLUSTERED INDEX [i1] ON [MessageHub].[AvailableChargeReceiptValidation
 	[AvailableChargeReceiptDataId] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 GO
+
+------------------------------------------------------------------------------------------------------------------------
+-- Foreign keys
+------------------------------------------------------------------------------------------------------------------------
+
+ALTER TABLE [Charges].[GridArea]  WITH CHECK ADD  CONSTRAINT [FK_GridArea_MarketParticipant] FOREIGN KEY([GridAccessProviderId])
+    REFERENCES [Charges].[MarketParticipant] ([Id])
+    GO
+ALTER TABLE [Charges].[GridAreaLink]  WITH CHECK ADD  CONSTRAINT [FK_GridAreaLink_GridArea] FOREIGN KEY([GridAreaId])
+    REFERENCES [Charges].[GridArea] ([Id])
+    GO
+ALTER TABLE [Charges].[MeteringPoint] WITH CHECK ADD CONSTRAINT [FK_MeteringPoint_GridAreaLink] FOREIGN KEY (GridAreaLinkId)
+    REFERENCES [Charges].[GridAreaLink] (Id);
+    GO
 ALTER TABLE [Charges].[Charge]  WITH CHECK ADD CONSTRAINT [FK_Charge_MarketParticipant] FOREIGN KEY([OwnerId])
     REFERENCES [Charges].[MarketParticipant] ([Id])
     GO
@@ -315,8 +368,6 @@ ALTER TABLE [Charges].[ChargeLink]  WITH CHECK ADD CONSTRAINT [FK_ChargeLink_Met
     GO
 ALTER TABLE [Charges].[ChargePoint]  WITH CHECK ADD  CONSTRAINT [FK_ChargePoint_Charge] FOREIGN KEY([ChargeId])
     REFERENCES [Charges].[Charge] ([Id])
-    GO
-ALTER TABLE [Charges].[ChargePoint] CHECK CONSTRAINT [FK_ChargePoint_Charge]
     GO
 ALTER TABLE [Charges].[DefaultChargeLink]  WITH CHECK ADD CONSTRAINT [FK_DefaultChargeLink_Charge] FOREIGN KEY([ChargeId])
     REFERENCES [Charges].[Charge] ([Id])
