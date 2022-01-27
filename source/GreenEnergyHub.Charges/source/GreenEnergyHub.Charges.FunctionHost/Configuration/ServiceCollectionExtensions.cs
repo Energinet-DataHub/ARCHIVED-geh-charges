@@ -44,12 +44,12 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
         /// <summary>
         /// Adds registration of ActorMiddleware, ActorContext and ActorProvider.
         /// </summary>
-        /// <param name="container">ServiceCollection container</param>
-        public static void AddActorContext(this IServiceCollection container)
+        /// <param name="serviceCollection">ServiceCollection container</param>
+        public static void AddActorContext(this IServiceCollection serviceCollection)
         {
-            container.AddScoped<ActorMiddleware>();
-            container.AddScoped<IActorContext, ActorContext>();
-            container.AddScoped<IActorProvider, ActorProvider>();
+            serviceCollection.AddScoped<ActorMiddleware>();
+            serviceCollection.AddScoped<IActorContext, ActorContext>();
+            serviceCollection.AddScoped<IActorProvider, ActorProvider>();
         }
     }
 }
