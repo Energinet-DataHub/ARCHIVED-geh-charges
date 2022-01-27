@@ -61,8 +61,9 @@ namespace GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories
             if (meteringPointId == null) throw new ArgumentNullException(nameof(meteringPointId));
             if (string.IsNullOrEmpty(meteringPointId.Trim())) throw new ArgumentException();
 
-            // TODO BJARKE: What if actor of grid area is null?
-            // TODO BJARKE: What if grid area is in-active?
+            // According to product owner the business processes should not be able to result
+            // in encountering an inactive grid area nor a grid area without
+            // an owner grid access provider. So no special handling of those cases.
             return (from meteringPoint in _chargesDatabaseContext.MeteringPoints
                     from gridAreaLink in _chargesDatabaseContext.GridAreaLinks
                     from gridArea in _chargesDatabaseContext.GridAreas

@@ -53,7 +53,6 @@ namespace GreenEnergyHub.Charges.Application.MeteringPoints.Handlers
                 _logger.LogInformation(
                     $"Metering Point ID '{meteringPoint.MeteringPointId}' already exists in storage");
 
-                // TODO BJARKE: How does this method ensure that they are identical? Shouldn't it throw? At least the name is very misleading
                 // Compare and log differences between the integration event data and the persisted metering point's data
                 EnsureMeteringPointsAreIdentical(meteringPoint, existingMeteringPoint);
             }
