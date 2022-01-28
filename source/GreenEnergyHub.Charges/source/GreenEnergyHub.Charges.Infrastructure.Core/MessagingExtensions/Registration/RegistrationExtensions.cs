@@ -27,7 +27,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Registr
             services.AddScoped<ICorrelationContext, CorrelationContext>();
             services.AddScoped<IMessageMetaDataContext, MessageMetaDataContext>();
             services.AddScoped<MessageExtractor>();
-            services.AddSingleton<IJsonSerializer, GreenEnergyHub.Charges.Core.Json.JsonSerializer>();
+            services.AddSingleton<IJsonSerializer, JsonSerializer>();
             return new MessagingRegistrator(services);
         }
 
