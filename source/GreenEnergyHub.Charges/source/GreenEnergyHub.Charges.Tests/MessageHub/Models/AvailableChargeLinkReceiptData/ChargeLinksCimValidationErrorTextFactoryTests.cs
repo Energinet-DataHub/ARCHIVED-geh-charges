@@ -81,8 +81,9 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeLinkRece
         {
             switch (validationRuleIdentifier)
             {
-                case ValidationRuleIdentifier.MeteringPointDoesNotExist:
                 case ValidationRuleIdentifier.ChargeDoesNotExist:
+                case ValidationRuleIdentifier.MeteringPointDoesNotExist:
+                case ValidationRuleIdentifier.UpdateNotYetSupported:
                     return chargeLinksCommand.ChargeLinks.First().SenderProvidedChargeId;
                 default:
                     return null;

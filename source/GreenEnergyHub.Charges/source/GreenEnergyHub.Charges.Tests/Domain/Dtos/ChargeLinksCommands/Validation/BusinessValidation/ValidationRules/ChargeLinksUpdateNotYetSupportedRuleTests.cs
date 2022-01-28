@@ -66,6 +66,22 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeLinksCommands.Validatio
             sut.IsValid.Should().BeFalse();
         }
 
+        [Theory]
+        [InlineAutoMoqData(1, 12)]
+        public void IsValid_WhenExistingChargeLinksListIsEmpty_ReturnsTrue(int startDateDayOfMonth, int? endDateDayOfMonth, string meteringPointId, DocumentDto document)
+        {
+            // Arrange
+            var newChargeLinks = GetChargeLinksWithPeriod(2022, 1, startDateDayOfMonth, endDateDayOfMonth);
+            var chargeLinkCommand = new ChargeLinksCommand(meteringPointId, document, newChargeLinks);
+
+            var existingChargeLinks = new List<ChargeLink>();
+
+            var sut = new ChargeLinksUpdateNotYetSupportedRule(chargeLinkCommand, existingChargeLinks);
+
+            // Act & Assert
+            sut.IsValid.Should().BeTrue();
+        }
+
         private IReadOnlyCollection<ChargeLink> GetExistingChargeLinks()
         {
             var day1LocalDateTime = new LocalDateTime(2022, 1, 11, 0, 0);
