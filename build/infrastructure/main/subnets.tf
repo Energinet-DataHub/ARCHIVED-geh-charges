@@ -15,7 +15,7 @@
 module "snet_external_private_endpoints" {
   source                                        = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//azure/subnet?ref=6.0.0"
   name                                          = "external-endpoints-subnet"
-  project_name                                  = var.project_name
+  project_name                                  = var.domain_name_short
   environment_short                             = var.environment_short
   environment_instance                          = var.environment_instance
   resource_group_name                           = data.azurerm_key_vault_secret.vnet_shared_resouce_group_name
@@ -27,7 +27,7 @@ module "snet_external_private_endpoints" {
 module "snet_internal_private_endpoints" {
   source                                        = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//azure/subnet?ref=6.0.0"
   name                                          = "private-endpoints-subnet"
-  project_name                                  = var.project_name
+  project_name                                  = var.domain_name_short
   environment_short                             = var.environment_short
   environment_instance                          = var.environment_instance
   resource_group_name                           = data.azurerm_key_vault_secret.vnet_shared_resouce_group_name
@@ -40,7 +40,7 @@ module "snet_internal_private_endpoints" {
 module "vnet_integrations_webapi" {
   source                                        = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//azure/subnet?ref=6.0.0"
   name                                          = "vnet-integrations-webapi"
-  project_name                                  = var.project_name
+  project_name                                  = var.domain_name_short
   environment_short                             = var.environment_short
   environment_instance                          = var.environment_instance
   resource_group_name                           = data.azurerm_key_vault_secret.vnet_shared_resouce_group_name
