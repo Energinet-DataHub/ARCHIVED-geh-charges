@@ -56,23 +56,7 @@ namespace GreenEnergyHub.Charges.QueryApi.Model
                 entity.HasKey(e => e.Id)
                     .IsClustered(false);
 
-                entity.ToTable("Charge", "Charges");
-
-                entity.HasIndex(e => new { e.SenderProvidedChargeId, e.Type, e.OwnerId }, "IX_SenderProvidedChargeId_ChargeType_MarketParticipantId");
-
                 entity.Property(e => e.Id).ValueGeneratedNever();
-
-                entity.Property(e => e.Description)
-                    .IsRequired()
-                    .HasMaxLength(2048);
-
-                entity.Property(e => e.Name)
-                    .IsRequired()
-                    .HasMaxLength(132);
-
-                entity.Property(e => e.SenderProvidedChargeId)
-                    .IsRequired()
-                    .HasMaxLength(35);
 
                 entity.HasOne(d => d.Owner)
                     .WithMany(p => p.Charges)
@@ -85,10 +69,6 @@ namespace GreenEnergyHub.Charges.QueryApi.Model
             {
                 entity.HasKey(e => e.Id)
                     .IsClustered(false);
-
-                entity.ToTable("ChargeLink", "Charges");
-
-                entity.HasIndex(e => new { e.MeteringPointId, e.ChargeId }, "IX_MeteringPointId_ChargeId");
 
                 entity.Property(e => e.Id).ValueGeneratedNever();
 
@@ -111,11 +91,7 @@ namespace GreenEnergyHub.Charges.QueryApi.Model
                     .HasName("PK_ChargePrice")
                     .IsClustered(false);
 
-                entity.ToTable("ChargePoint", "Charges");
-
                 entity.Property(e => e.Id).ValueGeneratedNever();
-
-                entity.Property(e => e.Price).HasColumnType("decimal(14, 6)");
 
                 entity.HasOne(d => d.Charge)
                     .WithMany(p => p.ChargePoints)
@@ -128,10 +104,6 @@ namespace GreenEnergyHub.Charges.QueryApi.Model
             {
                 entity.HasKey(e => e.Id)
                     .IsClustered(false);
-
-                entity.ToTable("DefaultChargeLink", "Charges");
-
-                entity.HasIndex(e => new { e.MeteringPointType, e.StartDateTime, e.EndDateTime }, "IX_MeteringPointType_StartDateTime_EndDateTime");
 
                 entity.Property(e => e.Id).ValueGeneratedNever();
 
@@ -147,10 +119,6 @@ namespace GreenEnergyHub.Charges.QueryApi.Model
                 entity.HasKey(e => e.Id)
                     .IsClustered(false);
 
-                entity.ToTable("GridArea", "Charges");
-
-                entity.HasIndex(e => e.Id, "IX_GridAreaId");
-
                 entity.Property(e => e.Id).ValueGeneratedNever();
 
                 entity.HasOne(d => d.GridAccessProvider)
@@ -163,10 +131,6 @@ namespace GreenEnergyHub.Charges.QueryApi.Model
             {
                 entity.HasKey(e => e.Id)
                     .IsClustered(false);
-
-                entity.ToTable("GridAreaLink", "Charges");
-
-                entity.HasIndex(e => e.Id, "IX_GridAreaLinkId");
 
                 entity.Property(e => e.Id).ValueGeneratedNever();
 
@@ -182,16 +146,7 @@ namespace GreenEnergyHub.Charges.QueryApi.Model
                 entity.HasKey(e => e.Id)
                     .IsClustered(false);
 
-                entity.ToTable("MarketParticipant", "Charges");
-
-                entity.HasIndex(e => e.MarketParticipantId, "UC_MarketParticipantId")
-                    .IsUnique();
-
                 entity.Property(e => e.Id).ValueGeneratedNever();
-
-                entity.Property(e => e.MarketParticipantId)
-                    .IsRequired()
-                    .HasMaxLength(35);
             });
 
             modelBuilder.Entity<MeteringPoint>(entity =>
@@ -199,20 +154,7 @@ namespace GreenEnergyHub.Charges.QueryApi.Model
                 entity.HasKey(e => e.Id)
                     .IsClustered(false);
 
-                entity.ToTable("MeteringPoint", "Charges");
-
-                entity.HasIndex(e => e.GridAreaLinkId, "IX_GridAreaLinkId");
-
-                entity.HasIndex(e => e.MeteringPointId, "IX_MeteringPointId");
-
-                entity.HasIndex(e => e.MeteringPointId, "UC_MeteringPointId")
-                    .IsUnique();
-
                 entity.Property(e => e.Id).ValueGeneratedNever();
-
-                entity.Property(e => e.MeteringPointId)
-                    .IsRequired()
-                    .HasMaxLength(50);
 
                 entity.HasOne(d => d.GridAreaLink)
                     .WithMany(p => p.MeteringPoints)
