@@ -13,7 +13,6 @@
 // limitations under the License.
 
 using System;
-using EntityFrameworkCore.SqlServer.NodaTime.Extensions;
 using GreenEnergyHub.Charges.QueryApi;
 using GreenEnergyHub.Charges.QueryApi.Model;
 using Microsoft.EntityFrameworkCore;
