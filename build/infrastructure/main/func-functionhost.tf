@@ -41,9 +41,9 @@ module "func_functionhost" {
     CHARGE_LINKS_REJECTED_TOPIC_NAME                                = module.sbt_links_command_rejected.name
     CHARGE_LINKS_REJECTED_SUBSCRIPTION_NAME                         = "links-command-rejected"
     CHARGE_LINKS_ACCEPTED_SUB_REPLIER                               = "charge-links-accepted-sub-replier"
-    CHARGE_LINKS_ACCEPTED_SUB_EVENTPUBLISHER                        = "charge-links-accepted-sub-event-publisher"
-    CHARGE_LINKS_ACCEPTED_SUB_DATAAVAILABLENOTIFIER                 = "charge-links-accepted-sub-data-available-notifier"
-    CHARGE_LINKS_ACCEPTED_SUB_CONFIRMATIONNOTIFIER                  = "charge-links-accepted-sub-confirmation-notifier"
+    CHARGE_LINKS_ACCEPTED_SUB_EVENT_PUBLISHER                       = "charge-links-accepted-sub-event-publisher"
+    CHARGE_LINKS_ACCEPTED_SUB_DATA_AVAILABLE_NOTIFIER               = "charge-links-accepted-sub-data-available-notifier"
+    CHARGE_LINKS_ACCEPTED_SUB_CONFIRMATION_NOTIFIER                 = "charge-links-accepted-sub-confirmation-notifier"
     CHARGE_LINKS_CREATED_TOPIC_NAME                                 = data.azurerm_key_vault_secret.sbt_charge_link_created_name.value
     CHARGE_LINKS_RECEIVED_TOPIC_NAME                                = module.sbt_links_command_received.name
     CHARGE_LINKS_RECEIVED_SUBSCRIPTION_NAME                         = "links-command-received-receiver"
