@@ -22,7 +22,7 @@ using FluentAssertions;
 using Google.Protobuf;
 using GreenEnergyHub.Charges.FunctionHost.MeteringPoint;
 using GreenEnergyHub.Charges.Infrastructure.Persistence;
-using GreenEnergyHub.Charges.IntegrationTests.Fixtures;
+using GreenEnergyHub.Charges.IntegrationTests.Fixtures.FunctionApp;
 using GreenEnergyHub.Charges.IntegrationTests.TestCommon;
 using GreenEnergyHub.Charges.IntegrationTests.TestHelpers;
 using Xunit;

@@ -92,5 +92,9 @@ namespace GreenEnergyHub.Charges.FunctionHost.Common
         // Internal, charge links, rejected
         public const string ChargeLinksRejectedTopicName = "CHARGE_LINKS_REJECTED_TOPIC_NAME";
         public const string ChargeLinksRejectedSubscriptionName = "CHARGE_LINKS_REJECTED_SUBSCRIPTION_NAME";
+
+        // JWT Token auth
+        public const string B2CTenantId = "B2C_TENANT_ID";
+        public const string BackendServiceAppId = "BACKEND_SERVICE_APP_ID";
     }
 }

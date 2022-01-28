@@ -16,7 +16,8 @@ using System.Net;
 using System.Threading.Tasks;
 using Energinet.DataHub.Core.FunctionApp.TestCommon;
 using FluentAssertions;
-using GreenEnergyHub.Charges.IntegrationTests.Fixtures;
+using GreenEnergyHub.Charges.IntegrationTests.Fixtures.FunctionApp;
+using GreenEnergyHub.Charges.IntegrationTests.TestHelpers;
 using Xunit;
 using Xunit.Abstractions;
 using Xunit.Categories;
@@ -32,19 +33,23 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
         [Collection(nameof(ChargesFunctionAppCollectionFixture))]
         public class Run : FunctionAppTestBase<ChargesFunctionAppFixture>
         {
+            private readonly HttpRequestGenerator _httpRequestGenerator;
+
             public Run(ChargesFunctionAppFixture fixture, ITestOutputHelper testOutputHelper)
                 : base(fixture, testOutputHelper)
             {
+                TestDataGenerator.GenerateDataForIntegrationTests(fixture);
+                _httpRequestGenerator = new HttpRequestGenerator(fixture.AuthorizationConfiguration);
             }
 
             [Fact]
             public async Task When_RequestingHealthStatus_Then_ReturnStatusOK()
             {
                 // Arrange
-                var requestUri = "api/HealthStatus";
+                var result = await _httpRequestGenerator.CreateHttpGetRequestAsync("api/HealthStatus");
 
                 // Act
-                var actualResponse = await Fixture.HostManager.HttpClient.GetAsync(requestUri);
+                var actualResponse = await Fixture.HostManager.HttpClient.SendAsync(result.Request);
 
                 // Assert
                 actualResponse.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -54,10 +59,10 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             public async Task When_RequestingUnknownEndpoint_Then_ReturnStatusNotFound()
             {
                 // Arrange
-                var requestUri = "api/unknown";
+                var result = await _httpRequestGenerator.CreateHttpGetRequestAsync("api/unknown");
 
                 // Act
-                var actualResponse = await Fixture.HostManager.HttpClient.GetAsync(requestUri);
+                var actualResponse = await Fixture.HostManager.HttpClient.SendAsync(result.Request);
 
                 // Assert
                 actualResponse.StatusCode.Should().Be(HttpStatusCode.NotFound);

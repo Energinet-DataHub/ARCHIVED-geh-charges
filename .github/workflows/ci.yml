@@ -27,7 +27,7 @@ jobs:
   
   # Build and test solution, and publish coverage report
   dotnet_solution_ci:
-    uses: Energinet-DataHub/.github/.github/workflows/dotnet-solution-ci.yml@2.7.0
+    uses: Energinet-DataHub/.github/.github/workflows/dotnet-solution-ci.yml@3.0.3
     with:
       SOLUTION_FILE_PATH: 'source/GreenEnergyHub.Charges/GreenEnergyHub.Charges.sln'
       DOTNET_VERSION: '5.0'
@@ -39,6 +39,7 @@ jobs:
       AZURE_SPN_ID: ${{ secrets.AZURE_SPN_ID }}
       AZURE_SPN_SECRET: ${{ secrets.AZURE_SPN_SECRET }}
       AZURE_KEYVAULT_URL: ${{ secrets.AZURE_KEYVAULT_URL }}
+      AZURE_SECRETS_KEYVAULT_URL: ${{ secrets.AZURE_SECRETS_KEYVAULT_URL }}
 
   terraform_validate:
     uses: Energinet-DataHub/.github/.github/workflows/terraform-validate.yml@2.7.0
