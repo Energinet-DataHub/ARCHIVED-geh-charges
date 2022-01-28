@@ -39,7 +39,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeLinksCommands.Validatio
             var newChargeLinks = GetChargeLinksWithoutOverlappingPeriods();
             var chargeLinkCommand = new ChargeLinksCommand(meteringPointId, document, newChargeLinks);
 
-            var existingChargeLinks = GetExistingChargeLinks();
+            var existingChargeLinks = GetExistingChargeLinks(11, 21);
 
             var sut = new ChargeLinksUpdateNotYetSupportedRule(chargeLinkCommand, existingChargeLinks);
 
@@ -52,13 +52,14 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeLinksCommands.Validatio
         [InlineAutoMoqData(12, 20)]
         [InlineAutoMoqData(20, null!)]
         [InlineAutoMoqData(1, 30)]
-        public void IsValid_WhenCalledWithOverlappingChargeLinks_ReturnsFalse(int startDateDayOfMonth, int? endDateDayOfMonth, string meteringPointId, DocumentDto document)
+        public void IsValid_WhenCalledWithOverlappingChargeLinks_ReturnsFalse(
+            int startDateDayOfMonth, int? endDateDayOfMonth, string meteringPointId, DocumentDto document)
         {
             // Arrange
             var newChargeLinks = GetChargeLinksWithPeriod(2022, 1, startDateDayOfMonth, endDateDayOfMonth);
             var chargeLinkCommand = new ChargeLinksCommand(meteringPointId, document, newChargeLinks);
 
-            var existingChargeLinks = GetExistingChargeLinks();
+            var existingChargeLinks = GetExistingChargeLinks(11, 21);
 
             var sut = new ChargeLinksUpdateNotYetSupportedRule(chargeLinkCommand, existingChargeLinks);
 
@@ -68,26 +69,41 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeLinksCommands.Validatio
 
         [Theory]
         [InlineAutoMoqData(1, 12)]
-        public void IsValid_WhenExistingChargeLinksListIsEmpty_ReturnsTrue(int startDateDayOfMonth, int? endDateDayOfMonth, string meteringPointId, DocumentDto document)
+        public void IsValid_WhenExistingChargeLinksListIsEmpty_ReturnsTrue(
+            int startDateDayOfMonth, int? endDateDayOfMonth, string meteringPointId, DocumentDto document)
         {
             // Arrange
             var newChargeLinks = GetChargeLinksWithPeriod(2022, 1, startDateDayOfMonth, endDateDayOfMonth);
             var chargeLinkCommand = new ChargeLinksCommand(meteringPointId, document, newChargeLinks);
 
-            var existingChargeLinks = new List<ChargeLink>();
-
-            var sut = new ChargeLinksUpdateNotYetSupportedRule(chargeLinkCommand, existingChargeLinks);
+            var sut = new ChargeLinksUpdateNotYetSupportedRule(chargeLinkCommand, new List<ChargeLink>());
 
             // Act & Assert
             sut.IsValid.Should().BeTrue();
         }
 
-        private IReadOnlyCollection<ChargeLink> GetExistingChargeLinks()
+        [Theory]
+        [InlineAutoMoqData(1, 12)]
+        public void IsValid_WhenExistingChargeLinkHasEqualDatesAsNewLink_ReturnsFalse(
+            int startDateDayOfMonth, int endDateDayOfMonth, string meteringPointId, DocumentDto document)
         {
-            var day1LocalDateTime = new LocalDateTime(2022, 1, 11, 0, 0);
+            // Arrange
+            var newChargeLinks = GetChargeLinksWithPeriod(2022, 1, startDateDayOfMonth, endDateDayOfMonth);
+            var chargeLinkCommand = new ChargeLinksCommand(meteringPointId, document, newChargeLinks);
+            var existingChargeLinks = GetExistingChargeLinks(startDateDayOfMonth, endDateDayOfMonth);
+
+            var sut = new ChargeLinksUpdateNotYetSupportedRule(chargeLinkCommand, existingChargeLinks);
+
+            // Act & Assert
+            sut.IsValid.Should().BeFalse();
+        }
+
+        private IReadOnlyCollection<ChargeLink> GetExistingChargeLinks(int startDateDayOfMonth, int endDateDayOfMonth)
+        {
+            var day1LocalDateTime = new LocalDateTime(2022, 1, startDateDayOfMonth, 0, 0);
             var day1Utc = _copenhagen.AtStrictly(day1LocalDateTime).ToInstant();
 
-            var day2LocalDateTime = new LocalDateTime(2022, 1, 21, 0, 0);
+            var day2LocalDateTime = new LocalDateTime(2022, 1, endDateDayOfMonth, 0, 0);
             var day2Utc = _copenhagen.AtStrictly(day2LocalDateTime).ToInstant();
 
             var link = new ChargeLinkBuilder().WithStartDate(day1Utc).WithEndDate(day2Utc).Build();
