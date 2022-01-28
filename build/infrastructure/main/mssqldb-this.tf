@@ -11,21 +11,19 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-data "azurerm_sql_server" "sqlsrv" {
-  name                = data.azurerm_key_vault_secret.sql_data_name.value
+data "azurerm_mssql_server" "mssqlsrv" {
+  name                = data.azurerm_key_vault_secret.mssql_data_name.value
   resource_group_name = data.azurerm_resource_group.shared_resources.name
 }
 
-module "sqldb_charges" {
-  source                = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//azure/sql-database?ref=5.1.0"
+module "mssqldb_charges" {
+  source                = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//azure/mssql-database?ref=5.4.0"
 
   name                  = "data"
   project_name          = var.domain_name_short
   environment_short     = var.environment_short
   environment_instance  = var.environment_instance
-  resource_group_name   = data.azurerm_resource_group.shared_resources.name
-  location              = data.azurerm_resource_group.shared_resources.location  
-  server_name           = data.azurerm_sql_server.sqlsrv.name
+  server_id             = data.azurerm_mssql_server.mssqlsrv.id
   
   tags                  = azurerm_resource_group.this.tags
 }

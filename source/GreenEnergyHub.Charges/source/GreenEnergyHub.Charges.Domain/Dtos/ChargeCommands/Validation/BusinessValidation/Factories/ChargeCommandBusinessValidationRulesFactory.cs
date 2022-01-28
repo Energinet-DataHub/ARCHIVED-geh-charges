@@ -53,7 +53,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessV
             var configuration = await _rulesConfigurationRepository.GetConfigurationAsync().ConfigureAwait(false);
 
             var senderId = chargeCommand.Document.Sender.Id;
-            var sender = await _marketParticipantRepository.GetOrNullAsync(senderId);
+            var sender = await _marketParticipantRepository.GetOrNullAsync(senderId).ConfigureAwait(false);
 
             var charge = await GetChargeOrNullAsync(chargeCommand).ConfigureAwait(false);
 
@@ -90,25 +90,24 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessV
                     configuration.StartDateValidationRuleConfiguration,
                     _zonedDateTimeService,
                     _clock),
-                new CommandSenderMustBeAnExistingMarketParticipantRule(chargeCommand, sender),
+                new CommandSenderMustBeAnExistingMarketParticipantRule(sender),
                 new ChargeUpdateNotYetSupportedRule(charge),
             };
 
             return rules;
         }
 
-        private async Task<Charge?> GetChargeOrNullAsync(ChargeCommand command)
+        private Task<Charge?> GetChargeOrNullAsync(ChargeCommand command)
         {
             var chargeId = command.ChargeOperation.ChargeId;
             var chargeOperationChargeOwner = command.ChargeOperation.ChargeOwner;
             var chargeType = command.ChargeOperation.Type;
 
-            return await _chargeRepository
+            return _chargeRepository
                 .GetOrNullAsync(new ChargeIdentifier(
                     chargeId,
                     chargeOperationChargeOwner,
-                    chargeType))
-                .ConfigureAwait(false);
+                    chargeType));
         }
     }
 }

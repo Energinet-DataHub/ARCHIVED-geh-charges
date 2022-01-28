@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures
+namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures.FunctionApp
 {
     public static class ChargesServiceBusResourceNames
     {

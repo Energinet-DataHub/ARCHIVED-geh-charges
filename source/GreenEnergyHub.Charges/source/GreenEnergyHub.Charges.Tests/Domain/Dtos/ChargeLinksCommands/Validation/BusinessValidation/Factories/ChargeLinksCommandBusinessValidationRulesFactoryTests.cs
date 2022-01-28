@@ -15,13 +15,17 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands.Validation.BusinessValidation.Factories;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands.Validation.BusinessValidation.ValidationRules;
+using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using GreenEnergyHub.Charges.Domain.MeteringPoints;
+using GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors;
+using GreenEnergyHub.Charges.MessageHub.Models.Shared;
 using GreenEnergyHub.Charges.TestCore.Attributes;
 using GreenEnergyHub.Charges.Tests.Builders;
 using Moq;
@@ -31,7 +35,7 @@ using Xunit.Categories;
 namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeLinksCommands.Validation.BusinessValidation.Factories
 {
     [UnitTest]
-    public class BusinessValidationRulesFactoryTests
+    public class ChargeLinksCommandBusinessValidationRulesFactoryTests
     {
         [Theory]
         [InlineAutoMoqData(typeof(MeteringPointMustExistRule))]
@@ -42,14 +46,13 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeLinksCommands.Validatio
             ChargeLinksCommandBuilder builder)
         {
             // Arrange
-            var chargeCommand = builder.Build();
+            var chargeLinksCommand = builder.Build();
 
             MeteringPoint? meteringPoint = null;
-            repository.Setup(r => r.GetOrNullAsync(chargeCommand.MeteringPointId))
-                .ReturnsAsync(meteringPoint);
+            SetupMeteringPointRepositoryMock(repository, chargeLinksCommand, meteringPoint);
 
             // Act
-            var actual = await sut.CreateRulesAsync(chargeCommand).ConfigureAwait(false);
+            var actual = await sut.CreateRulesAsync(chargeLinksCommand).ConfigureAwait(false);
             var actualRules = actual.GetRules().Select(r => r.GetType());
 
             // Assert
@@ -71,17 +74,14 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeLinksCommands.Validatio
             // Arrange
             var link = linksBuilder.Build();
             var links = new List<ChargeLinkDto> { link };
-            var chargeCommand = linksCommandBuilder.WithChargeLinks(links).Build();
-
-            meteringPointRepository.Setup(r => r.GetOrNullAsync(chargeCommand.MeteringPointId))
-                .ReturnsAsync(meteringPoint);
+            var chargeLinksCommand = linksCommandBuilder.WithChargeLinks(links).Build();
 
             Charge? charge = null;
-            chargeRepository.Setup(r => r.GetOrNullAsync(It.IsAny<ChargeIdentifier>()))
-                .ReturnsAsync(charge);
+            SetupChargeRepositoryMock(chargeRepository, charge);
+            SetupMeteringPointRepositoryMock(meteringPointRepository, chargeLinksCommand, meteringPoint);
 
             // Act
-            var actual = await sut.CreateRulesAsync(chargeCommand).ConfigureAwait(false);
+            var actual = await sut.CreateRulesAsync(chargeLinksCommand).ConfigureAwait(false);
             var actualRules = actual.GetRules().Select(r => r.GetType());
 
             // Assert
@@ -104,16 +104,13 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeLinksCommands.Validatio
             // Arrange
             var link = linksBuilder.Build();
             var links = new List<ChargeLinkDto> { link };
-            var chargeCommand = linksCommandBuilder.WithChargeLinks(links).Build();
+            var chargeLinksCommand = linksCommandBuilder.WithChargeLinks(links).Build();
 
-            meteringPointRepository.Setup(r => r.GetOrNullAsync(chargeCommand.MeteringPointId))
-                .ReturnsAsync(meteringPoint);
-
-            chargeRepository.Setup(r => r.GetOrNullAsync(It.IsAny<ChargeIdentifier>()))
-                .ReturnsAsync(charge);
+            SetupChargeRepositoryMock(chargeRepository, charge);
+            SetupMeteringPointRepositoryMock(meteringPointRepository, chargeLinksCommand, meteringPoint);
 
             // Act
-            var actual = await sut.CreateRulesAsync(chargeCommand).ConfigureAwait(false);
+            var actual = await sut.CreateRulesAsync(chargeLinksCommand).ConfigureAwait(false);
             var actualRules = actual.GetRules().Select(r => r.GetType());
 
             // Assert
@@ -133,6 +130,59 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeLinksCommands.Validatio
             await Assert.ThrowsAsync<ArgumentNullException>(
                     () => sut.CreateRulesAsync(command!))
                 .ConfigureAwait(false);
+        }
+
+        [Theory]
+        [InlineAutoMoqData(CimValidationErrorTextToken.ChargeLinkStartDate)]
+        [InlineAutoMoqData(CimValidationErrorTextToken.DocumentSenderProvidedChargeId)]
+        public async Task CreateRulesAsync_AllRulesThatNeedTriggeredByForErrorMessage_MustImplementIValidationRuleWithExtendedData(
+            CimValidationErrorTextToken cimValidationErrorTextToken,
+            [Frozen] Mock<IMeteringPointRepository> meteringPointRepository,
+            [Frozen] Mock<IChargeRepository> chargeRepository,
+            ChargeLinksCommandBusinessValidationRulesFactory sut,
+            ChargeLinksCommand chargeLinksCommand,
+            MeteringPoint meteringPoint,
+            Charge charge)
+        {
+            // Arrange
+            SetupChargeRepositoryMock(chargeRepository, charge);
+            SetupMeteringPointRepositoryMock(meteringPointRepository, chargeLinksCommand, meteringPoint);
+
+            // Act
+            var validationRules = (await sut.CreateRulesAsync(chargeLinksCommand)).GetRules();
+
+            // Assert
+            var type = typeof(CimValidationErrorTextTemplateMessages);
+            foreach (var fieldInfo in type.GetFields(BindingFlags.Static | BindingFlags.Public))
+            {
+                if (!fieldInfo.GetCustomAttributes().Any()) continue;
+
+                var errorMessageForAttribute = (ErrorMessageForAttribute)fieldInfo.GetCustomAttributes()
+                    .Single(x => x.GetType() == typeof(ErrorMessageForAttribute));
+
+                var validationRuleIdentifier = errorMessageForAttribute.ValidationRuleIdentifier;
+                var errorText = fieldInfo.GetValue(null)!.ToString();
+                var validationErrorTextTokens = CimValidationErrorTextTokenMatcher.GetTokens(errorText!);
+                var validationRule = validationRules.FirstOrDefault(x => x.ValidationRuleIdentifier == validationRuleIdentifier);
+
+                if (validationErrorTextTokens.Contains(cimValidationErrorTextToken) && validationRule != null)
+                {
+                    Assert.True(validationRule is IValidationRuleWithExtendedData);
+                }
+            }
+        }
+
+        private static void SetupChargeRepositoryMock(Mock<IChargeRepository> chargeRepository, Charge? charge)
+        {
+            chargeRepository.Setup(r => r.GetOrNullAsync(It.IsAny<ChargeIdentifier>())).ReturnsAsync(charge);
+        }
+
+        private static void SetupMeteringPointRepositoryMock(
+            Mock<IMeteringPointRepository> repository,
+            ChargeLinksCommand chargeLinksCommand,
+            MeteringPoint? meteringPoint)
+        {
+            repository.Setup(r => r.GetOrNullAsync(chargeLinksCommand.MeteringPointId)).ReturnsAsync(meteringPoint);
         }
     }
 }

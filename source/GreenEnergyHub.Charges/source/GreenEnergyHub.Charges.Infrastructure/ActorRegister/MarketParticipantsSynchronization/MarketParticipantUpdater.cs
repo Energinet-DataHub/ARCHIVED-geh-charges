@@ -12,11 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.Infrastructure.ActorRegister.Persistence.Actors;
 
-namespace GreenEnergyHub.Charges.Infrastructure.ActorRegister
+namespace GreenEnergyHub.Charges.Infrastructure.ActorRegister.MarketParticipantsSynchronization
 {
     public static class MarketParticipantUpdater
     {
@@ -25,27 +24,37 @@ namespace GreenEnergyHub.Charges.Infrastructure.ActorRegister
             Actor actor,
             MarketParticipantRole businessProcessRole)
         {
-            if (marketParticipant.MarketParticipantId != actor.IdentificationNumber)
-            {
-                throw new InvalidOperationException(
-                    $"Actor with identification number '{actor.IdentificationNumber}'"
-                    + ", seems to have an updated identification number, which is not a valid business operation.");
-            }
-
-            UpdateIsActive(marketParticipant, actor);
+            UpdateMarketParticipantId(marketParticipant, actor.IdentificationNumber);
+            UpdateIsActive(marketParticipant, actor.Active);
             UpdateRole(marketParticipant, businessProcessRole);
         }
 
-        private static void UpdateIsActive(MarketParticipant marketParticipant, Actor actor)
+        /// <summary>
+        /// This is NOT a legal business operation. It is however supported during the implementation of the
+        /// temporary actor register solution where such updates apparently occurs.
+        /// </summary>
+        private static void UpdateMarketParticipantId(MarketParticipant marketParticipant, string marketParticipantId)
         {
-            if (marketParticipant.IsActive == actor.Active) return;
-            marketParticipant.IsActive = actor.Active;
+            if (marketParticipant.MarketParticipantId == marketParticipantId) return;
+            SetMarketParticipantId(marketParticipant, marketParticipantId);
+        }
+
+        private static void UpdateIsActive(MarketParticipant marketParticipant, bool isActive)
+        {
+            if (marketParticipant.IsActive == isActive) return;
+            marketParticipant.IsActive = isActive;
         }
 
         private static void UpdateRole(MarketParticipant marketParticipant, MarketParticipantRole businessProcessRole)
         {
             if (marketParticipant.BusinessProcessRole == businessProcessRole) return;
             marketParticipant.UpdateBusinessProcessRole(businessProcessRole);
+        }
+
+        private static void SetMarketParticipantId(MarketParticipant marketParticipant, string marketParticipantId)
+        {
+            var prop = marketParticipant.GetType().GetProperty(nameof(MarketParticipant.MarketParticipantId))!;
+            prop.SetValue(marketParticipant, marketParticipantId);
         }
     }
 }

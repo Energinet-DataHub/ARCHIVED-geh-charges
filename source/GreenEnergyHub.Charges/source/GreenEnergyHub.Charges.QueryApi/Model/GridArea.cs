@@ -12,18 +12,26 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Xunit;
+using System;
+using System.Collections.Generic;
 
-namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures
+#nullable disable
+
+namespace GreenEnergyHub.Charges.QueryApi.Model
 {
-    /// <summary>
-    /// A xUnit collection fixture for ensuring tests don't run in parallel.
-    ///
-    /// xUnit documentation of collection fixtures:
-    ///  * https://xunit.net/docs/shared-context#collection-fixture
-    /// </summary>
-    [CollectionDefinition(nameof(ChargesFunctionAppCollectionFixture))]
-    public class ChargesFunctionAppCollectionFixture : ICollectionFixture<ChargesFunctionAppFixture>
+    public partial class GridArea
     {
+        public GridArea()
+        {
+            GridAreaLinks = new HashSet<GridAreaLink>();
+        }
+
+        public Guid Id { get; set; }
+
+        public Guid? GridAccessProviderId { get; set; }
+
+        public virtual MarketParticipant GridAccessProvider { get; set; }
+
+        public virtual ICollection<GridAreaLink> GridAreaLinks { get; set; }
     }
 }

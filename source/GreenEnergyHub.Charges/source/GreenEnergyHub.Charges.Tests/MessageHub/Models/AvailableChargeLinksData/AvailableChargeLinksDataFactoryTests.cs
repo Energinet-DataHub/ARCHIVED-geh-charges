@@ -38,7 +38,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeLinksDat
         [Theory]
         [InlineAutoDomainData]
         public async Task CreateAsync_WhenTaxCharges_ReturnsAvailableData(
-            TestMeteringPointAdministrator hubSender,
+            TestMeteringPointAdministrator meteringPointAdministrator,
             [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
             [Frozen] Mock<IChargeRepository> chargeRepository,
             [Frozen] Mock<IMessageMetaDataContext> messageMetaDataContext,
@@ -49,10 +49,10 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeLinksDat
             AvailableChargeLinksDataFactory sut)
         {
             // Arrange
-            marketParticipantRepository.Setup(r => r.GetHubSenderAsync()).ReturnsAsync(hubSender);
+            marketParticipantRepository.Setup(r => r.GetMeteringPointAdministratorAsync()).ReturnsAsync(meteringPointAdministrator);
             marketParticipantRepository
-                .Setup(m => m.GetGridAccessProvider(acceptedEvent.ChargeLinksCommand.MeteringPointId))
-                .Returns(gridAccessProvider);
+                .Setup(m => m.GetGridAccessProviderAsync(acceptedEvent.ChargeLinksCommand.MeteringPointId))
+                .ReturnsAsync(gridAccessProvider);
 
             charge.SetPrivateProperty(c => c.TaxIndicator, true);
             chargeRepository
@@ -89,19 +89,21 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeLinksDat
         [Theory]
         [InlineAutoDomainData]
         public async Task CreateAsync_WhenNotTaxCharges_ReturnsEmptyList(
-            TestMeteringPointAdministrator hubSender,
+            TestMeteringPointAdministrator meteringPointAdministrator,
             [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
             [Frozen] Mock<IChargeRepository> chargeRepository,
             ChargeLinksAcceptedEvent acceptedEvent,
             Charge charge,
-            TestMarketParticipant marketParticipant,
+            TestGridAccessProvider gridAccessProvider,
             AvailableChargeLinksDataFactory sut)
         {
             // Arrange
-            marketParticipantRepository.Setup(r => r.GetHubSenderAsync()).ReturnsAsync(hubSender);
             marketParticipantRepository
-                .Setup(m => m.GetGridAccessProvider(acceptedEvent.ChargeLinksCommand.MeteringPointId))
-                .Returns(marketParticipant);
+                .Setup(r => r.GetMeteringPointAdministratorAsync())
+                .ReturnsAsync(meteringPointAdministrator);
+            marketParticipantRepository
+                .Setup(m => m.GetGridAccessProviderAsync(acceptedEvent.ChargeLinksCommand.MeteringPointId))
+                .ReturnsAsync(gridAccessProvider);
 
             charge.SetPrivateProperty(c => c.TaxIndicator, false);
             chargeRepository

@@ -16,6 +16,8 @@
     "ACTOR_REGISTER_CONNECTION_STRING": "<actor register database connection string>",
     "MESSAGEHUB_STORAGE_CONNECTION_STRING": "<connection string for writing to the Message Hub storage account for bundles>",
     "REQUEST_RESPONSE_LOGGING_CONNECTION_STRING": "<connection string for logging request and response to storage>",
+    "B2C_TENANT_ID": "<Azure B2C tenant id>",
+    "BACKEND_SERVICE_APP_ID": "<Backend service application id>",
 
     // From this point on, it is settings that change with the code and not the environment
     // Localization
@@ -65,7 +67,7 @@
     // Internal, charge links, accepted
     "CHARGE_LINKS_ACCEPTED_TOPIC_NAME": "links-command-accepted",
     "CHARGE_LINKS_REJECTED_TOPIC_NAME": "links-command-rejected",
-    "CHARGE_LINKS_REJECTED_SUBSCRIPTION_NAME": "charge-links-command-rejected",
+    "CHARGE_LINKS_REJECTED_SUBSCRIPTION_NAME": "links-command-rejected",
     "CHARGE_LINKS_ACCEPTED_SUB_CONFIRMATION_NOTIFIER": "charge-links-accepted-sub-confirmation-notifier",
     "CHARGE_LINKS_ACCEPTED_SUB_DATA_AVAILABLE_NOTIFIER": "charge-links-accepted-sub-data-available-notifier",
     "CHARGE_LINKS_ACCEPTED_SUB_EVENT_PUBLISHER": "charge-links-accepted-sub-event-publisher",

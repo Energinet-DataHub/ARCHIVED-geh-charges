@@ -22,12 +22,14 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands.Validation.Busi
     /// <summary>
     /// Temporary rule that stops both update and stops from taking place to charge links until that is implemented
     /// </summary>
-    public class ChargeLinksUpdateNotYetSupportedRule : IValidationRule
+    public class ChargeLinksUpdateNotYetSupportedRule : IValidationRuleWithExtendedData
     {
         private readonly ChargeLinksCommand _chargeLinksCommand;
         private readonly IReadOnlyCollection<ChargeLink> _existingChargeLinks;
 
-        public ChargeLinksUpdateNotYetSupportedRule(ChargeLinksCommand chargeLinksCommand, IReadOnlyCollection<ChargeLink> existingChargeLinks)
+        public ChargeLinksUpdateNotYetSupportedRule(
+            ChargeLinksCommand chargeLinksCommand,
+            IReadOnlyCollection<ChargeLink> existingChargeLinks)
         {
             _chargeLinksCommand = chargeLinksCommand;
             _existingChargeLinks = existingChargeLinks;
@@ -50,5 +52,12 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands.Validation.Busi
 
             return true;
         }
+
+        /// <summary>
+        /// This validation rule validates each ChargeLink in a list of ChargeLink(s). This property will
+        /// tell which ChargeLink triggered the rule. The ChargeLink is identified by SenderProvidedChargeId.
+        /// </summary>
+        public string TriggeredBy => _chargeLinksCommand.ChargeLinks
+            .First(link => !ChargeLinkDateRangeIsNotOverlapping(link)).SenderProvidedChargeId;
     }
 }

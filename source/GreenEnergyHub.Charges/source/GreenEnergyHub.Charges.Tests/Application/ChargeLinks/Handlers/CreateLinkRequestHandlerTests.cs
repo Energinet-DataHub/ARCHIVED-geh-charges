@@ -18,7 +18,6 @@ using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
-using GreenEnergyHub.Charges.Application;
 using GreenEnergyHub.Charges.Application.ChargeLinks.CreateDefaultChargeLinkReplier;
 using GreenEnergyHub.Charges.Application.ChargeLinks.Handlers;
 using GreenEnergyHub.Charges.Contracts;
@@ -85,7 +84,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Handlers
                 .ReturnsAsync(MeteringPoint.Create(
                     meteringPointId,
                     MeteringPointType.Consumption,
-                    "gridArea",
+                    Guid.NewGuid(),
                     SystemClock.Instance.GetCurrentInstant(),
                     ConnectionState.New,
                     null));
@@ -210,7 +209,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Handlers
                 .ReturnsAsync(MeteringPoint.Create(
                     meteringPointId,
                     MeteringPointType.Consumption,
-                    "gridArea",
+                    Guid.NewGuid(),
                     SystemClock.Instance.GetCurrentInstant(),
                     ConnectionState.New,
                     null));

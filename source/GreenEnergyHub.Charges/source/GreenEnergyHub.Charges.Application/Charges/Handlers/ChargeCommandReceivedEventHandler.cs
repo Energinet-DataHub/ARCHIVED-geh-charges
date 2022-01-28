@@ -52,7 +52,9 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
                 return;
             }
 
-            var charge = await _chargeFactory.CreateFromCommandAsync(commandReceivedEvent.Command);
+            var charge = await _chargeFactory
+                .CreateFromCommandAsync(commandReceivedEvent.Command)
+                .ConfigureAwait(false);
             await _chargeRepository.StoreChargeAsync(charge).ConfigureAwait(false);
 
             await _chargeCommandReceiptService.AcceptAsync(commandReceivedEvent.Command).ConfigureAwait(false);

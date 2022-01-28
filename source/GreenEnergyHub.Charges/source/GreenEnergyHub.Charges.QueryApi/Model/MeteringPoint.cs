@@ -32,13 +32,15 @@ namespace GreenEnergyHub.Charges.QueryApi.Model
 
         public int MeteringPointType { get; set; }
 
-        public string GridAreaId { get; set; }
+        public Guid GridAreaLinkId { get; set; }
 
         public DateTime EffectiveDate { get; set; }
 
         public int ConnectionState { get; set; }
 
         public int? SettlementMethod { get; set; }
+
+        public virtual GridAreaLink GridAreaLink { get; set; }
 
         public virtual ICollection<ChargeLink> ChargeLinks { get; set; }
     }

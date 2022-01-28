@@ -21,9 +21,9 @@ using GreenEnergyHub.Charges.Infrastructure.ActorRegister.Persistence.Actors;
 using GreenEnergyHub.Charges.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 
-namespace GreenEnergyHub.Charges.Infrastructure.ActorRegister
+namespace GreenEnergyHub.Charges.Infrastructure.ActorRegister.MarketParticipantsSynchronization
 {
-    public class MarketParticipantSynchronizer : IMarketParticipantSynchronizer
+    public class MarketParticipantsSynchronizer : IMarketParticipantsSynchronizer
     {
         private readonly IActorRegister _actorRegister;
         private readonly IChargesDatabaseContext _chargesDatabaseContext;
@@ -33,7 +33,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.ActorRegister
         /// </summary>
         private readonly List<Role> _rolesUsedInChargesDomain;
 
-        public MarketParticipantSynchronizer(
+        public MarketParticipantsSynchronizer(
             IActorRegister actorRegister,
             IChargesDatabaseContext chargesDatabaseContext)
         {
@@ -45,18 +45,19 @@ namespace GreenEnergyHub.Charges.Infrastructure.ActorRegister
 
         public async Task SynchronizeAsync()
         {
-            var marketParticipants = await _chargesDatabaseContext.MarketParticipants.ToListAsync();
+            var marketParticipants = await _chargesDatabaseContext.MarketParticipants.ToListAsync().ConfigureAwait(false);
 
             var actors = (await _actorRegister
                 .Actors
-                .ToListAsync())
+                .ToListAsync()
+                .ConfigureAwait(false))
                 .Where(a => _rolesUsedInChargesDomain.Any(r => a.Roles.Contains(r)))
                 .ToList();
 
             foreach (var actor in actors)
                 AddOrUpdateMarketParticipant(marketParticipants, actor);
 
-            await _chargesDatabaseContext.SaveChangesAsync();
+            await _chargesDatabaseContext.SaveChangesAsync().ConfigureAwait(false);
         }
 
         private void AddOrUpdateMarketParticipant(List<MarketParticipant> marketParticipants, Actor actor)
