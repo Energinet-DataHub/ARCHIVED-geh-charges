@@ -20,7 +20,6 @@ using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandAcceptedEvents;
 
 namespace GreenEnergyHub.Charges.Application.Charges.Factories
 {
-    // Test if build is triggered
     public class ChargeCreatedEventFactory : IChargeCreatedEventFactory
     {
         private readonly CurrencyConfigurationIso4217 _currencyConfigurationIso4217;
