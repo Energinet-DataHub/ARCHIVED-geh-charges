@@ -100,12 +100,8 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeLinksCommands.Validatio
 
         private IReadOnlyCollection<ChargeLink> GetExistingChargeLinks(int startDateDayOfMonth, int endDateDayOfMonth)
         {
-            var day1LocalDateTime = new LocalDateTime(2022, 1, startDateDayOfMonth, 0, 0);
-            var day1Utc = _copenhagen.AtStrictly(day1LocalDateTime).ToInstant();
-
-            var day2LocalDateTime = new LocalDateTime(2022, 1, endDateDayOfMonth, 0, 0);
-            var day2Utc = _copenhagen.AtStrictly(day2LocalDateTime).ToInstant();
-
+            var day1Utc = GetInstantFromLocalDateTime(2022, 1, startDateDayOfMonth);
+            var day2Utc = GetInstantFromLocalDateTime(2022, 1, endDateDayOfMonth);
             var link = new ChargeLinkBuilder().WithStartDate(day1Utc).WithEndDate(day2Utc).Build();
 
             return new List<ChargeLink> { link };
@@ -113,16 +109,11 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeLinksCommands.Validatio
 
         private List<ChargeLinkDto> GetChargeLinksWithoutOverlappingPeriods()
         {
-            var day1LocalDateTime = new LocalDateTime(2022, 1, 3, 0, 0);
-            var day1Utc = _copenhagen.AtStrictly(day1LocalDateTime).ToInstant();
-
-            var day2LocalDateTime = new LocalDateTime(2022, 1, 11, 0, 0);
-            var day2Utc = _copenhagen.AtStrictly(day2LocalDateTime).ToInstant();
-
+            var day1Utc = GetInstantFromLocalDateTime(2022, 1, 3);
+            var day2Utc = GetInstantFromLocalDateTime(2022, 1, 11);
             var link1 = new ChargeLinkDtoBuilder().WithStartDate(day1Utc).WithEndDate(day2Utc).Build();
 
-            var day3LocalDateTime = new LocalDateTime(2022, 1, 21, 0, 0);
-            var day3Utc = _copenhagen.AtStrictly(day3LocalDateTime).ToInstant();
+            var day3Utc = GetInstantFromLocalDateTime(2022, 1, 21);
             var link2 = new ChargeLinkDtoBuilder().WithStartDate(day3Utc).Build();
 
             return new List<ChargeLinkDto> { link1, link2 };
@@ -130,17 +121,21 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeLinksCommands.Validatio
 
         private List<ChargeLinkDto> GetChargeLinksWithPeriod(int year, int month, int startDateDayOfMonth, int? endDateDayOfMonth)
         {
-            var day1LocalDateTime = new LocalDateTime(year, month, startDateDayOfMonth, 0, 0);
-            var day1Utc = _copenhagen.AtStrictly(day1LocalDateTime).ToInstant();
-
-            var day2LocalDateTime = new LocalDateTime(year, month, endDateDayOfMonth.GetValueOrDefault(1), 0, 0);
-            var day2Utc = _copenhagen.AtStrictly(day2LocalDateTime).ToInstant();
+            var day1Utc = GetInstantFromLocalDateTime(year, month, startDateDayOfMonth);
+            var day2Utc = GetInstantFromLocalDateTime(year, month, endDateDayOfMonth.GetValueOrDefault(1));
 
             var link = endDateDayOfMonth is not null
                 ? new ChargeLinkDtoBuilder().WithStartDate(day1Utc).WithEndDate(day2Utc).Build()
                 : new ChargeLinkDtoBuilder().WithStartDate(day1Utc).Build();
 
             return new List<ChargeLinkDto> { link };
+        }
+
+        private Instant GetInstantFromLocalDateTime(int year, int month, int day)
+        {
+            var day1LocalDateTime = new LocalDateTime(year, month, day, 0, 0);
+            var day1Utc = _copenhagen.AtStrictly(day1LocalDateTime).ToInstant();
+            return day1Utc;
         }
     }
 }
