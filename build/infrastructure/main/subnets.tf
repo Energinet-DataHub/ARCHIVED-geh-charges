@@ -59,7 +59,7 @@ module "vnet_integrations_webapi" {
 module "vnet_integrations_functionhost" {
   source                                        = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//azure/subnet?ref=6.0.0"
   name                                          = "vnet-integrations-functionhost"
-  project_name                                  = var.project_name
+  project_name                                  = var.domain_name_short
   environment_short                             = var.environment_short
   environment_instance                          = var.environment_instance
   resource_group_name                           = data.azurerm_key_vault_secret.vnet_shared_resouce_group_name.value
