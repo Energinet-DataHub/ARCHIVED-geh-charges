@@ -45,7 +45,7 @@ jobs:
     uses: Energinet-DataHub/.github/.github/workflows/terraform-validate.yml@2.7.0
     with:
       TERRAFORM_WORKING_DIR_PATH: './build/infrastructure/main'
-      TERRAFORM_VERSION: '1.0.10'
+      TERRAFORM_VERSION: '1.1.2'
 
   # Create function host artifact for deployment
   functionhost_ci:
