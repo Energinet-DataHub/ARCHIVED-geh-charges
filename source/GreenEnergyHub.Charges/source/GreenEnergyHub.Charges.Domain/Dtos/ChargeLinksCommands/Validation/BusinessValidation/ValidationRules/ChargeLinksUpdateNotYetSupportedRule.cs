@@ -53,9 +53,11 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands.Validation.Busi
             return true;
         }
 
-        public string TriggeredBy => IsValid ?
-            _chargeLinksCommand.ChargeLinks.First().SenderProvidedChargeId :
-            _chargeLinksCommand.ChargeLinks.First(link => !ChargeLinkDateRangeIsNotOverlapping(link))
-                .SenderProvidedChargeId;
+        /// <summary>
+        /// This validation rule validates each ChargeLink in a list of ChargeLink(s). This property will
+        /// tell which ChargeLink triggered the rule. The ChargeLink is identified by SenderProvidedChargeId.
+        /// </summary>
+        public string TriggeredBy => _chargeLinksCommand.ChargeLinks
+            .First(link => !ChargeLinkDateRangeIsNotOverlapping(link)).SenderProvidedChargeId;
     }
 }
