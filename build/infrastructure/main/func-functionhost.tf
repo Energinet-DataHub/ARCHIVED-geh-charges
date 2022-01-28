@@ -21,7 +21,7 @@ module "func_functionhost" {
   resource_group_name                       = azurerm_resource_group.this.name
   location                                  = azurerm_resource_group.this.location
   vnet_integration_subnet_id                = module.vnet_integrations_functionhost.id
-  private_endpoint_subnet_id                = module.private_endpoints_subnet.id
+  private_endpoint_subnet_id                = module.snet_internal_private_endpoints.id
   private_dns_resource_group_name           = data.azurerm_key_vault_secret.pdns_resouce_group_name
   app_service_plan_id                       = module.plan_shared.id
   application_insights_instrumentation_key  = data.azurerm_key_vault_secret.appi_shared_instrumentation_key.value

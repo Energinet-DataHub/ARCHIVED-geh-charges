@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-module "external_endpoints_subnet" {
+module "snet_external_private_endpoints" {
   source                                        = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//azure/subnet?ref=6.0.0"
   name                                          = "external-endpoints-subnet"
   project_name                                  = var.project_name
@@ -24,7 +24,7 @@ module "external_endpoints_subnet" {
   enforce_private_link_endpoint_network_policies  = true
 }
 
-module "private_endpoints_subnet" {
+module "snet_internal_private_endpoints" {
   source                                        = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//azure/subnet?ref=6.0.0"
   name                                          = "private-endpoints-subnet"
   project_name                                  = var.project_name

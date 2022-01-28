@@ -22,7 +22,7 @@ module "kv_charges" {
   location                        = azurerm_resource_group.this.location
   enabled_for_template_deployment = true
   sku_name                        = "standard"
-  private_endpoint_subnet_id      = module.private_endpoints_subnet.id
+  private_endpoint_subnet_id      = module.snet_internal_private_endpoints.id
   private_dns_resource_group_name = data.azurerm_key_vault_secret.pdns_resouce_group_name
 
   tags                            = azurerm_resource_group.this.tags
