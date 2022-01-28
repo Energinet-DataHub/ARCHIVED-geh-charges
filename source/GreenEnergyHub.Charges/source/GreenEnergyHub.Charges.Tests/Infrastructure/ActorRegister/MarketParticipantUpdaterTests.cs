@@ -58,5 +58,23 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.ActorRegister
 
             marketParticipant.BusinessProcessRole.Should().Be(expectedRole);
         }
+
+        /// <summary>
+        /// This is not a valid business operation. We however need to support it for now as the temporary
+        /// actor register exhibits this kind of updates to actors.
+        /// </summary>
+        [Theory]
+        [InlineAutoMoqData]
+        public void Update_SetsMarketParticipantId(
+            MarketParticipantBuilder marketParticipantBuilder,
+            Actor actor)
+        {
+            var anyValidRole = MarketParticipantRole.SystemOperator;
+            var marketParticipant = marketParticipantBuilder.Build();
+
+            MarketParticipantUpdater.Update(marketParticipant, actor, anyValidRole);
+
+            marketParticipant.MarketParticipantId.Should().Be(actor.IdentificationNumber);
+        }
     }
 }
