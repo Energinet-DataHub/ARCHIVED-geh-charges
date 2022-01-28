@@ -22,10 +22,6 @@ limitations under the License.
     </PropertyGroup>
 
     <ItemGroup>
-      <None Remove="Scripts\Model\202201281340 Increase OriginalOperationId length.sql" />
-    </ItemGroup>
-
-    <ItemGroup>
       <PackageReference Include="dbup-sqlserver" Version="4.5.0" />
       <PackageReference Update="StyleCop.Analyzers" Version="1.2.0-beta.354">
         <PrivateAssets>all</PrivateAssets>
