@@ -14,7 +14,7 @@
 
 module "snet_external_private_endpoints" {
   source                                        = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//azure/subnet?ref=6.0.0"
-  name                                          = "external-endpoints-subnet"
+  name                                          = "external-private-endpoints"
   project_name                                  = var.domain_name_short
   environment_short                             = var.environment_short
   environment_instance                          = var.environment_instance
@@ -26,7 +26,7 @@ module "snet_external_private_endpoints" {
 
 module "snet_internal_private_endpoints" {
   source                                        = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//azure/subnet?ref=6.0.0"
-  name                                          = "private-endpoints-subnet"
+  name                                          = "internal-private-endpoints"
   project_name                                  = var.domain_name_short
   environment_short                             = var.environment_short
   environment_instance                          = var.environment_instance
