@@ -20,7 +20,6 @@ using System.Reflection;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
 using GreenEnergyHub.Charges.Domain.Charges;
-using GreenEnergyHub.Charges.Domain.HubSenderMarketParticipant;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.MessageHub.Infrastructure.Cim;
 using GreenEnergyHub.Charges.MessageHub.Infrastructure.Cim.Bundles.Charges;
@@ -118,8 +117,8 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Infrastructure.Cim.Bundles.Cha
             Mock<ICimIdProvider> cimIdProvider)
         {
             marketParticipantRepository
-                .Setup(r => r.GetHubSenderAsync())
-                .ReturnsAsync(new HubSenderMarketParticipant(Guid.NewGuid(), "5790001330552", true, new[] { MarketParticipantRole.MeteringPointAdministrator }));
+                .Setup(r => r.GetMeteringPointAdministratorAsync())
+                .ReturnsAsync(new MarketParticipant(Guid.NewGuid(), "5790001330552", true, MarketParticipantRole.MeteringPointAdministrator));
 
             var currentTime = Instant.FromUtc(2021, 10, 22, 15, 30, 41).PlusNanoseconds(4);
             clock.Setup(c => c.GetCurrentInstant()).Returns(currentTime);

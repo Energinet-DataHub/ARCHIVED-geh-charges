@@ -24,6 +24,7 @@ namespace GreenEnergyHub.Charges.QueryApi.Model
         public MarketParticipant()
         {
             Charges = new HashSet<Charge>();
+            GridAreas = new HashSet<GridArea>();
         }
 
         public Guid Id { get; set; }
@@ -35,5 +36,7 @@ namespace GreenEnergyHub.Charges.QueryApi.Model
         public bool IsActive { get; set; }
 
         public virtual ICollection<Charge> Charges { get; set; }
+
+        public virtual ICollection<GridArea> GridAreas { get; set; }
     }
 }

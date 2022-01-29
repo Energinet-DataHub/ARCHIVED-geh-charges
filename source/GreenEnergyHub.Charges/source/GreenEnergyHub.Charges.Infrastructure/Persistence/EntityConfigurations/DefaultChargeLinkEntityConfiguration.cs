@@ -23,7 +23,9 @@ namespace GreenEnergyHub.Charges.Infrastructure.Persistence.EntityConfigurations
         public void Configure(EntityTypeBuilder<DefaultChargeLink> builder)
         {
             builder.ToTable(nameof(DefaultChargeLink));
+
             builder.HasKey(x => x.Id);
+            builder.Property(x => x.Id).ValueGeneratedNever();
 
             builder.Property(x => x.ChargeId);
             builder.Property(x => x.MeteringPointType);

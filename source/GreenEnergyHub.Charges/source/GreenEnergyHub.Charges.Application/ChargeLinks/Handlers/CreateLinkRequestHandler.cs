@@ -14,7 +14,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application.ChargeLinks.CreateDefaultChargeLinkReplier;
@@ -100,7 +99,8 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
             await CreateAndDispatchChargeLinksReceivedEventIfApplicableForLinkingAsync(
                 createDefaultChargeLinksRequest,
                 defaultChargeLinks,
-                meteringPoint);
+                meteringPoint)
+                .ConfigureAwait(false);
         }
 
         private async Task<MeteringPoint?> GetMeteringPointAsync(string meteringPointId)
@@ -148,8 +148,9 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
                     meteringPoint.EffectiveDate,
                     meteringPoint.MeteringPointType)).ToList();
 
-            var chargeLinksCommand = await _chargeLinksCommandFactory.CreateAsync(
-                createDefaultChargeLinksRequest, chargeLinksApplicableForLinking);
+            var chargeLinksCommand = await _chargeLinksCommandFactory
+                .CreateAsync(createDefaultChargeLinksRequest, chargeLinksApplicableForLinking)
+                .ConfigureAwait(false);
 
             var chargeLinksReceivedEvent = new ChargeLinksReceivedEvent(
                 _clock.GetCurrentInstant(),

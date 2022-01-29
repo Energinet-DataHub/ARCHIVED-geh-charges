@@ -27,7 +27,7 @@ jobs:
   
   # Build and test solution, and publish coverage report
   dotnet_solution_ci:
-    uses: Energinet-DataHub/.github/.github/workflows/dotnet-solution-ci.yml@2.7.0
+    uses: Energinet-DataHub/.github/.github/workflows/dotnet-solution-ci.yml@3.0.3
     with:
       SOLUTION_FILE_PATH: 'source/GreenEnergyHub.Charges/GreenEnergyHub.Charges.sln'
       DOTNET_VERSION: '5.0'
@@ -39,6 +39,7 @@ jobs:
       AZURE_SPN_ID: ${{ secrets.AZURE_SPN_ID }}
       AZURE_SPN_SECRET: ${{ secrets.AZURE_SPN_SECRET }}
       AZURE_KEYVAULT_URL: ${{ secrets.AZURE_KEYVAULT_URL }}
+      AZURE_SECRETS_KEYVAULT_URL: ${{ secrets.AZURE_SECRETS_KEYVAULT_URL }}
 
   terraform_validate:
     uses: Energinet-DataHub/.github/.github/workflows/terraform-validate.yml@2.7.0
@@ -76,23 +77,23 @@ jobs:
       DOTNET_VERSION: '5.0.202'
       ARTIFACT_NAME: databasemigration
 
-  # Create system tests artifact for testing after deployment
-  systemtest_ci:
-    # Depend on these validating jobs in order to avoid potentially creating artifacts that should never be used if this job fails
-    needs: [ci_base, terraform_validate, dotnet_solution_ci]
-    uses: Energinet-DataHub/.github/.github/workflows/dotnet-create-function-artifact.yml@2.7.0
-    with:
-      CSPROJ_FILE_PATH: 'source/GreenEnergyHub.Charges/source/GreenEnergyHub.Charges.SystemTests/GreenEnergyHub.Charges.SystemTests.csproj'
-      DOTNET_VERSION: '5.0.202'
-      ARTIFACT_NAME: systemtests
+  # # Create system tests artifact for testing after deployment
+  # systemtest_ci:
+  #   # Depend on these validating jobs in order to avoid potentially creating artifacts that should never be used if this job fails
+  #   needs: [ci_base, terraform_validate, dotnet_solution_ci]
+  #   uses: Energinet-DataHub/.github/.github/workflows/dotnet-create-function-artifact.yml@2.7.0
+  #   with:
+  #     CSPROJ_FILE_PATH: 'source/GreenEnergyHub.Charges/source/GreenEnergyHub.Charges.SystemTests/GreenEnergyHub.Charges.SystemTests.csproj'
+  #     DOTNET_VERSION: '5.0.202'
+  #     ARTIFACT_NAME: systemtests
 
   # Create pre-release that might eventually be deployed in CD pipeline
   create_prerelease:
     needs: [
       functionhost_ci,
       webapi_ci,
-      database_migration_ci,
-      systemtest_ci
+      database_migration_ci
+      #systemtest_ci
     ]
     uses: Energinet-DataHub/.github/.github/workflows/create-prerelease.yml@2.7.0
     with:

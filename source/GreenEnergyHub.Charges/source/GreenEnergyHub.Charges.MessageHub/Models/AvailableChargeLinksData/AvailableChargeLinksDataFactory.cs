@@ -47,8 +47,8 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksData
             // It is the responsibility of the Charge Domain to find the recipient and
             // not considered part of the Create Metering Point orchestration.
             // We select the first as all bundled messages will have the same recipient
-            var recipient =
-                _marketParticipantRepository.GetGridAccessProvider(acceptedEvent.ChargeLinksCommand.MeteringPointId);
+            var recipient = await _marketParticipantRepository
+                .GetGridAccessProviderAsync(acceptedEvent.ChargeLinksCommand.MeteringPointId).ConfigureAwait(false);
 
             var result = new List<AvailableChargeLinksData>();
 
@@ -62,9 +62,9 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksData
                 {
                     result.Add(new AvailableChargeLinksData(
                         sender.MarketParticipantId,
-                        sender.SenderRole,
+                        sender.BusinessProcessRole,
                         recipient.MarketParticipantId,
-                        MarketParticipantRole.GridAccessProvider,
+                        recipient.BusinessProcessRole,
                         acceptedEvent.ChargeLinksCommand.Document.BusinessReasonCode,
                         _messageMetaDataContext.RequestDataTime,
                         Guid.NewGuid(), // ID of each available piece of data must be unique

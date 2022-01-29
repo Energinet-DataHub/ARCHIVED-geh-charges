@@ -44,10 +44,12 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeData
 
             if (ShouldMakeDataAvailableForActiveGridProviders(input))
             {
-                var activeGridAccessProviders = await _marketParticipantRepository.GetActiveGridAccessProvidersAsync();
+                var activeGridAccessProviders = await _marketParticipantRepository
+                    .GetGridAccessProvidersAsync()
+                    .ConfigureAwait(false);
                 var operation = input.Command.ChargeOperation;
 
-                foreach (var provider in activeGridAccessProviders)
+                foreach (var recipient in activeGridAccessProviders)
                 {
                     var points =
                         operation.Points
@@ -57,9 +59,9 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeData
 
                     result.Add(new AvailableChargeData(
                         sender.MarketParticipantId,
-                        sender.SenderRole,
-                        provider.MarketParticipantId,
-                        MarketParticipantRole.GridAccessProvider,
+                        sender.BusinessProcessRole,
+                        recipient.MarketParticipantId,
+                        recipient.BusinessProcessRole,
                         input.Command.Document.BusinessReasonCode,
                         _messageMetaDataContext.RequestDataTime,
                         Guid.NewGuid(), // ID of each available piece of data must be unique

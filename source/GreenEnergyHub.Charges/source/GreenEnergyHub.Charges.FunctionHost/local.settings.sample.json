@@ -14,8 +14,11 @@
     "INTEGRATIONEVENT_LISTENER_CONNECTION_STRING": "<sb listener connection string for integration events (without EntityPath)>",
     "INTEGRATIONEVENT_MANAGER_CONNECTION_STRING": "<sb manager connection string for integration events (without EntityPath)>",
     "INTEGRATIONEVENT_SENDER_CONNECTION_STRING": "<sb sender connection string for integration events (without EntityPath)>",
+    "ACTOR_REGISTER_CONNECTION_STRING": "<actor register database connection string>",
     "MESSAGEHUB_STORAGE_CONNECTION_STRING": "<connection string for writing to the Message Hub storage account for bundles>",
     "REQUEST_RESPONSE_LOGGING_CONNECTION_STRING": "<connection string for logging request and response to storage>",
+    "B2C_TENANT_ID": "<Azure B2C tenant id>",
+    "BACKEND_SERVICE_APP_ID": "<Backend service application id>",
 
     // From this point on, it is settings that change with the code and not the environment
     // Localization
@@ -30,8 +33,8 @@
     "CHARGE_LINKS_CREATED_TOPIC_NAME": "charge-links-created",
 
     // Integration, metering point domain
-    "CONSUMPTION_METERING_POINT_CREATED_TOPIC_NAME": "consumption-metering-point-created",
-    "CONSUMPTION_METERING_POINT_CREATED_SUBSCRIPTION_NAME": "consumption-metering-point-created-sub-charges",
+    "METERING_POINT_CREATED_TOPIC_NAME": "metering-point-created",
+    "METERING_POINT_CREATED_SUBSCRIPTION_NAME": "metering-point-created-sub-charges",
     "CREATE_LINKS_REQUEST_QUEUE_NAME": "create-links-request",
     "CREATE_LINKS_REPLY_QUEUE_NAME": "create-links-reply",
 

@@ -57,15 +57,15 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.BundleSpecification.Charges
             // Arrange
             var availableData = GetRejection(noOfReasons);
 
-            var marketParticipant = new MarketParticipant(
+            var meteringPointAdministrator = new MarketParticipant(
                 Guid.NewGuid(),
                 MaxLengthId,
                 true,
-                new[] { MarketParticipantRole.GridAccessProvider });
+                MarketParticipantRole.GridAccessProvider);
 
             marketParticipantRepository
-                .Setup(c => c.GetAsync(MarketParticipantRole.MeteringPointAdministrator)).
-                ReturnsAsync(marketParticipant);
+                .Setup(c => c.GetMeteringPointAdministratorAsync()).
+                ReturnsAsync(meteringPointAdministrator);
 
             cimIdProvider.Setup(c => c.GetUniqueId()).Returns(MaxLengthId);
 

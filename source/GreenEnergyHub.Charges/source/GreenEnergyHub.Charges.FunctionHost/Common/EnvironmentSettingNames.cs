@@ -29,6 +29,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Common
         public const string DomainEventManagerConnectionString = "DOMAINEVENT_MANAGER_CONNECTION_STRING";
         public const string DomainEventSenderConnectionString = "DOMAINEVENT_SENDER_CONNECTION_STRING";
         public const string DataHubListenerConnectionString = "INTEGRATIONEVENT_LISTENER_CONNECTION_STRING";
+        public const string ActorRegisterDbConnectionString = "ACTOR_REGISTER_CONNECTION_STRING";
         public const string DataHubManagerConnectionString = "INTEGRATIONEVENT_MANAGER_CONNECTION_STRING";
         public const string DataHubSenderConnectionString = "INTEGRATIONEVENT_SENDER_CONNECTION_STRING";
         public const string MessageHubStorageConnectionString = "MESSAGEHUB_STORAGE_CONNECTION_STRING";
@@ -45,8 +46,8 @@ namespace GreenEnergyHub.Charges.FunctionHost.Common
         public const string ChargeLinksCreatedTopicName = "CHARGE_LINKS_CREATED_TOPIC_NAME";
 
         // Integration, metering point domain
-        public const string ConsumptionMeteringPointCreatedTopicName = "CONSUMPTION_METERING_POINT_CREATED_TOPIC_NAME";
-        public const string ConsumptionMeteringPointCreatedSubscriptionName = "CONSUMPTION_METERING_POINT_CREATED_SUBSCRIPTION_NAME";
+        public const string MeteringPointCreatedTopicName = "METERING_POINT_CREATED_TOPIC_NAME";
+        public const string MeteringPointCreatedSubscriptionName = "METERING_POINT_CREATED_SUBSCRIPTION_NAME";
         public const string CreateLinksRequestQueueName = "CREATE_LINKS_REQUEST_QUEUE_NAME";
         public const string DefaultChargeLinksDataAvailableNotifiedTopicName =
             "DEFAULT_CHARGE_LINKS_DATA_AVAILABLE_NOTIFIED_TOPIC_NAME";
@@ -92,5 +93,9 @@ namespace GreenEnergyHub.Charges.FunctionHost.Common
         // Internal, charge links, rejected
         public const string ChargeLinksRejectedTopicName = "CHARGE_LINKS_REJECTED_TOPIC_NAME";
         public const string ChargeLinksRejectedSubscriptionName = "CHARGE_LINKS_REJECTED_SUBSCRIPTION_NAME";
+
+        // JWT Token auth
+        public const string B2CTenantId = "B2C_TENANT_ID";
+        public const string BackendServiceAppId = "BACKEND_SERVICE_APP_ID";
     }
 }

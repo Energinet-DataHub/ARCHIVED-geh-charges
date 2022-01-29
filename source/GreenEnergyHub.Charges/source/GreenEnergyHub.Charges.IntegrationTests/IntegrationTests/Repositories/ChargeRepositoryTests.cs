@@ -72,7 +72,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
                     x.Type == charge.Type)
                 .ConfigureAwait(false);
 
-            actual.Should().NotBeNull();
+            actual.Should().BeEquivalentTo(charge);
             actual.Points.Should().NotBeNullOrEmpty();
         }
 
@@ -225,7 +225,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
                 Guid.NewGuid(),
                 MarketParticipantOwnerId,
                 true,
-                new[] { MarketParticipantRole.EnergySupplier });
+                MarketParticipantRole.EnergySupplier);
             context.MarketParticipants.Add(marketParticipant);
             await context.SaveChangesAsync().ConfigureAwait(false);
 

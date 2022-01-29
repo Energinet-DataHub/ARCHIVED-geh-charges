@@ -13,12 +13,10 @@
 // limitations under the License.
 
 using FluentAssertions;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessValidation.ValidationRules;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
-using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.TestCore.Attributes;
-using GreenEnergyHub.TestHelpers;
+using GreenEnergyHub.Charges.Tests.Builders.Testables;
 using Xunit;
 using Xunit.Categories;
 
@@ -29,31 +27,29 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
     {
         [Theory]
         [AutoMoqData]
-        public void IsValid_WhenSenderHasValue_IsTrue(MarketParticipant sender, ChargeCommand command)
+        public void IsValid_WhenSenderHasValue_IsTrue(TestMarketParticipant sender)
         {
-            var sut = new CommandSenderMustBeAnExistingMarketParticipantRule(command, sender);
+            var sut = new CommandSenderMustBeAnExistingMarketParticipantRule(sender);
             sut.IsValid.Should().BeTrue();
         }
 
-        [Theory]
-        [AutoMoqData]
-        public void IsValid_WhenSenderIsNull_IsFalse(ChargeCommand command)
+        [Fact]
+        public void IsValid_WhenSenderIsNull_IsFalse()
         {
-            var sut = CreateInvalidRule(command);
+            var sut = CreateInvalidRule();
             sut.IsValid.Should().BeFalse();
         }
 
-        [Theory]
-        [InlineAutoDomainData]
-        public void ValidationRuleIdentifier_ShouldBe_EqualTo(ChargeCommand command)
+        [Fact]
+        public void ValidationRuleIdentifier_ShouldBe_EqualTo()
         {
-            var sut = CreateInvalidRule(command);
+            var sut = CreateInvalidRule();
             sut.ValidationRuleIdentifier.Should().Be(ValidationRuleIdentifier.CommandSenderMustBeAnExistingMarketParticipant);
         }
 
-        private static CommandSenderMustBeAnExistingMarketParticipantRule CreateInvalidRule(ChargeCommand command)
+        private static CommandSenderMustBeAnExistingMarketParticipantRule CreateInvalidRule()
         {
-            return new(command, null);
+            return new(null);
         }
     }
 }

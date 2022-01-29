@@ -27,7 +27,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors
     {
         [ErrorMessageFor(ValidationRuleIdentifier.StartDateValidation)]
         public const string StartDateValidationErrorText =
-            "Effectuation date {{ChargeStartDateTime}} incorrect: The information is not received within the correct time period (either too soon or too late)";
+            "Effective date {{ChargeStartDateTime}} incorrect: The information is not received within the correct time period (either too soon or too late)";
 
         [ErrorMessageFor(ValidationRuleIdentifier.ChangingTariffVatValueNotAllowed)]
         public const string ChangingTariffVatValueNotAllowedErrorText =
@@ -35,7 +35,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors
 
         [ErrorMessageFor(ValidationRuleIdentifier.ChangingTariffTaxValueNotAllowed)]
         public const string ChangingTariffTaxValueNotAllowedErrorText =
-            "Tax indicator {{ChargeTaxIndicator}} not allowed: charge {{DocumentSenderProvidedChargeId}} cannot be updated with another Tax indicator";
+            "It is not allowed to change the tax indicator to {{ChargeTaxIndicator}} for charge {{DocumentSenderProvidedChargeId}}";
 
         [ErrorMessageFor(ValidationRuleIdentifier.SenderIsMandatoryTypeValidation)]
         public const string SenderIsMandatoryTypeValidationErrorText =
@@ -131,11 +131,11 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors
 
         [ErrorMessageFor(ValidationRuleIdentifier.MeteringPointDoesNotExist)]
         public const string MeteringPointDoesNotExistValidationErrorText =
-            "GSRN-code {{MeteringPointId}} unknown: The specified metering point has not been registered in the system on effectuation date {{MeteringPointEffectiveDate}}";
+            "GSRN-code {{MeteringPointId}} is unknown: The specified metering point has not been registered in the system on the charge link start date";
 
         [ErrorMessageFor(ValidationRuleIdentifier.ChargeDoesNotExist)]
         public const string ChargeDoesNotExistValidationErrorText =
-            "Charge {{DocumentSenderProvidedChargeId}} not allowed: The charge is not an existing charge on date {{ChargeStartDateTime}}.";
+            "Charge {{DocumentSenderProvidedChargeId}} not allowed: The charge is not an existing charge on date {{ChargeLinkStartDate}}.";
 
         public const string Unknown = "unknown";
     }

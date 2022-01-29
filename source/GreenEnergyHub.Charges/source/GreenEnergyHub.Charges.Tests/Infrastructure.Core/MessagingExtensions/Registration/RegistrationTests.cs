@@ -12,8 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using Energinet.DataHub.Core.FunctionApp.Common;
+using Energinet.DataHub.Core.FunctionApp.Common.Abstractions.Actor;
 using Energinet.DataHub.Core.Messaging.Protobuf;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions;
+using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Factories;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Registration;
 using GreenEnergyHub.Charges.Tests.Infrastructure.Messaging;
 using GreenEnergyHub.TestHelpers;
@@ -37,9 +40,11 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Core.MessagingExtensions.R
             services.AddScoped<IClock>(_ => SystemClock.Instance);
 
             // Act
+            services.AddScoped<IActorContext, ActorContext>();
+            services.AddScoped<IServiceBusMessageFactory, ServiceBusMessageFactory>();
             services.SendProtobuf<TestMessageContract>();
             services.AddMessagingProtobuf()
-                .AddMessageDispatcher<TestMessage>(anyValidConnectionString, anyTopicName);
+                .AddExternalMessageDispatcher<TestMessage>(anyValidConnectionString, anyTopicName);
 
             // Assert
             var provider = services.BuildServiceProvider();
@@ -56,7 +61,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Core.MessagingExtensions.R
             // Act
             services
                 .AddMessaging()
-                .AddMessageExtractor<TestMessage>();
+                .AddExternalMessageExtractor<TestMessage>();
 
             // Assert
             var provider = services.BuildServiceProvider();

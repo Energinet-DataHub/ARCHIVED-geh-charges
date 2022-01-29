@@ -14,6 +14,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace GreenEnergyHub.Charges.Domain.MarketParticipants
 {
@@ -22,35 +23,62 @@ namespace GreenEnergyHub.Charges.Domain.MarketParticipants
     /// </summary>
     public class MarketParticipant
     {
-        private readonly List<MarketParticipantRole> _roles;
+        public static readonly IReadOnlyCollection<MarketParticipantRole> _validRoles = new List<MarketParticipantRole>
+        {
+            MarketParticipantRole.EnergySupplier,
+            MarketParticipantRole.SystemOperator,
+            MarketParticipantRole.GridAccessProvider,
+            MarketParticipantRole.MeteringPointAdministrator,
+        }.AsReadOnly();
 
-        public MarketParticipant(Guid id, string marketParticipantId, bool isActive, IEnumerable<MarketParticipantRole> roles)
+        public MarketParticipant(
+            Guid id,
+            string marketParticipantId,
+            bool isActive,
+            MarketParticipantRole businessProcessRole)
         {
             Id = id;
             MarketParticipantId = marketParticipantId;
             IsActive = isActive;
-            _roles = new(roles);
+            UpdateBusinessProcessRole(businessProcessRole);
         }
 
         // ReSharper disable once UnusedMember.Local - Required by persistence framework
         private MarketParticipant()
         {
             MarketParticipantId = null!;
-            _roles = new();
         }
 
         public Guid Id { get; }
 
         /// <summary>
         /// The ID that identifies the market participant. In Denmark this would be the GLN number or EIC code.
+        /// This ID must be immutable. A new market participant id would require de-activating the market participant
+        /// and replacing it by a new market participant.
+        ///
+        /// IMPORTANT: There should not be a private setter but it's a temporary solution to handle non-valid
+        /// updates in the temporary actor register solution.
         /// </summary>
-        public string MarketParticipantId { get; }
+        public string MarketParticipantId { get; private set; }
 
         /// <summary>
         /// The roles of the market participant.
         /// </summary>
-        public IReadOnlyCollection<MarketParticipantRole> Roles => _roles;
+        public MarketParticipantRole BusinessProcessRole { get; private set; }
 
-        public bool IsActive { get; }
+        public void UpdateBusinessProcessRole(MarketParticipantRole role)
+        {
+            if (!_validRoles.Contains(role))
+                throw new ArgumentException($"Business process role '{role}' is not valid in the charges domain.");
+
+            BusinessProcessRole = role;
+        }
+
+        /// <summary>
+        /// Market participants will not be deleted. They will be made in-active.
+        /// The setter is public as the charges domain doesn't enforce any validation
+        /// as it is the responsibility of the market role domain providing the data.
+        /// </summary>
+        public bool IsActive { get; set; }
     }
 }

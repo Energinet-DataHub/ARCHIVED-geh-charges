@@ -36,7 +36,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.ReplySender.CreateDefaultChargeL
             _serviceBusReplySenderProvider = serviceBusReplySenderProvider;
         }
 
-        public async Task ReplyWithSucceededAsync(
+        public Task ReplyWithSucceededAsync(
             [NotNull] string meteringPointId,
             bool didCreateChargeLinks,
             [NotNull] string replyTo)
@@ -53,10 +53,10 @@ namespace GreenEnergyHub.Charges.Infrastructure.ReplySender.CreateDefaultChargeL
                 },
             };
 
-            await SendReplyAsync(createDefaultChargeLinksReplySucceeded, replyTo, _correlationContext.Id);
+            return SendReplyAsync(createDefaultChargeLinksReplySucceeded, replyTo, _correlationContext.Id);
         }
 
-        public async Task ReplyWithFailedAsync(
+        public Task ReplyWithFailedAsync(
             [NotNull] string meteringPointId,
             ErrorCode errorCode,
             [NotNull] string replyTo)
@@ -74,18 +74,17 @@ namespace GreenEnergyHub.Charges.Infrastructure.ReplySender.CreateDefaultChargeL
                     },
             };
 
-            await SendReplyAsync(createDefaultChargeLinksReplyFailed, replyTo, _correlationContext.Id);
+            return SendReplyAsync(createDefaultChargeLinksReplyFailed, replyTo, _correlationContext.Id);
         }
 
-        private async Task SendReplyAsync(
+        private Task SendReplyAsync(
             CreateDefaultChargeLinksReply createDefaultChargeLinks,
             string replyTo,
             string correlationId)
         {
             var sender = _serviceBusReplySenderProvider.GetInstance(replyTo);
 
-            await sender.SendReplyAsync(createDefaultChargeLinks.ToByteArray(), correlationId)
-                .ConfigureAwait(false);
+            return sender.SendReplyAsync(createDefaultChargeLinks.ToByteArray(), correlationId);
         }
 
         private static void ValidateParametersOrThrow(string meteringPointId, string replyTo, string correlationId)
