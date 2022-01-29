@@ -50,38 +50,74 @@ namespace GreenEnergyHub.Charges.FunctionHost.System
 
         private async Task<Dictionary<string, bool>> GetDeepHealthCheckStatusAsync()
         {
-            var connectionString = EnvironmentHelper.GetEnv(EnvironmentSettingNames.DataHubManagerConnectionString);
             var chargesDbConnectionString = EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargeDbConnectionString);
-            var actorRegisterDbConnectionString =
-                EnvironmentHelper.GetEnv(EnvironmentSettingNames.ActorRegisterDbConnectionString);
+            var actorRegisterDbConnectionString = EnvironmentHelper.GetEnv(EnvironmentSettingNames.ActorRegisterDbConnectionString);
             var integrationConnectionString = EnvironmentHelper.GetEnv(EnvironmentSettingNames.DataHubManagerConnectionString);
             var domainConnectionString = EnvironmentHelper.GetEnv(EnvironmentSettingNames.DomainEventManagerConnectionString);
 
             return new Dictionary<string, bool>
             {
+                // Database connections
+                {
+                    "ChargesDatabaseIsAvailable",
+                    await IsDatabaseAvailableAsync(chargesDbConnectionString).ConfigureAwait(false)
+                },
+                {
+                    "ActorRegisterDatabaseIsAvailable",
+                    await IsDatabaseAvailableAsync(actorRegisterDbConnectionString).ConfigureAwait(false)
+                },
+
                 // Integration events, charges
-                { "ChargeCreatedTopicExists", await TopicExistsAsync(integrationConnectionString, EnvironmentSettingNames.ChargeCreatedTopicName) },
-                { "ChargePricesUpdatedTopicExists", await TopicExistsAsync(integrationConnectionString, EnvironmentSettingNames.ChargePricesUpdatedTopicName) },
+                {
+                    "ChargeCreatedTopicExists", await TopicExistsAsync(integrationConnectionString, EnvironmentSettingNames.ChargeCreatedTopicName)
+                    .ConfigureAwait(false)
+                },
+                {
+                    "ChargePricesUpdatedTopicExists", await TopicExistsAsync(integrationConnectionString, EnvironmentSettingNames.ChargePricesUpdatedTopicName)
+                    .ConfigureAwait(false)
+                },
 
                 // Integration events, charge links
-                { "ChargeLinksCreatedTopicExists", await TopicExistsAsync(integrationConnectionString, EnvironmentSettingNames.ChargeLinksCreatedTopicName) },
+                {
+                    "ChargeLinksCreatedTopicExists", await TopicExistsAsync(integrationConnectionString, EnvironmentSettingNames.ChargeLinksCreatedTopicName)
+                    .ConfigureAwait(false)
+                },
 
                 // Integration events, metering point domain
-                { "ConsumptionMeteringPointCreatedTopicExists", await TopicExistsAsync(integrationConnectionString, EnvironmentSettingNames.ConsumptionMeteringPointCreatedTopicName) },
+                {
+                    "ConsumptionMeteringPointCreatedTopicExists", await TopicExistsAsync(integrationConnectionString, EnvironmentSettingNames.MeteringPointCreatedTopicName)
+                    .ConfigureAwait(false)
+                },
                 {
                     "ConsumptionMeteringPointCreatedSubscriptionExists",
                     await SubscriptionExistsAsync(
                         integrationConnectionString,
-                        EnvironmentSettingNames.ConsumptionMeteringPointCreatedSubscriptionName,
-                        EnvironmentSettingNames.ConsumptionMeteringPointCreatedTopicName)
+                        EnvironmentSettingNames.MeteringPointCreatedSubscriptionName,
+                        EnvironmentSettingNames.MeteringPointCreatedTopicName)
+                        .ConfigureAwait(false)
                 },
-                { "CreateLinksRequestQueueExists", await QueueExistsAsync(integrationConnectionString, EnvironmentSettingNames.CreateLinksRequestQueueName) },
-                { "DefaultChargeLinksDataAvailableNotifiedTopicExists", await TopicExistsAsync(domainConnectionString, EnvironmentSettingNames.DefaultChargeLinksDataAvailableNotifiedTopicName) },
+                {
+                    "CreateLinksRequestQueueExists", await QueueExistsAsync(integrationConnectionString, EnvironmentSettingNames.CreateLinksRequestQueueName)
+                    .ConfigureAwait(false)
+                },
+                {
+                    "DefaultChargeLinksDataAvailableNotifiedTopicExists", await TopicExistsAsync(domainConnectionString, EnvironmentSettingNames.DefaultChargeLinksDataAvailableNotifiedTopicName)
+                    .ConfigureAwait(false)
+                },
 
                 // Integration events, MessageHub
-                { "MessageHubDataAvailableQueueExists", await QueueExistsAsync(integrationConnectionString, EnvironmentSettingNames.MessageHubDataAvailableQueue) },
-                { "MessageHubRequestQueueExists", await QueueExistsAsync(integrationConnectionString, EnvironmentSettingNames.MessageHubRequestQueue) },
-                { "MessageHubResponseQueueExists", await QueueExistsAsync(integrationConnectionString, EnvironmentSettingNames.MessageHubReplyQueue) },
+                {
+                    "MessageHubDataAvailableQueueExists", await QueueExistsAsync(integrationConnectionString, EnvironmentSettingNames.MessageHubDataAvailableQueue)
+                    .ConfigureAwait(false)
+                },
+                {
+                    "MessageHubRequestQueueExists", await QueueExistsAsync(integrationConnectionString, EnvironmentSettingNames.MessageHubRequestQueue)
+                    .ConfigureAwait(false)
+                },
+                {
+                    "MessageHubResponseQueueExists", await QueueExistsAsync(integrationConnectionString, EnvironmentSettingNames.MessageHubReplyQueue)
+                    .ConfigureAwait(false)
+                },
 
                 // Internal event, create default charge links
                 {
@@ -89,7 +125,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.System
                     await SubscriptionExistsAsync(
                     domainConnectionString,
                     EnvironmentSettingNames.DefaultChargeLinksDataAvailableNotifiedSubscription,
-                    EnvironmentSettingNames.DefaultChargeLinksDataAvailableNotifiedTopicName)
+                    EnvironmentSettingNames.DefaultChargeLinksDataAvailableNotifiedTopicName).ConfigureAwait(false)
                 },
             };
         }
@@ -120,7 +156,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.System
         {
             var client = new ServiceBusAdministrationClient(connectionString);
             var topicName = EnvironmentHelper.GetEnv(topicNameEnvVariable);
-            return await client.TopicExistsAsync(topicName);
+            return await client.TopicExistsAsync(topicName).ConfigureAwait(false);
         }
 
         private async Task<bool> SubscriptionExistsAsync(string connectionString, string subscriptionNameEnvVariable, string topicNameEnvVariable)
@@ -128,7 +164,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.System
             var client = new ServiceBusAdministrationClient(connectionString);
             var subscriptionName = EnvironmentHelper.GetEnv(subscriptionNameEnvVariable);
             var topicName = EnvironmentHelper.GetEnv(topicNameEnvVariable);
-            return await client.SubscriptionExistsAsync(topicName, subscriptionName);
+            return await client.SubscriptionExistsAsync(topicName, subscriptionName).ConfigureAwait(false);
         }
     }
 }
