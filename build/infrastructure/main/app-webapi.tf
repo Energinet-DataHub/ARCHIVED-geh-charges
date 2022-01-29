@@ -23,9 +23,14 @@ module "app_webapi" {
   vnet_integration_subnet_id                = module.vnet_integrations_webapi.id
   app_service_plan_id                       = module.plan_webapi.id
   application_insights_instrumentation_key  = data.azurerm_key_vault_secret.appi_shared_instrumentation_key.value
-  connection_strings = {
-    "CHARGE_DB_CONNECTION_STRING" = local.MS_CHARGE_DB_CONNECTION_STRING
-  }
+
+  connection_strings = [
+    {
+      name  = "CHARGE_DB_CONNECTION_STRING"
+      type  = "SQLServer"
+      value = local.MS_CHARGE_DB_CONNECTION_STRING
+    }
+  ]
 
   tags                                      = azurerm_resource_group.this.tags
 }
