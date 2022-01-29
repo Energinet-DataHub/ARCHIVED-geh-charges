@@ -85,11 +85,11 @@ namespace GreenEnergyHub.Charges.FunctionHost.System
 
                 // Integration events, metering point domain
                 {
-                    "ConsumptionMeteringPointCreatedTopicExists", await TopicExistsAsync(integrationConnectionString, EnvironmentSettingNames.MeteringPointCreatedTopicName)
+                    "MeteringPointCreatedTopicExists", await TopicExistsAsync(integrationConnectionString, EnvironmentSettingNames.MeteringPointCreatedTopicName)
                     .ConfigureAwait(false)
                 },
                 {
-                    "ConsumptionMeteringPointCreatedSubscriptionExists",
+                    "MeteringPointCreatedSubscriptionExists",
                     await SubscriptionExistsAsync(
                         integrationConnectionString,
                         EnvironmentSettingNames.MeteringPointCreatedSubscriptionName,
