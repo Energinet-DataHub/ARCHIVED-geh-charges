@@ -130,7 +130,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.System
             };
         }
 
-        private async Task<bool> IsDatabaseAvailableAsync(string connectionString)
+        private static async Task<bool> IsDatabaseAvailableAsync(string connectionString)
         {
             var connection = new SqlConnection(connectionString);
             try
@@ -145,21 +145,21 @@ namespace GreenEnergyHub.Charges.FunctionHost.System
             }
         }
 
-        private async Task<bool> QueueExistsAsync(string connectionString, string queueNameEnvVariable)
+        private static async Task<bool> QueueExistsAsync(string connectionString, string queueNameEnvVariable)
         {
             var client = new ServiceBusAdministrationClient(connectionString);
             var queueName = EnvironmentHelper.GetEnv(queueNameEnvVariable);
             return await client.QueueExistsAsync(queueName).ConfigureAwait(false);
         }
 
-        private async Task<bool> TopicExistsAsync(string connectionString, string topicNameEnvVariable)
+        private static async Task<bool> TopicExistsAsync(string connectionString, string topicNameEnvVariable)
         {
             var client = new ServiceBusAdministrationClient(connectionString);
             var topicName = EnvironmentHelper.GetEnv(topicNameEnvVariable);
             return await client.TopicExistsAsync(topicName).ConfigureAwait(false);
         }
 
-        private async Task<bool> SubscriptionExistsAsync(string connectionString, string subscriptionNameEnvVariable, string topicNameEnvVariable)
+        private static async Task<bool> SubscriptionExistsAsync(string connectionString, string subscriptionNameEnvVariable, string topicNameEnvVariable)
         {
             var client = new ServiceBusAdministrationClient(connectionString);
             var subscriptionName = EnvironmentHelper.GetEnv(subscriptionNameEnvVariable);
