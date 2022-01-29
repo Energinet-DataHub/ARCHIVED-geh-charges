@@ -100,10 +100,6 @@ namespace GreenEnergyHub.Charges.FunctionHost.System
                     "CreateLinksRequestQueueExists", await QueueExistsAsync(integrationConnectionString, EnvironmentSettingNames.CreateLinksRequestQueueName)
                     .ConfigureAwait(false)
                 },
-                {
-                    "DefaultChargeLinksDataAvailableNotifiedTopicExists", await TopicExistsAsync(domainConnectionString, EnvironmentSettingNames.DefaultChargeLinksDataAvailableNotifiedTopicName)
-                    .ConfigureAwait(false)
-                },
 
                 // Integration events, MessageHub
                 {
@@ -121,11 +117,77 @@ namespace GreenEnergyHub.Charges.FunctionHost.System
 
                 // Internal event, create default charge links
                 {
+                    "DefaultChargeLinksDataAvailableNotifiedTopicExists", await TopicExistsAsync(domainConnectionString, EnvironmentSettingNames.DefaultChargeLinksDataAvailableNotifiedTopicName)
+                    .ConfigureAwait(false)
+                },
+                {
                     "DefaultChargeLinksDataAvailableNotifiedSubscriptionExists",
                     await SubscriptionExistsAsync(
-                    domainConnectionString,
-                    EnvironmentSettingNames.DefaultChargeLinksDataAvailableNotifiedSubscription,
-                    EnvironmentSettingNames.DefaultChargeLinksDataAvailableNotifiedTopicName).ConfigureAwait(false)
+                        domainConnectionString,
+                        EnvironmentSettingNames.DefaultChargeLinksDataAvailableNotifiedSubscription,
+                        EnvironmentSettingNames.DefaultChargeLinksDataAvailableNotifiedTopicName).ConfigureAwait(false)
+                },
+
+                // Internal events, charge links
+                {
+                    "ChargeLinksAcceptedTopicExists", await TopicExistsAsync(domainConnectionString, EnvironmentSettingNames.ChargeLinksAcceptedTopicName)
+                    .ConfigureAwait(false)
+                },
+                {
+                    "ChargeLinksAcceptedReplierSubscriptionExists",
+                    await SubscriptionExistsAsync(
+                        domainConnectionString,
+                        EnvironmentSettingNames.ChargeLinksAcceptedReplier,
+                        EnvironmentSettingNames.ChargeLinksAcceptedTopicName)
+                        .ConfigureAwait(false)
+                },
+                {
+                    "ChargeLinksAcceptedEventPublisherSubscriptionExists",
+                    await SubscriptionExistsAsync(
+                        domainConnectionString,
+                        EnvironmentSettingNames.ChargeLinksAcceptedSubEventPublisher,
+                        EnvironmentSettingNames.ChargeLinksAcceptedTopicName)
+                        .ConfigureAwait(false)
+                },
+                {
+                    "ChargeLinksAcceptedDataAvailableNotifierSubscriptionExists",
+                    await SubscriptionExistsAsync(
+                        domainConnectionString,
+                        EnvironmentSettingNames.ChargeLinksAcceptedSubDataAvailableNotifier,
+                        EnvironmentSettingNames.ChargeLinksAcceptedTopicName)
+                        .ConfigureAwait(false)
+                },
+                {
+                    "ChargeLinksAcceptedConfirmationNotifierSubscriptionExists",
+                    await SubscriptionExistsAsync(
+                        domainConnectionString,
+                        EnvironmentSettingNames.ChargeLinksAcceptedSubConfirmationNotifier,
+                        EnvironmentSettingNames.ChargeLinksAcceptedTopicName)
+                        .ConfigureAwait(false)
+                },
+                {
+                    "ChargeLinksRejectedTopicExists", await TopicExistsAsync(domainConnectionString, EnvironmentSettingNames.ChargeLinksRejectedTopicName)
+                    .ConfigureAwait(false)
+                },
+                {
+                    "ChargeLinksRejectedSubscriptionExists",
+                    await SubscriptionExistsAsync(
+                        domainConnectionString,
+                        EnvironmentSettingNames.ChargeLinksRejectedSubscriptionName,
+                        EnvironmentSettingNames.ChargeLinksRejectedTopicName)
+                        .ConfigureAwait(false)
+                },
+                {
+                    "ChargeLinksReceivedTopicExists", await TopicExistsAsync(domainConnectionString, EnvironmentSettingNames.ChargeLinksReceivedTopicName)
+                    .ConfigureAwait(false)
+                },
+                {
+                    "ChargeLinksReceivedSubscriptionExists",
+                    await SubscriptionExistsAsync(
+                        domainConnectionString,
+                        EnvironmentSettingNames.ChargeLinksReceivedSubscriptionName,
+                        EnvironmentSettingNames.ChargeLinksReceivedTopicName)
+                        .ConfigureAwait(false)
                 },
             };
         }
