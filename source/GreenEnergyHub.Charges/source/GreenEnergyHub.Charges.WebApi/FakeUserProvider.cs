@@ -12,22 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
+using System.Threading.Tasks;
+using Energinet.DataHub.Core.App.Common.Abstractions.Users;
+
 namespace GreenEnergyHub.Charges.WebApi
 {
-    /// <summary>
-    /// Contains names of settings used by the web api.
-    /// </summary>
-    public static class EnvironmentSettingNames
+    public class FakeUserProvider : IUserProvider
     {
-        // Function
-        public const string AzureWebJobsStorage = "AzureWebJobsStorage";
-
-        // Environment specific settings
-        public const string AppInsightsInstrumentationKey = "APPINSIGHTS_INSTRUMENTATIONKEY";
-        public const string ChargeDbConnectionString = "CHARGE_DB_CONNECTION_STRING";
-
-        // JWT Token auth
-        public const string B2CTenantId = "B2C_TENANT_ID";
-        public const string BackendServiceAppId = "BACKEND_SERVICE_APP_ID";
+        public async Task<User> GetUserAsync(Guid userId)
+        {
+            return await Task.FromResult(new User(Guid.NewGuid(), Guid.NewGuid())).ConfigureAwait(false);
+        }
     }
 }

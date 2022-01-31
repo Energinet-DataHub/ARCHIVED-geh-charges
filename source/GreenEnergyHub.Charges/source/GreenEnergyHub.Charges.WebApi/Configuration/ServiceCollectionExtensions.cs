@@ -1,5 +1,5 @@
 ﻿// Copyright 2020 Energinet DataHub A/S
-// 
+//
 // Licensed under the Apache License, Version 2.0 (the "License2");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
@@ -12,10 +12,46 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using Energinet.DataHub.Core.App.Common;
+using Energinet.DataHub.Core.App.Common.Abstractions.Identity;
+using Energinet.DataHub.Core.App.Common.Abstractions.Security;
+using Energinet.DataHub.Core.App.Common.Abstractions.Users;
+using Energinet.DataHub.Core.App.Common.Identity;
+using Energinet.DataHub.Core.App.Common.Security;
+using Energinet.DataHub.Core.App.WebApp.Middleware;
+using GreenEnergyHub.Charges.Infrastructure.Core.Registration.ServiceCollection;
+using Microsoft.Extensions.DependencyInjection;
+
 namespace GreenEnergyHub.Charges.WebApi.Configuration
 {
     internal static class ServiceCollectionExtensions
     {
-        
+        /// <summary>
+        /// Adds registrations of JwtTokenMiddleware and corresponding dependencies.
+        /// </summary>
+        /// <param name="serviceCollection">ServiceCollection container</param>
+        public static void AddJwtTokenSecurity(this IServiceCollection serviceCollection)
+        {
+            var tenantId = EnvironmentHelper.GetEnv(EnvironmentSettingNames.B2CTenantId);
+            var audience = EnvironmentHelper.GetEnv(EnvironmentSettingNames.BackendServiceAppId);
+            var metadataAddress = $"https://login.microsoftonline.com/{tenantId}/v2.0/.well-known/openid-configuration";
+
+            serviceCollection.AddScoped<JwtTokenMiddleware>();
+            serviceCollection.AddScoped<IJwtTokenValidator, JwtTokenValidator>();
+            serviceCollection.AddScoped<IClaimsPrincipalAccessor, ClaimsPrincipalAccessor>();
+            serviceCollection.AddScoped<ClaimsPrincipalContext>();
+            serviceCollection.AddScoped(_ => new OpenIdSettings(metadataAddress, audience));
+        }
+
+        /// <summary>
+        /// Adds registration of ActorMiddleware, ActorContext and ActorProvider.
+        /// </summary>
+        /// <param name="serviceCollection">ServiceCollection container</param>
+        public static void AddUserContext(this IServiceCollection serviceCollection)
+        {
+            serviceCollection.AddScoped<UserMiddleware>();
+            serviceCollection.AddScoped<IUserContext, UserContext>();
+            serviceCollection.AddScoped<IUserProvider, FakeUserProvider>();
+        }
     }
 }
