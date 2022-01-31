@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System.Text.Json.Serialization;
+using GreenEnergyHub.Charges.WebApi.Configuration;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -43,7 +44,10 @@ namespace GreenEnergyHub.Charges.WebApi
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "GreenEnergyHub.Charges.WebApi", Version = "v1" });
             });
+
             services.AddQueryApi(Configuration);
+            services.AddJwtTokenSecurity();
+            services.AddUserContext();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
