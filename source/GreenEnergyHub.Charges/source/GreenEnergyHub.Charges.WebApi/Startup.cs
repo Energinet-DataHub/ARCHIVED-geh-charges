@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System.Text.Json.Serialization;
+using Energinet.DataHub.Core.App.WebApp.Middleware;
 using GreenEnergyHub.Charges.WebApi.Configuration;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -43,6 +44,22 @@ namespace GreenEnergyHub.Charges.WebApi
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "GreenEnergyHub.Charges.WebApi", Version = "v1" });
+
+                var securitySchema = new OpenApiSecurityScheme
+                {
+                    Description = "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
+                    Name = "Authorization",
+                    In = ParameterLocation.Header,
+                    Type = SecuritySchemeType.Http,
+                    Scheme = "bearer",
+                    Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = "Bearer", },
+                };
+
+                c.AddSecurityDefinition("Bearer", securitySchema);
+
+                var securityRequirement = new OpenApiSecurityRequirement { { securitySchema, new[] { "Bearer" } }, };
+
+                c.AddSecurityRequirement(securityRequirement);
             });
 
             services.AddQueryApi(Configuration);
@@ -63,6 +80,11 @@ namespace GreenEnergyHub.Charges.WebApi
             app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            app.UseMiddleware<JwtTokenMiddleware>();
+            app.UseMiddleware<UserMiddleware>();
+
+            app.UseAuthentication();
 
             app.UseEndpoints(endpoints =>
             {
