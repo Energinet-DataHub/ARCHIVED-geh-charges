@@ -33,7 +33,8 @@ Invoke-Expression "dotnet build ..\GreenEnergyHub.Charges.ApplyDBMigrationsApp\G
 Invoke-Expression "dotnet run --project ..\\GreenEnergyHub.Charges.ApplyDBMigrationsApp -- ""Server=(localdb)\mssqllocaldb;Database=ChargesDatabase;Trusted_Connection=True;"" includeSeedData"
 
 # Update scaffolded model
-Invoke-Expression "dotnet ef dbcontext scaffold ""$connectionString"" Microsoft.EntityFrameworkCore.SqlServer --output-dir $outputDir --context $context --schema $schema --force --no-onconfiguring"
+# --data-annotations: In order to add keys annotation required by OData
+Invoke-Expression "dotnet ef dbcontext scaffold ""$connectionString"" Microsoft.EntityFrameworkCore.SqlServer --output-dir $outputDir --context $context --schema $schema --force --no-onconfiguring --data-annotations"
 
 # Apply .editorconfig styles and fix .editorconfig analyzer violations - e.g. add license header and add empty line between props
 Invoke-Expression "dotnet format -s -a --include .\Model\"
