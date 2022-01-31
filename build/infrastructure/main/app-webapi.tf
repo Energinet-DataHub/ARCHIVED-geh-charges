@@ -24,13 +24,13 @@ module "app_webapi" {
   app_service_plan_id                       = module.plan_webapi.id
   application_insights_instrumentation_key  = data.azurerm_key_vault_secret.appi_shared_instrumentation_key.value
 
-  connection_strings = [
-    {
+  connection_strings = {
+    "sql_connection_string" = {
       name  = "CHARGE_DB_CONNECTION_STRING"
       type  = "SQLServer"
       value = local.MS_CHARGE_DB_CONNECTION_STRING
     }
-  ]
+  }
 
   tags                                      = azurerm_resource_group.this.tags
 }
