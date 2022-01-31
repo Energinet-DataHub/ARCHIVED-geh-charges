@@ -20,7 +20,7 @@ namespace GreenEnergyHub.Charges.Tests.Builders
     public class ChargeLinkDtoBuilder
     {
         private Instant _startDate = SystemClock.Instance.GetCurrentInstant();
-        private Instant _endDate = Instant.MaxValue;
+        private Instant? _endDate = Instant.MaxValue;
 
         public ChargeLinkDtoBuilder WithStartDate(Instant startDate)
         {
@@ -28,7 +28,7 @@ namespace GreenEnergyHub.Charges.Tests.Builders
             return this;
         }
 
-        public ChargeLinkDtoBuilder WithEndDate(Instant endDate)
+        public ChargeLinkDtoBuilder WithEndDate(Instant? endDate)
         {
             _endDate = endDate;
             return this;
