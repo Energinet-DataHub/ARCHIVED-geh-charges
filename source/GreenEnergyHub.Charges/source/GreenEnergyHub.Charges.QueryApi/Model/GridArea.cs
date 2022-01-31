@@ -14,11 +14,16 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
 
 #nullable disable
 
 namespace GreenEnergyHub.Charges.QueryApi.Model
 {
+    [Table("GridArea", Schema = "Charges")]
+    [Index(nameof(Id), Name = "IX_GridAreaId")]
     public partial class GridArea
     {
         public GridArea()
@@ -26,12 +31,16 @@ namespace GreenEnergyHub.Charges.QueryApi.Model
             GridAreaLinks = new HashSet<GridAreaLink>();
         }
 
+        [Key]
         public Guid Id { get; set; }
 
         public Guid? GridAccessProviderId { get; set; }
 
+        [ForeignKey(nameof(GridAccessProviderId))]
+        [InverseProperty(nameof(MarketParticipant.GridAreas))]
         public virtual MarketParticipant GridAccessProvider { get; set; }
 
+        [InverseProperty(nameof(GridAreaLink.GridArea))]
         public virtual ICollection<GridAreaLink> GridAreaLinks { get; set; }
     }
 }

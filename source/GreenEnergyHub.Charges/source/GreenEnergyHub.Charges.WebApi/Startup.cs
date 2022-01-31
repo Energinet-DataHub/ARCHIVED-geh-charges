@@ -17,6 +17,7 @@ using Energinet.DataHub.Core.App.WebApp.Middleware;
 using GreenEnergyHub.Charges.WebApi.Configuration;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.OData;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -39,7 +40,8 @@ namespace GreenEnergyHub.Charges.WebApi
             services.AddApplicationInsightsTelemetry();
 
             services.AddControllers()
-                .AddJsonOptions(options => options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
+                .AddJsonOptions(options => options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()))
+                .AddOData(option => option.Select().Filter().Count().OrderBy().Expand().SetMaxTop(100));
 
             services.AddSwaggerGen(c =>
             {
