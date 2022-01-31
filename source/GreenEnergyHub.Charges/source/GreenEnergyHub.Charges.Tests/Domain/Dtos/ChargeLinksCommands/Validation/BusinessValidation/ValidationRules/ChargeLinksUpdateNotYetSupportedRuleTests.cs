@@ -47,6 +47,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeLinksCommands.Validatio
         }
 
         [Theory]
+        [InlineAutoMoqData("2022-01-11T23:00:00Z", "2022-01-20T23:00:00Z", "2022-01-05T23:00:00Z", "2022-01-25T23:00:00Z")] // Encapsulated in existing
         [InlineAutoMoqData("2022-01-01T23:00:00Z", "2022-01-12T23:00:00Z", "2022-01-11T23:00:00Z", "2022-01-21T23:00:00Z")] // Intersects at beginning of existing
         [InlineAutoMoqData("2022-01-12T23:00:00Z", "2022-01-20T23:00:00Z", "2022-01-11T23:00:00Z", "2022-01-21T23:00:00Z")] // Intersects at end of existing
         [InlineAutoMoqData("2022-01-01T23:00:00Z", "2022-01-30T23:00:00Z", "2022-01-11T23:00:00Z", "2022-01-21T23:00:00Z")] // Encapsulates existing
