@@ -21,6 +21,7 @@ using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.TestCore.Attributes;
 using GreenEnergyHub.Charges.Tests.Builders;
 using NodaTime;
+using NodaTime.Text;
 using Xunit;
 using Xunit.Categories;
 
@@ -29,8 +30,6 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeLinksCommands.Validatio
     [UnitTest]
     public class ChargeLinksUpdateNotYetSupportedRuleTests
     {
-        private readonly DateTimeZone _copenhagen = DateTimeZoneProviders.Tzdb["Europe/Copenhagen"];
-
         [Theory]
         [InlineAutoMoqData]
         public void IsValid_WhenCalledWithValidChargeLinks_ReturnsTrue(string meteringPointId, DocumentDto document)
@@ -39,7 +38,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeLinksCommands.Validatio
             var newChargeLinks = GetChargeLinksWithoutOverlappingPeriods();
             var chargeLinkCommand = new ChargeLinksCommand(meteringPointId, document, newChargeLinks);
 
-            var existingChargeLinks = GetExistingChargeLinks(11, 21);
+            var existingChargeLinks = GetExistingChargeLinks("2022-01-10T23:00:00Z", "2022-01-20T23:00:00Z");
 
             var sut = new ChargeLinksUpdateNotYetSupportedRule(chargeLinkCommand, existingChargeLinks);
 
@@ -48,18 +47,19 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeLinksCommands.Validatio
         }
 
         [Theory]
-        [InlineAutoMoqData(1, 12)]
-        [InlineAutoMoqData(12, 20)]
-        [InlineAutoMoqData(20, null!)]
-        [InlineAutoMoqData(1, 30)]
+        [InlineAutoMoqData("2022-01-01T23:00:00Z", "2022-01-12T23:00:00Z", "2022-01-11T23:00:00Z", "2022-01-21T23:00:00Z")] // Intersects at beginning of existing
+        [InlineAutoMoqData("2022-01-12T23:00:00Z", "2022-01-20T23:00:00Z", "2022-01-11T23:00:00Z", "2022-01-21T23:00:00Z")] // Intersects at end of existing
+        [InlineAutoMoqData("2022-01-01T23:00:00Z", "2022-01-30T23:00:00Z", "2022-01-11T23:00:00Z", "2022-01-21T23:00:00Z")] // Encapsulates existing
+        [InlineAutoMoqData("2022-01-11T23:00:00Z", "2022-01-21T23:00:00Z", "2022-01-11T23:00:00Z", "2022-01-21T23:00:00Z")] // Exact match
+        [InlineAutoMoqData("2022-01-01T23:00:00Z", "9999-12-31T23:59:59Z", "2022-01-11T23:00:00Z", "9999-12-31T23:59:59Z")] // EndDate is DateTime.Max
+        [InlineAutoMoqData("2022-01-01T23:00:00Z", null!, "2022-01-11T23:00:00Z", "9999-12-31T23:59:59Z")] // EndDate is null!
         public void IsValid_WhenCalledWithOverlappingChargeLinks_ReturnsFalse(
-            int startDateDayOfMonth, int? endDateDayOfMonth, string meteringPointId, DocumentDto document)
+            string newStartDate, string? newEndDate, string existingStartDate, string existingEndDate, string meteringPointId, DocumentDto document)
         {
             // Arrange
-            var newChargeLinks = GetChargeLinksWithPeriod(2022, 1, startDateDayOfMonth, endDateDayOfMonth);
+            var newChargeLinks = new List<ChargeLinkDto> { CreateChargeLinkDto(newStartDate, newEndDate) };
             var chargeLinkCommand = new ChargeLinksCommand(meteringPointId, document, newChargeLinks);
-
-            var existingChargeLinks = GetExistingChargeLinks(11, 21);
+            var existingChargeLinks = GetExistingChargeLinks(existingStartDate, existingEndDate);
 
             var sut = new ChargeLinksUpdateNotYetSupportedRule(chargeLinkCommand, existingChargeLinks);
 
@@ -68,12 +68,12 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeLinksCommands.Validatio
         }
 
         [Theory]
-        [InlineAutoMoqData(1, 12)]
+        [InlineAutoMoqData("2022-01-01T23:00:00Z", "2022-01-12T23:00:00Z")]
         public void IsValid_WhenExistingChargeLinksListIsEmpty_ReturnsTrue(
-            int startDateDayOfMonth, int? endDateDayOfMonth, string meteringPointId, DocumentDto document)
+            string newStartDate, string? newEndDate, string meteringPointId, DocumentDto document)
         {
             // Arrange
-            var newChargeLinks = GetChargeLinksWithPeriod(2022, 1, startDateDayOfMonth, endDateDayOfMonth);
+            var newChargeLinks = new List<ChargeLinkDto> { CreateChargeLinkDto(newStartDate, newEndDate) };
             var chargeLinkCommand = new ChargeLinksCommand(meteringPointId, document, newChargeLinks);
 
             var sut = new ChargeLinksUpdateNotYetSupportedRule(chargeLinkCommand, new List<ChargeLink>());
@@ -82,60 +82,29 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeLinksCommands.Validatio
             sut.IsValid.Should().BeTrue();
         }
 
-        [Theory]
-        [InlineAutoMoqData(1, 12)]
-        public void IsValid_WhenExistingChargeLinkHasEqualDatesAsNewLink_ReturnsFalse(
-            int startDateDayOfMonth, int endDateDayOfMonth, string meteringPointId, DocumentDto document)
+        private static ChargeLinkDto CreateChargeLinkDto(string newStartDate, string? newEndDate)
         {
-            // Arrange
-            var newChargeLinks = GetChargeLinksWithPeriod(2022, 1, startDateDayOfMonth, endDateDayOfMonth);
-            var chargeLinkCommand = new ChargeLinksCommand(meteringPointId, document, newChargeLinks);
-            var existingChargeLinks = GetExistingChargeLinks(startDateDayOfMonth, endDateDayOfMonth);
-
-            var sut = new ChargeLinksUpdateNotYetSupportedRule(chargeLinkCommand, existingChargeLinks);
-
-            // Act & Assert
-            sut.IsValid.Should().BeFalse();
+            var startDate = InstantPattern.General.Parse(newStartDate).Value;
+            Instant? endDateTime = newEndDate == null ? null : InstantPattern.General.Parse(newEndDate).Value;
+            return new ChargeLinkDtoBuilder().WithStartDate(startDate).WithEndDate(endDateTime).Build();
         }
 
-        private IReadOnlyCollection<ChargeLink> GetExistingChargeLinks(int startDateDayOfMonth, int endDateDayOfMonth)
+        private static IReadOnlyCollection<ChargeLink> GetExistingChargeLinks(
+            string existingStartDate, string existingEndDate)
         {
-            var day1Utc = GetInstantFromLocalDateTime(2022, 1, startDateDayOfMonth);
-            var day2Utc = GetInstantFromLocalDateTime(2022, 1, endDateDayOfMonth);
-            var link = new ChargeLinkBuilder().WithStartDate(day1Utc).WithEndDate(day2Utc).Build();
+            var startDate = InstantPattern.General.Parse(existingStartDate).Value;
+            var endDate = InstantPattern.General.Parse(existingEndDate).Value;
+            var link = new ChargeLinkBuilder().WithStartDate(startDate).WithEndDate(endDate).Build();
 
             return new List<ChargeLink> { link };
         }
 
-        private List<ChargeLinkDto> GetChargeLinksWithoutOverlappingPeriods()
+        private static List<ChargeLinkDto> GetChargeLinksWithoutOverlappingPeriods()
         {
-            var day1Utc = GetInstantFromLocalDateTime(2022, 1, 3);
-            var day2Utc = GetInstantFromLocalDateTime(2022, 1, 11);
-            var link1 = new ChargeLinkDtoBuilder().WithStartDate(day1Utc).WithEndDate(day2Utc).Build();
-
-            var day3Utc = GetInstantFromLocalDateTime(2022, 1, 21);
-            var link2 = new ChargeLinkDtoBuilder().WithStartDate(day3Utc).Build();
+            var link1 = CreateChargeLinkDto("2022-01-02T23:00:00Z", "2022-01-10T23:00:00Z");
+            var link2 = CreateChargeLinkDto("2022-01-21T23:00:00Z", null);
 
             return new List<ChargeLinkDto> { link1, link2 };
-        }
-
-        private List<ChargeLinkDto> GetChargeLinksWithPeriod(int year, int month, int startDateDayOfMonth, int? endDateDayOfMonth)
-        {
-            var day1Utc = GetInstantFromLocalDateTime(year, month, startDateDayOfMonth);
-            var day2Utc = GetInstantFromLocalDateTime(year, month, endDateDayOfMonth.GetValueOrDefault(1));
-
-            var link = endDateDayOfMonth is not null
-                ? new ChargeLinkDtoBuilder().WithStartDate(day1Utc).WithEndDate(day2Utc).Build()
-                : new ChargeLinkDtoBuilder().WithStartDate(day1Utc).Build();
-
-            return new List<ChargeLinkDto> { link };
-        }
-
-        private Instant GetInstantFromLocalDateTime(int year, int month, int day)
-        {
-            var day1LocalDateTime = new LocalDateTime(year, month, day, 0, 0);
-            var day1Utc = _copenhagen.AtStrictly(day1LocalDateTime).ToInstant();
-            return day1Utc;
         }
     }
 }
