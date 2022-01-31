@@ -19,7 +19,7 @@ using GreenEnergyHub.Charges.Infrastructure.ActorRegister.GridAreaLinksSynchroni
 using GreenEnergyHub.Charges.Infrastructure.ActorRegister.GridAreasSynchronization;
 using GreenEnergyHub.Charges.Infrastructure.ActorRegister.MarketParticipantsSynchronization;
 using GreenEnergyHub.Charges.Infrastructure.ActorRegister.Persistence;
-using GreenEnergyHub.Charges.Infrastructure.Core.Registration.ServiceCollection;
+using GreenEnergyHub.Charges.Infrastructure.Core.Registration;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 

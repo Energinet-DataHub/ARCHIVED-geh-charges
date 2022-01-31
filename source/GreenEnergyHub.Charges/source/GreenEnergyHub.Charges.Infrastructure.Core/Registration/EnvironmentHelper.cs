@@ -14,7 +14,7 @@
 
 using System;
 
-namespace GreenEnergyHub.Charges.Infrastructure.Core.Registration.ServiceCollection
+namespace GreenEnergyHub.Charges.Infrastructure.Core.Registration
 {
     public static class EnvironmentHelper
     {
