@@ -53,7 +53,9 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeLinksCommands.Validatio
         [InlineAutoMoqData("2022-01-01T23:00:00Z", "2022-01-30T23:00:00Z", "2022-01-11T23:00:00Z", "2022-01-21T23:00:00Z")] // Encapsulates existing
         [InlineAutoMoqData("2022-01-11T23:00:00Z", "2022-01-21T23:00:00Z", "2022-01-11T23:00:00Z", "2022-01-21T23:00:00Z")] // Exact match
         [InlineAutoMoqData("2022-01-01T23:00:00Z", "9999-12-31T23:59:59Z", "2022-01-11T23:00:00Z", "9999-12-31T23:59:59Z")] // EndDate is DateTime.Max
-        [InlineAutoMoqData("2022-01-01T23:00:00Z", null!, "2022-01-11T23:00:00Z", "9999-12-31T23:59:59Z")] // EndDate is null!
+        [InlineAutoMoqData("2022-01-10T23:00:00Z", null!, "2022-01-11T23:00:00Z", "9999-12-31T23:59:59Z")] // StartDate before existing, EndDate is null!
+        [InlineAutoMoqData("2022-01-11T23:00:00Z", null!, "2022-01-11T23:00:00Z", "9999-12-31T23:59:59Z")] // StartDate equal to existing, EndDate is null!
+        [InlineAutoMoqData("2022-01-12T23:00:00Z", null!, "2022-01-11T23:00:00Z", "9999-12-31T23:59:59Z")] // StartDate later than existing, EndDate is null!
         public void IsValid_WhenCalledWithOverlappingChargeLinks_ReturnsFalse(
             string newStartDate, string? newEndDate, string existingStartDate, string existingEndDate, string meteringPointId, DocumentDto document)
         {
