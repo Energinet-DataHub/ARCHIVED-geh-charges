@@ -31,14 +31,18 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeLinksCommands.Validatio
     public class ChargeLinksUpdateNotYetSupportedRuleTests
     {
         [Theory]
-        [InlineAutoMoqData]
-        public void IsValid_WhenCalledWithValidChargeLinks_ReturnsTrue(string meteringPointId, DocumentDto document)
+        [InlineAutoMoqData("2022-01-11T23:00:00Z", "2022-01-20T23:00:00Z", "2022-01-21T00:00:00Z", "2022-01-25T23:00:00Z")] // Before existing
+        [InlineAutoMoqData("2022-01-25T23:00:00Z", "2022-01-31T23:00:00Z", "2022-01-01T23:00:00Z", "2022-01-25T23:00:00Z")] // After existing
+        [InlineAutoMoqData("2022-01-21T23:00:00Z", "9999-12-31T23:59:59Z", "2022-01-11T23:00:00Z", "2022-01-21T23:00:00Z")] // After with EndDate is DateTime.Max
+        [InlineAutoMoqData("2022-01-21T23:00:00Z", null!, "2022-01-11T23:00:00Z", "2022-01-21T23:00:00Z")] // After with EndDate is null!
+        public void IsValid_WhenCalledWithValidChargeLinks_ReturnsTrue(
+            string newStartDate, string? newEndDate, string existingStartDate, string existingEndDate, string meteringPointId, DocumentDto document)
         {
             // Arrange
-            var newChargeLinks = GetChargeLinksWithoutOverlappingPeriods();
+            var newChargeLinks = new List<ChargeLinkDto> { CreateChargeLinkDto(newStartDate, newEndDate) };
             var chargeLinkCommand = new ChargeLinksCommand(meteringPointId, document, newChargeLinks);
 
-            var existingChargeLinks = GetExistingChargeLinks("2022-01-10T23:00:00Z", "2022-01-20T23:00:00Z");
+            var existingChargeLinks = GetExistingChargeLinks(existingStartDate, existingEndDate);
 
             var sut = new ChargeLinksUpdateNotYetSupportedRule(chargeLinkCommand, existingChargeLinks);
 
@@ -100,14 +104,6 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeLinksCommands.Validatio
             var link = new ChargeLinkBuilder().WithStartDate(startDate).WithEndDate(endDate).Build();
 
             return new List<ChargeLink> { link };
-        }
-
-        private static List<ChargeLinkDto> GetChargeLinksWithoutOverlappingPeriods()
-        {
-            var link1 = CreateChargeLinkDto("2022-01-02T23:00:00Z", "2022-01-10T23:00:00Z");
-            var link2 = CreateChargeLinkDto("2022-01-21T23:00:00Z", null);
-
-            return new List<ChargeLinkDto> { link1, link2 };
         }
     }
 }
