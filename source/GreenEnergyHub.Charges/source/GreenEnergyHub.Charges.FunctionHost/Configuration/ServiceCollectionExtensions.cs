@@ -23,7 +23,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace GreenEnergyHub.Charges.FunctionHost.Configuration
 {
-    public static class ContainerExtensions
+    internal static class ServiceCollectionExtensions
     {
         /// <summary>
         /// Adds registrations of JwtTokenMiddleware and corresponding dependencies.
