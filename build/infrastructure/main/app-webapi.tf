@@ -27,7 +27,7 @@ module "app_webapi" {
   connection_strings = [
     {
       name  = "CHARGE_DB_CONNECTION_STRING"
-      type  = "SQLServer"
+      type  = "SQLAzure"
       value = local.MS_CHARGE_DB_CONNECTION_STRING
     }
   ]
