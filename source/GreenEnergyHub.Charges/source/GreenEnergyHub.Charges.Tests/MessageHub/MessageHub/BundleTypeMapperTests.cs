@@ -29,7 +29,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.MessageHub
     public class BundleTypeMapperTests
     {
         [Theory]
-        [MemberData("GetBundleTypes")]
+        [MemberData(nameof(GetBundleTypes))]
         public void Map_WhenGivenEnum_MapsToString(BundleType bundleType)
         {
             var actual = BundleTypeMapper.Map(bundleType);

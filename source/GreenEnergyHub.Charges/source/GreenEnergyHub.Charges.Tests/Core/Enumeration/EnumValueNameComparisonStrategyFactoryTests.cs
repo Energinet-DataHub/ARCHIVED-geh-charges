@@ -24,7 +24,7 @@ namespace GreenEnergyHub.Charges.Tests.Core.Enumeration
     public class EnumValueNameComparisonStrategyFactoryTests
     {
         [Theory]
-        [MemberData("AllStrategies")]
+        [MemberData(nameof(AllStrategies))]
         public void Create_WhenCalled_ReturnsNotNullComparisonStrategy(EnumComparisonStrategy strategy)
         {
             var actual = EnumValueNameComparisonStrategyFactory.Create(strategy);
