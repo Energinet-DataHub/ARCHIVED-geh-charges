@@ -117,8 +117,11 @@ namespace GreenEnergyHub.Charges.FunctionHost.System
 
                 // Internal event, create default charge links
                 {
-                    "DefaultChargeLinksDataAvailableNotifiedTopicExists", await TopicExistsAsync(domainConnectionString, EnvironmentSettingNames.DefaultChargeLinksDataAvailableNotifiedTopicName)
-                    .ConfigureAwait(false)
+                    "DefaultChargeLinksDataAvailableNotifiedTopicExists",
+                    await TopicExistsAsync(
+                        domainConnectionString,
+                        EnvironmentSettingNames.DefaultChargeLinksDataAvailableNotifiedTopicName)
+                        .ConfigureAwait(false)
                 },
                 {
                     "DefaultChargeLinksDataAvailableNotifiedSubscriptionExists",
@@ -187,6 +190,20 @@ namespace GreenEnergyHub.Charges.FunctionHost.System
                         domainConnectionString,
                         EnvironmentSettingNames.ChargeLinksReceivedSubscriptionName,
                         EnvironmentSettingNames.ChargeLinksReceivedTopicName)
+                        .ConfigureAwait(false)
+                },
+
+                // Internal events, charges
+                {
+                    "ChargeCommandAcceptedTopicExists", await TopicExistsAsync(domainConnectionString, EnvironmentSettingNames.CommandAcceptedTopicName)
+                    .ConfigureAwait(false)
+                },
+                {
+                    "ChargeCommandAcceptedSubscriptionExists",
+                    await SubscriptionExistsAsync(
+                        domainConnectionString,
+                        EnvironmentSettingNames.CommandAcceptedSubscriptionName,
+                        EnvironmentSettingNames.CommandAcceptedTopicName)
                         .ConfigureAwait(false)
                 },
             };
