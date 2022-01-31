@@ -48,8 +48,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures.WebApi
             Environment.SetEnvironmentVariable(
                 $"CONNECTIONSTRINGS:{EnvironmentSettingNames.ChargeDbConnectionString}",
                 DatabaseManager.ConnectionString);
-            Environment.SetEnvironmentVariable("B2C_TENANT_ID", AuthorizationConfiguration.B2cTenantId);
-            Environment.SetEnvironmentVariable("BACKEND_SERVICE_APP_ID", AuthorizationConfiguration.BackendAppId);
+            Environment.SetEnvironmentVariable(EnvironmentSettingNames.B2CTenantId, AuthorizationConfiguration.B2cTenantId);
+            Environment.SetEnvironmentVariable(EnvironmentSettingNames.BackendServiceAppId, AuthorizationConfiguration.BackendAppId);
         }
 
         /// <inheritdoc/>
