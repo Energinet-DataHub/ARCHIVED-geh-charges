@@ -36,6 +36,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
             var audience = EnvironmentHelper.GetEnv(EnvironmentSettingNames.BackendServiceAppId);
             var metadataAddress = $"https://login.microsoftonline.com/{tenantId}/v2.0/.well-known/openid-configuration";
 
+            serviceCollection.AddScoped<JwtTokenWrapperMiddleware>();
             serviceCollection.AddScoped<JwtTokenMiddleware>();
             serviceCollection.AddScoped<IClaimsPrincipalAccessor, ClaimsPrincipalAccessor>();
             serviceCollection.AddScoped<ClaimsPrincipalContext>();
@@ -48,7 +49,6 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
         /// <param name="serviceCollection">ServiceCollection container</param>
         public static void AddActorContext(this IServiceCollection serviceCollection)
         {
-            serviceCollection.AddScoped<JwtTokenWrapperMiddleware>();
             serviceCollection.AddScoped<ActorMiddleware>();
             serviceCollection.AddScoped<IActorContext, ActorContext>();
             serviceCollection.AddScoped<IActorProvider, ActorProvider>();

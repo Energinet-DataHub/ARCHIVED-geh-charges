@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using Energinet.DataHub.Core.FunctionApp.Common.Middleware;
@@ -20,9 +21,19 @@ using Microsoft.Azure.Functions.Worker.Middleware;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Core.Authentication
 {
+    /// <summary>
+    /// Temporary middleware workaround to suppress authentication requirements on selected
+    /// HTTP endpoints.
+    ///
+    /// The idea is to not register <see cref="JwtTokenMiddleware"/> as middleware but rather invoke
+    /// it from this wrapping middleware if authentication is required. This is because the
+    /// <see cref="JwtTokenMiddleware"/> currently doesn't support configuration of which endpoints
+    /// to authenticate.
+    /// </summary>
     public class JwtTokenWrapperMiddleware : IFunctionsWorkerMiddleware
     {
         private readonly JwtTokenMiddleware _jwtTokenMiddleware;
+        private readonly List<string> _functionNamesToExclude = new() { "HealthStatus", "SynchronizeFromActorRegister" };
 
         public JwtTokenWrapperMiddleware(JwtTokenMiddleware jwtTokenMiddleware)
         {
@@ -31,14 +42,14 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.Authentication
 
         public async Task Invoke(FunctionContext context, [NotNull] FunctionExecutionDelegate next)
         {
-            var funcName = context.FunctionDefinition.Name;
-            if (funcName != "HealthStatus" && funcName != "SynchronizeFromActorRegister")
+            var allowAnonymous = _functionNamesToExclude.Contains(context.FunctionDefinition.Name);
+            if (allowAnonymous)
             {
-                await _jwtTokenMiddleware.Invoke(context, next).ConfigureAwait(false);
+                await next(context).ConfigureAwait(false);
                 return;
             }
 
-            await next(context).ConfigureAwait(false);
+            await _jwtTokenMiddleware.Invoke(context, next).ConfigureAwait(false);
         }
     }
 }
