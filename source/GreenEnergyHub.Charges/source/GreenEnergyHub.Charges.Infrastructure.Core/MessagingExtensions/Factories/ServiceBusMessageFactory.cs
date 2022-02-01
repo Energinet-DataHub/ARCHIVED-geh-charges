@@ -14,8 +14,6 @@
 
 using System.Collections.Generic;
 using Azure.Messaging.ServiceBus;
-using Energinet.DataHub.Core.FunctionApp.Common.Abstractions.Actor;
-using Energinet.DataHub.Core.FunctionApp.Common.Abstractions.ServiceBus;
 using GreenEnergyHub.Charges.Infrastructure.Core.Correlation;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessageMetaData;
 
@@ -25,16 +23,13 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Factori
     {
         private readonly ICorrelationContext _correlationContext;
         private readonly IMessageMetaDataContext _messageMetaDataContext;
-        private readonly IActorContext _actorContext;
 
         public ServiceBusMessageFactory(
             ICorrelationContext correlationContext,
-            IMessageMetaDataContext messageMetaDataContext,
-            IActorContext actorContext)
+            IMessageMetaDataContext messageMetaDataContext)
         {
             _correlationContext = correlationContext;
             _messageMetaDataContext = messageMetaDataContext;
-            _actorContext = actorContext;
         }
 
         public ServiceBusMessage CreateInternalMessage(string data)
@@ -54,11 +49,6 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Factori
             return new ServiceBusMessage(data)
             {
                 CorrelationId = _correlationContext.Id,
-                ApplicationProperties =
-                    {
-                        // Actor is always set, for internal messages which originates from Charges Http ingestion point.
-                        new KeyValuePair<string, object>(Constants.ServiceBusIdentityKey, _actorContext.CurrentActor!.AsString()),
-                    },
             };
         }
 
