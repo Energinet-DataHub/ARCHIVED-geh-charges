@@ -35,13 +35,17 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
         [Collection(nameof(ChargesFunctionAppCollectionFixture))]
         public class RunAsync : FunctionAppTestBase<ChargesFunctionAppFixture>, IAsyncLifetime
         {
+            private readonly AuthenticatedHttpRequestGenerator _authenticatedHttpRequestGenerator;
             private readonly HttpRequestGenerator _httpRequestGenerator;
 
             public RunAsync(ChargesFunctionAppFixture fixture, ITestOutputHelper testOutputHelper)
                 : base(fixture, testOutputHelper)
             {
+                _httpRequestGenerator = new HttpRequestGenerator();
                 TestDataGenerator.GenerateDataForIntegrationTests(fixture);
-                _httpRequestGenerator = new HttpRequestGenerator(fixture.AuthorizationConfiguration);
+                _authenticatedHttpRequestGenerator = new AuthenticatedHttpRequestGenerator(
+                    _httpRequestGenerator,
+                    fixture.AuthorizationConfiguration);
             }
 
             public Task InitializeAsync()
@@ -58,10 +62,21 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             }
 
             [Fact]
+            public async Task When_RequestIsUnauthenticated_Then_AHttp403UnauthorizedIsReturned()
+            {
+                var (request, _) = _httpRequestGenerator
+                    .CreateHttpPostRequest(EndpointUrl, ChargeDocument.TariffBundleWithValidAndInvalid);
+
+                var actual = await Fixture.HostManager.HttpClient.SendAsync(request);
+
+                actual.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
+            }
+
+            [Fact]
             public async Task When_ChargeIsReceived_Then_AHttp200ResponseIsReturned()
             {
-                var request = await _httpRequestGenerator.CreateHttpPostRequestAsync(
-                    EndpointUrl, ChargeDocument.AnyValid);
+                var request = await _authenticatedHttpRequestGenerator
+                    .CreateAuthenticatedHttpPostRequestAsync(EndpointUrl, ChargeDocument.AnyValid);
 
                 var actualResponse = await Fixture.HostManager.HttpClient.SendAsync(request.Request);
 
@@ -71,19 +86,18 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             [Fact]
             public async Task When_InvalidChargeIsReceived_Then_AHttp400ResponseIsReturned()
             {
-                var request = await _httpRequestGenerator.CreateHttpPostRequestAsync(
-                    EndpointUrl, ChargeDocument.TariffInvalidSchema);
+                var request = await _authenticatedHttpRequestGenerator
+                    .CreateAuthenticatedHttpPostRequestAsync(EndpointUrl, ChargeDocument.TariffInvalidSchema);
                 var actualResponse = await Fixture.HostManager.HttpClient.SendAsync(request.Request);
                 actualResponse.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             }
 
-            // TODO: Should this (and all other "when charge" tests) be split in subscription, fee and tariff?
             [Fact]
             public async Task When_ChargeIsReceived_Then_ChargeCreatedIntegrationEventIsPublished()
             {
                 // Arrange
-                var (request, correlationId) = await _httpRequestGenerator.CreateHttpPostRequestAsync(
-                    EndpointUrl, ChargeDocument.AnyValid);
+                var (request, correlationId) = await _authenticatedHttpRequestGenerator
+                    .CreateAuthenticatedHttpPostRequestAsync(EndpointUrl, ChargeDocument.AnyValid);
                 using var eventualChargeCreatedEvent = await Fixture
                     .ChargeCreatedListener
                     .ListenForMessageAsync(correlationId)
@@ -93,8 +107,9 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 await Fixture.HostManager.HttpClient.SendAsync(request);
 
                 // Assert
-                var isChargeCreatedReceived = eventualChargeCreatedEvent.MessageAwaiter!.Wait(
-                    TimeSpan.FromSeconds(SecondsToWaitForIntegrationEvents));
+                var isChargeCreatedReceived = eventualChargeCreatedEvent
+                    .MessageAwaiter!
+                    .Wait(TimeSpan.FromSeconds(SecondsToWaitForIntegrationEvents));
                 isChargeCreatedReceived.Should().BeTrue();
             }
 
@@ -102,8 +117,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             public async Task When_ChargeBundleWithChargesIncludingPriceIsReceived_Then_ChargePricesUpdatedIntegrationEventsArePublished()
             {
                 // Arrange
-                var (request, correlationId) = await _httpRequestGenerator.CreateHttpPostRequestAsync(
-                    EndpointUrl, ChargeDocument.TariffBundleWithValidAndInvalid);
+                var (request, correlationId) = await _authenticatedHttpRequestGenerator
+                    .CreateAuthenticatedHttpPostRequestAsync(EndpointUrl, ChargeDocument.TariffBundleWithValidAndInvalid);
                 using var eventualChargePriceUpdatedEvent = await Fixture
                     .ChargePricesUpdatedListener
                     .ListenForEventsAsync(correlationId, expectedCount: 2)
@@ -113,8 +128,9 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 await Fixture.HostManager.HttpClient.SendAsync(request);
 
                 // Assert
-                var isChargePricesUpdatedReceived = eventualChargePriceUpdatedEvent.CountdownEvent!.Wait(
-                    TimeSpan.FromSeconds(SecondsToWaitForIntegrationEvents));
+                var isChargePricesUpdatedReceived = eventualChargePriceUpdatedEvent
+                    .CountdownEvent!
+                    .Wait(TimeSpan.FromSeconds(SecondsToWaitForIntegrationEvents));
                 isChargePricesUpdatedReceived.Should().BeTrue();
             }
 
@@ -122,8 +138,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             public async Task Given_NewTaxBundleTariffWithPrices_When_GridAccessProviderPeeks_Then_MessageHubReceivesReply()
             {
                 // Arrange
-                var (request, correlationId) = await _httpRequestGenerator.CreateHttpPostRequestAsync(
-                    EndpointUrl, ChargeDocument.TariffBundleWithValidAndInvalid);
+                var (request, correlationId) = await _authenticatedHttpRequestGenerator
+                    .CreateAuthenticatedHttpPostRequestAsync(EndpointUrl, ChargeDocument.TariffBundleWithValidAndInvalid);
 
                 // Act
                 await Fixture.HostManager.HttpClient.SendAsync(request);

@@ -19,6 +19,7 @@ using Energinet.DataHub.Core.FunctionApp.Common.Identity;
 using Energinet.DataHub.Core.FunctionApp.Common.Middleware;
 using GreenEnergyHub.Charges.FunctionHost.Common;
 using GreenEnergyHub.Charges.Infrastructure;
+using GreenEnergyHub.Charges.Infrastructure.Core.Authentication;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace GreenEnergyHub.Charges.FunctionHost.Configuration
@@ -47,6 +48,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
         /// <param name="serviceCollection">ServiceCollection container</param>
         public static void AddActorContext(this IServiceCollection serviceCollection)
         {
+            serviceCollection.AddScoped<JwtTokenWrapperMiddleware>();
             serviceCollection.AddScoped<ActorMiddleware>();
             serviceCollection.AddScoped<IActorContext, ActorContext>();
             serviceCollection.AddScoped<IActorProvider, ActorProvider>();
