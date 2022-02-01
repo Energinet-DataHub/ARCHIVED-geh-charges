@@ -15,6 +15,7 @@
 using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.OData;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -37,12 +38,14 @@ namespace GreenEnergyHub.Charges.WebApi
             services.AddApplicationInsightsTelemetry();
 
             services.AddControllers()
-                .AddJsonOptions(options => options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
+                .AddJsonOptions(options => options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()))
+                .AddOData(option => option.Select().Filter().Count().OrderBy().Expand().SetMaxTop(100));
 
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "GreenEnergyHub.Charges.WebApi", Version = "v1" });
             });
+
             services.AddQueryApi(Configuration);
         }
 
