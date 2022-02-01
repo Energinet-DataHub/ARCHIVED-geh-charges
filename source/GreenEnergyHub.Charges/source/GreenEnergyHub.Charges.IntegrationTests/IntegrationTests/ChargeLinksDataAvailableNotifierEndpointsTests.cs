@@ -69,7 +69,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests
                     },
                     Type = DocumentType.RequestChangeBillingMasterData,
                     IndustryClassification = IndustryClassification.Electricity,
-                    BusinessReasonCode = BusinessReasonCode.UpdateChargeInformation,
+                    BusinessReasonCode = BusinessReasonCode.UpdateMasterDataSettlement,
                     RequestDate = Instant.FromDateTimeUtc(DateTime.UtcNow),
                     CreatedDateTime = Instant.FromDateTimeUtc(DateTime.UtcNow),
                 };
