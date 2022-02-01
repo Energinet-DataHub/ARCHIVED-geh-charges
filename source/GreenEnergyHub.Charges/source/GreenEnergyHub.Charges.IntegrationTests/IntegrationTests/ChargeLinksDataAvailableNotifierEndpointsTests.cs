@@ -13,17 +13,19 @@
 // limitations under the License.
 
 using System;
-using System.Text.Json;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Azure.Messaging.ServiceBus;
 using Energinet.DataHub.Core.FunctionApp.TestCommon;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksAcceptedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
+using GreenEnergyHub.Charges.Domain.MarketParticipants;
+using GreenEnergyHub.Charges.FunctionHost.ChargeLinks;
 using GreenEnergyHub.Charges.FunctionHost.ChargeLinks.MessageHub;
 using GreenEnergyHub.Charges.IntegrationTests.Fixtures.FunctionApp;
 using GreenEnergyHub.Charges.IntegrationTests.TestCommon;
 using GreenEnergyHub.Charges.IntegrationTests.TestHelpers;
-using GreenEnergyHub.Charges.TestCore.Attributes;
 using NodaTime;
 using Xunit;
 using Xunit.Abstractions;
@@ -53,18 +55,34 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests
                 return Task.CompletedTask;
             }
 
-            [Theory]
-            [InlineAutoMoqData]
-            public async Task When_ChargeLinksAcceptedEvent_Then_Publish_ChargeLinksDataAvailableNotifiedEvent(
-                ChargeLinksCommand chargeLinksCommand)
+            [Fact]
+            public async Task When_ChargeLinksAcceptedEvent_Then_Publish_ChargeLinksDataAvailableNotifiedEvent()
             {
                 // Arrange
-                var message = CreateServiceBusMessage(chargeLinksCommand, out var correlationId, out var parentId);
+                var documentDto = new DocumentDto
+                {
+                    Id = "4ED89659-6F88-4F52-BC7B-8987B304A071",
+                    Sender = new MarketParticipantDto
+                    {
+                        BusinessProcessRole = MarketParticipantRole.SystemOperator,
+                        Id = "5790000432752",
+                    },
+                    Type = DocumentType.RequestChangeBillingMasterData,
+                    IndustryClassification = IndustryClassification.Electricity,
+                    BusinessReasonCode = BusinessReasonCode.UpdateChargeInformation,
+                    RequestDate = Instant.FromDateTimeUtc(DateTime.UtcNow),
+                    CreatedDateTime = Instant.FromDateTimeUtc(DateTime.UtcNow),
+                };
+
+                var command = new ChargeLinksCommand("571313180000000005", documentDto, new List<ChargeLinkDto>());
+
+                var message = CreateServiceBusMessage(command, out var correlationId, out var parentId);
 
                 await MockTelemetryClient.WrappedOperationWithTelemetryDependencyInformationAsync(
                     () => Fixture.ChargeLinksAcceptedTopic.SenderClient.SendMessageAsync(message), correlationId, parentId);
 
                 await FunctionAsserts.AssertHasExecutedAsync(Fixture.HostManager, nameof(ChargeLinkDataAvailableNotifierEndpoint)).ConfigureAwait(false);
+                await FunctionAsserts.AssertHasExecutedAsync(Fixture.HostManager, nameof(CreateDefaultChargeLinksReplierEndpoint)).ConfigureAwait(false);
             }
 
             private ServiceBusMessage CreateServiceBusMessage(
@@ -76,17 +94,14 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests
                 var message = new ChargeLinksAcceptedEvent(command, Instant.FromDateTimeUtc(DateTime.UtcNow));
                 parentId = $"00-{correlationId}-b7ad6b7169203331-02";
 
-                var data = JsonSerializer.Serialize(message);
+                var jsonSerializer = new Json.JsonSerializer();
+                var data = jsonSerializer.Serialize(message);
 
                 var serviceBusMessage = new ServiceBusMessage(data)
                 {
                     CorrelationId = correlationId,
                 };
-                serviceBusMessage.ApplicationProperties.Add("OperationTimestamp", DateTime.UtcNow);
-                serviceBusMessage.ApplicationProperties.Add("OperationCorrelationId", "1bf1b76337f14b78badc248a3289d022");
-                serviceBusMessage.ApplicationProperties.Add("MessageVersion", 1);
-                serviceBusMessage.ApplicationProperties.Add("MessageType", "ChargeLinksAcceptedEvent");
-                serviceBusMessage.ApplicationProperties.Add("EventIdentification", "2542ed0d242e46b68b8b803e93ffbf7c");
+                serviceBusMessage.ApplicationProperties.Add("ReplyTo", Fixture.CreateLinkReplyQueue.Name);
                 return serviceBusMessage;
             }
         }
