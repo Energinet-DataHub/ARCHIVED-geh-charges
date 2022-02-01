@@ -83,6 +83,9 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests
 
                 await FunctionAsserts.AssertHasExecutedAsync(Fixture.HostManager, nameof(ChargeLinkDataAvailableNotifierEndpoint)).ConfigureAwait(false);
                 await FunctionAsserts.AssertHasExecutedAsync(Fixture.HostManager, nameof(CreateDefaultChargeLinksReplierEndpoint)).ConfigureAwait(false);
+
+                // We need to clear host log after each test is done to ensure that we can assert on function executed on each test run because we only check on function name.
+                Fixture.HostManager.ClearHostLog();
             }
 
             private ServiceBusMessage CreateServiceBusMessage(
