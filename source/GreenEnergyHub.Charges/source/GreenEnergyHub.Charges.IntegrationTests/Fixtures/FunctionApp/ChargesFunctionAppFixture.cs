@@ -67,6 +67,9 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures.FunctionApp
         [NotNull]
         public TopicResource? MeteringPointCreatedTopic { get; private set; }
 
+        [NotNull]
+        public TopicResource? ChargeLinksAcceptedTopic { get; private set; }
+
         public AuthorizationConfiguration AuthorizationConfiguration { get; }
 
         private AzuriteManager AzuriteManager { get; }
@@ -110,7 +113,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures.FunctionApp
             Environment.SetEnvironmentVariable("B2C_TENANT_ID", AuthorizationConfiguration.B2cTenantId);
             Environment.SetEnvironmentVariable("BACKEND_SERVICE_APP_ID", AuthorizationConfiguration.BackendAppId);
 
-            var chargeLinkAcceptedTopic = await ServiceBusResourceProvider
+            ChargeLinksAcceptedTopic = await ServiceBusResourceProvider
                 .BuildTopic(ChargesServiceBusResourceNames.ChargeLinksAcceptedTopicKey)
                 .SetEnvironmentVariableToTopicName(EnvironmentSettingNames.ChargeLinksAcceptedTopicName)
                 .AddSubscription(ChargesServiceBusResourceNames.ChargeLinksAcceptedDataAvailableNotifierSubscriptionName)
@@ -195,6 +198,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures.FunctionApp
                     .DefaultChargeLinksDataAvailableNotifiedTopicName)
                 .AddSubscription(ChargesServiceBusResourceNames.DefaultChargeLinksDataAvailableNotifiedSubscriptionName)
                     .SetEnvironmentVariableToSubscriptionName(EnvironmentSettingNames.DefaultChargeLinksDataAvailableNotifiedSubscription)
+                .AddSubscription("test-default-charge-links-available-notified")
+                    .SetEnvironmentVariableToSubscriptionName("TEST_DEFAULT_CHARGE_LINKS_DATA_AVAILABLE_NOTIFIED_SUBSCRIPTION_NAME")
                 .CreateAsync();
 
             var chargeCreatedListener = new ServiceBusListenerMock(ServiceBusResourceProvider.ConnectionString, TestLogger);
