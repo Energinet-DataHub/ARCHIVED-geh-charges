@@ -26,6 +26,7 @@ using GreenEnergyHub.Charges.FunctionHost.ChargeLinks.MessageHub;
 using GreenEnergyHub.Charges.IntegrationTests.Fixtures.FunctionApp;
 using GreenEnergyHub.Charges.IntegrationTests.TestCommon;
 using GreenEnergyHub.Charges.IntegrationTests.TestHelpers;
+using GreenEnergyHub.Charges.Tests.Builders;
 using NodaTime;
 using Xunit;
 using Xunit.Abstractions;
@@ -59,28 +60,19 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests
             public async Task When_ChargeLinksAcceptedEvent_Then_Publish_ChargeLinksDataAvailableNotifiedEvent()
             {
                 // Arrange
-                var documentDto = new DocumentDto
-                {
-                    Id = "4ED89659-6F88-4F52-BC7B-8987B304A071",
-                    Sender = new MarketParticipantDto
-                    {
-                        BusinessProcessRole = MarketParticipantRole.SystemOperator,
-                        Id = "5790000432752",
-                    },
-                    Type = DocumentType.RequestChangeBillingMasterData,
-                    IndustryClassification = IndustryClassification.Electricity,
-                    BusinessReasonCode = BusinessReasonCode.UpdateMasterDataSettlement,
-                    RequestDate = Instant.FromDateTimeUtc(DateTime.UtcNow),
-                    CreatedDateTime = Instant.FromDateTimeUtc(DateTime.UtcNow),
-                };
+                var command = new ChargeLinksCommandBuilder().Build("571313180000000005");
+                var chargeLinksAcceptedEvent = new ChargeLinksAcceptedEvent(command, Instant.FromDateTimeUtc(DateTime.UtcNow));
 
-                var command = new ChargeLinksCommand("571313180000000005", documentDto, new List<ChargeLinkDto>());
+                var jsonSerializer = new Json.JsonSerializer();
+                var body = jsonSerializer.Serialize(chargeLinksAcceptedEvent);
 
-                var message = CreateServiceBusMessage(command, out var correlationId, out var parentId);
+                var message = CreateServiceBusMessage(body, out var correlationId, out var parentId);
 
+                // Act
                 await MockTelemetryClient.WrappedOperationWithTelemetryDependencyInformationAsync(
                     () => Fixture.ChargeLinksAcceptedTopic.SenderClient.SendMessageAsync(message), correlationId, parentId);
 
+                // Assert
                 await FunctionAsserts.AssertHasExecutedAsync(Fixture.HostManager, nameof(ChargeLinkDataAvailableNotifierEndpoint)).ConfigureAwait(false);
                 await FunctionAsserts.AssertHasExecutedAsync(Fixture.HostManager, nameof(CreateDefaultChargeLinksReplierEndpoint)).ConfigureAwait(false);
 
@@ -89,18 +81,14 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests
             }
 
             private ServiceBusMessage CreateServiceBusMessage(
-                ChargeLinksCommand command,
+                string body,
                 out string correlationId,
                 out string parentId)
             {
                 correlationId = CorrelationIdGenerator.Create();
-                var message = new ChargeLinksAcceptedEvent(command, Instant.FromDateTimeUtc(DateTime.UtcNow));
                 parentId = $"00-{correlationId}-b7ad6b7169203331-02";
 
-                var jsonSerializer = new Json.JsonSerializer();
-                var data = jsonSerializer.Serialize(message);
-
-                var serviceBusMessage = new ServiceBusMessage(data)
+                var serviceBusMessage = new ServiceBusMessage(body)
                 {
                     CorrelationId = correlationId,
                 };
