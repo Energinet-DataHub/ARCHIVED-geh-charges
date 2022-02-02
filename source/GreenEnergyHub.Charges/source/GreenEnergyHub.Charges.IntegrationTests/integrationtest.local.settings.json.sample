@@ -1,6 +1,4 @@
 ﻿{
   "AZURE_KEYVAULT_URL": "<Integration test key vault url>",
   "AZURE_SECRETS_KEYVAULT_URL": "<Key vault with secrets url>",
-  "B2C_TENANT_ID": "<Azure B2C tenant id>",
-  "BACKEND_SERVICE_APP_ID": "<Backend service application id>"
 }
