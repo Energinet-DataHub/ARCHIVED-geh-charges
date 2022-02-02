@@ -19,6 +19,7 @@ using Energinet.DataHub.Core.FunctionApp.Common.Identity;
 using Energinet.DataHub.Core.FunctionApp.Common.Middleware;
 using GreenEnergyHub.Charges.FunctionHost.Common;
 using GreenEnergyHub.Charges.Infrastructure;
+using GreenEnergyHub.Charges.Infrastructure.Core.Authentication;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace GreenEnergyHub.Charges.FunctionHost.Configuration
@@ -35,6 +36,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
             var audience = EnvironmentHelper.GetEnv(EnvironmentSettingNames.BackendServiceAppId);
             var metadataAddress = $"https://login.microsoftonline.com/{tenantId}/v2.0/.well-known/openid-configuration";
 
+            serviceCollection.AddScoped<JwtTokenWrapperMiddleware>();
             serviceCollection.AddScoped<JwtTokenMiddleware>();
             serviceCollection.AddScoped<IClaimsPrincipalAccessor, ClaimsPrincipalAccessor>();
             serviceCollection.AddScoped<ClaimsPrincipalContext>();

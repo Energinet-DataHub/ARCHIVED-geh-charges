@@ -14,7 +14,6 @@
 
 using System.Linq;
 using AutoFixture.Xunit2;
-using Energinet.DataHub.Core.FunctionApp.Common.Abstractions.Actor;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessageMetaData;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Factories;
@@ -42,7 +41,6 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Core.MessagingExtensions.F
         [InlineAutoDomainData]
         public void InternalMessage_DoesContain_ReplyTo(
             [Frozen] Mock<IMessageMetaDataContext> messageMetaDataContext,
-            [Frozen] Mock<IActorContext> actorContext,
             string data,
             string replyTo,
             ServiceBusMessageFactory sut)
@@ -50,7 +48,6 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Core.MessagingExtensions.F
             // Arrange
             messageMetaDataContext.Setup(m => m.ReplyTo).Returns(replyTo);
             messageMetaDataContext.Setup(m => m.IsReplyToSet()).Returns(true);
-            actorContext.Setup(m => m.CurrentActor).Returns(It.IsAny<Actor>());
 
             // Act
             var actual = sut.CreateInternalMessage(data);
