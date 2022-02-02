@@ -16,6 +16,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Energinet.DataHub.Core.FunctionApp.TestCommon;
+using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksAcceptedEvents;
 using GreenEnergyHub.Charges.FunctionHost.ChargeLinks;
 using GreenEnergyHub.Charges.FunctionHost.ChargeLinks.MessageHub;
@@ -31,7 +32,7 @@ using Xunit.Categories;
 namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests
 {
     [IntegrationTest]
-    public class ChargeLinksDataAvailableNotifierEndpointsTests
+    public class CreateDefaultChargeLinksReplierEndpointTests
     {
         [Collection(nameof(ChargesFunctionAppCollectionFixture))]
         public class RunAsync : FunctionAppTestBase<ChargesFunctionAppFixture>, IAsyncLifetime
@@ -53,7 +54,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests
             }
 
             [Fact]
-            public async Task When_ChargeLinksAcceptedEvent_Then_Publish_ChargeLinksDataAvailableNotifiedEvent()
+            public async Task When_ChargeLinksAcceptedEvent_Then_CreateLinkReply()
             {
                 // Arrange
                 var command = new ChargeLinksCommandBuilder().Build("571313180000000005");
@@ -70,6 +71,10 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests
 
                 var message = ServiceBusMessageGenerator.CreateWithJsonContent(body, applicationProperties, correlationId);
 
+                using var isMessageReceived = await Fixture.CreateLinkReplyQueueListener
+                    .ListenForMessageAsync(correlationId)
+                    .ConfigureAwait(false);
+
                 // Act
                 await MockTelemetryClient.WrappedOperationWithTelemetryDependencyInformationAsync(
                     () => Fixture.ChargeLinksAcceptedTopic.SenderClient.SendMessageAsync(message), correlationId, parentId);
@@ -77,6 +82,9 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests
                 // Assert
                 await FunctionAsserts.AssertHasExecutedAsync(Fixture.HostManager, nameof(ChargeLinkDataAvailableNotifierEndpoint)).ConfigureAwait(false);
                 await FunctionAsserts.AssertHasExecutedAsync(Fixture.HostManager, nameof(CreateDefaultChargeLinksReplierEndpoint)).ConfigureAwait(false);
+
+                var isMessageReceivedByQueue = isMessageReceived.MessageAwaiter!.Wait(TimeSpan.FromSeconds(10));
+                isMessageReceivedByQueue.Should().BeTrue();
 
                 // We need to clear host log after each test is done to ensure that we can assert on function executed on each test run because we only check on function name.
                 Fixture.HostManager.ClearHostLog();
