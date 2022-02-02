@@ -296,7 +296,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures.FunctionApp
             Environment.SetEnvironmentVariable(EnvironmentSettingNames.RequestResponseLoggingContainerName, ChargesServiceBusResourceNames.RequestResponseLoggingContainerName);
 
             var storage = new BlobContainerClient(ChargesServiceBusResourceNames.RequestResponseLoggingConnectionString, ChargesServiceBusResourceNames.RequestResponseLoggingContainerName);
-            await storage.CreateIfNotExistsAsync();
+            if (!await storage.ExistsAsync())
+                await storage.CreateAsync();
         }
 
         private static string GetBuildConfiguration()
