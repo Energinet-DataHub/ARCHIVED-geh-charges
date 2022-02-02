@@ -14,52 +14,42 @@
 
 using System.Net.Http;
 using System.Text;
-using System.Threading.Tasks;
-using GreenEnergyHub.Charges.IntegrationTests.Authorization;
 using NodaTime;
 
 namespace GreenEnergyHub.Charges.IntegrationTests.TestHelpers
 {
     public class HttpRequestGenerator
     {
-        private readonly AuthenticationClient _authenticationClient;
-
-        public HttpRequestGenerator(AuthorizationConfiguration authorizationConfiguration)
-        {
-            _authenticationClient = new AuthenticationClient(
-                authorizationConfiguration.BackendAppScope,
-                authorizationConfiguration.ClientCredentialsSettings,
-                authorizationConfiguration.B2cTenantId);
-        }
-
-        public async Task<(HttpRequestMessage Request, string CorrelationId)> CreateHttpPostRequestAsync(
+        public (HttpRequestMessage Request, string CorrelationId) CreateHttpPostRequest(
             string endpointUrl, string testFilePath)
         {
+            var (request, correlationId) = CreateHttpRequest(HttpMethod.Post, endpointUrl);
+
             var clock = SystemClock.Instance;
             var chargeXml = EmbeddedResourceHelper.GetEmbeddedFile(testFilePath, clock);
-            var correlationId = CorrelationIdGenerator.Create();
-
-            var request = new HttpRequestMessage(HttpMethod.Post, endpointUrl)
-            {
-                Content = new StringContent(chargeXml, Encoding.UTF8, "application/xml"),
-            };
-            request.ConfigureTraceContext(correlationId);
-
-            var authenticationResult = await _authenticationClient.GetAuthenticationTokenAsync();
-            request.Headers.Add("Authorization", $"Bearer {authenticationResult.AccessToken}");
+            request.Content = new StringContent(chargeXml, Encoding.UTF8, "application/xml");
 
             return (request, correlationId);
         }
 
-        public async Task<(HttpRequestMessage Request, string CorrelationId)> CreateHttpGetRequestAsync(
+        public (HttpRequestMessage Request, string CorrelationId) CreateHttpGetRequest(string endpointUrl)
+        {
+            return CreateHttpRequest(HttpMethod.Get, endpointUrl);
+        }
+
+        public (HttpRequestMessage Request, string CorrelationId) CreateHttpPutRequest(string endpointUrl)
+        {
+            return CreateHttpRequest(HttpMethod.Put, endpointUrl);
+        }
+
+        private static (HttpRequestMessage Request, string CorrelationId) CreateHttpRequest(
+            HttpMethod httpMethod,
             string endpointUrl)
         {
-            var correlationId = CorrelationIdGenerator.Create();
-            var request = new HttpRequestMessage(HttpMethod.Get, endpointUrl);
-            request.ConfigureTraceContext(correlationId);
+            var request = new HttpRequestMessage(httpMethod, endpointUrl);
 
-            var authenticationResult = await _authenticationClient.GetAuthenticationTokenAsync();
-            request.Headers.Add("Authorization", $"Bearer {authenticationResult.AccessToken}");
+            var correlationId = CorrelationIdGenerator.Create();
+            request.ConfigureTraceContext(correlationId);
 
             return (request, correlationId);
         }
