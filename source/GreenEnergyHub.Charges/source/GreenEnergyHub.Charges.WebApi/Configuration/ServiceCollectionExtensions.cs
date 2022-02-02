@@ -12,10 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.Core.App.Common;
 using Energinet.DataHub.Core.App.Common.Abstractions.Identity;
 using Energinet.DataHub.Core.App.Common.Abstractions.Security;
-using Energinet.DataHub.Core.App.Common.Abstractions.Users;
 using Energinet.DataHub.Core.App.Common.Identity;
 using Energinet.DataHub.Core.App.Common.Security;
 using Energinet.DataHub.Core.App.WebApp.Middleware;
@@ -41,17 +39,6 @@ namespace GreenEnergyHub.Charges.WebApi.Configuration
             serviceCollection.AddScoped<IClaimsPrincipalAccessor, ClaimsPrincipalAccessor>();
             serviceCollection.AddScoped<ClaimsPrincipalContext>();
             serviceCollection.AddScoped(_ => new OpenIdSettings(metadataAddress, audience));
-        }
-
-        /// <summary>
-        /// Adds registration of ActorMiddleware, ActorContext and ActorProvider.
-        /// </summary>
-        /// <param name="serviceCollection">ServiceCollection container</param>
-        public static void AddUserContext(this IServiceCollection serviceCollection)
-        {
-            serviceCollection.AddScoped<UserMiddleware>();
-            serviceCollection.AddScoped<IUserContext, UserContext>();
-            serviceCollection.AddScoped<IUserProvider, FakeUserProvider>();
         }
     }
 }

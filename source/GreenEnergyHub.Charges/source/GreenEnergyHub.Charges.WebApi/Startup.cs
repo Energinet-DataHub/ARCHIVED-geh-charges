@@ -66,7 +66,6 @@ namespace GreenEnergyHub.Charges.WebApi
 
             services.AddQueryApi(Configuration);
             services.AddJwtTokenSecurity();
-            services.AddUserContext();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -84,9 +83,6 @@ namespace GreenEnergyHub.Charges.WebApi
             app.UseRouting();
 
             app.UseMiddleware<JwtTokenMiddleware>();
-            app.UseMiddleware<UserMiddleware>();
-
-            app.UseAuthentication();
 
             app.UseEndpoints(endpoints =>
             {
