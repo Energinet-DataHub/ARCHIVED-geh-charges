@@ -15,12 +15,8 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Azure.Messaging.ServiceBus;
 using Energinet.DataHub.Core.FunctionApp.TestCommon;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksAcceptedEvents;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands;
-using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
-using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.FunctionHost.ChargeLinks;
 using GreenEnergyHub.Charges.FunctionHost.ChargeLinks.MessageHub;
 using GreenEnergyHub.Charges.IntegrationTests.Fixtures.FunctionApp;
@@ -66,7 +62,13 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests
                 var jsonSerializer = new Json.JsonSerializer();
                 var body = jsonSerializer.Serialize(chargeLinksAcceptedEvent);
 
-                var message = CreateServiceBusMessage(body, out var correlationId, out var parentId);
+                var applicationProperties = new Dictionary<string, string>();
+                applicationProperties.Add("ReplyTo", Fixture.CreateLinkReplyQueue.Name);
+
+                var correlationId = CorrelationIdGenerator.Create();
+                var parentId = $"00-{correlationId}-b7ad6b7169203331-02";
+
+                var message = ServiceBusMessageGenerator.CreateWithJsonContent(body, applicationProperties, correlationId);
 
                 // Act
                 await MockTelemetryClient.WrappedOperationWithTelemetryDependencyInformationAsync(
@@ -78,22 +80,6 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests
 
                 // We need to clear host log after each test is done to ensure that we can assert on function executed on each test run because we only check on function name.
                 Fixture.HostManager.ClearHostLog();
-            }
-
-            private ServiceBusMessage CreateServiceBusMessage(
-                string body,
-                out string correlationId,
-                out string parentId)
-            {
-                correlationId = CorrelationIdGenerator.Create();
-                parentId = $"00-{correlationId}-b7ad6b7169203331-02";
-
-                var serviceBusMessage = new ServiceBusMessage(body)
-                {
-                    CorrelationId = correlationId,
-                };
-                serviceBusMessage.ApplicationProperties.Add("ReplyTo", Fixture.CreateLinkReplyQueue.Name);
-                return serviceBusMessage;
             }
         }
     }
