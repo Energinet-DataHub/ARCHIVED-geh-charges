@@ -31,7 +31,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.TestHelpers
 
             foreach (var applicationProperty in applicationProperties)
             {
-                serviceBusMessage.ApplicationProperties.Add(applicationProperty.Key, applicationProperty.Key);
+                serviceBusMessage.ApplicationProperties.Add(applicationProperty.Key, applicationProperty.Value);
             }
 
             return serviceBusMessage;
