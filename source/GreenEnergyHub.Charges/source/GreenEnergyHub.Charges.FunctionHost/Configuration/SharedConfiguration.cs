@@ -72,10 +72,11 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
             serviceCollection.AddScoped<MessageMetaDataMiddleware>();
             serviceCollection.AddScoped<FunctionInvocationLoggingMiddleware>();
             serviceCollection.AddJwtTokenSecurity();
-            serviceCollection.AddActorContext();
-            serviceCollection.AddScoped(s => new ServiceBusActorContextMiddleware(
-                s.GetService<ILogger<ServiceBusActorContextMiddleware>>()!,
-                s.GetService<IActorContext>()!));
+
+            // serviceCollection.AddActorContext();
+            // serviceCollection.AddScoped(s => new ServiceBusActorContextMiddleware(
+            //     s.GetService<ILogger<ServiceBusActorContextMiddleware>>()!,
+            //     s.GetService<IActorContext>()!));
             serviceCollection.AddApplicationInsightsTelemetryWorkerService(
                 EnvironmentHelper.GetEnv(EnvironmentSettingNames.AppInsightsInstrumentationKey));
 
