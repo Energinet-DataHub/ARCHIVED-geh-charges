@@ -14,16 +14,20 @@
 
 using System.Collections.Generic;
 using Azure.Messaging.ServiceBus;
+using GreenEnergyHub.Charges.Domain.Dtos.Messages.Events;
 
 namespace GreenEnergyHub.Charges.IntegrationTests.TestHelpers
 {
     public static class ServiceBusMessageGenerator
     {
         public static ServiceBusMessage CreateWithJsonContent(
-            string body,
+            IInternalEvent internalEvent,
             Dictionary<string, string> applicationProperties,
             string correlationId)
         {
+            var jsonSerializer = new Json.JsonSerializer();
+            var body = jsonSerializer.Serialize(internalEvent);
+
             var serviceBusMessage = new ServiceBusMessage(body)
             {
                 CorrelationId = correlationId,

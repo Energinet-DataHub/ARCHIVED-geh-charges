@@ -15,13 +15,12 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Azure.Messaging.ServiceBus;
 using Energinet.DataHub.Core.FunctionApp.TestCommon;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksAcceptedEvents;
-using GreenEnergyHub.Charges.FunctionHost.ChargeLinks;
-using GreenEnergyHub.Charges.FunctionHost.ChargeLinks.MessageHub;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands;
 using GreenEnergyHub.Charges.IntegrationTests.Fixtures.FunctionApp;
-using GreenEnergyHub.Charges.IntegrationTests.TestCommon;
 using GreenEnergyHub.Charges.IntegrationTests.TestHelpers;
 using GreenEnergyHub.Charges.Tests.Builders;
 using NodaTime;
@@ -58,18 +57,9 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests
             {
                 // Arrange
                 var command = new ChargeLinksCommandBuilder().Build("571313180000000005");
-                var chargeLinksAcceptedEvent = new ChargeLinksAcceptedEvent(command, Instant.FromDateTimeUtc(DateTime.UtcNow));
-
-                var jsonSerializer = new Json.JsonSerializer();
-                var body = jsonSerializer.Serialize(chargeLinksAcceptedEvent);
-
-                var applicationProperties = new Dictionary<string, string>();
-                applicationProperties.Add("ReplyTo", Fixture.CreateLinkReplyQueue.Name);
-
                 var correlationId = CorrelationIdGenerator.Create();
                 var parentId = $"00-{correlationId}-b7ad6b7169203331-02";
-
-                var message = ServiceBusMessageGenerator.CreateWithJsonContent(body, applicationProperties, correlationId);
+                var message = CreateServiceBusMessage(command, correlationId);
 
                 using var isMessageReceived = await Fixture.CreateLinkReplyQueueListener
                     .ListenForMessageAsync(correlationId)
@@ -80,14 +70,24 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests
                     () => Fixture.ChargeLinksAcceptedTopic.SenderClient.SendMessageAsync(message), correlationId, parentId);
 
                 // Assert
-                await FunctionAsserts.AssertHasExecutedAsync(Fixture.HostManager, nameof(ChargeLinkDataAvailableNotifierEndpoint)).ConfigureAwait(false);
-                await FunctionAsserts.AssertHasExecutedAsync(Fixture.HostManager, nameof(CreateDefaultChargeLinksReplierEndpoint)).ConfigureAwait(false);
-
                 var isMessageReceivedByQueue = isMessageReceived.MessageAwaiter!.Wait(TimeSpan.FromSeconds(10));
                 isMessageReceivedByQueue.Should().BeTrue();
+            }
 
-                // We need to clear host log after each test is done to ensure that we can assert on function executed on each test run because we only check on function name.
-                Fixture.HostManager.ClearHostLog();
+            private ServiceBusMessage CreateServiceBusMessage(ChargeLinksCommand command, string correlationId)
+            {
+                var chargeLinksAcceptedEvent = new ChargeLinksAcceptedEvent(
+                    command, Instant.FromDateTimeUtc(DateTime.UtcNow));
+
+                var applicationProperties = new Dictionary<string, string>
+                {
+                    { "ReplyTo", Fixture.CreateLinkReplyQueue.Name },
+                };
+
+                var message = ServiceBusMessageGenerator.CreateWithJsonContent(
+                    chargeLinksAcceptedEvent, applicationProperties, correlationId);
+
+                return message;
             }
         }
     }
