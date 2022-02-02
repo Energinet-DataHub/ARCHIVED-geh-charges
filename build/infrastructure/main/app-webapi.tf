@@ -47,8 +47,8 @@ module "plan_webapi" {
   kind                  = "Linux"
   reserved              = true
   sku                   = {
-    tier  = "Basic"
-    size  = "B1"
+    tier  = "Standard"
+    size  = "S1"
   }
 
   tags                  = azurerm_resource_group.this.tags
