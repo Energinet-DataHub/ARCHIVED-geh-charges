@@ -49,7 +49,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 var actualResponse = await Fixture.HostManager.HttpClient.SendAsync(result.Request);
 
                 // Assert - should actually be 200 OK, but the temp actor register solution is not currently supported
-                // by the test fixture. But at least we can verify that we don't get a 403.
+                // by the test fixture. But at least we can verify that we don't get a 401.
                 actualResponse.StatusCode.Should().NotBe(HttpStatusCode.Unauthorized);
             }
         }
