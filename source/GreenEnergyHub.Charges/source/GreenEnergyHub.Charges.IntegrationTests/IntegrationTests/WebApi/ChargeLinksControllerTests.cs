@@ -111,6 +111,19 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi
             response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         }
 
+        [Fact]
+        public async Task When_RequestIsUnauthenticated_Then_AHttp401UnauthorizedIsReturned()
+        {
+            // Arrange
+            _client.DefaultRequestHeaders.Remove("Authorization");
+
+            // Act
+            var response = await _client.GetAsync($"{BaseUrl}{KnownMeteringPointId}");
+
+            // Assert
+            response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
+        }
+
         private static JsonSerializerOptions GetJsonSerializerOptions()
         {
             return new JsonSerializerOptions

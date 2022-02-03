@@ -30,6 +30,8 @@ namespace GreenEnergyHub.Charges.WebApi.Configuration
         /// <param name="serviceCollection">ServiceCollection container</param>
         public static void AddJwtTokenSecurity(this IServiceCollection serviceCollection)
         {
+            //var tenantId = EnvironmentHelper.GetEnv(EnvironmentSettingNames.FrontEndOpenIdUrl);
+            //var audience = EnvironmentHelper.GetEnv(EnvironmentSettingNames.FrontEndServiceAppId);
             var tenantId = EnvironmentHelper.GetEnv(EnvironmentSettingNames.B2CTenantId);
             var audience = EnvironmentHelper.GetEnv(EnvironmentSettingNames.BackendServiceAppId);
             var metadataAddress = $"https://login.microsoftonline.com/{tenantId}/v2.0/.well-known/openid-configuration";
