@@ -67,6 +67,9 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures.FunctionApp
         [NotNull]
         public TopicResource? MeteringPointCreatedTopic { get; private set; }
 
+        [NotNull]
+        public TopicResource? ChargeLinksAcceptedTopic { get; private set; }
+
         public AuthorizationConfiguration AuthorizationConfiguration { get; }
 
         private AzuriteManager AzuriteManager { get; }
@@ -110,7 +113,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures.FunctionApp
             Environment.SetEnvironmentVariable(EnvironmentSettingNames.B2CTenantId, AuthorizationConfiguration.B2cTenantId);
             Environment.SetEnvironmentVariable(EnvironmentSettingNames.BackendServiceAppId, AuthorizationConfiguration.BackendAppId);
 
-            var chargeLinkAcceptedTopic = await ServiceBusResourceProvider
+            ChargeLinksAcceptedTopic = await ServiceBusResourceProvider
                 .BuildTopic(ChargesServiceBusResourceNames.ChargeLinksAcceptedTopicKey)
                 .SetEnvironmentVariableToTopicName(EnvironmentSettingNames.ChargeLinksAcceptedTopicName)
                 .AddSubscription(ChargesServiceBusResourceNames.ChargeLinksAcceptedDataAvailableNotifierSubscriptionName)
