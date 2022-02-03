@@ -139,7 +139,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors
 
         [ErrorMessageFor(ValidationRuleIdentifier.ChargeLinksUpdateNotYetSupported)]
         public const string ChargeLinksUpdateNotYetSupportedErrorText =
-            "ChargeLink for Meteringpoint {{MeteringPointId}} and Charge with ID {{DocumentSenderProvidedChargeId}} for owner {{ChargeOwner}} of type {{ChargeType}} cannot yet be updated or stopped. The functionality is not implemented yet.";
+            "Charge link for metering point ID {{MeteringPointId}} and Charge with ID {{DocumentSenderProvidedChargeId}} for owner {{ChargeOwner}} of type {{ChargeType}} cannot yet be updated or stopped. The functionality is not implemented yet.";
 
         public const string Unknown = "unknown";
     }
