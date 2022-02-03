@@ -40,13 +40,13 @@ namespace GreenEnergyHub.Charges.WebApi.Controllers
         }
 
         /// <summary>
-        /// Returns all charge links data for a given metering point. Currently it returns mocked data.
+        /// Returns all charge links data for a given metering point.
         ///
         /// This V1 can be removed when the BFF uses the new V2.
         /// </summary>
         /// <param name="meteringPointId">The 18-digits metering point identifier used by the Danish version of Green Energy Hub.
         /// Use 404 to get a "404 Not Found" response.</param>
-        /// <returns>Mocked charge links data or "404 Not Found"</returns>
+        /// <returns>Charge links data or "404 Not Found"</returns>
         [HttpGet("GetAsync")]
         [MapToApiVersion("1.0")]
         public async Task<IActionResult> GetV1Async(string meteringPointId)
@@ -76,11 +76,11 @@ namespace GreenEnergyHub.Charges.WebApi.Controllers
         }
 
         /// <summary>
-        /// Returns all charge links data for a given metering point. Currently it returns mocked data.
+        /// Returns all charge links data for a given metering point.
         /// </summary>
         /// <param name="meteringPointId">The 18-digits metering point identifier used by the Danish version of Green Energy Hub.
         /// Use 404 to get a "404 Not Found" response.</param>
-        /// <returns>Mocked charge links data or "404 Not Found"</returns>
+        /// <returns>Charge links data or "404 Not Found"</returns>
         [HttpGet("GetAsync")]
         [MapToApiVersion("2.0")]
         public async Task<IActionResult> GetAsync(string meteringPointId)
