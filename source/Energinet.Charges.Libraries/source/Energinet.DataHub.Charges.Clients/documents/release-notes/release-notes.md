@@ -1,5 +1,9 @@
 # Energinet.DataHub.Charges.Clients Release notes
 
+## Version 1.0.25
+
+Updated Nuget packages
+
 ## Version 1.0.24
 
 Removed local settings to the unused resources earlier used to request the creation of messages
