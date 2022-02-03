@@ -125,8 +125,8 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors
         public const string CommandSenderMustBeAnExistingMarketParticipantErrorText =
             "Sender {{DocumentSenderId}} for message {{DocumentId}} is currently not an existing market party (company) or not active";
 
-        [ErrorMessageFor(ValidationRuleIdentifier.UpdateNotYetSupported)]
-        public const string UpdateNotYetSupportedErrorText =
+        [ErrorMessageFor(ValidationRuleIdentifier.ChargeUpdateNotYetSupported)]
+        public const string ChargeUpdateNotYetSupportedErrorText =
             "Charge ID {{DocumentSenderProvidedChargeId}} for owner {{ChargeOwner}} of type {{ChargeType}} cannot yet be updated or stopped. The functionality is not implemented yet.";
 
         [ErrorMessageFor(ValidationRuleIdentifier.MeteringPointDoesNotExist)]
@@ -136,6 +136,10 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors
         [ErrorMessageFor(ValidationRuleIdentifier.ChargeDoesNotExist)]
         public const string ChargeDoesNotExistValidationErrorText =
             "Charge {{DocumentSenderProvidedChargeId}} not allowed: The charge is not an existing charge on date {{ChargeLinkStartDate}}.";
+
+        [ErrorMessageFor(ValidationRuleIdentifier.ChargeLinksUpdateNotYetSupported)]
+        public const string ChargeLinksUpdateNotYetSupportedErrorText =
+            "ChargeLink for Meteringpoint {{MeteringPointId}} and Charge with ID {{DocumentSenderProvidedChargeId}} for owner {{ChargeOwner}} of type {{ChargeType}} cannot yet be updated or stopped. The functionality is not implemented yet.";
 
         public const string Unknown = "unknown";
     }
