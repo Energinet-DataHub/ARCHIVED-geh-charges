@@ -137,7 +137,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors
         public const string ChargeDoesNotExistValidationErrorText =
             "Charge {{DocumentSenderProvidedChargeId}} not allowed: The charge is not an existing charge on date {{ChargeLinkStartDate}}.";
 
-        [ErrorMessageFor(ValidationRuleIdentifier.ChargeLinksUpdateNotYetSupported)]
+        [ErrorMessageFor(ValidationRuleIdentifier.ChargeLinkUpdateNotYetSupported)]
         public const string ChargeLinksUpdateNotYetSupportedErrorText =
             "Charge link for metering point ID {{MeteringPointId}} and Charge with ID {{DocumentSenderProvidedChargeId}} for owner {{ChargeOwner}} of type {{ChargeType}} cannot yet be updated or stopped. The functionality is not implemented yet.";
 

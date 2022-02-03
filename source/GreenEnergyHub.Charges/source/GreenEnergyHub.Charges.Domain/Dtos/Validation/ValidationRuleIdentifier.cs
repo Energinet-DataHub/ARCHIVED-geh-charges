@@ -44,6 +44,6 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.Validation
         ChargeUpdateNotYetSupported = 28, // VR902 / D13
         MeteringPointDoesNotExist = 29, // VR200 / E10
         ChargeDoesNotExist = 30, // VR679 / E0I
-        ChargeLinksUpdateNotYetSupported = 31, // VR902 / D13
+        ChargeLinkUpdateNotYetSupported = 31, // VR902 / D13
     }
 }

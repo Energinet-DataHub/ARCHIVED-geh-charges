@@ -53,7 +53,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.Shared
         [InlineAutoMoqData(ValidationRuleIdentifier.DocumentTypeMustBeRequestUpdateChargeInformation, ReasonCode.D02)]
         [InlineAutoMoqData(ValidationRuleIdentifier.MeteringPointDoesNotExist, ReasonCode.E10)]
         [InlineAutoMoqData(ValidationRuleIdentifier.ChargeDoesNotExist, ReasonCode.E0I)]
-        [InlineAutoMoqData(ValidationRuleIdentifier.ChargeLinksUpdateNotYetSupported, ReasonCode.D13)]
+        [InlineAutoMoqData(ValidationRuleIdentifier.ChargeLinkUpdateNotYetSupported, ReasonCode.D13)]
         public void Create_ReturnsExpectedCode(
             ValidationRuleIdentifier identifier,
             ReasonCode expected,
