@@ -40,7 +40,7 @@ namespace GreenEnergyHub.Charges.WebApi.Controllers
         }
 
         /// <summary>
-        /// Returns all charge links data for a given metering point. Currently it returns mocked data.
+        /// Returns all charge links data for a given metering point.
         ///
         /// This V1 can be removed when the BFF uses the new V2.
         /// </summary>
