@@ -83,6 +83,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
             var marketParticipant = new MarketParticipant(
                 Guid.NewGuid(),
                 "MarketParticipantId",
+                string.Empty,
                 true,
                 MarketParticipantRole.EnergySupplier);
 

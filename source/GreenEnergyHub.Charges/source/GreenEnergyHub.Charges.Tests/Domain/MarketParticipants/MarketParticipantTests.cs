@@ -28,14 +28,14 @@ namespace GreenEnergyHub.Charges.Tests.Domain.MarketParticipants
         public void Ctor_WhenInvalidBusinessProcessRole_ThrowsArgumentException(MarketParticipantRole invalidRole)
         {
             Assert.Throws<ArgumentException>(() =>
-                new MarketParticipant(Guid.NewGuid(), string.Empty, false, invalidRole));
+                new MarketParticipant(Guid.NewGuid(), string.Empty, string.Empty, false, invalidRole));
         }
 
         [Theory]
         [MemberData(nameof(ValidBusinessProcessRoles))]
         public void Ctor_SetsRole(MarketParticipantRole role)
         {
-            var actual = new MarketParticipant(Guid.NewGuid(), string.Empty, false, role);
+            var actual = new MarketParticipant(Guid.NewGuid(), string.Empty, string.Empty, false, role);
             actual.BusinessProcessRole.Should().Be(role);
         }
 

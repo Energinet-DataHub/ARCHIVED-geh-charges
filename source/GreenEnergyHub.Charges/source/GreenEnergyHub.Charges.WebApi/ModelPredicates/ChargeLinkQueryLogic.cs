@@ -31,7 +31,7 @@ namespace GreenEnergyHub.Charges.WebApi.ModelPredicates
                     c.Charge.SenderProvidedChargeId,
                     c.Charge.Name,
                     c.Charge.Owner.MarketParticipantId,
-                    "<Aktørnavn XYZ>", // Hardcoded as we currently don't have the ChargeOwnerName data
+                    c.Charge.Owner.Name,
                     c.Charge.TaxIndicator,
                     c.Charge.TransparentInvoicing,
                     c.Factor,

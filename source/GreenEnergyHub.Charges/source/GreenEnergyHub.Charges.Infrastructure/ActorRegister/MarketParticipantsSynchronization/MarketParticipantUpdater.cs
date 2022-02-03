@@ -27,6 +27,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.ActorRegister.MarketParticipants
             UpdateMarketParticipantId(marketParticipant, actor.IdentificationNumber);
             UpdateIsActive(marketParticipant, actor.Active);
             UpdateRole(marketParticipant, businessProcessRole);
+            UpdateName(marketParticipant, actor.Name);
         }
 
         /// <summary>
@@ -36,7 +37,9 @@ namespace GreenEnergyHub.Charges.Infrastructure.ActorRegister.MarketParticipants
         private static void UpdateMarketParticipantId(MarketParticipant marketParticipant, string marketParticipantId)
         {
             if (marketParticipant.MarketParticipantId == marketParticipantId) return;
-            SetMarketParticipantId(marketParticipant, marketParticipantId);
+
+            var prop = marketParticipant.GetType().GetProperty(nameof(MarketParticipant.MarketParticipantId))!;
+            prop.SetValue(marketParticipant, marketParticipantId);
         }
 
         private static void UpdateIsActive(MarketParticipant marketParticipant, bool isActive)
@@ -51,10 +54,12 @@ namespace GreenEnergyHub.Charges.Infrastructure.ActorRegister.MarketParticipants
             marketParticipant.UpdateBusinessProcessRole(businessProcessRole);
         }
 
-        private static void SetMarketParticipantId(MarketParticipant marketParticipant, string marketParticipantId)
+        private static void UpdateName(MarketParticipant marketParticipant, string actorName)
         {
-            var prop = marketParticipant.GetType().GetProperty(nameof(MarketParticipant.MarketParticipantId))!;
-            prop.SetValue(marketParticipant, marketParticipantId);
+            if (marketParticipant.Name == actorName) return;
+
+            var prop = marketParticipant.GetType().GetProperty(nameof(MarketParticipant.Name))!;
+            prop.SetValue(marketParticipant, actorName);
         }
     }
 }

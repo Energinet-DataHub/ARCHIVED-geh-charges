@@ -43,6 +43,9 @@ namespace GreenEnergyHub.Charges.QueryApi.Model
 
         public bool IsActive { get; set; }
 
+        [Required]
+        public string Name { get; set; }
+
         [InverseProperty(nameof(Charge.Owner))]
         public virtual ICollection<Charge> Charges { get; set; }
 

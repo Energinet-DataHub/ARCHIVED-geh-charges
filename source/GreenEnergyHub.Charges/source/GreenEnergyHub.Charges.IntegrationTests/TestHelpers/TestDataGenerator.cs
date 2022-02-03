@@ -34,6 +34,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.TestHelpers
             dbContext.MarketParticipants.Add(new MarketParticipant(
                 testActorId,
                 "MarketParticipantForIntegrationTest",
+                string.Empty,
                 true,
                 MarketParticipantRole.GridAccessProvider));
             dbContext.SaveChanges();

@@ -34,11 +34,13 @@ namespace GreenEnergyHub.Charges.Domain.MarketParticipants
         public MarketParticipant(
             Guid id,
             string marketParticipantId,
+            string name,
             bool isActive,
             MarketParticipantRole businessProcessRole)
         {
             Id = id;
             MarketParticipantId = marketParticipantId;
+            Name = name;
             IsActive = isActive;
             UpdateBusinessProcessRole(businessProcessRole);
         }
@@ -47,6 +49,7 @@ namespace GreenEnergyHub.Charges.Domain.MarketParticipants
         private MarketParticipant()
         {
             MarketParticipantId = null!;
+            Name = null!;
         }
 
         public Guid Id { get; }
@@ -60,6 +63,12 @@ namespace GreenEnergyHub.Charges.Domain.MarketParticipants
         /// updates in the temporary actor register solution.
         /// </summary>
         public string MarketParticipantId { get; private set; }
+
+        /// <summary>
+        /// IMPORTANT: There should not be a private setter but it's a temporary solution to handle non-valid
+        /// updates in the temporary actor register solution.
+        /// </summary>
+        public string Name { get; private set; }
 
         /// <summary>
         /// The roles of the market participant.

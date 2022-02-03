@@ -23,13 +23,14 @@ namespace GreenEnergyHub.Charges.Infrastructure.ActorRegister.Persistence.Actors
     {
         public void Configure(EntityTypeBuilder<Actor> builder)
         {
-            builder.ToView("Actor");
+            builder.ToTable("ActorInfo");
 
             builder.HasKey(x => x.Id);
             builder.Property(x => x.Id).ValueGeneratedNever();
 
             builder.Property(a => a.IdentificationNumber);
             builder.Property(a => a.IdentificationType);
+            builder.Property(a => a.Name);
             builder.Property(a => a.Active);
 
             builder

@@ -147,6 +147,8 @@ namespace GreenEnergyHub.Charges.QueryApi.Model
                     .IsClustered(false);
 
                 entity.Property(e => e.Id).ValueGeneratedNever();
+
+                entity.Property(e => e.Name).HasDefaultValueSql("('')");
             });
 
             modelBuilder.Entity<MeteringPoint>(entity =>

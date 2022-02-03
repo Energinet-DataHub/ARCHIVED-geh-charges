@@ -80,7 +80,12 @@ namespace GreenEnergyHub.Charges.Infrastructure.ActorRegister.MarketParticipants
         private MarketParticipant CreateMarketParticipant(Actor actor)
         {
             var businessProcessRole = GetBusinessProcessRole(actor.Roles);
-            return new MarketParticipant(actor.Id, actor.IdentificationNumber, actor.Active, businessProcessRole);
+            return new MarketParticipant(
+                actor.Id,
+                actor.IdentificationNumber,
+                actor.Name,
+                actor.Active,
+                businessProcessRole);
         }
 
         /// <summary>

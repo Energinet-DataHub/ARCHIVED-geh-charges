@@ -24,12 +24,19 @@ namespace GreenEnergyHub.Charges.Infrastructure.ActorRegister.Persistence.Actors
     {
         private List<Role> _roles;
 
-        public Actor(Guid id, string identificationNumber, IdentificationType identificationType, List<Role> roles, bool active)
+        public Actor(
+            Guid id,
+            string identificationNumber,
+            IdentificationType identificationType,
+            string name,
+            List<Role> roles,
+            bool active)
         {
             Id = id;
             _roles = roles;
             IdentificationNumber = identificationNumber;
             IdentificationType = identificationType;
+            Name = name;
             Active = active;
         }
 
@@ -39,6 +46,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.ActorRegister.Persistence.Actors
         private Actor()
         {
             IdentificationNumber = null!;
+            Name = null!;
             _roles = null!;
         }
 
@@ -50,6 +58,8 @@ namespace GreenEnergyHub.Charges.Infrastructure.ActorRegister.Persistence.Actors
         public string IdentificationNumber { get; }
 
         public IdentificationType IdentificationType { get; }
+
+        public string Name { get; }
 
         public IReadOnlyCollection<Role> Roles => _roles;
 

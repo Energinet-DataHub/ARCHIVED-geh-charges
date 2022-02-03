@@ -116,6 +116,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Infrastructure.Cim.Bundles.Cha
                 .ReturnsAsync(new MarketParticipant(
                     Guid.NewGuid(),
                     "5790001330552",
+                    string.Empty,
                     true,
                     MarketParticipantRole.MeteringPointAdministrator));
 

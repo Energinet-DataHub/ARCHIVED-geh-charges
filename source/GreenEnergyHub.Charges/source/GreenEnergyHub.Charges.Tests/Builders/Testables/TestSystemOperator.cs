@@ -19,8 +19,8 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Testables
 {
     public class TestSystemOperator : MarketParticipant
     {
-        public TestSystemOperator(Guid id, string marketParticipantId)
-            : base(id, marketParticipantId, true, MarketParticipantRole.SystemOperator)
+        public TestSystemOperator(Guid id, string marketParticipantId, string name)
+            : base(id, marketParticipantId, name, true, MarketParticipantRole.SystemOperator)
         {
         }
     }
