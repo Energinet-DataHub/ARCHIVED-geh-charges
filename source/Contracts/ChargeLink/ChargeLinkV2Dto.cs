@@ -13,7 +13,6 @@
 // limitations under the License.
 
 using System;
-using System.ComponentModel.DataAnnotations;
 using Energinet.Charges.Contracts.Charge;
 
 // ReSharper disable once CheckNamespace - Type is shared so namespace is not determined by project structure/namespace
@@ -25,19 +24,17 @@ namespace Energinet.Charges.Contracts.ChargeLink
     /// <param name="ChargeType">The type of charge; tariff, fee or subscription</param>
     /// <param name="ChargeId">A charge identifier provided by the market participant. Combined with charge owner and charge type it becomes unique</param>
     /// <param name="ChargeName">Charge name provided by the market participant.</param>
-    /// <param name="ChargeOwner">A charge owner identification, e.g. the market participant's GLN or EIC number</param>
-    /// <param name="ChargeOwnerName">The market participant's company name</param>
+    /// <param name="ChargeOwnerId">The UUID of the actor owned by the market participant domain.</param>
     /// <param name="TaxIndicator">Indicates whether a tariff is considered a tax or not</param>
     /// <param name="TransparentInvoicing">Indicates whether the charge owner wants the charge to be displayed on the customer invoice</param>
     /// <param name="Quantity">The charge link's quantity</param>
     /// <param name="StartDate">The charge link's start date time in UTC</param>
     /// <param name="EndDate">The charge link's end date time in UTC</param>
-    public record ChargeLinkDto(
+    public record ChargeLinkV2Dto(
         ChargeType ChargeType,
         string ChargeId,
         string ChargeName,
-        string ChargeOwner,
-        string ChargeOwnerName,
+        Guid ChargeOwnerId,
         bool TaxIndicator,
         bool TransparentInvoicing,
         int Quantity,

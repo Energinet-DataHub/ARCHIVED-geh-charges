@@ -31,18 +31,18 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi
 {
     [IntegrationTest]
     [Collection(nameof(ChargesWebApiCollectionFixture))]
-    public class ChargeLinksControllerTests :
+    public class ChargeLinksV2ControllerTests :
         WebApiTestBase<ChargesWebApiFixture>,
         IClassFixture<ChargesWebApiFixture>,
         IClassFixture<WebApiFactory>,
         IAsyncLifetime
     {
-        private const string BaseUrl = "/ChargeLinks/GetAsync?meteringPointId=";
+        private const string BaseUrl = "/ChargeLinks/GetAsync?api-version=2.0&meteringPointId=";
         private const string KnownMeteringPointId = SeededData.MeteringPoints.Mp571313180000000005.Id;
         private readonly HttpClient _client;
         private readonly AuthenticationClient _authenticationClient;
 
-        public ChargeLinksControllerTests(
+        public ChargeLinksV2ControllerTests(
             ChargesWebApiFixture chargesWebApiFixture,
             WebApiFactory factory,
             ITestOutputHelper testOutputHelper)
@@ -87,7 +87,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi
 
             // Assert
             var jsonString = await response.Content.ReadAsStringAsync();
-            var actual = JsonSerializer.Deserialize<List<ChargeLinkV1Dto>>(
+            var actual = JsonSerializer.Deserialize<List<ChargeLinkV2Dto>>(
                 jsonString,
                 GetJsonSerializerOptions());
 
