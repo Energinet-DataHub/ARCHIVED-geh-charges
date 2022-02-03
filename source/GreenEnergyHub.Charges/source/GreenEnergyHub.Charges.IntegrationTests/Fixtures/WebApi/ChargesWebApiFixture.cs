@@ -49,9 +49,9 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures.WebApi
                 $"CONNECTIONSTRINGS:{EnvironmentSettingNames.ChargeDbConnectionString}",
                 DatabaseManager.ConnectionString);
 
-            //As a temporary workaround we use the configuration to auth as a actor, this will be changed to a user in the future.
-            Environment.SetEnvironmentVariable(EnvironmentSettingNames.B2CTenantId, AuthorizationConfiguration.B2cTenantId);
-            Environment.SetEnvironmentVariable(EnvironmentSettingNames.BackendServiceAppId, AuthorizationConfiguration.BackendAppId);
+            // When supported the url will have to be overwritten from test.common
+            //Environment.SetEnvironmentVariable(EnvironmentSettingNames.FrontEndOpenIdUrl, AuthorizationConfiguration.FrontEndOpenIdUrl);
+            Environment.SetEnvironmentVariable(EnvironmentSettingNames.FrontEndServiceAppId, AuthorizationConfiguration.FrontendAppId);
         }
 
         /// <inheritdoc/>

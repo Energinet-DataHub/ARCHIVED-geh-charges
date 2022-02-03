@@ -29,8 +29,5 @@ namespace GreenEnergyHub.Charges.WebApi
         // JWT Token auth
         public const string FrontEndOpenIdUrl = "FRONTEND_OPEN_ID_URL";
         public const string FrontEndServiceAppId = "FRONTEND_SERVICE_APP_ID";
-
-        public const string B2CTenantId = "B2C_TENANT_ID";
-        public const string BackendServiceAppId = "BACKEND_SERVICE_APP_ID";
     }
 }

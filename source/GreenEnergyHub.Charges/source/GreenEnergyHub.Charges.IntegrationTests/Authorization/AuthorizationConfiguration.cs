@@ -42,6 +42,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Authorization
             BackendAppScope = new[] { $"{backendAppId}/.default" };
 
             BackendAppId = SecretsConfiguration.GetValue<string>(BuildB2CBackendAppId(Environment));
+            FrontendAppId = SecretsConfiguration.GetValue<string>(BuildB2CFrontendAppId(Environment));
             var teamClientId = SecretsConfiguration.GetValue<string>(BuildB2CTeamSecretName(Environment, teamName, "client-id"));
             var teamClientSecret = SecretsConfiguration.GetValue<string>(BuildB2CTeamSecretName(Environment, teamName, "client-secret"));
 
@@ -49,6 +50,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Authorization
 
             ApiManagementBaseAddress = SecretsConfiguration.GetValue<Uri>(BuildApiManagementEnvironmentSecretName(Environment, "host-url"));
         }
+
+        public string FrontendAppId { get; }
 
         /// <summary>
         /// Backend application ID
@@ -127,6 +130,11 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Authorization
         private static string BuildB2CBackendAppId(string environment)
         {
             return $"B2C-{environment}-backend-app-id";
+        }
+
+        private static string BuildB2CFrontendAppId(string environment)
+        {
+            return $"B2C-{environment}-frontend-app-id";
         }
 
         private static string BuildB2CTeamSecretName(string environment, string team, string secret)
